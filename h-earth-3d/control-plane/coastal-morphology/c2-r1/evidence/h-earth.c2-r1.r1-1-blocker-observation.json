@@ -1,0 +1,13 @@
+{
+  "operation": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+  "observation": "VERIFICATION_TRANSECTS_EXCEEDED_FROZEN_WORLD_DOMAIN",
+  "candidateHeadAtObservation": "978b10cde556ec6d8a12f5c4ea3e3c7ee3b01555",
+  "classification": "BOUNDED_PASS_LOCAL_VERIFICATION_ENVELOPE_DEFECT",
+  "productDamage": false,
+  "publicRouteMutation": false,
+  "materialsStarted": false,
+  "normalsStarted": false,
+  "waterOpticsStarted": false,
+  "wavesOrFoamStarted": false,
+  "disposition": "CORRECT_CORRIDOR_AND_TEST_ENVELOPE_WITHIN_R1_1"
+}

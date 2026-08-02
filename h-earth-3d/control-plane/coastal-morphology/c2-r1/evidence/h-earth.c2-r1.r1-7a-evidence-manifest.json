@@ -1,0 +1,72 @@
+{
+  "manifestType": "H_EARTH_C2_R1_R1_7A_EVIDENCE_MANIFEST_v1",
+  "operation": "R1.7A_LANDFORM_ANALYSIS_AND_MACRO_FIELD_CONTRACT",
+  "status": "PASS_ENGINEERING_DURABLE_CLOSURE_PENDING_COMMIT",
+  "startingHead": "59d84592039fae226b17ae2b1c6610144059cb61",
+  "passingExecutionHead": "02118302eff1b6d24e8a90fbda9efa51bbf2ece4",
+  "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-start-001",
+  "passingHeadRollbackBranch": "rollback/h-earth-c2-r1-r1-7a-closed-001",
+  "workflow": {
+    "runId": 30675657736,
+    "jobId": 91302241616,
+    "result": "PASS",
+    "artifactId": 8810353024,
+    "artifactName": "h-earth-c2-r1-r1-7a-engineering-evidence",
+    "artifactDigest": "sha256:abca46c001acf13890f5dd45a84e5fafee54151687666f5eddef413072d2c2b4",
+    "artifactSizeBytes": 33518
+  },
+  "exactWorkflowArtifactFiles": {
+    "h-earth.c2-r1.r1-7a-verification.json": {
+      "sha256": "76e3f46befda639413c2a7d16d2cd52c58be9680b81b813ffb1dceaec02bd659"
+    },
+    "r1-7a-engineering-captures/h-earth.c2-r1.r1-7a-elevation-slope.svg": {
+      "sha256": "8c52a1c20044665587969f11cbb029f1b27bc9aa125f15a5ac222f0886ff408c"
+    },
+    "r1-7a-engineering-captures/h-earth.c2-r1.r1-7a-curvature-drainage.svg": {
+      "sha256": "8b889b9528f12b4e4a678afcc95c80b3684a7308491622972f91d8355c740857"
+    },
+    "r1-7a-engineering-captures/h-earth.c2-r1.r1-7a-moisture-transition.svg": {
+      "sha256": "09117ef1eb28d2ca7d8ad28921551b4bf70bc1eef634dbaf3abc8d31437a386b"
+    }
+  },
+  "durableRepositoryProjections": {
+    "h-earth.c2-r1.r1-7a-elevation-slope.svg": {
+      "projection": "DOCUMENTED_DOWNSAMPLED_5_BY_10_PROJECTION_OF_EXACT_WORKFLOW_CAPTURE",
+      "sha256": "8d550d444d224898f31897d81410022fca9abeb20e2d903032dc99a19b006ee6",
+      "gitBlobSha": "71d8261f6e93faa1b38d468a1b4d2273f04f3924"
+    },
+    "h-earth.c2-r1.r1-7a-curvature-drainage.svg": {
+      "projection": "DOCUMENTED_DOWNSAMPLED_5_BY_10_PROJECTION_OF_EXACT_WORKFLOW_CAPTURE",
+      "sha256": "d179261238a5350ab28c4b052234b820b7ccece0a4dee1edbcac95aa5718e6d9",
+      "gitBlobSha": "abe6624f9ec0173764fb5056023fd3ec00a1270d"
+    },
+    "h-earth.c2-r1.r1-7a-moisture-transition.svg": {
+      "projection": "DOCUMENTED_DOWNSAMPLED_5_BY_10_PROJECTION_OF_EXACT_WORKFLOW_CAPTURE",
+      "sha256": "5037fb02672b6c89346cd110609a777953de93fe0ad2840e3213a8cc6d2d1b56",
+      "gitBlobSha": "76fa3796cd775f65767ada0eee87e25f74cd76fe"
+    }
+  },
+  "implementationBlobs": {
+    ".github/workflows/h-earth-c2-r1-r1-7a-landform-analysis.yml": "8409cb6dffc1cb5da726a18c2e467459df790d4b",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.landform-analysis.js": "dba3fe2898b127addaa5a62081d466e55370da72",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7a-landform-analysis.mjs": "c256d88136f46dca0aaa5f695a5a5280b4fffe11"
+  },
+  "immutableUpstreamBlobs": {
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js": "45cbd83337c14bc94ce7d173b25f2157cb4eb84f",
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js": "c5a439f2833a4def90944e5eb1d03005ddb41e70",
+    "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js": "3eb689c5a030c40ebede52c6eaef300207742a7c",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js": "c0e103b0cbb51eac30105f0e8ae68c37e8fac281",
+    "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js": "2094bcafb1e5ae1c291066a9cf1dd3820a22d0b1",
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js": "1ac2ee902fc0cfb74413db37dd139bc51dbd9e46",
+    "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js": "0fa4b8434a5883e9858d2b73bb2e05e4b1a60c5c"
+  },
+  "representativeEngineeringCaptureCount": 3,
+  "capturePurpose": "ENGINEERING_FIELD_CORRESPONDENCE_AND_CONTINUITY_ONLY",
+  "bakedMacroControlFieldCreated": false,
+  "rendererSamplingIntegrationCreated": false,
+  "upstreamAuthoritiesUnchanged": true,
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false
+}

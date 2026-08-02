@@ -1,0 +1,248 @@
+{
+  "manifestType": "H_EARTH_C2_R1_R1_8D_REPRESENTATIVE_CAPTURE_PACKAGE_v3",
+  "result": "PASS_CAPTURE_PACKAGE_READY_FOR_HUMAN_REVIEW",
+  "publicOccurrenceUrl": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+  "exactServedCommit": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+  "browserVersion": "136.0.7103.25",
+  "captureCount": 6,
+  "captures": [
+    {
+      "identity": "LATERAL_BEACH_PROFILE",
+      "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/captures/lateral-beach-profile.png",
+      "sha256": "750385bff538907e4a6c149eeffdeb1f6f3ef7a307c370d1009b1816bd821e87",
+      "exactCandidateBytesHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+      "servedOccurrence": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "camera": {
+        "position": [
+          225,
+          74,
+          18
+        ],
+        "target": [
+          0,
+          1,
+          32
+        ],
+        "direction": [
+          -0.949528,
+          -0.308069,
+          0.059082
+        ],
+        "fovDegrees": 48,
+        "revision": 11,
+        "view": "LATERAL_BEACH_PROFILE"
+      },
+      "viewport": {
+        "cssWidth": 1254,
+        "cssHeight": 590,
+        "pixelWidth": 1254,
+        "pixelHeight": 590,
+        "devicePixelRatio": 1
+      },
+      "deviceOrBrowser": {
+        "browser": "Chromium",
+        "browserVersion": "136.0.7103.25",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.7103.25 Safari/537.36"
+      }
+    },
+    {
+      "identity": "INLAND_TO_DEEP_WATER",
+      "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/captures/inland-to-deep-water.png",
+      "sha256": "b4cba27c35bce6c059be120d397665285aeea428cb23cfd3560d724823184b0d",
+      "exactCandidateBytesHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+      "servedOccurrence": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "camera": {
+        "position": [
+          0,
+          64,
+          174
+        ],
+        "target": [
+          0,
+          -2,
+          -34
+        ],
+        "direction": [
+          0,
+          -0.302447,
+          -0.953166
+        ],
+        "fovDegrees": 50,
+        "revision": 12,
+        "view": "INLAND_TO_DEEP_WATER"
+      },
+      "viewport": {
+        "cssWidth": 1254,
+        "cssHeight": 590,
+        "pixelWidth": 1254,
+        "pixelHeight": 590,
+        "devicePixelRatio": 1
+      },
+      "deviceOrBrowser": {
+        "browser": "Chromium",
+        "browserVersion": "136.0.7103.25",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.7103.25 Safari/537.36"
+      }
+    },
+    {
+      "identity": "SHALLOW_WATER_AND_SEABED",
+      "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/captures/shallow-water-and-seabed.png",
+      "sha256": "b6f40ce8161f1997eb39129063bf933aac7a043df820e9744e5ff738c4d02e3a",
+      "exactCandidateBytesHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+      "servedOccurrence": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "camera": {
+        "position": [
+          0,
+          16,
+          -44
+        ],
+        "target": [
+          0,
+          -1.5,
+          32
+        ],
+        "direction": [
+          0,
+          -0.224391,
+          0.974499
+        ],
+        "fovDegrees": 54,
+        "revision": 13,
+        "view": "SHALLOW_WATER_AND_SEABED"
+      },
+      "viewport": {
+        "cssWidth": 1254,
+        "cssHeight": 590,
+        "pixelWidth": 1254,
+        "pixelHeight": 590,
+        "devicePixelRatio": 1
+      },
+      "deviceOrBrowser": {
+        "browser": "Chromium",
+        "browserVersion": "136.0.7103.25",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.7103.25 Safari/537.36"
+      }
+    },
+    {
+      "identity": "SANDBAR_AND_BATHYMETRY",
+      "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/captures/sandbar-and-bathymetry.png",
+      "sha256": "56d1f620667a7f09481a6a2fb6bbb3cba30cfd3653309e11baf3c24d7fe15225",
+      "exactCandidateBytesHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+      "servedOccurrence": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "camera": {
+        "position": [
+          132,
+          38,
+          -82
+        ],
+        "target": [
+          0,
+          -2,
+          28
+        ],
+        "direction": [
+          -0.748215,
+          -0.226732,
+          0.623512
+        ],
+        "fovDegrees": 47,
+        "revision": 14,
+        "view": "SANDBAR_AND_BATHYMETRY"
+      },
+      "viewport": {
+        "cssWidth": 1254,
+        "cssHeight": 590,
+        "pixelWidth": 1254,
+        "pixelHeight": 590,
+        "devicePixelRatio": 1
+      },
+      "deviceOrBrowser": {
+        "browser": "Chromium",
+        "browserVersion": "136.0.7103.25",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.7103.25 Safari/537.36"
+      }
+    },
+    {
+      "identity": "GROUND_TRAVERSAL",
+      "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/captures/ground-traversal.png",
+      "sha256": "14b0fcf649276afdceb8e5ec9cab81047bfd3e43a511721f3ccb5e5a6ff4c908",
+      "exactCandidateBytesHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+      "servedOccurrence": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "camera": {
+        "position": [
+          0,
+          3.1,
+          -22
+        ],
+        "target": [
+          0,
+          1.6,
+          78
+        ],
+        "direction": [
+          0,
+          -0.014998,
+          0.999888
+        ],
+        "fovDegrees": 58,
+        "revision": 15,
+        "view": "GROUND_TRAVERSAL"
+      },
+      "viewport": {
+        "cssWidth": 1254,
+        "cssHeight": 590,
+        "pixelWidth": 1254,
+        "pixelHeight": 590,
+        "devicePixelRatio": 1
+      },
+      "deviceOrBrowser": {
+        "browser": "Chromium",
+        "browserVersion": "136.0.7103.25",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.7103.25 Safari/537.36"
+      }
+    },
+    {
+      "identity": "DISTANT_LANDSCAPE",
+      "file": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/captures/distant-landscape.png",
+      "sha256": "602b940e3a4e94b27bd1d50291a2d2cc2d49848384111e5973d2ef74a61dfc74",
+      "exactCandidateBytesHead": "c77ecf9f047daf8dc11adfbb3a3e100410ba6a31",
+      "servedOccurrence": "https://liability-cos-flexibility-acquired.trycloudflare.com/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "camera": {
+        "position": [
+          0,
+          58,
+          -205
+        ],
+        "target": [
+          0,
+          12,
+          112
+        ],
+        "direction": [
+          0,
+          -0.143606,
+          0.989635
+        ],
+        "fovDegrees": 44,
+        "revision": 16,
+        "view": "DISTANT_LANDSCAPE"
+      },
+      "viewport": {
+        "cssWidth": 1254,
+        "cssHeight": 590,
+        "pixelWidth": 1254,
+        "pixelHeight": 590,
+        "devicePixelRatio": 1
+      },
+      "deviceOrBrowser": {
+        "browser": "Chromium",
+        "browserVersion": "136.0.7103.25",
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/136.0.7103.25 Safari/537.36"
+      }
+    }
+  ],
+  "automatedCapturesAreSupportingEvidenceOnly": true,
+  "visualAcceptanceEstablished": false,
+  "userDifferentialRequired": true,
+  "recordedAt": "2026-08-01T08:27:02.177Z"
+}

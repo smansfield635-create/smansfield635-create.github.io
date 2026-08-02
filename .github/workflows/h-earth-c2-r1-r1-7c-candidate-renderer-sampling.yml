@@ -1,0 +1,44 @@
+name: H-Earth C2-R1 R1.7C Candidate Renderer Sampling
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: h-earth-c2-r1-r1-7c-refs/pull/418/merge
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r1-7c:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 74940183e8e083a71e5f3a608fbb7506e433ca44
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify closed R1.7C candidate renderer sampling integration
+        env:
+          C2_R1_HEAD: 74940183e8e083a71e5f3a608fbb7506e433ca44
+          C2_R1_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+          R1_7C_SKIP_GIT_ASSERTIONS: 'true'
+        run: |
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7c-candidate-renderer-sampling.mjs
+
+      - name: Upload regenerated R1.7C receipt and engineering captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-r1-7c-engineering-evidence
+          path: |
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7c-engineering-captures/*.svg
+          if-no-files-found: error
+          retention-days: 30

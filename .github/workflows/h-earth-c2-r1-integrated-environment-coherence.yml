@@ -1,0 +1,357 @@
+name: H-Earth C2-R1 Integrated Environment Coherence
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_candidate_head:
+        required: true
+        type: string
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml'
+      - 'showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js'
+      - 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
+      - 'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
+      - 'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'
+
+permissions:
+  contents: read
+
+env:
+  EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
+  LIVE_REVIEW_URL: http://127.0.0.1:4188/showroom/globe/h-earth/index.html?cp2=round1-1f520809
+  PLAYWRIGHT_VERSION: 1.55.0
+
+jobs:
+  exact-head-static-and-package-custody:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+
+      - name: Verify exact head rollback and five-path boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git fetch origin rollback/h-earth-c2-r1-integrated-environment-coherence-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-integrated-environment-coherence-start-001
+          test "$(git rev-parse origin/rollback/h-earth-c2-r1-integrated-environment-coherence-start-001)" = d13872aff39f2fb6cb4e5677953fad2101cea5de
+          printf '%s\n' \
+            .github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml \
+            showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js \
+            showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js \
+            showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js \
+            showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js | sort > /tmp/expected-paths
+          git diff --name-only d13872aff39f2fb6cb4e5677953fad2101cea5de...HEAD | sort > /tmp/actual-paths
+          diff -u /tmp/expected-paths /tmp/actual-paths
+
+      - name: Verify source syntax and integration contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
+          node --check showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          node --check showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js
+          grep -F "H_EARTH_C2_R1_INTEGRATED_ENVIRONMENT_COHERENCE_CORRECTION_001" showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          grep -F "H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE" showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          grep -F "R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE" showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+
+      - name: Preserve complete-world package proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/static"
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs | tee "$RUNNER_TEMP/static/complete-world-package.log"
+          sha256sum "$RUNNER_TEMP/static/complete-world-package.log" > "$RUNNER_TEMP/static/complete-world-package.sha256"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-integrated-environment-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/static
+          if-no-files-found: error
+          retention-days: 30
+
+  live-environment-browser-matrix:
+    needs: exact-head-static-and-package-custody
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+
+      - name: Provision exact-head browser host
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          mkdir -p "$RUNNER_TEMP/browser/runtime" "$RUNNER_TEMP/browser/artifacts"
+          cd "$RUNNER_TEMP/browser/runtime"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4188 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >"$RUNNER_TEMP/browser/artifacts/server.log" 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS "$LIVE_REVIEW_URL" >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+
+      - name: Execute desktop and mobile integrated-world matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/browser/runtime/verify.mjs" <<'SCRIPT'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import process from 'node:process';
+          import { chromium } from 'playwright';
+
+          const out = path.join(process.env.RUNNER_TEMP, 'browser/artifacts');
+          const expectedPackageIdentity = 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE';
+          const expectedPackageDigest = 'fnv1a32:218f37ae';
+          const check = (condition, code, detail = null) => {
+            if (condition) return;
+            const error = new Error(code);
+            error.detail = detail;
+            throw error;
+          };
+          const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+          const sha256 = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
+
+          async function touchTurnAndTravel(page) {
+            await page.evaluate(async () => {
+              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+              const emit = (type, points) => {
+                for (const point of points) {
+                  const released = type === 'pointerup';
+                  canvas.dispatchEvent(new PointerEvent(type, {
+                    bubbles: true,
+                    cancelable: true,
+                    pointerId: point.id,
+                    pointerType: 'touch',
+                    isPrimary: point.id === 1,
+                    clientX: point.x,
+                    clientY: point.y,
+                    buttons: released ? 0 : 1,
+                    pressure: released ? 0 : 0.5
+                  }));
+                }
+              };
+              emit('pointerdown', [{ id: 1, x: 105, y: 260 }]);
+              emit('pointermove', [{ id: 1, x: 245, y: 260 }]);
+              await new Promise(resolve => setTimeout(resolve, 2400));
+              emit('pointerup', [{ id: 1, x: 245, y: 260 }]);
+              await new Promise(resolve => setTimeout(resolve, 180));
+              emit('pointerdown', [{ id: 1, x: 110, y: 390 }, { id: 2, x: 250, y: 390 }]);
+              emit('pointermove', [{ id: 1, x: 110, y: 285 }, { id: 2, x: 250, y: 285 }]);
+              await new Promise(resolve => setTimeout(resolve, 650));
+              emit('pointerup', [{ id: 1, x: 110, y: 285 }, { id: 2, x: 250, y: 285 }]);
+            });
+          }
+
+          async function desktopTurnAndTravel(page) {
+            const canvas = page.locator('#h-earth-functional-landscape-canvas');
+            const box = await canvas.boundingBox();
+            check(box, 'LIVE_CANVAS_BOX_MISSING');
+            const x = box.x + box.width * 0.42;
+            const y = box.y + box.height * 0.45;
+            await page.mouse.move(x, y);
+            await page.mouse.down();
+            await page.mouse.move(x + Math.min(260, box.width * 0.34), y, { steps: 12 });
+            await wait(2400);
+            await page.mouse.up();
+            await page.mouse.wheel(0, -360);
+            await wait(650);
+          }
+
+          async function runScenario(browser, scenario) {
+            const context = await browser.newContext({
+              viewport: scenario.viewport,
+              deviceScaleFactor: scenario.dpr,
+              isMobile: scenario.mobile,
+              hasTouch: scenario.mobile
+            });
+            await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
+            const page = await context.newPage();
+            const consoleRecords = [];
+            const pageErrors = [];
+            const requestFailures = [];
+            const httpFailures = [];
+            page.on('console', message => consoleRecords.push({ type: message.type(), text: message.text() }));
+            page.on('pageerror', error => pageErrors.push({ message: error.message }));
+            page.on('requestfailed', request => requestFailures.push({ url: request.url(), failure: request.failure() }));
+            page.on('response', response => {
+              if (response.status() >= 400 && !response.url().endsWith('/favicon.ico')) {
+                httpFailures.push({ url: response.url(), status: response.status() });
+              }
+            });
+
+            try {
+              const started = Date.now();
+              await page.goto(process.env.LIVE_REVIEW_URL, {
+                waitUntil: 'domcontentloaded',
+                timeout: 120000
+              });
+              await page.waitForFunction(() => {
+                const api = window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+                const root = document.getElementById('h-earth-functional-landscape-route');
+                return api?.ready === true || root?.dataset?.run8eError === 'true';
+              }, null, { timeout: 120000, polling: 250 });
+              const startupMilliseconds = Date.now() - started;
+              const before = await page.evaluate(() => {
+                const api = window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+                return {
+                  root: { ...document.getElementById('h-earth-functional-landscape-route').dataset },
+                  receipt: api?.getReceipt?.() ?? null,
+                  startup: window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null
+                };
+              });
+              check(before.root.run8eError !== 'true', 'LIVE_ROUTE_REPORTED_RUNTIME_ERROR', before);
+              check(before.receipt?.eligible === true, 'LIVE_ROUTE_RECEIPT_NOT_ELIGIBLE', before);
+              const selection = before.receipt.runtimePackageSelection;
+              check(selection?.runtimePackageIdentity === expectedPackageIdentity, 'LIVE_RUNTIME_PACKAGE_IDENTITY_MISMATCH', selection);
+              check(selection?.runtimePackageContentDigest === expectedPackageDigest, 'LIVE_RUNTIME_PACKAGE_DIGEST_MISMATCH', selection);
+              check(selection?.candidateSampleFailureCount === 0, 'LIVE_CANDIDATE_SAMPLE_FAILURES', selection);
+              check(selection?.boundTerrainVertexCount === 10419, 'LIVE_BOUND_TERRAIN_COUNT_MISMATCH', selection);
+              check(selection?.boundShorelineVertexCount === 299, 'LIVE_BOUND_SHORELINE_COUNT_MISMATCH', selection);
+              check(before.receipt.completeWorldBinding?.noncoastalBytesPreserved === true, 'LIVE_NONCOASTAL_BYTES_NOT_PRESERVED');
+              check(before.receipt.completeWorldBinding?.acceptedPlacementsPreserved === true, 'LIVE_PLACEMENTS_NOT_PRESERVED');
+              check(before.receipt.completeWorldBinding?.cameraNavigationTraversalTouchPreserved === true, 'LIVE_NAVIGATION_BOUNDARY_NOT_PRESERVED');
+              check(before.receipt.liveGpu?.resources?.package?.runtimeIdentity === expectedPackageIdentity, 'GPU_RUNTIME_PACKAGE_IDENTITY_MISMATCH', before.receipt.liveGpu?.resources?.package);
+              check(before.receipt.liveGpu?.resources?.package?.runtimeContentDigest === expectedPackageDigest, 'GPU_RUNTIME_PACKAGE_DIGEST_MISMATCH', before.receipt.liveGpu?.resources?.package);
+              check(before.receipt.liveGpu?.resources?.packageUploadedOnce === true, 'GPU_PACKAGE_NOT_RESIDENT_ONCE');
+              check(before.receipt.liveGpu?.resources?.noPostInitializationResourceCreation === true, 'GPU_POST_INIT_RESOURCE_CREATION');
+              check(before.receipt.liveGpu?.resources?.noPostInitializationBufferUpload === true, 'GPU_POST_INIT_BUFFER_UPLOAD');
+              const initialEvidence = before.receipt.liveGpu?.evidenceRecords?.[0]?.colorSummary;
+              check(initialEvidence?.nonClearPixelCount > initialEvidence.pixelCount * 0.01, 'INITIAL_WORLD_OCCUPANCY_INSUFFICIENT', initialEvidence);
+              check(initialEvidence?.uniqueColorBucketCount >= 16, 'INITIAL_WORLD_COLOR_DIVERSITY_INSUFFICIENT', initialEvidence);
+              check(initialEvidence?.luminanceStandardDeviation >= 2, 'INITIAL_WORLD_LUMINANCE_VARIANCE_INSUFFICIENT', initialEvidence);
+              check(before.receipt.liveGpu?.counters?.gpuFramebufferPresentationCount >= 1, 'INITIAL_VISIBLE_FRAME_MISSING');
+              check(before.receipt.intake?.currentNavigationState?.physicalRole, 'INITIAL_WORLD_NAVIGATION_STATE_MISSING');
+
+              const canvas = page.locator('#h-earth-functional-landscape-canvas');
+              const beforeBytes = await canvas.screenshot({ path: path.join(out, `${scenario.name}-before.png`) });
+              if (scenario.mobile) await touchTurnAndTravel(page);
+              else await desktopTurnAndTravel(page);
+              await wait(500);
+              const after = await page.evaluate(() => window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt());
+              const afterBytes = await canvas.screenshot({ path: path.join(out, `${scenario.name}-after.png`) });
+              check(after.liveGpu.counters.gpuFramebufferPresentationCount > before.receipt.liveGpu.counters.gpuFramebufferPresentationCount, 'VISIBLE_FRAME_DID_NOT_ADVANCE');
+              check(after.intake.counters.navigationProposalCount > before.receipt.intake.counters.navigationProposalCount, 'NAVIGATION_DID_NOT_ADVANCE');
+              check(after.liveGpu.frameRecords.at(-1)?.cameraPosition, 'POST_INPUT_CAMERA_RECORD_MISSING');
+              check(sha256(beforeBytes) !== sha256(afterBytes), 'POST_INPUT_VISIBLE_FRAME_UNCHANGED');
+              if (scenario.mobile) {
+                check(after.intake.counters.touchPointerEventCount > before.receipt.intake.counters.touchPointerEventCount, 'TOUCH_INPUT_NOT_RECORDED');
+                check(after.intake.counters.oneFingerLookProposalCount > before.receipt.intake.counters.oneFingerLookProposalCount, 'TOUCH_LOOK_NOT_RECORDED');
+                check(after.intake.counters.twoFingerTravelProposalCount > before.receipt.intake.counters.twoFingerTravelProposalCount, 'TOUCH_TRAVEL_NOT_RECORDED');
+                check(after.intake.counters.releaseTerminationCount > before.receipt.intake.counters.releaseTerminationCount, 'TOUCH_RELEASE_NOT_RECORDED');
+              } else {
+                check(after.intake.counters.mousePointerEventCount > before.receipt.intake.counters.mousePointerEventCount, 'MOUSE_INPUT_NOT_RECORDED');
+                check(after.intake.counters.oneFingerLookProposalCount > before.receipt.intake.counters.oneFingerLookProposalCount, 'DESKTOP_LOOK_NOT_RECORDED');
+                check(after.intake.counters.wheelEventCount > before.receipt.intake.counters.wheelEventCount, 'DESKTOP_TRAVEL_NOT_RECORDED');
+              }
+              check(consoleRecords.filter(record => record.type === 'error').length === 0, 'CONSOLE_ERROR', consoleRecords);
+              check(pageErrors.length === 0, 'PAGE_ERROR', pageErrors);
+              check(requestFailures.length === 0, 'REQUEST_FAILURE', requestFailures);
+              check(httpFailures.length === 0, 'HTTP_FAILURE', httpFailures);
+
+              const receipt = {
+                receiptType: 'H_EARTH_C2_R1_INTEGRATED_ENVIRONMENT_BROWSER_SCENARIO_v1',
+                expectedHead: process.env.EXPECTED_HEAD,
+                scenario,
+                startupMilliseconds,
+                packageIdentity: selection.runtimePackageIdentity,
+                packageContentDigest: selection.runtimePackageContentDigest,
+                boundTerrainVertexCount: selection.boundTerrainVertexCount,
+                boundShorelineVertexCount: selection.boundShorelineVertexCount,
+                candidateSampleFailureCount: selection.candidateSampleFailureCount,
+                beforeScreenshotSha256: sha256(beforeBytes),
+                afterScreenshotSha256: sha256(afterBytes),
+                before,
+                after,
+                consoleRecords,
+                pageErrors,
+                requestFailures,
+                httpFailures
+              };
+              fs.writeFileSync(path.join(out, `${scenario.name}-receipt.json`), JSON.stringify(receipt, null, 2));
+              await context.tracing.stop({ path: path.join(out, `${scenario.name}-trace.zip`) });
+              return receipt;
+            } catch (error) {
+              const diagnostic = await page.evaluate(() => ({
+                root: document.getElementById('h-earth-functional-landscape-route')?.dataset ?? null,
+                publicReceipt: window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.() ?? null,
+                startup: window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null,
+                runtime: window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.() ?? null
+              })).catch(() => null);
+              fs.writeFileSync(path.join(out, `${scenario.name}-failure.json`), JSON.stringify({
+                error: { name: error.name, message: error.message, detail: error.detail ?? null, stack: error.stack },
+                diagnostic,
+                consoleRecords,
+                pageErrors,
+                requestFailures,
+                httpFailures
+              }, null, 2));
+              await page.screenshot({ path: path.join(out, `${scenario.name}-failure.png`), fullPage: true }).catch(() => {});
+              await context.tracing.stop({ path: path.join(out, `${scenario.name}-trace.zip`) }).catch(() => {});
+              throw error;
+            } finally {
+              await context.close();
+            }
+          }
+
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage']
+          });
+          try {
+            const scenarios = [
+              { name: 'desktop-1440x900', viewport: { width: 1440, height: 900 }, dpr: 1, mobile: false },
+              { name: 'mobile-412x915', viewport: { width: 412, height: 915 }, dpr: 2.625, mobile: true },
+              { name: 'mobile-390x844', viewport: { width: 390, height: 844 }, dpr: 3, mobile: true }
+            ];
+            const receipts = [];
+            for (const scenario of scenarios) receipts.push(await runScenario(browser, scenario));
+            fs.writeFileSync(path.join(out, 'integrated-environment-summary.json'), JSON.stringify({
+              receiptType: 'H_EARTH_C2_R1_INTEGRATED_ENVIRONMENT_BROWSER_MATRIX_v1',
+              expectedHead: process.env.EXPECTED_HEAD,
+              operationId: 'H_EARTH_C2_R1_INTEGRATED_ENVIRONMENT_COHERENCE_CORRECTION_001',
+              roleBoundary: 'ROLE_1_ENGINEERING_EXECUTION_NOT_ROLE_5_RATIFICATION',
+              scenarios: receipts.map(receipt => ({
+                name: receipt.scenario.name,
+                startupMilliseconds: receipt.startupMilliseconds,
+                packageIdentity: receipt.packageIdentity,
+                boundTerrainVertexCount: receipt.boundTerrainVertexCount,
+                boundShorelineVertexCount: receipt.boundShorelineVertexCount,
+                beforeScreenshotSha256: receipt.beforeScreenshotSha256,
+                afterScreenshotSha256: receipt.afterScreenshotSha256
+              }))
+            }, null, 2));
+          } finally {
+            await browser.close();
+          }
+          SCRIPT
+          cd "$RUNNER_TEMP/browser/runtime"
+          node verify.mjs
+
+      - name: Digest browser artifacts
+        if: always()
+        shell: bash
+        run: |
+          cd "$RUNNER_TEMP/browser/artifacts"
+          find . -maxdepth 1 -type f ! -name artifact-sha256.txt -print0 | sort -z | xargs -0 sha256sum > artifact-sha256.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-c2-r1-integrated-environment-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/browser/artifacts
+          if-no-files-found: error
+          retention-days: 30

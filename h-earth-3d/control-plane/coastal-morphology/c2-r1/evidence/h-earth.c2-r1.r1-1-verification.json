@@ -1,0 +1,314 @@
+{
+  "receiptType": "H_EARTH_C2_R1_R1_1_CONTINUOUS_PROFILE_VERIFICATION_v3",
+  "operation": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+  "result": "PASS_CLOSED",
+  "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "candidateHead": "01bda213a57333aa59f1795ec9db001a90836eaa",
+  "verificationBoundary": {
+    "strictProfileMetrics": "FULLY_OWNED_COASTAL_PROFILE_ONLY",
+    "acceptedInlandTerrain": "SEPARATE_BLEND_SEAM_CONTINUITY_ONLY",
+    "curvedProjectionWeightTolerance": 0.02,
+    "laterPassesStarted": false
+  },
+  "checks": {
+    "sourceBaselineExact": true,
+    "failedC2GeometryExcluded": true,
+    "finiteTransects": true,
+    "finiteWitnesses": true,
+    "shorelineContinuous": true,
+    "ownedProfileAdjacentStepBounded": true,
+    "ownedProfileSlopeBounded": true,
+    "ownedProfileCurvatureBounded": true,
+    "blendSeamsContinuous": true,
+    "blendWeightsWithinCurvedProjectionTolerance": true,
+    "broadSandbarMeasurable": true,
+    "offshoreDepthIncreases": true,
+    "actualVerticalDepthAvailable": true,
+    "actualDepthIdentity": true,
+    "normalsDeferredToR12": true,
+    "productDefaultUnchanged": true,
+    "publicRouteUnchanged": true
+  },
+  "metrics": {
+    "transectCount": 25,
+    "crossShoreStep": 0.5,
+    "maximumShorelineElevationError": 0,
+    "maximumOwnedAdjacentStep": 0.04898242154879995,
+    "maximumOwnedAbsoluteSlope": 0.09796401930148857,
+    "maximumOwnedAbsoluteCurvature": 0.014886319579692615,
+    "maximumBlendSeamDelta": 0.14645541819256724,
+    "minimumSandbarWidth": 52,
+    "minimumOffshoreDepthGain": 3.9713465397767216,
+    "boundaryWeights": {
+      "waterwardBlendEnd": 0.010814659083037137,
+      "waterwardOwnedStart": 1,
+      "inlandOwnedEnd": 0.9999998637700218,
+      "inlandBlendEnd": 0
+    }
+  },
+  "actualDepthUsed": true,
+  "continuousProfileUsed": true,
+  "normalsRecomputed": false,
+  "materialsChanged": false,
+  "waterOpticsChanged": false,
+  "breakersChanged": false,
+  "rendererChanged": false,
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "nextCheckpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
+  "firstBlocker": null,
+  "evaluationIssues": [],
+  "witnessCount": 5,
+  "transects": [
+    {
+      "anchorX": -184,
+      "ownedSampleCount": 432,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6467080666966306,
+      "offshoreDepth": 4.618054606473352,
+      "barCenter": 66.34186886183844,
+      "barSigma": 23.834899399411505,
+      "barAmplitude": 0.9818163739060871
+    },
+    {
+      "anchorX": -168.66666666666666,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6478587089300465,
+      "offshoreDepth": 4.637223219974091,
+      "barCenter": 66.09666842831062,
+      "barSigma": 24.03103129533007,
+      "barAmplitude": 0.9595128276458937
+    },
+    {
+      "anchorX": -153.33333333333334,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6497650276773344,
+      "offshoreDepth": 4.64759331582975,
+      "barCenter": 66.00125645811679,
+      "barSigma": 24.26779258058162,
+      "barAmplitude": 0.9406074284019365
+    },
+    {
+      "anchorX": -138,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6523964715233815,
+      "offshoreDepth": 4.6616924257981545,
+      "barCenter": 66.05770319983915,
+      "barSigma": 24.54194325252742,
+      "barAmplitude": 0.9258101478128493
+    },
+    {
+      "anchorX": -122.66666666666666,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6557108498702121,
+      "offshoreDepth": 4.687182855949741,
+      "barCenter": 66.26478387228116,
+      "barSigma": 24.84973164670268,
+      "barAmplitude": 0.915676681604049
+    },
+    {
+      "anchorX": -107.33333333333333,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6596549533469839,
+      "offshoreDepth": 4.705520168776148,
+      "barCenter": 66.61800523976534,
+      "barSigma": 25.186945777147606,
+      "barAmplitude": 0.9105875810411537
+    },
+    {
+      "anchorX": -92,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6641655515621195,
+      "offshoreDepth": 4.725256477728422,
+      "barCenter": 67.10970310634472,
+      "barSigma": 25.54897097609124,
+      "barAmplitude": 0.9107339617424682
+    },
+    {
+      "anchorX": -76.66666666666667,
+      "ownedSampleCount": 432,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6691704624830984,
+      "offshoreDepth": 4.775869944936143,
+      "barCenter": 67.72920861349868,
+      "barSigma": 25.930853044207367,
+      "barAmplitude": 0.9161103265404886
+    },
+    {
+      "anchorX": -61.33333333333333,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6745887032075801,
+      "offshoreDepth": 4.805439119211882,
+      "barCenter": 68.46307973298622,
+      "barSigma": 26.327366047251424,
+      "barAmplitude": 0.9265147719220287
+    },
+    {
+      "anchorX": -46,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6803345637613848,
+      "offshoreDepth": 4.884983417498075,
+      "barCenter": 69.2953929319259,
+      "barSigma": 26.733083831303045,
+      "barAmplitude": 0.941556570294336
+    },
+    {
+      "anchorX": -30.666666666666657,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.686315295720022,
+      "offshoreDepth": 4.824102875655911,
+      "barCenter": 70.20808868155441,
+      "barSigma": 27.14245427795101,
+      "barAmplitude": 0.9606708433334682
+    },
+    {
+      "anchorX": -15.333333333333343,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6924346011638317,
+      "offshoreDepth": 4.864049929827764,
+      "barCenter": 71.1813633128159,
+      "barSigma": 27.549875283262015,
+      "barAmplitude": 0.9831397753733409
+    },
+    {
+      "anchorX": 0,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.6985948026663593,
+      "offshoreDepth": 5.0997633962318965,
+      "barCenter": 72.19409871630126,
+      "barSigma": 27.949771420785396,
+      "barAmplitude": 1.008119570189772
+    },
+    {
+      "anchorX": 15.333333333333343,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7046975076590373,
+      "offshoreDepth": 4.891225281089886,
+      "barCenter": 73.2243205629091,
+      "barSigma": 28.33667023948499,
+      "barAmplitude": 1.034672138846913
+    },
+    {
+      "anchorX": 30.666666666666657,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7106440407872092,
+      "offshoreDepth": 4.911061191021545,
+      "barCenter": 74.24967510275883,
+      "barSigma": 28.705277152485333,
+      "barAmplitude": 1.0618003286035704
+    },
+    {
+      "anchorX": 46,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7163393603330893,
+      "offshoreDepth": 4.927998927089676,
+      "barCenter": 75.24791419677418,
+      "barSigma": 29.05054789180355,
+      "barAmplitude": 1.08848536989629
+    },
+    {
+      "anchorX": 61.33333333333334,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7216920977279215,
+      "offshoreDepth": 4.938468278027132,
+      "barCenter": 76.19737805672393,
+      "barSigma": 29.367757537547092,
+      "barAmplitude": 1.1137251351186066
+    },
+    {
+      "anchorX": 76.66666666666669,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7266165426146033,
+      "offshoreDepth": 4.959041272984769,
+      "barCenter": 77.07746521922829,
+      "barSigma": 29.652565176934754,
+      "barAmplitude": 1.1365717724297633
+    },
+    {
+      "anchorX": 92,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7310335725817895,
+      "offshoreDepth": 4.97401196782414,
+      "barCenter": 77.86907955623623,
+      "barSigma": 29.90107330830292,
+      "barAmplitude": 1.156167301296275
+    },
+    {
+      "anchorX": 107.33333333333331,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7348723506220253,
+      "offshoreDepth": 5.124701929393035,
+      "barCenter": 78.5550446227426,
+      "barSigma": 30.109881177172127,
+      "barAmplitude": 1.171775833014617
+    },
+    {
+      "anchorX": 122.66666666666669,
+      "ownedSampleCount": 436,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7380718421978412,
+      "offshoreDepth": 5.755028398545753,
+      "barCenter": 79.12047635122929,
+      "barSigma": 30.276131314486975,
+      "barAmplitude": 1.1828112062084677
+    },
+    {
+      "anchorX": 138,
+      "ownedSampleCount": 432,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7405796975304199,
+      "offshoreDepth": 5.008829052369222,
+      "barCenter": 79.55310600610817,
+      "barSigma": 30.397548640168296,
+      "barAmplitude": 1.1888589994795655
+    },
+    {
+      "anchorX": 153.33333333333331,
+      "ownedSampleCount": 433,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7423563806935517,
+      "offshoreDepth": 5.006505883483839,
+      "barCenter": 79.84354639070123,
+      "barSigma": 30.472471596858114,
+      "barAmplitude": 1.1896920945510947
+    },
+    {
+      "anchorX": 168.66666666666669,
+      "ownedSampleCount": 432,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7433733921384953,
+      "offshoreDepth": 4.9564093022049835,
+      "barCenter": 79.98549553059995,
+      "barSigma": 30.499874887801848,
+      "barAmplitude": 1.185279205446735
+    },
+    {
+      "anchorX": 184,
+      "ownedSampleCount": 432,
+      "shorelineElevation": 0,
+      "shallowDepth": 0.7436142985766725,
+      "offshoreDepth": 5.002620847780434,
+      "barCenter": 79.9758734138831,
+      "barSigma": 30.47938350770726,
+      "barAmplitude": 1.1757860534013622
+    }
+  ]
+}

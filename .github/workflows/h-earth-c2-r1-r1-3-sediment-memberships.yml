@@ -1,0 +1,37 @@
+name: H-Earth C2-R1 R1.3 Sediment Memberships
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r1-3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute continuous sediment-membership verification
+        env:
+          C2_R1_HEAD: ${{ github.sha }}
+        run: |
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-3-sediment-memberships-corrected.mjs
+
+      - name: Upload R1.3 receipt and engineering captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-r1-3-engineering-evidence
+          path: |
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-3-verification.json
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-3-engineering-captures/*.svg
+          if-no-files-found: error
+          retention-days: 30

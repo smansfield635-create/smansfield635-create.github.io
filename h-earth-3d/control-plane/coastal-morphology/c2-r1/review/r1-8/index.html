@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" data-r1-8-review="booting" data-candidate-head="c53362c6f74b01c4e0b53be526b0e3a0b73edede">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>H-Earth C2-R1 · Isolated R1.8 Review</title>
+  <link rel="stylesheet" href="./review.css">
+</head>
+<body>
+  <main id="r18-review-root" data-occurrence="H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001">
+    <header class="review-header">
+      <div>
+        <p class="eyebrow">Isolated non-default review occurrence</p>
+        <h1>H-Earth C2-R1</h1>
+        <p class="summary">R1.8 functional and human-review candidate. This occurrence does not replace the ordinary H-Earth route.</p>
+      </div>
+      <dl class="identity">
+        <div><dt>Candidate head</dt><dd id="candidate-head">c53362c6f74b01c4e0b53be526b0e3a0b73edede</dd></div>
+        <div><dt>Visual status</dt><dd>NOT_ESTABLISHED</dd></div>
+        <div><dt>Default route</dt><dd>UNCHANGED</dd></div>
+      </dl>
+    </header>
+
+    <section class="stage-shell" aria-label="C2-R1 interactive terrain review">
+      <canvas id="r18-review-canvas" width="1280" height="720" aria-label="Interactive H-Earth C2-R1 WebGL terrain"></canvas>
+      <div class="stage-overlay">
+        <output id="runtime-status">Starting candidate runtime…</output>
+        <span>Drag to look · wheel/pinch to travel · two-finger vertical motion to move</span>
+      </div>
+      <nav class="view-controls" aria-label="Representative review views">
+        <button type="button" data-view="LATERAL_BEACH_PROFILE">Lateral beach profile</button>
+        <button type="button" data-view="INLAND_TO_DEEP_WATER">Inland to deep water</button>
+        <button type="button" data-view="SHALLOW_WATER_AND_SEABED">Shallow water and seabed</button>
+        <button type="button" data-view="SANDBAR_AND_BATHYMETRY">Sandbar and bathymetry</button>
+        <button type="button" data-view="GROUND_TRAVERSAL">Ground traversal</button>
+        <button type="button" data-view="DISTANT_LANDSCAPE">Distant landscape</button>
+      </nav>
+    </section>
+
+    <section class="review-boundary" aria-label="Review boundary">
+      <p><strong>Review only.</strong> Automated checks establish engineering readiness, not visual acceptance. Physical user inspection is required for R1.8E.</p>
+      <p id="runtime-detail">Waiting for WebGL 2, exact review-mesh materialization, coastal water/swash response, and live frame advancement.</p>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const rows = [];
+      let sequence = 0;
+      const emit = (event, detail = null) => {
+        const row = {
+          sequence: ++sequence,
+          event,
+          performanceMilliseconds: Number(performance.now().toFixed(3)),
+          detail
+        };
+        rows.push(row);
+        console.info(`R1_8_TRACE:${JSON.stringify(row)}`);
+        return row;
+      };
+      window.__R1_8_RUNTIME_TRACE__ = Object.freeze({ rows, emit });
+      emit('DOCUMENT_ELEMENT_AVAILABLE');
+
+      window.addEventListener('error', event => {
+        emit('MODULE_EXCEPTION', {
+          message: event.message || null,
+          filename: event.filename || null,
+          line: event.lineno || null,
+          column: event.colno || null,
+          stack: event.error?.stack || null
+        });
+      });
+      window.addEventListener('unhandledrejection', event => {
+        emit('MODULE_EXCEPTION', {
+          kind: 'UNHANDLED_REJECTION',
+          reason: String(event.reason?.stack || event.reason)
+        });
+      });
+
+      const startReview = () => {
+        emit('DYNAMIC_IMPORT_STARTED');
+        document.documentElement.dataset.r1_8Bootstrap = 'importing';
+        import('./review.js').then(() => {
+          document.documentElement.dataset.r1_8Bootstrap = 'resolved';
+          emit('DYNAMIC_IMPORT_RESOLVED');
+        }).catch(error => {
+          document.documentElement.dataset.r1_8Bootstrap = 'failed';
+          emit('DYNAMIC_IMPORT_REJECTED', {
+            message: error?.message || String(error),
+            stack: error?.stack || null
+          });
+          console.error(error);
+        });
+      };
+      document.addEventListener('DOMContentLoaded', () => {
+        emit('DOMCONTENTLOADED');
+        startReview();
+      }, { once: true });
+    })();
+  </script>
+</body>
+</html>

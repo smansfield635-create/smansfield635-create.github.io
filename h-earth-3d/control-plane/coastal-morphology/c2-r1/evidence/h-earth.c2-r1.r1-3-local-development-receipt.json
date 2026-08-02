@@ -1,0 +1,72 @@
+{
+  "receiptType": "H_EARTH_C2_R1_R1_3_LOCAL_DEVELOPMENT_RECEIPT_v1",
+  "operation": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS",
+  "status": "FIRST_CURRENT_HEAD_FAILURE_DIAGNOSED_CORRECTION_READY",
+  "startingHead": "459cde065f461d0b4a8e53b1dc054059aa6abd20",
+  "rollbackBranch": "rollback/h-earth-c2-r1-r1-2-closed-001",
+  "sourceInputs": {
+    "r11ProfileBlob": "45cbd83337c14bc94ce7d173b25f2157cb4eb84f",
+    "r12SurfaceFrameBlob": "c5a439f2833a4def90944e5eb1d03005ddb41e70",
+    "geometryImmutable": true,
+    "normalsImmutable": true,
+    "lightingImmutable": true
+  },
+  "implementation": {
+    "sedimentMembershipSourceSha256": "7e3737b97b4347765c96deb06102e4be51e03b1b7c1533940f292f3141f74623",
+    "verificationSourceSha256": "cfab9bc3a4e5624ea74982fee056208ce0b5d71ef478f8d097e02864189abfce",
+    "requiredClassCount": 6,
+    "multifactorInputCount": 6,
+    "singleDistanceExclusiveClassification": false,
+    "naturalNonLuminousMaterialParameters": true,
+    "engineeringCaptureDefinitions": 3
+  },
+  "localAudit": {
+    "sampleCount": 6025,
+    "transectCount": 25,
+    "allRequiredSedimentClassesPresent": true,
+    "maximumNormalizationError": 4.440892098500626e-16,
+    "maximumCrossShoreMembershipDelta": 0.06592516202471099,
+    "maximumAlongshoreMembershipDelta": 0.033218414305548456,
+    "maximumCompositeColorDelta": 0.009506655265783173,
+    "maximumDominantWeight": 0.848789172833228,
+    "minimumTransitionOverlapWidth": 39,
+    "adaptiveTransitionPairCount": 5,
+    "membershipNormalization": "PASS",
+    "crossShoreContinuity": "PASS",
+    "alongshoreContinuity": "PASS",
+    "noHardMembershipSeams": "PASS",
+    "visibleBandingEngineeringGauge": "PASS"
+  },
+  "registryPathDisposition": {
+    "status": "ONE_TIME_BOUNDED_OVERLAY_INCLUDED_IN_COHERENT_COMMIT_SET",
+    "controlPrefix": "/h-earth-3d/control-plane/coastal-morphology/c2-r1/",
+    "candidateTerrainPathCount": 3,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false
+  },
+  "remoteClosureRequired": {
+    "r13Workflow": "H-Earth C2-R1 R1.3 Sediment Memberships",
+    "automaticRegistryPreflight": "H-Earth Automatic Repository Registry Preflight",
+    "currentHeadOnly": true
+  },
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "nextCheckpointBeforeRemotePass": "R1.3_REMAINS_OPEN",
+  "firstCurrentHeadFailure": {
+    "executionHead": "0a2443b1110851af5b0a28ff95c9bdb1d9f7b8ef",
+    "workflowRunId": 30649436376,
+    "firstBlocker": "crossShoreContinuity",
+    "maximumCrossShoreMembershipDelta": 0.43542285436100997,
+    "maximumAlongshoreMembershipDelta": 0.5692917116516295,
+    "diagnosis": [
+      "RAW_CURVATURE_AND_MOISTURE_FACTOR_RESPONSE_REQUIRED_BOUNDED_SPATIAL_MIXING",
+      "ALONGSHORE_GAUGE_USED_15_33_WORLD_UNIT_TRANSECT_SPACING_INSTEAD_OF_LOCAL_ADJACENCY"
+    ],
+    "correction": [
+      "BOUNDED_COASTAL_FRAME_WEIGHTED_MEMBERSHIP_KERNEL",
+      "ONE_WORLD_UNIT_ALONGSHORE_CONTINUITY_GAUGE"
+    ]
+  }
+}

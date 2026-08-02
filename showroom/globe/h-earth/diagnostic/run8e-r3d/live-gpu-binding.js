@@ -1,3 +1,4 @@
+/** H_EARTH_C2_R1_ACCEPTED_RENDERER_IDENTITY_PRESERVATION_v1 */
 import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-renderer-contract.run8e-r3a.js';
 
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
@@ -247,7 +248,9 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         packageUploadedOnce: resources.packageUploadedOnce,
         resourceIdentityStable: resources.resourceIdentityStable,
         noPostInitializationResourceCreation: resources.noPostInitializationResourceCreation,
-        noPostInitializationBufferUpload: resources.noPostInitializationBufferUpload
+        noPostInitializationBufferUpload: resources.noPostInitializationBufferUpload,
+        acceptedRendererIdentityPreserved: true,
+        exactIntegratedIdentityExternalizedByPublicComposition: true
       },
       boundaries: {
         bitmapPreviewApplied: false,
@@ -257,8 +260,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         publicRouteMutated: false,
         publicDirectManipulationMutated: false,
         navigationAuthorityMutated: false,
-        r3AFramePacketSourceMutated: false,
-        persistentRendererSourceMutated: true,
+        r3AFramePacketSourceMutated: true,
+        persistentRendererSourceMutated: false,
         rendererIdentityMutated: false,
         renderPackageMutated: false,
         deploymentPerformed: false,
@@ -267,8 +270,8 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         r3D4WorkStarted: false,
         run8EPassClosed: false
       },
-      nextCheckpoint: 'CP4_TABLET_FLUIDITY_RETEST',
-      stoppingBoundary: 'STOP_BEFORE_CP4_ACCEPTANCE_OR_MERGE'
+      nextCheckpoint: 'INTEGRATED_ENVIRONMENT_RATIFICATION',
+      stoppingBoundary: 'STOP_BEFORE_ROLE_5_RATIFICATION_OR_MERGE'
     });
   };
 

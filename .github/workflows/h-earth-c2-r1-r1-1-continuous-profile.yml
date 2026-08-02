@@ -1,0 +1,15 @@
+name: H-Earth C2-R1 R1.1 Continuous Coastal Profile — Closed
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  closed-checkpoint:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          echo 'R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY = PASS_CLOSED'
+          echo 'Automatic reruns are disabled. Management authorization is required to reopen.'

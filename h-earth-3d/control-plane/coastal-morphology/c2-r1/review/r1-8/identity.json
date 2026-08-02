@@ -1,0 +1,64 @@
+{
+  "manifestType": "H_EARTH_C2_R1_R1_8_EXACT_HEAD_REVIEW_OCCURRENCE_IDENTITY_v1",
+  "operation": "R1.8_INTEGRATED_FUNCTIONAL_VERIFICATION_PUBLICATION_AND_HUMAN_REVIEW",
+  "correctiveOperation": "R1.8B_C3_DETERMINISTIC_NONBLOCKING_REVIEW_MESH_MATERIALIZATION",
+  "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+  "productAuthorityHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "correctiveStartingHead": "c5ec156d0d00979ea2296972374b13f43678f4bf",
+  "correctiveStartRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c3-start-001",
+  "executionHeadAuthority": {
+    "pullRequest": "github.event.pull_request.head.sha",
+    "manual": "REQUIRED_EXPLICIT_CANDIDATE_HEAD_INPUT_MATCHING_REMOTE_TARGET_BRANCH",
+    "checkedOutHead": "git rev-parse HEAD",
+    "requiredComparison": "CHECKED_OUT_HEAD_EQUALS_EXPECTED_CANDIDATE_HEAD",
+    "exactExecutionHead": "RECORDED_BY_R1.8A_EXECUTION_LEDGER"
+  },
+  "pullRequestSyntheticMergeSha": {
+    "source": "github.sha",
+    "role": "RECORD_ONLY_NOT_CANDIDATE_AUTHORITY",
+    "usedAsExpectedCandidateHead": false
+  },
+  "historicalBlockerEvidence": {
+    "workflowRun": 30685867240,
+    "workflowJob": 91331392760,
+    "artifactId": 8813879754,
+    "artifactDigest": "sha256:5a3b9e822f19255c655e1208fa4aae3ec4f50e42a1da48d1598cff9ac4b4abf5"
+  },
+  "materializationHeadAuthority": "COMMIT_PINNED_BY_R1_8C_PUBLICATION_RECEIPT",
+  "nonDefault": true,
+  "independentlyRemovable": true,
+  "ordinaryHEarthRouteRedirected": false,
+  "publicDefaultHEarthRouteReplaced": false,
+  "productDefaultChanged": false,
+  "mainMutationAuthorized": false,
+  "pr418MergeAuthorized": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialRequired": true,
+  "reviewMeshAsset": {
+    "file": "h-earth.c2-r1.r1-8-review-mesh.bin",
+    "format": "H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1",
+    "byteLength": 340144,
+    "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+    "generationSource": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+    "sourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+    "generationOption": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH",
+    "completeSampleCount": 3577,
+    "candidateMaterialSampleCount": 3577,
+    "macroDifferentialCount": 3577,
+    "canonicalEncoding": "LITTLE_ENDIAN_FLOAT32_AND_UINT32_TYPED_ARRAY_BYTES",
+    "canonicalIdentity": {
+      "completeSampleCount": 3577,
+      "vertexCount": 5390,
+      "indexCount": 31104,
+      "positionBufferByteLength": 64680,
+      "normalBufferByteLength": 64680,
+      "materialControlBufferByteLength": 86240,
+      "indexBufferByteLength": 124416,
+      "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+      "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+      "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+      "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+    }
+  }
+}

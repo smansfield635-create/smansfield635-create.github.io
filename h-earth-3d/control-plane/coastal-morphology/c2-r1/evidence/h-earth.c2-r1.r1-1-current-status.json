@@ -1,0 +1,13 @@
+{
+  "checkpoint": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+  "status": "PASS_CLOSED",
+  "executionHead": "0833b53d6f3314628493337dcbb9a815a05e69b5",
+  "firstExecutionObservation": "VERIFICATION_TRANSECTS_EXCEEDED_FROZEN_WORLD_DOMAIN",
+  "secondExecutionObservation": "INLAND_BASELINE_GRADIENT_MISCLASSIFIED_AS_OWNED_COASTAL_PROFILE",
+  "finalCorrection": "CURVED_SHORELINE_PROJECTION_WEIGHT_TOLERANCE_BOUNDED_TO_0_02",
+  "hardBlockers": [],
+  "laterPassesStarted": false,
+  "nextCheckpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
+  "productDefaultMutated": false,
+  "publicRouteMutated": false
+}

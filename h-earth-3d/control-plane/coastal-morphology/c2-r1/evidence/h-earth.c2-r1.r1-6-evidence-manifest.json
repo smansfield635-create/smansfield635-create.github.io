@@ -1,0 +1,48 @@
+{
+  "receiptType": "H_EARTH_C2_R1_R1_6_DURABLE_EVIDENCE_MANIFEST_v1",
+  "operation": "R1.6_RESTRAINED_SWASH_FOAM_AND_WETNESS",
+  "startingHead": "7273cbb3dfd98f7fbca5d4e10ac51cd732678968",
+  "executionHead": "67c4da4211dfc5c1865d7e73d60e8afd77d32624",
+  "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+  "workflowRun": 30661250997,
+  "workflowJob": 91257745063,
+  "artifactId": 8805389087,
+  "artifactDigest": "sha256:cbdf49946b7ec15a55af70746c53c6053ec89350578c2af2524fc3681b3829a5",
+  "captureRepresentation": "DOWNSAMPLED_FROM_EXACT_WORKFLOW_ARTIFACT_FOR_DURABLE_REPOSITORY_EVIDENCE",
+  "sourceArtifactCaptureSha256": {
+    "PRE_SWASH": "60cc7f455ec947933f540d34db5a7e1f6a31da5af9adaf79124e5508d5401666",
+    "MAXIMUM_ADVANCE": "4d6dff7d752309e6f3d9d7da5849cc07be4023680507a03c1b96313b7ff04aa8",
+    "POST_RETREAT_WITH_RESIDUAL_WETNESS": "3f1925eef94049a6c905235828031cce69055e1927dea1f6911c6b792f74125c"
+  },
+  "files": [
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-6-verification.json",
+      "sha256": "1c8ad5940ef99881fd183ce627b700e412ed4210a128ad7b8764ac09214dc6eb",
+      "role": "PASSING_ENGINEERING_RECEIPT"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-6-engineering-captures/h-earth.c2-r1.r1-6-pre-swash.svg",
+      "sha256": "01d733983e25df3b8e5240bcaa00998393aa6d77375e23913402acd9309275da",
+      "role": "PRE_SWASH_ENGINEERING_CAPTURE"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-6-engineering-captures/h-earth.c2-r1.r1-6-maximum-advance.svg",
+      "sha256": "3b95e5f1511d74d372a6b0e54542ea979cf60e9108162b7967b5d2dea7f09716",
+      "role": "MAXIMUM_ADVANCE_ENGINEERING_CAPTURE"
+    },
+    {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-6-engineering-captures/h-earth.c2-r1.r1-6-post-retreat-residual-wetness.svg",
+      "sha256": "1de6381fe7e3eb706aa0f4091c5890c01bf4c067aa5fc326c16ada81adde1227",
+      "role": "POST_RETREAT_RESIDUAL_WETNESS_ENGINEERING_CAPTURE"
+    }
+  ],
+  "captureCount": 3,
+  "engineeringEvidenceOnly": true,
+  "registryPreflight": "PASS",
+  "upstreamAuthoritiesUnchanged": true,
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "firstBlocker": null
+}

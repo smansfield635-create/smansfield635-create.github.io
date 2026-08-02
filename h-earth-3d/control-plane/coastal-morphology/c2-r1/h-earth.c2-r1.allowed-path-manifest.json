@@ -1,0 +1,163 @@
+{
+  "program": "C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR",
+  "startingBaselineHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "allowedPathPrefixes": [
+    "preview/h-earth/c2-r1/physically-coherent-coastal-successor-001/",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/"
+  ],
+  "allowedExactPaths": [
+    ".github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml",
+    ".github/workflows/h-earth-c2-r1-r1-1-continuous-profile.yml",
+    ".github/workflows/h-earth-c2-r1-r1-2-normals-lighting.yml",
+    ".github/workflows/h-earth-c2-r1-r1-3-sediment-memberships.yml",
+    ".github/workflows/h-earth-c2-r1-r1-4-actual-depth-water-optics.yml",
+    ".github/workflows/h-earth-c2-r1-r1-5-depth-slope-breakers.yml",
+    ".github/workflows/h-earth-c2-r1-r1-6-restrained-swash-foam-wetness.yml",
+    ".github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml",
+    ".github/workflows/h-earth-c2-r1-complete-world-integration.yml",
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+    "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+    "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+    "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+    "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
+  ],
+  "protectedPathPrefixes": [
+    "showroom/globe/h-earth/",
+    "h-earth-3d/terrain/",
+    "h-earth-3d/environment/",
+    "h-earth-3d/integration/"
+  ],
+  "protectedPathExactExceptions": {
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js": {
+      "checkpoint": "R1.1_CONTINUOUS_BEACH_AND_BATHYMETRY",
+      "candidateOnly": true,
+      "immutableAfterCheckpoint": true,
+      "productionImportBound": false,
+      "publicRouteBound": false,
+      "failedC2SourceConsumed": false
+    },
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js": {
+      "checkpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
+      "candidateOnly": true,
+      "immutableAfterCheckpoint": true,
+      "sourceProfile": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "productionImportBound": false,
+      "rendererBound": false,
+      "publicRouteBound": false,
+      "failedC2SourceConsumed": false
+    },
+    "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js": {
+      "checkpoint": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS",
+      "candidateOnly": true,
+      "immutableAfterCheckpoint": true,
+      "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+      "ownsSedimentWeightsOnly": true,
+      "waterOpticsBound": false,
+      "rendererBound": false,
+      "publicRouteBound": false
+    },
+    "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js": {
+      "checkpoint": "R1.4_ACTUAL_DEPTH_WATER_OPTICS",
+      "candidateOnly": true,
+      "immutableAfterCheckpoint": true,
+      "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+      "immutableSedimentInput": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+      "ownsCandidateWaterOpticsOnly": true,
+      "breakersOrFoamBound": false,
+      "oceanAnimationBound": false,
+      "rendererBound": false,
+      "publicRouteBound": false
+    },
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js": {
+      "checkpoint": "R1.5_DEPTH_AND_SLOPE_ALIGNED_BREAKERS",
+      "candidateOnly": true,
+      "immutableAfterCheckpoint": true,
+      "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+      "immutableSedimentInput": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+      "immutableWaterOpticsInput": "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+      "ownsBreakerEligibilityAndIntensityOnly": true,
+      "fullSwashFoamOrWetnessBound": false,
+      "openOceanDisplacementBound": false,
+      "rendererBound": false,
+      "publicRouteBound": false
+    },
+    "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js": {
+      "checkpoint": "R1.6_RESTRAINED_SWASH_FOAM_AND_WETNESS",
+      "candidateOnly": true,
+      "immutableGeometryInput": "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+      "immutableNormalInput": "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+      "immutableSedimentInput": "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+      "immutableWaterOpticsInput": "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+      "immutableBreakerEligibilityInput": "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+      "ownsSwashFoamWetnessAndCandidateAnimationOnly": true,
+      "breakerEligibilityLawBound": false,
+      "openOceanDisplacementBound": false,
+      "rendererLifecycleBound": false,
+      "cameraOrTraversalBound": false,
+      "publicRouteBound": false
+    }
+  },
+  "registryPathDisposition": {
+    "overlayPath": "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
+    "controlPrefix": "/h-earth-3d/control-plane/coastal-morphology/c2-r1/",
+    "candidateExactPaths": 6,
+    "readOnlyResolutionOnly": true,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false
+  },
+  "closedPassWorkflowDisposition": {
+    "R1.3": "MANUAL_ONLY",
+    "R1.4": "MANUAL_ONLY",
+    "R1.5": "MANUAL_ONLY",
+    "reason": "PREVENT_AUTOMATIC_RERUN_OF_CLOSED_CHECKPOINTS"
+  },
+  "protectedAuthorities": [
+    "CAMERA",
+    "NAVIGATION",
+    "TRAVERSAL",
+    "TOUCH_AND_POINTER_INPUT",
+    "PUBLIC_RENDERER_LIFECYCLE",
+    "PUBLIC_GPU_PRESENTATION",
+    "MANOR_PLACEMENT",
+    "CAVERN_PLACEMENT",
+    "UNRELATED_ACCEPTED_PLACEMENTS",
+    "NONCOASTAL_WORLD_GEOMETRY",
+    "PUBLIC_DEFAULT_ROUTE"
+  ],
+  "completeWorldIntegrationOperation": {
+    "operationId": "H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001",
+    "startingHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+    "rollbackBranch": "rollback/h-earth-c2-r1-complete-world-integration-start-001",
+    "rollbackHead": "e03f211a472fd564b1ed4b8a00096c923a077528",
+    "pathCount": 11,
+    "exactMutablePaths": [
+      ".github/workflows/h-earth-c2-r1-complete-world-integration.yml",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json"
+    ],
+    "selectedHost": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html",
+    "isolatedNondefault": true,
+    "publicDefaultMutationAllowed": false,
+    "mainMutationAllowed": false,
+    "mergeAuthorityCreated": false,
+    "role1SelfCertificationAllowed": false
+  },
+  "candidateMayImportProtectedSourcesWithoutMutation": true,
+  "productDefaultMutationAllowed": false,
+  "failedC2CandidateImportAllowed": false,
+  "failedC2CandidateCopyAllowed": false
+}

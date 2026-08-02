@@ -1,0 +1,15 @@
+name: H-Earth C2-R1 R1.2 Normals and Lighting — Closed
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  closed-checkpoint:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          echo 'R1.2_RECOMPUTED_NORMALS_AND_LIGHTING = PASS_CLOSED'
+          echo 'Automatic reruns are disabled. Management authorization is required to reopen.'

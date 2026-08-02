@@ -1,0 +1,22 @@
+{
+  "checkpoint": "R1.2_RECOMPUTED_NORMALS_AND_LIGHTING",
+  "status": "PASS_CLOSED",
+  "startingHead": "5827a6bf0ac90bafd91ab3b373872313253e3cbc",
+  "executionHead": "518dce9fdd767f286dba88204673fb0bfdb4c044",
+  "receiptCommit": "33a8f8b04dcc5e639b4ad3261543283d816354f0",
+  "rollbackBranch": "rollback/h-earth-c2-r1-r1-1-closed-001",
+  "workflowRunId": 30646013033,
+  "workflowJobId": 91207444473,
+  "normalAuthorityAdded": true,
+  "normalsRecomputed": true,
+  "normalContinuityChecked": true,
+  "lightingProjectionAdded": true,
+  "lightingProjectionPresent": true,
+  "materialsStarted": false,
+  "waterOpticsStarted": false,
+  "rendererIntegrationStarted": false,
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "firstBlocker": null,
+  "nextCheckpoint": "R1.3_GRADUAL_SEDIMENT_MEMBERSHIPS"
+}

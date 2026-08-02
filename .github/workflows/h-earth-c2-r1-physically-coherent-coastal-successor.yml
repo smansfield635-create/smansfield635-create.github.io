@@ -1,0 +1,618 @@
+name: H-Earth C2-R1 R1.8D-C2 Ephemeral Same-Origin Review Tunnel
+
+on:
+  pull_request:
+    branches:
+      - integration/h-earth-c2-r1-baseline-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-physically-coherent-coastal-successor.yml'
+  workflow_dispatch:
+    inputs:
+      candidate_head:
+        description: Exact candidate branch head to serve
+        required: true
+        type: string
+      session_minutes:
+        description: Bounded tunnel lifetime in minutes
+        required: false
+        default: '120'
+        type: string
+
+concurrency:
+  group: h-earth-c2-r1-r1-8d-c2-ephemeral-review
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  execute-r1-8d-c2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 175
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GITHUB_TOKEN: ${{ github.token }}
+      R1_8_TARGET_BRANCH: agent/h-earth-c2-r1-physically-coherent-coastal-successor-001
+      R1_8_PRODUCT_AUTHORITY_HEAD: c53362c6f74b01c4e0b53be526b0e3a0b73edede
+      R1_8B_PASS_HEAD: c77ecf9f047daf8dc11adfbb3a3e100410ba6a31
+      R1_8D_C2_STARTING_HEAD: e7843b6074fbb0bdfc713cabbc6c42764561e9c3
+      R1_8D_C2_ROLLBACK_BRANCH: rollback/h-earth-c2-r1-r1-8d-c2-start-001
+      R1_8_REVIEW_ENTRY: h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html
+      R1_8_LOCAL_ORIGIN: http://127.0.0.1:4188
+      R1_8_ASSET_SHA256: 88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77
+      R1_8_ASSET_BYTE_LENGTH: '340144'
+      R1_8_SESSION_MINUTES_DEFAULT: '120'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.candidate_head }}
+          fetch-depth: 0
+
+      - name: Gate authorized R1.8D-C2 execution
+        id: gate
+        run: |
+          set -euo pipefail
+          message="$(git log -1 --format=%s)"
+          if [ "$message" = "R1.8D-C2: execute ephemeral same-origin review tunnel" ]; then
+            echo "execute=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "execute=false" >> "$GITHUB_OUTPUT"
+            echo "R1.8D-C2 skipped for non-launch commit: $message"
+          fi
+
+      - name: Resolve exact launch and rollback identities
+        id: identity
+        if: steps.gate.outputs.execute == 'true'
+        env:
+          EVENT_PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          EVENT_SYNTHETIC_SHA: ${{ github.sha }}
+          MANUAL_CANDIDATE_HEAD: ${{ inputs.candidate_head }}
+          MANUAL_SESSION_MINUTES: ${{ inputs.session_minutes }}
+        run: |
+          set -euo pipefail
+          case "$GITHUB_EVENT_NAME" in
+            pull_request)
+              expected_candidate_head="$EVENT_PR_HEAD"
+              session_minutes="$R1_8_SESSION_MINUTES_DEFAULT"
+              ;;
+            workflow_dispatch)
+              expected_candidate_head="$MANUAL_CANDIDATE_HEAD"
+              session_minutes="${MANUAL_SESSION_MINUTES:-$R1_8_SESSION_MINUTES_DEFAULT}"
+              ;;
+            *)
+              echo "Unsupported workflow event: $GITHUB_EVENT_NAME" >&2
+              exit 1
+              ;;
+          esac
+          [[ "$expected_candidate_head" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$session_minutes" =~ ^[0-9]+$ ]]
+          if [ "$session_minutes" -lt 15 ] || [ "$session_minutes" -gt 150 ]; then
+            echo "session_minutes must be between 15 and 150" >&2
+            exit 1
+          fi
+          checked_out_head="$(git rev-parse HEAD)"
+          remote_head="$(git ls-remote origin "refs/heads/$R1_8_TARGET_BRANCH" | awk '{print $1}')"
+          rollback_head="$(git ls-remote origin "refs/heads/$R1_8D_C2_ROLLBACK_BRANCH" | awk '{print $1}')"
+          if [ "$checked_out_head" != "$expected_candidate_head" ] || [ "$remote_head" != "$expected_candidate_head" ]; then
+            echo "Exact launch identity mismatch" >&2
+            echo "checked_out=$checked_out_head remote=$remote_head expected=$expected_candidate_head" >&2
+            exit 1
+          fi
+          if [ "$rollback_head" != "$R1_8D_C2_STARTING_HEAD" ]; then
+            echo "Corrective rollback mismatch: $rollback_head" >&2
+            exit 1
+          fi
+          git merge-base --is-ancestor "$R1_8_PRODUCT_AUTHORITY_HEAD" "$checked_out_head"
+          echo "expected_candidate_head=$expected_candidate_head" >> "$GITHUB_OUTPUT"
+          echo "session_minutes=$session_minutes" >> "$GITHUB_OUTPUT"
+          echo "synthetic_merge_sha=$EVENT_SYNTHETIC_SHA" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.execute == 'true'
+        with:
+          node-version: 22
+
+      - name: Install browser and tunnel runtime
+        if: steps.gate.outputs.execute == 'true'
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.52.0
+          npx playwright install --with-deps chromium
+          curl --fail --location --retry 3 \
+            https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 \
+            --output /tmp/cloudflared
+          chmod +x /tmp/cloudflared
+          /tmp/cloudflared --version
+          sha256sum /tmp/cloudflared | tee /tmp/r1-8d-c2-cloudflared.sha256
+
+      - name: Prepare exact commit worktree and same-origin server
+        if: steps.gate.outputs.execute == 'true'
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/r1-8d-c2-c77
+          git worktree add --detach /tmp/r1-8d-c2-c77 "$R1_8B_PASS_HEAD"
+          test "$(git -C /tmp/r1-8d-c2-c77 rev-parse HEAD)" = "$R1_8B_PASS_HEAD"
+          cat > /tmp/r1-8d-c2-server.py <<'PY'
+          import argparse
+          import http.server
+          import mimetypes
+          import os
+          import socketserver
+
+          mimetypes.add_type("text/html; charset=utf-8", ".html")
+          mimetypes.add_type("text/css; charset=utf-8", ".css")
+          mimetypes.add_type("text/javascript; charset=utf-8", ".js")
+          mimetypes.add_type("text/javascript; charset=utf-8", ".mjs")
+          mimetypes.add_type("application/json; charset=utf-8", ".json")
+          mimetypes.add_type("application/octet-stream", ".bin")
+
+          class Handler(http.server.SimpleHTTPRequestHandler):
+              def end_headers(self):
+                  self.send_header("Cache-Control", "no-store")
+                  self.send_header("X-Content-Type-Options", "nosniff")
+                  super().end_headers()
+
+              def log_message(self, format, *args):
+                  print("%s - - [%s] %s" % (self.client_address[0], self.log_date_time_string(), format % args), flush=True)
+
+          parser = argparse.ArgumentParser()
+          parser.add_argument("--directory", required=True)
+          parser.add_argument("--host", default="127.0.0.1")
+          parser.add_argument("--port", type=int, default=4188)
+          args = parser.parse_args()
+          os.chdir(args.directory)
+          with socketserver.ThreadingTCPServer((args.host, args.port), Handler) as server:
+              server.allow_reuse_address = True
+              server.serve_forever()
+          PY
+          python3 /tmp/r1-8d-c2-server.py \
+            --directory /tmp/r1-8d-c2-c77 \
+            --host 127.0.0.1 \
+            --port 4188 \
+            > /tmp/r1-8d-c2-origin.log 2>&1 &
+          echo $! > /tmp/r1-8d-c2-origin.pid
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --show-error \
+              "$R1_8_LOCAL_ORIGIN/$R1_8_REVIEW_ENTRY" \
+              --output /tmp/r1-8d-c2-local-index.html; then
+              break
+            fi
+            sleep 1
+          done
+          test -s /tmp/r1-8d-c2-local-index.html
+          curl --fail --silent --show-error --head \
+            "$R1_8_LOCAL_ORIGIN/$R1_8_REVIEW_ENTRY" \
+            | tee /tmp/r1-8d-c2-local-index.headers
+
+      - name: Verify local occurrence, establish tunnel, verify public occurrence, capture, preserve, and hold session
+        if: steps.gate.outputs.execute == 'true'
+        env:
+          R1_8_EXPECTED_CANDIDATE_HEAD: ${{ steps.identity.outputs.expected_candidate_head }}
+          R1_8_SESSION_MINUTES: ${{ steps.identity.outputs.session_minutes }}
+        run: |
+          set -euo pipefail
+          cleanup() {
+            rm -f .r1-8d-c2-runner.mjs
+            if [ -f /tmp/r1-8d-c2-tunnel.pid ]; then kill "$(cat /tmp/r1-8d-c2-tunnel.pid)" 2>/dev/null || true; fi
+            if [ -f /tmp/r1-8d-c2-origin.pid ]; then kill "$(cat /tmp/r1-8d-c2-origin.pid)" 2>/dev/null || true; fi
+          }
+          trap cleanup EXIT
+
+          cat > .r1-8d-c2-runner.mjs <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import { chromium } from 'playwright';
+          import {
+            buildReviewResourceGraph,
+            traceCarrier
+          } from './h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8d-c1-carrier-trace.js';
+          import {
+            verifyServedOccurrence
+          } from './h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-8d-c1-served-verifier.js';
+
+          const ROOT = process.cwd();
+          const SERVED_ROOT = '/tmp/r1-8d-c2-c77';
+          const STARTING_HEAD = 'e7843b6074fbb0bdfc713cabbc6c42764561e9c3';
+          const R1_8B_PASS_HEAD = 'c77ecf9f047daf8dc11adfbb3a3e100410ba6a31';
+          const PRODUCT_AUTHORITY_HEAD = 'c53362c6f74b01c4e0b53be526b0e3a0b73edede';
+          const ROLLBACK_BRANCH = 'rollback/h-earth-c2-r1-r1-8d-c2-start-001';
+          const REVIEW_ROOT = 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8';
+          const REVIEW_DOCUMENT = `${REVIEW_ROOT}/index.html`;
+          const ASSET_PATH = `${REVIEW_ROOT}/h-earth.c2-r1.r1-8-review-mesh.bin`;
+          const EVIDENCE_ROOT = path.join(ROOT, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8');
+          const CAPTURE_ROOT = path.join(EVIDENCE_ROOT, 'captures');
+          const LEDGER_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-8-phase-ledger.json');
+          const RECEIPT_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-8d-c2-public-occurrence-receipt.json');
+          const CAPTURE_MANIFEST_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-8d-capture-manifest.json');
+          const LOCAL_TRACE_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-8d-c2-local-same-origin-trace.json');
+          const PUBLIC_TRACE_PATH = path.join(EVIDENCE_ROOT, 'h-earth.c2-r1.r1-8d-c2-public-tunnel-trace.json');
+          const EXPECTED_ASSET = Object.freeze({
+            byteLength: 340144,
+            sha256: '88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77',
+            vertexCount: 5390,
+            indexCount: 31104,
+            finalGeometryByteIdentity: true,
+            finalMaterialControlByteIdentity: true
+          });
+          const VIEWS = Object.freeze([
+            'LATERAL_BEACH_PROFILE',
+            'INLAND_TO_DEEP_WATER',
+            'SHALLOW_WATER_AND_SEABED',
+            'SANDBAR_AND_BATHYMETRY',
+            'GROUND_TRAVERSAL',
+            'DISTANT_LANDSCAPE'
+          ]);
+          const now = () => new Date().toISOString();
+          const sha256 = value => crypto.createHash('sha256').update(value).digest('hex');
+          const requireCondition = (condition, code, detail = null) => {
+            if (condition) return;
+            const error = new Error(code);
+            error.code = code;
+            error.detail = detail;
+            throw error;
+          };
+          const readJson = file => JSON.parse(fs.readFileSync(file, 'utf8'));
+          const writeJson = (file, value) => {
+            fs.mkdirSync(path.dirname(file), { recursive: true });
+            fs.writeFileSync(file, `${JSON.stringify(value, null, 2)}\n`);
+          };
+          const gitBytes = repositoryPath => fs.readFileSync(path.join(SERVED_ROOT, repositoryPath));
+          const graph = buildReviewResourceGraph({
+            gitBytes,
+            reviewRoot: REVIEW_ROOT,
+            reviewDocument: REVIEW_DOCUMENT,
+            assetPath: ASSET_PATH
+          });
+          requireCondition(graph.length === 34, 'REQUIRED_RESOURCE_GRAPH_COUNT_MISMATCH', graph.length);
+
+          const publicBaseUrl = process.env.R1_8_PUBLIC_BASE_URL;
+          const localBaseUrl = `${process.env.R1_8_LOCAL_ORIGIN}/`;
+          requireCondition(/^https:\/\/[a-z0-9-]+\.trycloudflare\.com\/$/.test(publicBaseUrl), 'PUBLIC_TUNNEL_URL_INVALID', publicBaseUrl);
+          const localCarrier = { id: 'LOCAL_EXACT_SAME_ORIGIN', baseUrl: localBaseUrl, host: new URL(localBaseUrl).host };
+          const publicCarrier = { id: 'CLOUDFLARE_QUICK_TUNNEL', baseUrl: publicBaseUrl, host: new URL(publicBaseUrl).host };
+          const browser = await chromium.launch({
+            headless: true,
+            args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage']
+          });
+          try {
+            const localTrace = await traceCarrier({
+              browser,
+              carrier: localCarrier,
+              graph,
+              gitBytes,
+              reviewDocument: REVIEW_DOCUMENT,
+              assetPath: ASSET_PATH
+            });
+            writeJson(LOCAL_TRACE_PATH, {
+              traceType: 'H_EARTH_C2_R1_R1_8D_C2_LOCAL_EXACT_SAME_ORIGIN_TRACE_v1',
+              exactServedCommit: R1_8B_PASS_HEAD,
+              graph,
+              trace: localTrace,
+              recordedAt: now()
+            });
+            requireCondition(localTrace.direct.allHttp200, 'LOCAL_REQUIRED_RESOURCE_HTTP_FAILURE');
+            requireCondition(localTrace.direct.allByteIdentical, 'LOCAL_REQUIRED_RESOURCE_BYTE_IDENTITY_FAILURE');
+            requireCondition(localTrace.direct.allMimeCompatible, 'LOCAL_REQUIRED_RESOURCE_MIME_FAILURE');
+            requireCondition(localTrace.browser.ready && localTrace.browser.readyDurationMs < 60000, 'LOCAL_EXACT_OCCURRENCE_NO_LONGER_PASSES', localTrace.browser);
+
+            const publicTrace = await traceCarrier({
+              browser,
+              carrier: publicCarrier,
+              graph,
+              gitBytes,
+              reviewDocument: REVIEW_DOCUMENT,
+              assetPath: ASSET_PATH
+            });
+            const publicHttpRequests = publicTrace.browser.observed.requests
+              .map(row => row.url)
+              .filter(url => /^https?:\/\//.test(url));
+            const mixedOrigins = publicHttpRequests.filter(url => new URL(url).host !== publicCarrier.host);
+            const assetRow = publicTrace.direct.resources.find(row => row.repositoryPath === ASSET_PATH);
+            writeJson(PUBLIC_TRACE_PATH, {
+              traceType: 'H_EARTH_C2_R1_R1_8D_C2_PUBLIC_QUICK_TUNNEL_TRACE_v1',
+              exactServedCommit: R1_8B_PASS_HEAD,
+              graph,
+              trace: publicTrace,
+              mixedOrigins,
+              recordedAt: now()
+            });
+            requireCondition(publicTrace.direct.allHttp200, 'PUBLIC_REQUIRED_RESOURCE_HTTP_FAILURE');
+            requireCondition(publicTrace.direct.allByteIdentical, 'PUBLIC_RESOURCE_BYTES_DIFFER');
+            requireCondition(publicTrace.direct.allMimeCompatible, 'PUBLIC_MIME_TYPE_IS_INCOMPATIBLE');
+            requireCondition(publicTrace.direct.resources.every(row => row.finalUrlAfterRedirects === row.requestedUrl), 'PUBLIC_RESOURCE_REDIRECT_PRESENT');
+            requireCondition(publicTrace.classifications.length === 0, 'PUBLIC_CARRIER_CLASSIFICATION_PRESENT', publicTrace.classifications);
+            requireCondition(mixedOrigins.length === 0, 'PUBLIC_MIXED_ORIGIN_REQUEST_PRESENT', mixedOrigins);
+            requireCondition(assetRow?.responseByteLength === EXPECTED_ASSET.byteLength, 'PUBLIC_MESH_ASSET_BYTE_LENGTH_MISMATCH', assetRow);
+            requireCondition(assetRow?.responseSha256 === EXPECTED_ASSET.sha256, 'PUBLIC_MESH_ASSET_SHA256_MISMATCH', assetRow);
+            requireCondition(publicTrace.browser.ready && publicTrace.browser.readyDurationMs < 60000, 'PUBLIC_READY_SENTINEL_EXCEEDS_60_SECONDS', publicTrace.browser);
+
+            const served = await verifyServedOccurrence({
+              browser,
+              carrier: publicCarrier,
+              reviewDocument: REVIEW_DOCUMENT,
+              productAuthorityHead: PRODUCT_AUTHORITY_HEAD,
+              expectedAsset: EXPECTED_ASSET,
+              captureRoot: CAPTURE_ROOT,
+              repositoryRoot: ROOT,
+              candidateBytesHead: R1_8B_PASS_HEAD,
+              views: VIEWS
+            });
+            const runtimeRows = publicTrace.browser.pageState?.runtimeTrace || [];
+            const events = new Set(runtimeRows.map(row => row.event));
+            const requiredRuntimeEvents = [
+              'CANDIDATE_CONSTRUCTION_COMPLETED',
+              'ALL_GPU_BUFFERS_UPLOADED',
+              'FIRST_FRAME_PRESENTED',
+              'READY_SENTINEL_WRITTEN'
+            ];
+            for (const event of requiredRuntimeEvents) {
+              requireCondition(events.has(event), `PUBLIC_RUNTIME_EVENT_MISSING:${event}`, runtimeRows);
+            }
+            requireCondition(publicTrace.browser.pageState?.bootstrap === 'resolved', 'DYNAMIC_IMPORT_NOT_RESOLVED', publicTrace.browser.pageState);
+            requireCondition(served.desktop.frameAdvancement.delta > 2, 'PUBLIC_LIVE_FRAME_ADVANCEMENT_NOT_CONFIRMED');
+            requireCondition(served.captures.length === 6, 'SIX_REPRESENTATIVE_CAPTURES_NOT_CREATED');
+
+            const tunnelStartTimestamp = process.env.R1_8_TUNNEL_START_TIMESTAMP;
+            const expectedSessionEndTimestamp = process.env.R1_8_EXPECTED_SESSION_END_TIMESTAMP;
+            const receipt = {
+              receiptType: 'H_EARTH_C2_R1_R1_8D_C2_EPHEMERAL_SAME_ORIGIN_PUBLIC_OCCURRENCE_v1',
+              operation: 'R1.8D_C2_EPHEMERAL_SAME_ORIGIN_REVIEW_TUNNEL_AND_SERVED_CAPTURE_PREPARATION',
+              result: 'PASS_RECORDED_AWAITING_USER_DIFFERENTIAL',
+              publicOccurrenceUrl: new URL(REVIEW_DOCUMENT, publicCarrier.baseUrl).href,
+              publicBaseUrl: publicCarrier.baseUrl,
+              tunnelProvider: 'CLOUDFLARE_QUICK_TUNNEL',
+              tunnelStartTimestamp,
+              expectedSessionEndTimestamp,
+              exactServedCommit: R1_8B_PASS_HEAD,
+              reviewEntryPath: REVIEW_DOCUMENT,
+              localOrigin: process.env.R1_8_LOCAL_ORIGIN,
+              launchHead: process.env.R1_8_EXPECTED_CANDIDATE_HEAD,
+              rollbackBranch: ROLLBACK_BRANCH,
+              asset: EXPECTED_ASSET,
+              requiredResourceCount: graph.length,
+              allRequiredResourcesHttp200: publicTrace.direct.allHttp200,
+              allRequiredResourcesByteIdentical: publicTrace.direct.allByteIdentical,
+              allRequiredResourcesMimeCompatible: publicTrace.direct.allMimeCompatible,
+              mixedOriginRequestCount: mixedOrigins.length,
+              browserVerificationResult: {
+                domContentLoadedWithin60Seconds: Boolean(publicTrace.browser.navigation && publicTrace.browser.navigation.durationMs < 60000),
+                dynamicImportResolved: publicTrace.browser.pageState?.bootstrap === 'resolved',
+                webglContextEstablished: served.desktop.initialReceipt.webgl2ContextEstablished === true,
+                candidateConstructionCompleted: events.has('CANDIDATE_CONSTRUCTION_COMPLETED'),
+                gpuBuffersUploaded: events.has('ALL_GPU_BUFFERS_UPLOADED'),
+                firstFramePresented: events.has('FIRST_FRAME_PRESENTED'),
+                readySentinelWritten: events.has('READY_SENTINEL_WRITTEN'),
+                readySentinelWithin60Seconds: publicTrace.browser.readyDurationMs < 60000,
+                liveFrameAdvancementConfirmed: served.desktop.frameAdvancement.delta > 2,
+                cameraResponseFunctional: served.desktop.interactedReceipt.cameraRevision > served.desktop.initialReceipt.camera.revision,
+                touchInputFunctional: served.mobileReferenceEmulation.interactedReceipt.touchEventCount > 0,
+                navigationFunctional: served.desktop.interactedReceipt.navigationEventCount > 0 || served.desktop.interactedReceipt.pointerEventCount > 2,
+                noBitmapDragFallback: served.desktop.interactedReceipt.noBitmapDragFallback === true,
+                r1_7MacroExpressionActive: served.desktop.interactedReceipt.macroDifferentialCount > 0
+              },
+              referenceDeviceReviewAvailable: true,
+              capturesCreated: true,
+              captureCount: served.captures.length,
+              productRegressionEstablished: false,
+              candidateFailureEstablished: false,
+              publicDefaultRouteMutated: false,
+              productDefaultMutated: false,
+              mainMutated: false,
+              pr418Merged: false,
+              r1_8eStarted: false,
+              visualSuccessorStatus: 'NOT_ESTABLISHED',
+              recordedAt: now()
+            };
+            writeJson(RECEIPT_PATH, receipt);
+            writeJson(CAPTURE_MANIFEST_PATH, {
+              manifestType: 'H_EARTH_C2_R1_R1_8D_REPRESENTATIVE_CAPTURE_PACKAGE_v3',
+              result: 'PASS_CAPTURE_PACKAGE_READY_FOR_HUMAN_REVIEW',
+              publicOccurrenceUrl: receipt.publicOccurrenceUrl,
+              exactServedCommit: R1_8B_PASS_HEAD,
+              browserVersion: served.browserVersion,
+              captureCount: served.captures.length,
+              captures: served.captures,
+              automatedCapturesAreSupportingEvidenceOnly: true,
+              visualAcceptanceEstablished: false,
+              userDifferentialRequired: true,
+              recordedAt: now()
+            });
+
+            const ledger = readJson(LEDGER_PATH);
+            if (ledger.firstBlocker && !ledger.r1_8dC2PriorStaticCarrierBlocker) {
+              ledger.r1_8dC2PriorStaticCarrierBlocker = ledger.firstBlocker;
+            }
+            ledger.correctiveOperation = receipt.operation;
+            ledger.correctiveStartingHead = STARTING_HEAD;
+            ledger.correctiveStartRollbackBranch = ROLLBACK_BRANCH;
+            ledger.controllingStatus = 'R1.8D_PASS_RECORDED_AWAITING_USER_DIFFERENTIAL';
+            ledger.firstBlocker = null;
+            ledger.referenceDeviceReviewAvailable = true;
+            ledger.userDifferentialReady = true;
+            ledger.visualSuccessorStatus = 'NOT_ESTABLISHED';
+            ledger.productDefaultMutated = false;
+            ledger.publicDefaultRouteMutated = false;
+            ledger.mainMutated = false;
+            ledger.pr418Merged = false;
+            ledger.r1_8eStarted = false;
+            const phase = {
+              id: 'R1.8D_C2_EPHEMERAL_SAME_ORIGIN_REVIEW_TUNNEL_AND_SERVED_CAPTURE_PREPARATION',
+              status: 'PASS_RECORDED_AWAITING_USER_DIFFERENTIAL',
+              recordedAt: now(),
+              evidence: {
+                receiptPath: path.relative(ROOT, RECEIPT_PATH).split(path.sep).join('/'),
+                receiptSha256: sha256(fs.readFileSync(RECEIPT_PATH)),
+                publicOccurrenceUrl: receipt.publicOccurrenceUrl,
+                exactServedCommit: R1_8B_PASS_HEAD,
+                requiredResourceCount: graph.length,
+                allRequiredResourcesByteIdentical: true,
+                allRequiredResourcesMimeCompatible: true,
+                captureManifestPath: path.relative(ROOT, CAPTURE_MANIFEST_PATH).split(path.sep).join('/'),
+                captureManifestSha256: sha256(fs.readFileSync(CAPTURE_MANIFEST_PATH)),
+                captureCount: served.captures.length,
+                r1_8bMaterialization: 'PASS_RECORDED_DO_NOT_REPEAT',
+                r1_8bLocalFunctionalVerification: 'PASS_RECORDED_DO_NOT_REOPEN',
+                r1_8dC1StaticCarrierTrace: 'PASS_DIAGNOSIS_COMPLETE'
+              },
+              blocker: null
+            };
+            const index = ledger.phases.findIndex(row => row.id === phase.id);
+            if (index >= 0) ledger.phases[index] = phase;
+            else ledger.phases.push(phase);
+            ledger.completedPhaseCount = ledger.phases.filter(row => String(row.status).startsWith('PASS')).length;
+            ledger.updatedAt = now();
+            writeJson(LEDGER_PATH, ledger);
+
+            fs.writeFileSync('/tmp/r1-8d-c2-public-url.txt', receipt.publicOccurrenceUrl);
+            fs.writeFileSync('/tmp/r1-8d-c2-public-base-url.txt', publicCarrier.baseUrl);
+            fs.writeFileSync('/tmp/r1-8d-c2-result.json', `${JSON.stringify({
+              receipt,
+              localReadyDurationMs: localTrace.browser.readyDurationMs,
+              publicReadyDurationMs: publicTrace.browser.readyDurationMs,
+              captureCount: served.captures.length
+            }, null, 2)}\n`);
+          } finally {
+            await browser.close();
+          }
+          NODE
+
+          local_url="$R1_8_LOCAL_ORIGIN/$R1_8_REVIEW_ENTRY"
+          curl --fail --silent --show-error "$local_url" >/dev/null
+
+          /tmp/cloudflared tunnel --no-autoupdate --url "$R1_8_LOCAL_ORIGIN" \
+            > /tmp/r1-8d-c2-cloudflared.log 2>&1 &
+          echo $! > /tmp/r1-8d-c2-tunnel.pid
+          tunnel_start="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          public_base=""
+          for attempt in $(seq 1 90); do
+            public_base="$(grep -Eo 'https://[a-z0-9-]+\.trycloudflare\.com' /tmp/r1-8d-c2-cloudflared.log | head -n1 || true)"
+            if [ -n "$public_base" ]; then break; fi
+            if ! kill -0 "$(cat /tmp/r1-8d-c2-tunnel.pid)" 2>/dev/null; then
+              cat /tmp/r1-8d-c2-cloudflared.log >&2
+              exit 1
+            fi
+            sleep 1
+          done
+          if [ -z "$public_base" ]; then
+            cat /tmp/r1-8d-c2-cloudflared.log >&2
+            echo "TUNNEL_CANNOT_BE_ESTABLISHED" >&2
+            exit 1
+          fi
+          public_base="${public_base%/}/"
+          expected_end="$(date -u -d "+${R1_8_SESSION_MINUTES} minutes" +%Y-%m-%dT%H:%M:%SZ)"
+          public_ready=false
+          for attempt in $(seq 1 90); do
+            if curl --fail --silent --show-error \
+              "${public_base}${R1_8_REVIEW_ENTRY}" \
+              --output /tmp/r1-8d-c2-public-index.html; then
+              public_ready=true
+              break
+            fi
+            sleep 1
+          done
+          if [ "$public_ready" != true ] || [ ! -s /tmp/r1-8d-c2-public-index.html ]; then
+            cat /tmp/r1-8d-c2-cloudflared.log >&2
+            echo "TUNNEL_PUBLIC_DOCUMENT_UNREACHABLE" >&2
+            exit 1
+          fi
+
+          R1_8_PUBLIC_BASE_URL="$public_base" \
+          R1_8_TUNNEL_START_TIMESTAMP="$tunnel_start" \
+          R1_8_EXPECTED_SESSION_END_TIMESTAMP="$expected_end" \
+          node ./.r1-8d-c2-runner.mjs
+          rm -f .r1-8d-c2-runner.mjs
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8-phase-ledger.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8d-c2-public-occurrence-receipt.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8d-c2-local-same-origin-trace.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8d-c2-public-tunnel-trace.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8d-capture-manifest.json \
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/captures
+          git commit -m "R1.8D-C2: preserve live same-origin occurrence and capture package"
+          resulting_head="$(git rev-parse HEAD)"
+          git push origin "HEAD:$R1_8_TARGET_BRANCH"
+
+          git diff --name-only "$R1_8D_C2_STARTING_HEAD" "$resulting_head" \
+            | grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+            | sort -u > /tmp/r1-8d-c2-resulting-paths.txt || true
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/r1-8d-c2-resulting-paths.txt \
+            --task "Exact resulting-head R1.8D-C2 ephemeral same-origin occurrence and capture package" \
+            --mutation-intent \
+            --output /tmp/r1-8d-c2-resulting-registry-preflight.json
+          cat /tmp/r1-8d-c2-resulting-registry-preflight.json
+          node -e '
+            const fs = require("fs");
+            const value = JSON.parse(fs.readFileSync("/tmp/r1-8d-c2-resulting-registry-preflight.json", "utf8"));
+            if (value.finalDisposition !== "PASS") process.exit(1);
+          '
+
+          occurrence_url="$(cat /tmp/r1-8d-c2-public-url.txt)"
+          {
+            echo "## H-Earth R1.8D-C2 live review occurrence"
+            echo
+            echo "- URL: $occurrence_url"
+            echo "- Exact served commit: \`$R1_8B_PASS_HEAD\`"
+            echo "- Tunnel start: $tunnel_start"
+            echo "- Expected session end: $expected_end"
+            echo "- Resulting evidence head: \`$resulting_head\`"
+            echo "- Registry preflight: PASS"
+            echo "- Captures: 6"
+            echo "- R1.8E: NOT_STARTED"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          comment_body="$(cat <<EOF
+          R1.8D-C2 live same-origin review occurrence is available.
+
+          **Physical review URL:** $occurrence_url
+
+          - Exact served commit: \`$R1_8B_PASS_HEAD\`
+          - Tunnel start: \`$tunnel_start\`
+          - Expected session end: \`$expected_end\`
+          - Browser/public verification: PASS
+          - All 34 required resources: HTTP 200, exact bytes, compatible MIME
+          - Six representative captures: created and identity-bound
+          - Evidence head: \`$resulting_head\`
+          - R1.8E: not started; user differential required
+
+          This Quick Tunnel is temporary. Expiration is an occurrence-liveness event and does not reopen R1.8B.
+          EOF
+          )"
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/issues/418/comments" \
+            -f body="$comment_body" \
+            > /tmp/r1-8d-c2-pr-comment.json
+
+          echo "PUBLIC_OCCURRENCE_URL=$occurrence_url"
+          echo "RESULTING_HEAD=$resulting_head"
+          echo "SESSION_END=$expected_end"
+          echo "Holding verified tunnel for $R1_8_SESSION_MINUTES minutes."
+          sleep "$((R1_8_SESSION_MINUTES * 60))"
+
+      - name: Upload bounded R1.8D-C2 evidence
+        if: always() && steps.gate.outputs.execute == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-r1-8d-c2-ephemeral-same-origin-evidence
+          path: |
+            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8
+            /tmp/r1-8d-c2-result.json
+            /tmp/r1-8d-c2-resulting-registry-preflight.json
+            /tmp/r1-8d-c2-resulting-paths.txt
+            /tmp/r1-8d-c2-cloudflared.log
+            /tmp/r1-8d-c2-cloudflared.sha256
+            /tmp/r1-8d-c2-origin.log
+            /tmp/r1-8d-c2-local-index.headers
+            /tmp/r1-8d-c2-pr-comment.json
+          if-no-files-found: warn
+          retention-days: 30

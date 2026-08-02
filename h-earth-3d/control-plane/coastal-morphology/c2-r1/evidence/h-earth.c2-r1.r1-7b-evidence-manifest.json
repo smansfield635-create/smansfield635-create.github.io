@@ -1,0 +1,80 @@
+{
+  "manifestType": "H_EARTH_C2_R1_R1_7B_EVIDENCE_MANIFEST_v1",
+  "operation": "R1.7B_BOUNDED_BAKED_MACRO_CONTROL_FIELD",
+  "status": "PASS_ENGINEERING_DURABLE_CLOSURE_COMMITTED",
+  "startingHead": "0498da0f3f4fe522659830499bd55ef8f018f776",
+  "passingExecutionHead": "f1ba63b088f89c6539d92d5293ba1eb651644480",
+  "durableClosureHead": "COMMIT_CONTAINING_THIS_RECORD",
+  "startRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-start-001",
+  "closedRollbackBranch": "rollback/h-earth-c2-r1-r1-7b-closed-001",
+  "workflow": {
+    "runId": 30679342931,
+    "jobId": 91313062274,
+    "result": "PASS",
+    "artifactId": 8811649872,
+    "artifactName": "h-earth-c2-r1-r1-7b-engineering-evidence",
+    "artifactDigest": "sha256:6516110abe68a14160b64b4dbc0ed5dd3996128260806d4c21f773edb82b9ae4",
+    "artifactSizeBytes": 32980
+  },
+  "exactWorkflowArtifactFiles": {
+    "h-earth.c2-r1.r1-7b-verification.json": {
+      "sha256": "0927022ab382e046a7d5fa32e81e7ebe64b6876bf22576b1b5916f024222d003"
+    },
+    "r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-albedo-roughness.svg": {
+      "sha256": "78a1915a82415b29ca9ae844f5ce1ef3871a518a071fc0b597498eaa913ee615"
+    },
+    "r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-cavity-normal.svg": {
+      "sha256": "4fb1c6379500d1ea81c68fbf3896e82f9faf49005dbcc9052461940638ca8bee"
+    },
+    "r1-7b-engineering-captures/h-earth.c2-r1.r1-7b-coastal-preservation.svg": {
+      "sha256": "018fac4b0f6f6038444116d01fdd6b760000063e620290491a18ec45589b2938"
+    }
+  },
+  "durableRepositoryProjections": {
+    "h-earth.c2-r1.r1-7b-albedo-roughness.svg": {
+      "projection": "DOCUMENTED_DOWNSAMPLED_5_BY_10_PROJECTION_OF_EXACT_WORKFLOW_CAPTURE",
+      "sourceSha256": "78a1915a82415b29ca9ae844f5ce1ef3871a518a071fc0b597498eaa913ee615",
+      "sha256": "254087169e9188d3daec07ea155720e16b886f55f2f6a1eb524ae8b2ad083ebc",
+      "gitBlobSha": "ecaa17fe6498b1f96f74e49feef924cabffdec4e"
+    },
+    "h-earth.c2-r1.r1-7b-cavity-normal.svg": {
+      "projection": "DOCUMENTED_DOWNSAMPLED_5_BY_10_PROJECTION_OF_EXACT_WORKFLOW_CAPTURE",
+      "sourceSha256": "4fb1c6379500d1ea81c68fbf3896e82f9faf49005dbcc9052461940638ca8bee",
+      "sha256": "8592ada0e19fcd321857510bb86556eea9022ef2c750996fc5965d06c5f0c4d9",
+      "gitBlobSha": "cfaf37ad796ded85d424516f8cb4220d78697ef8"
+    },
+    "h-earth.c2-r1.r1-7b-coastal-preservation.svg": {
+      "projection": "DOCUMENTED_DOWNSAMPLED_5_BY_10_PROJECTION_OF_EXACT_WORKFLOW_CAPTURE",
+      "sourceSha256": "018fac4b0f6f6038444116d01fdd6b760000063e620290491a18ec45589b2938",
+      "sha256": "7ec8f9c3af5c3dde02c7b72f0705ce9b1b01be133bf40d218150460f00bc2471",
+      "gitBlobSha": "d35ec2a1a61c622bf116c9805e3732b53dc0192f"
+    }
+  },
+  "implementationBlobs": {
+    ".github/workflows/h-earth-c2-r1-r1-7b-baked-macro-control-field.yml": "baef22736bbc6235c4d54cfda57b6fe993d1a74a",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js": "a97b3df57ae01626a2ff5cbedf510e2afdf06912",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.r1-7b-baked-macro-control-field.mjs": "74b6c1b4b9f69a7ff56cc58467c99168fbc5f959",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/tools/h-earth.c2-r1.r1-7b-bake-macro-control-field.mjs": "d9dac1e6e14e956432d8d9122a4c9b498cb0a3dc"
+  },
+  "immutableUpstreamBlobs": {
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js": "45cbd83337c14bc94ce7d173b25f2157cb4eb84f",
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js": "c5a439f2833a4def90944e5eb1d03005ddb41e70",
+    "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js": "3eb689c5a030c40ebede52c6eaef300207742a7c",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js": "c0e103b0cbb51eac30105f0e8ae68c37e8fac281",
+    "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js": "2094bcafb1e5ae1c291066a9cf1dd3820a22d0b1",
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js": "1ac2ee902fc0cfb74413db37dd139bc51dbd9e46",
+    "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js": "0fa4b8434a5883e9858d2b73bb2e05e4b1a60c5c",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.landform-analysis.js": "dba3fe2898b127addaa5a62081d466e55370da72"
+  },
+  "fieldValuesSha256": "4377ff9e9fc60a6218478b289acbff99075eab08d4e518a6eb68b1a12b98f866",
+  "representativeEngineeringCaptureCount": 3,
+  "capturePurpose": "ENGINEERING_BAKED_FIELD_CORRESPONDENCE_CONTINUITY_AND_COASTAL_PRESERVATION_ONLY",
+  "bakedMacroControlFieldCreated": true,
+  "rendererSamplingIntegrationCreated": false,
+  "wholeWorldBakeCreated": false,
+  "upstreamAuthoritiesUnchanged": true,
+  "productDefaultMutated": false,
+  "publicRouteMutated": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false
+}

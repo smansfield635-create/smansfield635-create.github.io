@@ -1,0 +1,1657 @@
+{
+  "receiptType": "H_EARTH_C2_R1_R1_8B_INTEGRATED_FUNCTIONAL_VERIFICATION_v2",
+  "operation": "R1.8B_C3_DETERMINISTIC_NONBLOCKING_REVIEW_MESH_MATERIALIZATION",
+  "result": "PASS_ENGINEERING_READY_FOR_ISOLATED_PUBLICATION",
+  "sourceCandidateHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+  "verificationHead": "fef4ee12fd092d730c0a9e0a5c7dbdc648a0681c",
+  "localOccurrence": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+  "materializationIdentity": {
+    "receiptType": "H_EARTH_C2_R1_R1_8B_C3_EXACT_REVIEW_MESH_MATERIALIZATION_IDENTITY_v1",
+    "operation": "R1.8B_C3_DETERMINISTIC_NONBLOCKING_REVIEW_MESH_MATERIALIZATION",
+    "result": "PASS_EXACT_PREMATERIALIZED_REVIEW_MESH_READY_FOR_RUNTIME_VERIFICATION",
+    "option": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH",
+    "sourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+    "correctiveStartingHead": "c5ec156d0d00979ea2296972374b13f43678f4bf",
+    "correctiveRollbackBranch": "rollback/h-earth-c2-r1-r1-8b-c3-start-001",
+    "asset": {
+      "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+      "format": "H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1",
+      "byteLength": 340144,
+      "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77"
+    },
+    "before": {
+      "completeSampleCount": 3577,
+      "vertexCount": 5390,
+      "indexCount": 31104,
+      "positionBufferByteLength": 64680,
+      "normalBufferByteLength": 64680,
+      "materialControlBufferByteLength": 86240,
+      "indexBufferByteLength": 124416,
+      "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+      "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+      "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+      "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+    },
+    "after": {
+      "completeSampleCount": 3577,
+      "vertexCount": 5390,
+      "indexCount": 31104,
+      "positionBufferByteLength": 64680,
+      "normalBufferByteLength": 64680,
+      "materialControlBufferByteLength": 86240,
+      "indexBufferByteLength": 124416,
+      "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+      "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+      "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+      "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+    },
+    "completeSampleCountIdentical": true,
+    "vertexCountIdentical": true,
+    "indexCountIdentical": true,
+    "finalGeometryByteIdentity": true,
+    "finalMaterialControlByteIdentity": true,
+    "completeSampleCount": 3577,
+    "candidateMaterialSampleCount": 3577,
+    "macroDifferentialCount": 3577,
+    "generationDurationMs": 248042.202297,
+    "r1_7bFieldValuesSha256": "4377ff9e9fc60a6218478b289acbff99075eab08d4e518a6eb68b1a12b98f866",
+    "singleRuntimeSamplePreserved": true,
+    "authorizedChannelSetPreserved": true,
+    "materialParametersUnchanged": true,
+    "r1_7aByteIdentical": true,
+    "r1_7bByteIdentical": true,
+    "r1_7cSamplingArchitectureUnchanged": true,
+    "r1_7dEngineeringResultUnchanged": true
+  },
+  "runtimeTrace": {
+    "path": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-8/h-earth.c2-r1.r1-8b-c3-runtime-trace.json",
+    "sha256": "bb294b9bc173a65d39600718f3a399b917ddc96800d3339884c4ec45989d72b3"
+  },
+  "webglRendererStarts": true,
+  "candidateWorldLoads": true,
+  "cameraResponseFunctional": true,
+  "touchInputFunctional": true,
+  "navigationFunctional": true,
+  "liveFrameAdvancementConfirmed": true,
+  "noBitmapDragFallback": true,
+  "noRendererLifecycleRegression": true,
+  "r1_7MacroExpressionActive": true,
+  "performanceUsableForPhysicalReview": true,
+  "exactReviewGeometryPreserved": true,
+  "completeSampleCountIdentical": true,
+  "vertexCountIdentical": true,
+  "indexCountIdentical": true,
+  "finalGeometryByteIdentity": true,
+  "finalMaterialControlByteIdentity": true,
+  "immutableReadback": {
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.landform-analysis.js": "dba3fe2898b127addaa5a62081d466e55370da72",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js": "a97b3df57ae01626a2ff5cbedf510e2afdf06912",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js": "c0e103b0cbb51eac30105f0e8ae68c37e8fac281",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js": "d4681c64230e75c362daa702a60c6f2fee3720a4",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7a-verification.json": "000c72cd37b12c7e7abfe783f26bdd139d69901d",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7b-verification.json": "c15d880bda64279f220ee810721909941f4b6424",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/h-earth.c2-r1.r1-7c-verification.json": "5b7a9650a5f39ffee2ba394334fb24806d771d0e",
+    "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/r1-7d/h-earth.c2-r1.r1-7d-verification.json": "55cb8397e8c57e541ae014a9df0232c64459087e",
+    "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js": "45cbd83337c14bc94ce7d173b25f2157cb4eb84f",
+    "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js": "c5a439f2833a4def90944e5eb1d03005ddb41e70",
+    "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js": "3eb689c5a030c40ebede52c6eaef300207742a7c",
+    "h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js": "2094bcafb1e5ae1c291066a9cf1dd3820a22d0b1",
+    "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js": "1ac2ee902fc0cfb74413db37dd139bc51dbd9e46",
+    "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js": "0fa4b8434a5883e9858d2b73bb2e05e4b1a60c5c"
+  },
+  "desktop": {
+    "response": {
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "contentType": "text/html"
+    },
+    "domContentLoadedDurationMs": 19.355260000011185,
+    "readyDurationMs": 811.9761930000095,
+    "traceRows": [
+      {
+        "sequence": 1,
+        "event": "DOCUMENT_ELEMENT_AVAILABLE",
+        "performanceMilliseconds": 12.7,
+        "detail": null
+      },
+      {
+        "sequence": 2,
+        "event": "DOMCONTENTLOADED",
+        "performanceMilliseconds": 13.3,
+        "detail": null
+      },
+      {
+        "sequence": 3,
+        "event": "DYNAMIC_IMPORT_STARTED",
+        "performanceMilliseconds": 13.4,
+        "detail": null
+      },
+      {
+        "sequence": 4,
+        "event": "WEBGL_CONTEXT_REQUESTED",
+        "performanceMilliseconds": 178.9,
+        "detail": null
+      },
+      {
+        "sequence": 5,
+        "event": "WEBGL_CONTEXT_ESTABLISHED",
+        "performanceMilliseconds": 372.9,
+        "detail": {
+          "established": true
+        }
+      },
+      {
+        "sequence": 6,
+        "event": "CANDIDATE_CONSTRUCTION_STARTED",
+        "performanceMilliseconds": 375.7,
+        "detail": {
+          "option": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH"
+        }
+      },
+      {
+        "sequence": 7,
+        "event": "MAIN_THREAD_HEARTBEAT",
+        "performanceMilliseconds": 401.1,
+        "detail": {
+          "count": 1,
+          "driftMilliseconds": 0.30000000004656613
+        }
+      },
+      {
+        "sequence": 8,
+        "event": "FIRST_CONSTRUCTION_BATCH_COMPLETED",
+        "performanceMilliseconds": 418,
+        "detail": {
+          "batchIndex": 0,
+          "name": "TERRAIN_POSITIONS",
+          "byteLength": 42924,
+          "durationMilliseconds": 0
+        }
+      },
+      {
+        "sequence": 9,
+        "event": "LAST_CONSTRUCTION_BATCH_COMPLETED",
+        "performanceMilliseconds": 422.7,
+        "detail": {
+          "batchIndex": 7,
+          "name": "WATER_INDICES",
+          "byteLength": 41472,
+          "durationMilliseconds": 0
+        }
+      },
+      {
+        "sequence": 10,
+        "event": "CANDIDATE_CONSTRUCTION_COMPLETED",
+        "performanceMilliseconds": 425.7,
+        "detail": {
+          "completeSampleCount": 3577,
+          "durationMilliseconds": 49.90000000002328,
+          "mainThreadHeartbeatCount": 1,
+          "longestSingleMainThreadBlockMilliseconds": 0.30000000004656613
+        }
+      },
+      {
+        "sequence": 11,
+        "event": "FIRST_GPU_BUFFER_UPLOAD",
+        "performanceMilliseconds": 426,
+        "detail": {
+          "byteLength": 42924
+        }
+      },
+      {
+        "sequence": 12,
+        "event": "ALL_GPU_BUFFERS_UPLOADED",
+        "performanceMilliseconds": 426.8,
+        "detail": {
+          "uploadCount": 8,
+          "durationMilliseconds": 0.8999999999650754
+        }
+      },
+      {
+        "sequence": 13,
+        "event": "FIRST_FRAME_PRESENTED",
+        "performanceMilliseconds": 803.3,
+        "detail": {
+          "frameCount": 1
+        }
+      },
+      {
+        "sequence": 14,
+        "event": "READY_SENTINEL_WRITTEN",
+        "performanceMilliseconds": 804.8,
+        "detail": {
+          "totalReadyDurationMilliseconds": 428.0999999999767,
+          "firstFramePresented": true
+        }
+      },
+      {
+        "sequence": 15,
+        "event": "DYNAMIC_IMPORT_RESOLVED",
+        "performanceMilliseconds": 805.4,
+        "detail": null
+      }
+    ],
+    "receipt": {
+      "schema": "H_EARTH_C2_R1_R1_8_REVIEW_RUNTIME_RECEIPT_v2",
+      "sourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+      "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+      "contractId": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "rendererContract": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "meshContractId": "H_EARTH_C2_R1_R1_8_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH_v1",
+      "materializationOption": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH",
+      "asset": {
+        "file": "h-earth.c2-r1.r1-8-review-mesh.bin",
+        "byteLength": 340144,
+        "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+        "fetchDurationMs": 7.2000000000116415,
+        "format": "H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1"
+      },
+      "webgl2ContextEstablished": true,
+      "meshReady": true,
+      "frameCount": 3,
+      "presentationCount": 3,
+      "candidateMaterialSampleCount": 3577,
+      "waterBreakerSwashRuntimeSampleCount": 1,
+      "macroDifferentialCount": 3577,
+      "macroExpressionActive": true,
+      "coastalMaterialChainActive": true,
+      "waterBreakerSwashChainActive": true,
+      "pointerEventCount": 0,
+      "touchEventCount": 0,
+      "navigationEventCount": 0,
+      "cameraRevision": 1,
+      "camera": {
+        "position": [
+          0,
+          58,
+          -205
+        ],
+        "target": [
+          0,
+          12,
+          112
+        ],
+        "direction": [
+          0,
+          -0.143606,
+          0.989635
+        ],
+        "fovDegrees": 44,
+        "revision": 1,
+        "view": "DISTANT_LANDSCAPE"
+      },
+      "lastWaterSample": {
+        "foamIntensity": 0.5454637005423246,
+        "foamOpacity": 0.3709153163687808,
+        "temporaryWetness": 0,
+        "waterSurfaceOpacity": 0.34327498525117606
+      },
+      "meshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "expectedMeshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "exactReviewGeometryPreserved": true,
+      "construction": {
+        "totalConstructionDurationMs": 49.90000000002328,
+        "longestSingleMainThreadBlockMs": 0.30000000004656613,
+        "mainThreadHeartbeatCountDuringConstruction": 1,
+        "batchDurations": [
+          {
+            "batchIndex": 0,
+            "name": "TERRAIN_POSITIONS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 1,
+            "name": "TERRAIN_NORMALS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0.09999999997671694
+          },
+          {
+            "batchIndex": 2,
+            "name": "TERRAIN_MATERIAL_CONTROLS",
+            "byteLength": 57232,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 3,
+            "name": "TERRAIN_INDICES",
+            "byteLength": 82944,
+            "durationMilliseconds": 0.1000000000349246
+          },
+          {
+            "batchIndex": 4,
+            "name": "WATER_POSITIONS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 5,
+            "name": "WATER_NORMALS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 6,
+            "name": "WATER_MATERIAL_CONTROLS",
+            "byteLength": 29008,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 7,
+            "name": "WATER_INDICES",
+            "byteLength": 41472,
+            "durationMilliseconds": 0
+          }
+        ],
+        "firstGpuBufferUploadAt": 426,
+        "allGpuBuffersUploadedAt": 426.79999999998836,
+        "gpuUploadDurationMs": 0.8999999999650754,
+        "firstFrameAt": 803.2999999999884,
+        "readyAt": 803.7999999999884,
+        "totalReadyDurationMs": 428.0999999999767
+      },
+      "noBitmapDragFallback": true,
+      "rendererLifecycleMutated": false,
+      "terrainGeometryMutated": false,
+      "publicDefaultRouteMutated": false,
+      "productDefaultMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialRequired": true,
+      "viewport": {
+        "width": 1254,
+        "height": 590,
+        "devicePixelRatio": 1
+      },
+      "ready": true
+    },
+    "interacted": {
+      "schema": "H_EARTH_C2_R1_R1_8_REVIEW_RUNTIME_RECEIPT_v2",
+      "sourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+      "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+      "contractId": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "rendererContract": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "meshContractId": "H_EARTH_C2_R1_R1_8_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH_v1",
+      "materializationOption": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH",
+      "asset": {
+        "file": "h-earth.c2-r1.r1-8-review-mesh.bin",
+        "byteLength": 340144,
+        "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+        "fetchDurationMs": 7.2000000000116415,
+        "format": "H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1"
+      },
+      "webgl2ContextEstablished": true,
+      "meshReady": true,
+      "frameCount": 35,
+      "presentationCount": 35,
+      "candidateMaterialSampleCount": 3577,
+      "waterBreakerSwashRuntimeSampleCount": 6,
+      "macroDifferentialCount": 3577,
+      "macroExpressionActive": true,
+      "coastalMaterialChainActive": true,
+      "waterBreakerSwashChainActive": true,
+      "pointerEventCount": 10,
+      "touchEventCount": 0,
+      "navigationEventCount": 1,
+      "cameraRevision": 10,
+      "camera": {
+        "position": [
+          -5.224325,
+          58.184837,
+          -202.991943
+        ],
+        "target": [
+          -304.055878,
+          68.757568,
+          -88.131371
+        ],
+        "direction": [
+          -0.932915,
+          0.033007,
+          0.35858
+        ],
+        "fovDegrees": 44,
+        "revision": 10,
+        "view": "DISTANT_LANDSCAPE"
+      },
+      "lastWaterSample": {
+        "foamIntensity": 0,
+        "foamOpacity": 0,
+        "temporaryWetness": 0,
+        "waterSurfaceOpacity": 0.3582096529942127
+      },
+      "meshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "expectedMeshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "exactReviewGeometryPreserved": true,
+      "construction": {
+        "totalConstructionDurationMs": 49.90000000002328,
+        "longestSingleMainThreadBlockMs": 0.30000000004656613,
+        "mainThreadHeartbeatCountDuringConstruction": 1,
+        "batchDurations": [
+          {
+            "batchIndex": 0,
+            "name": "TERRAIN_POSITIONS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 1,
+            "name": "TERRAIN_NORMALS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0.09999999997671694
+          },
+          {
+            "batchIndex": 2,
+            "name": "TERRAIN_MATERIAL_CONTROLS",
+            "byteLength": 57232,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 3,
+            "name": "TERRAIN_INDICES",
+            "byteLength": 82944,
+            "durationMilliseconds": 0.1000000000349246
+          },
+          {
+            "batchIndex": 4,
+            "name": "WATER_POSITIONS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 5,
+            "name": "WATER_NORMALS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 6,
+            "name": "WATER_MATERIAL_CONTROLS",
+            "byteLength": 29008,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 7,
+            "name": "WATER_INDICES",
+            "byteLength": 41472,
+            "durationMilliseconds": 0
+          }
+        ],
+        "firstGpuBufferUploadAt": 426,
+        "allGpuBuffersUploadedAt": 426.79999999998836,
+        "gpuUploadDurationMs": 0.8999999999650754,
+        "firstFrameAt": 803.2999999999884,
+        "readyAt": 803.7999999999884,
+        "totalReadyDurationMs": 428.0999999999767
+      },
+      "noBitmapDragFallback": true,
+      "rendererLifecycleMutated": false,
+      "terrainGeometryMutated": false,
+      "publicDefaultRouteMutated": false,
+      "productDefaultMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialRequired": true,
+      "viewport": {
+        "width": 1254,
+        "height": 590,
+        "devicePixelRatio": 1
+      },
+      "ready": true
+    },
+    "navigationCamera": {
+      "position": [
+        0,
+        3.1,
+        -22
+      ],
+      "target": [
+        0,
+        1.6,
+        78
+      ],
+      "direction": [
+        0,
+        -0.014998,
+        0.999888
+      ],
+      "fovDegrees": 58,
+      "revision": 11,
+      "view": "GROUND_TRAVERSAL"
+    },
+    "frameAdvancement": {
+      "beforeFrames": 3,
+      "afterFrames": 14,
+      "delta": 11
+    },
+    "observed": {
+      "requests": [
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-field.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-formations.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-landscape.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-distant-context.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.north.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.east.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.south.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.west.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/objects/ground-cell-001.objects.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.zones.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/h-earth.matrix.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/cells/ground-cell-001.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "method": "GET"
+        }
+      ],
+      "responses": [
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-field.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-formations.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-distant-context.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-landscape.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.north.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.east.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.south.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/objects/ground-cell-001.objects.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.west.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.zones.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/cells/ground-cell-001.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/h-earth.matrix.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "status": 200
+        }
+      ],
+      "requestFailures": [],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "crashes": [],
+      "frameAttached": [],
+      "frameNavigated": [
+        "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html"
+      ],
+      "domContentLoaded": [
+        {
+          "at": "2026-08-01T07:26:22.200Z"
+        }
+      ],
+      "loads": [
+        {
+          "at": "2026-08-01T07:26:22.204Z"
+        }
+      ]
+    },
+    "captures": []
+  },
+  "mobile": {
+    "response": {
+      "status": 200,
+      "finalUrl": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+      "contentType": "text/html"
+    },
+    "domContentLoadedDurationMs": 26.10508799998206,
+    "readyDurationMs": 464.7802039999806,
+    "traceRows": [
+      {
+        "sequence": 1,
+        "event": "DOCUMENT_ELEMENT_AVAILABLE",
+        "performanceMilliseconds": 21.6,
+        "detail": null
+      },
+      {
+        "sequence": 2,
+        "event": "DOMCONTENTLOADED",
+        "performanceMilliseconds": 21.9,
+        "detail": null
+      },
+      {
+        "sequence": 3,
+        "event": "DYNAMIC_IMPORT_STARTED",
+        "performanceMilliseconds": 22.1,
+        "detail": null
+      },
+      {
+        "sequence": 4,
+        "event": "WEBGL_CONTEXT_REQUESTED",
+        "performanceMilliseconds": 158.1,
+        "detail": null
+      },
+      {
+        "sequence": 5,
+        "event": "WEBGL_CONTEXT_ESTABLISHED",
+        "performanceMilliseconds": 167.6,
+        "detail": {
+          "established": true
+        }
+      },
+      {
+        "sequence": 6,
+        "event": "CANDIDATE_CONSTRUCTION_STARTED",
+        "performanceMilliseconds": 171,
+        "detail": {
+          "option": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH"
+        }
+      },
+      {
+        "sequence": 7,
+        "event": "MAIN_THREAD_HEARTBEAT",
+        "performanceMilliseconds": 196.5,
+        "detail": {
+          "count": 1,
+          "driftMilliseconds": 0.19999999995343387
+        }
+      },
+      {
+        "sequence": 8,
+        "event": "FIRST_CONSTRUCTION_BATCH_COMPLETED",
+        "performanceMilliseconds": 215.9,
+        "detail": {
+          "batchIndex": 0,
+          "name": "TERRAIN_POSITIONS",
+          "byteLength": 42924,
+          "durationMilliseconds": 0
+        }
+      },
+      {
+        "sequence": 9,
+        "event": "LAST_CONSTRUCTION_BATCH_COMPLETED",
+        "performanceMilliseconds": 220.5,
+        "detail": {
+          "batchIndex": 7,
+          "name": "WATER_INDICES",
+          "byteLength": 41472,
+          "durationMilliseconds": 0
+        }
+      },
+      {
+        "sequence": 10,
+        "event": "MAIN_THREAD_HEARTBEAT",
+        "performanceMilliseconds": 221.8,
+        "detail": {
+          "count": 2,
+          "driftMilliseconds": 0.40000000002328306
+        }
+      },
+      {
+        "sequence": 11,
+        "event": "CANDIDATE_CONSTRUCTION_COMPLETED",
+        "performanceMilliseconds": 224.3,
+        "detail": {
+          "completeSampleCount": 3577,
+          "durationMilliseconds": 53.09999999997672,
+          "mainThreadHeartbeatCount": 2,
+          "longestSingleMainThreadBlockMilliseconds": 0.40000000002328306
+        }
+      },
+      {
+        "sequence": 12,
+        "event": "FIRST_GPU_BUFFER_UPLOAD",
+        "performanceMilliseconds": 224.7,
+        "detail": {
+          "byteLength": 42924
+        }
+      },
+      {
+        "sequence": 13,
+        "event": "ALL_GPU_BUFFERS_UPLOADED",
+        "performanceMilliseconds": 225.7,
+        "detail": {
+          "uploadCount": 8,
+          "durationMilliseconds": 1.2000000000116415
+        }
+      },
+      {
+        "sequence": 14,
+        "event": "FIRST_FRAME_PRESENTED",
+        "performanceMilliseconds": 454.1,
+        "detail": {
+          "frameCount": 1
+        }
+      },
+      {
+        "sequence": 15,
+        "event": "READY_SENTINEL_WRITTEN",
+        "performanceMilliseconds": 454.6,
+        "detail": {
+          "totalReadyDurationMilliseconds": 283.6000000000349,
+          "firstFramePresented": true
+        }
+      },
+      {
+        "sequence": 16,
+        "event": "DYNAMIC_IMPORT_RESOLVED",
+        "performanceMilliseconds": 454.8,
+        "detail": null
+      }
+    ],
+    "receipt": {
+      "schema": "H_EARTH_C2_R1_R1_8_REVIEW_RUNTIME_RECEIPT_v2",
+      "sourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+      "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+      "contractId": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "rendererContract": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "meshContractId": "H_EARTH_C2_R1_R1_8_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH_v1",
+      "materializationOption": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH",
+      "asset": {
+        "file": "h-earth.c2-r1.r1-8-review-mesh.bin",
+        "byteLength": 340144,
+        "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+        "fetchDurationMs": 8.700000000011642,
+        "format": "H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1"
+      },
+      "webgl2ContextEstablished": true,
+      "meshReady": true,
+      "frameCount": 2,
+      "presentationCount": 2,
+      "candidateMaterialSampleCount": 3577,
+      "waterBreakerSwashRuntimeSampleCount": 1,
+      "macroDifferentialCount": 3577,
+      "macroExpressionActive": true,
+      "coastalMaterialChainActive": true,
+      "waterBreakerSwashChainActive": true,
+      "pointerEventCount": 0,
+      "touchEventCount": 0,
+      "navigationEventCount": 0,
+      "cameraRevision": 1,
+      "camera": {
+        "position": [
+          0,
+          58,
+          -205
+        ],
+        "target": [
+          0,
+          12,
+          112
+        ],
+        "direction": [
+          0,
+          -0.143606,
+          0.989635
+        ],
+        "fovDegrees": 44,
+        "revision": 1,
+        "view": "DISTANT_LANDSCAPE"
+      },
+      "lastWaterSample": {
+        "foamIntensity": 0.1973157409171028,
+        "foamOpacity": 0.13417470382362992,
+        "temporaryWetness": 0,
+        "waterSurfaceOpacity": 0.34191232234214014
+      },
+      "meshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "expectedMeshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "exactReviewGeometryPreserved": true,
+      "construction": {
+        "totalConstructionDurationMs": 53.09999999997672,
+        "longestSingleMainThreadBlockMs": 0.40000000002328306,
+        "mainThreadHeartbeatCountDuringConstruction": 2,
+        "batchDurations": [
+          {
+            "batchIndex": 0,
+            "name": "TERRAIN_POSITIONS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 1,
+            "name": "TERRAIN_NORMALS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0.09999999997671694
+          },
+          {
+            "batchIndex": 2,
+            "name": "TERRAIN_MATERIAL_CONTROLS",
+            "byteLength": 57232,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 3,
+            "name": "TERRAIN_INDICES",
+            "byteLength": 82944,
+            "durationMilliseconds": 0.1000000000349246
+          },
+          {
+            "batchIndex": 4,
+            "name": "WATER_POSITIONS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 5,
+            "name": "WATER_NORMALS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 6,
+            "name": "WATER_MATERIAL_CONTROLS",
+            "byteLength": 29008,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 7,
+            "name": "WATER_INDICES",
+            "byteLength": 41472,
+            "durationMilliseconds": 0
+          }
+        ],
+        "firstGpuBufferUploadAt": 224.70000000001164,
+        "allGpuBuffersUploadedAt": 225.59999999997672,
+        "gpuUploadDurationMs": 1.2000000000116415,
+        "firstFrameAt": 454,
+        "readyAt": 454.5,
+        "totalReadyDurationMs": 283.6000000000349
+      },
+      "noBitmapDragFallback": true,
+      "rendererLifecycleMutated": false,
+      "terrainGeometryMutated": false,
+      "publicDefaultRouteMutated": false,
+      "productDefaultMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialRequired": true,
+      "viewport": {
+        "width": 820,
+        "height": 1318,
+        "devicePixelRatio": 2.625
+      },
+      "ready": true
+    },
+    "interacted": {
+      "schema": "H_EARTH_C2_R1_R1_8_REVIEW_RUNTIME_RECEIPT_v2",
+      "sourceHead": "c53362c6f74b01c4e0b53be526b0e3a0b73edede",
+      "occurrence": "H_EARTH_C2_R1_R1_8_ISOLATED_REVIEW_001",
+      "contractId": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "rendererContract": "H_EARTH_C2_R1_MINIMAL_CANDIDATE_RENDERER_SAMPLING_INTEGRATION_v1",
+      "meshContractId": "H_EARTH_C2_R1_R1_8_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH_v1",
+      "materializationOption": "OPTION_B_DETERMINISTIC_PREMATERIALIZED_REVIEW_MESH",
+      "asset": {
+        "file": "h-earth.c2-r1.r1-8-review-mesh.bin",
+        "byteLength": 340144,
+        "sha256": "88018b9425565d4745ebf5d59a0b942971069c53020028995cb086079da34a77",
+        "fetchDurationMs": 8.700000000011642,
+        "format": "H_EARTH_C2_R1_R1_8_REVIEW_MESH_BINARY_LE_v1"
+      },
+      "webgl2ContextEstablished": true,
+      "meshReady": true,
+      "frameCount": 36,
+      "presentationCount": 36,
+      "candidateMaterialSampleCount": 3577,
+      "waterBreakerSwashRuntimeSampleCount": 6,
+      "macroDifferentialCount": 3577,
+      "macroExpressionActive": true,
+      "coastalMaterialChainActive": true,
+      "waterBreakerSwashChainActive": true,
+      "pointerEventCount": 9,
+      "touchEventCount": 9,
+      "navigationEventCount": 2,
+      "cameraRevision": 4,
+      "camera": {
+        "position": [
+          -1.032946,
+          58.055477,
+          -202.512589
+        ],
+        "target": [
+          -123.854675,
+          64.651894,
+          93.251358
+        ],
+        "direction": [
+          -0.383434,
+          0.020593,
+          0.923339
+        ],
+        "fovDegrees": 44,
+        "revision": 4,
+        "view": "DISTANT_LANDSCAPE"
+      },
+      "lastWaterSample": {
+        "foamIntensity": 0.12297864594491359,
+        "foamOpacity": 0.08362547924254125,
+        "temporaryWetness": 0,
+        "waterSurfaceOpacity": 0.3475748007156441
+      },
+      "meshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "expectedMeshIdentity": {
+        "completeSampleCount": 3577,
+        "vertexCount": 5390,
+        "indexCount": 31104,
+        "positionBufferByteLength": 64680,
+        "normalBufferByteLength": 64680,
+        "materialControlBufferByteLength": 86240,
+        "indexBufferByteLength": 124416,
+        "finalPositionDataSha256": "0b0f89dea87754902fa53ba89a4bf12134d6d7636076077e29eb2f98765d7129",
+        "finalNormalDataSha256": "0d1e9477b8cd9ff650bc9e17adcac2bb2c90fb9d41ff33327170c2f49bd04aa3",
+        "finalMaterialControlDataSha256": "c447a4fb909e00e56753e18bf174f55c7ac476e8b725b00204111ab0ce1f6a73",
+        "finalIndexDataSha256": "59a02cdc8a270a4c9aa4094c6e4bf428cb697bd3a9af8840d23b12513177633f"
+      },
+      "exactReviewGeometryPreserved": true,
+      "construction": {
+        "totalConstructionDurationMs": 53.09999999997672,
+        "longestSingleMainThreadBlockMs": 0.40000000002328306,
+        "mainThreadHeartbeatCountDuringConstruction": 2,
+        "batchDurations": [
+          {
+            "batchIndex": 0,
+            "name": "TERRAIN_POSITIONS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 1,
+            "name": "TERRAIN_NORMALS",
+            "byteLength": 42924,
+            "durationMilliseconds": 0.09999999997671694
+          },
+          {
+            "batchIndex": 2,
+            "name": "TERRAIN_MATERIAL_CONTROLS",
+            "byteLength": 57232,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 3,
+            "name": "TERRAIN_INDICES",
+            "byteLength": 82944,
+            "durationMilliseconds": 0.1000000000349246
+          },
+          {
+            "batchIndex": 4,
+            "name": "WATER_POSITIONS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 5,
+            "name": "WATER_NORMALS",
+            "byteLength": 21756,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 6,
+            "name": "WATER_MATERIAL_CONTROLS",
+            "byteLength": 29008,
+            "durationMilliseconds": 0
+          },
+          {
+            "batchIndex": 7,
+            "name": "WATER_INDICES",
+            "byteLength": 41472,
+            "durationMilliseconds": 0
+          }
+        ],
+        "firstGpuBufferUploadAt": 224.70000000001164,
+        "allGpuBuffersUploadedAt": 225.59999999997672,
+        "gpuUploadDurationMs": 1.2000000000116415,
+        "firstFrameAt": 454,
+        "readyAt": 454.5,
+        "totalReadyDurationMs": 283.6000000000349
+      },
+      "noBitmapDragFallback": true,
+      "rendererLifecycleMutated": false,
+      "terrainGeometryMutated": false,
+      "publicDefaultRouteMutated": false,
+      "productDefaultMutated": false,
+      "visualSuccessorStatus": "NOT_ESTABLISHED",
+      "userDifferentialRequired": true,
+      "viewport": {
+        "width": 820,
+        "height": 1318,
+        "devicePixelRatio": 2.625
+      },
+      "ready": true
+    },
+    "navigationCamera": {
+      "position": [
+        0,
+        3.1,
+        -22
+      ],
+      "target": [
+        0,
+        1.6,
+        78
+      ],
+      "direction": [
+        0,
+        -0.014998,
+        0.999888
+      ],
+      "fovDegrees": 58,
+      "revision": 5,
+      "view": "GROUND_TRAVERSAL"
+    },
+    "frameAdvancement": {
+      "beforeFrames": 2,
+      "afterFrames": 25,
+      "delta": 23
+    },
+    "observed": {
+      "requests": [
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-field.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-formations.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-landscape.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-distant-context.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.north.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.east.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.south.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.west.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/objects/ground-cell-001.objects.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.zones.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/h-earth.matrix.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/cells/ground-cell-001.js",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "method": "GET"
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "method": "GET"
+        }
+      ],
+      "responses": [
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.css",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/review.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.candidate-renderer-sampling.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh-materializer.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.baked-macro-control-field.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.continuous-sediment-membership.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-field.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-water-optics.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/terrain/h-earth.terrain-formations.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-landscape.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-distant-context.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.north.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.east.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.west.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/showroom/globe/h-earth/render/geometry-kernel.south.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/zones/ground-cell-001.zones.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/h-earth.matrix.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/objects/ground-cell-001.objects.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/cells/ground-cell-001.js",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/identity.json",
+          "status": 200
+        },
+        {
+          "url": "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/h-earth.c2-r1.r1-8-review-mesh.bin",
+          "status": 200
+        }
+      ],
+      "requestFailures": [],
+      "consoleErrors": [],
+      "pageErrors": [],
+      "crashes": [],
+      "frameAttached": [],
+      "frameNavigated": [
+        "http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/r1-8/index.html"
+      ],
+      "domContentLoaded": [
+        {
+          "at": "2026-08-01T07:26:24.930Z"
+        }
+      ],
+      "loads": [
+        {
+          "at": "2026-08-01T07:26:24.930Z"
+        }
+      ]
+    },
+    "captures": []
+  },
+  "browserVersion": "136.0.7103.25",
+  "productDefaultMutated": false,
+  "publicDefaultRouteMutated": false,
+  "mainMutated": false,
+  "pr418Merged": false,
+  "visualSuccessorStatus": "NOT_ESTABLISHED",
+  "userDifferentialReady": false,
+  "firstBlocker": null
+}

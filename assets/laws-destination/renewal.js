@@ -1,4 +1,4 @@
-/* LAWS_COMPLETE_RENEWAL_INTERACTION_ENGINE_v2 */
+/* LAWS_COMPLETE_RENEWAL_INTERACTION_ENGINE_v3 */
 (() => {
   'use strict';
 
@@ -14,61 +14,97 @@
     motionQuery.addEventListener('change', setMotionMode);
   }
 
-  const activate = (tabs, panels, nextIndex, focus = false) => {
-    tabs.forEach((tab, index) => {
-      const selected = index === nextIndex;
-      tab.setAttribute('aria-selected', String(selected));
-      tab.tabIndex = selected ? 0 : -1;
-      const panel = panels[index];
-      if (panel) {
-        panel.hidden = !selected;
-        panel.tabIndex = selected ? 0 : -1;
-      }
+  const collapsePanels = (buttons, panels) => {
+    buttons.forEach((button) => button.setAttribute('aria-expanded', 'false'));
+    panels.forEach((panel) => {
+      panel.hidden = true;
+      panel.tabIndex = -1;
     });
-    if (focus && tabs[nextIndex]) tabs[nextIndex].focus();
+  };
+
+  const expandPanel = (buttons, panels, nextIndex) => {
+    collapsePanels(buttons, panels);
+    const button = buttons[nextIndex];
+    const panel = panels[nextIndex];
+    if (!button || !panel) return;
+    button.setAttribute('aria-expanded', 'true');
+    panel.hidden = false;
+    panel.tabIndex = 0;
   };
 
   document.querySelectorAll('[data-lr-tabs]').forEach((group, groupIndex) => {
     const tablist = group.querySelector('[role="tablist"]');
-    const tabs = Array.from(group.querySelectorAll('[role="tab"]'));
+    const buttons = Array.from(group.querySelectorAll('[role="tab"]'));
     const panels = Array.from(group.querySelectorAll('[role="tabpanel"]'));
-    if (!tablist || tabs.length === 0 || tabs.length !== panels.length) return;
+    if (!tablist || buttons.length === 0 || buttons.length !== panels.length) return;
 
-    tabs.forEach((tab, index) => {
-      const tabId = tab.id || `lr-tab-${groupIndex}-${index}`;
-      const panelId = panels[index].id || `lr-panel-${groupIndex}-${index}`;
-      tab.id = tabId;
+    tablist.setAttribute('role', 'group');
+
+    buttons.forEach((button, index) => {
+      const buttonId = button.id || `lr-disclosure-${groupIndex}-${index}`;
+      const panelId = panels[index].id || `lr-disclosure-panel-${groupIndex}-${index}`;
+      button.id = buttonId;
       panels[index].id = panelId;
-      tab.setAttribute('aria-controls', panelId);
-      panels[index].setAttribute('aria-labelledby', tabId);
-      tab.addEventListener('click', () => activate(tabs, panels, index));
-      tab.addEventListener('keydown', (event) => {
+
+      button.removeAttribute('role');
+      button.removeAttribute('aria-selected');
+      button.removeAttribute('tabindex');
+      button.setAttribute('aria-controls', panelId);
+      button.setAttribute('aria-expanded', 'false');
+
+      panels[index].setAttribute('role', 'region');
+      panels[index].setAttribute('aria-labelledby', buttonId);
+
+      button.addEventListener('click', () => {
+        const wasOpen = button.getAttribute('aria-expanded') === 'true';
+        collapsePanels(buttons, panels);
+        if (!wasOpen) expandPanel(buttons, panels, index);
+      });
+
+      button.addEventListener('keydown', (event) => {
         let next = index;
         switch (event.key) {
           case 'ArrowRight':
           case 'ArrowDown':
-            next = (index + 1) % tabs.length;
+            next = (index + 1) % buttons.length;
             break;
           case 'ArrowLeft':
           case 'ArrowUp':
-            next = (index - 1 + tabs.length) % tabs.length;
+            next = (index - 1 + buttons.length) % buttons.length;
             break;
           case 'Home':
             next = 0;
             break;
           case 'End':
-            next = tabs.length - 1;
+            next = buttons.length - 1;
             break;
           default:
             return;
         }
         event.preventDefault();
-        activate(tabs, panels, next, true);
+        buttons[next]?.focus();
       });
     });
 
-    const requested = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
-    activate(tabs, panels, requested >= 0 ? requested : 0);
+    collapsePanels(buttons, panels);
+  });
+
+  document.querySelectorAll('.lr-status-grid').forEach((grid) => {
+    if (grid.closest('.lr-page-facts')) return;
+
+    const disclosure = document.createElement('details');
+    disclosure.className = 'lr-page-facts';
+    disclosure.dataset.lrPageFacts = 'true';
+
+    const summary = document.createElement('summary');
+    summary.textContent = 'Page facts';
+
+    const body = document.createElement('div');
+    body.className = 'lr-page-facts__body';
+
+    grid.parentNode?.insertBefore(disclosure, grid);
+    disclosure.append(summary, body);
+    body.append(grid);
   });
 
   const protectedAcronyms = new Set([
@@ -138,10 +174,16 @@
     body.append(note, receipt);
   });
 
+  document.querySelectorAll('.lr-page-facts, .lr-audit, .lr-source-disclosure').forEach((disclosure) => {
+    disclosure.removeAttribute('open');
+  });
+
   document.querySelectorAll('.lr-record').forEach((record) => {
     record.dataset.lrAuditTranslated = 'true';
   });
+
   root.dataset.lrAuditPresentation = 'translated';
+  root.dataset.lrEntryDisclosureState = 'collapsed';
 
   let errors = 0;
   const updateHealth = () => {

@@ -344,14 +344,14 @@ html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
 }
 
 html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
-  width: 0.72rem;
-  height: 0.72rem;
-  border-width: 1px;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-width: 2px;
   box-shadow: 0 0 8px rgba(116, 229, 255, 0.16);
 }
 
 html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
-  background: rgba(121, 234, 255, 0.72);
+  background: #79eaff;
   box-shadow: 0 0 12px rgba(121, 234, 255, 0.52);
   transform: scale(1.05);
 }

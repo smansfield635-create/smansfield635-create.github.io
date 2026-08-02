@@ -185,7 +185,9 @@ function verifyStaticRepositoryContracts() {
     assert(tabs === page.tabs && panels === page.tabs, `${page.name}: tab/panel adapter mismatch ${tabs}/${panels}`);
     assert((html.match(/aria-selected="true"/g) || []).length === 0, `${page.name}: a reading control is preselected in source`);
     assert((html.match(/aria-expanded="false" type="button"/g) || []).length === page.tabs, `${page.name}: zero-open source contract is incomplete`);
-    assert((html.match(/<details class="lr-page-facts">/g) || []).length === 1, `${page.name}: native Page facts disclosure missing`);
+    assert((html.match(/<details class="lr-page-facts" open>/g) || []).length === 1, `${page.name}: static Page facts fallback missing`);
+    assert((html.match(/<details class="lr-audit" open>/g) || []).length === 1, `${page.name}: static audit fallback missing`);
+    assert(html.includes("document.documentElement.classList.add('lr-js')"), `${page.name}: enhanced-entry bootstrap missing`);
     assert(!html.includes('role="tabpanel" hidden'), `${page.name}: static panel hidden in source`);
     for (const id of page.records) assert(html.includes(`data-content-id="${id}"`), `${page.name}: canonical record missing ${id}`);
   }

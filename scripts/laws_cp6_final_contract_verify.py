@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify final Checkpoint 6 content authority before browser execution."""
+"""Verify final Checkpoint 6 content and current Compass authority before browser execution."""
 
 from __future__ import annotations
 
@@ -26,6 +26,7 @@ def main() -> None:
     battery = read_json("laws-battery-study-contextual-interpretation-record-v1.json")
     successor = read_json("cp6-2-successor-chain-acceptance-v1.json")
     static_receipt = read_json("contextual-renewal-verification-v1.json")
+    legacy = read_json("legacy-benchmark-disposition-v1.json")
     route_contract = json.loads(
         (ROOT / "laws/control-plane/cp6-1/cp6-2-route-contract.json").read_text(encoding="utf-8")
     )
@@ -62,6 +63,18 @@ def main() -> None:
     assert static_receipt["compass_runtime_files_mutated"] == 0
     assert static_receipt["evidence_status_upgrades"] == 0
     assert static_receipt["future_frontier_deployment_claims"] == 0
+
+    assert legacy["current_compass_contract"]["top_level_authorities"] == 6
+    assert legacy["current_compass_contract"]["law_authorities"] == 4
+    assert legacy["current_compass_contract"]["outer_label_model"] == "single-active-primary-only"
+    assert legacy["current_compass_contract"]["total_child_routes"] == 24
+    assert legacy["four_compass_exact_head_regression"]["material_findings_after_classification"] == []
+    assert legacy["four_compass_exact_head_regression"]["product_correction_required_from_this_run"] is False
+    assert legacy["six_authority_benchmark"]["protected_compass_runtime_changed_in_current_pr"] is False
+    assert legacy["six_authority_benchmark"]["product_correction_required_from_this_run"] is False
+    assert legacy["first_test_benchmark"]["disposition"] == "REPLACED_FOR_CURRENT_PRODUCT_BY_EXACT_HEAD_CURRENT_CONTRACT_BROWSER_PROOF"
+    assert legacy["authority_boundary"]["checkpoint_closed"] is False
+    assert legacy["authority_boundary"]["merge_authorized"] is False
 
     require_text(
         "laws/research/applied-investigations/index.html",
@@ -113,10 +126,20 @@ def main() -> None:
     assert laws.count('id="cp6-work-behind-laws"') == 1
     assert laws.find('id="research-comes-first"') < laws.find('id="cp6-work-behind-laws"')
     assert laws.find('id="cp6-work-behind-laws"') < laws.find('aria-label="Laws supporting orientation"')
+    assert 'data-laws-method-acronym="FIRST"' in laws
+    assert 'data-laws-test-method="four-member-reversible-admissibility-cluster"' in laws
+    assert 'data-laws-primary-star-count="4"' in laws
     assert 'data-laws-category-count="6"' in laws
+    assert 'data-laws-nonlaw-member-count="8"' in laws
     assert 'data-laws-child-route-count="24"' in laws
+    assert 'data-laws-first-disclosure' in laws
     assert 'data-laws-controller-navigation-authority="true"' in laws
     assert 'data-laws-evidence-claim-authority="false"' in laws
+
+    interactions = (ROOT / "laws/index.interactions.js").read_text(encoding="utf-8")
+    assert 'const D=Object.freeze(["flow","integrity","reality","structure","test","research"])' in interactions
+    assert 'singleActiveOuterAuthorityLabel:true' in interactions
+    assert 'primary-only-star-center-protected-tab' in interactions
 
     print(json.dumps({
         "contract": "LAWS_CP6_FINAL_CONTENT_CONTRACT_VERIFICATION_v1",
@@ -126,6 +149,8 @@ def main() -> None:
         "migrated_records": migrated,
         "compatibility_bindings": 9,
         "material_law_relationships": total,
+        "current_compass_contract": "SIX_AUTHORITY_SINGLE_ACTIVE_OUTER_LABEL",
+        "legacy_benchmark_failures": "CLASSIFIED_WITH_NO_MATERIAL_PRODUCT_FINDINGS",
         "successor_chain_gap": "RECONCILED_PROCEDURALLY",
         "checkpoint_6": "OPEN_PENDING_BROWSER_USER_ACCEPTANCE_MERGE_DEPLOYMENT"
     }, indent=2))

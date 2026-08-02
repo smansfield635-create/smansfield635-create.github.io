@@ -1,0 +1,45 @@
+{
+  "correction_class": "NARROW_V3_IDENTITY_CONSISTENCY_SUCCESSOR",
+  "drive_file_id": "1TEzUwAxqGxmKrjDOsG92bC8F1Wnz5yHI",
+  "drive_file_url": "https://drive.google.com/file/d/1TEzUwAxqGxmKrjDOsG92bC8F1Wnz5yHI/view?usp=drivesdk",
+  "drive_folder_id": "1CgobLUPWO4Pl68OUeW6SfbRclxIM2IlF",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1CgobLUPWO4Pl68OUeW6SfbRclxIM2IlF",
+  "empirical_reliability_and_validity": "OPEN",
+  "executable_release_receipt_sha256": "97b2db06e833dc2e92fdeba57bffdec59dd878141f30806114ec36862e7ab91a",
+  "h_earth_product_changed": false,
+  "imi_core_changed": false,
+  "manifest_relative_reset_preserved": true,
+  "observer_grade_imi_instrument_available": true,
+  "platform_binding": {
+    "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+    "platform_merge_commit_sha": "cffa9889430d6700c3fad548d29dfada3dd04e61",
+    "platform_version": "1.0.0"
+  },
+  "predecessor_release": {
+    "merge_commit_sha": "4b5527fee92f45c93c72e20214900cee7d30edae",
+    "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v3",
+    "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v3",
+    "route_version": "3.0.0"
+  },
+  "private_imi_dependency": {
+    "custody_state": "BYTE_VERIFIED_EXTERNAL_INSTRUMENT_DEPENDENCY",
+    "package_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+    "package_version": "1.0.0",
+    "repository_mirror": false,
+    "runtime_mount_required": true,
+    "zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87"
+  },
+  "release_bundle_file": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v4.zip",
+  "release_bundle_file_count": 44,
+  "release_bundle_sha256": "49162b7ff730a9efc71bd2151ad00b34e8b9f46271018a015defb5534c7fb3b2",
+  "release_bundle_size_bytes": 73711,
+  "release_id": "IMI_H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_DEPLOYABLE_RELEASE_v4",
+  "release_version": "4.0.0",
+  "reset_mathematics_changed": false,
+  "route_id": "H_EARTH_COAST_ENTRY_TO_GRATITUDE_INITIAL_PRESENTATION_v4",
+  "route_identity_consistency_required": true,
+  "route_version": "4.0.0",
+  "v1_immutable": true,
+  "v2_immutable": true,
+  "v3_immutable": true
+}

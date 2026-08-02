@@ -25,6 +25,14 @@
 
   const setupCollapsibleNavigation = () => {
     const compactQuery = window.matchMedia('(max-width: 920px)');
+    const compactViewport = () => {
+      const widths = [
+        window.innerWidth,
+        document.documentElement.clientWidth,
+        window.screen?.width
+      ].filter((value) => Number.isFinite(value) && value > 0);
+      return compactQuery.matches || widths.some((value) => value <= 920);
+    };
 
     document.querySelectorAll('.lr-topbar').forEach((topbar, index) => {
       const nav = topbar.querySelector('.lr-nav');
@@ -54,7 +62,7 @@
 
       const applyViewportDefault = () => {
         if (userOverride) return;
-        setExpanded(!compactQuery.matches);
+        setExpanded(!compactViewport());
       };
 
       toggle.addEventListener('click', () => {
@@ -84,6 +92,7 @@
       if (typeof compactQuery.addEventListener === 'function') {
         compactQuery.addEventListener('change', applyViewportDefault);
       }
+      window.addEventListener('resize', applyViewportDefault, { passive: true });
     });
   };
 

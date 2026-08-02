@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Verify final Checkpoint 6 content authority before browser execution."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+CONTROL = ROOT / "laws/control-plane/cp6-context"
+
+
+def read_json(name: str) -> dict:
+    return json.loads((CONTROL / name).read_text(encoding="utf-8"))
+
+
+def require_text(path: str, values: list[str]) -> None:
+    text = (ROOT / path).read_text(encoding="utf-8")
+    for value in values:
+        if value not in text:
+            raise SystemExit(f"{path}: missing required text: {value}")
+
+
+def main() -> None:
+    crosswalk = read_json("laws-frontier-compatibility-crosswalk-v1.json")
+    battery = read_json("laws-battery-study-contextual-interpretation-record-v1.json")
+    successor = read_json("cp6-2-successor-chain-acceptance-v1.json")
+    static_receipt = read_json("contextual-renewal-verification-v1.json")
+    route_contract = json.loads(
+        (ROOT / "laws/control-plane/cp6-1/cp6-2-route-contract.json").read_text(encoding="utf-8")
+    )
+
+    assert crosswalk["contract"] == "LAWS_FRONTIER_COMPATIBILITY_CROSSWALK_v1"
+    assert len(crosswalk["mappings"]) == 11
+    assert crosswalk["authority_boundary"]["route_deletion"] == 0
+    assert crosswalk["authority_boundary"]["redirect_creation"] == 0
+    assert crosswalk["authority_boundary"]["evidence_status_upgrade"] == 0
+
+    assert battery["contract"] == "LAWS_BATTERY_STUDY_CONTEXTUAL_INTERPRETATION_RECORD_v1"
+    assert battery["data_and_observation_units"]["held_out_cell_count"] == 3
+    assert battery["data_and_observation_units"]["final_test_record_count"] == 1653
+    assert battery["data_and_observation_units"]["warning_horizon_cycles"] == 20
+    assert battery["baselines_and_comparators"][0]["auroc"] == 0.9394
+    assert battery["baselines_and_comparators"][1]["auroc"] == 0.9704
+    assert battery["execution_status"]["universal_law_validation_complete"] is False
+    assert battery["execution_status"]["critical_system_validation_complete"] is False
+
+    assert successor["contract"] == "LAWS_CP6_2_SUCCESSOR_CHAIN_ACCEPTANCE_v1"
+    assert successor["standalone_cp6_2_receipt"]["located"] is False
+    assert successor["standalone_cp6_2_receipt"]["reconstructed"] is False
+    assert successor["acceptance_basis"]["final_checkpoint_closure_claimed"] is False
+    assert successor["checkpoint_disposition"]["checkpoint_6"] == "OPEN"
+    assert successor["successor_evidence"]["cp6_3_execution_commit"]["sha"] == "a76bb97f9a63c588b5e7131b3dc3461f8d1e36ee"
+    assert successor["successor_evidence"]["cp6_3_merge_commit"]["sha"] == "19097ef47f17fd38b515a39ef62a524e5d19bc0c"
+
+    assert route_contract["compatibility_binding_count"] == 9
+    assert route_contract["bindings_with_complete_required_field_set"] == 9
+    assert len(route_contract["test_routes"]) == 4
+    assert len(route_contract["research_routes"]) == 4
+
+    assert static_receipt["frontier_files_mutated"] == 0
+    assert static_receipt["compass_runtime_files_mutated"] == 0
+    assert static_receipt["evidence_status_upgrades"] == 0
+    assert static_receipt["future_frontier_deployment_claims"] == 0
+
+    require_text(
+        "laws/research/applied-investigations/index.html",
+        [
+            "System examined",
+            "Data or observations",
+            "Current evidence status",
+            "Primary Frontier authority",
+            "/explore/frontier/energy/",
+            "1,653 final-test cycle records",
+            "AUROC 0.9394",
+            "AUROC 0.9704",
+        ],
+    )
+
+    relationships = {
+        "laws/categories/flow/index.html": 2,
+        "laws/categories/integrity/index.html": 3,
+        "laws/categories/reality/index.html": 3,
+        "laws/categories/structure/index.html": 2,
+    }
+    total = 0
+    for path, expected in relationships.items():
+        text = (ROOT / path).read_text(encoding="utf-8")
+        assert text.count("<strong>Study:</strong> Battery health") == expected
+        assert text.count("<strong>Primary Frontier domain:</strong> Power and Energy") == expected
+        assert text.count("<strong>What the study observed:</strong>") == expected
+        assert text.count("<strong>Where the claim stops:</strong>") >= expected
+        total += expected
+    assert total == 10
+
+    destination_paths = [
+        "laws/research/applied-investigations/index.html",
+        "laws/research/evidence-and-sources/index.html",
+        "laws/research/methods-and-models/index.html",
+        "laws/research/findings-and-boundaries/index.html",
+        "laws/test/admission-and-baseline/index.html",
+        "laws/test/forward-construction/index.html",
+        "laws/test/reverse-audit/index.html",
+        "laws/test/result-and-record/index.html",
+    ]
+    migrated = sum(
+        (ROOT / path).read_text(encoding="utf-8").count('data-cp6-3-content-row="true"')
+        for path in destination_paths
+    )
+    assert migrated == 48
+
+    laws = (ROOT / "laws/index.html").read_text(encoding="utf-8")
+    assert laws.count('id="cp6-work-behind-laws"') == 1
+    assert laws.find('id="research-comes-first"') < laws.find('id="cp6-work-behind-laws"')
+    assert laws.find('id="cp6-work-behind-laws"') < laws.find('aria-label="Laws supporting orientation"')
+    assert 'data-laws-category-count="6"' in laws
+    assert 'data-laws-child-route-count="24"' in laws
+    assert 'data-laws-controller-navigation-authority="true"' in laws
+    assert 'data-laws-evidence-claim-authority="false"' in laws
+
+    print(json.dumps({
+        "contract": "LAWS_CP6_FINAL_CONTENT_CONTRACT_VERIFICATION_v1",
+        "status": "PASS",
+        "frontier_compatibility_surfaces": 11,
+        "canonical_destinations": 8,
+        "migrated_records": migrated,
+        "compatibility_bindings": 9,
+        "material_law_relationships": total,
+        "successor_chain_gap": "RECONCILED_PROCEDURALLY",
+        "checkpoint_6": "OPEN_PENDING_BROWSER_USER_ACCEPTANCE_MERGE_DEPLOYMENT"
+    }, indent=2))
+
+
+if __name__ == "__main__":
+    main()

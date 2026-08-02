@@ -56,6 +56,22 @@
 
 .lr-js .lr-panel[hidden] { display: none !important; }
 
+/* Progressive-enhancement equivalence: enhanced pages enter collapsed;
+   static/no-JavaScript pages expose the complete semantic reading. */
+html:not(.lr-js) .lr-page-facts:not([open]) > .lr-page-facts__body,
+html:not(.lr-js) .lr-audit:not([open]) > .lr-audit__body {
+  display: grid !important;
+}
+
+html:not(.lr-js) .lr-page-facts > summary::after,
+html:not(.lr-js) .lr-audit > summary::after {
+  content: "Static";
+  font-size: .58rem;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
 @media (max-width: 680px) {
   .lr-page-facts > summary {
     min-height: 3.5rem;

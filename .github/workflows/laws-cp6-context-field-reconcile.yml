@@ -1,0 +1,66 @@
+name: Laws CP6 contextual field reconcile
+
+on:
+  push:
+    branches:
+      - agent/laws-cp6-context-authority-records-001
+    paths:
+      - .github/workflows/laws-cp6-context-field-reconcile.yml
+      - scripts/laws_cp6_context_field_reconcile.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-cp6-context-field-reconcile-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-cp6-context-authority-records-001
+          fetch-depth: 0
+
+      - name: Complete required contextual fields
+        run: python3 scripts/laws_cp6_context_field_reconcile.py
+
+      - name: Verify exact bounded product scope
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+              'laws/research/applied-investigations/index.html',
+              'laws/categories/flow/index.html',
+              'laws/categories/integrity/index.html',
+              'laws/categories/reality/index.html',
+              'laws/categories/structure/index.html',
+          }
+          changed = set(subprocess.check_output(['git', 'diff', '--name-only'], text=True).splitlines())
+          if changed != expected:
+              raise SystemExit(f'Unexpected scope: {sorted(changed)}')
+          PY
+
+      - name: Verify no authority or route widening
+        run: |
+          ! git diff | grep -E '^\+.*(future Frontier architecture is live|Frontier Compass is deployed|universal battery validation)'
+          test "$(git diff -- laws/categories/flow/index.html | grep -c 'What the study observed')" -eq 2
+          test "$(git diff -- laws/categories/integrity/index.html | grep -c 'What the study observed')" -eq 3
+          test "$(git diff -- laws/categories/reality/index.html | grep -c 'What the study observed')" -eq 3
+          test "$(git diff -- laws/categories/structure/index.html | grep -c 'What the study observed')" -eq 2
+
+      - name: Commit reconciled contextual fields
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            laws/research/applied-investigations/index.html \
+            laws/categories/flow/index.html \
+            laws/categories/integrity/index.html \
+            laws/categories/reality/index.html \
+            laws/categories/structure/index.html
+          git commit -m 'Complete Laws CP6 contextual study fields'
+          git push origin HEAD:agent/laws-cp6-context-authority-records-001

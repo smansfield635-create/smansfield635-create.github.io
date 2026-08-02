@@ -111,8 +111,9 @@ function insertMethodLayer(rel, block) {
   let html = read(rel);
   if (html.includes(`data-laws-derivative-contract="${CONTRACT}"`)) return;
   if (!html.includes(SCOPE_MARKER)) throw new Error(`SCOPE_MARKER_NOT_FOUND:${rel}`);
+  const normalizedBlock = block.replace(/[ \t]+$/gm, '');
   html = addRootFlag(addCssLink(html));
-  html = html.replace(SCOPE_MARKER, `${block}\n${SCOPE_MARKER}`);
+  html = html.replace(SCOPE_MARKER, `${normalizedBlock}\n${SCOPE_MARKER}`);
   write(rel, html);
 }
 

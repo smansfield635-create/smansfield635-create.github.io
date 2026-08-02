@@ -32,6 +32,15 @@ function verifySource() {
   record('source_contract', 'PASS', 'Source-native five-light rail, cache tokens, tablet reflow, and read-only correspondence are present.');
 }
 
+async function waitForRuntimeReady(page) {
+  await page.waitForFunction(() => {
+    const root = document.querySelector('[data-laws-root]');
+    return Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER) &&
+      root?.dataset.lawsControllerStatus === 'ready' &&
+      root?.dataset.lawsInteractionsStatus === 'ready';
+  });
+}
+
 async function ensureConstellation(page) {
   const state = await page.locator('[data-laws-root]').getAttribute('data-laws-controller-state');
   if (state === 'CONSTELLATION') return;
@@ -42,6 +51,8 @@ async function ensureConstellation(page) {
 
 async function select(page, direction) {
   await ensureConstellation(page);
+  await page.waitForFunction(() => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION');
+  await page.waitForTimeout(120);
   await page.evaluate((next) => {
     const control = document.querySelector('[data-laws-category][data-direction="' + next + '"]');
     if (!control) throw new Error('Missing authority control: ' + next);
@@ -113,7 +124,7 @@ async function verifyProfile(browser, profile) {
   page.on('pageerror', (error) => errors.push('pageerror: ' + error.message));
   page.on('console', (message) => { if (message.type() === 'error' && !message.text().includes('404')) errors.push('console: ' + message.text()); });
   await page.goto(baseUrl + '/laws/', { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER));
+  await waitForRuntimeReady(page);
   for (const direction of directions) {
     await select(page, direction);
     assertSnapshot(await snapshot(page), direction, profile);
@@ -143,7 +154,7 @@ async function verifyReducedMotion(browser) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
   const page = await context.newPage();
   await page.goto(baseUrl + '/laws/', { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER));
+  await waitForRuntimeReady(page);
   await select(page, 'structure');
   const transition = await page.locator('[data-laws-first-rail] [data-laws-experience-active="true"] .laws-first-rail__light').evaluate((node) => getComputedStyle(node).transitionDuration);
   assert.ok(transition === '0s' || transition === '0.001ms', 'Reduced-motion transition remains active: ' + transition);

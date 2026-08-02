@@ -44,6 +44,15 @@ function verifySourceContract() {
   record('source_contract', 'PASS', 'Five state records, existing read-only Compass subscription, accepted constellation return, cyan active light, and in-bounds mobile positioning are present.');
 }
 
+async function waitForRuntimeReady(page) {
+  await page.waitForFunction(() => {
+    const root = document.querySelector('[data-laws-root]');
+    return Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER) &&
+      root?.dataset.lawsControllerStatus === 'ready' &&
+      root?.dataset.lawsInteractionsStatus === 'ready';
+  });
+}
+
 async function openFirstDisclosure(page) {
   const disclosure = page.locator('[data-laws-first-disclosure]');
   assert.equal(await disclosure.count(), 1, 'FIRST disclosure missing.');
@@ -92,20 +101,17 @@ async function selectDirection(page, direction) {
   );
 
   await page.waitForFunction(
-    (nextDirection) => {
-      const records = Array.from(document.querySelectorAll('.laws-first__question-grid [data-laws-experience-question]'));
-      if (records.length !== 5) return false;
-      const cyan = 'rgb(121, 234, 255)';
-      const inactive = 'rgb(7, 16, 31)';
-      return records.every((record) => {
-        const active = record.dataset.lawsExperienceActive === 'true';
-        const expectedActive = record.dataset.lawsExperienceQuestion === nextDirection;
-        const background = getComputedStyle(record, '::before').backgroundColor;
-        return active === expectedActive && background === (expectedActive ? cyan : inactive);
-      });
-    },
-    direction
-  );
+      (nextDirection) => {
+        const records = Array.from(document.querySelectorAll('.laws-first__question-grid [data-laws-experience-question]'));
+        return records.length === 5 && records.every((record) => {
+          const active = record.dataset.lawsExperienceActive === 'true';
+          const expectedActive = record.dataset.lawsExperienceQuestion === nextDirection;
+          return active === expectedActive;
+        });
+      },
+      direction
+    );
+    await page.waitForTimeout(260);
 }
 
 async function inspectIndicators(page) {
@@ -190,7 +196,7 @@ async function verifyViewport(browser, profile) {
   });
 
   await page.goto(`${baseUrl}/laws/`, { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER));
+  await waitForRuntimeReady(page);
   await openFirstDisclosure(page);
 
   const observations = [];
@@ -218,7 +224,7 @@ async function verifyReducedMotion(browser) {
   });
   const page = await context.newPage();
   await page.goto(`${baseUrl}/laws/`, { waitUntil: 'networkidle' });
-  await page.waitForFunction(() => Boolean(globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGB_LAWS_CONTROLLER));
+  await waitForRuntimeReady(page);
   await openFirstDisclosure(page);
   await selectDirection(page, 'structure');
 

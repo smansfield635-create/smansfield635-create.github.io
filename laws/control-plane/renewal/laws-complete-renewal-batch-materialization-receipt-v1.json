@@ -158,5 +158,28 @@
     "metric_change": false,
     "evidence_status_upgrade": false,
     "claim_ceiling_upgrade": false
+  },
+  "final_synchronization": {
+    "contract": "LAWS_CP6_FINAL_SYNCHRONIZATION_v1",
+    "status": "APPLIED_PENDING_EXACT_HEAD_VERIFICATION",
+    "changes": {
+      "signals": true,
+      "measure": true,
+      "reverse_audit": true,
+      "collapsible_navigation": true,
+      "laws_landing_battery_context": true
+    },
+    "zero_open_entry_preserved": true,
+    "collapsible_navigation_preserved": true,
+    "battery_public_surface_scope": 27,
+    "held_out_cells": 3,
+    "final_test_cycle_records": 1653,
+    "warning_horizon_cycles": 20,
+    "combined_model_auroc": 0.9394,
+    "burden_comparator_auroc": 0.9704,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "route_mutation": false,
+    "compass_runtime_authority_change": false
   }
 }

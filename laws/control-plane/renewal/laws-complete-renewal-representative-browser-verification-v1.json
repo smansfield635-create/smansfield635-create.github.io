@@ -1,0 +1,105 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_REPRESENTATIVE_BROWSER_VERIFICATION_v1",
+  "mode": "EXECUTED_CROSS_COMPATIBILITY_VERIFICATION_RECEIPT",
+  "status": "PASS_ENGINEERING_PENDING_USER_VISUAL_ACCEPTANCE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pull_request": 490,
+  "branch": "agent/laws-complete-renewal-cross-compatible-001",
+  "verified_product_head": "1f771737165163ce740c7cc971eff95a857b7d0c",
+  "tested_pull_request_merge_ref": "0a1d900fcb6280f494f927d42320b2ff1f5ef795",
+  "rollback_baseline": "8b2e2d872a968643c8e17a78f8e0df6060027730",
+  "workflow": {
+    "name": "Laws CP6 contextual integrated verification",
+    "run_id": 30733820948,
+    "job_id": 91458706324,
+    "conclusion": "SUCCESS",
+    "artifact_id": 8828851164,
+    "artifact_name": "laws-cp6-contextual-integrated-verification",
+    "artifact_size_bytes": 4705,
+    "artifact_sha256": "13a96d73752343cfb9be7df78621de326057b1406ff5949cb7ce26a1bb840d63",
+    "artifact_expiration": "2026-08-16T05:18:26Z"
+  },
+  "static_and_authority_contracts": {
+    "status": "PASS",
+    "frontier_compatibility_surfaces": 11,
+    "canonical_destinations": 8,
+    "migrated_records": 48,
+    "record_verification": "UNIQUE_IDS_WITH_FROZEN_PER_DESTINATION_COUNTS",
+    "frozen_per_destination_distribution": [11, 6, 10, 7, 2, 1, 4, 7],
+    "compatibility_bindings": 9,
+    "material_law_relationships": 10,
+    "current_compass_contract": "SIX_AUTHORITY_SINGLE_ACTIVE_OUTER_LABEL",
+    "protected_mutation_boundary": "PASS",
+    "frontier_mutation": 0,
+    "compass_runtime_mutation": 0,
+    "route_or_file_deletion": 0
+  },
+  "executed_matrix": {
+    "devices": ["PHONE_390x844", "TABLET_820x1180", "DESKTOP_1440x1000"],
+    "representatives": [
+      "/laws/categories/flow/signals/",
+      "/laws/categories/reality/measure.html",
+      "/laws/test/reverse-audit/",
+      "/laws/research/findings-and-boundaries/",
+      "/laws/industrial-posture/"
+    ],
+    "contextual_pages_per_device": 13,
+    "cohort_pages_per_device": 5,
+    "compass_authorities": 6,
+    "compass_child_routes": 24,
+    "single_active_outer_label": true,
+    "keyboard_tab_operation": "PASS",
+    "pointer_or_touch_tab_operation": "PASS",
+    "native_audit_disclosure": "PASS",
+    "horizontal_overflow": 0,
+    "browser_errors": 0,
+    "reduced_motion_pages": 5,
+    "reduced_motion": "PASS",
+    "static_no_javascript_pages": 5,
+    "static_no_javascript_all_reading_panels_visible": true,
+    "static_no_javascript_native_audit_disclosure": "PASS"
+  },
+  "representative_results": {
+    "phone": {
+      "signals": "PASS",
+      "measure": "PASS",
+      "reverse_audit": "PASS",
+      "findings_and_boundaries": "PASS",
+      "industrial_posture": "PASS"
+    },
+    "tablet": {
+      "signals": "PASS",
+      "measure": "PASS",
+      "reverse_audit": "PASS",
+      "findings_and_boundaries": "PASS",
+      "industrial_posture": "PASS"
+    },
+    "desktop": {
+      "signals": "PASS",
+      "measure": "PASS",
+      "reverse_audit": "PASS",
+      "findings_and_boundaries": "PASS",
+      "industrial_posture": "PASS"
+    }
+  },
+  "preserved_boundaries": {
+    "user_visual_acceptance": "NOT_RECORDED",
+    "batch_migration": "HELD",
+    "remaining_page_mutation": "NOT_AUTHORIZED_BY_THIS_RECEIPT",
+    "merge": "NOT_AUTHORIZED",
+    "evidence_status_upgrade": "NOT_AUTHORIZED",
+    "equation_mutation": "NOT_AUTHORIZED",
+    "canonical_owner_mutation": "NOT_AUTHORIZED",
+    "frontier_mutation": "NOT_AUTHORIZED",
+    "compass_runtime_mutation": "NOT_AUTHORIZED"
+  },
+  "receipt_only_commit_rule": "This receipt is created after the verified product head and does not change the tested product, route, formula, evidence, custody, or runtime surfaces.",
+  "current_disposition": {
+    "representative_implementation": "PASS_ENGINEERING",
+    "executed_cross_compatibility": "PASS",
+    "user_visual_review": "REQUIRED",
+    "batch_migration": "HELD",
+    "pull_request_state": "OPEN_DRAFT_UNMERGED",
+    "merge_authority": "NOT_GRANTED"
+  }
+}

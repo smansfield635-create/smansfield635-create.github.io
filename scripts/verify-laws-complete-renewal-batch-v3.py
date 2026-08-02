@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Successor acceptance verifier for the Reverse Audit comparator completeness correction.
+"""Successor acceptance verifier for the complete representative battery corrections.
 
-The v2 verifier remains the complete chamber verifier. This successor injects only the
-new named control paths into its allowed-path registry, executes every v2 invariant, and
-then requires the exact Reverse Audit comparator authority, receipt, and public sentence.
+The v2 verifier remains the complete chamber verifier. This successor adapts only the
+superseded v2 control registry and one-path representative mutation boundary to the
+three exact user-authorized factual corrections, executes every remaining v2 invariant,
+and then requires the Reverse Audit comparator authority, receipt, and public sentence.
 """
 
 from __future__ import annotations
@@ -17,11 +18,19 @@ AUTHORITY = ROOT / "laws/control-plane/renewal/laws-complete-renewal-reverse-aud
 RECEIPT = ROOT / "laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json"
 TARGET = ROOT / "laws/test/reverse-audit/index.html"
 
+AUTHORIZED_REPRESENTATIVE_PATHS = {
+    "laws/categories/flow/signals/index.html",
+    "laws/categories/reality/measure.html",
+    "laws/test/reverse-audit/index.html",
+}
+
 NEW_CONTROLS = [
     ".github/workflows/laws-complete-renewal-reverse-audit-comparator.yml",
     ".github/workflows/laws-complete-renewal-batch-verification-v3.yml",
+    "scripts/laws_complete_renewal_representative_horizon_patch.py",
     "scripts/laws_complete_renewal_reverse_audit_comparator_patch.py",
     "scripts/verify-laws-complete-renewal-batch-v3.py",
+    "laws/control-plane/renewal/laws-complete-renewal-representative-battery-horizon-completeness-successor-v1.json",
     "laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-comparator-successor-v1.json",
     "laws/control-plane/renewal/laws-complete-renewal-batch-browser-verification-v3.json",
 ]
@@ -38,12 +47,28 @@ def require(condition: bool, message: str) -> None:
         raise AssertionError(message)
 
 
-def run_v2_with_named_controls() -> None:
+def run_v2_with_successor_adapters() -> None:
     source = V2.read_text(encoding="utf-8")
-    needle = "allowed_controls = {\n"
-    require(source.count(needle) == 1, "Unable to locate unique v2 allowed-control registry")
-    injection = needle + "".join(f'    "{path}",\n' for path in NEW_CONTROLS)
-    source = source.replace(needle, injection, 1)
+
+    control_needle = "allowed_controls = {\n"
+    require(source.count(control_needle) == 1, "Unable to locate unique v2 allowed-control registry")
+    control_injection = control_needle + "".join(f'    "{path}",\n' for path in NEW_CONTROLS)
+    source = source.replace(control_needle, control_injection, 1)
+
+    representative_needle = 'authorized_representative_changes = {"laws/categories/flow/signals/index.html"}'
+    require(
+        source.count(representative_needle) == 1,
+        "Unable to locate unique superseded v2 representative mutation boundary",
+    )
+    representative_replacement = (
+        "authorized_representative_changes = {\n"
+        '    "laws/categories/flow/signals/index.html",\n'
+        '    "laws/categories/reality/measure.html",\n'
+        '    "laws/test/reverse-audit/index.html",\n'
+        "}"
+    )
+    source = source.replace(representative_needle, representative_replacement, 1)
+
     namespace = {
         "__name__": "__main__",
         "__file__": str(V2),
@@ -55,8 +80,13 @@ def main() -> int:
     authority = json.loads(AUTHORITY.read_text(encoding="utf-8"))
     require(authority.get("status") == "ACTIVE_FOR_PR_493", "Reverse Audit comparator authority is not active")
     require(authority.get("required_public_sentence") == REQUIRED_SENTENCE, "Authority sentence drift")
+    require(
+        set(authority.get("final_representative_mutation_boundary", {}).get("authorized_paths", []))
+        == AUTHORIZED_REPRESENTATIVE_PATHS,
+        "Final representative mutation authority drift",
+    )
 
-    run_v2_with_named_controls()
+    run_v2_with_successor_adapters()
 
     public = TARGET.read_text(encoding="utf-8").split('<details class="lr-audit"', 1)[0]
     normalized_public = " ".join(public.split())

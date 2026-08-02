@@ -1,6 +1,13 @@
 name: Laws Reverse Audit battery sample-context correction v2
 
 on:
+  push:
+    branches:
+      - agent/laws-complete-renewal-batch-001
+    paths:
+      - .github/workflows/laws-complete-renewal-reverse-audit-comparator.yml
+      - scripts/laws_complete_renewal_reverse_audit_comparator_patch.py
+      - laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-sample-successor-v2.json
   pull_request:
     types:
       - ready_for_review
@@ -21,8 +28,8 @@ concurrency:
 jobs:
   correct:
     if: >-
-      github.event.pull_request.number == 493 &&
-      github.event.pull_request.head.ref == 'agent/laws-complete-renewal-batch-001'
+      github.ref == 'refs/heads/agent/laws-complete-renewal-batch-001' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.number == 493 && github.event.pull_request.head.ref == 'agent/laws-complete-renewal-batch-001')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

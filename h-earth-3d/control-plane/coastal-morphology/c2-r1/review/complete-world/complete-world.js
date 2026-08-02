@@ -87,7 +87,7 @@ try {
   packageRecord = await buildHEarthC2R1CompleteWorldRenderPackage({
     canonicalPackage,
     exactBindingCacheBase64,
-    exactBindingCacheArtifactDigest: 'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1',
+    exactBindingCacheArtifactDigest: 'sha256:2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5',
     startupBudgetMilliseconds: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserBudgetMilliseconds,
     yieldEveryVertices: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserYieldEveryVertices,
     onProgress(progressReceipt) {
@@ -144,7 +144,7 @@ try {
     objectId: 'H_EARTH:C2_R1:COASTAL_SUCCESSOR',
     executionHistoryId: 'H_EARTH:C2_R1:PR_418:HISTORY_001',
     activeEdgeId: 'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE',
-    operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001',
+    operationId: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001',
     correctiveOperationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_REAL_PACKAGE_ADAPTER_CORRECTION_001',
     performanceCorrectionId: 'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
     packageIdentity: packageRecord.packageIdentity,
@@ -185,7 +185,7 @@ try {
     objectId: 'H_EARTH:C2_R1:COASTAL_SUCCESSOR',
     executionHistoryId: 'H_EARTH:C2_R1:PR_418:HISTORY_001',
     activeEdgeId: 'H_EARTH:C2_R1:COASTAL_COMPONENT_TO_COMPLETE_WORLD_CANDIDATE',
-    operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001',
+    operationId: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001',
     rootRejectionCode: packageEvaluation?.rootRejectionCode ?? packageRecord?.rootRejectionCode ?? error?.message ?? 'COMPLETE_WORLD_RUNTIME_FAILURE',
     issues: packageEvaluation?.issues ?? packageRecord?.issues ?? [],
     counters: packageEvaluation?.counters ?? packageRecord?.counters ?? startupProgress?.counters ?? null,

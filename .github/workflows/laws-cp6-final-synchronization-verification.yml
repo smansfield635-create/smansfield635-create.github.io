@@ -1,0 +1,84 @@
+name: Laws CP6 Final Synchronization Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/laws-cp6-final-synchronization-verification.yml'
+      - 'assets/laws-destination/**'
+      - 'laws/**'
+      - 'frontier/energy/battery-coherence-study/index.html'
+      - 'scripts/verify-laws-cp6-final-synchronization.py'
+      - 'scripts/laws_cp6_final_browser_verify.mjs'
+      - 'scripts/laws_cp6_final_browser_verify_runner.mjs'
+      - 'scripts/laws_cp6_final_contract_verify.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-cp6-final-synchronization-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  LAWS_CP6_FINAL_BASE_URL: http://127.0.0.1:4173
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+          fetch-depth: 0
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - name: Fetch current main
+        run: git fetch origin main
+
+      - name: Verify existing CP6 authority and custody contract
+        run: python3 scripts/laws_cp6_final_contract_verify.py
+
+      - name: Verify final synchronization static contract
+        run: python3 scripts/verify-laws-cp6-final-synchronization.py
+
+      - name: Install pinned browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-cp6-final-server.log 2>&1 &
+          echo $! > /tmp/laws-cp6-final-server.pid
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-cp6-final-server.log
+          exit 1
+
+      - name: Execute 33-route final browser matrix
+        run: node scripts/laws_cp6_final_browser_verify_runner.mjs
+
+      - name: Upload final synchronization evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-final-synchronization-${{ env.EXECUTION_COMMIT }}
+          path: |
+            artifacts/laws-cp6-final-synchronization/**
+            /tmp/laws-cp6-final-server.log
+          if-no-files-found: warn
+          retention-days: 30

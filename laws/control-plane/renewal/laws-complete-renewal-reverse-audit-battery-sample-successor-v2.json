@@ -1,0 +1,49 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_REVERSE_AUDIT_BATTERY_SAMPLE_SUCCESSOR_v2",
+  "mode": "BOUNDED_REPRESENTATIVE_SAMPLE_AND_COMPARATOR_COMPLETENESS_SUCCESSOR",
+  "status": "ACTIVE_FOR_PR_493",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pr": 493,
+  "predecessor": "LAWS_COMPLETE_RENEWAL_REVERSE_AUDIT_BATTERY_COMPARATOR_SUCCESSOR_v1",
+  "target": {
+    "route": "/laws/test/reverse-audit/",
+    "path": "laws/test/reverse-audit/index.html",
+    "layer": "PUBLIC_CHALLENGE_READING"
+  },
+  "reason": "The predecessor sentence preserves the 20-cycle target and stronger burden comparator but does not state the complete held-out evaluation population required across all 27 battery-study public surfaces.",
+  "required_public_sentence": "The defined battery event was evaluated within the next 20 cycles across 1,653 final-test cycle records from three held-out cells, and reverse challenge preserved the stronger conventional aging-burden comparator at AUROC 0.9704 against the combined model at AUROC 0.9394 before component ablations and threshold behavior were considered.",
+  "required_fact_set": [
+    "THREE_HELD_OUT_CELLS",
+    "1653_FINAL_TEST_CYCLE_RECORDS",
+    "DEFINED_EVENT_WITHIN_NEXT_20_CYCLES",
+    "BURDEN_COMPARATOR_AUROC_0_9704",
+    "COMBINED_MODEL_AUROC_0_9394",
+    "BURDEN_COMPARATOR_EXCEEDED_COMBINED_MODEL"
+  ],
+  "authorized_mutation": {
+    "class": "ONE_PREDECESSOR_SENTENCE_REPLACEMENT",
+    "visual_structure_change": false,
+    "tab_structure_change": false,
+    "metric_formula_or_result_change": false,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "canonical_owner_change": false,
+    "custody_payload_change": false
+  },
+  "final_representative_mutation_boundary": {
+    "authorized_paths": [
+      "laws/categories/flow/signals/index.html",
+      "laws/categories/reality/measure.html",
+      "laws/test/reverse-audit/index.html"
+    ],
+    "other_representative_html_mutations": 0,
+    "representative_visual_structure_mutations": 0
+  },
+  "verification": [
+    "REVERSE_AUDIT_PUBLIC_CHALLENGE_LAYER_CONTAINS_COMPLETE_SAMPLE_HORIZON_AND_COMPARATOR_CONTEXT",
+    "ALL_FOUR_EXISTING_CHALLENGE_RESULTS_REMAIN_UNCHANGED",
+    "NO_VISUAL_OR_TAB_STRUCTURE_CHANGE",
+    "NO_EVIDENCE_OR_CLAIM_UPGRADE"
+  ],
+  "merge_authority": false
+}

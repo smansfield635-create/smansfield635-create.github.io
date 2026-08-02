@@ -17,7 +17,7 @@ const EXPECTED_GRATITUDE_NODE_ID='H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIA
 const EXPECTED_C2_R1_NODE_ID='H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE';
 const EXPECTED_INTEGRATED_NODE_ID='H_EARTH_C2_R1_GRATITUDE_CONTINUOUS_STARTING_ENVIRONMENT';
 const EXPECTED_BRANCH='agent/h-earth-c2-r1-material-only-binding-implementation-001';
-const EXPECTED_HEAD='44019e27c3d52c59cc59bba7c833b6317d014273';
+const EXPECTED_HEAD='501505fe66dbeede467240d8c7d93f194f7d10d2';
 const EXPECTED_PACKAGE='H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E';
 const EXPECTED_CONTROL_PREFIX='/h-earth-3d/control-plane/coastal-morphology/c2-r1/';
 const EXPECTED_COASTAL_PATHS=Object.freeze([
@@ -40,6 +40,8 @@ export const H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS=Object.freeze([
   '/.github/workflows/h-earth-c2-r1-complete-world-integration.yml',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json',
+  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json',
+  '/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js',
   '/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json',
@@ -73,8 +75,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies(){
     integratedEnvironmentNodePresent:INTEGRATED_NODE.nodeId===EXPECTED_INTEGRATED_NODE_ID&&registryFacade.getHEarthRepositoryRegistryNode(INTEGRATED_NODE.nodeId)===INTEGRATED_NODE,
     twoMembershipRelationsPresent:INTEGRATED_RELATIONS.length===2&&sameSet(relationIds,EXPECTED_RELATION_IDS),
     coastEntryCorrespondsToX0ZMinus96:INTEGRATED_NODE.coastEntryCorrespondence?.corresponds===true&&INTEGRATED_NODE.coastEntryCorrespondence?.worldX===0&&INTEGRATED_NODE.coastEntryCorrespondence?.worldZ===-96,
-    allEightHEarthPathsResolved:changedPathResolutions.length===8&&changedPathResolutions.every(({resolution})=>resolution.resolved===true&&(resolution.nodes??[]).some(node=>node.nodeId===EXPECTED_INTEGRATED_NODE_ID)),
-    allEightHEarthPathOccurrencesExact:changedPathResolutions.every(({repositoryPath,resolution})=>Boolean(compositeOccurrenceFor(resolution,repositoryPath))),
+    allTenHEarthPathsResolved:changedPathResolutions.length===10&&changedPathResolutions.every(({resolution})=>resolution.resolved===true&&(resolution.nodes??[]).some(node=>node.nodeId===EXPECTED_INTEGRATED_NODE_ID)),
+    allTenHEarthPathOccurrencesExact:changedPathResolutions.every(({repositoryPath,resolution})=>Boolean(compositeOccurrenceFor(resolution,repositoryPath))),
     twoRuntimePathsResolved:runtimeResolutions.length===2&&runtimeResolutions.every(({repositoryPath,resolution})=>resolution.resolved===true&&Boolean(compositeOccurrenceFor(resolution,repositoryPath))),
     currentBranchOccurrencesBound:currentCompositeOccurrences.length===9&&currentCompositeOccurrences.every(record=>record.refName===EXPECTED_BRANCH),
     currentHeadOccurrencesBound:currentCompositeOccurrences.length===9&&currentCompositeOccurrences.every(record=>record.commitSha===EXPECTED_HEAD),
@@ -114,11 +116,11 @@ export async function runHEarthC2R1MC5AutomaticRegistryPreflight({paths=H_EARTH_
   const dependencies=loadHEarthRepositoryRegistryValidatorDependencies();
   if(dependencies.identityVerified!==true)throw new Error('MC5_REGISTRY_IDENTITY_NOT_VERIFIED');
   if(dependencies.integratedEnvironmentVerified!==true)throw new Error(`MC5_INTEGRATED_ENVIRONMENT_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
-  if(!sameSet(paths,H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS))throw new Error('MC5_PR_484_NINE_PATH_SET_MISMATCH');
+  if(!sameSet(paths,H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS))throw new Error('MC5_PR_484_ELEVEN_PATH_SET_MISMATCH');
   const {runAutomaticHEarthPreflight}=await import('./activation/h-earth.repository-registry.auto-preflight.js');
   const receipt=runAutomaticHEarthPreflight({paths:[...H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS],taskText:'PR #484 MC5 Gratitude continuous starting-environment read-only registry verification',mutationIntent:false});
   const classification=receipt.pathClassification;
-  const checks={requestedPathCount:classification.normalizedPaths.length===9,exactRequestedPathSet:sameSet(classification.normalizedPaths,H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS),expectedOutsideWorkflow:classification.outsidePaths.length===1&&classification.outsidePaths[0]===EXPECTED_OUTSIDE_PATH,hEarthPathCount:classification.hEarthPaths.length===8,allHEarthPathsRegistered:classification.classifications.filter(entry=>entry.insideScopeRoot).every(entry=>entry.registered===true&&entry.classification==='REGISTERED_H_EARTH_PATH'),gratitudeNodePresent:dependencies.exactHeadChecks.gratitudeNodePresent,c2R1NodePresent:dependencies.exactHeadChecks.c2R1NodePresent,integratedEnvironmentNodePresent:dependencies.exactHeadChecks.integratedEnvironmentNodePresent,twoMembershipRelationsPresent:dependencies.exactHeadChecks.twoMembershipRelationsPresent,coastEntryCorrespondsToX0ZMinus96:dependencies.exactHeadChecks.coastEntryCorrespondsToX0ZMinus96,allEightHEarthPathsResolved:dependencies.exactHeadChecks.allEightHEarthPathsResolved,twoRuntimePathsResolved:dependencies.exactHeadChecks.twoRuntimePathsResolved,currentBranchOccurrencesBound:dependencies.exactHeadChecks.currentBranchOccurrencesBound,currentHeadOccurrencesBound:dependencies.exactHeadChecks.currentHeadOccurrencesBound,authorityTransferFalse:dependencies.exactHeadChecks.authorityTransferFalse,productMutationFalse:dependencies.exactHeadChecks.productMutationFalse,dependenciesVerified:receipt.dependenciesVerified===true,validatorDispositionPass:receipt.validatorReceipt?.finalDisposition==='PASS',finalDispositionPass:receipt.finalDisposition==='PASS'};
+  const checks={requestedPathCount:classification.normalizedPaths.length===11,exactRequestedPathSet:sameSet(classification.normalizedPaths,H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS),expectedOutsideWorkflow:classification.outsidePaths.length===1&&classification.outsidePaths[0]===EXPECTED_OUTSIDE_PATH,hEarthPathCount:classification.hEarthPaths.length===10,allHEarthPathsRegistered:classification.classifications.filter(entry=>entry.insideScopeRoot).every(entry=>entry.registered===true&&entry.classification==='REGISTERED_H_EARTH_PATH'),gratitudeNodePresent:dependencies.exactHeadChecks.gratitudeNodePresent,c2R1NodePresent:dependencies.exactHeadChecks.c2R1NodePresent,integratedEnvironmentNodePresent:dependencies.exactHeadChecks.integratedEnvironmentNodePresent,twoMembershipRelationsPresent:dependencies.exactHeadChecks.twoMembershipRelationsPresent,coastEntryCorrespondsToX0ZMinus96:dependencies.exactHeadChecks.coastEntryCorrespondsToX0ZMinus96,allTenHEarthPathsResolved:dependencies.exactHeadChecks.allTenHEarthPathsResolved,allTenHEarthPathOccurrencesExact:dependencies.exactHeadChecks.allTenHEarthPathOccurrencesExact,twoRuntimePathsResolved:dependencies.exactHeadChecks.twoRuntimePathsResolved,currentBranchOccurrencesBound:dependencies.exactHeadChecks.currentBranchOccurrencesBound,currentHeadOccurrencesBound:dependencies.exactHeadChecks.currentHeadOccurrencesBound,authorityTransferFalse:dependencies.exactHeadChecks.authorityTransferFalse,productMutationFalse:dependencies.exactHeadChecks.productMutationFalse,dependenciesVerified:receipt.dependenciesVerified===true,validatorDispositionPass:receipt.validatorReceipt?.finalDisposition==='PASS',finalDispositionPass:receipt.finalDisposition==='PASS'};
   if(!Object.values(checks).every(Boolean))throw new Error(`MC5_AUTOMATIC_PREFLIGHT_FAILED:${JSON.stringify(checks)}:${JSON.stringify(receipt)}`);
   return deepFreeze({...receipt,mc5Checks:checks,requiredFinalDisposition:'PASS'});
 }

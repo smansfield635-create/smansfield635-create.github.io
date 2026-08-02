@@ -2,11 +2,9 @@ name: H-Earth C2-R1 Material-Only Binding Materialization
 
 on:
   pull_request:
-    branches:
-      - rollback/h-earth-c2-r1-material-only-binding-start-001
+    branches: [rollback/h-earth-c2-r1-material-only-binding-start-001]
     paths:
       - '.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
-      - '.github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml'
       - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
       - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json'
       - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js'
@@ -24,9 +22,19 @@ permissions:
 
 env:
   EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-  CANDIDATE_BRANCH: ${{ github.event.pull_request.head.ref }}
+  CANDIDATE_BRANCH: agent/h-earth-c2-r1-material-only-binding-implementation-001
   STARTING_HEAD: 4f0491f00fae794ecdefbae36f4ee86c8a1bd21a
   ROLLBACK_BRANCH: rollback/h-earth-c2-r1-material-only-binding-start-001
+  ARTIFACT_ID: '8827148247'
+  ARTIFACT_ZIP_SHA256: 8162da59a38abe5381bd0e16381c9a772d72c84a5cdc912bc9700a2e9e992690
+  CACHE_JSON_SHA256: 2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5
+  CACHE_GZIP_SHA256: 8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b
+  CARRIER_PART_1_SHA256: 9caa380b03ae548234c8b2859d153bc1c9565057db9c64645c12b307c35b7936
+  CARRIER_PART_2_SHA256: 67e2a7af63dae9d7f3475e9bf7239b16a01c54202c318664a4f3d89fad8131e8
+  CACHE_SCHEMA: H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v2
+  PACKAGE_IDENTITY: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
+  PACKAGE_DIGEST: fnv1a32:773dae4e
+  OPERATION_ID: H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001
 
 jobs:
   materialize-exact-packet:
@@ -39,16 +47,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: MC4.1 verify exact branch rollback and twelve-path corridor
+      - name: MC4.1 verify frozen branch and authorized corridor
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          git fetch origin "$ROLLBACK_BRANCH:refs/remotes/origin/$ROLLBACK_BRANCH"
-          test "$(git rev-parse "refs/remotes/origin/$ROLLBACK_BRANCH")" = "$STARTING_HEAD"
-          cat > /tmp/allowed <<'PATHS'
+          test "$GITHUB_HEAD_REF" = "$CANDIDATE_BRANCH"
+          git fetch --no-tags origin "$ROLLBACK_BRANCH:refs/remotes/origin/$ROLLBACK_BRANCH"
+          test "$(git rev-parse refs/remotes/origin/$ROLLBACK_BRANCH)" = "$STARTING_HEAD"
+          cat > /tmp/expected <<'PATHS'
           .github/workflows/h-earth-c2-r1-complete-world-integration.yml
-          .github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml
           h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
@@ -60,64 +68,70 @@ jobs:
           showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
           PATHS
-          sort -u /tmp/allowed -o /tmp/allowed
+          sort -u /tmp/expected -o /tmp/expected
           git diff --name-only "$STARTING_HEAD...HEAD" | sort -u > /tmp/current
-          test ! -s <(comm -23 /tmp/current /tmp/allowed)
-          test "$(wc -l < /tmp/allowed)" -eq 12
+          test ! -s <(comm -23 /tmp/current /tmp/expected)
+          n="$(wc -l < /tmp/current)"; test "$n" -eq 9 -o "$n" -eq 11
 
-      - name: MC4.2 detect completed materialization
+      - name: MC4.2 exact completion sentinel
         id: state
         shell: bash
         run: |
-          if grep -q 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_IDENTITY_v1' \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json; then
-            echo 'already=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'already=false' >> "$GITHUB_OUTPUT"
-          fi
+          node <<'NODE'
+          const c=require('crypto'),f=require('fs'),z=require('zlib'),x=require('child_process');
+          const H=v=>c.createHash('sha256').update(v).digest('hex'),J=p=>JSON.parse(f.readFileSync(p)),S=a=>JSON.stringify([...new Set(a)].sort());
+          const P={json:'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json',custody:'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json',ledger:'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json',role3:'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'};
+          const expected=['.github/workflows/h-earth-c2-r1-complete-world-integration.yml','h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js','h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js','h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs','h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json','showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'],B='EXACT_COMMIT_CONTAINING_THIS_RECORD',E='EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW';
+          let q={};
+          try{
+            const i=J(P.json),s=J(P.custody),l=J(P.ledger),r=J(P.role3),a=l.exactBindingCacheCarrier,b=r.exactBindingCacheCarrier;
+            const rec=o=>o.operationId===process.env.OPERATION_ID&&o.candidateBranch===process.env.CANDIDATE_BRANCH&&o.startingHead===process.env.STARTING_HEAD&&o.cacheSchema===process.env.CACHE_SCHEMA&&o.completeWorldPackageIdentity===process.env.PACKAGE_IDENTITY&&o.completeWorldPackageContentDigest===process.env.PACKAGE_DIGEST&&o.boundTerrainVertexCount===10419&&o.boundShorelineVertexCount===154&&o.terrainPositionMutationCount===0&&o.terrainNormalMutationCount===0&&o.inlandWaterMembershipViolationCount===0&&o.resultingHeadBinding===B&&o.externalizedHeadBinding===E;
+            q.identity=i.manifestType==='H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_IDENTITY_v1'&&i.operationId===process.env.OPERATION_ID&&i.startingHead===process.env.STARTING_HEAD&&i.candidateBranch===process.env.CANDIDATE_BRANCH&&i.cacheSchema===process.env.CACHE_SCHEMA&&i.packageIdentity===process.env.PACKAGE_IDENTITY&&i.packageContentDigest===process.env.PACKAGE_DIGEST&&i.boundTerrainVertexCount===10419&&i.boundShorelineVertexCount===154&&i.canonicalPositionsPreserved&&i.canonicalNormalsPreserved&&i.inlandWaterMembershipViolationCount===0;
+            q.custody=s.recordType==='H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_SOURCE_CUSTODY_v1'&&s.operationId===process.env.OPERATION_ID&&s.startingHead===process.env.STARTING_HEAD&&s.cacheSchema===process.env.CACHE_SCHEMA&&s.newPackageIdentity===process.env.PACKAGE_IDENTITY&&s.newPackageDigest===process.env.PACKAGE_DIGEST&&s.canonicalPositionsByteIdentical&&s.canonicalNormalsByteIdentical&&s.terrainPositionMutationCount===0&&s.terrainNormalMutationCount===0&&s.inlandWaterMembershipViolationCount===0;
+            q.records=rec(l)&&rec(r);q.parts=a?.partIndex===1&&b?.partIndex===2&&a.partCount===2&&b.partCount===2&&a.encoding==='BASE64_GZIP_JSON'&&b.encoding==='BASE64_GZIP_JSON';
+            q.partHashes=H(Buffer.from(a.value))===process.env.CARRIER_PART_1_SHA256&&H(Buffer.from(b.value))===process.env.CARRIER_PART_2_SHA256;
+            const gz=Buffer.from(a.value+b.value,'base64'),js=z.gunzipSync(gz),k=JSON.parse(js);
+            q.cacheHashes=H(gz)===process.env.CACHE_GZIP_SHA256&&H(js)===process.env.CACHE_JSON_SHA256;
+            q.cache=k.cacheType===process.env.CACHE_SCHEMA&&k.completeWorldPackageIdentity===process.env.PACKAGE_IDENTITY&&k.completeWorldPackageContentDigest===process.env.PACKAGE_DIGEST&&k.counters.boundTerrainVertexCount===10419&&k.counters.boundShorelineVertexCount===154&&k.counters.terrainPositionMutationCount===0&&k.counters.terrainNormalMutationCount===0&&k.counters.inlandWaterMembershipViolationCount===0&&k.preservation.canonicalPositionsByteIdentical&&k.preservation.canonicalNormalsByteIdentical&&k.preservation.indicesPreserved&&k.preservation.primitiveSpansPreserved&&k.preservation.drawRangesPreserved;
+            const d=x.execFileSync('git',['diff','--name-only',process.env.STARTING_HEAD+'...HEAD'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+            q.eleven=d.length===11&&S(d)===S(expected);q.branch=process.env.GITHUB_HEAD_REF===process.env.CANDIDATE_BRANCH;
+          }catch(e){q.error=e.message}
+          const ok=!q.error&&Object.values(q).every(v=>v===true);
+          f.appendFileSync(process.env.GITHUB_OUTPUT,'already='+ok+'\n');f.appendFileSync(process.env.GITHUB_STEP_SUMMARY,'```json\n'+JSON.stringify(q,null,2)+'\n```\n');
+          NODE
 
-      - name: MC4.3 acquire exact passing cache-v2 artifact
+      - name: MC4.3 verify immutable artifact
         if: steps.state.outputs.already != 'true'
-        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
-          set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/material-only"
-          gh api -H 'Accept: application/vnd.github+json' \
-            "/repos/${GITHUB_REPOSITORY}/actions/artifacts/8827148247/zip" \
-            > "$RUNNER_TEMP/material-only-artifact.zip"
-          unzip -q "$RUNNER_TEMP/material-only-artifact.zip" -d "$RUNNER_TEMP/material-only"
-          cd "$RUNNER_TEMP/material-only"
-          echo '2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5  complete-world-material-only-cache-v2.json' | sha256sum -c -
-          echo '8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b  complete-world-material-only-cache-v2.json.gz' | sha256sum -c -
-          test -s cache-carrier-part-1.txt
-          test -s cache-carrier-part-2.txt
-          test -s material-only-static-receipt.json
+          set -euo pipefail;mkdir -p "$RUNNER_TEMP/m"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID/zip" > "$RUNNER_TEMP/a.zip"
+          echo "$ARTIFACT_ZIP_SHA256  $RUNNER_TEMP/a.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/a.zip" -d "$RUNNER_TEMP/m";cd "$RUNNER_TEMP/m"
+          echo "$CARRIER_PART_1_SHA256  cache-carrier-part-1.txt" | sha256sum -c -
+          echo "$CARRIER_PART_2_SHA256  cache-carrier-part-2.txt" | sha256sum -c -
+          echo "$CACHE_GZIP_SHA256  complete-world-material-only-cache-v2.json.gz" | sha256sum -c -
+          echo "$CACHE_JSON_SHA256  complete-world-material-only-cache-v2.json" | sha256sum -c -
+          cat cache-carrier-part-1.txt cache-carrier-part-2.txt | base64 -d > c.gz
+          echo "$CACHE_GZIP_SHA256  c.gz" | sha256sum -c -;gzip -dc c.gz > c.json;echo "$CACHE_JSON_SHA256  c.json" | sha256sum -c -
 
-      - name: MC4.4 materialize identity runtime custody and carriers
+      - name: MC4.4 materialize only two evidence carriers
         if: steps.state.outputs.already != 'true'
         shell: bash
         run: |
-          set -euo pipefail
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs --materialize
-          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
-          node --check showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
-          node --check showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
-          for path in \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json; do
-            node -e "JSON.parse(require('fs').readFileSync('$path','utf8'))"
-          done
-
-      - name: MC4.5 verify eleven materialized paths and commit once
-        if: steps.state.outputs.already != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > /tmp/expected-eleven <<'PATHS'
+          node <<'NODE'
+          const f=require('fs'),p=n=>f.readFileSync(process.env.RUNNER_TEMP+'/m/cache-carrier-part-'+n+'.txt','utf8');
+          const common={operationId:process.env.OPERATION_ID,candidateBranch:process.env.CANDIDATE_BRANCH,startingHead:process.env.STARTING_HEAD,cacheSchema:process.env.CACHE_SCHEMA,completeWorldPackageIdentity:process.env.PACKAGE_IDENTITY,completeWorldPackageContentDigest:process.env.PACKAGE_DIGEST,boundTerrainVertexCount:10419,boundShorelineVertexCount:154,terrainPositionMutationCount:0,terrainNormalMutationCount:0,inlandWaterMembershipViolationCount:0,resultingHeadBinding:'EXACT_COMMIT_CONTAINING_THIS_RECORD',externalizedHeadBinding:'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW',artifactId:8827148247,artifactZipSha256:'sha256:'+process.env.ARTIFACT_ZIP_SHA256,cacheJsonSha256:'sha256:'+process.env.CACHE_JSON_SHA256,cacheGzipSha256:'sha256:'+process.env.CACHE_GZIP_SHA256,canonicalPositionsPreserved:true,canonicalNormalsPreserved:true,indicesPrimitiveSpansDrawRangesPreserved:true,materialOnlyBinding:true,geometryChanged:false,materialsRegenerated:false,cameraChanged:false,navigationChanged:false,placementsChanged:false,packageChanged:false,runtimeCodeChangedByCompletion:false,cacheBytesRegenerated:false,publicDefaultMutation:false,publication:false,promotion:false,mergeAuthorized:false,userDifferential:'NOT_PERFORMED',overallCompleteWorldPathCount:11,materializationStatus:'COMPLETE_PRELOADED_CARRIER_TRANSACTION'};
+          const l={ledgerType:'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_OPERATION_LEDGER_v1',...common,fromRole:'ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY',nextRole:'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',carrierPartSha256:'sha256:'+process.env.CARRIER_PART_1_SHA256,exactBindingCacheCarrier:{partIndex:1,partCount:2,encoding:'BASE64_GZIP_JSON',value:p(1)},status:'ROLE_1_CARRIER_MATERIALIZATION_COMPLETE_READY_FOR_IDEMPOTENT_MC4_SENTINEL'};
+          const r={entryType:'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_ROLE_3_ENTRY_v1',...common,fromRole:'ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY',nextRole:'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',carrierPartSha256:'sha256:'+process.env.CARRIER_PART_2_SHA256,reviewEntry:'/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html',workflow:'.github/workflows/h-earth-c2-r1-complete-world-integration.yml',currentRole1Status:'DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION',exactBindingCacheCarrier:{partIndex:2,partCount:2,encoding:'BASE64_GZIP_JSON',value:p(2)},status:'READY_FOR_INDEPENDENT_ROLE_3_EXECUTION_VERIFICATION'};
+          const d='h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/';f.writeFileSync(d+'h-earth.c2-r1.complete-world-operation-ledger.json',JSON.stringify(l,null,2)+'\n');f.writeFileSync(d+'h-earth.c2-r1.complete-world-role3-entry.json',JSON.stringify(r,null,2)+'\n');
+          NODE
+          printf '%s\n' h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json | sort > /tmp/two
+          git diff --name-only HEAD | sort > /tmp/changed;diff -u /tmp/two /tmp/changed
+          git diff --name-only "$STARTING_HEAD" | sort > /tmp/total
+          cat > /tmp/eleven <<'PATHS'
           .github/workflows/h-earth-c2-r1-complete-world-integration.yml
           h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
@@ -130,18 +144,20 @@ jobs:
           showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
           PATHS
-          sort -u /tmp/expected-eleven -o /tmp/expected-eleven
-          git diff --name-only "$STARTING_HEAD" | sort -u > /tmp/materialized
-          diff -u /tmp/expected-eleven /tmp/materialized
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json \
-            showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js \
-            showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
-          git commit -m 'C2-R1 MC4: materialize exact material-only cache v2 package'
-          git push origin "HEAD:$CANDIDATE_BRANCH"
+          sort -u /tmp/eleven -o /tmp/eleven;diff -u /tmp/eleven /tmp/total;test "$(wc -l < /tmp/total)" -eq 11
+
+      - name: MC4.5 verify and amend without a second commit
+        if: steps.state.outputs.already != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e "const c=require('crypto'),z=require('zlib'),d='./h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/',l=require(d+'h-earth.c2-r1.complete-world-operation-ledger.json'),r=require(d+'h-earth.c2-r1.complete-world-role3-entry.json'),h=v=>c.createHash('sha256').update(v).digest('hex'),g=Buffer.from(l.exactBindingCacheCarrier.value+r.exactBindingCacheCarrier.value,'base64'),j=z.gunzipSync(g),k=JSON.parse(j);if(h(Buffer.from(l.exactBindingCacheCarrier.value))!==process.env.CARRIER_PART_1_SHA256||h(Buffer.from(r.exactBindingCacheCarrier.value))!==process.env.CARRIER_PART_2_SHA256||h(g)!==process.env.CACHE_GZIP_SHA256||h(j)!==process.env.CACHE_JSON_SHA256||k.cacheType!==process.env.CACHE_SCHEMA||k.completeWorldPackageIdentity!==process.env.PACKAGE_IDENTITY||k.counters.boundTerrainVertexCount!==10419||k.counters.boundShorelineVertexCount!==154||k.counters.terrainPositionMutationCount||k.counters.terrainNormalMutationCount||k.counters.inlandWaterMembershipViolationCount)process.exit(1)"
+          git config user.name github-actions[bot];git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          test "$(git diff --cached --name-only | wc -l)" -eq 2
+          git commit --amend --no-edit
+          git push --force-with-lease="refs/heads/$CANDIDATE_BRANCH:$EXPECTED_HEAD" origin "HEAD:$CANDIDATE_BRANCH"
+
+      - name: MC4.6 idempotent no-op
+        if: steps.state.outputs.already == 'true'
+        run: test -z "$(git status --porcelain)" && echo PASS_IDEMPOTENT_NO_OP

@@ -8,13 +8,25 @@ on:
       - .github/workflows/laws-cp6-osf-derivative-methods.yml
       - tools/laws-cp6-osf-derivative-methods-transform.mjs
       - tools/laws-cp6-osf-derivative-methods-verify.mjs
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    paths:
+      - .github/workflows/laws-cp6-osf-derivative-methods.yml
+      - tools/laws-cp6-osf-derivative-methods-transform.mjs
+      - tools/laws-cp6-osf-derivative-methods-verify.mjs
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: laws-cp6-osf-derivative-methods-${{ github.ref }}
+  group: laws-cp6-osf-derivative-methods-${{ github.event.pull_request.head.ref || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -22,12 +34,14 @@ jobs:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    env:
+      TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
     steps:
       - name: Check out exact candidate branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ env.TARGET_BRANCH }}
           fetch-depth: 0
 
       - name: Set up Node
@@ -91,6 +105,4 @@ jobs:
             laws/control-plane/osf-derivative-methods
           git diff --cached --check
           git commit -m "Integrate source-bound OSF derivative methods"
-          git push origin HEAD:${GITHUB_REF_NAME}
-
-# Explicit retrigger after workflow installation on the candidate branch.
+          git push origin HEAD:${TARGET_BRANCH}

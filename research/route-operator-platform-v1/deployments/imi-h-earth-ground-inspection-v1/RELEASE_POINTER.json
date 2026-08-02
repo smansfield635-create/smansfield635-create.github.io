@@ -1,0 +1,29 @@
+{
+  "release_id": "IMI_H_EARTH_GROUND_INSPECTION_DEPLOYABLE_RELEASE_v1",
+  "release_version": "1.0.0",
+  "release_bundle_file": "IMI_H_EARTH_GROUND_INSPECTION_DEPLOYABLE_RELEASE_v1.zip",
+  "release_bundle_sha256": "8ce02a5cb9d791799332afaae26cd6aedccbd4a39bfe8f4c40577d3fec237017",
+  "release_bundle_file_count": 35,
+  "drive_folder_id": "1WuXOsXnOsXkVchDav09tEsStBOyh9PNP",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1WuXOsXnOsXkVchDav09tEsStBOyh9PNP",
+  "drive_file_id": "1XmVzeY6Pw-PNVuc6fTiXJipJNs0SgTt4",
+  "drive_file_url": "https://drive.google.com/file/d/1XmVzeY6Pw-PNVuc6fTiXJipJNs0SgTt4/view?usp=drivesdk",
+  "executable_release_receipt_sha256": "6d87feabd5c826c24ba11b1bf146c8a3c85336b89db69f4ac24e0dc225e9176f",
+  "private_imi_dependency": {
+    "package_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+    "package_version": "1.0.0",
+    "zip_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+    "custody_state": "BYTE_VERIFIED_EXTERNAL_INSTRUMENT_DEPENDENCY",
+    "repository_mirror": false,
+    "runtime_mount_required": true
+  },
+  "platform_binding": {
+    "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+    "platform_version": "1.0.0",
+    "platform_merge_commit_sha": "cffa9889430d6700c3fad548d29dfada3dd04e61"
+  },
+  "route_id": "H_EARTH_GROUND_CELL_001_PATH3_GROUND_CONDITION_READ",
+  "route_version": "1.0.0",
+  "observer_grade_imi_instrument_available": true,
+  "empirical_reliability_and_validity": "OPEN"
+}

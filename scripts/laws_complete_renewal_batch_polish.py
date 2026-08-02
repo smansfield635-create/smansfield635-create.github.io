@@ -2,8 +2,8 @@
 """Apply bounded presentation corrections to an already materialized Laws batch.
 
 This script never regenerates or rewraps pages. It only corrects presentation labels,
-formula-stage tokenization, and compatibility-page titles in the product files named by
-the existing materialization receipt.
+formula-stage tokenization, compatibility-page titles, and links between frozen slash-form
+story identities and the retained public .html route shapes.
 """
 
 from __future__ import annotations
@@ -20,6 +20,27 @@ TITLE_REPLACEMENTS = {
     "laws/battery-heldout-study/index.html": "Battery health held-out study · Laws",
     "laws/scientific-law/battery-heldout-study/index.html": "Battery health held-out study · Scientific Law · Laws",
     "laws/categories/reality/battery-heldout-study/index.html": "Battery health held-out study · Reality · Laws",
+}
+
+STORY_TO_SERVED = {
+    "/laws/categories/reality/theory/": "/laws/categories/reality/theory.html",
+    "/laws/categories/reality/evidence/": "/laws/categories/reality/evidence.html",
+    "/laws/categories/reality/measure/": "/laws/categories/reality/measure.html",
+    "/laws/categories/reality/limits/": "/laws/categories/reality/limits.html",
+    "/laws/categories/structure/constraints/": "/laws/categories/structure/constraints.html",
+    "/laws/categories/structure/interfaces/": "/laws/categories/structure/interfaces.html",
+    "/laws/categories/structure/boundaries/": "/laws/categories/structure/boundaries.html",
+    "/laws/categories/structure/governance/": "/laws/categories/structure/governance.html",
+}
+
+SOURCE_TO_STORY = {
+    "laws/categories/reality/theory.html": "/laws/categories/reality/theory/",
+    "laws/categories/reality/evidence.html": "/laws/categories/reality/evidence/",
+    "laws/categories/reality/limits.html": "/laws/categories/reality/limits/",
+    "laws/categories/structure/constraints.html": "/laws/categories/structure/constraints/",
+    "laws/categories/structure/interfaces.html": "/laws/categories/structure/interfaces/",
+    "laws/categories/structure/boundaries.html": "/laws/categories/structure/boundaries/",
+    "laws/categories/structure/governance.html": "/laws/categories/structure/governance/",
 }
 
 ARROWS = re.compile(r"\s*(?:→|←|↔|⇄)\s*")
@@ -86,6 +107,27 @@ def set_title(text: str, title: str) -> str:
     return re.sub(r"<title>.*?</title>", f"<title>{escape(title)}</title>", text, count=1, flags=re.I | re.S)
 
 
+def reconcile_route_links(text: str, raw_path: str) -> str:
+    for story_route, served_route in STORY_TO_SERVED.items():
+        text = text.replace(f'href="{story_route}"', f'href="{served_route}"')
+        text = text.replace(
+            f'href="https://diamondgatebridge.com{story_route}"',
+            f'href="https://diamondgatebridge.com{served_route}"',
+        )
+
+    story_route = SOURCE_TO_STORY.get(raw_path)
+    if story_route:
+        served_route = STORY_TO_SERVED[story_route]
+        text = text.replace(f'data-route="{story_route}"', f'data-route="{served_route}"', 1)
+        if f'data-narrative-route="{story_route}"' not in text:
+            text = text.replace(
+                f'data-route="{served_route}"',
+                f'data-route="{served_route}" data-narrative-route="{story_route}"',
+                1,
+            )
+    return text
+
+
 def main() -> int:
     if not RECEIPT.exists():
         raise SystemExit("Materialization receipt is missing; polish cannot run safely.")
@@ -100,6 +142,7 @@ def main() -> int:
 
         text = RAW_PHASE.sub(humanize_phase, text)
         text = polish_formula_boards(text)
+        text = reconcile_route_links(text, raw_path)
         if raw_path in TITLE_REPLACEMENTS:
             text = set_title(text, TITLE_REPLACEMENTS[raw_path])
 
@@ -113,6 +156,11 @@ def main() -> int:
         "formula_node_split_rule": "ARROWS_ONLY_PLUS_SIGNS_PRESERVED",
         "raw_story_phase_labels_humanized": True,
         "compatibility_titles_corrected": sorted(TITLE_REPLACEMENTS),
+        "route_shape_reconciliation": {
+            "story_identity_preserved": True,
+            "retained_html_public_routes": STORY_TO_SERVED,
+            "redirects_created": 0,
+        },
         "changed_files": sorted(changed),
     }
     RECEIPT.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")

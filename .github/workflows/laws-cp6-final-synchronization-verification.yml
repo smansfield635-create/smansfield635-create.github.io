@@ -11,6 +11,7 @@ on:
       - 'frontier/energy/battery-coherence-study/index.html'
       - 'scripts/verify-laws-cp6-final-synchronization.py'
       - 'scripts/laws_cp6_final_browser_verify.mjs'
+      - 'scripts/laws_cp6_final_browser_verify_runner.mjs'
       - 'scripts/laws_cp6_final_contract_verify.py'
   workflow_dispatch:
 
@@ -69,7 +70,7 @@ jobs:
           exit 1
 
       - name: Execute 33-route final browser matrix
-        run: node scripts/laws_cp6_final_browser_verify.mjs
+        run: node scripts/laws_cp6_final_browser_verify_runner.mjs
 
       - name: Upload final synchronization evidence
         if: always()

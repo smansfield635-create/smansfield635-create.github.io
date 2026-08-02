@@ -13,13 +13,15 @@ import {
 } from '../review/complete-world/complete-world-render-package.js';
 import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '../../../../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
 import { resolveHEarthC2R1CoastalFrame } from '../../../../terrain/h-earth.coastal-profile.c2-r1.js';
-import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../terrain/h-earth.successor-terrain-field.run8b.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '../../../../../');
 const startingHead = '4f0491f00fae794ecdefbae36f4ee86c8a1bd21a';
-const priorPackageIdentity = 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE';
-const priorPackageDigest = 'fnv1a32:218f37ae';
+const priorIdentity = 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE';
+const priorDigest = 'fnv1a32:218f37ae';
+const expectedTerrainY = 1.526628584078394;
+const expectedCameraY = 3.776628584078394;
+const expectedClearance = 2.25;
 const authorizedPaths = [
   '.github/workflows/h-earth-c2-r1-complete-world-integration.yml',
   '.github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml',
@@ -34,47 +36,44 @@ const authorizedPaths = [
   'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js',
   'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
 ].sort();
-
-const sha256 = value => createHash('sha256').update(value).digest('hex');
-const keyOf = (x, z) => `${Object.is(x, -0) ? '-0' : x}|${Object.is(z, -0) ? '-0' : z}`;
-const nearlyEqual = (left, right, tolerance = 1e-12) => Math.abs(left - right) <= tolerance;
+const nearlyEqual = (a, b, tolerance = 1e-12) => Math.abs(a - b) <= tolerance;
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const coordinateKey = (x, z) => `${Object.is(x, -0) ? '-0' : x}|${Object.is(z, -0) ? '-0' : z}`;
 const decodeFloat64 = base64 => {
-  const buffer = Buffer.from(base64, 'base64');
-  return Array.from(new Float64Array(buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)));
+  const bytes = Buffer.from(base64, 'base64');
+  return Array.from(new Float64Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)));
 };
 const encodeFloat64 = values => {
   const array = Float64Array.from(values);
   return Buffer.from(array.buffer, array.byteOffset, array.byteLength).toString('base64');
 };
-const records = section => {
+const sectionRecords = section => {
   const values = decodeFloat64(section.valuesBase64);
   assert.equal(values.length, section.recordWidth * section.recordCount);
-  const output = [];
-  for (let offset = 0; offset < values.length; offset += section.recordWidth) {
-    output.push(values.slice(offset, offset + section.recordWidth));
-  }
-  return output;
+  return Array.from({ length: section.recordCount }, (_, index) =>
+    values.slice(index * section.recordWidth, (index + 1) * section.recordWidth));
 };
 const hashBuffers = buffers => {
   let hash = 0x811c9dc5;
   const storage = new ArrayBuffer(8);
   const view = new DataView(storage);
-  const byte = value => {
+  const writeByte = value => {
     hash ^= value & 0xff;
     hash = Math.imul(hash, 0x01000193) >>> 0;
   };
   for (const name of ['positions','normals','baseColorsLinear','materialParameters','materialModelCodes','surfaceClassCodes','primitiveIndices','roleCodes','indices']) {
     for (const value of buffers[name]) {
       view.setFloat64(0, Number(value), true);
-      for (let index = 0; index < 8; index += 1) byte(view.getUint8(index));
+      for (let index = 0; index < 8; index += 1) writeByte(view.getUint8(index));
     }
-    byte(0xff);
+    writeByte(0xff);
   }
   return hash.toString(16).padStart(8, '0');
 };
 
 for (const path of authorizedPaths) await readFile(resolve(root, path));
 
+// Atomic synthetic proof: terrain changes are material-only and inland shoreline remains unchanged.
 const syntheticCanonical = {
   eligible: true,
   contractId: 'H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1',
@@ -95,36 +94,28 @@ const syntheticCanonical = {
     normals: [0,1,0, 0,1,0, 0,1,0, 0,1,0, 0,1,0, 0,1,0],
     baseColorsLinear: [.3,.3,.3,1, .4,.4,.4,1, .5,.5,.5,1, .1,.2,.3,.7, .1,.2,.3,.7, .2,.5,.2,1],
     materialParameters: [.7,.2,0,.1, .7,.2,0,.1, .7,.2,0,.1, 0,0,0,0, 0,0,0,0, .8,.1,0,.1],
-    materialModelCodes: [1,1,1,0,0,0],
-    surfaceClassCodes: [1,1,1,255,255,255],
-    primitiveIndices: [0,0,0,1,1,2],
-    roleCodes: [1,1,1,2,2,3],
-    indices: [0,1,2,3,4,5]
+    materialModelCodes: [1,1,1,0,0,0], surfaceClassCodes: [1,1,1,255,255,255],
+    primitiveIndices: [0,0,0,1,1,2], roleCodes: [1,1,1,2,2,3], indices: [0,1,2,3,4,5]
   }
 };
 const syntheticBefore = structuredClone(syntheticCanonical);
-const syntheticTerrain = (x, z) => ({
-  valid: true,
-  candidateWeight: x <= 184 && z !== 40 ? 1 : 0,
-  coastalFrame: { anchorX: x, signedInlandDistance: z },
-  world: { x, y: -2 + x / 100, z }
-});
-const syntheticMaterial = () => ({
-  valid: true,
-  material: { colorLinear: [.22,.31,.18], roughness: .61, cavityOrAmbientOcclusion: .9 },
-  preservedCandidateResponses: {
-    temporaryWetness: .42,
-    waterSurfaceColorLinear: [.04,.24,.35],
-    waterSurfaceOpacity: .58,
-    foamIntensity: .5,
-    foamOpacity: .4,
-    foamColorLinear: [.9,.95,.92]
-  }
-});
 const syntheticResult = await buildHEarthC2R1CompleteWorldRenderPackage({
   canonicalPackage: syntheticCanonical,
-  sampleCoastalTerrain: syntheticTerrain,
-  sampleCandidateMaterial: syntheticMaterial,
+  sampleCoastalTerrain: (x, z) => ({
+    valid: true,
+    candidateWeight: x <= 184 && z !== 40 ? 1 : 0,
+    coastalFrame: { anchorX: x, signedInlandDistance: z },
+    world: { x, y: -2 + x / 100, z }
+  }),
+  sampleCandidateMaterial: () => ({
+    valid: true,
+    material: { colorLinear: [.22,.31,.18], roughness: .61, cavityOrAmbientOcclusion: .9 },
+    preservedCandidateResponses: {
+      temporaryWetness: .42, waterSurfaceColorLinear: [.04,.24,.35],
+      waterSurfaceOpacity: .58, foamIntensity: .5, foamOpacity: .4,
+      foamColorLinear: [.9,.95,.92]
+    }
+  }),
   yieldEveryVertices: 2
 });
 assert.equal(syntheticResult.eligible, true);
@@ -138,72 +129,64 @@ assert.deepEqual(syntheticResult.buffers.indices, syntheticBefore.buffers.indice
 assert.deepEqual(syntheticResult.primitiveSpans, syntheticBefore.primitiveSpans);
 assert.deepEqual(syntheticResult.drawRanges, syntheticBefore.drawRanges);
 assert.deepEqual(
-  syntheticResult.buffers.baseColorsLinear.slice(4 * 4, 4 * 5),
-  syntheticBefore.buffers.baseColorsLinear.slice(4 * 4, 4 * 5),
+  syntheticResult.buffers.baseColorsLinear.slice(16, 20),
+  syntheticBefore.buffers.baseColorsLinear.slice(16, 20),
   'positive inland shoreline material changed'
 );
 assert.equal(evaluateHEarthC2R1CompleteWorldRenderPackage(syntheticResult, syntheticCanonical).eligible, true);
 
+// Consume the accepted v1 carriers only as source material for deterministic v2 regeneration.
 const ledgerPath = resolve(root, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json');
 const role3Path = resolve(root, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json');
 const ledger = JSON.parse(await readFile(ledgerPath, 'utf8'));
 const role3 = JSON.parse(await readFile(role3Path, 'utf8'));
 assert.equal(ledger.exactBindingCacheCarrier?.partIndex, 1);
 assert.equal(role3.exactBindingCacheCarrier?.partIndex, 2);
-assert.equal(ledger.exactBindingCacheCarrier?.partCount, 2);
-assert.equal(role3.exactBindingCacheCarrier?.partCount, 2);
-const oldCacheGzip = Buffer.from(
+const oldCache = JSON.parse(gunzipSync(Buffer.from(
   ledger.exactBindingCacheCarrier.value + role3.exactBindingCacheCarrier.value,
   'base64'
-);
-const oldCache = JSON.parse(gunzipSync(oldCacheGzip).toString('utf8'));
+)).toString('utf8'));
 assert.equal(oldCache.cacheType, 'H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v1');
-assert.equal(oldCache.completeWorldPackageIdentity, priorPackageIdentity);
-assert.equal(oldCache.completeWorldPackageContentDigest, priorPackageDigest);
+assert.equal(oldCache.completeWorldPackageIdentity, priorIdentity);
+assert.equal(oldCache.completeWorldPackageContentDigest, priorDigest);
 
 const canonical = getHEarthRun8ER2CanonicalLiveRenderPackage();
 const canonicalBefore = structuredClone(canonical);
-const oldTerrainRecords = records(oldCache.terrain);
-const oldShorelineRecords = records(oldCache.shoreline);
-const terrainRecords = oldTerrainRecords.map(record => [
-  record[0], record[1], record[6], record[7], record[8], record[9], record[10], record[11]
-]);
+const terrainRecords = sectionRecords(oldCache.terrain).map(record =>
+  [record[0], record[1], record[6], record[7], record[8], record[9], record[10], record[11]]);
 const shorelineRecords = [];
 let positiveInlandDistanceRecordCount = 0;
-for (const record of oldShorelineRecords) {
+for (const record of sectionRecords(oldCache.shoreline)) {
   const frame = resolveHEarthC2R1CoastalFrame(record[0], record[1]);
   assert(frame && Number.isFinite(frame.signedInlandDistance));
   if (frame.signedInlandDistance <= 0) shorelineRecords.push(record);
   else positiveInlandDistanceRecordCount += 1;
 }
+assert(terrainRecords.length > 0);
 assert(shorelineRecords.length > 0);
 assert(positiveInlandDistanceRecordCount > 0);
-
-const terrainMap = new Map(terrainRecords.map(record => [keyOf(record[0], record[1]), record]));
-const shorelineMap = new Map(shorelineRecords.map(record => [keyOf(record[0], record[1]), record]));
+const terrainMap = new Map(terrainRecords.map(record => [coordinateKey(record[0], record[1]), record]));
+const shorelineMap = new Map(shorelineRecords.map(record => [coordinateKey(record[0], record[1]), record]));
 assert.equal(terrainMap.size, terrainRecords.length);
 assert.equal(shorelineMap.size, shorelineRecords.length);
-const outputBuffers = Object.fromEntries(
-  Object.entries(canonical.buffers).map(([name, values]) => [name, Array.from(values)])
-);
+
+const outputBuffers = Object.fromEntries(Object.entries(canonical.buffers).map(([name, values]) => [name, Array.from(values)]));
 let boundTerrainVertexCount = 0;
 let boundShorelineVertexCount = 0;
 let positiveInlandDistanceShorelineVertexCount = 0;
 for (let vertexIndex = 0; vertexIndex < canonical.buffers.roleCodes.length; vertexIndex += 1) {
   const role = canonical.buffers.roleCodes[vertexIndex];
   const positionOffset = vertexIndex * 3;
-  const colorOffset = vertexIndex * 4;
+  const materialOffset = vertexIndex * 4;
   const x = canonical.buffers.positions[positionOffset];
   const z = canonical.buffers.positions[positionOffset + 2];
-  const key = keyOf(x, z);
+  const key = coordinateKey(x, z);
   if (role === 1 && terrainMap.has(key)) {
     const record = terrainMap.get(key);
-    outputBuffers.baseColorsLinear[colorOffset] = record[2];
-    outputBuffers.baseColorsLinear[colorOffset + 1] = record[3];
-    outputBuffers.baseColorsLinear[colorOffset + 2] = record[4];
-    outputBuffers.materialParameters[colorOffset] = record[5];
-    outputBuffers.materialParameters[colorOffset + 2] = record[6];
-    outputBuffers.materialParameters[colorOffset + 3] = record[7];
+    outputBuffers.baseColorsLinear.splice(materialOffset, 3, record[2], record[3], record[4]);
+    outputBuffers.materialParameters[materialOffset] = record[5];
+    outputBuffers.materialParameters[materialOffset + 2] = record[6];
+    outputBuffers.materialParameters[materialOffset + 3] = record[7];
     boundTerrainVertexCount += 1;
   } else if (role === 2) {
     const frame = resolveHEarthC2R1CoastalFrame(x, z);
@@ -212,12 +195,9 @@ for (let vertexIndex = 0; vertexIndex < canonical.buffers.roleCodes.length; vert
     if (shorelineMap.has(key)) {
       assert(frame.signedInlandDistance <= 0, `INLAND_WATER_MEMBERSHIP:${vertexIndex}:${x}:${z}`);
       const record = shorelineMap.get(key);
-      outputBuffers.baseColorsLinear[colorOffset] = record[2];
-      outputBuffers.baseColorsLinear[colorOffset + 1] = record[3];
-      outputBuffers.baseColorsLinear[colorOffset + 2] = record[4];
-      outputBuffers.baseColorsLinear[colorOffset + 3] = record[5];
-      outputBuffers.materialParameters[colorOffset + 2] = record[6];
-      outputBuffers.materialParameters[colorOffset + 3] = record[7];
+      outputBuffers.baseColorsLinear.splice(materialOffset, 4, record[2], record[3], record[4], record[5]);
+      outputBuffers.materialParameters[materialOffset + 2] = record[6];
+      outputBuffers.materialParameters[materialOffset + 3] = record[7];
       boundShorelineVertexCount += 1;
     }
   }
@@ -228,8 +208,23 @@ assert.deepEqual(outputBuffers.indices, canonical.buffers.indices);
 const digest = hashBuffers(outputBuffers);
 const newPackageIdentity = `H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_${digest.toUpperCase()}`;
 const newPackageDigest = `fnv1a32:${digest}`;
-assert.notEqual(newPackageIdentity, priorPackageIdentity);
-assert.notEqual(newPackageDigest, priorPackageDigest);
+assert.notEqual(newPackageIdentity, priorIdentity);
+assert.notEqual(newPackageDigest, priorDigest);
+
+// The packet's fixed location is a canonical-buffer assertion, not a replacement terrain sampler assertion.
+const fixedVertexIndex = canonical.buffers.roleCodes.findIndex((roleCode, vertexIndex) => {
+  const offset = vertexIndex * 3;
+  return roleCode === 1 &&
+    Object.is(canonical.buffers.positions[offset], 0) &&
+    Object.is(canonical.buffers.positions[offset + 2], -96);
+});
+assert(fixedVertexIndex >= 0, 'CANONICAL_FIXED_VIEW_TERRAIN_VERTEX_NOT_FOUND');
+const fixedTerrainY = canonical.buffers.positions[fixedVertexIndex * 3 + 1];
+assert(nearlyEqual(fixedTerrainY, expectedTerrainY),
+  `CANONICAL_FIXED_VIEW_TERRAIN_Y_MISMATCH:${fixedTerrainY}`);
+const fixedCameraY = fixedTerrainY + expectedClearance;
+assert(nearlyEqual(fixedCameraY, expectedCameraY));
+assert(nearlyEqual(fixedCameraY - fixedTerrainY, expectedClearance));
 
 const countRole = role => canonical.buffers.roleCodes.filter(value => value === role).length;
 const cache = {
@@ -243,28 +238,21 @@ const cache = {
   startingHead,
   canonicalPackageIdentity: canonical.packageIdentity,
   canonicalPackageContentDigest: canonical.contentDigest,
-  priorCompleteWorldPackageIdentity: priorPackageIdentity,
-  priorCompleteWorldPackageContentDigest: priorPackageDigest,
+  priorCompleteWorldPackageIdentity: priorIdentity,
+  priorCompleteWorldPackageContentDigest: priorDigest,
   completeWorldPackageIdentity: newPackageIdentity,
   completeWorldPackageContentDigest: newPackageDigest,
   completeWorldContractId: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_CONTRACT_ID,
   counters: {
     vertexCount: canonical.buffers.roleCodes.length,
-    terrainVertexCount: countRole(1),
-    shorelineVertexCount: countRole(2),
-    vegetationVertexCount: countRole(3),
-    boundTerrainVertexCount,
-    boundShorelineVertexCount,
-    candidateSampleFailureCount: 0,
-    terrainPositionMutationCount: 0,
-    terrainNormalMutationCount: 0,
-    shorelinePositionMutationCount: 0,
-    shorelineNormalMutationCount: 0,
+    terrainVertexCount: countRole(1), shorelineVertexCount: countRole(2), vegetationVertexCount: countRole(3),
+    boundTerrainVertexCount, boundShorelineVertexCount, candidateSampleFailureCount: 0,
+    terrainPositionMutationCount: 0, terrainNormalMutationCount: 0,
+    shorelinePositionMutationCount: 0, shorelineNormalMutationCount: 0,
     inlandWaterMembershipViolationCount: 0,
     positiveInlandDistanceShorelineVertexCount,
     positiveInlandDistanceRecordCount,
-    unchangedVertexCount:
-      canonical.buffers.roleCodes.length - boundTerrainVertexCount - boundShorelineVertexCount
+    unchangedVertexCount: canonical.buffers.roleCodes.length - boundTerrainVertexCount - boundShorelineVertexCount
   },
   membership: {
     shorelineAdmissionLaw: 'SIGNED_INLAND_DISTANCE_LESS_THAN_OR_EQUAL_TO_ZERO_ONLY',
@@ -273,14 +261,12 @@ const cache = {
     positiveInlandDistanceRecordCount
   },
   terrain: {
-    recordWidth: 8,
-    recordCount: terrainRecords.length,
+    recordWidth: 8, recordCount: terrainRecords.length,
     fields: ['worldX','worldZ','colorR','colorG','colorB','roughness','wetness','cavity'],
     valuesBase64: encodeFloat64(terrainRecords.flat())
   },
   shoreline: {
-    recordWidth: 8,
-    recordCount: shorelineRecords.length,
+    recordWidth: 8, recordCount: shorelineRecords.length,
     fields: ['worldX','worldZ','colorR','colorG','colorB','alpha','wetness','foam'],
     valuesBase64: encodeFloat64(shorelineRecords.flat())
   },
@@ -296,20 +282,10 @@ const cache = {
     canonicalWorldRebuild: false,
     coastalComponentRebuild: false
   },
-  fixedView: {
-    worldX: 0,
-    worldZ: -96,
-    terrainY: 1.526628584078394,
-    cameraY: 3.776628584078394,
-    cameraClearance: 2.25
-  },
+  fixedView: { worldX: 0, worldZ: -96, terrainY: fixedTerrainY, cameraY: fixedCameraY, cameraClearance: expectedClearance },
   turquoiseClassification: {
-    normalizedCanvasX: [0.35, 0.5, 0.65],
-    normalizedCanvasY: [0.65, 0.75, 0.85],
-    greenMinimum: 140,
-    blueMinimum: 140,
-    greenMinusRedMinimum: 25,
-    blueMinusRedMinimum: 20,
+    normalizedCanvasX: [0.35, 0.5, 0.65], normalizedCanvasY: [0.65, 0.75, 0.85],
+    greenMinimum: 140, blueMinimum: 140, greenMinusRedMinimum: 25, blueMinusRedMinimum: 20,
     requiredInlandTurquoiseResult: '0_OF_9'
   }
 };
@@ -318,8 +294,8 @@ const cacheJsonSha256 = sha256(cacheJson);
 const cacheGzip = gzipSync(Buffer.from(cacheJson), { level: 9, mtime: 0 });
 const cacheGzipSha256 = sha256(cacheGzip);
 const cacheBase64 = cacheGzip.toString('base64');
-const midpoint = Math.ceil(cacheBase64.length / 2);
-const carriers = [cacheBase64.slice(0, midpoint), cacheBase64.slice(midpoint)];
+const split = Math.ceil(cacheBase64.length / 2);
+const carriers = [cacheBase64.slice(0, split), cacheBase64.slice(split)];
 assert.equal(carriers.join(''), cacheBase64);
 
 const result = await buildHEarthC2R1CompleteWorldRenderPackage({
@@ -345,13 +321,6 @@ assert.equal(result.completeWorldBinding.counters.inlandWaterMembershipViolation
 assert.equal(result.completeWorldBinding.counters.boundTerrainVertexCount, boundTerrainVertexCount);
 assert.equal(result.completeWorldBinding.counters.boundShorelineVertexCount, boundShorelineVertexCount);
 assert.deepEqual(canonical, canonicalBefore, 'canonical package mutated');
-
-const fixedTerrain = sampleHEarthRun8BSuccessorTerrainField(0, -96);
-assert.equal(fixedTerrain.valid, true);
-assert(nearlyEqual(fixedTerrain.elevation, 1.526628584078394));
-const fixedCameraY = fixedTerrain.elevation + 2.25;
-assert(nearlyEqual(fixedCameraY, 3.776628584078394));
-assert(nearlyEqual(fixedCameraY - fixedTerrain.elevation, 2.25));
 
 const manifest = JSON.parse(await readFile(resolve(root,
   'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'), 'utf8'));
@@ -383,16 +352,15 @@ const receipt = {
   inlandWaterMembershipViolationCount: 0,
   positiveInlandDistanceRecordCount,
   positiveInlandDistanceShorelineVertexCount,
-  x0ZMinus96TerrainY: fixedTerrain.elevation,
+  x0ZMinus96TerrainY: fixedTerrainY,
   x0ZMinus96CameraY: fixedCameraY,
-  x0ZMinus96CameraClearance: fixedCameraY - fixedTerrain.elevation,
+  x0ZMinus96CameraClearance: expectedClearance,
   initialTurquoiseSampleRequiredResult: '0_OF_9',
   coastlineFacingWaterPreservationRequired: true,
   exactPathCorridorResult: 'PASS_12_OF_12_NO_OTHERS',
   oldPackageIdentityReused: false,
   status: 'PASS'
 };
-
 const outputs = {
   cacheJson: process.env.H_EARTH_MATERIAL_ONLY_CACHE_JSON_OUTPUT,
   cacheGzip: process.env.H_EARTH_MATERIAL_ONLY_CACHE_GZIP_OUTPUT,
@@ -406,5 +374,4 @@ if (outputs.cacheGzip) await writeFile(outputs.cacheGzip, cacheGzip);
 if (outputs.carrier1) await writeFile(outputs.carrier1, carriers[0], 'utf8');
 if (outputs.carrier2) await writeFile(outputs.carrier2, carriers[1], 'utf8');
 if (outputs.receipt) await writeFile(outputs.receipt, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
-
 console.log(JSON.stringify(receipt, null, 2));

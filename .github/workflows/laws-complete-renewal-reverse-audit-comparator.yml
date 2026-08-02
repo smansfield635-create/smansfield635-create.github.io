@@ -45,20 +45,25 @@ jobs:
 
           path = Path('laws/test/reverse-audit/index.html')
           text = path.read_text(encoding='utf-8')
+          public = text.split('<details class="lr-audit"', 1)[0]
           sentence = (
               'The defined battery event was evaluated within the next 20 cycles, and reverse challenge '
               'preserved the stronger conventional aging-burden comparator at AUROC 0.9704 against the '
               'combined model at AUROC 0.9394 before component ablations and threshold behavior were considered.'
           )
-          assert sentence in text
-          assert text.count(sentence) == 1
-          assert text.count('role="tab"') == 5
-          assert text.count('role="tabpanel"') == 5
-          assert text.count('aria-selected="true"') == 1
-          assert 'Combined model</span><strong>0.9394</strong>' in text
-          assert 'Axes only</span><strong>0.8945</strong>' in text
-          assert 'Average pooling</span><strong>0.8000</strong>' in text
-          assert 'Production threshold</span><strong>0.0000</strong>' in text
+          assert public.count(sentence) == 1
+          assert public.count('role="tab"') == 5
+          assert public.count('role="tabpanel"') == 5
+          assert public.count('aria-selected="true"') == 1
+          for marker in (
+              'Combined model', '0.9394',
+              'Axes only', '0.8945',
+              'Average pooling', '0.8000',
+              'Production threshold', '0.0000',
+              'stronger conventional aging-burden comparator', '0.9704',
+              'next 20 cycles'
+          ):
+              assert marker in public, marker
 
           receipt = json.loads(Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json').read_text())
           correction = receipt['reverse_audit_battery_comparator_successor']

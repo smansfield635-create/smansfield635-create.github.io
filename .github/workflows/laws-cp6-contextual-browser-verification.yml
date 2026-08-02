@@ -1,100 +1,133 @@
-name: Laws CP6 final detail normalization
+name: Laws CP6 contextual integrated verification
 
 on:
   push:
     branches:
-      - agent/laws-complete-renewal-batch-001
+      - agent/laws-cp6-context-authority-records-001
     paths:
+      - laws/**
+      - scripts/laws_cp6_contextual_browser_verify.mjs
+      - scripts/laws_cp6_final_contract_verify.py
       - .github/workflows/laws-cp6-contextual-browser-verification.yml
-      - scripts/laws_cp6_final_detail_normalize.py
+  pull_request:
+    branches:
+      - main
+    paths:
+      - laws/**
+      - scripts/laws_cp6_contextual_browser_verify.mjs
+      - scripts/laws_cp6_final_contract_verify.py
+      - .github/workflows/laws-cp6-contextual-browser-verification.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: laws-cp6-final-detail-normalization
-  cancel-in-progress: false
+  group: laws-cp6-contextual-browser-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  normalize:
+  verify:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - name: Check out exact recovered batch branch
+      - name: Check out candidate
         uses: actions/checkout@v4
         with:
-          ref: agent/laws-complete-renewal-batch-001
           fetch-depth: 0
 
-      - name: Apply systematic zero-open and formula normalization
-        run: python3 scripts/laws_cp6_final_detail_normalize.py
-
-      - name: Restore permanent verifier and remove one-shot script
-        shell: bash
+      - name: Verify protected mutation boundary
         run: |
-          set -euo pipefail
           git fetch origin main
-          git checkout origin/main -- .github/workflows/laws-cp6-contextual-browser-verification.yml
-          rm scripts/laws_cp6_final_detail_normalize.py
-
-      - name: Verify bounded normalization scope
-        shell: bash
-        run: |
-          set -euo pipefail
-          git diff --check
-          git status --short
-          python3 - <<'PY'
-          import json
-          import subprocess
-          from pathlib import Path
-
-          receipt = json.loads(Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json').read_text())
-          allowed = {
-              raw for raw in receipt['product_files_written'] if raw.endswith('.html')
-          } | {
-              'laws/categories/flow/signals/index.html',
-              'laws/categories/reality/measure.html',
-              'laws/test/reverse-audit/index.html',
-              'laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json',
-              '.github/workflows/laws-cp6-contextual-browser-verification.yml',
-              'scripts/laws_cp6_final_detail_normalize.py',
-              'scripts/laws_complete_renewal_batch.py',
-              'scripts/laws_complete_renewal_batch_browser_verify.mjs',
-              'scripts/laws_complete_renewal_batch_browser_verify_v2.mjs',
-              'scripts/laws_complete_renewal_batch_polish.py',
-              'scripts/laws_complete_renewal_representative_horizon_patch.py',
-              'scripts/laws_complete_renewal_reverse_audit_comparator_patch.py',
-              'scripts/laws_complete_renewal_signals_horizon_patch.py',
-              'scripts/verify-laws-complete-renewal-batch.py',
-              'scripts/verify-laws-complete-renewal-batch-v2.py',
-              'scripts/verify-laws-complete-renewal-batch-v3.py',
-          }
-          observed = {
-              line[3:]
-              for line in subprocess.check_output(['git', 'status', '--short'], text=True).splitlines()
-              if line.strip()
-          }
-          unexpected = sorted(observed - allowed)
-          if unexpected:
-              raise SystemExit(f'CP6_DETAIL_SCOPE_DRIFT:{unexpected}')
-          if 'laws/categories/flow/feedback/index.html' not in observed:
-              raise SystemExit('FEEDBACK_DETAIL_REPAIR_NOT_OBSERVED')
-          if len([path for path in observed if path.endswith('.html')]) < 20:
-              raise SystemExit(f'INSUFFICIENT_SYSTEMATIC_PAGE_NORMALIZATION:{len(observed)}')
-          PY
-          grep -F '<strong>INPUT_(t+1)</strong>' laws/categories/flow/feedback/index.html
-          if grep -R 'aria-selected="true"\|aria-expanded="true"' laws/categories laws/test laws/research frontier/energy/battery-coherence-study/index.html; then
-            echo 'Pre-opened reading state remains in the normalized cohort.' >&2
+          changed="$(git diff --name-only origin/main...HEAD)"
+          printf '%s\n' "$changed"
+          if printf '%s\n' "$changed" | grep -E '^frontier/'; then
+            echo 'Frontier route or record mutation is prohibited in Checkpoint 6.' >&2
+            exit 1
+          fi
+          if printf '%s\n' "$changed" | grep -E '^laws/index\.(controller|compositor|interactions|crystals|cosmos)\.js$|^laws/index\.planet\.js$'; then
+            echo 'Compass runtime mutation is prohibited.' >&2
+            exit 1
+          fi
+          if git diff --name-status origin/main...HEAD | grep -E '^D[[:space:]]'; then
+            echo 'Route or file deletion is prohibited.' >&2
             exit 1
           fi
 
-      - name: Commit normalized cohort and restored verifier
-        shell: bash
+      - name: Validate final content and authority contracts
         run: |
-          set -euo pipefail
+          python3 -m json.tool laws/control-plane/cp6-context/laws-frontier-compatibility-crosswalk-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/laws-battery-study-contextual-interpretation-record-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/contextual-renewal-verification-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/cp6-2-successor-chain-acceptance-v1.json >/dev/null
+          python3 scripts/laws_cp6_final_contract_verify.py
+
+      - name: Install browser verifier
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start static candidate server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-cp6-server.log 2>&1 &
+          echo $! >/tmp/laws-cp6-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-cp6-server.log
+          exit 1
+
+      - name: Run integrated phone tablet desktop reduced-motion static and input verification
+        run: node scripts/laws_cp6_contextual_browser_verify.mjs
+
+      - name: Materialize exact-head verification receipt
+        if: github.event_name == 'push'
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          source = Path('artifacts/laws-cp6-contextual-verification/result.json')
+          target = Path('laws/control-plane/cp6-context/integrated-browser-verification-v1.json')
+          data = json.loads(source.read_text(encoding='utf-8'))
+          data['candidateHead'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          data['workflowRunId'] = os.environ.get('GITHUB_RUN_ID')
+          data['workflowRunAttempt'] = os.environ.get('GITHUB_RUN_ATTEMPT')
+          data['scopeBoundary'] = {
+              'frontierFilesMutated': 0,
+              'compassRuntimeFilesMutated': 0,
+              'routeDeletions': 0,
+              'redirectsCreated': 0,
+              'evidenceStatusUpgrades': 0,
+              'futureFrontierDeploymentClaims': 0
+          }
+          data['checkpointDisposition'] = 'OPEN_PENDING_LIVE_USER_VISUAL_ACCEPTANCE_MERGE_AND_DEPLOYMENT'
+          target.write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit passing verification receipt
+        if: github.event_name == 'push'
+        run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'Normalize CP6 zero-open and formula details [skip ci]'
-          git push origin HEAD:agent/laws-complete-renewal-batch-001
+          git add laws/control-plane/cp6-context/integrated-browser-verification-v1.json
+          git commit -m 'Record Laws CP6 integrated browser verification pass'
+          git push origin HEAD:agent/laws-cp6-context-authority-records-001
+
+      - name: Upload verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-cp6-contextual-integrated-verification
+          path: |
+            artifacts/laws-cp6-contextual-verification/
+            laws/control-plane/cp6-context/integrated-browser-verification-v1.json
+            /tmp/laws-cp6-server.log
+          if-no-files-found: warn
+          retention-days: 14

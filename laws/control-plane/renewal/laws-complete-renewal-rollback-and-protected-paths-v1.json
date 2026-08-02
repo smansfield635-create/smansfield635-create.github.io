@@ -30,7 +30,11 @@
     "laws/control-plane/narrative/laws-complete-narrative-map-freeze-record-v1.json",
     "laws/control-plane/cp6-3/migration-ledger.json",
     "laws/control-plane/cp6-4-5/content-reduction-custody-ledger.json",
-    "laws/control-plane/cp6-1/route-retirement-ledger.json"
+    "laws/control-plane/cp6-1/route-retirement-ledger.json",
+    "laws/control-plane/renewal/laws-complete-renewal-representative-implementation-authority-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-cross-compatibility-matrix-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-route-shape-reconciliation-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-rollback-and-protected-paths-v1.json"
   ],
   "protected_counts_and_invariants": {
     "laws_authorities": 6,
@@ -47,7 +51,7 @@
   },
   "authorized_product_paths_for_initial_cohort": [
     "laws/categories/flow/signals/index.html",
-    "laws/categories/reality/measure/index.html",
+    "laws/categories/reality/measure.html",
     "laws/test/reverse-audit/index.html",
     "laws/research/findings-and-boundaries/index.html",
     "laws/industrial-posture/index.html"
@@ -76,7 +80,8 @@
     "previous_next_context_may_be_added_without_route_reassignment": true,
     "complete_frontier_study_remains_frontier_owned": true,
     "canonical_record_ownership_may_not_move": true,
-    "source_copy_may_not_be_deleted_during_representative_validation": true
+    "source_copy_may_not_be_deleted_during_representative_validation": true,
+    "route_shape_adapter": "laws/control-plane/renewal/laws-complete-renewal-route-shape-reconciliation-v1.json"
   },
   "stop_conditions": [
     "ANY_PROTECTED_RUNTIME_DIFF",

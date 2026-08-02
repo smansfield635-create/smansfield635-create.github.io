@@ -27,6 +27,16 @@
   "exact_equations_reconstructed": false,
   "public_audit_separation_present": true,
   "reduced_motion_rule_present": true,
+  "exact_head_reverification": {
+    "requested": true,
+    "product_head_verified_for_retrigger": "1653b5f8a09aa7861ed0548f0fa9d9c7b11074b0",
+    "public_product_mutation_in_this_retrigger": false,
+    "controlling_checks": [
+      "Laws CP6 contextual integrated verification",
+      "Laws Compass FIRST Test Benchmark"
+    ],
+    "legacy_laws_checks": "NON_BLOCKING_NOT_AWAITED"
+  },
   "required_next_verification": [
     "HTML_STRUCTURE_AND_LINK_CHECK",
     "PHONE_BROWSER_PRESENTATION",

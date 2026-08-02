@@ -12,6 +12,7 @@ on:
       - scripts/verify-laws-complete-renewal-batch-v3.py
       - scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
       - scripts/laws_complete_renewal_reverse_audit_comparator_patch.py
+      - laws/control-plane/renewal/laws-complete-renewal-reverse-audit-battery-sample-successor-v2.json
       - assets/laws-destination/renewal.js
       - assets/laws-destination/renewal-navigation.css
       - assets/laws-destination/renewal-batch.css
@@ -102,7 +103,7 @@ jobs:
                   'boundedRepresentativeCorrections': [
                       'laws/categories/flow/signals/index.html::EXACT_20_CYCLE_FACT_ADDITION',
                       'laws/categories/reality/measure.html::EXACT_20_CYCLE_FACT_ADDITION',
-                      'laws/test/reverse-audit/index.html::EXACT_20_CYCLE_AND_STRONGER_COMPARATOR_FACT_REPLACEMENT'
+                      'laws/test/reverse-audit/index.html::EXACT_SAMPLE_HORIZON_AND_STRONGER_COMPARATOR_FACT_REPLACEMENT'
                   ],
                   'otherRepresentativeHtmlMutations': 0,
                   'representativeVisualStructureMutations': 0,

@@ -82,12 +82,12 @@ jobs:
           test "$(git rev-parse "refs/remotes/origin/$ROLLBACK_BRANCH")" = "$STARTING_HEAD"
           cat > /tmp/mc5-pr484-nine-paths <<'PATHS'
           .github/workflows/h-earth-c2-r1-complete-world-integration.yml
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
-          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
           showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
           PATHS

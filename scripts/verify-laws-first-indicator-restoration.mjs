@@ -28,6 +28,7 @@ function record(check, status, detail = '') {
 function verifySourceContract() {
   const css = fs.readFileSync('laws/index.experience.polish.css', 'utf8');
   const js = fs.readFileSync('laws/index.experience.js', 'utf8');
+  const controller = fs.readFileSync('laws/index.controller.js', 'utf8');
   const html = fs.readFileSync('laws/index.html', 'utf8');
 
   assert.ok(css.includes('LAWS_FIRST_DYNAMIC_INDICATOR_RESTORATION_v1'), 'Restoration CSS contract missing.');
@@ -36,10 +37,11 @@ function verifySourceContract() {
   assert.ok(css.includes('background: #79eaff;'), 'Active cyan light missing.');
   assert.ok(js.includes('subscribeCompassState'), 'Existing Compass correspondence subscription missing.');
   assert.ok(js.includes('node.dataset.lawsExperienceActive'), 'Existing question-state correspondence missing.');
+  assert.ok(controller.includes('function requestReturnToConstellation'), 'Accepted return-to-constellation procedure missing.');
   assert.equal((html.match(/data-laws-experience-question="(?:flow|integrity|reality|structure|test)"/g) || []).length, 5, 'Exactly five FIRST question records are required.');
   assert.ok(!css.includes('pointer-events: auto'), 'Indicator restoration must not create a new interaction surface.');
 
-  record('source_contract', 'PASS', 'Five state records, existing read-only Compass subscription, cyan active light, and in-bounds mobile positioning are present.');
+  record('source_contract', 'PASS', 'Five state records, existing read-only Compass subscription, accepted constellation return, cyan active light, and in-bounds mobile positioning are present.');
 }
 
 async function openFirstDisclosure(page) {
@@ -51,15 +53,41 @@ async function openFirstDisclosure(page) {
   assert.equal(await disclosure.evaluate((node) => node.open), true, 'FIRST disclosure did not open.');
 }
 
+async function ensureConstellation(page) {
+  const state = await page.locator('[data-laws-root]').getAttribute('data-laws-controller-state');
+  if (state === 'CONSTELLATION') return;
+
+  const returned = await page.evaluate(() => {
+    const controller = globalThis.DGB_LAWS_CONTROLLER;
+    if (!controller || typeof controller.requestReturnToConstellation !== 'function') {
+      throw new Error('Accepted return-to-constellation controller procedure missing');
+    }
+    return controller.requestReturnToConstellation({ scrollToScene: false });
+  });
+
+  assert.equal(returned, true, `Return to constellation was rejected from ${state || 'unknown state'}.`);
+  await page.waitForFunction(
+    () => document.querySelector('[data-laws-root]')?.dataset.lawsControllerState === 'CONSTELLATION'
+  );
+}
+
 async function selectDirection(page, direction) {
-  await page.evaluate((nextDirection) => {
+  await ensureConstellation(page);
+
+  const accepted = await page.evaluate((nextDirection) => {
     const control = document.querySelector(`[data-laws-category][data-direction="${nextDirection}"]`);
     if (!control) throw new Error(`Compass authority control missing: ${nextDirection}`);
     control.click();
+    return true;
   }, direction);
 
+  assert.equal(accepted, true, `Compass authority selection was not issued: ${direction}.`);
   await page.waitForFunction(
-    (nextDirection) => document.documentElement.dataset.lawsExperienceDirection === nextDirection,
+    (nextDirection) => {
+      const root = document.querySelector('[data-laws-root]');
+      return root?.dataset.lawsControllerState === 'CLUSTER_OPEN' &&
+        document.documentElement.dataset.lawsExperienceDirection === nextDirection;
+    },
     direction
   );
 }
@@ -72,6 +100,7 @@ async function inspectIndicators(page) {
 
     return {
       direction: root.dataset.lawsExperienceDirection || '',
+      controllerState: document.querySelector('[data-laws-root]')?.dataset.lawsControllerState || '',
       overflow: Math.max(root.scrollWidth, body.scrollWidth) - root.clientWidth,
       records: records.map((record) => {
         const pseudo = getComputedStyle(record, '::before');
@@ -99,6 +128,7 @@ async function inspectIndicators(page) {
 
 function assertIndicatorSnapshot(snapshot, expectedDirection, profileName) {
   assert.equal(snapshot.direction, expectedDirection, `${profileName}: ambient direction mismatch.`);
+  assert.equal(snapshot.controllerState, 'CLUSTER_OPEN', `${profileName}: selection did not reach the accepted Compass cluster state.`);
   assert.ok(snapshot.overflow <= 2, `${profileName}: horizontal overflow ${snapshot.overflow}px.`);
   assert.equal(snapshot.records.length, 5, `${profileName}: expected five indicator records.`);
 
@@ -153,12 +183,13 @@ async function verifyViewport(browser, profile) {
     const snapshot = await inspectIndicators(page);
     assertIndicatorSnapshot(snapshot, direction, profile.name);
     observations.push(snapshot);
+    await ensureConstellation(page);
   }
 
   assert.deepEqual(errors, [], `${profile.name}: browser errors: ${errors.join(' | ')}`);
   await page.screenshot({ path: `artifacts/laws-first-indicators-${profile.name}.png`, fullPage: true });
   await context.close();
-  record(`interactive_${profile.name}`, 'PASS', 'Five sequential Compass selections produced one visible, in-bounds active light with no overflow or browser errors.');
+  record(`interactive_${profile.name}`, 'PASS', 'Five Compass selections, each separated by the accepted return-to-constellation procedure, produced one visible in-bounds active light with no overflow or browser errors.');
   return observations;
 }
 

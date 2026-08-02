@@ -103,7 +103,7 @@
       {
         "path": "laws/categories/reality/measure.html",
         "fact": "The defined near-term battery event was evaluated within the next 20 cycles.",
-        "changed_in_this_run": true,
+        "changed_in_this_run": false,
         "visual_structure_change": false,
         "tab_structure_change": false,
         "metric_change": false,
@@ -113,7 +113,7 @@
       {
         "path": "laws/test/reverse-audit/index.html",
         "fact": "The defined battery event was evaluated within the next 20 cycles before reverse challenge.",
-        "changed_in_this_run": true,
+        "changed_in_this_run": false,
         "visual_structure_change": false,
         "tab_structure_change": false,
         "metric_change": false,

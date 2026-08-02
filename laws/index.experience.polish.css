@@ -134,8 +134,103 @@ html[data-cp6-experiential-presentation="candidate"] .laws-minimal-nav > summary
   }
 }
 
+/*
+ * LAWS_FIRST_DYNAMIC_INDICATOR_RESTORATION_v1
+ * Restores the five visual F.I.R.S.T. state lights without creating a new
+ * state source. The existing read-only Compass correspondence continues to
+ * set data-laws-experience-active on the five question records.
+ */
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article {
+  isolation: isolate;
+  overflow: visible;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article > :is(a, p) {
+  opacity: 0.58;
+  transition: opacity 220ms ease, color 220ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"] > :is(a, p) {
+  opacity: 1;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+  z-index: 4;
+  box-sizing: border-box;
+  display: block;
+  width: 0.9rem;
+  height: 0.9rem;
+  opacity: 1 !important;
+  visibility: visible !important;
+  border: 2px solid rgba(116, 229, 255, 0.52);
+  background: #07101f;
+  box-shadow:
+    0 0 0 1px rgba(116, 229, 255, 0.08),
+    0 0 12px rgba(116, 229, 255, 0.18);
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 220ms ease,
+    transform 180ms ease;
+}
+
+html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
+  border-color: #e7fcff;
+  background: #79eaff;
+  box-shadow:
+    0 0 0 4px rgba(121, 234, 255, 0.12),
+    0 0 12px rgba(121, 234, 255, 0.9),
+    0 0 28px rgba(121, 234, 255, 0.72);
+  transform: scale(1.16);
+}
+
+@media (max-width: 780px) {
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid {
+    position: relative;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid::before {
+    display: block !important;
+    top: 1.45rem;
+    bottom: 1.45rem;
+    left: 0.45rem;
+    right: auto;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(
+      to bottom,
+      rgba(121, 234, 255, 0.5),
+      var(--laws-experience-line) 18%,
+      var(--laws-experience-line) 82%,
+      rgba(121, 234, 255, 0.26)
+    );
+    box-shadow: 0 0 12px rgba(121, 234, 255, 0.12);
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article {
+    padding: 0.85rem 0 1.35rem 2.15rem !important;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+    top: 1rem !important;
+    left: 0 !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure-body {
     backdrop-filter: none;
+  }
+
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article,
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before,
+  html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article > :is(a, p) {
+    transition: none !important;
   }
 }

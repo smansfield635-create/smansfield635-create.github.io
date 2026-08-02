@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/laws-complete-renewal-batch-materialize.yml
       - scripts/laws_complete_renewal_batch.py
+      - scripts/laws_complete_renewal_batch_polish.py
       - assets/laws-destination/renewal-batch.css
       - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
       - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
@@ -18,6 +19,7 @@ on:
     paths:
       - .github/workflows/laws-complete-renewal-batch-materialize.yml
       - scripts/laws_complete_renewal_batch.py
+      - scripts/laws_complete_renewal_batch_polish.py
       - assets/laws-destination/renewal-batch.css
       - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
       - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
@@ -48,8 +50,18 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Materialize complete chamber and battery pathway
-        run: python scripts/laws_complete_renewal_batch.py
+      - name: Materialize once or reuse existing product candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json ]]; then
+            echo 'Existing materialized candidate detected; regeneration and nested source wrapping are prohibited.'
+          else
+            python scripts/laws_complete_renewal_batch.py
+          fi
+
+      - name: Apply bounded presentation polish
+        run: python scripts/laws_complete_renewal_batch_polish.py
 
       - name: Verify generated route and presentation markers
         shell: bash
@@ -64,6 +76,7 @@ jobs:
           assert receipt['remaining_child_routes_materialized'] == 20
           assert receipt['battery_public_surface_scope'] == 27
           assert receipt['product_file_count'] == 29
+          assert receipt['presentation_polish']['formula_node_split_rule'] == 'ARROWS_ONLY_PLUS_SIGNS_PRESERVED'
 
           for path in receipt['product_files_written']:
               text = (root / path).read_text(encoding='utf-8')
@@ -79,7 +92,19 @@ jobs:
               assert 'lr-topbar' in text and 'lr-nav' in text, path
               assert 'lr-boundary' in text, path
               assert 'lr-audit' in text, path
-          print('Generated presentation contract: PASS')
+
+          cycles = (root / 'laws/categories/flow/cycles/index.html').read_text(encoding='utf-8')
+          assert '<strong>STATE_(t+1); cumulative effect = Σ cycle effects</strong>' in cycles
+          assert '<strong>STATE_(t</strong>' not in cycles
+
+          expected_titles = {
+              'laws/battery-heldout-study/index.html': 'Battery health held-out study · Laws',
+              'laws/scientific-law/battery-heldout-study/index.html': 'Battery health held-out study · Scientific Law · Laws',
+              'laws/categories/reality/battery-heldout-study/index.html': 'Battery health held-out study · Reality · Laws',
+          }
+          for path, title in expected_titles.items():
+              assert f'<title>{title}</title>' in (root / path).read_text(encoding='utf-8')
+          print('Generated and polished presentation contract: PASS')
           PY
 
       - name: Normalize generated whitespace
@@ -122,16 +147,16 @@ jobs:
           print('Generated HTML structural checks: PASS')
           PY
 
-      - name: Commit materialized product candidate
+      - name: Commit polished product candidate
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet; then
-            echo 'No materialization changes to commit.'
+            echo 'No product polish changes to commit.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add laws frontier/energy/battery-coherence-study/index.html
-          git commit -m 'Materialize complete Laws chamber and battery pathway renewal'
+          git commit -m 'Polish complete Laws chamber and battery pathway renewal'
           git push origin HEAD:agent/laws-complete-renewal-batch-001

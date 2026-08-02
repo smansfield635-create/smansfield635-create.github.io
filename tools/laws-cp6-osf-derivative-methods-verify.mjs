@@ -10,7 +10,6 @@ const ROOT = process.cwd();
 const CONTRACT = 'LAWS_CP6_OSF_DERIVATIVE_METHODS_V1';
 const SCOPE_MARKER = '<section aria-labelledby="scope-title" class="panel boundary">';
 const OUT = path.join(ROOT, 'laws/control-plane/osf-derivative-methods');
-const LANDING = 'laws/index.html';
 const CHILDREN = [
   'laws/test/admission-and-baseline/index.html',
   'laws/test/forward-construction/index.html',
@@ -19,7 +18,16 @@ const CHILDREN = [
   'laws/research/evidence-and-sources/index.html',
   'laws/research/methods-and-models/index.html'
 ];
+const ROUTES = [
+  '/laws/test/admission-and-baseline/',
+  '/laws/test/forward-construction/',
+  '/laws/test/reverse-audit/',
+  '/laws/test/result-and-record/',
+  '/laws/research/evidence-and-sources/',
+  '/laws/research/methods-and-models/'
+];
 const PROTECTED = [
+  'laws/index.html',
   'laws/index.controller.js',
   'laws/index.compositor.js',
   'laws/index.crystals.js',
@@ -64,12 +72,16 @@ const staticReport = {
   contract: CONTRACT,
   status: 'PASS',
   checked_at: new Date().toISOString(),
+  destination_pages: CHILDREN.length,
   child_archive_byte_preservation: {},
   method_layer_counts: {},
   protected_runtime_diff: {},
   source_identity: {},
   claim_boundary: {}
 };
+
+assert.equal(CHILDREN.length, 6, 'DESTINATION_PAGE_COUNT');
+assert.equal(ROUTES.length, 6, 'DESTINATION_ROUTE_COUNT');
 
 for (const rel of CHILDREN) {
   const before = baseline(rel);
@@ -86,16 +98,6 @@ for (const rel of CHILDREN) {
   staticReport.child_archive_byte_preservation[rel] = true;
   staticReport.method_layer_counts[rel] = 1;
 }
-
-const landing = read(LANDING);
-assert.equal(count(landing, `data-laws-local-compass-orientation="${CONTRACT}"`), 1, 'LANDING_ORIENTATION_COUNT');
-assert.equal(count(landing, 'data-laws-derivative-methods-css="true"'), 1, 'LANDING_CSS_COUNT');
-assert.ok(landing.includes('The Laws Compass uses the same navigation language as the Main Compass.'), 'INHERITED_LANGUAGE_MISSING');
-assert.ok(landing.includes('Select the center world'), 'CENTER_RETURN_EXPLANATION_MISSING');
-const enterIndex = landing.indexOf('data-laws-enter=""');
-const orientationIndex = landing.indexOf(`data-laws-local-compass-orientation="${CONTRACT}"`);
-const pathsIndex = landing.indexOf('data-laws-experience-stage="paths"');
-assert.ok(enterIndex >= 0 && orientationIndex > enterIndex && pathsIndex > orientationIndex, 'LANDING_SEQUENCE_INVALID');
 
 const manifest = JSON.parse(read('laws/control-plane/osf-derivative-methods/manifest.json'));
 assert.equal(manifest.contract, CONTRACT);
@@ -119,18 +121,18 @@ staticReport.claim_boundary = manifest.claim_boundary;
 
 for (const rel of PROTECTED) {
   const diff = execFileSync('git', ['diff', '--name-only', 'HEAD', '--', rel], { cwd: ROOT, encoding: 'utf8' }).trim();
-  assert.equal(diff, '', `PROTECTED_RUNTIME_CHANGED:${rel}`);
+  assert.equal(diff, '', `PROTECTED_OR_OUT_OF_SCOPE_PATH_CHANGED:${rel}`);
   staticReport.protected_runtime_diff[rel] = 'ZERO';
 }
 
 const changed = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim().split('\n').filter(Boolean);
 const allowed = new Set([
-  LANDING,
   ...CHILDREN,
   'laws/derivative-methods.css',
   'laws/control-plane/osf-derivative-methods/manifest.json'
 ]);
 for (const rel of changed) assert.ok(allowed.has(rel), `UNAUTHORIZED_TRANSFORM_PATH:${rel}`);
+assert.equal(changed.includes('laws/index.html'), false, 'LANDING_PAGE_MUTATION_PROHIBITED');
 staticReport.changed_paths = changed;
 fs.writeFileSync(path.join(OUT, 'static.json'), `${JSON.stringify(staticReport, null, 2)}\n`, 'utf8');
 
@@ -153,7 +155,7 @@ function probeServer(url) {
 
 async function waitForServer() {
   for (let i = 0; i < 40; i += 1) {
-    if (await probeServer('http://127.0.0.1:4173/laws/')) return;
+    if (await probeServer('http://127.0.0.1:4173/laws/test/admission-and-baseline/')) return;
     await delay(250);
   }
   throw new Error(`LOCAL_SERVER_NOT_READY:${serverError}`);
@@ -181,15 +183,6 @@ const profiles = [
   { name: 'tablet', width: 820, height: 1180 },
   { name: 'desktop', width: 1440, height: 1000 }
 ];
-const routes = [
-  '/laws/',
-  '/laws/test/admission-and-baseline/',
-  '/laws/test/forward-construction/',
-  '/laws/test/reverse-audit/',
-  '/laws/test/result-and-record/',
-  '/laws/research/evidence-and-sources/',
-  '/laws/research/methods-and-models/'
-];
 
 const browserReport = {
   contract: CONTRACT,
@@ -210,35 +203,19 @@ try {
     page.on('console', (message) => { if (message.type() === 'error') errors.push(`console:${message.text()}`); });
     page.on('pageerror', (error) => errors.push(`page:${error.message}`));
     const profileResult = {};
-    for (const route of routes) {
+    for (const route of ROUTES) {
       const response = await page.goto(`http://127.0.0.1:4173${route}`, { waitUntil: 'networkidle' });
       assert.ok(response && response.ok(), `HTTP_FAILURE:${profile.name}:${route}`);
-      const result = await page.evaluate(({ route, contract }) => {
+      const result = await page.evaluate((contract) => {
         const root = document.documentElement;
-        const overflow = Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1;
-        const methodLayers = document.querySelectorAll(`[data-laws-derivative-contract="${contract}"]`).length;
-        const orientation = document.querySelector(`[data-laws-local-compass-orientation="${contract}"]`);
-        const enter = document.querySelector('[data-laws-enter]');
-        const paths = document.querySelector('[data-laws-experience-stage="paths"]');
-        let landingOrder = null;
-        if (route === '/laws/') {
-          landingOrder = Boolean(orientation && enter && paths && (enter.compareDocumentPosition(orientation) & Node.DOCUMENT_POSITION_FOLLOWING) && (orientation.compareDocumentPosition(paths) & Node.DOCUMENT_POSITION_FOLLOWING));
-        }
         return {
-          overflow,
-          methodLayers,
-          orientationVisible: orientation ? getComputedStyle(orientation).display !== 'none' : null,
-          landingOrder,
+          overflow: Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1,
+          methodLayers: document.querySelectorAll(`[data-laws-derivative-contract="${contract}"]`).length,
           title: document.title
         };
-      }, { route, contract: CONTRACT });
+      }, CONTRACT);
       assert.equal(result.overflow, false, `HORIZONTAL_OVERFLOW:${profile.name}:${route}`);
-      if (route === '/laws/') {
-        assert.equal(result.orientationVisible, true, `LANDING_ORIENTATION_NOT_VISIBLE:${profile.name}`);
-        assert.equal(result.landingOrder, true, `LANDING_BROWSER_ORDER_INVALID:${profile.name}`);
-      } else {
-        assert.equal(result.methodLayers, 1, `METHOD_LAYER_BROWSER_COUNT:${profile.name}:${route}`);
-      }
+      assert.equal(result.methodLayers, 1, `METHOD_LAYER_BROWSER_COUNT:${profile.name}:${route}`);
       profileResult[route] = result;
     }
     assert.deepEqual(errors, [], `BROWSER_ERRORS:${profile.name}:${JSON.stringify(errors)}`);
@@ -273,8 +250,11 @@ fs.writeFileSync(path.join(OUT, 'browser.json'), `${JSON.stringify(browserReport
 console.log(JSON.stringify({
   status: 'PASS',
   contract: CONTRACT,
+  source_ids: Object.keys(EXPECTED_METADATA),
+  destination_pages: CHILDREN.length,
   changed_paths: changed,
   profiles: Object.keys(browserReport.profiles),
   protected_runtime_diff: 'ZERO',
+  landing_page_diff: 'ZERO',
   child_archive_byte_preservation: 'PASS'
 }, null, 2));

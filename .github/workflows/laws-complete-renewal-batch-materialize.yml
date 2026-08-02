@@ -10,6 +10,17 @@ on:
       - assets/laws-destination/renewal-batch.css
       - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
       - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
+  pull_request:
+    types:
+      - ready_for_review
+    branches:
+      - main
+    paths:
+      - .github/workflows/laws-complete-renewal-batch-materialize.yml
+      - scripts/laws_complete_renewal_batch.py
+      - assets/laws-destination/renewal-batch.css
+      - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
+      - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
 
 permissions:
   contents: write
@@ -20,7 +31,9 @@ concurrency:
 
 jobs:
   materialize:
-    if: github.ref == 'refs/heads/agent/laws-complete-renewal-batch-001'
+    if: >-
+      github.ref == 'refs/heads/agent/laws-complete-renewal-batch-001' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.number == 493 && github.event.pull_request.head.ref == 'agent/laws-complete-renewal-batch-001')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -101,8 +114,6 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add \
-            laws \
-            frontier/energy/battery-coherence-study/index.html
+          git add laws frontier/energy/battery-coherence-study/index.html
           git commit -m 'Materialize complete Laws chamber and battery pathway renewal'
           git push origin HEAD:agent/laws-complete-renewal-batch-001

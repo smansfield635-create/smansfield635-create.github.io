@@ -13,7 +13,7 @@ import { deepFreeze, H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY } fro
 const directory=path.dirname(fileURLToPath(import.meta.url));
 const readJson=fileName=>JSON.parse(fs.readFileSync(path.join(directory,fileName),'utf8'));
 const FILES=Object.freeze({consolidated:'h-earth.repository-registry.validator-contract.json',input:'h-earth.repository-registry.validator-contract.input.json',receipt:'h-earth.repository-registry.validator-contract.receipt.json',dispositions:'h-earth.repository-registry.validator-contract.dispositions.json',failures:'h-earth.repository-registry.validator-contract.failures.json',criticality:'h-earth.repository-registry.validator-contract.criticality.json',algorithm:'h-earth.repository-registry.validator-contract.algorithm.json',instruction:'h-earth.repository-registry.tool-instruction.json'});
-const EXPECTED_GRATITUDE_NODE_ID='H_EARTH_GRATITUDE_REGION_CONTROLLING_ARTIFACT_REFERENCE_UPDATE_SCOPE';
+const EXPECTED_GRATITUDE_NODE_ID='H_EARTH_GRATITUDE_REGION_COORDINATE_RECONCILIATION_CANDIDATE_SET_PACKAGE';
 const EXPECTED_C2_R1_NODE_ID='H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE';
 const EXPECTED_INTEGRATED_NODE_ID='H_EARTH_C2_R1_GRATITUDE_CONTINUOUS_STARTING_ENVIRONMENT';
 const EXPECTED_BRANCH='agent/h-earth-c2-r1-material-only-binding-implementation-001';

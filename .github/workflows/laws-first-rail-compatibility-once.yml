@@ -1,0 +1,66 @@
+name: Laws FIRST rail legacy compatibility once
+
+on:
+  pull_request:
+    types: [ready_for_review]
+    paths:
+      - '.github/workflows/laws-first-rail-compatibility-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  preserve-legacy-indicator-contract:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: macos-latest
+    steps:
+      - name: Check out exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-first-indicator-cache-bust-001
+          fetch-depth: 0
+
+      - name: Preserve secondary disclosure indicator compatibility
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('laws/index.experience.polish.css')
+          text = path.read_text()
+          old = '''html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+            width: 0.72rem;
+            height: 0.72rem;
+            border-width: 1px;
+            box-shadow: 0 0 8px rgba(116, 229, 255, 0.16);
+          }
+
+          html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
+            background: rgba(121, 234, 255, 0.72);
+            box-shadow: 0 0 12px rgba(121, 234, 255, 0.52);
+            transform: scale(1.05);
+          }'''.replace('          ', '')
+          new = '''html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
+            width: 0.9rem;
+            height: 0.9rem;
+            border-width: 2px;
+            box-shadow: 0 0 8px rgba(116, 229, 255, 0.16);
+          }
+
+          html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
+            background: #79eaff;
+            box-shadow: 0 0 12px rgba(121, 234, 255, 0.52);
+            transform: scale(1.05);
+          }'''.replace('          ', '')
+          if old not in text:
+              raise SystemExit('legacy compatibility block not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+
+      - name: Commit CSS compatibility only
+        shell: bash
+        run: |
+          git add laws/index.experience.polish.css
+          git config user.name "laws-rail-compatibility-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "Preserve legacy FIRST indicator compatibility"
+          git push origin HEAD:agent/laws-first-indicator-cache-bust-001

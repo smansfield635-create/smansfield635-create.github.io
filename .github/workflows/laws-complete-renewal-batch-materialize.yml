@@ -1,4 +1,4 @@
-name: Laws complete renewal batch materialize
+name: Laws CP6 final detail synchronization
 
 on:
   push:
@@ -6,197 +6,74 @@ on:
       - agent/laws-complete-renewal-batch-001
     paths:
       - .github/workflows/laws-complete-renewal-batch-materialize.yml
-      - scripts/laws_complete_renewal_batch.py
-      - scripts/laws_complete_renewal_batch_polish.py
-      - scripts/laws_complete_renewal_signals_horizon_patch.py
-      - scripts/laws_complete_renewal_representative_horizon_patch.py
-      - assets/laws-destination/renewal-batch.css
-      - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
-      - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
-      - laws/control-plane/renewal/laws-complete-renewal-signals-battery-horizon-correction-v1.json
-      - laws/control-plane/renewal/laws-complete-renewal-representative-battery-horizon-completeness-successor-v1.json
-  pull_request:
-    types:
-      - ready_for_review
-    branches:
-      - main
-    paths:
-      - .github/workflows/laws-complete-renewal-batch-materialize.yml
-      - scripts/laws_complete_renewal_batch.py
-      - scripts/laws_complete_renewal_batch_polish.py
-      - scripts/laws_complete_renewal_signals_horizon_patch.py
-      - scripts/laws_complete_renewal_representative_horizon_patch.py
-      - assets/laws-destination/renewal-batch.css
-      - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
-      - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
-      - laws/control-plane/renewal/laws-complete-renewal-signals-battery-horizon-correction-v1.json
-      - laws/control-plane/renewal/laws-complete-renewal-representative-battery-horizon-completeness-successor-v1.json
+      - scripts/laws_cp6_final_sync_apply.py
 
 permissions:
   contents: write
 
 concurrency:
-  group: laws-complete-renewal-batch-materialize
+  group: laws-cp6-final-detail-synchronization
   cancel-in-progress: false
 
 jobs:
-  materialize:
-    if: >-
-      github.ref == 'refs/heads/agent/laws-complete-renewal-batch-001' ||
-      (github.event_name == 'pull_request' && github.event.pull_request.number == 493 && github.event.pull_request.head.ref == 'agent/laws-complete-renewal-batch-001')
+  synchronize:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
-      - name: Checkout exact batch branch
+      - name: Check out exact recovered batch branch
         uses: actions/checkout@v4
         with:
           ref: agent/laws-complete-renewal-batch-001
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+      - name: Apply exact non-generating CP6 deltas
+        run: python3 scripts/laws_cp6_final_sync_apply.py
 
-      - name: Materialize once or reuse existing product candidate
-        shell: bash
+      - name: Remove one-shot carrier
         run: |
-          set -euo pipefail
-          if [[ -f laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json ]]; then
-            echo 'Existing materialized candidate detected; regeneration and nested source wrapping are prohibited.'
-          else
-            python scripts/laws_complete_renewal_batch.py
-          fi
+          rm .github/workflows/laws-complete-renewal-batch-materialize.yml
+          rm scripts/laws_cp6_final_sync_apply.py
 
-      - name: Apply bounded presentation polish
-        run: python scripts/laws_complete_renewal_batch_polish.py
-
-      - name: Apply exact Signals 20-cycle completeness correction
-        run: python scripts/laws_complete_renewal_signals_horizon_patch.py
-
-      - name: Apply remaining representative 20-cycle completeness corrections
-        run: python scripts/laws_complete_renewal_representative_horizon_patch.py
-
-      - name: Verify generated route and presentation markers
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          root = Path('.')
-          receipt = json.loads((root / 'laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json').read_text())
-          assert receipt['remaining_child_routes_materialized'] == 20
-          assert receipt['battery_public_surface_scope'] == 27
-          assert receipt['product_file_count'] == 29
-          assert receipt['presentation_polish']['formula_node_split_rule'] == 'ARROWS_ONLY_PLUS_SIGNS_PRESERVED'
-          assert receipt['representative_battery_completeness_correction']['path'] == 'laws/categories/flow/signals/index.html'
-          successor = receipt['representative_battery_horizon_completeness_successor']
-          assert successor['final_authorized_representative_paths'] == [
-              'laws/categories/flow/signals/index.html',
-              'laws/categories/reality/measure.html',
-              'laws/test/reverse-audit/index.html',
-          ]
-
-          for path in receipt['product_files_written']:
-              text = (root / path).read_text(encoding='utf-8')
-              if path == 'laws/index.html':
-                  assert 'lr-battery-landing' in text
-                  assert 'BATTERY_COHERENCE_HELDOUT_STUDY_v1' in text
-                  continue
-              assert 'data-laws-complete-renewal="v1"' in text, path
-              assert '/assets/laws-destination/renewal.css' in text, path
-              assert '/assets/laws-destination/renewal-navigation.css' in text, path
-              assert '/assets/laws-destination/renewal-batch.css' in text, path
-              assert '/assets/laws-destination/renewal.js' in text, path
-              assert 'lr-topbar' in text and 'lr-nav' in text, path
-              assert 'lr-boundary' in text, path
-              assert 'lr-audit' in text, path
-
-          signals = (root / 'laws/categories/flow/signals/index.html').read_text(encoding='utf-8')
-          measure = (root / 'laws/categories/reality/measure.html').read_text(encoding='utf-8')
-          reverse = (root / 'laws/test/reverse-audit/index.html').read_text(encoding='utf-8')
-          findings = (root / 'laws/research/findings-and-boundaries/index.html').read_text(encoding='utf-8')
-          assert 'the defined near-term event was evaluated within the next 20 cycles' in signals
-          assert 'one defined near-term event evaluated within the next 20 cycles' in measure
-          assert 'The defined battery event was evaluated within the next 20 cycles' in reverse
-          assert 'fixed 80%-within-20-cycles event' in findings
-
-          cycles = (root / 'laws/categories/flow/cycles/index.html').read_text(encoding='utf-8')
-          assert '<strong>STATE_(t+1); cumulative effect = Σ cycle effects</strong>' in cycles
-          assert '<strong>STATE_(t</strong>' not in cycles
-
-          expected_titles = {
-              'laws/battery-heldout-study/index.html': 'Battery health held-out study · Laws',
-              'laws/scientific-law/battery-heldout-study/index.html': 'Battery health held-out study · Scientific Law · Laws',
-              'laws/categories/reality/battery-heldout-study/index.html': 'Battery health held-out study · Reality · Laws',
-          }
-          for path, title in expected_titles.items():
-              assert f'<title>{title}</title>' in (root / path).read_text(encoding='utf-8')
-          print('Generated, polished, and representative-complete presentation contract: PASS')
-          PY
-
-      - name: Normalize generated whitespace
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          receipt_path = Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json')
-          receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
-          paths = list(receipt['product_files_written']) + [
-              'laws/categories/flow/signals/index.html',
-              'laws/categories/reality/measure.html',
-              'laws/test/reverse-audit/index.html',
-          ]
-          for raw_path in paths:
-              path = Path(raw_path)
-              text = path.read_text(encoding='utf-8')
-              normalized = '\n'.join(line.rstrip() for line in text.splitlines()) + '\n'
-              path.write_text(normalized, encoding='utf-8')
-          print('Generated whitespace normalization: PASS')
-          PY
-
-      - name: Check HTML and whitespace integrity
+      - name: Verify exact mutation boundary
         shell: bash
         run: |
           set -euo pipefail
           git diff --check
-          python - <<'PY'
-          from pathlib import Path
-          import re
-
-          receipt = Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json')
-          assert receipt.exists()
-          representative_paths = {
+          git status --short
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+              '.github/workflows/laws-complete-renewal-batch-materialize.yml',
+              'assets/laws-destination/renewal.js',
               'laws/categories/flow/signals/index.html',
               'laws/categories/reality/measure.html',
+              'laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json',
+              'laws/index.html',
               'laws/test/reverse-audit/index.html',
+              'scripts/laws_cp6_final_sync_apply.py',
           }
-          for path in Path('laws').rglob('*.html'):
-              text = path.read_text(encoding='utf-8', errors='strict')
-              if 'data-laws-complete-renewal="v1"' not in text and path.as_posix() not in representative_paths:
-                  continue
-              assert re.search(r'<!doctype html>', text, re.I), path
-              assert re.search(r'<html\b', text, re.I), path
-              assert re.search(r'</html>', text, re.I), path
-              assert text.count('id="main"') == 1, path
-          print('Generated HTML structural checks: PASS')
+          observed = {
+              line[3:]
+              for line in subprocess.check_output(['git', 'status', '--short'], text=True).splitlines()
+              if line.strip()
+          }
+          if observed != expected:
+              raise SystemExit(f'CP6_FINAL_SYNC_SCOPE_DRIFT: expected={sorted(expected)} observed={sorted(observed)}')
           PY
+          grep -F 'collapsePanels(buttons, panels)' assets/laws-destination/renewal.js
+          grep -F 'setupCollapsibleNavigation' assets/laws-destination/renewal.js
+          grep -F 'within the next 20 cycles' laws/categories/flow/signals/index.html
+          grep -F 'within the next 20 cycles' laws/categories/reality/measure.html
+          grep -F '1,653 final-test cycle records from three held-out cells' laws/test/reverse-audit/index.html
+          grep -F 'lr-battery-landing' laws/index.html
 
-      - name: Commit bounded representative completeness candidate
+      - name: Commit exact synchronized candidate
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet; then
-            echo 'No product completeness changes to commit.'
-            exit 0
-          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add laws frontier/energy/battery-coherence-study/index.html
-          git commit -m 'Complete representative battery horizon context'
+          git add -A
+          git commit -m 'Complete CP6 final detail synchronization [skip ci]'
           git push origin HEAD:agent/laws-complete-renewal-batch-001

@@ -7,6 +7,10 @@ on:
     paths:
       - scripts/laws-renewal-apply-static-equivalence.mjs
       - .github/workflows/laws-renewal-apply-static-equivalence.yml
+  pull_request:
+    paths:
+      - scripts/laws-renewal-apply-static-equivalence.mjs
+      - .github/workflows/laws-renewal-apply-static-equivalence.yml
 
 permissions:
   contents: write

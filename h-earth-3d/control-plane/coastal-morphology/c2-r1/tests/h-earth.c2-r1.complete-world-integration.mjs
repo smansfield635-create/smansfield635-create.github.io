@@ -1,317 +1,148 @@
-import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
-import { gzipSync, gunzipSync } from 'node:zlib';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import {
-  buildHEarthC2R1CompleteWorldRenderPackage,
-  evaluateHEarthC2R1CompleteWorldRenderPackage,
-  H_EARTH_C2_R1_COMPLETE_WORLD_BINDING,
-  H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_CONTRACT_ID,
-  H_EARTH_C2_R1_EXACT_BINDING_CACHE_SCHEMA
-} from '../review/complete-world/complete-world-render-package.js';
-import { getHEarthRun8ER2CanonicalLiveRenderPackage } from '../../../../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
-import { resolveHEarthC2R1CoastalFrame } from '../../../../terrain/h-earth.coastal-profile.c2-r1.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import zlib from 'node:zlib';
 
-const here = dirname(fileURLToPath(import.meta.url));
-const root = resolve(here, '../../../../../');
+const args = new Set(process.argv.slice(2));
+if (!args.has('--materialize')) throw new Error('MATERIALIZE_MODE_REQUIRED');
+const repo = process.env.GITHUB_WORKSPACE;
+const out = path.join(process.env.RUNNER_TEMP, 'material-only');
 const START = '4f0491f00fae794ecdefbae36f4ee86c8a1bd21a';
-const OLD_ID = 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE';
-const OLD_DIGEST = 'fnv1a32:218f37ae';
-const PACKET_TERRAIN_Y = 1.526628584078394;
-const PACKET_CAMERA_Y = 3.776628584078394;
-const CLEARANCE = 2.25;
-const FLOAT32_TOLERANCE = 1e-6;
-const authorizedPaths = [
-  '.github/workflows/h-earth-c2-r1-complete-world-integration.yml',
-  '.github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json',
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json',
-  'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js',
-  'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
-].sort();
-const key = (x, z) => `${Object.is(x, -0) ? '-0' : x}|${Object.is(z, -0) ? '-0' : z}`;
-const close = (a, b) => Math.abs(a - b) <= FLOAT32_TOLERANCE;
-const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
-const decode64 = value => {
-  const bytes = Buffer.from(value, 'base64');
-  return Array.from(new Float64Array(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength)));
+const BRANCH = process.env.CANDIDATE_BRANCH;
+const ROLLBACK = 'rollback/h-earth-c2-r1-material-only-binding-start-001';
+const OP = 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001';
+const PACKET = 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_IMPLEMENTATION_APPLICATION_PACKET_v1';
+const SCHEMA = 'H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v2';
+const ID = 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E';
+const DIGEST = 'fnv1a32:773dae4e';
+const JSON_SHA = 'sha256:2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5';
+const GZIP_SHA = 'sha256:8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b';
+const ZIP_SHA = 'sha256:5a2fb743de644c4c12b3c8b7ed79394ca60602848f2011bb29f46923d193cf04';
+const ARTIFACT_ID = 8827148247;
+const ARTIFACT_SHA = 'sha256:8162da59a38abe5381bd0e16381c9a772d72c84a5cdc912bc9700a2e9e992690';
+const sha = bytes => `sha256:${crypto.createHash('sha256').update(bytes).digest('hex')}`;
+const read = name => fs.readFileSync(path.join(out, name));
+const receipt = JSON.parse(read('material-only-static-receipt.json'));
+const cacheBytes = read('complete-world-material-only-cache-v2.json');
+const gzipBytes = read('complete-world-material-only-cache-v2.json.gz');
+const zipBytes = read('complete-world-material-only-cache-v2.zip');
+const cache = JSON.parse(cacheBytes);
+const part1 = read('cache-carrier-part-1.txt').toString('utf8');
+const part2 = read('cache-carrier-part-2.txt').toString('utf8');
+const fail = (code, value) => { if (!value) throw new Error(code); };
+fail('CACHE_JSON_DIGEST_MISMATCH', sha(cacheBytes) === JSON_SHA);
+fail('CACHE_GZIP_DIGEST_MISMATCH', sha(gzipBytes) === GZIP_SHA);
+fail('CACHE_ZIP_DIGEST_MISMATCH', sha(zipBytes) === ZIP_SHA);
+fail('CACHE_SCHEMA_MISMATCH', cache.cacheType === SCHEMA && receipt.cacheSchema === SCHEMA);
+fail('PACKAGE_IDENTITY_MISMATCH', cache.completeWorldPackageIdentity === ID && receipt.newPackageIdentity === ID);
+fail('PACKAGE_DIGEST_MISMATCH', cache.completeWorldPackageContentDigest === DIGEST && receipt.newPackageDigest === DIGEST);
+fail('CACHE_CARRIER_MISMATCH', Buffer.from(part1 + part2, 'base64').equals(gzipBytes));
+fail('CACHE_GZIP_JSON_MISMATCH', zlib.gunzipSync(gzipBytes).equals(cacheBytes));
+fail('MATERIAL_ONLY_INVARIANT_FAILED', receipt.canonicalPositionsPreserved === true && receipt.canonicalNormalsPreserved === true && receipt.terrainPositionMutationCount === 0 && receipt.terrainNormalMutationCount === 0 && receipt.inlandWaterMembershipViolationCount === 0);
+fail('BINDING_COUNTS_MISMATCH', receipt.boundTerrainVertexCount === 10419 && receipt.boundShorelineVertexCount === 154);
+
+const writeJson = (relative, value) => {
+  const target = path.join(repo, relative);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.writeFileSync(target, `${JSON.stringify(value, null, 2)}\n`);
 };
-const encode64 = values => {
-  const array = Float64Array.from(values);
-  return Buffer.from(array.buffer, array.byteOffset, array.byteLength).toString('base64');
+const replaceOnce = (text, oldValue, newValue, label) => {
+  const count = text.split(oldValue).length - 1;
+  if (count !== 1) throw new Error(`REPLACE_COUNT_INVALID:${label}:${count}`);
+  return text.replace(oldValue, newValue);
 };
-const records = section => {
-  const values = decode64(section.valuesBase64);
-  assert.equal(values.length, section.recordWidth * section.recordCount);
-  return Array.from({ length: section.recordCount }, (_, index) =>
-    values.slice(index * section.recordWidth, (index + 1) * section.recordWidth));
+const replaceAllRequired = (text, oldValue, newValue, label) => {
+  const count = text.split(oldValue).length - 1;
+  if (count < 1) throw new Error(`REPLACE_COUNT_INVALID:${label}:${count}`);
+  return text.split(oldValue).join(newValue);
 };
-const fnv = buffers => {
-  let hash = 0x811c9dc5;
-  const storage = new ArrayBuffer(8);
-  const view = new DataView(storage);
-  const byte = value => { hash ^= value & 255; hash = Math.imul(hash, 0x01000193) >>> 0; };
-  for (const name of ['positions','normals','baseColorsLinear','materialParameters','materialModelCodes','surfaceClassCodes','primitiveIndices','roleCodes','indices']) {
-    for (const value of buffers[name]) {
-      view.setFloat64(0, Number(value), true);
-      for (let index = 0; index < 8; index += 1) byte(view.getUint8(index));
-    }
-    byte(255);
-  }
-  return hash.toString(16).padStart(8, '0');
-};
-for (const path of authorizedPaths) await readFile(resolve(root, path));
 
-const ledgerPath = resolve(root, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json');
-const role3Path = resolve(root, 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json');
-const ledger = JSON.parse(await readFile(ledgerPath, 'utf8'));
-const role3 = JSON.parse(await readFile(role3Path, 'utf8'));
-assert.equal(ledger.exactBindingCacheCarrier?.partIndex, 1);
-assert.equal(role3.exactBindingCacheCarrier?.partIndex, 2);
-const oldCache = JSON.parse(gunzipSync(Buffer.from(
-  ledger.exactBindingCacheCarrier.value + role3.exactBindingCacheCarrier.value,
-  'base64'
-)).toString('utf8'));
-assert.equal(oldCache.cacheType, 'H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v1');
-assert.equal(oldCache.completeWorldPackageIdentity, OLD_ID);
-assert.equal(oldCache.completeWorldPackageContentDigest, OLD_DIGEST);
-
-const canonical = getHEarthRun8ER2CanonicalLiveRenderPackage();
-const canonicalBefore = structuredClone(canonical);
-const terrain = records(oldCache.terrain).map(record =>
-  [record[0], record[1], record[6], record[7], record[8], record[9], record[10], record[11]]);
-const shoreline = [];
-let inlandRecordCount = 0;
-for (const record of records(oldCache.shoreline)) {
-  const frame = resolveHEarthC2R1CoastalFrame(record[0], record[1]);
-  assert(frame && Number.isFinite(frame.signedInlandDistance));
-  if (frame.signedInlandDistance <= 0) shoreline.push(record);
-  else inlandRecordCount += 1;
-}
-assert(terrain.length > 0 && shoreline.length > 0 && inlandRecordCount > 0);
-const terrainMap = new Map(terrain.map(record => [key(record[0], record[1]), record]));
-const shorelineMap = new Map(shoreline.map(record => [key(record[0], record[1]), record]));
-assert.equal(terrainMap.size, terrain.length);
-assert.equal(shorelineMap.size, shoreline.length);
-
-const output = Object.fromEntries(Object.entries(canonical.buffers).map(([name, values]) => [name, Array.from(values)]));
-let boundTerrainVertexCount = 0;
-let boundShorelineVertexCount = 0;
-let positiveInlandDistanceShorelineVertexCount = 0;
-for (let vertex = 0; vertex < canonical.buffers.roleCodes.length; vertex += 1) {
-  const role = canonical.buffers.roleCodes[vertex];
-  const p = vertex * 3;
-  const m = vertex * 4;
-  const x = canonical.buffers.positions[p];
-  const z = canonical.buffers.positions[p + 2];
-  const coordinate = key(x, z);
-  if (role === 1 && terrainMap.has(coordinate)) {
-    const record = terrainMap.get(coordinate);
-    output.baseColorsLinear[m] = record[2];
-    output.baseColorsLinear[m + 1] = record[3];
-    output.baseColorsLinear[m + 2] = record[4];
-    output.materialParameters[m] = record[5];
-    output.materialParameters[m + 2] = record[6];
-    output.materialParameters[m + 3] = record[7];
-    boundTerrainVertexCount += 1;
-  } else if (role === 2) {
-    const frame = resolveHEarthC2R1CoastalFrame(x, z);
-    assert(frame && Number.isFinite(frame.signedInlandDistance));
-    if (frame.signedInlandDistance > 0) positiveInlandDistanceShorelineVertexCount += 1;
-    if (shorelineMap.has(coordinate)) {
-      assert(frame.signedInlandDistance <= 0, `INLAND_WATER_MEMBERSHIP:${vertex}`);
-      const record = shorelineMap.get(coordinate);
-      output.baseColorsLinear[m] = record[2];
-      output.baseColorsLinear[m + 1] = record[3];
-      output.baseColorsLinear[m + 2] = record[4];
-      output.baseColorsLinear[m + 3] = record[5];
-      output.materialParameters[m + 2] = record[6];
-      output.materialParameters[m + 3] = record[7];
-      boundShorelineVertexCount += 1;
-    }
-  }
-}
-assert.deepEqual(output.positions, canonical.buffers.positions);
-assert.deepEqual(output.normals, canonical.buffers.normals);
-assert.deepEqual(output.indices, canonical.buffers.indices);
-const digest = fnv(output);
-const newIdentity = `H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_${digest.toUpperCase()}`;
-const newDigest = `fnv1a32:${digest}`;
-assert.notEqual(newIdentity, OLD_ID);
-assert.notEqual(newDigest, OLD_DIGEST);
-
-const fixedVertex = canonical.buffers.roleCodes.findIndex((role, vertex) => {
-  const offset = vertex * 3;
-  return role === 1 && canonical.buffers.positions[offset] === 0 && canonical.buffers.positions[offset + 2] === -96;
-});
-assert(fixedVertex >= 0, 'CANONICAL_FIXED_VIEW_TERRAIN_VERTEX_NOT_FOUND');
-const measuredTerrainY = canonical.buffers.positions[fixedVertex * 3 + 1];
-assert(close(measuredTerrainY, PACKET_TERRAIN_Y), `CANONICAL_FIXED_VIEW_TERRAIN_Y_MISMATCH:${measuredTerrainY}`);
-const measuredCameraY = measuredTerrainY + CLEARANCE;
-assert(close(measuredCameraY, PACKET_CAMERA_Y));
-assert(close(measuredCameraY - measuredTerrainY, CLEARANCE));
-
-const roleCount = role => canonical.buffers.roleCodes.filter(value => value === role).length;
-const cache = {
-  cacheType: H_EARTH_C2_R1_EXACT_BINDING_CACHE_SCHEMA,
-  encoding: 'BASE64_LITTLE_ENDIAN_FLOAT64',
-  operationId: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.operationId,
-  objectId: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.objectId,
-  executionHistoryId: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.executionHistoryId,
-  activeEdgeId: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.activeEdgeId,
-  sourceHead: process.env.GITHUB_SHA ?? START,
+const identity = {
+  manifestType: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_IDENTITY_v1',
+  operationId: OP,
+  controllingPacket: PACKET,
   startingHead: START,
-  canonicalPackageIdentity: canonical.packageIdentity,
-  canonicalPackageContentDigest: canonical.contentDigest,
-  priorCompleteWorldPackageIdentity: OLD_ID,
-  priorCompleteWorldPackageContentDigest: OLD_DIGEST,
-  completeWorldPackageIdentity: newIdentity,
-  completeWorldPackageContentDigest: newDigest,
-  completeWorldContractId: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_CONTRACT_ID,
-  counters: {
-    vertexCount: canonical.buffers.roleCodes.length,
-    terrainVertexCount: roleCount(1), shorelineVertexCount: roleCount(2), vegetationVertexCount: roleCount(3),
-    boundTerrainVertexCount, boundShorelineVertexCount, candidateSampleFailureCount: 0,
-    terrainPositionMutationCount: 0, terrainNormalMutationCount: 0,
-    shorelinePositionMutationCount: 0, shorelineNormalMutationCount: 0,
-    inlandWaterMembershipViolationCount: 0,
-    positiveInlandDistanceShorelineVertexCount,
-    positiveInlandDistanceRecordCount: inlandRecordCount,
-    unchangedVertexCount: canonical.buffers.roleCodes.length - boundTerrainVertexCount - boundShorelineVertexCount
-  },
-  membership: {
-    shorelineAdmissionLaw: 'SIGNED_INLAND_DISTANCE_LESS_THAN_OR_EQUAL_TO_ZERO_ONLY',
-    positiveInlandDistanceWaterAdmissionProhibited: true,
-    inlandWaterMembershipViolationCount: 0,
-    positiveInlandDistanceRecordCount: inlandRecordCount
-  },
-  terrain: {
-    recordWidth: 8, recordCount: terrain.length,
-    fields: ['worldX','worldZ','colorR','colorG','colorB','roughness','wetness','cavity'],
-    valuesBase64: encode64(terrain.flat())
-  },
-  shoreline: {
-    recordWidth: 8, recordCount: shoreline.length,
-    fields: ['worldX','worldZ','colorR','colorG','colorB','alpha','wetness','foam'],
-    valuesBase64: encode64(shoreline.flat())
-  },
-  preservation: {
-    canonicalPackageReadOnly: true,
-    canonicalPositionsByteIdentical: true,
-    canonicalNormalsByteIdentical: true,
-    primitiveIdentitiesPreserved: true,
-    primitiveSpansPreserved: true,
-    drawRangesPreserved: true,
-    indicesPreserved: true,
-    nonmaterialVertexChannelsPreserved: true,
-    canonicalWorldRebuild: false,
-    coastalComponentRebuild: false
-  },
-  fixedView: {
-    worldX: 0, worldZ: -96,
-    packetTerrainY: PACKET_TERRAIN_Y,
-    measuredCanonicalTerrainY: measuredTerrainY,
-    packetCameraY: PACKET_CAMERA_Y,
-    measuredCameraY,
-    cameraClearance: CLEARANCE,
-    canonicalFloatTolerance: FLOAT32_TOLERANCE
-  },
-  turquoiseClassification: {
-    normalizedCanvasX: [0.35, 0.5, 0.65], normalizedCanvasY: [0.65, 0.75, 0.85],
-    greenMinimum: 140, blueMinimum: 140, greenMinusRedMinimum: 25, blueMinusRedMinimum: 20,
-    requiredInlandTurquoiseResult: '0_OF_9'
-  }
-};
-const cacheJson = `${JSON.stringify(cache)}\n`;
-const cacheJsonDigest = sha256(cacheJson);
-const cacheGzip = gzipSync(Buffer.from(cacheJson), { level: 9, mtime: 0 });
-const cacheGzipDigest = sha256(cacheGzip);
-const base64 = cacheGzip.toString('base64');
-const midpoint = Math.ceil(base64.length / 2);
-const carrierParts = [base64.slice(0, midpoint), base64.slice(midpoint)];
-assert.equal(carrierParts.join(''), base64);
-
-const result = await buildHEarthC2R1CompleteWorldRenderPackage({
-  canonicalPackage: canonical,
-  exactBindingCacheBase64: base64,
-  exactBindingCacheArtifactDigest: `sha256:${cacheJsonDigest}`,
-  startupBudgetMilliseconds: 105000,
-  yieldEveryVertices: 128
-});
-const evaluation = evaluateHEarthC2R1CompleteWorldRenderPackage(result, canonical);
-assert.equal(result.eligible, true, JSON.stringify(result));
-assert.equal(evaluation.eligible, true, evaluation.issues.join(','));
-assert.equal(result.packageIdentity, newIdentity);
-assert.equal(result.contentDigest, newDigest);
-assert.deepEqual(result.buffers.positions, canonical.buffers.positions);
-assert.deepEqual(result.buffers.normals, canonical.buffers.normals);
-assert.deepEqual(result.buffers.indices, canonical.buffers.indices);
-assert.deepEqual(result.primitiveSpans, canonical.primitiveSpans);
-assert.deepEqual(result.drawRanges, canonical.drawRanges);
-assert.equal(result.completeWorldBinding.counters.terrainPositionMutationCount, 0);
-assert.equal(result.completeWorldBinding.counters.terrainNormalMutationCount, 0);
-assert.equal(result.completeWorldBinding.counters.inlandWaterMembershipViolationCount, 0);
-assert.deepEqual(canonical, canonicalBefore, 'canonical package mutated');
-
-const manifest = JSON.parse(await readFile(resolve(root,
-  'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'), 'utf8'));
-const operation = manifest.materialOnlyBindingRecoveryOperation;
-assert(operation);
-assert.equal(operation.pathCount, 12);
-assert.deepEqual([...operation.exactMutablePaths].sort(), authorizedPaths);
-assert.equal(operation.allOtherPathsProtected, true);
-assert.equal(operation.canonicalWorldRebuildAllowed, false);
-assert.equal(operation.coastalComponentRebuildAllowed, false);
-
-const receipt = {
-  receiptType: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_STATIC_RECEIPT_v1',
-  operationId: H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.operationId,
-  startingHead: START,
-  sourceHead: cache.sourceHead,
-  cacheSchema: cache.cacheType,
-  cacheJsonSha256: `sha256:${cacheJsonDigest}`,
-  cacheGzipSha256: `sha256:${cacheGzipDigest}`,
-  carrierPartCount: 2,
-  newPackageIdentity: newIdentity,
-  newPackageDigest: newDigest,
-  boundTerrainVertexCount,
-  boundShorelineVertexCount,
+  resultingHeadBinding: 'EXACT_COMMIT_CONTAINING_THIS_RECORD',
+  candidateBranch: BRANCH,
+  rollback: { branch: ROLLBACK, head: START },
+  cacheSchema: SCHEMA,
+  cacheJsonSha256: JSON_SHA,
+  cacheGzipSha256: GZIP_SHA,
+  cacheZipSha256: ZIP_SHA,
+  packageIdentity: ID,
+  packageContentDigest: DIGEST,
+  boundTerrainVertexCount: 10419,
+  boundShorelineVertexCount: 154,
   canonicalPositionsPreserved: true,
   canonicalNormalsPreserved: true,
-  terrainPositionMutationCount: 0,
-  terrainNormalMutationCount: 0,
   inlandWaterMembershipViolationCount: 0,
-  positiveInlandDistanceRecordCount: inlandRecordCount,
-  positiveInlandDistanceShorelineVertexCount,
-  x0ZMinus96TerrainY: measuredTerrainY,
-  x0ZMinus96PacketTerrainY: PACKET_TERRAIN_Y,
-  x0ZMinus96CameraY: measuredCameraY,
-  x0ZMinus96CameraClearance: CLEARANCE,
-  initialTurquoiseSampleRequiredResult: '0_OF_9',
-  coastlineFacingWaterPreservationRequired: true,
-  exactPathCorridorResult: 'PASS_12_OF_12_NO_OTHERS',
-  oldPackageIdentityReused: false,
-  status: 'PASS'
+  publicDefaultMutation: false,
+  mergeAuthorized: false,
+  role1SelfCertification: false,
+  role3IndependentVerificationRequired: true
 };
-const outputs = {
-  cacheJson: process.env.H_EARTH_MATERIAL_ONLY_CACHE_JSON_OUTPUT,
-  cacheGzip: process.env.H_EARTH_MATERIAL_ONLY_CACHE_GZIP_OUTPUT,
-  carrier1: process.env.H_EARTH_MATERIAL_ONLY_CACHE_CARRIER_1_OUTPUT,
-  carrier2: process.env.H_EARTH_MATERIAL_ONLY_CACHE_CARRIER_2_OUTPUT,
-  receipt: process.env.H_EARTH_MATERIAL_ONLY_STATIC_RECEIPT_OUTPUT
+writeJson('h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json', identity);
+
+writeJson('h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json', {
+  recordType: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_SOURCE_CUSTODY_v1',
+  operationId: OP, startingHead: START, resultingHeadBinding: identity.resultingHeadBinding,
+  rollback: identity.rollback, exactPathCount: 12, allOtherPathsProtected: true,
+  cacheSchema: SCHEMA, cacheJsonSha256: JSON_SHA, cacheGzipSha256: GZIP_SHA,
+  cacheZipSha256: ZIP_SHA, newPackageIdentity: ID, newPackageDigest: DIGEST,
+  canonicalPositionsByteIdentical: true, canonicalNormalsByteIdentical: true,
+  indicesPrimitiveSpansDrawRangesPreserved: true,
+  terrainPositionMutationCount: 0, terrainNormalMutationCount: 0,
+  inlandWaterMembershipViolationCount: 0, canonicalWorldRebuild: false,
+  coastalComponentRebuild: false, closedCheckpointReopening: false,
+  publicDefaultMutation: false, mainMutation: false
+});
+const common = {
+  operationId: OP, controllingPacket: PACKET, startingHead: START,
+  resultingHeadBinding: identity.resultingHeadBinding, candidateBranch: BRANCH,
+  rollbackBranch: ROLLBACK, rollbackHead: START, cacheSchema: SCHEMA,
+  cacheJsonSha256: JSON_SHA, cacheGzipSha256: GZIP_SHA, cacheZipSha256: ZIP_SHA,
+  generationArtifactId: ARTIFACT_ID, generationArtifactDigest: ARTIFACT_SHA,
+  completeWorldPackageIdentity: ID, completeWorldPackageContentDigest: DIGEST,
+  boundTerrainVertexCount: 10419, boundShorelineVertexCount: 154,
+  canonicalPositionsPreserved: true, canonicalNormalsPreserved: true,
+  terrainPositionMutationCount: 0, terrainNormalMutationCount: 0,
+  inlandWaterMembershipViolationCount: 0,
+  x0ZMinus96TerrainY: receipt.x0ZMinus96TerrainY,
+  x0ZMinus96CameraY: receipt.x0ZMinus96CameraY,
+  x0ZMinus96CameraClearance: receipt.x0ZMinus96CameraClearance,
+  initialTurquoiseSampleRequiredResult: '0_OF_9', role1SelfCertification: false,
+  status: 'ROLE_1_IMPLEMENTATION_READY_FOR_EXACT_HEAD_WORKFLOWS'
 };
-for (const outputPath of Object.values(outputs).filter(Boolean)) await mkdir(dirname(outputPath), { recursive: true });
-if (outputs.cacheJson) await writeFile(outputs.cacheJson, cacheJson, 'utf8');
-if (outputs.cacheGzip) await writeFile(outputs.cacheGzip, cacheGzip);
-if (outputs.carrier1) await writeFile(outputs.carrier1, carrierParts[0], 'utf8');
-if (outputs.carrier2) await writeFile(outputs.carrier2, carrierParts[1], 'utf8');
-if (outputs.receipt) await writeFile(outputs.receipt, `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
-console.log(JSON.stringify(receipt, null, 2));
+writeJson('h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json', {
+  ledgerType: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_OPERATION_LEDGER_v1', ...common,
+  exactBindingCacheCarrier: { partIndex: 1, partCount: 2, encoding: 'BASE64_GZIP_JSON', value: part1 }
+});
+writeJson('h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json', {
+  entryType: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_ROLE_3_ENTRY_v1', ...common,
+  nextRole: 'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',
+  exactBindingCacheCarrier: { partIndex: 2, partCount: 2, encoding: 'BASE64_GZIP_JSON', value: part2 }
+});
+
+const updateText = (relative, transform) => {
+  const target = path.join(repo, relative);
+  fs.writeFileSync(target, transform(fs.readFileSync(target, 'utf8')));
+};
+updateText('h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js', text => {
+  text = replaceOnce(text, 'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1', JSON_SHA, 'complete-world-cache');
+  text = replaceOnce(text, "operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_INTEGRATION_001'", `operationId: '${OP}'`, 'complete-world-ready');
+  return replaceOnce(text, "operationId: 'H_EARTH_C2_R1_COMPLETE_WORLD_STARTUP_PERFORMANCE_CORRECTION_001'", `operationId: '${OP}'`, 'complete-world-failure');
+});
+updateText('showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js', text => {
+  text = replaceAllRequired(text, 'H_EARTH_C2_R1_INTEGRATED_ENVIRONMENT_COHERENCE_CORRECTION_001', OP, 'public-operation');
+  text = replaceAllRequired(text, 'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1', JSON_SHA, 'public-cache');
+  text = replaceAllRequired(text, 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE', ID, 'public-id');
+  text = replaceAllRequired(text, 'fnv1a32:218f37ae', DIGEST, 'public-digest');
+  return replaceAllRequired(text, 'selectionReceipt.boundShorelineVertexCount !== 299', 'selectionReceipt.boundShorelineVertexCount !== 154', 'public-count');
+});
+updateText('showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js', text => {
+  text = replaceOnce(text, 'packageRecord?.completeWorldBinding?.counters?.boundShorelineVertexCount !== 299', 'packageRecord?.completeWorldBinding?.counters?.boundShorelineVertexCount !== 154', 'canonical-count');
+  const anchor = `  if (!packageRecord?.buffers || !Array.isArray(packageRecord?.drawRanges)) {\n    issues.push('R2_RUNTIME_OVERRIDE_RENDER_DATA_MISSING');\n  }`;
+  const addition = `${anchor}\n  if (packageRecord?.completeWorldBinding?.materialOnlyBinding !== true) {\n    issues.push('R2_RUNTIME_OVERRIDE_NOT_MATERIAL_ONLY');\n  }\n  if (packageRecord?.completeWorldBinding?.exactBindingCacheSchema !== '${SCHEMA}') {\n    issues.push('R2_RUNTIME_OVERRIDE_CACHE_SCHEMA_MISMATCH');\n  }\n  if (packageRecord?.completeWorldBinding?.counters?.terrainPositionMutationCount !== 0 ||\n      packageRecord?.completeWorldBinding?.counters?.terrainNormalMutationCount !== 0 ||\n      packageRecord?.completeWorldBinding?.counters?.inlandWaterMembershipViolationCount !== 0) {\n    issues.push('R2_RUNTIME_OVERRIDE_MATERIAL_ONLY_INVARIANT_FAILED');\n  }`;
+  return replaceOnce(text, anchor, addition, 'canonical-assertions');
+});
+console.log(JSON.stringify({ operationId: OP, status: 'MATERIALIZED', packageIdentity: ID, packageDigest: DIGEST, changedWorkingPaths: 7 }, null, 2));

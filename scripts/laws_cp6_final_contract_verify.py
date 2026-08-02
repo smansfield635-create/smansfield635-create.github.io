@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -19,6 +20,17 @@ def require_text(path: str, values: list[str]) -> None:
     for value in values:
         if value not in text:
             raise SystemExit(f"{path}: missing required text: {value}")
+
+
+def canonical_content_ids(path: str) -> set[str]:
+    """Return canonical CP6 content identities declared by one destination.
+
+    The complete renewal preserves canonical identities while allowing the
+    public presentation markup to evolve. Verification therefore follows the
+    record IDs themselves rather than a legacy presentation-row attribute.
+    """
+    text = (ROOT / path).read_text(encoding="utf-8")
+    return set(re.findall(r'data-content-id="(CP6-CONTENT-\d+)"', text))
 
 
 def main() -> None:
@@ -106,20 +118,23 @@ def main() -> None:
         total += expected
     assert total == 10
 
-    destination_paths = [
-        "laws/research/applied-investigations/index.html",
-        "laws/research/evidence-and-sources/index.html",
-        "laws/research/methods-and-models/index.html",
-        "laws/research/findings-and-boundaries/index.html",
-        "laws/test/admission-and-baseline/index.html",
-        "laws/test/forward-construction/index.html",
-        "laws/test/reverse-audit/index.html",
-        "laws/test/result-and-record/index.html",
-    ]
-    migrated = sum(
-        (ROOT / path).read_text(encoding="utf-8").count('data-cp6-3-content-row="true"')
-        for path in destination_paths
-    )
+    destination_record_counts = {
+        "laws/research/applied-investigations/index.html": 11,
+        "laws/research/evidence-and-sources/index.html": 6,
+        "laws/research/methods-and-models/index.html": 10,
+        "laws/research/findings-and-boundaries/index.html": 7,
+        "laws/test/admission-and-baseline/index.html": 2,
+        "laws/test/forward-construction/index.html": 1,
+        "laws/test/reverse-audit/index.html": 4,
+        "laws/test/result-and-record/index.html": 7,
+    }
+    all_migrated_ids: set[str] = set()
+    for path, expected in destination_record_counts.items():
+        ids = canonical_content_ids(path)
+        assert len(ids) == expected, f"{path}: expected {expected} canonical records, found {len(ids)}"
+        assert all_migrated_ids.isdisjoint(ids), f"{path}: duplicate canonical record identity"
+        all_migrated_ids.update(ids)
+    migrated = len(all_migrated_ids)
     assert migrated == 48
 
     laws = (ROOT / "laws/index.html").read_text(encoding="utf-8")
@@ -147,6 +162,7 @@ def main() -> None:
         "frontier_compatibility_surfaces": 11,
         "canonical_destinations": 8,
         "migrated_records": migrated,
+        "canonical_record_identity_verification": "UNIQUE_IDS_WITH_FROZEN_PER_DESTINATION_COUNTS",
         "compatibility_bindings": 9,
         "material_law_relationships": total,
         "current_compass_contract": "SIX_AUTHORITY_SINGLE_ACTIVE_OUTER_LABEL",

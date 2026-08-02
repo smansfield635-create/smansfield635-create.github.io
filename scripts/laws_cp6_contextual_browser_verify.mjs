@@ -7,14 +7,14 @@ const root = process.cwd();
 const results = [];
 
 const destinationPages = [
-  ['/laws/research/applied-investigations/', '#cp6-battery-study-index'],
-  ['/laws/research/evidence-and-sources/', '#cp6-battery-evidence'],
-  ['/laws/research/methods-and-models/', '#cp6-battery-method'],
-  ['/laws/research/findings-and-boundaries/', '#cp6-battery-findings'],
-  ['/laws/test/admission-and-baseline/', '#cp6-battery-admission'],
-  ['/laws/test/forward-construction/', '#cp6-battery-forward'],
-  ['/laws/test/reverse-audit/', '#cp6-battery-reverse'],
-  ['/laws/test/result-and-record/', '#cp6-battery-result'],
+  { route: '/laws/research/applied-investigations/', selector: '#cp6-battery-study-index', records: 11 },
+  { route: '/laws/research/evidence-and-sources/', selector: '#cp6-battery-evidence', records: 6 },
+  { route: '/laws/research/methods-and-models/', selector: '#cp6-battery-method', records: 10 },
+  { route: '/laws/research/findings-and-boundaries/', selector: '#main', records: 7 },
+  { route: '/laws/test/admission-and-baseline/', selector: '#cp6-battery-admission', records: 2 },
+  { route: '/laws/test/forward-construction/', selector: '#cp6-battery-forward', records: 1 },
+  { route: '/laws/test/reverse-audit/', selector: '#main', records: 4 },
+  { route: '/laws/test/result-and-record/', selector: '#cp6-battery-result', records: 7 },
 ];
 
 const relationshipPages = [
@@ -24,10 +24,58 @@ const relationshipPages = [
   '/laws/categories/structure/',
 ];
 
-const allContextPages = [
-  ['/laws/', '#cp6-work-behind-laws'],
-  ...destinationPages,
-  ...relationshipPages.map(route => [route, '#cp6-battery-law-relationships']),
+const contextualPages = [
+  { route: '/laws/', selector: '#cp6-work-behind-laws' },
+  ...destinationPages.map(({ route, selector }) => ({ route, selector })),
+  ...relationshipPages.map(route => ({ route, selector: '#cp6-battery-law-relationships' })),
+];
+
+const cohortPages = [
+  {
+    name: 'signals',
+    route: '/laws/categories/flow/signals/',
+    routeAttribute: '/laws/categories/flow/signals/',
+    family: 'LAW_CHILD',
+    tabs: 3,
+    records: [],
+  },
+  {
+    name: 'measure',
+    route: '/laws/categories/reality/measure.html',
+    routeAttribute: '/laws/categories/reality/measure.html',
+    narrativeRoute: '/laws/categories/reality/measure/',
+    family: 'LAW_CHILD',
+    tabs: 3,
+    records: [],
+  },
+  {
+    name: 'reverse-audit',
+    route: '/laws/test/reverse-audit/',
+    routeAttribute: '/laws/test/reverse-audit/',
+    family: 'TEST_CHILD',
+    tabs: 5,
+    records: ['CP6-CONTENT-119', 'CP6-CONTENT-121', 'CP6-CONTENT-122', 'CP6-CONTENT-137'],
+  },
+  {
+    name: 'findings-and-boundaries',
+    route: '/laws/research/findings-and-boundaries/',
+    routeAttribute: '/laws/research/findings-and-boundaries/',
+    family: 'RESEARCH_CHILD',
+    tabs: 5,
+    records: [
+      'CP6-CONTENT-071', 'CP6-CONTENT-080', 'CP6-CONTENT-082',
+      'CP6-CONTENT-083', 'CP6-CONTENT-084', 'CP6-CONTENT-085',
+      'CP6-CONTENT-086',
+    ],
+  },
+  {
+    name: 'industrial-posture',
+    route: '/laws/industrial-posture/',
+    routeAttribute: '/laws/industrial-posture/',
+    family: 'EQUATION_OR_MODEL_SURFACE',
+    tabs: 6,
+    records: ['CP6-CONTENT-063'],
+  },
 ];
 
 const profiles = [
@@ -41,9 +89,14 @@ function assert(condition, message) {
 }
 
 function localPathForRoute(route) {
-  const clean = route.split('#')[0].split('?')[0];
-  if (clean === '/') return path.join(root, 'index.html');
-  return path.join(root, clean.replace(/^\//, ''), 'index.html');
+  const clean = route.split('#')[0].split('?')[0].replace(/^\//, '');
+  if (!clean) return path.join(root, 'index.html');
+  if (clean.endsWith('.html')) return path.join(root, clean);
+  return path.join(root, clean, 'index.html');
+}
+
+function canonicalContentIds(html) {
+  return new Set([...html.matchAll(/data-content-id="(CP6-CONTENT-\d+)"/g)].map(match => match[1]));
 }
 
 function verifyStaticRepositoryContracts() {
@@ -73,16 +126,68 @@ function verifyStaticRepositoryContracts() {
   assert(legacyDisposition.four_compass_exact_head_regression.material_findings_after_classification.length === 0, 'Material Four-Compass finding remains unresolved');
   assert(legacyDisposition.six_authority_benchmark.protected_compass_runtime_changed_in_current_pr === false, 'Historical six-authority benchmark disposition reports runtime mutation');
 
-  for (const [route] of allContextPages) {
+  for (const { route } of contextualPages) {
     assert(fs.existsSync(localPathForRoute(route)), `Missing local route target: ${route}`);
   }
-
-  let migrated = 0;
-  for (const [route] of destinationPages) {
-    const html = fs.readFileSync(localPathForRoute(route), 'utf8');
-    migrated += (html.match(/data-cp6-3-content-row="true"/g) || []).length;
+  for (const page of cohortPages) {
+    assert(fs.existsSync(localPathForRoute(page.route)), `Missing cohort route target: ${page.route}`);
   }
-  assert(migrated === 48, `Expected 48 migrated records, found ${migrated}`);
+
+  const allMigratedIds = new Set();
+  for (const { route, records } of destinationPages) {
+    const html = fs.readFileSync(localPathForRoute(route), 'utf8');
+    const ids = canonicalContentIds(html);
+    assert(ids.size === records, `${route}: expected ${records} canonical records, found ${ids.size}`);
+    for (const id of ids) {
+      assert(!allMigratedIds.has(id), `${route}: duplicate canonical record identity ${id}`);
+      allMigratedIds.add(id);
+    }
+  }
+  assert(allMigratedIds.size === 48, `Expected 48 unique migrated records, found ${allMigratedIds.size}`);
+
+  const sharedCSS = fs.readFileSync('assets/laws-destination/renewal.css', 'utf8');
+  const sharedJS = fs.readFileSync('assets/laws-destination/renewal.js', 'utf8');
+  assert(sharedCSS.includes('@media (max-width: 920px)'), 'Tablet breakpoint missing');
+  assert(sharedCSS.includes('@media (max-width: 680px)'), 'Phone breakpoint missing');
+  assert(sharedCSS.includes('@media (prefers-reduced-motion: reduce)'), 'Reduced-motion CSS missing');
+  for (const key of ['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp', 'Home', 'End']) {
+    assert(sharedJS.includes(key), `Shared keyboard operation missing: ${key}`);
+  }
+  assert(!sharedJS.includes('setInterval('), 'Continuous interval loop introduced');
+  assert(!sharedJS.includes('canvas.getContext'), 'Shared interaction engine acquired canvas authority');
+
+  for (const page of cohortPages) {
+    const html = fs.readFileSync(localPathForRoute(page.route), 'utf8');
+    assert(html.includes(`data-route="${page.routeAttribute}"`), `${page.name}: route identity changed`);
+    assert(html.includes(`data-page-family="${page.family}"`), `${page.name}: page-family adapter missing`);
+    if (page.narrativeRoute) assert(html.includes(`data-narrative-route="${page.narrativeRoute}"`), `${page.name}: narrative route missing`);
+    assert(html.includes('/assets/laws-destination/renewal.css'), `${page.name}: shared CSS missing`);
+    assert(html.includes('/assets/laws-destination/renewal.js'), `${page.name}: shared JS missing`);
+    assert(html.includes('class="lr-hero"'), `${page.name}: page-specific hero missing`);
+    assert(html.includes('class="lr-boundary"'), `${page.name}: visible claim boundary missing`);
+    assert(html.includes('class="lr-story-nav"'), `${page.name}: story context missing`);
+    assert(html.includes('class="lr-audit"'), `${page.name}: collapsed audit missing`);
+    assert(!html.toLowerCase().includes('<meta http-equiv="refresh"'), `${page.name}: redirect metadata introduced`);
+    assert(!html.includes('location.replace('), `${page.name}: redirect script introduced`);
+    const tabs = (html.match(/role="tab"/g) || []).length;
+    const panels = (html.match(/role="tabpanel"/g) || []).length;
+    assert(tabs === page.tabs && panels === page.tabs, `${page.name}: tab/panel adapter mismatch ${tabs}/${panels}`);
+    assert((html.match(/aria-selected="true"/g) || []).length === 1, `${page.name}: active entry lens is not singular`);
+    assert(!html.includes('role="tabpanel" hidden'), `${page.name}: static panel hidden in source`);
+    for (const id of page.records) assert(html.includes(`data-content-id="${id}"`), `${page.name}: canonical record missing ${id}`);
+  }
+
+  const signals = fs.readFileSync(localPathForRoute('/laws/categories/flow/signals/'), 'utf8');
+  const measure = fs.readFileSync(localPathForRoute('/laws/categories/reality/measure.html'), 'utf8');
+  const reverse = fs.readFileSync(localPathForRoute('/laws/test/reverse-audit/'), 'utf8');
+  const findings = fs.readFileSync(localPathForRoute('/laws/research/findings-and-boundaries/'), 'utf8');
+  const industrial = fs.readFileSync(localPathForRoute('/laws/industrial-posture/'), 'utf8');
+  assert(signals.includes('/laws/categories/flow/#signals'), 'Signals historical family owner missing');
+  assert(measure.includes('data-narrative-route="/laws/categories/reality/measure/"'), 'Measure narrative identity missing');
+  assert(reverse.includes('LAWS_COMPASS_WORLD_PASS_PLANET_AND_SHOWROOM_COSMOS_READY_HTML_RECEIPT_v2_3_0'), 'Reverse Audit structural provenance missing');
+  assert(findings.includes('1,653 final-test records') && findings.includes('AUROC 0.9394'), 'Findings bounded result missing');
+  assert(industrial.includes('M_in = M_out + M_dest + ΔM_inv ± ε'), 'Industrial equation identity missing');
+  assert(industrial.includes('2c4caa3dea93fc96fcfd259c7bcdf000ccbc43ce826484298ae9cc9e72551657'), 'Industrial payload hash missing');
 
   const lawsHTML = fs.readFileSync('laws/index.html', 'utf8');
   const interactions = fs.readFileSync('laws/index.interactions.js', 'utf8');
@@ -104,15 +209,18 @@ function verifyStaticRepositoryContracts() {
     'universal battery validation',
     'critical-system deployment validated: yes',
   ];
-  for (const file of verification.changed_product_files.filter(p => p.endsWith('.html'))) {
+  for (const file of verification.changed_product_files.filter(file => file.endsWith('.html'))) {
     const text = fs.readFileSync(file, 'utf8').toLowerCase();
     for (const phrase of forbidden) assert(!text.includes(phrase.toLowerCase()), `Forbidden claim in ${file}: ${phrase}`);
   }
+
   results.push({
     check: 'repository-contracts',
     status: 'PASS',
-    migratedRecords: migrated,
+    migratedRecords: allMigratedIds.size,
+    recordVerification: 'UNIQUE_IDS_WITH_FROZEN_PER_DESTINATION_COUNTS',
     compatibilityBindings: 9,
+    cohortPages: cohortPages.length,
     currentCompassContract: 'SIX_AUTHORITY_SINGLE_ACTIVE_OUTER_LABEL',
     legacyFailuresClassified: true,
   });
@@ -190,6 +298,73 @@ async function verifyCurrentCompassContract(page, profileName) {
   });
 }
 
+async function verifyCohortPage(page, cohort, profileName) {
+  const response = await page.goto(baseURL + cohort.route, { waitUntil: 'networkidle' });
+  assert(response && response.ok(), `${profileName}: HTTP failure ${cohort.route}`);
+  await page.locator('#main').waitFor({ state: 'visible' });
+
+  const snapshot = await page.evaluate(() => ({
+    route: document.documentElement.dataset.route || '',
+    family: document.documentElement.dataset.pageFamily || '',
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+    scrollHeight: document.documentElement.scrollHeight,
+    clientHeight: document.documentElement.clientHeight,
+    hero: Boolean(document.querySelector('.lr-hero')),
+    boundary: Boolean(document.querySelector('.lr-boundary')),
+    storyLinks: document.querySelectorAll('.lr-story-nav a').length,
+    auditOpen: Boolean(document.querySelector('.lr-audit')?.open),
+    tabs: document.querySelectorAll('[role="tab"]').length,
+    panels: document.querySelectorAll('[role="tabpanel"]').length,
+    selectedTabs: document.querySelectorAll('[role="tab"][aria-selected="true"]').length,
+    visiblePanels: [...document.querySelectorAll('[role="tabpanel"]')].filter(panel => !panel.hidden).length,
+    browserErrors: document.documentElement.dataset.lrBrowserErrors || '0',
+    overflowFlag: document.documentElement.dataset.lrOverflow || '0',
+  }));
+
+  assert(snapshot.route === cohort.routeAttribute, `${profileName}/${cohort.name}: route identity changed`);
+  assert(snapshot.family === cohort.family, `${profileName}/${cohort.name}: page family changed`);
+  assert(snapshot.hero && snapshot.boundary, `${profileName}/${cohort.name}: hero or boundary missing`);
+  assert(snapshot.storyLinks >= 2, `${profileName}/${cohort.name}: story navigation incomplete`);
+  assert(snapshot.tabs === cohort.tabs && snapshot.panels === cohort.tabs, `${profileName}/${cohort.name}: tab/panel count mismatch`);
+  assert(snapshot.selectedTabs === 1 && snapshot.visiblePanels === 1, `${profileName}/${cohort.name}: progressive panel state invalid`);
+  assert(snapshot.auditOpen === false, `${profileName}/${cohort.name}: audit is not collapsed on entry`);
+  assert(snapshot.scrollWidth <= snapshot.clientWidth + 2, `${profileName}/${cohort.name}: horizontal overflow ${snapshot.scrollWidth}/${snapshot.clientWidth}`);
+  assert(snapshot.scrollHeight > snapshot.clientHeight, `${profileName}/${cohort.name}: page content unexpectedly absent`);
+  assert(snapshot.browserErrors === '0' && snapshot.overflowFlag === '0', `${profileName}/${cohort.name}: shared engine health failure`);
+
+  const tabs = page.locator('[role="tab"]');
+  const selectedIndex = await tabs.evaluateAll(elements => elements.findIndex(element => element.getAttribute('aria-selected') === 'true'));
+  const nextIndex = (selectedIndex + 1) % cohort.tabs;
+  await tabs.nth(nextIndex).click();
+  assert(await tabs.nth(nextIndex).getAttribute('aria-selected') === 'true', `${profileName}/${cohort.name}: pointer/touch tab activation failed`);
+  const controlledPanel = await tabs.nth(nextIndex).getAttribute('aria-controls');
+  assert(controlledPanel && await page.locator(`#${controlledPanel}`).isVisible(), `${profileName}/${cohort.name}: selected panel not visible`);
+
+  await tabs.nth(nextIndex).focus();
+  await page.keyboard.press('End');
+  assert(await tabs.nth(cohort.tabs - 1).getAttribute('aria-selected') === 'true', `${profileName}/${cohort.name}: End-key tab operation failed`);
+  await page.keyboard.press('Home');
+  assert(await tabs.nth(0).getAttribute('aria-selected') === 'true', `${profileName}/${cohort.name}: Home-key tab operation failed`);
+  await page.keyboard.press('ArrowRight');
+  assert(await tabs.nth(1).getAttribute('aria-selected') === 'true', `${profileName}/${cohort.name}: Arrow-key tab operation failed`);
+
+  const audit = page.locator('.lr-audit');
+  await audit.locator('summary').click();
+  assert(await audit.evaluate(element => element.open), `${profileName}/${cohort.name}: native audit disclosure failed`);
+  assert(await audit.locator('.lr-audit__body').isVisible(), `${profileName}/${cohort.name}: audit body did not become visible`);
+
+  results.push({
+    check: `cohort-${profileName}-${cohort.name}`,
+    status: 'PASS',
+    tabs: cohort.tabs,
+    keyboard: true,
+    pointerOrTouch: true,
+    auditDisclosure: true,
+    overflow: 0,
+  });
+}
+
 async function verifyProfile(browser, profile) {
   const context = await browser.newContext({
     viewport: profile.viewport,
@@ -199,10 +374,10 @@ async function verifyProfile(browser, profile) {
   });
   const page = await context.newPage();
   const consoleErrors = [];
-  page.on('console', msg => { if (msg.type() === 'error') consoleErrors.push(msg.text()); });
+  page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
   page.on('pageerror', error => consoleErrors.push(error.message));
 
-  for (const [route, selector] of allContextPages) {
+  for (const { route, selector } of contextualPages) {
     const response = await page.goto(baseURL + route, { waitUntil: 'networkidle' });
     assert(response && response.ok(), `${profile.name}: HTTP failure ${route}`);
     await page.locator(selector).waitFor({ state: 'visible' });
@@ -217,45 +392,59 @@ async function verifyProfile(browser, profile) {
   }
 
   await verifyCurrentCompassContract(page, profile.name);
-
-  await page.goto(baseURL + '/laws/research/applied-investigations/', { waitUntil: 'networkidle' });
-  await page.keyboard.press('Tab');
-  const keyboardFocus = await page.evaluate(() => document.activeElement?.tagName || '');
-  assert(['A', 'BUTTON', 'SUMMARY'].includes(keyboardFocus), `${profile.name}: keyboard focus did not reach an interactive control`);
-
-  if (profile.hasTouch) {
-    await page.locator('#cp6-battery-study-index a[href="/frontier/energy/battery-coherence-study/"]').click();
-    await page.waitForLoadState('domcontentloaded');
-    assert(new URL(page.url()).pathname === '/frontier/energy/battery-coherence-study/', `${profile.name}: touch route did not return to complete Frontier record`);
-  }
+  for (const cohort of cohortPages) await verifyCohortPage(page, cohort, profile.name);
 
   assert(consoleErrors.length === 0, `${profile.name}: browser errors: ${consoleErrors.join(' | ')}`);
-  results.push({ check: `browser-${profile.name}`, status: 'PASS', pages: allContextPages.length, overflow: 0, browserErrors: 0 });
+  results.push({
+    check: `browser-${profile.name}`,
+    status: 'PASS',
+    contextualPages: contextualPages.length,
+    cohortPages: cohortPages.length,
+    overflow: 0,
+    browserErrors: 0,
+  });
   await context.close();
 }
 
 async function verifyReducedMotion(browser) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
-  await page.goto(baseURL + '/laws/', { waitUntil: 'networkidle' });
-  await page.locator('#cp6-work-behind-laws').waitFor({ state: 'visible' });
-  const reduced = await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
-  assert(reduced, 'Reduced-motion media state not active');
-  const animation = await page.locator('#cp6-work-behind-laws').evaluate(el => getComputedStyle(el).animationName);
-  assert(animation === 'none', `Reduced-motion contextual section still animated: ${animation}`);
-  results.push({ check: 'reduced-motion', status: 'PASS' });
+  for (const cohort of cohortPages) {
+    await page.goto(baseURL + cohort.route, { waitUntil: 'networkidle' });
+    assert(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches), `${cohort.name}: reduced-motion media state not active`);
+    const animation = await page.locator('.lr-hero').evaluate(element => getComputedStyle(element).animationName);
+    assert(animation === 'none', `${cohort.name}: reduced-motion hero still animated: ${animation}`);
+    assert(await page.evaluate(() => document.documentElement.dataset.lrMotion) === 'reduced', `${cohort.name}: shared reduced-motion state missing`);
+  }
+  results.push({ check: 'reduced-motion', status: 'PASS', pages: cohortPages.length });
   await context.close();
 }
 
 async function verifyStaticEquivalent(browser) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
   const page = await context.newPage();
-  for (const [route, selector] of allContextPages) {
-    const response = await page.goto(baseURL + route, { waitUntil: 'domcontentloaded' });
-    assert(response && response.ok(), `Static mode HTTP failure ${route}`);
-    await page.locator(selector).waitFor({ state: 'visible' });
+  for (const cohort of cohortPages) {
+    const response = await page.goto(baseURL + cohort.route, { waitUntil: 'domcontentloaded' });
+    assert(response && response.ok(), `Static mode HTTP failure ${cohort.route}`);
+    await page.locator('#main').waitFor({ state: 'visible' });
+    const panels = page.locator('[role="tabpanel"]');
+    assert(await panels.count() === cohort.tabs, `${cohort.name}: static panel count mismatch`);
+    for (let index = 0; index < cohort.tabs; index += 1) {
+      assert(await panels.nth(index).isVisible(), `${cohort.name}: static reading panel ${index} hidden`);
+    }
+    const audit = page.locator('.lr-audit');
+    assert(!(await audit.evaluate(element => element.open)), `${cohort.name}: static audit unexpectedly open`);
+    const summary = audit.locator('summary');
+    await summary.focus();
+    await summary.press('Enter');
+    assert(await audit.evaluate(element => element.open), `${cohort.name}: native static audit disclosure failed`);
+    const dimensions = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }));
+    assert(dimensions.scrollWidth <= dimensions.clientWidth + 2, `${cohort.name}: static horizontal overflow`);
   }
-  results.push({ check: 'static-no-javascript', status: 'PASS', pages: allContextPages.length });
+  results.push({ check: 'static-no-javascript', status: 'PASS', pages: cohortPages.length, allReadingPanelsVisible: true });
   await context.close();
 }
 
@@ -271,12 +460,14 @@ async function main() {
   }
   fs.mkdirSync('artifacts/laws-cp6-contextual-verification', { recursive: true });
   fs.writeFileSync('artifacts/laws-cp6-contextual-verification/result.json', JSON.stringify({
-    contract: 'LAWS_CP6_CONTEXTUAL_INTEGRATED_BROWSER_VERIFICATION_v1',
+    contract: 'LAWS_COMPLETE_RENEWAL_REPRESENTATIVE_BROWSER_VERIFICATION_v1',
     status: 'PASS',
     baseURL,
     checks: results,
+    cohortRoutes: cohortPages.map(page => page.route),
     legacyBenchmarkDisposition: 'CLASSIFIED_WITH_NO_MATERIAL_PRODUCT_FINDINGS',
     userVisualAcceptance: 'REQUIRED_NOT_RECORDED',
+    batchMigration: 'HELD',
     mergeAuthorization: false,
   }, null, 2) + '\n');
   console.log(JSON.stringify(results, null, 2));

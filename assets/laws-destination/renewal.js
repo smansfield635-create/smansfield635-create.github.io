@@ -71,8 +71,8 @@
         if (firstLink) firstLink.focus();
       });
 
-      nav.addEventListener('keydown', (event) => {
-        if (event.key !== 'Escape') return;
+      topbar.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape' || toggle.getAttribute('aria-expanded') !== 'true') return;
         event.preventDefault();
         userOverride = true;
         setExpanded(false, true);

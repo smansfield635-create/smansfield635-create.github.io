@@ -9,10 +9,12 @@ on:
       - scripts/laws_complete_renewal_batch.py
       - scripts/laws_complete_renewal_batch_polish.py
       - scripts/laws_complete_renewal_signals_horizon_patch.py
+      - scripts/laws_complete_renewal_representative_horizon_patch.py
       - assets/laws-destination/renewal-batch.css
       - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
       - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
       - laws/control-plane/renewal/laws-complete-renewal-signals-battery-horizon-correction-v1.json
+      - laws/control-plane/renewal/laws-complete-renewal-representative-battery-horizon-completeness-successor-v1.json
   pull_request:
     types:
       - ready_for_review
@@ -23,10 +25,12 @@ on:
       - scripts/laws_complete_renewal_batch.py
       - scripts/laws_complete_renewal_batch_polish.py
       - scripts/laws_complete_renewal_signals_horizon_patch.py
+      - scripts/laws_complete_renewal_representative_horizon_patch.py
       - assets/laws-destination/renewal-batch.css
       - laws/control-plane/renewal/laws-complete-renewal-battery-study-presentation-scope-v1.json
       - laws/control-plane/renewal/laws-complete-renewal-remaining-20-route-migration-manifest-v1.json
       - laws/control-plane/renewal/laws-complete-renewal-signals-battery-horizon-correction-v1.json
+      - laws/control-plane/renewal/laws-complete-renewal-representative-battery-horizon-completeness-successor-v1.json
 
 permissions:
   contents: write
@@ -70,6 +74,9 @@ jobs:
       - name: Apply exact Signals 20-cycle completeness correction
         run: python scripts/laws_complete_renewal_signals_horizon_patch.py
 
+      - name: Apply remaining representative 20-cycle completeness corrections
+        run: python scripts/laws_complete_renewal_representative_horizon_patch.py
+
       - name: Verify generated route and presentation markers
         shell: bash
         run: |
@@ -85,6 +92,12 @@ jobs:
           assert receipt['product_file_count'] == 29
           assert receipt['presentation_polish']['formula_node_split_rule'] == 'ARROWS_ONLY_PLUS_SIGNS_PRESERVED'
           assert receipt['representative_battery_completeness_correction']['path'] == 'laws/categories/flow/signals/index.html'
+          successor = receipt['representative_battery_horizon_completeness_successor']
+          assert successor['final_authorized_representative_paths'] == [
+              'laws/categories/flow/signals/index.html',
+              'laws/categories/reality/measure.html',
+              'laws/test/reverse-audit/index.html',
+          ]
 
           for path in receipt['product_files_written']:
               text = (root / path).read_text(encoding='utf-8')
@@ -102,7 +115,13 @@ jobs:
               assert 'lr-audit' in text, path
 
           signals = (root / 'laws/categories/flow/signals/index.html').read_text(encoding='utf-8')
+          measure = (root / 'laws/categories/reality/measure.html').read_text(encoding='utf-8')
+          reverse = (root / 'laws/test/reverse-audit/index.html').read_text(encoding='utf-8')
+          findings = (root / 'laws/research/findings-and-boundaries/index.html').read_text(encoding='utf-8')
           assert 'the defined near-term event was evaluated within the next 20 cycles' in signals
+          assert 'one defined near-term event evaluated within the next 20 cycles' in measure
+          assert 'The defined battery event was evaluated within the next 20 cycles' in reverse
+          assert 'fixed 80%-within-20-cycles event' in findings
 
           cycles = (root / 'laws/categories/flow/cycles/index.html').read_text(encoding='utf-8')
           assert '<strong>STATE_(t+1); cumulative effect = Σ cycle effects</strong>' in cycles
@@ -128,7 +147,11 @@ jobs:
 
           receipt_path = Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json')
           receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
-          paths = list(receipt['product_files_written']) + ['laws/categories/flow/signals/index.html']
+          paths = list(receipt['product_files_written']) + [
+              'laws/categories/flow/signals/index.html',
+              'laws/categories/reality/measure.html',
+              'laws/test/reverse-audit/index.html',
+          ]
           for raw_path in paths:
               path = Path(raw_path)
               text = path.read_text(encoding='utf-8')
@@ -148,9 +171,14 @@ jobs:
 
           receipt = Path('laws/control-plane/renewal/laws-complete-renewal-batch-materialization-receipt-v1.json')
           assert receipt.exists()
+          representative_paths = {
+              'laws/categories/flow/signals/index.html',
+              'laws/categories/reality/measure.html',
+              'laws/test/reverse-audit/index.html',
+          }
           for path in Path('laws').rglob('*.html'):
               text = path.read_text(encoding='utf-8', errors='strict')
-              if 'data-laws-complete-renewal="v1"' not in text and path.as_posix() != 'laws/categories/flow/signals/index.html':
+              if 'data-laws-complete-renewal="v1"' not in text and path.as_posix() not in representative_paths:
                   continue
               assert re.search(r'<!doctype html>', text, re.I), path
               assert re.search(r'<html\b', text, re.I), path
@@ -159,16 +187,16 @@ jobs:
           print('Generated HTML structural checks: PASS')
           PY
 
-      - name: Commit polished product candidate
+      - name: Commit bounded representative completeness candidate
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet; then
-            echo 'No product polish changes to commit.'
+            echo 'No product completeness changes to commit.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add laws frontier/energy/battery-coherence-study/index.html
-          git commit -m 'Complete Signals battery horizon context'
+          git commit -m 'Complete representative battery horizon context'
           git push origin HEAD:agent/laws-complete-renewal-batch-001

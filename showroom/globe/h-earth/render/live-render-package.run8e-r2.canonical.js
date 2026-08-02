@@ -142,11 +142,22 @@ function evaluateRuntimePackageOverride(packageRecord, canonicalPackage) {
   if (packageRecord?.completeWorldBinding?.counters?.boundTerrainVertexCount !== 10419) {
     issues.push('R2_RUNTIME_OVERRIDE_TERRAIN_BINDING_COUNT_MISMATCH');
   }
-  if (packageRecord?.completeWorldBinding?.counters?.boundShorelineVertexCount !== 299) {
+  if (packageRecord?.completeWorldBinding?.counters?.boundShorelineVertexCount !== 154) {
     issues.push('R2_RUNTIME_OVERRIDE_SHORELINE_BINDING_COUNT_MISMATCH');
   }
   if (!packageRecord?.buffers || !Array.isArray(packageRecord?.drawRanges)) {
     issues.push('R2_RUNTIME_OVERRIDE_RENDER_DATA_MISSING');
+  }
+  if (packageRecord?.completeWorldBinding?.materialOnlyBinding !== true) {
+    issues.push('R2_RUNTIME_OVERRIDE_NOT_MATERIAL_ONLY');
+  }
+  if (packageRecord?.completeWorldBinding?.exactBindingCacheSchema !== 'H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v2') {
+    issues.push('R2_RUNTIME_OVERRIDE_CACHE_SCHEMA_MISMATCH');
+  }
+  if (packageRecord?.completeWorldBinding?.counters?.terrainPositionMutationCount !== 0 ||
+      packageRecord?.completeWorldBinding?.counters?.terrainNormalMutationCount !== 0 ||
+      packageRecord?.completeWorldBinding?.counters?.inlandWaterMembershipViolationCount !== 0) {
+    issues.push('R2_RUNTIME_OVERRIDE_MATERIAL_ONLY_INVARIANT_FAILED');
   }
   return freezeRecord({
     eligible: issues.length === 0,

@@ -1,0 +1,83 @@
+name: Laws complete narrative map completeness amendment
+
+on:
+  push:
+    branches:
+      - agent/laws-complete-narrative-map-001
+    paths:
+      - scripts/laws_complete_narrative_map_completeness_amend.py
+      - .github/workflows/laws-complete-narrative-map-completeness-amend.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-complete-narrative-map-completeness-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  amend-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact design branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-complete-narrative-map-001
+          fetch-depth: 0
+
+      - name: Apply complete-record and legacy-surface amendment
+        run: python3 scripts/laws_complete_narrative_map_completeness_amend.py
+
+      - name: Validate amended authority record
+        run: |
+          python3 -m json.tool laws/control-plane/narrative/laws-complete-narrative-map-v1.json >/dev/null
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path('laws/control-plane/narrative/laws-complete-narrative-map-v1.json')
+          data = json.loads(path.read_text(encoding='utf-8'))
+          assert data['status'] == 'FREEZE_ELIGIBLE_PENDING_USER_FREEZE'
+          assert data['amendment_disposition']['core_24_route_narrative'] == 'ACCEPTED_UNCHANGED'
+          assert data['amendment_disposition']['product_implementation'] == 'HELD'
+          assert data['amendment_disposition']['user_freeze_recorded'] is False
+          assert len(data['pages']) == 24
+          assert data['canonical_record_coverage']['record_count'] == 48
+          assert len(data['canonical_record_coverage']['records']) == 48
+          assert data['complete_record_population']['record_count'] == 138
+          assert len(data['complete_record_population']['records']) == 138
+          inventory = data['legacy_and_source_presentation_surface_inventory']
+          assert inventory['surface_count'] == len(inventory['surfaces'])
+          assert inventory['surface_count'] > 24
+          assert all(surface['presentation_status'] in inventory['allowed_statuses'] for surface in inventory['surfaces'])
+          assert data['reference_hierarchy']['visual_and_mathematical_expression_authority'] == 'MAIN_DIAMOND_GATE_BRIDGE_COMPASS'
+          assert data['reference_hierarchy']['interaction_organization_reference'] == 'R.O.B._AND_W.A.V.E._TAB_AND_DISCLOSURE_SYSTEM'
+          assert data['reference_hierarchy']['campaign_visual_identity_copy'] == 'PROHIBITED'
+          assert data['reference_hierarchy']['tabs_placed_above_unchanged_monolithic_content'] == 'PROHIBITED'
+          assert len(data['freeze_gate']['representative_pages_after_freeze']) == 5
+          assert data['industrial_posture_equation_representative']['canonical_record'] == 'CP6-CONTENT-063'
+          assert data['amendment_verification']['accepted_24_route_pages_unchanged'] is True
+          assert data['amendment_verification']['product_files_mutated'] == 0
+          PY
+
+      - name: Verify amendment changed only the design authority
+        run: |
+          changed="$(git diff --name-only)"
+          printf '%s\n' "$changed"
+          test "$changed" = "laws/control-plane/narrative/laws-complete-narrative-map-v1.json"
+          test -z "$(git diff --name-only | grep -E '^laws/.*\.(html|css|js)$' || true)"
+
+      - name: Remove temporary amendment carriers
+        run: |
+          git rm scripts/laws_complete_narrative_map_completeness_amend.py
+          git rm .github/workflows/laws-complete-narrative-map-completeness-amend.yml
+
+      - name: Commit the self-contained amended map
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add laws/control-plane/narrative/laws-complete-narrative-map-v1.json
+          git commit -m 'Amend Laws narrative map for complete record coverage'
+          git push origin HEAD:agent/laws-complete-narrative-map-001

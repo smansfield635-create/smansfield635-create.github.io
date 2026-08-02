@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/laws-cp6-contextual-renewal.yml
       - scripts/laws_cp6_contextual_renewal.py
+      - scripts/laws_cp6_context_field_reconcile.py
 
 permissions:
   contents: write
@@ -27,13 +28,16 @@ jobs:
           fetch-depth: 0
 
       - name: Apply source-bound contextual renewal
-        run: python3 scripts/laws_cp6_contextual_renewal.py
+        run: |
+          python3 scripts/laws_cp6_contextual_renewal.py
+          python3 scripts/laws_cp6_context_field_reconcile.py
 
       - name: Validate generated JSON authorities
         run: |
           python3 -m json.tool laws/control-plane/cp6-context/laws-frontier-compatibility-crosswalk-v1.json >/dev/null
           python3 -m json.tool laws/control-plane/cp6-context/laws-battery-study-contextual-interpretation-record-v1.json >/dev/null
           python3 -m json.tool laws/control-plane/cp6-context/contextual-renewal-verification-v1.json >/dev/null
+          python3 -m json.tool laws/control-plane/cp6-context/cp6-2-successor-chain-acceptance-v1.json >/dev/null
 
       - name: Verify bounded mutation scope
         run: |
@@ -96,5 +100,5 @@ jobs:
             laws/categories/reality/index.html \
             laws/categories/structure/index.html \
             laws/control-plane/cp6-context/contextual-renewal-verification-v1.json
-          git commit -m 'Apply Laws CP6 source-bound contextual renewal'
+          git commit -m 'Complete Laws CP6 source-bound contextual renewal'
           git push origin HEAD:agent/laws-cp6-context-authority-records-001

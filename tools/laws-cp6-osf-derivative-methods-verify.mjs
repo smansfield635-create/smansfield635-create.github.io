@@ -208,12 +208,80 @@ try {
       assert.ok(response && response.ok(), `HTTP_FAILURE:${profile.name}:${route}`);
       const result = await page.evaluate((contract) => {
         const root = document.documentElement;
+        const body = document.body;
+        const viewportWidth = root.clientWidth;
+        const documentWidth = Math.max(body.scrollWidth, root.scrollWidth);
+        const overflow = documentWidth > viewportWidth + 1;
+
+        const selectorFor = (element) => {
+          if (element.id) return `${element.tagName.toLowerCase()}#${element.id}`;
+          const methodId = element.getAttribute('data-laws-method-id');
+          if (methodId) return `${element.tagName.toLowerCase()}[data-laws-method-id="${methodId}"]`;
+          const contractId = element.getAttribute('data-laws-derivative-contract');
+          if (contractId) return `${element.tagName.toLowerCase()}[data-laws-derivative-contract="${contractId}"]`;
+          const classes = Array.from(element.classList).slice(0, 3);
+          return `${element.tagName.toLowerCase()}${classes.map((name) => `.${name}`).join('')}`;
+        };
+
+        const overflowDiagnostics = Array.from(document.querySelectorAll('body *'))
+          .map((element) => {
+            const rect = element.getBoundingClientRect();
+            const style = getComputedStyle(element);
+            const parent = element.parentElement;
+            const parentStyle = parent ? getComputedStyle(parent) : null;
+            const rightOverflow = Math.max(0, rect.right - viewportWidth);
+            const leftOverflow = Math.max(0, -rect.left);
+            const internalOverflow = Math.max(0, element.scrollWidth - element.clientWidth);
+            const overflowAmount = Math.max(rightOverflow, leftOverflow, internalOverflow);
+            return {
+              overflowAmount,
+              elementSelector: selectorFor(element),
+              textOrComponentId: element.getAttribute('data-laws-method-id') || element.textContent?.trim().replace(/\s+/g, ' ').slice(0, 180) || '',
+              clientWidth: element.clientWidth,
+              scrollWidth: element.scrollWidth,
+              boundingRect: {
+                left: Number(rect.left.toFixed(2)),
+                right: Number(rect.right.toFixed(2)),
+                width: Number(rect.width.toFixed(2))
+              },
+              computedMinWidth: style.minWidth,
+              computedMaxWidth: style.maxWidth,
+              computedWidth: style.width,
+              whiteSpace: style.whiteSpace,
+              overflowWrap: style.overflowWrap,
+              wordBreak: style.wordBreak,
+              overflowX: style.overflowX,
+              display: style.display,
+              boxSizing: style.boxSizing,
+              gridOrFlexMinSize: {
+                elementMinWidth: style.minWidth,
+                parentDisplay: parentStyle?.display ?? null,
+                parentMinWidth: parentStyle?.minWidth ?? null,
+                parentGridTemplateColumns: parentStyle?.gridTemplateColumns ?? null,
+                parentFlex: parentStyle?.flex ?? null
+              }
+            };
+          })
+          .filter((entry) => entry.overflowAmount > 1)
+          .sort((a, b) => b.overflowAmount - a.overflowAmount)
+          .slice(0, 12);
+
         return {
-          overflow: Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1,
+          overflow,
+          viewportWidth,
+          documentWidth,
+          overflowDiagnostics,
           methodLayers: document.querySelectorAll(`[data-laws-derivative-contract="${contract}"]`).length,
           title: document.title
         };
       }, CONTRACT);
+      if (result.overflow) {
+        console.error(`HORIZONTAL_OVERFLOW_DIAGNOSTICS:${profile.name}:${route}:${JSON.stringify({
+          viewportWidth: result.viewportWidth,
+          documentWidth: result.documentWidth,
+          nodes: result.overflowDiagnostics
+        })}`);
+      }
       assert.equal(result.overflow, false, `HORIZONTAL_OVERFLOW:${profile.name}:${route}`);
       assert.equal(result.methodLayers, 1, `METHOD_LAYER_BROWSER_COUNT:${profile.name}:${route}`);
       profileResult[route] = result;

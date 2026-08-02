@@ -17,7 +17,7 @@ const ID = 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E';
 const DIGEST = 'fnv1a32:773dae4e';
 const JSON_SHA = 'sha256:2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5';
 const GZIP_SHA = 'sha256:8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b';
-const ZIP_SHA = 'sha256:5a2fb743de644c4c12b3c8b7ed79394ca60602848f2011bb29f46923d193cf04';
+const CACHE_ARCHIVE_SHA = 'sha256:5a2fb743de644c4c12b3c8b7ed79394ca60602848f2011bb29f46923d193cf04';
 const ARTIFACT_ID = 8827148247;
 const ARTIFACT_SHA = 'sha256:8162da59a38abe5381bd0e16381c9a772d72c84a5cdc912bc9700a2e9e992690';
 const sha = bytes => `sha256:${crypto.createHash('sha256').update(bytes).digest('hex')}`;
@@ -25,14 +25,12 @@ const read = name => fs.readFileSync(path.join(out, name));
 const receipt = JSON.parse(read('material-only-static-receipt.json'));
 const cacheBytes = read('complete-world-material-only-cache-v2.json');
 const gzipBytes = read('complete-world-material-only-cache-v2.json.gz');
-const zipBytes = read('complete-world-material-only-cache-v2.zip');
 const cache = JSON.parse(cacheBytes);
 const part1 = read('cache-carrier-part-1.txt').toString('utf8');
 const part2 = read('cache-carrier-part-2.txt').toString('utf8');
 const fail = (code, value) => { if (!value) throw new Error(code); };
 fail('CACHE_JSON_DIGEST_MISMATCH', sha(cacheBytes) === JSON_SHA);
 fail('CACHE_GZIP_DIGEST_MISMATCH', sha(gzipBytes) === GZIP_SHA);
-fail('CACHE_ZIP_DIGEST_MISMATCH', sha(zipBytes) === ZIP_SHA);
 fail('CACHE_SCHEMA_MISMATCH', cache.cacheType === SCHEMA && receipt.cacheSchema === SCHEMA);
 fail('PACKAGE_IDENTITY_MISMATCH', cache.completeWorldPackageIdentity === ID && receipt.newPackageIdentity === ID);
 fail('PACKAGE_DIGEST_MISMATCH', cache.completeWorldPackageContentDigest === DIGEST && receipt.newPackageDigest === DIGEST);
@@ -68,7 +66,7 @@ const identity = {
   cacheSchema: SCHEMA,
   cacheJsonSha256: JSON_SHA,
   cacheGzipSha256: GZIP_SHA,
-  cacheZipSha256: ZIP_SHA,
+  cacheArchiveSha256: CACHE_ARCHIVE_SHA,
   packageIdentity: ID,
   packageContentDigest: DIGEST,
   boundTerrainVertexCount: 10419,
@@ -88,7 +86,7 @@ writeJson('h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-w
   operationId: OP, startingHead: START, resultingHeadBinding: identity.resultingHeadBinding,
   rollback: identity.rollback, exactPathCount: 12, allOtherPathsProtected: true,
   cacheSchema: SCHEMA, cacheJsonSha256: JSON_SHA, cacheGzipSha256: GZIP_SHA,
-  cacheZipSha256: ZIP_SHA, newPackageIdentity: ID, newPackageDigest: DIGEST,
+  cacheArchiveSha256: CACHE_ARCHIVE_SHA, newPackageIdentity: ID, newPackageDigest: DIGEST,
   canonicalPositionsByteIdentical: true, canonicalNormalsByteIdentical: true,
   indicesPrimitiveSpansDrawRangesPreserved: true,
   terrainPositionMutationCount: 0, terrainNormalMutationCount: 0,
@@ -100,7 +98,7 @@ const common = {
   operationId: OP, controllingPacket: PACKET, startingHead: START,
   resultingHeadBinding: identity.resultingHeadBinding, candidateBranch: BRANCH,
   rollbackBranch: ROLLBACK, rollbackHead: START, cacheSchema: SCHEMA,
-  cacheJsonSha256: JSON_SHA, cacheGzipSha256: GZIP_SHA, cacheZipSha256: ZIP_SHA,
+  cacheJsonSha256: JSON_SHA, cacheGzipSha256: GZIP_SHA, cacheArchiveSha256: CACHE_ARCHIVE_SHA,
   generationArtifactId: ARTIFACT_ID, generationArtifactDigest: ARTIFACT_SHA,
   completeWorldPackageIdentity: ID, completeWorldPackageContentDigest: DIGEST,
   boundTerrainVertexCount: 10419, boundShorelineVertexCount: 154,

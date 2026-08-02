@@ -434,7 +434,9 @@ async function verifyStaticEquivalent(browser) {
     }
     const audit = page.locator('.lr-audit');
     assert(!(await audit.evaluate(element => element.open)), `${cohort.name}: static audit unexpectedly open`);
-    await audit.locator('summary').click();
+    const summary = audit.locator('summary');
+    await summary.focus();
+    await summary.press('Enter');
     assert(await audit.evaluate(element => element.open), `${cohort.name}: native static audit disclosure failed`);
     const dimensions = await page.evaluate(() => ({
       scrollWidth: document.documentElement.scrollWidth,

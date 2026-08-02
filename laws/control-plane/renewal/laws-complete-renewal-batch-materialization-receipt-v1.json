@@ -76,18 +76,18 @@
       },
       "redirects_created": 0
     },
+    "family_lens_contracts": {
+      "law_children": "PRACTICAL_ENGINEERING_EMPIRICAL",
+      "test_children": "PURPOSE_INPUTS_PROCEDURE_CHALLENGE_RECORD",
+      "research_children": "PROBLEM_EVIDENCE_METHOD_RESULT_LIMITS"
+    },
     "changed_files": [
-      "laws/categories/integrity/coherence/index.html",
-      "laws/categories/reality/evidence.html",
-      "laws/categories/reality/index.html",
-      "laws/categories/reality/limits.html",
-      "laws/categories/reality/theory.html",
-      "laws/categories/structure/boundaries.html",
-      "laws/categories/structure/constraints.html",
-      "laws/categories/structure/governance.html",
-      "laws/categories/structure/index.html",
-      "laws/categories/structure/interfaces.html",
-      "laws/test/admission-and-baseline/index.html"
+      "laws/research/applied-investigations/index.html",
+      "laws/research/evidence-and-sources/index.html",
+      "laws/research/methods-and-models/index.html",
+      "laws/test/admission-and-baseline/index.html",
+      "laws/test/forward-construction/index.html",
+      "laws/test/result-and-record/index.html"
     ]
   }
 }

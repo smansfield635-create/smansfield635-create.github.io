@@ -5,7 +5,16 @@ on:
     branches:
       - main
     paths:
-      - "laws/**"
+      - "laws/index.html"
+      - "laws/index.controller.js"
+      - "laws/index.interactions.js"
+      - "laws/index.compositor.js"
+      - "laws/index.cosmos.js"
+      - "laws/index.crystals.js"
+      - "laws/index.planet.js"
+      - "laws/index.experience.js"
+      - "laws/index.experience.css"
+      - "laws/index.experience.polish.css"
       - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs"
       - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs"
       - ".github/workflows/laws-four-compass-exact-head-regression.yml"

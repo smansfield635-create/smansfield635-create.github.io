@@ -7,6 +7,15 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/h-earth-run8e-mobile-navigation-correction.yml'
+      - 'h-earth-3d/validation/h-earth.run8e-mobile-navigation-correction.*'
+      - 'showroom/globe/h-earth/index.html'
+      - 'showroom/globe/h-earth/functional-landscape/index.js'
+      - 'showroom/globe/h-earth/functional-landscape/environment-integration.js'
+      - 'showroom/globe/h-earth/functional-landscape/mobile-navigation-controls.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8e-mobile-navigation-correction-scope.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
   workflow_dispatch:
 
 permissions:

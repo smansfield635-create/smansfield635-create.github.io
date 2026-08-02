@@ -20,6 +20,19 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - h-earth-3d/control-plane/post-merge-disposition/**
+      - tools/h-earth-post-merge-scope-disposition-audit.mjs
+      - .github/workflows/h-earth-post-merge-scope-disposition-audit.yml
+      - h-earth-3d/control-plane/step-1/**
+      - h-earth-3d/registry/candidates/**
+      - h-earth-3d/registry/accepted-amendments/**
+      - h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+      - tools/h-earth-lifecycle-control-plane-step-1-audit.mjs
+      - tools/h-earth-registry-successor-build.mjs
+      - tools/h-earth-repository-registry-compositor-route-amendment-audit.mjs
+      - tools/h-earth-repository-registry-successor-v2-audit.mjs
+      - tools/h-earth-repository-registry-target-4f-audit.mjs
   workflow_dispatch:
 
 permissions:

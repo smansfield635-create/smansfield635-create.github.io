@@ -1,83 +1,18 @@
-name: Metaverse Four-Compass Benchmark Tool Smoke
+name: Metaverse Four-Compass Benchmark Tool Smoke — manual archive
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "laws/**"
-      - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs"
-      - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs"
-      - "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs"
-      - ".github/workflows/metaverse-benchmark-four-compass-tool-smoke.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
-env:
-  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
-
 jobs:
-  smoke:
-    name: Verify separated tool reachability
+  archive-notice:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
-      - name: Checkout exact execution head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXECUTION_COMMIT }}
-
-      - name: Verify exact checkout identity
-        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Set up Chrome
-        id: chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-
-      - name: Install pinned browser driver
-        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-
-      - name: Validate smoke source syntax
+      - name: Report benchmark custody
         run: |
-          node --check verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs
-          node --check verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs
-
-      - name: Execute separated smoke capture
-        env:
-          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: node verification/benchmark-tools/four-compass-benchmark-v1/four-compass-smoke-capture.mjs
-
-      - name: Validate smoke receipts
-        run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const compass = JSON.parse(fs.readFileSync('four-compass-benchmark-tool-smoke.json', 'utf8'));
-          const auxiliary = JSON.parse(fs.readFileSync('website-home-receiver-control-smoke.json', 'utf8'));
-          const failures = [];
-          if (compass.status !== 'PASS_TOOL_SMOKE' || compass.lane !== 'FOUR_COMPASS_CORPUS') failures.push('compass');
-          if (auxiliary.status !== 'PASS_TOOL_SMOKE' || auxiliary.lane !== 'AUXILIARY_CONTROL') failures.push('auxiliary');
-          if (compass.assertions.authorityCount !== 4) failures.push('compass_count');
-          if (auxiliary.assertions.authorityCount !== 1) failures.push('auxiliary_count');
-          if (failures.length) throw new Error(`FOUR_COMPASS_SMOKE_VALIDATION_FAILED:${failures.join(',')}`);
-          NODE
-
-      - name: Upload separated smoke evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: metaverse-benchmark-four-compass-tool-smoke-evidence
-          path: |
-            four-compass-benchmark-tool-smoke.json
-            website-home-receiver-control-smoke.json
-            four-compass-benchmark-tool-smoke-screenshots/
-            website-home-receiver-control-smoke-screenshots/
-          if-no-files-found: error
-          retention-days: 30
+          echo 'The cross-product smoke benchmark is retired from automatic Laws pull-request execution.'
+          echo 'Original repository commit: 5efe5118e0addfa6965a2f00511b531afa8c8d8a'
+          echo 'Original workflow blob: 4973252071716f8ff032738379aa293552c2dfd0'
+          echo 'Use the retained Laws exact-head regression for Checkpoint 6; the original smoke YAML remains recoverable from Git history.'

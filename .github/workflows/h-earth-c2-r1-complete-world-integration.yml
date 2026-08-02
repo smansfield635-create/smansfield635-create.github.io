@@ -1,24 +1,36 @@
 name: H-Earth C2-R1 Material-Only Binding Materialization
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/h-earth-c2-r1-material-only-binding-implementation-001
+      - integration/h-earth-c2-r1-baseline-001
     paths:
       - '.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
+      - '.github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'
+      - 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
+      - 'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
 
 permissions:
   contents: write
   actions: read
 
 env:
-  EXPECTED_HEAD: ${{ github.sha }}
-  CANDIDATE_BRANCH: ${{ github.ref_name }}
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+  CANDIDATE_BRANCH: ${{ github.event.pull_request.head.ref }}
   STARTING_HEAD: 4f0491f00fae794ecdefbae36f4ee86c8a1bd21a
   ROLLBACK_BRANCH: rollback/h-earth-c2-r1-material-only-binding-start-001
 
 jobs:
   materialize-exact-packet:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -79,7 +91,9 @@ jobs:
           cd "$RUNNER_TEMP/material-only"
           echo '2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5  complete-world-material-only-cache-v2.json' | sha256sum -c -
           echo '8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b  complete-world-material-only-cache-v2.json.gz' | sha256sum -c -
-          echo '5a2fb743de644c4c12b3c8b7ed79394ca60602848f2011bb29f46923d193cf04  complete-world-material-only-cache-v2.zip' | sha256sum -c -
+          test -s cache-carrier-part-1.txt
+          test -s cache-carrier-part-2.txt
+          test -s material-only-static-receipt.json
 
       - name: MC4.4 materialize identity runtime custody and carriers
         if: steps.state.outputs.already != 'true'

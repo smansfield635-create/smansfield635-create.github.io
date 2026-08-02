@@ -59,9 +59,13 @@ def main() -> int:
     run_v2_with_named_controls()
 
     public = TARGET.read_text(encoding="utf-8").split('<details class="lr-audit"', 1)[0]
-    require(public.count(REQUIRED_SENTENCE) == 1, "Exact Reverse Audit comparator sentence is not singular in the public layer")
+    normalized_public = " ".join(public.split())
+    require(
+        normalized_public.count(REQUIRED_SENTENCE) == 1,
+        "Exact Reverse Audit comparator sentence is not singular in the public layer",
+    )
     for marker in ("next 20 cycles", "AUROC 0.9704", "AUROC 0.9394", "stronger conventional aging-burden comparator"):
-        require(marker in public, f"Reverse Audit comparator context missing: {marker}")
+        require(marker in normalized_public, f"Reverse Audit comparator context missing: {marker}")
 
     receipt = json.loads(RECEIPT.read_text(encoding="utf-8"))
     correction = receipt.get("reverse_audit_battery_comparator_successor", {})

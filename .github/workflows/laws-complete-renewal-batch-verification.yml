@@ -7,7 +7,9 @@ on:
     paths:
       - .github/workflows/laws-complete-renewal-batch-verification.yml
       - scripts/verify-laws-complete-renewal-batch.py
+      - scripts/verify-laws-complete-renewal-batch-v2.py
       - scripts/laws_complete_renewal_batch_browser_verify.mjs
+      - scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
       - scripts/laws_complete_renewal_batch_polish.py
       - assets/laws-destination/renewal.js
       - assets/laws-destination/renewal-navigation.css
@@ -23,7 +25,9 @@ on:
     paths:
       - .github/workflows/laws-complete-renewal-batch-verification.yml
       - scripts/verify-laws-complete-renewal-batch.py
+      - scripts/verify-laws-complete-renewal-batch-v2.py
       - scripts/laws_complete_renewal_batch_browser_verify.mjs
+      - scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
       - scripts/laws_complete_renewal_batch_polish.py
       - assets/laws-destination/renewal.js
       - assets/laws-destination/renewal-navigation.css
@@ -53,8 +57,8 @@ jobs:
       - name: Fetch current main for mutation-boundary comparison
         run: git fetch origin main
 
-      - name: Run complete static authority and custody verification
-        run: python3 scripts/verify-laws-complete-renewal-batch.py
+      - name: Run complete public-layer authority and custody verification
+        run: python3 scripts/verify-laws-complete-renewal-batch-v2.py
 
       - name: Install browser verifier
         run: |
@@ -74,8 +78,8 @@ jobs:
           cat /tmp/laws-complete-renewal-server.log
           exit 1
 
-      - name: Execute integrated browser cross-compatibility matrix
-        run: node scripts/laws_complete_renewal_batch_browser_verify.mjs
+      - name: Execute integrated visible-current-layer browser matrix
+        run: node scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
 
       - name: Materialize exact-head verification receipt
         shell: bash

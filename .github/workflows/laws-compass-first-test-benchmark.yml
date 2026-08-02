@@ -79,9 +79,9 @@ jobs:
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          node <<'NODE'
-          const fs = require('node:fs');
-          const puppeteer = require('puppeteer-core');
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import puppeteer from 'puppeteer-core';
 
           const visibleSource = `(element) => {
             if (!element || element.hidden) return false;

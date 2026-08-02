@@ -1,0 +1,44 @@
+name: Laws FIRST rail verifier correction once
+
+on:
+  pull_request:
+    types: [ready_for_review]
+    paths:
+      - '.github/workflows/laws-first-rail-verifier-fix-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  correct-verifier:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: macos-latest
+    steps:
+      - name: Check out exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-first-indicator-cache-bust-001
+          fetch-depth: 0
+
+      - name: Correct receipt newline literal
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('scripts/verify-laws-first-rail-architecture.mjs')
+          text = path.read_text()
+          old = "JSON.stringify(receipt, null, 2) + '\n');"
+          new = "JSON.stringify(receipt, null, 2) + '\\n');"
+          if old not in text:
+              raise SystemExit('malformed receipt newline literal not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+
+      - name: Commit verifier correction only
+        shell: bash
+        run: |
+          git add scripts/verify-laws-first-rail-architecture.mjs
+          git config user.name "laws-rail-verifier-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "Correct FIRST rail verifier receipt literal"
+          git push origin HEAD:agent/laws-first-indicator-cache-bust-001

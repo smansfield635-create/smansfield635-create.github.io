@@ -1,20 +1,21 @@
 {
   "contract": "LAWS_RENEWAL_COLLAPSED_ENTRY_AND_PAGE_FACTS_CONTRACT_v1",
   "mode": "USER_VISUAL_PRESENTATION_CORRECTION",
-  "status": "IMPLEMENTED_PENDING_EXECUTED_AND_USER_VISUAL_VERIFICATION",
+  "status": "IMPLEMENTED_IN_FIVE_PAGE_SOURCE_PENDING_EXECUTED_AND_USER_VISUAL_VERIFICATION",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "branch": "agent/laws-renewal-public-audit-translation-001",
   "parent_correction": "LAWS_RENEWAL_PUBLIC_AUDIT_TRANSLATION_CORRECTION_v1",
   "user_direction": {
     "page_facts": [
-      "CANONICAL_ROUTE",
-      "ASSIGNED_CANONICAL_RECORDS",
-      "STUDY_STATUS"
+      "CANONICAL_ROUTE_OR_EQUIVALENT_PAGE_IDENTITY",
+      "ASSIGNED_CANONICAL_RECORDS_OR_EQUIVALENT_OWNERSHIP_FACT",
+      "STUDY_STATUS_OR_EQUIVALENT_EVIDENCE_POSTURE"
     ],
     "page_facts_presentation": "ONE_COLLAPSED_NATIVE_DISCLOSURE",
     "interactive_reading_panels_on_entry": "ALL_COLLAPSED",
     "future_default": "NO_INTERACTIVE_PANEL_OPEN_ON_PAGE_LOAD",
-    "retroactive_sweep_authority": false
+    "representative_five_page_source_correction_authority": true,
+    "unbounded_retroactive_sweep_authority": false
   },
   "shared_engine_behavior": {
     "page_facts_label": "Page facts",
@@ -35,10 +36,25 @@
   "scope": {
     "shared_files": [
       "assets/laws-destination/renewal.css",
+      "assets/laws-destination/renewal-core-v1.css",
+      "assets/laws-destination/renewal-public-audit-v2.css",
       "assets/laws-destination/renewal-collapsed-entry-v3.css",
       "assets/laws-destination/renewal.js"
     ],
-    "product_page_html_mutation": 0,
+    "representative_product_pages": [
+      "laws/categories/flow/signals/index.html",
+      "laws/categories/reality/measure.html",
+      "laws/test/reverse-audit/index.html",
+      "laws/research/findings-and-boundaries/index.html",
+      "laws/industrial-posture/index.html"
+    ],
+    "permanent_verifier": [
+      "scripts/verify-laws-renewal-collapsed-entry.mjs",
+      ".github/workflows/laws-renewal-collapsed-entry-verification.yml"
+    ],
+    "shared_asset_version": "LAWS_COMPLETE_RENEWAL_V3",
+    "product_page_html_mutation": 5,
+    "one_time_transformer_retained": false,
     "route_mutation": 0,
     "canonical_record_mutation": 0,
     "formula_identity_mutation": 0,
@@ -46,6 +62,20 @@
     "claim_ceiling_mutation": 0,
     "frontier_mutation": 0,
     "compass_runtime_mutation": 0
+  },
+  "required_verification": {
+    "source_contracts": true,
+    "phone": true,
+    "tablet": true,
+    "desktop": true,
+    "keyboard_focus_without_auto_open": true,
+    "pointer_and_touch_toggle": true,
+    "exclusive_or_zero_open_panel_state": true,
+    "page_facts_open_and_close": true,
+    "reduced_motion": true,
+    "static_no_javascript_equivalence": true,
+    "horizontal_overflow": true,
+    "browser_errors": true
   },
   "program_disposition": {
     "current_correction_pr": 494,

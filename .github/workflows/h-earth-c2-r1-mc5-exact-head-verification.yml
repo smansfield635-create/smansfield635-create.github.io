@@ -2,6 +2,13 @@ name: H-Earth C2-R1 MC5 Exact-Head Verification
 
 on:
   workflow_dispatch:
+  pull_request:
+    types:
+      - ready_for_review
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c2-r1-mc5-exact-head-verification.yml'
   push:
     branches:
       - main

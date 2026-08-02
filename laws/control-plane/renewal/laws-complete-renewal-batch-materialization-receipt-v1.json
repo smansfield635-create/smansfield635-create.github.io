@@ -140,5 +140,23 @@
     "metric_change": false,
     "evidence_status_upgrade": false,
     "claim_ceiling_upgrade": false
+  },
+  "reverse_audit_battery_sample_successor_v2": {
+    "status": "APPLIED_PENDING_EXECUTED_VERIFICATION",
+    "authority": "LAWS_COMPLETE_RENEWAL_REVERSE_AUDIT_BATTERY_SAMPLE_SUCCESSOR_v2",
+    "predecessor": "LAWS_COMPLETE_RENEWAL_REVERSE_AUDIT_BATTERY_COMPARATOR_SUCCESSOR_v1",
+    "path": "laws/test/reverse-audit/index.html",
+    "required_public_sentence": "The defined battery event was evaluated within the next 20 cycles across 1,653 final-test cycle records from three held-out cells, and reverse challenge preserved the stronger conventional aging-burden comparator at AUROC 0.9704 against the combined model at AUROC 0.9394 before component ablations and threshold behavior were considered.",
+    "changed_in_this_run": true,
+    "held_out_cells": 3,
+    "final_test_cycle_records": 1653,
+    "warning_horizon_cycles": 20,
+    "combined_model_auroc": 0.9394,
+    "burden_comparator_auroc": 0.9704,
+    "visual_structure_change": false,
+    "tab_structure_change": false,
+    "metric_change": false,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false
   }
 }

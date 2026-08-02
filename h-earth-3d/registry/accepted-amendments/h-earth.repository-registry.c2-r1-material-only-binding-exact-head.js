@@ -2,9 +2,10 @@
  * Read-only C2-R1 material-only binding exact-head registry overlay.
  *
  * This control-plane amendment registers PR #484's immutable candidate
- * occurrence and the two governed runtime paths that must be recognized by
- * automatic repository-registry preflight. It creates no product, merge,
- * promotion, publication, or mutation authority.
+ * occurrence, the two governed runtime paths that must be recognized by
+ * automatic repository-registry preflight, and its own bounded installation
+ * surfaces. It creates no product, merge, promotion, publication, or mutation
+ * authority.
  */
 import baseFacade from './h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js';
 
@@ -26,6 +27,16 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_RUNTIME_PATHS = Obje
   '/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
 ]);
 
+export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_CONTROL_PATHS = Object.freeze([
+  '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js',
+  '/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+]);
+
+const ALL_REGISTERED_PATHS = Object.freeze([
+  ...H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_RUNTIME_PATHS,
+  ...H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_CONTROL_PATHS
+]);
+
 export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_REGISTRATION = freeze({
   registrationId: 'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_REGISTRATION_v1',
   operationId: 'H_EARTH_C2_R1_MC5_REGISTRY_WORKFLOW_DEADLOCK_RESOLUTION_001',
@@ -35,6 +46,7 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_REGISTRATION = freez
   candidateHead: CANDIDATE_HEAD,
   packageIdentity: PACKAGE_IDENTITY,
   runtimePaths: H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_RUNTIME_PATHS,
+  controlPlanePaths: H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_CONTROL_PATHS,
   productMutationAuthorized: false,
   candidateMutationAuthorized: false,
   materializationRerunAuthorized: false,
@@ -42,7 +54,7 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_REGISTRATION = freez
   publicationAuthorized: false
 });
 
-const OCCURRENCES = Object.freeze(
+const RUNTIME_OCCURRENCES = Object.freeze(
   H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_RUNTIME_PATHS.map((repositoryPath) => freeze({
     repository: REPOSITORY,
     refType: 'BRANCH',
@@ -60,6 +72,27 @@ const OCCURRENCES = Object.freeze(
   }))
 );
 
+const CONTROL_OCCURRENCES = Object.freeze(
+  H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_CONTROL_PATHS.map((repositoryPath) => freeze({
+    repository: REPOSITORY,
+    refType: 'BRANCH',
+    refName: 'main',
+    commitSha: null,
+    path: repositoryPath,
+    gitBlobSha: null,
+    contentSha256: null,
+    byteCount: null,
+    existenceStatus: 'PRESENT_AFTER_CONTROL_PLANE_MERGE',
+    fetchbackStatus: 'CONTROL_PLANE_INSTALLATION_CANDIDATE',
+    occurrenceClass: 'C2_R1_MC5_CONTROL_PLANE_INSTALLATION_OCCURRENCE'
+  }))
+);
+
+const OCCURRENCES = Object.freeze([
+  ...RUNTIME_OCCURRENCES,
+  ...CONTROL_OCCURRENCES
+]);
+
 export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE = freeze({
   evidenceId: 'EVIDENCE_H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_v1',
   evidenceClass: 'EXACT_REPOSITORY_CANDIDATE_IDENTITY_REGISTRATION',
@@ -70,6 +103,7 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE = freeze({
     'PR_484_EXACT_BRANCH_REGISTERED',
     'PR_484_EXACT_HEAD_REGISTERED',
     'TWO_RUNTIME_PATHS_REGISTERED',
+    'CONTROL_PLANE_INSTALLATION_PATHS_REGISTERED',
     'MATERIAL_ONLY_PACKAGE_IDENTITY_REGISTERED',
     'MC5_CONTROL_PLANE_VERIFICATION_REQUIRED'
   ]),
@@ -89,8 +123,8 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_NODE = freeze({
   nodeSubtype: 'C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD',
   displayName: 'H-Earth C2-R1 Material-Only Binding Exact Head',
   description:
-    'Registers PR #484, its immutable candidate branch and head, the material-only package identity, and the two runtime paths required for bounded MC5 verification.',
-  repositoryPaths: H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_RUNTIME_PATHS,
+    'Registers PR #484, its immutable candidate branch and head, the material-only package identity, two runtime paths, and the bounded control-plane installation surfaces required for MC5 verification.',
+  repositoryPaths: ALL_REGISTERED_PATHS,
   repositoryOccurrences: OCCURRENCES,
   evidenceClass: 'EXACT_REPOSITORY_CANDIDATE_IDENTITY_REGISTRATION',
   evidenceReferences: Object.freeze([
@@ -106,6 +140,7 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_NODE = freeze({
     'EXACT_BRANCH_IDENTITY_REGISTRATION',
     'EXACT_HEAD_IDENTITY_REGISTRATION',
     'TWO_RUNTIME_PATH_SCOPE_REGISTRATION',
+    'CONTROL_PLANE_INSTALLATION_SCOPE_REGISTRATION',
     'MC5_READ_ONLY_VERIFICATION_ENABLEMENT'
   ]),
   authorityLimitations: Object.freeze([
@@ -126,7 +161,7 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_NODE = freeze({
   cardinalCompleteness: 'NOT_APPLICABLE',
   orderingRules: Object.freeze([]),
   dependencyRelations: Object.freeze([]),
-  allowedMutationScope: 'NONE_READ_ONLY_REGISTRATION',
+  allowedMutationScope: 'CONTROL_PLANE_REGISTRATION_ONLY',
   prohibitedMutations: Object.freeze([
     'PRODUCT_FILE_MUTATION',
     'PR_484_MUTATION',
@@ -140,12 +175,14 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_NODE = freeze({
     'PR_484_HEAD_EQUALS_REGISTERED_HEAD',
     'BOTH_RUNTIME_PATHS_RESOLVE_IN_REGISTRY',
     'BOTH_RUNTIME_OCCURRENCES_MATCH_EXACT_HEAD',
+    'CONTROL_PLANE_INSTALLATION_PATHS_RESOLVE_IN_REGISTRY',
     'PACKAGE_IDENTITY_EQUALS_REGISTERED_PACKAGE'
   ]),
   stoppingBoundaries: Object.freeze([
     'STOP_IF_PR_484_BRANCH_MOVES',
     'STOP_IF_PR_484_HEAD_MOVES',
     'STOP_IF_EITHER_RUNTIME_PATH_IS_UNREGISTERED',
+    'STOP_IF_CONTROL_PLANE_PATH_IS_UNREGISTERED',
     'STOP_IF_PACKAGE_IDENTITY_DIFFERS'
   ]),
   currentIdentityReferences: Object.freeze([
@@ -159,7 +196,7 @@ export const H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_NODE = freeze({
 });
 
 const pathIndex = new Map(
-  H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_RUNTIME_PATHS.map((repositoryPath) => [
+  ALL_REGISTERED_PATHS.map((repositoryPath) => [
     repositoryPath,
     {
       node: H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_NODE,

@@ -62,30 +62,6 @@
       "laws/categories/reality/battery-heldout-study/index.html",
       "laws/scientific-law/battery-heldout-study/index.html"
     ],
-    "changed_files": [
-      "laws/battery-heldout-study/index.html",
-      "laws/categories/flow/cycles/index.html",
-      "laws/categories/flow/feedback/index.html",
-      "laws/categories/flow/handoffs/index.html",
-      "laws/categories/integrity/accountability/index.html",
-      "laws/categories/integrity/coherence/index.html",
-      "laws/categories/integrity/consistency/index.html",
-      "laws/categories/integrity/continuity/index.html",
-      "laws/categories/reality/battery-heldout-study/index.html",
-      "laws/categories/reality/evidence.html",
-      "laws/categories/reality/limits.html",
-      "laws/categories/reality/theory.html",
-      "laws/categories/structure/boundaries.html",
-      "laws/categories/structure/constraints.html",
-      "laws/categories/structure/governance.html",
-      "laws/categories/structure/interfaces.html",
-      "laws/research/applied-investigations/index.html",
-      "laws/research/evidence-and-sources/index.html",
-      "laws/research/methods-and-models/index.html",
-      "laws/scientific-law/battery-heldout-study/index.html",
-      "laws/test/admission-and-baseline/index.html",
-      "laws/test/forward-construction/index.html",
-      "laws/test/result-and-record/index.html"
-    ]
+    "changed_files": []
   }
 }

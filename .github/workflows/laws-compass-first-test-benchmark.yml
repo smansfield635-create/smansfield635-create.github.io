@@ -1,13 +1,6 @@
 name: Laws Compass FIRST Test Benchmark
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "laws/**"
-      - "verification/benchmark-tools/four-compass-benchmark-v1/laws-first-test-benchmark.mjs"
-      - ".github/workflows/laws-compass-first-test-benchmark.yml"
   workflow_dispatch:
 
 permissions:

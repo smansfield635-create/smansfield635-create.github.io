@@ -1,0 +1,102 @@
+name: Laws FIRST rail staged-loader reconciliation once
+
+on:
+  pull_request:
+    types: [synchronize]
+    paths:
+      - '.github/workflows/laws-first-rail-staged-loader-reconciliation-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile-staged-loader:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: macos-latest
+    steps:
+      - name: Check out exact correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-first-indicator-cache-bust-001
+          fetch-depth: 0
+
+      - name: Reconcile Compass-zone preload corridor
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          html_path = Path('laws/index.html')
+          html = html_path.read_text()
+          old = '''    observeSection(
+              "#laws-orbit",
+              reason => {
+                runWhenIdle(
+                  () => {
+                    loadOrbitSystems(reason);
+                    loadInteractionSystems("orbit-visible");
+                  },
+                  500
+                );
+              },
+              {
+                rootMargin:
+                  "620px 0px"
+              }
+            );'''.replace('          ', '')
+          new = '''    observeSection(
+              ".laws-compass-primary",
+              reason => {
+                runWhenIdle(
+                  () => {
+                    loadOrbitSystems(reason);
+                    loadInteractionSystems("compass-zone-proximity");
+                  },
+                  500
+                );
+              },
+              {
+                rootMargin:
+                  "1200px 0px"
+              }
+            );'''.replace('          ', '')
+          if old not in html:
+              raise SystemExit('staged loader observation block not found')
+          html = html.replace(old, new, 1)
+          if 'data-laws-first-rail-preload=' not in html:
+              html = html.replace(
+                  'data-laws-first-rail-architecture="persistent-compass-zone-v2"',
+                  'data-laws-first-rail-architecture="persistent-compass-zone-v2" data-laws-first-rail-preload="compass-zone-proximity-1200px"',
+                  1
+              )
+          html_path.write_text(html)
+
+          verifier_path = Path('scripts/verify-laws-first-rail-architecture.mjs')
+          verifier = verifier_path.read_text()
+          marker = "  assert.ok(html.includes('data-laws-first-rail-architecture=\"persistent-compass-zone-v2\"'), 'Architecture marker missing.');"
+          insertion = marker + "\n  assert.ok(html.includes('data-laws-first-rail-preload=\"compass-zone-proximity-1200px\"'), 'Compass-zone preload marker missing.');\n  assert.ok(html.includes('observeSection(\\n      \".laws-compass-primary\"'), 'Staged loader does not observe the Compass zone.');\n  assert.ok(html.includes('\"1200px 0px\"'), 'Compass-zone preload corridor is not 1200px.');"
+          if marker not in verifier:
+              raise SystemExit('architecture verifier source marker not found')
+          verifier = verifier.replace(marker, insertion, 1)
+          verifier_path.write_text(verifier)
+
+          control_path = Path('laws/control-plane/renewal/laws-first-persistent-rail-and-tablet-reflow-v2.json')
+          import json
+          control = json.loads(control_path.read_text())
+          guarantees = control.setdefault('guarantees', [])
+          if 'COMPASS_ZONE_PRELOAD_CORRIDOR_PRESERVED_AFTER_REFLOW' not in guarantees:
+              guarantees.append('COMPASS_ZONE_PRELOAD_CORRIDOR_PRESERVED_AFTER_REFLOW')
+          control['staged_loader_observation_target'] = '.laws-compass-primary'
+          control['staged_loader_root_margin'] = '1200px 0px'
+          control_path.write_text(json.dumps(control, indent=2) + '\n')
+          PY
+
+      - name: Commit staged-loader reconciliation
+        shell: bash
+        run: |
+          git add laws/index.html scripts/verify-laws-first-rail-architecture.mjs \
+            laws/control-plane/renewal/laws-first-persistent-rail-and-tablet-reflow-v2.json
+          git config user.name "laws-rail-loader-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "Preserve Compass staged loading after hero reflow"
+          git push origin HEAD:agent/laws-first-indicator-cache-bust-001

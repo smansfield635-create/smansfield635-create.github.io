@@ -81,13 +81,18 @@
       "test_children": "PURPOSE_INPUTS_PROCEDURE_CHALLENGE_RECORD",
       "research_children": "PROBLEM_EVIDENCE_METHOD_RESULT_LIMITS"
     },
-    "changed_files": [
-      "laws/research/applied-investigations/index.html",
-      "laws/research/evidence-and-sources/index.html",
-      "laws/research/methods-and-models/index.html",
-      "laws/test/admission-and-baseline/index.html",
-      "laws/test/forward-construction/index.html",
-      "laws/test/result-and-record/index.html"
-    ]
+    "changed_files": []
+  },
+  "representative_battery_completeness_correction": {
+    "status": "APPLIED_PENDING_EXECUTED_VERIFICATION",
+    "authority": "LAWS_COMPLETE_RENEWAL_SIGNALS_BATTERY_HORIZON_CORRECTION_v1",
+    "path": "laws/categories/flow/signals/index.html",
+    "fact": "The defined near-term event was evaluated within the next 20 cycles.",
+    "visual_structure_change": false,
+    "tab_structure_change": false,
+    "metric_change": false,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "changed_in_this_run": true
   }
 }

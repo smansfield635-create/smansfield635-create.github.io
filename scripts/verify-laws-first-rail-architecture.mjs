@@ -162,6 +162,5 @@ try {
 } finally {
   await browser.close();
 }
-fs.writeFileSync(path.join('artifacts', 'laws-first-rail-architecture-verification.json'), JSON.stringify(receipt, null, 2) + '
-');
+fs.writeFileSync(path.join('artifacts', 'laws-first-rail-architecture-verification.json'), JSON.stringify(receipt, null, 2) + '\n');
 console.log(JSON.stringify(receipt, null, 2));

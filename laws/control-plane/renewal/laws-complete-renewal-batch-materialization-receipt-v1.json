@@ -93,6 +93,40 @@
     "metric_change": false,
     "evidence_status_upgrade": false,
     "claim_ceiling_upgrade": false,
-    "changed_in_this_run": true
+    "changed_in_this_run": false
+  },
+  "representative_battery_horizon_completeness_successor": {
+    "status": "APPLIED_PENDING_EXECUTED_VERIFICATION",
+    "authority": "LAWS_COMPLETE_RENEWAL_REPRESENTATIVE_BATTERY_HORIZON_COMPLETENESS_SUCCESSOR_v1",
+    "predecessor_signals_correction_preserved": true,
+    "corrections": [
+      {
+        "path": "laws/categories/reality/measure.html",
+        "fact": "The defined near-term battery event was evaluated within the next 20 cycles.",
+        "changed_in_this_run": true,
+        "visual_structure_change": false,
+        "tab_structure_change": false,
+        "metric_change": false,
+        "evidence_status_upgrade": false,
+        "claim_ceiling_upgrade": false
+      },
+      {
+        "path": "laws/test/reverse-audit/index.html",
+        "fact": "The defined battery event was evaluated within the next 20 cycles before reverse challenge.",
+        "changed_in_this_run": true,
+        "visual_structure_change": false,
+        "tab_structure_change": false,
+        "metric_change": false,
+        "evidence_status_upgrade": false,
+        "claim_ceiling_upgrade": false
+      }
+    ],
+    "final_authorized_representative_paths": [
+      "laws/categories/flow/signals/index.html",
+      "laws/categories/reality/measure.html",
+      "laws/test/reverse-audit/index.html"
+    ],
+    "other_representative_html_mutations": 0,
+    "representative_visual_structure_mutations": 0
   }
 }

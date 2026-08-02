@@ -1,0 +1,82 @@
+{
+  "contractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_READ_ONLY_PRODUCTION_OBSERVATION_AND_SOURCE_CUSTODY_H2_v1",
+  "toolId": "H_EARTH_CAPACITY_CAMERA_AND_RENDERER_CORRESPONDENCE_VERIFIER_v1",
+  "checkpoint": "H2",
+  "checkpointTitle": "READ_ONLY_PRODUCTION_OBSERVATION_AND_SOURCE_CUSTODY",
+  "parentCheckpointContractId": "H_EARTH_CAPACITY_CAMERA_RENDERER_CORRESPONDENCE_LAWFUL_MEASUREMENT_MODEL_H1_v1",
+  "parentCheckpointCommit": "1ca73a30f89c6003416c89bbff8d5fce54520996",
+  "branch": "agent/h-earth-capacity-camera-correspondence-verifier-h2-001",
+  "sourceCommit": "ba0f3ecf3087f91d2cb3ff6aa4dd3c040107712e",
+  "authorizedCheckpointPaths": [
+    "tools/h-earth-capacity-camera-renderer-correspondence-h2-contract.json",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h2-common.mjs",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h2-facts.mjs",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h2-observer.mjs",
+    "tools/h-earth-capacity-camera-renderer-correspondence-h2-controls.mjs",
+    ".github/workflows/h-earth-capacity-camera-correspondence-h2.yml"
+  ],
+  "primaryCapacityAuthorityPath": "showroom/globe/h-earth/capacity.js",
+  "sourcePosture": "READ_ONLY_EXECUTION",
+  "productionMutationAuthority": "NONE",
+  "expectedFacts": {
+    "capacityContractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_FRAME_BASED_EXECUTION_CAPACITY_v2",
+    "capacitySchemaVersion": 2,
+    "canonicalCapacityPath": "/showroom/globe/h-earth/capacity.js",
+    "auxiliaryCapacityModulePermitted": false,
+    "camera": {
+      "model": "PERSPECTIVE_LOOK_AT_CAMERA",
+      "position": {"x": 0, "y": 14, "z": -240},
+      "target": {"x": 0, "y": 0.6, "z": -48},
+      "up": {"x": 0, "y": 1, "z": 0},
+      "verticalFovDegrees": 60,
+      "nearPlane": 0.25,
+      "farPlane": 512,
+      "cameraStateAuthority": "COMPOSITOR",
+      "projectionAuthority": "RENDERER",
+      "positionBounds": {"xMin": -256, "xMax": 256, "yMin": -80, "yMax": 120, "zMin": -256, "zMax": 256},
+      "targetBounds": {"xMin": -96, "xMax": 96, "yMin": -1, "yMax": 8, "zMin": -256, "zMax": 24},
+      "yawDegrees": {"minimum": -180, "maximum": 180, "maximumDeltaPerIntent": 8, "wrapPermitted": true, "initialWaterwardYawDegrees": 180, "compositionArcDegrees": 76},
+      "pitchDegrees": {"minimum": -24, "maximum": 12, "maximumDeltaPerIntent": 8},
+      "verticalFovCapacity": {"minimum": 38, "maximum": 68, "maximumDeltaPerIntent": 6},
+      "resolvedPoseEligibility": {"orthogonalBasisTolerance": 0.001, "nearPlaneMinimum": 0.01, "farPlaneMaximum": 512, "farPlaneMustExceedNearPlane": true, "cameraRevisionRequired": true}
+    },
+    "viewport": {
+      "minimumWidthPx": 320,
+      "minimumHeightPx": 320,
+      "maximumWidthPx": 7680,
+      "maximumHeightPx": 4320,
+      "preferredDesignWidthPx": 1440,
+      "preferredDesignHeightPx": 900,
+      "supportedAspectRatioMinimum": 0.5625,
+      "supportedAspectRatioMaximum": 2.4,
+      "pixelRatioMinimum": 1,
+      "pixelRatioPreferredMaximum": 2,
+      "pixelRatioAbsoluteMaximum": 3
+    },
+    "budgets": {
+      "semanticLayerContainers": {"minimum": 15, "preferred": 15, "maximum": 16},
+      "environmentPrimitives": {"minimum": 1, "preferredMaximum": 256, "absoluteMaximum": 384},
+      "interactionNodes": {"minimum": 1, "preferredMaximum": 8, "absoluteMaximum": 16},
+      "totalRendererOwnedNodes": {"preferredMaximum": 304, "absoluteMaximum": 448},
+      "maximumMountedRendererInstances": 1,
+      "maximumActiveRenderFrames": 1,
+      "maximumPendingFrameApplications": 2
+    },
+    "livingPresentation": {
+      "governedBrowserRowCount": 19,
+      "graphExpansionPermitted": false,
+      "maximumActiveFramesPerSecond": 30,
+      "maximumMainThreadWorkMillisecondsPerFrame": 8
+    }
+  },
+  "claims": {
+    "productionObservationAuthorized": true,
+    "sourceCustodyObservationAuthorized": true,
+    "rendererExecutionAuthorized": false,
+    "productionMutationAuthorized": false,
+    "productionFilesChanged": 0,
+    "productionCorrectionStarted": false,
+    "h3Started": false,
+    "mergePerformed": false
+  }
+}

@@ -51,6 +51,7 @@ function verifyStaticRepositoryContracts() {
   const battery = JSON.parse(fs.readFileSync('laws/control-plane/cp6-context/laws-battery-study-contextual-interpretation-record-v1.json', 'utf8'));
   const compatibility = JSON.parse(fs.readFileSync('laws/control-plane/cp6-1/cp6-2-route-contract.json', 'utf8'));
   const verification = JSON.parse(fs.readFileSync('laws/control-plane/cp6-context/contextual-renewal-verification-v1.json', 'utf8'));
+  const legacyDisposition = JSON.parse(fs.readFileSync('laws/control-plane/cp6-context/legacy-benchmark-disposition-v1.json', 'utf8'));
 
   assert(crosswalk.mappings.length === 11, 'Current eleven Frontier compatibility surfaces not preserved in crosswalk');
   assert(crosswalk.authority_boundary.route_deletion === 0, 'Route deletion recorded');
@@ -67,6 +68,11 @@ function verifyStaticRepositoryContracts() {
   assert(verification.frontier_files_mutated === 0, 'Frontier mutation recorded');
   assert(verification.compass_runtime_files_mutated === 0, 'Compass runtime mutation recorded');
 
+  assert(legacyDisposition.current_compass_contract.top_level_authorities === 6, 'Legacy disposition does not preserve six authorities');
+  assert(legacyDisposition.current_compass_contract.outer_label_model === 'single-active-primary-only', 'Legacy disposition does not preserve the accepted outer-label model');
+  assert(legacyDisposition.four_compass_exact_head_regression.material_findings_after_classification.length === 0, 'Material Four-Compass finding remains unresolved');
+  assert(legacyDisposition.six_authority_benchmark.protected_compass_runtime_changed_in_current_pr === false, 'Historical six-authority benchmark disposition reports runtime mutation');
+
   for (const [route] of allContextPages) {
     assert(fs.existsSync(localPathForRoute(route)), `Missing local route target: ${route}`);
   }
@@ -79,10 +85,18 @@ function verifyStaticRepositoryContracts() {
   assert(migrated === 48, `Expected 48 migrated records, found ${migrated}`);
 
   const lawsHTML = fs.readFileSync('laws/index.html', 'utf8');
+  const interactions = fs.readFileSync('laws/index.interactions.js', 'utf8');
   assert(lawsHTML.includes('data-laws-category-count="6"'), 'Six authorities marker missing');
+  assert(lawsHTML.includes('data-laws-primary-star-count="4"'), 'Four law-authority marker missing');
+  assert(lawsHTML.includes('data-laws-nonlaw-member-count="8"'), 'Eight Test and Research child markers missing');
   assert(lawsHTML.includes('data-laws-child-route-count="24"'), 'Twenty-four Laws child-route marker missing');
+  assert(lawsHTML.includes('data-laws-test-method="four-member-reversible-admissibility-cluster"'), 'Current Test method marker missing');
+  assert(lawsHTML.includes('data-laws-first-disclosure'), 'Current F.I.R.S.T. disclosure missing');
   assert(lawsHTML.includes('data-laws-controller-navigation-authority="true"'), 'Compass controller navigation authority missing');
   assert(lawsHTML.includes('data-laws-evidence-claim-authority="false"'), 'Evidence claim boundary changed');
+  assert(interactions.includes('const D=Object.freeze(["flow","integrity","reality","structure","test","research"])'), 'Six-authority interaction identity missing');
+  assert(interactions.includes('singleActiveOuterAuthorityLabel:true'), 'Single-active outer-label contract missing');
+  assert(interactions.includes('primary-only-star-center-protected-tab'), 'Primary-only label placement contract missing');
 
   const forbidden = [
     'future Frontier architecture is live',
@@ -94,7 +108,86 @@ function verifyStaticRepositoryContracts() {
     const text = fs.readFileSync(file, 'utf8').toLowerCase();
     for (const phrase of forbidden) assert(!text.includes(phrase.toLowerCase()), `Forbidden claim in ${file}: ${phrase}`);
   }
-  results.push({ check: 'repository-contracts', status: 'PASS', migratedRecords: migrated, compatibilityBindings: 9 });
+  results.push({
+    check: 'repository-contracts',
+    status: 'PASS',
+    migratedRecords: migrated,
+    compatibilityBindings: 9,
+    currentCompassContract: 'SIX_AUTHORITY_SINGLE_ACTIVE_OUTER_LABEL',
+    legacyFailuresClassified: true,
+  });
+}
+
+async function verifyCurrentCompassContract(page, profileName) {
+  await page.goto(baseURL + '/laws/', { waitUntil: 'networkidle' });
+  await page.waitForFunction(() => Boolean(
+    document.querySelector('[data-laws-root]') &&
+    globalThis.DGB_LAWS_CONTROLLER &&
+    document.querySelectorAll('[data-laws-projected-category-label]').length === 6
+  ));
+
+  const snapshot = await page.evaluate(() => {
+    const visible = element => {
+      if (!element || element.hidden) return false;
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity || 1) > 0.01 && rect.width > 0 && rect.height > 0;
+    };
+    const root = document.querySelector('[data-laws-root]');
+    const labels = [...document.querySelectorAll('[data-laws-projected-category-label]')];
+    const topLevelAuthorities = [...document.querySelectorAll('button[data-laws-category][data-direction]')];
+    const childControls = [...document.querySelectorAll('button[data-direction][data-route]')]
+      .filter(element => !element.hasAttribute('data-laws-category'));
+    const lawControls = childControls.filter(element => element.hasAttribute('data-laws-law'));
+    const testChildren = childControls.filter(element => element.dataset.direction === 'test');
+    const researchChildren = childControls.filter(element => element.dataset.direction === 'research');
+    return {
+      methodAcronym: document.documentElement.dataset.lawsMethodAcronym || '',
+      testMethod: document.documentElement.dataset.lawsTestMethod || '',
+      primaryStarCount: Number(document.documentElement.dataset.lawsPrimaryStarCount || 0),
+      declaredAuthorityCount: Number(document.documentElement.dataset.lawsCategoryCount || 0),
+      declaredChildRouteCount: Number(document.documentElement.dataset.lawsChildRouteCount || 0),
+      topLevelAuthorityCount: topLevelAuthorities.length,
+      topLevelAuthorityIds: topLevelAuthorities.map(element => element.dataset.direction).sort(),
+      childControlCount: childControls.length,
+      lawControlCount: lawControls.length,
+      testChildCount: testChildren.length,
+      researchChildCount: researchChildren.length,
+      projectedLabelCount: labels.length,
+      projectedVisibleCount: labels.filter(visible).length,
+      projectedPrimaryCount: labels.filter(element => visible(element) && element.dataset.primary === 'true').length,
+      projectedLetterCount: labels.filter(element => element.querySelector('[data-laws-projected-category-letter]')).length,
+      projectedWordCount: labels.filter(element => element.querySelector('[data-laws-projected-category-word]')).length,
+      visibleAuthorityIds: labels.filter(visible).map(element => element.dataset.direction || element.dataset.lawsProjectedCategoryLabel || ''),
+      firstDisclosurePresent: Boolean(document.querySelector('[data-laws-first-disclosure]')),
+      controllerState: root?.dataset.lawsControllerState || '',
+      controllerAuthority: document.documentElement.dataset.compassControllerNavigationAuthority || '',
+      horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    };
+  });
+
+  assert(snapshot.methodAcronym === 'FIRST', `${profileName}: F.I.R.S.T. acronym contract changed`);
+  assert(snapshot.testMethod === 'four-member-reversible-admissibility-cluster', `${profileName}: Test method contract changed: ${snapshot.testMethod}`);
+  assert(snapshot.primaryStarCount === 4, `${profileName}: four law authorities not preserved`);
+  assert(snapshot.declaredAuthorityCount === 6 && snapshot.topLevelAuthorityCount === 6, `${profileName}: six top-level authorities not preserved`);
+  assert(JSON.stringify(snapshot.topLevelAuthorityIds) === JSON.stringify(['flow', 'integrity', 'reality', 'research', 'structure', 'test']), `${profileName}: authority identity set changed`);
+  assert(snapshot.declaredChildRouteCount === 24 && snapshot.childControlCount === 24, `${profileName}: 24 child routes not preserved`);
+  assert(snapshot.lawControlCount === 16 && snapshot.testChildCount === 4 && snapshot.researchChildCount === 4, `${profileName}: law, Test, or Research child membership changed`);
+  assert(snapshot.projectedLabelCount === 6, `${profileName}: six projected authority labels were not installed`);
+  assert(snapshot.projectedVisibleCount === 1 && snapshot.projectedPrimaryCount === 1, `${profileName}: single-active outer-label contract failed`);
+  assert(snapshot.projectedLetterCount === 6 && snapshot.projectedWordCount === 6, `${profileName}: projected label parts are incomplete`);
+  assert(snapshot.firstDisclosurePresent, `${profileName}: current F.I.R.S.T. disclosure is missing`);
+  assert(snapshot.controllerState.length > 0 && snapshot.controllerAuthority === 'true', `${profileName}: controller authority is unavailable`);
+  assert(snapshot.horizontalOverflow <= 2, `${profileName}: Compass stage horizontal overflow: ${snapshot.horizontalOverflow}`);
+
+  results.push({
+    check: `current-compass-${profileName}`,
+    status: 'PASS',
+    authorities: snapshot.topLevelAuthorityCount,
+    childRoutes: snapshot.childControlCount,
+    visibleOuterLabels: snapshot.projectedVisibleCount,
+    visibleAuthorityIds: snapshot.visibleAuthorityIds,
+  });
 }
 
 async function verifyProfile(browser, profile) {
@@ -122,6 +215,8 @@ async function verifyProfile(browser, profile) {
     assert(dimensions.scrollWidth <= dimensions.clientWidth + 2, `${profile.name}: horizontal overflow on ${route}: ${dimensions.scrollWidth}/${dimensions.clientWidth}`);
     assert(dimensions.scrollHeight > dimensions.clientHeight, `${profile.name}: page content unexpectedly absent on ${route}`);
   }
+
+  await verifyCurrentCompassContract(page, profile.name);
 
   await page.goto(baseURL + '/laws/research/applied-investigations/', { waitUntil: 'networkidle' });
   await page.keyboard.press('Tab');
@@ -180,6 +275,7 @@ async function main() {
     status: 'PASS',
     baseURL,
     checks: results,
+    legacyBenchmarkDisposition: 'CLASSIFIED_WITH_NO_MATERIAL_PRODUCT_FINDINGS',
     userVisualAcceptance: 'REQUIRED_NOT_RECORDED',
     mergeAuthorization: false,
   }, null, 2) + '\n');

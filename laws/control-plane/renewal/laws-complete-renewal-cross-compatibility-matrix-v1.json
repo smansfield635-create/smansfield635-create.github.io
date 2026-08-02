@@ -1,0 +1,196 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_CROSS_COMPATIBILITY_MATRIX_v1",
+  "mode": "IMPLEMENTATION_COMPATIBILITY_AUTHORITY",
+  "status": "BOUND_FOR_REPRESENTATIVE_IMPLEMENTATION",
+  "program": "COMPLETE_LAWS_CHAMBER_CHILD_AND_RECORD_RENEWAL",
+  "applies_to": {
+    "initial_validation_cohort": 5,
+    "predestined_child_routes": 24,
+    "canonical_records": 48,
+    "complete_custody_population": 138,
+    "surviving_public_and_compatibility_surfaces": "ALL_FROZEN_DISPOSITIONS"
+  },
+  "governing_rule": "A component is not cross-compatible merely because it renders on multiple pages. It must preserve the same semantic action, route authority, content authority, mathematical identity, evidence status, accessibility behavior, responsive meaning, motion equivalence, and audit custody across every consuming page family.",
+  "shared_contracts": {
+    "visual_expression": {
+      "authority": "MAIN_DIAMOND_GATE_BRIDGE_COMPASS",
+      "required": [
+        "MODERN_SANS_TYPOGRAPHY",
+        "ATMOSPHERIC_DEPTH",
+        "STAGED_EXPLANATION",
+        "PRACTICAL_MATHEMATICAL_CONTEXT",
+        "ILLUMINATED_RELATIONSHIP_EXPRESSION",
+        "PAGE_SPECIFIC_VISUAL_LOGIC"
+      ],
+      "prohibited": [
+        "CAMPAIGN_VISUAL_COPY",
+        "REPORT_DASHBOARD_GRAMMAR",
+        "TERMINAL_STYLE_PRIMARY_MATH",
+        "REPEATED_NESTED_BORDER_CARDS_AS_DEFAULT"
+      ]
+    },
+    "interaction_organization": {
+      "reference": "R.O.B._AND_W.A.V.E._TAB_AND_DISCLOSURE_SYSTEM",
+      "required": [
+        "ONE_ACTIVE_PRIMARY_LENS",
+        "INACTIVE_PANELS_HIDDEN",
+        "ARROW_HOME_END_KEYBOARD_OPERATION",
+        "POINTER_AND_TOUCH_EQUIVALENCE",
+        "NESTED_DISCLOSURES_CLOSED_BY_DEFAULT",
+        "FOCUS_STATE_PRESERVED"
+      ],
+      "prohibited": [
+        "TABS_ABOVE_UNCHANGED_MONOLITHIC_CONTENT",
+        "CANVAS_ONLY_ACTION_AUTHORITY",
+        "DRAG_ONLY_OPERATION",
+        "GENERIC_IDENTICAL_TAB_LABELS_WHEN_PAGE_ROLE_DIFFERS"
+      ]
+    },
+    "equation_expression": {
+      "required_sequence": [
+        "WHY_IT_MATTERS",
+        "FORMAL_SELECTABLE_NOTATION",
+        "VISUAL_RELATIONSHIP",
+        "VARIABLE_DEFINITIONS",
+        "PRACTICAL_LENS",
+        "ENGINEERING_LENS",
+        "EMPIRICAL_STATUS",
+        "CLAIM_BOUNDARY",
+        "COLLAPSED_CUSTODY_RECORD"
+      ],
+      "required_equivalence": [
+        "DESKTOP",
+        "TABLET",
+        "PHONE",
+        "FULL_MOTION",
+        "REDUCED_MOTION",
+        "STATIC_NO_JAVASCRIPT"
+      ],
+      "identity_rule": "Notation, variables, units, assumptions, thresholds, safe-mode behavior, source identity, execution status, and claim ceiling remain identical across every presentation mode.",
+      "prohibited": [
+        "IMAGE_ONLY_MATH",
+        "AESTHETIC_FORMULA_MUTATION",
+        "ANIMATION_AS_VALIDATION_SIGNAL",
+        "COLOR_AS_SOLE_STATUS_CHANNEL"
+      ]
+    },
+    "content_and_evidence": {
+      "semantic_dom_authority": true,
+      "canonical_record_authority": true,
+      "renderer_presentation_only": true,
+      "required": [
+        "PRACTICAL_ENGINEERING_EMPIRICAL_SEPARATION",
+        "VISIBLE_CLAIM_BOUNDARY",
+        "NEGATIVE_MIXED_AND_UNRESOLVED_RESULTS_PRESERVED",
+        "SOURCE_AND_CUSTODY_ACCESSIBLE",
+        "COMPLETE_FRONTIER_RECORD_REMAINS_FRONTIER_OWNED"
+      ],
+      "hard_fail_transitions": [
+        "PROPOSED_TO_PROVEN",
+        "REGISTERED_TO_VALIDATED",
+        "SIMULATED_TO_OBSERVED",
+        "EXECUTED_TO_REPLICATED",
+        "ABSENT_TO_NEGATIVE",
+        "MIXED_TO_SUPPORTIVE"
+      ]
+    },
+    "route_and_story": {
+      "existing_route_authority_preserved": true,
+      "compass_runtime_preserved": true,
+      "direct_entry_supported": true,
+      "previous_next_context_required": true,
+      "sequence_is_context_not_access_control": true,
+      "compatibility_wrappers_must_visibly_handoff": true,
+      "route_deletion_redirect_or_rename_authority": false
+    },
+    "responsive_behavior": {
+      "desktop": "COMPOSED_SHARED_STAGE_WITH_PAGE_SPECIFIC_VISUAL_AND_LENS_SYSTEM",
+      "tablet": "PRESERVE_PRIMARY_RELATIONSHIP_AND_ONE_ACTIVE_LENS_WITH_REDUCED_SIMULTANEOUS_DETAIL",
+      "phone": "ONE_PRIMARY_IDEA_BEFORE_SECONDARY_LENSES; NO_MONOLITHIC_STACK; NO_HORIZONTAL_OVERFLOW",
+      "no_content_loss": [
+        "EVIDENCE_STATUS",
+        "VARIABLE_DEFINITIONS",
+        "CLAIM_BOUNDARY",
+        "RETURN_CONTEXT",
+        "AUDIT_ACCESS"
+      ]
+    },
+    "motion_and_lifecycle": {
+      "full_motion": "BOUNDED_EXPLANATORY_TRANSITIONS",
+      "reduced_motion": "STEPPED_OR_STATE_SUBSTITUTION_WITH_IDENTICAL_MEANING",
+      "static_no_javascript": "COMPLETE_COMPREHENSION_AND_ROUTE_ACCESS",
+      "runtime_rules": [
+        "NO_REQUIRED_AUTOMATIC_CAMERA_TRAVEL",
+        "NO_RENDER_LOOP_WHEN_OFFSCREEN",
+        "NO_RENDER_LOOP_WHEN_DOCUMENT_HIDDEN",
+        "EXPLICIT_SUSPEND_RESUME_DISPOSE",
+        "BOUNDED_PIXEL_RATIO",
+        "DETERMINISTIC_STATE_RESTORE"
+      ]
+    },
+    "audit_and_custody": {
+      "collapsed_by_default": true,
+      "must_preserve": [
+        "RECORD_ID",
+        "CANONICAL_OWNER",
+        "SOURCE_PATH_OR_IDENTIFIER",
+        "VERSION",
+        "STATUS",
+        "LIMITATIONS",
+        "MIGRATION_OR_CUSTODY_RECEIPT"
+      ],
+      "audit_layer_cannot_control_initial_public_comprehension": true
+    }
+  },
+  "page_family_adapters": {
+    "LAW_CHILD": {
+      "default_lenses": ["PRACTICAL", "ENGINEERING", "EMPIRICAL", "BOUNDARY"],
+      "required_story_role": "ONE_RECURRING_RELATIONSHIP"
+    },
+    "TEST_CHILD": {
+      "default_lenses": ["PURPOSE", "INPUTS", "PROCEDURE", "CHALLENGE", "RECORD"],
+      "required_story_role": "ONE_PROCEDURAL_FUNCTION"
+    },
+    "RESEARCH_CHILD": {
+      "default_lenses": ["PROBLEM", "EVIDENCE", "METHOD", "RESULT", "LIMITS"],
+      "required_story_role": "ONE_INVESTIGATION_SLICE"
+    },
+    "EQUATION_OR_MODEL_SURFACE": {
+      "default_lenses": ["MEANING", "EQUATION", "VARIABLES", "OPERATION", "EVIDENCE", "CUSTODY"],
+      "required_story_role": "ONE_FORMAL_RELATIONSHIP_WITH_VISIBLE_STATUS"
+    },
+    "COMPATIBILITY_WRAPPER": {
+      "default_lenses": [],
+      "required_story_role": "CONCISE_HANDOFF_TO_CANONICAL_OWNER"
+    }
+  },
+  "cross_compatibility_acceptance_matrix": {
+    "devices": ["PHONE", "TABLET", "DESKTOP"],
+    "input_modes": ["KEYBOARD", "POINTER", "TOUCH"],
+    "presentation_modes": ["FULL_MOTION", "REDUCED_MOTION", "STATIC_NO_JAVASCRIPT"],
+    "content_modes": ["PRACTICAL", "ENGINEERING", "EMPIRICAL", "AUDIT"],
+    "required_checks": [
+      "ONE_ACTIVE_PANEL_ONLY",
+      "NO_HIDDEN_CONTENT_AUTHORITY",
+      "FOCUS_AND_SELECTION_SYNCHRONIZED",
+      "NO_HORIZONTAL_OVERFLOW",
+      "NO_ROUTE_LOSS",
+      "NO_RECORD_LOSS",
+      "NO_EQUATION_MUTATION",
+      "NO_EVIDENCE_STATUS_DRIFT",
+      "NO_CLAIM_CEILING_DRIFT",
+      "NO_MONOLITHIC_DEFAULT_SCROLL",
+      "STATIC_AND_REDUCED_MEANING_EQUIVALENT_TO_FULL"
+    ]
+  },
+  "admission_states": [
+    "EXPERIMENTAL",
+    "SHARED_COMPONENT_PASS",
+    "REPRESENTATIVE_INTEGRATED",
+    "CROSS_COMPATIBILITY_PASS",
+    "USER_VISUALLY_ACCEPTED",
+    "ELIGIBLE_FOR_BATCH_MIGRATION",
+    "REJECTED"
+  ],
+  "current_admission_state": "AUTHORIZED_FOR_SHARED_COMPONENT_AND_REPRESENTATIVE_CONSTRUCTION"
+}

@@ -62,6 +62,32 @@
       "laws/categories/reality/battery-heldout-study/index.html",
       "laws/scientific-law/battery-heldout-study/index.html"
     ],
-    "changed_files": []
+    "route_shape_reconciliation": {
+      "story_identity_preserved": true,
+      "retained_html_public_routes": {
+        "/laws/categories/reality/theory/": "/laws/categories/reality/theory.html",
+        "/laws/categories/reality/evidence/": "/laws/categories/reality/evidence.html",
+        "/laws/categories/reality/measure/": "/laws/categories/reality/measure.html",
+        "/laws/categories/reality/limits/": "/laws/categories/reality/limits.html",
+        "/laws/categories/structure/constraints/": "/laws/categories/structure/constraints.html",
+        "/laws/categories/structure/interfaces/": "/laws/categories/structure/interfaces.html",
+        "/laws/categories/structure/boundaries/": "/laws/categories/structure/boundaries.html",
+        "/laws/categories/structure/governance/": "/laws/categories/structure/governance.html"
+      },
+      "redirects_created": 0
+    },
+    "changed_files": [
+      "laws/categories/integrity/coherence/index.html",
+      "laws/categories/reality/evidence.html",
+      "laws/categories/reality/index.html",
+      "laws/categories/reality/limits.html",
+      "laws/categories/reality/theory.html",
+      "laws/categories/structure/boundaries.html",
+      "laws/categories/structure/constraints.html",
+      "laws/categories/structure/governance.html",
+      "laws/categories/structure/index.html",
+      "laws/categories/structure/interfaces.html",
+      "laws/test/admission-and-baseline/index.html"
+    ]
   }
 }

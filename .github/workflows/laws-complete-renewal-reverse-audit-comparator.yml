@@ -56,11 +56,18 @@ jobs:
           assert public.count('role="tabpanel"') == 5
           assert public.count('aria-selected="true"') == 1
           for marker in (
-              'Combined model', '0.9394',
-              'Axes only', '0.8945',
-              'Average pooling', '0.8000',
-              'Production threshold', '0.0000',
-              'stronger conventional aging-burden comparator', '0.9704',
+              'Stronger ordinary explanation',
+              'Incremental challenge',
+              'Weakest-axis challenge',
+              'Threshold challenge',
+              'Raw plus H* reached 0.7770 versus raw 0.7850',
+              'H* incremental delta was −0.0080',
+              'AUROC 0.6743 was above chance but remained preliminary',
+              'zero true positives',
+              'balanced accuracy 0.4994',
+              'stronger conventional aging-burden comparator',
+              'AUROC 0.9704',
+              'AUROC 0.9394',
               'next 20 cycles'
           ):
               assert marker in public, marker

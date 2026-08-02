@@ -56,11 +56,12 @@
 
 .lr-js .lr-panel[hidden] { display: none !important; }
 
-/* Progressive-enhancement equivalence: enhanced pages enter collapsed;
-   static/no-JavaScript pages expose the complete semantic reading. */
-html:not(.lr-js) .lr-page-facts:not([open]) > .lr-page-facts__body,
-html:not(.lr-js) .lr-audit:not([open]) > .lr-audit__body {
-  display: grid !important;
+/* Source disclosures are open for static/no-JavaScript readability.
+   The inline bootstrap marks enhanced pages before first paint; the full
+   runtime then closes disclosures and records readiness. */
+html.lr-js:not(.lr-runtime-ready) .lr-page-facts > .lr-page-facts__body,
+html.lr-js:not(.lr-runtime-ready) .lr-audit > .lr-audit__body {
+  display: none !important;
 }
 
 html:not(.lr-js) .lr-page-facts > summary::after,

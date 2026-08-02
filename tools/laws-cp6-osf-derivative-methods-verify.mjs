@@ -1,0 +1,252 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { execFileSync, spawn } from 'node:child_process';
+import { setTimeout as delay } from 'node:timers/promises';
+import { chromium } from 'playwright';
+
+const ROOT = process.cwd();
+const CONTRACT = 'LAWS_CP6_OSF_DERIVATIVE_METHODS_V1';
+const SCOPE_MARKER = '<section aria-labelledby="scope-title" class="panel boundary">';
+const OUT = path.join(ROOT, 'laws/control-plane/osf-derivative-methods');
+const LANDING = 'laws/index.html';
+const CHILDREN = [
+  'laws/test/admission-and-baseline/index.html',
+  'laws/test/forward-construction/index.html',
+  'laws/test/reverse-audit/index.html',
+  'laws/test/result-and-record/index.html',
+  'laws/research/evidence-and-sources/index.html',
+  'laws/research/methods-and-models/index.html'
+];
+const PROTECTED = [
+  'laws/index.controller.js',
+  'laws/index.compositor.js',
+  'laws/index.crystals.js',
+  'laws/index.interactions.js',
+  'laws/index.cosmos.js',
+  'laws/index.planet.js',
+  'assets/audralia/audralia.planet.js'
+];
+const EXPECTED_METADATA = {
+  '7jnxq': '467beb4017f844fddd7328d69b654483324235d4f941b031e4a7eb20004c5530',
+  '9ut2z': '82735851ff27ee32bb19c5ac5cf99da57805d8dc3be48bdad83dd24be6799a2f',
+  '7vkgs': 'd77b87050afb73108e62c34aae8a54d93cc04756785c0bdc2dfc31b1900df979',
+  'n82xh': '12d75fd447aa5686c695264bf9387d35546d02933644eafbdaed251ed141cada',
+  'rjdms': '695a0d8ccb59b57135758a2ea89b54b5c27119f74024b98de6da1becc8bf437c'
+};
+const EXPECTED_FILES = {
+  'Diagnostic_Rules_Coherence_Framework.pdf': '514175c7c619adf7d208260fe47702771895e199d5bef36fd18dd3a81d2c6ced',
+  'Methods_Appendix_Diagnostic_Framework.pdf': '5bb824f8c4291403ab486fd9412f2069aa9d2e49fbd4f508ada68f54caceb18f',
+  'Diagnostic_Protocol_Rulebook.pdf': '8c1e9e23d58f88c2922eb949db0a7da70fa1b33b50365da74b4c3b16273da1a6',
+  'Case_Selection_and_Evidence_Windows-1.pdf': '6de1a6f746dc0c9bbcbdcdd2a7b3631418f46cfc9b31ba211e3960d34d2fe2e3',
+  'Observer_Replication_Guide.pdf': 'd4d7d5a005f300d5230ee6ace3711f1689583202b17cfbc538fa42a0113e6b55',
+  'Integral_Platform_HOW_TO-2.pdf': '6bf9d21f9e06768e2eb829dae5641ac76bc3b74f98b1d4061910b09bb4ab8e3a',
+  'Integral_Platform_Method_Explained.pdf': '13adead582dfca3140137ac7eb9d32774c53a74920cc5c104dc99a9216250343'
+};
+
+function read(rel) {
+  return fs.readFileSync(path.join(ROOT, rel), 'utf8');
+}
+function baseline(rel) {
+  return execFileSync('git', ['show', `HEAD:${rel}`], { cwd: ROOT, encoding: 'utf8' });
+}
+function count(haystack, needle) {
+  return haystack.split(needle).length - 1;
+}
+function ensureDir() {
+  fs.mkdirSync(OUT, { recursive: true });
+}
+
+ensureDir();
+
+const staticReport = {
+  contract: CONTRACT,
+  status: 'PASS',
+  checked_at: new Date().toISOString(),
+  child_archive_byte_preservation: {},
+  method_layer_counts: {},
+  protected_runtime_diff: {},
+  source_identity: {},
+  claim_boundary: {}
+};
+
+for (const rel of CHILDREN) {
+  const before = baseline(rel);
+  const after = read(rel);
+  const beforeMarker = before.indexOf(SCOPE_MARKER);
+  const afterMarker = after.indexOf(SCOPE_MARKER);
+  assert.ok(beforeMarker >= 0, `BASE_SCOPE_MARKER_MISSING:${rel}`);
+  assert.ok(afterMarker >= 0, `CANDIDATE_SCOPE_MARKER_MISSING:${rel}`);
+  assert.equal(after.slice(afterMarker), before.slice(beforeMarker), `CANONICAL_ARCHIVE_CHANGED:${rel}`);
+  assert.equal(count(after, `data-laws-derivative-contract="${CONTRACT}"`), 1, `DERIVATIVE_LAYER_COUNT:${rel}`);
+  assert.equal(count(after, 'data-laws-derivative-methods-css="true"'), 1, `DERIVATIVE_CSS_COUNT:${rel}`);
+  assert.ok(after.indexOf(`data-laws-derivative-contract="${CONTRACT}"`) < afterMarker, `DERIVATIVE_LAYER_NOT_ABOVE_ARCHIVE:${rel}`);
+  assert.ok(after.includes('data-empirical-validation-claimed="false"'), `EMPIRICAL_FALSE_FLAG_MISSING:${rel}`);
+  staticReport.child_archive_byte_preservation[rel] = true;
+  staticReport.method_layer_counts[rel] = 1;
+}
+
+const landing = read(LANDING);
+assert.equal(count(landing, `data-laws-local-compass-orientation="${CONTRACT}"`), 1, 'LANDING_ORIENTATION_COUNT');
+assert.equal(count(landing, 'data-laws-derivative-methods-css="true"'), 1, 'LANDING_CSS_COUNT');
+assert.ok(landing.includes('The Laws Compass uses the same navigation language as the Main Compass.'), 'INHERITED_LANGUAGE_MISSING');
+assert.ok(landing.includes('Select the center world'), 'CENTER_RETURN_EXPLANATION_MISSING');
+const enterIndex = landing.indexOf('data-laws-enter=""');
+const orientationIndex = landing.indexOf(`data-laws-local-compass-orientation="${CONTRACT}"`);
+const pathsIndex = landing.indexOf('data-laws-experience-stage="paths"');
+assert.ok(enterIndex >= 0 && orientationIndex > enterIndex && pathsIndex > orientationIndex, 'LANDING_SEQUENCE_INVALID');
+
+const manifest = JSON.parse(read('laws/control-plane/osf-derivative-methods/manifest.json'));
+assert.equal(manifest.contract, CONTRACT);
+assert.equal(manifest.source_registry.registry_id, 'OSF_LAWS_CHAMBER_SOURCE_REGISTRY_v1');
+assert.equal(manifest.source_registry.pull_request_head, 'ae2ccedd4f74ef1afdcc5181a4056c30c83fa20d');
+assert.equal(manifest.source_registry.source_snapshot_head, 'dbd508fc5cacaa463abed0c159812a1e02635c1d');
+assert.deepEqual(Object.keys(manifest.first_slice_sources).sort(), Object.keys(EXPECTED_METADATA).sort());
+for (const [id, hash] of Object.entries(EXPECTED_METADATA)) {
+  assert.equal(manifest.first_slice_sources[id].metadata_sha256, hash, `METADATA_SHA256_MISMATCH:${id}`);
+  staticReport.source_identity[id] = { metadata_sha256: hash, status: 'PASS' };
+}
+const allFiles = Object.assign({}, ...Object.values(manifest.first_slice_sources).map((source) => source.public_files));
+for (const [name, hash] of Object.entries(EXPECTED_FILES)) {
+  assert.equal(allFiles[name], hash, `FILE_SHA256_MISMATCH:${name}`);
+}
+assert.equal(manifest.claim_boundary.empirical_validation_claimed, false);
+assert.equal(manifest.claim_boundary.independent_replication_established, false);
+assert.equal(manifest.claim_boundary.executed_study_established, false);
+assert.equal(manifest.claim_boundary.derivative_is_new_method, false);
+staticReport.claim_boundary = manifest.claim_boundary;
+
+for (const rel of PROTECTED) {
+  const diff = execFileSync('git', ['diff', '--name-only', 'HEAD', '--', rel], { cwd: ROOT, encoding: 'utf8' }).trim();
+  assert.equal(diff, '', `PROTECTED_RUNTIME_CHANGED:${rel}`);
+  staticReport.protected_runtime_diff[rel] = 'ZERO';
+}
+
+const changed = execFileSync('git', ['diff', '--name-only', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).trim().split('\n').filter(Boolean);
+const allowed = new Set([
+  LANDING,
+  ...CHILDREN,
+  'laws/derivative-methods.css',
+  'laws/control-plane/osf-derivative-methods/manifest.json'
+]);
+for (const rel of changed) assert.ok(allowed.has(rel), `UNAUTHORIZED_TRANSFORM_PATH:${rel}`);
+staticReport.changed_paths = changed;
+fs.writeFileSync(path.join(OUT, 'static.json'), `${JSON.stringify(staticReport, null, 2)}\n`, 'utf8');
+
+const server = spawn('python3', ['-m', 'http.server', '4173', '--directory', ROOT], { stdio: ['ignore', 'pipe', 'pipe'] });
+let serverError = '';
+server.stderr.on('data', (chunk) => { serverError += chunk.toString(); });
+
+async function waitForServer() {
+  for (let i = 0; i < 40; i += 1) {
+    try {
+      const response = await fetch('http://127.0.0.1:4173/laws/');
+      if (response.ok) return;
+    } catch {}
+    await delay(250);
+  }
+  throw new Error(`LOCAL_SERVER_NOT_READY:${serverError}`);
+}
+
+const profiles = [
+  { name: 'phone', width: 390, height: 844 },
+  { name: 'tablet', width: 820, height: 1180 },
+  { name: 'desktop', width: 1440, height: 1000 }
+];
+const routes = [
+  '/laws/',
+  '/laws/test/admission-and-baseline/',
+  '/laws/test/forward-construction/',
+  '/laws/test/reverse-audit/',
+  '/laws/test/result-and-record/',
+  '/laws/research/evidence-and-sources/',
+  '/laws/research/methods-and-models/'
+];
+
+const browserReport = {
+  contract: CONTRACT,
+  status: 'PASS',
+  checked_at: new Date().toISOString(),
+  profiles: {},
+  javascript_disabled: null
+};
+
+let browser;
+try {
+  await waitForServer();
+  browser = await chromium.launch({ headless: true });
+  for (const profile of profiles) {
+    const context = await browser.newContext({ viewport: { width: profile.width, height: profile.height } });
+    const page = await context.newPage();
+    const errors = [];
+    page.on('console', (message) => { if (message.type() === 'error') errors.push(`console:${message.text()}`); });
+    page.on('pageerror', (error) => errors.push(`page:${error.message}`));
+    const profileResult = {};
+    for (const route of routes) {
+      const response = await page.goto(`http://127.0.0.1:4173${route}`, { waitUntil: 'networkidle' });
+      assert.ok(response && response.ok(), `HTTP_FAILURE:${profile.name}:${route}`);
+      const result = await page.evaluate(({ route, contract }) => {
+        const root = document.documentElement;
+        const overflow = Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1;
+        const methodLayers = document.querySelectorAll(`[data-laws-derivative-contract="${contract}"]`).length;
+        const orientation = document.querySelector(`[data-laws-local-compass-orientation="${contract}"]`);
+        const enter = document.querySelector('[data-laws-enter]');
+        const paths = document.querySelector('[data-laws-experience-stage="paths"]');
+        let landingOrder = null;
+        if (route === '/laws/') {
+          landingOrder = Boolean(orientation && enter && paths && (enter.compareDocumentPosition(orientation) & Node.DOCUMENT_POSITION_FOLLOWING) && (orientation.compareDocumentPosition(paths) & Node.DOCUMENT_POSITION_FOLLOWING));
+        }
+        return {
+          overflow,
+          methodLayers,
+          orientationVisible: orientation ? getComputedStyle(orientation).display !== 'none' : null,
+          landingOrder,
+          title: document.title
+        };
+      }, { route, contract: CONTRACT });
+      assert.equal(result.overflow, false, `HORIZONTAL_OVERFLOW:${profile.name}:${route}`);
+      if (route === '/laws/') {
+        assert.equal(result.orientationVisible, true, `LANDING_ORIENTATION_NOT_VISIBLE:${profile.name}`);
+        assert.equal(result.landingOrder, true, `LANDING_BROWSER_ORDER_INVALID:${profile.name}`);
+      } else {
+        assert.equal(result.methodLayers, 1, `METHOD_LAYER_BROWSER_COUNT:${profile.name}:${route}`);
+      }
+      profileResult[route] = result;
+    }
+    assert.deepEqual(errors, [], `BROWSER_ERRORS:${profile.name}:${JSON.stringify(errors)}`);
+    await page.goto('http://127.0.0.1:4173/laws/research/methods-and-models/', { waitUntil: 'networkidle' });
+    await page.screenshot({ path: path.join(OUT, `${profile.name}-methods.png`), fullPage: true });
+    browserReport.profiles[profile.name] = { viewport: profile, routes: profileResult, errors };
+    await context.close();
+  }
+
+  const staticContext = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+  const staticPage = await staticContext.newPage();
+  const staticResponse = await staticPage.goto('http://127.0.0.1:4173/laws/test/admission-and-baseline/', { waitUntil: 'domcontentloaded' });
+  assert.ok(staticResponse && staticResponse.ok(), 'STATIC_HTTP_FAILURE');
+  const staticResult = await staticPage.evaluate((contract) => {
+    const root = document.documentElement;
+    return {
+      methodLayers: document.querySelectorAll(`[data-laws-derivative-contract="${contract}"]`).length,
+      overflow: Math.max(document.body.scrollWidth, root.scrollWidth) > root.clientWidth + 1
+    };
+  }, CONTRACT);
+  assert.equal(staticResult.methodLayers, 1, 'STATIC_METHOD_LAYER_MISSING');
+  assert.equal(staticResult.overflow, false, 'STATIC_HORIZONTAL_OVERFLOW');
+  browserReport.javascript_disabled = staticResult;
+  await staticPage.screenshot({ path: path.join(OUT, 'phone-static-admission.png'), fullPage: true });
+  await staticContext.close();
+} finally {
+  if (browser) await browser.close();
+  server.kill('SIGTERM');
+}
+
+fs.writeFileSync(path.join(OUT, 'browser.json'), `${JSON.stringify(browserReport, null, 2)}\n`, 'utf8');
+console.log(JSON.stringify({
+  status: 'PASS',
+  contract: CONTRACT,
+  changed_paths: changed,
+  profiles: Object.keys(browserReport.profiles),
+  protected_runtime_diff: 'ZERO',
+  child_archive_byte_preservation: 'PASS'
+}, null, 2));

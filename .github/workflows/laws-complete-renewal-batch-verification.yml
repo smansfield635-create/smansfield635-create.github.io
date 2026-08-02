@@ -11,6 +11,7 @@ on:
       - scripts/laws_complete_renewal_batch_browser_verify.mjs
       - scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
       - scripts/laws_complete_renewal_batch_polish.py
+      - scripts/laws_complete_renewal_signals_horizon_patch.py
       - assets/laws-destination/renewal.js
       - assets/laws-destination/renewal-navigation.css
       - assets/laws-destination/renewal-batch.css
@@ -29,6 +30,7 @@ on:
       - scripts/laws_complete_renewal_batch_browser_verify.mjs
       - scripts/laws_complete_renewal_batch_browser_verify_v2.mjs
       - scripts/laws_complete_renewal_batch_polish.py
+      - scripts/laws_complete_renewal_signals_horizon_patch.py
       - assets/laws-destination/renewal.js
       - assets/laws-destination/renewal-navigation.css
       - assets/laws-destination/renewal-batch.css
@@ -112,7 +114,12 @@ jobs:
                   ]
               },
               'protectedBoundaries': {
-                  'representativeHtmlMutations': 0,
+                  'representativeHtmlMutations': 1,
+                  'boundedRepresentativeCorrections': [
+                      'laws/categories/flow/signals/index.html::EXACT_20_CYCLE_FACT_ADDITION'
+                  ],
+                  'otherRepresentativeHtmlMutations': 0,
+                  'representativeVisualStructureMutations': 0,
                   'compassRuntimeMutations': 0,
                   'routeDeletions': 0,
                   'redirectsCreated': 0,

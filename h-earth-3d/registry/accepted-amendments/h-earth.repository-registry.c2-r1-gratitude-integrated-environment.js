@@ -22,7 +22,7 @@ const normalize=value=>{if(typeof value!=='string')return null;let result=value.
 
 const REPOSITORY='smansfield635-create/smansfield635-create.github.io';
 const BRANCH='agent/h-earth-c2-r1-material-only-binding-implementation-001';
-const HEAD='44019e27c3d52c59cc59bba7c833b6317d014273';
+const HEAD='501505fe66dbeede467240d8c7d93f194f7d10d2';
 const CONTROL_PREFIX='/h-earth-3d/control-plane/coastal-morphology/c2-r1/';
 const CONTROL_PREFIX_NORMALIZED=normalize(CONTROL_PREFIX);
 const RUNTIME_PATHS=Object.freeze([

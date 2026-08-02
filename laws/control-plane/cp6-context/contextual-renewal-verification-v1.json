@@ -7,20 +7,7 @@
   ],
   "selected_study": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
   "changed_product_files": [
-    "laws/categories/flow/index.html",
-    "laws/categories/integrity/index.html",
-    "laws/categories/reality/index.html",
-    "laws/categories/structure/index.html",
-    "laws/cp6-contextual-renewal.css",
-    "laws/index.html",
-    "laws/research/applied-investigations/index.html",
-    "laws/research/evidence-and-sources/index.html",
-    "laws/research/findings-and-boundaries/index.html",
-    "laws/research/methods-and-models/index.html",
-    "laws/test/admission-and-baseline/index.html",
-    "laws/test/forward-construction/index.html",
-    "laws/test/result-and-record/index.html",
-    "laws/test/reverse-audit/index.html"
+    "laws/cp6-contextual-renewal.css"
   ],
   "expected_product_file_count": 14,
   "landing_pages_mutated": 1,

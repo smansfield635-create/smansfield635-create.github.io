@@ -7,9 +7,10 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_CP6_EXPERIENTIAL_PRESENTATION_v2";
+  const CONTRACT = "LAWS_CP6_EXPERIENTIAL_PRESENTATION_v3";
   const STELLAR_STYLE = "/laws/index.stellar-continuity.css?v=LAWS_STELLAR_CONTINUITY_20260801A";
   const STELLAR_SCRIPT = "/laws/index.background-cosmos.js?v=LAWS_BACKGROUND_COSMOS_20260801A";
+  const COMPASS_PRELOAD_MARGIN = "1200px 0px";
 
   const COPY = Object.freeze({
     idle: Object.freeze({
@@ -66,6 +67,7 @@
   const documentElement = document.documentElement;
   const root = document.querySelector("[data-laws-root]");
   const hero = document.querySelector("[data-laws-experience-stage='hero']");
+  const compassPrimary = document.querySelector(".laws-compass-primary");
   const speaker = document.querySelector("[data-laws-experience-speaker]");
   const speakerEyebrow = document.querySelector("[data-laws-experience-speaker-eyebrow]");
   const speakerTitle = document.querySelector("[data-laws-experience-speaker-title]");
@@ -78,6 +80,8 @@
   let unsubscribeCompass = null;
   let activeDirection = "";
   let reducedMotion = false;
+  let compassPreloadObserver = null;
+  let compassPreloadRequested = false;
 
   function normalizeDirection(value) {
     const direction = String(value || "").trim().toLowerCase();
@@ -218,6 +222,72 @@
     });
   }
 
+  function requestCompassRuntimePreload(reason) {
+    if (compassPreloadRequested) {
+      return true;
+    }
+
+    const loader = globalThis.DGBLawsStagedLoader;
+    if (!loader) {
+      return false;
+    }
+
+    const canLoadOrbit = typeof loader.loadOrbitSystems === "function";
+    const canLoadInteractions = typeof loader.loadInteractionSystems === "function";
+    if (!canLoadOrbit || !canLoadInteractions) {
+      return false;
+    }
+
+    compassPreloadRequested = true;
+    documentElement.dataset.lawsExperiencePreload = reason || "compass-zone-proximity";
+    loader.loadOrbitSystems();
+    loader.loadInteractionSystems();
+
+    if (compassPreloadObserver) {
+      compassPreloadObserver.disconnect();
+      compassPreloadObserver = null;
+    }
+
+    return true;
+  }
+
+  function installCompassPreload() {
+    if (!compassPrimary) {
+      return;
+    }
+
+    const request = reason => {
+      if (requestCompassRuntimePreload(reason)) {
+        return;
+      }
+
+      globalThis.addEventListener(
+        "DGB_LAWS_STAGED_LOADER_READY",
+        () => requestCompassRuntimePreload(reason),
+        { once: true }
+      );
+    };
+
+    if (typeof IntersectionObserver !== "function") {
+      request("no-intersection-observer");
+      return;
+    }
+
+    compassPreloadObserver = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) {
+        return;
+      }
+
+      request("compass-zone-proximity");
+    }, {
+      root: null,
+      rootMargin: COMPASS_PRELOAD_MARGIN,
+      threshold: 0.01
+    });
+
+    compassPreloadObserver.observe(compassPrimary);
+  }
+
   function installStageObserver() {
     if (!stageNodes.length) {
       return;
@@ -308,6 +378,7 @@
     documentElement.dataset.lawsExperience = "active";
     applyCopy(deriveDirection(readControllerState()), "initialize");
     observeRootState();
+    installCompassPreload();
     installStageObserver();
     connectController();
     installParallax();
@@ -318,6 +389,7 @@
       contract: CONTRACT,
       getDirection: () => activeDirection,
       refresh: () => applyCopy(deriveDirection(readControllerState()), "manual-refresh"),
+      requestCompassRuntimePreload: () => requestCompassRuntimePreload("manual-presentation-request"),
       navigationAuthority: false,
       contentAuthority: false,
       controllerAuthority: false,
@@ -332,6 +404,8 @@
           navigationAuthority: false,
           controllerAuthority: false,
           evidenceAuthority: false,
+          compassPreloadTarget: ".laws-compass-primary",
+          compassPreloadMargin: COMPASS_PRELOAD_MARGIN,
           reducedMotion
         })
       })

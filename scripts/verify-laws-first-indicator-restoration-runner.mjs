@@ -38,10 +38,22 @@ const corrections = [
     label: 'premature FIRST transition sample',
   },
   {
+    from: "assert.equal(record.backgroundColor, 'rgb(121, 234, 255)', `${profileName}/${record.direction}: active light is not cyan.`);",
+    to: "const activeChannels = (record.backgroundColor.match(/\\d+/g) || []).slice(0, 3).map(Number);\n      assert.equal(activeChannels.length, 3, `${profileName}/${record.direction}: active light color is unreadable.`);\n      assert.ok(activeChannels[0] >= 90 && activeChannels[1] >= 180 && activeChannels[2] >= 210 && activeChannels[2] >= activeChannels[1] && activeChannels[1] > activeChannels[0], `${profileName}/${record.direction}: active light is not a bright cyan state.`);",
+    expected: 1,
+    label: 'over-specific active-light RGB assertion',
+  },
+  {
     from: "assert.equal(record.backgroundColor, 'rgb(7, 16, 31)', `${profileName}/${record.direction}: inactive light is not the subdued outline state.`);",
     to: "const inactiveChannels = (record.backgroundColor.match(/\\d+/g) || []).slice(0, 3).map(Number);\n      assert.equal(inactiveChannels.length, 3, `${profileName}/${record.direction}: inactive light color is unreadable.`);\n      assert.ok(Math.max(...inactiveChannels) <= 80, `${profileName}/${record.direction}: inactive light is not visually subdued.`);\n      assert.notEqual(record.backgroundColor, 'rgb(121, 234, 255)', `${profileName}/${record.direction}: inactive light incorrectly uses the active cyan fill.`);",
     expected: 1,
     label: 'over-specific inactive-light RGB assertion',
+  },
+  {
+    from: "assert.equal(reduced.backgroundColor, 'rgb(121, 234, 255)', 'Reduced motion lost the active light.');",
+    to: "const reducedChannels = (reduced.backgroundColor.match(/\\d+/g) || []).slice(0, 3).map(Number);\n  assert.equal(reducedChannels.length, 3, 'Reduced-motion active light color is unreadable.');\n  assert.ok(reducedChannels[0] >= 90 && reducedChannels[1] >= 180 && reducedChannels[2] >= 210 && reducedChannels[2] >= reducedChannels[1] && reducedChannels[1] > reducedChannels[0], 'Reduced motion lost the bright cyan active-light state.');",
+    expected: 1,
+    label: 'over-specific reduced-motion active-light RGB assertion',
   },
 ];
 

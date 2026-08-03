@@ -1,0 +1,400 @@
+/* METHODS_NATIVE_VISUAL_ARCHITECTURE_REMEDIATION_PROTOTYPE_v1 — nonproduct browser-session candidate only. */
+:root {
+  --mvr-safe: 20px;
+  --mvr-gap: clamp(10px, 1.2vw, 18px);
+  --mvr-panel: rgba(4, 13, 20, 0.94);
+  --mvr-panel-strong: rgba(2, 9, 14, 0.985);
+  --mvr-line: rgba(114, 213, 238, 0.22);
+  --mvr-gold: #f1d978;
+  --mvr-cyan: #78d9ed;
+  --mvr-text: #f4f1e7;
+  --mvr-muted: #aeb9c4;
+}
+html, body { overflow: hidden !important; overscroll-behavior: none; }
+body[data-mm-display="expanded"] .mm-showroom {
+  position: fixed !important;
+  inset: var(--mm-overlay-top, 64px) 0 0 !important;
+  width: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: radial-gradient(circle at 70% 10%, rgba(30, 98, 121, 0.13), transparent 34%), linear-gradient(150deg, #06131d 0%, #030a10 72%, #02070b 100%) !important;
+}
+.mm-stage {
+  box-sizing: border-box !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: var(--mvr-safe) !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto !important;
+  grid-template-areas: "header camera" "families families" "instrument instrument" "lens lens" "coordinate coordinate" !important;
+  gap: var(--mvr-gap) !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  isolation: isolate;
+}
+.mm-stage::before, .mm-stage::after, .mm-stage__header::before, .mm-stage__header::after { content: none !important; display: none !important; }
+.mm-stage__header {
+  grid-area: header !important;
+  position: static !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: start !important;
+  gap: 16px !important;
+  padding: 0 0 12px !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(241, 217, 120, 0.34) !important;
+  background: transparent !important;
+  z-index: 20 !important;
+}
+.mm-stage__header > div:first-child { min-width: 0 !important; }
+.mm-stage__header .mm-kicker { display: none !important; }
+.mm-stage__header h2, .mm-stage__header [data-mm-family-title] {
+  max-width: 22ch !important;
+  margin: 0 !important;
+  font-size: clamp(28px, 4.4vw, 62px) !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.035em !important;
+  text-wrap: balance !important;
+  color: var(--mvr-text) !important;
+}
+.mm-stage__question {
+  max-width: 76ch !important;
+  margin: 8px 0 0 !important;
+  font-size: clamp(14px, 1.2vw, 18px) !important;
+  line-height: 1.35 !important;
+  color: var(--mvr-muted) !important;
+  text-wrap: pretty !important;
+}
+.mm-showroom-toggle {
+  min-width: 156px !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 10px 16px !important;
+  position: static !important;
+  align-self: start !important;
+  border-radius: 999px !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+[data-mvr-camera-controls] {
+  grid-area: camera;
+  position: static;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(96px, 1fr));
+  align-self: start;
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid rgba(120, 217, 237, 0.2);
+  border-radius: 14px;
+  background: rgba(3, 11, 17, 0.82);
+  z-index: 30;
+}
+[data-mvr-camera-controls] button {
+  min-width: 96px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--mvr-muted);
+  font: 700 13px/1 system-ui, sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+[data-mvr-camera-controls] button[aria-pressed="true"] {
+  border-color: rgba(241, 217, 120, 0.48);
+  background: linear-gradient(120deg, rgba(120, 217, 237, 0.22), rgba(241, 217, 120, 0.18));
+  color: var(--mvr-text);
+}
+.mm-family-tabs {
+  grid-area: families !important;
+  position: static !important;
+  inset: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  perspective: none !important;
+  z-index: 22 !important;
+}
+.mm-family-tab {
+  position: static !important;
+  inset: auto !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  padding: 9px 12px !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  clip-path: none !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  text-align: center !important;
+  text-wrap: balance !important;
+  color: rgba(210, 222, 230, 0.78) !important;
+  background: rgba(2, 10, 16, 0.72) !important;
+  border: 1px solid rgba(120, 217, 237, 0.12) !important;
+}
+.mm-family-tab[aria-selected="true"] {
+  color: #061019 !important;
+  background: linear-gradient(110deg, #75d7eb, #f0d978) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 8px 24px rgba(54, 151, 184, 0.16) !important;
+}
+.mm-z-axis-controls { position: absolute !important; top: calc(var(--mvr-safe) + 2px) !important; right: calc(var(--mvr-safe) + 8px) !important; display: none !important; }
+.mm-instrument {
+  grid-area: instrument !important;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: clamp(12px, 1.4vw, 20px) !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(241, 217, 120, 0.24) !important;
+  border-radius: 24px !important;
+  background: linear-gradient(145deg, rgba(8, 24, 34, 0.92), rgba(2, 9, 14, 0.98)), var(--mvr-panel-strong) !important;
+  box-shadow: inset 0 0 0 1px rgba(120, 217, 237, 0.06), 0 20px 50px rgba(0, 0, 0, 0.24) !important;
+  z-index: 10 !important;
+}
+.mm-depth-plane { display: none !important; }
+.mm-model-deck {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  transform: none !important;
+  perspective: none !important;
+  outline-offset: -4px !important;
+}
+.mm-model-card {
+  box-sizing: border-box !important;
+  position: absolute !important;
+  inset: auto !important;
+  left: 50% !important;
+  top: 50% !important;
+  width: min(980px, calc(100% - 32px)) !important;
+  height: auto !important;
+  max-height: calc(100% - 20px) !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: clamp(18px, 2vw, 32px) !important;
+  display: grid !important;
+  grid-template-rows: auto auto minmax(120px, 1fr) auto !important;
+  gap: clamp(12px, 1.5vw, 22px) !important;
+  overflow: auto !important;
+  transform: translate(-50%, -50%) scale(0.92) !important;
+  transform-origin: center !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  border: 1px solid rgba(120, 217, 237, 0.2) !important;
+  border-radius: 20px !important;
+  background: linear-gradient(150deg, rgba(4, 15, 23, 0.98), rgba(1, 7, 11, 0.99)) !important;
+  box-shadow: none !important;
+  z-index: 1 !important;
+}
+.mm-model-card[data-position="active"], .mm-model-card[data-mm-x-position="active"] {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  z-index: 8 !important;
+}
+.mm-model-card__meta { display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 16px !important; min-width: 0 !important; }
+.mm-model-card__meta, .mm-model-card__index, .mm-model-card__status { font-size: 12px !important; line-height: 1.2 !important; }
+.mm-model-card__statement {
+  max-width: 28ch !important;
+  margin: 0 !important;
+  font-size: clamp(24px, 3.4vw, 50px) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.025em !important;
+  color: var(--mvr-text) !important;
+  text-wrap: balance !important;
+}
+.mm-equation-theatre {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 116px !important;
+  display: grid !important;
+  align-content: center !important;
+  gap: 12px !important;
+  padding: clamp(16px, 2.4vw, 32px) !important;
+  overflow: auto !important;
+  border: 1px solid var(--mvr-line) !important;
+  border-radius: 18px !important;
+  background: rgba(0, 6, 10, 0.8) !important;
+}
+.mm-equation-theatre__label { font-size: 12px !important; line-height: 1.2 !important; color: var(--mvr-gold) !important; }
+.mm-equation { font-size: clamp(28px, 5vw, 68px) !important; line-height: 1.1 !important; overflow-wrap: anywhere !important; text-align: center !important; }
+.mm-model-card__footer { display: grid !important; grid-template-columns: auto minmax(0, 1fr) !important; align-items: center !important; gap: 18px !important; }
+.mm-inspect { min-width: 152px !important; min-height: 44px !important; padding: 10px 16px !important; font-size: 13px !important; line-height: 1.1 !important; white-space: nowrap !important; }
+.mm-model-card__question { margin: 0 !important; min-width: 0 !important; font-size: 14px !important; line-height: 1.4 !important; text-align: right !important; color: var(--mvr-muted) !important; }
+.mm-deck-controls { position: absolute !important; inset: auto 12px 12px auto !important; display: flex !important; gap: 8px !important; z-index: 30 !important; }
+.mm-model-control, .mm-deck-controls button {
+  width: 48px !important;
+  min-width: 48px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  margin: 0 !important;
+  border-radius: 14px !important;
+  background: rgba(2, 10, 16, 0.94) !important;
+  border: 1px solid rgba(241, 217, 120, 0.42) !important;
+  font-size: 22px !important;
+}
+.mm-stage > div:has(> .mm-lens) {
+  grid-area: lens !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  align-items: end !important;
+  gap: 12px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.mm-lens {
+  position: static !important;
+  inset: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 12px !important;
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 14px !important;
+  transform: none !important;
+  border: 1px solid rgba(120, 217, 237, 0.16) !important;
+  border-radius: 16px !important;
+  background: var(--mvr-panel) !important;
+  z-index: 20 !important;
+}
+.mm-lens-tabs { position: static !important; inset: auto !important; display: flex !important; flex-wrap: wrap !important; gap: 6px !important; margin: 0 !important; padding: 0 !important; transform: none !important; }
+.mm-lens-tab { position: static !important; inset: auto !important; min-width: 92px !important; min-height: 44px !important; margin: 0 !important; padding: 9px 12px !important; transform: none !important; opacity: 1 !important; visibility: visible !important; font-size: 12px !important; line-height: 1.1 !important; border-radius: 10px !important; }
+.mm-lens-panel { min-width: 0 !important; max-width: none !important; margin: 0 !important; padding: 0 !important; font-size: 14px !important; line-height: 1.45 !important; color: #c9d2da !important; text-wrap: pretty !important; }
+.mm-progress { margin: 0 !important; padding: 0 4px 4px !important; max-width: 28ch !important; font-size: 12px !important; line-height: 1.3 !important; text-align: right !important; color: rgba(174, 185, 196, 0.72) !important; }
+.mm-euclidean-coordinate {
+  grid-area: coordinate !important;
+  position: static !important;
+  inset: auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+  color: rgba(120, 217, 237, 0.76) !important;
+  z-index: 20 !important;
+}
+[data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-instrument { padding: clamp(20px, 2.4vw, 34px) !important; }
+[data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-position="active"], [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-mm-x-position="active"] { width: min(900px, 78%) !important; max-height: 92% !important; transform: scale(0.9) !important; }
+[data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card__statement { font-size: clamp(22px, 2.7vw, 40px) !important; }
+[data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-equation { font-size: clamp(28px, 4.2vw, 58px) !important; }
+[data-mm-showroom][data-mm-camera="BROWSE"] .mm-stage__header h2, [data-mm-showroom][data-mm-camera="BROWSE"] .mm-stage__header [data-mm-family-title] { font-size: clamp(24px, 3.3vw, 46px) !important; }
+[data-mm-showroom][data-mm-camera="BROWSE"] .mm-stage__question { max-width: 60ch !important; }
+[data-mm-showroom][data-mm-camera="BROWSE"] .mm-instrument { padding: 10px !important; border-color: rgba(120, 217, 237, 0.34) !important; }
+[data-mm-showroom][data-mm-camera="BROWSE"] .mm-model-card[data-position="active"], [data-mm-showroom][data-mm-camera="BROWSE"] .mm-model-card[data-mm-x-position="active"] { width: min(1120px, calc(100% - 12px)) !important; max-height: calc(100% - 8px) !important; transform: scale(1) !important; }
+[data-mm-showroom][data-mm-camera="BROWSE"] .mm-family-tab:not([aria-selected="true"]) { opacity: 0.64 !important; }
+[data-mm-showroom][data-mm-camera="BROWSE"] .mm-model-card__statement { max-width: 34ch !important; }
+.mm-stage__header, .mm-stage__header * { background-image: none !important; }
+.mm-dialog { max-width: min(980px, calc(100vw - 24px)) !important; max-height: calc(100vh - 24px) !important; margin: auto !important; }
+.mm-dialog__inner { max-height: calc(100vh - 48px) !important; overflow: auto !important; }
+.mm-dialog__close { min-width: 44px !important; min-height: 44px !important; }
+@media (max-width: 1180px) {
+  :root { --mvr-safe: 16px; }
+  .mm-stage { grid-template-columns: minmax(0, 1fr) !important; grid-template-areas: "header" "camera" "families" "instrument" "lens" "coordinate" !important; grid-template-rows: auto auto auto minmax(0, 1fr) auto auto !important; }
+  [data-mvr-camera-controls] { width: min(360px, 100%); justify-self: end; }
+  .mm-stage__header h2, .mm-stage__header [data-mm-family-title] { font-size: clamp(28px, 5vw, 48px) !important; }
+  .mm-model-card { width: calc(100% - 20px) !important; }
+  [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-position="active"], [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-mm-x-position="active"] { width: min(820px, 86%) !important; }
+  .mm-stage > div:has(> .mm-lens) { grid-template-columns: minmax(0, 1fr) !important; }
+  .mm-progress { display: none !important; }
+}
+@media (max-width: 767px) {
+  :root { --mvr-safe: 12px; --mvr-gap: 8px; }
+  .mm-topbar { min-height: 64px !important; padding: 8px 12px !important; }
+  .mm-nav { display: none !important; }
+  body[data-mm-display="expanded"] .mm-showroom { top: var(--mm-overlay-top, 64px) !important; }
+  .mm-stage { padding: var(--mvr-safe) !important; grid-template-rows: auto auto auto minmax(0, 1fr) auto auto !important; }
+  .mm-stage__header { grid-template-columns: minmax(0, 1fr) !important; padding-bottom: 8px !important; }
+  .mm-stage__header h2, .mm-stage__header [data-mm-family-title], [data-mm-showroom][data-mm-camera="BROWSE"] .mm-stage__header h2, [data-mm-showroom][data-mm-camera="BROWSE"] .mm-stage__header [data-mm-family-title] { max-width: none !important; font-size: clamp(24px, 8.2vw, 34px) !important; line-height: 1 !important; }
+  .mm-stage__question { margin-top: 5px !important; font-size: 14px !important; line-height: 1.25 !important; display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden !important; }
+  .mm-showroom-toggle { display: none !important; }
+  [data-mvr-camera-controls] { width: 100%; grid-template-columns: repeat(2, 1fr); padding: 3px; }
+  [data-mvr-camera-controls] button { min-width: 0; min-height: 44px; }
+  .mm-family-tabs { display: flex !important; overflow-x: auto !important; overscroll-behavior-inline: contain; scrollbar-width: none; padding-bottom: 2px !important; }
+  .mm-family-tabs::-webkit-scrollbar { display: none; }
+  .mm-family-tab { flex: 0 0 auto !important; width: auto !important; min-width: 132px !important; min-height: 44px !important; padding-inline: 12px !important; }
+  .mm-instrument, [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-instrument, [data-mm-showroom][data-mm-camera="BROWSE"] .mm-instrument { padding: 8px !important; border-radius: 16px !important; }
+  .mm-model-card, [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-position="active"], [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-mm-x-position="active"], [data-mm-showroom][data-mm-camera="BROWSE"] .mm-model-card[data-position="active"], [data-mm-showroom][data-mm-camera="BROWSE"] .mm-model-card[data-mm-x-position="active"] { width: 100% !important; max-height: 100% !important; padding: 14px !important; gap: 9px !important; border-radius: 14px !important; transform: none !important; }
+  [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-position="active"], [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card[data-mm-x-position="active"] { width: 92% !important; max-height: 92% !important; transform: scale(0.94) !important; }
+  .mm-model-card__meta, .mm-model-card__index, .mm-model-card__status { font-size: 12px !important; }
+  .mm-model-card__statement, [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card__statement { max-width: none !important; font-size: clamp(19px, 6vw, 25px) !important; line-height: 1.08 !important; }
+  .mm-equation-theatre { min-height: 88px !important; padding: 12px !important; gap: 8px !important; border-radius: 12px !important; }
+  .mm-equation { font-size: clamp(24px, 9vw, 38px) !important; }
+  .mm-model-card__footer { grid-template-columns: minmax(0, 1fr) !important; gap: 8px !important; }
+  .mm-inspect { width: 100% !important; min-width: 0 !important; min-height: 44px !important; }
+  .mm-model-card__question { display: none !important; }
+  .mm-deck-controls { inset: auto 8px 8px auto !important; }
+  .mm-model-control, .mm-deck-controls button { width: 44px !important; min-width: 44px !important; height: 44px !important; min-height: 44px !important; }
+  .mm-lens { padding: 8px !important; grid-template-columns: minmax(0, 1fr) !important; gap: 8px !important; border-radius: 12px !important; }
+  .mm-lens-tabs { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .mm-lens-tab { min-width: 0 !important; min-height: 44px !important; padding: 8px 4px !important; font-size: 11px !important; }
+  .mm-lens-panel { font-size: 14px !important; line-height: 1.35 !important; display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden !important; }
+  .mm-euclidean-coordinate { gap: 5px 10px !important; font-size: 11px !important; white-space: normal !important; }
+}
+@media (max-height: 860px) and (min-width: 768px) {
+  :root { --mvr-safe: 12px; --mvr-gap: 8px; }
+  .mm-stage__header { padding-bottom: 7px !important; }
+  .mm-stage__header h2, .mm-stage__header [data-mm-family-title], [data-mm-showroom][data-mm-camera="BROWSE"] .mm-stage__header h2, [data-mm-showroom][data-mm-camera="BROWSE"] .mm-stage__header [data-mm-family-title] { font-size: clamp(26px, 3.7vw, 42px) !important; }
+  .mm-stage__question { margin-top: 4px !important; font-size: 14px !important; }
+  .mm-family-tab { min-height: 40px !important; }
+  [data-mvr-camera-controls] button { min-height: 40px; }
+  .mm-model-card, [data-mm-showroom][data-mm-camera="BROWSE"] .mm-model-card[data-position="active"], [data-mm-showroom][data-mm-camera="BROWSE"] .mm-model-card[data-mm-x-position="active"] { padding: 16px !important; gap: 9px !important; }
+  .mm-model-card__statement, [data-mm-showroom][data-mm-camera="OVERVIEW"] .mm-model-card__statement { font-size: clamp(22px, 2.4vw, 34px) !important; }
+  .mm-equation-theatre { min-height: 94px !important; padding: 12px 18px !important; }
+  .mm-equation { font-size: clamp(28px, 4vw, 50px) !important; }
+  .mm-lens { padding: 8px 10px !important; }
+  .mm-lens-tab { min-height: 40px !important; }
+  .mm-lens-panel { line-height: 1.3 !important; }
+  .mm-euclidean-coordinate { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mm-model-card, .mm-family-tab, [data-mvr-camera-controls] button { transition: none !important; animation: none !important; }
+}

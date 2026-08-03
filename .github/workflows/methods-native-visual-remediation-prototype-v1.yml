@@ -1,0 +1,125 @@
+name: Methods Native Visual Remediation Prototype v1
+
+on:
+  pull_request:
+    branches:
+      - verification/methods-euclidean-coherence-v1-001
+    paths:
+      - "verification/methods-native-visual-architecture-remediation-prototype-v1/**"
+      - ".github/workflows/methods-native-visual-remediation-prototype-v1.yml"
+  push:
+    branches:
+      - experiment/methods-native-visual-architecture-remediation-prototype-v1-001
+    paths:
+      - "verification/methods-native-visual-architecture-remediation-prototype-v1/**"
+      - ".github/workflows/methods-native-visual-remediation-prototype-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-native-visual-remediation-prototype-v1-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXPECTED_SOURCE_HEAD: 66a2105e96e84c5b482f783010779f87a90a28ee
+  METHODS_MODELS_ORIGIN: http://127.0.0.1:4173
+  PROTOTYPE_OUT_DIR: methods-native-visual-architecture-remediation-prototype-v1-evidence
+
+jobs:
+  phase-2a-prototype:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout isolated nonproduct prototype head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Enforce nonproduct changed-path boundary
+        shell: bash
+        run: |
+          test "$(git merge-base "$EXPECTED_SOURCE_HEAD" HEAD)" = "$EXPECTED_SOURCE_HEAD"
+          while IFS= read -r changed; do
+            case "$changed" in
+              verification/methods-euclidean-coherence-v1/*) ;;
+              verification/methods-native-visual-architecture-remediation-prototype-v1/*) ;;
+              .github/workflows/methods-euclidean-coherence-v1.yml) ;;
+              .github/workflows/methods-native-visual-remediation-prototype-v1.yml) ;;
+              *) echo "UNAUTHORIZED_CHANGED_PATH:$changed"; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$EXPECTED_SOURCE_HEAD" HEAD)
+          git diff --exit-code "$EXPECTED_SOURCE_HEAD" -- laws/research/methods-and-models/
+          git diff --name-only "$EXPECTED_SOURCE_HEAD" HEAD | sort | tee exact-changed-paths.txt
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate prototype source syntax
+        shell: bash
+        run: |
+          node --check verification/methods-native-visual-architecture-remediation-prototype-v1/prototype.js
+          node --check verification/methods-native-visual-architecture-remediation-prototype-v1/runner.mjs
+
+      - name: Start exact-source static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-phase2a-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/laws/research/methods-and-models/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/methods-phase2a-server.log
+          exit 1
+
+      - name: Execute representative risk-set prototype review
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -o pipefail
+          node verification/methods-native-visual-architecture-remediation-prototype-v1/runner.mjs | tee methods-phase2a-run.log
+
+      - name: Package Phase 2A evidence
+        if: always()
+        shell: bash
+        run: |
+          if [ -d methods-native-visual-architecture-remediation-prototype-v1-evidence ]; then
+            cp exact-changed-paths.txt methods-native-visual-architecture-remediation-prototype-v1-evidence/ || true
+            cp methods-phase2a-run.log methods-native-visual-architecture-remediation-prototype-v1-evidence/ || true
+            cp /tmp/methods-phase2a-server.log methods-native-visual-architecture-remediation-prototype-v1-evidence/server.log || true
+            cp verification/methods-native-visual-architecture-remediation-prototype-v1/prototype.css methods-native-visual-architecture-remediation-prototype-v1-evidence/executed-prototype.css || true
+            cp verification/methods-native-visual-architecture-remediation-prototype-v1/prototype.js methods-native-visual-architecture-remediation-prototype-v1-evidence/executed-prototype.js || true
+            cp verification/methods-native-visual-architecture-remediation-prototype-v1/runner.mjs methods-native-visual-architecture-remediation-prototype-v1-evidence/executed-runner.mjs || true
+            find methods-native-visual-architecture-remediation-prototype-v1-evidence -type f -print0 | sort -z | xargs -0 sha256sum > methods-native-visual-architecture-remediation-prototype-v1-evidence/SHA256SUMS
+            tar -czf methods-native-visual-architecture-remediation-prototype-v1-evidence.tar.gz methods-native-visual-architecture-remediation-prototype-v1-evidence
+            sha256sum methods-native-visual-architecture-remediation-prototype-v1-evidence.tar.gz > methods-native-visual-architecture-remediation-prototype-v1-evidence.tar.gz.sha256
+          fi
+
+      - name: Upload Phase 2A evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-native-visual-architecture-remediation-prototype-v1-evidence
+          path: |
+            methods-native-visual-architecture-remediation-prototype-v1-evidence/
+            methods-native-visual-architecture-remediation-prototype-v1-evidence.tar.gz
+            methods-native-visual-architecture-remediation-prototype-v1-evidence.tar.gz.sha256
+            methods-phase2a-run.log
+            exact-changed-paths.txt
+            /tmp/methods-phase2a-server.log
+          if-no-files-found: warn
+          retention-days: 30

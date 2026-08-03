@@ -1,7 +1,7 @@
 {
   "schema": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
   "locatorId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
-  "status": "ACTIVE_ROLE_6_COMPLETE_READY_FOR_ROLE_1_HANDOFF",
+  "status": "ACTIVE_ROLE_6_COMPLETE_HANDOFF_TO_ROLE_1_ISSUED",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "locatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
   "package": {
@@ -76,12 +76,23 @@
     "failoverGuide": "27_ROLE_6_FAILOVER_OPERATING_GUIDE_v1.md",
     "sha256Manifest": "SHA256SUMS.txt"
   },
+  "activeHandoff": {
+    "handoffId": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_HANDOFF_v1",
+    "locatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
+    "locatorCommit": "da86ccba656bafc4f1efb45827fadfd836e7138a",
+    "locatorBlob": "8b66e3d8da80478dd9398b15d0958a47394dd26d",
+    "driveFileId": "1q2TbJS6tIY_AeYdGL23f2TIUEwnDhBz5",
+    "archiveSha256": "4b073253f2a196a4729c5545b48db52b0f17a54829bb4015be035cd4ce81d95e",
+    "status": "READY_FOR_ROLE_1_ASSUMPTION"
+  },
   "recoveryInstructions": [
     "SEARCH_GITHUB_FOR_ANY_SEARCH_ALIAS_IN_THIS_LOCATOR",
     "OPEN_THIS_CANONICAL_LOCATOR",
-    "DOWNLOAD_THE_DRIVE_ARCHIVE_BY_FILE_ID",
-    "VERIFY_THE_ARCHIVE_SHA256_BEFORE_EXTRACTION",
-    "VERIFY_EVERY_MEMBER_AGAINST_SHA256SUMS_TXT",
+    "OPEN_ACTIVE_HANDOFF_LOCATOR",
+    "DOWNLOAD_AND_VERIFY_THE_HANDOFF_ARCHIVE",
+    "DOWNLOAD_THE_ROLE_6_DRIVE_ARCHIVE_BY_FILE_ID",
+    "VERIFY_THE_ROLE_6_ARCHIVE_SHA256_BEFORE_EXTRACTION",
+    "VERIFY_EVERY_ROLE_6_MEMBER_AGAINST_SHA256SUMS_TXT",
     "READ_THE_FAILOVER_GUIDE_AND_CONTROLLING_PACKAGE_MEMBERS",
     "ISSUE_A_ROLE_ASSUMPTION_RECEIPT_IF_THE_ORIGINAL_ROOM_IS_UNAVAILABLE",
     "DO_NOT_INFER_ANY_MISSING_OR_CONTRADICTORY_VALUE",
@@ -92,6 +103,8 @@
     "H Earth geometry tool base",
     "Role 6 geometry tool base",
     "Role 6 causal model terrain",
+    "Role 6 to Role 1 handoff",
+    "H-Earth R06 C10 Role 1",
     "R06 C10",
     "ground cell 001 R06 C10",
     "saddle valley basin",
@@ -106,12 +119,19 @@
     "sourceRoom": "ROLE_6_INDEPENDENT_RESEARCH_CHAMBER_AND_CROSS_SYSTEM_TROUBLESHOOTING_AUTHORITY",
     "role6Result": "R06_C10_CAUSAL_MODEL_AND_TOOL_REQUIREMENTS_COMPLETE",
     "nextRoom": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
-    "nextOperation": "CONSTRUCT_THE_NONPRODUCT_BOUNDED_GEOMETRY_ARTICULATION_AUTHORING_TOOL_AND_VERIFICATION_HARNESS_EXACTLY_FROM_THE_FROZEN_PACKAGE",
+    "nextOperation": "H_EARTH_R06_C10_PRE_ROUND_NONPRODUCT_TOOL_CONSTRUCTION_001",
+    "activeHandoffLocator": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
+    "role1Status": "READY_FOR_ASSUMPTION",
+    "requiredRole1Result": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
+    "requiredRole1PackageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
+    "role1SuccessorLocator": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json",
+    "roleAfterRole1": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
     "officialGeometryArticulationRound": "NOT_YET_STARTED",
     "productMutationAuthorized": false
   },
   "supersession": {
     "supersedes": null,
-    "supersededBy": null
+    "supersededBy": null,
+    "successorToolLocator": "PENDING_ROLE_1_COMPLETION"
   }
 }

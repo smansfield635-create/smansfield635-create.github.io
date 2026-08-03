@@ -162,23 +162,27 @@ async function verifyProfile(profile, viewport) {
   const dockAfterMove = await page.$eval("[data-mm-dock-title]", node => node.textContent);
   if (dockAfterMove !== "Unaccounted Residual") failures.push("dock_navigation");
 
-  if (profile === "DESKTOP") {
-    const beforeDrag = await page.$eval("[data-mm-dock]", node => {
-      const rect = node.getBoundingClientRect();
-      return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
-    });
-    const handle = await page.$("[data-mm-dock-handle]");
-    const box = await handle.boundingBox();
-    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-    await page.mouse.down();
-    await page.mouse.move(Math.max(24, box.x - 120), Math.max(90, box.y - 90), { steps: 8 });
-    await page.mouse.up();
-    const afterDrag = await page.$eval("[data-mm-dock]", node => {
-      const rect = node.getBoundingClientRect();
-      return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
-    });
-    if (Math.abs(afterDrag.left - beforeDrag.left) < 20 && Math.abs(afterDrag.top - beforeDrag.top) < 20) failures.push("dock_drag");
-    if (afterDrag.left < 7 || afterDrag.top < 7 || afterDrag.right > viewport.width + 1 || afterDrag.bottom > viewport.height + 1) failures.push("dock_drag_bounds");
+  if (viewport.width > 720) {
+    if (collapsed.handleDisplay === "none") {
+      failures.push("desktop_tablet_drag_handle_hidden");
+    } else {
+      const beforeDrag = await page.$eval("[data-mm-dock]", node => {
+        const rect = node.getBoundingClientRect();
+        return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+      });
+      const handle = await page.$("[data-mm-dock-handle]");
+      const box = await handle.boundingBox();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(Math.max(24, box.x - 120), Math.max(90, box.y - 90), { steps: 8 });
+      await page.mouse.up();
+      const afterDrag = await page.$eval("[data-mm-dock]", node => {
+        const rect = node.getBoundingClientRect();
+        return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
+      });
+      if (Math.abs(afterDrag.left - beforeDrag.left) < 20 && Math.abs(afterDrag.top - beforeDrag.top) < 20) failures.push("dock_drag");
+      if (afterDrag.left < 7 || afterDrag.top < 7 || afterDrag.right > viewport.width + 1 || afterDrag.bottom > viewport.height + 1) failures.push("dock_drag_bounds");
+    }
   } else if (collapsed.handleDisplay !== "none") {
     failures.push("mobile_drag_handle_visible");
   }

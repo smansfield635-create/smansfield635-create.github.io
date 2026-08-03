@@ -9,17 +9,53 @@
   "cross_observer_contamination": false,
   "disagreement_categories": [],
   "factor_comparisons": [
-    {"exact_agreement": true, "factor_id": "COAST_ENTRY_POSITION_AVAILABILITY"},
-    {"exact_agreement": true, "factor_id": "SUCCESSOR_TERRAIN_CLEARANCE_AVAILABILITY"},
-    {"exact_agreement": true, "factor_id": "AUTHORIZED_INLAND_TARGET_ALIGNMENT_AVAILABILITY"},
-    {"exact_agreement": true, "factor_id": "NEAR_BERM_CENTERLINE_CLEARANCE"},
-    {"exact_agreement": true, "factor_id": "BEACH_FOREGROUND_PRESERVATION"},
-    {"exact_agreement": true, "factor_id": "INLAND_ANCHOR_VISIBILITY"},
-    {"accepted_unobstructed_fraction": 0.6959409401844713, "accepted_value_a": 0.8, "accepted_value_b": 0.8, "exact_agreement": true, "factor_id": "INLAND_ANCHOR_OCCLUSION_CLEARANCE"},
-    {"exact_agreement": true, "factor_id": "DESKTOP_PRESENTATION_AVAILABILITY"},
-    {"exact_agreement": true, "factor_id": "MOBILE_390_PRESENTATION_AVAILABILITY"},
-    {"exact_agreement": true, "factor_id": "MOBILE_412_PRESENTATION_AVAILABILITY"},
-    {"exact_agreement": true, "factor_id": "RESET_STATE_REPRODUCIBILITY"}
+    {
+      "exact_agreement": true,
+      "factor_id": "COAST_ENTRY_POSITION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "SUCCESSOR_TERRAIN_CLEARANCE_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "AUTHORIZED_INLAND_TARGET_ALIGNMENT_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "NEAR_BERM_CENTERLINE_CLEARANCE"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "BEACH_FOREGROUND_PRESERVATION"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "INLAND_ANCHOR_VISIBILITY"
+    },
+    {
+      "accepted_unobstructed_fraction": 0.6959409401844713,
+      "accepted_value_a": 0.8,
+      "accepted_value_b": 0.8,
+      "exact_agreement": true,
+      "factor_id": "INLAND_ANCHOR_OCCLUSION_CLEARANCE"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "DESKTOP_PRESENTATION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "MOBILE_390_PRESENTATION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "MOBILE_412_PRESENTATION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "RESET_STATE_REPRODUCIBILITY"
+    }
   ],
   "final_imi_result_agreement": true,
   "hard_collapse_agreement": true,
@@ -59,7 +95,10 @@
     "unevaluable_state_false": true,
     "unresolved_controlling_defect_false": false
   },
-  "routing_actions": ["ROLE5_HOLD", "PRESERVE_CONCORDANT_CONTROLLING_DEFECT"],
+  "routing_actions": [
+    "ROLE5_HOLD",
+    "PRESERVE_CONCORDANT_CONTROLLING_DEFECT"
+  ],
   "same_input_identity": true,
   "source_acceptance_record_id": "H_EARTH_C2_R1_ROLE_4_RECONCILIATION_CURRENT_CASE_001",
   "terminal_state_agreement": true,

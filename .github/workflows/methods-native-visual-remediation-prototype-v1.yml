@@ -1,6 +1,12 @@
 name: Methods Native Visual Remediation Prototype v1
 
 on:
+  pull_request:
+    branches:
+      - verification/methods-euclidean-coherence-v1-001
+    paths:
+      - "verification/methods-native-visual-architecture-remediation-prototype-v1/**"
+      - ".github/workflows/methods-native-visual-remediation-prototype-v1.yml"
   push:
     branches:
       - experiment/methods-native-visual-architecture-remediation-prototype-v1-001
@@ -29,7 +35,7 @@ jobs:
       - name: Checkout isolated nonproduct prototype head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Enforce nonproduct changed-path boundary
@@ -82,7 +88,7 @@ jobs:
         shell: bash
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-          CANDIDATE_HEAD: ${{ github.sha }}
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -o pipefail
           node verification/methods-native-visual-architecture-remediation-prototype-v1/runner.mjs | tee methods-phase2a-run.log

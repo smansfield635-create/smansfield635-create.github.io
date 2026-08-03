@@ -77,7 +77,7 @@ jobs:
       - name: Install pinned browser driver
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
-      - name: Bind robust state adapter to native selected-state surfaces
+      - name: Bind fault-tolerant state adapter to native selected-state surfaces
         shell: bash
         run: |
           python3 - <<'PY'
@@ -87,15 +87,19 @@ jobs:
           replacements = [
             (
               "async function setFamily(page,z){const current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmZ));if(current!==z){await clickIndexed(page,'.mm-family-tab',z);await waitDataset(page,'mmZ',z);await waitStable(page);}}",
-              "async function setFamily(page,z){const current=await page.$$eval('.mm-family-tab',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==z){await clickIndexed(page,'.mm-family-tab',z);await page.waitForFunction(({z})=>[...document.querySelectorAll('.mm-family-tab')].findIndex(e=>e.getAttribute('aria-selected')==='true')===z,{timeout:8000},{z});await waitStable(page);}}"
+              "async function setFamily(page,z){let current=await page.$$eval('.mm-family-tab',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==z){await page.evaluate(({z})=>{const el=[...document.querySelectorAll('.mm-family-tab')][z];if(el)el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));},{z});await waitStable(page,180);current=await page.$$eval('.mm-family-tab',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));}return current===z;}"
             ),
             (
               "async function setLens(page,y){const current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmY));if(current!==y){await clickIndexed(page,'.mm-lens-tab',y);await waitDataset(page,'mmY',y);await waitStable(page);}}",
-              "async function setLens(page,y){const current=await page.$$eval('[data-mm-lens-tab]',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==y){await clickIndexed(page,'[data-mm-lens-tab]',y);await page.waitForFunction(({y})=>[...document.querySelectorAll('[data-mm-lens-tab]')].findIndex(e=>e.getAttribute('aria-selected')==='true')===y,{timeout:8000},{y});await waitStable(page);}}"
+              "async function setLens(page,y){let current=await page.$$eval('[data-mm-lens-tab]',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==y){await page.evaluate(({y})=>{const el=[...document.querySelectorAll('[data-mm-lens-tab]')][y];if(el)el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));},{y});await waitStable(page,180);current=await page.$$eval('[data-mm-lens-tab]',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));}return current===y;}"
             ),
             (
               "async function setModel(page,x,count){let current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmX));let guard=0;while(current!==x && guard++<count+2){const forward=(x-current+count)%count;const backward=(current-x+count)%count;const selector=forward<=backward?'[data-mm-next]':'[data-mm-previous]';await page.click(selector);await waitStable(page);current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmX));}if(current!==x)throw new Error(`MODEL_STATE_UNREACHABLE:${current}->${x}`);}",
-              "async function setModel(page,x,count){let current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));let guard=0;while(current!==x && guard++<count+2){const forward=(x-current+count)%count;const backward=(current-x+count)%count;const selector=forward<=backward?'[data-mm-next]':'[data-mm-previous]';await page.click(selector);await waitStable(page);current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));}if(current!==x)throw new Error(`MODEL_STATE_UNREACHABLE:${current}->${x}`);}"
+              "async function setModel(page,x,count){let current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));let guard=0;while(current!==x&&guard++<count+2){const forward=(x-current+count)%count;const backward=(current-x+count)%count;const selector=forward<=backward?'[data-mm-next]':'[data-mm-previous]';await page.evaluate(({selector})=>document.querySelector(selector)?.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window})),{selector});await waitStable(page,180);current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));}return current===x;}"
+            ),
+            (
+              "async function setCoordinate(page,z,x,y){await setFamily(page,z);await setLens(page,y);await setModel(page,x,FAMILIES[z].models.length);}",
+              "async function setCoordinate(page,z,x,y){const familyReached=await setFamily(page,z);const lensReached=await setLens(page,y);const modelReached=await setModel(page,x,FAMILIES[z].models.length);return {familyReached,lensReached,modelReached,reached:familyReached&&lensReached&&modelReached};}"
             )
           ]
           for old, new in replacements:

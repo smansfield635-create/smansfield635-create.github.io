@@ -1,3 +1,4 @@
+# trigger-002
 name: H-Earth Band-Limited Terrain Relief V2 Bootstrap
 
 on:
@@ -272,6 +273,11 @@ jobs:
             echo '```'
           } > /tmp/pr-comment.md
           gh pr comment "$PR_NUMBER" --body-file /tmp/pr-comment.md
+      - name: Publish failure locator
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_V2_BOOTSTRAP_FAILURE:${GITHUB_RUN_ID}:${GITHUB_SHA}"
       - name: Upload validation evidence
         if: always()
         uses: actions/upload-artifact@v4

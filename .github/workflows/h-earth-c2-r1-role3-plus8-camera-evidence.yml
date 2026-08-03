@@ -5,6 +5,9 @@ on:
   push:
     branches: [control/h-earth-c2-r1-role3-plus8-camera-evidence-001]
     paths: ['.github/workflows/h-earth-c2-r1-role3-plus8-camera-evidence.yml']
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/h-earth-c2-r1-role3-plus8-camera-evidence.yml']
 
 permissions:
   contents: read

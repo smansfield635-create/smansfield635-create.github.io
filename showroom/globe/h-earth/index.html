@@ -194,8 +194,8 @@
   <script id="h-earth-cp2-round1-default-promotion">
     (() => {
       const parameters = new URLSearchParams(window.location.search);
-      if (!parameters.has('cp2')) {
-        parameters.set('cp2', 'round1-1f520809');
+      if (!parameters.has('visual') && !parameters.has('cp2')) {
+        parameters.set('visual', 'terrain-relief-v2');
         const query = parameters.toString();
         history.replaceState(
           history.state,

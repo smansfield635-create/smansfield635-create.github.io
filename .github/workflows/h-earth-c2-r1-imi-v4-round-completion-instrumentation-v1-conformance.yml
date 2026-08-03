@@ -1,0 +1,40 @@
+name: H-Earth C2-R1 IMI v4 Round Completion Instrumentation v1 Conformance
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-c2-r1-imi-v4-round-completion-instrumentation-v1-conformance.yml'
+      - 'research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1/**'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify public round-completion records
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1/verify_round_completion_records_v1.py | tee round-completion-conformance-receipt.json
+      - name: Validate JSON records
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path('research/route-operator-platform-v1/observer-execution/h-earth-c2-r1-imi-v4-round-completion-v1')
+          for p in root.glob('*.json'): json.loads(p.read_text())
+          json.loads(pathlib.Path('round-completion-conformance-receipt.json').read_text())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-imi-v4-round-completion-${{ github.sha }}
+          path: round-completion-conformance-receipt.json
+          if-no-files-found: error
+          retention-days: 90

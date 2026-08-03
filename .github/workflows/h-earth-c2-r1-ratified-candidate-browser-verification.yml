@@ -1,0 +1,270 @@
+name: H-Earth C2-R1 Ratified Candidate Browser Verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - control/h-earth-c2-r1-ratified-candidate-browser-verification-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-ratified-candidate-browser-verification.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-c2-r1-ratified-candidate-browser-verification-03d20d8e
+  cancel-in-progress: false
+
+env:
+  OPERATION_ID: H_EARTH_C2_R1_RATIFIED_CANDIDATE_TEMPORARY_REVIEW_BROWSER_EXECUTION_001
+  REVIEW_URL: https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@abb5a4f1942157f72b09b9ccd421b9854e024953/preview/h-earth/c2-r1/ratified-candidate-03d20d8eea75e9ec/index.html
+  DELIVERY_CARRIER_HEAD: abb5a4f1942157f72b09b9ccd421b9854e024953
+  EXACT_SOURCE_COMMIT: 03d20d8eea75e9eceff12edb37495b1b5b9ed419
+  ARTIFACT_NAME: h-earth-c2-r1-ratified-candidate-browser-verification-03d20d8e
+  PLAYWRIGHT_VERSION: 1.55.0
+
+jobs:
+  browser-execution-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout verification carrier read-only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Execute immutable HTTPS review path in Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          runtime="$RUNNER_TEMP/h-earth-review-browser-runtime"
+          evidence="$RUNNER_TEMP/h-earth-review-browser-evidence"
+          mkdir -p "$runtime" "$evidence/screenshots"
+          cd "$runtime"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+          cat > runner.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+
+          const reviewUrl = process.env.REVIEW_URL;
+          const exactSourceCommit = process.env.EXACT_SOURCE_COMMIT;
+          const deliveryCarrierHead = process.env.DELIVERY_CARRIER_HEAD;
+          const operationId = process.env.OPERATION_ID;
+          const evidenceRoot = path.join(process.env.RUNNER_TEMP, 'h-earth-review-browser-evidence');
+          const screenshotsRoot = path.join(evidenceRoot, 'screenshots');
+          const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+          const writeJson = (name, value) => fs.writeFileSync(path.join(evidenceRoot, name), `${JSON.stringify(value, null, 2)}\n`);
+
+          const viewports = [
+            { id: 'DESKTOP_1440_X_900', width: 1440, height: 900, isMobile: false, hasTouch: false },
+            { id: 'MOBILE_390_X_844', width: 390, height: 844, isMobile: true, hasTouch: true },
+            { id: 'MOBILE_412_X_915', width: 412, height: 915, isMobile: true, hasTouch: true }
+          ];
+
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+          let terminalError = null;
+
+          try {
+            for (const viewport of viewports) {
+              const context = await browser.newContext({
+                viewport: { width: viewport.width, height: viewport.height },
+                isMobile: viewport.isMobile,
+                hasTouch: viewport.hasTouch,
+                deviceScaleFactor: 1,
+                ignoreHTTPSErrors: false
+              });
+              const page = await context.newPage();
+              const consoleErrors = [];
+              const pageErrors = [];
+              const requestFailures = [];
+              const httpFailures = [];
+
+              page.on('console', message => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+              page.on('pageerror', error => pageErrors.push({ message: error.message, stack: error.stack ?? null }));
+              page.on('requestfailed', request => requestFailures.push({ url: request.url(), failure: request.failure()?.errorText ?? null }));
+              page.on('response', response => {
+                if (response.status() >= 400) httpFailures.push({ url: response.url(), status: response.status() });
+              });
+
+              const startedAt = Date.now();
+              let navigationResponse = null;
+              let navigationError = null;
+              try {
+                navigationResponse = await page.goto(reviewUrl, { waitUntil: 'domcontentloaded', timeout: 90000 });
+              } catch (error) {
+                navigationError = { message: error.message, stack: error.stack ?? null };
+              }
+
+              await page.waitForTimeout(2500);
+              const responseHeaders = navigationResponse ? await navigationResponse.allHeaders() : {};
+              const contentType = responseHeaders['content-type'] ?? null;
+              const status = navigationResponse?.status() ?? null;
+              const title = await page.title().catch(() => null);
+              const bodyTextSample = await page.locator('body').innerText().then(text => text.slice(0, 1200)).catch(() => null);
+
+              const deliveryState = await page.evaluate(() => ({
+                rootTemporaryReview: document.documentElement.dataset.hEarthTemporaryReview ?? null,
+                rootExactSourceCommit: document.documentElement.dataset.hEarthExactSourceCommit ?? null,
+                metaExactSourceCommit: document.querySelector('meta[name="h-earth-exact-source-commit"]')?.content ?? null,
+                delivery: window.H_EARTH_TEMPORARY_REVIEW_DELIVERY ?? null,
+                canvasPresent: document.getElementById('h-earth-functional-landscape-canvas') instanceof HTMLCanvasElement,
+                routePresent: Boolean(document.getElementById('h-earth-functional-landscape-route')),
+                currentUrl: location.href
+              })).catch(error => ({ evaluationError: error.message }));
+
+              let runtimeState = null;
+              let runtimeWaitError = null;
+              if (contentType?.toLowerCase().includes('text/html') && deliveryState?.canvasPresent) {
+                try {
+                  await page.waitForFunction(() => {
+                    const route = document.getElementById('h-earth-functional-landscape-route');
+                    const receipt = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+                    return route?.dataset.run8eReady === 'true' || receipt?.stages?.READY_PUBLISHED === 'PASS' || Boolean(receipt?.firstFailureStage) || route?.dataset.run8eError === 'true';
+                  }, { timeout: 120000 });
+                } catch (error) {
+                  runtimeWaitError = { message: error.message };
+                }
+
+                runtimeState = await page.evaluate(() => {
+                  const route = document.getElementById('h-earth-functional-landscape-route');
+                  const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+                  const startup = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null;
+                  const diagnostics = window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.() ?? null;
+                  return {
+                    routeRun8eReady: route?.dataset.run8eReady ?? null,
+                    routeRun8eError: route?.dataset.run8eError ?? null,
+                    routeRun7hReady: route?.dataset.run7hReady ?? null,
+                    routeRun7hError: route?.dataset.run7hError ?? null,
+                    canvasWidth: canvas?.width ?? null,
+                    canvasHeight: canvas?.height ?? null,
+                    startup,
+                    diagnostics,
+                    packageIdentity: window.H_EARTH_COMPLETE_WORLD_PACKAGE?.packageIdentity ?? window.H_EARTH_COMPLETE_WORLD_PACKAGE?.identity ?? null,
+                    packageDigest: window.H_EARTH_COMPLETE_WORLD_PACKAGE?.packageDigest ?? window.H_EARTH_COMPLETE_WORLD_PACKAGE?.digest ?? null
+                  };
+                });
+              }
+
+              const initialPath = path.join(screenshotsRoot, `${viewport.id}__INITIAL.png`);
+              await page.screenshot({ path: initialPath, fullPage: false });
+              const initialSha256 = sha256(fs.readFileSync(initialPath));
+
+              let interaction = { attempted: false, changed: false, beforeSha256: initialSha256, afterSha256: null, error: null };
+              const canvas = page.locator('#h-earth-functional-landscape-canvas');
+              if (deliveryState?.canvasPresent && await canvas.isVisible().catch(() => false)) {
+                interaction.attempted = true;
+                try {
+                  await canvas.scrollIntoViewIfNeeded();
+                  const box = await canvas.boundingBox();
+                  if (!box) throw new Error('CANVAS_BOUNDING_BOX_UNAVAILABLE');
+                  const beforePath = path.join(screenshotsRoot, `${viewport.id}__BEFORE_INTERACTION.png`);
+                  const afterPath = path.join(screenshotsRoot, `${viewport.id}__AFTER_INTERACTION.png`);
+                  await page.screenshot({ path: beforePath, fullPage: false });
+                  const x0 = box.x + box.width * 0.56;
+                  const y0 = box.y + box.height * 0.54;
+                  await page.mouse.move(x0, y0);
+                  await page.mouse.down();
+                  await page.mouse.move(x0 - Math.min(130, box.width * 0.18), y0 + Math.min(55, box.height * 0.08), { steps: 12 });
+                  await page.mouse.up();
+                  await page.mouse.wheel(0, -420);
+                  await page.waitForTimeout(1200);
+                  await page.screenshot({ path: afterPath, fullPage: false });
+                  const beforeSha256 = sha256(fs.readFileSync(beforePath));
+                  const afterSha256 = sha256(fs.readFileSync(afterPath));
+                  interaction = { attempted: true, changed: beforeSha256 !== afterSha256, beforeSha256, afterSha256, error: null };
+                } catch (error) {
+                  interaction.error = { message: error.message, stack: error.stack ?? null };
+                }
+              }
+
+              const htmlContentType = Boolean(contentType?.toLowerCase().includes('text/html'));
+              const sourceIdentityPass = deliveryState?.rootTemporaryReview === 'active'
+                && deliveryState?.rootExactSourceCommit === exactSourceCommit
+                && deliveryState?.metaExactSourceCommit === exactSourceCommit
+                && deliveryState?.delivery?.exactSourceCommit === exactSourceCommit
+                && deliveryState?.delivery?.productMutation === false
+                && deliveryState?.delivery?.liveHEarthPageMutation === false;
+              const runtimeReady = runtimeState?.routeRun8eReady === 'true'
+                || runtimeState?.startup?.stages?.READY_PUBLISHED === 'PASS';
+              const runtimeFailed = runtimeState?.routeRun8eError === 'true'
+                || Boolean(runtimeState?.startup?.firstFailureStage);
+
+              const pass = status === 200
+                && htmlContentType
+                && title === 'H-Earth · Live Interactive World'
+                && sourceIdentityPass
+                && deliveryState?.canvasPresent === true
+                && runtimeReady
+                && !runtimeFailed
+                && consoleErrors.length === 0
+                && pageErrors.length === 0
+                && requestFailures.length === 0
+                && httpFailures.length === 0
+                && interaction.attempted
+                && interaction.changed;
+
+              results.push({
+                viewport,
+                pass,
+                elapsedMs: Date.now() - startedAt,
+                navigation: { status, contentType, navigationError, finalUrl: page.url(), title, bodyTextSample },
+                deliveryState,
+                runtimeState,
+                runtimeWaitError,
+                interaction,
+                failures: { consoleErrors, pageErrors, requestFailures, httpFailures },
+                initialScreenshot: { path: `screenshots/${viewport.id}__INITIAL.png`, sha256: initialSha256 }
+              });
+              await context.close();
+            }
+          } catch (error) {
+            terminalError = { message: error.message, stack: error.stack ?? null };
+          } finally {
+            await browser.close();
+          }
+
+          const overallPass = terminalError === null && results.length === viewports.length && results.every(result => result.pass);
+          const receipt = {
+            receiptId: 'H_EARTH_C2_R1_RATIFIED_CANDIDATE_TEMPORARY_REVIEW_BROWSER_EXECUTION_RECEIPT_v1',
+            operationId,
+            result: overallPass ? 'PASS' : 'BLOCKED',
+            reviewUrl,
+            deliveryCarrierHead,
+            exactSourceCommit,
+            browser: 'chromium',
+            viewportCount: viewports.length,
+            results,
+            terminalError,
+            unauthorizedRepositoryMutationCount: 0,
+            productMutation: false,
+            liveHEarthPageMutation: false,
+            generatedAt: new Date().toISOString()
+          };
+          writeJson('browser-execution-receipt.json', receipt);
+
+          const files = fs.readdirSync(evidenceRoot, { recursive: true })
+            .filter(name => fs.statSync(path.join(evidenceRoot, name)).isFile())
+            .sort();
+          const manifest = files.map(name => ({ path: name, sha256: sha256(fs.readFileSync(path.join(evidenceRoot, name))) }));
+          writeJson('artifact-manifest-sha256.json', { files: manifest });
+
+          console.log(JSON.stringify({ result: receipt.result, viewports: results.map(r => ({ id: r.viewport.id, pass: r.pass, status: r.navigation.status, contentType: r.navigation.contentType, title: r.navigation.title })) }, null, 2));
+          if (!overallPass) process.exitCode = 1;
+          NODE
+          node runner.mjs
+
+      - name: Upload immutable browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ runner.temp }}/h-earth-review-browser-evidence
+          if-no-files-found: error
+          retention-days: 90

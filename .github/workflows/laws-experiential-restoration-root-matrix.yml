@@ -1,0 +1,188 @@
+name: Laws Experiential Restoration Root Matrix
+
+on:
+  push:
+    branches:
+      - agent/laws-experiential-architecture-restoration-001
+    paths:
+      - '.github/workflows/laws-experiential-restoration-root-matrix.yml'
+      - 'tools/laws-experiential-restoration-root-matrix.mjs'
+      - 'laws/index.html'
+      - 'laws/index.experience.css'
+      - 'laws/index.experience.polish.css'
+      - 'laws/index.experience.js'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/laws-experiential-restoration-root-matrix.yml'
+      - 'tools/laws-experiential-restoration-root-matrix.mjs'
+      - 'laws/index.html'
+      - 'laws/index.experience.css'
+      - 'laws/index.experience.polish.css'
+      - 'laws/index.experience.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: laws-experiential-restoration-root-matrix-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+  EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
+  BASE_URL: http://127.0.0.1:4173
+  EVIDENCE_DIR: artifacts/laws-experiential-restoration/root-matrix
+
+jobs:
+  root-acceptance-matrix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact restoration head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+          fetch-depth: 0
+
+      - name: Lock exact checkout and main base
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
+          test "$(git merge-base origin/main HEAD)" = "$EXPECTED_MAIN_BASE"
+
+      - name: Verify exact root output hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '8fff5010933b90ffd396fddab393fb4044954b1b2838299b2a454f598c246854  laws/index.html' | sha256sum --check --strict
+          echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
+          echo 'e5a289b9e6792f7549be7797880ffe6911a6fea3e4f5e02b48ada1b71158a59f  laws/index.experience.polish.css' | sha256sum --check --strict
+          echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
+          node --check tools/laws-experiential-restoration-root-matrix.mjs
+          node --check laws/index.experience.js
+
+      - name: Verify authority and scope invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR"
+          for protected in \
+            laws/index.controller.js \
+            laws/index.interactions.js \
+            laws/index.compositor.js \
+            laws/index.crystals.js \
+            laws/index.cosmos.js \
+            laws/index.planet.js
+          do
+            git diff --quiet "$EXPECTED_MAIN_BASE" HEAD -- "$protected"
+          done
+          git diff --quiet "$EXPECTED_MAIN_BASE" HEAD -- laws/index.experience.css
+          if git diff --name-only "$EXPECTED_MAIN_BASE" HEAD | grep -E '^(frontier/|laws/control-plane/|laws/categories/|laws/research/|laws/test/|laws/scientific-law/)'; then
+            echo 'Protected child, control-plane, or Frontier mutation detected.' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import re
+          import subprocess
+          from pathlib import Path
+
+          base = "ef2ffdb1da7911238652f076a6b44326061493ef"
+          current = Path("laws/index.html").read_text(encoding="utf-8")
+          prior = subprocess.check_output(
+              ["git", "show", f"{base}:laws/index.html"], text=True
+          )
+
+          rail = re.compile(
+              r'<section class="laws-first-rail" data-laws-first-rail="".*?</section>\n?',
+              re.S,
+          )
+          current_normalized = rail.sub("", current)
+          prior_normalized = rail.sub("", prior)
+
+          current_normalized = current_normalized.replace(
+              ' data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"',
+              "",
+          ).replace(
+              'data-laws-first-rail-architecture="integrated-hero-v1"',
+              'data-laws-first-rail-architecture="persistent-compass-zone-v2"',
+          ).replace(
+              'data-laws-tablet-hero-reflow="split-composition-until-780px"',
+              'data-laws-tablet-hero-reflow="single-column-at-1100px"',
+          ).replace(
+              'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803A',
+              'LAWS_FIRST_RAIL_ARCHITECTURE_20260802B',
+          )
+
+          if current_normalized != prior_normalized:
+              raise SystemExit("NON_PRESENTATION_HTML_DELTA_DETECTED")
+
+          def values(pattern, text):
+              return sorted(set(re.findall(pattern, text)))
+
+          receipt = {
+              "contract": "LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_AUTHORITY_INVARIANTS_v1",
+              "base": base,
+              "head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "route_delta": 0,
+              "owner_delta": 0,
+              "formula_identity_delta": 0,
+              "evidence_status_delta": 0,
+              "claim_ceiling_delta": 0,
+              "frontier_delta": 0,
+              "protected_runtime_delta": 0,
+              "content_ids": values(r'data-content-id="([^"]+)"', current),
+              "routes": values(r'(?:href|data-route)="(/[^"]*)"', current),
+              "formula_block_sha256": [
+                  hashlib.sha256(block.encode()).hexdigest()
+                  for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)
+              ],
+              "non_presentation_html_equal": True,
+              "disposition": "PASS",
+          }
+          Path("artifacts/laws-experiential-restoration/root-matrix/authority-invariants.json").write_text(
+              json.dumps(receipt, indent=2) + "\n", encoding="utf-8"
+          )
+          print(json.dumps(receipt, indent=2))
+          PY
+
+      - name: Install pinned browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-root-matrix-server.log 2>&1 &
+          echo $! > /tmp/laws-root-matrix-server.pid
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-root-matrix-server.log
+          exit 1
+
+      - name: Execute root browser acceptance matrix
+        run: node tools/laws-experiential-restoration-root-matrix.mjs
+
+      - name: Upload exact-head root evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-experiential-restoration-root-${{ env.EXECUTION_COMMIT }}
+          path: |
+            artifacts/laws-experiential-restoration/root-matrix/**
+            /tmp/laws-root-matrix-server.log
+          if-no-files-found: warn
+          retention-days: 30

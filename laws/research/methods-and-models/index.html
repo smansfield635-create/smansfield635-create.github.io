@@ -2,7 +2,7 @@
 <html lang="en"
   data-route="/laws/research/methods-and-models/"
   data-page-family="RESEARCH_CHILD_SHOWROOM"
-  data-methods-models-contract="METHODS_MODELS_DUAL_AXIS_SHOWROOM_v1"
+  data-methods-models-contract="METHODS_MODELS_SHOWROOM_DOCK_v2"
   data-canonical-archive="METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"
   data-source-completeness="open"
   data-scientific-validation-claimed="false"
@@ -17,12 +17,14 @@
   <link rel="canonical" href="https://diamondgatebridge.com/laws/research/methods-and-models/">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/laws/research/methods-and-models/showroom.css?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1">
+  <link rel="stylesheet" href="/laws/research/methods-and-models/showroom-refinement.css?v=METHODS_MODELS_SHOWROOM_DOCK_V2">
   <script defer src="/laws/research/methods-and-models/showroom.js?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1"></script>
+  <script defer src="/laws/research/methods-and-models/showroom-refinement.js?v=METHODS_MODELS_SHOWROOM_DOCK_V2"></script>
 </head>
-<body data-mm-family="structure">
+<body data-mm-family="structure" data-mm-display="expanded">
 <a class="mm-skip" href="#methods-models-showroom">Skip to the model showroom</a>
 <div class="mm-shell">
-  <header class="mm-topbar">
+  <header class="mm-topbar" data-mm-topbar>
     <a class="mm-brand" href="/laws/" aria-label="Return to the Laws Chamber">
       <small>Diamond Gate Bridge · Laws</small>
       <strong>Methods and Models</strong>
@@ -35,18 +37,18 @@
   </header>
 
   <main class="mm-main" id="main">
-    <section class="mm-intro" aria-labelledby="page-title">
+    <section class="mm-intro" aria-labelledby="page-title" data-mm-background-surface>
       <div>
         <p class="mm-kicker">Research · Model Showroom</p>
         <h1 id="page-title">Methods and Models</h1>
       </div>
       <div>
         <p class="mm-intro__question">How was the proposition specified, calculated, compared, and exposed to failure?</p>
-        <p class="mm-intro__cue">Move through the model families in depth. Roll left or right through the equations inside each family. Inspect one model without losing your place.</p>
+        <p class="mm-intro__cue">Open the model field to move through families and equations. Collapse it into a compact dock when you are ready to examine the public research context beneath it.</p>
       </div>
     </section>
 
-    <section class="mm-showroom" id="methods-models-showroom" data-mm-showroom aria-labelledby="mm-family-title">
+    <section class="mm-showroom" id="methods-models-showroom" data-mm-showroom aria-labelledby="mm-family-title" aria-hidden="false">
       <div class="mm-stage">
         <header class="mm-stage__header">
           <div>
@@ -54,7 +56,10 @@
             <h2 id="mm-family-title" data-mm-family-title>Structural Envelope and Collapse</h2>
             <p class="mm-stage__question" data-mm-family-question>What must be present, saturated, and functionally failed before collapse is qualified?</p>
           </div>
-          <span class="mm-stage__status">Canonical archive v0.1.0-draft · source completeness open</span>
+          <button class="mm-showroom-toggle" type="button" data-mm-collapse-showroom aria-expanded="true" aria-controls="methods-models-showroom">
+            <span aria-hidden="true">−</span>
+            Collapse showroom
+          </button>
         </header>
 
         <div class="mm-family-tabs" role="tablist" aria-label="Model families" data-mm-family-tabs>
@@ -107,23 +112,38 @@
       </div>
     </section>
 
+    <aside class="mm-dock" data-mm-dock hidden aria-label="Collapsed Methods and Models showroom">
+      <button class="mm-dock__handle" type="button" data-mm-dock-handle aria-label="Move the model dock"><span aria-hidden="true">⋮⋮</span></button>
+      <div class="mm-dock__identity">
+        <span class="mm-dock__symbol" data-mm-dock-symbol>451</span>
+        <span class="mm-dock__family" data-mm-dock-family>Structural Envelope</span>
+        <strong data-mm-dock-title>451 Structural Envelope</strong>
+        <small data-mm-dock-progress>Model 1 of 6</small>
+      </div>
+      <div class="mm-dock__controls">
+        <button type="button" data-mm-dock-previous aria-label="Previous model">←</button>
+        <button type="button" data-mm-open-showroom aria-expanded="false" aria-controls="methods-models-showroom">Open showroom</button>
+        <button type="button" data-mm-dock-next aria-label="Next model">→</button>
+      </div>
+    </aside>
+
     <noscript>
       <section class="mm-support" aria-label="JavaScript-disabled Methods and Models summary">
         <div class="mm-boundary">
           <p class="mm-kicker">Model access</p>
-          <h3>JavaScript is required for the dual-axis showroom.</h3>
-          <p>The read-only canonical record remains available through the Record and provenance section below.</p>
+          <h3>JavaScript is required for the interactive model field.</h3>
+          <p>The supporting research context and related public routes remain available below.</p>
         </div>
       </section>
     </noscript>
 
-    <section class="mm-support" aria-labelledby="construction-title">
+    <section class="mm-support" aria-labelledby="construction-title" data-mm-background-surface>
       <div class="mm-support__intro">
         <div>
-          <p class="mm-kicker">Subordinate interpretation</p>
+          <p class="mm-kicker">How the models are used</p>
           <h2 id="construction-title">A model becomes usable only when its assumptions and failure conditions remain visible.</h2>
         </div>
-        <p>The showroom carries the equations. This lower layer explains the shared construction discipline without repeating every canonical record: admit the inputs, declare the method, freeze the comparison, expose the proposition to failure, and preserve the result.</p>
+        <p>The model field carries the equations. This layer explains the shared discipline: admit the inputs, declare the method, freeze the comparison, expose the proposition to failure, and preserve the result.</p>
       </div>
 
       <div class="mm-method-chain" aria-label="Method construction sequence">
@@ -156,37 +176,19 @@
       <section class="mm-boundary" aria-labelledby="boundary-title">
         <p class="mm-kicker">Claim boundary</p>
         <h3 id="boundary-title">A formal model is not an empirical validation claim.</h3>
-        <p>Source-confirmed equations remain formal architectures until their domain mappings, thresholds, datasets, partitions, execution, uncertainty, and replication are established. The 448 saturation gate, 61 admissibility membrane, and nine basin anchors remain visibly preserved under source hold pending recovery of AUDRALIA_COLLAPSE_ENGINEERING_V1.</p>
+        <p>Source-confirmed equations remain formal architectures until their domain mappings, thresholds, datasets, partitions, execution, uncertainty, and replication are established. Architectures preserved under source hold are labeled inside the model field without turning internal archive administration into public content.</p>
       </section>
 
-      <details class="mm-provenance">
-        <summary>Record and provenance</summary>
-        <p>The former public text-dump presentation has been removed from the reading flow. Its canonical IDs, source-payload hashes, equations, derivative methods, resolver records, and custody language remain preserved in Git history and the read-only archive register.</p>
-        <div class="mm-provenance__grid">
-          <div><span>Archive</span><strong>METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT</strong></div>
-          <div><span>Version</span><strong>0.1.0-draft</strong></div>
-          <div><span>Known architecture</span><strong>Preserved</strong></div>
-          <div><span>Source completeness</span><strong>Not claimed</strong></div>
-          <div><span>Archive ZIP SHA-256</span><strong>bb032b86a2665a0d53df310d03c787dc8a193da1599761b960166d17f847fe2b</strong></div>
-          <div><span>Missing exact package</span><strong>AUDRALIA_COLLAPSE_ENGINEERING_V1</strong></div>
-        </div>
-        <nav class="mm-related" aria-label="Canonical record access">
-          <a href="/laws/research/methods-and-models/canonical-records-v1.html">Read-only record manifest</a>
-          <a href="/laws/test/admission-and-baseline/">Admission and Baseline</a>
-          <a href="/laws/test/forward-construction/">Forward Construction</a>
-          <a href="/laws/test/reverse-audit/">Reverse Audit</a>
-          <a href="/laws/test/result-and-record/">Result and Record</a>
-        </nav>
-      </details>
-
-      <nav class="mm-story-nav" aria-label="Laws narrative context">
-        <a href="/laws/research/evidence-and-sources/"><span>Previous</span><strong>Research / Evidence and Sources</strong></a>
-        <a href="/laws/categories/flow/signals/"><span>Next</span><strong>Flow / Signals</strong></a>
+      <nav class="mm-public-routes" aria-label="Continue through Laws research">
+        <a href="/laws/research/evidence-and-sources/"><span>Inspect the foundation</span><strong>Evidence and Sources</strong><p>See what supports each claim and where the evidence stops.</p></a>
+        <a href="/laws/research/applied-investigations/"><span>See the methods in use</span><strong>Applied Investigations</strong><p>Follow the methods into bounded research applications.</p></a>
+        <a href="/laws/research/findings-and-boundaries/"><span>Read the result correctly</span><strong>Findings and Boundaries</strong><p>Separate observed findings from interpretation and unresolved limits.</p></a>
+        <a href="/laws/"><span>Return to orientation</span><strong>Laws Compass</strong><p>Choose another Laws destination without losing the broader architecture.</p></a>
       </nav>
     </section>
   </main>
 
-  <footer class="mm-footer">
+  <footer class="mm-footer" data-mm-background-surface>
     <span>Diamond Gate Bridge · Laws Chamber</span>
     <a href="/laws/">Return to the Laws Compass</a>
   </footer>
@@ -195,10 +197,7 @@
 <dialog class="mm-dialog" data-mm-dialog aria-labelledby="mm-dialog-title">
   <div class="mm-dialog__inner">
     <header class="mm-dialog__top">
-      <div>
-        <p class="mm-kicker" data-mm-dialog-kicker>Model family</p>
-        <h2 id="mm-dialog-title" data-mm-dialog-title>Model</h2>
-      </div>
+      <div><p class="mm-kicker" data-mm-dialog-kicker>Model family</p><h2 id="mm-dialog-title" data-mm-dialog-title>Model</h2></div>
       <button class="mm-dialog__close" type="button" aria-label="Return to the model showroom" data-mm-dialog-close>×</button>
     </header>
     <div class="mm-dialog__equation" data-mm-dialog-equation></div>

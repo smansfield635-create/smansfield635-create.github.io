@@ -11,6 +11,8 @@
   };
 
   load('/verification/methods-native-visual-architecture-remediation-prototype-v1/prototype-v2.js', 'v2', () => {
-    load('/verification/methods-native-visual-architecture-remediation-prototype-v1/prototype-v3.js', 'v3');
+    load('/verification/methods-native-visual-architecture-remediation-prototype-v1/prototype-v3.js', 'v3', () => {
+      load('/verification/methods-native-visual-architecture-remediation-prototype-v1/prototype-v4.js', 'v4');
+    });
   });
 })();

@@ -1,24 +1,40 @@
 /*
- * Laws root Rolodex placement, tablet depth-axis, and heading-band continuity.
- * Presentation only. The visitor-intent navigation remains in the full-width
- * root flow beneath the accepted Compass. Phone and desktop delivery remain unchanged.
+ * Laws root Rolodex responsive presentation continuity.
+ * Presentation only. Preserves the accepted Compass, routes, content custody,
+ * tablet depth axis, and desktop flow while adding a single-group mobile browser.
  */
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_ROOT_ROLODEX_PLACEMENT_CONTINUITY_v3";
-  const TABLET_DEPTH_MEDIA = "(min-width: 781px) and (max-width: 1200px)";
+  const CONTRACT = "LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v4";
+  const TABLET_MEDIA = "(min-width: 781px) and (max-width: 1200px)";
+  const MOBILE_MEDIA = "(max-width: 780px)";
+
+  const ACTION_COPY = Object.freeze({
+    "laws-governing-relationships": Object.freeze({ preview: "Preview laws", route: "Enter laws and relationships" }),
+    "methods-models": Object.freeze({ preview: "Preview methods", route: "Enter methods and models" }),
+    "scientific-law": Object.freeze({ preview: "Preview scientific law", route: "Enter scientific law" }),
+    "evidence-sources": Object.freeze({ preview: "Preview evidence", route: "Enter evidence and sources" }),
+    "applied-investigations": Object.freeze({ preview: "Preview investigations", route: "Enter applied investigations" }),
+    "findings-boundaries": Object.freeze({ preview: "Preview findings", route: "Enter findings and boundaries" }),
+    "admission-baseline": Object.freeze({ preview: "Preview baseline", route: "Enter admission and baseline" }),
+    "forward-construction": Object.freeze({ preview: "Preview construction", route: "Enter forward construction" }),
+    "reverse-audit": Object.freeze({ preview: "Preview reverse audit", route: "Enter reverse audit" }),
+    "results-records": Object.freeze({ preview: "Preview results", route: "Enter results and records" })
+  });
+
   let originSnapshot = null;
-  let depthMedia = null;
-  let depthStage = null;
-  let depthSwitcher = null;
-  let depthSummary = null;
-  let depthSummaryEyebrow = null;
-  let depthSummaryTitle = null;
-  let depthFields = [];
-  let depthButtons = [];
-  let activeDepthIndex = 0;
+  let tabletMedia = null;
+  let mobileMedia = null;
+  let groupStage = null;
+  let groupSwitcher = null;
+  let groupSummary = null;
+  let groupSummaryEyebrow = null;
+  let groupSummaryTitle = null;
+  let groupFields = [];
+  let groupButtons = [];
+  let activeGroupIndex = 0;
 
   function viewportSnapshots() {
     return Array.from(document.querySelectorAll(".laws-rolodex-viewport")).map(viewport => ({
@@ -40,207 +56,26 @@
     const snapshot = originSnapshot;
     originSnapshot = null;
     requestAnimationFrame(() => {
-      for (const entry of snapshot.viewports) {
-        entry.viewport.scrollLeft = entry.scrollLeft;
-      }
+      for (const entry of snapshot.viewports) entry.viewport.scrollLeft = entry.scrollLeft;
       globalThis.scrollTo(snapshot.scrollX, snapshot.scrollY);
     });
   }
 
   function installPresentationStyles() {
-    if (document.querySelector("style[data-laws-rolodex-viewport-containment]")) return;
-
-    const style = document.createElement("style");
-    style.dataset.lawsRolodexViewportContainment = "true";
-    style.textContent = `
-html[data-laws-root-rolodex="active"] .laws-visitor-paths--rolodex {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100vw !important;
-  contain: inline-size;
-  overflow-x: clip !important;
-}
-html[data-laws-root-rolodex="active"] .laws-rolodex-field,
-html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser,
-html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  max-width: 100% !important;
-}
-html[data-laws-root-rolodex="active"] .laws-rolodex-track {
-  width: max-content !important;
-  min-width: 0 !important;
-  max-width: none !important;
-}
-html[data-laws-root-rolodex="active"] .laws-rolodex-depth-switcher,
-html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary {
-  display: none;
-}
-html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
-  display: contents;
-}
-@media (min-width: 781px) and (max-width: 1200px) {
-  html[data-laws-root-rolodex="active"] .laws-visitor-paths--rolodex[data-laws-tablet-depth-axis="active"] {
-    gap: clamp(1.4rem, 3vw, 2.4rem) !important;
-    padding-bottom: clamp(5rem, 9vw, 8rem) !important;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-switcher {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: .55rem;
-    width: min(calc(100% - 2rem), 52rem);
-    margin: 0 auto;
-    padding: .45rem;
-    border: 1px solid rgba(128, 224, 255, .2);
-    border-radius: 999px;
-    background: rgba(5, 13, 29, .76);
-    box-shadow: 0 1.1rem 3rem rgba(0, 0, 0, .24);
-    backdrop-filter: blur(16px);
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-tab {
-    min-width: 0;
-    min-height: 3.2rem;
-    padding: .7rem .8rem;
-    border: 1px solid transparent;
-    border-radius: 999px;
-    background: transparent;
-    color: rgba(229, 238, 255, .64);
-    font: inherit;
-    font-size: clamp(.68rem, 1.35vw, .82rem);
-    font-weight: 760;
-    letter-spacing: .08em;
-    line-height: 1.2;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-tab[aria-selected="true"] {
-    border-color: rgba(128, 224, 255, .5);
-    background: linear-gradient(135deg, rgba(116, 219, 255, .2), rgba(165, 130, 255, .18));
-    color: rgba(245, 250, 255, .98);
-    transform: translateY(-1px);
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-tab:focus-visible {
-    outline: 2px solid rgba(128, 224, 255, .95);
-    outline-offset: 3px;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary {
-    display: grid;
-    gap: .55rem;
-    width: min(calc(100% - 2rem), 68rem);
-    margin: .1rem auto 0;
-    padding: clamp(.6rem, 1.8vw, 1rem) clamp(1rem, 3vw, 2.5rem) clamp(.2rem, 1vw, .6rem);
-    text-align: left;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary__eyebrow {
-    margin: 0;
-    color: rgba(128, 224, 255, .88);
-    font-size: clamp(.72rem, 1.4vw, .88rem);
-    font-weight: 780;
-    letter-spacing: .15em;
-    line-height: 1.2;
-    text-transform: uppercase;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary__title {
-    margin: 0;
-    max-width: 42rem;
-    color: rgba(245, 250, 255, .98);
-    font-size: clamp(1.9rem, 4.2vw, 3.6rem);
-    line-height: 1.02;
-    letter-spacing: -.035em;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    grid-template-areas: "depth-stack";
-    align-items: start;
-    width: 100%;
-    min-width: 0;
-    padding: clamp(.35rem, 1vw, .8rem) clamp(1rem, 3vw, 2.5rem) clamp(5.5rem, 9vw, 8rem);
-    perspective: 1100px;
-    perspective-origin: 50% 22%;
-    transform-style: preserve-3d;
-    overflow: clip;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field {
-    grid-area: depth-stack;
-    position: relative;
-    display: block !important;
-    width: min(100%, 68rem) !important;
-    margin-inline: auto;
-    padding: clamp(1rem, 2.4vw, 1.8rem) clamp(1rem, 2.8vw, 2.5rem) clamp(1.4rem, 3vw, 2.4rem) !important;
-    border: 1px solid rgba(128, 224, 255, .14);
-    border-radius: clamp(1.25rem, 2.2vw, 2rem);
-    background: linear-gradient(145deg, rgba(8, 18, 38, .82), rgba(5, 11, 26, .68));
-    box-shadow: 0 2rem 5rem rgba(0, 0, 0, .3);
-    backface-visibility: hidden;
-    transform-origin: 50% 8%;
-    transition: transform 360ms cubic-bezier(.2, .75, .2, 1), opacity 260ms ease, filter 260ms ease;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field .laws-rolodex-field__heading {
-    display: none !important;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field .laws-rolodex-field__browser {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field[data-laws-depth-state="active"] {
-    z-index: 4;
-    opacity: 1;
-    filter: none;
-    pointer-events: auto;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field[data-laws-depth-state="previous"] {
-    z-index: 2;
-    opacity: .2;
-    filter: saturate(.58) brightness(.72);
-    pointer-events: none;
-    transform: translate3d(-7%, 4.4rem, -210px) scale(.88);
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field[data-laws-depth-state="next"] {
-    z-index: 3;
-    opacity: .34;
-    filter: saturate(.72) brightness(.82);
-    pointer-events: none;
-    transform: translate3d(7%, 2.5rem, -115px) scale(.94);
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field:not([data-laws-depth-state="active"]) .laws-rolodex-field__browser {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-@media (max-width: 780px) {
-  html[data-laws-root-rolodex="active"],
-  html[data-laws-root-rolodex="active"] body,
-  html[data-laws-root-rolodex="active"] .laws-shell,
-  html[data-laws-root-rolodex="active"] .laws-estate {
-    box-sizing: border-box !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: 100% !important;
-  }
-  html[data-laws-root-rolodex="active"],
-  html[data-laws-root-rolodex="active"] body {
-    overflow-x: clip !important;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-tab,
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field {
-    transition: none !important;
-  }
-}
-`;
-    document.head.append(style);
+    if (document.querySelector("link[data-laws-responsive-rolodex]")) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/laws/index.rolodex-responsive.css?v=LAWS_ROOT_MOBILE_ROLODEX_20260803A";
+    link.dataset.lawsResponsiveRolodex = "true";
+    document.head.append(link);
   }
 
-  function tabletDepthActive() {
-    return Boolean(depthMedia && depthMedia.matches);
+  function tabletActive() {
+    return Boolean(tabletMedia && tabletMedia.matches);
+  }
+
+  function mobileActive() {
+    return Boolean(mobileMedia && mobileMedia.matches);
   }
 
   function groupCopy(field, index) {
@@ -252,12 +87,8 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     };
   }
 
-  function groupLabel(field, index) {
-    return groupCopy(field, index).eyebrow;
-  }
-
-  function normalizeDepthIndex(index) {
-    const count = depthFields.length;
+  function normalizeIndex(index) {
+    const count = groupFields.length;
     return count ? ((index % count) + count) % count : 0;
   }
 
@@ -274,169 +105,200 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     else field.setAttribute("inert", "");
   }
 
-  function updateDepthSummary(active) {
-    if (!depthSummary || !depthSummaryEyebrow || !depthSummaryTitle) return;
-
-    depthSummary.setAttribute("aria-hidden", String(!active));
-    if (!active || !depthFields.length) return;
-
-    const copy = groupCopy(depthFields[activeDepthIndex], activeDepthIndex);
-    depthSummaryEyebrow.textContent = copy.eyebrow;
-    depthSummaryTitle.textContent = copy.title;
+  function updateSummary(active) {
+    if (!groupSummary || !groupSummaryEyebrow || !groupSummaryTitle) return;
+    groupSummary.setAttribute("aria-hidden", String(!active));
+    if (!active || !groupFields.length) return;
+    const copy = groupCopy(groupFields[activeGroupIndex], activeGroupIndex);
+    groupSummaryEyebrow.textContent = copy.eyebrow;
+    groupSummaryTitle.textContent = copy.title;
   }
 
-  function publishDepthState(source) {
-    globalThis.dispatchEvent(new CustomEvent("LAWS_TABLET_ROLODEX_DEPTH_CHANGED", {
-      detail: Object.freeze({
-        contract: CONTRACT,
-        source,
-        tabletDepthActive: tabletDepthActive(),
-        activeIndex: activeDepthIndex,
-        activeRolodexId: depthFields[activeDepthIndex]?.dataset.rolodexId || "",
-        groupCount: depthFields.length,
-        headingBandActive: Boolean(tabletDepthActive() && depthSummary),
-        navigationAuthority: false,
-        contentAuthority: false
-      })
-    }));
+  function publishState(source) {
+    const detail = Object.freeze({
+      contract: CONTRACT,
+      source,
+      tabletDepthActive: tabletActive(),
+      mobileRolodexActive: mobileActive(),
+      activeIndex: activeGroupIndex,
+      activeRolodexId: groupFields[activeGroupIndex]?.dataset.rolodexId || "",
+      groupCount: groupFields.length,
+      headingBandActive: Boolean((tabletActive() || mobileActive()) && groupSummary),
+      navigationAuthority: false,
+      contentAuthority: false
+    });
+
+    globalThis.dispatchEvent(new CustomEvent("LAWS_ROLODEX_GROUP_CHANGED", { detail }));
+    globalThis.dispatchEvent(new CustomEvent("LAWS_TABLET_ROLODEX_DEPTH_CHANGED", { detail }));
   }
 
-  function applyDepthState(source = "selection", focusTab = false) {
-    const active = tabletDepthActive();
+  function applyGroupState(source = "selection", focusTab = false) {
+    const tablet = tabletActive();
+    const mobile = mobileActive();
+    const grouped = tablet || mobile;
     const section = document.querySelector("[data-laws-root-rolodex-section]");
-    if (!section || !depthFields.length) return;
+    if (!section || !groupFields.length) return;
 
-    section.dataset.lawsTabletDepthAxis = active ? "active" : "inactive";
-    document.documentElement.dataset.lawsTabletRolodexDepthAxis = active ? "active" : "inactive";
+    section.dataset.lawsTabletDepthAxis = tablet ? "active" : "inactive";
+    section.dataset.lawsMobileRolodex = mobile ? "active" : "inactive";
+    document.documentElement.dataset.lawsTabletRolodexDepthAxis = tablet ? "active" : "inactive";
+    document.documentElement.dataset.lawsMobileRolodex = mobile ? "active" : "inactive";
 
-    depthFields.forEach((field, index) => {
-      if (!active) {
-        field.removeAttribute("data-laws-depth-state");
+    groupFields.forEach((field, index) => {
+      field.removeAttribute("data-laws-group-state");
+      field.removeAttribute("data-laws-mobile-state");
+
+      if (tablet) {
+        const relative = (index - activeGroupIndex + groupFields.length) % groupFields.length;
+        const state = relative === 0 ? "active" : relative === 1 ? "next" : "previous";
+        field.dataset.lawsGroupState = state;
+        setFieldInteractive(field, state === "active");
+      } else if (mobile) {
+        const active = index === activeGroupIndex;
+        field.dataset.lawsMobileState = active ? "active" : "inactive";
+        setFieldInteractive(field, active);
+      } else {
         setFieldInteractive(field, true);
-        return;
       }
-
-      const relative = (index - activeDepthIndex + depthFields.length) % depthFields.length;
-      const state = relative === 0 ? "active" : relative === 1 ? "next" : "previous";
-      field.dataset.lawsDepthState = state;
-      setFieldInteractive(field, state === "active");
     });
 
-    depthButtons.forEach((button, index) => {
-      const selected = active && index === activeDepthIndex;
+    groupButtons.forEach((button, index) => {
+      const selected = grouped && index === activeGroupIndex;
       button.setAttribute("aria-selected", String(selected));
-      button.tabIndex = selected || !active ? 0 : -1;
+      button.tabIndex = selected || !grouped ? 0 : -1;
     });
 
-    updateDepthSummary(active);
-
-    if (focusTab && active) {
-      depthButtons[activeDepthIndex]?.focus({ preventScroll: true });
-    }
-
-    publishDepthState(source);
+    updateSummary(grouped);
+    if (focusTab && grouped) groupButtons[activeGroupIndex]?.focus({ preventScroll: true });
+    publishState(source);
   }
 
-  function activateDepthGroup(index, source = "control", focusTab = false) {
-    if (!depthFields.length) return;
-    activeDepthIndex = normalizeDepthIndex(index);
-    applyDepthState(source, focusTab);
+  function activateGroup(index, source = "control", focusTab = false) {
+    if (!groupFields.length) return;
+    activeGroupIndex = normalizeIndex(index);
+    applyGroupState(source, focusTab);
   }
 
-  function buildDepthSwitcher(section) {
-    if (depthSwitcher) return;
+  function buildSwitcher(section) {
+    if (groupSwitcher) return;
 
-    depthSwitcher = document.createElement("div");
-    depthSwitcher.className = "laws-rolodex-depth-switcher";
-    depthSwitcher.setAttribute("role", "tablist");
-    depthSwitcher.setAttribute("aria-label", "Choose a Laws destination group");
+    groupSwitcher = document.createElement("div");
+    groupSwitcher.className = "laws-rolodex-group-switcher";
+    groupSwitcher.setAttribute("role", "tablist");
+    groupSwitcher.setAttribute("aria-label", "Choose a Laws destination group");
 
-    depthButtons = depthFields.map((field, index) => {
+    groupButtons = groupFields.map((field, index) => {
       field.id ||= `laws-rolodex-group-${field.dataset.rolodexId || index + 1}`;
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "laws-rolodex-depth-tab";
-      button.id = `laws-rolodex-depth-tab-${index + 1}`;
+      button.className = "laws-rolodex-group-tab";
+      button.id = `laws-rolodex-group-tab-${index + 1}`;
       button.setAttribute("role", "tab");
       button.setAttribute("aria-controls", field.id);
-      button.textContent = groupLabel(field, index);
+      button.textContent = groupCopy(field, index).eyebrow;
 
-      button.addEventListener("click", () => activateDepthGroup(index, "tab-click"));
+      button.addEventListener("click", () => activateGroup(index, "tab-click"));
       button.addEventListener("keydown", event => {
         if (event.key === "ArrowRight" || event.key === "ArrowDown") {
           event.preventDefault();
-          activateDepthGroup(activeDepthIndex + 1, "tab-arrow-next", true);
+          activateGroup(activeGroupIndex + 1, "tab-arrow-next", true);
         } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
           event.preventDefault();
-          activateDepthGroup(activeDepthIndex - 1, "tab-arrow-previous", true);
+          activateGroup(activeGroupIndex - 1, "tab-arrow-previous", true);
         } else if (event.key === "Home") {
           event.preventDefault();
-          activateDepthGroup(0, "tab-home", true);
+          activateGroup(0, "tab-home", true);
         } else if (event.key === "End") {
           event.preventDefault();
-          activateDepthGroup(depthFields.length - 1, "tab-end", true);
+          activateGroup(groupFields.length - 1, "tab-end", true);
         }
       });
 
-      depthSwitcher.append(button);
+      groupSwitcher.append(button);
       return button;
     });
 
-    section.insertBefore(depthSwitcher, depthStage);
+    section.insertBefore(groupSwitcher, groupStage);
   }
 
-  function buildDepthSummary(section) {
-    if (depthSummary) return;
+  function buildSummary(section) {
+    if (groupSummary) return;
 
-    depthSummary = document.createElement("header");
-    depthSummary.className = "laws-rolodex-depth-summary";
-    depthSummary.dataset.lawsRolodexDepthSummary = "true";
-    depthSummary.setAttribute("aria-live", "polite");
-    depthSummary.setAttribute("aria-atomic", "true");
-    depthSummary.setAttribute("aria-hidden", "true");
+    groupSummary = document.createElement("header");
+    groupSummary.className = "laws-rolodex-group-summary";
+    groupSummary.dataset.lawsRolodexGroupSummary = "true";
+    groupSummary.setAttribute("aria-live", "polite");
+    groupSummary.setAttribute("aria-atomic", "true");
+    groupSummary.setAttribute("aria-hidden", "true");
 
-    depthSummaryEyebrow = document.createElement("p");
-    depthSummaryEyebrow.className = "laws-rolodex-depth-summary__eyebrow";
+    groupSummaryEyebrow = document.createElement("p");
+    groupSummaryEyebrow.className = "laws-rolodex-group-summary__eyebrow";
+    groupSummaryTitle = document.createElement("h3");
+    groupSummaryTitle.className = "laws-rolodex-group-summary__title";
 
-    depthSummaryTitle = document.createElement("h3");
-    depthSummaryTitle.className = "laws-rolodex-depth-summary__title";
-
-    depthSummary.append(depthSummaryEyebrow, depthSummaryTitle);
-    section.insertBefore(depthSummary, depthStage);
+    groupSummary.append(groupSummaryEyebrow, groupSummaryTitle);
+    section.insertBefore(groupSummary, groupStage);
   }
 
-  function mountTabletDepthAxis() {
+  function mountGroupedRolodex() {
     const section = document.querySelector("[data-laws-root-rolodex-section]");
     if (!section) return false;
 
-    const existingStage = section.querySelector(":scope > .laws-rolodex-depth-stage");
+    const existingStage = section.querySelector(":scope > .laws-rolodex-group-stage, :scope > .laws-rolodex-depth-stage");
     if (existingStage) {
-      depthStage = existingStage;
-      depthFields = Array.from(depthStage.querySelectorAll(":scope > .laws-rolodex-field"));
+      groupStage = existingStage;
+      groupStage.className = "laws-rolodex-group-stage";
+      groupFields = Array.from(groupStage.querySelectorAll(":scope > .laws-rolodex-field"));
     } else {
       const fields = Array.from(section.querySelectorAll(":scope > .laws-rolodex-field"));
       if (fields.length !== 3) return false;
-
-      depthStage = document.createElement("div");
-      depthStage.className = "laws-rolodex-depth-stage";
-      depthStage.dataset.lawsRolodexDepthStage = "true";
-      section.insertBefore(depthStage, fields[0]);
-      fields.forEach(field => depthStage.append(field));
-      depthFields = fields;
+      groupStage = document.createElement("div");
+      groupStage.className = "laws-rolodex-group-stage";
+      groupStage.dataset.lawsRolodexGroupStage = "true";
+      section.insertBefore(groupStage, fields[0]);
+      fields.forEach(field => groupStage.append(field));
+      groupFields = fields;
     }
 
-    buildDepthSwitcher(section);
-    buildDepthSummary(section);
+    buildSwitcher(section);
+    buildSummary(section);
 
-    if (!depthMedia && typeof matchMedia === "function") {
-      depthMedia = matchMedia(TABLET_DEPTH_MEDIA);
-      const onChange = () => applyDepthState("viewport-change");
-      if (typeof depthMedia.addEventListener === "function") depthMedia.addEventListener("change", onChange);
-      else if (typeof depthMedia.addListener === "function") depthMedia.addListener(onChange);
+    if (!tabletMedia && typeof matchMedia === "function") {
+      tabletMedia = matchMedia(TABLET_MEDIA);
+      const onTabletChange = () => applyGroupState("tablet-viewport-change");
+      if (typeof tabletMedia.addEventListener === "function") tabletMedia.addEventListener("change", onTabletChange);
+      else if (typeof tabletMedia.addListener === "function") tabletMedia.addListener(onTabletChange);
     }
 
-    applyDepthState("mount");
+    if (!mobileMedia && typeof matchMedia === "function") {
+      mobileMedia = matchMedia(MOBILE_MEDIA);
+      const onMobileChange = () => applyGroupState("mobile-viewport-change");
+      if (typeof mobileMedia.addEventListener === "function") mobileMedia.addEventListener("change", onMobileChange);
+      else if (typeof mobileMedia.addListener === "function") mobileMedia.addListener(onMobileChange);
+    }
+
+    applyGroupState("mount");
     return true;
+  }
+
+  function applyActionCopy() {
+    document.querySelectorAll(".laws-rolodex-card[data-destination-id]").forEach(card => {
+      const id = card.dataset.destinationId;
+      const copy = ACTION_COPY[id];
+      const button = card.querySelector(".laws-rolodex-enter");
+      if (!copy || !button) return;
+      button.textContent = copy.preview;
+      button.setAttribute("aria-label", `${copy.preview}: ${card.querySelector("h4")?.textContent?.trim() || id}`);
+    });
+  }
+
+  function applyExhibitRouteCopy(destinationId) {
+    const copy = ACTION_COPY[destinationId];
+    if (!copy) return;
+    requestAnimationFrame(() => {
+      const route = document.querySelector(".laws-exhibit-route");
+      if (route) route.textContent = copy.route;
+    });
   }
 
   function placeRolodex() {
@@ -457,11 +319,10 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     document.querySelector(".laws-accessibility-note")?.remove();
 
     const footerDescription = document.querySelector(".laws-footer > div > span");
-    if (footerDescription) {
-      footerDescription.textContent = "Choose a direction in the Compass or continue to a destination.";
-    }
+    if (footerDescription) footerDescription.textContent = "Choose a direction in the Compass or continue to a destination.";
 
-    mountTabletDepthAxis();
+    mountGroupedRolodex();
+    applyActionCopy();
 
     document.documentElement.dataset.lawsRolodexPlacement = "full-width-root-flow";
     globalThis.dispatchEvent(new CustomEvent("LAWS_ROLODEX_PLACEMENT_READY", {
@@ -471,9 +332,11 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
         redundantUseStageVisible: false,
         runtimeCustodyNoteVisible: false,
         viewportContained: true,
-        tabletDepthAxisAvailable: Boolean(depthStage && depthFields.length === 3),
-        tabletDepthAxisActive: tabletDepthActive(),
-        tabletHeadingBandAvailable: Boolean(depthSummary),
+        tabletDepthAxisAvailable: Boolean(groupStage && groupFields.length === 3),
+        tabletDepthAxisActive: tabletActive(),
+        mobileGroupedRolodexAvailable: Boolean(groupStage && groupFields.length === 3),
+        mobileGroupedRolodexActive: mobileActive(),
+        headingBandAvailable: Boolean(groupSummary),
         navigationAuthority: false,
         contentAuthority: false
       })
@@ -484,7 +347,10 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
   function initialize() {
     placeRolodex();
     globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY", placeRolodex);
-    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", captureOrigin);
+    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", event => {
+      captureOrigin();
+      applyExhibitRouteCopy(event.detail?.destinationId || "");
+    });
     globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_CLOSED", restoreOrigin);
   }
 

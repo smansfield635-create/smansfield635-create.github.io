@@ -17,11 +17,19 @@ const collisions = detectPairwiseCollisions({ surfaces: { coordinatePanel: box(0
 assert.equal(collisions[0].code, 'PROHIBITED_REGION_COLLISION');
 
 const context = detectTransitionContext(
-  { scrollY: 100, visibility: { title: true, cameraControls: true }, instrumentIdentity: 'A' },
-  { scrollY: 260, visibility: { title: false, cameraControls: false }, instrumentIdentity: 'A' }
+  { scrollY: 100, visibility: { title: true, cameraControls: true }, surfaces: { title: box(20, 20, 300, 60), cameraControls: box(340, 20, 180, 60) }, instrumentIdentity: 'A' },
+  { scrollY: 260, visibility: { title: false, cameraControls: false }, surfaces: { title: box(20, -120, 300, 60), cameraControls: box(340, -120, 180, 60) }, instrumentIdentity: 'A' }
 );
 assert.ok(context.some(item => item.code === 'STATE_TRANSITION_SCROLL_DISPLACEMENT'));
 assert.equal(context.filter(item => item.code === 'STATE_TRANSITION_ORIENTATION_LOST').length, 2);
+assert.ok(context.some(item => item.code === 'STATE_TRANSITION_CONTEXT_LOSS'));
+
+const reflow = detectTransitionContext(
+  { scrollY: 0, visibility: { title: true, cameraControls: true }, surfaces: { title: box(20, 20, 300, 60), cameraControls: box(340, 20, 180, 60) }, instrumentIdentity: 'A' },
+  { scrollY: 0, visibility: { title: true, cameraControls: true }, surfaces: { title: box(20, 140, 300, 60), cameraControls: box(340, 140, 180, 60) }, instrumentIdentity: 'A' }
+);
+assert.equal(reflow.filter(item => item.code === 'STATE_TRANSITION_ORIENTATION_DISPLACEMENT').length, 2);
+assert.ok(reflow.some(item => item.code === 'STATE_TRANSITION_CONTEXT_LOSS'));
 
 const vertical = detectVerticalBudget({
   viewport: { width: 1180, height: 820 },
@@ -45,4 +53,4 @@ assert.equal(validateHumanFactorsReceipt({ reviewer: { id: 'r1', type: 'HUMAN' }
   visualWeightHierarchy: 'PASS', methodsIdentity: 'PASS', visualRhythm: 'PASS', perceptualEffort: 'PASS', cameraRoleClarity: 'PASS', mobileContextContinuity: 'PASS'
 } }).status, 'PASS_HUMAN_FACTORS');
 
-console.log(JSON.stringify({ contract: 'METHODS_NATIVE_VISUAL_CONFORMANCE_EXTENSION_v1', detectorTests: 12, result: 'PASS' }, null, 2));
+console.log(JSON.stringify({ contract: 'METHODS_NATIVE_VISUAL_CONFORMANCE_EXTENSION_v1', detectorTests: 15, result: 'PASS' }, null, 2));

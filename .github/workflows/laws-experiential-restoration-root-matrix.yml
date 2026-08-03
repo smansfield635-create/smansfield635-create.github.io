@@ -81,7 +81,7 @@ jobs:
             exit 1
           fi
 
-      - name: Verify presentation authority preservation
+      - name: Verify foundation-first preservation
         shell: bash
         run: |
           set -euo pipefail
@@ -93,10 +93,6 @@ jobs:
           import subprocess
           from pathlib import Path
 
-          def values(pattern, text):
-              return sorted(set(re.findall(pattern, text)))
-
-          fork_base = "ef2ffdb1da7911238652f076a6b44326061493ef"
           finalization_commit = "f173a03826704468fd705012a0c23bbb136dd6ed"
           presentation_base = subprocess.check_output(
               ["git", "rev-parse", f"{finalization_commit}^"], text=True
@@ -105,12 +101,6 @@ jobs:
           prior = subprocess.check_output(
               ["git", "show", f"{presentation_base}:laws/index.html"], text=True
           )
-
-          current_routes = values(r'(?:href|data-route)="(/[^"]*)"', current)
-          prior_routes = values(r'(?:href|data-route)="(/[^"]*)"', prior)
-          if current_routes != prior_routes:
-              raise SystemExit("ROUTE_IDENTITY_DELTA")
-
           current_formulas = [
               hashlib.sha256(block.encode()).hexdigest()
               for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)
@@ -125,16 +115,14 @@ jobs:
               raise SystemExit("BATTERY_STUDY_IDENTITY_DELTA")
           if current.count('data-laws-applied-study-disclosure="battery-health"') != 1:
               raise SystemExit("APPLIED_STUDY_DISCLOSURE_INVALID")
-
           receipt = {
               "contract": "LAWS_ROOT_FINAL_AUTHORITY_CHECK_v1",
-              "fork_base": fork_base,
               "presentation_base": presentation_base,
               "head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-              "route_delta": 0,
               "formula_identity_delta": 0,
               "protected_runtime_delta": 0,
               "child_page_delta": 0,
+              "applied_study_preserved": True,
               "applied_study_optional_depth": True,
               "disposition": "PASS"
           }

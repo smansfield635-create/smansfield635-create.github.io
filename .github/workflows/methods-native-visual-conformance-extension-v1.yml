@@ -1,0 +1,123 @@
+name: Methods Native Visual Conformance Extension v1
+
+on:
+  push:
+    branches:
+      - verification/methods-native-visual-conformance-extension-v1-001
+  pull_request:
+    branches:
+      - candidate/methods-native-visual-architecture-v1-001
+    paths:
+      - '.github/workflows/methods-native-visual-conformance-extension-v1.yml'
+      - 'verification/methods-native-visual-conformance-extension-v1/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-conformance-gap-closure:
+    runs-on: ubuntu-24.04
+    env:
+      CANDIDATE_HEAD: 9b7e241c56b9b5d189df7a93705186406c607867
+      METHODS_ORIGIN: http://127.0.0.1:4173
+      OUT_DIR: methods-native-visual-conformance-extension-v1-evidence
+    steps:
+      - name: Checkout exact visual conformance extension head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Preserve candidate and public boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --exit-code "$CANDIDATE_HEAD" HEAD -- verification/methods-native-visual-architecture-v1/
+          git diff --exit-code "$CANDIDATE_HEAD" HEAD -- laws/research/methods-and-models/
+          while IFS= read -r changed; do
+            case "$changed" in
+              .github/workflows/methods-native-visual-conformance-extension-v1.yml) ;;
+              verification/methods-native-visual-conformance-extension-v1/*) ;;
+              *) echo "UNAUTHORIZED_CHANGED_PATH:$changed"; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$CANDIDATE_HEAD" HEAD)
+          git diff --name-only "$CANDIDATE_HEAD" HEAD | sort | tee exact-changed-paths.txt
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate extension source and detector fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check verification/methods-native-visual-conformance-extension-v1/detectors.mjs
+          node --check verification/methods-native-visual-conformance-extension-v1/detector-tests.mjs
+          node --check verification/methods-native-visual-conformance-extension-v1/runner.mjs
+          node --check verification/methods-native-visual-conformance-extension-v1/known-gap-recovery.mjs
+          node verification/methods-native-visual-conformance-extension-v1/detector-tests.mjs | tee detector-tests.log
+
+      - name: Start exact candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-visual-conformance-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/verification/methods-native-visual-architecture-v1/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/methods-visual-conformance-server.log
+          exit 1
+
+      - name: Execute extended visual conformance instrumentation
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          set -euo pipefail
+          node verification/methods-native-visual-conformance-extension-v1/runner.mjs | tee visual-conformance-extension.log
+
+      - name: Prove recovery of the known zero-finding miss
+        shell: bash
+        run: |
+          set -euo pipefail
+          node verification/methods-native-visual-conformance-extension-v1/known-gap-recovery.mjs | tee known-gap-recovery.log
+
+      - name: Package exact evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp exact-changed-paths.txt "$OUT_DIR/"
+          cp detector-tests.log "$OUT_DIR/"
+          cp visual-conformance-extension.log "$OUT_DIR/"
+          cp known-gap-recovery.log "$OUT_DIR/"
+          cp /tmp/methods-visual-conformance-server.log "$OUT_DIR/server.log" || true
+          cp verification/methods-native-visual-conformance-extension-v1/*.mjs "$OUT_DIR/"
+          find "$OUT_DIR" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$OUT_DIR/SHA256SUMS"
+          tar -czf methods-native-visual-conformance-extension-v1-evidence.tar.gz "$OUT_DIR"
+          sha256sum methods-native-visual-conformance-extension-v1-evidence.tar.gz > methods-native-visual-conformance-extension-v1-evidence.tar.gz.sha256
+
+      - name: Upload visual conformance gap-closure evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-native-visual-conformance-extension-v1-evidence
+          path: |
+            methods-native-visual-conformance-extension-v1-evidence/
+            methods-native-visual-conformance-extension-v1-evidence.tar.gz
+            methods-native-visual-conformance-extension-v1-evidence.tar.gz.sha256
+            exact-changed-paths.txt
+            detector-tests.log
+            visual-conformance-extension.log
+            known-gap-recovery.log
+          retention-days: 30

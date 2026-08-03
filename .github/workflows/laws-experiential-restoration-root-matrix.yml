@@ -98,6 +98,9 @@ jobs:
           import subprocess
           from pathlib import Path
 
+          def values(pattern, text):
+              return sorted(set(re.findall(pattern, text)))
+
           base = "ef2ffdb1da7911238652f076a6b44326061493ef"
           current = Path("laws/index.html").read_text(encoding="utf-8")
           prior = subprocess.check_output(["git", "show", f"{base}:laws/index.html"], text=True)
@@ -107,13 +110,15 @@ jobs:
           current_normalized = current_normalized.replace(
               ' data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"', ""
           ).replace(
+              ' data-laws-foundation-first-applied-study="true"', ""
+          ).replace(
               'data-laws-first-rail-architecture="integrated-hero-v1"',
               'data-laws-first-rail-architecture="persistent-compass-zone-v2"'
           ).replace(
               'data-laws-tablet-hero-reflow="split-composition-until-780px"',
               'data-laws-tablet-hero-reflow="single-column-at-1100px"'
           ).replace(
-              'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803A',
+              'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803B',
               'LAWS_FIRST_RAIL_ARCHITECTURE_20260802B'
           )
           presentation_only_delta = current_normalized != prior_normalized
@@ -127,8 +132,6 @@ jobs:
           prior_formulas = [hashlib.sha256(block.encode()).hexdigest() for block in re.findall(r'<pre><code>(.*?)</code></pre>', prior, re.S)]
           if current_formulas != prior_formulas:
               raise SystemExit("FORMULA_IDENTITY_DELTA")
-          def values(pattern, text):
-              return sorted(set(re.findall(pattern, text)))
           receipt = {
               "contract": "LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_AUTHORITY_INVARIANTS_v1",
               "base": base,
@@ -142,10 +145,7 @@ jobs:
               "protected_runtime_delta": 0,
               "content_ids": values(r'data-content-id="([^"]+)"', current),
               "routes": values(r'(?:href|data-route)="(/[^"]*)"', current),
-              "formula_block_sha256": [
-                  hashlib.sha256(block.encode()).hexdigest()
-                  for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)
-              ],
+              "formula_block_sha256": current_formulas,
               "presentation_only_html_delta": presentation_only_delta,
               "applied_study_optional_depth": True,
               "disposition": "PASS"

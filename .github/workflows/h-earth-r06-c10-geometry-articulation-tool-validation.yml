@@ -1,0 +1,76 @@
+name: H-Earth R06 C10 C4 Isolated Bounded Finalizer
+
+on:
+  push:
+    branches:
+      - role1/r06-c10-c4-portable-harness-002
+    paths:
+      - .github/workflows/h-earth-r06-c10-geometry-articulation-tool-validation.yml
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: h-earth-r06-c10-c4-isolated-finalizer-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact C3 construction base
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute exact receipt-backed C4 finalizer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > /tmp/finalizer.gz.b64
+          for sha in \
+            229f953a95c18f5dea63a9953d85c2b2c40117bb \
+            48226ffe54276c2f918b1908205bf5864bc816e4; do
+            gh api "repos/smansfield635-create/smansfield635-create.github.io/git/blobs/${sha}" --jq .content \
+              | tr -d '\r\n' | base64 --decode >> /tmp/finalizer.gz.b64
+          done
+          base64 --decode /tmp/finalizer.gz.b64 | gzip --decompress > /tmp/finalize-c4.sh
+          test "$(sha256sum /tmp/finalize-c4.sh | awk '{print $1}')" = '3afcd13176641b3e81c0ae5099ae7e0f16a493c73baa7d329b7ff30be478a177'
+          sed -i 's/role1\/r06-c10-c4-portable-harness-001/role1\/r06-c10-c4-portable-harness-002/g' /tmp/finalize-c4.sh
+          bash /tmp/finalize-c4.sh
+
+      - name: Publish success locator
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_R06_C10_C4_FINALIZER_002_PASS:${GITHUB_RUN_ID}:${FINAL_HEAD}"
+
+      - name: Publish failure locator
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_R06_C10_C4_FINALIZER_002_FAIL:${GITHUB_RUN_ID}:${GITHUB_SHA}"
+
+      - name: Upload bounded nonproduct evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-c4-finalizer-002-${{ github.run_id }}
+          path: |
+            /tmp/r06-c10-run-1
+            /tmp/r06-c10-run-2
+            /tmp/r06-c10-role-3
+            /tmp/r06-c10-failover
+            /tmp/r06-c10-missing-input
+            h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.receipt.json
+          if-no-files-found: warn
+          retention-days: 30

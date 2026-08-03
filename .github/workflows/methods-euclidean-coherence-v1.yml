@@ -1,6 +1,12 @@
 name: Methods Euclidean Nonproduct Coherence Pass v1
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "verification/methods-euclidean-coherence-v1/**"
+      - ".github/workflows/methods-euclidean-coherence-v1.yml"
   push:
     branches:
       - verification/methods-euclidean-coherence-v1-001

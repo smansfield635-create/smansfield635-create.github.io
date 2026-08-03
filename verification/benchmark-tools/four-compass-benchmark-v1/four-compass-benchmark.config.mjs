@@ -141,3 +141,5 @@ export function validateAuthorityConfig() {
   const failures = Object.entries(assertions).filter(([, pass]) => !pass).map(([id]) => id);
   return Object.freeze({ assertions: Object.freeze(assertions), failures: Object.freeze(failures) });
 }
+
+// Exact-head browser regression trigger for the tablet Rolodex depth-axis candidate.

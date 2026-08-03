@@ -1,0 +1,73 @@
+name: H-Earth C2-R1 Camera Height Visual Lab Delivery Check
+on:
+  push:
+    branches: [experiment/h-earth-c2-r1-camera-height-visual-lab-001]
+    paths: [.github/workflows/h-earth-c2-r1-camera-height-visual-lab-delivery-check.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  browser-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install Chromium browser
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Execute exact preview in Chromium
+        env:
+          EXACT_HEAD: 8e404ec2580d4a1f99e7997e580f71d92a8c4fd6
+          EXACT_PATH: preview/h-earth/c2-r1/camera-height-visual-lab-001/index.html
+        run: |
+          cat > check.cjs <<'NODE'
+          const fs=require('fs'); const {chromium}=require('playwright');
+          const h=process.env.EXACT_HEAD,p=process.env.EXACT_PATH,o='smansfield635-create',r='smansfield635-create.github.io';
+          const cells=[
+            ['RAWCDN_GITHACK_IMMUTABLE_COMMIT',`https://rawcdn.githack.com/${o}/${r}/${h}/${p}`],
+            ['JSDELIVR_GITHUB_IMMUTABLE_COMMIT',`https://cdn.jsdelivr.net/gh/${o}/${r}@${h}/${p}`],
+            ['STATICALY_GITHUB_IMMUTABLE_COMMIT',`https://cdn.statically.io/gh/${o}/${r}/${h}/${p}`]
+          ];
+          const close=(a,b)=>Math.abs(Number(a)-Number(b))<1e-6;
+          async function wait(page){await page.waitForFunction(()=>window.H_EARTH_CAMERA_HEIGHT_VISUAL_LAB&&document.querySelector('.h-earth-camera-height-lab')&&document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady==='true',{timeout:150000});}
+          async function snap(page){return page.evaluate(()=>{const lab=window.H_EARTH_CAMERA_HEIGHT_VISUAL_LAB,api=window.H_EARTH_RUN8E_PUBLIC_ROUTE,s=api?.getIntakeReceipt?.()?.currentNavigationState,c=document.getElementById('h-earth-functional-landscape-canvas'),q=document.getElementById('h-earth-camera-height-range');return{href:location.href,lab,state:s,ready:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady,error:document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eError,panel:!!document.querySelector('.h-earth-camera-height-lab'),webgl:!!c?.getContext?.('webgl2'),range:q?{min:+q.min,max:+q.max,step:+q.step,value:+q.value}:null,presets:[...document.querySelectorAll('#h-earth-camera-height-presets button')].map(x=>+x.textContent),status:document.getElementById('h-earth-camera-height-status')?.textContent};});}
+          function validate(x,height){const s=x.state,l=x.lab,f=[];if(!x.panel)f.push('PANEL_MISSING');if(!x.webgl)f.push('WEBGL2_MISSING');if(x.ready!=='true'||x.error==='true')f.push('RUNTIME_UNHEALTHY');if(!l?.previewOnly)f.push('LAB_API_MISSING');if(!s)f.push('STATE_MISSING');if(!close(l?.selectedEyeHeight,height))f.push('SELECTED_HEIGHT');if(!close(s?.clearance,height))f.push('CLEARANCE');if(!close(s?.position?.x,0))f.push('X');if(!close(s?.position?.z,-96))f.push('Z');if(!close(s?.yawDegrees,0))f.push('YAW');if(!close(s?.pitchDegrees,8))f.push('PITCH');if(!close(s?.verticalFovDegrees,56))f.push('FOV');if(!close(l?.currentNavigationState?.position?.y,s?.position?.y))f.push('OBSERVED_Y');if(l?.defaultProductStateMutated!==false)f.push('DEFAULT_MUTATION');if(!x.range||!close(x.range.min,2.25)||!close(x.range.max,8.25)||!close(x.range.step,.25))f.push('RANGE');if(JSON.stringify(x.presets)!==JSON.stringify([2.25,3.75,5.25,6.75,8.25]))f.push('PRESETS');return f;}
+          (async()=>{const b=await chromium.launch({headless:true,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']});const results=[];let pass=null;
+          for(const [method,base] of cells){const ctx=await b.newContext({viewport:{width:1440,height:900}}),page=await ctx.newPage(),ce=[],pe=[],rf=[];page.on('console',m=>{if(m.type()==='error')ce.push(m.text())});page.on('pageerror',e=>pe.push(e.stack||e.message));page.on('requestfailed',q=>rf.push({url:q.url(),error:q.failure()?.errorText}));const item={method,base,attempts:[],consoleErrors:ce,pageErrors:pe,requestFailures:rf};try{
+          for(const [type,height] of [['BASELINE_QUERY',2.25],['QUERY_PARAMETER',5.25]]){const url=`${base}?cameraHeight=${height.toFixed(2)}`,res=await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});await wait(page);const x=await snap(page),fail=validate(x,height);item.attempts.push({type,url,httpStatus:res?.status(),snapshot:x,failures:fail});if(fail.length)throw Error(`${type}:${fail}`);}
+          await page.locator('#h-earth-camera-height-presets button',{hasText:'8.25'}).click();await page.waitForURL(u=>u.searchParams.get('cameraHeight')==='8.25');await wait(page);let x=await snap(page),fail=validate(x,8.25);item.attempts.push({type:'PRESET_BUTTON',url:page.url(),snapshot:x,failures:fail});if(fail.length)throw Error(`PRESET:${fail}`);
+          await page.locator('#h-earth-camera-height-range').evaluate(e=>{e.value='6.75';e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}))});await page.waitForURL(u=>u.searchParams.get('cameraHeight')==='6.75');await wait(page);x=await snap(page);fail=validate(x,6.75);item.attempts.push({type:'RANGE_CONTROL',url:page.url(),snapshot:x,failures:fail});if(fail.length)throw Error(`RANGE:${fail}`);
+          const bc=ce.filter(t=>!/favicon|Failed to load resource.*404/i.test(t)),br=rf.filter(e=>!/favicon/i.test(e.url));if(pe.length||bc.length||br.length)throw Error(`RUNTIME_FAILURES:${JSON.stringify({pe,bc,br})}`);await page.screenshot({path:'camera-height-visual-lab-browser.png',fullPage:true});item.result='PASS';item.verifiedUserAccessUrl=`${base}?cameraHeight=5.25`;pass=item;results.push(item);await ctx.close();break;
+          }catch(e){item.result='FAIL';item.error=e.stack||String(e);results.push(item);await ctx.close();}}
+          await b.close();const receipt={receiptType:'H_EARTH_C2_R1_CAMERA_HEIGHT_VISUAL_LAB_BROWSER_DELIVERY_RECEIPT_v1',operationId:'H_EARTH_C2_R1_CAMERA_HEIGHT_VISUAL_LAB_DELIVERY_CORRECTION_001',exactPreviewHead:h,exactPreviewPath:p,browser:'PLAYWRIGHT_CHROMIUM_HEADLESS_1440x900_SWIFTSHADER_WEBGL',result:pass?'CAMERA_HEIGHT_VISUAL_LAB_USER_ACCESS_READY':'BLOCKED_WITH_ONE_EXACT_VISUAL_LAB_DELIVERY_CONTRADICTION',verifiedUserAccessUrl:pass?.verifiedUserAccessUrl??null,deliveryMethod:pass?.method??null,candidates:results,unauthorizedMutationCount:0,timestamp:new Date().toISOString()};fs.writeFileSync('camera-height-visual-lab-delivery-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(!pass)process.exit(1);})().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          node check.cjs
+      - name: Upload browser receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-camera-height-visual-lab-delivery-receipt
+          path: |
+            camera-height-visual-lab-delivery-receipt.json
+            camera-height-visual-lab-browser.png
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Publish browser receipt to PR 518
+        if: always()
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          {
+            echo '## Camera-height visual lab browser delivery receipt'
+            echo
+            echo 'Workflow run: `${{ github.run_id }}`'
+            echo
+            if [ -f camera-height-visual-lab-delivery-receipt.json ]; then
+              echo '```json'; cat camera-height-visual-lab-delivery-receipt.json; echo '```'
+            else
+              echo '`BROWSER_RECEIPT_FILE_MISSING`'
+            fi
+          } >/tmp/comment.md
+          gh pr comment 518 --repo smansfield635-create/smansfield635-create.github.io --body-file /tmp/comment.md

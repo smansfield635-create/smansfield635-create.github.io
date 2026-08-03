@@ -178,7 +178,7 @@ async function verifyProfile(profile, viewport) {
       return { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
     });
     if (Math.abs(afterDrag.left - beforeDrag.left) < 20 && Math.abs(afterDrag.top - beforeDrag.top) < 20) failures.push("dock_drag");
-    if (afterDrag.left < 7 || afterDrag.top < 7 || afterDrag.right > window.innerWidth + 1 || afterDrag.bottom > window.innerHeight + 1) failures.push("dock_drag_bounds");
+    if (afterDrag.left < 7 || afterDrag.top < 7 || afterDrag.right > viewport.width + 1 || afterDrag.bottom > viewport.height + 1) failures.push("dock_drag_bounds");
   } else if (collapsed.handleDisplay !== "none") {
     failures.push("mobile_drag_handle_visible");
   }

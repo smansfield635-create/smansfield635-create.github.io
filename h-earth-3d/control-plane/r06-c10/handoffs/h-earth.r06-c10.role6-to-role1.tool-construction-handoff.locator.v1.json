@@ -1,7 +1,7 @@
 {
   "schema": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_TOOL_CONSTRUCTION_HANDOFF_LOCATOR_v1",
   "locatorId": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_TOOL_CONSTRUCTION_HANDOFF_LOCATOR_v1",
-  "status": "ACTIVE_READY_FOR_ROLE_1_ASSUMPTION",
+  "status": "ACTIVE_READY_FOR_ROLE_1_C1_RESUMPTION_AFTER_ROLE_4_CUSTODY_CORRECTION",
   "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "locatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
@@ -24,7 +24,26 @@
     "locatorCommit": "9b1f5434be67ca8ec8906bb47370f4f52ad36e73",
     "locatorBlob": "45075546f3b5425d144d1c87ae7e764cc3d39db9",
     "archiveDriveFileId": "1bp5gDl41Oje87AlwjKmyhgm_TBgli_wR",
-    "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb"
+    "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+    "archiveByteCount": 179997,
+    "archiveMemberCount": 39,
+    "originalCoreManifestMemberCount": 35
+  },
+  "custodyCorrection": {
+    "status": "ACTIVE_REQUIRED_FOR_ROLE_1_C1_RESUMPTION",
+    "operationId": "H_EARTH_R06_C10_ROLE_1_C1_CUSTODY_CORRECTION_001",
+    "locatorPath": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+    "locatorCommit": "e7402f9ffd3f1733723de844d9a21f1d873eff8c",
+    "locatorBlob": "f046e7223cfb8291a5620143a58201a02e307865",
+    "correctionArchiveDriveFileId": "1NNNCT8liggR4MAtYvLr7zM12QMdlxUGl",
+    "correctionArchiveSha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8",
+    "correctionArchiveByteCount": 5637,
+    "correctionArchiveMemberCount": 4,
+    "detachedCompleteManifestSha256": "129466ffc161a25e9c9b1e7d2d6594b92408fee6a9f36155c75111ece7f186db",
+    "detachedManifestCoverageCount": 39,
+    "authoritativeReplacementLaw": "VERIFY_35_CORE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT_AND_VERIFY_ALL_39_MEMBERS_AGAINST_THE_DETACHED_COMPLETE_MEMBER_MANIFEST",
+    "previouslyPassedC1ChecksReusable": true,
+    "toolConstructionAfterC1": "NOT_AUTHORIZED_BY_THIS_CORRECTION"
   },
   "exactBaseline": {
     "acceptedLiveBaselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
@@ -35,15 +54,21 @@
     "sourceRole": "ROLE_6_INDEPENDENT_RESEARCH_CHAMBER_AND_CROSS_SYSTEM_TROUBLESHOOTING_AUTHORITY",
     "destinationRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
     "destinationOperation": "H_EARTH_R06_C10_PRE_ROUND_NONPRODUCT_TOOL_CONSTRUCTION_001",
-    "requiredRole1Result": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
+    "currentAuthorizedCheckpoint": "R1_C1_CUSTODY_AND_BASELINE_ADMISSION_RESUMPTION_ONLY",
+    "currentRequiredResult": "R06_C10_ROLE_1_C1_PASS_CLOSED",
+    "requiredRole1FinalResult": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
     "requiredRole1PackageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
-    "nextRoleAfterSuccessfulReturn": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
+    "nextRoleAfterSuccessfulFinalReturn": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
     "governanceCopy": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY"
   },
   "role1CoreDuties": [
-    "VERIFY_PREDECESSOR_LOCATOR_ARCHIVE_AND_MEMBER_HASHES",
+    "VERIFY_HANDOFF_ARCHIVE_AND_EIGHT_MEMBER_MANIFEST",
+    "VERIFY_ROLE_6_SOURCE_ARCHIVE_OUTER_IDENTITY",
+    "VERIFY_35_CORE_ROLE_6_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT",
+    "VERIFY_ALL_39_ROLE_6_MEMBERS_AGAINST_ROLE_4_DETACHED_COMPLETE_MEMBER_MANIFEST",
     "ISSUE_ROLE_1_PACKAGE_ASSUMPTION_RECEIPT",
-    "CONSTRUCT_THE_EIGHT_DECLARED_NONPRODUCT_TOOLS",
+    "CLOSE_R1_C1_AND_STOP_PENDING_NEXT_CHECKPOINT_AUTHORIZATION",
+    "AFTER_LATER_AUTHORIZATION_CONSTRUCT_THE_EIGHT_DECLARED_NONPRODUCT_TOOLS",
     "IMPLEMENT_ALL_28_FROZEN_HARNESS_ASSERTIONS",
     "RUN_STATIC_BASELINE_AND_CONFORMANCE_FIXTURES",
     "PROVE_ZERO_PRODUCT_PATH_MUTATION",
@@ -77,18 +102,23 @@
     "sha256Role": "BYTE_IDENTITY_AUTHORITY",
     "requiredRole1SuccessorLocatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json",
     "requiredPredecessorLocatorUpdatePath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
+    "custodyCorrectionLocatorPath": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
     "controlPlaneRoot": "h-earth-3d/control-plane/",
     "laneRoot": "h-earth-3d/control-plane/r06-c10/"
   },
   "recoveryInstructions": [
     "SEARCH_GITHUB_USING_ANY_SEARCH_ALIAS",
     "OPEN_THIS_HANDOFF_LOCATOR",
+    "OPEN_THE_ROLE_4_CUSTODY_CORRECTION_LOCATOR",
     "DOWNLOAD_AND_VERIFY_THE_HANDOFF_ARCHIVE",
     "FOLLOW_02_ROLE_1_EXACT_INPUT_AUTHORITY_AND_LOAD_ORDER_V1_JSON",
     "DOWNLOAD_AND_VERIFY_THE_COMPLETE_ROLE_6_PACKAGE",
+    "DOWNLOAD_AND_VERIFY_THE_ROLE_4_CUSTODY_CORRECTION_ARCHIVE",
+    "VERIFY_35_CORE_MEMBERS_AGAINST_THE_ORIGINAL_INTERNAL_MANIFEST",
+    "VERIFY_ALL_39_MEMBERS_AGAINST_THE_DETACHED_COMPLETE_MANIFEST",
     "ISSUE_ROLE_1_ASSUMPTION_RECEIPT",
     "DO_NOT_INFER_MISSING_OR_CONTRADICTORY_VALUES",
-    "RETURN_ANY_AUTHORITY_GAP_TO_ROLE_4"
+    "RETURN_ANY_NEW_AUTHORITY_GAP_TO_ROLE_4"
   ],
   "searchAliases": [
     "H-Earth R06 C10 Role 1",
@@ -99,10 +129,14 @@
     "bounded successor terrain field compiler",
     "geometry articulation verification harness",
     "saddle valley basin tool",
-    "H-Earth pre-round geometry tool"
+    "H-Earth pre-round geometry tool",
+    "R06 C10 custody correction",
+    "detached complete member manifest"
   ],
   "supersession": {
     "supersedes": null,
-    "supersededBy": null
+    "supersededBy": null,
+    "custodyInstructionSuperseded": "VERIFY_ALL_ARCHIVE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT",
+    "custodyInstructionReplacement": "VERIFY_35_CORE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT_AND_VERIFY_ALL_39_MEMBERS_AGAINST_THE_DETACHED_COMPLETE_MEMBER_MANIFEST"
   }
 }

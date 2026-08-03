@@ -66,6 +66,7 @@ jobs:
           root="$RUNNER_TEMP/h-earth-c2-r1-role3-plus8-camera-evidence"
           runtime="$RUNNER_TEMP/role3-plus8-runtime"
           mkdir -p "$root/frames" "$root/input-evidence" "$root/diagnostics" "$runtime"
+          printf '%s\n' "$root" > "$RUNNER_TEMP/role3-plus8-evidence-root"
           cd "$runtime"
           npm init -y >/dev/null
           npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"

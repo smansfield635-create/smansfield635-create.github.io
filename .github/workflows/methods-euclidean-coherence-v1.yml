@@ -20,7 +20,7 @@ permissions:
 
 concurrency:
   group: methods-state-reach-correction-v1-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 env:
   EXPECTED_SOURCE_HEAD: 66a2105e96e84c5b482f783010779f87a90a28ee

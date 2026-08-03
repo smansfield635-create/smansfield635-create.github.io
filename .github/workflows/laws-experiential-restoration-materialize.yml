@@ -1,4 +1,4 @@
-name: Laws Experiential Restoration Verifier Telemetry
+name: Laws Experiential Restoration Interaction Diagnostic
 
 on:
   push:
@@ -6,127 +6,178 @@ on:
       - agent/laws-experiential-architecture-restoration-001
     paths:
       - '.github/workflows/laws-experiential-restoration-materialize.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/laws-experiential-restoration-materialize.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: laws-experiential-restoration-verifier-telemetry
-  cancel-in-progress: false
+  group: laws-experiential-restoration-interaction-diagnostic-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 env:
-  RESTORATION_BRANCH: agent/laws-experiential-architecture-restoration-001
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
   EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
+  BASE_URL: http://127.0.0.1:4173
 
 jobs:
-  instrument-verifier:
-    if: github.ref_name == 'agent/laws-experiential-architecture-restoration-001'
+  interaction-diagnostic:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
-      - name: Check out bounded restoration branch
+      - name: Check out exact restoration head
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.RESTORATION_BRANCH }}
+          ref: ${{ env.EXECUTION_COMMIT }}
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Lock current main and branch ancestry
+      - name: Lock exact checkout and main base
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin main "$RESTORATION_BRANCH"
+          test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+          git fetch origin main
           test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
           test "$(git merge-base origin/main HEAD)" = "$EXPECTED_MAIN_BASE"
 
-      - name: Add route-by-route interaction telemetry
+      - name: Install pinned browser verifier
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start exact candidate server
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-interaction-diagnostic-server.log 2>&1 &
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/laws-interaction-diagnostic-server.log
+          exit 1
 
-          path = Path("tools/laws-experiential-restoration-root-matrix.mjs")
-          text = path.read_text(encoding="utf-8")
-
-          replacements = [
-              (
-                  'async function activateAuthority(page, direction, input) {\n  await returnToConstellation(page);',
-                  'async function activateAuthority(page, direction, input) {\n  console.log(JSON.stringify({ stage: "authority-start", direction, input }));\n  await returnToConstellation(page);',
-              ),
-              (
-                  '      assert.ok(hit, `No unblocked physical hit surface for ${direction} (${input}).`);\n      if (input === "touch") {',
-                  '      assert.ok(hit, `No unblocked physical hit surface for ${direction} (${input}).`);\n      console.log(JSON.stringify({ stage: "authority-hit", direction, input, hit }));\n      if (input === "touch") {',
-              ),
-              (
-                  '''  await page.waitForFunction(nextDirection => {
-    const root = document.querySelector("[data-laws-root]");
-    return root?.dataset.lawsControllerState === "CLUSTER_OPEN" &&
-      document.documentElement.dataset.lawsExperienceDirection === nextDirection;
-  }, direction, { timeout: 15000 });''',
-                  '''  try {
-    await page.waitForFunction(nextDirection => {
-      const root = document.querySelector("[data-laws-root]");
-      return root?.dataset.lawsControllerState === "CLUSTER_OPEN" &&
-        document.documentElement.dataset.lawsExperienceDirection === nextDirection;
-    }, direction, { timeout: 15000 });
-  } catch (error) {
-    const debug = await page.evaluate(nextDirection => {
-      const root = document.querySelector("[data-laws-root]");
-      const projected = document.querySelector(
-        `[data-laws-projected-category-label="${nextDirection}"]`
-      );
-      const semantic = document.querySelector(
-        `[data-laws-category][data-direction="${nextDirection}"]`
-      );
-      return {
-        requestedDirection: nextDirection,
-        controllerState: root?.dataset.lawsControllerState || "",
-        activeDirection: root?.dataset.lawsActiveDirection || "",
-        activeCategory: root?.dataset.lawsActiveCategory || "",
-        experienceDirection: document.documentElement.dataset.lawsExperienceDirection || "",
-        spatialPrimaryId: root?.dataset.lawsSpatialPrimaryId || "",
-        visibleLabelId: root?.dataset.lawsVisibleOuterAuthorityLabelId || "",
-        projectedHidden: projected?.hidden ?? null,
-        projectedAriaHidden: projected?.getAttribute("aria-hidden") || "",
-        projectedPointerEvents: projected ? getComputedStyle(projected).pointerEvents : "",
-        semanticPointerEvents: semantic ? getComputedStyle(semantic).pointerEvents : "",
-        interactionReceipt: globalThis.DGB_LAWS_INTERACTIONS?.getReceipt?.() || null,
-        controllerFrame: globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null
-      };
-    }, direction);
-    console.error(JSON.stringify({ stage: "authority-timeout", direction, input, debug }, null, 2));
-    throw error;
-  }''',
-              ),
-          ]
-
-          for old, new in replacements:
-              count = text.count(old)
-              if count != 1:
-                  raise SystemExit(f"TELEMETRY_ANCHOR_COUNT={count}: {old[:80]!r}")
-              text = text.replace(old, new, 1)
-
-          path.write_text(text, encoding="utf-8")
-          PY
-
-      - name: Verify bounded verifier-only scope
+      - name: Trace live authority activation surfaces
         shell: bash
         run: |
           set -euo pipefail
-          mapfile -t changed < <(git diff --name-only | sort)
-          test "${#changed[@]}" -eq 1
-          test "${changed[0]}" = "tools/laws-experiential-restoration-root-matrix.mjs"
-          node --check tools/laws-experiential-restoration-root-matrix.mjs
-          git diff --check
+          cat > /tmp/laws-interaction-diagnostic.mjs <<'JS'
+          import { chromium } from "playwright";
 
-      - name: Commit verifier telemetry
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tools/laws-experiential-restoration-root-matrix.mjs
-          git commit -m "Trace Laws physical authority selection"
-          git push origin "HEAD:$RESTORATION_BRANCH"
+          const baseUrl = process.env.BASE_URL;
+          const methods = ["locator-tap", "touchscreen-center", "mouse-center"];
+          const browser = await chromium.launch({ headless: true });
+
+          async function state(page, label) {
+            return page.evaluate(nextLabel => {
+              const root = document.querySelector("[data-laws-root]");
+              let frame = null;
+              try { frame = globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null; } catch (_) { frame = null; }
+              return {
+                label: nextLabel,
+                controllerState: root?.dataset.lawsControllerState || "",
+                activeDirection: root?.dataset.lawsActiveDirection || "",
+                activeCategory: root?.dataset.lawsActiveCategory || "",
+                experienceDirection: document.documentElement.dataset.lawsExperienceDirection || "",
+                spatialPrimaryId: root?.dataset.lawsSpatialPrimaryId || "",
+                visibleLabelId: root?.dataset.lawsVisibleOuterAuthorityLabelId || "",
+                interactionsStatus: root?.dataset.lawsInteractionsStatus || "",
+                interactionReceipt: globalThis.DGB_LAWS_INTERACTIONS?.getReceipt?.() || null,
+                frameState: frame?.state || "",
+                frameDirection: frame?.compass?.selectedDirection || ""
+              };
+            }, label);
+          }
+
+          for (const method of methods) {
+            const context = await browser.newContext({
+              viewport: { width: 390, height: 844 },
+              isMobile: true,
+              hasTouch: true,
+              deviceScaleFactor: 1
+            });
+            const page = await context.newPage();
+            const errors = [];
+            page.on("pageerror", error => errors.push(`pageerror:${error.message}`));
+            page.on("console", message => {
+              if (message.type() === "error") errors.push(`console:${message.text()}`);
+            });
+
+            await page.goto(`${baseUrl}/laws/`, { waitUntil: "networkidle" });
+            await page.waitForFunction(() => {
+              const root = document.querySelector("[data-laws-root]");
+              return Boolean(
+                globalThis.DGB_LAWS_CONTROLLER &&
+                globalThis.DGB_LAWS_EXPERIENCE &&
+                globalThis.DGBLawsStagedLoader
+              ) && root?.dataset.lawsControllerStatus === "available";
+            });
+            const preload = await page.evaluate(() => {
+              document.querySelector("[data-laws-compass-primary]")?.scrollIntoView({
+                block: "center",
+                behavior: "instant"
+              });
+              return globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false;
+            });
+            await page.waitForFunction(() => {
+              const root = document.querySelector("[data-laws-root]");
+              return Boolean(globalThis.DGB_LAWS_INTERACTIONS) &&
+                root?.dataset.lawsInteractionsStatus === "available";
+            });
+            await page.waitForTimeout(250);
+
+            const visibleId = await page.locator("[data-laws-root]")
+              .getAttribute("data-laws-visible-outer-authority-label-id");
+            const projected = page.locator(
+              `[data-laws-projected-category-label="${visibleId}"]`
+            );
+            const box = await projected.boundingBox();
+            const before = await state(page, "before");
+            const surface = await projected.evaluate(node => ({
+              hidden: node.hidden,
+              ariaHidden: node.getAttribute("aria-hidden"),
+              pointerEvents: getComputedStyle(node).pointerEvents,
+              display: getComputedStyle(node).display,
+              visibility: getComputedStyle(node).visibility,
+              text: node.textContent?.trim() || ""
+            }));
+
+            if (method === "locator-tap") {
+              await projected.tap();
+            } else if (method === "touchscreen-center") {
+              await page.touchscreen.tap(
+                box.x + box.width / 2,
+                box.y + box.height / 2
+              );
+            } else {
+              await page.mouse.click(
+                box.x + box.width / 2,
+                box.y + box.height / 2
+              );
+            }
+
+            await page.waitForTimeout(1200);
+            const after = await state(page, "after");
+            console.log(JSON.stringify({
+              method,
+              preload,
+              visibleId,
+              box,
+              surface,
+              before,
+              after,
+              errors
+            }, null, 2));
+            await context.close();
+          }
+
+          await browser.close();
+          JS
+          node /tmp/laws-interaction-diagnostic.mjs

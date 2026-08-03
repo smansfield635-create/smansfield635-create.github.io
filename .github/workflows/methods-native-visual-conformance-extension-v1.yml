@@ -23,9 +23,10 @@ jobs:
       METHODS_ORIGIN: http://127.0.0.1:4173
       OUT_DIR: methods-native-visual-conformance-extension-v1-evidence
     steps:
-      - name: Checkout visual conformance extension head
+      - name: Checkout exact visual conformance extension head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Preserve candidate and public boundaries

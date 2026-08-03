@@ -38,7 +38,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Execute public route cases in Chromium
+      - name: Execute corrected public route cases in Chromium
         shell: bash
         run: |
           set -euo pipefail
@@ -57,11 +57,12 @@ jobs:
 
           const V2='../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
           const CP2='../../render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js';
+          const PUBLIC_MODULE='/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js';
           const root=process.env.PUBLIC_URL;
-          const evidence=path.join(process.env.RUNNER_TEMP,'h-earth-v2-live-browser-evidence');
-          const shots=path.join(evidence,'screenshots');
-          const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
-          const write=(n,v)=>fs.writeFileSync(path.join(evidence,n),JSON.stringify(v,null,2)+'\n');
+          const out=path.join(process.env.RUNNER_TEMP,'h-earth-v2-live-browser-evidence');
+          const shots=path.join(out,'screenshots');
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const write=(n,v)=>fs.writeFileSync(path.join(out,n),JSON.stringify(v,null,2)+'\n');
           const viewports=[
             {id:'DESKTOP_1440_X_900',width:1440,height:900,isMobile:false,hasTouch:false},
             {id:'MOBILE_390_X_844',width:390,height:844,isMobile:true,hasTouch:true},
@@ -72,6 +73,7 @@ jobs:
             {id:'EXPLICIT_VISUAL_V2',url:root+'?visual=terrain-relief-v2',visual:true,cp2:false,renderer:V2},
             {id:'EXPLICIT_CP2_REFERENCE',url:root+'?cp2=round1-1f520809',visual:false,cp2:true,renderer:CP2}
           ];
+
           const browser=await chromium.launch({headless:true});
           const results=[];
           let terminalError=null;
@@ -88,9 +90,9 @@ jobs:
               let response=null,navigationError=null;
               try{response=await page.goto(c.url,{waitUntil:'domcontentloaded',timeout:90000})}catch(e){navigationError={message:e.message,stack:e.stack??null}}
               try{await page.waitForFunction(()=>{
-                const r=document.getElementById('h-earth-functional-landscape-route');
-                const s=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
-                return r?.dataset.run8eReady==='true'||r?.dataset.run8eError==='true'||Boolean(s?.firstFailureStage)||s?.stages?.READY_PUBLISHED==='PASS';
+                const route=document.getElementById('h-earth-functional-landscape-route');
+                const startup=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+                return route?.dataset.run8eReady==='true'||route?.dataset.run8eError==='true'||Boolean(startup?.firstFailureStage)||startup?.stages?.READY_PUBLISHED==='PASS';
               },{timeout:150000})}catch{}
               await page.waitForTimeout(1500);
               const headers=response?await response.allHeaders():{};
@@ -120,30 +122,39 @@ jobs:
                 }catch(e){interaction.error={message:e.message,stack:e.stack??null}}
               }
               await page.screenshot({path:after});
-              interaction.beforeSha256=hash(fs.readFileSync(before));interaction.afterSha256=hash(fs.readFileSync(after));interaction.changed=interaction.beforeSha256!==interaction.afterSha256;
-              const live=runtime.receipt?.liveGpu??null,ex=runtime.receipt?.runtimeExclusivity??null,co=live?.correspondence??null;
+              interaction.beforeSha256=sha(fs.readFileSync(before));interaction.afterSha256=sha(fs.readFileSync(after));interaction.changed=interaction.beforeSha256!==interaction.afterSha256;
+
+              const live=runtime.receipt?.liveGpu??null;
+              const ex=runtime.receipt?.runtimeExclusivity??null;
+              const co=live?.correspondence??null;
+              const modules=runtime.receipt?.moduleSources??[];
+              const externalInjectedModules=modules.filter(m=>m!==PUBLIC_MODULE);
               const params=new URL(runtime.href).searchParams;
               const selector=c.visual?params.get('visual')==='terrain-relief-v2'&&!params.has('cp2'):params.get('cp2')==='round1-1f520809'&&!params.has('visual');
               const selection=live?.selectedRendererPath===c.renderer&&live?.additiveVisualRequested===c.visual&&live?.liveDifferential?.requested===c.cp2;
               const v2=runtime.resources.some(u=>u.includes('persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'));
               const cp2=runtime.resources.some(u=>u.includes('persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'));
               const baseline=runtime.resources.some(u=>/persistent-live-renderer\.run8e-r3c\.js(?:\?|$)/.test(u));
+              const rendererResources=runtime.resources.filter(u=>u.includes('/render/persistent-live-renderer.run8e-r3c'));
               const resources=c.visual?v2&&!cp2&&!baseline:cp2&&!v2&&!baseline;
-              const exclusivity=ex?.activePublicModuleScriptCount===1&&ex?.legacyModuleScriptCount===0&&ex?.activeWebGL2ContextCount===1&&ex?.activePersistentRendererCount===1&&ex?.activeNavigationStateStreamCount===1&&ex?.activePointerTouchIntakeCount===1&&ex?.activeFramePresentationAuthorityCount===1&&ex?.legacyCpuRouteControllerLoaded===false&&ex?.legacyCpuEnvironmentIntegrationLoaded===false&&ex?.legacyPublicDirectManipulationLoaded===false&&ex?.cpuWorldRebuildPerCameraChange===false&&ex?.cssBitmapPreview===false&&ex?.duplicatePointerListeners===false&&ex?.packageUploadedOnce===true&&ex?.resourceIdentityStable===true;
+              const exactlyOneRendererImport=rendererResources.length===1;
+              const moduleAuthority=modules.includes(PUBLIC_MODULE)&&ex?.legacyModuleScriptCount===0&&ex?.legacyCpuRouteControllerLoaded===false&&ex?.legacyCpuEnvironmentIntegrationLoaded===false&&ex?.legacyPublicDirectManipulationLoaded===false;
+              const exclusivity=moduleAuthority&&ex?.activeWebGL2ContextCount===1&&ex?.activePersistentRendererCount===1&&ex?.activeNavigationStateStreamCount===1&&ex?.activePointerTouchIntakeCount===1&&ex?.activeFramePresentationAuthorityCount===1&&ex?.cpuWorldRebuildPerCameraChange===false&&ex?.cssBitmapPreview===false&&ex?.duplicatePointerListeners===false&&ex?.packageUploadedOnce===true&&ex?.resourceIdentityStable===true;
               const lifecycle=co?.packageUploadedOnce===true&&co?.resourceIdentityStable===true&&co?.noPostInitializationResourceCreation===true&&co?.noPostInitializationBufferUpload===true;
               const visible=Number(live?.counters?.gpuFramebufferPresentationCount??0)>0;
               const startup=runtime.routeReady==='true'&&runtime.routeError==='false'&&!runtime.startup?.firstFailureStage;
-              const pass=response?.status()===200&&(headers['content-type']??'').toLowerCase().includes('text/html')&&!navigationError&&runtime.title==='H-Earth · Live Interactive World'&&runtime.canvasPresent&&selector&&selection&&resources&&exclusivity&&lifecycle&&visible&&startup&&Object.values(errors).every(a=>a.length===0)&&interaction.attempted&&interaction.changed&&!interaction.error;
-              results.push({caseId:c.id,viewport:vp,pass,elapsedMs:Date.now()-started,navigation:{status:response?.status()??null,contentType:headers['content-type']??null,error:navigationError,finalUrl:runtime.href},checks:{selector,selection,resources,exclusivity,lifecycle,visible,startup,v2ResourceLoaded:v2,cp2ResourceLoaded:cp2,baselineResourceLoaded:baseline},runtime,interaction,errors});
+              const pass=response?.status()===200&&(headers['content-type']??'').toLowerCase().includes('text/html')&&!navigationError&&runtime.title==='H-Earth · Live Interactive World'&&runtime.canvasPresent&&selector&&selection&&resources&&exactlyOneRendererImport&&exclusivity&&lifecycle&&visible&&startup&&Object.values(errors).every(a=>a.length===0)&&interaction.attempted&&interaction.changed&&!interaction.error;
+              results.push({caseId:c.id,viewport:vp,pass,elapsedMs:Date.now()-started,navigation:{status:response?.status()??null,contentType:headers['content-type']??null,error:navigationError,finalUrl:runtime.href},checks:{selector,selection,resources,exactlyOneRendererImport,moduleAuthority,exclusivity,lifecycle,visible,startup,v2ResourceLoaded:v2,cp2ResourceLoaded:cp2,baselineResourceLoaded:baseline},externalInjectedModules,runtime,interaction,errors});
               await ctx.close();
             }
           }catch(e){terminalError={message:e.message,stack:e.stack??null}}finally{await browser.close()}
+
           const pass=!terminalError&&results.length===9&&results.every(r=>r.pass);
           const receipt={receiptId:'ROLE_3_H_EARTH_TERRAIN_RELIEF_V2_POSTMERGE_PUBLIC_BROWSER_RECEIPT_v1',operationId:process.env.OPERATION_ID,result:pass?'PASS':'BLOCKED',publicUrl:root,reviewedCandidateHead:process.env.REVIEWED_CANDIDATE_HEAD,promotionMergeCommit:process.env.PROMOTION_MERGE_COMMIT,scenarioCount:results.length,results,terminalError,unauthorizedMutationCount:0,productMutation:false,liveRouteMutation:false,generatedAt:new Date().toISOString()};
           write('browser-verification-receipt.json',receipt);
-          const files=fs.readdirSync(evidence,{recursive:true}).filter(n=>fs.statSync(path.join(evidence,n)).isFile()).sort();
-          write('artifact-manifest-sha256.json',{files:files.map(n=>({path:n,sha256:hash(fs.readFileSync(path.join(evidence,n)))}))});
-          console.log(JSON.stringify({result:receipt.result,scenarios:results.map(r=>({caseId:r.caseId,viewport:r.viewport.id,pass:r.pass,checks:r.checks,errors:r.errors}))},null,2));
+          const files=fs.readdirSync(out,{recursive:true}).filter(n=>fs.statSync(path.join(out,n)).isFile()).sort();
+          write('artifact-manifest-sha256.json',{files:files.map(n=>({path:n,sha256:sha(fs.readFileSync(path.join(out,n)))}))});
+          console.log(JSON.stringify({result:receipt.result,scenarios:results.map(r=>({caseId:r.caseId,viewport:r.viewport.id,pass:r.pass,checks:r.checks,externalInjectedModules:r.externalInjectedModules,errors:r.errors}))},null,2));
           if(!pass)process.exitCode=1;
           NODE
           node runner.mjs

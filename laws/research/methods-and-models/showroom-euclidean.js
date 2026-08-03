@@ -232,8 +232,17 @@
   function moveFamily(delta, source = "z-control") {
     const buttons = familyButtons();
     if (!buttons.length) return;
+    const preservedLensIndex = state.lensIndex;
     beginTransition("z", delta > 0 ? "next" : "previous");
     buttons[normalize(state.familyIndex + delta, buttons.length)]?.click();
+
+    // The inherited family renderer defaults its lens to Practical. In the
+    // Euclidean state model X, Y, and Z are independent coordinates, so a Z
+    // rotation must restore the previously active Y plane immediately.
+    const lenses = elements.lensButtons();
+    if (lenses[preservedLensIndex]?.getAttribute("aria-selected") !== "true") {
+      lenses[preservedLensIndex]?.click();
+    }
     publish(source);
   }
 

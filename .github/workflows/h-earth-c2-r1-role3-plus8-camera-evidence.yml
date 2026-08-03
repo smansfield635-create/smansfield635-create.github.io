@@ -80,6 +80,11 @@ jobs:
               raise SystemExit('RUNNER_SOURCE_PAYLOAD_NOT_FOUND')
           runner = gzip.decompress(base64.b64decode(match.group(1))).decode()
           runner = runner.replace('process.env.GITHUB_SHA', 'process.env.CARRIER_HEAD')
+          old = "verifyCanonicalField(manifest,'manifest_sha256',MANIFEST_SHA);verifyCanonicalField(contract,'contract_sha256',CONTRACT_SHA);"
+          new = "execFileSync('python3',[path.join(AUTHORITY_ROOT,'verify_role6_records_v1.py')],{stdio:'inherit'});must(manifest.manifest_sha256===MANIFEST_SHA,'MANIFEST_SHA256_IDENTITY_MISMATCH');must(contract.contract_sha256===CONTRACT_SHA,'CONTRACT_SHA256_IDENTITY_MISMATCH');"
+          if old not in runner:
+              raise SystemExit('CANONICAL_VERIFIER_PATCH_TARGET_NOT_FOUND')
+          runner = runner.replace(old, new)
           pathlib.Path('runner.mjs').write_text(runner)
           PY
           node --check runner.mjs

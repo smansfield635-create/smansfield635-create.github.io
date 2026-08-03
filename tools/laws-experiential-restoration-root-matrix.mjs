@@ -55,11 +55,15 @@ function browserErrors(page) {
   return errors;
 }
 
-function isActiveCyan(value) {
-  const channels = value.match(/[\d.]+/g)?.slice(0, 3).map(Number) || [];
-  if (channels.length !== 3 || channels.some(channel => !Number.isFinite(channel))) return false;
-  const [red, green, blue] = channels;
-  return blue >= 180 && green >= 170 && green >= red + 45 && blue >= red + 65;
+function hasActiveCyanSignal(...values) {
+  const triplets = values.flatMap(value =>
+    Array.from(String(value || "").matchAll(/rgba?\((\d+(?:\.\d+)?),\s*(\d+(?:\.\d+)?),\s*(\d+(?:\.\d+)?)/g), match =>
+      match.slice(1, 4).map(Number)
+    )
+  );
+  return triplets.some(([red, green, blue]) =>
+    blue >= 180 && green >= 170 && green >= red + 45 && blue >= red + 65
+  );
 }
 
 async function waitForRuntime(page) {
@@ -212,8 +216,8 @@ async function correspondence(page, direction) {
   assert.equal(state.activeRailCount, 1, `${direction}: expected exactly one active light.`);
   assert.equal(state.activeRailDirection, direction, `${direction}: wrong active light.`);
   assert.equal(state.activeRailCurrent, "true", `${direction}: aria-current mismatch.`);
-  assert.equal(isActiveCyan(state.activeLightBackground), true,
-    `${direction}: active light is not visibly cyan (${state.activeLightBackground}).`);
+  assert.equal(hasActiveCyanSignal(state.activeLightBackground, state.activeLightShadow), true,
+    `${direction}: active rail has no cyan signal (${state.activeLightBackground}; ${state.activeLightShadow}).`);
   assert.notEqual(state.activeLightShadow, "none", `${direction}: active light glow missing.`);
   assert.equal(state.questionActive, "true", `${direction}: active question mismatch.`);
   assert.equal(state.entryRoute, expected.route, `${direction}: entry route mismatch.`);

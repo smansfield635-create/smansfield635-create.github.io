@@ -59,11 +59,14 @@ function collectErrors(page) {
 async function waitForRuntime(page) {
   await page.waitForFunction(() => {
     const root = document.querySelector("[data-laws-root]");
-    return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE) &&
-      root?.dataset.lawsControllerStatus === "ready";
+    return Boolean(
+      globalThis.DGB_LAWS_CONTROLLER &&
+      globalThis.DGB_LAWS_EXPERIENCE &&
+      globalThis.DGBLawsStagedLoader
+    ) && root?.dataset.lawsControllerStatus === "available";
   }, null, { timeout: 30000 });
 
-  await page.evaluate(() => {
+  const preloadAccepted = await page.evaluate(() => {
     document.querySelector("[data-laws-compass-primary]")?.scrollIntoView({
       block: "center",
       inline: "nearest",
@@ -71,12 +74,13 @@ async function waitForRuntime(page) {
     });
     return globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false;
   });
+  assert.equal(preloadAccepted, true, "Existing staged runtime preload request was rejected.");
 
-  await page.waitForFunction(() =>
-    document.querySelector("[data-laws-root]")?.dataset.lawsInteractionsStatus === "ready",
-    null,
-    { timeout: 30000 }
-  );
+  await page.waitForFunction(() => {
+    const root = document.querySelector("[data-laws-root]");
+    return Boolean(globalThis.DGB_LAWS_INTERACTIONS) &&
+      root?.dataset.lawsInteractionsStatus === "available";
+  }, null, { timeout: 30000 });
   await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
 }
 

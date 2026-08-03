@@ -1,0 +1,20 @@
+name: H-Earth V2 Trigger Probe
+
+on:
+  push:
+    branches:
+      - agent/h-earth-current-live-bandlimited-terrain-relief-v2-002
+    paths:
+      - .github/workflows/h-earth-v2-trigger-probe.yml
+
+permissions:
+  pull-requests: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish probe receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_V2_TRIGGER_PROBE_PASS:${GITHUB_RUN_ID}:${GITHUB_SHA}"

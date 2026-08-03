@@ -24,6 +24,7 @@ env:
   EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
   EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
   BASE_URL: http://127.0.0.1:4173
+  EVIDENCE_DIR: artifacts/laws-experiential-restoration/interaction-diagnostic
 
 jobs:
   interaction-diagnostic:
@@ -45,6 +46,15 @@ jobs:
           test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
           test "$(git merge-base origin/main HEAD)" = "$EXPECTED_MAIN_BASE"
 
+      - name: Verify product hashes remain unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '8fff5010933b90ffd396fddab393fb4044954b1b2838299b2a454f598c246854  laws/index.html' | sha256sum --check --strict
+          echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
+          echo 'e5a289b9e6792f7549be7797880ffe6911a6fea3e4f5e02b48ada1b71158a59f  laws/index.experience.polish.css' | sha256sum --check --strict
+          echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
+
       - name: Install pinned browser verifier
         run: |
           npm install --no-save --no-package-lock playwright@1.55.0
@@ -64,15 +74,20 @@ jobs:
           cat /tmp/laws-interaction-diagnostic-server.log
           exit 1
 
-      - name: Trace scene-centered authority activation
+      - name: Trace and retain scene-centered authority activation
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR"
           cat > tools/.laws-interaction-diagnostic.mjs <<'JS'
+          import fs from "node:fs/promises";
+          import path from "node:path";
           import { chromium } from "playwright";
 
           const baseUrl = process.env.BASE_URL;
+          const evidenceDir = process.env.EVIDENCE_DIR;
           const methods = ["touchscreen-coordinate", "mouse-coordinate"];
+          const results = [];
           const browser = await chromium.launch({ headless: true });
 
           async function state(page, label) {
@@ -176,10 +191,6 @@ jobs:
                   height: rect.height,
                   bottom: rect.bottom
                 },
-                topTag: "",
-                topClass: "",
-                ownerTag: "",
-                ownerText: projected.textContent?.trim() || "",
                 pointerEvents: getComputedStyle(projected).pointerEvents
               };
             });
@@ -196,7 +207,9 @@ jobs:
             const errors = [];
             page.on("pageerror", error => errors.push(`pageerror:${error.message}`));
             page.on("console", message => {
-              if (message.type() === "error") errors.push(`console:${message.text()}`);
+              if (message.type() === "error" && !message.text().includes("404")) {
+                errors.push(`console:${message.text()}`);
+              }
             });
 
             await page.goto(`${baseUrl}/laws/`, { waitUntil: "networkidle" });
@@ -251,18 +264,49 @@ jobs:
 
             await page.waitForTimeout(1400);
             const after = await state(page, "after");
-            console.log(JSON.stringify({
+            const result = {
               method,
               preload,
               hit,
               before,
               after,
-              errors
-            }, null, 2));
+              errors,
+              activated: after.controllerState === "CLUSTER_OPEN" &&
+                after.activeDirection === hit.visibleId &&
+                after.experienceDirection === hit.visibleId
+            };
+            results.push(result);
+            console.log(JSON.stringify(result, null, 2));
             await context.close();
           }
 
           await browser.close();
+          const receipt = {
+            contract: "LAWS_EXPERIENTIAL_RESTORATION_PHYSICAL_AUTHORITY_DIAGNOSTIC_v1",
+            head: process.env.EXECUTION_COMMIT,
+            viewport: { width: 390, height: 844 },
+            results,
+            allActivated: results.every(result => result.activated),
+            disposition: results.every(result => result.activated) ? "PASS" : "FAIL"
+          };
+          await fs.mkdir(evidenceDir, { recursive: true });
+          await fs.writeFile(
+            path.join(evidenceDir, "physical-authority-diagnostic.json"),
+            `${JSON.stringify(receipt, null, 2)}\n`,
+            "utf8"
+          );
+          if (!receipt.allActivated) process.exitCode = 1;
           JS
           node tools/.laws-interaction-diagnostic.mjs
           rm -f tools/.laws-interaction-diagnostic.mjs
+
+      - name: Upload exact interaction receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-interaction-diagnostic-${{ env.EXECUTION_COMMIT }}
+          path: |
+            artifacts/laws-experiential-restoration/interaction-diagnostic/**
+            /tmp/laws-interaction-diagnostic-server.log
+          if-no-files-found: warn
+          retention-days: 30

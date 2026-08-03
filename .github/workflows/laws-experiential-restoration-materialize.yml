@@ -1,4 +1,4 @@
-name: Laws Experiential Restoration Interaction Diagnostic
+name: Laws Experiential Restoration Geometry Probe
 
 on:
   push:
@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: laws-experiential-restoration-interaction-diagnostic-${{ github.event.pull_request.number || github.ref }}
+  group: laws-experiential-restoration-geometry-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -27,12 +27,11 @@ env:
   EVIDENCE_DIR: artifacts/laws-experiential-restoration/interaction-diagnostic
 
 jobs:
-  interaction-diagnostic:
+  geometry-probe:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Check out exact restoration head
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.EXECUTION_COMMIT }}
           fetch-depth: 0
@@ -59,232 +58,121 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-interaction-diagnostic-server.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-geometry-server.log 2>&1 &
           for attempt in $(seq 1 50); do
-            if curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null; then
-              exit 0
-            fi
+            curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null && exit 0
             sleep 1
           done
-          cat /tmp/laws-interaction-diagnostic-server.log
           exit 1
 
-      - name: Trace physical authority activation with partial receipts
+      - name: Record scene and projected-label geometry
         shell: bash
         run: |
-          set -u
           mkdir -p "$EVIDENCE_DIR"
-          cat > tools/.laws-interaction-diagnostic.mjs <<'JS'
+          printf '{"contract":"LAWS_GEOMETRY_PROBE_BOOTSTRAP_v1","head":"%s","status":"NODE_NOT_STARTED"}\n' "$EXECUTION_COMMIT" > "$EVIDENCE_DIR/geometry-probe.json"
+          cat > tools/.laws-geometry-probe.mjs <<'JS'
           import fs from "node:fs/promises";
-          import path from "node:path";
           import { chromium } from "playwright";
 
-          const evidenceDir = process.env.EVIDENCE_DIR;
-          const receiptPath = path.join(evidenceDir, "physical-authority-diagnostic.json");
+          const output = `${process.env.EVIDENCE_DIR}/geometry-probe.json`;
           const receipt = {
-            contract: "LAWS_EXPERIENTIAL_RESTORATION_PHYSICAL_AUTHORITY_DIAGNOSTIC_v2",
+            contract: "LAWS_EXPERIENTIAL_RESTORATION_GEOMETRY_PROBE_v1",
             head: process.env.EXECUTION_COMMIT,
-            viewport: { width: 390, height: 844 },
-            results: [],
-            allActivated: false,
-            disposition: "IN_PROGRESS"
+            status: "STARTED",
+            initial: null,
+            centered: null,
+            error: null
+          };
+          const persist = () => fs.writeFile(output, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
+          await persist();
+
+          const snapshot = () => {
+            const root = document.querySelector("[data-laws-root]");
+            const scene = document.querySelector("[data-laws-scene-field]");
+            const visibleId = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
+            const label = document.querySelector(`[data-laws-projected-category-label="${visibleId}"]`);
+            const sceneRect = scene?.getBoundingClientRect();
+            const labelRect = label?.getBoundingClientRect();
+            const point = labelRect ? {
+              x: labelRect.left + labelRect.width / 2,
+              y: labelRect.top + labelRect.height / 2
+            } : null;
+            const top = point && point.x >= 0 && point.y >= 0 && point.x < innerWidth && point.y < innerHeight
+              ? document.elementFromPoint(point.x, point.y) : null;
+            return {
+              scrollY,
+              viewport: { width: innerWidth, height: innerHeight },
+              controllerStatus: root?.dataset.lawsControllerStatus || "",
+              interactionsStatus: root?.dataset.lawsInteractionsStatus || "",
+              visibleId,
+              sceneRect: sceneRect ? {
+                left: sceneRect.left, top: sceneRect.top, right: sceneRect.right,
+                bottom: sceneRect.bottom, width: sceneRect.width, height: sceneRect.height
+              } : null,
+              labelRect: labelRect ? {
+                left: labelRect.left, top: labelRect.top, right: labelRect.right,
+                bottom: labelRect.bottom, width: labelRect.width, height: labelRect.height
+              } : null,
+              centerPoint: point,
+              centerInViewport: Boolean(point && point.x >= 0 && point.y >= 0 && point.x < innerWidth && point.y < innerHeight),
+              centerTopTag: top?.tagName || "",
+              centerTopClass: typeof top?.className === "string" ? top.className : "",
+              centerOwnedByVisibleLabel: Boolean(top?.closest?.(`[data-laws-projected-category-label="${visibleId}"]`))
+            };
           };
 
-          async function persist() {
-            await fs.mkdir(evidenceDir, { recursive: true });
-            await fs.writeFile(receiptPath, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
-          }
-
-          async function state(page, label) {
-            return page.evaluate(nextLabel => {
-              const root = document.querySelector("[data-laws-root]");
-              const scene = document.querySelector("[data-laws-scene-field]");
-              const sceneRect = scene?.getBoundingClientRect();
-              let frame = null;
-              try { frame = globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null; } catch (_) {}
-              return {
-                label: nextLabel,
-                scrollY,
-                sceneRect: sceneRect ? {
-                  left: sceneRect.left, top: sceneRect.top,
-                  width: sceneRect.width, height: sceneRect.height,
-                  bottom: sceneRect.bottom
-                } : null,
-                controllerState: root?.dataset.lawsControllerState || "",
-                activeDirection: root?.dataset.lawsActiveDirection || "",
-                activeCategory: root?.dataset.lawsActiveCategory || "",
-                experienceDirection: document.documentElement.dataset.lawsExperienceDirection || "",
-                visibleLabelId: root?.dataset.lawsVisibleOuterAuthorityLabelId || "",
-                interactionsStatus: root?.dataset.lawsInteractionsStatus || "",
-                interactionReceipt: globalThis.DGB_LAWS_INTERACTIONS?.getReceipt?.() || null,
-                frameState: frame?.state || "",
-                frameDirection: frame?.compass?.selectedDirection || ""
-              };
-            }, label);
-          }
-
-          async function geometry(page) {
-            return page.evaluate(() => {
-              const root = document.querySelector("[data-laws-root]");
-              const scene = document.querySelector("[data-laws-scene-field]");
-              const visibleId = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
-              const projected = document.querySelector(`[data-laws-projected-category-label="${visibleId}"]`);
-              const sceneRect = scene?.getBoundingClientRect();
-              const rect = projected?.getBoundingClientRect();
-              const style = projected ? getComputedStyle(projected) : null;
-              const samples = [];
-              if (rect) {
-                for (const [fx, fy] of [[.5,.5],[.35,.5],[.65,.5],[.5,.35],[.5,.65]]) {
-                  const x = rect.left + rect.width * fx;
-                  const y = rect.top + rect.height * fy;
-                  const top = x >= 0 && y >= 0 && x < innerWidth && y < innerHeight
-                    ? document.elementFromPoint(x, y) : null;
-                  const owner = top?.closest?.(`[data-laws-projected-category-label="${visibleId}"]`) || null;
-                  samples.push({
-                    x, y,
-                    inViewport: x >= 0 && y >= 0 && x < innerWidth && y < innerHeight,
-                    topTag: top?.tagName || "",
-                    topClass: typeof top?.className === "string" ? top.className : "",
-                    owned: Boolean(owner)
-                  });
-                }
-              }
-              return {
-                visibleId,
-                scrollY,
-                sceneRect: sceneRect ? {
-                  left: sceneRect.left, top: sceneRect.top,
-                  width: sceneRect.width, height: sceneRect.height,
-                  bottom: sceneRect.bottom
-                } : null,
-                projectedRect: rect ? {
-                  left: rect.left, top: rect.top,
-                  width: rect.width, height: rect.height,
-                  right: rect.right, bottom: rect.bottom
-                } : null,
-                projectedHidden: projected?.hidden ?? null,
-                projectedAriaHidden: projected?.getAttribute("aria-hidden") || "",
-                display: style?.display || "",
-                visibility: style?.visibility || "",
-                pointerEvents: style?.pointerEvents || "",
-                samples
-              };
+          let browser;
+          try {
+            browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({
+              viewport: { width: 390, height: 844 },
+              isMobile: true,
+              hasTouch: true,
+              deviceScaleFactor: 1
             });
-          }
-
-          async function ownedPoint(page) {
-            return page.evaluate(() => {
+            const page = await context.newPage();
+            await page.goto(`${process.env.BASE_URL}/laws/`, { waitUntil: "networkidle" });
+            await page.waitForFunction(() => {
               const root = document.querySelector("[data-laws-root]");
-              const visibleId = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
-              const projected = document.querySelector(`[data-laws-projected-category-label="${visibleId}"]`);
-              if (!(projected instanceof HTMLElement)) return null;
-              const rect = projected.getBoundingClientRect();
-              for (const [fx, fy] of [[.5,.5],[.35,.5],[.65,.5],[.5,.35],[.5,.65]]) {
-                const x = rect.left + rect.width * fx;
-                const y = rect.top + rect.height * fy;
-                if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
-                const top = document.elementFromPoint(x, y);
-                if (top?.closest?.(`[data-laws-projected-category-label="${visibleId}"]`)) {
-                  return { visibleId, x, y };
-                }
-              }
-              return null;
-            });
+              return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGBLawsStagedLoader) &&
+                root?.dataset.lawsControllerStatus === "available";
+            }, null, { timeout: 30000 });
+            await page.evaluate(() => globalThis.DGB_LAWS_EXPERIENCE.requestCompassRuntimePreload());
+            await page.waitForFunction(() => {
+              const root = document.querySelector("[data-laws-root]");
+              return Boolean(globalThis.DGB_LAWS_INTERACTIONS) && root?.dataset.lawsInteractionsStatus === "available";
+            }, null, { timeout: 30000 });
+            receipt.initial = await page.evaluate(snapshot);
+            await page.evaluate(() => document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
+              block: "center", inline: "nearest", behavior: "instant"
+            }));
+            await page.waitForTimeout(500);
+            receipt.centered = await page.evaluate(snapshot);
+            receipt.status = "COMPLETE";
+            await context.close();
+          } catch (error) {
+            receipt.status = "ERROR";
+            receipt.error = { message: error.message, stack: error.stack || "" };
+          } finally {
+            await persist();
+            if (browser) await browser.close();
           }
-
-          const browser = await chromium.launch({ headless: true });
-          for (const method of ["touchscreen-coordinate", "mouse-coordinate"]) {
-            const result = { method, startedAt: new Date().toISOString() };
-            let context = null;
-            try {
-              context = await browser.newContext({
-                viewport: { width: 390, height: 844 },
-                isMobile: true,
-                hasTouch: true,
-                deviceScaleFactor: 1
-              });
-              const page = await context.newPage();
-              result.errors = [];
-              page.on("pageerror", error => result.errors.push(`pageerror:${error.message}`));
-              page.on("console", message => {
-                if (message.type() === "error" && !message.text().includes("404")) {
-                  result.errors.push(`console:${message.text()}`);
-                }
-              });
-
-              await page.goto(`${process.env.BASE_URL}/laws/`, { waitUntil: "networkidle" });
-              await page.waitForFunction(() => {
-                const root = document.querySelector("[data-laws-root]");
-                return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGBLawsStagedLoader) &&
-                  root?.dataset.lawsControllerStatus === "available";
-              }, null, { timeout: 30000 });
-
-              result.preload = await page.evaluate(() =>
-                globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false
-              );
-              await page.waitForFunction(() => {
-                const root = document.querySelector("[data-laws-root]");
-                return Boolean(globalThis.DGB_LAWS_INTERACTIONS) && root?.dataset.lawsInteractionsStatus === "available";
-              }, null, { timeout: 30000 });
-
-              result.beforeInitial = await state(page, "before-initial-scroll");
-              result.geometryInitial = await geometry(page);
-              await page.evaluate(() => document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
-                block: "center", inline: "nearest", behavior: "instant"
-              }));
-              await page.waitForTimeout(350);
-              result.before = await state(page, "before-input");
-              result.geometryAfterSceneCenter = await geometry(page);
-
-              let hit = null;
-              for (let attempt = 0; attempt < 40; attempt += 1) {
-                hit = await ownedPoint(page);
-                if (hit) break;
-                await page.waitForTimeout(25);
-              }
-              result.hit = hit;
-              if (!hit) throw new Error("NO_OWNED_PROJECTED_LABEL_POINT");
-
-              if (method === "touchscreen-coordinate") {
-                await page.touchscreen.tap(hit.x, hit.y);
-              } else {
-                await page.mouse.click(hit.x, hit.y);
-              }
-              await page.waitForTimeout(1400);
-              result.after = await state(page, "after-input");
-              result.geometryAfter = await geometry(page);
-              result.activated = result.after.controllerState === "CLUSTER_OPEN" &&
-                result.after.activeDirection === hit.visibleId &&
-                result.after.experienceDirection === hit.visibleId;
-            } catch (error) {
-              result.activated = false;
-              result.error = { message: error.message, stack: error.stack || "" };
-            } finally {
-              result.completedAt = new Date().toISOString();
-              receipt.results.push(result);
-              receipt.allActivated = receipt.results.length === 2 && receipt.results.every(item => item.activated);
-              receipt.disposition = receipt.results.length < 2
-                ? "IN_PROGRESS"
-                : receipt.allActivated ? "PASS" : "FAIL";
-              await persist();
-              if (context) await context.close();
-            }
-          }
-          await browser.close();
-          if (!receipt.allActivated) process.exitCode = 1;
+          if (receipt.status !== "COMPLETE") process.exitCode = 1;
           JS
-          node tools/.laws-interaction-diagnostic.mjs
+          set +e
+          node tools/.laws-geometry-probe.mjs > "$EVIDENCE_DIR/node-output.log" 2>&1
           status=$?
-          rm -f tools/.laws-interaction-diagnostic.mjs
+          set -e
+          rm -f tools/.laws-geometry-probe.mjs
           exit $status
 
-      - name: Upload exact interaction receipt
+      - name: Upload geometry probe
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: laws-interaction-diagnostic-${{ env.EXECUTION_COMMIT }}
+          name: laws-geometry-probe-${{ env.EXECUTION_COMMIT }}
           path: |
             artifacts/laws-experiential-restoration/interaction-diagnostic/**
-            /tmp/laws-interaction-diagnostic-server.log
-          if-no-files-found: warn
+            /tmp/laws-geometry-server.log
+          if-no-files-found: error
           retention-days: 30

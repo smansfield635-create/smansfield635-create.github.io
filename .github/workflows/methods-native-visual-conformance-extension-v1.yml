@@ -81,12 +81,18 @@ jobs:
           exit 1
 
       - name: Execute extended visual conformance instrumentation
+        shell: bash
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: node verification/methods-native-visual-conformance-extension-v1/runner.mjs | tee visual-conformance-extension.log
+        run: |
+          set -euo pipefail
+          node verification/methods-native-visual-conformance-extension-v1/runner.mjs | tee visual-conformance-extension.log
 
       - name: Prove recovery of the known zero-finding miss
-        run: node verification/methods-native-visual-conformance-extension-v1/known-gap-recovery.mjs | tee known-gap-recovery.log
+        shell: bash
+        run: |
+          set -euo pipefail
+          node verification/methods-native-visual-conformance-extension-v1/known-gap-recovery.mjs | tee known-gap-recovery.log
 
       - name: Package exact evidence
         shell: bash

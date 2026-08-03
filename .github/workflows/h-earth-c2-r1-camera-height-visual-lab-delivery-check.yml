@@ -23,7 +23,7 @@ jobs:
           EXACT_HEAD: 8e404ec2580d4a1f99e7997e580f71d92a8c4fd6
           EXACT_PATH: preview/h-earth/c2-r1/camera-height-visual-lab-001/index.html
         run: |
-          cat > /tmp/check.cjs <<'NODE'
+          cat > check.cjs <<'NODE'
           const fs=require('fs'); const {chromium}=require('playwright');
           const h=process.env.EXACT_HEAD,p=process.env.EXACT_PATH,o='smansfield635-create',r='smansfield635-create.github.io';
           const cells=[
@@ -44,7 +44,7 @@ jobs:
           }catch(e){item.result='FAIL';item.error=e.stack||String(e);results.push(item);await ctx.close();}}
           await b.close();const receipt={receiptType:'H_EARTH_C2_R1_CAMERA_HEIGHT_VISUAL_LAB_BROWSER_DELIVERY_RECEIPT_v1',operationId:'H_EARTH_C2_R1_CAMERA_HEIGHT_VISUAL_LAB_DELIVERY_CORRECTION_001',exactPreviewHead:h,exactPreviewPath:p,browser:'PLAYWRIGHT_CHROMIUM_HEADLESS_1440x900_SWIFTSHADER_WEBGL',result:pass?'CAMERA_HEIGHT_VISUAL_LAB_USER_ACCESS_READY':'BLOCKED_WITH_ONE_EXACT_VISUAL_LAB_DELIVERY_CONTRADICTION',verifiedUserAccessUrl:pass?.verifiedUserAccessUrl??null,deliveryMethod:pass?.method??null,candidates:results,unauthorizedMutationCount:0,timestamp:new Date().toISOString()};fs.writeFileSync('camera-height-visual-lab-delivery-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(!pass)process.exit(1);})().catch(e=>{console.error(e);process.exit(1)});
           NODE
-          node /tmp/check.cjs
+          node check.cjs
       - name: Upload browser receipt
         if: always()
         uses: actions/upload-artifact@v4
@@ -70,4 +70,4 @@ jobs:
               echo '`BROWSER_RECEIPT_FILE_MISSING`'
             fi
           } >/tmp/comment.md
-          gh pr comment 518 --body-file /tmp/comment.md
+          gh pr comment 518 --repo smansfield635-create/smansfield635-create.github.io --body-file /tmp/comment.md

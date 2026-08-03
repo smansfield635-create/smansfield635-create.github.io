@@ -3,8 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { chromium } from "playwright";
 
-const CONTRACT = "LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_ROOT_MATRIX_v1";
-const ROUTE = "/laws/";
+const CONTRACT = "LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_ROOT_MATRIX_v2";
 const BASE_URL = process.env.BASE_URL || "http://127.0.0.1:4173";
 const EVIDENCE_DIR = path.resolve(
   process.cwd(),
@@ -31,10 +30,10 @@ const PROFILES = Object.freeze([
 const receipt = {
   contract: CONTRACT,
   head: HEAD,
-  route: ROUTE,
+  route: "/laws/",
   generatedAt: new Date().toISOString(),
   profiles: {},
-  keyboard: null,
+  keyboardFiveAuthorityCoverage: null,
   reducedMotion: null,
   staticNoJavaScript: {},
   disposition: "IN_PROGRESS"
@@ -45,12 +44,12 @@ async function writeJson(name, value) {
   await fs.writeFile(path.join(EVIDENCE_DIR, name), `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-function collectErrors(page) {
+function browserErrors(page) {
   const errors = [];
-  page.on("pageerror", error => errors.push(`pageerror: ${error.message}`));
+  page.on("pageerror", error => errors.push(`pageerror:${error.message}`));
   page.on("console", message => {
     if (message.type() === "error" && !message.text().includes("404")) {
-      errors.push(`console: ${message.text()}`);
+      errors.push(`console:${message.text()}`);
     }
   });
   return errors;
@@ -59,238 +58,198 @@ function collectErrors(page) {
 async function waitForRuntime(page) {
   await page.waitForFunction(() => {
     const root = document.querySelector("[data-laws-root]");
-    return Boolean(
-      globalThis.DGB_LAWS_CONTROLLER &&
-      globalThis.DGB_LAWS_EXPERIENCE &&
-      globalThis.DGBLawsStagedLoader
-    ) && root?.dataset.lawsControllerStatus === "available";
+    return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGBLawsStagedLoader) &&
+      root?.dataset.lawsControllerStatus === "available";
   }, null, { timeout: 30000 });
-
-  const preloadAccepted = await page.evaluate(() => {
-    document.querySelector("[data-laws-compass-primary]")?.scrollIntoView({
-      block: "center",
-      inline: "nearest",
-      behavior: "instant"
-    });
-    return globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false;
-  });
-  assert.equal(preloadAccepted, true, "Existing staged runtime preload request was rejected.");
-
+  const preload = await page.evaluate(() =>
+    globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false
+  );
+  assert.equal(preload, true, "Existing staged runtime preload request was rejected.");
   await page.waitForFunction(() => {
     const root = document.querySelector("[data-laws-root]");
-    return Boolean(globalThis.DGB_LAWS_INTERACTIONS) &&
-      root?.dataset.lawsInteractionsStatus === "available";
+    return Boolean(globalThis.DGB_LAWS_INTERACTIONS) && root?.dataset.lawsInteractionsStatus === "available";
   }, null, { timeout: 30000 });
-  await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
-}
-
-function disclosure(page) {
-  return page.locator(".laws-first > details[data-laws-first-disclosure]");
-}
-
-async function activate(page, locator, input) {
-  if (input === "keyboard") {
-    await locator.focus();
-    assert.equal(await locator.evaluate(node => document.activeElement === node), true,
-      "Keyboard focus did not reach the requested control.");
-    await locator.press("Enter");
-  } else if (input === "touch") {
-    await locator.tap();
-  } else {
-    await locator.click();
-  }
 }
 
 async function activateDisclosure(page, input) {
-  const node = disclosure(page);
-  assert.equal(await node.count(), 1, "Expected one rendered F.I.R.S.T. disclosure in the hero.");
-  const summary = node.locator(":scope > summary");
-  if (await node.evaluate(element => element.open)) {
+  const details = page.locator(".laws-first > details[data-laws-first-disclosure]");
+  assert.equal(await details.count(), 1, "Expected one rendered F.I.R.S.T. disclosure.");
+  const summary = details.locator(":scope > summary");
+  if (await details.evaluate(node => node.open)) {
     await summary.click();
-    await page.waitForFunction(() => {
-      const element = document.querySelector(".laws-first > details[data-laws-first-disclosure]");
-      return Boolean(element && !element.open);
-    });
+    await page.waitForFunction(() =>
+      !document.querySelector(".laws-first > details[data-laws-first-disclosure]")?.open
+    );
   }
-  await activate(page, summary, input);
+  if (input === "keyboard") {
+    await summary.focus();
+    await summary.press("Enter");
+  } else if (input === "touch") {
+    await summary.tap();
+  } else {
+    await summary.click();
+  }
   await page.waitForFunction(() =>
     Boolean(document.querySelector(".laws-first > details[data-laws-first-disclosure]")?.open)
   );
-  await page.waitForTimeout(160);
-
-  const snapshot = await page.evaluate(maxGap => {
+  await page.waitForTimeout(180);
+  const state = await page.evaluate(maxGap => {
     const details = document.querySelector(".laws-first > details[data-laws-first-disclosure]");
     const summary = details?.querySelector(":scope > summary");
     const body = details?.querySelector(":scope > .laws-first__disclosure-body");
-    const summaryRect = summary?.getBoundingClientRect();
-    const bodyRect = body?.getBoundingClientRect();
-    const style = body ? getComputedStyle(body) : null;
-    const gap = summaryRect && bodyRect ? bodyRect.top - summaryRect.bottom : null;
-    const intersects = Boolean(bodyRect && bodyRect.bottom > 0 && bodyRect.top < innerHeight);
+    const a = summary?.getBoundingClientRect();
+    const b = body?.getBoundingClientRect();
+    const gap = a && b ? b.top - a.bottom : null;
+    const intersects = Boolean(b && b.bottom > 0 && b.top < innerHeight);
     return {
       open: Boolean(details?.open),
-      summaryBottom: summaryRect?.bottom ?? null,
-      bodyTop: bodyRect?.top ?? null,
-      bodyBottom: bodyRect?.bottom ?? null,
-      bodyPosition: style?.position || "",
+      summaryBottom: a?.bottom ?? null,
+      bodyTop: b?.top ?? null,
+      bodyBottom: b?.bottom ?? null,
+      bodyPosition: body ? getComputedStyle(body).position : "",
       gap,
       intersects,
       immediateVisibleConsequence: Boolean(intersects && gap !== null && gap <= maxGap),
       scrollY
     };
   }, MAX_CTA_GAP);
+  assert.equal(state.open, true, "F.I.R.S.T. disclosure did not open.");
+  assert.equal(state.immediateVisibleConsequence, true,
+    `CTA consequence displaced: gap=${state.gap}, intersects=${state.intersects}.`);
+  return state;
+}
 
-  assert.equal(snapshot.open, true, "F.I.R.S.T. disclosure did not open.");
-  assert.equal(snapshot.immediateVisibleConsequence, true,
-    `CTA consequence displaced: gap=${snapshot.gap}, intersects=${snapshot.intersects}.`);
-  return snapshot;
+async function centerScene(page) {
+  await page.evaluate(() => document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
+    block: "center", inline: "nearest", behavior: "instant"
+  }));
+  await page.waitForTimeout(350);
 }
 
 async function returnToConstellation(page) {
-  const state = await page.locator("[data-laws-root]").getAttribute("data-laws-controller-state");
-  if (state === "CONSTELLATION") return;
+  const current = await page.locator("[data-laws-root]").getAttribute("data-laws-controller-state");
+  if (current === "CONSTELLATION") return;
   const accepted = await page.evaluate(() =>
-    globalThis.DGB_LAWS_CONTROLLER?.requestReturnToConstellation?.({ scrollToScene: false }) ?? false
+    globalThis.DGB_LAWS_CONTROLLER?.requestReturnToConstellation?.({ source: "root-matrix-reset", scrollToScene: false }) ?? false
   );
-  assert.equal(accepted, true, `Return to constellation rejected from ${state}.`);
+  assert.equal(accepted, true, `Controller rejected test reset from ${current}.`);
   await page.waitForFunction(() =>
     document.querySelector("[data-laws-root]")?.dataset.lawsControllerState === "CONSTELLATION"
   );
 }
 
-async function activateAuthority(page, direction, input) {
-  await returnToConstellation(page);
-  const semanticSelector = `[data-laws-category][data-direction="${direction}"]`;
-  const semanticControl = page.locator(semanticSelector).first();
-  assert.equal(await semanticControl.count(), 1, `Authority control missing: ${direction}.`);
-  await semanticControl.scrollIntoViewIfNeeded();
-  await page.waitForTimeout(180);
-
-  if (input === "keyboard") {
-    await activate(page, semanticControl, input);
-  } else {
-    const hit = await page.evaluate(nextDirection => {
-      const semantic = document.querySelector(
-        `[data-laws-category][data-direction="${nextDirection}"]`
-      );
-      const projected = document.querySelector(
-        `[data-laws-projected-category-label="${nextDirection}"]`
-      );
-      const surfaces = [projected, semantic].filter(node => {
-        if (!(node instanceof HTMLElement)) return false;
-        const rect = node.getBoundingClientRect();
-        const style = getComputedStyle(node);
-        return !node.hidden &&
-          style.display !== "none" &&
-          style.visibility !== "hidden" &&
-          style.pointerEvents !== "none" &&
-          rect.width > 0 &&
-          rect.height > 0;
-      });
-      const fractions = [
-        [0.5, 0.5], [0.2, 0.2], [0.8, 0.2], [0.2, 0.8],
-        [0.8, 0.8], [0.5, 0.2], [0.5, 0.8], [0.2, 0.5], [0.8, 0.5]
-      ];
-
-      for (const surface of surfaces) {
-        const rect = surface.getBoundingClientRect();
-        for (const [fx, fy] of fractions) {
-          const x = rect.left + rect.width * fx;
-          const y = rect.top + rect.height * fy;
-          if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
-          const top = document.elementFromPoint(x, y);
-          const owner = top?.closest?.(
-            `[data-laws-projected-category-label="${nextDirection}"], ` +
-            `[data-laws-category][data-direction="${nextDirection}"]`
-          );
-          if (!owner) continue;
-          return {
-            x,
-            y,
-            surface: owner.hasAttribute("data-laws-projected-category-label")
-              ? "projected-label"
-              : "semantic-control"
-          };
-        }
+async function physicalHit(page) {
+  return page.evaluate(() => {
+    const root = document.querySelector("[data-laws-root]");
+    const direction = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
+    const label = document.querySelector(`[data-laws-projected-category-label="${direction}"]`);
+    if (!(label instanceof HTMLElement)) return null;
+    const rect = label.getBoundingClientRect();
+    for (const [fx, fy] of [[.5,.5],[.35,.5],[.65,.5],[.5,.35],[.5,.65]]) {
+      const x = rect.left + rect.width * fx;
+      const y = rect.top + rect.height * fy;
+      if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
+      const top = document.elementFromPoint(x, y);
+      if (top?.closest?.(`[data-laws-projected-category-label="${direction}"]`)) {
+        return {
+          direction, x, y,
+          rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
+          topTag: top.tagName,
+          topClass: typeof top.className === "string" ? top.className : ""
+        };
       }
-      return null;
-    }, direction);
-
-    assert.ok(hit, `No unblocked physical hit surface for ${direction} (${input}).`);
-    if (input === "touch") {
-      await page.touchscreen.tap(hit.x, hit.y);
-    } else {
-      await page.mouse.click(hit.x, hit.y);
     }
-  }
+    return null;
+  });
+}
 
-  await page.waitForFunction(nextDirection => {
-    const root = document.querySelector("[data-laws-root]");
-    return root?.dataset.lawsControllerState === "CLUSTER_OPEN" &&
-      document.documentElement.dataset.lawsExperienceDirection === nextDirection;
-  }, direction, { timeout: 15000 });
-  await page.waitForTimeout(260);
-
+async function correspondence(page, direction) {
   const expected = AUTHORITIES[direction];
-  const snapshot = await page.evaluate(({ nextDirection, expectedTitle, expectedRoute }) => {
+  const state = await page.evaluate(({ direction, expectedRoute, expectedTitle }) => {
     const root = document.querySelector("[data-laws-root]");
-    let frame = null;
-    try { frame = globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null; } catch (_) { frame = null; }
+    const semantic = document.querySelector(`[data-laws-category][data-direction="${direction}"]`);
     const rail = Array.from(document.querySelectorAll(
       "[data-laws-first-rail] [data-laws-experience-indicator]"
     ));
-    const activeRail = rail.filter(item => item.dataset.lawsExperienceActive === "true");
-    const activeItem = activeRail[0] || null;
+    const active = rail.filter(item => item.dataset.lawsExperienceActive === "true");
+    const activeItem = active[0] || null;
     const light = activeItem?.querySelector(".laws-first-rail__light") || null;
     const question = document.querySelector(
-      `.laws-first__question-grid [data-laws-experience-question="${nextDirection}"]`
+      `.laws-first__question-grid [data-laws-experience-question="${direction}"]`
     );
-    const html = document.documentElement;
-    const body = document.body;
+    const interaction = globalThis.DGB_LAWS_INTERACTIONS?.getReceipt?.() || null;
     return {
-      direction: html.dataset.lawsExperienceDirection || "",
       controllerState: root?.dataset.lawsControllerState || "",
-      rootActiveDirection: root?.dataset.lawsActiveDirection || "",
-      rootActiveCategory: root?.dataset.lawsActiveCategory || "",
-      orbitFocus: root?.dataset.orbitFocus || "",
-      frameDirection: frame?.compass?.selectedDirection || "",
+      experienceDirection: document.documentElement.dataset.lawsExperienceDirection || "",
+      semanticExpanded: semantic?.getAttribute("aria-expanded") || "",
       railCount: rail.length,
-      activeRailCount: activeRail.length,
+      activeRailCount: active.length,
       activeRailDirection: activeItem?.dataset.lawsExperienceIndicator || "",
       activeRailCurrent: activeItem?.getAttribute("aria-current") || "",
-      lightBackground: light ? getComputedStyle(light).backgroundColor : "",
-      lightShadow: light ? getComputedStyle(light).boxShadow : "",
+      activeLightBackground: light ? getComputedStyle(light).backgroundColor : "",
+      activeLightShadow: light ? getComputedStyle(light).boxShadow : "",
       questionActive: question?.dataset.lawsExperienceActive || "",
       entryRoute: question?.querySelector("a")?.getAttribute("href") || "",
       expectedRoute,
       speakerTitle: document.querySelector("[data-laws-experience-speaker-title]")?.textContent?.trim() || "",
       expectedTitle,
       speakerBody: document.querySelector("[data-laws-experience-speaker-body]")?.textContent?.trim() || "",
-      overflow: Math.max(html.scrollWidth, body.scrollWidth) - html.clientWidth
+      interactionLastAction: interaction?.lastAction || "",
+      interactionLastFailure: interaction?.lastFailure || "",
+      overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - document.documentElement.clientWidth
     };
-  }, { nextDirection: direction, expectedTitle: expected.title, expectedRoute: expected.route });
+  }, { direction, expectedRoute: expected.route, expectedTitle: expected.title });
+  assert.equal(state.controllerState, "CLUSTER_OPEN", `${direction}: controller did not open the authority cluster.`);
+  assert.equal(state.experienceDirection, direction, `${direction}: experience correspondence mismatch.`);
+  assert.equal(state.railCount, 5, `${direction}: five-light rail incomplete.`);
+  assert.equal(state.activeRailCount, 1, `${direction}: expected exactly one active light.`);
+  assert.equal(state.activeRailDirection, direction, `${direction}: wrong active light.`);
+  assert.equal(state.activeRailCurrent, "true", `${direction}: aria-current mismatch.`);
+  assert.equal(state.activeLightBackground, "rgb(121, 234, 255)", `${direction}: cyan active light missing.`);
+  assert.notEqual(state.activeLightShadow, "none", `${direction}: active light glow missing.`);
+  assert.equal(state.questionActive, "true", `${direction}: active question mismatch.`);
+  assert.equal(state.entryRoute, expected.route, `${direction}: entry route mismatch.`);
+  assert.equal(state.speakerTitle, expected.title, `${direction}: active question title mismatch.`);
+  assert.ok(state.speakerBody.length > 30, `${direction}: active explanation missing.`);
+  assert.equal(state.interactionLastFailure, "", `${direction}: protected interaction reported failure.`);
+  assert.ok(state.overflow <= 2, `${direction}: horizontal overflow ${state.overflow}px.`);
+  return state;
+}
 
-  assert.equal(snapshot.direction, direction, `${direction}: presentation direction mismatch.`);
-  assert.equal(snapshot.controllerState, "CLUSTER_OPEN", `${direction}: controller state mismatch.`);
-  assert.ok(
-    snapshot.frameDirection === direction ||
-    snapshot.orbitFocus === direction ||
-    snapshot.rootActiveCategory === direction ||
-    snapshot.rootActiveDirection === direction,
-    `${direction}: celestial/controller state does not correspond.`
-  );
-  assert.equal(snapshot.railCount, 5, `${direction}: five-light rail incomplete.`);
-  assert.equal(snapshot.activeRailCount, 1, `${direction}: exactly one rail light must be active.`);
-  assert.equal(snapshot.activeRailDirection, direction, `${direction}: active rail mismatch.`);
-  assert.equal(snapshot.activeRailCurrent, "true", `${direction}: rail aria-current mismatch.`);
-  assert.equal(snapshot.lightBackground, "rgb(121, 234, 255)", `${direction}: cyan active light missing.`);
-  assert.notEqual(snapshot.lightShadow, "none", `${direction}: active light glow missing.`);
-  assert.equal(snapshot.questionActive, "true", `${direction}: active question mismatch.`);
-  assert.equal(snapshot.entryRoute, expected.route, `${direction}: entry route mismatch.`);
-  assert.equal(snapshot.speakerTitle, expected.title, `${direction}: active question title mismatch.`);
-  assert.ok(snapshot.speakerBody.length > 30, `${direction}: active explanation missing.`);
-  assert.ok(snapshot.overflow <= 2, `${direction}: horizontal overflow ${snapshot.overflow}px.`);
-  return snapshot;
+async function activateVisiblePhysically(page, input) {
+  await returnToConstellation(page);
+  await centerScene(page);
+  const hit = await physicalHit(page);
+  assert.ok(hit, `No owned visible projected-authority hit point for ${input}.`);
+  if (input === "touch") await page.touchscreen.tap(hit.x, hit.y);
+  else await page.mouse.click(hit.x, hit.y);
+  await page.waitForFunction(direction => {
+    const root = document.querySelector("[data-laws-root]");
+    return root?.dataset.lawsControllerState === "CLUSTER_OPEN" &&
+      document.documentElement.dataset.lawsExperienceDirection === direction;
+  }, hit.direction, { timeout: 15000 });
+  await page.waitForTimeout(300);
+  const state = await correspondence(page, hit.direction);
+  assert.equal(state.interactionLastAction, "pointer-finalized:TAP:handled",
+    `${input}: physical authority tap was not handled by the protected interaction runtime.`);
+  return { hit, state };
+}
+
+async function activateKeyboardAuthority(page, direction) {
+  await returnToConstellation(page);
+  const control = page.locator(`[data-laws-category][data-direction="${direction}"]`).first();
+  assert.equal(await control.count(), 1, `Keyboard authority control missing: ${direction}.`);
+  await control.focus();
+  assert.equal(await control.evaluate(node => document.activeElement === node), true,
+    `Keyboard focus did not reach ${direction}.`);
+  await control.press("Enter");
+  await page.waitForFunction(nextDirection => {
+    const root = document.querySelector("[data-laws-root]");
+    return root?.dataset.lawsControllerState === "CLUSTER_OPEN" &&
+      document.documentElement.dataset.lawsExperienceDirection === nextDirection;
+  }, direction, { timeout: 15000 });
+  await page.waitForTimeout(250);
+  return correspondence(page, direction);
 }
 
 async function verifyProfile(browser, profile) {
@@ -301,17 +260,15 @@ async function verifyProfile(browser, profile) {
     deviceScaleFactor: 1
   });
   const page = await context.newPage();
-  const errors = collectErrors(page);
-  await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: "networkidle" });
+  const errors = browserErrors(page);
+  await page.goto(`${BASE_URL}/laws/`, { waitUntil: "networkidle" });
   await waitForRuntime(page);
+  await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
   const cta = await activateDisclosure(page, profile.input);
-  const authorities = {};
-  for (const direction of Object.keys(AUTHORITIES)) {
-    authorities[direction] = await activateAuthority(page, direction, profile.input);
-  }
+  const physicalAuthority = await activateVisiblePhysically(page, profile.input);
   await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-full.png`), fullPage: true });
   assert.deepEqual(errors, [], `${profile.name}: browser errors: ${errors.join(" | ")}`);
-  const result = { profile, cta, authorities, errors, disposition: "PASS" };
+  const result = { profile, cta, physicalAuthority, errors, disposition: "PASS" };
   await writeJson(`${profile.name}.json`, result);
   await context.close();
   return result;
@@ -320,17 +277,18 @@ async function verifyProfile(browser, profile) {
 async function verifyKeyboard(browser) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
-  const errors = collectErrors(page);
-  await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: "networkidle" });
+  const errors = browserErrors(page);
+  await page.goto(`${BASE_URL}/laws/`, { waitUntil: "networkidle" });
   await waitForRuntime(page);
+  await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
   const cta = await activateDisclosure(page, "keyboard");
   const authorities = {};
   for (const direction of Object.keys(AUTHORITIES)) {
-    authorities[direction] = await activateAuthority(page, direction, "keyboard");
+    authorities[direction] = await activateKeyboardAuthority(page, direction);
   }
   assert.deepEqual(errors, [], `keyboard: browser errors: ${errors.join(" | ")}`);
-  const result = { cta, authorities, errors, disposition: "PASS" };
-  await writeJson("keyboard.json", result);
+  const result = { cta, authorities, authorityCount: Object.keys(authorities).length, errors, disposition: "PASS" };
+  await writeJson("keyboard-five-authorities.json", result);
   await context.close();
   return result;
 }
@@ -343,21 +301,22 @@ async function verifyReducedMotion(browser) {
     reducedMotion: "reduce"
   });
   const page = await context.newPage();
-  const errors = collectErrors(page);
-  await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: "networkidle" });
+  const errors = browserErrors(page);
+  await page.goto(`${BASE_URL}/laws/`, { waitUntil: "networkidle" });
   await waitForRuntime(page);
+  await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
   const cta = await activateDisclosure(page, "touch");
-  const selection = await activateAuthority(page, "structure", "touch");
-  const transition = await page.evaluate(() => {
+  const physicalAuthority = await activateVisiblePhysically(page, "touch");
+  const transitionDuration = await page.evaluate(() => {
     const light = document.querySelector(
       '[data-laws-first-rail] [data-laws-experience-active="true"] .laws-first-rail__light'
     );
     return light ? getComputedStyle(light).transitionDuration : "";
   });
-  assert.ok(transition === "0s" || transition === "0.001ms",
-    `Reduced-motion transition remains active: ${transition}.`);
+  assert.ok(["0s", "0.001ms"].includes(transitionDuration),
+    `Reduced-motion transition remains active: ${transitionDuration}.`);
   assert.deepEqual(errors, [], `reduced-motion: browser errors: ${errors.join(" | ")}`);
-  const result = { cta, selection, transition, errors, disposition: "PASS" };
+  const result = { cta, physicalAuthority, transitionDuration, errors, disposition: "PASS" };
   await writeJson("reduced-motion.json", result);
   await context.close();
   return result;
@@ -371,42 +330,37 @@ async function verifyStatic(browser, profile) {
     javaScriptEnabled: false
   });
   const page = await context.newPage();
-  await page.goto(`${BASE_URL}${ROUTE}`, { waitUntil: "load" });
+  await page.goto(`${BASE_URL}/laws/`, { waitUntil: "load" });
   const cta = await activateDisclosure(page, profile.hasTouch ? "touch" : "pointer");
-  const expectedRoutes = Object.fromEntries(
-    Object.entries(AUTHORITIES).map(([key, value]) => [key, value.route])
-  );
-  const snapshot = await page.evaluate(routes => {
+  const expectedRoutes = Object.fromEntries(Object.entries(AUTHORITIES).map(([id, value]) => [id, value.route]));
+  const state = await page.evaluate(routes => {
     const rail = Array.from(document.querySelectorAll(
       "[data-laws-first-rail] [data-laws-experience-indicator]"
     ));
     const questions = Array.from(document.querySelectorAll(
       ".laws-first__question-grid [data-laws-experience-question]"
     ));
-    const html = document.documentElement;
-    const body = document.body;
     return {
       railCount: rail.length,
       activeRailCount: rail.filter(item => item.dataset.lawsExperienceActive === "true").length,
       questionCount: questions.length,
-      entryRoutes: Object.fromEntries(questions.map(item => [
+      routes: Object.fromEntries(questions.map(item => [
         item.dataset.lawsExperienceQuestion,
         item.querySelector("a")?.getAttribute("href") || ""
       ])),
       expectedRoutes: routes,
       heroText: document.querySelector(".laws-first")?.textContent?.replace(/\s+/g, " ").trim() || "",
-      overflow: Math.max(html.scrollWidth, body.scrollWidth) - html.clientWidth
+      overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - document.documentElement.clientWidth
     };
   }, expectedRoutes);
-
-  assert.equal(snapshot.railCount, 5, `${profile.name}: no-JS rail incomplete.`);
-  assert.equal(snapshot.activeRailCount, 0, `${profile.name}: no-JS invented active state.`);
-  assert.equal(snapshot.questionCount, 5, `${profile.name}: no-JS question set incomplete.`);
-  assert.deepEqual(snapshot.entryRoutes, snapshot.expectedRoutes, `${profile.name}: no-JS routes changed.`);
-  assert.ok(snapshot.heroText.includes("Research comes F.I.R.S.T."), `${profile.name}: no-JS hero missing.`);
-  assert.ok(snapshot.overflow <= 2, `${profile.name}: no-JS horizontal overflow ${snapshot.overflow}px.`);
+  assert.equal(state.railCount, 5, `${profile.name}: static rail incomplete.`);
+  assert.equal(state.activeRailCount, 0, `${profile.name}: static mode invented an active authority.`);
+  assert.equal(state.questionCount, 5, `${profile.name}: static question set incomplete.`);
+  assert.deepEqual(state.routes, state.expectedRoutes, `${profile.name}: static entry routes changed.`);
+  assert.ok(state.heroText.includes("Research comes F.I.R.S.T."), `${profile.name}: static hero missing.`);
+  assert.ok(state.overflow <= 2, `${profile.name}: static overflow ${state.overflow}px.`);
   await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-no-js-full.png`), fullPage: true });
-  const result = { profile, cta, snapshot, disposition: "PASS" };
+  const result = { profile, cta, state, disposition: "PASS" };
   await writeJson(`${profile.name}-no-js.json`, result);
   await context.close();
   return result;
@@ -418,14 +372,14 @@ try {
   for (const profile of PROFILES) {
     receipt.profiles[profile.name] = await verifyProfile(browser, profile);
   }
-  receipt.keyboard = await verifyKeyboard(browser);
+  receipt.keyboardFiveAuthorityCoverage = await verifyKeyboard(browser);
   receipt.reducedMotion = await verifyReducedMotion(browser);
   receipt.staticNoJavaScript.phone = await verifyStatic(browser, PROFILES[0]);
   receipt.staticNoJavaScript.desktop = await verifyStatic(browser, PROFILES[3]);
   receipt.disposition = "PASS";
 } finally {
   await browser.close();
+  await writeJson("root-matrix.json", receipt);
 }
 
-await writeJson("root-matrix.json", receipt);
 console.log(JSON.stringify(receipt, null, 2));

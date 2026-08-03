@@ -1,4 +1,4 @@
-name: Methods Euclidean Nonproduct Coherence Pass v1
+name: Methods Nonproduct Harness State Reach Correction v1
 
 on:
   pull_request:
@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: methods-euclidean-coherence-v1-${{ github.ref }}
+  group: methods-state-reach-correction-v1-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -27,10 +27,10 @@ env:
   EXECUTION_COMMIT: 66a2105e96e84c5b482f783010779f87a90a28ee
   HARNESS_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
   METHODS_MODELS_ORIGIN: http://127.0.0.1:4173
-  COHERENCE_OUT_DIR: methods-euclidean-coherence-evidence
+  COHERENCE_OUT_DIR: methods-euclidean-state-reach-correction-evidence
 
 jobs:
-  nonproduct-coherence:
+  nonproduct-state-reach-correction:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -77,85 +77,62 @@ jobs:
       - name: Install pinned browser driver
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
-      - name: Bind fault-tolerant state adapter to native selected-state surfaces
+      - name: Validate corrected nonproduct runner syntax
+        run: node --check verification/methods-euclidean-coherence-v1/runner.mjs
+
+      - name: Record corrected runner identity
         shell: bash
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('verification/methods-euclidean-coherence-v1/runner.mjs')
-          s = p.read_text()
-          replacements = [
-            (
-              "async function setFamily(page,z){const current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmZ));if(current!==z){await clickIndexed(page,'.mm-family-tab',z);await waitDataset(page,'mmZ',z);await waitStable(page);}}",
-              "async function setFamily(page,z){let current=await page.$$eval('.mm-family-tab',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==z){await page.evaluate(({z})=>{const el=[...document.querySelectorAll('.mm-family-tab')][z];if(el)el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));},{z});await waitStable(page,180);current=await page.$$eval('.mm-family-tab',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));}return current===z;}"
-            ),
-            (
-              "async function setLens(page,y){const current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmY));if(current!==y){await clickIndexed(page,'.mm-lens-tab',y);await waitDataset(page,'mmY',y);await waitStable(page);}}",
-              "async function setLens(page,y){let current=await page.$$eval('[data-mm-lens-tab]',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==y){await page.evaluate(({y})=>{const el=[...document.querySelectorAll('[data-mm-lens-tab]')][y];if(el)el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));},{y});await waitStable(page,180);current=await page.$$eval('[data-mm-lens-tab]',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));}return current===y;}"
-            ),
-            (
-              "async function setModel(page,x,count){let current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmX));let guard=0;while(current!==x && guard++<count+2){const forward=(x-current+count)%count;const backward=(current-x+count)%count;const selector=forward<=backward?'[data-mm-next]':'[data-mm-previous]';await page.click(selector);await waitStable(page);current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmX));}if(current!==x)throw new Error(`MODEL_STATE_UNREACHABLE:${current}->${x}`);}",
-              "async function setModel(page,x,count){let current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));let guard=0;while(current!==x&&guard++<count+2){const forward=(x-current+count)%count;const backward=(current-x+count)%count;const selector=forward<=backward?'[data-mm-next]':'[data-mm-previous]';await page.evaluate(({selector})=>document.querySelector(selector)?.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window})),{selector});await waitStable(page,180);current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));}return current===x;}"
-            ),
-            (
-              "async function setCoordinate(page,z,x,y){await setFamily(page,z);await setLens(page,y);await setModel(page,x,FAMILIES[z].models.length);}",
-              "async function setCoordinate(page,z,x,y){const familyReached=await setFamily(page,z);const lensReached=await setLens(page,y);const modelReached=await setModel(page,x,FAMILIES[z].models.length);return {familyReached,lensReached,modelReached,reached:familyReached&&lensReached&&modelReached};}"
-            )
-          ]
-          for old, new in replacements:
-              if old not in s:
-                  raise SystemExit('STATE_ADAPTER_PATCH_TARGET_NOT_FOUND')
-              s = s.replace(old, new)
-          p.write_text(s)
-          PY
-
-      - name: Validate nonproduct runner syntax
-        run: node --check verification/methods-euclidean-coherence-v1/runner.mjs
+          sha256sum verification/methods-euclidean-coherence-v1/runner.mjs | tee corrected-runner.sha256
+          git diff --name-only "$EXPECTED_SOURCE_HEAD" HEAD | sort | tee exact-changed-paths.txt
 
       - name: Start exact-source static server
         shell: bash
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-euclidean-coherence-server.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-state-reach-server.log 2>&1 &
           for attempt in $(seq 1 60); do
             if curl -fsS http://127.0.0.1:4173/laws/research/methods-and-models/ >/dev/null; then
               exit 0
             fi
             sleep 0.25
           done
-          cat /tmp/methods-euclidean-coherence-server.log
+          cat /tmp/methods-state-reach-server.log
           exit 1
 
-      - name: Execute 1575-primary nonproduct coherence pass
+      - name: Execute corrected 1575-primary nonproduct pass
         shell: bash
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
           set -o pipefail
-          node verification/methods-euclidean-coherence-v1/runner.mjs | tee methods-euclidean-coherence-run.log
+          node verification/methods-euclidean-coherence-v1/runner.mjs | tee methods-state-reach-correction-run.log
 
       - name: Generate archive identity
         if: always()
         shell: bash
         run: |
-          if [ -d methods-euclidean-coherence-evidence ]; then
-            cp /tmp/methods-euclidean-coherence-server.log methods-euclidean-coherence-evidence/server.log || true
-            cp methods-euclidean-coherence-run.log methods-euclidean-coherence-evidence/runner.log || true
-            cp verification/methods-euclidean-coherence-v1/runner.mjs methods-euclidean-coherence-evidence/executed-runner.mjs || true
-            sha256sum verification/methods-euclidean-coherence-v1/runner.mjs > methods-euclidean-coherence-evidence/executed-runner.mjs.sha256 || true
-            tar -czf methods-euclidean-coherence-evidence.tar.gz methods-euclidean-coherence-evidence
-            sha256sum methods-euclidean-coherence-evidence.tar.gz > methods-euclidean-coherence-evidence.tar.gz.sha256
+          if [ -d methods-euclidean-state-reach-correction-evidence ]; then
+            cp /tmp/methods-state-reach-server.log methods-euclidean-state-reach-correction-evidence/server.log || true
+            cp methods-state-reach-correction-run.log methods-euclidean-state-reach-correction-evidence/runner.log || true
+            cp verification/methods-euclidean-coherence-v1/runner.mjs methods-euclidean-state-reach-correction-evidence/executed-runner.mjs || true
+            cp corrected-runner.sha256 methods-euclidean-state-reach-correction-evidence/executed-runner.mjs.sha256 || true
+            cp exact-changed-paths.txt methods-euclidean-state-reach-correction-evidence/exact-changed-paths.txt || true
+            tar -czf methods-euclidean-state-reach-correction-evidence.tar.gz methods-euclidean-state-reach-correction-evidence
+            sha256sum methods-euclidean-state-reach-correction-evidence.tar.gz > methods-euclidean-state-reach-correction-evidence.tar.gz.sha256
           fi
 
-      - name: Upload exact-head nonproduct coherence evidence
+      - name: Upload corrected state-reach evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: methods-euclidean-nonproduct-coherence-v1-evidence
+          name: methods-nonproduct-harness-state-reach-correction-v1-evidence
           path: |
-            methods-euclidean-coherence-evidence/
-            methods-euclidean-coherence-evidence.tar.gz
-            methods-euclidean-coherence-evidence.tar.gz.sha256
-            methods-euclidean-coherence-run.log
-            /tmp/methods-euclidean-coherence-server.log
+            methods-euclidean-state-reach-correction-evidence/
+            methods-euclidean-state-reach-correction-evidence.tar.gz
+            methods-euclidean-state-reach-correction-evidence.tar.gz.sha256
+            methods-state-reach-correction-run.log
+            corrected-runner.sha256
+            exact-changed-paths.txt
+            /tmp/methods-state-reach-server.log
           if-no-files-found: warn
           retention-days: 30

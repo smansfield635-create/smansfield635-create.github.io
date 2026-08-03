@@ -149,8 +149,29 @@ async function verifyProfile(profile, viewport) {
   const zState = await snapshot(page);
   if (zState.familyId !== "pressure" || zState.modelId !== "pressure-field" || !zState.coordinate.includes("Z PRESSURE / CAPACITY") || !zState.coordinate.includes("X 01/07")) failures.push("z_rotation");
 
+  const inspectHit = await page.evaluate(() => {
+    const control = document.querySelector('.mm-model-card[data-mm-x-position="active"] [data-mm-inspect]');
+    const rect = control?.getBoundingClientRect();
+    const hit = rect ? document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2) : null;
+    const card = control?.closest(".mm-model-card");
+    return {
+      controlExists: Boolean(control),
+      disabled: Boolean(control?.disabled),
+      cardInert: Boolean(card?.inert),
+      cardAriaHidden: card?.getAttribute("aria-hidden"),
+      rect: rect ? { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height } : null,
+      hitTag: hit?.tagName || "",
+      hitClass: hit?.className || "",
+      hitIsControl: hit === control || Boolean(hit?.closest?.("[data-mm-inspect]") === control)
+    };
+  });
+  console.log("METHODS_MODELS_INSPECT_HIT", JSON.stringify({ profile, inspectHit }));
   await page.click('.mm-model-card[data-mm-x-position="active"] [data-mm-inspect]');
-  await page.waitForSelector("dialog[open]");
+  try {
+    await page.waitForSelector("dialog[open]", { timeout: 3500 });
+  } catch {
+    throw new Error(`METHODS_MODELS_INSPECT_POINTER_FAILED:${profile}:${JSON.stringify(inspectHit)}`);
+  }
   const inspection = await page.evaluate(() => ({
     title: document.querySelector("[data-mm-dialog-title]")?.textContent,
     sections: document.querySelectorAll(".mm-dialog__section").length,

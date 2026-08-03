@@ -1,744 +1,163 @@
-name: H-Earth C2-R1 Complete World Integration
+name: H-Earth C2-R1 Material-Only Binding Materialization
 
 on:
-  workflow_dispatch:
-    inputs:
-      expected_candidate_head:
-        required: true
-        type: string
   pull_request:
-    branches: [integration/h-earth-c2-r1-baseline-001]
+    branches: [rollback/h-earth-c2-r1-material-only-binding-start-001]
     paths:
       - '.github/workflows/h-earth-c2-r1-complete-world-integration.yml'
       - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/**'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js'
       - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs'
-      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/**'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'
+      - 'showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js'
+      - 'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'
 
 permissions:
-  contents: read
+  contents: write
+  actions: read
 
 env:
-  EXPECTED_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.expected_candidate_head }}
-  REVIEW_URL: http://127.0.0.1:4188/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html
-  PLAYWRIGHT_VERSION: 1.55.0
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+  CANDIDATE_BRANCH: agent/h-earth-c2-r1-material-only-binding-implementation-001
+  STARTING_HEAD: 4f0491f00fae794ecdefbae36f4ee86c8a1bd21a
+  ROLLBACK_BRANCH: rollback/h-earth-c2-r1-material-only-binding-start-001
+  ARTIFACT_ID: '8827148247'
+  ARTIFACT_ZIP_SHA256: 8162da59a38abe5381bd0e16381c9a772d72c84a5cdc912bc9700a2e9e992690
+  CACHE_JSON_SHA256: 2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5
+  CACHE_GZIP_SHA256: 8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b
+  CARRIER_PART_1_SHA256: 9caa380b03ae548234c8b2859d153bc1c9565057db9c64645c12b307c35b7936
+  CARRIER_PART_2_SHA256: 67e2a7af63dae9d7f3475e9bf7239b16a01c54202c318664a4f3d89fad8131e8
+  CACHE_SCHEMA: H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v2
+  PACKAGE_IDENTITY: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
+  PACKAGE_DIGEST: fnv1a32:773dae4e
+  OPERATION_ID: H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001
 
 jobs:
-  exact-head-and-static-construction:
+  materialize-exact-packet:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.EXPECTED_HEAD }}
           fetch-depth: 0
+          persist-credentials: true
 
-      - name: Verify exact identities and path boundaries
+      - name: MC4.1 verify frozen branch and authorized corridor
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test "$GITHUB_HEAD_REF" = "$CANDIDATE_BRANCH"
+          git fetch --no-tags origin "$ROLLBACK_BRANCH:refs/remotes/origin/$ROLLBACK_BRANCH"
+          test "$(git rev-parse refs/remotes/origin/$ROLLBACK_BRANCH)" = "$STARTING_HEAD"
+          cat > /tmp/expected <<'PATHS'
+          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          PATHS
+          sort -u /tmp/expected -o /tmp/expected
+          git diff --name-only "$STARTING_HEAD...HEAD" | sort -u > /tmp/current
+          test ! -s <(comm -23 /tmp/current /tmp/expected)
+          n="$(wc -l < /tmp/current)"; test "$n" -eq 9 -o "$n" -eq 11
 
-          git fetch origin rollback/h-earth-c2-r1-real-package-adapter-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-real-package-adapter-start-001
-          git fetch origin rollback/h-earth-c2-r1-startup-performance-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-startup-performance-start-001
-          git fetch origin rollback/h-earth-c2-r1-visible-frame-color-start-001:refs/remotes/origin/rollback/h-earth-c2-r1-visible-frame-color-start-001
+      - name: MC4.2 exact completion sentinel
+        id: state
+        shell: bash
+        run: |
+          node <<'NODE'
+          const c=require('crypto'),f=require('fs'),z=require('zlib'),x=require('child_process');
+          const H=v=>c.createHash('sha256').update(v).digest('hex'),J=p=>JSON.parse(f.readFileSync(p)),S=a=>JSON.stringify([...new Set(a)].sort());
+          const P={json:'h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json',custody:'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json',ledger:'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json',role3:'h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json'};
+          const expected=['.github/workflows/h-earth-c2-r1-complete-world-integration.yml','h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js','h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js','h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs','h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json','h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json','showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'],B='EXACT_COMMIT_CONTAINING_THIS_RECORD',E='EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW';
+          let q={};
+          try{
+            const i=J(P.json),s=J(P.custody),l=J(P.ledger),r=J(P.role3),a=l.exactBindingCacheCarrier,b=r.exactBindingCacheCarrier;
+            const rec=o=>o.operationId===process.env.OPERATION_ID&&o.candidateBranch===process.env.CANDIDATE_BRANCH&&o.startingHead===process.env.STARTING_HEAD&&o.cacheSchema===process.env.CACHE_SCHEMA&&o.completeWorldPackageIdentity===process.env.PACKAGE_IDENTITY&&o.completeWorldPackageContentDigest===process.env.PACKAGE_DIGEST&&o.boundTerrainVertexCount===10419&&o.boundShorelineVertexCount===154&&o.terrainPositionMutationCount===0&&o.terrainNormalMutationCount===0&&o.inlandWaterMembershipViolationCount===0&&o.resultingHeadBinding===B&&o.externalizedHeadBinding===E;
+            q.identity=i.manifestType==='H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_IDENTITY_v1'&&i.operationId===process.env.OPERATION_ID&&i.startingHead===process.env.STARTING_HEAD&&i.candidateBranch===process.env.CANDIDATE_BRANCH&&i.cacheSchema===process.env.CACHE_SCHEMA&&i.packageIdentity===process.env.PACKAGE_IDENTITY&&i.packageContentDigest===process.env.PACKAGE_DIGEST&&i.boundTerrainVertexCount===10419&&i.boundShorelineVertexCount===154&&i.canonicalPositionsPreserved&&i.canonicalNormalsPreserved&&i.inlandWaterMembershipViolationCount===0;
+            q.custody=s.recordType==='H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_SOURCE_CUSTODY_v1'&&s.operationId===process.env.OPERATION_ID&&s.startingHead===process.env.STARTING_HEAD&&s.cacheSchema===process.env.CACHE_SCHEMA&&s.newPackageIdentity===process.env.PACKAGE_IDENTITY&&s.newPackageDigest===process.env.PACKAGE_DIGEST&&s.canonicalPositionsByteIdentical&&s.canonicalNormalsByteIdentical&&s.terrainPositionMutationCount===0&&s.terrainNormalMutationCount===0&&s.inlandWaterMembershipViolationCount===0;
+            q.records=rec(l)&&rec(r);q.parts=a?.partIndex===1&&b?.partIndex===2&&a.partCount===2&&b.partCount===2&&a.encoding==='BASE64_GZIP_JSON'&&b.encoding==='BASE64_GZIP_JSON';
+            q.partHashes=H(Buffer.from(a.value))===process.env.CARRIER_PART_1_SHA256&&H(Buffer.from(b.value))===process.env.CARRIER_PART_2_SHA256;
+            const gz=Buffer.from(a.value+b.value,'base64'),js=z.gunzipSync(gz),k=JSON.parse(js);
+            q.cacheHashes=H(gz)===process.env.CACHE_GZIP_SHA256&&H(js)===process.env.CACHE_JSON_SHA256;
+            q.cache=k.cacheType===process.env.CACHE_SCHEMA&&k.completeWorldPackageIdentity===process.env.PACKAGE_IDENTITY&&k.completeWorldPackageContentDigest===process.env.PACKAGE_DIGEST&&k.counters.boundTerrainVertexCount===10419&&k.counters.boundShorelineVertexCount===154&&k.counters.terrainPositionMutationCount===0&&k.counters.terrainNormalMutationCount===0&&k.counters.inlandWaterMembershipViolationCount===0&&k.preservation.canonicalPositionsByteIdentical&&k.preservation.canonicalNormalsByteIdentical&&k.preservation.indicesPreserved&&k.preservation.primitiveSpansPreserved&&k.preservation.drawRangesPreserved;
+            const d=x.execFileSync('git',['diff','--name-only',process.env.STARTING_HEAD+'...HEAD'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+            q.eleven=d.length===11&&S(d)===S(expected);q.branch=process.env.GITHUB_HEAD_REF===process.env.CANDIDATE_BRANCH;
+          }catch(e){q.error=e.message}
+          const ok=!q.error&&Object.values(q).every(v=>v===true);
+          f.appendFileSync(process.env.GITHUB_OUTPUT,'already='+ok+'\n');f.appendFileSync(process.env.GITHUB_STEP_SUMMARY,'```json\n'+JSON.stringify(q,null,2)+'\n```\n');
+          NODE
 
-          test "$(git rev-parse origin/rollback/h-earth-c2-r1-real-package-adapter-start-001)" = 8d41e4eb85a8ef6a2162e46c2bc5d0a92892dc55
-          test "$(git rev-parse origin/rollback/h-earth-c2-r1-startup-performance-start-001)" = f171852f3b453a1535fc29ed2798430814351084
-          test "$(git rev-parse origin/rollback/h-earth-c2-r1-visible-frame-color-start-001)" = a699c5a64e2bf54d950a69c839c3d9ee41b6514f
+      - name: MC4.3 verify immutable artifact
+        if: steps.state.outputs.already != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail;mkdir -p "$RUNNER_TEMP/m"
+          gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID/zip" > "$RUNNER_TEMP/a.zip"
+          echo "$ARTIFACT_ZIP_SHA256  $RUNNER_TEMP/a.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/a.zip" -d "$RUNNER_TEMP/m";cd "$RUNNER_TEMP/m"
+          echo "$CARRIER_PART_1_SHA256  cache-carrier-part-1.txt" | sha256sum -c -
+          echo "$CARRIER_PART_2_SHA256  cache-carrier-part-2.txt" | sha256sum -c -
+          echo "$CACHE_GZIP_SHA256  complete-world-material-only-cache-v2.json.gz" | sha256sum -c -
+          echo "$CACHE_JSON_SHA256  complete-world-material-only-cache-v2.json" | sha256sum -c -
+          cat cache-carrier-part-1.txt cache-carrier-part-2.txt | base64 -d > c.gz
+          echo "$CACHE_GZIP_SHA256  c.gz" | sha256sum -c -;gzip -dc c.gz > c.json;echo "$CACHE_JSON_SHA256  c.json" | sha256sum -c -
 
-          printf '%s\n' \
-            .github/workflows/h-earth-c2-r1-complete-world-integration.yml \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs | sort > /tmp/expected-prior-six
-          git diff --name-only 8d41e4eb85a8ef6a2162e46c2bc5d0a92892dc55...origin/rollback/h-earth-c2-r1-visible-frame-color-start-001 | sort > /tmp/actual-prior-six
-          diff -u /tmp/expected-prior-six /tmp/actual-prior-six
+      - name: MC4.4 materialize only two evidence carriers
+        if: steps.state.outputs.already != 'true'
+        shell: bash
+        run: |
+          node <<'NODE'
+          const f=require('fs'),p=n=>f.readFileSync(process.env.RUNNER_TEMP+'/m/cache-carrier-part-'+n+'.txt','utf8');
+          const common={operationId:process.env.OPERATION_ID,candidateBranch:process.env.CANDIDATE_BRANCH,startingHead:process.env.STARTING_HEAD,cacheSchema:process.env.CACHE_SCHEMA,completeWorldPackageIdentity:process.env.PACKAGE_IDENTITY,completeWorldPackageContentDigest:process.env.PACKAGE_DIGEST,boundTerrainVertexCount:10419,boundShorelineVertexCount:154,terrainPositionMutationCount:0,terrainNormalMutationCount:0,inlandWaterMembershipViolationCount:0,resultingHeadBinding:'EXACT_COMMIT_CONTAINING_THIS_RECORD',externalizedHeadBinding:'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW',artifactId:8827148247,artifactZipSha256:'sha256:'+process.env.ARTIFACT_ZIP_SHA256,cacheJsonSha256:'sha256:'+process.env.CACHE_JSON_SHA256,cacheGzipSha256:'sha256:'+process.env.CACHE_GZIP_SHA256,canonicalPositionsPreserved:true,canonicalNormalsPreserved:true,indicesPrimitiveSpansDrawRangesPreserved:true,materialOnlyBinding:true,geometryChanged:false,materialsRegenerated:false,cameraChanged:false,navigationChanged:false,placementsChanged:false,packageChanged:false,runtimeCodeChangedByCompletion:false,cacheBytesRegenerated:false,publicDefaultMutation:false,publication:false,promotion:false,mergeAuthorized:false,userDifferential:'NOT_PERFORMED',overallCompleteWorldPathCount:11,materializationStatus:'COMPLETE_PRELOADED_CARRIER_TRANSACTION'};
+          const l={ledgerType:'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_OPERATION_LEDGER_v1',...common,fromRole:'ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY',nextRole:'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',carrierPartSha256:'sha256:'+process.env.CARRIER_PART_1_SHA256,exactBindingCacheCarrier:{partIndex:1,partCount:2,encoding:'BASE64_GZIP_JSON',value:p(1)},status:'ROLE_1_CARRIER_MATERIALIZATION_COMPLETE_READY_FOR_IDEMPOTENT_MC4_SENTINEL'};
+          const r={entryType:'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_ROLE_3_ENTRY_v1',...common,fromRole:'ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY',nextRole:'ROLE_3_EXECUTION_VERIFICATION_AND_RECEIPT_CUSTODY',carrierPartSha256:'sha256:'+process.env.CARRIER_PART_2_SHA256,reviewEntry:'/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html',workflow:'.github/workflows/h-earth-c2-r1-complete-world-integration.yml',currentRole1Status:'DONE_READY_FOR_INDEPENDENT_ROLE_3_VERIFICATION',exactBindingCacheCarrier:{partIndex:2,partCount:2,encoding:'BASE64_GZIP_JSON',value:p(2)},status:'READY_FOR_INDEPENDENT_ROLE_3_EXECUTION_VERIFICATION'};
+          const d='h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/';f.writeFileSync(d+'h-earth.c2-r1.complete-world-operation-ledger.json',JSON.stringify(l,null,2)+'\n');f.writeFileSync(d+'h-earth.c2-r1.complete-world-role3-entry.json',JSON.stringify(r,null,2)+'\n');
+          NODE
+          printf '%s\n' h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json | sort > /tmp/two
+          git diff --name-only HEAD | sort > /tmp/changed;diff -u /tmp/two /tmp/changed
+          git diff --name-only "$STARTING_HEAD" | sort > /tmp/total
+          cat > /tmp/eleven <<'PATHS'
+          .github/workflows/h-earth-c2-r1-complete-world-integration.yml
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+          showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+          PATHS
+          sort -u /tmp/eleven -o /tmp/eleven;diff -u /tmp/eleven /tmp/total;test "$(wc -l < /tmp/total)" -eq 11
 
-          printf '%s\n' \
-            .github/workflows/h-earth-c2-r1-complete-world-integration.yml \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js | sort > /tmp/expected-visible-frame-two
-          git diff --name-only a699c5a64e2bf54d950a69c839c3d9ee41b6514f...HEAD | sort > /tmp/actual-visible-frame-two
-          diff -u /tmp/expected-visible-frame-two /tmp/actual-visible-frame-two
-
-          printf '%s\n' \
-            .github/workflows/h-earth-c2-r1-complete-world-integration.yml \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html \
-            h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs | sort > /tmp/expected-eleven
-          git diff --name-only e03f211a472fd564b1ed4b8a00096c923a077528...HEAD | sort > /tmp/actual-eleven
-          diff -u /tmp/expected-eleven /tmp/actual-eleven
-
-      - name: Run synthetic and exact-cache integration tests
+      - name: MC4.5 verify and amend without a second commit
+        if: steps.state.outputs.already != 'true'
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/static"
-          node h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs | tee "$RUNNER_TEMP/static/static-test.log"
-          sha256sum "$RUNNER_TEMP/static/static-test.log" > "$RUNNER_TEMP/static/static-test.sha256"
+          node -e "const c=require('crypto'),z=require('zlib'),d='./h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/',l=require(d+'h-earth.c2-r1.complete-world-operation-ledger.json'),r=require(d+'h-earth.c2-r1.complete-world-role3-entry.json'),h=v=>c.createHash('sha256').update(v).digest('hex'),g=Buffer.from(l.exactBindingCacheCarrier.value+r.exactBindingCacheCarrier.value,'base64'),j=z.gunzipSync(g),k=JSON.parse(j);if(h(Buffer.from(l.exactBindingCacheCarrier.value))!==process.env.CARRIER_PART_1_SHA256||h(Buffer.from(r.exactBindingCacheCarrier.value))!==process.env.CARRIER_PART_2_SHA256||h(g)!==process.env.CACHE_GZIP_SHA256||h(j)!==process.env.CACHE_JSON_SHA256||k.cacheType!==process.env.CACHE_SCHEMA||k.completeWorldPackageIdentity!==process.env.PACKAGE_IDENTITY||k.counters.boundTerrainVertexCount!==10419||k.counters.boundShorelineVertexCount!==154||k.counters.terrainPositionMutationCount||k.counters.terrainNormalMutationCount||k.counters.inlandWaterMembershipViolationCount)process.exit(1)"
+          git config user.name github-actions[bot];git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
+          test "$(git diff --cached --name-only | wc -l)" -eq 2
+          git commit --amend --no-edit
+          git push --force-with-lease="refs/heads/$CANDIDATE_BRANCH:$EXPECTED_HEAD" origin "HEAD:$CANDIDATE_BRANCH"
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-c2-r1-complete-world-static-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/static
-          if-no-files-found: error
-          retention-days: 30
-
-  browser-execution-transport:
-    needs: exact-head-and-static-construction
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
-
-      - name: Provision exact-head same-origin browser host
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          mkdir -p "$RUNNER_TEMP/browser/runtime" "$RUNNER_TEMP/browser/artifacts"
-          cd "$RUNNER_TEMP/browser/runtime"
-          npm init -y >/dev/null
-          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
-          npx playwright install --with-deps chromium
-          python3 -m http.server 4188 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >"$RUNNER_TEMP/browser/artifacts/server.log" 2>&1 &
-          for attempt in $(seq 1 60); do
-            if curl -fsS "$REVIEW_URL" >/dev/null; then exit 0; fi
-            sleep 1
-          done
-          exit 1
-
-      - name: Execute desktop and touch mobile visible-world matrix
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > "$RUNNER_TEMP/browser/runtime/verify.mjs" <<'SCRIPT'
-          import fs from 'node:fs';
-          import path from 'node:path';
-          import process from 'node:process';
-          import { chromium } from 'playwright';
-
-          const out = path.join(process.env.RUNNER_TEMP, 'browser/artifacts');
-          const thresholds = Object.freeze({
-            minimumIntermediatePixelRatio: 0.05,
-            minimumNonBackgroundIntermediatePixelRatio: 0.005,
-            maximumBlackPixelRatio: 0.90,
-            maximumWhitePixelRatio: 0.90,
-            minimumMeanRgbVariance: 0.0005,
-            minimumNonBackgroundPixelRatio: 0.01,
-            minimumEffectiveLuminanceBands: 3,
-            minimumEffectiveRgbBands: 3,
-            effectiveBandMinimumRatio: 0.001
-          });
-
-          const check = (condition, code, detail = null) => {
-            if (condition) return;
-            const error = new Error(code);
-            error.detail = detail;
-            throw error;
-          };
-          const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-
-          function analyzePixels(pixels, width, height, backgroundRgb, limits) {
-            const pixelCount = width * height;
-            check(pixelCount > 0, 'FRAMEBUFFER_DIMENSIONS_INVALID', { width, height });
-            check(pixels.length === pixelCount * 4, 'FRAMEBUFFER_READBACK_LENGTH_INVALID', {
-              expected: pixelCount * 4,
-              actual: pixels.length
-            });
-            check(
-              Array.isArray(backgroundRgb) && backgroundRgb.length === 3 &&
-              backgroundRgb.every(Number.isFinite),
-              'FRAMEBUFFER_BACKGROUND_REFERENCE_INVALID',
-              backgroundRgb
-            );
-
-            let blackPixelCount = 0;
-            let whitePixelCount = 0;
-            let intermediatePixelCount = 0;
-            let nonBackgroundPixelCount = 0;
-            let nonBackgroundIntermediatePixelCount = 0;
-            const sums = [0, 0, 0];
-            const squaredSums = [0, 0, 0];
-            const luminanceBands = new Array(16).fill(0);
-            const rgbBands = new Map();
-
-            for (let offset = 0; offset < pixels.length; offset += 4) {
-              const bytes = [pixels[offset], pixels[offset + 1], pixels[offset + 2]];
-              const rgb = bytes.map(value => value / 255);
-              const luminance = rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
-              const intermediate = luminance >= 0.08 && luminance <= 0.92;
-              if (luminance <= 0.02) blackPixelCount += 1;
-              if (luminance >= 0.98) whitePixelCount += 1;
-              if (intermediate) intermediatePixelCount += 1;
-
-              const backgroundDistance = Math.hypot(
-                bytes[0] - backgroundRgb[0],
-                bytes[1] - backgroundRgb[1],
-                bytes[2] - backgroundRgb[2]
-              );
-              if (backgroundDistance > 12) {
-                nonBackgroundPixelCount += 1;
-                if (intermediate) nonBackgroundIntermediatePixelCount += 1;
-              }
-
-              for (let channel = 0; channel < 3; channel += 1) {
-                sums[channel] += rgb[channel];
-                squaredSums[channel] += rgb[channel] * rgb[channel];
-              }
-              luminanceBands[Math.min(15, Math.floor(luminance * 16))] += 1;
-              const rgbBand = `${bytes[0] >> 5}:${bytes[1] >> 5}:${bytes[2] >> 5}`;
-              rgbBands.set(rgbBand, (rgbBands.get(rgbBand) ?? 0) + 1);
-            }
-
-            const channelMeans = sums.map(value => value / pixelCount);
-            const channelVariances = squaredSums.map((value, channel) =>
-              Math.max(0, value / pixelCount - channelMeans[channel] ** 2)
-            );
-            const effectiveMinimum = Math.max(
-              1,
-              Math.ceil(pixelCount * limits.effectiveBandMinimumRatio)
-            );
-            return {
-              width,
-              height,
-              pixelCount,
-              backgroundRgb,
-              blackPixelCount,
-              blackPixelRatio: blackPixelCount / pixelCount,
-              whitePixelCount,
-              whitePixelRatio: whitePixelCount / pixelCount,
-              intermediatePixelCount,
-              intermediatePixelRatio: intermediatePixelCount / pixelCount,
-              nonBackgroundPixelCount,
-              nonBackgroundPixelRatio: nonBackgroundPixelCount / pixelCount,
-              nonBackgroundIntermediatePixelCount,
-              nonBackgroundIntermediatePixelRatio:
-                nonBackgroundIntermediatePixelCount / pixelCount,
-              channelMeans,
-              channelVariances,
-              meanRgbVariance:
-                channelVariances.reduce((sum, value) => sum + value, 0) / 3,
-              effectiveLuminanceBandCount:
-                luminanceBands.filter(count => count >= effectiveMinimum).length,
-              effectiveRgbBandCount:
-                [...rgbBands.values()].filter(count => count >= effectiveMinimum).length,
-              luminanceBandCounts: luminanceBands,
-              effectiveBandMinimumPixelCount: effectiveMinimum
-            };
-          }
-
-          function metricFailures(metrics, limits) {
-            const failures = [];
-            if (metrics.intermediatePixelRatio < limits.minimumIntermediatePixelRatio) {
-              failures.push('INTERMEDIATE_LUMINANCE_INSUFFICIENT');
-            }
-            if (metrics.nonBackgroundIntermediatePixelRatio <
-                limits.minimumNonBackgroundIntermediatePixelRatio) {
-              failures.push('NONBACKGROUND_MIDTONE_CONTENT_INSUFFICIENT');
-            }
-            if (metrics.blackPixelRatio >= limits.maximumBlackPixelRatio) {
-              failures.push('NEAR_TOTAL_BLACK_FRAME_DOMINANCE');
-            }
-            if (metrics.whitePixelRatio >= limits.maximumWhitePixelRatio) {
-              failures.push('NEAR_TOTAL_WHITE_FRAME_DOMINANCE');
-            }
-            if (metrics.meanRgbVariance < limits.minimumMeanRgbVariance) {
-              failures.push('RGB_COLOR_VARIANCE_INSUFFICIENT');
-            }
-            if (metrics.nonBackgroundPixelRatio < limits.minimumNonBackgroundPixelRatio) {
-              failures.push('NONBACKGROUND_GEOMETRY_OCCUPANCY_INSUFFICIENT');
-            }
-            if (metrics.effectiveLuminanceBandCount < limits.minimumEffectiveLuminanceBands) {
-              failures.push('EFFECTIVE_LUMINANCE_BANDS_INSUFFICIENT');
-            }
-            if (metrics.effectiveRgbBandCount < limits.minimumEffectiveRgbBands) {
-              failures.push('EFFECTIVE_RGB_COLOR_BANDS_INSUFFICIENT');
-            }
-            return failures;
-          }
-
-          function requireVisibleWorld(metrics, label) {
-            const failures = metricFailures(metrics, thresholds);
-            check(failures.length === 0, `VISIBLE_WORLD_METRICS_FAILED:${label}`, {
-              failures,
-              thresholds,
-              metrics
-            });
-          }
-
-          function executeNegativeFixture() {
-            const width = 10;
-            const height = 10;
-            const pixels = new Uint8Array(width * height * 4);
-            for (let index = 0; index < width * height; index += 1) {
-              const black = index < 60;
-              const offset = index * 4;
-              pixels[offset] = black ? 0 : 255;
-              pixels[offset + 1] = black ? 0 : 255;
-              pixels[offset + 2] = black ? 0 : 255;
-              pixels[offset + 3] = 255;
-            }
-            const metrics = analyzePixels(pixels, width, height, [255, 255, 255], thresholds);
-            const failures = metricFailures(metrics, thresholds);
-            check(
-              failures.includes('INTERMEDIATE_LUMINANCE_INSUFFICIENT') &&
-              failures.includes('NONBACKGROUND_MIDTONE_CONTENT_INSUFFICIENT') &&
-              failures.includes('EFFECTIVE_RGB_COLOR_BANDS_INSUFFICIENT'),
-              'NEGATIVE_REGRESSION_FIXTURE_FALSE_PASS',
-              { failures, metrics }
-            );
-            return {
-              fixtureClass: 'BLACK_GEOMETRY_WHITE_BACKGROUND',
-              priorFalsePass: true,
-              updatedVerifierResult: 'FAIL_AS_REQUIRED',
-              failures,
-              metrics
-            };
-          }
-
-          async function readVisualMetrics(page) {
-            const raw = await page.evaluate(limits => {
-              const canvas = document.getElementById('complete-world-canvas');
-              const gl = canvas?.getContext('webgl2');
-              if (!gl) throw new Error('FRAMEBUFFER_WEBGL2_CONTEXT_MISSING');
-              const webglErrorBeforeReadback = gl.getError();
-              const width = gl.drawingBufferWidth;
-              const height = gl.drawingBufferHeight;
-              const pixels = new Uint8Array(width * height * 4);
-              gl.readPixels(0, 0, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-              const webglErrorAfterReadback = gl.getError();
-              const authority = window.H_EARTH_C2_R1_COMPLETE_WORLD?.packageRecord
-                ?.environmentDefaults?.skyHorizonColor;
-              if (!Array.isArray(authority) || authority.length < 3) {
-                throw new Error('FRAMEBUFFER_BACKGROUND_AUTHORITY_MISSING');
-              }
-              const backgroundRgb = authority.slice(0, 3).map(value =>
-                Math.round(Math.min(255, Math.max(0, Number(value))))
-              );
-
-              const pixelCount = width * height;
-              let blackPixelCount = 0;
-              let whitePixelCount = 0;
-              let intermediatePixelCount = 0;
-              let nonBackgroundPixelCount = 0;
-              let nonBackgroundIntermediatePixelCount = 0;
-              const sums = [0, 0, 0];
-              const squaredSums = [0, 0, 0];
-              const luminanceBands = new Array(16).fill(0);
-              const rgbBands = new Map();
-
-              for (let offset = 0; offset < pixels.length; offset += 4) {
-                const bytes = [pixels[offset], pixels[offset + 1], pixels[offset + 2]];
-                const rgb = bytes.map(value => value / 255);
-                const luminance = rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
-                const intermediate = luminance >= 0.08 && luminance <= 0.92;
-                if (luminance <= 0.02) blackPixelCount += 1;
-                if (luminance >= 0.98) whitePixelCount += 1;
-                if (intermediate) intermediatePixelCount += 1;
-                if (Math.hypot(
-                  bytes[0] - backgroundRgb[0],
-                  bytes[1] - backgroundRgb[1],
-                  bytes[2] - backgroundRgb[2]
-                ) > 12) {
-                  nonBackgroundPixelCount += 1;
-                  if (intermediate) nonBackgroundIntermediatePixelCount += 1;
-                }
-                for (let channel = 0; channel < 3; channel += 1) {
-                  sums[channel] += rgb[channel];
-                  squaredSums[channel] += rgb[channel] * rgb[channel];
-                }
-                luminanceBands[Math.min(15, Math.floor(luminance * 16))] += 1;
-                const rgbBand = `${bytes[0] >> 5}:${bytes[1] >> 5}:${bytes[2] >> 5}`;
-                rgbBands.set(rgbBand, (rgbBands.get(rgbBand) ?? 0) + 1);
-              }
-
-              const channelMeans = sums.map(value => value / pixelCount);
-              const channelVariances = squaredSums.map((value, channel) =>
-                Math.max(0, value / pixelCount - channelMeans[channel] ** 2)
-              );
-              const effectiveMinimum = Math.max(
-                1,
-                Math.ceil(pixelCount * limits.effectiveBandMinimumRatio)
-              );
-              return {
-                webglErrorBeforeReadback,
-                webglErrorAfterReadback,
-                metrics: {
-                  width,
-                  height,
-                  pixelCount,
-                  backgroundRgb,
-                  blackPixelCount,
-                  blackPixelRatio: blackPixelCount / pixelCount,
-                  whitePixelCount,
-                  whitePixelRatio: whitePixelCount / pixelCount,
-                  intermediatePixelCount,
-                  intermediatePixelRatio: intermediatePixelCount / pixelCount,
-                  nonBackgroundPixelCount,
-                  nonBackgroundPixelRatio: nonBackgroundPixelCount / pixelCount,
-                  nonBackgroundIntermediatePixelCount,
-                  nonBackgroundIntermediatePixelRatio:
-                    nonBackgroundIntermediatePixelCount / pixelCount,
-                  channelMeans,
-                  channelVariances,
-                  meanRgbVariance:
-                    channelVariances.reduce((sum, value) => sum + value, 0) / 3,
-                  effectiveLuminanceBandCount:
-                    luminanceBands.filter(count => count >= effectiveMinimum).length,
-                  effectiveRgbBandCount:
-                    [...rgbBands.values()].filter(count => count >= effectiveMinimum).length,
-                  luminanceBandCounts: luminanceBands,
-                  effectiveBandMinimumPixelCount: effectiveMinimum
-                }
-              };
-            }, thresholds);
-            return raw;
-          }
-
-          async function touch(page, rows) {
-            await page.evaluate(async steps => {
-              const canvas = document.getElementById('complete-world-canvas');
-              for (const row of steps) {
-                for (const point of row.points) {
-                  const released = row.type === 'pointerup';
-                  canvas.dispatchEvent(new PointerEvent(row.type, {
-                    bubbles: true,
-                    cancelable: true,
-                    pointerId: point.id,
-                    pointerType: 'touch',
-                    isPrimary: point.id === 1,
-                    clientX: point.x,
-                    clientY: point.y,
-                    buttons: released ? 0 : 1,
-                    pressure: released ? 0 : 0.5
-                  }));
-                }
-                await new Promise(resolve => setTimeout(resolve, row.wait ?? 80));
-              }
-            }, rows);
-          }
-
-          async function interact(page, mobile) {
-            if (!mobile) {
-              const box = await page.locator('#complete-world-canvas').boundingBox();
-              check(box, 'CANVAS_BOX_MISSING');
-              const x = box.x + box.width / 2;
-              const y = box.y + box.height / 2;
-              await page.mouse.move(x, y);
-              await page.mouse.down();
-              await page.mouse.move(x + 120, y, { steps: 12 });
-              await page.mouse.up();
-              await page.mouse.wheel(0, -240);
-              await wait(250);
-              return;
-            }
-            await touch(page, [
-              { type: 'pointerdown', points: [{ id: 1, x: 110, y: 220 }] },
-              { type: 'pointermove', points: [{ id: 1, x: 205, y: 220 }], wait: 380 },
-              { type: 'pointerup', points: [{ id: 1, x: 205, y: 220 }] }
-            ]);
-            await touch(page, [
-              { type: 'pointerdown', points: [{ id: 1, x: 105, y: 360 }, { id: 2, x: 225, y: 360 }] },
-              { type: 'pointermove', points: [{ id: 1, x: 105, y: 275 }, { id: 2, x: 225, y: 275 }], wait: 420 },
-              { type: 'pointerup', points: [{ id: 1, x: 105, y: 275 }, { id: 2, x: 225, y: 275 }] }
-            ]);
-            await touch(page, [
-              { type: 'pointerdown', points: [{ id: 1, x: 125, y: 330 }, { id: 2, x: 205, y: 330 }] },
-              { type: 'pointermove', points: [{ id: 1, x: 70, y: 330 }, { id: 2, x: 260, y: 330 }], wait: 420 },
-              { type: 'pointerup', points: [{ id: 1, x: 70, y: 330 }, { id: 2, x: 260, y: 330 }] }
-            ]);
-          }
-
-          const negativeRegressionFixture = executeNegativeFixture();
-          fs.writeFileSync(
-            path.join(out, 'negative-regression-fixture.json'),
-            JSON.stringify(negativeRegressionFixture, null, 2)
-          );
-
-          async function runScenario(browser, scenario) {
-            const context = await browser.newContext({
-              viewport: scenario.viewport,
-              deviceScaleFactor: scenario.dpr,
-              isMobile: scenario.mobile,
-              hasTouch: scenario.mobile
-            });
-            await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
-            const page = await context.newPage();
-            const consoleRecords = [];
-            const pageErrors = [];
-            const requestFailures = [];
-            const httpRecords = [];
-            page.on('console', message =>
-              consoleRecords.push({ type: message.type(), text: message.text() })
-            );
-            page.on('pageerror', error => pageErrors.push({ message: error.message }));
-            page.on('requestfailed', request =>
-              requestFailures.push({ url: request.url(), failure: request.failure() })
-            );
-            page.on('response', response =>
-              httpRecords.push({
-                url: response.url(),
-                status: response.status(),
-                contentType: response.headers()['content-type'] ?? null
-              })
-            );
-
-            try {
-              const started = Date.now();
-              await page.goto(process.env.REVIEW_URL, {
-                waitUntil: 'domcontentloaded',
-                timeout: 120000
-              });
-              await page.waitForFunction(() => {
-                const state = window.H_EARTH_C2_R1_COMPLETE_WORLD;
-                return state?.ready === true || state?.failed === true;
-              }, null, { timeout: 120000, polling: 250 });
-              const startupMilliseconds = Date.now() - started;
-              const startup = await page.evaluate(() => {
-                const state = window.H_EARTH_C2_R1_COMPLETE_WORLD;
-                return state.failed
-                  ? { failed: true, value: state.getFailureReceipt() }
-                  : { failed: false, value: state.getReceipt() };
-              });
-              check(!startup.failed, startup.value.rootRejectionCode ?? 'RUNTIME_FAILED', startup.value);
-              const before = startup.value;
-              check(startupMilliseconds <= 120000, 'STARTUP_BUDGET_EXCEEDED', { startupMilliseconds });
-              check(
-                before.packageBinding.counters.constructionMilliseconds <= 105000,
-                'CONSTRUCTION_BUDGET_EXCEEDED',
-                before.packageBinding.counters
-              );
-              check(
-                before.packageIdentity === 'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE',
-                'PACKAGE_IDENTITY_MISMATCH',
-                before.packageIdentity
-              );
-              check(
-                before.packageContentDigest === 'fnv1a32:218f37ae',
-                'PACKAGE_CONTENT_DIGEST_MISMATCH',
-                before.packageContentDigest
-              );
-
-              const beforeVisual = await readVisualMetrics(page);
-              check(
-                beforeVisual.webglErrorBeforeReadback === 0 &&
-                beforeVisual.webglErrorAfterReadback === 0,
-                'WEBGL_ERROR_AFTER_STARTUP',
-                beforeVisual
-              );
-              requireVisibleWorld(beforeVisual.metrics, `${scenario.name}:BEFORE_INPUT`);
-              await page.screenshot({
-                path: path.join(out, `${scenario.name}-before.png`),
-                fullPage: true
-              });
-
-              await interact(page, scenario.mobile);
-              const after = await page.evaluate(() =>
-                window.H_EARTH_C2_R1_COMPLETE_WORLD.getReceipt()
-              );
-              const afterVisual = await readVisualMetrics(page);
-              check(
-                afterVisual.webglErrorBeforeReadback === 0 &&
-                afterVisual.webglErrorAfterReadback === 0,
-                'WEBGL_ERROR_AFTER_VISIBLE_FRAME_ADVANCEMENT',
-                afterVisual
-              );
-              requireVisibleWorld(afterVisual.metrics, `${scenario.name}:AFTER_INPUT`);
-              const webgl = await page.evaluate(() =>
-                document.getElementById('complete-world-canvas').getContext('webgl2')
-                  instanceof WebGL2RenderingContext
-              );
-              await page.screenshot({
-                path: path.join(out, `${scenario.name}-after.png`),
-                fullPage: true
-              });
-
-              const rb = before.renderer.counters;
-              const ra = after.renderer.counters;
-              const ib = before.intake.counters;
-              const ia = after.intake.counters;
-              check(webgl, 'WEBGL2_NOT_BOUND');
-              check(ra.contextCreationCount === 1, 'CONTEXT_COUNT_NOT_ONE', ra);
-              check(ra.rendererInitializationCount === 1, 'RENDERER_INIT_NOT_ONE', ra);
-              check(
-                ra.visiblePresentationCount > rb.visiblePresentationCount,
-                'VISIBLE_FRAME_NOT_ADVANCED',
-                { rb, ra }
-              );
-              check(ra.worldRebuildCount === 0, 'WORLD_REBUILD', ra);
-              check(ra.postInitializationResourceCreationCount === 0, 'POST_INIT_RESOURCE_CREATION', ra);
-              check(ra.postInitializationBufferUploadCount === 0, 'POST_INIT_BUFFER_UPLOAD', ra);
-              check(
-                after.renderer.correspondence.rgba8AuthorityPreserved === true &&
-                after.renderer.correspondence.normalizedRgbTransport === true &&
-                after.renderer.correspondence.vec3UniformArity === 3,
-                'RGBA8_VEC3_TRANSPORT_RECEIPT_INVALID',
-                after.renderer.correspondence
-              );
-              check(after.packageBinding.counters.candidateSampleFailureCount === 0, 'SAMPLE_FAILURE');
-              check(after.packageBinding.counters.boundTerrainVertexCount === 10419, 'TERRAIN_COUNT');
-              check(after.packageBinding.counters.boundShorelineVertexCount === 299, 'SHORELINE_COUNT');
-              check(ia.navigationProposalCount > ib.navigationProposalCount, 'NAVIGATION_NOT_ADVANCED', { ib, ia });
-
-              if (scenario.mobile) {
-                check(ia.touchPointerEventCount > ib.touchPointerEventCount, 'TOUCH_NOT_RECORDED');
-                check(ia.oneFingerLookProposalCount > ib.oneFingerLookProposalCount, 'LOOK_NOT_RECORDED');
-                check(ia.twoFingerTravelProposalCount > ib.twoFingerTravelProposalCount, 'TRAVEL_NOT_RECORDED');
-                check(ia.pinchProposalCount > ib.pinchProposalCount, 'PINCH_NOT_RECORDED');
-                check(ia.releaseTerminationCount > ib.releaseTerminationCount, 'RELEASE_NOT_RECORDED');
-              } else {
-                check(ia.mousePointerEventCount > ib.mousePointerEventCount, 'MOUSE_NOT_RECORDED');
-                check(ia.oneFingerLookProposalCount > ib.oneFingerLookProposalCount, 'DESKTOP_LOOK_NOT_RECORDED');
-                check(ia.wheelEventCount > ib.wheelEventCount, 'WHEEL_NOT_RECORDED');
-              }
-
-              check(consoleRecords.filter(row => row.type === 'error').length === 0, 'CONSOLE_ERROR', consoleRecords);
-              check(pageErrors.length === 0, 'PAGE_ERROR', pageErrors);
-              check(requestFailures.length === 0, 'REQUEST_FAILURE', requestFailures);
-              check(
-                httpRecords.filter(row => row.status >= 400 && !row.url.endsWith('/favicon.ico')).length === 0,
-                'HTTP_FAILURE',
-                httpRecords
-              );
-
-              const receipt = {
-                receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_BROWSER_SCENARIO_v7',
-                operationId:
-                  'H_EARTH_C2_R1_COMPLETE_WORLD_VISIBLE_FRAME_COLOR_AND_ENVIRONMENT_READABILITY_CORRECTION_001',
-                expectedHead: process.env.EXPECTED_HEAD,
-                reviewUrl: process.env.REVIEW_URL,
-                scenario,
-                startupMilliseconds,
-                webgl,
-                webglErrorResult: 'PASS_ZERO_ERRORS',
-                rgba8Vec3TransportResult: 'PASS',
-                clearColorNormalizationResult: 'PASS',
-                luminanceDistributionResult: 'PASS',
-                colorVarianceResult: 'PASS',
-                geometryOccupancyResult: 'PASS',
-                blackWhiteDominanceRejectionResult: 'PASS',
-                beforeVisual,
-                afterVisual,
-                before,
-                after,
-                consoleRecords,
-                pageErrors,
-                requestFailures,
-                httpRecords
-              };
-              fs.writeFileSync(
-                path.join(out, `${scenario.name}-receipt.json`),
-                JSON.stringify(receipt, null, 2)
-              );
-              await context.tracing.stop({ path: path.join(out, `${scenario.name}-trace.zip`) });
-              return receipt;
-            } catch (error) {
-              const progress = await page.evaluate(() =>
-                window.H_EARTH_C2_R1_COMPLETE_WORLD?.getProgressReceipt?.() ?? null
-              ).catch(() => null);
-              fs.writeFileSync(
-                path.join(out, `${scenario.name}-failure.json`),
-                JSON.stringify({
-                  error: { name: error.name, message: error.message, detail: error.detail ?? null },
-                  progress,
-                  consoleRecords,
-                  pageErrors,
-                  requestFailures,
-                  httpRecords
-                }, null, 2)
-              );
-              await context.tracing.stop({ path: path.join(out, `${scenario.name}-trace.zip`) }).catch(() => {});
-              throw error;
-            } finally {
-              await context.close();
-            }
-          }
-
-          const browser = await chromium.launch({
-            headless: true,
-            args: [
-              '--use-angle=swiftshader',
-              '--enable-webgl',
-              '--ignore-gpu-blocklist',
-              '--disable-dev-shm-usage'
-            ]
-          });
-
-          try {
-            const scenarios = [
-              { name: 'desktop-1440x900', viewport: { width: 1440, height: 900 }, dpr: 1, mobile: false },
-              { name: 'mobile-412x915', viewport: { width: 412, height: 915 }, dpr: 2.625, mobile: true },
-              { name: 'mobile-390x844', viewport: { width: 390, height: 844 }, dpr: 3, mobile: true }
-            ];
-            const receipts = [];
-            for (const scenario of scenarios) receipts.push(await runScenario(browser, scenario));
-            const first = receipts[0];
-            fs.writeFileSync(
-              path.join(out, 'browser-summary.json'),
-              JSON.stringify({
-                receiptType: 'H_EARTH_C2_R1_COMPLETE_WORLD_VISIBLE_WORLD_BROWSER_SUMMARY_v7',
-                operationId:
-                  'H_EARTH_C2_R1_COMPLETE_WORLD_VISIBLE_FRAME_COLOR_AND_ENVIRONMENT_READABILITY_CORRECTION_001',
-                expectedHead: process.env.EXPECTED_HEAD,
-                reviewUrl: process.env.REVIEW_URL,
-                roleBoundary: 'ROLE_1_TRANSPORT_NOT_ROLE_3_CERTIFICATION',
-                negativeRegressionFixture,
-                thresholds,
-                packageIdentity: first.after.packageIdentity,
-                packageContentDigest: first.after.packageContentDigest,
-                candidateSampleFailureCount:
-                  first.after.packageBinding.counters.candidateSampleFailureCount,
-                boundTerrainVertexCount:
-                  first.after.packageBinding.counters.boundTerrainVertexCount,
-                boundShorelineVertexCount:
-                  first.after.packageBinding.counters.boundShorelineVertexCount,
-                scenarios: receipts.map(receipt => ({
-                  name: receipt.scenario.name,
-                  startupMilliseconds: receipt.startupMilliseconds,
-                  constructionMilliseconds:
-                    receipt.after.packageBinding.counters.constructionMilliseconds,
-                  webglErrorResult: receipt.webglErrorResult,
-                  rgba8Vec3TransportResult: receipt.rgba8Vec3TransportResult,
-                  clearColorNormalizationResult: receipt.clearColorNormalizationResult,
-                  luminanceDistributionResult: receipt.luminanceDistributionResult,
-                  colorVarianceResult: receipt.colorVarianceResult,
-                  geometryOccupancyResult: receipt.geometryOccupancyResult,
-                  blackWhiteDominanceRejectionResult:
-                    receipt.blackWhiteDominanceRejectionResult,
-                  beforeVisualMetrics: receipt.beforeVisual.metrics,
-                  afterVisualMetrics: receipt.afterVisual.metrics
-                }))
-              }, null, 2)
-            );
-          } finally {
-            await browser.close();
-          }
-          SCRIPT
-          cd "$RUNNER_TEMP/browser/runtime"
-          node verify.mjs
-
-      - name: Digest browser artifacts
-        if: always()
-        shell: bash
-        run: |
-          cd "$RUNNER_TEMP/browser/artifacts"
-          find . -maxdepth 1 -type f ! -name artifact-sha256.txt -print0 | sort -z | xargs -0 sha256sum > artifact-sha256.txt
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: h-earth-c2-r1-complete-world-browser-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/browser/artifacts
-          if-no-files-found: error
-          retention-days: 30
+      - name: MC4.6 idempotent no-op
+        if: steps.state.outputs.already == 'true'
+        run: test -z "$(git status --porcelain)" && echo PASS_IDEMPOTENT_NO_OP

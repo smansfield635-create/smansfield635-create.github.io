@@ -14,7 +14,7 @@ import {
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
   'H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v2';
 export const H_EARTH_C2_R1_LIVE_ENVIRONMENT_INTEGRATION_OPERATION_ID =
-  'H_EARTH_C2_R1_INTEGRATED_ENVIRONMENT_COHERENCE_CORRECTION_001';
+  'H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001';
 
 const emitDiagnosticStage = (stage, status = 'PASS', detail = null) => {
   window.dispatchEvent(new CustomEvent('h-earth-runtime-diagnostic-stage', {
@@ -127,7 +127,7 @@ async function bindIntegratedCompleteWorldPackage() {
     canonicalPackage,
     exactBindingCacheBase64,
     exactBindingCacheArtifactDigest:
-      'sha256:0c01a65ce7a8304874fc9ec43ce1972a5f0e828b2ceb369c3d4faf603f1ff0d1',
+      'sha256:2262fe92c43f8980113bc7482253bbbb785a96679b15156541165bc46713e7b5',
     startupBudgetMilliseconds:
       H_EARTH_C2_R1_COMPLETE_WORLD_BINDING.startup.browserBudgetMilliseconds,
     yieldEveryVertices:
@@ -158,11 +158,11 @@ async function bindIntegratedCompleteWorldPackage() {
   });
   if (
     selectionReceipt.runtimePackageIdentity !==
-      'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE' ||
-    selectionReceipt.runtimePackageContentDigest !== 'fnv1a32:218f37ae' ||
+      'H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E' ||
+    selectionReceipt.runtimePackageContentDigest !== 'fnv1a32:773dae4e' ||
     selectionReceipt.candidateSampleFailureCount !== 0 ||
     selectionReceipt.boundTerrainVertexCount !== 10419 ||
-    selectionReceipt.boundShorelineVertexCount !== 299 ||
+    selectionReceipt.boundShorelineVertexCount !== 154 ||
     selectionReceipt.rendererCompatibilityAliasActive !== true ||
     selectionReceipt.exactIntegratedBuffersPresentedByAcceptedRenderer !== true
   ) {

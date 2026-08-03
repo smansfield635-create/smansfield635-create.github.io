@@ -15,6 +15,7 @@
     ".github/workflows/h-earth-c2-r1-r1-6-restrained-swash-foam-wetness.yml",
     ".github/workflows/h-earth-c2-r1-r1-7c-candidate-renderer-sampling.yml",
     ".github/workflows/h-earth-c2-r1-complete-world-integration.yml",
+    ".github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml",
     "h-earth-3d/terrain/h-earth.coastal-profile.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-surface-frame.c2-r1.js",
     "h-earth-3d/terrain/h-earth.coastal-sediment-membership.c2-r1.js",
@@ -22,7 +23,9 @@
     "h-earth-3d/environment/h-earth.coastal-breaker-field.c2-r1.js",
     "h-earth-3d/environment/h-earth.coastal-swash-foam-wetness.c2-r1.js",
     "h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js",
-    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"
+    "h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
   ],
   "protectedPathPrefixes": [
     "showroom/globe/h-earth/",
@@ -101,6 +104,18 @@
       "rendererLifecycleBound": false,
       "cameraOrTraversalBound": false,
       "publicRouteBound": false
+    },
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": {
+      "operationId": "H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001",
+      "runtimePackageIdentityBindingOnly": true,
+      "cameraNavigationTouchMutationAllowed": false,
+      "publicDefaultPromotionAllowed": false
+    },
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": {
+      "operationId": "H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001",
+      "derivedPackageIdentityBindingOnly": true,
+      "canonicalPackageMutationAllowed": false,
+      "rendererRedesignAllowed": false
     }
   },
   "registryPathDisposition": {
@@ -151,6 +166,47 @@
     ],
     "selectedHost": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html",
     "isolatedNondefault": true,
+    "publicDefaultMutationAllowed": false,
+    "mainMutationAllowed": false,
+    "mergeAuthorityCreated": false,
+    "role1SelfCertificationAllowed": false
+  },
+  "materialOnlyBindingRecoveryOperation": {
+    "operationId": "H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_RECOVERY_001",
+    "controllingPacket": "H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_IMPLEMENTATION_APPLICATION_PACKET_v1",
+    "startingHead": "4f0491f00fae794ecdefbae36f4ee86c8a1bd21a",
+    "rollbackBranch": "rollback/h-earth-c2-r1-material-only-binding-start-001",
+    "rollbackHead": "4f0491f00fae794ecdefbae36f4ee86c8a1bd21a",
+    "candidateBranch": "agent/h-earth-c2-r1-material-only-binding-implementation-001",
+    "pathCount": 12,
+    "exactMutablePaths": [
+      ".github/workflows/h-earth-c2-r1-complete-world-integration.yml",
+      ".github/workflows/h-earth-c2-r1-integrated-environment-coherence.yml",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/tests/h-earth.c2-r1.complete-world-integration.mjs",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json",
+      "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
+    ],
+    "allOtherPathsProtected": true,
+    "canonicalWorldRebuildAllowed": false,
+    "coastalComponentRebuildAllowed": false,
+    "closedCheckpointReopeningAllowed": false,
+    "derivedCacheRegenerationAllowed": true,
+    "derivedPackageRegenerationAllowed": true,
+    "materialMembershipCorrectionAllowed": true,
+    "positionsMustRemainCanonicalByteIdentical": true,
+    "normalsMustRemainCanonicalByteIdentical": true,
+    "indicesPrimitiveSpansAndDrawRangesMustRemainPreserved": true,
+    "shorelineAdmissionLaw": "SIGNED_INLAND_DISTANCE_LESS_THAN_OR_EQUAL_TO_ZERO_ONLY",
+    "positiveInlandDistanceWaterAdmissionAllowed": false,
+    "cacheSchema": "H_EARTH_C2_R1_COMPLETE_WORLD_EXACT_BINDING_CACHE_v2",
+    "oldCacheOrPackageIdentityReuseAllowed": false,
     "publicDefaultMutationAllowed": false,
     "mainMutationAllowed": false,
     "mergeAuthorityCreated": false,

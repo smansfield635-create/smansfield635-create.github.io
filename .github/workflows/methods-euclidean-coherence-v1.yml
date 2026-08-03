@@ -1,0 +1,118 @@
+name: Methods Euclidean Nonproduct Coherence Pass v1
+
+on:
+  push:
+    branches:
+      - verification/methods-euclidean-coherence-v1-001
+    paths:
+      - "verification/methods-euclidean-coherence-v1/**"
+      - ".github/workflows/methods-euclidean-coherence-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-euclidean-coherence-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  EXPECTED_SOURCE_HEAD: 66a2105e96e84c5b482f783010779f87a90a28ee
+  EXECUTION_COMMIT: 66a2105e96e84c5b482f783010779f87a90a28ee
+  HARNESS_COMMIT: ${{ github.sha }}
+  METHODS_MODELS_ORIGIN: http://127.0.0.1:4173
+  COHERENCE_OUT_DIR: methods-euclidean-coherence-evidence
+
+jobs:
+  nonproduct-coherence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout isolated nonproduct harness head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify candidate source files are byte-unchanged
+        shell: bash
+        run: |
+          test "$(git merge-base "$EXPECTED_SOURCE_HEAD" HEAD)" = "$EXPECTED_SOURCE_HEAD"
+          ALLOWED_1="verification/methods-euclidean-coherence-v1/runner.mjs"
+          ALLOWED_2="verification/methods-euclidean-coherence-v1/README.md"
+          ALLOWED_3=".github/workflows/methods-euclidean-coherence-v1.yml"
+          while IFS= read -r changed; do
+            case "$changed" in
+              "$ALLOWED_1"|"$ALLOWED_2"|"$ALLOWED_3") ;;
+              *) echo "UNAUTHORIZED_CHANGED_PATH:$changed"; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$EXPECTED_SOURCE_HEAD" HEAD)
+          git diff --exit-code "$EXPECTED_SOURCE_HEAD" -- \
+            laws/research/methods-and-models/index.html \
+            laws/research/methods-and-models/showroom.css \
+            laws/research/methods-and-models/showroom.js \
+            laws/research/methods-and-models/showroom-refinement.css \
+            laws/research/methods-and-models/showroom-refinement.js \
+            laws/research/methods-and-models/showroom-euclidean.css \
+            laws/research/methods-and-models/showroom-euclidean-interaction.css \
+            laws/research/methods-and-models/showroom-euclidean.js \
+            laws/research/methods-and-models/canonical-records-v1.html
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate nonproduct runner syntax
+        run: node --check verification/methods-euclidean-coherence-v1/runner.mjs
+
+      - name: Start exact-source static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-euclidean-coherence-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/laws/research/methods-and-models/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/methods-euclidean-coherence-server.log
+          exit 1
+
+      - name: Execute 1575-primary nonproduct coherence pass
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/methods-euclidean-coherence-v1/runner.mjs | tee methods-euclidean-coherence-run.log
+
+      - name: Generate archive identity
+        if: always()
+        shell: bash
+        run: |
+          if [ -d methods-euclidean-coherence-evidence ]; then
+            cp /tmp/methods-euclidean-coherence-server.log methods-euclidean-coherence-evidence/server.log || true
+            cp methods-euclidean-coherence-run.log methods-euclidean-coherence-evidence/runner.log || true
+            tar -czf methods-euclidean-coherence-evidence.tar.gz methods-euclidean-coherence-evidence
+            sha256sum methods-euclidean-coherence-evidence.tar.gz > methods-euclidean-coherence-evidence.tar.gz.sha256
+          fi
+
+      - name: Upload exact-head nonproduct coherence evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-euclidean-nonproduct-coherence-v1-evidence
+          path: |
+            methods-euclidean-coherence-evidence/
+            methods-euclidean-coherence-evidence.tar.gz
+            methods-euclidean-coherence-evidence.tar.gz.sha256
+            methods-euclidean-coherence-run.log
+            /tmp/methods-euclidean-coherence-server.log
+          if-no-files-found: warn
+          retention-days: 30

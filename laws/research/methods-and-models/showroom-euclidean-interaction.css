@@ -1,0 +1,13 @@
+/*
+ * Euclidean model-stage hit hierarchy.
+ * The deck remains the X-axis gesture coordinate surface, but its empty plane
+ * must not intercept controls rendered on the active model. Pointer events that
+ * originate on the active card still bubble through the deck for swipe handling.
+ */
+html[data-methods-models-euclidean-showroom="active"] .mm-model-deck {
+  pointer-events: none !important;
+}
+
+html[data-methods-models-euclidean-showroom="active"] .mm-model-card[data-mm-x-position="active"] {
+  pointer-events: auto !important;
+}

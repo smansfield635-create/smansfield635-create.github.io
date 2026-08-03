@@ -1,0 +1,117 @@
+{
+  "schema": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
+  "locatorId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
+  "status": "ACTIVE_ROLE_6_COMPLETE_READY_FOR_ROLE_1_HANDOFF",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "locatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
+  "package": {
+    "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "packageVersion": "0.2.0_ROLE_6_REQUIREMENTS_COMPLETE",
+    "operationId": "H_EARTH_R06_C10_PRE_ROUND_GEOMETRY_TOOL_BASE_DEFINITION_001",
+    "archiveFileName": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1_0_2_0_ROLE_6_REQUIREMENTS_COMPLETE.zip",
+    "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+    "archiveByteCount": 179997,
+    "archiveMemberCount": 39,
+    "archiveReadback": "PASS",
+    "cumulativePackageComplete": true
+  },
+  "driveCustody": {
+    "fileId": "1bp5gDl41Oje87AlwjKmyhgm_TBgli_wR",
+    "fileUrl": "https://drive.google.com/file/d/1bp5gDl41Oje87AlwjKmyhgm_TBgli_wR/view?usp=drivesdk",
+    "mimeType": "application/zip",
+    "storedByteCount": 179997,
+    "readbackSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
+    "sha256Match": true,
+    "archiveReadback": "PASS",
+    "archiveMemberCount": 39
+  },
+  "exactBaseline": {
+    "acceptedLiveBaselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+    "reviewedCandidateHead": "97003e9de386a8962fb46d0b370005b900a167d6",
+    "promotionPr": 532,
+    "userDifferential": "PASS_MATERIAL_SIGNIFICANT_IMPROVEMENT"
+  },
+  "region": {
+    "semanticAddress": "H_EARTH_GROUND_CELL_001:R06:C10",
+    "physicalOwnerChunk": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+    "chunkWorldBounds": {
+      "xMinimum": 0,
+      "xMaximum": 128,
+      "zMinimum": -210,
+      "zMaximum": -125
+    },
+    "authoredCore": {
+      "xMinimum": 32,
+      "xMaximum": 64,
+      "zMinimum": -192,
+      "zMaximum": -164
+    },
+    "blendSupport": {
+      "xMinimum": 24,
+      "xMaximum": 72,
+      "zMinimum": -200,
+      "zMaximum": -156
+    },
+    "verificationHalo": {
+      "xMinimum": 16,
+      "xMaximum": 80,
+      "zMinimum": -208,
+      "zMaximum": -148
+    }
+  },
+  "implementationArchitecture": {
+    "fieldLaw": "BOUNDED_SUCCESSOR_TERRAIN_FIELD_LAW",
+    "geometryConstruction": "UNCHANGED_RUN_8B_AXIS_INDEX_AND_SOUTH_NEUTRAL_GEOMETRY_CONSTRUCTION",
+    "directPostConstructionVertexEditing": "PROHIBITED"
+  },
+  "controllingPackageMembers": {
+    "role6Return": "records/25_ROLE_6_CAUSAL_MODEL_AND_TOOL_REQUIREMENTS_RETURN_v1.json",
+    "regionResolution": "records/09_EXACT_R06_C10_REGION_RESOLUTION_v1.json",
+    "causalModel": "records/10_CURRENT_TERRAIN_CAUSAL_MODEL_v1.json",
+    "safeParameterBounds": "records/14_SAFE_ARTICULATION_PARAMETER_BOUNDS_v1.json",
+    "toolSpecification": "records/19_BOUNDED_AUTHORING_TOOL_FUNCTIONAL_SPECIFICATION_v1.json",
+    "verificationHarnessSpecification": "records/22_REQUIRED_VERIFICATION_HARNESS_SPECIFICATION_v1.json",
+    "role1Boundary": "records/24_EXACT_ROLE_1_TOOL_CONSTRUCTION_BOUNDARY_v1.json",
+    "toolManifest": "records/26_TOOL_MANIFEST_v1.json",
+    "failoverGuide": "27_ROLE_6_FAILOVER_OPERATING_GUIDE_v1.md",
+    "sha256Manifest": "SHA256SUMS.txt"
+  },
+  "recoveryInstructions": [
+    "SEARCH_GITHUB_FOR_ANY_SEARCH_ALIAS_IN_THIS_LOCATOR",
+    "OPEN_THIS_CANONICAL_LOCATOR",
+    "DOWNLOAD_THE_DRIVE_ARCHIVE_BY_FILE_ID",
+    "VERIFY_THE_ARCHIVE_SHA256_BEFORE_EXTRACTION",
+    "VERIFY_EVERY_MEMBER_AGAINST_SHA256SUMS_TXT",
+    "READ_THE_FAILOVER_GUIDE_AND_CONTROLLING_PACKAGE_MEMBERS",
+    "ISSUE_A_ROLE_ASSUMPTION_RECEIPT_IF_THE_ORIGINAL_ROOM_IS_UNAVAILABLE",
+    "DO_NOT_INFER_ANY_MISSING_OR_CONTRADICTORY_VALUE",
+    "RETURN_MISSING_OR_CONTRADICTORY_AUTHORITY_TO_ROLE_4"
+  ],
+  "searchAliases": [
+    "H-Earth geometry articulation",
+    "H Earth geometry tool base",
+    "Role 6 geometry tool base",
+    "Role 6 causal model terrain",
+    "R06 C10",
+    "ground cell 001 R06 C10",
+    "saddle valley basin",
+    "coastal to inland transition terrain",
+    "bounded successor terrain field",
+    "terrain authoring harness",
+    "pre-round geometry tool",
+    "cavern compatible adjacent face",
+    "future waterfall readiness geometry"
+  ],
+  "routing": {
+    "sourceRoom": "ROLE_6_INDEPENDENT_RESEARCH_CHAMBER_AND_CROSS_SYSTEM_TROUBLESHOOTING_AUTHORITY",
+    "role6Result": "R06_C10_CAUSAL_MODEL_AND_TOOL_REQUIREMENTS_COMPLETE",
+    "nextRoom": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
+    "nextOperation": "CONSTRUCT_THE_NONPRODUCT_BOUNDED_GEOMETRY_ARTICULATION_AUTHORING_TOOL_AND_VERIFICATION_HARNESS_EXACTLY_FROM_THE_FROZEN_PACKAGE",
+    "officialGeometryArticulationRound": "NOT_YET_STARTED",
+    "productMutationAuthorized": false
+  },
+  "supersession": {
+    "supersedes": null,
+    "supersededBy": null
+  }
+}

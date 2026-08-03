@@ -1,19 +1,23 @@
 name: Laws Root Finalization
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/laws-experiential-architecture-restoration-001
+      - main
     paths:
       - '.github/workflows/laws-experiential-restoration-materialize.yml'
+      - 'tools/materialize-laws-root-restoration.py'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: laws-root-finalization
+  group: laws-root-finalization-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
+
+env:
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   finalize-root-candidate:
@@ -23,14 +27,14 @@ jobs:
       - name: Check out exact restoration head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.EXECUTION_COMMIT }}
           fetch-depth: 0
 
       - name: Confirm unrelated main drift
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
           fork_base="ef2ffdb1da7911238652f076a6b44326061493ef"
           git fetch origin main
           test "$(git merge-base origin/main HEAD)" = "$fork_base"

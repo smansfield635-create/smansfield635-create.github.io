@@ -1,4 +1,4 @@
-# Connector-authored exact-head trigger for the corrected physical-input matrix.
+# Connector-authored exact-head trigger for root matrix v2.
 name: Laws Experiential Restoration Root Matrix
 
 on:
@@ -97,37 +97,26 @@ jobs:
 
           base = "ef2ffdb1da7911238652f076a6b44326061493ef"
           current = Path("laws/index.html").read_text(encoding="utf-8")
-          prior = subprocess.check_output(
-              ["git", "show", f"{base}:laws/index.html"], text=True
-          )
-
-          rail = re.compile(
-              r'<section class="laws-first-rail" data-laws-first-rail="".*?</section>\n?',
-              re.S,
-          )
+          prior = subprocess.check_output(["git", "show", f"{base}:laws/index.html"], text=True)
+          rail = re.compile(r'<section class="laws-first-rail" data-laws-first-rail="".*?</section>\n?', re.S)
           current_normalized = rail.sub("", current)
           prior_normalized = rail.sub("", prior)
-
           current_normalized = current_normalized.replace(
-              ' data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"',
-              "",
+              ' data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"', ""
           ).replace(
               'data-laws-first-rail-architecture="integrated-hero-v1"',
-              'data-laws-first-rail-architecture="persistent-compass-zone-v2"',
+              'data-laws-first-rail-architecture="persistent-compass-zone-v2"'
           ).replace(
               'data-laws-tablet-hero-reflow="split-composition-until-780px"',
-              'data-laws-tablet-hero-reflow="single-column-at-1100px"',
+              'data-laws-tablet-hero-reflow="single-column-at-1100px"'
           ).replace(
               'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803A',
-              'LAWS_FIRST_RAIL_ARCHITECTURE_20260802B',
+              'LAWS_FIRST_RAIL_ARCHITECTURE_20260802B'
           )
-
           if current_normalized != prior_normalized:
               raise SystemExit("NON_PRESENTATION_HTML_DELTA_DETECTED")
-
           def values(pattern, text):
               return sorted(set(re.findall(pattern, text)))
-
           receipt = {
               "contract": "LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_AUTHORITY_INVARIANTS_v1",
               "base": base,
@@ -146,7 +135,7 @@ jobs:
                   for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)
               ],
               "non_presentation_html_equal": True,
-              "disposition": "PASS",
+              "disposition": "PASS"
           }
           Path("artifacts/laws-experiential-restoration/root-matrix/authority-invariants.json").write_text(
               json.dumps(receipt, indent=2) + "\n", encoding="utf-8"

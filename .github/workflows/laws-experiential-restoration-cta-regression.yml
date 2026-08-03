@@ -70,7 +70,7 @@ jobs:
           set -euo pipefail
           echo 'e91c6020dbe56a133ba53fe3fbcff3f6d5fce3f54d74a34148814000af06dabe  laws/index.html' | sha256sum --check --strict
           echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
-          echo '7a37b15b3d2ba02068b06ffe0a2bfef4dc9d033121b52b79198721ae07057fb2  laws/index.experience.polish.css' | sha256sum --check --strict
+          echo '3abfe9c9a34a03105fc2ad80369589586a83b8cba2cc94da7cdf308d02c69e25  laws/index.experience.polish.css' | sha256sum --check --strict
           echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
 
       - name: Capture current and former root source baselines

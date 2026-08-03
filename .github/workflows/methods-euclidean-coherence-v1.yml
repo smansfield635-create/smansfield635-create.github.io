@@ -25,7 +25,7 @@ concurrency:
 env:
   EXPECTED_SOURCE_HEAD: 66a2105e96e84c5b482f783010779f87a90a28ee
   EXECUTION_COMMIT: 66a2105e96e84c5b482f783010779f87a90a28ee
-  HARNESS_COMMIT: ${{ github.sha }}
+  HARNESS_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
   METHODS_MODELS_ORIGIN: http://127.0.0.1:4173
   COHERENCE_OUT_DIR: methods-euclidean-coherence-evidence
 
@@ -37,7 +37,7 @@ jobs:
       - name: Checkout isolated nonproduct harness head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Verify candidate source files are byte-unchanged

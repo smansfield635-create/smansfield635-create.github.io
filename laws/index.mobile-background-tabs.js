@@ -1,18 +1,21 @@
 /*
- * Laws root Rolodex placement and tablet depth-axis continuity.
+ * Laws root Rolodex placement, tablet depth-axis, and heading-band continuity.
  * Presentation only. The visitor-intent navigation remains in the full-width
- * root flow beneath the accepted Compass. Phone delivery remains unchanged.
+ * root flow beneath the accepted Compass. Phone and desktop delivery remain unchanged.
  */
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_ROOT_ROLODEX_PLACEMENT_CONTINUITY_v2";
+  const CONTRACT = "LAWS_ROOT_ROLODEX_PLACEMENT_CONTINUITY_v3";
   const TABLET_DEPTH_MEDIA = "(min-width: 781px) and (max-width: 1200px)";
   let originSnapshot = null;
   let depthMedia = null;
   let depthStage = null;
   let depthSwitcher = null;
+  let depthSummary = null;
+  let depthSummaryEyebrow = null;
+  let depthSummaryTitle = null;
   let depthFields = [];
   let depthButtons = [];
   let activeDepthIndex = 0;
@@ -71,7 +74,8 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-track {
   min-width: 0 !important;
   max-width: none !important;
 }
-html[data-laws-root-rolodex="active"] .laws-rolodex-depth-switcher {
+html[data-laws-root-rolodex="active"] .laws-rolodex-depth-switcher,
+html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary {
   display: none;
 }
 html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
@@ -79,7 +83,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
 }
 @media (min-width: 781px) and (max-width: 1200px) {
   html[data-laws-root-rolodex="active"] .laws-visitor-paths--rolodex[data-laws-tablet-depth-axis="active"] {
-    gap: clamp(2.5rem, 5vw, 4rem) !important;
+    gap: clamp(1.4rem, 3vw, 2.4rem) !important;
     padding-bottom: clamp(5rem, 9vw, 8rem) !important;
   }
   html[data-laws-root-rolodex="active"] .laws-rolodex-depth-switcher {
@@ -122,6 +126,31 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     outline: 2px solid rgba(128, 224, 255, .95);
     outline-offset: 3px;
   }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary {
+    display: grid;
+    gap: .55rem;
+    width: min(calc(100% - 2rem), 68rem);
+    margin: .1rem auto 0;
+    padding: clamp(.6rem, 1.8vw, 1rem) clamp(1rem, 3vw, 2.5rem) clamp(.2rem, 1vw, .6rem);
+    text-align: left;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary__eyebrow {
+    margin: 0;
+    color: rgba(128, 224, 255, .88);
+    font-size: clamp(.72rem, 1.4vw, .88rem);
+    font-weight: 780;
+    letter-spacing: .15em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-summary__title {
+    margin: 0;
+    max-width: 42rem;
+    color: rgba(245, 250, 255, .98);
+    font-size: clamp(1.9rem, 4.2vw, 3.6rem);
+    line-height: 1.02;
+    letter-spacing: -.035em;
+  }
   html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     position: relative;
     isolation: isolate;
@@ -130,7 +159,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     align-items: start;
     width: 100%;
     min-width: 0;
-    padding: clamp(1rem, 2.5vw, 2rem) clamp(1rem, 3vw, 2.5rem) clamp(5.5rem, 9vw, 8rem);
+    padding: clamp(.35rem, 1vw, .8rem) clamp(1rem, 3vw, 2.5rem) clamp(5.5rem, 9vw, 8rem);
     perspective: 1100px;
     perspective-origin: 50% 22%;
     transform-style: preserve-3d;
@@ -139,9 +168,10 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
   html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field {
     grid-area: depth-stack;
     position: relative;
+    display: block !important;
     width: min(100%, 68rem) !important;
     margin-inline: auto;
-    padding-inline: clamp(1rem, 2.8vw, 2.5rem) !important;
+    padding: clamp(1rem, 2.4vw, 1.8rem) clamp(1rem, 2.8vw, 2.5rem) clamp(1.4rem, 3vw, 2.4rem) !important;
     border: 1px solid rgba(128, 224, 255, .14);
     border-radius: clamp(1.25rem, 2.2vw, 2rem);
     background: linear-gradient(145deg, rgba(8, 18, 38, .82), rgba(5, 11, 26, .68));
@@ -149,6 +179,14 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     backface-visibility: hidden;
     transform-origin: 50% 8%;
     transition: transform 360ms cubic-bezier(.2, .75, .2, 1), opacity 260ms ease, filter 260ms ease;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field .laws-rolodex-field__heading {
+    display: none !important;
+  }
+  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field .laws-rolodex-field__browser {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
   html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field[data-laws-depth-state="active"] {
     z-index: 4;
@@ -174,12 +212,6 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
   html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field:not([data-laws-depth-state="active"]) .laws-rolodex-field__browser {
     opacity: 0;
     visibility: hidden;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field:not([data-laws-depth-state="active"]) .laws-rolodex-field__heading {
-    max-width: min(72%, 34rem);
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage > .laws-rolodex-field:not([data-laws-depth-state="active"]) .laws-rolodex-field__heading h3 {
-    font-size: clamp(1.4rem, 3.2vw, 2.55rem);
   }
 }
 @media (max-width: 780px) {
@@ -211,10 +243,17 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     return Boolean(depthMedia && depthMedia.matches);
   }
 
+  function groupCopy(field, index) {
+    return {
+      eyebrow: field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim()
+        || `Destination group ${index + 1}`,
+      title: field.querySelector(".laws-rolodex-field__heading h3")?.textContent?.trim()
+        || "Choose a destination."
+    };
+  }
+
   function groupLabel(field, index) {
-    return field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim()
-      || field.querySelector(".laws-rolodex-field__heading h3")?.textContent?.trim()
-      || `Destination group ${index + 1}`;
+    return groupCopy(field, index).eyebrow;
   }
 
   function normalizeDepthIndex(index) {
@@ -235,6 +274,17 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     else field.setAttribute("inert", "");
   }
 
+  function updateDepthSummary(active) {
+    if (!depthSummary || !depthSummaryEyebrow || !depthSummaryTitle) return;
+
+    depthSummary.setAttribute("aria-hidden", String(!active));
+    if (!active || !depthFields.length) return;
+
+    const copy = groupCopy(depthFields[activeDepthIndex], activeDepthIndex);
+    depthSummaryEyebrow.textContent = copy.eyebrow;
+    depthSummaryTitle.textContent = copy.title;
+  }
+
   function publishDepthState(source) {
     globalThis.dispatchEvent(new CustomEvent("LAWS_TABLET_ROLODEX_DEPTH_CHANGED", {
       detail: Object.freeze({
@@ -244,6 +294,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
         activeIndex: activeDepthIndex,
         activeRolodexId: depthFields[activeDepthIndex]?.dataset.rolodexId || "",
         groupCount: depthFields.length,
+        headingBandActive: Boolean(tabletDepthActive() && depthSummary),
         navigationAuthority: false,
         contentAuthority: false
       })
@@ -276,6 +327,8 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
       button.setAttribute("aria-selected", String(selected));
       button.tabIndex = selected || !active ? 0 : -1;
     });
+
+    updateDepthSummary(active);
 
     if (focusTab && active) {
       depthButtons[activeDepthIndex]?.focus({ preventScroll: true });
@@ -332,6 +385,26 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     section.insertBefore(depthSwitcher, depthStage);
   }
 
+  function buildDepthSummary(section) {
+    if (depthSummary) return;
+
+    depthSummary = document.createElement("header");
+    depthSummary.className = "laws-rolodex-depth-summary";
+    depthSummary.dataset.lawsRolodexDepthSummary = "true";
+    depthSummary.setAttribute("aria-live", "polite");
+    depthSummary.setAttribute("aria-atomic", "true");
+    depthSummary.setAttribute("aria-hidden", "true");
+
+    depthSummaryEyebrow = document.createElement("p");
+    depthSummaryEyebrow.className = "laws-rolodex-depth-summary__eyebrow";
+
+    depthSummaryTitle = document.createElement("h3");
+    depthSummaryTitle.className = "laws-rolodex-depth-summary__title";
+
+    depthSummary.append(depthSummaryEyebrow, depthSummaryTitle);
+    section.insertBefore(depthSummary, depthStage);
+  }
+
   function mountTabletDepthAxis() {
     const section = document.querySelector("[data-laws-root-rolodex-section]");
     if (!section) return false;
@@ -353,6 +426,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
     }
 
     buildDepthSwitcher(section);
+    buildDepthSummary(section);
 
     if (!depthMedia && typeof matchMedia === "function") {
       depthMedia = matchMedia(TABLET_DEPTH_MEDIA);
@@ -399,6 +473,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
         viewportContained: true,
         tabletDepthAxisAvailable: Boolean(depthStage && depthFields.length === 3),
         tabletDepthAxisActive: tabletDepthActive(),
+        tabletHeadingBandAvailable: Boolean(depthSummary),
         navigationAuthority: false,
         contentAuthority: false
       })

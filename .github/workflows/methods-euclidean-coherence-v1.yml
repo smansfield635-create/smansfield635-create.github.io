@@ -77,6 +77,34 @@ jobs:
       - name: Install pinned browser driver
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
+      - name: Bind robust state adapter to native selected-state surfaces
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('verification/methods-euclidean-coherence-v1/runner.mjs')
+          s = p.read_text()
+          replacements = [
+            (
+              "async function setFamily(page,z){const current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmZ));if(current!==z){await clickIndexed(page,'.mm-family-tab',z);await waitDataset(page,'mmZ',z);await waitStable(page);}}",
+              "async function setFamily(page,z){const current=await page.$$eval('.mm-family-tab',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==z){await clickIndexed(page,'.mm-family-tab',z);await page.waitForFunction(({z})=>[...document.querySelectorAll('.mm-family-tab')].findIndex(e=>e.getAttribute('aria-selected')==='true')===z,{timeout:8000},{z});await waitStable(page);}}"
+            ),
+            (
+              "async function setLens(page,y){const current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmY));if(current!==y){await clickIndexed(page,'.mm-lens-tab',y);await waitDataset(page,'mmY',y);await waitStable(page);}}",
+              "async function setLens(page,y){const current=await page.$$eval('[data-mm-lens-tab]',els=>els.findIndex(e=>e.getAttribute('aria-selected')==='true'));if(current!==y){await clickIndexed(page,'[data-mm-lens-tab]',y);await page.waitForFunction(({y})=>[...document.querySelectorAll('[data-mm-lens-tab]')].findIndex(e=>e.getAttribute('aria-selected')==='true')===y,{timeout:8000},{y});await waitStable(page);}}"
+            ),
+            (
+              "async function setModel(page,x,count){let current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmX));let guard=0;while(current!==x && guard++<count+2){const forward=(x-current+count)%count;const backward=(current-x+count)%count;const selector=forward<=backward?'[data-mm-next]':'[data-mm-previous]';await page.click(selector);await waitStable(page);current=Number(await page.$eval('[data-mm-showroom]',e=>e.dataset.mmX));}if(current!==x)throw new Error(`MODEL_STATE_UNREACHABLE:${current}->${x}`);}",
+              "async function setModel(page,x,count){let current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));let guard=0;while(current!==x && guard++<count+2){const forward=(x-current+count)%count;const backward=(current-x+count)%count;const selector=forward<=backward?'[data-mm-next]':'[data-mm-previous]';await page.click(selector);await waitStable(page);current=await page.$$eval('.mm-model-card',els=>els.findIndex(e=>e.dataset.position==='active'||e.dataset.mmXPosition==='active'));}if(current!==x)throw new Error(`MODEL_STATE_UNREACHABLE:${current}->${x}`);}"
+            )
+          ]
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit('STATE_ADAPTER_PATCH_TARGET_NOT_FOUND')
+              s = s.replace(old, new)
+          p.write_text(s)
+          PY
+
       - name: Validate nonproduct runner syntax
         run: node --check verification/methods-euclidean-coherence-v1/runner.mjs
 
@@ -94,9 +122,12 @@ jobs:
           exit 1
 
       - name: Execute 1575-primary nonproduct coherence pass
+        shell: bash
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: node verification/methods-euclidean-coherence-v1/runner.mjs | tee methods-euclidean-coherence-run.log
+        run: |
+          set -o pipefail
+          node verification/methods-euclidean-coherence-v1/runner.mjs | tee methods-euclidean-coherence-run.log
 
       - name: Generate archive identity
         if: always()
@@ -105,6 +136,8 @@ jobs:
           if [ -d methods-euclidean-coherence-evidence ]; then
             cp /tmp/methods-euclidean-coherence-server.log methods-euclidean-coherence-evidence/server.log || true
             cp methods-euclidean-coherence-run.log methods-euclidean-coherence-evidence/runner.log || true
+            cp verification/methods-euclidean-coherence-v1/runner.mjs methods-euclidean-coherence-evidence/executed-runner.mjs || true
+            sha256sum verification/methods-euclidean-coherence-v1/runner.mjs > methods-euclidean-coherence-evidence/executed-runner.mjs.sha256 || true
             tar -czf methods-euclidean-coherence-evidence.tar.gz methods-euclidean-coherence-evidence
             sha256sum methods-euclidean-coherence-evidence.tar.gz > methods-euclidean-coherence-evidence.tar.gz.sha256
           fi

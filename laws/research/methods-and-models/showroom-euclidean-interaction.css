@@ -14,3 +14,14 @@ html[data-methods-models-euclidean-showroom="active"] .mm-model-card[data-mm-x-p
 html[data-methods-models-euclidean-showroom="active"] .mm-model-control {
   pointer-events: auto !important;
 }
+
+/*
+ * The active mobile card is projected forward on the Z plane. Its unprojected
+ * width must therefore be narrower than the viewport so the projected object,
+ * equation, and inspection control remain fully inside the phone stage.
+ */
+@media (max-width: 720px) {
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card {
+    width: min(78vw, 30rem) !important;
+  }
+}

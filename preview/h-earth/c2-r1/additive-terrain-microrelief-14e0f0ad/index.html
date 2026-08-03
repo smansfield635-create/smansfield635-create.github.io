@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en"
+  data-preview-class="TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER"
+  data-delivery-operation-id="H_EARTH_ADDITIVE_TERRAIN_MICRORELIEF_TEMPORARY_REVIEW_DELIVERY_001"
+  data-exact-candidate-head="14e0f0ad03f9d6355b36d24a89e136bf3fe063aa"
+  data-product-pr-number="524"
+  data-candidate-query="visual=terrain-microrelief-v1"
+  data-product-mutation="false"
+  data-live-h-earth-page-mutation="false">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>H-Earth · Temporary Microrelief Review Carrier</title>
+  <style>
+    :root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#020708;color:#edf7f3}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 68% 14%,#173431 0,transparent 38rem),#020708}
+    main{width:min(760px,100%);padding:22px;border:1px solid #31534c;border-radius:20px;background:#071311e8;box-shadow:0 28px 90px #0009}
+    h1{margin:0 0 10px;font-size:clamp(1.4rem,4vw,2.4rem)}
+    p{margin:.55rem 0;color:#b5cbc3;line-height:1.55}
+    code{overflow-wrap:anywhere;color:#d7f3e7}
+    .status{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #79b99b55;border-radius:999px;color:#bcebd5;background:#194c3733;font-size:.76rem;font-weight:800}
+    [data-state="failed"] .status{border-color:#d67d7d77;color:#ffd0d0;background:#5b161655}
+  </style>
+</head>
+<body>
+  <main id="temporary-review-carrier" data-state="loading">
+    <span class="status">Temporary exact-head review carrier</span>
+    <h1>Loading the frozen H-Earth microrelief candidate</h1>
+    <p id="carrier-status">Resolving the exact candidate entry document and its complete resource graph.</p>
+    <p><strong>Candidate head:</strong><br><code>14e0f0ad03f9d6355b36d24a89e136bf3fe063aa</code></p>
+    <p><strong>Product PR:</strong> #524 · product mutation false · live H-Earth page mutation false</p>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const DELIVERY_OPERATION_ID =
+        'H_EARTH_ADDITIVE_TERRAIN_MICRORELIEF_TEMPORARY_REVIEW_DELIVERY_001';
+      const EXACT_CANDIDATE_HEAD =
+        '14e0f0ad03f9d6355b36d24a89e136bf3fe063aa';
+      const PRODUCT_PR_NUMBER = 524;
+      const CANDIDATE_QUERY = 'visual=terrain-microrelief-v1';
+      const CANDIDATE_QUERY_KEY = 'visual';
+      const CANDIDATE_QUERY_VALUE = 'terrain-microrelief-v1';
+      const PRODUCT_MUTATION = false;
+      const LIVE_H_EARTH_PAGE_MUTATION = false;
+      const EXACT_SOURCE_ROOT =
+        `https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${EXACT_CANDIDATE_HEAD}/showroom/globe/h-earth/`;
+      const EXACT_ENTRY_DOCUMENT = `${EXACT_SOURCE_ROOT}index.html`;
+
+      const deliveryReceipt = Object.freeze({
+        DELIVERY_OPERATION_ID,
+        EXACT_CANDIDATE_HEAD,
+        PRODUCT_PR_NUMBER,
+        CANDIDATE_QUERY,
+        PRODUCT_MUTATION,
+        LIVE_H_EARTH_PAGE_MUTATION,
+        exactEntryDocument: EXACT_ENTRY_DOCUMENT,
+        exactSourceRoot: EXACT_SOURCE_ROOT
+      });
+      window.H_EARTH_TEMPORARY_REVIEW_DELIVERY = deliveryReceipt;
+
+      const query = new URLSearchParams(window.location.search);
+      if (query.get(CANDIDATE_QUERY_KEY) !== CANDIDATE_QUERY_VALUE) {
+        query.set(CANDIDATE_QUERY_KEY, CANDIDATE_QUERY_VALUE);
+        window.history.replaceState(
+          window.history.state,
+          '',
+          `${window.location.pathname}?${query.toString()}${window.location.hash}`
+        );
+      }
+
+      const root = document.getElementById('temporary-review-carrier');
+      const status = document.getElementById('carrier-status');
+      const fail = (error) => {
+        root.dataset.state = 'failed';
+        status.textContent =
+          `Exact-head carrier failed before product execution: ${error?.message ?? String(error)}`;
+        window.H_EARTH_TEMPORARY_REVIEW_DELIVERY_FAILURE = Object.freeze({
+          ...deliveryReceipt,
+          message: error?.message ?? String(error)
+        });
+      };
+
+      fetch(EXACT_ENTRY_DOCUMENT, {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-store',
+        credentials: 'omit'
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`EXACT_ENTRY_HTTP_${response.status}`);
+          }
+          return response.text();
+        })
+        .then((sourceHtml) => {
+          if (!/^\s*<!doctype html>/i.test(sourceHtml) || !/<html\b/i.test(sourceHtml)) {
+            throw new Error('EXACT_ENTRY_DOCUMENT_NOT_HTML');
+          }
+
+          const markerAttributes = [
+            `data-preview-class="TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER"`,
+            `data-delivery-operation-id="${DELIVERY_OPERATION_ID}"`,
+            `data-exact-candidate-head="${EXACT_CANDIDATE_HEAD}"`,
+            `data-product-pr-number="${PRODUCT_PR_NUMBER}"`,
+            `data-candidate-query="${CANDIDATE_QUERY}"`,
+            `data-product-mutation="${PRODUCT_MUTATION}"`,
+            `data-live-h-earth-page-mutation="${LIVE_H_EARTH_PAGE_MUTATION}"`
+          ].join(' ');
+
+          let executableHtml = sourceHtml.replace(
+            /<html\b([^>]*)>/i,
+            `<html$1 ${markerAttributes}>`
+          );
+          executableHtml = executableHtml.replace(
+            /<head\b([^>]*)>/i,
+            `<head$1><base href="${EXACT_SOURCE_ROOT}"><meta name="robots" content="noindex,nofollow,noarchive">`
+          );
+
+          const executedMarkerScript =
+            `<script>` +
+            `window.H_EARTH_TEMPORARY_REVIEW_DELIVERY=Object.freeze(${JSON.stringify(deliveryReceipt)});` +
+            `document.documentElement.dataset.deliveryOperationId=${JSON.stringify(DELIVERY_OPERATION_ID)};` +
+            `document.documentElement.dataset.exactCandidateHead=${JSON.stringify(EXACT_CANDIDATE_HEAD)};` +
+            `document.documentElement.dataset.productPrNumber=${JSON.stringify(String(PRODUCT_PR_NUMBER))};` +
+            `document.documentElement.dataset.candidateQuery=${JSON.stringify(CANDIDATE_QUERY)};` +
+            `document.documentElement.dataset.productMutation='false';` +
+            `document.documentElement.dataset.liveHEarthPageMutation='false';` +
+            `<\/script>`;
+
+          executableHtml = /<\/body>/i.test(executableHtml)
+            ? executableHtml.replace(/<\/body>/i, `${executedMarkerScript}</body>`)
+            : `${executableHtml}${executedMarkerScript}`;
+
+          document.open('text/html', 'replace');
+          document.write(executableHtml);
+          document.close();
+        })
+        .catch(fail);
+    })();
+  </script>
+</body>
+</html>

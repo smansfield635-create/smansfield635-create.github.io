@@ -1,4 +1,4 @@
-name: Laws Experiential Restoration Verifier Target Correction
+name: Laws Experiential Restoration Verifier Telemetry
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: laws-experiential-restoration-verifier-target-correction
+  group: laws-experiential-restoration-verifier-telemetry
   cancel-in-progress: false
 
 env:
@@ -20,7 +20,7 @@ env:
   EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
 
 jobs:
-  correct-verifier-targets:
+  instrument-verifier:
     if: github.ref_name == 'agent/laws-experiential-architecture-restoration-001'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -40,7 +40,7 @@ jobs:
           test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
           test "$(git merge-base origin/main HEAD)" = "$EXPECTED_MAIN_BASE"
 
-      - name: Replace verifier target resolution exactly once
+      - name: Add route-by-route interaction telemetry
         shell: bash
         run: |
           set -euo pipefail
@@ -49,85 +49,66 @@ jobs:
 
           path = Path("tools/laws-experiential-restoration-root-matrix.mjs")
           text = path.read_text(encoding="utf-8")
-          old = r'''async function activateAuthority(page, direction, input) {
-            await returnToConstellation(page);
-            const control = page.locator(`[data-laws-category][data-direction="${direction}"]`).first();
-            assert.equal(await control.count(), 1, `Authority control missing: ${direction}.`);
-            await activate(page, control, input);
 
-            await page.waitForFunction(nextDirection => {'''
-          new = r'''async function activateAuthority(page, direction, input) {
-            await returnToConstellation(page);
-            const semanticSelector = `[data-laws-category][data-direction="${direction}"]`;
-            const semanticControl = page.locator(semanticSelector).first();
-            assert.equal(await semanticControl.count(), 1, `Authority control missing: ${direction}.`);
-            await semanticControl.scrollIntoViewIfNeeded();
-            await page.waitForTimeout(180);
+          replacements = [
+              (
+                  'async function activateAuthority(page, direction, input) {\n  await returnToConstellation(page);',
+                  'async function activateAuthority(page, direction, input) {\n  console.log(JSON.stringify({ stage: "authority-start", direction, input }));\n  await returnToConstellation(page);',
+              ),
+              (
+                  '      assert.ok(hit, `No unblocked physical hit surface for ${direction} (${input}).`);\n      if (input === "touch") {',
+                  '      assert.ok(hit, `No unblocked physical hit surface for ${direction} (${input}).`);\n      console.log(JSON.stringify({ stage: "authority-hit", direction, input, hit }));\n      if (input === "touch") {',
+              ),
+              (
+                  '''  await page.waitForFunction(nextDirection => {
+    const root = document.querySelector("[data-laws-root]");
+    return root?.dataset.lawsControllerState === "CLUSTER_OPEN" &&
+      document.documentElement.dataset.lawsExperienceDirection === nextDirection;
+  }, direction, { timeout: 15000 });''',
+                  '''  try {
+    await page.waitForFunction(nextDirection => {
+      const root = document.querySelector("[data-laws-root]");
+      return root?.dataset.lawsControllerState === "CLUSTER_OPEN" &&
+        document.documentElement.dataset.lawsExperienceDirection === nextDirection;
+    }, direction, { timeout: 15000 });
+  } catch (error) {
+    const debug = await page.evaluate(nextDirection => {
+      const root = document.querySelector("[data-laws-root]");
+      const projected = document.querySelector(
+        `[data-laws-projected-category-label="${nextDirection}"]`
+      );
+      const semantic = document.querySelector(
+        `[data-laws-category][data-direction="${nextDirection}"]`
+      );
+      return {
+        requestedDirection: nextDirection,
+        controllerState: root?.dataset.lawsControllerState || "",
+        activeDirection: root?.dataset.lawsActiveDirection || "",
+        activeCategory: root?.dataset.lawsActiveCategory || "",
+        experienceDirection: document.documentElement.dataset.lawsExperienceDirection || "",
+        spatialPrimaryId: root?.dataset.lawsSpatialPrimaryId || "",
+        visibleLabelId: root?.dataset.lawsVisibleOuterAuthorityLabelId || "",
+        projectedHidden: projected?.hidden ?? null,
+        projectedAriaHidden: projected?.getAttribute("aria-hidden") || "",
+        projectedPointerEvents: projected ? getComputedStyle(projected).pointerEvents : "",
+        semanticPointerEvents: semantic ? getComputedStyle(semantic).pointerEvents : "",
+        interactionReceipt: globalThis.DGB_LAWS_INTERACTIONS?.getReceipt?.() || null,
+        controllerFrame: globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null
+      };
+    }, direction);
+    console.error(JSON.stringify({ stage: "authority-timeout", direction, input, debug }, null, 2));
+    throw error;
+  }''',
+              ),
+          ]
 
-            if (input === "keyboard") {
-              await activate(page, semanticControl, input);
-            } else {
-              const hit = await page.evaluate(nextDirection => {
-                const semantic = document.querySelector(
-                  `[data-laws-category][data-direction="${nextDirection}"]`
-                );
-                const projected = document.querySelector(
-                  `[data-laws-projected-category-label="${nextDirection}"]`
-                );
-                const surfaces = [projected, semantic].filter(node => {
-                  if (!(node instanceof HTMLElement)) return false;
-                  const rect = node.getBoundingClientRect();
-                  const style = getComputedStyle(node);
-                  return !node.hidden &&
-                    style.display !== "none" &&
-                    style.visibility !== "hidden" &&
-                    style.pointerEvents !== "none" &&
-                    rect.width > 0 &&
-                    rect.height > 0;
-                });
-                const fractions = [
-                  [0.5, 0.5], [0.2, 0.2], [0.8, 0.2], [0.2, 0.8],
-                  [0.8, 0.8], [0.5, 0.2], [0.5, 0.8], [0.2, 0.5], [0.8, 0.5]
-                ];
+          for old, new in replacements:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"TELEMETRY_ANCHOR_COUNT={count}: {old[:80]!r}")
+              text = text.replace(old, new, 1)
 
-                for (const surface of surfaces) {
-                  const rect = surface.getBoundingClientRect();
-                  for (const [fx, fy] of fractions) {
-                    const x = rect.left + rect.width * fx;
-                    const y = rect.top + rect.height * fy;
-                    if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
-                    const top = document.elementFromPoint(x, y);
-                    const owner = top?.closest?.(
-                      `[data-laws-projected-category-label="${nextDirection}"], ` +
-                      `[data-laws-category][data-direction="${nextDirection}"]`
-                    );
-                    if (!owner) continue;
-                    return {
-                      x,
-                      y,
-                      surface: owner.hasAttribute("data-laws-projected-category-label")
-                        ? "projected-label"
-                        : "semantic-control"
-                    };
-                  }
-                }
-                return null;
-              }, direction);
-
-              assert.ok(hit, `No unblocked physical hit surface for ${direction} (${input}).`);
-              if (input === "touch") {
-                await page.touchscreen.tap(hit.x, hit.y);
-              } else {
-                await page.mouse.click(hit.x, hit.y);
-              }
-            }
-
-            await page.waitForFunction(nextDirection => {'''
-
-          count = text.count(old)
-          if count != 1:
-              raise SystemExit(f"VERIFIER_TARGET_ANCHOR_COUNT={count}")
-          path.write_text(text.replace(old, new, 1), encoding="utf-8")
+          path.write_text(text, encoding="utf-8")
           PY
 
       - name: Verify bounded verifier-only scope
@@ -140,12 +121,12 @@ jobs:
           node --check tools/laws-experiential-restoration-root-matrix.mjs
           git diff --check
 
-      - name: Commit corrected physical target verifier
+      - name: Commit verifier telemetry
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add tools/laws-experiential-restoration-root-matrix.mjs
-          git commit -m "Verify Laws authorities through physical input surfaces"
+          git commit -m "Trace Laws physical authority selection"
           git push origin "HEAD:$RESTORATION_BRANCH"

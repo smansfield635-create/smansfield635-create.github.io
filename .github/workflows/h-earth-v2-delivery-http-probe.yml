@@ -1,0 +1,103 @@
+name: H-Earth V2 Delivery HTTP Probe
+
+on:
+  push:
+    branches:
+      - review/h-earth-bandlimited-terrain-relief-v2-97003e9d-001
+    paths:
+      - .github/workflows/h-earth-v2-delivery-http-probe.yml
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Probe GitHub Pages carrier and publish receipt
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_URL: https://diamondgatebridge.com/preview/h-earth/c2-r1/bandlimited-terrain-relief-v2-97003e9d/index.html?visual=terrain-relief-v2
+          REFERENCE_URL: https://diamondgatebridge.com/showroom/globe/h-earth/
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate_status=''
+          candidate_type=''
+          reference_status=''
+          reference_type=''
+          passed='false'
+
+          content_type() {
+            awk 'BEGIN{IGNORECASE=1} /^content-type:/ {line=$0} END {sub(/\r$/, "", line); sub(/^[^:]+:[[:space:]]*/, "", line); print line}' "$1"
+          }
+
+          for attempt in $(seq 1 48); do
+            candidate_status=$(curl --location --silent --show-error \
+              --output /tmp/candidate.html \
+              --dump-header /tmp/candidate.headers \
+              --write-out '%{http_code}' \
+              -H 'Cache-Control: no-cache' \
+              "$TARGET_URL" || true)
+            candidate_type=$(content_type /tmp/candidate.headers 2>/dev/null || true)
+
+            reference_status=$(curl --location --silent --show-error \
+              --output /tmp/reference.html \
+              --dump-header /tmp/reference.headers \
+              --write-out '%{http_code}' \
+              -H 'Cache-Control: no-cache' \
+              "$REFERENCE_URL" || true)
+            reference_type=$(content_type /tmp/reference.headers 2>/dev/null || true)
+
+            if [[ "$candidate_status" == '200' ]] \
+              && [[ "${candidate_type,,}" == text/html* ]] \
+              && grep -Fq 'H_EARTH_BAND_LIMITED_TERRAIN_RELIEF_V2_TEMPORARY_REVIEW_DELIVERY_001' /tmp/candidate.html \
+              && grep -Fq '97003e9de386a8962fb46d0b370005b900a167d6' /tmp/candidate.html \
+              && grep -Fq 'visual=terrain-relief-v2' /tmp/candidate.html \
+              && grep -Fq 'data-product-mutation="false"' /tmp/candidate.html \
+              && grep -Fq 'data-live-h-earth-route-mutation="false"' /tmp/candidate.html \
+              && [[ "$reference_status" == '200' ]] \
+              && [[ "${reference_type,,}" == text/html* ]]; then
+              passed='true'
+              break
+            fi
+            sleep 10
+          done
+
+          if [[ "$passed" != 'true' ]]; then
+            cat > /tmp/receipt.md <<EOF
+          ## H-Earth V2 temporary delivery HTTP probe — FAIL
+
+          - workflow run: `${GITHUB_RUN_ID}`
+          - workflow head: `${GITHUB_SHA}`
+          - candidate status: `${candidate_status}`
+          - candidate content type: `${candidate_type}`
+          - reference status: `${reference_status}`
+          - reference content type: `${reference_type}`
+
+          No browser-execution or perceptual claim is made.
+          EOF
+            gh pr comment 530 --repo smansfield635-create/smansfield635-create.github.io --body-file /tmp/receipt.md
+            exit 1
+          fi
+
+          cat > /tmp/receipt.md <<EOF
+          ## H-Earth V2 temporary delivery HTTP probe — PASS
+
+          - workflow run: `${GITHUB_RUN_ID}`
+          - workflow head: `${GITHUB_SHA}`
+          - candidate URL: `${TARGET_URL}`
+          - candidate HTTP status: `${candidate_status}`
+          - candidate content type: `${candidate_type}`
+          - reference URL: `${REFERENCE_URL}`
+          - reference HTTP status: `${reference_status}`
+          - reference content type: `${reference_type}`
+          - exact source markers: `PASS`
+          - product mutation marker: `false`
+          - live H-Earth route mutation marker: `false`
+
+          This is an HTTP entry-document and source-marker receipt only. It is not browser execution, perceptual advancement, matched-camera differential, Role 5 ratification, user acceptance, or PR #529 promotion.
+          EOF
+          gh pr comment 530 --repo smansfield635-create/smansfield635-create.github.io --body-file /tmp/receipt.md

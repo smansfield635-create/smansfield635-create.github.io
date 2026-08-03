@@ -2,7 +2,7 @@
 <html lang="en"
   data-route="/laws/research/methods-and-models/"
   data-page-family="RESEARCH_CHILD_SHOWROOM"
-  data-methods-models-contract="METHODS_MODELS_SHOWROOM_DOCK_v2"
+  data-methods-models-contract="METHODS_MODELS_EUCLIDEAN_SHOWROOM_v3"
   data-canonical-archive="METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"
   data-source-completeness="open"
   data-scientific-validation-claimed="false"
@@ -13,13 +13,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <title>Methods and Models · Research · Laws · Diamond Gate Bridge</title>
-  <meta name="description" content="Operate the Methods and Models showroom: structural collapse, pressure and capacity, closure and flow, and falsification methods presented as one dual-axis model instrument.">
+  <meta name="description" content="Operate the Methods and Models showroom: structural collapse, pressure and capacity, closure and flow, and falsification methods presented as one Euclidean model instrument across model, lens, and family axes.">
   <link rel="canonical" href="https://diamondgatebridge.com/laws/research/methods-and-models/">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/laws/research/methods-and-models/showroom.css?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1">
   <link rel="stylesheet" href="/laws/research/methods-and-models/showroom-refinement.css?v=METHODS_MODELS_SHOWROOM_DOCK_V2">
+  <link rel="stylesheet" href="/laws/research/methods-and-models/showroom-euclidean.css?v=METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3">
+  <link rel="stylesheet" href="/laws/research/methods-and-models/showroom-euclidean-interaction.css?v=METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3A">
   <script defer src="/laws/research/methods-and-models/showroom.js?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1"></script>
   <script defer src="/laws/research/methods-and-models/showroom-refinement.js?v=METHODS_MODELS_SHOWROOM_DOCK_V2"></script>
+  <script defer src="/laws/research/methods-and-models/showroom-euclidean.js?v=METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3"></script>
 </head>
 <body data-mm-family="structure" data-mm-display="expanded">
 <a class="mm-skip" href="#methods-models-showroom">Skip to the model showroom</a>
@@ -44,7 +47,7 @@
       </div>
       <div>
         <p class="mm-intro__question">How was the proposition specified, calculated, compared, and exposed to failure?</p>
-        <p class="mm-intro__cue">Open the model field to move through families and equations. Collapse it into a compact dock when you are ready to examine the public research context beneath it.</p>
+        <p class="mm-intro__cue">Rotate the model field through X for models, Y for interpretive lenses, and Z for model families. Collapse the complete coordinate into a compact dock when you are ready to examine the public research context beneath it.</p>
       </div>
     </section>
 
@@ -52,7 +55,7 @@
       <div class="mm-stage">
         <header class="mm-stage__header">
           <div>
-            <p class="mm-kicker">Primary exhibit · Dual-axis model field</p>
+            <p class="mm-kicker">Primary exhibit · Euclidean model field</p>
             <h2 id="mm-family-title" data-mm-family-title>Structural Envelope and Collapse</h2>
             <p class="mm-stage__question" data-mm-family-question>What must be present, saturated, and functionally failed before collapse is qualified?</p>
           </div>
@@ -67,6 +70,12 @@
           <button class="mm-family-tab" type="button" role="tab" aria-selected="false">Pressure / Capacity</button>
           <button class="mm-family-tab" type="button" role="tab" aria-selected="false">Closure / Flow</button>
           <button class="mm-family-tab" type="button" role="tab" aria-selected="false">Method / Falsification</button>
+        </div>
+
+        <div class="mm-z-axis-controls" aria-label="Rotate the model-family depth axis">
+          <button type="button" data-mm-family-previous aria-label="Previous model family">↑</button>
+          <span aria-hidden="true">Z</span>
+          <button type="button" data-mm-family-next aria-label="Next model family">↓</button>
         </div>
 
         <div class="mm-instrument">
@@ -109,16 +118,25 @@
           </div>
           <p class="mm-progress" data-mm-progress>Structural Envelope · Model 1 of 6</p>
         </div>
+
+        <div class="mm-euclidean-coordinate" data-mm-coordinate aria-label="X 01 of 06, Y Practical, Z Structural Envelope">
+          <span data-mm-coordinate-x>X 01/06</span>
+          <span data-mm-coordinate-y>Y PRACTICAL</span>
+          <span data-mm-coordinate-z>Z STRUCTURAL ENVELOPE</span>
+        </div>
       </div>
     </section>
 
     <aside class="mm-dock" data-mm-dock hidden aria-label="Collapsed Methods and Models showroom">
-      <button class="mm-dock__handle" type="button" data-mm-dock-handle aria-label="Move the model dock"><span aria-hidden="true">⋮⋮</span></button>
+      <button class="mm-dock__handle" type="button" data-mm-dock-handle aria-label="Move the model dock">
+        <span aria-hidden="true">⋮⋮</span>
+      </button>
       <div class="mm-dock__identity">
         <span class="mm-dock__symbol" data-mm-dock-symbol>451</span>
         <span class="mm-dock__family" data-mm-dock-family>Structural Envelope</span>
         <strong data-mm-dock-title>451 Structural Envelope</strong>
         <small data-mm-dock-progress>Model 1 of 6</small>
+        <small class="mm-dock__coordinate" data-mm-dock-coordinate>X 01/06 · Y PRACTICAL · Z STRUCTURAL ENVELOPE</small>
       </div>
       <div class="mm-dock__controls">
         <button type="button" data-mm-dock-previous aria-label="Previous model">←</button>
@@ -180,10 +198,26 @@
       </section>
 
       <nav class="mm-public-routes" aria-label="Continue through Laws research">
-        <a href="/laws/research/evidence-and-sources/"><span>Inspect the foundation</span><strong>Evidence and Sources</strong><p>See what supports each claim and where the evidence stops.</p></a>
-        <a href="/laws/research/applied-investigations/"><span>See the methods in use</span><strong>Applied Investigations</strong><p>Follow the methods into bounded research applications.</p></a>
-        <a href="/laws/research/findings-and-boundaries/"><span>Read the result correctly</span><strong>Findings and Boundaries</strong><p>Separate observed findings from interpretation and unresolved limits.</p></a>
-        <a href="/laws/"><span>Return to orientation</span><strong>Laws Compass</strong><p>Choose another Laws destination without losing the broader architecture.</p></a>
+        <a href="/laws/research/evidence-and-sources/">
+          <span>Inspect the foundation</span>
+          <strong>Evidence and Sources</strong>
+          <p>See what supports each claim and where the evidence stops.</p>
+        </a>
+        <a href="/laws/research/applied-investigations/">
+          <span>See the methods in use</span>
+          <strong>Applied Investigations</strong>
+          <p>Follow the methods into bounded research applications.</p>
+        </a>
+        <a href="/laws/research/findings-and-boundaries/">
+          <span>Read the result correctly</span>
+          <strong>Findings and Boundaries</strong>
+          <p>Separate observed findings from interpretation and unresolved limits.</p>
+        </a>
+        <a href="/laws/">
+          <span>Return to orientation</span>
+          <strong>Laws Compass</strong>
+          <p>Choose another Laws destination without losing the broader architecture.</p>
+        </a>
       </nav>
     </section>
   </main>
@@ -197,7 +231,10 @@
 <dialog class="mm-dialog" data-mm-dialog aria-labelledby="mm-dialog-title">
   <div class="mm-dialog__inner">
     <header class="mm-dialog__top">
-      <div><p class="mm-kicker" data-mm-dialog-kicker>Model family</p><h2 id="mm-dialog-title" data-mm-dialog-title>Model</h2></div>
+      <div>
+        <p class="mm-kicker" data-mm-dialog-kicker>Model family</p>
+        <h2 id="mm-dialog-title" data-mm-dialog-title>Model</h2>
+      </div>
       <button class="mm-dialog__close" type="button" aria-label="Return to the model showroom" data-mm-dialog-close>×</button>
     </header>
     <div class="mm-dialog__equation" data-mm-dialog-equation></div>

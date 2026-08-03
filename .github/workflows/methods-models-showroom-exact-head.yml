@@ -10,6 +10,9 @@ on:
       - "laws/research/methods-and-models/showroom.js"
       - "laws/research/methods-and-models/showroom-refinement.css"
       - "laws/research/methods-and-models/showroom-refinement.js"
+      - "laws/research/methods-and-models/showroom-euclidean.css"
+      - "laws/research/methods-and-models/showroom-euclidean-interaction.css"
+      - "laws/research/methods-and-models/showroom-euclidean.js"
       - "laws/research/methods-and-models/canonical-records-v1.html"
       - "verification/methods-models-showroom-browser.mjs"
       - ".github/workflows/methods-models-showroom-exact-head.yml"
@@ -56,6 +59,7 @@ jobs:
         run: |
           node --check laws/research/methods-and-models/showroom.js
           node --check laws/research/methods-and-models/showroom-refinement.js
+          node --check laws/research/methods-and-models/showroom-euclidean.js
           node --check verification/methods-models-showroom-browser.mjs
 
       - name: Start exact-head static server

@@ -60,6 +60,15 @@ jobs:
           test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
           git cat-file -e "$FORMER_ROOT_REFERENCE^{commit}"
 
+      - name: Verify exact restoration output hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '8fff5010933b90ffd396fddab393fb4044954b1b2838299b2a454f598c246854  laws/index.html' | sha256sum --check --strict
+          echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
+          echo 'e5a289b9e6792f7549be7797880ffe6911a6fea3e4f5e02b48ada1b71158a59f  laws/index.experience.polish.css' | sha256sum --check --strict
+          echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
+
       - name: Capture current and former root source baselines
         shell: bash
         run: |

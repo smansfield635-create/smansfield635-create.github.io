@@ -109,12 +109,12 @@ def make_info(name):
     info.compress_type=zipfile.ZIP_DEFLATED
     info.flag_bits |= 0x800
     return info
+entries=[(member['archivePath'],open(member['stagedPath'],'rb').read()) for member in spec['members']]
+entries.append(('SHA256SUMS.txt',open(spec['sha256SumsPath'],'rb').read()))
+entries.sort(key=lambda entry: entry[0])
 with zipfile.ZipFile(output_path,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9,strict_timestamps=True) as z:
-    for member in spec['members']:
-        data=open(member['stagedPath'],'rb').read()
-        z.writestr(make_info(member['archivePath']),data,compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
-    sums=open(spec['sha256SumsPath'],'rb').read()
-    z.writestr(make_info('SHA256SUMS.txt'),sums,compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
+    for name,data in entries:
+        z.writestr(make_info(name),data,compress_type=zipfile.ZIP_DEFLATED,compresslevel=9)
 `;
 
 export function buildDeterministicPackage({ specPath, outputPath, repeatOutputPath = null }) {

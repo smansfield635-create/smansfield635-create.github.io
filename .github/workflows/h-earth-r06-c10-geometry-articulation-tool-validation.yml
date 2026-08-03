@@ -1,4 +1,4 @@
-name: H-Earth R06 C10 C4 Isolated Bounded Finalizer
+name: H-Earth R06 C10 C4 Isolated Bounded Finalizer Correction
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Execute exact receipt-backed C4 finalizer
+      - name: Execute corrected receipt-backed C4 finalizer
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -47,6 +47,36 @@ jobs:
           base64 --decode /tmp/finalizer.gz.b64 | gzip --decompress > /tmp/finalize-c4.sh
           test "$(sha256sum /tmp/finalize-c4.sh | awk '{print $1}')" = '3afcd13176641b3e81c0ae5099ae7e0f16a493c73baa7d329b7ff30be478a177'
           sed -i 's/role1\/r06-c10-c4-portable-harness-001/role1\/r06-c10-c4-portable-harness-002/g' /tmp/finalize-c4.sh
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('/tmp/finalize-c4.sh')
+          source = path.read_text()
+          old_validator = "if(/actions\\/(?:deploy-pages|upload-pages-artifact)|pages-build-deployment|npm\\s+run\\s+deploy|environment:\\s*github-pages/i.test(workflowSource)) throw new Error('WORKFLOW_DEPLOYMENT_ACTION_PRESENT');"
+          new_validator = "const activeDeploymentPattern=/^(?:\\s*uses:\\s*actions\\/(?:deploy-pages|upload-pages-artifact)@|\\s*environment:\\s*github-pages\\s*$|\\s*run:\\s*.*\\bnpm\\s+run\\s+deploy\\b)/mi;\nif(activeDeploymentPattern.test(workflowSource)) throw new Error('WORKFLOW_DEPLOYMENT_ACTION_PRESENT');"
+          if source.count(old_validator) != 1:
+              raise SystemExit(f'FINALIZER_VALIDATOR_COUNT:{source.count(old_validator)}')
+          source = source.replace(old_validator, new_validator)
+
+          anchor = "test \"$(sha256sum \"$WORKFLOW\" | awk '{print $1}')\" = \"$WORKFLOW_SHA256\"\n"
+          workflow_patch = r'''python3 - "$WORKFLOW" <<'PY_WORKFLOW'
+          from pathlib import Path
+          import sys
+
+          workflow = Path(sys.argv[1])
+          text = workflow.read_text()
+          old = "if(/actions\\/(?:deploy-pages|upload-pages-artifact)|pages-build-deployment|npm\\s+run\\s+deploy|environment:\\s*github-pages/i.test(workflowSource)) throw new Error('WORKFLOW_DEPLOYMENT_ACTION_PRESENT');"
+          new = "const activeDeploymentPattern=/^(?:\\s*uses:\\s*actions\\/(?:deploy-pages|upload-pages-artifact)@|\\s*environment:\\s*github-pages\\s*$|\\s*run:\\s*.*\\bnpm\\s+run\\s+deploy\\b)/mi;\n          if(activeDeploymentPattern.test(workflowSource)) throw new Error('WORKFLOW_DEPLOYMENT_ACTION_PRESENT');"
+          if text.count(old) != 1:
+              raise SystemExit(f'WORKFLOW_VALIDATOR_COUNT:{text.count(old)}')
+          workflow.write_text(text.replace(old, new))
+          PY_WORKFLOW
+          '''
+          if source.count(anchor) != 1:
+              raise SystemExit(f'WORKFLOW_HASH_ANCHOR_COUNT:{source.count(anchor)}')
+          source = source.replace(anchor, anchor + workflow_patch)
+          path.write_text(source)
+          PY
           bash /tmp/finalize-c4.sh
 
       - name: Publish success locator
@@ -58,13 +88,13 @@ jobs:
         if: failure()
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_R06_C10_C4_FINALIZER_002_FAIL:${GITHUB_RUN_ID}:${GITHUB_SHA}"
+        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_R06_C10_C4_FINALIZER_002_CORRECTION_FAIL:${GITHUB_RUN_ID}:${GITHUB_SHA}"
 
       - name: Upload bounded nonproduct evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-r06-c10-c4-finalizer-002-${{ github.run_id }}
+          name: h-earth-r06-c10-c4-finalizer-002-correction-${{ github.run_id }}
           path: |
             /tmp/r06-c10-run-1
             /tmp/r06-c10-run-2

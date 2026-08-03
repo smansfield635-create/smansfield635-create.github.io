@@ -77,6 +77,38 @@ jobs:
       - name: Install pinned browser driver
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
+      - name: Finalize read-only return observation adapter
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('verification/methods-euclidean-coherence-v1/runner.mjs')
+          text = path.read_text()
+          replacements = [
+            (
+              "async function enterCameraObservation(page, requested, viewportId, coordinate) {\n  if (requested === 'OVERVIEW') {",
+              "async function enterCameraObservation(page, requested, viewportId, coordinate, applyCondition = true) {\n  if (applyCondition && requested === 'OVERVIEW') {"
+            ),
+            (
+              "  } else {\n    await page.focus('[data-mm-model-deck]');\n  }\n  await waitStable(page, 80);",
+              "  } else if (applyCondition) {\n    await page.focus('[data-mm-model-deck]');\n  }\n  await waitStable(page, applyCondition ? 80 : 20);"
+            ),
+            (
+              "    requested,\n    native_contract_declared:",
+              "    requested,\n    condition_applied: applyCondition,\n    native_contract_declared:"
+            ),
+            (
+              "const returnedCamera = await enterCameraObservation(page, 'BROWSE', viewport.id, coordinateId(z, x, 0));",
+              "const returnedCamera = await enterCameraObservation(page, 'BROWSE', viewport.id, coordinateId(z, x, 0), false);"
+            )
+          ]
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit(f'RETURN_OBSERVATION_PATCH_TARGET_NOT_FOUND: {old[:80]}')
+              text = text.replace(old, new, 1)
+          path.write_text(text)
+          PY
+
       - name: Validate corrected nonproduct runner syntax
         run: node --check verification/methods-euclidean-coherence-v1/runner.mjs
 

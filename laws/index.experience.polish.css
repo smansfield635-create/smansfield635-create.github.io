@@ -235,32 +235,24 @@ html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid 
   }
 }
 
-
 /*
- * LAWS_FIRST_PERSISTENT_COMPASS_RAIL_AND_TABLET_REFLOW_v2
- * One source-native F.I.R.S.T. indicator rail remains in the Compass zone.
- * It consumes the existing presentation correspondence and creates no control.
+ * LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1
+ * Restores the F.I.R.S.T. rail to the declaration side of the split hero,
+ * removes the detached Compass-zone sequence, and keeps the native disclosure
+ * response adjacent to its activation point on tablet viewports.
+ * Presentation only: no route, controller, record, evidence, or claim authority.
  */
-html[data-cp6-experiential-presentation="candidate"] .laws-compass-primary {
-  grid-auto-flow: row;
-}
-
-html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
-  order: 1;
-}
-
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail {
-  order: 2;
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first > .laws-first-rail {
   position: relative;
-  z-index: 12;
-  width: 100%;
-  margin: -1rem 0 1rem;
+  z-index: 5;
+  width: min(100%, 34rem);
+  margin: clamp(1.65rem, 3.5vh, 2.65rem) 0 0;
   padding: 0;
   border: 0;
   background: transparent;
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__list {
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__list {
   isolation: isolate;
   position: relative;
   display: grid;
@@ -271,190 +263,168 @@ html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__list {
   list-style: none;
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__list::before {
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__list::before {
   content: "";
   position: absolute;
   z-index: -1;
-  top: 0.47rem;
-  right: 0;
-  left: 0;
+  top: 0.43rem;
+  right: 0.4rem;
+  left: 0.4rem;
   height: 1px;
-  background: linear-gradient(90deg, rgba(121, 234, 255, 0.52), var(--laws-experience-line), rgba(121, 234, 255, 0.26));
-  box-shadow: 0 0 12px rgba(121, 234, 255, 0.12);
+  background: linear-gradient(90deg, rgba(121, 234, 255, 0.58), var(--laws-experience-line), rgba(121, 234, 255, 0.28));
+  box-shadow: 0 0 14px rgba(121, 234, 255, 0.14);
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item {
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item {
   position: relative;
   min-width: 0;
-  padding: 1.55rem 0.8rem 0.75rem 0;
-  opacity: 0.58;
+  padding: 1.35rem 0.15rem 0;
+  opacity: 0.5;
+  text-align: center;
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__light {
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__light {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
   box-sizing: border-box;
-  width: 0.95rem;
-  height: 0.95rem;
-  border: 2px solid rgba(116, 229, 255, 0.58);
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(116, 229, 255, 0.56);
   border-radius: 50%;
   background: #07101f;
-  box-shadow: 0 0 12px rgba(116, 229, 255, 0.2);
-  transform: scale(1);
+  box-shadow: 0 0 12px rgba(116, 229, 255, 0.18);
+  transform: translateX(-50%);
   transition: background-color 180ms ease, border-color 180ms ease, box-shadow 220ms ease, transform 180ms ease;
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__label,
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__question {
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__label {
   display: block;
   min-width: 0;
-}
-
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__label {
+  overflow-wrap: anywhere;
   color: var(--laws-experience-ink);
-  font-size: 0.7rem;
+  font-size: clamp(0.53rem, 0.75vw, 0.66rem);
   font-weight: 760;
-  letter-spacing: 0.065em;
+  letter-spacing: 0.035em;
   text-transform: uppercase;
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__question {
-  margin-top: 0.55rem;
-  color: var(--laws-experience-muted);
-  font-size: clamp(0.76rem, 0.92vw, 0.9rem);
-  line-height: 1.4;
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__question {
+  display: none;
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] {
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item[data-laws-experience-active="true"] {
   opacity: 1;
   transform: translateY(-0.12rem);
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] .laws-first-rail__light {
+html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item[data-laws-experience-active="true"] .laws-first-rail__light {
   border-color: #e7fcff;
   background: #79eaff;
   box-shadow: 0 0 0 4px rgba(121, 234, 255, 0.12), 0 0 12px rgba(121, 234, 255, 0.92), 0 0 28px rgba(121, 234, 255, 0.74);
-  transform: scale(1.16);
+  transform: translateX(-50%) scale(1.16);
 }
 
-html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
-  order: 3;
-}
-
-html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article::before {
-  width: 0.9rem;
-  height: 0.9rem;
-  border-width: 2px;
-  box-shadow: 0 0 8px rgba(116, 229, 255, 0.16);
-}
-
-html[data-cp6-experiential-presentation="candidate"] .laws-first__question-grid article[data-laws-experience-active="true"]::before {
-  background: #79eaff;
-  box-shadow: 0 0 12px rgba(121, 234, 255, 0.52);
-  transform: scale(1.05);
-}
-
-@media (max-width: 1100px) {
-  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: clamp(1.25rem, 3.5vw, 2.75rem);
-    padding: clamp(2rem, 5vh, 4rem) 0 clamp(3.5rem, 7vh, 5.5rem);
+@media (min-width: 781px) and (max-width: 1200px) {
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-experience-hero,
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-experience-hero:has(.laws-first__disclosure[open]) {
+    min-height: calc(100svh - 5rem);
+    display: grid;
+    grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.2fr);
+    align-items: start;
+    gap: clamp(1.5rem, 3.2vw, 3rem);
+    padding: clamp(2rem, 5vh, 4rem) 0 clamp(3rem, 7vh, 5rem);
   }
 
-  html[data-cp6-experiential-presentation="candidate"] .laws-experience-atmosphere span:nth-child(3) {
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first {
+    position: relative;
+    width: 100%;
+    align-self: start;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__disclosure-body {
+    position: static;
+    width: 100%;
+    max-width: 34rem;
+    margin: 1.35rem 0 0;
+    padding: 1.2rem 0 0;
+    border-top: 1px solid var(--laws-experience-line);
+    background: transparent;
+    backdrop-filter: none;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid::before {
     display: none;
   }
 
-  html[data-cp6-experiential-presentation="candidate"] .laws-first {
-    width: min(100%, 56rem);
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid article {
+    display: grid;
+    grid-template-columns: minmax(5.25rem, 0.34fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 0.72rem 0 0.72rem 1.45rem;
+    border-bottom: 1px solid rgba(121, 234, 255, 0.09);
   }
 
-  html[data-cp6-experiential-presentation="candidate"] .laws-first__disclosure-body {
-    width: 100%;
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid article::before {
+    top: 0.9rem;
+    left: 0;
   }
 
-  html[data-cp6-experiential-presentation="candidate"] .laws-compass-primary {
-    position: relative;
-    top: auto;
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__question-grid p {
+    max-width: none;
+    margin: 0;
+    font-size: 0.88rem;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first__disclosure[open] .laws-first__research-record {
+    grid-template-columns: minmax(5.25rem, 0.34fr) minmax(0, 1fr);
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+    padding: 0.85rem 0 0 1.45rem;
+  }
+
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-compass-primary {
+    position: sticky;
+    top: 1rem;
     width: 100%;
-    align-self: stretch;
+    align-self: start;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+    margin: 0;
   }
 
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail {
-    order: 1;
-    margin: 0 0 0.5rem;
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-orbit {
+    min-height: clamp(31rem, 70vw, 44rem);
   }
 
-  html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
-    order: 2;
-    min-height: clamp(31rem, 76vw, 42rem);
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
-    order: 3;
-    width: min(100%, 44rem);
-    margin: -3rem auto 0;
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-controller-panel {
+    width: min(96%, 38rem);
+    margin: -3.5rem auto 0;
   }
 }
 
 @media (max-width: 780px) {
-  html[data-cp6-experiential-presentation="candidate"] .laws-experience-hero {
-    gap: 0.85rem;
-    padding-top: clamp(1.75rem, 5vh, 3rem);
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first > .laws-first-rail {
+    width: 100%;
+    margin-top: 1.4rem;
   }
 
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail {
-    margin-bottom: 0;
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-orbit {
-    min-height: min(118vw, 36rem);
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-controller-panel {
-    margin-top: -1.75rem;
-  }
-}
-
-@media (max-width: 600px) {
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item {
-    padding: 1.45rem 0.2rem 0.55rem;
-    text-align: center;
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__light {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] {
-    transform: none;
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item[data-laws-experience-active="true"] .laws-first-rail__light {
-    transform: translateX(-50%) scale(1.16);
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__label {
-    font-size: clamp(0.55rem, 2.55vw, 0.68rem);
-    letter-spacing: 0.035em;
-  }
-
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__question {
-    display: none;
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__label {
+    font-size: clamp(0.52rem, 2.45vw, 0.65rem);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__item,
-  html[data-cp6-experiential-presentation="candidate"] .laws-first-rail__light {
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__item,
+  html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"] .laws-first-rail__light {
     transition: none !important;
   }
 }

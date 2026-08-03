@@ -7,10 +7,12 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_CP6_EXPERIENTIAL_PRESENTATION_v3";
+  const CONTRACT = "LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1";
   const STELLAR_STYLE = "/laws/index.stellar-continuity.css?v=LAWS_STELLAR_CONTINUITY_20260801A";
   const STELLAR_SCRIPT = "/laws/index.background-cosmos.js?v=LAWS_BACKGROUND_COSMOS_20260801A";
   const COMPASS_PRELOAD_MARGIN = "1200px 0px";
+  const INLINE_DISCLOSURE_MEDIA = "(min-width: 781px) and (max-width: 1200px)";
+  const MAX_IMMEDIATE_DISCLOSURE_GAP = 160;
 
   const COPY = Object.freeze({
     idle: Object.freeze({
@@ -76,6 +78,9 @@
   const questionNodes = Array.from(document.querySelectorAll("[data-laws-experience-question]"));
   const indicatorNodes = Array.from(document.querySelectorAll("[data-laws-experience-indicator]"));
   const stageNodes = Array.from(document.querySelectorAll("[data-laws-experience-stage]"));
+  const firstDisclosure = document.querySelector("details[data-laws-first-disclosure]");
+  const firstDisclosureSummary = firstDisclosure?.querySelector(":scope > summary") || null;
+  const firstDisclosureBody = firstDisclosure?.querySelector(":scope > .laws-first__disclosure-body") || null;
 
   let unsubscribeCompass = null;
   let activeDirection = "";
@@ -288,6 +293,78 @@
     compassPreloadObserver.observe(compassPrimary);
   }
 
+  function firstDisclosureSnapshot() {
+    const summaryRect = firstDisclosureSummary?.getBoundingClientRect();
+    const bodyRect = firstDisclosureBody?.getBoundingClientRect();
+    const gap = summaryRect && bodyRect
+      ? bodyRect.top - summaryRect.bottom
+      : null;
+    const bodyIntersectsViewport = Boolean(
+      bodyRect && bodyRect.bottom > 0 && bodyRect.top < innerHeight
+    );
+
+    return Object.freeze({
+      open: Boolean(firstDisclosure?.open),
+      inlineViewport: Boolean(matchMedia?.(INLINE_DISCLOSURE_MEDIA).matches),
+      gap,
+      bodyIntersectsViewport,
+      immediateVisibleConsequence: Boolean(
+        firstDisclosure?.open &&
+        bodyIntersectsViewport &&
+        gap !== null &&
+        gap <= MAX_IMMEDIATE_DISCLOSURE_GAP
+      )
+    });
+  }
+
+  function commitFirstDisclosureContinuity(source = "toggle") {
+    if (!firstDisclosure || !firstDisclosureSummary || !firstDisclosureBody) {
+      return;
+    }
+
+    const open = Boolean(firstDisclosure.open);
+    firstDisclosureSummary.setAttribute("aria-expanded", String(open));
+    documentElement.dataset.lawsFirstDisclosure = open ? "open" : "closed";
+
+    requestAnimationFrame(() => {
+      let snapshot = firstDisclosureSnapshot();
+      if (
+        open &&
+        snapshot.inlineViewport &&
+        !snapshot.immediateVisibleConsequence
+      ) {
+        firstDisclosureBody.scrollIntoView({
+          block: "nearest",
+          inline: "nearest",
+          behavior: reducedMotion ? "auto" : "smooth"
+        });
+        snapshot = firstDisclosureSnapshot();
+      }
+
+      globalThis.dispatchEvent(new CustomEvent("LAWS_FIRST_DISCLOSURE_CONTINUITY", {
+        detail: Object.freeze({
+          contract: CONTRACT,
+          source,
+          ...snapshot,
+          navigationAuthority: false,
+          controllerAuthority: false,
+          contentAuthority: false
+        })
+      }));
+    });
+  }
+
+  function installFirstDisclosureContinuity() {
+    if (!firstDisclosure) {
+      return;
+    }
+
+    firstDisclosure.addEventListener("toggle", () => {
+      commitFirstDisclosureContinuity("native-details-toggle");
+    });
+    commitFirstDisclosureContinuity("initialize");
+  }
+
   function installStageObserver() {
     if (!stageNodes.length) {
       return;
@@ -379,6 +456,7 @@
     applyCopy(deriveDirection(readControllerState()), "initialize");
     observeRootState();
     installCompassPreload();
+    installFirstDisclosureContinuity();
     installStageObserver();
     connectController();
     installParallax();
@@ -390,6 +468,8 @@
       getDirection: () => activeDirection,
       refresh: () => applyCopy(deriveDirection(readControllerState()), "manual-refresh"),
       requestCompassRuntimePreload: () => requestCompassRuntimePreload("manual-presentation-request"),
+      getFirstDisclosureSnapshot: firstDisclosureSnapshot,
+      refreshFirstDisclosure: () => commitFirstDisclosureContinuity("manual-refresh"),
       navigationAuthority: false,
       contentAuthority: false,
       controllerAuthority: false,
@@ -406,6 +486,8 @@
           evidenceAuthority: false,
           compassPreloadTarget: ".laws-compass-primary",
           compassPreloadMargin: COMPASS_PRELOAD_MARGIN,
+          firstDisclosureMedia: INLINE_DISCLOSURE_MEDIA,
+          maxImmediateDisclosureGap: MAX_IMMEDIATE_DISCLOSURE_GAP,
           reducedMotion
         })
       })

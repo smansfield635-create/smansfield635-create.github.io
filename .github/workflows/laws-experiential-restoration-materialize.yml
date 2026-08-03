@@ -1,4 +1,4 @@
-name: Laws Experiential Restoration Activation Probe
+name: Laws Root Finalization
 
 on:
   push:
@@ -6,198 +6,304 @@ on:
       - agent/laws-experiential-architecture-restoration-001
     paths:
       - '.github/workflows/laws-experiential-restoration-materialize.yml'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/laws-experiential-restoration-materialize.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: laws-experiential-restoration-activation-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
-env:
-  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
-  EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
-  BASE_URL: http://127.0.0.1:4173
-  EVIDENCE_DIR: artifacts/laws-experiential-restoration/interaction-diagnostic
+  group: laws-root-finalization
+  cancel-in-progress: false
 
 jobs:
-  activation-probe:
+  finalize-root-candidate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out restoration branch
+        uses: actions/checkout@v4
         with:
-          ref: ${{ env.EXECUTION_COMMIT }}
+          ref: agent/laws-experiential-architecture-restoration-001
           fetch-depth: 0
 
-      - name: Lock exact checkout and product hashes
+      - name: Lock expected parent
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           git fetch origin main
-          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
-          test "$(git merge-base origin/main HEAD)" = "$EXPECTED_MAIN_BASE"
-          echo '8fff5010933b90ffd396fddab393fb4044954b1b2838299b2a454f598c246854  laws/index.html' | sha256sum --check --strict
-          echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
-          echo 'e5a289b9e6792f7549be7797880ffe6911a6fea3e4f5e02b48ada1b71158a59f  laws/index.experience.polish.css' | sha256sum --check --strict
-          echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
+          test "$(git rev-parse origin/main)" = "ef2ffdb1da7911238652f076a6b44326061493ef"
+          test "$(git merge-base origin/main HEAD)" = "ef2ffdb1da7911238652f076a6b44326061493ef"
 
-      - name: Install pinned browser verifier
-        run: |
-          npm install --no-save --no-package-lock playwright@1.55.0
-          npx playwright install --with-deps chromium
-
-      - name: Start exact candidate server
+      - name: Finalize foundation-first Laws root
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-activation-server.log 2>&1 &
-          for attempt in $(seq 1 50); do
-            curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null && exit 0
-            sleep 1
-          done
-          exit 1
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import re
 
-      - name: Record raw touch and pointer activation receipts
+          html_path = Path('laws/index.html')
+          css_path = Path('laws/index.experience.polish.css')
+          matrix_path = Path('tools/laws-experiential-restoration-root-matrix.mjs')
+          matrix_workflow_path = Path('.github/workflows/laws-experiential-restoration-root-matrix.yml')
+          cta_workflow_path = Path('.github/workflows/laws-experiential-restoration-cta-regression.yml')
+
+          html = html_path.read_text(encoding='utf-8')
+          css = css_path.read_text(encoding='utf-8')
+          matrix = matrix_path.read_text(encoding='utf-8')
+          matrix_workflow = matrix_workflow_path.read_text(encoding='utf-8')
+          cta_workflow = cta_workflow_path.read_text(encoding='utf-8')
+
+          study_pattern = re.compile(
+              r'\n<section class="cp6-context cp6-landing-context lr-battery-landing" '
+              r'id="cp6-work-behind-laws".*?</section>\n(?=<section aria-label="Laws supporting orientation")',
+              re.S,
+          )
+          match = study_pattern.search(html)
+          if not match:
+              raise SystemExit('BATTERY_STUDY_BLOCK_NOT_FOUND')
+          study = match.group(0).strip()
+          html = html[:match.start()] + '\n' + html[match.end():]
+
+          evidence_marker = '<details class="laws-orientation-panel" data-laws-supporting-panel="evidence-applied">'
+          evidence_start = html.find(evidence_marker)
+          if evidence_start < 0:
+              raise SystemExit('EVIDENCE_PANEL_NOT_FOUND')
+          body_marker = '  <div class="laws-orientation-panel__body">\n'
+          body_start = html.find(body_marker, evidence_start)
+          if body_start < 0:
+              raise SystemExit('EVIDENCE_PANEL_BODY_NOT_FOUND')
+          insertion = body_start + len(body_marker)
+          wrapped_study = f'''<details class="laws-discovery__item laws-applied-study-disclosure" data-laws-applied-study-disclosure="battery-health">
+  <summary>
+    <span>Applied study</span>
+    <strong>Battery health held-out evaluation</strong>
+    <small>One bounded example. The Laws foundation remains the subject of this chamber.</small>
+  </summary>
+  <div class="laws-applied-study-disclosure__body">
+{study}
+  </div>
+</details>
+'''
+          html = html[:insertion] + wrapped_study + html[insertion:]
+          html = html.replace(
+              'data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"',
+              'data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1" data-laws-foundation-first-applied-study="true"',
+              1,
+          )
+          html = html.replace(
+              'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803A" rel="stylesheet"',
+              'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803B" rel="stylesheet"',
+              1,
+          )
+
+          css_marker = 'LAWS_FOUNDATION_FIRST_APPLIED_STUDY_v1'
+          if css_marker not in css:
+              css += r'''
+
+/*
+ * LAWS_FOUNDATION_FIRST_APPLIED_STUDY_v1
+ * Keeps the Laws foundation primary. Applied research remains available as
+ * optional evidence depth and does not occupy the chamber threshold.
+ */
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure {
+  margin: 0.35rem 0 1.35rem;
+  border: 0;
+  border-top: 1px solid rgba(121, 234, 255, 0.22);
+  border-bottom: 1px solid rgba(121, 234, 255, 0.12);
+  background: transparent;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 0.24fr) minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  padding: 1.15rem 0;
+  color: var(--laws-experience-ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::after {
+  content: "+";
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: #79eaff;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure[open] > summary::after {
+  content: "−";
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary span {
+  color: #79eaff;
+  font-size: 0.68rem;
+  font-weight: 760;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary strong {
+  font-size: clamp(1rem, 1.7vw, 1.28rem);
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary small {
+  grid-column: 2;
+  color: var(--laws-experience-muted);
+  font-size: 0.82rem;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure__body {
+  padding: 0 0 1.35rem;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure .lr-battery-landing {
+  margin: 0;
+  padding: clamp(1rem, 2.5vw, 1.5rem) 0 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+@media (max-width: 780px) {
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary span,
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary strong,
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary small {
+    grid-column: 1;
+  }
+
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+}
+'''
+
+          profile_anchor = '''  await page.goto(`${BASE_URL}/laws/`, { waitUntil: "networkidle" });
+  await waitForRuntime(page);
+  await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
+  const cta = await activateDisclosure(page, profile.input);'''
+          profile_replacement = '''  await page.goto(`${BASE_URL}/laws/`, { waitUntil: "networkidle" });
+  await waitForRuntime(page);
+  await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
+  await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-entry.png`) });
+  const appliedStudy = await page.evaluate(() => {
+    const study = document.querySelector('[data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"]');
+    const disclosure = study?.closest('[data-laws-applied-study-disclosure="battery-health"]');
+    return {
+      present: Boolean(study),
+      nestedInOptionalDepth: Boolean(disclosure),
+      openOnEntry: Boolean(disclosure?.open),
+      parentPanel: Boolean(disclosure?.closest('[data-laws-supporting-panel="evidence-applied"]'))
+    };
+  });
+  assert.equal(appliedStudy.present, true, `${profile.name}: applied study missing.`);
+  assert.equal(appliedStudy.nestedInOptionalDepth, true, `${profile.name}: battery study dominates the root instead of optional depth.`);
+  assert.equal(appliedStudy.openOnEntry, false, `${profile.name}: applied study must be closed on entry.`);
+  assert.equal(appliedStudy.parentPanel, true, `${profile.name}: applied study is outside the evidence path.`);
+  const cta = await activateDisclosure(page, profile.input);'''
+          if profile_anchor not in matrix:
+              raise SystemExit('ROOT_MATRIX_PROFILE_ANCHOR_NOT_FOUND')
+          matrix = matrix.replace(profile_anchor, profile_replacement, 1)
+          matrix = matrix.replace(
+              '  await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-full.png`), fullPage: true });',
+              '  await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-selected.png`) });',
+              1,
+          )
+          matrix = matrix.replace(
+              '  const result = { profile, cta, physicalAuthority, errors, disposition: "PASS" };',
+              '  const result = { profile, appliedStudy, cta, physicalAuthority, errors, disposition: "PASS" };',
+              1,
+          )
+
+          strict_block = '''          if current_normalized != prior_normalized:
+              raise SystemExit("NON_PRESENTATION_HTML_DELTA_DETECTED")'''
+          if strict_block not in matrix_workflow:
+              raise SystemExit('AUTHORITY_STRICT_BLOCK_NOT_FOUND')
+          matrix_workflow = matrix_workflow.replace(
+              strict_block,
+              '''          presentation_only_delta = current_normalized != prior_normalized
+          if current.count('data-laws-applied-study-disclosure="battery-health"') != 1:
+              raise SystemExit("APPLIED_STUDY_DISCLOSURE_COUNT_INVALID")
+          if current.count('data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"') != prior.count('data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"'):
+              raise SystemExit("BATTERY_STUDY_IDENTITY_DELTA")''',
+              1,
+          )
+          matrix_workflow = matrix_workflow.replace(
+              '              "non_presentation_html_equal": True,',
+              '              "presentation_only_html_delta": presentation_only_delta,\n              "applied_study_optional_depth": True,',
+              1,
+          )
+
+          html_path.write_text(html, encoding='utf-8')
+          css_path.write_text(css, encoding='utf-8')
+          matrix_path.write_text(matrix, encoding='utf-8')
+          matrix_workflow_path.write_text(matrix_workflow, encoding='utf-8')
+
+          hashes = {
+              'laws/index.html': hashlib.sha256(html_path.read_bytes()).hexdigest(),
+              'laws/index.experience.css': hashlib.sha256(Path('laws/index.experience.css').read_bytes()).hexdigest(),
+              'laws/index.experience.polish.css': hashlib.sha256(css_path.read_bytes()).hexdigest(),
+              'laws/index.experience.js': hashlib.sha256(Path('laws/index.experience.js').read_bytes()).hexdigest(),
+          }
+
+          def refresh_hashes(text):
+              for file_path, digest in hashes.items():
+                  text = re.sub(
+                      rf"echo '[0-9a-f]{{64}}  {re.escape(file_path)}'",
+                      f"echo '{digest}  {file_path}'",
+                      text,
+                  )
+              return text
+
+          matrix_workflow_path.write_text(refresh_hashes(matrix_workflow_path.read_text(encoding='utf-8')), encoding='utf-8')
+          cta_workflow_path.write_text(refresh_hashes(cta_workflow), encoding='utf-8')
+
+          print('\n'.join(f'{digest}  {file_path}' for file_path, digest in hashes.items()))
+          PY
+
+          git rm -f tools/materialize-laws-root-restoration.py
+          git rm -f .github/workflows/laws-experiential-restoration-materialize.yml
+
+      - name: Verify bounded finalization diff
         shell: bash
         run: |
-          mkdir -p "$EVIDENCE_DIR"
-          printf '{"contract":"LAWS_ACTIVATION_PROBE_BOOTSTRAP_v1","head":"%s","status":"NODE_NOT_STARTED"}\n' "$EXECUTION_COMMIT" > "$EVIDENCE_DIR/activation-probe.json"
-          cat > tools/.laws-activation-probe.mjs <<'JS'
-          import fs from "node:fs/promises";
-          import { chromium } from "playwright";
+          set -euo pipefail
+          git diff --check
+          node --check laws/index.experience.js
+          node --check tools/laws-experiential-restoration-root-matrix.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('laws/index.html').read_text(encoding='utf-8')
+          assert html.count('data-laws-applied-study-disclosure="battery-health"') == 1
+          assert html.count('data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"') == 1
+          assert html.index('data-laws-supporting-panel="evidence-applied"') < html.index('data-laws-applied-study-disclosure="battery-health"')
+          PY
+          for protected in laws/index.controller.js laws/index.interactions.js laws/index.compositor.js laws/index.crystals.js laws/index.cosmos.js laws/index.planet.js; do
+            git diff --quiet ef2ffdb1da7911238652f076a6b44326061493ef -- "$protected"
+          done
 
-          const output = `${process.env.EVIDENCE_DIR}/activation-probe.json`;
-          const receipt = {
-            contract: "LAWS_EXPERIENTIAL_RESTORATION_ACTIVATION_PROBE_v1",
-            head: process.env.EXECUTION_COMMIT,
-            status: "STARTED",
-            results: [],
-            error: null
-          };
-          const persist = () => fs.writeFile(output, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
-          await persist();
-
-          const snapshot = () => {
-            const root = document.querySelector("[data-laws-root]");
-            let frame = null;
-            try { frame = globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null; } catch (_) {}
-            return {
-              scrollY,
-              controllerState: root?.dataset.lawsControllerState || "",
-              activeDirection: root?.dataset.lawsActiveDirection || "",
-              activeCategory: root?.dataset.lawsActiveCategory || "",
-              experienceDirection: document.documentElement.dataset.lawsExperienceDirection || "",
-              visibleLabelId: root?.dataset.lawsVisibleOuterAuthorityLabelId || "",
-              controllerFrameState: frame?.state || "",
-              controllerFrameDirection: frame?.compass?.selectedDirection || "",
-              controllerFrameClusterDirection: frame?.activeClusterDirection || frame?.cluster?.direction || "",
-              interactionReceipt: globalThis.DGB_LAWS_INTERACTIONS?.getReceipt?.() || null
-            };
-          };
-
-          const hitPoint = () => {
-            const root = document.querySelector("[data-laws-root]");
-            const id = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
-            const label = document.querySelector(`[data-laws-projected-category-label="${id}"]`);
-            const rect = label?.getBoundingClientRect();
-            if (!rect) return null;
-            const x = rect.left + rect.width / 2;
-            const y = rect.top + rect.height / 2;
-            const top = x >= 0 && y >= 0 && x < innerWidth && y < innerHeight
-              ? document.elementFromPoint(x, y) : null;
-            return {
-              id, x, y,
-              labelRect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
-              inViewport: x >= 0 && y >= 0 && x < innerWidth && y < innerHeight,
-              topTag: top?.tagName || "",
-              topClass: typeof top?.className === "string" ? top.className : "",
-              owned: Boolean(top?.closest?.(`[data-laws-projected-category-label="${id}"]`))
-            };
-          };
-
-          let browser;
-          try {
-            browser = await chromium.launch({ headless: true });
-            for (const method of ["touch", "pointer"]) {
-              const context = await browser.newContext({
-                viewport: { width: 390, height: 844 },
-                isMobile: true,
-                hasTouch: true,
-                deviceScaleFactor: 1
-              });
-              const page = await context.newPage();
-              const result = { method, browserErrors: [] };
-              page.on("pageerror", error => result.browserErrors.push(`pageerror:${error.message}`));
-              page.on("console", message => {
-                if (message.type() === "error" && !message.text().includes("404")) {
-                  result.browserErrors.push(`console:${message.text()}`);
-                }
-              });
-              try {
-                await page.goto(`${process.env.BASE_URL}/laws/`, { waitUntil: "networkidle" });
-                await page.waitForFunction(() => {
-                  const root = document.querySelector("[data-laws-root]");
-                  return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGBLawsStagedLoader) &&
-                    root?.dataset.lawsControllerStatus === "available";
-                }, null, { timeout: 30000 });
-                result.preload = await page.evaluate(() => globalThis.DGB_LAWS_EXPERIENCE.requestCompassRuntimePreload());
-                await page.waitForFunction(() => {
-                  const root = document.querySelector("[data-laws-root]");
-                  return Boolean(globalThis.DGB_LAWS_INTERACTIONS) && root?.dataset.lawsInteractionsStatus === "available";
-                }, null, { timeout: 30000 });
-                await page.evaluate(() => document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
-                  block: "center", inline: "nearest", behavior: "instant"
-                }));
-                await page.waitForTimeout(400);
-                result.before = await page.evaluate(snapshot);
-                result.hit = await page.evaluate(hitPoint);
-                if (!result.hit?.owned) throw new Error(`UNOWNED_HIT:${JSON.stringify(result.hit)}`);
-                if (method === "touch") {
-                  await page.touchscreen.tap(result.hit.x, result.hit.y);
-                } else {
-                  await page.mouse.click(result.hit.x, result.hit.y);
-                }
-                await page.waitForTimeout(1600);
-                result.after = await page.evaluate(snapshot);
-              } catch (error) {
-                result.error = { message: error.message, stack: error.stack || "" };
-              }
-              receipt.results.push(result);
-              await persist();
-              await context.close();
-            }
-            receipt.status = "COMPLETE";
-          } catch (error) {
-            receipt.status = "ERROR";
-            receipt.error = { message: error.message, stack: error.stack || "" };
-          } finally {
-            await persist();
-            if (browser) await browser.close();
-          }
-          if (receipt.status !== "COMPLETE") process.exitCode = 1;
-          JS
-          set +e
-          node tools/.laws-activation-probe.mjs > "$EVIDENCE_DIR/node-output.log" 2>&1
-          status=$?
-          set -e
-          rm -f tools/.laws-activation-probe.mjs
-          exit $status
-
-      - name: Upload activation probe
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: laws-activation-probe-${{ env.EXECUTION_COMMIT }}
-          path: |
-            artifacts/laws-experiential-restoration/interaction-diagnostic/**
-            /tmp/laws-activation-server.log
-          if-no-files-found: error
-          retention-days: 30
+      - name: Commit finalized merge candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html laws/index.experience.polish.css tools/laws-experiential-restoration-root-matrix.mjs .github/workflows/laws-experiential-restoration-root-matrix.yml .github/workflows/laws-experiential-restoration-cta-regression.yml
+          git commit -m "Finalize Laws root foundation-first restoration"
+          git push origin HEAD:agent/laws-experiential-architecture-restoration-001

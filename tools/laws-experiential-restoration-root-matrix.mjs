@@ -160,9 +160,69 @@ async function returnToConstellation(page) {
 
 async function activateAuthority(page, direction, input) {
   await returnToConstellation(page);
-  const control = page.locator(`[data-laws-category][data-direction="${direction}"]`).first();
-  assert.equal(await control.count(), 1, `Authority control missing: ${direction}.`);
-  await activate(page, control, input);
+  const semanticSelector = `[data-laws-category][data-direction="${direction}"]`;
+  const semanticControl = page.locator(semanticSelector).first();
+  assert.equal(await semanticControl.count(), 1, `Authority control missing: ${direction}.`);
+  await semanticControl.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(180);
+
+  if (input === "keyboard") {
+    await activate(page, semanticControl, input);
+  } else {
+    const hit = await page.evaluate(nextDirection => {
+      const semantic = document.querySelector(
+        `[data-laws-category][data-direction="${nextDirection}"]`
+      );
+      const projected = document.querySelector(
+        `[data-laws-projected-category-label="${nextDirection}"]`
+      );
+      const surfaces = [projected, semantic].filter(node => {
+        if (!(node instanceof HTMLElement)) return false;
+        const rect = node.getBoundingClientRect();
+        const style = getComputedStyle(node);
+        return !node.hidden &&
+          style.display !== "none" &&
+          style.visibility !== "hidden" &&
+          style.pointerEvents !== "none" &&
+          rect.width > 0 &&
+          rect.height > 0;
+      });
+      const fractions = [
+        [0.5, 0.5], [0.2, 0.2], [0.8, 0.2], [0.2, 0.8],
+        [0.8, 0.8], [0.5, 0.2], [0.5, 0.8], [0.2, 0.5], [0.8, 0.5]
+      ];
+
+      for (const surface of surfaces) {
+        const rect = surface.getBoundingClientRect();
+        for (const [fx, fy] of fractions) {
+          const x = rect.left + rect.width * fx;
+          const y = rect.top + rect.height * fy;
+          if (x < 0 || y < 0 || x >= innerWidth || y >= innerHeight) continue;
+          const top = document.elementFromPoint(x, y);
+          const owner = top?.closest?.(
+            `[data-laws-projected-category-label="${nextDirection}"], ` +
+            `[data-laws-category][data-direction="${nextDirection}"]`
+          );
+          if (!owner) continue;
+          return {
+            x,
+            y,
+            surface: owner.hasAttribute("data-laws-projected-category-label")
+              ? "projected-label"
+              : "semantic-control"
+          };
+        }
+      }
+      return null;
+    }, direction);
+
+    assert.ok(hit, `No unblocked physical hit surface for ${direction} (${input}).`);
+    if (input === "touch") {
+      await page.touchscreen.tap(hit.x, hit.y);
+    } else {
+      await page.mouse.click(hit.x, hit.y);
+    }
+  }
 
   await page.waitForFunction(nextDirection => {
     const root = document.querySelector("[data-laws-root]");

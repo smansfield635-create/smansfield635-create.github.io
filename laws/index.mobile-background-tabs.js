@@ -1,151 +1,130 @@
 /*
- * Laws CP6 visitor-path placement and tab presentation correction.
- * Presentation only. Existing destinations, records, routes, and panel bodies
- * remain canonical and unchanged.
+ * Laws root Rolodex placement continuity.
+ * Retires the superseded CP6 tab relocation so visitor-intent navigation
+ * remains in the full-width root flow beneath the accepted Compass.
  */
 
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_CP6_MOBILE_BACKGROUND_TABS_CORRECTION_v1";
+  const CONTRACT = "LAWS_ROOT_ROLODEX_PLACEMENT_CONTINUITY_v1";
+  let originSnapshot = null;
 
-  function directPanels(paths) {
-    return Array.from(paths.children).filter(node =>
-      node.matches?.("details.laws-orientation-panel[data-laws-supporting-panel]")
-    );
+  function viewportSnapshots() {
+    return Array.from(document.querySelectorAll(".laws-rolodex-viewport")).map(viewport => ({
+      viewport,
+      scrollLeft: viewport.scrollLeft
+    }));
   }
 
-  function shortLabel(panel, index) {
-    const key = panel.dataset.lawsSupportingPanel || "";
-    if (key.includes("foundation") || index === 0) return "Understand";
-    if (key.includes("evidence") || index === 1) return "Evidence";
-    if (key.includes("system") || key.includes("architecture") || index === 2) return "Inspect";
-    return panel.querySelector("summary span")?.textContent?.trim() || `Path ${index + 1}`;
-  }
-
-  function mountTabs() {
-    const paths = document.querySelector(".laws-visitor-paths[data-laws-progressive-disclosure]");
-    const compassPrimary = document.querySelector("[data-laws-compass-primary]");
-    const controllerPanel = compassPrimary?.querySelector("[data-laws-panel]");
-    if (!paths || !compassPrimary || !controllerPanel) return false;
-
-    if (paths.parentElement !== compassPrimary || controllerPanel.nextElementSibling !== paths) {
-      controllerPanel.after(paths);
-    }
-
-    paths.dataset.lawsTabsMounted = "true";
-    paths.dataset.lawsTabsContract = CONTRACT;
-
-    const panels = directPanels(paths);
-    if (panels.length !== 3) {
-      paths.dataset.lawsTabsStatus = "held-panel-count";
-      return false;
-    }
-
-    let tablist = paths.querySelector(":scope > .laws-visitor-paths__tablist");
-    if (!tablist) {
-      tablist = document.createElement("div");
-      tablist.className = "laws-visitor-paths__tablist";
-      tablist.setAttribute("role", "tablist");
-      tablist.setAttribute("aria-label", "Three ways into the Laws Chamber");
-      const header = paths.querySelector(":scope > .laws-visitor-paths__header");
-      if (header) header.after(tablist);
-      else paths.prepend(tablist);
-    }
-
-    tablist.replaceChildren();
-
-    const activate = (targetIndex, focus = false) => {
-      const normalized = ((targetIndex % panels.length) + panels.length) % panels.length;
-      panels.forEach((panel, index) => {
-        const active = index === normalized;
-        panel.open = active;
-        panel.dataset.lawsTabActive = String(active);
-        panel.setAttribute("role", "tabpanel");
-        panel.setAttribute("aria-hidden", String(!active));
-      });
-
-      Array.from(tablist.children).forEach((button, index) => {
-        const active = index === normalized;
-        button.setAttribute("aria-selected", String(active));
-        button.tabIndex = active ? 0 : -1;
-        if (active && focus) button.focus({ preventScroll: true });
-      });
-
-      paths.dataset.lawsActiveVisitorPath = panels[normalized].dataset.lawsSupportingPanel || String(normalized);
-      globalThis.dispatchEvent(new CustomEvent("LAWS_VISITOR_PATH_CHANGED", {
-        detail: Object.freeze({
-          contract: CONTRACT,
-          index: normalized,
-          panel: paths.dataset.lawsActiveVisitorPath,
-          navigationAuthority: false,
-          contentAuthority: false
-        })
-      }));
+  function captureOrigin() {
+    originSnapshot = {
+      scrollX: globalThis.scrollX,
+      scrollY: globalThis.scrollY,
+      viewports: viewportSnapshots()
     };
+  }
 
-    panels.forEach((panel, index) => {
-      panel.id ||= `laws-visitor-path-panel-${index + 1}`;
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "laws-visitor-paths__tab";
-      button.id = `laws-visitor-path-tab-${index + 1}`;
-      button.setAttribute("role", "tab");
-      button.setAttribute("aria-controls", panel.id);
-      button.textContent = shortLabel(panel, index);
-      panel.setAttribute("aria-labelledby", button.id);
-      button.addEventListener("click", () => activate(index));
-      button.addEventListener("keydown", event => {
-        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-          event.preventDefault();
-          activate(index + 1, true);
-        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-          event.preventDefault();
-          activate(index - 1, true);
-        } else if (event.key === "Home") {
-          event.preventDefault();
-          activate(0, true);
-        } else if (event.key === "End") {
-          event.preventDefault();
-          activate(panels.length - 1, true);
-        }
-      });
-      tablist.append(button);
+  function restoreOrigin() {
+    if (!originSnapshot) return;
+    const snapshot = originSnapshot;
+    originSnapshot = null;
+    requestAnimationFrame(() => {
+      for (const entry of snapshot.viewports) {
+        entry.viewport.scrollLeft = entry.scrollLeft;
+      }
+      globalThis.scrollTo(snapshot.scrollX, snapshot.scrollY);
     });
+  }
 
-    activate(0);
-    paths.dataset.lawsTabsStatus = "available";
+  function installViewportContainment() {
+    if (document.querySelector("style[data-laws-rolodex-viewport-containment]")) return;
 
-    globalThis.DGB_LAWS_VISITOR_PATH_TABS = Object.freeze({
-      contract: CONTRACT,
-      activate,
-      panelCount: panels.length,
-      navigationAuthority: false,
-      controllerAuthority: false,
-      recordAuthority: false,
-      evidenceAuthority: false,
-      claimAuthority: false
-    });
+    const style = document.createElement("style");
+    style.dataset.lawsRolodexViewportContainment = "true";
+    style.textContent = `
+html[data-laws-root-rolodex="active"] .laws-visitor-paths--rolodex {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100vw !important;
+  contain: inline-size;
+  overflow-x: clip !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-field,
+html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser,
+html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+html[data-laws-root-rolodex="active"] .laws-rolodex-track {
+  width: max-content !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+@media (max-width: 780px) {
+  html[data-laws-root-rolodex="active"],
+  html[data-laws-root-rolodex="active"] body,
+  html[data-laws-root-rolodex="active"] .laws-shell,
+  html[data-laws-root-rolodex="active"] .laws-estate {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  html[data-laws-root-rolodex="active"],
+  html[data-laws-root-rolodex="active"] body {
+    overflow-x: clip !important;
+  }
+}
+`;
+    document.head.append(style);
+  }
 
-    globalThis.dispatchEvent(new CustomEvent("LAWS_VISITOR_PATH_TABS_READY", {
+  function placeRolodex() {
+    const section = document.querySelector("[data-laws-root-rolodex-section]");
+    if (!section) return false;
+
+    installViewportContainment();
+
+    const useStage = document.querySelector(".laws-use-stage[data-laws-experience-stage='use']");
+    if (useStage) {
+      useStage.replaceWith(section);
+    } else {
+      const hero = document.querySelector("[data-laws-experience-stage='hero']");
+      if (hero?.parentElement && section.previousElementSibling !== hero) hero.after(section);
+    }
+
+    section.dataset.lawsExperienceVisible = "true";
+    document.querySelector(".laws-accessibility-note")?.remove();
+
+    const footerDescription = document.querySelector(".laws-footer > div > span");
+    if (footerDescription) {
+      footerDescription.textContent = "Choose a direction in the Compass or continue to a destination.";
+    }
+
+    document.documentElement.dataset.lawsRolodexPlacement = "full-width-root-flow";
+    globalThis.dispatchEvent(new CustomEvent("LAWS_ROLODEX_PLACEMENT_READY", {
       detail: Object.freeze({
         contract: CONTRACT,
-        panelCount: panels.length,
-        mountedAfterCompassResponse: true,
-        navigationAuthority: false
+        fullWidthRootFlow: true,
+        redundantUseStageVisible: false,
+        runtimeCustodyNoteVisible: false,
+        viewportContained: true,
+        navigationAuthority: false,
+        contentAuthority: false
       })
     }));
-
     return true;
   }
 
   function initialize() {
-    if (mountTabs()) return;
-    let attempts = 0;
-    const timer = globalThis.setInterval(() => {
-      attempts += 1;
-      if (mountTabs() || attempts >= 40) globalThis.clearInterval(timer);
-    }, 100);
+    placeRolodex();
+    globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY", placeRolodex);
+    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", captureOrigin);
+    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_CLOSED", restoreOrigin);
   }
 
   if (document.readyState === "loading") {

@@ -307,7 +307,6 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-depth-stage {
       button.setAttribute("role", "tab");
       button.setAttribute("aria-controls", field.id);
       button.textContent = groupLabel(field, index);
-      field.setAttribute("aria-labelledby", button.id);
 
       button.addEventListener("click", () => activateDepthGroup(index, "tab-click"));
       button.addEventListener("keydown", event => {

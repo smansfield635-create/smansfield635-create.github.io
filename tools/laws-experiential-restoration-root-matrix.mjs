@@ -264,11 +264,26 @@ async function verifyProfile(browser, profile) {
   await page.goto(`${BASE_URL}/laws/`, { waitUntil: "networkidle" });
   await waitForRuntime(page);
   await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
+  await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-entry.png`) });
+  const appliedStudy = await page.evaluate(() => {
+    const study = document.querySelector('[data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"]');
+    const disclosure = study?.closest('[data-laws-applied-study-disclosure="battery-health"]');
+    return {
+      present: Boolean(study),
+      nestedInOptionalDepth: Boolean(disclosure),
+      openOnEntry: Boolean(disclosure?.open),
+      parentPanel: Boolean(disclosure?.closest('[data-laws-supporting-panel="evidence-applied"]'))
+    };
+  });
+  assert.equal(appliedStudy.present, true, `${profile.name}: applied study missing.`);
+  assert.equal(appliedStudy.nestedInOptionalDepth, true, `${profile.name}: battery study dominates the root instead of optional depth.`);
+  assert.equal(appliedStudy.openOnEntry, false, `${profile.name}: applied study must be closed on entry.`);
+  assert.equal(appliedStudy.parentPanel, true, `${profile.name}: applied study is outside the evidence path.`);
   const cta = await activateDisclosure(page, profile.input);
   const physicalAuthority = await activateVisiblePhysically(page, profile.input);
-  await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-full.png`), fullPage: true });
+  await page.screenshot({ path: path.join(EVIDENCE_DIR, `${profile.name}-selected.png`) });
   assert.deepEqual(errors, [], `${profile.name}: browser errors: ${errors.join(" | ")}`);
-  const result = { profile, cta, physicalAuthority, errors, disposition: "PASS" };
+  const result = { profile, appliedStudy, cta, physicalAuthority, errors, disposition: "PASS" };
   await writeJson(`${profile.name}.json`, result);
   await context.close();
   return result;

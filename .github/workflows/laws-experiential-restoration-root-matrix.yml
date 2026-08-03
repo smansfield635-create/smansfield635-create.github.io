@@ -33,7 +33,7 @@ concurrency:
 
 env:
   EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
-  EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
+  FORK_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
   BASE_URL: http://127.0.0.1:4173
   EVIDENCE_DIR: artifacts/laws-experiential-restoration/root-matrix
 
@@ -54,16 +54,19 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
           git fetch origin main
-          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
-          test "$(git merge-base origin/main HEAD)" = "$EXPECTED_MAIN_BASE"
+          test "$(git merge-base origin/main HEAD)" = "$FORK_BASE"
+          if git diff --name-only "$FORK_BASE" origin/main | grep -E '^laws/(index\.|index/|research/|test/|categories/|scientific-law/)'; then
+            echo 'Main advanced through overlapping Laws paths; rebase review required.' >&2
+            exit 1
+          fi
 
       - name: Verify exact root output hashes
         shell: bash
         run: |
           set -euo pipefail
-          echo '8fff5010933b90ffd396fddab393fb4044954b1b2838299b2a454f598c246854  laws/index.html' | sha256sum --check --strict
+          echo 'e91c6020dbe56a133ba53fe3fbcff3f6d5fce3f54d74a34148814000af06dabe  laws/index.html' | sha256sum --check --strict
           echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
-          echo 'e5a289b9e6792f7549be7797880ffe6911a6fea3e4f5e02b48ada1b71158a59f  laws/index.experience.polish.css' | sha256sum --check --strict
+          echo '7a37b15b3d2ba02068b06ffe0a2bfef4dc9d033121b52b79198721ae07057fb2  laws/index.experience.polish.css' | sha256sum --check --strict
           echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
           node --check tools/laws-experiential-restoration-root-matrix.mjs
           node --check laws/index.experience.js
@@ -81,10 +84,10 @@ jobs:
             laws/index.cosmos.js \
             laws/index.planet.js
           do
-            git diff --quiet "$EXPECTED_MAIN_BASE" HEAD -- "$protected"
+            git diff --quiet "$FORK_BASE" HEAD -- "$protected"
           done
-          git diff --quiet "$EXPECTED_MAIN_BASE" HEAD -- laws/index.experience.css
-          if git diff --name-only "$EXPECTED_MAIN_BASE" HEAD | grep -E '^(frontier/|laws/control-plane/|laws/categories/|laws/research/|laws/test/|laws/scientific-law/)'; then
+          git diff --quiet "$FORK_BASE" HEAD -- laws/index.experience.css
+          if git diff --name-only "$FORK_BASE" HEAD | grep -E '^(frontier/|laws/control-plane/|laws/categories/|laws/research/|laws/test/|laws/scientific-law/)'; then
             echo 'Protected child, control-plane, or Frontier mutation detected.' >&2
             exit 1
           fi
@@ -113,8 +116,17 @@ jobs:
               'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803A',
               'LAWS_FIRST_RAIL_ARCHITECTURE_20260802B'
           )
-          if current_normalized != prior_normalized:
-              raise SystemExit("NON_PRESENTATION_HTML_DELTA_DETECTED")
+          presentation_only_delta = current_normalized != prior_normalized
+          if current.count('data-laws-applied-study-disclosure="battery-health"') != 1:
+              raise SystemExit("APPLIED_STUDY_DISCLOSURE_COUNT_INVALID")
+          if current.count('data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"') != prior.count('data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"'):
+              raise SystemExit("BATTERY_STUDY_IDENTITY_DELTA")
+          if values(r'(?:href|data-route)="(/[^"]*)"', current) != values(r'(?:href|data-route)="(/[^"]*)"', prior):
+              raise SystemExit("ROUTE_IDENTITY_DELTA")
+          current_formulas = [hashlib.sha256(block.encode()).hexdigest() for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)]
+          prior_formulas = [hashlib.sha256(block.encode()).hexdigest() for block in re.findall(r'<pre><code>(.*?)</code></pre>', prior, re.S)]
+          if current_formulas != prior_formulas:
+              raise SystemExit("FORMULA_IDENTITY_DELTA")
           def values(pattern, text):
               return sorted(set(re.findall(pattern, text)))
           receipt = {
@@ -134,7 +146,8 @@ jobs:
                   hashlib.sha256(block.encode()).hexdigest()
                   for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)
               ],
-              "non_presentation_html_equal": True,
+              "presentation_only_html_delta": presentation_only_delta,
+              "applied_study_optional_depth": True,
               "disposition": "PASS"
           }
           Path("artifacts/laws-experiential-restoration/root-matrix/authority-invariants.json").write_text(

@@ -428,3 +428,94 @@ html[data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"]
     transition: none !important;
   }
 }
+
+
+/*
+ * LAWS_FOUNDATION_FIRST_APPLIED_STUDY_v1
+ * Keeps the Laws foundation primary. Applied research remains available as
+ * optional evidence depth and does not occupy the chamber threshold.
+ */
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure {
+  margin: 0.35rem 0 1.35rem;
+  border: 0;
+  border-top: 1px solid rgba(121, 234, 255, 0.22);
+  border-bottom: 1px solid rgba(121, 234, 255, 0.12);
+  background: transparent;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 0.24fr) minmax(0, 1fr) auto;
+  gap: 0.25rem 1rem;
+  align-items: baseline;
+  padding: 1.15rem 0;
+  color: var(--laws-experience-ink);
+  cursor: pointer;
+  list-style: none;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::-webkit-details-marker {
+  display: none;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::after {
+  content: "+";
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  color: #79eaff;
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure[open] > summary::after {
+  content: "−";
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary span {
+  color: #79eaff;
+  font-size: 0.68rem;
+  font-weight: 760;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary strong {
+  font-size: clamp(1rem, 1.7vw, 1.28rem);
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary small {
+  grid-column: 2;
+  color: var(--laws-experience-muted);
+  font-size: 0.82rem;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure__body {
+  padding: 0 0 1.35rem;
+}
+
+html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure .lr-battery-landing {
+  margin: 0;
+  padding: clamp(1rem, 2.5vw, 1.5rem) 0 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+@media (max-width: 780px) {
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary span,
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary strong,
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary small {
+    grid-column: 1;
+  }
+
+  html[data-laws-foundation-first-applied-study="true"] .laws-applied-study-disclosure > summary::after {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+}

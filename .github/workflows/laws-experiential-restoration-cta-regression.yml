@@ -32,7 +32,7 @@ concurrency:
 
 env:
   EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
-  EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
+  FORK_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
   FORMER_ROOT_REFERENCE: 9ad029eb1fbffe05525041c94eeeaee3378d2e58
   BASE_URL: http://127.0.0.1:4173
   EVIDENCE_DIR: artifacts/laws-experiential-restoration/cta-regression
@@ -57,16 +57,20 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin main
-          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
+          test "$(git merge-base origin/main HEAD)" = "$FORK_BASE"
+          if git diff --name-only "$FORK_BASE" origin/main | grep -E '^laws/(index\.|index/|research/|test/|categories/|scientific-law/)'; then
+            echo 'Main advanced through overlapping Laws paths; rebase review required.' >&2
+            exit 1
+          fi
           git cat-file -e "$FORMER_ROOT_REFERENCE^{commit}"
 
       - name: Verify exact restoration output hashes
         shell: bash
         run: |
           set -euo pipefail
-          echo '8fff5010933b90ffd396fddab393fb4044954b1b2838299b2a454f598c246854  laws/index.html' | sha256sum --check --strict
+          echo 'e91c6020dbe56a133ba53fe3fbcff3f6d5fce3f54d74a34148814000af06dabe  laws/index.html' | sha256sum --check --strict
           echo '4a48242720d7f42dcf582ff910766882091c1b00a0ad3fad72807d5a5090d196  laws/index.experience.css' | sha256sum --check --strict
-          echo 'e5a289b9e6792f7549be7797880ffe6911a6fea3e4f5e02b48ada1b71158a59f  laws/index.experience.polish.css' | sha256sum --check --strict
+          echo '7a37b15b3d2ba02068b06ffe0a2bfef4dc9d033121b52b79198721ae07057fb2  laws/index.experience.polish.css' | sha256sum --check --strict
           echo '2722d0f4da22b07d40fb2ecd14eea0d07c9bb21181013352136800a4934a9062  laws/index.experience.js' | sha256sum --check --strict
 
       - name: Capture current and former root source baselines

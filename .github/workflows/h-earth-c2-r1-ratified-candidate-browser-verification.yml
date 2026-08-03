@@ -22,10 +22,11 @@ concurrency:
 
 env:
   OPERATION_ID: H_EARTH_C2_R1_RATIFIED_CANDIDATE_TEMPORARY_REVIEW_BROWSER_EXECUTION_001
-  REVIEW_URL: https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@abb5a4f1942157f72b09b9ccd421b9854e024953/preview/h-earth/c2-r1/ratified-candidate-03d20d8eea75e9ec/index.html
-  DELIVERY_CARRIER_HEAD: abb5a4f1942157f72b09b9ccd421b9854e024953
+  REVIEW_URL: https://diamondgatebridge.com/preview/h-earth/c2-r1/ratified-candidate-03d20d8eea75e9ec/index.html
+  DELIVERY_BRANCH_HEAD: 477a5cc43b9da423c53e2f6d8b078c3082012913
+  DELIVERY_MERGE_COMMIT: 738c9ab0764e038fc960c57d596933452a40d23c
   EXACT_SOURCE_COMMIT: 03d20d8eea75e9eceff12edb37495b1b5b9ed419
-  ARTIFACT_NAME: h-earth-c2-r1-ratified-candidate-browser-verification-03d20d8e
+  ARTIFACT_NAME: h-earth-c2-r1-ratified-candidate-pages-browser-verification-03d20d8e
   PLAYWRIGHT_VERSION: 1.55.0
 
 jobs:
@@ -38,7 +39,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Execute immutable HTTPS review path in Chromium
+      - name: Execute corrected GitHub Pages review path in Chromium
         shell: bash
         run: |
           set -euo pipefail
@@ -57,11 +58,12 @@ jobs:
 
           const reviewUrl = process.env.REVIEW_URL;
           const exactSourceCommit = process.env.EXACT_SOURCE_COMMIT;
-          const deliveryCarrierHead = process.env.DELIVERY_CARRIER_HEAD;
+          const deliveryBranchHead = process.env.DELIVERY_BRANCH_HEAD;
+          const deliveryMergeCommit = process.env.DELIVERY_MERGE_COMMIT;
           const operationId = process.env.OPERATION_ID;
           const evidenceRoot = path.join(process.env.RUNNER_TEMP, 'h-earth-review-browser-evidence');
           const screenshotsRoot = path.join(evidenceRoot, 'screenshots');
-          const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+          const sha256 = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
           const writeJson = (name, value) => fs.writeFileSync(path.join(evidenceRoot, name), `${JSON.stringify(value, null, 2)}\n`);
 
           const viewports = [
@@ -107,12 +109,11 @@ jobs:
                 navigationError = { message: error.message, stack: error.stack ?? null };
               }
 
-              await page.waitForTimeout(2500);
-              const responseHeaders = navigationResponse ? await navigationResponse.allHeaders() : {};
-              const contentType = responseHeaders['content-type'] ?? null;
+              await page.waitForTimeout(3000);
+              const headers = navigationResponse ? await navigationResponse.allHeaders() : {};
               const status = navigationResponse?.status() ?? null;
+              const contentType = headers['content-type'] ?? null;
               const title = await page.title().catch(() => null);
-              const bodyTextSample = await page.locator('body').innerText().then(text => text.slice(0, 1200)).catch(() => null);
 
               const deliveryState = await page.evaluate(() => ({
                 rootTemporaryReview: document.documentElement.dataset.hEarthTemporaryReview ?? null,
@@ -131,12 +132,14 @@ jobs:
                   await page.waitForFunction(() => {
                     const route = document.getElementById('h-earth-functional-landscape-route');
                     const receipt = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
-                    return route?.dataset.run8eReady === 'true' || receipt?.stages?.READY_PUBLISHED === 'PASS' || Boolean(receipt?.firstFailureStage) || route?.dataset.run8eError === 'true';
+                    return route?.dataset.run8eReady === 'true'
+                      || receipt?.stages?.READY_PUBLISHED === 'PASS'
+                      || Boolean(receipt?.firstFailureStage)
+                      || route?.dataset.run8eError === 'true';
                   }, { timeout: 120000 });
                 } catch (error) {
                   runtimeWaitError = { message: error.message };
                 }
-
                 runtimeState = await page.evaluate(() => {
                   const route = document.getElementById('h-earth-functional-landscape-route');
                   const canvas = document.getElementById('h-earth-functional-landscape-canvas');
@@ -161,7 +164,7 @@ jobs:
               await page.screenshot({ path: initialPath, fullPage: false });
               const initialSha256 = sha256(fs.readFileSync(initialPath));
 
-              let interaction = { attempted: false, changed: false, beforeSha256: initialSha256, afterSha256: null, error: null };
+              let interaction = { attempted: false, changed: false, beforeSha256: null, afterSha256: null, error: null };
               const canvas = page.locator('#h-earth-functional-landscape-canvas');
               if (deliveryState?.canvasPresent && await canvas.isVisible().catch(() => false)) {
                 interaction.attempted = true;
@@ -219,7 +222,7 @@ jobs:
                 viewport,
                 pass,
                 elapsedMs: Date.now() - startedAt,
-                navigation: { status, contentType, navigationError, finalUrl: page.url(), title, bodyTextSample },
+                navigation: { status, contentType, navigationError, finalUrl: page.url(), title },
                 deliveryState,
                 runtimeState,
                 runtimeWaitError,
@@ -235,13 +238,16 @@ jobs:
             await browser.close();
           }
 
-          const overallPass = terminalError === null && results.length === viewports.length && results.every(result => result.pass);
+          const overallPass = terminalError === null
+            && results.length === viewports.length
+            && results.every(result => result.pass);
           const receipt = {
-            receiptId: 'H_EARTH_C2_R1_RATIFIED_CANDIDATE_TEMPORARY_REVIEW_BROWSER_EXECUTION_RECEIPT_v1',
+            receiptId: 'H_EARTH_C2_R1_RATIFIED_CANDIDATE_GITHUB_PAGES_BROWSER_EXECUTION_RECEIPT_v1',
             operationId,
             result: overallPass ? 'PASS' : 'BLOCKED',
             reviewUrl,
-            deliveryCarrierHead,
+            deliveryBranchHead,
+            deliveryMergeCommit,
             exactSourceCommit,
             browser: 'chromium',
             viewportCount: viewports.length,
@@ -257,10 +263,20 @@ jobs:
           const files = fs.readdirSync(evidenceRoot, { recursive: true })
             .filter(name => fs.statSync(path.join(evidenceRoot, name)).isFile())
             .sort();
-          const manifest = files.map(name => ({ path: name, sha256: sha256(fs.readFileSync(path.join(evidenceRoot, name))) }));
-          writeJson('artifact-manifest-sha256.json', { files: manifest });
+          writeJson('artifact-manifest-sha256.json', {
+            files: files.map(name => ({ path: name, sha256: sha256(fs.readFileSync(path.join(evidenceRoot, name))) }))
+          });
 
-          console.log(JSON.stringify({ result: receipt.result, viewports: results.map(r => ({ id: r.viewport.id, pass: r.pass, status: r.navigation.status, contentType: r.navigation.contentType, title: r.navigation.title })) }, null, 2));
+          console.log(JSON.stringify({
+            result: receipt.result,
+            viewports: results.map(result => ({
+              id: result.viewport.id,
+              pass: result.pass,
+              status: result.navigation.status,
+              contentType: result.navigation.contentType,
+              title: result.navigation.title
+            }))
+          }, null, 2));
           if (!overallPass) process.exitCode = 1;
           NODE
           node runner.mjs

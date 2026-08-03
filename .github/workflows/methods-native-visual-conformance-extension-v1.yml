@@ -104,7 +104,7 @@ jobs:
           cp known-gap-recovery.log "$OUT_DIR/"
           cp /tmp/methods-visual-conformance-server.log "$OUT_DIR/server.log" || true
           cp verification/methods-native-visual-conformance-extension-v1/*.mjs "$OUT_DIR/"
-          find "$OUT_DIR" -type f -print0 | sort -z | xargs -0 sha256sum > "$OUT_DIR/SHA256SUMS"
+          find "$OUT_DIR" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$OUT_DIR/SHA256SUMS"
           tar -czf methods-native-visual-conformance-extension-v1-evidence.tar.gz "$OUT_DIR"
           sha256sum methods-native-visual-conformance-extension-v1-evidence.tar.gz > methods-native-visual-conformance-extension-v1-evidence.tar.gz.sha256
 

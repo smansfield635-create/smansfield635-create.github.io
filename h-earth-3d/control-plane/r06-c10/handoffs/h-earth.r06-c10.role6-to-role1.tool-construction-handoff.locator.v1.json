@@ -1,0 +1,108 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_TOOL_CONSTRUCTION_HANDOFF_LOCATOR_v1",
+  "locatorId": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_TOOL_CONSTRUCTION_HANDOFF_LOCATOR_v1",
+  "status": "ACTIVE_READY_FOR_ROLE_1_ASSUMPTION",
+  "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "locatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
+  "handoffArchive": {
+    "handoffId": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_HANDOFF_v1",
+    "archiveFileName": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_HANDOFF_v1.zip",
+    "archiveSha256": "4b073253f2a196a4729c5545b48db52b0f17a54829bb4015be035cd4ce81d95e",
+    "archiveByteCount": 8557,
+    "archiveMemberCount": 8,
+    "archiveReadback": "PASS",
+    "driveFileId": "1q2TbJS6tIY_AeYdGL23f2TIUEwnDhBz5",
+    "driveFileUrl": "https://drive.google.com/file/d/1q2TbJS6tIY_AeYdGL23f2TIUEwnDhBz5/view?usp=drivesdk",
+    "driveReadbackSha256": "4b073253f2a196a4729c5545b48db52b0f17a54829bb4015be035cd4ce81d95e",
+    "driveReadbackMatch": true
+  },
+  "predecessorRole6Authority": {
+    "result": "R06_C10_CAUSAL_MODEL_AND_TOOL_REQUIREMENTS_COMPLETE",
+    "packageVersion": "0.2.0_ROLE_6_REQUIREMENTS_COMPLETE",
+    "locatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
+    "locatorCommit": "9b1f5434be67ca8ec8906bb47370f4f52ad36e73",
+    "locatorBlob": "45075546f3b5425d144d1c87ae7e764cc3d39db9",
+    "archiveDriveFileId": "1bp5gDl41Oje87AlwjKmyhgm_TBgli_wR",
+    "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb"
+  },
+  "exactBaseline": {
+    "acceptedLiveBaselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+    "productMutationAuthorized": false,
+    "officialGeometryArticulationRound": "NOT_YET_STARTED"
+  },
+  "routing": {
+    "sourceRole": "ROLE_6_INDEPENDENT_RESEARCH_CHAMBER_AND_CROSS_SYSTEM_TROUBLESHOOTING_AUTHORITY",
+    "destinationRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
+    "destinationOperation": "H_EARTH_R06_C10_PRE_ROUND_NONPRODUCT_TOOL_CONSTRUCTION_001",
+    "requiredRole1Result": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
+    "requiredRole1PackageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
+    "nextRoleAfterSuccessfulReturn": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
+    "governanceCopy": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY"
+  },
+  "role1CoreDuties": [
+    "VERIFY_PREDECESSOR_LOCATOR_ARCHIVE_AND_MEMBER_HASHES",
+    "ISSUE_ROLE_1_PACKAGE_ASSUMPTION_RECEIPT",
+    "CONSTRUCT_THE_EIGHT_DECLARED_NONPRODUCT_TOOLS",
+    "IMPLEMENT_ALL_28_FROZEN_HARNESS_ASSERTIONS",
+    "RUN_STATIC_BASELINE_AND_CONFORMANCE_FIXTURES",
+    "PROVE_ZERO_PRODUCT_PATH_MUTATION",
+    "EMIT_COMPLETE_0_3_0_CUMULATIVE_RETURN_PACKAGE",
+    "UPLOAD_AND_READ_BACK_THE_RETURN_ARCHIVE_IN_GOOGLE_DRIVE",
+    "CREATE_THE_DETERMINISTIC_ROLE_1_SUCCESSOR_LOCATOR",
+    "UPDATE_THE_ROLE_6_PREDECESSOR_LOCATOR",
+    "RETURN_TO_ROLE_3_AND_ROLE_4_AND_STOP"
+  ],
+  "prohibited": [
+    "LIVE_PRODUCT_GEOMETRY_MUTATION",
+    "EXISTING_TERRAIN_RUN_8A_OR_RUN_8B_AUTHORITY_MUTATION",
+    "ACCEPTED_INDEX_RENDERER_BINDING_OR_NAVIGATION_MUTATION",
+    "WATER_WATERFALL_OR_RESERVOIR_IMPLEMENTATION",
+    "NEW_VISUAL_SHADER_TEXTURE_BUFFER_OR_DRAW_CALL",
+    "OFFICIAL_GEOMETRY_ARTICULATION_ROUND_START",
+    "ROLE_6_REQUIREMENT_REINTERPRETATION_OR_LOCAL_INVENTION",
+    "MATERIAL_VISUAL_IMPROVEMENT_CLAIM",
+    "SELF_RATIFICATION"
+  ],
+  "boundedCheckpoints": [
+    "R1_C1_CUSTODY_AND_BASELINE_ADMISSION",
+    "R1_C2_CONTRACTS_AND_STATIC_FIXTURE_CONSTRUCTION",
+    "R1_C3_FIELD_GEOMETRY_AND_CLEARANCE_TOOL_CONSTRUCTION",
+    "R1_C4_HARNESS_AND_FAIL_CLOSED_RECEIPT",
+    "R1_C5_CUMULATIVE_RETURN_DISCOVERY_AND_CUSTODY"
+  ],
+  "backupAndDiscovery": {
+    "githubRole": "CANONICAL_DISCOVERY_IDENTITY_ROUTING_AND_SUPERSESSION_ANCHOR",
+    "googleDriveRole": "DURABLE_COMPLETE_ARCHIVE_CUSTODY",
+    "sha256Role": "BYTE_IDENTITY_AUTHORITY",
+    "requiredRole1SuccessorLocatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json",
+    "requiredPredecessorLocatorUpdatePath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
+    "controlPlaneRoot": "h-earth-3d/control-plane/",
+    "laneRoot": "h-earth-3d/control-plane/r06-c10/"
+  },
+  "recoveryInstructions": [
+    "SEARCH_GITHUB_USING_ANY_SEARCH_ALIAS",
+    "OPEN_THIS_HANDOFF_LOCATOR",
+    "DOWNLOAD_AND_VERIFY_THE_HANDOFF_ARCHIVE",
+    "FOLLOW_02_ROLE_1_EXACT_INPUT_AUTHORITY_AND_LOAD_ORDER_V1_JSON",
+    "DOWNLOAD_AND_VERIFY_THE_COMPLETE_ROLE_6_PACKAGE",
+    "ISSUE_ROLE_1_ASSUMPTION_RECEIPT",
+    "DO_NOT_INFER_MISSING_OR_CONTRADICTORY_VALUES",
+    "RETURN_ANY_AUTHORITY_GAP_TO_ROLE_4"
+  ],
+  "searchAliases": [
+    "H-Earth R06 C10 Role 1",
+    "Role 6 to Role 1 handoff",
+    "Role 1 geometry articulation tool",
+    "nonproduct terrain authoring tool",
+    "R06 C10 tool construction",
+    "bounded successor terrain field compiler",
+    "geometry articulation verification harness",
+    "saddle valley basin tool",
+    "H-Earth pre-round geometry tool"
+  ],
+  "supersession": {
+    "supersedes": null,
+    "supersededBy": null
+  }
+}

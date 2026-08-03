@@ -46,7 +46,9 @@ export function detectPairwiseCollisions(snapshot, pairs) {
 
 export function detectTransitionContext(before, after, options = {}) {
   const findings = [];
+  const contextLossCauses = [];
   const maxScrollDelta = options.maxScrollDelta ?? 32;
+  const maxAnchorDelta = options.maxAnchorDelta ?? 48;
   const orientation = options.orientationSurfaces ?? ['title', 'cameraControls'];
   const delta = Math.abs((after.scrollY ?? 0) - (before.scrollY ?? 0));
   if (delta > maxScrollDelta) {
@@ -54,6 +56,7 @@ export function detectTransitionContext(before, after, options = {}) {
       code: 'STATE_TRANSITION_SCROLL_DISPLACEMENT',
       detail: { before: before.scrollY, after: after.scrollY, delta, maxScrollDelta }
     });
+    contextLossCauses.push('STATE_TRANSITION_SCROLL_DISPLACEMENT');
   }
   for (const surface of orientation) {
     const wasVisible = Boolean(before.visibility?.[surface]);
@@ -63,12 +66,34 @@ export function detectTransitionContext(before, after, options = {}) {
         code: 'STATE_TRANSITION_ORIENTATION_LOST',
         detail: { surface }
       });
+      contextLossCauses.push(`STATE_TRANSITION_ORIENTATION_LOST:${surface}`);
+      continue;
+    }
+    const beforeRect = before.surfaces?.[surface];
+    const afterRect = after.surfaces?.[surface];
+    if (wasVisible && remainsVisible && beforeRect && afterRect) {
+      const topDelta = Math.abs(afterRect.top - beforeRect.top);
+      const leftDelta = Math.abs(afterRect.left - beforeRect.left);
+      if (topDelta > maxAnchorDelta || leftDelta > maxAnchorDelta) {
+        findings.push({
+          code: 'STATE_TRANSITION_ORIENTATION_DISPLACEMENT',
+          detail: { surface, topDelta, leftDelta, maxAnchorDelta }
+        });
+        contextLossCauses.push(`STATE_TRANSITION_ORIENTATION_DISPLACEMENT:${surface}`);
+      }
     }
   }
   if (before.instrumentIdentity && after.instrumentIdentity && before.instrumentIdentity !== after.instrumentIdentity) {
     findings.push({
       code: 'STATE_TRANSITION_INSTRUMENT_IDENTITY_CHANGED',
       detail: { before: before.instrumentIdentity, after: after.instrumentIdentity }
+    });
+    contextLossCauses.push('STATE_TRANSITION_INSTRUMENT_IDENTITY_CHANGED');
+  }
+  if (contextLossCauses.length) {
+    findings.push({
+      code: 'STATE_TRANSITION_CONTEXT_LOSS',
+      detail: { causes: [...new Set(contextLossCauses)] }
     });
   }
   return findings;

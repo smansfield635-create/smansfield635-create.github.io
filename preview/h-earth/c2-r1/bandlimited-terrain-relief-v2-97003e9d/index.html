@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en"
+  data-preview-class="TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER"
+  data-delivery-operation-id="H_EARTH_BAND_LIMITED_TERRAIN_RELIEF_V2_TEMPORARY_REVIEW_DELIVERY_001"
+  data-product-pr-number="529"
+  data-exact-candidate-head="97003e9de386a8962fb46d0b370005b900a167d6"
+  data-candidate-query="visual=terrain-relief-v2"
+  data-product-mutation="false"
+  data-live-h-earth-route-mutation="false"
+  data-additive-bandlimited-relief-v2-requested="true"
+  data-additive-bandlimited-relief-v2-query-key="visual"
+  data-additive-bandlimited-relief-v2-query-value="terrain-relief-v2"
+  data-selected-renderer-path="../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+  data-exactly-one-renderer-module="true">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>H-Earth · Temporary Band-Limited Terrain Relief V2 Review</title>
+  <style>
+    :root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#020708;color:#edf7f3}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 68% 14%,#173431 0,transparent 38rem),#020708}
+    main{width:min(780px,100%);padding:22px;border:1px solid #31534c;border-radius:20px;background:#071311e8;box-shadow:0 28px 90px #0009}
+    h1{margin:0 0 10px;font-size:clamp(1.4rem,4vw,2.4rem)}
+    p{margin:.55rem 0;color:#b5cbc3;line-height:1.55}
+    code{overflow-wrap:anywhere;color:#d7f3e7}
+    .status{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #79b99b55;border-radius:999px;color:#bcebd5;background:#194c3733;font-size:.76rem;font-weight:800}
+    [data-state="failed"] .status{border-color:#d67d7d77;color:#ffd0d0;background:#5b161655}
+  </style>
+</head>
+<body>
+  <main id="temporary-review-carrier" data-state="loading">
+    <span class="status">Temporary exact-head review carrier</span>
+    <h1>Loading the frozen H-Earth terrain-relief V2 candidate</h1>
+    <p id="carrier-status">Resolving the exact candidate entry document and its complete relative resource graph.</p>
+    <p><strong>Candidate head:</strong><br><code>97003e9de386a8962fb46d0b370005b900a167d6</code></p>
+    <p><strong>Product PR:</strong> #529 · product mutation false · live H-Earth route mutation false</p>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const DELIVERY_OPERATION_ID =
+        'H_EARTH_BAND_LIMITED_TERRAIN_RELIEF_V2_TEMPORARY_REVIEW_DELIVERY_001';
+      const PRODUCT_PR_NUMBER = 529;
+      const EXACT_CANDIDATE_HEAD =
+        '97003e9de386a8962fb46d0b370005b900a167d6';
+      const CANDIDATE_QUERY = 'visual=terrain-relief-v2';
+      const CANDIDATE_QUERY_KEY = 'visual';
+      const CANDIDATE_QUERY_VALUE = 'terrain-relief-v2';
+      const PRODUCT_MUTATION = false;
+      const LIVE_H_EARTH_ROUTE_MUTATION = false;
+      const additiveBandlimitedReliefV2Requested = true;
+      const additiveBandlimitedReliefV2QueryKey = 'visual';
+      const additiveBandlimitedReliefV2QueryValue = 'terrain-relief-v2';
+      const selectedRendererPath =
+        '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+      const exactlyOneRendererModule = true;
+      const EXACT_REPOSITORY_ROOT =
+        `https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${EXACT_CANDIDATE_HEAD}/`;
+      const EXACT_SOURCE_ROOT =
+        `${EXACT_REPOSITORY_ROOT}showroom/globe/h-earth/`;
+      const EXACT_ENTRY_DOCUMENT = `${EXACT_SOURCE_ROOT}index.html`;
+
+      const deliveryReceipt = Object.freeze({
+        DELIVERY_OPERATION_ID,
+        PRODUCT_PR_NUMBER,
+        EXACT_CANDIDATE_HEAD,
+        CANDIDATE_QUERY,
+        PRODUCT_MUTATION,
+        LIVE_H_EARTH_ROUTE_MUTATION,
+        additiveBandlimitedReliefV2Requested,
+        additiveBandlimitedReliefV2QueryKey,
+        additiveBandlimitedReliefV2QueryValue,
+        selectedRendererPath,
+        exactlyOneRendererModule,
+        exactEntryDocument: EXACT_ENTRY_DOCUMENT,
+        exactSourceRoot: EXACT_SOURCE_ROOT,
+        exactRepositoryRoot: EXACT_REPOSITORY_ROOT
+      });
+      window.H_EARTH_TEMPORARY_REVIEW_DELIVERY = deliveryReceipt;
+
+      const query = new URLSearchParams(window.location.search);
+      if (query.get(CANDIDATE_QUERY_KEY) !== CANDIDATE_QUERY_VALUE) {
+        query.set(CANDIDATE_QUERY_KEY, CANDIDATE_QUERY_VALUE);
+        window.history.replaceState(
+          window.history.state,
+          '',
+          `${window.location.pathname}?${query.toString()}${window.location.hash}`
+        );
+      }
+
+      const root = document.getElementById('temporary-review-carrier');
+      const status = document.getElementById('carrier-status');
+      const fail = (error) => {
+        root.dataset.state = 'failed';
+        status.textContent =
+          `Exact-head carrier failed before product execution: ${error?.message ?? String(error)}`;
+        window.H_EARTH_TEMPORARY_REVIEW_DELIVERY_FAILURE = Object.freeze({
+          ...deliveryReceipt,
+          message: error?.message ?? String(error)
+        });
+      };
+
+      const exactResourceUrl = (value, base = EXACT_SOURCE_ROOT) => {
+        const source = String(value || '').trim();
+        if (!source || source.startsWith('#') || /^(?:data|blob|javascript|mailto|tel):/i.test(source)) {
+          return source;
+        }
+        if (source.startsWith('/')) {
+          return new URL(source.slice(1), EXACT_REPOSITORY_ROOT).href;
+        }
+        return new URL(source, base).href;
+      };
+
+      fetch(EXACT_ENTRY_DOCUMENT, {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-store',
+        credentials: 'omit'
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`EXACT_ENTRY_HTTP_${response.status}`);
+          }
+          return response.text();
+        })
+        .then((sourceHtml) => {
+          if (!/^\s*<!doctype html>/i.test(sourceHtml) || !/<html\b/i.test(sourceHtml)) {
+            throw new Error('EXACT_ENTRY_DOCUMENT_NOT_HTML');
+          }
+
+          const parsed = new DOMParser().parseFromString(sourceHtml, 'text/html');
+          if (!parsed.documentElement || !parsed.head || !parsed.body) {
+            throw new Error('EXACT_ENTRY_DOCUMENT_PARSE_FAILED');
+          }
+
+          parsed.querySelectorAll('base').forEach((node) => node.remove());
+          const base = parsed.createElement('base');
+          base.href = EXACT_SOURCE_ROOT;
+          parsed.head.prepend(base);
+
+          const robots = parsed.createElement('meta');
+          robots.name = 'robots';
+          robots.content = 'noindex,nofollow,noarchive';
+          parsed.head.append(robots);
+
+          const resourceSelectors = [
+            ['script[src]', 'src'],
+            ['link[rel="stylesheet"][href]', 'href'],
+            ['link[rel="preload"][href]', 'href'],
+            ['link[rel="modulepreload"][href]', 'href'],
+            ['img[src]', 'src'],
+            ['source[src]', 'src'],
+            ['video[poster]', 'poster'],
+            ['audio[src]', 'src'],
+            ['object[data]', 'data']
+          ];
+          for (const [selector, attribute] of resourceSelectors) {
+            parsed.querySelectorAll(selector).forEach((node) => {
+              node.setAttribute(attribute, exactResourceUrl(node.getAttribute(attribute)));
+            });
+          }
+
+          Object.assign(parsed.documentElement.dataset, {
+            previewClass: 'TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER',
+            deliveryOperationId: DELIVERY_OPERATION_ID,
+            productPrNumber: String(PRODUCT_PR_NUMBER),
+            exactCandidateHead: EXACT_CANDIDATE_HEAD,
+            candidateQuery: CANDIDATE_QUERY,
+            productMutation: String(PRODUCT_MUTATION),
+            liveHEarthRouteMutation: String(LIVE_H_EARTH_ROUTE_MUTATION),
+            additiveBandlimitedReliefV2Requested: String(additiveBandlimitedReliefV2Requested),
+            additiveBandlimitedReliefV2QueryKey,
+            additiveBandlimitedReliefV2QueryValue,
+            selectedRendererPath,
+            exactlyOneRendererModule: String(exactlyOneRendererModule)
+          });
+
+          const executedMarkerScript = parsed.createElement('script');
+          executedMarkerScript.textContent =
+            `window.H_EARTH_TEMPORARY_REVIEW_DELIVERY=Object.freeze(${JSON.stringify(deliveryReceipt)});` +
+            `Object.assign(document.documentElement.dataset,${JSON.stringify({
+              previewClass: 'TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER',
+              deliveryOperationId: DELIVERY_OPERATION_ID,
+              productPrNumber: String(PRODUCT_PR_NUMBER),
+              exactCandidateHead: EXACT_CANDIDATE_HEAD,
+              candidateQuery: CANDIDATE_QUERY,
+              productMutation: 'false',
+              liveHEarthRouteMutation: 'false',
+              additiveBandlimitedReliefV2Requested: 'true',
+              additiveBandlimitedReliefV2QueryKey,
+              additiveBandlimitedReliefV2QueryValue,
+              selectedRendererPath,
+              exactlyOneRendererModule: 'true'
+            })});`;
+          parsed.body.append(executedMarkerScript);
+
+          const executableHtml = '<!doctype html>\n' + parsed.documentElement.outerHTML;
+          document.open('text/html', 'replace');
+          document.write(executableHtml);
+          document.close();
+        })
+        .catch(fail);
+    })();
+  </script>
+</body>
+</html>

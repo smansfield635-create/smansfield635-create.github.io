@@ -1,7 +1,7 @@
 {
   "schema": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
   "locatorId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_LOCATOR_v1",
-  "status": "ACTIVE_ROLE_6_COMPLETE_HANDOFF_TO_ROLE_1_ISSUED",
+  "status": "ACTIVE_ROLE_6_COMPLETE_ROLE_1_C1_RESUMPTION_AUTHORIZED_AFTER_ROLE_4_CUSTODY_CORRECTION",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "locatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json",
   "package": {
@@ -12,6 +12,7 @@
     "archiveSha256": "311429d6ce5206396847d68e9dc275425ed1ec6d918da92cf9b54001767149fb",
     "archiveByteCount": 179997,
     "archiveMemberCount": 39,
+    "originalCoreManifestMemberCount": 35,
     "archiveReadback": "PASS",
     "cumulativePackageComplete": true
   },
@@ -76,27 +77,48 @@
     "failoverGuide": "27_ROLE_6_FAILOVER_OPERATING_GUIDE_v1.md",
     "sha256Manifest": "SHA256SUMS.txt"
   },
+  "custodyCorrection": {
+    "status": "ACTIVE_REQUIRED_FOR_ROLE_1_C1_RESUMPTION",
+    "operationId": "H_EARTH_R06_C10_ROLE_1_C1_CUSTODY_CORRECTION_001",
+    "locatorPath": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+    "locatorCommit": "e7402f9ffd3f1733723de844d9a21f1d873eff8c",
+    "locatorBlob": "f046e7223cfb8291a5620143a58201a02e307865",
+    "correctionArchiveDriveFileId": "1NNNCT8liggR4MAtYvLr7zM12QMdlxUGl",
+    "correctionArchiveSha256": "9903e8c5d78ead39f619efdfde4ed9ea93638a0cb4b7a7a951dc8bd19e1114a8",
+    "correctionArchiveByteCount": 5637,
+    "correctionArchiveMemberCount": 4,
+    "detachedCompleteManifestSha256": "129466ffc161a25e9c9b1e7d2d6594b92408fee6a9f36155c75111ece7f186db",
+    "detachedManifestCoverageCount": 39,
+    "authoritativeCustodyLaw": [
+      "VERIFY_35_CORE_MEMBERS_AGAINST_THE_SOURCE_ARCHIVE_INTERNAL_SHA256SUMS_TXT",
+      "VERIFY_ALL_39_SOURCE_ARCHIVE_MEMBERS_AGAINST_THE_ROLE_4_DETACHED_COMPLETE_MEMBER_MANIFEST"
+    ],
+    "previouslyPassedC1ChecksReusable": true
+  },
   "activeHandoff": {
     "handoffId": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_HANDOFF_v1",
     "locatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
-    "locatorCommit": "da86ccba656bafc4f1efb45827fadfd836e7138a",
-    "locatorBlob": "8b66e3d8da80478dd9398b15d0958a47394dd26d",
+    "locatorCommit": "e4e8307bfa0750dbe98ffca521f69f695f557ad9",
+    "locatorBlob": "8a324ca03865ded62f141caeb5214608f85ea346",
     "driveFileId": "1q2TbJS6tIY_AeYdGL23f2TIUEwnDhBz5",
     "archiveSha256": "4b073253f2a196a4729c5545b48db52b0f17a54829bb4015be035cd4ce81d95e",
-    "status": "READY_FOR_ROLE_1_ASSUMPTION"
+    "status": "READY_FOR_ROLE_1_C1_RESUMPTION_AFTER_ROLE_4_CUSTODY_CORRECTION"
   },
   "recoveryInstructions": [
     "SEARCH_GITHUB_FOR_ANY_SEARCH_ALIAS_IN_THIS_LOCATOR",
     "OPEN_THIS_CANONICAL_LOCATOR",
     "OPEN_ACTIVE_HANDOFF_LOCATOR",
+    "OPEN_ROLE_4_CUSTODY_CORRECTION_LOCATOR",
     "DOWNLOAD_AND_VERIFY_THE_HANDOFF_ARCHIVE",
     "DOWNLOAD_THE_ROLE_6_DRIVE_ARCHIVE_BY_FILE_ID",
     "VERIFY_THE_ROLE_6_ARCHIVE_SHA256_BEFORE_EXTRACTION",
-    "VERIFY_EVERY_ROLE_6_MEMBER_AGAINST_SHA256SUMS_TXT",
+    "VERIFY_35_CORE_ROLE_6_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT",
+    "DOWNLOAD_AND_VERIFY_THE_ROLE_4_CUSTODY_CORRECTION_ARCHIVE",
+    "VERIFY_ALL_39_ROLE_6_MEMBERS_AGAINST_THE_DETACHED_COMPLETE_MEMBER_MANIFEST",
     "READ_THE_FAILOVER_GUIDE_AND_CONTROLLING_PACKAGE_MEMBERS",
     "ISSUE_A_ROLE_ASSUMPTION_RECEIPT_IF_THE_ORIGINAL_ROOM_IS_UNAVAILABLE",
     "DO_NOT_INFER_ANY_MISSING_OR_CONTRADICTORY_VALUE",
-    "RETURN_MISSING_OR_CONTRADICTORY_AUTHORITY_TO_ROLE_4"
+    "RETURN_NEW_MISSING_OR_CONTRADICTORY_AUTHORITY_TO_ROLE_4"
   ],
   "searchAliases": [
     "H-Earth geometry articulation",
@@ -113,7 +135,9 @@
     "terrain authoring harness",
     "pre-round geometry tool",
     "cavern compatible adjacent face",
-    "future waterfall readiness geometry"
+    "future waterfall readiness geometry",
+    "R06 C10 custody correction",
+    "detached complete member manifest"
   ],
   "routing": {
     "sourceRoom": "ROLE_6_INDEPENDENT_RESEARCH_CHAMBER_AND_CROSS_SYSTEM_TROUBLESHOOTING_AUTHORITY",
@@ -121,8 +145,11 @@
     "nextRoom": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
     "nextOperation": "H_EARTH_R06_C10_PRE_ROUND_NONPRODUCT_TOOL_CONSTRUCTION_001",
     "activeHandoffLocator": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
-    "role1Status": "READY_FOR_ASSUMPTION",
-    "requiredRole1Result": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
+    "custodyCorrectionLocator": "h-earth-3d/control-plane/r06-c10/custody/h-earth.r06-c10.role4.custody-correction.locator.v1.json",
+    "role1Status": "READY_FOR_C1_RESUMPTION_AFTER_ROLE_4_CUSTODY_CORRECTION",
+    "currentAuthorizedCheckpoint": "R1_C1_CUSTODY_AND_BASELINE_ADMISSION_RESUMPTION_ONLY",
+    "currentRequiredResult": "R06_C10_ROLE_1_C1_PASS_CLOSED",
+    "requiredRole1FinalResult": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
     "requiredRole1PackageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
     "role1SuccessorLocator": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json",
     "roleAfterRole1": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
@@ -132,6 +159,8 @@
   "supersession": {
     "supersedes": null,
     "supersededBy": null,
-    "successorToolLocator": "PENDING_ROLE_1_COMPLETION"
+    "successorToolLocator": "PENDING_ROLE_1_COMPLETION",
+    "custodyInstructionSuperseded": "VERIFY_EVERY_ROLE_6_MEMBER_AGAINST_SHA256SUMS_TXT",
+    "custodyInstructionReplacement": "VERIFY_35_CORE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT_AND_VERIFY_ALL_39_MEMBERS_AGAINST_THE_ROLE_4_DETACHED_COMPLETE_MEMBER_MANIFEST"
   }
 }

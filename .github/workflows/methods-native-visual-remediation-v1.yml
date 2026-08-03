@@ -1,0 +1,116 @@
+name: Methods Native Visual Remediation Candidate v1
+
+on:
+  push:
+    branches:
+      - verification/methods-native-visual-remediation-v1-001
+    paths:
+      - "verification/methods-native-remediation-v1/**"
+      - ".github/workflows/methods-native-visual-remediation-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXECUTION_COMMIT: ${{ github.sha }}
+  HARNESS_COMMIT: ${{ github.sha }}
+  EXPECTED_SOURCE_HEAD: ${{ github.sha }}
+  METHODS_MODELS_ORIGIN: http://127.0.0.1:4173
+  COHERENCE_OUT_DIR: methods-native-remediation-v1-evidence
+
+jobs:
+  exact-head-nonproduct-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Build exact corrected remediation runner
+        shell: bash
+        run: |
+          cp verification/methods-euclidean-coherence-v1/runner.mjs verification/methods-native-remediation-v1/runner.mjs
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('verification/methods-native-remediation-v1/runner.mjs')
+          text = path.read_text()
+          replacements = [
+            ("async function enterCameraObservation(page, requested, viewportId, coordinate) {\n  if (requested === 'OVERVIEW') {", "async function enterCameraObservation(page, requested, viewportId, coordinate, applyCondition = true) {\n  if (applyCondition && requested === 'OVERVIEW') {"),
+            ("  } else {\n    await page.focus('[data-mm-model-deck]');\n  }\n  await waitStable(page, 80);", "  } else if (applyCondition) {\n    await page.focus('[data-mm-model-deck]');\n  }\n  await waitStable(page, applyCondition ? 80 : 20);"),
+            ("    requested,\n    native_contract_declared:", "    requested,\n    condition_applied: applyCondition,\n    native_contract_declared:"),
+            ("const returnedCamera = await enterCameraObservation(page, 'BROWSE', viewport.id, coordinateId(z, x, 0));", "const returnedCamera = await enterCameraObservation(page, 'BROWSE', viewport.id, coordinateId(z, x, 0), false);")
+          ]
+          for old,new in replacements:
+              if old in text: text=text.replace(old,new,1)
+          required = [
+            "condition_applied: applyCondition",
+            "enterCameraObservation(page, 'BROWSE', viewport.id, coordinateId(z, x, 0), false)"
+          ]
+          if not all(token in text for token in required): raise SystemExit('CORRECTED_ADAPTER_NOT_PRESERVED')
+          text=text.replace("const EXECUTION_CONTRACT = 'METHODS_EUCLIDEAN_SHOWROOM_NONPRODUCT_HARNESS_COHERENCE_PASS_v1';", "const EXECUTION_CONTRACT = 'METHODS_NATIVE_VISUAL_REMEDIATION_CANDIDATE_IMPLEMENTATION_AND_VERIFICATION_v1';")
+          text=text.replace("const EXPECTED_SOURCE_HEAD = process.env.EXPECTED_SOURCE_HEAD || '66a2105e96e84c5b482f783010779f87a90a28ee';", "const EXPECTED_SOURCE_HEAD = process.env.EXPECTED_SOURCE_HEAD || EXECUTION_COMMIT;")
+          text=text.replace("const ROUTE = `${ORIGIN}/laws/research/methods-and-models/`;", "const ROUTE = `${ORIGIN}/verification/methods-native-remediation-v1/harness/`;")
+          start=text.index('const sourceFiles = ['); end=text.index('];',start)+2
+          text=text[:start]+"const sourceFiles = [\n  'verification/methods-native-remediation-v1/harness/index.html',\n  'verification/methods-native-remediation-v1/harness/candidate.css',\n  'verification/methods-native-remediation-v1/harness/candidate.js'\n];"+text[end:]
+          start=text.index('const sourceAssertions = {'); end=text.index('};',start)+2
+          block="""const sourceAssertions = {
+  allRequiredFilesPresent: Object.values(sourcePresence).every(Boolean),
+  contract: sourceText[sourceFiles[0]]?.includes('METHODS_MODELS_EUCLIDEAN_SHOWROOM_v3') || false,
+  sourceCompletenessOpen: sourceText[sourceFiles[0]]?.includes('data-source-completeness=\"open\"') || false,
+  productAcceptanceNotGranted: sourceText[sourceFiles[0]]?.includes('data-product-acceptance=\"not-granted\"') || false,
+  canonicalArchiveBound: sourceText[sourceFiles[0]]?.includes('METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT') || false,
+  noCanvasWebglGlobe: !/webgl|three\.js|getContext\(|<canvas|globe/i.test(cameraSourceCorpus),
+  reducedMotionDeclared: (sourceText[sourceFiles[1]] || '').includes('prefers-reduced-motion: reduce'),
+  exactCoordinateStateDeclared: ['familyIndex','modelIndex','lensIndex','METHODS_MODELS_EUCLIDEAN_STATE_CHANGED'].every(token => (sourceText[sourceFiles[2]] || '').includes(token)),
+  nativeCameraContractDeclared
+};"""
+          text=text[:start]+block+text[end:]
+          path.write_text(text)
+          PY
+          node --check verification/methods-native-remediation-v1/harness/candidate.js
+          node --check verification/methods-native-remediation-v1/runner.mjs
+      - name: Start exact-head static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-native-remediation-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/verification/methods-native-remediation-v1/harness/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/methods-native-remediation-server.log
+          exit 1
+      - name: Execute 1575 primary evaluations and risk capture
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: node verification/methods-native-remediation-v1/runner.mjs
+      - name: Archive evidence
+        if: always()
+        run: |
+          cp verification/methods-native-remediation-v1/runner.mjs methods-native-remediation-v1-evidence/executed-runner.mjs
+          sha256sum methods-native-remediation-v1-evidence/executed-runner.mjs > methods-native-remediation-v1-evidence/executed-runner.mjs.sha256
+          tar -czf methods-native-remediation-v1-evidence.tar.gz methods-native-remediation-v1-evidence
+          sha256sum methods-native-remediation-v1-evidence.tar.gz > methods-native-remediation-v1-evidence.tar.gz.sha256
+      - name: Upload exact evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-native-remediation-v1-evidence
+          path: |
+            methods-native-remediation-v1-evidence
+            methods-native-remediation-v1-evidence.tar.gz
+            methods-native-remediation-v1-evidence.tar.gz.sha256
+            /tmp/methods-native-remediation-server.log
+          if-no-files-found: error
+          retention-days: 90

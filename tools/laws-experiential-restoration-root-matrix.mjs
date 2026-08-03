@@ -60,9 +60,24 @@ async function waitForRuntime(page) {
   await page.waitForFunction(() => {
     const root = document.querySelector("[data-laws-root]");
     return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE) &&
-      root?.dataset.lawsControllerStatus === "ready" &&
-      root?.dataset.lawsInteractionsStatus === "ready";
+      root?.dataset.lawsControllerStatus === "ready";
   }, null, { timeout: 30000 });
+
+  await page.evaluate(() => {
+    document.querySelector("[data-laws-compass-primary]")?.scrollIntoView({
+      block: "center",
+      inline: "nearest",
+      behavior: "instant"
+    });
+    return globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false;
+  });
+
+  await page.waitForFunction(() =>
+    document.querySelector("[data-laws-root]")?.dataset.lawsInteractionsStatus === "ready",
+    null,
+    { timeout: 30000 }
+  );
+  await page.evaluate(() => scrollTo({ top: 0, left: 0, behavior: "instant" }));
 }
 
 function disclosure(page) {
@@ -86,7 +101,6 @@ async function activateDisclosure(page, input) {
   const node = disclosure(page);
   assert.equal(await node.count(), 1, "Expected one rendered F.I.R.S.T. disclosure in the hero.");
   const summary = node.locator(":scope > summary");
-
   if (await node.evaluate(element => element.open)) {
     await summary.click();
     await page.waitForFunction(() => {
@@ -94,7 +108,6 @@ async function activateDisclosure(page, input) {
       return Boolean(element && !element.open);
     });
   }
-
   await activate(page, summary, input);
   await page.waitForFunction(() =>
     Boolean(document.querySelector(".laws-first > details[data-laws-first-disclosure]")?.open)
@@ -168,7 +181,6 @@ async function activateAuthority(page, direction, input) {
     const question = document.querySelector(
       `.laws-first__question-grid [data-laws-experience-question="${nextDirection}"]`
     );
-    const control = document.querySelector(`[data-laws-category][data-direction="${nextDirection}"]`);
     const html = document.documentElement;
     const body = document.body;
     return {
@@ -178,7 +190,6 @@ async function activateAuthority(page, direction, input) {
       rootActiveCategory: root?.dataset.lawsActiveCategory || "",
       orbitFocus: root?.dataset.orbitFocus || "",
       frameDirection: frame?.compass?.selectedDirection || "",
-      selectedExpanded: control?.getAttribute("aria-expanded") || "",
       railCount: rail.length,
       activeRailCount: activeRail.length,
       activeRailDirection: activeItem?.dataset.lawsExperienceIndicator || "",

@@ -1,0 +1,75 @@
+name: Laws Experiential Restoration Materialize
+
+on:
+  push:
+    branches:
+      - agent/laws-experiential-architecture-restoration-001
+    paths:
+      - '.github/workflows/laws-experiential-restoration-materialize.yml'
+      - 'tools/materialize-laws-root-restoration.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-experiential-restoration-materialize
+  cancel-in-progress: false
+
+env:
+  RESTORATION_BRANCH: agent/laws-experiential-architecture-restoration-001
+  EXPECTED_MAIN_BASE: ef2ffdb1da7911238652f076a6b44326061493ef
+
+jobs:
+  materialize:
+    if: github.ref_name == 'agent/laws-experiential-architecture-restoration-001'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out bounded restoration branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RESTORATION_BRANCH }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lock current main and branch ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main "$RESTORATION_BRANCH"
+          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_BASE"
+          test "$(git merge-base origin/main HEAD)" = "$EXPECTED_MAIN_BASE"
+
+      - name: Materialize complete root presentation files
+        run: python3 tools/materialize-laws-root-restoration.py
+
+      - name: Verify bounded full-file scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only | sort)
+          expected=(
+            laws/index.experience.js
+            laws/index.experience.polish.css
+            laws/index.html
+          )
+          test "${#changed[@]}" -eq "${#expected[@]}"
+          for i in "${!expected[@]}"; do
+            test "${changed[$i]}" = "${expected[$i]}"
+          done
+          node --check laws/index.experience.js
+          grep -q 'data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"' laws/index.html
+          grep -q 'data-laws-first-rail-architecture="integrated-hero-v1"' laws/index.html
+          ! grep -q 'single-column-at-1100px' laws/index.html
+          git diff --check
+
+      - name: Commit complete root replacements
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add laws/index.html laws/index.experience.polish.css laws/index.experience.js
+          git commit -m "Restore Laws root experiential architecture"
+          git push origin "HEAD:$RESTORATION_BRANCH"

@@ -101,7 +101,7 @@ async function verifyProfile(profile, viewport) {
   const evidenceText = await page.$eval("[data-mm-lens-panel]", node => node.textContent.trim());
   if (!evidenceText.includes("source-confirmed")) failures.push("evidence_lens");
 
-  await page.click("[data-mm-inspect]");
+  await page.click('.mm-model-card[data-position="active"] [data-mm-inspect]');
   await page.waitForSelector("dialog[open]");
   const dialogState = await page.evaluate(() => ({
     open: document.querySelector("dialog")?.open,

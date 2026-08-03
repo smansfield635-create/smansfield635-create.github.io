@@ -7,6 +7,11 @@ on:
       - control/h-earth-c2-r1-ratified-candidate-browser-verification-001
     paths:
       - '.github/workflows/h-earth-c2-r1-ratified-candidate-browser-verification.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c2-r1-ratified-candidate-browser-verification.yml'
 
 permissions:
   contents: read

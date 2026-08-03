@@ -142,4 +142,4 @@ export function validateAuthorityConfig() {
   return Object.freeze({ assertions: Object.freeze(assertions), failures: Object.freeze(failures) });
 }
 
-// Exact-head browser regression trigger for the tablet Rolodex heading-band candidate.
+// Exact-head browser regression trigger for the mobile grouped-Rolodex candidate.

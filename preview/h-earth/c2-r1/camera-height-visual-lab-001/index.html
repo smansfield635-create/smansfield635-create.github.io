@@ -72,6 +72,10 @@
         };
         const adjustState = state => {
           if (!state || !Number.isFinite(state.terrainElevation)) return state;
+          const coastPosition =
+            Math.abs(Number(state.position?.x) - 0) < 1e-9 &&
+            Math.abs(Number(state.position?.z) - (-96)) < 1e-9;
+          if (!coastPosition) return state;
           const next = clone(state);
           const eyeHeight = currentHeight();
           next.position.y = next.terrainElevation + eyeHeight;

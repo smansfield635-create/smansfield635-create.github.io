@@ -68,7 +68,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/laws-interaction-diagnostic.mjs <<'JS'
+          cat > tools/.laws-interaction-diagnostic.mjs <<'JS'
           import { chromium } from "playwright";
 
           const baseUrl = process.env.BASE_URL;
@@ -180,4 +180,5 @@ jobs:
 
           await browser.close();
           JS
-          node /tmp/laws-interaction-diagnostic.mjs
+          node tools/.laws-interaction-diagnostic.mjs
+          rm -f tools/.laws-interaction-diagnostic.mjs

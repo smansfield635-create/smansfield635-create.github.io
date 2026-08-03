@@ -1,4 +1,4 @@
-name: Laws Experiential Restoration Geometry Probe
+name: Laws Experiential Restoration Activation Probe
 
 on:
   push:
@@ -17,7 +17,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: laws-experiential-restoration-geometry-${{ github.event.pull_request.number || github.ref }}
+  group: laws-experiential-restoration-activation-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -27,7 +27,7 @@ env:
   EVIDENCE_DIR: artifacts/laws-experiential-restoration/interaction-diagnostic
 
 jobs:
-  geometry-probe:
+  activation-probe:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -58,29 +58,28 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-geometry-server.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-activation-server.log 2>&1 &
           for attempt in $(seq 1 50); do
             curl --fail --silent http://127.0.0.1:4173/laws/ > /dev/null && exit 0
             sleep 1
           done
           exit 1
 
-      - name: Record scene and projected-label geometry
+      - name: Record raw touch and pointer activation receipts
         shell: bash
         run: |
           mkdir -p "$EVIDENCE_DIR"
-          printf '{"contract":"LAWS_GEOMETRY_PROBE_BOOTSTRAP_v1","head":"%s","status":"NODE_NOT_STARTED"}\n' "$EXECUTION_COMMIT" > "$EVIDENCE_DIR/geometry-probe.json"
-          cat > tools/.laws-geometry-probe.mjs <<'JS'
+          printf '{"contract":"LAWS_ACTIVATION_PROBE_BOOTSTRAP_v1","head":"%s","status":"NODE_NOT_STARTED"}\n' "$EXECUTION_COMMIT" > "$EVIDENCE_DIR/activation-probe.json"
+          cat > tools/.laws-activation-probe.mjs <<'JS'
           import fs from "node:fs/promises";
           import { chromium } from "playwright";
 
-          const output = `${process.env.EVIDENCE_DIR}/geometry-probe.json`;
+          const output = `${process.env.EVIDENCE_DIR}/activation-probe.json`;
           const receipt = {
-            contract: "LAWS_EXPERIENTIAL_RESTORATION_GEOMETRY_PROBE_v1",
+            contract: "LAWS_EXPERIENTIAL_RESTORATION_ACTIVATION_PROBE_v1",
             head: process.env.EXECUTION_COMMIT,
             status: "STARTED",
-            initial: null,
-            centered: null,
+            results: [],
             error: null
           };
           const persist = () => fs.writeFile(output, `${JSON.stringify(receipt, null, 2)}\n`, "utf8");
@@ -88,68 +87,94 @@ jobs:
 
           const snapshot = () => {
             const root = document.querySelector("[data-laws-root]");
-            const scene = document.querySelector("[data-laws-scene-field]");
-            const visibleId = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
-            const label = document.querySelector(`[data-laws-projected-category-label="${visibleId}"]`);
-            const sceneRect = scene?.getBoundingClientRect();
-            const labelRect = label?.getBoundingClientRect();
-            const point = labelRect ? {
-              x: labelRect.left + labelRect.width / 2,
-              y: labelRect.top + labelRect.height / 2
-            } : null;
-            const top = point && point.x >= 0 && point.y >= 0 && point.x < innerWidth && point.y < innerHeight
-              ? document.elementFromPoint(point.x, point.y) : null;
+            let frame = null;
+            try { frame = globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null; } catch (_) {}
             return {
               scrollY,
-              viewport: { width: innerWidth, height: innerHeight },
-              controllerStatus: root?.dataset.lawsControllerStatus || "",
-              interactionsStatus: root?.dataset.lawsInteractionsStatus || "",
-              visibleId,
-              sceneRect: sceneRect ? {
-                left: sceneRect.left, top: sceneRect.top, right: sceneRect.right,
-                bottom: sceneRect.bottom, width: sceneRect.width, height: sceneRect.height
-              } : null,
-              labelRect: labelRect ? {
-                left: labelRect.left, top: labelRect.top, right: labelRect.right,
-                bottom: labelRect.bottom, width: labelRect.width, height: labelRect.height
-              } : null,
-              centerPoint: point,
-              centerInViewport: Boolean(point && point.x >= 0 && point.y >= 0 && point.x < innerWidth && point.y < innerHeight),
-              centerTopTag: top?.tagName || "",
-              centerTopClass: typeof top?.className === "string" ? top.className : "",
-              centerOwnedByVisibleLabel: Boolean(top?.closest?.(`[data-laws-projected-category-label="${visibleId}"]`))
+              controllerState: root?.dataset.lawsControllerState || "",
+              activeDirection: root?.dataset.lawsActiveDirection || "",
+              activeCategory: root?.dataset.lawsActiveCategory || "",
+              experienceDirection: document.documentElement.dataset.lawsExperienceDirection || "",
+              visibleLabelId: root?.dataset.lawsVisibleOuterAuthorityLabelId || "",
+              controllerFrameState: frame?.state || "",
+              controllerFrameDirection: frame?.compass?.selectedDirection || "",
+              controllerFrameClusterDirection: frame?.activeClusterDirection || frame?.cluster?.direction || "",
+              interactionReceipt: globalThis.DGB_LAWS_INTERACTIONS?.getReceipt?.() || null
+            };
+          };
+
+          const hitPoint = () => {
+            const root = document.querySelector("[data-laws-root]");
+            const id = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
+            const label = document.querySelector(`[data-laws-projected-category-label="${id}"]`);
+            const rect = label?.getBoundingClientRect();
+            if (!rect) return null;
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            const top = x >= 0 && y >= 0 && x < innerWidth && y < innerHeight
+              ? document.elementFromPoint(x, y) : null;
+            return {
+              id, x, y,
+              labelRect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height },
+              inViewport: x >= 0 && y >= 0 && x < innerWidth && y < innerHeight,
+              topTag: top?.tagName || "",
+              topClass: typeof top?.className === "string" ? top.className : "",
+              owned: Boolean(top?.closest?.(`[data-laws-projected-category-label="${id}"]`))
             };
           };
 
           let browser;
           try {
             browser = await chromium.launch({ headless: true });
-            const context = await browser.newContext({
-              viewport: { width: 390, height: 844 },
-              isMobile: true,
-              hasTouch: true,
-              deviceScaleFactor: 1
-            });
-            const page = await context.newPage();
-            await page.goto(`${process.env.BASE_URL}/laws/`, { waitUntil: "networkidle" });
-            await page.waitForFunction(() => {
-              const root = document.querySelector("[data-laws-root]");
-              return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGBLawsStagedLoader) &&
-                root?.dataset.lawsControllerStatus === "available";
-            }, null, { timeout: 30000 });
-            await page.evaluate(() => globalThis.DGB_LAWS_EXPERIENCE.requestCompassRuntimePreload());
-            await page.waitForFunction(() => {
-              const root = document.querySelector("[data-laws-root]");
-              return Boolean(globalThis.DGB_LAWS_INTERACTIONS) && root?.dataset.lawsInteractionsStatus === "available";
-            }, null, { timeout: 30000 });
-            receipt.initial = await page.evaluate(snapshot);
-            await page.evaluate(() => document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
-              block: "center", inline: "nearest", behavior: "instant"
-            }));
-            await page.waitForTimeout(500);
-            receipt.centered = await page.evaluate(snapshot);
+            for (const method of ["touch", "pointer"]) {
+              const context = await browser.newContext({
+                viewport: { width: 390, height: 844 },
+                isMobile: true,
+                hasTouch: true,
+                deviceScaleFactor: 1
+              });
+              const page = await context.newPage();
+              const result = { method, browserErrors: [] };
+              page.on("pageerror", error => result.browserErrors.push(`pageerror:${error.message}`));
+              page.on("console", message => {
+                if (message.type() === "error" && !message.text().includes("404")) {
+                  result.browserErrors.push(`console:${message.text()}`);
+                }
+              });
+              try {
+                await page.goto(`${process.env.BASE_URL}/laws/`, { waitUntil: "networkidle" });
+                await page.waitForFunction(() => {
+                  const root = document.querySelector("[data-laws-root]");
+                  return Boolean(globalThis.DGB_LAWS_CONTROLLER && globalThis.DGB_LAWS_EXPERIENCE && globalThis.DGBLawsStagedLoader) &&
+                    root?.dataset.lawsControllerStatus === "available";
+                }, null, { timeout: 30000 });
+                result.preload = await page.evaluate(() => globalThis.DGB_LAWS_EXPERIENCE.requestCompassRuntimePreload());
+                await page.waitForFunction(() => {
+                  const root = document.querySelector("[data-laws-root]");
+                  return Boolean(globalThis.DGB_LAWS_INTERACTIONS) && root?.dataset.lawsInteractionsStatus === "available";
+                }, null, { timeout: 30000 });
+                await page.evaluate(() => document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
+                  block: "center", inline: "nearest", behavior: "instant"
+                }));
+                await page.waitForTimeout(400);
+                result.before = await page.evaluate(snapshot);
+                result.hit = await page.evaluate(hitPoint);
+                if (!result.hit?.owned) throw new Error(`UNOWNED_HIT:${JSON.stringify(result.hit)}`);
+                if (method === "touch") {
+                  await page.touchscreen.tap(result.hit.x, result.hit.y);
+                } else {
+                  await page.mouse.click(result.hit.x, result.hit.y);
+                }
+                await page.waitForTimeout(1600);
+                result.after = await page.evaluate(snapshot);
+              } catch (error) {
+                result.error = { message: error.message, stack: error.stack || "" };
+              }
+              receipt.results.push(result);
+              await persist();
+              await context.close();
+            }
             receipt.status = "COMPLETE";
-            await context.close();
           } catch (error) {
             receipt.status = "ERROR";
             receipt.error = { message: error.message, stack: error.stack || "" };
@@ -160,19 +185,19 @@ jobs:
           if (receipt.status !== "COMPLETE") process.exitCode = 1;
           JS
           set +e
-          node tools/.laws-geometry-probe.mjs > "$EVIDENCE_DIR/node-output.log" 2>&1
+          node tools/.laws-activation-probe.mjs > "$EVIDENCE_DIR/node-output.log" 2>&1
           status=$?
           set -e
-          rm -f tools/.laws-geometry-probe.mjs
+          rm -f tools/.laws-activation-probe.mjs
           exit $status
 
-      - name: Upload geometry probe
+      - name: Upload activation probe
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: laws-geometry-probe-${{ env.EXECUTION_COMMIT }}
+          name: laws-activation-probe-${{ env.EXECUTION_COMMIT }}
           path: |
             artifacts/laws-experiential-restoration/interaction-diagnostic/**
-            /tmp/laws-geometry-server.log
+            /tmp/laws-activation-server.log
           if-no-files-found: error
           retention-days: 30

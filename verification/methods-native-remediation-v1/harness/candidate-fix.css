@@ -13,3 +13,10 @@
   .camera-controls { margin-top: 8px; }
   .stage-field { min-height: 220px; }
 }
+@media (max-width: 620px) {
+  .mm-stage { min-height: 520px; grid-template-rows: auto auto auto minmax(240px, 1fr) auto; }
+  .stage-field { min-height: 240px; }
+  .coordinate-readout { top: 8px; left: 8px; right: 8px; flex-wrap: nowrap; gap: 4px; }
+  .coordinate-readout span { flex: 1 1 auto; min-height: 28px; padding: 0 5px; font-size: 10px; white-space: nowrap; }
+  .mm-model-deck { inset: 66px 8px 8px; }
+}

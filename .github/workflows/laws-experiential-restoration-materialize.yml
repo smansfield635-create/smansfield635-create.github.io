@@ -64,7 +64,7 @@ jobs:
           cat /tmp/laws-interaction-diagnostic-server.log
           exit 1
 
-      - name: Trace raw-coordinate authority activation
+      - name: Trace scene-centered authority activation
         shell: bash
         run: |
           set -euo pipefail
@@ -78,10 +78,20 @@ jobs:
           async function state(page, label) {
             return page.evaluate(nextLabel => {
               const root = document.querySelector("[data-laws-root]");
+              const scene = document.querySelector("[data-laws-scene-field]");
+              const sceneRect = scene?.getBoundingClientRect();
               let frame = null;
               try { frame = globalThis.DGB_LAWS_CONTROLLER?.getFrame?.() || null; } catch (_) { frame = null; }
               return {
                 label: nextLabel,
+                scrollY,
+                sceneRect: sceneRect ? {
+                  left: sceneRect.left,
+                  top: sceneRect.top,
+                  width: sceneRect.width,
+                  height: sceneRect.height,
+                  bottom: sceneRect.bottom
+                } : null,
                 controllerState: root?.dataset.lawsControllerState || "",
                 activeDirection: root?.dataset.lawsActiveDirection || "",
                 activeCategory: root?.dataset.lawsActiveCategory || "",
@@ -99,6 +109,8 @@ jobs:
           async function currentHit(page) {
             return page.evaluate(() => {
               const root = document.querySelector("[data-laws-root]");
+              const scene = document.querySelector("[data-laws-scene-field]");
+              const sceneRect = scene?.getBoundingClientRect();
               const visibleId = root?.dataset.lawsVisibleOuterAuthorityLabelId || "";
               const projected = document.querySelector(
                 `[data-laws-projected-category-label="${visibleId}"]`
@@ -122,11 +134,20 @@ jobs:
                     visibleId,
                     x,
                     y,
+                    scrollY,
+                    sceneRect: sceneRect ? {
+                      left: sceneRect.left,
+                      top: sceneRect.top,
+                      width: sceneRect.width,
+                      height: sceneRect.height,
+                      bottom: sceneRect.bottom
+                    } : null,
                     rect: {
                       left: rect.left,
                       top: rect.top,
                       width: rect.width,
-                      height: rect.height
+                      height: rect.height,
+                      bottom: rect.bottom
                     },
                     topTag: top?.tagName || "",
                     topClass: top?.className || "",
@@ -140,11 +161,20 @@ jobs:
                 visibleId,
                 x: null,
                 y: null,
+                scrollY,
+                sceneRect: sceneRect ? {
+                  left: sceneRect.left,
+                  top: sceneRect.top,
+                  width: sceneRect.width,
+                  height: sceneRect.height,
+                  bottom: sceneRect.bottom
+                } : null,
                 rect: {
                   left: rect.left,
                   top: rect.top,
                   width: rect.width,
-                  height: rect.height
+                  height: rect.height,
+                  bottom: rect.bottom
                 },
                 topTag: "",
                 topClass: "",
@@ -178,26 +208,36 @@ jobs:
                 globalThis.DGBLawsStagedLoader
               ) && root?.dataset.lawsControllerStatus === "available";
             });
-            const preload = await page.evaluate(() => {
-              document.querySelector("[data-laws-compass-primary]")?.scrollIntoView({
-                block: "center",
-                behavior: "instant"
-              });
-              return globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false;
-            });
+            const preload = await page.evaluate(() =>
+              globalThis.DGB_LAWS_EXPERIENCE?.requestCompassRuntimePreload?.() ?? false
+            );
             await page.waitForFunction(() => {
               const root = document.querySelector("[data-laws-root]");
               return Boolean(globalThis.DGB_LAWS_INTERACTIONS) &&
                 root?.dataset.lawsInteractionsStatus === "available";
             });
-            await page.waitForTimeout(250);
+            await page.evaluate(() => {
+              document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
+                block: "center",
+                inline: "nearest",
+                behavior: "instant"
+              });
+            });
+            await page.waitForTimeout(300);
 
             const before = await state(page, "before");
             let hit = null;
-            for (let attempt = 0; attempt < 20; attempt += 1) {
+            for (let attempt = 0; attempt < 30; attempt += 1) {
               hit = await currentHit(page);
               if (hit?.x !== null && hit?.y !== null) break;
-              await page.waitForTimeout(16);
+              await page.evaluate(() => {
+                document.querySelector("[data-laws-scene-field]")?.scrollIntoView({
+                  block: "center",
+                  inline: "nearest",
+                  behavior: "instant"
+                });
+              });
+              await page.waitForTimeout(32);
             }
             if (!hit || hit.x === null || hit.y === null) {
               throw new Error(`No owned projected-label point for ${method}: ${JSON.stringify(hit)}`);

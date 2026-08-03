@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="color-scheme" content="dark">
+  <title>H-Earth Camera Height Visual Lab</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#020609;color:#eef8f6;font-family:system-ui,sans-serif}
+    body{display:grid;place-items:center;padding:24px;box-sizing:border-box}
+    .loading{max-width:720px;padding:24px;border:1px solid rgba(220,242,238,.22);border-radius:18px;background:#061014}
+    .loading h1{margin:0 0 10px;font-size:clamp(1.5rem,5vw,3rem)}
+    .loading p{margin:0;color:rgba(238,248,246,.72)}
+    .error{color:#ffd2d2;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <section class="loading" aria-live="polite">
+    <h1>H-Earth camera-height visual lab</h1>
+    <p id="lab-loading-status">Loading the exact PR #512 environment…</p>
+  </section>
+  <script>
+    (async () => {
+      const LAB_ID = 'H_EARTH_C2_R1_TEMPORARY_CAMERA_HEIGHT_VISUAL_LAB_BUILD_001';
+      const LAB_PATH = 'preview/h-earth/c2-r1/camera-height-visual-lab-001/index.html';
+      const marker = `/${LAB_PATH}`;
+      const markerIndex = location.href.indexOf(marker);
+      if (markerIndex < 0) {
+        throw new Error('CAMERA_HEIGHT_LAB_REPOSITORY_ROOT_UNRESOLVED');
+      }
+
+      const repositoryRoot = location.href.slice(0, markerIndex + 1);
+      const minimumHeight = 2.25;
+      const maximumHeight = 8.25;
+      const increment = 0.25;
+      const parameters = new URLSearchParams(location.search);
+      const requestedHeight = Number(parameters.get('cameraHeight'));
+      const clamp = (value, minimum, maximum) =>
+        Math.min(maximum, Math.max(minimum, value));
+      const normalizeHeight = (value) => {
+        const finiteValue = Number.isFinite(value) ? value : minimumHeight;
+        const stepped = minimumHeight +
+          Math.round((clamp(finiteValue, minimumHeight, maximumHeight) - minimumHeight) / increment) * increment;
+        return Number(stepped.toFixed(2));
+      };
+      const selectedHeight = normalizeHeight(requestedHeight);
+      globalThis.__H_EARTH_CAMERA_HEIGHT_LAB_HEIGHT__ = selectedHeight;
+
+      const navigationUrl =
+        `${repositoryRoot}showroom/globe/h-earth/functional-landscape/navigation.js`;
+      const sourceNavigationUrl = `${navigationUrl}?camera-height-lab-source=1`;
+      const shimSource = `
+        import * as source from ${JSON.stringify(sourceNavigationUrl)};
+        const minimumHeight = 2.25;
+        const maximumHeight = 8.25;
+        const increment = 0.25;
+        const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+        const currentHeight = () => {
+          const requested = Number(globalThis.__H_EARTH_CAMERA_HEIGHT_LAB_HEIGHT__);
+          const finiteValue = Number.isFinite(requested) ? requested : minimumHeight;
+          const stepped = minimumHeight + Math.round((clamp(finiteValue, minimumHeight, maximumHeight) - minimumHeight) / increment) * increment;
+          return Number(stepped.toFixed(2));
+        };
+        const clone = value => JSON.parse(JSON.stringify(value));
+        const freeze = (value, seen = new WeakSet()) => {
+          if (value === null || typeof value !== 'object' || Object.isFrozen(value)) return value;
+          if (seen.has(value)) return value;
+          seen.add(value);
+          Object.values(value).forEach(nested => freeze(nested, seen));
+          return Object.freeze(value);
+        };
+        const adjustState = state => {
+          if (!state || !Number.isFinite(state.terrainElevation)) return state;
+          const next = clone(state);
+          const eyeHeight = currentHeight();
+          next.position.y = next.terrainElevation + eyeHeight;
+          next.clearance = eyeHeight;
+          return freeze(next);
+        };
+        const adjustResult = result => {
+          if (!result || !result.state) return result;
+          return freeze({ ...result, state: adjustState(result.state) });
+        };
+        export const H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID = source.H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID;
+        export const H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE = freeze({ ...source.H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE, eyeHeight: currentHeight() });
+        export const H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS = source.H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS;
+        export const resolveHEarthNavigableTerrainChunk = source.resolveHEarthNavigableTerrainChunk;
+        export function createHEarthFunctionalLandscapeNavigationState(options = {}) {
+          return adjustResult(source.createHEarthFunctionalLandscapeNavigationState(options));
+        }
+        export function proposeHEarthFunctionalLandscapeNavigation(currentState, intent = {}) {
+          return adjustResult(source.proposeHEarthFunctionalLandscapeNavigation(currentState, intent));
+        }
+        export const createHEarthFunctionalLandscapeCamera = source.createHEarthFunctionalLandscapeCamera;
+        export const evaluateHEarthFunctionalLandscapeNavigationState = source.evaluateHEarthFunctionalLandscapeNavigationState;
+      `;
+      const shimUrl = URL.createObjectURL(new Blob([shimSource], {
+        type: 'text/javascript'
+      }));
+
+      const sourceUrl = `${repositoryRoot}showroom/globe/h-earth/index.html`;
+      const response = await fetch(sourceUrl, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`CAMERA_HEIGHT_LAB_SOURCE_HTTP_FAILURE:${response.status}`);
+      }
+      let sourceHtml = await response.text();
+
+      sourceHtml = sourceHtml.replace(
+        /\b(href|src)=(['"])\/(?!\/)/g,
+        (match, attribute, quote) => `${attribute}=${quote}${repositoryRoot}`
+      );
+      sourceHtml = sourceHtml.replace(
+        /url\((['"]?)\/(?!\/)/g,
+        (match, quote) => `url(${quote}${repositoryRoot}`
+      );
+
+      const closeScript = '<' + '/script>';
+      const importMap = JSON.stringify({
+        imports: {
+          [navigationUrl]: shimUrl
+        }
+      });
+      const preflightScript = `
+        <base href="${repositoryRoot}showroom/globe/h-earth/">
+        <meta name="robots" content="noindex,nofollow,noarchive">
+        <meta name="h-earth-camera-height-lab" content="${LAB_ID}">
+        <script>
+          (() => {
+            const repositoryRoot = ${JSON.stringify(repositoryRoot)};
+            const originalFetch = window.fetch.bind(window);
+            window.fetch = (input, init) => {
+              if (typeof input === 'string' && input.startsWith('/') && !input.startsWith('//')) {
+                input = repositoryRoot + input.slice(1);
+              }
+              return originalFetch(input, init);
+            };
+            globalThis.__H_EARTH_CAMERA_HEIGHT_LAB_HEIGHT__ = ${selectedHeight};
+            globalThis.__H_EARTH_CAMERA_HEIGHT_LAB_REPOSITORY_ROOT__ = repositoryRoot;
+          })();
+        ${closeScript}
+        <script type="importmap">${importMap}${closeScript}
+      `;
+      sourceHtml = sourceHtml.replace('<head>', `<head>${preflightScript}`);
+
+      const labUiScript = `
+        <script>
+          (() => {
+            const labId = ${JSON.stringify(LAB_ID)};
+            const minimumHeight = ${minimumHeight};
+            const maximumHeight = ${maximumHeight};
+            const increment = ${increment};
+            const selectedHeight = ${selectedHeight};
+            const presets = [2.25, 3.75, 5.25, 6.75, 8.25];
+            const style = document.createElement('style');
+            style.textContent = \`
+              .h-earth-camera-height-lab{position:fixed;z-index:2147483000;right:12px;bottom:12px;width:min(390px,calc(100vw - 24px));padding:14px;border:1px solid rgba(220,242,238,.32);border-radius:16px;background:rgba(2,8,10,.94);box-shadow:0 20px 70px rgba(0,0,0,.58);backdrop-filter:blur(12px);color:#eef8f6;font-family:system-ui,sans-serif}
+              .h-earth-camera-height-lab h2{margin:0;font-size:1rem}.h-earth-camera-height-lab p{margin:6px 0;color:rgba(238,248,246,.72);font-size:.76rem;line-height:1.4}
+              .h-earth-camera-height-lab output{display:block;margin:10px 0 6px;font:800 1.4rem/1 ui-monospace,monospace;color:#bff0d1}
+              .h-earth-camera-height-lab input[type=range]{width:100%}.h-earth-camera-height-lab__presets{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:10px}
+              .h-earth-camera-height-lab button{min-height:34px;padding:6px;border:1px solid rgba(220,242,238,.24);border-radius:9px;background:rgba(255,255,255,.06);color:#eef8f6;font-weight:800;cursor:pointer}
+              .h-earth-camera-height-lab button[aria-pressed=true]{background:#d8f8eb;color:#04100d}.h-earth-camera-height-lab__status{font-family:ui-monospace,monospace;color:#9de5bd!important}
+              @media(max-width:520px){.h-earth-camera-height-lab{right:8px;bottom:8px;width:calc(100vw - 16px);box-sizing:border-box}.h-earth-camera-height-lab__presets{grid-template-columns:repeat(5,minmax(0,1fr))}}
+            \`;
+            document.head.append(style);
+
+            const panel = document.createElement('aside');
+            panel.className = 'h-earth-camera-height-lab';
+            panel.setAttribute('aria-label', 'Temporary camera height visual lab');
+            panel.innerHTML = \`
+              <h2>Temporary camera-height lab</h2>
+              <p>Only coast camera eye height varies. X 0 · Z −96 · yaw 0° · pitch +8° · FOV 56° remain fixed.</p>
+              <output id="h-earth-camera-height-value">\${selectedHeight.toFixed(2)} world units</output>
+              <input id="h-earth-camera-height-range" type="range" min="\${minimumHeight}" max="\${maximumHeight}" step="\${increment}" value="\${selectedHeight}" aria-label="Camera eye height">
+              <div class="h-earth-camera-height-lab__presets" id="h-earth-camera-height-presets"></div>
+              <p class="h-earth-camera-height-lab__status" id="h-earth-camera-height-status">Waiting for live GPU environment…</p>
+            \`;
+            document.body.append(panel);
+
+            const applyHeight = value => {
+              const next = new URL(location.href);
+              next.searchParams.set('cameraHeight', Number(value).toFixed(2));
+              location.assign(next.href);
+            };
+            const range = panel.querySelector('#h-earth-camera-height-range');
+            range.addEventListener('input', () => {
+              panel.querySelector('#h-earth-camera-height-value').textContent = Number(range.value).toFixed(2) + ' world units';
+            });
+            range.addEventListener('change', () => applyHeight(range.value));
+
+            const presetHost = panel.querySelector('#h-earth-camera-height-presets');
+            presets.forEach(value => {
+              const button = document.createElement('button');
+              button.type = 'button';
+              button.textContent = value.toFixed(2);
+              button.setAttribute('aria-pressed', String(value === selectedHeight));
+              button.addEventListener('click', () => applyHeight(value));
+              presetHost.append(button);
+            });
+
+            const publishStatus = () => {
+              const api = window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+              const state = api?.getIntakeReceipt?.()?.currentNavigationState;
+              if (!state) return false;
+              panel.querySelector('#h-earth-camera-height-status').textContent =
+                \`LIVE · height \${Number(state.clearance).toFixed(2)} · camera Y \${Number(state.position.y).toFixed(2)}\`;
+              window.H_EARTH_CAMERA_HEIGHT_VISUAL_LAB = Object.freeze({
+                labId,
+                previewOnly: true,
+                selectedEyeHeight: selectedHeight,
+                range: Object.freeze({ minimum: minimumHeight, maximum: maximumHeight, increment }),
+                fixedCamera: Object.freeze({ x: 0, z: -96, yawDegrees: 0, pitchDegrees: 8, verticalFovDegrees: 56 }),
+                currentNavigationState: JSON.parse(JSON.stringify(state)),
+                defaultProductStateMutated: false
+              });
+              return true;
+            };
+            window.addEventListener('h-earth-run8e-ready', publishStatus);
+            const interval = window.setInterval(() => {
+              if (publishStatus()) window.clearInterval(interval);
+            }, 250);
+          })();
+        ${closeScript}
+      `;
+      sourceHtml = sourceHtml.replace('</body>', `${labUiScript}</body>`);
+      sourceHtml = sourceHtml.replace(
+        '<html lang="en"',
+        '<html lang="en" data-h-earth-camera-height-lab="active"'
+      );
+
+      document.open();
+      document.write(sourceHtml);
+      document.close();
+    })().catch(error => {
+      const status = document.getElementById('lab-loading-status');
+      if (status) {
+        status.className = 'error';
+        status.textContent = error instanceof Error ? `${error.message}\n${error.stack ?? ''}` : String(error);
+      }
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

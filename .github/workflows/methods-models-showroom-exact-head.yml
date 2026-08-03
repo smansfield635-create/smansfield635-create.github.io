@@ -8,6 +8,8 @@ on:
       - "laws/research/methods-and-models/index.html"
       - "laws/research/methods-and-models/showroom.css"
       - "laws/research/methods-and-models/showroom.js"
+      - "laws/research/methods-and-models/showroom-refinement.css"
+      - "laws/research/methods-and-models/showroom-refinement.js"
       - "laws/research/methods-and-models/canonical-records-v1.html"
       - "verification/methods-models-showroom-browser.mjs"
       - ".github/workflows/methods-models-showroom-exact-head.yml"
@@ -27,7 +29,7 @@ env:
 jobs:
   exact-head-showroom:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Checkout exact execution head
         uses: actions/checkout@v4
@@ -53,6 +55,7 @@ jobs:
       - name: Validate JavaScript syntax
         run: |
           node --check laws/research/methods-and-models/showroom.js
+          node --check laws/research/methods-and-models/showroom-refinement.js
           node --check verification/methods-models-showroom-browser.mjs
 
       - name: Start exact-head static server

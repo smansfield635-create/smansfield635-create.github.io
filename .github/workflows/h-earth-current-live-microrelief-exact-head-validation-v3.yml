@@ -1,0 +1,143 @@
+name: H-Earth Current-Live Microrelief Exact-Head Validation v3
+
+on:
+  push:
+    branches:
+      - agent/h-earth-current-live-additive-terrain-microrelief-001
+    paths:
+      - .github/workflows/h-earth-current-live-microrelief-exact-head-validation-v3.yml
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Parse browser modules
+        run: |
+          node --input-type=module --check < showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-microrelief-v1.js
+          node --input-type=module --check < showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js
+      - name: Install browser
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.1
+          npx playwright install --with-deps chromium
+      - name: Start exact-head server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > h-earth-microrelief-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null && exit 0
+            sleep 1
+          done
+          cat h-earth-microrelief-server.log
+          exit 1
+      - name: Compile, link, render, and verify exact selector
+        run: |
+          cat > verify-microrelief.cjs <<'NODE'
+          const fs = require('fs');
+          const { chromium } = require('playwright');
+          const expected = {
+            baseline: '../../render/persistent-live-renderer.run8e-r3c.js',
+            cp2: '../../render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js',
+            additive: '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-microrelief-v1.js'
+          };
+          async function runCase(browser, label, query, path, additive, cp2) {
+            const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+            const page = await context.newPage();
+            const consoleErrors = [], pageErrors = [], requestFailures = [];
+            page.on('console', m => { if (m.type() === 'error') consoleErrors.push(m.text()); });
+            page.on('pageerror', e => pageErrors.push(e.stack || e.message));
+            page.on('requestfailed', r => requestFailures.push({ url: r.url(), error: r.failure()?.errorText ?? null }));
+            const url = `http://127.0.0.1:4173/showroom/globe/h-earth/${query}`;
+            const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+            await page.waitForFunction(() => document.getElementById('h-earth-functional-landscape-route')?.dataset?.run8eReady === 'true' && typeof window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt === 'function', null, { timeout: 120000 });
+            const snapshot = await page.evaluate(() => {
+              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+              const root = document.getElementById('h-earth-functional-landscape-route');
+              const receipt = window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+              const gl = canvas?.getContext?.('webgl2') ?? null;
+              return { ready: root?.dataset?.run8eReady, error: root?.dataset?.run8eError, canvas: canvas instanceof HTMLCanvasElement, webgl: Boolean(gl), lost: gl?.isContextLost?.() ?? null, receipt };
+            });
+            const receipt = snapshot.receipt;
+            const failures = [];
+            if (response?.status() !== 200) failures.push(`HTTP_${response?.status()}`);
+            if (snapshot.ready !== 'true' || snapshot.error === 'true') failures.push('RUNTIME_NOT_READY');
+            if (!snapshot.canvas || !snapshot.webgl || snapshot.lost !== false) failures.push('WEBGL2_INVALID');
+            if (receipt?.selectedRendererPath !== path) failures.push(`PATH:${receipt?.selectedRendererPath}`);
+            if (receipt?.additiveVisualRequested !== additive) failures.push('ADDITIVE_FLAG');
+            if (receipt?.liveDifferential?.requested !== cp2) failures.push('CP2_FLAG');
+            if (receipt?.resources?.counters?.shaderCompileCount !== 4) failures.push(`SHADER_COMPILE_COUNT:${receipt?.resources?.counters?.shaderCompileCount}`);
+            if (receipt?.resources?.counters?.programLinkCount !== 2) failures.push(`PROGRAM_LINK_COUNT:${receipt?.resources?.counters?.programLinkCount}`);
+            if (receipt?.resources?.counters?.contextCreationCount !== 1) failures.push('CONTEXT_COUNT');
+            if (receipt?.counters?.rendererInitializationCount !== 1) failures.push('RENDERER_COUNT');
+            if ((receipt?.counters?.gpuFramebufferPresentationCount ?? 0) < 1) failures.push('NO_FRAME');
+            if (receipt?.resources?.packageUploadedOnce !== true) failures.push('PACKAGE_UPLOAD');
+            if (receipt?.resources?.resourceIdentityStable !== true) failures.push('RESOURCE_IDENTITY');
+            if (receipt?.resources?.noPostInitializationResourceCreation !== true) failures.push('POST_INIT_RESOURCE');
+            if (receipt?.resources?.noPostInitializationBufferUpload !== true) failures.push('POST_INIT_UPLOAD');
+            const blockingConsole = consoleErrors.filter(x => !/favicon|404 \(File not found\)/i.test(x));
+            const blockingRequests = requestFailures.filter(x => !/favicon/i.test(x.url));
+            if (pageErrors.length) failures.push(`PAGE:${JSON.stringify(pageErrors)}`);
+            if (blockingConsole.length) failures.push(`CONSOLE:${JSON.stringify(blockingConsole)}`);
+            if (blockingRequests.length) failures.push(`REQUEST:${JSON.stringify(blockingRequests)}`);
+            const result = { label, url, httpStatus: response?.status() ?? null, selectedRendererPath: receipt?.selectedRendererPath ?? null, additiveVisualRequested: receipt?.additiveVisualRequested ?? null, cp2Requested: receipt?.liveDifferential?.requested ?? null, shaderCompileCount: receipt?.resources?.counters?.shaderCompileCount ?? null, programLinkCount: receipt?.resources?.counters?.programLinkCount ?? null, visibleFrames: receipt?.counters?.gpuFramebufferPresentationCount ?? null, failures };
+            await context.close();
+            if (failures.length) throw new Error(`${label}:${failures.join('|')}`);
+            return result;
+          }
+          (async () => {
+            const browser = await chromium.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-webgl', '--ignore-gpu-blocklist', '--disable-dev-shm-usage'] });
+            const results = [];
+            try {
+              results.push(await runCase(browser, 'DEFAULT', '', expected.baseline, false, false));
+              results.push(await runCase(browser, 'CP2', '?cp2=round1-1f520809', expected.cp2, false, true));
+              results.push(await runCase(browser, 'ADDITIVE', '?visual=terrain-microrelief-v1', expected.additive, true, false));
+              results.push(await runCase(browser, 'ADDITIVE_PRECEDENCE', '?cp2=round1-1f520809&visual=terrain-microrelief-v1', expected.additive, true, true));
+            } finally { await browser.close(); }
+            const receipt = { receiptType: 'H_EARTH_CURRENT_LIVE_ADDITIVE_TERRAIN_MICRORELIEF_EXACT_HEAD_VALIDATION_v1', result: 'PASS', workflowRunId: process.env.GITHUB_RUN_ID, validationHead: process.env.GITHUB_SHA, javascriptSyntax: 'PASS', shaderCompile: 'PASS', shaderLink: 'PASS', selectorPrecedence: 'PASS', defaultSelectionPreserved: 'PASS', results, timestamp: new Date().toISOString() };
+            fs.writeFileSync('microrelief-validation-receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+            console.log(JSON.stringify(receipt, null, 2));
+          })().catch(error => {
+            const receipt = { receiptType: 'H_EARTH_CURRENT_LIVE_ADDITIVE_TERRAIN_MICRORELIEF_EXACT_HEAD_VALIDATION_v1', result: 'FAIL', workflowRunId: process.env.GITHUB_RUN_ID, validationHead: process.env.GITHUB_SHA, javascriptSyntax: 'PASS', error: error.stack || error.message || String(error), timestamp: new Date().toISOString() };
+            fs.writeFileSync('microrelief-validation-receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          });
+          NODE
+          node verify-microrelief.cjs
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-current-live-microrelief-exact-head-validation-v3
+          path: |
+            microrelief-validation-receipt.json
+            h-earth-microrelief-server.log
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Publish receipt to PR 524
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo '## Exact-head terrain microrelief validation v3'
+            echo
+            echo "Workflow run: \`${GITHUB_RUN_ID}\`"
+            echo
+            echo "Validation head: \`${GITHUB_SHA}\`"
+            echo
+            echo '```json'
+            cat microrelief-validation-receipt.json 2>/dev/null || printf '%s\n' '{"result":"FAIL","error":"VALIDATION_RECEIPT_MISSING"}'
+            echo '```'
+          } > microrelief-comment.md
+          gh pr comment 524 --body-file microrelief-comment.md

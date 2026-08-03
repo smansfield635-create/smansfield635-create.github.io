@@ -101,40 +101,33 @@ jobs:
           def values(pattern, text):
               return sorted(set(re.findall(pattern, text)))
 
-          base = "ef2ffdb1da7911238652f076a6b44326061493ef"
+          fork_base = "ef2ffdb1da7911238652f076a6b44326061493ef"
+          presentation_base = "c3b0dbfe531daa428d7c82a1d0cebd09e90f39fb"
           current = Path("laws/index.html").read_text(encoding="utf-8")
-          prior = subprocess.check_output(["git", "show", f"{base}:laws/index.html"], text=True)
-          rail = re.compile(r'<section class="laws-first-rail" data-laws-first-rail="".*?</section>\n?', re.S)
-          current_normalized = rail.sub("", current)
-          prior_normalized = rail.sub("", prior)
-          current_normalized = current_normalized.replace(
-              ' data-laws-root-restoration="LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_v1"', ""
-          ).replace(
-              ' data-laws-foundation-first-applied-study="true"', ""
-          ).replace(
-              'data-laws-first-rail-architecture="integrated-hero-v1"',
-              'data-laws-first-rail-architecture="persistent-compass-zone-v2"'
-          ).replace(
-              'data-laws-tablet-hero-reflow="split-composition-until-780px"',
-              'data-laws-tablet-hero-reflow="single-column-at-1100px"'
-          ).replace(
-              'LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_20260803B',
-              'LAWS_FIRST_RAIL_ARCHITECTURE_20260802B'
+          prior = subprocess.check_output(
+              ["git", "show", f"{presentation_base}:laws/index.html"], text=True
           )
-          presentation_only_delta = current_normalized != prior_normalized
+          presentation_only_delta = current != prior
           if current.count('data-laws-applied-study-disclosure="battery-health"') != 1:
               raise SystemExit("APPLIED_STUDY_DISCLOSURE_COUNT_INVALID")
           if current.count('data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"') != prior.count('data-battery-study="BATTERY_COHERENCE_HELDOUT_STUDY_v1"'):
               raise SystemExit("BATTERY_STUDY_IDENTITY_DELTA")
           if values(r'(?:href|data-route)="(/[^"]*)"', current) != values(r'(?:href|data-route)="(/[^"]*)"', prior):
               raise SystemExit("ROUTE_IDENTITY_DELTA")
-          current_formulas = [hashlib.sha256(block.encode()).hexdigest() for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)]
-          prior_formulas = [hashlib.sha256(block.encode()).hexdigest() for block in re.findall(r'<pre><code>(.*?)</code></pre>', prior, re.S)]
+          current_formulas = [
+              hashlib.sha256(block.encode()).hexdigest()
+              for block in re.findall(r'<pre><code>(.*?)</code></pre>', current, re.S)
+          ]
+          prior_formulas = [
+              hashlib.sha256(block.encode()).hexdigest()
+              for block in re.findall(r'<pre><code>(.*?)</code></pre>', prior, re.S)
+          ]
           if current_formulas != prior_formulas:
               raise SystemExit("FORMULA_IDENTITY_DELTA")
           receipt = {
               "contract": "LAWS_EXPERIENTIAL_ARCHITECTURE_RESTORATION_AUTHORITY_INVARIANTS_v1",
-              "base": base,
+              "fork_base": fork_base,
+              "presentation_base": presentation_base,
               "head": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
               "route_delta": 0,
               "owner_delta": 0,

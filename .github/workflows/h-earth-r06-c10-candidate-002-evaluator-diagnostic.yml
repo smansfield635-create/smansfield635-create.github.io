@@ -1,0 +1,82 @@
+name: H-Earth R06 C10 Candidate 002 Evaluator Diagnostic
+on:
+  push:
+    branches:
+      - control/r06-c10-prospective-candidate-002-construction-and-admission
+    paths:
+      - .github/workflows/h-earth-r06-c10-candidate-002-evaluator-diagnostic.yml
+permissions:
+  contents: write
+jobs:
+  diagnose-evaluator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run exact committed evaluator directly
+        shell: bash
+        run: |
+          set -euo pipefail
+          CANDIDATE=0064e438303e10bcdbc389ce900becc3cddf16c4
+          OUT=/tmp/r06-c10-candidate-002-evaluator-diagnostic
+          DEST=h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-002/evaluator-diagnostic
+          mkdir -p "$OUT"
+          git worktree add --detach /tmp/r06-c10-candidate-002 "$CANDIDATE"
+          set +e
+          (
+            cd /tmp/r06-c10-candidate-002
+            H_EARTH_R06_C10_GATE_INPUT_CANDIDATE="$CANDIDATE" \
+            H_EARTH_R06_C10_ADAPTER_ID=H_EARTH_R06_C10_CANDIDATE_ADMISSION_ADAPTER_v1 \
+            H_EARTH_R06_C10_ADAPTER_CANDIDATE_HEAD="$CANDIDATE" \
+            H_EARTH_R06_C10_PRIVATE_STATE_ALLOWED=false \
+            node h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-002.exact-candidate-evaluator.v1.mjs \
+              --candidate-head "$CANDIDATE" \
+              --output "$OUT/raw-evaluator-receipt.json"
+          ) > "$OUT/stdout.log" 2> "$OUT/stderr.log"
+          STATUS=$?
+          set -e
+          printf '%s\n' "$STATUS" > "$OUT/exit-code.txt"
+          test -f "$OUT/raw-evaluator-receipt.json"
+          python - <<'PY'
+          import hashlib, json, os, pathlib
+          root=pathlib.Path('/tmp/r06-c10-candidate-002-evaluator-diagnostic')
+          receipt=json.load(open(root/'raw-evaluator-receipt.json'))
+          summary={
+            'schema':'H_EARTH_R06_C10_CANDIDATE_002_EVALUATOR_DIAGNOSTIC_RETURN_v1',
+            'candidateHead':'0064e438303e10bcdbc389ce900becc3cddf16c4',
+            'candidateParent':'b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f',
+            'workflowRunId':os.environ['GITHUB_RUN_ID'],
+            'workflowRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],
+            'evaluatorExitCode':int((root/'exit-code.txt').read_text()),
+            'rawReceiptSchema':receipt.get('schema'),
+            'rawReceiptError':receipt.get('error'),
+            'rawReceiptSha256':hashlib.sha256((root/'raw-evaluator-receipt.json').read_bytes()).hexdigest(),
+            'privateStateUsed':False,
+            'manualMetadataReconstructionUsed':False
+          }
+          (root/'return.json').write_text(json.dumps(summary,indent=2)+'\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin control/r06-c10-prospective-candidate-002-construction-and-admission --force
+          git checkout -B control/r06-c10-prospective-candidate-002-construction-and-admission origin/control/r06-c10-prospective-candidate-002-construction-and-admission
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+          cp -a "$OUT"/. "$DEST"/
+          git add "$DEST"
+          git commit -m 'Record candidate 002 evaluator diagnostic'
+          git push origin HEAD:refs/heads/control/r06-c10-prospective-candidate-002-construction-and-admission
+      - name: Upload evaluator diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-candidate-002-evaluator-diagnostic
+          path: /tmp/r06-c10-candidate-002-evaluator-diagnostic/
+          if-no-files-found: error
+          retention-days: 90

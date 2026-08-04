@@ -73,32 +73,43 @@ function buildTerritoryIndex() {
   territoryIndex.replaceChildren(fragment);
 }
 
-function currentFamilyIndex() {
-  const renderedIndex = Number(app()?.resolvedScene?.native?.familyIndex);
-  if (Number.isInteger(renderedIndex)) return renderedIndex;
-  const nativeIndex = Number(app()?.nativeState?.z?.index);
-  return Number.isInteger(nativeIndex) ? nativeIndex : null;
+function currentFamilyId() {
+  return app()?.resolvedScene?.native?.familyId || app()?.nativeState?.z?.familyId || null;
+}
+
+function currentFamilyOrderIndex() {
+  const current = app();
+  const familyId = currentFamilyId();
+  if (!current || !familyId) return -1;
+  return current.catalog.findIndex(family => family.id === familyId);
 }
 
 function selectFamilyIndex(targetIndex) {
   const current = app();
-  const from = currentFamilyIndex();
-  const count = current?.registry?.familyCount || 4;
-  if (!current || !Number.isInteger(from) || !Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= count) return;
+  const count = current?.catalog?.length || current?.registry?.familyCount || 4;
+  const fromIndex = currentFamilyOrderIndex();
+  const targetFamily = current?.catalog?.[targetIndex];
+  if (!current || !Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= count || fromIndex < 0 || !targetFamily) return;
 
-  if (from === targetIndex) {
+  if (currentFamilyId() === targetFamily.id) {
     familySelectionPlan = null;
     stage.dataset.familySelectionStatus = "complete";
     synchronize("selection");
     return;
   }
 
-  const forward = (targetIndex - from + count) % count;
-  const backward = (from - targetIndex + count) % count;
+  const forward = (targetIndex - fromIndex + count) % count;
+  const backward = (fromIndex - targetIndex + count) % count;
   const direction = forward <= backward ? 1 : -1;
-  familySelectionPlan = { targetIndex, direction, count };
-  const expectedIndex = (from + direction + count) % count;
-  stage.dataset.familySelectionStatus = `moving-${from}-to-${expectedIndex}`;
+  const nextIndex = (fromIndex + direction + count) % count;
+  const nextFamilyId = current.catalog[nextIndex]?.id || "unknown";
+  familySelectionPlan = {
+    targetIndex,
+    targetFamilyId: targetFamily.id,
+    direction,
+    count
+  };
+  stage.dataset.familySelectionStatus = `moving-${currentFamilyId()}-to-${nextFamilyId}`;
   current.moveFamily(direction);
 }
 
@@ -106,21 +117,23 @@ function continueFamilySelection(source) {
   const plan = familySelectionPlan;
   if (!plan || source !== "transition") return;
   const current = app();
-  const activeIndex = Number(current?.resolvedScene?.native?.familyIndex);
-  if (!current || !Number.isInteger(activeIndex)) {
+  const activeFamilyId = current?.resolvedScene?.native?.familyId;
+  const activeIndex = current?.catalog?.findIndex(family => family.id === activeFamilyId) ?? -1;
+  if (!current || !activeFamilyId || activeIndex < 0) {
     familySelectionPlan = null;
-    stage.dataset.familySelectionStatus = "invalid-rendered-state";
+    stage.dataset.familySelectionStatus = "invalid-rendered-family";
     return;
   }
 
-  if (activeIndex === plan.targetIndex) {
+  if (activeFamilyId === plan.targetFamilyId) {
     familySelectionPlan = null;
     stage.dataset.familySelectionStatus = "complete";
     return;
   }
 
-  const expectedIndex = (activeIndex + plan.direction + plan.count) % plan.count;
-  stage.dataset.familySelectionStatus = `moving-${activeIndex}-to-${expectedIndex}`;
+  const nextIndex = (activeIndex + plan.direction + plan.count) % plan.count;
+  const nextFamilyId = current.catalog[nextIndex]?.id || "unknown";
+  stage.dataset.familySelectionStatus = `moving-${activeFamilyId}-to-${nextFamilyId}`;
   setTimeout(() => {
     if (familySelectionPlan !== plan) return;
     app()?.moveFamily(plan.direction);

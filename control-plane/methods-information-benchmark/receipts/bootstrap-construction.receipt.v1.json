@@ -1,0 +1,18 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_CONSTRUCTION_DECLARATION_v2",
+  "operationId": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_AND_ROLE_MATERIALIZATION_v1",
+  "executingFunction": "BOOTSTRAP_BUILDER",
+  "baseHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "successorHeadBinding": "COMMAND_EMITTED_EXACT_HEAD_BUILDER_RECEIPT_REQUIRED",
+  "status": "BUILDER_CANDIDATE_REQUIRES_EXACT_HEAD_COMMAND_RECEIPT",
+  "staticFileIsNotExecutionReceipt": true,
+  "permanentRoleAuthorityActivated": false,
+  "independentVerificationClaimed": false,
+  "benchmarkSemanticsMutated": false,
+  "pageMutation": false,
+  "rendererMutation": false,
+  "publicMethodsMutation": false,
+  "publicLawsMutation": false,
+  "stoppingBoundary": "RETURN_AFTER_EXACT_HEAD_BUILDER_RECEIPT_FOR_FRESH_INDEPENDENT_BOOTSTRAP_VERIFICATION",
+  "nextAuthorizedTarget": "METHODS_INFORMATION_BENCHMARK_INDEPENDENT_BOOTSTRAP_VERIFICATION_v1_ONLY_AFTER_EXACT_HEAD_BUILDER_PASS"
+}

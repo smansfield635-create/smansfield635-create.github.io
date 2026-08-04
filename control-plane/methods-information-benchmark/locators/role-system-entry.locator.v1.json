@@ -1,0 +1,10 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_LOCATOR_v1",
+  "locatorId": "ROLE_SYSTEM_ENTRY_V1",
+  "status": "ACTIVE_DISCOVERY_LOCATOR",
+  "purpose": "Enter the pre-role system and inspect activation state.",
+  "bundle": "control-plane/methods-information-benchmark/bootstrap/bootstrap-bundle.v1.json",
+  "entryCommand": "node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs role-holder-admission --locator control-plane/methods-information-benchmark/locators/role-system-entry.locator.v1.json --operation <OPERATION_ID> --room <ROOM_EXECUTION_ID> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/admission.json",
+  "conversationMemoryAuthority": false,
+  "privateStateAuthority": false
+}

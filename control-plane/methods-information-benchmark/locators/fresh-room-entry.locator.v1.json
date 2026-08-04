@@ -1,0 +1,20 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_LOCATOR_v2",
+  "locatorId": "FRESH_ROOM_ENTRY_V2",
+  "status": "ACTIVE_PRE_ROLE_DISCOVERY_LOCATOR",
+  "purpose": "Enter as a fresh Bootstrap Verifier only with authentic exact-head Builder evidence, or fail closed while permanent roles remain inactive.",
+  "bundle": "control-plane/methods-information-benchmark/bootstrap/bootstrap-bundle.v1.json",
+  "builderEvidenceRequired": [
+    "BUILDER_RECEIPT",
+    "BUILDER_FINGERPRINT",
+    "BUILDER_CANDIDATE_HEAD",
+    "BUILDER_EXECUTION_HOLDER",
+    "ORIGIN_SEED_BLOB",
+    "ORIGIN_SEED_SHA256",
+    "EXACT_CHANGED_PATH_BLOB_MAP"
+  ],
+  "verifierCommand": "node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs independent-bootstrap-verifier --builder-receipt <BUILDER_RECEIPT> --builder-fingerprint <BUILDER_FINGERPRINT> --builder-candidate-head <EXACT_HEAD> --builder-execution-holder <BUILDER_HOLDER> --verifier-execution-holder <FRESH_VERIFIER_HOLDER> --origin-seed-blob <SEED_BLOB> --origin-seed-sha256 <SEED_SHA256> --changed-path-blob-map <CHANGED_PATH_MAP> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/verification.json",
+  "permanentRoleAdmissionCommand": "node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs role-holder-admission --locator control-plane/methods-information-benchmark/locators/fresh-room-entry.locator.v1.json --operation <OPERATION_ID> --room <ROOM_EXECUTION_ID> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/admission.json",
+  "conversationMemoryAuthority": false,
+  "privateStateAuthority": false
+}

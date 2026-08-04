@@ -6,6 +6,7 @@ const inspection = document.querySelector("[data-spatial-inspection]");
 const lensButtons = Array.from(document.querySelectorAll("[data-lens-select]"));
 const territoryIndex = document.querySelector("[data-family-territory-index]");
 const inspectionTabs = Array.from(document.querySelectorAll("[data-inspection-tab]"));
+const COMPOSITION_STYLE_ID = "methods-page-specific-transform-authority";
 let bound = false;
 let inspectionObserver = null;
 let territoryBuilt = false;
@@ -13,6 +14,38 @@ let familySelectionPlan = null;
 
 function app() {
   return globalThis.__METHODS_SPATIAL_APP || null;
+}
+
+function ensureCompositionAuthorityStyle() {
+  if (document.getElementById(COMPOSITION_STYLE_ID)) return;
+  const style = document.createElement("style");
+  style.id = COMPOSITION_STYLE_ID;
+  style.dataset.contract = "METHODS_PAGE_SPECIFIC_TRANSFORM_AUTHORITY_v1";
+  style.textContent = `
+    .spatial-stage[data-composition-authority="PAGE_SPECIFIC"] .spatial-scene-root {
+      left: 0 !important;
+      top: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    .spatial-stage[data-composition-authority="PAGE_SPECIFIC"] .spatial-field {
+      left: 0 !important;
+      top: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    .spatial-stage[data-composition-authority="PAGE_SPECIFIC"] .spatial-family-plane,
+    .spatial-stage[data-composition-authority="PAGE_SPECIFIC"] .spatial-model-node,
+    .spatial-stage[data-composition-authority="PAGE_SPECIFIC"] .spatial-relationship {
+      transition-duration: 0ms !important;
+      animation-duration: 0ms !important;
+    }
+  `;
+  document.head.append(style);
 }
 
 function familyRecord(familyId) {
@@ -205,7 +238,8 @@ function planeLayout(center, profile, active, overview) {
 
 function overviewNodePosition(familyIndex, modelIndex, count, profile) {
   const centers = overviewFamilyCenters(profile);
-  const [cx, cy, cz] = centers[familyIndex] || [stageOrigin(profile).x, stageOrigin(profile).y, 0];
+  const origin = stageOrigin(profile);
+  const [cx, cy, cz] = centers[familyIndex] || [origin.x, origin.y, 0];
   const midpoint = (count - 1) / 2;
   const normalized = midpoint ? (modelIndex - midpoint) / midpoint : 0;
   const direction = familyIndex < 2 ? 1 : -1;
@@ -221,7 +255,7 @@ function browseNodePosition(descriptor, activeDescriptor, profile) {
   const sameFamily = descriptor.FAMILY_ID === activeDescriptor.FAMILY_ID;
   const delta = descriptor.modelIndex - activeDescriptor.modelIndex;
   const active = descriptor.MODEL_ID === activeDescriptor.MODEL_ID;
-  if (active) return { x: origin.x, y: origin.y + (profile.mobile ? -38 : -22), z: 60, scale: profile.mobile ? 1 : 1 };
+  if (active) return { x: origin.x, y: origin.y + (profile.mobile ? -38 : -22), z: 60, scale: 1 };
   if (!sameFamily) return { x: origin.x + (descriptor.familyIndex % 2 ? 900 : -900), y: origin.y + 170, z: 0, scale: .45 };
   const direction = Math.sign(delta) || 1;
   const distance = Math.abs(delta);
@@ -270,6 +304,8 @@ function applyRelationshipGeometry(layoutByModel, overview) {
 }
 
 function normalizeStageCoordinatePlane() {
+  ensureCompositionAuthorityStyle();
+  stage.dataset.compositionAuthority = "PAGE_SPECIFIC";
   sceneRoot.style.left = "0px";
   sceneRoot.style.top = "0px";
   sceneRoot.style.width = "100%";
@@ -301,7 +337,8 @@ function applyPageSpecificGeometry() {
     const family = current.registry.families.find(candidate => candidate.familyId === plane.dataset.familyId);
     const familyIndex = family?.familyIndex || 0;
     const active = plane.dataset.familyId === resolved.native.familyId;
-    const layout = planeLayout(centers[familyIndex] || [stageOrigin(profile).x, stageOrigin(profile).y, 0], profile, active, overview);
+    const origin = stageOrigin(profile);
+    const layout = planeLayout(centers[familyIndex] || [origin.x, origin.y, 0], profile, active, overview);
     plane.dataset.regionOrder = String(familyIndex + 1);
     plane.dataset.regionSemantics = "CANONICAL_ORDER_WITHOUT_DIRECTIONAL_AUTHORITY";
     plane.dataset.compositionRole = overview ? "DISTINCT_FAMILY_TERRITORY" : active ? "ACTIVE_FAMILY_BACKPLANE" : "DISTANT_FAMILY_CONTEXT";
@@ -418,6 +455,7 @@ initialize().catch(error => {
 globalThis.__LAWS_CHILD_STAGE_EXTENSION = Object.freeze({
   contract: "LAWS_CHILD_SPATIAL_STAGE_SHELL_v1",
   compositionContract: "METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_CORRECTION_v1",
+  transformAuthorityContract: "METHODS_PAGE_SPECIFIC_TRANSFORM_AUTHORITY_v1",
   methodsInstance: "METHODS_CATEGORICAL_CORPUS_STAGE_v1",
   globalOrigin: "LAWS_CHAMBER_AND_RESEARCH_GATEWAY",
   localOrigin: "METHODS_AND_MODELS_CORPUS",

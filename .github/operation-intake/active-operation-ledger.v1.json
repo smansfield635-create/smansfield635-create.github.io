@@ -1,23 +1,24 @@
 {
-  "activeScopes": {
-    "5ac90fe89e0b11c994986a11b8292199e6e1c61062debd6f6b75d46da9faa781": {
-      "governingHead": "a18107998f0a5d8146010aa4cc9767d1f85b1ebd",
-      "lockGeneration": 1,
-      "lockScope": "BOOTSTRAP_CAS_CERTIFICATION:30939417092:1",
-      "operationId": "REMOTE_CAS_B_30939417092_1",
-      "procedureLocatorDigest": "ddc32cd5dd819596f70ece713b0b7a810014e6bd260c96b6bed8ed5fe27f3b2c",
-      "released": false,
-      "requestDigest": "4b777c0f1c883d227257774f587b8a55bf4fccb4d3e882c598ebfaa7bfdfc81f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "5ac90fe89e0b11c994986a11b8292199e6e1c61062debd6f6b75d46da9faa781",
-      "state": "ADMITTED_LOCKED"
-    }
-  },
+  "activeScopes": {},
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
   "lockGeneration": 1,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
-  "terminalHistory": []
+  "terminalHistory": [
+    {
+      "governingHead": "a18107998f0a5d8146010aa4cc9767d1f85b1ebd",
+      "lockGeneration": 1,
+      "lockScope": "BOOTSTRAP_CAS_CERTIFICATION:30939417092:1",
+      "operationId": "REMOTE_CAS_B_30939417092_1",
+      "procedureLocatorDigest": "ddc32cd5dd819596f70ece713b0b7a810014e6bd260c96b6bed8ed5fe27f3b2c",
+      "released": true,
+      "requestDigest": "4b777c0f1c883d227257774f587b8a55bf4fccb4d3e882c598ebfaa7bfdfc81f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5ac90fe89e0b11c994986a11b8292199e6e1c61062debd6f6b75d46da9faa781",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    }
+  ]
 }

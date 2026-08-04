@@ -1,0 +1,126 @@
+{
+  "schema": "METHODS_ROLE6_DEVELOPMENTAL_BASELINE_MANIFEST_v1",
+  "manifestId": "METHODS_ROLE_6_DEVELOPMENTAL_BASELINE_BINDING_v1",
+  "primaryOperationalBaseline": {
+    "sourcePullRequest": 544,
+    "operationId": "METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_CORRECTION_v1",
+    "exactCandidateHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "predecessorHead": "332fa3056fa3768c9f26f4b2fd98f6b39c455bcf",
+    "operationalBaselineHead": "ab636b11e32253ece8e00f05993d980f747fa980",
+    "pathSetAuthority": "EXACT_15_PATH_CANDIDATE_SURFACE",
+    "paths": [
+      ".github/workflows/methods-categorical-spatial-context-equation-embodiment-v1.yml",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/OPERATOR_GUIDE.md",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/README.md",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/app.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/index.html",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-observer.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-validate.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage.css",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/observer.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/renderer.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/semantic-descriptor.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/styles.css",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/tool-admission-matrix.json",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/validate.mjs"
+    ],
+    "interpretation": "AUTHORITATIVE_CURRENT_IMPLEMENTATION_SUBJECT_NOT_REQUIRED_SUCCESSOR_STATE"
+  },
+  "canonicalCorpus": {
+    "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "path": "laws/research/methods-and-models/showroom.js",
+    "expectedFamilyCount": 4,
+    "expectedRecordCount": 25,
+    "expectedLensCount": 3,
+    "meaning": "GOVERNED_SEMANTIC_RECORDS_NOT_25_INDEPENDENT_EQUATIONS",
+    "exactBlobAndSha256": "DISCOVER_AND_REPRODUCE_FROM_EXACT_HEAD"
+  },
+  "reviewDeliveryCarrier": {
+    "sourcePullRequest": 547,
+    "sourceBranchHead": "6df1ab3993e241f5163aa01b34b33fd721477fef",
+    "mergedCarrierCommit": "cd4edd03711292bf1184081bc0e7571ac6e3ea72",
+    "path": "preview/methods-and-models/spatial-corpus-69bef391/index.html",
+    "deliveredCandidateHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "role": "REVIEW_DELIVERY_MECHANISM_NOT_PRODUCT_BASELINE"
+  },
+  "empiricalWorkflowEvidence": {
+    "workflowRun": 30877398655,
+    "workflowName": "Methods Spatial Stage Perceptual Composition Correction v1",
+    "result": "SUCCESS",
+    "artifactId": 8880027936,
+    "artifactName": "methods-categorical-spatial-context-equation-embodiment-v1-evidence",
+    "artifactDigest": "sha256:3b468c93f02580eed712f69b5b6cbe5775ab471d3d3119699bfb922211fd5bbe",
+    "artifactHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "interpretationBoundary": "PROVES_DECLARED_EXISTING_GATES_ONLY_NOT_USER_ACCEPTANCE_OR_COMPLETE_SPATIAL_SUCCESS"
+  },
+  "developmentalLineage": [
+    {
+      "stage": "PURPOSE_BUILT_SHOWROOM",
+      "pullRequest": 527,
+      "head": "c581d6757e07cdfaec868b12773bafa60ddbdf62"
+    },
+    {
+      "stage": "SHOWROOM_CONTROL_REFINEMENT",
+      "pullRequest": 528,
+      "head": "41bbc5a6898fd65eab95512cbd36054512ca5e66"
+    },
+    {
+      "stage": "CSS_3D_EUCLIDEAN_SHOWROOM",
+      "pullRequest": 531,
+      "head": "66a2105e96e84c5b482f783010779f87a90a28ee"
+    },
+    {
+      "stage": "HARNESS_STATE_REACH_CORRECTION",
+      "pullRequest": 533,
+      "head": "ea87bbc66dba6b3d87c1b98a9afbbcb78450947c"
+    },
+    {
+      "stage": "NATIVE_VISUAL_ARCHITECTURE_CANDIDATE",
+      "pullRequest": 535,
+      "head": "9b7e241c56b9b5d189df7a93705186406c607867"
+    },
+    {
+      "stage": "NATIVE_VISUAL_CONFORMANCE_EXTENSION",
+      "pullRequest": 536,
+      "head": "7baf3245ee725e66da79b585fa7d921fbde04f4d"
+    },
+    {
+      "stage": "OPERATIONAL_SPATIAL_TEMPLATE",
+      "pullRequest": 537,
+      "head": "ab636b11e32253ece8e00f05993d980f747fa980"
+    },
+    {
+      "stage": "LAWS_CHILD_SPATIAL_CONTEXT_SUCCESSOR",
+      "pullRequest": 541,
+      "head": "332fa3056fa3768c9f26f4b2fd98f6b39c455bcf"
+    },
+    {
+      "stage": "PERCEPTUAL_COMPOSITION_CORRECTION",
+      "pullRequest": 544,
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a"
+    },
+    {
+      "stage": "TEMPORARY_REVIEW_DELIVERY",
+      "pullRequest": 547,
+      "head": "6df1ab3993e241f5163aa01b34b33fd721477fef"
+    }
+  ],
+  "requiredDiscoveryOutputs": [
+    "EXACT_BASELINE_PATH_BLOB_SHA256_MAP",
+    "EXACT_CANONICAL_CORPUS_BLOB_SHA256",
+    "EXACT_REVIEW_CARRIER_BLOB_SHA256",
+    "BASELINE_PATH_SET_FINGERPRINT",
+    "DEVELOPMENTAL_LINEAGE_HEAD_EXISTENCE",
+    "REPOSITORY_SUPPORTED_MECHANISM_SIGNATURES",
+    "AUTHENTICATED_EMPIRICAL_WORKFLOW_EVIDENCE"
+  ],
+  "notEstablishedByThisManifest": [
+    "COMPLETE_CAUSAL_EXPLANATION",
+    "ALL_CURRENT_RECORD_RELATIONS_CORRECT_OR_INCORRECT",
+    "TRUE_3D_ALONE_SUFFICIENT",
+    "CURRENT_AWARD_CATEGORY_BINDING",
+    "METHODS_BENCHMARK_COMPASS_REGISTRATION",
+    "CANONICAL_25_RECORD_DEPENDENCY_GRAPH"
+  ]
+}

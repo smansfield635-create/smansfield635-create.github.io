@@ -1,0 +1,14 @@
+{
+  "schema": "METHODS_ROLE6_DEVELOPMENTAL_BASELINE_SUCCESSOR_LOCATOR_v1",
+  "entryPacket": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/methods-role6-developmental-baseline-successor.packet.v1.json",
+  "dependencyManifest": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/dependency-manifest.v1.json",
+  "baselineManifest": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/developmental-baseline-manifest.v1.json",
+  "userAnswerSet": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/user-origin-developmental-answer-set.v1.md",
+  "instrumentChamberAcceptance": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/instrument-chamber-acceptance.v1.json",
+  "builder": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-builder.mjs",
+  "verifier": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-verifier.mjs",
+  "receiptSchema": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/packet-receipt.schema.v1.json",
+  "nextAuthorizedStageAfterPass": "SEPARATE_USER_ATOMIC_ASSIGNMENT_AUTHORIZATION",
+  "assignmentPerformed": false,
+  "mergeAllowed": false
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_ROLE6_DEVELOPMENTAL_BASELINE_SUCCESSOR_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "pass",
+    "executedHead",
+    "holder",
+    "packetCanonicalSha256",
+    "dependencyClosureFingerprint",
+    "baselinePathMapFingerprint",
+    "answerSetSha256",
+    "roleAuthorityAcquired",
+    "assignmentPerformed",
+    "substantiveOperationExecuted",
+    "repairPerformed",
+    "privateStateDependency"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string"
+    },
+    "pass": {
+      "const": true
+    },
+    "executedHead": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "holder": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packetCanonicalSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "dependencyClosureFingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "baselinePathMapFingerprint": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "answerSetSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "roleAuthorityAcquired": {
+      "const": false
+    },
+    "assignmentPerformed": {
+      "const": false
+    },
+    "substantiveOperationExecuted": {
+      "const": false
+    },
+    "repairPerformed": {
+      "const": false
+    },
+    "privateStateDependency": {
+      "const": false
+    }
+  },
+  "additionalProperties": true
+}

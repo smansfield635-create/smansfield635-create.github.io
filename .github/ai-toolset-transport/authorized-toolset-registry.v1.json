@@ -1,7 +1,7 @@
 {
   "schema": "REPOSITORY_AUTHORIZED_TOOLSET_REGISTRY_v1",
   "registryId": "SMANSFIELD_AUTHORIZED_TOOLSET_REGISTRY_V1",
-  "status": "BOOTSTRAP_CANDIDATE_NOT_ACTIVE",
+  "status": "ACTIVE_CERTIFIED",
   "closedWorld": true,
   "arbitraryCommandAccepted": false,
   "movingToolingRefsAccepted": false,
@@ -107,7 +107,7 @@
       },
       "continuationRule": "CONTINUE_ONLY_AFTER_VALIDATED_PASS",
       "terminationRule": "TRANSPORT_EXECUTION_AUTHORITY_TERMINATES_AFTER_RECEIPT_RETURN_AND_CONTINUATION_DISPOSITION",
-      "descriptorActivationStatus": "CERTIFICATION_AND_SEPARATE_RATIFICATION_REQUIRED"
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

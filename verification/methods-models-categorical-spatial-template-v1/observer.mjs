@@ -31,6 +31,19 @@ async function stableSnapshot(page) {
   return page.evaluate(() => {
     const app = globalThis.__METHODS_SPATIAL_APP;
     const scene = app.resolvedScene;
+    const stage = document.querySelector("[data-spatial-stage]");
+    const activeElement = document.querySelector(".spatial-model-node[data-active='true']");
+    const stageRect = stage.getBoundingClientRect();
+    const activeRect = activeElement.getBoundingClientRect();
+    const intersectionWidth = Math.max(0, Math.min(stageRect.right, activeRect.right) - Math.max(stageRect.left, activeRect.left));
+    const intersectionHeight = Math.max(0, Math.min(stageRect.bottom, activeRect.bottom) - Math.max(stageRect.top, activeRect.top));
+    const activeArea = Math.max(1, activeRect.width * activeRect.height);
+    const activeCenterX = activeRect.left + activeRect.width / 2;
+    const activeCenterY = activeRect.top + activeRect.height / 2;
+    const stageCenterX = stageRect.left + stageRect.width / 2;
+    const stageCenterY = stageRect.top + stageRect.height / 2;
+    const visibleNodes = scene.nodes.filter(node => node.visible);
+
     return {
       native: scene.native,
       cameraMode: app.cameraMode,
@@ -39,13 +52,26 @@ async function stableSnapshot(page) {
       activeModel: scene.activeDescriptor.modelId,
       activeFamily: scene.activeDescriptor.familyId,
       visibleCluster: scene.visibleCluster,
-      lifecycles: Object.fromEntries(scene.nodes.filter(node => node.visible).map(node => [node.modelId, node.lifecycle])),
-      detailClasses: Object.fromEntries(scene.nodes.filter(node => node.visible).map(node => [node.modelId, node.detailClass])),
+      lifecycles: Object.fromEntries(visibleNodes.map(node => [node.modelId, node.lifecycle])),
+      detailClasses: Object.fromEntries(visibleNodes.map(node => [node.modelId, node.detailClass])),
+      lifecycleCounts: Object.fromEntries(["ACTIVE_MODEL", "NEAR_NEIGHBOR", "FAMILY_CONTEXT", "DISTANT_CORPUS"].map(name => [name, visibleNodes.filter(node => node.lifecycle === name).length])),
+      activePresentation: {
+        visibleRatio: (intersectionWidth * intersectionHeight) / activeArea,
+        area: activeArea,
+        width: activeRect.width,
+        height: activeRect.height,
+        centerOffsetX: Math.abs(activeCenterX - stageCenterX) / Math.max(1, stageRect.width),
+        centerOffsetY: Math.abs(activeCenterY - stageCenterY) / Math.max(1, stageRect.height),
+        top: activeRect.top,
+        left: activeRect.left,
+        text: activeElement.querySelector("[data-spatial-model-text]")?.textContent?.trim() || ""
+      },
       receiptCount: app.receipts.length,
       registry: {
         familyCount: app.registry.familyCount,
         modelCount: app.registry.modelCount,
-        lensCount: app.registry.lensCount
+        lensCount: app.registry.lensCount,
+        registryVersion: app.registry.registryVersion
       }
     };
   });
@@ -126,7 +152,7 @@ async function runViewport(label, viewport) {
   await capture(page, `${label}-07-exact-return`);
 
   await page.close();
-  return { overview, browse, returned, returnReceipt };
+  return { overview, browse, modelMoved, lensMoved, familyMoved, returned, returnReceipt };
 }
 
 try {
@@ -134,18 +160,27 @@ try {
   const mobile = await runViewport("mobile-390x844", { width: 390, height: 844, deviceScaleFactor: 1 });
 
   const overviewBrowseDiffer = snapshot => JSON.stringify(snapshot.overview.camera) !== JSON.stringify(snapshot.browse.camera) && snapshot.overview.cameraMode === "overview" && snapshot.browse.cameraMode === "browse";
-  const hasSpatialLifecycle = snapshot => {
-    const values = Object.values(snapshot.browse.lifecycles);
-    return values.includes("ACTIVE_MODEL") && values.includes("NEAR_NEIGHBOR") && values.includes("DISTANT_CORPUS");
-  };
+  const hasSpatialLifecycle = snapshot => snapshot.browse.lifecycleCounts.ACTIVE_MODEL === 1 && snapshot.browse.lifecycleCounts.NEAR_NEIGHBOR >= 2 && snapshot.browse.lifecycleCounts.DISTANT_CORPUS >= 1;
+  const activeContained = snapshot => snapshot.overview.activePresentation.visibleRatio >= 0.95 && snapshot.browse.activePresentation.visibleRatio >= 0.98;
+  const browseFocusesActive = snapshot => snapshot.browse.activePresentation.area >= snapshot.overview.activePresentation.area * 1.2 && snapshot.browse.activePresentation.centerOffsetX <= 0.2 && snapshot.browse.activePresentation.centerOffsetY <= 0.25;
+  const lensIsPerceptible = snapshot => snapshot.modelMoved.native.lensId !== snapshot.lensMoved.native.lensId && snapshot.modelMoved.activePresentation.text !== snapshot.lensMoved.activePresentation.text && JSON.stringify(snapshot.modelMoved.camera) !== JSON.stringify(snapshot.lensMoved.camera) && Math.abs(snapshot.modelMoved.activePresentation.top - snapshot.lensMoved.activePresentation.top) >= 8;
+  const familyMovesField = snapshot => snapshot.lensMoved.native.familyId !== snapshot.familyMoved.native.familyId && snapshot.lensMoved.activeModel !== snapshot.familyMoved.activeModel && JSON.stringify(snapshot.lensMoved.camera.target) !== JSON.stringify(snapshot.familyMoved.camera.target);
   const exactReturn = run => run.returnReceipt?.exactNativeReturn && run.returnReceipt?.exactCameraRoleReturn && run.returnReceipt?.exactCenteredTargetReturn && run.returnReceipt?.exactVisibleClusterReturn;
 
   result.checks = {
     registryOperational: desktop.overview.registry.familyCount === 4 && desktop.overview.registry.modelCount === 25 && desktop.overview.registry.lensCount === 3,
     desktopOverviewBrowseDistinct: overviewBrowseDiffer(desktop),
     mobileOverviewBrowseDistinct: overviewBrowseDiffer(mobile),
+    desktopActiveExhibitContained: activeContained(desktop),
+    mobileActiveExhibitContained: activeContained(mobile),
+    desktopBrowseFocusesActive: browseFocusesActive(desktop),
+    mobileBrowseFocusesActive: browseFocusesActive(mobile),
     desktopSpatialLifecycleVisible: hasSpatialLifecycle(desktop),
     mobileSpatialLifecycleVisible: hasSpatialLifecycle(mobile),
+    desktopLensTransitionPerceptible: lensIsPerceptible(desktop),
+    mobileLensTransitionPerceptible: lensIsPerceptible(mobile),
+    desktopFamilyTransitionSpatial: familyMovesField(desktop),
+    mobileFamilyTransitionSpatial: familyMovesField(mobile),
     desktopExactReturn: Boolean(exactReturn(desktop)),
     mobileExactReturn: Boolean(exactReturn(mobile)),
     desktopTransitionReceipts: desktop.returned.receiptCount >= 6,

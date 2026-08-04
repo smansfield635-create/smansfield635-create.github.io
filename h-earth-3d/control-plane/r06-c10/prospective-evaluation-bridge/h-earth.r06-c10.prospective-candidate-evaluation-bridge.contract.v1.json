@@ -1,0 +1,65 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_CONTRACT_v1",
+  "instrumentId": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_v1",
+  "status": "CONSTRUCTION_CANDIDATE_PENDING_CONFORMANCE",
+  "purpose": "Generate and validate prospective candidate-bound evaluator inputs without evaluating, admitting, mutating, or retuning the terrain candidate.",
+  "placement": {
+    "precededBy": "BOUNDED_TERRAIN_CANDIDATE_CONSTRUCTION",
+    "followedBy": "SEPARATE_GATE_AWARE_ADMISSION_SUCCESSOR_COMMIT_AND_EXISTING_EXACT_GATE_EXECUTION",
+    "lateStageAdditiveInstrumentation": true,
+    "earlierTerrainInstrumentationMutationRequired": false
+  },
+  "identityModel": {
+    "subjectCandidateHead": "IMMUTABLE_TERRAIN_SUBJECT",
+    "evaluationToolingHead": "COMMIT_CONTAINING_BRIDGE_AND_BOUNDED_RUNTIME_REPAIR",
+    "admissionSuccessorHead": "NOT_CREATED_BY_THIS_INSTRUMENT"
+  },
+  "requiredTerrainIdentity": {
+    "candidateTerrainBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+    "successorTerrainFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+    "geometryConstructorBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+    "mismatchDisposition": "FAIL_CLOSED_AS_UNAUTHORIZED_TERRAIN_MUTATION"
+  },
+  "generatedArtifacts": [
+    "normalized-request.json",
+    "integration-manifest.json",
+    "traversal-manifest.json",
+    "camera-manifest.json",
+    "evaluator-input-document.json",
+    "evidence-package.json",
+    "bridge-execution-receipt.json"
+  ],
+  "explicitlyProhibitedOutputsAndActions": [
+    "GATE_RECEIPT",
+    "REPRODUCTION_FINGERPRINT",
+    "ASSERTION_PASS_OR_FAIL_RESULT",
+    "ADMISSION_SUCCESSOR_COMMIT",
+    "CANDIDATE_TERRAIN_MUTATION",
+    "TERRAIN_RETUNING",
+    "EXISTING_GATE_INVOCATION",
+    "ROLE_3_REPRODUCTION"
+  ],
+  "failBeforeEvaluatorExecution": [
+    "MISSING_TRAVERSAL_POINTS",
+    "MISSING_CAMERA_RECORDS",
+    "MISSING_CHANGED_PATHS",
+    "MISSING_EVIDENCE_MEMBERS",
+    "MISSING_ROLLBACK_IDENTITY",
+    "MISSING_REQUEST_FIELD",
+    "CANDIDATE_BLOB_MISMATCH"
+  ],
+  "evaluatorContract": {
+    "assertionSetId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_ASSERTIONS_28_v1",
+    "expectedAssertionCount": 28,
+    "bridgeProducesAssertions": false,
+    "bridgeInvokesEvaluator": false,
+    "measurementSemanticsChangeAuthorized": false
+  },
+  "operationalVerificationDefinition": {
+    "positiveFixture": "DETERMINISTIC_SEVEN_ARTIFACT_OUTPUT",
+    "negativeFixtures": "EXACT_NAMED_FIELD_AND_SOURCE_FAILURES",
+    "rawUndefinedLengthFailurePermitted": false,
+    "candidateExecutionRequired": false,
+    "existingGateExecutionRequired": false
+  }
+}

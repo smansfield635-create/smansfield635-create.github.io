@@ -1,5 +1,5 @@
 export const SPATIAL_DESCRIPTOR_SCHEMA_VERSION = "1.0.0";
-export const SPATIAL_REGISTRY_VERSION = "1.0.0";
+export const SPATIAL_REGISTRY_VERSION = "1.0.1";
 export const PAGE_EXPRESSION_PROFILE_VERSION = "neutral-structural@1.0.0";
 
 export const LENSES = Object.freeze([
@@ -15,14 +15,21 @@ function freezeVector(vector) {
   return Object.freeze(vector.map(Number));
 }
 
+function nearestNeighborIndexes(modelCount, modelIndex, limit = 2) {
+  return Array.from({ length: modelCount }, (_, index) => index)
+    .filter(index => index !== modelIndex)
+    .sort((left, right) => Math.abs(left - modelIndex) - Math.abs(right - modelIndex) || left - right)
+    .slice(0, Math.min(limit, Math.max(0, modelCount - 1)));
+}
+
 function descriptorForModel(family, familyIndex, model, modelIndex) {
   const modelCount = family.models.length;
   const centeredIndex = modelIndex - (modelCount - 1) / 2;
   const familyZ = -familyIndex * FAMILY_DEPTH;
   const modelX = centeredIndex * MODEL_SPACING;
-  const neighborIds = [];
-  if (modelIndex > 0) neighborIds.push(family.models[modelIndex - 1].id);
-  if (modelIndex < modelCount - 1) neighborIds.push(family.models[modelIndex + 1].id);
+  const neighborIndexes = nearestNeighborIndexes(modelCount, modelIndex, 2);
+  const neighborIds = neighborIndexes.map(index => family.models[index].id);
+  const relationshipClasses = neighborIndexes.map(index => Math.abs(index - modelIndex) === 1 ? "SAME_FAMILY_ADJACENT" : "SAME_FAMILY_NEAR");
 
   const fieldPosition = freezeVector([modelX, 0, familyZ]);
   return Object.freeze({
@@ -36,8 +43,8 @@ function descriptorForModel(family, familyIndex, model, modelIndex) {
     modelPosition: freezeVector([modelX, 0, 0]),
     lensRelation: Object.freeze(Object.fromEntries(LENSES.map(lens => [lens.id, lens.relation]))),
     neighborIds: Object.freeze(neighborIds),
-    relationshipClasses: Object.freeze(neighborIds.map(() => "SAME_FAMILY_ADJACENT")),
-    overviewCameraTarget: freezeVector([0, 0, -(FAMILY_DEPTH * 1.5)]),
+    relationshipClasses: Object.freeze(relationshipClasses),
+    overviewCameraTarget: freezeVector([modelX, 0, -(FAMILY_DEPTH * 1.5)]),
     browseCameraTarget: fieldPosition,
     inspectionCameraTarget: freezeVector([modelX, 0, familyZ + 2]),
     baseVisualWeight: 1,

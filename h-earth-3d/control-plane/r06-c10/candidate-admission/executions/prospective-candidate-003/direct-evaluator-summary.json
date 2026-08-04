@@ -1,0 +1,10 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_003_DIRECT_EVALUATOR_SUMMARY_v1",
+  "exitCode": 1,
+  "receiptSchema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATOR_FAILURE_v1",
+  "overallResult": null,
+  "passCount": null,
+  "failCount": null,
+  "exactFailIds": [],
+  "error": "Cannot read properties of undefined (reading 'length')"
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATOR_FAILURE_v1",
+  "candidateHead": null,
+  "parentHead": null,
+  "evaluatorId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_003_EXACT_EVALUATOR_v1",
+  "gateInputCandidateHead": "1381ab6c3e3f144dea52cbdeafa82657cfe982e8",
+  "result": "FAIL_CLOSED",
+  "error": "Cannot read properties of undefined (reading 'length')",
+  "privateStateUsed": false,
+  "conversationMemoryRequired": false
+}

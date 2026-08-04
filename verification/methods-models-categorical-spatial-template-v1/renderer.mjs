@@ -93,7 +93,7 @@ export class MethodsSpatialRenderer extends EventTarget {
           <span class="spatial-model-node__family">${escapeHtml(model?.familyLabel || descriptor.familyId)}</span>
           <h2>${escapeHtml(model?.title || descriptor.modelId)}</h2>
           <div class="spatial-model-node__equation">${model?.equation || ""}</div>
-          <p>${escapeHtml(model?.statement || "")}</p>
+          <p data-spatial-model-text>${escapeHtml(model?.statement || "")}</p>
           <span class="spatial-model-node__coordinate">X ${String(descriptor.modelIndex + 1).padStart(2, "0")} · Z ${String(descriptor.familyIndex + 1).padStart(2, "0")}</span>
         </div>`;
       fragment.append(node);
@@ -135,13 +135,17 @@ export class MethodsSpatialRenderer extends EventTarget {
     const nodeById = new Map(resolved.nodes.map(node => [node.modelId, node]));
     this.field.querySelectorAll(".spatial-model-node").forEach(element => {
       const node = nodeById.get(element.dataset.modelId);
+      const model = this.models.get(element.dataset.modelId);
       element.hidden = !node?.visible;
       element.dataset.lifecycle = node?.lifecycle || "DISTANT_CORPUS";
       element.dataset.detailClass = node?.detailClass || "SILHOUETTE";
       element.dataset.active = String(Boolean(node?.active));
+      element.dataset.lens = resolved.native.lensId;
       element.setAttribute("aria-hidden", String(!node?.visible));
       element.tabIndex = node?.active ? 0 : -1;
       if (node?.position) element.style.transform = nodeTransform(node.position);
+      const text = element.querySelector("[data-spatial-model-text]");
+      if (text) text.textContent = node?.active ? (model?.[resolved.native.lensId] || model?.statement || "") : (model?.statement || "");
     });
 
     this.field.querySelectorAll(".spatial-family-plane").forEach(plane => {

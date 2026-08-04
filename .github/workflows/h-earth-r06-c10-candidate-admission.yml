@@ -5,6 +5,7 @@ on:
       - control/r06-c10-prospective-candidate-002-construction-and-admission
     paths-ignore:
       - h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-002/**
+      - .github/workflows/h-earth-r06-c10-candidate-002-evaluator-diagnostic.yml
 permissions:
   contents: write
 concurrency:

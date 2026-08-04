@@ -1,0 +1,57 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "METHODS_INFORMATION_BENCHMARK_BOOTSTRAP",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "governance/methods-information-benchmark-bootstrap-v1/"
+  ],
+  "ownedExactPaths": [
+    ".github/workflows/methods-information-benchmark-pre-role-bootstrap-v1.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/methods-information-benchmark-bootstrap/entrypoint.v1.json",
+  "authorityBoundary": [
+    "NONPRODUCT_ROLE_GENESIS_INSTRUMENT_ONLY",
+    "NO_METHODS_PAGE_OR_RENDERER_MUTATION",
+    "NO_PERMANENT_ROLE_AUTHORITY_BEFORE_ACTIVATION_RECEIPT",
+    "NO_MERGE_OR_RELEASE_AUTHORITY",
+    "ACTIVATION_REQUIRES_EXPLICIT_USER_ACCEPTANCE_RECEIPT"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "governance/methods-information-benchmark-bootstrap-v1/AGENTS.md",
+    "governance/methods-information-benchmark-bootstrap-v1/origin-seed.v1.json"
+  ],
+  "registries": [
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/execution-backends.v1.json",
+    "governance/methods-information-benchmark-bootstrap-v1/registries/operational-functions.v1.json",
+    "governance/methods-information-benchmark-bootstrap-v1/registries/role-contracts.v1.json",
+    "governance/methods-information-benchmark-bootstrap-v1/registries/conflict-matrix.v1.json"
+  ],
+  "procedures": {
+    "validationCommand": "node governance/methods-information-benchmark-bootstrap-v1/tools/validate-all.mjs --output-dir <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>",
+    "builderCommand": "node governance/methods-information-benchmark-bootstrap-v1/tools/bootstrap-builder.mjs --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/builder",
+    "verifierCommand": "node governance/methods-information-benchmark-bootstrap-v1/tools/bootstrap-verifier.mjs --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/verifier",
+    "activationCommand": "node governance/methods-information-benchmark-bootstrap-v1/tools/activation-gate.mjs --builder <BUILDER_RECEIPT> --verifier <VERIFIER_RECEIPT> --comparison <COMPARISON_RECEIPT> --acceptance <USER_ACCEPTANCE_RECEIPT> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/activation.json",
+    "assignmentCommand": "node governance/methods-information-benchmark-bootstrap-v1/tools/role-holder-admission.mjs --ledger <LEDGER_PATH> --expected-head <EXPECTED_LEDGER_HEAD> --role ROLE_6 --holder <EXECUTION_ID> --activation <ACTIVATION_RECEIPT> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/assignment.json"
+  },
+  "localExecution": {
+    "backendId": "LOCAL_CLEAN_GIT",
+    "requiresCleanWorktree": true,
+    "runtime": "NODE_22_OR_NEWER"
+  },
+  "githubActionsExecution": {
+    "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+    "workflow": ".github/workflows/methods-information-benchmark-pre-role-bootstrap-v1.yml",
+    "artifact": "methods-information-benchmark-pre-role-bootstrap-v1-evidence"
+  },
+  "stoppingRules": [
+    "ORIGIN_SEED_MISSING_OR_HASH_MISMATCH",
+    "ROUTER_DISPOSITION_NOT_PASS",
+    "BUILDER_AND_VERIFIER_EXECUTION_HOLDER_COLLISION",
+    "TOPOLOGY_OR_FINGERPRINT_DIVERGENCE",
+    "OPEN_FATAL_FINDING",
+    "USER_ACCEPTANCE_RECEIPT_MISSING",
+    "STALE_ASSIGNMENT_LEDGER_HEAD"
+  ]
+}

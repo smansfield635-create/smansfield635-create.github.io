@@ -1,0 +1,61 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "H_EARTH",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "h-earth-3d/",
+    "showroom/globe/h-earth/"
+  ],
+  "ownedExactPaths": [
+    ".github/workflows/h-earth-repository-registry-preflight.yml",
+    ".github/workflows/h-earth-r06-c10-candidate-admission.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+  "authorityBoundary": [
+    "THIS_ENTRYPOINT_ROUTES_AND_DOES_NOT_CREATE_MUTATION_AUTHORITY",
+    "H_EARTH_REGISTRY_AND_NARROWER_GOVERNANCE_REMAIN_CONTROLLING",
+    "STOP_RATHER_THAN_INFER_MISSING_AUTHORITY_OR_CRITICAL_EVIDENCE"
+  ],
+  "requiredInstructions": [
+    "h-earth-3d/AGENTS.md",
+    "showroom/globe/h-earth/AGENTS.md"
+  ],
+  "registries": [
+    "h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+    "h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
+    "h-earth-3d/registry/h-earth.repository-registry.github-instruction.md",
+    "h-earth-3d/registry/H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1.md"
+  ],
+  "procedures": {
+    "automaticPreflight": {
+      "purpose": "Resolve governed H-Earth paths before substantive work.",
+      "command": "node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs --path <repository-path> [--path <repository-path> ...]",
+      "mutationFlag": "--mutation-intent",
+      "workflow": ".github/workflows/h-earth-repository-registry-preflight.yml",
+      "receiptClass": "H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_RECEIPT"
+    },
+    "r06c10ExactCandidateAdmission": {
+      "locator": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.successor-room-candidate-admission.locator.v1.json",
+      "localCommand": "node h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs --candidate <EXACT_CANDIDATE_HEAD> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/gate-receipt.json",
+      "githubActionsWorkflow": ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
+      "receiptSchema": "h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.exact-candidate-admission.receipt.schema.v1.json",
+      "manualMetadataReconstructionAllowed": false
+    }
+  },
+  "localExecution": {
+    "precondition": "CLEAN_NETWORK_CAPABLE_GIT_CHECKOUT",
+    "fallbackWhenUnavailable": "USE_DECLARED_GITHUB_ACTIONS_WORKFLOW"
+  },
+  "githubActionsExecution": {
+    "candidateAdmissionWorkflow": ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
+    "requiredArtifact": "h-earth-r06-c10-candidate-admission-receipt",
+    "sameGateRequired": true
+  },
+  "stoppingRules": [
+    "REGISTRY_BLOCK_OR_STOP_DISPOSITION",
+    "MISSING_PROJECT_AUTHORITY",
+    "MISSING_REQUIRED_RECEIPT",
+    "PRIVATE_OR_DIRTY_EXECUTION_STATE",
+    "MANUAL_RECONSTRUCTION_SUBSTITUTED_FOR_DECLARED_EXECUTION"
+  ]
+}

@@ -6,6 +6,11 @@ on:
       - recovery/r06-c10-c5-records-001
     paths:
       - .github/workflows/h-earth-r06-c10-c5-record-recovery-carrier.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/h-earth-r06-c10-c5-record-recovery-carrier.yml
 
 permissions:
   contents: read

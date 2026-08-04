@@ -1,0 +1,191 @@
+name: Methods Role 6 Operation Packet Carrier
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/methods-information-benchmark-role6-operation-packet-carrier.yml'
+      - 'control-plane/methods-information-benchmark/role6-operation-packet/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  packet-builder:
+    name: role-neutral-packet-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact packet carrier head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact carrier and immutable infrastructure ancestry
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          ACTUAL_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$ACTUAL_HEAD" = "$EXPECTED_HEAD"
+          git merge-base --is-ancestor 0d601cb71dac863130b934f387425085fdf54e52 "$ACTUAL_HEAD"
+          printf '%s\n' "$EXPECTED_HEAD" > "$RUNNER_TEMP/EXPECTED_PACKET_CARRIER_HEAD"
+          printf '%s\n' "$ACTUAL_HEAD" > "$RUNNER_TEMP/EXECUTED_PACKET_CARRIER_HEAD"
+          cmp "$RUNNER_TEMP/EXPECTED_PACKET_CARRIER_HEAD" "$RUNNER_TEMP/EXECUTED_PACKET_CARRIER_HEAD"
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate packet source syntax
+        run: |
+          set -euo pipefail
+          node --check control-plane/methods-information-benchmark/role6-operation-packet/packet-builder.mjs
+          node --check control-plane/methods-information-benchmark/role6-operation-packet/packet-verifier.mjs
+
+      - name: Authenticate external dependency identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['REPOSITORY']; token=os.environ['GH_TOKEN']
+          def get(path):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}{path}',
+                  headers={
+                      'Authorization':f'Bearer {token}',
+                      'Accept':'application/vnd.github+json',
+                      'X-GitHub-Api-Version':'2022-11-28',
+                      'User-Agent':'methods-role6-packet-carrier'
+                  })
+              with urllib.request.urlopen(req) as response: return json.load(response)
+          pr553=get('/pulls/553'); pr554=get('/pulls/554')
+          assert pr553['head']['sha']=='ffec9a660f93f9d34efda9a6aeaea41105254a25'
+          assert pr554['head']['sha']=='0d601cb71dac863130b934f387425085fdf54e52'
+          assert pr553['merged'] is False and pr554['merged'] is False
+          expected={
+            8899858820:('sha256:aadf696bcfff3fb79248214d0e7aab25998fa7dd180e18874645bed3e23fbd7a','ffec9a660f93f9d34efda9a6aeaea41105254a25'),
+            8902651467:('sha256:1f5027dc145dcc0dae1f425c1775efa8a55a3be27d53fde6b3b77937830e2605','0d601cb71dac863130b934f387425085fdf54e52'),
+            8902666009:('sha256:aa929471c5985a55715b1525e343fbbbc012ab86753fe24386a3126f43a945f5','0d601cb71dac863130b934f387425085fdf54e52')}
+          evidence={'prs':{'553':pr553['head']['sha'],'554':pr554['head']['sha']},'artifacts':{}}
+          for aid,(digest,head) in expected.items():
+              artifact=get(f'/actions/artifacts/{aid}')
+              assert artifact['digest']==digest
+              assert artifact['workflow_run']['head_sha']==head
+              assert artifact['expired'] is False
+              evidence['artifacts'][str(aid)]={'digest':artifact['digest'],'headSha':artifact['workflow_run']['head_sha'],'expired':artifact['expired'],'name':artifact['name']}
+          with open(os.path.join(os.environ['RUNNER_TEMP'],'external-dependency-api-evidence.json'),'w') as f:
+              json.dump(evidence,f,indent=2); f.write('\n')
+          PY
+
+      - name: Build immutable Role 6 packet without assignment
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          PACKET_BUILDER_HOLDER: GITHUB_ACTIONS_ROLE6_PACKET_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/role6-operation-packet/packet-builder.mjs \
+            --expected-head "$EXPECTED_HEAD" \
+            --holder "$PACKET_BUILDER_HOLDER" \
+            --output-dir "$RUNNER_TEMP/packet-builder"
+          python - <<'PY'
+          import json, os
+          r=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'packet-builder','packet-builder-receipt.json')))
+          assert r['pass'] is True
+          assert r['roleAuthorityAcquired'] is False
+          assert r['assignmentPerformed'] is False
+          assert r['assignmentAuthorizationIssued'] is False
+          assert r['substantiveOperationExecuted'] is False
+          assert r['requiredRole6OutputCount']==20
+          assert r['authorizedRole6ChangedPathCount']==22
+          PY
+
+      - name: Upload packet Builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-operation-packet-builder-evidence
+          path: |
+            ${{ runner.temp }}/packet-builder
+            ${{ runner.temp }}/external-dependency-api-evidence.json
+            ${{ runner.temp }}/EXPECTED_PACKET_CARRIER_HEAD
+            ${{ runner.temp }}/EXECUTED_PACKET_CARRIER_HEAD
+          if-no-files-found: error
+          retention-days: 30
+
+  fresh-packet-verifier:
+    name: fresh-role-neutral-packet-verifier
+    needs: packet-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact packet carrier head independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact clean verifier checkout
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          git merge-base --is-ancestor 0d601cb71dac863130b934f387425085fdf54e52 "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain)"
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download authentic packet Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-operation-packet-builder-evidence
+          path: ${{ runner.temp }}/authentic-builder-evidence
+
+      - name: Independently reproduce packet and dependency closure
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          PACKET_VERIFIER_HOLDER: GITHUB_ACTIONS_ROLE6_PACKET_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          BUILDER_RECEIPT="$(find "$RUNNER_TEMP/authentic-builder-evidence" -name packet-builder-receipt.json -type f -print -quit)"
+          test -n "$BUILDER_RECEIPT"
+          mkdir -p "$RUNNER_TEMP/packet-verifier"
+          node control-plane/methods-information-benchmark/role6-operation-packet/packet-verifier.mjs \
+            --expected-head "$EXPECTED_HEAD" \
+            --builder-receipt "$BUILDER_RECEIPT" \
+            --holder "$PACKET_VERIFIER_HOLDER" \
+            --output "$RUNNER_TEMP/packet-verifier/packet-verifier-receipt.json"
+          python - <<'PY'
+          import json, os
+          r=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'packet-verifier','packet-verifier-receipt.json')))
+          assert r['pass'] is True
+          assert r['distinctExecutionHolders'] is True
+          assert r['builderVerifierPacketHashMatch'] is True
+          assert r['builderVerifierDependencyClosureMatch'] is True
+          assert r['repairPerformed'] is False
+          assert r['privateStateDependency'] is False
+          assert r['roleAuthorityAcquired'] is False
+          assert r['assignmentPerformed'] is False
+          assert r['assignmentAuthorizationIssued'] is False
+          assert r['substantiveOperationExecuted'] is False
+          assert r['nextAuthorizedStage']=='SEPARATE_USER_ATOMIC_ASSIGNMENT_AUTHORIZATION'
+          PY
+          test -z "$(git status --porcelain)"
+
+      - name: Upload fresh packet Verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-operation-packet-verifier-evidence
+          path: ${{ runner.temp }}/packet-verifier
+          if-no-files-found: error
+          retention-days: 30

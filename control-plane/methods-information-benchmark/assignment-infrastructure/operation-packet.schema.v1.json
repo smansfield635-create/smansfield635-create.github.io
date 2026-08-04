@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_BOUNDED_OPERATION_PACKET_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "packetId", "roleId", "operationId", "purpose", "inputs", "outputs", "may", "mayNot", "returnRequired", "productMutationAllowed", "selfRatificationAllowed", "scopeExpansionAllowed", "mergeAllowed"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_BOUNDED_OPERATION_PACKET_v1"},
+    "packetId": {"type": "string", "minLength": 1},
+    "roleId": {"type": "string", "minLength": 1},
+    "operationId": {"type": "string", "minLength": 1},
+    "purpose": {"type": "string", "minLength": 1},
+    "inputs": {"type": "array"},
+    "outputs": {"type": "array", "minItems": 1},
+    "may": {"type": "array"},
+    "mayNot": {"type": "array"},
+    "returnRequired": {"const": true},
+    "productMutationAllowed": {"const": false},
+    "selfRatificationAllowed": {"const": false},
+    "scopeExpansionAllowed": {"const": false},
+    "mergeAllowed": {"const": false}
+  },
+  "additionalProperties": true
+}

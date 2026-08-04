@@ -1,0 +1,41 @@
+name: R06 C10 Candidate 004 Launch Witness
+
+on:
+  push:
+    branches:
+      - control/r06-c10-prospective-candidate-004-construction-and-admission
+    paths-ignore:
+      - h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-004/**
+
+permissions:
+  contents: write
+
+jobs:
+  witness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Commit workflow launch identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEST='h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-004'
+          mkdir -p "$DEST"
+          cat > "$DEST/workflow-launch.json" <<JSON
+          {
+            "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_004_WORKFLOW_LAUNCH_v1",
+            "workflow": "${GITHUB_WORKFLOW}",
+            "workflowRunId": "${GITHUB_RUN_ID}",
+            "workflowRunAttempt": "${GITHUB_RUN_ATTEMPT}",
+            "triggerCommit": "${GITHUB_SHA}",
+            "result": "WORKFLOW_LAUNCHED"
+          }
+          JSON
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$DEST/workflow-launch.json"
+          git commit -m 'Record candidate 004 workflow launch'
+          git push origin HEAD:refs/heads/control/r06-c10-prospective-candidate-004-construction-and-admission

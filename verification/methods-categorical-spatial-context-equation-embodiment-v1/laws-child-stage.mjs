@@ -9,7 +9,7 @@ const inspectionTabs = Array.from(document.querySelectorAll("[data-inspection-ta
 let bound = false;
 let inspectionObserver = null;
 let territoryBuilt = false;
-let familySelectionToken = 0;
+let familySelectionPlan = null;
 
 function app() {
   return globalThis.__METHODS_SPATIAL_APP || null;
@@ -74,48 +74,10 @@ function buildTerritoryIndex() {
 }
 
 function currentFamilyIndex() {
-  const nativeIndex = Number(app()?.nativeState?.z?.index);
-  if (Number.isInteger(nativeIndex)) return nativeIndex;
   const renderedIndex = Number(app()?.resolvedScene?.native?.familyIndex);
-  return Number.isInteger(renderedIndex) ? renderedIndex : null;
-}
-
-function advanceFamilySelection(targetIndex, direction, token) {
-  if (token !== familySelectionToken) return;
-  const current = app();
-  const activeIndex = currentFamilyIndex();
-  const count = current?.registry?.familyCount || 4;
-  if (!current || !Number.isInteger(activeIndex)) {
-    stage.dataset.familySelectionStatus = "invalid-native-state";
-    return;
-  }
-  if (activeIndex === targetIndex) {
-    stage.dataset.familySelectionStatus = "settling";
-    current.whenStable().then(() => {
-      if (token !== familySelectionToken) return;
-      synchronize();
-      stage.dataset.familySelectionStatus = "complete";
-    }).catch(error => {
-      stage.dataset.familySelectionStatus = "render-failure";
-      console.error(error);
-    });
-    return;
-  }
-
-  const expectedIndex = (activeIndex + direction + count) % count;
-  stage.dataset.familySelectionStatus = `moving-${activeIndex}-to-${expectedIndex}`;
-  let timeoutId = 0;
-  const onReceipt = () => {
-    clearTimeout(timeoutId);
-    if (token !== familySelectionToken) return;
-    setTimeout(() => advanceFamilySelection(targetIndex, direction, token), 0);
-  };
-  globalThis.addEventListener("METHODS_MODELS_RENDERER_TRANSITION_RECEIPT", onReceipt, { once: true });
-  timeoutId = setTimeout(() => {
-    globalThis.removeEventListener("METHODS_MODELS_RENDERER_TRANSITION_RECEIPT", onReceipt);
-    if (token === familySelectionToken) stage.dataset.familySelectionStatus = `timeout-${expectedIndex}`;
-  }, 12000);
-  current.moveFamily(direction);
+  if (Number.isInteger(renderedIndex)) return renderedIndex;
+  const nativeIndex = Number(app()?.nativeState?.z?.index);
+  return Number.isInteger(nativeIndex) ? nativeIndex : null;
 }
 
 function selectFamilyIndex(targetIndex) {
@@ -123,16 +85,46 @@ function selectFamilyIndex(targetIndex) {
   const from = currentFamilyIndex();
   const count = current?.registry?.familyCount || 4;
   if (!current || !Number.isInteger(from) || !Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= count) return;
-  const token = ++familySelectionToken;
+
   if (from === targetIndex) {
+    familySelectionPlan = null;
     stage.dataset.familySelectionStatus = "complete";
-    synchronize();
+    synchronize("selection");
     return;
   }
+
   const forward = (targetIndex - from + count) % count;
   const backward = (from - targetIndex + count) % count;
   const direction = forward <= backward ? 1 : -1;
-  advanceFamilySelection(targetIndex, direction, token);
+  familySelectionPlan = { targetIndex, direction, count };
+  const expectedIndex = (from + direction + count) % count;
+  stage.dataset.familySelectionStatus = `moving-${from}-to-${expectedIndex}`;
+  current.moveFamily(direction);
+}
+
+function continueFamilySelection(source) {
+  const plan = familySelectionPlan;
+  if (!plan || source !== "transition") return;
+  const current = app();
+  const activeIndex = Number(current?.resolvedScene?.native?.familyIndex);
+  if (!current || !Number.isInteger(activeIndex)) {
+    familySelectionPlan = null;
+    stage.dataset.familySelectionStatus = "invalid-rendered-state";
+    return;
+  }
+
+  if (activeIndex === plan.targetIndex) {
+    familySelectionPlan = null;
+    stage.dataset.familySelectionStatus = "complete";
+    return;
+  }
+
+  const expectedIndex = (activeIndex + plan.direction + plan.count) % plan.count;
+  stage.dataset.familySelectionStatus = `moving-${activeIndex}-to-${expectedIndex}`;
+  setTimeout(() => {
+    if (familySelectionPlan !== plan) return;
+    app()?.moveFamily(plan.direction);
+  }, 0);
 }
 
 function updateTerritoryIndex() {
@@ -202,9 +194,8 @@ function browseNodePosition(descriptor, activeDescriptor, profile) {
   const active = descriptor.MODEL_ID === activeDescriptor.MODEL_ID;
   if (active) return { x: 0, y: profile.mobile ? -44 : -26, z: 240, scale: profile.mobile ? .91 : 1 };
   if (!sameFamily) return { x: descriptor.familyIndex % 2 ? 900 : -900, y: 170, z: -540, scale: .45 };
-  const wrappedDelta = delta;
-  const direction = Math.sign(wrappedDelta) || 1;
-  const distance = Math.abs(wrappedDelta);
+  const direction = Math.sign(delta) || 1;
+  const distance = Math.abs(delta);
   if (distance === 1) {
     return { x: direction * (profile.mobile ? 265 : 420), y: profile.mobile ? -16 : 20, z: 70, scale: profile.mobile ? .65 : .76 };
   }
@@ -327,7 +318,7 @@ function setInspectionPanel(panelId) {
   inspectionTabs.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.inspectionTab === panelId)));
 }
 
-function synchronize() {
+function synchronize(source = "general") {
   if (!app()?.resolvedScene) return;
   buildTerritoryIndex();
   updateLensInstrument();
@@ -335,6 +326,7 @@ function synchronize() {
   updateLocalOrigin();
   applyPageSpecificGeometry();
   updateInspectionOrigin();
+  continueFamilySelection(source);
   document.documentElement.dataset.lawsChildStageReady = "true";
   document.documentElement.dataset.perceptualCompositionReady = "true";
 }
@@ -344,16 +336,16 @@ function bind() {
   bound = true;
   lensButtons.forEach(button => button.addEventListener("click", () => selectLens(button.dataset.lensSelect)));
   inspectionTabs.forEach(button => button.addEventListener("click", () => setInspectionPanel(button.dataset.inspectionTab)));
-  globalThis.addEventListener("METHODS_MODELS_RENDERER_TRANSITION_RECEIPT", synchronize);
-  addEventListener("resize", () => requestAnimationFrame(synchronize));
+  globalThis.addEventListener("METHODS_MODELS_RENDERER_TRANSITION_RECEIPT", () => synchronize("transition"));
+  addEventListener("resize", () => requestAnimationFrame(() => synchronize("resize")));
   if (inspection) {
     inspectionObserver = new MutationObserver(() => {
       if (inspection.dataset.open === "true") setInspectionPanel("instrument");
-      synchronize();
+      synchronize("inspection");
     });
     inspectionObserver.observe(inspection, { attributes: true, attributeFilter: ["hidden", "data-open", "data-model-id", "data-form-class"] });
   }
-  synchronize();
+  synchronize("initial");
 }
 
 async function initialize() {

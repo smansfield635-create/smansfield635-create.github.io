@@ -1,0 +1,36 @@
+{
+  "contract": "METHODS_CATEGORICAL_SPATIAL_CONTEXT_EQUATION_EMBODIMENT_TOOL_ADMISSION_MATRIX_v1",
+  "baselineHead": "ab636b11e32253ece8e00f05993d980f747fa980",
+  "directImports": [
+    "verification/methods-models-categorical-spatial-template-v1/catalog-source.mjs",
+    "verification/methods-models-categorical-spatial-template-v1/descriptor-registry.mjs",
+    "verification/methods-models-categorical-spatial-template-v1/descriptor-schema.mjs",
+    "verification/methods-models-categorical-spatial-template-v1/resolver.mjs",
+    "verification/methods-models-categorical-spatial-template-v1/native-bridge.mjs"
+  ],
+  "canonicalAuthority": "laws/research/methods-and-models/showroom.js",
+  "admittedRendererOwnedExtensions": [
+    "equation-form classification",
+    "canonical-source reference",
+    "equation-class instrument geometry",
+    "source-state environmental treatment",
+    "progressive detail projection",
+    "semantic validation reports"
+  ],
+  "prohibited": [
+    "parallel canonical model registry",
+    "rewritten canonical equation",
+    "substitute canonical description",
+    "inferred quantitative relationship",
+    "generic placeholder content",
+    "public Methods mutation",
+    "baseline operational architecture reopening",
+    "merge",
+    "promotion",
+    "empirical validation claim",
+    "product acceptance claim"
+  ],
+  "full1575StateCertificationExecuted": false,
+  "productAcceptanceGranted": false,
+  "mergeAuthorized": false
+}

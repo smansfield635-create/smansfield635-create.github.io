@@ -1,0 +1,66 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_ROLE_CONTRACT_REGISTRY_v1",
+  "registryId": "METHODS_INFORMATION_BENCHMARK_INACTIVE_ROLE_CONTRACTS_v1",
+  "contracts": [
+    {
+      "roleId": "ROLE_6",
+      "title": "Requirements and Causal Authority",
+      "status": "MATERIALIZED_INACTIVE_ROLE",
+      "functionIds": ["REQUIREMENTS_AND_CAUSAL_AUTHORITY"],
+      "createdBy": "BOOTSTRAP_BUILDER",
+      "activationAuthority": "ROLE_SYSTEM_ACTIVATION_GATE",
+      "may": ["FREEZE_REQUIREMENTS", "DEFINE_CAUSAL_ACCEPTANCE", "DEFINE_FAILURE_AND_UNEVALUABLE_CONDITIONS", "EMIT_REQUIREMENTS_RECEIPT"],
+      "mayNot": ["CONSTRUCT", "VERIFY", "RATIFY", "PREPARE_PUBLIC_REVIEW", "SELF_ACTIVATE", "ASSIGN_ANOTHER_ROLE"]
+    },
+    {
+      "roleId": "ROLE_4",
+      "title": "Governance and Routing",
+      "status": "MATERIALIZED_INACTIVE_ROLE",
+      "functionIds": ["GOVERNANCE_AND_ROUTING"],
+      "createdBy": "BOOTSTRAP_BUILDER",
+      "activationAuthority": "ROLE_SYSTEM_ACTIVATION_GATE",
+      "may": ["OPEN_BOUNDED_OPERATION", "ROUTE_OPERATION", "CLOSE_OR_REOPEN_OPERATION"],
+      "mayNot": ["CONSTRUCT", "VERIFY", "RATIFY", "SELF_ACTIVATE", "REPAIR_IN_PLACE"]
+    },
+    {
+      "roleId": "ROLE_1",
+      "title": "Construction",
+      "status": "MATERIALIZED_INACTIVE_ROLE",
+      "functionIds": ["CONSTRUCTION"],
+      "createdBy": "BOOTSTRAP_BUILDER",
+      "activationAuthority": "ROLE_SYSTEM_ACTIVATION_GATE",
+      "may": ["CONSTRUCT_BOUNDED_OUTPUT", "EMIT_CONSTRUCTION_RECEIPT"],
+      "mayNot": ["VERIFY_OWN_OUTPUT", "RATIFY", "SELF_ACTIVATE", "MERGE"]
+    },
+    {
+      "roleId": "ROLE_3",
+      "title": "Independent Execution",
+      "status": "MATERIALIZED_INACTIVE_ROLE",
+      "functionIds": ["INDEPENDENT_EXECUTION"],
+      "createdBy": "BOOTSTRAP_BUILDER",
+      "activationAuthority": "ROLE_SYSTEM_ACTIVATION_GATE",
+      "may": ["REPRODUCE", "EXECUTE_INDEPENDENTLY", "EMIT_VERIFICATION_RECEIPT"],
+      "mayNot": ["REPAIR", "REWRITE", "RATIFY", "SELF_ACTIVATE"]
+    },
+    {
+      "roleId": "ROLE_5",
+      "title": "Integrated Ratification",
+      "status": "MATERIALIZED_INACTIVE_ROLE",
+      "functionIds": ["INTEGRATED_RATIFICATION"],
+      "createdBy": "BOOTSTRAP_BUILDER",
+      "activationAuthority": "ROLE_SYSTEM_ACTIVATION_GATE",
+      "may": ["INTEGRATE_EVIDENCE", "RATIFY_OR_REJECT", "EMIT_RATIFICATION_RECEIPT"],
+      "mayNot": ["CONSTRUCT", "REPAIR", "SELF_ACTIVATE", "MERGE_WITHOUT_SEPARATE_AUTHORITY"]
+    },
+    {
+      "roleId": "ROLE_2",
+      "title": "Review Preparation",
+      "status": "MATERIALIZED_INACTIVE_ROLE",
+      "functionIds": ["REVIEW_PREPARATION"],
+      "createdBy": "BOOTSTRAP_BUILDER",
+      "activationAuthority": "ROLE_SYSTEM_ACTIVATION_GATE",
+      "may": ["PREPARE_REVIEW_PACKET", "PRESENT_RATIFIED_EVIDENCE"],
+      "mayNot": ["CONSTRUCT", "VERIFY", "RATIFY", "SELF_ACTIVATE", "ALTER_RATIFIED_RESULT"]
+    }
+  ]
+}

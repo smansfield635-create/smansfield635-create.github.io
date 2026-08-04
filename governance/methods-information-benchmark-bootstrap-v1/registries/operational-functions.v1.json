@@ -1,0 +1,48 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_OPERATIONAL_FUNCTION_REGISTRY_v1",
+  "registryId": "METHODS_INFORMATION_BENCHMARK_OPERATIONAL_FUNCTIONS_v1",
+  "functions": [
+    {
+      "functionId": "REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+      "roleId": "ROLE_6",
+      "permanentRolePredecessors": [],
+      "requiredBeforeAllConstructionFunctions": true,
+      "operationOrder": 1
+    },
+    {
+      "functionId": "GOVERNANCE_AND_ROUTING",
+      "roleId": "ROLE_4",
+      "permanentRolePredecessors": ["ROLE_6"],
+      "requiredBeforeAllConstructionFunctions": false,
+      "operationOrder": 2
+    },
+    {
+      "functionId": "CONSTRUCTION",
+      "roleId": "ROLE_1",
+      "permanentRolePredecessors": ["ROLE_4"],
+      "requiredBeforeAllConstructionFunctions": false,
+      "operationOrder": 3
+    },
+    {
+      "functionId": "INDEPENDENT_EXECUTION",
+      "roleId": "ROLE_3",
+      "permanentRolePredecessors": ["ROLE_1"],
+      "requiredBeforeAllConstructionFunctions": false,
+      "operationOrder": 4
+    },
+    {
+      "functionId": "INTEGRATED_RATIFICATION",
+      "roleId": "ROLE_5",
+      "permanentRolePredecessors": ["ROLE_3"],
+      "requiredBeforeAllConstructionFunctions": false,
+      "operationOrder": 5
+    },
+    {
+      "functionId": "REVIEW_PREPARATION",
+      "roleId": "ROLE_2",
+      "permanentRolePredecessors": ["ROLE_5"],
+      "requiredBeforeAllConstructionFunctions": false,
+      "operationOrder": 6
+    }
+  ]
+}

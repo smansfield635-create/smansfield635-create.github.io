@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_ROLE_SYSTEM_ACTIVATION_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "operationId", "status", "originSeedSha256", "verifiedTopologyDigest", "bootstrapFingerprint", "productionAuthorityActive"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_ROLE_SYSTEM_ACTIVATION_RECEIPT_v1"},
+    "operationId": {"type": "string"},
+    "status": {"type": "string"},
+    "originSeedSha256": {"type": "string"},
+    "verifiedTopologyDigest": {"type": "string"},
+    "bootstrapFingerprint": {"type": "string"},
+    "productionAuthorityActive": {"type": "boolean"}
+  }
+}

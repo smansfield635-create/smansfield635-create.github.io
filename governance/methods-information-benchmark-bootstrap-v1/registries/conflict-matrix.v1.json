@@ -1,0 +1,67 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_ROLE_CONFLICT_MATRIX_v1",
+  "registryId": "METHODS_INFORMATION_BENCHMARK_ROLE_CONFLICTS_v1",
+  "policy": "ONE_EXECUTION_HOLDER_MAY_HOLD_AT_MOST_ONE_ACTIVE_PERMANENT_ROLE",
+  "conflictingRolePairs": [
+    [
+      "ROLE_1",
+      "ROLE_2"
+    ],
+    [
+      "ROLE_1",
+      "ROLE_3"
+    ],
+    [
+      "ROLE_1",
+      "ROLE_4"
+    ],
+    [
+      "ROLE_1",
+      "ROLE_5"
+    ],
+    [
+      "ROLE_1",
+      "ROLE_6"
+    ],
+    [
+      "ROLE_2",
+      "ROLE_3"
+    ],
+    [
+      "ROLE_2",
+      "ROLE_4"
+    ],
+    [
+      "ROLE_2",
+      "ROLE_5"
+    ],
+    [
+      "ROLE_2",
+      "ROLE_6"
+    ],
+    [
+      "ROLE_3",
+      "ROLE_4"
+    ],
+    [
+      "ROLE_3",
+      "ROLE_5"
+    ],
+    [
+      "ROLE_3",
+      "ROLE_6"
+    ],
+    [
+      "ROLE_4",
+      "ROLE_5"
+    ],
+    [
+      "ROLE_4",
+      "ROLE_6"
+    ],
+    [
+      "ROLE_5",
+      "ROLE_6"
+    ]
+  ]
+}

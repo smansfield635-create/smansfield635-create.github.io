@@ -1,0 +1,68 @@
+#!/usr/bin/env node
+import path from 'node:path';
+import { findRoot, loadAuthority, readRegistries, validateGraph, validateConflictMatrix, canonicalText, sha256Text, fingerprintPayload, parseArgs, writeJson, fileSha256, fail } from './common.mjs';
+
+function regenerateIndependently(registries, graph) {
+  const contracts = new Map(registries.roles.contracts.map((contract) => [contract.roleId, contract]));
+  const orderedFunctions = registries.functions.functions.slice().sort((left, right) => left.operationOrder - right.operationOrder || left.functionId.localeCompare(right.functionId));
+  return {
+    schema: 'METHODS_INFORMATION_BENCHMARK_GENERATED_ROLE_TOPOLOGY_v1',
+    firstPermanentRole: graph.firstRoleId,
+    lifecycle: ['PROPOSED_ROLE', 'MATERIALIZED_INACTIVE_ROLE', 'INDEPENDENTLY_VERIFIED_ROLE', 'ACTIVATABLE_ROLE', 'OPERATION_SCOPED_ACTIVE_ASSIGNMENT', 'RETURNED_OR_SUPERSEDED_ROLE_ASSIGNMENT'],
+    roles: orderedFunctions.map((fn) => {
+      const contract = contracts.get(fn.roleId);
+      return {
+        roleId: fn.roleId,
+        title: contract.title,
+        status: contract.status,
+        functionIds: contract.functionIds.slice(),
+        predecessors: (fn.permanentRolePredecessors ?? []).slice(),
+        operationOrder: fn.operationOrder,
+        may: contract.may.slice(),
+        mayNot: contract.mayNot.slice()
+      };
+    }),
+    routingSequence: orderedFunctions.map((fn) => fn.roleId)
+  };
+}
+
+try {
+  const args = parseArgs(process.argv.slice(2), ['--output', '--execution-holder', '--require-git']);
+  if (!args.output) fail('MISSING_OUTPUT');
+  const executionHolder = args['execution-holder'] ?? 'BOOTSTRAP_VERIFIER_EXECUTION';
+  const root = findRoot();
+  const authority = loadAuthority(root, { requireGit: args['require-git'] === 'true' });
+  const seedBefore = fileSha256(authority.seedFile);
+  const registries = readRegistries(root);
+  const graph = validateGraph(registries);
+  validateConflictMatrix(registries);
+  if (graph.firstRoleId !== authority.seed.expectedFirstPermanentRole) fail('FIRST_ROLE_SEED_MISMATCH');
+  const topology = regenerateIndependently(registries, graph);
+  const topologyDigest = sha256Text(canonicalText(topology));
+  const fingerprint = sha256Text(canonicalText(fingerprintPayload(authority, registries, topology)));
+  const seedAfter = fileSha256(authority.seedFile);
+  if (seedBefore !== seedAfter) fail('ORIGIN_SEED_CHANGED_DURING_BOOTSTRAP');
+  writeJson(path.join(args.output, 'role-topology.json'), topology);
+  const receipt = {
+    schema: 'METHODS_INFORMATION_BENCHMARK_BOOTSTRAP_VERIFIER_RECEIPT_v1',
+    operationId: authority.seed.operationId,
+    function: 'BOOTSTRAP_VERIFIER',
+    executionHolder,
+    status: 'PASS_VERIFIER_INDEPENDENT_REGENERATION',
+    exactStartingHead: authority.seed.exactStartingHead,
+    repositoryHead: authority.repository.head,
+    originSeedSha256: authority.seedSha256,
+    originSeedGitBlob: authority.seedGitBlob,
+    topologyDigest,
+    bootstrapFingerprint: fingerprint,
+    firstPermanentRole: graph.firstRoleId,
+    importedBuilderTemporaryState: false,
+    repairedBuilderOutput: false,
+    roleAuthorityActive: false
+  };
+  writeJson(path.join(args.output, 'verifier-receipt.json'), receipt);
+  process.stdout.write(`${JSON.stringify(receipt, null, 2)}\n`);
+} catch (error) {
+  process.stderr.write(`${JSON.stringify({ schema: 'METHODS_INFORMATION_BENCHMARK_BOOTSTRAP_VERIFIER_FAILURE_v1', status: 'FAIL_CLOSED', error: error.message }, null, 2)}\n`);
+  process.exit(1);
+}

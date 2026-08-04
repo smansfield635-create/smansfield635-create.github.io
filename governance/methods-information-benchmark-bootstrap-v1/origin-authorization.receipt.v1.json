@@ -1,0 +1,16 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_ORIGIN_AUTHORIZATION_RECEIPT_v1",
+  "operationId": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_AND_ROLE_MATERIALIZATION_001",
+  "originAuthority": "USER",
+  "authorizationStatus": "AUTHORIZED_TO_BUILD_AND_VERIFY_INACTIVE_GENESIS_INSTRUMENT",
+  "originSeedPath": "governance/methods-information-benchmark-bootstrap-v1/origin-seed.v1.json",
+  "originSeedSchema": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_ORIGIN_SEED_v1",
+  "originSeedVersion": "1.0.0",
+  "originSeedSha256": "103de4494dc591da9d99eb57e2e4f30d781669ace529aa180140f65d6b3aa98f",
+  "originSeedGitBlob": "38c95f18d00ac225993b242f599849ca57e9f6b9",
+  "exactStartingHead": "4feae1ca8287a54b1aed96df21b45169811be1b0",
+  "activationAuthorizedWithoutSeparateAcceptance": false,
+  "mergeAuthorized": false,
+  "productMutationAuthorized": false,
+  "conversationMemoryRequired": false
+}

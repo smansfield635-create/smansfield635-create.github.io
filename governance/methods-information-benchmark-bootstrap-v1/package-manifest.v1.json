@@ -1,0 +1,21 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_PACKAGE_MANIFEST_v1",
+  "packageId": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_AND_ROLE_MATERIALIZATION_v1",
+  "version": "1.0.0",
+  "classification": "NONPRODUCT_ROLE_GENESIS_INSTRUMENT",
+  "status": "INACTIVE_PENDING_INDEPENDENT_VALIDATION",
+  "entryCommand": "node governance/methods-information-benchmark-bootstrap-v1/tools/validate-all.mjs --output-dir <OUTSIDE_REPOSITORY_OR_IGNORED_PATH> --require-git true",
+  "tools": [
+    "bootstrap-builder.mjs",
+    "bootstrap-verifier.mjs",
+    "compare-fingerprints.mjs",
+    "activation-gate.mjs",
+    "role-holder-admission.mjs",
+    "role-holder-return.mjs",
+    "negative-fixture-tests.mjs",
+    "validate-all.mjs"
+  ],
+  "productionRoleAuthorityActive": false,
+  "productMutation": false,
+  "mergeAuthority": false
+}

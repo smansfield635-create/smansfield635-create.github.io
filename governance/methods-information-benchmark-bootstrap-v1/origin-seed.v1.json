@@ -1,0 +1,103 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_ORIGIN_SEED_v1",
+  "operationId": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_AND_ROLE_MATERIALIZATION_001",
+  "version": "1.0.0",
+  "status": "USER_ORIGIN_AUTHORITY_COMMITTED_SEED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "exactStartingHead": "4feae1ca8287a54b1aed96df21b45169811be1b0",
+  "packagePrefix": "governance/methods-information-benchmark-bootstrap-v1/",
+  "immutableAfterExecutionStart": true,
+  "seedChangeLaw": "SEED_CHANGED_AFTER_EXECUTION_START_REQUIRES_NEW_BOOTSTRAP_OPERATION",
+  "permanentRoleAuthorityInitiallyExists": false,
+  "bootstrapFunctions": [
+    {
+      "id": "BOOTSTRAP_BUILDER",
+      "may": [
+        "DISCOVER_REPOSITORY_AUTHORITIES",
+        "CONSTRUCT_GENESIS_INSTRUMENTS",
+        "MATERIALIZE_INACTIVE_ROLE_CONTRACTS",
+        "EMIT_BUILDER_RECEIPT_AND_FINGERPRINT"
+      ],
+      "mayNot": [
+        "APPROVE_OWN_OUTPUT",
+        "VERIFY_OWN_OUTPUT",
+        "ACTIVATE_ROLE_SYSTEM",
+        "ASSIGN_PERMANENT_ROLE",
+        "MUTATE_PRODUCT"
+      ]
+    },
+    {
+      "id": "BOOTSTRAP_VERIFIER",
+      "may": [
+        "DISCOVER_REPOSITORY_AUTHORITIES",
+        "INDEPENDENTLY_REGENERATE_TOPOLOGY",
+        "VALIDATE_CANONICAL_OUTPUTS",
+        "EMIT_VERIFIER_RECEIPT_AND_FINGERPRINT"
+      ],
+      "mayNot": [
+        "IMPORT_BUILDER_TEMP_STATE",
+        "REPAIR_BUILDER_OUTPUT",
+        "REWRITE_ROLE_CONTRACTS",
+        "ACTIVATE_ROLE_SYSTEM",
+        "ASSIGN_PERMANENT_ROLE",
+        "MUTATE_PRODUCT"
+      ]
+    }
+  ],
+  "roleLifecycle": [
+    "PROPOSED_ROLE",
+    "MATERIALIZED_INACTIVE_ROLE",
+    "INDEPENDENTLY_VERIFIED_ROLE",
+    "ACTIVATABLE_ROLE",
+    "OPERATION_SCOPED_ACTIVE_ASSIGNMENT",
+    "RETURNED_OR_SUPERSEDED_ROLE_ASSIGNMENT"
+  ],
+  "permanentRoleIds": [
+    "ROLE_1",
+    "ROLE_2",
+    "ROLE_3",
+    "ROLE_4",
+    "ROLE_5",
+    "ROLE_6"
+  ],
+  "firstPermanentRoleSelectionRule": "SELECT_UNASSIGNED_FUNCTION_WITH_NO_UNSATISFIED_PERMANENT_ROLE_PREDECESSOR_AND_REQUIRED_BEFORE_ALL_CONSTRUCTION_FUNCTIONS; REQUIRE_EXACTLY_ONE_RESULT_OR_FAIL_CLOSED",
+  "expectedFirstPermanentRole": "ROLE_6",
+  "activationAuthority": "USER_ORIGIN_SEED_CONDITIONAL_AUTHORIZATION_ONLY",
+  "activationGateDiscretion": "NONE",
+  "activationConditions": [
+    "BUILDER_PASS",
+    "FRESH_VERIFIER_PASS",
+    "BUILDER_AND_VERIFIER_EXECUTION_HOLDERS_DIFFER",
+    "CANONICAL_TOPOLOGY_DIGEST_MATCH",
+    "BOOTSTRAP_FINGERPRINT_MATCH",
+    "NO_OPEN_FATAL_FINDING",
+    "ORIGIN_SEED_SHA256_MATCH",
+    "ORIGIN_SEED_GIT_BLOB_MATCH",
+    "EXACT_STARTING_HEAD_IS_ANCESTOR",
+    "EXPLICIT_USER_ACCEPTANCE_RECEIPT_MATCH"
+  ],
+  "canonicalization": {
+    "encoding": "UTF_8",
+    "json": "CANONICAL_JSON",
+    "objectKeys": "SORTED",
+    "arrayOrder": "DECLARED_ORDER_PRESERVED",
+    "lineEndings": "LF",
+    "relativePaths": "NORMALIZED_FORWARD_SLASH",
+    "excludedFromFingerprint": [
+      "TIMESTAMPS",
+      "TEMP_PATHS",
+      "PROCESS_IDS",
+      "HOST_NAMES",
+      "RANDOM_PORTS",
+      "ARTIFACT_UPLOAD_IDS",
+      "EXECUTION_HOLDER_IDS"
+    ]
+  },
+  "protectedBoundaries": [
+    "NO_METHODS_PAGE_MUTATION",
+    "NO_METHODS_RENDERER_MUTATION",
+    "NO_NATIVE_CANDIDATE_MUTATION",
+    "NO_BENCHMARK_SEMANTIC_MUTATION",
+    "NO_RELEASE_OR_MERGE_AUTHORITY"
+  ]
+}

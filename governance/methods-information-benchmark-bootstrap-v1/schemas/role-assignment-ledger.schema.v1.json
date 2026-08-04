@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_ROLE_ASSIGNMENT_LEDGER_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "operationId", "revision", "ledgerHead", "completedRoles", "assignments"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_ROLE_ASSIGNMENT_LEDGER_v1"},
+    "operationId": {"type": "string"},
+    "revision": {"type": "integer", "minimum": 0},
+    "ledgerHead": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "completedRoles": {"type": "array", "items": {"type": "string"}},
+    "assignments": {"type": "array"}
+  }
+}

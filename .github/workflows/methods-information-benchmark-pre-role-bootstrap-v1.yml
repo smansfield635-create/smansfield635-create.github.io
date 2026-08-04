@@ -1,0 +1,94 @@
+name: Methods Information Benchmark Pre-Role Bootstrap v1
+
+on:
+  push:
+    branches:
+      - agent/methods-information-benchmark-pre-role-bootstrap-v1-001
+    paths:
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/methods-information-benchmark-bootstrap/**'
+      - '.github/workflows/methods-information-benchmark-pre-role-bootstrap-v1.yml'
+      - 'governance/methods-information-benchmark-bootstrap-v1/**'
+  pull_request:
+    paths:
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/methods-information-benchmark-bootstrap/**'
+      - '.github/workflows/methods-information-benchmark-pre-role-bootstrap-v1.yml'
+      - 'governance/methods-information-benchmark-bootstrap-v1/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-pre-role-bootstrap:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact bootstrap head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate router registration and mutation route
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path governance/methods-information-benchmark-bootstrap-v1/origin-seed.v1.json \
+            --path .github/workflows/methods-information-benchmark-pre-role-bootstrap-v1.yml \
+            --task "Validate registered Methods benchmark pre-role bootstrap" \
+            --output /tmp/bootstrap-router-receipt.json
+          grep -q '"disposition": "PASS"' /tmp/bootstrap-router-receipt.json
+
+      - name: Enforce nonproduct path boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          START_HEAD=4feae1ca8287a54b1aed96df21b45169811be1b0
+          git merge-base --is-ancestor "$START_HEAD" HEAD
+          while IFS= read -r changed; do
+            case "$changed" in
+              governance/methods-information-benchmark-bootstrap-v1/*) ;;
+              .github/workflows/methods-information-benchmark-pre-role-bootstrap-v1.yml) ;;
+              *) echo "UNAUTHORIZED_PACKAGE_COMMIT_PATH:$changed"; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$START_HEAD" HEAD)
+
+      - name: Validate source syntax
+        run: |
+          set -euo pipefail
+          for file in governance/methods-information-benchmark-bootstrap-v1/tools/*.mjs; do node --check "$file"; done
+
+      - name: Execute complete clean-room bootstrap validation
+        run: |
+          set -euo pipefail
+          node governance/methods-information-benchmark-bootstrap-v1/tools/validate-all.mjs \
+            --output-dir /tmp/methods-bootstrap-validation \
+            --require-git true | tee /tmp/methods-bootstrap-validation.log
+
+      - name: Package exact evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/methods-bootstrap-evidence
+          cp -R /tmp/methods-bootstrap-validation /tmp/methods-bootstrap-evidence/validation || true
+          cp /tmp/router-self-test.json /tmp/methods-bootstrap-evidence/ || true
+          cp /tmp/bootstrap-router-receipt.json /tmp/methods-bootstrap-evidence/ || true
+          cp /tmp/methods-bootstrap-validation.log /tmp/methods-bootstrap-evidence/ || true
+          git rev-parse HEAD > /tmp/methods-bootstrap-evidence/EXACT_HEAD
+          find /tmp/methods-bootstrap-evidence -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > /tmp/methods-bootstrap-evidence/SHA256SUMS
+
+      - name: Upload bootstrap evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-information-benchmark-pre-role-bootstrap-v1-evidence
+          path: /tmp/methods-bootstrap-evidence
+          if-no-files-found: error
+          retention-days: 30

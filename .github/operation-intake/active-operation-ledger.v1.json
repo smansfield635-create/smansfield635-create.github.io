@@ -1,22 +1,9 @@
 {
-  "activeScopes": {
-    "edef9f82f6f1db30db14cec92ad248103d0fade30154e8ce9213225c656134a9": {
-      "governingHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
-      "lockGeneration": 9,
-      "lockScope": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR",
-      "operationId": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_MATERIALIZATION_001",
-      "procedureLocatorDigest": "d7984db15c47ce59266ac1d122c3ff5eec879ae381f7ab00c054ff51c6a4aab5",
-      "released": false,
-      "requestDigest": "51de263720bd6c0bb7bbbb780e2befc3c104aed6d3aaa6fab228b16eb8e8dbd9",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "edef9f82f6f1db30db14cec92ad248103d0fade30154e8ce9213225c656134a9",
-      "state": "ADMITTED_LOCKED"
-    }
-  },
+  "activeScopes": {},
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 10,
+  "lockGeneration": 11,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -134,6 +121,19 @@
       "requestDigest": "238de3ee3f81d7f2b72b90e5f15081b21a7e0850bc91cc4ae2a0cab0ee805494",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "5e58eedfe7fdef556f5f4c2d3919d3c28bfdc67a1396b8cbdc9a03af51969b01",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
+      "lockGeneration": 9,
+      "lockScope": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR",
+      "operationId": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_MATERIALIZATION_001",
+      "procedureLocatorDigest": "d7984db15c47ce59266ac1d122c3ff5eec879ae381f7ab00c054ff51c6a4aab5",
+      "released": true,
+      "requestDigest": "51de263720bd6c0bb7bbbb780e2befc3c104aed6d3aaa6fab228b16eb8e8dbd9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "edef9f82f6f1db30db14cec92ad248103d0fade30154e8ce9213225c656134a9",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

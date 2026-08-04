@@ -26,10 +26,11 @@ const checks = Object.freeze({
   RESEARCH_STORY_NAVIGATION_PRESENT: /class="research-story-navigation"/.test(indexText),
   CANONICAL_CUSTODY_COLLAPSED: /<details[^>]*data-canonical-custody(?![^>]*open)/.test(indexText),
   COMPLETE_INSPECTION_ORIGIN_PRESENT: ["data-inspection-origin-family", "data-inspection-origin-model", "data-inspection-origin-lens"].every(marker => indexText.includes(marker)),
-  PAGE_SPECIFIC_STAGE_CSS_PRESENT: /Laws child-stage perceptual composition correction/.test(cssText) && /--stage-height:\s*clamp\(610px, calc\(100svh - 218px\), 820px\)/.test(cssText),
-  MOBILE_STAGE_CONTINUITY_PRESENT: /--stage-height:\s*calc\(100svh - 184px\)/.test(cssText),
+  PAGE_SPECIFIC_STAGE_CSS_PRESENT: /Laws child-stage perceptual composition correction/.test(cssText) && /--stage-height:\s*clamp\(640px, calc\(100svh - 176px\), 840px\)/.test(cssText),
+  MOBILE_STAGE_CONTINUITY_PRESENT: /--stage-height:\s*calc\(100svh - 164px\)/.test(cssText),
   FOUR_FAMILY_CANONICAL_ORDER_RING_PRESENT: /function overviewFamilyCenters\(/.test(extensionText) && /CANONICAL_ORDER_WITHOUT_DIRECTIONAL_AUTHORITY/.test(extensionText),
   CURVED_MODEL_TRAJECTORY_PRESENT: /CURVED_CANONICAL_ARC/.test(extensionText) && /Math\.pow\(Math\.abs\(normalized\), 1\.7\)/.test(extensionText),
+  DETERMINISTIC_STAGE_COORDINATES_PRESENT: /node\.style\.left\s*=/.test(extensionText) && /plane\.style\.left\s*=/.test(extensionText) && /relation\.style\.left\s*=/.test(extensionText),
   LENS_AND_ORIGIN_RUNTIME_BINDING_PRESENT: /function selectLens\(/.test(extensionText) && /function updateLocalOrigin\(/.test(extensionText),
   PUBLIC_METHODS_SCRIPT_COPY_EMBEDDED_0: !/<script[^>]+src="\/laws\/research\/methods-and-models\/showroom\.js/.test(indexText),
   LAWS_COMPASS_SEMANTIC_REPLICATION_0: !/METHODS_FAMILIES_AS_LAWS_CARDINALS|Flow, Integrity, Reality, and Structure/.test(indexText)

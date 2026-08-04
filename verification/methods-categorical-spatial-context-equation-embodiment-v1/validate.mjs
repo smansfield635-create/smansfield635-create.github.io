@@ -118,7 +118,7 @@ const semanticCompleteness = {
   familiesComplete: registry.familyCount === 4,
   modelsComplete: registry.modelCount === 25,
   lensesComplete: registry.lensCount === 3,
-  allRequiredCountsComplete: Object.values(requiredCounts).every(value => value === 25) && registry.familyCount === 4,
+  allRequiredCountsComplete: requiredCounts.FAMILIES === 4 && Object.entries(requiredCounts).filter(([key]) => key !== "FAMILIES").every(([, value]) => value === 25),
   sourceCompletenessClaimed: false,
   empiricalValidationClaimed: false,
   productAcceptanceGranted: false
@@ -174,6 +174,7 @@ const gateChecks = {
   LIMIT_FIELDS_25_OF_25: requiredCounts.LIMIT_FIELDS === 25,
   SOURCE_STATES_PRESERVED_25_OF_25: sourceStateReport.preserved === 25,
   INSPECTION_FIELDS_COMPLETE: semanticCompleteness.completeInspectionFields,
+  SUMMARY_COUNTS_COMPLETE: semanticCompleteness.allRequiredCountsComplete,
   PLACEHOLDERS_0: absenceReport.counts.PLACEHOLDERS === 0,
   GENERIC_EQUATION_FALLBACKS_0: absenceReport.counts.GENERIC_EQUATION_FALLBACKS === 0,
   PARALLEL_CANONICAL_RECORDS_0: absenceReport.counts.PARALLEL_CANONICAL_RECORDS === 0,

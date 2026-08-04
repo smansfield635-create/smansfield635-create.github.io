@@ -1,12 +1,14 @@
-name: Methods Laws Child Spatial Context and Equation Embodiment v1
+name: Methods Spatial Stage Perceptual Composition Correction v1
 
 on:
   push:
     branches:
       - experiment/methods-categorical-spatial-context-equation-embodiment-v1-001
+      - experiment/methods-categorical-spatial-stage-perceptual-composition-correction-v1-001
   pull_request:
     branches:
       - experiment/methods-models-categorical-spatial-template-v1-001
+      - experiment/methods-categorical-spatial-context-equation-embodiment-v1-001
     paths:
       - '.github/workflows/methods-categorical-spatial-context-equation-embodiment-v1.yml'
       - 'verification/methods-categorical-spatial-context-equation-embodiment-v1/**'
@@ -20,6 +22,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       BASELINE_HEAD: ab636b11e32253ece8e00f05993d980f747fa980
+      PREDECESSOR_HEAD: 332fa3056fa3768c9f26f4b2fd98f6b39c455bcf
       METHODS_ORIGIN: http://127.0.0.1:4173
       OUT_DIR: methods-categorical-spatial-context-equation-embodiment-v1-evidence
       SHARED_SHELL: LAWS_CHILD_SPATIAL_STAGE_SHELL_v1
@@ -36,6 +39,8 @@ jobs:
         run: |
           set -euo pipefail
           git cat-file -e "$BASELINE_HEAD^{commit}"
+          git cat-file -e "$PREDECESSOR_HEAD^{commit}"
+          git merge-base --is-ancestor "$PREDECESSOR_HEAD" HEAD
           git diff --exit-code "$BASELINE_HEAD" HEAD -- laws/research/methods-and-models/
           git diff --exit-code "$BASELINE_HEAD" HEAD -- verification/methods-models-categorical-spatial-template-v1/
           while IFS= read -r changed; do
@@ -46,6 +51,7 @@ jobs:
             esac
           done < <(git diff --name-only "$BASELINE_HEAD" HEAD)
           printf '%s\n' "$BASELINE_HEAD" > base-head.txt
+          printf '%s\n' "$PREDECESSOR_HEAD" > predecessor-head.txt
           git rev-parse HEAD > successor-head.txt
           git diff --name-only "$BASELINE_HEAD" HEAD | sort | tee exact-changed-paths.txt
 
@@ -126,6 +132,7 @@ jobs:
         run: |
           set -euo pipefail
           cp base-head.txt "$OUT_DIR/"
+          cp predecessor-head.txt "$OUT_DIR/"
           cp successor-head.txt "$OUT_DIR/"
           cp exact-changed-paths.txt "$OUT_DIR/"
           cp semantic-validation.log "$OUT_DIR/"
@@ -153,8 +160,10 @@ jobs:
           }
           walk(out);
           fs.writeFileSync(path.join(out, 'artifact-manifest.json'), JSON.stringify({
-            contract: 'METHODS_CATEGORICAL_SPATIAL_CONTEXT_EQUATION_EMBODIMENT_ARTIFACT_MANIFEST_v1',
+            contract: 'METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_CORRECTION_ARTIFACT_MANIFEST_v1',
+            operation: 'METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_CORRECTION_v1',
             baselineHead: fs.readFileSync('base-head.txt', 'utf8').trim(),
+            predecessorHead: fs.readFileSync('predecessor-head.txt', 'utf8').trim(),
             successorHead: fs.readFileSync('successor-head.txt', 'utf8').trim(),
             files,
             mergeAuthorized: false,
@@ -181,6 +190,7 @@ jobs:
             methods-categorical-spatial-context-equation-embodiment-v1-evidence.tar.gz
             methods-categorical-spatial-context-equation-embodiment-v1-evidence.tar.gz.sha256
             base-head.txt
+            predecessor-head.txt
             successor-head.txt
             exact-changed-paths.txt
             semantic-validation.log
@@ -201,4 +211,4 @@ jobs:
           test "$(cat observer-exit-status.txt)" = "0"
           test "$(cat shell-validation-exit-status.txt)" = "0"
           test "$(cat shell-observer-exit-status.txt)" = "0"
-          node -e 'const fs=require("fs"); const root=process.env.OUT_DIR; const staticGate=JSON.parse(fs.readFileSync(root+"/semantic-static-gate-result.json")); const shell=JSON.parse(fs.readFileSync(root+"/laws-child-stage-shell-report.json")); const observer=JSON.parse(fs.readFileSync(root+"/observer-result.json")); const shellObserver=JSON.parse(fs.readFileSync(root+"/laws-child-stage-observer-result.json")); if(staticGate.result!=="PASS_SEMANTIC_STATIC_GATE") process.exit(1); if(shell.result!=="PASS_LAWS_CHILD_STAGE_STATIC_GATE") process.exit(1); if(shell.sharedShell!==process.env.SHARED_SHELL||shell.methodsInstance!==process.env.METHODS_INSTANCE) process.exit(1); if(observer.result!=="PASS_SEMANTIC_EMBODIMENT_GATE") process.exit(1); if(shellObserver.result!=="PASS_LAWS_CHILD_STAGE_OBSERVER_GATE") process.exit(1);'
+          node -e 'const fs=require("fs"); const root=process.env.OUT_DIR; const staticGate=JSON.parse(fs.readFileSync(root+"/semantic-static-gate-result.json")); const shell=JSON.parse(fs.readFileSync(root+"/laws-child-stage-shell-report.json")); const observer=JSON.parse(fs.readFileSync(root+"/observer-result.json")); const shellObserver=JSON.parse(fs.readFileSync(root+"/laws-child-stage-observer-result.json")); if(staticGate.result!=="PASS_SEMANTIC_STATIC_GATE") process.exit(1); if(staticGate.checks.SUMMARY_COUNTS_COMPLETE!==true) process.exit(1); if(shell.result!=="PASS_LAWS_CHILD_STAGE_STATIC_GATE") process.exit(1); if(shell.sharedShell!==process.env.SHARED_SHELL||shell.methodsInstance!==process.env.METHODS_INSTANCE) process.exit(1); if(observer.result!=="PASS_SEMANTIC_EMBODIMENT_GATE") process.exit(1); if(shellObserver.result!=="PASS_LAWS_CHILD_STAGE_OBSERVER_GATE") process.exit(1);'

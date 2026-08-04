@@ -1,5 +1,6 @@
 {
   "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_007_STAGED_EXECUTOR_TRIGGER_v1",
+  "attempt": 2,
   "exactStartingMainHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
   "terrainCorrection": {
     "operator": "FALL_FACE",
@@ -8,5 +9,6 @@
     "toeZPreserved": -192
   },
   "allOtherTerrainParametersChanged": false,
+  "transformerCorrection": "VALIDATE_ALREADY_RENAMED_CARRIER_BRANCH",
   "productMutation": false
 }

@@ -281,8 +281,8 @@ The artifact contains:
 ```text
 screenshots/
 observer-result.json
-generated-spatial-registry.json
-registry-validation.json
+methods-models-spatial-descriptor-registry-v1.generated.json
+validation-result.json
 registry-validation.log
 operational-observer.log
 tool-admission-matrix.json

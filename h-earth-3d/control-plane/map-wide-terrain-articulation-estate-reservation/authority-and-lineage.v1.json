@@ -1,0 +1,39 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_INSTRUMENT_AUTHORITY_AND_LINEAGE_v1",
+  "userOriginIssue": 569,
+  "startingMainHead": "3ac9279dc82e56f7b0d67972ce56048d07e5ecfa",
+  "acceptedR06C10Reference": {
+    "pr": 566,
+    "exactCandidateHead": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+    "terrainPath": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js",
+    "terrainBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+    "successorFieldPath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "successorFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+    "status": "IMMUTABLE_ACCEPTED_LOCAL_REFERENCE_NOT_MERGED_MAIN"
+  },
+  "mirrorManorReservationEvidence": {
+    "sourcePr": 328,
+    "candidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+    "anchor": {"x": 67.25, "z": -16.85},
+    "manorPad": {"width": 30, "depth": 22},
+    "permittedExpansion": {"min": {"width": 30, "depth": 22}, "max": {"width": 32, "depth": 24}},
+    "elevationBand": {"min": 1.2, "max": 1.8},
+    "principalViewAzimuthDeg": -25,
+    "viewCorridorHalfAngleDeg": 15,
+    "initialCorridorWidthMeters": 14,
+    "originalDisposition": "ADMISSIBLE_WITHOUT_GLOBAL_AUTHORITY",
+    "reservationUseOnly": true
+  },
+  "precedence": [
+    "USER_ORIGIN_BOUNDARY",
+    "REPOSITORY_ACTIVE_GOVERNANCE",
+    "EXACT_ACCEPTED_REFERENCE_IDENTITIES",
+    "THIS_INACTIVE_INSTRUMENT_CANDIDATE"
+  ],
+  "nonClaims": [
+    "R06_C10_IS_MERGED_MAIN",
+    "MIRROR_MANOR_IS_CONSTRUCTED",
+    "MAP_WIDE_TERRAIN_IS_AUTHORIZED",
+    "THIS_INSTRUMENT_IS_ACTIVE"
+  ]
+}

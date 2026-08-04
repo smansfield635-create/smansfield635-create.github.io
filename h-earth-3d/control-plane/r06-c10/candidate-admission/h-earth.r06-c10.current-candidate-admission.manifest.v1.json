@@ -1,0 +1,11 @@
+{
+  "schema": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_MANIFEST_v1",
+  "candidateHeadBinding": "RESOLVED_FROM_GATE_ARGUMENT",
+  "assertionSetId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_ASSERTIONS_28_v1",
+  "expectedAssertionCount": 28,
+  "adapterPath": "h-earth-3d/validation/h-earth.r06-c10.candidate-admission.adapter.v1.mjs",
+  "evaluatorPath": "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-002.exact-candidate-evaluator.v1.mjs",
+  "privateStateAllowed": false,
+  "dirtyWorktreeAllowed": false,
+  "oneDeclaredCommandRequired": true
+}

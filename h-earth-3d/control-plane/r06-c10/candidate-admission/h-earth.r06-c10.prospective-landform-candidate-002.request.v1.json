@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "H_EARTH_R06_C10_ARTICULATION_REQUEST_v1",
+  "operationId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_CONSTRUCTION_002",
+  "exactBaseline": {
+    "commit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+    "terrainFieldBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+    "geometryConstructorBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46"
+  },
+  "region": {
+    "semanticAddress": "H_EARTH_GROUND_CELL_001:R06:C10",
+    "authoredCore": {"xMinimum": 32, "xMaximum": 64, "zMinimum": -192, "zMaximum": -164},
+    "blendSupport": {"xMinimum": 24, "xMaximum": 72, "zMinimum": -200, "zMaximum": -156},
+    "verificationHalo": {"xMinimum": 16, "xMaximum": 80, "zMinimum": -208, "zMaximum": -148}
+  },
+  "operations": [
+    {"operator":"ORIENTED_SADDLE","amplitude":3.4,"centerX":44,"centerZ":-168,"radiusU":14,"radiusV":10,"rotationDegrees":90},
+    {"operator":"RIDGE_FACE","centerX":36,"centerZ":-178,"feather":6,"halfLength":18,"halfWidth":7,"height":3.4,"rotationDegrees":90},
+    {"operator":"RIDGE_FACE","centerX":52,"centerZ":-178,"feather":6,"halfLength":18,"halfWidth":7,"height":3.4,"rotationDegrees":90},
+    {"operator":"VALLEY_CORRIDOR","depth":1,"endFeatherWorldUnits":6,"halfWidth":6,"polyline":[[44,-164],[44,-176],[44,-188]]},
+    {"operator":"FALL_FACE","centerX":44,"centerZ":-180,"drop":4,"feather":6,"halfLength":12,"halfWidth":10,"rotationDegrees":-90},
+    {"operator":"LOWER_BASIN","centerX":44,"centerZ":-192,"depth":2,"radiusU":14,"radiusV":12,"rotationDegrees":0},
+    {"operator":"DRAINAGE_CUT","depth":2.4,"endFeatherWorldUnits":4,"halfWidth":4,"polyline":[[44,-192],[36,-196],[28,-200]]},
+    {"operator":"TERRACE_BAND","centerX":34,"centerZ":-170,"feather":4,"halfLength":10,"halfWidth":5,"height":0.9,"rotationDegrees":90},
+    {"operator":"TERRACE_BAND","centerX":54,"centerZ":-170,"feather":4,"halfLength":10,"halfWidth":5,"height":0.9,"rotationDegrees":90}
+  ],
+  "traversableOpening": {
+    "polyline": [[68,-196],[68,-164]],
+    "minimumWidthWorldUnits": 8
+  },
+  "cavernCompatibility": {"required": true},
+  "waterfallReadiness": {"required": true}
+}

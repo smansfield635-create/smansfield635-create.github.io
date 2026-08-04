@@ -1,0 +1,15 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_MATCHED_CAMERA_MANIFEST_v1",
+  "candidateId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_002",
+  "sourceRegistryPath": "h-earth-3d/tools/instrument-platform/permanent-scene-registry.mjs",
+  "sourceRegistryExpectedBlob": "ab30137698716b6674e295dfb537fa04ffef4d46",
+  "captureAuthority": "POST_GATE_INDEPENDENT_RENDER_EXECUTION",
+  "views": [
+    {"sceneId":"SCENE_01_HILL_FIELD_FILL","normalTraversalView":true,"matchedBaselineAndCandidate":true},
+    {"sceneId":"SCENE_02_ASCENDING_TOWARD_CREST","normalTraversalView":true,"matchedBaselineAndCandidate":true},
+    {"sceneId":"SCENE_03_DESCENDING_WITHOUT_HORIZON","normalTraversalView":true,"matchedBaselineAndCandidate":true},
+    {"sceneId":"SCENE_06_COAST_TO_INLAND_TRANSITION","normalTraversalView":true,"matchedBaselineAndCandidate":true}
+  ],
+  "screenshotsClaimed": false,
+  "userReviewAuthorized": false
+}

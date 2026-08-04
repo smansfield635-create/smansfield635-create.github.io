@@ -1,0 +1,7 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_003_TRIGGER_v1",
+  "operationBlob": "f24d137139935cfb78cea02e6b7cd098f63d1fef",
+  "exactStartingMainHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "purpose": "Trigger the already-installed isolated candidate-003 construction and exact-admission workflow.",
+  "productMutation": false
+}

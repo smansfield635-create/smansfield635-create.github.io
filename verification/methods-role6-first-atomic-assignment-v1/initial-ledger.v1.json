@@ -1,0 +1,8 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_FIRST_ASSIGNMENT_LEDGER_v1",
+  "genesisCandidateHead": "3c303a49b4e90cf8672cd76f9f2c31041c2e56d1",
+  "bootstrapFingerprint": "86597f327a3ad0b49a1f4580ed25f07a8032197f470490bcd060ed15d6e2cb54",
+  "revision": 0,
+  "ledgerHead": "38278be08265e21387e163a902f6f715c15ae91361f383418cf0c4eba86e31a0",
+  "assignments": []
+}

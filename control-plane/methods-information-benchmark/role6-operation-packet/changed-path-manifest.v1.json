@@ -1,0 +1,31 @@
+{
+  "schema": "METHODS_ROLE_6_OPERATION_PACKET_CARRIER_CHANGED_PATH_MANIFEST_v1",
+  "manifestId": "METHODS_ROLE_6_OPERATION_PACKET_CARRIER_CHANGED_PATHS_001",
+  "exactBaseInfrastructureHead": "0d601cb71dac863130b934f387425085fdf54e52",
+  "expectedChangedPaths": [
+    ".github/workflows/methods-information-benchmark-role6-operation-packet-carrier.yml",
+    "control-plane/methods-information-benchmark/role6-operation-packet/AGENTS.md",
+    "control-plane/methods-information-benchmark/role6-operation-packet/carrier-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/changed-path-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/methods-role6-operation.packet.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-builder.mjs",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-dependency-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-entry.locator.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-receipt.schema.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-verifier.mjs"
+  ],
+  "equalityRequired": true,
+  "prohibitedPathPrefixes": [
+    "laws/",
+    "showroom/",
+    "assets/",
+    "render/",
+    "renderer/",
+    "preview/",
+    "control-plane/methods-information-benchmark/assignment-infrastructure/",
+    "control-plane/methods-information-benchmark/bootstrap/",
+    "control-plane/methods-information-benchmark/role6-audit/"
+  ],
+  "assignmentStateArtifactsAllowed": false,
+  "substantiveAuditOutputsAllowed": false
+}

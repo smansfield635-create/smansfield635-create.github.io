@@ -71,9 +71,16 @@ async function runViewport(label, viewport) {
   const page = await browser.newPage();
   await page.setViewport(viewport);
   page.on("console", message => {
-    if (message.type() === "error") result.consoleErrors.push({ viewport: label, text: message.text() });
+    if (message.type() === "error") {
+      result.consoleErrors.push({
+        viewport: label,
+        text: message.text(),
+        location: message.location(),
+        stackTrace: message.stackTrace()
+      });
+    }
   });
-  page.on("pageerror", error => result.pageErrors.push({ viewport: label, text: error.message }));
+  page.on("pageerror", error => result.pageErrors.push({ viewport: label, text: error.message, stack: error.stack || null }));
   page.on("requestfailed", request => result.requestFailures.push({ viewport: label, url: request.url(), reason: request.failure()?.errorText || "unknown" }));
 
   await page.goto(`${origin}/verification/methods-models-categorical-spatial-template-v1/`, { waitUntil: "networkidle0", timeout: 30000 });
@@ -153,5 +160,13 @@ try {
 }
 
 await fs.writeFile(path.join(outDir, "observer-result.json"), `${JSON.stringify(result, null, 2)}\n`);
-console.log(JSON.stringify({ contract: result.contract, result: result.result, checks: result.checks, screenshotCount: result.screenshots.length }, null, 2));
+console.log(JSON.stringify({
+  contract: result.contract,
+  result: result.result,
+  checks: result.checks,
+  screenshotCount: result.screenshots.length,
+  consoleErrors: result.consoleErrors,
+  pageErrors: result.pageErrors,
+  requestFailures: result.requestFailures
+}, null, 2));
 if (result.result !== "PASS_OPERATIONAL_VERTICAL_SLICE") process.exitCode = 1;

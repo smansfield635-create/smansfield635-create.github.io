@@ -157,35 +157,41 @@ function viewportProfile() {
 
 function overviewFamilyCenters(profile) {
   if (profile.mobile) {
-    const radiusX = Math.min(105, profile.rect.width * .27);
-    const radiusY = Math.min(126, profile.rect.height * .20);
+    const radiusX = Math.min(118, profile.rect.width * .30);
+    const radiusY = Math.min(132, profile.rect.height * .20);
     return [
-      [0, -radiusY, -30],
-      [radiusX, 0, 10],
-      [0, radiusY, 50],
-      [-radiusX, 0, 90]
+      [0, -radiusY, 40],
+      [radiusX, 0, 30],
+      [0, radiusY, 20],
+      [-radiusX, 0, 10]
     ];
   }
-  const x = Math.min(390, profile.rect.width * .27);
-  const y = Math.min(168, profile.rect.height * .235);
+  const x = Math.min(400, profile.rect.width * .285);
+  const y = Math.min(178, profile.rect.height * .225);
   return [
-    [-x, -y, -90],
-    [x, -y, -30],
-    [x, y, 30],
-    [-x, y, 90]
+    [-x, -y, 40],
+    [x, -y, 30],
+    [x, y, 20],
+    [-x, y, 10]
   ];
 }
 
-function planeTransform(center, profile, active, overview) {
+function planeLayout(center, profile, active, overview) {
   if (overview) {
-    const scale = profile.mobile ? .36 : profile.tablet ? .72 : .92;
-    return `translate3d(${center[0]}px, ${center[1]}px, ${center[2]}px) translate(-50%, -50%) scale(${scale})`;
+    return {
+      x: center[0],
+      y: center[1],
+      z: center[2],
+      scale: profile.mobile ? .36 : profile.tablet ? .72 : .92
+    };
   }
-  const scale = profile.mobile ? .7 : .98;
-  const x = active ? 0 : center[0] * 1.7;
-  const y = active ? -12 : center[1] * 1.4;
-  const z = active ? -120 : -460;
-  return `translate3d(${x}px, ${y}px, ${z}px) translate(-50%, -50%) scale(${active ? scale : scale * .58})`;
+  const scale = profile.mobile ? .70 : .98;
+  return {
+    x: active ? 0 : center[0] * 1.7,
+    y: active ? -12 : center[1] * 1.4,
+    z: active ? 40 : 0,
+    scale: active ? scale : scale * .58
+  };
 }
 
 function overviewNodePosition(familyIndex, modelIndex, count, profile) {
@@ -194,29 +200,32 @@ function overviewNodePosition(familyIndex, modelIndex, count, profile) {
   const midpoint = (count - 1) / 2;
   const normalized = midpoint ? (modelIndex - midpoint) / midpoint : 0;
   const direction = familyIndex < 2 ? 1 : -1;
-  const spacing = profile.mobile ? 27 : profile.tablet ? 56 : 74;
+  const spacing = profile.mobile ? 29 : profile.tablet ? 56 : 72;
   const localX = (modelIndex - midpoint) * spacing;
-  const localY = direction * (Math.pow(Math.abs(normalized), 1.7) * (profile.mobile ? 28 : 52) - (profile.mobile ? 9 : 16));
-  const scale = profile.mobile ? .37 : profile.tablet ? .62 : .74;
-  return { x: cx + localX, y: cy + localY + (profile.mobile ? 7 : 24), z: cz + modelIndex * 2, scale };
+  const localY = direction * (Math.pow(Math.abs(normalized), 1.7) * (profile.mobile ? 26 : 48) - (profile.mobile ? 8 : 14));
+  const scale = profile.mobile ? .38 : profile.tablet ? .62 : .74;
+  return { x: cx + localX, y: cy + localY + (profile.mobile ? 5 : 16), z: cz + modelIndex, scale };
 }
 
 function browseNodePosition(descriptor, activeDescriptor, profile) {
   const sameFamily = descriptor.FAMILY_ID === activeDescriptor.FAMILY_ID;
   const delta = descriptor.modelIndex - activeDescriptor.modelIndex;
   const active = descriptor.MODEL_ID === activeDescriptor.MODEL_ID;
-  if (active) return { x: 0, y: profile.mobile ? -44 : -26, z: 240, scale: profile.mobile ? .91 : 1 };
-  if (!sameFamily) return { x: descriptor.familyIndex % 2 ? 900 : -900, y: 170, z: -540, scale: .45 };
+  if (active) return { x: 0, y: profile.mobile ? -38 : -22, z: 60, scale: profile.mobile ? .91 : 1 };
+  if (!sameFamily) return { x: descriptor.familyIndex % 2 ? 900 : -900, y: 170, z: 0, scale: .45 };
   const direction = Math.sign(delta) || 1;
   const distance = Math.abs(delta);
   if (distance === 1) {
-    return { x: direction * (profile.mobile ? 265 : 420), y: profile.mobile ? -16 : 20, z: 70, scale: profile.mobile ? .65 : .76 };
+    return { x: direction * (profile.mobile ? 272 : 430), y: profile.mobile ? -12 : 18, z: 30, scale: profile.mobile ? .64 : .74 };
   }
-  return { x: direction * (profile.mobile ? 440 + distance * 45 : 620 + distance * 80), y: 72 + distance * 18, z: -120 - distance * 30, scale: .54 };
+  return { x: direction * (profile.mobile ? 450 + distance * 45 : 630 + distance * 80), y: 70 + distance * 18, z: 10, scale: .52 };
 }
 
 function setNodeTransform(node, layout, projection) {
-  node.style.transform = `translate3d(${layout.x}px, ${layout.y}px, ${layout.z}px) translate(-50%, -50%) scale(${layout.scale})`;
+  node.style.left = `${layout.x}px`;
+  node.style.top = `${layout.y}px`;
+  node.style.zIndex = String(Math.max(1, Math.round(layout.z + 100)));
+  node.style.transform = `translate(-50%, -50%) scale(${layout.scale})`;
   node.dataset.trajectoryProjection = projection;
   node.dataset.compositionX = layout.x.toFixed(2);
   node.dataset.compositionY = layout.y.toFixed(2);
@@ -241,8 +250,11 @@ function applyRelationshipGeometry(layoutByModel, overview) {
     }
     const geometry = relationGeometry(from, to);
     relation.hidden = !overview && !(document.querySelector(`[data-model-id="${CSS.escape(relation.dataset.from)}"]`)?.dataset.active === "true" || document.querySelector(`[data-model-id="${CSS.escape(relation.dataset.to)}"]`)?.dataset.active === "true");
+    relation.style.left = `${geometry.x}px`;
+    relation.style.top = `${geometry.y}px`;
+    relation.style.zIndex = String(Math.max(1, Math.round(geometry.z + 90)));
     relation.style.width = `${geometry.length}px`;
-    relation.style.transform = `translate3d(${geometry.x}px, ${geometry.y}px, ${geometry.z}px) translate(-50%, -50%) rotate(${geometry.angle}deg)`;
+    relation.style.transform = `translate(-50%, -50%) rotate(${geometry.angle}deg)`;
     relation.dataset.compositionRelation = overview ? "FAMILY_TRAJECTORY" : "ACTIVE_NEIGHBOR_LINK";
   });
 }
@@ -259,17 +271,21 @@ function applyPageSpecificGeometry() {
 
   stage.dataset.compositionMode = overview ? "FOUR_FAMILY_FIELD" : "ACTIVE_MODEL_FOREGROUND";
   stage.dataset.activeLens = resolved.native.lensId;
-  sceneRoot.style.transform = "translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg) scale(1)";
-  field.style.transform = "translate3d(0px, 0px, 0px)";
+  sceneRoot.style.transform = "none";
+  field.style.transform = "none";
 
   document.querySelectorAll(".spatial-family-plane").forEach(plane => {
     const family = current.registry.families.find(candidate => candidate.familyId === plane.dataset.familyId);
     const familyIndex = family?.familyIndex || 0;
     const active = plane.dataset.familyId === resolved.native.familyId;
+    const layout = planeLayout(centers[familyIndex] || [0, 0, 0], profile, active, overview);
     plane.dataset.regionOrder = String(familyIndex + 1);
     plane.dataset.regionSemantics = "CANONICAL_ORDER_WITHOUT_DIRECTIONAL_AUTHORITY";
     plane.dataset.compositionRole = overview ? "DISTINCT_FAMILY_TERRITORY" : active ? "ACTIVE_FAMILY_BACKPLANE" : "DISTANT_FAMILY_CONTEXT";
-    plane.style.transform = planeTransform(centers[familyIndex] || [0,0,0], profile, active, overview);
+    plane.style.left = `${layout.x}px`;
+    plane.style.top = `${layout.y}px`;
+    plane.style.zIndex = String(Math.max(1, Math.round(layout.z + 80)));
+    plane.style.transform = `translate(-50%, -50%) scale(${layout.scale})`;
   });
 
   document.querySelectorAll(".spatial-model-node").forEach(node => {
@@ -287,11 +303,11 @@ function applyPageSpecificGeometry() {
 
   applyRelationshipGeometry(layoutByModel, overview);
 
-  requestAnimationFrame(() => {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
     const activeNode = document.querySelector(".spatial-model-node[data-active='true']");
     const stageRect = stage.getBoundingClientRect();
     const activeRect = activeNode?.getBoundingClientRect();
-    const fullyVisible = !activeRect || overview || (activeRect.left >= stageRect.left + 6 && activeRect.right <= stageRect.right - 6 && activeRect.top >= stageRect.top + 45 && activeRect.bottom <= stageRect.bottom - (profile.mobile ? 90 : 64));
+    const fullyVisible = !activeRect || overview || (activeRect.left >= stageRect.left + 6 && activeRect.right <= stageRect.right - 6 && activeRect.top >= stageRect.top + 38 && activeRect.bottom <= stageRect.bottom - (profile.mobile ? 88 : 62));
     stage.dataset.activeModelFullyVisible = String(fullyVisible);
     const nodes = Array.from(document.querySelectorAll(".spatial-model-node:not([hidden])"));
     const centersX = nodes.map(node => {
@@ -300,7 +316,7 @@ function applyPageSpecificGeometry() {
     });
     const averageX = centersX.length ? centersX.reduce((sum, value) => sum + value, 0) / centersX.length : stageRect.left + stageRect.width / 2;
     stage.dataset.corpusCenterOffsetRatio = (Math.abs(averageX - (stageRect.left + stageRect.width / 2)) / Math.max(1, stageRect.width)).toFixed(4);
-  });
+  }));
 }
 
 function updateLocalOrigin() {

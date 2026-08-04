@@ -1,0 +1,55 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_ATOMIC_ASSIGNMENT_AUTHORIZATION_v2",
+  "authorizationSchemaId": "METHODS_INFORMATION_BENCHMARK_ATOMIC_ASSIGNMENT_AUTHORIZATION_SCHEMA_v2",
+  "authorizationId": "MIB_ROLE6_FIRST_ATOMIC_ASSIGNMENT_AUTHORIZATION_20260804_1802_V2",
+  "authorizationNonce": "d1310a88d2b901a54c9f9ab18f3b97e6adb5dbdf141f2240127e3108ba0e6c2e",
+  "originAuthority": "USER",
+  "authorized": true,
+  "roleId": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "canonicalOperationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "authorizedHolderExecutionId": "MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7",
+  "canonicalGenesisHead": "3c303a49b4e90cf8672cd76f9f2c31041c2e56d1",
+  "genesisFingerprint": "86597f327a3ad0b49a1f4580ed25f07a8032197f470490bcd060ed15d6e2cb54",
+  "exactAssignmentInfrastructureHead": "0d601cb71dac863130b934f387425085fdf54e52",
+  "assignmentInfrastructureFingerprint": "9386865e9ccb553a42bc6e3f30a4955517c8332be37bdd5011660e08d052191b",
+  "exactPacketSuccessorHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+  "operationPacketPath": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/methods-role6-developmental-baseline-successor.packet.v1.json",
+  "operationPacketSchema": "METHODS_INFORMATION_BENCHMARK_BOUNDED_OPERATION_PACKET_SUCCESSOR_v1",
+  "operationPacketCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+  "activationEligibilityReceiptIdentity": {
+    "canonicalSha256": "58e3efdae0f78dbe91a8881e583d57dc2460117db8ac13a9ae77e019642856c4",
+    "artifactId": 8899858820,
+    "artifactSha256": "aadf696bcfff3fb79248214d0e7aab25998fa7dd180e18874645bed3e23fbd7a"
+  },
+  "packetVerificationReceiptIdentity": {
+    "receiptFileSha256": "1ed30d3e860fed2e5debd869fd88367ec884cfa17a13ee1036d504244124562f",
+    "artifactId": 8905112612,
+    "artifactSha256": "de51f942cae1514e0124f43c34ef4dc801d9c355849cfcb7a20bff0a65c8efc8"
+  },
+  "expectedInitialLedgerHead": "38278be08265e21387e163a902f6f715c15ae91361f383418cf0c4eba86e31a0",
+  "expectedRoleState": "INACTIVE",
+  "expectedOperationState": "UNASSIGNED",
+  "authorizedAssignmentChangedPathSet": [
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-operation-scoped-activation.record.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/first-assignment-ledger.successor.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/atomic-authorization-consumption.record.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-admission.receipt.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/assignment-transaction.evidence.v1.json"
+  ],
+  "issuedAt": "2026-08-04T18:02:00-05:00",
+  "expiresAt": "2026-08-05T18:02:00-05:00",
+  "singleUse": true,
+  "returnRequired": true,
+  "returnDestination": "METHODS_INFORMATION_BENCHMARK_GOVERNANCE_INTAKE",
+  "terminationLaw": {
+    "terminatesAtFirstOf": [
+      "ACCEPTED_MACHINE_READABLE_RETURN",
+      "DECLARED_STOPPING_BOUNDARY",
+      "PACKET_DEFINED_OPERATION_EXPIRY",
+      "FAIL_CLOSED_AUTHORITY_OR_SCOPE_VIOLATION",
+      "USER_REVOCATION"
+    ],
+    "residualGeneralRoleAuthorityAllowed": false,
+    "postTerminationRoleState": "INACTIVE"
+  }
+}

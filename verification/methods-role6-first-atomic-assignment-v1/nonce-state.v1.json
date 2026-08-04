@@ -1,0 +1,11 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_NONCE_STATE_v1",
+  "revision": 0,
+  "nonceStateHead": "53391b32904055529981e0f27b5d6dd0bf65ea87315b1587271c7b4877fe2229",
+  "nonces": {
+    "d1310a88d2b901a54c9f9ab18f3b97e6adb5dbdf141f2240127e3108ba0e6c2e": {
+      "state": "UNUSED",
+      "authorizationId": "MIB_ROLE6_FIRST_ATOMIC_ASSIGNMENT_AUTHORIZATION_20260804_1802_V2"
+    }
+  }
+}

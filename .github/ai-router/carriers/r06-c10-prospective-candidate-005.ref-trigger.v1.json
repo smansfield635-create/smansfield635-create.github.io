@@ -1,0 +1,6 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_005_REF_TRIGGER_v1",
+  "carrierHeadBeforeTrigger": "2496ce8dfd4079bdfdddc8bd1bb7ebb7f682ba74",
+  "triggerClass": "GIT_REFERENCE_UPDATE",
+  "productMutation": false
+}

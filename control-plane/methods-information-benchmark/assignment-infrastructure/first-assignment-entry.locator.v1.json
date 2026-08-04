@@ -1,0 +1,19 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_GENERIC_FIRST_ASSIGNMENT_LOCATOR_v1",
+  "locatorId": "MIB_GENERIC_FIRST_ASSIGNMENT_ENTRY_001",
+  "status": "INSTRUMENTATION_ONLY_NOT_AN_ASSIGNMENT",
+  "manifest": "control-plane/methods-information-benchmark/assignment-infrastructure/manifest.v1.json",
+  "tool": "control-plane/methods-information-benchmark/assignment-infrastructure/assignment.mjs",
+  "requiredProductionInputs": [
+    "EXACT_ACTIVATION_ELIGIBILITY_RECEIPT",
+    "HASH_BOUND_BOUNDED_OPERATION_PACKET",
+    "SEPARATE_USER_ATOMIC_ASSIGNMENT_AUTHORIZATION",
+    "INITIAL_LEDGER_AND_EXPECTED_LEDGER_HEAD",
+    "UNIQUE_HOLDER_EXECUTION_ID"
+  ],
+  "roleIdentityBound": false,
+  "operationIdentityBound": false,
+  "productionAssignmentPerformed": false,
+  "conversationMemoryAuthority": false,
+  "privateStateAuthority": false
+}

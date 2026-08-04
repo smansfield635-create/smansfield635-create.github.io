@@ -1,0 +1,1 @@
+Temporary bounded bootstrap carrier. The pull-request workflow replaces this directory and itself with the exact final successor package, then pushes the successor head without assigning Role 6 or mutating product surfaces.

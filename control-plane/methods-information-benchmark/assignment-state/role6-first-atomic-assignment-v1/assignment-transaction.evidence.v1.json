@@ -1,0 +1,23 @@
+{
+  "approvalSha256": "415318812af834cc3be2c9658aca03696ab1d7f92cb6c94a193ffd2bb7306769",
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "authorizationSha256": "4f2a24c7b6a0bdf46e9d83a41ec27eae605016c12a451b109b26ee97ed5fdfc0",
+  "exactChangedPaths": [
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-operation-scoped-activation.record.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/first-assignment-ledger.successor.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/atomic-authorization-consumption.record.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-admission.receipt.v1.json",
+    "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/assignment-transaction.evidence.v1.json"
+  ],
+  "generalRoleAuthorityActivated": false,
+  "mergePerformed": false,
+  "noncePredecessorHead": "53391b32904055529981e0f27b5d6dd0bf65ea87315b1587271c7b4877fe2229",
+  "nonceSuccessorHead": "cf4d6082fd82428e5dbe8d49e3497fbcc0b6a248d5f82d3cbf4a5862818d36fd",
+  "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+  "packetSuccessorHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+  "predecessorLedgerHead": "38278be08265e21387e163a902f6f715c15ae91361f383418cf0c4eba86e31a0",
+  "result": "PASS_OPERATION_SCOPED_ASSIGNMENT_PREPARED",
+  "schema": "METHODS_INFORMATION_BENCHMARK_ASSIGNMENT_TRANSACTION_EVIDENCE_v2",
+  "substantiveAuditOutputsCreated": false,
+  "successorLedgerHead": "c351db89434f9a65a28cbacbd0122c0396b15f12b5e6d529b09dbdfa9bf120a3"
+}

@@ -1,0 +1,240 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_1_OFFICIAL_LANDFORM_CANDIDATE_CONSTRUCTION_RETURN_v1",
+  "operationId": "H_EARTH_R06_C10_OFFICIAL_LANDFORM_CANDIDATE_CONSTRUCTION_001",
+  "exactSuccessReturn": "R06_C10_ROLE_1_OFFICIAL_LANDFORM_CANDIDATE_CONSTRUCTION_PASS_CLOSED",
+  "status": "PASS_CLOSED",
+  "sourceRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
+  "destinationRole": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "exactStartingHead": "125d72ccfca327ffc061dda962e1287e29f9050d",
+  "exactCandidateHeadBinding": "RETURNED_OUT_OF_BAND_AFTER_COMMIT_OBJECT_CREATION_TO_AVOID_SELF_REFERENCE",
+  "branch": "role1/r06-c10-official-landform-candidate-construction-001",
+  "target": "H_EARTH_GROUND_CELL_001:R06:C10",
+  "targetEnvironment": "COASTAL_TO_INLAND_TRANSITION_LANDFORM",
+  "geometrySequence": [
+    "UPPER_SADDLE",
+    "DROP_FACE_SUPPORT",
+    "LOWER_PLUNGE_POOL_BASIN_SUPPORT",
+    "RESERVOIR_OR_OUTFLOW_SUPPORT"
+  ],
+  "authorizedBoundaryProof": {
+    "core": {
+      "xMinimum": 32,
+      "xMaximum": 64,
+      "zMinimum": -192,
+      "zMaximum": -164
+    },
+    "blendSupport": {
+      "xMinimum": 24,
+      "xMaximum": 72,
+      "zMinimum": -200,
+      "zMaximum": -156
+    },
+    "halo": {
+      "xMinimum": 16,
+      "xMaximum": 80,
+      "zMinimum": -208,
+      "zMaximum": -148
+    },
+    "maximumObservedAppliedDelta": {
+      "minimum": -5.470812196338406,
+      "maximum": 5.2192367632428365
+    },
+    "outsideBlendSupportExactZero": true,
+    "supportOuterEdgeDeltaExactZero": true,
+    "supportOuterEdgeMaximumGradient": 0,
+    "mutationOutsideHalo": false
+  },
+  "exactChangedPathCount": 7,
+  "exactChangedPaths": [
+    "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_01_HILL_FIELD_FILL.matched-comparison.svg",
+    "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_02_ASCENDING_TOWARD_CREST.matched-comparison.svg",
+    "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_03_DESCENDING_WITHOUT_HORIZON.matched-comparison.svg",
+    "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_06_COAST_TO_INLAND_TRANSITION.matched-comparison.svg",
+    "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.official-landform-candidate-construction.return.v1.json",
+    "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js",
+    "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+  ],
+  "productBlobIdentities": {
+    "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+    "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+    "startingSuccessorTerrainField": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+    "unchangedGeometryConstructor": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46"
+  },
+  "frozenSubstrateConformanceReexecution": {
+    "result": "PASS_EXPECTED_25_PASS_3_CANDIDATE_GATES_FAIL",
+    "passCount": 25,
+    "expectedFailIds": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "deterministicReceiptDigest": "3ddf83abcef0a2f5cfa8aa61d314dd6935d655506505fda8386b9b5d3817a4a4",
+    "toolBaseMutation": false,
+    "assertionSemanticMutation": false
+  },
+  "assertionsExecuted28": true,
+  "exactPassAssertionIds": [
+    "01_EXACT_BASELINE_COMMIT_AND_ALL_REQUIRED_BLOBS_MATCH",
+    "02_ROLE_6_PACKAGE_AND_MEMBER_SHA256_VALUES_MATCH",
+    "03_REQUEST_SCHEMA_VALID_AND_NO_UNKNOWN_KEYS",
+    "04_ALL_PARAMETERS_INSIDE_SAFE_BOUNDS",
+    "05_CONFORMANCE_OUTPUT_SHA256_MATCHES_EXPECTED_FIXTURE",
+    "06_CANDIDATE_FIELD_DETERMINISTIC_REPEAT_EXECUTION",
+    "07_CANDIDATE_FIELD_FINITE_AT_ALL_RUN_8B_AXIS_POINTS",
+    "08_DELTA_EXACT_ZERO_OUTSIDE_BLEND_SUPPORT",
+    "09_SUPPORT_OUTER_EDGE_DELTA_EXACT_ZERO",
+    "10_SUPPORT_OUTER_EDGE_GRADIENT_WITHIN_1E_MINUS_8",
+    "11_RUN_8B_X_AND_Z_AXES_BYTE_EQUIVALENT",
+    "12_RUN_8B_INDEX_ARRAY_BYTE_EQUIVALENT",
+    "13_VERTEX_TRIANGLE_ROW_COLUMN_COUNTS_MATCH",
+    "14_NONDEGENERATE_TRIANGLES_MINIMUM_DOUBLE_AREA_AT_LEAST_4",
+    "15_FACE_AND_VERTEX_NORMALS_FINITE_AND_UNIT_BOUNDED",
+    "16_ALL_VIRTUAL_SHARED_EDGE_PAIRS_PASS",
+    "17_FORMER_BOUNDARY_CONTINUITY_REMAINS_PASS",
+    "18_COASTLINE_AND_WATER_MEMBERSHIP_UNCHANGED",
+    "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+    "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+    "21_CLEARANCE_USES_CANDIDATE_FIELD_NOT_RUN_6_FIELD",
+    "22_AT_LEAST_ONE_CAVERN_COMPATIBLE_FACE_PATCH_REPORTED",
+    "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS",
+    "24_ACCEPTED_V2_PRODUCT_BLOBS_UNCHANGED",
+    "25_NO_NEW_SHADER_TEXTURE_BUFFER_DRAW_CALL_OR_WATER_PRIMITIVE",
+    "26_MATCHED_CAMERA_MANIFEST_HAS_AT_LEAST_THREE_NORMAL_VIEWS",
+    "27_ROLLBACK_AND_RECOVERY_OUTPUTS_COMPLETE",
+    "28_PACKAGE_MEMBER_HASHES_AND_ARCHIVE_READBACK_PASS"
+  ],
+  "exactFailAssertionIds": [],
+  "candidateAdmissionResult": "PASS_28_OF_28",
+  "mandatoryAssertionEvidence": {
+    "19": {
+      "maximumGeneralSlope": 0.6583069223068284,
+      "maximumSpecialSlope": 1.7298445240130975,
+      "maximumGeneralTwoUnitEdgeRise": 1.2696344256401062,
+      "maximumSpecialTwoUnitEdgeRise": 3.4952969551086426,
+      "maximumGeneralAdjacentNormalAngleDegrees": 7.180405942581581,
+      "maximumSpecialAdjacentNormalAngleDegrees": 35.77690050264094
+    },
+    "20": {
+      "status": "TRAVERSAL_CLEARANCE_PASS",
+      "declaredWidthWorldUnits": 8,
+      "declaredLengthWorldUnits": 32,
+      "continuousPassLengthWorldUnits": 32,
+      "hardSlopeMaximum": 0.48,
+      "minimumTerrainClearanceWorldUnits": 1.6,
+      "failedStationCount": 0
+    },
+    "23": {
+      "status": "WATERFALL_READINESS_DRY_GEOMETRY_REPORTED",
+      "dryGeometryPresent": true,
+      "requiredOutputsPresent": true,
+      "continuousDownhillPath": true,
+      "waterImplementation": false,
+      "flowDirectionElevations": [
+        19.67009848356247,
+        16.22801834344864,
+        10.843777298927307,
+        10.843777298927307,
+        10.843777298927307,
+        10.248187899589539,
+        4.532264173030853
+      ]
+    }
+  },
+  "fourMatchedTraversalViewIdentities": [
+    {
+      "sceneId": "SCENE_01_HILL_FIELD_FILL",
+      "normalTraversalView": true,
+      "path": "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_01_HILL_FIELD_FILL.matched-comparison.svg",
+      "gitBlob": "843dfde7eee4f17e2dbf578af9ac2bfe566d14c8",
+      "sha256": "5dffaf7e40f4dccabf5f738d2eb53f5d3cd2ac1b883f0f416325e07e36b3f92e",
+      "bytes": 5154,
+      "sourceRasterSha256": {
+        "baseline": "257a32fb776ffd9fd19c80abf1faf4e66bf2c220b88d17d6df39ce2d743226e6",
+        "candidate": "ebbeea056ab25b26a82f0f01ae7ff00c4862815f72ed9346f8865d6fd6230ab8"
+      },
+      "changedPixelFractionAt8": 0.20047589869281046,
+      "meanAbsoluteChannelDifference": 11.015741421568627,
+      "p95AbsoluteChannelDifference": 79,
+      "maximumChannelDifference": 135,
+      "obviousWithoutExplanation": true
+    },
+    {
+      "sceneId": "SCENE_02_ASCENDING_TOWARD_CREST",
+      "normalTraversalView": true,
+      "path": "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_02_ASCENDING_TOWARD_CREST.matched-comparison.svg",
+      "gitBlob": "1c54568ec8a32a392be51d2880cb0b31bf52eaea",
+      "sha256": "dfc247f2cdc78e810c6c77f815213a11403cfdfe7f1c6038c8ef479347230125",
+      "bytes": 5004,
+      "sourceRasterSha256": {
+        "baseline": "843d4b145cc090b2c8856677abfcc1a2afe20edba06dcb223ad6070d17836228",
+        "candidate": "fa469f1ba997be30d9849bbdfccac61637c5dc250add8193b4d912a5fa0e94dc"
+      },
+      "changedPixelFractionAt8": 0.08734272875816994,
+      "meanAbsoluteChannelDifference": 4.828709150326797,
+      "p95AbsoluteChannelDifference": 14,
+      "maximumChannelDifference": 132,
+      "obviousWithoutExplanation": true
+    },
+    {
+      "sceneId": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+      "normalTraversalView": true,
+      "path": "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_03_DESCENDING_WITHOUT_HORIZON.matched-comparison.svg",
+      "gitBlob": "252fb90a9f47d99393ac20ccf508f512198122fd",
+      "sha256": "8d4e165e2652439da2c27073ac96a359d63abb974e37d7704fa2db904fa3f8dc",
+      "bytes": 7412,
+      "sourceRasterSha256": {
+        "baseline": "267a324d617f96450e96ebe8ed6c4d43e4660a216e913e7f708e3301487ca515",
+        "candidate": "0683e5ad2d6fb4a16fcb9978d65be7b8dd8a58225e47cb71f6ac042769660b04"
+      },
+      "changedPixelFractionAt8": 0.176828022875817,
+      "meanAbsoluteChannelDifference": 8.47198052832244,
+      "p95AbsoluteChannelDifference": 62,
+      "maximumChannelDifference": 165,
+      "obviousWithoutExplanation": true
+    },
+    {
+      "sceneId": "SCENE_06_COAST_TO_INLAND_TRANSITION",
+      "normalTraversalView": true,
+      "path": "h-earth-3d/control-plane/r06-c10/candidates/official-landform-candidate-001/views/SCENE_06_COAST_TO_INLAND_TRANSITION.matched-comparison.svg",
+      "gitBlob": "b7d898e13b976a35235e2d2b504be6b4c76a7dd3",
+      "sha256": "8719fc9c9984c99574fb4ecd7767cf179c686764ec81d52a530c3d6aaf391dde",
+      "bytes": 6132,
+      "sourceRasterSha256": {
+        "baseline": "a7e1cdff2c3288686e8b0a1066f0e97c74081b85cf07b0ccd5f2aed277aef070",
+        "candidate": "49ff18624f8a2cba48a4d89216ad0b6202b1fe05257899af0cfd2d15fdc4625f"
+      },
+      "changedPixelFractionAt8": 0.018392565359477125,
+      "meanAbsoluteChannelDifference": 1.151576797385621,
+      "p95AbsoluteChannelDifference": 0,
+      "maximumChannelDifference": 140,
+      "obviousWithoutExplanation": false
+    }
+  ],
+  "threeViewPerceptualThresholdResult": {
+    "obviousViewCount": 3,
+    "required": 3,
+    "result": "PASS_3_OF_4"
+  },
+  "evidencePackageIdentity": {
+    "sha256": "926e4f25ed97d28012a73ac8499fd95779f194809f21a204f98180ca49ec5b89",
+    "byteCount": 391818,
+    "memberCount": 27,
+    "archiveName": "H_EARTH_R06_C10_OFFICIAL_LANDFORM_CANDIDATE_001_EVIDENCE_PACKAGE_v1.zip"
+  },
+  "rollbackIdentity": "R06_C10_OFFICIAL_LANDFORM_CANDIDATE_001_RESET_TO_125d72c",
+  "rollbackTargetHead": "125d72ccfca327ffc061dda962e1287e29f9050d",
+  "mainUnchanged": true,
+  "userReviewRequested": false,
+  "publicReviewUrlCreated": false,
+  "mainMerge": false,
+  "livePromotion": false,
+  "waterImplementation": false,
+  "cavernFinalization": false,
+  "directPostconstructionVertexEditing": false,
+  "acceptedV2BaselineMutation": false,
+  "toolBaseMutation": false,
+  "assertionSemanticMutation": false,
+  "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "stopAfterReturn": true,
+  "waitForUserDirection": false
+}

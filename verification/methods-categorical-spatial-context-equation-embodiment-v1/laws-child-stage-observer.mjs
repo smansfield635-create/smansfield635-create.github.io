@@ -307,6 +307,14 @@ function maxPlaneOverlap(planes) {
   return maximum;
 }
 
+function uniquePlaneCenterCount(planes) {
+  return new Set(planes.map(plane => {
+    const centerX = Math.round((plane.left + plane.right) / 2);
+    const centerY = Math.round((plane.top + plane.bottom) / 2);
+    return `${centerX}:${centerY}`;
+  })).size;
+}
+
 const browser = await puppeteer.launch({ executablePath: chromePath, headless: "new", args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"] });
 try {
   const desktop = await runDesktop(browser);
@@ -317,7 +325,7 @@ try {
     phoneStageInFirstView: phone.overview.shell.stageTopRatio <= .22 && phone.overview.shell.stageViewportIntersection >= .72,
     desktopCorpusCentered: desktop.overview.shell.corpusCenterOffsetRatio <= .08,
     phoneCorpusCentered: phone.overview.shell.corpusCenterOffsetRatio <= .14,
-    desktopFourFamilyTerritoriesDistinct: desktop.overview.planes.length === 4 && new Set(desktop.overview.planes.map(plane => plane.transform)).size === 4 && maxPlaneOverlap(desktop.overview.planes) <= .35,
+    desktopFourFamilyTerritoriesDistinct: desktop.overview.planes.length === 4 && uniquePlaneCenterCount(desktop.overview.planes) === 4 && maxPlaneOverlap(desktop.overview.planes) <= .35,
     desktopFourFamilyStatesCaptured: desktop.familyStates.length === 4 && new Set(desktop.familyStates.map(state => state.native.familyId)).size === 4 && desktop.familyStates.every(state => state.shell.familySelectionStatus === "complete"),
     phoneFamilyHorizonVisible: phone.overview.shell.territoryIndexCount === 4 && phone.overview.shell.territoryIndexVisible,
     desktopBrowseActiveFullyVisible: desktop.browse.active.stageIntersection >= .98 && desktop.browse.active.viewportIntersection >= .98 && desktop.browse.shell.activeModelFullyVisibleFlag,

@@ -3,7 +3,7 @@
   "candidateHead": null,
   "parentHead": null,
   "evaluatorId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_003_EXACT_EVALUATOR_v1",
-  "gateInputCandidateHead": "1381ab6c3e3f144dea52cbdeafa82657cfe982e8",
+  "gateInputCandidateHead": "ed8267a0251e70c4f654eef90f5e3d7329fdf419",
   "result": "FAIL_CLOSED",
   "error": "Cannot read properties of undefined (reading 'length')",
   "privateStateUsed": false,

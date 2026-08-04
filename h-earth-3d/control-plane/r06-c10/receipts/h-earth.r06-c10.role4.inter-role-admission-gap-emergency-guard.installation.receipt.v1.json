@@ -1,0 +1,28 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_4_INTER_ROLE_ADMISSION_GAP_EMERGENCY_GUARD_INSTALLATION_RECEIPT_v1",
+  "operationId": "H_EARTH_R06_C10_INTER_ROLE_CANDIDATE_ADMISSION_GUARD_INSTALLATION_001",
+  "status": "IMPLEMENTED_PENDING_FRESH_ROOM_EXECUTION_VERIFICATION",
+  "startingMainHead": "2228abc0de3422c75f687df415dc683f3aab8ca9",
+  "branch": "role4/r06-c10-inter-role-candidate-admission-guard-001",
+  "installedComponents": [
+    "h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs",
+    "h-earth-3d/validation/h-earth.r06-c10.candidate-admission.adapter.v1.mjs",
+    "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.successor-room-candidate-admission.locator.v1.json",
+    "h-earth-3d/control-plane/r06-c10/governance/h-earth.r06-c10.inter-role-candidate-admission-gate.v1.json",
+    "h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.exact-candidate-admission.receipt.schema.v1.json"
+  ],
+  "immediateEffect": [
+    "ROLE_1_MESSAGE_ONLY_PASS_IS_NONAUTHORITATIVE",
+    "PRIVATE_OR_UNCOMMITTED_EXECUTION_STATE_CANNOT_AUTHORIZE_HANDOFF",
+    "ANY_CANDIDATE_WITHOUT_COMMITTED_MANIFEST_AND_EVALUATOR_FAILS_CLOSED",
+    "ANY_CANDIDATE_THAT_MUTATES_GATE_AUTHORITY_FILES_FAILS_CLOSED",
+    "FRESH_ROOM_REPRODUCTION_FINGERPRINT_IS_REQUIRED_BEFORE_RATIFICATION_OR_USER_REVIEW"
+  ],
+  "currentBlockedCandidateHead": "95504c9927922318225da1d61fa303cec70497f9",
+  "currentBlockedCandidateRemainsRejected": true,
+  "productMutation": false,
+  "liveRouteMutation": false,
+  "assertionSemanticMutation": false,
+  "freshRoomExecutionVerification": "REQUIRED_BEFORE_PASS_CLOSED",
+  "productWorkflowHeld": true
+}

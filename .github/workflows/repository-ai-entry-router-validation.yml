@@ -56,6 +56,28 @@ jobs:
           test "$status" -eq 1
           grep -q '"disposition": "BLOCK"' /tmp/repository-ai-entry-router-unregistered-mutation.json
 
+      - name: Exercise H-Earth candidate admission negative backend
+        shell: bash
+        run: |
+          set +e
+          node h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs \
+            --candidate 95504c9927922318225da1d61fa303cec70497f9 \
+            --output /tmp/h-earth-r06-c10-negative-admission.json
+          status=$?
+          set -e
+          test "$status" -eq 1
+          python - <<'PY'
+          import json
+          path = '/tmp/h-earth-r06-c10-negative-admission.json'
+          with open(path, 'r', encoding='utf-8') as handle:
+              receipt = json.load(handle)
+          assert receipt['schema'] == 'H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_GATE_FAILURE_v1'
+          assert receipt['gateResult'] == 'FAIL_CLOSED_INSTRUMENT_OR_BINDING_ERROR'
+          assert receipt['candidateArgument'] == '95504c9927922318225da1d61fa303cec70497f9'
+          assert receipt['error'].startswith('AUTHORITY_IDENTITY_MISMATCH:')
+          assert receipt['conversationMemoryRequired'] is False
+          PY
+
       - name: Upload router validation receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,5 +87,6 @@ jobs:
             /tmp/repository-ai-entry-router-self-test.json
             /tmp/repository-ai-entry-router-h-earth-route.json
             /tmp/repository-ai-entry-router-unregistered-mutation.json
+            /tmp/h-earth-r06-c10-negative-admission.json
           if-no-files-found: error
           retention-days: 30

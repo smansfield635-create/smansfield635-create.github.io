@@ -1,9 +1,22 @@
 {
-  "activeScopes": {},
+  "activeScopes": {
+    "50fafd1666a4a4de761e2e5ad6c81e86a6347182089d2823fa52e4e72d3388a3": {
+      "governingHead": "73040001dbbb2e7bb7d2fc70e654d228386e3d47",
+      "lockGeneration": 4,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK:ASSIGNMENT_SUCCESSOR_GAP_CLOSURE:ROLE6:V1",
+      "operationId": "METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_v1",
+      "procedureLocatorDigest": "3b816318e87aab3a689bfbed22d277597d19fe903bd72f1a762fbe83e34bc458",
+      "released": false,
+      "requestDigest": "419e0a01eab5b41f48601ffffba7f60c86cddfc5d556861462ccd140925da760",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "50fafd1666a4a4de761e2e5ad6c81e86a6347182089d2823fa52e4e72d3388a3",
+      "state": "ADMITTED_LOCKED"
+    }
+  },
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3,
+  "lockGeneration": 4,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

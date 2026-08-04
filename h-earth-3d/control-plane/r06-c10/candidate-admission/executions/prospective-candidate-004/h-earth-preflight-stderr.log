@@ -1,0 +1,11 @@
+file:///tmp/r06-c10-governing-004/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js:40
+if(!BASE_NODE)throw new Error(`C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:${NODE_ID}`);
+                    ^
+
+Error: C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE
+    at file:///tmp/r06-c10-governing-004/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js:40:21
+    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v22.23.1

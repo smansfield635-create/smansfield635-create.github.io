@@ -1,0 +1,40 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_004_AUTHORSHIP_MANIFEST_v1",
+  "sourceDiagnosticHead": "0064e438303e10bcdbc389ce900becc3cddf16c4",
+  "sourceDiagnosticUsedAsAuthority": false,
+  "exactStartingMainHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "requestCanonicalSha256": "eec4ee8b9a98ea651908f1b9e11baa82437f641035cffc78d01550c7ddd80859",
+  "terrainParameterRetuningFromCandidate002": false,
+  "authoredMembers": [
+    {
+      "path": "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json",
+      "bytes": 563,
+      "sha256": "172ca9a7c6fdd8c737e6470fe0e9e5f0e8d8b4bc5be6270abd5aca5026e89e8d"
+    },
+    {
+      "path": "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-004.matched-camera-manifest.v1.json",
+      "bytes": 1027,
+      "sha256": "ce22ab67aafe48df477e26876fe443ac4722de8fbc4be228da9807c7de2d2b45"
+    },
+    {
+      "path": "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-004.request.v1.json",
+      "bytes": 3098,
+      "sha256": "26e3c04e9dd3881c73b627e7959f5eb93e690f7fd9e3aa846b94b38ed7b58234"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-004.js",
+      "bytes": 6668,
+      "sha256": "b07839c5285f6f2a9823272c7341f0836bc08a70012b3ad0615fe77e50220652"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "bytes": 8489,
+      "sha256": "b2cd6bbc8e100a7489fca2e8d2168f10a0318dc1d9c51642de68e710f90417c8"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-004.exact-candidate-evaluator.v1.mjs",
+      "bytes": 30213,
+      "sha256": "a5c32f27ed3d3aa86f0bca790fc895d0b9e345239dbf2a0981140a061291b2fd"
+    }
+  ]
+}

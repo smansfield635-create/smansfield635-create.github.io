@@ -1,0 +1,10 @@
+{
+  "authorizationId": "MIB_ROLE6_FIRST_ATOMIC_ASSIGNMENT_AUTHORIZATION_20260804_1802_V2",
+  "authorizationNonce": "d1310a88d2b901a54c9f9ab18f3b97e6adb5dbdf141f2240127e3108ba0e6c2e",
+  "authorizationSha256": "4f2a24c7b6a0bdf46e9d83a41ec27eae605016c12a451b109b26ee97ed5fdfc0",
+  "consumed": true,
+  "noncePredecessorHead": "53391b32904055529981e0f27b5d6dd0bf65ea87315b1587271c7b4877fe2229",
+  "nonceSuccessorHead": "cf4d6082fd82428e5dbe8d49e3497fbcc0b6a248d5f82d3cbf4a5862818d36fd",
+  "schema": "METHODS_INFORMATION_BENCHMARK_ATOMIC_AUTHORIZATION_CONSUMPTION_RECORD_v1",
+  "singleUse": true
+}

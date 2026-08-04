@@ -19,44 +19,60 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run exact committed evaluator directly
+      - name: Run stack-preserving diagnostic copy of committed evaluator
         shell: bash
         run: |
           set -euo pipefail
           CANDIDATE=0064e438303e10bcdbc389ce900becc3cddf16c4
           OUT=/tmp/r06-c10-candidate-002-evaluator-diagnostic
           DEST=h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-002/evaluator-diagnostic
+          EVALUATOR=h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-002.exact-candidate-evaluator.v1.mjs
+          rm -rf "$OUT" /tmp/r06-c10-candidate-002
           mkdir -p "$OUT"
           git worktree add --detach /tmp/r06-c10-candidate-002 "$CANDIDATE"
-          set +e
           (
             cd /tmp/r06-c10-candidate-002
+            git rev-parse "HEAD:$EVALUATOR" > "$OUT/original-evaluator-blob.txt"
+            python - <<'PY'
+            from pathlib import Path
+            p=Path('h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-002.exact-candidate-evaluator.v1.mjs')
+            s=p.read_text()
+            old="error:error instanceof Error?error.message:String(error)"
+            new="error:error instanceof Error?error.stack:String(error)"
+            assert old in s
+            p.write_text(s.replace(old,new,1))
+            PY
+            git hash-object "$EVALUATOR" > "$OUT/diagnostic-evaluator-blob.txt"
+            set +e
             H_EARTH_R06_C10_GATE_INPUT_CANDIDATE="$CANDIDATE" \
             H_EARTH_R06_C10_ADAPTER_ID=H_EARTH_R06_C10_CANDIDATE_ADMISSION_ADAPTER_v1 \
             H_EARTH_R06_C10_ADAPTER_CANDIDATE_HEAD="$CANDIDATE" \
             H_EARTH_R06_C10_PRIVATE_STATE_ALLOWED=false \
-            node h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-002.exact-candidate-evaluator.v1.mjs \
+            node "$EVALUATOR" \
               --candidate-head "$CANDIDATE" \
-              --output "$OUT/raw-evaluator-receipt.json"
-          ) > "$OUT/stdout.log" 2> "$OUT/stderr.log"
-          STATUS=$?
-          set -e
-          printf '%s\n' "$STATUS" > "$OUT/exit-code.txt"
+              --output "$OUT/raw-evaluator-receipt.json" \
+              > "$OUT/stdout.log" 2> "$OUT/stderr.log"
+            STATUS=$?
+            set -e
+            printf '%s\n' "$STATUS" > "$OUT/exit-code.txt"
+          )
           test -f "$OUT/raw-evaluator-receipt.json"
           python - <<'PY'
           import hashlib, json, os, pathlib
           root=pathlib.Path('/tmp/r06-c10-candidate-002-evaluator-diagnostic')
           receipt=json.load(open(root/'raw-evaluator-receipt.json'))
           summary={
-            'schema':'H_EARTH_R06_C10_CANDIDATE_002_EVALUATOR_DIAGNOSTIC_RETURN_v1',
+            'schema':'H_EARTH_R06_C10_CANDIDATE_002_EVALUATOR_DIAGNOSTIC_RETURN_v2',
             'candidateHead':'0064e438303e10bcdbc389ce900becc3cddf16c4',
             'candidateParent':'b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f',
             'workflowRunId':os.environ['GITHUB_RUN_ID'],
             'workflowRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],
             'evaluatorExitCode':int((root/'exit-code.txt').read_text()),
             'rawReceiptSchema':receipt.get('schema'),
-            'rawReceiptError':receipt.get('error'),
+            'rawReceiptErrorOrStack':receipt.get('error'),
             'rawReceiptSha256':hashlib.sha256((root/'raw-evaluator-receipt.json').read_bytes()).hexdigest(),
+            'diagnosticCopyOnly':True,
+            'candidateMutation':False,
             'privateStateUsed':False,
             'manualMetadataReconstructionUsed':False
           }
@@ -70,7 +86,7 @@ jobs:
           mkdir -p "$DEST"
           cp -a "$OUT"/. "$DEST"/
           git add "$DEST"
-          git commit -m 'Record candidate 002 evaluator diagnostic'
+          git commit -m 'Record candidate 002 evaluator stack diagnostic'
           git push origin HEAD:refs/heads/control/r06-c10-prospective-candidate-002-construction-and-admission
       - name: Upload evaluator diagnostic
         if: always()

@@ -100,6 +100,7 @@ async function snapshot(page) {
         stageTopRatio: stageRect.top / innerHeight,
         territoryIndexCount: document.querySelectorAll("[data-family-select]").length,
         territoryIndexVisible: rect(document.querySelector("[data-family-territory-index]")).bottom > 0,
+        familySelectionStatus: stage.dataset.familySelectionStatus || null,
         corpusCenterOffsetRatio: Number(stage.dataset.corpusCenterOffsetRatio || 1),
         activeModelFullyVisibleFlag: stage.dataset.activeModelFullyVisible === "true"
       },
@@ -139,8 +140,16 @@ async function capture(page, name) {
 }
 
 async function selectFamily(page, targetIndex) {
-  await page.evaluate(index => globalThis.__LAWS_CHILD_STAGE_EXTENSION.selectFamilyIndex(index), targetIndex);
-  await page.waitForFunction(index => globalThis.__METHODS_SPATIAL_APP.resolvedScene.native.familyIndex === index, { timeout: 12000 }, targetIndex);
+  const selector = `[data-family-select][data-family-index="${targetIndex}"]`;
+  await page.click(selector);
+  await page.waitForFunction(index => {
+    const current = globalThis.__METHODS_SPATIAL_APP;
+    const button = document.querySelector(`[data-family-select][data-family-index="${index}"]`);
+    return Number(current?.nativeState?.z?.index) === index
+      && Number(current?.resolvedScene?.native?.familyIndex) === index
+      && button?.getAttribute("aria-current") === "true"
+      && document.querySelector("[data-spatial-stage]")?.dataset.familySelectionStatus === "complete";
+  }, { timeout: 12000 }, targetIndex);
   await settle(page);
 }
 
@@ -253,7 +262,7 @@ try {
     desktopCorpusCentered: desktop.overview.shell.corpusCenterOffsetRatio <= .08,
     phoneCorpusCentered: phone.overview.shell.corpusCenterOffsetRatio <= .14,
     desktopFourFamilyTerritoriesDistinct: desktop.overview.planes.length === 4 && new Set(desktop.overview.planes.map(plane => plane.transform)).size === 4 && maxPlaneOverlap(desktop.overview.planes) <= .35,
-    desktopFourFamilyStatesCaptured: desktop.familyStates.length === 4 && new Set(desktop.familyStates.map(state => state.native.familyId)).size === 4,
+    desktopFourFamilyStatesCaptured: desktop.familyStates.length === 4 && new Set(desktop.familyStates.map(state => state.native.familyId)).size === 4 && desktop.familyStates.every(state => state.shell.familySelectionStatus === "complete"),
     phoneFamilyHorizonVisible: phone.overview.shell.territoryIndexCount === 4 && phone.overview.shell.territoryIndexVisible,
     desktopBrowseActiveFullyVisible: desktop.browse.active.stageIntersection >= .98 && desktop.browse.active.viewportIntersection >= .98 && desktop.browse.shell.activeModelFullyVisibleFlag,
     phoneBrowseActiveFullyVisible: phone.browse.active.stageIntersection >= .97 && phone.browse.active.viewportIntersection >= .97 && phone.browse.active.width >= phone.browse.viewport.width * .68 && phone.browse.shell.activeModelFullyVisibleFlag,

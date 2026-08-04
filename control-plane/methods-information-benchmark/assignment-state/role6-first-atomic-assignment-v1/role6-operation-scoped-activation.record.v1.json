@@ -1,0 +1,21 @@
+{
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "generalRoleAuthority": false,
+  "holderExecutionId": "MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7",
+  "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "operationScopedAuthority": true,
+  "returnRequired": true,
+  "roleId": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "schema": "METHODS_INFORMATION_BENCHMARK_ROLE_6_OPERATION_SCOPED_ACTIVATION_RECORD_v1",
+  "terminationLaw": {
+    "postTerminationRoleState": "INACTIVE",
+    "residualGeneralRoleAuthorityAllowed": false,
+    "terminatesAtFirstOf": [
+      "ACCEPTED_MACHINE_READABLE_RETURN",
+      "DECLARED_STOPPING_BOUNDARY",
+      "PACKET_DEFINED_OPERATION_EXPIRY",
+      "FAIL_CLOSED_AUTHORITY_OR_SCOPE_VIOLATION",
+      "USER_REVOCATION"
+    ]
+  }
+}

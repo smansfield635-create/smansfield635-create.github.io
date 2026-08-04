@@ -1,99 +1,75 @@
-name: H-Earth R06 C10 Exact Candidate Admission
+name: H-Earth R06 C10 Prospective Candidate 003 Construction and Admission
 
 on:
-  workflow_dispatch:
-    inputs:
-      candidate_head:
-        description: Exact 40-character candidate commit SHA
-        required: true
-        type: string
-      governing_head:
-        description: Governing commit or ref containing the unchanged admission authority
-        required: true
-        default: main
-        type: string
+  push:
+    branches:
+      - control/r06-c10-prospective-candidate-003-construction-and-admission
+    paths-ignore:
+      - h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-003/**
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: h-earth-r06-c10-prospective-candidate-003
+  cancel-in-progress: false
 
 jobs:
-  exact-candidate-admission:
+  construct-and-admit:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
-      - name: Check out governing authority
+      - name: Check out exact isolated carrier head
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.governing_head }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
 
-      - name: Validate exact inputs
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Recover exact prospectively authored operation blob
         shell: bash
         env:
-          CANDIDATE_HEAD: ${{ inputs.candidate_head }}
+          GH_TOKEN: ${{ github.token }}
+          OPERATION_BLOB: f24d137139935cfb78cea02e6b7cd098f63d1fef
         run: |
           set -euo pipefail
-          [[ "$CANDIDATE_HEAD" =~ ^[0-9a-f]{40}$ ]]
-          git rev-parse "${CANDIDATE_HEAD}^{commit}"
-          git status --porcelain=v1 --untracked-files=all | grep -q . && exit 1 || true
-
-      - name: Execute repository-declared admission gate
-        id: gate
-        shell: bash
-        env:
-          CANDIDATE_HEAD: ${{ inputs.candidate_head }}
-        run: |
-          set +e
-          mkdir -p /tmp/h-earth-r06-c10-admission
-          node h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs \
-            --candidate "$CANDIDATE_HEAD" \
-            --output /tmp/h-earth-r06-c10-admission/gate-receipt.json
-          status=$?
-          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
-          exit 0
-
-      - name: Bind workflow execution identity
-        if: always()
-        shell: bash
-        env:
-          CANDIDATE_HEAD: ${{ inputs.candidate_head }}
-          GOVERNING_HEAD_INPUT: ${{ inputs.governing_head }}
-          GATE_EXIT_CODE: ${{ steps.gate.outputs.exit_code }}
-        run: |
+          mkdir -p .github/ai-router/carriers
           python - <<'PY'
-          import json, os, pathlib, subprocess
-          out = pathlib.Path('/tmp/h-earth-r06-c10-admission/workflow-binding.json')
-          out.parent.mkdir(parents=True, exist_ok=True)
-          def git(*args):
-              return subprocess.check_output(['git', *args], text=True).strip()
-          record = {
-              "schema": "H_EARTH_R06_C10_CANDIDATE_ADMISSION_WORKFLOW_BINDING_v1",
-              "repository": os.environ["GITHUB_REPOSITORY"],
-              "workflow": os.environ["GITHUB_WORKFLOW"],
-              "workflowRunId": os.environ["GITHUB_RUN_ID"],
-              "workflowRunAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
-              "workflowJob": os.environ["GITHUB_JOB"],
-              "governingHeadInput": os.environ["GOVERNING_HEAD_INPUT"],
-              "governingHeadResolved": git("rev-parse", "HEAD^{commit}"),
-              "candidateHead": os.environ["CANDIDATE_HEAD"],
-              "gateExitCode": int(os.environ.get("GATE_EXIT_CODE") or 1),
-              "manualMetadataReconstructionUsed": False
-          }
-          out.write_text(json.dumps(record, indent=2) + "\n")
+          import base64, json, os, pathlib, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          blob=os.environ['OPERATION_BLOB']
+          request=urllib.request.Request(
+              f'https://api.github.com/repos/{repo}/git/blobs/{blob}',
+              headers={
+                  'Authorization':f'Bearer {os.environ["GH_TOKEN"]}',
+                  'Accept':'application/vnd.github+json',
+                  'X-GitHub-Api-Version':'2022-11-28'
+              }
+          )
+          with urllib.request.urlopen(request) as response:
+              payload=json.load(response)
+          content=base64.b64decode(payload['content'])
+          path=pathlib.Path('.github/ai-router/carriers/r06-c10-prospective-candidate-003.operation.sh')
+          path.write_bytes(content)
           PY
+          test "$(git hash-object .github/ai-router/carriers/r06-c10-prospective-candidate-003.operation.sh)" = "$OPERATION_BLOB"
+          sed -i "s#CARRIER_BRANCH='control/r06-c10-prospective-candidate-002-construction-and-admission'#CARRIER_BRANCH='control/r06-c10-prospective-candidate-003-construction-and-admission'#" .github/ai-router/carriers/r06-c10-prospective-candidate-003.operation.sh
 
-      - name: Upload command-emitted admission evidence
+      - name: Construct direct-main successor and execute current 28-assertion gate
+        shell: bash
+        run: |
+          chmod +x .github/ai-router/carriers/r06-c10-prospective-candidate-003.operation.sh
+          .github/ai-router/carriers/r06-c10-prospective-candidate-003.operation.sh
+
+      - name: Upload prospective construction and admission evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-r06-c10-candidate-admission-receipt
-          path: /tmp/h-earth-r06-c10-admission/
+          name: h-earth-r06-c10-prospective-candidate-003-admission
+          path: /tmp/r06-c10-prospective-candidate-003/
           if-no-files-found: error
           retention-days: 90
-
-      - name: Preserve fail-closed gate conclusion
-        if: always()
-        shell: bash
-        env:
-          GATE_EXIT_CODE: ${{ steps.gate.outputs.exit_code }}
-        run: |
-          test "${GATE_EXIT_CODE:-1}" -eq 0

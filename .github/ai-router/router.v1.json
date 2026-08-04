@@ -34,6 +34,18 @@
       ],
       "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "METHODS_INFORMATION_BENCHMARK_BOOTSTRAP",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [
+        "governance/methods-information-benchmark-bootstrap-v1/"
+      ],
+      "ownedExactPaths": [
+        ".github/workflows/methods-information-benchmark-pre-role-bootstrap-v1.yml"
+      ],
+      "entrypoint": ".github/ai-router/projects/methods-information-benchmark-bootstrap/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

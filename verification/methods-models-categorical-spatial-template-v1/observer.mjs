@@ -165,7 +165,21 @@ try {
   const browseFocusesActive = snapshot => snapshot.browse.activePresentation.area >= snapshot.overview.activePresentation.area * 1.2 && snapshot.browse.activePresentation.centerOffsetX <= 0.2 && snapshot.browse.activePresentation.centerOffsetY <= 0.25;
   const lensIsPerceptible = snapshot => snapshot.modelMoved.native.lensId !== snapshot.lensMoved.native.lensId && snapshot.modelMoved.activePresentation.text !== snapshot.lensMoved.activePresentation.text && JSON.stringify(snapshot.modelMoved.camera) !== JSON.stringify(snapshot.lensMoved.camera) && Math.abs(snapshot.modelMoved.activePresentation.top - snapshot.lensMoved.activePresentation.top) >= 8;
   const familyMovesField = snapshot => snapshot.lensMoved.native.familyId !== snapshot.familyMoved.native.familyId && snapshot.lensMoved.activeModel !== snapshot.familyMoved.activeModel && JSON.stringify(snapshot.lensMoved.camera.target) !== JSON.stringify(snapshot.familyMoved.camera.target);
-  const exactReturn = run => run.returnReceipt?.exactNativeReturn && run.returnReceipt?.exactCameraRoleReturn && run.returnReceipt?.exactCenteredTargetReturn && run.returnReceipt?.exactVisibleClusterReturn;
+  const exactReturnFields = Object.freeze([
+    "exactNativeReturn",
+    "exactCameraRoleReturn",
+    "exactCameraPresetReturn",
+    "exactCameraTargetReturn",
+    "exactCenteredTargetReturn",
+    "exactVisibleClusterReturn",
+    "exactDetailClassesReturn",
+    "exactScrollPositionReturn",
+    "exactFocusTargetReturn",
+    "exactInputModeReturn",
+    "exactViewportClassReturn",
+    "exactViewportDimensionsReturn"
+  ]);
+  const exactReturn = run => exactReturnFields.every(field => run.returnReceipt?.[field] === true);
 
   result.checks = {
     registryOperational: desktop.overview.registry.familyCount === 4 && desktop.overview.registry.modelCount === 25 && desktop.overview.registry.lensCount === 3,
@@ -181,14 +195,15 @@ try {
     mobileLensTransitionPerceptible: lensIsPerceptible(mobile),
     desktopFamilyTransitionSpatial: familyMovesField(desktop),
     mobileFamilyTransitionSpatial: familyMovesField(mobile),
-    desktopExactReturn: Boolean(exactReturn(desktop)),
-    mobileExactReturn: Boolean(exactReturn(mobile)),
+    desktopExactReturn: exactReturn(desktop),
+    mobileExactReturn: exactReturn(mobile),
     desktopTransitionReceipts: desktop.returned.receiptCount >= 6,
     mobileTransitionReceipts: mobile.returned.receiptCount >= 6,
     noConsoleErrors: result.consoleErrors.length === 0,
     noPageErrors: result.pageErrors.length === 0,
     noRequestFailures: result.requestFailures.length === 0
   };
+  result.exactReturnFields = exactReturnFields;
   result.result = Object.values(result.checks).every(Boolean) ? "PASS_OPERATIONAL_VERTICAL_SLICE" : "FAIL_OPERATIONAL_VERTICAL_SLICE";
 } finally {
   await browser.close();
@@ -199,6 +214,7 @@ console.log(JSON.stringify({
   contract: result.contract,
   result: result.result,
   checks: result.checks,
+  exactReturnFields: result.exactReturnFields,
   screenshotCount: result.screenshots.length,
   consoleErrors: result.consoleErrors,
   pageErrors: result.pageErrors,

@@ -25,9 +25,8 @@ jobs:
       - name: Construct and execute exact gate
         shell: bash
         run: |
-          cat .github/ai-router/carriers/r06-c10-prospective-candidate-002.operation.part*.b64 | base64 -d | gzip -d > /tmp/r06-c10-operation.sh
-          chmod +x /tmp/r06-c10-operation.sh
-          /tmp/r06-c10-operation.sh
+          chmod +x .github/ai-router/carriers/r06-c10-prospective-candidate-002.operation.sh
+          .github/ai-router/carriers/r06-c10-prospective-candidate-002.operation.sh
       - name: Upload construction and admission evidence
         if: always()
         uses: actions/upload-artifact@v4

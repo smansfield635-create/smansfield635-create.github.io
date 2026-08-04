@@ -1,0 +1,185 @@
+name: Authorized Toolset and AI Room Transport Bootstrap Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-toolset-transport/**'
+      - '.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml'
+      - '.github/workflows/ai-room-execution-transport.yml'
+      - 'tools/ai-room-transport/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  bootstrap-builder:
+    name: temporary-bootstrap-builder-self-test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact bootstrap candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact clean candidate and source syntax
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          for file in tools/ai-room-transport/*.mjs; do node --check "$file"; done
+
+      - name: Run full-chain Builder self-test
+        env:
+          BUILDER_HOLDER: GITHUB_ACTIONS_AI_ROOM_TRANSPORT_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/self-test.v1.mjs \
+            --root . \
+            --expected-head "$EXPECTED_HEAD" \
+            --holder "$BUILDER_HOLDER" \
+            --output-dir "$RUNNER_TEMP/ai-room-transport-builder"
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=process.env.RUNNER_TEMP+'/ai-room-transport-builder/bootstrap-self-test-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p));
+          if(r.result!=='PASS_CLOSED'||r.negativeFixtureCount!==20||r.negativeFixturesPassed!==20)process.exit(1);
+          if(!r.commandExecutionPassed||!r.receiptValidationPassed||!r.continuationGatePassed)process.exit(1);
+          if(r.productMutationPerformed||r.roleActivationPerformed||r.methodsAuditExecuted||r.mergePerformed||r.permanentTransportActivated)process.exit(1);
+          NODE
+
+      - name: Upload Builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-room-transport-bootstrap-builder-evidence
+          path: ${{ runner.temp }}/ai-room-transport-builder
+          if-no-files-found: error
+          retention-days: 30
+
+  fresh-bootstrap-verifier:
+    name: fresh-independent-bootstrap-verifier
+    needs: bootstrap-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact bootstrap candidate independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download authentic Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: ai-room-transport-bootstrap-builder-evidence
+          path: ${{ runner.temp }}/authentic-builder
+
+      - name: Reproduce independently without repair
+        env:
+          VERIFIER_HOLDER: GITHUB_ACTIONS_AI_ROOM_TRANSPORT_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          BUILDER_RECEIPT="$(find "$RUNNER_TEMP/authentic-builder" -name bootstrap-self-test-receipt.json -type f -print -quit)"
+          test -n "$BUILDER_RECEIPT"
+          node tools/ai-room-transport/fresh-verifier.v1.mjs \
+            --root . \
+            --expected-head "$EXPECTED_HEAD" \
+            --builder-receipt "$BUILDER_RECEIPT" \
+            --holder "$VERIFIER_HOLDER" \
+            --output-dir "$RUNNER_TEMP/ai-room-transport-verifier"
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=process.env.RUNNER_TEMP+'/ai-room-transport-verifier/fresh-verifier-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p));
+          if(r.result!=='PASS_CLOSED_FRESH_INDEPENDENT_REPRODUCTION'||!r.distinctExecutionHolders||!r.packageFingerprintMatch)process.exit(1);
+          if(r.negativeFixtureCount!==20||r.negativeFixturesPassed!==20||r.repairPerformed)process.exit(1);
+          if(r.productMutationPerformed||r.roleActivationPerformed||r.methodsAuditExecuted||r.mergePerformed||r.permanentTransportActivated)process.exit(1);
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload fresh Verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-room-transport-bootstrap-verifier-evidence
+          path: ${{ runner.temp }}/ai-room-transport-verifier
+          if-no-files-found: error
+          retention-days: 30
+
+  terminate-bootstrap-authority:
+    name: command-emitted-bootstrap-authority-termination
+    needs: [bootstrap-builder, fresh-bootstrap-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact certified candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download Builder and Verifier evidence
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ai-room-transport-bootstrap-*-evidence
+          path: ${{ runner.temp }}/certification
+          merge-multiple: false
+
+      - name: Emit terminal bootstrap authority receipt
+        run: |
+          set -euo pipefail
+          BUILDER_RECEIPT="$(find "$RUNNER_TEMP/certification" -name bootstrap-self-test-receipt.json -type f -print -quit)"
+          VERIFIER_RECEIPT="$(find "$RUNNER_TEMP/certification" -name fresh-verifier-receipt.json -type f -print -quit)"
+          test -n "$BUILDER_RECEIPT"
+          test -n "$VERIFIER_RECEIPT"
+          mkdir -p "$RUNNER_TEMP/ai-room-transport-termination"
+          node tools/ai-room-transport/bootstrap-authority-terminator.v1.mjs \
+            --builder "$BUILDER_RECEIPT" \
+            --verifier "$VERIFIER_RECEIPT" \
+            --policy .github/ai-toolset-transport/bootstrap-termination-policy.v1.json \
+            --output "$RUNNER_TEMP/ai-room-transport-termination/bootstrap-authority-termination-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=process.env.RUNNER_TEMP+'/ai-room-transport-termination/bootstrap-authority-termination-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p));
+          if(r.result!=='PASS_CLOSED_BOOTSTRAP_AUTHORITY_TERMINATED')process.exit(1);
+          for(const k of ['temporaryBuilderAuthorityActive','temporaryVerifierAuthorityActive','residualBootstrapAuthority','productMutationPerformed','roleActivationPerformed','methodsAuditExecuted','mergePerformed','permanentTransportActivated'])if(r[k]!==false)process.exit(1);
+          if(r.activationRequiresSeparateRatification!==true)process.exit(1);
+          NODE
+
+      - name: Package complete certification and termination evidence
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/ai-room-transport-final-certification"
+          cp -R "$RUNNER_TEMP/certification"/* "$RUNNER_TEMP/ai-room-transport-final-certification/"
+          cp "$RUNNER_TEMP/ai-room-transport-termination/bootstrap-authority-termination-receipt.json" "$RUNNER_TEMP/ai-room-transport-final-certification/"
+
+      - name: Upload final certification package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-room-transport-bootstrap-final-certification
+          path: ${{ runner.temp }}/ai-room-transport-final-certification
+          if-no-files-found: error
+          retention-days: 30

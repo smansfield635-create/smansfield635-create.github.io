@@ -33,6 +33,7 @@ const result = {
   pageErrors: [],
   requestFailures: [],
   checks: {},
+  fatalError: null,
   publicMethodsMutationAuthorized: false,
   mergeAuthorized: false,
   userReviewAuthorized: false,
@@ -139,17 +140,65 @@ async function capture(page, name) {
   result.screenshots.push(path.relative(outDir, file));
 }
 
-async function selectFamily(page, targetIndex) {
-  const selector = `[data-family-select][data-family-index="${targetIndex}"]`;
-  await page.click(selector);
-  await page.waitForFunction(index => {
+async function familyTransitionDiagnostic(page, targetIndex, phase) {
+  return page.evaluate((index, receiptPhase) => {
     const current = globalThis.__METHODS_SPATIAL_APP;
+    const stage = document.querySelector("[data-spatial-stage]");
     const button = document.querySelector(`[data-family-select][data-family-index="${index}"]`);
-    return Number(current?.nativeState?.z?.index) === index
-      && Number(current?.resolvedScene?.native?.familyIndex) === index
-      && button?.getAttribute("aria-current") === "true"
-      && document.querySelector("[data-spatial-stage]")?.dataset.familySelectionStatus === "complete";
-  }, { timeout: 12000 }, targetIndex);
+    const buttonRect = button?.getBoundingClientRect();
+    const centerX = buttonRect ? buttonRect.left + buttonRect.width / 2 : null;
+    const centerY = buttonRect ? buttonRect.top + buttonRect.height / 2 : null;
+    const hit = centerX === null ? null : document.elementFromPoint(centerX, centerY);
+    return {
+      phase: receiptPhase,
+      targetIndex: index,
+      nativeState: current?.nativeState || null,
+      resolvedNative: current?.resolvedScene?.native || null,
+      familySelectionStatus: stage?.dataset.familySelectionStatus || null,
+      targetButton: button ? {
+        familyId: button.dataset.familySelect,
+        familyIndex: button.dataset.familyIndex,
+        ariaCurrent: button.getAttribute("aria-current"),
+        disabled: button.disabled,
+        rect: buttonRect ? { left: buttonRect.left, top: buttonRect.top, right: buttonRect.right, bottom: buttonRect.bottom, width: buttonRect.width, height: buttonRect.height } : null,
+        centerHitTag: hit?.tagName || null,
+        centerHitFamilyIndex: hit?.closest?.("[data-family-index]")?.dataset?.familyIndex || null
+      } : null,
+      territories: Array.from(document.querySelectorAll("[data-family-select]")).map(item => ({
+        familyId: item.dataset.familySelect,
+        familyIndex: item.dataset.familyIndex,
+        ariaCurrent: item.getAttribute("aria-current")
+      })),
+      recentReceipts: Array.isArray(current?.receipts) ? current.receipts.slice(-8) : []
+    };
+  }, targetIndex, phase);
+}
+
+async function selectFamily(page, targetIndex) {
+  const before = await familyTransitionDiagnostic(page, targetIndex, "before-dom-click");
+  await page.evaluate(index => {
+    const button = document.querySelector(`[data-family-select][data-family-index="${index}"]`);
+    if (!(button instanceof HTMLButtonElement)) throw new Error(`METHODS_FAMILY_TERRITORY_BUTTON_MISSING:${index}`);
+    button.click();
+  }, targetIndex);
+  const afterClick = await familyTransitionDiagnostic(page, targetIndex, "after-dom-click");
+  try {
+    await page.waitForFunction(index => {
+      const current = globalThis.__METHODS_SPATIAL_APP;
+      const button = document.querySelector(`[data-family-select][data-family-index="${index}"]`);
+      return Number(current?.nativeState?.z?.index) === index
+        && Number(current?.resolvedScene?.native?.familyIndex) === index
+        && button?.getAttribute("aria-current") === "true"
+        && document.querySelector("[data-spatial-stage]")?.dataset.familySelectionStatus === "complete";
+    }, { timeout: 12000 }, targetIndex);
+  } catch (error) {
+    const timeout = await familyTransitionDiagnostic(page, targetIndex, "timeout");
+    const wrapped = new Error(`METHODS_FAMILY_TERRITORY_TRANSITION_FAILED:${targetIndex}`);
+    wrapped.name = "MethodsFamilyTerritoryTransitionError";
+    wrapped.stack = `${wrapped.stack}\nCaused by: ${error.stack || error.message}`;
+    wrapped.diagnostic = { before, afterClick, timeout };
+    throw wrapped;
+  }
   await settle(page);
 }
 
@@ -280,10 +329,18 @@ try {
   result.result = Object.values(result.checks).every(Boolean) ? "PASS_LAWS_CHILD_STAGE_OBSERVER_GATE" : "FAIL_LAWS_CHILD_STAGE_OBSERVER_GATE";
   await writeJson("desktop-exact-return-receipt.json", desktop.returnReceipt);
   await writeJson("phone-exact-return-receipt.json", phone.returnReceipt);
-  await writeJson("laws-child-stage-observer-result.json", result);
+} catch (error) {
+  result.result = "FAIL_LAWS_CHILD_STAGE_OBSERVER_GATE";
+  result.fatalError = {
+    name: error.name || "Error",
+    message: error.message || String(error),
+    stack: error.stack || null,
+    diagnostic: error.diagnostic || null
+  };
 } finally {
+  await writeJson("laws-child-stage-observer-result.json", result);
   await browser.close();
 }
 
-console.log(JSON.stringify({ contract: result.contract, result: result.result, checks: result.checks, screenshots: result.screenshots, consoleErrors: result.consoleErrors, pageErrors: result.pageErrors, requestFailures: result.requestFailures }, null, 2));
+console.log(JSON.stringify({ contract: result.contract, result: result.result, checks: result.checks, fatalError: result.fatalError, screenshots: result.screenshots, consoleErrors: result.consoleErrors, pageErrors: result.pageErrors, requestFailures: result.requestFailures }, null, 2));
 if (result.result !== "PASS_LAWS_CHILD_STAGE_OBSERVER_GATE") process.exitCode = 1;

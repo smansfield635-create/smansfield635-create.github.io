@@ -1,0 +1,7 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_ROLE_SYSTEM_ACTIVATION_GATE_RECEIPT_v2",
+  "gateResult": "ELIGIBLE_FOR_SEPARATE_FIRST_ASSIGNMENT_OPERATION",
+  "firstRoleCandidate": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "automaticActivationPerformed": false,
+  "permanentRoleAuthorityActivated": false
+}

@@ -1,0 +1,72 @@
+name: H-Earth R06 C10 C5 Record Recovery Carrier
+
+on:
+  push:
+    branches:
+      - recovery/r06-c10-c5-records-001
+    paths:
+      - .github/workflows/h-earth-r06-c10-c5-record-recovery-carrier.yml
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Capture exact stored C5 record chunks
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          out=/tmp/c5-record-recovery
+          mkdir -p "$out"
+          ids=(5173099262 5173104396 5173109832 5173114502 5173119638)
+          for index in "${!ids[@]}"; do
+            sequence=$((index+1))
+            gh api "repos/smansfield635-create/smansfield635-create.github.io/issues/comments/${ids[$index]}" > "$out/comment-${sequence}.json"
+          done
+
+          python3 - <<'PY'
+          import base64, hashlib, json, pathlib, re
+          root=pathlib.Path('/tmp/c5-record-recovery')
+          marker='H_EARTH_R06_C10_C5_RECORDS_CHUNK_v1'
+          expected_declared='f2cdd4700902c78be9b8d8ccaed2628759397eae8c5576cb49ee066500dd7ee6'
+          chunks=[]
+          records=[]
+          for sequence in range(1,6):
+              comment=json.loads((root/f'comment-{sequence}.json').read_text())
+              body=comment.get('body','')
+              match=re.fullmatch(rf'{marker}:(\d+):(\d+):([0-9a-f]{{64}})\n([A-Za-z0-9+/=]+)',body)
+              if not match:
+                  raise SystemExit(f'COMMENT_FORMAT_MISMATCH:{sequence}')
+              index,total,declared,payload=int(match.group(1)),int(match.group(2)),match.group(3),match.group(4)
+              if index!=sequence or total!=5:
+                  raise SystemExit(f'COMMENT_SEQUENCE_MISMATCH:{sequence}:{index}:{total}')
+              (root/f'chunk-{sequence}.b64').write_text(payload)
+              chunks.append(payload)
+              records.append({'sequence':sequence,'commentId':comment['id'],'declaredSha256':declared,'payloadLength':len(payload),'payloadSha256':hashlib.sha256(payload.encode()).hexdigest()})
+          naive=base64.b64decode(''.join(chunks),validate=True)
+          (root/'naive-c5-records.tgz').write_bytes(naive)
+          metadata={
+              'schema':'H_EARTH_R06_C10_C5_RECORD_RECOVERY_CARRIER_v1',
+              'declaredBundleSha256':expected_declared,
+              'naiveBundleSha256':hashlib.sha256(naive).hexdigest(),
+              'naiveBundleByteCount':len(naive),
+              'chunks':records
+          }
+          (root/'metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
+          print(json.dumps(metadata,indent=2))
+          PY
+
+      - name: Upload exact recovery carrier
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-c5-record-recovery-carrier
+          path: /tmp/c5-record-recovery
+          if-no-files-found: error
+          retention-days: 7

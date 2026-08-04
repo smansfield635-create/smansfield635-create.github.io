@@ -12,7 +12,8 @@
     "control-plane/methods-information-benchmark/role6-operation-packet/packet-dependency-manifest.v1.json",
     "control-plane/methods-information-benchmark/role6-operation-packet/packet-entry.locator.v1.json",
     "control-plane/methods-information-benchmark/role6-operation-packet/packet-receipt.schema.v1.json",
-    "control-plane/methods-information-benchmark/role6-operation-packet/packet-verifier.mjs"
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-verifier.mjs",
+    "control-plane/methods-information-benchmark/role6-operation-packet/role6-output-registry.v1.json"
   ],
   "equalityRequired": true,
   "prohibitedPathPrefixes": [

@@ -1,18 +1,5 @@
 {
-  "activeScopes": {
-    "646b3cbefcc64af8faa186d79ec9c913eff8d954b2694582558083da7cd53ea6": {
-      "governingHead": "3c9838ba660ca63df63bab6be92032d315f9bf77",
-      "lockGeneration": 3,
-      "lockScope": "ACTIVATION:30942644875:2",
-      "operationId": "B30942644875",
-      "procedureLocatorDigest": "f7f7f35cc5ace88b4375c3789d27e9df1e1b48a22ea53430feeafa41c7318a60",
-      "released": false,
-      "requestDigest": "32c8d0c11aea35c8bd05cb50b1939a492d0be3818e71f2e0b086a151bd61d2b5",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "646b3cbefcc64af8faa186d79ec9c913eff8d954b2694582558083da7cd53ea6",
-      "state": "ADMITTED_LOCKED"
-    }
-  },
+  "activeScopes": {},
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
@@ -43,6 +30,19 @@
       "requestDigest": "83828402b14ea528b5f307591afbad39fe50c2c9c1dc78d43a710b83c2a6e0dc",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c68d4725044d48c52372f8e02c9f6502de15bae8fefe58552d365730d85e7b6b",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "3c9838ba660ca63df63bab6be92032d315f9bf77",
+      "lockGeneration": 3,
+      "lockScope": "ACTIVATION:30942644875:2",
+      "operationId": "B30942644875",
+      "procedureLocatorDigest": "f7f7f35cc5ace88b4375c3789d27e9df1e1b48a22ea53430feeafa41c7318a60",
+      "released": true,
+      "requestDigest": "32c8d0c11aea35c8bd05cb50b1939a492d0be3818e71f2e0b086a151bd61d2b5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "646b3cbefcc64af8faa186d79ec9c913eff8d954b2694582558083da7cd53ea6",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
     }

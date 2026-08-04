@@ -152,6 +152,7 @@ async function familyTransitionDiagnostic(page, targetIndex, phase) {
     return {
       phase: receiptPhase,
       targetIndex: index,
+      targetFamilyId: button?.dataset.familySelect || null,
       nativeState: current?.nativeState || null,
       resolvedNative: current?.resolvedScene?.native || null,
       familySelectionStatus: stage?.dataset.familySelectionStatus || null,
@@ -176,6 +177,7 @@ async function familyTransitionDiagnostic(page, targetIndex, phase) {
 
 async function selectFamily(page, targetIndex) {
   const before = await familyTransitionDiagnostic(page, targetIndex, "before-dom-click");
+  if (!before.targetFamilyId) throw new Error(`METHODS_FAMILY_TERRITORY_ID_MISSING:${targetIndex}`);
   await page.evaluate(index => {
     const button = document.querySelector(`[data-family-select][data-family-index="${index}"]`);
     if (!(button instanceof HTMLButtonElement)) throw new Error(`METHODS_FAMILY_TERRITORY_BUTTON_MISSING:${index}`);
@@ -183,17 +185,18 @@ async function selectFamily(page, targetIndex) {
   }, targetIndex);
   const afterClick = await familyTransitionDiagnostic(page, targetIndex, "after-dom-click");
   try {
-    await page.waitForFunction(index => {
+    await page.waitForFunction((index, familyId) => {
       const current = globalThis.__METHODS_SPATIAL_APP;
       const button = document.querySelector(`[data-family-select][data-family-index="${index}"]`);
-      return Number(current?.nativeState?.z?.index) === index
-        && Number(current?.resolvedScene?.native?.familyIndex) === index
+      return current?.nativeState?.z?.familyId === familyId
+        && current?.resolvedScene?.native?.familyId === familyId
+        && button?.dataset.familySelect === familyId
         && button?.getAttribute("aria-current") === "true"
         && document.querySelector("[data-spatial-stage]")?.dataset.familySelectionStatus === "complete";
-    }, { timeout: 12000 }, targetIndex);
+    }, { timeout: 12000 }, targetIndex, before.targetFamilyId);
   } catch (error) {
     const timeout = await familyTransitionDiagnostic(page, targetIndex, "timeout");
-    const wrapped = new Error(`METHODS_FAMILY_TERRITORY_TRANSITION_FAILED:${targetIndex}`);
+    const wrapped = new Error(`METHODS_FAMILY_TERRITORY_TRANSITION_FAILED:${before.targetFamilyId}`);
     wrapped.name = "MethodsFamilyTerritoryTransitionError";
     wrapped.stack = `${wrapped.stack}\nCaused by: ${error.stack || error.message}`;
     wrapped.diagnostic = { before, afterClick, timeout };

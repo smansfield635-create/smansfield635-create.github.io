@@ -1,0 +1,138 @@
+name: H-Earth R06 C10 C5A Materialize
+
+on:
+  push:
+    branches:
+      - recovery/r06-c10-c5a-materialization-001
+    paths:
+      - .github/workflows/h-earth-r06-c10-c5a-materialize.yml
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Recover checksum-bound six-record payload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BASE='ab6ea74ac8c03c7ba6c53514c2f89185ef91f72f'
+          PAYLOAD_SHA='604d28b6508e016d945963444560c0e8c17276c1c86dd1777978df0d0d748fd2'
+          MARKER='H_EARTH_R06_C10_C5A_RECORDS_CHUNK_v1'
+          work=/tmp/r06-c10-c5a
+          mkdir -p "$work/comments" "$work/payload"
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = "$BASE"
+
+          ids=(
+            5173571111
+            5173574249
+            5173577018
+            5173579922
+            5173583470
+            5173585637
+            5173587883
+            5173590259
+            5173593307
+            5173595831
+            5173598000
+            5173599715
+          )
+          for index in "${!ids[@]}"; do
+            sequence=$((index+1))
+            gh api "repos/smansfield635-create/smansfield635-create.github.io/issues/comments/${ids[$index]}" > "$work/comments/comment-${sequence}.json"
+          done
+
+          python3 - <<'PY'
+          import base64, hashlib, json, pathlib, re
+          root=pathlib.Path('/tmp/r06-c10-c5a')
+          marker='H_EARTH_R06_C10_C5A_RECORDS_CHUNK_v1'
+          expected_payload_sha='604d28b6508e016d945963444560c0e8c17276c1c86dd1777978df0d0d748fd2'
+          chunks=[]
+          for sequence in range(1,13):
+              comment=json.loads((root/'comments'/f'comment-{sequence}.json').read_text())
+              body=comment.get('body','')
+              match=re.fullmatch(rf'{marker}:(\d+):(\d+):([0-9a-f]{{64}})\n([A-Za-z0-9+/=]+)',body)
+              if not match:
+                  raise SystemExit(f'C5A_COMMENT_FORMAT_MISMATCH:{sequence}')
+              index,total,declared,payload=int(match.group(1)),int(match.group(2)),match.group(3),match.group(4)
+              if index != sequence or total != 12:
+                  raise SystemExit(f'C5A_COMMENT_SEQUENCE_MISMATCH:{sequence}:{index}:{total}')
+              actual=hashlib.sha256(payload.encode()).hexdigest()
+              if actual != declared:
+                  raise SystemExit(f'C5A_CHUNK_SHA256_MISMATCH:{sequence}:{actual}:{declared}')
+              chunks.append(payload)
+          raw=base64.b64decode(''.join(chunks),validate=True)
+          actual=hashlib.sha256(raw).hexdigest()
+          if actual != expected_payload_sha:
+              raise SystemExit(f'C5A_PAYLOAD_SHA256_MISMATCH:{actual}')
+          (root/'repo-updates.tgz').write_bytes(raw)
+          print(json.dumps({'chunkCount':12,'payloadByteCount':len(raw),'payloadSha256':actual},indent=2))
+          PY
+
+          tar -xzf "$work/repo-updates.tgz" -C "$work/payload"
+
+          cd "$work/payload"
+          expected=(
+            '16b2d7b7d40ecff7d33b4168fc78fcb0f705f5fdcf3f47f7600d7d4a169ad440  h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5a.entry-point-identity-correction.receipt.v1.json'
+            '2cec5b49f81d104ff131463319e71429f7507e31667ddc08592fff4925266d1e  h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json'
+            '3918311f98513d5d2300eb88812efb0623e38d6e3361fc41084e995ea1e82ce1  h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json'
+            'af728432f26257cf6703ce070a8b9870c8e81e3a69e3204d275c32fb7d5e6b66  h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json'
+            'bd1ca110b8393ed8a53f67ea00a69dbaa555540ef02aaaeacf380e622a8abded  h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json'
+            '4856edc82cb0f5eeaf846ef797603efea51f2950f24f7b0822518c07c15a7417  h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json'
+          )
+          printf '%s\n' "${expected[@]}" | sha256sum -c -
+
+          test "$(git hash-object h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5a.entry-point-identity-correction.receipt.v1.json)" = 'aef8bd4017978f0528c2f78e63110daf0efd4509'
+          test "$(git hash-object h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json)" = 'dd90c540bb2da5274eee5935b8d4ce0a7b9e7bc8'
+          test "$(git hash-object h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json)" = 'b5a1ab7c3ec04692237eaaf750723db2a6d25bd7'
+          test "$(git hash-object h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json)" = '798041a5d743ba39164d4e4d3a85382e83065520'
+          test "$(git hash-object h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json)" = 'a651a3e5aa0977ddedc4d781bc1c87b617d47f1b'
+          test "$(git hash-object h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json)" = '51c5bc0c4ebcfa21204820685fd52de9dd712740'
+
+      - name: Create exact six-path C5A closure
+        run: |
+          set -euo pipefail
+          BASE='ab6ea74ac8c03c7ba6c53514c2f89185ef91f72f'
+          BRANCH='role1/r06-c10-c5a-entry-point-identity-correction-001'
+          work=/tmp/r06-c10-c5a
+          expected_paths=(
+            'h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json'
+            'h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json'
+            'h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5a.entry-point-identity-correction.receipt.v1.json'
+            'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json'
+            'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json'
+            'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json'
+          )
+
+          git switch --detach "$BASE"
+          git switch -c "$BRANCH"
+          cp -a "$work/payload/h-earth-3d" ./
+          git add -- "${expected_paths[@]}"
+
+          mapfile -t staged < <(git diff --cached --name-only | sort)
+          mapfile -t expected < <(printf '%s\n' "${expected_paths[@]}" | sort)
+          test "${#staged[@]}" -eq 6
+          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${staged[@]}")
+          if printf '%s\n' "${staged[@]}" | grep -Eq '^(showroom/globe/h-earth/|h-earth-3d/terrain/|h-earth-3d/integration/|h-earth-3d/tools/|h-earth-3d/validation/)'; then
+            exit 1
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Close R06 C10 Role 1 C5A entry-point identity correction'
+          final_head=$(git rev-parse HEAD)
+          test "$(git rev-parse HEAD^)" = "$BASE"
+          mapfile -t final_paths < <(git diff --name-only "$BASE" HEAD | sort)
+          test "${#final_paths[@]}" -eq 6
+          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${final_paths[@]}")
+          git push origin "HEAD:refs/heads/$BRANCH"
+          echo "C5A_FINAL_HEAD=$final_head"

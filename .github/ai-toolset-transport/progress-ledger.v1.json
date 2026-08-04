@@ -3,7 +3,7 @@
   "bootstrapId": "REPOSITORY_AUTHORIZED_TOOLSET_ROUTING_AND_AI_ROOM_EXECUTION_TRANSPORT_BOOTSTRAP_v1",
   "branch": "bootstrap/authorized-toolset-ai-room-transport-genesis-v1-001",
   "baseHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
-  "currentCheckpoint": "CP10_BOOTSTRAP_AUTHORITY_TERMINATION",
+  "currentCheckpoint": "CP09_NEGATIVE_FIXTURES_AND_INDEPENDENT_CERTIFICATION",
   "checkpoints": [
     {
       "id": "CP00_BOOTSTRAP_SEED_AND_SCOPE",
@@ -17,16 +17,12 @@
     {
       "id": "CP01_SCHEMAS",
       "status": "PASS_CLOSED",
-      "evidenceCommits": [
-        "3fc3ce8ae2baa8132ae80c91799f8d40308ae7c4"
-      ]
+      "evidenceCommits": ["3fc3ce8ae2baa8132ae80c91799f8d40308ae7c4"]
     },
     {
       "id": "CP02_AUTHORIZED_TOOLSET_REGISTRY",
       "status": "PASS_CLOSED",
-      "evidenceCommits": [
-        "f875300cafd77ff43d23127473aa8c0ef7386f60"
-      ]
+      "evidenceCommits": ["f875300cafd77ff43d23127473aa8c0ef7386f60"]
     },
     {
       "id": "CP03_TOOLSET_RESOLVER",
@@ -39,16 +35,12 @@
     {
       "id": "CP04_EXECUTION_BACKEND_SELECTOR",
       "status": "PASS_CLOSED",
-      "evidenceCommits": [
-        "d1e90112f8c01a0420032203a96303025f9d30ca"
-      ]
+      "evidenceCommits": ["d1e90112f8c01a0420032203a96303025f9d30ca"]
     },
     {
       "id": "CP05_FIXED_COMMAND_DISPATCHER",
       "status": "PASS_CLOSED",
-      "evidenceCommits": [
-        "02e58d217b793c0bcd2d587f83dabfaba8098686"
-      ]
+      "evidenceCommits": ["02e58d217b793c0bcd2d587f83dabfaba8098686"]
     },
     {
       "id": "CP06_AI_ROOM_ISSUE_COMMENT_TRANSPORT",
@@ -76,12 +68,13 @@
     },
     {
       "id": "CP09_NEGATIVE_FIXTURES_AND_INDEPENDENT_CERTIFICATION",
-      "status": "IMPLEMENTED_READY_FOR_INDEPENDENT_CERTIFICATION",
+      "status": "REPAIR_APPLIED_READY_FOR_INDEPENDENT_CERTIFICATION",
       "evidenceCommits": [
         "87603d602f1b0b4a1c09a49bb972a94b1296ade2",
         "a823415d307956b50c5f1362ee841c8fac68157a",
         "062bac7af5b51df921c62e26bf8d8ac49d24bd2e",
-        "f4ec32eab1786c7bcb20ebdd14b96586c399f5dd"
+        "f4ec32eab1786c7bcb20ebdd14b96586c399f5dd",
+        "7fb16250abbaf8045e3d062d546d20be49612215"
       ]
     },
     {
@@ -94,10 +87,23 @@
       ]
     }
   ],
+  "certificationAttempts": [
+    {
+      "attempt": 1,
+      "candidateHead": "c9084b958ba226f17b3cd7cb40a70212c337e0ce",
+      "workflowRun": 30952377431,
+      "builderJob": 92137333826,
+      "result": "FAIL_CLOSED_FIXTURE_EXPECTATION_MISMATCH",
+      "observedErrorCode": "RECEIPT_PROHIBITED_PATH_OBSERVED",
+      "expectedErrorCode": "RECEIPT_UNAUTHORIZED_PATH_OBSERVED",
+      "repair": "CHANGE_FIXTURE_INPUT_FROM_EXPLICITLY_PROHIBITED_PATH_TO_NONPROHIBITED_UNAUTHORIZED_PATH",
+      "validatorWeakened": false
+    }
+  ],
   "productMutationPerformed": false,
   "roleActivationPerformed": false,
   "methodsAuditExecuted": false,
   "mergePerformed": false,
   "permanentTransportActivated": false,
-  "implementationLoopStatus": "COMPLETE_PENDING_INDEPENDENT_CERTIFICATION"
+  "implementationLoopStatus": "REPAIRED_PENDING_INDEPENDENT_CERTIFICATION"
 }

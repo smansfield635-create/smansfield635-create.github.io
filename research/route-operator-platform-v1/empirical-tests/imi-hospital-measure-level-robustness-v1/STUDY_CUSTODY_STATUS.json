@@ -1,0 +1,35 @@
+{
+  "study_id": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B",
+  "status": "PASS_CLOSED_WITH_GITHUB_PRIMARY_AND_HASH_BOUND_EXTERNAL_LARGE_BYTE_CUSTODY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/imi-hospital-measure-level-robustness-v1",
+  "pull_request": 545,
+  "repository_path": "research/route-operator-platform-v1/empirical-tests/imi-hospital-measure-level-robustness-v1",
+  "instrument_relationship": "SEPARATE_STUDY_RECORD_REFERENCING_FROZEN_INSTRUMENT_AUTHORITY",
+  "merge_authority": "NOT_INFERRED_FROM_PUBLICATION_REQUEST",
+  "github_primary_contents": [
+    "route",
+    "executable",
+    "summary",
+    "sensitivity",
+    "collapse examples",
+    "measure dictionary",
+    "report",
+    "resolved clarifications",
+    "manifests",
+    "receipts",
+    "exact successor ZIP carrier"
+  ],
+  "external_large_byte_custody": {
+    "drive_folder_id": "1L_a6Oi_BTpYB5tW6nrLvhAGHKQqI-J_o",
+    "drive_zip_file_id": "1DmMswnXbp1msmrhpAA2159jV6lHutUf0",
+    "drive_zip_sha256": "e818c9b16b8b493d27da9e2d37f9503944b0d7699497a705ad5ec9ddbfefe32d",
+    "source_sha256": "0ba1b358e54e8812c9d1cf72c37f715b7bfeb3da12009bb6705158f0d15f91b5",
+    "full_hospital_results_sha256": "d8efa1e9db284294f49cd64542955bba7aaa6858f77a17bdf07c7eabeedf4f12",
+    "full_sensitivity_results_sha256": "9923812fa22bcf968dd01f1f334cbcffedb436f22fae1a44a8ec0ef33636a7f3"
+  },
+  "resolved_clarifications": {
+    "additive_comparator": "(MORT_nonworse + SAFETY_nonworse) / (MORT_comparable + SAFETY_comparable)",
+    "collapse_case_coverage_tier": "ANY_COMPARABLE_ONLY"
+  }
+}

@@ -1,26 +1,34 @@
 {
   "schema": "H_EARTH_R06_C10_ROLE_1_TO_ROLE_3_INDEPENDENT_TOOL_VERIFICATION_HANDOFF_LOCATOR_v1",
   "locatorId": "H_EARTH_R06_C10_ROLE_1_TO_ROLE_3_INDEPENDENT_TOOL_VERIFICATION_HANDOFF_LOCATOR_v1",
-  "status": "PREPARED_NOT_YET_ACTIVATED",
+  "status": "PREPARED_NOT_ACTIVE",
   "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "locatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json",
   "sourceRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
   "destinationRole": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
-  "role3ExecutionAuthority": "HELD_PENDING_ROLE_4_C5A_VALIDATION",
+  "role3ExecutionAuthority": "HELD_PENDING_ROLE_4_C5B_VALIDATION",
   "nextActiveRoomAfterC5": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
   "package": {
     "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
-    "packageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED",
-    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_1_ENTRY_POINT_IDENTITY_CORRECTED.zip",
-    "archiveSha256": "9b6a3765550c6fe37b59452018ecc660cf709629b4b3661862a1f224ea1cba1e",
-    "archiveByteCount": 13361365,
-    "archiveMemberCount": 165,
-    "driveFileId": "1j1VFxYBD6Wv3DqH1TMH6Imy6dJIn6Hu-",
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED.zip",
+    "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+    "archiveByteCount": 13364458,
+    "archiveMemberCount": 167,
+    "internalSha256SumsCoverageCount": 166,
+    "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+    "driveMimeType": "application/zip",
+    "metadataReadback": "PASS",
+    "rawByteReadback": "PASS",
     "completeMemberManifestPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
-    "completeMemberManifestSha256": "2cec5b49f81d104ff131463319e71429f7507e31667ddc08592fff4925266d1e",
-    "completeMemberManifestGitBlob": "dd90c540bb2da5274eee5935b8d4ce0a7b9e7bc8",
-    "completedToolSourceHead": "0f0d767a6ae71d3cb2d6b2cb187a767ccee80a7f"
+    "completeMemberManifestSha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+    "completeMemberManifestGitBlob": "edbb27881533dd3c891234ccaabed623b46b2d2f",
+    "completeMemberManifestCoverage": "167_OF_167",
+    "completedToolSourceIdentity": {
+      "tool8GitBlob": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+      "tool8Sha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243"
+    }
   },
   "eightToolManifest": {
     "toolCount": 8,
@@ -100,12 +108,25 @@
         "status": "CONSTRUCTED_ROLE_1_PROVISIONAL",
         "version": "1.0.0",
         "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.package-and-recovery-emitter.v1.mjs",
-        "gitBlob": "27f4ea03b612037035707035405597d821029cb9",
-        "sha256": "e1b818bd081c063e7d9d4b96043276f2f3e0c32dfd8286b87d4952f94f2e7846",
+        "gitBlob": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+        "sha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243",
         "entryPoint": "buildDeterministicPackage",
         "mutationClass": "NONPRODUCT_OR_READ_ONLY"
       }
-    ]
+    ],
+    "rootDiscoveryGeneralization": {
+      "operationId": "H_EARTH_R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_001",
+      "toolId": "H_EARTH_R06_C10_PACKAGE_AND_RECOVERY_EMITTER_v1",
+      "predecessorToolBlob": "27f4ea03b612037035707035405597d821029cb9",
+      "predecessorToolSha256": "e1b818bd081c063e7d9d4b96043276f2f3e0c32dfd8286b87d4952f94f2e7846",
+      "successorToolBlob": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+      "successorToolSha256": "0234cb20260254e428d697639d2770f1058716984b7432d99e69953ff4191243",
+      "rootDiscoveryLaw": "EXACTLY_ONE_VERIFIED_ARCHIVE_ROOT_THEN_VALIDATE_PACKAGE_BUILD_RECEIPT_IDENTITY",
+      "hardCodedSuccessorRoot": false,
+      "zeroRootFailsClosed": true,
+      "multipleRootsFailClosed": true,
+      "tools1Through7Changed": false
+    }
   },
   "baselineAndProtectedBlobs": {
     "acceptedBaselineCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
@@ -159,40 +180,41 @@
   "loadOrder": [
     "VERIFY_DRIVE_METADATA_AND_RAW_BYTE_READBACK",
     "VERIFY_OUTER_SHA256_BYTE_COUNT_MEMBER_COUNT",
-    "VERIFY_COMPLETE_MEMBER_MANIFEST_165_OF_165",
-    "VERIFY_INTERNAL_SHA256SUMS_164_OF_164",
+    "DERIVE_EXACTLY_ONE_ARCHIVE_ROOT",
+    "VALIDATE_RECOVERED_PACKAGE_BUILD_RECEIPT_IDENTITY",
+    "VERIFY_COMPLETE_MEMBER_MANIFEST_167_OF_167",
+    "VERIFY_INTERNAL_SHA256SUMS_166_OF_166",
     "EXTRACT_INTO_CLEAN_DIRECTORY",
     "LOAD_COMPLETED_EIGHT_TOOL_MANIFEST",
     "VERIFY_ALL_EIGHT_TOOL_PATHS_BLOBS_SHA256_AND_ENTRY_POINTS",
-    "VERIFY_C1_THROUGH_C4_RECEIPTS",
+    "VERIFY_C1_THROUGH_C4_AND_PRIOR_ROLE_RECEIPTS",
     "VERIFY_BASELINE_AND_PROTECTED_BLOBS",
     "EXECUTE_PORTABLE_HARNESS_AS_ROLE_3_INDEPENDENT_EXECUTION",
     "RETURN_EXACT_INDEPENDENT_RECEIPT_TO_ROLE_4"
   ],
   "provisionalReplay": {
     "result": "PASS",
-    "rawDriveReadbackPass": true,
-    "outerArchiveIdentityPass": true,
-    "completeMemberManifestAllMembersPass": true,
-    "internalSha256SumsAllNonmanifestMembersPass": true,
-    "eightToolPathBlobSha256Pass": true,
-    "eightOfEightEntryPointsPresent": true,
-    "c1ThroughC4ReceiptsPass": true,
-    "baselineAndProtectedBlobsPass": true,
-    "role3ModeHarnessExecutionPass": true,
-    "role6FailoverModePass": true,
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "receiptSha256": "12edfb9c403d222de33f8636d87e8952c2a1cd4afc2dadc2dd00e2c628ccb7e0",
+    "predecessor030ReplayPass": true,
+    "successor031ReplayPass": true,
+    "successor032ReplayPass": true,
+    "eightToolPathBlobSha256EntryPointPass": true,
+    "tools1Through7Unchanged": true,
     "assertionImplementationCount": 28,
     "assertionExecutionCount": 28,
-    "exactCandidateAdmissionFailures": [
+    "passAssertionCount": 25,
+    "failAssertionCount": 3,
+    "exactFailAssertionIds": [
       "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
       "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
       "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
     ],
-    "deterministicRepeatPass": true,
-    "deterministicReceiptDigest": "3ddf83abcef0a2f5cfa8aa61d314dd6935d655506505fda8386b9b5d3817a4a4",
-    "missingAuthorityFailClosedPass": true,
-    "productMutation": false,
-    "officialGeometryArticulationRound": "NOT_STARTED"
+    "candidateAdmission": "FAIL_CLOSED",
+    "harnessConstruction": "PASS",
+    "deterministicRole1ReceiptDigest": "3ddf83abcef0a2f5cfa8aa61d314dd6935d655506505fda8386b9b5d3817a4a4",
+    "missingAuthority": "HARNESS_INPUT_REJECTED_FAIL_CLOSED",
+    "productMutation": false
   },
   "expectedOperation": "H_EARTH_R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_001",
   "expectedReturn": {
@@ -221,12 +243,15 @@
     "R06 C10 independent tool verification",
     "H Earth eight tool Role 3 handoff",
     "R06 C10 0.3.0 verification package",
-    "H Earth R06 C10 package 0.3.1 entry point corrected",
-    "constructR06C10CandidateRun8BGeometry"
+    "H Earth R06 C10 package 0.3.2 recovery root generalized",
+    "Tool 8 dynamic archive root",
+    "R06 C10 C5B"
   ],
-  "c5aCorrection": {
-    "result": "R06_C10_ROLE_1_C5A_ENTRY_POINT_IDENTITY_CORRECTION_PASS_CLOSED",
-    "correctionReceiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5a.entry-point-identity-correction.receipt.v1.json",
+  "c5bCorrection": {
+    "result": "R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_PASS_CLOSED",
+    "receiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5b.recovery-root-generalization.receipt.v1.json",
+    "receiptSha256": "ccd882b8f0f58beed72b07c06d7ec4d15438ff8909a789ffa168e8f0e8352fdb",
+    "receiptGitBlob": "7aa5a2fb7aa23c509b996c7ecc4e9b5c7f01e33e",
     "role3ReactivationStatus": "PREPARED_NOT_ACTIVE"
   }
 }

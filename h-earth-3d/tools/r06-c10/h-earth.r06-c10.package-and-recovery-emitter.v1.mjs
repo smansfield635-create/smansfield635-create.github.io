@@ -9,8 +9,8 @@ import { fileURLToPath } from 'node:url';
 export const H_EARTH_R06_C10_PACKAGE_AND_RECOVERY_EMITTER_ID =
   'H_EARTH_R06_C10_PACKAGE_AND_RECOVERY_EMITTER_v1';
 export const PACKAGE_ID = 'H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1';
-export const PACKAGE_VERSION = '0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE';
-export const ARCHIVE_ROOT = 'H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1';
+export const PACKAGE_VERSION = '0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED';
+export const ARCHIVE_ROOT = 'H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED';
 export const FIXED_ZIP_TIMESTAMP = Object.freeze([1980, 1, 1, 0, 0, 0]);
 export const FIXED_FILE_MODE = 0o100644;
 
@@ -171,13 +171,26 @@ with zipfile.ZipFile(archive) as z:
     bad=z.testzip()
     infos=sorted(z.infolist(),key=lambda i:i.filename)
     files=[i for i in infos if not i.is_dir()]
-    roots={i.filename.split('/')[0] for i in files}
-    if len(roots)!=1: raise SystemExit('MULTIPLE_ARCHIVE_ROOTS')
-    root=next(iter(roots))+'/'
+    if not files: raise SystemExit('ZERO_ARCHIVE_ROOTS')
+    normalized=[]
+    roots=set()
+    for info in files:
+        name=info.filename.replace('\\','/')
+        parts=name.split('/')
+        if len(parts)<2 or not parts[0] or not parts[-1]:
+            raise SystemExit('ARCHIVE_MEMBER_OUTSIDE_SINGLE_ROOT')
+        roots.add(parts[0])
+        normalized.append((info,name))
+    if len(roots)==0: raise SystemExit('ZERO_ARCHIVE_ROOTS')
+    if len(roots)>1: raise SystemExit('MULTIPLE_ARCHIVE_ROOTS')
+    root_name=next(iter(roots))
+    root=root_name+'/'
     members=[]
     raw={}
-    for info in files:
-        rel=info.filename[len(root):]
+    for info,name in normalized:
+        if not name.startswith(root): raise SystemExit('ARCHIVE_MEMBER_OUTSIDE_SINGLE_ROOT')
+        rel=name[len(root):]
+        if not rel: raise SystemExit('ARCHIVE_MEMBER_EMPTY_RELATIVE_PATH')
         b=z.read(info.filename); raw[rel]=b
         members.append({'path':rel,'sha256':hashlib.sha256(b).hexdigest(),'byteCount':len(b)})
     if 'SHA256SUMS.txt' not in raw: raise SystemExit('MISSING_SHA256SUMS')
@@ -228,15 +241,44 @@ with zipfile.ZipFile(archive) as z:
 `;
 
 export function extractArchive({ archivePath, outputDirectory }) {
-  verifyArchiveReadback({ archivePath });
+  const verification = verifyArchiveReadback({ archivePath });
   fs.rmSync(outputDirectory, { recursive: true, force: true });
   run('python3', ['-c', PYTHON_EXTRACTOR, path.resolve(archivePath), path.resolve(outputDirectory)]);
-  return path.join(path.resolve(outputDirectory), ARCHIVE_ROOT);
+  const packageRoot = path.join(path.resolve(outputDirectory), verification.archiveRoot);
+  if (!fs.existsSync(packageRoot) || !fs.statSync(packageRoot).isDirectory()) {
+    throw new Error('VERIFIED_ARCHIVE_ROOT_NOT_EXTRACTED');
+  }
+  return { packageRoot, archiveRoot: verification.archiveRoot, verification };
+}
+
+export function loadRecoveredPackageIdentity({ packageRoot, archiveRoot }) {
+  const identityPath = path.join(packageRoot, 'PACKAGE_BUILD_RECEIPT.json');
+  if (!fs.existsSync(identityPath)) throw new Error('RECOVERED_PACKAGE_IDENTITY_MISSING');
+  const identity = JSON.parse(fs.readFileSync(identityPath, 'utf8'));
+  if (identity.schema !== 'H_EARTH_R06_C10_ROLE_1_PACKAGE_BUILD_RECEIPT_v1') {
+    throw new Error('RECOVERED_PACKAGE_IDENTITY_SCHEMA_MISMATCH');
+  }
+  if (identity.packageId !== PACKAGE_ID) throw new Error('RECOVERED_PACKAGE_ID_MISMATCH');
+  if (typeof identity.packageVersion !== 'string' || identity.packageVersion.trim() === '') {
+    throw new Error('RECOVERED_PACKAGE_VERSION_MISSING');
+  }
+  if (identity.archiveName !== `${archiveRoot}.zip`) {
+    throw new Error('RECOVERED_PACKAGE_ARCHIVE_ROOT_IDENTITY_MISMATCH');
+  }
+  return Object.freeze({
+    identityPath,
+    packageId: identity.packageId,
+    packageVersion: identity.packageVersion,
+    archiveName: identity.archiveName,
+    archiveRoot
+  });
 }
 
 export function replayRecoveryPackage({ archivePath, outputDirectory }) {
   const extractionDirectory = path.join(path.resolve(outputDirectory), 'extracted');
-  const packageRoot = extractArchive({ archivePath, outputDirectory: extractionDirectory });
+  const extraction = extractArchive({ archivePath, outputDirectory: extractionDirectory });
+  const { packageRoot, archiveRoot } = extraction;
+  const recoveredPackageIdentity = loadRecoveredPackageIdentity({ packageRoot, archiveRoot });
   const repositoryRoot = path.join(packageRoot, 'recovery/repository-substrate');
   const manifestPath = path.join(packageRoot, 'manifests/completed-eight-tool-manifest.json');
   const assumptionPath = path.join(packageRoot, 'recovery/role-assumption-bootstrap.json');
@@ -246,6 +288,12 @@ export function replayRecoveryPackage({ archivePath, outputDirectory }) {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
   if (manifest.toolCount !== 8 || !Array.isArray(manifest.tools) || manifest.tools.length !== 8) {
     throw new Error('RECOVERY_TOOL_MANIFEST_NOT_COMPLETE');
+  }
+  if (manifest.packageId !== recoveredPackageIdentity.packageId) {
+    throw new Error('RECOVERY_MANIFEST_PACKAGE_ID_MISMATCH');
+  }
+  if (manifest.packageVersion !== recoveredPackageIdentity.packageVersion) {
+    throw new Error('RECOVERY_MANIFEST_PACKAGE_VERSION_MISMATCH');
   }
   for (const tool of manifest.tools) {
     const file = path.join(repositoryRoot, tool.path);
@@ -288,7 +336,9 @@ export function replayRecoveryPackage({ archivePath, outputDirectory }) {
     schema: 'H_EARTH_R06_C10_C5_CLEAN_RECOVERY_REPLAY_RECEIPT_v1',
     result: pass ? 'PASS' : 'FAIL_CLOSED',
     packageId: PACKAGE_ID,
-    packageVersion: PACKAGE_VERSION,
+    packageVersion: recoveredPackageIdentity.packageVersion,
+    archiveRoot,
+    packageIdentityValidated: true,
     completedToolManifestLoads: true,
     requiredSourceIdentitiesVerified: first.assertions?.[0]?.result === 'PASS',
     role1ProvisionalHarnessPass: first.harnessConstructionResult === 'PASS',

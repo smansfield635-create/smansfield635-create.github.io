@@ -7,18 +7,19 @@
   "locatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json",
   "sourceRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
   "destinationRole": "ROLE_3_INDEPENDENT_EXECUTION_AND_ENGINEERING_VERIFICATION_AUTHORITY",
-  "role3ExecutionAuthority": "HELD_PENDING_ROLE_4_C5_VALIDATION",
+  "role3ExecutionAuthority": "HELD_PENDING_ROLE_4_C5A_VALIDATION",
   "nextActiveRoomAfterC5": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
   "package": {
     "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
-    "packageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
-    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1.zip",
-    "archiveSha256": "577de36ebe8909b14c34670b266414ac9d6f305737dac8fde8c2e05b5ea87e9d",
-    "archiveByteCount": 13344906,
-    "archiveMemberCount": 163,
-    "driveFileId": "1iHbJ5CWEPcVku3HZWQi7bGp1xHFxfKXr",
+    "packageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED",
+    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_1_ENTRY_POINT_IDENTITY_CORRECTED.zip",
+    "archiveSha256": "9b6a3765550c6fe37b59452018ecc660cf709629b4b3661862a1f224ea1cba1e",
+    "archiveByteCount": 13361365,
+    "archiveMemberCount": 165,
+    "driveFileId": "1j1VFxYBD6Wv3DqH1TMH6Imy6dJIn6Hu-",
     "completeMemberManifestPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
-    "completeMemberManifestSha256": "783a7a2a199c8a0f05f780ce2f960cb8182eb45c5cc71cdb6b39dc30a448e98c",
+    "completeMemberManifestSha256": "2cec5b49f81d104ff131463319e71429f7507e31667ddc08592fff4925266d1e",
+    "completeMemberManifestGitBlob": "dd90c540bb2da5274eee5935b8d4ce0a7b9e7bc8",
     "completedToolSourceHead": "0f0d767a6ae71d3cb2d6b2cb187a767ccee80a7f"
   },
   "eightToolManifest": {
@@ -71,7 +72,7 @@
         "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-authoring-tool.v1.mjs",
         "gitBlob": "fca63387cf1599e12f97e75e16f9e33f92880896",
         "sha256": "a7e290d3d48167abf6526b54f1d880f7db7f49bf151cbec8047a70ae12a58fc8",
-        "entryPoint": "constructR06C10Run8BGeometry",
+        "entryPoint": "constructR06C10CandidateRun8BGeometry",
         "mutationClass": "NONPRODUCT_OR_READ_ONLY"
       },
       {
@@ -158,11 +159,11 @@
   "loadOrder": [
     "VERIFY_DRIVE_METADATA_AND_RAW_BYTE_READBACK",
     "VERIFY_OUTER_SHA256_BYTE_COUNT_MEMBER_COUNT",
-    "VERIFY_COMPLETE_MEMBER_MANIFEST_163_OF_163",
-    "VERIFY_INTERNAL_SHA256SUMS_162_OF_162",
+    "VERIFY_COMPLETE_MEMBER_MANIFEST_165_OF_165",
+    "VERIFY_INTERNAL_SHA256SUMS_164_OF_164",
     "EXTRACT_INTO_CLEAN_DIRECTORY",
     "LOAD_COMPLETED_EIGHT_TOOL_MANIFEST",
-    "VERIFY_ALL_EIGHT_TOOL_PATHS_BLOBS_AND_SHA256",
+    "VERIFY_ALL_EIGHT_TOOL_PATHS_BLOBS_SHA256_AND_ENTRY_POINTS",
     "VERIFY_C1_THROUGH_C4_RECEIPTS",
     "VERIFY_BASELINE_AND_PROTECTED_BLOBS",
     "EXECUTE_PORTABLE_HARNESS_AS_ROLE_3_INDEPENDENT_EXECUTION",
@@ -170,21 +171,28 @@
   ],
   "provisionalReplay": {
     "result": "PASS",
-    "receiptSha256": "626f96778d4eed798361455c9d242057e133ba2075b78714b2d76101b64ea3de",
-    "completedToolManifestLoads": true,
-    "requiredSourceIdentitiesVerified": true,
-    "role1ProvisionalHarnessPass": true,
-    "role3IndependentModeSimulationPass": true,
-    "validRole6FailoverAssumptionReceiptLoads": true,
-    "missingAuthorityFailsClosed": true,
-    "deterministicRepeat": true,
+    "rawDriveReadbackPass": true,
+    "outerArchiveIdentityPass": true,
+    "completeMemberManifestAllMembersPass": true,
+    "internalSha256SumsAllNonmanifestMembersPass": true,
+    "eightToolPathBlobSha256Pass": true,
+    "eightOfEightEntryPointsPresent": true,
+    "c1ThroughC4ReceiptsPass": true,
+    "baselineAndProtectedBlobsPass": true,
+    "role3ModeHarnessExecutionPass": true,
+    "role6FailoverModePass": true,
+    "assertionImplementationCount": 28,
+    "assertionExecutionCount": 28,
     "exactCandidateAdmissionFailures": [
       "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
       "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
       "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
     ],
-    "conversationStateRequired": false,
-    "productMutation": false
+    "deterministicRepeatPass": true,
+    "deterministicReceiptDigest": "3ddf83abcef0a2f5cfa8aa61d314dd6935d655506505fda8386b9b5d3817a4a4",
+    "missingAuthorityFailClosedPass": true,
+    "productMutation": false,
+    "officialGeometryArticulationRound": "NOT_STARTED"
   },
   "expectedOperation": "H_EARTH_R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_001",
   "expectedReturn": {
@@ -212,6 +220,13 @@
     "H-Earth R06 C10 Role 1 to Role 3",
     "R06 C10 independent tool verification",
     "H Earth eight tool Role 3 handoff",
-    "R06 C10 0.3.0 verification package"
-  ]
+    "R06 C10 0.3.0 verification package",
+    "H Earth R06 C10 package 0.3.1 entry point corrected",
+    "constructR06C10CandidateRun8BGeometry"
+  ],
+  "c5aCorrection": {
+    "result": "R06_C10_ROLE_1_C5A_ENTRY_POINT_IDENTITY_CORRECTION_PASS_CLOSED",
+    "correctionReceiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5a.entry-point-identity-correction.receipt.v1.json",
+    "role3ReactivationStatus": "PREPARED_NOT_ACTIVE"
+  }
 }

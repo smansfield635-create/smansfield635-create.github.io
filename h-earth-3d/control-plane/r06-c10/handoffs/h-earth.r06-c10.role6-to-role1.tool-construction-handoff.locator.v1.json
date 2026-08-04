@@ -1,7 +1,7 @@
 {
   "schema": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_TOOL_CONSTRUCTION_HANDOFF_LOCATOR_v1",
   "locatorId": "H_EARTH_R06_C10_ROLE_6_TO_ROLE_1_TOOL_CONSTRUCTION_HANDOFF_LOCATOR_v1",
-  "status": "PASS_CLOSED_SUPERSEDED_BY_ROLE_1_COMPLETED_SUBSTRATE",
+  "status": "PASS_CLOSED_SUPERSEDED_BY_ROLE_1_C5A_CORRECTED_SUBSTRATE",
   "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "locatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json",
@@ -55,14 +55,14 @@
     "sourceRole": "ROLE_6_INDEPENDENT_RESEARCH_CHAMBER_AND_CROSS_SYSTEM_TROUBLESHOOTING_AUTHORITY",
     "destinationRole": "ROLE_1_PRODUCT_INTEGRATION_AND_SOURCE_AUTHORITY",
     "destinationOperation": "H_EARTH_R06_C10_PRE_ROUND_NONPRODUCT_TOOL_CONSTRUCTION_001",
-    "currentAuthorizedCheckpoint": "R1_C5_PASS_CLOSED",
-    "currentRequiredResult": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
+    "currentAuthorizedCheckpoint": "C5A_ENTRY_POINT_IDENTITY_CORRECTION",
+    "currentRequiredResult": "R06_C10_ROLE_1_C5A_ENTRY_POINT_IDENTITY_CORRECTION_PASS_CLOSED",
     "requiredRole1FinalResult": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
-    "requiredRole1PackageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
+    "requiredRole1PackageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED",
     "nextRoleAfterSuccessfulFinalReturn": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
     "governanceCopy": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
     "role3Status": "PREPARED_NOT_YET_ACTIVATED",
-    "role3Authority": "HELD_PENDING_ROLE_4_C5_VALIDATION",
+    "role3Authority": "PREPARED_NOT_ACTIVE",
     "role3LocatorPath": "h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json"
   },
   "role1CoreDuties": [
@@ -138,23 +138,29 @@
     "detached complete member manifest"
   ],
   "supersession": {
-    "supersedes": null,
-    "supersededBy": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_LOCATOR_v1",
-    "custodyInstructionSuperseded": "VERIFY_ALL_ARCHIVE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT",
-    "custodyInstructionReplacement": "VERIFY_35_CORE_MEMBERS_AGAINST_ORIGINAL_SHA256SUMS_TXT_AND_VERIFY_ALL_39_MEMBERS_AGAINST_THE_DETACHED_COMPLETE_MEMBER_MANIFEST",
-    "successorLocatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json"
+    "c5HistoricalMainHead": "ab6ea74ac8c03c7ba6c53514c2f89185ef91f72f",
+    "c5HistoricalArchiveDriveFileId": "1iHbJ5CWEPcVku3HZWQi7bGp1xHFxfKXr",
+    "c5HistoricalArchivePreserved": true,
+    "c5aSuccessorPackageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED"
   },
-  "handoffStatus": "PASS_CLOSED_SUPERSEDED_BY_ROLE_1_COMPLETED_SUBSTRATE",
+  "handoffStatus": "PASS_CLOSED_SUPERSEDED_BY_ROLE_1_C5A_CORRECTED_SUBSTRATE",
   "role1CompletedSubstrate": {
-    "result": "R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE",
-    "packageVersion": "0.3.0_ROLE_1_TOOL_CONSTRUCTION_COMPLETE",
-    "completedToolSourceHead": "0f0d767a6ae71d3cb2d6b2cb187a767ccee80a7f",
-    "successorLocatorPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json",
-    "archiveSha256": "577de36ebe8909b14c34670b266414ac9d6f305737dac8fde8c2e05b5ea87e9d",
-    "archiveByteCount": 13344906,
-    "archiveMemberCount": 163,
-    "driveFileId": "1iHbJ5CWEPcVku3HZWQi7bGp1xHFxfKXr",
-    "completeMemberManifestSha256": "783a7a2a199c8a0f05f780ce2f960cb8182eb45c5cc71cdb6b39dc30a448e98c",
-    "cleanRecoveryReplay": "PASS"
+    "result": "R06_C10_ROLE_1_C5A_ENTRY_POINT_IDENTITY_CORRECTION_PASS_CLOSED",
+    "package": {
+      "packageId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+      "packageVersion": "0.3.1_ROLE_1_ENTRY_POINT_IDENTITY_CORRECTED",
+      "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_1_ENTRY_POINT_IDENTITY_CORRECTED.zip",
+      "archiveSha256": "9b6a3765550c6fe37b59452018ecc660cf709629b4b3661862a1f224ea1cba1e",
+      "archiveByteCount": 13361365,
+      "archiveMemberCount": 165,
+      "driveFileId": "1j1VFxYBD6Wv3DqH1TMH6Imy6dJIn6Hu-",
+      "completeMemberManifestPath": "h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json",
+      "completeMemberManifestSha256": "2cec5b49f81d104ff131463319e71429f7507e31667ddc08592fff4925266d1e",
+      "completeMemberManifestGitBlob": "dd90c540bb2da5274eee5935b8d4ce0a7b9e7bc8",
+      "completedToolSourceHead": "0f0d767a6ae71d3cb2d6b2cb187a767ccee80a7f"
+    },
+    "correctionReceiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5a.entry-point-identity-correction.receipt.v1.json",
+    "allEightEntryPointsPresent": true,
+    "productMutation": false
   }
 }

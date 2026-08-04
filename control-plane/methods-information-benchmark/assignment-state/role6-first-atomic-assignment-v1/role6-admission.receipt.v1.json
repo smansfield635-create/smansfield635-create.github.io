@@ -1,0 +1,13 @@
+{
+  "admitted": true,
+  "assignmentAuthorityActive": true,
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "conversationMemoryUsed": false,
+  "disposition": "ADMITTED_OPERATION_SCOPED",
+  "generalRoleAuthority": false,
+  "holderExecutionId": "MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7",
+  "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "privateStateUsed": false,
+  "roleId": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "schema": "METHODS_INFORMATION_BENCHMARK_ROLE_HOLDER_ADMISSION_RECEIPT_v2"
+}

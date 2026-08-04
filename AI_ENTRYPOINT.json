@@ -1,7 +1,7 @@
 {
   "schema": "REPOSITORY_AI_ENTRYPOINT_v2",
   "entrypointId": "SMANSFIELD_REPOSITORY_AI_ENTRYPOINT_v2",
-  "status": "BOOTSTRAP_CANDIDATE_PENDING_ACTIVATION",
+  "status": "ACTIVE_FAIL_CLOSED",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "rootAgentInstruction": "AGENTS.md",
   "operationIntakeGate": {

@@ -1,8 +1,0 @@
-{
-  "schema": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_GATE_FAILURE_v1",
-  "gateId": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_GATE_v1",
-  "gateResult": "FAIL_CLOSED_INSTRUMENT_OR_BINDING_ERROR",
-  "candidateArgument": "0064e438303e10bcdbc389ce900becc3cddf16c4",
-  "error": "ADAPTER_RECEIPT_MISSING:candidateHead",
-  "conversationMemoryRequired": false
-}

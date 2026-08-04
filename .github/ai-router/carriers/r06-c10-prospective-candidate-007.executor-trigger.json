@@ -1,0 +1,12 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_007_STAGED_EXECUTOR_TRIGGER_v1",
+  "exactStartingMainHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "terrainCorrection": {
+    "operator": "FALL_FACE",
+    "centerZ": {"from": -180, "to": -178},
+    "halfLength": {"from": 12, "to": 14},
+    "toeZPreserved": -192
+  },
+  "allOtherTerrainParametersChanged": false,
+  "productMutation": false
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "REPOSITORY_AI_ROUTER_REGISTRY_v1",
+  "routerId": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "projectRegistrationSchema": ".github/ai-router/project-registration.schema.v1.json",
+  "sharedProcedureRegistry": ".github/ai-router/shared-procedures.v1.json",
+  "executionBackendRegistry": ".github/ai-router/execution-backends.v1.json",
+  "entryReceiptSchema": ".github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json",
+  "routerInfrastructure": {
+    "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+    "ownedExactPaths": [
+      "AGENTS.md",
+      "AI_ENTRYPOINT.json",
+      "tools/repository-ai-entry-router.mjs",
+      ".github/workflows/repository-ai-entry-router-validation.yml"
+    ],
+    "ownedPathPrefixes": [
+      ".github/ai-router/"
+    ],
+    "validationCommand": "node tools/repository-ai-entry-router.mjs --self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/router-self-test-receipt.json"
+  },
+  "projects": [
+    {
+      "projectId": "H_EARTH",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [
+        "h-earth-3d/",
+        "showroom/globe/h-earth/"
+      ],
+      "ownedExactPaths": [
+        ".github/workflows/h-earth-repository-registry-preflight.yml",
+        ".github/workflows/h-earth-r06-c10-candidate-admission.yml"
+      ],
+      "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+      "priority": 100
+    }
+  ],
+  "unregisteredPathPolicy": {
+    "readOnlyDisposition": "REVIEW_REQUIRED",
+    "mutationDisposition": "BLOCK",
+    "reason": "NO_REGISTERED_PROJECT_AUTHORITY",
+    "registrationTemplate": ".github/ai-router/project-registration.schema.v1.json"
+  },
+  "ambiguityPolicy": {
+    "disposition": "STOP",
+    "reason": "MULTIPLE_EQUAL_PRIORITY_PROJECT_ROUTES"
+  }
+}

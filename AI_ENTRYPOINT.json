@@ -1,0 +1,26 @@
+{
+  "schema": "REPOSITORY_AI_ENTRYPOINT_v1",
+  "entrypointId": "SMANSFIELD_REPOSITORY_AI_ENTRYPOINT_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "rootAgentInstruction": "AGENTS.md",
+  "routerRegistry": ".github/ai-router/router.v1.json",
+  "routerCli": "tools/repository-ai-entry-router.mjs",
+  "sharedProcedureRegistry": ".github/ai-router/shared-procedures.v1.json",
+  "executionBackendRegistry": ".github/ai-router/execution-backends.v1.json",
+  "projectRegistrationSchema": ".github/ai-router/project-registration.schema.v1.json",
+  "entryReceiptSchema": ".github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json",
+  "entryCommand": "node tools/repository-ai-entry-router.mjs --path <repository-path> [--path <repository-path> ...]",
+  "mutationCommand": "node tools/repository-ai-entry-router.mjs --mutation-intent --path <repository-path> [--path <repository-path> ...]",
+  "rules": [
+    "ROUTE_BEFORE_SUBSTANTIVE_REPOSITORY_ACTION",
+    "LOAD_ALL_RESOLVED_PROJECT_INSTRUCTIONS",
+    "SHARED_PROCEDURE_DOES_NOT_GRANT_PROJECT_AUTHORITY",
+    "UNREGISTERED_PROJECT_PATH_REQUIRES_REVIEW",
+    "AMBIGUOUS_ROUTE_STOPS",
+    "NO_EXECUTION_CLAIM_FROM_METADATA_RECONSTRUCTION",
+    "LOCAL_EXECUTION_UNAVAILABLE_USES_DECLARED_GITHUB_ACTIONS_BACKEND",
+    "COMMAND_EMITTED_RECEIPT_REQUIRED_WHEN_A_PROCEDURE_REQUIRES_EXECUTION"
+  ],
+  "conversationMemoryRequired": false
+}

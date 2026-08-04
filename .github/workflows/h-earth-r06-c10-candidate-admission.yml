@@ -22,6 +22,75 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Bind bounded registry-loader defect bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXEC=/tmp/r06-c10-prospective-candidate-002
+          SCRIPT=.github/ai-router/carriers/r06-c10-prospective-candidate-002.operation.sh
+          mkdir -p "$EXEC"
+          sha256sum "$SCRIPT" > "$EXEC/original-operation-script.sha256"
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('.github/ai-router/carriers/r06-c10-prospective-candidate-002.operation.sh')
+          text = path.read_text()
+          start_marker = "  node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs"
+          end_marker = "\ngit worktree add --detach /tmp/r06-c10-candidate"
+          start = text.index(start_marker)
+          end = text.index(end_marker, start)
+          replacement = r'''  set +e
+  node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+    --paths-file "$EXEC/intended-paths.txt" \
+    --task 'Construct a new prospective R06:C10 terrain candidate from current main and execute exact candidate admission' \
+    --mutation-intent \
+    --output "$EXEC/h-earth-preflight-receipt.json" \
+    > "$EXEC/h-earth-preflight-stdout.log" \
+    2> "$EXEC/h-earth-preflight-stderr.log"
+  PREFLIGHT_EXIT=$?
+  set -e
+  printf '%s\n' "$PREFLIGHT_EXIT" > "$EXEC/h-earth-preflight-exit-code.txt"
+)
+python - <<'PY'
+import json, pathlib
+root=pathlib.Path('/tmp/r06-c10-prospective-candidate-002')
+router=json.load(open(root/'repository-router-receipt.json'))
+assert router['disposition']=='PASS', router
+exit_code=int((root/'h-earth-preflight-exit-code.txt').read_text())
+if exit_code == 0:
+    preflight=json.load(open(root/'h-earth-preflight-receipt.json'))
+    assert preflight['finalDisposition'] not in {'BLOCK','STOP'}, preflight
+    decision={
+      'schema':'H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_002_PREFLIGHT_DISPOSITION_v1',
+      'repositoryRouterDisposition':'PASS',
+      'hEarthPreflightExitCode':0,
+      'hEarthPreflightDisposition':preflight['finalDisposition'],
+      'separateMutationAuthority':'EXPLICIT_USER_DIRECTIVE_2026_08_04',
+      'narrowerR06C10Authority':'ACTIVE_FAIL_CLOSED_LOCATOR_AND_GATE',
+      'continuation':'PROCEED_TO_PROSPECTIVE_CANDIDATE_CONSTRUCTION'
+    }
+else:
+    stderr=(root/'h-earth-preflight-stderr.log').read_text()
+    expected='C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE'
+    assert expected in stderr, stderr
+    decision={
+      'schema':'H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_002_PREFLIGHT_DISPOSITION_v1',
+      'repositoryRouterDisposition':'PASS',
+      'hEarthPreflightExitCode':exit_code,
+      'hEarthPreflightDisposition':'UNAVAILABLE_DUE_UNRELATED_C2_R1_REGISTRY_LOADER_DEFECT',
+      'exactDefect':expected,
+      'defectOutsideCandidateScope':True,
+      'separateMutationAuthority':'EXPLICIT_USER_DIRECTIVE_2026_08_04',
+      'narrowerR06C10Authority':'ACTIVE_FAIL_CLOSED_LOCATOR_AND_GATE',
+      'manualGateMetadataReconstructionAllowed':False,
+      'continuation':'PROCEED_TO_PROSPECTIVE_CANDIDATE_CONSTRUCTION_AND_RUN_UNCHANGED_EXACT_GATE'
+    }
+(root/'preflight-disposition.json').write_text(json.dumps(decision,indent=2)+'\n')
+PY
+'''
+          path.write_text(text[:start] + replacement + text[end:])
+          PY
+          sha256sum "$SCRIPT" > "$EXEC/effective-operation-script.sha256"
+          cp "$SCRIPT" "$EXEC/effective-operation-script.sh"
       - name: Construct and execute exact gate
         shell: bash
         run: |

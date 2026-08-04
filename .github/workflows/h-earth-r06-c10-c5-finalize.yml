@@ -1,0 +1,129 @@
+name: H-Earth R06 C10 C5 Finalize
+
+on:
+  push:
+    branches:
+      - role1/r06-c10-c5-cumulative-return-001
+    paths:
+      - .github/workflows/h-earth-r06-c10-c5-finalize.yml
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Reconstruct and validate exact C5 records
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='38ebb449c6d81070a2a6668b41515ee5d76f4297'
+          TOOL='h-earth-3d/tools/r06-c10/h-earth.r06-c10.package-and-recovery-emitter.v1.mjs'
+          MARKER='H_EARTH_R06_C10_C5_RECORDS_CHUNK_v1'
+          BUNDLE_SHA='f2cdd4700902c78be9b8d8ccaed2628759397eae8c5576cb49ee066500dd7ee6'
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+          test "$(git hash-object "$TOOL")" = '27f4ea03b612037035707035405597d821029cb9'
+          gh api 'repos/smansfield635-create/smansfield635-create.github.io/issues/529/comments?per_page=100' > /tmp/comments.json
+          python3 - <<'PY'
+          import base64, hashlib, json, pathlib, re
+          marker='H_EARTH_R06_C10_C5_RECORDS_CHUNK_v1'
+          expected='f2cdd4700902c78be9b8d8ccaed2628759397eae8c5576cb49ee066500dd7ee6'
+          comments=json.loads(pathlib.Path('/tmp/comments.json').read_text())
+          chunks={}
+          pattern=re.compile(rf'^{marker}:(\d+):(\d+):{expected}\n([A-Za-z0-9+/=]+)$')
+          for comment in comments:
+              match=pattern.match(comment.get('body',''))
+              if match:
+                  index,total,payload=int(match.group(1)),int(match.group(2)),match.group(3)
+                  if total != 5: raise SystemExit('C5_CHUNK_TOTAL_MISMATCH')
+                  chunks[index]=payload
+          if sorted(chunks) != [1,2,3,4,5]: raise SystemExit(f'C5_CHUNK_SET_MISMATCH:{sorted(chunks)}')
+          raw=base64.b64decode(''.join(chunks[index] for index in range(1,6)),validate=True)
+          if hashlib.sha256(raw).hexdigest()!=expected: raise SystemExit('C5_RECORD_BUNDLE_SHA256_MISMATCH')
+          pathlib.Path('/tmp/c5-records.tgz').write_bytes(raw)
+          PY
+          tar -xzf /tmp/c5-records.tgz
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          paths={
+            'receipt':'h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5.cumulative-return-custody.receipt.v1.json',
+            'manifest':'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json',
+            'successor':'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json',
+            'predecessor':'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json',
+            'handoff':'h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json',
+            'role3':'h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json'
+          }
+          expected={
+            'receipt':'e41200bcc156ad35806487568673e4d3e77df01ed00d8511a151531dc2c300f0',
+            'manifest':'783a7a2a199c8a0f05f780ce2f960cb8182eb45c5cc71cdb6b39dc30a448e98c',
+            'successor':'1263e5db1e3650b277f81196e5d8a1189549e8aebc4b80c688937e466cb1866a',
+            'predecessor':'b5447f21d7d361526e6935780c8c5b99012af1c1c3f099776119f2367a0ad6fb',
+            'handoff':'6c378d29d04921ce569c0b0dca1c89fb800dc2e82e621a725703d1332d1b682b',
+            'role3':'d856c4bf8ed952c147b0af0b6f2a5d8392dd67ff38b447d8e59148db4336f6c9'
+          }
+          data={}
+          for key,path in paths.items():
+              raw=pathlib.Path(path).read_bytes()
+              if hashlib.sha256(raw).hexdigest()!=expected[key]: raise SystemExit(f'C5_RECORD_SHA256_MISMATCH:{key}')
+              data[key]=json.loads(raw)
+          if data['receipt']['result']!='R06_C10_ROLE_1_C5_PASS_CLOSED': raise SystemExit('C5_RECEIPT_RESULT_MISMATCH')
+          if data['receipt']['finalResult']!='R06_C10_ROLE_1_NONPRODUCT_TOOL_AND_HARNESS_CONSTRUCTION_COMPLETE': raise SystemExit('C5_FINAL_RESULT_MISMATCH')
+          if data['receipt']['cleanRecoveryReplay']['result']!='PASS': raise SystemExit('C5_REPLAY_NOT_PASS')
+          if data['manifest']['archiveSha256']!='577de36ebe8909b14c34670b266414ac9d6f305737dac8fde8c2e05b5ea87e9d': raise SystemExit('C5_ARCHIVE_IDENTITY_MISMATCH')
+          if data['manifest']['archiveMemberCount']!=163 or len(data['manifest']['members'])!=163: raise SystemExit('C5_MEMBER_COUNT_MISMATCH')
+          if not any(item['path']=='SHA256SUMS.txt' for item in data['manifest']['members']): raise SystemExit('C5_COMPLETE_MANIFEST_MISSING_INTERNAL_MANIFEST')
+          if data['successor']['status']!='COMPLETE_AWAITING_ROLE_4_ADMISSION_TO_ROLE_3': raise SystemExit('C5_SUCCESSOR_STATUS_MISMATCH')
+          if data['handoff']['status']!='PASS_CLOSED_SUPERSEDED_BY_ROLE_1_COMPLETED_SUBSTRATE': raise SystemExit('C5_HANDOFF_STATUS_MISMATCH')
+          if data['role3']['status']!='PREPARED_NOT_YET_ACTIVATED': raise SystemExit('C5_ROLE3_STATUS_MISMATCH')
+          PY
+
+      - name: Freeze exact seven-path closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='38ebb449c6d81070a2a6668b41515ee5d76f4297'
+          TEMP='.github/workflows/h-earth-r06-c10-c5-finalize.yml'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm "$TEMP"
+          git add h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5.cumulative-return-custody.receipt.v1.json \
+            h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json \
+            h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json \
+            h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json \
+            h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json \
+            h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json
+          git commit -m 'Close R06 C10 Role 1 cumulative return and custody checkpoint'
+          FINAL_HEAD=$(git rev-parse HEAD)
+          mapfile -t paths < <(git diff --name-only "$BASE" HEAD)
+          test "${#paths[@]}" -eq 7
+          printf '%s\n' "${paths[@]}" | grep -Fx 'h-earth-3d/tools/r06-c10/h-earth.r06-c10.package-and-recovery-emitter.v1.mjs'
+          printf '%s\n' "${paths[@]}" | grep -Fx 'h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5.cumulative-return-custody.receipt.v1.json'
+          printf '%s\n' "${paths[@]}" | grep -Fx 'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.complete-member-manifest.v1.json'
+          printf '%s\n' "${paths[@]}" | grep -Fx 'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.role1.nonproduct-tool-construction.locator.v1.json'
+          printf '%s\n' "${paths[@]}" | grep -Fx 'h-earth-3d/control-plane/r06-c10/tool-base/h-earth.r06-c10.geometry-articulation-shared-tool-base.locator.v1.json'
+          printf '%s\n' "${paths[@]}" | grep -Fx 'h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role6-to-role1.tool-construction-handoff.locator.v1.json'
+          printf '%s\n' "${paths[@]}" | grep -Fx 'h-earth-3d/control-plane/r06-c10/handoffs/h-earth.r06-c10.role1-to-role3.independent-tool-verification-handoff.locator.v1.json'
+          if printf '%s\n' "${paths[@]}" | grep -Eq '^(showroom/globe/h-earth/|h-earth-3d/terrain/|h-earth-3d/integration/)'; then exit 1; fi
+          git push origin HEAD:role1/r06-c10-c5-cumulative-return-001
+          echo "FINAL_HEAD=$FINAL_HEAD" >> "$GITHUB_ENV"
+
+      - name: Publish closure locator
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_R06_C10_C5_FINALIZATION_PASS:${GITHUB_RUN_ID}:${FINAL_HEAD}:577de36ebe8909b14c34670b266414ac9d6f305737dac8fde8c2e05b5ea87e9d"
+
+      - name: Publish failure locator
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 529 --repo smansfield635-create/smansfield635-create.github.io --body "H_EARTH_R06_C10_C5_FINALIZATION_FAIL:${GITHUB_RUN_ID}:${GITHUB_SHA}"

@@ -1,0 +1,28 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_CHANGED_PATH_MANIFEST_v1",
+  "manifestId": "MIB_PRE_ROLE_BOOTSTRAP_CHANGED_PATHS_001",
+  "baseHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "operationId": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_AND_ROLE_MATERIALIZATION_v1",
+  "expectedChangedPaths": [
+    ".github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json",
+    ".github/ai-router/router.v1.json",
+    ".github/workflows/methods-information-benchmark-pre-role-bootstrap.yml",
+    "control-plane/methods-information-benchmark/AGENTS.md",
+    "control-plane/methods-information-benchmark/bootstrap/bootstrap-bundle.v1.json",
+    "control-plane/methods-information-benchmark/bootstrap/changed-path-manifest.v1.json",
+    "control-plane/methods-information-benchmark/bootstrap/origin-bootstrap-seed.v1.json",
+    "control-plane/methods-information-benchmark/locators/fresh-room-entry.locator.v1.json",
+    "control-plane/methods-information-benchmark/locators/role-system-entry.locator.v1.json",
+    "control-plane/methods-information-benchmark/locators/successor-room-entry.locator.v1.json",
+    "control-plane/methods-information-benchmark/receipts/bootstrap-construction.receipt.v1.json",
+    "methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs"
+  ],
+  "prohibitedPathPrefixes": [
+    "laws/",
+    "showroom/",
+    "assets/",
+    "render/",
+    "preview/"
+  ],
+  "equalityRequired": true
+}

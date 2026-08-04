@@ -21,8 +21,8 @@ function familyMap(catalog) {
 
 function sceneTransform(camera) {
   const [targetX, targetY, targetZ] = camera.target;
-  const x = -targetX * UNIT;
-  const y = targetY * UNIT;
+  const x = -targetX * UNIT * camera.scale;
+  const y = targetY * UNIT * camera.scale;
   const z = -targetZ * UNIT - camera.depth;
   return `translate3d(${x}px, ${y}px, ${z}px) rotateX(${camera.rotateX}deg) rotateY(${camera.rotateY}deg) scale(${camera.scale})`;
 }

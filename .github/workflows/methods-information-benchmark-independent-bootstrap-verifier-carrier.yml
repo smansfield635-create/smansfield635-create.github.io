@@ -1,0 +1,304 @@
+name: Methods Information Benchmark Independent Bootstrap Verifier Carrier
+
+on:
+  push:
+    branches:
+      - verification/methods-information-benchmark-independent-bootstrap-verifier-carrier-v1-001
+    paths:
+      - .github/workflows/methods-information-benchmark-independent-bootstrap-verifier-carrier.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: methods-information-benchmark-independent-bootstrap-verifier-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: independent-bootstrap-verifier
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      EXACT_CANDIDATE_HEAD: 3c303a49b4e90cf8672cd76f9f2c31041c2e56d1
+      EXACT_BASE_HEAD: b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f
+      BUILDER_WORKFLOW_RUN_ID: "30923002718"
+      BUILDER_ARTIFACT_ID: "8897880239"
+      BUILDER_ARTIFACT_NAME: methods-information-benchmark-pre-role-bootstrap-receipts
+      BUILDER_ARTIFACT_SIZE_BYTES: "9728"
+      BUILDER_ARTIFACT_SHA256: 0734e39760d5127346dd3011f2a26319b751fbfd445c25efb55e70cb66e2d1e1
+
+    steps:
+      - name: Check out exact PR 551 candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: 3c303a49b4e90cf8672cd76f9f2c31041c2e56d1
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up exact fingerprint execution class
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Assert exact clean detached candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_CANDIDATE_HEAD"
+          git merge-base --is-ancestor "$EXACT_BASE_HEAD" "$EXACT_CANDIDATE_HEAD"
+          test -z "$(git status --porcelain)"
+          test "$(node -p 'process.versions.node.split(`.`)[0]')" = "22"
+          test "$(node -p 'process.platform')" = "linux"
+          test "$(node -p 'process.arch')" = "x64"
+          printf '%s\n' "$EXACT_CANDIDATE_HEAD" > "$RUNNER_TEMP/executed-head.txt"
+
+      - name: Authenticate Builder artifact metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts/${BUILDER_ARTIFACT_ID}" \
+            > "$RUNNER_TEMP/builder-artifact-metadata.json"
+
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          metadata_path = Path(os.environ["RUNNER_TEMP"]) / "builder-artifact-metadata.json"
+          metadata = json.loads(metadata_path.read_text())
+          expected_digest = f"sha256:{os.environ['BUILDER_ARTIFACT_SHA256']}"
+
+          assert str(metadata["id"]) == os.environ["BUILDER_ARTIFACT_ID"]
+          assert metadata["name"] == os.environ["BUILDER_ARTIFACT_NAME"]
+          assert str(metadata["size_in_bytes"]) == os.environ["BUILDER_ARTIFACT_SIZE_BYTES"]
+          assert metadata["expired"] is False
+          assert metadata.get("digest") == expected_digest
+
+          workflow_run = metadata.get("workflow_run") or {}
+          assert str(workflow_run.get("id")) == os.environ["BUILDER_WORKFLOW_RUN_ID"]
+          assert workflow_run.get("head_sha") == os.environ["EXACT_CANDIDATE_HEAD"]
+          PY
+
+      - name: Download and authenticate Builder artifact bytes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          BUILDER_ZIP="$RUNNER_TEMP/builder-artifact-8897880239.zip"
+          EVIDENCE_DIR="$RUNNER_TEMP/builder-evidence"
+          mkdir -p "$EVIDENCE_DIR"
+
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts/${BUILDER_ARTIFACT_ID}/zip" \
+            > "$BUILDER_ZIP"
+
+          printf '%s  %s\n' "$BUILDER_ARTIFACT_SHA256" "$BUILDER_ZIP" | sha256sum --check -
+          unzip -q "$BUILDER_ZIP" -d "$EVIDENCE_DIR"
+
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          evidence = Path(os.environ["RUNNER_TEMP"]) / "builder-evidence"
+          expected = {
+              "EXPECTED_HEAD",
+              "EXECUTED_HEAD",
+              "BASE_HEAD",
+              "BUILDER_EXECUTION_HOLDER",
+              "router.json",
+              "self-test.json",
+              "discovery.json",
+              "fingerprint.json",
+              "builder-receipt.json",
+              "changed-path-blob-map.json",
+              "admission.json",
+              "changed-paths.txt",
+          }
+          actual = {
+              str(path.relative_to(evidence))
+              for path in evidence.rglob("*")
+              if path.is_file()
+          }
+          assert actual == expected, {
+              "missing": sorted(expected - actual),
+              "unexpected": sorted(actual - expected),
+          }
+          PY
+
+      - name: Validate authentic Builder custody and select fresh holder
+        shell: bash
+        run: |
+          set -euo pipefail
+          EVIDENCE_DIR="$RUNNER_TEMP/builder-evidence"
+          VERIFIER_EXECUTION_HOLDER="GITHUB_ACTIONS_BOOTSTRAP_VERIFIER_CARRIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
+          printf '%s\n' "$VERIFIER_EXECUTION_HOLDER" > "$RUNNER_TEMP/verifier-execution-holder.txt"
+
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          evidence = temp / "builder-evidence"
+          receipt_path = evidence / "builder-receipt.json"
+          receipt = json.loads(receipt_path.read_text())
+          fingerprint = json.loads((evidence / "fingerprint.json").read_text())
+          changed_map = json.loads((evidence / "changed-path-blob-map.json").read_text())
+
+          expected_head = os.environ["EXACT_CANDIDATE_HEAD"]
+          expected_base = os.environ["EXACT_BASE_HEAD"]
+          verifier_holder = (temp / "verifier-execution-holder.txt").read_text().strip()
+          builder_holder = (evidence / "BUILDER_EXECUTION_HOLDER").read_text().strip()
+
+          assert (evidence / "EXPECTED_HEAD").read_text().strip() == expected_head
+          assert (evidence / "EXECUTED_HEAD").read_text().strip() == expected_head
+          assert (evidence / "BASE_HEAD").read_text().strip() == expected_base
+
+          assert receipt["schema"] == "METHODS_INFORMATION_BENCHMARK_BOOTSTRAP_BUILDER_RECEIPT_v2"
+          assert receipt["pass"] is True
+          assert receipt["exactHeadMatch"] is True
+          assert receipt["expectedHead"] == expected_head
+          assert receipt["executedHead"] == expected_head
+          assert receipt["baseHead"] == expected_base
+          assert receipt["executingFunction"] == "BOOTSTRAP_BUILDER"
+          assert receipt["executionHolder"] == builder_holder
+          assert receipt["builderFingerprint"] == fingerprint["fingerprint"]
+          assert receipt["changedPathBlobMap"] == changed_map
+          assert receipt["independentVerificationClaimed"] is False
+          assert receipt["permanentRoleAuthorityActivated"] is False
+          assert receipt["conversationMemoryUsed"] is False
+          assert receipt["privateStateUsed"] is False
+          assert verifier_holder != builder_holder
+
+          values = {
+              "builder-fingerprint.txt": receipt["builderFingerprint"],
+              "builder-execution-holder.txt": builder_holder,
+              "origin-seed-blob.txt": receipt["originSeed"]["gitBlob"],
+              "origin-seed-sha256.txt": receipt["originSeed"]["sha256"],
+              "builder-receipt-sha256.txt": hashlib.sha256(receipt_path.read_bytes()).hexdigest(),
+          }
+          for name, value in values.items():
+              (temp / name).write_text(f"{value}\n")
+          PY
+
+      - name: Run PR 551 unmodified canonical verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_CANDIDATE_HEAD"
+          test -z "$(git status --porcelain)"
+
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs \
+            independent-bootstrap-verifier \
+            --builder-receipt "$RUNNER_TEMP/builder-evidence/builder-receipt.json" \
+            --builder-fingerprint "$(cat "$RUNNER_TEMP/builder-fingerprint.txt")" \
+            --builder-candidate-head "$EXACT_CANDIDATE_HEAD" \
+            --builder-execution-holder "$(cat "$RUNNER_TEMP/builder-execution-holder.txt")" \
+            --verifier-execution-holder "$(cat "$RUNNER_TEMP/verifier-execution-holder.txt")" \
+            --origin-seed-blob "$(cat "$RUNNER_TEMP/origin-seed-blob.txt")" \
+            --origin-seed-sha256 "$(cat "$RUNNER_TEMP/origin-seed-sha256.txt")" \
+            --changed-path-blob-map "$RUNNER_TEMP/builder-evidence/changed-path-blob-map.json" \
+            --output "$RUNNER_TEMP/verification.json"
+
+      - name: Validate canonical Verifier receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          receipt = json.loads((temp / "verification.json").read_text())
+          verifier_holder = (temp / "verifier-execution-holder.txt").read_text().strip()
+          builder_holder = (temp / "builder-execution-holder.txt").read_text().strip()
+          builder_fingerprint = (temp / "builder-fingerprint.txt").read_text().strip()
+          builder_receipt_sha256 = (temp / "builder-receipt-sha256.txt").read_text().strip()
+
+          assert receipt["schema"] == "METHODS_INFORMATION_BENCHMARK_BOOTSTRAP_VERIFICATION_RECEIPT_v2"
+          assert receipt["executingFunction"] == "BOOTSTRAP_VERIFIER"
+          assert receipt["executionHolder"] == verifier_holder
+          assert receipt["builderExecutionHolder"] == builder_holder
+          assert receipt["distinctExecutionHolders"] is True
+          assert receipt["candidateHead"] == os.environ["EXACT_CANDIDATE_HEAD"]
+          assert receipt["baseHead"] == os.environ["EXACT_BASE_HEAD"]
+          assert receipt["builderReceiptSha256"] == builder_receipt_sha256
+          assert receipt["builderFingerprint"] == builder_fingerprint
+          assert receipt["verifierFingerprint"] == builder_fingerprint
+          assert receipt["fingerprintMatch"] is True
+          assert receipt["originSeedIdentityMatch"] is True
+          assert receipt["changedPathBlobMapMatch"] is True
+          assert receipt["topologyPass"] is True
+          assert receipt["circularAuthorityCount"] == 0
+          assert receipt["unassignedOperationalFunctions"] == 0
+          assert receipt["conflictingRoleCombinations"] == 0
+          assert receipt["privateStateDependency"] is False
+          assert receipt["repairPerformed"] is False
+          assert receipt["pass"] is True
+          PY
+
+      - name: Prove no repair or candidate mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_CANDIDATE_HEAD"
+          test -z "$(git status --porcelain)"
+          git diff --exit-code
+          git diff --cached --exit-code
+
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          verification = json.loads((temp / "verification.json").read_text())
+          carrier = {
+              "schema": "METHODS_INFORMATION_BENCHMARK_BOUNDED_VERIFIER_EXECUTION_CARRIER_RECEIPT_v1",
+              "carrierWorkflowRunId": os.environ["GITHUB_RUN_ID"],
+              "carrierWorkflowRunAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "carrierCommit": os.environ["GITHUB_SHA"],
+              "executedCandidateHead": os.environ["EXACT_CANDIDATE_HEAD"],
+              "builderArtifactId": int(os.environ["BUILDER_ARTIFACT_ID"]),
+              "builderArtifactSha256": os.environ["BUILDER_ARTIFACT_SHA256"],
+              "builderExecutionHolder": verification["builderExecutionHolder"],
+              "verifierExecutionHolder": verification["executionHolder"],
+              "canonicalVerifierReceiptSchema": verification["schema"],
+              "canonicalVerifierPass": verification["pass"],
+              "repairPerformed": verification["repairPerformed"],
+              "candidateMutationPerformed": False,
+              "permanentRoleAuthorityActivated": False,
+              "mergePerformed": False,
+          }
+          (temp / "carrier-execution-receipt.json").write_text(
+              json.dumps(carrier, indent=2) + "\n"
+          )
+          PY
+
+      - name: Upload canonical Verifier receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-information-benchmark-independent-bootstrap-verifier-receipt-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/verification.json
+            ${{ runner.temp }}/carrier-execution-receipt.json
+            ${{ runner.temp }}/builder-artifact-metadata.json
+            ${{ runner.temp }}/builder-receipt-sha256.txt
+            ${{ runner.temp }}/executed-head.txt
+            ${{ runner.temp }}/builder-execution-holder.txt
+            ${{ runner.temp }}/verifier-execution-holder.txt
+          if-no-files-found: warn
+          retention-days: 30

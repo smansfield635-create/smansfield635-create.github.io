@@ -1,0 +1,7 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_006_STAGED_EXECUTOR_TRIGGER_v1",
+  "exactStartingMainHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "terrainParameterChangeFromCandidate005": false,
+  "normalEvaluationSurface": "BOUNDED_TWO_UNIT_LOCAL_MESH",
+  "productMutation": false
+}

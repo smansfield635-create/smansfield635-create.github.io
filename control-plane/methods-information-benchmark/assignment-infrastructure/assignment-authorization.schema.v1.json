@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_ATOMIC_ASSIGNMENT_AUTHORIZATION_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "authorizationId", "originAuthority", "authorized", "roleId", "operationId", "holderExecutionId", "eligibilityReceiptSha256", "operationPacketSha256", "fixtureOnly"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_ATOMIC_ASSIGNMENT_AUTHORIZATION_RECEIPT_v1"},
+    "authorizationId": {"type": "string", "minLength": 1},
+    "originAuthority": {"const": "USER"},
+    "authorized": {"const": true},
+    "roleId": {"type": "string", "minLength": 1},
+    "operationId": {"type": "string", "minLength": 1},
+    "holderExecutionId": {"type": "string", "minLength": 1},
+    "eligibilityReceiptSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "operationPacketSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fixtureOnly": {"type": "boolean"}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,146 @@
+name: H-Earth R06-C10 Candidate Preview 95504c V12 Runtime Identity
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-r06-c10-preview-95504c-v12-runtime-identity.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-r06-c10-preview-95504c-v12-runtime-identity
+  cancel-in-progress: false
+
+jobs:
+  prove-and-publish:
+    if: github.head_ref == 'publication/h-earth-r06-c10-preview-95504c-001'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      SOURCE_HEAD: 95504c9927922318225da1d61fa303cec70497f9
+      PUBLICATION_BRANCH: publication/h-earth-r06-c10-preview-95504c-001
+      PREVIEW_ROOT: preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9
+      PREVIEW_URL_PATH: /preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9/index.html
+      SOURCE_ENTRY: showroom/globe/h-earth/index.html
+      V1_WORKFLOW: .github/workflows/h-earth-r06-c10-preview-95504c.yml
+      V8_WORKFLOW: .github/workflows/h-earth-r06-c10-preview-95504c-v8-boundary-compat.yml
+      V10_WORKFLOW: .github/workflows/h-earth-r06-c10-preview-95504c-v10-full-frame.yml
+      V11_WORKFLOW: .github/workflows/h-earth-r06-c10-preview-95504c-v11-runtime-identity.yml
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - name: Check out publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: publication/h-earth-r06-c10-preview-95504c-001
+          fetch-depth: 0
+          path: publication
+
+      - name: Check out exact terrain candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 95504c9927922318225da1d61fa303cec70497f9
+          fetch-depth: 1
+          path: source
+
+      - name: Materialize exact candidate and bounded preview compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V10_WORKFLOW']
+          text=workflow.read_text()
+          match=re.search(r"- name: Materialize and apply bounded preview compatibility.*?python3 - <<'PY'\n(.*?)\n          PY",text,re.S)
+          if not match: raise RuntimeError('V10_MATERIALIZATION_BLOCK_NOT_FOUND')
+          exec(compile(textwrap.dedent(match.group(1)),'v12-materialize-compatibility.py','exec'),{'__name__':'__main__'})
+          PY
+
+      - name: Run V11 package identity binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V11_WORKFLOW']
+          text=workflow.read_text()
+          name='Bind complete candidate package identity into preview renderers'
+          match=re.search(rf"      - name: {re.escape(name)}\n        shell: bash\n        run: \|\n(.*?)(?=\n      - name:)",text,re.S)
+          if not match: raise RuntimeError('V11_IDENTITY_BINDING_STEP_NOT_FOUND')
+          Path(os.environ['RUNNER_TEMP'],'v11-identity.sh').write_text(textwrap.dedent(match.group(1)))
+          PY
+          bash "$RUNNER_TEMP/v11-identity.sh"
+
+      - name: Run V11 package verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V11_WORKFLOW']
+          text=workflow.read_text()
+          name='Verify complete package and identity correspondence'
+          match=re.search(rf"      - name: {re.escape(name)}\n        shell: bash\n        run: \|\n(.*?)(?=\n      - name:)",text,re.S)
+          if not match: raise RuntimeError('V11_PACKAGE_VERIFICATION_STEP_NOT_FOUND')
+          Path(os.environ['RUNNER_TEMP'],'v11-package.sh').write_text(textwrap.dedent(match.group(1)))
+          PY
+          bash "$RUNNER_TEMP/v11-package.sh"
+
+      - name: Install Chromium verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pw"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+
+      - name: Run V11 desktop and touch-mobile environment proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V11_WORKFLOW']
+          text=workflow.read_text()
+          name='Prove full visible environment on desktop and touch mobile'
+          match=re.search(rf"      - name: {re.escape(name)}\n        shell: bash\n        run: \|\n(.*?)(?=\n      - name:)",text,re.S)
+          if not match: raise RuntimeError('V11_BROWSER_PROOF_STEP_NOT_FOUND')
+          Path(os.environ['RUNNER_TEMP'],'v11-browser.sh').write_text(textwrap.dedent(match.group(1)))
+          PY
+          bash "$RUNNER_TEMP/v11-browser.sh"
+
+      - name: Bind proof and publish verified preview root
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V11_WORKFLOW']
+          text=workflow.read_text()
+          name='Bind proof and commit verified preview root'
+          match=re.search(rf"      - name: {re.escape(name)}\n        shell: bash\n        run: \|\n(.*?)(?=\n      - name:)",text,re.S)
+          if not match: raise RuntimeError('V11_PUBLICATION_STEP_NOT_FOUND')
+          Path(os.environ['RUNNER_TEMP'],'v11-publish.sh').write_text(textwrap.dedent(match.group(1)))
+          PY
+          bash "$RUNNER_TEMP/v11-publish.sh"
+
+      - name: Upload exact environment proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-preview-95504c-v12-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/proof
+            publication/${{ env.PREVIEW_ROOT }}/byte-manifest.json
+            publication/${{ env.PREVIEW_ROOT }}/byte-manifest.sha256
+            publication/${{ env.PREVIEW_ROOT }}/publication-receipt.json
+          if-no-files-found: warn
+          retention-days: 30

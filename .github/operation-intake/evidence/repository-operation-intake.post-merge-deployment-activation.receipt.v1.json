@@ -1,0 +1,53 @@
+{
+  "schema": "REPOSITORY_OPERATION_INTAKE_POST_MERGE_DEPLOYMENT_ACTIVATION_RECEIPT_v1",
+  "postMergeActivationClosureSeedDigest": "53ff23b6cb1a7e5e3bb00f24fb654d48a809324f71931cd1add74f848f69479d",
+  "preBootstrapGoverningHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "bootstrapToolingHead": "a18107998f0a5d8146010aa4cc9767d1f85b1ebd",
+  "bootstrapTerminalHead": "27c2b2e6a499830c4d24563710a208aa26ca356e",
+  "pr556MergeHead": "73040001dbbb2e7bb7d2fc70e654d228386e3d47",
+  "activationCandidateHead": "1977b0749c33a40f19237c33ff16ce46e73baca6",
+  "activationPullRequest": 558,
+  "activationCandidateWorkflowRun": 30944981822,
+  "activationCandidateWorkflowJobs": {
+    "bootstrap-builder-self-test": 92112608700,
+    "fresh-bootstrap-verifier": 92112677648,
+    "remote-ledger-cas-certification": 92112736802,
+    "package-bootstrap-certification": 92112841095
+  },
+  "activationCandidateArtifact": {
+    "id": 8906723552,
+    "name": "repository-operation-intake-bootstrap-certification-v1",
+    "digest": "sha256:1afde9d20c3da3ca484bfbf836c509470076044a6fa5401c32396dba36f1daf1",
+    "sizeBytes": 5718,
+    "canonicalFingerprintSha256": "5c276657143b945bd1b084ae3e3eb20ae0df8fa05715924b74c09524738761ee"
+  },
+  "activeImplementationHead": "02d829c804205db791d8d7aaed499dd53d8f57ef",
+  "activeImplementationPathBlobMap": {
+    "AI_ENTRYPOINT.json": "bcc571d4eb149e77ab9900e01c0d674a2462b8fa",
+    ".github/operation-intake/locator.v1.json": "65951596783d5006ef5afa758692168052f07349",
+    ".github/workflows/repository-operation-intake-validation.yml": "c3330c195d412d1f620f82144f8a974ea9cc8899",
+    ".github/operation-intake/deployment-activation-receipt.schema.v1.json": "19ede20f0d3ef13cc98c8bd72d5ad84958a46a10"
+  },
+  "postMergeWorkflowRun": 30945846721,
+  "postMergeWorkflowJobs": {
+    "bootstrap-builder-self-test": 92115507323,
+    "fresh-bootstrap-verifier": 92115570604,
+    "remote-ledger-cas-certification": 92115642447,
+    "package-bootstrap-certification": 92115732035
+  },
+  "postMergeArtifact": {
+    "id": 8907061038,
+    "name": "repository-operation-intake-bootstrap-certification-v1",
+    "digest": "sha256:c2c78f9dec5c6a2a07c1291bdd8e5e3f3084391cb9ad5a1d57ef592f97c8e2a8",
+    "sizeBytes": 5715,
+    "canonicalFingerprintSha256": "47b9f8faca4e352820db11ac0508a050718868f3650e6a90e6c38931d774c96b"
+  },
+  "preservedBootstrapCertificationFingerprint": "bed40b811e82ac3e59f9a9e0abbcfaf101e8939a0d30b786ea115786d9c73767",
+  "bootstrapAuthorityExpired": true,
+  "intakeStatus": "ACTIVE_FAIL_CLOSED",
+  "productMutation": false,
+  "hEarthMutation": false,
+  "postMergeActivationAuthorityExpirationBinding": "DEPLOYMENT_RECEIPT_PUBLICATION_HEAD",
+  "deploymentReceiptPublicationHeadBinding": "MERGE_COMMIT_CONTAINING_THIS_RECEIPT_TREE",
+  "result": "PASS_CLOSED_POST_MERGE_DEPLOYMENT_ACTIVATED"
+}

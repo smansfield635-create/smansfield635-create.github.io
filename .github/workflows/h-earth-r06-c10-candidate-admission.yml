@@ -1,3 +1,4 @@
+# content trigger: prospective candidate 004
 name: H-Earth R06 C10 Prospective Candidate 004 Construction and Admission
 
 on:
@@ -71,25 +72,25 @@ jobs:
           evaluator=evaluator.replace(
               "  const topology=geometry.topology;",
               """  const constructorTopology=geometry?.topology??null;
-  const independentVertices=[];
-  let independentFinite=true;
-  for(const z of axes.zValues)for(const x of axes.xValues){
-    const sample=sampleHEarthRun8BSuccessorTerrainField(x,z);
-    if(sample?.valid!==true||!finite(sample.elevation))independentFinite=false;
-    independentVertices.push({x,y:sample.elevation,z});
-  }
-  const expectedIndices=buildIndependentIndices(axes.zValues.length,axes.xValues.length);
-  const topology={
-    ok:geometry?.ok===true&&independentFinite,
-    xValues:axes.xValues,
-    zValues:axes.zValues,
-    rowCount:axes.zValues.length,
-    columnCount:axes.xValues.length,
-    vertices:independentVertices,
-    indices:expectedIndices,
-    constructorTopology,
-    issues:geometry?.issues??[]
-  };"""
+          const independentVertices=[];
+          let independentFinite=true;
+          for(const z of axes.zValues)for(const x of axes.xValues){
+            const sample=sampleHEarthRun8BSuccessorTerrainField(x,z);
+            if(sample?.valid!==true||!finite(sample.elevation))independentFinite=false;
+            independentVertices.push({x,y:sample.elevation,z});
+          }
+          const expectedIndices=buildIndependentIndices(axes.zValues.length,axes.xValues.length);
+          const topology={
+            ok:geometry?.ok===true&&independentFinite,
+            xValues:axes.xValues,
+            zValues:axes.zValues,
+            rowCount:axes.zValues.length,
+            columnCount:axes.xValues.length,
+            vertices:independentVertices,
+            indices:expectedIndices,
+            constructorTopology,
+            issues:geometry?.issues??[]
+          };"""
           )
           evaluator=evaluator.replace(
               "const axisMatch=topology?.ok===true&&stableJson(topology.xValues)===stableJson(axes.xValues)&&stableJson(topology.zValues)===stableJson(axes.zValues);",

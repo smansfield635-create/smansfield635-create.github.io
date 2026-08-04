@@ -19,6 +19,12 @@ def main() -> None:
     args = parser.parse_args()
 
     text = Path(args.source).read_text(encoding="utf-8").replace("006", "007")
+    text = replace_once(
+        text,
+        "SOURCE_DIAGNOSTIC_HEAD='0074e438303e10bcdbc389ce900becc3cddf16c4'",
+        "SOURCE_DIAGNOSTIC_HEAD='0064e438303e10bcdbc389ce900becc3cddf16c4'",
+        "diagnostic_source_head",
+    )
     expected_branch = "CARRIER_BRANCH='work/r06-c10-candidate-007-admission'"
     if expected_branch not in text:
         raise RuntimeError("PATCH_TARGET_MISSING:carrier_branch")

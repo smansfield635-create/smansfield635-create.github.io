@@ -1,0 +1,91 @@
+{
+  "schema": "METHODS_ROLE_6_OPERATION_PACKET_DEPENDENCY_MANIFEST_v1",
+  "manifestId": "METHODS_ROLE_6_OPERATION_PACKET_DEPENDENCY_MANIFEST_001",
+  "status": "ROLE_NEUTRAL_PACKET_CONSTRUCTION_INPUT",
+  "canonicalGenesis": {
+    "head": "3c303a49b4e90cf8672cd76f9f2c31041c2e56d1",
+    "fingerprint": "86597f327a3ad0b49a1f4580ed25f07a8032197f470490bcd060ed15d6e2cb54"
+  },
+  "genericAssignmentInfrastructure": {
+    "head": "0d601cb71dac863130b934f387425085fdf54e52",
+    "fingerprint": "9386865e9ccb553a42bc6e3f30a4955517c8332be37bdd5011660e08d052191b",
+    "manifestPath": "control-plane/methods-information-benchmark/assignment-infrastructure/manifest.v1.json",
+    "manifestGitBlobAtInfrastructureHead": "e47fec822d90de47a8d035cb9dc45468c00b946e",
+    "operationPacketSchemaPath": "control-plane/methods-information-benchmark/assignment-infrastructure/operation-packet.schema.v1.json",
+    "operationPacketSchemaGitBlobAtInfrastructureHead": "287a7ec6cdff6f17aa9fbcf3a2667ec5c9661fc3"
+  },
+  "activationEligibility": {
+    "carrierPr": 553,
+    "carrierHead": "ffec9a660f93f9d34efda9a6aeaea41105254a25",
+    "workflowRun": 30927865972,
+    "workflowJob": 92054756860,
+    "artifactId": 8899858820,
+    "artifactSha256": "aadf696bcfff3fb79248214d0e7aab25998fa7dd180e18874645bed3e23fbd7a",
+    "gateResult": "ELIGIBLE_FOR_SEPARATE_FIRST_ASSIGNMENT_OPERATION",
+    "firstRoleCandidate": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "automaticActivationPerformed": false,
+    "roleAssignmentPerformed": false
+  },
+  "independentGenesisVerification": {
+    "carrierPr": 552,
+    "carrierHead": "bc8dd5952b89692dd92dc342c5900e6c428ad3a6",
+    "artifactId": 8899242983,
+    "artifactSha256": "f0cc59f5fc7209ab538316bfd28d8983d9b22e91d1c1f1f9dd05e4626759ed3c",
+    "verifiedFingerprint": "86597f327a3ad0b49a1f4580ed25f07a8032197f470490bcd060ed15d6e2cb54"
+  },
+  "assignmentInfrastructureVerification": {
+    "carrierPr": 554,
+    "exactInfrastructureHead": "0d601cb71dac863130b934f387425085fdf54e52",
+    "workflowRun": 30934842596,
+    "builderJob": 92078253642,
+    "freshVerifierJob": 92078304463,
+    "builderArtifactId": 8902651467,
+    "builderArtifactSha256": "1f5027dc145dcc0dae1f425c1775efa8a55a3be27d53fde6b3b77937830e2605",
+    "verifierArtifactId": 8902666009,
+    "verifierArtifactSha256": "aa929471c5985a55715b1525e343fbbbc012ab86753fe24386a3126f43a945f5",
+    "infrastructureFingerprint": "9386865e9ccb553a42bc6e3f30a4955517c8332be37bdd5011660e08d052191b",
+    "roleIdentityBound": false,
+    "operationIdentityBound": false,
+    "productionAssignmentPerformed": false
+  },
+  "canonicalCorpus": {
+    "meaning": "25_GOVERNED_SEMANTIC_RECORDS_NOT_25_INDEPENDENT_EQUATIONS",
+    "sourceHead": "0d601cb71dac863130b934f387425085fdf54e52",
+    "sourcePath": "laws/research/methods-and-models/showroom.js",
+    "sourceGitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+    "sourceContract": "METHODS_MODELS_DUAL_AXIS_SHOWROOM_v1",
+    "expectedFamilyCount": 4,
+    "expectedRecordCount": 25,
+    "expectedLensCount": 3,
+    "sourceHoldMustRemainPreserved": true,
+    "evidenceStatusMustRemainPreserved": true,
+    "builderMayChooseCanonicalSubstitute": false
+  },
+  "operationPacket": {
+    "path": "control-plane/methods-information-benchmark/role6-operation-packet/methods-role6-operation.packet.v1.json",
+    "canonicalPacketSha256": "7b36653dd27112df4704d354e38c47f2a4cd7c5edacf707bf1a74d4601c01271",
+    "hashPolicy": {
+      "algorithm": "SHA256",
+      "domain": "CANONICAL_JSON_WITH_PACKET_SHA256_NULL",
+      "canonicalization": "UTF8_JSON_SORTED_OBJECT_KEYS_ARRAY_ORDER_PRESERVED_NO_INSIGNIFICANT_WHITESPACE",
+      "field": "packetSha256"
+    }
+  },
+  "requiredDependencyClosure": [
+    "CANONICAL_GENESIS_IDENTITY_MATCH",
+    "ASSIGNMENT_INFRASTRUCTURE_HEAD_IS_ANCESTOR",
+    "ASSIGNMENT_INFRASTRUCTURE_FILES_UNCHANGED",
+    "ACTIVATION_ELIGIBILITY_IDENTITY_MATCH",
+    "INDEPENDENT_GENESIS_VERIFICATION_IDENTITY_PRESENT",
+    "CANONICAL_CORPUS_PATH_AND_BLOB_MATCH",
+    "FOUR_FAMILIES_AND_25_RECORDS_RECOVERABLE",
+    "PACKET_CANONICAL_HASH_MATCH",
+    "PACKET_CARRIER_CHANGED_PATH_SET_EXACT",
+    "NO_ASSIGNMENT_STATE_ARTIFACT",
+    "NO_SUBSTANTIVE_AUDIT_OUTPUT"
+  ],
+  "conversationMemoryAuthority": false,
+  "privateWorkingStateAuthority": false,
+  "packetBuilderMayRepairDependencies": false,
+  "packetVerifierMayRepairDependencies": false
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "METHODS_ROLE6_DEVELOPMENTAL_BASELINE_SUCCESSOR_CHANGED_PATH_MANIFEST_v1",
+  "baseHead": "bbc510bb1276b37dde9495b08d72a0424b669b62",
+  "expectedChangedPathCount": 13,
+  "expectedChangedPaths": [
+    ".github/workflows/methods-information-benchmark-role6-developmental-baseline-successor.yml",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/AGENTS.md",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/changed-path-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/dependency-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/developmental-baseline-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/execution-trigger.v1.txt",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/instrument-chamber-acceptance.v1.json",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/methods-role6-developmental-baseline-successor.packet.v1.json",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/packet-entry.locator.v1.json",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/packet-receipt.schema.v1.json",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-builder.mjs",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-verifier.mjs",
+    "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/user-origin-developmental-answer-set.v1.md"
+  ],
+  "publicMethodsMutationAllowed": false,
+  "publicLawsMutationAllowed": false,
+  "productMutationAllowed": false,
+  "roleAssignmentAllowed": false,
+  "substantiveRole6ExecutionAllowed": false,
+  "mergeAllowed": false
+}

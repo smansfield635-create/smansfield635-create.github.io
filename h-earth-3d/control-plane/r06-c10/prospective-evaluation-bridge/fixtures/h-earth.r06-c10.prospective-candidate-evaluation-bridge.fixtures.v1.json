@@ -1,0 +1,209 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_FIXTURE_CORPUS_v1",
+  "validInput": {
+    "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_INPUT_v1",
+    "operationId": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_FIXTURE_001",
+    "subjectCandidateHead": "ed8267a0251e70c4f654eef90f5e3d7329fdf419",
+    "evaluationToolingHead": "1111111111111111111111111111111111111111",
+    "request": {
+      "schemaVersion": "H_EARTH_R06_C10_ARTICULATION_REQUEST_v1",
+      "operationId": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_FIXTURE_001",
+      "exactBaseline": {
+        "commit": "6836288462bbbc7ab7c03ee5f12fafaab119f9e36"
+      },
+      "region": {
+        "semanticAddress": "H_EARTH_GROUND_CELL_001:R06:C10"
+      },
+      "operations": [
+        {
+          "operator": "FIXTURE_NOOP_IDENTITY_WITNESS"
+        }
+      ],
+      "traversableOpening": {
+        "minimumWidthWorldUnits": 8
+      },
+      "cavernCompatibility": {
+        "required": true
+      },
+      "waterfallReadiness": {
+        "required": true
+      }
+    },
+    "integration": {
+      "subjectCandidateHead": "ed8267a0251e70c4f654eef90f5e3d7329fdf419",
+      "changedPaths": [
+        "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json",
+        "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-003.matched-camera-manifest.v1.json",
+        "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-003.request.v1.json",
+        "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-003.js",
+        "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-003.exact-candidate-evaluator.v1.mjs"
+      ],
+      "terrainIdentity": {
+        "candidateTerrainBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+        "successorTerrainFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+        "geometryConstructorBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46"
+      }
+    },
+    "traversal": {
+      "points": [
+        {
+          "id": "TRAVERSAL_FIXTURE_001",
+          "x": 68,
+          "z": -196
+        },
+        {
+          "id": "TRAVERSAL_FIXTURE_002",
+          "x": 68,
+          "z": -164
+        }
+      ]
+    },
+    "camera": {
+      "records": [
+        {
+          "sceneId": "SCENE_01_HILL_FIELD_FILL"
+        },
+        {
+          "sceneId": "SCENE_02_ASCENDING_TOWARD_CREST"
+        },
+        {
+          "sceneId": "SCENE_03_DESCENDING_WITHOUT_HORIZON"
+        }
+      ]
+    },
+    "evaluatorContract": {
+      "assertionSetId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_ASSERTIONS_28_v1",
+      "expectedAssertionCount": 28,
+      "evidenceMembers": [
+        "normalized-request.json",
+        "integration-manifest.json",
+        "traversal-manifest.json",
+        "camera-manifest.json",
+        "evaluator-input-document.json"
+      ],
+      "rollbackIdentity": {
+        "rollbackId": "R06_C10_FIXTURE_ROLLBACK_001",
+        "rollbackHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f"
+      }
+    },
+    "authority": {
+      "terrainMutationAuthorized": false,
+      "gateInvocationAuthorized": false,
+      "gateReceiptGenerationAuthorized": false
+    }
+  },
+  "negativeCases": [
+    {
+      "id": "MISSING_TRAVERSAL_POINTS",
+      "mutation": {
+        "operation": "delete",
+        "path": "traversal.points"
+      },
+      "expected": {
+        "errorCode": "MISSING_OR_INVALID_ARRAY",
+        "field": "traversal.points",
+        "sourceDocument": "traversal"
+      }
+    },
+    {
+      "id": "MISSING_CAMERA_RECORDS",
+      "mutation": {
+        "operation": "delete",
+        "path": "camera.records"
+      },
+      "expected": {
+        "errorCode": "MISSING_OR_INVALID_ARRAY",
+        "field": "camera.records",
+        "sourceDocument": "camera"
+      }
+    },
+    {
+      "id": "MISSING_CHANGED_PATHS",
+      "mutation": {
+        "operation": "delete",
+        "path": "integration.changedPaths"
+      },
+      "expected": {
+        "errorCode": "MISSING_OR_INVALID_ARRAY",
+        "field": "integration.changedPaths",
+        "sourceDocument": "integration"
+      }
+    },
+    {
+      "id": "MISSING_EVIDENCE_MEMBERS",
+      "mutation": {
+        "operation": "delete",
+        "path": "evaluatorContract.evidenceMembers"
+      },
+      "expected": {
+        "errorCode": "MISSING_OR_INVALID_ARRAY",
+        "field": "evaluatorContract.evidenceMembers",
+        "sourceDocument": "evaluatorContract"
+      }
+    },
+    {
+      "id": "MISSING_ROLLBACK_IDENTITY",
+      "mutation": {
+        "operation": "delete",
+        "path": "evaluatorContract.rollbackIdentity"
+      },
+      "expected": {
+        "errorCode": "INVALID_OBJECT",
+        "field": "evaluatorContract.rollbackIdentity",
+        "sourceDocument": "evaluatorContract"
+      }
+    },
+    {
+      "id": "MISSING_REQUEST_FIELD",
+      "mutation": {
+        "operation": "delete",
+        "path": "request.region"
+      },
+      "expected": {
+        "errorCode": "INVALID_OBJECT",
+        "field": "request.region",
+        "sourceDocument": "request"
+      }
+    },
+    {
+      "id": "CANDIDATE_BLOB_MISMATCH",
+      "mutation": {
+        "operation": "set",
+        "path": "integration.terrainIdentity.candidateTerrainBlob",
+        "value": "0000000000000000000000000000000000000000"
+      },
+      "expected": {
+        "errorCode": "CANDIDATE_BLOB_MISMATCH",
+        "field": "integration.terrainIdentity.candidateTerrainBlob",
+        "sourceDocument": "integration"
+      }
+    },
+    {
+      "id": "UNAUTHORIZED_GATE_INVOCATION",
+      "mutation": {
+        "operation": "set",
+        "path": "authority.gateInvocationAuthorized",
+        "value": true
+      },
+      "expected": {
+        "errorCode": "EXACT_VALUE_MISMATCH",
+        "field": "authority.gateInvocationAuthorized",
+        "sourceDocument": "authority"
+      }
+    },
+    {
+      "id": "ASSERTION_COUNT_DRIFT",
+      "mutation": {
+        "operation": "set",
+        "path": "evaluatorContract.expectedAssertionCount",
+        "value": 27
+      },
+      "expected": {
+        "errorCode": "EXACT_VALUE_MISMATCH",
+        "field": "evaluatorContract.expectedAssertionCount",
+        "sourceDocument": "evaluatorContract"
+      }
+    }
+  ]
+}

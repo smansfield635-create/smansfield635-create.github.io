@@ -1,0 +1,57 @@
+{
+  "receiptType": "H_EARTH_RUN_8_PHASE_1_MAIN_PROMOTION_RECEIPT",
+  "eligible": true,
+  "status": "RUN_8_PHASE_1_MAIN_PROMOTION_PASS",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "verifiedOn": "2026-07-26",
+  "prePromotionMainHead": "a77e1751c5eb4f3edb6cd8bbd913da66a0234605",
+  "finalPromotedStackHead": "df1e1c7aad32a63fd35186cca0351b49b561579e",
+  "orderedPromotion": [
+    {
+      "checkpoint": "RUN_8A",
+      "pullRequest": 188,
+      "checkpointHead": "88e2a3f8b5ff5fb8587ba95d2e13d3ea8504dfbd",
+      "mergeCommit": "2e1ce0d1e1c8911c14339eb41643081c9bda9cbc"
+    },
+    {
+      "checkpoint": "RUN_8B",
+      "pullRequest": 190,
+      "checkpointHead": "f3375d629633bbdadcbebcd91f2dc19796e366e1",
+      "mergeCommit": "a10d6160378ac6ec83742f6530461cc433957298"
+    },
+    {
+      "checkpoint": "RUN_8C",
+      "pullRequest": 192,
+      "checkpointHead": "7272cd8609674d2e30a74a32d6a98cee1680f496",
+      "mergeCommit": "82b237284d6390005843174b0dfe23b6b7ac81c0"
+    },
+    {
+      "checkpoint": "RUN_8D",
+      "pullRequest": 194,
+      "checkpointHead": "26bab1eb804a6e8737f551e1d1aa9d9cbbe4ae5f",
+      "mergeCommit": "716a4370cf5ef320b12d3731aff577dcd6bb778b"
+    },
+    {
+      "checkpoint": "RUN_8E",
+      "pullRequest": 196,
+      "checkpointHead": "ac260fd8c3a36d71a04ab1ffe6d8b3012ce8bb2d",
+      "mergeCommit": "df1e1c7aad32a63fd35186cca0351b49b561579e"
+    }
+  ],
+  "verification": {
+    "orderedMergeSequencePresentAtMainTip": true,
+    "run8EHeadIsAncestorOfMain": true,
+    "run8EHeadBehindMainBy": 0,
+    "allFiveCheckpointHeadsContainedInMain": true,
+    "publicRouteReintegrationContainedInMain": true,
+    "sourceCorrectionRequired": false,
+    "missingCheckpointCount": 0
+  },
+  "remainingRun8EClosure": {
+    "deployment": "NOT_EXECUTED",
+    "liveIdentityAndBrowserProof": "NOT_EXECUTED",
+    "physicalSamsungExecution": "NOT_EXECUTED",
+    "run8EPassClosed": false
+  },
+  "issues": []
+}

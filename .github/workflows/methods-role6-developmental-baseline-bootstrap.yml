@@ -1,0 +1,36 @@
+name: Methods Role 6 Developmental Baseline Bootstrap
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/methods-role6-developmental-baseline-bootstrap.yml'
+      - 'control-plane/methods-information-benchmark/role6-developmental-baseline-bootstrap/**'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  materialize-successor:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Materialize exact successor payload
+        env:
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          base64 -d control-plane/methods-information-benchmark/role6-developmental-baseline-bootstrap/payload.b64 | tar -xz
+          rm -rf control-plane/methods-information-benchmark/role6-developmental-baseline-bootstrap
+          rm -f .github/workflows/methods-role6-developmental-baseline-bootstrap.yml
+          git config user.name 'methods-role6-bootstrap-builder'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'Materialize Role 6 developmental baseline packet successor'
+          git push origin "HEAD:${HEAD_BRANCH}"

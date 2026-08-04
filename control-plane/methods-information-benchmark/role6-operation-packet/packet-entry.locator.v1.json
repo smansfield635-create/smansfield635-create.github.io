@@ -1,0 +1,17 @@
+{
+  "schema": "METHODS_ROLE_6_OPERATION_PACKET_ENTRY_LOCATOR_v1",
+  "locatorId": "METHODS_ROLE_6_OPERATION_PACKET_CARRIER_ENTRY_001",
+  "status": "PACKET_CONSTRUCTION_ENTRY_ONLY",
+  "exactBaseInfrastructureHead": "0d601cb71dac863130b934f387425085fdf54e52",
+  "packetPath": "control-plane/methods-information-benchmark/role6-operation-packet/methods-role6-operation.packet.v1.json",
+  "dependencyManifestPath": "control-plane/methods-information-benchmark/role6-operation-packet/packet-dependency-manifest.v1.json",
+  "outputRegistryPath": "control-plane/methods-information-benchmark/role6-operation-packet/role6-output-registry.v1.json",
+  "carrierManifestPath": "control-plane/methods-information-benchmark/role6-operation-packet/carrier-manifest.v1.json",
+  "builderCommand": "node control-plane/methods-information-benchmark/role6-operation-packet/packet-builder.mjs --expected-head <EXACT_PACKET_CARRIER_HEAD> --holder <PACKET_BUILDER_EXECUTION_ID> --output-dir <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/builder",
+  "verifierCommand": "node control-plane/methods-information-benchmark/role6-operation-packet/packet-verifier.mjs --expected-head <EXACT_PACKET_CARRIER_HEAD> --builder-receipt <AUTHENTIC_BUILDER_RECEIPT> --holder <DISTINCT_PACKET_VERIFIER_EXECUTION_ID> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/packet-verifier-receipt.json",
+  "assignmentCommandPresent": false,
+  "roleAuthorityActivated": false,
+  "conversationMemoryAuthority": false,
+  "privateStateAuthority": false,
+  "stop": "AFTER_INDEPENDENT_PACKET_REPRODUCTION_WITHOUT_ASSIGNMENT"
+}

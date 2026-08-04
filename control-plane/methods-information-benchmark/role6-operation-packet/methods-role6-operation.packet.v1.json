@@ -1,0 +1,256 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_BOUNDED_OPERATION_PACKET_v1",
+  "packetSchemaPath": "control-plane/methods-information-benchmark/assignment-infrastructure/operation-packet.schema.v1.json",
+  "packetId": "METHODS_ROLE_6_FORMAL_RECORD_AND_THREE_ANCHOR_REQUIREMENTS_PACKET_v1",
+  "packetVersion": "1.0.0",
+  "status": "MATERIALIZED_UNASSIGNED_PENDING_INDEPENDENT_PACKET_REPRODUCTION",
+  "roleId": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_AND_THREE_ANCHOR_REQUIREMENTS_AUDIT_v1",
+  "purpose": "Classify the governed 25-record Methods corpus, freeze formal types, clusters, dependencies and independence classes, and define the truth-preserving three-anchor requirements interface for later construction without assignment, product implementation, award-cycle research, or Benchmark Compass registration.",
+  "identityChain": {
+    "canonicalGenesisHead": "3c303a49b4e90cf8672cd76f9f2c31041c2e56d1",
+    "genesisFingerprint": "86597f327a3ad0b49a1f4580ed25f07a8032197f470490bcd060ed15d6e2cb54",
+    "exactAssignmentInfrastructureHead": "0d601cb71dac863130b934f387425085fdf54e52",
+    "assignmentInfrastructureFingerprint": "9386865e9ccb553a42bc6e3f30a4955517c8332be37bdd5011660e08d052191b",
+    "activationEligibilityCarrierHead": "ffec9a660f93f9d34efda9a6aeaea41105254a25",
+    "activationEligibilityArtifactSha256": "aadf696bcfff3fb79248214d0e7aab25998fa7dd180e18874645bed3e23fbd7a",
+    "activationEligibilityGateResult": "ELIGIBLE_FOR_SEPARATE_FIRST_ASSIGNMENT_OPERATION",
+    "independentGenesisVerifierArtifactSha256": "f0cc59f5fc7209ab538316bfd28d8983d9b22e91d1c1f1f9dd05e4626759ed3c",
+    "assignmentInfrastructureVerifierArtifactSha256": "aa929471c5985a55715b1525e343fbbbc012ab86753fe24386a3126f43a945f5"
+  },
+  "canonicalCorpus": {
+    "meaning": "25_GOVERNED_SEMANTIC_RECORDS_NOT_25_INDEPENDENT_EQUATIONS",
+    "sourceHead": "0d601cb71dac863130b934f387425085fdf54e52",
+    "sourcePath": "laws/research/methods-and-models/showroom.js",
+    "sourceGitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+    "sourceContract": "METHODS_MODELS_DUAL_AXIS_SHOWROOM_v1",
+    "expectedFamilyCount": 4,
+    "expectedRecordCount": 25,
+    "expectedLensCount": 3,
+    "preserveSourceHolds": true,
+    "preserveEvidenceStatus": true,
+    "canonicalSubstitutionAllowed": false
+  },
+  "formalRecordSchema": {
+    "requiredFields": [
+      "IDENTITY",
+      "TITLE",
+      "CONCEPTUAL_CLUSTER",
+      "FORMAL_TYPE",
+      "INDEPENDENCE_CLASS",
+      "QUESTION_ANSWERED",
+      "CLAIM",
+      "FORMAL_REPRESENTATION",
+      "SYMBOL_DEFINITIONS",
+      "REQUIRED_INPUTS",
+      "PRODUCED_OUTPUTS",
+      "PRECONDITIONS",
+      "OPERATING_RULE",
+      "DEPENDENCIES",
+      "DERIVED_FROM",
+      "FAILURE_BEHAVIOR",
+      "EVIDENCE_REQUIREMENTS",
+      "EVIDENCE_STATUS",
+      "LIMITS",
+      "PRACTICAL_INTERPRETATION",
+      "INVOCATION_CONDITIONS"
+    ],
+    "axisIndependenceRequired": true
+  },
+  "classificationAxes": {
+    "formalType": "WHAT_KIND_OF_FORMAL_OBJECT_IS_IT",
+    "conceptualCluster": "WHAT_SYSTEM_OR_PROBLEM_FAMILY_DOES_IT_BELONG_TO",
+    "independenceClass": "HOW_DOES_IT_RELATE_MATHEMATICALLY_OR_LOGICALLY_TO_OTHER_RECORDS",
+    "derivedRecordsMustIdentifyParents": true,
+    "complementaryViewsMayNotBeIndependent": true,
+    "proceduralAndEpistemicRulesMayNotBeComputationalEquations": true
+  },
+  "userCognitiveOrigin": {
+    "target": "USER_DEFINED_DIRECT_MANIPULATION_SPATIAL_INQUIRY_ENVIRONMENT",
+    "interactionReference": "MINORITY_REPORT_STYLE_DIRECT_SPATIAL_MANIPULATION_AS_INTERACTION_PRINCIPLE_ONLY",
+    "literalReplicationRequired": false,
+    "freeAirGestureRequired": false,
+    "mobileEquivalenceRequired": true,
+    "deviceScope": [
+      "PHONE",
+      "TABLET",
+      "DESKTOP"
+    ],
+    "capabilities": [
+      "SELECT_MOVE_COMBINE_AND_REORDER_FORMAL_RECORDS_AND_QUESTION_COMPONENTS",
+      "FOREGROUND_BACKGROUND_AND_INSPECT_OBJECTS",
+      "SUBMIT_ASSEMBLED_INQUIRY",
+      "FOREGROUND_THE_GOVERNED_FORMAL_RECORD_OR_DEPENDENCY_CHAIN",
+      "PRESERVE_SUPPORTING_AND_ALTERNATIVE_RECORDS_IN_CONTEXT"
+    ]
+  },
+  "threeAnchorContract": {
+    "originAnchor": "USER_DEFINED_INTERACTIVE_SPATIAL_INQUIRY_ENVIRONMENT",
+    "truthSubstrate": "GOVERNED_FORMAL_RECORD_AND_DEPENDENCY_GRAPH",
+    "externalExcellenceAnchor": "GENERIC_TROPHY_STANDARD_RELEVANCE_AND_READINESS_ENGINE",
+    "presentationExcellenceAnchor": "BENCHMARK_COMPASS_PAGE_OPTIMIZATION_AND_PRESENTATION_ENGINE",
+    "truthPrecedence": "FORMAL_RECORD_GRAPH_CONTROLS_SUBSTANTIVE_RELATIONS",
+    "reconciliation": "NO_ANCHOR_MAY_BE_OPTIMIZED_BY_INVALIDATING_ANOTHER",
+    "finalStandard": [
+      "SEMANTICALLY_TRUE",
+      "FUNCTIONALLY_COHERENT",
+      "VISUALLY_AND_INTERACTIVELY_ELITE",
+      "EVIDENTIARILY_SUPPORTABLE"
+    ],
+    "trophyRules": {
+      "objectRelative": true,
+      "hEarthIsPriorInstanceNotDefinition": true,
+      "methodsBindingNotYetCreated": true,
+      "currentAwardCycleResearchRequiredBeforeCategoryFreeze": true,
+      "currentAwardCycleResearchPerformedInThisOperation": false,
+      "blindInheritanceOfHEarthCategories": false
+    },
+    "compassRules": {
+      "benchmarkCompassExists": true,
+      "methodsRegistrationNotYetEstablished": true,
+      "defineBindingRequirementsOnly": true,
+      "registrationOrMutationAllowed": false
+    }
+  },
+  "inputs": [
+    {
+      "id": "CANONICAL_25_RECORD_CORPUS",
+      "path": "laws/research/methods-and-models/showroom.js",
+      "head": "0d601cb71dac863130b934f387425085fdf54e52",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "access": "READ_ONLY"
+    },
+    {
+      "id": "USER_ORIGIN_FORMAL_RECORD_AUDIT_TARGET",
+      "source": "PACKET_CONTENT",
+      "access": "READ_ONLY"
+    },
+    {
+      "id": "USER_ORIGIN_DIRECT_MANIPULATION_TARGET",
+      "source": "PACKET_CONTENT",
+      "access": "READ_ONLY"
+    },
+    {
+      "id": "USER_ORIGIN_THREE_ANCHOR_TARGET",
+      "source": "PACKET_CONTENT",
+      "access": "READ_ONLY"
+    }
+  ],
+  "readOnlyDiscoveryScope": [
+    "laws/research/methods-and-models/",
+    "verification/",
+    "control-plane/",
+    ".github/workflows/"
+  ],
+  "outputs": [
+    "CANONICAL_25_RECORD_INVENTORY_v1",
+    "FORMAL_TYPE_ASSIGNMENT_REGISTRY_v1",
+    "CONCEPTUAL_CLUSTER_ASSIGNMENT_REGISTRY_v1",
+    "RECORD_DEPENDENCY_GRAPH_v1",
+    "INDEPENDENCE_CLASSIFICATION_REGISTRY_v1",
+    "COMPUTATIONAL_VS_NONCOMPUTATIONAL_BOUNDARY_v1",
+    "INVOCATION_CONDITION_REGISTRY_v1",
+    "QUESTION_INTENT_TO_RECORD_TYPE_ROUTING_SPEC_v1",
+    "UNRESOLVED_OR_AMBIGUOUS_RECORD_HOLD_REGISTER_v1",
+    "ROLE_6_REQUIREMENTS_FREEZE_RECOMMENDATION_v1",
+    "METHODS_THREE_ANCHOR_DEVELOPMENT_CONTRACT_v1",
+    "METHODS_USER_COGNITIVE_ORIGIN_REQUIREMENTS_v1",
+    "GENERIC_TROPHY_STANDARD_BINDING_REQUIREMENTS_v1",
+    "METHODS_BENCHMARK_COMPASS_BINDING_REQUIREMENTS_v1",
+    "THREE_ANCHOR_CONFLICT_AND_PRECEDENCE_RULES_v1",
+    "PRECONSTRUCTION_AND_POSTCONSTRUCTION_EVALUATION_LIFECYCLE_v1",
+    "PHONE_TABLET_DESKTOP_EQUIVALENCE_REQUIREMENTS_v1",
+    "TROPHY_AND_COMPASS_EVIDENCE_REQUIREMENTS_REGISTRY_v1",
+    "METHODS_PRODUCT_REQUIREMENTS_INTEGRATION_SCHEMA_v1",
+    "ROLE_6_INTEGRATED_REQUIREMENTS_FREEZE_RECOMMENDATION_v1",
+    "ROLE_6_OPERATION_RETURN_PACKET_v1",
+    "ROLE_6_OPERATION_RETURN_RECEIPT_v1"
+  ],
+  "outputRegistryPath": "control-plane/methods-information-benchmark/role6-operation-packet/role6-output-registry.v1.json",
+  "may": [
+    "ACCOUNT_FOR_ALL_25_GOVERNED_RECORDS",
+    "ASSIGN_FORMAL_TYPES_OR_EXPLICIT_HOLDS",
+    "ASSIGN_CONCEPTUAL_CLUSTERS_OR_EXPLICIT_HOLDS",
+    "DECLARE_DEPENDENCIES_AND_DERIVATIONS",
+    "CLASSIFY_INDEPENDENCE",
+    "DEFINE_COMPUTATIONAL_AND_NONCOMPUTATIONAL_BOUNDARIES",
+    "DEFINE_INVOCATION_CONDITIONS_AND_INTENT_ROUTING_REQUIREMENTS",
+    "PRESERVE_SOURCE_HOLDS_AND_EVIDENCE_STATUS",
+    "DEFINE_THREE_ANCHOR_REQUIREMENTS_AND_CONFLICT_RULES",
+    "DEFINE_LATER_TROPHY_RESEARCH_AND_BENCHMARK_COMPASS_BINDING_REQUIREMENTS",
+    "RETURN_MACHINE_READABLE_OUTPUTS_TO_GOVERNANCE"
+  ],
+  "mayNot": [
+    "VISUAL_IMPLEMENTATION",
+    "INQUIRY_ROUTER_IMPLEMENTATION",
+    "COMPOSITE_ASSEMBLY_IMPLEMENTATION",
+    "PUBLIC_METHODS_MUTATION",
+    "PUBLIC_LAWS_MUTATION",
+    "SHOWROOM_OR_RENDERER_MUTATION",
+    "BENCHMARK_SEMANTIC_REWRITE",
+    "INVENT_FALSE_FORMAL_RELATIONS",
+    "TROPHY_CATEGORY_FREEZE_WITHOUT_CURRENT_RESEARCH",
+    "CURRENT_AWARD_CYCLE_RESEARCH_OR_SUBMISSION",
+    "BENCHMARK_COMPASS_REGISTRATION_OR_IMPLEMENTATION",
+    "ROLE_1_ACTIVATION",
+    "SELF_RATIFICATION",
+    "SCOPE_EXPANSION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE"
+  ],
+  "closureConditions": [
+    "all25RecordsAccountedFor",
+    "primaryFormalTypeAssignedOrExplicitlyHeld",
+    "conceptualClusterAssignedOrExplicitlyHeld",
+    "dependenciesDeclared",
+    "derivedRecordsIdentifyParents",
+    "complementaryViewsNotMislabeledIndependent",
+    "proceduralAndEpistemicRulesNotMislabeledComputational",
+    "sourceHoldsPreserved",
+    "evidenceStatusPreserved",
+    "dependencyCyclesExplainedOrRejected",
+    "invocationConditionsDefined",
+    "threeAnchorRequirementsDefined",
+    "truthPrecedencePreserved"
+  ],
+  "failureBehavior": {
+    "missingRecord": "FAIL_CLOSED_AND_RETURN_HOLD",
+    "ambiguousType": "EXPLICIT_HOLD_NOT_INVENTION",
+    "unresolvedDependency": "EXPLICIT_HOLD_WITH_EVIDENCE_BOUNDARY",
+    "sourceIdentityMismatch": "STOP_NO_OUTPUT_ADOPTION",
+    "unauthorizedPathMutation": "TERMINATE_AUTHORITY_FAIL_CLOSED",
+    "scopeViolation": "TERMINATE_AUTHORITY_FAIL_CLOSED"
+  },
+  "stoppingBoundary": "RETURN_THE_TWENTY_REQUIRED_OUTPUTS_AND_MACHINE_READABLE_RETURN_ARTIFACTS_TO_GOVERNANCE_WITHOUT_ADOPTION_RATIFICATION_NEXT_ROLE_ASSIGNMENT_MERGE_DEPLOYMENT_OR_RELEASE",
+  "terminationLaw": {
+    "terminatesAtFirstOf": [
+      "ACCEPTED_MACHINE_READABLE_RETURN",
+      "DECLARED_STOPPING_BOUNDARY",
+      "PACKET_DEFINED_OPERATION_EXPIRY",
+      "FAIL_CLOSED_AUTHORITY_OR_SCOPE_VIOLATION",
+      "USER_REVOCATION"
+    ],
+    "wallClockExpiryMustBeBoundByAtomicAuthorization": true,
+    "residualGeneralRoleAuthorityAllowed": false,
+    "postTerminationRoleState": "INACTIVE",
+    "postTerminationOperationState": "RETURNED_OR_STOPPED_WITH_EXACT_RECEIPT"
+  },
+  "returnRequired": true,
+  "returnDestination": "METHODS_INFORMATION_BENCHMARK_GOVERNANCE_INTAKE",
+  "productMutationAllowed": false,
+  "selfRatificationAllowed": false,
+  "scopeExpansionAllowed": false,
+  "mergeAllowed": false,
+  "assignmentPerformedByThisPacketCarrier": false,
+  "roleAuthorityActivatedByThisPacketCarrier": false,
+  "substantiveOperationExecutedByThisPacketCarrier": false,
+  "dependencyManifestPath": "control-plane/methods-information-benchmark/role6-operation-packet/packet-dependency-manifest.v1.json",
+  "packetHashPolicy": {
+    "algorithm": "SHA256",
+    "domain": "CANONICAL_JSON_WITH_PACKET_SHA256_NULL",
+    "canonicalization": "UTF8_JSON_SORTED_OBJECT_KEYS_ARRAY_ORDER_PRESERVED_NO_INSIGNIFICANT_WHITESPACE",
+    "field": "packetSha256"
+  },
+  "packetSha256": "98763524f3d1da1867e3bec4843d0c477406a7b276866908a9b8389fa7f5bbcc"
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_ROLE_6_OPERATION_PACKET_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "executingFunction",
+    "executionHolder",
+    "exactCarrierHead",
+    "exactBaseInfrastructureHead",
+    "operationPacketPath",
+    "operationPacketCanonicalSha256",
+    "operationPacketFileSha256",
+    "dependencyClosureFingerprint",
+    "changedPathBlobMap",
+    "roleAuthorityAcquired",
+    "assignmentPerformed",
+    "substantiveOperationExecuted",
+    "repairPerformed",
+    "pass"
+  ],
+  "properties": {
+    "schema": {
+      "enum": [
+        "METHODS_ROLE_6_OPERATION_PACKET_BUILDER_RECEIPT_v1",
+        "METHODS_ROLE_6_OPERATION_PACKET_VERIFIER_RECEIPT_v1"
+      ]
+    },
+    "executingFunction": {
+      "enum": [
+        "PACKET_BUILDER",
+        "FRESH_PACKET_VERIFIER"
+      ]
+    },
+    "executionHolder": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exactCarrierHead": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "exactBaseInfrastructureHead": {
+      "const": "0d601cb71dac863130b934f387425085fdf54e52"
+    },
+    "operationPacketPath": {
+      "const": "control-plane/methods-information-benchmark/role6-operation-packet/methods-role6-operation.packet.v1.json"
+    },
+    "operationPacketCanonicalSha256": {
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "operationPacketFileSha256": {
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "dependencyClosureFingerprint": {
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "changedPathBlobMap": {
+      "type": "object",
+      "minProperties": 11
+    },
+    "roleAuthorityAcquired": {
+      "const": false
+    },
+    "assignmentPerformed": {
+      "const": false
+    },
+    "substantiveOperationExecuted": {
+      "const": false
+    },
+    "repairPerformed": {
+      "const": false
+    },
+    "pass": {
+      "const": true
+    }
+  },
+  "additionalProperties": true
+}

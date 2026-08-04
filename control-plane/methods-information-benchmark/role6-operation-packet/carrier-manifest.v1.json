@@ -1,0 +1,39 @@
+{
+  "schema": "METHODS_ROLE_6_OPERATION_PACKET_CARRIER_MANIFEST_v1",
+  "carrierId": "METHODS_ROLE_6_OPERATION_PACKET_CARRIER_v1",
+  "version": "1.0.0",
+  "classification": "NONPRODUCT_ROLE_NEUTRAL_PACKET_CONSTRUCTION_AND_REPRODUCTION",
+  "exactBaseInfrastructureHead": "0d601cb71dac863130b934f387425085fdf54e52",
+  "assignmentInfrastructureFingerprint": "9386865e9ccb553a42bc6e3f30a4955517c8332be37bdd5011660e08d052191b",
+  "packetPath": "control-plane/methods-information-benchmark/role6-operation-packet/methods-role6-operation.packet.v1.json",
+  "packetCanonicalSha256": "98763524f3d1da1867e3bec4843d0c477406a7b276866908a9b8389fa7f5bbcc",
+  "dependencyManifestPath": "control-plane/methods-information-benchmark/role6-operation-packet/packet-dependency-manifest.v1.json",
+  "outputRegistryPath": "control-plane/methods-information-benchmark/role6-operation-packet/role6-output-registry.v1.json",
+  "expectedChangedPaths": [
+    ".github/workflows/methods-information-benchmark-role6-operation-packet-carrier.yml",
+    "control-plane/methods-information-benchmark/role6-operation-packet/AGENTS.md",
+    "control-plane/methods-information-benchmark/role6-operation-packet/carrier-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/changed-path-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/methods-role6-operation.packet.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-builder.mjs",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-dependency-manifest.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-entry.locator.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-receipt.schema.v1.json",
+    "control-plane/methods-information-benchmark/role6-operation-packet/packet-verifier.mjs",
+    "control-plane/methods-information-benchmark/role6-operation-packet/role6-output-registry.v1.json"
+  ],
+  "temporaryFunctions": [
+    "PACKET_BUILDER",
+    "FRESH_PACKET_VERIFIER"
+  ],
+  "roleIdentitySerialized": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "operationIdentitySerialized": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_AND_THREE_ANCHOR_REQUIREMENTS_AUDIT_v1",
+  "roleAuthorityAcquired": false,
+  "assignmentPerformed": false,
+  "substantiveOperationExecuted": false,
+  "assignmentAuthorizationIssued": false,
+  "productMutationPerformed": false,
+  "mergeAllowed": false,
+  "automaticContinuation": false,
+  "nextStageOnlyAfterPass": "SEPARATE_USER_ATOMIC_ASSIGNMENT_AUTHORIZATION"
+}

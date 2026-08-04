@@ -1,0 +1,12 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATOR_FAILURE_v1",
+  "candidateHead": null,
+  "parentHead": null,
+  "evaluatorId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_005_EXACT_EVALUATOR_v1",
+  "gateInputCandidateHead": "026bbe3e2da5ab1d021ca2417c295249075bd565",
+  "result": "FAIL_CLOSED",
+  "error": "Cannot read properties of undefined (reading 'x')",
+  "errorStack": "TypeError: Cannot read properties of undefined (reading 'x')\n    at angleDegrees (file:///tmp/r06-c10-candidate-005/h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-005.exact-candidate-evaluator.v1.mjs:72:67)\n    at file:///tmp/r06-c10-candidate-005/h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-005.exact-candidate-evaluator.v1.mjs:202:500\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)",
+  "privateStateUsed": false,
+  "conversationMemoryRequired": false
+}

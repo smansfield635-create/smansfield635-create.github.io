@@ -6,6 +6,30 @@
   "baseHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
   "projectId": "METHODS_INFORMATION_BENCHMARK",
   "purpose": "Create and independently verify the repository-native machinery that materializes operation-scoped roles around the existing Methods information benchmark without changing benchmark semantics.",
+  "canonicalLineage": {
+    "canonicalSeedPath": "control-plane/methods-information-benchmark/bootstrap/origin-bootstrap-seed.v1.json",
+    "canonicalBuilderPullRequest": 551,
+    "status": "SOLE_CANONICAL_GENESIS_CANDIDATE",
+    "noncanonicalImplementationDonors": [
+      {
+        "pullRequest": 550,
+        "status": "NONCANONICAL_IMPLEMENTATION_DONOR_ONLY",
+        "admissibleDonations": [
+          "ACTIVATION_CONDITIONS",
+          "ATOMIC_LEDGER_PATTERN",
+          "COMPARE_AND_SWAP_ADMISSION_PATTERN",
+          "RETURN_TOOLING_PATTERN",
+          "NEGATIVE_FIXTURE_COVERAGE",
+          "EXACT_HEAD_WORKFLOW_BINDING_PATTERN"
+        ],
+        "prohibited": [
+          "SECOND_CANONICAL_SEED",
+          "INDEPENDENT_ACTIVATION",
+          "MERGE_AS_GENESIS_LINEAGE"
+        ]
+      }
+    ]
+  },
   "currentState": {
     "permanentRoleAuthorityExists": false,
     "activePermanentRoleExists": false,
@@ -17,6 +41,7 @@
       "may": [
         "CONSTRUCT_GENESIS_INSTRUMENTS",
         "MATERIALIZE_INACTIVE_ROLE_CONTRACTS",
+        "EMIT_EXACT_HEAD_BUILDER_RECEIPT",
         "EMIT_BUILDER_FINGERPRINT"
       ],
       "mayNot": [
@@ -28,6 +53,7 @@
     },
     "BOOTSTRAP_VERIFIER": {
       "may": [
+        "CONSUME_AUTHENTIC_BUILDER_RECEIPT",
         "REPRODUCE_FROM_CLEAN_CHECKOUT",
         "VERIFY_TOPOLOGY",
         "EMIT_VERIFIER_FINGERPRINT"
@@ -35,6 +61,7 @@
       "mayNot": [
         "REPAIR_BUILDER_OUTPUT",
         "REWRITE_TOPOLOGY",
+        "DEFAULT_MISSING_BUILDER_IDENTITY",
         "ACTIVATE_WITHOUT_GATE"
       ]
     }
@@ -67,6 +94,17 @@
     "REVIEW_PREPARATION_CANNOT_DECLARE_USER_ACCEPTANCE",
     "AUTHORITY_CANNOT_DEPEND_ON_CONVERSATION_MEMORY"
   ],
+  "activationConditions": [
+    "EXACT_HEAD_BUILDER_RECEIPT_PASS",
+    "FRESH_BOOTSTRAP_VERIFIER_PASS",
+    "BUILDER_AND_VERIFIER_EXECUTION_HOLDERS_DISTINCT",
+    "TOPOLOGY_MATCH",
+    "BOOTSTRAP_FINGERPRINT_MATCH",
+    "ORIGIN_SEED_IDENTITY_MATCH",
+    "EXACT_CHANGED_PATH_BLOB_MAP_MATCH",
+    "CANDIDATE_HEAD_ANCESTRY_VALID",
+    "EXPLICIT_USER_ACCEPTANCE_RECEIPT"
+  ],
   "protectedSurfaces": [
     "BENCHMARK_SEMANTICS",
     "PUBLIC_METHODS_PATHS",
@@ -83,6 +121,6 @@
     "PUBLIC_PROMOTION",
     "MERGE"
   ],
-  "stoppingBoundary": "MATERIALIZE_INACTIVE_ROLE_SYSTEM_AND_RETURN_FOR_FRESH_INDEPENDENT_BOOTSTRAP_VERIFICATION",
+  "stoppingBoundary": "MATERIALIZE_INACTIVE_ROLE_SYSTEM_AND_RETURN_AFTER_EXACT_HEAD_BUILDER_RECEIPT_FOR_FRESH_INDEPENDENT_BOOTSTRAP_VERIFICATION",
   "automaticContinuation": false
 }

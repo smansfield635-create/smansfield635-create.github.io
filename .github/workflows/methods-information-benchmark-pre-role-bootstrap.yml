@@ -1,0 +1,59 @@
+name: Methods Information Benchmark Pre-Role Bootstrap
+on:
+  pull_request:
+    paths:
+      - 'control-plane/methods-information-benchmark/**'
+      - 'methods-information-benchmark/**'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/methods-information-benchmark/**'
+      - '.github/workflows/methods-information-benchmark-pre-role-bootstrap.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Route project mutation
+        run: node tools/repository-ai-entry-router.mjs --mutation-intent --path control-plane/methods-information-benchmark/bootstrap/origin-bootstrap-seed.v1.json --path methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs --output /tmp/router.json
+      - name: Builder self-test
+        run: node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs self-test --output /tmp/self-test.json
+      - name: Repository discovery
+        run: node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs repository-authority-discovery --output /tmp/discovery.json
+      - name: Builder fingerprint
+        run: node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs bootstrap-fingerprint-generator --output /tmp/fingerprint.json
+      - name: Prove permanent role admission is held
+        run: |
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs role-holder-admission --locator control-plane/methods-information-benchmark/locators/fresh-room-entry.locator.v1.json --operation MIB_PRE_ROLE_BOOTSTRAP --room GITHUB_ACTIONS_PROBE --output /tmp/admission.json
+          grep -q HELD_ROLE_SYSTEM_INACTIVE /tmp/admission.json
+      - name: Enforce exact paths and protected surfaces
+        env: {PR_BASE_SHA: '${{ github.event.pull_request.base.sha }}'}
+        run: |
+          BASE_SHA="${PR_BASE_SHA:-$(git rev-parse HEAD^)}"
+          git diff --name-only "$BASE_SHA" HEAD | sort > /tmp/changed-paths.txt
+          python - <<'PY'
+          import json
+          m=json.load(open('control-plane/methods-information-benchmark/bootstrap/changed-path-manifest.v1.json'))
+          actual=[x.strip() for x in open('/tmp/changed-paths.txt') if x.strip()]
+          expected=sorted(m['expectedChangedPaths'])
+          assert actual==expected,(sorted(set(expected)-set(actual)),sorted(set(actual)-set(expected)))
+          assert not any(any(p.startswith(prefix) for prefix in m['prohibitedPathPrefixes']) for p in actual)
+          PY
+      - name: Upload receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-information-benchmark-pre-role-bootstrap-receipts
+          path: |
+            /tmp/router.json
+            /tmp/self-test.json
+            /tmp/discovery.json
+            /tmp/fingerprint.json
+            /tmp/admission.json
+            /tmp/changed-paths.txt
+          if-no-files-found: error
+          retention-days: 30

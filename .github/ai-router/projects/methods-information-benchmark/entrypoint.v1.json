@@ -1,0 +1,50 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "METHODS_INFORMATION_BENCHMARK",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "control-plane/methods-information-benchmark/",
+    "methods-information-benchmark/"
+  ],
+  "ownedExactPaths": [
+    ".github/workflows/methods-information-benchmark-pre-role-bootstrap.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json",
+  "authorityBoundary": [
+    "ROUTES_WITHOUT_ACTIVATING_PERMANENT_ROLES",
+    "USER_ORIGIN_SEED_IS_ONLY_GENESIS_AUTHORITY",
+    "CONVERSATION_MEMORY_AND_PRIVATE_STATE_NONAUTHORITATIVE",
+    "STOP_ON_AMBIGUOUS_BENCHMARK_OR_ROLE_AUTHORITY"
+  ],
+  "requiredInstructions": [
+    "control-plane/methods-information-benchmark/AGENTS.md"
+  ],
+  "registries": [
+    "control-plane/methods-information-benchmark/bootstrap/bootstrap-bundle.v1.json"
+  ],
+  "procedures": {
+    "bootstrapSelfTest": {
+      "command": "node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/self-test.json",
+      "workflow": ".github/workflows/methods-information-benchmark-pre-role-bootstrap.yml"
+    },
+    "freshRoomAdmission": {
+      "locator": "control-plane/methods-information-benchmark/locators/fresh-room-entry.locator.v1.json",
+      "command": "node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs role-holder-admission --locator <LOCATOR> --operation <OPERATION_ID> --room <ROOM_EXECUTION_ID> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/admission.json"
+    }
+  },
+  "localExecution": {
+    "precondition": "CLEAN_GIT_CHECKOUT",
+    "fallbackWhenUnavailable": "USE_DECLARED_GITHUB_ACTIONS_WORKFLOW"
+  },
+  "githubActionsExecution": {
+    "workflow": ".github/workflows/methods-information-benchmark-pre-role-bootstrap.yml",
+    "requiredArtifact": "methods-information-benchmark-pre-role-bootstrap-receipts"
+  },
+  "stoppingRules": [
+    "ROLE_SYSTEM_INACTIVE",
+    "INDEPENDENT_VERIFICATION_MISSING",
+    "CANONICAL_BENCHMARK_AMBIGUOUS",
+    "PRIVATE_STATE_DEPENDENCY",
+    "FINGERPRINT_MISMATCH"
+  ]
+}

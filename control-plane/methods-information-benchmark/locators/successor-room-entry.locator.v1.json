@@ -1,0 +1,10 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_LOCATOR_v1",
+  "locatorId": "SUCCESSOR_ROOM_ENTRY_V1",
+  "status": "ACTIVE_DISCOVERY_LOCATOR",
+  "purpose": "Recover routing and succession without conversation memory.",
+  "bundle": "control-plane/methods-information-benchmark/bootstrap/bootstrap-bundle.v1.json",
+  "entryCommand": "node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs role-holder-admission --locator control-plane/methods-information-benchmark/locators/successor-room-entry.locator.v1.json --operation <OPERATION_ID> --room <ROOM_EXECUTION_ID> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/admission.json",
+  "conversationMemoryAuthority": false,
+  "privateStateAuthority": false
+}

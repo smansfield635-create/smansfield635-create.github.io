@@ -1,0 +1,89 @@
+name: Methods First Atomic Assignment Successor Gap Closure
+
+on:
+  pull_request:
+    branches:
+      - control/methods-role6-developmental-baseline-packet-successor-v1-001
+    paths:
+      - '.github/workflows/methods-first-atomic-assignment-successor-gap-closure.yml'
+      - 'control-plane/methods-information-benchmark/assignment-successor-gap-closure/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gap-closure-builder:
+    name: Gap closure builder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+      - name: Run exact builder harness
+        shell: bash
+        env:
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          EXECUTION_HOLDER: GITHUB_ACTIONS_GAP_CLOSURE_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          OUTPUT: /tmp/methods-gap-closure/builder.receipt.json
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/assignment-successor-gap-closure/fresh-independent-reproduction-harness.v1.mjs --expected-head "$CANDIDATE_HEAD" --base-head fa7e74403ff43e017bccef7462f4e001918cf0a3 --execution-holder "$EXECUTION_HOLDER" --output "$OUTPUT"
+      - name: Upload builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-first-atomic-assignment-gap-closure-builder-v1
+          path: /tmp/methods-gap-closure/builder.receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  fresh-gap-closure-verifier:
+    name: Fresh gap closure verifier
+    needs: gap-closure-builder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate head fresh
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+      - name: Download builder evidence only
+        uses: actions/download-artifact@v4
+        with:
+          name: methods-first-atomic-assignment-gap-closure-builder-v1
+          path: /tmp/methods-gap-closure/builder
+      - name: Independently reproduce and emit return receipt
+        shell: bash
+        env:
+          CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          BUILDER_HOLDER: GITHUB_ACTIONS_GAP_CLOSURE_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          EXECUTION_HOLDER: GITHUB_ACTIONS_GAP_CLOSURE_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+          OUTPUT: /tmp/methods-gap-closure/verifier.receipt.json
+        run: |
+          set -euo pipefail
+          test "$BUILDER_HOLDER" != "$EXECUTION_HOLDER"
+          node control-plane/methods-information-benchmark/assignment-successor-gap-closure/fresh-independent-reproduction-harness.v1.mjs --expected-head "$CANDIDATE_HEAD" --base-head fa7e74403ff43e017bccef7462f4e001918cf0a3 --execution-holder "$EXECUTION_HOLDER" --output "$OUTPUT"
+          node <<'NODE'
+          const fs=require('fs');
+          const builder=JSON.parse(fs.readFileSync('/tmp/methods-gap-closure/builder/builder.receipt.json','utf8'));
+          const verifier=JSON.parse(fs.readFileSync('/tmp/methods-gap-closure/verifier.receipt.json','utf8'));
+          if(builder.packageFingerprint!==verifier.packageFingerprint) throw new Error('REPRODUCTION_FINGERPRINT_MISMATCH');
+          if(builder.executionHolder===verifier.executionHolder) throw new Error('BUILDER_VERIFIER_HOLDER_COLLISION');
+          const receipt={schema:'METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_RETURN_RECEIPT_v1',operation:'METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_v1',result:'PASS_CLOSED',candidateHead:verifier.candidateHead,baseHead:verifier.baseHead,packageFingerprint:verifier.packageFingerprint,builderHolder:builder.executionHolder,verifierHolder:verifier.executionHolder,distinctHolders:true,negativeFixturesPassed:verifier.negativeFixturesPassed,packetSuccessorAdapterPass:true,authorizationV2Pass:true,assignmentPerformed:false,role6AuthorityActivated:false,substantiveRole6AuditStarted:false,mergePerformed:false};
+          fs.writeFileSync('/tmp/methods-gap-closure/gap-closure.return.receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - name: Upload fresh verifier and return evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-first-atomic-assignment-gap-closure-verifier-v1
+          path: |
+            /tmp/methods-gap-closure/verifier.receipt.json
+            /tmp/methods-gap-closure/gap-closure.return.receipt.json
+          if-no-files-found: error
+          retention-days: 30

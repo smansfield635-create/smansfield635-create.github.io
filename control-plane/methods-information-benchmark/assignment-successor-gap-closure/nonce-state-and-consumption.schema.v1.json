@@ -1,0 +1,52 @@
+{
+  "$id": "METHODS_INFORMATION_BENCHMARK_NONCE_STATE_AND_CONSUMPTION_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "nonceStateHead": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "nonces": {
+      "additionalProperties": {
+        "additionalProperties": true,
+        "properties": {
+          "authorizationId": {
+            "type": "string"
+          },
+          "consumedByAssignmentId": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "UNUSED",
+              "CONSUMED",
+              "REVOKED",
+              "EXPIRED"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "authorizationId"
+        ],
+        "type": "object"
+      },
+      "type": "object"
+    },
+    "revision": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "schema": {
+      "const": "METHODS_INFORMATION_BENCHMARK_NONCE_STATE_v1"
+    }
+  },
+  "required": [
+    "schema",
+    "revision",
+    "nonceStateHead",
+    "nonces"
+  ],
+  "type": "object"
+}

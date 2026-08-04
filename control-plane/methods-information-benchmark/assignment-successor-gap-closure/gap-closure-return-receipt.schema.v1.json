@@ -1,0 +1,76 @@
+{
+  "$id": "METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_RETURN_RECEIPT_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assignmentPerformed": {
+      "const": false
+    },
+    "authorizationV2Pass": {
+      "const": true
+    },
+    "baseHead": {
+      "const": "fa7e74403ff43e017bccef7462f4e001918cf0a3"
+    },
+    "builderHolder": {
+      "type": "string"
+    },
+    "candidateHead": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "distinctHolders": {
+      "const": true
+    },
+    "mergePerformed": {
+      "const": false
+    },
+    "negativeFixturesPassed": {
+      "const": 15
+    },
+    "operation": {
+      "const": "METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_v1"
+    },
+    "packageFingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "packetSuccessorAdapterPass": {
+      "const": true
+    },
+    "result": {
+      "const": "PASS_CLOSED"
+    },
+    "role6AuthorityActivated": {
+      "const": false
+    },
+    "schema": {
+      "const": "METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_RETURN_RECEIPT_v1"
+    },
+    "substantiveRole6AuditStarted": {
+      "const": false
+    },
+    "verifierHolder": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "operation",
+    "result",
+    "candidateHead",
+    "baseHead",
+    "packageFingerprint",
+    "builderHolder",
+    "verifierHolder",
+    "distinctHolders",
+    "negativeFixturesPassed",
+    "packetSuccessorAdapterPass",
+    "authorizationV2Pass",
+    "assignmentPerformed",
+    "role6AuthorityActivated",
+    "substantiveRole6AuditStarted",
+    "mergePerformed"
+  ],
+  "type": "object"
+}

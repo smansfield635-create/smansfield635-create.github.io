@@ -1,0 +1,25 @@
+{
+  "allPathsNonproduct": true,
+  "exactBaseHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+  "expectedChangedPathCount": 17,
+  "expectedChangedPaths": [
+    ".github/workflows/methods-first-atomic-assignment-successor-gap-closure.yml",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/AGENTS.md",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/manifest.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/changed-path-manifest.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/packet-schema-family-admission.registry.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/operation-id-canonicalization-alias.crosswalk.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/atomic-assignment-authorization.schema.v2.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/exact-user-authorization-approval-receipt.schema.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/nonce-state-and-consumption.schema.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/assignment-transaction-path-manifest.schema.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/first-assignment-compare-and-swap-executor.v2.mjs",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/pr557-packet-successor-adapter.v1.mjs",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/assignment-transaction-evidence.schema.v2.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/negative-fixture-registry.v2.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/fresh-independent-reproduction-harness.v1.mjs",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/gap-closure-return-receipt.schema.v1.json",
+    "control-plane/methods-information-benchmark/assignment-successor-gap-closure/entry.locator.v1.json"
+  ],
+  "schema": "METHODS_FIRST_ATOMIC_ASSIGNMENT_SUCCESSOR_GAP_CLOSURE_CHANGED_PATH_MANIFEST_v1"
+}

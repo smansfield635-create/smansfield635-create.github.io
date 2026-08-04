@@ -9,6 +9,7 @@ const inspectionTabs = Array.from(document.querySelectorAll("[data-inspection-ta
 let bound = false;
 let inspectionObserver = null;
 let territoryBuilt = false;
+let familySelectionToken = 0;
 
 function app() {
   return globalThis.__METHODS_SPATIAL_APP || null;
@@ -72,40 +73,66 @@ function buildTerritoryIndex() {
   territoryIndex.replaceChildren(fragment);
 }
 
-async function waitForFamilyIndex(targetIndex, timeout = 12000) {
-  const started = performance.now();
-  while (Number(app()?.nativeState?.z?.index) !== targetIndex) {
-    if (performance.now() - started > timeout) throw new Error(`METHODS_FAMILY_INDEX_TRANSITION_TIMEOUT:${targetIndex}`);
-    await new Promise(resolve => setTimeout(resolve, 50));
-  }
-  await app().whenStable();
-  if (Number(app()?.resolvedScene?.native?.familyIndex) !== targetIndex) {
-    throw new Error(`METHODS_FAMILY_RENDER_CORRESPONDENCE_FAILURE:${targetIndex}`);
-  }
+function currentFamilyIndex() {
+  const nativeIndex = Number(app()?.nativeState?.z?.index);
+  if (Number.isInteger(nativeIndex)) return nativeIndex;
+  const renderedIndex = Number(app()?.resolvedScene?.native?.familyIndex);
+  return Number.isInteger(renderedIndex) ? renderedIndex : null;
 }
 
-async function selectFamilyIndex(targetIndex) {
+function advanceFamilySelection(targetIndex, direction, token) {
+  if (token !== familySelectionToken) return;
   const current = app();
-  const from = Number(current?.nativeState?.z?.index);
+  const activeIndex = currentFamilyIndex();
   const count = current?.registry?.familyCount || 4;
-  if (!current || !Number.isInteger(from) || !Number.isInteger(targetIndex)) return;
+  if (!current || !Number.isInteger(activeIndex)) {
+    stage.dataset.familySelectionStatus = "invalid-native-state";
+    return;
+  }
+  if (activeIndex === targetIndex) {
+    stage.dataset.familySelectionStatus = "settling";
+    current.whenStable().then(() => {
+      if (token !== familySelectionToken) return;
+      synchronize();
+      stage.dataset.familySelectionStatus = "complete";
+    }).catch(error => {
+      stage.dataset.familySelectionStatus = "render-failure";
+      console.error(error);
+    });
+    return;
+  }
+
+  const expectedIndex = (activeIndex + direction + count) % count;
+  stage.dataset.familySelectionStatus = `moving-${activeIndex}-to-${expectedIndex}`;
+  let timeoutId = 0;
+  const onReceipt = () => {
+    clearTimeout(timeoutId);
+    if (token !== familySelectionToken) return;
+    setTimeout(() => advanceFamilySelection(targetIndex, direction, token), 0);
+  };
+  globalThis.addEventListener("METHODS_MODELS_RENDERER_TRANSITION_RECEIPT", onReceipt, { once: true });
+  timeoutId = setTimeout(() => {
+    globalThis.removeEventListener("METHODS_MODELS_RENDERER_TRANSITION_RECEIPT", onReceipt);
+    if (token === familySelectionToken) stage.dataset.familySelectionStatus = `timeout-${expectedIndex}`;
+  }, 12000);
+  current.moveFamily(direction);
+}
+
+function selectFamilyIndex(targetIndex) {
+  const current = app();
+  const from = currentFamilyIndex();
+  const count = current?.registry?.familyCount || 4;
+  if (!current || !Number.isInteger(from) || !Number.isInteger(targetIndex) || targetIndex < 0 || targetIndex >= count) return;
+  const token = ++familySelectionToken;
   if (from === targetIndex) {
-    await current.whenStable();
+    stage.dataset.familySelectionStatus = "complete";
+    synchronize();
     return;
   }
   const forward = (targetIndex - from + count) % count;
   const backward = (from - targetIndex + count) % count;
   const direction = forward <= backward ? 1 : -1;
-  const steps = Math.min(forward, backward);
-  const control = document.querySelector(direction > 0 ? "[data-control='family-next']" : "[data-control='family-previous']");
-  if (!(control instanceof HTMLButtonElement)) throw new Error("METHODS_FAMILY_NATIVE_CONTROL_MISSING");
-  for (let step = 0; step < steps; step += 1) {
-    const activeIndex = Number(current.nativeState.z.index);
-    const expectedIndex = (activeIndex + direction + count) % count;
-    control.click();
-    await waitForFamilyIndex(expectedIndex);
-  }
-  synchronize();
+  advanceFamilySelection(targetIndex, direction, token);
 }
 
 function updateTerritoryIndex() {

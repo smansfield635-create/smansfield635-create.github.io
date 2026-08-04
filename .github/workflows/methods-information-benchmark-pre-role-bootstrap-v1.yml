@@ -27,7 +27,17 @@ jobs:
       - name: Check out exact bootstrap head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+
+      - name: Assert exact checkout identity
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          printf '%s\n' "$EXPECTED_HEAD" > /tmp/expected-bootstrap-head
 
       - name: Set up Node 22
         uses: actions/setup-node@v4
@@ -81,7 +91,9 @@ jobs:
           cp /tmp/router-self-test.json /tmp/methods-bootstrap-evidence/ || true
           cp /tmp/bootstrap-router-receipt.json /tmp/methods-bootstrap-evidence/ || true
           cp /tmp/methods-bootstrap-validation.log /tmp/methods-bootstrap-evidence/ || true
-          git rev-parse HEAD > /tmp/methods-bootstrap-evidence/EXACT_HEAD
+          cp /tmp/expected-bootstrap-head /tmp/methods-bootstrap-evidence/EXPECTED_HEAD || true
+          git rev-parse HEAD^{commit} > /tmp/methods-bootstrap-evidence/EXACT_HEAD
+          cmp /tmp/methods-bootstrap-evidence/EXPECTED_HEAD /tmp/methods-bootstrap-evidence/EXACT_HEAD
           find /tmp/methods-bootstrap-evidence -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > /tmp/methods-bootstrap-evidence/SHA256SUMS
 
       - name: Upload bootstrap evidence

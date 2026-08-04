@@ -4,6 +4,7 @@
   data-page-family="LAWS_CHILD_SPATIAL_STAGE"
   data-stage-contract="LAWS_CHILD_SPATIAL_STAGE_SHELL_v1"
   data-methods-instance="METHODS_CATEGORICAL_CORPUS_STAGE_v1"
+  data-composition-contract="METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_CORRECTION_v1"
   data-public-methods-mutation="false"
   data-merge-authorized="false">
 <head>
@@ -33,8 +34,8 @@
     </header>
 
     <main class="laws-main" id="main">
-      <section class="laws-hero" aria-labelledby="page-title" data-laws-hero>
-        <div>
+      <section class="laws-hero laws-hero--compact" aria-labelledby="page-title" data-laws-hero>
+        <div class="laws-hero__identity">
           <p class="spatial-kicker">Laws · Research · Methods and Models</p>
           <h1 id="page-title">Methods and Models</h1>
         </div>
@@ -47,11 +48,7 @@
       <section class="methods-chamber" id="methods-spatial-chamber" data-methods-chamber aria-labelledby="methods-chamber-title">
         <header class="methods-chamber__header">
           <div class="origin-beacon" data-global-origin aria-label="Global Laws and Research origin">
-            <span>Laws</span>
-            <i aria-hidden="true">↓</i>
-            <span>Research</span>
-            <i aria-hidden="true">↓</i>
-            <strong>Methods and Models</strong>
+            <span>Laws</span><i aria-hidden="true">↓</i><span>Research</span><i aria-hidden="true">↓</i><strong>Methods and Models</strong>
           </div>
           <div class="methods-chamber__identity" data-local-origin>
             <p class="spatial-kicker">Local corpus origin</p>
@@ -68,49 +65,56 @@
           <section class="spatial-stage" data-spatial-stage aria-label="Canonical Methods categorical field">
             <div class="spatial-stage__grid" aria-hidden="true"></div>
             <div class="spatial-stage__horizon" aria-hidden="true"></div>
+
+            <nav class="family-territory-index" data-family-territory-index aria-label="Methods family regions"></nav>
+
             <div class="spatial-stage__core" aria-hidden="true">
               <span>Methods</span>
               <strong>Equation Core</strong>
+              <i></i>
             </div>
+
             <div class="spatial-scene-root" data-spatial-scene-root>
               <div class="spatial-field" data-spatial-field></div>
             </div>
+
             <div class="spatial-stage__readout" aria-live="polite">
               <span data-spatial-status>Initializing native Methods state…</span>
               <span data-spatial-coordinate>X -- · Y -- · Z --</span>
             </div>
+
             <aside class="spatial-legend" aria-label="Source-state and equation-form legend">
               <span class="spatial-legend__confirmed">Confirmed architecture</span>
               <span class="spatial-legend__hold">Source hold · recovery boundary</span>
-              <span class="spatial-legend__form">Instrument form follows the canonical equation class</span>
+              <span class="spatial-legend__form">Equation class determines instrument form</span>
             </aside>
-          </section>
 
-          <nav class="spatial-controls" aria-label="Methods corpus navigation">
-            <div class="spatial-control-group">
-              <span>Family region</span>
-              <button id="family-previous" data-control="family-previous" type="button" aria-label="Previous Methods family">Previous</button>
-              <button id="family-next" data-control="family-next" type="button" aria-label="Next Methods family">Next</button>
-            </div>
-            <div class="spatial-control-group spatial-control-group--primary">
-              <span>Canonical model</span>
-              <button id="model-previous" data-control="model-previous" type="button" aria-label="Previous model">Previous</button>
-              <button id="inspect-model" data-control="inspect" type="button">Inspect model</button>
-              <button id="model-next" data-control="model-next" type="button" aria-label="Next model">Next</button>
-            </div>
-            <div class="spatial-control-group spatial-control-group--lens" data-lens-instrument>
-              <span>Reading instrument</span>
-              <div class="spatial-lens-selector" role="group" aria-label="Interpretive lens">
-                <button type="button" data-lens-select="practical" aria-pressed="true">Practical</button>
-                <button type="button" data-lens-select="engineering" aria-pressed="false">Engineering</button>
-                <button type="button" data-lens-select="evidence" aria-pressed="false">Evidence</button>
+            <nav class="spatial-controls" aria-label="Methods corpus navigation">
+              <div class="spatial-control-group">
+                <span>Family region</span>
+                <button id="family-previous" data-control="family-previous" type="button" aria-label="Previous Methods family">Previous</button>
+                <button id="family-next" data-control="family-next" type="button" aria-label="Next Methods family">Next</button>
               </div>
-              <div class="spatial-lens-step" aria-hidden="true">
-                <button id="lens-previous" data-control="lens-previous" type="button" tabindex="-1">−</button>
-                <button id="lens-next" data-control="lens-next" type="button" tabindex="-1">+</button>
+              <div class="spatial-control-group spatial-control-group--primary">
+                <span>Canonical model</span>
+                <button id="model-previous" data-control="model-previous" type="button" aria-label="Previous model">Previous</button>
+                <button id="inspect-model" data-control="inspect" type="button">Inspect model</button>
+                <button id="model-next" data-control="model-next" type="button" aria-label="Next model">Next</button>
               </div>
-            </div>
-          </nav>
+              <div class="spatial-control-group spatial-control-group--lens" data-lens-instrument>
+                <span>Reading instrument</span>
+                <div class="spatial-lens-selector" role="group" aria-label="Interpretive lens">
+                  <button type="button" data-lens-select="practical" aria-pressed="true">Practical</button>
+                  <button type="button" data-lens-select="engineering" aria-pressed="false">Engineering</button>
+                  <button type="button" data-lens-select="evidence" aria-pressed="false">Evidence</button>
+                </div>
+                <div class="spatial-lens-step" aria-hidden="true">
+                  <button id="lens-previous" data-control="lens-previous" type="button" tabindex="-1">−</button>
+                  <button id="lens-next" data-control="lens-next" type="button" tabindex="-1">+</button>
+                </div>
+              </div>
+            </nav>
+          </section>
         </main>
       </section>
 
@@ -165,7 +169,7 @@
             <p><strong>Global origin:</strong> Laws Chamber and Research gateway.</p>
             <p><strong>Local origin:</strong> Methods and Models corpus.</p>
             <p><strong>Canonical source:</strong> <code>laws/research/methods-and-models/showroom.js</code>.</p>
-            <p><strong>Candidate contract:</strong> <code>METHODS_CATEGORICAL_SPATIAL_CONTEXT_AND_EQUATION_EMBODIMENT_PASS_v1</code>.</p>
+            <p><strong>Candidate contract:</strong> <code>METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_CORRECTION_v1</code>.</p>
             <p><strong>Public Methods mutation:</strong> prohibited and absent.</p>
             <p><strong>Merge:</strong> unauthorized.</p>
           </div>
@@ -179,30 +183,22 @@
     </footer>
   </div>
 
-  <section class="spatial-inspection" data-spatial-inspection data-open="false" hidden aria-label="Complete canonical model inspection">
+  <section class="spatial-inspection" data-spatial-inspection data-open="false" data-mobile-panel="instrument" hidden aria-label="Complete canonical model inspection">
     <div class="spatial-inspection__scrim" aria-hidden="true"></div>
     <article class="spatial-inspection__panel" role="dialog" aria-modal="true" aria-labelledby="spatial-inspection-title">
       <header class="inspection-header">
         <div>
           <p class="spatial-kicker">Methods foreground workbench</p>
           <nav class="inspection-origin" aria-label="Inspection origin path">
-            <span>Research</span><i aria-hidden="true">→</i>
-            <span>Methods and Models</span><i aria-hidden="true">→</i>
-            <span data-inspection-origin-family></span><i aria-hidden="true">→</i>
-            <span data-inspection-origin-model></span><i aria-hidden="true">→</i>
-            <strong data-inspection-origin-lens></strong>
+            <span>Research</span><i aria-hidden="true">→</i><span>Methods and Models</span><i aria-hidden="true">→</i><span data-inspection-origin-family></span><i aria-hidden="true">→</i><span data-inspection-origin-model></span><i aria-hidden="true">→</i><strong data-inspection-origin-lens></strong>
           </nav>
-          <p class="inspection-family" data-inspection-family-title></p>
-          <p class="inspection-family-question" data-inspection-family-question></p>
         </div>
         <button class="spatial-inspection__close" data-spatial-inspection-close data-local-return type="button">Return to corpus</button>
       </header>
 
-      <div class="inspection-identity">
-        <div>
-          <h2 id="spatial-inspection-title" data-inspection-model-title></h2>
-          <p class="inspection-model-question" data-inspection-model-question></p>
-        </div>
+      <div class="inspection-status-rail">
+        <p class="inspection-family" data-inspection-family-title></p>
+        <p class="inspection-family-question" data-inspection-family-question></p>
         <div class="inspection-state">
           <span data-inspection-source-state></span>
           <span data-inspection-status></span>
@@ -210,28 +206,46 @@
         </div>
       </div>
 
-      <section class="inspection-equation" aria-label="Canonical equation">
-        <p data-inspection-equation-label></p>
-        <div data-inspection-equation></div>
-        <p data-inspection-statement></p>
+      <section class="inspection-instrument-stage" data-inspection-form-object aria-label="Canonical equation instrument">
+        <div class="inspection-instrument-stage__chassis" aria-hidden="true"><i></i><i></i><i></i><b></b><em></em></div>
+        <div class="inspection-instrument-stage__content">
+          <p data-inspection-equation-label></p>
+          <h2 id="spatial-inspection-title" data-inspection-model-title></h2>
+          <p class="inspection-model-question" data-inspection-model-question></p>
+          <div class="inspection-equation" data-inspection-equation></div>
+          <p class="inspection-statement" data-inspection-statement></p>
+        </div>
       </section>
 
+      <nav class="inspection-mobile-tabs" aria-label="Inspection workbench sections">
+        <button type="button" data-inspection-tab="instrument" aria-pressed="true">Instrument</button>
+        <button type="button" data-inspection-tab="operation" aria-pressed="false">Operation</button>
+        <button type="button" data-inspection-tab="evidence" aria-pressed="false">Evidence</button>
+        <button type="button" data-inspection-tab="failure" aria-pressed="false">Failure</button>
+      </nav>
+
       <div class="inspection-workbench">
-        <aside class="inspection-zone inspection-zone--left">
-          <section class="inspection-symbols"><h3>Symbols, inputs, and relationships</h3><ul data-inspection-symbols></ul></section>
-          <section><h3>Purpose</h3><p data-inspection-purpose></p></section>
-        </aside>
-        <div class="inspection-zone inspection-zone--center">
-          <section><h3>Practical lens</h3><p data-inspection-practical></p></section>
-          <section><h3>Engineering lens</h3><p data-inspection-engineering></p></section>
-          <section><h3>Evidence lens</h3><p data-inspection-evidence></p></section>
-        </div>
-        <aside class="inspection-zone inspection-zone--right">
-          <section><h3>Architecture</h3><p data-inspection-architecture></p></section>
-          <section><h3>Operation</h3><p data-inspection-operation></p></section>
-        </aside>
-        <section class="inspection-zone inspection-zone--upper"><h3>Source state, status, and evidence standing</h3><p data-inspection-evidence-standing></p></section>
-        <section class="inspection-zone inspection-zone--lower"><h3>Failure behavior</h3><p data-inspection-failure></p><h3>Limits and boundaries</h3><p data-inspection-limits></p></section>
+        <section class="inspection-zone inspection-zone--instrument" data-workbench-panel="instrument">
+          <div class="inspection-symbols"><h3>Symbols, inputs, and relationships</h3><ul data-inspection-symbols></ul></div>
+          <div><h3>Purpose</h3><p data-inspection-purpose></p></div>
+        </section>
+
+        <section class="inspection-zone inspection-zone--operation" data-workbench-panel="operation">
+          <div><h3>Practical lens</h3><p data-inspection-practical></p></div>
+          <div><h3>Engineering lens</h3><p data-inspection-engineering></p></div>
+          <div><h3>Architecture</h3><p data-inspection-architecture></p></div>
+          <div><h3>Operation</h3><p data-inspection-operation></p></div>
+        </section>
+
+        <section class="inspection-zone inspection-zone--evidence" data-workbench-panel="evidence">
+          <div><h3>Evidence lens</h3><p data-inspection-evidence></p></div>
+          <div><h3>Source state, status, and evidence standing</h3><p data-inspection-evidence-standing></p></div>
+        </section>
+
+        <section class="inspection-zone inspection-zone--failure" data-workbench-panel="failure">
+          <div><h3>Failure behavior</h3><p data-inspection-failure></p></div>
+          <div><h3>Limits and boundaries</h3><p data-inspection-limits></p></div>
+        </section>
       </div>
 
       <footer class="inspection-custody">

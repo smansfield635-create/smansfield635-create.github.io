@@ -3,7 +3,7 @@
   "bootstrapId": "REPOSITORY_AUTHORIZED_TOOLSET_ROUTING_AND_AI_ROOM_EXECUTION_TRANSPORT_BOOTSTRAP_v1",
   "branch": "bootstrap/authorized-toolset-ai-room-transport-genesis-v1-001",
   "baseHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
-  "currentCheckpoint": "CP03_TOOLSET_RESOLVER",
+  "currentCheckpoint": "CP04_EXECUTION_BACKEND_SELECTOR",
   "checkpoints": [
     {
       "id": "CP00_BOOTSTRAP_SEED_AND_SCOPE",
@@ -38,8 +38,10 @@
     },
     {
       "id": "CP04_EXECUTION_BACKEND_SELECTOR",
-      "status": "NOT_STARTED",
-      "evidenceCommits": []
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "d1e90112f8c01a0420032203a96303025f9d30ca"
+      ]
     },
     {
       "id": "CP05_FIXED_COMMAND_DISPATCHER",

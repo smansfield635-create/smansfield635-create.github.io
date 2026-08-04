@@ -1,48 +1,76 @@
-# active-branch relay trigger: prospective candidate 005
-name: H-Earth R06 C10 Prospective Candidate 005 Active-Branch Relay
+name: H-Earth R06 C10 Candidate 005 Carrier Checksum Diagnostic
 on:
   push:
     branches:
       - control/r06-c10-prospective-candidate-004-construction-and-admission
-    paths-ignore:
-      - h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-004/**
 permissions:
-  contents: write
+  contents: read
 concurrency:
-  group: h-earth-r06-c10-prospective-candidate-005-relay
+  group: h-earth-r06-c10-candidate-005-checksum-diagnostic
   cancel-in-progress: false
 jobs:
-  construct-and-admit:
+  diagnose-carrier:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
     steps:
       - name: Check out exact candidate-005 carrier branch
         uses: actions/checkout@v4
         with:
           ref: control/r06-c10-prospective-candidate-005-construction-and-admission
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Reconstruct checksum-bound candidate-005 carrier
+      - name: Reconstruct and inspect carrier
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           BASE=.github/ai-router/carriers/r06-c10-prospective-candidate-005
-          cat "${BASE}.bundle.part"*.b64 | base64 -d > "${BASE}.bundle.tar.gz"
-          cat "${BASE}.operation.part"*.b64 | base64 -d > "${BASE}.operation.sh"
-          test "$(sha256sum "${BASE}.bundle.tar.gz" | awk '{print $1}')" = 7b5dae4b11c2e7d48b0ca4b379a7c5cfcb2d644b64d1e34b44d8f4d5f5ba0b6c
-          test "$(sha256sum "${BASE}.operation.sh" | awk '{print $1}')" = 0984048596ecca47fa342ad105f9ad15880ad8ae7bfdcefb3b97bd7b6b9e9754
-          chmod +x "${BASE}.operation.sh"
-      - name: Construct direct-main candidate 005 and run unchanged exact gate
-        shell: bash
-        run: |
-          .github/ai-router/carriers/r06-c10-prospective-candidate-005.operation.sh
-      - name: Upload candidate-005 execution evidence
-        if: always()
+          OUT=/tmp/r06-c10-candidate-005-carrier-diagnostic
+          mkdir -p "$OUT"
+          cat "${BASE}.bundle.part"*.b64 > "$OUT/bundle.concat.b64"
+          cat "${BASE}.operation.part"*.b64 > "$OUT/operation.concat.b64"
+          set +e
+          base64 -d "$OUT/bundle.concat.b64" > "$OUT/bundle.tar.gz" 2> "$OUT/bundle-base64.stderr"
+          BUNDLE_DECODE=$?
+          base64 -d "$OUT/operation.concat.b64" > "$OUT/operation.sh" 2> "$OUT/operation-base64.stderr"
+          OPERATION_DECODE=$?
+          tar -tzf "$OUT/bundle.tar.gz" > "$OUT/bundle-members.txt" 2> "$OUT/bundle-tar.stderr"
+          BUNDLE_TAR=$?
+          bash -n "$OUT/operation.sh" 2> "$OUT/operation-bash-n.stderr"
+          OPERATION_SYNTAX=$?
+          set -e
+          BUNDLE_SHA=$(sha256sum "$OUT/bundle.tar.gz" | awk '{print $1}')
+          OPERATION_SHA=$(sha256sum "$OUT/operation.sh" | awk '{print $1}')
+          BUNDLE_B64_SHA=$(sha256sum "$OUT/bundle.concat.b64" | awk '{print $1}')
+          OPERATION_B64_SHA=$(sha256sum "$OUT/operation.concat.b64" | awk '{print $1}')
+          python - "$BUNDLE_DECODE" "$OPERATION_DECODE" "$BUNDLE_TAR" "$OPERATION_SYNTAX" "$BUNDLE_SHA" "$OPERATION_SHA" "$BUNDLE_B64_SHA" "$OPERATION_B64_SHA" <<'PY'
+          import json, pathlib, sys
+          root=pathlib.Path('/tmp/r06-c10-candidate-005-carrier-diagnostic')
+          record={
+            'schema':'H_EARTH_R06_C10_CANDIDATE_005_CARRIER_CHECKSUM_DIAGNOSTIC_v1',
+            'bundleExpectedSha256':'7b5dae4b11c2e7d48b0ca4b379a7c5cfcb2d644b64d1e34b44d8f4d5f5ba0b6c',
+            'bundleActualSha256':sys.argv[5],
+            'operationExpectedSha256':'0984048596ecca47fa342ad105f9ad15880ad8ae7bfdcefb3b97bd7b6b9e9754',
+            'operationActualSha256':sys.argv[6],
+            'bundleConcatenatedBase64Sha256':sys.argv[7],
+            'operationConcatenatedBase64Sha256':sys.argv[8],
+            'bundleDecodeExitCode':int(sys.argv[1]),
+            'operationDecodeExitCode':int(sys.argv[2]),
+            'bundleTarListExitCode':int(sys.argv[3]),
+            'operationBashSyntaxExitCode':int(sys.argv[4]),
+            'bundleDecodedBytes':(root/'bundle.tar.gz').stat().st_size,
+            'operationDecodedBytes':(root/'operation.sh').stat().st_size,
+            'bundleBase64Characters':len((root/'bundle.concat.b64').read_text()),
+            'operationBase64Characters':len((root/'operation.concat.b64').read_text()),
+            'candidateConstructed':False,
+            'gateExecuted':False,
+            'productMutation':False
+          }
+          (root/'diagnostic.json').write_text(json.dumps(record,indent=2)+'\n')
+          print(json.dumps(record,indent=2))
+          PY
+      - name: Upload checksum diagnostic
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-r06-c10-prospective-candidate-005-admission
-          path: /tmp/r06-c10-prospective-candidate-005/
+          name: h-earth-r06-c10-candidate-005-carrier-checksum-diagnostic
+          path: /tmp/r06-c10-candidate-005-carrier-diagnostic/
           if-no-files-found: error
           retention-days: 90

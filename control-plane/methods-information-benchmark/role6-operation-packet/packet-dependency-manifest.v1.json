@@ -63,13 +63,18 @@
   },
   "operationPacket": {
     "path": "control-plane/methods-information-benchmark/role6-operation-packet/methods-role6-operation.packet.v1.json",
-    "canonicalPacketSha256": "7b36653dd27112df4704d354e38c47f2a4cd7c5edacf707bf1a74d4601c01271",
+    "canonicalPacketSha256": "98763524f3d1da1867e3bec4843d0c477406a7b276866908a9b8389fa7f5bbcc",
     "hashPolicy": {
       "algorithm": "SHA256",
       "domain": "CANONICAL_JSON_WITH_PACKET_SHA256_NULL",
       "canonicalization": "UTF8_JSON_SORTED_OBJECT_KEYS_ARRAY_ORDER_PRESERVED_NO_INSIGNIFICANT_WHITESPACE",
       "field": "packetSha256"
     }
+  },
+  "outputRegistry": {
+    "path": "control-plane/methods-information-benchmark/role6-operation-packet/role6-output-registry.v1.json",
+    "substantiveOutputCount": 20,
+    "returnArtifactCount": 2
   },
   "requiredDependencyClosure": [
     "CANONICAL_GENESIS_IDENTITY_MATCH",
@@ -80,6 +85,7 @@
     "CANONICAL_CORPUS_PATH_AND_BLOB_MATCH",
     "FOUR_FAMILIES_AND_25_RECORDS_RECOVERABLE",
     "PACKET_CANONICAL_HASH_MATCH",
+    "OUTPUT_REGISTRY_COMPLETE",
     "PACKET_CARRIER_CHANGED_PATH_SET_EXACT",
     "NO_ASSIGNMENT_STATE_ARTIFACT",
     "NO_SUBSTANTIVE_AUDIT_OUTPUT"

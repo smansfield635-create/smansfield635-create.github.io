@@ -1,0 +1,169 @@
+name: Methods Categorical Spatial Context and Equation Embodiment v1
+
+on:
+  push:
+    branches:
+      - experiment/methods-categorical-spatial-context-equation-embodiment-v1-001
+  pull_request:
+    branches:
+      - experiment/methods-models-categorical-spatial-template-v1-001
+    paths:
+      - '.github/workflows/methods-categorical-spatial-context-equation-embodiment-v1.yml'
+      - 'verification/methods-categorical-spatial-context-equation-embodiment-v1/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-embodiment-gate:
+    runs-on: ubuntu-24.04
+    env:
+      BASELINE_HEAD: ab636b11e32253ece8e00f05993d980f747fa980
+      METHODS_ORIGIN: http://127.0.0.1:4173
+      OUT_DIR: methods-categorical-spatial-context-equation-embodiment-v1-evidence
+    steps:
+      - name: Checkout exact successor head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Preserve public Methods and operational baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$BASELINE_HEAD^{commit}"
+          git diff --exit-code "$BASELINE_HEAD" HEAD -- laws/research/methods-and-models/
+          git diff --exit-code "$BASELINE_HEAD" HEAD -- verification/methods-models-categorical-spatial-template-v1/
+          while IFS= read -r changed; do
+            case "$changed" in
+              .github/workflows/methods-categorical-spatial-context-equation-embodiment-v1.yml) ;;
+              verification/methods-categorical-spatial-context-equation-embodiment-v1/*) ;;
+              *) echo "UNAUTHORIZED_CHANGED_PATH:$changed"; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$BASELINE_HEAD" HEAD)
+          printf '%s\n' "$BASELINE_HEAD" > base-head.txt
+          git rev-parse HEAD > successor-head.txt
+          git diff --name-only "$BASELINE_HEAD" HEAD | sort | tee exact-changed-paths.txt
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install pinned browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Check successor source syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          for source in verification/methods-categorical-spatial-context-equation-embodiment-v1/*.mjs; do
+            node --check "$source"
+          done
+
+      - name: Validate canonical semantic embodiment
+        shell: bash
+        run: |
+          set -uo pipefail
+          validation_status=0
+          node verification/methods-categorical-spatial-context-equation-embodiment-v1/validate.mjs | tee semantic-validation.log || validation_status=${PIPESTATUS[0]}
+          printf '%s\n' "$validation_status" > validation-exit-status.txt
+
+      - name: Start exact successor server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-semantic-server.log 2>&1 &
+          for attempt in $(seq 1 80); do
+            if curl -fsS http://127.0.0.1:4173/verification/methods-categorical-spatial-context-equation-embodiment-v1/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/methods-semantic-server.log
+          exit 1
+
+      - name: Execute desktop and mobile semantic observer
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          set -uo pipefail
+          observer_status=0
+          node verification/methods-categorical-spatial-context-equation-embodiment-v1/observer.mjs | tee semantic-observer.log || observer_status=${PIPESTATUS[0]}
+          printf '%s\n' "$observer_status" > observer-exit-status.txt
+
+      - name: Package exact nonproduct evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp base-head.txt "$OUT_DIR/"
+          cp successor-head.txt "$OUT_DIR/"
+          cp exact-changed-paths.txt "$OUT_DIR/"
+          cp semantic-validation.log "$OUT_DIR/"
+          cp semantic-observer.log "$OUT_DIR/"
+          cp validation-exit-status.txt "$OUT_DIR/"
+          cp observer-exit-status.txt "$OUT_DIR/"
+          cp /tmp/methods-semantic-server.log "$OUT_DIR/server.log" || true
+          cp verification/methods-categorical-spatial-context-equation-embodiment-v1/tool-admission-matrix.json "$OUT_DIR/"
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const out = process.env.OUT_DIR;
+          const files = [];
+          function walk(dir) {
+            for (const name of fs.readdirSync(dir).sort()) {
+              const absolute = path.join(dir, name);
+              const relative = path.relative(out, absolute);
+              if (fs.statSync(absolute).isDirectory()) walk(absolute);
+              else files.push(relative);
+            }
+          }
+          walk(out);
+          fs.writeFileSync(path.join(out, 'artifact-manifest.json'), JSON.stringify({
+            contract: 'METHODS_CATEGORICAL_SPATIAL_CONTEXT_EQUATION_EMBODIMENT_ARTIFACT_MANIFEST_v1',
+            baselineHead: fs.readFileSync('base-head.txt', 'utf8').trim(),
+            successorHead: fs.readFileSync('successor-head.txt', 'utf8').trim(),
+            files,
+            mergeAuthorized: false,
+            publicMethodsMutationAuthorized: false,
+            empiricalValidationClaimed: false,
+            full1575StateCertificationClaimed: false
+          }, null, 2) + '\n');
+          NODE
+          find "$OUT_DIR" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$OUT_DIR/SHA256SUMS"
+          tar -czf methods-categorical-spatial-context-equation-embodiment-v1-evidence.tar.gz "$OUT_DIR"
+          sha256sum methods-categorical-spatial-context-equation-embodiment-v1-evidence.tar.gz > methods-categorical-spatial-context-equation-embodiment-v1-evidence.tar.gz.sha256
+
+      - name: Upload semantic embodiment evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-categorical-spatial-context-equation-embodiment-v1-evidence
+          path: |
+            methods-categorical-spatial-context-equation-embodiment-v1-evidence/
+            methods-categorical-spatial-context-equation-embodiment-v1-evidence.tar.gz
+            methods-categorical-spatial-context-equation-embodiment-v1-evidence.tar.gz.sha256
+            base-head.txt
+            successor-head.txt
+            exact-changed-paths.txt
+            semantic-validation.log
+            semantic-observer.log
+            validation-exit-status.txt
+            observer-exit-status.txt
+          retention-days: 30
+
+      - name: Enforce semantic embodiment gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(cat validation-exit-status.txt)" = "0"
+          test "$(cat observer-exit-status.txt)" = "0"
+          node -e 'const fs=require("fs"); const staticGate=JSON.parse(fs.readFileSync(process.env.OUT_DIR+"/semantic-static-gate-result.json")); const observer=JSON.parse(fs.readFileSync(process.env.OUT_DIR+"/observer-result.json")); if(staticGate.result!=="PASS_SEMANTIC_STATIC_GATE") process.exit(1); if(observer.result!=="PASS_SEMANTIC_EMBODIMENT_GATE") process.exit(1);'

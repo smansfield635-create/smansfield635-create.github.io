@@ -12,7 +12,7 @@ const CAMERA_PRESETS = Object.freeze({
     inspection: Object.freeze({ depth: 220, rotateX: 0, rotateY: 0, scale: 1 })
   }),
   mobile: Object.freeze({
-    overview: Object.freeze({ depth: 760, rotateX: -6, rotateY: 7, scale: 0.52 }),
+    overview: Object.freeze({ depth: 760, rotateX: -6, rotateY: 0, scale: 0.52 }),
     browse: Object.freeze({ depth: 275, rotateX: -2, rotateY: 2, scale: 0.84 }),
     inspection: Object.freeze({ depth: 205, rotateX: 0, rotateY: 0, scale: 0.92 })
   })

@@ -1,0 +1,32 @@
+{
+  "schema": "REPOSITORY_OPERATION_INTAKE_BOOTSTRAP_ACTIVATION_RECEIPT_v1",
+  "seedId": "REPOSITORY_OPERATION_INTAKE_BOOTSTRAP_SEED_v1",
+  "exactGoverningHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "bootstrapToolingHead": "a18107998f0a5d8146010aa4cc9767d1f85b1ebd",
+  "terminalCommitBinding": "COMMIT_CONTAINING_THIS_RECEIPT",
+  "branch": "bootstrap/repository-operation-intake-v1-001",
+  "pullRequest": 556,
+  "workflowRunId": 30939417092,
+  "workflowJobIds": {
+    "bootstrap-builder-self-test": 92093694913,
+    "fresh-bootstrap-verifier": 92093772652,
+    "remote-ledger-cas-certification": 92093874933,
+    "package-bootstrap-certification": 92094010393
+  },
+  "artifact": {
+    "id": 8904516138,
+    "name": "repository-operation-intake-bootstrap-certification-v1",
+    "digest": "sha256:c58773c9ed006e183a71fcfb4593b4f20abc70a12dbc9dcf741086d0a6108f93",
+    "sizeBytes": 5689
+  },
+  "canonicalFingerprintSha256": "bed40b811e82ac3e59f9a9e0abbcfaf101e8939a0d30b786ea115786d9c73767",
+  "builderSelfTest": "PASS",
+  "freshVerifier": "PASS",
+  "remoteCasCertification": "PASS_EXACTLY_ONE_ACQUIRED",
+  "allowedPathBoundary": "PASS_EXACT",
+  "productMutation": false,
+  "mainMutation": false,
+  "mergePerformed": false,
+  "bootstrapAuthorityExpired": true,
+  "result": "PASS_CLOSED_BOOTSTRAP_ACTIVATED_UNMERGED"
+}

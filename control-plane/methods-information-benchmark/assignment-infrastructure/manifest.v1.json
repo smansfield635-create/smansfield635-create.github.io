@@ -18,6 +18,13 @@
   "returnRequired": true,
   "automaticOutputAdoption": false,
   "automaticNextRoleAssignment": false,
+  "predecessorBootstrapWorkflowApplicability": {
+    "workflow": ".github/workflows/methods-information-benchmark-pre-role-bootstrap.yml",
+    "scope": "PR_551_EXACT_GENESIS_TWELVE_PATH_CANDIDATE_ONLY",
+    "successorInfrastructureApplicability": false,
+    "expectedSuccessorDisposition": "CHANGED_PATH_SET_MISMATCH_FAIL_CLOSED",
+    "meaning": "PREDECESSOR_GENESIS_IDENTITY_PRESERVED_NOT_SUCCESSOR_INFRASTRUCTURE_FAILURE"
+  },
   "protectedSurfaces": [
     "PUBLIC_METHODS_PATHS",
     "PUBLIC_LAWS_PATHS",

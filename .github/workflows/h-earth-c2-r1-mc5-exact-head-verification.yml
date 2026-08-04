@@ -2,6 +2,13 @@ name: H-Earth C2-R1 MC5 Exact-Head Verification
 
 on:
   workflow_dispatch:
+  pull_request:
+    types:
+      - ready_for_review
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c2-r1-mc5-exact-head-verification.yml'
   push:
     branches:
       - main
@@ -18,7 +25,7 @@ concurrency:
 env:
   TARGET_PR: '484'
   TARGET_BRANCH: agent/h-earth-c2-r1-material-only-binding-implementation-001
-  TARGET_HEAD: 44019e27c3d52c59cc59bba7c833b6317d014273
+  TARGET_HEAD: 501505fe66dbeede467240d8c7d93f194f7d10d2
   STARTING_HEAD: 4f0491f00fae794ecdefbae36f4ee86c8a1bd21a
   ROLLBACK_BRANCH: rollback/h-earth-c2-r1-material-only-binding-start-001
   TARGET_PACKAGE: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
@@ -28,6 +35,8 @@ env:
   TARGET_CACHE_GZIP_SHA256: 8a22a0edec87ef25c763722b8be55fa457b7cfcddd1cdc21ffba1abfbd35709b
   TARGET_TERRAIN_COUNT: '10419'
   TARGET_SHORELINE_COUNT: '154'
+  CANDIDATE_REGISTRY_SOURCE_PATH: h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js
+  CANDIDATE_REGISTRY_SOURCE_BLOB_SHA: a195eea704df0a3f754f626817181b63114178fd
   LIVE_REVIEW_URL: http://127.0.0.1:4188/showroom/globe/h-earth/index.html?cp2=round1-1f520809
   PLAYWRIGHT_VERSION: 1.55.0
 
@@ -50,13 +59,29 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Run automatic registry preflight for all nine PR 484 paths
+      - name: Stage frozen C2-R1 candidate registry member runner-local
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate_root="$GITHUB_WORKSPACE/candidate"
+          control_root="$GITHUB_WORKSPACE/control-plane"
+          source_path="$CANDIDATE_REGISTRY_SOURCE_PATH"
+          test "$(git -C "$candidate_root" rev-parse HEAD)" = "$TARGET_HEAD"
+          actual_blob="$(git -C "$candidate_root" rev-parse "HEAD:$source_path")"
+          test "$actual_blob" = "$CANDIDATE_REGISTRY_SOURCE_BLOB_SHA"
+          mkdir -p "$(dirname "$control_root/$source_path")"
+          cp "$candidate_root/$source_path" "$control_root/$source_path"
+          staged_blob="$(git -C "$control_root" hash-object --no-filters "$control_root/$source_path")"
+          test "$staged_blob" = "$CANDIDATE_REGISTRY_SOURCE_BLOB_SHA"
+
+      - name: Run automatic integrated registry preflight for all eleven PR 484 paths
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/mc5-static"
           cd "$GITHUB_WORKSPACE/control-plane"
-          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js
+          node --check "$CANDIDATE_REGISTRY_SOURCE_PATH"
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-gratitude-integrated-environment.js
           node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
           MC5_RECEIPT="$RUNNER_TEMP/mc5-static/registry-preflight-receipt.json" node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -66,16 +91,16 @@ jobs:
           } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
           const dependencies = load();
           if (dependencies.identityVerified !== true) throw new Error('REGISTRY_IDENTITY_NOT_VERIFIED');
-          if (dependencies.exactHeadRegistrationVerified !== true) {
-            throw new Error(`EXACT_HEAD_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
+          if (dependencies.integratedEnvironmentVerified !== true) {
+            throw new Error(`INTEGRATED_ENVIRONMENT_REGISTRATION_FAILED:${JSON.stringify(dependencies.exactHeadChecks)}`);
           }
-          if (H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.length !== 9) throw new Error('PR_484_CHANGED_PATH_COUNT_NOT_NINE');
+          if (H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.length !== 11) throw new Error('PR_484_CHANGED_PATH_COUNT_NOT_ELEVEN');
           const receipt = await runHEarthC2R1MC5AutomaticRegistryPreflight();
           if (receipt.finalDisposition !== 'PASS') throw new Error(`REGISTRY_PREFLIGHT_NOT_PASS:${receipt.finalDisposition}`);
           fs.writeFileSync(process.env.MC5_RECEIPT, `${JSON.stringify(receipt, null, 2)}\n`);
           NODE
 
-      - name: Verify exact branch head rollback and nine-path custody
+      - name: Verify exact branch head rollback and eleven-path custody
         shell: bash
         run: |
           set -euo pipefail
@@ -85,10 +110,12 @@ jobs:
           test "$(git rev-parse "refs/remotes/origin/$TARGET_BRANCH")" = "$TARGET_HEAD"
           git fetch --no-tags origin "$ROLLBACK_BRANCH:refs/remotes/origin/$ROLLBACK_BRANCH"
           test "$(git rev-parse "refs/remotes/origin/$ROLLBACK_BRANCH")" = "$STARTING_HEAD"
-          cat > /tmp/mc5-pr484-nine-paths <<'PATHS'
+          cat > /tmp/mc5-pr484-eleven-paths <<'PATHS'
           .github/workflows/h-earth-c2-r1-complete-world-integration.yml
           h-earth-3d/control-plane/coastal-morphology/c2-r1/h-earth.c2-r1.allowed-path-manifest.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-source-custody.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json
+          h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js
           h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/identity.json
@@ -96,9 +123,9 @@ jobs:
           showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
           showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
           PATHS
-          sort -u /tmp/mc5-pr484-nine-paths -o /tmp/mc5-pr484-nine-paths
+          sort -u /tmp/mc5-pr484-eleven-paths -o /tmp/mc5-pr484-eleven-paths
           git diff --name-only "$STARTING_HEAD...$TARGET_HEAD" | sort -u > /tmp/mc5-actual-paths
-          diff -u /tmp/mc5-pr484-nine-paths /tmp/mc5-actual-paths
+          diff -u /tmp/mc5-pr484-eleven-paths /tmp/mc5-actual-paths
           test -z "$(git status --porcelain)"
 
       - name: Verify cache v2 package identity and material-only invariants
@@ -147,8 +174,8 @@ jobs:
           check(custody.canonicalPositionsByteIdentical === true && custody.canonicalNormalsByteIdentical === true, 'CUSTODY_CANONICAL_GEOMETRY_NOT_IDENTICAL');
           check(custody.terrainPositionMutationCount === 0 && custody.terrainNormalMutationCount === 0, 'CUSTODY_GEOMETRY_MUTATION');
           check(custody.inlandWaterMembershipViolationCount === 0, 'CUSTODY_INLAND_WATER_VIOLATION');
-          check(ledger.resultingHeadBinding === 'EXACT_COMMIT_CONTAINING_THIS_RECORD', 'LEDGER_HEAD_BINDING_INVALID');
-          check(role3.resultingHeadBinding === 'EXACT_COMMIT_CONTAINING_THIS_RECORD', 'ROLE3_HEAD_BINDING_INVALID');
+          check(ledger.externalizedHeadBinding === 'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW', 'LEDGER_HEAD_BINDING_INVALID');
+          check(role3.externalizedHeadBinding === 'EXACT_BRANCH_HEAD_CONTAINING_THIS_RECORD_AND_FINAL_VERIFICATION_WORKFLOW', 'ROLE3_HEAD_BINDING_INVALID');
           check(ledger.candidateBranch === branch && role3.candidateBranch === branch, 'EVIDENCE_BRANCH_MISMATCH');
           check(ledger.completeWorldPackageIdentity === packageIdentity && role3.completeWorldPackageIdentity === packageIdentity, 'EVIDENCE_PACKAGE_MISMATCH');
           check(ledger.completeWorldPackageContentDigest === packageDigest && role3.completeWorldPackageContentDigest === packageDigest, 'EVIDENCE_DIGEST_MISMATCH');
@@ -173,8 +200,27 @@ jobs:
           check(cache.terrain.recordWidth === 8 && cache.shoreline.recordWidth === 8, 'CACHE_RECORD_WIDTH_MISMATCH');
           check(JSON.stringify(cache.terrain.fields) === JSON.stringify(['worldX','worldZ','colorR','colorG','colorB','roughness','wetness','cavity']), 'CACHE_TERRAIN_FIELDS_MISMATCH');
           check(JSON.stringify(cache.shoreline.fields) === JSON.stringify(['worldX','worldZ','colorR','colorG','colorB','alpha','wetness','foam']), 'CACHE_SHORELINE_FIELDS_MISMATCH');
-          check(runtimeText.includes(packageIdentity) && runtimeText.includes(packageDigest), 'RUNTIME_PACKAGE_BINDING_MISSING');
-          check(packageText.includes(packageIdentity) && packageText.includes(packageDigest), 'PACKAGE_OVERRIDE_BINDING_MISSING');
+          check(
+            runtimeText.includes('installHEarthRun8ER2RuntimePackageOverride') &&
+            runtimeText.includes(packageIdentity) &&
+            runtimeText.includes(packageDigest) &&
+            runtimeText.includes('selectionReceipt.runtimePackageIdentity') &&
+            runtimeText.includes('selectionReceipt.runtimePackageContentDigest') &&
+            runtimeText.includes('rendererCompatibilityAliasActive') &&
+            runtimeText.includes('exactIntegratedBuffersPresentedByAcceptedRenderer'),
+            'RUNTIME_EXACT_PACKAGE_OVERRIDE_BINDING_MISSING'
+          );
+          check(
+            packageText.includes('export function installHEarthRun8ER2RuntimePackageOverride') &&
+            packageText.includes('R2_RUNTIME_PACKAGE_OVERRIDE_ACTIVE') &&
+            packageText.includes('runtimePackageIdentity: packageRecord.packageIdentity') &&
+            packageText.includes('runtimePackageContentDigest: packageRecord.contentDigest') &&
+            packageText.includes('rendererCompatibilityAliasActive: true') &&
+            packageText.includes('exactIntegratedBuffersPresentedByAcceptedRenderer: true') &&
+            packageText.includes('/^H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_[0-9A-F]{8}$/') &&
+            packageText.includes('/^fnv1a32:[0-9a-f]{8}$/'),
+            'GENERIC_PACKAGE_OVERRIDE_ADAPTER_CONTRACT_MISSING'
+          );
           check(runtimeText.includes('boundShorelineVertexCount !== 154'), 'RUNTIME_SHORELINE_COUNT_GUARD_MISSING');
           check(packageText.includes('boundShorelineVertexCount !== 154'), 'PACKAGE_SHORELINE_COUNT_GUARD_MISSING');
           const receipt = {
@@ -184,7 +230,7 @@ jobs:
             candidateHead: head,
             rollbackBranch: process.env.ROLLBACK_BRANCH,
             rollbackHead: process.env.STARTING_HEAD,
-            exactChangedPathCount: 9,
+            exactChangedPathCount: 11,
             cacheSchema: schema,
             cacheJsonSha256: sha256(cacheBytes),
             cacheGzipSha256: sha256(gzipBytes),

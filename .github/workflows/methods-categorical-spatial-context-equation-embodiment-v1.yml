@@ -1,4 +1,4 @@
-name: Methods Categorical Spatial Context and Equation Embodiment v1
+name: Methods Laws Child Spatial Context and Equation Embodiment v1
 
 on:
   push:
@@ -22,6 +22,8 @@ jobs:
       BASELINE_HEAD: ab636b11e32253ece8e00f05993d980f747fa980
       METHODS_ORIGIN: http://127.0.0.1:4173
       OUT_DIR: methods-categorical-spatial-context-equation-embodiment-v1-evidence
+      SHARED_SHELL: LAWS_CHILD_SPATIAL_STAGE_SHELL_v1
+      METHODS_INSTANCE: METHODS_CATEGORICAL_CORPUS_STAGE_v1
     steps:
       - name: Checkout exact successor head
         uses: actions/checkout@v4
@@ -77,6 +79,14 @@ jobs:
           node verification/methods-categorical-spatial-context-equation-embodiment-v1/validate.mjs | tee semantic-validation.log || validation_status=${PIPESTATUS[0]}
           printf '%s\n' "$validation_status" > validation-exit-status.txt
 
+      - name: Validate Laws child-stage shell
+        shell: bash
+        run: |
+          set -uo pipefail
+          shell_validation_status=0
+          node verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-validate.mjs | tee laws-child-stage-validation.log || shell_validation_status=${PIPESTATUS[0]}
+          printf '%s\n' "$shell_validation_status" > shell-validation-exit-status.txt
+
       - name: Start exact successor server
         shell: bash
         run: |
@@ -101,6 +111,16 @@ jobs:
           node verification/methods-categorical-spatial-context-equation-embodiment-v1/observer.mjs | tee semantic-observer.log || observer_status=${PIPESTATUS[0]}
           printf '%s\n' "$observer_status" > observer-exit-status.txt
 
+      - name: Execute desktop and mobile Laws child-stage observer
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          set -uo pipefail
+          shell_observer_status=0
+          node verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-observer.mjs | tee laws-child-stage-observer.log || shell_observer_status=${PIPESTATUS[0]}
+          printf '%s\n' "$shell_observer_status" > shell-observer-exit-status.txt
+
       - name: Package exact nonproduct evidence
         shell: bash
         run: |
@@ -110,8 +130,12 @@ jobs:
           cp exact-changed-paths.txt "$OUT_DIR/"
           cp semantic-validation.log "$OUT_DIR/"
           cp semantic-observer.log "$OUT_DIR/"
+          cp laws-child-stage-validation.log "$OUT_DIR/"
+          cp laws-child-stage-observer.log "$OUT_DIR/"
           cp validation-exit-status.txt "$OUT_DIR/"
           cp observer-exit-status.txt "$OUT_DIR/"
+          cp shell-validation-exit-status.txt "$OUT_DIR/"
+          cp shell-observer-exit-status.txt "$OUT_DIR/"
           cp /tmp/methods-semantic-server.log "$OUT_DIR/server.log" || true
           cp verification/methods-categorical-spatial-context-equation-embodiment-v1/tool-admission-matrix.json "$OUT_DIR/"
           node <<'NODE'
@@ -136,7 +160,12 @@ jobs:
             mergeAuthorized: false,
             publicMethodsMutationAuthorized: false,
             empiricalValidationClaimed: false,
-            full1575StateCertificationClaimed: false
+            full1575StateCertificationClaimed: false,
+            sharedShell: process.env.SHARED_SHELL,
+            methodsInstance: process.env.METHODS_INSTANCE,
+            globalOrigin: 'LAWS_CHAMBER_AND_RESEARCH_GATEWAY',
+            localOrigin: 'METHODS_AND_MODELS_CORPUS',
+            lawsCompassSemanticReplication: false
           }, null, 2) + '\n');
           NODE
           find "$OUT_DIR" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$OUT_DIR/SHA256SUMS"
@@ -156,8 +185,12 @@ jobs:
             exact-changed-paths.txt
             semantic-validation.log
             semantic-observer.log
+            laws-child-stage-validation.log
+            laws-child-stage-observer.log
             validation-exit-status.txt
             observer-exit-status.txt
+            shell-validation-exit-status.txt
+            shell-observer-exit-status.txt
           retention-days: 30
 
       - name: Enforce semantic embodiment gate
@@ -166,4 +199,6 @@ jobs:
           set -euo pipefail
           test "$(cat validation-exit-status.txt)" = "0"
           test "$(cat observer-exit-status.txt)" = "0"
-          node -e 'const fs=require("fs"); const staticGate=JSON.parse(fs.readFileSync(process.env.OUT_DIR+"/semantic-static-gate-result.json")); const observer=JSON.parse(fs.readFileSync(process.env.OUT_DIR+"/observer-result.json")); if(staticGate.result!=="PASS_SEMANTIC_STATIC_GATE") process.exit(1); if(observer.result!=="PASS_SEMANTIC_EMBODIMENT_GATE") process.exit(1);'
+          test "$(cat shell-validation-exit-status.txt)" = "0"
+          test "$(cat shell-observer-exit-status.txt)" = "0"
+          node -e 'const fs=require("fs"); const root=process.env.OUT_DIR; const staticGate=JSON.parse(fs.readFileSync(root+"/semantic-static-gate-result.json")); const shell=JSON.parse(fs.readFileSync(root+"/laws-child-stage-shell-report.json")); const observer=JSON.parse(fs.readFileSync(root+"/observer-result.json")); const shellObserver=JSON.parse(fs.readFileSync(root+"/laws-child-stage-observer-result.json")); if(staticGate.result!=="PASS_SEMANTIC_STATIC_GATE") process.exit(1); if(shell.result!=="PASS_LAWS_CHILD_STAGE_STATIC_GATE") process.exit(1); if(shell.sharedShell!==process.env.SHARED_SHELL||shell.methodsInstance!==process.env.METHODS_INSTANCE) process.exit(1); if(observer.result!=="PASS_SEMANTIC_EMBODIMENT_GATE") process.exit(1); if(shellObserver.result!=="PASS_LAWS_CHILD_STAGE_OBSERVER_GATE") process.exit(1);'

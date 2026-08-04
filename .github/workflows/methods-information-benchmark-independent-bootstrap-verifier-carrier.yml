@@ -1,5 +1,6 @@
 name: Methods Information Benchmark Independent Bootstrap Verifier Carrier
 
+# Carrier-only workflow; the verification job checks out the immutable candidate head.
 on:
   push:
     branches:

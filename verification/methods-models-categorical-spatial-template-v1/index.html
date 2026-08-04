@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Methods Models Categorical Spatial Template v1</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="spatial-shell">
+    <header class="spatial-header">
+      <div>
+        <p class="spatial-kicker">Methods and Models · Neutral Spatial Template</p>
+        <h1>Categorical field</h1>
+      </div>
+      <div class="spatial-camera-controls" role="group" aria-label="Camera mode">
+        <button type="button" data-camera-mode="overview" aria-pressed="true">Overview</button>
+        <button type="button" data-camera-mode="browse" aria-pressed="false">Browse</button>
+      </div>
+    </header>
+
+    <section class="spatial-stage" data-spatial-stage aria-label="Three-dimensional categorical field">
+      <div class="spatial-stage__horizon" aria-hidden="true"></div>
+      <div class="spatial-scene-root" data-spatial-scene-root>
+        <div class="spatial-field" data-spatial-field></div>
+      </div>
+      <div class="spatial-stage__readout" aria-live="polite">
+        <span data-spatial-status>Initializing native Methods state…</span>
+        <span data-spatial-coordinate>X -- · Y -- · Z --</span>
+      </div>
+    </section>
+
+    <nav class="spatial-controls" aria-label="Spatial navigation">
+      <div class="spatial-control-group">
+        <span>Family plane</span>
+        <button id="family-previous" data-control="family-previous" type="button" aria-label="Previous family plane">−</button>
+        <button id="family-next" data-control="family-next" type="button" aria-label="Next family plane">+</button>
+      </div>
+      <div class="spatial-control-group spatial-control-group--primary">
+        <span>Model position</span>
+        <button id="model-previous" data-control="model-previous" type="button" aria-label="Previous model">Previous</button>
+        <button id="inspect-model" data-control="inspect" type="button">Inspect</button>
+        <button id="model-next" data-control="model-next" type="button" aria-label="Next model">Next</button>
+      </div>
+      <div class="spatial-control-group">
+        <span>Lens relation</span>
+        <button id="lens-previous" data-control="lens-previous" type="button" aria-label="Previous lens">−</button>
+        <button id="lens-next" data-control="lens-next" type="button" aria-label="Next lens">+</button>
+      </div>
+    </nav>
+  </main>
+
+  <section class="spatial-inspection" data-spatial-inspection data-open="false" hidden aria-label="Model inspection">
+    <div class="spatial-inspection__scrim" aria-hidden="true"></div>
+    <article class="spatial-inspection__panel" role="dialog" aria-modal="true" aria-labelledby="spatial-inspection-title">
+      <button class="spatial-inspection__close" data-spatial-inspection-close type="button">Return to field</button>
+      <p class="spatial-kicker">Native inspection state · renderer-owned camera</p>
+      <h2 id="spatial-inspection-title" data-spatial-inspection-title></h2>
+      <div class="spatial-inspection__equation" data-spatial-inspection-equation></div>
+      <p data-spatial-inspection-body></p>
+    </article>
+  </section>
+
+  <iframe class="native-methods-frame" data-native-methods-frame title="Native Methods state authority" src="/laws/research/methods-and-models/" aria-hidden="true" tabindex="-1"></iframe>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

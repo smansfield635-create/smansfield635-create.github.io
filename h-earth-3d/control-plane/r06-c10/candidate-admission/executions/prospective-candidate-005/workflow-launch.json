@@ -1,0 +1,8 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_005_WORKFLOW_LAUNCH_v1",
+  "workflow": "R06 C10 Candidate 005 Launch Witness",
+  "workflowRunId": "30930726261",
+  "workflowRunAttempt": "1",
+  "triggerCommit": "a3d3fade3fc701aa405fe3b73ec55d69f8800bc9",
+  "result": "WORKFLOW_LAUNCHED"
+}

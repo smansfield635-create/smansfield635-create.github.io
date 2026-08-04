@@ -1,0 +1,109 @@
+name: Verify Deployed R06-C10 Environment Preview
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-r06-c10-public-preview-verification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public-preview:
+    if: github.head_ref == 'verification/h-earth-r06-c10-public-preview-95504c-001'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9/index.html
+      SOURCE_HEAD: 95504c9927922318225da1d61fa303cec70497f9
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Chromium verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pw" "$RUNNER_TEMP/proof"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+
+      - name: Verify deployed desktop and touch-mobile environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/pw/verify-public.mjs" <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import process from 'node:process';
+          import { chromium } from 'playwright';
+          const url=process.env.PREVIEW_URL;
+          const out=path.join(process.env.RUNNER_TEMP,'proof');
+          const assert=(value,code,detail=null)=>{if(!value){const error=new Error(code);error.detail=detail;throw error;}};
+          async function inspect(browser,profile){
+            const context=await browser.newContext({viewport:profile.viewport,deviceScaleFactor:profile.dpr,isMobile:profile.mobile,hasTouch:profile.mobile});
+            const page=await context.newPage();
+            const consoleErrors=[],pageErrors=[],requestFailures=[],httpFailures=[];
+            page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text())});
+            page.on('pageerror',error=>pageErrors.push({message:error.message,stack:error.stack}));
+            page.on('requestfailed',request=>requestFailures.push({url:request.url(),failure:request.failure()}));
+            page.on('response',response=>{if(response.status()>=400&&!response.url().endsWith('/favicon.ico'))httpFailures.push({url:response.url(),status:response.status()})});
+            const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:120000});
+            assert(response?.status()===200,'PUBLIC_PREVIEW_HTTP_NOT_200',{status:response?.status(),url});
+            await page.waitForSelector('#h-earth-functional-landscape-canvas',{timeout:120000});
+            await page.waitForFunction(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()?.stages?.READY_PUBLISHED==='PASS',null,{timeout:120000,polling:500});
+            await page.waitForTimeout(3000);
+            const result=await page.evaluate(()=>{
+              const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+              const gl=canvas?.getContext('webgl2')||canvas?.getContext('webgl');
+              if(!canvas||!gl||!canvas.width||!canvas.height)return{canvas:null};
+              const pixels=new Uint8Array(canvas.width*canvas.height*4);
+              gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+              let visible=0,bright=0,sum=0,max=0;
+              for(let index=0;index<pixels.length;index+=4){const value=pixels[index]+pixels[index+1]+pixels[index+2];sum+=value;max=Math.max(max,value);if(value>18)visible++;if(value>90)bright++;}
+              const resources=performance.getEntriesByType('resource').map(entry=>entry.name);
+              return{
+                href:location.href,
+                sourceHead:document.documentElement.dataset.sourceHead??null,
+                canvas:{width:canvas.width,height:canvas.height,visiblePixelFraction:visible/(canvas.width*canvas.height),brightPixelFraction:bright/(canvas.width*canvas.height),meanRgbSum:sum/(canvas.width*canvas.height),maximumRgbSum:max,glError:gl.getError()},
+                startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
+                runtimeSnapshot:window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.()??null,
+                candidateModuleLoaded:resources.some(resource=>resource.includes('h-earth.r06-c10.official-landform-candidate-001.js')),
+                routeReady:document.getElementById('h-earth-functional-landscape-route')?.dataset?.run8eReady??null
+              };
+            });
+            await page.screenshot({path:path.join(out,`${profile.name}.png`),fullPage:true});
+            const receipt={status:'PASS_DEPLOYED_VISIBLE_ENVIRONMENT',profile:profile.name,url,result,consoleErrors,pageErrors,requestFailures,httpFailures};
+            fs.writeFileSync(path.join(out,`${profile.name}.receipt.json`),JSON.stringify(receipt,null,2)+'\n');
+            assert(result.canvas?.visiblePixelFraction>.01,'DEPLOYED_VISIBLE_WORLD_FRAME_NOT_PROVEN',receipt);
+            assert(result.canvas?.brightPixelFraction>.001,'DEPLOYED_ENVIRONMENT_CONTRAST_NOT_PROVEN',receipt);
+            assert(result.candidateModuleLoaded,'DEPLOYED_CANDIDATE_MODULE_NOT_LOADED',receipt);
+            assert(result.startupReceipt?.firstFailureStage==null,'DEPLOYED_STARTUP_FAILURE',receipt);
+            assert(result.routeReady==='true','DEPLOYED_ROUTE_NOT_READY',receipt);
+            assert(pageErrors.length===0,'DEPLOYED_PAGE_ERRORS_PRESENT',receipt);
+            assert(requestFailures.length===0,'DEPLOYED_REQUEST_FAILURES_PRESENT',receipt);
+            assert(httpFailures.length===0,'DEPLOYED_HTTP_FAILURES_PRESENT',receipt);
+            await context.close();
+            return receipt;
+          }
+          const browser=await chromium.launch({headless:true});
+          try{
+            const desktop=await inspect(browser,{name:'desktop',viewport:{width:1440,height:1000},dpr:1,mobile:false});
+            const mobile=await inspect(browser,{name:'touch-mobile',viewport:{width:412,height:915},dpr:2,mobile:true});
+            fs.writeFileSync(path.join(out,'deployed-preview-verification.json'),JSON.stringify({status:'PASS_DEPLOYED_VISIBLE_ENVIRONMENT',sourceHead:process.env.SOURCE_HEAD,url,desktop,mobile},null,2)+'\n');
+          }finally{await browser.close();}
+          JS
+          cd "$RUNNER_TEMP/pw"
+          node verify-public.mjs
+
+      - name: Upload deployed preview proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-deployed-preview-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/proof
+          if-no-files-found: warn
+          retention-days: 30

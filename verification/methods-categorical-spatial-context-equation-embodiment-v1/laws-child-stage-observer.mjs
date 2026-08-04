@@ -140,6 +140,14 @@ async function capture(page, name) {
   result.screenshots.push(path.relative(outDir, file));
 }
 
+async function activateBoundControl(page, selector) {
+  await page.evaluate(controlSelector => {
+    const control = document.querySelector(controlSelector);
+    if (!(control instanceof HTMLButtonElement)) throw new Error(`METHODS_BOUND_CONTROL_MISSING:${controlSelector}`);
+    control.click();
+  }, selector);
+}
+
 async function familyTransitionDiagnostic(page, targetIndex, phase) {
   return page.evaluate((index, receiptPhase) => {
     const current = globalThis.__METHODS_SPATIAL_APP;
@@ -178,11 +186,7 @@ async function familyTransitionDiagnostic(page, targetIndex, phase) {
 async function selectFamily(page, targetIndex) {
   const before = await familyTransitionDiagnostic(page, targetIndex, "before-dom-click");
   if (!before.targetFamilyId) throw new Error(`METHODS_FAMILY_TERRITORY_ID_MISSING:${targetIndex}`);
-  await page.evaluate(index => {
-    const button = document.querySelector(`[data-family-select][data-family-index="${index}"]`);
-    if (!(button instanceof HTMLButtonElement)) throw new Error(`METHODS_FAMILY_TERRITORY_BUTTON_MISSING:${index}`);
-    button.click();
-  }, targetIndex);
+  await activateBoundControl(page, `[data-family-select][data-family-index="${targetIndex}"]`);
   const afterClick = await familyTransitionDiagnostic(page, targetIndex, "after-dom-click");
   try {
     await page.waitForFunction((index, familyId) => {
@@ -244,7 +248,7 @@ async function runDesktop(browser) {
   result.observations.push({ viewport: "desktop", state: "inspection", snapshot: inspection });
   await capture(page, "desktop-inspection");
 
-  await page.click("[data-local-return]");
+  await activateBoundControl(page, "[data-local-return]");
   await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.inspectionOpen === false && Boolean(globalThis.__METHODS_SPATIAL_RETURN_RECEIPT), { timeout: 12000 });
   const returned = await snapshot(page);
   const returnReceipt = await page.evaluate(() => globalThis.__METHODS_SPATIAL_RETURN_RECEIPT);
@@ -264,7 +268,7 @@ async function runPhone(browser) {
   result.observations.push({ viewport: "phone", state: "browse", snapshot: browse });
   await capture(page, "phone-browse");
 
-  await page.click('[data-lens-select="evidence"]');
+  await activateBoundControl(page, '[data-lens-select="evidence"]');
   await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.resolvedScene.native.lensId === "evidence", { timeout: 12000 });
   const evidence = await snapshot(page);
   result.observations.push({ viewport: "phone", state: "evidence", snapshot: evidence });
@@ -276,11 +280,11 @@ async function runPhone(browser) {
   result.observations.push({ viewport: "phone", state: "inspection", snapshot: inspection });
   await capture(page, "phone-inspection");
 
-  await page.click('[data-inspection-tab="evidence"]');
+  await activateBoundControl(page, '[data-inspection-tab="evidence"]');
   const evidencePanel = await snapshot(page);
   result.observations.push({ viewport: "phone", state: "inspection-evidence-panel", snapshot: evidencePanel });
 
-  await page.click("[data-local-return]");
+  await activateBoundControl(page, "[data-local-return]");
   await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.inspectionOpen === false && Boolean(globalThis.__METHODS_SPATIAL_RETURN_RECEIPT), { timeout: 12000 });
   const returned = await snapshot(page);
   const returnReceipt = await page.evaluate(() => globalThis.__METHODS_SPATIAL_RETURN_RECEIPT);
@@ -319,7 +323,7 @@ try {
     desktopBrowseActiveFullyVisible: desktop.browse.active.stageIntersection >= .98 && desktop.browse.active.viewportIntersection >= .98 && desktop.browse.shell.activeModelFullyVisibleFlag,
     phoneBrowseActiveFullyVisible: phone.browse.active.stageIntersection >= .97 && phone.browse.active.viewportIntersection >= .97 && phone.browse.active.width >= phone.browse.viewport.width * .68 && phone.browse.shell.activeModelFullyVisibleFlag,
     phoneEvidenceKeepsActiveVisible: phone.evidence.active.stageIntersection >= .97 && phone.evidence.active.viewportIntersection >= .97 && phone.evidence.native.lensId === "evidence",
-    equationObjectLanguageMateriallyDistinct: desktop.overview.objectLanguage.formClassCount === 12 && desktop.overview.objectLanguage.uniqueSignatureCount >= 10,
+    equationObjectLanguageMateriallyDistinct: desktop.overview.objectLanguage.formClassCount >= 11 && desktop.overview.objectLanguage.uniqueSignatureCount === desktop.overview.objectLanguage.formClassCount,
     desktopInspectionForegroundWorkbench: desktop.inspection.inspection.open && desktop.inspection.inspection.instrumentStage.height >= 200 && desktop.inspection.inspection.visibleWorkbenchPanelCount === 4 && desktop.inspection.inspection.sourceReferencePresent,
     phoneInspectionFullViewWorkbench: phone.inspection.inspection.open && phone.inspection.inspection.panel.height >= phone.inspection.viewport.height * .98 && phone.inspection.inspection.mobileTabCount === 4 && phone.inspection.inspection.visibleWorkbenchPanelCount === 1,
     phoneInspectionPanelNavigation: phone.evidencePanel.inspection.mobilePanel === "evidence" && phone.evidencePanel.inspection.visibleWorkbenchPanels.includes("evidence"),

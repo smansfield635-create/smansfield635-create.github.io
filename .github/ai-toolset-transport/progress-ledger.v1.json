@@ -3,19 +3,69 @@
   "bootstrapId": "REPOSITORY_AUTHORIZED_TOOLSET_ROUTING_AND_AI_ROOM_EXECUTION_TRANSPORT_BOOTSTRAP_v1",
   "branch": "bootstrap/authorized-toolset-ai-room-transport-genesis-v1-001",
   "baseHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
-  "currentCheckpoint": "CP00_BOOTSTRAP_SEED_AND_SCOPE",
+  "currentCheckpoint": "CP01_SCHEMAS",
   "checkpoints": [
-    {"id":"CP00_BOOTSTRAP_SEED_AND_SCOPE","status":"PASS_CLOSED","evidenceCommits":["2887b0c2d47f8407a56f5fb8f5c816fc8b330d05","b9e2d997256c9e9e8f0f89809539f49ea028802a","fc7e49aa2ca92e9fbe6c5bdda6e4ae2e94a372eb"]},
-    {"id":"CP01_SCHEMAS","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP02_AUTHORIZED_TOOLSET_REGISTRY","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP03_TOOLSET_RESOLVER","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP04_EXECUTION_BACKEND_SELECTOR","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP05_FIXED_COMMAND_DISPATCHER","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP06_AI_ROOM_ISSUE_COMMENT_TRANSPORT","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP07_COMMAND_RECEIPT_RETURN","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP08_RECEIPT_VALIDATOR_AND_CONTINUATION_GATE","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP09_NEGATIVE_FIXTURES_AND_INDEPENDENT_CERTIFICATION","status":"NOT_STARTED","evidenceCommits":[]},
-    {"id":"CP10_BOOTSTRAP_AUTHORITY_TERMINATION","status":"NOT_STARTED","evidenceCommits":[]}
+    {
+      "id": "CP00_BOOTSTRAP_SEED_AND_SCOPE",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "2887b0c2d47f8407a56f5fb8f5c816fc8b330d05",
+        "b9e2d997256c9e9e8f0f89809539f49ea028802a",
+        "fc7e49aa2ca92e9fbe6c5bdda6e4ae2e94a372eb"
+      ]
+    },
+    {
+      "id": "CP01_SCHEMAS",
+      "status": "PASS_CLOSED",
+      "evidenceCommits": [
+        "3fc3ce8ae2baa8132ae80c91799f8d40308ae7c4"
+      ]
+    },
+    {
+      "id": "CP02_AUTHORIZED_TOOLSET_REGISTRY",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP03_TOOLSET_RESOLVER",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP04_EXECUTION_BACKEND_SELECTOR",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP05_FIXED_COMMAND_DISPATCHER",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP06_AI_ROOM_ISSUE_COMMENT_TRANSPORT",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP07_COMMAND_RECEIPT_RETURN",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP08_RECEIPT_VALIDATOR_AND_CONTINUATION_GATE",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP09_NEGATIVE_FIXTURES_AND_INDEPENDENT_CERTIFICATION",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    },
+    {
+      "id": "CP10_BOOTSTRAP_AUTHORITY_TERMINATION",
+      "status": "NOT_STARTED",
+      "evidenceCommits": []
+    }
   ],
   "productMutationPerformed": false,
   "roleActivationPerformed": false,

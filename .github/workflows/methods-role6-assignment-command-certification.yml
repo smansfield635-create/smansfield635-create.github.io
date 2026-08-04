@@ -1,0 +1,129 @@
+name: Methods Role 6 Assignment Command Certification
+
+on:
+  pull_request:
+    branches:
+      - assignment/methods-role6-first-atomic-v1-001
+    paths:
+      - '.github/workflows/methods-role6-assignment-command-certification.yml'
+      - 'verification/methods-role6-first-atomic-assignment-v1/role6-assignment-command.v1.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+env:
+  TOOLING_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  SUBJECT_HEAD: ce40519190a9048c1e0cef682108c34b0a7f8055
+  COMMAND: verification/methods-role6-first-atomic-assignment-v1/role6-assignment-command.v1.mjs
+
+jobs:
+  assignment-command-builder:
+    name: assignment-command-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact tooling head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TOOLING_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Execute exact assignment command wrapper
+        env:
+          HOLDER: GITHUB_ACTIONS_ROLE6_ASSIGNMENT_COMMAND_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/assignment-command-builder"
+          node "$COMMAND" \
+            --root . \
+            --expected-tooling-head "$TOOLING_HEAD" \
+            --subject-assignment-head "$SUBJECT_HEAD" \
+            --execution-holder "$HOLDER" \
+            --output "$RUNNER_TEMP/assignment-command-builder/command-payload-receipt.json"
+          RECEIPT="$RUNNER_TEMP/assignment-command-builder/command-payload-receipt.json" node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.env.RECEIPT,'utf8'));
+          if(r.result!=='PASS_CLOSED_ROLE_6_ASSIGNMENT_VALIDATED_AND_ACTIVE')throw new Error('ASSIGNMENT_COMMAND_NOT_PASS');
+          if(!r.role6AssignmentValidated||!r.assignmentAuthorityActive||!r.operationScopedAuthority)throw new Error('ASSIGNMENT_STATE_NOT_ACTIVE');
+          if(r.generalRoleAuthority||r.assignmentPerformedByThisCommand||r.substantiveAuditOutputsCreated||r.productMutationPerformed||r.mergePerformed||r.repairPerformed||r.privateStateDependency)throw new Error('ASSIGNMENT_COMMAND_BOUNDARY_FAILURE');
+          if(r.exactChangedPaths.length!==5||r.outputBlobMap.length!==5)throw new Error('ASSIGNMENT_PATH_OR_BLOB_MAP_FAILURE');
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload Builder command evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-assignment-command-builder-v1
+          path: ${{ runner.temp }}/assignment-command-builder
+          if-no-files-found: error
+          retention-days: 30
+
+  fresh-assignment-command-verifier:
+    name: fresh-assignment-command-verifier
+    needs: assignment-command-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact tooling head independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TOOLING_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download authentic Builder command evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-assignment-command-builder-v1
+          path: ${{ runner.temp }}/authentic-builder
+
+      - name: Reproduce command independently and compare
+        env:
+          HOLDER: GITHUB_ACTIONS_ROLE6_ASSIGNMENT_COMMAND_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/assignment-command-verifier"
+          node "$COMMAND" \
+            --root . \
+            --expected-tooling-head "$TOOLING_HEAD" \
+            --subject-assignment-head "$SUBJECT_HEAD" \
+            --execution-holder "$HOLDER" \
+            --output "$RUNNER_TEMP/assignment-command-verifier/command-payload-receipt.json"
+          B="$(find "$RUNNER_TEMP/authentic-builder" -name command-payload-receipt.json -type f -print -quit)"
+          V="$RUNNER_TEMP/assignment-command-verifier/command-payload-receipt.json"
+          test -n "$B"
+          BUILDER="$B" VERIFIER="$V" node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const stable=v=>Array.isArray(v)?v.map(stable):(v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v);
+          const b=JSON.parse(fs.readFileSync(process.env.BUILDER,'utf8'));
+          const v=JSON.parse(fs.readFileSync(process.env.VERIFIER,'utf8'));
+          if(b.executionHolder===v.executionHolder)throw new Error('COMMAND_HOLDER_COLLISION');
+          delete b.executionHolder;delete v.executionHolder;
+          if(JSON.stringify(stable(b))!==JSON.stringify(stable(v)))throw new Error('COMMAND_RECEIPT_REPRODUCTION_MISMATCH');
+          const receipt={schema:'METHODS_ROLE_6_ASSIGNMENT_COMMAND_CERTIFICATION_RECEIPT_v1',result:'PASS_CLOSED_FRESH_COMMAND_REPRODUCTION',toolingHead:process.env.TOOLING_HEAD,subjectAssignmentHead:process.env.SUBJECT_HEAD,builderHolder:JSON.parse(fs.readFileSync(process.env.BUILDER,'utf8')).executionHolder,verifierHolder:JSON.parse(fs.readFileSync(process.env.VERIFIER,'utf8')).executionHolder,distinctHolders:true,assignmentId:v.assignmentId,authorizationSha256:v.authorizationSha256,assignmentAuthorityActive:true,operationScopedAuthority:true,generalRoleAuthority:false,repairPerformed:false,privateStateDependency:false};
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/assignment-command-verifier/command-certification-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload fresh command certification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-assignment-command-verifier-v1
+          path: ${{ runner.temp }}/assignment-command-verifier
+          if-no-files-found: error
+          retention-days: 30

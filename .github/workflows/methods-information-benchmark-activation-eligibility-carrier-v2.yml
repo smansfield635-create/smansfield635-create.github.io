@@ -1,0 +1,177 @@
+name: Methods Information Benchmark Activation Eligibility Carrier v2
+
+on:
+  push:
+    branches:
+      - control/methods-information-benchmark-activation-eligibility-v1-001
+    paths:
+      - verification/methods-information-benchmark-activation-eligibility-v1/user-acceptance.receipt.v1.json
+      - .github/workflows/methods-information-benchmark-activation-eligibility-carrier-v2.yml
+  pull_request:
+    branches:
+      - agent/methods-information-benchmark-pre-role-bootstrap-v1
+    paths:
+      - verification/methods-information-benchmark-activation-eligibility-v1/user-acceptance.receipt.v1.json
+      - .github/workflows/methods-information-benchmark-activation-eligibility-carrier-v2.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  evaluate:
+    name: activation-eligibility
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      EXACT_CANDIDATE_HEAD: 3c303a49b4e90cf8672cd76f9f2c31041c2e56d1
+      EXACT_BASE_HEAD: b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f
+      BOOTSTRAP_FINGERPRINT: 86597f327a3ad0b49a1f4580ed25f07a8032197f470490bcd060ed15d6e2cb54
+      VERIFIER_WORKFLOW_RUN_ID: "30926342886"
+      VERIFIER_ARTIFACT_ID: "8899242983"
+      VERIFIER_ARTIFACT_NAME: methods-information-benchmark-independent-bootstrap-verifier-receipt-30926342886
+      VERIFIER_ARTIFACT_SIZE_BYTES: "2655"
+      VERIFIER_ARTIFACT_SHA256: f0cc59f5fc7209ab538316bfd28d8983d9b22e91d1c1f1f9dd05e4626759ed3c
+      ACCEPTANCE_RECEIPT_COMMIT: 3cb3035b5237d6eb835d1b16a0fb5a94ccc0d9cb
+      ACCEPTANCE_RECEIPT_PATH: verification/methods-information-benchmark-activation-eligibility-v1/user-acceptance.receipt.v1.json
+      ACCEPTANCE_RECEIPT_GIT_BLOB: e58ffcc0231e7c5e656183e626c959852d7a80dc
+      CARRIER_DEFINITION_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Check out exact verified candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: 3c303a49b4e90cf8672cd76f9f2c31041c2e56d1
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up canonical execution class
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Authenticate evidence and run eligibility gate
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_CANDIDATE_HEAD"
+          git merge-base --is-ancestor "$EXACT_BASE_HEAD" "$EXACT_CANDIDATE_HEAD"
+          test -z "$(git status --porcelain)"
+          test "$(node -p 'process.versions.node.split(`.`)[0]')" = "22"
+          test "$(node -p 'process.platform')" = "linux"
+          test "$(node -p 'process.arch')" = "x64"
+          printf '%s\n' "$EXACT_CANDIDATE_HEAD" > "$RUNNER_TEMP/executed-head.txt"
+
+          gh api -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/contents/${ACCEPTANCE_RECEIPT_PATH}?ref=${ACCEPTANCE_RECEIPT_COMMIT}" \
+            > "$RUNNER_TEMP/acceptance-metadata.json"
+
+          gh api -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts/${VERIFIER_ARTIFACT_ID}" \
+            > "$RUNNER_TEMP/verifier-artifact-metadata.json"
+
+          gh api -H "Accept: application/vnd.github+json" \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts/${VERIFIER_ARTIFACT_ID}/zip" \
+            > "$RUNNER_TEMP/verifier-artifact.zip"
+          printf '%s  %s\n' "$VERIFIER_ARTIFACT_SHA256" "$RUNNER_TEMP/verifier-artifact.zip" | sha256sum --check -
+          mkdir -p "$RUNNER_TEMP/verifier-evidence"
+          unzip -q "$RUNNER_TEMP/verifier-artifact.zip" -d "$RUNNER_TEMP/verifier-evidence"
+
+          python - <<'PY'
+          import base64, hashlib, json, os
+          from pathlib import Path
+          t=Path(os.environ['RUNNER_TEMP'])
+          a=json.loads((t/'acceptance-metadata.json').read_text())
+          assert a['path']==os.environ['ACCEPTANCE_RECEIPT_PATH']
+          assert a['sha']==os.environ['ACCEPTANCE_RECEIPT_GIT_BLOB']
+          b=base64.b64decode(a['content'])
+          (t/'user-acceptance.json').write_bytes(b)
+          r=json.loads(b)
+          assert r['schema']=='METHODS_INFORMATION_BENCHMARK_USER_ACCEPTANCE_RECEIPT_v1'
+          assert r['originAuthority']=='USER' and r['accepted'] is True and r['decisionText']=='Accept.'
+          assert r['candidateHead']==os.environ['EXACT_CANDIDATE_HEAD']
+          assert r['bootstrapFingerprint']==os.environ['BOOTSTRAP_FINGERPRINT']
+          assert str(r['verifierArtifactId'])==os.environ['VERIFIER_ARTIFACT_ID']
+          assert r['verifierArtifactSha256']==os.environ['VERIFIER_ARTIFACT_SHA256']
+          assert 'AUTOMATICALLY_ASSIGN_ROLE_6' in r['notAuthorized']
+          (t/'user-acceptance-sha256.txt').write_text(hashlib.sha256(b).hexdigest()+'\n')
+
+          m=json.loads((t/'verifier-artifact-metadata.json').read_text())
+          assert str(m['id'])==os.environ['VERIFIER_ARTIFACT_ID']
+          assert m['name']==os.environ['VERIFIER_ARTIFACT_NAME']
+          assert str(m['size_in_bytes'])==os.environ['VERIFIER_ARTIFACT_SIZE_BYTES']
+          assert m['expired'] is False
+          assert m.get('digest')==f"sha256:{os.environ['VERIFIER_ARTIFACT_SHA256']}"
+          assert str((m.get('workflow_run') or {}).get('id'))==os.environ['VERIFIER_WORKFLOW_RUN_ID']
+
+          e=t/'verifier-evidence'
+          v=json.loads((e/'verification.json').read_text())
+          c=json.loads((e/'carrier-execution-receipt.json').read_text())
+          assert v['schema']=='METHODS_INFORMATION_BENCHMARK_BOOTSTRAP_VERIFICATION_RECEIPT_v2'
+          assert v['candidateHead']==os.environ['EXACT_CANDIDATE_HEAD']
+          assert v['baseHead']==os.environ['EXACT_BASE_HEAD']
+          assert v['builderFingerprint']==v['verifierFingerprint']==os.environ['BOOTSTRAP_FINGERPRINT']
+          assert v['fingerprintMatch'] and v['distinctExecutionHolders'] and v['originSeedIdentityMatch'] and v['changedPathBlobMapMatch']
+          assert v['pass'] and not v['repairPerformed'] and not v['privateStateDependency']
+          assert c['canonicalVerifierPass'] and not c['candidateMutationPerformed'] and not c['permanentRoleAuthorityActivated'] and not c['mergePerformed']
+          PY
+
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs \
+            role-system-activation-gate \
+            --receipt "$RUNNER_TEMP/verifier-evidence/verification.json" \
+            --acceptance "$RUNNER_TEMP/user-acceptance.json" \
+            --output "$RUNNER_TEMP/activation-eligibility.json"
+
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          t=Path(os.environ['RUNNER_TEMP'])
+          g=json.loads((t/'activation-eligibility.json').read_text())
+          assert g['schema']=='METHODS_INFORMATION_BENCHMARK_ROLE_SYSTEM_ACTIVATION_GATE_RECEIPT_v2'
+          assert g['gateResult']=='ELIGIBLE_FOR_SEPARATE_FIRST_ASSIGNMENT_OPERATION'
+          assert g['firstRoleCandidate']=='ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY'
+          assert g['automaticActivationPerformed'] is False
+          assert g['permanentRoleAuthorityActivated'] is False
+          c={
+            'schema':'METHODS_INFORMATION_BENCHMARK_ACTIVATION_ELIGIBILITY_CARRIER_RECEIPT_v1',
+            'carrierWorkflowRunId':os.environ['GITHUB_RUN_ID'],
+            'carrierWorkflowRunAttempt':os.environ['GITHUB_RUN_ATTEMPT'],
+            'carrierDefinitionHead':os.environ['CARRIER_DEFINITION_HEAD'],
+            'executedCandidateHead':os.environ['EXACT_CANDIDATE_HEAD'],
+            'userAcceptanceCommit':os.environ['ACCEPTANCE_RECEIPT_COMMIT'],
+            'userAcceptanceGitBlob':os.environ['ACCEPTANCE_RECEIPT_GIT_BLOB'],
+            'verifierArtifactId':int(os.environ['VERIFIER_ARTIFACT_ID']),
+            'verifierArtifactSha256':os.environ['VERIFIER_ARTIFACT_SHA256'],
+            'gateResult':g['gateResult'],
+            'firstRoleCandidate':g['firstRoleCandidate'],
+            'automaticActivationPerformed':False,
+            'permanentRoleAuthorityActivated':False,
+            'candidateMutationPerformed':False,
+            'roleAssignmentPerformed':False,
+            'mergePerformed':False,
+          }
+          (t/'activation-eligibility-carrier-receipt.json').write_text(json.dumps(c,indent=2)+'\n')
+          PY
+
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_CANDIDATE_HEAD"
+          test -z "$(git status --porcelain)"
+          git diff --exit-code
+          git diff --cached --exit-code
+
+      - name: Upload activation eligibility evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-information-benchmark-activation-eligibility-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/user-acceptance.json
+            ${{ runner.temp }}/user-acceptance-sha256.txt
+            ${{ runner.temp }}/activation-eligibility.json
+            ${{ runner.temp }}/activation-eligibility-carrier-receipt.json
+            ${{ runner.temp }}/verifier-artifact-metadata.json
+            ${{ runner.temp }}/executed-head.txt
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,13 @@
+{
+  "schema": "H_EARTH_R06_C10_CANDIDATE_002_EVALUATOR_DIAGNOSTIC_RETURN_v1",
+  "candidateHead": "0064e438303e10bcdbc389ce900becc3cddf16c4",
+  "candidateParent": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "workflowRunId": "30928301810",
+  "workflowRunAttempt": "1",
+  "evaluatorExitCode": 1,
+  "rawReceiptSchema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATOR_FAILURE_v1",
+  "rawReceiptError": "Cannot read properties of undefined (reading 'length')",
+  "rawReceiptSha256": "f15d66648d2607e80fb973baef87f0fe6add85b18c94b39f77163030a0d0d554",
+  "privateStateUsed": false,
+  "manualMetadataReconstructionUsed": false
+}

@@ -1,0 +1,146 @@
+name: Methods Role 6 Developmental Baseline Packet Successor
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/methods-information-benchmark-role6-developmental-baseline-successor.yml'
+      - 'control-plane/methods-information-benchmark/role6-developmental-baseline-successor/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  successor-builder:
+    name: developmental-baseline-successor-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact successor carrier head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate successor source syntax
+        run: |
+          set -euo pipefail
+          node --check control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-builder.mjs
+          node --check control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-verifier.mjs
+
+      - name: Construct exact developmental baseline binding without assignment
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          SUCCESSOR_BUILDER_HOLDER: GITHUB_ACTIONS_ROLE6_DEVELOPMENTAL_BASELINE_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-builder.mjs \
+            --expected-head "$EXPECTED_HEAD" \
+            --holder "$SUCCESSOR_BUILDER_HOLDER" \
+            --output-dir "$RUNNER_TEMP/developmental-baseline-successor-builder"
+          python - <<'PY'
+          import json, os
+          p=os.path.join(os.environ['RUNNER_TEMP'],'developmental-baseline-successor-builder','successor-builder-receipt.json')
+          r=json.load(open(p))
+          assert r['pass'] is True
+          assert r['requiredSubstantiveOutputCount']==27
+          assert r['requiredReturnArtifactCount']==2
+          assert r['roleAuthorityAcquired'] is False
+          assert r['assignmentPerformed'] is False
+          assert r['assignmentAuthorizationIssued'] is False
+          assert r['substantiveOperationExecuted'] is False
+          assert r['repairPerformed'] is False
+          assert r['privateStateDependency'] is False
+          assert r['mergePerformed'] is False
+          PY
+
+      - name: Upload successor Builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-developmental-baseline-successor-builder-evidence
+          path: ${{ runner.temp }}/developmental-baseline-successor-builder
+          if-no-files-found: error
+          retention-days: 30
+
+  fresh-successor-verifier:
+    name: fresh-developmental-baseline-successor-verifier
+    needs: successor-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact successor carrier head independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert clean exact-head verifier checkout
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          git merge-base --is-ancestor bbc510bb1276b37dde9495b08d72a0424b669b62 "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain)"
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download authentic Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-developmental-baseline-successor-builder-evidence
+          path: ${{ runner.temp }}/authentic-successor-builder-evidence
+
+      - name: Independently reproduce baseline binding and packet closure
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          SUCCESSOR_VERIFIER_HOLDER: GITHUB_ACTIONS_ROLE6_DEVELOPMENTAL_BASELINE_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          BUILDER_RECEIPT="$(find "$RUNNER_TEMP/authentic-successor-builder-evidence" -name successor-builder-receipt.json -type f -print -quit)"
+          test -n "$BUILDER_RECEIPT"
+          mkdir -p "$RUNNER_TEMP/developmental-baseline-successor-verifier"
+          node control-plane/methods-information-benchmark/role6-developmental-baseline-successor/successor-verifier.mjs \
+            --expected-head "$EXPECTED_HEAD" \
+            --builder-receipt "$BUILDER_RECEIPT" \
+            --holder "$SUCCESSOR_VERIFIER_HOLDER" \
+            --output "$RUNNER_TEMP/developmental-baseline-successor-verifier/successor-verifier-receipt.json"
+          python - <<'PY'
+          import json, os
+          p=os.path.join(os.environ['RUNNER_TEMP'],'developmental-baseline-successor-verifier','successor-verifier-receipt.json')
+          r=json.load(open(p))
+          assert r['pass'] is True
+          assert r['distinctExecutionHolders'] is True
+          assert r['builderVerifierPacketHashMatch'] is True
+          assert r['builderVerifierBaselinePathMapMatch'] is True
+          assert r['builderVerifierDependencyClosureMatch'] is True
+          assert r['requiredSubstantiveOutputCount']==27
+          assert r['requiredReturnArtifactCount']==2
+          assert r['roleAuthorityAcquired'] is False
+          assert r['assignmentPerformed'] is False
+          assert r['assignmentAuthorizationIssued'] is False
+          assert r['substantiveOperationExecuted'] is False
+          assert r['repairPerformed'] is False
+          assert r['privateStateDependency'] is False
+          assert r['mergePerformed'] is False
+          assert r['nextAuthorizedStage']=='SEPARATE_USER_ATOMIC_ASSIGNMENT_AUTHORIZATION'
+          PY
+          test -z "$(git status --porcelain)"
+
+      - name: Upload fresh successor Verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-developmental-baseline-successor-verifier-evidence
+          path: ${{ runner.temp }}/developmental-baseline-successor-verifier
+          if-no-files-found: error
+          retention-days: 30

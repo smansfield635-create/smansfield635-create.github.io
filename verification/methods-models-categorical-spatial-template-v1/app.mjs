@@ -43,6 +43,66 @@ function nativeSignature(detail) {
   return [detail?.z?.familyId, detail?.x?.modelId, detail?.y?.lens, detail?.display].join("|");
 }
 
+function freezeFocusTarget(kind, value) {
+  return Object.freeze({ kind, value: String(value || "") });
+}
+
+function focusIdentityForElement(element) {
+  if (!element || element === document.body || element === document.documentElement) {
+    return freezeFocusTarget("body", "BODY");
+  }
+  if (element.id) return freezeFocusTarget("id", element.id);
+  if (element.dataset?.control) return freezeFocusTarget("control", element.dataset.control);
+  if (element.matches?.(".spatial-model-node[data-model-id]")) {
+    return freezeFocusTarget("model", element.dataset.modelId);
+  }
+  return freezeFocusTarget("tag", element.tagName || "UNKNOWN");
+}
+
+function captureReturnFocusTarget() {
+  const captured = focusIdentityForElement(document.activeElement);
+  if (captured.kind !== "body" && captured.kind !== "tag") return captured;
+  const activeModelId = currentResolved?.activeDescriptor?.modelId || nativeState?.x?.modelId || "";
+  return freezeFocusTarget("model", activeModelId);
+}
+
+function resolveFocusTarget(target) {
+  if (!target?.kind || !target?.value) return null;
+  if (target.kind === "id") return document.getElementById(target.value);
+  if (target.kind === "control") {
+    return document.querySelector(`[data-control="${CSS.escape(target.value)}"]`);
+  }
+  if (target.kind === "model") {
+    return document.querySelector(`.spatial-model-node[data-model-id="${CSS.escape(target.value)}"]`);
+  }
+  if (target.kind === "body") return document.body;
+  return null;
+}
+
+function focusTargetsEqual(left, right) {
+  return left?.kind === right?.kind && left?.value === right?.value;
+}
+
+function vectorsEqual(left, right) {
+  return Array.isArray(left) && Array.isArray(right) &&
+    left.length === right.length &&
+    left.every((value, index) => value === right[index]);
+}
+
+function recordsEqual(left, right) {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function pointsEqual(left, right, tolerance = 1) {
+  return Math.abs(Number(left?.x || 0) - Number(right?.x || 0)) <= tolerance &&
+    Math.abs(Number(left?.y || 0) - Number(right?.y || 0)) <= tolerance;
+}
+
+function viewportsEqual(left, right) {
+  return Number(left?.width) === Number(right?.width) &&
+    Number(left?.height) === Number(right?.height);
+}
+
 function updateCameraControls() {
   cameraButtons.forEach(button => {
     const active = button.dataset.cameraMode === cameraMode;
@@ -97,12 +157,11 @@ function closeInspectionView() {
 }
 
 function captureSnapshot() {
-  const activeElement = document.activeElement;
   returnSnapshot = createReturnSnapshot({
     resolvedScene: currentResolved,
     cameraMode,
     scrollPosition: Object.freeze({ x: scrollX, y: scrollY }),
-    focusTarget: activeElement?.id || activeElement?.dataset?.control || activeElement?.tagName || "BODY",
+    focusTarget: captureReturnFocusTarget(),
     inputMode,
     viewport: viewport()
   });
@@ -111,7 +170,12 @@ function captureSnapshot() {
 }
 
 function emitReturnReceipt(reached) {
-  const currentFocus = document.activeElement?.id || document.activeElement?.dataset?.control || document.activeElement?.tagName || "BODY";
+  const reachedFocusTarget = focusIdentityForElement(document.activeElement);
+  const reachedScrollPosition = Object.freeze({ x: scrollX, y: scrollY });
+  const reachedViewport = viewport();
+  const reachedDetailClasses = Object.freeze(Object.fromEntries(
+    reached.nodes.filter(node => node.visible).map(node => [node.modelId, node.detailClass])
+  ));
   const receipt = Object.freeze({
     contract: "METHODS_MODELS_RENDERER_EXACT_RETURN_RECEIPT_v1",
     snapshot: returnSnapshot,
@@ -124,15 +188,29 @@ function emitReturnReceipt(reached) {
       cameraTarget: Object.freeze([...reached.camera.target]),
       centeredRenderTarget: reached.activeDescriptor.modelId,
       visibleCluster: Object.freeze([...reached.visibleCluster]),
-      scrollPosition: Object.freeze({ x: scrollX, y: scrollY }),
-      focusTarget: currentFocus,
+      detailClasses: reachedDetailClasses,
+      scrollPosition: reachedScrollPosition,
+      focusTarget: reachedFocusTarget,
       inputMode,
-      viewportClass: reached.viewportClass
+      viewportClass: reached.viewportClass,
+      viewport: reachedViewport
     }),
-    exactNativeReturn: reached.native.familyId === returnSnapshot.nativeFamily && reached.native.modelId === returnSnapshot.nativeModel && reached.native.lensId === returnSnapshot.nativeLens,
+    exactNativeReturn:
+      reached.native.familyId === returnSnapshot.nativeFamily &&
+      reached.native.modelId === returnSnapshot.nativeModel &&
+      reached.native.lensId === returnSnapshot.nativeLens &&
+      reached.native.displayState === returnSnapshot.displayState,
     exactCameraRoleReturn: cameraMode === returnSnapshot.requestedCameraMode,
+    exactCameraPresetReturn: reached.camera.preset === returnSnapshot.cameraPreset,
+    exactCameraTargetReturn: vectorsEqual(reached.camera.target, returnSnapshot.cameraTarget),
     exactCenteredTargetReturn: reached.activeDescriptor.modelId === returnSnapshot.centeredRenderTarget,
-    exactVisibleClusterReturn: JSON.stringify(reached.visibleCluster) === JSON.stringify(returnSnapshot.visibleCluster),
+    exactVisibleClusterReturn: recordsEqual(reached.visibleCluster, returnSnapshot.visibleCluster),
+    exactDetailClassesReturn: recordsEqual(reachedDetailClasses, returnSnapshot.detailClasses),
+    exactScrollPositionReturn: pointsEqual(reachedScrollPosition, returnSnapshot.scrollPosition),
+    exactFocusTargetReturn: focusTargetsEqual(reachedFocusTarget, returnSnapshot.focusTarget),
+    exactInputModeReturn: inputMode === returnSnapshot.inputMode,
+    exactViewportClassReturn: reached.viewportClass === returnSnapshot.viewportClass,
+    exactViewportDimensionsReturn: viewportsEqual(reachedViewport, returnSnapshot.viewport),
     productAcceptanceGranted: false
   });
   globalThis.__METHODS_SPATIAL_RETURN_RECEIPT = receipt;
@@ -156,7 +234,7 @@ async function handleInspectionChange(event) {
   updateCameraControls();
   await scheduleRender("inspection-exact-return");
   scrollTo({ left: returnSnapshot.scrollPosition.x, top: returnSnapshot.scrollPosition.y, behavior: "auto" });
-  const focusCandidate = document.getElementById(returnSnapshot.focusTarget) || document.querySelector(`[data-control="${CSS.escape(returnSnapshot.focusTarget)}"]`) || renderer.activeNode();
+  const focusCandidate = resolveFocusTarget(returnSnapshot.focusTarget) || renderer.activeNode();
   focusCandidate?.focus({ preventScroll: true });
   emitReturnReceipt(currentResolved);
   returnSnapshot = null;

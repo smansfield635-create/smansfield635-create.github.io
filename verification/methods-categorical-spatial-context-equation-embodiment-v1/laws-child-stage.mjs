@@ -72,18 +72,35 @@ function buildTerritoryIndex() {
   territoryIndex.replaceChildren(fragment);
 }
 
-function selectFamilyIndex(targetIndex) {
+async function waitForFamilyIndex(targetIndex, timeout = 12000) {
+  const started = performance.now();
+  while (app()?.resolvedScene?.native?.familyIndex !== targetIndex) {
+    if (performance.now() - started > timeout) throw new Error(`METHODS_FAMILY_INDEX_TRANSITION_TIMEOUT:${targetIndex}`);
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+  await app().whenStable();
+}
+
+async function selectFamilyIndex(targetIndex) {
   const current = app();
   const from = current?.resolvedScene?.native?.familyIndex;
   const count = current?.registry?.familyCount || 4;
-  if (!current || !Number.isInteger(from) || from === targetIndex) return;
+  if (!current || !Number.isInteger(from) || !Number.isInteger(targetIndex)) return;
+  if (from === targetIndex) {
+    await current.whenStable();
+    return;
+  }
   const forward = (targetIndex - from + count) % count;
   const backward = (from - targetIndex + count) % count;
   const direction = forward <= backward ? 1 : -1;
   const steps = Math.min(forward, backward);
   for (let step = 0; step < steps; step += 1) {
-    setTimeout(() => current.moveFamily(direction), step * 220);
+    const activeIndex = current.resolvedScene.native.familyIndex;
+    const expectedIndex = (activeIndex + direction + count) % count;
+    current.moveFamily(direction);
+    await waitForFamilyIndex(expectedIndex);
   }
+  synchronize();
 }
 
 function updateTerritoryIndex() {

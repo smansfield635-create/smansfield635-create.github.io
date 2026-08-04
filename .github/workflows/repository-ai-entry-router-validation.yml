@@ -1,0 +1,69 @@
+name: Repository AI Entry Router Validation
+
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/**'
+      - 'tools/repository-ai-entry-router.mjs'
+      - '.github/workflows/repository-ai-entry-router-validation.yml'
+  push:
+    paths:
+      - 'AGENTS.md'
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/**'
+      - 'tools/repository-ai-entry-router.mjs'
+      - '.github/workflows/repository-ai-entry-router-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-router:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact workflow head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run repository AI router self-test
+        run: |
+          node tools/repository-ai-entry-router.mjs \
+            --self-test \
+            --output /tmp/repository-ai-entry-router-self-test.json
+
+      - name: Exercise H-Earth registered route
+        run: |
+          node tools/repository-ai-entry-router.mjs \
+            --path h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
+            --task "Workflow registered-route validation" \
+            --output /tmp/repository-ai-entry-router-h-earth-route.json
+
+      - name: Exercise unregistered mutation guard
+        shell: bash
+        run: |
+          set +e
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path future-project/example.txt \
+            --task "Workflow unregistered-mutation validation" \
+            --output /tmp/repository-ai-entry-router-unregistered-mutation.json
+          status=$?
+          set -e
+          test "$status" -eq 1
+          grep -q '"disposition": "BLOCK"' /tmp/repository-ai-entry-router-unregistered-mutation.json
+
+      - name: Upload router validation receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-ai-entry-router-validation-receipts
+          path: |
+            /tmp/repository-ai-entry-router-self-test.json
+            /tmp/repository-ai-entry-router-h-earth-route.json
+            /tmp/repository-ai-entry-router-unregistered-mutation.json
+          if-no-files-found: error
+          retention-days: 30

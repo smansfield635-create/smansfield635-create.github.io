@@ -14,16 +14,32 @@ Authority remains separated:
 
 The expression slots are deliberately nonblocking. Landmark identity is unresolved; material and atmosphere use neutral structural profiles.
 
-Run the bounded validation from repository root:
+## Start here
+
+The complete operator map, local commands, browser controls, automation API, evidence locations, and tool responsibilities are documented in:
+
+```text
+verification/methods-models-categorical-spatial-template-v1/OPERATOR_GUIDE.md
+```
+
+Run bounded validation from the repository root:
 
 ```bash
 node verification/methods-models-categorical-spatial-template-v1/validate.mjs
 ```
 
-Serve the repository and open:
+Serve the repository:
 
-```text
-/verification/methods-models-categorical-spatial-template-v1/
+```bash
+python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-The complete certification instrument is intentionally not invoked by this operation.
+Then open:
+
+```text
+http://127.0.0.1:4173/verification/methods-models-categorical-spatial-template-v1/
+```
+
+The exact-return receipt now verifies native state, display state, camera role, camera preset, camera target, centered target, visible cluster, detail allocation, scroll position, focus target, input mode, viewport class, and viewport dimensions.
+
+The complete Methods certification instrument is intentionally not invoked by this operation.

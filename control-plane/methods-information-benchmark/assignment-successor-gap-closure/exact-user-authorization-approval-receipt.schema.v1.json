@@ -1,0 +1,42 @@
+{
+  "$id": "METHODS_INFORMATION_BENCHMARK_EXACT_USER_AUTHORIZATION_APPROVAL_RECEIPT_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approvalId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "approved": {
+      "const": true
+    },
+    "approvedAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "authorizationId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "authorizationSha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "originAuthority": {
+      "const": "USER"
+    },
+    "schema": {
+      "const": "METHODS_INFORMATION_BENCHMARK_EXACT_USER_AUTHORIZATION_APPROVAL_RECEIPT_v1"
+    }
+  },
+  "required": [
+    "schema",
+    "approvalId",
+    "originAuthority",
+    "approved",
+    "authorizationId",
+    "authorizationSha256",
+    "approvedAt"
+  ],
+  "type": "object"
+}

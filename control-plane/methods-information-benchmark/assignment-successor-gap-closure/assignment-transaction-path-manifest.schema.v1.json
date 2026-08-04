@@ -1,0 +1,34 @@
+{
+  "$id": "METHODS_INFORMATION_BENCHMARK_ASSIGNMENT_TRANSACTION_PATH_MANIFEST_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assignmentChangedPaths": {
+      "const": [
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-operation-scoped-activation.record.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/first-assignment-ledger.successor.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/atomic-authorization-consumption.record.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-admission.receipt.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/assignment-transaction.evidence.v1.json"
+      ]
+    },
+    "schema": {
+      "const": "METHODS_INFORMATION_BENCHMARK_ASSIGNMENT_TRANSACTION_PATH_MANIFEST_v1"
+    },
+    "transactionOutputIds": {
+      "const": [
+        "ROLE_6_OPERATION_SCOPED_ACTIVATION_RECORD",
+        "FIRST_ASSIGNMENT_LEDGER_SUCCESSOR",
+        "ATOMIC_AUTHORIZATION_CONSUMPTION_RECORD",
+        "ROLE_6_ADMISSION_RECEIPT",
+        "ASSIGNMENT_TRANSACTION_EVIDENCE"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "assignmentChangedPaths",
+    "transactionOutputIds"
+  ],
+  "type": "object"
+}

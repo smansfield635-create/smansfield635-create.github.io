@@ -1,0 +1,190 @@
+{
+  "$id": "METHODS_INFORMATION_BENCHMARK_ATOMIC_ASSIGNMENT_AUTHORIZATION_SCHEMA_v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activationEligibilityReceiptIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactId": {
+          "const": 8899858820
+        },
+        "artifactSha256": {
+          "const": "aadf696bcfff3fb79248214d0e7aab25998fa7dd180e18874645bed3e23fbd7a"
+        },
+        "canonicalSha256": {
+          "const": "58e3efdae0f78dbe91a8881e583d57dc2460117db8ac13a9ae77e019642856c4"
+        }
+      },
+      "required": [
+        "canonicalSha256",
+        "artifactId",
+        "artifactSha256"
+      ],
+      "type": "object"
+    },
+    "assignmentInfrastructureFingerprint": {
+      "const": "9386865e9ccb553a42bc6e3f30a4955517c8332be37bdd5011660e08d052191b"
+    },
+    "authorizationId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "authorizationNonce": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "authorizationSchemaId": {
+      "const": "METHODS_INFORMATION_BENCHMARK_ATOMIC_ASSIGNMENT_AUTHORIZATION_SCHEMA_v2"
+    },
+    "authorized": {
+      "const": true
+    },
+    "authorizedAssignmentChangedPathSet": {
+      "const": [
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-operation-scoped-activation.record.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/first-assignment-ledger.successor.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/atomic-authorization-consumption.record.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-admission.receipt.v1.json",
+        "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/assignment-transaction.evidence.v1.json"
+      ]
+    },
+    "authorizedHolderExecutionId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "canonicalGenesisHead": {
+      "const": "3c303a49b4e90cf8672cd76f9f2c31041c2e56d1"
+    },
+    "canonicalOperationId": {
+      "const": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1"
+    },
+    "exactAssignmentInfrastructureHead": {
+      "const": "0d601cb71dac863130b934f387425085fdf54e52"
+    },
+    "exactPacketSuccessorHead": {
+      "const": "fa7e74403ff43e017bccef7462f4e001918cf0a3"
+    },
+    "expectedInitialLedgerHead": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "expectedOperationState": {
+      "const": "UNASSIGNED"
+    },
+    "expectedRoleState": {
+      "const": "INACTIVE"
+    },
+    "expiresAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "genesisFingerprint": {
+      "const": "86597f327a3ad0b49a1f4580ed25f07a8032197f470490bcd060ed15d6e2cb54"
+    },
+    "issuedAt": {
+      "format": "date-time",
+      "type": "string"
+    },
+    "operationPacketCanonicalSha256": {
+      "const": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc"
+    },
+    "operationPacketPath": {
+      "const": "control-plane/methods-information-benchmark/role6-developmental-baseline-successor/methods-role6-developmental-baseline-successor.packet.v1.json"
+    },
+    "operationPacketSchema": {
+      "const": "METHODS_INFORMATION_BENCHMARK_BOUNDED_OPERATION_PACKET_SUCCESSOR_v1"
+    },
+    "originAuthority": {
+      "const": "USER"
+    },
+    "packetVerificationReceiptIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "artifactId": {
+          "const": 8905112612
+        },
+        "artifactSha256": {
+          "const": "de51f942cae1514e0124f43c34ef4dc801d9c355849cfcb7a20bff0a65c8efc8"
+        },
+        "receiptFileSha256": {
+          "const": "1ed30d3e860fed2e5debd869fd88367ec884cfa17a13ee1036d504244124562f"
+        }
+      },
+      "required": [
+        "receiptFileSha256",
+        "artifactId",
+        "artifactSha256"
+      ],
+      "type": "object"
+    },
+    "returnDestination": {
+      "const": "METHODS_INFORMATION_BENCHMARK_GOVERNANCE_INTAKE"
+    },
+    "returnRequired": {
+      "const": true
+    },
+    "roleId": {
+      "const": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY"
+    },
+    "schema": {
+      "const": "METHODS_INFORMATION_BENCHMARK_ATOMIC_ASSIGNMENT_AUTHORIZATION_v2"
+    },
+    "singleUse": {
+      "const": true
+    },
+    "terminationLaw": {
+      "additionalProperties": true,
+      "properties": {
+        "postTerminationRoleState": {
+          "const": "INACTIVE"
+        },
+        "residualGeneralRoleAuthorityAllowed": {
+          "const": false
+        },
+        "terminatesAtFirstOf": {
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "terminatesAtFirstOf",
+        "residualGeneralRoleAuthorityAllowed",
+        "postTerminationRoleState"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema",
+    "authorizationSchemaId",
+    "authorizationId",
+    "authorizationNonce",
+    "originAuthority",
+    "authorized",
+    "roleId",
+    "canonicalOperationId",
+    "authorizedHolderExecutionId",
+    "canonicalGenesisHead",
+    "genesisFingerprint",
+    "exactAssignmentInfrastructureHead",
+    "assignmentInfrastructureFingerprint",
+    "exactPacketSuccessorHead",
+    "operationPacketPath",
+    "operationPacketSchema",
+    "operationPacketCanonicalSha256",
+    "activationEligibilityReceiptIdentity",
+    "packetVerificationReceiptIdentity",
+    "expectedInitialLedgerHead",
+    "expectedRoleState",
+    "expectedOperationState",
+    "authorizedAssignmentChangedPathSet",
+    "issuedAt",
+    "expiresAt",
+    "singleUse",
+    "returnRequired",
+    "returnDestination",
+    "terminationLaw"
+  ],
+  "type": "object"
+}

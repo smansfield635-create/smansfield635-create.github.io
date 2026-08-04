@@ -1,0 +1,13 @@
+{
+  "canonicalAssignmentUseRequired": true,
+  "canonicalOperationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "packetRewriteRequired": false,
+  "schema": "METHODS_INFORMATION_BENCHMARK_OPERATION_ID_CANONICALIZATION_AND_ALIAS_CROSSWALK_v1",
+  "supersededAliases": [
+    {
+      "assignmentUseAllowed": false,
+      "disposition": "SUPERSEDED_OPERATION_ALIAS",
+      "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_AND_THREE_ANCHOR_REQUIREMENTS_AUDIT_v1"
+    }
+  ]
+}

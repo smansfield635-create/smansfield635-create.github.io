@@ -1,0 +1,66 @@
+{
+  "fixtureCount": 15,
+  "fixtures": [
+    {
+      "expectedError": "OPERATION_ALIAS_USED_INSTEAD_OF_CANONICAL_ID",
+      "id": "OPERATION_ALIAS_USED_INSTEAD_OF_CANONICAL_ID"
+    },
+    {
+      "expectedError": "UNSUPPORTED_PACKET_SCHEMA",
+      "id": "UNSUPPORTED_PACKET_SCHEMA"
+    },
+    {
+      "expectedError": "PACKET_HEAD_MISMATCH",
+      "id": "PACKET_HEAD_MISMATCH"
+    },
+    {
+      "expectedError": "PACKET_HASH_MISMATCH",
+      "id": "PACKET_HASH_MISMATCH"
+    },
+    {
+      "expectedError": "EXPECTED_LEDGER_HEAD_MISMATCH",
+      "id": "EXPECTED_LEDGER_HEAD_MISMATCH"
+    },
+    {
+      "expectedError": "ROLE_NOT_INACTIVE",
+      "id": "ROLE_NOT_INACTIVE"
+    },
+    {
+      "expectedError": "OPERATION_NOT_UNASSIGNED",
+      "id": "OPERATION_NOT_UNASSIGNED"
+    },
+    {
+      "expectedError": "NONCE_MISSING",
+      "id": "NONCE_MISSING"
+    },
+    {
+      "expectedError": "NONCE_ALREADY_CONSUMED",
+      "id": "NONCE_ALREADY_CONSUMED"
+    },
+    {
+      "expectedError": "AUTHORIZATION_EXPIRED",
+      "id": "AUTHORIZATION_EXPIRED"
+    },
+    {
+      "expectedError": "HOLDER_MISMATCH",
+      "id": "HOLDER_MISMATCH"
+    },
+    {
+      "expectedError": "USER_APPROVAL_HASH_MISMATCH",
+      "id": "USER_APPROVAL_HASH_MISMATCH"
+    },
+    {
+      "expectedError": "CHANGED_PATH_SET_MISMATCH",
+      "id": "CHANGED_PATH_SET_MISMATCH"
+    },
+    {
+      "expectedError": "SUBSTANTIVE_AUDIT_OUTPUT_IN_ASSIGNMENT_TRANSACTION",
+      "id": "SUBSTANTIVE_AUDIT_OUTPUT_IN_ASSIGNMENT_TRANSACTION"
+    },
+    {
+      "expectedError": "RETURN_OR_TERMINATION_LAW_MISSING",
+      "id": "RETURN_OR_TERMINATION_LAW_MISSING"
+    }
+  ],
+  "schema": "METHODS_INFORMATION_BENCHMARK_NEGATIVE_FIXTURE_REGISTRY_v2"
+}

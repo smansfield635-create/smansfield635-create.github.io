@@ -1,0 +1,6 @@
+h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json
+h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-002.matched-camera-manifest.v1.json
+h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-002.request.v1.json
+h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-002.js
+h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-002.exact-candidate-evaluator.v1.mjs

@@ -19,12 +19,9 @@ def main() -> None:
     args = parser.parse_args()
 
     text = Path(args.source).read_text(encoding="utf-8").replace("006", "007")
-    text = replace_once(
-        text,
-        "CARRIER_BRANCH='work/r06-c10-candidate-006-admission'",
-        "CARRIER_BRANCH='work/r06-c10-candidate-007-admission'",
-        "carrier_branch",
-    )
+    expected_branch = "CARRIER_BRANCH='work/r06-c10-candidate-007-admission'"
+    if expected_branch not in text:
+        raise RuntimeError("PATCH_TARGET_MISSING:carrier_branch")
 
     request_marker = (
         "request['operationId']='H_EARTH_R06_C10_PROSPECTIVE_"

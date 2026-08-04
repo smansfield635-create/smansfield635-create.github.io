@@ -74,16 +74,19 @@ function buildTerritoryIndex() {
 
 async function waitForFamilyIndex(targetIndex, timeout = 12000) {
   const started = performance.now();
-  while (app()?.resolvedScene?.native?.familyIndex !== targetIndex) {
+  while (Number(app()?.nativeState?.z?.index) !== targetIndex) {
     if (performance.now() - started > timeout) throw new Error(`METHODS_FAMILY_INDEX_TRANSITION_TIMEOUT:${targetIndex}`);
     await new Promise(resolve => setTimeout(resolve, 50));
   }
   await app().whenStable();
+  if (Number(app()?.resolvedScene?.native?.familyIndex) !== targetIndex) {
+    throw new Error(`METHODS_FAMILY_RENDER_CORRESPONDENCE_FAILURE:${targetIndex}`);
+  }
 }
 
 async function selectFamilyIndex(targetIndex) {
   const current = app();
-  const from = current?.resolvedScene?.native?.familyIndex;
+  const from = Number(current?.nativeState?.z?.index);
   const count = current?.registry?.familyCount || 4;
   if (!current || !Number.isInteger(from) || !Number.isInteger(targetIndex)) return;
   if (from === targetIndex) {
@@ -94,10 +97,12 @@ async function selectFamilyIndex(targetIndex) {
   const backward = (from - targetIndex + count) % count;
   const direction = forward <= backward ? 1 : -1;
   const steps = Math.min(forward, backward);
+  const control = document.querySelector(direction > 0 ? "[data-control='family-next']" : "[data-control='family-previous']");
+  if (!(control instanceof HTMLButtonElement)) throw new Error("METHODS_FAMILY_NATIVE_CONTROL_MISSING");
   for (let step = 0; step < steps; step += 1) {
-    const activeIndex = current.resolvedScene.native.familyIndex;
+    const activeIndex = Number(current.nativeState.z.index);
     const expectedIndex = (activeIndex + direction + count) % count;
-    current.moveFamily(direction);
+    control.click();
     await waitForFamilyIndex(expectedIndex);
   }
   synchronize();

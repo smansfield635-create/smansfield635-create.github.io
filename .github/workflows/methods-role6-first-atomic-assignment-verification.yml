@@ -1,0 +1,217 @@
+name: Methods Role 6 First Atomic Assignment Verification
+
+on:
+  pull_request:
+    branches:
+      - assignment/methods-role6-first-atomic-v1-001
+    paths:
+      - '.github/workflows/methods-role6-first-atomic-assignment-verification.yml'
+      - 'verification/methods-role6-first-atomic-assignment-v1/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+env:
+  ASSIGNMENT_HEAD: ce40519190a9048c1e0cef682108c34b0a7f8055
+  ASSIGNMENT_BASE: cfc2dc915ae84fd6349832500165a40a5dd0ddb8
+  ASSIGNMENT_HOLDER: MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7
+  ASSIGNMENT_NOW: '2026-08-04T18:12:00-05:00'
+  INPUT_ROOT: verification/methods-role6-first-atomic-assignment-v1
+  EXECUTOR: control-plane/methods-information-benchmark/assignment-successor-gap-closure/first-assignment-compare-and-swap-executor.v2.mjs
+  PACKET: control-plane/methods-information-benchmark/role6-developmental-baseline-successor/methods-role6-developmental-baseline-successor.packet.v1.json
+
+jobs:
+  assignment-builder:
+    name: assignment-transaction-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out verification carrier
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Reproduce exact assignment transaction
+        env:
+          BUILDER_EXECUTION_HOLDER: GITHUB_ACTIONS_ROLE6_ASSIGNMENT_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          C="$RUNNER_TEMP/assignment-candidate"
+          O="$RUNNER_TEMP/assignment-builder"
+          git worktree add --detach "$C" "$ASSIGNMENT_HEAD"
+          test "$(git -C "$C" rev-parse HEAD^{commit})" = "$ASSIGNMENT_HEAD"
+          mkdir -p "$O"
+          node "$C/$EXECUTOR" \
+            --command prepare \
+            --ledger "$GITHUB_WORKSPACE/$INPUT_ROOT/initial-ledger.v1.json" \
+            --nonce-state "$GITHUB_WORKSPACE/$INPUT_ROOT/nonce-state.v1.json" \
+            --eligibility "$GITHUB_WORKSPACE/$INPUT_ROOT/activation-eligibility.receipt.v2.json" \
+            --packet "$C/$PACKET" \
+            --authorization "$GITHUB_WORKSPACE/$INPUT_ROOT/authorization.v2.json" \
+            --approval "$GITHUB_WORKSPACE/$INPUT_ROOT/approval.receipt.v1.json" \
+            --path-manifest "$GITHUB_WORKSPACE/$INPUT_ROOT/assignment-path-manifest.v1.json" \
+            --holder "$ASSIGNMENT_HOLDER" \
+            --now "$ASSIGNMENT_NOW" \
+            --output-dir "$O/generated"
+          CANDIDATE_ROOT="$C" OUTPUT_ROOT="$O" BUILDER_EXECUTION_HOLDER="$BUILDER_EXECUTION_HOLDER" node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+          import crypto from 'node:crypto';
+          const paths=["control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-operation-scoped-activation.record.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/first-assignment-ledger.successor.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/atomic-authorization-consumption.record.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-admission.receipt.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/assignment-transaction.evidence.v1.json"];
+          const candidate=process.env.CANDIDATE_ROOT;
+          const output=process.env.OUTPUT_ROOT;
+          const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const actual=cp.execFileSync('git',['-C',candidate,'diff','--name-only',process.env.ASSIGNMENT_BASE,process.env.ASSIGNMENT_HEAD],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
+          if(JSON.stringify(actual)!==JSON.stringify([...paths].sort())) throw new Error('ASSIGNMENT_CHANGED_PATH_SET_MISMATCH');
+          const blobMap=[];
+          for(const p of paths){
+            const generated=output+'/generated/'+p;
+            const committed=candidate+'/'+p;
+            if(!fs.existsSync(generated)) throw new Error('GENERATED_OUTPUT_MISSING:'+p);
+            if(cp.spawnSync('cmp',['-s',generated,committed]).status!==0) throw new Error('ASSIGNMENT_OUTPUT_BYTE_MISMATCH:'+p);
+            blobMap.push({path:p,sha256:sha(committed),gitBlob:cp.execFileSync('git',['-C',candidate,'rev-parse',process.env.ASSIGNMENT_HEAD+':'+p],{encoding:'utf8'}).trim()});
+          }
+          const receipt={
+            schema:'METHODS_ROLE_6_FIRST_ATOMIC_ASSIGNMENT_BUILDER_RECEIPT_v1',
+            result:'PASS_CLOSED_ASSIGNMENT_TRANSACTION_REPRODUCED',
+            assignmentHead:process.env.ASSIGNMENT_HEAD,
+            assignmentBase:process.env.ASSIGNMENT_BASE,
+            assignmentId:'8c4d0f0fb1b3068764e476c4',
+            authorizationSha256:'4f2a24c7b6a0bdf46e9d83a41ec27eae605016c12a451b109b26ee97ed5fdfc0',
+            approvalSha256:'415318812af834cc3be2c9658aca03696ab1d7f92cb6c94a193ffd2bb7306769',
+            builderExecutionHolder:process.env.BUILDER_EXECUTION_HOLDER,
+            transactionHolder:process.env.ASSIGNMENT_HOLDER,
+            exactChangedPaths:paths,
+            outputBlobMap:blobMap,
+            role6AssignmentPerformed:true,
+            assignmentAuthorityActive:true,
+            operationScopedAuthority:true,
+            generalRoleAuthority:false,
+            substantiveAuditOutputsCreated:false,
+            repairPerformed:false,
+            privateStateDependency:false,
+            mergePerformed:false
+          };
+          fs.writeFileSync(output+'/builder.receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          test -z "$(git -C "$C" status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload Builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-first-atomic-assignment-builder-v1
+          path: ${{ runner.temp }}/assignment-builder
+          if-no-files-found: error
+          retention-days: 30
+
+  fresh-assignment-verifier:
+    name: fresh-independent-assignment-verifier
+    needs: assignment-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out verification carrier independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download authentic Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: methods-role6-first-atomic-assignment-builder-v1
+          path: ${{ runner.temp }}/authentic-builder
+
+      - name: Reproduce independently without repair
+        env:
+          VERIFIER_EXECUTION_HOLDER: GITHUB_ACTIONS_ROLE6_ASSIGNMENT_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          C="$RUNNER_TEMP/assignment-candidate"
+          O="$RUNNER_TEMP/assignment-verifier"
+          B="$(find "$RUNNER_TEMP/authentic-builder" -name builder.receipt.json -type f -print -quit)"
+          test -n "$B"
+          git worktree add --detach "$C" "$ASSIGNMENT_HEAD"
+          mkdir -p "$O"
+          node "$C/$EXECUTOR" \
+            --command prepare \
+            --ledger "$GITHUB_WORKSPACE/$INPUT_ROOT/initial-ledger.v1.json" \
+            --nonce-state "$GITHUB_WORKSPACE/$INPUT_ROOT/nonce-state.v1.json" \
+            --eligibility "$GITHUB_WORKSPACE/$INPUT_ROOT/activation-eligibility.receipt.v2.json" \
+            --packet "$C/$PACKET" \
+            --authorization "$GITHUB_WORKSPACE/$INPUT_ROOT/authorization.v2.json" \
+            --approval "$GITHUB_WORKSPACE/$INPUT_ROOT/approval.receipt.v1.json" \
+            --path-manifest "$GITHUB_WORKSPACE/$INPUT_ROOT/assignment-path-manifest.v1.json" \
+            --holder "$ASSIGNMENT_HOLDER" \
+            --now "$ASSIGNMENT_NOW" \
+            --output-dir "$O/generated"
+          CANDIDATE_ROOT="$C" OUTPUT_ROOT="$O" BUILDER_RECEIPT="$B" VERIFIER_EXECUTION_HOLDER="$VERIFIER_EXECUTION_HOLDER" node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+          import crypto from 'node:crypto';
+          const paths=["control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-operation-scoped-activation.record.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/first-assignment-ledger.successor.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/atomic-authorization-consumption.record.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/role6-admission.receipt.v1.json", "control-plane/methods-information-benchmark/assignment-state/role6-first-atomic-assignment-v1/assignment-transaction.evidence.v1.json"];
+          const candidate=process.env.CANDIDATE_ROOT;
+          const output=process.env.OUTPUT_ROOT;
+          const builder=JSON.parse(fs.readFileSync(process.env.BUILDER_RECEIPT,'utf8'));
+          if(builder.builderExecutionHolder===process.env.VERIFIER_EXECUTION_HOLDER) throw new Error('BUILDER_VERIFIER_HOLDER_COLLISION');
+          const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const blobMap=[];
+          for(const p of paths){
+            const generated=output+'/generated/'+p;
+            const committed=candidate+'/'+p;
+            if(cp.spawnSync('cmp',['-s',generated,committed]).status!==0) throw new Error('VERIFIER_TO_CANDIDATE_MISMATCH:'+p);
+            const builderGenerated=process.env.RUNNER_TEMP+'/authentic-builder/generated/'+p;
+            if(cp.spawnSync('cmp',['-s',generated,builderGenerated]).status!==0) throw new Error('VERIFIER_TO_BUILDER_MISMATCH:'+p);
+            blobMap.push({path:p,sha256:sha(committed),gitBlob:cp.execFileSync('git',['-C',candidate,'rev-parse',process.env.ASSIGNMENT_HEAD+':'+p],{encoding:'utf8'}).trim()});
+          }
+          if(JSON.stringify(blobMap)!==JSON.stringify(builder.outputBlobMap)) throw new Error('OUTPUT_BLOB_MAP_MISMATCH');
+          const receipt={
+            schema:'METHODS_ROLE_6_FIRST_ATOMIC_ASSIGNMENT_VERIFICATION_RECEIPT_v1',
+            result:'PASS_CLOSED_FRESH_INDEPENDENT_ASSIGNMENT_REPRODUCTION',
+            assignmentHead:process.env.ASSIGNMENT_HEAD,
+            assignmentBase:process.env.ASSIGNMENT_BASE,
+            assignmentId:'8c4d0f0fb1b3068764e476c4',
+            authorizationSha256:'4f2a24c7b6a0bdf46e9d83a41ec27eae605016c12a451b109b26ee97ed5fdfc0',
+            approvalSha256:'415318812af834cc3be2c9658aca03696ab1d7f92cb6c94a193ffd2bb7306769',
+            builderExecutionHolder:builder.builderExecutionHolder,
+            verifierExecutionHolder:process.env.VERIFIER_EXECUTION_HOLDER,
+            distinctExecutionHolders:true,
+            transactionHolder:process.env.ASSIGNMENT_HOLDER,
+            exactChangedPaths:paths,
+            outputBlobMap:blobMap,
+            role6AssignmentValidated:true,
+            assignmentAuthorityActive:true,
+            operationScopedAuthority:true,
+            generalRoleAuthority:false,
+            substantiveAuditOutputsCreated:false,
+            repairPerformed:false,
+            privateStateDependency:false,
+            mergePerformed:false
+          };
+          fs.writeFileSync(output+'/assignment.verification.receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          test -z "$(git -C "$C" status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload fresh Verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-first-atomic-assignment-verifier-v1
+          path: ${{ runner.temp }}/assignment-verifier
+          if-no-files-found: error
+          retention-days: 30

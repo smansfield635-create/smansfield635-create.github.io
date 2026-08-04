@@ -162,7 +162,7 @@ function runNegative(base, descriptor, positiveReceipt) {
     const receipt = clone(positiveReceipt); receipt.descriptorId = 'FORGED_DESCRIPTOR'; validateCommandReceipt({ descriptor, receipt });
   }));
   tests.push(expected('UNAUTHORIZED_CHANGED_PATH_IN_RECEIPT', 'RECEIPT_UNAUTHORIZED_PATH_OBSERVED', () => {
-    const receipt = clone(positiveReceipt); receipt.changedPaths = ['laws/unauthorized.txt']; validateCommandReceipt({ descriptor, receipt });
+    const receipt = clone(positiveReceipt); receipt.changedPaths = ['future-project/unauthorized.txt']; validateCommandReceipt({ descriptor, receipt });
   }));
   tests.push(expected('CONTINUATION_WITHOUT_VALIDATION', 'CONTINUATION_VALIDATION_SCHEMA_MISMATCH', () => {
     applyContinuationGate({ descriptor, validationResult: { schema: 'NOT_A_VALIDATION_RESULT' } });

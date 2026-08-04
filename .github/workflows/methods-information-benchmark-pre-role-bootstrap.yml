@@ -1,4 +1,5 @@
 name: Methods Information Benchmark Pre-Role Bootstrap
+
 on:
   pull_request:
     paths:
@@ -8,51 +9,151 @@ on:
       - '.github/ai-router/projects/methods-information-benchmark/**'
       - '.github/workflows/methods-information-benchmark-pre-role-bootstrap.yml'
   workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      BUILDER_EXECUTION_HOLDER: GITHUB_ACTIONS_BOOTSTRAP_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
     steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Resolve and assert exact identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXECUTED_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$EXECUTED_HEAD" = "$EXPECTED_HEAD"
+          BASE_HEAD="${PR_BASE_SHA:-$(git merge-base HEAD origin/main)}"
+          git merge-base --is-ancestor "$BASE_HEAD" "$EXECUTED_HEAD"
+          printf '%s\n' "$EXPECTED_HEAD" > /tmp/EXPECTED_HEAD
+          printf '%s\n' "$EXECUTED_HEAD" > /tmp/EXECUTED_HEAD
+          printf '%s\n' "$BASE_HEAD" > /tmp/BASE_HEAD
+          printf '%s\n' "$BUILDER_EXECUTION_HOLDER" > /tmp/BUILDER_EXECUTION_HOLDER
+          cmp /tmp/EXPECTED_HEAD /tmp/EXECUTED_HEAD
+
       - uses: actions/setup-node@v4
-        with: {node-version: '22'}
-      - name: Route project mutation
-        run: node tools/repository-ai-entry-router.mjs --mutation-intent --path control-plane/methods-information-benchmark/bootstrap/origin-bootstrap-seed.v1.json --path methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs --output /tmp/router.json
-      - name: Builder self-test
-        run: node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs self-test --output /tmp/self-test.json
-      - name: Repository discovery
-        run: node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs repository-authority-discovery --output /tmp/discovery.json
-      - name: Builder fingerprint
-        run: node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs bootstrap-fingerprint-generator --output /tmp/fingerprint.json
-      - name: Prove permanent role admission is held
+        with:
+          node-version: '22'
+
+      - name: Validate source syntax
+        run: node --check methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs
+
+      - name: Route exact candidate mutation
         run: |
-          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs role-holder-admission --locator control-plane/methods-information-benchmark/locators/fresh-room-entry.locator.v1.json --operation MIB_PRE_ROLE_BOOTSTRAP --room GITHUB_ACTIONS_PROBE --output /tmp/admission.json
-          grep -q HELD_ROLE_SYSTEM_INACTIVE /tmp/admission.json
-      - name: Enforce exact paths and protected surfaces
-        env: {PR_BASE_SHA: '${{ github.event.pull_request.base.sha }}'}
-        run: |
-          BASE_SHA="${PR_BASE_SHA:-$(git rev-parse HEAD^)}"
-          git diff --name-only "$BASE_SHA" HEAD | sort > /tmp/changed-paths.txt
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path control-plane/methods-information-benchmark/bootstrap/origin-bootstrap-seed.v1.json \
+            --path methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs \
+            --output /tmp/router.json
           python - <<'PY'
           import json
-          m=json.load(open('control-plane/methods-information-benchmark/bootstrap/changed-path-manifest.v1.json'))
-          actual=[x.strip() for x in open('/tmp/changed-paths.txt') if x.strip()]
-          expected=sorted(m['expectedChangedPaths'])
-          assert actual==expected,(sorted(set(expected)-set(actual)),sorted(set(actual)-set(expected)))
-          assert not any(any(p.startswith(prefix) for prefix in m['prohibitedPathPrefixes']) for p in actual)
+          expected=open('/tmp/EXPECTED_HEAD').read().strip()
+          receipt=json.load(open('/tmp/router.json'))
+          assert receipt['governingHead']==expected,(receipt['governingHead'],expected)
+          assert receipt['disposition']=='PASS'
           PY
-      - name: Upload receipts
+
+      - name: Builder self-test at exact head
+        run: |
+          set -euo pipefail
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs self-test \
+            --expected-head "$(cat /tmp/EXPECTED_HEAD)" \
+            --base-head "$(cat /tmp/BASE_HEAD)" \
+            --output /tmp/self-test.json
+
+      - name: Repository discovery at exact head
+        run: |
+          set -euo pipefail
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs repository-authority-discovery \
+            --expected-head "$(cat /tmp/EXPECTED_HEAD)" \
+            --output /tmp/discovery.json
+
+      - name: Emit authority-complete builder fingerprint
+        run: |
+          set -euo pipefail
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs bootstrap-fingerprint-generator \
+            --expected-head "$(cat /tmp/EXPECTED_HEAD)" \
+            --base-head "$(cat /tmp/BASE_HEAD)" \
+            --output /tmp/fingerprint.json
+
+      - name: Emit exact-head Builder receipt
+        run: |
+          set -euo pipefail
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs builder-receipt \
+            --expected-head "$(cat /tmp/EXPECTED_HEAD)" \
+            --base-head "$(cat /tmp/BASE_HEAD)" \
+            --execution-holder "$BUILDER_EXECUTION_HOLDER" \
+            --changed-path-map-output /tmp/changed-path-blob-map.json \
+            --output /tmp/builder-receipt.json
+          python - <<'PY'
+          import json
+          expected=open('/tmp/EXPECTED_HEAD').read().strip()
+          receipt=json.load(open('/tmp/builder-receipt.json'))
+          assert receipt['expectedHead']==expected
+          assert receipt['executedHead']==expected
+          assert receipt['exactHeadMatch'] is True
+          assert receipt['pass'] is True
+          assert receipt['independentVerificationClaimed'] is False
+          assert receipt['permanentRoleAuthorityActivated'] is False
+          assert receipt['executionHolder']==open('/tmp/BUILDER_EXECUTION_HOLDER').read().strip()
+          fingerprint=json.load(open('/tmp/fingerprint.json'))
+          assert receipt['builderFingerprint']==fingerprint['fingerprint']
+          assert receipt['changedPathBlobMap']==json.load(open('/tmp/changed-path-blob-map.json'))
+          PY
+
+      - name: Prove permanent role admission is held
+        run: |
+          set -euo pipefail
+          node methods-information-benchmark/validation/pre-role-bootstrap/bootstrap.mjs role-holder-admission \
+            --locator control-plane/methods-information-benchmark/locators/fresh-room-entry.locator.v1.json \
+            --operation MIB_PRE_ROLE_BOOTSTRAP \
+            --room GITHUB_ACTIONS_PROBE \
+            --output /tmp/admission.json
+          grep -q HELD_ROLE_SYSTEM_INACTIVE /tmp/admission.json
+
+      - name: Enforce exact paths and protected surfaces
+        run: |
+          set -euo pipefail
+          git diff --name-only "$(cat /tmp/BASE_HEAD)" "$(cat /tmp/EXECUTED_HEAD)" | sort > /tmp/changed-paths.txt
+          python - <<'PY'
+          import json
+          manifest=json.load(open('control-plane/methods-information-benchmark/bootstrap/changed-path-manifest.v1.json'))
+          actual=[line.strip() for line in open('/tmp/changed-paths.txt') if line.strip()]
+          expected=sorted(manifest['expectedChangedPaths'])
+          assert actual==expected,(sorted(set(expected)-set(actual)),sorted(set(actual)-set(expected)))
+          assert not any(any(path.startswith(prefix) for prefix in manifest['prohibitedPathPrefixes']) for path in actual)
+          blob_map=json.load(open('/tmp/changed-path-blob-map.json'))
+          assert [item['path'] for item in blob_map]==expected
+          assert all(item['gitBlob'] and item['sha256'] for item in blob_map)
+          PY
+
+      - name: Upload exact-head Builder receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: methods-information-benchmark-pre-role-bootstrap-receipts
           path: |
+            /tmp/EXPECTED_HEAD
+            /tmp/EXECUTED_HEAD
+            /tmp/BASE_HEAD
+            /tmp/BUILDER_EXECUTION_HOLDER
             /tmp/router.json
             /tmp/self-test.json
             /tmp/discovery.json
             /tmp/fingerprint.json
+            /tmp/builder-receipt.json
+            /tmp/changed-path-blob-map.json
             /tmp/admission.json
             /tmp/changed-paths.txt
           if-no-files-found: error

@@ -1,0 +1,5 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_005_LAUNCH_WITNESS_TRIGGER_v1",
+  "purpose": "Distinguish workflow launch from early carrier failure.",
+  "productMutation": false
+}

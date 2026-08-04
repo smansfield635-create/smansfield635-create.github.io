@@ -1,0 +1,150 @@
+name: Methods Information Benchmark Generic First Assignment Infrastructure
+
+on:
+  push:
+    branches:
+      - control/methods-generic-first-assignment-infrastructure-v1-001
+    paths:
+      - control-plane/methods-information-benchmark/assignment-infrastructure/**
+      - .github/workflows/methods-information-benchmark-generic-first-assignment-infrastructure.yml
+  pull_request:
+    branches:
+      - agent/methods-information-benchmark-pre-role-bootstrap-v1
+    paths:
+      - control-plane/methods-information-benchmark/assignment-infrastructure/**
+      - .github/workflows/methods-information-benchmark-generic-first-assignment-infrastructure.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  EXACT_BASE_HEAD: 3c303a49b4e90cf8672cd76f9f2c31041c2e56d1
+  CARRIER_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  TOOL: control-plane/methods-information-benchmark/assignment-infrastructure/assignment.mjs
+  SELF_TEST: control-plane/methods-information-benchmark/assignment-infrastructure/assignment-self-test.mjs
+  VERIFIER: control-plane/methods-information-benchmark/assignment-infrastructure/assignment-verifier.mjs
+
+jobs:
+  builder-test:
+    name: generic-assignment-infrastructure-builder-test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact carrier head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CARRIER_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up canonical execution class
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run role-neutral builder self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$CARRIER_HEAD"
+          test -z "$(git status --porcelain)"
+          HOLDER="GITHUB_ACTIONS_GENERIC_ASSIGNMENT_INFRA_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
+          node "$SELF_TEST" \
+            --expected-head "$CARRIER_HEAD" \
+            --base-head "$EXACT_BASE_HEAD" \
+            --execution-holder "$HOLDER" \
+            --output "$RUNNER_TEMP/builder-self-test.json"
+          node "$TOOL" infrastructure-fingerprint \
+            --expected-head "$CARRIER_HEAD" \
+            --base-head "$EXACT_BASE_HEAD" \
+            --output "$RUNNER_TEMP/infrastructure-fingerprint.json"
+          node - <<'NODE'
+          const fs = require('fs');
+          const b = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/builder-self-test.json'));
+          const f = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/infrastructure-fingerprint.json'));
+          if (!b.pass || b.productionAssignmentPerformed || b.permanentRoleAuthorityActivated) throw new Error('BUILDER_TEST_NOT_PASS_CLOSED');
+          if (b.roleIdentityBound || b.operationIdentityBound) throw new Error('ROLE_OR_OPERATION_BOUND_DURING_INFRASTRUCTURE_BUILD');
+          if (b.infrastructureFingerprint !== f.fingerprint) throw new Error('BUILDER_FINGERPRINT_MISMATCH');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/builder-holder.txt', b.executionHolder + '\n');
+          NODE
+          test "$(git rev-parse HEAD^{commit})" = "$CARRIER_HEAD"
+          test -z "$(git status --porcelain)"
+          git diff --exit-code
+          git diff --cached --exit-code
+
+      - name: Upload builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-generic-first-assignment-infrastructure-builder-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/builder-self-test.json
+            ${{ runner.temp }}/infrastructure-fingerprint.json
+            ${{ runner.temp }}/builder-holder.txt
+          if-no-files-found: error
+          retention-days: 30
+
+  fresh-verifier:
+    name: generic-assignment-infrastructure-fresh-verifier
+    needs: builder-test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact carrier head independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CARRIER_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+          clean: true
+
+      - name: Set up canonical execution class
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Download authentic builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: methods-generic-first-assignment-infrastructure-builder-${{ github.run_id }}
+          path: ${{ runner.temp }}/builder-evidence
+
+      - name: Reproduce and verify without assignment
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$CARRIER_HEAD"
+          test -z "$(git status --porcelain)"
+          BUILDER_HOLDER="$(tr -d '\r\n' < "$RUNNER_TEMP/builder-evidence/builder-holder.txt")"
+          BUILDER_FINGERPRINT="$(node -p "JSON.parse(require('fs').readFileSync('$RUNNER_TEMP/builder-evidence/infrastructure-fingerprint.json')).fingerprint")"
+          VERIFIER_HOLDER="GITHUB_ACTIONS_GENERIC_ASSIGNMENT_INFRA_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}"
+          test "$BUILDER_HOLDER" != "$VERIFIER_HOLDER"
+          node "$VERIFIER" \
+            --builder-receipt "$RUNNER_TEMP/builder-evidence/builder-self-test.json" \
+            --builder-fingerprint "$BUILDER_FINGERPRINT" \
+            --builder-head "$CARRIER_HEAD" \
+            --builder-holder "$BUILDER_HOLDER" \
+            --verifier-holder "$VERIFIER_HOLDER" \
+            --base-head "$EXACT_BASE_HEAD" \
+            --output "$RUNNER_TEMP/infrastructure-verification.json"
+          node - <<'NODE'
+          const fs = require('fs');
+          const v = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/infrastructure-verification.json'));
+          if (!v.pass || !v.fingerprintMatch || !v.distinctExecutionHolders) throw new Error('VERIFIER_NOT_PASS_CLOSED');
+          if (v.productionAssignmentPerformed || v.permanentRoleAuthorityActivated || v.roleIdentityBound || v.operationIdentityBound) throw new Error('INFRASTRUCTURE_VERIFICATION_CROSSED_ASSIGNMENT_BOUNDARY');
+          if (v.repairPerformed || v.candidateMutationPerformed || v.productMutationPerformed || v.mergePerformed) throw new Error('VERIFIER_BOUNDARY_VIOLATION');
+          NODE
+          test "$(git rev-parse HEAD^{commit})" = "$CARRIER_HEAD"
+          test -z "$(git status --porcelain)"
+          git diff --exit-code
+          git diff --cached --exit-code
+
+      - name: Upload verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-generic-first-assignment-infrastructure-verifier-${{ github.run_id }}
+          path: ${{ runner.temp }}/infrastructure-verification.json
+          if-no-files-found: error
+          retention-days: 30

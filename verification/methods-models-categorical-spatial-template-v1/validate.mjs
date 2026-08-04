@@ -28,16 +28,27 @@ const nativeState = Object.freeze({
 const overview = resolveSceneState({ registry, nativeState, cameraMode: "overview", inspectionOpen: false, viewport: { width: 1440, height: 1000 } });
 const browse = resolveSceneState({ registry, nativeState, cameraMode: "browse", inspectionOpen: false, viewport: { width: 1440, height: 1000 } });
 const mobile = resolveSceneState({ registry, nativeState, cameraMode: "browse", inspectionOpen: false, viewport: { width: 360, height: 800 } });
+const engineering = resolveSceneState({
+  registry,
+  nativeState: Object.freeze({ ...nativeState, y: Object.freeze({ index: 1, count: 3, lens: "engineering" }) }),
+  cameraMode: "browse",
+  inspectionOpen: false,
+  viewport: { width: 1440, height: 1000 }
+});
 
+const practicalActive = browse.nodes.find(node => node.active);
+const engineeringActive = engineering.nodes.find(node => node.active);
 const operationalChecks = Object.freeze({
   exactFamilyCount: registry.familyCount === 4,
   exactModelCount: registry.modelCount === 25,
   exactLensCount: registry.lensCount === 3,
   allNativeModelsResolveOnce: new Set(registry.descriptors.map(item => item.modelId)).size === registry.modelCount,
   overviewBrowseTargetsDiffer: JSON.stringify(overview.camera) !== JSON.stringify(browse.camera),
-  activeModelFullDetail: browse.nodes.find(node => node.active)?.detailClass === "FULL",
-  perceptibleNeighborsPresent: browse.nodes.filter(node => node.lifecycle === "NEAR_NEIGHBOR" && node.visible).length >= 1,
+  overviewTracksActiveHorizontalPosition: overview.camera.target[0] === browse.activeDescriptor.fieldPosition[0],
+  activeModelFullDetail: practicalActive?.detailClass === "FULL",
+  perceptibleNeighborsPresent: browse.nodes.filter(node => node.lifecycle === "NEAR_NEIGHBOR" && node.visible).length >= 2,
   distantCorpusPresent: overview.nodes.some(node => node.lifecycle === "DISTANT_CORPUS" && node.visible),
+  lensSpatialRelationChanges: JSON.stringify(practicalActive?.position) !== JSON.stringify(engineeringActive?.position) && JSON.stringify(browse.camera) !== JSON.stringify(engineering.camera),
   mobileDetailReduced: mobile.visibleCluster.length < browse.visibleCluster.length,
   optionalExpressionSlotsNonblocking: registry.descriptors.every(item => item.materialProfileSlot && item.atmosphereProfileSlot)
 });

@@ -82,8 +82,10 @@ jobs:
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          set -euo pipefail
-          node verification/methods-models-categorical-spatial-template-v1/observer.mjs | tee operational-observer.log
+          set -uo pipefail
+          observer_status=0
+          node verification/methods-models-categorical-spatial-template-v1/observer.mjs | tee operational-observer.log || observer_status=${PIPESTATUS[0]}
+          printf '%s\n' "$observer_status" > observer-exit-status.txt
 
       - name: Package exact nonproduct evidence
         shell: bash
@@ -92,6 +94,7 @@ jobs:
           cp exact-changed-paths.txt "$OUT_DIR/"
           cp registry-validation.log "$OUT_DIR/"
           cp operational-observer.log "$OUT_DIR/"
+          cp observer-exit-status.txt "$OUT_DIR/"
           cp /tmp/methods-spatial-server.log "$OUT_DIR/server.log" || true
           cp verification/methods-models-categorical-spatial-template-v1/tool-admission-matrix.json "$OUT_DIR/"
           find "$OUT_DIR" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$OUT_DIR/SHA256SUMS"
@@ -109,4 +112,11 @@ jobs:
             exact-changed-paths.txt
             registry-validation.log
             operational-observer.log
+            observer-exit-status.txt
           retention-days: 30
+
+      - name: Enforce operational observer result
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(cat observer-exit-status.txt)" = "0"

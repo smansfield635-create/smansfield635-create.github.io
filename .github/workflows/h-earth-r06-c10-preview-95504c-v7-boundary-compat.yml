@@ -1,0 +1,327 @@
+name: H-Earth R06-C10 Candidate Preview 95504c V7 Boundary Compatibility
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-r06-c10-preview-95504c-v7-boundary-compat.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-r06-c10-preview-95504c-v7-boundary-compat
+  cancel-in-progress: false
+
+jobs:
+  materialize-prove-publish:
+    if: github.head_ref == 'publication/h-earth-r06-c10-preview-95504c-001'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      SOURCE_HEAD: 95504c9927922318225da1d61fa303cec70497f9
+      PUBLICATION_BRANCH: publication/h-earth-r06-c10-preview-95504c-001
+      PREVIEW_ROOT: preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9
+      PREVIEW_URL_PATH: /preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9/index.html
+      SOURCE_ENTRY: showroom/globe/h-earth/index.html
+      V1_WORKFLOW: .github/workflows/h-earth-r06-c10-preview-95504c.yml
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - name: Check out publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: publication/h-earth-r06-c10-preview-95504c-001
+          fetch-depth: 0
+          path: publication
+
+      - name: Check out exact terrain candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 95504c9927922318225da1d61fa303cec70497f9
+          fetch-depth: 1
+          path: source
+
+      - name: Materialize exact closure with runtime-selected renderers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,textwrap
+          from pathlib import Path
+          workflow=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['V1_WORKFLOW']
+          text=workflow.read_text()
+          match=re.search(r"- name: Materialize exact self-contained environment preview.*?python3 - <<'PY'\n(.*?)\n          PY",text,re.S)
+          if not match: raise RuntimeError('V1_MATERIALIZER_BLOCK_NOT_FOUND')
+          code=textwrap.dedent(match.group(1))
+          old='queue = [entry]'
+          new="""queue = [
+              entry,
+              PurePosixPath('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),
+              PurePosixPath('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'),
+              PurePosixPath('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js')
+          ]"""
+          if old not in code: raise RuntimeError('V1_QUEUE_PATCH_TARGET_NOT_FOUND')
+          exec(compile(code.replace(old,new,1),'r06-c10-preview-materializer-v7.py','exec'),{'__name__':'__main__'})
+          PY
+
+      - name: Install preview-only outer-domain derivative compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['PREVIEW_ROOT']
+          rel='_source/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'
+          path=root/rel
+          text=path.read_text()
+          old="""  const elevation = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ);
+          const step = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.sampling.derivativeStep;
+          const left = sampleHEarthRun8BSuccessorTerrainElevation(worldX - step, worldZ);
+          const right = sampleHEarthRun8BSuccessorTerrainElevation(worldX + step, worldZ);
+          const back = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ - step);
+          const front = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ + step);
+          const gradientX = (right - left) / (2 * step);
+          const gradientZ = (front - back) / (2 * step);
+          const normalLength = Math.hypot(-gradientX, 1, -gradientZ);
+          const candidateDelta =
+            sampleHEarthR06C10OfficialLandformDelta(worldX, worldZ);
+
+          return freeze({
+            ...source,
+            world: { ...source.world, y: elevation },
+            elevation,
+            baselineElevation: canonicalizeHEarthRun8BElevation(source.elevation),
+            appliedCandidateDelta: candidateDelta,
+            gradient: { x: gradientX, z: gradientZ },
+            normal: {
+              x: -gradientX / normalLength,
+              y: 1 / normalLength,
+              z: -gradientZ / normalLength
+            },
+            slope: Math.hypot(gradientX, gradientZ),
+            curvature:
+              left - 2 * elevation + right + back - 2 * elevation + front,"""
+          new="""  const elevation = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ);
+          const step = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.sampling.derivativeStep;
+          const domain = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain;
+          const outerBoundary =
+            worldX - step < domain.xMinimum ||
+            worldX + step > domain.xMaximum ||
+            worldZ - step < domain.zMinimum ||
+            worldZ + step > domain.zMaximum;
+          let gradientX;
+          let gradientZ;
+          let normal;
+          let slope;
+          let curvature;
+          if (outerBoundary) {
+            gradientX = source.gradient.x;
+            gradientZ = source.gradient.z;
+            normal = { ...source.normal };
+            slope = source.slope;
+            curvature = source.curvature;
+          } else {
+            const left = sampleHEarthRun8BSuccessorTerrainElevation(worldX - step, worldZ);
+            const right = sampleHEarthRun8BSuccessorTerrainElevation(worldX + step, worldZ);
+            const back = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ - step);
+            const front = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ + step);
+            gradientX = (right - left) / (2 * step);
+            gradientZ = (front - back) / (2 * step);
+            const normalLength = Math.hypot(-gradientX, 1, -gradientZ);
+            normal = {
+              x: -gradientX / normalLength,
+              y: 1 / normalLength,
+              z: -gradientZ / normalLength
+            };
+            slope = Math.hypot(gradientX, gradientZ);
+            curvature = left - 2 * elevation + right + back - 2 * elevation + front;
+          }
+          const candidateDelta =
+            sampleHEarthR06C10OfficialLandformDelta(worldX, worldZ);
+
+          return freeze({
+            ...source,
+            world: { ...source.world, y: elevation },
+            elevation,
+            baselineElevation: canonicalizeHEarthRun8BElevation(source.elevation),
+            appliedCandidateDelta: candidateDelta,
+            gradient: { x: gradientX, z: gradientZ },
+            normal,
+            slope,
+            curvature,"""
+          if old not in text: raise RuntimeError('BOUNDARY_COMPATIBILITY_PATCH_TARGET_NOT_FOUND')
+          path.write_text(text.replace(old,new,1))
+          manifest_path=root/'byte-manifest.json'
+          manifest=json.loads(manifest_path.read_text())
+          digest=hashlib.sha256(path.read_bytes()).hexdigest()
+          row=next((r for r in manifest['sourceEntries'] if r['previewFile']==rel),None)
+          if row is None: raise RuntimeError('SUCCESSOR_FIELD_MANIFEST_ROW_MISSING')
+          row['previewSha256']=digest
+          row['transform']='PREVIEW_ONLY_OUTER_DOMAIN_DERIVATIVE_COMPATIBILITY_GEOMETRY_ELEVATIONS_UNCHANGED'
+          manifest['previewCompatibility']={
+            'class':'OUTER_WORLD_DOMAIN_DERIVATIVE_FALLBACK_TO_EXISTING_RUN8A_SAMPLE',
+            'terrainElevationMutation':False,
+            'candidateDeltaMutation':False,
+            'candidateSupportRegionMutation':False,
+            'affectedCoordinates':'ONLY_SAMPLES_WITHIN_0_5_WORLD_UNITS_OF_SUCCESSOR_WORLD_DOMAIN_OUTER_EDGE'
+          }
+          manifest_path.write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n')
+          manifest_digest=hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+          (root/'byte-manifest.sha256').write_text(f'{manifest_digest}  byte-manifest.json\n')
+          receipt_path=root/'publication-receipt.json'
+          receipt=json.loads(receipt_path.read_text())
+          receipt.update({'manifestDigest':'sha256:'+manifest_digest,'previewCompatibilityInstalled':True,'terrainElevationMutation':False,'candidateDeltaMutation':False})
+          receipt_path.write_text(json.dumps(receipt,indent=2)+'\n')
+          print(json.dumps({'patchedFile':rel,'previewSha256':digest,'manifestDigest':manifest_digest}))
+          PY
+
+      - name: Verify closure and preview compatibility boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os,subprocess
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['PREVIEW_ROOT']
+          src=Path(os.environ['GITHUB_WORKSPACE'])/'source'
+          manifest=json.loads((root/'byte-manifest.json').read_text())
+          assert hashlib.sha256((root/'byte-manifest.json').read_bytes()).hexdigest()==(root/'byte-manifest.sha256').read_text().split()[0]
+          accounted={'index.html','byte-manifest.json','byte-manifest.sha256','publication-receipt.json'}
+          transformed=[]
+          for row in manifest['sourceEntries']:
+              s=src/row['sourceFile']; d=root/row['previewFile']
+              assert s.is_file() and d.is_file()
+              assert subprocess.check_output(['git','-C',str(src),'rev-parse',f"{manifest['sourceHead']}:{row['sourceFile']}"],text=True).strip()==row['sourceBlob']
+              assert hashlib.sha256(s.read_bytes()).hexdigest()==row['sourceSha256']
+              assert hashlib.sha256(d.read_bytes()).hexdigest()==row['previewSha256']
+              accounted.add(row['previewFile'])
+              if row['transform']!='NONE': transformed.append((row['previewFile'],row['transform']))
+          actual={str(p.relative_to(root)) for p in root.rglob('*') if p.is_file()}
+          assert actual==accounted,(sorted(actual-accounted),sorted(accounted-actual))
+          assert manifest['previewCompatibility']['terrainElevationMutation'] is False
+          assert manifest['previewCompatibility']['candidateDeltaMutation'] is False
+          print(json.dumps({'result':'PASS','sourceEntries':len(manifest['sourceEntries']),'previewFiles':len(actual),'transformedCount':len(transformed)}))
+          PY
+
+      - name: Install Chromium verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pw" "$RUNNER_TEMP/proof"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+
+      - name: Prove exact terrain elevations and visible environment on desktop and mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4188 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/publication" >"$RUNNER_TEMP/proof/server.log" 2>&1 &
+          ready=false
+          for attempt in $(seq 1 60); do
+            if curl -fsS "http://127.0.0.1:4188$PREVIEW_URL_PATH" >/dev/null; then ready=true; break; fi
+            sleep 1
+          done
+          test "$ready" = true
+          cat > "$RUNNER_TEMP/pw/verify.mjs" <<'JS'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import process from 'node:process';
+          import { chromium } from 'playwright';
+          const url=`http://127.0.0.1:4188${process.env.PREVIEW_URL_PATH}`;
+          const out=path.join(process.env.RUNNER_TEMP,'proof');
+          const assert=(value,code,detail=null)=>{if(!value){const e=new Error(code);e.detail=detail;throw e;}};
+          async function inspect(browser,profile){
+            const context=await browser.newContext({viewport:profile.viewport,deviceScaleFactor:profile.dpr,isMobile:profile.mobile,hasTouch:profile.mobile});
+            const page=await context.newPage();
+            const pageErrors=[],requestFailures=[],httpFailures=[];
+            page.on('pageerror',e=>pageErrors.push({message:e.message,stack:e.stack}));
+            page.on('requestfailed',r=>requestFailures.push({url:r.url(),failure:r.failure()}));
+            page.on('response',r=>{if(r.status()>=400&&!r.url().endsWith('/favicon.ico'))httpFailures.push({url:r.url(),status:r.status()})});
+            await page.goto(url,{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForSelector('#h-earth-functional-landscape-canvas',{timeout:120000});
+            await page.waitForFunction(()=>{
+              const c=document.getElementById('h-earth-functional-landscape-canvas');
+              if(!c||!c.width||!c.height)return false;
+              const gl=c.getContext('webgl2')||c.getContext('webgl');
+              if(!gl)return false;
+              const w=Math.min(c.width,256),h=Math.min(c.height,256),p=new Uint8Array(w*h*4);
+              gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,p);
+              let visible=0;for(let i=0;i<p.length;i+=4)if(p[i]+p[i+1]+p[i+2]>18)visible++;
+              return visible/(w*h)>.01;
+            },null,{timeout:120000,polling:500});
+            const result=await page.evaluate(async()=>{
+              const c=document.getElementById('h-earth-functional-landscape-canvas');
+              const gl=c.getContext('webgl2')||c.getContext('webgl');
+              const w=Math.min(c.width,256),h=Math.min(c.height,256),p=new Uint8Array(w*h*4);
+              gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,p);
+              let visible=0,sum=0;for(let i=0;i<p.length;i+=4){const s=p[i]+p[i+1]+p[i+2];sum+=s;if(s>18)visible++;}
+              const terrain=await import('/preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9/_source/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js');
+              const points=[[44,-168],[44,-180],[44,-192],[28,-200],[32,-192],[64,-164]];
+              const witnesses=points.map(([x,z])=>{const s=terrain.sampleHEarthRun8BSuccessorTerrainField(x,z);return{x,z,elevation:s.elevation,delta:s.appliedCandidateDelta,valid:s.valid,normal:s.normal,slope:s.slope,curvature:s.curvature};});
+              return {
+                canvas:{width:c.width,height:c.height,visiblePixelFraction:visible/(w*h),meanRgbSum:sum/(w*h)},
+                startupReceipt:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
+                candidateModuleLoaded:performance.getEntriesByType('resource').some(r=>r.name.includes('h-earth.r06-c10.official-landform-candidate-001.js')),
+                witnesses
+              };
+            });
+            assert(result.canvas.visiblePixelFraction>.01,'VISIBLE_WORLD_FRAME_NOT_PROVEN',result);
+            assert(result.candidateModuleLoaded,'CANDIDATE_MODULE_NOT_LOADED',result);
+            assert(!result.startupReceipt?.firstFailureStage,'STARTUP_FAILURE',result.startupReceipt);
+            assert(result.witnesses.every(w=>w.valid&&Number.isFinite(w.elevation)&&Number.isFinite(w.slope)&&Number.isFinite(w.curvature)),'CANDIDATE_WITNESS_INVALID',result.witnesses);
+            assert(result.witnesses.some(w=>Math.abs(w.delta)>.000001),'CANDIDATE_DELTA_NOT_PRESENT',result.witnesses);
+            assert(pageErrors.length===0,'PAGE_ERRORS_PRESENT',pageErrors);
+            assert(requestFailures.length===0,'REQUEST_FAILURES_PRESENT',requestFailures);
+            assert(httpFailures.length===0,'HTTP_FAILURES_PRESENT',httpFailures);
+            await page.screenshot({path:path.join(out,`${profile.name}.png`),fullPage:true});
+            const receipt={status:'PASS_VISIBLE_ENVIRONMENT',profile:profile.name,result,pageErrors,requestFailures,httpFailures};
+            fs.writeFileSync(path.join(out,`${profile.name}.receipt.json`),JSON.stringify(receipt,null,2)+'\n');
+            await context.close();return receipt;
+          }
+          const browser=await chromium.launch({headless:true});
+          try{
+            const desktop=await inspect(browser,{name:'desktop',viewport:{width:1440,height:1000},dpr:1,mobile:false});
+            const mobile=await inspect(browser,{name:'touch-mobile',viewport:{width:412,height:915},dpr:2,mobile:true});
+            fs.writeFileSync(path.join(out,'browser-proof.summary.json'),JSON.stringify({status:'PASS',sourceHead:process.env.SOURCE_HEAD,desktop,mobile},null,2)+'\n');
+          }finally{await browser.close();}
+          JS
+          cd "$RUNNER_TEMP/pw"
+          node verify.mjs
+          python3 - <<'PY'
+          import json,os
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])/'publication'/os.environ['PREVIEW_ROOT']
+          receipt_path=root/'publication-receipt.json'
+          receipt=json.loads(receipt_path.read_text())
+          proof=json.loads((Path(os.environ['RUNNER_TEMP'])/'proof'/'browser-proof.summary.json').read_text())
+          receipt.update({'status':'PASS_VISIBLE_ENVIRONMENT_PROVEN','desktopBrowserProof':'PASS','touchMobileBrowserProof':'PASS','candidateTerrainModuleLoaded':True,'visibleWorldFrameProven':True,'browserProofSummary':proof})
+          receipt_path.write_text(json.dumps(receipt,indent=2)+'\n')
+          PY
+
+      - name: Commit verified preview root
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/publication"
+          git config user.name h-earth-preview-publisher
+          git config user.email actions@users.noreply.github.com
+          git add "$PREVIEW_ROOT"
+          test -n "$(git status --porcelain -- "$PREVIEW_ROOT")"
+          git commit -m 'Publish verified R06 C10 candidate environment preview'
+          git push origin "HEAD:$PUBLICATION_BRANCH"
+
+      - name: Upload browser proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-r06-c10-preview-95504c-v7-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/proof
+            publication/${{ env.PREVIEW_ROOT }}/byte-manifest.json
+            publication/${{ env.PREVIEW_ROOT }}/byte-manifest.sha256
+            publication/${{ env.PREVIEW_ROOT }}/publication-receipt.json
+          if-no-files-found: warn
+          retention-days: 30

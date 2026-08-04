@@ -1,122 +1,48 @@
-# content trigger: prospective candidate 004
-name: H-Earth R06 C10 Prospective Candidate 004 Construction and Admission
-
+# active-branch relay trigger: prospective candidate 005
+name: H-Earth R06 C10 Prospective Candidate 005 Active-Branch Relay
 on:
   push:
     branches:
       - control/r06-c10-prospective-candidate-004-construction-and-admission
     paths-ignore:
       - h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-004/**
-
 permissions:
   contents: write
-
 concurrency:
-  group: h-earth-r06-c10-prospective-candidate-004
+  group: h-earth-r06-c10-prospective-candidate-005-relay
   cancel-in-progress: false
-
 jobs:
   construct-and-admit:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Check out exact isolated carrier head
+      - name: Check out exact candidate-005 carrier branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: control/r06-c10-prospective-candidate-005-construction-and-admission
           fetch-depth: 0
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Recover and correct the prospective operation carrier
+      - name: Reconstruct checksum-bound candidate-005 carrier
         shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          OPERATION_BLOB: f24d137139935cfb78cea02e6b7cd098f63d1fef
         run: |
           set -euo pipefail
-          mkdir -p .github/ai-router/carriers
-          python - <<'PY'
-          import base64, json, os, pathlib, urllib.request
-          repo=os.environ['GITHUB_REPOSITORY']
-          blob=os.environ['OPERATION_BLOB']
-          request=urllib.request.Request(
-              f'https://api.github.com/repos/{repo}/git/blobs/{blob}',
-              headers={
-                  'Authorization':f'Bearer {os.environ["GH_TOKEN"]}',
-                  'Accept':'application/vnd.github+json',
-                  'X-GitHub-Api-Version':'2022-11-28'
-              }
-          )
-          with urllib.request.urlopen(request) as response:
-              payload=json.load(response)
-          original=base64.b64decode(payload['content'])
-          source=pathlib.Path('/tmp/r06-c10-prospective-candidate-004.original-operation.sh')
-          source.write_bytes(original)
-          assert os.popen(f'git hash-object {source}').read().strip()==blob
-          text=original.decode('utf-8').replace('003','004')
-          text=text.replace(
-              "CARRIER_BRANCH='control/r06-c10-prospective-candidate-002-construction-and-admission'",
-              "CARRIER_BRANCH='control/r06-c10-prospective-candidate-004-construction-and-admission'"
-          )
-          marker="evaluator=show(source_paths['evaluator']).replace('002','004')\n"
-          assert marker in text
-          correction=r'''# Public South geometry exposes counts and axis identities, not its internal arrays.
-          evaluator=evaluator.replace(
-              "  const expectedIndices=buildIndependentIndices(axes.zValues.length,axes.xValues.length);\n  const indexMatch=",
-              "  const indexMatch="
-          )
-          evaluator=evaluator.replace(
-              "  const topology=geometry.topology;",
-              """  const constructorTopology=geometry?.topology??null;
-          const independentVertices=[];
-          let independentFinite=true;
-          for(const z of axes.zValues)for(const x of axes.xValues){
-            const sample=sampleHEarthRun8BSuccessorTerrainField(x,z);
-            if(sample?.valid!==true||!finite(sample.elevation))independentFinite=false;
-            independentVertices.push({x,y:sample.elevation,z});
-          }
-          const expectedIndices=buildIndependentIndices(axes.zValues.length,axes.xValues.length);
-          const topology={
-            ok:geometry?.ok===true&&independentFinite,
-            xValues:axes.xValues,
-            zValues:axes.zValues,
-            rowCount:axes.zValues.length,
-            columnCount:axes.xValues.length,
-            vertices:independentVertices,
-            indices:expectedIndices,
-            constructorTopology,
-            issues:geometry?.issues??[]
-          };"""
-          )
-          evaluator=evaluator.replace(
-              "const axisMatch=topology?.ok===true&&stableJson(topology.xValues)===stableJson(axes.xValues)&&stableJson(topology.zValues)===stableJson(axes.zValues);",
-              "const axisMatch=topology?.ok===true&&constructorTopology?.vertexCount===topology.vertices.length&&constructorTopology?.indexCount===topology.indices.length&&stableJson(topology.xValues)===stableJson(axes.xValues)&&stableJson(topology.zValues)===stableJson(axes.zValues);"
-          )
-          evaluator=evaluator.replace(
-              "error:error instanceof Error?error.message:String(error),privateStateUsed:false",
-              "error:error instanceof Error?error.message:String(error),errorStack:error instanceof Error?error.stack:null,privateStateUsed:false"
-          )
-          '''
-          text=text.replace(marker,marker+correction)
-          target=pathlib.Path('.github/ai-router/carriers/r06-c10-prospective-candidate-004.operation.sh')
-          target.write_text(text)
-          PY
-          chmod +x .github/ai-router/carriers/r06-c10-prospective-candidate-004.operation.sh
-
-      - name: Construct direct-main successor and execute current 28-assertion gate
+          BASE=.github/ai-router/carriers/r06-c10-prospective-candidate-005
+          cat "${BASE}.bundle.part"*.b64 | base64 -d > "${BASE}.bundle.tar.gz"
+          cat "${BASE}.operation.part"*.b64 | base64 -d > "${BASE}.operation.sh"
+          test "$(sha256sum "${BASE}.bundle.tar.gz" | awk '{print $1}')" = 7b5dae4b11c2e7d48b0ca4b379a7c5cfcb2d644b64d1e34b44d8f4d5f5ba0b6c
+          test "$(sha256sum "${BASE}.operation.sh" | awk '{print $1}')" = 0984048596ecca47fa342ad105f9ad15880ad8ae7bfdcefb3b97bd7b6b9e9754
+          chmod +x "${BASE}.operation.sh"
+      - name: Construct direct-main candidate 005 and run unchanged exact gate
         shell: bash
         run: |
-          .github/ai-router/carriers/r06-c10-prospective-candidate-004.operation.sh
-
-      - name: Upload prospective construction and admission evidence
+          .github/ai-router/carriers/r06-c10-prospective-candidate-005.operation.sh
+      - name: Upload candidate-005 execution evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-r06-c10-prospective-candidate-004-admission
-          path: /tmp/r06-c10-prospective-candidate-004/
+          name: h-earth-r06-c10-prospective-candidate-005-admission
+          path: /tmp/r06-c10-prospective-candidate-005/
           if-no-files-found: error
           retention-days: 90

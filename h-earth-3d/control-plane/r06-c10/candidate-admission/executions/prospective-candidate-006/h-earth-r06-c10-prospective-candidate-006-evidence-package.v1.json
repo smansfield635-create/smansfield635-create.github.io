@@ -1,0 +1,766 @@
+{
+  "assertions": [
+    {
+      "evidence": {
+        "expectedParent": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+        "parentHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+        "protectedIdentity": [
+          {
+            "actual": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+            "expected": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+            "parent": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+            "path": "showroom/globe/h-earth/index.html"
+          },
+          {
+            "actual": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "expected": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "parent": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+          },
+          {
+            "actual": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+            "expected": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+            "parent": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+            "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+          },
+          {
+            "actual": "8ab3446c536fc24423d5601acce232b19fa71c91",
+            "expected": "8ab3446c536fc24423d5601acce232b19fa71c91",
+            "parent": "8ab3446c536fc24423d5601acce232b19fa71c91",
+            "path": "showroom/globe/h-earth/functional-landscape/navigation.js"
+          },
+          {
+            "actual": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+            "expected": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+            "parent": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+            "path": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+          },
+          {
+            "actual": "ab30137698716b6674e295dfb537fa04ffef4d46",
+            "expected": "ab30137698716b6674e295dfb537fa04ffef4d46",
+            "parent": "ab30137698716b6674e295dfb537fa04ffef4d46",
+            "path": "h-earth-3d/tools/instrument-platform/permanent-scene-registry.mjs"
+          }
+        ],
+        "workingTreeClean": true
+      },
+      "id": "01_EXACT_BASELINE_COMMIT_AND_ALL_REQUIRED_BLOBS_MATCH",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "mode": "FROZEN_TOOL_IDENTITY_RECHECK",
+        "toolIdentity": [
+          {
+            "actual": "569553d2d08e954c0459db98770faaf1c210230c",
+            "expected": "569553d2d08e954c0459db98770faaf1c210230c",
+            "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-contracts.v1.mjs"
+          },
+          {
+            "actual": "fca63387cf1599e12f97e75e16f9e33f92880896",
+            "expected": "fca63387cf1599e12f97e75e16f9e33f92880896",
+            "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.geometry-articulation-authoring-tool.v1.mjs"
+          },
+          {
+            "actual": "53ad54911e7108f1bdbfbef39cb59b814ae76785",
+            "expected": "53ad54911e7108f1bdbfbef39cb59b814ae76785",
+            "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.candidate-clearance-adapter.v1.mjs"
+          },
+          {
+            "actual": "b50b8959208cf8cead0f1b9392d039e27257608c",
+            "expected": "b50b8959208cf8cead0f1b9392d039e27257608c",
+            "path": "h-earth-3d/validation/h-earth.r06-c10.geometry-articulation-tool.harness.mjs"
+          },
+          {
+            "actual": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+            "expected": "284e675d02e1fbf43d66a64eb9b37f2a712ab29f",
+            "path": "h-earth-3d/tools/r06-c10/h-earth.r06-c10.package-and-recovery-emitter.v1.mjs"
+          }
+        ]
+      },
+      "id": "02_ROLE_6_PACKAGE_AND_MEMBER_SHA256_VALUES_MATCH",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "issues": [],
+        "productRequestSha256": "f3cf3e2aba60d8c9896cb8d234981e14bbd1a073a1a431c84df288b2996859a3",
+        "requestCanonicalSha256": "f3cf3e2aba60d8c9896cb8d234981e14bbd1a073a1a431c84df288b2996859a3",
+        "unknown": [],
+        "valid": true
+      },
+      "id": "03_REQUEST_SCHEMA_VALID_AND_NO_UNKNOWN_KEYS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "issues": [],
+        "operationCount": 9,
+        "valid": true
+      },
+      "id": "04_ALL_PARAMETERS_INSIDE_SAFE_BOUNDS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "classification": "MODE_A_FROZEN_TOOL_CONFORMANCE_ONLY",
+        "deterministicReceiptDigest": "ff82cdd4c0bd2499540b1128167b4aee0dfef356326040831c3cfcad0a184c89",
+        "exitCode": 0,
+        "failIds": [
+          "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+          "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+          "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+        ],
+        "passCount": 25
+      },
+      "id": "05_CONFORMANCE_OUTPUT_SHA256_MATCHES_EXPECTED_FIXTURE",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "firstDigest": "b1572ebfe0e1ab354d7cfd825e549d6fdcdd2f99184e0e14ccbfde85fb0dc331",
+        "randomnessUsed": false,
+        "secondDigest": "b1572ebfe0e1ab354d7cfd825e549d6fdcdd2f99184e0e14ccbfde85fb0dc331"
+      },
+      "id": "06_CANDIDATE_FIELD_DETERMINISTIC_REPEAT_EXECUTION",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "nonfiniteCount": 0,
+        "sampledAxisPointCount": 24360
+      },
+      "id": "07_CANDIDATE_FIELD_FINITE_AT_ALL_RUN_8B_AXIS_POINTS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "deltaRange": {
+          "maximum": 5.00024063906283,
+          "minimum": -5.465941863163164
+        },
+        "nonzeroDeltaCount": 0,
+        "outsideAxisPointCount": 24108
+      },
+      "id": "08_DELTA_EXACT_ZERO_OUTSIDE_BLEND_SUPPORT",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "edgeSampleCount": 96,
+        "nonzeroCount": 0
+      },
+      "id": "09_SUPPORT_OUTER_EDGE_DELTA_EXACT_ZERO",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "bound": 1e-8,
+        "maximumGradient": 0,
+        "method": "ANALYTIC_Q5_OUTER_EDGE_VALUE_AND_FIRST_DERIVATIVE_ZERO"
+      },
+      "id": "10_SUPPORT_OUTER_EDGE_GRADIENT_WITHIN_1E_MINUS_8",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "geometryConstructorBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+        "xCount": 203,
+        "xDigest": "b1898c5b377f0249ae6e0407fc4767c77c2456ce48e53f8b8e933cfbdf3fd66c",
+        "zCount": 120,
+        "zDigest": "61cbc175fe734f75af50dcad03cb262f1cd642e02a5ef5e3ee03957487969985"
+      },
+      "id": "11_RUN_8B_X_AND_Z_AXES_BYTE_EQUIVALENT",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "actualIndexCount": 144228,
+        "expectedIndexCount": 144228,
+        "indexDigest": "895a1beb501b402f4a592647a3910188dde764977030018fca968a42b8bb0a5a"
+      },
+      "id": "12_RUN_8B_INDEX_ARRAY_BYTE_EQUIVALENT",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "columnCount": 203,
+        "expectedTriangles": 48076,
+        "expectedVertices": 24360,
+        "rowCount": 120,
+        "triangleCount": 48076,
+        "vertexCount": 24360
+      },
+      "id": "13_VERTEX_TRIANGLE_ROW_COLUMN_COUNTS_MATCH",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "minimumTriangleDoubleArea": 4.000314971616015,
+        "requiredMinimum": 4
+      },
+      "id": "14_NONDEGENERATE_TRIANGLES_MINIMUM_DOUBLE_AREA_AT_LEAST_4",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "faceNormalCount": 48076,
+        "invalidNormals": 0,
+        "vertexNormalCount": 24360
+      },
+      "id": "15_FACE_AND_VERTEX_NORMALS_FINITE_AND_UNIT_BOUNDED",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "issues": [],
+        "sharedEdgePairCount": 2045,
+        "status": "RUN_8B_VIRTUAL_SHARED_EDGE_PASS"
+      },
+      "id": "16_ALL_VIRTUAL_SHARED_EDGE_PAIRS_PASS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "issues": [],
+        "status": "RUN_8B_FORMER_BOUNDARY_CONTINUITY_PASS"
+      },
+      "id": "17_FORMER_BOUNDARY_CONTINUITY_REMAINS_PASS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "coastAndWaterExteriorNonzeroCount": 0,
+        "forbiddenChangedPaths": [],
+        "waterImplementation": false
+      },
+      "id": "18_COASTLINE_AND_WATER_MEMBERSHIP_UNCHANGED",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "limits": {
+          "edgeGradient": 1e-8,
+          "generalNormal": 35,
+          "generalRise": 2.5,
+          "generalSlope": 1.25,
+          "specialNormal": 50,
+          "specialRise": 4,
+          "specialSlope": 2
+        },
+        "maxima": {
+          "generalNormal": 0,
+          "generalRise": 0,
+          "generalSlope": 0,
+          "specialNormal": 54.21623236703736,
+          "specialRise": 3.4120563864707947,
+          "specialSlope": 1.7457643122414066
+        }
+      },
+      "id": "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "pass": false
+    },
+    {
+      "evidence": {
+        "continuousPassLengthWorldUnits": 32,
+        "declaredLengthWorldUnits": 32,
+        "declaredWidthWorldUnits": 8,
+        "failedStationCount": 0,
+        "hardSlopeMaximum": 0.48,
+        "status": "TRAVERSAL_CLEARANCE_PASS"
+      },
+      "id": "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "candidateFieldUsed": true,
+        "run6NavigationFieldUsed": false
+      },
+      "id": "21_CLEARANCE_USES_CANDIDATE_FIELD_NOT_RUN_6_FIELD",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "eligiblePatchCount": 1,
+        "eligiblePatchIds": [
+          "R06_C10_CAVERN_COMPATIBLE_FACE_PATCH_001"
+        ],
+        "status": "CAVERN_COMPATIBILITY_ANALYSIS_COMPLETE"
+      },
+      "id": "22_AT_LEAST_ONE_CAVERN_COMPATIBLE_FACE_PATCH_REPORTED",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "continuousDownhillPath": true,
+        "dryGeometryPresent": true,
+        "flowDirectionWitnessSamples": [
+          {
+            "elevation": 19.645356059074402,
+            "index": 0,
+            "x": 44,
+            "z": -168
+          },
+          {
+            "elevation": 16.22595304250717,
+            "index": 1,
+            "x": 44,
+            "z": -180
+          },
+          {
+            "elevation": 10.821702241897583,
+            "index": 2,
+            "x": 44,
+            "z": -192
+          },
+          {
+            "elevation": 10.821702241897583,
+            "index": 3,
+            "x": 44,
+            "z": -192
+          },
+          {
+            "elevation": 10.821702241897583,
+            "index": 4,
+            "x": 44,
+            "z": -192
+          },
+          {
+            "elevation": 10.24827641248703,
+            "index": 5,
+            "x": 36,
+            "z": -196
+          },
+          {
+            "elevation": 4.532264173030853,
+            "index": 6,
+            "x": 28,
+            "z": -200
+          }
+        ],
+        "status": "WATERFALL_READINESS_DRY_GEOMETRY_REPORTED",
+        "waterImplementation": false
+      },
+      "id": "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "protectedProductBlobs": [
+          {
+            "actual": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+            "expected": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+            "parent": "bc868995d9065ce03a5948bcf9f27804b178bc0b",
+            "path": "showroom/globe/h-earth/index.html"
+          },
+          {
+            "actual": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "expected": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "parent": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+          },
+          {
+            "actual": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+            "expected": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+            "parent": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+            "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+          },
+          {
+            "actual": "8ab3446c536fc24423d5601acce232b19fa71c91",
+            "expected": "8ab3446c536fc24423d5601acce232b19fa71c91",
+            "parent": "8ab3446c536fc24423d5601acce232b19fa71c91",
+            "path": "showroom/globe/h-earth/functional-landscape/navigation.js"
+          }
+        ]
+      },
+      "id": "24_ACCEPTED_V2_PRODUCT_BLOBS_UNCHANGED",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "cavernFinalization": false,
+        "directPostconstructionVertexEditing": false,
+        "forbiddenChangedPaths": [],
+        "prohibitedMatches": [],
+        "waterImplementation": false
+      },
+      "id": "25_NO_NEW_SHADER_TEXTURE_BUFFER_DRAW_CALL_OR_WATER_PRIMITIVE",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "normalMatchedViewCount": 4,
+        "sceneIds": [
+          "SCENE_01_HILL_FIELD_FILL",
+          "SCENE_02_ASCENDING_TOWARD_CREST",
+          "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+          "SCENE_06_COAST_TO_INLAND_TRANSITION"
+        ],
+        "screenshotsClaimed": false,
+        "sourceRegistryBlob": "ab30137698716b6674e295dfb537fa04ffef4d46",
+        "viewCount": 4
+      },
+      "id": "26_MATCHED_CAMERA_MANIFEST_HAS_AT_LEAST_THREE_NORMAL_VIEWS",
+      "pass": true
+    },
+    {
+      "evidence": {
+        "rollbackIdentity": {
+          "candidateChangedPaths": [
+            "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json",
+            "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.matched-camera-manifest.v1.json",
+            "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.request.v1.json",
+            "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-006.js",
+            "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+            "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-006.exact-candidate-evaluator.v1.mjs"
+          ],
+          "candidateHead": "79e9ae5596920b8ab4ed2016433b195116446dec",
+          "parentHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+          "parentProductBlobs": {
+            "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-006.js": null,
+            "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js": "0bd36eec01a75311bf6441d575bae5a057195bbc"
+          },
+          "procedure": [
+            "MOVE_CANDIDATE_BRANCH_REF_TO_PARENT_HEAD",
+            "REMOVE_CANDIDATE_ONLY_PATHS",
+            "VERIFY_PROTECTED_BLOBS_MATCH_PARENT"
+          ],
+          "rollbackId": "R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_006_RESET_TO_MAIN"
+        }
+      },
+      "id": "27_ROLLBACK_AND_RECOVERY_OUTPUTS_COMPLETE",
+      "pass": true
+    }
+  ],
+  "cameraManifest": {
+    "candidateId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_006",
+    "captureAuthority": "POST_GATE_INDEPENDENT_RENDER_EXECUTION",
+    "schema": "H_EARTH_R06_C10_PROSPECTIVE_MATCHED_CAMERA_MANIFEST_v1",
+    "screenshotsClaimed": false,
+    "sourceRegistryExpectedBlob": "ab30137698716b6674e295dfb537fa04ffef4d46",
+    "sourceRegistryPath": "h-earth-3d/tools/instrument-platform/permanent-scene-registry.mjs",
+    "userReviewAuthorized": false,
+    "views": [
+      {
+        "matchedBaselineAndCandidate": true,
+        "normalTraversalView": true,
+        "sceneId": "SCENE_01_HILL_FIELD_FILL"
+      },
+      {
+        "matchedBaselineAndCandidate": true,
+        "normalTraversalView": true,
+        "sceneId": "SCENE_02_ASCENDING_TOWARD_CREST"
+      },
+      {
+        "matchedBaselineAndCandidate": true,
+        "normalTraversalView": true,
+        "sceneId": "SCENE_03_DESCENDING_WITHOUT_HORIZON"
+      },
+      {
+        "matchedBaselineAndCandidate": true,
+        "normalTraversalView": true,
+        "sceneId": "SCENE_06_COAST_TO_INLAND_TRANSITION"
+      }
+    ]
+  },
+  "cameraManifestPath": "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.matched-camera-manifest.v1.json",
+  "candidateBlobs": {
+    "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json": "e56325a2be878fbeffbcd46457b762414122ff65",
+    "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.matched-camera-manifest.v1.json": "00a95ef47081038c7b86e7facd9b2ca563641900",
+    "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.request.v1.json": "f41b001086d1e461ae4f0ec89a17c1d23a6043da",
+    "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-006.js": "81eab1a7d6d994143e97948bd0779b699a684199",
+    "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js": "f08a868c7ddcf924b94896e216e2f4f77f117183",
+    "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-006.exact-candidate-evaluator.v1.mjs": "9b61f58574bd545a635e5c18f53fbd79f25eaaa8"
+  },
+  "candidateHead": "79e9ae5596920b8ab4ed2016433b195116446dec",
+  "changedPaths": [
+    "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json",
+    "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.matched-camera-manifest.v1.json",
+    "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.request.v1.json",
+    "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-006.js",
+    "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-006.exact-candidate-evaluator.v1.mjs"
+  ],
+  "parentHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+  "rawMeasurements": {
+    "diagnosticInputCandidate": "95504c9927922318225da1d61fa303cec70497f9",
+    "diagnosticInputUsedAsAuthority": false,
+    "evaluatorId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_006_EXACT_EVALUATOR_v1",
+    "evidenceAuthorship": "PROSPECTIVE_ONLY",
+    "modeA": {
+      "classification": "FROZEN_TOOL_CONFORMANCE_ONLY",
+      "deterministicReceiptDigest": "ff82cdd4c0bd2499540b1128167b4aee0dfef356326040831c3cfcad0a184c89",
+      "failIds": [
+        "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+        "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+        "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+      ],
+      "passCount": 25
+    },
+    "modeB": {
+      "axisPointCount": 24360,
+      "cavern": {
+        "eligiblePatchCount": 1
+      },
+      "deltaRange": {
+        "maximum": 5.00024063906283,
+        "minimum": -5.465941863163164
+      },
+      "edgeMaximumGradient": 0,
+      "fieldDeterministicDigest": "b1572ebfe0e1ab354d7cfd825e549d6fdcdd2f99184e0e14ccbfde85fb0dc331",
+      "geometry": {
+        "minimumTriangleDoubleArea": 4.000314971616015,
+        "sharedEdgePairCount": 2045,
+        "triangleCount": 48076,
+        "vertexCount": 24360
+      },
+      "requestCanonicalSha256": "f3cf3e2aba60d8c9896cb8d234981e14bbd1a073a1a431c84df288b2996859a3",
+      "slopeAndNormal": {
+        "generalNormal": 0,
+        "generalRise": 0,
+        "generalSlope": 0,
+        "specialNormal": 54.21623236703736,
+        "specialRise": 3.4120563864707947,
+        "specialSlope": 1.7457643122414066
+      },
+      "traversal": {
+        "continuousPassLength": 32,
+        "length": 32,
+        "status": "TRAVERSAL_CLEARANCE_PASS",
+        "width": 8
+      },
+      "waterfall": {
+        "continuousDownhillPath": true,
+        "status": "WATERFALL_READINESS_DRY_GEOMETRY_REPORTED",
+        "witnesses": [
+          {
+            "elevation": 19.645356059074402,
+            "index": 0,
+            "x": 44,
+            "z": -168
+          },
+          {
+            "elevation": 16.22595304250717,
+            "index": 1,
+            "x": 44,
+            "z": -180
+          },
+          {
+            "elevation": 10.821702241897583,
+            "index": 2,
+            "x": 44,
+            "z": -192
+          },
+          {
+            "elevation": 10.821702241897583,
+            "index": 3,
+            "x": 44,
+            "z": -192
+          },
+          {
+            "elevation": 10.821702241897583,
+            "index": 4,
+            "x": 44,
+            "z": -192
+          },
+          {
+            "elevation": 10.24827641248703,
+            "index": 5,
+            "x": 36,
+            "z": -196
+          },
+          {
+            "elevation": 4.532264173030853,
+            "index": 6,
+            "x": 28,
+            "z": -200
+          }
+        ]
+      }
+    }
+  },
+  "request": {
+    "cavernCompatibility": {
+      "required": true
+    },
+    "exactBaseline": {
+      "commit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+      "geometryConstructorBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+      "terrainFieldBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc"
+    },
+    "operationId": "H_EARTH_R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_CONSTRUCTION_006",
+    "operations": [
+      {
+        "amplitude": 3.4,
+        "centerX": 44,
+        "centerZ": -168,
+        "operator": "ORIENTED_SADDLE",
+        "radiusU": 14,
+        "radiusV": 10,
+        "rotationDegrees": 90
+      },
+      {
+        "centerX": 36,
+        "centerZ": -178,
+        "feather": 6,
+        "halfLength": 18,
+        "halfWidth": 7,
+        "height": 3.4,
+        "operator": "RIDGE_FACE",
+        "rotationDegrees": 90
+      },
+      {
+        "centerX": 52,
+        "centerZ": -178,
+        "feather": 6,
+        "halfLength": 18,
+        "halfWidth": 7,
+        "height": 3.4,
+        "operator": "RIDGE_FACE",
+        "rotationDegrees": 90
+      },
+      {
+        "depth": 1,
+        "endFeatherWorldUnits": 6,
+        "halfWidth": 6,
+        "operator": "VALLEY_CORRIDOR",
+        "polyline": [
+          [
+            44,
+            -164
+          ],
+          [
+            44,
+            -176
+          ],
+          [
+            44,
+            -188
+          ]
+        ]
+      },
+      {
+        "centerX": 44,
+        "centerZ": -180,
+        "drop": 4,
+        "feather": 6,
+        "halfLength": 12,
+        "halfWidth": 10,
+        "operator": "FALL_FACE",
+        "rotationDegrees": -90
+      },
+      {
+        "centerX": 44,
+        "centerZ": -192,
+        "depth": 2,
+        "operator": "LOWER_BASIN",
+        "radiusU": 14,
+        "radiusV": 12,
+        "rotationDegrees": 0
+      },
+      {
+        "depth": 2.4,
+        "endFeatherWorldUnits": 4,
+        "halfWidth": 4,
+        "operator": "DRAINAGE_CUT",
+        "polyline": [
+          [
+            44,
+            -192
+          ],
+          [
+            36,
+            -196
+          ],
+          [
+            28,
+            -200
+          ]
+        ]
+      },
+      {
+        "centerX": 34,
+        "centerZ": -170,
+        "feather": 4,
+        "halfLength": 10,
+        "halfWidth": 5,
+        "height": 0.9,
+        "operator": "TERRACE_BAND",
+        "rotationDegrees": 90
+      },
+      {
+        "centerX": 54,
+        "centerZ": -170,
+        "feather": 4,
+        "halfLength": 10,
+        "halfWidth": 5,
+        "height": 0.9,
+        "operator": "TERRACE_BAND",
+        "rotationDegrees": 90
+      }
+    ],
+    "region": {
+      "authoredCore": {
+        "xMaximum": 64,
+        "xMinimum": 32,
+        "zMaximum": -164,
+        "zMinimum": -192
+      },
+      "blendSupport": {
+        "xMaximum": 72,
+        "xMinimum": 24,
+        "zMaximum": -156,
+        "zMinimum": -200
+      },
+      "semanticAddress": "H_EARTH_GROUND_CELL_001:R06:C10",
+      "verificationHalo": {
+        "xMaximum": 80,
+        "xMinimum": 16,
+        "zMaximum": -148,
+        "zMinimum": -208
+      }
+    },
+    "schemaVersion": "H_EARTH_R06_C10_ARTICULATION_REQUEST_v1",
+    "traversableOpening": {
+      "minimumWidthWorldUnits": 8,
+      "polyline": [
+        [
+          68,
+          -196
+        ],
+        [
+          68,
+          -164
+        ]
+      ]
+    },
+    "waterfallReadiness": {
+      "required": true
+    }
+  },
+  "requestPath": "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.request.v1.json",
+  "rollbackIdentity": {
+    "candidateChangedPaths": [
+      "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json",
+      "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.matched-camera-manifest.v1.json",
+      "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.prospective-landform-candidate-006.request.v1.json",
+      "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-006.js",
+      "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-006.exact-candidate-evaluator.v1.mjs"
+    ],
+    "candidateHead": "79e9ae5596920b8ab4ed2016433b195116446dec",
+    "parentHead": "b1bd82abe9ab5f8a1535cf2e664c6d67ab91dc7f",
+    "parentProductBlobs": {
+      "h-earth-3d/terrain/h-earth.r06-c10.prospective-landform-candidate-006.js": null,
+      "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js": "0bd36eec01a75311bf6441d575bae5a057195bbc"
+    },
+    "procedure": [
+      "MOVE_CANDIDATE_BRANCH_REF_TO_PARENT_HEAD",
+      "REMOVE_CANDIDATE_ONLY_PATHS",
+      "VERIFY_PROTECTED_BLOBS_MATCH_PARENT"
+    ],
+    "rollbackId": "R06_C10_PROSPECTIVE_LANDFORM_CANDIDATE_006_RESET_TO_MAIN"
+  },
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_006_EVIDENCE_PACKAGE_v1"
+}

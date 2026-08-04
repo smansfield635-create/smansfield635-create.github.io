@@ -1,0 +1,12 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_006_PREFLIGHT_DISPOSITION_v1",
+  "repositoryRouterDisposition": "PASS",
+  "hEarthPreflightExitCode": 1,
+  "hEarthPreflightDisposition": "UNAVAILABLE_DUE_UNRELATED_C2_R1_REGISTRY_LOADER_DEFECT",
+  "exactDefect": "C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE",
+  "defectOutsideCandidateScope": true,
+  "separateMutationAuthority": "EXPLICIT_USER_DIRECTIVE_2026_08_04",
+  "narrowerR06C10Authority": "ACTIVE_FAIL_CLOSED_LOCATOR_AND_GATE",
+  "manualGateMetadataReconstructionAllowed": false,
+  "continuation": "PROCEED_TO_NEW_DIRECT_MAIN_SUCCESSOR_AND_UNCHANGED_EXACT_GATE"
+}

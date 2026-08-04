@@ -1,0 +1,12 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_006_DIRECT_EVALUATOR_SUMMARY_v1",
+  "exitCode": 1,
+  "receiptSchema": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_RECEIPT_v1",
+  "overallResult": "FAIL_27_OF_28",
+  "passCount": 27,
+  "failCount": 1,
+  "exactFailIds": [
+    "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS"
+  ],
+  "error": null
+}

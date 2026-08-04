@@ -25,89 +25,126 @@ const exactReturnFields = Object.freeze([
 ]);
 
 const result = {
-  contract: "LAWS_CHILD_SPATIAL_STAGE_SHELL_OBSERVER_v1",
+  contract: "METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_OBSERVER_v1",
+  operation: "METHODS_CATEGORICAL_SPATIAL_STAGE_PERCEPTUAL_COMPOSITION_CORRECTION_v1",
   observations: [],
   screenshots: [],
   consoleErrors: [],
   pageErrors: [],
   requestFailures: [],
   checks: {},
-  mergeAuthorized: false,
   publicMethodsMutationAuthorized: false,
-  empiricalValidationClaimed: false,
-  userReviewAuthorized: false
+  mergeAuthorized: false,
+  userReviewAuthorized: false,
+  full1575StateCertificationClaimed: false
 };
 
 async function writeJson(name, value) {
   await fs.writeFile(path.join(outDir, name), `${JSON.stringify(value, null, 2)}\n`);
 }
 
-async function whenStable(page) {
+async function settle(page) {
   await page.evaluate(() => globalThis.__METHODS_SPATIAL_APP.whenStable());
-  await page.waitForFunction(() => document.documentElement.dataset.lawsChildStageReady === "true", { timeout: 12000 });
+  await page.waitForFunction(() => document.documentElement.dataset.perceptualCompositionReady === "true", { timeout: 12000 });
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+
+function overlapRatio(a, b) {
+  const width = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+  const height = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+  const overlap = width * height;
+  const smaller = Math.max(1, Math.min(a.width * a.height, b.width * b.height));
+  return overlap / smaller;
 }
 
 async function snapshot(page) {
-  await whenStable(page);
+  await settle(page);
   return page.evaluate(() => {
-    const app = globalThis.__METHODS_SPATIAL_APP;
+    const rect = element => {
+      const value = element.getBoundingClientRect();
+      return { left: value.left, top: value.top, right: value.right, bottom: value.bottom, width: value.width, height: value.height };
+    };
+    const intersectionRatio = (child, parent) => {
+      const width = Math.max(0, Math.min(child.right, parent.right) - Math.max(child.left, parent.left));
+      const height = Math.max(0, Math.min(child.bottom, parent.bottom) - Math.max(child.top, parent.top));
+      return width * height / Math.max(1, child.width * child.height);
+    };
     const stage = document.querySelector("[data-spatial-stage]");
-    const stageRect = stage.getBoundingClientRect();
-    const planes = Array.from(document.querySelectorAll(".spatial-family-plane"));
-    const activeFamily = app.resolvedScene.native.familyId;
-    const activeFamilyNodes = Array.from(document.querySelectorAll(`.spatial-model-node[data-family-id="${CSS.escape(activeFamily)}"]`));
-    const yOffsets = activeFamilyNodes.map(node => Number((/translate3d\([^,]+,\s*([-\d.]+)px/.exec(node.style.transform) || [])[1])).filter(Number.isFinite);
+    const hero = document.querySelector("[data-laws-hero]");
+    const topbar = document.querySelector("[data-laws-child-topbar]");
+    const stageRect = rect(stage);
+    const viewportRect = { left: 0, top: 0, right: innerWidth, bottom: innerHeight, width: innerWidth, height: innerHeight };
+    const activeNode = document.querySelector(".spatial-model-node[data-active='true']");
+    const activeRect = rect(activeNode);
+    const planeRects = Array.from(document.querySelectorAll(".spatial-family-plane")).map(plane => ({ familyId: plane.dataset.familyId, ...rect(plane), transform: plane.style.transform, role: plane.dataset.compositionRole }));
+    const nodes = Array.from(document.querySelectorAll(".spatial-model-node:not([hidden])"));
+    const visibleNodeRects = nodes.map(node => ({ modelId: node.dataset.modelId, familyId: node.dataset.familyId, active: node.dataset.active === "true", formClass: node.dataset.formClass, role: node.dataset.compositionRole, ...rect(node) }));
+    const formSignatures = Object.fromEntries(Array.from(document.querySelectorAll(".spatial-model-node")).map(node => {
+      const style = getComputedStyle(node, "::before");
+      return [node.dataset.formClass, [style.clipPath, style.borderRadius, style.borderLeftWidth, style.borderRightStyle].join("|")];
+    }));
+    const inspection = document.querySelector("[data-spatial-inspection]");
+    const inspectionOpen = globalThis.__METHODS_SPATIAL_APP.inspectionOpen;
+    const inspectionPanel = document.querySelector(".spatial-inspection__panel");
+    const workbench = document.querySelector(".inspection-workbench");
+    const visibleWorkbenchPanels = Array.from(document.querySelectorAll("[data-workbench-panel]")).filter(panel => getComputedStyle(panel).display !== "none");
     return {
-      native: app.resolvedScene.native,
-      cameraMode: app.cameraMode,
-      inspectionOpen: app.inspectionOpen,
+      viewport: { width: innerWidth, height: innerHeight },
+      cameraMode: globalThis.__METHODS_SPATIAL_APP.cameraMode,
+      native: globalThis.__METHODS_SPATIAL_APP.resolvedScene.native,
       shell: {
-        lawsChildShell: Boolean(document.querySelector("[data-laws-child-shell]")),
-        topbar: Boolean(document.querySelector("[data-laws-child-topbar]")),
-        compactHero: Boolean(document.querySelector("[data-laws-hero]")),
-        chamber: Boolean(document.querySelector("[data-methods-chamber]")),
-        globalOrigin: document.querySelector("[data-global-origin]")?.textContent?.replace(/\s+/g, " ").trim() || "",
-        localOrigin: document.querySelector("[data-local-origin]")?.textContent?.replace(/\s+/g, " ").trim() || "",
-        localOriginState: document.querySelector("[data-local-origin-state]")?.textContent?.trim() || "",
-        globalReturnHref: document.querySelector("[data-global-return]")?.getAttribute("href") || "",
-        localReturnText: document.querySelector("[data-local-return]")?.textContent?.trim() || "",
-        support: Boolean(document.querySelector("[data-supporting-public-context]")),
-        claimBoundary: Boolean(document.querySelector("[data-claim-boundary]")),
-        custodyCollapsed: Boolean(document.querySelector("details[data-canonical-custody]:not([open])")),
-        stageViewportRatio: stageRect.height / Math.max(1, innerHeight),
-        stageWidthRatio: stageRect.width / Math.max(1, innerWidth)
+        topbar: rect(topbar),
+        hero: rect(hero),
+        stage: stageRect,
+        stageViewportIntersection: intersectionRatio(stageRect, viewportRect),
+        stageTopRatio: stageRect.top / innerHeight,
+        territoryIndexCount: document.querySelectorAll("[data-family-select]").length,
+        territoryIndexVisible: rect(document.querySelector("[data-family-territory-index]")).bottom > 0,
+        corpusCenterOffsetRatio: Number(stage.dataset.corpusCenterOffsetRatio || 1),
+        activeModelFullyVisibleFlag: stage.dataset.activeModelFullyVisible === "true"
       },
-      lensInstrument: {
-        count: document.querySelectorAll("[data-lens-select]").length,
-        active: Array.from(document.querySelectorAll("[data-lens-select][aria-pressed='true']")).map(button => button.dataset.lensSelect)
+      active: {
+        ...activeRect,
+        stageIntersection: intersectionRatio(activeRect, stageRect),
+        viewportIntersection: intersectionRatio(activeRect, viewportRect),
+        centerOffsetX: Math.abs((activeRect.left + activeRect.width / 2) - (stageRect.left + stageRect.width / 2)) / Math.max(1, stageRect.width),
+        centerOffsetY: Math.abs((activeRect.top + activeRect.height / 2) - (stageRect.top + stageRect.height / 2)) / Math.max(1, stageRect.height)
       },
-      familyRegions: {
-        count: planes.length,
-        transforms: planes.map(plane => plane.style.transform),
-        orders: planes.map(plane => plane.dataset.regionOrder),
-        semantics: planes.map(plane => plane.dataset.regionSemantics)
-      },
-      trajectory: {
-        activeFamily,
-        yOffsets,
-        uniqueYOffsets: new Set(yOffsets.map(value => value.toFixed(2))).size,
-        projectedCount: activeFamilyNodes.filter(node => node.dataset.trajectoryProjection === "CURVED_CANONICAL_ARC").length
+      planes: planeRects,
+      visibleNodes: visibleNodeRects,
+      objectLanguage: {
+        formClassCount: Object.keys(formSignatures).length,
+        uniqueSignatureCount: new Set(Object.values(formSignatures)).size,
+        signatures: formSignatures
       },
       inspection: {
-        originPath: Array.from(document.querySelectorAll(".inspection-origin span, .inspection-origin strong")).map(item => item.textContent.trim()).filter(Boolean),
-        localReturnText: document.querySelector("[data-local-return]")?.textContent?.trim() || ""
+        open: inspectionOpen,
+        panel: inspectionPanel ? rect(inspectionPanel) : null,
+        workbench: workbench ? rect(workbench) : null,
+        mobilePanel: inspection?.dataset.mobilePanel || null,
+        mobileTabCount: document.querySelectorAll("[data-inspection-tab]").length,
+        visibleWorkbenchPanelCount: visibleWorkbenchPanels.length,
+        visibleWorkbenchPanels: visibleWorkbenchPanels.map(panel => panel.dataset.workbenchPanel),
+        instrumentStage: rect(document.querySelector("[data-inspection-form-object]")),
+        sourceReferencePresent: Boolean(document.querySelector("[data-inspection-source-reference]")?.textContent?.trim())
       }
     };
   });
 }
 
-async function capture(page, name, fullPage = false) {
+async function capture(page, name) {
   const file = path.join(screenshotDir, `${name}.png`);
-  await page.screenshot({ path: file, fullPage });
+  await page.screenshot({ path: file, fullPage: false });
   result.screenshots.push(path.relative(outDir, file));
 }
 
-async function runViewport(browser, label, viewport) {
+async function selectFamily(page, targetIndex) {
+  await page.evaluate(index => globalThis.__LAWS_CHILD_STAGE_EXTENSION.selectFamilyIndex(index), targetIndex);
+  await page.waitForFunction(index => globalThis.__METHODS_SPATIAL_APP.resolvedScene.native.familyIndex === index, { timeout: 12000 }, targetIndex);
+  await settle(page);
+}
+
+async function openPage(browser, label, viewport) {
   const page = await browser.newPage();
   await page.setViewport(viewport);
   page.on("console", message => {
@@ -115,80 +152,129 @@ async function runViewport(browser, label, viewport) {
   });
   page.on("pageerror", error => result.pageErrors.push({ viewport: label, text: error.message }));
   page.on("requestfailed", request => result.requestFailures.push({ viewport: label, url: request.url(), reason: request.failure()?.errorText || "unknown" }));
-
   await page.goto(`${origin}/verification/methods-categorical-spatial-context-equation-embodiment-v1/`, { waitUntil: "networkidle0", timeout: 30000 });
-  await page.waitForFunction(() => document.documentElement.dataset.methodsSpatialReady === "true" && document.documentElement.dataset.lawsChildStageReady === "true", { timeout: 24000 });
+  await page.waitForFunction(() => document.documentElement.dataset.methodsSpatialReady === "true" && document.documentElement.dataset.perceptualCompositionReady === "true", { timeout: 24000 });
+  return page;
+}
 
+async function runDesktop(browser) {
+  const page = await openPage(browser, "desktop-1440x1000", { width: 1440, height: 1000, deviceScaleFactor: 1 });
   const overview = await snapshot(page);
-  result.observations.push({ viewport: label, state: "laws-child-overview", snapshot: overview });
-  await capture(page, `${label}-laws-child-overview`);
+  result.observations.push({ viewport: "desktop", state: "overview", snapshot: overview });
+  await capture(page, "desktop-overview");
+
+  const familyStates = [];
+  for (let index = 0; index < 4; index += 1) {
+    await selectFamily(page, index);
+    const state = await snapshot(page);
+    familyStates.push(state);
+    result.observations.push({ viewport: "desktop", state: `family-${index + 1}`, snapshot: state });
+    await capture(page, `desktop-family-${String(index + 1).padStart(2, "0")}-${state.native.familyId}`);
+  }
 
   await page.evaluate(() => globalThis.__METHODS_SPATIAL_APP.setCameraMode("browse"));
   const browse = await snapshot(page);
-  result.observations.push({ viewport: label, state: "laws-child-browse", snapshot: browse });
-
-  await page.click('[data-lens-select="evidence"]');
-  await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.resolvedScene.native.lensId === "evidence", { timeout: 12000 });
-  const evidence = await snapshot(page);
-  result.observations.push({ viewport: label, state: "laws-child-evidence-lens", snapshot: evidence });
-  await capture(page, `${label}-laws-child-evidence-lens`);
+  result.observations.push({ viewport: "desktop", state: "browse", snapshot: browse });
+  await capture(page, "desktop-browse");
 
   await page.evaluate(() => globalThis.__METHODS_SPATIAL_APP.inspect());
   await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.inspectionOpen === true, { timeout: 12000 });
   const inspection = await snapshot(page);
-  result.observations.push({ viewport: label, state: "laws-child-inspection", snapshot: inspection });
-  await capture(page, `${label}-laws-child-inspection`, true);
+  result.observations.push({ viewport: "desktop", state: "inspection", snapshot: inspection });
+  await capture(page, "desktop-inspection");
 
   await page.click("[data-local-return]");
   await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.inspectionOpen === false && Boolean(globalThis.__METHODS_SPATIAL_RETURN_RECEIPT), { timeout: 12000 });
   const returned = await snapshot(page);
   const returnReceipt = await page.evaluate(() => globalThis.__METHODS_SPATIAL_RETURN_RECEIPT);
-  result.observations.push({ viewport: label, state: "laws-child-exact-return", snapshot: returned, returnReceipt });
-
+  result.observations.push({ viewport: "desktop", state: "exact-return", snapshot: returned, returnReceipt });
   await page.close();
-  return { overview, browse, evidence, inspection, returned, returnReceipt };
+  return { overview, familyStates, browse, inspection, returned, returnReceipt };
+}
+
+async function runPhone(browser) {
+  const page = await openPage(browser, "phone-390x844", { width: 390, height: 844, deviceScaleFactor: 1 });
+  const overview = await snapshot(page);
+  result.observations.push({ viewport: "phone", state: "overview", snapshot: overview });
+  await capture(page, "phone-overview");
+
+  await page.evaluate(() => globalThis.__METHODS_SPATIAL_APP.setCameraMode("browse"));
+  const browse = await snapshot(page);
+  result.observations.push({ viewport: "phone", state: "browse", snapshot: browse });
+  await capture(page, "phone-browse");
+
+  await page.click('[data-lens-select="evidence"]');
+  await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.resolvedScene.native.lensId === "evidence", { timeout: 12000 });
+  const evidence = await snapshot(page);
+  result.observations.push({ viewport: "phone", state: "evidence", snapshot: evidence });
+  await capture(page, "phone-evidence");
+
+  await page.evaluate(() => globalThis.__METHODS_SPATIAL_APP.inspect());
+  await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.inspectionOpen === true, { timeout: 12000 });
+  const inspection = await snapshot(page);
+  result.observations.push({ viewport: "phone", state: "inspection", snapshot: inspection });
+  await capture(page, "phone-inspection");
+
+  await page.click('[data-inspection-tab="evidence"]');
+  const evidencePanel = await snapshot(page);
+  result.observations.push({ viewport: "phone", state: "inspection-evidence-panel", snapshot: evidencePanel });
+
+  await page.click("[data-local-return]");
+  await page.waitForFunction(() => globalThis.__METHODS_SPATIAL_APP.inspectionOpen === false && Boolean(globalThis.__METHODS_SPATIAL_RETURN_RECEIPT), { timeout: 12000 });
+  const returned = await snapshot(page);
+  const returnReceipt = await page.evaluate(() => globalThis.__METHODS_SPATIAL_RETURN_RECEIPT);
+  result.observations.push({ viewport: "phone", state: "exact-return", snapshot: returned, returnReceipt });
+  await page.close();
+  return { overview, browse, evidence, inspection, evidencePanel, returned, returnReceipt };
+}
+
+function exactReturn(receipt) {
+  return exactReturnFields.every(field => receipt?.[field] === true);
+}
+
+function maxPlaneOverlap(planes) {
+  let maximum = 0;
+  for (let left = 0; left < planes.length; left += 1) {
+    for (let right = left + 1; right < planes.length; right += 1) {
+      maximum = Math.max(maximum, overlapRatio(planes[left], planes[right]));
+    }
+  }
+  return maximum;
 }
 
 const browser = await puppeteer.launch({ executablePath: chromePath, headless: "new", args: ["--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu"] });
 try {
-  const desktop = await runViewport(browser, "desktop-1440x1000", { width: 1440, height: 1000, deviceScaleFactor: 1 });
-  const mobile = await runViewport(browser, "mobile-390x844", { width: 390, height: 844, deviceScaleFactor: 1 });
-
-  const shellComplete = run => {
-    const shell = run.overview.shell;
-    return shell.lawsChildShell && shell.topbar && shell.compactHero && shell.chamber && /Laws/i.test(shell.globalOrigin) && /Research/i.test(shell.globalOrigin) && /Methods and Models/i.test(shell.globalOrigin) && /Methods equation core/i.test(shell.localOrigin) && shell.globalReturnHref === "/laws/" && shell.localReturnText === "Return to corpus" && shell.support && shell.claimBoundary && shell.custodyCollapsed;
-  };
-  const stageContinuous = run => run.overview.shell.stageViewportRatio >= .70 && run.overview.shell.stageWidthRatio >= .90;
-  const ringComplete = run => run.overview.familyRegions.count === 4 && new Set(run.overview.familyRegions.transforms).size === 4 && new Set(run.overview.familyRegions.orders).size === 4 && run.overview.familyRegions.semantics.every(value => value === "CANONICAL_ORDER_WITHOUT_DIRECTIONAL_AUTHORITY");
-  const trajectoryComplete = run => run.overview.trajectory.uniqueYOffsets >= 3 && run.overview.trajectory.projectedCount >= 5;
-  const lensComplete = run => run.overview.lensInstrument.count === 3 && run.overview.lensInstrument.active.length === 1 && run.evidence.lensInstrument.active[0] === "evidence" && run.evidence.native.lensId === "evidence";
-  const inspectionOriginComplete = run => run.inspection.inspection.originPath.length >= 5 && run.inspection.inspection.originPath[0] === "Research" && run.inspection.inspection.originPath[1] === "Methods and Models" && run.inspection.inspection.localReturnText === "Return to corpus";
-  const exactReturn = run => exactReturnFields.every(field => run.returnReceipt?.[field] === true);
+  const desktop = await runDesktop(browser);
+  const phone = await runPhone(browser);
 
   result.checks = {
-    desktopLawsChildShellComplete: shellComplete(desktop),
-    mobileLawsChildShellComplete: shellComplete(mobile),
-    desktopStageContinuity: stageContinuous(desktop),
-    mobileStageContinuity: stageContinuous(mobile),
-    desktopFourFamilyCanonicalOrderRing: ringComplete(desktop),
-    mobileFourFamilyCanonicalOrderRing: ringComplete(mobile),
-    desktopCurvedModelTrajectory: trajectoryComplete(desktop),
-    mobileCurvedModelTrajectory: trajectoryComplete(mobile),
-    desktopLensInstrument: lensComplete(desktop),
-    mobileLensInstrument: lensComplete(mobile),
-    desktopInspectionOriginAndReturn: inspectionOriginComplete(desktop),
-    mobileInspectionOriginAndReturn: inspectionOriginComplete(mobile),
-    desktopExactMethodsReturn: exactReturn(desktop),
-    mobileExactMethodsReturn: exactReturn(mobile),
+    desktopStageInFirstView: desktop.overview.shell.stageTopRatio <= .20 && desktop.overview.shell.stageViewportIntersection >= .72,
+    phoneStageInFirstView: phone.overview.shell.stageTopRatio <= .22 && phone.overview.shell.stageViewportIntersection >= .72,
+    desktopCorpusCentered: desktop.overview.shell.corpusCenterOffsetRatio <= .08,
+    phoneCorpusCentered: phone.overview.shell.corpusCenterOffsetRatio <= .14,
+    desktopFourFamilyTerritoriesDistinct: desktop.overview.planes.length === 4 && new Set(desktop.overview.planes.map(plane => plane.transform)).size === 4 && maxPlaneOverlap(desktop.overview.planes) <= .35,
+    desktopFourFamilyStatesCaptured: desktop.familyStates.length === 4 && new Set(desktop.familyStates.map(state => state.native.familyId)).size === 4,
+    phoneFamilyHorizonVisible: phone.overview.shell.territoryIndexCount === 4 && phone.overview.shell.territoryIndexVisible,
+    desktopBrowseActiveFullyVisible: desktop.browse.active.stageIntersection >= .98 && desktop.browse.active.viewportIntersection >= .98 && desktop.browse.shell.activeModelFullyVisibleFlag,
+    phoneBrowseActiveFullyVisible: phone.browse.active.stageIntersection >= .97 && phone.browse.active.viewportIntersection >= .97 && phone.browse.active.width >= phone.browse.viewport.width * .68 && phone.browse.shell.activeModelFullyVisibleFlag,
+    phoneEvidenceKeepsActiveVisible: phone.evidence.active.stageIntersection >= .97 && phone.evidence.active.viewportIntersection >= .97 && phone.evidence.native.lensId === "evidence",
+    equationObjectLanguageMateriallyDistinct: desktop.overview.objectLanguage.formClassCount === 12 && desktop.overview.objectLanguage.uniqueSignatureCount >= 10,
+    desktopInspectionForegroundWorkbench: desktop.inspection.inspection.open && desktop.inspection.inspection.instrumentStage.height >= 200 && desktop.inspection.inspection.visibleWorkbenchPanelCount === 4 && desktop.inspection.inspection.sourceReferencePresent,
+    phoneInspectionFullViewWorkbench: phone.inspection.inspection.open && phone.inspection.inspection.panel.height >= phone.inspection.viewport.height * .98 && phone.inspection.inspection.mobileTabCount === 4 && phone.inspection.inspection.visibleWorkbenchPanelCount === 1,
+    phoneInspectionPanelNavigation: phone.evidencePanel.inspection.mobilePanel === "evidence" && phone.evidencePanel.inspection.visibleWorkbenchPanels.includes("evidence"),
+    desktopExactReturn: exactReturn(desktop.returnReceipt),
+    phoneExactReturn: exactReturn(phone.returnReceipt),
     noConsoleErrors: result.consoleErrors.length === 0,
     noPageErrors: result.pageErrors.length === 0,
     noRequestFailures: result.requestFailures.length === 0
   };
   result.result = Object.values(result.checks).every(Boolean) ? "PASS_LAWS_CHILD_STAGE_OBSERVER_GATE" : "FAIL_LAWS_CHILD_STAGE_OBSERVER_GATE";
+  await writeJson("desktop-exact-return-receipt.json", desktop.returnReceipt);
+  await writeJson("phone-exact-return-receipt.json", phone.returnReceipt);
+  await writeJson("laws-child-stage-observer-result.json", result);
 } finally {
   await browser.close();
 }
 
-await writeJson("laws-child-stage-observer-result.json", result);
-console.log(JSON.stringify({ contract: result.contract, result: result.result, checks: result.checks, screenshotCount: result.screenshots.length, consoleErrors: result.consoleErrors, pageErrors: result.pageErrors, requestFailures: result.requestFailures }, null, 2));
+console.log(JSON.stringify({ contract: result.contract, result: result.result, checks: result.checks, screenshots: result.screenshots, consoleErrors: result.consoleErrors, pageErrors: result.pageErrors, requestFailures: result.requestFailures }, null, 2));
 if (result.result !== "PASS_LAWS_CHILD_STAGE_OBSERVER_GATE") process.exitCode = 1;

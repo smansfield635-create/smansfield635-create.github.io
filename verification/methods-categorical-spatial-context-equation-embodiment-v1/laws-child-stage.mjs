@@ -155,24 +155,32 @@ function viewportProfile() {
   return { rect, mobile, tablet };
 }
 
+function stageOrigin(profile) {
+  return {
+    x: profile.rect.width / 2,
+    y: profile.rect.height * (profile.mobile ? .46 : .47)
+  };
+}
+
 function overviewFamilyCenters(profile) {
+  const origin = stageOrigin(profile);
   if (profile.mobile) {
-    const radiusX = Math.min(118, profile.rect.width * .30);
-    const radiusY = Math.min(132, profile.rect.height * .20);
+    const radiusX = Math.min(92, profile.rect.width * .24);
+    const radiusY = Math.min(122, profile.rect.height * .19);
     return [
-      [0, -radiusY, 40],
-      [radiusX, 0, 30],
-      [0, radiusY, 20],
-      [-radiusX, 0, 10]
+      [origin.x, origin.y - radiusY, 40],
+      [origin.x + radiusX, origin.y, 30],
+      [origin.x, origin.y + radiusY, 20],
+      [origin.x - radiusX, origin.y, 10]
     ];
   }
-  const x = Math.min(400, profile.rect.width * .285);
-  const y = Math.min(178, profile.rect.height * .225);
+  const x = Math.min(350, profile.rect.width * .25);
+  const y = Math.min(170, profile.rect.height * .22);
   return [
-    [-x, -y, 40],
-    [x, -y, 30],
-    [x, y, 20],
-    [-x, y, 10]
+    [origin.x - x, origin.y - y, 40],
+    [origin.x + x, origin.y - y, 30],
+    [origin.x + x, origin.y + y, 20],
+    [origin.x - x, origin.y + y, 10]
   ];
 }
 
@@ -182,13 +190,14 @@ function planeLayout(center, profile, active, overview) {
       x: center[0],
       y: center[1],
       z: center[2],
-      scale: profile.mobile ? .36 : profile.tablet ? .72 : .92
+      scale: profile.mobile ? .34 : profile.tablet ? .72 : .92
     };
   }
+  const origin = stageOrigin(profile);
   const scale = profile.mobile ? .70 : .98;
   return {
-    x: active ? 0 : center[0] * 1.7,
-    y: active ? -12 : center[1] * 1.4,
+    x: active ? origin.x : origin.x + (center[0] - origin.x) * 1.7,
+    y: active ? origin.y - 12 : origin.y + (center[1] - origin.y) * 1.4,
     z: active ? 40 : 0,
     scale: active ? scale : scale * .58
   };
@@ -196,29 +205,30 @@ function planeLayout(center, profile, active, overview) {
 
 function overviewNodePosition(familyIndex, modelIndex, count, profile) {
   const centers = overviewFamilyCenters(profile);
-  const [cx, cy, cz] = centers[familyIndex] || [0, 0, 0];
+  const [cx, cy, cz] = centers[familyIndex] || [stageOrigin(profile).x, stageOrigin(profile).y, 0];
   const midpoint = (count - 1) / 2;
   const normalized = midpoint ? (modelIndex - midpoint) / midpoint : 0;
   const direction = familyIndex < 2 ? 1 : -1;
-  const spacing = profile.mobile ? 29 : profile.tablet ? 56 : 72;
+  const spacing = profile.mobile ? 22 : profile.tablet ? 56 : 72;
   const localX = (modelIndex - midpoint) * spacing;
-  const localY = direction * (Math.pow(Math.abs(normalized), 1.7) * (profile.mobile ? 26 : 48) - (profile.mobile ? 8 : 14));
-  const scale = profile.mobile ? .38 : profile.tablet ? .62 : .74;
-  return { x: cx + localX, y: cy + localY + (profile.mobile ? 5 : 16), z: cz + modelIndex, scale };
+  const localY = direction * (Math.pow(Math.abs(normalized), 1.7) * (profile.mobile ? 22 : 48) - (profile.mobile ? 7 : 14));
+  const scale = profile.mobile ? .34 : profile.tablet ? .62 : .74;
+  return { x: cx + localX, y: cy + localY + (profile.mobile ? 4 : 16), z: cz + modelIndex, scale };
 }
 
 function browseNodePosition(descriptor, activeDescriptor, profile) {
+  const origin = stageOrigin(profile);
   const sameFamily = descriptor.FAMILY_ID === activeDescriptor.FAMILY_ID;
   const delta = descriptor.modelIndex - activeDescriptor.modelIndex;
   const active = descriptor.MODEL_ID === activeDescriptor.MODEL_ID;
-  if (active) return { x: 0, y: profile.mobile ? -38 : -22, z: 60, scale: profile.mobile ? .91 : 1 };
-  if (!sameFamily) return { x: descriptor.familyIndex % 2 ? 900 : -900, y: 170, z: 0, scale: .45 };
+  if (active) return { x: origin.x, y: origin.y + (profile.mobile ? -38 : -22), z: 60, scale: profile.mobile ? 1 : 1 };
+  if (!sameFamily) return { x: origin.x + (descriptor.familyIndex % 2 ? 900 : -900), y: origin.y + 170, z: 0, scale: .45 };
   const direction = Math.sign(delta) || 1;
   const distance = Math.abs(delta);
   if (distance === 1) {
-    return { x: direction * (profile.mobile ? 272 : 430), y: profile.mobile ? -12 : 18, z: 30, scale: profile.mobile ? .64 : .74 };
+    return { x: origin.x + direction * (profile.mobile ? 272 : 430), y: origin.y + (profile.mobile ? -12 : 18), z: 30, scale: profile.mobile ? .64 : .74 };
   }
-  return { x: direction * (profile.mobile ? 450 + distance * 45 : 630 + distance * 80), y: 70 + distance * 18, z: 10, scale: .52 };
+  return { x: origin.x + direction * (profile.mobile ? 450 + distance * 45 : 630 + distance * 80), y: origin.y + 70 + distance * 18, z: 10, scale: .52 };
 }
 
 function setNodeTransform(node, layout, projection) {
@@ -259,6 +269,19 @@ function applyRelationshipGeometry(layoutByModel, overview) {
   });
 }
 
+function normalizeStageCoordinatePlane() {
+  sceneRoot.style.left = "0px";
+  sceneRoot.style.top = "0px";
+  sceneRoot.style.width = "100%";
+  sceneRoot.style.height = "100%";
+  sceneRoot.style.transform = "none";
+  field.style.left = "0px";
+  field.style.top = "0px";
+  field.style.width = "100%";
+  field.style.height = "100%";
+  field.style.transform = "none";
+}
+
 function applyPageSpecificGeometry() {
   const current = app();
   const resolved = current?.resolvedScene;
@@ -271,14 +294,14 @@ function applyPageSpecificGeometry() {
 
   stage.dataset.compositionMode = overview ? "FOUR_FAMILY_FIELD" : "ACTIVE_MODEL_FOREGROUND";
   stage.dataset.activeLens = resolved.native.lensId;
-  sceneRoot.style.transform = "none";
-  field.style.transform = "none";
+  stage.dataset.coordinatePlane = "FULL_STAGE_PIXELS";
+  normalizeStageCoordinatePlane();
 
   document.querySelectorAll(".spatial-family-plane").forEach(plane => {
     const family = current.registry.families.find(candidate => candidate.familyId === plane.dataset.familyId);
     const familyIndex = family?.familyIndex || 0;
     const active = plane.dataset.familyId === resolved.native.familyId;
-    const layout = planeLayout(centers[familyIndex] || [0, 0, 0], profile, active, overview);
+    const layout = planeLayout(centers[familyIndex] || [stageOrigin(profile).x, stageOrigin(profile).y, 0], profile, active, overview);
     plane.dataset.regionOrder = String(familyIndex + 1);
     plane.dataset.regionSemantics = "CANONICAL_ORDER_WITHOUT_DIRECTIONAL_AUTHORITY";
     plane.dataset.compositionRole = overview ? "DISTINCT_FAMILY_TERRITORY" : active ? "ACTIVE_FAMILY_BACKPLANE" : "DISTANT_FAMILY_CONTEXT";

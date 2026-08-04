@@ -1,0 +1,71 @@
+name: H-Earth Gratitude Region Traversal Scene Suite CP0
+
+on:
+  push:
+    branches:
+      - agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001
+    paths:
+      - .github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml
+      - h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs
+      - h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: h-earth-gratitude-region-traversal-scene-suite-cp0
+  cancel-in-progress: false
+
+jobs:
+  freeze-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact checkpoint branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Execute CP0 baseline verification
+        id: execute
+        shell: bash
+        run: |
+          set +e
+          node h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs | tee cp0-execution.log
+          code=${PIPESTATUS[0]}
+          set -e
+          echo "exit_code=${code}" >> "$GITHUB_OUTPUT"
+
+      - name: Preserve durable receipt
+        shell: bash
+        run: |
+          test -f h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record traversal scene suite CP0 baseline execution"
+            git push origin HEAD:agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001
+          fi
+
+      - name: Upload CP0 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gratitude-region-traversal-scene-suite-cp0
+          path: |
+            cp0-execution.log
+            h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json
+          if-no-files-found: error
+
+      - name: Enforce checkpoint result
+        if: always()
+        shell: bash
+        run: exit "${{ steps.execute.outputs.exit_code }}"

@@ -1,0 +1,2389 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP0_BASELINE_RECEIPT_v1",
+  "checkpoint": "CP0_EXACT_INTEGRATED_BASELINE_FREEZE",
+  "result": "PASS_CLOSED",
+  "startedAt": "2026-07-29T23:51:00.318Z",
+  "completedAt": "2026-07-29T23:51:13.244Z",
+  "repository": {
+    "fullName": "smansfield635-create/smansfield635-create.github.io",
+    "baselineMainHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "remoteMainHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "checkpointBranch": "agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001",
+    "checkpointHead": "17a4ecbc6354675a961c214a3c3caa4c60438005",
+    "rollbackBranch": "rollback/h-earth-gratitude-region-pre-traversal-scene-suite-001",
+    "rollbackHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "diffPaths": [
+      ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
+      "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
+      "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
+      "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json",
+      "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs"
+    ]
+  },
+  "separation": {
+    "perceptualJudgmentPerformed": false,
+    "engineeringDiagnosisPerformed": false,
+    "repositoryMutationClass": "CONTROL_AND_VERIFICATION_ONLY",
+    "executedVerificationPerformed": true,
+    "newPhysicalAcceptancePerformed": false
+  },
+  "rollbackInventory": {
+    "exactRollbackRefEstablished": true,
+    "restoreTargetCommit": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "restoreScope": "COMPLETE_INTEGRATED_STATE_BEFORE_TRAVERSAL_SCENES"
+  },
+  "sourceInventory": [
+    {
+      "path": "h-earth-3d/cells/ground-cell-001.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 31945,
+      "gitBlob": "0ce8b5123678cfa36339879792c0bfa4a1a0444d",
+      "sha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+      "role": "FINAL_PLACEMENT_AUTHORITY",
+      "bytes": 15982,
+      "gitBlob": "ad6a7ac1871e1f248c40ac7836d487f786dc48e4",
+      "sha256": "fc6d82ada19f2f5e2222753289bfea55f5703d77f2308ab91349c4755dfe6e20",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-spatial-interaction-area-development.v1.json",
+      "role": "ORIGINAL_SPATIAL_AUTHORITY",
+      "bytes": 16435,
+      "gitBlob": "ee5ca94f5ae55ce8f11b460428b800ad4e9a2a9d",
+      "sha256": "d7b8fd9e553372a3697c5ab186ad98edf21d47fe8d006dd102a4c36b3835599b",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json",
+      "role": "NARRATIVE_RECONCILIATION_AUTHORITY",
+      "bytes": 25491,
+      "gitBlob": "1702d62036a6b241fdadddfabc304a5288f38652",
+      "sha256": "5f39d4168fcb2862f0182de6961ec739e55223c7dac32e48384eded4ee2873ed",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 25303,
+      "gitBlob": "3f0a833cc32106029318eee460d9ca15cf841959",
+      "sha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 12746,
+      "gitBlob": "e141af58c037b1be170a168a7b7ee464b3008e6c",
+      "sha256": "6ad77be70f7c0536cf9c4474d8d42228a19c46be324ff566747e7598e7a7c3f1",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+      "role": "LIVE_RENDER_PACKAGE_AUTHORITY",
+      "bytes": 11021,
+      "gitBlob": "63ac317ca90b2c71ef8dc366e83ad17b13d6a155",
+      "sha256": "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 7357,
+      "gitBlob": "dbab15717f754b2dc9cedd75ab6835d3f4328a15",
+      "sha256": "d00308f30b297f3d1ccfab1bd588172973accfae00fcc1b3eb5f0cfbf1372a97",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 11821,
+      "gitBlob": "7d50eaf13d0bc719039bc24e571b3dec0dcaf978",
+      "sha256": "081cc158471dcf4a5d6c3a57c6ceaae8ae575bc77d2195f1a60a23e45f4507eb",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.biome-field.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 12712,
+      "gitBlob": "059aced691f3947cdadd582d84b562fb7f9b94be",
+      "sha256": "c0a67d1cbd3000e405d1415f25f1e725989b292659072040c15b37db1602ea93",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.population-planner.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 17476,
+      "gitBlob": "a7f7cf194f5a7dda86526244ae396adb81b521ea",
+      "sha256": "5764eba7a1d95b04ca142526234f65aa717e3685ebac82e81b5c7812fa218922",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 17747,
+      "gitBlob": "e5478149cfe78f1371232bf3ba2b0e610371b030",
+      "sha256": "62a16a20e57cb76a94a324566124df4d1b3ec322567b98e66edaa91d35326839",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 9859,
+      "gitBlob": "caaef944e0681a98b722f9c99526d38d8f25ec50",
+      "sha256": "e22d06b9118950e334b5c29c57d2d5206d5c0c3ef8307b51e573108975480866",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.surface-state-field.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 16358,
+      "gitBlob": "d71aaf047bebcc18a47a6bb9c741211ca2a10f45",
+      "sha256": "d67b104ed4ba19bbafee928fea4d54254893e14e4b157022a3685e047e477db2",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 11335,
+      "gitBlob": "82d0590fdc7346f7b6cdb5eafeb3d51ef13411dc",
+      "sha256": "fbc52764278cac8be054335136693534a7022672afff7be49ec7fda4c929bfe7",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.water-state.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 15112,
+      "gitBlob": "c99e933a14b2642e0971ffbd8b06dfbaaf562284",
+      "sha256": "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/h-earth.matrix.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 35389,
+      "gitBlob": "a34f94e0c285cd6e0a46111f8e4dcc97bc95f1c9",
+      "sha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 13010,
+      "gitBlob": "8f20a80ce5797b3616bee64a53d95911c641e46b",
+      "sha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 43060,
+      "gitBlob": "2bcb67ebf84f36248475921c85e75236a1115102",
+      "sha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 5784,
+      "gitBlob": "9d32fd89070fa534d63c3c6a3feb4c8f5fd519f4",
+      "sha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 34235,
+      "gitBlob": "8ed548780039fffba3989e55f5c8f3713354e34f",
+      "sha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/objects/ground-cell-001.objects.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 104797,
+      "gitBlob": "1d791ee32d07a16f687c0e40b9e25b3c8074b880",
+      "sha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "role": "TERRAIN_AUTHORITY",
+      "bytes": 8557,
+      "gitBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "sha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 7882,
+      "gitBlob": "bf0dfcc0166fd1e677529ff46b91d943f7eae7c8",
+      "sha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 6275,
+      "gitBlob": "98f8131dab38973f0f30165967443e0057f7615f",
+      "sha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 68680,
+      "gitBlob": "ed9ff1f7d3c139a1cba7df169f278336342339f4",
+      "sha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "h-earth-3d/zones/ground-cell-001.zones.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 107753,
+      "gitBlob": "2d21f90e6eda8b0885ce4815b352335827a38522",
+      "sha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/capacity.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 107527,
+      "gitBlob": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8",
+      "sha256": "696531778b726a61af424cef67286936d5ed22fac7c087ba542cd357c7b78305",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 9106,
+      "gitBlob": "20947f46a754f0730aa69c44d0fd699788c5a8d2",
+      "sha256": "0a2a752df10677a1570ab41a639b718dc2430fcab024a6f3bdcf1950b1c388b3",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 17868,
+      "gitBlob": "3e47f49c9692e22e77c784afa6877a5ed6cd9c19",
+      "sha256": "f3291c255e6e831e4b35137dae942520eefa87ee0e84235acbde0b5c84e602be",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "role": "PROPOSAL_TO_GPU_BINDING",
+      "bytes": 9020,
+      "gitBlob": "3254eb36d0d061397bcb76d7f6fe9016ea9ba710",
+      "sha256": "323ce55787ac08713c5a0f2f0a1c1dad8edc20c8226c6a8290e6cc55d7bc1864",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "role": "TOUCH_INPUT_AUTHORITY",
+      "bytes": 12347,
+      "gitBlob": "aae214ddbc4cd18aa8c737ee7bbb3de44322da96",
+      "sha256": "332df30201c7a224754a7920e42ed00a9750ce23166620bbb3768099d09fd63a",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+      "role": "GESTURE_CLASSIFICATION_AUTHORITY",
+      "bytes": 5044,
+      "gitBlob": "89434de5190f710265e97c717bb2ccba52e8571f",
+      "sha256": "5936b390e7d4c2b801a44c0e3505440bd089c9e2d32091abad1189fb0d044632",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/index.css",
+      "role": "PUBLIC_STYLE_AUTHORITY",
+      "bytes": 6031,
+      "gitBlob": "481148416a8d0466e76c4cb2eca7a67d8932a242",
+      "sha256": "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "role": "NAVIGATION_AND_CAMERA_AUTHORITY",
+      "bytes": 19131,
+      "gitBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+      "sha256": "4be99d9b81c5e3984270014b705c552950fe32bc28293b3ecf58d0c87de1c1a0",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "role": "PUBLIC_RUNTIME_ORCHESTRATION",
+      "bytes": 11509,
+      "gitBlob": "98c768be0cfb2ec4bc82e2b634913d91cc73a32f",
+      "sha256": "3a5551dbdc5bad1efd14e4fd8bd9d84d3c6696d6ea8495eddb7b1296d98b2811",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "role": "PUBLIC_RUNTIME_ORCHESTRATION",
+      "bytes": 471,
+      "gitBlob": "c9f5ad33bebcf13793c9a0ef37ac363f7b4391ce",
+      "sha256": "4ae7e06c9f58757f08b54e1d6e81ac350b534436fe11fc357e545fe17ecf0f90",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/index.css",
+      "role": "PUBLIC_STYLE_AUTHORITY",
+      "bytes": 58317,
+      "gitBlob": "f208b7f11096a7bf5da282226903ac634c1eab01",
+      "sha256": "96317107e7d114dbc2345865b75786b2aa4d5f7a0414ea6f4f70790f610e8c81",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "role": "PUBLIC_ENTRY_DOCUMENT",
+      "bytes": 17808,
+      "gitBlob": "a192e161149392fc2f849e6c2e6eb503d3ae90da",
+      "sha256": "f4a92b5d57c92fd5692fd1c63a6b46eb4f948a3e6177967101b78d374116c661",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 10815,
+      "gitBlob": "54459cd7dcb82bf0c2860d581d714b766162f74d",
+      "sha256": "f678c52ef0fe16660369a97b43806074b93250efafba1fd89ea48f67a6ec836e",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 4421,
+      "gitBlob": "9e3c5192ee90f8342c119d60e312027e374629df",
+      "sha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 19852,
+      "gitBlob": "cd7a15e9cc67dbb598ae68c26027fd4ea26bdd5b",
+      "sha256": "73f1ddd4d9fca535238760aabf7b231b6592f1db799e82cde7b1e09e41fdaa96",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 128728,
+      "gitBlob": "261e73cc2c561dbf8d4f2f8210e51dad361cec91",
+      "sha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 40459,
+      "gitBlob": "91eabcc240b54ef01a52d59a237dff629d90a722",
+      "sha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 127118,
+      "gitBlob": "b5289094db8648800197a03226d6322902960b48",
+      "sha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 145913,
+      "gitBlob": "af1c78e2fe336678f9f477256a619b1a25c0d7b1",
+      "sha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 73706,
+      "gitBlob": "26f1b41c6a25bc7324082465b70cb6b68c2a457d",
+      "sha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 8875,
+      "gitBlob": "929cb0118d6fe71ff381f315590dba6a056d0ce8",
+      "sha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 7372,
+      "gitBlob": "33829da14ab390aba747ac502bfb96332a1209e5",
+      "sha256": "1b61f3008d93b94ef1a6ea16f9f622889d4086d65664669f95cffeeeafc6b9e4",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 15341,
+      "gitBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+      "sha256": "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "role": "GPU_TRANSPORT_AUTHORITY",
+      "bytes": 5173,
+      "gitBlob": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+      "sha256": "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-preview.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 5454,
+      "gitBlob": "6f9060d196bde61092489f7d578c14784117a5f6",
+      "sha256": "f9f0275608c3201568d3221c5c5f3701499a61f6f7cbc24852849c9fd6c142fe",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 14561,
+      "gitBlob": "bb7b7cd9f835f36cef7eb068fe764f7afe74e817",
+      "sha256": "6e7a6e0ad335425121adff26f99f97e892f453b5c5958afed3f5f0a059e09fa3",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "role": "LIVE_RENDER_PACKAGE_AUTHORITY",
+      "bytes": 3696,
+      "gitBlob": "9d3cb84168f2aea23a013de6d8982b707abf3f60",
+      "sha256": "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "role": "LIVE_RENDER_PACKAGE_AUTHORITY",
+      "bytes": 26551,
+      "gitBlob": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+      "sha256": "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "role": "FRAME_PACKET_AUTHORITY",
+      "bytes": 12119,
+      "gitBlob": "8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+      "sha256": "ca85699d6603d95f55ddded611ba37b46b5f13c5dd95a28997a89ee0f831df37",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+      "role": "WEBGL_PRESENTATION_AUTHORITY",
+      "bytes": 23052,
+      "gitBlob": "95cf65d906548b9ab19279d7a84182ad697c6945",
+      "sha256": "9e2ec2bb96b78e37fc377316d89d7cc1bcdfd5c9d059770c8ec08305ca139044",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 17168,
+      "gitBlob": "71ec6950e1a47c31862b596b4144635a97cbaa20",
+      "sha256": "b5ff536681b7a54310312d1ccf87fa548b857c4f308abfeedaf87898b18b02e3",
+      "exactAgainstBaseline": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "role": "RUNTIME_DEPENDENCY",
+      "bytes": 20969,
+      "gitBlob": "fa6fb8bdc579be109c30a963c2bbdcea398a1d57",
+      "sha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4",
+      "exactAgainstBaseline": true
+    }
+  ],
+  "runtimeInventory": {
+    "publicUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/",
+    "verificationClass": "SERVED_BYTE_AND_BOOTSTRAP_IDENTITY_ONLY",
+    "runtimeGraphFileCount": 56,
+    "runtimeGraphEdges": [
+      {
+        "from": "showroom/globe/h-earth/index.html",
+        "to": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/index.html",
+        "to": "showroom/globe/h-earth/functional-landscape/index.css"
+      },
+      {
+        "from": "showroom/globe/h-earth/index.html",
+        "to": "showroom/globe/h-earth/index.css"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "to": "showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "to": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "to": "showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "to": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "to": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "to": "showroom/globe/h-earth/functional-landscape/navigation.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "to": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "to": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "to": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "to": "showroom/globe/h-earth/capacity.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "to": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "to": "showroom/globe/h-earth/functional-landscape/navigation.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "to": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+        "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+        "to": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+        "to": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "to": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+      },
+      {
+        "from": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "showroom/globe/h-earth/render/run8e-successor-environment.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "to": "showroom/globe/h-earth/render/renderer.functional-landscape.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "to": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js"
+      },
+      {
+        "from": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "to": "h-earth-3d/h-earth.matrix.js"
+      },
+      {
+        "from": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "to": "h-earth-3d/cells/ground-cell-001.js"
+      },
+      {
+        "from": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "to": "h-earth-3d/zones/ground-cell-001.zones.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "showroom/globe/h-earth/render/geometry-landscape.js"
+      },
+      {
+        "from": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "to": "showroom/globe/h-earth/render/geometry-distant-context.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "showroom/globe/h-earth/render/landscape-preview.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "showroom/globe/h-earth/render/renderer.functional-landscape.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "to": "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.east.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.south.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.west.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+      },
+      {
+        "from": "h-earth-3d/cells/ground-cell-001.js",
+        "to": "h-earth-3d/h-earth.matrix.js"
+      },
+      {
+        "from": "h-earth-3d/zones/ground-cell-001.zones.js",
+        "to": "h-earth-3d/h-earth.matrix.js"
+      },
+      {
+        "from": "h-earth-3d/zones/ground-cell-001.zones.js",
+        "to": "h-earth-3d/cells/ground-cell-001.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "to": "h-earth-3d/objects/ground-cell-001.objects.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "to": "h-earth-3d/zones/ground-cell-001.zones.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "to": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js"
+      },
+      {
+        "from": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-landscape.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-landscape.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-landscape.js",
+        "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-formations.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/landscape-preview.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/landscape-preview.js",
+        "to": "showroom/globe/h-earth/render/geometry-landscape.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/landscape-preview.js",
+        "to": "showroom/globe/h-earth/render/geometry-shoreline.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/landscape-preview.js",
+        "to": "showroom/globe/h-earth/render/geometry-distant-context.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/landscape-preview.js",
+        "to": "h-earth-3d/integration/h-earth.landscape-realization-planner.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "to": "showroom/globe/h-earth/render/geometry-distant-context.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "to": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "to": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "to": "showroom/globe/h-earth/render/environment-atmosphere.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "to": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "to": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "to": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.east.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.north.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.east.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.south.js"
+      },
+      {
+        "from": "h-earth-3d/objects/ground-cell-001.objects.js",
+        "to": "h-earth-3d/cells/ground-cell-001.js"
+      },
+      {
+        "from": "h-earth-3d/objects/ground-cell-001.objects.js",
+        "to": "h-earth-3d/zones/ground-cell-001.zones.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "to": "showroom/globe/h-earth/render/geometry-kernel.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "to": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "to": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "to": "h-earth-3d/environment/h-earth.population-planner.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "to": "h-earth-3d/environment/h-earth.spatial-lifecycle.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.population-planner.js",
+        "to": "h-earth-3d/environment/h-earth.biome-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.population-planner.js",
+        "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.population-planner.js",
+        "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.biome-field.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.biome-field.js",
+        "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.biome-field.js",
+        "to": "h-earth-3d/environment/h-earth.water-state.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.biome-field.js",
+        "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.water-state.js",
+        "to": "h-earth-3d/terrain/h-earth.terrain-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.water-state.js",
+        "to": "h-earth-3d/environment/h-earth.surface-state-field.js"
+      },
+      {
+        "from": "h-earth-3d/environment/h-earth.water-state.js",
+        "to": "h-earth-3d/environment/h-earth.atmosphere-state.js"
+      }
+    ],
+    "runtimeFiles": [
+      {
+        "path": "h-earth-3d/cells/ground-cell-001.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/cells/ground-cell-001.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/cells/ground-cell-001.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 31945,
+        "servedBytes": 31945,
+        "localSha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2",
+        "servedSha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-7cc9\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 25303,
+        "servedBytes": 25303,
+        "localSha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7",
+        "servedSha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-62d7\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 12746,
+        "servedBytes": 12746,
+        "localSha256": "6ad77be70f7c0536cf9c4474d8d42228a19c46be324ff566747e7598e7a7c3f1",
+        "servedSha256": "6ad77be70f7c0536cf9c4474d8d42228a19c46be324ff566747e7598e7a7c3f1",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-31ca\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 11021,
+        "servedBytes": 11021,
+        "localSha256": "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+        "servedSha256": "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2b0d\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 7357,
+        "servedBytes": 7357,
+        "localSha256": "d00308f30b297f3d1ccfab1bd588172973accfae00fcc1b3eb5f0cfbf1372a97",
+        "servedSha256": "d00308f30b297f3d1ccfab1bd588172973accfae00fcc1b3eb5f0cfbf1372a97",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1cbd\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.atmosphere-state.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.atmosphere-state.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 11821,
+        "servedBytes": 11821,
+        "localSha256": "081cc158471dcf4a5d6c3a57c6ceaae8ae575bc77d2195f1a60a23e45f4507eb",
+        "servedSha256": "081cc158471dcf4a5d6c3a57c6ceaae8ae575bc77d2195f1a60a23e45f4507eb",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2e2d\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.biome-field.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.biome-field.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.biome-field.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 12712,
+        "servedBytes": 12712,
+        "localSha256": "c0a67d1cbd3000e405d1415f25f1e725989b292659072040c15b37db1602ea93",
+        "servedSha256": "c0a67d1cbd3000e405d1415f25f1e725989b292659072040c15b37db1602ea93",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-31a8\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.population-planner.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.population-planner.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.population-planner.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 17476,
+        "servedBytes": 17476,
+        "localSha256": "5764eba7a1d95b04ca142526234f65aa717e3685ebac82e81b5c7812fa218922",
+        "servedSha256": "5764eba7a1d95b04ca142526234f65aa717e3685ebac82e81b5c7812fa218922",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-4444\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.spatial-lifecycle.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.spatial-lifecycle.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 17747,
+        "servedBytes": 17747,
+        "localSha256": "62a16a20e57cb76a94a324566124df4d1b3ec322567b98e66edaa91d35326839",
+        "servedSha256": "62a16a20e57cb76a94a324566124df4d1b3ec322567b98e66edaa91d35326839",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-4553\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 9859,
+        "servedBytes": 9859,
+        "localSha256": "e22d06b9118950e334b5c29c57d2d5206d5c0c3ef8307b51e573108975480866",
+        "servedSha256": "e22d06b9118950e334b5c29c57d2d5206d5c0c3ef8307b51e573108975480866",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2683\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.surface-state-field.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.surface-state-field.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.surface-state-field.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 16358,
+        "servedBytes": 16358,
+        "localSha256": "d67b104ed4ba19bbafee928fea4d54254893e14e4b157022a3685e047e477db2",
+        "servedSha256": "d67b104ed4ba19bbafee928fea4d54254893e14e4b157022a3685e047e477db2",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-3fe6\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 11335,
+        "servedBytes": 11335,
+        "localSha256": "fbc52764278cac8be054335136693534a7022672afff7be49ec7fda4c929bfe7",
+        "servedSha256": "fbc52764278cac8be054335136693534a7022672afff7be49ec7fda4c929bfe7",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2c47\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/environment/h-earth.water-state.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.water-state.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/environment/h-earth.water-state.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 15112,
+        "servedBytes": 15112,
+        "localSha256": "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26",
+        "servedSha256": "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-3b08\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/h-earth.matrix.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/h-earth.matrix.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/h-earth.matrix.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 35389,
+        "servedBytes": 35389,
+        "localSha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5",
+        "servedSha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-8a3d\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.landscape-realization-planner.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.landscape-realization-planner.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 13010,
+        "servedBytes": 13010,
+        "localSha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a",
+        "servedSha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-32d2\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 43060,
+        "servedBytes": 43060,
+        "localSha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523",
+        "servedSha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-a834\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 5784,
+        "servedBytes": 5784,
+        "localSha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85",
+        "servedSha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1698\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 34235,
+        "servedBytes": 34235,
+        "localSha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544",
+        "servedSha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-85bb\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/objects/ground-cell-001.objects.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/objects/ground-cell-001.objects.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/objects/ground-cell-001.objects.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 104797,
+        "servedBytes": 104797,
+        "localSha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b",
+        "servedSha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1995d\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 8557,
+        "servedBytes": 8557,
+        "localSha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+        "servedSha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-216d\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.terrain-field.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.terrain-field.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 7882,
+        "servedBytes": 7882,
+        "localSha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+        "servedSha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1eca\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.terrain-formations.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/terrain/h-earth.terrain-formations.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 6275,
+        "servedBytes": 6275,
+        "localSha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b",
+        "servedSha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1883\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/zones/ground-cell-001.landscape-lattice.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/zones/ground-cell-001.landscape-lattice.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 68680,
+        "servedBytes": 68680,
+        "localSha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482",
+        "servedSha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-10c48\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "h-earth-3d/zones/ground-cell-001.zones.js",
+        "url": "https://diamondgatebridge.com/h-earth-3d/zones/ground-cell-001.zones.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/h-earth-3d/zones/ground-cell-001.zones.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 107753,
+        "servedBytes": 107753,
+        "localSha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe",
+        "servedSha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1a4e9\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/capacity.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/capacity.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/capacity.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 107527,
+        "servedBytes": 107527,
+        "localSha256": "696531778b726a61af424cef67286936d5ed22fac7c087ba542cd357c7b78305",
+        "servedSha256": "696531778b726a61af424cef67286936d5ed22fac7c087ba542cd357c7b78305",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1a407\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 9106,
+        "servedBytes": 9106,
+        "localSha256": "0a2a752df10677a1570ab41a639b718dc2430fcab024a6f3bdcf1950b1c388b3",
+        "servedSha256": "0a2a752df10677a1570ab41a639b718dc2430fcab024a6f3bdcf1950b1c388b3",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2392\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 17868,
+        "servedBytes": 17868,
+        "localSha256": "f3291c255e6e831e4b35137dae942520eefa87ee0e84235acbde0b5c84e602be",
+        "servedSha256": "f3291c255e6e831e4b35137dae942520eefa87ee0e84235acbde0b5c84e602be",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-45cc\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 9020,
+        "servedBytes": 9020,
+        "localSha256": "323ce55787ac08713c5a0f2f0a1c1dad8edc20c8226c6a8290e6cc55d7bc1864",
+        "servedSha256": "323ce55787ac08713c5a0f2f0a1c1dad8edc20c8226c6a8290e6cc55d7bc1864",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-233c\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 12347,
+        "servedBytes": 12347,
+        "localSha256": "332df30201c7a224754a7920e42ed00a9750ce23166620bbb3768099d09fd63a",
+        "servedSha256": "332df30201c7a224754a7920e42ed00a9750ce23166620bbb3768099d09fd63a",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-303b\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 5044,
+        "servedBytes": 5044,
+        "localSha256": "5936b390e7d4c2b801a44c0e3505440bd089c9e2d32091abad1189fb0d044632",
+        "servedSha256": "5936b390e7d4c2b801a44c0e3505440bd089c9e2d32091abad1189fb0d044632",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-13b4\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/functional-landscape/index.css",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/index.css?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/index.css?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 6031,
+        "servedBytes": 6031,
+        "localSha256": "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
+        "servedSha256": "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
+        "exact": true,
+        "contentType": "text/css; charset=utf-8",
+        "etag": "W/\"6a6a87d4-178f\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/navigation.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/navigation.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 19131,
+        "servedBytes": 19131,
+        "localSha256": "4be99d9b81c5e3984270014b705c552950fe32bc28293b3ecf58d0c87de1c1a0",
+        "servedSha256": "4be99d9b81c5e3984270014b705c552950fe32bc28293b3ecf58d0c87de1c1a0",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-4abb\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 11509,
+        "servedBytes": 11509,
+        "localSha256": "3a5551dbdc5bad1efd14e4fd8bd9d84d3c6696d6ea8495eddb7b1296d98b2811",
+        "servedSha256": "3a5551dbdc5bad1efd14e4fd8bd9d84d3c6696d6ea8495eddb7b1296d98b2811",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2cf5\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 471,
+        "servedBytes": 471,
+        "localSha256": "4ae7e06c9f58757f08b54e1d6e81ac350b534436fe11fc357e545fe17ecf0f90",
+        "servedSha256": "4ae7e06c9f58757f08b54e1d6e81ac350b534436fe11fc357e545fe17ecf0f90",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1d7\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/index.css",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/index.css?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/index.css?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 58317,
+        "servedBytes": 58317,
+        "localSha256": "96317107e7d114dbc2345865b75786b2aa4d5f7a0414ea6f4f70790f610e8c81",
+        "servedSha256": "96317107e7d114dbc2345865b75786b2aa4d5f7a0414ea6f4f70790f610e8c81",
+        "exact": true,
+        "contentType": "text/css; charset=utf-8",
+        "etag": "W/\"6a6a87d4-e3cd\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/index.html",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/index.html?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/index.html?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 17808,
+        "servedBytes": 17808,
+        "localSha256": "f4a92b5d57c92fd5692fd1c63a6b46eb4f948a3e6177967101b78d374116c661",
+        "servedSha256": "f4a92b5d57c92fd5692fd1c63a6b46eb4f948a3e6177967101b78d374116c661",
+        "exact": true,
+        "contentType": "text/html; charset=utf-8",
+        "etag": null,
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/environment-atmosphere.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/environment-atmosphere.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/environment-atmosphere.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 10815,
+        "servedBytes": 10815,
+        "localSha256": "f678c52ef0fe16660369a97b43806074b93250efafba1fd89ea48f67a6ec836e",
+        "servedSha256": "f678c52ef0fe16660369a97b43806074b93250efafba1fd89ea48f67a6ec836e",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2a3f\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-distant-context.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-distant-context.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 4421,
+        "servedBytes": 4421,
+        "localSha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2",
+        "servedSha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1145\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 19852,
+        "servedBytes": 19852,
+        "localSha256": "73f1ddd4d9fca535238760aabf7b231b6592f1db799e82cde7b1e09e41fdaa96",
+        "servedSha256": "73f1ddd4d9fca535238760aabf7b231b6592f1db799e82cde7b1e09e41fdaa96",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-4d8c\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.east.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.east.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 128728,
+        "servedBytes": 128728,
+        "localSha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba",
+        "servedSha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1f6d8\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-kernel.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 40459,
+        "servedBytes": 40459,
+        "localSha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817",
+        "servedSha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-9e0b\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-kernel.north.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.north.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.north.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 127118,
+        "servedBytes": 127118,
+        "localSha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0",
+        "servedSha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1f08e\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.south.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.south.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 145913,
+        "servedBytes": 145913,
+        "localSha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877",
+        "servedSha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-239f9\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.west.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-kernel.west.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 73706,
+        "servedBytes": 73706,
+        "localSha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970",
+        "servedSha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-11fea\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-landscape.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-landscape.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-landscape.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 8875,
+        "servedBytes": 8875,
+        "localSha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f",
+        "servedSha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-22ab\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-shoreline.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-shoreline.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-shoreline.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 7372,
+        "servedBytes": 7372,
+        "localSha256": "1b61f3008d93b94ef1a6ea16f9f622889d4086d65664669f95cffeeeafc6b9e4",
+        "servedSha256": "1b61f3008d93b94ef1a6ea16f9f622889d4086d65664669f95cffeeeafc6b9e4",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1ccc\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 15341,
+        "servedBytes": 15341,
+        "localSha256": "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06",
+        "servedSha256": "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-3bed\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 5173,
+        "servedBytes": 5173,
+        "localSha256": "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+        "servedSha256": "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-1435\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/landscape-preview.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/landscape-preview.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/landscape-preview.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 5454,
+        "servedBytes": 5454,
+        "localSha256": "f9f0275608c3201568d3221c5c5f3701499a61f6f7cbc24852849c9fd6c142fe",
+        "servedSha256": "f9f0275608c3201568d3221c5c5f3701499a61f6f7cbc24852849c9fd6c142fe",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-154e\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 14561,
+        "servedBytes": 14561,
+        "localSha256": "6e7a6e0ad335425121adff26f99f97e892f453b5c5958afed3f5f0a059e09fa3",
+        "servedSha256": "6e7a6e0ad335425121adff26f99f97e892f453b5c5958afed3f5f0a059e09fa3",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-38e1\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 3696,
+        "servedBytes": 3696,
+        "localSha256": "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+        "servedSha256": "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-e70\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-render-package.run8e-r2.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 26551,
+        "servedBytes": 26551,
+        "localSha256": "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae",
+        "servedSha256": "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-67b7\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 12119,
+        "servedBytes": 12119,
+        "localSha256": "ca85699d6603d95f55ddded611ba37b46b5f13c5dd95a28997a89ee0f831df37",
+        "servedSha256": "ca85699d6603d95f55ddded611ba37b46b5f13c5dd95a28997a89ee0f831df37",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-2f57\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 23052,
+        "servedBytes": 23052,
+        "localSha256": "9e2ec2bb96b78e37fc377316d89d7cc1bcdfd5c9d059770c8ec08305ca139044",
+        "servedSha256": "9e2ec2bb96b78e37fc377316d89d7cc1bcdfd5c9d059770c8ec08305ca139044",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-5a0c\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/renderer.functional-landscape.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/renderer.functional-landscape.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 17168,
+        "servedBytes": 17168,
+        "localSha256": "b5ff536681b7a54310312d1ccf87fa548b857c4f308abfeedaf87898b18b02e3",
+        "servedSha256": "b5ff536681b7a54310312d1ccf87fa548b857c4f308abfeedaf87898b18b02e3",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-4310\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "url": "https://diamondgatebridge.com/showroom/globe/h-earth/render/run8e-successor-environment.js?cp0=8a68a163f20c",
+        "finalUrl": "https://diamondgatebridge.com/showroom/globe/h-earth/render/run8e-successor-environment.js?cp0=8a68a163f20c",
+        "status": 200,
+        "attempt": 1,
+        "localBytes": 20969,
+        "servedBytes": 20969,
+        "localSha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4",
+        "servedSha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4",
+        "exact": true,
+        "contentType": "application/javascript; charset=utf-8",
+        "etag": "W/\"6a6a87d4-51e9\"",
+        "lastModified": "Wed, 29 Jul 2026 23:08:04 GMT"
+      }
+    ],
+    "exactServedSourceGraph": true
+  },
+  "acceptedPlacementInventory": [
+    {
+      "areaId": "GRATITUDE_REGION_ENTRY_ZONE",
+      "lifecycleDisposition": "ACCEPTED",
+      "placementDisposition": "ACCEPT_EXISTING_INITIAL_CAMERA_BOUND_ARRIVAL",
+      "sourceCandidateId": "GRATITUDE_REGION_ENTRY_ZONE_CANDIDATE_01",
+      "finalBounds": {
+        "xMinimum": -24,
+        "xMaximum": 24,
+        "zMinimum": -132,
+        "zMaximum": -88
+      },
+      "activeInitialState": {
+        "waypointId": "COAST",
+        "x": 0,
+        "z": -96,
+        "yPolicy": "DERIVE_FROM_ACTIVE_TERRAIN_CLEARANCE_LAW",
+        "yawDegrees": 0,
+        "pitchDegrees": -8,
+        "verticalFovDegrees": 56
+      },
+      "deferred": [
+        "ALARIC_STAR_GEOMETRY",
+        "MAP_PROJECTION_GEOMETRY"
+      ],
+      "requiredPlacementFieldsResolved": true
+    },
+    {
+      "areaId": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+      "lifecycleDisposition": "ACCEPTED",
+      "placementDisposition": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+      "sourceCandidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+      "finalSiteCenter": {
+        "x": 80,
+        "z": -172
+      },
+      "finalSiteBounds": {
+        "xMinimum": 64,
+        "xMaximum": 96,
+        "zMinimum": -188,
+        "zMaximum": -156
+      },
+      "deferred": [
+        "EXACT_BUILDING_FOOTPRINT",
+        "BUILDING_ORIENTATION",
+        "ATRIUM_GEOMETRY",
+        "ENTRANCE_COORDINATES",
+        "GARDEN_LAYOUT",
+        "SCULPTURE_POSITIONS"
+      ],
+      "requiredPlacementFieldsResolved": true
+    },
+    {
+      "areaId": "GRATITUDE_REGION_CAVERN_PRECINCT",
+      "lifecycleDisposition": "ACCEPTED",
+      "placementDisposition": "ACCEPT_CURRENT_RELATION",
+      "sourceCandidateId": "GRATITUDE_REGION_CAVERN_EXTERIOR_ENTRANCE_RELATION_CANDIDATE_01",
+      "exteriorFace": {
+        "x": 40,
+        "z": -284
+      },
+      "apron": {
+        "x": 48,
+        "z": -284
+      },
+      "precinctCenter": {
+        "x": 56,
+        "z": -284
+      },
+      "deferred": [
+        "CAVERN_INTERIOR_OCCURRENCE",
+        "ENTRANCE_OPENING_GEOMETRY",
+        "INTERIOR_TRANSITION_ANCHOR",
+        "CAVERN_SHAPE",
+        "CAVERN_SIZE",
+        "CAVERN_CONTENTS"
+      ],
+      "requiredPlacementFieldsResolved": true
+    },
+    {
+      "areaId": "GRATITUDE_REGION_FRONTIER_PLAINS",
+      "lifecycleDisposition": "RETAINED_ELIGIBLE_NONFINAL",
+      "placementDisposition": "RETAIN_ELIGIBLE_NONFINAL_AS_SEPARATE_FUTURE_PROJECT",
+      "sourceCandidateId": "GRATITUDE_REGION_FRONTIER_PLAINS_PRECINCT_ENVELOPE_CANDIDATE_01",
+      "preservedRole": "LARGE_REGIONAL_CAPACITY_RESERVE",
+      "finalEnvelope": null,
+      "finalAnchor": null,
+      "deferred": [
+        "DISTRIBUTED_FUNCTIONAL_SYSTEMS_TOPOLOGY",
+        "EXACT_FUNCTIONAL_CELLS",
+        "INFRASTRUCTURE_LAYOUT",
+        "FRONTIER_CONSTRUCTION"
+      ],
+      "requiredPlacementFieldsResolved": true
+    }
+  ],
+  "pairRelationshipMatrix": [
+    {
+      "id": "ENTRY_ZONE__MIRROR_MANOR",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "relationship": "SEPARATE_CONNECTED_REGIONAL_AREAS",
+        "boundsDistance": 46.6476151587624
+      }
+    },
+    {
+      "id": "ENTRY_ZONE__CAVERN_PRECINCT",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "relationship": "DISTINCT_CONCEALED_MOUNTAIN_EXTERIOR_DESTINATION",
+        "boundsDistance": 145.98630072715724,
+        "straightLineDistance": 180.48822676285562
+      }
+    },
+    {
+      "id": "ENTRY_ZONE__FRONTIER_PLAINS",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "relationship": "CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE",
+        "envelopeDistance": 128,
+        "routeAccepted": false
+      }
+    },
+    {
+      "id": "MIRROR_MANOR__CAVERN_PRECINCT",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "relationship": "LAWFUL_APPROACH_TO_CONCEALED_MOUNTAIN_EXTERIOR",
+        "boundsDistance": 88,
+        "approachPathDistance": 113.94112549695429
+      }
+    },
+    {
+      "id": "MIRROR_MANOR__FRONTIER_PLAINS",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "relationship": "CONNECTED_ROUTE_CANDIDATE_TO_SEPARATE_CAPACITY_RESERVE",
+        "envelopeDistance": 56,
+        "routeAccepted": false
+      }
+    },
+    {
+      "id": "CAVERN_PRECINCT__FRONTIER_PLAINS",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "relationship": "SEPARATE_CAPACITY_RESERVE_CLEAR_OF_CAVERN_PRECINCT_AND_APPROACH",
+        "envelopeDistance": 113.27841806805036,
+        "cavernApproachMinimumDistance": 72
+      }
+    }
+  ],
+  "preservationLaws": [
+    {
+      "id": "ENTRY_WATER_REMAINS_HARD_BOUNDARY",
+      "status": "PASS",
+      "passed": true,
+      "basis": "SOURCE_LAW_PLUS_UNCHANGED_CAMERA_BOUND_ARRIVAL"
+    },
+    {
+      "id": "ENTRY_CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE",
+      "status": "PASS",
+      "passed": true,
+      "basis": "ACTIVE_NAVIGATION_EXECUTED_UNCHANGED"
+    },
+    {
+      "id": "ENTRY_MUST_NOT_COLLAPSE_INTO_MANOR",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "relationship": "SEPARATE_CONNECTED_REGIONAL_AREAS",
+        "boundsDistance": 46.6476151587624
+      }
+    },
+    {
+      "id": "MANOR_LOW_CORRIDOR_REMAINS_OPEN",
+      "status": "PASS",
+      "passed": true,
+      "basis": "FP_02_PROTECTED_LOW_CORRIDOR"
+    },
+    {
+      "id": "MANOR_TWO_HILL_RELATION_REMAINS_LEGIBLE",
+      "status": "PASS",
+      "passed": true,
+      "basis": "FP_02_TWO_HILL_RELATION"
+    },
+    {
+      "id": "MANOR_BOTH_VIEWS_REMAIN_CLEAR",
+      "status": "PASS",
+      "passed": true,
+      "basis": "FP_02_VIEW_PRESERVATION"
+    },
+    {
+      "id": "MANOR_ARCHITECTURE_REMAINS_UNASSIGNED",
+      "status": "PASS",
+      "passed": true,
+      "basis": "FP_02_STOP_BEFORE_ARCHITECTURE"
+    },
+    {
+      "id": "CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED",
+      "status": "PASS",
+      "passed": true,
+      "basis": "FP_03_CURRENT_RELATION"
+    },
+    {
+      "id": "CAVERN_INTERIOR_REMAINS_SEPARATE",
+      "status": "PASS",
+      "passed": true,
+      "basis": "SEPARATE_UNASSIGNED_INTERIOR"
+    },
+    {
+      "id": "FRONTIER_NAME_DOES_NOT_PREASSIGN_FINAL_COORDINATES",
+      "status": "PASS",
+      "passed": true,
+      "basis": "FP_04_FORMAL_DEFERRAL"
+    },
+    {
+      "id": "FRONTIER_CAPACITY_EVIDENCE_PRESERVED_NONFINAL",
+      "status": "PASS",
+      "passed": true,
+      "basis": "EXISTING_ANALYTICAL_CANDIDATE_RETAINED"
+    },
+    {
+      "id": "FRONTIER_NO_OBJECTS_FLATTENING_OR_SYSTEM_PLACEMENT",
+      "status": "PASS",
+      "passed": true,
+      "basis": "FP_04_NONCONSTRUCTION"
+    },
+    {
+      "id": "GLOBAL_NO_AUTHORITY_OVERREACH",
+      "status": "PASS",
+      "passed": true,
+      "basis": {
+        "priorAuthorityMutation": false,
+        "grCr01To04Mutation": false,
+        "terrainMutation": false,
+        "cameraAuthorityMutation": false,
+        "buildingGeometry": false,
+        "cavernExcavation": false,
+        "roadOrCorridorGeometry": false,
+        "runtimeIntegration": false,
+        "publicRouteMutation": false,
+        "livePageChange": false,
+        "productConstruction": false,
+        "mergeAuthorityCreated": false,
+        "canonicalizationAuthority": false
+      }
+    }
+  ],
+  "priorPhysicalEvidenceInventory": {
+    "classification": "PRIOR_LIMITED_PHYSICAL_EVIDENCE_NOT_NEW_CP0_ACCEPTANCE",
+    "samsungPhone": {
+      "gestureMotion": "SMOOTH_GLIDE_OBSERVED",
+      "guidedAcceptanceRecorder": "NOT_REGISTERING_GESTURE_STREAM",
+      "classification": "PRODUCT_MOTION_PASS_DIAGNOSTIC_RECORDER_DIVERGENCE"
+    },
+    "androidTablet": {
+      "guidedReceiptVersion": "H_EARTH_GUIDED_INTERACTION_ACCEPTANCE_RECEIPT_v2",
+      "terminalState": "COMPLETE",
+      "viewport": {
+        "width": 683,
+        "height": 760,
+        "devicePixelRatio": 1.5
+      },
+      "webglVendor": "Google Inc. (Qualcomm)",
+      "webglRenderer": "ANGLE (Qualcomm, Adreno (TM) 619, OpenGL ES 3.2)",
+      "elapsedSeconds": 25.125,
+      "rendererReadyAtStart": true,
+      "visibleFrameAtStart": true,
+      "framesPresentedDuringSession": 67,
+      "proposalsDuringSession": 67,
+      "requiredStepCount": 8,
+      "stepsResolved": 8,
+      "passCount": 8,
+      "skippedCount": 0,
+      "notCompletedCount": 0,
+      "firstAttemptPassActions": [
+        "TURN_LEFT",
+        "TURN_RIGHT",
+        "PITCH_UP",
+        "PITCH_DOWN",
+        "MOVE_FORWARD",
+        "MOVE_BACKWARD",
+        "ZOOM_IN",
+        "ZOOM_OUT"
+      ],
+      "gestureFunctionalAcceptance": "PASS",
+      "guidedInstrumentQualityAcceptance": "PASS",
+      "separatePhysicalFluidityObservationBeforeCorrection": "POPPING_DRAG_INSTEAD_OF_CONTINUOUS_GLIDE",
+      "separatePhysicalFluidityObservationAfterCorrection": "SMOOTH_CONTINUOUS_GLIDE_OBSERVED",
+      "priorPullPopBehaviorAfterCorrection": "NOT_OBSERVED",
+      "traversalSpeedObservation": "SMOOTH_BUT_SLOWER_THAN_USER_PREFERENCE",
+      "traversalSpeedDisposition": "NONBLOCKING_FUTURE_CALIBRATION_CANDIDATE",
+      "functionalDisposition": "PASS_CLOSED",
+      "fluidityDisposition": "PASS_CLOSED"
+    },
+    "acceptanceBoundary": {
+      "exploratoryAndBoundedTestingAuthorized": true,
+      "tabletEightOfEightFunctionalAcceptanceClosed": true,
+      "correctedTabletFluidityPhysicalAcceptanceClosed": true,
+      "traversalSpeedPreferenceNonblocking": true,
+      "physicalReleaseTerminationConfirmationRequired": true,
+      "portraitLandscapePhysicalAcceptanceRequired": true,
+      "cp4AcceptanceAuthorized": false,
+      "cp4MergeAuthorized": false,
+      "cp3dPassClosedRequiredBeforeIntegration": true,
+      "pr295MergeRequiredBeforeIntegration": true
+    }
+  },
+  "checks": [
+    {
+      "id": "BASELINE_IS_ANCESTOR",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "baseline": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+        "head": "17a4ecbc6354675a961c214a3c3caa4c60438005"
+      }
+    },
+    {
+      "id": "DELTA_IS_CHECKPOINT_ONLY",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "diffPaths": [
+          ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
+          "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs"
+        ],
+        "unauthorized": []
+      }
+    },
+    {
+      "id": "PRODUCT_AND_WORLD_SOURCE_UNCHANGED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "productChanges": []
+      }
+    },
+    {
+      "id": "TRAVERSAL_SCENES_NOT_CREATED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "sceneChanges": [],
+        "verifierCorrection": "AUTHORIZED_CP0_CUSTODY_PATHS_ARE_NOT_TRAVERSAL_SCENES",
+        "previouslyMisclassifiedPaths": [
+          ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp0.yml",
+          "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.v1.json",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.mjs",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.receipt.v1.json",
+          "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp0-baseline.runner.mjs"
+        ]
+      }
+    },
+    {
+      "id": "REMOTE_MAIN_EQUALS_BASELINE",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "main": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+        "baseline": "8a68a163f20c0918f33a3137763af05d4ccb035f"
+      }
+    },
+    {
+      "id": "ROLLBACK_REF_EQUALS_BASELINE",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "rollback": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+        "expected": "8a68a163f20c0918f33a3137763af05d4ccb035f"
+      }
+    },
+    {
+      "id": "PLACEMENT_BLOB_EXACT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "actual": "ad6a7ac1871e1f248c40ac7836d487f786dc48e4",
+        "expected": "ad6a7ac1871e1f248c40ac7836d487f786dc48e4"
+      }
+    },
+    {
+      "id": "PLACEMENT_STATUS_CLOSED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "actual": "FINAL_PLACEMENT_DISPOSITION_RESOLVED_PASS_CLOSED"
+      }
+    },
+    {
+      "id": "FP00_THROUGH_FP05_CLOSED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "checkpointErrors": []
+      }
+    },
+    {
+      "id": "ACCEPTED_PLACEMENT_INVENTORY_EXACT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "placementErrors": [],
+        "areaCount": 4
+      }
+    },
+    {
+      "id": "PAIR_MATRIX_PASSING",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "count": 6
+      }
+    },
+    {
+      "id": "PRESERVATION_LAWS_PASSING",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "count": 13
+      }
+    },
+    {
+      "id": "PRIOR_PHYSICAL_EVIDENCE_BLOB_EXACT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "actual": "e463d56174bda69e9aa49c7c353f422f7226e280",
+        "expected": "e463d56174bda69e9aa49c7c353f422f7226e280"
+      }
+    },
+    {
+      "id": "PRIOR_PHYSICAL_BOUNDARIES_REMAIN_OPEN",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "acceptanceBoundary": {
+          "exploratoryAndBoundedTestingAuthorized": true,
+          "tabletEightOfEightFunctionalAcceptanceClosed": true,
+          "correctedTabletFluidityPhysicalAcceptanceClosed": true,
+          "traversalSpeedPreferenceNonblocking": true,
+          "physicalReleaseTerminationConfirmationRequired": true,
+          "portraitLandscapePhysicalAcceptanceRequired": true,
+          "cp4AcceptanceAuthorized": false,
+          "cp4MergeAuthorized": false,
+          "cp3dPassClosedRequiredBeforeIntegration": true,
+          "pr295MergeRequiredBeforeIntegration": true
+        }
+      }
+    },
+    {
+      "id": "RUNTIME_GRAPH_RESOLVED",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "unresolved": []
+      }
+    },
+    {
+      "id": "SOURCE_INVENTORY_EXACT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "sourceCount": 59,
+        "sourceErrors": []
+      }
+    },
+    {
+      "id": "SERVED_RUNTIME_BYTES_EXACT",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "runtimeFileCount": 56,
+        "runtimeErrors": []
+      }
+    },
+    {
+      "id": "ONE_PUBLIC_MODULE_BOOTSTRAP",
+      "status": "PASS",
+      "passed": true,
+      "detail": {
+        "modules": [
+          "./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=renderer-startup-receipt-v1"
+        ]
+      }
+    }
+  ],
+  "failures": [],
+  "closure": {
+    "exactBaselineIdentified": true,
+    "rollbackAuthorityEstablished": true,
+    "sourceInventoryComplete": true,
+    "runtimeInventoryComplete": true,
+    "acceptedPlacementInventoryComplete": true,
+    "productSourceChanged": false,
+    "traversalSceneSuiteCreated": false,
+    "unresolvedBaselineGapCount": 0,
+    "checkpointResult": "PASS_CLOSED",
+    "nextCheckpointAuthorized": false,
+    "stoppingBoundary": "STOP_AFTER_CP0_BASELINE_FREEZE_BEFORE_TRAVERSAL_SCENE_SUITE_CREATION"
+  },
+  "verifierCorrection": {
+    "applied": true,
+    "scope": "TRAVERSAL_SCENE_PATH_CLASSIFICATION_ONLY",
+    "productSourceMutation": false,
+    "runtimeAcceptanceChanged": false,
+    "placementAcceptanceChanged": false,
+    "physicalAcceptanceChanged": false
+  }
+}

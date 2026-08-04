@@ -1,0 +1,10 @@
+{
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_007_STAGED_EXECUTOR_RECEIPT_v1",
+  "workflowRunId": "30932146127",
+  "workflowRunAttempt": "1",
+  "triggerCommit": "8f333b3cf54811cadbbba967999c5628e5b4056b",
+  "recoverOutcome": "success",
+  "patchOutcome": "success",
+  "operationOutcome": "failure",
+  "manualMetadataReconstructionUsed": false
+}

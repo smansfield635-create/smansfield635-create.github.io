@@ -1,0 +1,195 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_PRE_ROLE_BOOTSTRAP_BUNDLE_v1",
+  "bundleId": "MIB_PRE_ROLE_BOOTSTRAP_BUNDLE_001",
+  "status": "MATERIALIZED_INACTIVE_PENDING_INDEPENDENT_VERIFICATION",
+  "seed": "control-plane/methods-information-benchmark/bootstrap/origin-bootstrap-seed.v1.json",
+  "discovery": {
+    "markers": [
+      "METHODS_INFORMATION_BENCHMARK",
+      "INFORMATION_BENCHMARK",
+      "OBJECT_BENCHMARK_STANDARD",
+      "METHODS_MODELS_COHERENCE_INSTRUMENT"
+    ],
+    "include": [
+      "control-plane/",
+      "methods/",
+      "laws/research/methods-and-models/",
+      "verification/"
+    ],
+    "exclude": [
+      "control-plane/methods-information-benchmark/",
+      "methods-information-benchmark/",
+      ".github/ai-router/projects/methods-information-benchmark/"
+    ],
+    "none": "HELD_CANONICAL_BENCHMARK_UNRESOLVED",
+    "multiple": "HELD_AMBIGUOUS_REQUIRES_CAUSAL_AUTHORITY"
+  },
+  "functions": [
+    "DEFINE_REQUIREMENTS",
+    "CONSTRUCT",
+    "INDEPENDENTLY_VERIFY",
+    "RATIFY",
+    "PREPARE_REVIEW",
+    "GOVERN_AND_ROUTE",
+    "CORRECT",
+    "RECOVER",
+    "SUCCEED"
+  ],
+  "edges": [
+    ["DEFINE_REQUIREMENTS", "CONSTRUCT"],
+    ["CONSTRUCT", "INDEPENDENTLY_VERIFY"],
+    ["INDEPENDENTLY_VERIFY", "RATIFY"],
+    ["RATIFY", "PREPARE_REVIEW"],
+    ["GOVERN_AND_ROUTE", "DEFINE_REQUIREMENTS"],
+    ["GOVERN_AND_ROUTE", "CONSTRUCT"],
+    ["GOVERN_AND_ROUTE", "INDEPENDENTLY_VERIFY"],
+    ["GOVERN_AND_ROUTE", "RATIFY"],
+    ["GOVERN_AND_ROUTE", "PREPARE_REVIEW"],
+    ["RATIFY", "CORRECT"],
+    ["CORRECT", "INDEPENDENTLY_VERIFY"],
+    ["RECOVER", "SUCCEED"],
+    ["SUCCEED", "GOVERN_AND_ROUTE"]
+  ],
+  "roles": {
+    "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY": ["DEFINE_REQUIREMENTS"],
+    "ROLE_1_CONSTRUCTION_AND_SOURCE_INTEGRATION": ["CONSTRUCT"],
+    "ROLE_3_FRESH_ROOM_INDEPENDENT_EXECUTION": ["INDEPENDENTLY_VERIFY"],
+    "ROLE_5_INTEGRATED_RATIFICATION": ["RATIFY"],
+    "ROLE_2_HUMAN_REVIEW_PREPARATION": ["PREPARE_REVIEW"],
+    "ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION": ["GOVERN_AND_ROUTE", "CORRECT", "RECOVER", "SUCCEED"]
+  },
+  "contracts": {
+    "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY": {
+      "authority": "REPOSITORY_CONTROLLED_OPERATION_ASSIGNMENT",
+      "operationScoped": true,
+      "conversationMemoryAuthority": false,
+      "privateStateAuthority": false,
+      "returnRequired": true,
+      "stop": "RETURN_MACHINE_READABLE_RECEIPT_TO_GOVERNANCE"
+    },
+    "ROLE_1_CONSTRUCTION_AND_SOURCE_INTEGRATION": {
+      "authority": "REPOSITORY_CONTROLLED_OPERATION_ASSIGNMENT",
+      "operationScoped": true,
+      "conversationMemoryAuthority": false,
+      "privateStateAuthority": false,
+      "returnRequired": true,
+      "stop": "RETURN_MACHINE_READABLE_RECEIPT_TO_GOVERNANCE"
+    },
+    "ROLE_3_FRESH_ROOM_INDEPENDENT_EXECUTION": {
+      "authority": "REPOSITORY_CONTROLLED_OPERATION_ASSIGNMENT",
+      "operationScoped": true,
+      "conversationMemoryAuthority": false,
+      "privateStateAuthority": false,
+      "returnRequired": true,
+      "stop": "RETURN_MACHINE_READABLE_RECEIPT_TO_GOVERNANCE"
+    },
+    "ROLE_5_INTEGRATED_RATIFICATION": {
+      "authority": "REPOSITORY_CONTROLLED_OPERATION_ASSIGNMENT",
+      "operationScoped": true,
+      "conversationMemoryAuthority": false,
+      "privateStateAuthority": false,
+      "returnRequired": true,
+      "stop": "RETURN_MACHINE_READABLE_RECEIPT_TO_GOVERNANCE"
+    },
+    "ROLE_2_HUMAN_REVIEW_PREPARATION": {
+      "authority": "REPOSITORY_CONTROLLED_OPERATION_ASSIGNMENT",
+      "operationScoped": true,
+      "conversationMemoryAuthority": false,
+      "privateStateAuthority": false,
+      "returnRequired": true,
+      "stop": "RETURN_MACHINE_READABLE_RECEIPT_TO_GOVERNANCE"
+    },
+    "ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION": {
+      "authority": "REPOSITORY_CONTROLLED_OPERATION_ASSIGNMENT",
+      "operationScoped": true,
+      "conversationMemoryAuthority": false,
+      "privateStateAuthority": false,
+      "returnRequired": true,
+      "stop": "RETURN_MACHINE_READABLE_RECEIPT_TO_GOVERNANCE"
+    }
+  },
+  "incompatible": [
+    ["CONSTRUCT", "INDEPENDENTLY_VERIFY"],
+    ["CONSTRUCT", "RATIFY"],
+    ["RATIFY", "CORRECT"],
+    ["GOVERN_AND_ROUTE", "DEFINE_REQUIREMENTS"]
+  ],
+  "forbidden": [
+    "ROLE_CREATES_OWN_AUTHORITY",
+    "ROLE_ACTIVATES_ITSELF",
+    "MUTATOR_VERIFIES_ITSELF",
+    "MUTATOR_RATIFIES_ITSELF",
+    "RATIFIER_REPAIRS_CANDIDATE",
+    "REVIEW_BYPASSES_ADMISSION",
+    "AUTHORITY_USES_CONVERSATION_MEMORY"
+  ],
+  "routes": [
+    ["PRE_ROLE_BOOTSTRAP", "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY", "INDEPENDENT_BOOTSTRAP_VERIFICATION_AND_ACTIVATION"],
+    ["ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY", "ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_6_REQUIREMENTS_FREEZE_RECEIPT"],
+    ["ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_1_CONSTRUCTION_AND_SOURCE_INTEGRATION", "ROLE_6_RETURN_VALIDATED"],
+    ["ROLE_1_CONSTRUCTION_AND_SOURCE_INTEGRATION", "ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_1_CONSTRUCTION_RECEIPT"],
+    ["ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_3_FRESH_ROOM_INDEPENDENT_EXECUTION", "CANDIDATE_COMMITTED_AND_PACKAGED"],
+    ["ROLE_3_FRESH_ROOM_INDEPENDENT_EXECUTION", "ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_3_INDEPENDENT_RECEIPT"],
+    ["ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_5_INTEGRATED_RATIFICATION", "TWO_FINGERPRINTS_MATCH"],
+    ["ROLE_5_INTEGRATED_RATIFICATION", "ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_5_RATIFICATION_RECEIPT"],
+    ["ROLE_4_GOVERNANCE_ROUTING_AND_SUCCESSION", "ROLE_2_HUMAN_REVIEW_PREPARATION", "RATIFICATION_PASS"]
+  ],
+  "activation": {
+    "roleContractsMaterialized": true,
+    "roleAuthorityActive": false,
+    "activeAssignment": null,
+    "status": "HELD_PENDING_INDEPENDENT_BOOTSTRAP_VERIFICATION",
+    "firstRoleCandidate": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY"
+  },
+  "tools": [
+    "ORIGIN_BOOTSTRAP_SEED_VALIDATOR",
+    "REPOSITORY_AUTHORITY_DISCOVERY",
+    "OPERATION_GRAPH_BUILDER",
+    "ROLE_TOPOLOGY_SYNTHESIZER",
+    "ROLE_SEPARATION_VALIDATOR",
+    "ROLE_CONTRACT_MATERIALIZER",
+    "INITIAL_ROUTING_GRAPH_EMITTER",
+    "ROLE_HOLDER_ADMISSION_GATE",
+    "BOOTSTRAP_FINGERPRINT_GENERATOR",
+    "INDEPENDENT_BOOTSTRAP_VERIFIER",
+    "ROLE_SYSTEM_ACTIVATION_GATE"
+  ],
+  "negativeFixtures": {
+    "CONVERSATION_MEMORY_AUTHORITATIVE": "CONVERSATION_MEMORY_AUTHORITY_FORBIDDEN",
+    "ROLE_SELF_ACTIVATION": "PERMANENT_ROLE_ACTIVATION_NOT_AUTHORIZED",
+    "MUTATOR_SELF_VERIFICATION": "DUPLICATE_FUNCTION_AUTHORITY",
+    "UNASSIGNED_FUNCTION": "UNASSIGNED_OPERATIONAL_FUNCTION",
+    "MISSING_RETURN_DESTINATION": "ROLE_CONTRACT_RETURN_REQUIRED"
+  },
+  "fingerprint": {
+    "exclude": [
+      "ABSOLUTE_TEMP_PATHS",
+      "PROCESS_IDS",
+      "WALL_CLOCK_TIMESTAMPS",
+      "RANDOM_PORTS",
+      "LOCAL_USER_NAMES",
+      "HOST_NAMES",
+      "ARTIFACT_UPLOAD_IDS",
+      "UPLOAD_TIMESTAMPS",
+      "NONDETERMINISTIC_ORDER"
+    ],
+    "include": [
+      "NODE_VERSION",
+      "OPERATING_SYSTEM_CLASS",
+      "ARCHITECTURE_CLASS",
+      "EXACT_COMMAND",
+      "TOOL_BLOBS",
+      "SCHEMA_BLOBS",
+      "BENCHMARK_BLOBS"
+    ]
+  },
+  "freshRoom": {
+    "uniqueOperationScopedHolder": true,
+    "cleanCheckout": true,
+    "cleanDetachedWorktree": true,
+    "noBuilderTempFiles": true,
+    "noUndeclaredEnvironment": true,
+    "inputLimitedToLocatorAndCandidateHead": true,
+    "machineReadableReceipt": true
+  }
+}

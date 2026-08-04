@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_ASSIGNMENT_RETURN_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "status", "assignmentId", "assignmentHead", "ledgerRevision", "assignmentAuthorityActive", "outputAdopted", "nextRoleAssignmentPerformed"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_ASSIGNMENT_RETURN_RECEIPT_v1"},
+    "status": {"enum": ["PASS_TEST_MODE_RETURNED", "PASS_OPERATION_ASSIGNMENT_RETURNED"]},
+    "assignmentId": {"type": "string", "minLength": 1},
+    "assignmentHead": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "ledgerRevision": {"type": "integer", "minimum": 2},
+    "assignmentAuthorityActive": {"const": false},
+    "outputAdopted": {"const": false},
+    "nextRoleAssignmentPerformed": {"const": false}
+  },
+  "additionalProperties": true
+}

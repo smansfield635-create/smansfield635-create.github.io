@@ -7,6 +7,11 @@ on:
       - verification/methods-information-benchmark-independent-bootstrap-verifier-carrier-v1-001
     paths:
       - .github/workflows/methods-information-benchmark-independent-bootstrap-verifier-carrier.yml
+  pull_request:
+    branches:
+      - agent/methods-information-benchmark-pre-role-bootstrap-v1
+    paths:
+      - .github/workflows/methods-information-benchmark-independent-bootstrap-verifier-carrier.yml
   workflow_dispatch:
 
 permissions:
@@ -30,6 +35,7 @@ jobs:
       BUILDER_ARTIFACT_NAME: methods-information-benchmark-pre-role-bootstrap-receipts
       BUILDER_ARTIFACT_SIZE_BYTES: "9728"
       BUILDER_ARTIFACT_SHA256: 0734e39760d5127346dd3011f2a26319b751fbfd445c25efb55e70cb66e2d1e1
+      CARRIER_DEFINITION_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
       - name: Check out exact PR 551 candidate head
@@ -270,7 +276,7 @@ jobs:
               "schema": "METHODS_INFORMATION_BENCHMARK_BOUNDED_VERIFIER_EXECUTION_CARRIER_RECEIPT_v1",
               "carrierWorkflowRunId": os.environ["GITHUB_RUN_ID"],
               "carrierWorkflowRunAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
-              "carrierCommit": os.environ["GITHUB_SHA"],
+              "carrierDefinitionHead": os.environ["CARRIER_DEFINITION_HEAD"],
               "executedCandidateHead": os.environ["EXACT_CANDIDATE_HEAD"],
               "builderArtifactId": int(os.environ["BUILDER_ARTIFACT_ID"]),
               "builderArtifactSha256": os.environ["BUILDER_ARTIFACT_SHA256"],
@@ -281,6 +287,7 @@ jobs:
               "repairPerformed": verification["repairPerformed"],
               "candidateMutationPerformed": False,
               "permanentRoleAuthorityActivated": False,
+              "syntheticMergeRefUsed": False,
               "mergePerformed": False,
           }
           (temp / "carrier-execution-receipt.json").write_text(

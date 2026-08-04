@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_FIRST_ROLE_ASSIGNMENT_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "status", "assignment", "assignmentHead", "ledgerRevision", "assignmentAuthorityActive", "automaticAdditionalRoleActivation"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_FIRST_ROLE_ASSIGNMENT_RECEIPT_v1"},
+    "status": {"enum": ["PASS_TEST_MODE_ASSIGNMENT", "PASS_OPERATION_SCOPED_ACTIVE_ASSIGNMENT"]},
+    "assignment": {"type": "object"},
+    "assignmentHead": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "ledgerRevision": {"type": "integer", "minimum": 1},
+    "assignmentAuthorityActive": {"type": "boolean"},
+    "automaticAdditionalRoleActivation": {"const": false}
+  },
+  "additionalProperties": true
+}

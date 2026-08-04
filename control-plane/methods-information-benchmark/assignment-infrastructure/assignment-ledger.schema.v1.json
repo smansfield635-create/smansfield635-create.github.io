@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_FIRST_ASSIGNMENT_LEDGER_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "genesisCandidateHead", "bootstrapFingerprint", "revision", "ledgerHead", "assignments"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_FIRST_ASSIGNMENT_LEDGER_v1"},
+    "genesisCandidateHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "bootstrapFingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "revision": {"type": "integer", "minimum": 0},
+    "ledgerHead": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assignments": {"type": "array", "maxItems": 1}
+  },
+  "additionalProperties": false
+}

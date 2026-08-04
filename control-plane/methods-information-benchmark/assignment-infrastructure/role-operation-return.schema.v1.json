@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_INFORMATION_BENCHMARK_ROLE_OPERATION_RETURN_SCHEMA_v1",
+  "type": "object",
+  "required": ["schema", "assignmentId", "roleId", "operationId", "holderExecutionId", "disposition", "outputManifestSha256", "fixtureOnly"],
+  "properties": {
+    "schema": {"const": "METHODS_INFORMATION_BENCHMARK_ROLE_OPERATION_RETURN_v1"},
+    "assignmentId": {"type": "string", "minLength": 1},
+    "roleId": {"type": "string", "minLength": 1},
+    "operationId": {"type": "string", "minLength": 1},
+    "holderExecutionId": {"type": "string", "minLength": 1},
+    "disposition": {"enum": ["PASS_RETURN", "HELD_RETURN", "FAIL_RETURN"]},
+    "outputManifestSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "fixtureOnly": {"type": "boolean"}
+  },
+  "additionalProperties": true
+}

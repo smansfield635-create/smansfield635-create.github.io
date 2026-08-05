@@ -1,0 +1,134 @@
+name: PR570 Registry Scope Gap Termination
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  GOVERNING_HEAD: 2c4e5a21e4e902bee421528498c112998fa783bc
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  LINEAGE_OPERATION_ID: H_EARTH_MAP_WIDE_INSTRUMENT_LINEAGE_AWARE_PERMANENT_RATIFICATION_v2
+  LINEAGE_LOCK_SCOPE: H_EARTH:MAP_WIDE_INSTRUMENT:LINEAGE_AWARE_PERMANENT_RATIFICATION:V2
+  LINEAGE_GENERATION: '123'
+  FRESH_OPERATION_ID: H_EARTH_MAP_WIDE_INSTRUMENT_FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION_v2
+  FRESH_LOCK_SCOPE: H_EARTH:MAP_WIDE_INSTRUMENT:FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION:V2
+  FRESH_GENERATION: '125'
+  TERMINATION_OPERATION_ID: H_EARTH_PR570_REGISTRY_SCOPE_GAP_TERMINATION_T_001
+  TERMINATION_LOCK_SCOPE: H_EARTH:PR570_REGISTRY_SCOPE_GAP:TERMINATION:T:V1
+  TERMINATION_GENERATION: '132'
+
+jobs:
+  terminate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact isolated one-file carrier
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$GOVERNING_HEAD"
+          mapfile -t paths < <(git diff --name-only "$GOVERNING_HEAD" HEAD)
+          test "${#paths[@]}" -eq 1
+          test "${paths[0]}" = '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
+          test "$(git rev-parse "$GOVERNING_HEAD:tools/operation-intake/repository-operation-lock-manager.v1.mjs")" = '6fc0199c9dc943b8cdf3efe7c789f0e1888774b8'
+      - name: Close lineage-aware generation 123 fail closed
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
+              --operation-id "$LINEAGE_OPERATION_ID" --lock-scope "$LINEAGE_LOCK_SCOPE" \
+              --lock-generation "$LINEAGE_GENERATION" --terminal-disposition FAIL_CLOSED \
+              --output /tmp/generation-123-closure.json; then break; fi
+            test "$attempt" -lt 4
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/generation-123-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Close fresh-revalidation generation 125 fail closed
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
+              --operation-id "$FRESH_OPERATION_ID" --lock-scope "$FRESH_LOCK_SCOPE" \
+              --lock-generation "$FRESH_GENERATION" --terminal-disposition FAIL_CLOSED \
+              --output /tmp/generation-125-closure.json; then break; fi
+            test "$attempt" -lt 4
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/generation-125-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Close termination generation 132 pass closed
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
+              --operation-id "$TERMINATION_OPERATION_ID" --lock-scope "$TERMINATION_LOCK_SCOPE" \
+              --lock-generation "$TERMINATION_GENERATION" --terminal-disposition PASS_CLOSED \
+              --output /tmp/generation-132-closure.json; then break; fi
+            test "$attempt" -lt 4
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/generation-132-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Emit terminal certification
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const lineage=JSON.parse(fs.readFileSync('/tmp/generation-123-closure.json','utf8'));
+          const fresh=JSON.parse(fs.readFileSync('/tmp/generation-125-closure.json','utf8'));
+          const termination=JSON.parse(fs.readFileSync('/tmp/generation-132-closure.json','utf8'));
+          const out={
+            schema:'PR570_REGISTRY_SCOPE_GAP_TERMINATION_CERTIFICATION_v1',
+            result:'PASS_CLOSED_FAILED_RATIFICATION_ATTEMPTS_TERMINATED',
+            governingHead:process.env.GOVERNING_HEAD,
+            failureClass:'H_EARTH_INTERNAL_REGISTRY_OCCURRENCE_GAP',
+            unresolvedPathCount:13,
+            lineageGeneration:123,
+            lineageDisposition:'FAIL_CLOSED',
+            lineageClosureCommit:lineage.closureCommitSha,
+            freshGeneration:125,
+            freshDisposition:'FAIL_CLOSED',
+            freshClosureCommit:fresh.closureCommitSha,
+            terminationGeneration:132,
+            terminationDisposition:'PASS_CLOSED',
+            terminationClosureCommit:termination.closureCommitSha,
+            routerOwnershipGeneration111Preserved:true,
+            pr570Mutated:false,
+            pr605Merged:false,
+            pr606Merged:false,
+            registryMutationPerformed:false,
+            mainMutationPerformed:false,
+            mergePerformed:false,
+            residualAuthority:false
+          };
+          out.certificationDigest=crypto.createHash('sha256').update(JSON.stringify(out)).digest('hex');
+          fs.mkdirSync('/tmp/pr570-registry-scope-gap-terminal',{recursive:true});
+          fs.writeFileSync('/tmp/pr570-registry-scope-gap-terminal/certification.json',JSON.stringify(out,null,2)+'\n');
+          fs.copyFileSync('/tmp/generation-123-closure.json','/tmp/pr570-registry-scope-gap-terminal/generation-123-closure.json');
+          fs.copyFileSync('/tmp/generation-125-closure.json','/tmp/pr570-registry-scope-gap-terminal/generation-125-closure.json');
+          fs.copyFileSync('/tmp/generation-132-closure.json','/tmp/pr570-registry-scope-gap-terminal/generation-132-closure.json');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-registry-scope-gap-terminal-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/pr570-registry-scope-gap-terminal/
+          if-no-files-found: error
+          retention-days: 90

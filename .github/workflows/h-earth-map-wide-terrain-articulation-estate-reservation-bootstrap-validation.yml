@@ -1,0 +1,135 @@
+name: H-Earth Map-Wide Terrain Instrument Bootstrap Validation
+
+on:
+  pull_request:
+    paths:
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/**'
+      - 'tools/h-earth-map-wide-terrain/**'
+      - '.github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  temporary-builder-self-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify syntax and exact added-only path boundary
+        shell: bash
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          for f in tools/h-earth-map-wide-terrain/*.mjs; do node --check "$f"; done
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+          const m=JSON.parse(fs.readFileSync('h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/changed-path-manifest.v1.json'));
+          const names=cp.execFileSync('git',['diff','--name-only',m.baseHead,process.env.HEAD_SHA],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
+          const expected=[...m.expectedChangedPaths].sort();
+          if(JSON.stringify(names)!==JSON.stringify(expected))throw Error('CHANGED_PATH_SET_MISMATCH');
+          const status=cp.execFileSync('git',['diff','--name-status',m.baseHead,process.env.HEAD_SHA],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+          if(status.some(x=>!x.startsWith('A\t')))throw Error('EXISTING_PATH_MUTATION_DETECTED');
+          NODE
+      - name: Run complete Builder chain
+        run: >-
+          node tools/h-earth-map-wide-terrain/self-test.v1.mjs
+          --root .
+          --expected-head ${{ github.event.pull_request.head.sha }}
+          --holder GITHUB_ACTIONS_MAP_WIDE_TERRAIN_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          --output-dir /tmp/map-wide-terrain-builder
+      - name: Upload Builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-builder-evidence
+          path: /tmp/map-wide-terrain-builder
+          if-no-files-found: error
+
+  fresh-independent-verifier:
+    needs: temporary-builder-self-test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download authentic Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-builder-evidence
+          path: /tmp/builder
+      - name: Reproduce independently without repair
+        run: >-
+          node tools/h-earth-map-wide-terrain/fresh-verifier.v1.mjs
+          --root .
+          --expected-head ${{ github.event.pull_request.head.sha }}
+          --builder-receipt /tmp/builder/bootstrap-self-test-receipt.json
+          --holder GITHUB_ACTIONS_MAP_WIDE_TERRAIN_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+          --output-dir /tmp/map-wide-terrain-verifier
+      - name: Upload Verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-verifier-evidence
+          path: /tmp/map-wide-terrain-verifier
+          if-no-files-found: error
+
+  command-emitted-bootstrap-authority-termination:
+    needs: [temporary-builder-self-test, fresh-independent-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact certified candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-builder-evidence
+          path: /tmp/builder
+      - name: Download Verifier evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-verifier-evidence
+          path: /tmp/verifier
+      - name: Emit terminal receipt
+        run: >-
+          node tools/h-earth-map-wide-terrain/bootstrap-authority-terminator.v1.mjs
+          --builder-receipt /tmp/builder/bootstrap-self-test-receipt.json
+          --verifier-receipt /tmp/verifier/fresh-verifier-receipt.json
+          --policy h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/bootstrap-termination-policy.v1.json
+          --output /tmp/final/bootstrap-authority-termination-receipt.json
+      - name: Package complete evidence
+        shell: bash
+        run: |
+          mkdir -p /tmp/final/builder /tmp/final/verifier
+          cp -R /tmp/builder/. /tmp/final/builder/
+          cp -R /tmp/verifier/. /tmp/final/verifier/
+      - name: Upload final certification
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-final-certification
+          path: /tmp/final
+          if-no-files-found: error

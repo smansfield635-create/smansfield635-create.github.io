@@ -11,7 +11,7 @@
     {
       "phase": 1,
       "operation": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1",
-      "status": "AUTHORIZED_ACTIVE",
+      "status": "PASS_CLOSED",
       "requiredInputs": [
         "CURRENT_HOSPITAL_REPOSITORY_RUN",
         "CURRENT_SPONTANEOUS_SPEECH_REPOSITORY_RERUN",
@@ -28,19 +28,23 @@
         "EVIDENCE_LEVEL_PER_ROUTE",
         "PHASE_2_READINESS_DECISION"
       ],
+      "result": "PASS_CLOSED_PHASE_1_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS",
+      "synthesisPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis.v1.json",
+      "receiptPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis-receipt.v1.json",
       "stop": "STOP_AFTER_SYNTHESIS_AND_PHASE_2_READINESS_DECISION"
     },
     {
       "phase": 2,
       "operation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
-      "status": "STAGED_NOT_AUTHORIZED_UNTIL_PHASE_1_PASS",
+      "status": "AUTHORIZED_NOT_EXECUTED",
       "requiredOutputs": [
         "DOMAIN_ADMISSION_STANDARD",
         "PREREGISTERED_CROSS_DOMAIN_HYPOTHESES",
         "REPLICATION_GRID",
         "HELD_OUT_DATA_REQUIREMENTS",
         "INDEPENDENT_REPRODUCTION_STANDARD"
-      ]
+      ],
+      "executionBoundary": "PROTOCOL_CONSTRUCTION_AND_FREEZE_ONLY_NO_NEW_DATA_TESTS"
     },
     {
       "phase": 3,
@@ -82,6 +86,16 @@
       ]
     }
   ],
+  "phase1WorkflowEvidence": {
+    "verifiedHeadSha": "ffaaabdbd7691dd1079a7afdb81a62310fda706a",
+    "workflowName": "H-Earth IMI Empirical Platform",
+    "workflowRunId": 31029565605,
+    "workflowJobId": 92386517692,
+    "workflowConclusion": "success",
+    "phase1SynthesisStepConclusion": "success",
+    "artifactId": 8940114740,
+    "artifactSha256": "35789885bb63dc1e2a20c85908985303b94552a619365f7fd2b8ea13a2dc73cc"
+  },
   "globalBoundaries": {
     "rawIMIMagnitudesComparableAcrossRoutes": false,
     "universalMultiplicativeSuperiorityClaimed": false,
@@ -92,5 +106,6 @@
     "mainMergeAuthorized": false,
     "publicReleaseAuthorized": false
   },
+  "currentProgramState": "PHASE_1_PASS_CLOSED_PHASE_2_PROTOCOL_AUTHORIZED_NOT_EXECUTED",
   "currentDecision": "EXECUTE_PHASE_1_ONLY"
 }

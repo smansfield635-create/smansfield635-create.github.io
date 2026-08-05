@@ -1,3 +1,4 @@
+# Existing-PR execution trigger; no scientific or route semantics changed.
 name: H-Earth IMI Phase 3 CLAC Five-Feature Completion
 
 on:

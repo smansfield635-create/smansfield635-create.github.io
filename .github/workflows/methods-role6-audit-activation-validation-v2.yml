@@ -45,11 +45,13 @@ jobs:
           if(l.status!=='ACTIVE_RATIFIED_CERTIFIED') process.exit(1);
           NODE
           test -z "$(git ls-tree -r --name-only "$ACTIVE_MAIN_HEAD" -- control-plane/methods-information-benchmark/role6-audit/outputs control-plane/methods-information-benchmark/role6-audit/receipts)"
-      - name: Command-close canonical root lock
+      - id: close
+        name: Execute canonical root lock closure
         shell: bash
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
+          set +e
           node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
             --action close \
             --repository smansfield635-create/smansfield635-create.github.io \
@@ -59,6 +61,52 @@ jobs:
             --lock-generation "$LOCK_GENERATION" \
             --terminal-disposition PASS_CLOSED \
             --output "$RUNNER_TEMP/root-lock-closure-receipt.json"
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          test -f "$RUNNER_TEMP/root-lock-closure-receipt.json" || printf '%s\n' '{"schema":"MISSING_CLOSURE_RECEIPT_v1","result":"MISSING"}' > "$RUNNER_TEMP/root-lock-closure-receipt.json"
+          cat "$RUNNER_TEMP/root-lock-closure-receipt.json"
+          exit 0
+      - name: Emit closure diagnostic record
+        if: always()
+        shell: bash
+        env:
+          COMMAND_STATUS: ${{ steps.close.outputs.status }}
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const p=process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json';
+          const c=JSON.parse(fs.readFileSync(p,'utf8'));
+          const out={
+            schema:'METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_CLOSURE_DIAGNOSTIC_v1',
+            operationId:process.env.OPERATION_ID,
+            exactActiveMainHead:process.env.ACTIVE_MAIN_HEAD,
+            activationWorkflowRun:30969033583,
+            builderJob:92189154244,
+            freshVerifierJob:92189207807,
+            activationFingerprint:'2c19836c9998bf43af457fde221e1486b3406f16cad4d87484fcb1b9fac6985a',
+            commandExitCode:Number(process.env.COMMAND_STATUS),
+            canonicalClosureReceipt:c,
+            closureReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),
+            descriptorActiveOnMain:true,
+            rootAuditAdmissionPerformed:false,
+            substantiveAuditProgress:'0_OF_27',
+            returnProgress:'0_OF_2'
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/activation-closure-diagnostic.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: methods-role6-audit-activation-v2-closure-diagnostic
+          path: |
+            ${{ runner.temp }}/root-lock-closure-receipt.json
+            ${{ runner.temp }}/activation-closure-diagnostic.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Require command-emitted terminal closure
+        if: always()
+        shell: bash
+        run: |
           node - <<'NODE'
           const fs=require('fs');
           const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json','utf8'));
@@ -66,42 +114,3 @@ jobs:
           if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true||r.lockGeneration!==45) process.exit(1);
           if(r.terminalDisposition!=='PASS_CLOSED'||r.operationId!=='METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_SUCCESSOR_v2') process.exit(1);
           NODE
-      - name: Emit activation closure record
-        shell: bash
-        run: |
-          node - <<'NODE'
-          const fs=require('fs'),crypto=require('crypto');
-          const c=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json','utf8'));
-          const out={
-            schema:'METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_CLOSURE_RECOVERY_RECEIPT_v1',
-            operationId:process.env.OPERATION_ID,
-            exactActiveMainHead:process.env.ACTIVE_MAIN_HEAD,
-            activationWorkflowRun:30969033583,
-            builderJob:92189154244,
-            freshVerifierJob:92189207807,
-            activationFingerprint:'2c19836c9998bf43af457fde221e1486b3406f16cad4d87484fcb1b9fac6985a',
-            descriptorActiveOnMain:true,
-            rootLockClosure:c,
-            rootAuditAdmissionPerformed:false,
-            substantiveAuditProgress:'0_OF_27',
-            returnProgress:'0_OF_2',
-            role6TerminationPerformed:false,
-            publicMethodsMutation:false,
-            publicLawsMutation:false,
-            productMutation:false,
-            mergeApiOperation:false,
-            deploymentPerformed:false,
-            releasePerformed:false,
-            closureReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json')).digest('hex'),
-            result:'PASS_CLOSED_DESCRIPTOR_ACTIVE_ROOT_AUDIT_INTAKE_PENDING'
-          };
-          fs.writeFileSync(process.env.RUNNER_TEMP+'/activation-closure-recovery-receipt.json',JSON.stringify(out,null,2)+'\n');
-          NODE
-      - uses: actions/upload-artifact@v4
-        with:
-          name: methods-role6-audit-activation-v2-closure-recovery
-          path: |
-            ${{ runner.temp }}/root-lock-closure-receipt.json
-            ${{ runner.temp }}/activation-closure-recovery-receipt.json
-          if-no-files-found: error
-          retention-days: 90

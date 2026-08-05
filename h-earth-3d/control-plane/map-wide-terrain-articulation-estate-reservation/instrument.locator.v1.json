@@ -1,0 +1,18 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT_LOCATOR_v1",
+  "instrumentId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENT_v1",
+  "status": "BOOTSTRAP_CANDIDATE_NOT_ACTIVE",
+  "controlRoot": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation",
+  "toolRoot": "tools/h-earth-map-wide-terrain",
+  "components": {
+    "terrainCensus": "tools/h-earth-map-wide-terrain/terrain-census.v1.mjs",
+    "estateReservationValidator": "tools/h-earth-map-wide-terrain/estate-reservation-validator.v1.mjs",
+    "zonePlanCompiler": "tools/h-earth-map-wide-terrain/zone-articulation-plan-compiler.v1.mjs",
+    "continuousOrchestrationCompiler": "tools/h-earth-map-wide-terrain/continuous-map-orchestration-compiler.v1.mjs",
+    "cumulativeConstraintEvaluator": "tools/h-earth-map-wide-terrain/cumulative-constraint-evaluator.v1.mjs",
+    "varianceRepetitionDetector": "tools/h-earth-map-wide-terrain/variance-repetition-detector.v1.mjs",
+    "previewPackagePlanner": "tools/h-earth-map-wide-terrain/preview-package-planner.v1.mjs"
+  },
+  "certificationWorkflow": ".github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml",
+  "activationRequiresSeparateRatification": true
+}

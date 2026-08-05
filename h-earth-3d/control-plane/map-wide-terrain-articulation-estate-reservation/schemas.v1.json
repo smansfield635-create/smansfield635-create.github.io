@@ -1,0 +1,18 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_INSTRUMENT_SCHEMA_REGISTRY_v1",
+  "closedWorld": true,
+  "schemas": {
+    "WORLD_DESCRIPTOR_v1": {"required": ["width", "depth", "latticeRows", "latticeColumns", "cellSize", "expectedCellCount", "continuousFieldId", "originX", "originZ"]},
+    "TERRAIN_CELL_v1": {"required": ["address", "row", "column", "bounds", "continuousFieldId", "featureClass", "baselineSlopeDeg", "baselineNormalVarianceDeg", "traversable"]},
+    "MAP_WIDE_TERRAIN_CENSUS_v1": {"required": ["world", "cells", "classificationCounts", "adjacencyEdgeCount", "censusDigest"]},
+    "ESTATE_RESERVATION_CONTRACT_v1": {"required": ["reservationId", "anchor", "components", "buildableSlopeLimitDeg", "terrainBuffer", "accessCorridors", "viewCorridor"]},
+    "ZONE_ARTICULATION_PLAN_v1": {"required": ["zones", "cellAssignments", "protectedCells", "planDigest"]},
+    "CONTINUOUS_MAP_WIDE_SUCCESSOR_PLAN_v1": {"required": ["continuousFieldId", "cellOperations", "adjacencyBlends", "orchestrationDigest"]},
+    "CUMULATIVE_CONSTRAINT_RESULT_v1": {"required": ["result", "metrics", "failures"]},
+    "GLOBAL_VARIANCE_REPETITION_RESULT_v1": {"required": ["result", "metrics", "failures"]},
+    "MAP_WIDE_PREVIEW_REVIEW_PACKAGE_PLAN_v1": {"required": ["cameraClasses", "comparisonClasses", "rollbackIdentity", "performanceEvidence", "planDigest"]},
+    "BOOTSTRAP_SELF_TEST_RECEIPT_v1": {"required": ["result", "executionHolder", "expectedHead", "packageFingerprint", "negativeFixtureCount", "negativeFixturesPassed"]},
+    "BOOTSTRAP_TERMINATION_RECEIPT_v1": {"required": ["result", "builderAuthorityActive", "verifierAuthorityActive", "residualBootstrapAuthority", "permanentInstrumentActive"]}
+  },
+  "unknownFieldsPolicy": "FAIL_CLOSED_AT_COMPONENT_BOUNDARIES"
+}

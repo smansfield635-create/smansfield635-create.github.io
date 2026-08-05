@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_INSTRUMENT_PROGRESS_LEDGER_v1",
+  "operationId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENTATION_EXTENSION_v1",
+  "issueSeed": 569,
+  "exactStartingHead": "3ac9279dc82e56f7b0d67972ce56048d07e5ecfa",
+  "checkpoints": [
+    {"checkpoint": "CP00_USER_ORIGIN_GENESIS_SEED", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP01_WORLD_AND_ESTATE_IDENTITY_BINDING", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP02_SCHEMA_AND_OPERATOR_REGISTRY", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP03_MAP_WIDE_TERRAIN_CENSUS", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP04_ESTATE_RESERVATION_VALIDATOR", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP05_ZONE_ARTICULATION_PLAN_COMPILER", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP06_CONTINUOUS_ORCHESTRATION_COMPILER", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP07_CUMULATIVE_CONSTRAINT_EVALUATOR", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP08_VARIANCE_REPETITION_DETECTOR", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP09_PREVIEW_REVIEW_PACKAGE_PLANNER", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP10_NEGATIVE_FIXTURES_AND_FRESH_VERIFICATION", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"},
+    {"checkpoint": "CP11_BOOTSTRAP_AUTHORITY_TERMINATION", "implementationStatus": "MATERIALIZED_IN_CANDIDATE", "certificationStatus": "PENDING_GITHUB_ACTIONS"}
+  ],
+  "treeMutationBoundary": {"expectedAddedPaths": 25, "existingPathsModified": 0, "productPathsModified": 0},
+  "terminalState": "PENDING_EXTERNAL_CERTIFICATION"
+}

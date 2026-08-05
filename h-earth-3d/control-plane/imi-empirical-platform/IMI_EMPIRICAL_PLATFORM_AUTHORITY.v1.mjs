@@ -5,8 +5,8 @@ const authorityBody = {
   schemaVersion: 'IMI_EMPIRICAL_PLATFORM_AUTHORITY_v1',
   operation: 'IMI_ACTIVE_TOOLBASE_EMPIRICAL_PLATFORM_INTEGRATION_AND_BRANCH_OPERATIONAL_INTAKE_v1',
   deliverable: 'IMI_CORE_AND_EMPIRICAL_PORTFOLIO_ENGINE_v1',
-  class: 'REPOSITORY_INTEGRATED_EMPIRICAL_INTRINSIC_MANEUVERABILITY_INDEX_ROUTE_SCORING_PORTFOLIO_RECEIPT_AND_CROSS_DOMAIN_SYNTHESIS_TOOL',
-  status: 'PREOFFICIAL_REPOSITORY_BRANCH_OPERATIONAL_EMPIRICAL_TOOL_WITH_PHASE_1_MULTI_DOMAIN_SYNTHESIS_PASS_CLOSED',
+  class: 'REPOSITORY_INTEGRATED_EMPIRICAL_INTRINSIC_MANEUVERABILITY_INDEX_ROUTE_SCORING_PORTFOLIO_RECEIPT_CROSS_DOMAIN_SYNTHESIS_AND_GENERALIZABILITY_PROTOCOL_TOOL',
+  status: 'PREOFFICIAL_REPOSITORY_BRANCH_OPERATIONAL_EMPIRICAL_TOOL_WITH_PHASE_2_GENERALIZABILITY_PROTOCOL_PASS_CLOSED',
   sourceDisposition: 'SANDBOX_PROTOTYPE_PROMOTED_AS_NONCONTROLLING_SOURCE_MATERIAL',
   empiricalFunction: [
     'ROUTE_SPECIFIC_IMI_SCORING',
@@ -23,7 +23,13 @@ const authorityBody = {
     'CROSS_DOMAIN_MEASUREMENT_BEHAVIOR_SYNTHESIS',
     'ENGINE_ROUTE_DOMAIN_DATASET_AND_UNRESOLVED_FINDING_CLASSIFICATION',
     'ROUTE_EVIDENCE_LEVEL_ASSIGNMENT',
-    'PHASE_2_GENERALIZABILITY_PROTOCOL_READINESS_DECISION'
+    'GENERALIZABILITY_DOMAIN_ADMISSION_STANDARD',
+    'PREREGISTERED_CROSS_DOMAIN_HYPOTHESES',
+    'FOUR_TRACK_REPLICATION_GRID',
+    'HELD_OUT_DATA_REQUIREMENTS',
+    'INDEPENDENT_REPRODUCTION_STANDARD',
+    'NEGATIVE_RESULT_AND_DISAGREEMENT_CUSTODY',
+    'PHASE_3_PARALLEL_EXTERNAL_TEST_AUTHORIZATION'
   ],
   includedSchemas: [
     'IMI_ROUTE_SCHEMA_v1',
@@ -32,7 +38,10 @@ const authorityBody = {
     'IMI_SCOPE_GENERALIZABILITY_AND_PRACTICAL_VALUE_FIVE_PHASE_PLAN_v1',
     'IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_PROTOCOL_v1',
     'IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1',
-    'IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_RECEIPT_v1'
+    'IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_RECEIPT_v1',
+    'IMI_GENERALIZABILITY_PROTOCOL_v1',
+    'IMI_GENERALIZABILITY_PROTOCOL_RECEIPT_v1',
+    'IMI_GENERALIZABILITY_PROTOCOL_VERIFICATION_RESULT_v1'
   ],
   engineMeta: IMI_EMPIRICAL_ENGINE_META,
   defaultOrdinalScale: DEFAULT_IMI_ORDINAL_SCALE.scaleId,
@@ -47,6 +56,7 @@ const authorityBody = {
     'h-earth-3d/tools/imi-empirical-platform/schemas/study-receipt.schema.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/schemas/portfolio-registry.schema.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/synthesis/imi-multi-domain-empirical-portfolio-synthesis-protocol.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-generalizability-protocol.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/routes/example-hospital-route.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/routes/cms-hospital-refresh-2026-route.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/routes/usda-honey-bee-refresh-2026-route.v1.json',
@@ -58,6 +68,7 @@ const authorityBody = {
     'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_EXISTING_FOUR_DOMAIN_EMPIRICAL_PORTFOLIO_COMPLETION_v1/imi-existing-four-domain-portfolio-completion-receipt.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis-receipt.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_GENERALIZABILITY_PROTOCOL_v1/imi-generalizability-protocol-receipt.v1.json',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-platform.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-intake.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs',
@@ -67,7 +78,9 @@ const authorityBody = {
     'h-earth-3d/validation/imi-empirical-platform/imi.spontaneous-speech-rerun-2026.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.existing-four-domain-portfolio-completion.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runner.mjs',
-    'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runtime-boundary-adapter.mjs'
+    'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runtime-boundary-adapter.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.phase-progression-adapter.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.generalizability-protocol.runner.mjs'
   ],
   operationalIntakeContract: {
     branchOperational: true,
@@ -101,13 +114,15 @@ const authorityBody = {
     phase1Result: 'PASS_CLOSED_PHASE_1_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS',
     phase1SynthesisPath: 'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis.v1.json',
     phase1ReceiptPath: 'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis-receipt.v1.json',
-    phase2Status: 'AUTHORIZED_NOT_EXECUTED',
-    nextOperation: 'IMI_GENERALIZABILITY_PROTOCOL_v1',
-    phasesThreeThroughFiveExecuted: false,
-    planPath: 'h-earth-3d/control-plane/imi-empirical-platform/IMI_SCOPE_GENERALIZABILITY_AND_PRACTICAL_VALUE_FIVE_PHASE_PLAN_v1.json',
-    synthesisProtocolPath: 'h-earth-3d/tools/imi-empirical-platform/synthesis/imi-multi-domain-empirical-portfolio-synthesis-protocol.v1.json',
-    synthesisRunnerPath: 'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runner.mjs',
-    synthesisBoundaryAdapterPath: 'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runtime-boundary-adapter.mjs'
+    phase2Status: 'PASS_CLOSED',
+    phase2Operation: 'IMI_GENERALIZABILITY_PROTOCOL_v1',
+    phase2Result: 'PASS_CLOSED_PHASE_2_GENERALIZABILITY_PROTOCOL',
+    phase2ProtocolPath: 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-generalizability-protocol.v1.json',
+    phase2ReceiptPath: 'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_GENERALIZABILITY_PROTOCOL_v1/imi-generalizability-protocol-receipt.v1.json',
+    phase3Status: 'AUTHORIZED_NOT_EXECUTED',
+    nextOperation: 'IMI_PARALLEL_EXTERNAL_TESTS_v1',
+    phasesFourAndFiveExecuted: false,
+    planPath: 'h-earth-3d/control-plane/imi-empirical-platform/IMI_SCOPE_GENERALIZABILITY_AND_PRACTICAL_VALUE_FIVE_PHASE_PLAN_v1.json'
   },
   phase1Determination: {
     evaluatedCases: 4598,
@@ -123,15 +138,20 @@ const authorityBody = {
     decisionGeneralizability: 'NOT_YET_TESTED',
     universalMultiplicativeSuperiorityEstablished: false
   },
-  phase1WorkflowEvidence: {
-    verifiedHeadSha: 'ffaaabdbd7691dd1079a7afdb81a62310fda706a',
-    workflowName: 'H-Earth IMI Empirical Platform',
-    workflowRunId: 31029565605,
-    workflowJobId: 92386517692,
-    workflowConclusion: 'success',
-    phase1SynthesisStepConclusion: 'success',
-    artifactId: 8940114740,
-    artifactSha256: '35789885bb63dc1e2a20c85908985303b94552a619365f7fd2b8ea13a2dc73cc'
+  phase2Determination: {
+    protocolDigest: 'fnv1a32:54474299',
+    planDigest: 'fnv1a32:ab7fcb4d',
+    receiptDigest: 'fnv1a32:52fffa7f',
+    protocolStatus: 'FROZEN',
+    domainAdmissionCriterionCount: 10,
+    preregisteredHypothesisCount: 6,
+    replicationTrackCount: 4,
+    heldOutMandatoryRuleCount: 10,
+    independentReproductionOutputCount: 12,
+    newDataInspected: false,
+    newDataTestsExecuted: false,
+    phase3Authorized: true,
+    phase3Executed: false
   },
   boundaries: {
     officialScaleClaimed: false,
@@ -144,14 +164,14 @@ const authorityBody = {
     liveWebsiteOperational: false,
     rawCrossRouteIMIMagnitudeComparisonAuthorized: false,
     universalMultiplicativeSuperiorityClaimed: false,
-    phase2GeneralizabilityProtocolExecuted: false,
+    phase2GeneralizabilityProtocolExecuted: true,
     externalTestsExecuted: false,
     decisionUtilityPilotsExecuted: false,
     independentMultiDomainReproductionExecuted: false,
     fullCrossDomainResearchSynthesisPerformed: true,
-    stop: 'STOP_AFTER_PHASE_1_SYNTHESIS_AND_PHASE_2_READINESS_DECISION'
+    stop: 'STOP_AFTER_PHASE_2_CLOSE_PHASE_3_AUTHORIZED_NOT_EXECUTED'
   },
-  result: 'IMI_EMPIRICAL_PLATFORM_PHASE_1_MULTI_DOMAIN_SYNTHESIS_PASS_CLOSED_PHASE_2_PROTOCOL_AUTHORIZED_NOT_EXECUTED'
+  result: 'IMI_EMPIRICAL_PLATFORM_PHASE_2_GENERALIZABILITY_PROTOCOL_PASS_CLOSED_PHASE_3_PARALLEL_EXTERNAL_TESTS_AUTHORIZED_NOT_EXECUTED'
 };
 
 export const IMI_EMPIRICAL_PLATFORM_AUTHORITY_v1 = deepFreeze({

@@ -59,8 +59,12 @@ async function readLedger() {
   return { ledger, ledgerBlobSha: file.sha, branchHead: ref.object.sha };
 }
 
-function findGeneration(ledger, generation) {
-  return Object.values(ledger.activeScopes ?? {}).find((entry) => entry.lockGeneration === generation) ?? null;
+function findGenerationRecord(ledger, generation) {
+  const active = Object.values(ledger.activeScopes ?? {}).find((entry) => entry.lockGeneration === generation);
+  if (active) return { location: 'activeScopes', entry: active };
+  const terminal = [...(ledger.terminalHistory ?? [])].reverse().find((entry) => entry.lockGeneration === generation);
+  if (terminal) return { location: 'terminalHistory', entry: terminal };
+  return null;
 }
 
 const hashResult = spawnSync('git', ['hash-object', LOCK_MANAGER_PATH], { encoding: 'utf8' });
@@ -84,7 +88,7 @@ assert(generation43Before.lockGeneration === LOCK_GENERATION, 'GENERATION_43_LOC
 assert(generation43Before.released === false, 'GENERATION_43_ALREADY_RELEASED');
 assert(generation43Before.state === 'ADMITTED_LOCKED', 'GENERATION_43_STATE_MISMATCH');
 
-const generation44Before = findGeneration(before.ledger, 44);
+const generation44Before = findGenerationRecord(before.ledger, 44);
 assert(generation44Before !== null, 'GENERATION_44_REFERENCE_NOT_FOUND');
 const generation44BeforeCanonical = canonical(generation44Before);
 
@@ -126,7 +130,7 @@ assert(terminal43.state === 'TERMINAL', 'GENERATION_43_TERMINAL_STATE_MISMATCH')
 assert(terminal43.released === true, 'GENERATION_43_TERMINAL_RELEASE_FALSE');
 assert(terminal43.terminalDisposition === TERMINAL_DISPOSITION, 'GENERATION_43_TERMINAL_DISPOSITION_MISMATCH');
 
-const generation44After = findGeneration(after.ledger, 44);
+const generation44After = findGenerationRecord(after.ledger, 44);
 assert(generation44After !== null, 'GENERATION_44_MISSING_AFTER_CLOSE');
 assert(canonical(generation44After) === generation44BeforeCanonical, 'GENERATION_44_MUTATED');
 
@@ -153,6 +157,7 @@ const verification = stable({
   generation43PresentInActiveScopes: false,
   generation43PresentInTerminalHistory: true,
   generation43TerminalDisposition: terminal43.terminalDisposition,
+  generation44Location: generation44After.location,
   generation44Unaffected: true,
   directLedgerEditingPerformed: false,
   lockAcquisitionPerformed: false,

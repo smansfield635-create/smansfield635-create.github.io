@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "IMI_EMPIRICAL_PORTFOLIO_REGISTRY_SCHEMA_v1",
+  "requiredTopLevelFields": ["schemaVersion", "version", "portfolioMeta", "studies"],
+  "studyEntryFields": [
+    "studyId",
+    "studyVersion",
+    "domain",
+    "routeId",
+    "routeVersion",
+    "datasetId",
+    "validationClass",
+    "receiptFingerprint",
+    "generatedAt",
+    "totalCases",
+    "validCases",
+    "unevaluableCases",
+    "hardCollapseCases",
+    "routeFingerprint",
+    "datasetFingerprint",
+    "backupStatus"
+  ],
+  "law": "Study entries append. Prior study records are not overwritten. Corrections require a new studyVersion or corrected receipt."
+}

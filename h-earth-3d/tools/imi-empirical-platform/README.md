@@ -2,7 +2,21 @@
 
 Status: `1.0.0-preofficial`.
 
-This module promotes the scratch prototype into the active H-Earth tool base. It pairs the Intrinsic Maneuverability Index instrument with an empirical portfolio receipt system, so every study run produces both the calculations and a durable study record.
+This module promotes the scratch prototype into the active H-Earth tool base. It pairs the Intrinsic Maneuverability Index instrument with an empirical portfolio receipt system, so every formal study run can produce both the calculations and a durable study record.
+
+## Operational meaning
+
+This is not a live website claim. Operational here means repository-branch empirical operation:
+
+1. a route file is explicitly selected;
+2. a dataset row file is explicitly selected;
+3. the repository-based IMI engine runs the route;
+4. case-level IMI outputs are generated;
+5. a study receipt is generated;
+6. a portfolio registry entry is appended;
+7. the generated output files are written to an output directory.
+
+Main-branch merger, production release, public release, final IMI scale admission, route certification, and real empirical validation remain separate gates.
 
 ## Purpose
 
@@ -23,11 +37,35 @@ For every case, the engine can produce:
 
 For every study run, the engine produces a study receipt and a portfolio registry entry.
 
-## Boundary
+## Generic empirical intake runner
 
-This module does not certify any route, dataset, empirical result, production release, public release, or final IMI scale. It is a repository-integrated preofficial empirical tool for continued IMI study construction.
+Run from the repository root:
 
-## Validation runner
+```bash
+node h-earth-3d/validation/imi-empirical-platform/imi.empirical-intake.runner.mjs \
+  --route h-earth-3d/tools/imi-empirical-platform/routes/example-hospital-route.v1.json \
+  --rows h-earth-3d/tools/imi-empirical-platform/examples/example-hospital-rows.v1.json \
+  --output-dir /tmp/imi-empirical-intake \
+  --strict
+```
+
+The intake runner writes:
+
+- `imi-study-run-output.v1.json`
+- `imi-study-receipt.v1.json`
+- `imi-case-results.v1.json`
+- `imi-portfolio-registry.v1.json`
+- `imi-portfolio-summary.v1.json`
+- `imi-empirical-intake-operational-receipt.v1.json`
+
+Optional inputs:
+
+- `--study-meta <json>`
+- `--dataset-meta <json>`
+- `--portfolio-in <json>`
+- `--clock <iso-date>`
+
+## Fixture validation runner
 
 Run from the repository root:
 
@@ -42,3 +80,7 @@ Expected fixture behavior:
 - unevaluable cases: 1
 - hard-collapse cases: 1
 - portfolio study count: 1
+
+## Boundary
+
+This module does not certify any route, dataset, empirical result, production release, public release, or final IMI scale. It is a repository-integrated preofficial empirical tool for continued IMI study construction.

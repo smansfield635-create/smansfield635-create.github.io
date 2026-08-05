@@ -127,13 +127,20 @@ jobs:
   phase3-hospital-external-replication:
     needs: verify-imi-empirical-platform
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install frozen PySUS DuckLake access dependency
+        run: python -m pip install --disable-pip-version-check pysus==2.7.0
       - name: Execute hospital external or next-release track
+        env:
+          PYTHON: python
         shell: bash
         run: |
           set -euo pipefail
@@ -153,13 +160,20 @@ jobs:
   phase3-speech-heldout-reproduction:
     needs: verify-imi-empirical-platform
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install bounded CLAC extraction dependencies
+        run: python -m pip install --disable-pip-version-check remotezip==0.12.3 openpyxl==3.1.5
       - name: Execute speech held-out source and reproduction gate
+        env:
+          PYTHON: python
         shell: bash
         run: |
           set -euo pipefail

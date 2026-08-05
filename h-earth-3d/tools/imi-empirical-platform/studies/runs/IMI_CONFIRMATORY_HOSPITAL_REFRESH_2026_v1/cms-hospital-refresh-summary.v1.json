@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "IMI_CMS_HOSPITAL_REFRESH_2026_SUMMARY_v1",
+  "result": "PASS_CLOSED_CMS_HOSPITAL_REFRESH_2026_REPOSITORY_INTAKE_RUN",
+  "sourceIdentity": {
+    "schemaVersion": "CMS_HOSPITAL_REFRESH_2026_SOURCE_IDENTITY_v1",
+    "retrievedAt": "2026-08-05T14:50:00.000Z",
+    "datasets": {
+      "complications": {
+        "id": "ynj2-r877",
+        "name": "Complications and Deaths - Hospital",
+        "page": "https://data.cms.gov/provider-data/dataset/ynj2-r877",
+        "source": "cms-provider-data-metastore-downloadURL",
+        "metaUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/ynj2-r877",
+        "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/6af7c44d77436e5a1caac3ce39a83fe9_1777413950/Complications_and_Deaths-Hospital.csv",
+        "metaReleased": "2026-05-13",
+        "metaModified": "2026-04-28",
+        "title": "Complications and Deaths - Hospital",
+        "rowCount": 95840,
+        "fingerprint": "fnv1a32:09095ab2"
+      },
+      "general": {
+        "id": "xubh-q36u",
+        "name": "Hospital General Information",
+        "page": "https://data.cms.gov/provider-data/dataset/xubh-q36u",
+        "source": "cms-provider-data-metastore-downloadURL",
+        "metaUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/xubh-q36u",
+        "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/893c372430d9d71a1c52737d01239d47_1777413958/Hospital_General_Information.csv",
+        "metaReleased": "2026-05-13",
+        "metaModified": "2026-04-28",
+        "title": "Hospital General Information",
+        "rowCount": 5432,
+        "fingerprint": "fnv1a32:9c4a55f4"
+      }
+    },
+    "transformedRows": {
+      "rowCount": 4175,
+      "fingerprint": "fnv1a32:dfb8863c"
+    }
+  },
+  "transformedHospitalRows": 4175,
+  "validCases": 3147,
+  "unevaluableCases": 1028,
+  "hardCollapseCases": 3,
+  "medianIMI": 1,
+  "exactIMI1Cases": 2438,
+  "exactIMI1PercentOfValid": 0.7747060692723229,
+  "outcomeComparators": {
+    "overall_rating": {
+      "pairedN": 2834,
+      "spearmanIMI": 0.2684862314978638,
+      "spearmanAdditiveMean": 0.2682582939331683,
+      "spearmanWMI": 0.26908906610537137
+    }
+  },
+  "priorReference": {
+    "validCases": 2973,
+    "hardCollapseCases": 3,
+    "medianIMI": 1,
+    "exactIMI1Percent": 77.262025
+  },
+  "comparisonToPrior": {
+    "validCasesDelta": 174,
+    "hardCollapseCasesDelta": 0,
+    "medianIMIDelta": 0,
+    "exactIMI1PercentDelta": 0.20858192723228797
+  },
+  "boundaries": {
+    "confirmatoryStyleRefresh": true,
+    "finalValidationClaimed": false,
+    "terminalIMI7Assigned": false,
+    "rawDownloadedAtRuntime": true
+  }
+}

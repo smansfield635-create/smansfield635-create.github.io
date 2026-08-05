@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "IMI_USDA_HONEY_BEE_PHASE_CONSOLIDATION_RECEIPT_v1",
+  "result": "PASS_CLOSED_USDA_HONEY_BEE_CURRENT_REFRESH_PHASE_CONSOLIDATED",
+  "phaseId": "USDA_HONEY_BEE_CURRENT_REFRESH_2026_PHASE_v1",
+  "createdAt": "2026-08-05T16:38:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pullRequest": 589,
+  "branch": "instrument/imi-empirical-platform-v1",
+  "runId": "IMI_USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_v1",
+  "consolidationClass": "MINIMAL_PHASE_CONSOLIDATION_WITH_OPEN_ROUTE_DISCRIMINATION_TRACK",
+  "decision": {
+    "currentRefreshClosedForPortfolioPurposes": true,
+    "temporalSignalRetained": true,
+    "multiplicativeAdvantageEstablished": false,
+    "weakestFactorDiversityEstablished": false,
+    "moveToExistingPortfolioCompletionAuthorized": true,
+    "beeContinuationTrackPreserved": true
+  },
+  "consolidatedBeeState": {
+    "transitionRows": 100,
+    "validCases": 100,
+    "unevaluableCases": 0,
+    "hardCollapseCases": 0,
+    "meanIMI": 0.7119870552812866,
+    "medianIMI": 0.7159236365999999,
+    "spearmanIMIToNextLoss": -0.3451252954298831,
+    "spearmanCSToNextLoss": 0.3451252954298831,
+    "spearmanAdditiveSeverityToNextLoss": 0.3506737328900443,
+    "spearmanWMISeverityToNextLoss": 0.3019121621306334,
+    "weakestFactorCounts": {
+      "VARROA_AVAILABILITY": 100
+    }
+  },
+  "allowedClaim": "The current USDA honey-bee route is repository-operational and shows an exploratory temporal association between present multi-stressor constraint and next-quarter state-level colony loss.",
+  "notClaimed": [
+    "multiplicative superiority over the additive comparator",
+    "weakest-factor diversity",
+    "colony-level causation",
+    "route-independent biological validity",
+    "terminal IMI-7 assignment",
+    "final validation",
+    "main-branch admission",
+    "live website operation"
+  ],
+  "supportingRepositoryEvidence": {
+    "summaryReceipt": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_v1/usda-honey-bee-refresh-summary.v1.json",
+    "route": "h-earth-3d/tools/imi-empirical-platform/routes/usda-honey-bee-refresh-2026-route.v1.json",
+    "runner": "h-earth-3d/validation/imi-empirical-platform/imi.usda-honey-bee-refresh-2026.runner.mjs"
+  },
+  "nextRecommendedOperation": {
+    "operation": "COMPLETE_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_AND_EXISTING_FOUR_DOMAIN_PORTFOLIO_SURFACE",
+    "parallelContinuation": "OPEN_BEE_ROUTE_DISCRIMINATION_AND_LONGER_PANEL_TRACK",
+    "reason": "The present bee study is sufficient for portfolio inclusion, while Varroa dominance and comparator parity remain explicit route-development questions."
+  },
+  "boundaries": {
+    "minimalConsolidationOnly": true,
+    "portfolioInterpretationAllowed": true,
+    "fullResearchSynthesisNotYetPerformed": true,
+    "beeRouteDiscriminationComplete": false,
+    "mainMerged": false,
+    "liveWebsiteOperational": false,
+    "finalValidationClaimed": false
+  }
+}

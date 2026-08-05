@@ -1,17 +1,5 @@
 {
   "activeScopes": {
-    "0177ef035b320f214e48b3074ef7ffefd812ea48fd9b887b82b683eb517105d8": {
-      "governingHead": "a96447b720b9466a3843a4eafb52a990e449f580",
-      "lockGeneration": 272,
-      "lockScope": "METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION:ROUTER_OWNERSHIP:V1",
-      "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_ROUTER_OWNERSHIP_PREREQUISITE_v1",
-      "procedureLocatorDigest": "6a7196943ffb7fb84eb49eb003823fd7de2183d8dd4617d91f5ef9de6f15de92",
-      "released": false,
-      "requestDigest": "d10ea1a728f496383268547fba16d41e93ff387e5a596597ccf80eda532712e6",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "0177ef035b320f214e48b3074ef7ffefd812ea48fd9b887b82b683eb517105d8",
-      "state": "ADMITTED_LOCKED"
-    },
     "10395de588f9010c490895fafe8e8f3fde74654f7feeb978f458a2a56e9867af": {
       "governingHead": "7e7ffbff3a8cc36e5889ac4d612d7ca6e905c50f",
       "lockGeneration": 204,
@@ -3561,6 +3549,19 @@
       "requestDigest": "c5d58a68196ace14feb549bbeff618014f3517c2f1fb64774e939613ebe5129c",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "121d52937e8ccba043469a037d83b466b9f376a390ce902cf3d1405d4da2b1b6",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "a96447b720b9466a3843a4eafb52a990e449f580",
+      "lockGeneration": 272,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION:ROUTER_OWNERSHIP:V1",
+      "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_ROUTER_OWNERSHIP_PREREQUISITE_v1",
+      "procedureLocatorDigest": "6a7196943ffb7fb84eb49eb003823fd7de2183d8dd4617d91f5ef9de6f15de92",
+      "released": true,
+      "requestDigest": "d10ea1a728f496383268547fba16d41e93ff387e5a596597ccf80eda532712e6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0177ef035b320f214e48b3074ef7ffefd812ea48fd9b887b82b683eb517105d8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

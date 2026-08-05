@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_INPUT_v1",
+  "type": "object",
+  "required": [
+    "repositoryIdentity",
+    "governingMainIdentity",
+    "currentTerrainIdentity",
+    "acceptedLocalReferenceIdentity",
+    "bm2CensusIdentity",
+    "estateIdentityCorrection",
+    "estateLineage",
+    "terrainDomain",
+    "terrainSampling",
+    "landformDescriptors",
+    "formationAuthorities",
+    "semanticAddressAuthorities",
+    "hillAndGullyWitnesses",
+    "shorelineAndWaterAuthority",
+    "navigationAnchors",
+    "cavernRelation",
+    "r06c10PreservationBounds",
+    "viewObjectives",
+    "requiredEstateSubzones",
+    "searchAndOptimizationRules",
+    "constructionBudgets",
+    "operatorFamilyRegistry",
+    "prohibitedActions",
+    "requiredOutputs"
+  ],
+  "properties": {
+    "governingMainIdentity": {
+      "const": "0d88fe21aba99c97b73fcdc68d44af57d55b68be"
+    },
+    "repositoryIdentity": {
+      "type": "string"
+    },
+    "currentTerrainIdentity": {
+      "type": "object"
+    },
+    "acceptedLocalReferenceIdentity": {
+      "type": "object"
+    },
+    "bm2CensusIdentity": {
+      "type": "object"
+    },
+    "estateIdentityCorrection": {
+      "type": "object"
+    },
+    "estateLineage": {
+      "type": "object"
+    },
+    "terrainDomain": {
+      "type": "object"
+    },
+    "terrainSampling": {
+      "type": "object"
+    },
+    "landformDescriptors": {
+      "type": "array"
+    },
+    "formationAuthorities": {
+      "type": "array"
+    },
+    "semanticAddressAuthorities": {
+      "type": "array"
+    },
+    "hillAndGullyWitnesses": {
+      "type": "object"
+    },
+    "shorelineAndWaterAuthority": {
+      "type": "object"
+    },
+    "navigationAnchors": {
+      "type": "array"
+    },
+    "cavernRelation": {
+      "type": "object"
+    },
+    "r06c10PreservationBounds": {
+      "type": "object"
+    },
+    "viewObjectives": {
+      "type": "object"
+    },
+    "requiredEstateSubzones": {
+      "type": "array",
+      "minItems": 15
+    },
+    "searchAndOptimizationRules": {
+      "type": "object"
+    },
+    "constructionBudgets": {
+      "type": "object"
+    },
+    "operatorFamilyRegistry": {
+      "type": "array",
+      "minItems": 6
+    },
+    "prohibitedActions": {
+      "type": "array"
+    },
+    "requiredOutputs": {
+      "type": "array"
+    }
+  },
+  "additionalProperties": false
+}

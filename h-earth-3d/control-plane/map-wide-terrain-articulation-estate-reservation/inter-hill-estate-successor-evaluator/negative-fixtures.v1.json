@@ -1,0 +1,135 @@
+{
+  "schema": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_NEGATIVE_FIXTURES_v1",
+  "fixtures": [
+    {
+      "number": 1,
+      "id": "WRONG_X67_25_Z_MINUS16_85_IDENTITY_ACCEPTED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 2,
+      "id": "IDENTITY_CORRECTION_MISSING",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 3,
+      "id": "CURRENT_MAIN_HEAD_MISMATCH",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 4,
+      "id": "CURRENT_TERRAIN_BLOB_MISMATCH",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 5,
+      "id": "ACCEPTED_R06_C10_BLOB_MISMATCH",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 6,
+      "id": "ACCEPTED_REFERENCE_CLAIMED_MERGED_MAIN",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 7,
+      "id": "SYNTHETIC_512_BY_512_DOMAIN_USED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 8,
+      "id": "REAR_MOUNTAIN_BAND_MISSING",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 9,
+      "id": "MICROGRAPH_COVERAGE_GAP",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 10,
+      "id": "REAL_ADJACENCY_EDGE_MISSING",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 11,
+      "id": "ESTATE_GRAPH_DISCONNECTED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 12,
+      "id": "ONE_RECTANGULAR_PAD_MODEL_USED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 13,
+      "id": "FIXED_30_BY_22_REQUIREMENT_REINTRODUCED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 14,
+      "id": "FIXED_32_BY_24_REQUIREMENT_REINTRODUCED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 15,
+      "id": "FIRST_OR_SECOND_HILL_EXCLUDED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 16,
+      "id": "INTER_HILL_AXIS_BLOCKED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 17,
+      "id": "LOW_CORRIDOR_CLOSED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 18,
+      "id": "MOUNTAIN_VIEW_GATE_FAILED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 19,
+      "id": "OCEAN_VIEW_GATE_FAILED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 20,
+      "id": "PRIMARY_ROUTE_FAILED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 21,
+      "id": "SERVICE_ROUTE_FAILED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 22,
+      "id": "R06_C10_PRESERVATION_INTRUSION",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 23,
+      "id": "C0_OR_C1_CONTINUITY_EXCEEDED",
+      "expected": "FAIL_CLOSED"
+    },
+    {
+      "number": 24,
+      "id": "GRID_CORRELATED_OR_REPETITIVE_PLAN",
+      "expected": "FAIL_CLOSED"
+    }
+  ],
+  "boundaryFixtures": [
+    "FORMER_BOUNDARY_Z_MINUS_256",
+    "SHORELINE_ZERO_CROSSING",
+    "R06_C10_BLEND_SUPPORT_EDGE",
+    "R06_C10_VERIFICATION_HALO_EDGE",
+    "REAR_MOUNTAIN_CORE_EDGE",
+    "CAVERN_EXTERIOR_PROTECTION_EDGE",
+    "ESTATE_SEARCH_GEODESIC_CAP",
+    "MAP_DOMAIN_FOUR_CORNERS"
+  ]
+}

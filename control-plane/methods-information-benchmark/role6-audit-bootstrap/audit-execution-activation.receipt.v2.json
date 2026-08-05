@@ -1,0 +1,51 @@
+{
+  "schema": "METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_RECEIPT_v2",
+  "operationId": "METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_SUCCESSOR_v2",
+  "descriptorId": "METHODS_ROLE6_AUDIT_EXECUTION_DESCRIPTOR_V1",
+  "auditOperationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "currentMainBaseHead": "5d6295c6c4a9b94db168e0822e02e36fbee29414",
+  "certifiedSourceHead": "e62bbcd23aa8351f76ab6c5f501800d4d8f03565",
+  "sourceToolingHead": "a823c1fee318297d77cac6d24d4f268ac45dafcf",
+  "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "certificationWorkflowRun": 30966337230,
+  "certificationArtifactId": 8914863630,
+  "certificationArtifactSha256": "60c651102af0a5aaf9f1000c9e892119f96dd6d39cb8baa39a5560e34a58a8a8",
+  "sourcePackageFingerprint": "c9e28507aed9bd9c7acdabba933cd9b1daad7bebf5a9126075a78165932da37f",
+  "ratificationCommentId": 5186563114,
+  "predecessorActivationLock": {
+    "lockGeneration": 44,
+    "terminalDisposition": "FAIL_CLOSED",
+    "defect": "ASSIGNMENT_BASE_RELATIVE_VALIDATOR_COULD_NOT_PRESERVE_CURRENT_MAIN"
+  },
+  "activationAdmission": {
+    "lockGeneration": 45,
+    "scopeHash": "f11cac52d7c12d3a119e894df5d9dae131697e43ed2454b0743ef8e30d4e3671",
+    "requestDigest": "3b1a35d9d4c05f704a66e6239bef24bcafc9224e390cca568b4b3d0beb9971fd",
+    "procedureDigest": "2185af597341c2200861772d2d765a2ea4e02f82b42b2a4d94bcdf9a146c4253",
+    "acquisitionCommitSha": "a6b385185419b321265cb2c3b407f3ab362c780a",
+    "committedLedgerBlobSha": "b5a8ee368a7d890769b711c1961690f4284eb005",
+    "result": "ADMITTED_AND_LOCKED"
+  },
+  "activationHeadBinding": "COMMIT_CONTAINING_THIS_RECEIPT",
+  "activationStatus": "ACTIVE_RATIFIED_CERTIFIED_WHEN_COMMIT_IS_CURRENT_MAIN",
+  "sourcePathPreservation": {
+    "unchangedCertifiedPathCount": 18,
+    "transformedCertifiedPathCount": 2,
+    "successorInstrumentationPathCount": 3,
+    "totalActivationPathCount": 23
+  },
+  "descriptorActivationOnMain": true,
+  "rootAuditAdmissionStillRequired": true,
+  "substantiveAuditProgress": "0_OF_27",
+  "returnProgress": "0_OF_2",
+  "role6TerminationPerformed": false,
+  "publicMethodsMutation": false,
+  "publicLawsMutation": false,
+  "productMutation": false,
+  "mergePerformed": false,
+  "deploymentPerformed": false,
+  "releasePerformed": false,
+  "rootLockClosureBinding": "COMMAND_EMITTED_AFTER_EXACT_MAIN_FAST_FORWARD",
+  "result": "ACTIVATION_CANDIDATE_READY_FOR_FRESH_CERTIFICATION_AND_EXACT_MAIN_FAST_FORWARD"
+}

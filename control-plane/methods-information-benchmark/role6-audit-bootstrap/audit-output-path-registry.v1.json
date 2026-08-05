@@ -1,0 +1,227 @@
+{
+  "schema": "METHODS_ROLE_6_AUDIT_OUTPUT_PATH_REGISTRY_v1",
+  "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "substantiveOutputs": [
+    {
+      "ordinal": 1,
+      "id": "CANONICAL_25_RECORD_INVENTORY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/01-canonical-25-record-inventory-v1.json"
+    },
+    {
+      "ordinal": 2,
+      "id": "FORMAL_TYPE_ASSIGNMENT_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/02-formal-type-assignment-registry-v1.json"
+    },
+    {
+      "ordinal": 3,
+      "id": "CONCEPTUAL_CLUSTER_ASSIGNMENT_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/03-conceptual-cluster-assignment-registry-v1.json"
+    },
+    {
+      "ordinal": 4,
+      "id": "RECORD_DEPENDENCY_GRAPH_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/04-record-dependency-graph-v1.json"
+    },
+    {
+      "ordinal": 5,
+      "id": "INDEPENDENCE_CLASSIFICATION_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/05-independence-classification-registry-v1.json"
+    },
+    {
+      "ordinal": 6,
+      "id": "COMPUTATIONAL_VS_NONCOMPUTATIONAL_BOUNDARY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/06-computational-vs-noncomputational-boundary-v1.json"
+    },
+    {
+      "ordinal": 7,
+      "id": "INVOCATION_CONDITION_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/07-invocation-condition-registry-v1.json"
+    },
+    {
+      "ordinal": 8,
+      "id": "QUESTION_INTENT_TO_RECORD_TYPE_ROUTING_SPEC_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/08-question-intent-to-record-type-routing-spec-v1.json"
+    },
+    {
+      "ordinal": 9,
+      "id": "UNRESOLVED_OR_AMBIGUOUS_RECORD_HOLD_REGISTER_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/09-unresolved-or-ambiguous-record-hold-register-v1.json"
+    },
+    {
+      "ordinal": 10,
+      "id": "ROLE_6_REQUIREMENTS_FREEZE_RECOMMENDATION_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/10-role-6-requirements-freeze-recommendation-v1.json"
+    },
+    {
+      "ordinal": 11,
+      "id": "METHODS_THREE_ANCHOR_DEVELOPMENT_CONTRACT_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/11-methods-three-anchor-development-contract-v1.json"
+    },
+    {
+      "ordinal": 12,
+      "id": "METHODS_USER_COGNITIVE_ORIGIN_REQUIREMENTS_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/12-methods-user-cognitive-origin-requirements-v1.json"
+    },
+    {
+      "ordinal": 13,
+      "id": "GENERIC_TROPHY_STANDARD_BINDING_REQUIREMENTS_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/13-generic-trophy-standard-binding-requirements-v1.json"
+    },
+    {
+      "ordinal": 14,
+      "id": "METHODS_BENCHMARK_COMPASS_BINDING_REQUIREMENTS_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/14-methods-benchmark-compass-binding-requirements-v1.json"
+    },
+    {
+      "ordinal": 15,
+      "id": "THREE_ANCHOR_CONFLICT_AND_PRECEDENCE_RULES_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/15-three-anchor-conflict-and-precedence-rules-v1.json"
+    },
+    {
+      "ordinal": 16,
+      "id": "PRECONSTRUCTION_AND_POSTCONSTRUCTION_EVALUATION_LIFECYCLE_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/16-preconstruction-and-postconstruction-evaluation-lifecycle-v1.json"
+    },
+    {
+      "ordinal": 17,
+      "id": "PHONE_TABLET_DESKTOP_EQUIVALENCE_REQUIREMENTS_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/17-phone-tablet-desktop-equivalence-requirements-v1.json"
+    },
+    {
+      "ordinal": 18,
+      "id": "TROPHY_AND_COMPASS_EVIDENCE_REQUIREMENTS_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/18-trophy-and-compass-evidence-requirements-registry-v1.json"
+    },
+    {
+      "ordinal": 19,
+      "id": "METHODS_PRODUCT_REQUIREMENTS_INTEGRATION_SCHEMA_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/19-methods-product-requirements-integration-schema-v1.json"
+    },
+    {
+      "ordinal": 20,
+      "id": "ROLE_6_INTEGRATED_REQUIREMENTS_FREEZE_RECOMMENDATION_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/20-role-6-integrated-requirements-freeze-recommendation-v1.json"
+    },
+    {
+      "ordinal": 21,
+      "id": "DEVELOPMENTAL_BASELINE_ELEMENT_INVENTORY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/21-developmental-baseline-element-inventory-v1.json"
+    },
+    {
+      "ordinal": 22,
+      "id": "INTENT_IMPLEMENTATION_OUTCOME_CROSSWALK_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/22-intent-implementation-outcome-crosswalk-v1.json"
+    },
+    {
+      "ordinal": 23,
+      "id": "CORRELATED_DEVELOPMENTAL_VALUE_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/23-correlated-developmental-value-registry-v1.json"
+    },
+    {
+      "ordinal": 24,
+      "id": "ELEMENT_LEVEL_DISPOSITION_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/24-element-level-disposition-registry-v1.json"
+    },
+    {
+      "ordinal": 25,
+      "id": "CONCEPT_IMPLEMENTATION_REQUIREMENTS_INSTRUMENTATION_FAILURE_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/25-concept-implementation-requirements-instrumentation-failure-registry-v1.json"
+    },
+    {
+      "ordinal": 26,
+      "id": "BASELINE_TO_SUCCESSOR_REQUIREMENT_TRACE_REGISTRY_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/26-baseline-to-successor-requirement-trace-registry-v1.json"
+    },
+    {
+      "ordinal": 27,
+      "id": "CAUSAL_CONFIDENCE_AND_UNRESOLVED_CAUSE_REGISTER_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/outputs/27-causal-confidence-and-unresolved-cause-register-v1.json"
+    }
+  ],
+  "returnArtifacts": [
+    {
+      "ordinal": 1,
+      "id": "ROLE_6_OPERATION_RETURN_PACKET_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.packet.v1.json",
+      "materializationPhase": "PACKAGE_INPUT"
+    },
+    {
+      "ordinal": 2,
+      "id": "ROLE_6_OPERATION_RETURN_RECEIPT_v1",
+      "path": "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json",
+      "materializationPhase": "COMMAND_EMITTED_AFTER_INDEPENDENT_VERIFICATION"
+    }
+  ],
+  "substantiveOutputCount": 27,
+  "returnArtifactCount": 2,
+  "authorizedChangedPathCount": 29,
+  "authorizedChangedPaths": [
+    "control-plane/methods-information-benchmark/role6-audit/outputs/01-canonical-25-record-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/02-formal-type-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/03-conceptual-cluster-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/04-record-dependency-graph-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/05-independence-classification-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/06-computational-vs-noncomputational-boundary-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/07-invocation-condition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/08-question-intent-to-record-type-routing-spec-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/09-unresolved-or-ambiguous-record-hold-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/10-role-6-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/11-methods-three-anchor-development-contract-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/12-methods-user-cognitive-origin-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/13-generic-trophy-standard-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/14-methods-benchmark-compass-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/15-three-anchor-conflict-and-precedence-rules-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/16-preconstruction-and-postconstruction-evaluation-lifecycle-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/17-phone-tablet-desktop-equivalence-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/18-trophy-and-compass-evidence-requirements-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/19-methods-product-requirements-integration-schema-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/20-role-6-integrated-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/21-developmental-baseline-element-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/22-intent-implementation-outcome-crosswalk-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/23-correlated-developmental-value-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/24-element-level-disposition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/25-concept-implementation-requirements-instrumentation-failure-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/26-baseline-to-successor-requirement-trace-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/27-causal-confidence-and-unresolved-cause-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.packet.v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json"
+  ],
+  "equalityRequired": true,
+  "packageInputPaths": [
+    "control-plane/methods-information-benchmark/role6-audit/outputs/01-canonical-25-record-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/02-formal-type-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/03-conceptual-cluster-assignment-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/04-record-dependency-graph-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/05-independence-classification-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/06-computational-vs-noncomputational-boundary-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/07-invocation-condition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/08-question-intent-to-record-type-routing-spec-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/09-unresolved-or-ambiguous-record-hold-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/10-role-6-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/11-methods-three-anchor-development-contract-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/12-methods-user-cognitive-origin-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/13-generic-trophy-standard-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/14-methods-benchmark-compass-binding-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/15-three-anchor-conflict-and-precedence-rules-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/16-preconstruction-and-postconstruction-evaluation-lifecycle-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/17-phone-tablet-desktop-equivalence-requirements-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/18-trophy-and-compass-evidence-requirements-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/19-methods-product-requirements-integration-schema-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/20-role-6-integrated-requirements-freeze-recommendation-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/21-developmental-baseline-element-inventory-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/22-intent-implementation-outcome-crosswalk-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/23-correlated-developmental-value-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/24-element-level-disposition-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/25-concept-implementation-requirements-instrumentation-failure-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/26-baseline-to-successor-requirement-trace-registry-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/outputs/27-causal-confidence-and-unresolved-cause-register-v1.json",
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.packet.v1.json"
+  ],
+  "commandEmittedPaths": [
+    "control-plane/methods-information-benchmark/role6-audit/receipts/role6-operation-return.receipt.v1.json"
+  ],
+  "packageInputPathCount": 28,
+  "commandEmittedPathCount": 1
+}

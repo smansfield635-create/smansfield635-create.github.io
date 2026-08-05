@@ -4,6 +4,14 @@
   "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
   "status": "FROZEN_BEFORE_FEATURE_VALUE_INSPECTION",
   "frozenAt": "2026-08-05T20:05:00.000Z",
+  "preExecutionCorrections": [
+    {
+      "correction": "PPL_EXPONENT_BASE_ALIGNED_TO_AUTHOR_SCRIPT",
+      "basis": "ppl_en.py uses numpy.exp2(loss.item())",
+      "featureValuesInspectedBeforeCorrection": false,
+      "routeEffect": "NONE_MONOTONIC_POSITIVE_SCALING_OF_LOG_PPL_RESIDUALS"
+    }
+  ],
   "sourcePackage": {
     "archiveUrl": "https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip",
     "archiveInventorySha256": "8a09ea16830481e95a558b43558dcd47c833c6aa99fb96a39eecb0110d470d75",
@@ -94,7 +102,7 @@
       "accessRepresentationFile": "mistral-7b-instruct-v0.1.Q5_K_M.gguf",
       "accessRepresentationSha256": "c4b062ec7f0f160e848a0e34c4e291b9e39b3fc60df5b201c038e7064dbbdcdc",
       "quantization": "Q5_K_M",
-      "calculation": "EXP_OF_MEAN_NEXT_TOKEN_CROSS_ENTROPY_WITH_LOG_PPL_USED_DOWNSTREAM",
+      "calculation": "TWO_TO_THE_POWER_OF_MEAN_NEXT_TOKEN_CROSS_ENTROPY_WITH_NATURAL_LOG_PPL_USED_DOWNSTREAM",
       "representationLimitation": "Q5_K_M_IS_A_DECLARED_COMPUTE_ACCESS_REPRESENTATION_AND_IS_NOT_CLAIMED_BYTE_OR_LOGIT_EQUIVALENT_TO_FULL_PRECISION"
     }
   },
@@ -106,7 +114,7 @@
     "contextualAvailability": "ONE_MINUS_BERT_GSIM_PERCENTILE",
     "visualGroundingAvailability": "CLIP_PERCENTILE",
     "syntacticOrganizationAvailability": "ADD_PERCENTILE",
-    "adjustedPredictabilityAvailability": "ONE_MINUS_WITHIN_LANGUAGE_PERCENTILE_OF_LOG_PPL_RESIDUALIZED_ON_BERT_TTR",
+    "adjustedPredictabilityAvailability": "ONE_MINUS_WITHIN_LANGUAGE_PERCENTILE_OF_NATURAL_LOG_PPL_RESIDUALIZED_ON_BERT_TTR",
     "terminalLock": "NONE"
   },
   "failureLaw": {

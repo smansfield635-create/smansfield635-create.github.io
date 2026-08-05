@@ -84,7 +84,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runtime-boundary-adapter.mjs \
+          node h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.phase-progression-adapter.mjs \
             --hospital-dir /tmp/imi-cms-hospital-refresh-2026 \
             --bee-dir /tmp/imi-usda-honey-bee-refresh-2026 \
             --dssi-dir /tmp/imi-dssi-sovereign-debt-service-expansion-2026 \

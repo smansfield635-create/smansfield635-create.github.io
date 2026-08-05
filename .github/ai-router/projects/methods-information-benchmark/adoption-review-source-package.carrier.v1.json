@@ -101,11 +101,23 @@
         "trailingMustEqualChunkIndex": 2,
         "trailingMustEqualPrefixLength": 3285,
         "trailingSha256": "d9d5810cdd31a5e7e13da9e1502271a3e3f55777d15101b826e935fef8621e56"
+      },
+      {
+        "chunkIndex": 2,
+        "commentId": 5187632672,
+        "correctedBase64Length": 6000,
+        "correctedBase64Sha256": "777436319cd9e35bfb5a682b6b259e11815ebeda7a34c96a11788493a8ea6b99",
+        "correctedCharacter": "h",
+        "observedBase64Length": 6000,
+        "observedBase64Sha256": "0861950a2f3a1f976ca6c48e8168d707b329b23ed4be68ed114f5bcc7bd53681",
+        "observedCharacter": "z",
+        "recoveryClass": "EXACT_COMMENT_ID_SINGLE_CHARACTER_SUBSTITUTION_ONLY",
+        "substitutionIndex": 3421
       }
     ],
     "issueNumber": 586,
     "marker": "METHODS_ADOPTION_SOURCE_PACKAGE_CHUNK_V1",
-    "recoveryPolicyVersion": "EXACT_COMMENT_CHUNK_RECOVERY_v1",
+    "recoveryPolicyVersion": "EXACT_COMMENT_CHUNK_RECOVERY_v2",
     "rejectedReplacementCommentIds": [
       5188010300
     ],

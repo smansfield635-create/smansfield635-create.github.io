@@ -1,0 +1,94 @@
+name: H-Earth IMI Hospital Temporal Holdout Make-or-Break
+
+on:
+  push:
+    branches:
+      - instrument/imi-empirical-platform-v1
+    paths:
+      - '.github/workflows/h-earth-imi-hospital-temporal-holdout-make-or-break.yml'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.hospital-temporal-holdout-make-or-break.py'
+      - 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-hospital-temporal-holdout-make-or-break-protocol.v1.json'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  hospital-temporal-holdout-make-or-break:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Reclaim runner disk
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || true
+
+      - name: Install frozen DATASUS access dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+            pysus==2.7.0 \
+            duckdb==1.5.4
+          python - <<'PY'
+          import duckdb
+          import pysus
+          print({
+              'pysus': getattr(pysus, '__version__', '2.7.0'),
+              'duckdb': duckdb.__version__,
+          })
+          PY
+
+      - name: Execute frozen hospital temporal holdout make-or-break test
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/imi-hospital-make-or-break
+          python h-earth-3d/validation/imi-empirical-platform/imi.hospital-temporal-holdout-make-or-break.py \
+            --output-dir /tmp/imi-hospital-make-or-break \
+            --clock 2026-08-05T23:00:00.000Z \
+            2>&1 | tee /tmp/imi-hospital-make-or-break.log
+
+      - name: Enforce binary scientific disposition
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          path = '/tmp/imi-hospital-make-or-break/imi-hospital-temporal-holdout-make-or-break-result.v1.json'
+          result = json.load(open(path, encoding='utf-8'))
+          allowed = {
+              'PASS_CONTINUE_IMI_PREDICTIVE_PROGRAM_ONE_UNRELATED_CONFIRMATORY_TEST_EARNED',
+              'FAIL_STOP_AND_ARCHIVE_GENERAL_IMI_PREDICTIVE_AND_SCALE_DEVELOPMENT_PROGRAM',
+          }
+          assert result['verdict'] in allowed, result
+          assert result['minimumEvidenceSatisfied'] is True, result
+          assert result['boundaries']['heldOutOutcomeExecuted'] is True, result
+          assert result['boundaries']['routeRetuned'] is False, result
+          assert result['boundaries']['thresholdRetuned'] is False, result
+          assert result['primaryTest']['geometricMeanControlRankingIdentical'] is True, result
+          print(json.dumps({
+              'result': 'PASS_BINARY_DISPOSITION_EMITTED',
+              'verdict': result['verdict'],
+              'continueProgram': result['continueProgram'],
+              'pairedInstitutions': result['analysisPopulation']['pairedInstitutions'],
+              'imiRecall': result['primaryTest']['recalls']['IMI_RISK'],
+              'bestComparator': result['primaryTest']['bestNonEquivalentComparator'],
+              'improvement': result['primaryTest']['imiMinusBestComparator'],
+              'bootstrapLower95': result['primaryTest']['pairedBootstrap']['lower95'],
+              'packageSha256': result['packageSha256'],
+          }, indent=2))
+          PY
+
+      - name: Upload make-or-break evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-hospital-temporal-holdout-make-or-break
+          path: |
+            /tmp/imi-hospital-make-or-break.log
+            /tmp/imi-hospital-make-or-break/**
+          retention-days: 90

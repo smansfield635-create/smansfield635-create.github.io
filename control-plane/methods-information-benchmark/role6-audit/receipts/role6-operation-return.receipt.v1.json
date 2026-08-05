@@ -1,0 +1,18 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_ASSIGNMENT_RETURN_RECEIPT_v1",
+  "status": "PASS_OPERATION_ASSIGNMENT_RETURNED",
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "roleId": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "holderExecutionId": "MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7",
+  "disposition": "PASS_RETURN",
+  "predecessorAssignmentHead": "c351db89434f9a65a28cbacbd0122c0396b15f12b5e6d529b09dbdfa9bf120a3",
+  "assignmentHead": "7a711b08d7d843f041e95463d7625b5b599db54e5c0cb08dcf1142024452cd64",
+  "ledgerRevision": 2,
+  "assignmentAuthorityActive": false,
+  "postTerminationRoleState": "INACTIVE",
+  "outputManifestSha256": "ccec60ff18f011871eea04501797c72c8df35ae1f99a540c505086e58b4e342b",
+  "outputAdopted": false,
+  "nextRoleAssignmentPerformed": false,
+  "mergePerformed": false
+}

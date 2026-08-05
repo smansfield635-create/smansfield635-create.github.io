@@ -1,0 +1,213 @@
+name: H-Earth IMI Phase 3 CLAC PPL Sharded Completion
+
+on:
+  push:
+    branches:
+      - instrument/imi-empirical-platform-v1
+    paths:
+      - '.github/workflows/h-earth-imi-phase3-clac-ppl-sharded-completion.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  ppl-shard:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Recover exact CLAC source package
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/imi-phase3-clac-source-artifact
+          gh run download 31044189240 --repo "$GITHUB_REPOSITORY" \
+            --name imi-phase3-clac-source-package \
+            --dir /tmp/imi-phase3-clac-source-artifact
+          test -n "$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)"
+
+      - name: Reclaim runner disk and install transfer utility
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || true
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq aria2
+
+      - name: Install frozen PPL dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check numpy==1.26.4
+          python -m pip install --disable-pip-version-check \
+            llama-cpp-python==0.3.16 \
+            --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+
+      - name: Download exact Q5_K_M representation with parallel ranges
+        run: |
+          set -euo pipefail
+          MODEL=/tmp/mistral-7b-instruct-v0.1.Q5_K_M.gguf
+          URL='https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GGUF/resolve/44934253f84b5e51d9f247dd22c6cda8c362e790/mistral-7b-instruct-v0.1.Q5_K_M.gguf?download=true'
+          aria2c \
+            --continue=true \
+            --max-connection-per-server=8 \
+            --split=8 \
+            --min-split-size=16M \
+            --max-tries=10 \
+            --retry-wait=5 \
+            --connect-timeout=30 \
+            --timeout=120 \
+            --file-allocation=none \
+            --allow-overwrite=true \
+            --auto-file-renaming=false \
+            --dir=/tmp \
+            --out=mistral-7b-instruct-v0.1.Q5_K_M.gguf \
+            "$URL"
+          printf '%s  %s\n' \
+            'c4b062ec7f0f160e848a0e34c4e291b9e39b3fc60df5b201c038e7064dbbdcdc' \
+            "$MODEL" | sha256sum --check
+
+      - name: Execute frozen PPL shard
+        run: |
+          set -euo pipefail
+          PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          mkdir -p /tmp/imi-phase3-clac-ppl-shard
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-sharded-execution.py extract \
+            --package "$PACKAGE" \
+            --model-path /tmp/mistral-7b-instruct-v0.1.Q5_K_M.gguf \
+            --shard-index ${{ matrix.shard }} \
+            --shard-count 4 \
+            --output /tmp/imi-phase3-clac-ppl-shard/clac-ppl-shard-${{ matrix.shard }}.v1.json \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-ppl-shard-${{ matrix.shard }}.log
+          rm -f /tmp/mistral-7b-instruct-v0.1.Q5_K_M.gguf
+
+      - name: Upload PPL shard evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-ppl-shard-${{ matrix.shard }}
+          path: |
+            /tmp/imi-phase3-clac-ppl-shard-${{ matrix.shard }}.log
+            /tmp/imi-phase3-clac-ppl-shard/**
+          retention-days: 90
+
+  merge-and-complete:
+    needs: ppl-shard
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Recover exact source and completed non-PPL feature artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p \
+            /tmp/imi-phase3-clac-source-artifact \
+            /tmp/imi-phase3-clac-fasttext-artifact \
+            /tmp/imi-phase3-clac-bert-add-artifact \
+            /tmp/imi-phase3-clac-clip-artifact
+          gh run download 31044189240 --repo "$GITHUB_REPOSITORY" \
+            --name imi-phase3-clac-source-package \
+            --dir /tmp/imi-phase3-clac-source-artifact
+          gh run download 31044189240 --repo "$GITHUB_REPOSITORY" \
+            --name imi-phase3-clac-fasttext-features \
+            --dir /tmp/imi-phase3-clac-fasttext-artifact
+          gh run download 31044189240 --repo "$GITHUB_REPOSITORY" \
+            --name imi-phase3-clac-bert-add-features \
+            --dir /tmp/imi-phase3-clac-bert-add-artifact
+          gh run download 31044189240 --repo "$GITHUB_REPOSITORY" \
+            --name imi-phase3-clac-clip-features \
+            --dir /tmp/imi-phase3-clac-clip-artifact
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: imi-phase3-clac-ppl-shard-*
+          path: /tmp/imi-phase3-clac-ppl-shards
+          merge-multiple: true
+
+      - name: Merge shards and apply frozen author PPL alignment
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/imi-phase3-clac-ppl
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-sharded-execution.py merge \
+            --inputs-dir /tmp/imi-phase3-clac-ppl-shards \
+            --output /tmp/imi-phase3-clac-ppl/clac-ppl-features.raw.v1.json \
+            2>&1 | tee /tmp/imi-phase3-clac-ppl.log
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py \
+            --input /tmp/imi-phase3-clac-ppl/clac-ppl-features.raw.v1.json \
+            --output /tmp/imi-phase3-clac-ppl/clac-ppl-features.v1.json \
+            2>&1 | tee -a /tmp/imi-phase3-clac-ppl.log
+
+      - name: Assemble exact five-feature package
+        run: |
+          set -euo pipefail
+          PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          FASTTEXT=$(find /tmp/imi-phase3-clac-fasttext-artifact -name clac-fasttext-features.v1.json -print -quit)
+          BERT_ADD=$(find /tmp/imi-phase3-clac-bert-add-artifact -name clac-bert-add-features.v1.json -print -quit)
+          CLIP=$(find /tmp/imi-phase3-clac-clip-artifact -name clac-clip-features.v1.json -print -quit)
+          PPL=/tmp/imi-phase3-clac-ppl/clac-ppl-features.v1.json
+          test -n "$PACKAGE" && test -n "$FASTTEXT" && test -n "$BERT_ADD" && test -n "$CLIP" && test -s "$PPL"
+          mkdir -p /tmp/imi-phase3-clac-completion
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
+            --mode assemble --package "$PACKAGE" \
+            --fasttext-features "$FASTTEXT" \
+            --bert-add-features "$BERT_ADD" \
+            --clip-features "$CLIP" \
+            --ppl-features "$PPL" \
+            --output /tmp/imi-phase3-clac-completion/clac-five-feature-package.python.v1.json \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-completion.log
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs \
+            --input /tmp/imi-phase3-clac-completion/clac-five-feature-package.python.v1.json \
+            --output /tmp/imi-phase3-clac-completion/clac-five-feature-package.v1.json \
+            2>&1 | tee -a /tmp/imi-phase3-clac-completion.log
+
+      - name: Execute unchanged IMI route and close speech track if admissible
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-completion.runner.mjs \
+            --feature-package /tmp/imi-phase3-clac-completion/clac-five-feature-package.v1.json \
+            --output-dir /tmp/imi-phase3-clac-completion/final \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee -a /tmp/imi-phase3-clac-completion.log
+          python - <<'PY'
+          import json
+          path = '/tmp/imi-phase3-clac-completion/final/speech-phase3-track-receipt.v1.json'
+          receipt = json.load(open(path, encoding='utf-8'))
+          assert receipt['minimumEvidenceSatisfied'] is True
+          assert receipt['terminalDisposition'].startswith('PASS_CLOSED')
+          assert receipt['phase4Candidate'] is False
+          print(json.dumps({
+              'result': 'PASS_CLAC_PHASE_3_SPEECH_SHARDED_COMPLETION_GATE',
+              'receiptDigest': receipt['receiptDigest'],
+              'terminalDisposition': receipt['terminalDisposition']
+          }))
+          PY
+
+      - name: Upload final sharded CLAC completion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-ppl-sharded-speech-completion
+          path: |
+            /tmp/imi-phase3-clac-ppl.log
+            /tmp/imi-phase3-clac-ppl/**
+            /tmp/imi-phase3-clac-completion.log
+            /tmp/imi-phase3-clac-completion/**
+          retention-days: 90

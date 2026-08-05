@@ -1,0 +1,400 @@
+name: H-Earth IMI Phase 3 CLAC Five-Feature Completion
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-imi-phase3-clac-five-feature-completion.yml'
+      - 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-clac-five-feature-extraction-contract.v1.json'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-completion.runner.mjs'
+      - 'h-earth-3d/tools/imi-empirical-platform/routes/spontaneous-speech-current-repository-rerun-2026-route.v1.json'
+      - 'h-earth-3d/tools/imi-empirical-platform/imi-core-and-empirical-portfolio-engine.v1.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify frozen extraction implementation syntax
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py \
+            h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
+            h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py
+          node --check h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs
+          node --check h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-completion.runner.mjs
+          python -m json.tool \
+            h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-clac-five-feature-extraction-contract.v1.json \
+            >/dev/null
+
+  source-package:
+    needs: conformance
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install bounded CLAC source dependencies
+        run: python -m pip install --disable-pip-version-check remotezip==0.12.3 openpyxl==3.1.5
+      - name: Rebind exact CLAC transcript and metadata package
+        run: |
+          set -euo pipefail
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py \
+            --output-dir /tmp/imi-phase3-clac-source \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-source.log
+          PACKAGE=$(find /tmp/imi-phase3-clac-source -name clac-public-text-metadata-package.v1.json -print -quit)
+          python - "$PACKAGE" <<'PY'
+          import json, sys
+          package = json.load(open(sys.argv[1], encoding='utf-8'))
+          assert package['packageSha256'] == '52df6e548c512239337281bb5f0e461a4751f6068f75db197bd2ad323b3ad171'
+          assert package['cookieTheft']['extractedUsableTranscriptCount'] == 240
+          assert len(package['cookieTheft']['transcripts']) == 240
+          print(json.dumps({'result': 'PASS_EXACT_CLAC_SOURCE_PACKAGE_REBOUND', 'packageSha256': package['packageSha256']}))
+          PY
+      - name: Upload exact CLAC source package
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-source-package
+          path: |
+            /tmp/imi-phase3-clac-source.log
+            /tmp/imi-phase3-clac-source/**
+          retention-days: 90
+
+  fasttext-features:
+    needs: source-package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-source-package
+          path: /tmp/imi-phase3-clac-source-artifact
+      - name: Install frozen FastText feature dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+            numpy==1.26.4 \
+            scipy==1.12.0 \
+            gensim==4.3.3 \
+            nltk==3.9.1 \
+            spacy==3.7.4
+          python -m spacy download en_core_web_sm
+          python - <<'PY'
+          import nltk
+          nltk.download('stopwords', quiet=True)
+          PY
+      - name: Stream exact Common Crawl English vectors to disk
+        run: |
+          set -euo pipefail
+          curl --location --fail --show-error --retry 5 --retry-all-errors \
+            https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.bin.gz \
+            | gzip -dc > /tmp/cc.en.300.bin
+          test -s /tmp/cc.en.300.bin
+          sha256sum /tmp/cc.en.300.bin | tee /tmp/imi-phase3-clac-fasttext-model.sha256
+      - name: Execute frozen FastText feature extraction
+        run: |
+          set -euo pipefail
+          PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          mkdir -p /tmp/imi-phase3-clac-fasttext
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
+            --mode fasttext \
+            --package "$PACKAGE" \
+            --model-path /tmp/cc.en.300.bin \
+            --output /tmp/imi-phase3-clac-fasttext/clac-fasttext-features.v1.json \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-fasttext.log
+          rm -f /tmp/cc.en.300.bin
+      - name: Upload FastText feature evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-fasttext-features
+          path: |
+            /tmp/imi-phase3-clac-fasttext.log
+            /tmp/imi-phase3-clac-fasttext-model.sha256
+            /tmp/imi-phase3-clac-fasttext/**
+          retention-days: 90
+
+  bert-add-features:
+    needs: source-package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-source-package
+          path: /tmp/imi-phase3-clac-source-artifact
+      - name: Install frozen BERT and dependency-distance dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+            torch==2.4.1 \
+            --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --disable-pip-version-check \
+            numpy==1.26.4 \
+            transformers==4.44.2 \
+            spacy==3.7.4
+          python -m spacy download en_core_web_sm
+      - name: Execute frozen BERT and ADD feature extraction
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+          TOKENIZERS_PARALLELISM: 'false'
+        run: |
+          set -euo pipefail
+          PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          mkdir -p /tmp/imi-phase3-clac-bert-add
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
+            --mode bert_add \
+            --package "$PACKAGE" \
+            --output /tmp/imi-phase3-clac-bert-add/clac-bert-add-features.v1.json \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-bert-add.log
+      - name: Upload BERT and ADD feature evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-bert-add-features
+          path: |
+            /tmp/imi-phase3-clac-bert-add.log
+            /tmp/imi-phase3-clac-bert-add/**
+          retention-days: 90
+
+  clip-features:
+    needs: source-package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-source-package
+          path: /tmp/imi-phase3-clac-source-artifact
+      - name: Install frozen CLIP feature dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check \
+            torch==2.4.1 \
+            torchvision==0.19.1 \
+            --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install --disable-pip-version-check \
+            numpy==1.26.4 \
+            pillow==10.4.0 \
+            spacy==3.7.4 \
+            ftfy \
+            regex \
+            tqdm
+          python -m pip install --disable-pip-version-check \
+            git+https://github.com/openai/CLIP.git@d05afc436d78f1c48dc0dbf8e5980a9d471f35f6
+          python -m spacy download en_core_web_sm
+      - name: Bind exact Cookie Theft stimulus image
+        run: |
+          set -euo pipefail
+          curl --location --fail --show-error --retry 5 --retry-all-errors \
+            https://raw.githubusercontent.com/X-LANCE/CogBench/676a03e5a634f42adc5ab245ddee8ca24d2a2fc7/samples/images/cookie_theft.jpg \
+            --output /tmp/cookie_theft.jpg
+          BYTES=$(stat -c%s /tmp/cookie_theft.jpg)
+          test "$BYTES" = '164703'
+          BLOB_SHA=$({ printf 'blob %s\0' "$BYTES"; cat /tmp/cookie_theft.jpg; } | sha1sum | awk '{print $1}')
+          test "$BLOB_SHA" = '4c4c76187410772d616f5f01b66828781b5415bc'
+          sha256sum /tmp/cookie_theft.jpg | tee /tmp/imi-phase3-clac-stimulus.sha256
+      - name: Execute frozen CLIP feature extraction
+        run: |
+          set -euo pipefail
+          PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          mkdir -p /tmp/imi-phase3-clac-clip
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
+            --mode clip \
+            --package "$PACKAGE" \
+            --image-path /tmp/cookie_theft.jpg \
+            --output /tmp/imi-phase3-clac-clip/clac-clip-features.v1.json \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-clip.log
+      - name: Upload CLIP feature evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-clip-features
+          path: |
+            /tmp/imi-phase3-clac-clip.log
+            /tmp/imi-phase3-clac-stimulus.sha256
+            /tmp/imi-phase3-clac-clip/**
+          retention-days: 90
+
+  ppl-features:
+    needs: source-package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-source-package
+          path: /tmp/imi-phase3-clac-source-artifact
+      - name: Install frozen Mistral access-representation dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check numpy==1.26.4 huggingface_hub==0.24.7
+          python -m pip install --disable-pip-version-check \
+            llama-cpp-python==0.3.16 \
+            --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+      - name: Download exact Q5_K_M access representation
+        env:
+          HF_HUB_DISABLE_TELEMETRY: '1'
+        run: |
+          set -euo pipefail
+          MODEL=$(python - <<'PY'
+          from huggingface_hub import hf_hub_download
+          print(hf_hub_download(
+              repo_id='TheBloke/Mistral-7B-Instruct-v0.1-GGUF',
+              filename='mistral-7b-instruct-v0.1.Q5_K_M.gguf',
+              revision='44934253f84b5e51d9f247dd22c6cda8c362e790'
+          ))
+          PY
+          )
+          printf '%s  %s\n' \
+            'c4b062ec7f0f160e848a0e34c4e291b9e39b3fc60df5b201c038e7064dbbdcdc' \
+            "$MODEL" | sha256sum --check
+          printf '%s\n' "$MODEL" > /tmp/imi-phase3-clac-ppl-model-path.txt
+      - name: Execute frozen PPL extraction and author exponent alignment
+        run: |
+          set -euo pipefail
+          PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          MODEL=$(cat /tmp/imi-phase3-clac-ppl-model-path.txt)
+          mkdir -p /tmp/imi-phase3-clac-ppl
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
+            --mode ppl \
+            --package "$PACKAGE" \
+            --model-path "$MODEL" \
+            --output /tmp/imi-phase3-clac-ppl/clac-ppl-features.raw.v1.json \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-ppl.log
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py \
+            --input /tmp/imi-phase3-clac-ppl/clac-ppl-features.raw.v1.json \
+            --output /tmp/imi-phase3-clac-ppl/clac-ppl-features.v1.json \
+            2>&1 | tee -a /tmp/imi-phase3-clac-ppl.log
+      - name: Upload PPL feature evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-ppl-features
+          path: |
+            /tmp/imi-phase3-clac-ppl.log
+            /tmp/imi-phase3-clac-ppl/**
+          retention-days: 90
+
+  assemble-and-run:
+    needs:
+      - fasttext-features
+      - bert-add-features
+      - clip-features
+      - ppl-features
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-source-package
+          path: /tmp/imi-phase3-clac-source-artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-fasttext-features
+          path: /tmp/imi-phase3-clac-fasttext-artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-bert-add-features
+          path: /tmp/imi-phase3-clac-bert-add-artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-clip-features
+          path: /tmp/imi-phase3-clac-clip-artifact
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-clac-ppl-features
+          path: /tmp/imi-phase3-clac-ppl-artifact
+      - name: Assemble exact five-feature package
+        run: |
+          set -euo pipefail
+          PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          FASTTEXT=$(find /tmp/imi-phase3-clac-fasttext-artifact -name clac-fasttext-features.v1.json -print -quit)
+          BERT_ADD=$(find /tmp/imi-phase3-clac-bert-add-artifact -name clac-bert-add-features.v1.json -print -quit)
+          CLIP=$(find /tmp/imi-phase3-clac-clip-artifact -name clac-clip-features.v1.json -print -quit)
+          PPL=$(find /tmp/imi-phase3-clac-ppl-artifact -name clac-ppl-features.v1.json -print -quit)
+          mkdir -p /tmp/imi-phase3-clac-completion
+          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
+            --mode assemble \
+            --package "$PACKAGE" \
+            --fasttext-features "$FASTTEXT" \
+            --bert-add-features "$BERT_ADD" \
+            --clip-features "$CLIP" \
+            --ppl-features "$PPL" \
+            --output /tmp/imi-phase3-clac-completion/clac-five-feature-package.python.v1.json \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee /tmp/imi-phase3-clac-completion.log
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs \
+            --input /tmp/imi-phase3-clac-completion/clac-five-feature-package.python.v1.json \
+            --output /tmp/imi-phase3-clac-completion/clac-five-feature-package.v1.json \
+            2>&1 | tee -a /tmp/imi-phase3-clac-completion.log
+      - name: Execute unchanged IMI route and close speech track if admissible
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-completion.runner.mjs \
+            --feature-package /tmp/imi-phase3-clac-completion/clac-five-feature-package.v1.json \
+            --output-dir /tmp/imi-phase3-clac-completion/final \
+            --clock 2026-08-05T20:05:00.000Z \
+            2>&1 | tee -a /tmp/imi-phase3-clac-completion.log
+          python - <<'PY'
+          import json
+          receipt = json.load(open('/tmp/imi-phase3-clac-completion/final/speech-phase3-track-receipt.v1.json', encoding='utf-8'))
+          assert receipt['minimumEvidenceSatisfied'] is True
+          assert receipt['result'] == 'PASS_CLOSED_PHASE_3_SPEECH_CLAC_FIVE_FEATURE_REPRODUCTION_EXECUTED_WITH_Q5_K_M_PPL_REPRESENTATION'
+          assert receipt['phase4Candidate'] is False
+          print(json.dumps({'result': 'PASS_CLAC_PHASE_3_SPEECH_COMPLETION_GATE', 'receiptDigest': receipt['receiptDigest']}))
+          PY
+      - name: Upload final CLAC Phase 3 completion evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-clac-five-feature-completion-evidence
+          path: |
+            /tmp/imi-phase3-clac-completion.log
+            /tmp/imi-phase3-clac-completion/**
+          retention-days: 90

@@ -1,0 +1,54 @@
+{
+  "routeId": "USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_ROUTE_v1",
+  "routeVersion": "1.0.0-confirmatory-style-refresh",
+  "domain": "agricultural_colony_resilience",
+  "caseIdField": "case_id",
+  "frozenBeforeRun": true,
+  "requiredFactors": [
+    {
+      "factorId": "VARROA_AVAILABILITY",
+      "label": "Availability not constrained by Varroa mites",
+      "normalizer": {
+        "type": "direct_constraint",
+        "field": "varroa_constraint"
+      }
+    },
+    {
+      "factorId": "OTHER_PESTS_PARASITES_AVAILABILITY",
+      "label": "Availability not constrained by other pests and parasites",
+      "normalizer": {
+        "type": "direct_constraint",
+        "field": "other_pests_constraint"
+      }
+    },
+    {
+      "factorId": "DISEASE_AVAILABILITY",
+      "label": "Availability not constrained by diseases",
+      "normalizer": {
+        "type": "direct_constraint",
+        "field": "disease_constraint"
+      }
+    },
+    {
+      "factorId": "PESTICIDE_AVAILABILITY",
+      "label": "Availability not constrained by pesticides",
+      "normalizer": {
+        "type": "direct_constraint",
+        "field": "pesticide_constraint"
+      }
+    }
+  ],
+  "terminalLock": {
+    "type": "none"
+  },
+  "outcomeFields": ["next_loss_rate"],
+  "limitations": [
+    "Confirmatory-style refresh, not final validation.",
+    "Uses USDA NASS Honey Bee Colonies text report at execution time.",
+    "State-level public aggregate data cannot establish colony-level causality.",
+    "Stressors are not mutually exclusive; a colony may be affected by multiple stressors during a quarter.",
+    "Other States and United States aggregate rows are excluded from the primary transition panel.",
+    "No IMI-7 terminal lock is assigned from this aggregate report."
+  ],
+  "nextValidationStep": "Compare current NASS release result against prior agricultural colony backfill and repeat on next annual release."
+}

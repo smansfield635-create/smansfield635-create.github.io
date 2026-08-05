@@ -51,19 +51,60 @@
     {
       "phase": 3,
       "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
-      "status": "AUTHORIZED_NOT_EXECUTED",
+      "status": "EXECUTED_WITH_OPEN_HELD_TRACKS",
+      "result": "PHASE_3_EXECUTED_PARTIAL_TRACKS_HELD_OPEN",
+      "manifestPath": "h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-parallel-external-tests-manifest.v1.json",
+      "collectiveEvidencePath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/imi-phase3-collective-durable-evidence-package.v1.json",
+      "phase3Closed": false,
+      "counts": {
+        "executed": 4,
+        "passClosed": 2,
+        "heldOpen": 2,
+        "failClosed": 0,
+        "minimumEvidenceSatisfied": 2,
+        "phase4Candidates": 0
+      },
       "tracks": [
-        "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
-        "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
-        "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
-        "DSSI_REMAINING_COUNTRY_CONTINUATION"
+        {
+          "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+          "status": "HELD_OPEN_SOURCE_NOT_AVAILABLE",
+          "result": "HELD_NO_ELIGIBLE_NEXT_RELEASE_OR_NON_CMS_PACKAGE",
+          "phase4Candidate": false,
+          "evidencePath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/hospital-phase3-durable-evidence-package.v1.json"
+        },
+        {
+          "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+          "status": "HELD_OPEN_SOURCE_ACCESS_AND_FEATURE_ADAPTER_REQUIRED",
+          "result": "HELD_LAWFUL_HELD_OUT_SPEECH_PACKAGE_NOT_AVAILABLE_TO_EXECUTION",
+          "phase4Candidate": false,
+          "evidencePath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/speech-phase3-durable-evidence-package.v1.json"
+        },
+        {
+          "track": "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+          "status": "PASS_CLOSED",
+          "result": "PASS_CLOSED_PHASE_3_BEE_LONGER_PANEL_EXECUTED_WITH_FINDINGS_RETAINED",
+          "phase4Candidate": false,
+          "evidencePath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/bee-phase3-durable-evidence-package.v1.json"
+        },
+        {
+          "track": "DSSI_REMAINING_COUNTRY_CONTINUATION",
+          "status": "PASS_CLOSED",
+          "result": "PASS_CLOSED_PHASE_3_DSSI_REMAINING_COUNTRY_CONTINUATION_MINIMUM_MET",
+          "phase4Candidate": false,
+          "evidencePath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/dssi-phase3-durable-evidence-package.v1.json"
+        }
       ],
-      "executionBoundary": "EACH_TRACK_REQUIRES_SEPARATE_SOURCE_ROUTE_AND_RECEIPT_IDENTITIES"
+      "openHeldTracks": [
+        "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+        "SPEECH_HELD_OUT_DATASET_REPRODUCTION"
+      ],
+      "phase4Candidates": [],
+      "executionBoundary": "EACH_TRACK_REQUIRES_SEPARATE_SOURCE_ROUTE_EXECUTION_AND_RECEIPT_IDENTITIES_AND_HELD_TRACKS_MAY_NOT_BE_FORCED_CLOSED"
     },
     {
       "phase": 4,
       "operation": "IMI_DECISION_UTILITY_PILOTS_v1",
-      "status": "STAGED_NOT_AUTHORIZED_UNTIL_ROUTE_SPECIFIC_EXTERNAL_OR_PROSPECTIVE_EVIDENCE",
+      "status": "NOT_AUTHORIZED_NO_ADMISSIBLE_CANDIDATE_TRACK",
       "candidatePilots": [
         "HOSPITAL_REVIEW_TRIAGE",
         "BEE_EARLY_WARNING_AND_RESOURCE_TARGETING"
@@ -74,7 +115,8 @@
         "GEOMETRIC_MEAN",
         "BEST_SINGLE_FACTOR",
         "DOMAIN_STANDARD_OR_BASELINE_METHOD"
-      ]
+      ],
+      "reason": "PHASE_3_HAS_ZERO_ADMITTED_PHASE_4_CANDIDATES_AND_TWO_PHASE_3_TRACKS_REMAIN_HELD_OPEN"
     },
     {
       "phase": 5,
@@ -106,7 +148,21 @@
     "replicationTrackCount": 4,
     "mandatoryDomainAdmissionCriterionCount": 10,
     "newDataTestsExecuted": false,
-    "phase3Authorization": "AUTHORIZED_NOT_EXECUTED"
+    "phase3Authorization": "EXECUTED_WITH_OPEN_HELD_TRACKS"
+  },
+  "phase3WorkflowEvidence": {
+    "verifiedHeadSha": "a8db6015e3f29c5818bc052433e5e4a4d4fbcf20",
+    "workflowName": "H-Earth IMI Empirical Platform",
+    "workflowRunId": 31032196707,
+    "baseVerificationJobId": 92395391998,
+    "hospitalJobId": 92395538003,
+    "speechJobId": 92395537952,
+    "beeJobId": 92395538028,
+    "dssiJobId": 92395538020,
+    "collectiveJobId": 92396112934,
+    "workflowConclusion": "success",
+    "collectiveResult": "PHASE_3_EXECUTED_PARTIAL_TRACKS_HELD_OPEN",
+    "collectiveReceiptDigest": "fnv1a32:b2e43be0"
   },
   "globalBoundaries": {
     "rawIMIMagnitudesComparableAcrossRoutes": false,
@@ -114,10 +170,13 @@
     "universalPredictiveValidityClaimed": false,
     "causalClaimsAuthorized": false,
     "clinicalDiagnosticUseAuthorized": false,
+    "decisionUtilityClaimed": false,
     "finalInstrumentValidationClaimed": false,
+    "phase4Authorized": false,
+    "phase5Authorized": false,
     "mainMergeAuthorized": false,
     "publicReleaseAuthorized": false
   },
-  "currentProgramState": "PHASE_2_PASS_CLOSED_PHASE_3_PARALLEL_EXTERNAL_TESTS_AUTHORIZED_NOT_EXECUTED",
-  "currentDecision": "STOP_AFTER_PHASE_2_CLOSE_PHASE_3_AUTHORIZED_NOT_EXECUTED"
+  "currentProgramState": "PHASE_3_EXECUTED_WITH_OPEN_HELD_TRACKS_PHASE_4_NOT_AUTHORIZED",
+  "currentDecision": "RESOLVE_OPEN_PHASE_3_HOLDS_WITHOUT_ROUTE_RETUNING"
 }

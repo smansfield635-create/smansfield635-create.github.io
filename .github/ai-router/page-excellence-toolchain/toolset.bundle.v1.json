@@ -1,0 +1,482 @@
+{
+  "schema": "MANDATORY_PAGE_EXCELLENCE_TOOLCHAIN_BUNDLE_v1",
+  "status": "ACTIVE_VERSION_BOUND",
+  "version": "1.0.0",
+  "entrypoint": {
+    "schema": "PAGE_EXCELLENCE_TOOLCHAIN_ENTRYPOINT_v1",
+    "projectId": "PAGE_EXCELLENCE_TOOLCHAIN",
+    "status": "ACTIVATION_CANDIDATE_FAIL_CLOSED",
+    "version": "1.0.0",
+    "locator": ".github/ai-router/page-excellence-toolchain/mandatory-toolset.locator.v1.json",
+    "requiredInstructions": [
+      ".github/ai-router/page-excellence-toolchain/universal-page-excellence-standard.v1.json",
+      ".github/ai-router/page-excellence-toolchain/phase-gates.v1.json",
+      ".github/ai-router/page-excellence-toolchain/scoring-model.v1.json"
+    ],
+    "procedures": {
+      "pageMutationGate": "node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --mutation-intent --page-phase <PHASE> --page-receipt-bundle <BUNDLE.json> --path <PATH>",
+      "blindEvaluationWorkflow": ".github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml"
+    },
+    "authorityBoundary": [
+      "TOOLCHAIN_ACTIVATION_DOES_NOT_AUTHORIZE_PUBLIC_PAGE_MUTATION",
+      "NAMED_AWARD_READINESS_REQUIRES_SEPARATE_CURRENT_ADAPTER",
+      "BLIND_BASELINE_SUBJECT_BYTES_ARE_IMMUTABLE"
+    ]
+  },
+  "locator": {
+    "schema": "MANDATORY_PAGE_EXCELLENCE_TOOLSET_LOCATOR_v1",
+    "status": "ACTIVE_VERSION_BOUND",
+    "toolsetId": "MANDATORY_PAGE_TOOLSET",
+    "version": "1.0.0",
+    "instrumentRegistry": ".github/ai-router/page-excellence-toolchain/instrument-registry.v1.json",
+    "universalStandard": ".github/ai-router/page-excellence-toolchain/universal-page-excellence-standard.v1.json",
+    "phaseGates": ".github/ai-router/page-excellence-toolchain/phase-gates.v1.json",
+    "scoringModel": ".github/ai-router/page-excellence-toolchain/scoring-model.v1.json",
+    "receiptSchema": ".github/ai-router/page-excellence-toolchain/phase-receipt.schema.v1.json",
+    "awardAdapterSchema": ".github/ai-router/page-excellence-toolchain/award-adapter.schema.v1.json",
+    "failClosedOn": [
+      "NOT_REGISTERED",
+      "NOT_ACTIVE",
+      "NOT_VERSION_BOUND",
+      "MISSING_REQUIRED_THRESHOLDS",
+      "NOT_EXECUTED",
+      "MISSING_A_VALID_RECEIPT"
+    ]
+  },
+  "instrumentRegistry": {
+    "schema": "MANDATORY_PAGE_EXCELLENCE_INSTRUMENT_REGISTRY_v1",
+    "status": "ACTIVE_VERSION_BOUND",
+    "toolsetVersion": "1.0.0",
+    "instruments": [
+      {
+        "id": "informationArchitectureInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION",
+          "RUNTIME"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#INFORMATION_ARCHITECTURE_AND_CLARITY"
+      },
+      {
+        "id": "perceptualExcellenceInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "ARCHITECTURE",
+          "RUNTIME",
+          "ADOPTION"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#VISUAL_COMPOSITION_AND_CRAFT"
+      },
+      {
+        "id": "accessibilityInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION",
+          "RUNTIME"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#ACCESSIBILITY_EXECUTION"
+      },
+      {
+        "id": "responsiveEquivalenceInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION",
+          "RUNTIME"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#RESPONSIVE_DEVICE_EQUIVALENCE"
+      },
+      {
+        "id": "interactionQualityInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION",
+          "RUNTIME"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#INTERACTION_AND_NAVIGATION"
+      },
+      {
+        "id": "performanceOptimizationInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "IMPLEMENTATION",
+          "RUNTIME"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#PERFORMANCE_AND_CODE_OPTIMIZATION"
+      },
+      {
+        "id": "stateAndRecoveryInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "IMPLEMENTATION",
+          "RUNTIME"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#HARD_GATE_EXACT_RETURN_INTEGRITY"
+      },
+      {
+        "id": "provenanceAndEvidenceInstrument",
+        "version": "1.0.0",
+        "status": "ACTIVE_VERSION_BOUND",
+        "phases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION",
+          "RUNTIME",
+          "ADOPTION"
+        ],
+        "thresholdsRef": "scoring-model.v1.json#HARD_GATE_PROVENANCE_AND_REPRODUCIBILITY"
+      }
+    ],
+    "closedWorld": true,
+    "requiredInstrumentCount": 8
+  },
+  "universalStandard": {
+    "schema": "UNIVERSAL_PAGE_EXCELLENCE_AND_OPTIMIZATION_STANDARD_v1",
+    "status": "ACTIVE_MANDATORY_CANDIDATE",
+    "version": "1.0.0",
+    "layer1": {
+      "id": "UNIVERSAL_PAGE_EXCELLENCE_AND_OPTIMIZATION_STANDARD",
+      "mandatoryForEveryPage": true,
+      "awardReadinessClaimCreated": false
+    },
+    "layer2": {
+      "id": "CURRENT_NAMED_AWARD_CATEGORY_ADAPTERS",
+      "requiredOnlyWhenAwardReadinessClaimed": true,
+      "currentAdapterBound": false
+    },
+    "laws": [
+      "NO_MANDATORY_TOOLSET_ROUTE_NO_PAGE_CONSTRUCTION",
+      "NO_PHASE_RECEIPTS_NO_CANDIDATE_MATERIALIZATION",
+      "NO_RUNTIME_EVIDENCE_NO_PERCEPTUAL_ACCEPTANCE_REQUEST",
+      "NO_ACCEPTANCE_NO_PUBLIC_PAGE_MUTATION",
+      "UNIVERSAL_EXCELLENCE_PASS_NOT_NAMED_AWARD_READINESS"
+    ],
+    "pageOperationDetection": {
+      "extensions": [
+        ".html",
+        ".htm",
+        ".css",
+        ".scss",
+        ".sass",
+        ".less",
+        ".jsx",
+        ".tsx",
+        ".vue",
+        ".svelte"
+      ],
+      "interfacePrefixes": [
+        "laws/",
+        "showroom/",
+        "pages/",
+        "website/",
+        "web/",
+        "src/ui/",
+        "src/pages/"
+      ],
+      "taskTokens": [
+        "PAGE",
+        "INTERFACE",
+        "UI",
+        "UX",
+        "WEBSITE",
+        "SHOWROOM",
+        "DASHBOARD",
+        "LANDING"
+      ],
+      "excludedPrefixes": [
+        ".github/ai-router/page-excellence-toolchain/",
+        "control-plane/page-excellence-toolchain/",
+        "tools/page-excellence-toolchain/"
+      ]
+    }
+  },
+  "phaseGates": {
+    "schema": "MANDATORY_PAGE_CONSTRUCTION_PHASE_GATES_v1",
+    "status": "ACTIVE_FAIL_CLOSED",
+    "version": "1.0.0",
+    "gates": {
+      "ARCHITECTURE": {
+        "requiredReceiptPhases": [
+          "ARCHITECTURE"
+        ],
+        "requiredFindings": [
+          "INFORMATION_HIERARCHY",
+          "USER_INTENT_ROUTES",
+          "DEPENDENCY_REPRESENTATION",
+          "CONTENT_DENSITY",
+          "NAVIGATION_MODEL",
+          "RESPONSIVE_PRIORITY",
+          "ACCESSIBILITY_STRUCTURE"
+        ]
+      },
+      "IMPLEMENTATION": {
+        "requiredReceiptPhases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION"
+        ],
+        "requiredFindings": [
+          "SEMANTIC_MARKUP",
+          "FOCUS_MANAGEMENT",
+          "KEYBOARD_MODEL",
+          "STATE_RECOVERY",
+          "BUNDLE_STRUCTURE",
+          "RENDERING_STRATEGY",
+          "SEARCH_AND_GRAPH_COMPLEXITY",
+          "DEVICE_LAYOUT_RULES"
+        ]
+      },
+      "RUNTIME": {
+        "requiredReceiptPhases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION",
+          "RUNTIME"
+        ],
+        "requiredFindings": [
+          "REAL_BROWSER_MATRIX",
+          "PHONE_TABLET_DESKTOP_RENDERING",
+          "SCREEN_READER_EXECUTION",
+          "HUMAN_KEYBOARD_TRAVERSAL",
+          "PERFORMANCE_MEASUREMENT",
+          "LAYOUT_STABILITY",
+          "INTERACTION_LATENCY",
+          "RESPONSIVE_EQUIVALENCE",
+          "PERCEPTUAL_HIERARCHY",
+          "VISUAL_CRAFT",
+          "ORIGINALITY_AND_MEMORABILITY"
+        ]
+      },
+      "ADOPTION": {
+        "requiredReceiptPhases": [
+          "ARCHITECTURE",
+          "IMPLEMENTATION",
+          "RUNTIME",
+          "ADOPTION"
+        ],
+        "requiredFindings": [
+          "INDEPENDENT_REPRODUCTION",
+          "COMPOSITE_SCORE",
+          "CRITICAL_DEFECT_DISPOSITION",
+          "DIRECT_USER_PERCEPTUAL_REVIEW"
+        ]
+      }
+    },
+    "allowedReceiptResults": [
+      "PASS",
+      "PASS_WITH_EXPLICIT_BOUND"
+    ],
+    "blockingResults": [
+      "FAIL_REPAIR_REQUIRED",
+      "UNEVALUABLE_ENVIRONMENTAL",
+      "NOT_EXECUTED"
+    ]
+  },
+  "scoringModel": {
+    "schema": "MANDATORY_PAGE_BLIND_BASELINE_SCORING_MODEL_v1",
+    "status": "FROZEN_BEFORE_EVALUATION",
+    "version": "1.0.0",
+    "domains": [
+      {
+        "id": "INFORMATION_ARCHITECTURE_AND_CLARITY",
+        "weight": 15
+      },
+      {
+        "id": "VISUAL_COMPOSITION_AND_CRAFT",
+        "weight": 20
+      },
+      {
+        "id": "INTERACTION_AND_NAVIGATION",
+        "weight": 15
+      },
+      {
+        "id": "ACCESSIBILITY_EXECUTION",
+        "weight": 15
+      },
+      {
+        "id": "RESPONSIVE_DEVICE_EQUIVALENCE",
+        "weight": 10
+      },
+      {
+        "id": "PERFORMANCE_AND_CODE_OPTIMIZATION",
+        "weight": 15
+      },
+      {
+        "id": "ORIGINALITY_AND_EXPERIENTIAL_DISTINCTION",
+        "weight": 10
+      }
+    ],
+    "hardGates": [
+      "PROVENANCE_AND_VISUAL_BYTE_IDENTITY",
+      "REPRODUCIBLE_VALIDATION_PACKAGE",
+      "EXACT_RETURN_INTEGRITY",
+      "NO_FATAL_RUNTIME_ERRORS",
+      "NO_CRITICAL_ACCESSIBILITY_DEFECTS"
+    ],
+    "viewEligibility": {
+      "allHardGatesPass": true,
+      "minimumTotalScore": 80,
+      "minimumDomainScore": 70,
+      "minimumVisualCompositionScore": 75,
+      "minimumAccessibilityScore": 80
+    },
+    "dispositions": [
+      {
+        "min": 80,
+        "max": 100,
+        "result": "REASONABLE_TO_STRONG",
+        "userVisualReview": "AUTHORIZED_IF_ALL_OTHER_THRESHOLDS_PASS"
+      },
+      {
+        "min": 70,
+        "max": 79.999,
+        "result": "REMEDIATION_HOLD",
+        "userVisualReview": "WITHHELD"
+      },
+      {
+        "min": 0,
+        "max": 69.999,
+        "result": "STRUCTURAL_RECOMPOSITION_OR_REBUILD",
+        "userVisualReview": "WITHHELD"
+      }
+    ],
+    "hardGateOverride": "ANY_HARD_GATE_FAILURE_FAIL_CLOSED_REGARDLESS_OF_TOTAL_SCORE",
+    "automatedProxyBoundary": "DOM_GEOMETRY_CONTRAST_AND_FEATURE_MEASUREMENTS_SCREEN_FOR_OBVIOUS_FAILURE_BUT_DO_NOT_CREATE_HUMAN_PERCEPTUAL_ACCEPTANCE_OR_NAMED_AWARD_READINESS"
+  },
+  "phaseReceiptSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_SCHEMA_v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "schema",
+      "toolsetId",
+      "toolsetVersion",
+      "subjectHead",
+      "phaseReceipts"
+    ],
+    "properties": {
+      "schema": {
+        "const": "MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1"
+      },
+      "toolsetId": {
+        "const": "MANDATORY_PAGE_TOOLSET"
+      },
+      "toolsetVersion": {
+        "type": "string",
+        "minLength": 1
+      },
+      "subjectHead": {
+        "type": "string",
+        "minLength": 7
+      },
+      "phaseReceipts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "phase",
+            "result",
+            "instrumentVersions",
+            "receiptDigest"
+          ],
+          "properties": {
+            "phase": {
+              "enum": [
+                "ARCHITECTURE",
+                "IMPLEMENTATION",
+                "RUNTIME",
+                "ADOPTION"
+              ]
+            },
+            "result": {
+              "enum": [
+                "PASS",
+                "PASS_WITH_EXPLICIT_BOUND",
+                "FAIL_REPAIR_REQUIRED",
+                "UNEVALUABLE_ENVIRONMENTAL",
+                "NOT_EXECUTED"
+              ]
+            },
+            "instrumentVersions": {
+              "type": "object",
+              "minProperties": 1
+            },
+            "receiptDigest": {
+              "type": "string",
+              "minLength": 16
+            }
+          }
+        }
+      }
+    }
+  },
+  "awardAdapterSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "NAMED_AWARD_CATEGORY_ADAPTER_SCHEMA_v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "awardName",
+      "cycle",
+      "category",
+      "criteriaVersion",
+      "boundRequirements",
+      "evidenceRequirements"
+    ],
+    "properties": {
+      "awardName": {
+        "type": "string"
+      },
+      "cycle": {
+        "type": "string"
+      },
+      "category": {
+        "type": "string"
+      },
+      "criteriaVersion": {
+        "type": "string"
+      },
+      "boundRequirements": {
+        "type": "array",
+        "minItems": 1
+      },
+      "evidenceRequirements": {
+        "type": "array",
+        "minItems": 1
+      }
+    }
+  },
+  "baselineEvaluationRequest": {
+    "schema": "METHODS_PAGE_BLIND_BASELINE_EVALUATION_REQUEST_v1",
+    "operationId": "METHODS_PAGE_MANDATORY_EXCELLENCE_TOOLCHAIN_ACTIVATION_AND_BLIND_BASELINE_EVALUATION_v1",
+    "status": "AUTHORIZED_BLIND_EXECUTION",
+    "userVisualInspection": "WITHHELD_PENDING_SCORE",
+    "evaluationSubject": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+    "packagingSuccessor": "6c9f32d4ea13905b87f3519f9c18c425ae0e449c",
+    "governingMainAtConstruction": "0d88fe21aba99c97b73fcdc68d44af57d55b68be",
+    "subjectMutation": "PROHIBITED_DURING_FIRST_SCORE",
+    "visualBytesPreserved": true,
+    "requiredReturnFields": [
+      "EXACT_SUBJECT_HEAD",
+      "INSTRUMENT_VERSIONS",
+      "HARD_GATE_RESULTS",
+      "SEVEN_DOMAIN_SCORES",
+      "TOTAL_SCORE",
+      "TOP_DEFECTS",
+      "REPRODUCTION_IDENTITIES",
+      "VIEW_ELIGIBILITY",
+      "RECOMMENDED_DISPOSITION"
+    ],
+    "screenshotsUserVisible": false,
+    "flatteringNarrativeProhibited": true
+  }
+}

@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const here=path.dirname(fileURLToPath(import.meta.url));
+const bundle=JSON.parse(fs.readFileSync(path.join(here,'toolset.bundle.v1.json'),'utf8'));
+const locator=bundle.locator;
+const registry=bundle.instrumentRegistry;
+const gates=bundle.phaseGates;
+const scoring=bundle.scoringModel;
+const checks=[];const check=(name,pass,detail='')=>checks.push({name,result:pass?'PASS':'FAIL',detail});
+check('bundle-active',bundle.status==='ACTIVE_VERSION_BOUND'&&bundle.version==='1.0.0');
+check('toolset-active',locator.status==='ACTIVE_VERSION_BOUND'&&locator.version===bundle.version);
+check('eight-instruments',registry.instruments.length===8&&registry.requiredInstrumentCount===8);
+check('all-version-bound',registry.instruments.every(i=>i.status==='ACTIVE_VERSION_BOUND'&&i.version===bundle.version&&i.thresholdsRef));
+check('four-gates',Object.keys(gates.gates).length===4);
+check('seven-domains',scoring.domains.length===7&&scoring.domains.reduce((sum,d)=>sum+d.weight,0)===100);
+check('threshold-freeze',scoring.status==='FROZEN_BEFORE_EVALUATION'&&scoring.viewEligibility.minimumTotalScore===80&&scoring.viewEligibility.minimumVisualCompositionScore===75&&scoring.viewEligibility.minimumAccessibilityScore===80);
+check('five-hard-gates',scoring.hardGates.length===5);
+check('award-layer-separated',bundle.universalStandard.layer2.currentAdapterBound===false&&bundle.universalStandard.layer2.requiredOnlyWhenAwardReadinessClaimed===true);
+const result={schema:'MANDATORY_PAGE_EXCELLENCE_TOOLCHAIN_SELF_TEST_v1',result:checks.every(c=>c.result==='PASS')?'PASS':'FAIL',checks};
+console.log(JSON.stringify(result,null,2));if(result.result!=='PASS')process.exitCode=1;

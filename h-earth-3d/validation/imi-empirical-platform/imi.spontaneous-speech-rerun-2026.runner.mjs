@@ -240,11 +240,37 @@ function transformRows(admitted) {
   return transformed.sort((a, b) => sourceOrder.get(a.participant_id) - sourceOrder.get(b.participant_id));
 }
 
+function resolveLegacyWeakestFactorTies(caseResults) {
+  const tieResolvedCounts = {};
+  const tiePatternCounts = {};
+  let tieCases = 0;
+  for (const result of caseResults.filter((candidate) => candidate.status === 'VALID')) {
+    const weakest = result.factors
+      .filter((factor) => factor.availability === result.wmi)
+      .map((factor) => factor.factorId);
+    if (weakest.length > 1) {
+      tieCases += 1;
+      const pattern = weakest.join('|');
+      tiePatternCounts[pattern] = (tiePatternCounts[pattern] || 0) + 1;
+    }
+    const firstRequiredFactor = weakest[0];
+    tieResolvedCounts[firstRequiredFactor] = (tieResolvedCounts[firstRequiredFactor] || 0) + 1;
+  }
+  return deepFreeze({
+    policy: 'FIRST_REQUIRED_FACTOR_IN_FROZEN_ROUTE_ORDER_FOR_LEGACY_COMPARISON_ONLY',
+    engineNativePolicy: 'PRESERVE_ALL_EXACT_TIES',
+    tieCases,
+    tiePatternCounts,
+    tieResolvedCounts
+  });
+}
+
 function summarize(studyRun, sourceIdentity, rows) {
   const valid = studyRun.caseResults.filter((result) => result.status === 'VALID');
   const imis = valid.map((result) => result.imi);
   const languageCounts = counts(rows.map((row) => row.language));
   const uniqueIMIValues = new Set(imis.map((value) => value.toPrecision(16))).size;
+  const tieResolution = resolveLegacyWeakestFactorTies(studyRun.caseResults);
   const summary = {
     schemaVersion: 'IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_SUMMARY_v1',
     result: 'PASS_CLOSED_SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026',
@@ -261,7 +287,14 @@ function summarize(studyRun, sourceIdentity, rows) {
     minIMI: studyRun.receipt.summary.imiSummary?.min ?? null,
     maxIMI: studyRun.receipt.summary.imiSummary?.max ?? null,
     uniqueIMIValues,
-    weakestFactorCounts: studyRun.receipt.summary.weakestFactorCounts,
+    weakestFactorCounts: tieResolution.tieResolvedCounts,
+    engineNativeWeakestFactorCounts: studyRun.receipt.summary.weakestFactorCounts,
+    weakestFactorTieDiagnostics: {
+      policy: tieResolution.policy,
+      engineNativePolicy: tieResolution.engineNativePolicy,
+      tieCases: tieResolution.tieCases,
+      tiePatternCounts: tieResolution.tiePatternCounts
+    },
     legacyReproductionComparison: {
       expected: EXPECTED,
       absoluteDeltas: {
@@ -276,7 +309,8 @@ function summarize(studyRun, sourceIdentity, rows) {
       rawPublishedFeatureFileRerun: true,
       currentRepositoryEngineUsed: true,
       domainVarianceMaterial: uniqueIMIValues === rows.length,
-      weakestFactorDiversity: Object.keys(studyRun.receipt.summary.weakestFactorCounts).length === 5,
+      weakestFactorDiversity: Object.keys(tieResolution.tieResolvedCounts).length === 5,
+      exactWeakestFactorTiesPreserved: tieResolution.tieCases === 5,
       clinicalValidationEstablished: false,
       naturalDiagnosticCategoriesEstablished: false
     },
@@ -287,6 +321,8 @@ function summarize(studyRun, sourceIdentity, rows) {
       terminalIMI7Assigned: false,
       rawAudioOrTranscriptLoaded: false,
       publishedFeatureFileDownloadedAtRuntime: true,
+      weakestFactorLegacyComparisonUsesFirstRequiredFactorTieResolution: true,
+      engineNativeReceiptsPreserveAllExactTies: true,
       mainMerged: false,
       liveWebsiteOperational: false
     }

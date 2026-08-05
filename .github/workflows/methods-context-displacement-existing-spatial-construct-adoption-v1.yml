@@ -95,13 +95,7 @@ jobs:
           if [ "$STATUS" = PASS_CLOSED ]; then
             git fetch origin operation-locks/repository-operation-intake-v1
             git show origin/operation-locks/repository-operation-intake-v1:.github/operation-intake/active-operation-ledger.v1.json > /tmp/ledger.json
-            node --input-type=module <<'NODE'
-            import fs from'node:fs';
-            const l=JSON.parse(fs.readFileSync('/tmp/ledger.json'));
-            const x=l.terminalHistory.find(x=>x.operationId===process.env.OP&&x.lockGeneration===Number(process.env.LOCK_GENERATION));
-            if(!x||x.released!==true||x.terminalDisposition!=='PASS_CLOSED')throw Error('TERMINAL_LOCK_CONFIRMATION_FAILED');
-            fs.writeFileSync('/tmp/closure.json',JSON.stringify({schema:'METHODS_SPATIAL_ADOPTION_LOCK_CONFIRMATION_RECEIPT_v1',result:'PASS_ALREADY_CLOSED',lockGeneration:Number(process.env.LOCK_GENERATION),terminalDisposition:x.terminalDisposition,lockReleased:x.released},null,2)+'\n');
-            NODE
+            node -e "const fs=require('fs');const l=JSON.parse(fs.readFileSync('/tmp/ledger.json'));const x=l.terminalHistory.find(x=>x.operationId===process.env.OP&&x.lockGeneration===Number(process.env.LOCK_GENERATION));if(!x||x.released!==true||x.terminalDisposition!=='PASS_CLOSED')throw Error('TERMINAL_LOCK_CONFIRMATION_FAILED');fs.writeFileSync('/tmp/closure.json',JSON.stringify({schema:'METHODS_SPATIAL_ADOPTION_LOCK_CONFIRMATION_RECEIPT_v1',result:'PASS_ALREADY_CLOSED',lockGeneration:Number(process.env.LOCK_GENERATION),terminalDisposition:x.terminalDisposition,lockReleased:x.released},null,2)+'\n')"
           else
             node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$OP" --lock-scope "$SCOPE" --lock-generation "$LOCK_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/closure.json
             node -e "let r=require('/tmp/closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true)throw Error('LOCK_CLOSURE_FAILED')"

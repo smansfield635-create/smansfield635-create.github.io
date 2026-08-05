@@ -1,0 +1,44 @@
+{
+  "routeId": "HOSPITAL_COMPARATIVE_NON_WORSE_OUTCOME_ROUTE_EXAMPLE_v1",
+  "routeVersion": "1.0.0-example",
+  "domain": "healthcare_quality",
+  "caseIdField": "provider_id",
+  "frozenBeforeRun": false,
+  "requiredFactors": [
+    {
+      "factorId": "MORT",
+      "label": "Mortality non-worse availability",
+      "normalizer": {
+        "type": "availability_from_worse_reported",
+        "worseField": "mortality_worse",
+        "reportedField": "mortality_reported"
+      }
+    },
+    {
+      "factorId": "SAFETY",
+      "label": "Safety non-worse availability",
+      "normalizer": {
+        "type": "availability_from_worse_reported",
+        "worseField": "safety_worse",
+        "reportedField": "safety_reported"
+      }
+    },
+    {
+      "factorId": "READM",
+      "label": "Readmission non-worse availability",
+      "normalizer": {
+        "type": "availability_from_worse_reported",
+        "worseField": "readmission_worse",
+        "reportedField": "readmission_reported"
+      }
+    }
+  ],
+  "terminalLock": { "type": "none" },
+  "outcomeFields": ["overall_rating"],
+  "limitations": [
+    "Example route only.",
+    "Not a certified hospital route.",
+    "Terminal IMI-7 not assessed."
+  ],
+  "nextValidationStep": "Replace example data with frozen hospital route and versioned CMS dataset."
+}

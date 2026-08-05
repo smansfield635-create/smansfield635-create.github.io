@@ -1,0 +1,233 @@
+{
+  "governingHead": "3b21d30763ca0368110811351bb3d3c8a042af47",
+  "mutationBoundary": {
+    "destinationPathCount": 13,
+    "publicOrVisualMutation": false,
+    "sourcePathMutationCount": 0,
+    "sourcePathsReadOnly": true
+  },
+  "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_v1",
+  "schema": "METHODS_SPATIAL_ADOPTION_SOURCE_IDENTITY_MANIFEST_v1",
+  "sourceGroups": {
+    "compass": [
+      {
+        "blob": "3d6427cbdb961576468d4aab05c0e4987549cea3",
+        "capabilities": [
+          "RIGHT_HANDED_EUCLIDEAN_SPHERES",
+          "POINTER_CAPTURE_AND_INTERRUPTION_RECOVERY",
+          "GESTURE_SAMPLING",
+          "DRAG_FLICK_CLASSIFICATION",
+          "ROTATIONAL_DIRECT_MANIPULATION",
+          "RELEASE_SETTLEMENT_AND_NEAREST_TARGET_SNAP",
+          "DEPTH_SCALE_PROMINENCE_AND_HIT_PRIORITY"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_HARDENED_v4",
+        "path": "assets/compass/compass.crystals.js"
+      },
+      {
+        "blob": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+        "capabilities": [
+          "CONSTELLATION_AND_CLUSTER_STATE_AUTHORITY",
+          "ORIENTATION_PREVIEW_SETTLING_COMMITTED_CANCELLED_LIFECYCLE",
+          "PRESERVED_ORIENTATIONS",
+          "SELECTION_DISTINCT_FROM_MANIPULATION",
+          "DETERMINISTIC_FOCUS_AND_RETURN_SEMANTICS"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "DGB_COMPASS_CONTROLLER_SPHERICAL_CONSTELLATION_AND_CLUSTER_REBUILD_v3",
+        "path": "assets/compass/compass.controller.js"
+      }
+    ],
+    "governance": [
+      {
+        "blob": "f41c9a6b9ec99eb3ddb90a9f6f9e514468111bd6",
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "path": ".github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json",
+        "role": "EXACT_THIRTEEN_PATH_ROUTE_AND_AUTHORITY_BOUNDARY"
+      },
+      {
+        "blob": "15796cdd395c754e426a286d51e1bf8ba0e7c5cc",
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "path": ".github/ai-router/projects/methods-information-benchmark/router-prerequisite-permanent-ratification.v1.json",
+        "role": "PERMANENT_ROUTER_PREREQUISITE_RATIFICATION"
+      },
+      {
+        "blob": "47fcdcde22839003366d3f14fd7eb873b92faa38",
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "path": ".github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json",
+        "role": "MANDATORY_PAGE_TOOLSET_1_1_0_BUNDLE"
+      },
+      {
+        "blob": "e72b666959e0e59067aab8aa61408807e4808532",
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "path": ".github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json",
+        "role": "RATIFIED_ACTIVE_FAIL_CLOSED_TOOLCHAIN_STATE"
+      }
+    ],
+    "hEarth": [
+      {
+        "blob": "322ee2bfed5184acd8eac600f19abd72380b6c2b",
+        "capabilities": [
+          "ONE_FINGER_LOOK",
+          "TWO_FINGER_TRAVEL",
+          "PINCH_ZOOM",
+          "IMMEDIATE_GESTURE_STATE",
+          "SETTLED_RENDER_COMMIT",
+          "COALESCED_RENDER_COMMIT"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "path": "showroom/globe/h-earth/functional-landscape/direct-manipulation.js"
+      },
+      {
+        "blob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+        "capabilities": [
+          "BOUNDED_CAMERA_PROPOSALS",
+          "TERRAIN_CLEARANCE_VALIDATION",
+          "FOV_AND_PITCH_LIMITS",
+          "LAST_LAWFUL_STATE_RECOVERY",
+          "NAVIGATION_STATE_SEQUENCE"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "path": "showroom/globe/h-earth/functional-landscape/navigation.js"
+      },
+      {
+        "blob": "aae214ddbc4cd18aa8c737ee7bbb3de44322da96",
+        "capabilities": [
+          "CONTINUOUS_POINTER_TOUCH_LATTICE",
+          "ONE_FINGER_LOOK_PROPOSALS",
+          "TWO_FINGER_TRAVEL_PROPOSALS",
+          "PINCH_PROPOSALS",
+          "FRAME_RATE_BOUNDED_CONTINUOUS_INTENT",
+          "RELEASE_TERMINATION"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_RUN_8E_CP3B_LOCKED_CONTINUOUS_POINTER_TOUCH_INTAKE_v1",
+        "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+      },
+      {
+        "blob": "98c768be0cfb2ec4bc82e2b634913d91cc73a32f",
+        "capabilities": [
+          "HTML_CANVAS_HOST",
+          "PERSISTENT_WEBGL2_SURFACE",
+          "DIRECT_PROPOSAL_TO_FRAME_RESPONSE",
+          "RESOURCE_IDENTITY_STABILITY",
+          "PUBLIC_RUNTIME_EXCLUSIVITY_RECEIPT"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1",
+        "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js"
+      },
+      {
+        "blob": "16bc8c45fb5c2363326d05f7610e11387b3a4e38",
+        "capabilities": [
+          "PERSISTENT_GPU_RENDERER",
+          "CAMERA_UNIFORM_PACKET",
+          "FRAME_PRESENTATION_SEQUENCE",
+          "VIEW_PROJECTION_MATRIX",
+          "NO_WORLD_REBUILD_ON_CAMERA_MOVE",
+          "GPU_EVIDENCE_CAPTURE"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_BINDING_v1",
+        "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+      },
+      {
+        "blob": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8",
+        "capabilities": [
+          "WORLD_AND_VIEWPORT_BOUNDS",
+          "CAMERA_AND_NAVIGATION_CAPACITY",
+          "INTERACTION_AND_INERTIA_CAPACITY",
+          "PRIMITIVE_NODE_AND_FRAME_BUDGETS",
+          "BOUNDED_CAPACITY_EVALUATORS"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5",
+        "path": "showroom/globe/h-earth/capacity.js"
+      },
+      {
+        "blob": "3764f0d53b0564de7a5e983bd339dda75017bc82",
+        "capabilities": [
+          "CAMERA_VIEWPORT_VISIBILITY_COMPOSITION",
+          "FRAME_SEQUENCE_AUTHORITY",
+          "ATOMIC_INTENT_OCCURRENCE_TRANSACTION",
+          "IMMUTABLE_RENDERER_HANDOFF"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1",
+        "path": "showroom/globe/h-earth/compositor.js"
+      },
+      {
+        "blob": "6720240473626f6589e1964b247436d46d5f6fb8",
+        "capabilities": [
+          "BOUNDED_CAMERA_STATE",
+          "PAN_TILT_ZOOM_RESET_FOCUS",
+          "SCENE_ROOT_TRANSFORMS",
+          "MOUNT_FOCUS_DESTROY_LIFECYCLE"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_3D_CONTROLLER_FILE_RENEWAL_STEP_034P_BOUNDED_GROUND_VIEW_CAMERA_AND_CONTROLLER_v1",
+        "path": "showroom/globe/h-earth/controller.js"
+      },
+      {
+        "blob": "799d37cec5244e6aa19b7d94dffe37e182b85884",
+        "capabilities": [
+          "FRAME_DERIVED_PROJECTION",
+          "NEAR_FAR_AND_VIEWPORT_FRUSTUM_CLIPPING",
+          "SCENE_MATERIALIZATION_EXTENT",
+          "MOUNT_APPLY_REPROJECT_DESTROY_LIFECYCLE"
+        ],
+        "commit": "3b21d30763ca0368110811351bb3d3c8a042af47",
+        "contract": "H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1",
+        "path": "showroom/globe/h-earth/renderer.js"
+      }
+    ],
+    "methods": [
+      {
+        "blob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+        "commit": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+        "path": "laws/research/methods-and-models/showroom.js",
+        "role": "CANONICAL_25_RECORD_CORPUS_WITH_PRACTICAL_ENGINEERING_EVIDENCE_FIELDS"
+      },
+      {
+        "blob": "1a86d2d43919678e8541fc35d95294f348cd1f44",
+        "commit": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+        "path": "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-core.mjs",
+        "role": "FAMILY_RECORD_LENS_IDENTITY_AND_NAVIGATION_INVARIANTS"
+      },
+      {
+        "blob": "377fe7c33e9ae1874076a4ddc862bfcc9f4a63b8",
+        "commit": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+        "path": "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-graph.mjs",
+        "role": "DEPENDENCY_EDGES_AND_EXPLICIT_NONEDGES"
+      },
+      {
+        "blob": "fcee869ce63a904b7303737af93fe75a1e4ef9b6",
+        "commit": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+        "path": "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-routing.mjs",
+        "role": "QUESTION_INTENT_ROUTES_AND_EVIDENCE_HOLDS"
+      },
+      {
+        "blob": "b5dc2fb9b0011d3c57b28c545a5bfbdf29f4f500",
+        "commit": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+        "path": "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/model-development.mjs",
+        "role": "DEVELOPMENTAL_FAILURE_AND_PRESERVATION_TRACE"
+      },
+      {
+        "blob": "95ee3b96874c0ef111e9fda2293712c69ec24f98",
+        "commit": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+        "path": "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate/state.mjs",
+        "role": "THIRTEEN_FIELD_EXACT_RETURN_AND_SHA256_RETURN_TOKEN_VERIFICATION"
+      },
+      {
+        "blob": "6214e6d43e34f4d5f91b4845cd6eb9bd39591920",
+        "commit": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+        "path": "control-plane/methods-information-benchmark/page-implementation-candidate-v1/candidate-package.v1.json",
+        "role": "NONVISUAL_PRODUCT_CONTRACT_SOURCE_AND_2044_VISUAL_EXCLUSION_BOUNDARY"
+      }
+    ]
+  },
+  "sourceIdentityRule": "EVERY_ADOPTED_CAPABILITY_IS_BOUND_TO_EXACT_COMMIT_AND_GIT_BLOB;MOVING_REFS_AND_UNBOUND_COPYING_ARE_PROHIBITED",
+  "status": "EXACT_SOURCE_IDENTITIES_BOUND"
+}

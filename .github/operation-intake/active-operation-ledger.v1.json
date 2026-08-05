@@ -1,5 +1,17 @@
 {
   "activeScopes": {
+    "214a46e0f56d7907a6872c2c9adfa22ec9d48256c0136e55d888e98f80de237a": {
+      "governingHead": "3d80989e4571e62a5b9997aa70b223c0678ee1d3",
+      "lockGeneration": 64,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROUTER_REGISTRATION/ADOPTION_TRANSLATION_PACKAGE_MATERIALIZATION/V1",
+      "operationId": "METHODS_INFORMATION_BENCHMARK_ROUTER_REGISTRATION_AND_ADOPTION_TRANSLATION_PACKAGE_MATERIALIZATION_v1",
+      "procedureLocatorDigest": "02fa6213dc3ee768ca2a73d692d0836c4b58c7245c3fcdbc35aca2d4e135f1d6",
+      "released": false,
+      "requestDigest": "b195da50070b2275246b40d72ae3e9ab804e4241fa82836552a1a610a0025c6a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "214a46e0f56d7907a6872c2c9adfa22ec9d48256c0136e55d888e98f80de237a",
+      "state": "ADMITTED_LOCKED"
+    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -88,7 +100,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 63,
+  "lockGeneration": 64,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

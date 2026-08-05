@@ -25,7 +25,7 @@ env:
   EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
   GENESIS_BASE: 56b6ab1f192aec994af0c537dd7c9dad1be14d7f
   GENESIS_HEAD: 1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500
-  GENESIS_TREE: 7fa3fb262f24bebd3425a05e67ec16a430defcf5
+  GENESIS_TREE: 476c1ef4d7e81db57b0f763d6a94f475ea317d1c
   GENESIS_MANIFEST_BLOB: 12f433ab0031c2f77b93362408be4503fce1d0e0
 
 jobs:

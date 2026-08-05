@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "IMI_STUDY_RECEIPT_SCHEMA_v1",
+  "requiredTopLevelFields": [
+    "schemaVersion",
+    "engine",
+    "studyMeta",
+    "datasetMeta",
+    "routeIdentity",
+    "formulas",
+    "summary",
+    "caseResultCount",
+    "generatedAt",
+    "limitations",
+    "nextValidationStep"
+  ],
+  "summaryFields": [
+    "totalCases",
+    "validCases",
+    "unevaluableCases",
+    "validPercent",
+    "unevaluablePercent",
+    "hardCollapseCases",
+    "terminalLockedCases",
+    "ordinalDistribution",
+    "imiSummary",
+    "csSummary",
+    "wmiSummary",
+    "additiveMeanSummary",
+    "weakestFactorCounts",
+    "outcomeComparators"
+  ],
+  "law": "Every study run must produce both mathematics and an empirical evidence receipt."
+}

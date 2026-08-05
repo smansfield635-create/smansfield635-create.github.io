@@ -1,0 +1,37 @@
+{
+  "routeId": "DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_ROUTE_v1",
+  "routeVersion": "1.0.0-confirmatory-style-expansion",
+  "domain": "sovereign_debt_service_schedule_dispersion",
+  "caseIdField": "country_code",
+  "frozenBeforeRun": true,
+  "requiredFactors": [
+    {
+      "factorId": "INTEREST_DISPERSION_AVAILABILITY",
+      "label": "Normalized monthly interest-payment dispersion availability",
+      "normalizer": {
+        "type": "direct_availability",
+        "field": "a_interest_dispersion"
+      }
+    },
+    {
+      "factorId": "PRINCIPAL_DISPERSION_AVAILABILITY",
+      "label": "Normalized monthly principal-payment dispersion availability",
+      "normalizer": {
+        "type": "direct_availability",
+        "field": "a_principal_dispersion"
+      }
+    }
+  ],
+  "terminalLock": {
+    "type": "none"
+  },
+  "outcomeFields": [],
+  "limitations": [
+    "Confirmatory-style expansion, not final validation.",
+    "Uses World Bank DSSI monthly debt-service pages retrievable at execution time.",
+    "Route measures schedule dispersion of 2025 monthly interest and principal obligations, not solvency or default risk.",
+    "Countries without a complete retrievable 2025 Total row are UNEVALUABLE / not admitted to numeric route result.",
+    "No IMI-7 terminal lock is assigned from payment-schedule dispersion alone."
+  ],
+  "nextValidationStep": "Compare expanded retrievable cohort against the earlier 14-country DSSI bootstrap and then add solvency/outcome variables only under a separate route."
+}

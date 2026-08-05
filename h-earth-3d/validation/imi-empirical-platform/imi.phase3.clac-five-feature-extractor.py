@@ -338,7 +338,7 @@ def ppl_mode(package_path: Path, output_path: Path, model_path: Path, clock: str
             "representation": "Q5_K_M",
             "path": str(model_path),
             "sha256": model_digest,
-            "fullPrecisionEquivalenceClaimed": false
+            "fullPrecisionEquivalenceClaimed": False
         },
         "rows": rows,
     })

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "IMI_DSSI_PHASE_CONSOLIDATION_RECEIPT_v1",
+  "result": "PASS_CLOSED_DSSI_PARTIAL_ALL_COUNTRY_EXPANSION_PHASE_CONSOLIDATED",
+  "phaseId": "DSSI_PARTIAL_ALL_COUNTRY_EXPANSION_2026_PHASE_v1",
+  "createdAt": "2026-08-05T16:27:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pullRequest": 589,
+  "branch": "instrument/imi-empirical-platform-v1",
+  "runId": "IMI_DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_v1",
+  "consolidationClass": "MINIMAL_PHASE_CONSOLIDATION_BEFORE_NEXT_DOMAIN",
+  "decision": {
+    "dssiPhaseClosedForPortfolioPurposes": true,
+    "allCountryCompletionClosed": false,
+    "moveToNextDomainAuthorizedByEvidencePosture": true,
+    "dssiContinuationTrackPreserved": true
+  },
+  "consolidatedDssiState": {
+    "candidateCountryCount": 70,
+    "expectedRetrievableCountryTarget": 68,
+    "segmentsPlanned": 7,
+    "segmentsAdmitted": 7,
+    "validCountryRows": 32,
+    "unevaluableCases": 0,
+    "hardCollapseCases": 0,
+    "meanIMI": 0.7626088136606457,
+    "medianIMI": 0.8182579600697106,
+    "minIMI": 0.37064439627459067,
+    "maxIMI": 0.9666971859477349,
+    "meanAdditive": 0.8701142297210668,
+    "weakestFactorCounts": {
+      "PRINCIPAL_DISPERSION_AVAILABILITY": 20,
+      "INTEREST_DISPERSION_AVAILABILITY": 12
+    }
+  },
+  "allowedClaim": "DSSI route is branch-operational and empirically run on 32 admitted World Bank DSSI country rows through a segmented web-extracted source package.",
+  "notClaimed": [
+    "complete World Bank DSSI census",
+    "complete 68-country retrievable target",
+    "solvency prediction",
+    "default prediction",
+    "terminal IMI-7 assignment",
+    "final validation",
+    "main-branch admission",
+    "live website operation"
+  ],
+  "supportingRepositoryEvidence": {
+    "summaryReceipt": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_v1/dssi-expansion-summary.v1.json",
+    "sourcePackageManifest": "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/dssi-source-package-manifest.v1.json",
+    "segmentDirectory": "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments",
+    "runner": "h-earth-3d/validation/imi-empirical-platform/imi.dssi-sovereign-debt-service-expansion-2026.runner.mjs"
+  },
+  "nextRecommendedOperation": {
+    "operation": "OPEN_FOURTH_DOMAIN_CURRENT_DATA_RUN",
+    "reason": "Additional DSSI rows would improve within-domain coverage, but a fourth domain tests cross-domain portability and is now higher marginal value.",
+    "minimumRequirements": [
+      "current public source or admitted uploaded source",
+      "clear route-specific required factors",
+      "enough rows for a nontrivial numeric run",
+      "explicit missingness discipline",
+      "outcome or comparator field if available",
+      "no final-validation claim unless independently warranted"
+    ]
+  },
+  "boundaries": {
+    "minimalConsolidationOnly": true,
+    "portfolioInterpretationAllowed": true,
+    "fullResearchSynthesisNotYetPerformed": true,
+    "dssiAllCountryExtractionComplete": false,
+    "mainMerged": false,
+    "liveWebsiteOperational": false,
+    "finalValidationClaimed": false
+  }
+}

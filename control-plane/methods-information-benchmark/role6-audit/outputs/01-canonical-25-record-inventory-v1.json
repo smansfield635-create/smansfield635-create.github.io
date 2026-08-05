@@ -1,0 +1,294 @@
+{
+  "schema": "CANONICAL_25_RECORD_INVENTORY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "inventoryStatus": "COMPLETE_EXACT_CORPUS_IDENTITY_WITH_SEMANTIC_EXTRACTION",
+  "interpretiveLenses": [
+    "practical",
+    "engineering",
+    "evidence"
+  ],
+  "families": [
+    {
+      "id": "structure",
+      "label": "Structural Envelope",
+      "recordIds": [
+        "envelope-451",
+        "gate-448",
+        "spine-minimum",
+        "collapse-qualified",
+        "membrane-61",
+        "anchors-9"
+      ]
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure / Capacity",
+      "recordIds": [
+        "pressure-field",
+        "capacity-field",
+        "pcr",
+        "stability",
+        "hazard",
+        "complement",
+        "zero-aware"
+      ]
+    },
+    {
+      "id": "closure",
+      "label": "Closure / Flow",
+      "recordIds": [
+        "mass-ledger",
+        "residual-u",
+        "closure-threshold",
+        "energy-loop",
+        "useful-output"
+      ]
+    },
+    {
+      "id": "method",
+      "label": "Method / Falsification",
+      "recordIds": [
+        "first",
+        "integral-method",
+        "diagnostic-five",
+        "abcd",
+        "falsification",
+        "no-match",
+        "fixtures"
+      ]
+    }
+  ],
+  "records": [
+    {
+      "id": "envelope-451",
+      "title": "451 Structural Envelope",
+      "family": "structure",
+      "familyLabel": "Structural Envelope",
+      "equation": "451 = 256 + 192 + 3",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "gate-448",
+      "title": "448 Saturation Gate",
+      "family": "structure",
+      "familyLabel": "Structural Envelope",
+      "equation": "448 = 256 + 192",
+      "sourceState": "hold"
+    },
+    {
+      "id": "spine-minimum",
+      "title": "E / I / V Minimum Principle",
+      "family": "structure",
+      "familyLabel": "Structural Envelope",
+      "equation": "W_d = min(E_d, I_d, V_d)",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "collapse-qualified",
+      "title": "Qualified Collapse Predicate",
+      "family": "structure",
+      "familyLabel": "Structural Envelope",
+      "equation": "CollapseQualified_d = (B256_d >= 256) AND (P192_d >= 192) AND (min(E_d,I_d,V_d) <= epsilon_d)",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "membrane-61",
+      "title": "61 Admissibility Membrane",
+      "family": "structure",
+      "familyLabel": "Structural Envelope",
+      "equation": "61 not-in 451",
+      "sourceState": "hold"
+    },
+    {
+      "id": "anchors-9",
+      "title": "Nine Basin Anchors",
+      "family": "structure",
+      "familyLabel": "Structural Envelope",
+      "equation": "9 not-in 451",
+      "sourceState": "hold"
+    },
+    {
+      "id": "pressure-field",
+      "title": "Pressure Field",
+      "family": "pressure",
+      "familyLabel": "Pressure / Capacity",
+      "equation": "Pi = G * X",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "capacity-field",
+      "title": "Usable Capacity",
+      "family": "pressure",
+      "familyLabel": "Pressure / Capacity",
+      "equation": "K = P * R * A * C",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "pcr",
+      "title": "Pressure-to-Capacity Ratio",
+      "family": "pressure",
+      "familyLabel": "Pressure / Capacity",
+      "equation": "PCR = Pi / max(K, epsilon_K)",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "stability",
+      "title": "Stability Complement",
+      "family": "pressure",
+      "familyLabel": "Pressure / Capacity",
+      "equation": "S* = 1 / (1 + PCR)",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "hazard",
+      "title": "Hazard Complement",
+      "family": "pressure",
+      "familyLabel": "Pressure / Capacity",
+      "equation": "H* = PCR / (1 + PCR)",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "complement",
+      "title": "Stability-Hazard Identity",
+      "family": "pressure",
+      "familyLabel": "Pressure / Capacity",
+      "equation": "S* + H* = 1",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "zero-aware",
+      "title": "Zero-Aware Multiplication",
+      "family": "pressure",
+      "familyLabel": "Pressure / Capacity",
+      "equation": "required zero => product = 0",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "mass-ledger",
+      "title": "Industrial Closure Equation",
+      "family": "closure",
+      "familyLabel": "Closure / Flow",
+      "equation": "M_in = M_out + M_dest + DeltaM_inv +/- epsilon",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "residual-u",
+      "title": "Unaccounted Residual",
+      "family": "closure",
+      "familyLabel": "Closure / Flow",
+      "equation": "U = M_in - (M_out + M_dest + DeltaM_inv)",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "closure-threshold",
+      "title": "Closure Threshold",
+      "family": "closure",
+      "familyLabel": "Closure / Flow",
+      "equation": "Closed if |U| <= 3epsilon; Open if |U| > 3epsilon",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "energy-loop",
+      "title": "Energy Loop Law",
+      "family": "closure",
+      "familyLabel": "Closure / Flow",
+      "equation": "Storage -> Release -> Operate -> Recover -> Storage",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "useful-output",
+      "title": "Useful Output Condition",
+      "family": "closure",
+      "familyLabel": "Closure / Flow",
+      "equation": "Useful_Output >= Total_Input + Losses + Reset_Costs",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "first",
+      "title": "F.I.R.S.T. Research Method",
+      "family": "method",
+      "familyLabel": "Method / Falsification",
+      "equation": "Flow -> Integrity -> Reality -> Structure -> Test",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "integral-method",
+      "title": "Integral Scientific Method",
+      "family": "method",
+      "familyLabel": "Method / Falsification",
+      "equation": "Observe -> Reduce -> Falsify -> Iterate -> Terminate -> Compress",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "diagnostic-five",
+      "title": "Five-Diagnostic Classification Set",
+      "family": "method",
+      "familyLabel": "Method / Falsification",
+      "equation": "C.A.D. ; C.T.D. ; C.F.D. ; I.M.D. ; T.D.",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "abcd",
+      "title": "A-B-C-D Diagnostic Procedure",
+      "family": "method",
+      "familyLabel": "Method / Falsification",
+      "equation": "A -> B -> C -> D",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "falsification",
+      "title": "Formal Falsification Path",
+      "family": "method",
+      "familyLabel": "Method / Falsification",
+      "equation": "Define -> Measure -> Freeze -> Score -> Compare",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "no-match",
+      "title": "No-Match Discipline",
+      "family": "method",
+      "familyLabel": "Method / Falsification",
+      "equation": "No match => no consumption",
+      "sourceState": "confirmed"
+    },
+    {
+      "id": "fixtures",
+      "title": "Synthetic Fixtures",
+      "family": "method",
+      "familyLabel": "Method / Falsification",
+      "equation": "Fixture pass != empirical validation",
+      "sourceState": "confirmed"
+    }
+  ],
+  "counts": {
+    "families": 4,
+    "records": 25,
+    "lenses": 3,
+    "sourceConfirmed": 22,
+    "sourceHold": 3
+  },
+  "claimBoundary": "INVENTORY_AND_SOURCE_IDENTITY_ONLY_NOT_EMPIRICAL_VALIDATION_OR_GOVERNANCE_ADOPTION"
+}

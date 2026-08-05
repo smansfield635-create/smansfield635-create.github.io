@@ -1,0 +1,154 @@
+{
+  "schema": "INVOCATION_CONDITION_REGISTRY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "conditions": [
+    {
+      "recordId": "envelope-451",
+      "invokeWhen": "WHEN_THE_COMPLETE_DECLARED_STRUCTURAL_MEASUREMENT_ENVELOPE_MUST_BE_DESCRIBED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "gate-448",
+      "invokeWhen": "WHEN_EXACT_INTERNAL_PLUS_EXTERNAL_SATURATION_IS_BEING_DISTINGUISHED_FROM_SPINE_FAILURE",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "spine-minimum",
+      "invokeWhen": "WHEN_REQUIRED_AXIS_FAILURE_MUST_REMAIN_NONCOMPENSATORY",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "collapse-qualified",
+      "invokeWhen": "WHEN_ALL_COLLAPSE_QUALIFICATION_CLAUSES_ARE_FROZEN_AND_EVALUATED_AT_ONE_STATE",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "membrane-61",
+      "invokeWhen": "WHEN_ADMISSIBILITY_OF_A_SOURCE_MAPPING_THRESHOLD_OR_CLAIM_MUST_BE_DECIDED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "anchors-9",
+      "invokeWhen": "WHEN_BASIN_ORIENTATION_IS_REQUIRED_WITHOUT_CHANGING_THE_COLLAPSE_SUM",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "pressure-field",
+      "invokeWhen": "WHEN_ALL_REQUIRED_PRESSURE_FACTORS_ARE_ADMITTED_AND_NORMALIZED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "capacity-field",
+      "invokeWhen": "WHEN_ALL_REQUIRED_CAPACITY_FACTORS_ARE_ADMITTED_AND_NORMALIZED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "pcr",
+      "invokeWhen": "WHEN_PRESSURE_AND_CAPACITY_ARE_AVAILABLE_AND_EPSILON_K_IS_FROZEN",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "stability",
+      "invokeWhen": "WHEN_A_BOUNDED_STABILITY_VIEW_OF_PCR_IS_REQUIRED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "hazard",
+      "invokeWhen": "WHEN_A_BOUNDED_HAZARD_VIEW_OF_PCR_IS_REQUIRED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "complement",
+      "invokeWhen": "WHEN_ARITHMETIC_CONSISTENCY_OF_STABILITY_AND_HAZARD_MUST_BE_TESTED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "zero-aware",
+      "invokeWhen": "BEFORE_ANY_LOG_DOMAIN_PRODUCT_IMPLEMENTATION_OR_ZERO_SENSITIVE_AGGREGATION",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "mass-ledger",
+      "invokeWhen": "WHEN_ADMITTED_MASS_DISPOSITION_MUST_BE_RECONCILED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "residual-u",
+      "invokeWhen": "AFTER_COMMON_BASIS_LEDGER_TERMS_ARE_FROZEN",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "closure-threshold",
+      "invokeWhen": "AFTER_U_AND_EPSILON_ARE_FROZEN",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "energy-loop",
+      "invokeWhen": "WHEN_LOOP_COMPLETENESS_AND_RETURN_TO_STORAGE_ARE_BEING_ASSESSED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "useful-output",
+      "invokeWhen": "WHEN_FULL_LOOP_INPUT_LOSS_AND_RESET_COSTS_SHARE_ONE_ACCOUNTING_BOUNDARY",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "first",
+      "invokeWhen": "WHEN_A_RESEARCH_QUESTION_REQUIRES_FLOW_INTEGRITY_REALITY_STRUCTURE_AND_TEST_REVIEW",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "integral-method",
+      "invokeWhen": "WHEN_A_CLAIM_MUST_BE_REDUCED_FALSIFIED_ITERATED_AND_TERMINATED_OBJECTIVELY",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "diagnostic-five",
+      "invokeWhen": "WHEN_THE_FIVE_FROZEN_DIAGNOSTIC_LENSES_HAVE_APPLICABLE_RULES_AND_EVIDENCE",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "abcd",
+      "invokeWhen": "WHEN_ORDERED_INTERNAL_COHERENCE_CONSTRAINT_FRAGMENTATION_AND_TRAJECTORY_REVIEW_IS_REQUIRED",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "falsification",
+      "invokeWhen": "WHEN_A_TRAJECTORY_OR_NARROWING_CLAIM_IS_READY_FOR_PRE_FROZEN_DISCONFIRMATION",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "no-match",
+      "invokeWhen": "BEFORE_CONSUMING_EVIDENCE_THAT_MAY_NOT_SATISFY_APPLICABILITY_CONDITIONS",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    },
+    {
+      "recordId": "fixtures",
+      "invokeWhen": "WHEN_DETERMINISTIC_CONTRACT_BEHAVIOR_MUST_BE_TESTED_WITHOUT_EMPIRICAL_PROMOTION",
+      "doNotInvokeAs": "UNIVERSAL_DEFAULT_OR_POST_HOC_JUSTIFICATION"
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "schema": "INDEPENDENCE_CLASSIFICATION_REGISTRY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "classifications": [
+    {
+      "recordId": "envelope-451",
+      "independenceClass": "ARCHITECTURAL_ROOT",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "gate-448",
+      "independenceClass": "DERIVED_SUBSTRUCTURE",
+      "independentOfVisualPresentation": true,
+      "notes": "SOURCE_HOLD_LIMITS_EXACT_SEMANTICS"
+    },
+    {
+      "recordId": "spine-minimum",
+      "independenceClass": "INDEPENDENT_KERNEL",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "collapse-qualified",
+      "independenceClass": "DERIVED_PREDICATE",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "membrane-61",
+      "independenceClass": "EXTERNAL_GOVERNANCE_ARCHITECTURE",
+      "independentOfVisualPresentation": true,
+      "notes": "SOURCE_HOLD_LIMITS_EXACT_SEMANTICS"
+    },
+    {
+      "recordId": "anchors-9",
+      "independenceClass": "EXTERNAL_ORIENTATION_ARCHITECTURE",
+      "independentOfVisualPresentation": true,
+      "notes": "SOURCE_HOLD_LIMITS_EXACT_SEMANTICS"
+    },
+    {
+      "recordId": "pressure-field",
+      "independenceClass": "INDEPENDENT_KERNEL",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "capacity-field",
+      "independenceClass": "INDEPENDENT_KERNEL",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "pcr",
+      "independenceClass": "DERIVED_TRANSFORM",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "stability",
+      "independenceClass": "DERIVED_COMPLEMENTARY_VIEW",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "hazard",
+      "independenceClass": "DERIVED_COMPLEMENTARY_VIEW",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "complement",
+      "independenceClass": "DERIVED_INVARIANT",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "zero-aware",
+      "independenceClass": "CROSS_KERNEL_GOVERNING_RULE",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "mass-ledger",
+      "independenceClass": "INDEPENDENT_KERNEL",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "residual-u",
+      "independenceClass": "DERIVED_TRANSFORM",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "closure-threshold",
+      "independenceClass": "DERIVED_CLASSIFIER",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "energy-loop",
+      "independenceClass": "INDEPENDENT_PROCEDURAL_RULE",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "useful-output",
+      "independenceClass": "CYCLE_CONSTRAINT",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "first",
+      "independenceClass": "INDEPENDENT_PROCEDURAL_FRAMEWORK",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "integral-method",
+      "independenceClass": "INDEPENDENT_PROCEDURAL_FRAMEWORK",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "diagnostic-five",
+      "independenceClass": "INDEPENDENT_CLASSIFICATION_FRAMEWORK",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "abcd",
+      "independenceClass": "INDEPENDENT_PROCEDURAL_FRAMEWORK_WITH_CONCEPTUAL_OVERLAP",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "falsification",
+      "independenceClass": "INDEPENDENT_TEST_PROTOCOL",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "no-match",
+      "independenceClass": "CROSS_SYSTEM_GOVERNING_RULE",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    },
+    {
+      "recordId": "fixtures",
+      "independenceClass": "INDEPENDENT_TEST_ARTIFACT_CLASS",
+      "independentOfVisualPresentation": true,
+      "notes": null
+    }
+  ],
+  "governingDistinction": "INDEPENDENT_RECORD_DOES_NOT_MEAN_UNRELATED_RECORD; DERIVED_RECORD_DOES_NOT_MEAN_DISPOSABLE"
+}

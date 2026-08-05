@@ -1,0 +1,297 @@
+{
+  "schema": "BASELINE_TO_SUCCESSOR_REQUIREMENT_TRACE_REGISTRY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "traces": [
+    {
+      "requirementId": "SR-001",
+      "sourceBaselineElements": [
+        "25_RECORD_CORPUS"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "FORMAL_TYPE_EACH_RECORD_BEFORE_VISUAL_ASSEMBLY",
+      "validationEvidenceRequired": "FORMAL_TYPE_REGISTRY_AND_GOVERNANCE_REVIEW"
+    },
+    {
+      "requirementId": "SR-002",
+      "sourceBaselineElements": [
+        "25_RECORD_CORPUS",
+        "FOUR_FAMILY_ORGANIZATION"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "FREEZE_DEPENDENCY_GRAPH_WITH_EXPLICIT_NONEDGES_AND_HOLDS",
+      "validationEvidenceRequired": "GRAPH_REPRODUCTION_AND_GOVERNANCE_ADOPTION"
+    },
+    {
+      "requirementId": "SR-003",
+      "sourceBaselineElements": [
+        "DIRECT_RECORD_SELECTION"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "SUPPORT_DIRECT_MANIPULATION_INQUIRY_ASSEMBLY",
+      "validationEvidenceRequired": "HELD_OUT_USER_TASK_COMPLETION_AND_STATE_RECEIPTS"
+    },
+    {
+      "requirementId": "SR-004",
+      "sourceBaselineElements": [
+        "INSPECTION_DIALOG"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "INSPECT_ASSEMBLED_CHAIN_WITH_NEIGHBOR_CONTEXT",
+      "validationEvidenceRequired": "TASK_AND_ACCESSIBILITY_EVIDENCE"
+    },
+    {
+      "requirementId": "SR-005",
+      "sourceBaselineElements": [
+        "SIMULATED_DEPTH",
+        "CAMERA_AND_STAGE_TOKENS"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "IMPLEMENT_TRUE_SPATIAL_RELATION_OR_EXPLICITLY_DECLARED_EQUIVALENT",
+      "validationEvidenceRequired": "CAMERA_PARALLAX_OCCLUSION_TRANSITION_AND_RETURN_TESTS"
+    },
+    {
+      "requirementId": "SR-006",
+      "sourceBaselineElements": [
+        "RETURN_MECHANISM"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "PROVE_EXACT_RETURN_TO_PRIOR_CORPUS_STATE",
+      "validationEvidenceRequired": "BYTE_OR_STATE_FINGERPRINT_REPLAY"
+    },
+    {
+      "requirementId": "SR-007",
+      "sourceBaselineElements": [
+        "RESPONSIVE_BEHAVIOR"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "PRESERVE_CAPABILITY_STATE_AND_RESULT_ACROSS_PHONE_TABLET_DESKTOP",
+      "validationEvidenceRequired": "DEVICE_MATRIX_CONFORMANCE"
+    },
+    {
+      "requirementId": "SR-008",
+      "sourceBaselineElements": [
+        "NO_MATCH_DISCIPLINE"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "HOLD_UNMATCHED_INQUIRIES_AND_EVIDENCE_WITH_REASON",
+      "validationEvidenceRequired": "NEGATIVE_FIXTURES_AND_REAL_NO_MATCH_CASES"
+    },
+    {
+      "requirementId": "SR-009",
+      "sourceBaselineElements": [
+        "THREE_ANCHORS"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "BIND_USER_ORIGIN_TROPHY_AND_COMPASS_WITH_FORMAL_TRUTH_PRECEDENCE",
+      "validationEvidenceRequired": "VERSIONED_BINDING_RECEIPTS"
+    },
+    {
+      "requirementId": "SR-010",
+      "sourceBaselineElements": [
+        "GOVERNANCE_INFRASTRUCTURE"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "REQUIRE_ROLE_ASSIGNMENT_INDEPENDENT_VERIFICATION_RETURN_AND_TERMINATION",
+      "validationEvidenceRequired": "REPOSITORY_RECEIPTS_AND_FRESH_REPRODUCTION"
+    },
+    {
+      "requirementId": "SR-011",
+      "sourceBaselineElements": [
+        "TROPHY_STANDARD"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "RESEARCH_CURRENT_CATEGORIES_ONLY_AFTER_REQUIREMENTS_FREEZE",
+      "validationEvidenceRequired": "DATED_PRIMARY_SOURCE_RESEARCH_AND_CROSSWALK"
+    },
+    {
+      "requirementId": "SR-012",
+      "sourceBaselineElements": [
+        "BENCHMARK_COMPASS"
+      ],
+      "originalAttemptedFunction": "SEE_CROSSWALK_AND_USER_ORIGIN",
+      "implementationHypothesis": "BASELINE_MECHANISM_OR_DECLARED_SUCCESSOR_MECHANISM",
+      "observedResult": "BASELINE_DID_NOT_FULLY_SATISFY_THE_DECLARED_FUNCTION",
+      "failureOrLimit": "CLASSIFIED_IN_FAILURE_REGISTRY_OR_HOLD_REGISTER",
+      "causalConfidence": "STRONGLY_SUPPORTED_OR_HELD_AS_SPECIFIED",
+      "retainedValue": "PRESERVE_CORPUS_CONTEXT_AND_GOVERNANCE_VALUE",
+      "newProjectUnderstanding": "FORMAL_RELATIONS_AND_CAPABILITIES_PRECEDE_PRESENTATION",
+      "threeAnchorRelevance": [
+        "FORMAL_TRUTH",
+        "USER_COGNITIVE_ORIGIN",
+        "TROPHY_STANDARD",
+        "BENCHMARK_COMPASS"
+      ],
+      "formalTruthRelevance": "NO_FALSE_RELATION_OR_SILENT_DEPENDENCY",
+      "successorRequirement": "REGISTER_METHODS_AND_EXECUTE_CONFORMANCE_BEFORE_SCORING",
+      "validationEvidenceRequired": "REGISTRATION_AND_TEST_RECEIPTS"
+    }
+  ],
+  "traceFieldSetComplete": true,
+  "externalConstraintWithoutBaselineTraceCount": 0
+}

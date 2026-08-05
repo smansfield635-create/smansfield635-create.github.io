@@ -1,0 +1,66 @@
+{
+  "schema": "PHONE_TABLET_DESKTOP_EQUIVALENCE_REQUIREMENTS_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "equivalenceDefinition": "CAPABILITY_STATE_AND_RESULT_EQUIVALENCE_NOT_PIXEL_IDENTITY",
+  "requirements": [
+    {
+      "requirementId": "DEV-001",
+      "requirement": "SAME_25_RECORD_SEMANTIC_CORPUS_AND_FORMAL_GRAPH"
+    },
+    {
+      "requirementId": "DEV-002",
+      "requirement": "SAME_INQUIRY_ASSEMBLY_CAPABILITY"
+    },
+    {
+      "requirementId": "DEV-003",
+      "requirement": "SAME_SELECTION_COMBINATION_FOREGROUNDING_AND_INSPECTION_LOGIC"
+    },
+    {
+      "requirementId": "DEV-004",
+      "requirement": "SAME_EXACT_RETURN_AND_STATE_REPLAY_OUTCOME"
+    },
+    {
+      "requirementId": "DEV-005",
+      "requirement": "LAYOUT_MAY_DIFFER_BUT_CAPABILITY_AND_RESULT_MAY_NOT_DEGRADE_SILENTLY"
+    },
+    {
+      "requirementId": "DEV-006",
+      "requirement": "KEYBOARD_TOUCH_POINTER_AND_ASSISTIVE_INPUT_HAVE_DECLARED_EQUIVALENTS"
+    },
+    {
+      "requirementId": "DEV-007",
+      "requirement": "DEVICE_SPECIFIC_PERFORMANCE_AND_DENSITY_BOUNDS_ARE_TESTED"
+    }
+  ],
+  "requiredTestMatrix": [
+    "PHONE_PORTRAIT",
+    "PHONE_LANDSCAPE",
+    "TABLET_PORTRAIT",
+    "TABLET_LANDSCAPE",
+    "DESKTOP_STANDARD",
+    "DESKTOP_WIDE"
+  ]
+}

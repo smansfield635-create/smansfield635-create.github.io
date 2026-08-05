@@ -1,0 +1,181 @@
+{
+  "schema": "FORMAL_TYPE_ASSIGNMENT_REGISTRY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "classificationStatus": "COMPLETE_WITH_THREE_SOURCE_HOLD_RECORDS_RETAINED",
+  "assignments": [
+    {
+      "recordId": "envelope-451",
+      "formalType": "STRUCTURAL_CARDINALITY_IDENTITY",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "gate-448",
+      "formalType": "SATURATION_CARDINALITY_IDENTITY",
+      "sourceState": "hold",
+      "assignmentConfidence": "HELD_SOURCE_SEMANTICS"
+    },
+    {
+      "recordId": "spine-minimum",
+      "formalType": "NONCOMPENSATORY_MINIMUM_OPERATOR",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "collapse-qualified",
+      "formalType": "CONJUNCTIVE_BOOLEAN_PREDICATE",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "membrane-61",
+      "formalType": "SET_EXCLUSION_AND_ADMISSION_BOUNDARY",
+      "sourceState": "hold",
+      "assignmentConfidence": "HELD_SOURCE_SEMANTICS"
+    },
+    {
+      "recordId": "anchors-9",
+      "formalType": "SET_EXCLUSION_AND_ORIENTATION_ARCHITECTURE",
+      "sourceState": "hold",
+      "assignmentConfidence": "HELD_SOURCE_SEMANTICS"
+    },
+    {
+      "recordId": "pressure-field",
+      "formalType": "MULTIPLICATIVE_KERNEL",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "capacity-field",
+      "formalType": "MULTIPLICATIVE_KERNEL",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "pcr",
+      "formalType": "PROTECTED_RATIO_TRANSFORM",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "stability",
+      "formalType": "BOUNDED_MONOTONE_TRANSFORM",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "hazard",
+      "formalType": "BOUNDED_MONOTONE_TRANSFORM",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "complement",
+      "formalType": "COMPLEMENT_IDENTITY",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "zero-aware",
+      "formalType": "NUMERICAL_SEMANTIC_RULE",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "mass-ledger",
+      "formalType": "CONSERVATION_BALANCE",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "residual-u",
+      "formalType": "DERIVED_RESIDUAL",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "closure-threshold",
+      "formalType": "THRESHOLD_CLASSIFIER",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "energy-loop",
+      "formalType": "PROCEDURAL_CYCLE",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "useful-output",
+      "formalType": "ACCOUNTING_INEQUALITY",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "first",
+      "formalType": "ORDERED_RESEARCH_ORIENTATION",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "integral-method",
+      "formalType": "ORDERED_FALSIFICATION_METHOD",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "diagnostic-five",
+      "formalType": "FIXED_DIAGNOSTIC_SET",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "abcd",
+      "formalType": "ORDERED_DIAGNOSTIC_PROCEDURE",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "falsification",
+      "formalType": "FALSIFICATION_PROTOCOL",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "no-match",
+      "formalType": "EPISTEMIC_ADMISSION_RULE",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    },
+    {
+      "recordId": "fixtures",
+      "formalType": "TEST_EVIDENCE_BOUNDARY",
+      "sourceState": "confirmed",
+      "assignmentConfidence": "STRONGLY_SUPPORTED_BY_DECLARED_EQUATION_AND_OPERATION"
+    }
+  ],
+  "typeAssignmentsAre": "ROLE_6_CANDIDATE_CLASSIFICATIONS_PENDING_GOVERNANCE"
+}

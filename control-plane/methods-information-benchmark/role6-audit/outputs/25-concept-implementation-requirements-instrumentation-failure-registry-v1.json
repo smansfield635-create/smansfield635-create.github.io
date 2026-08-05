@@ -1,0 +1,87 @@
+{
+  "schema": "CONCEPT_IMPLEMENTATION_REQUIREMENTS_INSTRUMENTATION_FAILURE_REGISTRY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "failures": [
+    {
+      "failureId": "DIV-1",
+      "finding": "VISUAL_ORGANIZATION_PRECEDED_FORMAL_DEPENDENCY_FREEZE",
+      "failureClass": "REQUIREMENTS_FAILURE",
+      "causalConfidence": "STRONGLY_SUPPORTED",
+      "boundary": "NO_CONCEPT_FAILURE_CLAIM"
+    },
+    {
+      "failureId": "DIV-2",
+      "finding": "CSS_LAYOUT_AND_DEPTH_STYLING_USED_WHERE_TRUE_SCENE_AND_CAMERA_BEHAVIOR_WERE_REQUIRED",
+      "failureClass": "IMPLEMENTATION_FAILURE",
+      "causalConfidence": "STRONGLY_SUPPORTED",
+      "boundary": "TRUE_3D_ALONE_NOT_PROVEN_SUFFICIENT"
+    },
+    {
+      "failureId": "DIV-3",
+      "finding": "RECORDS_PRESENTED_AS_NEAR_PEERS_BEFORE_DERIVATION_AND_DEPENDENCY_CLASSES",
+      "failureClass": "REQUIREMENTS_FAILURE",
+      "causalConfidence": "STRONGLY_SUPPORTED",
+      "boundary": "EXACT_RELATION_ERRORS_NOT_ALL_PROVEN"
+    },
+    {
+      "failureId": "DIV-4",
+      "finding": "SELECTION_AND_NAVIGATION_NOT_EQUIVALENT_TO_INQUIRY_ASSEMBLY",
+      "failureClass": "IMPLEMENTATION_FAILURE",
+      "causalConfidence": "DIRECTLY_OBSERVED",
+      "boundary": "UNDERLYING_DIRECT_MANIPULATION_CONCEPT_RETAINED"
+    },
+    {
+      "failureId": "DIV-5",
+      "finding": "RESPONSIVE_REARRANGEMENT_DID_NOT_PRESERVE_SAME_SPATIAL_LIFECYCLE",
+      "failureClass": "REQUIREMENTS_FAILURE",
+      "causalConfidence": "DIRECTLY_OBSERVED",
+      "boundary": "DEVICE_SPECIFIC_CAUSES_NOT_FULLY_RESOLVED"
+    },
+    {
+      "failureId": "DIV-6",
+      "finding": "FOREGROUNDING_DID_NOT_PROVE_GOVERNED_CHAIN_RESOLUTION_FROM_USER_INTENT",
+      "failureClass": "INSTRUMENTATION_FAILURE",
+      "causalConfidence": "STRONGLY_SUPPORTED",
+      "boundary": "CHAIN_RESOLVER_NOT_EMPIRICALLY_DEMONSTRATED"
+    },
+    {
+      "failureId": "DIV-7",
+      "finding": "TROPHY_AND_COMPASS_REQUIREMENTS_NOT_PRECONSTRUCTION_INPUTS",
+      "failureClass": "REQUIREMENTS_FAILURE",
+      "causalConfidence": "DIRECTLY_OBSERVED",
+      "boundary": "EXTERNAL_REQUIREMENTS_STILL_UNBOUND"
+    },
+    {
+      "failureId": "DIV-8",
+      "finding": "INITIAL_LACK_OF_REPOSITORY_CONTROLLED_ROLE_ASSIGNMENT_VERIFICATION_AND_SUCCESSION",
+      "failureClass": "GOVERNANCE_FAILURE",
+      "causalConfidence": "DIRECTLY_OBSERVED",
+      "boundary": "LATER_INFRASTRUCTURE_MATERIALLY_REPAIRED"
+    }
+  ],
+  "conceptFailureFindings": [],
+  "rule": "CONCEPT_FAILURE_IS_NOT_ASSIGNED_WITHOUT_EVIDENCE_DISTINGUISHING_IT_FROM_IMPLEMENTATION_REQUIREMENTS_AND_INSTRUMENTATION"
+}

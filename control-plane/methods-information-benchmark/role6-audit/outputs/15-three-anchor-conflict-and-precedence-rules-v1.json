@@ -1,0 +1,67 @@
+{
+  "schema": "THREE_ANCHOR_CONFLICT_AND_PRECEDENCE_RULES_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "precedence": [
+    {
+      "rank": 1,
+      "authority": "FORMAL_TRUTH",
+      "rule": "INVALID_OR_UNPROVEN_RELATIONS_MUST_NOT_BE_CREATED_TO_SATISFY_OTHER_ANCHORS"
+    },
+    {
+      "rank": 2,
+      "authority": "USER_COGNITIVE_ORIGIN",
+      "rule": "FUNCTIONAL_CAPABILITY_CONTROLS_PRODUCT_PURPOSE_WITHIN_FORMAL_TRUTH"
+    },
+    {
+      "rank": 3,
+      "authority": "BOUND_TROPHY_STANDARD",
+      "rule": "EXCELLENCE_REQUIREMENTS_APPLY_ONLY_AFTER_CURRENT_RESEARCH_AND_BINDING"
+    },
+    {
+      "rank": 4,
+      "authority": "REGISTERED_BENCHMARK_COMPASS",
+      "rule": "CONFORMANCE_REQUIREMENTS_APPLY_ONLY_AFTER_REGISTRATION"
+    }
+  ],
+  "conflictOutcomes": [
+    {
+      "condition": "ANCHOR_REQUIRES_FALSE_FORMAL_RELATION",
+      "outcome": "REJECT_AND_HOLD"
+    },
+    {
+      "condition": "USER_ORIGIN_AND_PRESENTATION_CONVENIENCE_CONFLICT",
+      "outcome": "USER_ORIGIN_CONTROLS"
+    },
+    {
+      "condition": "TROPHY_OR_COMPASS_REQUIREMENT_UNBOUND",
+      "outcome": "DO_NOT_ENFORCE_AS_CURRENT_REQUIREMENT"
+    },
+    {
+      "condition": "EVIDENCE_INSUFFICIENT",
+      "outcome": "HOLD_WITH_REQUIRED_EVIDENCE"
+    }
+  ]
+}

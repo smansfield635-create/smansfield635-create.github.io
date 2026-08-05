@@ -1,0 +1,111 @@
+{
+  "schema": "UNRESOLVED_OR_AMBIGUOUS_RECORD_HOLD_REGISTER_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "holds": [
+    {
+      "holdId": "HOLD_SOURCE_GATE_448",
+      "recordIds": [
+        "gate-448"
+      ],
+      "reason": "ORIGINAL_CONTROLLING_SOURCE_UNDER_RECOVERY",
+      "releaseEvidence": "RECOVERED_HASH_BOUND_SOURCE_OR_GOVERNANCE_ACCEPTED_EQUIVALENT"
+    },
+    {
+      "holdId": "HOLD_SOURCE_MEMBRANE_61",
+      "recordIds": [
+        "membrane-61"
+      ],
+      "reason": "EXACT_ORIGINAL_ADMISSIBILITY_SEMANTICS_UNDER_RECOVERY",
+      "releaseEvidence": "RECOVERED_HASH_BOUND_SOURCE"
+    },
+    {
+      "holdId": "HOLD_SOURCE_ANCHORS_9",
+      "recordIds": [
+        "anchors-9"
+      ],
+      "reason": "EXACT_BASIN_ANCHOR_SEMANTICS_UNDER_RECOVERY",
+      "releaseEvidence": "RECOVERED_HASH_BOUND_SOURCE"
+    },
+    {
+      "holdId": "HOLD_DOMAIN_BINDINGS",
+      "recordIds": [
+        "spine-minimum",
+        "collapse-qualified",
+        "pressure-field",
+        "capacity-field",
+        "pcr",
+        "mass-ledger",
+        "closure-threshold",
+        "useful-output"
+      ],
+      "reason": "DOMAIN_FACTORS_NORMALIZERS_THRESHOLDS_AND_UNCERTAINTIES_NOT_FROZEN",
+      "releaseEvidence": "VERSIONED_DOMAIN_ROUTE_AND_HELD_OUT_TEST_PLAN"
+    },
+    {
+      "holdId": "HOLD_METHOD_RELATION",
+      "recordIds": [
+        "diagnostic-five",
+        "abcd"
+      ],
+      "reason": "CONCEPTUAL_OVERLAP_DOES_NOT_ESTABLISH_DERIVATION_OR_EQUIVALENCE",
+      "releaseEvidence": "SOURCE_CROSSWALK_AND_GOVERNANCE_DECISION"
+    },
+    {
+      "holdId": "HOLD_EMPIRICAL_STATUS",
+      "recordIds": [
+        "envelope-451",
+        "gate-448",
+        "spine-minimum",
+        "collapse-qualified",
+        "membrane-61",
+        "anchors-9",
+        "pressure-field",
+        "capacity-field",
+        "pcr",
+        "stability",
+        "hazard",
+        "complement",
+        "zero-aware",
+        "mass-ledger",
+        "residual-u",
+        "closure-threshold",
+        "energy-loop",
+        "useful-output",
+        "first",
+        "integral-method",
+        "diagnostic-five",
+        "abcd",
+        "falsification",
+        "no-match",
+        "fixtures"
+      ],
+      "reason": "FORMAL_AND_FIXTURE_STATUS_DOES_NOT_ESTABLISH_EMPIRICAL_VALIDATION",
+      "releaseEvidence": "ROUTE_SPECIFIC_HELD_OUT_REAL_DATA_EVIDENCE"
+    }
+  ],
+  "openHoldCount": 6,
+  "silentResolutionAllowed": false
+}

@@ -1,0 +1,250 @@
+{
+  "schema": "RECORD_DEPENDENCY_GRAPH_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "graphStatus": "BOUNDED_CANDIDATE_GRAPH_COMPLETE_WITH_EXPLICIT_NONEDGES_AND_HOLDS",
+  "nodes": [
+    {
+      "recordId": "envelope-451",
+      "formalType": "STRUCTURAL_CARDINALITY_IDENTITY"
+    },
+    {
+      "recordId": "gate-448",
+      "formalType": "SATURATION_CARDINALITY_IDENTITY"
+    },
+    {
+      "recordId": "spine-minimum",
+      "formalType": "NONCOMPENSATORY_MINIMUM_OPERATOR"
+    },
+    {
+      "recordId": "collapse-qualified",
+      "formalType": "CONJUNCTIVE_BOOLEAN_PREDICATE"
+    },
+    {
+      "recordId": "membrane-61",
+      "formalType": "SET_EXCLUSION_AND_ADMISSION_BOUNDARY"
+    },
+    {
+      "recordId": "anchors-9",
+      "formalType": "SET_EXCLUSION_AND_ORIENTATION_ARCHITECTURE"
+    },
+    {
+      "recordId": "pressure-field",
+      "formalType": "MULTIPLICATIVE_KERNEL"
+    },
+    {
+      "recordId": "capacity-field",
+      "formalType": "MULTIPLICATIVE_KERNEL"
+    },
+    {
+      "recordId": "pcr",
+      "formalType": "PROTECTED_RATIO_TRANSFORM"
+    },
+    {
+      "recordId": "stability",
+      "formalType": "BOUNDED_MONOTONE_TRANSFORM"
+    },
+    {
+      "recordId": "hazard",
+      "formalType": "BOUNDED_MONOTONE_TRANSFORM"
+    },
+    {
+      "recordId": "complement",
+      "formalType": "COMPLEMENT_IDENTITY"
+    },
+    {
+      "recordId": "zero-aware",
+      "formalType": "NUMERICAL_SEMANTIC_RULE"
+    },
+    {
+      "recordId": "mass-ledger",
+      "formalType": "CONSERVATION_BALANCE"
+    },
+    {
+      "recordId": "residual-u",
+      "formalType": "DERIVED_RESIDUAL"
+    },
+    {
+      "recordId": "closure-threshold",
+      "formalType": "THRESHOLD_CLASSIFIER"
+    },
+    {
+      "recordId": "energy-loop",
+      "formalType": "PROCEDURAL_CYCLE"
+    },
+    {
+      "recordId": "useful-output",
+      "formalType": "ACCOUNTING_INEQUALITY"
+    },
+    {
+      "recordId": "first",
+      "formalType": "ORDERED_RESEARCH_ORIENTATION"
+    },
+    {
+      "recordId": "integral-method",
+      "formalType": "ORDERED_FALSIFICATION_METHOD"
+    },
+    {
+      "recordId": "diagnostic-five",
+      "formalType": "FIXED_DIAGNOSTIC_SET"
+    },
+    {
+      "recordId": "abcd",
+      "formalType": "ORDERED_DIAGNOSTIC_PROCEDURE"
+    },
+    {
+      "recordId": "falsification",
+      "formalType": "FALSIFICATION_PROTOCOL"
+    },
+    {
+      "recordId": "no-match",
+      "formalType": "EPISTEMIC_ADMISSION_RULE"
+    },
+    {
+      "recordId": "fixtures",
+      "formalType": "TEST_EVIDENCE_BOUNDARY"
+    }
+  ],
+  "edges": [
+    {
+      "from": "gate-448",
+      "to": "envelope-451",
+      "relation": "NESTED_CARDINALITY_SUBSTRUCTURE",
+      "confidence": "STRONGLY_SUPPORTED"
+    },
+    {
+      "from": "spine-minimum",
+      "to": "envelope-451",
+      "relation": "STRUCTURALLY_INCLUDED_OPERATIONALLY_SEPARATE",
+      "confidence": "STRONGLY_SUPPORTED"
+    },
+    {
+      "from": "collapse-qualified",
+      "to": "gate-448",
+      "relation": "REQUIRES_SATURATION_GATE",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "collapse-qualified",
+      "to": "spine-minimum",
+      "relation": "REQUIRES_WEAKEST_SPINE_TEST",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "pcr",
+      "to": "pressure-field",
+      "relation": "NUMERATOR_DEPENDENCY",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "pcr",
+      "to": "capacity-field",
+      "relation": "DENOMINATOR_DEPENDENCY",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "stability",
+      "to": "pcr",
+      "relation": "DERIVED_FROM",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "hazard",
+      "to": "pcr",
+      "relation": "DERIVED_FROM",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "complement",
+      "to": "stability",
+      "relation": "IDENTITY_COMPONENT",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "complement",
+      "to": "hazard",
+      "relation": "IDENTITY_COMPONENT",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "zero-aware",
+      "to": "pressure-field",
+      "relation": "GOVERNS_REQUIRED_ZERO_SEMANTICS",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "zero-aware",
+      "to": "capacity-field",
+      "relation": "GOVERNS_REQUIRED_ZERO_SEMANTICS",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "residual-u",
+      "to": "mass-ledger",
+      "relation": "DERIVED_FROM_LEDGER_TERMS",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "closure-threshold",
+      "to": "residual-u",
+      "relation": "CLASSIFIES",
+      "confidence": "DIRECTLY_DECLARED"
+    },
+    {
+      "from": "useful-output",
+      "to": "energy-loop",
+      "relation": "CONSTRAINS_CYCLE_COMPLETENESS",
+      "confidence": "STRONGLY_SUPPORTED"
+    }
+  ],
+  "explicitNonEdges": [
+    {
+      "from": "membrane-61",
+      "to": "envelope-451",
+      "relation": "EXPLICITLY_EXCLUDED_FROM_STRUCTURAL_SUM"
+    },
+    {
+      "from": "anchors-9",
+      "to": "envelope-451",
+      "relation": "EXPLICITLY_EXCLUDED_FROM_STRUCTURAL_SUM"
+    },
+    {
+      "from": "diagnostic-five",
+      "to": "abcd",
+      "relation": "NO_CANONICAL_DERIVATION_ESTABLISHED_CONCEPTUAL_OVERLAP_ONLY"
+    },
+    {
+      "from": "first",
+      "to": "integral-method",
+      "relation": "NO_CANONICAL_DERIVATION_ESTABLISHED_PARALLEL_METHODS"
+    }
+  ],
+  "graphRules": [
+    "CONCEPTUAL_COPRESENCE_IS_NOT_DEPENDENCY",
+    "UI_ADJACENCY_IS_NOT_FORMAL_DERIVATION",
+    "SOURCE_HOLD_PREVENTS_SEMANTIC_EXPANSION",
+    "ONLY_DECLARED_OR_STRONGLY_SUPPORTED_EDGES_ARE_ADMITTED"
+  ]
+}

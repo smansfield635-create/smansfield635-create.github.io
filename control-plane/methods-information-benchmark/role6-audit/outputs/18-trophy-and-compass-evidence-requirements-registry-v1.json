@@ -1,0 +1,89 @@
+{
+  "schema": "TROPHY_AND_COMPASS_EVIDENCE_REQUIREMENTS_REGISTRY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "requirements": [
+    {
+      "evidenceId": "EV-001",
+      "evidence": "CURRENT_AWARD_CRITERIA_SOURCE_AND_DATE",
+      "anchor": "TROPHY_STANDARD",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    },
+    {
+      "evidenceId": "EV-002",
+      "evidence": "CATEGORY_TO_REQUIREMENT_CROSSWALK",
+      "anchor": "TROPHY_STANDARD",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    },
+    {
+      "evidenceId": "EV-003",
+      "evidence": "INDEPENDENT_REVIEW_OR_REPRODUCTION",
+      "anchor": "TROPHY_STANDARD",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    },
+    {
+      "evidenceId": "EV-004",
+      "evidence": "METHODS_COMPASS_REGISTRATION_RECEIPT",
+      "anchor": "BENCHMARK_COMPASS",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    },
+    {
+      "evidenceId": "EV-005",
+      "evidence": "DEVICE_MATRIX_RESULTS",
+      "anchor": "BENCHMARK_COMPASS",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    },
+    {
+      "evidenceId": "EV-006",
+      "evidence": "ACCESSIBILITY_AND_PERFORMANCE_RESULTS",
+      "anchor": "BENCHMARK_COMPASS",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    },
+    {
+      "evidenceId": "EV-007",
+      "evidence": "EXACT_STATE_AND_RETURN_REPLAY_RECEIPTS",
+      "anchor": "BOTH",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    },
+    {
+      "evidenceId": "EV-008",
+      "evidence": "HELD_OUT_USER_TASK_EVIDENCE",
+      "anchor": "BOTH",
+      "currentStatus": "MISSING_OR_NOT_BOUND"
+    }
+  ],
+  "existingEvidence": [
+    {
+      "artifactId": 8880027936,
+      "status": "VALID_FOR_DECLARED_EXISTING_GATES_ONLY",
+      "notProofOf": [
+        "USER_ACCEPTANCE",
+        "COMPLETE_SPATIAL_SUCCESS",
+        "TROPHY_READINESS",
+        "COMPASS_CONFORMANCE"
+      ]
+    }
+  ]
+}

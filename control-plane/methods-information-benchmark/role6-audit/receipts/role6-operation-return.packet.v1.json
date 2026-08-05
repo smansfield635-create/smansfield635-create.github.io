@@ -1,0 +1,25 @@
+{
+  "schema": "METHODS_INFORMATION_BENCHMARK_ROLE_OPERATION_RETURN_v1",
+  "assignmentId": "8c4d0f0fb1b3068764e476c4",
+  "roleId": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+  "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "holderExecutionId": "MIB_ROLE6_FIRST_ASSIGNMENT_HOLDER_20260804_1802_6BB3D2454E65D0254CD93ED7",
+  "disposition": "PASS_RETURN",
+  "outputManifestSha256": "ccec60ff18f011871eea04501797c72c8df35ae1f99a540c505086e58b4e342b",
+  "fixtureOnly": false,
+  "auditSummary": {
+    "substantiveOutputCount": 27,
+    "recordCount": 25,
+    "baselinePathCount": 15,
+    "openHoldCount": 6,
+    "conceptFailureAssigned": false,
+    "adoptionPerformed": false,
+    "publicMutationPerformed": false,
+    "mergePerformed": false
+  },
+  "governanceReturn": {
+    "destination": "METHODS_INFORMATION_BENCHMARK_GOVERNANCE_INTAKE",
+    "recommendation": "REVIEW_CANDIDATE_REQUIREMENTS_AND_HOLDS_BEFORE_ADOPTION_OR_IMPLEMENTATION",
+    "roleStateAfterCommandReturn": "INACTIVE"
+  }
+}

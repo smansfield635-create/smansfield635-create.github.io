@@ -1,0 +1,187 @@
+{
+  "schema": "DEVELOPMENTAL_BASELINE_ELEMENT_INVENTORY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "baselineStatus": "EXACT_15_PATH_SUBJECT_REPRODUCED",
+  "baselinePathMapFingerprint": "9ceb0b2170d99d6f99a40ca344e877e524628e1a0673eea1ccc97b346de24c3e",
+  "paths": [
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": ".github/workflows/methods-categorical-spatial-context-equation-embodiment-v1.yml",
+      "gitBlob": "88279b2164125c930dc5b3719cdd54eac293ae73",
+      "sha256": "f256d782c82b17c04e8b65f1d0621809c361f58bda5dce0f3fd8fa4ce31f90d1",
+      "size": 10567
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/OPERATOR_GUIDE.md",
+      "gitBlob": "7fb1c1c83a55b1651a804b3271c13347ae1fc931",
+      "sha256": "19d50fa834ec7778a594e24009e8fc21a356a050dc03be36550f1450870e99b7",
+      "size": 4001
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/README.md",
+      "gitBlob": "5893634c86da64567a78fd772103847c39766426",
+      "sha256": "553b0622da4fa26e5542543c32427ed749242762e2a49afb08c246de4eed1829",
+      "size": 2715
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/app.mjs",
+      "gitBlob": "718e5e229626a8b26c2aae11ffcd131ee334f9a1",
+      "sha256": "d80153b29b811155b4ba7124b69b922cb98ba5f22e4b042ff820405aa7198dc9",
+      "size": 15893
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/index.html",
+      "gitBlob": "bd3b93dab11e00698e9895eed21e00180434c4a4",
+      "sha256": "09944968fc063c4399b543ebf7ed08f541727c0973351d9844c9859a37eeff81",
+      "size": 15852
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-observer.mjs",
+      "gitBlob": "e3b0357c84ecd0ca6c1b798e66fee295435b10a9",
+      "sha256": "486043a47f13587f232e35f6cf3ee1fbca7ac2b2782957b653942900759eb3f5",
+      "size": 20691
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-validate.mjs",
+      "gitBlob": "a3617d8e38eae2f51af7ba0edcd4cd0d2cfc9a5f",
+      "sha256": "93f70afe4403a69ec5659be58578ca62f15f136c6839d8bc0429c93584a19060",
+      "size": 4204
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage.css",
+      "gitBlob": "bb271670acd69c39fc374463c375ce51a19a93d6",
+      "sha256": "4451ccb38f7f1d46ddbff462e0b8d24fcc82013062d166fe6de1a9e95b895044",
+      "size": 13499
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage.mjs",
+      "gitBlob": "0ebc83b1abd17793e8a43157558a5bb023741299",
+      "sha256": "4da36f0a2e7fb263453d20035484daa4518438b06c59ca871b277d4694f8f702",
+      "size": 19894
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/observer.mjs",
+      "gitBlob": "dcb353433ba669719ff87b7175eb30fb8b875c06",
+      "sha256": "43174ff5ce0dec48d6b12d8b00afd45e3c69168634f4997f8016d9aa5e5e629e",
+      "size": 21349
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/renderer.mjs",
+      "gitBlob": "0473098e3eaca7d39ae778c149fddb92f5c842a2",
+      "sha256": "73085e70e4a9ee72909091c82923b6bf1c81bf90fde9cabb4f691032ffa665ca",
+      "size": 14515
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/semantic-descriptor.mjs",
+      "gitBlob": "94954108b3947df64c5f8fd3e9c8a5ea46bc4e4f",
+      "sha256": "ce3889187957e0d97494cf84d25ab9ddf96c8fbf6179f95924f70f3c8ad68124",
+      "size": 9364
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/styles.css",
+      "gitBlob": "1a3f90093007dc6c9734c968efbd0fa42f9c7a13",
+      "sha256": "f78a951f1784a1846061a6665745751bf56c17370062ce717c654ad25a09c0c4",
+      "size": 32780
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/tool-admission-matrix.json",
+      "gitBlob": "e831d425d0280aac712965a77440003fa2b2a005",
+      "sha256": "eeef699a9b5be7c7eb283f14a702fe641694b0d86d62312c489d32caf8824f5d",
+      "size": 1468
+    },
+    {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "path": "verification/methods-categorical-spatial-context-equation-embodiment-v1/validate.mjs",
+      "gitBlob": "13822345d1e88fdf998b5f1d0e5e5b67ad1adf3a",
+      "sha256": "134e82227d776a373b337c711bc7bdaeea29c4a6b00a5db84156c383bc2464b1",
+      "size": 10431
+    }
+  ],
+  "canonicalCorpusIdentity": {
+    "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "path": "laws/research/methods-and-models/showroom.js",
+    "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+    "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+    "size": 50557
+  },
+  "reviewCarrierIdentity": {
+    "head": "cd4edd03711292bf1184081bc0e7571ac6e3ea72",
+    "path": "preview/methods-and-models/spatial-corpus-69bef391/index.html",
+    "gitBlob": "e3cd8aa3ab6a04e319e3e9b99d7c306ef1f30de6",
+    "sha256": "4216f665a7fc7429491647065db32880063182a82a11d41d837d7255a0c63074",
+    "size": 8459
+  },
+  "repositorySupportedMechanismSignatures": {
+    "perspectiveTokenPresent": true,
+    "preserve3dTokenPresent": true,
+    "cameraTokenPresent": true,
+    "spatialSceneRootPresent": true,
+    "pointerOrTouchMechanismPresent": true,
+    "explicitReturnMechanismPresent": true,
+    "canonicalCorpusFetchPresent": true,
+    "webglOrCanvasTokenPresent": false,
+    "interpretationBoundary": "TOKEN_PRESENCE_ONLY_NOT_PROOF_OF_SUCCESS_FAILURE_OR_CAUSE"
+  },
+  "mechanismFingerprint": "2e7937f1e5b6ce4a92bf23a6cf253425684880737ae6fcbecb2b784a3b42fe88",
+  "developmentalLineageFingerprint": "fdf687b08c9d79aa18e6d01d1cdf71a59b1c72e43de52882e4438dcefc23c59f",
+  "externalEvidence": {
+    "pr544": {
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "merged": true
+    },
+    "pr547": {
+      "head": "6df1ab3993e241f5163aa01b34b33fd721477fef",
+      "merged": true
+    },
+    "pr555": {
+      "head": "bbc510bb1276b37dde9495b08d72a0424b669b62",
+      "merged": false,
+      "draft": true
+    },
+    "artifact": {
+      "id": 8880027936,
+      "name": "methods-categorical-spatial-context-equation-embodiment-v1-evidence",
+      "digest": "sha256:3b468c93f02580eed712f69b5b6cbe5775ab471d3d3119699bfb922211fd5bbe",
+      "head": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+      "expired": false
+    }
+  },
+  "externalEvidenceFingerprint": "e62c53c5866bc81e253b4ca7bb8c7469de9d924772056407babd673fea49928e",
+  "inventoryBoundary": "PATH_HASH_AND_TOKEN_SIGNATURE_EVIDENCE_DOES_NOT_PROVE_USER_ACCEPTANCE_OR_COMPLETE_CAUSE"
+}

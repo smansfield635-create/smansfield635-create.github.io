@@ -1,0 +1,163 @@
+{
+  "schema": "COMPUTATIONAL_VS_NONCOMPUTATIONAL_BOUNDARY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "boundaries": [
+    {
+      "recordId": "envelope-451",
+      "classification": "NONCOMPUTATIONAL_ARCHITECTURE",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "gate-448",
+      "classification": "NONCOMPUTATIONAL_ARCHITECTURE",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "spine-minimum",
+      "classification": "COMPUTABLE_AFTER_DOMAIN_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "collapse-qualified",
+      "classification": "COMPUTABLE_AFTER_DOMAIN_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "membrane-61",
+      "classification": "NONCOMPUTATIONAL_ARCHITECTURE",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "anchors-9",
+      "classification": "NONCOMPUTATIONAL_ARCHITECTURE",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "pressure-field",
+      "classification": "COMPUTABLE_AFTER_FACTOR_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "capacity-field",
+      "classification": "COMPUTABLE_AFTER_FACTOR_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "pcr",
+      "classification": "COMPUTABLE_AFTER_FACTOR_AND_FLOOR_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "stability",
+      "classification": "COMPUTABLE_FROM_PCR",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "hazard",
+      "classification": "COMPUTABLE_FROM_PCR",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "complement",
+      "classification": "COMPUTABLE_INVARIANT_CHECK",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "zero-aware",
+      "classification": "COMPUTATIONAL_IMPLEMENTATION_RULE",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "mass-ledger",
+      "classification": "COMPUTABLE_AFTER_MEASUREMENT_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "residual-u",
+      "classification": "COMPUTABLE_FROM_LEDGER_TERMS",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "closure-threshold",
+      "classification": "COMPUTABLE_AFTER_UNCERTAINTY_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "energy-loop",
+      "classification": "NONCOMPUTATIONAL_SEQUENCE_UNLESS_OPERATIONALIZED",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "useful-output",
+      "classification": "COMPUTABLE_AFTER_ACCOUNTING_BOUNDARY_BINDING",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "first",
+      "classification": "NONCOMPUTATIONAL_METHOD",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "integral-method",
+      "classification": "NONCOMPUTATIONAL_METHOD",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "diagnostic-five",
+      "classification": "NONCOMPUTATIONAL_UNTIL_RULES_BOUND",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "abcd",
+      "classification": "NONCOMPUTATIONAL_UNTIL_RULES_BOUND",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "falsification",
+      "classification": "MIXED_PROCEDURAL_AND_COMPUTATIONAL",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    },
+    {
+      "recordId": "no-match",
+      "classification": "COMPUTABLE_WHEN_MATCH_PREDICATES_BOUND",
+      "executionReadiness": "NOT_EMPIRICALLY_READY"
+    },
+    {
+      "recordId": "fixtures",
+      "classification": "COMPUTATIONAL_TEST_CONTRACT",
+      "executionReadiness": "NOT_APPLICABLE_OR_REQUIRES_OPERATIONALIZATION"
+    }
+  ],
+  "requiredBeforeComputation": [
+    "DOMAIN_FACTOR_DICTIONARY",
+    "NORMALIZERS_AND_BOUNDS",
+    "THRESHOLDS_AND_SAFETY_FLOORS",
+    "MISSINGNESS_AND_NO_MATCH_RULES",
+    "PROVENANCE_AND_VERSION_BINDING",
+    "HELD_OUT_TEST_PLAN"
+  ],
+  "prohibition": "FORMAL_EQUATION_PRESENCE_MUST_NOT_BE_REPORTED_AS_EMPIRICAL_EXECUTION"
+}

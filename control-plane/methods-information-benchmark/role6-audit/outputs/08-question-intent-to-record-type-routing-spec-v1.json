@@ -1,0 +1,153 @@
+{
+  "schema": "QUESTION_INTENT_TO_RECORD_TYPE_ROUTING_SPEC_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "routes": [
+    {
+      "intent": "WHAT_CONSTITUTES_THE_COMPLETE_STRUCTURE",
+      "recordIds": [
+        "envelope-451"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "WHAT_MUST_SATURATE",
+      "recordIds": [
+        "gate-448"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "CAN_STRENGTH_COMPENSATE_FOR_REQUIRED_FAILURE",
+      "recordIds": [
+        "spine-minimum",
+        "zero-aware"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "IS_COLLAPSE_FORMALLY_QUALIFIED",
+      "recordIds": [
+        "collapse-qualified"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "WHAT_MAY_ENTER_THE_MODEL",
+      "recordIds": [
+        "membrane-61",
+        "no-match"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "WHAT_IS_OUTSIDE_THE_COLLAPSE_SUM",
+      "recordIds": [
+        "membrane-61",
+        "anchors-9"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "HOW_IS_PRESSURE_CONSTRUCTED",
+      "recordIds": [
+        "pressure-field"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "HOW_IS_USABLE_CAPACITY_CONSTRUCTED",
+      "recordIds": [
+        "capacity-field"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "HOW_DO_PRESSURE_AND_CAPACITY_COMPARE",
+      "recordIds": [
+        "pcr"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "HOW_ARE_STABILITY_AND_HAZARD_BOUNDED",
+      "recordIds": [
+        "stability",
+        "hazard",
+        "complement"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "WHERE_DID_MATERIAL_GO",
+      "recordIds": [
+        "mass-ledger",
+        "residual-u",
+        "closure-threshold"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "IS_THE_OPERATING_LOOP_COMPLETE",
+      "recordIds": [
+        "energy-loop",
+        "useful-output"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "HOW_SHOULD_RESEARCH_BE_ORIENTED",
+      "recordIds": [
+        "first",
+        "integral-method"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "WHICH_DIAGNOSTIC_PROCEDURE_APPLIES",
+      "recordIds": [
+        "diagnostic-five",
+        "abcd"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "HOW_CAN_THE_CLAIM_BE_DISPROVED",
+      "recordIds": [
+        "falsification"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "intent": "WHAT_DO_SYNTHETIC_TESTS_ESTABLISH",
+      "recordIds": [
+        "fixtures"
+      ],
+      "selectionRule": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    }
+  ],
+  "fallback": "NO_MATCH_WITH_REASON_AND_HOLD",
+  "routingProhibition": "DO_NOT_ROUTE_BY_VISUAL_PROXIMITY_ALONE"
+}

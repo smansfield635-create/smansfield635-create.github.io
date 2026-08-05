@@ -1,0 +1,42 @@
+{
+  "schema": "ROLE_6_INTEGRATED_REQUIREMENTS_FREEZE_RECOMMENDATION_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "recommendation": "CONDITIONALLY_FREEZE_REQUIREMENTS_BASELINE_FOR_GOVERNANCE_REVIEW",
+  "candidateRequirementSets": {
+    "userCognitiveOrigin": 10,
+    "trophyStandard": 5,
+    "benchmarkCompass": 7,
+    "deviceEquivalence": 7,
+    "formalGraphEdges": 15
+  },
+  "conditions": [
+    "KEEP_SOURCE_HOLDS_OPEN",
+    "DO_NOT_TREAT_GRAPH_AS_ADOPTED_UNTIL_GOVERNANCE_REVIEW",
+    "NO_VISUAL_IMPLEMENTATION_BEFORE_PRECONSTRUCTION_GATE",
+    "NO_EMPIRICAL_OR_AWARD_CLAIM_UPGRADE"
+  ],
+  "adoptionPerformed": false
+}

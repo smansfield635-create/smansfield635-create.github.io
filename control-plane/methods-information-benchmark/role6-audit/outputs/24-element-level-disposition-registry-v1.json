@@ -1,0 +1,86 @@
+{
+  "schema": "ELEMENT_LEVEL_DISPOSITION_REGISTRY_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "dispositions": [
+    {
+      "elementId": "25_RECORD_CORPUS",
+      "disposition": "PRESERVE_WITH_RECLASSIFICATION",
+      "justification": "FORMAL_TYPES_AND_DEPENDENCIES_REQUIRE_GOVERNANCE_REVIEW"
+    },
+    {
+      "elementId": "FOUR_FAMILY_ORGANIZATION",
+      "disposition": "PRESERVE_AS_UNRESOLVED_EXPERIMENT",
+      "justification": "CURRENT_SEMANTIC_STRUCTURE_MAY_NOT_EQUAL_FORMAL_GRAPH"
+    },
+    {
+      "elementId": "THREE_INTERPRETIVE_LENSES",
+      "disposition": "PRESERVE_WITH_RECLASSIFICATION",
+      "justification": "USEFUL_VIEWS_NOT_FORMAL_RELATION_AUTHORITIES"
+    },
+    {
+      "elementId": "FLAT_OR_2_5D_VISUAL_LAYOUT",
+      "disposition": "CARRY_FORWARD_AS_INFORMATIVE_FAILURE",
+      "justification": "DID_NOT_SATISFY_SPATIAL_TARGET"
+    },
+    {
+      "elementId": "DIRECT_RECORD_SELECTION",
+      "disposition": "PRESERVE_WITH_RECLASSIFICATION",
+      "justification": "PARTIAL_INTERACTION_VALUE_NOT_ASSEMBLY"
+    },
+    {
+      "elementId": "SIMULATED_DEPTH_AS_SPATIAL_PROOF",
+      "disposition": "RETIRE_WITH_CAUSAL_JUSTIFICATION",
+      "justification": "VISUAL_DEPTH_CUES_DO_NOT_PROVE_SPATIAL_MODEL"
+    },
+    {
+      "elementId": "OVERVIEW_BROWSE_INSPECTION_RETURN",
+      "disposition": "PRESERVE_WITH_RECLASSIFICATION",
+      "justification": "FORMALIZE_AND_VERIFY_EXACT_STATE_LIFECYCLE"
+    },
+    {
+      "elementId": "MOBILE_RESPONSIVE_STACKING_AS_EQUIVALENCE",
+      "disposition": "RETIRE_WITH_CAUSAL_JUSTIFICATION",
+      "justification": "LAYOUT_REARRANGEMENT_NOT_CAPABILITY_EQUIVALENCE"
+    },
+    {
+      "elementId": "TRUE_SPATIAL_INQUIRY_ASSEMBLY",
+      "disposition": "REPAIR_BY_DECLARED_SUCCESSOR",
+      "justification": "PRIMARY_UNSATISFIED_USER_ORIGIN"
+    },
+    {
+      "elementId": "FIFTEEN_PATH_VERIFICATION_SURFACE",
+      "disposition": "PRESERVE_EXACTLY",
+      "justification": "AUTHORITATIVE_DEVELOPMENTAL_AUDIT_SUBJECT"
+    },
+    {
+      "elementId": "GOVERNANCE_GENESIS_AND_ASSIGNMENT_LINEAGE",
+      "disposition": "PRESERVE_EXACTLY",
+      "justification": "REPOSITORY_SUPPORTED_CORRECTION"
+    }
+  ],
+  "allDeclaredElementsAccountedFor": true,
+  "silentDiscard": false
+}

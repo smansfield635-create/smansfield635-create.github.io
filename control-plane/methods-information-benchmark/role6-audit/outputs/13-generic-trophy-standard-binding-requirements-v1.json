@@ -1,0 +1,55 @@
+{
+  "schema": "GENERIC_TROPHY_STANDARD_BINDING_REQUIREMENTS_v1",
+  "status": "AUDIT_CANDIDATE_NOT_ADOPTED",
+  "sourceBinding": {
+    "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+    "assignmentHead": "ce40519190a9048c1e0cef682108c34b0a7f8055",
+    "assignmentId": "8c4d0f0fb1b3068764e476c4",
+    "packetHead": "fa7e74403ff43e017bccef7462f4e001918cf0a3",
+    "packetCanonicalSha256": "5c93a8ebe638b9f06a4e14fc42f8ee202c8801e940527aa4fb987006a04e0cdc",
+    "baselineHead": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+    "canonicalCorpus": {
+      "path": "laws/research/methods-and-models/showroom.js",
+      "gitBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "sha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f",
+      "familyCount": 4,
+      "recordCount": 25,
+      "lensCount": 3
+    }
+  },
+  "authorityBoundary": {
+    "role": "ROLE_6_REQUIREMENTS_AND_CAUSAL_AUTHORITY",
+    "operationScoped": true,
+    "generalRoleAuthority": false,
+    "adoptionAuthority": false,
+    "publicMutationAuthority": false
+  },
+  "bindingStatus": "NOT_CURRENTLY_BOUND",
+  "requirements": [
+    {
+      "requirementId": "TS-001",
+      "requirement": "RESEARCH_CURRENT_RELEVANT_AWARD_DISCIPLINES_AFTER_OBJECT_AND_EVIDENCE_FREEZE"
+    },
+    {
+      "requirementId": "TS-002",
+      "requirement": "BIND_CATEGORY_CRITERIA_TO_EXACT_PRODUCT_REQUIREMENTS_AND_EVIDENCE"
+    },
+    {
+      "requirementId": "TS-003",
+      "requirement": "PRESERVE_ORIGINALITY_OF_INTENT_WITHOUT_SUBSTITUTING_NOVELTY_FOR_FUNCTION"
+    },
+    {
+      "requirementId": "TS-004",
+      "requirement": "REQUIRE_INDEPENDENT_REPRODUCIBLE_EVIDENCE_FOR_ELITE_READINESS_CLAIMS"
+    },
+    {
+      "requirementId": "TS-005",
+      "requirement": "SEPARATE_CANDIDATE_QUALITY_FROM_AWARD_ADOPTION_OR_SUBMISSION"
+    }
+  ],
+  "prohibitions": [
+    "NO_CURRENT_CYCLE_CATEGORY_CLAIM",
+    "NO_ELITE_TIER_READINESS_CLAIM",
+    "NO_AWARD_SUBMISSION_AUTHORITY"
+  ]
+}

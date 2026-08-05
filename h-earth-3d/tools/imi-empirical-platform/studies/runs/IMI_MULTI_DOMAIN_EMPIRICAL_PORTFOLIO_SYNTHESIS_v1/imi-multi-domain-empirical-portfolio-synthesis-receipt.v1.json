@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_RECEIPT_v1",
+  "operation": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1",
+  "result": "PASS_CLOSED_PHASE_1_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS",
+  "generatedAt": "2026-08-05T17:11:00.000Z",
+  "totals": {
+    "evaluatedCases": 4598,
+    "validCases": 3570,
+    "unevaluableCases": 1028,
+    "hardCollapseCases": 3,
+    "domains": 4,
+    "routeFamilies": 4
+  },
+  "invariantConstruct": "RETAINED_JOINT_MANEUVERABILITY_THROUGH_A_SPECIFIED_TRAJECTORY_UNDER_MULTIPLE_DECLARED_NON_SUBSTITUTABLE_REQUIRED_FACTORS",
+  "findingCount": 12,
+  "routeFamilyCount": 4,
+  "phase2Authorized": true,
+  "nextOperation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
+  "synthesisDigest": "fnv1a32:b1d356ba",
+  "boundaries": {
+    "phase1Only": true,
+    "newDataCollected": false,
+    "newDomainOpened": false,
+    "rawCrossRouteScoreComparisonPerformed": false,
+    "routeRetuningPerformed": false,
+    "externalValidationClaimed": false,
+    "prospectiveValidationClaimed": false,
+    "decisionUtilityClaimed": false,
+    "universalMultiplicativeSuperiorityClaimed": false,
+    "finalInstrumentValidationClaimed": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  },
+  "receiptDigest": "fnv1a32:91279879"
+}

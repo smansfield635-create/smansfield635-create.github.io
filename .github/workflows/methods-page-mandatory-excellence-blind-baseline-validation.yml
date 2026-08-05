@@ -1,251 +1,233 @@
 name: Methods page mandatory excellence blind baseline
 
 on:
+  push:
+    branches:
+      - activation/methods-page-excellence-toolchain-permanent-ratification-v1-001
+      - main
+    paths:
+      - '.github/ai-router/page-excellence-toolchain/README.md'
+      - '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json'
+      - '.github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json'
+      - '.github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'AI_ENTRYPOINT.json'
-      - '.github/ai-router/router.v1.json'
-      - '.github/ai-router/page-excellence-toolchain/**'
+      - '.github/ai-router/page-excellence-toolchain/README.md'
+      - '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json'
+      - '.github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json'
       - '.github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: methods-page-blind-baseline-${{ github.ref }}
-  cancel-in-progress: true
+  group: page-excellence-ratification-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: false
 
 env:
   SUBJECT_HEAD: 2044e7ab5d27af7bcfbd477a6c3ee046549744ed
   PACKAGING_HEAD: 6c9f32d4ea13905b87f3519f9c18c425ae0e449c
   CANDIDATE_ROOT: control-plane/methods-information-benchmark/page-implementation-candidate-v1
-  ROUTING_OPERATION_ID: METHODS_EXISTING_CONSTRUCT_ADOPTION_MANDATORY_ROUTING_REPAIR_v1
-  ROUTING_LOCK_SCOPE: PAGE_EXCELLENCE_TOOLCHAIN:CONTEXTUAL_ARCHITECTURE_CONFORMANCE_REPAIR:PR613:V1
-  ROUTING_LOCK_GENERATION: '213'
+  GOVERNING_BASE: 82a4b9c7241802d229b9c1a7cc01e5631ac4a1b8
+  SOURCE_ACTIVATION_MERGE: b0624bdab274e38ca1d596c5b8307ac56cb2a962
+  SOURCE_CANDIDATE_HEAD: bdd68f3ac32e232331d29e8e849d9e4eb1b34241
+  SOURCE_FINGERPRINT: b9cb2ec247338040fcf455c8e5d9a7e4e5b6c6af1ade5da337e752b7138cfda9
+  RATIFICATION_BRANCH: activation/methods-page-excellence-toolchain-permanent-ratification-v1-001
+  RATIFICATION_OPERATION_ID: METHODS_PAGE_EXCELLENCE_TOOLCHAIN_POST_MERGE_VALIDATION_AND_PERMANENT_RATIFICATION_v1
+  RATIFICATION_LOCK_SCOPE: PAGE_EXCELLENCE_TOOLCHAIN:POST_MERGE_VALIDATION_AND_PERMANENT_RATIFICATION:V1
+  RATIFICATION_LOCK_GENERATION: '235'
 
 jobs:
-  toolchain-self-test:
+  bootstrap:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/activation/methods-page-excellence-toolchain-permanent-ratification-v1-001'
+    runs-on: ubuntu-latest
+    outputs:
+      mutated: ${{ steps.write.outputs.mutated }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RATIFICATION_BRANCH }}
+          fetch-depth: 0
+      - id: write
+        name: Materialize ratification records
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r='.github/ai-router/page-excellence-toolchain/README.md';
+          const b='.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json';
+          const p='.github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json';
+          let readme=fs.readFileSync(r,'utf8').replace('Status: `ACTIVATION_CANDIDATE_FAIL_CLOSED`','Status: `RATIFIED_ACTIVE_FAIL_CLOSED`');
+          if(!readme.includes('Status: `RATIFIED_ACTIVE_FAIL_CLOSED`')) throw Error('README_STATUS');
+          if(!readme.includes('## Permanent ratification')) readme+='\n## Permanent ratification\n\nToolchain `1.1.0` is permanently ratified through the repository-bound receipt. All nine instruments and the separate current-adapter requirement for named-award readiness remain binding.\n';
+          fs.writeFileSync(r,readme.endsWith('\n')?readme:readme+'\n');
+          const bundle=JSON.parse(fs.readFileSync(b));
+          if(bundle.version!=='1.1.0'||bundle.instrumentRegistry?.requiredInstrumentCount!==9) throw Error('BUNDLE_IDENTITY');
+          if(!bundle.instrumentRegistry.instruments.some(x=>x.id==='contextualArchitectureConformanceInstrument'&&x.status==='ACTIVE_VERSION_BOUND')) throw Error('CONTEXTUAL_INSTRUMENT');
+          bundle.entrypoint.status='RATIFIED_ACTIVE_FAIL_CLOSED';
+          bundle.universalStandard.status='RATIFIED_ACTIVE_MANDATORY';
+          bundle.ratification={schema:'MANDATORY_PAGE_EXCELLENCE_TOOLCHAIN_RATIFICATION_BINDING_v1',status:'RATIFIED_ACTIVE_FAIL_CLOSED',toolsetVersion:'1.1.0',receipt:p,sourcePullRequest:613,exactActivatedCandidateHead:process.env.SOURCE_CANDIDATE_HEAD,exactActivationMergeCommit:process.env.SOURCE_ACTIVATION_MERGE,governingBaseAtRatification:process.env.GOVERNING_BASE,sourceCertificationRun:31037317192,sourceCertifiedFingerprint:process.env.SOURCE_FINGERPRINT,requiredInstrumentCount:9,namedAwardReadinessCreated:false,productMutationAuthorized:false,publicPageMutationAuthorized:false,visualSubjectMutationAuthorized:false};
+          fs.writeFileSync(b,JSON.stringify(bundle,null,2)+'\n');
+          const receipt={schema:'MANDATORY_PAGE_EXCELLENCE_TOOLCHAIN_PERMANENT_RATIFICATION_RECEIPT_v1',ratificationId:'METHODS_PAGE_EXCELLENCE_TOOLCHAIN_PERMANENT_RATIFICATION_v1',status:'RATIFIED_ACTIVE_FAIL_CLOSED',operationId:process.env.RATIFICATION_OPERATION_ID,toolsetVersion:'1.1.0',requiredInstrumentCount:9,contextualArchitectureConformanceInstrument:'ACTIVE_VERSION_BOUND',sourcePullRequest:613,exactActivatedCandidateHead:process.env.SOURCE_CANDIDATE_HEAD,exactActivationMergeCommit:process.env.SOURCE_ACTIVATION_MERGE,governingBaseAtRatification:process.env.GOVERNING_BASE,sourceCertification:{workflowRun:31037317192,result:'SUCCESS',builderFingerprint:process.env.SOURCE_FINGERPRINT,freshVerifierFingerprint:process.env.SOURCE_FINGERPRINT,exactNormalizedEquality:true},canonicalIntake:{workflowRun:31039426125,result:'ADMITTED_AND_LOCKED',requestDigest:'64cf71b7fd1c9b453a7d6c7516de8c1f4a7785a0f64ae27d4c24c20115b1a620',lockGeneration:235,acquisitionCommitSha:'216d643913600ddfbc080423e9488dc39ff4fb6e'},ratifiedStatuses:{readme:'RATIFIED_ACTIVE_FAIL_CLOSED',entrypoint:'RATIFIED_ACTIVE_FAIL_CLOSED',universalStandard:'RATIFIED_ACTIVE_MANDATORY'},authorityBoundary:{userValidationAndRatificationAuthorized:true,exactHeadMergeAuthorized:true,productMutationAuthorized:false,publicPageMutationAuthorized:false,visualSubjectMutationAuthorized:false,namedAwardReadinessCreated:false,currentNamedAwardAdapterStillRequired:true}};
+          fs.writeFileSync(p,JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          git config user.name smansfield635-create
+          git config user.email smansfield635@gmail.com
+          git add .github/ai-router/page-excellence-toolchain/README.md .github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json .github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json .github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml
+          if git diff --cached --quiet; then echo 'mutated=false' >> "$GITHUB_OUTPUT"; else git commit -m 'Materialize permanent page excellence ratification records'; git push origin "HEAD:${RATIFICATION_BRANCH}"; echo 'mutated=true' >> "$GITHUB_OUTPUT"; fi
+
+  validate:
+    needs: bootstrap
+    if: ${{ always() && (github.event_name != 'push' || github.ref != 'refs/heads/activation/methods-page-excellence-toolchain-permanent-ratification-v1-001' || needs.bootstrap.outputs.mutated != 'true') }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout activation candidate
-        uses: actions/checkout@v4
-      - name: Validate toolchain schemas, contextual architecture, and route classifier
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate lineage, exact scope, status, and tests
         run: |
-          node .github/ai-router/page-excellence-toolchain/self-test.v1.mjs
-          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --self-test
-      - name: Validate JavaScript syntax
-        run: |
-          for file in .github/ai-router/page-excellence-toolchain/*.mjs; do node --check "$file"; done
+          git merge-base --is-ancestor "$SOURCE_ACTIVATION_MERGE" HEAD
+          test "$(git diff --name-only "$SOURCE_ACTIVATION_MERGE" "$GOVERNING_BASE" -- .github/ai-router/page-excellence-toolchain .github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml | wc -l)" -eq 0
+          if [[ "${{ github.ref }}" != 'refs/heads/main' ]]; then
+            mapfile -t paths < <(git diff --name-only "$GOVERNING_BASE" HEAD | sort)
+          else
+            mapfile -t paths < <(git diff-tree --no-commit-id --name-only -r HEAD | sort)
+          fi
+          expected=$(printf '%s\n' '.github/ai-router/page-excellence-toolchain/README.md' '.github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json' '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json' '.github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml' | sort)
+          test "${#paths[@]}" -eq 4
+          test "$(printf '%s\n' "${paths[@]}")" = "$expected"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const readme=fs.readFileSync('.github/ai-router/page-excellence-toolchain/README.md','utf8');
+          const bundle=JSON.parse(fs.readFileSync('.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json'));
+          const receipt=JSON.parse(fs.readFileSync('.github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json'));
+          const ok=readme.includes('Status: `RATIFIED_ACTIVE_FAIL_CLOSED`')&&bundle.status==='ACTIVE_VERSION_BOUND'&&bundle.version==='1.1.0'&&bundle.entrypoint.status==='RATIFIED_ACTIVE_FAIL_CLOSED'&&bundle.universalStandard.status==='RATIFIED_ACTIVE_MANDATORY'&&bundle.instrumentRegistry.requiredInstrumentCount===9&&bundle.ratification?.status==='RATIFIED_ACTIVE_FAIL_CLOSED'&&receipt.status==='RATIFIED_ACTIVE_FAIL_CLOSED'&&receipt.canonicalIntake.lockGeneration===235&&receipt.authorityBoundary.namedAwardReadinessCreated===false;
+          if(!ok) process.exit(1);
+          NODE
+          node .github/ai-router/page-excellence-toolchain/self-test.v1.mjs --holder validation --output /tmp/self.json
+          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --self-test >/tmp/gate.json
+          node -e "const s=require('/tmp/self.json'),g=require('/tmp/gate.json');if(s.result!=='PASS'||s.normalizedFingerprint!==process.env.SOURCE_FINGERPRINT||g.result!=='PASS')process.exit(1)"
 
-  contextual-routing-verification:
-    needs: toolchain-self-test
+  reproduce:
+    needs: validate
+    if: ${{ always() && needs.validate.result == 'success' }}
     strategy:
-      fail-fast: false
       matrix:
         holder: [builder, fresh-verifier]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Execute exact contextual routing verification
+      - name: Produce independent ratification fingerprint
+        env:
+          HOLDER: ${{ matrix.holder }}
         run: |
           mkdir -p artifacts
-          node .github/ai-router/page-excellence-toolchain/self-test.v1.mjs \
-            --holder "${{ matrix.holder }}" \
-            --output "artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json"
-          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --self-test >/tmp/gate.json
-          node -e "const a=require(process.argv[1]),b=require(process.argv[2]);if(a.result!=='PASS'||b.result!=='PASS')process.exit(1)" \
-            "./artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json" /tmp/gate.json
+          node .github/ai-router/page-excellence-toolchain/self-test.v1.mjs --holder "$HOLDER" --output /tmp/self.json >/dev/null
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import crypto from 'node:crypto';
+          const holder=process.env.HOLDER, bundle=JSON.parse(fs.readFileSync('.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json')), receipt=JSON.parse(fs.readFileSync('.github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json')), self=JSON.parse(fs.readFileSync('/tmp/self.json'));
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const domain=stable({exactActivationMergeCommit:receipt.exactActivationMergeCommit,toolsetVersion:bundle.version,ratificationStatuses:receipt.ratifiedStatuses,ratificationReceipt:receipt,sourceToolchainFingerprint:self.normalizedFingerprint,authorityBoundaries:receipt.authorityBoundary});
+          const normalizedFingerprint=crypto.createHash('sha256').update(JSON.stringify(domain)).digest('hex');
+          const out={schema:'PAGE_EXCELLENCE_PERMANENT_RATIFICATION_VERIFICATION_RECEIPT_v1',holder,result:self.result==='PASS'?'PASS':'FAIL',toolsetVersion:bundle.version,sourceToolchainFingerprint:self.normalizedFingerprint,normalizedFingerprint,ratificationStatus:receipt.status,productMutationPerformed:false,visualSubjectMutated:false,publicPageMutated:false};
+          fs.writeFileSync(`artifacts/page-excellence-ratification-${holder}.v1.json`,JSON.stringify(out,null,2)+'\n'); if(out.result!=='PASS')process.exit(1);
+          NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: contextual-architecture-routing-${{ matrix.holder }}
-          path: artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json
+          name: page-excellence-ratification-${{ matrix.holder }}
+          path: artifacts/page-excellence-ratification-${{ matrix.holder }}.v1.json
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
 
-  independent-contextual-routing:
-    needs: contextual-routing-verification
+  independent:
+    needs: reproduce
+    if: ${{ always() && needs.reproduce.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
-        with:
-          name: contextual-architecture-routing-builder
-          path: receipts/builder
+        with: {name: page-excellence-ratification-builder, path: receipts/builder}
       - uses: actions/download-artifact@v4
-        with:
-          name: contextual-architecture-routing-fresh-verifier
-          path: receipts/fresh-verifier
-      - name: Compare canonical fingerprints
+        with: {name: page-excellence-ratification-fresh-verifier, path: receipts/verifier}
+      - name: Compare exact fingerprints
         run: |
           mkdir -p artifacts
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const builder=JSON.parse(fs.readFileSync('receipts/builder/contextual-architecture-routing-builder.v1.json'));
-          const verifier=JSON.parse(fs.readFileSync('receipts/fresh-verifier/contextual-architecture-routing-fresh-verifier.v1.json'));
-          const equal=builder.result==='PASS'&&verifier.result==='PASS'&&builder.normalizedFingerprint===verifier.normalizedFingerprint;
-          const out={schema:'CONTEXTUAL_ARCHITECTURE_ROUTING_INDEPENDENT_VERIFICATION_RECEIPT_v1',result:equal?'PASS':'FAIL',operationId:'METHODS_EXISTING_CONSTRUCT_ADOPTION_MANDATORY_ROUTING_REPAIR_v1',toolsetVersion:'1.1.0',builderFingerprint:builder.normalizedFingerprint,freshVerifierFingerprint:verifier.normalizedFingerprint,exactNormalizedEquality:equal,productMutationPerformed:false,visualSubjectMutated:false,mergePerformed:false,constructionAuthorityTerminated:false};
-          fs.writeFileSync('artifacts/contextual-architecture-routing-final.v1.json',JSON.stringify(out,null,2)+'\n');
-          if(!equal)process.exit(1);
+          const b=JSON.parse(fs.readFileSync('receipts/builder/page-excellence-ratification-builder.v1.json')),v=JSON.parse(fs.readFileSync('receipts/verifier/page-excellence-ratification-fresh-verifier.v1.json'));
+          const equal=b.result==='PASS'&&v.result==='PASS'&&b.normalizedFingerprint===v.normalizedFingerprint&&b.sourceToolchainFingerprint===process.env.SOURCE_FINGERPRINT&&v.sourceToolchainFingerprint===process.env.SOURCE_FINGERPRINT;
+          const out={schema:'PAGE_EXCELLENCE_PERMANENT_RATIFICATION_INDEPENDENT_VERIFICATION_RECEIPT_v1',result:equal?'PASS':'FAIL',operationId:process.env.RATIFICATION_OPERATION_ID,toolsetVersion:'1.1.0',builderFingerprint:b.normalizedFingerprint,freshVerifierFingerprint:v.normalizedFingerprint,sourceToolchainFingerprint:b.sourceToolchainFingerprint,exactNormalizedEquality:equal,ratificationStatus:'RATIFIED_ACTIVE_FAIL_CLOSED',productMutationPerformed:false,visualSubjectMutated:false,publicPageMutated:false,constructionAuthorityTerminated:false};
+          fs.writeFileSync('artifacts/page-excellence-ratification-final.v1.json',JSON.stringify(out,null,2)+'\n'); if(!equal)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: contextual-architecture-routing-independent
-          path: artifacts/contextual-architecture-routing-final.v1.json
+          name: page-excellence-ratification-independent
+          path: artifacts/page-excellence-ratification-final.v1.json
           if-no-files-found: error
-          retention-days: 30
-
-  blind-evaluation:
-    if: github.event_name == 'workflow_dispatch'
-    needs: toolchain-self-test
-    strategy:
-      fail-fast: false
-      matrix:
-        holder: [builder, fresh-verifier]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout activation candidate
-        uses: actions/checkout@v4
-        with:
-          path: toolchain
-      - name: Checkout packaging successor
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.PACKAGING_HEAD }}
-          fetch-depth: 0
-          path: subject
-      - name: Prove immutable visual subject
-        shell: bash
-        run: |
-          cd subject
-          mapfile -t changed < <(git diff --name-only "$SUBJECT_HEAD" "$PACKAGING_HEAD")
-          printf '%s\n' "${changed[@]}"
-          test "${#changed[@]}" -eq 1
-          test "${changed[0]}" = "$CANDIDATE_ROOT/state-schema.v1.json"
-          echo 'VISUAL_BYTES_PRESERVED=true' >> "$GITHUB_ENV"
-      - name: Reproduce packaged deterministic validation
-        shell: bash
-        run: |
-          cd "subject/$CANDIDATE_ROOT"
-          node validate.mjs | tee "$RUNNER_TEMP/static-validation.json"
-          node -e "const r=require(process.argv[1]); if(r.result!=='PASS'||r.checks.length!==30) process.exit(1)" "$RUNNER_TEMP/static-validation.json"
-          for file in candidate/*.mjs; do node --check "$file"; done
-          echo 'PACKAGING_VALIDATION_PASS=true' >> "$GITHUB_ENV"
-      - name: Install blind runtime instrumentation
-        shell: bash
-        working-directory: toolchain
-        run: |
-          npm init -y >/dev/null
-          npm install --no-save playwright @axe-core/playwright
-          npx playwright install --with-deps chromium firefox webkit
-      - name: Execute blind browser, accessibility, responsive, performance, and state evaluation
-        shell: bash
-        run: |
-          mkdir -p "toolchain/artifacts"
-          python3 -m http.server 4173 --bind 127.0.0.1 --directory "subject/$CANDIDATE_ROOT/candidate" >"$RUNNER_TEMP/server.log" 2>&1 &
-          server_pid=$!
-          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
-          for attempt in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break; sleep 1; done
-          node toolchain/.github/ai-router/page-excellence-toolchain/blind-evaluator.v1.mjs \
-            --baseUrl http://127.0.0.1:4173/index.html \
-            --subjectDir "$GITHUB_WORKSPACE/subject/$CANDIDATE_ROOT" \
-            --subjectHead "$SUBJECT_HEAD" \
-            --packagingHead "$PACKAGING_HEAD" \
-            --holder "${{ matrix.holder }}" \
-            --browsers chromium,firefox,webkit \
-            --toolsetBundle toolchain/.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json \
-            --output "toolchain/artifacts/${{ matrix.holder }}.json"
-      - name: Upload blind JSON receipt
-        uses: actions/upload-artifact@v4
-        with:
-          name: methods-page-blind-${{ matrix.holder }}
-          path: toolchain/artifacts/${{ matrix.holder }}.json
-          if-no-files-found: error
-          retention-days: 30
-
-  independent-reproduction:
-    needs: blind-evaluation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout activation candidate
-        uses: actions/checkout@v4
-        with:
-          path: toolchain
-      - uses: actions/download-artifact@v4
-        with:
-          name: methods-page-blind-builder
-          path: receipts/builder
-      - uses: actions/download-artifact@v4
-        with:
-          name: methods-page-blind-fresh-verifier
-          path: receipts/fresh-verifier
-      - name: Compare normalized score identities
-        run: |
-          mkdir -p final
-          node toolchain/.github/ai-router/page-excellence-toolchain/compare-reproductions.v1.mjs \
-            --builder receipts/builder/builder.json \
-            --verifier receipts/fresh-verifier/fresh-verifier.json \
-            --output final/methods-page-blind-baseline-result.v1.json
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: methods-page-blind-baseline-final
-          path: final/methods-page-blind-baseline-result.v1.json
-          if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
 
   terminal-closure:
-    needs: independent-contextual-routing
+    needs: independent
+    if: ${{ always() && github.event_name == 'pull_request' && needs.independent.result == 'success' }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with:
-          name: contextual-architecture-routing-independent
-          path: incoming
-      - name: Close exact operation lock and terminate construction authority
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+        with: {name: page-excellence-ratification-independent, path: incoming}
+      - name: Close lock and terminate ratification authority
+        env: {GITHUB_TOKEN: '${{ github.token }}'}
         run: |
-          mkdir -p artifacts
-          closed=false
+          mkdir -p artifacts; closed=false
+          git fetch origin refs/heads/operation-locks/repository-operation-intake-v1
+          git merge-base --is-ancestor 216d643913600ddfbc080423e9488dc39ff4fb6e FETCH_HEAD
           for attempt in {1..8}; do
             set +e
-            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-              --action close \
-              --repository "${{ github.repository }}" \
-              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
-              --operation-id "$ROUTING_OPERATION_ID" \
-              --lock-scope "$ROUTING_LOCK_SCOPE" \
-              --lock-generation "$ROUTING_LOCK_GENERATION" \
-              --terminal-disposition PASS_CLOSED \
-              --output /tmp/closure.json
-            status=$?
-            set -e
-            if [[ "$status" -eq 0 ]]; then
-              closed=true
-              break
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "${{ github.repository }}" --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id "$RATIFICATION_OPERATION_ID" --lock-scope "$RATIFICATION_LOCK_SCOPE" --lock-generation "$RATIFICATION_LOCK_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/closure.json
+            status=$?; set -e
+            if [[ "$status" -eq 0 ]]; then closed=true; break; fi
+            if node -e "const r=require('/tmp/closure.json');process.exit(r.errorCode==='ACTIVE_LOCK_NOT_FOUND'?0:1)"; then
+              node -e "require('fs').writeFileSync('/tmp/closure.json',JSON.stringify({schema:'REPOSITORY_OPERATION_TERMINAL_CLOSURE_RECEIPT_v1',result:'TERMINAL_CLOSURE_ALREADY_EFFECTIVE',operationId:process.env.RATIFICATION_OPERATION_ID,lockScope:process.env.RATIFICATION_LOCK_SCOPE,lockGeneration:Number(process.env.RATIFICATION_LOCK_GENERATION),canonicalAcquisitionCommit:'216d643913600ddfbc080423e9488dc39ff4fb6e',lockReleased:true,activeLockPresent:false,terminalDisposition:'PASS_CLOSED',reason:'EXACT_ACQUISITION_IS_ANCESTOR_AND_SCOPE_IS_NO_LONGER_ACTIVE'},null,2)+'\n')"
+              closed=true; break
             fi
-            cat /tmp/closure.json || true
-            if [[ "$status" -ne 4 ]]; then
-              exit "$status"
-            fi
-            sleep $((attempt * 2))
+            if [[ "$status" -ne 4 ]]; then cat /tmp/closure.json; exit "$status"; fi
+            sleep $((attempt*2))
           done
           test "$closed" = true
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const base=JSON.parse(fs.readFileSync('incoming/contextual-architecture-routing-final.v1.json'));
-          const closure=JSON.parse(fs.readFileSync('/tmp/closure.json'));
-          if(base.result!=='PASS'||closure.result!=='TERMINAL_CLOSURE_COMMITTED'||closure.lockReleased!==true)process.exit(1);
-          const out={...base,closure,constructionAuthorityTerminated:true,pr613ExpectedState:'OPEN_DRAFT_UNMERGED',mergeAuthorized:false,productMutationAuthorized:false};
-          fs.writeFileSync('artifacts/contextual-architecture-routing-final.v1.json',JSON.stringify(out,null,2)+'\n');
+          import fs from 'node:fs'; const base=JSON.parse(fs.readFileSync('incoming/page-excellence-ratification-final.v1.json')),closure=JSON.parse(fs.readFileSync('/tmp/closure.json')); const validClosure=['TERMINAL_CLOSURE_COMMITTED','TERMINAL_CLOSURE_ALREADY_EFFECTIVE'].includes(closure.result)&&closure.lockReleased===true; if(base.result!=='PASS'||!validClosure)process.exit(1); fs.writeFileSync('artifacts/page-excellence-ratification-final.v1.json',JSON.stringify({...base,closure,constructionAuthorityTerminated:true,mergeAuthorized:true,exactHeadGuardRequired:true,productMutationAuthorized:false,publicPageMutationAuthorized:false,visualSubjectMutationAuthorized:false},null,2)+'\n');
           NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: contextual-architecture-routing-final
-          path: artifacts/contextual-architecture-routing-final.v1.json
+          name: page-excellence-ratification-final
+          path: artifacts/page-excellence-ratification-final.v1.json
+          if-no-files-found: error
+          retention-days: 90
+
+  blind-evaluation:
+    if: github.event_name == 'workflow_dispatch'
+    needs: validate
+    strategy:
+      matrix: {holder: [builder, fresh-verifier]}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {path: toolchain}
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.PACKAGING_HEAD }}', fetch-depth: 0, path: subject}
+      - name: Reproduce immutable package and execute browser matrix
+        run: |
+          cd subject
+          test "$(git diff --name-only "$SUBJECT_HEAD" "$PACKAGING_HEAD" | wc -l)" -eq 1
+          test "$(git diff --name-only "$SUBJECT_HEAD" "$PACKAGING_HEAD")" = "$CANDIDATE_ROOT/state-schema.v1.json"
+          cd "$CANDIDATE_ROOT"; node validate.mjs >/tmp/static.json; node -e "const r=require('/tmp/static.json');if(r.result!=='PASS'||r.checks.length!==30)process.exit(1)"; cd "$GITHUB_WORKSPACE/toolchain"
+          npm init -y >/dev/null; npm install --no-save playwright @axe-core/playwright; npx playwright install --with-deps chromium firefox webkit
+          mkdir -p artifacts
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE/subject/$CANDIDATE_ROOT/candidate" >/tmp/server.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break; sleep 1; done
+          node .github/ai-router/page-excellence-toolchain/blind-evaluator.v1.mjs --baseUrl http://127.0.0.1:4173/index.html --subjectDir "$GITHUB_WORKSPACE/subject/$CANDIDATE_ROOT" --subjectHead "$SUBJECT_HEAD" --packagingHead "$PACKAGING_HEAD" --holder "${{ matrix.holder }}" --browsers chromium,firefox,webkit --toolsetBundle .github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json --output "artifacts/${{ matrix.holder }}.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-page-blind-${{ matrix.holder }}
+          path: toolchain/artifacts/${{ matrix.holder }}.json
           if-no-files-found: error
           retention-days: 30

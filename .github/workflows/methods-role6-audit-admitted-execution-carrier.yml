@@ -8,18 +8,18 @@ permissions:
   contents: write
   actions: read
 concurrency:
-  group: methods-role6-audit-admitted-execution-carrier-v1
+  group: methods-role6-audit-admitted-execution-carrier-v2
   cancel-in-progress: false
 env:
   REPOSITORY: smansfield635-create/smansfield635-create.github.io
-  CARRIER_BASE_HEAD: 94948ce99ee43c86e693e69e3e21d10cd25702e4
-  CARRIER_OPERATION_ID: METHODS_ROLE_6_AUDIT_ADMITTED_EXECUTION_CARRIER_v1
-  CARRIER_LOCK_SCOPE: METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/ADMITTED_EXECUTION_CARRIER/V1
-  CARRIER_LOCK_GENERATION: '48'
+  CARRIER_BASE_HEAD: 7d672c10a99cb525bf9fb4b40b51ec8157944bb5
+  CARRIER_OPERATION_ID: METHODS_ROLE_6_AUDIT_ADMITTED_EXECUTION_CARRIER_v2
+  CARRIER_LOCK_SCOPE: METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/ADMITTED_EXECUTION_CARRIER/V2
+  CARRIER_LOCK_GENERATION: '50'
   AUDIT_OPERATION_ID: METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1
   AUDIT_LOCK_SCOPE: METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_DEVELOPMENTAL_BASELINE
-  AUDIT_LOCK_GENERATION: '46'
-  AUDIT_GOVERNING_HEAD: 3753f7307c36f1269f68fd5222a59c1605f12358
+  AUDIT_LOCK_GENERATION: '49'
+  AUDIT_GOVERNING_HEAD: 7d672c10a99cb525bf9fb4b40b51ec8157944bb5
   AUDIT_BRANCH: audit/methods-role6-formal-record-three-anchor-developmental-baseline-v1-001
   AUDIT_TOOLING_HEAD: a823c1fee318297d77cac6d24d4f268ac45dafcf
   MANIFEST_PATH: control-plane/methods-information-benchmark/role6-audit-execution-carrier/audit-package.v1.json
@@ -75,6 +75,7 @@ jobs:
             exit "$prior"
           }
           trap finish EXIT
+          git fetch origin "$CARRIER_BASE_HEAD"
           test "$(git rev-parse "$CARRIER_BASE_HEAD^{commit}")" = "$CARRIER_BASE_HEAD"
           git diff --name-only "$CARRIER_BASE_HEAD...HEAD" | sort > "$RUNNER_TEMP/actual"
           printf '%s\n' '.github/workflows/methods-role6-audit-admitted-execution-carrier.yml' "$MANIFEST_PATH" | sort > "$RUNNER_TEMP/expected"
@@ -85,16 +86,17 @@ jobs:
           const h={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'};
           const api=async u=>{const r=await fetch(u,{headers:h});if(!r.ok)throw Error(`API:${r.status}:${u}`);return r.json()};
           const m=JSON.parse(fs.readFileSync(process.env.MANIFEST_PATH,'utf8'));
+          if(m.schema!=='METHODS_ROLE6_AUDIT_REPOSITORY_RESIDENT_PACKAGE_CARRIER_v2'||m.encoding!=='gzip-base64')throw Error('MANIFEST_IDENTITY');
+          if(m.auditLockGeneration!==Number(process.env.AUDIT_LOCK_GENERATION)||m.carrierLockGeneration!==Number(process.env.CARRIER_LOCK_GENERATION)||m.auditOperationId!==process.env.AUDIT_OPERATION_ID||m.carrierOperationId!==process.env.CARRIER_OPERATION_ID||m.auditBranch!==process.env.AUDIT_BRANCH||m.auditToolingHead!==process.env.AUDIT_TOOLING_HEAD||m.governingMainHead!==process.env.AUDIT_GOVERNING_HEAD)throw Error('MANIFEST_BINDING');
           const lf=await api(`https://api.github.com/repos/${process.env.REPOSITORY}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=${encodeURIComponent('operation-locks/repository-operation-intake-v1')}`);
           const l=JSON.parse(Buffer.from(String(lf.content).replace(/\s/g,''),'base64').toString());
-          for(const [op,gen,head] of [[process.env.AUDIT_OPERATION_ID,46,process.env.AUDIT_GOVERNING_HEAD],[process.env.CARRIER_OPERATION_ID,48,process.env.CARRIER_BASE_HEAD]]){const x=Object.values(l.activeScopes??{}).find(v=>v.operationId===op);if(!x||x.lockGeneration!==gen||x.governingHead!==head||x.state!=='ADMITTED_LOCKED'||x.released!==false)throw Error(`LOCK_NOT_ACTIVE:${op}`)}
-          let s='';for(let i=0;i<m.commentIds.length;i++){const c=await api(`https://api.github.com/repos/${process.env.REPOSITORY}/issues/comments/${m.commentIds[i]}`);if(c.user?.login!=='smansfield635-create')throw Error('COMMENT_AUTHOR');const [marker,data]=String(c.body).trim().split(/\n/,2);if(marker!==m.partMarkers[i]||!data)throw Error(`COMMENT_PART:${i+1}`);s+=data.trim()}
-          const gz=Buffer.from(s,'base64');if(crypto.createHash('sha256').update(gz).digest('hex')!==m.compressedSha256)throw Error('COMPRESSED_HASH');
+          for(const [op,gen,head] of [[process.env.AUDIT_OPERATION_ID,Number(process.env.AUDIT_LOCK_GENERATION),process.env.AUDIT_GOVERNING_HEAD],[process.env.CARRIER_OPERATION_ID,Number(process.env.CARRIER_LOCK_GENERATION),process.env.CARRIER_BASE_HEAD]]){const x=Object.values(l.activeScopes??{}).find(v=>v.operationId===op);if(!x||x.lockGeneration!==gen||x.governingHead!==head||x.state!=='ADMITTED_LOCKED'||x.released!==false)throw Error(`LOCK_NOT_ACTIVE:${op}`)}
+          const gz=Buffer.from(m.compressedBase64,'base64');if(crypto.createHash('sha256').update(gz).digest('hex')!==m.compressedSha256)throw Error('COMPRESSED_HASH');
           const raw=zlib.gunzipSync(gz);if(crypto.createHash('sha256').update(raw).digest('hex')!==m.uncompressedSha256)throw Error('PACKAGE_FILE_HASH');
           fs.writeFileSync(`${process.env.RUNNER_TEMP}/package/audit-package.v1.json`,raw);
           const pkg=JSON.parse(raw),r=loadRegistry(process.cwd());validatePackage(pkg,r);
           const pf=packageFingerprint(pkg,r),om=outputManifestSha256(pkg);if(pf!==m.packageFingerprint||om!==m.outputManifestSha256)throw Error('PACKAGE_IDENTITY');
-          fs.writeFileSync(`${process.env.RUNNER_TEMP}/evidence/package-validation-receipt.json`,JSON.stringify({schema:'METHODS_ROLE6_AUDIT_PACKAGE_VALIDATION_RECEIPT_v1',result:'PASS_CLOSED',packageFingerprint:pf,outputManifestSha256:om,substantiveOutputCount:27,returnPacketCount:1,commentIds:m.commentIds},null,2)+'\n');
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/evidence/package-validation-receipt.json`,JSON.stringify({schema:'METHODS_ROLE6_AUDIT_PACKAGE_VALIDATION_RECEIPT_v2',result:'PASS_CLOSED',compressedSha256:m.compressedSha256,uncompressedSha256:m.uncompressedSha256,packageFingerprint:pf,outputManifestSha256:om,substantiveOutputCount:27,returnPacketCount:1,auditLockGeneration:m.auditLockGeneration,carrierLockGeneration:m.carrierLockGeneration},null,2)+'\n');
           NODE
           for p in control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-output-path-registry.v1.json control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-package.schema.v1.json tools/methods-role6-audit/lib.v1.mjs tools/methods-role6-audit/audit-package-materializer.v1.mjs tools/methods-role6-audit/audit-package-verifier.v1.mjs; do test "$(git rev-parse "HEAD:$p")" = "$(git rev-parse "$AUDIT_TOOLING_HEAD:$p")"; done
           git fetch origin "$AUDIT_BRANCH" "$AUDIT_TOOLING_HEAD"

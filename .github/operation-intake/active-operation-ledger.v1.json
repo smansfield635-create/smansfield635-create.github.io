@@ -12,18 +12,6 @@
       "scopeHash": "054f3731e43dc4adf0862eca96bc9c8da0ec4da5715a71f4157ef934ad3a6392",
       "state": "ADMITTED_LOCKED"
     },
-    "0c064d1d4d9a53e2ad1a724d68b51d306cac074301218cf321f5feb755853d73": {
-      "governingHead": "2c4e5a21e4e902bee421528498c112998fa783bc",
-      "lockGeneration": 117,
-      "lockScope": "H_EARTH:MAP_WIDE_INSTRUMENT:FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION:V1",
-      "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION_v1",
-      "procedureLocatorDigest": "9cc8c05acc306f723adfa36c228a198ea9f98fcae49055776b71cf1a94704258",
-      "released": false,
-      "requestDigest": "248f54af38caea33cfad8827e35d160f0c71e233557e6ff90f70c396ace7783b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "0c064d1d4d9a53e2ad1a724d68b51d306cac074301218cf321f5feb755853d73",
-      "state": "ADMITTED_LOCKED"
-    },
     "1b0d9d545e283cde6a2f3a9999f9ecfcf6089b7e18d501db30f67d1138658752": {
       "governingHead": "c3fc862a754ce94b4c0fefad40097f1d52904de2",
       "lockGeneration": 94,
@@ -1552,6 +1540,19 @@
       "scopeHash": "b3f567ca1dce878da88ff5fa534ec53aae06ff6785c842c98a5faa33eb9eedf8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "2c4e5a21e4e902bee421528498c112998fa783bc",
+      "lockGeneration": 117,
+      "lockScope": "H_EARTH:MAP_WIDE_INSTRUMENT:FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION:V1",
+      "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION_v1",
+      "procedureLocatorDigest": "9cc8c05acc306f723adfa36c228a198ea9f98fcae49055776b71cf1a94704258",
+      "released": true,
+      "requestDigest": "248f54af38caea33cfad8827e35d160f0c71e233557e6ff90f70c396ace7783b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0c064d1d4d9a53e2ad1a724d68b51d306cac074301218cf321f5feb755853d73",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

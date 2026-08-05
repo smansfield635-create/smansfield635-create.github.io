@@ -1,0 +1,42 @@
+[
+  {
+    "provider_id": "HOSP_A",
+    "mortality_worse": 0,
+    "mortality_reported": 4,
+    "safety_worse": 0,
+    "safety_reported": 5,
+    "readmission_worse": 0,
+    "readmission_reported": 6,
+    "overall_rating": 5
+  },
+  {
+    "provider_id": "HOSP_B",
+    "mortality_worse": 0,
+    "mortality_reported": 4,
+    "safety_worse": 0,
+    "safety_reported": 5,
+    "readmission_worse": 6,
+    "readmission_reported": 6,
+    "overall_rating": 3
+  },
+  {
+    "provider_id": "HOSP_C",
+    "mortality_worse": 1,
+    "mortality_reported": 4,
+    "safety_worse": 2,
+    "safety_reported": 5,
+    "readmission_worse": 1,
+    "readmission_reported": 6,
+    "overall_rating": 2
+  },
+  {
+    "provider_id": "HOSP_D",
+    "mortality_worse": "",
+    "mortality_reported": "",
+    "safety_worse": 0,
+    "safety_reported": 5,
+    "readmission_worse": 0,
+    "readmission_reported": 6,
+    "overall_rating": 4
+  }
+]

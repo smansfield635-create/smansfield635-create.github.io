@@ -12,18 +12,6 @@
       "scopeHash": "214a46e0f56d7907a6872c2c9adfa22ec9d48256c0136e55d888e98f80de237a",
       "state": "ADMITTED_LOCKED"
     },
-    "40e56140536d54f6afd826c5689330c5777ac976fdfef7469fd34a8d0b15b13d": {
-      "governingHead": "b568fe4e1323a465de4356c04babad80048b04d9",
-      "lockGeneration": 75,
-      "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:OPERATION_B:FINALIZATION:V1",
-      "operationId": "CP10_OPERATION_B_FINALIZATION_EVIDENCE_AND_TERMINATION_v1",
-      "procedureLocatorDigest": "eb65f736015a5a8564b5d1b766c26ca7b4113e5d885cb0526a612ffb0e337c76",
-      "released": false,
-      "requestDigest": "b90e3b7c01d06e65daf8f428d663a6f5e4b2e8c1dd395024b98401d2667ad695",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "40e56140536d54f6afd826c5689330c5777ac976fdfef7469fd34a8d0b15b13d",
-      "state": "ADMITTED_LOCKED"
-    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -970,6 +958,19 @@
       "requestDigest": "384fb21608b2b6a11a6c8c767d2f2781db5f7c39795f155f9d8ef7fca42126c2",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "f249b4bce2ed3970d282fc72178e7b63b3e55c8a3fab281924392070b6e24781",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "b568fe4e1323a465de4356c04babad80048b04d9",
+      "lockGeneration": 75,
+      "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:OPERATION_B:FINALIZATION:V1",
+      "operationId": "CP10_OPERATION_B_FINALIZATION_EVIDENCE_AND_TERMINATION_v1",
+      "procedureLocatorDigest": "eb65f736015a5a8564b5d1b766c26ca7b4113e5d885cb0526a612ffb0e337c76",
+      "released": true,
+      "requestDigest": "b90e3b7c01d06e65daf8f428d663a6f5e4b2e8c1dd395024b98401d2667ad695",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "40e56140536d54f6afd826c5689330c5777ac976fdfef7469fd34a8d0b15b13d",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

@@ -1,0 +1,23 @@
+{
+  "schema": "METHODS_ROLE6_AUDIT_PACKAGE_COMMENT_CARRIER_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "issueNumber": 575,
+  "commentIds": [5187084861, 5187093011, 5187100159],
+  "partMarkers": [
+    "METHODS_ROLE6_AUDIT_PACKAGE_GZIP_BASE64_PART_1_OF_3",
+    "METHODS_ROLE6_AUDIT_PACKAGE_GZIP_BASE64_PART_2_OF_3",
+    "METHODS_ROLE6_AUDIT_PACKAGE_GZIP_BASE64_PART_3_OF_3"
+  ],
+  "encoding": "gzip-base64",
+  "compressedSha256": "6e344a0410d6fad74373e32149a7c7eafc3eb0f2182a36cfe9e53216d0e63a2f",
+  "uncompressedSha256": "d053b334b22dd195f470a347d123a877c7c4b4cbfeb0af98bc24e4392e810ad9",
+  "packageFingerprint": "0a2b90e94c16f7df75ce205deb58c9bd4dee4d08c63ad4da2164fbbbf74249a3",
+  "outputManifestSha256": "ccec60ff18f011871eea04501797c72c8df35ae1f99a540c505086e58b4e342b",
+  "auditOperationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+  "auditBranch": "audit/methods-role6-formal-record-three-anchor-developmental-baseline-v1-001",
+  "auditToolingHead": "a823c1fee318297d77cac6d24d4f268ac45dafcf",
+  "auditLockGeneration": 46,
+  "carrierLockGeneration": 48,
+  "publicMutation": false,
+  "merge": false
+}

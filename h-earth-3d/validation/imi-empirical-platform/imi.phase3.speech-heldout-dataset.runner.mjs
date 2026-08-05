@@ -1,5 +1,6 @@
 import { createRequire } from 'node:module';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { spawn } from 'node:child_process';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { canonicalDigest, deepFreeze } from '../../tools/instrument-platform/platform-core.mjs';
 
@@ -13,69 +14,71 @@ function argValue(name, fallback = null) {
   return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : fallback;
 }
 const outputDir = argValue('--output-dir', '/tmp/imi-phase3-speech-heldout-dataset');
-const clock = () => new Date(argValue('--clock', '2026-08-05T17:45:00.000Z'));
-const providedPackage = argValue('--lawful-source-package', null);
+const clockValue = argValue('--clock', '2026-08-05T19:05:00.000Z');
+const clock = () => new Date(clockValue);
+const probeDir = path.join(outputDir, 'clac-public-source-probe');
 
-async function inspectLocator(url) {
-  try {
-    const response = await fetch(url, { redirect: 'follow' });
-    const text = await response.text();
-    const normalized = text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    return {
-      url,
-      httpStatus: response.status,
-      ok: response.ok,
-      finalUrl: response.url,
-      contentBytes: Buffer.byteLength(text, 'utf8'),
-      contentDigest: canonicalDigest(text),
-      accessSignals: {
-        membershipRequired: /membership|member/i.test(normalized),
-        registrationRequired: /register|registration/i.test(normalized),
-        controlledOrApprovedAccess: /controlled access|approved access|password protected|restricted/i.test(normalized),
-        directOpenFeaturePackageAdvertised: /open feature package|direct public csv|download without registration/i.test(normalized)
-      }
-    };
-  } catch (error) {
-    return { url, ok: false, error: String(error?.message || error) };
-  }
+async function executeProbe() {
+  await mkdir(probeDir, { recursive: true });
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.env.PYTHON || 'python3', [
+      'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py',
+      '--output-dir', probeDir,
+      '--clock', clockValue
+    ], { stdio: 'inherit' });
+    child.once('error', reject);
+    child.once('exit', (code) => code === 0 ? resolve() : reject(new Error(`CLAC_SOURCE_PROBE_EXIT_${code}`)));
+  });
 }
 
 await mkdir(outputDir, { recursive: true });
-const locatorInspections = await Promise.all(track.lawfulSourceCandidates.map(inspectLocator));
-const sourceIdentity = deepFreeze({
-  schemaVersion: 'IMI_PHASE_3_SPEECH_HELD_OUT_SOURCE_AVAILABILITY_IDENTITY_v1',
-  observedAt: clock().toISOString(),
-  locators: locatorInspections,
-  providedPackage: providedPackage ? { pathProvided: true, opaquePath: path.basename(providedPackage) } : { pathProvided: false },
-  sourceAvailabilityDigest: canonicalDigest({ locatorInspections, providedPackage: Boolean(providedPackage) })
-});
-
-if (providedPackage) {
-  throw new Error('SPEECH_EXTERNAL_PACKAGE_EXECUTION_REQUIRES_A_SEPARATELY_IMPLEMENTED_AND_REVIEWED_FEATURE_ADAPTER');
+let probe;
+try {
+  await executeProbe();
+  probe = JSON.parse(await readFile(path.join(probeDir, 'clac-source-probe.v1.json'), 'utf8'));
+} catch (error) {
+  probe = {
+    schemaVersion: 'IMI_PHASE_3_CLAC_SOURCE_PROBE_v1',
+    result: 'HELD_CLAC_SOURCE_PROBE_PROCESS_FAILED',
+    observedAt: clock().toISOString(),
+    archiveUrl: 'https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip',
+    error: String(error?.message || error)
+  };
 }
-
+const sourceAccessible = probe.result === 'PASS_CLAC_REMOTE_ZIP_INVENTORY';
 const body = {
   schemaVersion: 'IMI_PHASE_3_SPEECH_HELD_OUT_REPRODUCTION_RECEIPT_v1',
   operation: 'IMI_PARALLEL_EXTERNAL_TESTS_v1',
   track: track.track,
-  result: 'HELD_LAWFUL_HELD_OUT_SPEECH_PACKAGE_NOT_AVAILABLE_TO_EXECUTION',
-  terminalDisposition: 'HELD_OPEN_SOURCE_ACCESS_AND_FEATURE_ADAPTER_REQUIRED',
+  result: sourceAccessible
+    ? 'HELD_PUBLIC_CLAC_SOURCE_INVENTORIED_EXACT_FIVE_FEATURE_EXECUTION_PENDING'
+    : 'HELD_PUBLIC_CLAC_SOURCE_INVENTORY_NOT_COMPLETED',
+  terminalDisposition: sourceAccessible
+    ? 'HELD_OPEN_PUBLIC_SOURCE_FEATURE_EXTRACTION'
+    : 'HELD_OPEN_PUBLIC_SOURCE_ACCESS',
   observedAt: clock().toISOString(),
   routeId: route.routeId,
   routeDigest: canonicalDigest(route),
-  sourceIdentity,
-  admission: {
-    independentPackageProvided: false,
-    minimumParticipantCountRequired: 100,
-    minimumDeclaredGroupsOrLanguagesRequired: 2,
-    frozenFiveFeatureInputsRequired: true,
-    minimumEvidenceSatisfied: false
-  },
-  reason: 'THE_IDENTIFIED_INDEPENDENT_SPEECH_CORPORA_REQUIRE_REGISTRATION_MEMBERSHIP_OR_APPROVED_ACCESS_AND_NO_LAWFULLY_ACCESSIBLE_FROZEN_FIVE_FEATURE_PACKAGE_WAS_PROVIDED_TO_THIS_EXECUTION',
+  sourceDigest: canonicalDigest(probe),
+  executionDigest: null,
+  summaryDigest: null,
+  minimumEvidenceSatisfied: false,
   phase4Candidate: false,
+  sourceIdentity: probe,
+  admission: {
+    independentPublicCorpusBound: true,
+    archiveInventoryCompleted: sourceAccessible,
+    minimumParticipantCountRequired: 100,
+    minimumDeclaredGroupsRequired: 2,
+    frozenFiveFeatureInputsRequired: true,
+    exactFeatureExtractionCompleted: false
+  },
+  reason: sourceAccessible
+    ? 'THE_INDEPENDENT_PUBLIC_CLAC_SOURCE_IS_ACCESSIBLE_AND_INVENTORIED; EXACT_FROZEN_FEATURE_EXTRACTION_REMAINS_REQUIRED_BEFORE_EMPIRICAL_CREDIT'
+    : 'THE_INDEPENDENT_PUBLIC_CLAC_SOURCE_WAS_BOUND_BUT_REMOTE_ARCHIVE_INVENTORY_DID_NOT_COMPLETE',
   boundaries: {
     protectedDataAccessAttempted: false,
-    authenticationBypassAttempted: false,
+    fullArchiveDownloaded: false,
     participantRowsInspected: false,
     newEmpiricalTestExecuted: false,
     routeRetuned: false,
@@ -84,6 +87,6 @@ const body = {
   }
 };
 const receipt = deepFreeze({ ...body, receiptDigest: canonicalDigest(body) });
-await writeFile(path.join(outputDir, 'speech-phase3-source-availability.v1.json'), `${JSON.stringify(sourceIdentity, null, 2)}\n`);
+await writeFile(path.join(outputDir, 'speech-phase3-source-availability.v1.json'), `${JSON.stringify(probe, null, 2)}\n`);
 await writeFile(path.join(outputDir, 'speech-phase3-track-receipt.v1.json'), `${JSON.stringify(receipt, null, 2)}\n`);
 console.log(JSON.stringify(receipt, null, 2));

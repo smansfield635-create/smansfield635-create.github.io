@@ -36,18 +36,6 @@
       "scopeHash": "c8170225ecfd16b065547b18e3190cc6c6531cbef77ab380a628c0413467b267",
       "state": "ADMITTED_LOCKED"
     },
-    "d0a6d1b747299c11fb0893fb571db06d00966fd6e72750c2f5d4bd005ce8b0c3": {
-      "governingHead": "94948ce99ee43c86e693e69e3e21d10cd25702e4",
-      "lockGeneration": 48,
-      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/ADMITTED_EXECUTION_CARRIER/V1",
-      "operationId": "METHODS_ROLE_6_AUDIT_ADMITTED_EXECUTION_CARRIER_v1",
-      "procedureLocatorDigest": "bc7e5f099d2241d4865a145bc8d72866221a0a9ac07bc3fea8c13b2987a52695",
-      "released": false,
-      "requestDigest": "6b48c75853c45d03510a481833afaf8a6a143d04827a404305b786939af543f5",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "d0a6d1b747299c11fb0893fb571db06d00966fd6e72750c2f5d4bd005ce8b0c3",
-      "state": "ADMITTED_LOCKED"
-    },
     "d3713cfb790f3d6b56d22862f66fe154a86f8320a592bffa9fe1292cd9aca6ff": {
       "governingHead": "7329f75f0c53be4626588a2920ac8ded903aff2f",
       "lockGeneration": 23,
@@ -611,6 +599,19 @@
       "requestDigest": "302db6b56bcdb845ccdbe996bb9edefd9e73ed11e0717af0fcd9c33cf48c31cb",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "39e45979cca0af8f42410a87e11a3914b42f8293e78880da892e407d1a6cc4b5",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "94948ce99ee43c86e693e69e3e21d10cd25702e4",
+      "lockGeneration": 48,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/ADMITTED_EXECUTION_CARRIER/V1",
+      "operationId": "METHODS_ROLE_6_AUDIT_ADMITTED_EXECUTION_CARRIER_v1",
+      "procedureLocatorDigest": "bc7e5f099d2241d4865a145bc8d72866221a0a9ac07bc3fea8c13b2987a52695",
+      "released": true,
+      "requestDigest": "6b48c75853c45d03510a481833afaf8a6a143d04827a404305b786939af543f5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d0a6d1b747299c11fb0893fb571db06d00966fd6e72750c2f5d4bd005ce8b0c3",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
     }

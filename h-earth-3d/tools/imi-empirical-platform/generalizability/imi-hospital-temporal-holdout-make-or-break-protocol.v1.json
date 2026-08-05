@@ -1,0 +1,89 @@
+{
+  "schemaVersion": "IMI_HOSPITAL_TEMPORAL_HOLDOUT_MAKE_OR_BREAK_PROTOCOL_v1",
+  "operation": "IMI_HOSPITAL_TEMPORAL_HOLDOUT_MAKE_OR_BREAK_TEST_v1",
+  "status": "FROZEN_BEFORE_OUTCOME_EXECUTION",
+  "frozenAt": "2026-08-05T22:55:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "instrument/imi-empirical-platform-v1",
+  "preFreezeSubjectHead": "0e4db2fe44b2b5b9b2012a7fcc117115df703bd5",
+  "purpose": "Make a binary stop-or-continue decision for the general IMI predictive-instrument program using a time-separated hospital outcome without route retuning.",
+  "frozenRoute": {
+    "path": "h-earth-3d/tools/imi-empirical-platform/routes/cms-hospital-refresh-2026-route.v1.json",
+    "routeId": "CMS_HOSPITAL_REFRESH_2026_BASE_ROUTE_v1",
+    "routeVersion": "1.0.0-confirmatory-style-refresh",
+    "expectedGitBlobSha": "698e11bcc7b1609dd7ddc6458387349131ff8ea1",
+    "expectedRouteDigest": "fnv1a32:8a4cb676",
+    "factorCount": 2,
+    "routeRetuningAuthorized": false
+  },
+  "sourceDesign": {
+    "country": "Brazil",
+    "state": "SP",
+    "informationSystem": "DATASUS_SIH_SUS_AIH_REDUCED_DATA",
+    "year": 2024,
+    "baselineMonths": [1, 2, 3],
+    "heldOutOutcomeMonths": [4, 5, 6, 7, 8, 9, 10, 11, 12],
+    "caseIdentity": "CNES",
+    "deduplicationIdentity": "N_AIH_WHEN_PRESENT_OTHERWISE_SOURCE_ROW",
+    "minimumAdmissionsPerWindow": 20,
+    "safetyDiagnosisRanges": ["T80_T88", "Y40_Y59", "Y60_Y84"],
+    "baselineAndOutcomeMappingMustBeIdentical": true
+  },
+  "analysisPopulation": {
+    "rule": "INTERSECTION_OF_BASELINE_ELIGIBLE_AND_HELD_OUT_OUTCOME_ELIGIBLE_HOSPITALS",
+    "minimumIntersectionInstitutions": 400,
+    "minimumBaselineRetentionFraction": 0.70,
+    "missingOutcomeDisposition": "EXCLUDE_FROM_PAIRED_ANALYSIS_AND_REPORT"
+  },
+  "frozenScores": {
+    "imiRisk": "1-((1-baseline_mortality_rate)*(1-baseline_safety_rate))",
+    "additiveRisk": "1-(((1-baseline_mortality_rate)+(1-baseline_safety_rate))/2)",
+    "weakestFactorRisk": "1-min(1-baseline_mortality_rate,1-baseline_safety_rate)",
+    "baselineMortalityRisk": "baseline_mortality_rate",
+    "baselineSafetyRisk": "baseline_safety_rate",
+    "geometricMeanControl": "1-sqrt((1-baseline_mortality_rate)*(1-baseline_safety_rate))",
+    "geometricMeanControlRole": "ALGEBRAIC_MONOTONIC_EQUIVALENCE_CONTROL_NOT_AN_INDEPENDENT_COMPETITOR"
+  },
+  "primaryOutcome": {
+    "name": "HELD_OUT_HIGH_ADVERSE_HOSPITAL",
+    "definition": "Hospital is positive when it lies in the deterministic top quintile of held-out mortality rate or the deterministic top quintile of held-out safety-complication rate.",
+    "topQuintileRule": "SELECT_CEILING_20_PERCENT_BY_DESCENDING_RATE_THEN_ASCENDING_FACILITY_ID",
+    "reviewBudgetFraction": 0.20,
+    "primaryMetric": "RECALL_OF_HELD_OUT_HIGH_ADVERSE_HOSPITALS_WITHIN_FIXED_REVIEW_BUDGET"
+  },
+  "competitiveComparators": [
+    "ADDITIVE_RISK",
+    "WEAKEST_FACTOR_RISK",
+    "BASELINE_MORTALITY_RISK",
+    "BASELINE_SAFETY_RISK"
+  ],
+  "uncertainty": {
+    "method": "PAIRED_HOSPITAL_BOOTSTRAP_OF_FIXED_SELECTION_INDICATORS_AND_PRIMARY_OUTCOME",
+    "replicates": 2000,
+    "seed": 20260805,
+    "confidence": 0.95,
+    "comparatorForInference": "BEST_OBSERVED_NON_EQUIVALENT_COMPARATOR"
+  },
+  "makeOrBreakDecision": {
+    "minimumAbsoluteRecallImprovement": 0.05,
+    "passRequires": [
+      "MINIMUM_ANALYSIS_POPULATION_SATISFIED",
+      "IMI_PRIMARY_RECALL_MINUS_BEST_COMPARATOR_PRIMARY_RECALL_GTE_0_05",
+      "PAIRED_BOOTSTRAP_95_PERCENT_LOWER_BOUND_FOR_IMPROVEMENT_GT_0",
+      "GEOMETRIC_MEAN_CONTROL_RANKING_IDENTICAL_TO_IMI"
+    ],
+    "passDisposition": "PASS_CONTINUE_IMI_PREDICTIVE_PROGRAM_ONE_UNRELATED_CONFIRMATORY_TEST_EARNED",
+    "failDisposition": "FAIL_STOP_AND_ARCHIVE_GENERAL_IMI_PREDICTIVE_AND_SCALE_DEVELOPMENT_PROGRAM",
+    "heldDisposition": "HELD_TEST_NOT_EXECUTED_OR_MINIMUM_EVIDENCE_NOT_MET",
+    "scientificFailureMustNotBeConvertedToExecutionFailure": true
+  },
+  "boundaries": {
+    "outcomeInspectionBeforeFreezeAuthorized": false,
+    "postOutcomeRouteMutationAuthorized": false,
+    "postOutcomeThresholdMutationAuthorized": false,
+    "causalClaimAuthorized": false,
+    "clinicalUseAuthorized": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  }
+}

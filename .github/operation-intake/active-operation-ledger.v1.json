@@ -12,6 +12,18 @@
       "scopeHash": "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412",
       "state": "ADMITTED_LOCKED"
     },
+    "ab8cb129de4ee6a0f3015f6edac80d806a589b2058df48221e8542b1973eae46": {
+      "governingHead": "0c77972a7f97ef6f89150ed1a0d3708ee4fdb5cb",
+      "lockGeneration": 52,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:GOVERNANCE_CI_CONFORMANCE_REPAIR:C:V1",
+      "operationId": "GOVERNANCE_CI_CONFORMANCE_REPAIR_C_001",
+      "procedureLocatorDigest": "e7e435aff3d18368a5ee5ca0959acec6f97d5fbd3b133ebf8ccafcd6e1a2b9e4",
+      "released": false,
+      "requestDigest": "aa9c4b49633e1833f4889c6294f2d011cb21c82328782d0d19096d6eb4d8c98c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ab8cb129de4ee6a0f3015f6edac80d806a589b2058df48221e8542b1973eae46",
+      "state": "ADMITTED_LOCKED"
+    },
     "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2": {
       "governingHead": "1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500",
       "lockGeneration": 14,
@@ -64,7 +76,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 51,
+  "lockGeneration": 52,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

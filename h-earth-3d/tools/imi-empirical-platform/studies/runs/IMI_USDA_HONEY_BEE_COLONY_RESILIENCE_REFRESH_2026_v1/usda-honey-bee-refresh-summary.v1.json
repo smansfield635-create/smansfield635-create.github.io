@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "IMI_USDA_HONEY_BEE_REFRESH_2026_SUMMARY_v1",
+  "result": "PASS_CLOSED_USDA_HONEY_BEE_REFRESH_2026_REPOSITORY_INTAKE_RUN",
+  "sourceIdentity": {
+    "schemaVersion": "USDA_HONEY_BEE_REFRESH_2026_SOURCE_IDENTITY_v1",
+    "retrievedAt": "2026-08-05T15:00:00.000Z",
+    "source": {
+      "publication": "Honey Bee Colonies",
+      "agency": "USDA National Agricultural Statistics Service",
+      "publicationPage": "https://esmis.nal.usda.gov/publication/honey-bee-colonies",
+      "releasePage": "https://esmis.nal.usda.gov/publication/honey-bee-colonies/2026-08-03",
+      "txtUrl": "https://esmis.nal.usda.gov/sites/default/release-files/796006/hcny0726.txt",
+      "released": "2026-08-03"
+    },
+    "sourceTextBytes": 75880,
+    "sourceTextFingerprint": "fnv1a32:48d32f89",
+    "parsedTables": {
+      "lossQuarterCount": 6,
+      "stressQuarterCount": 6,
+      "primaryStateCount": 20,
+      "transitionRows": 100,
+      "transformedRowsFingerprint": "fnv1a32:d8b7fff1"
+    }
+  },
+  "transitionRows": 100,
+  "validCases": 100,
+  "unevaluableCases": 0,
+  "hardCollapseCases": 0,
+  "medianIMI": 0.7159236365999999,
+  "meanIMI": 0.7119870552812866,
+  "medianCS": 0.28407636340000003,
+  "weakestFactorCounts": {
+    "VARROA_AVAILABILITY": 100
+  },
+  "outcomeComparators": {
+    "next_loss_rate": {
+      "pairedN": 100,
+      "spearmanIMI": -0.3451252954298831,
+      "spearmanCS": 0.3451252954298831,
+      "spearmanAdditiveSeverity": 0.3506737328900443,
+      "spearmanWMISeverity": 0.3019121621306334
+    }
+  },
+  "priorReference": {
+    "transitions": 100,
+    "fourFactorSeveritySpearmanNextLoss": 0.345,
+    "multiplicativeAdvantageOverAdditive": "NOT_ESTABLISHED",
+    "weakestFactorDiversity": "FAILED_VARROA_AS_WEAKEST_FACTOR_ALL_ROWS"
+  },
+  "boundaries": {
+    "confirmatoryStyleRefresh": true,
+    "finalValidationClaimed": false,
+    "terminalIMI7Assigned": false,
+    "rawDownloadedAtRuntime": true,
+    "stateLevelAggregateOnly": true
+  }
+}

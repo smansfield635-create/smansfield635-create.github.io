@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "IMI_ROUTE_SCHEMA_v1",
+  "requiredFields": [
+    "routeId",
+    "routeVersion",
+    "domain",
+    "caseIdField",
+    "requiredFactors",
+    "frozenBeforeRun"
+  ],
+  "requiredFactorFields": ["factorId", "label", "normalizer"],
+  "supportedNormalizerTypes": [
+    "direct_availability",
+    "direct_constraint",
+    "availability_from_worse_reported",
+    "availability_from_bad_total",
+    "availability_ratio",
+    "inverse_ratio_constraint"
+  ],
+  "terminalLockTypes": ["none", "boolean_field_true", "field_equals"],
+  "law": "A route defines a specific trajectory and includes only factors required for that trajectory. Unrelated strengths are excluded."
+}

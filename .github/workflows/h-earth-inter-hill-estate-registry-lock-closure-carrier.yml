@@ -1,0 +1,77 @@
+name: H-Earth Inter-Hill Estate Registry Lock Closure Carrier
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened]
+    paths:
+      - '.github/workflows/h-earth-inter-hill-estate-registry-lock-closure-carrier.yml'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  close-exact-operation-lock:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 82a4b9c7241802d229b9c1a7cc01e5631ac4a1b8
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify immutable implementation and merged registry identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/${{ github.repository }}/pulls/616 --jq .head.sha)" = "f5bbab7595306cbae16406f3f66fe206c2bd9f94"
+          test "$(gh api repos/${{ github.repository }}/pulls/616 --jq .merged)" = "false"
+          test "$(gh api repos/${{ github.repository }}/pulls/618 --jq .merged)" = "true"
+          test "$(gh api repos/${{ github.repository }}/pulls/618 --jq .merge_commit_sha)" = "b6ba52ff4361794b7686c88a9bd0c07712806075"
+      - name: Execute canonical fixed lock termination command
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository "${{ github.repository }}" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id H_EARTH_INTER_HILL_ESTATE_EVALUATOR_REPOSITORY_REGISTRY_SCOPE_RESOLUTION_001 \
+            --lock-scope H_EARTH/INTER_HILL_ESTATE_EVALUATOR/REPOSITORY_REGISTRY_SCOPE_RESOLUTION_001 \
+            --lock-generation 222 \
+            --terminal-disposition PASS_CLOSED \
+            --output "$RUNNER_TEMP/root-lock-closure-receipt.json"
+      - name: Verify exact closure receipt
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const checks=[
+            r.schema==='REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1',
+            r.result==='TERMINAL_CLOSURE_COMMITTED',
+            r.operationId==='H_EARTH_INTER_HILL_ESTATE_EVALUATOR_REPOSITORY_REGISTRY_SCOPE_RESOLUTION_001',
+            r.lockScope==='H_EARTH/INTER_HILL_ESTATE_EVALUATOR/REPOSITORY_REGISTRY_SCOPE_RESOLUTION_001',
+            r.lockGeneration===222,
+            r.terminalDisposition==='PASS_CLOSED',
+            r.lockReleased===true,
+            r.terminalHistoryPreserved===true,
+            /^[0-9a-f]{40}$/.test(r.closureCommitSha),
+            /^[0-9a-f]{40}$/.test(r.committedLedgerBlobSha)
+          ];
+          if(checks.some(x=>!x))throw Error('LOCK_CLOSURE_RECEIPT_IDENTITY_FAILURE');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-inter-hill-estate-registry-lock-closure-222
+          path: ${{ runner.temp }}/root-lock-closure-receipt.json
+          if-no-files-found: error
+          retention-days: 90

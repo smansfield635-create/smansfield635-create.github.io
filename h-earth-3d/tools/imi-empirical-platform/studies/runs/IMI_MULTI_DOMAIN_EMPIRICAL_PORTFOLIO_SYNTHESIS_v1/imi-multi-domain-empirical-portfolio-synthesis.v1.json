@@ -1,0 +1,305 @@
+{
+  "schemaVersion": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1",
+  "operation": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1",
+  "result": "PASS_CLOSED_PHASE_1_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS",
+  "generatedAt": "2026-08-05T17:11:00.000Z",
+  "invariantConstructStatement": {
+    "construct": "RETAINED_JOINT_MANEUVERABILITY_THROUGH_A_SPECIFIED_TRAJECTORY_UNDER_MULTIPLE_DECLARED_NON_SUBSTITUTABLE_REQUIRED_FACTORS",
+    "formula": "IMI_tau(t)=product_{i in R_tau} a_i(t)",
+    "interpretation": "IMI is a route-bounded measure of how much jointly usable room remains when all admitted required factors must remain available together.",
+    "notMeasuredUniversally": [
+      "HEALTH",
+      "INTELLIGENCE",
+      "RESILIENCE",
+      "SOLVENCY",
+      "QUALITY",
+      "CAUSATION"
+    ]
+  },
+  "sourceCustody": {
+    "planDigest": "fnv1a32:414be29c",
+    "protocolDigest": "fnv1a32:d4cf67c3",
+    "inputSources": {
+      "hospital": "CURRENT_WORKFLOW_RUNTIME",
+      "speech": "CURRENT_WORKFLOW_RUNTIME",
+      "bees": "CURRENT_WORKFLOW_RUNTIME",
+      "dssi": "CURRENT_WORKFLOW_RUNTIME"
+    },
+    "inputDigests": {
+      "hospital": "fnv1a32:103239ed",
+      "speech": "fnv1a32:39b90d17",
+      "bees": "fnv1a32:f8274bca",
+      "dssi": "fnv1a32:b4f51403"
+    }
+  },
+  "totals": {
+    "evaluatedCases": 4598,
+    "validCases": 3570,
+    "unevaluableCases": 1028,
+    "hardCollapseCases": 3,
+    "domains": 4,
+    "routeFamilies": 4
+  },
+  "routeFamilyTaxonomy": [
+    {
+      "family": "STATIC_INSTITUTIONAL_PROFILE",
+      "currentDomain": "HEALTHCARE_QUALITY",
+      "currentStudy": "IMI_CONFIRMATORY_HOSPITAL_REFRESH_2026_v1"
+    },
+    {
+      "family": "PARTICIPANT_FEATURE_STRUCTURE",
+      "currentDomain": "SPONTANEOUS_SPEECH_LANGUAGE_STRUCTURE",
+      "currentStudy": "IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_v1"
+    },
+    {
+      "family": "LONGITUDINAL_MULTI_STRESSOR_RESILIENCE",
+      "currentDomain": "AGRICULTURAL_COLONY_RESILIENCE",
+      "currentStudy": "IMI_USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_v1"
+    },
+    {
+      "family": "SCHEDULE_DISTRIBUTION_STRUCTURE",
+      "currentDomain": "SOVEREIGN_DEBT_SERVICE_SCHEDULE_DISPERSION",
+      "currentStudy": "IMI_DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_v1"
+    }
+  ],
+  "domainMatrix": [
+    {
+      "domainId": "HEALTHCARE_QUALITY",
+      "routeFamily": "STATIC_INSTITUTIONAL_PROFILE",
+      "result": "PASS_CLOSED_CMS_HOSPITAL_REFRESH_2026_REPOSITORY_INTAKE_RUN",
+      "evaluatedCases": 4175,
+      "validCases": 3147,
+      "unevaluableCases": 1028,
+      "hardCollapseCases": 3,
+      "evidenceLevel": "LEVEL_2_REPRODUCED_WITH_CURRENT_RELEASE_REFRESH",
+      "varianceFinding": "SATURATED_HIGH_END_DISTRIBUTION_WITH_2438_OF_3147_VALID_CASES_AT_EXACT_IMI_1",
+      "weakestFactorFinding": "NOT_DURABLY_ENUMERATED_IN_CURRENT_SUMMARY",
+      "comparatorFinding": "IMI_ADDITIVE_AND_WMI_HAVE_SIMILAR_MODEST_ASSOCIATION_WITH_OVERALL_RATING",
+      "practicalValueCandidate": "HOSPITAL_REVIEW_TRIAGE"
+    },
+    {
+      "domainId": "SPONTANEOUS_SPEECH_LANGUAGE_STRUCTURE",
+      "routeFamily": "PARTICIPANT_FEATURE_STRUCTURE",
+      "result": "PASS_CLOSED_SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026",
+      "evaluatedCases": 291,
+      "validCases": 291,
+      "unevaluableCases": 0,
+      "hardCollapseCases": 0,
+      "evidenceLevel": "LEVEL_2_REPRODUCED_FROM_PUBLISHED_SOURCE",
+      "varianceFinding": "MATERIAL_CONTINUOUS_DIFFERENTIATION_WITH_291_UNIQUE_IMI_VALUES",
+      "weakestFactorFinding": "FIVE_FACTOR_DIVERSITY_WITH_FIVE_EXACT_TIE_CASES_PRESERVED",
+      "comparatorFinding": "NO_ADMITTED_OUTCOME_COMPARATOR_IN_CURRENT_ROUTE",
+      "practicalValueCandidate": "RESEARCH_STRATIFICATION_AND_MULTI_FEATURE_PROFILE_ANALYSIS"
+    },
+    {
+      "domainId": "AGRICULTURAL_COLONY_RESILIENCE",
+      "routeFamily": "LONGITUDINAL_MULTI_STRESSOR_RESILIENCE",
+      "result": "PASS_CLOSED_USDA_HONEY_BEE_REFRESH_2026_REPOSITORY_INTAKE_RUN",
+      "evaluatedCases": 100,
+      "validCases": 100,
+      "unevaluableCases": 0,
+      "hardCollapseCases": 0,
+      "evidenceLevel": "LEVEL_2_REPRODUCED_CURRENT_RELEASE_REFRESH_WITH_OPEN_ROUTE_DISCRIMINATION",
+      "varianceFinding": "NONTRIVIAL_IMI_VARIATION_ACROSS_100_STATE_QUARTER_TRANSITIONS",
+      "weakestFactorFinding": "VARROA_IS_WEAKEST_FACTOR_IN_100_OF_100_CURRENT_CASES",
+      "comparatorFinding": "TEMPORAL_ASSOCIATION_SUPPORTED_BUT_ADDITIVE_SEVERITY_SLIGHTLY_EXCEEDS_CS_ASSOCIATION",
+      "practicalValueCandidate": "BEE_EARLY_WARNING_AND_RESOURCE_TARGETING"
+    },
+    {
+      "domainId": "SOVEREIGN_DEBT_SERVICE_SCHEDULE_DISPERSION",
+      "routeFamily": "SCHEDULE_DISTRIBUTION_STRUCTURE",
+      "result": "PASS_CLOSED_DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_REPOSITORY_INTAKE_RUN",
+      "evaluatedCases": 32,
+      "validCases": 32,
+      "unevaluableCases": 0,
+      "hardCollapseCases": 0,
+      "evidenceLevel": "LEVEL_1_EXECUTABLE_PARTIAL_ALL_COUNTRY_EXPANSION",
+      "varianceFinding": "MATERIAL_RANGE_FROM_0_370644_TO_0_966697_ACROSS_32_ADMITTED_COUNTRIES",
+      "weakestFactorFinding": "PRINCIPAL_WEAKEST_IN_20_CASES_AND_INTEREST_WEAKEST_IN_12_CASES",
+      "comparatorFinding": "MULTIPLICATIVE_MEAN_IS_MATERIALLY_LOWER_THAN_ADDITIVE_MEAN_WITHOUT_AN_OUTCOME_TEST",
+      "practicalValueCandidate": "DEBT_SERVICE_SCHEDULE_REVIEW_PRIORITIZATION"
+    }
+  ],
+  "crossDomainFindings": [
+    {
+      "findingId": "COMMON_ENGINE_EXECUTION",
+      "classification": "ENGINE_GENERAL",
+      "determination": "SUPPORTED_AT_REPOSITORY_EXECUTION_LEVEL_ACROSS_FOUR_ROUTE_FAMILIES",
+      "evidence": [
+        "HOSPITAL",
+        "SPEECH",
+        "BEES",
+        "DSSI"
+      ]
+    },
+    {
+      "findingId": "UNEVALUABLE_MISSINGNESS_DISCIPLINE",
+      "classification": "ENGINE_GENERAL",
+      "determination": "SUPPORTED_AS_ENGINE_BEHAVIOR_WITH_MATERIAL_EMPIRICAL_OCCURRENCE_IN_HOSPITAL_ROUTE",
+      "evidence": {
+        "hospitalUnevaluable": 1028,
+        "otherDomainsUnevaluable": 0
+      }
+    },
+    {
+      "findingId": "HARD_COLLAPSE_DETECTION",
+      "classification": "ENGINE_GENERAL",
+      "determination": "SUPPORTED_AS_ENGINE_BEHAVIOR_WITH_CURRENT_EMPIRICAL_OCCURRENCE_ONLY_IN_HOSPITAL_DATA",
+      "evidence": {
+        "hospital": 3,
+        "speech": 0,
+        "bees": 0,
+        "dssi": 0
+      }
+    },
+    {
+      "findingId": "EXACT_WEAKEST_FACTOR_TIE_PRESERVATION",
+      "classification": "ENGINE_GENERAL",
+      "determination": "SUPPORTED_AS_ENGINE_BEHAVIOR_WITH_FIVE_CURRENT_SPEECH_OCCURRENCES",
+      "evidence": {
+        "policy": "FIRST_REQUIRED_FACTOR_IN_FROZEN_ROUTE_ORDER_FOR_LEGACY_COMPARISON_ONLY",
+        "engineNativePolicy": "PRESERVE_ALL_EXACT_TIES",
+        "tieCases": 5,
+        "tiePatternCounts": {
+          "VISUAL_GROUNDING_AVAILABILITY|SYNTACTIC_ORGANIZATION_AVAILABILITY": 1,
+          "CONCEPTUAL_BREADTH_AVAILABILITY|CONTEXTUAL_BREADTH_AVAILABILITY": 3,
+          "CONTEXTUAL_BREADTH_AVAILABILITY|SYNTACTIC_ORGANIZATION_AVAILABILITY": 1
+        }
+      }
+    },
+    {
+      "findingId": "WEAKEST_FACTOR_DIVERSITY",
+      "classification": "UNRESOLVED",
+      "determination": "NOT_UNIVERSAL_AND_ROUTE_DEPENDENT_IN_CURRENT_PORTFOLIO",
+      "evidence": {
+        "speech": "DIVERSE",
+        "bees": "SINGLE_FACTOR_DOMINANT",
+        "dssi": "TWO_FACTOR_DIVERSE",
+        "hospital": "NOT_DURABLY_ENUMERATED"
+      }
+    },
+    {
+      "findingId": "MULTIPLICATIVE_SUPERIORITY",
+      "classification": "UNRESOLVED",
+      "determination": "NOT_ESTABLISHED_INSTRUMENT_WIDE",
+      "evidence": {
+        "hospital": "NEAR_PARITY_WITH_ADDITIVE_AND_WMI",
+        "bees": "ADDITIVE_ASSOCIATION_SLIGHTLY_STRONGER_THAN_CS",
+        "dssi": "STRUCTURAL_SCORE_DIFFERENCE_WITHOUT_OUTCOME_COMPARATOR",
+        "speech": "NO_ADMITTED_OUTCOME_COMPARATOR"
+      }
+    },
+    {
+      "findingId": "OUTCOME_OR_TEMPORAL_ASSOCIATION",
+      "classification": "ROUTE_FAMILY_GENERAL",
+      "determination": "SUPPORTED_ONLY_FOR_ROUTES_WITH_ADMITTED_COMPARATORS_AND_NOT_GENERALIZED_BEYOND_THEM",
+      "evidence": {
+        "hospitalOverallRating": {
+          "pairedN": 2834,
+          "spearmanIMI": 0.2684862314978638,
+          "spearmanAdditiveMean": 0.2682582939331683,
+          "spearmanWMI": 0.26908906610537137
+        },
+        "beeNextLoss": {
+          "pairedN": 100,
+          "spearmanIMI": -0.3451252954298831,
+          "spearmanCS": 0.3451252954298831,
+          "spearmanAdditiveSeverity": 0.3506737328900443,
+          "spearmanWMISeverity": 0.3019121621306334
+        }
+      }
+    },
+    {
+      "findingId": "HOSPITAL_HIGH_END_SATURATION",
+      "classification": "UNRESOLVED",
+      "determination": "MAY_BE_ROUTE_DATA_RESOLUTION_NORMALIZATION_OR_DOMAIN_STRUCTURE_EFFECT",
+      "evidence": {
+        "exactIMI1Cases": 2438,
+        "validCases": 3147,
+        "percent": 0.7747060692723229
+      }
+    },
+    {
+      "findingId": "BEE_VARROA_DOMINANCE",
+      "classification": "UNRESOLVED",
+      "determination": "CANNOT_YET_DISTINGUISH_BIOLOGICAL_DOMINANCE_FROM_ROUTE_OR_AGGREGATION_EFFECT",
+      "evidence": {
+        "VARROA_AVAILABILITY": 100
+      }
+    },
+    {
+      "findingId": "SPEECH_NUMERIC_REPRODUCTION",
+      "classification": "ROUTE_FAMILY_GENERAL",
+      "determination": "SUPPORTS_FROZEN_SOURCE_AND_ROUTE_REPRODUCIBILITY_NOT_EXTERNAL_POPULATION_GENERALIZATION",
+      "evidence": {
+        "meanIMI": 3.557656296088174e-7,
+        "medianIMI": 3.3220272661893535e-7,
+        "varianceIMI": 3.8625239714637494e-7,
+        "minIMI": 3.185183704444229e-11,
+        "maxIMI": 9.388409871746717e-8
+      }
+    },
+    {
+      "findingId": "DSSI_PRINCIPAL_INTEREST_PATTERN",
+      "classification": "DATASET_SPECIFIC",
+      "determination": "CURRENT_32_COUNTRY_SCHEDULE_DISPERSION_PATTERN_ONLY",
+      "evidence": {
+        "PRINCIPAL_DISPERSION_AVAILABILITY": 20,
+        "INTEREST_DISPERSION_AVAILABILITY": 12
+      }
+    },
+    {
+      "findingId": "RAW_IMI_MAGNITUDE_COMPARABILITY_ACROSS_ROUTES",
+      "classification": "ENGINE_GENERAL",
+      "determination": "PROHIBITED_WITHOUT_CALIBRATION_EVIDENCE",
+      "evidence": "COMPARE_MEASUREMENT_BEHAVIOR_AND_EVIDENCE_PROPERTIES_NOT_RAW_IMI_MAGNITUDES"
+    }
+  ],
+  "comparatorSynthesis": {
+    "universalMultiplicativeSuperiorityEstablished": false,
+    "structuralDifferenceFromAdditiveObserved": true,
+    "outcomeComparatorDomains": 2,
+    "noOutcomeComparatorDomains": 2,
+    "determination": "IMI_HAS_DISTINCT_NONCOMPENSATORY_STRUCTURE_BUT_PORTFOLIO_WIDE_PREDICTIVE_SUPERIORITY_IS_NOT_ESTABLISHED"
+  },
+  "saturationAndNonredundancy": {
+    "hospital": "HIGH_END_SATURATION_REQUIRES_ROUTE_OR_DATA_RESOLUTION_DIAGNOSIS",
+    "speech": "MATERIAL_CONTINUOUS_DIFFERENTIATION_AND_MULTIPLE_WEAKEST_FACTOR_CLASSES",
+    "bees": "SINGLE_WEAKEST_FACTOR_DOMINANCE_REQUIRES_ROUTE_DISCRIMINATION",
+    "dssi": "TWO_REQUIRED_FACTORS_BOTH_ACTIVE_IN_CURRENT_PARTIAL_PANEL"
+  },
+  "scopeDetermination": {
+    "computationalGeneralizability": "SUPPORTED_ACROSS_FOUR_CURRENT_ROUTE_FAMILIES",
+    "structuralGeneralizability": "PARTIALLY_SUPPORTED_FOR_COMMON_OUTPUT_CLASSES",
+    "distributionalGeneralizability": "NOT_YET_ESTABLISHED_INSTRUMENT_WIDE",
+    "predictiveGeneralizability": "ROUTE_SPECIFIC_AND_INCOMPLETE",
+    "operationalGeneralizability": "SUPPORTED_AT_INTERNAL_REPOSITORY_REPRODUCTION_LEVEL",
+    "decisionGeneralizability": "NOT_YET_TESTED"
+  },
+  "practicalValueCandidates": [
+    "HOSPITAL_REVIEW_TRIAGE",
+    "BEE_EARLY_WARNING_AND_RESOURCE_TARGETING",
+    "SPEECH_RESEARCH_STRATIFICATION",
+    "DSSI_SCHEDULE_REVIEW_PRIORITIZATION"
+  ],
+  "phase2Readiness": {
+    "authorized": true,
+    "nextOperation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
+    "reason": "THE_INVARIANT_CONSTRUCT_ROUTE_FAMILIES_CURRENT_EVIDENCE_LEVELS_AND_UNRESOLVED_CLAIMS_ARE_NOW_EXPLICIT_ENOUGH_TO_FREEZE_PROSPECTIVE_GENERALIZABILITY_TESTS",
+    "phase2MayNotExecuteDataTests": true
+  },
+  "boundaries": {
+    "phase1Only": true,
+    "newDataCollected": false,
+    "newDomainOpened": false,
+    "rawCrossRouteScoreComparisonPerformed": false,
+    "routeRetuningPerformed": false,
+    "externalValidationClaimed": false,
+    "prospectiveValidationClaimed": false,
+    "decisionUtilityClaimed": false,
+    "universalMultiplicativeSuperiorityClaimed": false,
+    "finalInstrumentValidationClaimed": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  }
+}

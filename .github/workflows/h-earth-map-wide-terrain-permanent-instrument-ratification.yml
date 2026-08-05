@@ -1,0 +1,88 @@
+name: PR570 Inner Registry Stop Fixed Termination
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  terminate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact carrier identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git diff --name-only 2c4e5a21e4e902bee421528498c112998fa783bc HEAD)" = ".github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml"
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
+      - name: Close generation 123 FAIL_CLOSED
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "${{ github.repository }}" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id H_EARTH_MAP_WIDE_INSTRUMENT_LINEAGE_AWARE_PERMANENT_RATIFICATION_v2 \
+              --lock-scope 'H_EARTH:MAP_WIDE_INSTRUMENT:LINEAGE_AWARE_PERMANENT_RATIFICATION:V2' \
+              --lock-generation 123 \
+              --terminal-disposition FAIL_CLOSED \
+              --output /tmp/generation-123-closure.json; then break; fi
+            test "$attempt" -lt 3
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/generation-123-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true)process.exit(1)"
+      - name: Close generation 129 PASS_CLOSED
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "${{ github.repository }}" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id H_EARTH_PR570_INNER_REGISTRY_STOP_TERMINATION_T_001 \
+              --lock-scope 'H_EARTH:PR570_INNER_REGISTRY_STOP:TERMINATION:T:V1' \
+              --lock-generation 129 \
+              --terminal-disposition PASS_CLOSED \
+              --output /tmp/generation-129-closure.json; then break; fi
+            test "$attempt" -lt 3
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/generation-129-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true)process.exit(1)"
+      - name: Emit termination receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const a=JSON.parse(fs.readFileSync('/tmp/generation-123-closure.json'));
+          const b=JSON.parse(fs.readFileSync('/tmp/generation-129-closure.json'));
+          const r={schema:'PR570_INNER_REGISTRY_STOP_AUTHORITY_TERMINATION_RECEIPT_v1',result:'PASS_CLOSED_STOP_TERMINATED',generation123Disposition:'FAIL_CLOSED',generation129Disposition:'PASS_CLOSED',generation123ClosureCommit:a.closureCommitSha,generation129ClosureCommit:b.closureCommitSha,pr602Merged:false,pr605Merged:false,residualAuthority:false};
+          r.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(r)).digest('hex');
+          fs.writeFileSync('/tmp/authority-termination.json',JSON.stringify(r,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-inner-registry-stop-termination-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/generation-123-closure.json
+            /tmp/generation-129-closure.json
+            /tmp/authority-termination.json
+          if-no-files-found: error
+          retention-days: 90

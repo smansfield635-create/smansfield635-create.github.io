@@ -4,7 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import registryFacade, {
   H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_SCOPE_NODE as EXACT_HEAD_NODE,
-  H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE as EXACT_HEAD_EVIDENCE
+  H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE as EXACT_HEAD_EVIDENCE,
+  H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_BASE_LINEAGE as EXACT_HEAD_BASE_LINEAGE,
+  requireC2R1BaseRegistryNode
 } from './accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js';
 import { deepFreeze, H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY } from './h-earth.repository-registry.validator-engine.identity.js';
 
@@ -12,6 +14,8 @@ const directory=path.dirname(fileURLToPath(import.meta.url));
 const readJson=fileName=>JSON.parse(fs.readFileSync(path.join(directory,fileName),'utf8'));
 const FILES=Object.freeze({consolidated:'h-earth.repository-registry.validator-contract.json',input:'h-earth.repository-registry.validator-contract.input.json',receipt:'h-earth.repository-registry.validator-contract.receipt.json',dispositions:'h-earth.repository-registry.validator-contract.dispositions.json',failures:'h-earth.repository-registry.validator-contract.failures.json',criticality:'h-earth.repository-registry.validator-contract.criticality.json',algorithm:'h-earth.repository-registry.validator-contract.algorithm.json',instruction:'h-earth.repository-registry.tool-instruction.json'});
 const EXPECTED_NODE_ID='H_EARTH_C2_R1_PHYSICALLY_COHERENT_COASTAL_SUCCESSOR_CANDIDATE_PACKAGE';
+const EXPECTED_PREDECESSOR_MODULE='./h-earth.repository-registry.c2-r1-candidate-path-disposition.js';
+const EXPECTED_PREDECESSOR_DISPOSITION='H_EARTH_REPOSITORY_REGISTRY_C2_R1_CANDIDATE_PATH_DISPOSITION_v4';
 const EXPECTED_BRANCH='agent/h-earth-c2-r1-material-only-binding-implementation-001';
 const EXPECTED_HEAD='44019e27c3d52c59cc59bba7c833b6317d014273';
 const EXPECTED_PACKAGE='H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E';
@@ -46,6 +50,7 @@ const sameSet=(left,right)=>JSON.stringify(sortedUnique(left))===JSON.stringify(
 
 export function loadHEarthRepositoryRegistryValidatorDependencies(){
   const contracts={consolidated:readJson(FILES.consolidated),input:readJson(FILES.input),receipt:readJson(FILES.receipt),dispositions:readJson(FILES.dispositions),failures:readJson(FILES.failures),criticality:readJson(FILES.criticality),algorithm:readJson(FILES.algorithm),instruction:readJson(FILES.instruction)};
+  const lineageBaseNode=requireC2R1BaseRegistryNode();
   const registryInstance=registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery=registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
   const expected=H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY;
@@ -55,9 +60,19 @@ export function loadHEarthRepositoryRegistryValidatorDependencies(){
   const hEarthChangedPaths=H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS.filter(repositoryPath=>repositoryPath!==EXPECTED_OUTSIDE_PATH);
   const changedPathResolutions=hEarthChangedPaths.map(repositoryPath=>({repositoryPath,resolution:registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath)}));
   const exactHeadChecks={
+    predecessorLineageSchema:EXACT_HEAD_BASE_LINEAGE.schema==='H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_BASE_LINEAGE_v1',
+    predecessorModule:EXACT_HEAD_BASE_LINEAGE.predecessorModule===EXPECTED_PREDECESSOR_MODULE,
+    predecessorDisposition:EXACT_HEAD_BASE_LINEAGE.predecessorDispositionId===EXPECTED_PREDECESSOR_DISPOSITION,
+    predecessorNodePresent:EXACT_HEAD_BASE_LINEAGE.predecessorNodePresent===true,
+    predecessorObservedNode:EXACT_HEAD_BASE_LINEAGE.observedNodeId===EXPECTED_NODE_ID,
+    predecessorRuntimeNode:lineageBaseNode.nodeId===EXPECTED_NODE_ID,
+    predecessorReadOnly:EXACT_HEAD_BASE_LINEAGE.readOnly===true,
+    predecessorNoMutationAuthority:EXACT_HEAD_BASE_LINEAGE.mutationAuthorityCreated===false,
+    predecessorNoMergeAuthority:EXACT_HEAD_BASE_LINEAGE.mergeAuthorityCreated===false,
     nodeIdentity:EXACT_HEAD_NODE.nodeId===EXPECTED_NODE_ID,
     lifecycle:EXACT_HEAD_NODE.lifecycleStatus==='CONTROL_PLANE_EXACT_HEAD_REGISTERED',
     evidenceClass:EXACT_HEAD_EVIDENCE.evidenceClass==='CONTROL_PLANE_EXACT_BRANCH_HEAD_AND_COMPLETE_C2_R1_OCCURRENCE_ADMISSION',
+    evidenceLineageIdentity:EXACT_HEAD_EVIDENCE.predecessorLineage?.observedNodeId===EXPECTED_NODE_ID,
     prNumber:EXACT_HEAD_EVIDENCE.prNumber===484,
     branch:EXACT_HEAD_EVIDENCE.candidateBranch===EXPECTED_BRANCH,
     head:EXACT_HEAD_EVIDENCE.candidateHead===EXPECTED_HEAD,
@@ -79,7 +94,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies(){
     mergeProhibited:EXACT_HEAD_NODE.authorityLimitations.includes('NO_MERGE_PROMOTION_PUBLICATION_OR_USER_REVIEW')
   };
   return deepFreeze({
-    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v3',
+    loaderId:'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v4',
     files:FILES,
     contracts,
     registryFacade,
@@ -87,13 +102,15 @@ export function loadHEarthRepositoryRegistryValidatorDependencies(){
     discovery,
     identityChecks,
     identityVerified:Object.values(identityChecks).every(Boolean),
+    exactHeadBaseLineage:EXACT_HEAD_BASE_LINEAGE,
+    exactHeadBaseNode:lineageBaseNode,
     exactHeadNode:EXACT_HEAD_NODE,
     exactHeadEvidence:EXACT_HEAD_EVIDENCE,
     exactHeadChecks,
     exactHeadRegistrationVerified:Object.values(exactHeadChecks).every(Boolean),
     mc5ChangedPaths:H_EARTH_C2_R1_MC5_PR_484_CHANGED_PATHS,
     boundary:{readOnly:true,networkDependencyRequired:false,mutationAuthorityCreated:false,workflowEnforcementInstalled:true,productMutationAuthorityCreated:false,pr484MutationAuthorityCreated:false,candidateMutationAuthorityCreated:false,materializationAuthorityCreated:false,mergeAuthorityCreated:false},
-    stoppingCondition:{contractAndRegistryLoaderComplete:true,mc5ExactHeadRegistrationLoaded:true,automaticPreflightRequired:true,productMutationAuthorized:false,pr484MutationAuthorized:false,candidateMutationAuthorized:false,materializationRerunAuthorized:false,mergeAuthorized:false}
+    stoppingCondition:{contractAndRegistryLoaderComplete:true,c2R1PredecessorLineageVerified:true,mc5ExactHeadRegistrationLoaded:true,automaticPreflightRequired:true,productMutationAuthorized:false,pr484MutationAuthorized:false,candidateMutationAuthorized:false,materializationRerunAuthorized:false,mergeAuthorized:false}
   });
 }
 

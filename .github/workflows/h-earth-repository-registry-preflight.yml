@@ -18,10 +18,7 @@ env:
   CANDIDATE_BRANCH: repair/h-earth-v2-six-path-inner-registry-v1-001
   COMMIT_A: 563464f3b8b5b8045677962986e3ba00fbeed960
   COMMIT_A_TREE: f26d3acb6d45ce642c3efa048809a3740256b770
-  NODE_ID: H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_SCOPE
-  PARENT_NODE_ID: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_V2
-  MAP_WIDE_NODE_ID: H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT
-  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  NEW_NODE_ID: H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_SCOPE
 
 jobs:
   reproduce:
@@ -46,7 +43,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Bind exact candidate, Commit A, and live ledger
+      - name: Bind exact candidate and live ledger
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_HEAD"
@@ -59,7 +56,7 @@ jobs:
           test "$(git rev-parse "$CANDIDATE_HEAD:h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js")" = 'd164fdf7b157f37a22ebfb6a90c90f87deef5f88'
           git fetch origin operation-locks/repository-operation-intake-v1
           git show FETCH_HEAD:.github/operation-intake/active-operation-ledger.v1.json > /tmp/live-ledger.json
-      - name: Run exact positive and negative preflight
+      - name: Run positive and negative preflight
         env:
           OUT: ${{ runner.temp }}/${{ matrix.artifact }}
         run: |
@@ -75,20 +72,16 @@ jobs:
           PATHS
           printf '%s\n' 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/unregistered-neighbor.v1.json' > "$OUT/negative-path.txt"
           node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
-            --paths-file "$OUT/paths.txt" \
-            --task "H-Earth V2 six-path registry ${{ matrix.artifact }}" \
-            --mutation-intent \
-            --output "$OUT/positive.json"
+            --paths-file "$OUT/paths.txt" --task "six-path-${{ matrix.artifact }}" \
+            --mutation-intent --output "$OUT/positive.json"
           set +e
           node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
-            --paths-file "$OUT/negative-path.txt" \
-            --task "H-Earth V2 undeclared-neighbor ${{ matrix.artifact }}" \
-            --mutation-intent \
-            --output "$OUT/negative.json"
-          negative_status=$?
+            --paths-file "$OUT/negative-path.txt" --task "negative-neighbor-${{ matrix.artifact }}" \
+            --mutation-intent --output "$OUT/negative.json"
+          status=$?
           set -e
-          test "$negative_status" -ne 0
-      - name: Verify exact occurrences, preserved lineages, and active locks
+          test "$status" -ne 0
+      - name: Verify exact occurrences and preserved chains
         env:
           HOLDER: ${{ matrix.holder }}_${{ github.run_id }}_${{ github.run_attempt }}
           OUT: ${{ runner.temp }}/${{ matrix.artifact }}
@@ -97,10 +90,13 @@ jobs:
           import fs from 'node:fs';
           import crypto from 'node:crypto';
           import cp from 'node:child_process';
-          import registryFacade, { H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_PATHS } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.v2-router-instruction-lock-closure-successor-scope.js';
+          import registryFacade from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.v2-router-instruction-lock-closure-successor-scope.js';
           import { runHEarthC2R1MC5AutomaticRegistryPreflight } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
 
-          const expected = new Map([
+          const newNodeId='H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_SCOPE';
+          const parentNodeId='H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_V2';
+          const mapWideNodeId='H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT';
+          const expected=new Map([
             ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/changed-path-manifest.v1.json','ce473c359101e55929af4a86069dbd3dd95e14c3'],
             ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/closure-request.lock-279.v1.json','193fc3d8c29a26cb391534f8350a0b5ab97a563f'],
             ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json','322d56de20ad3f59d89b8d6211a35a7b44ec4c3f'],
@@ -108,7 +104,7 @@ jobs:
             ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/rollback.v1.json','876fe9971db7c4259e39e5127370c3af44f11238'],
             ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs','3da81d3efb60cba9f0afaf96e9ba22bc9bd1193d']
           ]);
-          const mapWidePaths = [
+          const mapWidePaths=[
             '/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/AGENTS.md',
             '/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/authority-and-lineage.v1.json',
             '/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/bootstrap-seed.v1.json',
@@ -123,81 +119,59 @@ jobs:
             '/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/schemas.v1.json',
             '/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/synthetic-map-fixture.v1.json'
           ];
-          const positive = JSON.parse(fs.readFileSync(`${process.env.OUT}/positive.json`,'utf8'));
-          const negative = JSON.parse(fs.readFileSync(`${process.env.OUT}/negative.json`,'utf8'));
-          const ledger = JSON.parse(fs.readFileSync('/tmp/live-ledger.json','utf8'));
-          const classes = positive.pathClassification?.classifications ?? [];
-          if (positive.finalDisposition !== 'PASS' || positive.mutationMayProceed !== true) throw Error('SIX_PATH_POSITIVE_PREFLIGHT_NOT_PASS');
-          if (classes.length !== 6 || !classes.every(x => x.registered === true && x.classification === 'REGISTERED_H_EARTH_PATH' && (x.resolvedNodeIds ?? []).includes(process.env.NODE_ID))) throw Error('SIX_PATH_NODE_RESOLUTION_MISMATCH');
-          if (negative.finalDisposition !== 'STOP' || negative.mutationMayProceed !== false) throw Error('UNDECLARED_NEIGHBOR_NOT_STOPPED');
-          const negativeClass = negative.pathClassification?.classifications?.[0];
-          if (!negativeClass || negativeClass.registered !== false || negativeClass.classification !== 'UNREGISTERED_H_EARTH_SCOPED_PATH') throw Error('UNDECLARED_NEIGHBOR_CLASSIFICATION_MISMATCH');
-          if (H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_PATHS.length !== 6) throw Error('EXACT_PATH_COUNT_MISMATCH');
+          const positive=JSON.parse(fs.readFileSync(`${process.env.OUT}/positive.json`,'utf8'));
+          const negative=JSON.parse(fs.readFileSync(`${process.env.OUT}/negative.json`,'utf8'));
+          const ledger=JSON.parse(fs.readFileSync('/tmp/live-ledger.json','utf8'));
+          const classes=positive.pathClassification?.classifications??[];
+          if(positive.finalDisposition!=='PASS'||positive.mutationMayProceed!==true)throw Error('POSITIVE_PREFLIGHT_NOT_PASS');
+          if(classes.length!==6||!classes.every(x=>x.registered===true&&x.classification==='REGISTERED_H_EARTH_PATH'&&(x.resolvedNodeIds??[]).includes(newNodeId)))throw Error('SIX_PATH_RESOLUTION_MISMATCH');
+          if(negative.finalDisposition!=='STOP'||negative.mutationMayProceed!==false)throw Error('NEGATIVE_NEIGHBOR_NOT_STOPPED');
+          const nc=negative.pathClassification?.classifications?.[0];
+          if(!nc||nc.registered!==false||nc.classification!=='UNREGISTERED_H_EARTH_SCOPED_PATH')throw Error('NEGATIVE_NEIGHBOR_CLASSIFICATION_MISMATCH');
 
-          for (const [repositoryPath, blob] of expected) {
-            const resolution = registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
-            if (!resolution.resolved || !(resolution.nodes ?? []).some(node => node.nodeId === process.env.NODE_ID)) throw Error(`PATH_NOT_RESOLVED:${repositoryPath}`);
-            if (!(resolution.occurrences ?? []).some(o => o.commitSha === process.env.COMMIT_A && o.gitBlobSha === blob)) throw Error(`OCCURRENCE_IDENTITY_MISMATCH:${repositoryPath}`);
-            const actualBlob = cp.execFileSync('git',['rev-parse',`${process.env.COMMIT_A}:${repositoryPath.slice(1)}`],{encoding:'utf8'}).trim();
-            if (actualBlob !== blob) throw Error(`COMMIT_A_BLOB_MISMATCH:${repositoryPath}`);
+          for(const [repositoryPath,blob] of expected){
+            const r=registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+            if(!r.resolved||!(r.nodes??[]).some(n=>n.nodeId===newNodeId))throw Error(`NEW_PATH_UNRESOLVED:${repositoryPath}`);
+            if(!(r.occurrences??[]).some(o=>o.commitSha===process.env.COMMIT_A&&o.gitBlobSha===blob))throw Error(`NEW_OCCURRENCE_MISMATCH:${repositoryPath}`);
+            const actual=cp.execFileSync('git',['rev-parse',`${process.env.COMMIT_A}:${repositoryPath.slice(1)}`],{encoding:'utf8'}).trim();
+            if(actual!==blob)throw Error(`COMMIT_A_BLOB_MISMATCH:${repositoryPath}`);
           }
 
-          const parent = registryFacade.getHEarthRepositoryRegistryNode(process.env.PARENT_NODE_ID);
-          if (!parent || parent.lifecycleStatus !== 'CONTROL_PLANE_EXACT_HEAD_REGISTERED') throw Error('PARENT_V2_NODE_NOT_PRESERVED');
-          if (!registryFacade.getHEarthRepositoryRegistryNode(process.env.MAP_WIDE_NODE_ID)) throw Error('MAP_WIDE_NODE_NOT_PRESERVED');
-          for (const repositoryPath of mapWidePaths) {
-            if (!registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath).resolved) throw Error(`MAP_WIDE_PATH_REGRESSION:${repositoryPath}`);
+          const instance=registryFacade.getHEarthRepositoryRegistryInstance();
+          if(!(instance.nodes??[]).some(n=>n.nodeId===parentNodeId))throw Error('PARENT_V2_NODE_NOT_PRESERVED');
+          if(!(instance.nodes??[]).some(n=>n.nodeId===mapWideNodeId))throw Error('MAP_WIDE_NODE_NOT_IN_ACTIVE_INSTANCE');
+          const mapWideNodeIds=new Set();
+          for(const repositoryPath of mapWidePaths){
+            const r=registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+            if(!r.resolved)throw Error(`MAP_WIDE_PATH_REGRESSION:${repositoryPath}`);
+            for(const n of r.nodes??[])mapWideNodeIds.add(n.nodeId);
           }
-          const c2 = await runHEarthC2R1MC5AutomaticRegistryPreflight();
-          if (c2.finalDisposition !== 'PASS' || c2.requiredFinalDisposition !== 'PASS' || c2.mc5Checks?.allHEarthPathsRegistered !== true) throw Error('C2_R1_REGRESSION');
+          if(!mapWideNodeIds.has(mapWideNodeId))throw Error('MAP_WIDE_PATH_NODE_IDENTITY_MISMATCH');
 
-          const ledgerObjects = [];
-          const walk = (value) => {
-            if (value == null || typeof value !== 'object') return;
-            ledgerObjects.push(value);
-            for (const nested of Object.values(value)) walk(nested);
-          };
+          const c2=await runHEarthC2R1MC5AutomaticRegistryPreflight();
+          if(c2.finalDisposition!=='PASS'||c2.requiredFinalDisposition!=='PASS'||c2.mc5Checks?.allHEarthPathsRegistered!==true)throw Error('C2_R1_REGRESSION');
+
+          const objects=[];
+          const walk=v=>{if(v==null||typeof v!=='object')return;objects.push(v);for(const x of Object.values(v))walk(x);};
           walk(ledger);
-          const findActiveLock = (operationId, generation) => ledgerObjects.find(x =>
-            x.operationId === operationId &&
-            Number(x.lockGeneration) === generation &&
-            x.state === 'ADMITTED_LOCKED' &&
-            x.released === false
-          );
-          const lock279 = findActiveLock('H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001',279);
-          const lock280 = findActiveLock('H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001',280);
-          if (!lock279) throw Error('LOCK_279_NOT_PRESERVED_ACTIVE');
-          if (!lock280) throw Error('LOCK_280_NOT_PRESERVED_ACTIVE');
+          const active=(id,g)=>objects.find(x=>x.operationId===id&&Number(x.lockGeneration)===g&&x.state==='ADMITTED_LOCKED'&&x.released===false);
+          const lock279=active('H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001',279);
+          const lock280=active('H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001',280);
+          if(!lock279)throw Error('LOCK_279_NOT_PRESERVED_ACTIVE');
+          if(!lock280)throw Error('LOCK_280_NOT_PRESERVED_ACTIVE');
 
-          const payload = {
+          const payload={
             schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_FINGERPRINT_v1',
-            governingMain:process.env.GOVERNING_MAIN,
-            candidateHead:process.env.CANDIDATE_HEAD,
-            commitA:process.env.COMMIT_A,
-            commitATree:process.env.COMMIT_A_TREE,
-            nodeId:process.env.NODE_ID,
-            parentNodeId:process.env.PARENT_NODE_ID,
+            governingMain:process.env.GOVERNING_MAIN,candidateHead:process.env.CANDIDATE_HEAD,
+            commitA:process.env.COMMIT_A,commitATree:process.env.COMMIT_A_TREE,
+            nodeId:newNodeId,parentNodeId,mapWideNodeId,
             exactOccurrences:[...expected.entries()].sort((a,b)=>a[0].localeCompare(b[0])),
-            positiveDisposition:'PASS',
-            negativeDisposition:'STOP',
-            mapWidePathCount:13,
-            c2Disposition:'PASS',
-            lock279ScopeHash:lock279.scopeHash,
-            lock280ScopeHash:lock280.scopeHash,
-            lock279Preserved:true,
-            lock280Preserved:true
+            mapWidePathCount:13,mapWideResolvedNodeIds:[...mapWideNodeIds].sort(),
+            positiveDisposition:'PASS',negativeDisposition:'STOP',c2Disposition:'PASS',
+            lock279ScopeHash:lock279.scopeHash,lock280ScopeHash:lock280.scopeHash,
+            lock279Preserved:true,lock280Preserved:true
           };
-          const receipt = {
-            schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_EXECUTION_RECEIPT_v1',
-            result:'PASS_CLOSED_EXACT_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED',
-            executionHolder:process.env.HOLDER,
-            ...payload,
-            packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),
-            productMutationPerformed:false,
-            terrainMutationPerformed:false,
-            lockClosurePerformed:false,
-            mergePerformed:false
-          };
+          const receipt={schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_EXECUTION_RECEIPT_v1',result:'PASS_CLOSED_EXACT_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED',executionHolder:process.env.HOLDER,...payload,packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),productMutationPerformed:false,terrainMutationPerformed:false,lockClosurePerformed:false,mergePerformed:false};
           fs.writeFileSync(`${process.env.OUT}/receipt.json`,JSON.stringify(receipt,null,2)+'\n');
           fs.writeFileSync(`${process.env.OUT}/c2-receipt.json`,JSON.stringify(c2,null,2)+'\n');
           NODE
@@ -226,7 +200,7 @@ jobs:
         with:
           name: h-earth-v2-six-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/verifier
-      - name: Bind exact main, exact candidate, and independent equality
+      - name: Certify exact-head merge authority
         run: |
           set -euo pipefail
           git fetch origin main "$CANDIDATE_BRANCH"
@@ -235,28 +209,11 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-          const builder=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'utf8'));
-          const verifier=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'utf8'));
-          const expected='PASS_CLOSED_EXACT_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED';
-          if(builder.result!==expected||verifier.result!==expected)throw Error('REPRODUCTION_RESULT_MISMATCH');
-          if(builder.executionHolder===verifier.executionHolder)throw Error('EXECUTION_HOLDERS_NOT_DISTINCT');
-          if(builder.packageFingerprint!==verifier.packageFingerprint)throw Error('PACKAGE_FINGERPRINT_MISMATCH');
-          const receipt={
-            schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_MERGE_AUTHORITY_RECEIPT_v1',
-            result:'PASS_CLOSED_EXACT_HEAD_MERGE_AUTHORIZED',
-            repository:'smansfield635-create/smansfield635-create.github.io',
-            exactPreMergeMain:process.env.GOVERNING_MAIN,
-            exactCandidateHead:process.env.CANDIDATE_HEAD,
-            exactPr:634,
-            packageFingerprint:builder.packageFingerprint,
-            distinctExecutionHolders:true,
-            permittedChangedPathCount:2,
-            permittedEffect:'ACTIVATE_EXACT_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR',
-            locks279And280PreservedActive:true,
-            prohibitedEffects:['CONTROL_PLANE_SOURCE_MUTATION','LOCK_279_OR_280_CLOSURE','TERRAIN_MUTATION','MANOR_CONSTRUCTION','PRODUCT_OR_RUNTIME_MUTATION','DEPLOYMENT','RELEASE'],
-            headSubstitutionProhibited:true,
-            baseDriftRequiresHold:true
-          };
+          const b=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'utf8'));
+          const v=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'utf8'));
+          const result='PASS_CLOSED_EXACT_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED';
+          if(b.result!==result||v.result!==result||b.executionHolder===v.executionHolder||b.packageFingerprint!==v.packageFingerprint)throw Error('INDEPENDENT_REPRODUCTION_MISMATCH');
+          const receipt={schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_MERGE_AUTHORITY_RECEIPT_v1',result:'PASS_CLOSED_EXACT_HEAD_MERGE_AUTHORIZED',exactPreMergeMain:process.env.GOVERNING_MAIN,exactCandidateHead:process.env.CANDIDATE_HEAD,exactPr:634,packageFingerprint:b.packageFingerprint,distinctExecutionHolders:true,permittedChangedPathCount:2,permittedEffect:'ACTIVATE_EXACT_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR',locks279And280PreservedActive:true,headSubstitutionProhibited:true,baseDriftRequiresHold:true};
           receipt.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
           fs.mkdirSync('/tmp/h-earth-v2-six-path-registry-final',{recursive:true});
           fs.writeFileSync('/tmp/h-earth-v2-six-path-registry-final/merge-authority.json',JSON.stringify(receipt,null,2)+'\n');

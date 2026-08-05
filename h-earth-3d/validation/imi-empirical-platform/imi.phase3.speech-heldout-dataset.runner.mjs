@@ -14,7 +14,7 @@ function argValue(name, fallback = null) {
   return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : fallback;
 }
 const outputDir = argValue('--output-dir', '/tmp/imi-phase3-speech-heldout-dataset');
-const clockValue = argValue('--clock', '2026-08-05T19:05:00.000Z');
+const clockValue = argValue('--clock', '2026-08-05T19:45:00.000Z');
 const clock = () => new Date(clockValue);
 const probeDir = path.join(outputDir, 'clac-public-source-probe');
 
@@ -38,22 +38,22 @@ try {
   probe = JSON.parse(await readFile(path.join(probeDir, 'clac-source-probe.v1.json'), 'utf8'));
 } catch (error) {
   probe = {
-    schemaVersion: 'IMI_PHASE_3_CLAC_SOURCE_PROBE_v1',
+    schemaVersion: 'IMI_PHASE_3_CLAC_SOURCE_PROBE_v2',
     result: 'HELD_CLAC_SOURCE_PROBE_PROCESS_FAILED',
     observedAt: clock().toISOString(),
     archiveUrl: 'https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip',
     error: String(error?.message || error)
   };
 }
-const sourceAccessible = probe.result === 'PASS_CLAC_REMOTE_ZIP_INVENTORY';
+const packageBound = probe.result === 'PASS_CLAC_PUBLIC_TEXT_METADATA_PACKAGE_BOUND';
 const body = {
   schemaVersion: 'IMI_PHASE_3_SPEECH_HELD_OUT_REPRODUCTION_RECEIPT_v1',
   operation: 'IMI_PARALLEL_EXTERNAL_TESTS_v1',
   track: track.track,
-  result: sourceAccessible
-    ? 'HELD_PUBLIC_CLAC_SOURCE_INVENTORIED_EXACT_FIVE_FEATURE_EXECUTION_PENDING'
-    : 'HELD_PUBLIC_CLAC_SOURCE_INVENTORY_NOT_COMPLETED',
-  terminalDisposition: sourceAccessible
+  result: packageBound
+    ? 'HELD_PUBLIC_CLAC_TEXT_METADATA_PACKAGE_BOUND_EXACT_FIVE_FEATURE_EXECUTION_PENDING'
+    : 'HELD_PUBLIC_CLAC_TEXT_METADATA_PACKAGE_NOT_COMPLETED',
+  terminalDisposition: packageBound
     ? 'HELD_OPEN_PUBLIC_SOURCE_FEATURE_EXTRACTION'
     : 'HELD_OPEN_PUBLIC_SOURCE_ACCESS',
   observedAt: clock().toISOString(),
@@ -67,19 +67,22 @@ const body = {
   sourceIdentity: probe,
   admission: {
     independentPublicCorpusBound: true,
-    archiveInventoryCompleted: sourceAccessible,
+    archiveInventoryCompleted: packageBound,
+    transcriptMetadataPackageBound: packageBound,
+    extractedUsableTranscriptCount: probe.extractedUsableTranscriptCount || 0,
     minimumParticipantCountRequired: 100,
     minimumDeclaredGroupsRequired: 2,
     frozenFiveFeatureInputsRequired: true,
     exactFeatureExtractionCompleted: false
   },
-  reason: sourceAccessible
-    ? 'THE_INDEPENDENT_PUBLIC_CLAC_SOURCE_IS_ACCESSIBLE_AND_INVENTORIED; EXACT_FROZEN_FEATURE_EXTRACTION_REMAINS_REQUIRED_BEFORE_EMPIRICAL_CREDIT'
-    : 'THE_INDEPENDENT_PUBLIC_CLAC_SOURCE_WAS_BOUND_BUT_REMOTE_ARCHIVE_INVENTORY_DID_NOT_COMPLETE',
+  reason: packageBound
+    ? 'THE_INDEPENDENT_PUBLIC_CLAC_TRANSCRIPT_AND_METADATA_PACKAGE_IS_BOUND; EXACT_FROZEN_FIVE_FEATURE_EXTRACTION_REMAINS_REQUIRED_BEFORE_EMPIRICAL_CREDIT'
+    : 'THE_INDEPENDENT_PUBLIC_CLAC_SOURCE_WAS_BOUND_BUT_THE_BOUNDED_TRANSCRIPT_AND_METADATA_PACKAGE_DID_NOT_COMPLETE',
   boundaries: {
     protectedDataAccessAttempted: false,
     fullArchiveDownloaded: false,
-    participantRowsInspected: false,
+    audioDownloaded: false,
+    transcriptMetadataPackageBound: packageBound,
     newEmpiricalTestExecuted: false,
     routeRetuned: false,
     diagnosisOrClinicalScreeningClaimed: false,

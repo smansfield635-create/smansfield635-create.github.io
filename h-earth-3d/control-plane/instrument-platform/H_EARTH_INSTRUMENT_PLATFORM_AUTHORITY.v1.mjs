@@ -14,8 +14,8 @@ export const H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY_v1 = deepFreeze({
   operation: 'H_EARTH_INSTRUMENT_PLATFORM_CONTROL_PLANE_AND_STATE_MACHINE_v1',
   deliverable: 'H_EARTH_INSTRUMENT_PLATFORM_v1',
   class: 'GOVERNED_INTERNAL_ENGINEERING_DIAGNOSTIC_AUTHORING_CANDIDATE_ACCEPTANCE_AND_PROMOTION_INSTRUMENT',
-  status: 'UNIFIED_INSTRUMENT_SOURCE_AND_RUNTIME_IMPLEMENTATION',
-  controllingBaseHead: 'accdec74088120446bfc28f4441fc08a8210813f',
+  status: 'UNIFIED_INSTRUMENT_SOURCE_AND_RUNTIME_IMPLEMENTATION_WITH_IMI_EMPIRICAL_PLATFORM_EXTENSION',
+  controllingBaseHead: '3d80989e4571e62a5b9997aa70b223c0678ee1d3',
   includedInstrumentCount: toolRegistry.tools.length,
   includedInstruments: toolRegistry.tools.map((tool) => tool.toolId),
   sharedAuthorities: [
@@ -25,7 +25,8 @@ export const H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY_v1 = deepFreeze({
     'H_EARTH_EVIDENCE_ENVELOPE_v1',
     'H_EARTH_CROSS_TOOL_SESSION_LEDGER_v1',
     'H_EARTH_CHANGE_CLASS_ROUTER_v1',
-    'H_EARTH_AUTHORITY_STATE_MACHINE_v1'
+    'H_EARTH_AUTHORITY_STATE_MACHINE_v1',
+    'IMI_EMPIRICAL_PLATFORM_AUTHORITY_v1'
   ],
   constructionAndTerminalControllers: [
     'H_EARTH_BOUNDED_CANDIDATE_ASSEMBLER',
@@ -33,13 +34,14 @@ export const H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY_v1 = deepFreeze({
     'H_EARTH_PUBLIC_CANDIDATE_VERIFICATION_CONTROLLER',
     'H_EARTH_USER_DIFFERENTIAL_RECORDER',
     'H_EARTH_DEFAULT_PROMOTION_CONTROLLER',
-    'H_EARTH_PUBLIC_DEFAULT_REVERIFICATION_CONTROLLER'
+    'H_EARTH_PUBLIC_DEFAULT_REVERIFICATION_CONTROLLER',
+    'IMI_EMPIRICAL_ROUTE_STUDY_RECEIPT_ENGINE'
   ],
   authorityPartition: projectContext.authorityPartition,
   permanentSceneRegistryDigest: sceneRegistry.registryDigest,
   toolRegistryDigest: toolRegistry.registryDigest,
   fixedGates: {
-    exactToolCount: 4,
+    exactToolCount: 5,
     exactPermanentSceneCount: 8,
     b1BaselineDigest: 'fnv1a32:513f79fa',
     b2ProtectionDigest: 'fnv1a32:f228a5b5',
@@ -58,8 +60,17 @@ export const H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY_v1 = deepFreeze({
   exactPathScope: [
     '.github/workflows/h-earth-instrument-platform.yml',
     '.github/workflows/h-earth-terrain-workbench.yml',
+    'h-earth-3d/control-plane/imi-empirical-platform/IMI_EMPIRICAL_PLATFORM_AUTHORITY.v1.mjs',
     'h-earth-3d/control-plane/instrument-platform/H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY.v1.mjs',
     'h-earth-3d/control-plane/post-cp2-round2/H_EARTH_ROUND2_ASSET_DISPOSITION_MANIFEST.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/README.md',
+    'h-earth-3d/tools/imi-empirical-platform/index.html',
+    'h-earth-3d/tools/imi-empirical-platform/imi-core-and-empirical-portfolio-engine.v1.mjs',
+    'h-earth-3d/tools/imi-empirical-platform/schemas/route.schema.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/schemas/study-receipt.schema.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/schemas/portfolio-registry.schema.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/routes/example-hospital-route.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/examples/example-hospital-rows.v1.json',
     'h-earth-3d/tools/instrument-platform/authority-state-machine.mjs',
     'h-earth-3d/tools/instrument-platform/bounded-candidate-assembler.mjs',
     'h-earth-3d/tools/instrument-platform/change-class-router.mjs',
@@ -80,6 +91,7 @@ export const H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY_v1 = deepFreeze({
     'h-earth-3d/tools/terrain-workbench/scene-lab.mjs',
     'h-earth-3d/tools/terrain-workbench/terrain-atlas.mjs',
     'h-earth-3d/tools/terrain-workbench/workbench.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.empirical-platform.runner.mjs',
     'h-earth-3d/validation/instrument-platform/h-earth.instrument-platform.runner.mjs',
     'h-earth-3d/validation/terrain-workbench/h-earth.terrain-workbench.runner.mjs'
   ],
@@ -89,9 +101,11 @@ export const H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY_v1 = deepFreeze({
     candidateConstructionPerformed: false,
     userAcceptanceRecorded: false,
     publicDefaultChanged: false,
-    stop: 'STOP_AFTER_UNIFIED_INSTRUMENT_RUNTIME_IMPLEMENTATION_AND_REPOSITORY_INTEGRATION'
+    imiEmpiricalRouteCertificationPerformed: false,
+    imiEmpiricalValidationClaimed: false,
+    stop: 'STOP_AFTER_IMI_EMPIRICAL_PLATFORM_REPOSITORY_INTEGRATION_AND_EXAMPLE_FIXTURE_VALIDATION'
   },
-  result: 'H_EARTH_INSTRUMENT_PLATFORM_PASS_CLOSED'
+  result: 'H_EARTH_INSTRUMENT_PLATFORM_PASS_CLOSED_WITH_IMI_EMPIRICAL_PLATFORM_EXTENSION'
 });
 
 export default H_EARTH_INSTRUMENT_PLATFORM_AUTHORITY_v1;

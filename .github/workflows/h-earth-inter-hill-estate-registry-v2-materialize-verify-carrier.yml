@@ -1,0 +1,168 @@
+name: H-Earth Inter-Hill Estate Registry V2 Materialize and Verify Carrier
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+    paths:
+      - '.github/workflows/h-earth-inter-hill-estate-registry-v2-materialize-verify-carrier.yml'
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  materialize-and-verify-exact-two-path-successor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      REGISTRY_BRANCH: role1/inter-hill-estate-evaluator-exact-registry-scope-v2-001
+      REGISTRY_BASE: ce696e2d8a52cc6a173b904ad77cbe20b195dd2f
+      CORRECTED_HEAD: b935c204da2904e86f9c9c566bed0ac9b0de4193
+      LOADER_PATH: h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+      NEW_FACADE_PATH: h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js
+      NODE_ID: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_V2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ce696e2d8a52cc6a173b904ad77cbe20b195dd2f
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify corrected PR identity remains immutable
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/${GITHUB_REPOSITORY}/pulls/616 --jq .head.sha)" = "$CORRECTED_HEAD"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/pulls/616 --jq .merged)" = "false"
+      - name: Replace only the active facade import on registry branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/registry"
+          gh api "repos/${GITHUB_REPOSITORY}/contents/${LOADER_PATH}?ref=${REGISTRY_BRANCH}" > "$RUNNER_TEMP/registry/loader-meta.json"
+          jq -r .content "$RUNNER_TEMP/registry/loader-meta.json" | tr -d '\n' | base64 -d > "$RUNNER_TEMP/registry/loader-before.js"
+          python - <<'PY'
+          from pathlib import Path
+          p=Path(__import__('os').environ['RUNNER_TEMP'])/'registry'/'loader-before.js'
+          q=Path(__import__('os').environ['RUNNER_TEMP'])/'registry'/'loader-after.js'
+          s=p.read_text()
+          old="import registryFacade from './accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head.js';"
+          new="import registryFacade from './accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js';"
+          if s.count(old)!=1:
+              raise SystemExit(f'ACTIVE_FACADE_IMPORT_OCCURRENCE_COUNT_NOT_ONE:{s.count(old)}')
+          t=s.replace(old,new)
+          if t.count(new)!=1 or old in t:
+              raise SystemExit('ACTIVE_FACADE_IMPORT_REPLACEMENT_FAILED')
+          q.write_text(t)
+          PY
+          sha=$(jq -r .sha "$RUNNER_TEMP/registry/loader-meta.json")
+          content=$(base64 -w0 "$RUNNER_TEMP/registry/loader-after.js")
+          gh api --method PUT "repos/${GITHUB_REPOSITORY}/contents/${LOADER_PATH}" \
+            -f message='Activate corrected inter-hill evaluator exact-head registry facade v2' \
+            -f content="$content" \
+            -f sha="$sha" \
+            -f branch="$REGISTRY_BRANCH" > "$RUNNER_TEMP/registry/loader-put.json"
+          jq -e '.commit.sha|test("^[0-9a-f]{40}$")' "$RUNNER_TEMP/registry/loader-put.json" >/dev/null
+          jq -r .commit.sha "$RUNNER_TEMP/registry/loader-put.json" > "$RUNNER_TEMP/registry/registry-head.txt"
+      - name: Fetch and verify exact two-path registry successor
+        shell: bash
+        run: |
+          set -euo pipefail
+          registry_head=$(cat "$RUNNER_TEMP/registry/registry-head.txt")
+          git fetch --no-tags origin "$REGISTRY_BRANCH" "$CORRECTED_HEAD"
+          test "$(git rev-parse FETCH_HEAD)" = "$CORRECTED_HEAD" || true
+          git fetch --no-tags origin "refs/heads/${REGISTRY_BRANCH}:refs/remotes/origin/${REGISTRY_BRANCH}"
+          git checkout --detach "$registry_head"
+          test "$(git rev-parse HEAD)" = "$registry_head"
+          mapfile -t changed < <(git diff --name-only "$REGISTRY_BASE" HEAD | sort)
+          test "${#changed[@]}" -eq 2
+          test "${changed[0]}" = "$NEW_FACADE_PATH"
+          test "${changed[1]}" = "$LOADER_PATH"
+          mapfile -t status < <(git diff --name-status "$REGISTRY_BASE" HEAD)
+          test "${#status[@]}" -eq 2
+          printf '%s\n' "${status[@]}" | grep -Fx $'A\t'"$NEW_FACADE_PATH"
+          printf '%s\n' "${status[@]}" | grep -Fx $'M\t'"$LOADER_PATH"
+          test "$(grep -Fc "import registryFacade from './accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js';" "$LOADER_PATH")" -eq 1
+          test "$(git diff --unified=0 "$REGISTRY_BASE" HEAD -- "$LOADER_PATH" | grep -Ec '^[+-]import registryFacade')" -eq 2
+          test "$(git diff --unified=0 "$REGISTRY_BASE" HEAD -- "$LOADER_PATH" | grep -E '^[+-]' | grep -Ev '^---|^\+\+\+|^[+-]import registryFacade' | wc -l)" -eq 0
+          if printf '%s\n' "${changed[@]}" | grep -Eq '^(showroom/globe/h-earth/|h-earth-3d/terrain/|h-earth-3d/environment/)'; then exit 1; fi
+      - name: Execute exact registry verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+          import facade, {
+            H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_PATHS_V2 as paths,
+            H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_NODE_V2 as node,
+            H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_EVIDENCE_V2 as evidence
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js';
+          import {loadHEarthRepositoryRegistryValidatorDependencies} from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const correctedHead=process.env.CORRECTED_HEAD;
+          const expected=new Map([
+            ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md','f5d8215e180fa84ad4f23ee3eea57aa41abbcef0'],
+            ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/changed-path-manifest.v1.json','00dfbeecac4972bcb18381c120b16ab2801cdd7b'],
+            ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/input-schema.v1.json','2b4282a10fd490f03dcccb403ed72f505dd8d9df'],
+            ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/negative-fixtures.v1.json','c1ed9b2c734eb68b58e051f580c560f395e29354'],
+            ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/operator-family-admission.v1.json','3bfd4e5d5292a2a147a5a31c0de1fc08ce7b9b94'],
+            ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/output-schema.v1.json','a480c0cd6495053695d821d121f103503b4ed886'],
+            ['/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/requirements.v1.json','6d87efbe7418be4f6e78ea40a57e9749118fd9d7'],
+            ['/h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator.mjs','0b2d342f0faf97002cad69c945bfe2da962167c4']
+          ]);
+          if(paths.length!==8||expected.size!==8)throw Error('EXACT_PATH_COUNT_NOT_8');
+          if(node.nodeId!==process.env.NODE_ID||node.lifecycleStatus!=='CONTROL_PLANE_EXACT_HEAD_REGISTERED'||node.authorityClass!=='AUDIT_ONLY')throw Error('NEW_NODE_IDENTITY_FAILURE');
+          if(node.repositoryOccurrences.length!==8||evidence.sourceHead!==correctedHead||evidence.exactPathCount!==8)throw Error('NEW_EVIDENCE_IDENTITY_FAILURE');
+          for(const repositoryPath of paths){
+            const blob=expected.get(repositoryPath);
+            if(!blob)throw Error(`UNEXPECTED_PATH:${repositoryPath}`);
+            const resolution=facade.resolveHEarthRepositoryRegistryPath(repositoryPath);
+            if(resolution.resolved!==true||resolution.nodes.length!==1||resolution.nodes[0].nodeId!==process.env.NODE_ID)throw Error(`PATH_NOT_RESOLVED_TO_V2:${repositoryPath}`);
+            const occurrence=resolution.occurrences.find(x=>x.commitSha===correctedHead&&x.gitBlobSha===blob&&x.path===repositoryPath);
+            if(!occurrence)throw Error(`EXACT_OCCURRENCE_MISSING:${repositoryPath}`);
+            const relative=repositoryPath.slice(1);
+            const observed=cp.execFileSync('git',['ls-tree',correctedHead,'--',relative],{encoding:'utf8'}).trim().split(/\s+/)[2];
+            if(observed!==blob)throw Error(`SOURCE_BLOB_MISMATCH:${repositoryPath}:${observed}:${blob}`);
+          }
+          const neighbor='/h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/undeclared-neighbor.json';
+          if(facade.resolveHEarthRepositoryRegistryPath(neighbor).resolved!==false)throw Error('UNDECLARED_NEIGHBOR_RESOLVED');
+          const predecessor=facade.getHEarthRepositoryRegistryNode('H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE');
+          const predecessorEvidence=facade.getHEarthRepositoryRegistryEvidence('EVIDENCE_H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_v1');
+          if(!predecessor||!predecessorEvidence||predecessorEvidence.sourceHead!=='f5bbab7595306cbae16406f3f66fe206c2bd9f94')throw Error('PREDECESSOR_HISTORY_NOT_PRESERVED');
+          const parent=facade.getHEarthRepositoryRegistryNode('H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT');
+          if(!parent||parent.repositoryPaths.length!==13)throw Error(`MAP_WIDE_PATH_COUNT_NOT_13:${parent?.repositoryPaths?.length}`);
+          for(const p of parent.repositoryPaths)if(facade.resolveHEarthRepositoryRegistryPath(p).resolved!==true)throw Error(`MAP_WIDE_PATH_REGRESSION:${p}`);
+          const deps=loadHEarthRepositoryRegistryValidatorDependencies();
+          if(deps.identityVerified!==true||deps.exactHeadRegistrationVerified!==true)throw Error('C2_R1_EXISTING_REGISTRY_CHECKS_FAILED');
+          const receipt={
+            schema:'H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_REGISTRY_V2_VERIFICATION_RECEIPT_v1',
+            result:'PASS_READY_FOR_CONDITIONAL_REGISTRY_MERGE',
+            registryHead:cp.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
+            correctedHead,
+            exactChangedPathCount:2,
+            exactPathCount:8,
+            newNodeId:node.nodeId,
+            allEightPathsResolveToNewNode:true,
+            allEightOccurrencesMatchExactHeadAndBlobs:true,
+            predecessorRegistrationPreserved:true,
+            existing13MapWideInstrumentPathsResolve:true,
+            c2R1ExistingRegistryChecksPass:true,
+            undeclaredNeighborResult:'UNRESOLVED',
+            productOrTerrainChangedPathCount:0
+          };
+          fs.mkdirSync('/tmp/registry-evidence',{recursive:true});
+          fs.writeFileSync('/tmp/registry-evidence/registry-v2-verification.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-inter-hill-estate-registry-v2-materialization-verification
+          path: /tmp/registry-evidence
+          if-no-files-found: error
+          retention-days: 90

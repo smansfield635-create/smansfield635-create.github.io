@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "IMI_PHASE_3_HOSPITAL_DURABLE_EVIDENCE_PACKAGE_v1",
+  "sourceIdentity": {
+    "schemaVersion": "IMI_PHASE_3_HOSPITAL_SOURCE_AVAILABILITY_IDENTITY_v1",
+    "observedAt": "2026-08-05T17:45:00.000Z",
+    "baselineRelease": {
+      "complicationsReleased": "2026-05-13",
+      "generalReleased": "2026-05-13",
+      "complicationsModified": "2026-04-28",
+      "generalModified": "2026-04-28"
+    },
+    "datasets": {
+      "complications": {
+        "id": "ynj2-r877",
+        "name": "Complications and Deaths - Hospital",
+        "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/ynj2-r877",
+        "released": "2026-05-13",
+        "modified": "2026-04-28",
+        "title": "Complications and Deaths - Hospital",
+        "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/6af7c44d77436e5a1caac3ce39a83fe9_1777413950/Complications_and_Deaths-Hospital.csv"
+      },
+      "general": {
+        "id": "xubh-q36u",
+        "name": "Hospital General Information",
+        "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/xubh-q36u",
+        "released": "2026-05-13",
+        "modified": "2026-04-28",
+        "title": "Hospital General Information",
+        "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/893c372430d9d71a1c52737d01239d47_1777413958/Hospital_General_Information.csv"
+      }
+    },
+    "sourceDigest": "fnv1a32:dd4b0351"
+  },
+  "trackReceipt": {
+    "schemaVersion": "IMI_PHASE_3_HOSPITAL_EXTERNAL_REPLICATION_RECEIPT_v1",
+    "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+    "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+    "result": "HELD_NO_ELIGIBLE_NEXT_RELEASE_OR_NON_CMS_PACKAGE",
+    "terminalDisposition": "HELD_OPEN_SOURCE_NOT_AVAILABLE",
+    "observedAt": "2026-08-05T17:45:00.000Z",
+    "routeId": "CMS_HOSPITAL_REFRESH_2026_BASE_ROUTE_v1",
+    "routeDigest": "fnv1a32:8a4cb676",
+    "sourceIdentity": {
+      "schemaVersion": "IMI_PHASE_3_HOSPITAL_SOURCE_AVAILABILITY_IDENTITY_v1",
+      "observedAt": "2026-08-05T17:45:00.000Z",
+      "baselineRelease": {
+        "complicationsReleased": "2026-05-13",
+        "generalReleased": "2026-05-13",
+        "complicationsModified": "2026-04-28",
+        "generalModified": "2026-04-28"
+      },
+      "datasets": {
+        "complications": {
+          "id": "ynj2-r877",
+          "name": "Complications and Deaths - Hospital",
+          "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/ynj2-r877",
+          "released": "2026-05-13",
+          "modified": "2026-04-28",
+          "title": "Complications and Deaths - Hospital",
+          "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/6af7c44d77436e5a1caac3ce39a83fe9_1777413950/Complications_and_Deaths-Hospital.csv"
+        },
+        "general": {
+          "id": "xubh-q36u",
+          "name": "Hospital General Information",
+          "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/xubh-q36u",
+          "released": "2026-05-13",
+          "modified": "2026-04-28",
+          "title": "Hospital General Information",
+          "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/893c372430d9d71a1c52737d01239d47_1777413958/Hospital_General_Information.csv"
+        }
+      },
+      "sourceDigest": "fnv1a32:dd4b0351"
+    },
+    "admission": {
+      "nextCmsReleaseEligible": false,
+      "complicationsEligible": false,
+      "generalEligible": false,
+      "nonCmsPackageProvided": false,
+      "minimumEvidenceSatisfied": false
+    },
+    "reason": "THE_REQUIRED_CMS_DATASET_PAIR_HAS_NOT_ADVANCED_BEYOND_THE_FROZEN_BASELINE_RELEASE_AND_NO_SEPARATELY_BOUND_NON_CMS_PACKAGE_WAS_PROVIDED",
+    "phase4Candidate": false,
+    "boundaries": {
+      "sourceMetadataInspectedOnly": true,
+      "hospitalRowsDownloaded": false,
+      "newEmpiricalTestExecuted": false,
+      "routeRetuned": false,
+      "clinicalDiagnosisClaimed": false,
+      "causalClaimMade": false,
+      "finalValidationClaimed": false
+    },
+    "receiptDigest": "fnv1a32:6329f647"
+  }
+}

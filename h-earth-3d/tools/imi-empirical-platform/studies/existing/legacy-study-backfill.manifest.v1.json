@@ -1,0 +1,250 @@
+{
+  "schemaVersion": "IMI_EXISTING_STUDY_BACKFILL_MANIFEST_v1",
+  "version": "1.0.0-preofficial",
+  "classification": "LEGACY_EMPIRICAL_PORTFOLIO_RECEIPT_BACKFILL",
+  "purpose": "Bring already executed IMI empirical studies into the repository-based empirical platform as receipt and portfolio entries. This manifest does not claim raw-data rerun unless rawRowsAvailableInBranch is true.",
+  "generatedFrom": "preserved study reports and study output files available in ChatGPT file library before repository integration",
+  "createdAt": "2026-08-05T09:40:00-05:00",
+  "boundaries": {
+    "rawCaseRowsRecomputedHere": false,
+    "summaryReceiptBackfill": true,
+    "routeCertificationPerformed": false,
+    "confirmatoryValidationClaimed": false,
+    "publicReleaseAuthorized": false,
+    "mainBranchAdmissionClaimed": false
+  },
+  "studies": [
+    {
+      "studyId": "IMI_HOSPITAL_MEASURE_LEVEL_ROBUSTNESS_EXTENSION_1B",
+      "registryId": "ED-01-HOSPITAL-ROBUSTNESS",
+      "domain": "healthcare_quality",
+      "studyVersion": "1.0.0-legacy-backfill",
+      "validationClass": "EXPLORATORY_EMPIRICAL_ROBUSTNESS_TEST",
+      "sourceClass": "PUBLIC_CMS_MEASURE_LEVEL_DATA_WITH_GENERATED_HOSPITAL_LEVEL_RESULTS",
+      "sourceFiles": [
+        {
+          "name": "Complications_and_Deaths-Hospital.csv",
+          "bytes": 21641635,
+          "sha256": "0ba1b358e54e8812c9d1cf72c37f715b7bfeb3da12009bb6705158f0d15f91b5"
+        },
+        {
+          "name": "IMI_Hospital_Level_Results.csv",
+          "status": "derived_case_level_output_available_in_file_library"
+        },
+        {
+          "name": "IMI_Hospital_Robustness_Test_Report.md",
+          "status": "preserved_summary_report_available_in_file_library"
+        }
+      ],
+      "routeIdentity": {
+        "routeId": "HOSPITAL_MEASURE_LEVEL_BASE_NONOVERLAPPING_ROUTE_v1",
+        "routeVersion": "1.0.0-exploratory",
+        "caseUnit": "hospital",
+        "requiredFactors": ["MORTALITY_NONWORSE_AVAILABILITY", "SAFETY_COMPLICATION_NONWORSE_AVAILABILITY"],
+        "kernel": "IMI = a_MORT * a_SAFETY",
+        "missingnessRule": "Hospitals without required comparable factor observations are UNEVALUABLE under each threshold."
+      },
+      "rawRowsAvailableInBranch": false,
+      "derivedCaseOutputAvailable": true,
+      "summary": {
+        "sourceRows": 90611,
+        "hospitals": 4769,
+        "measures": 19,
+        "primaryThreshold": "ANY_COMPARABLE",
+        "validCases": 2973,
+        "unevaluableCases": 1796,
+        "meanIMI": 0.956454,
+        "medianIMI": 1.0,
+        "exactIMI1Percent": 77.262025,
+        "hardCollapseCases": 3,
+        "additiveVsMultiplicativeSpearman": 0.995,
+        "completeCoverageValidCases": 662
+      },
+      "portfolioDeterminations": [
+        "HOSPITAL_ROBUSTNESS_EXTENSION = EMPIRICALLY_VALUABLE",
+        "INDEPENDENT_CROSS_DOMAIN_TEST = NOT_SATISFIED",
+        "GENERAL_RANK_SUPERIORITY_OVER_ADDITIVE_MEAN = NOT_ESTABLISHED"
+      ],
+      "limitations": [
+        "Observational public reporting data, not causal evidence.",
+        "No temporal trajectory can be inferred from one reporting window.",
+        "Hospital complete-reporting cases are selected."
+      ]
+    },
+    {
+      "studyId": "IMI_EMPIRICAL_STUDY_02_SPONTANEOUS_SPEECH_EXPLORATORY_v1",
+      "registryId": "ED-02-SPEECH",
+      "domain": "spontaneous_speech_language_structure",
+      "studyVersion": "1.0.0-legacy-backfill",
+      "validationClass": "EXPLORATORY_CROSS_DOMAIN_EMPIRICAL_TEST",
+      "sourceClass": "PUBLIC_RESEARCH_SUPPLEMENT_AND_DERIVED_PARTICIPANT_RESULTS",
+      "sourceFiles": [
+        {
+          "name": "pone.0324270.s003.csv",
+          "bytes": 43331,
+          "sha256": "8aeea454a7e52ce072fa19289976cb1a06adac0ea8103c7537ec5677b72b4e2d"
+        },
+        {
+          "name": "IMI_EMPIRICAL_STUDY_02_SPONTANEOUS_SPEECH_EXPLORATORY_v1_REPORT.md",
+          "status": "preserved_summary_report_available_in_file_library"
+        }
+      ],
+      "routeIdentity": {
+        "routeId": "SPONTANEOUS_SPEECH_MANEUVERABILITY_ROUTE_v0",
+        "routeVersion": "0.0.0-exploratory",
+        "caseUnit": "participant",
+        "requiredFactors": ["CONCEPTUAL", "CONTEXTUAL", "VISUAL_GROUNDING", "SYNTACTIC_ORGANIZATION", "ADJUSTED_PREDICTABILITY"],
+        "kernel": "IMI = a_CONCEPTUAL * a_CONTEXTUAL * a_VISUAL_GROUNDING * a_SYNTACTIC_ORGANIZATION * a_ADJUSTED_PREDICTABILITY",
+        "missingnessRule": "Missing admitted route fields produce UNEVALUABLE. The preserved execution reported zero missing admitted route fields."
+      },
+      "rawRowsAvailableInBranch": false,
+      "derivedCaseOutputAvailable": true,
+      "summary": {
+        "participants": 291,
+        "englishParticipants": 237,
+        "greekParticipants": 54,
+        "validCases": 291,
+        "unevaluableCases": 0,
+        "meanIMI": 0.046104,
+        "medianIMI": 0.012221,
+        "varianceIMI": 0.007304,
+        "minimumIMI": 0.0000002452,
+        "maximumIMI": 0.648228,
+        "uniqueIMIValues": 291,
+        "hardCollapseCases": 0,
+        "pcaFirstComponentPercent": 36.5,
+        "cronbachAlpha": 0.413
+      },
+      "weakestFactorCounts": {
+        "conceptual_breadth": 72,
+        "contextual_breadth": 70,
+        "visual_grounding": 37,
+        "syntactic_organization": 47,
+        "adjusted_predictability": 65
+      },
+      "portfolioDeterminations": [
+        "DOMAIN_VARIANCE = PASS_MATERIAL",
+        "INDEPENDENT_CROSS_DOMAIN_TEST = SATISFIED_EXPLORATORILY",
+        "FACTOR_NONREDUNDANCY = SUPPORTED",
+        "WEAKEST_FACTOR_DIVERSITY = PASS",
+        "CONFIRMATORY_CLINICAL_VALIDATION = BLOCKED"
+      ],
+      "limitations": [
+        "Clinical variables were not present in the admitted S3 linguistic-feature file.",
+        "No diagnosis, MMSE, age, sex, or education inference claimed.",
+        "No clinical diagnostic use authorized."
+      ]
+    },
+    {
+      "studyId": "IMI_AGRICULTURAL_COLONY_RESILIENCE_EXPLORATORY_LONGITUDINAL_v1",
+      "registryId": "ED-04-AGRICULTURE-BEE",
+      "domain": "agricultural_colony_resilience",
+      "studyVersion": "1.0.0-legacy-backfill",
+      "validationClass": "EXPLORATORY_LONGITUDINAL_EMPIRICAL_EVIDENCE",
+      "sourceClass": "USDA_NASS_HONEY_BEE_COLONIES_RELEASE_AND_DERIVED_PANEL",
+      "sourceFiles": [
+        {
+          "name": "IMI_AGRICULTURAL_COLONY_RESILIENCE_EXPLORATORY_LONGITUDINAL_v1.xlsx",
+          "status": "derived_panel_workbook_available_in_file_library"
+        },
+        {
+          "name": "IMI_AGRICULTURAL_COLONY_RESILIENCE_EXPLORATORY_LONGITUDINAL_v1_REPORT.md",
+          "status": "preserved_summary_report_available_in_file_library"
+        }
+      ],
+      "routeIdentity": {
+        "routeId": "AGRICULTURAL_COLONY_STRESSOR_MANEUVERABILITY_ROUTE_v1",
+        "routeVersion": "1.0.0-exploratory",
+        "caseUnit": "state_quarter",
+        "requiredFactors": ["VARROA", "OTHER_PESTS_AND_PARASITES", "DISEASE", "PESTICIDE"],
+        "kernel": "IMI4 = a_VARROA * a_PESTS * a_DISEASE * a_PESTICIDE; CS4 = 1 - IMI4",
+        "sensitivityKernel": "IMI5 = IMI4 * (1 - OTHER_STRESSOR)",
+        "missingnessRule": "Missing required stressor fields produce UNEVALUABLE. UNKNOWN_STRESSOR is retained as uncertainty rather than causal availability."
+      },
+      "rawRowsAvailableInBranch": false,
+      "derivedCaseOutputAvailable": true,
+      "summary": {
+        "states": 20,
+        "stateQuarterRows": 120,
+        "laggedTransitions": 100,
+        "validCases": 120,
+        "hardCollapseCases": 0,
+        "spearmanCS4NextQuarterLoss": 0.345,
+        "spearmanCS5NextQuarterLoss": 0.357,
+        "spearmanVarroaNextQuarterLoss": 0.302,
+        "spearmanAdditiveMeanNextQuarterLoss": 0.350,
+        "multiplicativeCS4Rmse": 0.05133,
+        "additiveMean4Rmse": 0.05125,
+        "fiveFactorSensitivityRmse": 0.05089,
+        "spearmanCS4AdditiveMean4": 0.9986,
+        "varroaAsWeakestFactorRows": 120
+      },
+      "portfolioDeterminations": [
+        "TEMPORAL_SIGNAL = SUPPORTED_EXPLORATORILY",
+        "VALUE_BEYOND_VARROA = SMALL_BUT_POSITIVE_IN_CROSS_VALIDATION",
+        "VALUE_BEYOND_ADDITIVE_MEAN = NOT_ESTABLISHED",
+        "WEAKEST_FACTOR_DIVERSITY = FAIL_VARROA_DOMINATES_ALL_ROWS",
+        "CONFIRMATORY_VALIDATION = NO"
+      ],
+      "limitations": [
+        "Six quarters contained in one USDA release, not complete historical archive.",
+        "Stressor percentages overlap and are not independent probabilities.",
+        "State-level analysis cannot identify colony-level causal sequences."
+      ]
+    },
+    {
+      "studyId": "DSSI_SOVEREIGN_DEBT_SERVICE_IMI_BOOTSTRAP_v1",
+      "registryId": "ED-03-DSSI-FINANCE",
+      "domain": "sovereign_debt_service_finance",
+      "studyVersion": "1.0.0-legacy-backfill",
+      "validationClass": "EXPLORATORY_BOOTSTRAP_EMPIRICAL_TEST",
+      "sourceClass": "WORLD_BANK_DSSI_MONTHLY_DEBT_SERVICE_TABLES_AND_DERIVED_RESULTS",
+      "sourceFiles": [
+        {
+          "name": "DSSI_Sovereign_Debt_Service_IMI_Study_v1.xlsx",
+          "status": "derived_workbook_available_in_file_library"
+        },
+        {
+          "name": "DSSI_Sovereign_Debt_Service_IMI_Findings_v1.md",
+          "status": "preserved_summary_report_available_in_file_library"
+        }
+      ],
+      "routeIdentity": {
+        "routeId": "SOVEREIGN_DEBT_SERVICE_SCHEDULE_DISPERSION_IMI_v1",
+        "routeVersion": "1.0.0-exploratory",
+        "caseUnit": "country_year",
+        "requiredFactors": ["INTEREST_DISPERSION", "PRINCIPAL_DISPERSION"],
+        "kernel": "IMI = a_INTEREST_DISPERSION * a_PRINCIPAL_DISPERSION",
+        "missingnessRule": "Missing or incomplete 12-month required schedules produce UNEVALUABLE. No month or factor is imputed as favorable."
+      },
+      "rawRowsAvailableInBranch": false,
+      "derivedCaseOutputAvailable": true,
+      "summary": {
+        "numericCases": 14,
+        "validCases": 14,
+        "meanIMI": 0.8015658363348299,
+        "medianIMI": 0.8265983930142485,
+        "minimumIMI": 0.5850793276639117,
+        "maximumIMI": 0.9447854792408703,
+        "meanAdditiveMinusIMI": 0.09311840655309245,
+        "interestPrincipalSpearman": 0.22197802197802197,
+        "additiveVsIMISpearman": 0.9956043956043956,
+        "hardCollapseCases": 0,
+        "lowestCase": "Ethiopia",
+        "highestCase": "Mali"
+      },
+      "portfolioDeterminations": [
+        "CROSS_DOMAIN_ROUTE_FEASIBILITY = SUPPORTED",
+        "FACTOR_DISTINCTNESS = SUPPORTED_IN_BOOTSTRAP_COHORT",
+        "NONCOMPENSATORY_SEVERITY_DIFFERENTIATION = SUPPORTED",
+        "GENERAL_RANK_SUPERIORITY_OVER_ADDITIVE_MEAN = NOT_DEMONSTRATED",
+        "SOVEREIGN_SOLVENCY_OR_DEFAULT_PREDICTION = NOT_TESTED"
+      ],
+      "limitations": [
+        "Retrievability bootstrap cohort, not representative of all DSSI countries.",
+        "Measures schedule structure, not sovereign solvency.",
+        "No default prediction or causal claim."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "CP9_ROUTER_OWNERSHIP_REPAIR_CHANGED_PATH_MANIFEST_v1",
+  "baseHead": "3753f7307c36f1269f68fd5222a59c1605f12358",
+  "authorityIssue": 580,
+  "expectedChangedPathCount": 7,
+  "expectedChangedPaths": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/repairs/cp9r-router-ownership/AGENTS.md",
+    ".github/ai-router/repairs/cp9r-router-ownership/contract.v1.json",
+    ".github/ai-router/repairs/cp9r-router-ownership/frozen-operation-a-paths.v1.json",
+    ".github/ai-router/repairs/cp9r-router-ownership/changed-path-manifest.v1.json",
+    ".github/ai-router/repairs/cp9r-router-ownership/verify.v1.mjs",
+    ".github/workflows/cp9r-router-ownership-validation.yml"
+  ],
+  "routerMutationAllowed": true,
+  "toolsetRegistrationAllowed": false,
+  "cp9RetryAllowed": false,
+  "mergeAllowed": false
+}

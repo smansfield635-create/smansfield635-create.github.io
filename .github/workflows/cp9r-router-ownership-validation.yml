@@ -1,0 +1,146 @@
+name: CP9 Exact Router Ownership Repair Validation
+
+on:
+  push:
+    branches:
+      - repair/cp9r-router-ownership-v1-001
+    paths:
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/repairs/cp9r-router-ownership/**'
+      - '.github/workflows/cp9r-router-ownership-validation.yml'
+  pull_request:
+    paths:
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/repairs/cp9r-router-ownership/**'
+      - '.github/workflows/cp9r-router-ownership-validation.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build deterministic router-ownership receipt
+        run: |
+          node .github/ai-router/repairs/cp9r-router-ownership/verify.v1.mjs \
+            --execution-holder CP9R7_ROUTER_OWNERSHIP_BUILDER \
+            --output /tmp/cp9r-router-builder.json
+
+      - name: Upload builder receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: cp9r-router-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp9r-router-builder.json
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate in fresh job
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Independently reproduce router-ownership receipt
+        run: |
+          node .github/ai-router/repairs/cp9r-router-ownership/verify.v1.mjs \
+            --execution-holder CP9R8_FRESH_ROUTER_OWNERSHIP_VERIFIER \
+            --output /tmp/cp9r-router-verifier.json
+
+      - name: Upload verifier receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: cp9r-router-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp9r-router-verifier.json
+          if-no-files-found: error
+          retention-days: 90
+
+  certify:
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download builder receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: cp9r-router-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/builder
+
+      - name: Download verifier receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: cp9r-router-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/verifier
+
+      - name: Certify independent fingerprint equality
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const builder = JSON.parse(fs.readFileSync('/tmp/builder/cp9r-router-builder.json', 'utf8'));
+          const verifier = JSON.parse(fs.readFileSync('/tmp/verifier/cp9r-router-verifier.json', 'utf8'));
+          const required = 'PASS_CLOSED_ROUTER_OWNERSHIP_CANDIDATE';
+          if (builder.result !== required || verifier.result !== required) throw new Error('REPRODUCTION_RESULT_MISMATCH');
+          if (builder.executionHolder === verifier.executionHolder) throw new Error('EXECUTION_HOLDERS_NOT_DISTINCT');
+          if (builder.candidateHead !== verifier.candidateHead) throw new Error('CANDIDATE_HEAD_MISMATCH');
+          if (builder.packageFingerprint !== verifier.packageFingerprint) throw new Error('PACKAGE_FINGERPRINT_MISMATCH');
+          if (!builder.positiveRoutesPassed || !verifier.positiveRoutesPassed) throw new Error('POSITIVE_ROUTE_FAILURE');
+          if (!builder.negativeRoutesPassed || !verifier.negativeRoutesPassed) throw new Error('NEGATIVE_ROUTE_FAILURE');
+          const certification = {
+            schema: 'CP9_ROUTER_OWNERSHIP_REPAIR_FINAL_CERTIFICATION_RECEIPT_v1',
+            result: 'PASS_CLOSED_INDEPENDENTLY_REPRODUCED',
+            authorityIssue: 580,
+            candidateHead: builder.candidateHead,
+            baseHead: builder.baseHead,
+            builderHolder: builder.executionHolder,
+            verifierHolder: verifier.executionHolder,
+            distinctExecutionHolders: true,
+            exactOwnedPathCount: builder.exactOwnedPathCount,
+            positiveRouteCount: builder.positiveRouteCount,
+            negativeRouteCount: builder.negativeRouteCount,
+            existingRouterSelfTestResult: builder.existingRouterSelfTestResult,
+            unregisteredMutationDisposition: builder.unregisteredMutationDisposition,
+            ambiguityDisposition: builder.ambiguityDisposition,
+            routerInfrastructureOwnershipChanged: false,
+            hEarthPrefixOwnershipChanged: false,
+            broadPrefixOwnershipGranted: false,
+            toolsetRegistered: false,
+            cp9Retried: false,
+            mergePerformed: false,
+            pr570Mutated: false,
+            packageFingerprint: builder.packageFingerprint,
+            builderReceiptSha256: crypto.createHash('sha256').update(fs.readFileSync('/tmp/builder/cp9r-router-builder.json')).digest('hex'),
+            verifierReceiptSha256: crypto.createHash('sha256').update(fs.readFileSync('/tmp/verifier/cp9r-router-verifier.json')).digest('hex')
+          };
+          fs.writeFileSync('/tmp/cp9r-router-final-certification.json', `${JSON.stringify(certification, null, 2)}\n`);
+          console.log(JSON.stringify(certification, null, 2));
+          NODE
+
+      - name: Upload final certification
+        uses: actions/upload-artifact@v4
+        with:
+          name: cp9r-router-final-certification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/builder/cp9r-router-builder.json
+            /tmp/verifier/cp9r-router-verifier.json
+            /tmp/cp9r-router-final-certification.json
+          if-no-files-found: error
+          retention-days: 90

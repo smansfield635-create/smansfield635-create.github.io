@@ -1,0 +1,51 @@
+{
+  "schema": "CP9_ROUTER_OWNERSHIP_REPAIR_CONTRACT_v1",
+  "contractId": "CP9R6_ROUTER_OWNERSHIP_CONTRACT_FREEZE_v1",
+  "authorityIssue": 580,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingMainHead": "3753f7307c36f1269f68fd5222a59c1605f12358",
+  "routerPath": ".github/ai-router/router.v1.json",
+  "routerId": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
+  "targetProjectId": "H_EARTH",
+  "frozenPathSet": ".github/ai-router/repairs/cp9r-router-ownership/frozen-operation-a-paths.v1.json",
+  "ownershipRule": "APPEND_ONLY_THE_22_FROZEN_OPERATION_A_PATHS_TO_H_EARTH_OWNED_EXACT_PATHS",
+  "requiredPositiveResult": {
+    "pathCount": 22,
+    "routeClass": "REGISTERED_PROJECT",
+    "projectId": "H_EARTH",
+    "disposition": "PASS"
+  },
+  "requiredNegativeResult": {
+    "routeClass": "UNREGISTERED",
+    "disposition": "BLOCK",
+    "reason": "NO_REGISTERED_PROJECT_AUTHORITY"
+  },
+  "negativePaths": [
+    ".github/ai-toolset-transport/h-earth-registry-two-path-unlisted.v1.json",
+    "tools/h-earth-registry-two-path-toolset/unlisted-future-tool.mjs",
+    ".github/workflows/h-earth-registry-two-path-toolset-registration-validation-extra.yml"
+  ],
+  "preservedInvariants": [
+    "UNREGISTERED_MUTATION_REMAINS_BLOCK",
+    "AMBIGUITY_DISPOSITION_REMAINS_STOP",
+    "ROUTER_INFRASTRUCTURE_OWNERSHIP_UNCHANGED",
+    "H_EARTH_PREFIX_OWNERSHIP_UNCHANGED",
+    "NO_GENERIC_DOT_GITHUB_PREFIX",
+    "NO_GENERIC_TOOLS_PREFIX",
+    "NO_TOOLSET_DESCRIPTOR_REGISTRATION",
+    "NO_CP9_BRANCH_AUTHORITY",
+    "NO_MERGE_AUTHORITY"
+  ],
+  "prohibited": [
+    "BROAD_DOT_GITHUB_OWNERSHIP",
+    "BROAD_TOOLS_OWNERSHIP",
+    "UNREGISTERED_PATH_POLICY_WEAKENING",
+    "AMBIGUITY_PRECEDENCE_CHANGE",
+    "ARBITRARY_FUTURE_TOOLSET_OWNERSHIP",
+    "TOOLSET_REGISTRATION",
+    "CP9_RETRY",
+    "PR_570_MUTATION",
+    "MERGE"
+  ],
+  "status": "FROZEN_ROUTER_OWNERSHIP_REPAIR"
+}

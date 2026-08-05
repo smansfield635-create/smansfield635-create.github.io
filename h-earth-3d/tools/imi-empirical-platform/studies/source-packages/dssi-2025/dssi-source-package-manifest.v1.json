@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "DSSI_WEB_EXTRACTED_SOURCE_PACKAGE_MANIFEST_v1",
+  "packageId": "DSSI_2025_ALL_COUNTRY_SEGMENTED_WEB_EXTRACTED_SOURCE_PACKAGE_v1",
+  "routeId": "DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_ROUTE_v1",
+  "dataYear": 2025,
+  "source": {
+    "program": "Debt Service Suspension Initiative",
+    "agency": "World Bank",
+    "programPage": "https://www.worldbank.org/en/programs/debt-statistics/dssi",
+    "monthlyPagePattern": "https://datatopics.worldbank.org/dssitables/monthly/{ISO3}",
+    "table": "Debt Service Payments Due",
+    "units": "US$ thousands",
+    "declaredDataSource": "World Bank Debtor Reporting System"
+  },
+  "candidateCountryCount": 70,
+  "expectedIncludedDssiCountryCountFromWorldBankProgramPage": 68,
+  "candidateCountries": ["AFG","AGO","BGD","BEN","BTN","BFA","BDI","CPV","KHM","CMR","CAF","TCD","COM","COG","CIV","DJI","DMA","ETH","FJI","GMB","GHA","GRD","GIN","GNB","GUY","HTI","HND","KEN","KIR","KGZ","LAO","LSO","LBR","MDG","MWI","MDV","MLI","MRT","FSM","MDA","MNG","MOZ","MMR","NPL","NIC","NER","NGA","PAK","PNG","RWA","WSM","STP","SEN","SLE","SLB","SOM","SSD","LCA","VCT","SDN","TJK","TZA","TLS","TGO","TON","UGA","UZB","VUT","YEM","ZMB"],
+  "segmentation": [
+    {"segmentId":"DSSI_2025_SEGMENT_001","countryCodes":["AFG","AGO","BGD","BEN","BTN","BFA","BDI","CPV","KHM","CMR"],"path":"h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-001.json"},
+    {"segmentId":"DSSI_2025_SEGMENT_002","countryCodes":["CAF","TCD","COM","COG","CIV","DJI","DMA","ETH","FJI","GMB"],"path":"h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-002.json"},
+    {"segmentId":"DSSI_2025_SEGMENT_003","countryCodes":["GHA","GRD","GIN","GNB","GUY","HTI","HND","KEN","KIR","KGZ"],"path":"h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-003.json"},
+    {"segmentId":"DSSI_2025_SEGMENT_004","countryCodes":["LAO","LSO","LBR","MDG","MWI","MDV","MLI","MRT","FSM","MDA"],"path":"h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-004.json"},
+    {"segmentId":"DSSI_2025_SEGMENT_005","countryCodes":["MNG","MOZ","MMR","NPL","NIC","NER","NGA","PAK","PNG","RWA"],"path":"h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-005.json"},
+    {"segmentId":"DSSI_2025_SEGMENT_006","countryCodes":["WSM","STP","SEN","SLE","SLB","SOM","SSD","LCA","VCT","SDN"],"path":"h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-006.json"},
+    {"segmentId":"DSSI_2025_SEGMENT_007","countryCodes":["TJK","TZA","TLS","TGO","TON","UGA","UZB","VUT","YEM","ZMB"],"path":"h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-007.json"}
+  ],
+  "completionLaw": {
+    "numericStudyRunMinimumValidRows": 14,
+    "fullCandidateCoverageTarget": 70,
+    "expectedRetrievableCoverageTarget": 68,
+    "countriesWithoutComplete2025TotalRow": "classify as UNEVALUABLE / source-held, do not impute",
+    "segmentAdmissibility": "segments may be appended independently; every valid row must retain source URL and extraction evidence"
+  },
+  "boundaries": {
+    "allCountrySetup": true,
+    "segmentedExtractionAllowed": true,
+    "runtimeDynamicPageScrapeRequired": false,
+    "solvencyOrDefaultPredictionClaimed": false,
+    "terminalIMI7Assigned": false,
+    "finalValidationClaimed": false
+  }
+}

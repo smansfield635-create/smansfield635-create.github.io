@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "IMI_PHASE_3_PARALLEL_EXTERNAL_TESTS_MANIFEST_v1",
+  "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+  "status": "AUTHORIZED_EXECUTION_MANIFEST_FROZEN",
+  "protocolPath": "h-earth-3d/tools/imi-empirical-platform/generalizability/imi-generalizability-protocol.v1.json",
+  "protocolDigest": "fnv1a32:54474299",
+  "executionRule": "TRACKS_EXECUTE_IN_SEPARATE_JOBS_AND_RETAIN_SEPARATE_SOURCE_ROUTE_EXECUTION_AND_RECEIPT_IDENTITIES",
+  "tracks": [
+    {
+      "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+      "runner": "h-earth-3d/validation/imi-empirical-platform/imi.phase3.hospital-external-or-next-release.runner.mjs",
+      "frozenRoute": "h-earth-3d/tools/imi-empirical-platform/routes/cms-hospital-refresh-2026-route.v1.json",
+      "baselineRelease": {
+        "complicationsReleased": "2026-05-13",
+        "generalReleased": "2026-05-13",
+        "complicationsModified": "2026-04-28",
+        "generalModified": "2026-04-28"
+      },
+      "admissionRule": "BOTH_REQUIRED_CMS_DATASETS_MUST_HAVE_A_RELEASE_DATE_STRICTLY_AFTER_THE_BASELINE_OR_A_SEPARATELY_BOUND_NON_CMS_PACKAGE_MUST_BE_PROVIDED",
+      "minimumEvidence": "FULL_NEXT_RELEASE_OR_AT_LEAST_500_INDEPENDENT_INSTITUTIONS",
+      "heldDisposition": "HELD_NO_ELIGIBLE_NEXT_RELEASE_OR_NON_CMS_PACKAGE"
+    },
+    {
+      "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+      "runner": "h-earth-3d/validation/imi-empirical-platform/imi.phase3.speech-heldout-dataset.runner.mjs",
+      "frozenRoute": "h-earth-3d/tools/imi-empirical-platform/routes/spontaneous-speech-current-repository-rerun-2026-route.v1.json",
+      "lawfulSourceCandidates": [
+        "https://talkbank.org/dementia/ADReSS-M/",
+        "https://talkbank.org/dementia/ADReSSo-2021/",
+        "https://talkbank.org/dementia/DrivenData/index.html",
+        "https://talkbank.org/dementia/access.html"
+      ],
+      "admissionRule": "A_LAWFULLY_ACCESSIBLE_INDEPENDENT_PACKAGE_WITH_AT_LEAST_100_PARTICIPANTS_TWO_DECLARED_GROUPS_OR_LANGUAGES_AND_THE_FROZEN_FIVE_FEATURE_INPUTS_IS_REQUIRED",
+      "minimumEvidence": "AT_LEAST_100_INDEPENDENT_PARTICIPANTS_AND_AT_LEAST_TWO_DECLARED_GROUPS_OR_LANGUAGES",
+      "heldDisposition": "HELD_LAWFUL_HELD_OUT_SPEECH_PACKAGE_NOT_AVAILABLE_TO_EXECUTION"
+    },
+    {
+      "track": "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+      "runner": "h-earth-3d/validation/imi-empirical-platform/imi.phase3.bee-longer-panel.runner.mjs",
+      "frozenRoute": "h-earth-3d/tools/imi-empirical-platform/routes/usda-honey-bee-refresh-2026-route.v1.json",
+      "sources": [
+        {
+          "release": "2025-08-01",
+          "url": "https://esmis.nal.usda.gov/sites/default/release-files/rn301137d/w0894985t/1r66m149r/hcny0825.txt"
+        },
+        {
+          "release": "2026-08-03",
+          "url": "https://esmis.nal.usda.gov/sites/default/release-files/796006/hcny0726.txt"
+        }
+      ],
+      "heldOutTransitions": [
+        "2024_Q1_TO_2024_Q2",
+        "2024_Q2_TO_2024_Q3",
+        "2024_Q3_TO_2024_Q4",
+        "2024_Q4_TO_2025_Q1"
+      ],
+      "minimumEvidence": "AT_LEAST_20_STATES_ACROSS_AT_LEAST_THREE_NONOVERLAPPING_TRANSITIONS",
+      "thresholds": {
+        "noncompensatoryMeanAbsoluteDifference": 0.02,
+        "heldOutAssociationDirection": "IMI_NEGATIVE_CS_POSITIVE_WITH_NEXT_PERIOD_LOSS",
+        "bootstrapReplicates": 1000,
+        "bootstrapConfidence": 0.95
+      }
+    },
+    {
+      "track": "DSSI_REMAINING_COUNTRY_CONTINUATION",
+      "runner": "h-earth-3d/validation/imi-empirical-platform/imi.phase3.dssi-remaining-country-continuation.runner.mjs",
+      "frozenRoute": "h-earth-3d/tools/imi-empirical-platform/routes/dssi-sovereign-debt-service-expansion-2026-route.v1.json",
+      "sourcePattern": "https://datatopics.worldbank.org/dssitables/monthly/{ISO3}",
+      "baselineExtractedCountryCount": 32,
+      "candidateCountryCount": 70,
+      "minimumEvidence": "ALL_LAWFULLY_EXTRACTABLE_REMAINING_COUNTRIES_OR_AT_LEAST_20_NEW_COUNTRY_SCHEDULES_WITH_DOCUMENTED_FAILURES",
+      "thresholds": {
+        "noncompensatoryMeanAbsoluteDifference": 0.02,
+        "maximumConcurrentFetches": 4,
+        "perCountryTimeoutMilliseconds": 25000
+      }
+    }
+  ],
+  "collectiveGate": {
+    "allTrackRunnersMustExecute": true,
+    "heldTracksRemainOpen": true,
+    "phase3MayCloseOnlyWhenAllFourTracksHaveAdmissibleTerminalDispositions": true,
+    "phase4AuthorizationRequiresSeparateRouteSpecificAdmission": true,
+    "phase4AutomaticallyAuthorized": false,
+    "phase5Authorized": false
+  },
+  "boundaries": {
+    "mathematicalKernelMutationAuthorized": false,
+    "routeRetuningAfterOutcomeInspectionAuthorized": false,
+    "protectedOrControlledSpeechDataCircumventionAuthorized": false,
+    "rawCrossRouteMagnitudeComparisonAuthorized": false,
+    "causalClaimsAuthorized": false,
+    "clinicalDiagnosticUseAuthorized": false,
+    "defaultOrSolvencyPredictionAuthorized": false,
+    "decisionUtilityClaimed": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  }
+}

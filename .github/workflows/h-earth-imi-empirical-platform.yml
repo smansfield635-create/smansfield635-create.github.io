@@ -92,6 +92,14 @@ jobs:
             --output-dir /tmp/imi-multi-domain-portfolio-synthesis \
             2>&1 | tee /tmp/imi-multi-domain-portfolio-synthesis.log
 
+      - name: Verify Phase 2 generalizability protocol closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.generalizability-protocol.runner.mjs \
+            --output-dir /tmp/imi-generalizability-protocol \
+            2>&1 | tee /tmp/imi-generalizability-protocol.log
+
       - name: Upload IMI empirical platform operational evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -112,4 +120,6 @@ jobs:
             /tmp/imi-existing-four-domain-portfolio-completion/**
             /tmp/imi-multi-domain-portfolio-synthesis.log
             /tmp/imi-multi-domain-portfolio-synthesis/**
+            /tmp/imi-generalizability-protocol.log
+            /tmp/imi-generalizability-protocol/**
           retention-days: 90

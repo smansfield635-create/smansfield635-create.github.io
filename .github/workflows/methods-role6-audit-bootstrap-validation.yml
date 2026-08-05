@@ -1,0 +1,61 @@
+name: Methods Role 6 Audit Activation Fail-Closed Termination
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/methods-role6-audit-bootstrap-validation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  close-inconsistent-activation-lock:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact fail-closed subject
+        shell: bash
+        run: |
+          test "$(git rev-parse ${{ github.event.pull_request.base.sha }})" = "5d6295c6c4a9b94db168e0822e02e36fbee29414"
+          test "${{ github.event.pull_request.head.ref }}" = "activation/methods-role6-audit-execution-descriptor-v1-001"
+          test "$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})" = ".github/workflows/methods-role6-audit-bootstrap-validation.yml"
+      - name: Close admitted lock fail-closed
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository smansfield635-create/smansfield635-create.github.io \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_v1 \
+            --lock-scope METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/EXECUTION_DESCRIPTOR_ACTIVATION/V1 \
+            --lock-generation 44 \
+            --terminal-disposition FAIL_CLOSED \
+            --output "$RUNNER_TEMP/closure-receipt.json"
+      - name: Verify command-emitted closure
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=process.env.RUNNER_TEMP+'/closure-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          if(r.schema!=='REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1') throw Error('SCHEMA');
+          if(r.result!=='TERMINAL_CLOSURE_COMMITTED') throw Error('RESULT');
+          if(r.operationId!=='METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_v1') throw Error('OPERATION');
+          if(r.lockGeneration!==44||r.terminalDisposition!=='FAIL_CLOSED'||r.lockReleased!==true) throw Error('IDENTITY');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-role6-audit-activation-fail-closed-termination
+          path: ${{ runner.temp }}/closure-receipt.json
+          if-no-files-found: error
+          retention-days: 90

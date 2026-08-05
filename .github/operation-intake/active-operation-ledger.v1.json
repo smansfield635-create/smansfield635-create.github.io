@@ -1,5 +1,17 @@
 {
   "activeScopes": {
+    "54c1808d639dc9ad93213a8c9da2e0ba5985e965eeaf67ee45bf93eb3a591a5a": {
+      "governingHead": "5d6295c6c4a9b94db168e0822e02e36fbee29414",
+      "lockGeneration": 45,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/EXECUTION_DESCRIPTOR_ACTIVATION_SUCCESSOR/V2",
+      "operationId": "METHODS_ROLE_6_AUDIT_EXECUTION_DESCRIPTOR_ACTIVATION_SUCCESSOR_v2",
+      "procedureLocatorDigest": "7ce2024fae2ece0ba7699858579b287ca71ab2c35b056cb4671159e70cefde9d",
+      "released": false,
+      "requestDigest": "db741df010afb11b6560d12d0abc0e55610414d731ecb6962e09ad4418402d2b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "54c1808d639dc9ad93213a8c9da2e0ba5985e965eeaf67ee45bf93eb3a591a5a",
+      "state": "ADMITTED_LOCKED"
+    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -64,7 +76,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 44,
+  "lockGeneration": 45,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,0 +1,340 @@
+name: PR570 v3 Permanent Instrument Ratification Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+env:
+  GOVERNING_MAIN: a4ba663dbff1d780cf80e8e40ecaa396c2ee85c7
+  SOURCE_BASE: 3ac9279dc82e56f7b0d67972ce56048d07e5ecfa
+  SOURCE_HEAD: 7c0b8871928b21cd9b2806f058bce34eed11f2ba
+  SOURCE_FINGERPRINT: 3f1024c9dc2fed15d3a8a7a25387066a48f5a8ffddf2e3cfd00b96dd95e45f28
+  PACKAGE_COMMIT: a1076744a3a3f330ef31638867f0b48d6cc87047
+  CANDIDATE_HEAD: 778ee21b73d836473e6388cdc7634a05c221e374
+  CANDIDATE_BRANCH: activation/h-earth-map-wide-instrument-permanent-v3-001
+  CANDIDATE_PR: '611'
+  REGISTRY_PATH: h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.map-wide-instrument-scope-registration.js
+  NODE_ID: H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT
+
+jobs:
+  reproduce:
+    name: ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - role: builder
+            label: permanent-ratification-builder
+          - role: fresh-verifier
+            label: permanent-ratification-fresh-verifier
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CANDIDATE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run exact source and integrated successor verification
+        env:
+          EXECUTION_ROLE: ${{ matrix.role }}
+          EXECUTION_HOLDER: PR570_V3_${{ matrix.role }}_${{ github.run_id }}_${{ github.run_attempt }}
+          OUTPUT_DIR: ${{ runner.temp }}/${{ matrix.role }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTPUT_DIR"
+          cat > "$RUNNER_TEMP/pr570-v3-verify.mjs" <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import os from 'node:os';
+          import crypto from 'node:crypto';
+          import { execFileSync, spawnSync } from 'node:child_process';
+          import { pathToFileURL } from 'node:url';
+
+          const E=process.env;
+          const ROOT=process.cwd();
+          const LIFECYCLE=new Set([
+            'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/authority-and-lineage.v1.json',
+            'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/instrument.locator.v1.json',
+            'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/progress-ledger.v1.json'
+          ]);
+          const NEGATIVE='h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/unregistered-neighbor.v1.json';
+          const fail=(code,detail='')=>{const error=new Error(`${code}${detail?`:${detail}`:''}`);error.code=code;throw error;};
+          const assert=(value,code,detail='')=>{if(!value)fail(code,detail);};
+          const git=(...args)=>execFileSync('git',args,{cwd:ROOT,encoding:'utf8',maxBuffer:64*1024*1024}).trim();
+          const gitAt=(cwd,...args)=>execFileSync('git',args,{cwd,encoding:'utf8',maxBuffer:64*1024*1024}).trim();
+          const readJson=file=>JSON.parse(fs.readFileSync(file,'utf8'));
+          const stable=value=>Array.isArray(value)?value.map(stable):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,stable(value[key])])):value;
+          const canonical=value=>JSON.stringify(stable(value));
+          const digest=value=>crypto.createHash('sha256').update(canonical(value)).digest('hex');
+          const diffNames=(base,head)=>{const out=git('diff','--name-only',base,head);return out?out.split(/\r?\n/).filter(Boolean).sort():[];};
+          const blob=(head,file)=>git('rev-parse',`${head}:${file}`);
+          const run=(command,args,options={})=>{const result=spawnSync(command,args,{cwd:ROOT,encoding:'utf8',maxBuffer:64*1024*1024,...options});return result;};
+
+          assert(git('rev-parse','HEAD^{commit}')===E.CANDIDATE_HEAD,'CANDIDATE_HEAD_MISMATCH');
+          assert(git('status','--porcelain=v1','--untracked-files=all')==='','DIRTY_CANDIDATE_WORKTREE');
+          assert(git('rev-parse',`${E.CANDIDATE_HEAD}^`)===E.PACKAGE_COMMIT,'FINAL_PARENT_MISMATCH');
+          assert(git('rev-parse',`${E.PACKAGE_COMMIT}^`)===E.GOVERNING_MAIN,'PACKAGE_PARENT_MISMATCH');
+
+          const sourcePaths=diffNames(E.SOURCE_BASE,E.SOURCE_HEAD);
+          const packagePaths=diffNames(E.GOVERNING_MAIN,E.PACKAGE_COMMIT);
+          const candidatePaths=diffNames(E.GOVERNING_MAIN,E.CANDIDATE_HEAD);
+          const secondStage=diffNames(E.PACKAGE_COMMIT,E.CANDIDATE_HEAD);
+          assert(sourcePaths.length===25,'SOURCE_PATH_COUNT',String(sourcePaths.length));
+          assert(packagePaths.length===25,'PACKAGE_PATH_COUNT',String(packagePaths.length));
+          assert(candidatePaths.length===26,'CANDIDATE_PATH_COUNT',String(candidatePaths.length));
+          assert(canonical(sourcePaths)===canonical(packagePaths),'PACKAGE_SOURCE_PATH_SET_MISMATCH');
+          assert(secondStage.length===1&&secondStage[0]===E.REGISTRY_PATH,'SECOND_STAGE_SCOPE_MISMATCH',canonical(secondStage));
+          assert(canonical(candidatePaths)===canonical([...sourcePaths,E.REGISTRY_PATH].sort()),'COMPLETE_PATH_SET_MISMATCH');
+          const sourceStatus=git('diff','--name-status',E.SOURCE_BASE,E.SOURCE_HEAD).split(/\r?\n/).filter(Boolean);
+          assert(sourceStatus.every(line=>line.startsWith('A\t')),'SOURCE_NOT_ADDITIVE');
+
+          const preserved=[];
+          const lifecycle=[];
+          for(const file of sourcePaths){
+            const sourceBlob=blob(E.SOURCE_HEAD,file);
+            const packageBlob=blob(E.PACKAGE_COMMIT,file);
+            if(LIFECYCLE.has(file)){
+              assert(sourceBlob!==packageBlob,'LIFECYCLE_BLOB_NOT_SUCCESSOR',file);
+              lifecycle.push({path:file,sourceBlob,packageBlob});
+            }else{
+              assert(sourceBlob===packageBlob,'SOURCE_BLOB_NOT_PRESERVED',file);
+              preserved.push({path:file,blob:sourceBlob});
+            }
+          }
+          assert(preserved.length===22,'PRESERVED_BLOB_COUNT',String(preserved.length));
+          assert(lifecycle.length===3,'LIFECYCLE_COUNT',String(lifecycle.length));
+
+          const authority=readJson('h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/authority-and-lineage.v1.json');
+          const locator=readJson('h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/instrument.locator.v1.json');
+          const ledger=readJson('h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/progress-ledger.v1.json');
+          assert(authority.status==='PERMANENT_INSTRUMENT_ACTIVE_BY_SEPARATE_RATIFICATION','AUTHORITY_STATUS');
+          assert(authority.immutableBootstrapSource?.exactHead===E.SOURCE_HEAD,'AUTHORITY_SOURCE_HEAD');
+          assert(authority.separateRatification?.lockGeneration===150,'AUTHORITY_GENERATION');
+          assert(authority.separateRatification?.activeAuthorityClass==='PERMANENT_NONPRODUCT_INSTRUMENT','AUTHORITY_CLASS');
+          assert(locator.status==='PERMANENT_INSTRUMENT_ACTIVE_BY_SEPARATE_RATIFICATION','LOCATOR_STATUS');
+          assert(locator.immutableBootstrapSource?.exactHead===E.SOURCE_HEAD,'LOCATOR_SOURCE_HEAD');
+          assert(locator.ratification?.lockGeneration===150&&locator.ratification?.separateRatificationSatisfied===true,'LOCATOR_RATIFICATION');
+          assert(ledger.terminalState==='PERMANENT_INSTRUMENT_ACTIVE_BY_SEPARATE_RATIFICATION','LEDGER_TERMINAL_STATE');
+          assert(ledger.immutableSourceHead===E.SOURCE_HEAD&&ledger.activation?.futureOperationsRequireSeparateAdmission===true,'LEDGER_LINEAGE');
+          assert(ledger.actualTerrainMutationPerformed===false&&ledger.productMutationPerformed===false&&ledger.deploymentPerformed===false,'LEDGER_SIDE_EFFECT');
+
+          const sourceDir=path.join(os.tmpdir(),`pr570-source-${E.EXECUTION_ROLE}-${process.pid}`);
+          execFileSync('git',['worktree','add','--detach',sourceDir,E.SOURCE_HEAD],{cwd:ROOT,stdio:'pipe'});
+          const sourceOut=path.join(E.OUTPUT_DIR,'source');
+          try{
+            execFileSync(process.execPath,[
+              'tools/h-earth-map-wide-terrain/self-test.v1.mjs','--root','.','--expected-head',E.SOURCE_HEAD,
+              '--holder',`${E.EXECUTION_HOLDER}_SOURCE`,'--output-dir',sourceOut
+            ],{cwd:sourceDir,stdio:'pipe',maxBuffer:64*1024*1024});
+          }finally{
+            try{execFileSync('git',['worktree','remove','--force',sourceDir],{cwd:ROOT,stdio:'ignore'});}catch{}
+          }
+          const sourceReceipt=readJson(path.join(sourceOut,'bootstrap-self-test-receipt.json'));
+          assert(sourceReceipt.result==='PASS_CLOSED','SOURCE_REPRODUCTION_RESULT');
+          assert(sourceReceipt.packageFingerprint===E.SOURCE_FINGERPRINT,'SOURCE_FINGERPRINT_MISMATCH');
+          assert(sourceReceipt.fingerprintPayload?.identity?.changedPathCount===25,'SOURCE_IDENTITY_COUNT');
+          assert(sourceReceipt.negativeFixturesPassed===sourceReceipt.negativeFixtureCount,'SOURCE_NEGATIVE_FIXTURE_FAILURE');
+          assert(sourceReceipt.permanentInstrumentActivated===false,'SOURCE_BOOTSTRAP_BECAME_ACTIVE');
+
+          const integratedOut=path.join(E.OUTPUT_DIR,'integrated');
+          const integratedRun=run(process.execPath,[
+            'tools/h-earth-map-wide-terrain/self-test.v1.mjs','--root','.',
+            '--holder',`${E.EXECUTION_HOLDER}_INTEGRATED`,'--output-dir',integratedOut
+          ]);
+          assert(integratedRun.status===0,'INTEGRATED_SELF_TEST_EXECUTION',integratedRun.stderr);
+          const integratedReceipt=readJson(path.join(integratedOut,'bootstrap-self-test-receipt.json'));
+          assert(integratedReceipt.result==='PASS_CLOSED','INTEGRATED_SELF_TEST_RESULT');
+          assert(integratedReceipt.negativeFixturesPassed===integratedReceipt.negativeFixtureCount,'INTEGRATED_NEGATIVE_FIXTURE_FAILURE');
+          assert(integratedReceipt.actualTerrainMutationPerformed===false&&integratedReceipt.productMutationPerformed===false,'INTEGRATED_SIDE_EFFECT');
+
+          const registryModule=await import(`${pathToFileURL(path.join(ROOT,E.REGISTRY_PATH)).href}?role=${encodeURIComponent(E.EXECUTION_ROLE)}`);
+          const node=registryModule.getHEarthRepositoryRegistryNode(E.NODE_ID);
+          assert(node?.lifecycleStatus==='ACTIVE','REGISTRY_NODE_NOT_ACTIVE');
+          assert(node?.nodeSubtype==='PERMANENT_NONPRODUCT_INSTRUMENT','REGISTRY_NODE_SUBTYPE');
+          assert(node.repositoryPaths.length===13&&node.repositoryOccurrences.length===13,'REGISTRY_OCCURRENCE_COUNT');
+          const occurrences=[];
+          for(const occurrence of node.repositoryOccurrences){
+            const relative=occurrence.path.replace(/^\//,'');
+            assert(occurrence.refType==='COMMIT'&&occurrence.refName===E.PACKAGE_COMMIT&&occurrence.commitSha===E.PACKAGE_COMMIT,'REGISTRY_COMMIT_BINDING',relative);
+            assert(occurrence.occurrenceClass==='ACCEPTED'&&occurrence.fetchbackStatus==='VERIFIED'&&occurrence.existenceStatus==='PRESENT','REGISTRY_OCCURRENCE_STATE',relative);
+            assert(occurrence.gitBlobSha===blob(E.PACKAGE_COMMIT,relative),'REGISTRY_BLOB_BINDING',relative);
+            occurrences.push({path:occurrence.path,gitBlobSha:occurrence.gitBlobSha});
+          }
+
+          const routeReceipts=[];
+          for(let index=0;index<candidatePaths.length;index++){
+            const file=candidatePaths[index];
+            const output=path.join(E.OUTPUT_DIR,`route-${index}.json`);
+            const result=run(process.execPath,['tools/repository-ai-entry-router.mjs','--mutation-intent','--path',file,'--task','PR570 v3 permanent ratification route verification','--output',output]);
+            assert(result.status===0,'ROUTER_EXECUTION',`${file}:${result.stderr}`);
+            const receipt=readJson(output);
+            assert(receipt.disposition==='PASS'&&receipt.routes?.[0]?.projectId==='H_EARTH','ROUTER_DISPOSITION',file);
+            routeReceipts.push({path:file,projectId:'H_EARTH',disposition:'PASS'});
+          }
+
+          const internalPaths=node.repositoryPaths.map(value=>value.replace(/^\//,''));
+          fs.writeFileSync(path.join(E.OUTPUT_DIR,'internal-paths.txt'),`${internalPaths.join('\n')}\n`);
+          fs.writeFileSync(path.join(E.OUTPUT_DIR,'negative-path.txt'),`${NEGATIVE}\n`);
+          const positivePath=path.join(E.OUTPUT_DIR,'internal-preflight.json');
+          const positiveRun=run(process.execPath,['--experimental-default-type=module','tools/h-earth-repository-registry-auto-preflight.mjs','--paths-file',path.join(E.OUTPUT_DIR,'internal-paths.txt'),'--task','PR570_V3_INTERNAL_PREFLIGHT','--mutation-intent','--output',positivePath]);
+          assert(positiveRun.status===0,'INTERNAL_PREFLIGHT_EXECUTION',positiveRun.stderr);
+          const positive=readJson(positivePath);
+          const classifications=positive.pathClassification?.classifications??[];
+          assert(positive.finalDisposition==='PASS'&&positive.validatorReceipt?.finalDisposition==='PASS','INTERNAL_PREFLIGHT_DISPOSITION');
+          assert(classifications.length===13&&classifications.every(item=>item.registered===true&&item.classification==='REGISTERED_H_EARTH_PATH'&&(item.resolvedNodeIds??[]).includes(E.NODE_ID)),'INTERNAL_PREFLIGHT_PATHS');
+          const negativePath=path.join(E.OUTPUT_DIR,'negative-preflight.json');
+          const negativeRun=run(process.execPath,['--experimental-default-type=module','tools/h-earth-repository-registry-auto-preflight.mjs','--paths-file',path.join(E.OUTPUT_DIR,'negative-path.txt'),'--task','PR570_V3_NEGATIVE_NEIGHBOR','--mutation-intent','--output',negativePath]);
+          assert(negativeRun.status!==0,'NEGATIVE_NEIGHBOR_UNEXPECTED_PASS');
+          const negative=readJson(negativePath);
+          assert(negative.finalDisposition==='STOP'&&negative.mutationMayProceed===false,'NEGATIVE_NEIGHBOR_DISPOSITION');
+          assert(negative.pathClassification?.classifications?.[0]?.registered===false,'NEGATIVE_NEIGHBOR_REGISTERED');
+
+          const loader=await import(`${pathToFileURL(path.join(ROOT,'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js')).href}?role=${encodeURIComponent(E.EXECUTION_ROLE)}`);
+          const c2=await loader.runHEarthC2R1MC5AutomaticRegistryPreflight();
+          assert(c2.finalDisposition==='PASS'&&c2.requiredFinalDisposition==='PASS'&&c2.mc5Checks?.allHEarthPathsRegistered===true,'C2_R1_REGRESSION');
+
+          const payload=stable({
+            schema:'PR570_V3_PERMANENT_RATIFICATION_FINGERPRINT_PAYLOAD_v1',
+            governingMain:E.GOVERNING_MAIN,
+            sourceBase:E.SOURCE_BASE,
+            sourceHead:E.SOURCE_HEAD,
+            sourceFingerprint:sourceReceipt.packageFingerprint,
+            packageCommit:E.PACKAGE_COMMIT,
+            candidateHead:E.CANDIDATE_HEAD,
+            sourcePaths,
+            preserved,
+            lifecycle,
+            lifecycleSemantics:{
+              authorityStatus:authority.status,
+              locatorStatus:locator.status,
+              ledgerTerminalState:ledger.terminalState,
+              futureOperationsRequireSeparateAdmission:ledger.activation.futureOperationsRequireSeparateAdmission
+            },
+            registry:{nodeId:node.nodeId,nodeSubtype:node.nodeSubtype,lifecycleStatus:node.lifecycleStatus,occurrences:occurrences.sort((a,b)=>a.path.localeCompare(b.path))},
+            routes:routeReceipts,
+            internalPreflight:'PASS',
+            negativeNeighbor:'STOP',
+            c2Preflight:'PASS',
+            integratedSemanticFingerprint:integratedReceipt.packageFingerprint,
+            boundaries:{actualTerrainMutation:false,manorConstruction:false,productMutation:false,deployment:false,release:false}
+          });
+          const receipt=stable({
+            schema:'PR570_V3_PERMANENT_RATIFICATION_EXECUTION_RECEIPT_v1',
+            result:'PASS_CLOSED_PERMANENT_RATIFICATION_SUCCESSOR_REPRODUCED',
+            executionRole:E.EXECUTION_ROLE,
+            executionHolder:E.EXECUTION_HOLDER,
+            candidateHead:E.CANDIDATE_HEAD,
+            packageCommit:E.PACKAGE_COMMIT,
+            sourceHead:E.SOURCE_HEAD,
+            sourceFingerprint:sourceReceipt.packageFingerprint,
+            preservedSourceBlobCount:preserved.length,
+            lifecycleSuccessorCount:lifecycle.length,
+            candidateChangedPathCount:candidatePaths.length,
+            routedPathCount:routeReceipts.length,
+            acceptedOccurrenceCount:occurrences.length,
+            negativeNeighborStopped:true,
+            c2RegressionPass:true,
+            packageFingerprint:digest(payload),
+            fingerprintPayload:payload,
+            actualTerrainMutationPerformed:false,
+            manorConstructionPerformed:false,
+            productMutationPerformed:false,
+            deploymentPerformed:false,
+            releasePerformed:false,
+            mergePerformed:false,
+            repairPerformed:false
+          });
+          fs.writeFileSync(path.join(E.OUTPUT_DIR,'receipt.json'),`${JSON.stringify(receipt,null,2)}\n`);
+          NODE
+          node "$RUNNER_TEMP/pr570-v3-verify.mjs"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-v3-${{ matrix.role }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/${{ matrix.role }}/
+          if-no-files-found: error
+          retention-days: 90
+
+  certify:
+    name: permanent-ratification-premerge-certification
+    needs: reproduce
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GOVERNING_MAIN }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-v3-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-v3-fresh-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verifier
+      - name: Bind exact main, candidate, and independent fingerprints
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$GOVERNING_MAIN"
+          git fetch origin "$CANDIDATE_BRANCH"
+          test "$(git rev-parse FETCH_HEAD)" = "$CANDIDATE_HEAD"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const b=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'utf8'));
+          const v=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'utf8'));
+          const required='PASS_CLOSED_PERMANENT_RATIFICATION_SUCCESSOR_REPRODUCED';
+          if(b.result!==required||v.result!==required)throw Error('REPRODUCTION_RESULT_MISMATCH');
+          if(b.executionHolder===v.executionHolder||b.executionRole===v.executionRole)throw Error('EXECUTION_HOLDERS_NOT_DISTINCT');
+          if(b.packageFingerprint!==v.packageFingerprint)throw Error('PACKAGE_FINGERPRINT_MISMATCH');
+          if(b.candidateHead!==process.env.CANDIDATE_HEAD||v.candidateHead!==process.env.CANDIDATE_HEAD)throw Error('CANDIDATE_HEAD_MISMATCH');
+          const certification={
+            schema:'PR570_V3_PERMANENT_RATIFICATION_PREMERGE_CERTIFICATION_v1',
+            result:'PASS_CLOSED_EXACT_HEAD_MERGE_AUTHORIZED',
+            repository:'smansfield635-create/smansfield635-create.github.io',
+            exactPreMergeMain:process.env.GOVERNING_MAIN,
+            exactCandidateHead:process.env.CANDIDATE_HEAD,
+            exactCandidatePr:Number(process.env.CANDIDATE_PR),
+            exactPackageCommit:process.env.PACKAGE_COMMIT,
+            immutableSourceHead:process.env.SOURCE_HEAD,
+            immutableSourceFingerprint:process.env.SOURCE_FINGERPRINT,
+            packageFingerprint:b.packageFingerprint,
+            builderHolder:b.executionHolder,
+            verifierHolder:v.executionHolder,
+            distinctExecutionHolders:true,
+            changedPathCount:26,
+            preservedSourceBlobCount:22,
+            lifecycleSuccessorCount:3,
+            acceptedOccurrenceCount:13,
+            routedPathCount:26,
+            negativeNeighborStopped:true,
+            c2RegressionPass:true,
+            permittedEffect:'ACTIVATE_PERMANENT_NONPRODUCT_MAP_WIDE_TERRAIN_INSTRUMENT',
+            prohibitedEffects:['ACTUAL_TERRAIN_MUTATION','MANOR_CONSTRUCTION','PRODUCT_OR_RUNTIME_MUTATION','DEPLOYMENT','RELEASE','FUTURE_AUTHORITY_INHERITANCE'],
+            headSubstitutionProhibited:true,
+            baseDriftRequiresHold:true,
+            authorityTerminatesAfterExactMergeAndPostMergeVerification:true
+          };
+          certification.certificationDigest=crypto.createHash('sha256').update(JSON.stringify(certification)).digest('hex');
+          fs.mkdirSync('/tmp/pr570-v3-premerge',{recursive:true});
+          fs.writeFileSync('/tmp/pr570-v3-premerge/certification.json',JSON.stringify(certification,null,2)+'\n');
+          fs.copyFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'/tmp/pr570-v3-premerge/builder-receipt.json');
+          fs.copyFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'/tmp/pr570-v3-premerge/verifier-receipt.json');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-v3-premerge-certification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/pr570-v3-premerge/
+          if-no-files-found: error
+          retention-days: 90

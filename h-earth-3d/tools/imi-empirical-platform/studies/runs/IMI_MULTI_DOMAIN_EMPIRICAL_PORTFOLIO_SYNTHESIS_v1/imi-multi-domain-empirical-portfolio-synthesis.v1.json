@@ -17,7 +17,7 @@
     ]
   },
   "sourceCustody": {
-    "planDigest": "fnv1a32:414be29c",
+    "planDigest": "fnv1a32:7f2d9404",
     "protocolDigest": "fnv1a32:d4cf67c3",
     "inputSources": {
       "hospital": "CURRENT_WORKFLOW_RUNTIME",

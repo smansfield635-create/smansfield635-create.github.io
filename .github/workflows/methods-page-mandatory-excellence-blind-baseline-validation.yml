@@ -56,7 +56,7 @@ jobs:
             --output "artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json"
           node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --self-test >/tmp/gate.json
           node -e "const a=require(process.argv[1]),b=require(process.argv[2]);if(a.result!=='PASS'||b.result!=='PASS')process.exit(1)" \
-            "artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json" /tmp/gate.json
+            "./artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json" /tmp/gate.json
       - uses: actions/upload-artifact@v4
         with:
           name: contextual-architecture-routing-${{ matrix.holder }}
@@ -81,7 +81,7 @@ jobs:
           mkdir -p artifacts
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const builder=JSON.parse(fs.readFileSync('receipts/builder/contexual-architecture-routing-builder.v1.json'));
+          const builder=JSON.parse(fs.readFileSync('receipts/builder/contextual-architecture-routing-builder.v1.json'));
           const verifier=JSON.parse(fs.readFileSync('receipts/fresh-verifier/contextual-architecture-routing-fresh-verifier.v1.json'));
           const equal=builder.result==='PASS'&&verifier.result==='PASS'&&builder.normalizedFingerprint===verifier.normalizedFingerprint;
           const out={schema:'CONTEXTUAL_ARCHITECTURE_ROUTING_INDEPENDENT_VERIFICATION_RECEIPT_v1',result:equal?'PASS':'FAIL',operationId:'METHODS_EXISTING_CONSTRUCT_ADOPTION_MANDATORY_ROUTING_REPAIR_v1',toolsetVersion:'1.1.0',builderFingerprint:builder.normalizedFingerprint,freshVerifierFingerprint:verifier.normalizedFingerprint,exactNormalizedEquality:equal,productMutationPerformed:false,visualSubjectMutated:false,mergePerformed:false,constructionAuthorityTerminated:false};

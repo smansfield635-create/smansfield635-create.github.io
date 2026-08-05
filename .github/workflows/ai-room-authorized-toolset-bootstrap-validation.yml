@@ -50,15 +50,17 @@ jobs:
           test "$(git rev-parse "$GENESIS_HEAD:.github/ai-toolset-transport/changed-path-manifest.v1.json")" = "$GENESIS_MANIFEST_BLOB"
           test "$(git rev-parse "HEAD:.github/ai-toolset-transport/changed-path-manifest.v1.json")" = "$GENESIS_MANIFEST_BLOB"
           git worktree add --detach "$RUNNER_TEMP/ai-room-genesis" "$GENESIS_HEAD"
-          node "$RUNNER_TEMP/ai-room-genesis/tools/ai-room-transport/self-test.v1.mjs" \
-            --root "$RUNNER_TEMP/ai-room-genesis" \
+          cd "$RUNNER_TEMP/ai-room-genesis"
+          node tools/ai-room-transport/self-test.v1.mjs \
+            --root . \
             --expected-head "$GENESIS_HEAD" \
-            --holder "HISTORICAL_GENESIS_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --holder "GITHUB_ACTIONS_AI_ROOM_TRANSPORT_HISTORICAL_GENESIS_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
             --output-dir "$RUNNER_TEMP/genesis-evidence"
           node - <<'NODE'
           const fs = require('fs');
           const r = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/genesis-evidence/bootstrap-self-test-receipt.json'));
           if (r.result !== 'PASS_CLOSED' || r.changedPathCount !== 20 || r.negativeFixtureCount !== 20 || r.negativeFixturesPassed !== 20) process.exit(1);
+          if (!r.commandExecutionPassed || !r.receiptValidationPassed || !r.continuationGatePassed) process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         with:

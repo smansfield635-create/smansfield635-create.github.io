@@ -6,7 +6,7 @@ const authorityBody = {
   operation: 'IMI_ACTIVE_TOOLBASE_EMPIRICAL_PLATFORM_INTEGRATION_AND_BRANCH_OPERATIONAL_INTAKE_v1',
   deliverable: 'IMI_CORE_AND_EMPIRICAL_PORTFOLIO_ENGINE_v1',
   class: 'REPOSITORY_INTEGRATED_EMPIRICAL_INTRINSIC_MANEUVERABILITY_INDEX_ROUTE_SCORING_AND_PORTFOLIO_RECEIPT_TOOL',
-  status: 'PREOFFICIAL_REPOSITORY_BRANCH_OPERATIONAL_EMPIRICAL_INTAKE_TOOL',
+  status: 'PREOFFICIAL_REPOSITORY_BRANCH_OPERATIONAL_EMPIRICAL_TOOL_WITH_EXISTING_FOUR_DOMAIN_EXECUTION_SURFACE_COMPLETE',
   sourceDisposition: 'SANDBOX_PROTOTYPE_PROMOTED_AS_NONCONTROLLING_SOURCE_MATERIAL',
   empiricalFunction: [
     'ROUTE_SPECIFIC_IMI_SCORING',
@@ -17,7 +17,9 @@ const authorityBody = {
     'STUDY_RECEIPT_GENERATION',
     'PORTFOLIO_REGISTRY_APPEND_ENTRY_GENERATION',
     'GENERIC_EMPIRICAL_INTAKE_RUNNER',
-    'REPOSITORY_BRANCH_OUTPUT_ARCHIVE_WRITER'
+    'REPOSITORY_BRANCH_OUTPUT_ARCHIVE_WRITER',
+    'CURRENT_PUBLIC_SOURCE_RUNTIME_DOWNLOAD_AND_IDENTITY_BINDING',
+    'EXISTING_FOUR_DOMAIN_EXECUTION_SURFACE_COMPLETION'
   ],
   includedSchemas: [
     'IMI_ROUTE_SCHEMA_v1',
@@ -36,10 +38,22 @@ const authorityBody = {
     'h-earth-3d/tools/imi-empirical-platform/schemas/study-receipt.schema.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/schemas/portfolio-registry.schema.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/routes/example-hospital-route.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/routes/cms-hospital-refresh-2026-route.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/routes/usda-honey-bee-refresh-2026-route.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/routes/dssi-sovereign-debt-service-expansion-2026-route.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/routes/spontaneous-speech-current-repository-rerun-2026-route.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/examples/example-hospital-rows.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_v1/spontaneous-speech-rerun-summary.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_v1/usda-honey-bee-phase-consolidation-receipt.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_EXISTING_FOUR_DOMAIN_EMPIRICAL_PORTFOLIO_COMPLETION_v1/imi-existing-four-domain-portfolio-completion-receipt.v1.json',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-platform.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-intake.runner.mjs',
-    'h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs'
+    'h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.cms-hospital-refresh-2026.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.usda-honey-bee-refresh-2026.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.dssi-sovereign-debt-service-expansion-2026.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.spontaneous-speech-rerun-2026.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.existing-four-domain-portfolio-completion.runner.mjs'
   ],
   operationalIntakeContract: {
     branchOperational: true,
@@ -57,18 +71,27 @@ const authorityBody = {
     explicitDatasetAdmissionRequired: true,
     automaticPerceivedDataCapture: false
   },
+  currentEmpiricalExecutionSurface: {
+    hospitalCurrentRepositoryRun: 'PASS_CLOSED_CMS_HOSPITAL_REFRESH_2026_REPOSITORY_INTAKE_RUN',
+    spontaneousSpeechCurrentRepositoryRun: 'PASS_CLOSED_SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026',
+    honeyBeeCurrentRepositoryRun: 'PASS_CLOSED_USDA_HONEY_BEE_CURRENT_REFRESH_PHASE_CONSOLIDATED',
+    dssiCurrentRepositoryRun: 'PASS_CLOSED_DSSI_PARTIAL_ALL_COUNTRY_EXPANSION_PHASE_CONSOLIDATED',
+    collectiveResult: 'PASS_CLOSED_EXISTING_FOUR_DOMAIN_EMPIRICAL_EXECUTION_SURFACE_COMPLETE',
+    collectiveReceipt: 'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_EXISTING_FOUR_DOMAIN_EMPIRICAL_PORTFOLIO_COMPLETION_v1/imi-existing-four-domain-portfolio-completion-receipt.v1.json'
+  },
   boundaries: {
     officialScaleClaimed: false,
     routeCertificationPerformed: false,
-    realStudyDataLoaded: false,
+    realStudyDataLoaded: true,
     empiricalValidationClaimed: false,
     productionReleaseAuthorized: false,
     publicReleaseAuthorized: false,
     mainBranchMerged: false,
     liveWebsiteOperational: false,
-    stop: 'STOP_AFTER_REPOSITORY_BRANCH_OPERATIONAL_EMPIRICAL_INTAKE_AND_FIXTURE_VALIDATION'
+    fullCrossDomainResearchSynthesisPerformed: false,
+    stop: 'STOP_AFTER_EXISTING_FOUR_DOMAIN_EXECUTION_AND_CUSTODY_COMPLETION'
   },
-  result: 'IMI_EMPIRICAL_PLATFORM_BRANCH_OPERATIONAL_INTAKE_READY_FOR_CI_VERIFICATION'
+  result: 'IMI_EMPIRICAL_PLATFORM_EXISTING_FOUR_DOMAIN_EXECUTION_SURFACE_PASS_CLOSED_BRANCH_OPERATIONAL'
 };
 
 export const IMI_EMPIRICAL_PLATFORM_AUTHORITY_v1 = deepFreeze({

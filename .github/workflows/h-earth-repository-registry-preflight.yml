@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Bind exact candidate, Commit A, and live lock ledger
+      - name: Bind exact candidate, Commit A, and live ledger
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_HEAD"
@@ -59,7 +59,7 @@ jobs:
           test "$(git rev-parse "$CANDIDATE_HEAD:h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js")" = 'd164fdf7b157f37a22ebfb6a90c90f87deef5f88'
           git fetch origin operation-locks/repository-operation-intake-v1
           git show FETCH_HEAD:.github/operation-intake/active-operation-ledger.v1.json > /tmp/live-ledger.json
-      - name: Execute positive and negative automatic preflight
+      - name: Run exact positive and negative preflight
         env:
           OUT: ${{ runner.temp }}/${{ matrix.artifact }}
         run: |
@@ -88,7 +88,7 @@ jobs:
           negative_status=$?
           set -e
           test "$negative_status" -ne 0
-      - name: Verify occurrences, predecessor chains, C2-R1, and lock preservation
+      - name: Verify exact occurrences, preserved lineages, and active locks
         env:
           HOLDER: ${{ matrix.holder }}_${{ github.run_id }}_${{ github.run_attempt }}
           OUT: ${{ runner.temp }}/${{ matrix.artifact }}
@@ -97,9 +97,7 @@ jobs:
           import fs from 'node:fs';
           import crypto from 'node:crypto';
           import cp from 'node:child_process';
-          import registryFacade, {
-            H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_PATHS
-          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.v2-router-instruction-lock-closure-successor-scope.js';
+          import registryFacade, { H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_PATHS } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.v2-router-instruction-lock-closure-successor-scope.js';
           import { runHEarthC2R1MC5AutomaticRegistryPreflight } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
 
           const expected = new Map([
@@ -135,6 +133,7 @@ jobs:
           const negativeClass = negative.pathClassification?.classifications?.[0];
           if (!negativeClass || negativeClass.registered !== false || negativeClass.classification !== 'UNREGISTERED_H_EARTH_SCOPED_PATH') throw Error('UNDECLARED_NEIGHBOR_CLASSIFICATION_MISMATCH');
           if (H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_PATHS.length !== 6) throw Error('EXACT_PATH_COUNT_MISMATCH');
+
           for (const [repositoryPath, blob] of expected) {
             const resolution = registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
             if (!resolution.resolved || !(resolution.nodes ?? []).some(node => node.nodeId === process.env.NODE_ID)) throw Error(`PATH_NOT_RESOLVED:${repositoryPath}`);
@@ -142,20 +141,34 @@ jobs:
             const actualBlob = cp.execFileSync('git',['rev-parse',`${process.env.COMMIT_A}:${repositoryPath.slice(1)}`],{encoding:'utf8'}).trim();
             if (actualBlob !== blob) throw Error(`COMMIT_A_BLOB_MISMATCH:${repositoryPath}`);
           }
+
           const parent = registryFacade.getHEarthRepositoryRegistryNode(process.env.PARENT_NODE_ID);
           if (!parent || parent.lifecycleStatus !== 'CONTROL_PLANE_EXACT_HEAD_REGISTERED') throw Error('PARENT_V2_NODE_NOT_PRESERVED');
-          const mapWide = registryFacade.getHEarthRepositoryRegistryNode(process.env.MAP_WIDE_NODE_ID);
-          if (!mapWide) throw Error('MAP_WIDE_NODE_NOT_PRESERVED');
+          if (!registryFacade.getHEarthRepositoryRegistryNode(process.env.MAP_WIDE_NODE_ID)) throw Error('MAP_WIDE_NODE_NOT_PRESERVED');
           for (const repositoryPath of mapWidePaths) {
             if (!registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath).resolved) throw Error(`MAP_WIDE_PATH_REGRESSION:${repositoryPath}`);
           }
           const c2 = await runHEarthC2R1MC5AutomaticRegistryPreflight();
           if (c2.finalDisposition !== 'PASS' || c2.requiredFinalDisposition !== 'PASS' || c2.mc5Checks?.allHEarthPathsRegistered !== true) throw Error('C2_R1_REGRESSION');
-          const active = Object.values(ledger.activeScopes ?? {});
-          const lock279 = active.find(x => x.lockGeneration === 279 && x.operationId === 'H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001');
-          const lock280 = active.find(x => x.lockGeneration === 280 && x.operationId === 'H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001');
-          if (!lock279 || lock279.state !== 'ADMITTED_LOCKED' || lock279.released !== false) throw Error('LOCK_279_NOT_PRESERVED_ACTIVE');
-          if (!lock280 || lock280.state !== 'ADMITTED_LOCKED' || lock280.released !== false) throw Error('LOCK_280_NOT_PRESERVED_ACTIVE');
+
+          const ledgerObjects = [];
+          const walk = (value) => {
+            if (value == null || typeof value !== 'object') return;
+            ledgerObjects.push(value);
+            for (const nested of Object.values(value)) walk(nested);
+          };
+          walk(ledger);
+          const findActiveLock = (operationId, generation) => ledgerObjects.find(x =>
+            x.operationId === operationId &&
+            Number(x.lockGeneration) === generation &&
+            x.state === 'ADMITTED_LOCKED' &&
+            x.released === false
+          );
+          const lock279 = findActiveLock('H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001',279);
+          const lock280 = findActiveLock('H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001',280);
+          if (!lock279) throw Error('LOCK_279_NOT_PRESERVED_ACTIVE');
+          if (!lock280) throw Error('LOCK_280_NOT_PRESERVED_ACTIVE');
+
           const payload = {
             schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_FINGERPRINT_v1',
             governingMain:process.env.GOVERNING_MAIN,
@@ -169,6 +182,8 @@ jobs:
             negativeDisposition:'STOP',
             mapWidePathCount:13,
             c2Disposition:'PASS',
+            lock279ScopeHash:lock279.scopeHash,
+            lock280ScopeHash:lock280.scopeHash,
             lock279Preserved:true,
             lock280Preserved:true
           };

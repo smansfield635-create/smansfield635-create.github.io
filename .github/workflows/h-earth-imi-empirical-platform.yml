@@ -39,6 +39,12 @@ jobs:
           set -euo pipefail
           node h-earth-3d/validation/imi-empirical-platform/imi.cms-hospital-refresh-2026.runner.mjs --output-dir /tmp/imi-cms-hospital-refresh-2026 2>&1 | tee /tmp/imi-cms-hospital-refresh-2026.log
 
+      - name: Execute USDA honey bee refresh 2026 run
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.usda-honey-bee-refresh-2026.runner.mjs --output-dir /tmp/imi-usda-honey-bee-refresh-2026 2>&1 | tee /tmp/imi-usda-honey-bee-refresh-2026.log
+
       - name: Upload IMI empirical platform operational evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -49,4 +55,6 @@ jobs:
             /tmp/imi-empirical-platform-operational-suite/**
             /tmp/imi-cms-hospital-refresh-2026.log
             /tmp/imi-cms-hospital-refresh-2026/**
+            /tmp/imi-usda-honey-bee-refresh-2026.log
+            /tmp/imi-usda-honey-bee-refresh-2026/**
           retention-days: 90

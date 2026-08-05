@@ -1,0 +1,233 @@
+name: CP11 H-Earth Registry Two-Path Activation Ratification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-registry-two-path-cp11-activation-ratification.yml'
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+
+env:
+  BASE_HEAD: '347642b5c4f90b68a8351ead379eeb34d4fdb639'
+  ACTIVATION_HEAD: 'dccb1da47e912ed9018d4188b7a6268daa99cb78'
+  SUBJECT_PR590_HEAD: '603f74d3d4d52909812b0564102b742ded0ee27f'
+  SUBJECT_PR570_HEAD: '7c0b8871928b21cd9b2806f058bce34eed11f2ba'
+  TOOLING_HEAD: 'f978d62886b71bd0e619e4a713472ebffea43419'
+  CP10_PACKAGE_FINGERPRINT: '2f2d81e85706df097d8f80184d5e6b4021731bb7e89c800b763bedff2ac4e328'
+  OVERLAY_PATH: 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js'
+  LOADER_PATH: 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+  OVERLAY_BLOB: '602217838af009a778b0ba32b4bcc230e14090ac'
+  LOADER_BLOB: 'f18e0772903e85a55517d49e178c9e7088b56f91'
+  ACTIVATION_PR: '597'
+  SUBJECT_PR: '590'
+  INSTRUMENT_SUBJECT_PR: '570'
+  OPERATION_ID: 'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_MAIN_ACTIVATION_RATIFICATION_CP11_v1'
+  OPERATION_GENERATION: '85'
+  WORKFLOW_PATH: '.github/workflows/h-earth-registry-two-path-cp11-activation-ratification.yml'
+
+jobs:
+  exact-current-main-builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch exact identities and verify immutable state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for sha in "$BASE_HEAD" "$ACTIVATION_HEAD" "$SUBJECT_PR590_HEAD" "$SUBJECT_PR570_HEAD" "$TOOLING_HEAD"; do
+            git fetch --no-tags origin "$sha"
+            git cat-file -e "$sha^{commit}"
+          done
+          gh api "repos/${GITHUB_REPOSITORY}/branches/main" > /tmp/main.json
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${SUBJECT_PR}" > /tmp/pr590.json
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${INSTRUMENT_SUBJECT_PR}" > /tmp/pr570.json
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" > /tmp/pr597.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const main=JSON.parse(fs.readFileSync('/tmp/main.json'));
+          const p590=JSON.parse(fs.readFileSync('/tmp/pr590.json'));
+          const p570=JSON.parse(fs.readFileSync('/tmp/pr570.json'));
+          const p597=JSON.parse(fs.readFileSync('/tmp/pr597.json'));
+          if(main.commit.sha!==process.env.BASE_HEAD)throw Error('GOVERNING_HEAD_MISMATCH');
+          if(p590.state!=='open'||p590.merged_at!==null||p590.head.sha!==process.env.SUBJECT_PR590_HEAD)throw Error('PR590_SUBJECT_IDENTITY_MISMATCH');
+          if(p570.state!=='open'||p570.merged_at!==null||p570.head.sha!==process.env.SUBJECT_PR570_HEAD)throw Error('PR570_SUBJECT_IDENTITY_MISMATCH');
+          if(p597.state!=='open'||p597.draft!==true||p597.merged_at!==null||p597.head.sha!==process.env.ACTIVATION_HEAD||p597.base.sha!==process.env.BASE_HEAD)throw Error('ACTIVATION_PR_IDENTITY_MISMATCH');
+          NODE
+          mapfile -t changed < <(git diff --name-only "$BASE_HEAD" "$ACTIVATION_HEAD")
+          test "${#changed[@]}" = "2"
+          test "${changed[0]}" = "$OVERLAY_PATH"
+          test "${changed[1]}" = "$LOADER_PATH"
+          test "$(git rev-parse "$ACTIVATION_HEAD:$OVERLAY_PATH")" = "$OVERLAY_BLOB"
+          test "$(git rev-parse "$ACTIVATION_HEAD:$LOADER_PATH")" = "$LOADER_BLOB"
+          test "$(git rev-parse "$SUBJECT_PR590_HEAD:$OVERLAY_PATH")" = "$OVERLAY_BLOB"
+          test "$(git rev-parse "$SUBJECT_PR590_HEAD:$LOADER_PATH")" = "$LOADER_BLOB"
+      - name: Execute exact registered reproduction harness
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/cp11-tooling-builder /tmp/cp11-builder
+          mkdir -p /tmp/cp11-builder
+          git worktree add --detach /tmp/cp11-tooling-builder "$TOOLING_HEAD"
+          (
+            cd /tmp/cp11-tooling-builder
+            node tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs \
+              --base-head "$BASE_HEAD" \
+              --candidate-head "$ACTIVATION_HEAD" \
+              --subject-head "$SUBJECT_PR570_HEAD" \
+              --execution-holder "CP11_CURRENT_MAIN_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+              --output /tmp/cp11-builder/builder-receipt.json
+          )
+          git worktree remove --force /tmp/cp11-tooling-builder
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('/tmp/cp11-builder/builder-receipt.json'));
+          if(r.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED')throw Error(`BUILDER_FAILURE:${r.errorCode??'UNKNOWN'}`);
+          if(r.baseHead!==process.env.BASE_HEAD||r.candidateHead!==process.env.ACTIVATION_HEAD||r.subjectHead!==process.env.SUBJECT_PR570_HEAD)throw Error('BUILDER_HEAD_BINDING_MISMATCH');
+          if(r.overlayBlob!==process.env.OVERLAY_BLOB||r.loaderBlob!==process.env.LOADER_BLOB)throw Error('BUILDER_BLOB_MISMATCH');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp11-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp11-builder/builder-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+  exact-current-main-fresh-verifier:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Independently fetch exact identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for sha in "$BASE_HEAD" "$ACTIVATION_HEAD" "$SUBJECT_PR590_HEAD" "$SUBJECT_PR570_HEAD" "$TOOLING_HEAD"; do
+            git fetch --no-tags origin "$sha"
+            git cat-file -e "$sha^{commit}"
+          done
+          observed="$(gh api "repos/${GITHUB_REPOSITORY}/branches/main" --jq '.commit.sha')"
+          test "$observed" = "$BASE_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR590_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${INSTRUMENT_SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR570_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.head.sha')" = "$ACTIVATION_HEAD"
+          mapfile -t changed < <(git diff --name-only "$BASE_HEAD" "$ACTIVATION_HEAD")
+          test "${#changed[@]}" = "2"
+          printf '%s\n' "${changed[@]}" | cmp - <(printf '%s\n' "$OVERLAY_PATH" "$LOADER_PATH")
+          test "$(git rev-parse "$ACTIVATION_HEAD:$OVERLAY_PATH")" = "$OVERLAY_BLOB"
+          test "$(git rev-parse "$ACTIVATION_HEAD:$LOADER_PATH")" = "$LOADER_BLOB"
+      - name: Execute exact registered harness as fresh verifier
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/cp11-tooling-verifier /tmp/cp11-verifier
+          mkdir -p /tmp/cp11-verifier
+          git worktree add --detach /tmp/cp11-tooling-verifier "$TOOLING_HEAD"
+          (
+            cd /tmp/cp11-tooling-verifier
+            node tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs \
+              --base-head "$BASE_HEAD" \
+              --candidate-head "$ACTIVATION_HEAD" \
+              --subject-head "$SUBJECT_PR570_HEAD" \
+              --execution-holder "CP11_FRESH_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+              --output /tmp/cp11-verifier/fresh-verifier-receipt.json
+          )
+          git worktree remove --force /tmp/cp11-tooling-verifier
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('/tmp/cp11-verifier/fresh-verifier-receipt.json'));
+          if(r.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED')throw Error(`VERIFIER_FAILURE:${r.errorCode??'UNKNOWN'}`);
+          if(r.baseHead!==process.env.BASE_HEAD||r.candidateHead!==process.env.ACTIVATION_HEAD||r.subjectHead!==process.env.SUBJECT_PR570_HEAD)throw Error('VERIFIER_HEAD_BINDING_MISMATCH');
+          if(r.overlayBlob!==process.env.OVERLAY_BLOB||r.loaderBlob!==process.env.LOADER_BLOB)throw Error('VERIFIER_BLOB_MISMATCH');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp11-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp11-verifier/fresh-verifier-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+  certify-integration-and-conditional-merge-authority:
+    needs: [exact-current-main-builder, exact-current-main-fresh-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: cp11-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp11-builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: cp11-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp11-verifier
+      - name: Reconfirm exact PR, carrier, and main identities
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for sha in "$BASE_HEAD" "$ACTIVATION_HEAD" "$SUBJECT_PR590_HEAD" "$SUBJECT_PR570_HEAD"; do git fetch --no-tags origin "$sha"; done
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/branches/main" --jq '.commit.sha')" = "$BASE_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.head.sha')" = "$ACTIVATION_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.base.sha')" = "$BASE_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.draft')" = "true"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.merged')" = "false"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR590_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${INSTRUMENT_SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR570_HEAD"
+          carrier="${{ github.event.pull_request.number }}"
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/${carrier}/files?per_page=100" > /tmp/carrier-files.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const files=JSON.parse(fs.readFileSync('/tmp/carrier-files.json')).map(x=>x.filename);
+          if(files.length!==1||files[0]!==process.env.WORKFLOW_PATH)throw Error(`VERIFICATION_CARRIER_SCOPE_MISMATCH:${JSON.stringify(files)}`);
+          NODE
+      - name: Certify matching fingerprints and exact integration tree
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp11-final
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import {execFileSync} from 'node:child_process';
+          const b=JSON.parse(fs.readFileSync('/tmp/cp11-builder/builder-receipt.json'));
+          const v=JSON.parse(fs.readFileSync('/tmp/cp11-verifier/fresh-verifier-receipt.json'));
+          if(b.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED'||v.result!==b.result)throw Error('RESULT_MISMATCH');
+          if(b.executionHolder===v.executionHolder)throw Error('EXECUTION_HOLDERS_NOT_DISTINCT');
+          if(b.packageFingerprint!==v.packageFingerprint)throw Error('PACKAGE_FINGERPRINT_MISMATCH');
+          if(b.overlayBlob!==process.env.OVERLAY_BLOB||b.loaderBlob!==process.env.LOADER_BLOB)throw Error('CERTIFIED_BLOB_MISMATCH');
+          const expected=[process.env.OVERLAY_PATH,process.env.LOADER_PATH];
+          if(JSON.stringify(b.changedPaths)!==JSON.stringify(expected)||JSON.stringify(v.changedPaths)!==JSON.stringify(expected))throw Error('EXACT_TWO_PATH_SET_MISMATCH');
+          const activationTree=execFileSync('git',['show','-s','--format=%T',process.env.ACTIVATION_HEAD],{encoding:'utf8'}).trim();
+          const baseTree=execFileSync('git',['show','-s','--format=%T',process.env.BASE_HEAD],{encoding:'utf8'}).trim();
+          const cert={schema:'CP11_H_EARTH_TWO_PATH_INTEGRATION_CERTIFICATION_v1',result:'PASS_CLOSED_CURRENT_MAIN_SUCCESSOR_CERTIFIED',operationId:process.env.OPERATION_ID,operationGeneration:Number(process.env.OPERATION_GENERATION),exactGoverningHead:process.env.BASE_HEAD,activationPr:Number(process.env.ACTIVATION_PR),activationHead:process.env.ACTIVATION_HEAD,immutableSubjectPr:Number(process.env.SUBJECT_PR),immutableSubjectHead:process.env.SUBJECT_PR590_HEAD,instrumentSubjectPr:Number(process.env.INSTRUMENT_SUBJECT_PR),instrumentSubjectHead:process.env.SUBJECT_PR570_HEAD,exactToolingHead:process.env.TOOLING_HEAD,cp10PackageFingerprint:process.env.CP10_PACKAGE_FINGERPRINT,currentMainSuccessorFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,exactChangedPaths:expected,overlayBlob:b.overlayBlob,loaderBlob:b.loaderBlob,predecessorBlob:b.predecessorBlob,baseTree,activationTree,runtime:b.runtime,semanticChecks:b.semanticChecks,subjectChangedPathCount:b.subjectChangedPathCount,headSubstitution:false,productMutation:false,pr570Mutation:false,mergePerformed:false};
+          cert.certificationDigest=crypto.createHash('sha256').update(JSON.stringify(cert)).digest('hex');
+          const auth={schema:'CP11_H_EARTH_TWO_PATH_MERGE_AUTHORITY_RECEIPT_v1',result:'MERGE_AUTHORIZED_EXACT_HEAD_ONLY',authoritySource:'USER_ORIGIN_EXPLICIT_PROCEED_2026-08-05T09:27:00-05:00',operationId:process.env.OPERATION_ID,operationGeneration:Number(process.env.OPERATION_GENERATION),exactMainRequired:process.env.BASE_HEAD,exactPr:Number(process.env.ACTIVATION_PR),exactHead:process.env.ACTIVATION_HEAD,mergeMethod:'merge',integrationCertificationDigest:cert.certificationDigest,conditions:{exactSubjectPreserved:true,currentMainBoundSuccessorCertified:true,builderAndVerifierFingerprintsMatch:true,mainUnchangedAtCertification:true,verificationCarrierMergeProhibited:true},expiresOnMainChange:true,headSubstitution:false,broaderMergeAuthority:false};
+          fs.writeFileSync('/tmp/cp11-final/integration-certification.json',JSON.stringify(cert,null,2)+'\n');
+          fs.writeFileSync('/tmp/cp11-final/merge-authority-receipt.json',JSON.stringify(auth,null,2)+'\n');
+          fs.copyFileSync('/tmp/cp11-builder/builder-receipt.json','/tmp/cp11-final/builder-receipt.json');
+          fs.copyFileSync('/tmp/cp11-verifier/fresh-verifier-receipt.json','/tmp/cp11-final/fresh-verifier-receipt.json');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp11-premerge-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp11-final
+          if-no-files-found: error
+          retention-days: 90

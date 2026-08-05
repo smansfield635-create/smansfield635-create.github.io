@@ -1,9 +1,16 @@
 {
   "routeId": "SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026_ROUTE_v1",
-  "routeVersion": "1.0.0-repository-reproduction",
+  "routeVersion": "1.0.1-repository-reproduction-tie-explicit",
   "domain": "spontaneous_speech_language_structure",
   "caseIdField": "participant_id",
   "frozenBeforeRun": true,
+  "computationDetails": {
+    "rankScope": "WITHIN_LANGUAGE",
+    "rankMethod": "AVERAGE_MIDRANK_PERCENTILE_(RANK_MINUS_0.5)_DIVIDED_BY_LANGUAGE_N",
+    "predictabilityResidualization": "SEPARATE_OLS_WITH_INTERCEPT_WITHIN_EACH_LANGUAGE_LOG_PPL_ON_BERT_TTR",
+    "engineWeakestFactorTiePolicy": "PRESERVE_ALL_EXACT_TIES",
+    "legacyComparisonTiePolicy": "FIRST_REQUIRED_FACTOR_IN_FROZEN_ROUTE_ORDER_ONLY_FOR_REPRODUCTION_COMPARISON"
+  },
   "requiredFactors": [
     {
       "factorId": "CONCEPTUAL_BREADTH_AVAILABILITY",
@@ -27,7 +34,7 @@
     },
     {
       "factorId": "ADJUSTED_PREDICTABILITY_AVAILABILITY",
-      "label": "Inverse within-language rank availability of log-perplexity residualized for BERT type-token ratio",
+      "label": "Inverse within-language rank availability of log-perplexity residualized within language for BERT type-token ratio",
       "normalizer": { "type": "direct_availability", "field": "a_adjusted_predictability" }
     }
   ],

@@ -2,7 +2,7 @@
 
 Status: `1.0.0-preofficial`.
 
-This module promotes the scratch prototype into the active H-Earth tool base. It pairs the Intrinsic Maneuverability Index instrument with an empirical portfolio receipt system, so every formal study run can produce both the calculations and a durable study record.
+This module promotes the scratch prototype into the active H-Earth tool base. It pairs the Intrinsic Maneuverability Index instrument with an empirical portfolio receipt system, so every formal study run can produce both calculations and a durable study record.
 
 ## Operational meaning
 
@@ -35,7 +35,7 @@ For every case, the engine can produce:
 - `ordinalLevel`: exploratory IMI level assignment.
 - `UNEVALUABLE`: returned when a required factor is missing or invalid.
 
-For every study run, the engine produces a study receipt and a portfolio registry entry.
+For every repository intake run, the engine produces a study receipt, case-level output, and a portfolio registry entry.
 
 ## Generic empirical intake runner
 
@@ -65,12 +65,32 @@ Optional inputs:
 - `--portfolio-in <json>`
 - `--clock <iso-date>`
 
-## Fixture validation runner
+## Existing-study backfill runner
+
+The repository also contains a legacy backfill manifest for the already executed IMI empirical studies:
+
+- hospital measure-level robustness;
+- spontaneous speech/language structure;
+- agricultural colony resilience;
+- sovereign debt-service schedule dispersion.
+
+The backfill runner converts preserved study reports and derived outputs into repository-produced receipts and a portfolio registry entry:
+
+```bash
+node h-earth-3d/validation/imi-empirical-platform/imi.existing-studies-backfill.runner.mjs \
+  --output-dir /tmp/imi-existing-studies
+```
+
+This is not a raw-data rerun unless the historical source rows are later placed in the branch and explicitly rerun through the generic intake runner.
+
+## Fixture and operational validation runners
 
 Run from the repository root:
 
 ```bash
 node h-earth-3d/validation/imi-empirical-platform/imi.empirical-platform.runner.mjs
+node h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs \
+  --output-dir /tmp/imi-operational-suite
 ```
 
 Expected fixture behavior:
@@ -80,6 +100,13 @@ Expected fixture behavior:
 - unevaluable cases: 1
 - hard-collapse cases: 1
 - portfolio study count: 1
+
+Expected existing-study backfill behavior:
+
+- imported studies: 4
+- imported domains: healthcare, speech/language, agricultural colony resilience, sovereign debt-service finance
+- raw historical rerun: false
+- derived output available: true for the preserved studies
 
 ## Boundary
 

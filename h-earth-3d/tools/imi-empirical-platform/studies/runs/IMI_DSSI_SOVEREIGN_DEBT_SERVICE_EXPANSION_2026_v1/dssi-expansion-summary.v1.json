@@ -15,21 +15,22 @@
       "declaredDataSource": "World Bank Debtor Reporting System"
     },
     "candidateCountryCount": 70,
-    "segmentCount": 3,
-    "transformedRowsFingerprint": "fnv1a32:0d3471f1"
+    "segmentCount": 4,
+    "transformedRowsFingerprint": "fnv1a32:59f66ea0"
   },
   "sourcePackage": {
     "manifestPath": "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/dssi-source-package-manifest.v1.json",
     "segmentsAdmitted": [
       "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-001.json",
       "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-002.json",
-      "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-003.json"
+      "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-003.json",
+      "h-earth-3d/tools/imi-empirical-platform/studies/source-packages/dssi-2025/segments/dssi-2025-segment-004.json"
     ],
     "allCountrySetup": true,
     "candidateCountryCount": 70,
     "expectedRetrievableCountryTarget": 68,
     "segmentsPlanned": 7,
-    "segmentsAdmittedCount": 3,
+    "segmentsAdmittedCount": 4,
     "segmentedCompletionStillOpen": true
   },
   "admittedCountryCodes": [
@@ -51,32 +52,37 @@
     "GUY",
     "HTI",
     "KGZ",
-    "DMA"
+    "DMA",
+    "LAO",
+    "LBR",
+    "MWI",
+    "MRT",
+    "MDA"
   ],
   "candidateCountryCount": 70,
-  "transformedCountryRows": 19,
-  "validCases": 19,
+  "transformedCountryRows": 24,
+  "validCases": 24,
   "unevaluableCases": 0,
   "hardCollapseCases": 0,
-  "meanIMI": 0.749978338641774,
-  "medianIMI": 0.8138968996883112,
+  "meanIMI": 0.7748107489966073,
+  "medianIMI": 0.8379832793627302,
   "minIMI": 0.48880078345679606,
-  "maxIMI": 0.9353534205073526,
-  "meanAdditive": 0.863949816836364,
+  "maxIMI": 0.9354721461153707,
+  "meanAdditive": 0.8780573906080891,
   "weakestFactorCounts": {
-    "PRINCIPAL_DISPERSION_AVAILABILITY": 11,
-    "INTEREST_DISPERSION_AVAILABILITY": 8
+    "PRINCIPAL_DISPERSION_AVAILABILITY": 15,
+    "INTEREST_DISPERSION_AVAILABILITY": 9
   },
   "workflowEvidence": {
-    "verifiedHeadSha": "152020bd3f20e289c9030e7e6786721c35f608d2",
+    "verifiedHeadSha": "c9495199773affe3b41e55dd24acb34b03f6098a",
     "workflowName": "H-Earth IMI Empirical Platform",
-    "workflowRunId": 31021556138,
-    "workflowJobId": 92359255269,
+    "workflowRunId": 31022229862,
+    "workflowJobId": 92361598901,
     "workflowConclusion": "success",
     "dssiStepConclusion": "success",
     "artifactName": "imi-empirical-platform-operational-evidence",
-    "artifactId": 8936810415,
-    "artifactSha256": "7a7b1b4e833eaf5584e304937ad14b49672cfc191963992916a602a308c2151c"
+    "artifactId": 8937081416,
+    "artifactSha256": "a145d77dba4b5189b1f7b845210acb79109cba5f06edde687860fdc4c4614431"
   },
   "boundaries": {
     "confirmatoryStyleExpansion": true,

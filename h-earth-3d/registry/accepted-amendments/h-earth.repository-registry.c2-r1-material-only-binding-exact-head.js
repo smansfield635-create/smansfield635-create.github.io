@@ -7,7 +7,7 @@
  * two runtime paths required by MC5. It creates no source, product, merge,
  * publication, materialization, or candidate-mutation authority.
  */
-import baseFacade from './h-earth.repository-registry.gratitude-region-final-spatial-placement-disposition.js';
+import baseFacade from './h-earth.repository-registry.c2-r1-candidate-path-disposition.js';
 
 const freeze=(value,seen=new WeakSet())=>{if(value===null||typeof value!=='object'||Object.isFrozen(value)||seen.has(value))return value;seen.add(value);Object.values(value).forEach(item=>freeze(item,seen));return Object.freeze(value)};
 const normalizePath=value=>{if(typeof value!=='string')return null;let result=value.trim().replaceAll('\\','/');if(result.startsWith('./'))result=result.slice(2);if(!result.startsWith('/'))result=`/${result}`;result=result.replace(/\/{2,}/g,'/');return result.length>1&&result.endsWith('/')?result.slice(0,-1):result};
@@ -36,8 +36,12 @@ const RUNTIME_BLOBS=freeze({
   [RUNTIME_PATHS[1]]:'2b8103b182cfb5fcee84c94afaecd2a1cf329a7f'
 });
 const REGISTRY_PATHS=Object.freeze([CONTROL_PREFIX,...COASTAL_PATHS,...RUNTIME_PATHS]);
-const BASE_NODE=baseFacade.getHEarthRepositoryRegistryNode(NODE_ID);
-if(!BASE_NODE)throw new Error(`C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:${NODE_ID}`);
+export const requireC2R1BaseRegistryNode=(facade=baseFacade,nodeId=NODE_ID)=>{
+  const node=facade?.getHEarthRepositoryRegistryNode?.(nodeId)??null;
+  if(!node)throw new Error(`C2_R1_BASE_REGISTRY_NODE_NOT_FOUND:${nodeId}`);
+  return node;
+};
+const BASE_NODE=requireC2R1BaseRegistryNode();
 
 const occurrenceFor=path=>freeze({
   repository:REPOSITORY,

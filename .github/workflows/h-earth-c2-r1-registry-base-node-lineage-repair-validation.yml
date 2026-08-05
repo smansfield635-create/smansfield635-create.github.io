@@ -1,0 +1,181 @@
+name: H-Earth C2-R1 Registry Base-Node Lineage Repair Validation
+
+on:
+  pull_request:
+    paths:
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js'
+      - 'h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/**'
+      - '.github/workflows/h-earth-c2-r1-registry-base-node-lineage-repair-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  temporary-repair-builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact repair head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact nine-path boundary and historical blob
+        shell: bash
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import childProcess from 'node:child_process';
+          const manifest=JSON.parse(fs.readFileSync('h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/changed-path-manifest.v1.json','utf8'));
+          const rows=childProcess.execFileSync('git',['diff','--name-status',manifest.baseHead,process.env.HEAD_SHA],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).map((row)=>{const [status,...parts]=row.split('\t');return {status,path:parts.at(-1)}});
+          const actualPaths=rows.map((row)=>row.path).sort();
+          const expectedPaths=[...manifest.expectedChangedPaths].sort();
+          if(JSON.stringify(actualPaths)!==JSON.stringify(expectedPaths))throw new Error('REPAIR_CHANGED_PATH_SET_MISMATCH');
+          for(const row of rows){
+            const expected=row.path==='h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js'?'M':'A';
+            if(row.status!==expected)throw new Error(`REPAIR_PATH_STATUS_MISMATCH:${row.path}:${row.status}:${expected}`);
+          }
+          NODE
+          test "$(git rev-parse HEAD:h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js)" = "a195eea704df0a3f754f626817181b63114178fd"
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-candidate-path-disposition.js
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js
+          node --check h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/h-earth.c2-r1.registry-base-node-lineage-repair.test.mjs
+      - name: Verify preserved map-wide instrument head
+        shell: bash
+        run: |
+          set -euo pipefail
+          observed="$(git ls-remote origin refs/heads/bootstrap/h-earth-map-wide-terrain-estate-instrument-v1-001 | awk '{print $1}')"
+          test "$observed" = "7c0b8871928b21cd9b2806f058bce34eed11f2ba"
+      - name: Run repair Builder proof
+        run: >-
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/h-earth.c2-r1.registry-base-node-lineage-repair.test.mjs
+          --expected-head ${{ github.event.pull_request.head.sha }}
+          --holder GITHUB_ACTIONS_C2_R1_REGISTRY_REPAIR_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          --output /tmp/repair-builder/receipt.json
+      - name: Upload Builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-registry-repair-builder-evidence
+          path: /tmp/repair-builder
+          if-no-files-found: error
+
+  fresh-independent-repair-verifier:
+    needs: temporary-repair-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact repair head independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download authentic Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-c2-r1-registry-repair-builder-evidence
+          path: /tmp/builder
+      - name: Verify preserved map-wide instrument head independently
+        shell: bash
+        run: |
+          set -euo pipefail
+          observed="$(git ls-remote origin refs/heads/bootstrap/h-earth-map-wide-terrain-estate-instrument-v1-001 | awk '{print $1}')"
+          test "$observed" = "7c0b8871928b21cd9b2806f058bce34eed11f2ba"
+      - name: Reproduce repair without modification
+        run: >-
+          node h-earth-3d/control-plane/coastal-morphology/c2-r1/registry-repair/h-earth.c2-r1.registry-base-node-lineage-repair.test.mjs
+          --expected-head ${{ github.event.pull_request.head.sha }}
+          --holder GITHUB_ACTIONS_C2_R1_REGISTRY_REPAIR_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+          --output /tmp/repair-verifier/receipt.json
+      - name: Compare independent receipts
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const builder=JSON.parse(fs.readFileSync('/tmp/builder/receipt.json','utf8'));
+          const verifier=JSON.parse(fs.readFileSync('/tmp/repair-verifier/receipt.json','utf8'));
+          if(builder.result!=='PASS_CLOSED'||verifier.result!=='PASS_CLOSED')throw new Error('REPAIR_RECEIPT_NOT_PASS_CLOSED');
+          if(builder.holder===verifier.holder)throw new Error('BUILDER_VERIFIER_HOLDER_NOT_DISTINCT');
+          if(builder.packageFingerprint!==verifier.packageFingerprint)throw new Error('REPAIR_FINGERPRINT_MISMATCH');
+          if(builder.exactCandidateHead!==verifier.exactCandidateHead)throw new Error('REPAIR_HEAD_MISMATCH');
+          NODE
+      - name: Upload Verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-registry-repair-verifier-evidence
+          path: /tmp/repair-verifier
+          if-no-files-found: error
+
+  command-emitted-repair-authority-termination:
+    needs: [temporary-repair-builder, fresh-independent-repair-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-c2-r1-registry-repair-builder-evidence
+          path: /tmp/builder
+      - name: Download Verifier evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-c2-r1-registry-repair-verifier-evidence
+          path: /tmp/verifier
+      - name: Emit terminal repair receipt
+        shell: bash
+        run: |
+          mkdir -p /tmp/repair-final/builder /tmp/repair-final/verifier
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const builder=JSON.parse(fs.readFileSync('/tmp/builder/receipt.json','utf8'));
+          const verifier=JSON.parse(fs.readFileSync('/tmp/verifier/receipt.json','utf8'));
+          if(builder.result!=='PASS_CLOSED'||verifier.result!=='PASS_CLOSED')throw new Error('REPAIR_CERTIFICATION_NOT_PASS_CLOSED');
+          if(builder.holder===verifier.holder)throw new Error('BUILDER_VERIFIER_HOLDER_NOT_DISTINCT');
+          if(builder.packageFingerprint!==verifier.packageFingerprint)throw new Error('REPAIR_FINGERPRINT_MISMATCH');
+          const digest=(value)=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
+          const receipt={
+            schema:'H_EARTH_C2_R1_REGISTRY_BASE_NODE_LINEAGE_REPAIR_AUTHORITY_TERMINATION_RECEIPT_v1',
+            result:'PASS_CLOSED_REPAIR_AUTHORITY_TERMINATED',
+            operationId:'H_EARTH_C2_R1_REGISTRY_BASE_NODE_LINEAGE_REPAIR_v1',
+            exactRepairHead:builder.exactCandidateHead,
+            packageFingerprint:builder.packageFingerprint,
+            builderReceiptDigest:digest(builder),
+            verifierReceiptDigest:digest(verifier),
+            temporaryRepairBuilderAuthorityActive:false,
+            temporaryRepairVerifierAuthorityActive:false,
+            residualRepairAuthority:false,
+            preservedInstrumentPr:570,
+            preservedInstrumentHead:'7c0b8871928b21cd9b2806f058bce34eed11f2ba',
+            preservedInstrumentMutated:false,
+            terrainMutation:false,
+            rendererOrRuntimeMutation:false,
+            productOrRouteMutation:false,
+            manorConstruction:false,
+            deploymentOrRelease:false,
+            mergeOrPromotion:false,
+            authorityBroadening:false,
+            repairMergeAuthorized:false
+          };
+          fs.writeFileSync('/tmp/repair-final/repair-authority-termination-receipt.json',`${JSON.stringify(receipt,null,2)}\n`);
+          NODE
+          cp /tmp/builder/receipt.json /tmp/repair-final/builder/receipt.json
+          cp /tmp/verifier/receipt.json /tmp/repair-final/verifier/receipt.json
+      - name: Upload complete repair certification
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-c2-r1-registry-repair-final-certification
+          path: /tmp/repair-final
+          if-no-files-found: error

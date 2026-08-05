@@ -36,6 +36,18 @@
       "scopeHash": "29faefeb037e128676d0cd86d7542c497e2cf6f151d47a24410af7b1abefb882",
       "state": "ADMITTED_LOCKED"
     },
+    "776a2acbe640d8c483ddfc9ed5565eb22a4fc73633d20ad6a2f1bddde148f4c7": {
+      "governingHead": "ffe3cb714751ea0e8df2e53611538f6cadcc241c",
+      "lockGeneration": 104,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:H_EARTH_MAP_WIDE_INSTRUMENT_OWNERSHIP:R:V1",
+      "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_ROUTER_OWNERSHIP_R_001",
+      "procedureLocatorDigest": "ab25c4768453fbd02343d2a42d2f6288a37a632741c18b8622660a61c20242e9",
+      "released": false,
+      "requestDigest": "61db3bda9c205a2b925ab3218307fc79a9f7d849d8773187a6dcb0e2a01c5739",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "776a2acbe640d8c483ddfc9ed5565eb22a4fc73633d20ad6a2f1bddde148f4c7",
+      "state": "ADMITTED_LOCKED"
+    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -160,7 +172,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 103,
+  "lockGeneration": 104,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -51,6 +51,22 @@ jobs:
           set -euo pipefail
           node h-earth-3d/validation/imi-empirical-platform/imi.dssi-sovereign-debt-service-expansion-2026.runner.mjs --output-dir /tmp/imi-dssi-sovereign-debt-service-expansion-2026 2>&1 | tee /tmp/imi-dssi-sovereign-debt-service-expansion-2026.log
 
+      - name: Execute spontaneous speech repository rerun 2026
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.spontaneous-speech-rerun-2026.runner.mjs --output-dir /tmp/imi-spontaneous-speech-rerun-2026 2>&1 | tee /tmp/imi-spontaneous-speech-rerun-2026.log
+
+      - name: Verify existing four-domain empirical portfolio completion
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.existing-four-domain-portfolio-completion.runner.mjs \
+            --bee-dir /tmp/imi-usda-honey-bee-refresh-2026 \
+            --speech-dir /tmp/imi-spontaneous-speech-rerun-2026 \
+            --output-dir /tmp/imi-existing-four-domain-portfolio-completion \
+            2>&1 | tee /tmp/imi-existing-four-domain-portfolio-completion.log
+
       - name: Upload IMI empirical platform operational evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,4 +81,8 @@ jobs:
             /tmp/imi-usda-honey-bee-refresh-2026/**
             /tmp/imi-dssi-sovereign-debt-service-expansion-2026.log
             /tmp/imi-dssi-sovereign-debt-service-expansion-2026/**
+            /tmp/imi-spontaneous-speech-rerun-2026.log
+            /tmp/imi-spontaneous-speech-rerun-2026/**
+            /tmp/imi-existing-four-domain-portfolio-completion.log
+            /tmp/imi-existing-four-domain-portfolio-completion/**
           retention-days: 90

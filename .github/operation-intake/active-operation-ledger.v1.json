@@ -1,17 +1,5 @@
 {
   "activeScopes": {
-    "39e45979cca0af8f42410a87e11a3914b42f8293e78880da892e407d1a6cc4b5": {
-      "governingHead": "3753f7307c36f1269f68fd5222a59c1605f12358",
-      "lockGeneration": 46,
-      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_DEVELOPMENTAL_BASELINE",
-      "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
-      "procedureLocatorDigest": "b42679a35ce2793aa80b8135093e7c183428492ee62409258e2c44ff761f3450",
-      "released": false,
-      "requestDigest": "302db6b56bcdb845ccdbe996bb9edefd9e73ed11e0717af0fcd9c33cf48c31cb",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "39e45979cca0af8f42410a87e11a3914b42f8293e78880da892e407d1a6cc4b5",
-      "state": "ADMITTED_LOCKED"
-    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -612,6 +600,19 @@
       "scopeHash": "a3c5293d47f282492279d0e7e81e882012948e2b437e2a841c4f4432b953261a",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "3753f7307c36f1269f68fd5222a59c1605f12358",
+      "lockGeneration": 46,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_DEVELOPMENTAL_BASELINE",
+      "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+      "procedureLocatorDigest": "b42679a35ce2793aa80b8135093e7c183428492ee62409258e2c44ff761f3450",
+      "released": true,
+      "requestDigest": "302db6b56bcdb845ccdbe996bb9edefd9e73ed11e0717af0fcd9c33cf48c31cb",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "39e45979cca0af8f42410a87e11a3914b42f8293e78880da892e407d1a6cc4b5",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

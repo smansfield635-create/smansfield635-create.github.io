@@ -1,0 +1,42 @@
+name: H-Earth IMI Empirical Platform
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-imi-empirical-platform.yml'
+      - 'h-earth-3d/control-plane/imi-empirical-platform/**'
+      - 'h-earth-3d/tools/imi-empirical-platform/**'
+      - 'h-earth-3d/validation/imi-empirical-platform/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-imi-empirical-platform:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact IMI empirical platform candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute IMI empirical operational suite
+        run: |
+          node h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs --output-dir /tmp/imi-empirical-platform-operational-suite | tee /tmp/imi-empirical-platform-operational-suite.log
+
+      - name: Upload IMI empirical platform operational evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-empirical-platform-operational-evidence
+          path: |
+            /tmp/imi-empirical-platform-operational-suite.log
+            /tmp/imi-empirical-platform-operational-suite/**
+          retention-days: 90

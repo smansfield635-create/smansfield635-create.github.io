@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "IMI_PHASE_3_SPEECH_DURABLE_EVIDENCE_PACKAGE_v1",
+  "sourceAvailability": {
+    "schemaVersion": "IMI_PHASE_3_SPEECH_HELD_OUT_SOURCE_AVAILABILITY_IDENTITY_v1",
+    "observedAt": "2026-08-05T17:45:00.000Z",
+    "locators": [
+      {
+        "url": "https://talkbank.org/dementia/ADReSS-M/",
+        "httpStatus": 200,
+        "ok": true,
+        "finalUrl": "https://talkbank.org/dementia/ADReSS-M/",
+        "contentBytes": 2472,
+        "contentDigest": "fnv1a32:843d69f6",
+        "accessSignals": {
+          "membershipRequired": true,
+          "registrationRequired": false,
+          "controlledOrApprovedAccess": false,
+          "directOpenFeaturePackageAdvertised": false
+        }
+      },
+      {
+        "url": "https://talkbank.org/dementia/ADReSSo-2021/",
+        "httpStatus": 200,
+        "ok": true,
+        "finalUrl": "https://talkbank.org/dementia/ADReSSo-2021/",
+        "contentBytes": 10721,
+        "contentDigest": "fnv1a32:85be155e",
+        "accessSignals": {
+          "membershipRequired": true,
+          "registrationRequired": false,
+          "controlledOrApprovedAccess": false,
+          "directOpenFeaturePackageAdvertised": false
+        }
+      },
+      {
+        "url": "https://talkbank.org/dementia/DrivenData/index.html",
+        "ok": false,
+        "error": "fetch failed"
+      },
+      {
+        "url": "https://talkbank.org/dementia/access.html",
+        "ok": false,
+        "error": "fetch failed"
+      }
+    ],
+    "providedPackage": {
+      "pathProvided": false
+    },
+    "sourceAvailabilityDigest": "fnv1a32:c697dded"
+  },
+  "trackReceipt": {
+    "schemaVersion": "IMI_PHASE_3_SPEECH_HELD_OUT_REPRODUCTION_RECEIPT_v1",
+    "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+    "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+    "result": "HELD_LAWFUL_HELD_OUT_SPEECH_PACKAGE_NOT_AVAILABLE_TO_EXECUTION",
+    "terminalDisposition": "HELD_OPEN_SOURCE_ACCESS_AND_FEATURE_ADAPTER_REQUIRED",
+    "observedAt": "2026-08-05T17:45:00.000Z",
+    "routeId": "SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026_ROUTE_v1",
+    "routeDigest": "fnv1a32:d5df7656",
+    "sourceIdentity": {
+      "schemaVersion": "IMI_PHASE_3_SPEECH_HELD_OUT_SOURCE_AVAILABILITY_IDENTITY_v1",
+      "observedAt": "2026-08-05T17:45:00.000Z",
+      "locators": [
+        {
+          "url": "https://talkbank.org/dementia/ADReSS-M/",
+          "httpStatus": 200,
+          "ok": true,
+          "finalUrl": "https://talkbank.org/dementia/ADReSS-M/",
+          "contentBytes": 2472,
+          "contentDigest": "fnv1a32:843d69f6",
+          "accessSignals": {
+            "membershipRequired": true,
+            "registrationRequired": false,
+            "controlledOrApprovedAccess": false,
+            "directOpenFeaturePackageAdvertised": false
+          }
+        },
+        {
+          "url": "https://talkbank.org/dementia/ADReSSo-2021/",
+          "httpStatus": 200,
+          "ok": true,
+          "finalUrl": "https://talkbank.org/dementia/ADReSSo-2021/",
+          "contentBytes": 10721,
+          "contentDigest": "fnv1a32:85be155e",
+          "accessSignals": {
+            "membershipRequired": true,
+            "registrationRequired": false,
+            "controlledOrApprovedAccess": false,
+            "directOpenFeaturePackageAdvertised": false
+          }
+        },
+        {
+          "url": "https://talkbank.org/dementia/DrivenData/index.html",
+          "ok": false,
+          "error": "fetch failed"
+        },
+        {
+          "url": "https://talkbank.org/dementia/access.html",
+          "ok": false,
+          "error": "fetch failed"
+        }
+      ],
+      "providedPackage": {
+        "pathProvided": false
+      },
+      "sourceAvailabilityDigest": "fnv1a32:c697dded"
+    },
+    "admission": {
+      "independentPackageProvided": false,
+      "minimumParticipantCountRequired": 100,
+      "minimumDeclaredGroupsOrLanguagesRequired": 2,
+      "frozenFiveFeatureInputsRequired": true,
+      "minimumEvidenceSatisfied": false
+    },
+    "reason": "THE_IDENTIFIED_INDEPENDENT_SPEECH_CORPORA_REQUIRE_REGISTRATION_MEMBERSHIP_OR_APPROVED_ACCESS_AND_NO_LAWFULLY_ACCESSIBLE_FROZEN_FIVE_FEATURE_PACKAGE_WAS_PROVIDED_TO_THIS_EXECUTION",
+    "phase4Candidate": false,
+    "boundaries": {
+      "protectedDataAccessAttempted": false,
+      "authenticationBypassAttempted": false,
+      "participantRowsInspected": false,
+      "newEmpiricalTestExecuted": false,
+      "routeRetuned": false,
+      "diagnosisOrClinicalScreeningClaimed": false,
+      "finalValidationClaimed": false
+    },
+    "receiptDigest": "fnv1a32:70814189"
+  }
+}

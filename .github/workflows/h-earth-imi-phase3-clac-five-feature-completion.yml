@@ -1,4 +1,4 @@
-# Existing-PR execution trigger; no scientific or route semantics changed.
+# Branch execution is required while PR #589 conflicts with an advancing base.
 name: H-Earth IMI Phase 3 CLAC Five-Feature Completion
 
 on:
@@ -8,7 +8,6 @@ on:
     paths:
       - '.github/workflows/h-earth-imi-phase3-clac-five-feature-completion.yml'
       - 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-clac-five-feature-extraction-contract.v1.json'
-      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py'
       - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py'
       - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py'
       - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs'
@@ -19,7 +18,6 @@ on:
     paths:
       - '.github/workflows/h-earth-imi-phase3-clac-five-feature-completion.yml'
       - 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-clac-five-feature-extraction-contract.v1.json'
-      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py'
       - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py'
       - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py'
       - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs'
@@ -29,6 +27,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
@@ -47,7 +46,6 @@ jobs:
         run: |
           set -euo pipefail
           python -m py_compile \
-            h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py \
             h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
             h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py
           node --check h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs
@@ -59,29 +57,39 @@ jobs:
   source-package:
     needs: conformance
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Recover exact previously bound CLAC package
+        uses: actions/download-artifact@v4
         with:
-          python-version: '3.11'
-      - name: Install bounded CLAC source dependencies
-        run: python -m pip install --disable-pip-version-check remotezip==0.12.3 openpyxl==3.1.5
-      - name: Rebind exact CLAC transcript and metadata package
+          name: imi-phase3-speech-public-source-probe
+          repository: smansfield635-create/smansfield635-create.github.io
+          run-id: 31040594727
+          github-token: ${{ github.token }}
+          path: /tmp/imi-phase3-clac-prior-artifact
+      - name: Verify and rebind exact CLAC package identity
         run: |
           set -euo pipefail
-          python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py \
-            --output-dir /tmp/imi-phase3-clac-source \
-            --clock 2026-08-05T20:05:00.000Z \
-            2>&1 | tee /tmp/imi-phase3-clac-source.log
-          PACKAGE=$(find /tmp/imi-phase3-clac-source -name clac-public-text-metadata-package.v1.json -print -quit)
-          python - "$PACKAGE" <<'PY'
+          PACKAGE=$(find /tmp/imi-phase3-clac-prior-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
+          test -n "$PACKAGE"
+          mkdir -p /tmp/imi-phase3-clac-source
+          cp "$PACKAGE" /tmp/imi-phase3-clac-source/clac-public-text-metadata-package.v1.json
+          python - /tmp/imi-phase3-clac-source/clac-public-text-metadata-package.v1.json <<'PY' | tee /tmp/imi-phase3-clac-source.log
           import json, sys
           package = json.load(open(sys.argv[1], encoding='utf-8'))
           assert package['packageSha256'] == '52df6e548c512239337281bb5f0e461a4751f6068f75db197bd2ad323b3ad171'
+          assert package['archiveInventorySha256'] == '8a09ea16830481e95a558b43558dcd47c833c6aa99fb96a39eecb0110d470d75'
           assert package['cookieTheft']['extractedUsableTranscriptCount'] == 240
           assert len(package['cookieTheft']['transcripts']) == 240
-          print(json.dumps({'result': 'PASS_EXACT_CLAC_SOURCE_PACKAGE_REBOUND', 'packageSha256': package['packageSha256']}))
+          print(json.dumps({
+            'result': 'PASS_EXACT_CLAC_SOURCE_PACKAGE_RECOVERED_FROM_VERIFIED_PRIOR_ARTIFACT',
+            'priorWorkflowRun': 31040594727,
+            'priorArtifactId': 8944406141,
+            'packageSha256': package['packageSha256'],
+            'archiveInventorySha256': package['archiveInventorySha256'],
+            'participantRows': len(package['cookieTheft']['transcripts'])
+          }, indent=2))
           PY
       - name: Upload exact CLAC source package
         uses: actions/upload-artifact@v4
@@ -105,16 +113,15 @@ jobs:
         with:
           name: imi-phase3-clac-source-package
           path: /tmp/imi-phase3-clac-source-artifact
+      - name: Reclaim runner disk
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || true
       - name: Install frozen FastText feature dependencies
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check \
-            numpy==1.26.4 \
-            scipy==1.12.0 \
-            gensim==4.3.3 \
-            nltk==3.9.1 \
-            spacy==3.7.4
-          python -m spacy download en_core_web_sm
+            numpy==1.26.4 scipy==1.12.0 gensim==4.3.3 nltk==3.9.1 spacy==3.7.4
+          python -m pip install --disable-pip-version-check \
+            https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
           python - <<'PY'
           import nltk
           nltk.download('stopwords', quiet=True)
@@ -133,9 +140,7 @@ jobs:
           PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
           mkdir -p /tmp/imi-phase3-clac-fasttext
           python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
-            --mode fasttext \
-            --package "$PACKAGE" \
-            --model-path /tmp/cc.en.300.bin \
+            --mode fasttext --package "$PACKAGE" --model-path /tmp/cc.en.300.bin \
             --output /tmp/imi-phase3-clac-fasttext/clac-fasttext-features.v1.json \
             --clock 2026-08-05T20:05:00.000Z \
             2>&1 | tee /tmp/imi-phase3-clac-fasttext.log
@@ -168,13 +173,11 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check \
-            torch==2.4.1 \
-            --index-url https://download.pytorch.org/whl/cpu
+            torch==2.4.1 --index-url https://download.pytorch.org/whl/cpu
           python -m pip install --disable-pip-version-check \
-            numpy==1.26.4 \
-            transformers==4.44.2 \
-            spacy==3.7.4
-          python -m spacy download en_core_web_sm
+            numpy==1.26.4 transformers==4.44.2 spacy==3.7.4
+          python -m pip install --disable-pip-version-check \
+            https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
       - name: Execute frozen BERT and ADD feature extraction
         env:
           HF_HUB_DISABLE_TELEMETRY: '1'
@@ -184,8 +187,7 @@ jobs:
           PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
           mkdir -p /tmp/imi-phase3-clac-bert-add
           python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
-            --mode bert_add \
-            --package "$PACKAGE" \
+            --mode bert_add --package "$PACKAGE" \
             --output /tmp/imi-phase3-clac-bert-add/clac-bert-add-features.v1.json \
             --clock 2026-08-05T20:05:00.000Z \
             2>&1 | tee /tmp/imi-phase3-clac-bert-add.log
@@ -212,23 +214,20 @@ jobs:
         with:
           name: imi-phase3-clac-source-package
           path: /tmp/imi-phase3-clac-source-artifact
+      - name: Reclaim runner disk
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || true
       - name: Install frozen CLIP feature dependencies
         run: |
           set -euo pipefail
           python -m pip install --disable-pip-version-check \
-            torch==2.4.1 \
-            torchvision==0.19.1 \
+            torch==2.4.1 torchvision==0.19.1 \
             --index-url https://download.pytorch.org/whl/cpu
           python -m pip install --disable-pip-version-check \
-            numpy==1.26.4 \
-            pillow==10.4.0 \
-            spacy==3.7.4 \
-            ftfy \
-            regex \
-            tqdm
+            numpy==1.26.4 pillow==10.4.0 spacy==3.7.4 ftfy regex tqdm
           python -m pip install --disable-pip-version-check \
             git+https://github.com/openai/CLIP.git@d05afc436d78f1c48dc0dbf8e5980a9d471f35f6
-          python -m spacy download en_core_web_sm
+          python -m pip install --disable-pip-version-check \
+            https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
       - name: Bind exact Cookie Theft stimulus image
         run: |
           set -euo pipefail
@@ -246,9 +245,7 @@ jobs:
           PACKAGE=$(find /tmp/imi-phase3-clac-source-artifact -name clac-public-text-metadata-package.v1.json -print -quit)
           mkdir -p /tmp/imi-phase3-clac-clip
           python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
-            --mode clip \
-            --package "$PACKAGE" \
-            --image-path /tmp/cookie_theft.jpg \
+            --mode clip --package "$PACKAGE" --image-path /tmp/cookie_theft.jpg \
             --output /tmp/imi-phase3-clac-clip/clac-clip-features.v1.json \
             --clock 2026-08-05T20:05:00.000Z \
             2>&1 | tee /tmp/imi-phase3-clac-clip.log
@@ -276,6 +273,8 @@ jobs:
         with:
           name: imi-phase3-clac-source-package
           path: /tmp/imi-phase3-clac-source-artifact
+      - name: Reclaim runner disk
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || true
       - name: Install frozen Mistral access-representation dependencies
         run: |
           set -euo pipefail
@@ -308,9 +307,7 @@ jobs:
           MODEL=$(cat /tmp/imi-phase3-clac-ppl-model-path.txt)
           mkdir -p /tmp/imi-phase3-clac-ppl
           python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
-            --mode ppl \
-            --package "$PACKAGE" \
-            --model-path "$MODEL" \
+            --mode ppl --package "$PACKAGE" --model-path "$MODEL" \
             --output /tmp/imi-phase3-clac-ppl/clac-ppl-features.raw.v1.json \
             --clock 2026-08-05T20:05:00.000Z \
             2>&1 | tee /tmp/imi-phase3-clac-ppl.log
@@ -372,14 +369,12 @@ jobs:
           BERT_ADD=$(find /tmp/imi-phase3-clac-bert-add-artifact -name clac-bert-add-features.v1.json -print -quit)
           CLIP=$(find /tmp/imi-phase3-clac-clip-artifact -name clac-clip-features.v1.json -print -quit)
           PPL=$(find /tmp/imi-phase3-clac-ppl-artifact -name clac-ppl-features.v1.json -print -quit)
+          test -n "$PACKAGE" && test -n "$FASTTEXT" && test -n "$BERT_ADD" && test -n "$CLIP" && test -n "$PPL"
           mkdir -p /tmp/imi-phase3-clac-completion
           python h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py \
-            --mode assemble \
-            --package "$PACKAGE" \
-            --fasttext-features "$FASTTEXT" \
-            --bert-add-features "$BERT_ADD" \
-            --clip-features "$CLIP" \
-            --ppl-features "$PPL" \
+            --mode assemble --package "$PACKAGE" \
+            --fasttext-features "$FASTTEXT" --bert-add-features "$BERT_ADD" \
+            --clip-features "$CLIP" --ppl-features "$PPL" \
             --output /tmp/imi-phase3-clac-completion/clac-five-feature-package.python.v1.json \
             --clock 2026-08-05T20:05:00.000Z \
             2>&1 | tee /tmp/imi-phase3-clac-completion.log

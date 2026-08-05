@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "IMI_EXISTING_FOUR_DOMAIN_EMPIRICAL_PORTFOLIO_COMPLETION_RECEIPT_v1",
+  "operation": "IMI_EXISTING_FOUR_DOMAIN_EMPIRICAL_PORTFOLIO_COMPLETION_v1",
+  "result": "PASS_CLOSED_EXISTING_FOUR_DOMAIN_EMPIRICAL_EXECUTION_SURFACE_COMPLETE",
+  "createdAt": "2026-08-05T16:38:00.000Z",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pullRequest": 589,
+  "branch": "instrument/imi-empirical-platform-v1",
+  "bindingClass": "DURABLE_BRANCH_BINDING_OF_SUCCESSFUL_SIMULTANEOUS_BEE_AND_SPEECH_COMPLETION_RUN",
+  "completedDomains": [
+    {
+      "domain": "healthcare_quality",
+      "study": "IMI_CONFIRMATORY_HOSPITAL_REFRESH_2026_v1",
+      "currentRepositoryRun": true,
+      "phaseConsolidated": true,
+      "result": "PASS_CLOSED_CMS_HOSPITAL_REFRESH_2026_REPOSITORY_INTAKE_RUN",
+      "validCases": 3147,
+      "unevaluableCases": 1028,
+      "hardCollapseCases": 3
+    },
+    {
+      "domain": "spontaneous_speech_language_structure",
+      "study": "IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_v1",
+      "currentRepositoryRun": true,
+      "phaseConsolidated": true,
+      "result": "PASS_CLOSED_SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026",
+      "validCases": 291,
+      "unevaluableCases": 0,
+      "hardCollapseCases": 0,
+      "weakestFactorDiversity": true,
+      "exactWeakestFactorTieCases": 5,
+      "summaryPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_v1/spontaneous-speech-rerun-summary.v1.json"
+    },
+    {
+      "domain": "agricultural_colony_resilience",
+      "study": "IMI_USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_v1",
+      "currentRepositoryRun": true,
+      "phaseConsolidated": true,
+      "result": "PASS_CLOSED_USDA_HONEY_BEE_CURRENT_REFRESH_PHASE_CONSOLIDATED",
+      "validCases": 100,
+      "unevaluableCases": 0,
+      "hardCollapseCases": 0,
+      "temporalSignalRetained": true,
+      "weakestFactorDiversityEstablished": false,
+      "multiplicativeAdvantageEstablished": false,
+      "consolidationPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_v1/usda-honey-bee-phase-consolidation-receipt.v1.json"
+    },
+    {
+      "domain": "sovereign_debt_service_schedule_dispersion",
+      "study": "IMI_DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_v1",
+      "currentRepositoryRun": true,
+      "phaseConsolidated": true,
+      "result": "PASS_CLOSED_DSSI_PARTIAL_ALL_COUNTRY_EXPANSION_PHASE_CONSOLIDATED",
+      "validCases": 32,
+      "unevaluableCases": 0,
+      "hardCollapseCases": 0,
+      "allCountryCompletionClosed": false
+    }
+  ],
+  "simultaneousCompletion": {
+    "beePhaseConsolidationIncluded": true,
+    "speechPublishedSourceRerunIncluded": true,
+    "sameWorkflowJobRequired": true,
+    "collectiveGateExecutedAfterBoth": true,
+    "collectiveGateResult": "PASS"
+  },
+  "collectiveDetermination": {
+    "existingFourDomainPortfolioExecutionSurfaceComplete": true,
+    "allFourDomainsRepositoryRepresented": true,
+    "allFourDomainsCurrentRepositoryExecuted": true,
+    "beeNegativeFindingsPreserved": true,
+    "speechLegacyBackfillReplacedByCurrentSourceRerunForExecutionPurposes": true,
+    "fullCrossDomainResearchSynthesisPerformed": false,
+    "finalInstrumentValidationEstablished": false
+  },
+  "workflowEvidence": {
+    "verifiedHeadSha": "c20b1473a2179f661f28ca6a64172119e753f191",
+    "workflowName": "H-Earth IMI Empirical Platform",
+    "workflowRunId": 31027515220,
+    "workflowJobId": 92379638129,
+    "workflowConclusion": "success",
+    "beeStepConclusion": "success",
+    "speechStepConclusion": "success",
+    "collectiveCompletionStepConclusion": "success",
+    "artifactName": "imi-empirical-platform-operational-evidence",
+    "artifactId": 8939256602,
+    "artifactSha256": "387d42847ecba054f9b2b63746978e961b8a7f00c2706bc5b8cc762f8313f30c",
+    "runtimeReceiptDigest": "fnv1a32:8328f737"
+  },
+  "nextViableProgression": {
+    "operation": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1",
+    "parallelOpenTracks": [
+      "BEE_ROUTE_DISCRIMINATION_AND_LONGER_PANEL_STUDY",
+      "DSSI_REMAINING_COUNTRY_CONTINUATION",
+      "SPEECH_HELD_OUT_PROSPECTIVE_REPRODUCTION"
+    ]
+  },
+  "boundaries": {
+    "portfolioCompletionMeansExecutionAndCustodyCompletionOnly": true,
+    "fullResearchSynthesisNotYetPerformed": true,
+    "multiplicativeSuperiorityNotGenerallyClaimed": true,
+    "clinicalDiagnosticUseNotAuthorized": true,
+    "causalClaimsNotAuthorized": true,
+    "finalValidationClaimed": false,
+    "mainMerged": false,
+    "liveWebsiteOperational": false
+  }
+}

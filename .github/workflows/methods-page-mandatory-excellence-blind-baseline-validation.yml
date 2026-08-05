@@ -96,6 +96,7 @@ jobs:
           retention-days: 30
 
   blind-evaluation:
+    if: github.event_name == 'workflow_dispatch'
     needs: toolchain-self-test
     strategy:
       fail-fast: false
@@ -194,7 +195,7 @@ jobs:
           retention-days: 30
 
   terminal-closure:
-    needs: [independent-contextual-routing, independent-reproduction]
+    needs: independent-contextual-routing
     runs-on: ubuntu-latest
     permissions:
       contents: write

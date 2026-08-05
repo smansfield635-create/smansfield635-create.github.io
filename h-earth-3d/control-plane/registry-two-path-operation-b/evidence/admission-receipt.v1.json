@@ -5,6 +5,36 @@
   "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
   "implementationInferenceAuthorized": false,
   "lock": {
+    "governingHead": "3d80989e4571e62a5b9997aa70b223c0678ee1d3",
+    "lockGeneration": 63,
+    "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:OPERATION_B:V1",
+    "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_OPERATION_B_v1",
+    "procedureLocatorDigest": "c42e5309e4ead151ef7ddfd7cbd05d6b5fe70c82013e085af0ab99a401ee0933",
+    "released": false,
+    "requestDigest": "384fb21608b2b6a11a6c8c767d2f2781db5f7c39795f155f9d8ef7fca42126c2",
+    "schema": "REPOSITORY_OPERATION_LOCK_v1",
+    "scopeHash": "f249b4bce2ed3970d282fc72178e7b63b3e55c8a3fab281924392070b6e24781",
+    "state": "ADMITTED_LOCKED"
+  },
+  "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_OPERATION_B_v1",
+  "operationStarted": true,
+  "procedureLocatorDigest": "c42e5309e4ead151ef7ddfd7cbd05d6b5fe70c82013e085af0ab99a401ee0933",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "384fb21608b2b6a11a6c8c767d2f2781db5f7c39795f155f9d8ef7fca42126c2",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true,
+  "projectionSchema": "REPOSITORY_OPERATION_REMOTE_ADMISSION_EXECUTION_PROJECTION_v1",
+  "projectionResult": "CANONICAL_RECEIPT_AND_LIVE_LEDGER_BOUND",
+  "canonicalReceiptIdentity": {
+    "sourceClass": "REPOSITORY_PATH_AT_EXACT_HEAD",
+    "exactHead": "3d2b22d9e7860d867da7bbbb1e70bcbd8faa6494",
+    "path": "h-earth-3d/control-plane/registry-two-path-operation-b/evidence/admission-receipt.v1.json",
+    "sha256": "62a5b9538fa69625432859282dcd1b5b506943f48206778b90bdf0c35d0bda41"
+  },
+  "canonicalRemoteLockReceipt": {
     "acquisitionCommitSha": "6456d4c7d4bb02fd079499c7533940090144215d",
     "committedLedgerBlobSha": "dc7bd62d7e86394d83e88de51d10e8a6723b3011",
     "lockAcquired": true,
@@ -17,14 +47,11 @@
     "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
     "scopeHash": "f249b4bce2ed3970d282fc72178e7b63b3e55c8a3fab281924392070b6e24781"
   },
-  "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_OPERATION_B_v1",
-  "operationStarted": true,
-  "procedureLocatorDigest": "c42e5309e4ead151ef7ddfd7cbd05d6b5fe70c82013e085af0ab99a401ee0933",
-  "projectId": "H_EARTH",
-  "repositoryWritesAuthorized": true,
-  "requestDigest": "384fb21608b2b6a11a6c8c767d2f2781db5f7c39795f155f9d8ef7fca42126c2",
-  "result": "ADMITTED_AND_LOCKED",
-  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
-  "sourceDocument": null,
-  "workflowExecutionAuthorized": true
+  "liveLedgerIdentity": {
+    "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "ledgerHead": "6ac02e1c57ab10b68ba884d3fbd6de2b54e1de75",
+    "ledgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+    "lockGeneration": 63
+  },
+  "compatibilityProjectionOnly": true
 }

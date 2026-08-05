@@ -7,7 +7,7 @@
   "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1",
   "lockGeneration": 43,
   "terminalDisposition": "FAIL_CLOSED",
-  "expectedClosureReceiptSchema": "REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1",
+  "expectedClosureReceiptSchema": "REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1",
   "expectedResult": "TERMINAL_CLOSURE_COMMITTED",
   "authorityIssue": 580,
   "singleUse": true

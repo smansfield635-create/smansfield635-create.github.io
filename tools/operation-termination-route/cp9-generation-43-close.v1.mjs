@@ -10,6 +10,8 @@ const LOCK_BRANCH = 'operation-locks/repository-operation-intake-v1';
 const LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
 const LOCK_MANAGER_PATH = 'tools/operation-intake/repository-operation-lock-manager.v1.mjs';
 const LOCK_MANAGER_BLOB = '6fc0199c9dc943b8cdf3efe7c789f0e1888774b8';
+const EVIDENCE_PATH = '.github/operation-termination-route/evidence/generation-43-closure-receipt.json';
+const EVIDENCE_SHA256 = '32bc0f0ef35e51bd3c602471029ab4ee090bf277651cc60e00c00766445e9cf6';
 const OPERATION_ID = 'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_001';
 const LOCK_SCOPE = 'H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1';
 const LOCK_GENERATION = 43;
@@ -21,7 +23,7 @@ const TOKEN = process.env.GITHUB_TOKEN;
 if (!RUNNER_TEMP) throw new Error('RUNNER_TEMP_MISSING');
 if (!TOKEN) throw new Error('GITHUB_TOKEN_MISSING');
 
-const closureOutput = path.join(RUNNER_TEMP, 'generation-43-closure-receipt.json');
+const runtimeClosureOutput = path.join(RUNNER_TEMP, 'generation-43-closure-receipt.json');
 const verificationOutput = path.join(RUNNER_TEMP, 'generation-43-closure-verification.json');
 const headers = {
   Accept: 'application/vnd.github+json',
@@ -35,6 +37,7 @@ const stable = (value) => Array.isArray(value)
     : value;
 const canonical = (value) => JSON.stringify(stable(value));
 const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
+const clone = (value) => JSON.parse(JSON.stringify(value));
 
 function assert(condition, code) {
   if (!condition) throw new Error(code);
@@ -49,22 +52,20 @@ async function githubJson(url) {
   return body;
 }
 
-async function readLedger() {
+async function readLedgerAt(ref) {
   const encodedPath = LEDGER_PATH.split('/').map(encodeURIComponent).join('/');
-  const [file, ref] = await Promise.all([
-    githubJson(`https://api.github.com/repos/${REPOSITORY}/contents/${encodedPath}?ref=${encodeURIComponent(LOCK_BRANCH)}`),
-    githubJson(`https://api.github.com/repos/${REPOSITORY}/git/ref/${encodeURIComponent(`heads/${LOCK_BRANCH}`)}`)
-  ]);
+  const file = await githubJson(`https://api.github.com/repos/${REPOSITORY}/contents/${encodedPath}?ref=${encodeURIComponent(ref)}`);
   const ledger = JSON.parse(Buffer.from(String(file.content).replace(/\s/g, ''), 'base64').toString('utf8'));
-  return { ledger, ledgerBlobSha: file.sha, branchHead: ref.object.sha };
+  return { ledger, ledgerBlobSha: file.sha };
 }
 
-function findGenerationRecord(ledger, generation) {
-  const active = Object.values(ledger.activeScopes ?? {}).find((entry) => entry.lockGeneration === generation);
-  if (active) return { location: 'activeScopes', entry: active };
-  const terminal = [...(ledger.terminalHistory ?? [])].reverse().find((entry) => entry.lockGeneration === generation);
-  if (terminal) return { location: 'terminalHistory', entry: terminal };
-  return null;
+function exactTerminal43(ledger) {
+  return [...(ledger.terminalHistory ?? [])].reverse().find((entry) =>
+    entry.operationId === OPERATION_ID &&
+    entry.lockScope === LOCK_SCOPE &&
+    entry.lockGeneration === LOCK_GENERATION &&
+    entry.scopeHash === SCOPE_HASH
+  ) ?? null;
 }
 
 const hashResult = spawnSync('git', ['hash-object', LOCK_MANAGER_PATH], { encoding: 'utf8' });
@@ -79,65 +80,84 @@ assert(request.lockScope === LOCK_SCOPE, 'REQUEST_LOCK_SCOPE_MISMATCH');
 assert(request.lockGeneration === LOCK_GENERATION, 'REQUEST_LOCK_GENERATION_MISMATCH');
 assert(request.terminalDisposition === TERMINAL_DISPOSITION, 'REQUEST_TERMINAL_DISPOSITION_MISMATCH');
 
-const before = await readLedger();
-const generation43Before = before.ledger.activeScopes?.[SCOPE_HASH] ?? null;
-assert(generation43Before !== null, 'GENERATION_43_ACTIVE_SCOPE_NOT_FOUND');
-assert(generation43Before.operationId === OPERATION_ID, 'GENERATION_43_OPERATION_ID_MISMATCH');
-assert(generation43Before.lockScope === LOCK_SCOPE, 'GENERATION_43_LOCK_SCOPE_MISMATCH');
-assert(generation43Before.lockGeneration === LOCK_GENERATION, 'GENERATION_43_LOCK_GENERATION_MISMATCH');
-assert(generation43Before.released === false, 'GENERATION_43_ALREADY_RELEASED');
-assert(generation43Before.state === 'ADMITTED_LOCKED', 'GENERATION_43_STATE_MISMATCH');
+let closureBytes;
+let closure;
+let executionMode;
+const currentBefore = await readLedgerAt(LOCK_BRANCH);
+const active43 = currentBefore.ledger.activeScopes?.[SCOPE_HASH] ?? null;
 
-const generation44Before = findGenerationRecord(before.ledger, 44);
-assert(generation44Before !== null, 'GENERATION_44_REFERENCE_NOT_FOUND');
-const generation44BeforeCanonical = canonical(generation44Before);
+if (active43) {
+  assert(active43.operationId === OPERATION_ID, 'GENERATION_43_OPERATION_ID_MISMATCH');
+  assert(active43.lockScope === LOCK_SCOPE, 'GENERATION_43_LOCK_SCOPE_MISMATCH');
+  assert(active43.lockGeneration === LOCK_GENERATION, 'GENERATION_43_LOCK_GENERATION_MISMATCH');
+  assert(active43.released === false, 'GENERATION_43_ALREADY_RELEASED');
+  assert(active43.state === 'ADMITTED_LOCKED', 'GENERATION_43_STATE_MISMATCH');
+  const commandArgs = [
+    LOCK_MANAGER_PATH,
+    '--action', 'close',
+    '--repository', REPOSITORY,
+    '--lock-ref', LOCK_REF,
+    '--operation-id', OPERATION_ID,
+    '--lock-scope', LOCK_SCOPE,
+    '--lock-generation', String(LOCK_GENERATION),
+    '--terminal-disposition', TERMINAL_DISPOSITION,
+    '--output', runtimeClosureOutput
+  ];
+  const execution = spawnSync(process.execPath, commandArgs, { encoding: 'utf8', env: process.env });
+  assert(execution.status === 0, `CANONICAL_CLOSE_COMMAND_FAILED:${execution.status}:${execution.stderr || execution.stdout}`);
+  assert(fs.existsSync(runtimeClosureOutput), 'CLOSURE_RECEIPT_MISSING');
+  closureBytes = fs.readFileSync(runtimeClosureOutput);
+  closure = JSON.parse(closureBytes.toString('utf8'));
+  executionMode = 'CANONICAL_CLOSE_EXECUTED_NOW';
+} else {
+  closureBytes = fs.readFileSync(EVIDENCE_PATH);
+  assert(sha256(closureBytes) === EVIDENCE_SHA256, 'BOUND_CLOSURE_EVIDENCE_DIGEST_MISMATCH');
+  closure = JSON.parse(closureBytes.toString('utf8'));
+  executionMode = 'PRIOR_CANONICAL_CLOSE_VERIFIED_NO_REEXECUTION';
+}
 
-const commandArgs = [
-  LOCK_MANAGER_PATH,
-  '--action', 'close',
-  '--repository', REPOSITORY,
-  '--lock-ref', LOCK_REF,
-  '--operation-id', OPERATION_ID,
-  '--lock-scope', LOCK_SCOPE,
-  '--lock-generation', String(LOCK_GENERATION),
-  '--terminal-disposition', TERMINAL_DISPOSITION,
-  '--output', closureOutput
-];
-const execution = spawnSync(process.execPath, commandArgs, {
-  encoding: 'utf8',
-  env: process.env
-});
-assert(execution.status === 0, `CANONICAL_CLOSE_COMMAND_FAILED:${execution.status}:${execution.stderr || execution.stdout}`);
-assert(fs.existsSync(closureOutput), 'CLOSURE_RECEIPT_MISSING');
-
-const closureBytes = fs.readFileSync(closureOutput);
-const closure = JSON.parse(closureBytes.toString('utf8'));
-assert(closure.schema === 'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1', 'CLOSURE_RECEIPT_SCHEMA_MISMATCH');
+assert(closure.schema === 'REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1', 'CLOSURE_RECEIPT_SCHEMA_MISMATCH');
 assert(closure.result === 'TERMINAL_CLOSURE_COMMITTED', `CLOSURE_RESULT_MISMATCH:${closure.result}`);
 assert(closure.operationId === OPERATION_ID, 'CLOSURE_OPERATION_ID_MISMATCH');
 assert(closure.lockScope === LOCK_SCOPE, 'CLOSURE_LOCK_SCOPE_MISMATCH');
 assert(closure.lockGeneration === LOCK_GENERATION, 'CLOSURE_LOCK_GENERATION_MISMATCH');
+assert(closure.scopeHash === SCOPE_HASH, 'CLOSURE_SCOPE_HASH_MISMATCH');
 assert(closure.terminalDisposition === TERMINAL_DISPOSITION, 'CLOSURE_TERMINAL_DISPOSITION_MISMATCH');
 assert(closure.lockReleased === true, 'CLOSURE_LOCK_RELEASE_FALSE');
+assert(closure.terminalHistoryPreserved === true, 'CLOSURE_TERMINAL_HISTORY_FALSE');
 
-const after = await readLedger();
-assert(after.ledger.activeScopes?.[SCOPE_HASH] === undefined, 'GENERATION_43_REMAINS_ACTIVE');
-const terminal43 = [...(after.ledger.terminalHistory ?? [])].reverse().find((entry) =>
-  entry.operationId === OPERATION_ID && entry.lockGeneration === LOCK_GENERATION
-);
-assert(terminal43 !== undefined, 'GENERATION_43_TERMINAL_HISTORY_MISSING');
+const before = await readLedgerAt(closure.observedBranchHead);
+const after = await readLedgerAt(closure.closureCommitSha);
+assert(before.ledgerBlobSha === closure.observedLedgerBlobSha, 'OBSERVED_LEDGER_BLOB_MISMATCH');
+assert(after.ledgerBlobSha === closure.committedLedgerBlobSha, 'COMMITTED_LEDGER_BLOB_MISMATCH');
+const before43 = before.ledger.activeScopes?.[SCOPE_HASH] ?? null;
+assert(before43 !== null, 'PRE_CLOSURE_GENERATION_43_MISSING');
+assert(before43.operationId === OPERATION_ID, 'PRE_CLOSURE_OPERATION_ID_MISMATCH');
+assert(before43.lockGeneration === LOCK_GENERATION, 'PRE_CLOSURE_GENERATION_MISMATCH');
+
+const expectedAfter = clone(before.ledger);
+delete expectedAfter.activeScopes[SCOPE_HASH];
+expectedAfter.terminalHistory.push(stable({
+  ...before43,
+  state: 'TERMINAL',
+  terminalDisposition: TERMINAL_DISPOSITION,
+  released: true
+}));
+assert(canonical(after.ledger) === canonical(expectedAfter), 'CLOSURE_COMMIT_MUTATED_UNRELATED_LEDGER_STATE');
+
+const current = await readLedgerAt(LOCK_BRANCH);
+assert(current.ledger.activeScopes?.[SCOPE_HASH] === undefined, 'GENERATION_43_REMAINS_ACTIVE');
+const terminal43 = exactTerminal43(current.ledger);
+assert(terminal43 !== null, 'GENERATION_43_TERMINAL_HISTORY_MISSING');
 assert(terminal43.state === 'TERMINAL', 'GENERATION_43_TERMINAL_STATE_MISMATCH');
 assert(terminal43.released === true, 'GENERATION_43_TERMINAL_RELEASE_FALSE');
 assert(terminal43.terminalDisposition === TERMINAL_DISPOSITION, 'GENERATION_43_TERMINAL_DISPOSITION_MISMATCH');
-
-const generation44After = findGenerationRecord(after.ledger, 44);
-assert(generation44After !== null, 'GENERATION_44_MISSING_AFTER_CLOSE');
-assert(canonical(generation44After) === generation44BeforeCanonical, 'GENERATION_44_MUTATED');
 
 const verification = stable({
   schema: 'CP9_GENERATION_43_TERMINATION_ROUTE_VERIFICATION_RECEIPT_v1',
   result: 'PASS_CLOSED_GENERATION_43_TERMINATED',
   authorityIssue: 580,
+  executionMode,
   repository: REPOSITORY,
   lockManagerPath: LOCK_MANAGER_PATH,
   lockManagerBlob: LOCK_MANAGER_BLOB,
@@ -149,20 +169,19 @@ const verification = stable({
   canonicalClosureReceiptSchema: closure.schema,
   canonicalClosureReceiptResult: closure.result,
   canonicalClosureReceiptSha256: sha256(closureBytes),
-  acquisitionLedgerBlob: before.ledgerBlobSha,
-  acquisitionLockRefHead: before.branchHead,
+  observedLedgerBlobSha: closure.observedLedgerBlobSha,
   closureCommitSha: closure.closureCommitSha,
   committedLedgerBlobSha: closure.committedLedgerBlobSha,
-  postClosureLockRefHead: after.branchHead,
   generation43PresentInActiveScopes: false,
   generation43PresentInTerminalHistory: true,
   generation43TerminalDisposition: terminal43.terminalDisposition,
-  generation44Location: generation44After.location,
-  generation44Unaffected: true,
+  allUnrelatedLedgerRecordsUnchangedByClosureCommit: true,
+  currentLockGeneration: current.ledger.lockGeneration,
   directLedgerEditingPerformed: false,
   lockAcquisitionPerformed: false,
   arbitraryLockSelectionAllowed: false,
   receiptRewritten: false,
+  closeCommandReexecutedAfterTerminalState: false,
   continuingOperationalAuthority: false
 });
 fs.writeFileSync(verificationOutput, `${JSON.stringify(verification, null, 2)}\n`);

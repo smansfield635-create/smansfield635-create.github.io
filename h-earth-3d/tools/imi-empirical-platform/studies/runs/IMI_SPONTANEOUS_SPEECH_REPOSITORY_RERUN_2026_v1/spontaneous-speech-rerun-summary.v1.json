@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_SUMMARY_v1",
+  "result": "PASS_CLOSED_SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026",
+  "runId": "IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_v1",
+  "sourceIdentity": {
+    "article": "The structure of spontaneous speech changes in Alzheimer's disease: Crosslingual evidence from English and Greek",
+    "doi": "10.1371/journal.pone.0324270",
+    "supplementaryDoi": "10.1371/journal.pone.0324270.s003",
+    "sourceFile": "pone.0324270.s003.csv",
+    "sourceBytes": 43331,
+    "sourceSha256": "8aeea454a7e52ce072fa19289976cb1a06adac0ea8103c7537ec5677b72b4e2d",
+    "sourceRowCount": 291,
+    "transformedRowsFingerprint": "fnv1a32:2794d453",
+    "downloadedAtRuntime": true
+  },
+  "routeIdentity": {
+    "routeId": "SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026_ROUTE_v1",
+    "routePath": "h-earth-3d/tools/imi-empirical-platform/routes/spontaneous-speech-current-repository-rerun-2026-route.v1.json",
+    "rankScope": "WITHIN_LANGUAGE",
+    "predictabilityResidualization": "SEPARATE_OLS_WITH_INTERCEPT_WITHIN_EACH_LANGUAGE_LOG_PPL_ON_BERT_TTR",
+    "engineWeakestFactorTiePolicy": "PRESERVE_ALL_EXACT_TIES",
+    "legacyComparisonTiePolicy": "FIRST_REQUIRED_FACTOR_IN_FROZEN_ROUTE_ORDER_ONLY_FOR_REPRODUCTION_COMPARISON"
+  },
+  "participantRows": 291,
+  "languageCounts": {
+    "EN": 237,
+    "EL": 54
+  },
+  "validCases": 291,
+  "unevaluableCases": 0,
+  "hardCollapseCases": 0,
+  "meanIMI": 0.04610435576562961,
+  "medianIMI": 0.01222066779727338,
+  "varianceIMI": 0.007303613747602853,
+  "minIMI": 2.4516814816295556e-7,
+  "maxIMI": 0.6482279061159013,
+  "uniqueIMIValues": 291,
+  "legacyTieResolvedWeakestFactorCounts": {
+    "ADJUSTED_PREDICTABILITY_AVAILABILITY": 65,
+    "CONTEXTUAL_BREADTH_AVAILABILITY": 70,
+    "CONCEPTUAL_BREADTH_AVAILABILITY": 72,
+    "SYNTACTIC_ORGANIZATION_AVAILABILITY": 47,
+    "VISUAL_GROUNDING_AVAILABILITY": 37
+  },
+  "engineNativeWeakestFactorCounts": {
+    "ADJUSTED_PREDICTABILITY_AVAILABILITY": 65,
+    "CONTEXTUAL_BREADTH_AVAILABILITY": 69,
+    "CONCEPTUAL_BREADTH_AVAILABILITY": 69,
+    "SYNTACTIC_ORGANIZATION_AVAILABILITY": 47,
+    "VISUAL_GROUNDING_AVAILABILITY": 36,
+    "TIE:VISUAL_GROUNDING_AVAILABILITY|SYNTACTIC_ORGANIZATION_AVAILABILITY": 1,
+    "TIE:CONCEPTUAL_BREADTH_AVAILABILITY|CONTEXTUAL_BREADTH_AVAILABILITY": 3,
+    "TIE:CONTEXTUAL_BREADTH_AVAILABILITY|SYNTACTIC_ORGANIZATION_AVAILABILITY": 1
+  },
+  "weakestFactorTieDiagnostics": {
+    "tieCases": 5,
+    "tiePatternCounts": {
+      "VISUAL_GROUNDING_AVAILABILITY|SYNTACTIC_ORGANIZATION_AVAILABILITY": 1,
+      "CONCEPTUAL_BREADTH_AVAILABILITY|CONTEXTUAL_BREADTH_AVAILABILITY": 3,
+      "CONTEXTUAL_BREADTH_AVAILABILITY|SYNTACTIC_ORGANIZATION_AVAILABILITY": 1
+    }
+  },
+  "legacyReproductionAbsoluteDeltas": {
+    "meanIMI": 3.557656296088174e-7,
+    "medianIMI": 3.3220272661893535e-7,
+    "varianceIMI": 3.8625239714637494e-7,
+    "minIMI": 3.185183704444229e-11,
+    "maxIMI": 9.388409871746717e-8
+  },
+  "determinations": {
+    "rawPublishedFeatureFileRerun": true,
+    "currentRepositoryEngineUsed": true,
+    "legacyNumericResultsReproducedWithinFrozenTolerance": true,
+    "domainVarianceMaterial": true,
+    "weakestFactorDiversity": true,
+    "exactWeakestFactorTiesPreserved": true,
+    "clinicalValidationEstablished": false,
+    "naturalDiagnosticCategoriesEstablished": false
+  },
+  "workflowEvidence": {
+    "verifiedHeadSha": "c20b1473a2179f661f28ca6a64172119e753f191",
+    "workflowName": "H-Earth IMI Empirical Platform",
+    "workflowRunId": 31027515220,
+    "workflowJobId": 92379638129,
+    "workflowConclusion": "success",
+    "speechStepConclusion": "success",
+    "collectiveCompletionStepConclusion": "success",
+    "artifactName": "imi-empirical-platform-operational-evidence",
+    "artifactId": 8939256602,
+    "artifactSha256": "387d42847ecba054f9b2b63746978e961b8a7f00c2706bc5b8cc762f8313f30c"
+  },
+  "boundaries": {
+    "reproductionClass": "REPOSITORY_REPRODUCTION_OF_EXPLORATORY_ROUTE",
+    "finalValidationClaimed": false,
+    "diagnosisOrClinicalDiscriminationClaimed": false,
+    "terminalIMI7Assigned": false,
+    "rawAudioOrTranscriptLoaded": false,
+    "mainMerged": false,
+    "liveWebsiteOperational": false
+  }
+}

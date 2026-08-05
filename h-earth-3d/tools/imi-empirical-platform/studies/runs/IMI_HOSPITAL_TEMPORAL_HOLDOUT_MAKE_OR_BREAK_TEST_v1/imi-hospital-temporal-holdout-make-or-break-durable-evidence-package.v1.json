@@ -1,0 +1,123 @@
+{
+  "schemaVersion": "IMI_HOSPITAL_TEMPORAL_HOLDOUT_MAKE_OR_BREAK_DURABLE_EVIDENCE_PACKAGE_v1",
+  "operation": "IMI_HOSPITAL_TEMPORAL_HOLDOUT_MAKE_OR_BREAK_TEST_v1",
+  "terminalDisposition": "FAIL_STOP_AND_ARCHIVE_GENERAL_IMI_PREDICTIVE_AND_SCALE_DEVELOPMENT_PROGRAM",
+  "scientificDecision": {
+    "continueProgram": false,
+    "stopAndArchiveProgram": true,
+    "generalPredictiveAuthority": "NOT_ESTABLISHED_AND_PROGRAM_TERMINATED",
+    "generalPredictiveAndScaleDevelopmentProgram": "STOP_AND_ARCHIVE",
+    "instrumentDeletionAuthorized": false,
+    "archivePreservationRequired": true
+  },
+  "constructionIdentity": {
+    "preFreezeSubjectHead": "0e4db2fe44b2b5b9b2012a7fcc117115df703bd5",
+    "protocolFreezeCommit": "ea668d148782acc0e23766a6681c9f5b3d42b04e",
+    "runnerCommit": "d0e5fab557854488890f384fa35b40f0d08f8a2b",
+    "workflowAndExecutionHead": "71727cf3448ec469760a0e5c46ad0df5ff7c9cce",
+    "branch": "instrument/imi-empirical-platform-v1",
+    "pullRequest": 589
+  },
+  "workflowEvidence": {
+    "workflow": "H-Earth IMI Hospital Temporal Holdout Make-or-Break",
+    "runId": 31055278656,
+    "jobId": 92471317222,
+    "conclusion": "success",
+    "artifactId": 8950048252,
+    "artifactName": "imi-hospital-temporal-holdout-make-or-break",
+    "artifactBytes": 59957,
+    "artifactSha256": "fe111fbc962e1d20624abc463bc0ecd733c5144974db7bacf8c88a6058a5f82a"
+  },
+  "exactEvidenceIdentity": {
+    "resultFileSha256": "57c02154fc7684f79564f75e5cabd3627bf1c3c438d3e42c7955c4845b4ba3bb",
+    "sourceIdentityFileSha256": "1b8ba1d74b1e14ac5aeb21e7024c92badd5213cc9a6c050da9eacd5c53e22b70",
+    "resultPackageSha256": "bf87f1f1b7f4e4b3b0b27dd13aead640b675a51136c387d5b65fd2cc093b8af0",
+    "protocolSha256": "ef07b5afb5203914fba5006f0639e9215ffe433940ecac8ba491040957ecee8f",
+    "routeGitBlobSha": "698e11bcc7b1609dd7ddc6458387349131ff8ea1",
+    "routeSha256": "c2827014c3315d1a233ca39be61b536656f23dd1d1c11c04b26732e7d743f2bf"
+  },
+  "analysisPopulation": {
+    "baselineEligible": 557,
+    "heldOutEligible": 605,
+    "pairedInstitutions": 554,
+    "baselineRetentionFraction": 0.9946140035906643,
+    "reviewBudgetCount": 111,
+    "primaryOutcomePositiveCount": 196,
+    "laterMortalityTopCount": 111,
+    "laterSafetyTopCount": 111
+  },
+  "primaryTest": {
+    "metric": "RECALL_OF_HELD_OUT_HIGH_ADVERSE_HOSPITALS_WITHIN_FIXED_REVIEW_BUDGET",
+    "recalls": {
+      "IMI_RISK": 0.4744897959183674,
+      "ADDITIVE_RISK": 0.4744897959183674,
+      "WEAKEST_FACTOR_RISK": 0.42346938775510207,
+      "BASELINE_MORTALITY_RISK": 0.3979591836734694,
+      "BASELINE_SAFETY_RISK": 0.4642857142857143,
+      "GEOMETRIC_MEAN_CONTROL": 0.4744897959183674
+    },
+    "bestNonEquivalentComparator": "ADDITIVE_RISK",
+    "imiMinusBestComparator": 0.0,
+    "minimumRequiredImprovement": 0.05,
+    "pairedBootstrap": {
+      "requestedReplicates": 2000,
+      "validReplicates": 2000,
+      "seed": 20260805,
+      "lower95": 0.0,
+      "median": 0.0,
+      "upper95": 0.0
+    },
+    "geometricMeanControlRankingIdentical": true,
+    "pass": false
+  },
+  "secondaryAssociations": {
+    "IMI_RISK": {
+      "spearmanWithHeldOutMortality": 0.7997837501256513,
+      "spearmanWithHeldOutSafety": 0.5068643310494942
+    },
+    "ADDITIVE_RISK": {
+      "spearmanWithHeldOutMortality": 0.7986882645981832,
+      "spearmanWithHeldOutSafety": 0.5104684290836874
+    },
+    "WEAKEST_FACTOR_RISK": {
+      "spearmanWithHeldOutMortality": 0.8102848552171041,
+      "spearmanWithHeldOutSafety": 0.420636782213777
+    },
+    "BASELINE_MORTALITY_RISK": {
+      "spearmanWithHeldOutMortality": 0.8395251240190313,
+      "spearmanWithHeldOutSafety": 0.37608337406732095
+    },
+    "BASELINE_SAFETY_RISK": {
+      "spearmanWithHeldOutMortality": 0.3248374867979415,
+      "spearmanWithHeldOutSafety": 0.7685039522845323
+    },
+    "GEOMETRIC_MEAN_CONTROL": {
+      "spearmanWithHeldOutMortality": 0.7997837501256513,
+      "spearmanWithHeldOutSafety": 0.5068643310494942
+    }
+  },
+  "empiricalInterpretation": {
+    "imiProducedStrongTemporalAssociationInThisHospitalPanel": true,
+    "imiAddedValueBeyondBestComparator": false,
+    "imiAndAdditivePrimaryRecallIdentical": true,
+    "imiAndGeometricMeanRankingIdenticalByAlgebra": true,
+    "primaryFailureReason": "ZERO_INCREMENTAL_RECALL_OVER_ADDITIVE_RISK_UNDER_THE_FROZEN_20_PERCENT_REVIEW_BUDGET",
+    "currentHeldOutPredictiveRecord": {
+      "beeLongerPanel": "NEGATIVE_NO_RELIABLE_HELD_OUT_ASSOCIATION",
+      "hospitalTemporalHoldout": "FAIL_NO_INCREMENTAL_VALUE_OVER_ADDITIVE_COMPARATOR",
+      "positiveTests": 0,
+      "totalTests": 2
+    }
+  },
+  "boundaries": {
+    "protocolFrozenBeforeOutcomeExecution": true,
+    "routeRetuned": false,
+    "thresholdRetuned": false,
+    "scientificFailureConvertedToExecutionFailure": false,
+    "causalClaimMade": false,
+    "clinicalUseClaimed": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  },
+  "durablePackageSha256": "d5981c2f7a7ede6ed832660ff0c00d2fe4f08cf69f21644a1bd4db9b0d4a257f"
+}

@@ -1,0 +1,88 @@
+name: PR570 Ratification Lineage Defect Fixed Termination
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  terminate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact carrier identity
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git diff --name-only 2c4e5a21e4e902bee421528498c112998fa783bc HEAD)" = ".github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml"
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
+      - name: Close defective generation 117 FAIL_CLOSED
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "${{ github.repository }}" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id H_EARTH_MAP_WIDE_INSTRUMENT_FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION_v1 \
+              --lock-scope 'H_EARTH:MAP_WIDE_INSTRUMENT:FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION:V1' \
+              --lock-generation 117 \
+              --terminal-disposition FAIL_CLOSED \
+              --output /tmp/generation-117-closure.json; then break; fi
+            test "$attempt" -lt 3
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/generation-117-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true)process.exit(1)"
+      - name: Close termination generation 121 PASS_CLOSED
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "${{ github.repository }}" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id H_EARTH_PR570_RATIFICATION_LINEAGE_DEFECT_TERMINATION_T_001 \
+              --lock-scope 'H_EARTH:PR570_RATIFICATION_LINEAGE_DEFECT:TERMINATION:T:V1' \
+              --lock-generation 121 \
+              --terminal-disposition PASS_CLOSED \
+              --output /tmp/generation-121-closure.json; then break; fi
+            test "$attempt" -lt 3
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/generation-121-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true)process.exit(1)"
+      - name: Emit authority termination receipt
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const defective=JSON.parse(fs.readFileSync('/tmp/generation-117-closure.json','utf8'));
+          const current=JSON.parse(fs.readFileSync('/tmp/generation-121-closure.json','utf8'));
+          const receipt={schema:'PR570_RATIFICATION_LINEAGE_DEFECT_AUTHORITY_TERMINATION_RECEIPT_v1',result:'PASS_CLOSED_DEFECTIVE_OPERATION_TERMINATED',defectiveGeneration:117,defectiveTerminalDisposition:'FAIL_CLOSED',terminationGeneration:121,terminationTerminalDisposition:'PASS_CLOSED',defectiveClosureCommit:defective.closureCommitSha,terminationClosureCommit:current.closureCommitSha,preservedSuccessorPr:602,preservedSuccessorMerged:false,repositoryMutationPerformed:false,mergePerformed:false,residualAuthority:false};
+          receipt.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+          fs.writeFileSync('/tmp/authority-termination.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-ratification-lineage-defect-termination-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/generation-117-closure.json
+            /tmp/generation-121-closure.json
+            /tmp/authority-termination.json
+          if-no-files-found: error
+          retention-days: 90

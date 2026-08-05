@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import registryFacade from './accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head.js';
+import registryFacade from './accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js';
 import {
   H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_SCOPE_NODE as EXACT_HEAD_NODE,
   H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE as EXACT_HEAD_EVIDENCE,

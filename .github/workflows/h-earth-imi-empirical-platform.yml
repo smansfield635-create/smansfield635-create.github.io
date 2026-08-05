@@ -80,6 +80,18 @@ jobs:
             --output-dir /tmp/imi-existing-four-domain-portfolio-completion \
             2>&1 | tee /tmp/imi-existing-four-domain-portfolio-completion.log
 
+      - name: Execute Phase 1 multi-domain empirical portfolio synthesis
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runner.mjs \
+            --hospital-dir /tmp/imi-cms-hospital-refresh-2026 \
+            --bee-dir /tmp/imi-usda-honey-bee-refresh-2026 \
+            --dssi-dir /tmp/imi-dssi-sovereign-debt-service-expansion-2026 \
+            --speech-dir /tmp/imi-spontaneous-speech-rerun-2026 \
+            --output-dir /tmp/imi-multi-domain-portfolio-synthesis \
+            2>&1 | tee /tmp/imi-multi-domain-portfolio-synthesis.log
+
       - name: Upload IMI empirical platform operational evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -98,4 +110,6 @@ jobs:
             /tmp/imi-spontaneous-speech-rerun-2026/**
             /tmp/imi-existing-four-domain-portfolio-completion.log
             /tmp/imi-existing-four-domain-portfolio-completion/**
+            /tmp/imi-multi-domain-portfolio-synthesis.log
+            /tmp/imi-multi-domain-portfolio-synthesis/**
           retention-days: 90

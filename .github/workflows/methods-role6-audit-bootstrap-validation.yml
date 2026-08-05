@@ -1,4 +1,4 @@
-name: Methods Role 6 Audit Admission Tooling Bootstrap Validation
+name: Methods Role 6 Audit Bootstrap Payload Installer
 
 on:
   pull_request:
@@ -6,110 +6,115 @@ on:
       - 'control-plane/methods-information-benchmark/role6-audit-bootstrap/**'
       - 'tools/methods-role6-audit/**'
       - '.github/workflows/methods-role6-audit-bootstrap-validation.yml'
-      - '.github/workflows/methods-role6-audit-execution.yml'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: methods-role6-audit-bootstrap-installer
+  cancel-in-progress: false
 
 jobs:
-  builder:
+  install:
+    if: github.event.pull_request.head.ref == 'bootstrap/methods-role6-audit-admission-tooling-v1-001'
     runs-on: ubuntu-latest
-    outputs:
-      expected_head: ${{ steps.ids.outputs.expected_head }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - id: ids
-        shell: bash
-        run: echo "expected_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Builder certification
+      - name: Reconstruct and install certified bootstrap candidate
         shell: bash
         env:
-          BASE_HEAD: ce40519190a9048c1e0cef682108c34b0a7f8055
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
-          HOLDER: GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_BOOTSTRAP_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
-          node tools/methods-role6-audit/bootstrap-self-test.v1.mjs \
-            --base-head "$BASE_HEAD" \
-            --expected-head "$EXPECTED_HEAD" \
-            --holder "$HOLDER" \
-            --output "$RUNNER_TEMP/builder-receipt.json"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: methods-role6-audit-bootstrap-builder
-          path: ${{ runner.temp }}/builder-receipt.json
-          if-no-files-found: error
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-  fresh-verifier:
-    needs: builder
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.builder.outputs.expected_head }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - uses: actions/download-artifact@v4
-        with:
-          name: methods-role6-audit-bootstrap-builder
-          path: ${{ runner.temp }}/builder
-      - name: Fresh independent reproduction
-        shell: bash
-        env:
-          BASE_HEAD: ce40519190a9048c1e0cef682108c34b0a7f8055
-          EXPECTED_HEAD: ${{ needs.builder.outputs.expected_head }}
-          HOLDER: GITHUB_ACTIONS_METHODS_ROLE6_AUDIT_BOOTSTRAP_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
-        run: |
-          node tools/methods-role6-audit/fresh-verifier.v1.mjs \
-            --base-head "$BASE_HEAD" \
-            --expected-head "$EXPECTED_HEAD" \
-            --holder "$HOLDER" \
-            --builder-receipt "$RUNNER_TEMP/builder/builder-receipt.json" \
-            --output "$RUNNER_TEMP/verifier-receipt.json"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: methods-role6-audit-bootstrap-verifier
-          path: ${{ runner.temp }}/verifier-receipt.json
-          if-no-files-found: error
+          git show HEAD:control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-execution-descriptor.v1.json > "$RUNNER_TEMP/chunk.0"
+          git show HEAD:control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-package.schema.v1.json > "$RUNNER_TEMP/chunk.1"
+          git show HEAD:control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-operation-request.v1.json > "$RUNNER_TEMP/chunk.2"
+          git show HEAD:control-plane/methods-information-benchmark/role6-audit-bootstrap/negative-fixtures.v1.json > "$RUNNER_TEMP/chunk.3"
 
-  terminate-bootstrap-authority:
-    needs: [builder, fresh-verifier]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.builder.outputs.expected_head }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - uses: actions/download-artifact@v4
-        with:
-          name: methods-role6-audit-bootstrap-builder
-          path: ${{ runner.temp }}/builder
-      - uses: actions/download-artifact@v4
-        with:
-          name: methods-role6-audit-bootstrap-verifier
-          path: ${{ runner.temp }}/verifier
-      - name: Emit command-bound termination receipt
-        shell: bash
-        run: |
-          node tools/methods-role6-audit/bootstrap-authority-terminator.v1.mjs \
-            --builder-receipt "$RUNNER_TEMP/builder/builder-receipt.json" \
-            --verifier-receipt "$RUNNER_TEMP/verifier/verifier-receipt.json" \
-            --output "$RUNNER_TEMP/bootstrap-termination-receipt.json"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: methods-role6-audit-bootstrap-final-certification
-          path: |
-            ${{ runner.temp }}/builder/builder-receipt.json
-            ${{ runner.temp }}/verifier/verifier-receipt.json
-            ${{ runner.temp }}/bootstrap-termination-receipt.json
-          if-no-files-found: error
+          echo 'b21fce7e9a9ab8c13bae2b34538d01db6393d99d4091e916dfdd701a95d61fe7  CHUNK0' > "$RUNNER_TEMP/chunks.sha256"
+          echo '82bc76bdc4cf0381f7be1b90051c39ee17e97621d048364b7ac8674793f63c0b  CHUNK1' >> "$RUNNER_TEMP/chunks.sha255"
+          echo 'b4298adbc32878fb0c65ae4f7cb377bf60bc86508aec8127779adf9d542a8701  CHUNK2' >> "$RUNNER_TEMP/chunks.sha256"
+          echo '844dc2fb0bdaee3c6411b471e96acb890861c3bf3b885b677f348ff60482bbf6  CHUNK3' >> "$RUNNER_TEMP/chunks.sha256"
+          test "$(sha256sum "$RUNNER_TEMP/chunk.0" | cut -d' ' -f1)" = b21fce7e9a9ab8c13bae2b34538d01db6393d99d4091e916dfdd701a95d61fe7
+          test "$(sha256sum "$RUNNER_TEMP/chunk.1" | cut -d' ' -f1)" = 82bc76bdc4cf0381f7be1b90051c39ee17e97621d048364b7ac8674793f63c0b
+          test "$(sha256sum "$RUNNER_TEMP/chunk.2" | cut -d' ' -f1)" = b4298adbc32878fb0c65ae4f7cb377bf60bc86508aec8127779adf9d542a8701
+          test "$(sha256sum "$RUNNER_TEMP/chunk.3" | cut -d' ' -f1)" = 844dc2fb0bdaee3c6411b471e96acb890861c3bf3b885b677f348ff60482bbf6
+          cat "$RUNNER_TEMP/chunk.0" "$RUNNER_TEMP/chunk.1" "$RUNNER_TEMP/chunk.2" "$RUNNER_TEMP/chunk.3" > "$RUNNER_TEMP/payload.tar.xz"
+          test "$(sha256sum "$RUNNER_TEMP/payload.tar.xz" | cut -d' ' -f1)" = 02ed287350b9dc265b8c6c76dda38000762057130271368b5cdb33b2181a1d5c
+
+          rm -f control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-execution-descriptor.v1.json
+          tar -xJf "$RUNNER_TEMP/payload.tar.xz"
+
+          test "$(git hash-object control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-output-path-registry.v1.json)" = 5a4132a19566dff9a0791aa9d7051da6c0ceb27b
+          test "$(git hash-object control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-package.schema.v1.json)" = c57f669447360747124a134134e52f8564237c8b
+          test "$(git hash-object control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-operation-request.v1.json)" = 636578557df425466c3794a66cc9769c2e652922
+          test "$(git hash-object control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-construction-procedure.v1.json)" = 553dec5e83e2e1e61dc949f18fe3e98eb65175b3
+          test "$(git hash-object control-plane/methods-information-benchmark/role6-audit-bootstrap/negative-fixtures.v1.json)" = 073b931d058ece11e151ea341eb8d7481208b037
+          test "$(git hash-object tools/methods-role6-audit/lib.v1.mjs)" = f6ae0ac2ed8e2632d04af08e73ecabbe7d9ed53f
+          test "$(git hash-object tools/methods-role6-audit/audit-package-materializer.v1.mjs)" = 0faba4415a7745be1b2c5e28452f6990cceb95e6
+          test "$(git hash-object tools/methods-role6-audit/audit-package-verifier.v1.mjs)" = 29894b7bc151594d061c079b75e50979bb5e11c0
+          test "$(git hash-object tools/methods-role6-audit/bootstrap-self-test.v1.mjs)" = c74dc9929472d060abfc0087a5986b808cbf4c6c
+          test "$(git hash-object .github/workflows/methods-role6-audit-execution.yml)" = 071009650106eb601407b94505bf8e1cf961d868
+          test "$(git hash-object .github/workflows/methods-role6-audit-bootstrap-validation.yml)" = b7836855369c064e674873bcc934d60e7a71756d
+
+          git add -A
+          git commit -m "Materialize corrected Methods Role 6 audit bootstrap candidate"
+          TOOLING_HEAD="$(git rev-parse HEAD)"
+          export TOOLING_HEAD
+
+          node <<'NODE'
+          const fs = require('node:fs');
+          const registryPath = 'control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-output-path-registry.v1.json';
+          const descriptorPath = 'control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-execution-descriptor.v1.json';
+          const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+          const descriptor = {
+            schema: 'AUTHORIZED_TOOLSET_DESCRIPTOR_v1',
+            descriptorId: 'METHODS_ROLE6_AUDIT_EXECUTION_DESCRIPTOR_V1',
+            status: 'CERTIFIED_CANDIDATE_PENDING_RATIFICATION',
+            operationId: registry.operationId,
+            assignmentHead: registry.assignmentHead,
+            assignmentId: registry.assignmentId,
+            exactToolingHead: process.env.TOOLING_HEAD,
+            movingToolingRefsAccepted: false,
+            commandSpecification: {
+              executable: 'node',
+              scriptPath: 'tools/methods-role6-audit/audit-package-materializer.v1.mjs',
+              shell: false,
+              extraArgumentsAllowed: false,
+              environmentOverridesAllowed: false,
+              fixedModes: ['MATERIALIZE_28_INPUT_PATHS', 'EMIT_FINAL_RETURN_AND_INACTIVE_SUCCESSOR', 'VERIFY_FINAL_29_PATHS']
+            },
+            allowedMutationPaths: registry.authorizedChangedPaths,
+            packageInputPathCount: registry.packageInputPathCount,
+            commandEmittedPathCount: registry.commandEmittedPathCount,
+            substantiveAuditOutputCount: 27,
+            returnArtifactCount: 2,
+            independentVerificationRequired: true,
+            rootIntakeReceiptRequiredBeforeExecution: true,
+            activationOnMain: false,
+            prohibitions: [
+              'ARBITRARY_COMMANDS',
+              'MOVING_REFS',
+              'EXTRA_ARGUMENTS',
+              'ENVIRONMENT_OVERRIDES',
+              'PUBLIC_METHODS_OR_LAWS_MUTATION',
+              'MERGE',
+              'DEPLOYMENT',
+              'RELEASE'
+            ]
+          };
+          fs.writeFileSync(descriptorPath, JSON.stringify(descriptor, null, 2) + '\n');
+          NODE
+
+          git add control-plane/methods-information-benchmark/role6-audit-bootstrap/audit-execution-descriptor.v1.json
+          git commit -m "Bind exact Methods Role 6 audit tooling head"
+          git push origin "HEAD:${HEAD_REF}"

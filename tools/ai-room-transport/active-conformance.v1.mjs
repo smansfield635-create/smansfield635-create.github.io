@@ -8,7 +8,7 @@ import { resolveToolset } from './toolset-resolver.v1.mjs';
 
 const GENESIS_BASE = '56b6ab1f192aec994af0c537dd7c9dad1be14d7f';
 const GENESIS_HEAD = '1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500';
-const GENESIS_TREE = '7fa3fb262f24bebd3425a05e67ec16a430defcf5';
+const GENESIS_TREE = '476c1ef4d7e81db57b0f763d6a94f475ea317d1c';
 const MANIFEST_BLOB = '12f433ab0031c2f77b93362408be4503fce1d0e0';
 const BASE = '.github/ai-toolset-transport';
 const REGISTRY_PATH = `${BASE}/authorized-toolset-registry.v1.json`;

@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import registryFacade, {
   H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_SCOPE_NODE as EXACT_HEAD_NODE,
   H_EARTH_C2_R1_MATERIAL_ONLY_BINDING_EXACT_HEAD_EVIDENCE as EXACT_HEAD_EVIDENCE
-} from './accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js';
+} from './accepted-amendments/h-earth.repository-registry.imi-empirical-platform-scope.js';
 import { deepFreeze, H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_ENGINE_IDENTITY } from './h-earth.repository-registry.validator-engine.identity.js';
 
 const directory=path.dirname(fileURLToPath(import.meta.url));

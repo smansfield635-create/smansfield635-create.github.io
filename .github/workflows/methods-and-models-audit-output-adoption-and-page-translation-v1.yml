@@ -1,0 +1,48 @@
+name: Methods and Models Audit Output Adoption and Page Translation v1
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - materialization/methods-adoption-translation-v1-001
+    paths:
+      - '.github/workflows/methods-and-models-audit-output-adoption-and-page-translation-v1.yml'
+      - 'control-plane/methods-information-benchmark/adoption-and-page-translation-v1/**'
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_PACKAGE_FINGERPRINT: 4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e
+  GENERATION_58: '58'
+  INFRASTRUCTURE_GENERATION_64: '64'
+  INFRASTRUCTURE_OPERATION: METHODS_INFORMATION_BENCHMARK_ROUTER_REGISTRATION_AND_ADOPTION_TRANSLATION_PACKAGE_MATERIALIZATION_v1
+
+jobs:
+  custody-boundary:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify nonpublic adoption and translation custody boundary
+        run: |
+          set -euo pipefail
+          test -f control-plane/methods-information-benchmark/adoption-and-page-translation-v1/adoption-register.v1.json
+          test -f control-plane/methods-information-benchmark/adoption-and-page-translation-v1/page-translation-model.v1.json
+          test -f control-plane/methods-information-benchmark/adoption-and-page-translation-v1/rolodex-information-map.v1.json
+          test -f control-plane/methods-information-benchmark/adoption-and-page-translation-v1/review-summary.v1.json
+          test -f control-plane/methods-information-benchmark/adoption-and-page-translation-v1/review-package.v1.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const root = 'control-plane/methods-information-benchmark/adoption-and-page-translation-v1/';
+          const adoption = JSON.parse(fs.readFileSync(root + 'adoption-register.v1.json'));
+          const summary = JSON.parse(fs.readFileSync(root + 'review-summary.v1.json'));
+          const manifest = JSON.parse(fs.readFileSync(root + 'review-package.v1.json'));
+          if (adoption.entries?.length !== 27 || adoption.counts?.total !== 27) process.exit(1);
+          if (adoption.sourceBinding?.role6State !== 'INACTIVE' || adoption.sourceBinding?.role6Reopened !== false) process.exit(1);
+          if (manifest.packageFingerprintSha256 !== process.env.SOURCE_PACKAGE_FINGERPRINT) process.exit(1);
+          const b = summary.stoppingBoundary || {};
+          if (b.publicMethodsMutation !== 'NONE' || b.publicLawsMutation !== 'NONE' || b.implementation !== 'NONE' || b.deployment !== 'NONE' || b.release !== 'NONE') process.exit(1);
+          NODE

@@ -1,0 +1,46 @@
+{
+  "schema": "METHODS_AND_MODELS_ADOPTION_REVIEW_PACKAGE_MANIFEST_v1",
+  "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
+  "status": "NONREPOSITORY_CANDIDATE_PACKAGE",
+  "packageFingerprintSha256": "4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e",
+  "files": [
+    {
+      "path": "METHODS_AND_MODELS_ADOPTION_REVIEW_REPORT_v1.md",
+      "size": 9622,
+      "sha256": "c2693bab059779a9aa451cf2473eac2518cb106280fd0114241a6c8588aec830"
+    },
+    {
+      "path": "adoption-register.v1.json",
+      "size": 25547,
+      "sha256": "cc19bf09bc34a9102af9362dde9232eeb8d98a4aac653d6d5b38efcaa6d64c04"
+    },
+    {
+      "path": "fresh-reproduction.receipt.v1.json",
+      "size": 1839,
+      "sha256": "d3923eb714abbd1a7fc3ea86a1558e6be040ff6f7ee04aca460d169b9b42ec3c"
+    },
+    {
+      "path": "page-translation-model.v1.json",
+      "size": 4935,
+      "sha256": "fce9c0a553ce8b304c82528db830717e21575d3c2474818a7345316355371403"
+    },
+    {
+      "path": "repository-router-blocker.receipt.v1.json",
+      "size": 1492,
+      "sha256": "7703fa6bcd4eee169a7968886a437afaf7cedf89c288715d60983ace5ba44690"
+    },
+    {
+      "path": "review-summary.v1.json",
+      "size": 2163,
+      "sha256": "4fb40160d4b63b49a401b889d67e2384f1697dd771d0c22845976d5d9fdb36d1"
+    },
+    {
+      "path": "rolodex-information-map.v1.json",
+      "size": 4438,
+      "sha256": "bd79f8e88e3a42567884b7332569631583560685f115b45c3f7184b231c0ade0"
+    }
+  ],
+  "sourceAuditHead": "7eee0e3f7a8c37e548e7721f1f5c2df69b2a310a",
+  "repositoryMaterialized": false,
+  "operationClosed": false
+}

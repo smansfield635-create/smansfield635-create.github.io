@@ -1,0 +1,155 @@
+{
+  "schema": "METHODS_AND_MODELS_ROLODEX_INFORMATION_MAP_v1",
+  "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
+  "status": "PHASE_4_COMPLETE_NONPUBLIC_INTERACTION_MAP",
+  "sourceAuditHead": "7eee0e3f7a8c37e548e7721f1f5c2df69b2a310a",
+  "interactionSequence": [
+    "BROWSE",
+    "SELECT",
+    "FOCUS",
+    "IMMERSION",
+    "RETURN"
+  ],
+  "objectClasses": [
+    {
+      "class": "FORMAL_RECORD",
+      "role": "PRIMARY_DESTINATION",
+      "count": 25,
+      "identitySourceOrdinal": 1,
+      "selectionResult": "CREATE_FOCUS_STATE_WITH_LAWFUL_CONTEXT"
+    },
+    {
+      "class": "CONCEPTUAL_FAMILY",
+      "role": "PRIMARY_NAVIGATION_FRAME",
+      "count": 4,
+      "identitySourceOrdinal": 3,
+      "selectionResult": "FILTER_CORPUS_WITHOUT_ASSERTING_DEPENDENCY"
+    },
+    {
+      "class": "QUESTION_INTENT_ROUTE",
+      "role": "ALTERNATE_ENTRY",
+      "count": 16,
+      "identitySourceOrdinal": 8,
+      "selectionResult": "RETURN_ALL_LAWFULLY_RELEVANT_RECORDS_WITH_DEPENDENCY_CONTEXT"
+    },
+    {
+      "class": "FORMAL_TYPE",
+      "role": "CONTEXTUAL",
+      "identitySourceOrdinal": 2,
+      "selectionResult": "EXPLAIN_RECORD_KIND"
+    },
+    {
+      "class": "DEPENDENCY_EDGE_OR_EXPLICIT_NONEDGE",
+      "role": "CONTEXTUAL_RELATION",
+      "identitySourceOrdinal": 4,
+      "selectionResult": "EXPAND_OR_LIMIT_FOCUS_NEIGHBORHOOD"
+    },
+    {
+      "class": "HOLD_EVIDENCE_OR_CAUSAL_STATUS",
+      "role": "CONTEXTUAL_BOUNDARY",
+      "identitySourceOrdinals": [
+        9,
+        27
+      ],
+      "selectionResult": "SHOW_WHAT_IS_CONFIRMED_HELD_OR_UNRESOLVED"
+    },
+    {
+      "class": "DEVELOPMENTAL_TRACE",
+      "role": "CONTEXTUAL_HISTORY",
+      "identitySourceOrdinals": [
+        22,
+        24,
+        25,
+        26
+      ],
+      "selectionResult": "SHOW_INTENT_OUTCOME_DISPOSITION_AND_SUCCESSOR_REQUIREMENT"
+    },
+    {
+      "class": "INTERPRETIVE_LENS",
+      "role": "CONTEXTUAL_VIEW_ONLY",
+      "count": 3,
+      "identitySourceOrdinal": 1,
+      "selectionResult": "CHANGE_EXPLANATORY_VIEW_WITHOUT_CHANGING_FORMAL_RELATION"
+    }
+  ],
+  "states": [
+    {
+      "state": "BROWSE",
+      "requiredView": [
+        "FOUR_FAMILIES",
+        "FULL_25_RECORD_AVAILABILITY",
+        "VISIBLE_HOLD_OR_SOURCE_STATE_CUES"
+      ],
+      "prohibitions": [
+        "NO_IMPLIED_TOTAL_LINEAR_CHAIN",
+        "NO_VISUAL_PROXIMITY_AUTHORITY"
+      ]
+    },
+    {
+      "state": "SELECT",
+      "entryBy": [
+        "RECORD",
+        "FAMILY",
+        "QUESTION_INTENT"
+      ],
+      "requiredAction": "CAPTURE_EXACT_ORIGIN_SNAPSHOT_BEFORE_TRANSITION",
+      "output": "SELECTED_OBJECT_SET_AND_RETURN_TOKEN"
+    },
+    {
+      "state": "FOCUS",
+      "requiredView": [
+        "SELECTED_PRIMARY_RECORD_OR_SET",
+        "ADMITTED_EDGES",
+        "EXPLICIT_NONEDGES",
+        "NEIGHBOR_CONTEXT",
+        "HOLDS"
+      ],
+      "prohibitions": [
+        "NO_UNADMITTED_RELATION",
+        "NO_FORCED_MATCH"
+      ]
+    },
+    {
+      "state": "IMMERSION",
+      "requiredView": [
+        "DEPTH_INSPECTION",
+        "EQUATION_OR_PROCEDURE",
+        "FORMAL_TYPE",
+        "INVOCATION",
+        "EVIDENCE_BOUNDARY",
+        "DEVELOPMENTAL_TRACE"
+      ],
+      "requiredInvariant": "ORIGIN_SNAPSHOT_REMAINS_AVAILABLE_AND_UNMODIFIED"
+    },
+    {
+      "state": "RETURN",
+      "requiredAction": "RESTORE_AND_VERIFY_EXACT_ORIGIN_SNAPSHOT",
+      "successCondition": "RESTORED_STATE_FINGERPRINT_EQUALS_CAPTURED_ORIGIN_FINGERPRINT",
+      "failureCondition": "ANY_SILENT_RESET_LOST_FILTER_LOST_SELECTION_LOST_POSITION_OR_VERSION_MISMATCH"
+    }
+  ],
+  "exactReturnSnapshotFields": [
+    "contentVersionFingerprint",
+    "entryRoute",
+    "activeFamily",
+    "activeLens",
+    "searchAndFilterState",
+    "orderedSelectionHistory",
+    "focusedRecordOrSet",
+    "dependencyNeighborhood",
+    "expandedContextPanels",
+    "scrollAnchor",
+    "viewportOrCameraStateIfSpatial",
+    "deviceInteractionMode",
+    "returnToken"
+  ],
+  "navigationInvariants": [
+    "PRIMARY_DESTINATIONS_ARE_RECORDS_NOT_CARDS_AS_PRESENTATION_OBJECTS",
+    "FAMILIES_ORGANIZE_BROWSING_BUT_DO_NOT_CREATE_DEPENDENCIES",
+    "INTENT_ROUTING_MAY_RETURN_MULTIPLE_RECORDS",
+    "CONTEXTUAL_OBJECTS_NEVER_DISPLACE_THE_SELECTED_PRIMARY_DESTINATION",
+    "RETURN_RESTORES_STATE_NOT_JUST_ROUTE",
+    "PHONE_TABLET_DESKTOP_MAY_DIFFER_IN_LAYOUT_BUT_NOT_CAPABILITY_STATE_OR_RESULT"
+  ],
+  "implementationAuthorized": false
+}

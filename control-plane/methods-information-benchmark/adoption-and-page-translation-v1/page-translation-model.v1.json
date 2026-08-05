@@ -1,0 +1,174 @@
+{
+  "schema": "METHODS_AND_MODELS_PAGE_TRANSLATION_MODEL_v1",
+  "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
+  "status": "PHASES_2_AND_3_COMPLETE_NONPUBLIC_MODEL",
+  "sourceAuditHead": "7eee0e3f7a8c37e548e7721f1f5c2df69b2a310a",
+  "pagePurpose": "ENABLE_INQUIRY_RELATIVE_FORMAL_ASSEMBLY_WITH_LAWFUL_DEPENDENCY_CONTEXT_EVIDENCE_BOUNDARIES_AND_EXACT_RETURN",
+  "notEquivalentTo": [
+    "DOCUMENT_LIBRARY",
+    "CARD_CAROUSEL",
+    "EQUATION_GALLERY",
+    "VISUAL_ADJACENCY_AS_DEPENDENCY",
+    "RESPONSIVE_PAGE_ONLY"
+  ],
+  "selectedPageFacingSourceOrdinals": [
+    1,
+    3,
+    4,
+    8,
+    9,
+    12,
+    22,
+    24,
+    26,
+    27
+  ],
+  "contextualPageSourceOrdinals": [
+    2,
+    6,
+    11,
+    15,
+    17,
+    25
+  ],
+  "sourceSelectionRule": "ONLY_ADOPT_CONTROLLING_OR_ADOPT_AS_SUPPORTING_RECORD_OUTPUTS_WITH_DIRECT_INFORMATION_HIERARCHY_VALUE",
+  "informationHierarchy": [
+    {
+      "level": 0,
+      "id": "ORIENTATION_AND_EVIDENCE_POSTURE",
+      "purpose": "State what the Methods and Models environment enables and what its records do not prove.",
+      "content": [
+        "INQUIRY_RELATIVE_FORMAL_ASSEMBLY",
+        "FORMAL_TRUTH_PRECEDENCE",
+        "NO_EMPIRICAL_PROMOTION",
+        "OPEN_HOLDS_VISIBLE"
+      ]
+    },
+    {
+      "level": 1,
+      "id": "CORPUS_BROWSE",
+      "purpose": "Expose the complete corpus without presenting all objects as equal or independent.",
+      "content": [
+        "FOUR_CONCEPTUAL_FAMILIES",
+        "TWENTY_FIVE_PRIMARY_RECORD_DESTINATIONS",
+        "THREE_INTERPRETIVE_LENSES_AS_CONTEXT_ONLY"
+      ]
+    },
+    {
+      "level": 2,
+      "id": "QUESTION_OR_RECORD_SELECTION",
+      "purpose": "Permit entry by record identity, family, or declared question intent.",
+      "content": [
+        "DIRECT_RECORD_SELECTION",
+        "QUESTION_INTENT_ROUTING",
+        "NO_MATCH_WITH_REASON_AND_HOLD"
+      ]
+    },
+    {
+      "level": 3,
+      "id": "LAWFUL_FOCUS",
+      "purpose": "Foreground the selected record and only its admitted dependency neighborhood.",
+      "content": [
+        "FORMAL_TYPE",
+        "INCOMING_AND_OUTGOING_EDGES",
+        "EXPLICIT_NONEDGES",
+        "INDEPENDENCE_ANNOTATION",
+        "SOURCE_STATE"
+      ]
+    },
+    {
+      "level": 4,
+      "id": "IMMERSIVE_INSPECTION",
+      "purpose": "Inspect equation, invocation, computation status, evidence boundary, and developmental trace without losing context.",
+      "content": [
+        "EQUATION_OR_PROCEDURE",
+        "INVOCATION_CONDITION",
+        "COMPUTATIONAL_READINESS",
+        "HOLD_AND_RELEASE_EVIDENCE",
+        "CAUSAL_CONFIDENCE",
+        "BASELINE_TO_SUCCESSOR_TRACE"
+      ]
+    },
+    {
+      "level": 5,
+      "id": "DEVELOPMENTAL_TRANSLATION",
+      "purpose": "Show what the prior attempt intended, built, achieved, failed to establish, retained, retired, and passed forward.",
+      "content": [
+        "INTENT_IMPLEMENTATION_OUTCOME",
+        "ELEMENT_DISPOSITION",
+        "FAILURE_CLASSIFICATION",
+        "RETAINED_VALUE",
+        "SUCCESSOR_REQUIREMENT"
+      ]
+    },
+    {
+      "level": 6,
+      "id": "EXACT_CONTEXT_RETURN",
+      "purpose": "Restore the complete prior corpus state rather than reset to a generic landing view.",
+      "content": [
+        "RETURN_TOKEN",
+        "STATE_FINGERPRINT",
+        "VERSION_BINDING",
+        "EQUALITY_CHECK"
+      ]
+    }
+  ],
+  "recordPresentationContract": {
+    "requiredPrimaryFields": [
+      "recordId",
+      "title",
+      "family",
+      "equationOrProcedure",
+      "sourceState"
+    ],
+    "requiredContextualFields": [
+      "formalType",
+      "dependencyContext",
+      "explicitNonedges",
+      "invocationCondition",
+      "computationalBoundary",
+      "holdStatus",
+      "causalStatus"
+    ],
+    "optionalContextualFields": [
+      "independenceClass",
+      "developmentalTrace",
+      "successorRequirement"
+    ],
+    "prohibitedPresentationEffects": [
+      "VISUAL_PROXIMITY_CREATES_DEPENDENCY",
+      "HELD_SOURCE_SEMANTICS_SHOWN_AS_CONFIRMED",
+      "FORMAL_EQUATION_SHOWN_AS_EMPIRICAL_VALIDATION",
+      "SYNTHETIC_FIXTURE_SHOWN_AS_REAL_WORLD_PROOF",
+      "UNBOUND_EXTERNAL_STANDARD_SHOWN_AS_CURRENT_REQUIREMENT"
+    ]
+  },
+  "developmentalStageModel": [
+    {
+      "stage": "ORIGINAL_INTENT",
+      "controls": "USER_COGNITIVE_ORIGIN"
+    },
+    {
+      "stage": "BASELINE_MECHANISM",
+      "controls": "WHAT_WAS_ACTUALLY_BUILT"
+    },
+    {
+      "stage": "OBSERVED_OUTCOME",
+      "controls": "WHAT_WAS_OBSERVED_WITH_STATED_CONFIDENCE"
+    },
+    {
+      "stage": "DISPOSITION",
+      "controls": "PRESERVE_RECLASSIFY_RETIRE_REPAIR_OR_HOLD"
+    },
+    {
+      "stage": "SUCCESSOR_REQUIREMENT",
+      "controls": "WHAT_MUST_CHANGE_OR_BE_PROVEN"
+    },
+    {
+      "stage": "VALIDATION_BOUNDARY",
+      "controls": "WHAT_EVIDENCE_IS_REQUIRED_BEFORE_PROMOTION"
+    }
+  ],
+  "pageImplementationAuthorized": false,
+  "publicMutationAuthorized": false
+}

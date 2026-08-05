@@ -65,9 +65,12 @@ function validateGenesis(root) {
   return { baseHead: GENESIS_BASE, head: GENESIS_HEAD, tree: GENESIS_TREE, manifestBlob: MANIFEST_BLOB, changedPathCount: observed.length };
 }
 function descriptorFiles(root) {
-  return fs.readdirSync(path.join(root, BASE)).filter(name => name.endsWith('.json')).map(name => path.join(root, BASE, name)).filter(file => {
-    try { return readJson(file).schema === 'AUTHORIZED_TOOLSET_DESCRIPTOR_v1'; } catch { return false; }
-  });
+  return fs.readdirSync(path.join(root, BASE))
+    .filter(name => name.endsWith('.json'))
+    .map(name => path.join(root, BASE, name))
+    .filter(file => {
+      try { return readJson(file).schema === 'AUTHORIZED_TOOLSET_DESCRIPTOR_v1'; } catch { return false; }
+    });
 }
 function resolutionFixture(descriptor, index) {
   const properties = descriptor.canonicalInputSchema?.properties ?? {};
@@ -93,18 +96,26 @@ export function runConformance({ root, expectedHead, holder }) {
   assert(git(root, 'status', '--porcelain=v1', '--untracked-files=all') === '', 'DIRTY_WORKTREE');
   const genesis = validateGenesis(root);
   const registry = readJson(path.join(root, REGISTRY_PATH));
+  const historicalRegistry = JSON.parse(git(root, 'show', `${GENESIS_HEAD}:${REGISTRY_PATH}`));
   assert(registry.schema === 'REPOSITORY_AUTHORIZED_TOOLSET_REGISTRY_v1', 'REGISTRY_SCHEMA_MISMATCH');
+  assert(historicalRegistry.schema === 'REPOSITORY_AUTHORIZED_TOOLSET_REGISTRY_v1', 'HISTORICAL_REGISTRY_SCHEMA_MISMATCH');
   assert(registry.status === 'ACTIVE_CERTIFIED', 'REGISTRY_NOT_ACTIVE');
   assert(registry.closedWorld === true && registry.arbitraryCommandAccepted === false && registry.movingToolingRefsAccepted === false, 'REGISTRY_NOT_FAIL_CLOSED');
   assert(registry.descriptorSelectionPolicy === 'EXACTLY_ONE_MATCH_OR_FAIL_CLOSED', 'SELECTION_POLICY_MISMATCH');
   assert(Array.isArray(registry.tools) && registry.tools.length > 0, 'REGISTRY_EMPTY');
+  assert(Array.isArray(historicalRegistry.tools) && historicalRegistry.tools.length > 0, 'HISTORICAL_REGISTRY_EMPTY');
   unique(registry.tools.map(x => x.descriptorId), 'DUPLICATE_DESCRIPTOR_ID');
   unique(registry.tools.map(x => x.operationId), 'DUPLICATE_OPERATION_ID');
   unique(registry.tools.map(x => x.toolId), 'DUPLICATE_TOOL_ID');
+  unique(historicalRegistry.tools.map(x => x.descriptorId), 'DUPLICATE_HISTORICAL_DESCRIPTOR_ID');
   const files = descriptorFiles(root);
   const fileDescriptors = files.map(readJson);
   unique(fileDescriptors.map(x => x.descriptorId), 'DUPLICATE_DESCRIPTOR_FILE');
-  assert(canonical(fileDescriptors.map(x => x.descriptorId).sort()) === canonical(registry.tools.map(x => x.descriptorId).sort()), 'REGISTRY_DESCRIPTOR_FILE_SET_MISMATCH');
+  for (const fileDescriptor of fileDescriptors) {
+    const registered = registry.tools.find(x => x.descriptorId === fileDescriptor.descriptorId);
+    assert(registered, 'STANDALONE_DESCRIPTOR_NOT_REGISTERED', fileDescriptor.descriptorId);
+    assert(canonical(fileDescriptor) === canonical(registered), 'DESCRIPTOR_FILE_REGISTRY_MISMATCH', fileDescriptor.descriptorId);
+  }
   const resolutions = [];
   registry.tools.forEach((descriptor, index) => {
     assert(descriptor.schema === 'AUTHORIZED_TOOLSET_DESCRIPTOR_v1', 'DESCRIPTOR_SCHEMA_MISMATCH', descriptor.descriptorId);
@@ -115,12 +126,16 @@ export function runConformance({ root, expectedHead, holder }) {
     assert(descriptor.commandSpecification?.extraArgumentsAllowed === false, 'EXTRA_ARGUMENTS_PROHIBITION_MISSING', descriptor.descriptorId);
     assert(descriptor.commandSpecification?.environmentOverridesAllowed === false, 'ENVIRONMENT_OVERRIDE_PROHIBITION_MISSING', descriptor.descriptorId);
     git(root, 'cat-file', '-e', `${descriptor.exactToolingHead}:${descriptor.commandSpecification.scriptPath}`);
-    const fileDescriptor = fileDescriptors.find(x => x.descriptorId === descriptor.descriptorId);
-    assert(canonical(fileDescriptor) === canonical(descriptor), 'DESCRIPTOR_FILE_REGISTRY_MISMATCH', descriptor.descriptorId);
+    const standaloneDescriptor = fileDescriptors.find(x => x.descriptorId === descriptor.descriptorId);
+    const historicalDescriptor = historicalRegistry.tools.find(x => x.descriptorId === descriptor.descriptorId);
+    const provenance = standaloneDescriptor ? 'STANDALONE_ACTIVE_FILE' : historicalDescriptor ? 'FROZEN_HISTORICAL_INLINE' : null;
+    assert(provenance, 'ACTIVE_DESCRIPTOR_PROVENANCE_MISSING', descriptor.descriptorId);
+    const provenanceDescriptor = standaloneDescriptor ?? historicalDescriptor;
+    assert(canonical(provenanceDescriptor) === canonical(descriptor), 'ACTIVE_DESCRIPTOR_PROVENANCE_MISMATCH', descriptor.descriptorId);
     const fixture = resolutionFixture(descriptor, index + 1);
     const receipt = resolveToolset({ ...fixture, registry, allowCandidate: false });
     assert(receipt.result === 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED', 'DESCRIPTOR_RESOLUTION_FAILED', descriptor.descriptorId);
-    resolutions.push({ descriptorId: descriptor.descriptorId, operationId: descriptor.operationId, projectId: descriptor.projectId, exactToolingHead: descriptor.exactToolingHead, descriptorDigest: receipt.descriptorDigest });
+    resolutions.push({ descriptorId: descriptor.descriptorId, operationId: descriptor.operationId, projectId: descriptor.projectId, exactToolingHead: descriptor.exactToolingHead, descriptorDigest: receipt.descriptorDigest, provenance });
   });
   const first = registry.tools[0];
   const fixture = resolutionFixture(first, 7);
@@ -132,11 +147,19 @@ export function runConformance({ root, expectedHead, holder }) {
   expectedFailure(() => resolveToolset({ ...fixture, registry: shellRegistry }), 'SHELL_EXECUTION_PROHIBITED');
   const unknown = structuredClone(fixture); unknown.request.descriptorId = 'UNKNOWN_DESCRIPTOR';
   expectedFailure(() => resolveToolset({ ...unknown, registry }), 'AUTHORIZED_TOOLSET_NOT_FOUND');
-  const payload = stable({ schema: 'ACTIVE_TOOLSET_TRANSPORT_CONFORMANCE_FINGERPRINT_v1', expectedHead, genesis, registryDigest: sha256(canonical(registry)), descriptorFileCount: files.length, resolutions, negativeTests: ['DUPLICATE_DESCRIPTOR', 'MOVING_REF', 'SHELL', 'UNKNOWN_DESCRIPTOR'] });
+  const standaloneDescriptorFileCount = resolutions.filter(x => x.provenance === 'STANDALONE_ACTIVE_FILE').length;
+  const historicalInlineDescriptorCount = resolutions.filter(x => x.provenance === 'FROZEN_HISTORICAL_INLINE').length;
+  const payload = stable({
+    schema: 'ACTIVE_TOOLSET_TRANSPORT_CONFORMANCE_FINGERPRINT_v1', expectedHead, genesis,
+    registryDigest: sha256(canonical(registry)), historicalRegistryDigest: sha256(canonical(historicalRegistry)),
+    standaloneDescriptorFileCount, historicalInlineDescriptorCount, resolutions,
+    negativeTests: ['DUPLICATE_DESCRIPTOR', 'MOVING_REF', 'SHELL', 'UNKNOWN_DESCRIPTOR']
+  });
   return stable({
     schema: 'ACTIVE_TOOLSET_TRANSPORT_CONFORMANCE_RECEIPT_v1', result: 'PASS_CLOSED_ACTIVE_CONFORMANCE', executionHolder: holder,
     expectedHead, genesis, registryStatus: registry.status, closedWorld: registry.closedWorld, descriptorCount: registry.tools.length,
-    descriptorFileCount: files.length, descriptorsResolved: resolutions.length, resolutionReceipts: resolutions,
+    descriptorFileCount: files.length, standaloneDescriptorFileCount, historicalInlineDescriptorCount,
+    descriptorsResolved: resolutions.length, resolutionReceipts: resolutions,
     negativeFixtureCount: 4, negativeFixturesPassed: 4, packageFingerprint: sha256(canonical(payload)),
     productMutationPerformed: false, roleActivationPerformed: false, methodsAuditExecuted: false, hEarthRepairPerformed: false,
     pr570Mutated: false, mergePerformed: false, repairPerformed: false

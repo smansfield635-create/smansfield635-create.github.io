@@ -1,0 +1,251 @@
+name: Methods page mandatory excellence blind baseline
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/page-excellence-toolchain/**'
+      - '.github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-page-blind-baseline-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  SUBJECT_HEAD: 2044e7ab5d27af7bcfbd477a6c3ee046549744ed
+  PACKAGING_HEAD: 6c9f32d4ea13905b87f3519f9c18c425ae0e449c
+  CANDIDATE_ROOT: control-plane/methods-information-benchmark/page-implementation-candidate-v1
+  ROUTING_OPERATION_ID: METHODS_EXISTING_CONSTRUCT_ADOPTION_MANDATORY_ROUTING_REPAIR_v1
+  ROUTING_LOCK_SCOPE: PAGE_EXCELLENCE_TOOLCHAIN:CONTEXTUAL_ARCHITECTURE_CONFORMANCE_REPAIR:PR613:V1
+  ROUTING_LOCK_GENERATION: '213'
+
+jobs:
+  toolchain-self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout activation candidate
+        uses: actions/checkout@v4
+      - name: Validate toolchain schemas, contextual architecture, and route classifier
+        run: |
+          node .github/ai-router/page-excellence-toolchain/self-test.v1.mjs
+          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --self-test
+      - name: Validate JavaScript syntax
+        run: |
+          for file in .github/ai-router/page-excellence-toolchain/*.mjs; do node --check "$file"; done
+
+  contextual-routing-verification:
+    needs: toolchain-self-test
+    strategy:
+      fail-fast: false
+      matrix:
+        holder: [builder, fresh-verifier]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute exact contextual routing verification
+        run: |
+          mkdir -p artifacts
+          node .github/ai-router/page-excellence-toolchain/self-test.v1.mjs \
+            --holder "${{ matrix.holder }}" \
+            --output "artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json"
+          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --self-test >/tmp/gate.json
+          node -e "const a=require(process.argv[1]),b=require(process.argv[2]);if(a.result!=='PASS'||b.result!=='PASS')process.exit(1)" \
+            "./artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json" /tmp/gate.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: contextual-architecture-routing-${{ matrix.holder }}
+          path: artifacts/contextual-architecture-routing-${{ matrix.holder }}.v1.json
+          if-no-files-found: error
+          retention-days: 30
+
+  independent-contextual-routing:
+    needs: contextual-routing-verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: contextual-architecture-routing-builder
+          path: receipts/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: contextual-architecture-routing-fresh-verifier
+          path: receipts/fresh-verifier
+      - name: Compare canonical fingerprints
+        run: |
+          mkdir -p artifacts
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const builder=JSON.parse(fs.readFileSync('receipts/builder/contextual-architecture-routing-builder.v1.json'));
+          const verifier=JSON.parse(fs.readFileSync('receipts/fresh-verifier/contextual-architecture-routing-fresh-verifier.v1.json'));
+          const equal=builder.result==='PASS'&&verifier.result==='PASS'&&builder.normalizedFingerprint===verifier.normalizedFingerprint;
+          const out={schema:'CONTEXTUAL_ARCHITECTURE_ROUTING_INDEPENDENT_VERIFICATION_RECEIPT_v1',result:equal?'PASS':'FAIL',operationId:'METHODS_EXISTING_CONSTRUCT_ADOPTION_MANDATORY_ROUTING_REPAIR_v1',toolsetVersion:'1.1.0',builderFingerprint:builder.normalizedFingerprint,freshVerifierFingerprint:verifier.normalizedFingerprint,exactNormalizedEquality:equal,productMutationPerformed:false,visualSubjectMutated:false,mergePerformed:false,constructionAuthorityTerminated:false};
+          fs.writeFileSync('artifacts/contextual-architecture-routing-final.v1.json',JSON.stringify(out,null,2)+'\n');
+          if(!equal)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: contextual-architecture-routing-independent
+          path: artifacts/contextual-architecture-routing-final.v1.json
+          if-no-files-found: error
+          retention-days: 30
+
+  blind-evaluation:
+    if: github.event_name == 'workflow_dispatch'
+    needs: toolchain-self-test
+    strategy:
+      fail-fast: false
+      matrix:
+        holder: [builder, fresh-verifier]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout activation candidate
+        uses: actions/checkout@v4
+        with:
+          path: toolchain
+      - name: Checkout packaging successor
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PACKAGING_HEAD }}
+          fetch-depth: 0
+          path: subject
+      - name: Prove immutable visual subject
+        shell: bash
+        run: |
+          cd subject
+          mapfile -t changed < <(git diff --name-only "$SUBJECT_HEAD" "$PACKAGING_HEAD")
+          printf '%s\n' "${changed[@]}"
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = "$CANDIDATE_ROOT/state-schema.v1.json"
+          echo 'VISUAL_BYTES_PRESERVED=true' >> "$GITHUB_ENV"
+      - name: Reproduce packaged deterministic validation
+        shell: bash
+        run: |
+          cd "subject/$CANDIDATE_ROOT"
+          node validate.mjs | tee "$RUNNER_TEMP/static-validation.json"
+          node -e "const r=require(process.argv[1]); if(r.result!=='PASS'||r.checks.length!==30) process.exit(1)" "$RUNNER_TEMP/static-validation.json"
+          for file in candidate/*.mjs; do node --check "$file"; done
+          echo 'PACKAGING_VALIDATION_PASS=true' >> "$GITHUB_ENV"
+      - name: Install blind runtime instrumentation
+        shell: bash
+        working-directory: toolchain
+        run: |
+          npm init -y >/dev/null
+          npm install --no-save playwright @axe-core/playwright
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Execute blind browser, accessibility, responsive, performance, and state evaluation
+        shell: bash
+        run: |
+          mkdir -p "toolchain/artifacts"
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "subject/$CANDIDATE_ROOT/candidate" >"$RUNNER_TEMP/server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break; sleep 1; done
+          node toolchain/.github/ai-router/page-excellence-toolchain/blind-evaluator.v1.mjs \
+            --baseUrl http://127.0.0.1:4173/index.html \
+            --subjectDir "$GITHUB_WORKSPACE/subject/$CANDIDATE_ROOT" \
+            --subjectHead "$SUBJECT_HEAD" \
+            --packagingHead "$PACKAGING_HEAD" \
+            --holder "${{ matrix.holder }}" \
+            --browsers chromium,firefox,webkit \
+            --toolsetBundle toolchain/.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json \
+            --output "toolchain/artifacts/${{ matrix.holder }}.json"
+      - name: Upload blind JSON receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-page-blind-${{ matrix.holder }}
+          path: toolchain/artifacts/${{ matrix.holder }}.json
+          if-no-files-found: error
+          retention-days: 30
+
+  independent-reproduction:
+    needs: blind-evaluation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout activation candidate
+        uses: actions/checkout@v4
+        with:
+          path: toolchain
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-page-blind-builder
+          path: receipts/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-page-blind-fresh-verifier
+          path: receipts/fresh-verifier
+      - name: Compare normalized score identities
+        run: |
+          mkdir -p final
+          node toolchain/.github/ai-router/page-excellence-toolchain/compare-reproductions.v1.mjs \
+            --builder receipts/builder/builder.json \
+            --verifier receipts/fresh-verifier/fresh-verifier.json \
+            --output final/methods-page-blind-baseline-result.v1.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: methods-page-blind-baseline-final
+          path: final/methods-page-blind-baseline-result.v1.json
+          if-no-files-found: error
+          retention-days: 30
+
+  terminal-closure:
+    needs: independent-contextual-routing
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: contextual-architecture-routing-independent
+          path: incoming
+      - name: Close exact operation lock and terminate construction authority
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p artifacts
+          closed=false
+          for attempt in {1..8}; do
+            set +e
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "${{ github.repository }}" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id "$ROUTING_OPERATION_ID" \
+              --lock-scope "$ROUTING_LOCK_SCOPE" \
+              --lock-generation "$ROUTING_LOCK_GENERATION" \
+              --terminal-disposition PASS_CLOSED \
+              --output /tmp/closure.json
+            status=$?
+            set -e
+            if [[ "$status" -eq 0 ]]; then
+              closed=true
+              break
+            fi
+            cat /tmp/closure.json || true
+            if [[ "$status" -ne 4 ]]; then
+              exit "$status"
+            fi
+            sleep $((attempt * 2))
+          done
+          test "$closed" = true
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base=JSON.parse(fs.readFileSync('incoming/contextual-architecture-routing-final.v1.json'));
+          const closure=JSON.parse(fs.readFileSync('/tmp/closure.json'));
+          if(base.result!=='PASS'||closure.result!=='TERMINAL_CLOSURE_COMMITTED'||closure.lockReleased!==true)process.exit(1);
+          const out={...base,closure,constructionAuthorityTerminated:true,pr613ExpectedState:'OPEN_DRAFT_UNMERGED',mergeAuthorized:false,productMutationAuthorized:false};
+          fs.writeFileSync('artifacts/contextual-architecture-routing-final.v1.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: contextual-architecture-routing-final
+          path: artifacts/contextual-architecture-routing-final.v1.json
+          if-no-files-found: error
+          retention-days: 30

@@ -27,7 +27,9 @@ jobs:
           set -euo pipefail
           BASE='0d88fe21aba99c97b73fcdc68d44af57d55b68be'
           TARGET='role1/inter-hill-estate-successor-evaluator-implementation-001'
+          ISSUE=614
           PAYLOAD_SHA='1355e2abdd1354a398edd7705da423bb1287f9f8f182f5618062b3b8b265a847'
+          MARKER='H_EARTH_INTER_HILL_ESTATE_16_PATH_PAYLOAD_v1'
           work=/tmp/inter-hill-estate-materialize
           rm -rf "$work"
           mkdir -p "$work/comments" "$work/payload"
@@ -35,7 +37,7 @@ jobs:
           test "$(git rev-parse origin/main)" = "$BASE"
           test "$(git rev-parse origin/$TARGET)" = "$BASE"
 
-          ids=(5195430059 5195454167 5195467088)
+          ids=(5195430059 5195454167 5195508604 5195513760 5195519285)
           for index in "${!ids[@]}"; do
             sequence=$((index+1))
             gh api "repos/smansfield635-create/smansfield635-create.github.io/issues/comments/${ids[$index]}" > "$work/comments/comment-${sequence}.json"
@@ -49,16 +51,18 @@ jobs:
           expected_chunks=[
             '2f98a1c7ba0ed0db65cf771ae518ff8b5f4004086b0ba93360ccc3d13b1b1fd4',
             '9491634a4f6f17c9b84808271b15f6548cce18bd98dad59db9374ec7e3448514',
-            'c8c5260f14865a5284beb8c59784fc8478d395507264b18890e9dc158c3397d1',
+            'de6a0e6f91c72b9cb3b347baabf6f5cebd6284a9326035c9e98542cf9fa111f1',
+            'f56e206715d9de8260a2d34bb24c167a9e7f08663d9751e50f7e98546995e7dc',
+            '89567b46e7ec1cd7eb6411afe8a96251e91bf1dba95383a040a2730281eefd00',
           ]
           chunks=[]
-          for sequence in range(1,4):
+          for sequence in range(1,6):
               body=json.loads((root/'comments'/f'comment-{sequence}.json').read_text()).get('body','')
               match=re.fullmatch(rf'{marker}:(\d+):(\d+):([0-9a-f]{{64}})\n([A-Za-z0-9+/=]+)',body)
               if not match:
                   raise SystemExit(f'CARRIER_COMMENT_FORMAT_MISMATCH:{sequence}')
               index,total,declared,payload=int(match.group(1)),int(match.group(2)),match.group(3),match.group(4)
-              if index != sequence or total != 3 or declared != expected_chunks[sequence-1]:
+              if index != sequence or total != 5 or declared != expected_chunks[sequence-1]:
                   raise SystemExit(f'CARRIER_COMMENT_IDENTITY_MISMATCH:{sequence}')
               actual=hashlib.sha256(payload.encode()).hexdigest()
               if actual != declared:
@@ -69,7 +73,7 @@ jobs:
           if actual != expected_payload:
               raise SystemExit(f'CARRIER_PAYLOAD_SHA256_MISMATCH:{actual}')
           (root/'implementation.tgz').write_bytes(raw)
-          print(json.dumps({'chunkCount':3,'payloadByteCount':len(raw),'payloadSha256':actual},indent=2))
+          print(json.dumps({'chunkCount':5,'payloadByteCount':len(raw),'payloadSha256':actual},indent=2))
           PY2
 
           tar -xzf "$work/implementation.tgz" -C "$work/payload"

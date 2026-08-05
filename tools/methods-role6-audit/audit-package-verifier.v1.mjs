@@ -1,63 +1,8 @@
 #!/usr/bin/env node
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import {
-  AuditError, assert, canonicalPayloadBytes, listFilesRecursive, loadRegistry,
-  packageFingerprint, parseArgs, readJson, safeTarget, validatePackage, writeJson
-} from "./lib.v1.mjs";
-
-const moduleDir = path.dirname(fileURLToPath(import.meta.url));
-const defaultRepoRoot = path.resolve(moduleDir, "../..");
-
-export function verifyMaterialization({ pkg, outputRoot, holder, repoRoot = defaultRepoRoot, receiptPath }) {
-  const registry = loadRegistry(repoRoot);
-  validatePackage(pkg, registry);
-  assert(typeof holder === "string" && /^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(holder), "INPUT_SCHEMA_INVALID", "verifier_holder");
-
-  const entries = [...pkg.substantiveOutputs, ...pkg.returnArtifacts];
-  for (const entry of entries) {
-    const actual = fs.readFileSync(safeTarget(outputRoot, entry.path), "utf8");
-    assert(actual === canonicalPayloadBytes(entry.payload), "BYTE_VERIFICATION_FAILURE", entry.path);
-  }
-
-  const auditRoot = safeTarget(outputRoot, "control-plane/methods-information-benchmark/role6-audit");
-  const actualFiles = listFilesRecursive(auditRoot).map((relative) => `control-plane/methods-information-benchmark/role6-audit/${relative}`);
-  assert(JSON.stringify(actualFiles) === JSON.stringify(registry.authorizedChangedPaths), "OUTPUT_ID_OR_PATH_MISMATCH", "materialized_file_set");
-
-  const receipt = {
-    schema: "METHODS_ROLE_6_AUDIT_VERIFICATION_RECEIPT_v1",
-    operationId: pkg.operationId,
-    assignmentHead: pkg.assignmentHead,
-    assignmentId: pkg.assignmentId,
-    builderExecutionHolder: pkg.executionHolder,
-    verifierExecutionHolder: holder,
-    distinctExecutionHolders: holder !== pkg.executionHolder,
-    verifiedPathCount: actualFiles.length,
-    verifiedPaths: actualFiles,
-    packageFingerprint: packageFingerprint(pkg, registry),
-    byteVerificationPass: true,
-    repairPerformed: false,
-    productMutationPerformed: false,
-    mergePerformed: false
-  };
-  assert(receipt.distinctExecutionHolders, "FINGERPRINT_MISMATCH", "holder_not_distinct");
-  if (receiptPath) writeJson(receiptPath, receipt);
-  return receipt;
-}
-
-async function main() {
-  const args = parseArgs(process.argv.slice(2));
-  assert(args.input && args.outputRoot && args.holder && args.receipt, "INPUT_SCHEMA_INVALID", "required_arguments");
-  const pkg = readJson(args.input);
-  const receipt = verifyMaterialization({ pkg, outputRoot: args.outputRoot, holder: args.holder, receiptPath: args.receipt });
-  process.stdout.write(`${JSON.stringify(receipt)}\n`);
-}
-
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  main().catch((error) => {
-    const code = error instanceof AuditError ? error.code : "BYTE_VERIFICATION_FAILURE";
-    process.stderr.write(`${code}:${error.message}\n`);
-    process.exitCode = 1;
-  });
-}
+import fs from "node:fs";import path from "node:path";import {fileURLToPath} from "node:url";
+import {ASSIGNMENT_ID,AuditError,assert,canonicalPayloadBytes,computeLedgerHead,listFilesRecursive,loadRegistry,packageEntries,packageFingerprint,parseArgs,readJson,safeTarget,validatePackage,writeJson} from "./lib.v1.mjs";
+const moduleDir=path.dirname(fileURLToPath(import.meta.url));const defaultRepoRoot=path.resolve(moduleDir,"../..");
+export function verifyMaterialization({pkg,outputRoot,holder,repoRoot=defaultRepoRoot,receiptPath,finalReceiptPath=null,successorLedgerPath=null}){const registry=loadRegistry(repoRoot);validatePackage(pkg,registry);assert(typeof holder==="string"&&/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(holder),"INPUT_SCHEMA_INVALID","verifier_holder");for(const e of packageEntries(pkg)){const actual=fs.readFileSync(safeTarget(outputRoot,e.path),"utf8");assert(actual===canonicalPayloadBytes(e.payload),"BYTE_VERIFICATION_FAILURE",e.path);}const final=Boolean(finalReceiptPath||successorLedgerPath);assert(finalReceiptPath&&successorLedgerPath||!final,"INPUT_SCHEMA_INVALID","final_pair");if(final){const rr=readJson(finalReceiptPath),ledger=readJson(successorLedgerPath);assert(rr.schema==="METHODS_INFORMATION_BENCHMARK_ASSIGNMENT_RETURN_RECEIPT_v1"&&rr.assignmentId===ASSIGNMENT_ID&&rr.assignmentAuthorityActive===false&&rr.postTerminationRoleState==="INACTIVE","RETURN_OR_TERMINATION_FAILURE","return_receipt");assert(ledger.revision===2&&computeLedgerHead(ledger)===ledger.ledgerHead&&ledger.ledgerHead===rr.assignmentHead&&ledger.assignments[0].status==="RETURNED","RETURN_OR_TERMINATION_FAILURE","successor_ledger");}
+const auditRoot=safeTarget(outputRoot,"control-plane/methods-information-benchmark/role6-audit");const actualFiles=listFilesRecursive(auditRoot).map(r=>`control-plane/methods-information-benchmark/role6-audit/${r}`);const expected=final?registry.authorizedChangedPaths:registry.packageInputPaths;assert(JSON.stringify(actualFiles)===JSON.stringify(expected),"OUTPUT_ID_OR_PATH_MISMATCH","materialized_file_set");const receipt={schema:"METHODS_ROLE_6_AUDIT_VERIFICATION_RECEIPT_v1",operationId:pkg.operationId,assignmentHead:pkg.assignmentHead,assignmentId:pkg.assignmentId,builderExecutionHolder:pkg.executionHolder,verifierExecutionHolder:holder,distinctExecutionHolders:holder!==pkg.executionHolder,verifiedPathCount:actualFiles.length,verifiedPaths:actualFiles,packageFingerprint:packageFingerprint(pkg,registry),byteVerificationPass:true,finalReturnVerified:final,assignmentAuthorityActive:final?false:true,repairPerformed:false,productMutationPerformed:false,mergePerformed:false};assert(receipt.distinctExecutionHolders,"FINGERPRINT_MISMATCH","holder_not_distinct");if(receiptPath)writeJson(receiptPath,receipt);return receipt;}
+async function main(){const a=parseArgs(process.argv.slice(2));assert(a.input&&a.outputRoot&&a.holder&&a.receipt,"INPUT_SCHEMA_INVALID","required_arguments");const r=verifyMaterialization({pkg:readJson(a.input),outputRoot:a.outputRoot,holder:a.holder,receiptPath:a.receipt,finalReceiptPath:a.finalReceipt,successorLedgerPath:a.successorLedger});process.stdout.write(`${JSON.stringify(r)}\n`);}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))main().catch(e=>{const code=e instanceof AuditError?e.code:"BYTE_VERIFICATION_FAILURE";process.stderr.write(`${code}:${e.message}\n`);process.exitCode=1;});

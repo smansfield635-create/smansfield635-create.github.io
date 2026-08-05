@@ -54,18 +54,24 @@
     },
     {
       "step": 4,
-      "action": "MATERIALIZE_EXACT_29_PATHS_FROM_CANONICAL_AUDIT_PACKAGE"
+      "action": "MATERIALIZE_27_SUBSTANTIVE_OUTPUTS_PLUS_ROLE_6_RETURN_PACKET",
+      "pathCount": 28
     },
     {
       "step": 5,
-      "action": "RUN_BUILDER_VERIFICATION_AND_FRESH_INDEPENDENT_REPRODUCTION"
+      "action": "RUN_BUILDER_VERIFICATION_AND_FRESH_INDEPENDENT_REPRODUCTION_ON_28_PATHS"
     },
     {
       "step": 6,
-      "action": "EMIT_TWO_RETURN_ARTIFACTS_AND_TERMINATE_ROLE_6_TO_INACTIVE"
+      "action": "COMMAND_EMIT_ROLE_6_RETURN_RECEIPT_AND_SUCCESSOR_LEDGER_EVIDENCE",
+      "finalRepositoryPathCount": 29
     },
     {
       "step": 7,
+      "action": "FINAL_VERIFY_29_PATHS_TERMINATE_ROLE_6_TO_INACTIVE_AND_CLOSE_ROOT_LOCK"
+    },
+    {
+      "step": 8,
       "action": "STOP_WITHOUT_ADOPTION_RATIFICATION_NEXT_ROLE_MERGE_DEPLOYMENT_OR_RELEASE"
     }
   ],
@@ -111,7 +117,8 @@
       "methods-role6-audit-builder-evidence/audit-materialization.receipt.v1.json",
       "methods-role6-audit-verifier-evidence/audit-verification.receipt.v1.json",
       "methods-role6-audit-final-return/role6-operation-return.packet.v1.json",
-      "methods-role6-audit-final-return/role6-operation-return.receipt.v1.json"
+      "methods-role6-audit-final-return/role6-operation-return.receipt.v1.json",
+      "methods-role6-audit-final-return/first-assignment-ledger.returned-successor.v1.json"
     ]
   },
   "bridgeOutputFingerprintDomain": {

@@ -40,7 +40,7 @@ function descriptorChecks(descriptor) {
 }
 
 function runNegativeFixtures(registry, descriptor) {
-  const base = makeSyntheticPackage(repoRoot, "NEGATIVE_FIXTURE_BUILDER_001");
+  const base = makeSyntheticPackage(repoRoot);
   const results = [];
   const run = (id, expected, fn) => {
     let pass = false;
@@ -80,13 +80,13 @@ function runNegativeFixtures(registry, descriptor) {
   run("NEG_09_NONOBJECT_PAYLOAD", "PAYLOAD_NOT_OBJECT", () => {
     const p = clone(base); p.substantiveOutputs[0].payload = "bad"; validatePackage(p, registry);
   });
-  run("NEG_10_MISSING_RETURN", "OUTPUT_COUNT_MISMATCH", () => {
-    const p = clone(base); p.returnArtifacts.pop(); validatePackage(p, registry);
+  run("NEG_10_MISSING_RETURN", "INPUT_SCHEMA_INVALID", () => {
+    const p = clone(base); delete p.returnPacket; validatePackage(p, registry);
   });
   run("NEG_11_WRONG_RETURN_PATH", "OUTPUT_ID_OR_PATH_MISMATCH", () => {
-    const p = clone(base); p.returnArtifacts[0].path = "bad"; validatePackage(p, registry);
+    const p = clone(base); p.returnPacket.path = "bad"; validatePackage(p, registry);
   });
-  run("NEG_12_INVALID_HOLDER", "INPUT_SCHEMA_INVALID", () => {
+  run("NEG_12_INVALID_HOLDER", "ASSIGNMENT_IDENTITY_MISMATCH", () => {
     const p = clone(base); p.executionHolder = "x"; validatePackage(p, registry);
   });
   run("NEG_13_UNAUTHORIZED_PATH", "OUTPUT_ID_OR_PATH_MISMATCH", () => {

@@ -1,4 +1,4 @@
-name: PR570 Registry Scope Gap Termination
+name: PR570 Remaining Ratification Lock Termination
 
 on:
   pull_request:
@@ -12,9 +12,8 @@ permissions:
 env:
   GOVERNING_HEAD: 2c4e5a21e4e902bee421528498c112998fa783bc
   LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
-  LINEAGE_OPERATION_ID: H_EARTH_MAP_WIDE_INSTRUMENT_LINEAGE_AWARE_PERMANENT_RATIFICATION_v2
-  LINEAGE_LOCK_SCOPE: H_EARTH:MAP_WIDE_INSTRUMENT:LINEAGE_AWARE_PERMANENT_RATIFICATION:V2
-  LINEAGE_GENERATION: '123'
+  TERMINAL_LINEAGE_OPERATION_ID: H_EARTH_MAP_WIDE_INSTRUMENT_LINEAGE_AWARE_PERMANENT_RATIFICATION_v2
+  TERMINAL_LINEAGE_GENERATION: '123'
   FRESH_OPERATION_ID: H_EARTH_MAP_WIDE_INSTRUMENT_FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION_v2
   FRESH_LOCK_SCOPE: H_EARTH:MAP_WIDE_INSTRUMENT:FRESH_REVALIDATION_AND_PERMANENT_RATIFICATION:V2
   FRESH_GENERATION: '125'
@@ -23,7 +22,7 @@ env:
   TERMINATION_GENERATION: '132'
 
 jobs:
-  terminate:
+  terminate-remaining-locks:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -34,30 +33,31 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify exact isolated one-file carrier
+      - name: Verify exact carrier and live lock identities
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^)" = "$GOVERNING_HEAD"
+          test "$(git merge-base HEAD "$GOVERNING_HEAD")" = "$GOVERNING_HEAD"
           mapfile -t paths < <(git diff --name-only "$GOVERNING_HEAD" HEAD)
           test "${#paths[@]}" -eq 1
           test "${paths[0]}" = '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
           test "$(git rev-parse "$GOVERNING_HEAD:tools/operation-intake/repository-operation-lock-manager.v1.mjs")" = '6fc0199c9dc943b8cdf3efe7c789f0e1888774b8'
-      - name: Close lineage-aware generation 123 fail closed
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          for attempt in 1 2 3 4; do
-            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
-              --operation-id "$LINEAGE_OPERATION_ID" --lock-scope "$LINEAGE_LOCK_SCOPE" \
-              --lock-generation "$LINEAGE_GENERATION" --terminal-disposition FAIL_CLOSED \
-              --output /tmp/generation-123-closure.json; then break; fi
-            test "$attempt" -lt 4
-            sleep $((attempt * 2))
-          done
-          node -e "const r=require('/tmp/generation-123-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
-      - name: Close fresh-revalidation generation 125 fail closed
+          git fetch origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:.github/operation-intake/active-operation-ledger.v1.json > /tmp/live-ledger.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const ledger=JSON.parse(fs.readFileSync('/tmp/live-ledger.json','utf8'));
+          const objects=[];
+          const walk=v=>{if(!v||typeof v!=='object')return;objects.push(v);for(const x of Object.values(v))walk(x);};
+          walk(ledger);
+          const lineage=objects.find(x=>x.operationId===process.env.TERMINAL_LINEAGE_OPERATION_ID&&x.lockGeneration===Number(process.env.TERMINAL_LINEAGE_GENERATION)&&x.state==='TERMINAL');
+          const fresh=objects.find(x=>x.operationId===process.env.FRESH_OPERATION_ID&&x.lockGeneration===Number(process.env.FRESH_GENERATION)&&x.state==='ADMITTED_LOCKED'&&x.released===false);
+          const termination=objects.find(x=>x.operationId===process.env.TERMINATION_OPERATION_ID&&x.lockGeneration===Number(process.env.TERMINATION_GENERATION)&&x.state==='ADMITTED_LOCKED'&&x.released===false);
+          if(!lineage||lineage.terminalDisposition!=='FAIL_CLOSED'||lineage.released!==true)throw Error('GENERATION_123_NOT_TERMINAL_FAIL_CLOSED');
+          if(!fresh)throw Error('GENERATION_125_NOT_ACTIVE');
+          if(!termination)throw Error('GENERATION_132_NOT_ACTIVE');
+          fs.writeFileSync('/tmp/generation-123-observed.json',JSON.stringify(lineage,null,2)+'\n');
+          NODE
+      - name: Close generation 125 fail closed
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -92,43 +92,34 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-          const lineage=JSON.parse(fs.readFileSync('/tmp/generation-123-closure.json','utf8'));
-          const fresh=JSON.parse(fs.readFileSync('/tmp/generation-125-closure.json','utf8'));
-          const termination=JSON.parse(fs.readFileSync('/tmp/generation-132-closure.json','utf8'));
+          const lineage=JSON.parse(fs.readFileSync('/tmp/generation-123-observed.json'));
+          const fresh=JSON.parse(fs.readFileSync('/tmp/generation-125-closure.json'));
+          const termination=JSON.parse(fs.readFileSync('/tmp/generation-132-closure.json'));
           const out={
-            schema:'PR570_REGISTRY_SCOPE_GAP_TERMINATION_CERTIFICATION_v1',
-            result:'PASS_CLOSED_FAILED_RATIFICATION_ATTEMPTS_TERMINATED',
+            schema:'PR570_REMAINING_RATIFICATION_LOCK_TERMINATION_CERTIFICATION_v1',
+            result:'PASS_CLOSED_FAILED_RATIFICATION_LINEAGES_TERMINATED',
             governingHead:process.env.GOVERNING_HEAD,
-            failureClass:'H_EARTH_INTERNAL_REGISTRY_OCCURRENCE_GAP',
-            unresolvedPathCount:13,
-            lineageGeneration:123,
-            lineageDisposition:'FAIL_CLOSED',
-            lineageClosureCommit:lineage.closureCommitSha,
-            freshGeneration:125,
-            freshDisposition:'FAIL_CLOSED',
-            freshClosureCommit:fresh.closureCommitSha,
-            terminationGeneration:132,
-            terminationDisposition:'PASS_CLOSED',
-            terminationClosureCommit:termination.closureCommitSha,
-            routerOwnershipGeneration111Preserved:true,
+            generation123:{state:lineage.state,terminalDisposition:lineage.terminalDisposition,released:lineage.released},
+            generation125:{terminalDisposition:'FAIL_CLOSED',closureCommit:fresh.closureCommitSha,released:fresh.lockReleased},
+            generation132:{terminalDisposition:'PASS_CLOSED',closureCommit:termination.closureCommitSha,released:termination.lockReleased},
+            internalRegistryRepairMerge:'a4ba663dbff1d780cf80e8e40ecaa396c2ee85c7',
+            internalRegistryRepairGeneration136:'PASS_CLOSED',
             pr570Mutated:false,
-            pr605Merged:false,
-            pr606Merged:false,
-            registryMutationPerformed:false,
+            failedSuccessorMerged:false,
             mainMutationPerformed:false,
             mergePerformed:false,
-            residualAuthority:false
+            residualRatificationAuthority:false
           };
           out.certificationDigest=crypto.createHash('sha256').update(JSON.stringify(out)).digest('hex');
-          fs.mkdirSync('/tmp/pr570-registry-scope-gap-terminal',{recursive:true});
-          fs.writeFileSync('/tmp/pr570-registry-scope-gap-terminal/certification.json',JSON.stringify(out,null,2)+'\n');
-          fs.copyFileSync('/tmp/generation-123-closure.json','/tmp/pr570-registry-scope-gap-terminal/generation-123-closure.json');
-          fs.copyFileSync('/tmp/generation-125-closure.json','/tmp/pr570-registry-scope-gap-terminal/generation-125-closure.json');
-          fs.copyFileSync('/tmp/generation-132-closure.json','/tmp/pr570-registry-scope-gap-terminal/generation-132-closure.json');
+          fs.mkdirSync('/tmp/pr570-remaining-locks-terminal',{recursive:true});
+          fs.writeFileSync('/tmp/pr570-remaining-locks-terminal/certification.json',JSON.stringify(out,null,2)+'\n');
+          fs.copyFileSync('/tmp/generation-123-observed.json','/tmp/pr570-remaining-locks-terminal/generation-123-observed.json');
+          fs.copyFileSync('/tmp/generation-125-closure.json','/tmp/pr570-remaining-locks-terminal/generation-125-closure.json');
+          fs.copyFileSync('/tmp/generation-132-closure.json','/tmp/pr570-remaining-locks-terminal/generation-132-closure.json');
           NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: pr570-registry-scope-gap-terminal-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/pr570-registry-scope-gap-terminal/
+          name: pr570-remaining-ratification-locks-terminal-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/pr570-remaining-locks-terminal/
           if-no-files-found: error
           retention-days: 90

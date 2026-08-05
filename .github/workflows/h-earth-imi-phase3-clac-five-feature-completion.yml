@@ -2,6 +2,19 @@
 name: H-Earth IMI Phase 3 CLAC Five-Feature Completion
 
 on:
+  push:
+    branches:
+      - instrument/imi-empirical-platform-v1
+    paths:
+      - '.github/workflows/h-earth-imi-phase3-clac-five-feature-completion.yml'
+      - 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-clac-five-feature-extraction-contract.v1.json'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-source-probe.py'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-extractor.py'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-ppl-author-align.py'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-feature-package-js-bind.mjs'
+      - 'h-earth-3d/validation/imi-empirical-platform/imi.phase3.clac-five-feature-completion.runner.mjs'
+      - 'h-earth-3d/tools/imi-empirical-platform/routes/spontaneous-speech-current-repository-rerun-2026-route.v1.json'
+      - 'h-earth-3d/tools/imi-empirical-platform/imi-core-and-empirical-portfolio-engine.v1.mjs'
   pull_request:
     paths:
       - '.github/workflows/h-earth-imi-phase3-clac-five-feature-completion.yml'

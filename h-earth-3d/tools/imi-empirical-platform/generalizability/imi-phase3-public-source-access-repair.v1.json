@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "IMI_PHASE_3_PUBLIC_SOURCE_ACCESS_REPAIR_v1",
+  "operation": "IMI_PHASE_3_PUBLIC_SOURCE_COMPLETION_v1",
+  "status": "FROZEN_BEFORE_REPAIR_EXECUTION",
+  "parentAddendum": "h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-public-source-completion-addendum.v1.json",
+  "triggeringDefect": {
+    "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+    "classification": "SOURCE_HOST_CONNECT_TIMEOUT",
+    "affectedHost": "ftp.datasus.gov.br",
+    "scientificResultChanged": false
+  },
+  "hospitalAccessRepair": {
+    "sourceSemanticsPreserved": true,
+    "sourcePeriodsPreserved": ["2024-01", "2024-02", "2024-03"],
+    "statePreserved": "SP",
+    "caseIdentityPreserved": "CNES",
+    "factorMappingPreserved": true,
+    "newAccessRepresentation": "PYSUS_2_7_0_DUCKLAKE_PARQUET_MIRROR_OF_DATASUS",
+    "packageVersion": "pysus==2.7.0",
+    "prohibited": [
+      "CHANGE_SOURCE_PERIODS_AFTER_OUTCOME_INSPECTION",
+      "CHANGE_FACTOR_MAPPING",
+      "REUSE_CMS_DEVELOPMENT_ROWS",
+      "LOWER_500_INSTITUTION_MINIMUM"
+    ]
+  },
+  "speechAccessRepair": {
+    "archivePreserved": "https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip",
+    "taskPreserved": "COOKIE_THEFT_PICTURE_DESCRIPTION",
+    "rangeBasedArchiveAccess": true,
+    "fullArchiveDownloadProhibited": true,
+    "audioDownloadProhibitedFor_TEXT_METADATA_BINDING_STAGE": true,
+    "transcriptExtractionLimit": 240,
+    "minimumUsableTranscripts": 120,
+    "metadataWorkbookRequired": true,
+    "featureExtractionAuthorizedByThisRepair": false
+  },
+  "boundaries": {
+    "routeRetuned": false,
+    "kernelMutated": false,
+    "developmentEvidenceReclassified": false,
+    "phase4AutomaticallyAuthorized": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  }
+}

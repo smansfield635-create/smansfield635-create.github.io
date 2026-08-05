@@ -1,0 +1,96 @@
+{
+  "schemaVersion": "IMI_SCOPE_GENERALIZABILITY_AND_PRACTICAL_VALUE_FIVE_PHASE_PLAN_v1",
+  "operation": "IMI_SCOPE_GENERALIZABILITY_AND_PRACTICAL_VALUE_PROGRAM_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pullRequest": 589,
+  "branch": "instrument/imi-empirical-platform-v1",
+  "programPurpose": "Generalize the scope, empirical transfer boundaries, and practical decision value of IMI without converting route-specific findings into unsupported universal claims.",
+  "invariantConstructCandidate": "Retained joint maneuverability through a specified trajectory when success depends on multiple declared non-substitutable required factors.",
+  "phaseOrderIsMandatory": true,
+  "phases": [
+    {
+      "phase": 1,
+      "operation": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1",
+      "status": "AUTHORIZED_ACTIVE",
+      "requiredInputs": [
+        "CURRENT_HOSPITAL_REPOSITORY_RUN",
+        "CURRENT_SPONTANEOUS_SPEECH_REPOSITORY_RERUN",
+        "CURRENT_USDA_HONEY_BEE_REPOSITORY_RUN_AND_PHASE_CONSOLIDATION",
+        "CURRENT_DSSI_REPOSITORY_RUN_AND_PHASE_CONSOLIDATION",
+        "EXISTING_FOUR_DOMAIN_COMPLETION_RECEIPT"
+      ],
+      "requiredOutputs": [
+        "INVARIANT_CONSTRUCT_STATEMENT",
+        "ROUTE_FAMILY_TAXONOMY",
+        "CROSS_DOMAIN_FINDING_CLASSIFICATION",
+        "SATURATION_AND_NONREDUNDANCY_ANALYSIS",
+        "COMPARATOR_SYNTHESIS",
+        "EVIDENCE_LEVEL_PER_ROUTE",
+        "PHASE_2_READINESS_DECISION"
+      ],
+      "stop": "STOP_AFTER_SYNTHESIS_AND_PHASE_2_READINESS_DECISION"
+    },
+    {
+      "phase": 2,
+      "operation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
+      "status": "STAGED_NOT_AUTHORIZED_UNTIL_PHASE_1_PASS",
+      "requiredOutputs": [
+        "DOMAIN_ADMISSION_STANDARD",
+        "PREREGISTERED_CROSS_DOMAIN_HYPOTHESES",
+        "REPLICATION_GRID",
+        "HELD_OUT_DATA_REQUIREMENTS",
+        "INDEPENDENT_REPRODUCTION_STANDARD"
+      ]
+    },
+    {
+      "phase": 3,
+      "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+      "status": "STAGED_NOT_AUTHORIZED_UNTIL_PHASE_2_FREEZE",
+      "tracks": [
+        "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+        "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+        "DSSI_REMAINING_COUNTRY_CONTINUATION",
+        "HOSPITAL_NEXT_RELEASE_OR_EXTERNAL_SYSTEM_REPLICATION"
+      ]
+    },
+    {
+      "phase": 4,
+      "operation": "IMI_DECISION_UTILITY_PILOTS_v1",
+      "status": "STAGED_NOT_AUTHORIZED_UNTIL_ROUTE_SPECIFIC_EXTERNAL_OR_PROSPECTIVE_EVIDENCE",
+      "candidatePilots": [
+        "HOSPITAL_REVIEW_TRIAGE",
+        "BEE_EARLY_WARNING_AND_RESOURCE_TARGETING"
+      ],
+      "requiredComparators": [
+        "ADDITIVE_MEAN",
+        "WEAKEST_FACTOR_ONLY",
+        "GEOMETRIC_MEAN",
+        "BEST_SINGLE_FACTOR",
+        "DOMAIN_STANDARD_OR_BASELINE_METHOD"
+      ]
+    },
+    {
+      "phase": 5,
+      "operation": "IMI_INDEPENDENT_MULTI_DOMAIN_REPRODUCTION_v1",
+      "status": "STAGED_NOT_AUTHORIZED_UNTIL_PHASE_3_AND_PHASE_4_EVIDENCE_IS_ADMISSIBLE",
+      "requiredProperties": [
+        "INDEPENDENT_PARTICIPANT_OR_INSTITUTION",
+        "FROZEN_SOURCE_AND_ROUTE_IDENTITIES",
+        "CLEAN_ROOM_EXECUTION",
+        "BOUNDED_REPRODUCTION_CRITERIA",
+        "DISAGREEMENT_AND_NEGATIVE_RESULT_CUSTODY"
+      ]
+    }
+  ],
+  "globalBoundaries": {
+    "rawIMIMagnitudesComparableAcrossRoutes": false,
+    "universalMultiplicativeSuperiorityClaimed": false,
+    "universalPredictiveValidityClaimed": false,
+    "causalClaimsAuthorized": false,
+    "clinicalDiagnosticUseAuthorized": false,
+    "finalInstrumentValidationClaimed": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  },
+  "currentDecision": "EXECUTE_PHASE_1_ONLY"
+}

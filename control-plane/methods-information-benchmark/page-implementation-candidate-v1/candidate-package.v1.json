@@ -1,0 +1,345 @@
+{
+  "schema": "METHODS_AND_MODELS_PAGE_IMPLEMENTATION_CANDIDATE_PACKAGE_v1",
+  "status": "NONPUBLIC_PRODUCT_CANDIDATE_STATIC_VALIDATION_PASS_BROWSER_AND_PERCEPTUAL_GATES_OPEN",
+  "operationId": "METHODS_AND_MODELS_PAGE_IMPLEMENTATION_CANDIDATE_v1",
+  "sourceBinding": {
+    "finalMaterializedCandidateHead": "d84e2a2c0e73ff443993e134f6695d2ab08e4b41",
+    "sourcePackageFingerprint": "4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e",
+    "finalRepositoryFingerprint": "0d5bb1f3b916f3f702dbb77c9b329d721395aedf1a179f680186b2691e35e329",
+    "sourceAuditHead": "7eee0e3f7a8c37e548e7721f1f5c2df69b2a310a",
+    "canonicalCorpusBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965"
+  },
+  "productContract": {
+    "schema": "METHODS_AND_MODELS_PAGE_PRODUCT_CONTRACT_v1",
+    "status": "NONPUBLIC_CANDIDATE_CONTRACT",
+    "operationId": "METHODS_AND_MODELS_PAGE_IMPLEMENTATION_CANDIDATE_v1",
+    "sourceBinding": {
+      "finalMaterializedCandidateHead": "d84e2a2c0e73ff443993e134f6695d2ab08e4b41",
+      "sourcePackageFingerprint": "4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e",
+      "finalRepositoryFingerprint": "0d5bb1f3b916f3f702dbb77c9b329d721395aedf1a179f680186b2691e35e329",
+      "sourceAuditHead": "7eee0e3f7a8c37e548e7721f1f5c2df69b2a310a",
+      "canonicalCorpusPath": "laws/research/methods-and-models/showroom.js",
+      "canonicalCorpusBlob": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "canonicalCorpusSha256": "d1f7ae596a714d4cbc3b9286d0c4aa1f496f3a355956d7b684953befd91e475f"
+    },
+    "primaryDestinations": "25_FORMAL_RECORDS",
+    "browseFrames": "4_FAMILIES",
+    "alternateEntry": "16_QUESTION_INTENTS",
+    "interactionLifecycle": [
+      "ORIENTATION",
+      "CORPUS_BROWSE",
+      "QUESTION_OR_RECORD_SELECTION",
+      "LAWFUL_FOCUS",
+      "IMMERSIVE_INSPECTION",
+      "DEVELOPMENTAL_TRANSLATION",
+      "EXACT_RETURN"
+    ],
+    "interactionGrammar": [
+      "BROWSE",
+      "SELECT",
+      "FOCUS",
+      "IMMERSION",
+      "RETURN"
+    ],
+    "mandatoryDistinctions": [
+      "VISUAL_PROXIMITY_NOT_FORMAL_DEPENDENCY",
+      "SHARED_FAMILY_NOT_DEPENDENCY",
+      "CONCEPTUAL_RELATION_NOT_COMPUTATIONAL_RELATION",
+      "ADOPTED_RECORD_NOT_EMPIRICALLY_VALIDATED_CLAIM"
+    ],
+    "publicationAuthority": false,
+    "publicMutationAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "releaseAuthority": false
+  },
+  "stateSchema": {
+    "schema": "METHODS_AND_MODELS_EXACT_RETURN_STATE_SCHEMA_v1",
+    "status": "CANDIDATE_CONTRACT_FROZEN",
+    "contentVersionFingerprint": "0d5bb1f3b916f3f702dbb77c9b329d721395aedf1a179f680186b2691e35e329",
+    "requiredFields": [
+      "contentVersionFingerprint",
+      "entryRoute",
+      "activeFamily",
+      "activeLens",
+      "searchAndFilterState",
+      "orderedSelectionHistory",
+      "focusedRecordOrSet",
+      "dependencyNeighborhood",
+      "expandedContextPanels",
+      "scrollAnchor",
+      "viewportOrCameraStateIfSpatial",
+      "deviceInteractionMode",
+      "returnToken"
+    ],
+    "equalityRule": "RESTORED_STATE_FINGERPRINT_EQUALS_CAPTURED_ORIGIN_FINGERPRINT",
+    "failureConditions": [
+      "SILENT_RESET",
+      "LOST_FILTER",
+      "LOST_SELECTION",
+      "LOST_POSITION",
+      "VERSION_MISMATCH",
+      "INVALID_RETURN_TOKEN"
+    ],
+    "staleTokenRule": "REJECT_AND_REPORT_WITHOUT_APPROXIMATE_RESTORATION"
+  },
+  "validation": {
+    "deterministic": {
+      "schema": "METHODS_AND_MODELS_CANDIDATE_STATIC_VALIDATION_v1",
+      "result": "PASS",
+      "checks": [
+        {
+          "name": "record-count",
+          "status": "PASS",
+          "detail": "25"
+        },
+        {
+          "name": "unique-record-identities",
+          "status": "PASS",
+          "detail": "25"
+        },
+        {
+          "name": "family-count",
+          "status": "PASS",
+          "detail": "4"
+        },
+        {
+          "name": "lens-count",
+          "status": "PASS",
+          "detail": "3"
+        },
+        {
+          "name": "intent-route-count",
+          "status": "PASS",
+          "detail": "16"
+        },
+        {
+          "name": "dependency-edge-count",
+          "status": "PASS",
+          "detail": "15"
+        },
+        {
+          "name": "explicit-nonedge-count",
+          "status": "PASS",
+          "detail": "4"
+        },
+        {
+          "name": "open-hold-class-count",
+          "status": "PASS",
+          "detail": "6"
+        },
+        {
+          "name": "source-state-counts",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "family-membership-complete",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "all-relations-resolve",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "all-intent-routes-resolve",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "all-holds-resolve",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "record-contract-fields",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "source-binding-head",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "source-package-fingerprint",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "repository-fingerprint",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "semantic-main",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "semantic-dialog",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "live-regions",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "keyboard-navigation",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "focus-restoration",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "reduced-motion",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "responsive-breakpoints",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "deep-linking",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "no-publication-language",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "exact-state-field-contract",
+          "status": "PASS",
+          "detail": ""
+        },
+        {
+          "name": "exact-return-token-verification",
+          "status": "PASS",
+          "detail": "EXACT_SNAPSHOT_VERIFIED"
+        },
+        {
+          "name": "stale-version-rejected",
+          "status": "PASS",
+          "detail": "CONTENT_VERSION_MISMATCH"
+        },
+        {
+          "name": "mutated-snapshot-rejected",
+          "status": "PASS",
+          "detail": "INVALID_RETURN_TOKEN"
+        }
+      ]
+    },
+    "syntaxValidation": "PASS",
+    "browserRuntimeMatrix": "NOT_EXECUTED_ENVIRONMENTAL_HEADLESS_BROWSER_HANG",
+    "screenReaderExecution": "NOT_EXECUTED",
+    "humanKeyboardTraversal": "NOT_EXECUTED",
+    "responsivePerceptualEquivalence": "NOT_EXECUTED",
+    "performanceMeasurement": "NOT_EXECUTED",
+    "productPerceptualAcceptance": "NOT_EXECUTED"
+  },
+  "knownLimits": [
+    "STATIC_HOOK_PRESENCE_IS_NOT_SCREEN_READER_CERTIFICATION",
+    "RESPONSIVE_BREAKPOINT_PRESENCE_IS_NOT_DEVICE_EQUIVALENCE_PROOF",
+    "DETERMINISTIC_STATE_TESTS_DO_NOT_REPLACE_HUMAN_BROWSER_LIFECYCLE_TESTING",
+    "HEADLESS_CHROMIUM_RUNTIME_CHECK_DID_NOT_COMPLETE_IN_THE_EXECUTION_ENVIRONMENT"
+  ],
+  "rollback": "DELETE_THIS_DIRECTORY_OR_DELETE_THE_CANDIDATE_BRANCH_NO_PUBLIC_PATH_RESTORATION_REQUIRED",
+  "authority": {
+    "publicMutation": false,
+    "merge": false,
+    "deployment": false,
+    "release": false,
+    "publication": false
+  },
+  "changedPathManifest": {
+    "baseHead": "d84e2a2c0e73ff443993e134f6695d2ab08e4b41",
+    "branch": "candidate/methods-and-models-page-v1",
+    "pathRoot": "control-plane/methods-information-benchmark/page-implementation-candidate-v1",
+    "changedPathCount": 14,
+    "publicPathMutationCount": 0,
+    "workflowMutationCount": 0,
+    "deploymentMutationCount": 0,
+    "files": [
+      {
+        "path": "README.md",
+        "size": 3254,
+        "sha256": "7a5d4232f81e4c70d2f858f91b0558a386b8f2f5e41ff3d90991edbde7f4395e"
+      },
+      {
+        "path": "candidate-package.v1.json",
+        "selfHashRule": "SELF_HASH_OMITTED_TO_AVOID_RECURSIVE_IDENTITY"
+      },
+      {
+        "path": "validate.mjs",
+        "size": 5172,
+        "sha256": "be013f08bcd539148b2620c6b926326b43de09e9b96d0b383c7389c21a5d8cd3"
+      },
+      {
+        "path": "candidate/index.html",
+        "size": 3823,
+        "sha256": "ff79dd7478763a1614aec9ce666816a1d2ff71018016d405246a195178303f06"
+      },
+      {
+        "path": "candidate/styles.css",
+        "size": 6496,
+        "sha256": "b2f9cf9205c7d05a32780c66698cf6e2848ea8896ccf741df7dd6f48eb396599"
+      },
+      {
+        "path": "candidate/app.mjs",
+        "size": 15769,
+        "sha256": "980c0af61a6db45e427ffd7045f9fad791419c85b1a2fe6553c10abf68df2b3c"
+      },
+      {
+        "path": "candidate/state.mjs",
+        "size": 1904,
+        "sha256": "f0a66eb388fd77dd53e5401a008e8ef1c6991f9343d7555ddd97e0f899cf36cf"
+      },
+      {
+        "path": "candidate/candidate-data.mjs",
+        "size": 465,
+        "sha256": "cc6953e4a6673f9ea6dbaa58be13211c8aa4c778c211c96b40465e716358f663"
+      },
+      {
+        "path": "candidate/records-1.mjs",
+        "size": 7690,
+        "sha256": "3ca2c8238792d66fe2cd3f815df2f8e9459245fd2c999d497af034e90475a325"
+      },
+      {
+        "path": "candidate/records-2.mjs",
+        "size": 7398,
+        "sha256": "a1cbb248e2bb0c25991897b9e48ef57c03a1c96bdaa085f29c2563ef1b06a4de"
+      },
+      {
+        "path": "candidate/model-core.mjs",
+        "size": 2790,
+        "sha256": "50433c00ceb9acab6ac9656ffe7e3e0b8b2c64903b2b5d2daebd17f4c683e590"
+      },
+      {
+        "path": "candidate/model-graph.mjs",
+        "size": 2939,
+        "sha256": "55f489fb039da46e5fc878d8134c79e0d47b7d9b675019d3624a9f78b294e20b"
+      },
+      {
+        "path": "candidate/model-routing.mjs",
+        "size": 5786,
+        "sha256": "24afeeea13b60e0ccf668dd704ed813ae3aa9da393a8ef1afdadc5562ed19834"
+      },
+      {
+        "path": "candidate/model-development.mjs",
+        "size": 3814,
+        "sha256": "da38a35b6376719f0a14dacb124e87dc6b1a0bd8ad05f155f4ae9dd9bae5137f"
+      }
+    ]
+  }
+}

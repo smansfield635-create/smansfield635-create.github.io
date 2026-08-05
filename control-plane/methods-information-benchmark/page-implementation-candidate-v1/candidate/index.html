@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>Methods and Models — Nonpublic Candidate</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#corpus">Skip to corpus</a>
+  <header class="orientation" aria-labelledby="page-title">
+    <p class="eyebrow">Nonpublic product candidate · no publication authority</p>
+    <h1 id="page-title">Methods and Models</h1>
+    <p class="lede">Navigate formal records, admitted dependencies, explicit nonedges, open holds, evidence boundaries, and developmental history without converting visual proximity into authority.</p>
+    <div class="boundary-grid" aria-label="Governing distinctions">
+      <span>Visual proximity ≠ formal dependency</span>
+      <span>Shared family ≠ dependency</span>
+      <span>Conceptual relation ≠ computational relation</span>
+      <span>Adopted record ≠ empirically validated claim</span>
+    </div>
+  </header>
+
+  <main id="corpus" class="workspace" data-mm-candidate>
+    <section class="controls" aria-labelledby="browse-title">
+      <div>
+        <p class="eyebrow">Browse</p>
+        <h2 id="browse-title">Corpus controls</h2>
+      </div>
+      <div class="control-grid">
+        <label>Search records
+          <input type="search" data-search autocomplete="off" placeholder="Title, equation, or formal type">
+        </label>
+        <label>Question intent
+          <select data-intent><option value="">Choose an inquiry route</option></select>
+        </label>
+        <fieldset>
+          <legend>Interpretive lens</legend>
+          <div class="segmented" data-lenses role="radiogroup" aria-label="Interpretive lens"></div>
+        </fieldset>
+      </div>
+      <div class="family-tabs" data-families role="tablist" aria-label="Conceptual families"></div>
+      <p class="control-note">Families filter the corpus. They do not create dependencies.</p>
+    </section>
+
+    <section class="corpus" aria-labelledby="records-title">
+      <div class="section-heading">
+        <div><p class="eyebrow">25 primary destinations</p><h2 id="records-title">Formal record corpus</h2></div>
+        <output data-count aria-live="polite"></output>
+      </div>
+      <ol class="record-list" data-records></ol>
+      <div class="no-match" data-no-match hidden role="status">
+        <h3>No lawful match</h3>
+        <p>The current search and filters returned no admitted record. No record was forced into the result.</p>
+      </div>
+    </section>
+
+    <aside class="context" aria-labelledby="context-title">
+      <p class="eyebrow">Contextual, not primary</p>
+      <h2 id="context-title">System context</h2>
+      <details open><summary>Open holds</summary><div data-global-holds></div></details>
+      <details><summary>Developmental translation</summary><div data-developmental></div></details>
+      <details><summary>Source custody</summary><pre data-custody></pre></details>
+    </aside>
+  </main>
+
+  <dialog class="inspection" data-inspection aria-labelledby="inspection-title">
+    <form method="dialog" class="inspection-shell">
+      <header>
+        <div><p class="eyebrow" data-inspection-kicker></p><h2 id="inspection-title" data-inspection-title></h2></div>
+        <button class="close" value="close" aria-label="Close inspection">×</button>
+      </header>
+      <div data-inspection-content></div>
+      <footer>
+        <p data-return-status role="status" aria-live="polite"></p>
+        <button type="button" data-exact-return>Return to exact corpus state</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="sr-only" data-live aria-live="polite"></div>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

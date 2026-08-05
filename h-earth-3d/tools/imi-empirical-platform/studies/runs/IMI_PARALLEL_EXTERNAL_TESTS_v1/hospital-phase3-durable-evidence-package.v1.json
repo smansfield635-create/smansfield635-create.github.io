@@ -1,94 +1,131 @@
 {
-  "schemaVersion": "IMI_PHASE_3_HOSPITAL_DURABLE_EVIDENCE_PACKAGE_v1",
+  "schemaVersion": "IMI_PHASE_3_HOSPITAL_DURABLE_EVIDENCE_PACKAGE_v2",
+  "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+  "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+  "durableDisposition": "PASS_CLOSED_PHASE_3_HOSPITAL_PUBLIC_DATASUS_REPLICATION_EXECUTED",
   "sourceIdentity": {
-    "schemaVersion": "IMI_PHASE_3_HOSPITAL_SOURCE_AVAILABILITY_IDENTITY_v1",
-    "observedAt": "2026-08-05T17:45:00.000Z",
-    "baselineRelease": {
-      "complicationsReleased": "2026-05-13",
-      "generalReleased": "2026-05-13",
-      "complicationsModified": "2026-04-28",
-      "generalModified": "2026-04-28"
-    },
-    "datasets": {
-      "complications": {
-        "id": "ynj2-r877",
-        "name": "Complications and Deaths - Hospital",
-        "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/ynj2-r877",
-        "released": "2026-05-13",
-        "modified": "2026-04-28",
-        "title": "Complications and Deaths - Hospital",
-        "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/6af7c44d77436e5a1caac3ce39a83fe9_1777413950/Complications_and_Deaths-Hospital.csv"
+    "schemaVersion": "IMI_PHASE_3_DATASUS_HOSPITAL_SOURCE_IDENTITY_v1",
+    "observedAt": "2026-08-05T19:05:00.000Z",
+    "sourceId": "BRAZIL_DATASUS_SIH_SUS_SAO_PAULO_Q1_2024_v1",
+    "country": "Brazil",
+    "state": "Sao Paulo",
+    "informationSystem": "SIH/SUS AIH Reduced Data",
+    "accessRepresentation": "PYSUS_2_7_0_DUCKLAKE_PARQUET_MIRROR_OF_DATASUS",
+    "sourcePeriods": [
+      "2024-01",
+      "2024-02",
+      "2024-03"
+    ],
+    "sourceFiles": [
+      {
+        "localPath": "/home/runner/pysus/downloads/ducklake/sih/RDSP2402.parquet",
+        "basename": "RDSP2402.parquet",
+        "bytes": 12790801,
+        "sha256": "148165ed10f8d1d1c38957c2d65caddd975c72ec5c223250691592855e26e569"
       },
-      "general": {
-        "id": "xubh-q36u",
-        "name": "Hospital General Information",
-        "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/xubh-q36u",
-        "released": "2026-05-13",
-        "modified": "2026-04-28",
-        "title": "Hospital General Information",
-        "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/893c372430d9d71a1c52737d01239d47_1777413958/Hospital_General_Information.csv"
+      {
+        "localPath": "/home/runner/pysus/downloads/ducklake/sih/SPSP2401.parquet",
+        "basename": "SPSP2401.parquet",
+        "bytes": 42202169,
+        "sha256": "2003b60514250e5ad6e057e9a13816270f5365c0fc5e1af378aa4ea1f3a3167e"
+      },
+      {
+        "localPath": "/home/runner/pysus/downloads/ducklake/sih/SPSP2403.parquet",
+        "basename": "SPSP2403.parquet",
+        "bytes": 35283308,
+        "sha256": "f28279852ff56215a20af7a32c84ed35f4e75c5c4f29eb3d1164824f7cd9bdf4"
       }
+    ],
+    "admittedInstitutions": 557,
+    "minimumAdmissionsPerInstitution": 20,
+    "minimumInstitutionsRequired": 500,
+    "sourceOverlapWithCmsDevelopmentData": false,
+    "mappingContract": {
+      "caseIdentity": "CNES",
+      "deduplicationIdentity": "N_AIH_WHEN_PRESENT_OTHERWISE_SOURCE_ROW",
+      "mortalityReported": "ALL_DEDUPLICATED_ADMISSIONS",
+      "mortalityWorse": "MORTE_EQUALS_1",
+      "safetyReported": "ADMISSIONS_WITH_ANY_USABLE_DIAGNOSIS",
+      "safetyWorse": "ANY_DIAGNOSIS_IN_T80_T88_Y40_Y59_Y60_Y84"
+    }
+  },
+  "empiricalSummary": {
+    "schemaVersion": "IMI_PHASE_3_HOSPITAL_PUBLIC_DATASUS_SUMMARY_v1",
+    "result": "PASS_CLOSED_PHASE_3_HOSPITAL_PUBLIC_DATASUS_REPLICATION_EXECUTED",
+    "institutionRows": 557,
+    "validCases": 557,
+    "unevaluableCases": 0,
+    "hardCollapseCases": 0,
+    "imiSummary": {
+      "n": 557,
+      "min": 0.2016806722689075,
+      "q1": 0.922655641762195,
+      "median": 0.9523809523809523,
+      "q3": 0.9883720930232558,
+      "max": 1,
+      "mean": 0.9466494565604384
     },
-    "sourceDigest": "fnv1a32:dd4b0351"
+    "weakestFactorCounts": {
+      "MORTALITY_NONWORSE_AVAILABILITY": 407,
+      "TIE:MORTALITY_NONWORSE_AVAILABILITY|SAFETY_COMPLICATION_NONWORSE_AVAILABILITY": 116,
+      "SAFETY_COMPLICATION_NONWORSE_AVAILABILITY": 34
+    },
+    "minimumEvidenceSatisfied": true,
+    "phase4Candidate": false,
+    "boundaries": {
+      "nonCmsIndependentSource": true,
+      "sourceCountryDifferentFromDevelopmentSource": true,
+      "outcomeTestExecuted": false,
+      "routeRetuned": false,
+      "causalClaimMade": false,
+      "finalValidationClaimed": false
+    }
   },
   "trackReceipt": {
     "schemaVersion": "IMI_PHASE_3_HOSPITAL_EXTERNAL_REPLICATION_RECEIPT_v1",
     "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
     "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
-    "result": "HELD_NO_ELIGIBLE_NEXT_RELEASE_OR_NON_CMS_PACKAGE",
-    "terminalDisposition": "HELD_OPEN_SOURCE_NOT_AVAILABLE",
-    "observedAt": "2026-08-05T17:45:00.000Z",
+    "result": "PASS_CLOSED_PHASE_3_HOSPITAL_PUBLIC_DATASUS_REPLICATION_EXECUTED",
+    "terminalDisposition": "PASS_CLOSED_PUBLIC_NON_CMS_EXTERNAL_REPLICATION",
+    "observedAt": "2026-08-05T19:05:00.000Z",
     "routeId": "CMS_HOSPITAL_REFRESH_2026_BASE_ROUTE_v1",
     "routeDigest": "fnv1a32:8a4cb676",
-    "sourceIdentity": {
-      "schemaVersion": "IMI_PHASE_3_HOSPITAL_SOURCE_AVAILABILITY_IDENTITY_v1",
-      "observedAt": "2026-08-05T17:45:00.000Z",
-      "baselineRelease": {
-        "complicationsReleased": "2026-05-13",
-        "generalReleased": "2026-05-13",
-        "complicationsModified": "2026-04-28",
-        "generalModified": "2026-04-28"
-      },
-      "datasets": {
-        "complications": {
-          "id": "ynj2-r877",
-          "name": "Complications and Deaths - Hospital",
-          "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/ynj2-r877",
-          "released": "2026-05-13",
-          "modified": "2026-04-28",
-          "title": "Complications and Deaths - Hospital",
-          "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/6af7c44d77436e5a1caac3ce39a83fe9_1777413950/Complications_and_Deaths-Hospital.csv"
-        },
-        "general": {
-          "id": "xubh-q36u",
-          "name": "Hospital General Information",
-          "metadataUrl": "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/xubh-q36u",
-          "released": "2026-05-13",
-          "modified": "2026-04-28",
-          "title": "Hospital General Information",
-          "downloadUrl": "https://data.cms.gov/provider-data/sites/default/files/resources/893c372430d9d71a1c52737d01239d47_1777413958/Hospital_General_Information.csv"
-        }
-      },
-      "sourceDigest": "fnv1a32:dd4b0351"
-    },
-    "admission": {
-      "nextCmsReleaseEligible": false,
-      "complicationsEligible": false,
-      "generalEligible": false,
-      "nonCmsPackageProvided": false,
-      "minimumEvidenceSatisfied": false
-    },
-    "reason": "THE_REQUIRED_CMS_DATASET_PAIR_HAS_NOT_ADVANCED_BEYOND_THE_FROZEN_BASELINE_RELEASE_AND_NO_SEPARATELY_BOUND_NON_CMS_PACKAGE_WAS_PROVIDED",
+    "sourceDigest": "fnv1a32:5c3cb3e2",
+    "executionDigest": "fnv1a32:33d981ae",
+    "summaryDigest": "fnv1a32:6a073a54",
+    "minimumEvidenceSatisfied": true,
     "phase4Candidate": false,
+    "admission": {
+      "nonCmsPackageProvided": true,
+      "independentInstitutionCount": 557,
+      "minimumIndependentInstitutionsRequired": 500,
+      "sourceOverlapExcluded": true
+    },
     "boundaries": {
-      "sourceMetadataInspectedOnly": true,
-      "hospitalRowsDownloaded": false,
-      "newEmpiricalTestExecuted": false,
+      "nonCmsIndependentSource": true,
+      "sourceCountryDifferentFromDevelopmentSource": true,
+      "outcomeTestExecuted": false,
       "routeRetuned": false,
-      "clinicalDiagnosisClaimed": false,
       "causalClaimMade": false,
       "finalValidationClaimed": false
     },
-    "receiptDigest": "fnv1a32:6329f647"
+    "receiptDigest": "fnv1a32:6ad486a7"
+  },
+  "workflowEvidence": {
+    "workflow": "H-Earth IMI Phase 3 Public Source Completion",
+    "runId": 31040448607,
+    "jobId": 92423262127,
+    "head": "abefa6d8a8e9c13830fa86adb9037f9b954ce2e6",
+    "artifactId": 8944355534,
+    "artifactName": "imi-phase3-hospital-public-source-evidence",
+    "artifactSha256": "48276d0a16e4b589eedba8eebf4b7150975597575b491834d29a607a606b8e91"
+  },
+  "boundaries": {
+    "routeRetuned": false,
+    "outcomeTestExecuted": false,
+    "phase4Candidate": false,
+    "phase4AutomaticallyAuthorized": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
   }
 }

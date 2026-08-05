@@ -1,0 +1,60 @@
+{
+  "schema": "METHODS_CONTEXT_DISPLACEMENT_ENGINE_MINIMUM_SPATIAL_PROOF_CONTRACT_v1",
+  "version": "1.0.0",
+  "status": "NONPUBLIC_EXPERIENCE_PROOF",
+  "baseHead": "0d88fe21aba99c97b73fcdc68d44af57d55b68be",
+  "informationSourceHead": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+  "scope": {
+    "spatialStageCount": 2,
+    "modelsPerStage": 3,
+    "totalModelObjects": 6,
+    "fullyPopulatedModels": 1,
+    "lensCount": 3
+  },
+  "stages": [
+    {
+      "id": "pressure-capacity",
+      "models": ["pressure-field", "capacity-field", "pcr"]
+    },
+    {
+      "id": "method-falsification",
+      "models": ["first", "integral-method", "falsification"]
+    }
+  ],
+  "requiredVisibleSequence": [
+    "CURRENT_STAGE_IS_LEGIBLE",
+    "DISTANT_STAGE_IS_VISIBLE",
+    "STAGE_DISPLACEMENT_OCCURS_WITHOUT_PAGE_SCROLL",
+    "MODEL_ORDER_AND_ADJACENCY_ARE_COMPREHENSIBLE",
+    "FOCUSED_MODEL_MOVES_FORWARD_IN_SPACE",
+    "LENS_CHANGE_ALTERS_THE_MODEL_EXPRESSION",
+    "RETURN_RESTORES_THE_EXACT_PREFOCUS_STATE"
+  ],
+  "stateContract": [
+    "CURRENT_STAGE",
+    "STAGE_POSITION",
+    "CAMERA_OR_VIEW_TRANSFORM",
+    "MODEL_ORDER",
+    "FOCUSED_MODEL",
+    "ACTIVE_LENS",
+    "PRIOR_SELECTION",
+    "INPUT_MODE",
+    "RETURN_TOKEN",
+    "CONTENT_VERSION"
+  ],
+  "prohibitedPrimaryBehavior": [
+    "VERTICAL_DOCUMENT_SCROLL",
+    "CARD_GRID_SELECTION",
+    "MODAL_AS_MODEL_FOCUS",
+    "QUESTIONNAIRE_AS_NAVIGATION",
+    "CAROUSEL_WITHOUT_SPATIAL_POSITION",
+    "DECORATIVE_CAMERA_MOVEMENT"
+  ],
+  "boundaries": {
+    "publicMutation": false,
+    "fullCorpusIntegration": false,
+    "awardOptimization": false,
+    "permanentToolchainActivation": false,
+    "mergeAuthority": false
+  }
+}

@@ -1,124 +1,68 @@
-name: Methods Information Benchmark Router Registration and Adoption Translation Materialization v1
+name: Repair Methods source comment chunk recovery
 on:
-  workflow_dispatch:
   push:
     branches: [materialization/methods-adoption-translation-v1-001]
-    paths: ['.github/workflows/methods-information-benchmark-router-registration-and-adoption-translation-materialization-v1.yml']
+    paths:
+      - '.github/workflows/methods-information-benchmark-router-registration-and-adoption-translation-materialization-v1.yml'
 permissions:
   contents: write
-  actions: read
-  issues: read
-  pull-requests: read
-env:
-  REPOSITORY: smansfield635-create/smansfield635-create.github.io
-  BASE: ee0a7ae331ae9eb2d2b7d0800b0e636a58168072
-  FINGERPRINT: 4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e
-  G58_OPERATION: METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1
-  G58_SCOPE: METHODS_INFORMATION_BENCHMARK/METHODS_AND_MODELS/AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION/V1
-  G64_OPERATION: METHODS_INFORMATION_BENCHMARK_ROUTER_REGISTRATION_AND_ADOPTION_TRANSLATION_PACKAGE_MATERIALIZATION_v1
-  G64_SCOPE: METHODS_INFORMATION_BENCHMARK/ROUTER_REGISTRATION/ADOPTION_TRANSLATION_PACKAGE_MATERIALIZATION/V1
-  VERIFIER: .github/ai-router/projects/methods-information-benchmark/verify-router-registration-and-package.v1.mjs
-  W: .github/workflows/methods-information-benchmark-router-registration-and-adoption-translation-materialization-v1.yml
-  P0: .github/workflows/methods-and-models-audit-output-adoption-and-page-translation-v1.yml
-  IREC: control-plane/methods-information-benchmark/adoption-and-page-translation-v1/receipts/independent-verification.receipt.v1.json
-  CREC: control-plane/methods-information-benchmark/adoption-and-page-translation-v1/receipts/operation-closure.receipt.v1.json
 jobs:
-  materialize:
+  construct:
     runs-on: ubuntu-24.04
-    outputs:
-      head: ${{ steps.h.outputs.head }}
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - name: Reconstruct immutable source and commit exact seven-path core
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Construct exact two-path recovery candidate
+        env:
+          EXPECTED_MAIN: ee0a7ae331ae9eb2d2b7d0800b0e636a58168072
+          REPAIR_BRANCH: repair/methods-source-comment-chunk1-recovery-v1-001
         run: |
           set -euo pipefail
-          test "$(git merge-base "$BASE" "$GITHUB_SHA")" = "$BASE"
-          mapfile -t d < <(git diff --name-only "$BASE..$GITHUB_SHA" | sort)
-          test "${#d[@]}" -eq 1 && test "${d[0]}" = "$W"
-          test ! -e "$P0" && test ! -e "$IREC" && test ! -e "$CREC"
-          node - <<'NODE'
-          const fs=require('fs'),path=require('path'),os=require('os'),crypto=require('crypto'),{spawnSync}=require('child_process');
-          const H=b=>crypto.createHash('sha256').update(b).digest('hex'),get=async u=>{let r=await fetch(u,{headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'}});if(!r.ok)throw Error(`FETCH_${r.status}`);return r.json()};
-          (async()=>{let c=JSON.parse(fs.readFileSync('.github/ai-router/projects/methods-information-benchmark/adoption-review-source-package.carrier.v1.json')),f=process.env.FINGERPRINT,s='';if(c.packageFingerprintSha256!==f||c.reviewRepeated||c.packageRegenerated)throw Error('CARRIER');for(let k of[...c.transport.chunks].sort((a,b)=>a.chunkIndex-b.chunkIndex)){let q=await get(`https://api.github.com/repos/${c.transport.repository}/issues/comments/${k.commentId}`),m=c.transport.marker+'\n',p=JSON.parse(q.body.slice(m.length));if(q.id!==k.commentId||!q.body.startsWith(m)||p.packageFingerprint!==f||p.zipSha256!==c.exactZip.sha256||p.chunkIndex!==k.chunkIndex||p.chunkCount!==c.exactZip.chunkCount||p.chunkSha256!==k.sha256||p.base64.length!==k.length||H(Buffer.from(p.base64))!==k.sha256)throw Error('CHUNK');s+=p.base64}let z=Buffer.from(s,'base64');if(s.length!==c.exactZip.base64Length||z.length!==c.exactZip.size||H(z)!==c.exactZip.sha256)throw Error('ZIP');let zp=path.join(os.tmpdir(),'m.zip');fs.writeFileSync(zp,z);let d=new Map;for(let n of c.expectedZipMembers){let r=spawnSync('unzip',['-p',zp,n],{encoding:null});if(r.status)throw Error('UNZIP');d.set(n,Buffer.from(r.stdout))}let m=JSON.parse(d.get('review-package.v1.json'));if(m.packageFingerprintSha256!==f)throw Error('MANIFEST');for(let x of m.files){let b=d.get(x.path);if(!b||b.length!==x.size||H(b)!==x.sha256)throw Error('FILE')}for(let [s,t]of Object.entries(c.destinationMap)){fs.mkdirSync(path.dirname(t),{recursive:true});fs.writeFileSync(t,d.get(s))}let q=await get('https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/issues/comments/5187885715'),mk='METHODS_GENERATION_58_WORKFLOW_CARRIER_V1\n',p=JSON.parse(q.body.slice(mk.length)),b=Buffer.from(p.base64,'base64');if(q.id!==5187885715||!q.body.startsWith(mk)||p.sha256!=='e7cd206fd90ffdd005cbd0f01048792c3d178faa10e353df1a7bb1e856a14686'||p.size!==b.length||H(b)!==p.sha256)throw Error('P0');fs.mkdirSync(path.dirname(process.env.P0),{recursive:true});fs.writeFileSync(process.env.P0,b);let a=JSON.parse(fs.readFileSync(c.destinationMap['adoption-register.v1.json']));if(a.entries?.length!==27||a.counts?.total!==27||a.sourceBinding?.role6State!=='INACTIVE'||a.sourceBinding?.role6Reopened!==false)throw Error('BOUNDARY')})().catch(e=>{console.error(e);process.exit(1)})
-          NODE
-          git config user.name github-actions; git config user.email github-actions@github.com
-          git add "$P0" control-plane/methods-information-benchmark/adoption-and-page-translation-v1/{adoption-register.v1.json,page-translation-model.v1.json,rolodex-information-map.v1.json,review-summary.v1.json,review-package.v1.json}
-          git commit -m 'Materialize exact Methods adoption translation package'
-          test "$(git diff --name-only "$BASE..HEAD" | wc -l)" -eq 7
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - id: h
-        run: echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
-  package:
-    needs: materialize
-    strategy: {matrix: {lane: [builder, verifier]}}
-    runs-on: ubuntu-24.04
-    env: {GH_TOKEN: '${{ github.token }}'}
-    steps:
-      - uses: actions/checkout@v4
-        with: {ref: '${{ needs.materialize.outputs.head }}', fetch-depth: 0, persist-credentials: false}
-      - run: node "$VERIFIER" --mode package --base-head "$BASE" --candidate-head "${{ needs.materialize.outputs.head }}" --holder "GITHUB_ACTIONS_METHODS_PACKAGE_${{ matrix.lane }}_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output "$RUNNER_TEMP/${{ matrix.lane }}.json"
-      - uses: actions/upload-artifact@v4
-        with: {name: 'methods-package-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}', path: '${{ runner.temp }}/${{ matrix.lane }}.json'}
-  close58:
-    needs: [materialize, package]
-    runs-on: ubuntu-24.04
-    outputs: {head: '${{ steps.h.outputs.head }}'}
-    env: {GITHUB_TOKEN: '${{ github.token }}'}
-    steps:
-      - uses: actions/checkout@v4
-        with: {ref: '${{ needs.materialize.outputs.head }}', fetch-depth: 0}
-      - uses: actions/download-artifact@v4
-        with: {pattern: 'methods-package-*-${{ github.run_id }}-${{ github.run_attempt }}', path: '${{ runner.temp }}/p', merge-multiple: true}
-      - name: Verify core, close generation 58, and commit two receipts
-        run: |
-          set -euo pipefail
-          node - <<'NODE'
-          const fs=require('fs'),b=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/p/builder.json')),v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/p/verifier.json'));if(b.holder===v.holder||b.result!=='PASS_MATERIALIZATION_CORE_BYTES_EXACT'||v.result!==b.result||b.sourcePackageFingerprintSha256!==process.env.FINGERPRINT||b.repositoryFingerprint!==v.repositoryFingerprint||b.verifierRepairPerformed||v.verifierRepairPerformed)process.exit(1)
-          NODE
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$REPOSITORY" --operation-id "$G58_OPERATION" --lock-scope "$G58_SCOPE" --lock-generation 58 --terminal-disposition PASS_CLOSED --output "$RUNNER_TEMP/g58.json"
-          mkdir -p "$(dirname "$IREC")"
-          node - <<'NODE'
-          const fs=require('fs'),crypto=require('crypto'),S=v=>Array.isArray(v)?v.map(S):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,S(v[k])])):v,H=b=>crypto.createHash('sha256').update(b).digest('hex'),bt=fs.readFileSync(process.env.RUNNER_TEMP+'/p/builder.json'),vt=fs.readFileSync(process.env.RUNNER_TEMP+'/p/verifier.json'),b=JSON.parse(bt),v=JSON.parse(vt),c=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/g58.json'));if(c.result!=='TERMINAL_CLOSURE_COMMITTED'||c.lockGeneration!==58||c.terminalDisposition!=='PASS_CLOSED')process.exit(1);let common={operationId:process.env.G58_OPERATION,lockGeneration:58,sourcePackageFingerprintSha256:process.env.FINGERPRINT,repositoryFingerprintSha256:b.repositoryFingerprint,role6State:'INACTIVE',reviewRepeated:false,packageRegenerated:false,publicMethodsMutation:'NONE',publicLawsMutation:'NONE',implementation:'NONE',deployment:'NONE',release:'NONE'},i=S({schema:'METHODS_AND_MODELS_ADOPTION_REVIEW_VERIFICATION_RECEIPT_v1',result:'PASS_INDEPENDENT_REPOSITORY_REPRODUCTION',...common,candidateHeadBeforeCommandReceipts:'${{ needs.materialize.outputs.head }}',builderHolder:b.holder,verifierHolder:v.holder,builderReceiptSha256:H(bt),verifierReceiptSha256:H(vt),distinctExecutionHolders:true,verifierRepairPerformed:false}),o=S({schema:'METHODS_AND_MODELS_ADOPTION_REVIEW_OPERATION_CLOSURE_RECEIPT_v1',result:'PASS_CLOSED',...common,canonicalGeneration58ClosureReceipt:c,role6Reopened:false});fs.writeFileSync(process.env.IREC,JSON.stringify(i,null,2)+'\n');fs.writeFileSync(process.env.CREC,JSON.stringify(o,null,2)+'\n')
-          NODE
-          git config user.name github-actions; git config user.email github-actions@github.com
-          git add "$IREC" "$CREC"; git commit -m 'Close Methods adoption translation generation 58'
-          test "$(git diff --name-only "$BASE..HEAD" | wc -l)" -eq 9
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - id: h
-        run: echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
-      - uses: actions/upload-artifact@v4
-        with: {name: 'methods-generation-58-${{ github.run_id }}-${{ github.run_attempt }}', path: '${{ runner.temp }}/g58.json'}
-  final:
-    needs: close58
-    strategy: {matrix: {lane: [builder, verifier]}}
-    runs-on: ubuntu-24.04
-    env: {GH_TOKEN: '${{ github.token }}'}
-    steps:
-      - uses: actions/checkout@v4
-        with: {ref: '${{ needs.close58.outputs.head }}', fetch-depth: 0, persist-credentials: false}
-      - run: node "$VERIFIER" --mode final --base-head "$BASE" --candidate-head "${{ needs.close58.outputs.head }}" --holder "GITHUB_ACTIONS_METHODS_FINAL_${{ matrix.lane }}_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output "$RUNNER_TEMP/${{ matrix.lane }}.json"
-      - uses: actions/upload-artifact@v4
-        with: {name: 'methods-final-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}', path: '${{ runner.temp }}/${{ matrix.lane }}.json'}
-  close64:
-    needs: [close58, final]
-    runs-on: ubuntu-24.04
-    env: {GITHUB_TOKEN: '${{ github.token }}'}
-    steps:
-      - uses: actions/checkout@v4
-        with: {ref: '${{ needs.close58.outputs.head }}', fetch-depth: 0, persist-credentials: false}
-      - uses: actions/download-artifact@v4
-        with: {pattern: 'methods-final-*-${{ github.run_id }}-${{ github.run_attempt }}', path: '${{ runner.temp }}/f', merge-multiple: true}
-      - name: Verify final state and close generation 64
-        run: |
-          set -euo pipefail
-          node - <<'NODE'
-          const fs=require('fs'),b=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/f/builder.json')),v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/f/verifier.json'));if(b.holder===v.holder||b.result!=='PASS_FINAL_REPOSITORY_PACKAGE_AND_GENERATION58_CLOSURE'||v.result!==b.result||b.repositoryFingerprint!==v.repositoryFingerprint||b.sourcePackageFingerprintSha256!==process.env.FINGERPRINT||b.verifierRepairPerformed||v.verifierRepairPerformed||!b.generation58Closed||!v.generation58Closed)process.exit(1)
-          NODE
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$REPOSITORY" --operation-id "$G64_OPERATION" --lock-scope "$G64_SCOPE" --lock-generation 64 --terminal-disposition PASS_CLOSED --output "$RUNNER_TEMP/g64.json"
-          node -e "let r=require(process.env.RUNNER_TEMP+'/g64.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockGeneration!==64||r.terminalDisposition!=='PASS_CLOSED')process.exit(1)"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: {name: 'methods-materialization-terminal-${{ github.run_id }}-${{ github.run_attempt }}', path: '${{ runner.temp }}/g64.json'}
+          git fetch origin main
+          test "$(git rev-parse origin/main^{commit})" = "$EXPECTED_MAIN"
+          git switch --detach "$EXPECTED_MAIN"
+          git switch -c "$REPAIR_BRANCH"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          carrier_path=Path('.github/ai-router/projects/methods-information-benchmark/adoption-review-source-package.carrier.v1.json')
+          verifier_path=Path('.github/ai-router/projects/methods-information-benchmark/verify-router-registration-and-package.v1.mjs')
+          c=json.loads(carrier_path.read_text())
+          policy={"commentId":5187613092,"chunkIndex":1,"observedBase64Length":9285,"observedBase64Sha256":"3de2f39b8d937e8c7891ad67f1bb75f90eac38221963e9771a9e95fcd9994fcc","acceptedPrefixLength":6000,"acceptedPrefixSha256":"0d2cbc3c5151e46f21cb0a93128677ce289661b6c651126a5062ae3b81e368a8","trailingLength":3285,"trailingSha256":"d9d5810cdd31a5e7e13da9e1502271a3e3f55777d15101b826e935fef8621e56","trailingMustEqualChunkIndex":2,"trailingMustEqualPrefixLength":3285,"rejectedReplacementCommentId":5188010300,"recoveryClass":"EXACT_COMMENT_ID_PREFIX_AND_NEXT_CHUNK_CROSSCHECK_ONLY"}
+          c['transport']['exactRecoveryPolicies']=[policy]
+          c['transport']['rejectedReplacementCommentIds']=[5188010300]
+          c['transport']['recoveryPolicyVersion']='EXACT_COMMENT_CHUNK_RECOVERY_v1'
+          carrier_path.write_text(json.dumps(c,indent=2,sort_keys=True)+'\n')
+          v=verifier_path.read_text()
+          old_chunk="function chunk(body,k,c){let m=c.transport.marker+'\\n';if(typeof body!=='string'||!body.startsWith(m))bad('CHUNK_MARKER',k.commentId);let p=JSON.parse(body.slice(m.length));if(p.schema!=='METHODS_ADOPTION_SOURCE_PACKAGE_CHUNK_v1'||p.packageFingerprint!==F||p.zipSha256!==c.exactZip.sha256||p.chunkIndex!==k.chunkIndex||p.chunkCount!==c.exactZip.chunkCount||p.chunkSha256!==k.sha256||typeof p.base64!=='string'||p.base64.length!==k.length||sha(Buffer.from(p.base64))!==k.sha256)bad('CHUNK_INVALID',k.commentId);return p.base64}"
+          old_source="function source(c){if(process.env.METHODS_SOURCE_ZIP_PATH)return fs.readFileSync(process.env.METHODS_SOURCE_ZIP_PATH);if(!process.env.GITHUB_TOKEN&&!process.env.GH_TOKEN)bad('TOKEN_MISSING');let s='';for(let k of[...c.transport.chunks].sort((a,b)=>a.chunkIndex-b.chunkIndex)){let q=JSON.parse(ex('gh',['api',`repos/${c.transport.repository}/issues/comments/${k.commentId}`]).stdout);if(q.id!==k.commentId)bad('COMMENT_ID',k.commentId);s+=chunk(q.body,k,c)}if(s.length!==c.exactZip.base64Length)bad('BASE64_LENGTH');return Buffer.from(s,'base64')}"
+          new_chunk="function chunk(body,k,c){let m=c.transport.marker+'\\n';if(typeof body!=='string'||!body.startsWith(m))bad('CHUNK_MARKER',k.commentId);let p=JSON.parse(body.slice(m.length));if(p.schema!=='METHODS_ADOPTION_SOURCE_PACKAGE_CHUNK_v1'||p.packageFingerprint!==F||p.zipSha256!==c.exactZip.sha256||p.chunkIndex!==k.chunkIndex||p.chunkCount!==c.exactZip.chunkCount||p.chunkSha256!==k.sha256||typeof p.base64!=='string')bad('CHUNK_IDENTITY',k.commentId);let policy=(c.transport.exactRecoveryPolicies??[]).find(x=>x.commentId===k.commentId&&x.chunkIndex===k.chunkIndex);if(policy){if(p.base64.length!==policy.observedBase64Length||sha(Buffer.from(p.base64))!==policy.observedBase64Sha256)bad('CHUNK_RECOVERY_OBSERVED',k.commentId);let accepted=p.base64.slice(0,k.length),trailing=p.base64.slice(k.length);if(k.length!==policy.acceptedPrefixLength||k.sha256!==policy.acceptedPrefixSha256||accepted.length!==k.length||sha(Buffer.from(accepted))!==k.sha256||trailing.length!==policy.trailingLength||sha(Buffer.from(trailing))!==policy.trailingSha256)bad('CHUNK_RECOVERY_PREFIX',k.commentId);return{base64:accepted,trailing,recoveryPolicy:policy}}if(p.base64.length!==k.length||sha(Buffer.from(p.base64))!==k.sha256)bad('CHUNK_INVALID',k.commentId);return{base64:p.base64,trailing:null,recoveryPolicy:null}}"
+          new_source="function source(c){if(process.env.METHODS_SOURCE_ZIP_PATH)return fs.readFileSync(process.env.METHODS_SOURCE_ZIP_PATH);if(!process.env.GITHUB_TOKEN&&!process.env.GH_TOKEN)bad('TOKEN_MISSING');let records=[];for(let k of[...c.transport.chunks].sort((a,b)=>a.chunkIndex-b.chunkIndex)){let q=JSON.parse(ex('gh',['api',`repos/${c.transport.repository}/issues/comments/${k.commentId}`]).stdout);if(q.id!==k.commentId)bad('COMMENT_ID',k.commentId);records.push({k,...chunk(q.body,k,c)})}let s='';for(let r of records){if(r.recoveryPolicy){let p=r.recoveryPolicy,n=records.find(x=>x.k.chunkIndex===p.trailingMustEqualChunkIndex);if(!n||r.trailing!==n.base64.slice(0,p.trailingMustEqualPrefixLength))bad('CHUNK_RECOVERY_CROSSCHECK',r.k.commentId)}s+=r.base64}if(s.length!==c.exactZip.base64Length)bad('BASE64_LENGTH');return Buffer.from(s,'base64')}"
+          if v.count(old_chunk)!=1 or v.count(old_source)!=1:
+              raise SystemExit('EXACT_VERIFIER_SOURCE_NOT_FOUND')
+          v=v.replace(old_chunk,new_chunk).replace(old_source,new_source)
+          verifier_path.write_text(v)
+          PY
+          node --check .github/ai-router/projects/methods-information-benchmark/verify-router-registration-and-package.v1.mjs
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          c=json.loads(Path('.github/ai-router/projects/methods-information-benchmark/adoption-review-source-package.carrier.v1.json').read_text())
+          p=c['transport']['exactRecoveryPolicies'][0]
+          assert p['commentId']==5187613092
+          assert p['observedBase64Length']==9285
+          assert p['acceptedPrefixLength']==6000
+          assert p['trailingLength']==3285
+          assert p['trailingMustEqualChunkIndex']==2
+          assert p['trailingMustEqualPrefixLength']==3285
+          print(hashlib.sha256(Path('.github/ai-router/projects/methods-information-benchmark/adoption-review-source-package.carrier.v1.json').read_bytes()).hexdigest())
+          print(hashlib.sha256(Path('.github/ai-router/projects/methods-information-benchmark/verify-router-registration-and-package.v1.mjs').read_bytes()).hexdigest())
+          PY
+          test "$(git diff --name-only | sort | tr '\n' ' ')" = ".github/ai-router/projects/methods-information-benchmark/adoption-review-source-package.carrier.v1.json .github/ai-router/projects/methods-information-benchmark/verify-router-registration-and-package.v1.mjs "
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .github/ai-router/projects/methods-information-benchmark/adoption-review-source-package.carrier.v1.json .github/ai-router/projects/methods-information-benchmark/verify-router-registration-and-package.v1.mjs
+          git commit -m "Bind exact recovery for malformed Methods chunk 1"
+          git push origin "HEAD:$REPAIR_BRANCH"

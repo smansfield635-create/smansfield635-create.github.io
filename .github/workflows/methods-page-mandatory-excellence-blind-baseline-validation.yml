@@ -92,13 +92,13 @@ jobs:
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           for attempt in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break; sleep 1; done
           node toolchain/.github/ai-router/page-excellence-toolchain/blind-evaluator.v1.mjs \
-            --base-url http://127.0.0.1:4173/index.html \
-            --subject-dir "$GITHUB_WORKSPACE/subject/$CANDIDATE_ROOT" \
-            --subject-head "$SUBJECT_HEAD" \
-            --packaging-head "$PACKAGING_HEAD" \
+            --baseUrl http://127.0.0.1:4173/index.html \
+            --subjectDir "$GITHUB_WORKSPACE/subject/$CANDIDATE_ROOT" \
+            --subjectHead "$SUBJECT_HEAD" \
+            --packagingHead "$PACKAGING_HEAD" \
             --holder "${{ matrix.holder }}" \
             --browsers chromium,firefox,webkit \
-            --toolset-bundle toolchain/.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json \
+            --toolsetBundle toolchain/.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json \
             --output "toolchain/artifacts/${{ matrix.holder }}.json"
 
       - name: Upload blind JSON receipt

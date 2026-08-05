@@ -143,18 +143,6 @@
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "dd07a1e4b89ca67b0b9193fbd9c340af3c8dfaac2fa6a6a752a1c70a49a9fea8",
       "state": "ADMITTED_LOCKED"
-    },
-    "e1cae7f90cbc1c8e388826035b2c3e8d3d487ba15f68c7ec0aa7e699f3f7da09": {
-      "governingHead": "0c77972a7f97ef6f89150ed1a0d3708ee4fdb5cb",
-      "lockGeneration": 58,
-      "lockScope": "METHODS_INFORMATION_BENCHMARK/METHODS_AND_MODELS/AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION/V1",
-      "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
-      "procedureLocatorDigest": "488bcf400a2c1b730b07707f23450e5078ed1e309d0cd611b1abd2529acaffbd",
-      "released": false,
-      "requestDigest": "3b76bbc213412c02c685d080e008349aa8986c896e069b0278f57bc6850aa446",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "e1cae7f90cbc1c8e388826035b2c3e8d3d487ba15f68c7ec0aa7e699f3f7da09",
-      "state": "ADMITTED_LOCKED"
     }
   },
   "allowedChangedPaths": [
@@ -1409,6 +1397,19 @@
       "requestDigest": "4f32c8a3dccf3c49c4e5c4ea9e71d64d673927cd1473e6fa80d30ada56d40bd5",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "da951357141f8b3e619eb1c35aa1e93e46c218e2278e10b8e094bb34ec545604",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "0c77972a7f97ef6f89150ed1a0d3708ee4fdb5cb",
+      "lockGeneration": 58,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK/METHODS_AND_MODELS/AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION/V1",
+      "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
+      "procedureLocatorDigest": "488bcf400a2c1b730b07707f23450e5078ed1e309d0cd611b1abd2529acaffbd",
+      "released": true,
+      "requestDigest": "3b76bbc213412c02c685d080e008349aa8986c896e069b0278f57bc6850aa446",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e1cae7f90cbc1c8e388826035b2c3e8d3d487ba15f68c7ec0aa7e699f3f7da09",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

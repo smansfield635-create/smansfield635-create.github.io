@@ -1,0 +1,32 @@
+{
+  "canonicalGeneration58ClosureReceipt": {
+    "closureCommitSha": "2f30766e7fd5562d53de604cf500a047a1fbf361",
+    "committedLedgerBlobSha": "5a7a476a925f2976a8cc164caa7a94e34956de6f",
+    "lockGeneration": 58,
+    "lockReleased": true,
+    "lockScope": "METHODS_INFORMATION_BENCHMARK/METHODS_AND_MODELS/AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION/V1",
+    "observedBranchHead": "c147f26109667886055ecc107f252313d6973101",
+    "observedLedgerBlobSha": "272804ed553a627f34680b91c63b498d9e561112",
+    "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
+    "result": "TERMINAL_CLOSURE_COMMITTED",
+    "schema": "REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1",
+    "scopeHash": "e1cae7f90cbc1c8e388826035b2c3e8d3d487ba15f68c7ec0aa7e699f3f7da09",
+    "terminalDisposition": "PASS_CLOSED",
+    "terminalHistoryPreserved": true
+  },
+  "deployment": "NONE",
+  "implementation": "NONE",
+  "lockGeneration": 58,
+  "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
+  "packageRegenerated": false,
+  "publicLawsMutation": "NONE",
+  "publicMethodsMutation": "NONE",
+  "release": "NONE",
+  "repositoryFingerprintSha256": "12e2ef4d1bbfed90f237a11540b91b956082b105c76e51ac3ebcd9be95d55e0d",
+  "result": "PASS_CLOSED",
+  "reviewRepeated": false,
+  "role6Reopened": false,
+  "role6State": "INACTIVE",
+  "schema": "METHODS_AND_MODELS_ADOPTION_REVIEW_OPERATION_CLOSURE_RECEIPT_v1",
+  "sourcePackageFingerprintSha256": "4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e"
+}

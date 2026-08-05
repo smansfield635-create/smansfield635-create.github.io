@@ -1,0 +1,23 @@
+{
+  "builderHolder": "GITHUB_ACTIONS_METHODS_PACKAGE_builder_31018648059_1",
+  "builderReceiptSha256": "f904eb5614c44b81c15b6cfab601456073b412fe3133194ceae68a53532491d8",
+  "candidateHeadBeforeCommandReceipts": "86beafad76fb454d075a5312d21c14d99ecc3f20",
+  "deployment": "NONE",
+  "distinctExecutionHolders": true,
+  "implementation": "NONE",
+  "lockGeneration": 58,
+  "operationId": "METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1",
+  "packageRegenerated": false,
+  "publicLawsMutation": "NONE",
+  "publicMethodsMutation": "NONE",
+  "release": "NONE",
+  "repositoryFingerprintSha256": "12e2ef4d1bbfed90f237a11540b91b956082b105c76e51ac3ebcd9be95d55e0d",
+  "result": "PASS_INDEPENDENT_REPOSITORY_REPRODUCTION",
+  "reviewRepeated": false,
+  "role6State": "INACTIVE",
+  "schema": "METHODS_AND_MODELS_ADOPTION_REVIEW_VERIFICATION_RECEIPT_v1",
+  "sourcePackageFingerprintSha256": "4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e",
+  "verifierHolder": "GITHUB_ACTIONS_METHODS_PACKAGE_verifier_31018648059_1",
+  "verifierReceiptSha256": "1ceeae7f86a57fa3932cb48f4a737484ae6849b29f7870ac215658c7149744f9",
+  "verifierRepairPerformed": false
+}

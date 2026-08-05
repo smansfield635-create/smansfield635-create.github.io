@@ -1,0 +1,254 @@
+name: PR570 Lineage-Aware Permanent Instrument Ratification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  GOVERNING_MAIN: 2c4e5a21e4e902bee421528498c112998fa783bc
+  HISTORICAL_HEAD: 7c0b8871928b21cd9b2806f058bce34eed11f2ba
+  CANDIDATE_HEAD: 0253326d80a89084142465f5210b4bca6361bb1a
+  ORIGINAL_PACKAGE_FINGERPRINT: 3f1024c9dc2fed15d3a8a7a25387066a48f5a8ffddf2e3cfd00b96dd95e45f28
+
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prepare exact immutable worktrees
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git diff --name-only "$GOVERNING_MAIN" HEAD)" = ".github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml"
+          git fetch origin "$HISTORICAL_HEAD" "$CANDIDATE_HEAD" "$GOVERNING_MAIN"
+          test "$(git rev-parse "$CANDIDATE_HEAD^")" = "$GOVERNING_MAIN"
+          git worktree add --detach "$RUNNER_TEMP/historical" "$HISTORICAL_HEAD"
+          git worktree add --detach "$RUNNER_TEMP/candidate" "$CANDIDATE_HEAD"
+      - name: Prove exact 25-blob equality
+        run: |
+          mkdir -p /tmp/pr570-builder
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+          import crypto from 'node:crypto';
+          const run=(...a)=>cp.execFileSync('git',a,{encoding:'utf8'}).trim();
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const historical=process.env.HISTORICAL_HEAD,candidate=process.env.CANDIDATE_HEAD,base=process.env.GOVERNING_MAIN;
+          const manifest=JSON.parse(run('show',`${historical}:h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/changed-path-manifest.v1.json`));
+          const expected=[...manifest.expectedChangedPaths].sort();
+          if(expected.length!==25)throw Error('EXPECTED_PATH_COUNT_NOT_25');
+          const observed=run('diff','--name-only',base,candidate).split(/\r?\n/).filter(Boolean).sort();
+          if(JSON.stringify(observed)!==JSON.stringify(expected))throw Error('CURRENT_MAIN_SUCCESSOR_PATH_SET_MISMATCH');
+          const blobMap=expected.map(path=>{const h=run('rev-parse',`${historical}:${path}`),c=run('rev-parse',`${candidate}:${path}`);if(h!==c)throw Error(`BLOB_MISMATCH:${path}`);return {path,blob:h};});
+          const payload=stable({schema:'PR570_EXACT_25_BLOB_EQUALITY_PAYLOAD_v1',historical,candidate,base,blobMap});
+          const receipt={...payload,result:'PASS_CLOSED_EXACT_25_BLOBS_EQUAL',blobMapDigest:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')};
+          fs.writeFileSync('/tmp/pr570-builder/blob-equality.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - name: Reproduce historical certified instrument
+        run: |
+          cd "$RUNNER_TEMP/historical"
+          node tools/h-earth-map-wide-terrain/self-test.v1.mjs \
+            --root . \
+            --expected-head "$HISTORICAL_HEAD" \
+            --holder "PR570_V2_HISTORICAL_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --output-dir /tmp/pr570-builder/historical
+          node -e "const r=require('/tmp/pr570-builder/historical/bootstrap-self-test-receipt.json');if(r.result!=='PASS_CLOSED'||r.packageFingerprint!==process.env.ORIGINAL_PACKAGE_FINGERPRINT||r.negativeFixturesPassed!==25)process.exit(1)"
+      - name: Reproduce integrated successor semantics
+        run: |
+          cd "$RUNNER_TEMP/candidate"
+          node tools/h-earth-map-wide-terrain/self-test.v1.mjs \
+            --root . \
+            --holder "PR570_V2_INTEGRATION_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --output-dir /tmp/pr570-builder/integration
+          node -e "const r=require('/tmp/pr570-builder/integration/bootstrap-self-test-receipt.json');if(r.result!=='PASS_CLOSED'||r.negativeFixturesPassed!==25||r.fingerprintPayload.identity.skippedForLocalPreflight!==true)process.exit(1)"
+      - name: Run automatic H-Earth preflight against candidate
+        run: |
+          set -euo pipefail
+          git diff --name-only "$GOVERNING_MAIN" "$CANDIDATE_HEAD" \
+            | grep -E '^h-earth-3d/' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$)' \
+            | sort -u > /tmp/pr570-builder/h-earth-paths.txt
+          cd "$RUNNER_TEMP/candidate"
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/pr570-builder/h-earth-paths.txt \
+            --task "PR570 lineage-aware builder preflight" \
+            --mutation-intent \
+            --output /tmp/pr570-builder/preflight.json
+          node - <<'NODE'
+          const r=require('/tmp/pr570-builder/preflight.json');
+          const result=r.finalDisposition??r.result??r.disposition;
+          if(result!=='PASS')process.exit(1);
+          NODE
+      - name: Emit normalized builder certification
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const h=JSON.parse(fs.readFileSync('/tmp/pr570-builder/historical/bootstrap-self-test-receipt.json'));
+          const i=JSON.parse(fs.readFileSync('/tmp/pr570-builder/integration/bootstrap-self-test-receipt.json'));
+          const b=JSON.parse(fs.readFileSync('/tmp/pr570-builder/blob-equality.json'));
+          const p=JSON.parse(fs.readFileSync('/tmp/pr570-builder/preflight.json'));
+          const payload=stable({schema:'PR570_LINEAGE_AWARE_RATIFICATION_FINGERPRINT_PAYLOAD_v2',historicalFingerprint:h.packageFingerprint,integrationFingerprint:i.packageFingerprint,blobMapDigest:b.blobMapDigest,preflightPass:(p.finalDisposition??p.result??p.disposition)==='PASS',historicalHead:process.env.HISTORICAL_HEAD,candidateHead:process.env.CANDIDATE_HEAD,governingMain:process.env.GOVERNING_MAIN});
+          const receipt={schema:'PR570_LINEAGE_AWARE_BUILDER_CERTIFICATION_v2',result:'PASS_CLOSED',executionHolder:`PR570_V2_BUILDER_${process.env.GITHUB_RUN_ID}_${process.env.GITHUB_RUN_ATTEMPT}`,packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),fingerprintPayload:payload,historicalReceiptPath:'historical/bootstrap-self-test-receipt.json',integrationReceiptPath:'integration/bootstrap-self-test-receipt.json',blobEqualityPath:'blob-equality.json',preflightPath:'preflight.json'};
+          fs.writeFileSync('/tmp/pr570-builder/builder-certification.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-lineage-aware-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/pr570-builder
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-lineage-aware-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/builder
+      - name: Prepare independent worktrees
+        run: |
+          set -euo pipefail
+          git fetch origin "$HISTORICAL_HEAD" "$CANDIDATE_HEAD" "$GOVERNING_MAIN"
+          test "$(git rev-parse "$CANDIDATE_HEAD^")" = "$GOVERNING_MAIN"
+          git worktree add --detach "$RUNNER_TEMP/historical" "$HISTORICAL_HEAD"
+          git worktree add --detach "$RUNNER_TEMP/candidate" "$CANDIDATE_HEAD"
+          mkdir -p /tmp/pr570-verifier
+      - name: Independently prove exact 25-blob equality
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+          import crypto from 'node:crypto';
+          const run=(...a)=>cp.execFileSync('git',a,{encoding:'utf8'}).trim();
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const historical=process.env.HISTORICAL_HEAD,candidate=process.env.CANDIDATE_HEAD,base=process.env.GOVERNING_MAIN;
+          const manifest=JSON.parse(run('show',`${historical}:h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/changed-path-manifest.v1.json`));
+          const expected=[...manifest.expectedChangedPaths].sort();
+          const observed=run('diff','--name-only',base,candidate).split(/\r?\n/).filter(Boolean).sort();
+          if(expected.length!==25||JSON.stringify(observed)!==JSON.stringify(expected))throw Error('PATH_SET_MISMATCH');
+          const blobMap=expected.map(path=>{const h=run('rev-parse',`${historical}:${path}`),c=run('rev-parse',`${candidate}:${path}`);if(h!==c)throw Error(`BLOB_MISMATCH:${path}`);return {path,blob:h};});
+          const payload=stable({schema:'PR570_EXACT_25_BLOB_EQUALITY_PAYLOAD_v1',historical,candidate,base,blobMap});
+          fs.writeFileSync('/tmp/pr570-verifier/blob-equality.json',JSON.stringify({...payload,result:'PASS_CLOSED_EXACT_25_BLOBS_EQUAL',blobMapDigest:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex')},null,2)+'\n');
+          NODE
+      - name: Fresh historical verifier
+        run: |
+          cd "$RUNNER_TEMP/historical"
+          node tools/h-earth-map-wide-terrain/fresh-verifier.v1.mjs \
+            --root . \
+            --expected-head "$HISTORICAL_HEAD" \
+            --builder-receipt /tmp/builder/historical/bootstrap-self-test-receipt.json \
+            --holder "PR570_V2_HISTORICAL_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --output-dir /tmp/pr570-verifier/historical
+      - name: Fresh integration verifier
+        run: |
+          cd "$RUNNER_TEMP/candidate"
+          node tools/h-earth-map-wide-terrain/fresh-verifier.v1.mjs \
+            --root . \
+            --builder-receipt /tmp/builder/integration/bootstrap-self-test-receipt.json \
+            --holder "PR570_V2_INTEGRATION_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --output-dir /tmp/pr570-verifier/integration
+      - name: Independently rerun automatic preflight
+        run: |
+          set -euo pipefail
+          git diff --name-only "$GOVERNING_MAIN" "$CANDIDATE_HEAD" \
+            | grep -E '^h-earth-3d/' \
+            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$)' \
+            | sort -u > /tmp/pr570-verifier/h-earth-paths.txt
+          cd "$RUNNER_TEMP/candidate"
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/pr570-verifier/h-earth-paths.txt \
+            --task "PR570 lineage-aware verifier preflight" \
+            --mutation-intent \
+            --output /tmp/pr570-verifier/preflight.json
+          node -e "const r=require('/tmp/pr570-verifier/preflight.json');if((r.finalDisposition??r.result??r.disposition)!=='PASS')process.exit(1)"
+      - name: Emit normalized verifier certification
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const h=JSON.parse(fs.readFileSync('/tmp/pr570-verifier/historical/fresh-verifier-receipt.json'));
+          const i=JSON.parse(fs.readFileSync('/tmp/pr570-verifier/integration/fresh-verifier-receipt.json'));
+          const b=JSON.parse(fs.readFileSync('/tmp/pr570-verifier/blob-equality.json'));
+          const p=JSON.parse(fs.readFileSync('/tmp/pr570-verifier/preflight.json'));
+          const payload=stable({schema:'PR570_LINEAGE_AWARE_RATIFICATION_FINGERPRINT_PAYLOAD_v2',historicalFingerprint:h.packageFingerprint,integrationFingerprint:i.packageFingerprint,blobMapDigest:b.blobMapDigest,preflightPass:(p.finalDisposition??p.result??p.disposition)==='PASS',historicalHead:process.env.HISTORICAL_HEAD,candidateHead:process.env.CANDIDATE_HEAD,governingMain:process.env.GOVERNING_MAIN});
+          const receipt={schema:'PR570_LINEAGE_AWARE_VERIFIER_CERTIFICATION_v2',result:'PASS_CLOSED',executionHolder:`PR570_V2_VERIFIER_${process.env.GITHUB_RUN_ID}_${process.env.GITHUB_RUN_ATTEMPT}`,packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),fingerprintPayload:payload,independentReproduction:true,repairPerformed:false};
+          const builder=JSON.parse(fs.readFileSync('/tmp/builder/builder-certification.json'));
+          if(builder.packageFingerprint!==receipt.packageFingerprint||builder.executionHolder===receipt.executionHolder)throw Error('INDEPENDENT_REPRODUCTION_MISMATCH');
+          fs.writeFileSync('/tmp/pr570-verifier/verifier-certification.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-lineage-aware-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/pr570-verifier
+          if-no-files-found: error
+          retention-days: 90
+
+  certify:
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-lineage-aware-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-lineage-aware-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/verifier
+      - name: Verify live exact identities and emit merge authority
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = "$GOVERNING_MAIN"
+          test "$(git ls-remote origin refs/heads/bootstrap/h-earth-map-wide-terrain-estate-instrument-v1-001 | cut -f1)" = "$HISTORICAL_HEAD"
+          test "$(git ls-remote origin refs/heads/activation/h-earth-map-wide-instrument-pr570-v1-001 | cut -f1)" = "$CANDIDATE_HEAD"
+          mkdir -p /tmp/pr570-final
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const b=JSON.parse(fs.readFileSync('/tmp/builder/builder-certification.json'));
+          const v=JSON.parse(fs.readFileSync('/tmp/verifier/verifier-certification.json'));
+          if(b.result!=='PASS_CLOSED'||v.result!=='PASS_CLOSED'||b.packageFingerprint!==v.packageFingerprint||b.executionHolder===v.executionHolder)throw Error('CERTIFICATION_MISMATCH');
+          const receipt={schema:'PR570_EXACT_HEAD_MERGE_AUTHORITY_RECEIPT_v2',result:'PASS_CLOSED_EXACT_MERGE_AUTHORITY',repository:process.env.GITHUB_REPOSITORY,prNumber:602,exactGoverningMain:process.env.GOVERNING_MAIN,exactCandidateHead:process.env.CANDIDATE_HEAD,historicalHead:process.env.HISTORICAL_HEAD,packageFingerprint:b.packageFingerprint,mergeMethod:'merge',headSubstitutionProhibited:true,mainDriftRequiresHold:true,productMutationAuthorized:false,terrainMutationAuthorized:false,deploymentAuthorized:false,releaseAuthorized:false};
+          receipt.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+          fs.writeFileSync('/tmp/pr570-final/merge-authority.json',JSON.stringify(receipt,null,2)+'\n');
+          fs.copyFileSync('/tmp/builder/builder-certification.json','/tmp/pr570-final/builder-certification.json');
+          fs.copyFileSync('/tmp/verifier/verifier-certification.json','/tmp/pr570-final/verifier-certification.json');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-lineage-aware-premerge-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/pr570-final
+          if-no-files-found: error
+          retention-days: 90

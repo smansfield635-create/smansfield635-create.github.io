@@ -1,0 +1,304 @@
+{
+  "schemaVersion": "IMI_GENERALIZABILITY_PROTOCOL_v1",
+  "operation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
+  "status": "FROZEN",
+  "purpose": "Pre-register the domain admission, replication, held-out evidence, independent reproduction, and failure-custody rules that govern Phase 3 external tests.",
+  "governingConstruct": {
+    "construct": "RETAINED_JOINT_MANEUVERABILITY_THROUGH_A_SPECIFIED_TRAJECTORY_UNDER_MULTIPLE_DECLARED_NON_SUBSTITUTABLE_REQUIRED_FACTORS",
+    "formula": "IMI_tau(t)=product_{i in R_tau} a_i(t)",
+    "transferRule": "TRANSFER_THE_MEASUREMENT_ARCHITECTURE_AND_OUTPUT_CLASSES_NOT_UNCALIBRATED_RAW_SCORE_MAGNITUDES",
+    "forbiddenUniversalMeanings": [
+      "HEALTH",
+      "INTELLIGENCE",
+      "RESILIENCE",
+      "SOLVENCY",
+      "QUALITY",
+      "CAUSATION"
+    ]
+  },
+  "domainAdmissionStandard": {
+    "decision": "ALL_MANDATORY_CRITERIA_REQUIRED",
+    "mandatoryCriteria": [
+      {
+        "id": "DAS_01_CONSTRUCT_FIT",
+        "rule": "The proposed domain must contain a specified trajectory or decision path whose success requires multiple jointly usable factors."
+      },
+      {
+        "id": "DAS_02_NON_SUBSTITUTABILITY",
+        "rule": "Each required factor must be justified as non-substitutable for the declared route; unrelated strength may not compensate for a required failure."
+      },
+      {
+        "id": "DAS_03_FACTOR_OBSERVABILITY",
+        "rule": "Every required factor must map to an observable or reproducibly derived source variable with provenance."
+      },
+      {
+        "id": "DAS_04_ROUTE_FREEZE",
+        "rule": "Required factors, transformations, normalizers, missingness rules, collapse predicates, ordinal projection, and comparators must be frozen before held-out outcomes are inspected."
+      },
+      {
+        "id": "DAS_05_MISSINGNESS_DISCIPLINE",
+        "rule": "ABSENT, NOT_APPLICABLE, NOT_OBSERVED, and STRUCTURALLY_UNAVAILABLE must remain distinct; missing required evidence must yield UNEVALUABLE rather than imputation by convenience."
+      },
+      {
+        "id": "DAS_06_SOURCE_CUSTODY",
+        "rule": "Source identity, retrieval time, license or access basis, raw digest, transformation digest, and row-count reconciliation must be preserved."
+      },
+      {
+        "id": "DAS_07_COMPARATOR_PARITY",
+        "rule": "IMI must be compared against additive mean, weakest-factor-only, geometric mean, best single factor, and a domain-standard baseline when available."
+      },
+      {
+        "id": "DAS_08_OUTCOME_SEPARATION",
+        "rule": "Measurement construction data and held-out outcome or temporal data must be separated by time, source, institution, population, or explicit partition."
+      },
+      {
+        "id": "DAS_09_TERMINAL_BOUNDARY",
+        "rule": "Terminal or IMI-7 assignment requires affirmative route-specific terminal evidence and may not be inferred from a severe snapshot alone."
+      },
+      {
+        "id": "DAS_10_NEGATIVE_RESULT_CUSTODY",
+        "rule": "Null, adverse, saturated, dominated, non-reproduced, or comparator-inferior results must be retained without route retuning after outcome inspection."
+      }
+    ],
+    "admissionOutcomes": [
+      "ADMIT",
+      "HOLD_FOR_REPAIR",
+      "REJECT_CONSTRUCT_MISMATCH",
+      "REJECT_INSUFFICIENT_SOURCE_CUSTODY"
+    ],
+    "repairBoundary": "REPAIR_MAY_PRECEDE_HELD_OUT_INSPECTION_ONLY"
+  },
+  "preregisteredCrossDomainHypotheses": [
+    {
+      "id": "H1_ENGINE_EXECUTION_TRANSFER",
+      "type": "CONFIRMATORY_PROCESS",
+      "hypothesis": "The frozen engine will produce valid governed receipts across each admitted route family without domain-specific changes to the mathematical kernel.",
+      "successRule": "All admitted Phase 3 tracks execute the same kernel and pass schema, custody, missingness, and receipt gates.",
+      "failureRule": "Any track requires a kernel rewrite or bypass to execute."
+    },
+    {
+      "id": "H2_NONCOMPENSATORY_DIFFERENTIATION",
+      "type": "STRUCTURAL",
+      "hypothesis": "IMI will differ materially from at least one compensatory comparator in distributions containing uneven required-factor profiles.",
+      "successRule": "Predeclared distributional or rank difference exceeds the track-specific minimal-materiality threshold.",
+      "failureRule": "IMI is numerically or rank-equivalent to all admitted comparators within the frozen threshold."
+    },
+    {
+      "id": "H3_WEAKEST_FACTOR_PATTERN",
+      "type": "DIAGNOSTIC",
+      "hypothesis": "Weakest-factor diversity is route- and population-dependent rather than universally required.",
+      "successRule": "The portfolio contains both diverse and dominant weakest-factor patterns without violating route validity.",
+      "failureRule": "A purportedly multi-factor route contains a permanently inactive factor or unexplained deterministic dominance caused by construction."
+    },
+    {
+      "id": "H4_HELD_OUT_ASSOCIATION",
+      "type": "OUTCOME",
+      "hypothesis": "Where an admissible outcome or future state exists, IMI or CS may show route-specific held-out association but no universal predictive effect is presumed.",
+      "successRule": "Direction, endpoint, horizon, and uncertainty satisfy the frozen track rule.",
+      "failureRule": "The frozen direction is contradicted or uncertainty includes the track's null boundary."
+    },
+    {
+      "id": "H5_REPRODUCIBILITY",
+      "type": "REPRODUCTION",
+      "hypothesis": "A clean-room executor can reproduce route validation, case classifications, aggregate statistics, weakest-factor outputs, and receipt digests within frozen tolerances.",
+      "successRule": "All required reproduction fields pass; exact digests match where deterministic and numeric tolerances pass where source ordering or floating representation may differ.",
+      "failureRule": "Any required field is missing, silently repaired, or outside tolerance."
+    },
+    {
+      "id": "H6_SATURATION_AND_DOMINANCE_DIAGNOSIS",
+      "type": "LIMITATION",
+      "hypothesis": "Observed saturation or single-factor dominance can be classified as data-resolution, route-construction, aggregation, or substantive-domain effects without post-outcome retuning.",
+      "successRule": "A predeclared discrimination analysis assigns or retains an unresolved class with evidence.",
+      "failureRule": "The effect is dismissed or repaired without preserved negative evidence."
+    }
+  ],
+  "replicationGrid": [
+    {
+      "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+      "routeFamily": "STATIC_INSTITUTIONAL_PROFILE",
+      "eligibleEvidence": [
+        "NEXT_CMS_RELEASE",
+        "NON_CMS_HOSPITAL_SYSTEM_WITH_COMPARABLE_REQUIRED_FACTORS"
+      ],
+      "heldOutUnit": "HOSPITAL_OR_INSTITUTION",
+      "primaryTests": [
+        "RECEIPT_REPRODUCTION",
+        "MISSINGNESS_RATE",
+        "HARD_COLLAPSE_OCCURRENCE",
+        "HIGH_END_SATURATION",
+        "HELD_OUT_OVERALL_OR_DOMAIN_STANDARD_OUTCOME_ASSOCIATION"
+      ],
+      "minimumEvidence": "FULL_NEXT_RELEASE_OR_AT_LEAST_500_INDEPENDENT_INSTITUTIONS",
+      "prohibitedClaims": [
+        "CAUSATION",
+        "CLINICAL_DIAGNOSIS",
+        "UNIVERSAL_HOSPITAL_QUALITY"
+      ]
+    },
+    {
+      "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+      "routeFamily": "PARTICIPANT_FEATURE_STRUCTURE",
+      "eligibleEvidence": [
+        "INDEPENDENT_PUBLISHED_FEATURE_DATASET",
+        "PROSPECTIVELY_EXTRACTED_FROZEN_FEATURE_SET"
+      ],
+      "heldOutUnit": "PARTICIPANT",
+      "primaryTests": [
+        "FIVE_FACTOR_ROUTE_EXECUTION",
+        "UNIQUE_SCORE_RATE",
+        "WEAKEST_FACTOR_DIVERSITY",
+        "EXACT_TIE_PRESERVATION",
+        "LEGACY_ROUTE_REPRODUCTION"
+      ],
+      "minimumEvidence": "AT_LEAST_100_INDEPENDENT_PARTICIPANTS_AND_AT_LEAST_TWO_DECLARED_GROUPS_OR_LANGUAGES",
+      "prohibitedClaims": [
+        "ALZHEIMERS_DIAGNOSIS",
+        "CLINICAL_SCREENING",
+        "CAUSAL_LANGUAGE_DECLINE"
+      ]
+    },
+    {
+      "track": "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+      "routeFamily": "LONGITUDINAL_MULTI_STRESSOR_RESILIENCE",
+      "eligibleEvidence": [
+        "AT_LEAST_THREE_ADDITIONAL_QUARTERLY_RELEASES",
+        "LONGER_HISTORICAL_PANEL_WITH_FROZEN_VARIABLE_DEFINITIONS",
+        "COLONY_LEVEL_DATA_IF_LAWFULLY_AVAILABLE"
+      ],
+      "heldOutUnit": "STATE_QUARTER_OR_COLONY_PERIOD",
+      "primaryTests": [
+        "NEXT_PERIOD_LOSS_ASSOCIATION",
+        "VARROA_DOMINANCE_CLASSIFICATION",
+        "WEAKEST_FACTOR_DIVERSITY",
+        "IMI_VS_ADDITIVE_VS_WMI",
+        "AGGREGATION_SENSITIVITY"
+      ],
+      "minimumEvidence": "AT_LEAST_20_STATES_ACROSS_THREE_NEW_TRANSITIONS_OR_A_PREDECLARED_COLONY_LEVEL_SAMPLE",
+      "prohibitedClaims": [
+        "COLONY_LEVEL_CAUSATION_FROM_STATE_AGGREGATES",
+        "FINAL_BEE_ROUTE_VALIDITY",
+        "UNIVERSAL_EARLY_WARNING"
+      ]
+    },
+    {
+      "track": "DSSI_REMAINING_COUNTRY_CONTINUATION",
+      "routeFamily": "SCHEDULE_DISTRIBUTION_STRUCTURE",
+      "eligibleEvidence": [
+        "REMAINING_DSSI_COUNTRY_SCHEDULES",
+        "INDEPENDENT_DEBT_SERVICE_SCHEDULE_SOURCE_WITH_MATCHED_DEFINITIONS"
+      ],
+      "heldOutUnit": "COUNTRY_SCHEDULE",
+      "primaryTests": [
+        "ALL_COUNTRY_EXTRACTION_COMPLETION",
+        "PRINCIPAL_INTEREST_WEAKEST_PATTERN",
+        "DISTRIBUTIONAL_NONREDUNDANCY",
+        "SOURCE_RECONCILIATION",
+        "OPTIONAL_PREDECLARED_SCHEDULE_STRESS_OUTCOME"
+      ],
+      "minimumEvidence": "ALL_LAWFULLY_EXTRACTABLE_REMAINING_DSSI_COUNTRIES_OR_AT_LEAST_20_NEW_COUNTRY_SCHEDULES_WITH_DOCUMENTED_FAILURES",
+      "prohibitedClaims": [
+        "DEFAULT_PREDICTION",
+        "SOLVENCY_PREDICTION",
+        "CREDIT_RATING"
+      ]
+    }
+  ],
+  "heldOutDataRequirements": {
+    "mandatoryRules": [
+      "ROUTE_AND_HYPOTHESES_FROZEN_BEFORE_HELD_OUT_INSPECTION",
+      "NO_ROW_OR_UNIT_OVERLAP_WITH_ROUTE_DEVELOPMENT_SAMPLE_UNLESS_EXPLICIT_TEMPORAL_REPLICATION",
+      "SOURCE_IDENTITY_AND_RAW_DIGEST_BOUND",
+      "PREDECLARED_EXCLUSIONS_AND_MISSINGNESS_RULES",
+      "OUTCOME_HORIZON_AND_DIRECTION_FROZEN",
+      "COMPARATOR_IMPLEMENTATIONS_FROZEN",
+      "NO_NORMALIZER_RETUNING_AFTER_OUTCOME_INSPECTION",
+      "FULL_FAILURE_AND_UNEVALUABLE_LEDGER_PRESERVED",
+      "UNIT_OF_ANALYSIS_AND_CLUSTERING_DECLARED",
+      "MULTIPLE_TESTING_OR_HYPOTHESIS_FAMILY_RULE_DECLARED_WHEN_APPLICABLE"
+    ],
+    "admissibleSeparationModes": [
+      "TEMPORAL",
+      "INSTITUTIONAL",
+      "POPULATION",
+      "SOURCE_SYSTEM",
+      "GEOGRAPHIC",
+      "CLEAN_ROOM_REEXTRACTION"
+    ],
+    "inadmissiblePatterns": [
+      "RANDOM_SPLIT_AFTER_ROUTE_TUNING_WITHOUT_LOCK",
+      "SELECTIVE_CASE_REMOVAL_AFTER_RESULTS",
+      "OUTCOME_INFORMED_NORMALIZATION",
+      "UNRECORDED_MANUAL_REPAIR"
+    ]
+  },
+  "independentReproductionStandard": {
+    "independenceClasses": [
+      "INDEPENDENT_ROOM_OR_AGENT",
+      "INDEPENDENT_RESEARCHER",
+      "INDEPENDENT_INSTITUTION"
+    ],
+    "minimumClass": "INDEPENDENT_ROOM_OR_AGENT_WITH_NO_ACCESS_TO_EXPECTED_CASE_OUTPUTS",
+    "requiredInputs": [
+      "FROZEN_PROTOCOL",
+      "FROZEN_ROUTE",
+      "SOURCE_LOCATOR_OR_LAWFUL_DATA_PACKAGE",
+      "ENGINE_IDENTITY",
+      "EXECUTION_INSTRUCTIONS",
+      "TOLERANCE_MANIFEST"
+    ],
+    "withheldUntilExecution": [
+      "EXPECTED_CASE_RESULTS",
+      "EXPECTED_AGGREGATE_RESULTS",
+      "EXPECTED_RECEIPT_DIGEST"
+    ],
+    "requiredOutputs": [
+      "ENVIRONMENT_IDENTITY",
+      "SOURCE_DIGEST",
+      "ROUTE_DIGEST",
+      "ENGINE_DIGEST",
+      "CASE_COUNTS",
+      "UNEVALUABLE_LEDGER",
+      "HARD_COLLAPSE_LEDGER",
+      "WEAKEST_FACTOR_COUNTS_AND_TIES",
+      "COMPARATOR_RESULTS",
+      "AGGREGATE_STATISTICS",
+      "REPRODUCTION_RECEIPT",
+      "DISAGREEMENT_LEDGER"
+    ],
+    "tolerances": {
+      "deterministicJsonAndDigests": "EXACT",
+      "integerCounts": "EXACT",
+      "classificationLabels": "EXACT",
+      "floatingStatistics": "TRACK_SPECIFIC_FROZEN_ABSOLUTE_OR_RELATIVE_TOLERANCE",
+      "externalSourceRefresh": "SEMANTIC_AND_SCHEMA_EQUIVALENCE_WITH_SEPARATE_SOURCE_DIGEST"
+    },
+    "repairRule": "THE_REPRODUCER_MAY_REPORT_A_DEFECT_BUT_MAY_NOT_REPAIR_THE_GOVERNING_ROUTE_ENGINE_OR_EXPECTED_OUTPUTS_IN_THE_SAME_REPRODUCTION_RUN"
+  },
+  "phase3Gate": {
+    "authorizedTracks": [
+      "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+      "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+      "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+      "DSSI_REMAINING_COUNTRY_CONTINUATION"
+    ],
+    "gateDecision": "AUTHORIZE_PHASE_3_PARALLEL_EXTERNAL_TEST_PROTOCOL_EXECUTION",
+    "executionMode": "TRACKS_MAY_RUN_IN_PARALLEL_BUT_EACH_REQUIRES_SEPARATE_SOURCE_ROUTE_AND_RECEIPT_IDENTITIES",
+    "phase4NotAuthorized": true,
+    "phase5NotAuthorized": true
+  },
+  "boundaries": {
+    "protocolConstructionOnly": true,
+    "newDataInspected": false,
+    "newDataTestsExecuted": false,
+    "existingRoutesRetuned": false,
+    "rawCrossRouteScoreComparisonAuthorized": false,
+    "universalMultiplicativeSuperiorityClaimed": false,
+    "universalPredictiveValidityClaimed": false,
+    "causalClaimsAuthorized": false,
+    "clinicalDiagnosticUseAuthorized": false,
+    "decisionUtilityClaimed": false,
+    "finalInstrumentValidationClaimed": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  }
+}

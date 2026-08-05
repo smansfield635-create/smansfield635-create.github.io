@@ -30,7 +30,13 @@ const intakeLog = runNode([
   '--strict'
 ]);
 
-const requiredOutputFiles = [
+const backfillLog = runNode([
+  'h-earth-3d/validation/imi-empirical-platform/imi.existing-studies-backfill.runner.mjs',
+  '--output-dir',
+  path.join(outputDir, 'existing-study-backfill')
+]);
+
+const requiredIntakeOutputFiles = [
   'imi-study-run-output.v1.json',
   'imi-study-receipt.v1.json',
   'imi-case-results.v1.json',
@@ -39,7 +45,13 @@ const requiredOutputFiles = [
   'imi-empirical-intake-operational-receipt.v1.json'
 ].map((name) => path.join(outputDir, 'intake', name));
 
-for (const file of requiredOutputFiles) {
+const requiredBackfillOutputFiles = [
+  'imi-existing-study-backfill-portfolio-registry.v1.json',
+  'imi-existing-study-backfill-summary.v1.json',
+  'imi-existing-study-backfill-operational-receipt.v1.json'
+].map((name) => path.join(outputDir, 'existing-study-backfill', name));
+
+for (const file of [...requiredIntakeOutputFiles, ...requiredBackfillOutputFiles]) {
   if (!existsSync(file)) throw new Error(`MISSING_OPERATIONAL_OUTPUT:${file}`);
 }
 
@@ -51,16 +63,27 @@ if (operationalReceipt.boundaries.branchOperational !== true) throw new Error('B
 if (operationalReceipt.boundaries.mainMerged !== false) throw new Error('MAIN_MERGE_BOUNDARY_BROKEN');
 if (operationalReceipt.boundaries.liveWebsiteOperational !== false) throw new Error('LIVE_WEBSITE_BOUNDARY_BROKEN');
 
+const backfillReceipt = JSON.parse(readFileSync(path.join(outputDir, 'existing-study-backfill', 'imi-existing-study-backfill-operational-receipt.v1.json'), 'utf8'));
+if (backfillReceipt.result !== 'PASS_CLOSED_EXISTING_STUDIES_IMPORTED_AS_LEGACY_BACKFILL_RECEIPTS') {
+  throw new Error(`EXISTING_STUDY_BACKFILL_FAILED:${backfillReceipt.result}`);
+}
+if (backfillReceipt.summary.studyCount !== 4) throw new Error('EXISTING_STUDY_BACKFILL_COUNT_FAILURE');
+if (backfillReceipt.summary.derivedCaseOutputAvailableCount !== 4) throw new Error('EXISTING_STUDY_DERIVED_OUTPUT_COUNT_FAILURE');
+
 const suiteReceipt = {
   schemaVersion: 'IMI_EMPIRICAL_PLATFORM_OPERATIONAL_SUITE_RECEIPT_v1',
-  result: 'PASS_CLOSED_OPERATIONAL_BRANCH_EMPIRICAL_PLATFORM',
+  result: 'PASS_CLOSED_OPERATIONAL_BRANCH_EMPIRICAL_PLATFORM_WITH_EXISTING_STUDY_BACKFILL',
   fixtureRunnerExecuted: true,
   genericIntakeRunnerExecuted: true,
-  requiredOutputFiles,
+  existingStudyBackfillRunnerExecuted: true,
+  requiredOutputFiles: [...requiredIntakeOutputFiles, ...requiredBackfillOutputFiles],
   operationalReceipt,
+  backfillReceipt,
   boundaries: {
     repositoryBranchOperational: true,
     oneRepositoryBasedEngineUsed: true,
+    existingStudiesImportedAsBackfillReceipts: true,
+    rawHistoricalDataRerunPerformed: false,
     automaticPerceivedDataCapture: false,
     explicitDatasetAdmissionRequired: true,
     mainMerged: false,

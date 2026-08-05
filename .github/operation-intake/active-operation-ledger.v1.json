@@ -1,5 +1,17 @@
 {
   "activeScopes": {
+    "39e45979cca0af8f42410a87e11a3914b42f8293e78880da892e407d1a6cc4b5": {
+      "governingHead": "7d672c10a99cb525bf9fb4b40b51ec8157944bb5",
+      "lockGeneration": 49,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK/ROLE6_AUDIT/FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_DEVELOPMENTAL_BASELINE",
+      "operationId": "METHODS_FORMAL_RECORD_TYPE_DEPENDENCY_THREE_ANCHOR_AND_DEVELOPMENTAL_BASELINE_AUDIT_v1",
+      "procedureLocatorDigest": "213c9927578b4d4a9722ab4c748e6999c3b66996d2ddd99782921c794c0ff0ba",
+      "released": false,
+      "requestDigest": "f7706a156b69989cf34b4be32624a3e815048f4fd915ba9cd7877562c6d65ee2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "39e45979cca0af8f42410a87e11a3914b42f8293e78880da892e407d1a6cc4b5",
+      "state": "ADMITTED_LOCKED"
+    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -52,7 +64,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 48,
+  "lockGeneration": 49,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

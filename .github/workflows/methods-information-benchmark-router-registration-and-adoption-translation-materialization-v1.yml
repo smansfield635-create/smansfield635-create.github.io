@@ -65,11 +65,20 @@ jobs:
           const adoption = JSON.parse(fs.readFileSync(root + 'adoption-register.v1.json'));
           const summary = JSON.parse(fs.readFileSync(root + 'review-summary.v1.json'));
           const manifest = JSON.parse(fs.readFileSync(root + 'review-package.v1.json'));
-          if (adoption.entries?.length !== 27 || adoption.counts?.total !== 27) process.exit(1);
-          if (adoption.sourceBinding?.role6State !== 'INACTIVE' || adoption.sourceBinding?.role6Reopened !== false) process.exit(1);
-          if (manifest.packageFingerprintSha256 !== process.env.FINGERPRINT) process.exit(1);
+          if (adoption.entries?.length !== 27 || adoption.counts?.total !== 27) throw new Error('ADOPTION_COUNT');
+          if (adoption.sourceBinding?.role6State !== 'INACTIVE' || adoption.sourceBinding?.role6Reopened !== false) throw new Error('ROLE6_BOUNDARY');
+          if (manifest.packageFingerprintSha256 !== process.env.FINGERPRINT) throw new Error('PACKAGE_FINGERPRINT');
           const b = summary.stoppingBoundary || {};
-          if (b.publicMethodsMutation !== 'NONE' || b.publicLawsMutation !== 'NONE' || b.implementation !== 'NONE' || b.deployment !== 'NONE' || b.release !== 'NONE') process.exit(1);
+          if (b.noPublicMethodsMutation !== true ||
+              b.noPublicLawsMutation !== true ||
+              b.noDeployment !== true ||
+              b.noRelease !== true ||
+              b.noFindingPromotionBeyondRecordedDisposition !== true ||
+              b.noModificationOfAuditedSourceRecords !== true ||
+              b.role6Reactivation !== false) throw new Error('STOPPING_BOUNDARY');
+          if (summary.phaseResults?.PHASE_5_BUILD_NONPUBLIC_IMPLEMENTATION_CANDIDATE !== 'NOT_STARTED_NOT_AUTHORIZED_IN_CURRENT_INTAKE' ||
+              summary.phaseResults?.PHASE_6_TEST_IMPLEMENTATION !== 'NOT_STARTED' ||
+              summary.phaseResults?.PHASE_7_PUBLICATION_OR_ADOPTION_DECISION !== 'NOT_STARTED') throw new Error('IMPLEMENTATION_BOUNDARY');
           NODE
           echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
 
@@ -203,7 +212,11 @@ jobs:
         run: |
           set -euo pipefail
           echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
-          echo "core_fingerprint=$(node -p "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP + '/package/builder.json')).repositoryFingerprint")" >> "$GITHUB_OUTPUT"
+          node - <<'NODE'
+          const fs = require('fs');
+          const r = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/package/builder.json'));
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `core_fingerprint=${r.repositoryFingerprint}\n`);
+          NODE
       - uses: actions/upload-artifact@v4
         with:
           name: methods-generation-58-${{ github.run_id }}-${{ github.run_attempt }}

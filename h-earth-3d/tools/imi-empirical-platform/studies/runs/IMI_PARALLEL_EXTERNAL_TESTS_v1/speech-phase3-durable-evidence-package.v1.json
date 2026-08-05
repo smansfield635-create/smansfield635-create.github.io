@@ -1,128 +1,138 @@
 {
-  "schemaVersion": "IMI_PHASE_3_SPEECH_DURABLE_EVIDENCE_PACKAGE_v1",
+  "schemaVersion": "IMI_PHASE_3_SPEECH_DURABLE_EVIDENCE_PACKAGE_v2",
+  "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+  "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+  "durableDisposition": "HELD_PUBLIC_CLAC_TEXT_METADATA_PACKAGE_BOUND_EXACT_FIVE_FEATURE_EXECUTION_PENDING",
   "sourceAvailability": {
-    "schemaVersion": "IMI_PHASE_3_SPEECH_HELD_OUT_SOURCE_AVAILABILITY_IDENTITY_v1",
-    "observedAt": "2026-08-05T17:45:00.000Z",
-    "locators": [
-      {
-        "url": "https://talkbank.org/dementia/ADReSS-M/",
-        "httpStatus": 200,
-        "ok": true,
-        "finalUrl": "https://talkbank.org/dementia/ADReSS-M/",
-        "contentBytes": 2472,
-        "contentDigest": "fnv1a32:843d69f6",
-        "accessSignals": {
-          "membershipRequired": true,
-          "registrationRequired": false,
-          "controlledOrApprovedAccess": false,
-          "directOpenFeaturePackageAdvertised": false
-        }
-      },
-      {
-        "url": "https://talkbank.org/dementia/ADReSSo-2021/",
-        "httpStatus": 200,
-        "ok": true,
-        "finalUrl": "https://talkbank.org/dementia/ADReSSo-2021/",
-        "contentBytes": 10721,
-        "contentDigest": "fnv1a32:85be155e",
-        "accessSignals": {
-          "membershipRequired": true,
-          "registrationRequired": false,
-          "controlledOrApprovedAccess": false,
-          "directOpenFeaturePackageAdvertised": false
-        }
-      },
-      {
-        "url": "https://talkbank.org/dementia/DrivenData/index.html",
-        "ok": false,
-        "error": "fetch failed"
-      },
-      {
-        "url": "https://talkbank.org/dementia/access.html",
-        "ok": false,
-        "error": "fetch failed"
-      }
-    ],
-    "providedPackage": {
-      "pathProvided": false
+    "schemaVersion": "IMI_PHASE_3_CLAC_SOURCE_PROBE_v2",
+    "result": "PASS_CLAC_PUBLIC_TEXT_METADATA_PACKAGE_BOUND",
+    "observedAt": "2026-08-05T19:45:00.000Z",
+    "archiveUrl": "https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip",
+    "archiveEntries": 37233,
+    "classifiedCandidates": 37221,
+    "transcriptCountInArchive": 1832,
+    "audioCountInArchive": 1832,
+    "pairedTranscriptAudioCount": 1832,
+    "extractedUsableTranscriptCount": 240,
+    "metadataSheetCount": 1,
+    "metadataRowCounts": {
+      "Sheet1": 1832
     },
-    "sourceAvailabilityDigest": "fnv1a32:c697dded"
+    "inventorySha256": "8a09ea16830481e95a558b43558dcd47c833c6aa99fb96a39eecb0110d470d75",
+    "packageSha256": "52df6e548c512239337281bb5f0e461a4751f6068f75db197bd2ad323b3ad171",
+    "error": null,
+    "boundaries": {
+      "fullArchiveDownloaded": false,
+      "audioDownloaded": false,
+      "transcriptSubsetExtracted": true,
+      "metadataExtracted": true,
+      "featureExtractionExecuted": false,
+      "routeRetuned": false
+    }
+  },
+  "boundPackageIdentity": {
+    "schemaVersion": "IMI_PHASE_3_CLAC_PUBLIC_TEXT_METADATA_PACKAGE_v1",
+    "archiveUrl": "https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip",
+    "archiveEntries": 37233,
+    "archiveInventorySha256": "8a09ea16830481e95a558b43558dcd47c833c6aa99fb96a39eecb0110d470d75",
+    "readmeSha256": "4300f5780bc9bb714a8f3af71e6fd0c828f7b739ce7459bd0cfc9f7b51058b44",
+    "metadataSha256": "4979322d7886f9c7c84a2e628ae5fe9318bbcc43a39dfcda879270a522020a8f",
+    "metadataSheetCount": 1,
+    "metadataRows": 1832,
+    "cookieTheftTranscriptCountInArchive": 1832,
+    "pairedTranscriptAudioCount": 1832,
+    "extractedUsableTranscriptCount": 240,
+    "extractedParticipantMetadataCounts": {
+      "gender": {
+        "male": 126,
+        "female": 112,
+        "other": 2
+      },
+      "symptoms": {
+        "no": 236,
+        "yes": 4
+      },
+      "worker_country": {
+        "United States (US)": 239,
+        "Philippines (PH)": 1
+      }
+    },
+    "packageSha256": "52df6e548c512239337281bb5f0e461a4751f6068f75db197bd2ad323b3ad171"
   },
   "trackReceipt": {
     "schemaVersion": "IMI_PHASE_3_SPEECH_HELD_OUT_REPRODUCTION_RECEIPT_v1",
     "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
     "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
-    "result": "HELD_LAWFUL_HELD_OUT_SPEECH_PACKAGE_NOT_AVAILABLE_TO_EXECUTION",
-    "terminalDisposition": "HELD_OPEN_SOURCE_ACCESS_AND_FEATURE_ADAPTER_REQUIRED",
-    "observedAt": "2026-08-05T17:45:00.000Z",
+    "result": "HELD_PUBLIC_CLAC_TEXT_METADATA_PACKAGE_BOUND_EXACT_FIVE_FEATURE_EXECUTION_PENDING",
+    "terminalDisposition": "HELD_OPEN_PUBLIC_SOURCE_FEATURE_EXTRACTION",
+    "observedAt": "2026-08-05T19:45:00.000Z",
     "routeId": "SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026_ROUTE_v1",
     "routeDigest": "fnv1a32:d5df7656",
-    "sourceIdentity": {
-      "schemaVersion": "IMI_PHASE_3_SPEECH_HELD_OUT_SOURCE_AVAILABILITY_IDENTITY_v1",
-      "observedAt": "2026-08-05T17:45:00.000Z",
-      "locators": [
-        {
-          "url": "https://talkbank.org/dementia/ADReSS-M/",
-          "httpStatus": 200,
-          "ok": true,
-          "finalUrl": "https://talkbank.org/dementia/ADReSS-M/",
-          "contentBytes": 2472,
-          "contentDigest": "fnv1a32:843d69f6",
-          "accessSignals": {
-            "membershipRequired": true,
-            "registrationRequired": false,
-            "controlledOrApprovedAccess": false,
-            "directOpenFeaturePackageAdvertised": false
-          }
-        },
-        {
-          "url": "https://talkbank.org/dementia/ADReSSo-2021/",
-          "httpStatus": 200,
-          "ok": true,
-          "finalUrl": "https://talkbank.org/dementia/ADReSSo-2021/",
-          "contentBytes": 10721,
-          "contentDigest": "fnv1a32:85be155e",
-          "accessSignals": {
-            "membershipRequired": true,
-            "registrationRequired": false,
-            "controlledOrApprovedAccess": false,
-            "directOpenFeaturePackageAdvertised": false
-          }
-        },
-        {
-          "url": "https://talkbank.org/dementia/DrivenData/index.html",
-          "ok": false,
-          "error": "fetch failed"
-        },
-        {
-          "url": "https://talkbank.org/dementia/access.html",
-          "ok": false,
-          "error": "fetch failed"
-        }
-      ],
-      "providedPackage": {
-        "pathProvided": false
-      },
-      "sourceAvailabilityDigest": "fnv1a32:c697dded"
-    },
-    "admission": {
-      "independentPackageProvided": false,
-      "minimumParticipantCountRequired": 100,
-      "minimumDeclaredGroupsOrLanguagesRequired": 2,
-      "frozenFiveFeatureInputsRequired": true,
-      "minimumEvidenceSatisfied": false
-    },
-    "reason": "THE_IDENTIFIED_INDEPENDENT_SPEECH_CORPORA_REQUIRE_REGISTRATION_MEMBERSHIP_OR_APPROVED_ACCESS_AND_NO_LAWFULLY_ACCESSIBLE_FROZEN_FIVE_FEATURE_PACKAGE_WAS_PROVIDED_TO_THIS_EXECUTION",
+    "sourceDigest": "fnv1a32:26410962",
+    "executionDigest": null,
+    "summaryDigest": null,
+    "minimumEvidenceSatisfied": false,
     "phase4Candidate": false,
+    "admission": {
+      "independentPublicCorpusBound": true,
+      "archiveInventoryCompleted": true,
+      "transcriptMetadataPackageBound": true,
+      "extractedUsableTranscriptCount": 240,
+      "minimumParticipantCountRequired": 100,
+      "minimumDeclaredGroupsRequired": 2,
+      "frozenFiveFeatureInputsRequired": true,
+      "exactFeatureExtractionCompleted": false
+    },
+    "reason": "THE_INDEPENDENT_PUBLIC_CLAC_TRANSCRIPT_AND_METADATA_PACKAGE_IS_BOUND; EXACT_FROZEN_FIVE_FEATURE_EXTRACTION_REMAINS_REQUIRED_BEFORE_EMPIRICAL_CREDIT",
     "boundaries": {
       "protectedDataAccessAttempted": false,
-      "authenticationBypassAttempted": false,
-      "participantRowsInspected": false,
+      "fullArchiveDownloaded": false,
+      "audioDownloaded": false,
+      "transcriptMetadataPackageBound": true,
       "newEmpiricalTestExecuted": false,
       "routeRetuned": false,
       "diagnosisOrClinicalScreeningClaimed": false,
       "finalValidationClaimed": false
     },
-    "receiptDigest": "fnv1a32:70814189"
+    "receiptDigest": "fnv1a32:e5403f42"
+  },
+  "workflowEvidence": {
+    "workflow": "H-Earth IMI Phase 3 Public Source Completion",
+    "runId": 31040448607,
+    "jobId": 92423262107,
+    "head": "abefa6d8a8e9c13830fa86adb9037f9b954ce2e6",
+    "artifactId": 8944354282,
+    "artifactName": "imi-phase3-speech-public-source-probe",
+    "artifactSha256": "2f5c26fb01cc230de5ff97f9aa897ea8473a61c3c49bdcf7f2595a214552ff80"
+  },
+  "remainingRequirement": {
+    "exactFrozenFiveFeatureExtractionCompleted": false,
+    "requiredInputs": [
+      "FT_GSim",
+      "BERT_GSim",
+      "CLIP",
+      "ADD",
+      "PPL",
+      "BERT_TTR"
+    ],
+    "minimumParticipants": 100,
+    "minimumDeclaredGroupsOrLanguages": 2,
+    "availableParticipants": 240,
+    "declaredMetadataStrataAvailable": [
+      "gender:male",
+      "gender:female"
+    ],
+    "authorScriptRepository": "RuiHe1999/sem_space_AD",
+    "authorScriptCommit": "c06d9e0a31f245767873dee93c1cf722a4b6054f"
+  },
+  "boundaries": {
+    "protectedDataAccessAttempted": false,
+    "audioDownloaded": false,
+    "routeRetuned": false,
+    "clinicalDiagnosisClaimed": false,
+    "phase4Candidate": false,
+    "phase4AutomaticallyAuthorized": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
   }
 }

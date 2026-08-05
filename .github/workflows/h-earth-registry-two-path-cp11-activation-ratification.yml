@@ -1,4 +1,4 @@
-name: CP11 H-Earth Registry Two-Path Post-Merge Verification
+name: CP11 H-Earth Registry Two-Path Terminal Closure
 
 on:
   pull_request:
@@ -27,6 +27,13 @@ env:
   ACTIVATION_PR: '597'
   SUBJECT_PR: '590'
   INSTRUMENT_SUBJECT_PR: '570'
+  EVIDENCE_RUN: '31016907626'
+  BUILDER_ARTIFACT_ID: '8934880648'
+  BUILDER_ARTIFACT_NAME: 'cp11-post-merge-builder-31016907626-1'
+  BUILDER_ARTIFACT_DIGEST: 'sha256:f73eb25d2941b327790ea6f35c72e9312e7e2d08522381a22ddba27acdff27d4'
+  VERIFIER_ARTIFACT_ID: '8934880412'
+  VERIFIER_ARTIFACT_NAME: 'cp11-post-merge-verifier-31016907626-1'
+  VERIFIER_ARTIFACT_DIGEST: 'sha256:2029f44bb7711a898d67771fc8423f1748418c7236c4002594d8bce46d6d2a22'
   OPERATION_ID: 'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_MAIN_ACTIVATION_RATIFICATION_CP11_v1'
   OPERATION_SCOPE: 'H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR:MAIN_ACTIVATION_RATIFICATION:CP11:V1'
   OPERATION_GENERATION: '85'
@@ -35,128 +42,7 @@ env:
   WORKFLOW_PATH: '.github/workflows/h-earth-registry-two-path-cp11-activation-ratification.yml'
 
 jobs:
-  post-merge-builder:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Verify exact merged-main identity and blobs
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          for sha in "$PREMERGE_MAIN" "$ACTIVATION_HEAD" "$MERGED_MAIN" "$SUBJECT_PR590_HEAD" "$SUBJECT_PR570_HEAD" "$TOOLING_HEAD"; do
-            git fetch --no-tags origin "$sha"
-            git cat-file -e "$sha^{commit}"
-          done
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/branches/main" --jq '.commit.sha')" = "$MERGED_MAIN"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.merged')" = "true"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.head.sha')" = "$ACTIVATION_HEAD"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.merge_commit_sha')" = "$MERGED_MAIN"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR590_HEAD"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${INSTRUMENT_SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR570_HEAD"
-          mapfile -t changed < <(git diff --name-only "$PREMERGE_MAIN" "$MERGED_MAIN")
-          test "${#changed[@]}" = "2"
-          printf '%s\n' "${changed[@]}" | cmp - <(printf '%s\n' "$OVERLAY_PATH" "$LOADER_PATH")
-          test "$(git rev-parse "$MERGED_MAIN:$OVERLAY_PATH")" = "$OVERLAY_BLOB"
-          test "$(git rev-parse "$MERGED_MAIN:$LOADER_PATH")" = "$LOADER_BLOB"
-          test "$(git rev-parse "$ACTIVATION_HEAD:$OVERLAY_PATH")" = "$OVERLAY_BLOB"
-          test "$(git rev-parse "$ACTIVATION_HEAD:$LOADER_PATH")" = "$LOADER_BLOB"
-      - name: Reproduce exact merged main as builder
-        run: |
-          set -euo pipefail
-          rm -rf /tmp/cp11-post-tooling-builder /tmp/cp11-post-builder
-          mkdir -p /tmp/cp11-post-builder
-          git worktree add --detach /tmp/cp11-post-tooling-builder "$TOOLING_HEAD"
-          (
-            cd /tmp/cp11-post-tooling-builder
-            node tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs \
-              --base-head "$PREMERGE_MAIN" \
-              --candidate-head "$MERGED_MAIN" \
-              --subject-head "$SUBJECT_PR570_HEAD" \
-              --execution-holder "CP11_POST_MERGE_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
-              --output /tmp/cp11-post-builder/builder-receipt.json
-          )
-          git worktree remove --force /tmp/cp11-post-tooling-builder
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const r=JSON.parse(fs.readFileSync('/tmp/cp11-post-builder/builder-receipt.json'));
-          if(r.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED')throw Error(`POST_MERGE_BUILDER_FAILED:${r.errorCode??'UNKNOWN'}`);
-          if(r.baseHead!==process.env.PREMERGE_MAIN||r.candidateHead!==process.env.MERGED_MAIN||r.subjectHead!==process.env.SUBJECT_PR570_HEAD)throw Error('POST_MERGE_BUILDER_HEAD_MISMATCH');
-          if(r.overlayBlob!==process.env.OVERLAY_BLOB||r.loaderBlob!==process.env.LOADER_BLOB||r.predecessorBlob!==process.env.PREDECESSOR_BLOB)throw Error('POST_MERGE_BUILDER_BLOB_MISMATCH');
-          NODE
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cp11-post-merge-builder-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/cp11-post-builder/builder-receipt.json
-          if-no-files-found: error
-          retention-days: 90
-
-  post-merge-fresh-verifier:
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Independently verify exact merged-main state
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          for sha in "$PREMERGE_MAIN" "$MERGED_MAIN" "$SUBJECT_PR590_HEAD" "$SUBJECT_PR570_HEAD" "$TOOLING_HEAD"; do
-            git fetch --no-tags origin "$sha"
-            git cat-file -e "$sha^{commit}"
-          done
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/branches/main" --jq '.commit.sha')" = "$MERGED_MAIN"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.merged')" = "true"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR590_HEAD"
-          test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${INSTRUMENT_SUBJECT_PR}" --jq '.head.sha')" = "$SUBJECT_PR570_HEAD"
-          mapfile -t changed < <(git diff --name-only "$PREMERGE_MAIN" "$MERGED_MAIN")
-          test "${#changed[@]}" = "2"
-          printf '%s\n' "${changed[@]}" | cmp - <(printf '%s\n' "$OVERLAY_PATH" "$LOADER_PATH")
-          test "$(git rev-parse "$MERGED_MAIN:$OVERLAY_PATH")" = "$OVERLAY_BLOB"
-          test "$(git rev-parse "$MERGED_MAIN:$LOADER_PATH")" = "$LOADER_BLOB"
-      - name: Reproduce exact merged main as fresh verifier
-        run: |
-          set -euo pipefail
-          rm -rf /tmp/cp11-post-tooling-verifier /tmp/cp11-post-verifier
-          mkdir -p /tmp/cp11-post-verifier
-          git worktree add --detach /tmp/cp11-post-tooling-verifier "$TOOLING_HEAD"
-          (
-            cd /tmp/cp11-post-tooling-verifier
-            node tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs \
-              --base-head "$PREMERGE_MAIN" \
-              --candidate-head "$MERGED_MAIN" \
-              --subject-head "$SUBJECT_PR570_HEAD" \
-              --execution-holder "CP11_POST_MERGE_FRESH_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
-              --output /tmp/cp11-post-verifier/fresh-verifier-receipt.json
-          )
-          git worktree remove --force /tmp/cp11-post-tooling-verifier
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const r=JSON.parse(fs.readFileSync('/tmp/cp11-post-verifier/fresh-verifier-receipt.json'));
-          if(r.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED')throw Error(`POST_MERGE_VERIFIER_FAILED:${r.errorCode??'UNKNOWN'}`);
-          if(r.baseHead!==process.env.PREMERGE_MAIN||r.candidateHead!==process.env.MERGED_MAIN||r.subjectHead!==process.env.SUBJECT_PR570_HEAD)throw Error('POST_MERGE_VERIFIER_HEAD_MISMATCH');
-          if(r.overlayBlob!==process.env.OVERLAY_BLOB||r.loaderBlob!==process.env.LOADER_BLOB||r.predecessorBlob!==process.env.PREDECESSOR_BLOB)throw Error('POST_MERGE_VERIFIER_BLOB_MISMATCH');
-          NODE
-      - uses: actions/upload-artifact@v4
-        with:
-          name: cp11-post-merge-verifier-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/cp11-post-verifier/fresh-verifier-receipt.json
-          if-no-files-found: error
-          retention-days: 90
-
   certify-close-and-terminate:
-    needs: [post-merge-builder, post-merge-fresh-verifier]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -166,20 +52,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - uses: actions/download-artifact@v4
-        with:
-          name: cp11-post-merge-builder-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/cp11-post-builder
-      - uses: actions/download-artifact@v4
-        with:
-          name: cp11-post-merge-verifier-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/cp11-post-verifier
-      - name: Reconfirm terminal identities and carrier boundary
+      - name: Verify exact evidence artifacts and immutable identities
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          for sha in "$PREMERGE_MAIN" "$ACTIVATION_HEAD" "$MERGED_MAIN" "$SUBJECT_PR590_HEAD" "$SUBJECT_PR570_HEAD"; do git fetch --no-tags origin "$sha"; done
+          for sha in "$PREMERGE_MAIN" "$ACTIVATION_HEAD" "$MERGED_MAIN" "$SUBJECT_PR590_HEAD" "$SUBJECT_PR570_HEAD"; do
+            git fetch --no-tags origin "$sha"
+            git cat-file -e "$sha^{commit}"
+          done
           test "$(gh api "repos/${GITHUB_REPOSITORY}/branches/main" --jq '.commit.sha')" = "$MERGED_MAIN"
           test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.merged')" = "true"
           test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${ACTIVATION_PR}" --jq '.head.sha')" = "$ACTIVATION_HEAD"
@@ -189,43 +70,42 @@ jobs:
           carrier="${{ github.event.pull_request.number }}"
           test "$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${carrier}" --jq '.merged')" = "false"
           gh api "repos/${GITHUB_REPOSITORY}/pulls/${carrier}/files?per_page=100" > /tmp/carrier-files.json
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const files=JSON.parse(fs.readFileSync('/tmp/carrier-files.json')).map(x=>x.filename);
-          if(files.length!==1||files[0]!==process.env.WORKFLOW_PATH)throw Error(`TERMINAL_CARRIER_SCOPE_MISMATCH:${JSON.stringify(files)}`);
-          NODE
-      - name: Certify fingerprints and run automatic registry preflight
+          gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${EVIDENCE_RUN}/artifacts" > /tmp/evidence-artifacts.json
+          node --input-type=module --eval 'import fs from "node:fs"; const files=JSON.parse(fs.readFileSync("/tmp/carrier-files.json")).map(x=>x.filename); if(files.length!==1||files[0]!==process.env.WORKFLOW_PATH)throw Error(`CARRIER_SCOPE_MISMATCH:${JSON.stringify(files)}`); const a=JSON.parse(fs.readFileSync("/tmp/evidence-artifacts.json")).artifacts; const b=a.find(x=>String(x.id)===process.env.BUILDER_ARTIFACT_ID); const v=a.find(x=>String(x.id)===process.env.VERIFIER_ARTIFACT_ID); if(!b||b.name!==process.env.BUILDER_ARTIFACT_NAME||b.digest!==process.env.BUILDER_ARTIFACT_DIGEST||b.expired)throw Error("BUILDER_ARTIFACT_IDENTITY_MISMATCH"); if(!v||v.name!==process.env.VERIFIER_ARTIFACT_NAME||v.digest!==process.env.VERIFIER_ARTIFACT_DIGEST||v.expired)throw Error("VERIFIER_ARTIFACT_IDENTITY_MISMATCH");'
+          mapfile -t changed < <(git diff --name-only "$PREMERGE_MAIN" "$MERGED_MAIN")
+          test "${#changed[@]}" = "2"
+          printf '%s\n' "${changed[@]}" | cmp - <(printf '%s\n' "$OVERLAY_PATH" "$LOADER_PATH")
+          test "$(git rev-parse "$MERGED_MAIN:$OVERLAY_PATH")" = "$OVERLAY_BLOB"
+          test "$(git rev-parse "$MERGED_MAIN:$LOADER_PATH")" = "$LOADER_BLOB"
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BUILDER_ARTIFACT_NAME }}
+          path: /tmp/cp11-builder
+          repository: ${{ github.repository }}
+          run-id: ${{ env.EVIDENCE_RUN }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.VERIFIER_ARTIFACT_NAME }}
+          path: /tmp/cp11-verifier
+          repository: ${{ github.repository }}
+          run-id: ${{ env.EVIDENCE_RUN }}
+          github-token: ${{ github.token }}
+      - name: Bind fingerprints and execute automatic registry preflight
         run: |
           set -euo pipefail
           mkdir -p /tmp/cp11-terminal
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import crypto from 'node:crypto';
-          const b=JSON.parse(fs.readFileSync('/tmp/cp11-post-builder/builder-receipt.json'));
-          const v=JSON.parse(fs.readFileSync('/tmp/cp11-post-verifier/fresh-verifier-receipt.json'));
-          if(b.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED'||v.result!==b.result)throw Error('POST_MERGE_RESULT_MISMATCH');
-          if(b.executionHolder===v.executionHolder)throw Error('POST_MERGE_HOLDERS_NOT_DISTINCT');
-          if(b.packageFingerprint!==v.packageFingerprint)throw Error('POST_MERGE_FINGERPRINT_MISMATCH');
-          const expected=[process.env.OVERLAY_PATH,process.env.LOADER_PATH];
-          if(JSON.stringify(b.changedPaths)!==JSON.stringify(expected)||JSON.stringify(v.changedPaths)!==JSON.stringify(expected))throw Error('POST_MERGE_PATH_SET_MISMATCH');
-          const receipt={schema:'CP11_H_EARTH_TWO_PATH_POST_MERGE_VERIFICATION_v1',result:'PASS_CLOSED_MERGED_MAIN_EXACT_AND_INDEPENDENTLY_REPRODUCED',operationId:process.env.OPERATION_ID,operationGeneration:Number(process.env.OPERATION_GENERATION),preMergeMain:process.env.PREMERGE_MAIN,activationHead:process.env.ACTIVATION_HEAD,mergedMain:process.env.MERGED_MAIN,activationPr:Number(process.env.ACTIVATION_PR),immutableSubjectHead:process.env.SUBJECT_PR590_HEAD,instrumentSubjectHead:process.env.SUBJECT_PR570_HEAD,exactToolingHead:process.env.TOOLING_HEAD,preMergeSuccessorFingerprint:process.env.PREMERGE_SUCCESSOR_FINGERPRINT,preMergeCertificationDigest:process.env.PREMERGE_CERTIFICATION_DIGEST,postMergeFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,exactChangedPaths:expected,overlayBlob:b.overlayBlob,loaderBlob:b.loaderBlob,predecessorBlob:b.predecessorBlob,runtime:b.runtime,semanticChecks:b.semanticChecks,productMutation:false,pr570Mutation:false,verificationCarrierMerged:false,headSubstitution:false};
-          receipt.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
-          fs.writeFileSync('/tmp/cp11-terminal/post-merge-verification.json',JSON.stringify(receipt,null,2)+'\n');
-          fs.copyFileSync('/tmp/cp11-post-builder/builder-receipt.json','/tmp/cp11-terminal/builder-receipt.json');
-          fs.copyFileSync('/tmp/cp11-post-verifier/fresh-verifier-receipt.json','/tmp/cp11-terminal/fresh-verifier-receipt.json');
-          NODE
+          builder="$(find /tmp/cp11-builder -type f -name 'builder-receipt.json' -print -quit)"
+          verifier="$(find /tmp/cp11-verifier -type f -name 'fresh-verifier-receipt.json' -print -quit)"
+          test -n "$builder"
+          test -n "$verifier"
+          export BUILDER_RECEIPT="$builder" VERIFIER_RECEIPT="$verifier"
+          node --input-type=module --eval 'import fs from "node:fs"; import crypto from "node:crypto"; const b=JSON.parse(fs.readFileSync(process.env.BUILDER_RECEIPT)); const v=JSON.parse(fs.readFileSync(process.env.VERIFIER_RECEIPT)); if(b.result!=="PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED"||v.result!==b.result)throw Error("POST_MERGE_RESULT_MISMATCH"); if(b.executionHolder===v.executionHolder)throw Error("POST_MERGE_HOLDERS_NOT_DISTINCT"); if(b.packageFingerprint!==v.packageFingerprint)throw Error("POST_MERGE_FINGERPRINT_MISMATCH"); const expected=[process.env.OVERLAY_PATH,process.env.LOADER_PATH]; if(JSON.stringify(b.changedPaths)!==JSON.stringify(expected)||JSON.stringify(v.changedPaths)!==JSON.stringify(expected))throw Error("POST_MERGE_PATH_SET_MISMATCH"); if(b.overlayBlob!==process.env.OVERLAY_BLOB||b.loaderBlob!==process.env.LOADER_BLOB||b.predecessorBlob!==process.env.PREDECESSOR_BLOB)throw Error("POST_MERGE_BLOB_MISMATCH"); const r={schema:"CP11_H_EARTH_TWO_PATH_POST_MERGE_VERIFICATION_v1",result:"PASS_CLOSED_MERGED_MAIN_EXACT_AND_INDEPENDENTLY_REPRODUCED",operationId:process.env.OPERATION_ID,operationGeneration:Number(process.env.OPERATION_GENERATION),preMergeMain:process.env.PREMERGE_MAIN,activationHead:process.env.ACTIVATION_HEAD,mergedMain:process.env.MERGED_MAIN,activationPr:Number(process.env.ACTIVATION_PR),immutableSubjectHead:process.env.SUBJECT_PR590_HEAD,instrumentSubjectHead:process.env.SUBJECT_PR570_HEAD,exactToolingHead:process.env.TOOLING_HEAD,preMergeSuccessorFingerprint:process.env.PREMERGE_SUCCESSOR_FINGERPRINT,preMergeCertificationDigest:process.env.PREMERGE_CERTIFICATION_DIGEST,postMergeFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,exactChangedPaths:expected,overlayBlob:b.overlayBlob,loaderBlob:b.loaderBlob,predecessorBlob:b.predecessorBlob,runtime:b.runtime,semanticChecks:b.semanticChecks,evidenceRun:Number(process.env.EVIDENCE_RUN),builderArtifactId:Number(process.env.BUILDER_ARTIFACT_ID),verifierArtifactId:Number(process.env.VERIFIER_ARTIFACT_ID),productMutation:false,pr570Mutation:false,verificationCarrierMerged:false,headSubstitution:false}; r.receiptDigest=crypto.createHash("sha256").update(JSON.stringify(r)).digest("hex"); fs.writeFileSync("/tmp/cp11-terminal/post-merge-verification.json",JSON.stringify(r,null,2)+"\n"); fs.copyFileSync(process.env.BUILDER_RECEIPT,"/tmp/cp11-terminal/builder-receipt.json"); fs.copyFileSync(process.env.VERIFIER_RECEIPT,"/tmp/cp11-terminal/fresh-verifier-receipt.json");'
           rm -rf /tmp/cp11-merged-worktree
           git worktree add --detach /tmp/cp11-merged-worktree "$MERGED_MAIN"
-          (
-            cd /tmp/cp11-merged-worktree
-            node --input-type=module <<'NODE'
-            import fs from 'node:fs';
-            import {runHEarthC2R1MC5AutomaticRegistryPreflight} from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
-            const r=await runHEarthC2R1MC5AutomaticRegistryPreflight();
-            if(r.finalDisposition!=='PASS'||r.requiredFinalDisposition!=='PASS')throw Error('POST_MERGE_AUTOMATIC_PREFLIGHT_FAILED');
-            fs.writeFileSync('/tmp/cp11-terminal/automatic-registry-preflight.json',JSON.stringify(r,null,2)+'\n');
-            NODE
-          )
+          pushd /tmp/cp11-merged-worktree >/dev/null
+          node --input-type=module --eval 'import fs from "node:fs"; import {runHEarthC2R1MC5AutomaticRegistryPreflight} from "./h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js"; const r=await runHEarthC2R1MC5AutomaticRegistryPreflight(); if(r.finalDisposition!=="PASS"||r.requiredFinalDisposition!=="PASS")throw Error("POST_MERGE_AUTOMATIC_PREFLIGHT_FAILED"); fs.writeFileSync("/tmp/cp11-terminal/automatic-registry-preflight.json",JSON.stringify(r,null,2)+"\n");'
+          popd >/dev/null
           git worktree remove --force /tmp/cp11-merged-worktree
       - name: Close CP11 generation 85 PASS_CLOSED
         env:
@@ -241,31 +121,14 @@ jobs:
             --lock-generation "$OPERATION_GENERATION" \
             --terminal-disposition PASS_CLOSED \
             --output /tmp/cp11-terminal/closure-receipt.json
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const r=JSON.parse(fs.readFileSync('/tmp/cp11-terminal/closure-receipt.json'));
-          if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true||r.terminalDisposition!=='PASS_CLOSED')throw Error(`CP11_CLOSURE_FAILED:${JSON.stringify(r)}`);
-          NODE
+          node --input-type=module --eval 'import fs from "node:fs"; const r=JSON.parse(fs.readFileSync("/tmp/cp11-terminal/closure-receipt.json")); if(r.result!=="TERMINAL_CLOSURE_COMMITTED"||r.lockReleased!==true||r.terminalDisposition!=="PASS_CLOSED")throw Error(`CP11_CLOSURE_FAILED:${JSON.stringify(r)}`);'
       - name: Verify terminal ledger and emit authority termination
         run: |
           set -euo pipefail
           git fetch --no-tags origin operation-locks/repository-operation-intake-v1
           git show FETCH_HEAD:"$LEDGER_PATH" > /tmp/cp11-terminal/terminal-ledger.json
-          ledger_head="$(git rev-parse FETCH_HEAD)"
-          export LEDGER_HEAD="$ledger_head"
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import crypto from 'node:crypto';
-          const ledger=JSON.parse(fs.readFileSync('/tmp/cp11-terminal/terminal-ledger.json'));
-          const closure=JSON.parse(fs.readFileSync('/tmp/cp11-terminal/closure-receipt.json'));
-          const terminal=ledger.terminalHistory.find(x=>x.operationId===process.env.OPERATION_ID&&Number(x.lockGeneration)===Number(process.env.OPERATION_GENERATION));
-          const active=Object.values(ledger.activeScopes??{}).find(x=>x.operationId===process.env.OPERATION_ID);
-          if(active)throw Error('CP11_AUTHORITY_STILL_ACTIVE');
-          if(!terminal||terminal.state!=='TERMINAL'||terminal.released!==true||terminal.terminalDisposition!=='PASS_CLOSED')throw Error('CP11_TERMINAL_HISTORY_MISSING');
-          const receipt={schema:'CP11_H_EARTH_TWO_PATH_AUTHORITY_TERMINATION_v1',result:'PASS_CLOSED_CP11_AUTHORITY_TERMINATED',operationId:process.env.OPERATION_ID,operationGeneration:Number(process.env.OPERATION_GENERATION),lockScope:process.env.OPERATION_SCOPE,terminalDisposition:'PASS_CLOSED',lockReleased:true,closureCommit:closure.closureCommitSha,committedLedgerBlob:closure.committedLedgerBlobSha,terminalLedgerHead:process.env.LEDGER_HEAD,mergedMain:process.env.MERGED_MAIN,activationPr:Number(process.env.ACTIVATION_PR),activationHead:process.env.ACTIVATION_HEAD,constructionAuthorityActive:false,verificationAuthorityActive:false,mergeAuthorityActive:false,residualAuthority:false,verificationCarrierMerged:false,productMutation:false,pr570Mutation:false,deployment:false,release:false};
-          receipt.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
-          fs.writeFileSync('/tmp/cp11-terminal/authority-termination.json',JSON.stringify(receipt,null,2)+'\n');
-          NODE
+          export LEDGER_HEAD="$(git rev-parse FETCH_HEAD)"
+          node --input-type=module --eval 'import fs from "node:fs"; import crypto from "node:crypto"; const l=JSON.parse(fs.readFileSync("/tmp/cp11-terminal/terminal-ledger.json")); const c=JSON.parse(fs.readFileSync("/tmp/cp11-terminal/closure-receipt.json")); const t=l.terminalHistory.find(x=>x.operationId===process.env.OPERATION_ID&&Number(x.lockGeneration)===Number(process.env.OPERATION_GENERATION)); const a=Object.values(l.activeScopes??{}).find(x=>x.operationId===process.env.OPERATION_ID); if(a)throw Error("CP11_AUTHORITY_STILL_ACTIVE"); if(!t||t.state!=="TERMINAL"||t.released!==true||t.terminalDisposition!=="PASS_CLOSED")throw Error("CP11_TERMINAL_HISTORY_MISSING"); const r={schema:"CP11_H_EARTH_TWO_PATH_AUTHORITY_TERMINATION_v1",result:"PASS_CLOSED_CP11_AUTHORITY_TERMINATED",operationId:process.env.OPERATION_ID,operationGeneration:Number(process.env.OPERATION_GENERATION),lockScope:process.env.OPERATION_SCOPE,terminalDisposition:"PASS_CLOSED",lockReleased:true,closureCommit:c.closureCommitSha,committedLedgerBlob:c.committedLedgerBlobSha,terminalLedgerHead:process.env.LEDGER_HEAD,mergedMain:process.env.MERGED_MAIN,activationPr:Number(process.env.ACTIVATION_PR),activationHead:process.env.ACTIVATION_HEAD,constructionAuthorityActive:false,verificationAuthorityActive:false,mergeAuthorityActive:false,residualAuthority:false,verificationCarrierMerged:false,productMutation:false,pr570Mutation:false,deployment:false,release:false}; r.receiptDigest=crypto.createHash("sha256").update(JSON.stringify(r)).digest("hex"); fs.writeFileSync("/tmp/cp11-terminal/authority-termination.json",JSON.stringify(r,null,2)+"\n");'
       - uses: actions/upload-artifact@v4
         with:
           name: cp11-terminal-${{ github.run_id }}-${{ github.run_attempt }}

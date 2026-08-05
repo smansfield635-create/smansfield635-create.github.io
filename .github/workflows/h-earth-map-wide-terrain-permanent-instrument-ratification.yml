@@ -1,0 +1,283 @@
+name: PR570 Internal Registry Registration Verification
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-map-wide-terrain-permanent-instrument-ratification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+env:
+  GOVERNING_MAIN: 2c4e5a21e4e902bee421528498c112998fa783bc
+  CANDIDATE_HEAD: 91752782bf93c34031bdfd4c5103d03ac98534fc
+  CANDIDATE_BRANCH: repair/h-earth-map-wide-instrument-inner-registry-v1-001
+  BASE_REGISTRY_BLOB: 10ab7b203e03fde419e526d0cce2c0af42860911
+  BOOTSTRAP_BLOB: e422e814a29e024df91e8410687ab29ffe63c382
+  ORIGINAL_LOADER_BLOB: f18e0772903e85a55517d49e178c9e7088b56f91
+  NODE_ID: H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT
+
+jobs:
+  builder:
+    name: exact-registration-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CANDIDATE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact two-path candidate and immutable bases
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_HEAD"
+          test "$(git merge-base HEAD "$GOVERNING_MAIN")" = "$GOVERNING_MAIN"
+          mapfile -t paths < <(git diff --name-only "$GOVERNING_MAIN" "$CANDIDATE_HEAD" | sort)
+          test "${#paths[@]}" -eq 2
+          test "${paths[0]}" = 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.map-wide-instrument-scope-registration.js'
+          test "${paths[1]}" = 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+          test "$(git rev-parse "$CANDIDATE_HEAD:h-earth-3d/registry/h-earth.repository-registry.candidate.js")" = "$BASE_REGISTRY_BLOB"
+          test "$(git rev-parse "$CANDIDATE_HEAD:h-earth-3d/registry/h-earth.repository-registry.bootstrap.json")" = "$BOOTSTRAP_BLOB"
+          test "$(git rev-parse "$GOVERNING_MAIN:h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js")" = "$ORIGINAL_LOADER_BLOB"
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.map-wide-instrument-scope-registration.js
+          node --check h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+      - name: Run positive, negative, and C2-R1 regression checks
+        env:
+          EXECUTION_HOLDER: PR570_INNER_REGISTRY_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          OUTPUT_DIR: ${{ runner.temp }}/builder
+        run: |
+          set -euo pipefail
+          mkdir -p "$OUTPUT_DIR"
+          cat > "$OUTPUT_DIR/paths.txt" <<'PATHS'
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/AGENTS.md
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/authority-and-lineage.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/bootstrap-seed.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/bootstrap-termination-policy.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/changed-path-manifest.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/construction-procedure.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/instrument.locator.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/negative-fixtures.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/operation-request.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/operator-family-registry.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/progress-ledger.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/schemas.v1.json
+          h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/synthetic-map-fixture.v1.json
+          PATHS
+          printf '%s\n' 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/unregistered-neighbor.v1.json' > "$OUTPUT_DIR/negative-path.txt"
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file "$OUTPUT_DIR/paths.txt" \
+            --task PR570_INTERNAL_REGISTRY_REGISTRATION_BUILDER \
+            --mutation-intent \
+            --output "$OUTPUT_DIR/positive.json"
+          set +e
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file "$OUTPUT_DIR/negative-path.txt" \
+            --task PR570_INTERNAL_REGISTRY_NEGATIVE_NEIGHBOR_BUILDER \
+            --mutation-intent \
+            --output "$OUTPUT_DIR/negative.json"
+          negative_status=$?
+          set -e
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import { runHEarthC2R1MC5AutomaticRegistryPreflight } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const positive=JSON.parse(fs.readFileSync(`${process.env.OUTPUT_DIR}/positive.json`,'utf8'));
+          const negative=JSON.parse(fs.readFileSync(`${process.env.OUTPUT_DIR}/negative.json`,'utf8'));
+          const c2=await runHEarthC2R1MC5AutomaticRegistryPreflight();
+          const classifications=positive.pathClassification?.classifications??[];
+          if(positive.finalDisposition!=='PASS'||positive.validatorReceipt?.finalDisposition!=='PASS')throw Error('POSITIVE_PREFLIGHT_NOT_PASS');
+          if(classifications.length!==13||!classifications.every(x=>x.registered===true&&x.classification==='REGISTERED_H_EARTH_PATH'))throw Error('POSITIVE_PATH_REGISTRATION_INCOMPLETE');
+          if(!classifications.every(x=>(x.resolvedNodeIds??[]).includes(process.env.NODE_ID)))throw Error('POSITIVE_NODE_BINDING_MISMATCH');
+          if(negative.finalDisposition!=='STOP'||negative.mutationMayProceed!==false)throw Error('NEGATIVE_NEIGHBOR_NOT_STOPPED');
+          const negativeClass=negative.pathClassification?.classifications?.[0];
+          if(!negativeClass||negativeClass.registered!==false||negativeClass.classification!=='UNREGISTERED_H_EARTH_SCOPED_PATH')throw Error('NEGATIVE_NEIGHBOR_CLASSIFICATION_MISMATCH');
+          if(c2.finalDisposition!=='PASS'||c2.requiredFinalDisposition!=='PASS'||c2.mc5Checks?.allHEarthPathsRegistered!==true)throw Error('C2_R1_REGRESSION');
+          const payload={
+            schema:'PR570_INTERNAL_REGISTRY_REGISTRATION_FINGERPRINT_PAYLOAD_v1',
+            governingMain:process.env.GOVERNING_MAIN,
+            candidateHead:process.env.CANDIDATE_HEAD,
+            baseRegistryBlob:process.env.BASE_REGISTRY_BLOB,
+            bootstrapBlob:process.env.BOOTSTRAP_BLOB,
+            exactPathCount:13,
+            exactPaths:classifications.map(x=>x.repositoryPath).sort(),
+            nodeId:process.env.NODE_ID,
+            positiveDisposition:positive.finalDisposition,
+            negativeDisposition:negative.finalDisposition,
+            c2Disposition:c2.finalDisposition
+          };
+          const receipt={
+            schema:'PR570_INTERNAL_REGISTRY_REGISTRATION_EXECUTION_RECEIPT_v1',
+            result:'PASS_CLOSED_EXACT_INTERNAL_REGISTRY_REGISTRATION_REPRODUCED',
+            executionHolder:process.env.EXECUTION_HOLDER,
+            ...payload,
+            packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),
+            productMutationPerformed:false,
+            terrainMutationPerformed:false,
+            pr570Mutated:false,
+            mergePerformed:false
+          };
+          fs.writeFileSync(`${process.env.OUTPUT_DIR}/receipt.json`,JSON.stringify(receipt,null,2)+'\n');
+          fs.writeFileSync(`${process.env.OUTPUT_DIR}/c2-receipt.json`,JSON.stringify(c2,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-inner-registry-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/builder/
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-verifier:
+    name: exact-registration-fresh-verifier
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CANDIDATE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-inner-registry-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/builder-evidence
+      - name: Independently reproduce positive, negative, and C2 checks
+        env:
+          EXECUTION_HOLDER: PR570_INNER_REGISTRY_FRESH_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+          OUTPUT_DIR: ${{ runner.temp }}/verifier
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_HEAD"
+          test "$(git merge-base HEAD "$GOVERNING_MAIN")" = "$GOVERNING_MAIN"
+          mkdir -p "$OUTPUT_DIR"
+          cp "$RUNNER_TEMP/builder-evidence/paths.txt" "$OUTPUT_DIR/paths.txt"
+          cp "$RUNNER_TEMP/builder-evidence/negative-path.txt" "$OUTPUT_DIR/negative-path.txt"
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file "$OUTPUT_DIR/paths.txt" \
+            --task PR570_INTERNAL_REGISTRY_REGISTRATION_FRESH_VERIFIER \
+            --mutation-intent \
+            --output "$OUTPUT_DIR/positive.json"
+          set +e
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file "$OUTPUT_DIR/negative-path.txt" \
+            --task PR570_INTERNAL_REGISTRY_NEGATIVE_NEIGHBOR_FRESH_VERIFIER \
+            --mutation-intent \
+            --output "$OUTPUT_DIR/negative.json"
+          set -e
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import { runHEarthC2R1MC5AutomaticRegistryPreflight } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const positive=JSON.parse(fs.readFileSync(`${process.env.OUTPUT_DIR}/positive.json`,'utf8'));
+          const negative=JSON.parse(fs.readFileSync(`${process.env.OUTPUT_DIR}/negative.json`,'utf8'));
+          const c2=await runHEarthC2R1MC5AutomaticRegistryPreflight();
+          const classifications=positive.pathClassification?.classifications??[];
+          if(positive.finalDisposition!=='PASS'||positive.validatorReceipt?.finalDisposition!=='PASS')throw Error('POSITIVE_PREFLIGHT_NOT_PASS');
+          if(classifications.length!==13||!classifications.every(x=>x.registered===true&&x.classification==='REGISTERED_H_EARTH_PATH'))throw Error('POSITIVE_PATH_REGISTRATION_INCOMPLETE');
+          if(!classifications.every(x=>(x.resolvedNodeIds??[]).includes(process.env.NODE_ID)))throw Error('POSITIVE_NODE_BINDING_MISMATCH');
+          if(negative.finalDisposition!=='STOP'||negative.mutationMayProceed!==false)throw Error('NEGATIVE_NEIGHBOR_NOT_STOPPED');
+          const negativeClass=negative.pathClassification?.classifications?.[0];
+          if(!negativeClass||negativeClass.registered!==false||negativeClass.classification!=='UNREGISTERED_H_EARTH_SCOPED_PATH')throw Error('NEGATIVE_NEIGHBOR_CLASSIFICATION_MISMATCH');
+          if(c2.finalDisposition!=='PASS'||c2.requiredFinalDisposition!=='PASS'||c2.mc5Checks?.allHEarthPathsRegistered!==true)throw Error('C2_R1_REGRESSION');
+          const payload={
+            schema:'PR570_INTERNAL_REGISTRY_REGISTRATION_FINGERPRINT_PAYLOAD_v1',
+            governingMain:process.env.GOVERNING_MAIN,
+            candidateHead:process.env.CANDIDATE_HEAD,
+            baseRegistryBlob:process.env.BASE_REGISTRY_BLOB,
+            bootstrapBlob:process.env.BOOTSTRAP_BLOB,
+            exactPathCount:13,
+            exactPaths:classifications.map(x=>x.repositoryPath).sort(),
+            nodeId:process.env.NODE_ID,
+            positiveDisposition:positive.finalDisposition,
+            negativeDisposition:negative.finalDisposition,
+            c2Disposition:c2.finalDisposition
+          };
+          const receipt={
+            schema:'PR570_INTERNAL_REGISTRY_REGISTRATION_EXECUTION_RECEIPT_v1',
+            result:'PASS_CLOSED_EXACT_INTERNAL_REGISTRY_REGISTRATION_REPRODUCED',
+            executionHolder:process.env.EXECUTION_HOLDER,
+            ...payload,
+            packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),
+            productMutationPerformed:false,
+            terrainMutationPerformed:false,
+            pr570Mutated:false,
+            mergePerformed:false
+          };
+          const builder=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/builder-evidence/receipt.json`,'utf8'));
+          if(builder.executionHolder===receipt.executionHolder||builder.packageFingerprint!==receipt.packageFingerprint)throw Error('INDEPENDENT_REPRODUCTION_MISMATCH');
+          fs.writeFileSync(`${process.env.OUTPUT_DIR}/receipt.json`,JSON.stringify(receipt,null,2)+'\n');
+          fs.writeFileSync(`${process.env.OUTPUT_DIR}/c2-receipt.json`,JSON.stringify(c2,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-inner-registry-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verifier/
+          if-no-files-found: error
+          retention-days: 90
+
+  certify:
+    name: exact-head-merge-authority-certification
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.GOVERNING_MAIN }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-inner-registry-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: pr570-inner-registry-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verifier
+      - name: Bind exact main, head, and independent fingerprints
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$GOVERNING_MAIN"
+          test "$(git rev-parse "origin/$CANDIDATE_BRANCH")" = "$CANDIDATE_HEAD"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const builder=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'utf8'));
+          const verifier=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'utf8'));
+          if(builder.result!=='PASS_CLOSED_EXACT_INTERNAL_REGISTRY_REGISTRATION_REPRODUCED'||verifier.result!==builder.result)throw Error('REPRODUCTION_RESULT_MISMATCH');
+          if(builder.executionHolder===verifier.executionHolder||builder.packageFingerprint!==verifier.packageFingerprint)throw Error('FINGERPRINT_MISMATCH');
+          const receipt={
+            schema:'PR570_INTERNAL_REGISTRY_EXACT_HEAD_MERGE_AUTHORITY_RECEIPT_v1',
+            result:'PASS_CLOSED_EXACT_HEAD_MERGE_AUTHORIZED',
+            repository:'smansfield635-create/smansfield635-create.github.io',
+            exactPreMergeMain:process.env.GOVERNING_MAIN,
+            exactCandidateHead:process.env.CANDIDATE_HEAD,
+            exactPr:609,
+            packageFingerprint:builder.packageFingerprint,
+            distinctExecutionHolders:true,
+            permittedChangedPathCount:2,
+            permittedEffect:'ACTIVATE_EXACT_THIRTEEN_PATH_INTERNAL_REGISTRY_REGISTRATION',
+            prohibitedEffects:['PR570_MUTATION','PRODUCT_OR_TERRAIN_MUTATION','BASE_REGISTRY_CANDIDATE_CHANGE','BOOTSTRAP_CHANGE','PREFIX_REGISTRATION','DEPLOYMENT','RELEASE'],
+            headSubstitutionProhibited:true,
+            baseDriftRequiresHold:true,
+            authorityTerminatesAfterExactMerge:true
+          };
+          receipt.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+          fs.mkdirSync('/tmp/pr570-inner-registry-final',{recursive:true});
+          fs.writeFileSync('/tmp/pr570-inner-registry-final/merge-authority.json',JSON.stringify(receipt,null,2)+'\n');
+          fs.copyFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'/tmp/pr570-inner-registry-final/builder-receipt.json');
+          fs.copyFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'/tmp/pr570-inner-registry-final/verifier-receipt.json');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr570-inner-registry-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/pr570-inner-registry-final/
+          if-no-files-found: error
+          retention-days: 90

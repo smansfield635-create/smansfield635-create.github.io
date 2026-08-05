@@ -1,0 +1,44 @@
+{
+  "routeId": "SPONTANEOUS_SPEECH_CURRENT_REPOSITORY_RERUN_2026_ROUTE_v1",
+  "routeVersion": "1.0.0-repository-reproduction",
+  "domain": "spontaneous_speech_language_structure",
+  "caseIdField": "participant_id",
+  "frozenBeforeRun": true,
+  "requiredFactors": [
+    {
+      "factorId": "CONCEPTUAL_BREADTH_AVAILABILITY",
+      "label": "Inverse within-language rank availability of fastText global semantic similarity",
+      "normalizer": { "type": "direct_availability", "field": "a_conceptual" }
+    },
+    {
+      "factorId": "CONTEXTUAL_BREADTH_AVAILABILITY",
+      "label": "Inverse within-language rank availability of BERT global semantic similarity",
+      "normalizer": { "type": "direct_availability", "field": "a_contextual" }
+    },
+    {
+      "factorId": "VISUAL_GROUNDING_AVAILABILITY",
+      "label": "Within-language rank availability of CLIP picture-speech alignment",
+      "normalizer": { "type": "direct_availability", "field": "a_visual_grounding" }
+    },
+    {
+      "factorId": "SYNTACTIC_ORGANIZATION_AVAILABILITY",
+      "label": "Within-language rank availability of averaged dependency distance",
+      "normalizer": { "type": "direct_availability", "field": "a_syntactic_organization" }
+    },
+    {
+      "factorId": "ADJUSTED_PREDICTABILITY_AVAILABILITY",
+      "label": "Inverse within-language rank availability of log-perplexity residualized for BERT type-token ratio",
+      "normalizer": { "type": "direct_availability", "field": "a_adjusted_predictability" }
+    }
+  ],
+  "terminalLock": { "type": "none" },
+  "outcomeFields": [],
+  "limitations": [
+    "Repository reproduction of the previously exploratory feature-level route, not final validation.",
+    "The admitted S3 linguistic-feature file does not supply diagnosis, MMSE, age, sex, or education to this route.",
+    "No patient-control inference, Alzheimer diagnosis, clinical discrimination, or diagnostic use is authorized.",
+    "The route operates on extracted participant-level features rather than raw audio or transcripts.",
+    "Within-language percentile normalization describes relative structure in this admitted cohort and is not a universal external norm."
+  ],
+  "nextValidationStep": "Test the frozen route on a held-out feature dataset with prospectively admitted outcomes under a separate protocol."
+}

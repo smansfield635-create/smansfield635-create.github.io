@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IMI Empirical Platform</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; line-height: 1.45; max-width: 920px; }
+    code, pre { background: #f4f4f4; padding: 0.15rem 0.3rem; border-radius: 0.2rem; }
+    pre { padding: 1rem; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>IMI Empirical Platform</h1>
+  <p>This preofficial tool-base module pairs IMI route scoring with empirical study receipts and a portfolio registry.</p>
+  <pre id="status">Loading module...</pre>
+  <script type="module">
+    import api from './imi-core-and-empirical-portfolio-engine.v1.mjs';
+    document.getElementById('status').textContent = JSON.stringify({
+      ready: true,
+      schemaVersion: api.meta.schemaVersion,
+      version: api.meta.version,
+      official: api.meta.official,
+      exportedGlobal: typeof globalThis.IMI_EMPIRICAL_PLATFORM_API === 'object'
+    }, null, 2);
+  </script>
+</body>
+</html>

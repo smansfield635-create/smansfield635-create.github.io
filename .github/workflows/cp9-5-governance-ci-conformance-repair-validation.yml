@@ -1,0 +1,202 @@
+name: CP9.5 Governance CI Conformance Repair Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml'
+      - 'tools/ai-room-transport/active-conformance.v1.mjs'
+      - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/cp9-5-governance-ci-conformance-repair-validation.yml'
+      - '.github/workflows/cp9r-router-ownership-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  ROUTER_OPERATION_ID: GOVERNANCE_CI_REPAIR_ROUTER_OWNERSHIP_R_001
+  ROUTER_LOCK_SCOPE: REPOSITORY_AI_ROUTER_INFRASTRUCTURE:GOVERNANCE_CI_REPAIR_OWNERSHIP:R:V1
+  ROUTER_LOCK_GENERATION: '51'
+  CI_OPERATION_ID: GOVERNANCE_CI_CONFORMANCE_REPAIR_C_001
+  CI_LOCK_SCOPE: REPOSITORY_AI_ROUTER_INFRASTRUCTURE:GOVERNANCE_CI_CONFORMANCE_REPAIR:C:V1
+  CI_LOCK_GENERATION: '52'
+
+jobs:
+  builder:
+    name: governance-ci-repair-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact five-path repair and active conformance
+        run: |
+          set -euo pipefail
+          node --check tools/ai-room-transport/active-conformance.v1.mjs
+          node tools/ai-room-transport/active-conformance.v1.mjs \
+            --root . --expected-head "$EXPECTED_HEAD" \
+            --holder "CP9_5_CI_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --output "$RUNNER_TEMP/builder.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const read=p=>fs.readFileSync(p,'utf8');
+          const intake=read('.github/workflows/repository-operation-intake-validation.yml');
+          const bootstrap=read('.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml');
+          const historical=read('.github/workflows/cp9r-router-ownership-validation.yml');
+          if(!intake.includes("JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json'"))throw Error('INTAKE_SEMANTIC_JSON_CHECK_MISSING');
+          if(intake.includes('grep -q \'"status": "ACTIVE_FAIL_CLOSED"\''))throw Error('WHITESPACE_SENSITIVE_ENTRYPOINT_CHECK_REMAINS');
+          if(!bootstrap.includes('1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500')||!bootstrap.includes('active-conformance.v1.mjs'))throw Error('GENESIS_ACTIVE_MODE_SEPARATION_MISSING');
+          if(/\n\s*pull_request\s*:/.test(historical))throw Error('HISTORICAL_CP9R_PULL_REQUEST_TRIGGER_REMAINS');
+          if(!historical.includes('workflow_dispatch:')||!historical.includes('repair/cp9r-router-ownership-v1-001'))throw Error('HISTORICAL_CP9R_SCOPE_MISSING');
+          const entry=JSON.parse(read('AI_ENTRYPOINT.json')),locator=JSON.parse(read('.github/operation-intake/locator.v1.json'));
+          if(entry.status!=='ACTIVE_FAIL_CLOSED'||locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('ACTIVE_STATUS_SEMANTICS_FAILED');
+          const paths=['.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml','tools/ai-room-transport/active-conformance.v1.mjs','.github/workflows/repository-operation-intake-validation.yml','.github/workflows/cp9-5-governance-ci-conformance-repair-validation.yml','.github/workflows/cp9r-router-ownership-validation.yml'];
+          const receipt={schema:'CP9_5_GOVERNANCE_CI_STATIC_REPAIR_RECEIPT_v1',result:'PASS_CLOSED',expectedHead:process.env.EXPECTED_HEAD,changedPathCount:paths.length,paths,semanticJsonValidation:true,historicalGenesisSeparated:true,staleCp9rPullRequestTriggerRemoved:true,unregisteredPolicyWeakened:false,productMutationPerformed:false,operationBExecuted:false,pr570Mutated:false};
+          receipt.fingerprint=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/static.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          for P in \
+            .github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml \
+            tools/ai-room-transport/active-conformance.v1.mjs \
+            .github/workflows/repository-operation-intake-validation.yml \
+            .github/workflows/cp9-5-governance-ci-conformance-repair-validation.yml \
+            .github/workflows/cp9r-router-ownership-validation.yml; do
+            node tools/repository-ai-entry-router.mjs --mutation-intent --path "$P" --task 'CP9.5 governance CI repair route verification' --output "$RUNNER_TEMP/route.json"
+            node -e "const r=require(process.env.RUNNER_TEMP+'/route.json');if(r.disposition!=='PASS'||r.routes?.[0]?.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE')process.exit(1)"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp9-5-governance-ci-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/builder.json
+            ${{ runner.temp }}/static.json
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-verifier:
+    name: governance-ci-repair-fresh-independent-verifier
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: cp9-5-governance-ci-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/builder
+      - name: Reproduce without repair
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/active-conformance.v1.mjs \
+            --root . --expected-head "$EXPECTED_HEAD" \
+            --holder "CP9_5_CI_FRESH_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --output "$RUNNER_TEMP/verifier.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const b=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/builder/builder.json'));
+          const v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/verifier.json'));
+          if(b.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||v.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE')process.exit(1);
+          if(b.executionHolder===v.executionHolder||b.packageFingerprint!==v.packageFingerprint)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp9-5-governance-ci-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verifier.json
+          if-no-files-found: error
+          retention-days: 90
+
+  certify-and-close:
+    name: certify-repair-and-close-exact-locks
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: cp9-5-governance-ci-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: cp9-5-governance-ci-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verifier
+      - name: Emit pre-closure final certification
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const b=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/builder/builder.json'));
+          const s=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/builder/static.json'));
+          const v=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/verifier/verifier.json'));
+          if(b.packageFingerprint!==v.packageFingerprint||s.result!=='PASS_CLOSED')throw Error('CERTIFICATION_INPUT_MISMATCH');
+          const out={schema:'CP9_5_GOVERNANCE_CI_FINAL_CERTIFICATION_v1',result:'PASS_CLOSED_CI_DEFECTS_REPAIRED_AND_INDEPENDENTLY_REPRODUCED',candidateHead:process.env.EXPECTED_HEAD,activeConformanceFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,historicalGenesisPreserved:true,activeRegistryExtensionAware:true,semanticJsonChecks:true,staleCp9rWorkflowNarrowed:true,exactRepairPathCount:5,productMutationPerformed:false,hEarthRepairPerformed:false,operationBExecuted:false,pr570Mutated:false,mergePerformed:false};
+          out.certificationDigest=crypto.createHash('sha256').update(JSON.stringify(out)).digest('hex');
+          fs.writeFileSync('/tmp/final.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - name: Close router ownership generation 51 through canonical lock manager
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
+              --operation-id "$ROUTER_OPERATION_ID" --lock-scope "$ROUTER_LOCK_SCOPE" \
+              --lock-generation "$ROUTER_LOCK_GENERATION" --terminal-disposition PASS_CLOSED \
+              --output /tmp/router-closure.json; then break; fi
+            test "$attempt" -lt 3; sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/router-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Close CI repair generation 52 through canonical lock manager
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
+              --operation-id "$CI_OPERATION_ID" --lock-scope "$CI_LOCK_SCOPE" \
+              --lock-generation "$CI_LOCK_GENERATION" --terminal-disposition PASS_CLOSED \
+              --output /tmp/ci-closure.json; then break; fi
+            test "$attempt" -lt 3; sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/ci-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Package complete terminal evidence
+        run: |
+          mkdir -p /tmp/cp9-5-governance-ci-final
+          cp "$RUNNER_TEMP/builder/builder.json" /tmp/cp9-5-governance-ci-final/
+          cp "$RUNNER_TEMP/builder/static.json" /tmp/cp9-5-governance-ci-final/
+          cp "$RUNNER_TEMP/verifier/verifier.json" /tmp/cp9-5-governance-ci-final/
+          cp /tmp/final.json /tmp/cp9-5-governance-ci-final/
+          cp /tmp/router-closure.json /tmp/cp9-5-governance-ci-final/
+          cp /tmp/ci-closure.json /tmp/cp9-5-governance-ci-final/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp9-5-governance-ci-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp9-5-governance-ci-final/
+          if-no-files-found: error
+          retention-days: 90

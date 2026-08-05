@@ -1,1 +1,151 @@
-{"name":"Repository Operation Intake Bootstrap Validation","on":{"pull_request":{"branches":["main"],"paths-ignore":[".github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json"]},"push":{"branches":["main"],"paths-ignore":[".github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json"]},"workflow_dispatch":null},"permissions":{"contents":"read"},"env":{"B":"a18107998f0a5d8146010aa4cc9767d1f85b1ebd","R":".github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json","H":"${{ github.event.pull_request.head.sha || github.sha }}"},"jobs":{"bootstrap-builder-self-test":{"runs-on":"ubuntu-latest","steps":[{"uses":"actions/checkout@v4","with":{"ref":"${{ env.H }}","fetch-depth":0,"persist-credentials":false}},{"run":"grep -q '\"status\": \"ACTIVE_FAIL_CLOSED\"' AI_ENTRYPOINT.json;grep -q '\"status\":\"ACTIVE_FAIL_CLOSED\"' .github/operation-intake/locator.v1.json;grep -q 'push:' .github/workflows/repository-operation-intake-validation.yml;grep -q \"$R\" .github/workflows/repository-operation-intake-validation.yml\nnode -e \"let j=require('./.github/operation-intake/deployment-activation-receipt.schema.v1.json');if(!j.\\$id.endsWith('_SCHEMA_v1'))throw Error()\"\ngit worktree add --detach /tmp/x \"$B\";cd /tmp/x;node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/builder-self-test.receipt.json\n"},{"uses":"actions/upload-artifact@v4","with":{"name":"repository-operation-intake-builder-self-test-v1","path":"/tmp/builder-self-test.receipt.json","if-no-files-found":"error"}}]},"fresh-bootstrap-verifier":{"needs":"bootstrap-builder-self-test","runs-on":"ubuntu-latest","steps":[{"uses":"actions/checkout@v4","with":{"ref":"${{ env.H }}","fetch-depth":0,"persist-credentials":false}},{"uses":"actions/download-artifact@v4","with":{"name":"repository-operation-intake-builder-self-test-v1","path":"/tmp/certification/builder"}},{"run":"grep -q 'ACTIVE_FAIL_CLOSED' AI_ENTRYPOINT.json;grep -q 'ACTIVE_FAIL_CLOSED' .github/operation-intake/locator.v1.json\ngit worktree add --detach /tmp/x \"$B\";cd /tmp/x;node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/verifier-self-test.receipt.json;cmp /tmp/certification/builder/builder-self-test.receipt.json /tmp/verifier-self-test.receipt.json\n"},{"uses":"actions/upload-artifact@v4","with":{"name":"repository-operation-intake-verifier-self-test-v1","path":"/tmp/verifier-self-test.receipt.json","if-no-files-found":"error"}}]},"remote-ledger-cas-certification":{"needs":"fresh-bootstrap-verifier","runs-on":"ubuntu-latest","permissions":{"contents":"write"},"env":{"GITHUB_TOKEN":"${{ github.token }}","REPOSITORY":"${{ github.repository }}","L":"refs/heads/operation-locks/repository-operation-intake-v1"},"steps":[{"uses":"actions/checkout@v4","with":{"ref":"${{ env.H }}","fetch-depth":0,"persist-credentials":false}},{"run":"node --input-type=module - <<'NODE'\nimport f from'node:fs';import{createHash as h}from'node:crypto';import{ensureRef as E,acquireRemote as A,closeRemote as C}from'./tools/operation-intake/repository-operation-lock-manager.v1.mjs';let e=process.env,d='/tmp/c',s=`ACTIVATION:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`,q=x=>h('sha256').update(x).digest('hex'),o={repository:e.REPOSITORY,lockRef:e.L,token:e.GITHUB_TOKEN,lockScope:s,governingHead:e.H,requestDigest:q(s+'r'),procedureLocatorDigest:q(s+'p'),barrierFile:d+'/g'};f.mkdirSync(d,{recursive:true});await E({repository:e.REPOSITORY,lockRef:e.L,baseHead:e.H,token:e.GITHUB_TOKEN});let p=[A({...o,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),A({...o,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})];for(let i=0;i<300&&!(f.existsSync(d+'/a')&&f.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));let a=JSON.parse(f.readFileSync(d+'/a')),b=JSON.parse(f.readFileSync(d+'/b'));if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION');f.writeFileSync(d+'/g','');let x=await Promise.all(p),w=x.filter(z=>z.lockAcquired),l=x.filter(z=>!z.lockAcquired),z=w.length!==1||l.length!==1||l[0].errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(l[0].httpStatus);if(w.length!==1)throw Error('CARDINALITY');let c=await C({...o,operationId:w[0].operationId,lockGeneration:w[0].lockGeneration,terminalDisposition:z?'FAIL_CLOSED':'PASS_CLOSED'});if(z)throw Error('LOSER');if(!c.lockReleased)throw Error('CLOSURE');f.writeFileSync('/tmp/remote-cas-certification.receipt.json',JSON.stringify({schema:'REPOSITORY_OPERATION_INTAKE_REMOTE_CAS_CERTIFICATION_RECEIPT_v1',result:'PASS_EXACTLY_ONE_ACQUIRED',validationSubjectHead:e.H,winner:w[0],loser:l[0],closure:c,lockBranchChangedPaths:['.github/operation-intake/active-operation-ledger.v1.json']},null,2)+'\\n');\nNODE\ngit fetch origin operation-locks/repository-operation-intake-v1;X=$(git rev-parse origin/operation-locks/repository-operation-intake-v1);test \"$(git merge-base \"$B\" \"$X\")\" = \"$B\";for C in $(git rev-list \"$B..$X\");do test \"$(git diff-tree --no-commit-id --name-only -r \"$C\")\" = .github/operation-intake/active-operation-ledger.v1.json;done\n"},{"uses":"actions/upload-artifact@v4","with":{"name":"repository-operation-intake-remote-cas-certification-v1","path":"/tmp/remote-cas-certification.receipt.json","if-no-files-found":"error"}}]},"package-bootstrap-certification":{"needs":["bootstrap-builder-self-test","fresh-bootstrap-verifier","remote-ledger-cas-certification"],"runs-on":"ubuntu-latest","steps":[{"uses":"actions/checkout@v4","with":{"ref":"${{ env.H }}","fetch-depth":0,"persist-credentials":false}},{"uses":"actions/download-artifact@v4","with":{"name":"repository-operation-intake-builder-self-test-v1","path":"/tmp/certification/builder"}},{"uses":"actions/download-artifact@v4","with":{"name":"repository-operation-intake-verifier-self-test-v1","path":"/tmp/certification/verifier"}},{"uses":"actions/download-artifact@v4","with":{"name":"repository-operation-intake-remote-cas-certification-v1","path":"/tmp/certification/remote"}},{"run":"mkdir -p /tmp/certification/final\ncp /tmp/certification/builder/builder-self-test.receipt.json /tmp/certification/final/builder-self-test.receipt.json\ncp /tmp/certification/verifier/verifier-self-test.receipt.json /tmp/certification/final/verifier-self-test.receipt.json\ncp /tmp/certification/remote/remote-cas-certification.receipt.json /tmp/certification/final/remote-cas-certification.receipt.json\ngit show \"$B:.github/workflows/repository-operation-intake-validation.yml\"|awk '/Build canonical certification package/{x=1}x&&/node <<.NODE./{p=1;next}p&&/^          NODE$/{exit}p{sub(/^          /,\"\");print}' >/tmp/p.js\nTOOLING_HEAD=\"$H\" node /tmp/p.js\n"},{"uses":"actions/upload-artifact@v4","with":{"name":"repository-operation-intake-bootstrap-certification-v1","path":"/tmp/certification/final/","if-no-files-found":"error"}}]}}}
+name: Repository Operation Intake Bootstrap Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  B: a18107998f0a5d8146010aa4cc9767d1f85b1ebd
+  R: .github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json
+  H: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  bootstrap-builder-self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify active identities semantically and reproduce bootstrap
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
+          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
+          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
+          NODE
+          grep -q 'push:' .github/workflows/repository-operation-intake-validation.yml
+          grep -q "$R" .github/workflows/repository-operation-intake-validation.yml
+          node -e "let j=require('./.github/operation-intake/deployment-activation-receipt.schema.v1.json');if(!j.\$id.endsWith('_SCHEMA_v1'))throw Error()"
+          git worktree add --detach /tmp/x "$B"
+          cd /tmp/x
+          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/builder-self-test.receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-builder-self-test-v1
+          path: /tmp/builder-self-test.receipt.json
+          if-no-files-found: error
+
+  fresh-bootstrap-verifier:
+    needs: bootstrap-builder-self-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-intake-builder-self-test-v1
+          path: /tmp/certification/builder
+      - name: Reproduce independently with semantic JSON checks
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
+          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
+          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
+          NODE
+          git worktree add --detach /tmp/x "$B"
+          cd /tmp/x
+          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/verifier-self-test.receipt.json
+          cmp /tmp/certification/builder/builder-self-test.receipt.json /tmp/verifier-self-test.receipt.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-verifier-self-test-v1
+          path: /tmp/verifier-self-test.receipt.json
+          if-no-files-found: error
+
+  remote-ledger-cas-certification:
+    needs: fresh-bootstrap-verifier
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      L: refs/heads/operation-locks/repository-operation-intake-v1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Certify exactly-one remote CAS acquisition and closure
+        run: |
+          node --input-type=module - <<'NODE'
+          import f from'node:fs';import{createHash as h}from'node:crypto';import{ensureRef as E,acquireRemote as A,closeRemote as C}from'./tools/operation-intake/repository-operation-lock-manager.v1.mjs';let e=process.env,d='/tmp/c',s=`ACTIVATION:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`,q=x=>h('sha256').update(x).digest('hex'),o={repository:e.REPOSITORY,lockRef:e.L,token:e.GITHUB_TOKEN,lockScope:s,governingHead:e.H,requestDigest:q(s+'r'),procedureLocatorDigest:q(s+'p'),barrierFile:d+'/g'};f.mkdirSync(d,{recursive:true});await E({repository:e.REPOSITORY,lockRef:e.L,baseHead:e.H,token:e.GITHUB_TOKEN});let p=[A({...o,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),A({...o,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})];for(let i=0;i<300&&!(f.existsSync(d+'/a')&&f.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));let a=JSON.parse(f.readFileSync(d+'/a')),b=JSON.parse(f.readFileSync(d+'/b'));if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION');f.writeFileSync(d+'/g','');let x=await Promise.all(p),w=x.filter(z=>z.lockAcquired),l=x.filter(z=>!z.lockAcquired),z=w.length!==1||l.length!==1||l[0].errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(l[0].httpStatus);if(w.length!==1)throw Error('CARDINALITY');let c=await C({...o,operationId:w[0].operationId,lockGeneration:w[0].lockGeneration,terminalDisposition:z?'FAIL_CLOSED':'PASS_CLOSED'});if(z)throw Error('LOSER');if(!c.lockReleased)throw Error('CLOSURE');f.writeFileSync('/tmp/remote-cas-certification.receipt.json',JSON.stringify({schema:'REPOSITORY_OPERATION_INTAKE_REMOTE_CAS_CERTIFICATION_RECEIPT_v1',result:'PASS_EXACTLY_ONE_ACQUIRED',validationSubjectHead:e.H,winner:w[0],loser:l[0],closure:c,lockBranchChangedPaths:['.github/operation-intake/active-operation-ledger.v1.json']},null,2)+'\n');
+          NODE
+          git fetch origin operation-locks/repository-operation-intake-v1
+          X=$(git rev-parse origin/operation-locks/repository-operation-intake-v1)
+          test "$(git merge-base "$B" "$X")" = "$B"
+          for C in $(git rev-list "$B..$X"); do
+            test "$(git diff-tree --no-commit-id --name-only -r "$C")" = .github/operation-intake/active-operation-ledger.v1.json
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-remote-cas-certification-v1
+          path: /tmp/remote-cas-certification.receipt.json
+          if-no-files-found: error
+
+  package-bootstrap-certification:
+    needs: [bootstrap-builder-self-test, fresh-bootstrap-verifier, remote-ledger-cas-certification]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-intake-builder-self-test-v1
+          path: /tmp/certification/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-intake-verifier-self-test-v1
+          path: /tmp/certification/verifier
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-intake-remote-cas-certification-v1
+          path: /tmp/certification/remote
+      - name: Build canonical certification package using frozen bootstrap packager
+        run: |
+          mkdir -p /tmp/certification/final
+          cp /tmp/certification/builder/builder-self-test.receipt.json /tmp/certification/final/builder-self-test.receipt.json
+          cp /tmp/certification/verifier/verifier-self-test.receipt.json /tmp/certification/final/verifier-self-test.receipt.json
+          cp /tmp/certification/remote/remote-cas-certification.receipt.json /tmp/certification/final/remote-cas-certification.receipt.json
+          git show "$B:.github/workflows/repository-operation-intake-validation.yml" | awk '/Build canonical certification package/{x=1}x&&/node <<.NODE./{p=1;next}p&&/^          NODE$/{exit}p{sub(/^          /,"");print}' > /tmp/p.js
+          TOOLING_HEAD="$H" node /tmp/p.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-bootstrap-certification-v1
+          path: /tmp/certification/final/
+          if-no-files-found: error

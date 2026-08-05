@@ -30,13 +30,12 @@
       ],
       "result": "PASS_CLOSED_PHASE_1_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS",
       "synthesisPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis.v1.json",
-      "receiptPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis-receipt.v1.json",
-      "stop": "STOP_AFTER_SYNTHESIS_AND_PHASE_2_READINESS_DECISION"
+      "receiptPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis-receipt.v1.json"
     },
     {
       "phase": 2,
       "operation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
-      "status": "AUTHORIZED_NOT_EXECUTED",
+      "status": "PASS_CLOSED",
       "requiredOutputs": [
         "DOMAIN_ADMISSION_STANDARD",
         "PREREGISTERED_CROSS_DOMAIN_HYPOTHESES",
@@ -44,18 +43,22 @@
         "HELD_OUT_DATA_REQUIREMENTS",
         "INDEPENDENT_REPRODUCTION_STANDARD"
       ],
+      "result": "PASS_CLOSED_PHASE_2_GENERALIZABILITY_PROTOCOL",
+      "protocolPath": "h-earth-3d/tools/imi-empirical-platform/generalizability/imi-generalizability-protocol.v1.json",
+      "receiptPath": "h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_GENERALIZABILITY_PROTOCOL_v1/imi-generalizability-protocol-receipt.v1.json",
       "executionBoundary": "PROTOCOL_CONSTRUCTION_AND_FREEZE_ONLY_NO_NEW_DATA_TESTS"
     },
     {
       "phase": 3,
       "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
-      "status": "STAGED_NOT_AUTHORIZED_UNTIL_PHASE_2_FREEZE",
+      "status": "AUTHORIZED_NOT_EXECUTED",
       "tracks": [
-        "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+        "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
         "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
-        "DSSI_REMAINING_COUNTRY_CONTINUATION",
-        "HOSPITAL_NEXT_RELEASE_OR_EXTERNAL_SYSTEM_REPLICATION"
-      ]
+        "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+        "DSSI_REMAINING_COUNTRY_CONTINUATION"
+      ],
+      "executionBoundary": "EACH_TRACK_REQUIRES_SEPARATE_SOURCE_ROUTE_AND_RECEIPT_IDENTITIES"
     },
     {
       "phase": 4,
@@ -87,14 +90,23 @@
     }
   ],
   "phase1WorkflowEvidence": {
-    "verifiedHeadSha": "ffaaabdbd7691dd1079a7afdb81a62310fda706a",
+    "verifiedHeadSha": "f527c07ac3f449531d0a0cffc30d55de09787bce",
     "workflowName": "H-Earth IMI Empirical Platform",
-    "workflowRunId": 31029565605,
-    "workflowJobId": 92386517692,
+    "workflowRunId": 31030190771,
+    "workflowJobId": 92388639917,
     "workflowConclusion": "success",
     "phase1SynthesisStepConclusion": "success",
-    "artifactId": 8940114740,
-    "artifactSha256": "35789885bb63dc1e2a20c85908985303b94552a619365f7fd2b8ea13a2dc73cc"
+    "artifactId": 8940321342,
+    "artifactSha256": "e3d0b17651b5fea41406043b182e3cad0cef873c1c19afd92f3f1c8120ee913a"
+  },
+  "phase2ProtocolEvidence": {
+    "protocolDigest": "fnv1a32:54474299",
+    "protocolStatus": "FROZEN",
+    "hypothesisCount": 6,
+    "replicationTrackCount": 4,
+    "mandatoryDomainAdmissionCriterionCount": 10,
+    "newDataTestsExecuted": false,
+    "phase3Authorization": "AUTHORIZED_NOT_EXECUTED"
   },
   "globalBoundaries": {
     "rawIMIMagnitudesComparableAcrossRoutes": false,
@@ -106,6 +118,6 @@
     "mainMergeAuthorized": false,
     "publicReleaseAuthorized": false
   },
-  "currentProgramState": "PHASE_1_PASS_CLOSED_PHASE_2_PROTOCOL_AUTHORIZED_NOT_EXECUTED",
-  "currentDecision": "EXECUTE_PHASE_1_ONLY"
+  "currentProgramState": "PHASE_2_PASS_CLOSED_PHASE_3_PARALLEL_EXTERNAL_TESTS_AUTHORIZED_NOT_EXECUTED",
+  "currentDecision": "STOP_AFTER_PHASE_2_CLOSE_PHASE_3_AUTHORIZED_NOT_EXECUTED"
 }

@@ -16,7 +16,7 @@
   "routeFamilyCount": 4,
   "phase2Authorized": true,
   "nextOperation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
-  "synthesisDigest": "fnv1a32:b1d356ba",
+  "synthesisDigest": "fnv1a32:c9731e72",
   "boundaries": {
     "phase1Only": true,
     "newDataCollected": false,
@@ -31,5 +31,5 @@
     "mainMergeAuthorized": false,
     "publicReleaseAuthorized": false
   },
-  "receiptDigest": "fnv1a32:91279879"
+  "receiptDigest": "fnv1a32:f5fc932c"
 }

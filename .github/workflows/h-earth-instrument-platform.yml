@@ -5,16 +5,23 @@ on:
     paths:
       - '.github/workflows/h-earth-instrument-platform.yml'
       - 'h-earth-3d/control-plane/instrument-platform/**'
+      - 'h-earth-3d/control-plane/imi-empirical-platform/**'
       - 'h-earth-3d/tools/instrument-platform/**'
       - 'h-earth-3d/tools/terrain-workbench/**'
+      - 'h-earth-3d/tools/imi-empirical-platform/**'
       - 'h-earth-3d/validation/instrument-platform/**'
       - 'h-earth-3d/validation/terrain-workbench/**'
+      - 'h-earth-3d/validation/imi-empirical-platform/**'
   push:
     branches: [main]
     paths:
+      - 'h-earth-3d/control-plane/imi-empirical-platform/**'
+      - 'h-earth-3d/tools/imi-empirical-platform/**'
+      - 'h-earth-3d/validation/imi-empirical-platform/**'
       - 'h-earth-3d/control-plane/instrument-platform/H_EARTH_POST_MERGE_ENGINEERING_PROOF_001.v1.mjs'
       - 'h-earth-3d/tools/instrument-platform/index.html'
       - 'h-earth-3d/tools/instrument-platform/platform.mjs'
+      - 'h-earth-3d/tools/instrument-platform/tool-registry.mjs'
       - 'h-earth-3d/validation/instrument-platform/h-earth.instrument-platform.runner.mjs'
   workflow_dispatch:
 
@@ -59,6 +66,10 @@ jobs:
           H_EARTH_PUBLIC_PLATFORM_URL: https://smansfield635-create.github.io/h-earth-3d/tools/instrument-platform/index.html
         run: node h-earth-3d/validation/instrument-platform/h-earth.instrument-platform.runner.mjs | tee /tmp/h-earth-instrument-platform.log
 
+      - name: Execute IMI empirical platform fixture verifier
+        run: |
+          node h-earth-3d/validation/imi-empirical-platform/imi.empirical-platform.runner.mjs --output-dir /tmp/imi-empirical-platform | tee /tmp/imi-empirical-platform.log
+
       - name: Upload post-merge platform proof evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -69,6 +80,8 @@ jobs:
             h-earth-3d/validation/instrument-platform/evidence/
             /tmp/h-earth-instrument-platform.log
             /tmp/h-earth-instrument-platform-server.log
+            /tmp/imi-empirical-platform.log
+            /tmp/imi-empirical-platform/imi-empirical-platform-validation-receipt.v1.json
           retention-days: 90
 
       - name: Enforce current proof boundary

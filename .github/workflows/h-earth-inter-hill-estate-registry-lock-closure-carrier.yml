@@ -3,7 +3,7 @@ name: H-Earth Inter-Hill Estate Registry Lock Closure Carrier
 on:
   pull_request:
     branches: [main]
-    types: [opened]
+    types: [opened, synchronize]
     paths:
       - '.github/workflows/h-earth-inter-hill-estate-registry-lock-closure-carrier.yml'
 
@@ -32,7 +32,7 @@ jobs:
           test "$(gh api repos/${{ github.repository }}/pulls/616 --jq .head.sha)" = "f5bbab7595306cbae16406f3f66fe206c2bd9f94"
           test "$(gh api repos/${{ github.repository }}/pulls/616 --jq .merged)" = "false"
           test "$(gh api repos/${{ github.repository }}/pulls/618 --jq .merged)" = "true"
-          test "$(gh api repos/${{ github.repository }}/pulls/618 --jq .merge_commit_sha)" = "b6ba52ff4361794b7686c88a9bd0c07712806075"
+          test "$(gh api repos/${{ github.repository }}/pulls/618 --jq .merge_commit_sha)" = "82a4b9c7241802d229b9c1a7cc01e5631ac4a1b8"
       - name: Execute canonical fixed lock termination command
         env:
           GITHUB_TOKEN: ${{ github.token }}

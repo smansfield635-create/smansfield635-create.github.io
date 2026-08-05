@@ -1,87 +1,294 @@
-name: H-Earth Registry Two-Path Toolset Registration Validation
+name: CP10 Operation B Finalization Evidence and Termination
+
 on:
   pull_request:
+    branches: [main]
     paths:
-      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
-      - '.github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json'
-      - 'tools/h-earth-registry-two-path-toolset/**'
       - '.github/workflows/h-earth-registry-two-path-toolset-registration-validation.yml'
+
 permissions:
   contents: write
   actions: read
+  pull-requests: read
+
+env:
+  TOOLING_HEAD: f978d62886b71bd0e619e4a713472ebffea43419
+  REPAIR_BASE_HEAD: 3d80989e4571e62a5b9997aa70b223c0678ee1d3
+  CANDIDATE_HEAD: 603f74d3d4d52909812b0564102b742ded0ee27f
+  SUBJECT_HEAD: 7c0b8871928b21cd9b2806f058bce34eed11f2ba
+  SUBJECT_BASE: 3ac9279dc82e56f7b0d67972ce56048d07e5ecfa
+  BUILDER_RUN_ID: '30975493311'
+  BUILDER_ARTIFACT_NAME: ai-room-command-execution-receipt-30975493311-1
+  BUILDER_PAYLOAD_SHA256: 92cc76db967ac67994171f2dc02b140b0db154268e9fd315f5158845d527fffe
+  VERIFIER_RUN_ID: '30975573343'
+  VERIFIER_ARTIFACT_NAME: ai-room-command-execution-receipt-30975573343-1
+  VERIFIER_PAYLOAD_SHA256: 68ed87b77f80d190ec8c1be8c5c195fe4223a2c358f4a5bd0db7e82ad58bf1d6
+  OPERATION_B_ID: H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_OPERATION_B_v1
+  OPERATION_B_SCOPE: H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:OPERATION_B:V1
+  OPERATION_B_GENERATION: '63'
+  FINALIZATION_ID: CP10_OPERATION_B_FINALIZATION_EVIDENCE_AND_TERMINATION_v1
+  FINALIZATION_SCOPE: H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:OPERATION_B:FINALIZATION:V1
+  FINALIZATION_GENERATION: '75'
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+
 jobs:
   builder:
+    name: exact-registered-payload-builder
     runs-on: ubuntu-24.04
-    outputs:
-      tooling_head: ${{ steps.ids.outputs.tooling_head }}
-      registration_head: ${{ steps.ids.outputs.registration_head }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch immutable execution identities
+        run: |
+          set -euo pipefail
+          for H in "$TOOLING_HEAD" "$REPAIR_BASE_HEAD" "$CANDIDATE_HEAD" "$SUBJECT_HEAD" "$SUBJECT_BASE"; do
+            git fetch --no-tags origin "$H"
+            git cat-file -e "$H^{commit}"
+          done
+      - name: Download and verify successful builder transport receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.BUILDER_ARTIFACT_NAME }}
+          path: ${{ runner.temp }}/builder-transport
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.BUILDER_RUN_ID }}
+      - name: Execute exact registered harness and bind wrapper receipt
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/cp10-operation-b-finalization/builder"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=process.env.RUNNER_TEMP+'/builder-transport/command-execution-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const exact={
+            schema:'COMMAND_EXECUTION_RECEIPT_v1',
+            executionDisposition:'COMMAND_EXECUTED_AND_PASSED',
+            operationId:process.env.OPERATION_B_ID,
+            descriptorId:'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_VERIFIER_DESCRIPTOR_V1',
+            toolId:'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_REPRODUCTION_HARNESS_V1',
+            exactToolingHead:process.env.TOOLING_HEAD,
+            selectedBackend:'GITHUB_ACTIONS_CLEAN_EXECUTION',
+            admissionLockGeneration:Number(process.env.OPERATION_B_GENERATION),
+            workflowRunId:process.env.BUILDER_RUN_ID
+          };
+          for(const [k,v] of Object.entries(exact))if(r[k]!==v)throw Error(`BUILDER_TRANSPORT_${k}_MISMATCH`);
+          if(r.exitStatus!==0||r.prohibitedSideEffectsObserved!==false||JSON.stringify(r.changedPaths)!=='[]')throw Error('BUILDER_TRANSPORT_SIDE_EFFECT_OR_EXIT_MISMATCH');
+          if(r.outputDigests?.commandPayloadReceiptSha256!==process.env.BUILDER_PAYLOAD_SHA256)throw Error('BUILDER_TRANSPORT_PAYLOAD_DIGEST_MISMATCH');
+          fs.copyFileSync(p,process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/builder/transport-receipt.json');
+          NODE
+          git worktree add --detach "$RUNNER_TEMP/cp10-tooling-builder" "$TOOLING_HEAD"
+          cd "$RUNNER_TEMP/cp10-tooling-builder"
+          node tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs \
+            --base-head "$REPAIR_BASE_HEAD" \
+            --candidate-head "$CANDIDATE_HEAD" \
+            --subject-head "$SUBJECT_HEAD" \
+            --execution-holder CP10_OPERATION_B_BUILDER_HOLDER_002 \
+            --output "$RUNNER_TEMP/cp10-operation-b-finalization/builder/payload-receipt.json"
+          test "$(sha256sum "$RUNNER_TEMP/cp10-operation-b-finalization/builder/payload-receipt.json" | awk '{print $1}')" = "$BUILDER_PAYLOAD_SHA256"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const p=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/builder/payload-receipt.json','utf8'));
+          if(p.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED')throw Error('BUILDER_PAYLOAD_NOT_PASS');
+          if(p.baseHead!==process.env.REPAIR_BASE_HEAD||p.candidateHead!==process.env.CANDIDATE_HEAD||p.subjectHead!==process.env.SUBJECT_HEAD)throw Error('BUILDER_PAYLOAD_IDENTITY_MISMATCH');
+          if(p.executionHolder!=='CP10_OPERATION_B_BUILDER_HOLDER_002')throw Error('BUILDER_HOLDER_MISMATCH');
+          if(p.subjectChangedPathCount!==25)throw Error('SUBJECT_PATH_COUNT_MISMATCH');
+          const expected=[
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+          ].sort();
+          if(JSON.stringify([...p.changedPaths].sort())!==JSON.stringify(expected))throw Error('BUILDER_TWO_PATH_SCOPE_MISMATCH');
+          if(p.repairPerformed!==false||p.productMutationPerformed!==false||p.pr570Mutated!==false||p.mergePerformed!==false)throw Error('BUILDER_PROHIBITED_SIDE_EFFECT');
+          if(!/^[0-9a-f]{64}$/.test(p.packageFingerprint??''))throw Error('BUILDER_FINGERPRINT_INVALID');
+          const m={schema:'CP10_OPERATION_B_PAYLOAD_BINDING_RECEIPT_v1',result:'PASS_CLOSED_BUILDER_PAYLOAD_BOUND',executionHolder:p.executionHolder,packageFingerprint:p.packageFingerprint,payloadSha256:process.env.BUILDER_PAYLOAD_SHA256,transportRun:Number(process.env.BUILDER_RUN_ID),transportArtifact:8918086366,transportReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/builder/transport-receipt.json')).digest('hex'),candidateHead:p.candidateHead,repairPerformed:false,mergePerformed:false};
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/builder/binding-receipt.json',JSON.stringify(m,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp10-operation-b-finalization-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/cp10-operation-b-finalization/builder/
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-verifier:
+    name: exact-registered-payload-fresh-verifier
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch immutable execution identities
+        run: |
+          set -euo pipefail
+          for H in "$TOOLING_HEAD" "$REPAIR_BASE_HEAD" "$CANDIDATE_HEAD" "$SUBJECT_HEAD" "$SUBJECT_BASE"; do
+            git fetch --no-tags origin "$H"
+            git cat-file -e "$H^{commit}"
+          done
+      - name: Download and verify successful verifier transport receipt
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.VERIFIER_ARTIFACT_NAME }}
+          path: ${{ runner.temp }}/verifier-transport
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.VERIFIER_RUN_ID }}
+      - name: Execute exact registered harness and bind wrapper receipt
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/cp10-operation-b-finalization/verifier"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=process.env.RUNNER_TEMP+'/verifier-transport/command-execution-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const exact={schema:'COMMAND_EXECUTION_RECEIPT_v1',executionDisposition:'COMMAND_EXECUTED_AND_PASSED',operationId:process.env.OPERATION_B_ID,descriptorId:'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_VERIFIER_DESCRIPTOR_V1',toolId:'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_REPRODUCTION_HARNESS_V1',exactToolingHead:process.env.TOOLING_HEAD,selectedBackend:'GITHUB_ACTIONS_CLEAN_EXECUTION',admissionLockGeneration:Number(process.env.OPERATION_B_GENERATION),workflowRunId:process.env.VERIFIER_RUN_ID};
+          for(const [k,v] of Object.entries(exact))if(r[k]!==v)throw Error(`VERIFIER_TRANSPORT_${k}_MISMATCH`);
+          if(r.exitStatus!==0||r.prohibitedSideEffectsObserved!==false||JSON.stringify(r.changedPaths)!=='[]')throw Error('VERIFIER_TRANSPORT_SIDE_EFFECT_OR_EXIT_MISMATCH');
+          if(r.outputDigests?.commandPayloadReceiptSha256!==process.env.VERIFIER_PAYLOAD_SHA256)throw Error('VERIFIER_TRANSPORT_PAYLOAD_DIGEST_MISMATCH');
+          fs.copyFileSync(p,process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/verifier/transport-receipt.json');
+          NODE
+          git worktree add --detach "$RUNNER_TEMP/cp10-tooling-verifier" "$TOOLING_HEAD"
+          cd "$RUNNER_TEMP/cp10-tooling-verifier"
+          node tools/h-earth-registry-two-path-toolset/reproduction-harness.v1.mjs \
+            --base-head "$REPAIR_BASE_HEAD" \
+            --candidate-head "$CANDIDATE_HEAD" \
+            --subject-head "$SUBJECT_HEAD" \
+            --execution-holder CP10_OPERATION_B_FRESH_VERIFIER_HOLDER_001 \
+            --output "$RUNNER_TEMP/cp10-operation-b-finalization/verifier/payload-receipt.json"
+          test "$(sha256sum "$RUNNER_TEMP/cp10-operation-b-finalization/verifier/payload-receipt.json" | awk '{print $1}')" = "$VERIFIER_PAYLOAD_SHA256"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const p=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/verifier/payload-receipt.json','utf8'));
+          if(p.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED')throw Error('VERIFIER_PAYLOAD_NOT_PASS');
+          if(p.baseHead!==process.env.REPAIR_BASE_HEAD||p.candidateHead!==process.env.CANDIDATE_HEAD||p.subjectHead!==process.env.SUBJECT_HEAD)throw Error('VERIFIER_PAYLOAD_IDENTITY_MISMATCH');
+          if(p.executionHolder!=='CP10_OPERATION_B_FRESH_VERIFIER_HOLDER_001')throw Error('VERIFIER_HOLDER_MISMATCH');
+          if(p.subjectChangedPathCount!==25)throw Error('SUBJECT_PATH_COUNT_MISMATCH');
+          const expected=['h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.c2-r1-material-only-binding-exact-head.js','h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'].sort();
+          if(JSON.stringify([...p.changedPaths].sort())!==JSON.stringify(expected))throw Error('VERIFIER_TWO_PATH_SCOPE_MISMATCH');
+          if(p.repairPerformed!==false||p.productMutationPerformed!==false||p.pr570Mutated!==false||p.mergePerformed!==false)throw Error('VERIFIER_PROHIBITED_SIDE_EFFECT');
+          if(!/^[0-9a-f]{64}$/.test(p.packageFingerprint??''))throw Error('VERIFIER_FINGERPRINT_INVALID');
+          const m={schema:'CP10_OPERATION_B_PAYLOAD_BINDING_RECEIPT_v1',result:'PASS_CLOSED_FRESH_VERIFIER_PAYLOAD_BOUND',executionHolder:p.executionHolder,packageFingerprint:p.packageFingerprint,payloadSha256:process.env.VERIFIER_PAYLOAD_SHA256,transportRun:Number(process.env.VERIFIER_RUN_ID),transportArtifact:8918114455,transportReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/verifier/transport-receipt.json')).digest('hex'),candidateHead:p.candidateHead,repairPerformed:false,mergePerformed:false};
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/cp10-operation-b-finalization/verifier/binding-receipt.json',JSON.stringify(m,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cp10-operation-b-finalization-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/cp10-operation-b-finalization/verifier/
+          if-no-files-found: error
+          retention-days: 90
+
+  certify-and-close:
+    name: certify-fingerprint-and-close-generations-63-and-75
+    needs: [builder, fresh-verifier]
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
-        with: {node-version: 22}
-      - id: ids
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: cp10-operation-b-finalization-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: cp10-operation-b-finalization-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/verifier
+      - name: Verify exact pull-request and active-lock identities
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          echo "tooling_head=$(node -e "const d=require('./.github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json');process.stdout.write(d.exactToolingHead)")" >> "$GITHUB_OUTPUT"
-          echo "registration_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-      - run: for f in tools/h-earth-registry-two-path-toolset/*.mjs; do node --check "$f"; done
-      - run: |
-          node tools/h-earth-registry-two-path-toolset/self-test.v1.mjs --tooling-head "${{ steps.ids.outputs.tooling_head }}" --registration-head "${{ steps.ids.outputs.registration_head }}" --execution-holder "CP9_A002_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}" --output /tmp/builder.json
-      - uses: actions/upload-artifact@v4
-        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder.json, if-no-files-found: error, retention-days: 90}
-  fresh-verifier:
-    needs: builder
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with: {ref: "${{ github.event.pull_request.head.sha }}", fetch-depth: 0}
-      - uses: actions/setup-node@v4
-        with: {node-version: 22}
-      - uses: actions/download-artifact@v4
-        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder}
-      - run: |
-          node tools/h-earth-registry-two-path-toolset/fresh-verifier.v1.mjs --tooling-head "${{ needs.builder.outputs.tooling_head }}" --registration-head "${{ needs.builder.outputs.registration_head }}" --builder-receipt /tmp/builder/builder.json --execution-holder "CP9_A002_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}" --output /tmp/verifier.json
-      - uses: actions/upload-artifact@v4
-        with: {name: "h-earth-two-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/verifier.json, if-no-files-found: error, retention-days: 90}
-  certify-and-close:
-    needs: [builder, fresh-verifier]
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with: {ref: "${{ github.event.pull_request.head.sha }}", fetch-depth: 0}
-      - uses: actions/setup-node@v4
-        with: {node-version: 22}
-      - uses: actions/download-artifact@v4
-        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder}
-      - uses: actions/download-artifact@v4
-        with: {name: "h-earth-two-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/verifier}
-      - run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/570" > /tmp/pr570.json
+          gh api "repos/${GITHUB_REPOSITORY}/pulls/590" > /tmp/pr590.json
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';const b=JSON.parse(fs.readFileSync('/tmp/builder/builder.json')),v=JSON.parse(fs.readFileSync('/tmp/verifier/verifier.json'));
-          if(b.result!=='PASS_CLOSED_TOOLSET_CONFORMANT'||v.result!=='PASS_CLOSED_INDEPENDENTLY_REPRODUCED'||b.packageFingerprint!==v.packageFingerprint)throw Error('CERTIFICATION_FAILED');
-          fs.writeFileSync('/tmp/certification.json',JSON.stringify({schema:'CP9_OPERATION_A_TOOLSET_FINAL_CERTIFICATION_v1',result:'PASS_CLOSED_TOOLSET_REGISTERED_AND_REPRODUCED',operationId:'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_002',toolingHead:b.toolingHead,registrationHead:b.registrationHead,descriptorId:b.descriptorId,packageFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,exactRouteCount:b.routePositiveCount,negativeRouteCount:b.routeNegativeCount,negativeFixtureCount:b.negativeFixtureCount,productMutationPerformed:false,pr570Mutated:false,mergePerformed:false},null,2)+'\n');
+          import fs from 'node:fs';
+          const p570=JSON.parse(fs.readFileSync('/tmp/pr570.json')),p590=JSON.parse(fs.readFileSync('/tmp/pr590.json'));
+          if(p570.state!=='open'||p570.draft!==true||p570.merged_at!==null||p570.head.sha!==process.env.SUBJECT_HEAD)throw Error('PR570_IDENTITY_CHANGED');
+          if(p590.state!=='open'||p590.draft!==true||p590.merged_at!==null||p590.head.sha!==process.env.CANDIDATE_HEAD)throw Error('PR590_IDENTITY_CHANGED');
           NODE
-      - run: |
-          node tools/h-earth-registry-two-path-toolset/termination.v1.mjs --builder /tmp/builder/builder.json --verifier /tmp/verifier/verifier.json --certification /tmp/certification.json --output /tmp/termination.json
-      - env: {GITHUB_TOKEN: "${{ github.token }}"}
-        run: |
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "${{ github.repository }}" --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_002 --lock-scope 'H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1:RETRY:002' --lock-generation 47 --terminal-disposition PASS_CLOSED --output /tmp/closure.json
-          node -e "const r=require('/tmp/closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED')process.exit(1)"
-      - run: |
+          git fetch --no-tags origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:"$LEDGER_PATH" > /tmp/preclose-ledger.json
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';const c=JSON.parse(fs.readFileSync('/tmp/certification.json')),t=JSON.parse(fs.readFileSync('/tmp/termination.json')),l=JSON.parse(fs.readFileSync('/tmp/closure.json'));const pass=c.result==='PASS_CLOSED_TOOLSET_REGISTERED_AND_REPRODUCED'&&t.result==='PASS_CLOSED_OPERATION_A_AUTHORITY_TERMINATED'&&l.result==='TERMINAL_CLOSURE_COMMITTED';fs.writeFileSync('/tmp/continuation.json',JSON.stringify({schema:'CP9_OPERATION_A_CONTINUATION_GATE_RESULT_v1',result:pass?'CONTINUE_TO_SEPARATE_CP10_AUTHORITY':'STOP',operationBAuthorityInherited:false},null,2)+'\n');if(!pass)process.exit(1);
+          import fs from 'node:fs';const l=JSON.parse(fs.readFileSync('/tmp/preclose-ledger.json'));
+          for(const [id,gen,scope] of [[process.env.OPERATION_B_ID,63,process.env.OPERATION_B_SCOPE],[process.env.FINALIZATION_ID,75,process.env.FINALIZATION_SCOPE]]){
+            const x=Object.values(l.activeScopes??{}).find(v=>v.operationId===id&&Number(v.lockGeneration)===gen);
+            if(!x||x.lockScope!==scope||x.state!=='ADMITTED_LOCKED'||x.released!==false)throw Error(`ACTIVE_LOCK_MISMATCH:${id}`);
+          }
+          NODE
+      - name: Certify exact fingerprint equality
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp10-operation-b-finalization/final
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const bp='/tmp/builder/payload-receipt.json',vp='/tmp/verifier/payload-receipt.json';
+          const b=JSON.parse(fs.readFileSync(bp)),v=JSON.parse(fs.readFileSync(vp));
+          const bb=JSON.parse(fs.readFileSync('/tmp/builder/binding-receipt.json')),vb=JSON.parse(fs.readFileSync('/tmp/verifier/binding-receipt.json'));
+          if(b.result!=='PASS_CLOSED_TWO_PATH_SUCCESSOR_REPRODUCED'||v.result!==b.result)throw Error('PAYLOAD_RESULT_MISMATCH');
+          if(b.executionHolder===v.executionHolder)throw Error('EXECUTION_HOLDERS_NOT_DISTINCT');
+          if(b.packageFingerprint!==v.packageFingerprint)throw Error('PACKAGE_FINGERPRINT_MISMATCH');
+          if(bb.packageFingerprint!==b.packageFingerprint||vb.packageFingerprint!==v.packageFingerprint)throw Error('BINDING_FINGERPRINT_MISMATCH');
+          const c={schema:'CP10_OPERATION_B_FINAL_CERTIFICATION_v1',result:'PASS_CLOSED_TWO_PATH_SUCCESSOR_CONSTRUCTED_AND_INDEPENDENTLY_REPRODUCED',operationId:process.env.OPERATION_B_ID,governingRepairBase:process.env.REPAIR_BASE_HEAD,candidateHead:process.env.CANDIDATE_HEAD,subjectHead:process.env.SUBJECT_HEAD,toolingHead:process.env.TOOLING_HEAD,packageFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,changedPaths:b.changedPaths,subjectChangedPathCount:b.subjectChangedPathCount,overlayBlob:b.overlayBlob,loaderBlob:b.loaderBlob,predecessorBlob:b.predecessorBlob,builderPayloadSha256:crypto.createHash('sha256').update(fs.readFileSync(bp)).digest('hex'),verifierPayloadSha256:crypto.createHash('sha256').update(fs.readFileSync(vp)).digest('hex'),builderTransportRun:Number(process.env.BUILDER_RUN_ID),verifierTransportRun:Number(process.env.VERIFIER_RUN_ID),productMutationPerformed:false,pr570Mutated:false,mergePerformed:false,mergeAuthority:false};
+          c.certificationDigest=crypto.createHash('sha256').update(JSON.stringify(c)).digest('hex');
+          fs.writeFileSync('/tmp/cp10-operation-b-finalization/final/final-certification.json',JSON.stringify(c,null,2)+'\n');
+          for(const [src,name] of [[bp,'builder-payload-receipt.json'],[vp,'verifier-payload-receipt.json'],['/tmp/builder/transport-receipt.json','builder-transport-receipt.json'],['/tmp/verifier/transport-receipt.json','verifier-transport-receipt.json'],['/tmp/builder/binding-receipt.json','builder-binding-receipt.json'],['/tmp/verifier/binding-receipt.json','verifier-binding-receipt.json']])fs.copyFileSync(src,'/tmp/cp10-operation-b-finalization/final/'+name);
+          NODE
+      - name: Close Operation B generation 63 PASS_CLOSED
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$GITHUB_REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$OPERATION_B_ID" --lock-scope "$OPERATION_B_SCOPE" --lock-generation "$OPERATION_B_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/cp10-operation-b-finalization/final/operation-b-closure.json; then break; fi
+            test "$attempt" -lt 3; sleep $((attempt*2))
+          done
+          node -e "const r=require('/tmp/cp10-operation-b-finalization/final/operation-b-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Close finalization generation 75 PASS_CLOSED
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$GITHUB_REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$FINALIZATION_ID" --lock-scope "$FINALIZATION_SCOPE" --lock-generation "$FINALIZATION_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/cp10-operation-b-finalization/final/finalization-closure.json; then break; fi
+            test "$attempt" -lt 3; sleep $((attempt*2))
+          done
+          node -e "const r=require('/tmp/cp10-operation-b-finalization/final/finalization-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Verify terminal ledger and emit authority termination
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:"$LEDGER_PATH" > /tmp/postclose-ledger.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const l=JSON.parse(fs.readFileSync('/tmp/postclose-ledger.json'));
+          for(const [id,gen] of [[process.env.OPERATION_B_ID,63],[process.env.FINALIZATION_ID,75]]){
+            if(Object.values(l.activeScopes??{}).some(x=>x.operationId===id&&Number(x.lockGeneration)===gen))throw Error(`LOCK_STILL_ACTIVE:${id}`);
+            const t=(l.terminalHistory??[]).find(x=>x.operationId===id&&Number(x.lockGeneration)===gen);
+            if(!t||t.state!=='TERMINAL'||t.released!==true||t.terminalDisposition!=='PASS_CLOSED')throw Error(`TERMINAL_HISTORY_MISMATCH:${id}`);
+          }
+          const c=JSON.parse(fs.readFileSync('/tmp/cp10-operation-b-finalization/final/final-certification.json'));
+          const r={schema:'CP10_OPERATION_B_AUTHORITY_TERMINATION_RECEIPT_v1',result:'PASS_CLOSED_OPERATION_B_AUTHORITY_TERMINATED',operationId:process.env.OPERATION_B_ID,lockGeneration:63,terminalDisposition:'PASS_CLOSED',candidateHead:process.env.CANDIDATE_HEAD,packageFingerprint:c.packageFingerprint,constructionAuthorityActive:false,verificationAuthorityActive:false,mergeAuthority:false,pr570Mutation:false,mergePerformed:false,certificationDigest:c.certificationDigest};
+          r.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(r)).digest('hex');
+          fs.writeFileSync('/tmp/cp10-operation-b-finalization/final/authority-termination.json',JSON.stringify(r,null,2)+'\n');
           NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: "h-earth-two-path-final-${{ github.run_id }}-${{ github.run_attempt }}"
-          path: |
-            /tmp/builder/builder.json
-            /tmp/verifier/verifier.json
-            /tmp/certification.json
-            /tmp/termination.json
-            /tmp/closure.json
-            /tmp/continuation.json
+          name: cp10-operation-b-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp10-operation-b-finalization/final/
           if-no-files-found: error
           retention-days: 90

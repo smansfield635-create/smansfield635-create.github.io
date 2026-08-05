@@ -8,12 +8,12 @@ on:
       - '.github/workflows/h-earth-inter-hill-estate-negative-schema-lock-closure-carrier.yml'
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: read
   actions: read
 
 jobs:
-  close-exact-operation-lock:
+  verify-committed-operation-lock-closure:
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
@@ -37,42 +37,101 @@ jobs:
           test "$(gh api repos/${GITHUB_REPOSITORY}/pulls/624 --jq .merge_commit_sha)" = "a96447b720b9466a3843a4eafb52a990e449f580"
           test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/31045111771 --jq .conclusion)" = "success"
           test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/31045111835 --jq .conclusion)" = "success"
-      - name: Execute canonical fixed lock termination command
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - name: Verify committed canonical closure and reconstruct exact receipt
         shell: bash
         run: |
           set -euo pipefail
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action close \
-            --repository "${GITHUB_REPOSITORY}" \
-            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
-            --operation-id H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_NEGATIVE_FIXTURE_AND_SCHEMA_ENFORCEMENT_CORRECTION_001 \
-            --lock-scope H_EARTH/INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR/NEGATIVE_FIXTURE_AND_SCHEMA_ENFORCEMENT_CORRECTION_001 \
-            --lock-generation 258 \
-            --terminal-disposition PASS_CLOSED \
-            --output "$RUNNER_TEMP/root-lock-closure-receipt.json"
-      - name: Verify exact closure receipt
+          closure=9ecf21d08d911c1f908f2917384a230b347c7359
+          parent=e61e66406e6a04f7d4eeceb569ba6f03b419db40
+          ledger=.github/operation-intake/active-operation-ledger.v1.json
+          git cat-file -e "${closure}^{commit}"
+          git cat-file -e "${parent}^{commit}"
+          test "$(git rev-parse "${closure}^")" = "$parent"
+          test "$(git show -s --format=%s "$closure")" = "Close operation lock 258: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_NEGATIVE_FIXTURE_AND_SCHEMA_ENFORCEMENT_CORRECTION_001 PASS_CLOSED"
+          mkdir -p "$RUNNER_TEMP/closure"
+          git show "${parent}:${ledger}" > "$RUNNER_TEMP/closure/before.json"
+          git show "${closure}:${ledger}" > "$RUNNER_TEMP/closure/after.json"
+          before_blob=$(git rev-parse "${parent}:${ledger}")
+          after_blob=$(git rev-parse "${closure}:${ledger}")
+          BEFORE_BLOB="$before_blob" AFTER_BLOB="$after_blob" CLOSURE="$closure" PARENT="$parent" node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const operationId='H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_NEGATIVE_FIXTURE_AND_SCHEMA_ENFORCEMENT_CORRECTION_001';
+          const lockScope='H_EARTH/INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR/NEGATIVE_FIXTURE_AND_SCHEMA_ENFORCEMENT_CORRECTION_001';
+          const scopeHash='a062396007c42692e56a919e481640b1a8893168a493449be7c94063f87aff83';
+          const before=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/closure/before.json','utf8'));
+          const after=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/closure/after.json','utf8'));
+          const active=before.activeScopes?.[scopeHash];
+          if(!active)throw Error('PRE_CLOSURE_ACTIVE_LOCK_MISSING');
+          const activeChecks=[
+            active.schema==='REPOSITORY_OPERATION_LOCK_v1',
+            active.operationId===operationId,
+            active.lockScope===lockScope,
+            active.scopeHash===scopeHash,
+            active.lockGeneration===258,
+            active.state==='ADMITTED_LOCKED',
+            active.released===false,
+            active.governingHead==='ce696e2d8a52cc6a173b904ad77cbe20b195dd2f',
+            active.requestDigest==='0b9bbd3c3b3c5ee8cee344364e247548d33e184aa3ac1c87812cdc5824dd06bf',
+            active.procedureLocatorDigest==='a78e8bb48dfc1050ea1d926c00f7f59d1f1837afbd61554e0368cbc6f12f450e'
+          ];
+          if(activeChecks.some(x=>!x))throw Error('PRE_CLOSURE_ACTIVE_LOCK_IDENTITY_FAILURE');
+          if(after.activeScopes?.[scopeHash])throw Error('POST_CLOSURE_ACTIVE_LOCK_REMAINS');
+          const terminal=after.terminalHistory.find(x=>x.scopeHash===scopeHash&&x.operationId===operationId&&x.lockGeneration===258);
+          if(!terminal)throw Error('TERMINAL_HISTORY_ENTRY_MISSING');
+          const terminalChecks=[
+            terminal.schema==='REPOSITORY_OPERATION_LOCK_v1',
+            terminal.lockScope===lockScope,
+            terminal.state==='TERMINAL',
+            terminal.terminalDisposition==='PASS_CLOSED',
+            terminal.released===true,
+            terminal.governingHead===active.governingHead,
+            terminal.requestDigest===active.requestDigest,
+            terminal.procedureLocatorDigest===active.procedureLocatorDigest
+          ];
+          if(terminalChecks.some(x=>!x))throw Error('TERMINAL_HISTORY_IDENTITY_FAILURE');
+          const receipt={
+            schema:'REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1',
+            result:'TERMINAL_CLOSURE_COMMITTED',
+            operationId,
+            lockScope,
+            scopeHash,
+            lockGeneration:258,
+            terminalDisposition:'PASS_CLOSED',
+            terminalHistoryPreserved:true,
+            lockReleased:true,
+            observedLedgerBlobSha:process.env.BEFORE_BLOB,
+            observedBranchHead:process.env.PARENT,
+            committedLedgerBlobSha:process.env.AFTER_BLOB,
+            closureCommitSha:process.env.CLOSURE,
+            reconstructionBasis:'EXACT_COMMITTED_PRE_AND_POST_LEDGER_STATES_AND_CANONICAL_LOCK_MANAGER_OUTPUT_ORDER',
+            verificationResult:'PASS'
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - name: Verify reconstructed receipt identity
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const p=process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json';
-          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/root-lock-closure-receipt.json','utf8'));
           const checks=[
-            r.schema==='REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1',
+            r.schema==='REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1',
             r.result==='TERMINAL_CLOSURE_COMMITTED',
             r.operationId==='H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_NEGATIVE_FIXTURE_AND_SCHEMA_ENFORCEMENT_CORRECTION_001',
             r.lockScope==='H_EARTH/INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR/NEGATIVE_FIXTURE_AND_SCHEMA_ENFORCEMENT_CORRECTION_001',
+            r.scopeHash==='a062396007c42692e56a919e481640b1a8893168a493449be7c94063f87aff83',
             r.lockGeneration===258,
             r.terminalDisposition==='PASS_CLOSED',
             r.lockReleased===true,
             r.terminalHistoryPreserved===true,
-            /^[0-9a-f]{40}$/.test(r.closureCommitSha),
-            /^[0-9a-f]{40}$/.test(r.committedLedgerBlobSha)
+            r.observedLedgerBlobSha==='ccc6cb1f564377bf351365b40d7193beae34ab52',
+            r.observedBranchHead==='e61e66406e6a04f7d4eeceb569ba6f03b419db40',
+            r.committedLedgerBlobSha==='87265909c566c7a2fd9a6871666c23306e300b79',
+            r.closureCommitSha==='9ecf21d08d911c1f908f2917384a230b347c7359',
+            r.verificationResult==='PASS'
           ];
-          if(checks.some(x=>!x))throw Error('LOCK_CLOSURE_RECEIPT_IDENTITY_FAILURE');
+          if(checks.some(x=>!x))throw Error('RECONSTRUCTED_CLOSURE_RECEIPT_IDENTITY_FAILURE');
           NODE
       - uses: actions/upload-artifact@v4
         with:

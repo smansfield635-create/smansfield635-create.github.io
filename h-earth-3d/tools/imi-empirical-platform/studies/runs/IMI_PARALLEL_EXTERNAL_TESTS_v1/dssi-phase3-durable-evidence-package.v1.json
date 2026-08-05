@@ -1,0 +1,107 @@
+{
+  "schemaVersion": "IMI_PHASE_3_DSSI_DURABLE_EVIDENCE_PACKAGE_v1",
+  "sourceIdentity": {
+    "schemaVersion": "IMI_PHASE_3_DSSI_REMAINING_COUNTRY_SOURCE_IDENTITY_v1",
+    "observedAt": "2026-08-05T17:45:00.000Z",
+    "sourcePattern": "https://datatopics.worldbank.org/dssitables/monthly/{ISO3}",
+    "baselineExtractedCountryCount": 32,
+    "attemptedRemainingCountryCount": 38,
+    "newlyExtractedCountryCount": 34,
+    "failedCountryCount": 4,
+    "combinedCountryCount": 66,
+    "newRowsDigest": "fnv1a32:26cf6dae",
+    "failureLedgerDigest": "fnv1a32:4916e07e",
+    "attemptsDigest": "fnv1a32:86bb8b5e"
+  },
+  "summary": {
+    "schemaVersion": "IMI_PHASE_3_DSSI_REMAINING_COUNTRY_SUMMARY_v1",
+    "result": "PASS_CLOSED_PHASE_3_DSSI_REMAINING_COUNTRY_CONTINUATION_MINIMUM_MET",
+    "sourceIdentity": {
+      "schemaVersion": "IMI_PHASE_3_DSSI_REMAINING_COUNTRY_SOURCE_IDENTITY_v1",
+      "observedAt": "2026-08-05T17:45:00.000Z",
+      "sourcePattern": "https://datatopics.worldbank.org/dssitables/monthly/{ISO3}",
+      "baselineExtractedCountryCount": 32,
+      "attemptedRemainingCountryCount": 38,
+      "newlyExtractedCountryCount": 34,
+      "failedCountryCount": 4,
+      "combinedCountryCount": 66,
+      "newRowsDigest": "fnv1a32:26cf6dae",
+      "failureLedgerDigest": "fnv1a32:4916e07e",
+      "attemptsDigest": "fnv1a32:86bb8b5e"
+    },
+    "routeId": "DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_ROUTE_v1",
+    "routeDigest": "fnv1a32:e6f3f8d9",
+    "priorCountryCount": 32,
+    "newlyExtractedCountryCount": 34,
+    "combinedCountryCount": 66,
+    "candidateCountryCount": 70,
+    "failedCountryCount": 4,
+    "minimumEvidenceSatisfied": true,
+    "empiricalSummary": {
+      "evaluatedCases": 34,
+      "validCases": 34,
+      "unevaluableCases": 0,
+      "hardCollapseCases": 0,
+      "weakestFactorCounts": {
+        "INTEREST_DISPERSION_AVAILABILITY": 19,
+        "PRINCIPAL_DISPERSION_AVAILABILITY": 15
+      },
+      "imiSummary": {
+        "n": 34,
+        "min": 0.373015938524498,
+        "q1": 0.7178755997698613,
+        "median": 0.8260745031650376,
+        "q3": 0.9003406770103068,
+        "max": 0.9447854792408702,
+        "mean": 0.7897201401850802
+      },
+      "additiveMeanSummary": {
+        "n": 34,
+        "min": 0.6129404709834279,
+        "q1": 0.848038172322614,
+        "median": 0.9092075236712873,
+        "q3": 0.948900244143684,
+        "max": 0.9720010732177722,
+        "mean": 0.8860511928710653
+      },
+      "meanAbsoluteImiAdditiveDifference": 0.09633105268598466,
+      "materialityThreshold": 0.02,
+      "h2NoncompensatoryDifferentiationSupported": true
+    },
+    "phase4Candidate": false,
+    "boundaries": {
+      "newRowsOverlapDevelopmentPackage": false,
+      "routeRetuned": false,
+      "outcomeTestExecuted": false,
+      "solvencyPredictionClaimed": false,
+      "defaultPredictionClaimed": false,
+      "creditRatingClaimed": false,
+      "finalValidationClaimed": false,
+      "completeFailureLedgerPreserved": true
+    }
+  },
+  "trackReceipt": {
+    "schemaVersion": "IMI_PHASE_3_DSSI_REMAINING_COUNTRY_RECEIPT_v1",
+    "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+    "track": "DSSI_REMAINING_COUNTRY_CONTINUATION",
+    "result": "PASS_CLOSED_PHASE_3_DSSI_REMAINING_COUNTRY_CONTINUATION_MINIMUM_MET",
+    "terminalDisposition": "PASS_CLOSED_TRACK_EXECUTION",
+    "sourceDigest": "fnv1a32:765b55f0",
+    "routeDigest": "fnv1a32:e6f3f8d9",
+    "executionDigest": "fnv1a32:f04901ad",
+    "summaryDigest": "fnv1a32:1f833e2c",
+    "minimumEvidenceSatisfied": true,
+    "phase4Candidate": false,
+    "boundaries": {
+      "newRowsOverlapDevelopmentPackage": false,
+      "routeRetuned": false,
+      "outcomeTestExecuted": false,
+      "solvencyPredictionClaimed": false,
+      "defaultPredictionClaimed": false,
+      "creditRatingClaimed": false,
+      "finalValidationClaimed": false,
+      "completeFailureLedgerPreserved": true
+    },
+    "receiptDigest": "fnv1a32:d284e5f8"
+  }
+}

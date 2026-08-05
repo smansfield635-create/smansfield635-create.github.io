@@ -1,0 +1,41 @@
+{
+  "schema": "MANDATORY_PAGE_EXCELLENCE_TOOLCHAIN_PERMANENT_RATIFICATION_RECEIPT_v1",
+  "ratificationId": "METHODS_PAGE_EXCELLENCE_TOOLCHAIN_PERMANENT_RATIFICATION_v1",
+  "status": "RATIFIED_ACTIVE_FAIL_CLOSED",
+  "operationId": "METHODS_PAGE_EXCELLENCE_TOOLCHAIN_POST_MERGE_VALIDATION_AND_PERMANENT_RATIFICATION_v1",
+  "toolsetVersion": "1.1.0",
+  "requiredInstrumentCount": 9,
+  "contextualArchitectureConformanceInstrument": "ACTIVE_VERSION_BOUND",
+  "sourcePullRequest": 613,
+  "exactActivatedCandidateHead": "bdd68f3ac32e232331d29e8e849d9e4eb1b34241",
+  "exactActivationMergeCommit": "b0624bdab274e38ca1d596c5b8307ac56cb2a962",
+  "governingBaseAtRatification": "82a4b9c7241802d229b9c1a7cc01e5631ac4a1b8",
+  "sourceCertification": {
+    "workflowRun": 31037317192,
+    "result": "SUCCESS",
+    "builderFingerprint": "b9cb2ec247338040fcf455c8e5d9a7e4e5b6c6af1ade5da337e752b7138cfda9",
+    "freshVerifierFingerprint": "b9cb2ec247338040fcf455c8e5d9a7e4e5b6c6af1ade5da337e752b7138cfda9",
+    "exactNormalizedEquality": true
+  },
+  "canonicalIntake": {
+    "workflowRun": 31039426125,
+    "result": "ADMITTED_AND_LOCKED",
+    "requestDigest": "64cf71b7fd1c9b453a7d6c7516de8c1f4a7785a0f64ae27d4c24c20115b1a620",
+    "lockGeneration": 235,
+    "acquisitionCommitSha": "216d643913600ddfbc080423e9488dc39ff4fb6e"
+  },
+  "ratifiedStatuses": {
+    "readme": "RATIFIED_ACTIVE_FAIL_CLOSED",
+    "entrypoint": "RATIFIED_ACTIVE_FAIL_CLOSED",
+    "universalStandard": "RATIFIED_ACTIVE_MANDATORY"
+  },
+  "authorityBoundary": {
+    "userValidationAndRatificationAuthorized": true,
+    "exactHeadMergeAuthorized": true,
+    "productMutationAuthorized": false,
+    "publicPageMutationAuthorized": false,
+    "visualSubjectMutationAuthorized": false,
+    "namedAwardReadinessCreated": false,
+    "currentNamedAwardAdapterStillRequired": true
+  }
+}

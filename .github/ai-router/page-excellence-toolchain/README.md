@@ -1,6 +1,6 @@
 # Mandatory Page Excellence Toolchain v1.1
 
-Status: `ACTIVATION_CANDIDATE_FAIL_CLOSED`
+Status: `RATIFIED_ACTIVE_FAIL_CLOSED`
 
 This closed-world toolset makes architecture, implementation, runtime, and adoption evidence mandatory for page and interface mutations routed through `AI_ENTRYPOINT.json`.
 
@@ -44,3 +44,7 @@ The gate rejects unresolved implementation class, skipped construct search, miss
 The workflow preserves deterministic package reproduction, Chromium/Firefox/WebKit runtime tests, phone/tablet/desktop equivalence, axe accessibility execution, keyboard behavior, exact-return scenarios, performance measurements, and two-holder score reproduction. It additionally performs two-holder contextual-routing reproduction and closes the exact repository-operation lock only after canonical equality.
 
 Automated visual and originality scores remain bounded proxies. They do not create construct validity, human perceptual acceptance, or named-award readiness.
+
+## Permanent ratification
+
+Toolchain `1.1.0` is permanently ratified through the repository-bound receipt. All nine instruments and the separate current-adapter requirement for named-award readiness remain binding.

@@ -5,8 +5,8 @@ const authorityBody = {
   schemaVersion: 'IMI_EMPIRICAL_PLATFORM_AUTHORITY_v1',
   operation: 'IMI_ACTIVE_TOOLBASE_EMPIRICAL_PLATFORM_INTEGRATION_AND_BRANCH_OPERATIONAL_INTAKE_v1',
   deliverable: 'IMI_CORE_AND_EMPIRICAL_PORTFOLIO_ENGINE_v1',
-  class: 'REPOSITORY_INTEGRATED_EMPIRICAL_INTRINSIC_MANEUVERABILITY_INDEX_ROUTE_SCORING_PORTFOLIO_RECEIPT_CROSS_DOMAIN_SYNTHESIS_AND_GENERALIZABILITY_PROTOCOL_TOOL',
-  status: 'PREOFFICIAL_REPOSITORY_BRANCH_OPERATIONAL_EMPIRICAL_TOOL_WITH_PHASE_2_GENERALIZABILITY_PROTOCOL_PASS_CLOSED',
+  class: 'REPOSITORY_INTEGRATED_EMPIRICAL_INTRINSIC_MANEUVERABILITY_INDEX_ROUTE_SCORING_PORTFOLIO_RECEIPT_CROSS_DOMAIN_SYNTHESIS_GENERALIZABILITY_PROTOCOL_AND_PARALLEL_EXTERNAL_TEST_TOOL',
+  status: 'PREOFFICIAL_REPOSITORY_BRANCH_OPERATIONAL_EMPIRICAL_TOOL_WITH_PHASE_3_EXECUTED_AND_TWO_OPEN_HELD_TRACKS',
   sourceDisposition: 'SANDBOX_PROTOTYPE_PROMOTED_AS_NONCONTROLLING_SOURCE_MATERIAL',
   empiricalFunction: [
     'ROUTE_SPECIFIC_IMI_SCORING',
@@ -29,7 +29,11 @@ const authorityBody = {
     'HELD_OUT_DATA_REQUIREMENTS',
     'INDEPENDENT_REPRODUCTION_STANDARD',
     'NEGATIVE_RESULT_AND_DISAGREEMENT_CUSTODY',
-    'PHASE_3_PARALLEL_EXTERNAL_TEST_AUTHORIZATION'
+    'PHASE_3_PARALLEL_EXTERNAL_TEST_EXECUTION',
+    'SOURCE_AVAILABILITY_HOLD_CLASSIFICATION',
+    'HELD_OUT_TEMPORAL_BEE_REPLICATION',
+    'DSSI_REMAINING_COUNTRY_CONTINUATION',
+    'PHASE_3_COLLECTIVE_DISPOSITION_AND_PHASE_4_GATE'
   ],
   includedSchemas: [
     'IMI_ROUTE_SCHEMA_v1',
@@ -41,7 +45,14 @@ const authorityBody = {
     'IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_RECEIPT_v1',
     'IMI_GENERALIZABILITY_PROTOCOL_v1',
     'IMI_GENERALIZABILITY_PROTOCOL_RECEIPT_v1',
-    'IMI_GENERALIZABILITY_PROTOCOL_VERIFICATION_RESULT_v1'
+    'IMI_GENERALIZABILITY_PROTOCOL_VERIFICATION_RESULT_v1',
+    'IMI_PHASE_3_PARALLEL_EXTERNAL_TESTS_MANIFEST_v1',
+    'IMI_PHASE_3_HOSPITAL_EXTERNAL_REPLICATION_RECEIPT_v1',
+    'IMI_PHASE_3_SPEECH_HELD_OUT_REPRODUCTION_RECEIPT_v1',
+    'IMI_PHASE_3_BEE_LONGER_PANEL_RECEIPT_v1',
+    'IMI_PHASE_3_DSSI_REMAINING_COUNTRY_RECEIPT_v1',
+    'IMI_PHASE_3_PARALLEL_EXTERNAL_TESTS_SUMMARY_v1',
+    'IMI_PHASE_3_PARALLEL_EXTERNAL_TESTS_RECEIPT_v1'
   ],
   engineMeta: IMI_EMPIRICAL_ENGINE_META,
   defaultOrdinalScale: DEFAULT_IMI_ORDINAL_SCALE.scaleId,
@@ -57,6 +68,7 @@ const authorityBody = {
     'h-earth-3d/tools/imi-empirical-platform/schemas/portfolio-registry.schema.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/synthesis/imi-multi-domain-empirical-portfolio-synthesis-protocol.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-generalizability-protocol.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-parallel-external-tests-manifest.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/routes/example-hospital-route.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/routes/cms-hospital-refresh-2026-route.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/routes/usda-honey-bee-refresh-2026-route.v1.json',
@@ -69,6 +81,11 @@ const authorityBody = {
     'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1/imi-multi-domain-empirical-portfolio-synthesis-receipt.v1.json',
     'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_GENERALIZABILITY_PROTOCOL_v1/imi-generalizability-protocol-receipt.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/hospital-phase3-durable-evidence-package.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/speech-phase3-durable-evidence-package.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/bee-phase3-durable-evidence-package.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/dssi-phase3-durable-evidence-package.v1.json',
+    'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/imi-phase3-collective-durable-evidence-package.v1.json',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-platform.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-intake.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs',
@@ -80,7 +97,12 @@ const authorityBody = {
     'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runner.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.runtime-boundary-adapter.mjs',
     'h-earth-3d/validation/imi-empirical-platform/imi.multi-domain-portfolio-synthesis.phase-progression-adapter.mjs',
-    'h-earth-3d/validation/imi-empirical-platform/imi.generalizability-protocol.runner.mjs'
+    'h-earth-3d/validation/imi-empirical-platform/imi.generalizability-protocol.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.phase3.hospital-external-or-next-release.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.phase3.speech-heldout-dataset.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.phase3.bee-longer-panel.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.phase3.dssi-remaining-country-continuation.runner.mjs',
+    'h-earth-3d/validation/imi-empirical-platform/imi.phase3.parallel-external-tests.collective.runner.mjs'
   ],
   operationalIntakeContract: {
     branchOperational: true,
@@ -119,8 +141,18 @@ const authorityBody = {
     phase2Result: 'PASS_CLOSED_PHASE_2_GENERALIZABILITY_PROTOCOL',
     phase2ProtocolPath: 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-generalizability-protocol.v1.json',
     phase2ReceiptPath: 'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_GENERALIZABILITY_PROTOCOL_v1/imi-generalizability-protocol-receipt.v1.json',
-    phase3Status: 'AUTHORIZED_NOT_EXECUTED',
-    nextOperation: 'IMI_PARALLEL_EXTERNAL_TESTS_v1',
+    phase3Status: 'EXECUTED_WITH_OPEN_HELD_TRACKS',
+    phase3Operation: 'IMI_PARALLEL_EXTERNAL_TESTS_v1',
+    phase3Result: 'PHASE_3_EXECUTED_PARTIAL_TRACKS_HELD_OPEN',
+    phase3ManifestPath: 'h-earth-3d/tools/imi-empirical-platform/generalizability/imi-phase3-parallel-external-tests-manifest.v1.json',
+    phase3CollectiveEvidencePath: 'h-earth-3d/tools/imi-empirical-platform/studies/runs/IMI_PARALLEL_EXTERNAL_TESTS_v1/imi-phase3-collective-durable-evidence-package.v1.json',
+    openHeldTracks: [
+      'HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION',
+      'SPEECH_HELD_OUT_DATASET_REPRODUCTION'
+    ],
+    phase4Status: 'NOT_AUTHORIZED_NO_ADMISSIBLE_CANDIDATE_TRACK',
+    phase5Status: 'NOT_AUTHORIZED',
+    nextOperation: 'RESOLVE_OPEN_PHASE_3_HOLDS_WITHOUT_ROUTE_RETUNING',
     phasesFourAndFiveExecuted: false,
     planPath: 'h-earth-3d/control-plane/imi-empirical-platform/IMI_SCOPE_GENERALIZABILITY_AND_PRACTICAL_VALUE_FIVE_PHASE_PLAN_v1.json'
   },
@@ -140,7 +172,7 @@ const authorityBody = {
   },
   phase2Determination: {
     protocolDigest: 'fnv1a32:54474299',
-    planDigest: 'fnv1a32:ab7fcb4d',
+    frozenPlanDigest: 'fnv1a32:ab7fcb4d',
     receiptDigest: 'fnv1a32:52fffa7f',
     protocolStatus: 'FROZEN',
     domainAdmissionCriterionCount: 10,
@@ -150,8 +182,55 @@ const authorityBody = {
     independentReproductionOutputCount: 12,
     newDataInspected: false,
     newDataTestsExecuted: false,
-    phase3Authorized: true,
-    phase3Executed: false
+    phase3Authorized: true
+  },
+  phase3Determination: {
+    executedTracks: 4,
+    passClosedTracks: 2,
+    heldOpenTracks: 2,
+    failedTracks: 0,
+    phase4CandidateTracks: 0,
+    phase3Closed: false,
+    hospital: {
+      result: 'HELD_NO_ELIGIBLE_NEXT_RELEASE_OR_NON_CMS_PACKAGE',
+      reason: 'CMS_REQUIRED_DATASET_PAIR_NOT_NEWER_THAN_FROZEN_BASELINE_AND_NO_NON_CMS_PACKAGE_PROVIDED'
+    },
+    speech: {
+      result: 'HELD_LAWFUL_HELD_OUT_SPEECH_PACKAGE_NOT_AVAILABLE_TO_EXECUTION',
+      reason: 'CONTROLLED_ACCESS_OR_SUPPLIED_FIVE_FEATURE_PACKAGE_REQUIRED'
+    },
+    bees: {
+      result: 'PASS_CLOSED_PHASE_3_BEE_LONGER_PANEL_EXECUTED_WITH_FINDINGS_RETAINED',
+      heldOutCases: 80,
+      validCases: 80,
+      weakestFactorClasses: 3,
+      meanAbsoluteImiAdditiveDifference: 0.2619061964764452,
+      heldOutTemporalAssociationSupported: false,
+      phase4Candidate: false
+    },
+    dssi: {
+      result: 'PASS_CLOSED_PHASE_3_DSSI_REMAINING_COUNTRY_CONTINUATION_MINIMUM_MET',
+      newCountryCases: 34,
+      combinedCountryCount: 66,
+      candidateCountryCount: 70,
+      meanAbsoluteImiAdditiveDifference: 0.09633105268598466,
+      outcomeTestExecuted: false,
+      phase4Candidate: false
+    },
+    collectiveReceiptDigest: 'fnv1a32:b2e43be0',
+    phase4Authorized: false
+  },
+  phase3WorkflowEvidence: {
+    verifiedHeadSha: 'a8db6015e3f29c5818bc052433e5e4a4d4fbcf20',
+    workflowName: 'H-Earth IMI Empirical Platform',
+    workflowRunId: 31032196707,
+    baseVerificationJobId: 92395391998,
+    hospitalJobId: 92395538003,
+    speechJobId: 92395537952,
+    beeJobId: 92395538028,
+    dssiJobId: 92395538020,
+    collectiveJobId: 92396112934,
+    workflowConclusion: 'success'
   },
   boundaries: {
     officialScaleClaimed: false,
@@ -164,14 +243,18 @@ const authorityBody = {
     liveWebsiteOperational: false,
     rawCrossRouteIMIMagnitudeComparisonAuthorized: false,
     universalMultiplicativeSuperiorityClaimed: false,
+    universalPredictiveValidityClaimed: false,
     phase2GeneralizabilityProtocolExecuted: true,
-    externalTestsExecuted: false,
+    externalTestsExecuted: true,
+    allPhase3TracksClosed: false,
     decisionUtilityPilotsExecuted: false,
+    phase4Authorized: false,
     independentMultiDomainReproductionExecuted: false,
+    phase5Authorized: false,
     fullCrossDomainResearchSynthesisPerformed: true,
-    stop: 'STOP_AFTER_PHASE_2_CLOSE_PHASE_3_AUTHORIZED_NOT_EXECUTED'
+    stop: 'STOP_WITH_PHASE_3_EXECUTED_TWO_TRACKS_PASS_CLOSED_TWO_TRACKS_HELD_OPEN_PHASE_4_NOT_AUTHORIZED'
   },
-  result: 'IMI_EMPIRICAL_PLATFORM_PHASE_2_GENERALIZABILITY_PROTOCOL_PASS_CLOSED_PHASE_3_PARALLEL_EXTERNAL_TESTS_AUTHORIZED_NOT_EXECUTED'
+  result: 'IMI_EMPIRICAL_PLATFORM_PHASE_3_EXECUTED_PARTIAL_TRACKS_HELD_OPEN_PHASE_4_NOT_AUTHORIZED'
 };
 
 export const IMI_EMPIRICAL_PLATFORM_AUTHORITY_v1 = deepFreeze({

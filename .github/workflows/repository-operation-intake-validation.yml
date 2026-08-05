@@ -1,151 +1,320 @@
-name: Repository Operation Intake Bootstrap Validation
+name: Methods Spatial Router Prerequisite Ratification
 
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
-  push:
-    branches: [main]
-    paths-ignore:
-      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
-  workflow_dispatch:
+    paths:
+      - '.github/workflows/repository-operation-intake-validation.yml'
 
 permissions:
   contents: read
 
 env:
-  B: a18107998f0a5d8146010aa4cc9767d1f85b1ebd
-  R: .github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json
-  H: ${{ github.event.pull_request.head.sha || github.sha }}
+  GOVERNING_MAIN: 25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f
+  SOURCE_PR: '627'
+  SOURCE_CANDIDATE: ef83732de58b35385abab38ad27ffabb9e4c943b
+  SOURCE_MERGE: f3cfe54cb7cab3439e5d993aea1759e243f49e08
+  REJECTED_VISUAL: 2044e7ab5d27af7bcfbd477a6c3ee046549744ed
+  PREDECESSOR_OPERATION: METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_ROUTER_OWNERSHIP_PREREQUISITE_v1
+  PREDECESSOR_SCOPE: METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION:ROUTER_OWNERSHIP:V1
+  PREDECESSOR_GENERATION: '272'
+  PREDECESSOR_SCOPE_HASH: 0177ef035b320f214e48b3074ef7ffefd812ea48fd9b887b82b683eb517105d8
+  CURRENT_OPERATION: METHODS_CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION_ROUTER_PREREQUISITE_POST_MERGE_VALIDATION_LOCK_CLOSURE_AND_PERMANENT_RATIFICATION_v1
+  CURRENT_SCOPE: METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION:ROUTER_OWNERSHIP:POST_MERGE_RATIFICATION:V1
+  CURRENT_GENERATION: '278'
+  CURRENT_SCOPE_HASH: 9e421c4c599e072988bd0662d7da3354be716c59a8428eb57e15fa65fc583a05
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  BASE_WORKFLOW_BLOB: 5f5b6317d520ef072c4347b62a179870491d5448
+  RECEIPT_PATH: .github/ai-router/projects/methods-information-benchmark/router-prerequisite-permanent-ratification.v1.json
+  EXPECTED_BRANCH: ratification/methods-spatial-adoption-router-prerequisite-v1-001
 
 jobs:
-  bootstrap-builder-self-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.H }}
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Verify active identities semantically and reproduce bootstrap
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
-          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
-          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
-          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
-          NODE
-          grep -q 'push:' .github/workflows/repository-operation-intake-validation.yml
-          grep -q "$R" .github/workflows/repository-operation-intake-validation.yml
-          node -e "let j=require('./.github/operation-intake/deployment-activation-receipt.schema.v1.json');if(!j.\$id.endsWith('_SCHEMA_v1'))throw Error()"
-          git worktree add --detach /tmp/x "$B"
-          cd /tmp/x
-          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/builder-self-test.receipt.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/builder-self-test.receipt.json
-          if-no-files-found: error
-
-  fresh-bootstrap-verifier:
-    needs: bootstrap-builder-self-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.H }}
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/certification/builder
-      - name: Reproduce independently with semantic JSON checks
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
-          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
-          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
-          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
-          NODE
-          git worktree add --detach /tmp/x "$B"
-          cd /tmp/x
-          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/verifier-self-test.receipt.json
-          cmp /tmp/certification/builder/builder-self-test.receipt.json /tmp/verifier-self-test.receipt.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-verifier-self-test-v1
-          path: /tmp/verifier-self-test.receipt.json
-          if-no-files-found: error
-
-  remote-ledger-cas-certification:
-    needs: fresh-bootstrap-verifier
-    runs-on: ubuntu-latest
+  ratification-builder:
+    if: github.head_ref == 'ratification/methods-spatial-adoption-router-prerequisite-v1-001'
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     env:
       GITHUB_TOKEN: ${{ github.token }}
       REPOSITORY: ${{ github.repository }}
-      L: refs/heads/operation-locks/repository-operation-intake-v1
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.H }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Certify exactly-one remote CAS acquisition and closure
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact merged subject and registered route state
         run: |
-          node --input-type=module - <<'NODE'
-          import f from'node:fs';import{createHash as h}from'node:crypto';import{ensureRef as E,acquireRemote as A,closeRemote as C}from'./tools/operation-intake/repository-operation-lock-manager.v1.mjs';let e=process.env,d='/tmp/c',s=`ACTIVATION:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`,q=x=>h('sha256').update(x).digest('hex'),o={repository:e.REPOSITORY,lockRef:e.L,token:e.GITHUB_TOKEN,lockScope:s,governingHead:e.H,requestDigest:q(s+'r'),procedureLocatorDigest:q(s+'p'),barrierFile:d+'/g'};f.mkdirSync(d,{recursive:true});await E({repository:e.REPOSITORY,lockRef:e.L,baseHead:e.H,token:e.GITHUB_TOKEN});let p=[A({...o,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),A({...o,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})];for(let i=0;i<300&&!(f.existsSync(d+'/a')&&f.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));let a=JSON.parse(f.readFileSync(d+'/a')),b=JSON.parse(f.readFileSync(d+'/b'));if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION');f.writeFileSync(d+'/g','');let x=await Promise.all(p),w=x.filter(z=>z.lockAcquired),l=x.filter(z=>!z.lockAcquired),z=w.length!==1||l.length!==1||l[0].errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(l[0].httpStatus);if(w.length!==1)throw Error('CARDINALITY');let c=await C({...o,operationId:w[0].operationId,lockGeneration:w[0].lockGeneration,terminalDisposition:z?'FAIL_CLOSED':'PASS_CLOSED'});if(z)throw Error('LOSER');if(!c.lockReleased)throw Error('CLOSURE');f.writeFileSync('/tmp/remote-cas-certification.receipt.json',JSON.stringify({schema:'REPOSITORY_OPERATION_INTAKE_REMOTE_CAS_CERTIFICATION_RECEIPT_v1',result:'PASS_EXACTLY_ONE_ACQUIRED',validationSubjectHead:e.H,winner:w[0],loser:l[0],closure:c,lockBranchChangedPaths:['.github/operation-intake/active-operation-ledger.v1.json']},null,2)+'\n');
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test "$BASE_SHA" = "$GOVERNING_MAIN"
+          git merge-base --is-ancestor "$SOURCE_MERGE" "$BASE_SHA"
+          mkdir -p /tmp/ratification-builder
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/ratification-builder/router-self-test.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const expected = [
+            '.github/workflows/methods-context-displacement-existing-spatial-construct-adoption-v1.yml',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/source-identity-manifest.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/component-discovery.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/contextual-architecture-findings.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/adoption-matrix.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/prohibited-substitute-architectures.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/required-runtime-conditions.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/architecture-receipt-bundle.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/verify.v1.mjs',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/builder.receipt.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/fresh-verifier.receipt.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/independent-equality.receipt.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/operation-closure.receipt.v1.json'
+          ];
+          const entry = JSON.parse(fs.readFileSync('.github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json','utf8'));
+          const proc = entry.procedures?.contextDisplacementExistingSpatialConstructAdoption;
+          if (!proc) throw Error('ADOPTION_PROCEDURE_NOT_REGISTERED');
+          const actual = [...proc.exactDestinationPaths].sort();
+          if (JSON.stringify(actual) !== JSON.stringify([...expected].sort())) throw Error('THIRTEEN_ROUTE_SET_MISMATCH');
+          if (expected.length !== 13 || actual.length !== 13) throw Error('ROUTE_COUNT_MISMATCH');
+          if ((entry.ownedPathPrefixes ?? []).length !== 0) throw Error('PREFIX_WIDE_OWNERSHIP_PRESENT');
+          for (const p of expected) if (!(entry.ownedExactPaths ?? []).includes(p)) throw Error(`ENTRYPOINT_PATH_MISSING:${p}`);
+          if (proc.rejectedVisualSubject !== process.env.REJECTED_VISUAL) throw Error('REJECTED_VISUAL_BINDING_MISMATCH');
+          const selfTest = JSON.parse(fs.readFileSync('/tmp/ratification-builder/router-self-test.json','utf8'));
+          if (!String(selfTest.result ?? '').startsWith('PASS')) throw Error('ROUTER_SELF_TEST_FAILED');
+          fs.writeFileSync('/tmp/ratification-builder/route-state.json', JSON.stringify({
+            schema:'METHODS_SPATIAL_ROUTER_ROUTE_STATE_v1',
+            result:'PASS',
+            registeredExactPathCount:13,
+            registeredExactPaths:[...expected].sort(),
+            prefixWideOwnership:false,
+            rejectedVisualSubject:process.env.REJECTED_VISUAL,
+            routerSelfTestResult:selfTest.result
+          },null,2)+'\n');
           NODE
-          git fetch origin operation-locks/repository-operation-intake-v1
-          X=$(git rev-parse origin/operation-locks/repository-operation-intake-v1)
-          test "$(git merge-base "$B" "$X")" = "$B"
-          for C in $(git rev-list "$B..$X"); do
-            test "$(git diff-tree --no-commit-id --name-only -r "$C")" = .github/operation-intake/active-operation-ledger.v1.json
-          done
+      - name: Close exact predecessor lock through canonical manager
+        run: |
+          set -euo pipefail
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository "$REPOSITORY" \
+            --lock-ref "$LOCK_REF" \
+            --operation-id "$PREDECESSOR_OPERATION" \
+            --lock-scope "$PREDECESSOR_SCOPE" \
+            --lock-generation "$PREDECESSOR_GENERATION" \
+            --terminal-disposition PASS_CLOSED \
+            --output /tmp/ratification-builder/predecessor-lock-closure.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const c=JSON.parse(fs.readFileSync('/tmp/ratification-builder/predecessor-lock-closure.json','utf8'));
+          if(c.result!=='TERMINAL_CLOSURE_COMMITTED'||c.lockReleased!==true||c.lockGeneration!==272||c.scopeHash!==process.env.PREDECESSOR_SCOPE_HASH||c.terminalDisposition!=='PASS_CLOSED')throw Error('PREDECESSOR_LOCK_CLOSURE_INVALID');
+          NODE
+      - name: Build canonical builder fingerprint
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const route=JSON.parse(fs.readFileSync('/tmp/ratification-builder/route-state.json','utf8'));
+          const closure=JSON.parse(fs.readFileSync('/tmp/ratification-builder/predecessor-lock-closure.json','utf8'));
+          const domain=stable({
+            governingMainHead:process.env.GOVERNING_MAIN,
+            sourcePr:Number(process.env.SOURCE_PR),
+            sourceCandidateHead:process.env.SOURCE_CANDIDATE,
+            mergeCommit:process.env.SOURCE_MERGE,
+            registeredExactPaths:route.registeredExactPaths,
+            predecessorLockClosure:{operationId:process.env.PREDECESSOR_OPERATION,lockScope:process.env.PREDECESSOR_SCOPE,scopeHash:process.env.PREDECESSOR_SCOPE_HASH,lockGeneration:272,terminalDisposition:'PASS_CLOSED',lockReleased:true},
+            validation:{routerSelfTest:'PASS',routeCount:13,prefixWideOwnership:false,rejectedVisualFoundationExcluded:true},
+            authority:{targetAdoptionExecuted:false,pageMutation:false,compassMutation:false,hEarthMutation:false,publicMutation:false,mergeAuthorized:false}
+          });
+          const fingerprint=crypto.createHash('sha256').update(JSON.stringify(domain)).digest('hex');
+          fs.writeFileSync('/tmp/ratification-builder/builder.json',JSON.stringify({schema:'METHODS_SPATIAL_ROUTER_PREREQUISITE_RATIFICATION_BUILDER_RECEIPT_v1',result:'PASS',domain,fingerprint,predecessorClosureCommitSha:closure.closureCommitSha},null,2)+'\n');
+          NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: repository-operation-intake-remote-cas-certification-v1
-          path: /tmp/remote-cas-certification.receipt.json
+          name: methods-spatial-router-ratification-builder-v1
+          path: /tmp/ratification-builder/
           if-no-files-found: error
+          retention-days: 90
 
-  package-bootstrap-certification:
-    needs: [bootstrap-builder-self-test, fresh-bootstrap-verifier, remote-ledger-cas-certification]
-    runs-on: ubuntu-latest
+  ratification-fresh-verifier:
+    needs: ratification-builder
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.H }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - uses: actions/download-artifact@v4
         with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/certification/builder
-      - uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-verifier-self-test-v1
-          path: /tmp/certification/verifier
-      - uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-remote-cas-certification-v1
-          path: /tmp/certification/remote
-      - name: Build canonical certification package using frozen bootstrap packager
+          name: methods-spatial-router-ratification-builder-v1
+          path: /tmp/ratification-fresh/builder
+      - name: Reproduce route and closure state independently
         run: |
-          mkdir -p /tmp/certification/final
-          cp /tmp/certification/builder/builder-self-test.receipt.json /tmp/certification/final/builder-self-test.receipt.json
-          cp /tmp/certification/verifier/verifier-self-test.receipt.json /tmp/certification/final/verifier-self-test.receipt.json
-          cp /tmp/certification/remote/remote-cas-certification.receipt.json /tmp/certification/final/remote-cas-certification.receipt.json
-          git show "$B:.github/workflows/repository-operation-intake-validation.yml" | awk '/Build canonical certification package/{x=1}x&&/node <<.NODE./{p=1;next}p&&/^          NODE$/{exit}p{sub(/^          /,"");print}' > /tmp/p.js
-          TOOLING_HEAD="$H" node /tmp/p.js
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test "$BASE_SHA" = "$GOVERNING_MAIN"
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/fresh-router-self-test.json
+          git fetch origin operation-locks/repository-operation-intake-v1
+          git show origin/operation-locks/repository-operation-intake-v1:.github/operation-intake/active-operation-ledger.v1.json > /tmp/fresh-ledger.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const expected = [
+            '.github/workflows/methods-context-displacement-existing-spatial-construct-adoption-v1.yml',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/source-identity-manifest.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/component-discovery.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/contextual-architecture-findings.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/adoption-matrix.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/prohibited-substitute-architectures.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/required-runtime-conditions.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/architecture-receipt-bundle.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/verify.v1.mjs',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/builder.receipt.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/fresh-verifier.receipt.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/independent-equality.receipt.v1.json',
+            'control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/receipts/operation-closure.receipt.v1.json'
+          ].sort();
+          const entry=JSON.parse(fs.readFileSync('.github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json','utf8'));
+          const actual=[...entry.procedures.contextDisplacementExistingSpatialConstructAdoption.exactDestinationPaths].sort();
+          if(JSON.stringify(actual)!==JSON.stringify(expected)||(entry.ownedPathPrefixes??[]).length!==0)throw Error('FRESH_ROUTE_STATE_MISMATCH');
+          const selfTest=JSON.parse(fs.readFileSync('/tmp/fresh-router-self-test.json','utf8'));
+          if(!String(selfTest.result??'').startsWith('PASS'))throw Error('FRESH_ROUTER_SELF_TEST_FAILED');
+          const ledger=JSON.parse(fs.readFileSync('/tmp/fresh-ledger.json','utf8'));
+          const terminal=(ledger.terminalHistory??[]).find(x=>x.operationId===process.env.PREDECESSOR_OPERATION&&x.lockGeneration===272);
+          if(!terminal||terminal.released!==true||terminal.terminalDisposition!=='PASS_CLOSED'||terminal.scopeHash!==process.env.PREDECESSOR_SCOPE_HASH)throw Error('FRESH_PREDECESSOR_CLOSURE_MISSING');
+          const domain=stable({
+            governingMainHead:process.env.GOVERNING_MAIN,
+            sourcePr:Number(process.env.SOURCE_PR),
+            sourceCandidateHead:process.env.SOURCE_CANDIDATE,
+            mergeCommit:process.env.SOURCE_MERGE,
+            registeredExactPaths:expected,
+            predecessorLockClosure:{operationId:process.env.PREDECESSOR_OPERATION,lockScope:process.env.PREDECESSOR_SCOPE,scopeHash:process.env.PREDECESSOR_SCOPE_HASH,lockGeneration:272,terminalDisposition:'PASS_CLOSED',lockReleased:true},
+            validation:{routerSelfTest:'PASS',routeCount:13,prefixWideOwnership:false,rejectedVisualFoundationExcluded:true},
+            authority:{targetAdoptionExecuted:false,pageMutation:false,compassMutation:false,hEarthMutation:false,publicMutation:false,mergeAuthorized:false}
+          });
+          const fingerprint=crypto.createHash('sha256').update(JSON.stringify(domain)).digest('hex');
+          const builder=JSON.parse(fs.readFileSync('/tmp/ratification-fresh/builder/builder.json','utf8'));
+          if(builder.fingerprint!==fingerprint||JSON.stringify(builder.domain)!==JSON.stringify(domain))throw Error('BUILDER_FRESH_FINGERPRINT_MISMATCH');
+          fs.mkdirSync('/tmp/ratification-fresh/output',{recursive:true});
+          fs.writeFileSync('/tmp/ratification-fresh/output/fresh-verifier.json',JSON.stringify({schema:'METHODS_SPATIAL_ROUTER_PREREQUISITE_RATIFICATION_FRESH_VERIFIER_RECEIPT_v1',result:'PASS',domain,fingerprint,exactNormalizedEquality:true},null,2)+'\n');
+          NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: repository-operation-intake-bootstrap-certification-v1
-          path: /tmp/certification/final/
+          name: methods-spatial-router-ratification-fresh-verifier-v1
+          path: /tmp/ratification-fresh/output/
           if-no-files-found: error
+          retention-days: 90
+
+  ratification-finalize:
+    needs: [ratification-builder, ratification-fresh-verifier]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      BRANCH_NAME: ${{ github.head_ref }}
+      RUN_ID: ${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-spatial-router-ratification-builder-v1
+          path: /tmp/finalize/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-spatial-router-ratification-fresh-verifier-v1
+          path: /tmp/finalize/fresh
+      - name: Materialize one-path final candidate and restore workflow blob
+        run: |
+          set -euo pipefail
+          test "$BRANCH_NAME" = "$EXPECTED_BRANCH"
+          test "$BASE_SHA" = "$GOVERNING_MAIN"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const h={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
+          const api=`https://api.github.com/repos/${process.env.REPOSITORY}`;
+          const req=async(url,opts={},ok=[200])=>{const r=await fetch(url,{...opts,headers:{...h,...opts.headers}});const t=await r.text();let b;try{b=t?JSON.parse(t):null}catch{b={raw:t}}if(!ok.includes(r.status))throw Error(`API_${r.status}:${JSON.stringify(b)}`);return b};
+          const builder=JSON.parse(fs.readFileSync('/tmp/finalize/builder/builder.json','utf8'));
+          const fresh=JSON.parse(fs.readFileSync('/tmp/finalize/fresh/fresh-verifier.json','utf8'));
+          if(builder.result!=='PASS'||fresh.result!=='PASS'||builder.fingerprint!==fresh.fingerprint||fresh.exactNormalizedEquality!==true)throw Error('FINAL_FINGERPRINT_MISMATCH');
+          const receipt={
+            schema:'METHODS_SPATIAL_ROUTER_PREREQUISITE_PERMANENT_RATIFICATION_RECEIPT_v1',
+            status:'RATIFICATION_CANDIDATE_VERIFIED_PASS_CLOSED',
+            governingMainHead:process.env.GOVERNING_MAIN,
+            sourcePr:627,
+            sourceCandidateHead:process.env.SOURCE_CANDIDATE,
+            sourceMergeCommit:process.env.SOURCE_MERGE,
+            registeredExactPathCount:13,
+            prefixWideOwnership:false,
+            rejectedVisualSubject:process.env.REJECTED_VISUAL,
+            rejectedVisualFoundationExcluded:true,
+            predecessorLock:{operationId:process.env.PREDECESSOR_OPERATION,lockScope:process.env.PREDECESSOR_SCOPE,scopeHash:process.env.PREDECESSOR_SCOPE_HASH,lockGeneration:272,terminalDisposition:'PASS_CLOSED',lockReleased:true,closureCommitSha:builder.predecessorClosureCommitSha},
+            ratificationOperation:{operationId:process.env.CURRENT_OPERATION,lockScope:process.env.CURRENT_SCOPE,scopeHash:process.env.CURRENT_SCOPE_HASH,lockGeneration:278,terminalClosureRequiredAfterCandidateCommit:true},
+            builderFingerprint:builder.fingerprint,
+            freshVerifierFingerprint:fresh.fingerprint,
+            exactNormalizedEquality:true,
+            validationWorkflowRun:Number(process.env.RUN_ID),
+            finalCandidateScope:{changedPathCount:1,changedPath:process.env.RECEIPT_PATH,workflowRestoredToBlob:process.env.BASE_WORKFLOW_BLOB},
+            authorityBoundaries:{targetSpatialAdoptionExecuted:false,methodsPageMutation:false,compassMutation:false,hEarthMutation:false,publicOrVisualMutation:false,mergeAuthorized:false,namedAwardReadinessClaim:false},
+            permanentEffectCondition:'EFFECTIVE_ONLY_AFTER_THIS_CANDIDATE_IS_MERGED_AND_MAIN_VALIDATION_PASSES'
+          };
+          const receiptText=JSON.stringify(receipt,null,2)+'\n';
+          const blob=await req(`${api}/git/blobs`,{method:'POST',body:JSON.stringify({content:receiptText,encoding:'utf-8'})},[201]);
+          const baseCommit=await req(`${api}/git/commits/${process.env.HEAD_SHA}`);
+          const tree=await req(`${api}/git/trees`,{method:'POST',body:JSON.stringify({base_tree:baseCommit.tree.sha,tree:[
+            {path:process.env.RECEIPT_PATH,mode:'100644',type:'blob',sha:blob.sha},
+            {path:'.github/workflows/repository-operation-intake-validation.yml',mode:'100644',type:'blob',sha:process.env.BASE_WORKFLOW_BLOB}
+          ]})},[201]);
+          const commit=await req(`${api}/git/commits`,{method:'POST',body:JSON.stringify({message:'Ratify Methods spatial-adoption router prerequisite',tree:tree.sha,parents:[process.env.HEAD_SHA]})},[201]);
+          await req(`${api}/git/refs/heads/${encodeURIComponent(process.env.BRANCH_NAME)}`,{method:'PATCH',body:JSON.stringify({sha:commit.sha,force:false})});
+          fs.mkdirSync('/tmp/finalize/output',{recursive:true});
+          fs.writeFileSync('/tmp/finalize/output/permanent-ratification-receipt.json',receiptText);
+          fs.writeFileSync('/tmp/finalize/output/final-candidate-commit.json',JSON.stringify({schema:'METHODS_SPATIAL_ROUTER_RATIFICATION_FINAL_CANDIDATE_COMMIT_v1',result:'PASS',candidateHead:commit.sha,receiptBlob:blob.sha,tree:tree.sha,workflowRestoredBlob:process.env.BASE_WORKFLOW_BLOB},null,2)+'\n');
+          NODE
+      - name: Close current ratification lock and terminate authority
+        run: |
+          set -euo pipefail
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository "$REPOSITORY" \
+            --lock-ref "$LOCK_REF" \
+            --operation-id "$CURRENT_OPERATION" \
+            --lock-scope "$CURRENT_SCOPE" \
+            --lock-generation "$CURRENT_GENERATION" \
+            --terminal-disposition PASS_CLOSED \
+            --output /tmp/finalize/output/current-operation-closure.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const c=JSON.parse(fs.readFileSync('/tmp/finalize/output/current-operation-closure.json','utf8'));
+          if(c.result!=='TERMINAL_CLOSURE_COMMITTED'||c.lockReleased!==true||c.lockGeneration!==278||c.scopeHash!==process.env.CURRENT_SCOPE_HASH||c.terminalDisposition!=='PASS_CLOSED')throw Error('CURRENT_OPERATION_CLOSURE_INVALID');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-spatial-router-ratification-final-v1
+          path: /tmp/finalize/output/
+          if-no-files-found: error
+          retention-days: 90

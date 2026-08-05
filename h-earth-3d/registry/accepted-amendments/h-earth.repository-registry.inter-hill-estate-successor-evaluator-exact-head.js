@@ -98,16 +98,6 @@ export const H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_EVIDENCE =
   ])
 });
 
-const PARENT_RELATION = deepFreeze({
-  relationId: 'RELATION_H_EARTH_MAP_WIDE_INSTRUMENT_PARENT_OF_INTER_HILL_ESTATE_EVALUATOR_EXACT_HEAD_v1',
-  relationType: 'PARENT_SCOPE',
-  sourceNodeId: PARENT_NODE_ID,
-  targetNodeId: NODE_ID,
-  direction: 'INBOUND',
-  status: 'ACTIVE_EXACT_SCOPE_RELATION',
-  authorityTransferred: false
-});
-
 export const H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_NODE = deepFreeze({
   nodeId: NODE_ID,
   nodeType: 'BOUNDARY_PACKET',
@@ -142,7 +132,7 @@ export const H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_NODE
     'NO_PR_616_MUTATION_OR_MERGE',
     'NO_DEPLOYMENT_OR_RELEASE'
   ]),
-  parentRelations: Object.freeze([PARENT_RELATION]),
+  parentRelations: Object.freeze([]),
   childRelations: Object.freeze([]),
   peerRelations: Object.freeze([]),
   upstreamBoundaries: Object.freeze([PARENT_NODE_ID]),
@@ -154,7 +144,7 @@ export const H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_NODE
     'MAP_WIDE_INSTRUMENT_SCOPE_BEFORE_INTER_HILL_EVALUATOR_EXACT_HEAD_SCOPE',
     'EXACT_REGISTRY_SCOPE_RESOLUTION_BEFORE_ROLE_3_ENTRY'
   ]),
-  dependencyRelations: Object.freeze([PARENT_RELATION.relationId]),
+  dependencyRelations: Object.freeze([]),
   allowedMutationScope: 'NONE_REGISTRATION_IS_READ_ONLY_PATH_RESOLUTION_AUTHORITY',
   prohibitedMutations: Object.freeze([
     'GENERAL_PREFIX_REGISTRATION',
@@ -284,13 +274,9 @@ export function findHEarthRepositoryRegistryNodes(criteria = {}) {
 }
 
 export function getHEarthRepositoryRegistryRelationsForNode(nodeId, direction = 'BOTH') {
-  if (nodeId === NODE_ID) {
-    return direction === 'OUTBOUND' ? Object.freeze([]) : Object.freeze([PARENT_RELATION]);
-  }
-  if (nodeId === PARENT_NODE_ID && direction !== 'INBOUND') {
-    return deepFreeze([...baseFacade.getHEarthRepositoryRegistryRelationsForNode(nodeId, direction), PARENT_RELATION]);
-  }
-  return baseFacade.getHEarthRepositoryRegistryRelationsForNode(nodeId, direction);
+  return nodeId === NODE_ID
+    ? Object.freeze([])
+    : baseFacade.getHEarthRepositoryRegistryRelationsForNode(nodeId, direction);
 }
 
 export function getHEarthRepositoryRegistryDependencyClosure(nodeId) {
@@ -301,7 +287,7 @@ export function getHEarthRepositoryRegistryDependencyClosure(nodeId) {
         H_EARTH_MAP_WIDE_INSTRUMENT_SCOPE_NODE,
         H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_NODE
       ],
-      relations: [PARENT_RELATION],
+      relations: [],
       unresolved: false
     });
   }

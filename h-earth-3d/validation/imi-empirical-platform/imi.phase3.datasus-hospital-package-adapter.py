@@ -179,7 +179,7 @@ def main() -> int:
         "admittedInstitutions": len(rows),
         "minimumAdmissionsPerInstitution": MIN_ADMISSIONS,
         "minimumInstitutionsRequired": MIN_INSTITUTIONS,
-        "sourceOverlapWithCmsDevelopmentData": false,
+        "sourceOverlapWithCmsDevelopmentData": False,
         "mappingContract": {
             "caseIdentity": "CNES",
             "deduplicationIdentity": "N_AIH_WHEN_PRESENT_OTHERWISE_SOURCE_ROW",
@@ -194,13 +194,13 @@ def main() -> int:
         "sourceIdentity": source_identity,
         "rows": rows,
         "admission": {
-            "uniqueInstitutionIdentities": true,
+            "uniqueInstitutionIdentities": True,
             "minimumInstitutionCountSatisfied": len(rows) >= MIN_INSTITUTIONS,
             "requiredFactorCountsPresent": all(
                 row["mortality_reported"] > 0 and row["safety_reported"] > 0
                 for row in rows
             ),
-            "developmentSourceOverlapExcluded": true
+            "developmentSourceOverlapExcluded": True
         }
     }
     package = {**package_body, "packageSha256": canonical_sha256(package_body)}

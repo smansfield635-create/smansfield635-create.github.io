@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "IMI_PHASE_3_PUBLIC_SOURCE_COMPLETION_ADDENDUM_v1",
+  "operation": "IMI_PHASE_3_PUBLIC_SOURCE_COMPLETION_v1",
+  "status": "FROZEN_BEFORE_PUBLIC_SOURCE_EXECUTION",
+  "parentOperation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+  "parentProtocolDigest": "fnv1a32:54474299",
+  "purpose": "Resolve the open hospital and speech Phase 3 source holds using independent public sources without changing the frozen routes.",
+  "hospital": {
+    "track": "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+    "sourceId": "BRAZIL_DATASUS_SIH_SUS_SAO_PAULO_Q1_2024_v1",
+    "sourceClass": "PUBLIC_NON_CMS_INSTITUTIONAL_PACKAGE",
+    "license": "BRAZIL_OPEN_DATA_PORTAL_CC_ATTRIBUTION_NODERIVATIVES_3_0_AS_PUBLISHED",
+    "files": [
+      {"period": "2024-01", "url": "https://ftp.datasus.gov.br/dissemin/publicos/SIHSUS/200801_/Dados/RDSP2401.dbc"},
+      {"period": "2024-02", "url": "https://ftp.datasus.gov.br/dissemin/publicos/SIHSUS/200801_/Dados/RDSP2402.dbc"},
+      {"period": "2024-03", "url": "https://ftp.datasus.gov.br/dissemin/publicos/SIHSUS/200801_/Dados/RDSP2403.dbc"}
+    ],
+    "caseIdentity": "CNES",
+    "deduplicationIdentity": "N_AIH_WHEN_PRESENT_OTHERWISE_SOURCE_FILE_PLUS_ROW_INDEX",
+    "minimumInstitutionAdmissions": 20,
+    "minimumIndependentInstitutions": 500,
+    "mapping": {
+      "mortalityReported": "All deduplicated admissions with a valid CNES institution identity.",
+      "mortalityWorse": "Admissions whose SIH MORTE field equals 1.",
+      "safetyReported": "Admissions with at least one usable diagnosis field.",
+      "safetyWorse": "Admissions with any diagnosis in ICD-10 T80-T88, Y40-Y59, or Y60-Y84."
+    },
+    "outcomeField": "NONE_AVAILABLE_IN_FROZEN_PUBLIC_PACKAGE",
+    "overlapExclusion": "Brazil SIH/SUS institutions and admission records are source-independent from the United States CMS development package."
+  },
+  "speech": {
+    "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+    "sourceId": "MIT_CLAC_COOKIE_THEFT_PUBLIC_CORPUS_v1",
+    "archiveUrl": "https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip",
+    "sourceClass": "PUBLIC_INDEPENDENT_SPEECH_CORPUS",
+    "license": "CC_BY_SA",
+    "task": "COOKIE_THEFT_PICTURE_DESCRIPTION",
+    "minimumParticipants": 100,
+    "minimumGroups": 2,
+    "groupFieldPriority": ["declared_gender", "age_band"],
+    "selectionRule": "Sort unique participant identities lexicographically, exclude development participant IDs, then admit the first 120 with usable Cookie Theft transcript, metadata, and all frozen feature inputs; require at least 100 after validation.",
+    "frozenFeatureImplementations": {
+      "conceptualBreadth": "fastText cc.en.300.bin global all-pair cosine similarity with the published English stopword and filler exclusions.",
+      "contextualBreadth": "bert-base-uncased token embedding global all-pair cosine similarity.",
+      "visualGrounding": "OpenAI CLIP ViT-L/14; average sentence-to-Cookie-Theft-image cosine similarity.",
+      "syntacticOrganization": "spaCy en_core_web_sm averaged sentence-level dependency distance excluding punctuation.",
+      "adjustedPredictability": "mistralai/Mistral-7B-Instruct-v0.1 perplexity, log transformed and residualized within English for BERT type-token ratio."
+    },
+    "overlapExclusion": "Reject any participant identity matching the 291 PLOS/ADReSS-M development participant identities."
+  },
+  "boundaries": {
+    "routeRetuningAuthorized": false,
+    "developmentEvidenceReclassificationAuthorized": false,
+    "protectedDataCircumventionAuthorized": false,
+    "clinicalDiagnosisAuthorized": false,
+    "causalClaimsAuthorized": false,
+    "phase4AutomaticallyAuthorized": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  }
+}

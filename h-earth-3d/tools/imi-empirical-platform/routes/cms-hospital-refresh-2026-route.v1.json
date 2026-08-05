@@ -1,0 +1,39 @@
+{
+  "routeId": "CMS_HOSPITAL_REFRESH_2026_BASE_ROUTE_v1",
+  "routeVersion": "1.0.0-confirmatory-style-refresh",
+  "domain": "healthcare_quality",
+  "caseIdField": "facility_id",
+  "frozenBeforeRun": true,
+  "requiredFactors": [
+    {
+      "factorId": "MORTALITY_NONWORSE_AVAILABILITY",
+      "label": "Mortality non-worse availability",
+      "normalizer": {
+        "type": "availability_from_worse_reported",
+        "worseField": "mortality_worse",
+        "reportedField": "mortality_reported"
+      }
+    },
+    {
+      "factorId": "SAFETY_COMPLICATION_NONWORSE_AVAILABILITY",
+      "label": "Safety / complication non-worse availability",
+      "normalizer": {
+        "type": "availability_from_worse_reported",
+        "worseField": "safety_worse",
+        "reportedField": "safety_reported"
+      }
+    }
+  ],
+  "terminalLock": {
+    "type": "none"
+  },
+  "outcomeFields": ["overall_rating"],
+  "limitations": [
+    "Confirmatory-style refresh, not final validation.",
+    "Uses current CMS public provider-data release at execution time.",
+    "Route measures comparative non-worse status for mortality and safety/complication factors, not total hospital quality.",
+    "Hospitals missing either required comparable factor group are UNEVALUABLE.",
+    "No IMI-7 terminal lock is assigned from this snapshot-only source."
+  ],
+  "nextValidationStep": "Compare current-release result against prior hospital backfill and then run a later held-out release."
+}

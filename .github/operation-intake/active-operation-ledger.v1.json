@@ -108,18 +108,6 @@
       "scopeHash": "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2",
       "state": "ADMITTED_LOCKED"
     },
-    "c01a8ccafa9309f3ba55f043c55b9c83318db6322e820b499cded28162d30d4c": {
-      "governingHead": "2c4e5a21e4e902bee421528498c112998fa783bc",
-      "lockGeneration": 121,
-      "lockScope": "H_EARTH:PR570_RATIFICATION_LINEAGE_DEFECT:TERMINATION:T:V1",
-      "operationId": "H_EARTH_PR570_RATIFICATION_LINEAGE_DEFECT_TERMINATION_T_001",
-      "procedureLocatorDigest": "c87912e57af89cc329290ad6318de4569497523bbb03ccc20753daacf75d9b7f",
-      "released": false,
-      "requestDigest": "1e1539b245fef041f320e89775f3aacd88eb27cb7e4c3e56d5ddd5c898ce530e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c01a8ccafa9309f3ba55f043c55b9c83318db6322e820b499cded28162d30d4c",
-      "state": "ADMITTED_LOCKED"
-    },
     "c8170225ecfd16b065547b18e3190cc6c6531cbef77ab380a628c0413467b267": {
       "governingHead": "d3e15d44eacd7bfc30b708721dca6ad4c175c887",
       "lockGeneration": 20,
@@ -1553,6 +1541,19 @@
       "scopeHash": "0c064d1d4d9a53e2ad1a724d68b51d306cac074301218cf321f5feb755853d73",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "2c4e5a21e4e902bee421528498c112998fa783bc",
+      "lockGeneration": 121,
+      "lockScope": "H_EARTH:PR570_RATIFICATION_LINEAGE_DEFECT:TERMINATION:T:V1",
+      "operationId": "H_EARTH_PR570_RATIFICATION_LINEAGE_DEFECT_TERMINATION_T_001",
+      "procedureLocatorDigest": "c87912e57af89cc329290ad6318de4569497523bbb03ccc20753daacf75d9b7f",
+      "released": true,
+      "requestDigest": "1e1539b245fef041f320e89775f3aacd88eb27cb7e4c3e56d5ddd5c898ce530e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c01a8ccafa9309f3ba55f043c55b9c83318db6322e820b499cded28162d30d4c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

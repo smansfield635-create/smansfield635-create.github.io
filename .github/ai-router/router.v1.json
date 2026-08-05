@@ -17,7 +17,8 @@
       ".github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml",
       "tools/ai-room-transport/active-conformance.v1.mjs",
       ".github/workflows/repository-operation-intake-validation.yml",
-      ".github/workflows/cp9-5-governance-ci-conformance-repair-validation.yml"
+      ".github/workflows/cp9-5-governance-ci-conformance-repair-validation.yml",
+      ".github/workflows/cp9r-router-ownership-validation.yml"
     ],
     "ownedPathPrefixes": [
       ".github/ai-router/"

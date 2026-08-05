@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "IMI_GENERALIZABILITY_PROTOCOL_RECEIPT_v1",
+  "operation": "IMI_GENERALIZABILITY_PROTOCOL_v1",
+  "result": "PASS_CLOSED_PHASE_2_GENERALIZABILITY_PROTOCOL",
+  "generatedAt": "2026-08-05T17:32:00.000Z",
+  "protocolDigest": "fnv1a32:54474299",
+  "planDigest": "fnv1a32:ab7fcb4d",
+  "protocolStatus": "FROZEN",
+  "domainAdmissionCriterionCount": 10,
+  "preregisteredHypothesisCount": 6,
+  "replicationTrackCount": 4,
+  "heldOutMandatoryRuleCount": 10,
+  "independentReproductionOutputCount": 12,
+  "phase3Authorized": true,
+  "phase3Executed": false,
+  "authorizedTracks": [
+    "HOSPITAL_EXTERNAL_OR_NEXT_RELEASE_REPLICATION",
+    "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+    "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+    "DSSI_REMAINING_COUNTRY_CONTINUATION"
+  ],
+  "boundaries": {
+    "protocolConstructionOnly": true,
+    "newDataInspected": false,
+    "newDataTestsExecuted": false,
+    "existingRoutesRetuned": false,
+    "rawCrossRouteScoreComparisonAuthorized": false,
+    "universalMultiplicativeSuperiorityClaimed": false,
+    "universalPredictiveValidityClaimed": false,
+    "causalClaimsAuthorized": false,
+    "clinicalDiagnosticUseAuthorized": false,
+    "decisionUtilityClaimed": false,
+    "finalInstrumentValidationClaimed": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  },
+  "receiptDigest": "fnv1a32:52fffa7f"
+}

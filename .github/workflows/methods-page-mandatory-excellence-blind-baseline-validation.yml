@@ -142,7 +142,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p "toolchain/artifacts"
-          python3  -m http.server 4173 --bind 127.0.0.1 --directory "subject/$CANDIDATE_ROOT/candidate" >"$RUNNER_TEMP/server.log" 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "subject/$CANDIDATE_ROOT/candidate" >"$RUNNER_TEMP/server.log" 2>&1 &
           server_pid=$!
           trap 'kill "$server_pid" 2>/dev/null || true' EXIT
           for attempt in {1..30}; do curl -fsS http://127.0.0.1:4173/index.html >/dev/null && break; sleep 1; done
@@ -210,15 +210,31 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           mkdir -p artifacts
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action close \
-            --repository "${{ github.repository }}" \
-            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
-            --operation-id "$ROUTING_OPERATION_ID" \
-            --lock-scope "$ROUTING_LOCK_SCOPE" \
-            --lock-generation "$ROUTING_LOCK_GENERATION" \
-            --terminal-disposition PASS_CLOSED \
-            --output /tmp/closure.json
+          closed=false
+          for attempt in {1..8}; do
+            set +e
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "${{ github.repository }}" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id "$ROUTING_OPERATION_ID" \
+              --lock-scope "$ROUTING_LOCK_SCOPE" \
+              --lock-generation "$ROUTING_LOCK_GENERATION" \
+              --terminal-disposition PASS_CLOSED \
+              --output /tmp/closure.json
+            status=$?
+            set -e
+            if [[ "$status" -eq 0 ]]; then
+              closed=true
+              break
+            fi
+            cat /tmp/closure.json || true
+            if [[ "$status" -ne 4 ]]; then
+              exit "$status"
+            fi
+            sleep $((attempt * 2))
+          done
+          test "$closed" = true
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const base=JSON.parse(fs.readFileSync('incoming/contextual-architecture-routing-final.v1.json'));

@@ -123,3 +123,157 @@ jobs:
             /tmp/imi-generalizability-protocol.log
             /tmp/imi-generalizability-protocol/**
           retention-days: 90
+
+  phase3-hospital-external-replication:
+    needs: verify-imi-empirical-platform
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute hospital external or next-release track
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.hospital-external-or-next-release.runner.mjs \
+            --output-dir /tmp/imi-phase3-hospital \
+            2>&1 | tee /tmp/imi-phase3-hospital.log
+      - name: Upload hospital Phase 3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-hospital-evidence
+          path: |
+            /tmp/imi-phase3-hospital.log
+            /tmp/imi-phase3-hospital/**
+          retention-days: 90
+
+  phase3-speech-heldout-reproduction:
+    needs: verify-imi-empirical-platform
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute speech held-out source and reproduction gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.speech-heldout-dataset.runner.mjs \
+            --output-dir /tmp/imi-phase3-speech \
+            2>&1 | tee /tmp/imi-phase3-speech.log
+      - name: Upload speech Phase 3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-speech-evidence
+          path: |
+            /tmp/imi-phase3-speech.log
+            /tmp/imi-phase3-speech/**
+          retention-days: 90
+
+  phase3-bee-longer-panel:
+    needs: verify-imi-empirical-platform
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute bee longer-panel and route-discrimination track
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.bee-longer-panel.runner.mjs \
+            --output-dir /tmp/imi-phase3-bee \
+            2>&1 | tee /tmp/imi-phase3-bee.log
+      - name: Upload bee Phase 3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-bee-evidence
+          path: |
+            /tmp/imi-phase3-bee.log
+            /tmp/imi-phase3-bee/**
+          retention-days: 90
+
+  phase3-dssi-remaining-country-continuation:
+    needs: verify-imi-empirical-platform
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Execute DSSI remaining-country continuation track
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.dssi-remaining-country-continuation.runner.mjs \
+            --output-dir /tmp/imi-phase3-dssi \
+            2>&1 | tee /tmp/imi-phase3-dssi.log
+      - name: Upload DSSI Phase 3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-dssi-evidence
+          path: |
+            /tmp/imi-phase3-dssi.log
+            /tmp/imi-phase3-dssi/**
+          retention-days: 90
+
+  phase3-parallel-external-tests-collective:
+    needs:
+      - phase3-hospital-external-replication
+      - phase3-speech-heldout-reproduction
+      - phase3-bee-longer-panel
+      - phase3-dssi-remaining-country-continuation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-hospital-evidence
+          path: /tmp/downloaded-phase3-hospital
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-speech-evidence
+          path: /tmp/downloaded-phase3-speech
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-bee-evidence
+          path: /tmp/downloaded-phase3-bee
+      - uses: actions/download-artifact@v4
+        with:
+          name: imi-phase3-dssi-evidence
+          path: /tmp/downloaded-phase3-dssi
+      - name: Verify collective Phase 3 disposition
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.phase3.parallel-external-tests.collective.runner.mjs \
+            --hospital-dir /tmp/downloaded-phase3-hospital/imi-phase3-hospital \
+            --speech-dir /tmp/downloaded-phase3-speech/imi-phase3-speech \
+            --bee-dir /tmp/downloaded-phase3-bee/imi-phase3-bee \
+            --dssi-dir /tmp/downloaded-phase3-dssi/imi-phase3-dssi \
+            --output-dir /tmp/imi-phase3-collective \
+            2>&1 | tee /tmp/imi-phase3-collective.log
+      - name: Upload collective Phase 3 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-phase3-collective-evidence
+          path: |
+            /tmp/imi-phase3-collective.log
+            /tmp/imi-phase3-collective/**
+          retention-days: 90

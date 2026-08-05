@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_AND_MODELS_EXACT_RETURN_STATE_SCHEMA_v1",
+  "title": "Methods and Models exact-return state",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contentVersionFingerprint",
+    "entryRoute",
+    "activeFamily",
+    "activeLens",
+    "searchAndFilterState",
+    "orderedSelectionHistory",
+    "focusedRecordOrSet",
+    "dependencyNeighborhood",
+    "expandedContextPanels",
+    "scrollAnchor",
+    "viewportOrCameraStateIfSpatial",
+    "deviceInteractionMode",
+    "returnToken"
+  ],
+  "properties": {
+    "contentVersionFingerprint": { "type": "string", "minLength": 1 },
+    "entryRoute": { "type": "string", "minLength": 1 },
+    "activeFamily": { "type": "string", "minLength": 1 },
+    "activeLens": { "type": "string", "minLength": 1 },
+    "searchAndFilterState": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["search", "intent"],
+      "properties": {
+        "search": { "type": "string" },
+        "intent": { "type": "string" }
+      }
+    },
+    "orderedSelectionHistory": { "type": "array", "items": { "type": "string" } },
+    "focusedRecordOrSet": { "type": "array", "items": { "type": "string" } },
+    "dependencyNeighborhood": { "type": "array", "items": { "type": "string" } },
+    "expandedContextPanels": { "type": "array", "items": { "type": "string" } },
+    "scrollAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      }
+    },
+    "viewportOrCameraStateIfSpatial": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["mode"],
+      "properties": {
+        "mode": { "type": "string", "minLength": 1 }
+      }
+    },
+    "deviceInteractionMode": { "type": "string", "minLength": 1 },
+    "returnToken": { "type": "string", "minLength": 1 }
+  }
+}

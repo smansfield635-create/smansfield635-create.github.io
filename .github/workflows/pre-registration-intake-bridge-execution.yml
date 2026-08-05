@@ -1,0 +1,74 @@
+name: Permanent Pre-registration Canonical Intake Bridge
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  execute:
+    if: >-
+      contains(github.event.comment.body, 'PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9c3daa91a3624632a488853d029dabb25c5ce048
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify activation and parse request
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from'node:fs';
+          const h={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'};
+          const r=await fetch(`https://api.github.com/repos/${process.env.REPOSITORY}/contents/AI_ENTRYPOINT.json`,{headers:h});
+          if(!r.ok)throw Error(`ROOT_DISCOVERY_FETCH_FAILED:${r.status}`);
+          const f=await r.json(),j=JSON.parse(Buffer.from(String(f.content).replace(/\s/g,''),'base64').toString()),b=j.preRegistrationIntakeBridge;
+          if(!b||b.status!=='ACTIVE_PERMANENT_PRE_REGISTRATION_CAPABILITY'||b.exactCandidateHead!=='9c3daa91a3624632a488853d029dabb25c5ce048'||b.activationFingerprint!=='e16f80bf0d0e7f5b5354194c8cde180dbf726d385c2f96b5425780f32591c31d'||b.lockRef!=='refs/heads/operation-locks/repository-operation-intake-v1')throw Error('ACTIVATION_IDENTITY_MISMATCH');
+          const m='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1',body=process.env.COMMENT_BODY??'',tail=body.slice(body.indexOf(m)+m.length),a=tail.indexOf('{'),z=tail.lastIndexOf('}');
+          if(!body.includes(m)||a<0||z<a)throw Error('REQUEST_JSON_NOT_FOUND');
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/input.json`,JSON.stringify(JSON.parse(tail.slice(a,z+1)),null,2)+'\n');
+          NODE
+      - name: Execute exact bridge
+        id: bridge
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          node tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs --input "$RUNNER_TEMP/input.json" --output "$RUNNER_TEMP/bridge-receipt.json"
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Verify returned identity
+        if: always()
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from'node:fs';import crypto from'node:crypto';
+          const p=`${process.env.RUNNER_TEMP}/bridge-receipt.json`;if(!fs.existsSync(p))throw Error('BRIDGE_RECEIPT_MISSING');
+          const bytes=fs.readFileSync(p),r=JSON.parse(bytes);
+          if(r.schema!=='PRE_REGISTRATION_INTAKE_BRIDGE_RECEIPT_v1'||r.bridgeId!=='CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1'||r.canonicalGateExecuted!==true||r.canonicalGateBlob!=='f0b22e6b9574507632f1ad07647710971a4d63de'||r.lockRef!=='refs/heads/operation-locks/repository-operation-intake-v1'||r.admissionResultRewritten!==false)throw Error('BRIDGE_IDENTITY_VERIFICATION_FAILED');
+          const out={schema:'PRE_REGISTRATION_INTAKE_BRIDGE_POST_ACTIVATION_VERIFICATION_RECEIPT_v1',result:'ACTIVE_AND_IDENTITY_VERIFIED',activationFingerprint:'e16f80bf0d0e7f5b5354194c8cde180dbf726d385c2f96b5425780f32591c31d',exactCandidateHead:'9c3daa91a3624632a488853d029dabb25c5ce048',activationMainHead:process.env.GITHUB_SHA,workflowRun:process.env.GITHUB_RUN_ID,workflowAttempt:process.env.GITHUB_RUN_ATTEMPT,actor:process.env.GITHUB_ACTOR,canonicalGateExecuted:true,canonicalGateBlob:r.canonicalGateBlob,lockRef:r.lockRef,canonicalReceiptResult:r.canonicalReceiptJson?.result??null,canonicalReceiptSha256:r.canonicalReceiptSha256,lockIdentity:r.lockIdentity??null,unrelatedRepositoryMutation:false,broaderPermissionsIntroduced:false,receiptDigest:crypto.createHash('sha256').update(bytes).digest('hex')};
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/post-activation-verification.json`,JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pre-registration-intake-bridge-execution-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/bridge-receipt.json
+            ${{ runner.temp }}/post-activation-verification.json
+          if-no-files-found: error
+          retention-days: 90
+      - if: always()
+        env:
+          STATUS: ${{ steps.bridge.outputs.status }}
+        run: test "$STATUS" = "0"

@@ -1,0 +1,123 @@
+name: Pre-registration intake bridge certification
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/pre-registration-intake-bridge/**'
+      - 'tools/pre-registration-intake-bridge/**'
+      - '.github/workflows/pre-registration-intake-bridge-certification.yml'
+
+jobs:
+  static-conformance:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/pre-registration-intake-bridge/conformance-runner.v1.mjs --output "$RUNNER_TEMP/static-conformance.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pre-registration-intake-bridge-static-conformance-v1
+          path: ${{ runner.temp }}/static-conformance.json
+          if-no-files-found: error
+
+  remote-end-to-end-proof:
+    needs: static-conformance
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/pre-registration-intake-bridge/remote-proof-runner.v1.mjs --output "$RUNNER_TEMP/remote-proof.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pre-registration-intake-bridge-remote-proof-v1
+          path: ${{ runner.temp }}/remote-proof.json
+          if-no-files-found: error
+
+  fresh-independent-reproduction:
+    needs: remote-end-to-end-proof
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/pre-registration-intake-bridge/independent-reproducer.v1.mjs --locator .github/pre-registration-intake-bridge/locator.v1.json --output "$RUNNER_TEMP/independent-reproduction.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pre-registration-intake-bridge-independent-reproduction-v1
+          path: ${{ runner.temp }}/independent-reproduction.json
+          if-no-files-found: error
+
+  package-certification-and-authority-termination:
+    needs: [static-conformance, remote-end-to-end-proof, fresh-independent-reproduction]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: pre-registration-intake-bridge-static-conformance-v1
+          path: ${{ runner.temp }}/evidence/static
+      - uses: actions/download-artifact@v4
+        with:
+          name: pre-registration-intake-bridge-remote-proof-v1
+          path: ${{ runner.temp }}/evidence/remote
+      - uses: actions/download-artifact@v4
+        with:
+          name: pre-registration-intake-bridge-independent-reproduction-v1
+          path: ${{ runner.temp }}/evidence/independent
+      - run: >-
+          node tools/pre-registration-intake-bridge/package-certifier.v1.mjs
+          --static "$RUNNER_TEMP/evidence/static/static-conformance.json"
+          --remote "$RUNNER_TEMP/evidence/remote/remote-proof.json"
+          --independent "$RUNNER_TEMP/evidence/independent/independent-reproduction.json"
+          --output "$RUNNER_TEMP/package-certification.json"
+      - run: >-
+          node tools/pre-registration-intake-bridge/authority-terminator.v1.mjs
+          --certification "$RUNNER_TEMP/package-certification.json"
+          --output "$RUNNER_TEMP/authority-termination.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pre-registration-intake-bridge-final-certification-v1
+          path: |
+            ${{ runner.temp }}/package-certification.json
+            ${{ runner.temp }}/authority-termination.json
+          if-no-files-found: error

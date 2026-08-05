@@ -1,0 +1,46 @@
+{
+  "$id": "PRE_REGISTRATION_INTAKE_BRIDGE_INPUT_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "constructionProcedure": {
+      "type": "object"
+    },
+    "exactGoverningHead": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "executionHolder": {
+      "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$",
+      "type": "string"
+    },
+    "operationRequest": {
+      "type": "object"
+    },
+    "repository": {
+      "const": "smansfield635-create/smansfield635-create.github.io"
+    },
+    "requestId": {
+      "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$",
+      "type": "string"
+    },
+    "requestNonce": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1"
+    }
+  },
+  "required": [
+    "schema",
+    "requestId",
+    "repository",
+    "exactGoverningHead",
+    "operationRequest",
+    "constructionProcedure",
+    "requestNonce",
+    "executionHolder"
+  ],
+  "type": "object"
+}

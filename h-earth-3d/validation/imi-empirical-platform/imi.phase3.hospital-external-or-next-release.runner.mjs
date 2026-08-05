@@ -89,7 +89,7 @@ if (!nextReleaseEligible) {
     routeDigest: canonicalDigest(route),
     sourceIdentity,
     admission: {
-      nextCmsReleaseEligible,
+      nextCmsReleaseEligible: nextReleaseEligible,
       complicationsEligible,
       generalEligible,
       nonCmsPackageProvided: false,

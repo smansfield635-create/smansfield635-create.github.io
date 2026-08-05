@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#050b12">
+  <title>Methods Context Displacement — Minimum Spatial Proof</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#linear-view">Skip to linear document view</a>
+
+  <main class="app-shell" id="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <p class="eyebrow">Nonpublic interaction proof · 2 stages · 6 objects</p>
+        <h1>Methods Context Displacement</h1>
+      </div>
+      <div class="top-actions" aria-label="View controls">
+        <button class="quiet-button" id="help-button" type="button" aria-expanded="false" aria-controls="help-panel">Controls</button>
+        <button class="quiet-button" id="state-button" type="button" aria-expanded="false" aria-controls="state-panel">State</button>
+        <button class="quiet-button" id="mode-button" type="button" aria-pressed="false">Text mode</button>
+      </div>
+    </header>
+
+    <section class="orientation-strip" aria-label="Current position">
+      <div>
+        <span class="orientation-label">Current stage</span>
+        <strong id="current-stage-label">Pressure &amp; Capacity</strong>
+      </div>
+      <div class="route-line" aria-hidden="true">
+        <span class="route-node is-current" data-route-stage="0"></span>
+        <span class="route-segment"></span>
+        <span class="route-node" data-route-stage="1"></span>
+      </div>
+      <div class="orientation-destination">
+        <span class="orientation-label">Visible destination</span>
+        <button id="travel-button" class="travel-link" type="button">Travel to Method &amp; Falsification →</button>
+      </div>
+    </section>
+
+    <section class="spatial-viewport" id="spatial-view" aria-label="Spatial Methods and Models proof">
+      <div class="atmosphere" aria-hidden="true"></div>
+      <div class="depth-grid" aria-hidden="true"></div>
+      <div class="world" id="world"></div>
+
+      <div class="stage-navigation" aria-label="Stage navigation">
+        <button class="nav-orb" id="previous-stage" type="button" aria-label="Travel to previous stage">←</button>
+        <div class="stage-readout" aria-live="polite">
+          <span id="stage-ordinal">Stage 01</span>
+          <strong id="stage-title">Pressure &amp; Capacity</strong>
+          <small id="stage-kicker">Multiplicative state mechanics</small>
+        </div>
+        <button class="nav-orb" id="next-stage" type="button" aria-label="Travel to next stage">→</button>
+      </div>
+
+      <div class="model-navigation" aria-label="Model navigation">
+        <button class="model-step" id="previous-model" type="button">← Previous model</button>
+        <p id="model-position">Object 1 of 3</p>
+        <button class="model-step" id="next-model" type="button">Next model →</button>
+      </div>
+
+      <div class="lens-dock" role="group" aria-label="Model lens">
+        <span class="lens-dock-label">Rotate expression</span>
+        <div id="lens-buttons" class="lens-buttons"></div>
+      </div>
+
+      <div class="proof-status" id="proof-status" aria-live="polite">
+        <span class="status-light"></span>
+        <span id="status-text">Spatial state settled</span>
+      </div>
+    </section>
+
+    <section class="linear-view" id="linear-view" hidden aria-labelledby="linear-title">
+      <div class="linear-heading">
+        <p class="eyebrow">Secondary accessible representation</p>
+        <h2 id="linear-title">Methods proof — linear document view</h2>
+        <p>This view preserves the same two stages, six objects, and three lenses without spatial movement.</p>
+      </div>
+      <div id="linear-content"></div>
+    </section>
+
+    <aside class="utility-panel" id="help-panel" hidden>
+      <div class="utility-heading">
+        <h2>Interaction grammar</h2>
+        <button class="icon-button" data-close-panel="help-panel" type="button" aria-label="Close controls panel">×</button>
+      </div>
+      <dl class="control-list">
+        <div><dt>Stage travel</dt><dd>Shift + ←/→, stage arrows, or select the distant stage.</dd></div>
+        <div><dt>Model movement</dt><dd>←/→ or the model controls.</dd></div>
+        <div><dt>Focus</dt><dd>Enter or select the centered object.</dd></div>
+        <div><dt>Lens rotation</dt><dd>1 Practical · 2 Engineering · 3 Evidence.</dd></div>
+        <div><dt>Exact return</dt><dd>Escape or Return restores the prefocus snapshot.</dd></div>
+      </dl>
+    </aside>
+
+    <aside class="utility-panel state-panel" id="state-panel" hidden>
+      <div class="utility-heading">
+        <h2>Deterministic state</h2>
+        <button class="icon-button" data-close-panel="state-panel" type="button" aria-label="Close state panel">×</button>
+      </div>
+      <pre id="state-output"></pre>
+    </aside>
+
+    <div class="announcement" id="announcement" aria-live="assertive" aria-atomic="true"></div>
+  </main>
+
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

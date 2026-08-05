@@ -57,7 +57,7 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check \
             pysus==2.7.0 \
-            duckdb==1.3.2
+            duckdb==1.4.4
       - name: Execute public non-CMS hospital replication
         env:
           PYTHON: python

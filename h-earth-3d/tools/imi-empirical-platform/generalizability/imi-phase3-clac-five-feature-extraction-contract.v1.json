@@ -1,0 +1,141 @@
+{
+  "schemaVersion": "IMI_PHASE_3_CLAC_FIVE_FEATURE_EXTRACTION_CONTRACT_v1",
+  "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+  "track": "SPEECH_HELD_OUT_DATASET_REPRODUCTION",
+  "status": "FROZEN_BEFORE_FEATURE_VALUE_INSPECTION",
+  "frozenAt": "2026-08-05T20:05:00.000Z",
+  "sourcePackage": {
+    "archiveUrl": "https://data.csail.mit.edu/placesaudio/CLAC-Dataset.zip",
+    "archiveInventorySha256": "8a09ea16830481e95a558b43558dcd47c833c6aa99fb96a39eecb0110d470d75",
+    "packageSha256": "52df6e548c512239337281bb5f0e461a4751f6068f75db197bd2ad323b3ad171",
+    "transcriptCount": 240,
+    "metadataRowCount": 1832,
+    "language": "EN",
+    "task": "COOKIE_THEFT_PICTURE_DESCRIPTION",
+    "caseIdentity": "speakerId",
+    "declaredGroupField": "gender",
+    "declaredGroups": [
+      "male",
+      "female",
+      "other"
+    ],
+    "minimumParticipants": 100,
+    "minimumDeclaredGroups": 2,
+    "outcomeFieldsInspected": false
+  },
+  "authorMethodBasis": {
+    "article": "The structure of spontaneous speech changes in Alzheimer's disease: Crosslingual evidence from English and Greek",
+    "doi": "10.1371/journal.pone.0324270",
+    "repository": "RuiHe1999/sem_space_AD",
+    "repositoryCommit": "c06d9e0a31f245767873dee93c1cf722a4b6054f",
+    "scripts": {
+      "fastText": {
+        "path": "sem_sim_en.py",
+        "gitBlobSha": "990d158efd6abb422dbaad5a45a7438a5f1ebe7e"
+      },
+      "bert": {
+        "path": "bert_en.py",
+        "gitBlobSha": "2b57534df3dc2a00c3ea45a4eb63e436ffe70a36"
+      },
+      "dependencyDistance": {
+        "path": "add_en.py",
+        "gitBlobSha": "839349f26650c9e5e0e8ea44ee69e3bcdc22657f"
+      },
+      "perplexity": {
+        "path": "ppl_en.py",
+        "gitBlobSha": "bb104a6b43130f2e40e68cb1792fa3dfdcbd1d55"
+      },
+      "assembly": {
+        "path": "summary.py",
+        "gitBlobSha": "67e7c2fbb9487e9e47340f811bb978364b73445b"
+      }
+    }
+  },
+  "stimulusImage": {
+    "repository": "X-LANCE/CogBench",
+    "repositoryCommit": "676a03e5a634f42adc5ab245ddee8ca24d2a2fc7",
+    "path": "samples/images/cookie_theft.jpg",
+    "gitBlobSha": "4c4c76187410772d616f5f01b66828781b5415bc",
+    "byteCount": 164703,
+    "purpose": "COOKIE_THEFT_VISUAL_ANCHOR_FOR_CLIP_ALIGNMENT",
+    "runtimeSha256Required": true
+  },
+  "featureImplementations": {
+    "FT_GSim": {
+      "model": "FASTTEXT_COMMON_CRAWL_ENGLISH_300D",
+      "modelUrl": "https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.en.300.bin.gz",
+      "runtimeSha256Required": true,
+      "tokenization": "SPACY_EN_CORE_WEB_SM_EXCLUDE_STOPWORDS_SPACE_AND_PUNCTUATION_WITH_AUTHOR_FILLER_LIST",
+      "calculation": "MEAN_LOWER_TRIANGLE_ALL_PAIR_COSINE_SIMILARITY"
+    },
+    "BERT_GSim_AND_BERT_TTR": {
+      "model": "google-bert/bert-base-uncased",
+      "modelRevision": "86b5e0934494bd15c9632b12f734a8a67f723594",
+      "transformersVersion": "4.44.2",
+      "calculation": "AUTHOR_SCRIPT_TOKEN_EMBEDDING_ALL_PAIR_COSINE_AND_NON_SPECIAL_TOKEN_TTR"
+    },
+    "CLIP": {
+      "implementationRepository": "openai/CLIP",
+      "implementationCommit": "d05afc436d78f1c48dc0dbf8e5980a9d471f35f6",
+      "model": "ViT-L/14",
+      "modelWeightSha256": "b8cca3fd41ae0c99ba7e8951adf17d267cdb84cd88be6f7c2e0eca1737a03836",
+      "calculation": "MEAN_SENTENCE_TO_STIMULUS_IMAGE_COSINE_SIMILARITY"
+    },
+    "ADD": {
+      "spacyVersion": "3.7.4",
+      "spacyModel": "en_core_web_sm-3.7.1",
+      "calculation": "AUTHOR_SCRIPT_MEAN_OF_SENTENCE_MEAN_ABSOLUTE_DEPENDENT_HEAD_TOKEN_INDEX_DISTANCE_EXCLUDING_PUNCTUATION"
+    },
+    "PPL": {
+      "baseModel": "mistralai/Mistral-7B-Instruct-v0.1",
+      "baseModelMethod": "MEAN_NEXT_TOKEN_CROSS_ENTROPY_OVER_TRANSCRIPT",
+      "accessRepresentationRepository": "TheBloke/Mistral-7B-Instruct-v0.1-GGUF",
+      "accessRepresentationRevision": "44934253f84b5e51d9f247dd22c6cda8c362e790",
+      "accessRepresentationFile": "mistral-7b-instruct-v0.1.Q5_K_M.gguf",
+      "accessRepresentationSha256": "c4b062ec7f0f160e848a0e34c4e291b9e39b3fc60df5b201c038e7064dbbdcdc",
+      "quantization": "Q5_K_M",
+      "calculation": "EXP_OF_MEAN_NEXT_TOKEN_CROSS_ENTROPY_WITH_LOG_PPL_USED_DOWNSTREAM",
+      "representationLimitation": "Q5_K_M_IS_A_DECLARED_COMPUTE_ACCESS_REPRESENTATION_AND_IS_NOT_CLAIMED_BYTE_OR_LOGIT_EQUIVALENT_TO_FULL_PRECISION"
+    }
+  },
+  "routeTransform": {
+    "routePath": "h-earth-3d/tools/imi-empirical-platform/routes/spontaneous-speech-current-repository-rerun-2026-route.v1.json",
+    "rankScope": "WITHIN_LANGUAGE",
+    "rankMethod": "AVERAGE_MIDRANK_PERCENTILE_(RANK_MINUS_0.5)_DIVIDED_BY_LANGUAGE_N",
+    "conceptualAvailability": "ONE_MINUS_FT_GSIM_PERCENTILE",
+    "contextualAvailability": "ONE_MINUS_BERT_GSIM_PERCENTILE",
+    "visualGroundingAvailability": "CLIP_PERCENTILE",
+    "syntacticOrganizationAvailability": "ADD_PERCENTILE",
+    "adjustedPredictabilityAvailability": "ONE_MINUS_WITHIN_LANGUAGE_PERCENTILE_OF_LOG_PPL_RESIDUALIZED_ON_BERT_TTR",
+    "terminalLock": "NONE"
+  },
+  "failureLaw": {
+    "missingFeature": "UNEVALUABLE",
+    "modelRetrievalFailure": "HELD_OPEN_MODEL_ACCESS",
+    "digestMismatch": "STOP_SOURCE_IDENTITY_MISMATCH",
+    "prohibitedFallbacks": [
+      "SUBSTITUTE_SMALLER_BERT",
+      "SUBSTITUTE_DIFFERENT_CLIP_BACKBONE",
+      "SUBSTITUTE_DIFFERENT_LANGUAGE_MODEL",
+      "IMPUTE_REQUIRED_FEATURE",
+      "CHANGE_NORMALIZER_AFTER_FEATURE_INSPECTION",
+      "EXCLUDE_CASES_AFTER_IMI_INSPECTION"
+    ]
+  },
+  "admissionDecision": {
+    "prospectivelyExtractedFrozenFeatureSet": true,
+    "routeRetuned": false,
+    "heldOutOutcomeInspected": false,
+    "minimumEvidenceSatisfiedBeforeExecution": false,
+    "phase4CandidateBeforeExecution": false
+  },
+  "boundaries": {
+    "clinicalDiagnosisAuthorized": false,
+    "clinicalScreeningAuthorized": false,
+    "causalLanguageDeclineClaimAuthorized": false,
+    "fullPrecisionPplEquivalenceClaimed": false,
+    "phase4AutomaticallyAuthorized": false,
+    "mainMergeAuthorized": false,
+    "publicReleaseAuthorized": false
+  }
+}

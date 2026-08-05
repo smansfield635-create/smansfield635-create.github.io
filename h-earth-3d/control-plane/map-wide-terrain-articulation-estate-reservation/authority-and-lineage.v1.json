@@ -1,0 +1,89 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_TERRAIN_INSTRUMENT_AUTHORITY_AND_LINEAGE_v1",
+  "status": "PERMANENT_INSTRUMENT_ACTIVE_BY_SEPARATE_RATIFICATION",
+  "userOriginIssue": 569,
+  "startingMainHead": "3ac9279dc82e56f7b0d67972ce56048d07e5ecfa",
+  "acceptedR06C10Reference": {
+    "pr": 566,
+    "exactCandidateHead": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+    "terrainPath": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js",
+    "terrainBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+    "successorFieldPath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "successorFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+    "status": "IMMUTABLE_ACCEPTED_LOCAL_REFERENCE_NOT_MERGED_MAIN"
+  },
+  "mirrorManorReservationEvidence": {
+    "sourcePr": 328,
+    "candidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+    "anchor": {"x": 67.25, "z": -16.85},
+    "manorPad": {"width": 30, "depth": 22},
+    "permittedExpansion": {"min": {"width": 30, "depth": 22}, "max": {"width": 32, "depth": 24}},
+    "elevationBand": {"min": 1.2, "max": 1.8},
+    "principalViewAzimuthDeg": -25,
+    "viewCorridorHalfAngleDeg": 15,
+    "initialCorridorWidthMeters": 14,
+    "originalDisposition": "ADMISSIBLE_WITHOUT_GLOBAL_AUTHORITY",
+    "reservationUseOnly": true
+  },
+  "immutableBootstrapSource": {
+    "pr": 570,
+    "exactHead": "7c0b8871928b21cd9b2806f058bce34eed11f2ba",
+    "packageFingerprint": "3f1024c9dc2fed15d3a8a7a25387066a48f5a8ffddf2e3cfd00b96dd95e45f28",
+    "status": "CERTIFIED_INACTIVE_BOOTSTRAP_SOURCE",
+    "bootstrapAuthority": "TERMINATED",
+    "separateRatificationRequired": true
+  },
+  "separateRatification": {
+    "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_PERMANENT_RATIFICATION_AND_ACTIVATION_v3",
+    "exactGoverningMain": "a4ba663dbff1d780cf80e8e40ecaa396c2ee85c7",
+    "lockGeneration": 150,
+    "activationDecision": "ACTIVATE_PERMANENT_INSTRUMENT_ON_EXACT_CERTIFIED_MERGE",
+    "activationCommit": "RESOLVED_BY_POST_ACTIVATION_RECEIPT",
+    "postActivationVerificationRequired": true,
+    "routerOwnership": {
+      "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_ROUTER_OWNERSHIP_R_002",
+      "lockGeneration": 111
+    },
+    "internalRegistry": {
+      "activationMerge": "a4ba663dbff1d780cf80e8e40ecaa396c2ee85c7",
+      "operationId": "H_EARTH_MAP_WIDE_INSTRUMENT_INTERNAL_REGISTRY_REGISTRATION_R_001",
+      "lockGeneration": 136,
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    "activeAuthorityClass": "PERMANENT_NONPRODUCT_INSTRUMENT",
+    "activeScope": [
+      "MAP_WIDE_TERRAIN_CENSUS",
+      "ESTATE_RESERVATION_VALIDATION",
+      "ZONE_ARTICULATION_PLANNING",
+      "CONTINUOUS_ORCHESTRATION_PLANNING",
+      "CUMULATIVE_CONSTRAINT_EVALUATION",
+      "VARIANCE_AND_REPETITION_DETECTION",
+      "EXACT_CANDIDATE_PREVIEW_PACKAGE_PLANNING",
+      "INDEPENDENT_REPRODUCTION"
+    ],
+    "authorityLimitations": [
+      "NO_ACTUAL_TERRAIN_MUTATION_WITHOUT_SEPARATE_ADMISSION",
+      "NO_MANOR_CONSTRUCTION_WITHOUT_SEPARATE_ADMISSION",
+      "NO_PRODUCT_RUNTIME_RENDERER_OR_DEPLOYMENT_AUTHORITY",
+      "NO_AUTOMATIC_CANDIDATE_MERGE",
+      "NO_INHERITED_OPERATION_AUTHORITY"
+    ],
+    "temporaryBuilderAuthority": "TERMINATES_AFTER_RATIFICATION",
+    "temporaryVerifierAuthority": "TERMINATES_AFTER_RATIFICATION",
+    "mergeAuthority": "EXACT_CERTIFIED_SUCCESSOR_ONLY"
+  },
+  "precedence": [
+    "USER_ORIGIN_BOUNDARY",
+    "REPOSITORY_ACTIVE_GOVERNANCE",
+    "SEPARATE_RATIFICATION_RECEIPT",
+    "EXACT_CERTIFIED_BOOTSTRAP_SOURCE",
+    "PERMANENT_NONPRODUCT_INSTRUMENT_BOUNDARY"
+  ],
+  "nonClaims": [
+    "R06_C10_IS_MERGED_MAIN",
+    "MIRROR_MANOR_IS_CONSTRUCTED",
+    "ACTUAL_MAP_WIDE_TERRAIN_MUTATION_IS_AUTHORIZED",
+    "PRODUCT_RUNTIME_OR_DEPLOYMENT_AUTHORITY_EXISTS",
+    "FUTURE_OPERATIONS_INHERIT_RATIFICATION_AUTHORITY"
+  ]
+}

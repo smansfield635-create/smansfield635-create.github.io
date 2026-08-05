@@ -1,4 +1,5 @@
-name: Methods Information Benchmark Router Registration and Adoption Translation Materialization v1
+name: Methods Information Benchmark Adoption Translation Verification and Closure v1
+
 on:
   workflow_dispatch:
   push:
@@ -16,6 +17,7 @@ permissions:
 env:
   REPOSITORY: smansfield635-create/smansfield635-create.github.io
   BASE: ffe3cb714751ea0e8df2e53611538f6cadcc241c
+  SOURCE_AUDIT_HEAD: 7eee0e3f7a8c37e548e7721f1f5c2df69b2a310a
   FINGERPRINT: 4fc8e2280057b426e1573ab5ac4f710e0b0d1881264d443a56fb25b9f560f79e
   G58_OPERATION: METHODS_AND_MODELS_AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION_v1
   G58_SCOPE: METHODS_INFORMATION_BENCHMARK/METHODS_AND_MODELS/AUDIT_OUTPUT_ADOPTION_AND_PAGE_TRANSLATION/V1
@@ -24,156 +26,55 @@ env:
   VERIFIER: .github/ai-router/projects/methods-information-benchmark/verify-router-registration-and-package.v1.mjs
   W: .github/workflows/methods-information-benchmark-router-registration-and-adoption-translation-materialization-v1.yml
   P0: .github/workflows/methods-and-models-audit-output-adoption-and-page-translation-v1.yml
+  ROOT: control-plane/methods-information-benchmark/adoption-and-page-translation-v1
   IREC: control-plane/methods-information-benchmark/adoption-and-page-translation-v1/receipts/independent-verification.receipt.v1.json
   CREC: control-plane/methods-information-benchmark/adoption-and-page-translation-v1/receipts/operation-closure.receipt.v1.json
 
 jobs:
-  materialize:
+  core:
     runs-on: ubuntu-24.04
     outputs:
-      head: ${{ steps.head.outputs.head }}
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
+      head: ${{ steps.identity.outputs.head }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Reconstruct immutable source and commit exact seven-path core
+          persist-credentials: false
+      - id: identity
+        name: Confirm exact seven-path nonpublic core
         run: |
           set -euo pipefail
           test "$(git merge-base "$BASE" "$GITHUB_SHA")" = "$BASE"
-          mapfile -t changed < <(git diff --name-only "$BASE..$GITHUB_SHA" | sort)
-          test "${#changed[@]}" -eq 1
-          test "${changed[0]}" = "$W"
-          test ! -e "$P0"
+          mapfile -t actual < <(git diff --name-only "$BASE..$GITHUB_SHA" | sort)
+          mapfile -t expected < <(printf '%s\n' \
+            "$W" \
+            "$P0" \
+            "$ROOT/adoption-register.v1.json" \
+            "$ROOT/page-translation-model.v1.json" \
+            "$ROOT/review-package.v1.json" \
+            "$ROOT/review-summary.v1.json" \
+            "$ROOT/rolodex-information-map.v1.json" | sort)
+          test "${#actual[@]}" -eq 7
+          test "${actual[*]}" = "${expected[*]}"
           test ! -e "$IREC"
           test ! -e "$CREC"
+          test "$(sha256sum "$P0" | cut -d' ' -f1)" = "e7cd206fd90ffdd005cbd0f01048792c3d178faa10e353df1a7bb1e856a14686"
           node - <<'NODE'
           const fs = require('fs');
-          const path = require('path');
-          const os = require('os');
-          const crypto = require('crypto');
-          const { spawnSync } = require('child_process');
-          const H = b => crypto.createHash('sha256').update(b).digest('hex');
-          const get = async url => {
-            const r = await fetch(url, {headers: {
-              Accept: 'application/vnd.github+json',
-              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
-              'X-GitHub-Api-Version': '2022-11-28'
-            }});
-            if (!r.ok) throw new Error(`FETCH_${r.status}`);
-            return r.json();
-          };
-          (async () => {
-            const carrierPath = '.github/ai-router/projects/methods-information-benchmark/adoption-review-source-package.carrier.v1.json';
-            const c = JSON.parse(fs.readFileSync(carrierPath, 'utf8'));
-            const f = process.env.FINGERPRINT;
-            if (c.packageFingerprintSha256 !== f || c.reviewRepeated || c.packageRegenerated) throw new Error('CARRIER');
-            const records = [];
-            for (const k of [...c.transport.chunks].sort((a,b) => a.chunkIndex - b.chunkIndex)) {
-              const q = await get(`https://api.github.com/repos/${c.transport.repository}/issues/comments/${k.commentId}`);
-              const marker = c.transport.marker + '\n';
-              if (q.id !== k.commentId || typeof q.body !== 'string' || !q.body.startsWith(marker)) throw new Error('COMMENT');
-              const p = JSON.parse(q.body.slice(marker.length));
-              if (p.schema !== 'METHODS_ADOPTION_SOURCE_PACKAGE_CHUNK_v1' ||
-                  p.packageFingerprint !== f ||
-                  p.zipSha256 !== c.exactZip.sha256 ||
-                  p.chunkIndex !== k.chunkIndex ||
-                  p.chunkCount !== c.exactZip.chunkCount ||
-                  p.chunkSha256 !== k.sha256 ||
-                  typeof p.base64 !== 'string') throw new Error('CHUNK_IDENTITY');
-              const policy = (c.transport.exactRecoveryPolicies || []).find(x => x.commentId === k.commentId && x.chunkIndex === k.chunkIndex);
-              if (policy) {
-                if (p.base64.length !== policy.observedBase64Length || H(Buffer.from(p.base64)) !== policy.observedBase64Sha256) throw new Error('RECOVERY_OBSERVED');
-                if (policy.recoveryClass === 'EXACT_COMMENT_ID_PREFIX_AND_NEXT_CHUNK_CROSSCHECK_ONLY') {
-                  const accepted = p.base64.slice(0, k.length);
-                  const trailing = p.base64.slice(k.length);
-                  if (k.length !== policy.acceptedPrefixLength ||
-                      k.sha256 !== policy.acceptedPrefixSha256 ||
-                      accepted.length !== k.length ||
-                      H(Buffer.from(accepted)) !== k.sha256 ||
-                      trailing.length !== policy.trailingLength ||
-                      H(Buffer.from(trailing)) !== policy.trailingSha256) throw new Error('RECOVERY_PREFIX');
-                  records.push({k, base64: accepted, trailing, policy});
-                } else if (policy.recoveryClass === 'EXACT_COMMENT_ID_SINGLE_CHARACTER_SUBSTITUTION_ONLY') {
-                  if (!Number.isInteger(policy.substitutionIndex) ||
-                      policy.substitutionIndex < 0 ||
-                      policy.substitutionIndex >= p.base64.length ||
-                      typeof policy.observedCharacter !== 'string' ||
-                      policy.observedCharacter.length !== 1 ||
-                      typeof policy.correctedCharacter !== 'string' ||
-                      policy.correctedCharacter.length !== 1 ||
-                      p.base64[policy.substitutionIndex] !== policy.observedCharacter) throw new Error('RECOVERY_SUBSTITUTION_IDENTITY');
-                  const corrected = p.base64.slice(0, policy.substitutionIndex) +
-                    policy.correctedCharacter +
-                    p.base64.slice(policy.substitutionIndex + 1);
-                  if (policy.correctedBase64Length !== k.length ||
-                      policy.correctedBase64Sha256 !== k.sha256 ||
-                      corrected.length !== k.length ||
-                      H(Buffer.from(corrected)) !== k.sha256) throw new Error('RECOVERY_SUBSTITUTION_RESULT');
-                  records.push({k, base64: corrected, trailing: null, policy});
-                } else {
-                  throw new Error('RECOVERY_CLASS');
-                }
-              } else {
-                if (p.base64.length !== k.length || H(Buffer.from(p.base64)) !== k.sha256) throw new Error('CHUNK');
-                records.push({k, base64: p.base64, trailing: null, policy: null});
-              }
-            }
-            for (const r of records) {
-              if (r.policy?.recoveryClass !== 'EXACT_COMMENT_ID_PREFIX_AND_NEXT_CHUNK_CROSSCHECK_ONLY') continue;
-              const next = records.find(x => x.k.chunkIndex === r.policy.trailingMustEqualChunkIndex);
-              if (!next || r.trailing !== next.base64.slice(0, r.policy.trailingMustEqualPrefixLength)) throw new Error('RECOVERY_CROSSCHECK');
-            }
-            const encoded = records.map(r => r.base64).join('');
-            const zip = Buffer.from(encoded, 'base64');
-            if (encoded.length !== c.exactZip.base64Length || zip.length !== c.exactZip.size || H(zip) !== c.exactZip.sha256) throw new Error('ZIP');
-            const zipPath = path.join(os.tmpdir(), 'methods-adoption-review.zip');
-            fs.writeFileSync(zipPath, zip);
-            const docs = new Map();
-            for (const name of c.expectedZipMembers) {
-              const r = spawnSync('unzip', ['-p', zipPath, name], {encoding: null});
-              if (r.error || r.status !== 0) throw new Error(`UNZIP_${name}`);
-              docs.set(name, Buffer.from(r.stdout));
-            }
-            const manifest = JSON.parse(docs.get('review-package.v1.json'));
-            if (manifest.packageFingerprintSha256 !== f) throw new Error('MANIFEST');
-            for (const x of manifest.files) {
-              const b = docs.get(x.path);
-              if (!b || b.length !== x.size || H(b) !== x.sha256) throw new Error(`FILE_${x.path}`);
-            }
-            for (const [source, destination] of Object.entries(c.destinationMap)) {
-              fs.mkdirSync(path.dirname(destination), {recursive: true});
-              fs.writeFileSync(destination, docs.get(source));
-            }
-            const q = await get('https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/issues/comments/5187885715');
-            const marker = 'METHODS_GENERATION_58_WORKFLOW_CARRIER_V1\n';
-            if (q.id !== 5187885715 || typeof q.body !== 'string' || !q.body.startsWith(marker)) throw new Error('P0_COMMENT');
-            const p = JSON.parse(q.body.slice(marker.length));
-            const b = Buffer.from(p.base64, 'base64');
-            if (p.sha256 !== 'e7cd206fd90ffdd005cbd0f01048792c3d178faa10e353df1a7bb1e856a14686' ||
-                p.size !== b.length ||
-                H(b) !== p.sha256) throw new Error('P0');
-            fs.mkdirSync(path.dirname(process.env.P0), {recursive: true});
-            fs.writeFileSync(process.env.P0, b);
-            const adoption = JSON.parse(fs.readFileSync(c.destinationMap['adoption-register.v1.json'], 'utf8'));
-            if (adoption.entries?.length !== 27 ||
-                adoption.counts?.total !== 27 ||
-                adoption.sourceBinding?.role6State !== 'INACTIVE' ||
-                adoption.sourceBinding?.role6Reopened !== false) throw new Error('BOUNDARY');
-          })().catch(e => { console.error(e); process.exit(1); });
+          const root = process.env.ROOT + '/';
+          const adoption = JSON.parse(fs.readFileSync(root + 'adoption-register.v1.json'));
+          const summary = JSON.parse(fs.readFileSync(root + 'review-summary.v1.json'));
+          const manifest = JSON.parse(fs.readFileSync(root + 'review-package.v1.json'));
+          if (adoption.entries?.length !== 27 || adoption.counts?.total !== 27) process.exit(1);
+          if (adoption.sourceBinding?.role6State !== 'INACTIVE' || adoption.sourceBinding?.role6Reopened !== false) process.exit(1);
+          if (manifest.packageFingerprintSha256 !== process.env.FINGERPRINT) process.exit(1);
+          const b = summary.stoppingBoundary || {};
+          if (b.publicMethodsMutation !== 'NONE' || b.publicLawsMutation !== 'NONE' || b.implementation !== 'NONE' || b.deployment !== 'NONE' || b.release !== 'NONE') process.exit(1);
           NODE
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add "$P0" control-plane/methods-information-benchmark/adoption-and-page-translation-v1/{adoption-register.v1.json,page-translation-model.v1.json,rolodex-information-map.v1.json,review-summary.v1.json,review-package.v1.json}
-          git commit -m 'Materialize exact Methods adoption translation package'
-          test "$(git diff --name-only "$BASE..HEAD" | wc -l)" -eq 7
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - id: head
-        run: echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
+          echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
 
   package:
-    needs: materialize
+    needs: core
     strategy:
       matrix:
         lane: [builder, verifier]
@@ -183,33 +84,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.materialize.outputs.head }}
+          ref: ${{ needs.core.outputs.head }}
           fetch-depth: 0
           persist-credentials: false
-      - run: node "$VERIFIER" --mode package --base-head "$BASE" --candidate-head "${{ needs.materialize.outputs.head }}" --holder "GITHUB_ACTIONS_METHODS_PACKAGE_${{ matrix.lane }}_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output "$RUNNER_TEMP/${{ matrix.lane }}.json"
+      - name: Independently verify exact core bytes
+        run: |
+          node "$VERIFIER" \
+            --mode package \
+            --base-head "$BASE" \
+            --candidate-head "${{ needs.core.outputs.head }}" \
+            --holder "GITHUB_ACTIONS_METHODS_PACKAGE_${{ matrix.lane }}_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+            --output "$RUNNER_TEMP/${{ matrix.lane }}.json"
       - uses: actions/upload-artifact@v4
         with:
           name: methods-package-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/${{ matrix.lane }}.json
 
   close58:
-    needs: [materialize, package]
+    needs: [core, package]
     runs-on: ubuntu-24.04
     outputs:
-      head: ${{ steps.head.outputs.head }}
+      head: ${{ steps.identity.outputs.head }}
+      core_fingerprint: ${{ steps.identity.outputs.core_fingerprint }}
     env:
       GITHUB_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.materialize.outputs.head }}
+          ref: ${{ needs.core.outputs.head }}
           fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
           pattern: methods-package-*-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/package
           merge-multiple: true
-      - name: Verify core, close generation 58, and commit receipts
+      - name: Verify independent core receipts
         run: |
           set -euo pipefail
           node - <<'NODE'
@@ -220,10 +129,13 @@ jobs:
               b.result !== 'PASS_MATERIALIZATION_CORE_BYTES_EXACT' ||
               v.result !== b.result ||
               b.sourcePackageFingerprintSha256 !== process.env.FINGERPRINT ||
+              v.sourcePackageFingerprintSha256 !== process.env.FINGERPRINT ||
               b.repositoryFingerprint !== v.repositoryFingerprint ||
-              b.verifierRepairPerformed ||
-              v.verifierRepairPerformed) process.exit(1);
+              b.verifierRepairPerformed || v.verifierRepairPerformed) process.exit(1);
           NODE
+      - name: Close generation 58 and commit command receipts
+        run: |
+          set -euo pipefail
           node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
             --action close \
             --repository "$REPOSITORY" \
@@ -243,7 +155,7 @@ jobs:
           const b = JSON.parse(bt);
           const v = JSON.parse(vt);
           const c = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/g58.json'));
-          if (c.result !== 'TERMINAL_CLOSURE_COMMITTED' || c.lockGeneration !== 58 || c.terminalDisposition !== 'PASS_CLOSED') process.exit(1);
+          if (c.result !== 'TERMINAL_CLOSURE_COMMITTED' || c.lockGeneration !== 58 || c.terminalDisposition !== 'PASS_CLOSED' || c.operationId !== process.env.G58_OPERATION) process.exit(1);
           const common = {
             operationId: process.env.G58_OPERATION,
             lockGeneration: 58,
@@ -262,7 +174,7 @@ jobs:
             schema: 'METHODS_AND_MODELS_ADOPTION_REVIEW_VERIFICATION_RECEIPT_v1',
             result: 'PASS_INDEPENDENT_REPOSITORY_REPRODUCTION',
             ...common,
-            candidateHeadBeforeCommandReceipts: '${{ needs.materialize.outputs.head }}',
+            candidateHeadBeforeCommandReceipts: '${{ needs.core.outputs.head }}',
             builderHolder: b.holder,
             verifierHolder: v.holder,
             builderReceiptSha256: H(bt),
@@ -284,17 +196,21 @@ jobs:
           git config user.email github-actions@github.com
           git add "$IREC" "$CREC"
           git commit -m 'Close Methods adoption translation generation 58'
-          test "$(git diff --name-only "$BASE..HEAD" | wc -l)" -eq 9
+          mapfile -t actual < <(git diff --name-only "$BASE..HEAD" | sort)
+          test "${#actual[@]}" -eq 9
           git push origin "HEAD:${GITHUB_REF_NAME}"
-      - id: head
-        run: echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
+      - id: identity
+        run: |
+          set -euo pipefail
+          echo "head=$(git rev-parse HEAD^{commit})" >> "$GITHUB_OUTPUT"
+          echo "core_fingerprint=$(node -p "JSON.parse(require('fs').readFileSync(process.env.RUNNER_TEMP + '/package/builder.json')).repositoryFingerprint")" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
           name: methods-generation-58-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/g58.json
 
   final:
-    needs: close58
+    needs: [core, close58]
     strategy:
       matrix:
         lane: [builder, verifier]
@@ -307,7 +223,104 @@ jobs:
           ref: ${{ needs.close58.outputs.head }}
           fetch-depth: 0
           persist-credentials: false
-      - run: node "$VERIFIER" --mode final --base-head "$BASE" --candidate-head "${{ needs.close58.outputs.head }}" --holder "GITHUB_ACTIONS_METHODS_FINAL_${{ matrix.lane }}_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output "$RUNNER_TEMP/${{ matrix.lane }}.json"
+      - name: Independently verify nine-path final state
+        run: |
+          set -euo pipefail
+          git worktree add --detach "$RUNNER_TEMP/core" "${{ needs.core.outputs.head }}"
+          (
+            cd "$RUNNER_TEMP/core"
+            node "$VERIFIER" \
+              --mode package \
+              --base-head "$BASE" \
+              --candidate-head "${{ needs.core.outputs.head }}" \
+              --holder "GITHUB_ACTIONS_METHODS_FINAL_CORE_${{ matrix.lane }}_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
+              --output "$RUNNER_TEMP/core-${{ matrix.lane }}.json"
+          )
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const { spawnSync } = require('child_process');
+          const sort = v => Array.isArray(v) ? v.map(sort) : v && typeof v === 'object' ? Object.fromEntries(Object.keys(v).sort().map(k => [k, sort(v[k])])) : v;
+          const can = v => JSON.stringify(sort(v));
+          const H = b => crypto.createHash('sha256').update(b).digest('hex');
+          const HC = v => H(Buffer.from(can(v)));
+          const git = args => {
+            const r = spawnSync('git', args, {encoding:'utf8'});
+            if (r.error || r.status !== 0) throw new Error(`GIT_${args.join('_')}`);
+            return r.stdout.trim();
+          };
+          const base = process.env.BASE;
+          const finalHead = '${{ needs.close58.outputs.head }}';
+          const coreHead = '${{ needs.core.outputs.head }}';
+          const core = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/core-${{ matrix.lane }}.json'));
+          if (core.result !== 'PASS_MATERIALIZATION_CORE_BYTES_EXACT' || core.repositoryFingerprint !== '${{ needs.close58.outputs.core_fingerprint }}' || core.verifierRepairPerformed) throw new Error('CORE');
+          const expected = [
+            process.env.W,
+            process.env.P0,
+            process.env.ROOT + '/adoption-register.v1.json',
+            process.env.ROOT + '/page-translation-model.v1.json',
+            process.env.ROOT + '/review-package.v1.json',
+            process.env.ROOT + '/review-summary.v1.json',
+            process.env.ROOT + '/rolodex-information-map.v1.json',
+            process.env.IREC,
+            process.env.CREC
+          ].sort();
+          const actual = git(['diff','--name-only',`${base}..${finalHead}`]).split(/\r?\n/).filter(Boolean).sort();
+          if (can(actual) !== can(expected)) throw new Error('FINAL_PATHS');
+          const i = JSON.parse(fs.readFileSync(process.env.IREC));
+          const c = JSON.parse(fs.readFileSync(process.env.CREC));
+          const cc = c.canonicalGeneration58ClosureReceipt;
+          if (i.schema !== 'METHODS_AND_MODELS_ADOPTION_REVIEW_VERIFICATION_RECEIPT_v1' ||
+              i.result !== 'PASS_INDEPENDENT_REPOSITORY_REPRODUCTION' ||
+              i.sourcePackageFingerprintSha256 !== process.env.FINGERPRINT ||
+              i.repositoryFingerprintSha256 !== core.repositoryFingerprint ||
+              i.candidateHeadBeforeCommandReceipts !== coreHead ||
+              !i.distinctExecutionHolders || i.verifierRepairPerformed ||
+              i.role6State !== 'INACTIVE' || i.reviewRepeated || i.packageRegenerated) throw new Error('INDEPENDENT_RECEIPT');
+          if (c.schema !== 'METHODS_AND_MODELS_ADOPTION_REVIEW_OPERATION_CLOSURE_RECEIPT_v1' ||
+              c.result !== 'PASS_CLOSED' ||
+              c.sourcePackageFingerprintSha256 !== process.env.FINGERPRINT ||
+              c.repositoryFingerprintSha256 !== core.repositoryFingerprint ||
+              c.role6State !== 'INACTIVE' || c.role6Reopened || c.reviewRepeated || c.packageRegenerated ||
+              cc?.result !== 'TERMINAL_CLOSURE_COMMITTED' || cc?.lockGeneration !== 58 || cc?.terminalDisposition !== 'PASS_CLOSED' || cc?.operationId !== process.env.G58_OPERATION) throw new Error('CLOSURE_RECEIPT');
+          for (const x of [i,c]) {
+            if (x.publicMethodsMutation !== 'NONE' || x.publicLawsMutation !== 'NONE' || x.implementation !== 'NONE' || x.deployment !== 'NONE' || x.release !== 'NONE') throw new Error('BOUNDARY');
+          }
+          const receiptPaths = [process.env.IREC, process.env.CREC];
+          const payload = {
+            sourcePackageFingerprintSha256: process.env.FINGERPRINT,
+            sourceAuditHead: process.env.SOURCE_AUDIT_HEAD,
+            coreCandidateHead: coreHead,
+            finalCandidateHead: finalHead,
+            coreRepositoryFingerprintSha256: core.repositoryFingerprint,
+            commandReceiptBlobMap: Object.fromEntries(receiptPaths.map(p => [p, git(['rev-parse',`${finalHead}:${p}`])])),
+            commandReceiptSha256: Object.fromEntries(receiptPaths.map(p => [p, H(fs.readFileSync(p))]))
+          };
+          const out = sort({
+            schema: 'METHODS_INFORMATION_BENCHMARK_FINAL_REPOSITORY_VERIFICATION_RECEIPT_v1',
+            operationId: process.env.G64_OPERATION,
+            result: 'PASS_FINAL_REPOSITORY_PACKAGE_AND_GENERATION58_CLOSURE',
+            holder: 'GITHUB_ACTIONS_METHODS_FINAL_${{ matrix.lane }}_${{ github.run_id }}_${{ github.run_attempt }}',
+            sourcePackageFingerprintSha256: process.env.FINGERPRINT,
+            coreRepositoryFingerprintSha256: core.repositoryFingerprint,
+            finalRepositoryFingerprintSha256: HC(payload),
+            coreCandidateHead: coreHead,
+            finalCandidateHead: finalHead,
+            verifiedPathCount: 9,
+            generation58Closed: true,
+            role6State: 'INACTIVE',
+            reviewRepeated: false,
+            packageRegenerated: false,
+            verifierRepairPerformed: false,
+            publicMethodsMutation: 'NONE',
+            publicLawsMutation: 'NONE',
+            implementation: 'NONE',
+            deployment: 'NONE',
+            release: 'NONE',
+            fingerprintPayload: payload
+          });
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/${{ matrix.lane }}.json', JSON.stringify(out, null, 2) + '\n');
+          NODE
       - uses: actions/upload-artifact@v4
         with:
           name: methods-final-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
@@ -329,7 +342,7 @@ jobs:
           pattern: methods-final-*-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/final
           merge-multiple: true
-      - name: Verify final state and close generation 64
+      - name: Compare final holders and close generation 64
         run: |
           set -euo pipefail
           node - <<'NODE'
@@ -339,12 +352,13 @@ jobs:
           if (b.holder === v.holder ||
               b.result !== 'PASS_FINAL_REPOSITORY_PACKAGE_AND_GENERATION58_CLOSURE' ||
               v.result !== b.result ||
-              b.repositoryFingerprint !== v.repositoryFingerprint ||
               b.sourcePackageFingerprintSha256 !== process.env.FINGERPRINT ||
-              b.verifierRepairPerformed ||
-              v.verifierRepairPerformed ||
-              !b.generation58Closed ||
-              !v.generation58Closed) process.exit(1);
+              v.sourcePackageFingerprintSha256 !== process.env.FINGERPRINT ||
+              b.coreRepositoryFingerprintSha256 !== v.coreRepositoryFingerprintSha256 ||
+              b.finalRepositoryFingerprintSha256 !== v.finalRepositoryFingerprintSha256 ||
+              !b.generation58Closed || !v.generation58Closed ||
+              b.verifierRepairPerformed || v.verifierRepairPerformed ||
+              b.role6State !== 'INACTIVE' || v.role6State !== 'INACTIVE') process.exit(1);
           NODE
           node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
             --action close \
@@ -354,9 +368,12 @@ jobs:
             --lock-generation 64 \
             --terminal-disposition PASS_CLOSED \
             --output "$RUNNER_TEMP/g64.json"
-          node -e "const r=require(process.env.RUNNER_TEMP + '/g64.json'); if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockGeneration!==64||r.terminalDisposition!=='PASS_CLOSED') process.exit(1)"
+          node -e "const r=require(process.env.RUNNER_TEMP + '/g64.json'); if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockGeneration!==64||r.terminalDisposition!=='PASS_CLOSED'||r.operationId!==process.env.G64_OPERATION) process.exit(1)"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: methods-materialization-terminal-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/g64.json
+          path: |
+            ${{ runner.temp }}/g64.json
+            ${{ runner.temp }}/final/builder.json
+            ${{ runner.temp }}/final/verifier.json

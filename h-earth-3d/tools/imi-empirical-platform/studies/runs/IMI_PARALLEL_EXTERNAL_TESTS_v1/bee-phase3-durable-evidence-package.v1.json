@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "IMI_PHASE_3_BEE_DURABLE_EVIDENCE_PACKAGE_v1",
+  "sourceIdentity": {
+    "schemaVersion": "IMI_PHASE_3_BEE_LONGER_PANEL_SOURCE_IDENTITY_v1",
+    "observedAt": "2026-08-05T17:45:00.000Z",
+    "historicalSource": {
+      "release": "2025-08-01",
+      "url": "https://esmis.nal.usda.gov/sites/default/release-files/rn301137d/w0894985t/1r66m149r/hcny0825.txt",
+      "bytes": 88227,
+      "digest": "fnv1a32:9379fc36"
+    },
+    "currentOverlapSource": {
+      "release": "2026-08-03",
+      "url": "https://esmis.nal.usda.gov/sites/default/release-files/796006/hcny0726.txt",
+      "bytes": 75880,
+      "digest": "fnv1a32:48d32f89"
+    },
+    "heldOutQuarterRange": "2024_Q1_THROUGH_2025_Q1_OUTCOME",
+    "heldOutTransitionCount": 4,
+    "primaryStateCount": 20,
+    "heldOutRowCount": 80,
+    "transformedRowsDigest": "fnv1a32:149ea7a0",
+    "overlapRevisionDiagnosticCount": 36
+  },
+  "summary": {
+    "schemaVersion": "IMI_PHASE_3_BEE_LONGER_PANEL_SUMMARY_v1",
+    "result": "PASS_CLOSED_PHASE_3_BEE_LONGER_PANEL_EXECUTED_WITH_FINDINGS_RETAINED",
+    "sourceIdentity": {
+      "schemaVersion": "IMI_PHASE_3_BEE_LONGER_PANEL_SOURCE_IDENTITY_v1",
+      "observedAt": "2026-08-05T17:45:00.000Z",
+      "historicalSource": {
+        "release": "2025-08-01",
+        "url": "https://esmis.nal.usda.gov/sites/default/release-files/rn301137d/w0894985t/1r66m149r/hcny0825.txt",
+        "bytes": 88227,
+        "digest": "fnv1a32:9379fc36"
+      },
+      "currentOverlapSource": {
+        "release": "2026-08-03",
+        "url": "https://esmis.nal.usda.gov/sites/default/release-files/796006/hcny0726.txt",
+        "bytes": 75880,
+        "digest": "fnv1a32:48d32f89"
+      },
+      "heldOutQuarterRange": "2024_Q1_THROUGH_2025_Q1_OUTCOME",
+      "heldOutTransitionCount": 4,
+      "primaryStateCount": 20,
+      "heldOutRowCount": 80,
+      "transformedRowsDigest": "fnv1a32:149ea7a0",
+      "overlapRevisionDiagnosticCount": 36
+    },
+    "routeId": "USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_ROUTE_v1",
+    "routeDigest": "fnv1a32:39eea3b0",
+    "evaluatedCases": 80,
+    "validCases": 80,
+    "unevaluableCases": 0,
+    "hardCollapseCases": 0,
+    "weakestFactorCounts": {
+      "VARROA_AVAILABILITY": 78,
+      "DISEASE_AVAILABILITY": 1,
+      "PESTICIDE_AVAILABILITY": 1
+    },
+    "weakestFactorClassCount": 3,
+    "varroaDominanceClassification": "DOES_NOT_FULLY_PERSIST_IN_NONOVERLAPPING_HISTORICAL_PANEL",
+    "comparatorResults": {
+      "meanAbsoluteImiAdditiveDifference": 0.2619061964764452,
+      "materialityThreshold": 0.02,
+      "h2NoncompensatoryDifferentiationSupported": true,
+      "spearmanIMIWithNextLoss": -0.0908161955115458,
+      "spearmanCSWithNextLoss": 0.0908161955115458,
+      "spearmanAdditiveSeverityWithNextLoss": 0.09764094199984542,
+      "spearmanWMISeverityWithNextLoss": 0.043051376505324306,
+      "clusteredBootstrap": {
+        "replicates": 1000,
+        "clustering": "STATE_WITH_ALL_FOUR_TRANSITIONS_RETAINED_PER_RESAMPLED_STATE",
+        "imi": {
+          "lower": -0.32770693910200305,
+          "upper": 0.13858979245562345
+        },
+        "cs": {
+          "lower": -0.13858979245562345,
+          "upper": 0.32770693910200305
+        }
+      },
+      "h4HeldOutAssociationSupported": false
+    },
+    "overlapRevisionDiagnostics": {
+      "comparedQuarters": ["2025_Q1", "2025_Q2"],
+      "differingStateQuarterRecords": 36,
+      "diagnosticDigest": "fnv1a32:dda55ddd"
+    },
+    "phase4Candidate": false,
+    "boundaries": {
+      "stateAggregateOnly": true,
+      "heldOutRowsOverlapDevelopmentSample": false,
+      "routeRetuned": false,
+      "colonyLevelCausationClaimed": false,
+      "universalEarlyWarningClaimed": false,
+      "finalBeeRouteValidityClaimed": false,
+      "negativeAndComparatorInferiorResultsRetained": true
+    }
+  },
+  "trackReceipt": {
+    "schemaVersion": "IMI_PHASE_3_BEE_LONGER_PANEL_RECEIPT_v1",
+    "operation": "IMI_PARALLEL_EXTERNAL_TESTS_v1",
+    "track": "BEE_LONGER_PANEL_AND_ROUTE_DISCRIMINATION",
+    "result": "PASS_CLOSED_PHASE_3_BEE_LONGER_PANEL_EXECUTED_WITH_FINDINGS_RETAINED",
+    "terminalDisposition": "PASS_CLOSED_TRACK_EXECUTION",
+    "sourceDigest": "fnv1a32:7e63a94a",
+    "routeDigest": "fnv1a32:39eea3b0",
+    "executionDigest": "fnv1a32:ac1f8972",
+    "summaryDigest": "fnv1a32:2c8e580a",
+    "minimumEvidenceSatisfied": true,
+    "phase4Candidate": false,
+    "boundaries": {
+      "stateAggregateOnly": true,
+      "heldOutRowsOverlapDevelopmentSample": false,
+      "routeRetuned": false,
+      "colonyLevelCausationClaimed": false,
+      "universalEarlyWarningClaimed": false,
+      "finalBeeRouteValidityClaimed": false,
+      "negativeAndComparatorInferiorResultsRetained": true
+    },
+    "receiptDigest": "fnv1a32:c74a89bf"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_PROTOCOL_v1",
+  "operation": "IMI_MULTI_DOMAIN_EMPIRICAL_PORTFOLIO_SYNTHESIS_v1",
+  "classificationVocabulary": [
+    "ENGINE_GENERAL",
+    "ROUTE_FAMILY_GENERAL",
+    "DOMAIN_SPECIFIC",
+    "DATASET_SPECIFIC",
+    "UNRESOLVED"
+  ],
+  "invariantConstructStatement": {
+    "construct": "RETAINED_JOINT_MANEUVERABILITY_THROUGH_A_SPECIFIED_TRAJECTORY_UNDER_MULTIPLE_DECLARED_NON_SUBSTITUTABLE_REQUIRED_FACTORS",
+    "formula": "IMI_tau(t)=product_{i in R_tau} a_i(t)",
+    "interpretation": "IMI is a route-bounded measure of how much jointly usable room remains when all admitted required factors must remain available together.",
+    "notMeasuredUniversally": [
+      "HEALTH",
+      "INTELLIGENCE",
+      "RESILIENCE",
+      "SOLVENCY",
+      "QUALITY",
+      "CAUSATION"
+    ]
+  },
+  "routeFamilies": [
+    {
+      "family": "STATIC_INSTITUTIONAL_PROFILE",
+      "currentDomain": "HEALTHCARE_QUALITY",
+      "currentStudy": "IMI_CONFIRMATORY_HOSPITAL_REFRESH_2026_v1"
+    },
+    {
+      "family": "PARTICIPANT_FEATURE_STRUCTURE",
+      "currentDomain": "SPONTANEOUS_SPEECH_LANGUAGE_STRUCTURE",
+      "currentStudy": "IMI_SPONTANEOUS_SPEECH_REPOSITORY_RERUN_2026_v1"
+    },
+    {
+      "family": "LONGITUDINAL_MULTI_STRESSOR_RESILIENCE",
+      "currentDomain": "AGRICULTURAL_COLONY_RESILIENCE",
+      "currentStudy": "IMI_USDA_HONEY_BEE_COLONY_RESILIENCE_REFRESH_2026_v1"
+    },
+    {
+      "family": "SCHEDULE_DISTRIBUTION_STRUCTURE",
+      "currentDomain": "SOVEREIGN_DEBT_SERVICE_SCHEDULE_DISPERSION",
+      "currentStudy": "IMI_DSSI_SOVEREIGN_DEBT_SERVICE_EXPANSION_2026_v1"
+    }
+  ],
+  "requiredFindingQuestions": [
+    "DOES_THE_ROUTE_PRODUCE_NONTRIVIAL_VARIANCE",
+    "ARE_REQUIRED_FACTORS_EMPIRICALLY_DISTINCT",
+    "DOES_ONE_FACTOR_DOMINATE",
+    "ARE_EXACT_WEAKEST_FACTOR_TIES_PRESENT",
+    "HOW_DOES_MULTIPLICATION_DIFFER_FROM_ADDITION_OR_WEAKEST_FACTOR_ONLY",
+    "DOES_THE_ROUTE_HAVE_AN_OUTCOME_OR_TEMPORAL_COMPARATOR",
+    "DOES_MISSINGNESS_CREATE_UNEVALUABLE_CASES",
+    "DOES_HARD_COLLAPSE_OCCUR",
+    "DO_RESULTS_REPRODUCE_ON_FROZEN_SOURCE_AND_ROUTE",
+    "IS_THE_FINDING_ENGINE_GENERAL_ROUTE_GENERAL_DOMAIN_SPECIFIC_DATASET_SPECIFIC_OR_UNRESOLVED"
+  ],
+  "crossRouteComparisonRule": "COMPARE_MEASUREMENT_BEHAVIOR_AND_EVIDENCE_PROPERTIES_NOT_RAW_IMI_MAGNITUDES",
+  "evidenceLadder": [
+    "LEVEL_0_CONCEPTUAL",
+    "LEVEL_1_EXECUTABLE",
+    "LEVEL_2_REPRODUCED",
+    "LEVEL_3_EXTERNAL_POPULATION_OR_DATASET",
+    "LEVEL_4_PROSPECTIVE",
+    "LEVEL_5_DECISION_UTILITY",
+    "LEVEL_6_INDEPENDENT",
+    "LEVEL_7_VALIDATED_DOMAIN_PRODUCT"
+  ],
+  "phase1PassRequirements": {
+    "fourCurrentDomainsPresent": true,
+    "allFindingsClassified": true,
+    "rawCrossRouteMagnitudeComparisonProhibited": true,
+    "universalMultiplicativeSuperiorityNotClaimed": true,
+    "routeEvidenceLevelsAssigned": true,
+    "phase2ReadinessDecisionProduced": true
+  },
+  "boundaries": {
+    "newDataCollectionPerformed": false,
+    "newDomainOpened": false,
+    "routeRetuningPerformed": false,
+    "heldOutValidationPerformed": false,
+    "decisionUtilityTestPerformed": false,
+    "finalValidationClaimed": false
+  }
+}

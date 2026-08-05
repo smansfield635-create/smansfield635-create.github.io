@@ -51,6 +51,19 @@ jobs:
           set -euo pipefail
           node h-earth-3d/validation/imi-empirical-platform/imi.dssi-sovereign-debt-service-expansion-2026.runner.mjs --output-dir /tmp/imi-dssi-sovereign-debt-service-expansion-2026 2>&1 | tee /tmp/imi-dssi-sovereign-debt-service-expansion-2026.log
 
+      - name: Bind exact spontaneous speech source into evidence artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/imi-spontaneous-speech-rerun-2026
+          curl --location --fail --silent --show-error \
+            'https://journals.plos.org/plosone/article/file?type=supplementary&id=10.1371/journal.pone.0324270.s003' \
+            --output /tmp/imi-spontaneous-speech-rerun-2026/pone.0324270.s003.csv
+          printf '%s  %s\n' \
+            '8aeea454a7e52ce072fa19289976cb1a06adac0ea8103c7537ec5677b72b4e2d' \
+            '/tmp/imi-spontaneous-speech-rerun-2026/pone.0324270.s003.csv' \
+            | sha256sum --check
+
       - name: Execute spontaneous speech repository rerun 2026
         shell: bash
         run: |

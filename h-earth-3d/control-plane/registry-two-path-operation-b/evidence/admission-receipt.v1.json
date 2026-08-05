@@ -1,0 +1,30 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "6456d4c7d4bb02fd079499c7533940090144215d",
+    "committedLedgerBlobSha": "dc7bd62d7e86394d83e88de51d10e8a6723b3011",
+    "lockAcquired": true,
+    "lockGeneration": 63,
+    "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:OPERATION_B:V1",
+    "observedBranchHead": "870fdc092d7cba43595bdb8f0dfbefd05e9c5d78",
+    "observedLedgerBlobSha": "093990fa9365c436c2b398a3b528be3f6845e40e",
+    "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_OPERATION_B_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "f249b4bce2ed3970d282fc72178e7b63b3e55c8a3fab281924392070b6e24781"
+  },
+  "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_OPERATION_B_v1",
+  "operationStarted": true,
+  "procedureLocatorDigest": "c42e5309e4ead151ef7ddfd7cbd05d6b5fe70c82013e085af0ab99a401ee0933",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "384fb21608b2b6a11a6c8c767d2f2781db5f7c39795f155f9d8ef7fca42126c2",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

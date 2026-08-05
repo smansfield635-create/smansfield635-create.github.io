@@ -24,14 +24,20 @@ const [plan, protocol, receipt] = await Promise.all(
 const phase1 = plan.phases?.find((phase) => phase.phase === 1);
 const phase2 = plan.phases?.find((phase) => phase.phase === 2);
 const phase3 = plan.phases?.find((phase) => phase.phase === 3);
+const phase3Progressed = ['EXECUTED_WITH_OPEN_HELD_TRACKS', 'PASS_CLOSED'].includes(phase3?.status);
 
 assert(phase1?.status === 'PASS_CLOSED', 'PHASE_1_NOT_CLOSED');
 assert(phase2?.operation === 'IMI_GENERALIZABILITY_PROTOCOL_v1', 'PHASE_2_OPERATION_MISMATCH');
 assert(phase2?.status === 'PASS_CLOSED', 'PHASE_2_NOT_CLOSED');
 assert(phase2?.result === 'PASS_CLOSED_PHASE_2_GENERALIZABILITY_PROTOCOL', 'PHASE_2_RESULT_MISMATCH');
-assert(phase3?.status === 'AUTHORIZED_NOT_EXECUTED', 'PHASE_3_STATUS_MISMATCH');
-assert(plan.currentProgramState === 'PHASE_2_PASS_CLOSED_PHASE_3_PARALLEL_EXTERNAL_TESTS_AUTHORIZED_NOT_EXECUTED', 'PROGRAM_STATE_MISMATCH');
-assert(plan.currentDecision === 'STOP_AFTER_PHASE_2_CLOSE_PHASE_3_AUTHORIZED_NOT_EXECUTED', 'PROGRAM_STOP_MISMATCH');
+assert(['AUTHORIZED_NOT_EXECUTED', 'EXECUTED_WITH_OPEN_HELD_TRACKS', 'PASS_CLOSED'].includes(phase3?.status), 'PHASE_3_STATUS_MISMATCH');
+if (!phase3Progressed) {
+  assert(plan.currentProgramState === 'PHASE_2_PASS_CLOSED_PHASE_3_PARALLEL_EXTERNAL_TESTS_AUTHORIZED_NOT_EXECUTED', 'PROGRAM_STATE_MISMATCH');
+  assert(plan.currentDecision === 'STOP_AFTER_PHASE_2_CLOSE_PHASE_3_AUTHORIZED_NOT_EXECUTED', 'PROGRAM_STOP_MISMATCH');
+} else {
+  assert(plan.currentProgramState === 'PHASE_3_EXECUTED_WITH_OPEN_HELD_TRACKS_PHASE_4_NOT_AUTHORIZED', 'PROGRAM_PROGRESSED_STATE_MISMATCH');
+  assert(plan.currentDecision === 'RESOLVE_OPEN_PHASE_3_HOLDS_WITHOUT_ROUTE_RETUNING', 'PROGRAM_PROGRESSED_DECISION_MISMATCH');
+}
 
 assert(protocol.schemaVersion === 'IMI_GENERALIZABILITY_PROTOCOL_v1', 'PROTOCOL_SCHEMA_MISMATCH');
 assert(protocol.operation === 'IMI_GENERALIZABILITY_PROTOCOL_v1', 'PROTOCOL_OPERATION_MISMATCH');
@@ -67,9 +73,11 @@ for (const [key, expected] of Object.entries(requiredBoundaries)) {
 }
 
 const protocolDigest = canonicalDigest(protocol);
-const planDigest = canonicalDigest(plan);
+const currentPlanDigest = canonicalDigest(plan);
+const frozenPhase2PlanDigest = 'fnv1a32:ab7fcb4d';
 assert(receipt.protocolDigest === protocolDigest, 'PROTOCOL_DIGEST_MISMATCH');
-assert(receipt.planDigest === planDigest, 'PLAN_DIGEST_MISMATCH');
+assert(receipt.planDigest === frozenPhase2PlanDigest, 'FROZEN_PHASE_2_PLAN_DIGEST_MISMATCH');
+if (!phase3Progressed) assert(receipt.planDigest === currentPlanDigest, 'CURRENT_PHASE_2_PLAN_DIGEST_MISMATCH');
 assert(receipt.protocolStatus === 'FROZEN', 'RECEIPT_PROTOCOL_STATUS_MISMATCH');
 assert(receipt.phase3Authorized === true && receipt.phase3Executed === false, 'PHASE_3_AUTHORITY_BOUNDARY_MISMATCH');
 assert(receipt.result === 'PASS_CLOSED_PHASE_2_GENERALIZABILITY_PROTOCOL', 'RECEIPT_RESULT_MISMATCH');
@@ -82,7 +90,8 @@ const result = {
   operation: 'IMI_GENERALIZABILITY_PROTOCOL_v1',
   result: 'PASS_CLOSED_PHASE_2_GENERALIZABILITY_PROTOCOL',
   protocolDigest,
-  planDigest,
+  frozenPhase2PlanDigest,
+  currentPlanDigest,
   receiptDigest,
   domainAdmissionCriterionCount: protocol.domainAdmissionStandard.mandatoryCriteria.length,
   preregisteredHypothesisCount: protocol.preregisteredCrossDomainHypotheses.length,
@@ -90,9 +99,10 @@ const result = {
   heldOutMandatoryRuleCount: protocol.heldOutDataRequirements.mandatoryRules.length,
   independentReproductionOutputCount: protocol.independentReproductionStandard.requiredOutputs.length,
   phase3Authorized: true,
-  phase3Executed: false,
+  phase3ExecutedAtCurrentProgramState: phase3Progressed,
   phase4Authorized: false,
   phase5Authorized: false,
+  historicalReceiptPreserved: true,
   boundaries: requiredBoundaries
 };
 

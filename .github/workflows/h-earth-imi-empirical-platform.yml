@@ -28,12 +28,16 @@ jobs:
           node-version: '22'
 
       - name: Execute IMI empirical operational suite
+        shell: bash
         run: |
-          node h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs --output-dir /tmp/imi-empirical-platform-operational-suite | tee /tmp/imi-empirical-platform-operational-suite.log
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.empirical-operational-suite.runner.mjs --output-dir /tmp/imi-empirical-platform-operational-suite 2>&1 | tee /tmp/imi-empirical-platform-operational-suite.log
 
       - name: Execute CMS hospital refresh 2026 run
+        shell: bash
         run: |
-          node h-earth-3d/validation/imi-empirical-platform/imi.cms-hospital-refresh-2026.runner.mjs --output-dir /tmp/imi-cms-hospital-refresh-2026 | tee /tmp/imi-cms-hospital-refresh-2026.log
+          set -euo pipefail
+          node h-earth-3d/validation/imi-empirical-platform/imi.cms-hospital-refresh-2026.runner.mjs --output-dir /tmp/imi-cms-hospital-refresh-2026 2>&1 | tee /tmp/imi-cms-hospital-refresh-2026.log
 
       - name: Upload IMI empirical platform operational evidence
         if: always()

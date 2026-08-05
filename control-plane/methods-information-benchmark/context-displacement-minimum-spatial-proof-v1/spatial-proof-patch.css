@@ -1,0 +1,123 @@
+.model-object {
+  min-height: clamp(205px, 29vh, 285px);
+}
+
+.model-object:not(.is-focused) .expression-body,
+.model-object:not(.is-focused) .expression-callout,
+.model-object:not(.is-focused) .expression-footer {
+  display: none;
+}
+
+.model-object:not(.is-focused) .expression {
+  min-height: 62px;
+}
+
+.stage-heading {
+  transition:
+    opacity var(--focus-duration) ease,
+    transform var(--focus-duration) var(--ease-spatial);
+}
+
+.stage.is-focused .stage-heading {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.stage.is-focused .model-object.is-focused {
+  transform: translate3d(-50%, calc(-50% + 18px), 180px) rotateY(0deg) scale(1.04);
+  max-height: min(58vh, 540px);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.model-object .return-button {
+  display: none !important;
+}
+
+.stage-navigation,
+.model-navigation {
+  transition: opacity 220ms ease;
+}
+
+.spatial-viewport.is-focused .stage-navigation,
+.spatial-viewport.is-focused .model-navigation {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.return-focus {
+  position: absolute;
+  z-index: 25;
+  left: clamp(.8rem, 2vw, 1.5rem);
+  top: 1rem;
+  padding: .6rem .85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(5, 12, 19, .86);
+  color: var(--text);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .55rem;
+    padding-block: .65rem;
+  }
+
+  .brand-block {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .7rem;
+  }
+
+  .brand-block .eyebrow {
+    display: none;
+  }
+
+  .brand-block h1 {
+    max-width: none;
+    margin: 0;
+    font-size: 1.05rem;
+    white-space: nowrap;
+  }
+
+  .top-actions {
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  .quiet-button {
+    flex: 1;
+    padding: .42rem .5rem;
+    font-size: .7rem;
+  }
+
+  .stage-heading p {
+    display: none;
+  }
+
+  .model-object {
+    width: min(78vw, 320px);
+    min-height: 225px;
+    padding: .9rem;
+  }
+
+  .stage.is-focused .model-object.is-focused {
+    width: min(86vw, 350px);
+    max-height: 52vh;
+    transform: translate3d(-50%, calc(-50% + 10px), 180px) rotateY(0deg) scale(1);
+  }
+
+  .expression-body {
+    font-size: .7rem;
+  }
+
+  .model-object:not(.is-focused) .expression {
+    min-height: 48px;
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "environment": {
+    "Pillow": "12.2.0",
+    "cryptography": "46.0.4",
+    "jsonschema": "4.26.0",
+    "networkx": "3.6.1",
+    "python": "3.13.5"
+  },
+  "operation": "EXTERNALLY_AUTHORED_SOFTWARE_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "result_class": "EXPLORATORY_POST_HOC_EXTERNAL_SOFTWARE_BRIDGE",
+  "scientific_boundary": "Exploratory bridge over externally authored software implementations under theory-team-designed wrappers and interventions. This is not a preregistered natural-system test, independent human replication, or validation of a universal law.",
+  "summary": {
+    "claim_limit": "Exploratory bridge over externally authored software implementations under theory-team-designed wrappers and interventions. This is not a preregistered natural-system test, independent human replication, or validation of a universal law.",
+    "disposition": "EXTERNAL_SOFTWARE_SYSTEMS_SURVIVED_EXPLORATORY_BRIDGE",
+    "exact_relation_recovery": "4/4",
+    "held_out_predictions": {
+      "additive_capacity": "12/24",
+      "output_continuity_identity": "16/24",
+      "route_aware": "24/24"
+    },
+    "matched_output_discrimination": {
+      "output_continuity_identity_cases": "4/12",
+      "route_aware_cases": "12/12",
+      "systems": "4/4"
+    },
+    "systems": 4
+  },
+  "systems": [
+    {
+      "candidate_relations": [
+        "R01",
+        "R02",
+        "R03",
+        "R04",
+        "R05"
+      ],
+      "exact_relation_recovery": true,
+      "external_package": "cryptography",
+      "held_out_scores": {
+        "additive_capacity": 3,
+        "output_continuity_identity": 4,
+        "route_aware": 6,
+        "total": 6
+      },
+      "matched_output_scores": {
+        "output_continuity_identity": "1/3",
+        "route_aware": "3/3"
+      },
+      "recovered_constitutive_relations": [
+        "R01",
+        "R02",
+        "R03"
+      ],
+      "system_id": "SYS_CRYPTOGRAPHIC_VERIFICATION",
+      "truth_constitutive_relations": [
+        "R01",
+        "R02",
+        "R03"
+      ]
+    },
+    {
+      "candidate_relations": [
+        "R11",
+        "R12",
+        "R13",
+        "R14",
+        "R15"
+      ],
+      "exact_relation_recovery": true,
+      "external_package": "jsonschema",
+      "held_out_scores": {
+        "additive_capacity": 3,
+        "output_continuity_identity": 4,
+        "route_aware": 6,
+        "total": 6
+      },
+      "matched_output_scores": {
+        "output_continuity_identity": "1/3",
+        "route_aware": "3/3"
+      },
+      "recovered_constitutive_relations": [
+        "R11",
+        "R12",
+        "R13"
+      ],
+      "system_id": "SYS_JSON_SCHEMA_VALIDATION",
+      "truth_constitutive_relations": [
+        "R11",
+        "R12",
+        "R13"
+      ]
+    },
+    {
+      "candidate_relations": [
+        "R21",
+        "R22",
+        "R23",
+        "R24",
+        "R25"
+      ],
+      "exact_relation_recovery": true,
+      "external_package": "networkx",
+      "held_out_scores": {
+        "additive_capacity": 3,
+        "output_continuity_identity": 4,
+        "route_aware": 6,
+        "total": 6
+      },
+      "matched_output_scores": {
+        "output_continuity_identity": "1/3",
+        "route_aware": "3/3"
+      },
+      "recovered_constitutive_relations": [
+        "R21",
+        "R22",
+        "R23"
+      ],
+      "system_id": "SYS_WEIGHTED_GRAPH_ROUTING",
+      "truth_constitutive_relations": [
+        "R21",
+        "R22",
+        "R23"
+      ]
+    },
+    {
+      "candidate_relations": [
+        "R31",
+        "R32",
+        "R33",
+        "R34",
+        "R35"
+      ],
+      "exact_relation_recovery": true,
+      "external_package": "Pillow",
+      "held_out_scores": {
+        "additive_capacity": 3,
+        "output_continuity_identity": 4,
+        "route_aware": 6,
+        "total": 6
+      },
+      "matched_output_scores": {
+        "output_continuity_identity": "1/3",
+        "route_aware": "3/3"
+      },
+      "recovered_constitutive_relations": [
+        "R31",
+        "R32",
+        "R33"
+      ],
+      "system_id": "SYS_IMAGE_IDENTITY_ROUNDTRIP",
+      "truth_constitutive_relations": [
+        "R31",
+        "R32",
+        "R33"
+      ]
+    }
+  ]
+}

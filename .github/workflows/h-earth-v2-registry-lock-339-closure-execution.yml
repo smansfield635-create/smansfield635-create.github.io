@@ -1,0 +1,145 @@
+name: H-Earth V2 Registry Lock 339 Closure Execution
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+    paths:
+      - '.github/workflows/h-earth-v2-registry-lock-339-closure-execution.yml'
+
+permissions:
+  contents: write
+  actions: read
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: h-earth-v2-registry-lock-339-closure
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  CARRIER_PATH: .github/workflows/h-earth-v2-registry-lock-339-closure-execution.yml
+  EXACT_MERGE_COMMIT: e5be5aeb0efc4c7d2f98f34259b169d49e11232b
+  AUTHORIZED_REGISTRY_HEAD: da74dcf214bb1ff542894ad343a7102899d68bde
+  SOURCE_HEAD: 7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602
+  SOURCE_OPERATION: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002
+  REGISTRY_OPERATION: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_REPOSITORY_REGISTRY_SCOPE_RESOLUTION_001
+  REGISTRY_LOCK_SCOPE: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_EXACT_REGISTRY_TWO_PATH_SCOPE
+  SOURCE_LOCK_SCOPE: H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002_EXACT_13_PATH_SCOPE
+  ROLE4_AUTHORIZATION_COMMENT_ID: '5200961485'
+  POSTMERGE_PREFLIGHT_RUN: '31075566797'
+  POSTMERGE_PREFLIGHT_ARTIFACT: '8957345147'
+  POSTMERGE_PREFLIGHT_ARTIFACT_DIGEST: sha256:c800f0bdc2291e9e8beae09b482f1b6219ba14612ad1453a72d2999b1c0b358b
+
+jobs:
+  close-lock-339:
+    if: ${{ github.event.pull_request.head.ref == 'execution/h-earth-v2-registry-lock-339-closure-001' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact disposable carrier
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact carrier boundary and preclosure state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXACT_MERGE_COMMIT"
+          test "$(git diff --name-only HEAD^ HEAD)" = "$CARRIER_PATH"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'};
+          const api=`https://api.github.com/repos/${process.env.REPOSITORY}`;
+          const get=async path=>{const r=await fetch(`${api}${path}`,{headers});const t=await r.text();let b;try{b=t?JSON.parse(t):null}catch{b={raw:t}}if(!r.ok)throw Error(`GITHUB_API_ERROR:${r.status}:${path}:${t}`);return b};
+          const req=(v,c)=>{if(!v)throw Error(c)};
+          const decode=f=>JSON.parse(Buffer.from(String(f.content).replace(/\s/g,''),'base64').toString());
+          const main=await get('/git/ref/heads/main');
+          req(main.object.sha===process.env.EXACT_MERGE_COMMIT,'CURRENT_MAIN_MISMATCH');
+          const pr657=await get('/pulls/657');
+          req(pr657.state==='closed'&&pr657.merged===true,'PR_657_NOT_MERGED');
+          req(pr657.head.sha===process.env.AUTHORIZED_REGISTRY_HEAD,'PR_657_HEAD_MISMATCH');
+          req(pr657.merge_commit_sha===process.env.EXACT_MERGE_COMMIT,'PR_657_MERGE_COMMIT_MISMATCH');
+          const pr652=await get('/pulls/652');
+          req(pr652.state==='open'&&pr652.draft===true&&pr652.merged===false,'PR_652_STATE_MISMATCH');
+          req(pr652.head.sha===process.env.SOURCE_HEAD,'PR_652_HEAD_MISMATCH');
+          const auth=await get(`/issues/comments/${process.env.ROLE4_AUTHORIZATION_COMMENT_ID}`);
+          req(['OWNER','MEMBER','COLLABORATOR'].includes(auth.author_association),'ROLE4_AUTHORIZATION_ASSOCIATION_INVALID');
+          for(const token of ['PASS_EXACT_REGISTRY_HEAD_MERGE_AUTHORIZED',process.env.EXACT_MERGE_COMMIT,'ROLE_4_AUTHORIZES_LOCK_339_TERMINATION = PASS_CLOSED',process.env.POSTMERGE_PREFLIGHT_RUN])req(String(auth.body).includes(token),`ROLE4_AUTHORIZATION_TOKEN_MISSING:${token}`);
+          const run=await get(`/actions/runs/${process.env.POSTMERGE_PREFLIGHT_RUN}`);
+          req(run.status==='completed'&&run.conclusion==='success','POSTMERGE_PREFLIGHT_NOT_SUCCESS');
+          req(run.head_sha===process.env.SOURCE_HEAD,'POSTMERGE_PREFLIGHT_SOURCE_HEAD_MISMATCH');
+          req(Array.isArray(run.pull_requests)&&run.pull_requests.some(p=>p.base?.sha===process.env.EXACT_MERGE_COMMIT&&p.head?.sha===process.env.SOURCE_HEAD),'POSTMERGE_PREFLIGHT_BASE_HEAD_BINDING_MISMATCH');
+          const artifacts=await get(`/actions/runs/${process.env.POSTMERGE_PREFLIGHT_RUN}/artifacts?per_page=100`);
+          const artifact=artifacts.artifacts.find(a=>String(a.id)===process.env.POSTMERGE_PREFLIGHT_ARTIFACT);
+          req(artifact&&artifact.digest===process.env.POSTMERGE_PREFLIGHT_ARTIFACT_DIGEST,'POSTMERGE_PREFLIGHT_ARTIFACT_MISMATCH');
+          const ledgerFile=await get('/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1');
+          const ledger=decode(ledgerFile),active=Object.values(ledger.activeScopes);
+          const lock339=active.find(x=>x.lockGeneration===339);
+          req(lock339&&lock339.operationId===process.env.REGISTRY_OPERATION&&lock339.lockScope===process.env.REGISTRY_LOCK_SCOPE&&lock339.state==='ADMITTED_LOCKED'&&lock339.released===false,'LOCK_339_PRESTATE_MISMATCH');
+          const lock322=active.find(x=>x.lockGeneration===322);
+          req(lock322&&lock322.operationId===process.env.SOURCE_OPERATION&&lock322.lockScope===process.env.SOURCE_LOCK_SCOPE&&lock322.state==='ADMITTED_LOCKED'&&lock322.released===false,'LOCK_322_PRESTATE_MISMATCH');
+          fs.writeFileSync('/tmp/preclosure.json',JSON.stringify({schema:'H_EARTH_V2_REGISTRY_LOCK_339_PRECLOSURE_RECEIPT_v1',result:'PASS_READY_TO_CLOSE',currentMain:main.object.sha,registryPr:657,registryHead:pr657.head.sha,registryMergeCommit:pr657.merge_commit_sha,sourcePr:652,sourceHead:pr652.head.sha,postmergePreflightRun:Number(process.env.POSTMERGE_PREFLIGHT_RUN),postmergePreflightArtifact:Number(process.env.POSTMERGE_PREFLIGHT_ARTIFACT),postmergePreflightArtifactDigest:artifact.digest,lock339State:lock339.state,lock339Released:lock339.released,lock322State:lock322.state,lock322Released:lock322.released,productMutation:false,terrainMutation:false,liveEnvironmentMutation:false,estateMutation:false,manorMutation:false},null,2)+'\n');
+          NODE
+
+      - name: Execute canonical lock-manager closure
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/operation-intake/repository-operation-lock-manager.v1.mjs)" = "6fc0199c9dc943b8cdf3efe7c789f0e1888774b8"
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository "$REPOSITORY" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id "$REGISTRY_OPERATION" \
+            --lock-scope "$REGISTRY_LOCK_SCOPE" \
+            --lock-generation 339 \
+            --terminal-disposition PASS_CLOSED \
+            --output /tmp/lock-339-closure.json
+          node -e "const r=require('/tmp/lock-339-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockGeneration!==339||r.terminalDisposition!=='PASS_CLOSED'||r.lockReleased!==true)process.exit(1)"
+
+      - name: Verify postclosure custody
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const closure=JSON.parse(fs.readFileSync('/tmp/lock-339-closure.json'));
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'};
+          const api=`https://api.github.com/repos/${process.env.REPOSITORY}`;
+          const get=async path=>{const r=await fetch(`${api}${path}`,{headers});const t=await r.text();let b;try{b=t?JSON.parse(t):null}catch{b={raw:t}}if(!r.ok)throw Error(`GITHUB_API_ERROR:${r.status}:${path}:${t}`);return b};
+          const req=(v,c)=>{if(!v)throw Error(c)};
+          const main=await get('/git/ref/heads/main');req(main.object.sha===process.env.EXACT_MERGE_COMMIT,'MAIN_MOVED_DURING_CLOSURE');
+          const lockRef=await get('/git/ref/heads/operation-locks/repository-operation-intake-v1');req(lockRef.object.sha===closure.closureCommitSha,'LOCK_REF_CLOSURE_COMMIT_MISMATCH');
+          const ledgerFile=await get('/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1');
+          const ledger=JSON.parse(Buffer.from(String(ledgerFile.content).replace(/\s/g,''),'base64').toString()),active=Object.values(ledger.activeScopes);
+          req(!active.some(x=>x.lockGeneration===339),'LOCK_339_STILL_ACTIVE');
+          const terminal=ledger.terminalHistory.find(x=>x.lockGeneration===339);
+          req(terminal&&terminal.operationId===process.env.REGISTRY_OPERATION&&terminal.lockScope===process.env.REGISTRY_LOCK_SCOPE&&terminal.state==='TERMINAL'&&terminal.terminalDisposition==='PASS_CLOSED'&&terminal.released===true,'LOCK_339_TERMINAL_RECORD_MISMATCH');
+          const lock322=active.find(x=>x.lockGeneration===322);
+          req(lock322&&lock322.operationId===process.env.SOURCE_OPERATION&&lock322.lockScope===process.env.SOURCE_LOCK_SCOPE&&lock322.state==='ADMITTED_LOCKED'&&lock322.released===false,'LOCK_322_POSTSTATE_MISMATCH');
+          const pr652=await get('/pulls/652');req(pr652.state==='open'&&pr652.draft===true&&pr652.merged===false&&pr652.head.sha===process.env.SOURCE_HEAD,'PR_652_POSTSTATE_MISMATCH');
+          fs.writeFileSync('/tmp/postclosure.json',JSON.stringify({schema:'H_EARTH_V2_REGISTRY_LOCK_339_POSTCLOSURE_RECEIPT_v1',result:'PASS_CLOSED',closureRun:Number(process.env.GITHUB_RUN_ID),closureCommit:closure.closureCommitSha,committedLedgerBlob:closure.committedLedgerBlobSha,lock339TerminalDisposition:terminal.terminalDisposition,lock339Released:terminal.released,lock322State:lock322.state,lock322Released:lock322.released,sourcePrState:'OPEN_DRAFT_UNMERGED',sourcePrHead:pr652.head.sha,currentMain:main.object.sha,productMutation:false,terrainMutation:false,liveEnvironmentMutation:false,estateMutation:false,manorMutation:false,nextLawfulHolder:'ROLE_3_FRESH_INDEPENDENT_VERIFICATION_AUTHORITY'},null,2)+'\n');
+          NODE
+
+      - name: Upload exact closure receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-registry-lock-339-closure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/preclosure.json
+            /tmp/lock-339-closure.json
+            /tmp/postclosure.json
+          if-no-files-found: error
+          retention-days: 90

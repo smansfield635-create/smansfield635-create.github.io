@@ -1,0 +1,35 @@
+{
+  "archived_result_mutation_permitted": false,
+  "contract_id": "ICR_OBSERVER_BLINDED_HIDDEN_STRUCTURE_CONTRACT_v1",
+  "core_mutation_permitted": false,
+  "observer_blinding": "COMPUTATIONAL_PROCESS_ISOLATION",
+  "observer_may_access": [
+    "public-relation-catalog.v1.json",
+    "training-observations.json",
+    "heldout-cases.json"
+  ],
+  "observer_may_not_access": [
+    "hidden_system_v1.py",
+    "hidden-truth.v1.json",
+    "heldout-outcomes.json"
+  ],
+  "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_OBSERVER_BLINDED_HIDDEN_STRUCTURE_GAUNTLET_v1",
+  "post_result_repair_permitted": false,
+  "primary_metrics": {
+    "boundary_exact_match": true,
+    "constitutive_relation_exact_match": true,
+    "heldout_prediction_accuracy_required": 1.0,
+    "matched_output_discrimination_required": true,
+    "ordered_route_exact_match": true
+  },
+  "scientific_boundary": {
+    "computational_blind_recovery_tested": true,
+    "cross_domain_invariance": false,
+    "independent_human_observer_recovery": false,
+    "natural_system_validity": false,
+    "withheld_intervention_prediction_tested": true
+  },
+  "scope": "SECOND_ENGINEERED_OPAQUE_RELATION_SYSTEM",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "version": "1.0.0"
+}

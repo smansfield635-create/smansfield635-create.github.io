@@ -1,0 +1,81 @@
+{
+  "communication_rule": "AFTER_PUBLIC_OBSERVATION_RELEASE_ALL_AUTHOR_OBSERVER_COMMUNICATION_IS_PROHIBITED_EXCEPT_CUSTODIAN_LOGGED_CLARIFICATIONS_SHARED_TO_ALL_TEAMS",
+  "required_hash_commitments": [
+    "SYSTEM_TRUTH_PACKAGE_SHA256",
+    "PUBLIC_OBSERVATION_PACKAGE_SHA256",
+    "HELDOUT_INTERVENTION_PLAN_SHA256",
+    "OBSERVER_SUBMISSION_SHA256",
+    "BASELINE_SUBMISSION_SHA256",
+    "UNBLINDING_PACKAGE_SHA256"
+  ],
+  "roles": {
+    "baseline_team": {
+      "may": [
+        "fit preregistered baseline models"
+      ],
+      "may_not": [
+        "receive additional data",
+        "use hidden truth"
+      ]
+    },
+    "custodian": {
+      "may": [
+        "hold encrypted truth",
+        "verify hash commitments",
+        "release public packages",
+        "unblind after prediction freeze"
+      ],
+      "may_not": [
+        "provide inferential guidance",
+        "modify submissions"
+      ]
+    },
+    "evaluator": {
+      "may": [
+        "score submissions",
+        "apply frozen adjudication"
+      ],
+      "may_not": [
+        "change thresholds",
+        "redefine failures",
+        "exclude results posthoc"
+      ]
+    },
+    "observer_team": {
+      "may": [
+        "infer boundary",
+        "infer relations",
+        "predict withheld outcomes"
+      ],
+      "may_not": [
+        "access hidden truth",
+        "communicate with system authors after observation release",
+        "repair predictions after freeze"
+      ]
+    },
+    "protocol_authority": {
+      "may": [
+        "freeze protocol",
+        "verify manifest",
+        "answer predata semantic questions"
+      ],
+      "may_not": [
+        "author primary systems",
+        "access hidden truth",
+        "alter protocol after public observation release"
+      ]
+    },
+    "system_author": {
+      "may": [
+        "build external system",
+        "declare hidden truth",
+        "precommit interventions"
+      ],
+      "may_not": [
+        "serve as observer for own system",
+        "alter truth after commitment"
+      ]
+    }
+  },
+  "version": "1.0.0"
+}

@@ -10,7 +10,7 @@ permissions:
 env:
   C: control-plane/methods-information-benchmark/context-displacement-minimum-real-3d-proof-v1
   OP: METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_MINIMUM_REAL_3D_PROOF_v1
-  SCOPE: METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT:EXISTING_SPATIAL_CONSTRUCT:MINIMUM_REAL_3D_PROOF:V1
+  SCOPE: METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT:MINIMUM_REAL_3D_PROOF:CONSTRUCTION:V1
   LOCK_GENERATION: '316'
   LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
   H: ${{ github.event.pull_request.head.sha }}

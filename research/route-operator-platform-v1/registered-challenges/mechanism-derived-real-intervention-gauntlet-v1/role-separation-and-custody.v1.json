@@ -1,0 +1,85 @@
+{
+  "custody_sequence": [
+    "SOURCE_AND_TRUTH_PACKAGE_SEALED",
+    "PUBLIC_PACKAGE_HASHED_AND_RELEASED",
+    "ALL_PREDICTIONS_HASHED_AND_TIMESTAMPED",
+    "SUBMISSION_FREEZE_VERIFIED",
+    "OUTCOMES_UNBLINDED",
+    "INDEPENDENT_SCORING",
+    "SINGLE_PRIMARY_DISPOSITION"
+  ],
+  "leakage_rule": "ANY_MATERIAL_HELDOUT_OUTCOME_LEAKAGE_BEFORE_ALL_REQUIRED_PREDICTIONS_ARE_FROZEN_INVALIDATES_THE_AFFECTED_EPISODE_AND_MAY_TRIGGER_UNEVALUABLE_DISPOSITION",
+  "roles": {
+    "comparator_team": {
+      "may": [
+        "fit_frozen_comparators",
+        "submit_frozen_predictions"
+      ],
+      "may_not": [
+        "access_hidden_truth",
+        "change_model_class_after_outcome_access"
+      ]
+    },
+    "documentation_and_outcome_custodian": {
+      "may": [
+        "seal_truth",
+        "hash_sources",
+        "redact_outcomes",
+        "release_public_packages",
+        "unblind_outcomes"
+      ],
+      "may_not": [
+        "submit_primary_predictions",
+        "score_models"
+      ]
+    },
+    "independent_evaluator": {
+      "may": [
+        "verify_hashes",
+        "score_predictions",
+        "assign_disposition"
+      ],
+      "may_not": [
+        "alter_protocol",
+        "impute_prohibited_outcomes",
+        "exclude_adverse_model_failures"
+      ]
+    },
+    "protocol_authority": {
+      "may": [
+        "freeze_protocol",
+        "clarify_predata_literal_errors"
+      ],
+      "may_not": [
+        "author_primary_system_documentation",
+        "select_heldout_outcomes",
+        "score_own_predictions",
+        "access_unblinded_outcomes_before_freeze"
+      ]
+    },
+    "system_owner_or_historical_source": {
+      "may": [
+        "provide_documentation",
+        "provide_intervention_records",
+        "verify_operational_context"
+      ],
+      "may_not": [
+        "tune_relations_to_theory",
+        "alter_records_after_prediction_freeze"
+      ]
+    },
+    "theory_observer_team": {
+      "may": [
+        "derive_relations",
+        "submit_frozen_predictions"
+      ],
+      "may_not": [
+        "access_hidden_truth",
+        "coordinate_primary_maps",
+        "change_predictions_after_freeze"
+      ],
+      "minimum_teams": 2
+    }
+  },
+  "version": "1.0.0"
+}

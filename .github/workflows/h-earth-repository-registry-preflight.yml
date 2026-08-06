@@ -1,62 +1,70 @@
-name: H-Earth V2 Six-Path Registry Successor Verification
+name: H-Earth V2 Six-Path Registry Post-Merge Ratification
 
 on:
   pull_request:
     branches: [main]
     paths:
       - '.github/workflows/h-earth-repository-registry-preflight.yml'
-  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   actions: read
   pull-requests: read
 
 env:
-  GOVERNING_MAIN: 3b21d30763ca0368110811351bb3d3c8a042af47
+  PRE_MERGE_MAIN: 3b21d30763ca0368110811351bb3d3c8a042af47
   CANDIDATE_HEAD: 85635c737c6f240f68e449478d6a996dfff84aa0
-  CANDIDATE_BRANCH: repair/h-earth-v2-six-path-inner-registry-v1-001
+  MERGE_COMMIT: c3b76c497e9bec243f5ca3bdc2831d50ec19a1bb
+  MERGE_TREE: 344ef41f5505be4ca43f367a5ad93583e168f730
   COMMIT_A: 563464f3b8b5b8045677962986e3ba00fbeed960
   COMMIT_A_TREE: f26d3acb6d45ce642c3efa048809a3740256b770
   NEW_NODE_ID: H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_SCOPE
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  OPERATION_ID: H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_INTERNAL_REGISTRY_SUCCESSOR_R_001
+  LOCK_SCOPE: H_EARTH:V2_ROUTER_INSTRUCTION_LOCK_CLOSURE:INTERNAL_REGISTRY_SUCCESSOR:R:V1
+  LOCK_GENERATION: '283'
 
 jobs:
-  reproduce:
+  reproduce-active-merge:
     name: ${{ matrix.job_name }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - job_name: exact-six-path-builder
-            holder: H_EARTH_V2_SIX_PATH_REGISTRY_BUILDER
+          - job_name: active-merge-builder
+            holder: H_EARTH_V2_SIX_PATH_POSTMERGE_BUILDER
             artifact: builder
-          - job_name: exact-six-path-fresh-verifier
-            holder: H_EARTH_V2_SIX_PATH_REGISTRY_FRESH_VERIFIER
+          - job_name: active-merge-fresh-verifier
+            holder: H_EARTH_V2_SIX_PATH_POSTMERGE_FRESH_VERIFIER
             artifact: verifier
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.CANDIDATE_HEAD }}
+          ref: ${{ env.MERGE_COMMIT }}
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Bind exact candidate and live ledger
+      - name: Bind exact merge identity and live locks
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_HEAD"
-          test "$(git merge-base HEAD "$GOVERNING_MAIN")" = "$GOVERNING_MAIN"
+          test "$(git rev-parse HEAD^{commit})" = "$MERGE_COMMIT"
+          test "$(git rev-parse HEAD^{tree})" = "$MERGE_TREE"
+          read -r commit parent1 parent2 < <(git rev-list --parents -n 1 HEAD)
+          test "$commit" = "$MERGE_COMMIT"
+          test "$parent1" = "$PRE_MERGE_MAIN"
+          test "$parent2" = "$CANDIDATE_HEAD"
+          test "$(git rev-parse "$CANDIDATE_HEAD^{tree}")" = "$MERGE_TREE"
           test "$(git rev-parse "$COMMIT_A^{tree}")" = "$COMMIT_A_TREE"
-          mapfile -t changed < <(git diff --name-only "$GOVERNING_MAIN" "$CANDIDATE_HEAD" | sort)
+          mapfile -t changed < <(git diff --name-only "$PRE_MERGE_MAIN" "$MERGE_COMMIT" | sort)
           test "${#changed[@]}" -eq 2
           test "${changed[0]}" = 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.v2-router-instruction-lock-closure-successor-scope.js'
           test "${changed[1]}" = 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
-          test "$(git rev-parse "$CANDIDATE_HEAD:h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-successor-evaluator-exact-head-v2.js")" = 'd164fdf7b157f37a22ebfb6a90c90f87deef5f88'
           git fetch origin operation-locks/repository-operation-intake-v1
           git show FETCH_HEAD:.github/operation-intake/active-operation-ledger.v1.json > /tmp/live-ledger.json
-      - name: Run positive and negative preflight
+      - name: Run active positive and negative preflight
         env:
           OUT: ${{ runner.temp }}/${{ matrix.artifact }}
         run: |
@@ -72,16 +80,16 @@ jobs:
           PATHS
           printf '%s\n' 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/unregistered-neighbor.v1.json' > "$OUT/negative-path.txt"
           node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
-            --paths-file "$OUT/paths.txt" --task "six-path-${{ matrix.artifact }}" \
+            --paths-file "$OUT/paths.txt" --task "postmerge-six-path-${{ matrix.artifact }}" \
             --mutation-intent --output "$OUT/positive.json"
           set +e
           node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
-            --paths-file "$OUT/negative-path.txt" --task "negative-neighbor-${{ matrix.artifact }}" \
+            --paths-file "$OUT/negative-path.txt" --task "postmerge-negative-neighbor-${{ matrix.artifact }}" \
             --mutation-intent --output "$OUT/negative.json"
           status=$?
           set -e
           test "$status" -ne 0
-      - name: Verify exact occurrences and preserved chains
+      - name: Reproduce active registry and preserved chains
         env:
           HOLDER: ${{ matrix.holder }}_${{ github.run_id }}_${{ github.run_attempt }}
           OUT: ${{ runner.temp }}/${{ matrix.artifact }}
@@ -93,7 +101,7 @@ jobs:
           import registryFacade from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.v2-router-instruction-lock-closure-successor-scope.js';
           import { runHEarthC2R1MC5AutomaticRegistryPreflight } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
 
-          const newNodeId='H_EARTH_V2_ROUTER_INSTRUCTION_LOCK_CLOSURE_SUCCESSOR_EXACT_SCOPE';
+          const newNodeId=process.env.NEW_NODE_ID;
           const parentNodeId='H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_EXACT_HEAD_SCOPE_V2';
           const mapWideNodeId='H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_ESTATE_RESERVATION_INSTRUMENT';
           const expected=new Map([
@@ -157,72 +165,149 @@ jobs:
           const active=(id,g)=>objects.find(x=>x.operationId===id&&Number(x.lockGeneration)===g&&x.state==='ADMITTED_LOCKED'&&x.released===false);
           const lock279=active('H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001',279);
           const lock280=active('H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001',280);
+          const lock283=active(process.env.OPERATION_ID,Number(process.env.LOCK_GENERATION));
           if(!lock279)throw Error('LOCK_279_NOT_PRESERVED_ACTIVE');
           if(!lock280)throw Error('LOCK_280_NOT_PRESERVED_ACTIVE');
+          if(!lock283)throw Error('LOCK_283_NOT_ACTIVE');
 
           const payload={
-            schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_FINGERPRINT_v1',
-            governingMain:process.env.GOVERNING_MAIN,candidateHead:process.env.CANDIDATE_HEAD,
+            schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_POSTMERGE_FINGERPRINT_v1',
+            preMergeMain:process.env.PRE_MERGE_MAIN,candidateHead:process.env.CANDIDATE_HEAD,
+            mergeCommit:process.env.MERGE_COMMIT,mergeTree:process.env.MERGE_TREE,
             commitA:process.env.COMMIT_A,commitATree:process.env.COMMIT_A_TREE,
             nodeId:newNodeId,parentNodeId,mapWideNodeId,
             exactOccurrences:[...expected.entries()].sort((a,b)=>a[0].localeCompare(b[0])),
             mapWidePathCount:13,mapWideResolvedNodeIds:[...mapWideNodeIds].sort(),
             positiveDisposition:'PASS',negativeDisposition:'STOP',c2Disposition:'PASS',
             lock279ScopeHash:lock279.scopeHash,lock280ScopeHash:lock280.scopeHash,
-            lock279Preserved:true,lock280Preserved:true
+            lock283ScopeHash:lock283.scopeHash,
+            lock279Preserved:true,lock280Preserved:true,lock283ActiveBeforeClosure:true
           };
-          const receipt={schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_EXECUTION_RECEIPT_v1',result:'PASS_CLOSED_EXACT_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED',executionHolder:process.env.HOLDER,...payload,packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),productMutationPerformed:false,terrainMutationPerformed:false,lockClosurePerformed:false,mergePerformed:false};
+          const receipt={schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_POSTMERGE_EXECUTION_RECEIPT_v1',result:'PASS_CLOSED_ACTIVE_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED',executionHolder:process.env.HOLDER,...payload,packageFingerprint:crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex'),productMutationPerformed:false,terrainMutationPerformed:false,lockClosurePerformed:false,mergePerformed:false};
           fs.writeFileSync(`${process.env.OUT}/receipt.json`,JSON.stringify(receipt,null,2)+'\n');
           fs.writeFileSync(`${process.env.OUT}/c2-receipt.json`,JSON.stringify(c2,null,2)+'\n');
           NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: h-earth-v2-six-path-${{ matrix.artifact }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: h-earth-v2-six-path-postmerge-${{ matrix.artifact }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/${{ matrix.artifact }}/
           if-no-files-found: error
           retention-days: 90
 
-  certify:
-    name: exact-head-merge-authority-certification
-    needs: reproduce
+  ratify-and-terminate:
+    name: active-main-ratification-and-generation-283-closure
+    needs: reproduce-active-merge
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.GOVERNING_MAIN }}
+          ref: ${{ env.MERGE_COMMIT }}
           fetch-depth: 0
           persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - uses: actions/download-artifact@v4
         with:
-          name: h-earth-v2-six-path-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          name: h-earth-v2-six-path-postmerge-builder-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/builder
       - uses: actions/download-artifact@v4
         with:
-          name: h-earth-v2-six-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          name: h-earth-v2-six-path-postmerge-verifier-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/verifier
-      - name: Certify exact-head merge authority
+      - name: Verify independent fingerprints and durable active main
         run: |
           set -euo pipefail
-          git fetch origin main "$CANDIDATE_BRANCH"
-          test "$(git rev-parse origin/main)" = "$GOVERNING_MAIN"
-          test "$(git rev-parse "origin/$CANDIDATE_BRANCH")" = "$CANDIDATE_HEAD"
+          git fetch origin main operation-locks/repository-operation-intake-v1
+          git merge-base --is-ancestor "$MERGE_COMMIT" origin/main
+          for path in \
+            h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.v2-router-instruction-lock-closure-successor-scope.js \
+            h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js; do
+            test "$(git rev-parse "$MERGE_COMMIT:$path")" = "$(git rev-parse "origin/main:$path")"
+          done
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const b=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'utf8'));
+          const v=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'utf8'));
+          if(b.result!=='PASS_CLOSED_ACTIVE_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED'||v.result!==b.result)throw Error('POSTMERGE_RESULT_MISMATCH');
+          if(b.executionHolder===v.executionHolder)throw Error('EXECUTION_HOLDERS_NOT_DISTINCT');
+          if(b.packageFingerprint!==v.packageFingerprint)throw Error('POSTMERGE_FINGERPRINT_MISMATCH');
+          fs.mkdirSync('/tmp/h-earth-v2-six-path-registry-terminal',{recursive:true});
+          fs.writeFileSync('/tmp/h-earth-v2-six-path-registry-terminal/builder-receipt.json',JSON.stringify(b,null,2)+'\n');
+          fs.writeFileSync('/tmp/h-earth-v2-six-path-registry-terminal/verifier-receipt.json',JSON.stringify(v,null,2)+'\n');
+          NODE
+      - name: Close generation 283 pass closed
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3 4; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
+              --operation-id "$OPERATION_ID" --lock-scope "$LOCK_SCOPE" \
+              --lock-generation "$LOCK_GENERATION" --terminal-disposition PASS_CLOSED \
+              --output /tmp/h-earth-v2-six-path-registry-terminal/generation-283-closure.json; then
+              break
+            fi
+            test "$attempt" -lt 4
+            sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/h-earth-v2-six-path-registry-terminal/generation-283-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Verify terminal ledger and emit operational ratification
+        run: |
+          set -euo pipefail
+          git fetch origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:.github/operation-intake/active-operation-ledger.v1.json > /tmp/terminal-ledger.json
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-          const b=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'utf8'));
-          const v=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'utf8'));
-          const result='PASS_CLOSED_EXACT_SIX_PATH_REGISTRY_SUCCESSOR_REPRODUCED';
-          if(b.result!==result||v.result!==result||b.executionHolder===v.executionHolder||b.packageFingerprint!==v.packageFingerprint)throw Error('INDEPENDENT_REPRODUCTION_MISMATCH');
-          const receipt={schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR_MERGE_AUTHORITY_RECEIPT_v1',result:'PASS_CLOSED_EXACT_HEAD_MERGE_AUTHORIZED',exactPreMergeMain:process.env.GOVERNING_MAIN,exactCandidateHead:process.env.CANDIDATE_HEAD,exactPr:634,packageFingerprint:b.packageFingerprint,distinctExecutionHolders:true,permittedChangedPathCount:2,permittedEffect:'ACTIVATE_EXACT_SIX_PATH_INTERNAL_REGISTRY_SUCCESSOR',locks279And280PreservedActive:true,headSubstitutionProhibited:true,baseDriftRequiresHold:true};
-          receipt.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(receipt)).digest('hex');
-          fs.mkdirSync('/tmp/h-earth-v2-six-path-registry-final',{recursive:true});
-          fs.writeFileSync('/tmp/h-earth-v2-six-path-registry-final/merge-authority.json',JSON.stringify(receipt,null,2)+'\n');
-          fs.copyFileSync(`${process.env.RUNNER_TEMP}/builder/receipt.json`,'/tmp/h-earth-v2-six-path-registry-final/builder.json');
-          fs.copyFileSync(`${process.env.RUNNER_TEMP}/verifier/receipt.json`,'/tmp/h-earth-v2-six-path-registry-final/verifier.json');
+          const ledger=JSON.parse(fs.readFileSync('/tmp/terminal-ledger.json','utf8'));
+          const closure=JSON.parse(fs.readFileSync('/tmp/h-earth-v2-six-path-registry-terminal/generation-283-closure.json','utf8'));
+          const builder=JSON.parse(fs.readFileSync('/tmp/h-earth-v2-six-path-registry-terminal/builder-receipt.json','utf8'));
+          const objects=[];
+          const walk=v=>{if(v==null||typeof v!=='object')return;objects.push(v);for(const x of Object.values(v))walk(x);};
+          walk(ledger);
+          const active=(id,g)=>objects.find(x=>x.operationId===id&&Number(x.lockGeneration)===g&&x.state==='ADMITTED_LOCKED'&&x.released===false);
+          const terminal=(id,g)=>objects.find(x=>x.operationId===id&&Number(x.lockGeneration)===g&&x.state==='TERMINAL'&&x.released===true);
+          const lock279=active('H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001',279);
+          const lock280=active('H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001',280);
+          const lock283Active=active(process.env.OPERATION_ID,Number(process.env.LOCK_GENERATION));
+          const lock283Terminal=terminal(process.env.OPERATION_ID,Number(process.env.LOCK_GENERATION));
+          if(!lock279)throw Error('LOCK_279_NOT_ACTIVE_AFTER_RATIFICATION');
+          if(!lock280)throw Error('LOCK_280_NOT_ACTIVE_AFTER_RATIFICATION');
+          if(lock283Active)throw Error('LOCK_283_RESIDUAL_ACTIVE_AUTHORITY');
+          if(!lock283Terminal||lock283Terminal.terminalDisposition!=='PASS_CLOSED')throw Error('LOCK_283_TERMINAL_RECORD_MISSING');
+          const out={
+            schema:'H_EARTH_V2_SIX_PATH_INTERNAL_REGISTRY_OPERATIONAL_RATIFICATION_RECEIPT_v1',
+            result:'PASS_CLOSED_SIX_PATH_REGISTRY_ACTIVE_OPERATIONAL_AND_AUTHORITY_TERMINATED',
+            mergeCommit:process.env.MERGE_COMMIT,
+            currentMainVerified:true,
+            exactRegisteredPathCount:6,
+            undeclaredNeighborDisposition:'STOP',
+            correctedInterHillV2Preserved:true,
+            mapWidePathCountPreserved:13,
+            c2R1Preflight:'PASS',
+            packageFingerprint:builder.packageFingerprint,
+            lockGeneration:283,
+            terminalDisposition:'PASS_CLOSED',
+            closureCommit:closure.closureCommitSha,
+            lock279PreservedActive:true,
+            lock280PreservedActive:true,
+            residualGeneration283Authority:false,
+            productMutationPerformed:false,
+            terrainMutationPerformed:false,
+            manorConstructionPerformed:false,
+            commitAMutated:false,
+            commitBCreated:false,
+            deploymentPerformed:false,
+            releasePerformed:false
+          };
+          out.receiptDigest=crypto.createHash('sha256').update(JSON.stringify(out)).digest('hex');
+          fs.writeFileSync('/tmp/h-earth-v2-six-path-registry-terminal/operational-ratification.json',JSON.stringify(out,null,2)+'\n');
           NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: h-earth-v2-six-path-registry-final-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/h-earth-v2-six-path-registry-final/
+          name: h-earth-v2-six-path-registry-terminal-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/h-earth-v2-six-path-registry-terminal/
           if-no-files-found: error
           retention-days: 90

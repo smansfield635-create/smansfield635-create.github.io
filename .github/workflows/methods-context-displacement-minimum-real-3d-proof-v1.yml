@@ -1,0 +1,94 @@
+name: Methods Minimum Real 3D Proof v1
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/methods-context-displacement-minimum-real-3d-proof-v1.yml'
+      - 'control-plane/methods-information-benchmark/context-displacement-minimum-real-3d-proof-v1/**'
+permissions:
+  contents: write
+env:
+  C: control-plane/methods-information-benchmark/context-displacement-minimum-real-3d-proof-v1
+  OP: METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_MINIMUM_REAL_3D_PROOF_v1
+  SCOPE: METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT:EXISTING_SPATIAL_CONSTRUCT:MINIMUM_REAL_3D_PROOF:V1
+  LOCK_GENERATION: '316'
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  H: ${{ github.event.pull_request.head.sha }}
+jobs:
+  builder:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$H"
+          node "$C/verify.v1.mjs" --repository . --output /tmp/builder.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-minimum-real-3d-proof-builder-v1
+          path: /tmp/builder.json
+          if-no-files-found: error
+
+  fresh-verifier:
+    needs: builder
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-minimum-real-3d-proof-builder-v1
+          path: /tmp/builder
+      - run: |
+          set -euo pipefail
+          node "$C/verify.v1.mjs" --repository . --output /tmp/fresh.json
+          node --input-type=module <<'NODE'
+          import fs from'node:fs';
+          const b=JSON.parse(fs.readFileSync('/tmp/builder/builder.json'));
+          const f=JSON.parse(fs.readFileSync('/tmp/fresh.json'));
+          if(b.result!=='PASS'||f.result!=='PASS'||b.fingerprint!==f.fingerprint)throw Error('INDEPENDENT_REPRODUCTION_MISMATCH');
+          fs.writeFileSync('/tmp/equality.json',JSON.stringify({schema:'METHODS_MINIMUM_REAL_3D_PROOF_RUNTIME_EQUALITY_RECEIPT_v1',result:'PASS',fingerprint:b.fingerprint,exactNormalizedEquality:true,head:process.env.H},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-minimum-real-3d-proof-fresh-verifier-v1
+          path: |
+            /tmp/fresh.json
+            /tmp/equality.json
+          if-no-files-found: error
+
+  close-lock:
+    needs: fresh-verifier
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Close construction lock
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$OP" --lock-scope "$SCOPE" --lock-generation "$LOCK_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/closure.json
+          node -e "const r=require('/tmp/closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.lockReleased!==true)throw Error('LOCK_CLOSURE_FAILED')"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-minimum-real-3d-proof-operation-closure-v1
+          path: /tmp/closure.json
+          if-no-files-found: error

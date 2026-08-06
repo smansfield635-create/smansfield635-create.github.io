@@ -1,6 +1,6 @@
 {
   "schema": "H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONTRACT_v1",
-  "status": "ROLE_4_ADMITTED_CONSTRUCTION_CONTRACT",
+  "status": "ROLE_4_ADMITTED_CONSTRUCTION_CONTRACT_SINGLE_OWNER_GATE_REPAIRED",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "operation": {
     "operationId": "H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001",
@@ -86,18 +86,42 @@
     "class": "PROCEDURE_SPECIFIC_GOVERNANCE_LIFECYCLE_WORKFLOW",
     "generalCommandTransport": false,
     "modes": [
-      "PULL_REQUEST_VERIFICATION",
-      "LOCK_279_FAIL_CLOSED_EXECUTION",
-      "GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_EXECUTION"
+      "GOVERNANCE_GATE_REPAIR_PULL_REQUEST_VERIFICATION",
+      "LOCK_279_FAIL_CLOSED_EXECUTION_REQUEST_V2",
+      "GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V2"
     ],
-    "eventTarget": "EXACT_GOVERNANCE_SUCCESSOR_PULL_REQUEST",
+    "eventTarget": "EXACT_GOVERNANCE_SUCCESSOR_PULL_REQUEST_636",
     "actorAssociations": [
       "OWNER",
       "MEMBER",
       "COLLABORATOR"
     ],
-    "role4ReviewAction": "APPROVE",
-    "requestSuppliedReviewIdentifierIsProof": false
+    "singleOwnerRepositorySupported": true,
+    "thirdPartyApprovalReviewRequired": false,
+    "role4AuthorizationEvidence": "EXACT_PR_COMMENT",
+    "role4AuthorizationMarker": "ROLE_4_AUTHORIZATION_COMMENT",
+    "role4AuthorizationRequiredAssociation": "OWNER",
+    "role4AuthorizationRequiredBindings": [
+      "EXACT_CANDIDATE_HEAD",
+      "EXACT_MERGE_COMMIT"
+    ],
+    "role3PostCommandEvidenceRequiredForLock279": false,
+    "role3PostCommandEvidenceRequiredForLock280": true,
+    "currentMainRule": "WORKFLOW_EVENT_HEAD_MUST_EQUAL_CURRENT_MAIN_AND_AUTHORIZED_MERGE_MUST_BE_ANCESTOR",
+    "requestSuppliedCommentIdentifierIsProof": false,
+    "commentIdentifierMustResolveThroughGitHubApi": true
+  },
+  "governanceRepair": {
+    "repairClass": "SINGLE_OWNER_IMPOSSIBLE_APPROVAL_GATE_REPAIR",
+    "repairScope": [
+      ".github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml",
+      "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json"
+    ],
+    "rootCause": "GITHUB_PROHIBITS_PULL_REQUEST_AUTHORS_FROM_APPROVING_THEIR_OWN_PULL_REQUEST_AND_THE_REPOSITORY_HAS_ONE_AUTHORIZED_OWNER",
+    "technicalVerificationWeakened": false,
+    "mergeValidityAffected": false,
+    "syntheticEvidenceAllowed": false,
+    "newExternalCollaboratorRequired": false
   },
   "commands": {
     "lock279FailClosed": "node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001 --lock-scope H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE --lock-generation 279 --terminal-disposition FAIL_CLOSED --output \"$RUNNER_TEMP/h-earth-lock-279-fail-closed-command-receipt.json\"",

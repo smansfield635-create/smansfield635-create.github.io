@@ -8,7 +8,7 @@
     "data/ai4i.py": "839adf46038bcbe14dfc893c1b00a1ed6206e056d1672565c8b2da34cda5daf4",
     "data/common.py": "1f18348e439448fdfaa1361f8e0490ae8397ebfc81c0b14cb91b88966ed78984",
     "data/hydraulic.py": "a04482a62789b4f2a5bd3c67024266c3f17557fdde1439e87eecb1d139540638",
-    "data/naval.py": "7c9bc2f9abc97c397721e1cd6c20a8c894aca8f3c467c22666f2e3ca07730e67",
+    "data/naval.py": "11789fdc5da9364481fdebfcce1269d20e5cf161904b1b99d61abb88abd453c4",
     "data/run_uci_bridge_v1.py": "65cb0b63303c9bbcf370a62550b625065698c120c94e634f05b79543e7bb3307",
     "software/exploratory-execution-summary.json": "d856f0092c11969619f6ff3277f8603ae63790269787c4f9a84053376c90848c",
     "software/model.py": "5f1bdd1cf250009643b47c25d54cec4df61970f8230395954fc6745b75f11af7",
@@ -19,7 +19,7 @@
     "system-registry.v1.json": "c2f04c37fa8a8d7de8724956283398c68182169483af395a779bf6d32d9f4c16",
     "verify_package_v1.py": "e20a2296480a46d566e827a40c914e8597689180680371cdce386904f7bd6308"
   },
-  "freeze_status": "POST_PARTIAL_EXECUTION_RETRIEVAL_ONLY_REPAIR_v1_0_2",
+  "freeze_status": "POST_PARTIAL_EXECUTION_NAVAL_RETRIEVAL_ONLY_REPAIR_v1_0_4",
   "operation": "EXTERNALLY_SOURCED_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
   "schema": "EXTERNALLY_SOURCED_ICR_BRIDGE_MANIFEST_v1"
 }

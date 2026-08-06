@@ -20,10 +20,10 @@
     },
     "custodian": {
       "may": [
-        "hold encrypted truth",
-        "verify hash commitments",
-        "release public packages",
-        "unblind after prediction freeze"
+        "hold_encrypted_truth",
+        "verify_hash_commitments",
+        "release_public_packages",
+        "unblind_after_prediction_freeze"
       ],
       "may_not": [
         "provide inferential guidance",
@@ -32,48 +32,48 @@
     },
     "evaluator": {
       "may": [
-        "score submissions",
-        "apply frozen adjudication"
+        "score_submissions",
+        "apply_frozen_adjudication"
       ],
       "may_not": [
-        "change thresholds",
-        "redefine failures",
-        "exclude results posthoc"
+        "change_thresholds",
+        "redefine_failures",
+        "exclude_results posthoc"
       ]
     },
     "observer_team": {
       "may": [
-        "infer boundary",
-        "infer relations",
-        "predict withheld outcomes"
+        "infer_boundary",
+        "infer_relations",
+        "predict_withheld_outcomes"
       ],
       "may_not": [
-        "access hidden truth",
-        "communicate with system authors after observation release",
-        "repair predictions after freeze"
+        "access_hidden_truth",
+        "communicate_with_system_authors_after observation release",
+        "repair_predictions_after freeze"
       ]
     },
     "protocol_authority": {
       "may": [
-        "freeze protocol",
-        "verify manifest",
-        "answer predata semantic questions"
+        "freeze_protocol",
+        "verify_manifest",
+        "answer_predata_semantic_questions"
       ],
       "may_not": [
-        "author primary systems",
-        "access hidden truth",
-        "alter protocol after public observation release"
+        "author_primary_systems",
+        "access_hidden_truth",
+        "alter_protocol_after_public_observation_release"
       ]
     },
     "system_author": {
       "may": [
-        "build external system",
-        "declare hidden truth",
-        "precommit interventions"
+        "build_external_system",
+        "declare_hidden_truth",
+        "precommit_interventions"
       ],
       "may_not": [
-        "serve as observer for own system",
-        "alter truth after commitment"
+        "serve_as_observer_for_own_system",
+        "alter_truth_after_commitment"
       ]
     }
   },

@@ -1,0 +1,34 @@
+{
+  "boundary_nodes": [
+    "N04",
+    "N11",
+    "N18",
+    "N25",
+    "N32",
+    "N39"
+  ],
+  "constitutive_relations": [
+    "R01",
+    "R02",
+    "R03",
+    "R04",
+    "R05"
+  ],
+  "decoy_relations": [
+    "R06",
+    "R07",
+    "R08"
+  ],
+  "external_support_route": "X_SUPPORT_V1",
+  "functional_substitute_route": "S_SUBSTITUTE_V1",
+  "hysteresis_rule": "CLEARANCE_REQUIRED_AFTER_LATCHED_FRACTURE",
+  "identity_specific_requirement": "ORIGINAL_ROUTE_AND_CHALLENGE",
+  "ordered_original_route": [
+    "R01",
+    "R02",
+    "R03",
+    "R04",
+    "R05"
+  ],
+  "truth_id": "ICR_HIDDEN_TRUTH_v1"
+}

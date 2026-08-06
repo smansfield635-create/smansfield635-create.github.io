@@ -1,0 +1,34 @@
+{
+  "comparators": [
+    {
+      "description": "Predict intervention outcomes from preintervention visible output history and intervention timing only.",
+      "id": "B1_OUTPUT_HISTORY"
+    },
+    {
+      "description": "Preregistered regularized additive model using all public structured features and intervention indicators without route or provenance operators.",
+      "id": "B2_ADDITIVE_FEATURES"
+    },
+    {
+      "description": "Preregistered graph model using the same public documentation and observations to infer nodes, edges, connectivity, dependency, and reachability without identity-conditioned support, restoration, or hysteresis semantics.",
+      "id": "B3_GRAPH_DEPENDENCY"
+    },
+    {
+      "description": "Preregistered flexible predictive model using the same public inputs, training examples, and tuning budget.",
+      "id": "B4_BLACK_BOX"
+    }
+  ],
+  "fairness_rules": [
+    "IDENTICAL_PUBLIC_DOCUMENTATION_AND_OBSERVATIONS",
+    "IDENTICAL_INTERVENTION_DESCRIPTORS",
+    "IDENTICAL_TRAINING_AND_HELDOUT_SPLITS",
+    "IDENTICAL_PREDICTION_DEADLINE",
+    "NO_HIDDEN_TRUTH_FOR_ANY_MODEL",
+    "NO_POSTOUTCOME_MODEL_SUBSTITUTION",
+    "HYPERPARAMETER_SELECTION_LIMITED_TO_TRAINING_DATA",
+    "ALL_MODEL_FAILURES_RETAINED",
+    "GRAPH_COMPARATOR_MAY_DERIVE_ITS_OWN_GRAPH_FROM_THE_SAME_DOCUMENTATION"
+  ],
+  "redundancy_rule": "THEORY_IS_REDUNDANT_IF_PRIMARY_SURVIVAL_METRICS_ARE_MET_BUT_INCREMENT_OVER_STRONGEST_COMPARATOR_DOES_NOT_MEET_THE_FROZEN_MARGIN_AND_CONFIDENCE_REQUIREMENTS",
+  "strongest_comparator_definition": "HIGHEST_FROZEN_HELDOUT_COMPOSITE_SCORE_AMONG_B1_TO_B4",
+  "version": "1.0.0"
+}

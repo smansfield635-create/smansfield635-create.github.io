@@ -1,0 +1,66 @@
+{
+  "calibration": {
+    "confidence_predictions_retained": true,
+    "metric": "BRIER_SCORE_AND_RELIABILITY_SUMMARY",
+    "required": true
+  },
+  "component_weights": {
+    "hysteresis_classification_balanced_accuracy": 0.15,
+    "noncompensation_balanced_accuracy": 0.15,
+    "relation_specific_restoration_contrast": 0.2,
+    "selective_route_loss_balanced_accuracy": 0.25,
+    "supported_output_provenance_macro_f1": 0.25
+  },
+  "critical_failure_triggers": [
+    "SELECTIVE_REQUIRED_ROUTE_LOSS_LACKS_PREDICTED_SELECTIVE_EFFECT_IN_MAJORITY_OF_ADMISSIBLE_EPISODES",
+    "UNRELATED_CAPACITY_RELIABLY_RESTORES_CAPABILITY_WITHOUT_ROUTE_REOPENING",
+    "SUPPORTED_OUTPUT_SYSTEMATICALLY_MISCLASSIFIED_AS_ENDOGENOUS_CONTINUITY",
+    "RELATION_SPECIFIC_REPAIR_DOES_NOT_OUTPERFORM_UNRELATED_REPAIR",
+    "PREDICTED_HYSTERESIS_DIRECTION_SYSTEMATICALLY_CONTRADICTED"
+  ],
+  "dispositions": [
+    {
+      "id": "MECHANISM_FALSE",
+      "precedence": 1,
+      "rule": "ONE_OR_MORE_FROZEN_CRITICAL_FAILURE_TRIGGERS_MET_OR_PRIMARY_MECHANISM_PREDICTIONS_MATERIALLY_CONTRADICTED"
+    },
+    {
+      "id": "MECHANISM_UNDERDEFINED",
+      "precedence": 2,
+      "rule": "RELATIONS_BOUNDARIES_OR_ROUTE_FAMILIES_NOT_REPRODUCIBLY_DERIVABLE_ABOVE_FROZEN_THRESHOLDS"
+    },
+    {
+      "id": "MECHANISM_REDUNDANT",
+      "precedence": 3,
+      "rule": "MECHANISM_MET_ABSOLUTE_THRESHOLDS_BUT_FAILED_FROZEN_INCREMENT_OVER_STRONGEST_COMPARATOR"
+    },
+    {
+      "id": "SURVIVES_INITIAL_REAL_INTERVENTION_GAUNTLET",
+      "precedence": 4,
+      "rule": "ALL_ABSOLUTE_SELECTIVITY_PROVENANCE_RESTORATION_HYSTERESIS_AND_INCREMENT_THRESHOLDS_MET_WITH_NO_CRITICAL_FAILURE"
+    },
+    {
+      "id": "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE",
+      "precedence": 5,
+      "rule": "CUSTODY_INTERVENTION_FIDELITY_PORTFOLIO_POWER_OR_OUTCOME_INTEGRITY_FAILED_BEFORE_VALID_ADJUDICATION"
+    }
+  ],
+  "single_primary_disposition_required": true,
+  "survival_thresholds": {
+    "composite_score_min": 0.78,
+    "critical_prediction_failures_max": 0,
+    "hysteresis_classification_balanced_accuracy_min": 0.7,
+    "increment_bootstrap_95_ci_lower_bound_gt": 0.0,
+    "increment_over_strongest_comparator_min": 0.05,
+    "noncompensation_balanced_accuracy_min": 0.75,
+    "relation_specific_restoration_contrast_min": 0.75,
+    "selective_route_loss_balanced_accuracy_min": 0.8,
+    "supported_output_provenance_macro_f1_min": 0.8
+  },
+  "uncertainty": {
+    "confidence_level": 0.95,
+    "iterations": 10000,
+    "primary_method": "SYSTEM_CLUSTERED_BOOTSTRAP"
+  },
+  "version": "1.0.0"
+}

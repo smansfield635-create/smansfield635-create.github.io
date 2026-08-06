@@ -1,0 +1,38 @@
+{
+  "candidatePathMode": "ADDITIVE_ONLY",
+  "governingHead": "6ca63ec4ba34b9c84e783aaaf5aa73c4604f4fb6",
+  "lockClosureAuthority": false,
+  "mergeAuthority": false,
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_002",
+  "paths": [
+    ".github/workflows/h-earth-inter-hill-estate-successor-evaluator-v2-causal-correction.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/AGENTS.md",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/operation-request.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/input-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/output-schema.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/causal-rules.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/fixtures.v2.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/rollback.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/v2-causal-correction/verify.v2.mjs",
+    "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs",
+    "h-earth-3d/validation/h-earth.inter-hill-estate-successor-evaluator-v2.mjs"
+  ],
+  "preserves": [
+    "V1_EVALUATOR",
+    "PRODUCT",
+    "TERRAIN",
+    "LIVE_ENVIRONMENT",
+    "CAMERA",
+    "NAVIGATION",
+    "WATER",
+    "PLACEMENT",
+    "MANOR",
+    "LOCK_HISTORY_279",
+    "LOCK_HISTORY_280",
+    "ACTIVE_LOCK_322_UNTIL_SEPARATE_AUTHORIZED_CLOSURE"
+  ],
+  "rollbackMethod": "DELETE_EXACTLY_THE_13_ADDED_PATHS_OR_REVERT_THE_SINGLE_CONSTRUCTION_COMMIT",
+  "schema": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_ROLLBACK_v1"
+}

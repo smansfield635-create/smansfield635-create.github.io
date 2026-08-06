@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "IMI Factorial Temporal Diagnostic Receipt v1",
+  "type": "object",
+  "required": [
+    "extension_id",
+    "extension_version",
+    "state",
+    "case_id",
+    "comparability",
+    "observation_count",
+    "transition_count",
+    "current_condition",
+    "latest_direction",
+    "persistence",
+    "transitions",
+    "source_core_receipt_sha256_list",
+    "core_recalculation_performed",
+    "core_mutation_performed",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "extension_id": {"const": "IMI_FACTORIAL_TEMPORAL_DIAGNOSTIC_EXTENSION_v1"},
+    "extension_version": {"const": "1.0.0"},
+    "state": {"enum": ["INVALID", "UNEVALUABLE", "NUMERIC_TEMPORAL_DIAGNOSTIC"]},
+    "latest_direction": {"enum": ["IMPROVING", "STABLE", "DETERIORATING"]},
+    "persistence": {
+      "enum": [
+        "SUSTAINED_IMPROVEMENT",
+        "SUSTAINED_DETERIORATION",
+        "SUSTAINED_STABILITY",
+        "RELAPSE_OR_REVERSAL_TOWARD_DETERIORATION",
+        "RECOVERY_REVERSAL_OR_EMERGING_IMPROVEMENT",
+        "MIXED_OR_EMERGING",
+        "UNEVALUABLE_INSUFFICIENT_DIRECTION_INTERVALS"
+      ]
+    },
+    "core_recalculation_performed": {"const": false},
+    "core_mutation_performed": {"const": false},
+    "receipt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}

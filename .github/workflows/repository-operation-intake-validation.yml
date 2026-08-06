@@ -1,190 +1,151 @@
-name: Methods Spatial Database Text-First V2 Ratification
+name: Repository Operation Intake Bootstrap Validation
 
 on:
   pull_request:
     branches: [main]
-    paths: ['.github/workflows/repository-operation-intake-validation.yml']
+    paths-ignore:
+      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 env:
-  GOVERNING_MAIN: 1a7f674bed83730ac37b40c38dbbde5d2e0593a9
-  SOURCE_ISSUE: '656'
-  SOURCE_PR: '665'
-  SOURCE_CANDIDATE: 935e6c9243df60d2362b1bb834df49412b610496
-  SOURCE_MERGE: 1a7f674bed83730ac37b40c38dbbde5d2e0593a9
-  INTERACTION_CONTRACT_ID: METHODS_SPATIAL_DATABASE_TEXT_FIRST_INTERACTION_STATE_CONTRACT_v2
-  INTERACTION_CONTRACT_FINGERPRINT: 7f19aab646a09187369d6c4da00135b0e3623d3bfae288050318a04fb12845ef
-  INTERACTION_CONTRACT_CANONICAL_BYTES: '5803'
-  EXPECTED_ROUTER_BLOB: abfab1c5f33ca66b32b5b5a438a06016c04cab10
-  EXPECTED_ENTRYPOINT_BLOB: e85d35a1bce1925b380eed87b9eee586f05a355f
-  ROUTER_VALIDATION_RUN: '31076075240'
-  INTAKE_BOOTSTRAP_RUN: '31076075238'
-  EXPECTED_PATHS_JSON: '[".github/workflows/methods-spatial-database-nested-tab-recomposition-v1.yml","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/README.md","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/index.html","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/styles.css","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/data.mjs","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/math.mjs","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/state.mjs","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/renderer.mjs","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/navigation.mjs","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/app.mjs","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/design-grammar.v1.json","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/information-architecture.v1.json","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/interaction-state-contract.v1.json","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/proof-contract.v1.json","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/verify.v1.mjs","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/builder.receipt.v1.json","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/fresh-verifier.receipt.v1.json","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/independent-equality.receipt.v1.json","control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/operation-closure.receipt.v1.json"]'
-  PREDECESSOR_OPERATION: METHODS_SPATIAL_DATABASE_ROUTER_RECONCILIATION_REPLACEMENT_CANDIDATE_v1
-  PREDECESSOR_SCOPE: METHODS_INFORMATION_BENCHMARK:SPATIAL_DATABASE:NESTED_TAB_RECOMPOSITION:ROUTER_RECONCILIATION:V2
-  PREDECESSOR_GENERATION: '365'
-  PREDECESSOR_SCOPE_HASH: 13788afd216b2a85743f4f664cbdc273871a241d7c03180b3aef56f8f4eefab2
-  CURRENT_OPERATION: METHODS_SPATIAL_DATABASE_TEXT_FIRST_INTERACTION_CONTRACT_V2_POST_MERGE_VALIDATION_LOCK_CLOSURE_AND_PERMANENT_RATIFICATION_v1
-  CURRENT_SCOPE: METHODS_INFORMATION_BENCHMARK:SPATIAL_DATABASE:NESTED_TAB_RECOMPOSITION:TEXT_FIRST_V2:POST_MERGE_RATIFICATION:V1
-  CURRENT_GENERATION: '376'
-  CURRENT_SCOPE_HASH: 83226b40792f58a4df5a5166ac1f02f16857bd0fafc733abb269578336e5e51f
-  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
-  BASE_WORKFLOW_BLOB: 5f5b6317d520ef072c4347b62a179870491d5448
-  RECEIPT_PATH: .github/ai-router/projects/methods-information-benchmark/spatial-database-text-first-interaction-contract-v2-permanent-ratification.v1.json
-  EXPECTED_BRANCH: ratification/methods-spatial-database-text-first-v2-001
+  B: a18107998f0a5d8146010aa4cc9767d1f85b1ebd
+  R: .github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json
+  H: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
-  builder:
-    if: github.head_ref == 'ratification/methods-spatial-database-text-first-v2-001'
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
-      REPOSITORY: ${{ github.repository }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+  bootstrap-builder-self-test:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.H }}
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Verify text-first v2 routes and close predecessor lock 365
+      - name: Verify active identities semantically and reproduce bootstrap
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
-          test "$BASE_SHA" = "$GOVERNING_MAIN"
-          git merge-base --is-ancestor "$SOURCE_MERGE" "$BASE_SHA"
-          test "$(git hash-object .github/ai-router/router.v1.json)" = "$EXPECTED_ROUTER_BLOB"
-          test "$(git hash-object .github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json)" = "$EXPECTED_ENTRYPOINT_BLOB"
-          mkdir -p /tmp/builder
-          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/builder/router.json
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const expected=JSON.parse(process.env.EXPECTED_PATHS_JSON).sort();
-          fs.writeFileSync('/tmp/methods-spatial-database-text-first-v2-paths.txt', expected.join('\n')+'\n');
-          const entry=JSON.parse(fs.readFileSync('.github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json','utf8'));
-          const p=entry.procedures?.spatialDatabaseNestedTabRecomposition;
-          const actual=[...(p?.exactDestinationPaths??[])].sort();
-          if(expected.length!==19||JSON.stringify(actual)!==JSON.stringify(expected)||(entry.ownedPathPrefixes??[]).length)throw Error('NINETEEN_ROUTE_STATE_MISMATCH');
-          if(p.interactionStateContractFingerprint!==process.env.INTERACTION_CONTRACT_FINGERPRINT)throw Error('INTERACTION_CONTRACT_FINGERPRINT_MISMATCH');
-          if(![p.informationRecordsAsVisibleTabsRequired,p.textFirstInformationPageRequired,p.semanticDomTextPrimaryRequired,p.standardTextualScrollingRequired,p.exactContextualReturnRequired,p.practicalDefaultRequired,p.oneLensActiveAtATimeRequired,p.nestedTabsRequired,p.compassEquationChoreographyRequired,p.semanticAccessibilityRequired,p.reducedMotionEquivalenceRequired,p.userControlledCameraProhibited,p.gestureHeavyFirstProofProhibited].every(Boolean))throw Error('TEXT_FIRST_V2_CONTRACT_INCOMPLETE');
-          if(p.webglStatus!=='OPTIONAL_SUPPORTING_NONCONTROLLING'||p.primaryInteractionMode!=='TEXT_FIRST_TAB_AND_NESTED_CONTROL_SELECTION')throw Error('TEXT_FIRST_V2_INTERACTION_MODE_MISMATCH');
-          const r=JSON.parse(fs.readFileSync('/tmp/builder/router.json','utf8'));
-          if(!String(r.result??'').startsWith('PASS'))throw Error('ROUTER_SELF_TEST_FAILED');
-          fs.writeFileSync('/tmp/builder/route.json',JSON.stringify({result:'PASS',paths:expected,interactionContractFingerprint:p.interactionStateContractFingerprint},null,2)+'\n');
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
+          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
+          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
           NODE
-          node tools/repository-ai-entry-router.mjs --paths-file /tmp/methods-spatial-database-text-first-v2-paths.txt
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$PREDECESSOR_OPERATION" --lock-scope "$PREDECESSOR_SCOPE" --lock-generation "$PREDECESSOR_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/builder/closure.json
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import crypto from 'node:crypto';
-          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
-          const c=JSON.parse(fs.readFileSync('/tmp/builder/closure.json','utf8'));
-          if(c.result!=='TERMINAL_CLOSURE_COMMITTED'||!c.lockReleased||c.lockGeneration!==365||c.scopeHash!==process.env.PREDECESSOR_SCOPE_HASH||c.terminalDisposition!=='PASS_CLOSED')throw Error('LOCK_365_CLOSURE_INVALID');
-          const paths=JSON.parse(fs.readFileSync('/tmp/builder/route.json','utf8')).paths;
-          const domain=stable({governingMainHead:process.env.GOVERNING_MAIN,sourceIssue:Number(process.env.SOURCE_ISSUE),sourcePr:Number(process.env.SOURCE_PR),sourceCandidateHead:process.env.SOURCE_CANDIDATE,mergeCommit:process.env.SOURCE_MERGE,routerBlob:process.env.EXPECTED_ROUTER_BLOB,entrypointBlob:process.env.EXPECTED_ENTRYPOINT_BLOB,interactionContract:{id:process.env.INTERACTION_CONTRACT_ID,fingerprint:process.env.INTERACTION_CONTRACT_FINGERPRINT,canonicalByteCount:Number(process.env.INTERACTION_CONTRACT_CANONICAL_BYTES)},registeredExactPaths:paths,predecessorLockClosure:{operationId:process.env.PREDECESSOR_OPERATION,lockScope:process.env.PREDECESSOR_SCOPE,scopeHash:process.env.PREDECESSOR_SCOPE_HASH,lockGeneration:365,terminalDisposition:'PASS_CLOSED',lockReleased:true},validation:{routerSelfTest:'PASS',routeCount:19,prefixWideOwnership:false,routerValidationRun:Number(process.env.ROUTER_VALIDATION_RUN),intakeBootstrapRun:Number(process.env.INTAKE_BOOTSTRAP_RUN),textFirstInformationPage:true,semanticDomTextPrimary:true,informationRecordsAsVisibleTabs:true,standardTextualScrolling:true,exactContextualReturn:true,webglOptionalSupportingNoncontrolling:true,userControlledCameraProhibited:true,gestureHeavyFirstProofProhibited:true},authority:{checkpoint4Executed:false,successorImplementationExecuted:false,methodsPageMutation:false,lawsMutation:false,compassMutation:false,waveMutation:false,robMutation:false,hEarthMutation:false,publicMutation:false,deployment:false,release:false,perceptualAcceptanceClaim:false,ratificationReceiptMergeAuthorized:true}});
-          const fingerprint=crypto.createHash('sha256').update(JSON.stringify(domain)).digest('hex');
-          fs.writeFileSync('/tmp/builder/builder.json',JSON.stringify({schema:'METHODS_SPATIAL_DATABASE_TEXT_FIRST_V2_RATIFICATION_BUILDER_RECEIPT_v1',result:'PASS',domain,fingerprint,predecessorClosureCommitSha:c.closureCommitSha},null,2)+'\n');
-          NODE
+          grep -q 'push:' .github/workflows/repository-operation-intake-validation.yml
+          grep -q "$R" .github/workflows/repository-operation-intake-validation.yml
+          node -e "let j=require('./.github/operation-intake/deployment-activation-receipt.schema.v1.json');if(!j.\$id.endsWith('_SCHEMA_v1'))throw Error()"
+          git worktree add --detach /tmp/x "$B"
+          cd /tmp/x
+          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/builder-self-test.receipt.json
       - uses: actions/upload-artifact@v4
         with:
-          name: methods-spatial-database-text-first-v2-ratification-builder-v1
-          path: /tmp/builder/
+          name: repository-operation-intake-builder-self-test-v1
+          path: /tmp/builder-self-test.receipt.json
           if-no-files-found: error
-          retention-days: 90
 
-  verifier-finalize:
-    needs: builder
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
-      REPOSITORY: ${{ github.repository }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-      BASE_SHA: ${{ github.event.pull_request.base.sha }}
-      BRANCH_NAME: ${{ github.head_ref }}
-      RUN_ID: ${{ github.run_id }}
+  fresh-bootstrap-verifier:
+    needs: bootstrap-builder-self-test
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.H }}
           fetch-depth: 0
           persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
       - uses: actions/download-artifact@v4
         with:
-          name: methods-spatial-database-text-first-v2-ratification-builder-v1
-          path: /tmp/final/builder
-      - name: Independently reproduce, restore workflow, and materialize ratification receipt
+          name: repository-operation-intake-builder-self-test-v1
+          path: /tmp/certification/builder
+      - name: Reproduce independently with semantic JSON checks
         run: |
           set -euo pipefail
-          test "$BRANCH_NAME" = "$EXPECTED_BRANCH"
-          test "$BASE_SHA" = "$GOVERNING_MAIN"
-          test "$(git hash-object .github/ai-router/router.v1.json)" = "$EXPECTED_ROUTER_BLOB"
-          test "$(git hash-object .github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json)" = "$EXPECTED_ENTRYPOINT_BLOB"
-          mkdir -p /tmp/final/output
-          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/final/router.json
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const expected=JSON.parse(process.env.EXPECTED_PATHS_JSON).sort();
-          fs.writeFileSync('/tmp/methods-spatial-database-text-first-v2-paths.txt', expected.join('\n')+'\n');
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
+          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
+          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
           NODE
-          node tools/repository-ai-entry-router.mjs --paths-file /tmp/methods-spatial-database-text-first-v2-paths.txt
-          git fetch origin operation-locks/repository-operation-intake-v1
-          git show origin/operation-locks/repository-operation-intake-v1:.github/operation-intake/active-operation-ledger.v1.json > /tmp/final/ledger.json
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import crypto from 'node:crypto';
-          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
-          const expected=JSON.parse(process.env.EXPECTED_PATHS_JSON).sort();
-          const entry=JSON.parse(fs.readFileSync('.github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json','utf8'));
-          const p=entry.procedures?.spatialDatabaseNestedTabRecomposition;
-          const actual=[...(p?.exactDestinationPaths??[])].sort();
-          if(expected.length!==19||JSON.stringify(actual)!==JSON.stringify(expected)||(entry.ownedPathPrefixes??[]).length)throw Error('FRESH_NINETEEN_ROUTE_STATE_MISMATCH');
-          if(p.interactionStateContractFingerprint!==process.env.INTERACTION_CONTRACT_FINGERPRINT)throw Error('FRESH_INTERACTION_CONTRACT_FINGERPRINT_MISMATCH');
-          if(![p.informationRecordsAsVisibleTabsRequired,p.textFirstInformationPageRequired,p.semanticDomTextPrimaryRequired,p.standardTextualScrollingRequired,p.exactContextualReturnRequired,p.practicalDefaultRequired,p.oneLensActiveAtATimeRequired,p.nestedTabsRequired,p.compassEquationChoreographyRequired,p.semanticAccessibilityRequired,p.reducedMotionEquivalenceRequired,p.userControlledCameraProhibited,p.gestureHeavyFirstProofProhibited].every(Boolean))throw Error('FRESH_TEXT_FIRST_V2_CONTRACT_INCOMPLETE');
-          if(p.webglStatus!=='OPTIONAL_SUPPORTING_NONCONTROLLING'||p.primaryInteractionMode!=='TEXT_FIRST_TAB_AND_NESTED_CONTROL_SELECTION')throw Error('FRESH_TEXT_FIRST_V2_INTERACTION_MODE_MISMATCH');
-          const router=JSON.parse(fs.readFileSync('/tmp/final/router.json','utf8'));
-          if(!String(router.result??'').startsWith('PASS'))throw Error('FRESH_ROUTER_SELF_TEST_FAILED');
-          const ledger=JSON.parse(fs.readFileSync('/tmp/final/ledger.json','utf8'));
-          const terminal=(ledger.terminalHistory??[]).find(x=>x.operationId===process.env.PREDECESSOR_OPERATION&&x.lockGeneration===365);
-          if(!terminal||!terminal.released||terminal.terminalDisposition!=='PASS_CLOSED'||terminal.scopeHash!==process.env.PREDECESSOR_SCOPE_HASH)throw Error('FRESH_LOCK_365_CLOSURE_MISSING');
-          const domain=stable({governingMainHead:process.env.GOVERNING_MAIN,sourceIssue:Number(process.env.SOURCE_ISSUE),sourcePr:Number(process.env.SOURCE_PR),sourceCandidateHead:process.env.SOURCE_CANDIDATE,mergeCommit:process.env.SOURCE_MERGE,routerBlob:process.env.EXPECTED_ROUTER_BLOB,entrypointBlob:process.env.EXPECTED_ENTRYPOINT_BLOB,interactionContract:{id:process.env.INTERACTION_CONTRACT_ID,fingerprint:process.env.INTERACTION_CONTRACT_FINGERPRINT,canonicalByteCount:Number(process.env.INTERACTION_CONTRACT_CANONICAL_BYTES)},registeredExactPaths:expected,predecessorLockClosure:{operationId:process.env.PREDECESSOR_OPERATION,lockScope:process.env.PREDECESSOR_SCOPE,scopeHash:process.env.PREDECESSOR_SCOPE_HASH,lockGeneration:365,terminalDisposition:'PASS_CLOSED',lockReleased:true},validation:{routerSelfTest:'PASS',routeCount:19,prefixWideOwnership:false,routerValidationRun:Number(process.env.ROUTER_VALIDATION_RUN),intakeBootstrapRun:Number(process.env.INTAKE_BOOTSTRAP_RUN),textFirstInformationPage:true,semanticDomTextPrimary:true,informationRecordsAsVisibleTabs:true,standardTextualScrolling:true,exactContextualReturn:true,webglOptionalSupportingNoncontrolling:true,userControlledCameraProhibited:true,gestureHeavyFirstProofProhibited:true},authority:{checkpoint4Executed:false,successorImplementationExecuted:false,methodsPageMutation:false,lawsMutation:false,compassMutation:false,waveMutation:false,robMutation:false,hEarthMutation:false,publicMutation:false,deployment:false,release:false,perceptualAcceptanceClaim:false,ratificationReceiptMergeAuthorized:true}});
-          const fingerprint=crypto.createHash('sha256').update(JSON.stringify(domain)).digest('hex');
-          const builder=JSON.parse(fs.readFileSync('/tmp/final/builder/builder.json','utf8'));
-          if(builder.result!=='PASS'||builder.fingerprint!==fingerprint||JSON.stringify(builder.domain)!==JSON.stringify(domain))throw Error('BUILDER_FRESH_MISMATCH');
-          const receipt={schema:'METHODS_SPATIAL_DATABASE_TEXT_FIRST_V2_PERMANENT_RATIFICATION_RECEIPT_v1',status:'RATIFICATION_CANDIDATE_VERIFIED_PASS_CLOSED',governingMainHead:process.env.GOVERNING_MAIN,sourceIssue:Number(process.env.SOURCE_ISSUE),sourcePr:Number(process.env.SOURCE_PR),sourceCandidateHead:process.env.SOURCE_CANDIDATE,sourceMergeCommit:process.env.SOURCE_MERGE,sourceRouterBlob:process.env.EXPECTED_ROUTER_BLOB,sourceEntrypointBlob:process.env.EXPECTED_ENTRYPOINT_BLOB,interactionContract:{id:process.env.INTERACTION_CONTRACT_ID,fingerprint:process.env.INTERACTION_CONTRACT_FINGERPRINT,canonicalByteCount:Number(process.env.INTERACTION_CONTRACT_CANONICAL_BYTES)},registeredExactPathCount:19,prefixWideOwnership:false,textFirstSemantics:{semanticDomTextPrimary:true,informationRecordsAsVisibleTabs:true,standardTextualScrolling:true,exactContextualReturn:true,practicalDefault:true,oneLensActiveAtATime:true,nestedTabs:true,webglOptionalSupportingNoncontrolling:true,userControlledCameraProhibited:true,gestureHeavyFirstProofProhibited:true},predecessorLock:{operationId:process.env.PREDECESSOR_OPERATION,lockScope:process.env.PREDECESSOR_SCOPE,scopeHash:process.env.PREDECESSOR_SCOPE_HASH,lockGeneration:365,terminalDisposition:'PASS_CLOSED',lockReleased:true,closureCommitSha:builder.predecessorClosureCommitSha},ratificationOperation:{operationId:process.env.CURRENT_OPERATION,lockScope:process.env.CURRENT_SCOPE,scopeHash:process.env.CURRENT_SCOPE_HASH,lockGeneration:376,terminalClosureRequiredAfterCandidateCommit:true},builderFingerprint:fingerprint,freshVerifierFingerprint:fingerprint,exactNormalizedEquality:true,sourcePostMergeValidation:{routerValidationRun:Number(process.env.ROUTER_VALIDATION_RUN),intakeBootstrapRun:Number(process.env.INTAKE_BOOTSTRAP_RUN),result:'PASS'},validationWorkflowRun:Number(process.env.RUN_ID),finalCandidateScope:{changedPathCount:1,changedPath:process.env.RECEIPT_PATH,workflowRestoredToBlob:process.env.BASE_WORKFLOW_BLOB},authorityBoundaries:{checkpoint4Executed:false,successorImplementationExecuted:false,methodsPageMutation:false,lawsMutation:false,compassMutation:false,waveMutation:false,robMutation:false,hEarthMutation:false,publicOrVisualMutation:false,deploymentOrRelease:false,perceptualAcceptanceClaim:false,ratificationReceiptMergeAuthorized:true},permanentEffectCondition:'EFFECTIVE_ONLY_AFTER_THIS_RECEIPT_CANDIDATE_IS_MERGED_AND_RESULTING_MAIN_VALIDATION_PASSES'};
-          const text=JSON.stringify(receipt,null,2)+'\n';
-          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
-          const api=`https://api.github.com/repos/${process.env.REPOSITORY}`;
-          const request=async(url,options={},ok=[200])=>{const response=await fetch(url,{...options,headers:{...headers,...options.headers}});const raw=await response.text();let body;try{body=raw?JSON.parse(raw):null}catch{body={raw}}if(!ok.includes(response.status))throw Error(`API_${response.status}:${JSON.stringify(body)}`);return body};
-          const blob=await request(`${api}/git/blobs`,{method:'POST',body:JSON.stringify({content:text,encoding:'utf-8'})},[201]);
-          const base=await request(`${api}/git/commits/${process.env.HEAD_SHA}`);
-          const tree=await request(`${api}/git/trees`,{method:'POST',body:JSON.stringify({base_tree:base.tree.sha,tree:[{path:process.env.RECEIPT_PATH,mode:'100644',type:'blob',sha:blob.sha},{path:'.github/workflows/repository-operation-intake-validation.yml',mode:'100644',type:'blob',sha:process.env.BASE_WORKFLOW_BLOB}]})},[201]);
-          const commit=await request(`${api}/git/commits`,{method:'POST',body:JSON.stringify({message:'Ratify Methods spatial database text-first interaction contract v2',tree:tree.sha,parents:[process.env.HEAD_SHA]})},[201]);
-          await request(`${api}/git/refs/heads/${encodeURIComponent(process.env.BRANCH_NAME)}`,{method:'PATCH',body:JSON.stringify({sha:commit.sha,force:false})});
-          fs.writeFileSync('/tmp/final/output/permanent-ratification-receipt.json',text);
-          fs.writeFileSync('/tmp/final/output/final-candidate.json',JSON.stringify({result:'PASS',candidateHead:commit.sha,receiptBlob:blob.sha,tree:tree.sha,workflowRestoredBlob:process.env.BASE_WORKFLOW_BLOB,fingerprint},null,2)+'\n');
-          NODE
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$CURRENT_OPERATION" --lock-scope "$CURRENT_SCOPE" --lock-generation "$CURRENT_GENERATION" --terminal-disposition PASS_CLOSED --output /tmp/final/output/current-operation-closure.json
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const c=JSON.parse(fs.readFileSync('/tmp/final/output/current-operation-closure.json','utf8'));
-          if(c.result!=='TERMINAL_CLOSURE_COMMITTED'||!c.lockReleased||c.lockGeneration!==376||c.scopeHash!==process.env.CURRENT_SCOPE_HASH||c.terminalDisposition!=='PASS_CLOSED')throw Error('LOCK_376_CLOSURE_INVALID');
-          NODE
+          git worktree add --detach /tmp/x "$B"
+          cd /tmp/x
+          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/verifier-self-test.receipt.json
+          cmp /tmp/certification/builder/builder-self-test.receipt.json /tmp/verifier-self-test.receipt.json
       - uses: actions/upload-artifact@v4
         with:
-          name: methods-spatial-database-text-first-v2-ratification-final-v1
-          path: /tmp/final/output/
+          name: repository-operation-intake-verifier-self-test-v1
+          path: /tmp/verifier-self-test.receipt.json
           if-no-files-found: error
-          retention-days: 90
+
+  remote-ledger-cas-certification:
+    needs: fresh-bootstrap-verifier
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+      L: refs/heads/operation-locks/repository-operation-intake-v1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Certify exactly-one remote CAS acquisition and closure
+        run: |
+          node --input-type=module - <<'NODE'
+          import f from'node:fs';import{createHash as h}from'node:crypto';import{ensureRef as E,acquireRemote as A,closeRemote as C}from'./tools/operation-intake/repository-operation-lock-manager.v1.mjs';let e=process.env,d='/tmp/c',s=`ACTIVATION:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`,q=x=>h('sha256').update(x).digest('hex'),o={repository:e.REPOSITORY,lockRef:e.L,token:e.GITHUB_TOKEN,lockScope:s,governingHead:e.H,requestDigest:q(s+'r'),procedureLocatorDigest:q(s+'p'),barrierFile:d+'/g'};f.mkdirSync(d,{recursive:true});await E({repository:e.REPOSITORY,lockRef:e.L,baseHead:e.H,token:e.GITHUB_TOKEN});let p=[A({...o,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),A({...o,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})];for(let i=0;i<300&&!(f.existsSync(d+'/a')&&f.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));let a=JSON.parse(f.readFileSync(d+'/a')),b=JSON.parse(f.readFileSync(d+'/b'));if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION');f.writeFileSync(d+'/g','');let x=await Promise.all(p),w=x.filter(z=>z.lockAcquired),l=x.filter(z=>!z.lockAcquired),z=w.length!==1||l.length!==1||l[0].errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(l[0].httpStatus);if(w.length!==1)throw Error('CARDINALITY');let c=await C({...o,operationId:w[0].operationId,lockGeneration:w[0].lockGeneration,terminalDisposition:z?'FAIL_CLOSED':'PASS_CLOSED'});if(z)throw Error('LOSER');if(!c.lockReleased)throw Error('CLOSURE');f.writeFileSync('/tmp/remote-cas-certification.receipt.json',JSON.stringify({schema:'REPOSITORY_OPERATION_INTAKE_REMOTE_CAS_CERTIFICATION_RECEIPT_v1',result:'PASS_EXACTLY_ONE_ACQUIRED',validationSubjectHead:e.H,winner:w[0],loser:l[0],closure:c,lockBranchChangedPaths:['.github/operation-intake/active-operation-ledger.v1.json']},null,2)+'\n');
+          NODE
+          git fetch origin operation-locks/repository-operation-intake-v1
+          X=$(git rev-parse origin/operation-locks/repository-operation-intake-v1)
+          test "$(git merge-base "$B" "$X")" = "$B"
+          for C in $(git rev-list "$B..$X"); do
+            test "$(git diff-tree --no-commit-id --name-only -r "$C")" = .github/operation-intake/active-operation-ledger.v1.json
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-remote-cas-certification-v1
+          path: /tmp/remote-cas-certification.receipt.json
+          if-no-files-found: error
+
+  package-bootstrap-certification:
+    needs: [bootstrap-builder-self-test, fresh-bootstrap-verifier, remote-ledger-cas-certification]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.H }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-intake-builder-self-test-v1
+          path: /tmp/certification/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-intake-verifier-self-test-v1
+          path: /tmp/certification/verifier
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-intake-remote-cas-certification-v1
+          path: /tmp/certification/remote
+      - name: Build canonical certification package using frozen bootstrap packager
+        run: |
+          mkdir -p /tmp/certification/final
+          cp /tmp/certification/builder/builder-self-test.receipt.json /tmp/certification/final/builder-self-test.receipt.json
+          cp /tmp/certification/verifier/verifier-self-test.receipt.json /tmp/certification/final/verifier-self-test.receipt.json
+          cp /tmp/certification/remote/remote-cas-certification.receipt.json /tmp/certification/final/remote-cas-certification.receipt.json
+          git show "$B:.github/workflows/repository-operation-intake-validation.yml" | awk '/Build canonical certification package/{x=1}x&&/node <<.NODE./{p=1;next}p&&/^          NODE$/{exit}p{sub(/^          /,"");print}' > /tmp/p.js
+          TOOLING_HEAD="$H" node /tmp/p.js
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-bootstrap-certification-v1
+          path: /tmp/certification/final/
+          if-no-files-found: error

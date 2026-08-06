@@ -1,0 +1,115 @@
+{
+  "$id": "MECHANISM_DERIVED_REAL_INTERVENTION_SYSTEM_REGISTRATION_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "custodian_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "documentation_inventory": {
+      "items": {
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "document_id": {
+            "type": "string"
+          },
+          "provenance": {
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "source_class": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "document_id",
+          "source_class",
+          "sha256",
+          "date",
+          "provenance"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "domain": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "independence_attestation": {
+      "properties": {
+        "documentation_not_theory_authored": {
+          "const": true
+        },
+        "intervention_not_tuned_to_prediction": {
+          "const": true
+        },
+        "outcomes_not_disclosed": {
+          "const": true
+        }
+      },
+      "required": [
+        "documentation_not_theory_authored",
+        "intervention_not_tuned_to_prediction",
+        "outcomes_not_disclosed"
+      ],
+      "type": "object"
+    },
+    "intervention_episode_inventory": {
+      "items": {
+        "properties": {
+          "actual_documented_change": {
+            "const": true
+          },
+          "episode_id": {
+            "type": "string"
+          },
+          "fidelity_evidence_available": {
+            "const": true
+          },
+          "heldout_outcome_available": {
+            "const": true
+          },
+          "intervention_class": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "episode_id",
+          "intervention_class",
+          "actual_documented_change",
+          "heldout_outcome_available",
+          "fidelity_evidence_available"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "system_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "system_owner_or_source": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "system_id",
+    "domain",
+    "system_owner_or_source",
+    "documentation_inventory",
+    "intervention_episode_inventory",
+    "independence_attestation",
+    "custodian_id"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,119 @@
+{
+  "$id": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_OUTPUT_v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidateArrangementCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "caseId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "causalTraces": {
+      "type": "array"
+    },
+    "evaluatorEvidence": {
+      "type": "object"
+    },
+    "infeasibilityClaims": {
+      "additionalProperties": false,
+      "properties": {
+        "estate": {
+          "type": "object"
+        },
+        "terrain": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "terrain",
+        "estate"
+      ],
+      "type": "object"
+    },
+    "inferenceState": {
+      "enum": [
+        "EVALUABLE",
+        "UNEVALUABLE",
+        "INVALID_INPUT"
+      ]
+    },
+    "outputDigest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "passingArrangementCount": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resultClass": {
+      "enum": [
+        "NO_CANDIDATE_ARRANGEMENTS_GENERATED",
+        "CANDIDATE_ARRANGEMENTS_GENERATED_BUT_REJECTED",
+        "REJECTION_CAUSED_BY_DECLARED_HARD_CONSTRAINTS",
+        "REJECTION_CAUSED_BY_INPUT_OR_OBSERVABILITY_LIMITATION",
+        "REJECTION_CAUSED_BY_EVALUATOR_OR_MEASUREMENT_INSUFFICIENCY",
+        "EVIDENCE_SUPPORTING_TERRAIN_INFEASIBILITY",
+        "EVIDENCE_SUPPORTING_ESTATE_INFEASIBILITY",
+        "FEASIBLE_ARRANGEMENT_FOUND"
+      ]
+    },
+    "schema": {
+      "const": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_OUTPUT_INSTANCE_v2"
+    },
+    "zeroPassNonInference": {
+      "additionalProperties": false,
+      "properties": {
+        "estateInfeasibilityInferredFromZero": {
+          "const": false
+        },
+        "pass": {
+          "const": true
+        },
+        "passingCountIsZero": {
+          "type": "boolean"
+        },
+        "terrainInfeasibilityInferredFromZero": {
+          "const": false
+        }
+      },
+      "required": [
+        "passingCountIsZero",
+        "terrainInfeasibilityInferredFromZero",
+        "estateInfeasibilityInferredFromZero",
+        "pass"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema",
+    "caseId",
+    "resultClass",
+    "inferenceState",
+    "candidateArrangementCount",
+    "passingArrangementCount",
+    "causalTraces",
+    "infeasibilityClaims",
+    "zeroPassNonInference",
+    "evaluatorEvidence",
+    "outputDigest"
+  ],
+  "type": "object"
+}

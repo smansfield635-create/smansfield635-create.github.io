@@ -123,7 +123,7 @@ jobs:
           const negative=JSON.parse(fs.readFileSync(`${process.env.OUT}/negative.json`,'utf8'));
           const ledger=JSON.parse(fs.readFileSync('/tmp/live-ledger.json','utf8'));
           const classes=positive.pathClassification?.classifications??[];
-          if(positive.finalDisposition!=='PASS'||positive.mutationMayProceed!==true)throw Error('POSITIVE_PREFLIGHT_NOT_PASS');
+          if(positive.finalDisposition!=='PASS'||positive.mutationMayProceed!==false||positive.continuation!=='SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE')throw Error('POSITIVE_PREFLIGHT_NOT_PASS');
           if(classes.length!==6||!classes.every(x=>x.registered===true&&x.classification==='REGISTERED_H_EARTH_PATH'&&(x.resolvedNodeIds??[]).includes(newNodeId)))throw Error('SIX_PATH_RESOLUTION_MISMATCH');
           if(negative.finalDisposition!=='STOP'||negative.mutationMayProceed!==false)throw Error('NEGATIVE_NEIGHBOR_NOT_STOPPED');
           const nc=negative.pathClassification?.classifications?.[0];

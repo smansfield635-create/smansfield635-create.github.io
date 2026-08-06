@@ -1,0 +1,555 @@
+name: H-Earth V2 Router Instruction and Lock Closure Successor
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths:
+      - .github/ai-router/router.v1.json
+      - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/AGENTS.md
+      - .github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml
+      - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/contract.v1.json
+      - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/changed-path-manifest.v1.json
+      - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/closure-request.lock-279.v1.json
+      - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/negative-fixtures.v1.json
+      - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/rollback.v1.json
+      - h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs
+  workflow_dispatch:
+    inputs:
+      request_type:
+        description: Exact admitted closure request class
+        required: true
+        type: choice
+        options:
+          - LOCK_279_FAIL_CLOSED_EXECUTION_REQUEST_V1
+          - GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V1
+      pull_request_number:
+        description: Exact governance-successor pull request number
+        required: true
+        type: string
+      exact_verified_candidate_head:
+        description: Exact Role 3 verified two-commit candidate head
+        required: true
+        type: string
+      exact_role_4_authorized_merge_commit:
+        description: Exact Role 4 authorized merge commit; required only for closure execution
+        required: false
+        default: ''
+        type: string
+      role_4_review_id:
+        description: Real GitHub approval review ID; required only for closure execution
+        required: false
+        default: ''
+        type: string
+      role_3_post_command_comment_id:
+        description: Role 3 post-command PASS comment ID; required only for closure execution
+        required: false
+        default: ''
+        type: string
+      role_4_construction_lock_closure_authorization_comment_id:
+        description: Role 4 closure authorization comment ID; required only for closure execution
+        required: false
+        default: ''
+        type: string
+      lock_279_closure_run_id:
+        description: Successful exact workflow run that closed generation 279; required only for generation 280 closure
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  actions: read
+
+concurrency:
+  group: h-earth-v2-governance-successor-lock-lifecycle
+  cancel-in-progress: false
+
+jobs:
+  verify-candidate-and-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      REPOSITORY: smansfield635-create/smansfield635-create.github.io
+      EXPECTED_BRANCH: agent/h-earth-v2-governance-successor-001
+      EXPECTED_BASE: main
+      EXPECTED_COMMIT_A: 563464f3b8b5b8045677962986e3ba00fbeed960
+      EXPECTED_GOVERNING_HEAD: 25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f
+      WORKFLOW_PATH: .github/workflows/h-earth-v2-router-instruction-lock-closure-successor.yml
+      VERIFIER_PATH: h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs
+      CLOSURE_REQUEST_PATH: h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/closure-request.lock-279.v1.json
+      EXPECTED_CLOSURE_REQUEST_BLOB: 193fc3d8c29a26cb391534f8350a0b5ab97a563f
+      EXPECTED_LOCK_MANAGER_BLOB: 6fc0199c9dc943b8cdf3efe7c789f0e1888774b8
+      REQUEST_TYPE: ${{ github.event_name == 'pull_request' && 'PULL_REQUEST_VERIFICATION' || inputs.request_type }}
+      PULL_REQUEST_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || inputs.pull_request_number }}
+      EXACT_VERIFIED_CANDIDATE_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || inputs.exact_verified_candidate_head }}
+      EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT: ${{ inputs.exact_role_4_authorized_merge_commit }}
+      ROLE_4_REVIEW_ID: ${{ inputs.role_4_review_id }}
+      ROLE_3_POST_COMMAND_COMMENT_ID: ${{ inputs.role_3_post_command_comment_id }}
+      ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION_COMMENT_ID: ${{ inputs.role_4_construction_lock_closure_authorization_comment_id }}
+      LOCK_279_CLOSURE_RUN_ID: ${{ inputs.lock_279_closure_run_id }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Validate mode-specific dispatch fields
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$PULL_REQUEST_NUMBER" =~ ^[0-9]+$ ]]
+          [[ "$EXACT_VERIFIED_CANDIDATE_HEAD" =~ ^[0-9a-f]{40}$ ]]
+          case "$REQUEST_TYPE" in
+            PULL_REQUEST_VERIFICATION)
+              test -z "$EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT"
+              test -z "$ROLE_4_REVIEW_ID"
+              test -z "$ROLE_3_POST_COMMAND_COMMENT_ID"
+              test -z "$ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION_COMMENT_ID"
+              test -z "$LOCK_279_CLOSURE_RUN_ID"
+              ;;
+            LOCK_279_FAIL_CLOSED_EXECUTION_REQUEST_V1)
+              [[ "$EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT" =~ ^[0-9a-f]{40}$ ]]
+              [[ "$ROLE_4_REVIEW_ID" =~ ^[0-9]+$ ]]
+              [[ "$ROLE_3_POST_COMMAND_COMMENT_ID" =~ ^[0-9]+$ ]]
+              [[ "$ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION_COMMENT_ID" =~ ^[0-9]+$ ]]
+              test -z "$LOCK_279_CLOSURE_RUN_ID"
+              ;;
+            GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V1)
+              [[ "$EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT" =~ ^[0-9a-f]{40}$ ]]
+              [[ "$ROLE_4_REVIEW_ID" =~ ^[0-9]+$ ]]
+              [[ "$ROLE_3_POST_COMMAND_COMMENT_ID" =~ ^[0-9]+$ ]]
+              [[ "$ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION_COMMENT_ID" =~ ^[0-9]+$ ]]
+              [[ "$LOCK_279_CLOSURE_RUN_ID" =~ ^[0-9]+$ ]]
+              ;;
+            *)
+              echo "UNAUTHORIZED_REQUEST_TYPE" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Bind exact pull request and mode-specific authority evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const repo = process.env.REPOSITORY;
+          const [owner, name] = repo.split('/');
+          const api = 'https://api.github.com';
+          const allowedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`${api}${path}`, {headers});
+            const text = await response.text();
+            let body;
+            try { body = text ? JSON.parse(text) : null; } catch { body = {raw: text}; }
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${JSON.stringify(body)}`);
+            return body;
+          }
+          function requireCondition(value, code) {
+            if (!value) throw new Error(code);
+          }
+          function bodyBinds(comment, requiredTokens) {
+            const body = String(comment.body || '');
+            return requiredTokens.every(token => body.includes(token));
+          }
+          (async () => {
+            const prNumber = Number(process.env.PULL_REQUEST_NUMBER);
+            const pr = await get(`/repos/${owner}/${name}/pulls/${prNumber}`);
+            requireCondition(pr.base.ref === process.env.EXPECTED_BASE, 'PR_BASE_MISMATCH');
+            requireCondition(pr.head.ref === process.env.EXPECTED_BRANCH, 'PR_HEAD_BRANCH_MISMATCH');
+            requireCondition(pr.head.sha === process.env.EXACT_VERIFIED_CANDIDATE_HEAD, 'PR_CANDIDATE_HEAD_MISMATCH');
+
+            const candidateCommit = await get(`/repos/${owner}/${name}/git/commits/${process.env.EXACT_VERIFIED_CANDIDATE_HEAD}`);
+            requireCondition(candidateCommit.parents?.length === 1, 'COMMIT_B_PARENT_COUNT_MISMATCH');
+            requireCondition(candidateCommit.parents[0].sha === process.env.EXPECTED_COMMIT_A, 'COMMIT_B_PARENT_NOT_PRESERVED_COMMIT_A');
+
+            const triggerPermission = await get(`/repos/${owner}/${name}/collaborators/${encodeURIComponent(process.env.GITHUB_ACTOR)}/permission`);
+            requireCondition(['admin', 'maintain', 'write'].includes(triggerPermission.permission), 'TRIGGER_ACTOR_UNAUTHORIZED');
+
+            const main = await get(`/repos/${owner}/${name}/git/ref/heads/${process.env.EXPECTED_BASE}`);
+            let review = null;
+            let role3 = null;
+            let role4Closure = null;
+
+            if (process.env.REQUEST_TYPE === 'PULL_REQUEST_VERIFICATION') {
+              requireCondition(pr.merged === false, 'PR_VERIFICATION_REQUIRES_UNMERGED_PR');
+            } else {
+              requireCondition(pr.merged === true, 'POST_MERGE_REQUEST_REQUIRES_MERGED_PR');
+              requireCondition(pr.merge_commit_sha === process.env.EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT, 'AUTHORIZED_MERGE_COMMIT_MISMATCH');
+              requireCondition(main.object.sha === process.env.EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT, 'DEFAULT_BRANCH_NOT_EXACT_AUTHORIZED_MERGE_COMMIT');
+
+              review = await get(`/repos/${owner}/${name}/pulls/${prNumber}/reviews/${process.env.ROLE_4_REVIEW_ID}`);
+              requireCondition(review.state === 'APPROVED', 'ROLE_4_REVIEW_NOT_APPROVED');
+              requireCondition(allowedAssociations.has(review.author_association), 'ROLE_4_REVIEW_ASSOCIATION_UNAUTHORIZED');
+              requireCondition(review.commit_id === process.env.EXACT_VERIFIED_CANDIDATE_HEAD, 'ROLE_4_REVIEW_NOT_CANDIDATE_BOUND');
+
+              role3 = await get(`/repos/${owner}/${name}/issues/comments/${process.env.ROLE_3_POST_COMMAND_COMMENT_ID}`);
+              requireCondition(allowedAssociations.has(role3.author_association), 'ROLE_3_COMMENT_ASSOCIATION_UNAUTHORIZED');
+              requireCondition(bodyBinds(role3, [
+                'ROLE_3_POST_COMMAND_PASS',
+                process.env.EXACT_VERIFIED_CANDIDATE_HEAD
+              ]), 'ROLE_3_POST_COMMAND_PASS_NOT_CANDIDATE_BOUND');
+
+              role4Closure = await get(`/repos/${owner}/${name}/issues/comments/${process.env.ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION_COMMENT_ID}`);
+              requireCondition(allowedAssociations.has(role4Closure.author_association), 'ROLE_4_CLOSURE_COMMENT_ASSOCIATION_UNAUTHORIZED');
+              requireCondition(bodyBinds(role4Closure, [
+                'ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION',
+                process.env.EXACT_VERIFIED_CANDIDATE_HEAD,
+                process.env.EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT
+              ]), 'ROLE_4_CLOSURE_AUTHORIZATION_NOT_EXACTLY_BOUND');
+            }
+
+            const receipt = {
+              schema: 'H_EARTH_V2_GOVERNANCE_SUCCESSOR_EXACT_EVENT_BINDING_RECEIPT_v2',
+              result: 'PASS',
+              requestType: process.env.REQUEST_TYPE,
+              pullRequestNumber: prNumber,
+              candidateHead: process.env.EXACT_VERIFIED_CANDIDATE_HEAD,
+              preservedCommitA: process.env.EXPECTED_COMMIT_A,
+              authorizedMergeCommit: process.env.EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT || null,
+              role4ReviewId: review ? Number(process.env.ROLE_4_REVIEW_ID) : null,
+              role3PostCommandCommentId: role3 ? Number(process.env.ROLE_3_POST_COMMAND_COMMENT_ID) : null,
+              role4ConstructionLockClosureAuthorizationCommentId: role4Closure ? Number(process.env.ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION_COMMENT_ID) : null,
+              triggerActor: process.env.GITHUB_ACTOR,
+              triggerActorPermission: triggerPermission.permission,
+              defaultBranchHead: main.object.sha
+            };
+            fs.writeFileSync('/tmp/h-earth-v2-governance-successor-event-binding.json', JSON.stringify(receipt, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Check out exact verified candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXACT_VERIFIED_CANDIDATE_HEAD }}
+          fetch-depth: 0
+
+      - name: Bind exact candidate, workflow, lock manager and closure request blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXACT_VERIFIED_CANDIDATE_HEAD"
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_COMMIT_A"
+          test "$(git rev-parse "HEAD:$CLOSURE_REQUEST_PATH")" = "$EXPECTED_CLOSURE_REQUEST_BLOB"
+          test "$(git rev-parse "HEAD:tools/operation-intake/repository-operation-lock-manager.v1.mjs")" = "$EXPECTED_LOCK_MANAGER_BLOB"
+          WORKFLOW_BLOB="$(git rev-parse "HEAD:$WORKFLOW_PATH")"
+          test -n "$WORKFLOW_BLOB"
+          if [[ "$REQUEST_TYPE" != "PULL_REQUEST_VERIFICATION" ]]; then
+            git fetch --no-tags origin "$EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT"
+            MERGED_WORKFLOW_BLOB="$(git rev-parse "$EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT:$WORKFLOW_PATH")"
+            test "$MERGED_WORKFLOW_BLOB" = "$WORKFLOW_BLOB"
+          fi
+          node <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const closurePath = process.env.CLOSURE_REQUEST_PATH;
+          const closureBytes = fs.readFileSync(closurePath);
+          const closure = JSON.parse(closureBytes);
+          if (closure.lockGeneration !== 279) throw new Error('LOCK_279_GENERATION_MISMATCH');
+          if (closure.terminalDisposition !== 'FAIL_CLOSED') throw new Error('LOCK_279_DISPOSITION_MISMATCH');
+          if (closure.executionAuthority !== 'POST_MERGE_EXACT_PR_BOUND_WORKFLOW_ONLY') throw new Error('LOCK_279_EXECUTION_AUTHORITY_MISMATCH');
+          const receipt = {
+            schema: 'H_EARTH_V2_GOVERNANCE_SUCCESSOR_SOURCE_BINDING_RECEIPT_v1',
+            result: 'PASS',
+            candidateHead: process.env.EXACT_VERIFIED_CANDIDATE_HEAD,
+            workflowBlob: require('child_process').execFileSync('git', ['rev-parse', `HEAD:${process.env.WORKFLOW_PATH}`], {encoding:'utf8'}).trim(),
+            closureRequestBlob: process.env.EXPECTED_CLOSURE_REQUEST_BLOB,
+            closureRequestSha256: crypto.createHash('sha256').update(closureBytes).digest('hex'),
+            lockManagerBlob: process.env.EXPECTED_LOCK_MANAGER_BLOB
+          };
+          fs.writeFileSync('/tmp/h-earth-v2-governance-successor-source-binding.json', JSON.stringify(receipt, null, 2) + '\n');
+          NODE
+
+      - name: Execute exact static router negative rollback and boundary verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-successor-evaluator/router-instruction-lock-closure-successor/verify.v1.mjs
+          node "$VERIFIER_PATH" --phase full --output /tmp/h-earth-v2-governance-successor-verification.json
+          node <<'NODE'
+          const fs = require('fs');
+          const receipt = JSON.parse(fs.readFileSync('/tmp/h-earth-v2-governance-successor-verification.json', 'utf8'));
+          if (receipt.result !== 'PASS') throw new Error('VERIFICATION_NOT_PASS');
+          if (receipt.routerEightRouteResult !== 'PASS') throw new Error('ROUTER_SELF_TEST_NOT_PASS');
+          if (receipt.negativeFixtureResult !== '40_OF_40_PASS') throw new Error('NEGATIVE_FIXTURE_RESULT_NOT_40_OF_40_PASS');
+          for (const [name, value] of Object.entries({
+            'negative-fixtures': {schema:'H_EARTH_V2_GOVERNANCE_SUCCESSOR_NEGATIVE_FIXTURE_RECEIPT_v1',result:receipt.negativeFixtureResult,fixtures:receipt.negativeFixtureResults},
+            'router-self-test': {schema:'H_EARTH_V2_GOVERNANCE_SUCCESSOR_ROUTER_SELF_TEST_RECEIPT_v1',result:receipt.routerEightRouteResult,routes:receipt.routerEightRouteEvidence},
+            'path-boundary': {schema:'H_EARTH_V2_GOVERNANCE_SUCCESSOR_PATH_BOUNDARY_RECEIPT_v1',result:'PASS',candidateHead:receipt.gitEvidence.head,changedPaths:receipt.gitEvidence.changedPaths,status:receipt.gitEvidence.status}
+          })) fs.writeFileSync(`/tmp/h-earth-v2-governance-successor-${name}.json`, JSON.stringify(value, null, 2) + '\n');
+          NODE
+
+      - name: Download prior generation 279 closure receipt
+        if: ${{ inputs.request_type == 'GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V1' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-v2-governance-successor-lifecycle-receipts
+          path: /tmp/h-earth-v2-prior-lock-279
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: smansfield635-create/smansfield635-create.github.io
+          run-id: ${{ inputs.lock_279_closure_run_id }}
+
+      - name: Verify prior generation 279 receipt and independent terminal history
+        if: ${{ inputs.request_type == 'GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V1' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const repo = process.env.REPOSITORY;
+          const [owner, name] = repo.split('/');
+          const api = 'https://api.github.com';
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(apiPath) {
+            const response = await fetch(`${api}${apiPath}`, {headers});
+            const text = await response.text();
+            let body;
+            try { body = text ? JSON.parse(text) : null; } catch { body = {raw:text}; }
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${apiPath}:${JSON.stringify(body)}`);
+            return body;
+          }
+          function requireCondition(value, code) {
+            if (!value) throw new Error(code);
+          }
+          (async () => {
+            const priorRun = await get(`/repos/${owner}/${name}/actions/runs/${process.env.LOCK_279_CLOSURE_RUN_ID}`);
+            requireCondition(priorRun.path === process.env.WORKFLOW_PATH, 'LOCK_279_RUN_WORKFLOW_PATH_MISMATCH');
+            requireCondition(priorRun.event === 'workflow_dispatch', 'LOCK_279_RUN_EVENT_MISMATCH');
+            requireCondition(priorRun.status === 'completed' && priorRun.conclusion === 'success', 'LOCK_279_RUN_NOT_SUCCESS');
+            requireCondition(priorRun.head_sha === process.env.EXACT_ROLE_4_AUTHORIZED_MERGE_COMMIT, 'LOCK_279_RUN_HEAD_MISMATCH');
+            requireCondition(Number(priorRun.id) < Number(process.env.GITHUB_RUN_ID), 'LOCK_279_RUN_NOT_PRIOR');
+
+            const receiptPath = path.join('/tmp/h-earth-v2-prior-lock-279', 'h-earth-lock-279-fail-closed-command-receipt.json');
+            const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+            requireCondition(receipt.result === 'TERMINAL_CLOSURE_COMMITTED', 'LOCK_279_RECEIPT_NOT_COMMITTED');
+            requireCondition(receipt.lockReleased === true, 'LOCK_279_RECEIPT_NOT_RELEASED');
+            requireCondition(receipt.lockGeneration === 279, 'LOCK_279_RECEIPT_GENERATION_MISMATCH');
+            requireCondition(receipt.terminalDisposition === 'FAIL_CLOSED', 'LOCK_279_RECEIPT_DISPOSITION_MISMATCH');
+            requireCondition(receipt.operationId === 'H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001', 'LOCK_279_RECEIPT_OPERATION_MISMATCH');
+            requireCondition(receipt.lockScope === 'H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE', 'LOCK_279_RECEIPT_SCOPE_MISMATCH');
+
+            const closureCommit = await get(`/repos/${owner}/${name}/git/commits/${receipt.closureCommitSha}`);
+            requireCondition(closureCommit.parents?.length === 1, 'LOCK_279_CLOSURE_COMMIT_PARENT_COUNT_MISMATCH');
+            const closureLedgerFile = await get(`/repos/${owner}/${name}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=${receipt.closureCommitSha}`);
+            requireCondition(closureLedgerFile.sha === receipt.committedLedgerBlobSha, 'LOCK_279_CLOSURE_LEDGER_BLOB_MISMATCH');
+            const closureLedger = JSON.parse(Buffer.from(closureLedgerFile.content, 'base64').toString('utf8'));
+            const currentLedgerFile = await get(`/repos/${owner}/${name}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1`);
+            const currentLedger = JSON.parse(Buffer.from(currentLedgerFile.content, 'base64').toString('utf8'));
+            function verifyLedgerState(ledger, prefix) {
+              const active = Object.values(ledger.activeScopes || {});
+              requireCondition(!active.some(entry => entry.lockGeneration === 279 || entry.operationId === receipt.operationId || entry.lockScope === receipt.lockScope), `${prefix}_LOCK_279_STILL_ACTIVE`);
+              const terminal = (ledger.terminalHistory || []).find(entry =>
+                entry.lockGeneration === 279 &&
+                entry.operationId === receipt.operationId &&
+                entry.lockScope === receipt.lockScope &&
+                entry.scopeHash === receipt.scopeHash &&
+                entry.state === 'TERMINAL' &&
+                entry.released === true &&
+                entry.terminalDisposition === 'FAIL_CLOSED'
+              );
+              requireCondition(Boolean(terminal), `${prefix}_LOCK_279_TERMINAL_HISTORY_MISSING`);
+            }
+            verifyLedgerState(closureLedger, 'CLOSURE_COMMIT');
+            verifyLedgerState(currentLedger, 'CURRENT_LEDGER');
+
+            fs.writeFileSync('/tmp/h-earth-v2-governance-successor-lock-279-prerequisite.json', JSON.stringify({
+              schema: 'H_EARTH_V2_LOCK_279_PREREQUISITE_RECEIPT_v1',
+              result: 'PASS',
+              priorRunId: Number(process.env.LOCK_279_CLOSURE_RUN_ID),
+              priorRunHead: priorRun.head_sha,
+              lockGeneration: 279,
+              terminalDisposition: 'FAIL_CLOSED',
+              closureCommitSha: receipt.closureCommitSha,
+              committedLedgerBlobSha: receipt.committedLedgerBlobSha,
+              terminalHistoryVerified: true
+            }, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Package verification receipts
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-governance-successor-artifact
+          for file in \
+            /tmp/h-earth-v2-governance-successor-verification.json \
+            /tmp/h-earth-v2-governance-successor-negative-fixtures.json \
+            /tmp/h-earth-v2-governance-successor-router-self-test.json \
+            /tmp/h-earth-v2-governance-successor-path-boundary.json \
+            /tmp/h-earth-v2-governance-successor-event-binding.json \
+            /tmp/h-earth-v2-governance-successor-source-binding.json \
+            /tmp/h-earth-v2-governance-successor-lock-279-prerequisite.json
+          do
+            if [[ -f "$file" ]]; then cp "$file" /tmp/h-earth-v2-governance-successor-artifact/; fi
+          done
+
+      - name: Upload verification receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-governance-successor-verification-receipts
+          path: /tmp/h-earth-v2-governance-successor-artifact
+          if-no-files-found: error
+          retention-days: 30
+
+  execute-authorized-closure:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    needs: verify-candidate-and-authority
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: read
+      issues: read
+      actions: read
+    env:
+      REPOSITORY: smansfield635-create/smansfield635-create.github.io
+      REQUEST_TYPE: ${{ inputs.request_type }}
+      EXACT_VERIFIED_CANDIDATE_HEAD: ${{ inputs.exact_verified_candidate_head }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Check out exact verified candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.exact_verified_candidate_head }}
+          fetch-depth: 0
+
+      - name: Record pre-execution remote lock-ref identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(url) {
+            const response = await fetch(url, {headers});
+            const body = await response.json();
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${JSON.stringify(body)}`);
+            return body;
+          }
+          (async () => {
+            const ref = await get(`https://api.github.com/repos/${process.env.REPOSITORY}/git/ref/heads/operation-locks/repository-operation-intake-v1`);
+            const file = await get(`https://api.github.com/repos/${process.env.REPOSITORY}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1`);
+            fs.writeFileSync('/tmp/h-earth-v2-governance-successor-pre-execution-remote-ref.json', JSON.stringify({
+              schema: 'H_EARTH_V2_GOVERNANCE_SUCCESSOR_PRE_EXECUTION_REMOTE_REF_IDENTITY_v1',
+              result: 'PASS',
+              lockRefHead: ref.object.sha,
+              ledgerBlob: file.sha,
+              remoteRefHash: crypto.createHash('sha256').update(`${ref.object.sha}:${file.sha}`, 'utf8').digest('hex')
+            }, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Execute exact lock 279 fail-closed request
+        if: ${{ inputs.request_type == 'LOCK_279_FAIL_CLOSED_EXECUTION_REQUEST_V1' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001 --lock-scope H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE --lock-generation 279 --terminal-disposition FAIL_CLOSED --output "$RUNNER_TEMP/h-earth-lock-279-fail-closed-command-receipt.json"
+
+      - name: Execute exact construction lock generation 280 pass-closed request
+        if: ${{ inputs.request_type == 'GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V1' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_CONSTRUCTION_001 --lock-scope H_EARTH_V2_ROUTER_INSTRUCTION_AND_LOCK_CLOSURE_SUCCESSOR_EXACT_9_PATH_SCOPE --lock-generation 280 --terminal-disposition PASS_CLOSED --output "$RUNNER_TEMP/h-earth-governance-successor-construction-lock-pass-closed-receipt.json"
+
+      - name: Verify command receipt and post-execution remote-ref identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const path = require('path');
+          const receiptPath = process.env.REQUEST_TYPE === 'LOCK_279_FAIL_CLOSED_EXECUTION_REQUEST_V1'
+            ? path.join(process.env.RUNNER_TEMP, 'h-earth-lock-279-fail-closed-command-receipt.json')
+            : path.join(process.env.RUNNER_TEMP, 'h-earth-governance-successor-construction-lock-pass-closed-receipt.json');
+          const receipt = JSON.parse(fs.readFileSync(receiptPath, 'utf8'));
+          if (receipt.result !== 'TERMINAL_CLOSURE_COMMITTED') throw new Error('LOCK_CLOSURE_NOT_COMMITTED');
+          if (receipt.lockReleased !== true) throw new Error('LOCK_RELEASE_NOT_CONFIRMED');
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(url) {
+            const response = await fetch(url, {headers});
+            const body = await response.json();
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${JSON.stringify(body)}`);
+            return body;
+          }
+          (async () => {
+            const ref = await get(`https://api.github.com/repos/${process.env.REPOSITORY}/git/ref/heads/operation-locks/repository-operation-intake-v1`);
+            const file = await get(`https://api.github.com/repos/${process.env.REPOSITORY}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1`);
+            if (ref.object.sha !== receipt.closureCommitSha) throw new Error('REMOTE_REF_NOT_CLOSURE_COMMIT');
+            if (file.sha !== receipt.committedLedgerBlobSha) throw new Error('REMOTE_LEDGER_BLOB_MISMATCH');
+            fs.writeFileSync('/tmp/h-earth-v2-governance-successor-post-execution-remote-ref.json', JSON.stringify({
+              schema: 'H_EARTH_V2_GOVERNANCE_SUCCESSOR_POST_EXECUTION_REMOTE_REF_IDENTITY_v1',
+              result: 'PASS',
+              requestType: process.env.REQUEST_TYPE,
+              lockGeneration: receipt.lockGeneration,
+              terminalDisposition: receipt.terminalDisposition,
+              closureCommitSha: receipt.closureCommitSha,
+              committedLedgerBlobSha: receipt.committedLedgerBlobSha,
+              remoteRefHash: crypto.createHash('sha256').update(`${receipt.lockGeneration}:${ref.object.sha}:${file.sha}`, 'utf8').digest('hex')
+            }, null, 2) + '\n');
+          })().catch(error => {
+            console.error(error.stack || error.message);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Package exact lifecycle receipts
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-governance-successor-artifact
+          for file in \
+            /tmp/h-earth-v2-governance-successor-pre-execution-remote-ref.json \
+            /tmp/h-earth-v2-governance-successor-post-execution-remote-ref.json \
+            "$RUNNER_TEMP/h-earth-lock-279-fail-closed-command-receipt.json" \
+            "$RUNNER_TEMP/h-earth-governance-successor-construction-lock-pass-closed-receipt.json"
+          do
+            if [[ -f "$file" ]]; then cp "$file" /tmp/h-earth-v2-governance-successor-artifact/; fi
+          done
+
+      - name: Upload exact lifecycle receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-governance-successor-lifecycle-receipts
+          path: /tmp/h-earth-v2-governance-successor-artifact
+          if-no-files-found: error
+          retention-days: 30

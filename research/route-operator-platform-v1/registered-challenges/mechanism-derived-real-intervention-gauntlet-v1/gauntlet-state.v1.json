@@ -1,0 +1,19 @@
+{
+  "comparator_teams": 0,
+  "custodian_registered": false,
+  "evaluator_registered": false,
+  "execution_status": "NOT_STARTED",
+  "first_heldout_outcome_unblinded": false,
+  "first_prediction_frozen": false,
+  "first_public_documentation_package_released": false,
+  "first_system_admitted": false,
+  "operation_id": "MECHANISM_DERIVED_REAL_INTERVENTION_GAUNTLET_v1",
+  "postoutcome_repair_permitted": false,
+  "protocol_status": "FROZEN_BEFORE_SYSTEM_ADMISSION",
+  "registered_domains": 0,
+  "registered_intervention_episodes": 0,
+  "registered_systems": 0,
+  "scientific_result": "NONE",
+  "theory_prediction_teams": 0,
+  "version": "1.0.0"
+}

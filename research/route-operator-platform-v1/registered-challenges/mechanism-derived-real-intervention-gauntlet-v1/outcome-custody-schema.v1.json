@@ -1,0 +1,80 @@
+{
+  "$id": "MECHANISM_DERIVED_REAL_INTERVENTION_OUTCOME_CUSTODY_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "custodian_id": {
+      "type": "string"
+    },
+    "hidden_truth_package_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "intervention_fidelity_package_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "operation_id": {
+      "const": "MECHANISM_DERIVED_REAL_INTERVENTION_GAUNTLET_v1"
+    },
+    "prediction_freeze_receipts": {
+      "items": {
+        "properties": {
+          "model_id": {
+            "type": "string"
+          },
+          "submission_sha256": {
+            "pattern": "^[a-f0-9]{64}$",
+            "type": "string"
+          },
+          "submitted_at_utc": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "team_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "team_id",
+          "model_id",
+          "submission_sha256",
+          "submitted_at_utc"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "public_package_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "unblind_authorization": {
+      "properties": {
+        "all_required_submissions_frozen": {
+          "const": true
+        },
+        "authorized_at_utc": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "required": [
+        "all_required_submissions_frozen",
+        "authorized_at_utc"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "operation_id",
+    "custodian_id",
+    "hidden_truth_package_sha256",
+    "public_package_sha256",
+    "intervention_fidelity_package_sha256",
+    "prediction_freeze_receipts",
+    "unblind_authorization"
+  ],
+  "type": "object"
+}

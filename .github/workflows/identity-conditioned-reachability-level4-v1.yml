@@ -24,6 +24,26 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Diagnose frozen manifest hashes
+        working-directory: research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-level4-v1
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('.')
+          manifest = json.loads((root / 'MANIFEST_SHA256.json').read_text(encoding='utf-8'))
+          mismatches = []
+          for name, expected in manifest['files'].items():
+              actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
+              status = 'PASS' if actual == expected else 'MISMATCH'
+              print(f'{status} {name} expected={expected} actual={actual}')
+              if status == 'MISMATCH':
+                  mismatches.append(name)
+          print(json.dumps({'manifest_mismatches': mismatches}, sort_keys=True))
+          PY
+
       - name: Verify frozen package and deterministic gauntlet
         working-directory: research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-level4-v1
         run: python verify_level4_gauntlet_v1.py

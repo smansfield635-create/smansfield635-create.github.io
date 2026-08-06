@@ -63,7 +63,7 @@ def run() -> dict[str, Any]:
         raise RuntimeError(f"Target row mismatch: {len(y)} != {len(agg)}")
 
     output_cols = [c for c in agg.columns if c.startswith(("EPS1_", "FS1_", "FS2_"))]
-    route_cols = [c for c in agg.colums if c.startswith(("PS", "TS", "VS", "CE", "CP", "SE", "EPS", "FS"))]
+    route_cols = [c for c in agg.columns if c.startswith(("PS", "TS", "VS", "CE", "CP", "SE", "EPS", "FS"))]
     output = agg[output_cols].copy()
     relational = agg[route_cols].copy()
     pressure_means = [c for c in relational if c.startswith("PS") and c.endswith("_mean")]

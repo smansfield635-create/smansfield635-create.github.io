@@ -10,14 +10,17 @@
     "frozen-contract.v1.json": "5f667b88cabc4638b4751755fb124636d28c33a6419b71a24e8ce8afcc8a5fef",
     "independent_reproducer_v1.py": "26ab07c9b2c7c8e2509fc2aaedf4ab79ef377f82dbbf043fca19d3ef9a908a2f",
     "level4_gauntlet_v1.py": "d0d8da5265beb29440477b3aca74700306dc9b2be214437f56c16d2543d3aad1",
-    "level4_target_system_v1.py": "2fab7a7792558e25ac1cbffd9e38f89bc10c2cbffb89ee6e3fa861c52b720aff",
+    "level4_target_system_v1.py": "8c36d7bc61de0f8bc06d3574db3a8b6c9233f2480198ff8bb313825571b89e82",
     "prediction-matrix.v1.json": "befb5b3ac4cf9125091ca5a8836fb89458c476babe01bbe5710d1686ca678dcb",
     "system-spec.v1.json": "0828116bbe5b81c8021c423b0de9002a63df98fdabc486d3a454fe15128cc771"
   },
-  "manifest_id": "ICR_LEVEL4_FROZEN_MANIFEST_v1",
+  "manifest_id": "ICR_LEVEL4_FROZEN_MANIFEST_v1_0_1",
+  "prior_manifest_disposition": "RUN_001_INVALID_CUSTODY_HASH_MISMATCH",
   "real_natural_system_adjudication_performed": false,
-  "status": "FROZEN_BEFORE_EXECUTION",
+  "refreeze_reason": "CORRECT_EXPECTED_SHA256_FOR_UNCHANGED_LEVEL4_TARGET_SYSTEM_FILE",
+  "scientific_payload_changed": false,
+  "status": "REFROZEN_BEFORE_RUN_002",
   "verifier_path_required": "verify_level4_gauntlet_v1.py",
   "verifier_self_hash_excluded": true,
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

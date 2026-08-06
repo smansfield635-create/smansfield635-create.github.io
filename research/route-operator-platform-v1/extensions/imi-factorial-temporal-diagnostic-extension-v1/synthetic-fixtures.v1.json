@@ -1,0 +1,40 @@
+{
+  "rules": {
+    "meaningful_change_threshold": 0.02,
+    "persistence_window": 2,
+    "minimum_observations": 3,
+    "interval_mode": "EXACT",
+    "expected_interval": 1.0,
+    "condition_bands": [
+      {"label": "HIGH", "lower_inclusive": 0.75},
+      {"label": "MODERATE", "lower_inclusive": 0.4},
+      {"label": "LOW", "lower_inclusive": 0.0}
+    ]
+  },
+  "fixtures": [
+    {
+      "id": "SUSTAINED_IMPROVEMENT",
+      "expected_direction": "IMPROVING",
+      "expected_persistence": "SUSTAINED_IMPROVEMENT",
+      "imi_values": [0.3, 0.45, 0.62]
+    },
+    {
+      "id": "SUSTAINED_DETERIORATION",
+      "expected_direction": "DETERIORATING",
+      "expected_persistence": "SUSTAINED_DETERIORATION",
+      "imi_values": [0.8, 0.61, 0.42]
+    },
+    {
+      "id": "SUSTAINED_STABILITY",
+      "expected_direction": "STABLE",
+      "expected_persistence": "SUSTAINED_STABILITY",
+      "imi_values": [0.5, 0.51, 0.5]
+    },
+    {
+      "id": "RELAPSE",
+      "expected_direction": "DETERIORATING",
+      "expected_persistence": "RELAPSE_OR_REVERSAL_TOWARD_DETERIORATION",
+      "imi_values": [0.4, 0.58, 0.49]
+    }
+  ]
+}

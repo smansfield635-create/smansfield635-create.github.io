@@ -1,0 +1,56 @@
+name: Identity Conditioned Reachability Level 4 v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-level4-v1/**"
+      - ".github/workflows/identity-conditioned-reachability-level4-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-level4-gauntlet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Diagnose frozen manifest hashes
+        working-directory: research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-level4-v1
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('.')
+          manifest = json.loads((root / 'MANIFEST_SHA256.json').read_text(encoding='utf-8'))
+          mismatches = []
+          for name, expected in manifest['files'].items():
+              actual = hashlib.sha256((root / name).read_bytes()).hexdigest()
+              status = 'PASS' if actual == expected else 'MISMATCH'
+              print(f'{status} {name} expected={expected} actual={actual}')
+              if status == 'MISMATCH':
+                  mismatches.append(name)
+          print(json.dumps({'manifest_mismatches': mismatches}, sort_keys=True))
+          PY
+
+      - name: Verify frozen package and deterministic gauntlet
+        working-directory: research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-level4-v1
+        run: python verify_level4_gauntlet_v1.py
+
+      - name: Execute exact-head receipt and independent reproduction
+        working-directory: research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-level4-v1
+        run: |
+          mkdir -p /tmp/icr-level4
+          python level4_gauntlet_v1.py --output /tmp/icr-level4/execution-receipt.json
+          python independent_reproducer_v1.py /tmp/icr-level4/execution-receipt.json

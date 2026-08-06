@@ -1,0 +1,90 @@
+{
+  "matrix_id": "ICR_LEVEL4_PREDICTION_MATRIX_v1",
+  "predictions": [
+    {
+      "prediction_id": "P1_ENDOGENOUS_BASELINE",
+      "condition_id": "C1_ENDOGENOUS_BASELINE",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "PASS"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "ENDOGENOUSLY_PRESERVED"},
+        {"field": "original_route_available", "operator": "EQUALS", "value": true},
+        {"field": "original_challenge_pass", "operator": "EQUALS", "value": true}
+      ]
+    },
+    {
+      "prediction_id": "P2_EXTERNAL_SUPPORT_MASKS_ROUTE_LOSS",
+      "condition_id": "C2_EXTERNAL_SUPPORT",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "PASS"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "EXTERNALLY_SUSTAINED"},
+        {"field": "original_route_available", "operator": "EQUALS", "value": false},
+        {"field": "original_challenge_pass", "operator": "EQUALS", "value": false}
+      ]
+    },
+    {
+      "prediction_id": "P3_SUBSTITUTE_PRESERVES_OUTPUT_NOT_ORIGINAL_IDENTITY",
+      "condition_id": "C3_FUNCTIONAL_SUBSTITUTE",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "PASS"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "FUNCTIONALLY_SUBSTITUTED"},
+        {"field": "original_route_available", "operator": "EQUALS", "value": false},
+        {"field": "original_challenge_pass", "operator": "EQUALS", "value": false}
+      ]
+    },
+    {
+      "prediction_id": "P4_UNSUPPORTED_FRACTURE",
+      "condition_id": "C4_UNSUPPORTED_FRACTURE",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "FAIL"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "FRACTURED"},
+        {"field": "original_route_available", "operator": "EQUALS", "value": false}
+      ]
+    },
+    {
+      "prediction_id": "P5_UNRELATED_CAPACITY_NONCOMPENSATION",
+      "condition_id": "C5_UNRELATED_COMPENSATION",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "FAIL"},
+        {"field": "original_route_available", "operator": "EQUALS", "value": false},
+        {"field": "failure_reason", "operator": "EQUALS", "value": "UNRELATED_CAPACITY_CANNOT_VERIFY"}
+      ]
+    },
+    {
+      "prediction_id": "P6_RELATION_SPECIFIC_RESTORATION",
+      "condition_id": "C6_RELATION_SPECIFIC_RESTORATION",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "PASS"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "ENDOGENOUSLY_PRESERVED"},
+        {"field": "original_route_available", "operator": "EQUALS", "value": true}
+      ]
+    },
+    {
+      "prediction_id": "P7_SUPPORT_WITHDRAWAL_EXPOSES_FAILURE",
+      "condition_id": "C7_SUPPORT_WITHDRAWAL",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "FAIL"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "FRACTURED"},
+        {"field": "failure_reason", "operator": "EQUALS", "value": "SUPPORT_WITHDRAWN_WITHOUT_INTERNAL_ROUTE"}
+      ]
+    },
+    {
+      "prediction_id": "P8_RESTORATION_ALONE_INSUFFICIENT_AFTER_LATCHED_FRACTURE",
+      "condition_id": "C8_HYSTERETIC_RESTORE_BEFORE_CLEARANCE",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "FAIL"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "FRACTURED"},
+        {"field": "failure_reason", "operator": "EQUALS", "value": "REENTRY_CLEARANCE_REQUIRED"}
+      ]
+    },
+    {
+      "prediction_id": "P9_HYSTERETIC_REENTRY",
+      "condition_id": "C9_HYSTERETIC_REENTRY_AFTER_CLEARANCE",
+      "assertions": [
+        {"field": "output_status", "operator": "EQUALS", "value": "PASS"},
+        {"field": "identity_class", "operator": "EQUALS", "value": "RESTORED_WITH_HYSTERESIS"},
+        {"field": "route_steps", "operator": "CONTAINS", "value": "reentry_clearance"},
+        {"field": "original_route_available", "operator": "EQUALS", "value": true}
+      ]
+    }
+  ]
+}

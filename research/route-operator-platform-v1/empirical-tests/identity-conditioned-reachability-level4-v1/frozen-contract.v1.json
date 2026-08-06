@@ -1,0 +1,55 @@
+{
+  "contract_id": "ICR_LEVEL4_FROZEN_CONTRACT_v1",
+  "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_CONTROLLED_RELATION_DISRUPTION_GAUNTLET_v1",
+  "version": "1.0.0",
+  "status": "FROZEN_BEFORE_EXECUTION",
+  "scope": "BOUNDED_DETERMINISTIC_VERIFICATION_PIPELINE",
+  "universal_candidate_under_test": "A bounded system may preserve visible output while losing identity-defining internal relations; selective disruption of a constitutive relation removes predicted identity-preserving routes, unrelated capacity does not reopen them, and relation-specific restoration selectively reopens them.",
+  "primary_discriminating_claims": [
+    "OUTPUT_CONTINUITY_IS_NOT_IDENTITY_CONTINUITY",
+    "CONSTITUTIVE_RELATION_REMOVAL_CLOSES_PREDECLARED_ROUTE_FAMILY",
+    "UNRELATED_CAPACITY_DOES_NOT_REOPEN_ORIGINAL_ROUTE",
+    "EXTERNAL_SUPPORT_CAN_MASK_INTERNAL_ROUTE_LOSS",
+    "SUPPORT_WITHDRAWAL_EXPOSES_UNRESTORED_FAILURE",
+    "ORIGINAL_RELATION_RESTORATION_REOPENS_ORIGINAL_ROUTE",
+    "FUNCTIONAL_SUBSTITUTE_REMAINS_DISTINGUISHABLE_BY_PROVENANCE_AND_HELD_OUT_CHALLENGE",
+    "HYSTERETIC_REENTRY_MAY_REQUIRE_A_DIFFERENT_RETURN_PATH"
+  ],
+  "identity_criterion": {
+    "bounded_system": "The internal intake-canonicalization-original-key-lineage-verification-emission pipeline.",
+    "constitutive_relation": "Successful verification through ORIGINAL_KEY_LINEAGE_V1 with preserved internal provenance.",
+    "identity_continuity": "The target output is produced through the original internal lineage and the original-only challenge remains passable.",
+    "external_support": "The target output is supplied by an external oracle without restoring the original internal verification route.",
+    "functional_substitution": "A different key lineage produces the target output while failing the original-lineage challenge.",
+    "fracture": "No identity-preserving route to the target output is available.",
+    "restoration": "The original internal verification relation is restored and the original route becomes available again.",
+    "hysteretic_reentry": "After a latched fracture, original verification alone is insufficient until a separate reentry-clearance transition occurs."
+  },
+  "execution_order": [
+    "FREEZE_CONTRACT_AND_CODE",
+    "RECORD_EXACT_FROZEN_COMMIT",
+    "EXECUTE_ALL_NINE_CONDITIONS",
+    "RUN_INDEPENDENT_REPRODUCTION",
+    "EMIT_CLAIM_SCOPED_DISPOSITION",
+    "PROHIBIT_POST_RESULT_REPAIR"
+  ],
+  "blinding": {
+    "outcome_blinding": "NOT_APPLICABLE_TO_DETERMINISTIC_ENGINEERED_SYSTEM",
+    "prediction_freeze": "REQUIRED_BEFORE_FIRST_EXECUTION",
+    "analysis_freeze": "REQUIRED_BEFORE_FIRST_EXECUTION",
+    "independent_reproduction": "SEPARATE_REPRODUCER_REQUIRED",
+    "post_result_edits": "PROHIBITED_FOR_FROZEN_FILES"
+  },
+  "scientific_boundary": {
+    "establishes_natural_system_validity": false,
+    "establishes_cross_domain_invariance": false,
+    "tests_independent_relation_recovery": false,
+    "tests_controlled_route_loss_and_reopening": true,
+    "tests_matched_output_identity_discrimination": true,
+    "tests_support_and_substitution_distinction": true,
+    "tests_hysteretic_reentry": true
+  },
+  "core_mutation_permitted": false,
+  "archived_result_mutation_permitted": false,
+  "post_result_threshold_repair_permitted": false
+}

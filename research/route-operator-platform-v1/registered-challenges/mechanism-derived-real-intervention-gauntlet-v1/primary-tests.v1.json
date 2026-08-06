@@ -1,0 +1,71 @@
+{
+  "negative_control_rule": "EVERY_SELECTIVE_TEST_MUST_INCLUDE_PREREGISTERED_UNAFFECTED_CAPABILITIES_OR_UNRELATED_REPAIR_CONTROLS",
+  "no_aggregate_escape": "PASSING_OVERALL_ACCURACY_CANNOT_OFFSET_A_CRITICAL_FAILURE_ON_SUPPORTED_OUTPUT_OR_RELATION_SPECIFIC_RESTORATION",
+  "tests": [
+    {
+      "critical_failure": "PREDICTED_REQUIRED_ROUTE_LOSS_WITHOUT_SELECTIVE_CAPABILITY_EFFECT_IN_MAJORITY_OF_ADMISSIBLE_EPISODES",
+      "id": "T1_SELECTIVE_ROUTE_LOSS",
+      "primary_metric": "SELECTIVE_ROUTE_LOSS_BALANCED_ACCURACY",
+      "required_predictions": [
+        "affected_capabilities",
+        "unaffected_capabilities",
+        "route_availability_change",
+        "effect_direction",
+        "confidence"
+      ],
+      "target": "Predict capability-specific loss after a documented required relation or route is disabled."
+    },
+    {
+      "critical_failure": "UNRELATED_CAPACITY_RELIABLY_RESTORES_CAPABILITY_WITHOUT_ROUTE_REOPENING",
+      "id": "T2_UNRELATED_CAPACITY_NONCOMPENSATION",
+      "primary_metric": "NONCOMPENSATION_BALANCED_ACCURACY",
+      "required_predictions": [
+        "lost_required_route",
+        "unrelated_capacity_change",
+        "capability_restored_boolean",
+        "confidence"
+      ],
+      "target": "Predict that increased unrelated capacity does not restore a capability whose required route remains unavailable."
+    },
+    {
+      "critical_failure": "SUPPORTED_OUTPUT_IS_SYSTEMATICALLY_CLASSIFIED_AS_ENDOGENOUS_CONTINUITY",
+      "id": "T3_SUPPORTED_OUTPUT_WITH_INTERNAL_ROUTE_LOSS",
+      "primary_metric": "SUPPORTED_OUTPUT_PROVENANCE_MACRO_F1",
+      "required_predictions": [
+        "visible_output_status",
+        "endogenous_route_status",
+        "support_mode",
+        "withdrawal_outcome",
+        "confidence"
+      ],
+      "target": "Distinguish externally supported visible output from endogenous operation after internal route loss."
+    },
+    {
+      "critical_failure": "UNRELATED_REPAIR_PERFORMS_AS_WELL_AS_RELATION_SPECIFIC_REPAIR_FOR_PREDICTED_ROUTE_REOPENING",
+      "id": "T4_RELATION_SPECIFIC_RESTORATION",
+      "primary_metric": "RELATION_SPECIFIC_RESTORATION_CONTRAST",
+      "required_predictions": [
+        "repair_target",
+        "route_reopened_boolean",
+        "endogenous_capability_restored_boolean",
+        "unrelated_repair_control",
+        "confidence"
+      ],
+      "target": "Predict route reopening after repair of the relevant relation or a predeclared lawful substitute, and reject unrelated repair as equivalent restoration."
+    },
+    {
+      "critical_failure": "PREDICTED_HYSTERESIS_DIRECTION_SYSTEMATICALLY_CONTRADICTED_BY_COMPLETE_REVERSAL_SEQUENCES",
+      "id": "T5_HYSTERESIS",
+      "primary_metric": "HYSTERESIS_CLASSIFICATION_BALANCED_ACCURACY",
+      "required_predictions": [
+        "reference_state",
+        "return_attempt",
+        "predicted_return_class",
+        "persistent_difference_dimensions",
+        "confidence"
+      ],
+      "target": "Predict whether reversal returns the system to its preregistered prior state or leaves a persistent path-dependent difference."
+    }
+  ],
+  "version": "1.0.0"
+}

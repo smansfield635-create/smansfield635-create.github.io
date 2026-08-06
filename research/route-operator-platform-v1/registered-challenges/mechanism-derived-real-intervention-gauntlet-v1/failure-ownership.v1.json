@@ -1,0 +1,21 @@
+{
+  "anti_escape_rules": [
+    "ADVERSE_PRIMARY_EPISODES_MAY_NOT_BE_RELABELED_UNEVALUABLE_WITHOUT_A_PREDECLARED_CUSTODY_FIDELITY_OR_MISSINGNESS_TRIGGER",
+    "MECHANISM_FALSE_HAS_PRECEDENCE_OVER_REDUNDANCY_WHEN_A_CRITICAL_FAILURE_TRIGGER_IS_MET",
+    "UNDERDEFINITION_IS_NOT_SURVIVAL",
+    "PROTOCOL_CREATION_IS_NOT_A_SCIENTIFIC_RESULT"
+  ],
+  "ownership": {
+    "hysteresis_prediction_wrong": "MECHANISM_FALSE",
+    "insufficient_systems_or_episodes": "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE",
+    "intervention_fidelity_unverifiable": "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE",
+    "outcome_leakage_or_hash_failure": "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE",
+    "relation_derivation_nonreproducible": "MECHANISM_UNDERDEFINED",
+    "restoration_specificity_wrong": "MECHANISM_FALSE",
+    "selective_route_prediction_wrong": "MECHANISM_FALSE",
+    "strongest_comparator_matches_or_exceeds_mechanism": "MECHANISM_REDUNDANT",
+    "supported_output_provenance_wrong": "MECHANISM_FALSE",
+    "unrelated_capacity_compensates": "MECHANISM_FALSE"
+  },
+  "version": "1.0.0"
+}

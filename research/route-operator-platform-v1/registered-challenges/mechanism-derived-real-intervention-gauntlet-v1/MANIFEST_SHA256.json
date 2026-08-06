@@ -1,0 +1,32 @@
+{
+  "core_mutation_performed": false,
+  "file_count": 16,
+  "files": {
+    "PREREGISTRATION.md": "80c74b829c7b6512e261888f1de7299170bf822eff280a148fc4b72650ee2ed3",
+    "README.md": "5cb5c4728042356649e452a594317ec8ce8d202401276578e2debfff683d0daf",
+    "comparators.v1.json": "13949c41fd140cab0da38065110f80e8a15b3a3b7646328d7f214b11db558fd7",
+    "failure-ownership.v1.json": "c55f7de60e76aefdc76f632de530b62e55ea894f7bf6464b0ed0bfc379e96761",
+    "gauntlet-state.v1.json": "b0b1dd37210ff0d2fe7ab1948fe77513a21b7676f18c1306d854970f320cef18",
+    "hysteresis-operationalization.v1.json": "b15bff8304cfaf9bd7054578650f3c77d1590aeb9340974d02fcf61771a86f04",
+    "intervention-admissibility.v1.json": "bd37541bfab030e750ae593c225440faa07b5f9138fe4d03baf701e64190ae91",
+    "mechanism-candidate.v1.json": "aa7d050f5863b443dc5da91bdf9f2175194c88c0a36ad67c716703db684ee92b",
+    "outcome-custody-schema.v1.json": "d75c9202e58e62212e73e86d38a95a288b077cd1297a9cc9b78c7f4c5a4eed51",
+    "prediction-submission-schema.v1.json": "e2863f02dafa544d595496faced97c74b8b7662cd62888e90b1a89d96f8cf4d8",
+    "primary-tests.v1.json": "6cf968ef3a24f440b27412fb6b2f41593871f5d210fc8ba6825d40ee1393d8a0",
+    "real-system-registration-schema.v1.json": "cb4ead19c72b1aa5bdb2ec1b31522c8ef889c674ad81e7591a4deeaaa682b9c1",
+    "relation-derivation-contract.v1.json": "9082770b479b97e1add0cfcda69951a23cf539d1f96a7ad86867b2a2cfcbbcc4",
+    "role-separation-and-custody.v1.json": "f8bbcceb0fd288e7233a6f3079b8d278d62b61390dd83a303042c683cbe7e3c9",
+    "scoring-and-adjudication.v1.json": "94175c490c66765f5609c6c00b723fb4a71487a71e082e65aa3778eb3766f249",
+    "verify_mechanism_derived_real_intervention_gauntlet_v1.py": "9d5c622fe2546d17cbde6360001f7278d268ab0f1c0c75789f297cbf7298379d"
+  },
+  "lineage": {
+    "parent_exact_head": "85c7ae8092e7a9e7b305f89526e250bf72abe428",
+    "parent_mutated": false,
+    "parent_operation": "IDENTITY_CONDITIONED_REACHABILITY_EXTERNAL_ADVERSARIAL_REGISTERED_FALSIFICATION_CHALLENGE_v1"
+  },
+  "operation_id": "MECHANISM_DERIVED_REAL_INTERVENTION_GAUNTLET_v1",
+  "postoutcome_repair_permitted": false,
+  "scientific_result": "NONE",
+  "status": "FROZEN_BEFORE_SYSTEM_ADMISSION",
+  "version": "1.0.0"
+}

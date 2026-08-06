@@ -1,0 +1,25 @@
+name: Mechanism Derived Real Intervention Gauntlet v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/registered-challenges/mechanism-derived-real-intervention-gauntlet-v1/**"
+      - ".github/workflows/mechanism-derived-real-intervention-gauntlet-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-frozen-mechanism-gauntlet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen mechanism-derived real intervention gauntlet
+        working-directory: research/route-operator-platform-v1/registered-challenges/mechanism-derived-real-intervention-gauntlet-v1
+        run: python verify_mechanism_derived_real_intervention_gauntlet_v1.py

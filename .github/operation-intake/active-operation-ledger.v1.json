@@ -168,18 +168,6 @@
       "scopeHash": "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1",
       "state": "ADMITTED_LOCKED"
     },
-    "4d1298d5fa9c94fd3ef50abaad57a8e953a3332074e09d7c07046f3ee18b9b5f": {
-      "governingHead": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f",
-      "lockGeneration": 279,
-      "lockScope": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE",
-      "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001",
-      "procedureLocatorDigest": "2f5aaa61589e40025fa3a35d0fd2ba8c7def2afb92755a22dbea5b0f6b634c49",
-      "released": false,
-      "requestDigest": "ce0968c10b004554f3408f7cee00a4bebdf49d689dc989b51617d61e929c6a47",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "4d1298d5fa9c94fd3ef50abaad57a8e953a3332074e09d7c07046f3ee18b9b5f",
-      "state": "ADMITTED_LOCKED"
-    },
     "5b4f6b33d301429d23265c40ef4bd95a8555aec92574b5bf78da426e6eac74b5": {
       "governingHead": "ee79bd4d15c48e36ae80496ae0f36730f6c1a7d1",
       "lockGeneration": 215,
@@ -4063,6 +4051,19 @@
       "scopeHash": "be94fad501840075e1f40387daef4bea8a0026685469a0a1f3c602b65d2bf653",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f",
+      "lockGeneration": 279,
+      "lockScope": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_EXACT_13_PATH_SCOPE",
+      "operationId": "H_EARTH_INTER_HILL_ESTATE_SUCCESSOR_EVALUATOR_V2_CAUSAL_CORRECTION_001",
+      "procedureLocatorDigest": "2f5aaa61589e40025fa3a35d0fd2ba8c7def2afb92755a22dbea5b0f6b634c49",
+      "released": true,
+      "requestDigest": "ce0968c10b004554f3408f7cee00a4bebdf49d689dc989b51617d61e929c6a47",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4d1298d5fa9c94fd3ef50abaad57a8e953a3332074e09d7c07046f3ee18b9b5f",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

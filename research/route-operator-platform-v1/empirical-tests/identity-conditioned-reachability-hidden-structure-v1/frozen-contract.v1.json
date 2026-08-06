@@ -5,12 +5,12 @@
   "observer_blinding": "COMPUTATIONAL_PROCESS_ISOLATION",
   "observer_may_access": [
     "public-relation-catalog.v1.json",
-    "training-observations.json"
+    "training-observations.json",
+    "heldout-cases.json"
   ],
   "observer_may_not_access": [
     "hidden_system_v1.py",
     "hidden-truth.v1.json",
-    "heldout-cases.v1.json",
     "heldout-outcomes.json"
   ],
   "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_OBSERVER_BLINDED_HIDDEN_STRUCTURE_GAUNTLET_v1",

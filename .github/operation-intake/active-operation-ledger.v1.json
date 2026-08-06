@@ -288,6 +288,18 @@
       "scopeHash": "829f23705557beebb52268181d148379af118f0a65d7eb5875e615a79492af58",
       "state": "ADMITTED_LOCKED"
     },
+    "85257deb4efad6cc2d2a6c57ae5a193ccb85c2d4968b838847e439fee4ff8bb4": {
+      "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
+      "lockGeneration": 386,
+      "lockScope": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001_EXACT_25_PATH_SCOPE",
+      "operationId": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001",
+      "procedureLocatorDigest": "3c2fe701eb757f05c24b3cfefa5ca1a12283c2fcd9d25fa1b3a87f7fe142eb20",
+      "released": false,
+      "requestDigest": "d4356d520a6e5a34ca98407a4e2ce98a9a0f5273487ac0660c1c8803cb08ced7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "85257deb4efad6cc2d2a6c57ae5a193ccb85c2d4968b838847e439fee4ff8bb4",
+      "state": "ADMITTED_LOCKED"
+    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -796,7 +808,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 385,
+  "lockGeneration": 386,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,0 +1,9 @@
+{
+  "schema": "METHODS_MINIMUM_REAL_3D_PROOF_BUILDER_RECEIPT_v1",
+  "status": "CANDIDATE_MATERIALIZED_PENDING_WORKFLOW",
+  "governingHead": "29bbcfc6d58d5efd1c22bf5b526af81490b80469",
+  "lockGeneration": 316,
+  "registeredPathCount": 17,
+  "publicMutation": false,
+  "perceptualAcceptanceClaim": false
+}

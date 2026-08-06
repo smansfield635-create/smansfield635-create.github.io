@@ -1,0 +1,61 @@
+{
+  "extension_id": "IMI_FACTORIAL_TEMPORAL_DIAGNOSTIC_EXTENSION_v1",
+  "version": "1.0.0",
+  "status": "PROPOSED_NONPRODUCT_SUCCESSOR_INSTRUMENT",
+  "parent_authority": {
+    "core_instrument_id": "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+    "core_package_sha256": "0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87",
+    "falsification_extension_id": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1"
+  },
+  "purpose": "Standardize condition, direction, persistence, bottleneck, comparability, and study eligibility without changing the frozen core or retroactively changing archived study results.",
+  "governing_representation": [
+    "CURRENT_CONDITION",
+    "DIRECTION",
+    "PERSISTENCE",
+    "BOTTLENECK"
+  ],
+  "authority_boundary": {
+    "reads_immutable_core_receipts": true,
+    "recalculates_core_imi": false,
+    "modifies_core_package": false,
+    "modifies_core_output_schema": false,
+    "replaces_archived_studies": false,
+    "creates_new_successor_receipts": true,
+    "performs_real_study_reanalysis_in_this_operation": false
+  },
+  "required_comparability_fields": [
+    "route_id",
+    "route_version",
+    "factor_dictionary_version",
+    "normalization_version",
+    "source_registry_version",
+    "temporal_protocol_version",
+    "implementation_version"
+  ],
+  "route_specific_rules_required": [
+    "meaningful_change_threshold",
+    "persistence_window",
+    "minimum_observations",
+    "interval_mode",
+    "expected_interval_if_exact",
+    "condition_bands_if_classification_is_requested"
+  ],
+  "precedence": [
+    "INVALID",
+    "UNEVALUABLE",
+    "NUMERIC_TEMPORAL_DIAGNOSTIC"
+  ],
+  "prohibitions": [
+    "UNIVERSAL_DIRECTION_THRESHOLD",
+    "UNIVERSAL_SUCCESS_THRESHOLD",
+    "POST_OUTCOME_THRESHOLD_REPAIR",
+    "SILENT_ROUTE_VERSION_SUBSTITUTION",
+    "SILENT_FACTOR_DICTIONARY_SUBSTITUTION",
+    "DIRECTION_FROM_ONE_SNAPSHOT",
+    "PERSISTENCE_FROM_FEWER_THAN_THREE_COMPARABLE_OBSERVATIONS",
+    "COMPENSATION_LABELED_AS_RESTORATION_WITHOUT_CAUSAL_EVIDENCE",
+    "ARCHIVED_RESULT_OVERWRITE"
+  ],
+  "next_operation_after_admission": "AGRICULTURAL_FACTORIAL_TEMPORAL_RETROSPECTIVE_SUCCESSOR_REANALYSIS_v1",
+  "merge_authority": "NOT_GRANTED_BY_THIS_CONTRACT"
+}

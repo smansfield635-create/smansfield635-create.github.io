@@ -140,7 +140,8 @@ jobs:
               process.env.EXACT_CANDIDATE_HEAD,
               process.env.EXACT_MERGE_COMMIT,
               'ROLE_3_POST_COMMAND_PASS',
-              'ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION'
+              'ROLE_4_CONSTRUCTION_LOCK_CLOSURE_AUTHORIZATION',
+              'LOCK_MANAGER_CREDENTIAL_BINDING: GITHUB_TOKEN'
             ]) requireCondition(workflow.includes(token), `WORKFLOW_REQUIRED_TOKEN_MISSING:${token}`);
             for (const forbidden of [
               'role_4_' + 'review_id',
@@ -153,9 +154,10 @@ jobs:
             requireCondition(contract.workflow.role4AuthorizationEvidence === 'EXACT_PR_COMMENT', 'CONTRACT_ROLE4_COMMENT_EVIDENCE_MISMATCH');
             requireCondition(contract.workflow.role4AuthorizationRequiredAssociation === 'OWNER', 'CONTRACT_OWNER_ASSOCIATION_MISMATCH');
             requireCondition(contract.workflow.thirdPartyApprovalReviewRequired === false, 'CONTRACT_THIRD_PARTY_REVIEW_NOT_DISABLED');
+            requireCondition(contract.workflow.lockManagerCredentialEnvironment === 'GITHUB_TOKEN', 'CONTRACT_LOCK_MANAGER_CREDENTIAL_MISMATCH');
 
             const receipt = {
-              schema: 'H_EARTH_V2_SINGLE_OWNER_GOVERNANCE_REPAIR_VERIFICATION_RECEIPT_v1',
+              schema: 'H_EARTH_V2_SINGLE_OWNER_GOVERNANCE_REPAIR_VERIFICATION_RECEIPT_v2',
               result: 'PASS',
               pullRequestNumber: Number(process.env.PR_NUMBER),
               base: process.env.PR_BASE_SHA,
@@ -163,6 +165,7 @@ jobs:
               exactPaths: paths,
               impossibleReviewGatePresent: false,
               exactRole4CommentGatePresent: true,
+              lockManagerCredentialBound: true,
               technicalVerificationPreserved: true,
               lockCommandsPreserved: workflow.includes('--lock-generation 279 --terminal-disposition FAIL_CLOSED') && workflow.includes('--lock-generation 280 --terminal-disposition PASS_CLOSED')
             };
@@ -200,6 +203,9 @@ jobs:
       pull-requests: read
       issues: read
       actions: read
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LOCK_MANAGER_CREDENTIAL_BINDING: GITHUB_TOKEN
     steps:
       - name: Parse and validate exact closure request
         id: request
@@ -281,7 +287,6 @@ jobs:
       - name: Bind exact PR merge current-main and authorization evidence
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REQUEST_TYPE: ${{ steps.request.outputs.request_type }}
           PR_NUMBER: ${{ steps.request.outputs.pr_number }}
           CANDIDATE_HEAD: ${{ steps.request.outputs.candidate_head }}
@@ -428,7 +433,6 @@ jobs:
         if: ${{ steps.request.outputs.request_type == 'GOVERNANCE_SUCCESSOR_CONSTRUCTION_LOCK_PASS_CLOSED_REQUEST_V2' }}
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LOCK279_RUN_ID: ${{ steps.request.outputs.lock279_run_id }}
         run: |
           set -euo pipefail
@@ -490,8 +494,6 @@ jobs:
 
       - name: Record pre-execution remote lock-ref identity
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           node <<'NODE'
@@ -542,7 +544,6 @@ jobs:
         shell: bash
         env:
           REQUEST_TYPE: ${{ steps.request.outputs.request_type }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           node <<'NODE'

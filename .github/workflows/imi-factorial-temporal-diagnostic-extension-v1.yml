@@ -10,6 +10,7 @@ on:
 permissions:
   contents: read
 
+# The dedicated job verifies only the immutable extension payload at the exact PR head.
 jobs:
   verify-factorial-temporal-extension:
     runs-on: ubuntu-latest

@@ -1,0 +1,69 @@
+{
+  "admissible_source_classes": [
+    "AUTHORITATIVE_SCHEMATIC",
+    "ARCHITECTURE_DOCUMENT",
+    "SERVICE_OR_MAINTENANCE_MANUAL",
+    "WORK_ORDER_OR_CHANGE_TICKET",
+    "INCIDENT_OR_FAILURE_REPORT",
+    "VALIDATED_ENGINEERING_DESCRIPTION",
+    "CONTEMPORANEOUS_OPERATIONAL_LOG"
+  ],
+  "admission_rule": {
+    "conflict_resolution": "PRESERVE_DISAGREEMENT_AND_SCORE_TEAM_SPECIFIC_MAPS; NO_CONSENSUS_EDIT_AFTER_OUTCOME_ACCESS",
+    "minimum_independent_analyst_support": 2,
+    "minimum_relation_confidence": 0.6
+  },
+  "candidate_relation_fields": [
+    "relation_id",
+    "source_nodes",
+    "target_nodes",
+    "relation_type",
+    "required_capabilities",
+    "route_family",
+    "constitutive_status",
+    "lawful_substitutes",
+    "support_dependencies",
+    "evidence_citations",
+    "confidence"
+  ],
+  "derivation_roles": {
+    "documentation_custodian": {
+      "may": [
+        "freeze_sources",
+        "redact_outcomes",
+        "publish_identical_package"
+      ],
+      "may_not": [
+        "select_relations",
+        "score_predictions"
+      ]
+    },
+    "independent_relation_analyst": {
+      "may": [
+        "derive_boundaries",
+        "derive_relations",
+        "derive_route_families",
+        "declare_uncertainty"
+      ],
+      "may_not": [
+        "access_heldout_outcomes",
+        "coordinate_primary_maps",
+        "alter_source_package"
+      ],
+      "minimum_teams": 2
+    }
+  },
+  "source_requirements": [
+    "SOURCE_AUTHORED_INDEPENDENTLY_OF_THEORY_TEAM",
+    "SOURCE_HASH_AND_PROVENANCE_FROZEN_BEFORE_RELATION_DERIVATION",
+    "HELDOUT_OUTCOME_LABELS_REDACTED",
+    "DOCUMENTATION_DATE_AND_VERSION_RECORDED",
+    "AT_LEAST_ONE_AUTHORITATIVE_SCHEMATIC_OR_TWO_INDEPENDENT_DOCUMENTARY_LOCI_PER_PRIMARY_RELATION"
+  ],
+  "underdefinition_metrics": {
+    "median_pairwise_boundary_jaccard_min": 0.6,
+    "median_pairwise_relation_jaccard_min": 0.6,
+    "median_pairwise_route_family_jaccard_min": 0.55
+  },
+  "version": "1.0.0"
+}

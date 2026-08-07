@@ -1,0 +1,70 @@
+{
+  "schema":"WHOLE_ESTATE_CLAIM_BOUNDARY_MATRIX_v1",
+  "status":"CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "claims":[
+    {
+      "id":"UCIC_FORMAL_STATUS",
+      "permitted":"UCIC-v1 is a fixed falsifiable candidate universal invariant constraint with accumulated empirical support.",
+      "requiredQualifiers":["UNIVERSALITY_NOT_ESTABLISHED","INDEPENDENT_PROSPECTIVE_CONFIRMATION_PENDING"],
+      "prohibited":["UCIC_IS_A_PROVEN_UNIVERSAL_LAW","UCIC_IS_VALIDATED_WITHOUT_QUALIFICATION"]
+    },
+    {
+      "id":"PR709_EXTERNAL_SPECIFICITY",
+      "permitted":"In a five-case external CSB retrospective replication, the frozen UCIC route representations discriminated the documented causal structures from imported-case, boundary-shifted, and required/optional-permuted decoys in all five cases.",
+      "registeredClassification":"PROCESS_SEPARATED_RETROSPECTIVE_EXTERNAL_REPLICATION",
+      "registeredDisposition":"UCIC_ROUTE_SPECIFICITY_SUPPORTED_EXTERNAL_CSB",
+      "registeredEvidenceCeiling":"EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+      "requiredFacts":{"medianRouteHitRate":1.0,"medianCausalCoverage":1.0,"medianTrueMinusDecoyAdvantage":0.8333333333333334,"positiveAdvantageCases":"5/5"},
+      "requiredQualifiers":["OUTCOME_BLINDNESS_NOT_ESTABLISHED","PUBLIC_OUTCOME_CONTAMINATION_PRESENT","PROSPECTIVE_CONFIRMATION_NOT_ESTABLISHED","INDEPENDENT_HUMAN_CONFIRMATION_NOT_ESTABLISHED","UNIVERSALITY_NOT_ESTABLISHED"],
+      "prohibited":["PROSPECTIVE_PREDICTION_CONFIRMED_BY_PR709","OUTCOME_BLIND_REPLICATION","INDEPENDENT_HUMAN_CONFIRMATION","UNIVERSAL_LAW_ESTABLISHED"]
+    },
+    {
+      "id":"IMI_STATUS",
+      "permitted":"IMI is an observer-grade instrument and measurement framework operating under declared boundaries and evidence rules.",
+      "prohibited":["IMI_IS_IDENTICAL_TO_UCIC","IMI_MEASUREMENT_PROVES_UCIC_BY_DEFINITION","GLOBAL_MULTIPLICATIVE_PRODUCT_IS_VALIDATED"]
+    },
+    {
+      "id":"PROSPECTIVE_PORTFOLIO",
+      "permitted":"The prospective severe-test portfolio is frozen and infrastructure-verified; no prospective scientific result has been established.",
+      "requiredState":{"scientificResult":"NONE","outcomeAccess":"PROHIBITED"},
+      "prohibited":["PROTOCOL_READINESS_IS_A_SCIENTIFIC_RESULT","PROSPECTIVE_CONFIRMATION_COMPLETE"]
+    },
+    {
+      "id":"COHERENCE_DIAGNOSTIC",
+      "permitted":"The Coherence Diagnostic is a bounded private structured reflection tool.",
+      "prohibited":["MEDICAL_DIAGNOSIS","LEGAL_DETERMINATION","EMPLOYMENT_SCREENING","IQ_TEST","UCIC_EVIDENCE_BY_USER_RESULT"]
+    },
+    {
+      "id":"FRONTIER_APPLIED_STUDIES",
+      "permitted":"Frontier may present complete bounded applied studies with their evidence, methods, limitations and unresolved questions.",
+      "prohibited":["DOMAIN_RESULT_UPGRADES_UNIVERSALITY_WITHOUT_SEPARATE_ADJUDICATION"]
+    },
+    {
+      "id":"PRODUCT_AND_IMPLEMENTATION",
+      "permitted":"Products and implementations may demonstrate practical utility, usability, adoption or operational value.",
+      "prohibited":["PRODUCT_SUCCESS_IS_UCIC_CONFIRMATION","ATTRACTIVE_DESIGN_IS_SCIENTIFIC_EVIDENCE"]
+    },
+    {
+      "id":"PROVENANCE_AND_CI",
+      "permitted":"Receipts, hashes, CI and custody records establish execution and provenance facts within their scope.",
+      "prohibited":["CI_SUCCESS_IS_INVARIANT_SURVIVAL","HASH_MATCH_IS_SCIENTIFIC_TRUTH","RECEIPT_EXISTENCE_UPGRADES_EVIDENCE"]
+    },
+    {
+      "id":"INTERFACE_AND_3D",
+      "permitted":"A synchronized 3D interface may spatially represent and navigate the canonical scientific state.",
+      "prohibited":["3D_PRESENTATION_ALTERS_EVIDENCE_STATUS","3D_PRESENTATION_ALTERS_EXECUTION_STATUS","3D_PRESENTATION_ALTERS_CUSTODY_STATUS","VISUAL_PERSUASION_IS_SCIENTIFIC_CONFIRMATION"]
+    },
+    {
+      "id":"DEVELOPMENTAL_PROVENANCE",
+      "permitted":"The estate may state that coherence has functioned as a candidate design constraint where contemporaneous or bounded retrospective records support that statement.",
+      "prohibited":["RETROSPECTIVE_INTERPRETATION_PRESENTED_AS_PREREGISTERED_PREDICTION","WHOLE_ESTATE_CONSTRUCTION_PRESENTED_AS_PROOF_OF_UCIC"]
+    }
+  ],
+  "globalProhibitions":[
+    "NO_UNQUALIFIED_VALIDATED_LANGUAGE_FOR_UCIC",
+    "NO_UNIVERSALITY_CLAIM_UPGRADE",
+    "NO_RETROSPECTIVE_TO_PROSPECTIVE_PROMOTION",
+    "NO_PUBLIC_CLAIM_UPGRADE_FROM_THIS_CHECKPOINT"
+  ],
+  "publicMutationAuthorized":false
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "WHOLE_ESTATE_NARRATIVE_JOURNEY_MAP_v1",
+  "status": "CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "governingPrinciple": "DISTINCT_CAPACITIES_REMAIN_DISTINCT_WHILE_PARTICIPATING_IN_ONE_ESTATE",
+  "directEntryAllowed": true,
+  "compassRemainsOrientationAuthority": true,
+  "sequenceIsExplanatoryNotAccessControl": true,
+  "journey": [
+    {"order":1,"verb":"DISCOVER","estateObject":"COMPASS","primaryRole":"ORIENTATION","question":"What exists here, and where can I begin?"},
+    {"order":2,"verb":"QUESTION","estateObject":"REALITY","primaryRole":"EPISTEMIC_LAW","question":"What can be known, measured, interpreted, or left unresolved?"},
+    {"order":3,"verb":"CONSTRAIN","estateObject":"LAWS_AND_TEST","primaryRole":"EPISTEMIC_LAW","question":"What rules, boundaries, admissibility conditions, and falsifiers constrain the answer?"},
+    {"order":4,"verb":"UNDERSTAND_COHERENCE","estateObject":"UCIC","primaryRole":"FOUNDATION","question":"What constitutive relational condition is proposed to preserve system identity through change?","scientificStatus":"INVARIANT_CANDIDATE"},
+    {"order":5,"verb":"MEASURE","estateObject":"IMI","primaryRole":"MEASUREMENT","question":"How can aspects of the proposed coherence structure be observed under declared boundaries?","scientificStatus":"INSTRUMENT"},
+    {"order":6,"verb":"APPLY_PERSONALLY","estateObject":"COHERENCE_DIAGNOSTIC","primaryRole":"DIAGNOSIS","question":"How can bounded coherence concepts support private structured reflection without becoming medical diagnosis or scientific confirmation?"},
+    {"order":7,"verb":"INVESTIGATE_MATERIALLY","estateObject":"FRONTIER","primaryRole":"APPLICATION","question":"How do ideas behave in real or engineered systems, studies, prototypes, and unresolved problems?"},
+    {"order":8,"verb":"ACT","estateObject":"PRODUCTS_WORLDS_CHARACTERS_CAMPAIGNS","primaryRole":"IMPLEMENTATION","question":"How does understanding become usable tools, experiences, narratives, systems, or public action?"},
+    {"order":9,"verb":"INSPECT_PROOF","estateObject":"RECEIPTS_RESEARCH_RECORDS","primaryRole":"PROVENANCE","question":"What evidence, version lineage, execution record, claim ceiling, and unresolved falsifier supports or limits what was shown?"}
+  ],
+  "constitutionalHierarchy": [
+    "WHOLE_ESTATE_JOURNEY",
+    "UCIC_FOUNDATION",
+    "IMI_MEASUREMENT",
+    "METHODS_MODELS_FUNCTIONAL_PROOF"
+  ],
+  "constitutionalHierarchyMeaning": {
+    "wholeEstateContainsMoreThanScientificProgram": true,
+    "ucicDoesNotReplaceOtherRooms": true,
+    "imiDoesNotDefineUcicTrueByMeasurement": true,
+    "methodsModelsDoesNotBecomeWholeEstate": true
+  },
+  "methodsModelsPlacement": {
+    "primaryFunction": "EXECUTABLE_COMPARISON_UNDER_CONTROLLED_TRANSFORMATION",
+    "foundationDependency": "UCIC",
+    "measurementDependency": "IMI",
+    "epistemicDependencies": ["REALITY", "LAWS"],
+    "appliedDestination": "FRONTIER",
+    "provenanceDestinations": ["RECEIPTS", "RESEARCH_RECORDS"],
+    "notHomepage": true,
+    "notDiagnostic": true,
+    "notSoleCoherenceExplanation": true,
+    "notCompleteAppliedStudyArchive": true
+  },
+  "spatialDesignIntentForLaterCheckpoints": {
+    "xyzOrganizationalRepresentationRequired": true,
+    "readingSurfacesPrimarily2d": true,
+    "navigationSpatiallyTransitional": true,
+    "spatialRelationshipsSemanticallyMeaningful": true,
+    "guided3dPrimarySpatialMode": true,
+    "freeCameraOptionalSupportingMode": true,
+    "interfaceScientificAuthority": false,
+    "textAnd3dStateSynchronizationRequired": true
+  },
+  "publicMutationAuthorized": false
+}

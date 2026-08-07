@@ -10,6 +10,7 @@ export const CODEC_VERSION = 'MMNAV1';
 export const CAPSULE_SCHEMA = 'METHODS_MODELS_NAVIGATION_CAPSULE_v1';
 export const FRAGMENT_PREFIX = '#mmnav1.';
 
+const EMPTY_RELATIONS = Object.freeze({ bundledRelations: [] });
 const RETURN_FIELDS = Object.freeze([
   'ORIGIN_ROUTE',
   'ORIGIN_OBJECT_ID',
@@ -31,23 +32,13 @@ const isObject = value => value !== null && typeof value === 'object' && !Array.
 const isNonEmpty = value => typeof value === 'string' && value.length > 0;
 const sha256 = text => crypto.createHash('sha256').update(text, 'utf8').digest('hex');
 const sameKeysInOrder = (obj, keys) => isObject(obj) && JSON.stringify(Object.keys(obj)) === JSON.stringify(keys);
+const b64urlEncodeUtf8 = text => Buffer.from(text, 'utf8').toString('base64url');
 
-function b64urlEncodeUtf8(text) {
-  return Buffer.from(text, 'utf8').toString('base64url');
-}
 function b64urlDecodeUtf8(token) {
   if (typeof token !== 'string' || token.length === 0 || token.includes('=') || !/^[A-Za-z0-9_-]+$/.test(token)) throw new Error('NON_CANONICAL_BASE64URL');
   const decoded = Buffer.from(token, 'base64url').toString('utf8');
   if (b64urlEncodeUtf8(decoded) !== token) throw new Error('NON_CANONICAL_BASE64URL');
   return decoded;
-}
-
-function getEntry(registry, entryPointId) {
-  const entries = registry?.entryPoints;
-  if (!Array.isArray(entries)) throw new Error('ENTRYPOINT_REGISTRY_INVALID');
-  const matches = entries.filter(e => e.entryPointId === entryPointId);
-  if (matches.length !== 1) throw new Error(matches.length === 0 ? 'ENTRYPOINT_NO_MATCH' : 'ENTRYPOINT_AMBIGUOUS');
-  return matches[0];
 }
 
 function objectIdentity(state) {
@@ -62,9 +53,18 @@ function lensToken(state) {
   return axis.status === 'DECLARED' ? axis.value.lensId : axis.status;
 }
 
-function routeOnlyAuthorized(baseState, candidateState) {
-  const transition = validateTransition(baseState, candidateState, 'NAVIGATION');
-  return transition.valid;
+function getEntry(registry, entryPointId) {
+  const entries = registry?.entryPoints;
+  if (!Array.isArray(entries)) throw new Error('ENTRYPOINT_REGISTRY_INVALID');
+  const matches = entries.filter(e => e.entryPointId === entryPointId);
+  if (matches.length !== 1) throw new Error(matches.length === 0 ? 'ENTRYPOINT_NO_MATCH' : 'ENTRYPOINT_AMBIGUOUS');
+  return matches[0];
+}
+
+function relationMatches(registry, relationId, fromObjectId, toObjectId) {
+  const relations = registry?.bundledRelations;
+  if (!Array.isArray(relations)) throw new Error('SEMANTIC_RELATION_REGISTRY_INVALID');
+  return relations.filter(r => r.relationId === relationId && r.fromObjectId === fromObjectId && r.toObjectId === toObjectId);
 }
 
 export function buildAuthorityRegistry(entrypointRegistry, f4StateBindings) {
@@ -88,7 +88,8 @@ export function validateAuthorizedState(state, entryPointId, authorityRegistry) 
   if (serialized.resolutionClass === 'INVALID') return { valid: false, errors: serialized.errors };
   const identity = objectIdentity(serialized.state);
   if (!identity || identity.objectClass !== record.entry.expectedObjectClass || identity.objectId !== record.entry.expectedObjectId) return { valid: false, errors: ['ENTRYPOINT_TARGET_IDENTITY_MISMATCH'] };
-  if (!routeOnlyAuthorized(record.baseState, serialized.state)) return { valid: false, errors: ['STATE_OUTRUNS_ENTRYPOINT_AUTHORITY'] };
+  const transition = validateTransition(record.baseState, serialized.state, 'NAVIGATION');
+  if (!transition.valid) return { valid: false, errors: ['STATE_OUTRUNS_ENTRYPOINT_AUTHORITY', ...transition.errors] };
   return { valid: true, errors: [], state: serialized.state, resolutionClass: serialized.resolutionClass, sha256: serialized.sha256, bytes: serialized.bytes };
 }
 
@@ -104,8 +105,7 @@ export function createReturnContext(originState, originEntryPointId, originRoute
   const authorized = validateAuthorizedState(originState, originEntryPointId, authorityRegistry);
   if (!authorized.valid) throw new Error(`RETURN_ORIGIN_UNAUTHORIZED:${authorized.errors.join('|')}`);
   const identity = objectIdentity(authorized.state);
-  const stateBytesB64Url = b64urlEncodeUtf8(authorized.bytes);
-  const context = {
+  return canonicalReturnContextObject({
     ORIGIN_ROUTE: originRoute,
     ORIGIN_OBJECT_ID: identity.objectId,
     ORIGIN_DEPTH: originDepth,
@@ -115,9 +115,8 @@ export function createReturnContext(originState, originEntryPointId, originRoute
     RETURN_TARGET: `STATE_SHA256:${authorized.sha256}#ROUTE:${originRoute}`,
     ORIGIN_ENTRY_POINT_ID: originEntryPointId,
     ORIGIN_STATE_SHA256: authorized.sha256,
-    ORIGIN_STATE_BYTES_B64URL: stateBytesB64Url
-  };
-  return canonicalReturnContextObject(context);
+    ORIGIN_STATE_BYTES_B64URL: b64urlEncodeUtf8(authorized.bytes)
+  });
 }
 
 export function validateReturnContext(context, authorityRegistry) {
@@ -135,10 +134,20 @@ export function validateReturnContext(context, authorityRegistry) {
     if (lensToken(restored.state) !== canonical.ORIGIN_LENS) return { valid: false, errors: ['RETURN_ORIGIN_LENS_MISMATCH'] };
     const expectedTarget = `STATE_SHA256:${canonical.ORIGIN_STATE_SHA256}#ROUTE:${canonical.ORIGIN_ROUTE}`;
     if (canonical.RETURN_TARGET !== expectedTarget) return { valid: false, errors: ['RETURN_TARGET_MISMATCH'] };
-    return { valid: true, errors: [], state: restored.state, route: canonical.ORIGIN_ROUTE, entryPointId: canonical.ORIGIN_ENTRY_POINT_ID };
+    return { valid: true, errors: [], state: restored.state, route: canonical.ORIGIN_ROUTE, entryPointId: canonical.ORIGIN_ENTRY_POINT_ID, objectId: identity.objectId };
   } catch (error) {
     return { valid: false, errors: [error.message] };
   }
+}
+
+function validateReturnRelation(returnContext, destinationState, semanticRelationRegistry, authorityRegistry) {
+  const origin = validateReturnContext(returnContext, authorityRegistry);
+  if (!origin.valid) return { valid: false, errors: origin.errors };
+  const destination = objectIdentity(destinationState);
+  if (!destination) return { valid: false, errors: ['RETURN_DESTINATION_OBJECT_UNDECLARED'] };
+  const matches = relationMatches(semanticRelationRegistry, returnContext.DECLARED_RELATION_USED, origin.objectId, destination.objectId);
+  if (matches.length !== 1) return { valid: false, errors: [matches.length === 0 ? 'DECLARED_SEMANTIC_RELATION_NO_MATCH' : 'DECLARED_SEMANTIC_RELATION_AMBIGUOUS'] };
+  return { valid: true, errors: [] };
 }
 
 function canonicalCapsuleObject(capsule, authorityRegistry) {
@@ -146,11 +155,8 @@ function canonicalCapsuleObject(capsule, authorityRegistry) {
   if (capsule.schema !== CAPSULE_SCHEMA) throw new Error('CAPSULE_SCHEMA_MISMATCH');
   if (capsule.codecVersion !== CODEC_VERSION) throw new Error('CAPSULE_CODEC_VERSION_MISMATCH');
   if (!isNonEmpty(capsule.entryPointId) || !isNonEmpty(capsule.stateSha256) || !isNonEmpty(capsule.stateBytesB64Url)) throw new Error('CAPSULE_REQUIRED_FIELD_EMPTY');
-  getEntry({ entryPoints: Object.values(authorityRegistry ?? {}).map(record => record.entry) }, capsule.entryPointId);
-  if (capsule.returnContext !== null) {
-    const returned = validateReturnContext(capsule.returnContext, authorityRegistry);
-    if (!returned.valid) throw new Error(`CAPSULE_RETURN_CONTEXT_INVALID:${returned.errors.join('|')}`);
-  }
+  if (!authorityRegistry?.[capsule.entryPointId]) throw new Error('ENTRYPOINT_NO_MATCH');
+  if (capsule.returnContext !== null) canonicalReturnContextObject(capsule.returnContext);
   return {
     schema: capsule.schema,
     codecVersion: capsule.codecVersion,
@@ -161,12 +167,12 @@ function canonicalCapsuleObject(capsule, authorityRegistry) {
   };
 }
 
-export function encodeDeepLink(state, entryPointId, authorityRegistry, returnContext = null) {
+export function encodeDeepLink(state, entryPointId, authorityRegistry, returnContext = null, semanticRelationRegistry = EMPTY_RELATIONS) {
   const authorized = validateAuthorizedState(state, entryPointId, authorityRegistry);
   if (!authorized.valid) throw new Error(`STATE_NOT_AUTHORIZED_FOR_ENTRY:${authorized.errors.join('|')}`);
   if (returnContext !== null) {
-    const checked = validateReturnContext(returnContext, authorityRegistry);
-    if (!checked.valid) throw new Error(`RETURN_CONTEXT_INVALID:${checked.errors.join('|')}`);
+    const relation = validateReturnRelation(returnContext, authorized.state, semanticRelationRegistry, authorityRegistry);
+    if (!relation.valid) throw new Error(`RETURN_RELATION_INVALID:${relation.errors.join('|')}`);
   }
   const capsule = {
     schema: CAPSULE_SCHEMA,
@@ -177,11 +183,10 @@ export function encodeDeepLink(state, entryPointId, authorityRegistry, returnCon
     returnContext
   };
   const canonical = JSON.stringify(canonicalCapsuleObject(capsule, authorityRegistry));
-  const payload = b64urlEncodeUtf8(canonical);
-  return `${BASE_ROUTE}${FRAGMENT_PREFIX}${payload}.${sha256(canonical)}`;
+  return `${BASE_ROUTE}${FRAGMENT_PREFIX}${b64urlEncodeUtf8(canonical)}.${sha256(canonical)}`;
 }
 
-export function decodeDeepLink(inputUrl, authorityRegistry) {
+export function decodeDeepLink(inputUrl, authorityRegistry, semanticRelationRegistry = EMPTY_RELATIONS) {
   try {
     if (!isNonEmpty(inputUrl)) throw new Error('URL_EMPTY');
     const parsed = new URL(inputUrl, 'https://f5.invalid');
@@ -206,6 +211,10 @@ export function decodeDeepLink(inputUrl, authorityRegistry) {
     if (!restored.canonical) throw new Error(`STATE_RESTORE_FAILURE:${(restored.errors ?? []).join('|')}`);
     const authorized = validateAuthorizedState(restored.state, normalized.entryPointId, authorityRegistry);
     if (!authorized.valid) throw new Error(`STATE_OUTRUNS_ENTRYPOINT_AUTHORITY:${authorized.errors.join('|')}`);
+    if (normalized.returnContext !== null) {
+      const relation = validateReturnRelation(normalized.returnContext, restored.state, semanticRelationRegistry, authorityRegistry);
+      if (!relation.valid) throw new Error(`RETURN_RELATION_INVALID:${relation.errors.join('|')}`);
+    }
     const canonicalUrl = `${BASE_ROUTE}${FRAGMENT_PREFIX}${payload}.${digest}`;
     return { valid: true, errors: [], canonicalUrl, state: restored.state, resolutionClass: restored.resolutionClass, entryPointId: normalized.entryPointId, returnContext: normalized.returnContext };
   } catch (error) {
@@ -237,10 +246,10 @@ export function buildCrossObjectDeepLink(originState, originEntryPointId, destin
   if (!originAuthorized.valid || !destinationAuthorized.valid) throw new Error('CROSS_OBJECT_STATE_UNAUTHORIZED');
   const originObject = objectIdentity(originAuthorized.state).objectId;
   const destinationObject = objectIdentity(destinationAuthorized.state).objectId;
-  const matches = (semanticRelationRegistry?.bundledRelations ?? []).filter(r => r.relationId === relationId && r.fromObjectId === originObject && r.toObjectId === destinationObject);
+  const matches = relationMatches(semanticRelationRegistry, relationId, originObject, destinationObject);
   if (matches.length !== 1) throw new Error(matches.length === 0 ? 'DECLARED_SEMANTIC_RELATION_NO_MATCH' : 'DECLARED_SEMANTIC_RELATION_AMBIGUOUS');
   const returnContext = createReturnContext(originAuthorized.state, originEntryPointId, originRoute, originDepth, relationId, destinationRoute, authorityRegistry);
-  return encodeDeepLink(destinationAuthorized.state, destinationEntryPointId, authorityRegistry, returnContext);
+  return encodeDeepLink(destinationAuthorized.state, destinationEntryPointId, authorityRegistry, returnContext, semanticRelationRegistry);
 }
 
 export function restoreReturn(returnContext, authorityRegistry) {
@@ -250,14 +259,14 @@ export function restoreReturn(returnContext, authorityRegistry) {
     : { valid: false, errors: checked.errors, state: null, route: null, entryPointId: null, disposition: 'EXPLICIT_NON_RESTORABLE_STATE' };
 }
 
-export function createHistoryLedger(initialUrl, authorityRegistry) {
-  const decoded = decodeDeepLink(initialUrl, authorityRegistry);
+export function createHistoryLedger(initialUrl, authorityRegistry, semanticRelationRegistry = EMPTY_RELATIONS) {
+  const decoded = decodeDeepLink(initialUrl, authorityRegistry, semanticRelationRegistry);
   if (!decoded.valid) throw new Error(`HISTORY_INITIAL_ENTRY_INVALID:${decoded.errors.join('|')}`);
   return { entries: [decoded.canonicalUrl], index: 0 };
 }
 
-export function historyPush(ledger, url, authorityRegistry) {
-  const decoded = decodeDeepLink(url, authorityRegistry);
+export function historyPush(ledger, url, authorityRegistry, semanticRelationRegistry = EMPTY_RELATIONS) {
+  const decoded = decodeDeepLink(url, authorityRegistry, semanticRelationRegistry);
   if (!decoded.valid) return { valid: false, errors: decoded.errors, ledger: clone(ledger), restored: null };
   const entries = ledger.entries.slice(0, ledger.index + 1);
   entries.push(decoded.canonicalUrl);
@@ -265,22 +274,22 @@ export function historyPush(ledger, url, authorityRegistry) {
   return { valid: true, errors: [], ledger: next, restored: decoded };
 }
 
-export function historyBack(ledger, authorityRegistry) {
+export function historyBack(ledger, authorityRegistry, semanticRelationRegistry = EMPTY_RELATIONS) {
   if (ledger.index <= 0) return { valid: false, errors: ['NO_MATCH_BACK'], ledger: clone(ledger), restored: null };
   const next = { entries: [...ledger.entries], index: ledger.index - 1 };
-  const restored = decodeDeepLink(next.entries[next.index], authorityRegistry);
+  const restored = decodeDeepLink(next.entries[next.index], authorityRegistry, semanticRelationRegistry);
   if (!restored.valid) return { valid: false, errors: restored.errors, ledger: clone(ledger), restored: null };
   return { valid: true, errors: [], ledger: next, restored };
 }
 
-export function historyForward(ledger, authorityRegistry) {
+export function historyForward(ledger, authorityRegistry, semanticRelationRegistry = EMPTY_RELATIONS) {
   if (ledger.index >= ledger.entries.length - 1) return { valid: false, errors: ['NO_MATCH_FORWARD'], ledger: clone(ledger), restored: null };
   const next = { entries: [...ledger.entries], index: ledger.index + 1 };
-  const restored = decodeDeepLink(next.entries[next.index], authorityRegistry);
+  const restored = decodeDeepLink(next.entries[next.index], authorityRegistry, semanticRelationRegistry);
   if (!restored.valid) return { valid: false, errors: restored.errors, ledger: clone(ledger), restored: null };
   return { valid: true, errors: [], ledger: next, restored };
 }
 
-export function reloadFromUrl(url, authorityRegistry) {
-  return decodeDeepLink(url, authorityRegistry);
+export function reloadFromUrl(url, authorityRegistry, semanticRelationRegistry = EMPTY_RELATIONS) {
+  return decodeDeepLink(url, authorityRegistry, semanticRelationRegistry);
 }

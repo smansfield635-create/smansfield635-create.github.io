@@ -1,0 +1,39 @@
+{
+  "schema": "METHODS_SPATIAL_DATABASE_DESIGN_GRAMMAR_v1",
+  "status": "FROZEN_SOURCE_DERIVED",
+  "fingerprint": "13c93b713c936365564d9fd95e76a7cabbfce3d9ac9c3e658edbde0d70d98991",
+  "sourceCount": 9,
+  "rules": {
+    "informationHierarchy": [
+      "PRACTICAL_PRECEDES_ENGINEERING",
+      "ONE_ACTIVE_LENS_PANEL",
+      "DEEPER_DISCLOSURE_INSIDE_SELECTED_CONTEXT"
+    ],
+    "equationComposition": [
+      "MATH_SERIF_TYPOGRAPHY",
+      "RESPONSIVE_LINE_GROUPING",
+      "PRESERVED_WHITESPACE",
+      "COMPLETE_EXPRESSION_ANCHORED"
+    ],
+    "tabs": [
+      "ONE_ACTIVE_TAB_PER_TABSET",
+      "ROVING_TABINDEX",
+      "ARROW_HOME_END_NAVIGATION",
+      "NESTED_TABSETS_ALLOWED"
+    ],
+    "visual": [
+      "RESTRAINED_GOLD_BLUE_STONE",
+      "SELECTED_AND_RECEDING_CONTRAST",
+      "CONTROLLED_SHORT_MOTION",
+      "GLOW_NOT_SOLE_HIERARCHY_SIGNAL"
+    ],
+    "prohibited": [
+      "DECORATIVE_OBJECTS_AS_PRIMARY_SUBJECT",
+      "SIMULTANEOUS_THREE_LENS_PANELS",
+      "VISIBLE_LINEAR_VIEW",
+      "GESTURE_HEAVY_PRIMARY_PROOF",
+      "MANDATORY_WEBGL"
+    ]
+  },
+  "sourceMutation": false
+}

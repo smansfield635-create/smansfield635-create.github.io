@@ -1,7 +1,7 @@
 name: H-Earth Map-Wide Terrain Instrument Bootstrap Validation
 
 on:
-  pull_request:
+  pull_request_target:
     paths:
       - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/**'
       - 'tools/h-earth-map-wide-terrain/**'

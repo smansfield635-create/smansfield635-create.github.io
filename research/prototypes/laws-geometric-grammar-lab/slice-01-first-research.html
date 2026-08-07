@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" data-program-ready="false">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Lab Slice 01 · Research comes F.I.R.S.T.</title>
+  <link rel="stylesheet" href="../laws-graphic-engineering-integration/shared/first-research.css">
+  <style>
+    :root{color-scheme:dark;font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#050816;color:#f7f4ea}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,rgba(92,65,190,.24),transparent 36%),#050816}
+    main{width:min(1180px,calc(100% - 2rem));margin:auto;padding:2.5rem 0 5rem}.eyebrow{color:#69dce7;letter-spacing:.16em;text-transform:uppercase;font-size:.76rem;font-weight:800}
+    h1{max-width:900px;font-family:Georgia,serif;font-size:clamp(2.5rem,7vw,6rem);line-height:.93;margin:.4rem 0 1rem}.lead{max-width:780px;color:#c5cce0;font-size:1.08rem;line-height:1.7}
+    .controls{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.5rem 0}.controls button{border:1px solid rgba(255,255,255,.18);border-radius:999px;background:#101936;color:#f7f4ea;padding:.7rem 1rem;font:inherit;cursor:pointer}.controls button[aria-pressed=true]{border-color:#f2cb68;background:#3a2c12}
+    .readout{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}.card{border:1px solid rgba(255,255,255,.12);border-radius:1.35rem;background:rgba(12,18,42,.78);padding:1.2rem}.card h2{margin:.1rem 0 .7rem;font-family:Georgia,serif}.card p{color:#c5cce0;line-height:1.6}.receipt{white-space:pre-wrap;font:12px/1.55 ui-monospace,monospace;color:#b7c4df}
+    @media(max-width:760px){.readout{grid-template-columns:1fr}main{width:min(100% - 1rem,1180px);padding-top:1rem}}
+  </style>
+</head>
+<body>
+<main data-slice-root data-lens="practical" data-motion="full">
+  <p class="eyebrow">Workstream B · Shared mechanic test bed</p>
+  <h1>Research comes F.I.R.S.T.</h1>
+  <p class="lead">This laboratory tests the exact mechanic required by the real Compass story. The visitor relationship is fixed by content authority; the lab tests settlement, tethering, focus, motion alternatives, static equivalence, and lifecycle behavior.</p>
+
+  <div class="controls" aria-label="Lens controls">
+    <button type="button" data-lens-control="practical" aria-pressed="true">Practical</button>
+    <button type="button" data-lens-control="engineering" aria-pressed="false">Engineering</button>
+    <button type="button" data-lens-control="empirical" aria-pressed="false">Empirical</button>
+  </div>
+  <div class="controls" aria-label="Motion controls">
+    <button type="button" data-motion-control="full" aria-pressed="true">Full motion</button>
+    <button type="button" data-motion-control="reduced" aria-pressed="false">Reduced motion</button>
+    <button type="button" data-motion-control="static" aria-pressed="false">Static</button>
+  </div>
+
+  <section class="first-research-experience" data-first-research-root aria-label="F.I.R.S.T. and Research relationship">
+    <canvas class="first-research-scene" data-first-research-canvas aria-hidden="true"></canvas>
+    <div class="first-research-labels" data-first-research-labels aria-label="Relationship controls"></div>
+    <div class="first-research-static" data-first-research-static></div>
+    <p class="first-research-status" data-first-research-status></p>
+  </section>
+
+  <div class="readout">
+    <article class="card"><p class="eyebrow" data-active-kicker>Research</p><h2 data-active-title></h2><p data-active-body></p></article>
+    <article class="card"><p class="eyebrow">Shared render receipt</p><pre class="receipt" data-receipt></pre></article>
+  </div>
+</main>
+<script type="module" src="./slice-01-first-research.js"></script>
+</body>
+</html>

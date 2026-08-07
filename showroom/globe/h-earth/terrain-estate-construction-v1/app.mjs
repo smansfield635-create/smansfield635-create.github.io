@@ -1,5 +1,6 @@
 const canvas = document.querySelector('[data-h-earth-map-wide-canvas]');
 const statusNode = document.querySelector('[data-h-earth-status]');
+const diagnosticNode = document.querySelector('[data-h-earth-diagnostic]');
 const fitWorldButton = document.querySelector('[data-fit-world]');
 
 const setVisibleStatus = (text, state = text) => {
@@ -8,13 +9,18 @@ const setVisibleStatus = (text, state = text) => {
   statusNode.dataset.status = state;
 };
 
+const setDiagnostic = (text) => {
+  if (diagnosticNode) diagnosticNode.textContent = text;
+};
+
 const reportFailure = (stage, error) => {
   const message = error instanceof Error ? error.message : String(error);
   console.error(`H_EARTH_WORLD_INSPECTOR_${stage}_FAILED`, error);
   setVisibleStatus('ERROR', `${stage}_FAILED`);
+  setDiagnostic(`${stage}_FAILED: ${message}`);
   window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW_ERROR__ = Object.freeze({
     operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
-    inspectorRepairRevision: 5,
+    inspectorRepairRevision: 6,
     stage,
     message
   });
@@ -51,10 +57,7 @@ function wireControls(renderer) {
     pointers.set(event.pointerId, next);
 
     if (pointers.size === 1) {
-      renderer.orbit(
-        safeDelta(next.x - previous.x),
-        safeDelta(next.y - previous.y)
-      );
+      renderer.orbit(safeDelta(next.x - previous.x), safeDelta(next.y - previous.y));
       return;
     }
 
@@ -103,7 +106,7 @@ function wireControls(renderer) {
 async function loadObserverAfterFirstPaint(renderer) {
   try {
     await new Promise((resolve) => setTimeout(resolve, 0));
-    const observerModule = await import('./observer.mjs?repair=5');
+    const observerModule = await import('./observer.mjs');
     const receipt = observerModule.buildHEarthMapWideEnvironmentPreviewObserverReceipt(
       renderer.mesh.statistics,
       renderer.waterMesh.statistics
@@ -112,20 +115,22 @@ async function loadObserverAfterFirstPaint(renderer) {
     const safe = Object.values(cameraSafety).every((value) => value === true);
     const pass = receipt.result === 'PASS' && safe;
     setVisibleStatus(pass ? 'PASS' : 'READY', pass ? 'PASS' : 'OBSERVER_PENDING_OR_FAIL');
+    setDiagnostic('One finger: orbit · two fingers: pan + pinch · wheel: zoom · W/A/S/D or arrows: move.');
     window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
       operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
       lockGeneration: 422,
-      inspectorRepairRevision: 5,
+      inspectorRepairRevision: 6,
       renderer,
       observerReceipt: receipt
     });
   } catch (error) {
     console.warn('H_EARTH_WORLD_INSPECTOR_DEFERRED_OBSERVER_FAILED', error);
     setVisibleStatus('READY', 'VISUAL_READY_OBSERVER_DEFERRED');
+    setDiagnostic(`VISUAL_READY · observer deferred: ${error instanceof Error ? error.message : String(error)}`);
     window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
       operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
       lockGeneration: 422,
-      inspectorRepairRevision: 5,
+      inspectorRepairRevision: 6,
       renderer,
       observerReceipt: null,
       observerDeferredFailure: true
@@ -135,29 +140,29 @@ async function loadObserverAfterFirstPaint(renderer) {
 
 async function initialize() {
   try {
-    if (!(canvas instanceof HTMLCanvasElement)) {
-      throw new Error('H_EARTH_MAP_WIDE_CANVAS_MISSING');
-    }
+    if (!(canvas instanceof HTMLCanvasElement)) throw new Error('H_EARTH_MAP_WIDE_CANVAS_MISSING');
 
     setVisibleStatus('terrain…', 'IMPORTING_TERRAIN_RENDERER');
+    setDiagnostic('Importing terrain renderer…');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    const rendererModule = await import('./renderer.mjs?repair=5');
+    const rendererModule = await import('./renderer.mjs');
     setVisibleStatus('building…', 'BUILDING_TERRAIN');
+    setDiagnostic('Building terrain mesh…');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const renderer = rendererModule.createMapWideEnvironmentRenderer(canvas);
     renderer.render();
     wireControls(renderer);
     setVisibleStatus('READY', 'VISUAL_READY');
+    setDiagnostic('One finger: orbit · two fingers: pan + pinch · wheel: zoom · W/A/S/D or arrows: move.');
 
-    requestAnimationFrame(() => {
-      loadObserverAfterFirstPaint(renderer);
-    });
+    requestAnimationFrame(() => loadObserverAfterFirstPaint(renderer));
   } catch (error) {
     reportFailure('INITIALIZATION', error);
   }
 }
 
 setVisibleStatus('boot…', 'BOOTSTRAP_ACTIVE');
+setDiagnostic('Starting inspector…');
 initialize();

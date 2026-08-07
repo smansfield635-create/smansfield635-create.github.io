@@ -1,0 +1,25 @@
+{
+  "files": {
+    "EXPLORATORY_SOFTWARE_PROTOCOL.md": "802e9acbaf60bf31b3475234c6cbd281776d11090580437742f224923d4660aa",
+    "README.md": "83d627626994a72273d5fb2073a2e6c3c8f01ddaf466a783858374f85c35c781",
+    "SCIENTIFIC_BOUNDARY.md": "db7adc5d63c848f1e522b9ab4cd5d2485dbe08f32b86027b88c345881e06b1f7",
+    "UCI_DATA_PROTOCOL.md": "bd04cec781b5c16601a91481b54037ea366dc2be4b783a6a69db7816902e6ba7",
+    "alternative-models.v1.json": "5c5a55d58b7d02b2c4e72997e00349b327629eb9cccb2227797f51c3eca24ea3",
+    "data/ai4i.py": "839adf46038bcbe14dfc893c1b00a1ed6206e056d1672565c8b2da34cda5daf4",
+    "data/common.py": "1f18348e439448fdfaa1361f8e0490ae8397ebfc81c0b14cb91b88966ed78984",
+    "data/hydraulic.py": "a04482a62789b4f2a5bd3c67024266c3f17557fdde1439e87eecb1d139540638",
+    "data/naval.py": "11789fdc5da9364481fdebfcce1269d20e5cf161904b1b99d61abb88abd453c4",
+    "data/run_uci_bridge_v1.py": "65cb0b63303c9bbcf370a62550b625065698c120c94e634f05b79543e7bb3307",
+    "software/exploratory-execution-summary.json": "d856f0092c11969619f6ff3277f8603ae63790269787c4f9a84053376c90848c",
+    "software/model.py": "5f1bdd1cf250009643b47c25d54cec4df61970f8230395954fc6745b75f11af7",
+    "software/run_bridge_v1.py": "26bbd995e97dae6b5a01535ef302ceaa0f2b4b9ea56a1db925f8b405971f6671",
+    "software/systems_crypto_schema.py": "3d4a9e405f6aba276975c692daeb197786a72c0d94d522a78661910b660b8e86",
+    "software/systems_graph_image.py": "2ab226dc6902170b87d43e96d31192b8218a76d287ed4c3a46895d83b555714d",
+    "software/verify_software_bridge_v1.py": "c6c51bed77331f8827b297cc76faa0700733f4741e9164f49151cb2a98d7a39f",
+    "system-registry.v1.json": "c2f04c37fa8a8d7de8724956283398c68182169483af395a779bf6d32d9f4c16",
+    "verify_package_v1.py": "e20a2296480a46d566e827a40c914e8597689180680371cdce386904f7bd6308"
+  },
+  "freeze_status": "POST_PARTIAL_EXECUTION_NAVAL_RETRIEVAL_ONLY_REPAIR_v1_0_4",
+  "operation": "EXTERNALLY_SOURCED_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "schema": "EXTERNALLY_SOURCED_ICR_BRIDGE_MANIFEST_v1"
+}

@@ -1,0 +1,200 @@
+{
+  "schema": "METHODS_MODELS_F12_R6_SPATIAL_TRANSFORMATION_GRAMMAR_CONTRACT_v1",
+  "program": "F12_RECURSIVE_SPATIAL_INFORMATION_ARCHITECTURE_REMEDIATION_v1",
+  "checkpoint": "R6_SPATIAL_TRANSFORMATION_GRAMMAR",
+  "status": "PASS_CLOSED",
+  "constructionClass": "NONVISUAL_FAIL_CLOSED_TRANSFORMATION_AUTHORITY_GRAMMAR",
+  "parent": {
+    "id": "R5_CONTEXT_BOUND_RELATION_DISCLOSURE",
+    "head": "60dbad954020ae1cc9b3ce4cbb0539c318c41863",
+    "tree": "63e4da15fac80b9070d89f8cfdc8d3ad42a64d72",
+    "contractGitBlobSha": "71e7eef3d621b8992723317b7c36e5747b568ae0",
+    "runtimeGitBlobSha": "2f63b07f0f6eeb57e05780e5c4c840295f401363",
+    "verifierGitBlobSha": "b19c0f594f85dcb0081401c5f09a6731f2c3faab"
+  },
+  "namingProvenance": {
+    "exactCheckpointName": "R6_SPATIAL_TRANSFORMATION_GRAMMAR",
+    "exactNameIntroducedBy": "R5_CONTEXT_BOUND_RELATION_DISCLOSURE_CONTRACT",
+    "ordinalEligibilityIntroducedBy": "R5_CONTEXT_BOUND_RELATION_DISCLOSURE_CONTRACT",
+    "predecessorPattern": [
+      "R3_GRANTED_R4_ORDINAL_ELIGIBILITY_AND_R4_CANONIZED_ITS_EXACT_NAME",
+      "R4_GRANTED_R5_ORDINAL_ELIGIBILITY_AND_R5_CANONIZED_ITS_EXACT_NAME"
+    ],
+    "newGovernanceExceptionCreated": false
+  },
+  "authorityBasis": {
+    "r1AuthorizedCapabilities": [
+      "CONSTRUCT_INFORMATIONAL_TRANSFORMATION_SEMANTICS",
+      "CONSTRUCT_SEPARATELY_VERSIONED_PRESENTATION_TRANSFORMS"
+    ],
+    "r2FrameFieldsConsumed": [
+      "allowedSpatialTransformations",
+      "transformationSemantics"
+    ],
+    "r2Invariant": "EVERY_ALLOWED_SPATIAL_TRANSFORMATION_HAS_EXACTLY_ONE_DECLARED_INFORMATIONAL_SEMANTIC_BINDING",
+    "r3CurrentCorpusCondition": "ALL_RESOLVED_FRAMES_AUTHORIZE_ZERO_SPATIAL_TRANSFORMATIONS",
+    "visibleReconstructionAuthority": false,
+    "runtimeTransformationExecutionAuthority": false
+  },
+  "frozenInputs": {
+    "frameContract": "SPATIAL_CONTEXT_FRAME_v1",
+    "interpreter": "SPATIAL_CONTEXT_INTERPRETER_v1",
+    "navigationState": "SPATIAL_RECURSIVE_NAVIGATION_STATE_v1",
+    "relationDisclosure": "SPATIAL_CONTEXT_BOUND_RELATION_DISCLOSURE_v1",
+    "sourceScientificStateDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+    "sourceRelationGraphDigest": "4dabc8872082535d01d9bfae3cd9661be68dcf7e1cd6aed5280a9028d4b8137b",
+    "sourceProjectionGraphDigest": "9ebef4a6b8102ffd251c8e7809d379bff560d09fe9c75baa3f707768927b6ce8",
+    "r2FrameSemanticsMayBeReopened": false,
+    "r3InterpreterSemanticsMayBeReopened": false,
+    "r4NavigationSemanticsMayBeReopened": false,
+    "r5DisclosureSemanticsMayBeReopened": false,
+    "scientificResolutionMayBeReopened": false
+  },
+  "grammar": {
+    "id": "SPATIAL_TRANSFORMATION_GRAMMAR_v1",
+    "version": "SPATIAL_TRANSFORMATION_GRAMMAR_SCHEMA_v1",
+    "scientificAuthority": false,
+    "navigationAuthority": false,
+    "presentationRuntimeAuthority": false,
+    "spatialTransformationRuntimeAuthority": false,
+    "mayInventTransformation": false,
+    "mayInferTransformationFromNavigation": false,
+    "mayInferSemanticFromGeometry": false,
+    "mayRenderVisibleInterface": false
+  },
+  "stateFields": [
+    "grammarStateId",
+    "grammarVersion",
+    "navigationStateId",
+    "navigationDigest",
+    "disclosureStateId",
+    "disclosureDigest",
+    "contextFrameId",
+    "sourceScientificStateDigest",
+    "sourceRelationGraphDigest",
+    "sourceProjectionGraphDigest",
+    "authorizedTransformationIds",
+    "semanticBindings",
+    "admissionMode",
+    "navigationDoesNotAuthorizeTransformation",
+    "relationDisclosureDoesNotAuthorizeTransformation",
+    "runtimeExecutionAuthorized",
+    "visibleMutationAuthorized",
+    "scientificMutationAuthorized",
+    "grammarDigest"
+  ],
+  "behaviors": {
+    "compile": "COMPILE_EXACT_FRAME_DECLARED_TRANSFORMATION_AUTHORITY_WITHOUT_ADDING_OR_REMOVING_ANY_TRANSFORMATION",
+    "admit": "RETURN_EXACT_DECLARED_SEMANTIC_BINDING_ONLY_WHEN_TRANSFORMATION_ID_IS_ALREADY_AUTHORIZED_BY_THE_CURRENT_FROZEN_FRAME",
+    "reject": "FAIL_CLOSED_WHEN_TRANSFORMATION_IS_NOT_EXACTLY_AUTHORIZED_BY_THE_CURRENT_FRAME",
+    "replay": "REPLAY_R4_TRANSITION_TRAIL_THROUGH_R5_DISCLOSURE_AND_REPRODUCE_IDENTICAL_R6_GRAMMAR_STATE",
+    "check": "FAIL_CLOSED_ON_TRANSFORMATION_SCOPE_SEMANTIC_BINDING_SOURCE_DIGEST_CONTEXT_OR_GRAMMAR_DIGEST_DRIFT",
+    "trace": "TRACE_TRANSFORMATION_AUTHORITY_BACK_TO_THE_EXACT_R3_FRAME_WITHOUT_CREATING_PRESENTATION_RUNTIME"
+  },
+  "laws": [
+    "R6_CONSUMES_R3_FRAME_R4_NAVIGATION_AND_R5_DISCLOSURE_AS_FROZEN_INPUTS",
+    "R6_AUTHORIZED_TRANSFORMATION_IDS_MUST_EQUAL_CURRENT_FRAME_ALLOWED_SPATIAL_TRANSFORMATIONS",
+    "R6_SEMANTIC_BINDINGS_MUST_EQUAL_CURRENT_FRAME_TRANSFORMATION_SEMANTICS",
+    "EVERY_AUTHORIZED_TRANSFORMATION_REQUIRES_EXACTLY_ONE_DECLARED_INFORMATIONAL_SEMANTIC_BINDING",
+    "NO_DECLARED_TRANSFORMATION_MEANS_NO_SPATIAL_TRANSFORMATION_IS_ADMISSIBLE",
+    "NAVIGATION_TRANSITION_AUTHORITY_DOES_NOT_IMPLY_SPATIAL_TRANSFORMATION_AUTHORITY",
+    "RELATION_DISCLOSURE_AUTHORITY_DOES_NOT_IMPLY_SPATIAL_TRANSFORMATION_AUTHORITY",
+    "POSITION_DISTANCE_DEPTH_ROTATION_CAMERA_PROXIMITY_OR_PROMINENCE_MAY_NOT_CREATE_TRANSFORMATION_AUTHORITY_OR_SCIENTIFIC_MEANING",
+    "R6_MAY_NOT_CREATE_A_TRANSFORMATION_ID",
+    "R6_MAY_NOT_CREATE_OR_REWRITE_AN_INFORMATIONAL_SEMANTIC_BINDING",
+    "R6_MAY_NOT_EXECUTE_A_TRANSFORMATION",
+    "R6_MAY_NOT_CONSTRUCT_CAMERA_LAYOUT_STYLE_OR_BROWSER_PRESENTATION_RUNTIME",
+    "R6_MAY_NOT_MUTATE_R2_R3_R4_R5_OR_F1_THROUGH_F11",
+    "SCIENTIFIC_STATE_RELATION_GRAPH_AND_PROJECTION_GRAPH_DIGESTS_MUST_REMAIN_INVARIANT",
+    "IDENTICAL_R4_NAVIGATION_AND_R5_DISCLOSURE_STATE_MUST_PRODUCE_IDENTICAL_R6_GRAMMAR_STATE_ID_AND_DIGEST",
+    "ACCESSIBLE_OR_TEXT_FIRST_DELIVERY_MUST_NOT_REQUIRE_A_SPATIAL_TRANSFORMATION_FOR_SCIENTIFIC_RECOVERABILITY"
+  ],
+  "currentCorpusDisposition": {
+    "authorizedTransformationCount": 0,
+    "admissionMode": "NO_SPATIAL_TRANSFORMATION_AUTHORIZED",
+    "meaning": "THE_GRAMMAR_IS_EXECUTABLE_BUT_THE_CURRENT_FROZEN_R3_CORPUS_ADMITS_NO_TRANSFORMATION",
+    "authorityInflationPermittedToMakeR6_VISUALLY_ACTIVE": false
+  },
+  "failClosedReasons": [
+    "SPATIAL_TRANSFORMATION_NOT_AUTHORIZED",
+    "TRANSFORMATION_SCOPE_VIOLATION",
+    "REQUIRED_TRANSFORMATION_SUPPRESSED",
+    "TRANSFORMATION_SEMANTIC_MISMATCH",
+    "DUPLICATE_TRANSFORMATION_ID",
+    "DUPLICATE_TRANSFORMATION_SEMANTIC_BINDING",
+    "MISSING_TRANSFORMATION_SEMANTIC_BINDING",
+    "UNDECLARED_TRANSFORMATION_SEMANTIC_BINDING",
+    "SCIENTIFIC_STATE_MUTATION_ATTEMPT",
+    "SOURCE_DIGEST_MISSING",
+    "SOURCE_DIGEST_MISMATCH",
+    "NONDETERMINISTIC_GRAMMAR_STATE",
+    "GRAMMAR_DIGEST_MISMATCH"
+  ],
+  "authorized": [
+    "CONSTRUCT_NONVISUAL_TRANSFORMATION_AUTHORITY_GRAMMAR",
+    "CONSUME_CURRENT_FRAME_ALLOWED_SPATIAL_TRANSFORMATIONS_AS_IMMUTABLE_AUTHORITY",
+    "CONSUME_CURRENT_FRAME_TRANSFORMATION_SEMANTICS_AS_IMMUTABLE_BINDINGS",
+    "VERIFY_ONE_TO_ONE_TRANSFORMATION_SEMANTIC_BINDINGS",
+    "FAIL_CLOSED_ON_UNAUTHORIZED_TRANSFORMATION",
+    "VERIFY_NAVIGATION_DOES_NOT_CREATE_TRANSFORMATION_AUTHORITY",
+    "VERIFY_DISCLOSURE_DOES_NOT_CREATE_TRANSFORMATION_AUTHORITY",
+    "VERIFY_CURRENT_CORPUS_ZERO_TRANSFORMATION_DISPOSITION",
+    "VERIFY_REPLAY_DETERMINISM",
+    "VERIFY_SCIENTIFIC_STATE_INVARIANCE"
+  ],
+  "prohibited": [
+    "R2_FRAME_SEMANTIC_REOPENING",
+    "R3_INTERPRETER_SEMANTIC_REOPENING",
+    "R4_NAVIGATION_SEMANTIC_REOPENING",
+    "R5_DISCLOSURE_SEMANTIC_REOPENING",
+    "SCIENTIFIC_RESOLUTION_REOPENING",
+    "SCIENTIFIC_CLAIM_UPGRADE",
+    "TRANSFORMATION_CREATION",
+    "TRANSFORMATION_SEMANTIC_CREATION_OR_REWRITE",
+    "NAVIGATION_DERIVED_TRANSFORMATION_AUTHORITY",
+    "GEOMETRY_DERIVED_SCIENTIFIC_SEMANTICS",
+    "F1_THROUGH_F11_MUTATION",
+    "VISIBLE_RECONSTRUCTION",
+    "FINAL_INTERFACE_CONSTRUCTION",
+    "PUBLIC_METHODS_REPLACEMENT",
+    "LIVE_DEPLOYMENT",
+    "MERGE_TO_MAIN",
+    "BROWSER_NAVIGATION_BINDING",
+    "CAMERA_RUNTIME",
+    "STYLE_OR_LAYOUT_CONSTRUCTION",
+    "SPATIAL_TRANSFORMATION_RUNTIME_EXECUTION",
+    "REJECTED_SPECIMEN_PROMOTION"
+  ],
+  "verification": {
+    "workflow": ".github/workflows/methods-f12-r6-spatial-transformation-grammar-verify.yml",
+    "verifier": "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar.verify.v1.mjs",
+    "fetchDepth": 0,
+    "closureRule": "EXACT_SINGLE_SUCCESSOR_HEAD_REMOTE_VERIFICATION_PASS_AND_EXACT_FOUR_FILE_DIFF",
+    "terminalReverificationRequired": true
+  },
+  "closure": {
+    "transformationAuthorityGrammarConstructed": true,
+    "oneToOneSemanticBindingRuleConstructed": true,
+    "unauthorizedTransformationFailClosedConstructed": true,
+    "navigationNonAuthorityConstructed": true,
+    "disclosureNonAuthorityConstructed": true,
+    "zeroTransformationCorpusDispositionVerified": true,
+    "scientificStateMutated": false,
+    "certifiedPayloadMutated": false,
+    "r2FrameSemanticsReopened": false,
+    "r3InterpreterSemanticsReopened": false,
+    "r4NavigationSemanticsReopened": false,
+    "r5DisclosureSemanticsReopened": false,
+    "visibleExperienceMutated": false,
+    "publicStateMutated": false,
+    "presentationRuntimeConstructed": false,
+    "spatialTransformationRuntimeConstructed": false,
+    "mergeToMain": false,
+    "r7Eligibility": "ELIGIBLE_READY_FOR_EXECUTION"
+  },
+  "onPass": {
+    "r7": "ELIGIBLE_READY_FOR_EXECUTION",
+    "visibleReconstruction": "STILL_PROHIBITED"
+  },
+  "userDifferentialRequired": false
+}

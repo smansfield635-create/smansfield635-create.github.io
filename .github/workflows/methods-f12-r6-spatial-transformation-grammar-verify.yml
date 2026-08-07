@@ -1,0 +1,58 @@
+name: Methods F12 R6 Spatial Transformation Grammar Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r6-spatial-transformation-grammar-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-*'
+      - '.github/workflows/methods-f12-r6-spatial-transformation-grammar-verify.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-f12-r6-spatial-transformation-grammar-verify
+  cancel-in-progress: false
+
+jobs:
+  verify-r6-exact-head:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact R5 parent and frozen inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "60dbad954020ae1cc9b3ce4cbb0539c318c41863"
+          test "$(git rev-parse 60dbad954020ae1cc9b3ce4cbb0539c318c41863^{tree})" = "63e4da15fac80b9070d89f8cfdc8d3ad42a64d72"
+          test "$(git rev-parse 60dbad954020ae1cc9b3ce4cbb0539c318c41863:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-context-bound-relation-disclosure-contract.v1.json)" = "71e7eef3d621b8992723317b7c36e5747b568ae0"
+          test "$(git rev-parse 60dbad954020ae1cc9b3ce4cbb0539c318c41863:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-context-bound-relation-disclosure.v1.mjs)" = "2f63b07f0f6eeb57e05780e5c4c840295f401363"
+          test "$(git rev-parse 60dbad954020ae1cc9b3ce4cbb0539c318c41863:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-context-bound-relation-disclosure.verify.v1.mjs)" = "b19c0f594f85dcb0081401c5f09a6731f2c3faab"
+      - name: Verify R6 spatial transformation grammar
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar.verify.v1.mjs | tee r6-spatial-transformation-grammar-verification.json
+      - name: Prove exact R6 diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only 60dbad954020ae1cc9b3ce4cbb0539c318c41863..HEAD | tee r6-changed-paths.txt
+          test "$(wc -l < r6-changed-paths.txt)" -eq 4
+          grep -Fxq '.github/workflows/methods-f12-r6-spatial-transformation-grammar-verify.yml' r6-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar-contract.v1.json' r6-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar.v1.mjs' r6-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar.verify.v1.mjs' r6-changed-paths.txt
+          if git diff --name-only 60dbad954020ae1cc9b3ce4cbb0539c318c41863..HEAD | grep -E '(^|/)(f1-|f2-|f3-|f4-|f5-|f6-|f7-|f8-|f9-|f10-|f11-|r1-|r2-|r3-|r4-|r5-|laws/research/methods-and-models/|review/methods-models/)' | grep -q .; then
+            echo 'PROHIBITED_UPSTREAM_OR_VISIBLE_PATH_MUTATION'; exit 1
+          fi
+      - name: Preserve R6 verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r6-spatial-transformation-grammar-evidence
+          path: |
+            r6-spatial-transformation-grammar-verification.json
+            r6-changed-paths.txt

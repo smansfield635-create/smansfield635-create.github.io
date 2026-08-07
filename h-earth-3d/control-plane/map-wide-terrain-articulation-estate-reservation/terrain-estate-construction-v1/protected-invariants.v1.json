@@ -3,6 +3,7 @@
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
   "authorityIssue": 719,
   "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "successorRepairRevision": 1,
   "worldIdentity": {
     "width": 512,
     "depth": 512,
@@ -29,12 +30,17 @@
       "directionalPhaseCount": 3
     }
   },
-  "reservedEstateEnvelope": {
+  "estateSite": {
     "center": {"x": 80, "z": -172},
-    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "reservedBounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "preparedBuildablePad": {"xMinimum": 69, "xMaximum": 91, "zMinimum": -181, "zMaximum": -163},
     "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
-    "effect": "PROTECTED_FUTURE_CONSTRUCTION_ENVELOPE_ONLY",
-    "manorGeometryAuthorized": false
+    "effect": "PHYSICALLY_PREPARED_BUILDABLE_TERRACE_WITH_SMOOTH_TERRAIN_TRANSITION",
+    "gradingAuthorized": true,
+    "foundationAuthorized": false,
+    "manorGeometryAuthorized": false,
+    "developerOverlayMayBeDisabled": true,
+    "siteMustRemainLegibleWithoutOverlay": true
   },
   "twoHillRelation": {
     "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
@@ -42,7 +48,8 @@
     "hillSeparation": 94.40338976964756,
     "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
     "lowerHillToSaddleDrop": 10.537935137748718,
-    "mustRemainLegible": true
+    "mustRemainLegible": true,
+    "localEstateTerraceMayCutIntoLeftHillWithoutErasingBroaderHillMass": true
   },
   "lowCorridor": {
     "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
@@ -63,22 +70,35 @@
     "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
     "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96}
   },
+  "worldInspector": {
+    "singlePointerOrbitMustRemainRecoverable": true,
+    "minimumPitchRadians": 0.46,
+    "maximumPitchRadians": 1.49,
+    "fitWorldRecoveryRequired": true,
+    "estateFocusRequired": true,
+    "topViewRequired": true,
+    "mobilePinchZoomRequired": true,
+    "twoPointerPanRequired": true,
+    "ordinaryInteractionMayStrandCamera": false,
+    "developerEstateGuideDefault": "OFF"
+  },
   "requiredPreservationLaws": [
     "ENTRY_WATER_REMAINS_HARD_BOUNDARY",
     "CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE",
-    "ENTRY_ZONE_REMAINS_SEPARATE_FROM_RESERVED_ESTATE_ENVELOPE",
+    "ENTRY_ZONE_REMAINS_SEPARATE_FROM_ESTATE_SITE",
     "LOW_CORRIDOR_REMAINS_OPEN",
     "TWO_HILL_RELATION_REMAINS_LEGIBLE",
     "BEACHWARD_AND_MOUNTAINWARD_VIEWS_REMAIN_CLEAR",
     "CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED_WITHOUT_INTERIOR_CONSTRUCTION",
     "FRONTIER_PLAINS_REMAINS_UNCONSTRUCTED",
     "CONTINUOUS_TERRAIN_TRAVERSAL_MUST_NOT_REGRESS",
+    "ESTATE_ZONING_REQUIRES_PHYSICAL_TERRAIN_SITE_PREPARATION_NOT_OVERLAY_ONLY",
     "NO_MANOR_GEOMETRY_SELECTION_OR_AUTHORING",
     "NO_LIVE_RUNTIME_CAMERA_NAVIGATION_WATER_MUTATION",
     "NO_MERGE_DEPLOYMENT_RELEASE_WITHOUT_SEPARATE_AUTHORITY"
   ],
   "deferredGeometry": {
-    "exactBuildingFootprint": "UNASSIGNED",
+    "exactBuildingFootprint": "UNASSIGNED_WITHIN_PREPARED_SITE",
     "buildingOrientation": "UNASSIGNED",
     "atriumGeometry": "UNASSIGNED",
     "entranceCoordinates": "UNASSIGNED",

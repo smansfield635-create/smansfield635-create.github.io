@@ -2,6 +2,9 @@ import {
   H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ENVIRONMENT,
   sampleHEarthMapWideEnvironmentPresentation
 } from '../../../../h-earth-3d/environment/h-earth.gratitude-region-mirror-manor-estate.v1.js';
+import {
+  H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY
+} from '../../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js';
 
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const mix = (left, right, amount) => left * (1 - amount) + right * amount;
@@ -22,17 +25,17 @@ export const PREVIEW_DOMAIN = Object.freeze({
   xMaximum: 256,
   zMinimum: -320,
   zMaximum: 64,
-  columns: 129,
-  rows: 97
+  columns: 161,
+  rows: 121
 });
 
-const WORLD_CENTER = Object.freeze({ x: 0, z: -128 });
+const WORLD_CENTER = Object.freeze({ x: 0, z: -132 });
 const CAMERA_LIMITS = Object.freeze({
   minimumPitch: 0.46,
   maximumPitch: 1.49,
-  minimumDistance: 105,
+  minimumDistance: 95,
   maximumDistance: 1600,
-  worldFitDistance: 1325,
+  worldFitDistance: 1180,
   maximumTargetX: 246,
   minimumTargetX: -246,
   maximumTargetZ: 54,
@@ -137,26 +140,50 @@ void main(){
   const vec3 MICRO_DIRECTION_A=vec3(0.8164965809277260,0.4082482904638630,0.4082482904638630);
   const vec3 MICRO_DIRECTION_B=vec3(-0.4082482904638630,0.8164965809277260,0.4082482904638630);
   const vec3 MICRO_DIRECTION_C=vec3(0.4082482904638630,-0.4082482904638630,0.8164965809277260);
+  const float SOURCE_RELIEF_AMPLITUDE=0.22;
+  const float INSPECTOR_RELIEF_SCALE=0.42;
   float microPhaseA=dot(vWorldPosition,MICRO_DIRECTION_A)*3.306939635357677+0.37;
   float microPhaseB=dot(vWorldPosition,MICRO_DIRECTION_B)*2.7318196987737333+2.17;
   float microPhaseC=dot(vWorldPosition,MICRO_DIRECTION_C)*2.243994752564138+4.11;
   float maximumMicroPhaseFootprint=max(fwidth(microPhaseA),max(fwidth(microPhaseB),fwidth(microPhaseC)));
   float microAntialiasEnvelope=1.0-smoothstep(0.45,0.95,maximumMicroPhaseFootprint);
   float microReliefSignal=sin(microPhaseA)*0.50+sin(microPhaseB)*0.30+sin(microPhaseC)*0.20;
-  float microReliefHeight=microReliefSignal*0.22;
+  float microReliefHeight=microReliefSignal*SOURCE_RELIEF_AMPLITUDE*INSPECTOR_RELIEF_SCALE;
   float microDistanceEnvelope=1.0-smoothstep(120.0,300.0,distanceToCamera);
   float microSlopeEnvelope=mix(0.82,1.0,smoothstep(0.05,0.55,slope));
-  float terrainReliefEnvelope=clamp(microDistanceEnvelope*microSlopeEnvelope*microAntialiasEnvelope,0.0,1.0);
+  float steepSurfaceSuppression=1.0-smoothstep(0.58,0.88,slope);
+  float terrainReliefEnvelope=clamp(microDistanceEnvelope*microSlopeEnvelope*microAntialiasEnvelope*steepSurfaceSuppression,0.0,1.0);
   vec3 rawMicroreliefNormal=perturbTerrainNormal(geometricNormal,vWorldPosition,microReliefHeight);
   vec3 boundedMicroreliefNormal=limitTerrainNormalDeviation(geometricNormal,rawMicroreliefNormal);
   vec3 shadingNormal=normalize(mix(geometricNormal,boundedMicroreliefNormal,terrainReliefEnvelope));
   vec3 lightDirection=normalize(-uSunDirection);
   float diffuse=max(dot(shadingNormal,lightDirection),0.0);
-  float hemisphere=0.48+0.52*clamp(shadingNormal.y*0.5+0.5,0.0,1.0);
-  vec3 color=vColor*(0.42+0.68*diffuse)*hemisphere;
-  float fog=clamp((distanceToCamera-240.0)/(610.0-240.0),0.0,0.72);
+  float hemisphere=0.50+0.50*clamp(shadingNormal.y*0.5+0.5,0.0,1.0);
+  vec3 color=vColor*(0.46+0.64*diffuse)*hemisphere;
+  float fog=clamp((distanceToCamera-280.0)/(690.0-280.0),0.0,0.68);
   color=mix(color,uGroundHaze,fog);
   outColor=vec4(color,1.0);
+}`;
+
+const WATER_VS = `#version 300 es
+precision highp float;
+layout(location=0) in vec3 aPosition;
+layout(location=1) in vec4 aColor;
+uniform mat4 uViewProjection;
+uniform float uVerticalScale;
+out vec4 vColor;
+void main(){
+  vec3 displayPosition=vec3(aPosition.x,aPosition.y*uVerticalScale,aPosition.z);
+  vColor=aColor;
+  gl_Position=uViewProjection*vec4(displayPosition,1.0);
+}`;
+
+const WATER_FS = `#version 300 es
+precision highp float;
+in vec4 vColor;
+out vec4 outColor;
+void main(){
+  outColor=vColor;
 }`;
 
 function compileShader(gl, type, source) {
@@ -206,6 +233,9 @@ export function buildMapWideEnvironmentMesh() {
   let validSampleCount = 0;
   let estateSampleCount = 0;
   let sitePreparationSampleCount = 0;
+  let reservoirSampleCount = 0;
+  let waterfallSampleCount = 0;
+  let cavernReserveSampleCount = 0;
 
   for (let row = 0; row < rows; row += 1) {
     const z = mix(zMinimum, zMaximum, row / (rows - 1));
@@ -226,8 +256,11 @@ export function buildMapWideEnvironmentMesh() {
       maximumElevation = Math.max(maximumElevation, terrain.presentationElevation);
       minimumRelief = Math.min(minimumRelief, terrain.presentationReliefOffset);
       maximumRelief = Math.max(maximumRelief, terrain.presentationReliefOffset);
-      if (environment.precinctClass === 'RESERVED_ESTATE_CORE') estateSampleCount += 1;
+      if (environment.precinctClass.startsWith('ESTATE_')) estateSampleCount += 1;
       if ((terrain.sitePreparation?.weight ?? 0) > 0.01) sitePreparationSampleCount += 1;
+      if ((terrain.hydrology?.reservoirWeight ?? 0) > 0.01) reservoirSampleCount += 1;
+      if ((terrain.hydrology?.waterfallWeight ?? 0) > 0.01) waterfallSampleCount += 1;
+      if ((terrain.hydrology?.cavernReserveWeight ?? 0) > 0.01) cavernReserveSampleCount += 1;
     }
   }
 
@@ -254,12 +287,117 @@ export function buildMapWideEnvironmentMesh() {
       maximumRelief,
       estateSampleCount,
       sitePreparationSampleCount,
-      rendererClass: 'WEBGL2_STABLE_MOBILE_WORLD_INSPECTOR',
-      worldInspectorRepairRevision: 2,
+      reservoirSampleCount,
+      waterfallSampleCount,
+      cavernReserveSampleCount,
+      rendererClass: 'WEBGL2_STABLE_MOBILE_WORLD_AUTHORING_INSPECTOR',
+      worldInspectorRepairRevision: 3,
       guideOverlayRenderPathPresent: false,
-      v2VirtualNormalReliefExecutedInFragmentShader: true
+      v2VirtualNormalReliefExecutedInFragmentShader: true,
+      inspectorVirtualReliefScale: 0.42,
+      verticalScale: 1.35
     })
   });
+}
+
+function pushWaterVertex(vertices, x, y, z, color) {
+  vertices.push(x, y, z, color[0], color[1], color[2], color[3]);
+}
+
+export function buildWaterContextMesh() {
+  const vertices = [];
+  const indices = [];
+  const palette = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ENVIRONMENT.waterPresentation;
+  const hydro = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY;
+
+  const addTriangle = (a, b, c) => indices.push(a, b, c);
+
+  const oceanBase = vertices.length / 7;
+  const oceanY = hydro.seaLevelY + 0.12;
+  for (const [x, z] of [[-300, -145], [300, -145], [-300, 90], [300, 90]]) {
+    pushWaterVertex(vertices, x, oceanY, z, palette.ocean);
+  }
+  addTriangle(oceanBase, oceanBase + 2, oceanBase + 1);
+  addTriangle(oceanBase + 1, oceanBase + 2, oceanBase + 3);
+
+  const reservoir = hydro.reservoir;
+  const reservoirBase = vertices.length / 7;
+  const reservoirSegments = 48;
+  pushWaterVertex(
+    vertices,
+    reservoir.center.x,
+    reservoir.waterSurfaceElevation + 0.12,
+    reservoir.center.z,
+    palette.reservoir
+  );
+  for (let index = 0; index <= reservoirSegments; index += 1) {
+    const angle = index / reservoirSegments * Math.PI * 2;
+    pushWaterVertex(
+      vertices,
+      reservoir.center.x + Math.cos(angle) * reservoir.radius.x * 0.82,
+      reservoir.waterSurfaceElevation + 0.12,
+      reservoir.center.z + Math.sin(angle) * reservoir.radius.z * 0.82,
+      palette.reservoir
+    );
+  }
+  for (let index = 0; index < reservoirSegments; index += 1) {
+    addTriangle(reservoirBase, reservoirBase + index + 1, reservoirBase + index + 2);
+  }
+
+  const waterfall = hydro.waterfall;
+  const waterfallBase = vertices.length / 7;
+  const waterfallSegments = 28;
+  const crestSample = sampleHEarthMapWideEnvironmentPresentation(waterfall.visibleCrest.x, waterfall.visibleCrest.z);
+  const topY = crestSample?.valid === true
+    ? crestSample.presentationElevation + 1.4
+    : reservoir.waterSurfaceElevation + 28;
+  const bottomY = reservoir.waterSurfaceElevation + 0.55;
+  const ribbonHalfWidth = 2.6;
+  for (let index = 0; index <= waterfallSegments; index += 1) {
+    const t = index / waterfallSegments;
+    const x = mix(waterfall.visibleCrest.x, waterfall.landing.x, t);
+    const z = mix(waterfall.visibleCrest.z, waterfall.landing.z, t);
+    const y = mix(topY, bottomY, t);
+    pushWaterVertex(vertices, x - ribbonHalfWidth, y, z, palette.waterfall);
+    pushWaterVertex(vertices, x + ribbonHalfWidth, y, z, palette.waterfall);
+  }
+  for (let index = 0; index < waterfallSegments; index += 1) {
+    const a = waterfallBase + index * 2;
+    const b = a + 1;
+    const c = a + 2;
+    const d = a + 3;
+    addTriangle(a, c, b);
+    addTriangle(b, c, d);
+  }
+
+  return Object.freeze({
+    vertices: new Float32Array(vertices),
+    indices: new Uint32Array(indices),
+    statistics: Object.freeze({
+      triangleCount: indices.length / 3,
+      oceanTriangleCount: 2,
+      reservoirTriangleCount: reservoirSegments,
+      waterfallTriangleCount: waterfallSegments * 2,
+      authoringContextOnly: true,
+      liveWaterMutation: false
+    })
+  });
+}
+
+function createIndexedMeshBuffers(gl, mesh, stride, attributes) {
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+  const vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, mesh.vertices, gl.STATIC_DRAW);
+  for (const [location, size, offset] of attributes) {
+    gl.enableVertexAttribArray(location);
+    gl.vertexAttribPointer(location, size, gl.FLOAT, false, stride, offset);
+  }
+  const indexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
+  return Object.freeze({ vao, vertexBuffer, indexBuffer });
 }
 
 export function createMapWideEnvironmentRenderer(canvas) {
@@ -267,24 +405,21 @@ export function createMapWideEnvironmentRenderer(canvas) {
   if (!gl) throw new Error('WEBGL2_CONTEXT_UNAVAILABLE');
 
   const terrainProgram = createProgram(gl, TERRAIN_VS, TERRAIN_FS);
+  const waterProgram = createProgram(gl, WATER_VS, WATER_FS);
   const mesh = buildMapWideEnvironmentMesh();
-
-  const vao = gl.createVertexArray();
-  gl.bindVertexArray(vao);
-
-  const vertexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, mesh.vertices, gl.STATIC_DRAW);
-
-  const stride = 10 * 4;
-  for (const [location, size, offset] of [[0, 3, 0], [1, 3, 12], [2, 3, 24], [3, 1, 36]]) {
-    gl.enableVertexAttribArray(location);
-    gl.vertexAttribPointer(location, size, gl.FLOAT, false, stride, offset);
-  }
-
-  const indexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
+  const waterMesh = buildWaterContextMesh();
+  const terrainBuffers = createIndexedMeshBuffers(
+    gl,
+    mesh,
+    10 * 4,
+    [[0, 3, 0], [1, 3, 12], [2, 3, 24], [3, 1, 36]]
+  );
+  const waterBuffers = createIndexedMeshBuffers(
+    gl,
+    waterMesh,
+    7 * 4,
+    [[0, 3, 0], [1, 4, 12]]
+  );
 
   const state = {
     yaw: -0.62,
@@ -292,7 +427,7 @@ export function createMapWideEnvironmentRenderer(canvas) {
     distance: CAMERA_LIMITS.worldFitDistance,
     targetX: WORLD_CENTER.x,
     targetZ: WORLD_CENTER.z,
-    verticalScale: 2.0,
+    verticalScale: 1.35,
     renderedFrames: 0,
     cameraRecoveryCount: 0
   };
@@ -343,12 +478,14 @@ export function createMapWideEnvironmentRenderer(canvas) {
   function render() {
     resize();
     const { eye, target } = camera();
-    const projection = perspective(Math.PI / 3, canvas.width / canvas.height, 1, 2200);
+    const projection = perspective(Math.PI / 3, canvas.width / canvas.height, 1, 2400);
     const view = lookAt(eye, target, [0, 1, 0]);
     const viewProjection = multiply(projection, view);
     const atmosphere = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ENVIRONMENT.atmosphere;
 
     gl.enable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
+    gl.depthMask(true);
     gl.clearColor(atmosphere.skyZenith[0], atmosphere.skyZenith[1], atmosphere.skyZenith[2], 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -361,10 +498,22 @@ export function createMapWideEnvironmentRenderer(canvas) {
     );
     gl.uniform3fv(gl.getUniformLocation(terrainProgram, 'uSunDirection'), atmosphere.sunDirection);
     gl.uniform3fv(gl.getUniformLocation(terrainProgram, 'uGroundHaze'), atmosphere.groundHaze);
-
-    gl.bindVertexArray(vao);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bindVertexArray(terrainBuffers.vao);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, terrainBuffers.indexBuffer);
     gl.drawElements(gl.TRIANGLES, mesh.indices.length, gl.UNSIGNED_INT, 0);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.depthMask(false);
+    gl.useProgram(waterProgram);
+    gl.uniformMatrix4fv(gl.getUniformLocation(waterProgram, 'uViewProjection'), false, viewProjection);
+    gl.uniform1f(gl.getUniformLocation(waterProgram, 'uVerticalScale'), state.verticalScale);
+    gl.bindVertexArray(waterBuffers.vao);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, waterBuffers.indexBuffer);
+    gl.drawElements(gl.TRIANGLES, waterMesh.indices.length, gl.UNSIGNED_INT, 0);
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+
     state.renderedFrames += 1;
   }
 
@@ -451,12 +600,14 @@ export function createMapWideEnvironmentRenderer(canvas) {
         state.targetZ >= CAMERA_LIMITS.minimumTargetZ &&
         state.targetZ <= CAMERA_LIMITS.maximumTargetZ,
       fitWorldAvailable: true,
-      guideOverlayRenderPathAbsent: true
+      guideOverlayRenderPathAbsent: true,
+      authoringWaterContextOnly: true
     });
   }
 
   return Object.freeze({
     mesh,
+    waterMesh,
     state,
     render,
     orbit,
@@ -471,7 +622,11 @@ export function createMapWideEnvironmentRenderer(canvas) {
       webgl2: true,
       v2VirtualNormalReliefExecuted: true,
       statistics: mesh.statistics,
+      waterStatistics: waterMesh.statistics,
       manorGeometryConstructed: false,
+      cavernInteriorConstructed: false,
+      vaultInteriorConstructed: false,
+      liveWaterMutated: false,
       cameraScope: 'NONPUBLIC_PREVIEW_ONLY',
       guideOverlayRenderPathPresent: false,
       cameraSafety: getCameraSafety()

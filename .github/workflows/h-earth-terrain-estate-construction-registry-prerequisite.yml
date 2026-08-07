@@ -1,0 +1,111 @@
+name: H-Earth Terrain Estate Construction Registry Prerequisite
+
+on:
+  push:
+    branches:
+      - repair/h-earth-terrain-estate-construction-v1-registry-prerequisite-001
+
+permissions:
+  contents: write
+  issues: read
+
+concurrency:
+  group: h-earth-terrain-estate-construction-registry-prerequisite
+  cancel-in-progress: false
+
+jobs:
+  materialize-and-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Materialize exact admitted prerequisite and verify
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXACT_BRANCH: repair/h-earth-terrain-estate-construction-v1-registry-prerequisite-001
+          GOVERNING_HEAD: 2b4fae98b06a46370f2e3f1af94ace49905657a9
+          PAYLOAD_COMMENT_IDS: 5211727901 5211733638 5211739477 5211744604 5211747130
+          PAYLOAD_BASE64_LENGTH: '15240'
+          PAYLOAD_SHA256: 241fd153befc7127efcf6555a708a82a0f0bda32150be167fa56fd6aabd2ca5b
+          AMENDMENT_SHA256: 2408547e536055fbcf4fee0b71805a9979c210cd34f98fc673fd351f35cdd35a
+          LOADER_SHA256: 113e9ecce793c8d61d9f39fb2012eaadbc8ed9c0d371670e997672b771af1bf5
+          VERIFIER_SHA256: 48b2f3b3c0ca3db3cc80520b3db9e8a25ac53793c615a1d6a59392f037c33444
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$EXACT_BRANCH"
+          git merge-base --is-ancestor "$GOVERNING_HEAD" HEAD
+
+          work="$RUNNER_TEMP/h-earth-registry-prerequisite"
+          mkdir -p "$work/payload" "$work/receipts"
+          : > "$work/payload.b64"
+
+          for comment_id in $PAYLOAD_COMMENT_IDS; do
+            body="$work/comment-$comment_id.txt"
+            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" --jq .body > "$body"
+            grep -qx 'H_EARTH_TERRAIN_ESTATE_CONSTRUCTION_REGISTRY_PREREQUISITE_PAYLOAD_CHUNK_v1' "$body"
+            grep -qx "PAYLOAD_SHA256 = $PAYLOAD_SHA256" "$body"
+            sed -n '/^BASE64_BEGIN$/,/^BASE64_END$/p' "$body" | sed '1d;$d' | tr -d '\r\n' >> "$work/payload.b64"
+          done
+
+          test "$(wc -c < "$work/payload.b64" | tr -d ' ')" = "$PAYLOAD_BASE64_LENGTH"
+          base64 -d "$work/payload.b64" > "$work/payload.tar.gz"
+          test "$(sha256sum "$work/payload.tar.gz" | awk '{print $1}')" = "$PAYLOAD_SHA256"
+          tar -xzf "$work/payload.tar.gz" -C "$work/payload"
+          test "$(sha256sum "$work/payload/amendment.js" | awk '{print $1}')" = "$AMENDMENT_SHA256"
+          test "$(sha256sum "$work/payload/loader.js" | awk '{print $1}')" = "$LOADER_SHA256"
+          test "$(sha256sum "$work/payload/verifier.mjs" | awk '{print $1}')" = "$VERIFIER_SHA256"
+
+          install -D -m 0644 "$work/payload/amendment.js" h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.terrain-estate-construction-v1-authorized-candidate-scope.js
+          install -D -m 0644 "$work/payload/loader.js" h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          install -D -m 0755 "$work/payload/verifier.mjs" tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs
+
+          if [ -n "$(git status --short)" ]; then
+            actual="$(git status --porcelain | awk '{print $2}' | sort | tr '\n' ' ')"
+            expected="h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.terrain-estate-construction-v1-authorized-candidate-scope.js h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs "
+            test "$actual" = "$expected"
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git add -- \
+              h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.terrain-estate-construction-v1-authorized-candidate-scope.js \
+              h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js \
+              tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs
+            git commit -m "Install H-Earth construction registry prerequisite"
+            git push origin "HEAD:$EXACT_BRANCH"
+          fi
+
+          node tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs \
+            --verify --role BUILDER --output "$work/receipts/builder.json"
+
+          fresh="$work/fresh"
+          git clone --quiet --branch "$EXACT_BRANCH" --single-branch \
+            "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" "$fresh"
+          (
+            cd "$fresh"
+            node tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs \
+              --verify --role ROLE_3 --output "$work/receipts/role3.json"
+          )
+
+          node --input-type=module - "$work/receipts/builder.json" "$work/receipts/role3.json" <<'NODE'
+          import fs from 'node:fs';
+          const [builderPath, role3Path] = process.argv.slice(2);
+          const builder = JSON.parse(fs.readFileSync(builderPath, 'utf8'));
+          const role3 = JSON.parse(fs.readFileSync(role3Path, 'utf8'));
+          if (builder.result !== 'PASS' || role3.result !== 'PASS') throw new Error('VERIFICATION_NOT_PASS');
+          if (builder.verificationFingerprint !== role3.verificationFingerprint) throw new Error('ROLE3_FINGERPRINT_MISMATCH');
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: h-earth-terrain-estate-construction-registry-prerequisite
+          path: ${{ runner.temp }}/h-earth-registry-prerequisite/receipts
+          if-no-files-found: error
+          retention-days: 90

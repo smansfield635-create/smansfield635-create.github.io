@@ -37,6 +37,11 @@ const clone = value => structuredClone(value);
 const hash = text => crypto.createHash('sha256').update(text, 'utf8').digest('hex');
 const b64 = text => Buffer.from(text, 'utf8').toString('base64url');
 const unb64 = token => Buffer.from(token, 'base64url').toString('utf8');
+const canonicalBytes = state => {
+  const serialized = serializeCanonical(state);
+  assert.notEqual(serialized.resolutionClass, 'INVALID', `state failed F3 canonicalization: ${(serialized.errors ?? []).join('|')}`);
+  return serialized.bytes;
+};
 
 assert.equal(git('show','-s','--format=%T',F4_HEAD), F4_TREE, 'F4 tree drift');
 execFileSync('git', ['merge-base','--is-ancestor',F4_HEAD,'HEAD']);
@@ -112,8 +117,8 @@ const bioDecoded = decodeDeepLink(bioUrl, authority);
 const hurricaneDecoded = decodeDeepLink(hurricaneUrl, authority);
 assert.equal(bioDecoded.valid, true);
 assert.equal(hurricaneDecoded.valid, true);
-assert.equal(JSON.stringify(bioDecoded.state), JSON.stringify(bioAuthorized.state));
-assert.equal(JSON.stringify(hurricaneDecoded.state), JSON.stringify(hurricaneAuthorized.state));
+assert.equal(canonicalBytes(bioDecoded.state), canonicalBytes(bioAuthorized.state));
+assert.equal(canonicalBytes(hurricaneDecoded.state), canonicalBytes(hurricaneAuthorized.state));
 assert.equal(hurricaneDecoded.resolutionClass, 'PARTIAL');
 assert.equal(reloadFromUrl(bioUrl, authority).canonicalUrl, bioUrl);
 assert.equal(reloadFromUrl(hurricaneUrl, authority).canonicalUrl, hurricaneUrl);
@@ -122,7 +127,7 @@ const routed1 = navigateWithinState(bio, 'ENTRY:BIO_LAB');
 assert.equal(routed1.valid, true);
 assert.deepEqual(routed1.changedAxes, ['ROUTE_HISTORY']);
 assert.equal(validateAuthorizedState(routed1.state, 'BIO_LAB', authority).valid, true);
-for (const axis of Object.keys(bio.axes).filter(axis => axis !== 'ROUTE_HISTORY')) assert.equal(JSON.stringify(routed1.state.axes[axis]), JSON.stringify(bio.axes[axis]), `navigation mutated ${axis}`);
+for (const axis of Object.keys(bio.axes).filter(axis => axis !== 'ROUTE_HISTORY')) assert.deepEqual(routed1.state.axes[axis], bio.axes[axis], `navigation mutated ${axis}`);
 const routed2 = navigateWithinState(routed1.state, 'RETURNABLE:DETAIL');
 assert.equal(routed2.valid, true);
 const routed3 = navigateWithinState(routed1.state, 'ALTERNATE:DETAIL');
@@ -161,7 +166,7 @@ const returned = restoreReturn(crossDecoded.returnContext, authority);
 assert.equal(returned.valid, true);
 assert.equal(returned.entryPointId, 'BIO_LAB');
 assert.equal(returned.route, 'BIO_ORIGIN');
-assert.equal(JSON.stringify(returned.state), JSON.stringify(bioAuthorized.state));
+assert.equal(canonicalBytes(returned.state), canonicalBytes(bioAuthorized.state));
 assert.equal(decodeDeepLink(crossUrl, authority, relations).valid, false, 'return-bearing link accepted without relation authority');
 
 function unpack(url) {

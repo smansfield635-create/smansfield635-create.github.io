@@ -1,0 +1,20 @@
+{
+  "schema":"METHODS_MODELS_F9_CONFORMANCE_FIXTURES_v1",
+  "version":"1.0.0",
+  "positive":[
+    {"id":"OPEN_ORIGINAL_ENTRY","entryPointId":"BIO_LAB","expected":"VALID_D0_SESSION"},
+    {"id":"OPEN_SUCCESSOR_ENTRY","entryPointId":"BATTERY_COHERENCE_HELDOUT_STUDY","expected":"VALID_D0_SESSION"},
+    {"id":"DEPTH_TRAVERSAL","entryPointId":"SPONTANEOUS_SPEECH_EXPLORATORY","depths":["D0","D1","D2","D3","D4"],"expected":"SAME_SCIENTIFIC_BINDING"},
+    {"id":"ROUTE_AND_DEEPLINK","entryPointId":"CMAPSS_FD001_UNTOUCHED_VALIDATION","routeId":"F9_TEST_ROUTE","expected":"ROUTE_HISTORY_ONLY_AND_EXACT_RESTORE"},
+    {"id":"GLOBAL_SCENE_INSPECTION_NON_STATEFUL","nodeId":"STUDY:INDEPENDENT_ROUTE_IDENTIFICATION_PROTOCOL","expected":"VISIBLE_NONACTIVATING_NO_ENTRY_AUTHORITY"}
+  ],
+  "negative":[
+    {"id":"UNKNOWN_ENTRY","entryPointId":"F9_INVENTED_STUDY","expectedError":"ENTRYPOINT_NOT_STATEFUL_OR_NOT_REGISTERED"},
+    {"id":"PROTOCOL_AS_ENTRY","entryPointId":"INDEPENDENT_ROUTE_IDENTIFICATION_PROTOCOL","expectedError":"ENTRYPOINT_NOT_STATEFUL_OR_NOT_REGISTERED"},
+    {"id":"SPATIAL_ACTIVATION","nodeId":"STUDY:BIO_LAB","expectedError":"SPATIAL_NODE_NONACTIVATING_USE_REGISTERED_F7_CONTROL_OR_DIRECT_F5_ENTRY"},
+    {"id":"INFERRED_RELATION","relationId":"F9_INFERRED_RELATION","expected":false},
+    {"id":"UNAUTHORIZED_PROJECTION","claimId":"UCIC_CLAIM_GENERAL_BANK_COLLAPSE_EARLY_WARNING","destination":"APPLICATIONS","expected":false},
+    {"id":"USER_CAMERA","request":{"mode":"USER_CONTROLLED","orbit":true,"pan":true,"zoom":true,"userControlled":true},"expected":false},
+    {"id":"TAMPERED_SESSION","mutation":"CLAIM_CEILING_AXIS","expected":"FAIL_ON_NEXT_OPERATION"}
+  ]
+}

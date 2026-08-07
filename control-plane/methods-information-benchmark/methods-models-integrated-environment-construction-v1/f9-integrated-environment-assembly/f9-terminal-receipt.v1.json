@@ -1,0 +1,22 @@
+{
+  "schema":"METHODS_MODELS_F9_TERMINAL_RECEIPT_v1",
+  "status":"F9_ASSEMBLY_CANDIDATE_PENDING_EXACT_HEAD_VERIFICATION",
+  "operation":"F9_INTEGRATED_ENVIRONMENT_ASSEMBLY_v1",
+  "inputHead":"fc44591931d0b62d039bfaf9517d99ba56ad1c76",
+  "inputTree":"4083597b2481696c282545feb51ab7918224d2f5",
+  "target":"TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
+  "assembled":{"registryAssembly":true,"integratedRuntime":true,"globalSemanticPlane":true,"statefulOperationalPlane":true,"deepLinkContinuity":true,"depthInquiry":true,"interactionAccessibility":true,"spatialSemanticProjection":true,"textFirstEquivalence":true},
+  "expectedCounts":{"portfolioStudies":22,"statefulEntries":16,"nonStatefulPortfolioStudies":6,"canonicalClaims":19,"typedRelations":38},
+  "integrationCreatesScientificMeaning":false,
+  "integrationCreatesCrossObjectRelation":false,
+  "portfolioVisibilityCreatesEntryAuthority":false,
+  "f1ThroughF8Rewrite":false,
+  "scientificClaimUpgrade":false,
+  "publicMethodsMutation":false,
+  "publicLawsMutation":false,
+  "pr541Mutation":false,
+  "f10AuthorityAfterEffectivePass":true,
+  "f10ExecutionAfterEffectivePass":"NOT_STARTED_REQUIRES_SEPARATE_AUTHORIZATION",
+  "f11ThroughF12Authority":false,
+  "verification":"PENDING_EXACT_HEAD"
+}

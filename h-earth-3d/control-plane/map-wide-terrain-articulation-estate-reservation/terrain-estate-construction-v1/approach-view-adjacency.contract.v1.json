@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_APPROACH_VIEW_ADJACENCY_CONTRACT_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "twoHillRelation": {
+    "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
+    "rightHill": {"x": 152, "y": 42.73941022157669, "z": -224},
+    "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
+    "minimumLaw": "SUCCESSOR_MUST_NOT_RAISE_SADDLE_OR_LOWER_HILL_CORE_BY_GEOMETRIC_OFFSET",
+    "readability": "MUST_REMAIN_LEGIBLE"
+  },
+  "lowCorridor": {
+    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "axis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+    "hardOpenHalfWidth": 10,
+    "transitionHalfWidth": 18,
+    "successorGeometricOffsetInsideHardOpen": 0,
+    "mustRemainOpen": true
+  },
+  "viewCorridors": [
+    {
+      "id": "BEACHWARD_GROUND_VIEW",
+      "status": "PROTECTED",
+      "sourceMaximumObstruction": -0.041573455929757586,
+      "successorLaw": "NO_NEW_POSITIVE_OBSTRUCTION_ALONG_PROTECTED_RAY_SET"
+    },
+    {
+      "id": "MOUNTAINWARD_GROUND_VIEW",
+      "status": "PROTECTED",
+      "sourceMaximumObstruction": -3.0548654910176936,
+      "successorLaw": "MOUNTAINWARD_RELIEF_MAY_STRENGTHEN_DISTANT_FORM_BUT_MUST_NOT_OCCLUDE_NEAR_GROUND_CORRIDOR"
+    }
+  ],
+  "entryRegion": {
+    "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+    "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96},
+    "geometricOffset": 0,
+    "mustRemainSeparateFromEstate": true,
+    "mustRemainRegionallyConnected": true
+  },
+  "estateAdjacency": {
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "buildingGeometry": "DEFERRED",
+    "environmentalNesting": "AUTHORIZED",
+    "approachNetworkSelection": "DEFERRED",
+    "newHardBarriers": "PROHIBITED"
+  },
+  "hardFailures": [
+    "LOW_CORRIDOR_CLOSED",
+    "TWO_HILL_RELATION_ERASED",
+    "BEACHWARD_VIEW_NEWLY_OCCLUDED",
+    "MOUNTAINWARD_NEAR_CORRIDOR_OCCLUDED",
+    "ENTRY_ZONE_MERGED_INTO_ESTATE",
+    "ENTRY_ZONE_DISCONNECTED",
+    "MANOR_GEOMETRY_SELECTED_OR_CONSTRUCTED"
+  ]
+}

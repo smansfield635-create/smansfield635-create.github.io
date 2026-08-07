@@ -1,0 +1,15 @@
+{
+  "calibration_cloudflare": "OPEN",
+  "calibration_nasa_dss14": "OPEN",
+  "constitutive_route_analysts": 0,
+  "custody_roles_filled": 0,
+  "generic_graph_analysts": 0,
+  "operation_id": "UCIC_PROSPECTIVE_FINAL_REPORT_TARGET_PORTFOLIO_v1",
+  "outcome_access": "PROHIBITED",
+  "packet_construction": "NOT_STARTED",
+  "prediction_freeze": false,
+  "pre_outcome_packets_complete": 0,
+  "protocol_state": "FROZEN_AT_SOURCE_CUTOFF",
+  "scientific_result": null,
+  "targets_registered": 5
+}

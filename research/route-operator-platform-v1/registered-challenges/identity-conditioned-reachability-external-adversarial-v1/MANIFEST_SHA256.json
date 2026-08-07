@@ -1,0 +1,27 @@
+{
+  "core_mutation_performed": false,
+  "file_count": 16,
+  "files": {
+    "PREREGISTRATION.md": "a2f0850fa951f100cc816cd8d24212dca2c76b408459ac7215d0f5484804111b",
+    "README.md": "7b93d85df04ff51a336b20dcfb64244d8eb1d37e6e39e8bf3f286ffb96097cac",
+    "adjudication.v1.json": "2244afae27707b4ffaa846cadd08c012913fdd8813c93b52fba9799065b8871e",
+    "admissibility-contract.v1.json": "c56944743b78205b3f77a0c459182c8ac8d2a26a5b31ec950fdc4a1d5c2f55cb",
+    "baseline-models.v1.json": "5e04b5a8a8a25530698cba626e39262cea60ddcffd4adfc5aa7709bfbc3001da",
+    "challenge-state.v1.json": "73aa0e9a43a4801ee2a6fa778a042a76a2e3a905899d0f712f18284a5f156318",
+    "evaluator-packet.v1.json": "1efe295413226250026c615bdc5e458b6151be50fdd925a824dd15a22f98b441",
+    "external-author-packet.v1.json": "34548be25ce8559f5563ec4759ce8a19c42731b158d2dea2d0bc96ee77612929",
+    "failure-ownership.v1.json": "95b169d02f283ed197e179f8f2a83c3e19638f38ec5d17d8b7647c00793bdddd",
+    "observer-packet.v1.json": "f35d4f3630cf6ba5121847db9f9468239e12fb5e596575f0e288745602b18951",
+    "prediction-and-scoring.v1.json": "e26bcb7c71bb5bd41d781c4894aaf2c6a3d2823524a4fcb390ecee5fb79798a2",
+    "role-separation-and-custody.v1.json": "2871e93cb9277c057c48023d337131847114f89dee87152ad44267c1b336f778",
+    "sealed-submission-schema.v1.json": "765c89e4559cf57bd4fd6192fa0436ff2c41a611942da1c24fb3fa13bb8438fe",
+    "system-registration-schema.v1.json": "cb93338893a6aecb641a35b7686c3e5302a47957ef83aad35979db3f581978c1",
+    "universal-candidate.v1.json": "37dc1510fcd520f2592146276edbb9502b27ec305cd897cbccc1807e5050d1f5",
+    "verify_external_challenge_protocol_v1.py": "e7516c1b36783325431955b3d90fcd5f31487965e87902c47cea2c7b86aa2b2b"
+  },
+  "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_EXTERNAL_ADVERSARIAL_REGISTERED_FALSIFICATION_CHALLENGE_v1",
+  "postdata_repair_permitted": false,
+  "scientific_result": "NONE",
+  "status": "FROZEN_BEFORE_EXTERNAL_REGISTRATION",
+  "version": "1.0.0"
+}

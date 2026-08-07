@@ -1,0 +1,13 @@
+{
+  "categories": {
+    "SURVIVES_INITIAL_SEVERE_EXTERNAL_TEST": "All minimum portfolio requirements are met, no critical prediction fails, frozen recovery thresholds are met, and the framework exceeds the strongest baseline with positive uncertainty-closed increment.",
+    "THEORY_FALSE": "One or more frozen critical causal predictions fail under admissible measurement, or the aggregate severe-test criteria fail because of theory-owned prediction error.",
+    "THEORY_REDUNDANT": "The framework is operational but does not materially outperform the strongest preregistered alternative or provide unique matched-output discrimination.",
+    "THEORY_UNDERDEFINED": "Independent observers cannot recover materially compatible boundaries or constitutive relations under the frozen observability conditions.",
+    "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE": "The challenge cannot support a scientific disposition because custody, intervention validity, portfolio size, or statistical power requirements fail."
+  },
+  "no_positive_language_for_unevaluable": true,
+  "single_primary_disposition_required": true,
+  "universal_law_language_prohibited": true,
+  "version": "1.0.0"
+}

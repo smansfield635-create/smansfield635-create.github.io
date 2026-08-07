@@ -1,0 +1,39 @@
+{
+  "operation": "UCIC_HURRICANE_MECHANISTIC_EARLY_WARNING_PREFLIGHT_v1",
+  "classification": "TECHNICAL_DATA_ADMISSIBILITY_AND_RUNTIME_PREFLIGHT_ONLY",
+  "parent_empirical_head": "0088d0e05ea6c9f4254a6c2c9f7a1e137bd4667c",
+  "failed_static_proxy_pr": 728,
+  "failed_static_proxy_disposition": "HURRICANE_STRUCTURAL_COHERENCE_INCREMENT_NOT_SUPPORTED",
+  "scientific_result": "NONE",
+  "purpose": [
+    "verify NOAA TC-RADAR merged-file availability and transport",
+    "record exact source hashes and download/runtime cost",
+    "enumerate netCDF schema needed for a later frozen mechanistic protocol",
+    "verify availability of vortex-structure and SHIPS environmental predictor fields",
+    "avoid unnecessary multi-source joins where TC-RADAR already carries required metadata"
+  ],
+  "sources": [
+    "https://www.aoml.noaa.gov/ftp/pub/hrd/data/radar/level3/tc_radar_v3m_1997_2019_xy_rel_merge_ships.nc",
+    "https://www.aoml.noaa.gov/ftp/pub/hrd/data/radar/level3/tc_radar_v3m_2020_2024_xy_rel_merge_ships.nc"
+  ],
+  "outcome_access": "PROHIBITED",
+  "prohibited_operations": [
+    "compute future intensity change",
+    "compute rapid-intensification labels",
+    "read positive-lag vmax values for analysis",
+    "fit any predictive model",
+    "score UCIC or comparator models",
+    "choose thresholds based on outcome behavior",
+    "alter or reinterpret the completed PR 728 result"
+  ],
+  "permitted_operations": [
+    "HTTP HEAD metadata",
+    "download and SHA-256 hashing",
+    "netCDF dimension and variable-name enumeration",
+    "variable dtype/shape/dimension/attribute inspection",
+    "read lag-coordinate metadata",
+    "read non-outcome identity/time metadata solely to establish coverage",
+    "report predictor-field presence without scientific scoring"
+  ],
+  "stop_boundary": "Stop after schema/runtime receipt. A separate protocol freeze is required before any outcome extraction or model execution."
+}

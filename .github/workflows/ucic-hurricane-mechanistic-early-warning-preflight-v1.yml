@@ -1,0 +1,68 @@
+name: UCIC Hurricane Mechanistic Early Warning Preflight v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/**'
+      - '.github/workflows/ucic-hurricane-mechanistic-early-warning-preflight-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  technical-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install netCDF reader
+        run: python -m pip install --disable-pip-version-check netCDF4
+      - name: Verify outcome-free preflight contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/preflight-contract.v1.json')
+          x = json.loads(p.read_text())
+          assert x['classification'] == 'TECHNICAL_DATA_ADMISSIBILITY_AND_RUNTIME_PREFLIGHT_ONLY'
+          assert x['outcome_access'] == 'PROHIBITED'
+          assert x['scientific_result'] == 'NONE'
+          assert 'compute future intensity change' in x['prohibited_operations']
+          print('PASS_OUTCOME_FREE_PREFLIGHT_CONTRACT')
+          PY
+      - name: Run TC-RADAR schema and runtime preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/run-tc-radar-preflight-v1.py | tee tc-radar-preflight.log
+      - name: Verify preflight closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/preflight-result.v1.json')
+          x = json.loads(p.read_text())
+          assert x['terminal_disposition'] == 'PREFLIGHT_COMPLETE_NO_SCIENTIFIC_SCORING'
+          assert x['outcome_access'] == 'PROHIBITED'
+          assert x['scientific_result'] == 'NONE'
+          assert len(x['files']) == 2
+          print('PASS_TC_RADAR_PREFLIGHT')
+          PY
+      - name: Preserve preflight artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-hurricane-mechanistic-early-warning-preflight-v1
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/preflight-contract.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/preflight-result.v1.json
+            tc-radar-preflight.log

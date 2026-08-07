@@ -1,0 +1,20 @@
+{
+  "schema": "METHODS_MODELS_F10_ATTACK_MATRIX_v1",
+  "attacks": [
+    {"id":"CLAIM_PROMOTION","target":"F7/F9 carried session","expected":"REJECT"},
+    {"id":"EVIDENCE_RELABELING","target":"F7/F9 carried session","expected":"REJECT"},
+    {"id":"SCIENTIFIC_OBJECT_MUTATION","target":"F2 SCIENTIFIC_OBJECT axis","expected":"REJECT"},
+    {"id":"UNAUTHORIZED_STUDY_PROMOTION","target":"six non-stateful portfolio studies","expected":"REJECT"},
+    {"id":"RELATION_FABRICATION","target":"F8 typed scientific relation authority","expected":"REJECT"},
+    {"id":"PROJECTION_DRIFT","target":"cross-estate projection authority","expected":"REJECT"},
+    {"id":"SELF_CONSISTENT_UNAUTHORIZED_DEEP_LINK","target":"F5 canonical capsule with internally correct hashes but unauthorized state","expected":"REJECT"},
+    {"id":"URL_DIGEST_TAMPERING","target":"F5 fragment digest","expected":"REJECT"},
+    {"id":"MODALITY_DIVERGENCE","target":"F7 POINTER/KEYBOARD/TOUCH/ASSISTIVE_TECHNOLOGY equivalence","expected":"NO_DIVERGENCE"},
+    {"id":"SILENT_DEPTH_ESCALATION","target":"F6/F7 disclosure session","expected":"REJECT"},
+    {"id":"SCIENTIFIC_MUTATION_THROUGH_NAVIGATION","target":"F5 route operation","expected":"ROUTE_HISTORY_ONLY"},
+    {"id":"VISUAL_SEMANTIC_INFERENCE","target":"F8 spatial node/edge substrate","expected":"REJECT"},
+    {"id":"USER_CONTROLLED_CAMERA","target":"F8 camera contract","expected":"REJECT"},
+    {"id":"SESSION_ENVIRONMENT_DIGEST_DRIFT","target":"F9 environment identity","expected":"REJECT"},
+    {"id":"SESSION_SCENE_DIGEST_DRIFT","target":"F8 scene identity carried by F9","expected":"REJECT"}
+  ]
+}

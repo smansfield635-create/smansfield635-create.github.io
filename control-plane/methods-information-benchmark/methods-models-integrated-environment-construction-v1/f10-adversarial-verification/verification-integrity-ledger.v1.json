@@ -1,0 +1,21 @@
+{
+  "schema": "METHODS_MODELS_F10_VERIFICATION_INTEGRITY_LEDGER_v1",
+  "records": [
+    {
+      "runId": 31217689014,
+      "gate": "F9_INTEGRATED_ENVIRONMENT_ASSEMBLY",
+      "classification": "QUARANTINED_NONTERMINAL_VERIFICATION",
+      "reason": "SHELL_PIPELINE_USED_TEE_WITHOUT_PIPEFAIL_AND_COULD_MASK_UNDERLYING_VERIFIER_FAILURE",
+      "admissibleAsPassEvidence": false,
+      "downstreamAuthorityCreated": false
+    },
+    {
+      "runId": 31217950079,
+      "gate": "F9_INTEGRATED_ENVIRONMENT_ASSEMBLY",
+      "classification": "TERMINAL_FAIL_PROPAGATING_VERIFICATION",
+      "admissibleAsPassEvidence": true
+    }
+  ],
+  "f10Requirement": "ALL_PIPELINED_VERIFIER_COMMANDS_MUST_RUN_UNDER_FAIL_PROPAGATING_SHELL_SEMANTICS",
+  "historicalFailureErasureAuthorized": false
+}

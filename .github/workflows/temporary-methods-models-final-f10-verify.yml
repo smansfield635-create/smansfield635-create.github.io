@@ -1,0 +1,96 @@
+name: Temporary Methods Models Final F10 Verify
+on:
+  push:
+    branches:
+      - construction/methods-models-integrated-environment-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f10-adversarial-verification/**'
+      - '.github/workflows/temporary-methods-models-final-f10-verify.yml'
+permissions:
+  contents: read
+concurrency:
+  group: methods-models-final-f10-verify
+  cancel-in-progress: true
+jobs:
+  verify-f10-adversarial-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Require fail-propagating shell semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          false | tee /tmp/f10-pipefail-probe.log && { echo 'pipefail probe unexpectedly succeeded'; exit 1; } || true
+      - name: Verify frozen F1 through F9 and pre-F8 identities against F9 input
+        shell: bash
+        run: |
+          set -euo pipefail
+          for p in \
+            f1-construction-baseline \
+            f2-canonical-state-kernel \
+            f3-resolution-and-validity-engine \
+            f4-scientific-content-binding \
+            f5-navigation-and-continuity \
+            f6-depth-and-inquiry \
+            f7-interaction-and-accessibility \
+            pre-f8-corrective-construction-v1 \
+            f8-spatial-xyz-semantic-layer \
+            f9-integrated-environment-assembly
+          do
+            base="$(git rev-parse 858ddf423be1ea42e3b456230f2e1b05b474abf3:control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/$p)"
+            current="$(git rev-parse HEAD:control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/$p)"
+            test "$base" = "$current" || { echo "Frozen package drift: $p"; exit 1; }
+          done
+      - name: Re-establish F9 assembled baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f9-integrated-environment-assembly/verify.v1.mjs | tee f9-baseline-reverification.log
+      - name: Execute F10 adversarial verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f10-adversarial-verification/verify.v1.mjs | tee f10-adversarial-verification.log
+      - name: Prove exact F10 changed-path scope from F9 terminal head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only 858ddf423be1ea42e3b456230f2e1b05b474abf3..HEAD | tee f10-changed-paths.log
+          if grep -Ev '^(control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f10-adversarial-verification/|\.github/workflows/temporary-methods-models-final-f10-verify\.yml$)' f10-changed-paths.log | grep -q .; then
+            echo 'Unexpected non-F10 path changed'; exit 1
+          fi
+          if grep -Ei '(^|/)f11-|candidate-certification|(^|/)f12-|user-visual|laws/research/methods-and-models/|showroom|frontier' f10-changed-paths.log | grep -v 'f10-adversarial-verification' | grep -q .; then
+            echo 'F11+ or public path detected'; exit 1
+          fi
+      - name: Classify governing main drift without rebasing
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git diff --name-only a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc..origin/main | tee f10-main-drift.log
+          if grep -E '^(control-plane/methods-information-benchmark/|laws/research/methods-and-models/)' f10-main-drift.log | grep -q .; then
+            echo 'Methods governing surface drift detected'; exit 1
+          fi
+          git show a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc:.github/ai-router/router.v1.json > /tmp/router-base.json
+          git show origin/main:.github/ai-router/router.v1.json > /tmp/router-main.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base=JSON.parse(fs.readFileSync('/tmp/router-base.json','utf8'));
+          const main=JSON.parse(fs.readFileSync('/tmp/router-main.json','utf8'));
+          const find=r=>(r.projects||[]).find(p=>p.projectId==='METHODS_INFORMATION_BENCHMARK');
+          if(JSON.stringify(find(base))!==JSON.stringify(find(main))){
+            console.error('Methods-specific global router drift detected');
+            process.exit(1);
+          }
+          NODE
+      - name: Preserve F10 verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-models-final-program-f10-adversarial-verification
+          path: |
+            f9-baseline-reverification.log
+            f10-adversarial-verification.log
+            f10-changed-paths.log
+            f10-main-drift.log

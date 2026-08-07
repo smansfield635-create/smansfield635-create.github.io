@@ -1,0 +1,178 @@
+{
+  "claim_ceiling": "Retrospective mechanism-development evidence on a reused historical sample only. A favorable result may motivate and sharpen an independent preregistered full-scope test, but cannot independently confirm the coherence laws, establish universality, erase the prior adverse internal-only result, or establish earlier warning.",
+  "class_map": {
+    "ATMOSPHERIC_PERMISSIVENESS": {
+      "class_score": "mean(calibration_ECDF_low(shear0), calibration_ECDF_high(rhlo0))",
+      "observables": [
+        "shear0",
+        "rhlo0"
+      ]
+    },
+    "CROSS_CLASS_COUPLING_PROXY": {
+      "coupled_alignment": "RESOURCE_SUPPORT * ATMOSPHERIC_PERMISSIVENESS * INTERNAL_ORGANIZATION",
+      "coupled_momentum": "current coupled_alignment minus previous same-storm coupled_alignment when separation is 6-36 h"
+    },
+    "CURRENT_STATE": {
+      "observables": [
+        "vmax0",
+        "pres0"
+      ]
+    },
+    "INTERNAL_ORGANIZATION": {
+      "class_score": "A_t = arithmetic mean of the five already-frozen radar relation percentile scores",
+      "observables": [
+        "r1s",
+        "r2s",
+        "r3s",
+        "r4s",
+        "r5s"
+      ]
+    },
+    "RECENT_TRAJECTORY": {
+      "observables": [
+        "dvprev",
+        "dA_t"
+      ]
+    },
+    "RESOURCE_SUPPORT": {
+      "class_score": "mean(calibration_ECDF_high(sst0), calibration_ECDF_high(mpi0))",
+      "observables": [
+        "sst0",
+        "mpi0"
+      ]
+    },
+    "UNMEASURED_IN_THIS_SOURCE": [
+      "direct air-sea latent heat flux",
+      "direct sensible heat flux",
+      "upper-ocean heat content or warm-layer depth beyond SST/MPI proxies",
+      "storm-induced cold-wake feedback",
+      "direct enthalpy-transfer efficiency"
+    ]
+  },
+  "development_class": "RETROSPECTIVE_POST_RESULT_THEORY_MOTIVATED_SUCCESSOR",
+  "estimator": {
+    "C": 1.0,
+    "family": "standardized_L2_logistic_regression",
+    "max_iter": 4000,
+    "no_hyperparameter_tuning": true,
+    "solver": "liblinear"
+  },
+  "grand_scope_status": "NOT_ESTABLISHED_BECAUSE_DIRECT_TRANSFER_AND_FEEDBACK_CLASSES_ARE_UNMEASURED",
+  "models": {
+    "BASE": [
+      "vmax0",
+      "pres0",
+      "dvprev",
+      "shear0",
+      "sst0",
+      "rhlo0",
+      "mpi0"
+    ],
+    "COUPLING_ONLY": [
+      "vmax0",
+      "pres0",
+      "dvprev",
+      "shear0",
+      "sst0",
+      "rhlo0",
+      "mpi0",
+      "coupled_alignment",
+      "coupled_momentum"
+    ],
+    "FULL_CROSS_CLASS": [
+      "vmax0",
+      "pres0",
+      "dvprev",
+      "shear0",
+      "sst0",
+      "rhlo0",
+      "mpi0",
+      "A_t",
+      "dA_t",
+      "coupled_alignment",
+      "coupled_momentum"
+    ],
+    "INTERNAL_ONLY": [
+      "vmax0",
+      "pres0",
+      "dvprev",
+      "shear0",
+      "sst0",
+      "rhlo0",
+      "mpi0",
+      "A_t",
+      "dA_t"
+    ]
+  },
+  "operation": "UCIC_HURRICANE_CROSS_CLASS_RELATIONAL_SCOPE_REORGANIZATION_v1",
+  "outcome": {
+    "definition": "future 24-h maximum-wind increase >= 30 kt",
+    "field": "ri",
+    "name": "24_h_rapid_intensification",
+    "warning_time_claim": "NOT_TESTED"
+  },
+  "primary_contrasts": [
+    "FULL_CROSS_CLASS_minus_BASE",
+    "FULL_CROSS_CLASS_minus_INTERNAL_ONLY"
+  ],
+  "primary_metrics": [
+    "roc_auc",
+    "average_precision",
+    "brier"
+  ],
+  "prior_result_preservation": {
+    "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+    "protocol_sha256": "52199364e8880188230831080c333a3a83a52fcccd57e7086aa7fac45d45463d",
+    "rule": "THE_PRIOR_ADVERSE_RESULT_REMAINS_ADVERSE_AND_IS_NOT_REINTERPRETED_BY_THIS_SUCCESSOR",
+    "terminal_disposition": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED"
+  },
+  "purpose": "Test whether cross-class relational coupling adds 24-h rapid-intensification discrimination beyond the frozen conventional baseline and the prior internal-only structural representation when the exact corrected historical feature set is reorganized without relabeling or re-extraction.",
+  "scientific_question": "Within this reused historical temporal evaluation, does a preregistered cross-class coupling representation of energetic support, atmospheric permissiveness, and internal organization add predictive information beyond both the conventional baseline and the prior internal-only organization model?",
+  "source_identity": {
+    "artifact_id": 9001275013,
+    "artifact_zip_sha256": "637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c",
+    "data_policy": [
+      "NO_RELABELING",
+      "NO_RAW_RADAR_REEXTRACTION",
+      "NO_IMPUTATION",
+      "NO_ROW_ADDITION",
+      "NO_OUTCOME_REDEFINITION",
+      "NO_POST_RESULT_TUNING"
+    ],
+    "frozen_feature_file": "raw-tc-radar-mechanistic-qc-corrected-features.v1.csv",
+    "frozen_feature_file_sha256": "8fb7684683a8f8a4a846299e1f3e19e44524297c7a3dcd2d49508d740760a306",
+    "github_actions_run": 31195025635,
+    "raw_rows_expected": 426
+  },
+  "status": "FROZEN_BEFORE_SUCCESSOR_EXECUTION",
+  "temporal_evaluation": {
+    "blindness_status": "REUSED_POST_RESULT_NOT_INDEPENDENT_CONFIRMATION",
+    "calibration_years": "2004-2018",
+    "evaluation_years": "2019-2024",
+    "seed": 45125661,
+    "storm_cluster_bootstrap_iterations": 2000
+  },
+  "terminal_rules": [
+    {
+      "disposition": "CROSS_CLASS_RELATIONAL_SCOPE_SUPPORTED_WITH_LIMITATIONS",
+      "rule": "FULL_CROSS_CLASS_minus_BASE point > 0 with bootstrap 95% CI lower > 0 AND FULL_CROSS_CLASS_minus_INTERNAL_ONLY point > 0 with bootstrap 95% CI lower > 0"
+    },
+    {
+      "disposition": "CROSS_CLASS_RELATIONAL_SIGNAL_PRESENT_SCOPE_SPECIFICITY_INCONCLUSIVE",
+      "rule": "FULL_CROSS_CLASS_minus_BASE point > 0 AND FULL_CROSS_CLASS_minus_INTERNAL_ONLY point > 0, but one or both bootstrap lower bounds <= 0"
+    },
+    {
+      "disposition": "CROSS_CLASS_NO_ADVANTAGE_OVER_INTERNAL_ONLY",
+      "rule": "FULL_CROSS_CLASS_minus_BASE point > 0 AND FULL_CROSS_CLASS_minus_INTERNAL_ONLY point <= 0"
+    },
+    {
+      "disposition": "CROSS_CLASS_RELATIONAL_SCOPE_NOT_SUPPORTED",
+      "rule": "FULL_CROSS_CLASS_minus_BASE point <= 0"
+    },
+    {
+      "disposition": "CROSS_CLASS_RELATIONAL_SCOPE_UNEVALUABLE",
+      "rule": "insufficient eligible calibration/evaluation data or no outcome variation"
+    }
+  ],
+  "version": 1
+}

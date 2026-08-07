@@ -1,0 +1,114 @@
+name: UCIC Hurricane Cross-Class Relational Scope Reorganization v1
+
+on:
+  push:
+    branches:
+      - 'agent/ucic-hurricane-cross-class-coherence-successor-v1'
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/cross-class-relational-scope-protocol.v1.json'
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/CROSS_CLASS_RELATIONAL_SCOPE_REORGANIZATION_v1.md'
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/run-cross-class-relational-scope-v1.py'
+      - '.github/workflows/ucic-hurricane-cross-class-relational-scope-v1.yml'
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  cross-class-relational-scope:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout frozen successor candidate
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install scientific dependencies
+        run: python -m pip install --disable-pip-version-check numpy pandas scikit-learn
+
+      - name: Recover exact corrected historical feature artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p frozen-input
+          curl -LfsS \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/9001275013/zip" \
+            -o frozen-input/prior-artifact.zip
+          echo "637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c  frozen-input/prior-artifact.zip" | sha256sum -c -
+          unzip -q frozen-input/prior-artifact.zip -d frozen-input/artifact
+          test -f "frozen-input/artifact/research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-qc-corrected-features.v1.csv"
+          echo "8fb7684683a8f8a4a846299e1f3e19e44524297c7a3dcd2d49508d740760a306  frozen-input/artifact/research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-qc-corrected-features.v1.csv" | sha256sum -c -
+          echo "PASS_EXACT_PRIOR_FEATURE_ARTIFACT_RECOVERED"
+
+      - name: Verify frozen protocol identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root=Path('research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1')
+          p=root/'cross-class-relational-scope-protocol.v1.json'
+          assert hashlib.sha256(p.read_bytes()).hexdigest() == '4eccb876ce31958761502946d564ca6cfbf1b5427abd4413d5ce4abcd5ded182'
+          d=json.loads(p.read_text())
+          assert d['status'] == 'FROZEN_BEFORE_SUCCESSOR_EXECUTION'
+          assert d['development_class'] == 'RETROSPECTIVE_POST_RESULT_THEORY_MOTIVATED_SUCCESSOR'
+          assert d['prior_result_preservation']['terminal_disposition'] == 'RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED'
+          assert d['temporal_evaluation']['blindness_status'] == 'REUSED_POST_RESULT_NOT_INDEPENDENT_CONFIRMATION'
+          print('PASS_FROZEN_CROSS_CLASS_SUCCESSOR_IDENTITY')
+          PY
+
+      - name: Execute cross-class relational scope test
+        env:
+          CROSS_CLASS_INPUT: frozen-input/artifact/research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-qc-corrected-features.v1.csv
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/run-cross-class-relational-scope-v1.py | tee cross-class-relational-scope-execution.log
+
+      - name: Verify terminal disposition and preservation constraints
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1')
+          r=json.loads((root/'cross-class-relational-scope-result.v1.json').read_text())
+          allowed={
+            'CROSS_CLASS_RELATIONAL_SCOPE_SUPPORTED_WITH_LIMITATIONS',
+            'CROSS_CLASS_RELATIONAL_SIGNAL_PRESENT_SCOPE_SPECIFICITY_INCONCLUSIVE',
+            'CROSS_CLASS_NO_ADVANTAGE_OVER_INTERNAL_ONLY',
+            'CROSS_CLASS_RELATIONAL_SCOPE_NOT_SUPPORTED',
+            'CROSS_CLASS_RELATIONAL_SCOPE_UNEVALUABLE',
+          }
+          assert r['terminal_disposition'] in allowed
+          assert r['prior_result_preserved']['terminal_disposition'] == 'RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED'
+          assert r['warning_time_claim'] == 'NOT_TESTED'
+          assert r['grand_scope_status'].startswith('NOT_ESTABLISHED')
+          print('TERMINAL_DISPOSITION='+r['terminal_disposition'])
+          print('PASS_PRIOR_ADVERSE_RESULT_PRESERVED')
+          print('PASS_CLAIM_CEILING_BOUND')
+          PY
+
+      - name: Preserve successor empirical artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-hurricane-cross-class-relational-scope-v1
+          retention-days: 90
+          if-no-files-found: error
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/cross-class-relational-scope-protocol.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/CROSS_CLASS_RELATIONAL_SCOPE_REORGANIZATION_v1.md
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/cross-class-relational-scope-result.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/cross-class-relational-scope-derived-features.v1.csv
+            cross-class-relational-scope-execution.log

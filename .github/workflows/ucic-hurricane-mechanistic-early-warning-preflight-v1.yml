@@ -1,10 +1,6 @@
 name: UCIC Hurricane Mechanistic Early Warning Preflight v1
 
 on:
-  pull_request:
-    paths:
-      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/**'
-      - '.github/workflows/ucic-hurricane-mechanistic-early-warning-preflight-v1.yml'
   workflow_dispatch:
 
 permissions:

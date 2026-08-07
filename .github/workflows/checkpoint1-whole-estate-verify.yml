@@ -1,0 +1,20 @@
+name: Checkpoint 1 Whole-Estate Baseline Verify
+
+on:
+  push:
+    branches:
+      - checkpoint/whole-estate-baseline-freeze-v1
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Run Checkpoint 1 fail-closed verifier
+        run: node control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/verify.v1.mjs

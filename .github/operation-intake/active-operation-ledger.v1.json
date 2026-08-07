@@ -660,18 +660,6 @@
       "scopeHash": "c8170225ecfd16b065547b18e3190cc6c6531cbef77ab380a628c0413467b267",
       "state": "ADMITTED_LOCKED"
     },
-    "c94e8ac3a71e4ae8208e1c00a056c4b21205421d69b28dbaa6e92840f74f35fc": {
-      "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
-      "lockGeneration": 421,
-      "lockScope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:SUPERSEDE_411:TERMINAL_CLOSURE:V1:EXACT_2_PATH_SCOPE",
-      "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_SUPERSEDE_411_001",
-      "procedureLocatorDigest": "58177e2891f8936307464c560c64ec1dedb1a6afba10cd0f249ffd4332f24dee",
-      "released": false,
-      "requestDigest": "26cb889baf481a7d0d9663ea6a81aad72da6a3e56594dd564070aa549673a7b3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c94e8ac3a71e4ae8208e1c00a056c4b21205421d69b28dbaa6e92840f74f35fc",
-      "state": "ADMITTED_LOCKED"
-    },
     "c972bc850f33b98823d2c36372b6832d059800f6bc66d36604f278a8379dc978": {
       "governingHead": "28f4e20050f08801311c841203120d0db56c446e",
       "lockGeneration": 254,
@@ -5393,6 +5381,19 @@
       "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+      "lockGeneration": 421,
+      "lockScope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:SUPERSEDE_411:TERMINAL_CLOSURE:V1:EXACT_2_PATH_SCOPE",
+      "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_SUPERSEDE_411_001",
+      "procedureLocatorDigest": "58177e2891f8936307464c560c64ec1dedb1a6afba10cd0f249ffd4332f24dee",
+      "released": true,
+      "requestDigest": "26cb889baf481a7d0d9663ea6a81aad72da6a3e56594dd564070aa549673a7b3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c94e8ac3a71e4ae8208e1c00a056c4b21205421d69b28dbaa6e92840f74f35fc",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

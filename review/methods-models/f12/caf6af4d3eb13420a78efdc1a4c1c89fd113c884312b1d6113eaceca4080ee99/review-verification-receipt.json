@@ -1,0 +1,16 @@
+{
+  "schema":"METHODS_MODELS_F12_REVIEW_SURFACE_VERIFICATION_RECEIPT_v1",
+  "status":"PASS_CLOSED",
+  "materializedSpecimenCommit":"9386d771526cb60e773295d3a98a7dbe2a11adf9",
+  "verificationRunId":31221885135,
+  "verificationJobId":93008031830,
+  "remoteBrowserCheck":"PASS_F12_REVIEW_SURFACE_REMOTE_URL",
+  "certifiedEnvironmentHead":"d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+  "candidatePayloadFingerprintSha256":"caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99",
+  "verifiedCounts":{"portfolioStudies":22,"statefulEntries":16,"canonicalClaims":19,"typedRelations":38},
+  "reviewUrl":"https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/9386d771526cb60e773295d3a98a7dbe2a11adf9/review/methods-models/f12/caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99/index.html",
+  "publicMethodsReplacement":false,
+  "liveDeployment":false,
+  "scientificClaimUpgrade":false,
+  "f12UserVisualExperientialReview":"READY_NOT_YET_ADJUDICATED"
+}

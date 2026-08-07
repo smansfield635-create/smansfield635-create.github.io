@@ -21,6 +21,7 @@ const LOCK_GENERATION = 422;
 const SCOPE_HASH = '205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3';
 const POSITIVE_REFERENCE = '97003e9de386a8962fb46d0b370005b900a167d6';
 const EXPECTED_RUN8B_BLOB = '0bd36eec01a75311bf6441d575bae5a057195bbc';
+
 const RECEIPTS = new Set([
   `${CONTROL}/receipts/builder.receipt.v1.json`,
   `${CONTROL}/receipts/fresh-role3.receipt.v1.json`,
@@ -28,6 +29,7 @@ const RECEIPTS = new Set([
   `${CONTROL}/receipts/user-differential.receipt.v1.json`,
   `${CONTROL}/receipts/operation-closure.receipt.v1.json`
 ]);
+
 const EXCLUDED_MANOR_PATHS = new Set([
   `${CONTROL}/mirror-manor-geometry.contract.v1.json`,
   'h-earth-3d/authoring/h-earth.mirror-manor-geometry.v1.js'
@@ -38,10 +40,13 @@ const stable = (value) => Array.isArray(value)
   : value && typeof value === 'object'
     ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, stable(value[key])]))
     : value;
+
 const text = (value) => JSON.stringify(stable(value), null, 2) + '\n';
 const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'utf8' }).trim();
 const sameSet = (a, b) => JSON.stringify([...new Set(a)].sort()) === JSON.stringify([...new Set(b)].sort());
-const check = (checks, id, pass, detail = null) => { checks[id] = { pass: Boolean(pass), detail }; };
+const check = (checks, id, pass, detail = null) => {
+  checks[id] = { pass: Boolean(pass), detail };
+};
 
 function parseArgs(argv) {
   const out = { role: 'BUILDER', output: null };
@@ -70,9 +75,13 @@ function fingerprint(paths) {
   return hash.digest('hex');
 }
 
-export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ role = 'BUILDER', output = null } = {}) {
+export async function runHEarthMapWideEnvironmentRedevelopmentVerification({
+  role = 'BUILDER',
+  output = null
+} = {}) {
   const checks = {};
   const issues = [];
+
   const manifest = readJson(`${CONTROL}/changed-path-manifest.v1.json`);
   const exactPaths = Array.isArray(manifest.paths)
     ? manifest.paths
@@ -83,6 +92,7 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
   const proof = readJson(`${CONTROL}/proof-contract.v1.json`);
   const estatePlan = readJson(`${CONTROL}/estate-site-plan.v1.json`);
   const invariants = readJson(`${CONTROL}/protected-invariants.v1.json`);
+
   const head = git('rev-parse', 'HEAD');
   const mergeBase = git('merge-base', GOVERNING_HEAD, head);
   const changed = git('diff', '--name-only', `${GOVERNING_HEAD}..${head}`)
@@ -109,6 +119,7 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
   const precinct = evaluateHEarthMapWideEnvironmentPrecinct();
   const environment = evaluateHEarthMapWideEnvironmentPresentation();
   const previewObserver = buildHEarthMapWideEnvironmentPreviewObserverReceipt(null);
+
   check(checks, 'TERRAIN_EVALUATION', terrain.eligible === true, terrain.issues);
   check(checks, 'PRECINCT_EVALUATION', precinct.result === 'PASS', precinct.issues);
   check(checks, 'ENVIRONMENT_EVALUATION', environment.result === 'PASS', environment.issues);
@@ -132,32 +143,42 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
     sampleHEarthMapWideEnvironmentTerrainCandidate(90, -164)
   ];
   const preparedElevations = [estateCenter, ...estatePadWitnesses].map((sample) => sample.presentationElevation);
+
   check(checks, 'ESTATE_VALID', estateCenter.valid === true, estateCenter.status);
-  check(checks, 'ESTATE_PHYSICALLY_PREPARED',
+  check(
+    checks,
+    'ESTATE_PHYSICALLY_PREPARED',
     estateCenter.sitePreparation?.fullyPrepared === true &&
-    estateCenter.presentationElevation < estateCenter.elevation - 0.5,
+      estateCenter.presentationElevation < estateCenter.elevation - 0.5,
     estateCenter.sitePreparation
   );
-  check(checks, 'ESTATE_BUILDABLE_PAD_LEVEL',
+  check(
+    checks,
+    'ESTATE_BUILDABLE_PAD_LEVEL',
     estatePadWitnesses.every((sample) => sample.sitePreparation?.fullyPrepared === true) &&
-    Math.max(...preparedElevations) - Math.min(...preparedElevations) <= 1e-6,
+      Math.max(...preparedElevations) - Math.min(...preparedElevations) <= 1e-6,
     preparedElevations
   );
-  check(checks, 'ESTATE_PLAN_GRADING_AUTHORIZED',
+  check(
+    checks,
+    'ESTATE_PLAN_GRADING_AUTHORIZED',
     estatePlan.terrainTreatment?.gradingAuthorized === true &&
-    estatePlan.terrainTreatment?.foundationAuthorized === false &&
-    estatePlan.terrainTreatment?.buildingGeometryAuthorized === false,
+      estatePlan.terrainTreatment?.foundationAuthorized === false &&
+      estatePlan.terrainTreatment?.buildingGeometryAuthorized === false,
     estatePlan.terrainTreatment
   );
-  check(checks, 'ESTATE_OVERLAY_NOT_REQUIRED',
+  check(
+    checks,
+    'ESTATE_OVERLAY_NOT_REQUIRED',
     estatePlan.terrainTreatment?.overlayRequiredForSiteLegibility === false &&
-    invariants.estateSite?.siteMustRemainLegibleWithoutOverlay === true
+      invariants.estateSite?.siteMustRemainLegibleWithoutOverlay === true
   );
 
   const nonEstateProtectedSamples = [
     ['ENTRY', 0, -96],
     ['LOW_CORRIDOR', 112.41666666666667, -194.83333333333334]
   ].map(([id, x, z]) => ({ id, sample: sampleHEarthMapWideEnvironmentTerrainCandidate(x, z) }));
+
   for (const witness of nonEstateProtectedSamples) {
     check(checks, `${witness.id}_VALID`, witness.sample.valid === true, witness.sample.status);
     check(checks, `${witness.id}_ZERO_PRESENTATION_OFFSET`, Math.abs(witness.sample.presentationReliefOffset ?? Infinity) <= 1e-9, witness.sample.presentationReliefOffset);
@@ -170,15 +191,24 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
     sampleHEarthMapWideEnvironmentTerrainCandidate(-184, -212),
     sampleHEarthMapWideEnvironmentTerrainCandidate(196, -252)
   ];
-  check(checks, 'MATERIAL_PRESENTATION_RELIEF', reliefWitnesses.some((sample) =>
-    sample.valid === true && Math.abs(sample.presentationReliefOffset) >= 4
-  ), reliefWitnesses.map((sample) => sample.presentationReliefOffset));
+  check(
+    checks,
+    'MATERIAL_PRESENTATION_RELIEF',
+    reliefWitnesses.some((sample) => sample.valid === true && Math.abs(sample.presentationReliefOffset) >= 4),
+    reliefWitnesses.map((sample) => sample.presentationReliefOffset)
+  );
 
   const sourceRun8B = sourceIdentity.sources?.find((source) => source.id === 'CURRENT_RUN8B_TERRAIN_TRUTH');
   const sourcePositive = sourceIdentity.sources?.find((source) => source.id === 'POSITIVE_BANDLIMITED_RELIEF_REFERENCE');
   check(checks, 'SOURCE_RUN8B_EXACT', sourceRun8B?.commit === GOVERNING_HEAD && sourceRun8B?.gitBlobSha === EXPECTED_RUN8B_BLOB);
   check(checks, 'SOURCE_POSITIVE_EXACT', sourcePositive?.commit === POSITIVE_REFERENCE && sourcePositive?.mergedMain === false && sourcePositive?.automaticTransplant === false);
-  check(checks, 'PROOF_CONTRACT_LOCK', proof.lockGeneration === LOCK_GENERATION && proof.scopeHash === SCOPE_HASH);
+  check(
+    checks,
+    'PROOF_CONTRACT_LOCK',
+    proof.lockGeneration === LOCK_GENERATION &&
+      proof.scopeHash === SCOPE_HASH &&
+      proof.successorRepairRevision === 2
+  );
 
   const previewPaths = [
     'showroom/globe/h-earth/terrain-estate-construction-v1/index.html',
@@ -189,14 +219,20 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
   ];
   const previewPresent = previewPaths.every((repositoryPath) => fs.existsSync(path.join(ROOT, repositoryPath)));
   check(checks, 'PREVIEW_ALL_FILES_PRESENT', previewPresent);
+
   if (previewPresent) {
-    const previewText = previewPaths.map((repositoryPath) => fs.readFileSync(path.join(ROOT, repositoryPath), 'utf8')).join('\n');
+    const previewText = previewPaths
+      .map((repositoryPath) => fs.readFileSync(path.join(ROOT, repositoryPath), 'utf8'))
+      .join('\n');
+    const htmlText = fs.readFileSync(path.join(ROOT, previewPaths[0]), 'utf8');
     const appText = fs.readFileSync(path.join(ROOT, previewPaths[1]), 'utf8');
     const rendererText = fs.readFileSync(path.join(ROOT, previewPaths[2]), 'utf8');
-    const htmlText = fs.readFileSync(path.join(ROOT, previewPaths[0]), 'utf8');
+    const cssText = fs.readFileSync(path.join(ROOT, previewPaths[3]), 'utf8');
+
     check(checks, 'PREVIEW_NONPUBLIC_LABEL', /NONPUBLIC|nonpublic/i.test(previewText));
     check(checks, 'PREVIEW_NO_REMOTE_RUNTIME_DEPENDENCY', !/(?:src|href)=["']https?:\/\//i.test(previewText));
     check(checks, 'PREVIEW_WEBGL2_EXECUTION', /getContext\(['"]webgl2['"]/.test(rendererText) && /createProgram\(/.test(rendererText));
+
     check(checks, 'PREVIEW_V2_NORMAL_RELIEF_EXECUTION',
       /perturbTerrainNormal\(/.test(rendererText) &&
       /limitTerrainNormalDeviation\(/.test(rendererText) &&
@@ -208,6 +244,7 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
       /0\.3746065934159120/.test(rendererText) &&
       /smoothstep\(120\.0,300\.0,distanceToCamera\)/.test(rendererText)
     );
+
     check(checks, 'PREVIEW_STABLE_SINGLE_POINTER_ORBIT',
       /CAMERA_LIMITS/.test(rendererText) &&
       /minimumPitch:\s*0\.46/.test(rendererText) &&
@@ -215,42 +252,65 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
       /safeDelta/.test(appText) &&
       /renderer\.orbit/.test(appText)
     );
+
     check(checks, 'PREVIEW_MOBILE_PINCH_AND_PAN',
       /pointers\.size === 2/.test(appText) &&
       /zoomByFactor/.test(appText) &&
       /panScreen/.test(appText)
     );
-    check(checks, 'PREVIEW_RECOVERY_VIEWS',
+
+    check(checks, 'PREVIEW_FIT_WORLD_RECOVERY',
       /fitWorld\(/.test(rendererText) &&
-      /focusEstate\(/.test(rendererText) &&
-      /topView\(/.test(rendererText) &&
-      /data-fit-world/.test(htmlText) &&
-      /data-estate-focus/.test(htmlText) &&
-      /data-top-view/.test(htmlText)
+      /data-fit-world/.test(htmlText)
     );
-    check(checks, 'PREVIEW_GUIDES_OFF_BY_DEFAULT',
-      /showEstate:\s*false/.test(rendererText) &&
-      /showEntry:\s*false/.test(rendererText) &&
-      /data-toggle-estate>/.test(htmlText) &&
-      /data-toggle-entry>/.test(htmlText)
+
+    check(checks, 'PREVIEW_GUIDE_RENDER_PATH_ABSENT',
+      !/LINE_VS|LINE_FS|rectangleLine|drawLine|showEstate|showEntry/.test(rendererText) &&
+      !/data-toggle-estate|data-toggle-entry|data-estate-focus/.test(htmlText)
     );
-    check(checks, 'PREVIEW_HIGHER_INSPECTION_DENSITY', /columns:\s*129/.test(rendererText) && /rows:\s*97/.test(rendererText));
-    check(checks, 'PREVIEW_INTERACTIVE_3D_PRESENTATION', /presentationElevation/.test(previewText) && /orbit\(/.test(previewText));
-    check(checks, 'PREVIEW_NO_MANOR_GEOMETRY', !/createManor|buildManor|manorMesh|manorGeometryConstructed\s*:\s*true/i.test(previewText));
+
+    check(checks, 'PREVIEW_RELIEF_ALWAYS_ON',
+      !/data-toggle-relief/.test(htmlText) &&
+      /float y=aPosition\.y\+aRelief;/.test(rendererText)
+    );
+
+    check(checks, 'PREVIEW_CHROME_SEPARATED_FROM_VIEWPORT',
+      /class=["']preview-toolbar["']/.test(htmlText) &&
+      /class=["']preview-viewport["']/.test(htmlText) &&
+      /grid-template-rows:\s*auto minmax\(0,\s*1fr\) auto/.test(cssText)
+    );
+
+    check(checks, 'PREVIEW_HIGHER_INSPECTION_DENSITY',
+      /columns:\s*129/.test(rendererText) &&
+      /rows:\s*97/.test(rendererText)
+    );
+
+    check(checks, 'PREVIEW_INTERACTIVE_3D_PRESENTATION',
+      /presentationElevation/.test(previewText) &&
+      /orbit\(/.test(previewText)
+    );
+
+    check(checks, 'PREVIEW_NO_MANOR_GEOMETRY',
+      !/createManor|buildManor|manorMesh|manorGeometryConstructed\s*:\s*true/i.test(previewText)
+    );
   }
 
   const failed = Object.entries(checks).filter(([, value]) => value.pass !== true);
   issues.push(...failed.map(([id]) => id));
+
   const constructionPaths = exactPaths.filter((repositoryPath) => !RECEIPTS.has(repositoryPath));
-  const constructionFingerprint = constructionPaths.every((repositoryPath) => fs.existsSync(path.join(ROOT, repositoryPath)))
+  const constructionFingerprint = constructionPaths.every((repositoryPath) =>
+    fs.existsSync(path.join(ROOT, repositoryPath))
+  )
     ? fingerprint(constructionPaths)
     : null;
+
   const receipt = stable({
     schema: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_VERIFICATION_RECEIPT_v1',
     result: issues.length === 0 ? 'PASS' : 'FAIL_CLOSED',
     verifierRole: role,
     operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
-    successorRepairRevision: 1,
+    successorRepairRevision: 2,
     lockGeneration: LOCK_GENERATION,
     scopeHash: SCOPE_HASH,
     governingHead: GOVERNING_HEAD,
@@ -266,8 +326,12 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
 
   if (output) {
     fs.mkdirSync(output, { recursive: true });
-    fs.writeFileSync(path.join(output, `${role.toLowerCase().replaceAll('_', '-')}.verification-receipt.v1.json`), text(receipt));
+    fs.writeFileSync(
+      path.join(output, `${role.toLowerCase().replaceAll('_', '-')}.verification-receipt.v1.json`),
+      text(receipt)
+    );
   }
+
   return receipt;
 }
 
@@ -278,12 +342,17 @@ async function main() {
   if (receipt.result !== 'PASS') process.exitCode = 1;
 }
 
-const invoked = process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
-if (invoked) main().catch((error) => {
-  process.stderr.write(text({
-    schema: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_VERIFIER_FAILURE_v1',
-    result: 'FAIL_CLOSED',
-    error: error instanceof Error ? error.message : String(error)
-  }));
-  process.exitCode = 1;
-});
+const invoked =
+  process.argv[1] &&
+  pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+
+if (invoked) {
+  main().catch((error) => {
+    process.stderr.write(text({
+      schema: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_VERIFIER_FAILURE_v1',
+      result: 'FAIL_CLOSED',
+      error: error instanceof Error ? error.message : String(error)
+    }));
+    process.exitCode = 1;
+  });
+}

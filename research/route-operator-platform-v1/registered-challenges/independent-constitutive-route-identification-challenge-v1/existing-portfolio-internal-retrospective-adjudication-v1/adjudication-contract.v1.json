@@ -1,0 +1,44 @@
+{
+  "classification": "INTERNAL_PROCESS_SEPARATED_RETROSPECTIVE_PORTFOLIO_ADJUDICATION",
+  "external_statuses_not_decidable_here": [
+    "INDEPENDENT_HUMAN_IDENTIFIABILITY",
+    "PROSPECTIVE_REAL_INTERVENTION_GENERALITY",
+    "UNIVERSAL_EMPIRICAL_LAW"
+  ],
+  "fixed_invariant": {
+    "domain_narrowing_after_outcomes": "PROHIBITED",
+    "global_product_revival": "PROHIBITED",
+    "logical_form": "MEET_CAPACITIES(JOIN_ADMISSIBLE_ROUTES(MEET_REQUIRED_RELATIONS))",
+    "operator_substitution_after_outcomes": "PROHIBITED"
+  },
+  "governing_invariant_head": "cac25b781909d12f6b53b4c3440adcd7c1356eb0",
+  "independent_human_replication": false,
+  "operation_id": "EXISTING_PORTFOLIO_INTERNAL_RETROSPECTIVE_ADJUDICATION_v1",
+  "parent_issue": 691,
+  "primary_decision": "CONTINUATION_JUSTIFIED",
+  "purpose": "Determine whether the complete existing portfolio justifies continuation of the fixed universal coherence invariant candidate while preserving all negative constraints.",
+  "required_gates": {
+    "controlled_mechanism": {
+      "critical": true,
+      "rule": "both controlled causal gauntlet and hidden-structure gauntlet must pass"
+    },
+    "cross_domain_measurement_signal": {
+      "critical": false,
+      "rule": "at least two cross-sectional domains must support nonredundancy or hidden-collapse detection"
+    },
+    "external_system_transfer": {
+      "critical": true,
+      "rule": "external-software route predictions >= 0.90 and matched-output route advantage over output-history >= 0.25"
+    },
+    "negative_constraint_integrity": {
+      "critical": true,
+      "rule": "general observational superiority and multiplicative specificity must not be claimed if their frozen criteria fail"
+    }
+  },
+  "terminal_internal_dispositions": [
+    "INVARIANT_REJECTED_BY_EXISTING_PORTFOLIO",
+    "CONTINUATION_NOT_JUSTIFIED",
+    "SURVIVES_INTERNAL_RETROSPECTIVE_PORTFOLIO_ADJUDICATION_WITH_CONSTRAINTS",
+    "UNEVALUABLE_EVIDENCE_IDENTITY_FAILURE"
+  ]
+}

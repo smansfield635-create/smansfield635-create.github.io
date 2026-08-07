@@ -1,0 +1,21 @@
+{
+  "classification": "INTERNAL_PROCESS_SEPARATED_RETROSPECTIVE_PORTFOLIO_ADJUDICATION",
+  "continuation_justified": true,
+  "controlled_mechanism_supported": true,
+  "cross_domain_measurement_signal_supported": true,
+  "cross_domain_supporting_studies": 3,
+  "disposition": "SURVIVES_INTERNAL_RETROSPECTIVE_PORTFOLIO_ADJUDICATION_WITH_CONSTRAINTS",
+  "external_system_transfer_supported_internal": true,
+  "fixed_invariant_operator_retained": true,
+  "general_observational_predictive_superiority": false,
+  "global_product_remains_rejected": true,
+  "independent_human_identifiability": "NOT_ESTABLISHED",
+  "matched_output_route_advantage": 0.6666666666666667,
+  "multiplicative_specificity": false,
+  "next_scientific_action": "CONTINUE_TO_INDEPENDENT_HUMAN_AND_PROSPECTIVE_REAL_INTERVENTION_TESTS",
+  "operation_id": "EXISTING_PORTFOLIO_INTERNAL_RETROSPECTIVE_ADJUDICATION_v1",
+  "output_history_accuracy_external_software": 0.6666666666666666,
+  "prospective_real_intervention_generality": "NOT_ESTABLISHED",
+  "route_prediction_accuracy_external_software": 1.0,
+  "universal_empirical_law": "NOT_ESTABLISHED"
+}

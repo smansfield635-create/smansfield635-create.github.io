@@ -1,12 +1,26 @@
 #!/usr/bin/env python3
+import hashlib
 import json
 import pathlib
 import statistics
 
 ROOT = pathlib.Path(__file__).resolve().parent
+REPO = ROOT.parents[3]
 
 def load(name):
     return json.loads((ROOT / name).read_text())
+
+def verify_manifest():
+    manifest = ROOT / "manifest.sha256"
+    for raw in manifest.read_text().splitlines():
+        if not raw.strip():
+            continue
+        expected, rel = raw.split("  ", 1)
+        target = REPO / rel
+        actual = hashlib.sha256(target.read_bytes()).hexdigest()
+        assert actual == expected, f"manifest mismatch: {rel}"
+
+verify_manifest()
 
 selection = load("selection-and-scoring.v1.json")
 routes = load("route-maps.freeze.v1.json")

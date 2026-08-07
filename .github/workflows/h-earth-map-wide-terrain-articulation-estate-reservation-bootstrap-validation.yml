@@ -45,18 +45,18 @@ jobs:
           import cp from 'node:child_process';
 
           const head = process.env.HEAD_SHA;
-          const base = process.env.BASE_SHA;
+          const currentBase = process.env.BASE_SHA;
           const output = process.env.GITHUB_OUTPUT;
           const workflowPath =
             '.github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml';
-          const changed = cp.execFileSync(
+          const currentChanged = cp.execFileSync(
             'git',
-            ['diff', '--name-only', base, head],
+            ['diff', '--name-only', currentBase, head],
             { encoding: 'utf8' }
           ).trim().split(/\r?\n/).filter(Boolean).sort();
-          const status = cp.execFileSync(
+          const currentStatus = cp.execFileSync(
             'git',
-            ['diff', '--name-status', base, head],
+            ['diff', '--name-status', currentBase, head],
             { encoding: 'utf8' }
           ).trim().split(/\r?\n/).filter(Boolean);
 
@@ -69,19 +69,19 @@ jobs:
 
           const same = (left, right) =>
             JSON.stringify([...left].sort()) === JSON.stringify([...right].sort());
-          const statusMap = new Map(status.map((line) => {
+          const currentStatusMap = new Map(currentStatus.map((line) => {
             const [kind, file] = line.split('\t');
             return [file, kind];
           }));
 
-          if (same(changed, repairPaths)) {
+          if (same(currentChanged, repairPaths)) {
             const amendment =
               'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-v2-causal-evidence-execution-001-exact-head.js';
-            if (statusMap.get(amendment) !== 'A') {
+            if (currentStatusMap.get(amendment) !== 'A') {
               throw new Error('REPAIR_AMENDMENT_NOT_ADDED');
             }
             for (const file of repairPaths.filter((path) => path !== amendment)) {
-              if (statusMap.get(file) !== 'M') {
+              if (currentStatusMap.get(file) !== 'M') {
                 throw new Error(`REPAIR_EXISTING_PATH_NOT_MODIFIED:${file}`);
               }
             }
@@ -90,8 +90,8 @@ jobs:
             process.exit(0);
           }
 
-          if (same(changed, [workflowPath])) {
-            if (statusMap.get(workflowPath) !== 'M') {
+          if (same(currentChanged, [workflowPath])) {
+            if (currentStatusMap.get(workflowPath) !== 'M') {
               throw new Error('ROUTER_SUCCESSOR_WORKFLOW_NOT_MODIFIED');
             }
             fs.appendFileSync(output, 'validation_mode=governance-repair\n');
@@ -99,14 +99,24 @@ jobs:
             process.exit(0);
           }
 
-          const mergeBase = cp.execFileSync(
+          const operationBase = cp.execFileSync(
             'git',
-            ['merge-base', base, head],
+            ['merge-base', currentBase, head],
             { encoding: 'utf8' }
           ).trim();
-          if (mergeBase !== base) {
-            throw new Error('PULL_REQUEST_BASE_NOT_ANCESTOR');
+          if (!/^[0-9a-f]{40}$/.test(operationBase)) {
+            throw new Error('OPERATION_MERGE_BASE_INVALID');
           }
+          const operationChanged = cp.execFileSync(
+            'git',
+            ['diff', '--name-only', operationBase, head],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(Boolean).sort();
+          const operationStatus = cp.execFileSync(
+            'git',
+            ['diff', '--name-status', operationBase, head],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(Boolean);
 
           const manifestPaths = cp.execFileSync(
             'git',
@@ -134,8 +144,8 @@ jobs:
             if (manifest.modifiedPaths.length !== 0 || manifest.deletedPaths.length !== 0) continue;
             if (manifest.pathCount !== manifest.addedPaths.length) continue;
             if (manifest.classification !== '25_ADDED_0_MODIFIED_0_DELETED') continue;
-            if (!same(changed, manifest.addedPaths)) continue;
-            if (status.some((line) => !line.startsWith('A\t'))) continue;
+            if (!same(operationChanged, manifest.addedPaths)) continue;
+            if (operationStatus.some((line) => !line.startsWith('A\t'))) continue;
             matches.push({ manifestPath, manifest });
           }
 
@@ -146,6 +156,7 @@ jobs:
           const selected = matches[0];
           fs.appendFileSync(output, 'validation_mode=operation-candidate\n');
           fs.appendFileSync(output, `manifest_path=${selected.manifestPath}\n`);
+          fs.appendFileSync(output, `operation_base=${operationBase}\n`);
           NODE
       - name: Verify governance repair imports
         if: steps.boundary.outputs.validation_mode == 'governance-repair'

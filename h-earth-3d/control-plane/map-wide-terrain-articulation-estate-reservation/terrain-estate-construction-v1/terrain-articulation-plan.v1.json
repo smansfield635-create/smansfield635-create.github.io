@@ -1,119 +1,91 @@
 {
   "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_ARTICULATION_PLAN_v1",
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
-  "successorRepairRevision": 1,
+  "successorRepairRevision": 3,
   "terrainTruth": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
-  "designIntent": "MATERIAL_MAP_WIDE_RELIEF_DEPTH_LANDFORM_READABILITY_LONG_RANGE_COHERENCE_AND_PHYSICALLY_PREPARED_ESTATE_SITE_WITHOUT_MUTATING_RUN8B_IN_PLACE",
+  "designIntent": "RENEW_THE_MAP_AS_A_WORLD_SCALE_TERRAIN_AUTHORING_PROOF_WITH_DEEP_MOUNTAINS_COHERENT_COASTLINE_WATERFALL_RESERVOIR_CAVERN_RESERVE_AND_MULTI_HILL_ESTATE_TERRAIN",
   "candidateLaw": {
-    "composition": "RUN8B_ELEVATION_PLUS_BOUNDED_SUCCESSOR_RELIEF_PLUS_BOUNDED_ESTATE_SITE_PREPARATION",
+    "composition": "RUN8B_ELEVATION_PLUS_BOUNDED_MAP_AUTHORING_RELIEF_PLUS_HYDROLOGY_TERRAIN_RESERVATIONS_PLUS_MULTI_HILL_ESTATE_PREPARATION",
     "truthMutation": false,
     "deterministic": true,
     "continuous": true,
-    "analyticDerivativesRequired": true,
-    "nonEstateProtectedRegionOffsetsMustBeZero": true,
-    "estateSitePhysicalPreparationRequired": true
+    "entryPresentationOffsetMustRemainZero": true,
+    "liveWaterMutation": false
   },
-  "macroLandforms": [
-    {
-      "id": "MOUNTAINWARD_BACKBONE",
-      "class": "ELLIPTICAL_RIDGE",
-      "center": {"x": -64, "z": -274},
-      "radius": {"x": 172, "z": 72},
-      "maximumAddedElevation": 18,
-      "purpose": "STRENGTHEN_MOUNTAINWARD_DEPTH_AND_DISTANT_FORM_READABILITY"
-    },
-    {
-      "id": "WESTERN_SHOULDER",
-      "class": "ELLIPTICAL_RIDGE",
-      "center": {"x": -184, "z": -212},
-      "radius": {"x": 82, "z": 92},
-      "maximumAddedElevation": 9,
-      "purpose": "BREAK_MAP_WIDE_PLANARITY_WITHOUT_CLOSING_APPROACH_CORRIDORS"
-    },
-    {
-      "id": "EASTERN_SHOULDER",
-      "class": "ELLIPTICAL_RIDGE",
-      "center": {"x": 196, "z": -252},
-      "radius": {"x": 84, "z": 88},
-      "maximumAddedElevation": 12,
-      "purpose": "BALANCE_LONG_RANGE_RELIEF_AND_FRAME_CENTRAL_FIELD"
-    }
-  ],
-  "mesoRelief": {
-    "class": "BAND_LIMITED_MULTI_DIRECTIONAL_ROLLING_FIELD",
-    "maximumAddedMagnitude": 3.5,
-    "frequencies": [0.018, 0.026, 0.039],
-    "directionVectors": [
-      {"x": 0.83, "z": 0.56},
-      {"x": -0.48, "z": 0.88},
-      {"x": 0.67, "z": -0.74}
+  "mountainRenewal": {
+    "requiredForm": "DEEP_CONTINUOUS_MOUNTAIN_MASS_NOT_THIN_VERTICAL_PLATE",
+    "rearBoundaryIntegration": "MOUNTAIN_MASS_EXTENDS_TO_REAR_REGION_AND_CONCEALS_UNDEVELOPED_UPPER_WATERSHED",
+    "macroLandforms": [
+      {"id": "REAR_WATERSHED_MASS", "center": {"x": -72, "z": -294}, "radius": {"x": 194, "z": 92}, "maximumAddedElevation": 18},
+      {"id": "WESTERN_MOUNTAIN_DEPTH", "center": {"x": -148, "z": -262}, "radius": {"x": 118, "z": 86}, "maximumAddedElevation": 10},
+      {"id": "EASTERN_MOUNTAIN_DEPTH", "center": {"x": 2, "z": -258}, "radius": {"x": 108, "z": 82}, "maximumAddedElevation": 10},
+      {"id": "MOUNTAIN_FRONT_APRON", "center": {"x": -54, "z": -236}, "radius": {"x": 184, "z": 76}, "maximumAddedElevation": 6.5}
     ],
-    "purpose": "REDUCE_REPETITION_AND_FLATNESS_WHILE_REMAINING_BAND_LIMITED"
+    "rearBarrier": {"xMinimum": -238, "xMaximum": 92, "fullByZ": -306, "zeroByZ": -252, "maximumAddedElevation": 11}
   },
-  "estateSitePreparation": {
-    "class": "CUT_AND_BLEND_BUILDABLE_TERRACE",
-    "center": {"x": 80, "z": -172},
-    "buildablePad": {"xMinimum": 69, "xMaximum": 91, "zMinimum": -181, "zMaximum": -163},
-    "transitionMargin": 12,
-    "minimumCenterCutDepth": 1.0,
-    "maximumCenterCutDepth": 4.5,
-    "targetElevationRule": "LOWER_LOCAL_PERIMETER_PLUS_0_65_CLAMPED_TO_BOUNDED_CENTER_CUT",
-    "foundationGeometry": false,
-    "manorGeometry": false,
-    "developerOverlayRequired": false,
-    "purpose": "MAKE_THE_FUTURE_BUILDING_SITE_EXIST_IN_THE_TERRAIN_ITSELF_RATHER_THAN_AS_A_RECTANGLE_MARKER"
+  "surfaceContinuity": {
+    "mesoMaximumMagnitude": 1.65,
+    "mesoFrequencies": [0.014, 0.020, 0.027],
+    "diagnosticVerticalScale": 1.35,
+    "acceptedVirtualReliefSourceAmplitude": 0.22,
+    "inspectorVirtualReliefScale": 0.42,
+    "steepSurfaceMicroReliefSuppression": true,
+    "goal": "SMOOTHER_GEOLOGICAL_CONTINUITY_WITHOUT_ERASING_MAJOR_FORM_IDENTITY"
   },
-  "acceptedPresentationReference": {
-    "commit": "97003e9de386a8962fb46d0b370005b900a167d6",
-    "application": "NONPUBLIC_PREVIEW_NORMAL_SHADING_ONLY",
-    "geometryTransplant": false,
-    "reliefHeightAmplitude": 0.22,
-    "maximumNormalDeviationDegrees": 22,
-    "fullInfluenceThroughDistance": 120,
-    "fadeToZeroByDistance": 300,
-    "directionalPhaseCount": 3
-  },
-  "reliefSuppressionZones": [
-    {
-      "id": "ESTATE_SITE_MACRO_RELIEF_SUPPRESSION_WITH_PHYSICAL_SITE_PREPARATION_OVERRIDE",
-      "bounds": {"xMinimum": 52, "xMaximum": 108, "zMinimum": -200, "zMaximum": -144},
-      "reason": "SUPPRESS_UNCONTROLLED_MACRO_RELIEF_WHILE_ALLOWING_EXPLICIT_GRADED_SITE_PREPARATION"
+  "hydrologyAuthoring": {
+    "waterfall": {
+      "hiddenUpperSource": {"x": -48, "z": -310},
+      "visibleCrest": {"x": -48, "z": -268},
+      "landing": {"x": -44, "z": -230},
+      "channelCutDepth": 4.2
     },
-    {
-      "id": "ENTRY_ZONE",
-      "bounds": {"xMinimum": -32, "xMaximum": 32, "zMinimum": -140, "zMaximum": -80},
-      "reason": "PRESERVE_SEPARATE_CONNECTED_ENTRY_AND_EXISTING_COAST_ARRIVAL"
+    "reservoir": {
+      "center": {"x": -44, "z": -216},
+      "radius": {"x": 28, "z": 20},
+      "enclosed": true,
+      "visibleDrainageToCoast": false,
+      "concealedPumpIntakeReserved": true
+    },
+    "cavernExteriorReserve": {
+      "center": {"x": -16, "z": -236},
+      "radius": {"x": 16, "z": 13},
+      "interiorConstruction": false
+    },
+    "coastline": {
+      "seaLevelY": 0,
+      "oceanContextRenderedInInspector": true,
+      "beachMaterialContext": true,
+      "formerInundationContext": true,
+      "liveWaterMutation": false
     }
-  ],
-  "protectedCorridor": {
-    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
-    "axis": {"x": 0.5931990380498502, "z": 0.805055837353368},
-    "zeroOffsetHalfWidth": 10,
-    "minimumTransitionHalfWidth": 18,
-    "reason": "LOW_CORRIDOR_MUST_REMAIN_OPEN_AND_LEGIBLE"
   },
-  "coastalProtection": {
-    "fullSuppressionAtOrBeyondZ": -72,
-    "transitionBeginsAtZ": -104,
-    "waterMutation": false,
-    "reason": "NO_WATER_OR_ENTRY_BOUNDARY_MUTATION"
+  "estateTerrainPreparation": {
+    "class": "IRREGULAR_MULTI_HILL_ESTATE_TERRAIN_COMPOSITION",
+    "atriumCrown": {"center": {"x": 80, "z": -172}, "radius": {"x": 26, "z": 22}, "cutDepth": 1.4},
+    "connectiveSpine": {
+      "points": [
+        {"x": 80, "z": -172},
+        {"x": 112.41666666666667, "z": -194.83333333333334},
+        {"x": 136, "z": -208}
+      ],
+      "coreHalfWidth": 10,
+      "featherHalfWidth": 25,
+      "boundedCutDepth": 0.8
+    },
+    "largeHillInterface": {"center": {"x": 136, "z": -208}, "radius": {"x": 30, "z": 22}, "cutDepth": 2.2},
+    "hiddenVaultReserve": {"center": {"x": 152, "z": -224}, "reservedDepthBelowSurface": 34, "surfaceExpression": "NONE"},
+    "finalManorGeometry": false
   },
-  "continuityRules": [
-    "ALL_RELIEF_TERMS_USE_C1_OR_BETTER_ENVELOPES",
-    "ESTATE_SITE_PREPARATION_USES_SMOOTHSTEP_BLEND_TO_SURROUNDING_TERRAIN",
-    "NO_STEP_DISCONTINUITIES_AT_PROTECTED_MASKS_OR_PREPARED_SITE_TRANSITIONS",
-    "NO_GEOMETRIC_OFFSET_IN_ENTRY_ZONE_OR_LOW_CORRIDOR_CORE",
-    "NO_CHANGE_TO_RUN8B_SOURCE_MODULE",
-    "NO_CHANGE_TO_WATER_CAMERA_NAVIGATION_OR_LIVE_RUNTIME"
-  ],
   "visualSuccessCriteria": [
-    "MOUNTAINWARD_FORM_READS_AS_DEEPER_AND_MORE_STRUCTURED",
-    "MIDFIELD_IS_NOT_PERCEPTUALLY_PLANAR",
-    "LAND_FORMS_REMAIN_CONTINUOUS_UNDER_TRAVERSAL",
-    "ESTATE_SITE_READS_AS_PHYSICALLY_PREPARED_BUILDABLE_LAND_WITH_GUIDE_OFF",
-    "ESTATE_PRECINCT_REMAINS_VISUALLY_NESTED_IN_SURROUNDING_TERRAIN",
-    "TWO_HILL_AND_LOW_CORRIDOR_RELATION_REMAINS_CLEAR",
-    "BEACHWARD_AND_MOUNTAINWARD_VIEWS_REMAIN_OPEN",
-    "ENTRY_ZONE_REMAINS_DISTINCT_BUT_CONNECTED"
+    "MOUNTAINS_READ_AS_DEEP_LANDFORMS_WITH_NO_VISIBLE_BACKSIDE_GAP",
+    "WATERFALL_READS_AS_DESCENDING_FROM_HIDDEN_UPPER_WATERSHED_BETWEEN_PEAKS",
+    "ENCLOSED_RESERVOIR_READS_AS_NATURAL_MOUNTAIN_POOL",
+    "CAVERN_APPROACH_RESERVE_IS_LEGIBLE_RIGHT_OF_WATERFALL_WITHOUT_INTERIOR_CONSTRUCTION",
+    "ATRIUM_HILL_REMAINS_A_HIGH_360_VIEW_ANCHOR",
+    "ESTATE_TERRAIN_EXTENDS_IRREGULARLY_THROUGH_SADDLE_TOWARD_LARGE_HILL",
+    "COASTLINE_OCEAN_AND_BEACH_CONTEXT_ARE_VISIBLE_IN_MAP",
+    "TERRAIN_SURFACE_READS_SMOOTHER_AND_LESS_BANDED_THAN_PRIOR_INSPECTOR",
+    "ENTRY_ZONE_REMAINS_DISTINCT_AND_UNCHANGED",
+    "NO_LIVE_ENVIRONMENT_MUTATION_OCCURS"
   ]
 }

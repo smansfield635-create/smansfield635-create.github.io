@@ -1,0 +1,119 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F4_EMPIRICAL_INSTANCE_REGISTRY_v1",
+  "status": "F4_CONSTRUCTION_CANDIDATE",
+  "instances": [
+    {
+      "contentId": "BIO_LAB",
+      "contentClass": "EMPIRICAL_INSTANCE",
+      "title": "Bio-Lab Inc. Conyers Fire and Chemical Release",
+      "sourceRef": "CP7_SELECTED_VERTICAL_CASE_CONTRACT",
+      "authorityRef": "CHECKPOINT_7_PASS_CLOSED_BOUNDED_VERTICAL_AUTHORITY",
+      "contentVersion": "v1",
+      "sourceStudy": "UCIC_CSB_FIVE_CASE_EXTERNAL_OFFICIAL_RECORD_SPECIFICITY_REPLICATION_v1",
+      "sourcePr": 709,
+      "sourceHead": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+      "scientificClassification": "PROCESS_SEPARATED_RETROSPECTIVE_EXTERNAL_REPLICATION",
+      "terminalDisposition": "UCIC_ROUTE_SPECIFICITY_SUPPORTED_EXTERNAL_CSB",
+      "claimCeilingRef": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+      "systemBoundary": "Plant 12 reactive-chemical storage and its immediate protection/containment controls",
+      "identityCriterion": "continued safe performance of the registered hazardous-process capacity without loss of its required containment/control relations",
+      "uncertainty": "MODERATE",
+      "registeredRelations": [
+        "Reactive pool-treatment chemicals remain isolated from water/moisture during storage.",
+        "Sprinkler/fire-protection components remain mechanically compatible, corrosion-controlled, and leak-free around reactive inventory.",
+        "Storage-hazard identification accounts for reactivity, packaging, inventory scale, segregation, and ventilation.",
+        "Risk-management/oversight detects and corrects degraded safeguards before continued storage operation."
+      ],
+      "explicitFalsifier": "final official findings materially locate the causal route outside the registered predicted relations or contradict more than half of the registered failed relations",
+      "officialOutcomeCorrespondence": {
+        "materialRouteFindings": [
+          "corroded sprinkler leaked water onto reactive chlorinated isocyanurates",
+          "run-to-failure of degraded sprinkler protection",
+          "storage hazard identification/safeguards inadequate for reactive inventory, packaging, moisture and ventilation",
+          "risk management and oversight inadequate"
+        ],
+        "routeHits": 4,
+        "routePredictions": 4,
+        "causalFindingsCovered": 4,
+        "causalFindingsMaterialForScoring": 5
+      },
+      "decoyControls": [
+        {"id":"IMPORTED_CUISINE","routeHitRate":0.0},
+        {"id":"BOUNDARY_SHIFT","routeHitRate":0.25},
+        {"id":"PERMUTED_REQUIRED_OPTIONAL","routeHitRate":0.0}
+      ],
+      "caseScore": {
+        "routeHitRate": 1.0,
+        "causalCoverage": 0.8,
+        "falseRouteRate": 0.0,
+        "meanDecoyRouteHitRate": 0.08333333333333333,
+        "trueMinusDecoyAdvantage": 0.8166666666666667,
+        "trueRouteScore": 0.9
+      },
+      "limitations": [
+        "OUTCOME_BLINDNESS_NOT_ESTABLISHED",
+        "PUBLIC_OUTCOME_CONTAMINATION_PRESENT",
+        "INDEPENDENT_HUMAN_CONFIRMATION_NOT_ESTABLISHED",
+        "PROSPECTIVE_CONFIRMATION_NOT_ESTABLISHED",
+        "UNIVERSAL_LAW_NOT_ESTABLISHED",
+        "PRESERVED_CAPACITY_UNEVALUABLE_FROM_SUMMARY_RECORD",
+        "GLOBAL_MULTIPLICATIVE_OPERATOR_REMAINS_REJECTED",
+        "NO_CAUSAL_PROOF_BEYOND_SOURCE_STUDY_CEILING"
+      ],
+      "provenance": {
+        "selectedCaseContractBlob": "0773992cd6a20c55bd4e027af67b50351e07aa04",
+        "sourceResultBlob": "8a0aaca5d8edcccbf6e90d352a0612de56e69b19",
+        "selectionAndScoringBlob": "509ca8a97abf4a38a46f443d099e444cec118431",
+        "routeMapsBlob": "2ee2e6f4c8bb0380b5d0ba4e931e106938cdcc90",
+        "outcomeLedgerBlob": "6a5e964572721280352d519660a20249afe1c460",
+        "decoyMapsBlob": "62a609ae0db9dcd7fe54d1b1a14657c80c8ded0f"
+      }
+    },
+    {
+      "contentId": "HURRICANE_RAW_TC_RADAR_QC_CORRECTED",
+      "contentClass": "PERSPECTIVE_RESEARCH_OBJECT",
+      "sourceRef": "CP7_HURRICANE_DELTA_SOURCE_LEDGER",
+      "authorityRef": "F1_FROZEN_BOUNDED_PERSPECTIVE_RESEARCH_AUTHORITY",
+      "contentVersion": "v1",
+      "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+      "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+      "workflowRun": 31195025635,
+      "artifactId": 9001275013,
+      "artifactZipSha256": "637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c",
+      "qcCorrection": "SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION",
+      "evidenceStanding": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+      "claimCeilingRef": "BOUNDED_PERSPECTIVE_RESEARCH_CONTEXT_ONLY_UNLESS_FUTURE_EVIDENCE_CHANGES_STANDING",
+      "primaryIncrementalAuc": -0.009569377990430672,
+      "primaryBootstrap95": [-0.04339188231463211, 0.035535714285714205],
+      "additiveAuc": 0.8133971291866029,
+      "additiveDifferenceBootstrap95": [-0.03179495542509231, 0.11906047077922066],
+      "additiveStanding": "POSITIVE_POINT_ESTIMATE_INCONCLUSIVE",
+      "reorganizedCrossClassProxy": "NO_ADVANTAGE_OVER_INTERNAL_ONLY",
+      "trueMultiClassPhysicalCoherence": "NOT_YET_TESTED",
+      "warningTime": "NOT_TESTED",
+      "limitations": [
+        "PRIMARY_RAW_MECHANISTIC_TEST_NOT_SUPPORTED",
+        "ADDITIVE_POINT_ESTIMATE_INCONCLUSIVE",
+        "ADDITIVE_BOOTSTRAP_INTERVAL_CROSSES_ZERO",
+        "WARNING_TIME_NOT_TESTED",
+        "TRUE_MULTI_CLASS_PHYSICAL_COHERENCE_NOT_YET_TESTED",
+        "NO_EARLY_WARNING_CAUSAL_PROSPECTIVE_UNIVERSAL_OR_IMI_CONFIRMATION_CLAIM"
+      ],
+      "adverseEvidence": true,
+      "priorSupersededExecution": {
+        "priorStanding": "SIGNAL_PRESENT_INCONCLUSIVE",
+        "currentAdmission": "QUARANTINED_SUPERSEDED_BY_QC_CORRECTED_RAW_RESULT",
+        "reason": "unhandled SST sentinel contaminated evaluation input"
+      },
+      "provenance": {
+        "protocolSha256": "52199364e8880188230831080c333a3a83a52fcccd57e7086aa7fac45d45463d",
+        "resultSha256": "9bfe86b5036d8a44aed34fa24c949abf5362d421b59c6838e8a2256d78aab5fe",
+        "featuresSha256": "8fb7684683a8f8a4a846299e1f3e19e44524297c7a3dcd2d49508d740760a306",
+        "qcCorrectionNoteSha256": "6ebdf6e3290f0d0d4e37f71fb0c39faecbb0ebde8df153b3ad74c6543fbd0be6",
+        "executionLogSha256": "adb4c52770edabc7f2a794c2c47e4bc527bbae7d2dd48aa03947732f42691c95"
+      }
+    }
+  ],
+  "notAutomaticallyAdmitted": "RESEARCH_WITHOUT_EXACT_F1_OR_LATER_AUTHORIZED_SOURCE_IDENTITY",
+  "registryLaw": "EMPIRICAL_INSTANCES_PRESERVE_SOURCE_STANDING_AND_MAY_NOT_REDEFINE_METHOD_MODEL_OR_ONTOLOGY"
+}

@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_MANIFEST_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "lockGeneration": 422,
+  "lockScope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:CONTINUOUS_WORLD_FIELD:V1:EXACT_28_PATH_SCOPE",
+  "scopeHash": "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3",
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "constructionBranch": "build/h-earth-map-wide-environment-redevelopment-v1-001",
+  "constructionStage": "TERRAIN_PRESENTATION_CANDIDATE_STARTED",
+  "candidate": {
+    "path": "h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js",
+    "contractId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_v1",
+    "reliefProfileId": "H_EARTH_MAP_WIDE_BAND_LIMITED_VIRTUAL_RELIEF_PROFILE_v1",
+    "implementationClass": "ADDITIVE_BAND_LIMITED_VIRTUAL_RELIEF_ON_UNCHANGED_RUN8B_GEOMETRIC_TRUTH"
+  },
+  "baseTerrainTruth": {
+    "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+    "worldDomain": {"xMinimum": -256, "xMaximum": 256, "zMinimum": -320, "zMaximum": 64, "seaLevelY": 0},
+    "mutated": false
+  },
+  "positiveReliefReference": {
+    "commit": "97003e9de386a8962fb46d0b370005b900a167d6",
+    "tree": "7cd51523649788ad6fb226aea16f6799a5c58177",
+    "sourceProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
+    "classification": "POSITIVE_DESIGN_SOURCE_NOT_MERGED_MAIN_NOT_AUTOMATIC_TRANSPLANT"
+  },
+  "reliefMechanics": {
+    "directionalPhaseCount": 3,
+    "directionalPhases": [
+      {"id": "A", "direction": {"x": 0.816496580927726, "y": 0.408248290463863, "z": 0.408248290463863}, "frequency": 3.306939635357677, "offset": 0.37, "weight": 0.5},
+      {"id": "B", "direction": {"x": -0.408248290463863, "y": 0.816496580927726, "z": 0.408248290463863}, "frequency": 2.7318196987737333, "offset": 2.17, "weight": 0.3},
+      {"id": "C", "direction": {"x": 0.408248290463863, "y": -0.408248290463863, "z": 0.816496580927726}, "frequency": 2.243994752564138, "offset": 4.11, "weight": 0.2}
+    ],
+    "virtualReliefHeightAmplitude": 0.22,
+    "maximumNormalDeviationDegrees": 22,
+    "maximumNormalDeviationCosine": 0.9271838545667874,
+    "maximumNormalDeviationSine": 0.374606593415912,
+    "antialiasFootprint": {"fullThrough": 0.45, "zeroBy": 0.95},
+    "distanceEnvelope": {"fullInfluenceThrough": 120, "zeroInfluenceBy": 300},
+    "slopeEnvelope": {"minimumInfluence": 0.82, "maximumInfluence": 1.0, "responseStart": 0.05, "responseEnd": 0.55}
+  },
+  "reservedEstateEnvelope": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "effect": "PROTECTED_FUTURE_CONSTRUCTION_ENVELOPE_ONLY",
+    "manorGeometryConstructed": false
+  },
+  "preservation": {
+    "geometryElevationMutation": false,
+    "liveRuntimeMutation": false,
+    "cameraMutation": false,
+    "navigationMutation": false,
+    "waterMutation": false,
+    "registryMutation": false,
+    "manorGeometryMutation": false,
+    "frontierPlainsConstruction": false,
+    "cavernInteriorConstruction": false,
+    "mergeDeploymentRelease": false
+  },
+  "nextConstructionBoundary": "ENVIRONMENT_AND_NONPUBLIC_PREVIEW_INTEGRATION_WITHIN_EXISTING_28_PATH_LOCK_ONLY"
+}

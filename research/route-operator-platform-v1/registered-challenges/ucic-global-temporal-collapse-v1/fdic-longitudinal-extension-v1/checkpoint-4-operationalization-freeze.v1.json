@@ -1,0 +1,26 @@
+{
+  "operation": "UCIC_ARM_B_FDIC_LONGITUDINAL_COLLAPSE_EARLY_WARNING_EXTENSION_v1",
+  "checkpoint": "CP4_OPERATIONALIZATION_FREEZE_BEFORE_WARNING_EXECUTION",
+  "status": "PASS_CLOSED",
+  "parent_rules": "checkpoint-1-protocol-freeze.v1.json",
+  "data_inputs": [
+    "checkpoint-2-failure-source-extraction.v1.json",
+    "checkpoint-3-control-match-freeze.v1.json"
+  ],
+  "rank_tie_rule": "AVERAGE_POSITION_RANK",
+  "health_rank_orientation": {
+    "HIGHER_HEALTHIER": "ascending value order; smallest value receives the lowest health rank",
+    "LOWER_HEALTHIER": "descending value order; largest value receives the lowest health rank"
+  },
+  "factor_impaired_rule": "average health rank / 9 <= 2/9",
+  "quarter_continuity": "adjacent reported quarter-end observations for that institution",
+  "bank_quarter_warning_evaluable": "at least two factor ranks are evaluable at the quarter",
+  "bank_failure_evaluable": "at least one pre-failure quarter is warning-evaluable after rolling histories mature",
+  "missing_factor_rule": "missing/unevaluable factor receives no impaired or healthy credit and is excluded from additive mean",
+  "persistent_warning_break_rule": "any adjacent reported quarter that does not satisfy the >=2 impaired-factor condition breaks persistence",
+  "acute_warning_rule": "unchanged from CP1: >=3 impaired factors in one quarter",
+  "first_warning_rule": "earliest qualifying persistent or acute pre-failure quarter-end",
+  "post_failure_credit": "PROHIBITED",
+  "scientific_threshold_change": false,
+  "next_action": "EXECUTE_CP4_FAILED_BANK_FACTOR_SERIES_AND_UCIC_WARNINGS"
+}

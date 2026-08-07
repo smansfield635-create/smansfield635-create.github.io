@@ -1,0 +1,844 @@
+{
+  "additive_all_analogous_thresholds_pass": true,
+  "additive_analogous_threshold_gates": {
+    "maximum_false_positive_rate": true,
+    "minimum_actionable_30d_failures": true,
+    "minimum_discrimination_margin": true,
+    "minimum_evaluable_control_assignments": true,
+    "minimum_evaluable_failures": true,
+    "minimum_median_lead_days": true,
+    "minimum_sensitivity": true
+  },
+  "additive_metrics": {
+    "actionable_30d_detections": 7,
+    "discrimination_margin": 0.36363636363636365,
+    "early_90d_detections": 6,
+    "evaluable_control_assignments": 22,
+    "evaluable_failed_banks": 11,
+    "false_positive_assignments": 6,
+    "false_positive_rate": 0.2727272727272727,
+    "median_lead_days_detected": 1387,
+    "pre_failure_detections": 7,
+    "sensitivity": 0.6363636363636364,
+    "unique_control_institutions": 21
+  },
+  "additive_weak_dominance": false,
+  "assignment_count": 22,
+  "candidate_terminal_disposition_under_frozen_mapping": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+  "checkpoint": "CP5_COMPARATOR_AND_FALSE_POSITIVE_EXECUTION",
+  "control_assignment_summaries": [
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "SM",
+      "control_cert": 588,
+      "control_name": "MANUFACTURERS&TRADERS TR CO",
+      "evaluable": true,
+      "failed_cert_anchor": 24735,
+      "failed_name_anchor": "Silicon Valley Bank",
+      "index_date": "2023-03-10",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20221231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200331",
+        "lead_days": 1074
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "SM",
+      "control_cert": 57803,
+      "control_name": "ALLY BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 24735,
+      "failed_name_anchor": "Silicon Valley Bank",
+      "index_date": "2023-03-10",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20221231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200331",
+        "lead_days": 1074
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 11063,
+      "control_name": "FIRST-CITIZENS BANK&TRUST CO",
+      "evaluable": true,
+      "failed_cert_anchor": 57053,
+      "failed_name_anchor": "Signature Bank",
+      "index_date": "2023-03-12",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20221231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200630",
+        "lead_days": 985
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20210630",
+        "lead_days": 620
+      },
+      "control_bkclass": "NM",
+      "control_cert": 57565,
+      "control_name": "UBS BANK USA",
+      "evaluable": true,
+      "failed_cert_anchor": 57053,
+      "failed_name_anchor": "Signature Bank",
+      "index_date": "2023-03-12",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20221231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200331",
+        "lead_days": 1076
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 11063,
+      "control_name": "FIRST-CITIZENS BANK&TRUST CO",
+      "evaluable": true,
+      "failed_cert_anchor": 59017,
+      "failed_name_anchor": "First Republic Bank",
+      "index_date": "2023-05-01",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20230331",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200630",
+        "lead_days": 1035
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 5649,
+      "control_name": "DISCOVER BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 59017,
+      "failed_name_anchor": "First Republic Bank",
+      "index_date": "2023-05-01",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20230331",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200331",
+        "lead_days": 1126
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "SM",
+      "control_cert": 16603,
+      "control_name": "PEOPLES BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 25851,
+      "failed_name_anchor": "Heartland Tri-State Bank",
+      "index_date": "2023-07-28",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20230331",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20190930",
+        "lead_days": 1397
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "SM",
+      "control_cert": 10502,
+      "control_name": "BANKWEST OF KANSAS",
+      "evaluable": true,
+      "failed_cert_anchor": 25851,
+      "failed_name_anchor": "Heartland Tri-State Bank",
+      "index_date": "2023-07-28",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20230331",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20171231",
+        "lead_days": 2035
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 14260,
+      "control_name": "WALTERS BANK&TRUST CO",
+      "evaluable": true,
+      "failed_cert_anchor": 8758,
+      "failed_name_anchor": "Citizens Bank",
+      "index_date": "2023-11-03",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20230930",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20201231",
+        "lead_days": 1037
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20220930",
+        "lead_days": 399
+      },
+      "control_bkclass": "NM",
+      "control_cert": 11706,
+      "control_name": "1ST COMMUNITY BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 8758,
+      "failed_name_anchor": "Citizens Bank",
+      "index_date": "2023-11-03",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20230930",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20201231",
+        "lead_days": 1037
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20190930",
+        "lead_days": 1670
+      },
+      "control_bkclass": "NM",
+      "control_cert": 57903,
+      "control_name": "POPPY BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 27332,
+      "failed_name_anchor": "Republic Bank",
+      "index_date": "2024-04-26",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20231231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20190331",
+        "lead_days": 1853
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 29546,
+      "control_name": "GREAT SOUTHERN BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 27332,
+      "failed_name_anchor": "Republic Bank",
+      "index_date": "2024-04-26",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20231231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200630",
+        "lead_days": 1396
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "N",
+      "control_cert": 13983,
+      "control_name": "GRANVILLE NATIONAL BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 4134,
+      "failed_name_anchor": "First National Bank of Lindsay",
+      "index_date": "2024-10-18",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20240930",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200630",
+        "lead_days": 1571
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20230630",
+        "lead_days": 476
+      },
+      "control_bkclass": "N",
+      "control_cert": 5087,
+      "control_name": "FIRST NB OF BAGLEY",
+      "evaluable": true,
+      "failed_cert_anchor": 4134,
+      "failed_name_anchor": "First National Bank of Lindsay",
+      "index_date": "2024-10-18",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20240930",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20220331",
+        "lead_days": 932
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20190630",
+        "lead_days": 2028
+      },
+      "control_bkclass": "SI",
+      "control_cert": 29061,
+      "control_name": "TARBORO SAVINGS BANK SSB",
+      "evaluable": true,
+      "failed_cert_anchor": 28611,
+      "failed_name_anchor": "Pulaski Savings Bank",
+      "index_date": "2025-01-17",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20240930",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20190331",
+        "lead_days": 2119
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20240630",
+        "lead_days": 201
+      },
+      "control_bkclass": "SI",
+      "control_cert": 27897,
+      "control_name": "BLACK MOUNTAIN SB SSB",
+      "evaluable": true,
+      "failed_cert_anchor": 28611,
+      "failed_name_anchor": "Pulaski Savings Bank",
+      "index_date": "2025-01-17",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20240930",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20181231",
+        "lead_days": 2209
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "N",
+      "control_cert": 4654,
+      "control_name": "FIRST NB OF DIGHTON",
+      "evaluable": true,
+      "failed_cert_anchor": 5520,
+      "failed_name_anchor": "Santa Anna National Bank",
+      "index_date": "2025-06-27",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20250331",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20180930",
+        "lead_days": 2462
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "N",
+      "control_cert": 16198,
+      "control_name": "MASON CITY NATIONAL BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 5520,
+      "failed_name_anchor": "Santa Anna National Bank",
+      "index_date": "2025-06-27",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20250331",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200331",
+        "lead_days": 1914
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 58230,
+      "control_name": "FIRST MO STB OF CAPE COUNTY",
+      "evaluable": true,
+      "failed_cert_anchor": 57488,
+      "failed_name_anchor": "Metropolitan Capital Bank & Trust",
+      "index_date": "2026-01-30",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20251231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20190630",
+        "lead_days": 2406
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 34860,
+      "control_name": "NEW REPUBLIC BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 57488,
+      "failed_name_anchor": "Metropolitan Capital Bank & Trust",
+      "index_date": "2026-01-30",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20251231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20180630",
+        "lead_days": 2771
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 59298,
+      "control_name": "BUSINESS BANK THE",
+      "evaluable": true,
+      "failed_cert_anchor": 25796,
+      "failed_name_anchor": "Community Bank and Trust - West Georgia",
+      "index_date": "2026-05-01",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20251231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20250331",
+        "lead_days": 396
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "control_bkclass": "NM",
+      "control_cert": 1296,
+      "control_name": "FARMERS BANK",
+      "evaluable": true,
+      "failed_cert_anchor": 25796,
+      "failed_name_anchor": "Community Bank and Trust - West Georgia",
+      "index_date": "2026-05-01",
+      "label": "MATCHED_CONTROL_ASSIGNMENT",
+      "match_report_date": "20251231",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20180930",
+        "lead_days": 2770
+      }
+    }
+  ],
+  "failed_bank_method_summaries": [
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "cert": 24735,
+      "evaluable": true,
+      "index_date": "2023-03-10",
+      "label": "FAILED_BANK",
+      "name": "Silicon Valley Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20150630",
+        "lead_days": 2810
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20170930",
+        "lead_days": 1989
+      },
+      "cert": 57053,
+      "evaluable": true,
+      "index_date": "2023-03-12",
+      "label": "FAILED_BANK",
+      "name": "Signature Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20150630",
+        "lead_days": 2812
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20170630",
+        "lead_days": 2131
+      },
+      "cert": 59017,
+      "evaluable": true,
+      "index_date": "2023-05-01",
+      "label": "FAILED_BANK",
+      "name": "First Republic Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20160331",
+        "lead_days": 2587
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "cert": 25851,
+      "evaluable": true,
+      "index_date": "2023-07-28",
+      "label": "FAILED_BANK",
+      "name": "Heartland Tri-State Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20180630",
+        "lead_days": 1854
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": false,
+        "first_warning_date": "20230930",
+        "lead_days": 34
+      },
+      "cert": 8758,
+      "evaluable": true,
+      "index_date": "2023-11-03",
+      "label": "FAILED_BANK",
+      "name": "Citizens Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20170331",
+        "lead_days": 2408
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20230331",
+        "lead_days": 392
+      },
+      "cert": 27332,
+      "evaluable": true,
+      "index_date": "2024-04-26",
+      "label": "FAILED_BANK",
+      "name": "Republic Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20190331",
+        "lead_days": 1853
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20201231",
+        "lead_days": 1387
+      },
+      "cert": 4134,
+      "evaluable": true,
+      "index_date": "2024-10-18",
+      "label": "FAILED_BANK",
+      "name": "First National Bank of Lindsay",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200930",
+        "lead_days": 1479
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20170930",
+        "lead_days": 2666
+      },
+      "cert": 28611,
+      "evaluable": true,
+      "index_date": "2025-01-17",
+      "label": "FAILED_BANK",
+      "name": "Pulaski Savings Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20161231",
+        "lead_days": 2939
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "cert": 5520,
+      "evaluable": true,
+      "index_date": "2025-06-27",
+      "label": "FAILED_BANK",
+      "name": "Santa Anna National Bank",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200331",
+        "lead_days": 1914
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": false,
+        "detected_pre_index": false,
+        "early_90d": false,
+        "first_warning_date": null,
+        "lead_days": null
+      },
+      "cert": 57488,
+      "evaluable": true,
+      "index_date": "2026-01-30",
+      "label": "FAILED_BANK",
+      "name": "Metropolitan Capital Bank & Trust",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20200331",
+        "lead_days": 2131
+      }
+    },
+    {
+      "additive": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20250630",
+        "lead_days": 305
+      },
+      "cert": 25796,
+      "evaluable": true,
+      "index_date": "2026-05-01",
+      "label": "FAILED_BANK",
+      "name": "Community Bank and Trust - West Georgia",
+      "ucic": {
+        "actionable_30d": true,
+        "detected_pre_index": true,
+        "early_90d": true,
+        "first_warning_date": "20191231",
+        "lead_days": 2313
+      }
+    }
+  ],
+  "generated_at_utc": "2026-08-07T04:33:02.748294+00:00",
+  "matched_control_unit": "MATCHED_CONTROL_ASSIGNMENT",
+  "next_checkpoint": "CP6_TERMINAL_ADJUDICATION_AND_PAGE_READY_RECORD",
+  "operation": "UCIC_ARM_B_FDIC_LONGITUDINAL_COLLAPSE_EARLY_WARNING_EXTENSION_v1",
+  "status": "PASS_CLOSED",
+  "terminal_authority": "CP6_ONLY",
+  "ucic_all_continuation_thresholds_pass": false,
+  "ucic_metrics": {
+    "actionable_30d_detections": 11,
+    "discrimination_margin": 0.0,
+    "early_90d_detections": 11,
+    "evaluable_control_assignments": 22,
+    "evaluable_failed_banks": 11,
+    "false_positive_assignments": 22,
+    "false_positive_rate": 1.0,
+    "median_lead_days_detected": 2313,
+    "pre_failure_detections": 11,
+    "sensitivity": 1.0,
+    "unique_control_institutions": 21
+  },
+  "ucic_threshold_gates": {
+    "maximum_ucic_false_positive_rate": false,
+    "minimum_actionable_30d_failures": true,
+    "minimum_discrimination_margin": false,
+    "minimum_evaluable_controls": true,
+    "minimum_evaluable_failures": true,
+    "minimum_median_lead_days": true,
+    "minimum_ucic_sensitivity": true
+  },
+  "unique_control_count": 21
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F3_CANONICALIZATION_CONTRACT_v1",
+  "status": "F3_CONSTRUCTION_CANDIDATE",
+  "canonicalEnvelopeOrder": ["schema", "kernelVersion", "axes"],
+  "canonicalAxisOrder": [
+    "SYSTEM",
+    "SCIENTIFIC_OBJECT",
+    "MODEL",
+    "METHOD_STAGE",
+    "EVIDENCE",
+    "EXECUTION",
+    "CUSTODY",
+    "CLAIM_CEILING",
+    "SUPPORT_MODE",
+    "LENS",
+    "VIEW_MODE",
+    "ROUTE_HISTORY",
+    "CONTENT_VERSION"
+  ],
+  "canonicalAxisFieldOrder": ["status", "authorityRef", "sourceRef", "value"],
+  "nestedObjectRule": "LEXICOGRAPHIC_KEY_ORDER",
+  "arrayRule": "PRESERVE_INPUT_ORDER_EXACTLY",
+  "whitespaceRule": "NONE",
+  "encoding": "UTF-8",
+  "digest": "SHA-256",
+  "laws": [
+    "CANONICALIZATION_MAY_REORDER_OBJECT_KEYS_BUT_MAY_NOT_CHANGE_VALUES",
+    "CANONICALIZATION_MAY_NOT_REORDER_ARRAYS",
+    "ROUTE_HISTORY_ORDER_IS_SEMANTIC_AND_MUST_BE_PRESERVED",
+    "CLAIM_PROHIBITION_ORDER_MUST_BE_PRESERVED",
+    "AUTHORITY_REF_AND_SOURCE_REF_MUST_BE_SERIALIZED",
+    "UNSET_UNEVALUABLE_AND_NOT_APPLICABLE_MUST_SERIALIZE_DISTINCTLY",
+    "SERIALIZE_THEN_PARSE_THEN_CANONICALIZE_MUST_BE_BYTE_IDENTICAL",
+    "FAILED_PARSE_OR_FAILED_VALIDATION_MUST_NOT_PRODUCE_CANONICAL_BYTES"
+  ],
+  "urlCodecAuthorized": false,
+  "runtimeRestorationAuthorized": false
+}

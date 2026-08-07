@@ -1,0 +1,120 @@
+name: H-Earth Map-Wide Environment Redevelopment Supersede 411
+
+on:
+  push:
+    branches:
+      - closure/h-earth-map-wide-environment-redevelopment-supersede-411-001
+    paths:
+      - tools/h-earth-terrain-estate-construction-registry-prerequisite-terminal-closure.v1.mjs
+      - .github/workflows/h-earth-terrain-estate-construction-registry-prerequisite-terminal-closure.yml
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: h-earth-map-wide-environment-redevelopment-supersede-411-v1
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  EXACT_MAIN: 3f51f0cd159df33571905c6cb14253ebdd137e3b
+  CARRIER_BRANCH: closure/h-earth-map-wide-environment-redevelopment-supersede-411-001
+  EXECUTOR: tools/h-earth-terrain-estate-construction-registry-prerequisite-terminal-closure.v1.mjs
+
+jobs:
+  canonical-supersession:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact closure carrier
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bind exact carrier and main ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$CARRIER_BRANCH"
+          git fetch --no-tags origin main
+          test "$(git merge-base "$EXACT_MAIN" "$GITHUB_SHA")" = "$EXACT_MAIN"
+          test "$(git rev-parse origin/main)" = "$EXACT_MAIN"
+
+      - name: Verify exact supersession carrier contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-map-wide-environment-redevelopment-supersede-411
+          node "$EXECUTOR" --verify-static > /tmp/h-earth-map-wide-environment-redevelopment-supersede-411/static-verification.v1.json
+
+      - name: Close generation 411 as SUPERSEDED and self-close generation 421
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OUTPUT_PATH: /tmp/h-earth-map-wide-environment-redevelopment-supersede-411/terminal-closure-return.v1.json
+        run: |
+          set -euo pipefail
+          node "$EXECUTOR" --execute
+
+      - name: Upload canonical supersession return
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-environment-redevelopment-supersede-411-builder
+          path: /tmp/h-earth-map-wide-environment-redevelopment-supersede-411/
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh-role3-verification:
+    needs: canonical-supersession
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Fresh checkout of exact closure carrier
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Rebind exact main and carrier ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "$CARRIER_BRANCH"
+          git fetch --no-tags origin main
+          test "$(git merge-base "$EXACT_MAIN" "$GITHUB_SHA")" = "$EXACT_MAIN"
+          test "$(git rev-parse origin/main)" = "$EXACT_MAIN"
+
+      - name: Independently verify generation 411 supersession and carrier closure
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OUTPUT_PATH: /tmp/h-earth-map-wide-environment-redevelopment-supersede-411/role3-terminal-verification.v1.json
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-map-wide-environment-redevelopment-supersede-411
+          node "$EXECUTOR" --verify-terminal
+
+      - name: Upload fresh Role 3 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-environment-redevelopment-supersede-411-role3
+          path: /tmp/h-earth-map-wide-environment-redevelopment-supersede-411/
+          if-no-files-found: error
+          retention-days: 90

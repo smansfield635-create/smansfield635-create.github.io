@@ -1,0 +1,60 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F6_DEPTH_PROFILE_REGISTRY_v1",
+  "status": "F6_CONSTRUCTION_CANDIDATE",
+  "profileLaw": "FIELDS_ARE_DISCLOSED_CUMULATIVELY_FROM_EXISTING_F4_CONTENT_ONLY_AND_MAY_NOT_BE_INFERRED_OR_RELABELED",
+  "profiles": [
+    {
+      "contentId": "BIO_LAB",
+      "entryPointId": "BIO_LAB",
+      "requiredAtD0": [
+        "terminalDisposition",
+        "claimCeilingRef",
+        "limitations"
+      ],
+      "materialD0QualifierValues": [
+        "OUTCOME_BLINDNESS_NOT_ESTABLISHED",
+        "PUBLIC_OUTCOME_CONTAMINATION_PRESENT",
+        "INDEPENDENT_HUMAN_CONFIRMATION_NOT_ESTABLISHED",
+        "PROSPECTIVE_CONFIRMATION_NOT_ESTABLISHED",
+        "UNIVERSAL_LAW_NOT_ESTABLISHED"
+      ],
+      "fieldsByDepth": {
+        "D0": ["contentId","contentClass","title","scientificClassification","terminalDisposition","claimCeilingRef","limitations"],
+        "D1": ["systemBoundary","identityCriterion"],
+        "D2": ["registeredRelations","explicitFalsifier"],
+        "D3": ["uncertainty","officialOutcomeCorrespondence","decoyControls","caseScore"],
+        "D4": ["sourceRef","authorityRef","contentVersion","sourceStudy","sourcePr","sourceHead","provenance"]
+      }
+    },
+    {
+      "contentId": "HURRICANE_RAW_TC_RADAR_QC_CORRECTED",
+      "entryPointId": "HURRICANE_RAW_TC_RADAR_QC_CORRECTED",
+      "requiredAtD0": [
+        "evidenceStanding",
+        "claimCeilingRef",
+        "additiveStanding",
+        "warningTime",
+        "limitations",
+        "adverseEvidence"
+      ],
+      "materialD0QualifierValues": [
+        "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+        "POSITIVE_POINT_ESTIMATE_INCONCLUSIVE",
+        "NOT_TESTED",
+        "PRIMARY_RAW_MECHANISTIC_TEST_NOT_SUPPORTED",
+        "ADDITIVE_BOOTSTRAP_INTERVAL_CROSSES_ZERO",
+        "NO_EARLY_WARNING_CAUSAL_PROSPECTIVE_UNIVERSAL_OR_IMI_CONFIRMATION_CLAIM"
+      ],
+      "fieldsByDepth": {
+        "D0": ["contentId","contentClass","evidenceStanding","claimCeilingRef","additiveStanding","warningTime","limitations","adverseEvidence"],
+        "D1": ["operation","qcCorrection"],
+        "D2": ["primaryIncrementalAuc","additiveAuc"],
+        "D3": ["primaryBootstrap95","additiveDifferenceBootstrap95","reorganizedCrossClassProxy","trueMultiClassPhysicalCoherence","priorSupersededExecution"],
+        "D4": ["sourceRef","authorityRef","contentVersion","workflowHead","workflowRun","artifactId","artifactZipSha256","provenance"]
+      }
+    }
+  ],
+  "crossObjectRelationCreationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false,
+  "unsetFieldCompletionAuthorized": false
+}

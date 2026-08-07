@@ -13,7 +13,8 @@
     "governingTree": "602378bd8eae82c202de73d56ee74f67a7210625",
     "lockGeneration": 462,
     "scopeHash": "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e",
-    "exactPathCount": 14
+    "exactPathCount": 14,
+    "status": "PASS_CONSTRUCTED"
   },
   "routerPrerequisite": {
     "pr": 739,
@@ -21,6 +22,21 @@
     "mergeCommit": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
     "validationRun": 31210011756,
     "result": "PASS_MERGED"
+  },
+  "permanentActivation": {
+    "status": "PASS_CLOSED",
+    "pullRequest": 740,
+    "immutablePackageCommit": "ae65d17ce1019831a7e9ea27af9441fb5686887a",
+    "immutablePackageTree": "0c5fdf5692f8c256b97354f95359f60d5dae9cd0",
+    "packageFingerprint": "124fae0a63ef90edb0e8988ab5c65cc6692772b192baeefa00a8c9c55773097a",
+    "continuityVerificationRun": 31211470016,
+    "registryActivationCandidateHead": "fbfe1ada4ff676f264c94952eebf746e643c7dbe",
+    "registryActivationLockGeneration": 464,
+    "registryPreflightRun": 31212406841,
+    "ratificationMergeLockGeneration": 467,
+    "mergeCommit": "c961469d366f39422e143a2c6156e79b1c991735",
+    "mergeTree": "b06352cfe65f0b96bb60c5fb545cb9ccf8c44458",
+    "result": "ACTIVE_ON_MAIN"
   },
   "sourceRevision10": {
     "commit": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
@@ -38,6 +54,13 @@
     "oldWorldAssumption": "CONTINUOUS_512_BY_512_FIELD",
     "disposition": "SPATIAL_PREMISE_SUPERSEDED_BY_OPEN_WORLD_MIGRATION;PRESERVE_VALID_LOCAL_GEOGRAPHY_AND_EVIDENCE"
   },
+  "checkpointTransition": {
+    "stateReconciliationLockGeneration": 469,
+    "ow00": "PASS_CLOSED",
+    "nextCheckpoint": "OW01",
+    "nextCheckpointName": "GRATITUDE_CONTINENTAL_SKELETON_AND_TRUE_COASTAL_ENTRY_BINDING",
+    "productMutationAuthorizedByThisReconciliation": false
+  },
   "historicalLocks": [
     {
       "generation": 457,
@@ -45,11 +68,27 @@
     },
     {
       "generation": 458,
-      "status": "ROUTER_CONSTRUCTION_COMPLETED_MERGED_TERMINAL_RECONCILIATION_PENDING"
+      "status": "ROUTER_CONSTRUCTION_EXECUTED_AND_MERGED"
     },
     {
       "generation": 460,
-      "status": "ROUTER_MERGE_AUTHORITY_EXECUTED_TERMINAL_RECONCILIATION_PENDING"
+      "status": "ROUTER_EXACT_HEAD_MERGE_AUTHORITY_EXECUTED"
+    },
+    {
+      "generation": 462,
+      "status": "INSTRUMENT_CONSTRUCTION_EXECUTED"
+    },
+    {
+      "generation": 464,
+      "status": "H_EARTH_EXACT_OCCURRENCE_REGISTRY_ACTIVATION_EXECUTED"
+    },
+    {
+      "generation": 467,
+      "status": "INSTRUMENT_EXACT_HEAD_RATIFICATION_AND_MERGE_EXECUTED"
+    },
+    {
+      "generation": 469,
+      "status": "OW00_CLOSURE_AND_OW01_HANDOFF_RECONCILIATION_ACTIVE"
     }
   ],
   "authorityLimits": [
@@ -60,7 +99,7 @@
     "NO_MANOR_GEOMETRY",
     "NO_DEPLOYMENT",
     "NO_RELEASE",
-    "NO_AUTOMATIC_MERGE",
+    "NO_AUTOMATIC_PRODUCT_MERGE",
     "NO_INHERITED_PRODUCT_AUTHORITY"
   ]
 }

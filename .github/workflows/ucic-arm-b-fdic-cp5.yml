@@ -1,0 +1,46 @@
+name: UCIC Arm B FDIC CP5 Comparator
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/**'
+      - '.github/workflows/ucic-arm-b-fdic-cp5.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  execute-cp5:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      - name: Use already-closed CP5 checkpoint when present
+        id: closed
+        shell: bash
+        run: |
+          FILE=research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-5-comparator-false-positive-execution.v1.json
+          if [ -f "$FILE" ] && python -c 'import json,sys; o=json.load(open(sys.argv[1])); raise SystemExit(0 if o.get("status")=="PASS_CLOSED" else 1)' "$FILE"; then echo 'value=true' >> "$GITHUB_OUTPUT"; else echo 'value=false' >> "$GITHUB_OUTPUT"; fi
+      - name: Execute frozen matched controls and additive comparator
+        if: steps.closed.outputs.value != 'true'
+        run: python research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/execute-cp5-controls-comparator.py
+      - name: Hash and persist CP5 checkpoint
+        if: steps.closed.outputs.value != 'true'
+        shell: bash
+        run: |
+          DIR=research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1
+          sha256sum "$DIR/checkpoint-5-comparator-false-positive-execution.v1.json" > "$DIR/checkpoint-5.sha256"
+          python -c 'import json,sys; o=json.load(open(sys.argv[1])); raise SystemExit(0 if o.get("status")=="PASS_CLOSED" else 1)' "$DIR/checkpoint-5-comparator-false-positive-execution.v1.json"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$DIR/checkpoint-5-comparator-false-positive-execution.v1.json" "$DIR/checkpoint-5.sha256"
+          git commit -m 'Close Arm B FDIC CP5 comparator and false positives'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+      - name: Upload CP5 checkpoint artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-arm-b-fdic-cp5
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-5-comparator-false-positive-execution.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-5.sha256
+          if-no-files-found: warn

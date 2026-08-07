@@ -1,0 +1,65 @@
+name: UCIC Arm B FDIC CP2 Extraction
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/**'
+      - '.github/workflows/ucic-arm-b-fdic-cp2.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  extract-cp2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      - name: Use already-closed CP2 checkpoint when present
+        id: closed
+        shell: bash
+        run: |
+          FILE=research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2-failure-source-extraction.v1.json
+          if [ -f "$FILE" ] && python -c 'import json,sys; o=json.load(open(sys.argv[1])); raise SystemExit(0 if o.get("status")=="PASS_CLOSED" else 1)' "$FILE"; then
+            echo 'value=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'value=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Execute frozen CP2 FDIC extraction
+        if: steps.closed.outputs.value != 'true'
+        run: python research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/extract-cp2.py
+      - name: Hash CP2 output
+        if: steps.closed.outputs.value != 'true'
+        run: |
+          cd research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1
+          sha256sum checkpoint-2-failure-source-extraction.v1.json > checkpoint-2.sha256
+          find cp2-raw -type f -print0 | sort -z | xargs -0 sha256sum > cp2-raw.sha256
+      - name: Persist closed CP2 checkpoint
+        if: steps.closed.outputs.value != 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          p='research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2-failure-source-extraction.v1.json'
+          o=json.load(open(p))
+          if o.get('status') != 'PASS_CLOSED':
+              raise SystemExit('CP2_NOT_PASS_CLOSED')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2-failure-source-extraction.v1.json \
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2.sha256 \
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/cp2-raw.sha256
+          git commit -m 'Close Arm B FDIC CP2 source extraction'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+      - name: Upload CP2 checkpoint artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-arm-b-fdic-cp2
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2-failure-source-extraction.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2.sha256
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/cp2-raw.sha256
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/cp2-raw/
+          if-no-files-found: warn

@@ -1,0 +1,10 @@
+{
+  "operation": "UCIC_ARM_B_FDIC_LONGITUDINAL_COLLAPSE_EARLY_WARNING_EXTENSION_v1",
+  "classification": "NONSCIENTIFIC_EXACT_HEAD_VERIFICATION_TRIGGER",
+  "scientific_state_head": "8bcf6e219cbab8b0dba29609a7a59e3719e642af",
+  "cp1_through_cp6_content_change": false,
+  "scientific_result_change": false,
+  "purpose": "Trigger exact-head GitHub Actions after the bot-persisted CP6 closure commit, whose automatic runs were marked action_required rather than executed.",
+  "required_terminal_fdic_disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+  "merge_authority": "NOT_GRANTED"
+}

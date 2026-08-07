@@ -1,0 +1,48 @@
+name: UCIC Arm B FDIC CP6 Terminal Closure
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/**'
+      - '.github/workflows/ucic-arm-b-fdic-cp6.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  close-cp6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      - name: Use already-closed CP6 checkpoint when present
+        id: closed
+        shell: bash
+        run: |
+          FILE=research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-6-terminal-adjudication.v1.json
+          if [ -f "$FILE" ] && python -c 'import json,sys; o=json.load(open(sys.argv[1])); raise SystemExit(0 if o.get("status")=="PASS_CLOSED" else 1)' "$FILE"; then echo 'value=true' >> "$GITHUB_OUTPUT"; else echo 'value=false' >> "$GITHUB_OUTPUT"; fi
+      - name: Build terminal adjudication and page-ready record
+        if: steps.closed.outputs.value != 'true'
+        run: python research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/close-cp6.py
+      - name: Verify and persist CP6 closure
+        if: steps.closed.outputs.value != 'true'
+        shell: bash
+        run: |
+          DIR=research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1
+          python -c 'import json,sys; o=json.load(open(sys.argv[1])); assert o["status"]=="PASS_CLOSED"; assert o["terminal_fdic_extension_disposition"]=="FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED"' "$DIR/checkpoint-6-terminal-adjudication.v1.json"
+          sha256sum "$DIR/checkpoint-6-terminal-adjudication.v1.json" "$DIR/PAGE_READY_RESEARCH_RECORD.md" "$DIR/checkpoint-6-manifest.sha256.json" > "$DIR/checkpoint-6.sha256"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$DIR/checkpoint-6-terminal-adjudication.v1.json" "$DIR/PAGE_READY_RESEARCH_RECORD.md" "$DIR/checkpoint-6-manifest.sha256.json" "$DIR/checkpoint-6.sha256"
+          git commit -m 'Close Arm B FDIC CP6 terminal adjudication'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+      - name: Upload CP6 closure artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-arm-b-fdic-cp6
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-6-terminal-adjudication.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/PAGE_READY_RESEARCH_RECORD.md
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-6-manifest.sha256.json
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-6.sha256
+          if-no-files-found: warn

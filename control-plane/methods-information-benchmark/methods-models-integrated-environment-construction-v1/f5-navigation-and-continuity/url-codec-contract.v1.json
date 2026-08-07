@@ -1,0 +1,38 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F5_URL_CODEC_CONTRACT_v1",
+  "status": "F5_CONSTRUCTION_CANDIDATE",
+  "canonicalBaseRoute": "/laws/research/methods-and-models/",
+  "codecVersion": "MMNAV1",
+  "fragmentPrefix": "#mmnav1.",
+  "fragmentForm": "#mmnav1.<BASE64URL_CANONICAL_CAPSULE>.<SHA256_CANONICAL_CAPSULE>",
+  "capsuleFieldOrder": [
+    "schema",
+    "codecVersion",
+    "entryPointId",
+    "stateSha256",
+    "stateBytesB64Url",
+    "returnContext"
+  ],
+  "capsuleSchema": "METHODS_MODELS_NAVIGATION_CAPSULE_v1",
+  "stateEncoding": "F3_CANONICAL_UTF8_BYTES_THEN_BASE64URL_NO_PADDING",
+  "capsuleEncoding": "CANONICAL_JSON_UTF8_THEN_BASE64URL_NO_PADDING",
+  "capsuleDigest": "SHA-256",
+  "returnContext": "NULL_OR_F5_RETURN_CONTEXT_v1",
+  "decodeRules": [
+    "BASE_ROUTE_MUST_MATCH_EXACTLY",
+    "FRAGMENT_PREFIX_MUST_MATCH_EXACTLY",
+    "BASE64URL_MUST_BE_CANONICAL_NO_PADDING",
+    "CAPSULE_DIGEST_MUST_MATCH",
+    "CAPSULE_JSON_MUST_USE_EXACT_FIELD_SET_AND_ORDER",
+    "CODEC_VERSION_MUST_MATCH",
+    "ENTRY_POINT_MUST_BE_REGISTERED",
+    "STATE_DIGEST_MUST_MATCH_EMBEDDED_CANONICAL_STATE_BYTES",
+    "STATE_BYTES_MUST_PASS_F3_EXACT_CANONICAL_RESTORATION",
+    "ENTRY_POINT_TARGET_MUST_MATCH_RESTORED_SCIENTIFIC_OBJECT",
+    "RETURN_CONTEXT_IF_PRESENT_MUST_PASS_F5_RETURN_VALIDATION"
+  ],
+  "failureDisposition": "FAIL_CLOSED_NO_STATE",
+  "silentFallbackAuthorized": false,
+  "serverRouteMutationRequired": false,
+  "publicMutationAuthorized": false
+}

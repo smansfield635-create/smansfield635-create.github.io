@@ -4,19 +4,23 @@ const diagnosticNode=document.querySelector('[data-h-earth-diagnostic]');
 const focusButton=document.querySelector('[data-fit-world]');
 const brandNode=document.querySelector('.preview-brand');
 
+const OPERATION_ID='H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_v1';
+const CHECKPOINT='OW01';
+const LOCK_GENERATION=473;
+
 const setStatus=(text,state=text)=>{if(statusNode){statusNode.textContent=text;statusNode.dataset.status=state;}};
 const setDiagnostic=(text)=>{if(diagnosticNode)diagnosticNode.textContent=text;};
-const fail=(stage,error)=>{const message=error instanceof Error?error.message:String(error);console.error(`AUDRALIA_CONTINUOUS_WORLD_INSPECTOR_${stage}_FAILED`,error);setStatus('ERROR',`${stage}_FAILED`);setDiagnostic(`${stage}_FAILED: ${message}`);window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW_ERROR__=Object.freeze({operationId:'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',inspectorRepairRevision:10,stage,message});};
+const fail=(stage,error)=>{const message=error instanceof Error?error.message:String(error);console.error(`AUDRALIA_OW01_INSPECTOR_${stage}_FAILED`,error);setStatus('ERROR',`${stage}_FAILED`);setDiagnostic(`${stage}_FAILED: ${message}`);window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW_ERROR__=Object.freeze({operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,stage,message});};
 
 function updateScaleUI(renderer){
   const scale=renderer.getViewScale();
-  if(brandNode)brandNode.textContent=`Audralia · Gratitude · ${scale.toLowerCase()}`;
+  if(brandNode)brandNode.textContent=`Audralia · Gratitude · OW01 · ${scale.toLowerCase()}`;
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
-    LOCAL:'LOCAL · exact Gratitude terrain · one finger orbits · two fingers pan + pinch.',
-    REGION:'REGION · Gratitude terrain continues beyond the development tile · pinch outward for continental scale.',
-    CONTINENT:'CONTINENT · Gratitude sits on Audralia with its Nine Summits macro-geography · continue outward for planetary context.',
-    PLANETARY:'PLANETARY · Audralia remains one continuous world · the whole planet is not required to fit the viewport.'
+    LOCAL:'LOCAL · exact Gratitude terrain at 1:1 arc scale · inspect Harbor/coastal binding.',
+    REGION:'REGION · high-resolution Gratitude is bound to its true continental margin.',
+    CONTINENT:'CONTINENT · inspect the asymmetric Gratitude skeleton and primary inland watershed axes.',
+    PLANETARY:'PLANETARY · Audralia remains one continuous world; the other eight continents remain noncanonical.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -35,17 +39,17 @@ function wire(renderer){
 }
 
 async function observerAfterPaint(renderer){
-  try{await new Promise(r=>setTimeout(r,0));const module=await import('./observer.mjs');const receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer);const pass=receipt.result==='PASS';setStatus(pass?'PASS':'READY',pass?'PASS':'OBSERVER_PENDING_OR_FAIL');updateScaleUI(renderer);window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__=Object.freeze({operationId:'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',lockGeneration:422,inspectorRepairRevision:10,renderer,observerReceipt:receipt});}
-  catch(error){console.warn('AUDRALIA_CONTINUOUS_WORLD_INSPECTOR_DEFERRED_OBSERVER_FAILED',error);setStatus('READY','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__=Object.freeze({operationId:'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',lockGeneration:422,inspectorRepairRevision:10,renderer,observerReceipt:null,observerDeferredFailure:true});}
+  try{await new Promise(r=>setTimeout(r,0));const module=await import('./observer.mjs');const receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer);const pass=receipt.result==='PASS';setStatus(pass?'PASS':'FAIL',pass?'OW01_OBSERVER_PASS':'OW01_OBSERVER_FAIL');updateScaleUI(renderer);window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,renderer,observerReceipt:receipt});}
+  catch(error){console.warn('AUDRALIA_OW01_INSPECTOR_OBSERVER_FAILED',error);setStatus('READY','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,renderer,observerReceipt:null,observerDeferredFailure:true});}
 }
 
 async function initialize(){
   try{
-    if(!(canvas instanceof HTMLCanvasElement))throw new Error('H_EARTH_MAP_WIDE_CANVAS_MISSING');
-    setStatus('world…','IMPORTING_CONTINUOUS_AUDRALIA_WORLD');setDiagnostic('Building continuous Audralia / Gratitude multiscale authoring model…');await new Promise(r=>requestAnimationFrame(r));
-    const module=await import('./renderer.mjs');setStatus('building…','BUILDING_CONTINUOUS_WORLD_MODEL');await new Promise(r=>requestAnimationFrame(r));
+    if(!(canvas instanceof HTMLCanvasElement))throw new Error('H_EARTH_OW01_CANVAS_MISSING');
+    setStatus('world…','IMPORTING_AUDRALIA_OW01_WORLD');setDiagnostic('Building OW01 Gratitude continental skeleton and coastal-entry authoring model…');await new Promise(r=>requestAnimationFrame(r));
+    const module=await import('./renderer.mjs');setStatus('building…','BUILDING_OW01_GEOGRAPHIC_MODEL');await new Promise(r=>requestAnimationFrame(r));
     const renderer=module.createMapWideEnvironmentRenderer(canvas);renderer.render();wire(renderer);updateScaleUI(renderer);setStatus('READY','VISUAL_READY');requestAnimationFrame(()=>observerAfterPaint(renderer));
   }catch(error){fail('INITIALIZATION',error);}
 }
 
-setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting continuous Audralia world inspector…');initialize();
+setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting Audralia OW01 nonpublic inspector…');initialize();

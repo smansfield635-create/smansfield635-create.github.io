@@ -1,0 +1,64 @@
+name: Temporary Methods Models F12 Review Surface Verify
+on:
+  push:
+    branches:
+      - review/methods-models-f12-certified-candidate-caf6af4d
+permissions:
+  contents: read
+jobs:
+  verify-review-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify certified F11 substrate is unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f11-exact-candidate-certification)" = "7b5364b945f02d1566dfa6c164a16f3bfcbd6b79"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f11-exact-candidate-certification/certified-candidate-manifest.v1.json';
+          const m=JSON.parse(fs.readFileSync(p,'utf8'));
+          if(m.certifiedEnvironmentHead!=='d39d9f110ed7fe16109ddcb5b8043b3752c1a36e') process.exit(1);
+          if(m.candidatePayloadFingerprintSha256!=='caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99') process.exit(1);
+          NODE
+      - name: Verify review-only changed-path scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only 19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2..HEAD > /tmp/changed.txt
+          cat /tmp/changed.txt
+          if grep -Ev '^(review/methods-models/f12/caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99/|\.github/workflows/temporary-methods-models-f12-review-surface-verify\.yml$)' /tmp/changed.txt | grep -q .; then
+            echo 'Unexpected path outside F12 review preparation'; exit 1
+          fi
+      - name: Verify local specimen and scientific counts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check review/methods-models/f12/caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99/review.js
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const pre='control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/';
+          const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const si=read(pre+'versioned-study-registry-index.v1.json');
+          const ri=read(pre+'typed-relation-registry-index.v1.json');
+          const c=read(pre+'canonical-coherence-object.v1.json');
+          const f9=read('control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f9-integrated-environment-assembly/integrated-environment-manifest.v1.json');
+          if(si.totalStudyCount!==22||ri.totalRelationCount!==38||c.claims.length!==19||f9.statefulEntryIds.length!==16) process.exit(1);
+          NODE
+      - name: Verify immutable browser URL responds
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://rawcdn.githack.com/smansfield635-create/smansfield635-create.github.io/9386d771526cb60e773295d3a98a7dbe2a11adf9'
+          PATH0='review/methods-models/f12/caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99'
+          curl --retry 8 --retry-delay 4 --retry-all-errors -fsSL "$BASE/$PATH0/index.html" -o /tmp/index.html
+          curl --retry 8 --retry-delay 4 --retry-all-errors -fsSL "$BASE/$PATH0/review.css" -o /tmp/review.css
+          curl --retry 8 --retry-delay 4 --retry-all-errors -fsSL "$BASE/$PATH0/review.js" -o /tmp/review.js
+          curl --retry 8 --retry-delay 4 --retry-all-errors -fsSL "$BASE/control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/versioned-study-registry-index.v1.json" -o /tmp/studies.json
+          grep -q 'Certified Review Candidate' /tmp/index.html
+          grep -q 'METHODS_MODELS_REVIEW_SURFACE' /tmp/review.js
+          node -e "const x=require('/tmp/studies.json'); if(x.totalStudyCount!==22) process.exit(1)"
+          echo 'PASS_F12_REVIEW_SURFACE_REMOTE_URL'

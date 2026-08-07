@@ -11,7 +11,7 @@
   <main class="preview-shell" aria-label="H-Earth map-wide environment redevelopment nonpublic inspector">
     <header class="preview-toolbar" aria-live="polite">
       <div class="preview-brand">H-Earth · World Inspector</div>
-      <div class="preview-status" data-h-earth-status>loading…</div>
+      <div class="preview-status" data-h-earth-status>boot…</div>
       <button class="preview-button" type="button" data-fit-world>reset view</button>
     </header>
 
@@ -28,6 +28,19 @@
     </footer>
   </main>
 
-  <script type="module" src="./app.mjs"></script>
+  <script>
+    (() => {
+      const statusNode = document.querySelector('[data-h-earth-status]');
+      const markFailure = (label) => {
+        if (!statusNode) return;
+        statusNode.textContent = 'ERROR';
+        statusNode.dataset.status = label;
+      };
+      window.addEventListener('error', () => markFailure('WINDOW_ERROR'));
+      window.addEventListener('unhandledrejection', () => markFailure('UNHANDLED_REJECTION'));
+      window.__H_EARTH_INSPECTOR_BOOTSTRAP_ACTIVE__ = true;
+    })();
+  </script>
+  <script type="module" src="./app.mjs?repair=5"></script>
 </body>
 </html>

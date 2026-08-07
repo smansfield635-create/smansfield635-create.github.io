@@ -1,0 +1,8 @@
+{
+  "admission_rule": "Only materials publicly available at or before the cutoff may enter analyst-facing packets.",
+  "exceptions": [],
+  "operation_id": "UCIC_PROSPECTIVE_FINAL_REPORT_TARGET_PORTFOLIO_v1",
+  "post_cutoff_rule": "Investigative updates, final findings, probable cause, contributing factors, and recommendations published after cutoff are outcome-side material.",
+  "source_cutoff": "2026-08-06T20:34:00-05:00",
+  "timezone": "America/Chicago"
+}

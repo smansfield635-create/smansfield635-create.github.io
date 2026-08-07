@@ -58,6 +58,17 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       geography?.maximumCoastalBindingError < 1e-9 &&
       geography?.coastalBindingSampleCount === 7,
 
+    sharedHarborCoastAuthority:
+      contract?.sharedHarborCoastAuthority === true &&
+      contract?.transitionCoastlineAnchoredToSharedHarborFunction === true &&
+      continent?.transitionCoastlineAnchoredToSharedHarborFunction === true &&
+      continent?.transitionBindingPointCount >= 15 &&
+      gratitude?.sharedHarborCoastAuthority === true &&
+      stitch?.sharedHarborCoastAuthority === true &&
+      beach?.sharedHarborCoastAuthority === true &&
+      geography?.sharedHarborCoastAuthority === true &&
+      geography?.transitionBindingPointCount >= 15,
+
     deliberateClosedCoastlineConstructed:
       contract?.gratitudeContinentalSkeleton === 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
       contract?.gratitudeCoastlineIsUnionOfEllipses === false &&
@@ -134,6 +145,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       stitch?.separateMesh === true &&
       stitch?.alignedRectangularGrid === true &&
       stitch?.scalarFieldCoastlineClipping === true &&
+      stitch?.layerStepAuthoringUnits <= 8 &&
       stitch?.triangleCount > 0 &&
       stitch?.boundedTriangleEdges === true &&
       stitch?.maximumTriangleEdgeLength <= 40 &&
@@ -266,7 +278,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const mechanicalChecksPassed = failedChecks.length === 0;
 
   return freeze({
-    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v6',
+    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v7',
     result: mechanicalChecksPassed ? 'MECHANICAL_PASS_AWAITING_USER' : 'FAIL_CLOSED',
     mechanicalChecksPassed,
     userAcceptanceEstablished: false,
@@ -284,6 +296,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       'AUDRALIA',
       'GRATITUDE_CONTINENT',
       'ALIGNED_STITCH_ANNULUS',
+      'SHARED_HARBOR_COAST_AUTHORITY',
       'CONTINUOUS_COASTAL_RIBBON',
       'HIGH_RESOLUTION_LOCAL_TERRAIN'
     ]),
@@ -295,10 +308,10 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       authoringPreviewOnly: true,
       userGeographicDifferentialRecorded: true,
       latestUserDifferentialDisposition:
-        'MATERIAL_WORLD_CONTINUITY_SUCCESS_WITH_BOUNDED_COASTAL_AND_CONTINENT_REFINEMENT_REQUIRED',
+        'MATERIAL_WORLD_CONTINUITY_SUCCESS_WITH_LOCAL_STITCH_TOPOLOGY_TEAR_CORRECTION_REQUIRED',
       userAcceptanceEstablished: false,
       repairRound:
-        'OW01_COASTAL_RIBBON_SANDBAR_DIVERSITY_AND_NONCANONICAL_CONTINENT_REFINEMENT',
+        'OW01_SHARED_HARBOR_COAST_AUTHORITY_AND_STITCH_TOPOLOGY_CLOSURE',
       ow02Authorized: false,
       liveIntegrationAuthorized: false,
       frontPageIntegrationAuthorized: false,

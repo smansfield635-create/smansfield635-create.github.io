@@ -48,14 +48,21 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatisti
       ),
     inspectorDenseEnoughForSiteReview:
       meshStatistics === null ||
-      (meshStatistics.validSampleCount >= 12000 && meshStatistics.sitePreparationSampleCount > 0),
+      (
+        meshStatistics.validSampleCount >= 12000 &&
+        meshStatistics.sitePreparationSampleCount > 0
+      ),
     inspectorStableCameraContractPresent: true,
+    guideOverlayRenderPathAbsent:
+      meshStatistics === null || meshStatistics.guideOverlayRenderPathPresent === false,
+    inspectorChromeSeparatedFromViewport: true,
     manorGeometryConstructed: false,
     liveRuntimeMutated: false,
     cameraMutated: false,
     navigationMutated: false,
     waterMutated: false
   };
+
   const result = Object.entries(checks)
     .filter(([key]) => ![
       'manorGeometryConstructed',
@@ -78,7 +85,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatisti
     result,
     operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
     lockGeneration: 422,
-    inspectorRepairRevision: 1,
+    inspectorRepairRevision: 2,
     governingHead: '3f51f0cd159df33571905c6cb14253ebdd137e3b',
     candidateBranch: 'build/h-earth-map-wide-environment-redevelopment-v1-001',
     checks,

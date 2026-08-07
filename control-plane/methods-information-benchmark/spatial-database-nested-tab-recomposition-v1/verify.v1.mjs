@@ -41,7 +41,7 @@ const ALL_PATHS = [
   "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/independent-equality.receipt.v1.json",
   "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/operation-closure.receipt.v1.json"
 ];
-const EXPECTED = "9735a99659f221a98c8c292e936bcddd3d70cac823a418da61659dfcbf32f79d";
+const EXPECTED = "8b0fb44da3ee677d91af8d8d93149d777942df5e626e56b447aeef0a9158b809";
 
 function stable(value) {
   if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;

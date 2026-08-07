@@ -1,0 +1,71 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_CHANGED_PATH_MANIFEST_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "projectId": "H_EARTH",
+  "exactGoverningHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+  "exactGoverningTree": "81c2d80b45e40da7e935d2c72f3a3b2804b99704",
+  "constructionBranch": "build/h-earth-terrain-estate-construction-v1-001",
+  "lockGeneration": 411,
+  "lockScope": "H_EARTH:TERRAIN_AND_ESTATE_CONSTRUCTION:GRATITUDE_REGION_MIRROR_MANOR_PRECINCT:V1:EXACT_32_PATH_SCOPE",
+  "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f",
+  "exactPathCount": 32,
+  "pathClassificationRelativeToGoverningHead": {
+    "added": 31,
+    "modified": 1,
+    "deleted": 0,
+    "modifiedPaths": [
+      ".github/ai-router/projects/h-earth/entrypoint.v1.json"
+    ]
+  },
+  "phase1PreconstructionMaterialization": {
+    "pathCount": 4,
+    "terrainConstructionPerformed": false,
+    "estateConstructionPerformed": false,
+    "manorConstructionPerformed": false,
+    "previewPublished": false
+  },
+  "exactPaths": [
+    ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+    ".github/workflows/h-earth-terrain-and-estate-construction-v1.yml",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/AGENTS.md",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/operation-request.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/authority-and-lineage.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/source-identity-manifest.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/protected-invariants.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/terrain-articulation-plan.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/estate-site-plan.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/mirror-manor-geometry.contract.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/approach-view-adjacency.contract.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/rollback.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/proof-contract.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/observer.v1.mjs",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/builder.receipt.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/fresh-role3.receipt.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/role5-integrated-environment.receipt.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/user-differential.receipt.v1.json",
+    "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/operation-closure.receipt.v1.json",
+    "h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js",
+    "h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.manifest.json",
+    "h-earth-3d/zones/h-earth.gratitude-region-mirror-manor-precinct.v1.js",
+    "h-earth-3d/environment/h-earth.gratitude-region-mirror-manor-estate.v1.js",
+    "h-earth-3d/authoring/h-earth.mirror-manor-geometry.v1.js",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/index.html",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/app.mjs",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/styles.css",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/observer.mjs"
+  ],
+  "prohibited": [
+    "ALL_PATHS_NOT_EXACTLY_LISTED",
+    "MAIN_REF_MUTATION",
+    "REGISTRY_MUTATION",
+    "PRIOR_CAUSAL_EVIDENCE_OR_EVALUATOR_MUTATION",
+    "RUNTIME_CAMERA_NAVIGATION_OR_WATER_MUTATION",
+    "FRONTIER_PLAINS_CONSTRUCTION",
+    "CAVERN_INTERIOR_CONSTRUCTION",
+    "MERGE_DEPLOYMENT_OR_RELEASE"
+  ]
+}

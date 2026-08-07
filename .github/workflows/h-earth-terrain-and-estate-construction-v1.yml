@@ -1,0 +1,170 @@
+name: H-Earth Terrain and Estate Construction V1
+
+on:
+  push:
+    branches:
+      - build/h-earth-terrain-estate-construction-v1-001
+    paths:
+      - '.github/ai-router/projects/h-earth/entrypoint.v1.json'
+      - '.github/workflows/h-earth-terrain-and-estate-construction-v1.yml'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/**'
+      - 'h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js'
+      - 'h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.manifest.json'
+      - 'h-earth-3d/zones/h-earth.gratitude-region-mirror-manor-precinct.v1.js'
+      - 'h-earth-3d/environment/h-earth.gratitude-region-mirror-manor-estate.v1.js'
+      - 'h-earth-3d/authoring/h-earth.mirror-manor-geometry.v1.js'
+      - 'showroom/globe/h-earth/terrain-estate-construction-v1/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/ai-router/projects/h-earth/entrypoint.v1.json'
+      - '.github/workflows/h-earth-terrain-and-estate-construction-v1.yml'
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/**'
+      - 'h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js'
+      - 'h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.manifest.json'
+      - 'h-earth-3d/zones/h-earth.gratitude-region-mirror-manor-precinct.v1.js'
+      - 'h-earth-3d/environment/h-earth.gratitude-region-mirror-manor-estate.v1.js'
+      - 'h-earth-3d/authoring/h-earth.mirror-manor-geometry.v1.js'
+      - 'showroom/globe/h-earth/terrain-estate-construction-v1/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-terrain-estate-construction-v1-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  EXACT_GOVERNING_HEAD: 2b4fae98b06a46370f2e3f1af94ace49905657a9
+  EXACT_GOVERNING_TREE: 81c2d80b45e40da7e935d2c72f3a3b2804b99704
+  EXACT_BRANCH: build/h-earth-terrain-estate-construction-v1-001
+  OPERATION_ID: H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1
+  LOCK_GENERATION: '411'
+  LOCK_SCOPE: H_EARTH:TERRAIN_AND_ESTATE_CONSTRUCTION:GRATITUDE_REGION_MIRROR_MANOR_PRECINCT:V1:EXACT_32_PATH_SCOPE
+  SCOPE_HASH: 472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f
+  MANIFEST_PATH: h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/changed-path-manifest.v1.json
+
+jobs:
+  exact-scope-preconstruction-preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bind admitted branch and governing ancestry
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_BRANCH: ${{ github.head_ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          test "$HEAD_BRANCH" = "$EXACT_BRANCH"
+          git cat-file -e "$EXACT_GOVERNING_HEAD^{commit}"
+          test "$(git rev-parse "$EXACT_GOVERNING_HEAD^{tree}")" = "$EXACT_GOVERNING_TREE"
+          git merge-base --is-ancestor "$EXACT_GOVERNING_HEAD" HEAD
+          test "$(git diff --name-only "$EXACT_GOVERNING_HEAD" HEAD | grep -Ev '^$' | sort -u | wc -l | tr -d ' ')" -le 32
+
+      - name: Materialize exact admitted path list
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/h-earth-terrain-estate-construction-v1"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const manifest = JSON.parse(fs.readFileSync(process.env.MANIFEST_PATH, 'utf8'));
+          const expected = {
+            schema: 'H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_CHANGED_PATH_MANIFEST_v1',
+            operationId: process.env.OPERATION_ID,
+            exactGoverningHead: process.env.EXACT_GOVERNING_HEAD,
+            lockGeneration: Number(process.env.LOCK_GENERATION),
+            lockScope: process.env.LOCK_SCOPE,
+            scopeHash: process.env.SCOPE_HASH,
+            exactPathCount: 32
+          };
+          for (const [key, value] of Object.entries(expected)) {
+            if (manifest[key] !== value) throw new Error(`MANIFEST_IDENTITY_MISMATCH:${key}`);
+          }
+          if (!Array.isArray(manifest.exactPaths) || manifest.exactPaths.length !== 32) {
+            throw new Error('MANIFEST_EXACT_PATH_COUNT_MISMATCH');
+          }
+          const paths = [...new Set(manifest.exactPaths)];
+          if (paths.length !== 32 || paths.some((value) => typeof value !== 'string' || !value)) {
+            throw new Error('MANIFEST_PATH_SET_INVALID');
+          }
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/h-earth-terrain-estate-construction-v1/exact-paths.txt`, `${paths.sort().join('\n')}\n`);
+          NODE
+
+      - name: Execute exact H-Earth registry preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file "$RUNNER_TEMP/h-earth-terrain-estate-construction-v1/exact-paths.txt" \
+            --task "H-Earth terrain-and-estate construction V1 exact 32-path preconstruction preflight" \
+            --mutation-intent \
+            --output "$RUNNER_TEMP/h-earth-terrain-estate-construction-v1/registry-preflight.receipt.json"
+
+      - name: Require exact preflight pass and emit bounded receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          import fs from 'node:fs';
+          const directory = `${process.env.RUNNER_TEMP}/h-earth-terrain-estate-construction-v1`;
+          const bytes = fs.readFileSync(`${directory}/registry-preflight.receipt.json`);
+          const preflight = JSON.parse(bytes);
+          if (preflight.dependenciesVerified !== true) throw new Error('REGISTRY_DEPENDENCIES_NOT_VERIFIED');
+          if (preflight.finalDisposition !== 'PASS') throw new Error(`REGISTRY_PREFLIGHT_NOT_PASS:${preflight.finalDisposition}`);
+          if (preflight.validatorReceipt?.finalDisposition !== 'PASS') throw new Error('REGISTRY_VALIDATOR_NOT_PASS');
+          if (preflight.pathClassification?.normalizedPaths?.length !== 32) throw new Error('PREFLIGHT_PATH_COUNT_MISMATCH');
+          if (preflight.pathClassification?.hEarthPaths?.length !== 30) throw new Error('PREFLIGHT_H_EARTH_PATH_COUNT_MISMATCH');
+          const outside = preflight.pathClassification?.outsidePaths ?? [];
+          const expectedOutside = [
+            '/.github/ai-router/projects/h-earth/entrypoint.v1.json',
+            '/.github/workflows/h-earth-terrain-and-estate-construction-v1.yml'
+          ];
+          if (JSON.stringify(outside) !== JSON.stringify(expectedOutside)) throw new Error('PREFLIGHT_OUTSIDE_PATH_SET_MISMATCH');
+          const receipt = {
+            schema: 'H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_PRECONSTRUCTION_PREFLIGHT_RECEIPT_v1',
+            result: 'PASS',
+            operationId: process.env.OPERATION_ID,
+            exactGoverningHead: process.env.EXACT_GOVERNING_HEAD,
+            candidateHead: process.env.GITHUB_SHA,
+            lockGeneration: Number(process.env.LOCK_GENERATION),
+            lockScope: process.env.LOCK_SCOPE,
+            scopeHash: process.env.SCOPE_HASH,
+            exactPathCount: 32,
+            hEarthScopedPathCount: 30,
+            outsideRouterPathCount: 2,
+            registryPreflightReceiptSha256: crypto.createHash('sha256').update(bytes).digest('hex'),
+            terrainConstructionPerformed: false,
+            estateConstructionPerformed: false,
+            manorConstructionPerformed: false,
+            previewPublished: false,
+            mergePerformed: false,
+            deploymentPerformed: false,
+            releasePerformed: false,
+            nextAction: 'MATERIALIZE_CONTROL_PLANE_CONTRACTS_AND_SOURCE_IDENTITIES'
+          };
+          fs.writeFileSync(`${directory}/preconstruction-preflight.receipt.json`, `${JSON.stringify(receipt, null, 2)}\n`);
+          NODE
+
+      - name: Upload exact preconstruction receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-terrain-estate-construction-v1-preflight
+          path: ${{ runner.temp }}/h-earth-terrain-estate-construction-v1
+          if-no-files-found: error
+          retention-days: 90

@@ -8,7 +8,8 @@
   ],
   "ownedExactPaths": [
     ".github/workflows/h-earth-repository-registry-preflight.yml",
-    ".github/workflows/h-earth-r06-c10-candidate-admission.yml"
+    ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
+    ".github/workflows/h-earth-terrain-and-estate-construction-v1.yml"
   ],
   "entrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
   "authorityBoundary": [
@@ -40,6 +41,20 @@
       "githubActionsWorkflow": ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
       "receiptSchema": "h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.exact-candidate-admission.receipt.schema.v1.json",
       "manualMetadataReconstructionAllowed": false
+    },
+    "terrainAndEstateConstructionV1": {
+      "authorityIssue": 706,
+      "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+      "exactGoverningHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+      "lockGeneration": 411,
+      "lockScope": "H_EARTH:TERRAIN_AND_ESTATE_CONSTRUCTION:GRATITUDE_REGION_MIRROR_MANOR_PRECINCT:V1:EXACT_32_PATH_SCOPE",
+      "scopeManifest": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/changed-path-manifest.v1.json",
+      "instructions": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/AGENTS.md",
+      "githubActionsWorkflow": ".github/workflows/h-earth-terrain-and-estate-construction-v1.yml",
+      "preconstructionDispositionRequired": "PASS",
+      "mergeAuthority": false,
+      "deploymentAuthority": false,
+      "releaseAuthority": false
     }
   },
   "localExecution": {
@@ -49,7 +64,9 @@
   "githubActionsExecution": {
     "candidateAdmissionWorkflow": ".github/workflows/h-earth-r06-c10-candidate-admission.yml",
     "requiredArtifact": "h-earth-r06-c10-candidate-admission-receipt",
-    "sameGateRequired": true
+    "sameGateRequired": true,
+    "terrainAndEstateConstructionWorkflow": ".github/workflows/h-earth-terrain-and-estate-construction-v1.yml",
+    "terrainAndEstatePreflightArtifact": "h-earth-terrain-estate-construction-v1-preflight"
   },
   "stoppingRules": [
     "REGISTRY_BLOCK_OR_STOP_DISPOSITION",

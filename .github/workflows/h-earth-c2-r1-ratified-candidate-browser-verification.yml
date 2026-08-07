@@ -1,0 +1,169 @@
+name: H-Earth Terrain Relief V2 Live Default Browser Verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - control/h-earth-c2-r1-ratified-candidate-browser-verification-001
+    paths:
+      - '.github/workflows/h-earth-c2-r1-ratified-candidate-browser-verification.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/h-earth-c2-r1-ratified-candidate-browser-verification.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-terrain-relief-v2-live-default-browser-verification
+  cancel-in-progress: false
+
+env:
+  OPERATION_ID: H_EARTH_TERRAIN_RELIEF_V2_POSTMERGE_PUBLIC_BROWSER_VERIFICATION_001
+  PUBLIC_URL: https://diamondgatebridge.com/showroom/globe/h-earth/
+  PROMOTION_MERGE_COMMIT: 6836288462bbbc7ab7c03d5f12fafaab119f9e36
+  REVIEWED_CANDIDATE_HEAD: 97003e9de386a8962fb46d0b370005b900a167d6
+  ARTIFACT_NAME: h-earth-terrain-relief-v2-live-default-browser-verification
+  PLAYWRIGHT_VERSION: 1.55.0
+
+jobs:
+  public-browser-verification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Checkout verification carrier read-only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Execute corrected public route cases in Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          runtime="$RUNNER_TEMP/h-earth-v2-live-browser-runtime"
+          evidence="$RUNNER_TEMP/h-earth-v2-live-browser-evidence"
+          mkdir -p "$runtime" "$evidence/screenshots"
+          cd "$runtime"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+          cat > runner.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+
+          const V2='../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+          const CP2='../../render/persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js';
+          const PUBLIC_MODULE='/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js';
+          const root=process.env.PUBLIC_URL;
+          const out=path.join(process.env.RUNNER_TEMP,'h-earth-v2-live-browser-evidence');
+          const shots=path.join(out,'screenshots');
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const write=(n,v)=>fs.writeFileSync(path.join(out,n),JSON.stringify(v,null,2)+'\n');
+          const viewports=[
+            {id:'DESKTOP_1440_X_900',width:1440,height:900,isMobile:false,hasTouch:false},
+            {id:'MOBILE_390_X_844',width:390,height:844,isMobile:true,hasTouch:true},
+            {id:'MOBILE_412_X_915',width:412,height:915,isMobile:true,hasTouch:true}
+          ];
+          const cases=[
+            {id:'NO_QUERY_LIVE_DEFAULT',url:root,visual:true,cp2:false,renderer:V2},
+            {id:'EXPLICIT_VISUAL_V2',url:root+'?visual=terrain-relief-v2',visual:true,cp2:false,renderer:V2},
+            {id:'EXPLICIT_CP2_REFERENCE',url:root+'?cp2=round1-1f520809',visual:false,cp2:true,renderer:CP2}
+          ];
+
+          const browser=await chromium.launch({headless:true});
+          const results=[];
+          let terminalError=null;
+          try{
+            for(const c of cases)for(const vp of viewports){
+              const ctx=await browser.newContext({viewport:{width:vp.width,height:vp.height},isMobile:vp.isMobile,hasTouch:vp.hasTouch,deviceScaleFactor:1});
+              const page=await ctx.newPage();
+              const errors={console:[],page:[],request:[],http:[]};
+              page.on('console',m=>{if(m.type()==='error')errors.console.push(m.text())});
+              page.on('pageerror',e=>errors.page.push({message:e.message,stack:e.stack??null}));
+              page.on('requestfailed',r=>errors.request.push({url:r.url(),error:r.failure()?.errorText??null}));
+              page.on('response',r=>{if(r.status()>=400)errors.http.push({url:r.url(),status:r.status()})});
+              const started=Date.now();
+              let response=null,navigationError=null;
+              try{response=await page.goto(c.url,{waitUntil:'domcontentloaded',timeout:90000})}catch(e){navigationError={message:e.message,stack:e.stack??null}}
+              try{await page.waitForFunction(()=>{
+                const route=document.getElementById('h-earth-functional-landscape-route');
+                const startup=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+                return route?.dataset.run8eReady==='true'||route?.dataset.run8eError==='true'||Boolean(startup?.firstFailureStage)||startup?.stages?.READY_PUBLISHED==='PASS';
+              },{timeout:150000})}catch{}
+              await page.waitForTimeout(1500);
+              const headers=response?await response.allHeaders():{};
+              const runtime=await page.evaluate(()=>{
+                const route=document.getElementById('h-earth-functional-landscape-route');
+                const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+                return {
+                  href:location.href,title:document.title,
+                  routeReady:route?.dataset.run8eReady??null,routeError:route?.dataset.run8eError??null,
+                  canvasPresent:canvas instanceof HTMLCanvasElement,
+                  startup:window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null,
+                  receipt:window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt?.()??null,
+                  resources:performance.getEntriesByType('resource').map(e=>e.name)
+                };
+              });
+              const prefix=`${c.id}__${vp.id}`;
+              const before=path.join(shots,prefix+'__BEFORE.png'),after=path.join(shots,prefix+'__AFTER.png');
+              await page.screenshot({path:before});
+              let interaction={attempted:false,error:null};
+              const canvas=page.locator('#h-earth-functional-landscape-canvas');
+              if(runtime.canvasPresent&&await canvas.isVisible().catch(()=>false)){
+                interaction.attempted=true;
+                try{
+                  await canvas.scrollIntoViewIfNeeded();const b=await canvas.boundingBox();if(!b)throw new Error('CANVAS_BOUNDING_BOX_UNAVAILABLE');
+                  const x=b.x+b.width*.55,y=b.y+b.height*.52;
+                  await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x-Math.min(120,b.width*.18),y+Math.min(50,b.height*.08),{steps:12});await page.mouse.up();await page.mouse.wheel(0,-360);await page.waitForTimeout(900);
+                }catch(e){interaction.error={message:e.message,stack:e.stack??null}}
+              }
+              await page.screenshot({path:after});
+              interaction.beforeSha256=sha(fs.readFileSync(before));interaction.afterSha256=sha(fs.readFileSync(after));interaction.changed=interaction.beforeSha256!==interaction.afterSha256;
+
+              const live=runtime.receipt?.liveGpu??null;
+              const ex=runtime.receipt?.runtimeExclusivity??null;
+              const co=live?.correspondence??null;
+              const modules=runtime.receipt?.moduleSources??[];
+              const externalInjectedModules=modules.filter(m=>m!==PUBLIC_MODULE);
+              const params=new URL(runtime.href).searchParams;
+              const selector=c.visual?params.get('visual')==='terrain-relief-v2'&&!params.has('cp2'):params.get('cp2')==='round1-1f520809'&&!params.has('visual');
+              const selection=live?.selectedRendererPath===c.renderer&&live?.additiveVisualRequested===c.visual&&live?.liveDifferential?.requested===c.cp2;
+              const v2=runtime.resources.some(u=>u.includes('persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'));
+              const cp2=runtime.resources.some(u=>u.includes('persistent-live-renderer.run8e-r3c.cp2-round1-1f520809.js'));
+              const baseline=runtime.resources.some(u=>/persistent-live-renderer\.run8e-r3c\.js(?:\?|$)/.test(u));
+              const rendererResources=runtime.resources.filter(u=>u.includes('/render/persistent-live-renderer.run8e-r3c'));
+              const resources=c.visual?v2&&!cp2&&!baseline:cp2&&!v2&&!baseline;
+              const exactlyOneRendererImport=rendererResources.length===1;
+              const moduleAuthority=modules.includes(PUBLIC_MODULE)&&ex?.legacyModuleScriptCount===0&&ex?.legacyCpuRouteControllerLoaded===false&&ex?.legacyCpuEnvironmentIntegrationLoaded===false&&ex?.legacyPublicDirectManipulationLoaded===false;
+              const exclusivity=moduleAuthority&&ex?.activeWebGL2ContextCount===1&&ex?.activePersistentRendererCount===1&&ex?.activeNavigationStateStreamCount===1&&ex?.activePointerTouchIntakeCount===1&&ex?.activeFramePresentationAuthorityCount===1&&ex?.cpuWorldRebuildPerCameraChange===false&&ex?.cssBitmapPreview===false&&ex?.duplicatePointerListeners===false&&ex?.packageUploadedOnce===true&&ex?.resourceIdentityStable===true;
+              const lifecycle=co?.packageUploadedOnce===true&&co?.resourceIdentityStable===true&&co?.noPostInitializationResourceCreation===true&&co?.noPostInitializationBufferUpload===true;
+              const visible=Number(live?.counters?.gpuFramebufferPresentationCount??0)>0;
+              const startup=runtime.routeReady==='true'&&runtime.routeError==='false'&&!runtime.startup?.firstFailureStage;
+              const pass=response?.status()===200&&(headers['content-type']??'').toLowerCase().includes('text/html')&&!navigationError&&runtime.title==='H-Earth · Live Interactive World'&&runtime.canvasPresent&&selector&&selection&&resources&&exactlyOneRendererImport&&exclusivity&&lifecycle&&visible&&startup&&Object.values(errors).every(a=>a.length===0)&&interaction.attempted&&interaction.changed&&!interaction.error;
+              results.push({caseId:c.id,viewport:vp,pass,elapsedMs:Date.now()-started,navigation:{status:response?.status()??null,contentType:headers['content-type']??null,error:navigationError,finalUrl:runtime.href},checks:{selector,selection,resources,exactlyOneRendererImport,moduleAuthority,exclusivity,lifecycle,visible,startup,v2ResourceLoaded:v2,cp2ResourceLoaded:cp2,baselineResourceLoaded:baseline},externalInjectedModules,runtime,interaction,errors});
+              await ctx.close();
+            }
+          }catch(e){terminalError={message:e.message,stack:e.stack??null}}finally{await browser.close()}
+
+          const pass=!terminalError&&results.length===9&&results.every(r=>r.pass);
+          const receipt={receiptId:'ROLE_3_H_EARTH_TERRAIN_RELIEF_V2_POSTMERGE_PUBLIC_BROWSER_RECEIPT_v1',operationId:process.env.OPERATION_ID,result:pass?'PASS':'BLOCKED',publicUrl:root,reviewedCandidateHead:process.env.REVIEWED_CANDIDATE_HEAD,promotionMergeCommit:process.env.PROMOTION_MERGE_COMMIT,scenarioCount:results.length,results,terminalError,unauthorizedMutationCount:0,productMutation:false,liveRouteMutation:false,generatedAt:new Date().toISOString()};
+          write('browser-verification-receipt.json',receipt);
+          const files=fs.readdirSync(out,{recursive:true}).filter(n=>fs.statSync(path.join(out,n)).isFile()).sort();
+          write('artifact-manifest-sha256.json',{files:files.map(n=>({path:n,sha256:sha(fs.readFileSync(path.join(out,n)))}))});
+          console.log(JSON.stringify({result:receipt.result,scenarios:results.map(r=>({caseId:r.caseId,viewport:r.viewport.id,pass:r.pass,checks:r.checks,externalInjectedModules:r.externalInjectedModules,errors:r.errors}))},null,2));
+          if(!pass)process.exitCode=1;
+          NODE
+          node runner.mjs
+
+      - name: Upload immutable browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ runner.temp }}/h-earth-v2-live-browser-evidence
+          if-no-files-found: error
+          retention-days: 90

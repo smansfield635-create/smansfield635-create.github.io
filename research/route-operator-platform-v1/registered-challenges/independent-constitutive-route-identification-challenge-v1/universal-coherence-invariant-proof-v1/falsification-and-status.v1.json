@@ -1,0 +1,58 @@
+{
+  "candidate": "IDENTITY_CONTINUITY_IS_CONSTRAINED_BY_ADMISSIBLE_CONSTITUTIVE_RELATIONAL_REACHABILITY",
+  "current_result": {
+    "controlled_mechanism": "SUPPORTED",
+    "formal_operator": "ESTABLISHED_CONDITIONALLY",
+    "independent_human_identifiability": "NOT_TESTED",
+    "real_intervention_cross_domain_portfolio": "NOT_EXECUTED",
+    "universal_proof": "NOT_ESTABLISHED"
+  },
+  "empirical_universality_disposition": "OPEN",
+  "existing_portfolio_disposition": "SURVIVES_WITH_MATERIAL_INSTRUMENT_REFINEMENT",
+  "formal_disposition": "DERIVED_FROM_FROZEN_AXIOMS",
+  "prohibition": "THIS_PACKAGE_MAY_NOT_BE_REPRESENTED_AS_COMPLETED_EMPIRICAL_PROOF_OF_A_UNIVERSAL_NATURAL_LAW",
+  "schema_id": "UNIVERSAL_COHERENCE_INVARIANT_FALSIFICATION_AND_STATUS_v1",
+  "survival_requirements": [
+    "INDEPENDENT_BOUNDARY_AND_ROUTE_AGREEMENT",
+    "SELECTIVE_INTERVENTION_PREDICTION",
+    "UNRELATED_CAPACITY_NONCOMPENSATION",
+    "SUPPORTED_OUTPUT_PROVENANCE_DISCRIMINATION",
+    "RELATION_SPECIFIC_RESTORATION",
+    "HYSTERESIS_WHERE_PREDECLARED",
+    "ADVANTAGE_OR_NONREDUNDANT_INFORMATION_BEYOND_COMPARATORS",
+    "NO_POST_RESULT_REPAIR"
+  ],
+  "terminal_failures": [
+    {
+      "condition": "Qualified independent analysts given the same admissible pre-outcome evidence produce materially incompatible boundaries or constitutive-route structures beyond frozen tolerance.",
+      "disposition": "THEORY_UNDERDEFINED_OR_UNIVERSAL_IDENTIFIABILITY_FALSE",
+      "id": "NO_INDEPENDENT_IDENTIFIABILITY"
+    },
+    {
+      "condition": "Targeted loss of a declared required relation produces no selective change in the associated capacity or identity-conditioned route across an adequately powered admissible portfolio.",
+      "disposition": "MECHANISM_FALSE",
+      "id": "NO_SELECTIVE_CONSEQUENCE"
+    },
+    {
+      "condition": "Unrelated capacity reliably restores a route whose declared required relation remains absent, without an admissible alternative route.",
+      "disposition": "NONCOMPENSATION_AXIOM_FALSE",
+      "id": "UNRELATED_COMPENSATION"
+    },
+    {
+      "condition": "The invariant representation adds no reproducible selective prediction, provenance distinction, or restoration distinction beyond frozen generic graph and output-history comparators.",
+      "disposition": "THEORY_REDUNDANT",
+      "id": "OUTPUT_HISTORY_OR_GENERIC_GRAPH_EQUIVALENCE"
+    },
+    {
+      "condition": "Identity-continuity classifications can be changed without observable consequence by arbitrary relabeling of routes or admissibility criteria.",
+      "disposition": "IDENTITY_CONSTRUCT_NONEMPIRICAL",
+      "id": "ARBITRARY_IDENTITY_LABELING"
+    },
+    {
+      "condition": "The candidate survives only by changing boundaries, route topology, admissibility rules, thresholds, or exclusions after outcome inspection.",
+      "disposition": "CANDIDATE_REJECTED",
+      "id": "POST_RESULT_REPAIR_REQUIRED"
+    }
+  ],
+  "version": "1.0.0"
+}

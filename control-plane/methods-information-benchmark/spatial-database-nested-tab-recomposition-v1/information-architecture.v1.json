@@ -1,0 +1,54 @@
+{
+  "schema": "METHODS_SPATIAL_DATABASE_INFORMATION_ARCHITECTURE_v1",
+  "status": "PASS_FROZEN",
+  "fingerprint": "9428d8764026c6e8c75aa38d680be9db54e5d37aee3b3aa0480e41a0db247b3f",
+  "lane": {
+    "id": "pressure-and-capacity",
+    "title": "Pressure & Capacity",
+    "recordOrder": [
+      "pressure-field",
+      "capacity-field",
+      "pcr"
+    ],
+    "defaultRecord": "pressure-field",
+    "defaultLens": "practical"
+  },
+  "records": {
+    "pressure-field": {
+      "title": "Pressure Field",
+      "expression": "Π = G × X",
+      "relationship": "PCR_NUMERATOR"
+    },
+    "capacity-field": {
+      "title": "Usable Capacity",
+      "expression": "K = P × R × A × C",
+      "relationship": "PCR_DENOMINATOR"
+    },
+    "pcr": {
+      "title": "Pressure-to-Capacity Ratio",
+      "expression": "PCR = Π / max(K, εK)",
+      "relationship": "INTEGRATION"
+    }
+  },
+  "lensOrder": [
+    "practical",
+    "engineering",
+    "evidence"
+  ],
+  "progressiveDisclosure": [
+    "VISIBLE_RECORD_IDENTITY",
+    "PRACTICAL_DEFAULT",
+    "ONE_LENS_REPLACES_ACTIVE_SURFACE",
+    "ONE_SUBTAB_DEPTH",
+    "EXACT_CONTEXTUAL_RETURN"
+  ],
+  "evidenceHolds": [
+    "UNIVERSAL_DEFAULTS_NOT_ESTABLISHED",
+    "PREDICTIVE_VALIDITY_NOT_ESTABLISHED",
+    "CAUSAL_INTERPRETATION_NOT_ESTABLISHED",
+    "VALIDATED_THRESHOLDS_NOT_ESTABLISHED",
+    "PRODUCTION_READINESS_NOT_ESTABLISHED",
+    "CROSS_DOMAIN_TRANSFER_NOT_ESTABLISHED"
+  ],
+  "laterLaneExpansionAuthorized": false
+}

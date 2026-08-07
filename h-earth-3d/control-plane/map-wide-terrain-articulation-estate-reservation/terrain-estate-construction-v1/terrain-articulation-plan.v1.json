@@ -1,0 +1,102 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_ARTICULATION_PLAN_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "terrainTruth": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+  "designIntent": "MATERIAL_MAP_WIDE_RELIEF_DEPTH_LANDFORM_READABILITY_AND_LONG_RANGE_COHERENCE_WITHOUT_MUTATING_RUN8B_IN_PLACE",
+  "candidateLaw": {
+    "composition": "RUN8B_ELEVATION_PLUS_BOUNDED_SUCCESSOR_RELIEF",
+    "truthMutation": false,
+    "deterministic": true,
+    "continuous": true,
+    "analyticDerivativesRequired": true,
+    "protectedRegionOffsetsMustBeZero": true
+  },
+  "macroLandforms": [
+    {
+      "id": "MOUNTAINWARD_BACKBONE",
+      "class": "ELLIPTICAL_RIDGE",
+      "center": {"x": -64, "z": -274},
+      "radius": {"x": 172, "z": 72},
+      "maximumAddedElevation": 18,
+      "purpose": "STRENGTHEN_MOUNTAINWARD_DEPTH_AND_DISTANT_FORM_READABILITY"
+    },
+    {
+      "id": "WESTERN_SHOULDER",
+      "class": "ELLIPTICAL_RIDGE",
+      "center": {"x": -184, "z": -212},
+      "radius": {"x": 82, "z": 92},
+      "maximumAddedElevation": 9,
+      "purpose": "BREAK_MAP_WIDE_PLANARITY_WITHOUT_CLOSING_APPROACH_CORRIDORS"
+    },
+    {
+      "id": "EASTERN_SHOULDER",
+      "class": "ELLIPTICAL_RIDGE",
+      "center": {"x": 196, "z": -252},
+      "radius": {"x": 84, "z": 88},
+      "maximumAddedElevation": 12,
+      "purpose": "BALANCE_LONG_RANGE_RELIEF_AND_FRAME_CENTRAL_FIELD"
+    }
+  ],
+  "mesoRelief": {
+    "class": "BAND_LIMITED_MULTI_DIRECTIONAL_ROLLING_FIELD",
+    "maximumAddedMagnitude": 3.5,
+    "frequencies": [0.018, 0.026, 0.039],
+    "directionVectors": [
+      {"x": 0.83, "z": 0.56},
+      {"x": -0.48, "z": 0.88},
+      {"x": 0.67, "z": -0.74}
+    ],
+    "purpose": "REDUCE_REPETITION_AND_FLATNESS_WHILE_REMAINING_BAND_LIMITED"
+  },
+  "acceptedPresentationReference": {
+    "commit": "97003e9de386a8962fb46d0b370005b900a167d6",
+    "application": "NONPUBLIC_PREVIEW_NORMAL_SHADING_ONLY",
+    "geometryTransplant": false,
+    "reliefHeightAmplitude": 0.22,
+    "maximumNormalDeviationDegrees": 22,
+    "fullInfluenceThroughDistance": 120,
+    "fadeToZeroByDistance": 300,
+    "directionalPhaseCount": 3
+  },
+  "hardZeroOffsetZones": [
+    {
+      "id": "RESERVED_ESTATE_ENVELOPE_WITH_TRANSITION_MARGIN",
+      "bounds": {"xMinimum": 52, "xMaximum": 108, "zMinimum": -200, "zMaximum": -144},
+      "reason": "PRESERVE_ACCEPTED_ESTATE_SITE_AND_TWO_HILL_RELATION"
+    },
+    {
+      "id": "ENTRY_ZONE",
+      "bounds": {"xMinimum": -32, "xMaximum": 32, "zMinimum": -140, "zMaximum": -80},
+      "reason": "PRESERVE_SEPARATE_CONNECTED_ENTRY_AND_EXISTING_COAST_ARRIVAL"
+    }
+  ],
+  "protectedCorridor": {
+    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "axis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+    "zeroOffsetHalfWidth": 10,
+    "minimumTransitionHalfWidth": 18,
+    "reason": "LOW_CORRIDOR_MUST_REMAIN_OPEN_AND_LEGIBLE"
+  },
+  "coastalProtection": {
+    "fullSuppressionAtOrBeyondZ": -72,
+    "transitionBeginsAtZ": -104,
+    "waterMutation": false,
+    "reason": "NO_WATER_OR_ENTRY_BOUNDARY_MUTATION"
+  },
+  "continuityRules": [
+    "ALL_RELIEF_TERMS_USE_C1_OR_BETTER_ENVELOPES",
+    "NO_STEP_DISCONTINUITIES_AT_PROTECTED_MASKS",
+    "NO_GEOMETRIC_OFFSET_IN_RESERVED_ESTATE_CORE_ENTRY_ZONE_OR_LOW_CORRIDOR_CORE",
+    "NO_CHANGE_TO_RUN8B_SOURCE_MODULE",
+    "NO_CHANGE_TO_WATER_CAMERA_NAVIGATION_OR_LIVE_RUNTIME"
+  ],
+  "visualSuccessCriteria": [
+    "MOUNTAINWARD_FORM_READS_AS_DEEPER_AND_MORE_STRUCTURED",
+    "MIDFIELD_IS_NOT_PERCEPTUALLY_PLANAR",
+    "LAND_FORMS_REMAIN_CONTINUOUS_UNDER_TRAVERSAL",
+    "ESTATE_PRECINCT_REMAINS_VISUALLY_NESTED_IN_SURROUNDING_TERRAIN",
+    "TWO_HILL_AND_LOW_CORRIDOR_RELATION_REMAINS_CLEAR",
+    "BEACHWARD_AND_MOUNTAINWARD_VIEWS_REMAIN_OPEN",
+    "ENTRY_ZONE_REMAINS_DISTINCT_BUT_CONNECTED"
+  ]
+}

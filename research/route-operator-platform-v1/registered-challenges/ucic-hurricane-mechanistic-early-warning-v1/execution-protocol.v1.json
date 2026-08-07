@@ -1,0 +1,57 @@
+{
+  "operation": "UCIC_HURRICANE_MECHANISTIC_EARLY_WARNING_EXECUTION_v1",
+  "classification": "RETROSPECTIVE_PREACQUISITION_FIXED_ANALYSIS_ON_TC_RADAR_MERGED_METADATA",
+  "source": "https://raw.githubusercontent.com/MichaelFischerWx/TC-ATLAS/main/tc_radar_metadata_merge.json",
+  "source_object": "NOAA TC-RADAR merged-analysis metadata as distributed by TC-ATLAS",
+  "analysis_window": [2004, 2024],
+  "calibration_years": [2004, 2018],
+  "holdout_years": [2019, 2024],
+  "required_fields": [
+    "storm_name",
+    "datetime",
+    "year",
+    "vmax_kt",
+    "min_pressure_hpa",
+    "tilt_magnitude_km",
+    "rmw_km",
+    "coverage",
+    "shear_magnitude_kt",
+    "sst",
+    "rhlo",
+    "vmpi",
+    "dvmax_24h"
+  ],
+  "outcome": {
+    "name": "rapid_intensification_24h",
+    "rule": "dvmax_24h >= 30 kt"
+  },
+  "coherence": {
+    "name": "C_t",
+    "relations": ["low vortex tilt", "compact radius of maximum wind", "radar structural coverage"],
+    "normalization": "calibration-period empirical percentile only",
+    "formula": "min(1-ECDF_train(tilt), 1-ECDF_train(rmw), ECDF_train(coverage))"
+  },
+  "momentum": {
+    "name": "M_t",
+    "formula": "C_t - previous same-storm C_t",
+    "eligible_previous_interval_hours": [6, 36],
+    "missing_previous_case": "UNEVALUABLE_FOR_MOMENTUM_MODEL"
+  },
+  "models": {
+    "state_environment": ["vmax_kt", "min_pressure_hpa", "shear_magnitude_kt", "sst", "rhlo", "vmpi"],
+    "structural": ["C_t", "M_t"],
+    "combined": ["vmax_kt", "min_pressure_hpa", "shear_magnitude_kt", "sst", "rhlo", "vmpi", "C_t", "M_t"]
+  },
+  "fit": "standardized L2 logistic regression fit on calibration years only",
+  "primary_metric": "holdout ROC AUC(combined) - ROC AUC(state_environment)",
+  "secondary_metrics": ["ROC AUC", "average precision", "Brier score", "structural-only ROC AUC"],
+  "uncertainty": "2000-replicate holdout storm-cluster bootstrap, seed 45125661",
+  "terminal_rule": {
+    "SUPPORTED_WITH_LIMITATIONS": "incremental AUC > 0 and bootstrap 95% CI lower bound > 0",
+    "SIGNAL_PRESENT_INCONCLUSIVE": "incremental AUC > 0 but bootstrap 95% CI includes 0",
+    "NOT_SUPPORTED": "incremental AUC <= 0",
+    "UNEVALUABLE": "holdout lacks both outcome classes or fewer than 10 evaluable holdout cases"
+  },
+  "claim_ceiling": "retrospective TC-RADAR structural early-warning evidence only; not constitutive-route identification, causality, prospectivity, or universality",
+  "post_result_retuning": "PROHIBITED"
+}

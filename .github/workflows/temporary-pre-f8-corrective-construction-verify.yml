@@ -6,6 +6,9 @@ on:
     paths:
       - 'control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/**'
       - '.github/workflows/temporary-pre-f8-corrective-construction-verify.yml'
+concurrency:
+  group: pre-f8-corrective-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:

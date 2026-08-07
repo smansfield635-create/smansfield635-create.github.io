@@ -33,6 +33,9 @@ const FINE_U_MIN=-340;
 const FINE_U_MAX=340;
 const FINE_V_MIN=-230;
 const FINE_V_MAX=230;
+const COAST_CURVE_SAMPLES_PER_SEGMENT=8;
+const COAST_BOUNDARY_SUBDIVISIONS=4;
+const COAST_TANGENT_SCALE=.18;
 const MAX_TARGET_ARC=PLANET_RADIUS*Math.PI*.9;
 
 const PALETTE=freeze({
@@ -51,6 +54,8 @@ export const AUDRALIA_OPEN_WORLD_AUTHORING_CONTRACT=freeze({
   canonicalSurfaceAuthority:SURFACE_AUTHORITY,geographicTruthAuthorityCount:1,
   scaleRepresentationRule:'ONE_CANONICAL_SURFACE_ADAPTIVE_SPATIAL_SAMPLING',
   localFidelityRestoration:'FULL_LOCAL_SOURCE_INSIDE_PROTECTED_DOMAIN_WITH_FIXED_SPATIAL_FEATHER_OUTSIDE',
+  canonicalMacroCoastCurve:'ANCHOR_PRESERVING_CUBIC_HERMITE',
+  coastlineBoundaryResolution:'CAMERA_INDEPENDENT_COAST_CROSSING_CELL_SUBDIVISION',
   cameraDistanceCanChangeGeography:false,localMacroTransition:'CANONICAL_FIELD_SPATIAL_RECONCILIATION_NOT_CAMERA_LOD',
   stitchGeographicAuthority:false,coastalTerrainMaterialIntegrated:true,independentBeachVisualAuthority:false,
   separateBeachGeometryConstructed:false,separateWetSandGeometryConstructed:false,seawardWetTransitionGeometryConstructed:false,
@@ -92,9 +97,24 @@ const COAST_CONTROL_POINTS=freeze([
   [-635,-1675],[-920,-1810],[-1190,-1595],[-1050,-1360],[-1405,-1235],[-1535,-965],
   [-1280,-825],[-1605,-705],[-1700,-505]
 ].map(freeze));
+function hermitePoint(p0,p1,p2,p3,t){
+  const t2=t*t,t3=t2*t,h00=2*t3-3*t2+1,h10=t3-2*t2+t,h01=-2*t3+3*t2,h11=t3-t2;
+  const m1=[(p2[0]-p0[0])*COAST_TANGENT_SCALE,(p2[1]-p0[1])*COAST_TANGENT_SCALE];
+  const m2=[(p3[0]-p1[0])*COAST_TANGENT_SCALE,(p3[1]-p1[1])*COAST_TANGENT_SCALE];
+  return freeze([h00*p1[0]+h10*m1[0]+h01*p2[0]+h11*m2[0],h00*p1[1]+h10*m1[1]+h01*p2[1]+h11*m2[1]]);
+}
+function buildCoastCurvePoints(){
+  const result=[],count=COAST_CONTROL_POINTS.length;
+  for(let i=0;i<count;i++){
+    const p0=COAST_CONTROL_POINTS[(i-1+count)%count],p1=COAST_CONTROL_POINTS[i],p2=COAST_CONTROL_POINTS[(i+1)%count],p3=COAST_CONTROL_POINTS[(i+2)%count];
+    for(let step=0;step<COAST_CURVE_SAMPLES_PER_SEGMENT;step++)result.push(hermitePoint(p0,p1,p2,p3,step/COAST_CURVE_SAMPLES_PER_SEGMENT));
+  }
+  return freeze(result);
+}
+const COAST_CURVE_POINTS=buildCoastCurvePoints();
 function pointInPolygon(u,v){
-  let inside=false;for(let i=0,j=COAST_CONTROL_POINTS.length-1;i<COAST_CONTROL_POINTS.length;j=i,i++){
-    const a=COAST_CONTROL_POINTS[i],b=COAST_CONTROL_POINTS[j];
+  let inside=false;for(let i=0,j=COAST_CURVE_POINTS.length-1;i<COAST_CURVE_POINTS.length;j=i,i++){
+    const a=COAST_CURVE_POINTS[i],b=COAST_CURVE_POINTS[j];
     if((a[1]>v)!==(b[1]>v)&&u<(b[0]-a[0])*(v-a[1])/((b[1]-a[1])||1e-9)+a[0])inside=!inside;
   }return inside;
 }
@@ -103,7 +123,7 @@ function pointSegmentDistance(u,v,a,b){
   return Math.hypot(u-(a[0]+du*t),v-(a[1]+dv*t));
 }
 function gratitudeCoastSample(u,v){
-  let distance=Infinity;for(let i=0;i<COAST_CONTROL_POINTS.length;i++)distance=Math.min(distance,pointSegmentDistance(u,v,COAST_CONTROL_POINTS[i],COAST_CONTROL_POINTS[(i+1)%COAST_CONTROL_POINTS.length]));
+  let distance=Infinity;for(let i=0;i<COAST_CURVE_POINTS.length;i++)distance=Math.min(distance,pointSegmentDistance(u,v,COAST_CURVE_POINTS[i],COAST_CURVE_POINTS[(i+1)%COAST_CURVE_POINTS.length]));
   let inside=pointInPolygon(u,v);
   if(Math.abs(u)<=320&&v>-280){const field=gratitudeShorelineZ(u)-(v+LOCAL_CENTER_Z);inside=field>=0;distance=Math.min(distance,Math.abs(field));}
   return freeze({inside,distance,field:inside?distance:-distance});
@@ -155,6 +175,12 @@ function buildAxis(min,max,fineMin,fineMax){
   while(x<max-1e-9){let step=x>=fineMin&&x<fineMax?FINE_STEP:COARSE_STEP,next=Math.min(max,x+step);if(x<fineMin&&next>fineMin)next=fineMin;if(x<fineMax&&next>fineMax)next=fineMax;if(next<=x+1e-9)next=Math.min(max,x+step);values.push(next);x=next;}
   return freeze(values);
 }
+function decorateCanonicalSample(u,v,epsilon=.7){
+  const sample=sampleCanonicalGratitude(u,v);sample.position=tangentPosition(u,v,sample.elevation);
+  const left=sampleCanonicalGratitude(u-epsilon,v),right=sampleCanonicalGratitude(u+epsilon,v),back=sampleCanonicalGratitude(u,v-epsilon),forward=sampleCanonicalGratitude(u,v+epsilon);
+  const pLeft=tangentPosition(u-epsilon,v,left.elevation),pRight=tangentPosition(u+epsilon,v,right.elevation),pBack=tangentPosition(u,v-epsilon,back.elevation),pForward=tangentPosition(u,v+epsilon,forward.elevation);
+  let normal=norm(cross(sub(pForward,pBack),sub(pRight,pLeft)));if(dot(normal,tangentDirection(u,v))<0)normal=scale(normal,-1);sample.normal=normal;return sample;
+}
 function interpolateRecord(a,b,t){return{u:mix(a.u,b.u,t),v:mix(a.v,b.v,t),position:mix3(a.position,b.position,t),normal:norm(mix3(a.normal,b.normal,t)),color:mix3(a.color,b.color,t),field:mix(a.field,b.field,t)};}
 function clipPositive(records){
   const out=[];for(let i=0;i<records.length;i++){const current=records[i],previous=records[(i-1+records.length)%records.length],ci=current.field>=0,pi=previous.field>=0;if(ci!==pi){const den=previous.field-current.field,t=Math.abs(den)<1e-12?.5:clamp(previous.field/den,0,1);out.push(interpolateRecord(previous,current,t));}if(ci)out.push(current);}return out;
@@ -162,7 +188,7 @@ function clipPositive(records){
 function emitTerrainRecord(vertices,record){const index=vertices.length/10;vertices.push(...record.position,...record.normal,...record.color,1);return index;}
 function buildGratitudeMesh(){
   const us=buildAxis(CANONICAL_BOUNDS.uMin,CANONICAL_BOUNDS.uMax,FINE_U_MIN,FINE_U_MAX),vsAxis=buildAxis(CANONICAL_BOUNDS.vMin,CANONICAL_BOUNDS.vMax,FINE_V_MIN,FINE_V_MAX),columns=us.length,rows=vsAxis.length,samples=new Array(columns*rows),vertices=[],indices=[];
-  let clipped=0,omitted=0,sandSamples=0,localSamples=0,minElevation=Infinity,maxElevation=-Infinity;const at=(r,c)=>r*columns+c;
+  let clipped=0,omitted=0,sandSamples=0,localSamples=0,minElevation=Infinity,maxElevation=-Infinity,refinedCells=0,refinedTriangles=0;const at=(r,c)=>r*columns+c;
   for(let r=0;r<rows;r++)for(let c=0;c<columns;c++){
     const u=us[c],v=vsAxis[r],sample=sampleCanonicalGratitude(u,v);sample.position=tangentPosition(u,v,sample.elevation);sample.normal=tangentDirection(u,v);samples[at(r,c)]=sample;if(sample.terrain){localSamples++;if((sample.terrain.coastline?.beachWeight??0)>.08)sandSamples++;}if(sample.inside){minElevation=Math.min(minElevation,sample.elevation);maxElevation=Math.max(maxElevation,sample.elevation);}
   }
@@ -171,8 +197,20 @@ function buildGratitudeMesh(){
     let n=norm(cross(sub(forward.position,back.position),sub(right.position,left.position)));if(dot(n,tangentDirection(center.u,center.v))<0)n=scale(n,-1);center.normal=n;
   }
   const emitTriangle=triangle=>{const polygon=clipPositive(triangle);if(polygon.length<3){omitted++;return;}if(polygon.length!==3||triangle.some(x=>x.field<0))clipped++;const base=emitTerrainRecord(vertices,polygon[0]);for(let i=1;i<polygon.length-1;i++)indices.push(base,emitTerrainRecord(vertices,polygon[i]),emitTerrainRecord(vertices,polygon[i+1]));};
-  for(let r=0;r<rows-1;r++)for(let c=0;c<columns-1;c++){const a=samples[at(r,c)],b=samples[at(r,c+1)],d=samples[at(r+1,c)],e=samples[at(r+1,c+1)];emitTriangle([a,d,b]);emitTriangle([b,d,e]);}
-  return freeze({vertices:new Float32Array(vertices),indices:new Uint32Array(indices),statistics:freeze({surfaceAuthority:SURFACE_AUTHORITY,triangleCount:indices.length/3,adaptiveSpatialSampling:true,coarseStepAuthoringUnits:COARSE_STEP,fineStepAuthoringUnits:FINE_STEP,fineUInterval:freeze([FINE_U_MIN,FINE_U_MAX]),fineVInterval:freeze([FINE_V_MIN,FINE_V_MAX]),coastlineTopology:'SUBCELL_SCALAR_FIELD_CLIPPED',clippedCoastlineTriangleCount:clipped,omittedOceanTriangles:omitted,terrainIntegratedSandSampleCount:sandSamples,localInfluencedSampleCount:localSamples,terrainIntegratedSand:true,independentBeachVisualAuthority:false,separateBeachGeometryConstructed:false,separateWetSandGeometryConstructed:false,singleSurfaceAcrossAllScales:true,cameraDistanceCanChangeGeography:false,geographicInterpolationConstructed:false,localScaleCompressed:false,localArcScaleOneToOne:true,localWidthAuthoringUnits:512,localDepthAuthoringUnits:384,sourceTerrainMutation:false,minimumElevation:minElevation,maximumElevation:maxElevation,fullLocalSourceInsideProtectedDomain:true})});
+  const shouldRefine=(a,b,d,e,u0,u1,v0,v1)=>{
+    const fields=[a.field,b.field,d.field,e.field],positive=fields.filter(value=>value>=0).length,span=Math.hypot(u1-u0,v1-v0),minimum=Math.min(...fields.map(Math.abs));
+    return (positive>0&&positive<4)||minimum<=span*1.25;
+  };
+  const emitRefinedCell=(u0,u1,v0,v1)=>{
+    refinedCells++;const n=COAST_BOUNDARY_SUBDIVISIONS,grid=new Array((n+1)*(n+1)),idx=(r,c)=>r*(n+1)+c;
+    for(let r=0;r<=n;r++)for(let c=0;c<=n;c++){const u=mix(u0,u1,c/n),v=mix(v0,v1,r/n);grid[idx(r,c)]=decorateCanonicalSample(u,v,.55);}
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++){const a=grid[idx(r,c)],b=grid[idx(r,c+1)],d=grid[idx(r+1,c)],e=grid[idx(r+1,c+1)];emitTriangle([a,d,b]);emitTriangle([b,d,e]);refinedTriangles+=2;}
+  };
+  for(let r=0;r<rows-1;r++)for(let c=0;c<columns-1;c++){
+    const a=samples[at(r,c)],b=samples[at(r,c+1)],d=samples[at(r+1,c)],e=samples[at(r+1,c+1)],u0=us[c],u1=us[c+1],v0=vsAxis[r],v1=vsAxis[r+1];
+    if(shouldRefine(a,b,d,e,u0,u1,v0,v1))emitRefinedCell(u0,u1,v0,v1);else{emitTriangle([a,d,b]);emitTriangle([b,d,e]);}
+  }
+  return freeze({vertices:new Float32Array(vertices),indices:new Uint32Array(indices),statistics:freeze({surfaceAuthority:SURFACE_AUTHORITY,triangleCount:indices.length/3,adaptiveSpatialSampling:true,coarseStepAuthoringUnits:COARSE_STEP,fineStepAuthoringUnits:FINE_STEP,fineUInterval:freeze([FINE_U_MIN,FINE_U_MAX]),fineVInterval:freeze([FINE_V_MIN,FINE_V_MAX]),coastlineTopology:'SUBCELL_SCALAR_FIELD_CLIPPED',canonicalMacroCoastCurve:'ANCHOR_PRESERVING_CUBIC_HERMITE',macroCoastAuthoringAnchorCount:COAST_CONTROL_POINTS.length,macroCoastResolvedSampleCount:COAST_CURVE_POINTS.length,coastBoundarySubdivisionFactor:COAST_BOUNDARY_SUBDIVISIONS,coastBoundaryRefinedCellCount:refinedCells,coastBoundaryRefinedTriangleAttemptCount:refinedTriangles,clippedCoastlineTriangleCount:clipped,omittedOceanTriangles:omitted,terrainIntegratedSandSampleCount:sandSamples,localInfluencedSampleCount:localSamples,terrainIntegratedSand:true,independentBeachVisualAuthority:false,separateBeachGeometryConstructed:false,separateWetSandGeometryConstructed:false,singleSurfaceAcrossAllScales:true,cameraDistanceCanChangeGeography:false,geographicInterpolationConstructed:false,localScaleCompressed:false,localArcScaleOneToOne:true,localWidthAuthoringUnits:512,localDepthAuthoringUnits:384,sourceTerrainMutation:false,minimumElevation:minElevation,maximumElevation:maxElevation,fullLocalSourceInsideProtectedDomain:true})});
 }
 
 const OTHER_CONTINENTS=freeze([[28,38,.27,1.3,.7],[-24,72,.28,.82,1.28],[15,119,.25,1.4,.66],[-32,154,.27,1.08,.84],[34,-149,.26,.78,1.34],[-27,-112,.29,1.3,.76],[8,-76,.26,.9,1.26],[-42,-37,.24,1.38,.68]].map(freeze));
@@ -283,7 +321,7 @@ export function createMapWideEnvironmentRenderer(canvas){
   function panScreen(dx,dy){const amount=clamp(state.distance*.0017,.24,9),rightU=Math.cos(state.yaw),rightV=-Math.sin(state.yaw),forwardU=Math.sin(state.yaw),forwardV=Math.cos(state.yaw);pan((-dx*rightU+dy*forwardU)*amount,(-dx*rightV+dy*forwardV)*amount);}
   function focusGratitude(){Object.assign(state,{yaw:-.62,pitch:.88,distance:720,targetU:0,targetV:-4});render();}
   function planetaryVantage(){state.distance=5000;state.pitch=1.02;render();}
-  const evidence=freeze({operationId:OPERATION_ID,coherenceOperation:COHERENCE_OPERATION,surfaceAuthority:SURFACE_AUTHORITY,geographicTruthAuthorityCount:1,scaleDependentGeographicSubstitution:false,gratitudeUsesSameMeshAtAllViewScales:true,adaptiveSpatialSampling:true,fullLocalSourceInsideProtectedDomain:true,stitchGeographicInterpolationConstructed:false,independentBeachVisualAuthority:false,separateBeachGeometryConstructed:false,separateWetSandGeometryConstructed:false,seawardWetTransitionGeometryConstructed:false,coastalTerrainMaterialIntegrated:true,shallowCoastalWaterMaterial:true,planetaryOceanMaskedUnderCanonicalGratitudeLand:true,waterfallReservoirRegionProtected:true,planetaryOceanSingleSurface:true,localOceanOverlayConstructed:false,sourceTerrainMutation:false});
+  const evidence=freeze({operationId:OPERATION_ID,coherenceOperation:COHERENCE_OPERATION,surfaceAuthority:SURFACE_AUTHORITY,geographicTruthAuthorityCount:1,scaleDependentGeographicSubstitution:false,gratitudeUsesSameMeshAtAllViewScales:true,adaptiveSpatialSampling:true,fullLocalSourceInsideProtectedDomain:true,canonicalMacroCoastCurve:'ANCHOR_PRESERVING_CUBIC_HERMITE',cameraIndependentCoastBoundaryRefinement:true,stitchGeographicInterpolationConstructed:false,independentBeachVisualAuthority:false,separateBeachGeometryConstructed:false,separateWetSandGeometryConstructed:false,seawardWetTransitionGeometryConstructed:false,coastalTerrainMaterialIntegrated:true,shallowCoastalWaterMaterial:true,planetaryOceanMaskedUnderCanonicalGratitudeLand:true,waterfallReservoirRegionProtected:true,planetaryOceanSingleSurface:true,localOceanOverlayConstructed:false,sourceTerrainMutation:false});
   return freeze({planetMesh,continentMesh:gratitudeMesh,gratitudeMesh,stitchMesh:empty,beachMesh:empty,waterMesh,state,render,orbit,zoom,zoomByFactor,pan,panScreen,fitWorld:focusGratitude,focusGratitude,planetaryVantage,getViewScale:viewScale,getCameraSafety:()=>freeze({distanceSafe:state.distance>=95&&state.distance<=5600,continuousScaleRecognized:['LOCAL','REGION','CONTINENT','PLANETARY'].includes(viewScale()),geographySourceInvariantAcrossScale:true,canonicalTargetStableUnderPureZoom:true,fixedFovAcrossScale:true,liveMutationAbsent:true}),getOW01GeographicEvidence:()=>evidence,evaluateCanonicalGeographicIdentity,evaluateSurfaceCorrespondence:()=>surfaceCorrespondence,getSnapshot:()=>freeze({...state,viewScale:viewScale(),planetStatistics:planetMesh.statistics,continentStatistics:gratitudeMesh.statistics,gratitudeStatistics:gratitudeMesh.statistics,stitchStatistics:empty.statistics,beachStatistics:empty.statistics,waterStatistics:waterMesh.statistics,worldContract:AUDRALIA_OPEN_WORLD_AUTHORING_CONTRACT,surfaceCorrespondence,authoringRegionIsWorldBoundary:false,wholePlanetMustFitViewport:false,manorGeometryConstructed:false,liveRuntimeMutated:false,liveCameraMutated:false,liveNavigationMutated:false,liveWaterMutated:false})});
 }
 export default createMapWideEnvironmentRenderer;

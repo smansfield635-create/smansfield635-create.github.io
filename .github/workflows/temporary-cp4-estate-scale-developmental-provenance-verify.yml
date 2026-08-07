@@ -1,0 +1,19 @@
+name: Temporary CP4 Estate-Scale Developmental Provenance Verify
+
+on:
+  pull_request:
+    paths:
+      - 'control-plane/whole-estate/estate-scale-developmental-provenance-v1/**'
+      - '.github/workflows/temporary-cp4-estate-scale-developmental-provenance-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-checkpoint-4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Checkpoint 4 estate-scale developmental provenance
+        run: node control-plane/whole-estate/estate-scale-developmental-provenance-v1/verify.v1.mjs

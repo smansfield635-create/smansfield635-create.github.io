@@ -9,17 +9,35 @@ from datetime import datetime, timezone
 
 ROOT = pathlib.Path(__file__).resolve().parent
 CP1 = ROOT / "checkpoint-1-protocol-freeze.v1.json"
+CP2_CORRECTION = ROOT / "checkpoint-2-source-schema-correction.v1.json"
 OUT = ROOT / "checkpoint-2-failure-source-extraction.v1.json"
 RAW_DIR = ROOT / "cp2-raw"
 RAW_DIR.mkdir(exist_ok=True)
 
 API = "https://api.fdic.gov/banks/financials"
-FIELDS = ["CERT", "REPDTE", "ASSET", "DEP", "EQ", "LNLSNET", "ROA", "NIM"]
+# CP1 intended MARGIN_CAPACITY as Net Interest Margin. FDIC field NIM is
+# net interest income; NIMY is the corresponding net interest margin ratio.
+FIELDS = ["CERT", "REPDTE", "ASSET", "DEP", "EQ", "LNLSNET", "ROA", "NIMY"]
 
 with CP1.open("r", encoding="utf-8") as fh:
     cp1 = json.load(fh)
 if cp1.get("checkpoint") != "CP1_PROTOCOL_FREEZE" or cp1.get("status") != "PASS_CLOSED":
     raise SystemExit("CP1_NOT_PASS_CLOSED")
+with CP2_CORRECTION.open("r", encoding="utf-8") as fh:
+    cp2_correction = json.load(fh)
+if cp2_correction.get("status") != "PASS_CLOSED_TECHNICAL_CORRECTION":
+    raise SystemExit("CP2_SCHEMA_CORRECTION_NOT_CLOSED")
+
+
+def parse_repdate(value):
+    text = str(value or "").strip()
+    for fmt in ("%Y%m%d", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(text[:10], fmt).date()
+        except ValueError:
+            pass
+    raise ValueError(f"unsupported REPDTE {text!r}")
+
 
 cohort = cp1["failure_cohort"]
 records = []
@@ -70,11 +88,11 @@ for bank in cohort:
                 continue
             normalized_row = {field: row.get(field) for field in FIELDS}
             normalized.append(normalized_row)
-        normalized.sort(key=lambda r: str(r.get("REPDTE") or ""))
+        normalized.sort(key=lambda r: parse_repdate(r.get("REPDTE")))
         pre = []
         for row in normalized:
             try:
-                repdate = datetime.strptime(str(row.get("REPDTE"))[:10], "%Y-%m-%d").date()
+                repdate = parse_repdate(row.get("REPDTE"))
             except Exception:
                 continue
             if repdate < faildate:
@@ -105,6 +123,7 @@ result = {
         "endpoint": API,
         "fields": FIELDS,
         "transport": "GitHub Actions HTTPS request to official FDIC BankFind Financials API",
+        "technical_correction_record": CP2_CORRECTION.name,
     },
     "cohort_count": len(cohort),
     "source_evaluable_banks": evaluable_source,

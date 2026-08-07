@@ -1,0 +1,89 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PROTECTED_INVARIANTS_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "authorityIssue": 719,
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "worldIdentity": {
+    "width": 512,
+    "depth": 512,
+    "lattice": "16x16",
+    "cellCount": 256
+  },
+  "terrainTruthSource": {
+    "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+    "domain": {"xMinimum": -256, "xMaximum": 256, "zMinimum": -320, "zMaximum": 64, "seaLevelY": 0},
+    "mutationInPlace": "PROHIBITED"
+  },
+  "positiveReliefReference": {
+    "commit": "97003e9de386a8962fb46d0b370005b900a167d6",
+    "tree": "7cd51523649788ad6fb226aea16f6799a5c58177",
+    "status": "POSITIVE_DESIGN_SOURCE_ONLY",
+    "mergedMainClaim": false,
+    "automaticTransplant": false,
+    "acceptedDirection": {
+      "virtualReliefHeightAmplitude": 0.22,
+      "maximumNormalDeviationDegrees": 22,
+      "fullInfluenceThroughDistance": 120,
+      "fadeToZeroByDistance": 300,
+      "directionalPhaseCount": 3
+    }
+  },
+  "reservedEstateEnvelope": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
+    "effect": "PROTECTED_FUTURE_CONSTRUCTION_ENVELOPE_ONLY",
+    "manorGeometryAuthorized": false
+  },
+  "twoHillRelation": {
+    "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
+    "rightHill": {"x": 152, "y": 42.73941022157669, "z": -224},
+    "hillSeparation": 94.40338976964756,
+    "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
+    "lowerHillToSaddleDrop": 10.537935137748718,
+    "mustRemainLegible": true
+  },
+  "lowCorridor": {
+    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "pairAxis": {"x": 0.805055837353368, "z": -0.5931990380498502},
+    "corridorAxis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+    "noBuildHalfWidth": 6,
+    "mustRemainOpen": true
+  },
+  "views": {
+    "beachwardGroundView": "MUST_REMAIN_CLEAR",
+    "sourceMaximumObstruction": -0.041573455929757586,
+    "mountainwardGroundView": "MUST_REMAIN_CLEAR",
+    "sourceMountainwardMaximumObstruction": -3.0548654910176936
+  },
+  "entryZone": {
+    "mustRemainSeparateFromEstateEnvelope": true,
+    "mustRemainRegionallyConnected": true,
+    "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+    "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96}
+  },
+  "requiredPreservationLaws": [
+    "ENTRY_WATER_REMAINS_HARD_BOUNDARY",
+    "CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE",
+    "ENTRY_ZONE_REMAINS_SEPARATE_FROM_RESERVED_ESTATE_ENVELOPE",
+    "LOW_CORRIDOR_REMAINS_OPEN",
+    "TWO_HILL_RELATION_REMAINS_LEGIBLE",
+    "BEACHWARD_AND_MOUNTAINWARD_VIEWS_REMAIN_CLEAR",
+    "CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED_WITHOUT_INTERIOR_CONSTRUCTION",
+    "FRONTIER_PLAINS_REMAINS_UNCONSTRUCTED",
+    "CONTINUOUS_TERRAIN_TRAVERSAL_MUST_NOT_REGRESS",
+    "NO_MANOR_GEOMETRY_SELECTION_OR_AUTHORING",
+    "NO_LIVE_RUNTIME_CAMERA_NAVIGATION_WATER_MUTATION",
+    "NO_MERGE_DEPLOYMENT_RELEASE_WITHOUT_SEPARATE_AUTHORITY"
+  ],
+  "deferredGeometry": {
+    "exactBuildingFootprint": "UNASSIGNED",
+    "buildingOrientation": "UNASSIGNED",
+    "atriumGeometry": "UNASSIGNED",
+    "entranceCoordinates": "UNASSIGNED",
+    "gardenLayout": "UNASSIGNED",
+    "sculpturePositions": "UNASSIGNED",
+    "selectionByInferenceProhibited": true
+  }
+}

@@ -3,14 +3,7 @@ import { buildHEarthMapWideEnvironmentPreviewObserverReceipt } from './observer.
 
 const canvas = document.querySelector('[data-h-earth-map-wide-canvas]');
 const statusNode = document.querySelector('[data-h-earth-status]');
-const statsNode = document.querySelector('[data-h-earth-stats]');
-const reliefToggle = document.querySelector('[data-toggle-relief]');
-const estateToggle = document.querySelector('[data-toggle-estate]');
-const entryToggle = document.querySelector('[data-toggle-entry]');
-const wireToggle = document.querySelector('[data-toggle-wire]');
 const fitWorldButton = document.querySelector('[data-fit-world]');
-const estateFocusButton = document.querySelector('[data-estate-focus]');
-const topViewButton = document.querySelector('[data-top-view]');
 
 if (!(canvas instanceof HTMLCanvasElement)) {
   throw new Error('H_EARTH_MAP_WIDE_CANVAS_MISSING');
@@ -28,18 +21,11 @@ const safeDelta = (value) => Math.max(-64, Math.min(64, value));
 function setStatus() {
   const cameraSafety = renderer.getCameraSafety();
   const safe = Object.values(cameraSafety).every((value) => value === true);
-  statusNode.textContent = receipt.result === 'PASS' && safe
-    ? 'Candidate self-check: PASS · stable inspection controls active'
-    : 'Candidate self-check: FAIL_CLOSED';
-  statusNode.dataset.status = receipt.result === 'PASS' && safe ? 'PASS' : 'FAIL_CLOSED';
-
-  const statistics = renderer.mesh.statistics;
-  statsNode.textContent = [
-    `${statistics.validSampleCount.toLocaleString()} terrain samples`,
-    `${statistics.triangleCount.toLocaleString()} triangles`,
-    `${statistics.sitePreparationSampleCount.toLocaleString()} prepared-site samples`,
-    `elevation ${statistics.minimumElevation.toFixed(1)}…${statistics.maximumElevation.toFixed(1)}`
-  ].join(' · ');
+  const pass = receipt.result === 'PASS' && safe;
+  if (statusNode) {
+    statusNode.textContent = pass ? 'PASS' : 'FAIL';
+    statusNode.dataset.status = pass ? 'PASS' : 'FAIL_CLOSED';
+  }
 }
 
 function render() {
@@ -99,6 +85,7 @@ function clearPointer(event) {
   pointers.delete(event.pointerId);
   refreshGesture();
 }
+
 canvas.addEventListener('pointerup', clearPointer);
 canvas.addEventListener('pointercancel', clearPointer);
 canvas.addEventListener('lostpointercapture', clearPointer);
@@ -108,6 +95,8 @@ canvas.addEventListener('wheel', (event) => {
   renderer.zoom(event.deltaY);
 }, { passive: false });
 
+canvas.addEventListener('dblclick', () => renderer.fitWorld());
+
 window.addEventListener('keydown', (event) => {
   const distance = event.shiftKey ? 16 : 7;
   if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') renderer.pan(-distance, 0);
@@ -116,20 +105,13 @@ window.addEventListener('keydown', (event) => {
   if (event.key === 'ArrowDown' || event.key.toLowerCase() === 's') renderer.pan(0, distance);
 });
 
-reliefToggle?.addEventListener('change', () => renderer.setOption('showRelief', reliefToggle.checked));
-estateToggle?.addEventListener('change', () => renderer.setOption('showEstate', estateToggle.checked));
-entryToggle?.addEventListener('change', () => renderer.setOption('showEntry', entryToggle.checked));
-wireToggle?.addEventListener('change', () => renderer.setOption('wireframe', wireToggle.checked));
 fitWorldButton?.addEventListener('click', () => renderer.fitWorld());
-estateFocusButton?.addEventListener('click', () => renderer.focusEstate());
-topViewButton?.addEventListener('click', () => renderer.topView());
-
 window.addEventListener('resize', render);
 
 window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
   operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
   lockGeneration: 422,
-  inspectorRepairRevision: 1,
+  inspectorRepairRevision: 2,
   renderer,
   observerReceipt: receipt
 });

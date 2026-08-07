@@ -1,0 +1,15 @@
+name: UCIC Global Temporal Holdout Transfer and Collapse v1
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/**'
+      - '.github/workflows/ucic-global-temporal-collapse-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/verify.py

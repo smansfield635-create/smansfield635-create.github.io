@@ -1,0 +1,14 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_RECEIPT_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "gate": "BUILDER",
+  "status": "NOT_EXECUTED",
+  "result": "NONE",
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "lockGeneration": 422,
+  "candidateHead": null,
+  "constructionFingerprint": null,
+  "requiredCommand": "node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs --output /tmp/h-earth-map-wide-environment-redevelopment-v1",
+  "continuation": "EXECUTE_ONLY_AFTER_EXACT_28_PATH_CANDIDATE_FREEZE",
+  "evidenceInvented": false
+}

@@ -1,12 +1,22 @@
 {
   "schema":"METHODS_MODELS_F9_TERMINAL_RECEIPT_v1",
-  "status":"F9_ASSEMBLY_CANDIDATE_PENDING_EXACT_HEAD_VERIFICATION",
+  "status":"PASS_F9_INTEGRATED_ENVIRONMENT_ASSEMBLY_v1",
   "operation":"F9_INTEGRATED_ENVIRONMENT_ASSEMBLY_v1",
   "inputHead":"fc44591931d0b62d039bfaf9517d99ba56ad1c76",
   "inputTree":"4083597b2481696c282545feb51ab7918224d2f5",
   "target":"TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
+  "verifiedCandidateHead":"6963a0972a6dbdc77eaea42439f8b10429a477ec",
+  "verifiedCandidateTree":"a2ee5df33acd0f1de3bd1df935fe754b046dee58",
+  "verificationRun":31217887418,
+  "verificationJob":92995554815,
+  "verificationArtifact":9009214637,
+  "verificationArtifactDigest":"sha256:c1dd491b26f8f9ea35017b4a6d7c68aa5f5b040244a46beabdc5362785c8ea14",
+  "environmentScienceDigest":"dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+  "sceneScienceDigest":"82ad07a6e99424229c9fdee014de0e764474fb0fc382383aae06cb15dfb797ff",
   "assembled":{"registryAssembly":true,"integratedRuntime":true,"globalSemanticPlane":true,"statefulOperationalPlane":true,"deepLinkContinuity":true,"depthInquiry":true,"interactionAccessibility":true,"spatialSemanticProjection":true,"textFirstEquivalence":true},
-  "expectedCounts":{"portfolioStudies":22,"statefulEntries":16,"nonStatefulPortfolioStudies":6,"canonicalClaims":19,"typedRelations":38},
+  "verifiedCounts":{"portfolioStudies":22,"statefulEntries":16,"nonStatefulPortfolioStudies":6,"canonicalClaims":19,"typedRelations":38,"integratedEntryExecutions":16},
+  "verifiedBehaviors":{"modalityEquivalenceForAllEntries":true,"deepLinkContinuityForAllEntries":true,"nonStatefulPortfolioObjectsRemainNonEntry":true,"tamperedSessionFailsClosed":true,"frozenF1ThroughF8AndPreF8Trees":true,"f9OnlyChangedPathScope":true,"governingMainDriftClassifiedNonMethodsNoRebase":true},
+  "quarantinedVerification":{"run":31217689014,"reason":"INVALID_FOR_F9_PASS_PIPELINE_MASKED_VERIFIER_FAILURE_BEFORE_PIPEFAIL_REPAIR","scientificDispositionUseProhibited":true},
   "integrationCreatesScientificMeaning":false,
   "integrationCreatesCrossObjectRelation":false,
   "portfolioVisibilityCreatesEntryAuthority":false,
@@ -18,5 +28,5 @@
   "f10AuthorityAfterEffectivePass":true,
   "f10ExecutionAfterEffectivePass":"NOT_STARTED_REQUIRES_SEPARATE_AUTHORIZATION",
   "f11ThroughF12Authority":false,
-  "verification":"PENDING_EXACT_HEAD"
+  "terminalEffectCondition":"EFFECTIVE_ONLY_AFTER_THIS_RECEIPT_HEAD_PASSES_THE_FAIL_PROPAGATING_EXACT_HEAD_F9_VERIFIER"
 }

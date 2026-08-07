@@ -2,13 +2,48 @@
   "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_RECEIPT_v1",
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
   "gate": "BUILDER",
-  "status": "NOT_EXECUTED",
+  "status": "BLOCKED_NONTERMINAL_EXECUTION_SURFACE_UNAVAILABLE",
   "result": "NONE",
   "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
   "lockGeneration": 422,
-  "candidateHead": null,
-  "constructionFingerprint": null,
+  "scopeHash": "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3",
+  "constructionBranch": "build/h-earth-map-wide-environment-redevelopment-v1-001",
+  "constructionHeadBeforeReceiptUpdate": "d1abbdaf2f52d82ec5e80b58442259f64affd16c",
+  "exactPathCount": 28,
+  "exactPathDeltaStaticCheck": "PASS",
+  "allPathsMaterializedStaticCheck": "PASS",
+  "mainIdentityStaticCheck": "PASS_3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "lockIdentityStaticCheck": "PASS_GENERATION_422_ADMITTED_LOCKED_RELEASED_FALSE",
+  "automaticRepositoryRegistryPreflight": {
+    "runId": 31148880465,
+    "head": "d1abbdaf2f52d82ec5e80b58442259f64affd16c",
+    "result": "SUCCESS",
+    "builderSubstitution": false
+  },
   "requiredCommand": "node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs --output /tmp/h-earth-map-wide-environment-redevelopment-v1",
-  "continuation": "EXECUTE_ONLY_AFTER_EXACT_28_PATH_CANDIDATE_FREEZE",
+  "executionAttempts": [
+    {
+      "surface": "LOCAL_EXECUTION_SANDBOX",
+      "result": "UNAVAILABLE",
+      "reason": "GITHUB_HOST_DNS_UNAVAILABLE_TO_SANDBOX_CLONE"
+    },
+    {
+      "surface": "EXISTING_BRANCH_PUSH_ACTIONS",
+      "result": "NO_BUILDER_EXECUTOR_PRESENT",
+      "observedCheck": "AUTOMATIC_H_EARTH_REPOSITORY_REGISTRY_PREFLIGHT_SUCCESS_ONLY"
+    },
+    {
+      "surface": "CONNECTED_GITHUB_WRITE_TOOLS",
+      "result": "NO_WORKFLOW_OR_REPOSITORY_DISPATCH_ACTION_EXPOSED"
+    }
+  ],
+  "constructionFingerprint": null,
+  "verifiedConstructionHead": null,
+  "candidateFreezeAuthorized": false,
+  "role3Authorized": false,
+  "role3Prohibition": "ROLE_3_MUST_NOT_BEGIN_UNTIL_EXECUTED_BUILDER_PASS_AND_EXACT_CANDIDATE_FREEZE",
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "releaseAuthorized": false,
   "evidenceInvented": false
 }

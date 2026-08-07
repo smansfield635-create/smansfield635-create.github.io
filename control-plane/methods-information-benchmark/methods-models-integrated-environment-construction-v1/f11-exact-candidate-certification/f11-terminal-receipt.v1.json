@@ -1,0 +1,22 @@
+{
+  "schema": "METHODS_MODELS_F11_TERMINAL_RECEIPT_v1",
+  "operation": "F11_EXACT_CANDIDATE_CERTIFICATION_v1",
+  "status": "CANDIDATE_AWAITING_EXACT_HEAD_VERIFICATION",
+  "inputF10Head": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+  "inputF10Tree": "e42a5267c10c1ae5183e2935a49b97af6545f9eb",
+  "certifiedEnvironmentHead": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+  "certifiedEnvironmentTree": "e42a5267c10c1ae5183e2935a49b97af6545f9eb",
+  "candidateVerificationHead": null,
+  "candidateVerificationRunId": null,
+  "candidateVerificationArtifactId": null,
+  "candidateVerificationArtifactDigest": null,
+  "candidatePayloadFingerprintSha256": "caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99",
+  "quarantinedHistoricalRunPreserved": 31217689014,
+  "f1ThroughF10Rewrite": false,
+  "scientificClaimUpgrade": false,
+  "publicMethodsMutation": false,
+  "publicLawsMutation": false,
+  "pr541Mutation": false,
+  "f12AuthorityAfterEffectivePass": true,
+  "f12ExecutionAfterEffectivePass": "NOT_STARTED_REQUIRES_SEPARATE_USER_VISUAL_EXPERIENTIAL_REVIEW_AUTHORIZATION"
+}

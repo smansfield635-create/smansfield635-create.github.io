@@ -1,0 +1,26 @@
+{
+  "schema": "METHODS_MODELS_F11_CERTIFIED_CANDIDATE_MANIFEST_v1",
+  "certifiedEnvironmentHead": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+  "certifiedEnvironmentTree": "e42a5267c10c1ae5183e2935a49b97af6545f9eb",
+  "environmentScienceDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+  "sceneScienceDigest": "82ad07a6e99424229c9fdee014de0e764474fb0fc382383aae06cb15dfb797ff",
+  "candidatePayloadFingerprintAlgorithm": "SHA256_OF_ORDERED_NAME_EQUALS_TREE_SHA_LINES_UTF8",
+  "candidatePayloadFingerprintSha256": "caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99",
+  "frozenPackageTrees": [
+    {"name":"f1-construction-baseline","tree":"31aedf282a2e3d21dfadc362e762d6f72cc93c9c"},
+    {"name":"f2-canonical-state-kernel","tree":"44f10c6eab823c6fcd9e033e61d2e846629ead70"},
+    {"name":"f3-resolution-and-validity-engine","tree":"7aae62fe2d275081308cd9ac49e3afdb0ef15157"},
+    {"name":"f4-scientific-content-binding","tree":"c41d9007a60d8bf34b4f2e2e125863db46f9d088"},
+    {"name":"f5-navigation-and-continuity","tree":"61a9a8cb8567fd64407bfee7ceb5b96b63ff64a7"},
+    {"name":"f6-depth-and-inquiry","tree":"4c99ad12135c1496a57c7ade9ffc04d94ab08913"},
+    {"name":"f7-interaction-and-accessibility","tree":"4b237ec920eeec1eb3ac8c1bd4b32b544f606c79"},
+    {"name":"pre-f8-corrective-construction-v1","tree":"07375924b86f4a0981eb12519735262bce315cdf"},
+    {"name":"f8-spatial-xyz-semantic-layer","tree":"ab7a87b9428200f73bad2f468c953d0e116711c6"},
+    {"name":"f9-integrated-environment-assembly","tree":"fe0dff989c10052d7a00c7a331f7f7b6bb262b3a"},
+    {"name":"f10-adversarial-verification","tree":"27e947fb8d63fc7e9793dc4a329c75480b85182d"}
+  ],
+  "f10AttackCount": 15,
+  "f10AttacksRejectedOrConstrained": 15,
+  "quarantinedHistoricalRunExcludedFromPassingEvidence": 31217689014,
+  "certificationEnvelopeMayChangeCertifiedPayload": false
+}

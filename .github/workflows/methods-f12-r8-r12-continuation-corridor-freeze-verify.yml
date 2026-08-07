@@ -1,0 +1,54 @@
+name: Methods F12 R8-R12 Continuation Corridor Freeze Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r8-r12-continuation-corridor-freeze-v1-final
+
+permissions:
+  contents: read
+
+jobs:
+  verify-corridor-freeze-exact-head:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact R7 parent and frozen inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "723de3b034577693b04a41a1cbe2e3d5d82a884f"
+          test "$(git rev-parse 723de3b034577693b04a41a1cbe2e3d5d82a884f^{tree})" = "e67f442621214abf4304ada70c5631370d9c738b"
+          test "$(git rev-parse 723de3b034577693b04a41a1cbe2e3d5d82a884f:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r7-continuity-and-accessibility-contract.v1.json)" = "475aa283c3feb2fb6520f953c0a96d94285bc214"
+          test "$(git rev-parse 723de3b034577693b04a41a1cbe2e3d5d82a884f:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r7-continuity-and-accessibility.v1.mjs)" = "966811ccf1f13f2d37f34bb5c49e5d89c12f7e0d"
+          test "$(git rev-parse 723de3b034577693b04a41a1cbe2e3d5d82a884f:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r7-continuity-and-accessibility.verify.v1.mjs)" = "bdfd26836b26ca3658dd70acd656a94273fa2f72"
+
+      - name: Verify frozen R8-R12 corridor contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/f12-r8-r12-continuation-corridor-freeze.verify.v1.mjs | tee f12-r8-r12-continuation-corridor-freeze-verification.json
+
+      - name: Prove exact administrative-only additive diff
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only 723de3b034577693b04a41a1cbe2e3d5d82a884f..HEAD | tee f12-r8-r12-continuation-corridor-freeze-changed-paths.txt
+          test "$(wc -l < f12-r8-r12-continuation-corridor-freeze-changed-paths.txt)" -eq 3
+          grep -Fxq '.github/workflows/methods-f12-r8-r12-continuation-corridor-freeze-verify.yml' f12-r8-r12-continuation-corridor-freeze-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/f12-r8-r12-continuation-corridor-freeze.v1.json' f12-r8-r12-continuation-corridor-freeze-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/f12-r8-r12-continuation-corridor-freeze.verify.v1.mjs' f12-r8-r12-continuation-corridor-freeze-changed-paths.txt
+          test "$(git diff --diff-filter=D --name-only 723de3b034577693b04a41a1cbe2e3d5d82a884f..HEAD | wc -l)" -eq 0
+          test "$(git diff --name-status 723de3b034577693b04a41a1cbe2e3d5d82a884f..HEAD | awk '$1 != "A" {count++} END {print count+0}')" -eq 0
+
+      - name: Preserve corridor freeze evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r8-r12-continuation-corridor-freeze-evidence
+          path: |
+            f12-r8-r12-continuation-corridor-freeze-verification.json
+            f12-r8-r12-continuation-corridor-freeze-changed-paths.txt

@@ -5,20 +5,21 @@ const focusButton=document.querySelector('[data-fit-world]');
 const brandNode=document.querySelector('.preview-brand');
 
 const OPERATION_ID='H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_v1';
+const COHERENCE_OPERATION='H_EARTH_V2_COASTAL_INTEGRATION_AND_POSITIONAL_IDENTITY_CLOSURE';
 const CHECKPOINT='OW01';
 const LOCK_GENERATION=473;
 
 const setStatus=(text,state=text)=>{if(statusNode){statusNode.textContent=text;statusNode.dataset.status=state;}};
 const setDiagnostic=(text)=>{if(diagnosticNode)diagnosticNode.textContent=text;};
-const fail=(stage,error)=>{const message=error instanceof Error?error.message:String(error);console.error(`AUDRALIA_OW01_INSPECTOR_${stage}_FAILED`,error);setStatus('ERROR',`${stage}_FAILED`);setDiagnostic(`${stage}_FAILED: ${message}`);window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW_ERROR__=Object.freeze({operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,stage,message});};
+const fail=(stage,error)=>{const message=error instanceof Error?error.message:String(error);console.error(`AUDRALIA_OW01_INSPECTOR_${stage}_FAILED`,error);setStatus('ERROR',`${stage}_FAILED`);setDiagnostic(`${stage}_FAILED: ${message}`);window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW_ERROR__=Object.freeze({operationId:OPERATION_ID,coherenceOperation:COHERENCE_OPERATION,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,stage,message});};
 
 function updateScaleUI(renderer){
   const scale=renderer.getViewScale();
   if(brandNode)brandNode.textContent=`Audralia · Gratitude · OW01 · ${scale.toLowerCase()}`;
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
-    LOCAL:'LOCAL · 1:1 Gratitude terrain · continuous coastal ribbon · varied sandbars · inspect Harbor and the local/stitch handoff.',
-    REGION:'REGION · aligned 128-unit stitch annulus · continuous beach geometry · one planetary ocean · inspect transition continuity.',
+    LOCAL:'LOCAL · 1:1 Gratitude terrain · sand classified on existing terrain relief · seaward wet transition retained · inspect Harbor and the local/stitch handoff.',
+    REGION:'REGION · aligned 128-unit stitch annulus · terrain-integrated coastal material · one planetary ocean · inspect place continuity.',
     CONTINENT:'CONTINENT · refined Gratitude coastline · lowlands, basins, uplands, bounded divides, and localized mountains.',
     PLANETARY:'PLANETARY · Gratitude is resolved; the other eight continents use noncanonical anisotropic preview silhouettes only.'
   };
@@ -43,20 +44,22 @@ async function observerAfterPaint(renderer){
     await new Promise(r=>setTimeout(r,0));
     const module=await import('./observer.mjs');
     const receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer);
-    if(receipt.mechanicalChecksPassed===true){
-      setStatus('REVIEW','OW01_MECHANICAL_PASS_USER_REVIEW_REQUIRED');
-      updateScaleUI(renderer);
+    const positionalPass=receipt?.canonicalPositionalIdentity?.canonicalPositionalIdentityPassed===true;
+    if(receipt.mechanicalChecksPassed===true&&positionalPass){
+      setStatus('REVIEW','OW01_MECHANICAL_AND_POSITIONAL_PASS_USER_REVIEW_REQUIRED');
+      const scale=renderer.getViewScale();
+      setDiagnostic(`POSITIONAL IDENTITY PASS · 12/12 canonical anchors · ${scale} · now judge perceptual place identity while traversing local → region → continent → planetary → local.`);
     }else{
-      setStatus('FAIL','OW01_MECHANICAL_FAIL');
+      setStatus('FAIL','OW01_MECHANICAL_OR_POSITIONAL_FAIL');
       const failed=Array.isArray(receipt.failedChecks)?receipt.failedChecks.join(', '):'unknown';
-      setDiagnostic(`MECHANICAL_FAIL · ${failed}`);
+      setDiagnostic(`MECHANICAL_OR_POSITIONAL_FAIL · ${failed}`);
     }
-    window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,renderer,observerReceipt:receipt});
+    window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OPERATION_ID,coherenceOperation:COHERENCE_OPERATION,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,renderer,observerReceipt:receipt});
   }catch(error){
     console.warn('AUDRALIA_OW01_INSPECTOR_OBSERVER_FAILED',error);
     setStatus('REVIEW','VISUAL_READY_OBSERVER_DEFERRED');
     setDiagnostic(`VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);
-    window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,renderer,observerReceipt:null,observerDeferredFailure:true});
+    window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OPERATION_ID,coherenceOperation:COHERENCE_OPERATION,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,renderer,observerReceipt:null,observerDeferredFailure:true});
   }
 }
 
@@ -64,7 +67,7 @@ async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw new Error('H_EARTH_OW01_CANVAS_MISSING');
     setStatus('world…','IMPORTING_AUDRALIA_OW01_WORLD');
-    setDiagnostic('Building continuous coastal ribbon, varied sandbar field, refined Gratitude silhouette, and noncanonical continental previews…');
+    setDiagnostic('Building one continuous Audralia world with terrain-integrated coastal sand, protected water depth, and canonical geographic identity checks…');
     await new Promise(r=>requestAnimationFrame(r));
     const module=await import('./renderer.mjs');
     setStatus('building…','BUILDING_OW01_GEOGRAPHIC_MODEL');

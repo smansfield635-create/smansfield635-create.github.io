@@ -1,0 +1,49 @@
+{
+  "schema": "METHODS_MODELS_VERTICAL_CASE_CLAIM_AND_OWNERSHIP_CONTRACT_v1",
+  "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
+  "selectedCase": "BIO_LAB",
+  "laws": [
+    "METHODS_MODELS_DEMONSTRATION_DOES_NOT_OWN_SOURCE_STUDY",
+    "FRONTIER_RETAINS_APPLIED_STUDY_OWNERSHIP",
+    "RESEARCH_PROVENANCE_RETAINS_SOURCE_LINEAGE_AUTHORITY",
+    "METHODS_MODELS_MAY_EXPOSE_STANDING_BUT_MAY_NOT_UPGRADE_IT",
+    "PRESENTATION_SELECTION_DOES_NOT_CREATE_SCIENTIFIC_SELECTION_CREDIT",
+    "RETROSPECTIVE_CONTAMINATION_MUST_REMAIN_VISIBLE_AT_OR_BEFORE_RESULT_INTERPRETATION",
+    "UNEVALUABLE_PRESERVED_CAPACITY_ACCURACY_MAY_NOT_RECEIVE_POSITIVE_CREDIT",
+    "THE_FULL_FIVE_CASE_PORTFOLIO_REMAINS_A_SOURCE_STUDY_NOT_A_METHODS_MODELS_ROOM_OBJECT"
+  ],
+  "sourceStudyOwner": "FRONTIER",
+  "sourceProvenanceOwner": "RESEARCH_PROVENANCE",
+  "methodsModelsRole": "EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE",
+  "sourceStudy": {
+    "pr": 709,
+    "head": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+    "scientificExecution": "COMPLETE",
+    "repositoryAdmission": "OPEN_DRAFT_UNMERGED",
+    "sourceMergeAuthorization": false
+  },
+  "claimCeiling": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+  "requiredQualifiers": [
+    "outcome blindness NOT_ESTABLISHED",
+    "public outcome contamination PRESENT",
+    "independent human confirmation NOT_ESTABLISHED",
+    "prospective confirmation NOT_ESTABLISHED",
+    "universal law NOT_ESTABLISHED",
+    "preserved-capacity accuracy UNEVALUABLE_FROM_SUMMARY_RECORD",
+    "global multiplicative operator REMAINS_REJECTED"
+  ],
+  "prohibitedUpgrades": [
+    "validated prospective predictor",
+    "independent replication without qualification",
+    "universal confirmation",
+    "causal proof beyond official-record route concordance",
+    "full preserved-capacity validation"
+  ],
+  "demonstrationScope": {
+    "oneCaseOnly": true,
+    "caseId": "BIO_LAB",
+    "portfolioScoreMayAppearOnlyAsSourceContext": true,
+    "fullPortfolioReconstruction": false,
+    "frontierStudyDuplication": false
+  }
+}

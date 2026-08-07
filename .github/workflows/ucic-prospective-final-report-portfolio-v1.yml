@@ -1,0 +1,19 @@
+name: UCIC Prospective Final Report Portfolio v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/registered-challenges/independent-constitutive-route-identification-challenge-v1/ucic-prospective-final-report-portfolio-v1/**"
+      - ".github/workflows/ucic-prospective-final-report-portfolio-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify frozen portfolio
+        run: python "research/route-operator-platform-v1/registered-challenges/independent-constitutive-route-identification-challenge-v1/ucic-prospective-final-report-portfolio-v1/verify-portfolio-v1.py"

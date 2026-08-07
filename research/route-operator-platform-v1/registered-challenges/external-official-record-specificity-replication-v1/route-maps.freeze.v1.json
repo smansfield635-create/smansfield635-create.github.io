@@ -1,0 +1,72 @@
+{
+  "BIO_LAB": {
+    "contamination_status": "OUTCOME_SUMMARY_EXPOSURE_POSSIBLE_OR_CONFIRMED_DURING_PUBLIC_SOURCE_DISCOVERY",
+    "explicit_falsifier": "final official findings materially locate the causal route outside the registered predicted relations or contradict more than half of the registered failed relations",
+    "identity_criterion": "continued safe performance of the registered hazardous-process capacity without loss of its required containment/control relations",
+    "predicted_failed_relations": [
+      "Reactive pool-treatment chemicals remain isolated from water/moisture during storage.",
+      "Sprinkler/fire-protection components remain mechanically compatible, corrosion-controlled, and leak-free around reactive inventory.",
+      "Storage-hazard identification accounts for reactivity, packaging, inventory scale, segregation, and ventilation.",
+      "Risk-management/oversight detects and corrects degraded safeguards before continued storage operation."
+    ],
+    "preserved_capacity_predictions": [],
+    "system_boundary": "Plant 12 reactive-chemical storage and its immediate protection/containment controls",
+    "uncertainty": "MODERATE"
+  },
+  "CUISINE": {
+    "contamination_status": "OUTCOME_SUMMARY_EXPOSURE_POSSIBLE_OR_CONFIRMED_DURING_PUBLIC_SOURCE_DISCOVERY",
+    "explicit_falsifier": "final official findings materially locate the causal route outside the registered predicted relations or contradict more than half of the registered failed relations",
+    "identity_criterion": "continued safe performance of the registered hazardous-process capacity without loss of its required containment/control relations",
+    "predicted_failed_relations": [
+      "Refrigeration process control prevents heat-exchanger upset from driving surge-drum overpressure.",
+      "Pressure-relief discharge is routed/engineered so a two-phase ammonia release cannot expose occupied or evacuation areas.",
+      "Ammonia detection, alarm, and emergency shutdown functions detect and isolate a release promptly.",
+      "Emergency action and evacuation routing account for outdoor toxic releases, wind direction, shelter-in-place, training, and drills."
+    ],
+    "preserved_capacity_predictions": [],
+    "system_boundary": "Heat Exchanger 5 ammonia refrigeration loop, surge drum, relief discharge, detection/shutdown, and evacuation interface",
+    "uncertainty": "MODERATE"
+  },
+  "DOW": {
+    "contamination_status": "OUTCOME_SUMMARY_EXPOSURE_POSSIBLE_OR_CONFIRMED_DURING_PUBLIC_SOURCE_DISCOVERY",
+    "explicit_falsifier": "final official findings materially locate the causal route outside the registered predicted relations or contradict more than half of the registered failed relations",
+    "identity_criterion": "continued safe performance of the registered hazardous-process capacity without loss of its required containment/control relations",
+    "predicted_failed_relations": [
+      "Post-entry vessel closure positively verifies removal of tools/foreign material before startup.",
+      "Ethylene-oxide relief piping remains inerted and the inert atmosphere is actively monitored.",
+      "Emergency relief topology prevents flame propagation from relief piping back into the reflux drum.",
+      "Rupture-disc and relief-path integrity prevents unintended ethylene-oxide entry into air-containing piping."
+    ],
+    "preserved_capacity_predictions": [],
+    "system_boundary": "Glycol II ethylene-oxide finishing train around reflux drum, relief path, inerting, and post-maintenance startup",
+    "uncertainty": "MODERATE"
+  },
+  "GIVAUDAN": {
+    "contamination_status": "OUTCOME_SUMMARY_EXPOSURE_POSSIBLE_OR_CONFIRMED_DURING_PUBLIC_SOURCE_DISCOVERY",
+    "explicit_falsifier": "final official findings materially locate the causal route outside the registered predicted relations or contradict more than half of the registered failed relations",
+    "identity_criterion": "continued safe performance of the registered hazardous-process capacity without loss of its required containment/control relations",
+    "predicted_failed_relations": [
+      "Reactive ingredients are characterized and bounded by a validated safe thermal/pressure operating envelope.",
+      "Process controls, alarms, cooling, and shutdown functions prevent or arrest excursions beyond the decomposition boundary.",
+      "Emergency pressure relief is sized for the credible runaway decomposition scenario.",
+      "Occupied control-room siting/protection accounts for credible reactor blast hazards."
+    ],
+    "preserved_capacity_predictions": [],
+    "system_boundary": "Reactor 6 caramel-coloring batch process and immediately coupled safeguards/occupied control space",
+    "uncertainty": "MODERATE"
+  },
+  "PEMEX": {
+    "contamination_status": "OUTCOME_SUMMARY_EXPOSURE_POSSIBLE_OR_CONFIRMED_DURING_PUBLIC_SOURCE_DISCOVERY",
+    "explicit_falsifier": "final official findings materially locate the causal route outside the registered predicted relations or contradict more than half of the registered failed relations",
+    "identity_criterion": "continued safe performance of the registered hazardous-process capacity without loss of its required containment/control relations",
+    "predicted_failed_relations": [
+      "The exact equipment/flange to be opened is positively and independently identified before line opening.",
+      "Work permits include task-specific hazard controls, hold points, and operator verification before hazardous piping is opened.",
+      "Contract workers reassigned into an active hazardous unit receive explicit unit-specific hazard and safeguard communication.",
+      "Conduct-of-operations controls ensure written procedures and hazard evaluations are actually followed during maintenance."
+    ],
+    "preserved_capacity_predictions": [],
+    "system_boundary": "ARU maintenance line-opening work system in the partially operating amine unit",
+    "uncertainty": "MODERATE"
+  }
+}

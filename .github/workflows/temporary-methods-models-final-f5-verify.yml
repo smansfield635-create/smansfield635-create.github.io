@@ -1,0 +1,37 @@
+name: Temporary Final Program F5 Navigation And Continuity Verify
+
+on:
+  push:
+    branches:
+      - construction/methods-models-integrated-environment-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f5-navigation-and-continuity/**'
+      - '.github/workflows/temporary-methods-models-final-f5-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-f5-navigation-and-continuity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify F5 navigation and continuity fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f5-navigation-and-continuity/verify.v1.mjs | tee /tmp/f5-verification.log
+      - name: Require terminal F5 contract
+        shell: bash
+        run: grep -F 'PASS_F5_NAVIGATION_AND_CONTINUITY_v1' /tmp/f5-verification.log
+      - name: Preserve F5 verification log
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-models-final-program-f5-navigation-and-continuity-verification
+          if-no-files-found: error
+          retention-days: 90
+          path: /tmp/f5-verification.log

@@ -1,0 +1,96 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F1_CHECKPOINT_AUTHORITY_LEDGER_v1",
+  "status": "F1_CONSTRUCTION_BASELINE_CANDIDATE",
+  "checkpoints": [
+    {
+      "checkpoint": 1,
+      "operation": "WHOLE_ESTATE_NARRATIVE_AND_CONSTITUTIVE_BASELINE_FREEZE_v1",
+      "pr": 713,
+      "candidate": "73ab5f058f0e1c3ad1d15bb250ece739f50f395f",
+      "mergeCommit": "c73a4f8854b8b2bf8f7b12fa860f0bc85d666544",
+      "tree": "aedef3f75a3c4fd445a736bf8eeb73125bea3fb4",
+      "postMergeCertificationRun": 31149733964,
+      "disposition": "PASS_CLOSED",
+      "baselineIdentitiesPath": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/baseline-identities.v1.json",
+      "baselineIdentitiesBlob": "b86cc4094901989fdd2b3a3f13e65c5d50b73005"
+    },
+    {
+      "checkpoint": 2,
+      "operation": "NARRATIVE_SPINE_CONSTITUTION_v1",
+      "pr": 723,
+      "candidate": "4f3ec2211460ce4dafdf2cae90a4107b3cb32b7c",
+      "mergeCommit": "889197b2cbe73de171756b7545446f12a726cde7",
+      "tree": "0740fa6b1770705b6320dc88c22b7a3c5f6ecb0c",
+      "postMergeCertificationRun": 31150684465,
+      "disposition": "PASS_CLOSED",
+      "sourceLedgerPath": "control-plane/whole-estate/narrative-spine-constitution-v1/source-ledger.v1.json",
+      "sourceLedgerBlob": "517a3a2a600ad6c86ca8d0965e27763518629aca"
+    },
+    {
+      "checkpoint": 3,
+      "operation": "CONSTITUTIONAL_ROOM_RELATION_CONTRACTS_v1",
+      "pr": 725,
+      "candidate": "d827c059a444888f65879df09888551ce3c0c93f",
+      "mergeCommit": "a0b0fb3d753637cfc66c06e73b0b5f0cd237056a",
+      "tree": "a79ddd661cf0e8329a90c98daf00bcc0ccdd2b5d",
+      "postMergeCertificationRun": 31151536653,
+      "disposition": "PASS_CLOSED",
+      "sourceLedgerPath": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/source-ledger.v1.json",
+      "sourceLedgerBlob": "c96a4d9f6c5a660d71b01dc39de260a3a2fa4cef"
+    },
+    {
+      "checkpoint": 4,
+      "operation": "ESTATE_SCALE_DEVELOPMENTAL_PROVENANCE_v1",
+      "pr": 730,
+      "candidate": "717648d5ceb607abd6105adfbcf8138d74f18e80",
+      "mergeCommit": "8983b36233e55700614435cd17cc7139cc920336",
+      "tree": "139086f69385f7f44c1210db6179acd52b73df45",
+      "postMergeCertificationRun": 31152522999,
+      "disposition": "PASS_CLOSED",
+      "sourceLedgerPath": "control-plane/whole-estate/estate-scale-developmental-provenance-v1/source-ledger.v1.json",
+      "sourceLedgerBlob": "3c9a2961c442e6677c52436960c4baaca03d34d9"
+    },
+    {
+      "checkpoint": 5,
+      "operation": "METHODS_MODELS_ROLE_CONSTITUTION_v1",
+      "pr": 732,
+      "candidate": "a573b16783d7e34ef982dd413c889c71cbd859d6",
+      "mergeCommit": "b2533139bacbf876f818892a06c691824fa216dd",
+      "tree": "a7eedf5723c88d558cb3d5da9b2aa35e1175bbe4",
+      "postMergeCertificationRun": 31153754083,
+      "disposition": "PASS_CLOSED",
+      "sourceLedgerPath": "control-plane/whole-estate/methods-models-role-constitution-v1/source-ledger.v1.json",
+      "sourceLedgerBlob": "720654e32e733ea7eadac0cca4330bfbd39c2496"
+    },
+    {
+      "checkpoint": 6,
+      "operation": "INVARIANT_CONTRACT_PACKAGE_v1",
+      "pr": 733,
+      "candidate": "9bd319928dab98267bbd1d97842e6845c1354b26",
+      "mergeCommit": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
+      "tree": "aff84c63fcd96d5c8d4b1d29f4b86a374394b8a8",
+      "postMergeCertificationRun": 31156024178,
+      "postMergeCertificationAttempt": 2,
+      "disposition": "PASS_CLOSED",
+      "sourceLedgerPath": "control-plane/whole-estate/invariant-contract-package-v1/source-ledger.v1.json",
+      "sourceLedgerBlob": "9a26b1c6bb3c508e7851831064c79d4ebc588daf"
+    },
+    {
+      "checkpoint": 7,
+      "operation": "FIRST_SAFE_VERTICAL_CASE_SELECTION_v1",
+      "pr": 736,
+      "verifiedRepairHead": "06d6bc5ee07fb4e2285f839d642715c5a718f0ce",
+      "finalCandidate": "79295ee2937af4af3a0f843a77b9562944c5c6cd",
+      "mergeCommit": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+      "tree": "420e56a71801034c3e40e66d1048302a39a55da7",
+      "repairedVerificationRun": 31202868618,
+      "postMergeCertificationRun": 31203029188,
+      "ratificationComment": 5220195543,
+      "disposition": "PASS_CLOSED",
+      "sourceLedgerPath": "control-plane/whole-estate/first-safe-vertical-case-selection-v1/source-ledger.v1.json",
+      "sourceLedgerBlob": "2f8ad4e2218d075c94bf78660bb08d4b551cd45a"
+    }
+  ],
+  "allCheckpointAuthoritiesClosed": true,
+  "downstreamMayTreatUnmergedCheckpointCandidateAsAuthority": false
+}

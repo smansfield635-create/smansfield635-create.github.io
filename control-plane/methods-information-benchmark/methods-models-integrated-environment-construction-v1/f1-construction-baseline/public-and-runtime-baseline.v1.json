@@ -1,0 +1,73 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F1_PUBLIC_AND_RUNTIME_BASELINE_v1",
+  "status": "F1_CONSTRUCTION_BASELINE_CANDIDATE",
+  "governingMain": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+  "publicMethodsBaseline": {
+    "route": "/laws/research/methods-and-models/",
+    "contract": "METHODS_MODELS_EUCLIDEAN_SHOWROOM_v3",
+    "canonicalArchive": "METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT",
+    "sourceCompleteness": "OPEN",
+    "scientificValidationClaimed": false,
+    "universalLawProven": false,
+    "productAcceptance": "NOT_GRANTED",
+    "files": {
+      "laws/research/methods-and-models/index.html": "2a84f9a272d051041dd639d95e1dca4dbd5db144",
+      "laws/research/methods-and-models/showroom.css": "dd4e484cbc170a7841bce4ebe95eb47f4057b92b",
+      "laws/research/methods-and-models/showroom-refinement.css": "6a628a463093926ed9e38662df29275807b01a4c",
+      "laws/research/methods-and-models/showroom-euclidean.css": "985bc039f8b66c2e9c85bcb276615f3e7a9f1494",
+      "laws/research/methods-and-models/showroom-euclidean-interaction.css": "c1211f4b809872cea7ebfbd65e275a6ebba9a948",
+      "laws/research/methods-and-models/showroom.js": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+      "laws/research/methods-and-models/showroom-refinement.js": "fe5ac6d1c8326d0ea2de17ae509ea2e2bfaa9c1f",
+      "laws/research/methods-and-models/showroom-euclidean.js": "e2289469b7efed2d21d0d55c873e56402c893932",
+      "laws/research/methods-and-models/canonical-records-v1.html": "5b7234c0e3d002060445dc98c2b65ab36b337a31"
+    },
+    "deliveryTopologyAuthority": "CURRENT_PUBLIC_PRESENTATION_BASELINE_ONLY_NOT_CANONICAL_SCIENTIFIC_HIERARCHY"
+  },
+  "textFirstInteractionAuthority": {
+    "path": ".github/ai-router/projects/methods-information-benchmark/spatial-database-text-first-interaction-contract-v2-permanent-ratification.v1.json",
+    "blob": "0375241beb7ae76030402fb882d9cc1d46b257a5",
+    "contract": "METHODS_SPATIAL_DATABASE_TEXT_FIRST_INTERACTION_STATE_CONTRACT_v2",
+    "fingerprint": "7f19aab646a09187369d6c4da00135b0e3623d3bfae288050318a04fb12845ef",
+    "semanticDomTextPrimary": true,
+    "exactContextualReturn": true,
+    "practicalDefault": true,
+    "oneLensActiveAtATime": true
+  },
+  "spatialAdoptionArchitecture": {
+    "path": "control-plane/methods-information-benchmark/context-displacement-existing-spatial-construct-adoption-v1/architecture-receipt-bundle.v1.json",
+    "blob": "cfdc29e47ec3593753bc85214f5f7ce02130862c",
+    "fingerprint": "59da453bc620ff7992d71d6db4f075d28db9f35530c570961a6a0a14a2ef7252",
+    "status": "RATIFIED_ACTIVE_FAIL_CLOSED",
+    "operationalClass": "NONPUBLIC_GOVERNING_CONSTRUCTION_CONTRACT",
+    "pageImplementationExecuted": false
+  },
+  "pr541CapabilitySource": {
+    "pr": 541,
+    "state": "OPEN_DRAFT_UNMERGED",
+    "head": "2a874228f42c623c7747d566d87d451d029436f4",
+    "base": "ab636b11e32253ece8e00f05993d980f747fa980",
+    "disposition": "PRESERVE_AND_ADAPT",
+    "authority": "CAPABILITY_SOURCE_ONLY_NOT_GOVERNING_SCIENTIFIC_OR_MERGE_AUTHORITY",
+    "mutationAuthorized": false,
+    "changedPathCount": 15,
+    "changedPaths": [
+      ".github/workflows/methods-categorical-spatial-context-equation-embodiment-v1.yml",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/OPERATOR_GUIDE.md",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/README.md",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/app.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/index.html",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-observer.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage-validate.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage.css",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/laws-child-stage.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/observer.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/renderer.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/semantic-descriptor.mjs",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/styles.css",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/tool-admission-matrix.json",
+      "verification/methods-categorical-spatial-context-equation-embodiment-v1/validate.mjs"
+    ]
+  },
+  "runtimeLaw": "CAPABILITIES_MAY_BE_ADOPTED_OR_ADAPTED_ONLY_WHILE_CANONICAL_MEANING_EVIDENCE_AND_AUTHORITY_REMAIN_GOVERNING",
+  "publicMutationAuthorized": false
+}

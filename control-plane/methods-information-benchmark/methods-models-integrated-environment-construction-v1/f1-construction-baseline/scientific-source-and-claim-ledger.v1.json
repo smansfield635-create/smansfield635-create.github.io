@@ -1,0 +1,74 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F1_SCIENTIFIC_SOURCE_AND_CLAIM_LEDGER_v1",
+  "status": "F1_CONSTRUCTION_BASELINE_CANDIDATE",
+  "mergedScientificNormalization": {
+    "packagePath": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/",
+    "classification": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+    "blobs": {
+      "README.md": "cd50bad98ac8f9ae1ce7a772df5db6b82daa0929",
+      "canonical-hierarchy.v1.json": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+      "evidence-and-execution-state.v1.json": "9b80c1f4ad492037fd5bfc825ffdd933f9812b2f",
+      "human-and-3d-integration-contract.v1.json": "76b379fa1823f99bad5fb8b9bae5a00ae3e4491f",
+      "legacy-mapping.v1.json": "4df9983a406c97ef99770671a0bfc995f0a028df",
+      "methods-sequence.v1.json": "4fbebc22d2cf0bf8d4fa28c8857b915e7c28bd16",
+      "model-registry.v1.json": "61304f3a7230e1cc1a1ec89804b3fda45e3c9ced",
+      "universal-object-model.v1.json": "034b1e5d546782d7a6a019b0af6b80c1407d616f",
+      "verify.v1.mjs": "32e0be7e3b95bc8b77a06d6b668601e73bedaaad"
+    },
+    "requiredSeparations": [
+      "INSTRUMENT != INVARIANT_CANDIDATE",
+      "METHOD != MODEL",
+      "MODEL != RESULT",
+      "EXECUTION != EVIDENCE_STANDING",
+      "INTERFACE_STATE != SCIENTIFIC_STATE"
+    ],
+    "globalMultiplicativeProduct": "REJECTED_AS_GOVERNING_MODEL",
+    "pressureCapacity": "BOUNDED_SUPPORTING_MODEL_ONLY"
+  },
+  "selectedVerticalCase": {
+    "caseId": "BIO_LAB",
+    "sourcePr": 709,
+    "sourceHead": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+    "sourceStudy": "UCIC_CSB_FIVE_CASE_EXTERNAL_OFFICIAL_RECORD_SPECIFICITY_REPLICATION_v1",
+    "evidenceCeiling": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+    "outcomeBlindness": "NOT_ESTABLISHED",
+    "publicOutcomeContamination": "PRESENT",
+    "independentHumanConfirmation": "NOT_ESTABLISHED",
+    "prospectiveConfirmation": "NOT_ESTABLISHED",
+    "universality": "NOT_ESTABLISHED",
+    "preservedCapacityStatus": "UNEVALUABLE_FROM_SUMMARY_RECORD",
+    "sourceBlobs": {
+      "RESULT.v1.json": "8a0aaca5d8edcccbf6e90d352a0612de56e69b19",
+      "selection-and-scoring.v1.json": "509ca8a97abf4a38a46f443d099e444cec118431",
+      "route-maps.freeze.v1.json": "2ee2e6f4c8bb0380b5d0ba4e931e106938cdcc90",
+      "outcome-ledger.v1.json": "6a5e964572721280352d519660a20249afe1c460",
+      "decoy-maps.freeze.v1.json": "62a609ae0db9dcd7fe54d1b1a14657c80c8ded0f"
+    }
+  },
+  "hurricanePerspectiveResearch": {
+    "currentFrozenTest": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+    "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+    "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+    "workflowRun": 31195025635,
+    "artifactId": 9001275013,
+    "artifactZipSha256": "637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c",
+    "qcCorrection": "SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION",
+    "primaryIncrementalAuc": -0.009569377990430672,
+    "primaryBootstrap95": [-0.04339188231463211, 0.035535714285714205],
+    "additiveAuc": 0.8133971291866029,
+    "additiveDifferenceBootstrap95": [-0.03179495542509231, 0.11906047077922066],
+    "additiveStanding": "POSITIVE_POINT_ESTIMATE_INCONCLUSIVE",
+    "priorMetadataStanding": "QUARANTINED_SUPERSEDED_BY_QC_CORRECTED_RAW_RESULT",
+    "reorganizedCrossClassProxy": "NO_ADVANTAGE_OVER_INTERNAL_ONLY",
+    "trueMultiClassPhysicalCoherence": "NOT_YET_TESTED",
+    "warningTime": "NOT_TESTED",
+    "mayBeUsedAtF4": "BOUNDED_PERSPECTIVE_RESEARCH_CONTEXT_ONLY_UNLESS_FUTURE_EVIDENCE_CHANGES_STANDING"
+  },
+  "claimLaws": [
+    "NO_CONSTRUCTION_ARTIFACT_MAY_UPGRADE_SCIENTIFIC_STANDING",
+    "ADVERSE_MIXED_INCONCLUSIVE_UNEVALUABLE_AND_ABSENT_CONFIRMATION_STATES_REMAIN_DISTINCT",
+    "VISUAL_PROMINENCE_DOES_NOT_CREATE_EVIDENTIARY_STRENGTH",
+    "SOURCE_OWNERSHIP_AND_PROVENANCE_MUST_REMAIN_VISIBLE"
+  ],
+  "scientificClaimUpgradeAuthorized": false
+}

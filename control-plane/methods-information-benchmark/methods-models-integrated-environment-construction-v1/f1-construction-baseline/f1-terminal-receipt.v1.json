@@ -1,0 +1,35 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F1_TERMINAL_RECEIPT_v1",
+  "status": "CANDIDATE_PENDING_EXACT_VERIFICATION",
+  "program": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
+  "gate": "F1_CONSTRUCTION_BASELINE",
+  "branch": "construction/methods-models-integrated-environment-v1",
+  "inputMain": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+  "inputTree": "420e56a71801034c3e40e66d1048302a39a55da7",
+  "candidateDisposition": "PASS_F1_CONSTRUCTION_BASELINE_v1",
+  "effectiveOnlyAfter": [
+    "F1_FAIL_CLOSED_VERIFIER_SUCCESS",
+    "EXACT_GOVERNING_MAIN_NO_DRIFT_AT_VERIFICATION",
+    "ONLY_F1_PACKAGE_AND_TEMPORARY_VERIFIER_MUTATED"
+  ],
+  "outputsFrozenForDownstream": [
+    "GOVERNING_REPOSITORY_BASELINE",
+    "CP1_THROUGH_CP7_AUTHORITY_LINEAGE",
+    "SCIENTIFIC_SOURCE_AND_CLAIM_CEILINGS",
+    "PUBLIC_METHODS_PAGE_AND_RUNTIME_BASELINE",
+    "TEXT_FIRST_INTERACTION_AUTHORITY",
+    "SPATIAL_ADOPTION_ARCHITECTURE_AUTHORITY",
+    "PR541_CAPABILITY_SOURCE_BOUNDARY",
+    "NO_LIVE_MUTATION_BOUNDARY",
+    "FINAL_PROGRAM_BRANCH_IDENTITY",
+    "GATE_ADVANCEMENT_LAW"
+  ],
+  "scientificClaimUpgrade": false,
+  "publicMutation": false,
+  "visualConstruction": "NOT_STARTED",
+  "f2ConstructionAuthorityBeforeVerification": false,
+  "f2ConstructionAuthorityAfterEffectivePass": true,
+  "f2ExecutionAfterEffectivePass": "NOT_STARTED_UNTIL_SEPARATE_CONTINUATION",
+  "f3ThroughF12Authority": false,
+  "finalUserReviewGate": "F12_USER_VISUAL_AND_EXPERIENTIAL_REVIEW"
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F1_PROTECTED_BOUNDARY_AND_LINEAGE_v1",
+  "status": "F1_CONSTRUCTION_BASELINE_CANDIDATE",
+  "programBranch": "construction/methods-models-integrated-environment-v1",
+  "branchBase": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+  "singleConstructionLineage": true,
+  "allowedF1MutationPrefixes": [
+    "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f1-construction-baseline/",
+    ".github/workflows/temporary-methods-models-final-f1-verify.yml"
+  ],
+  "protectedSubjects": [
+    {
+      "subject": "PUBLIC_METHODS_AND_MODELS",
+      "pathPrefix": "laws/research/methods-and-models/",
+      "mutationAuthorized": false
+    },
+    {
+      "subject": "PUBLIC_LAWS",
+      "pathPrefix": "laws/",
+      "mutationAuthorized": false
+    },
+    {
+      "subject": "PR_541_CAPABILITY_SOURCE",
+      "pr": 541,
+      "exactHead": "2a874228f42c623c7747d566d87d451d029436f4",
+      "mutationAuthorized": false,
+      "mergeAuthorized": false
+    },
+    {
+      "subject": "BIO_LAB_SCIENTIFIC_SOURCE",
+      "pr": 709,
+      "exactHead": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+      "mutationAuthorized": false,
+      "mergeAuthorized": false
+    },
+    {
+      "subject": "HURRICANE_SCIENTIFIC_SOURCE",
+      "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+      "mutationAuthorized": false
+    },
+    {
+      "subject": "AI_ROUTER_AND_METHODS_ENTRYPOINT",
+      "paths": [
+        ".github/ai-router/router.v1.json",
+        ".github/ai-router/projects/methods-information-benchmark/entrypoint.v1.json"
+      ],
+      "mutationAuthorized": false
+    }
+  ],
+  "prohibitedDuringF1": [
+    "PUBLIC_PAGE_MUTATION",
+    "VISUAL_CONSTRUCTION",
+    "CANONICAL_STATE_KERNEL_CONSTRUCTION",
+    "RESOLUTION_ENGINE_CONSTRUCTION",
+    "SCIENTIFIC_CONTENT_EXPERIENCE_CONSTRUCTION",
+    "NAVIGATION_SYSTEM_CONSTRUCTION",
+    "DEPTH_SYSTEM_CONSTRUCTION",
+    "ACCESSIBILITY_INTERACTION_CONSTRUCTION",
+    "SPATIAL_XYZ_CONSTRUCTION",
+    "INTEGRATED_ENVIRONMENT_ASSEMBLY",
+    "DEPLOYMENT",
+    "RELEASE",
+    "SCIENTIFIC_CLAIM_UPGRADE",
+    "PR541_MUTATION",
+    "SOURCE_SCIENCE_MUTATION",
+    "ROUTER_OR_ENTRYPOINT_MUTATION"
+  ],
+  "f2ArtifactMutationAuthorized": false,
+  "rollback": "DELETE_OR_ABANDON_F1_BRANCH_AND_RETURN_TO_EXACT_GOVERNING_MAIN_WITHOUT_PUBLIC_MUTATION"
+}

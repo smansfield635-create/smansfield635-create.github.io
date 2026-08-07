@@ -1,0 +1,37 @@
+name: Temporary Final Program F1 Construction Baseline Verify
+
+on:
+  push:
+    branches:
+      - construction/methods-models-integrated-environment-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f1-construction-baseline/**'
+      - '.github/workflows/temporary-methods-models-final-f1-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-f1-construction-baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify F1 construction baseline fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f1-construction-baseline/verify.v1.mjs | tee /tmp/f1-verification.log
+      - name: Require terminal F1 contract
+        shell: bash
+        run: grep -F 'PASS_F1_CONSTRUCTION_BASELINE_v1' /tmp/f1-verification.log
+      - name: Preserve F1 verification log
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-models-final-program-f1-construction-baseline-verification
+          if-no-files-found: error
+          retention-days: 90
+          path: /tmp/f1-verification.log

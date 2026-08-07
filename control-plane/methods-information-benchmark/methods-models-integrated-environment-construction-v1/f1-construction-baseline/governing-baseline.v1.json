@@ -1,0 +1,38 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F1_GOVERNING_BASELINE_v1",
+  "status": "F1_CONSTRUCTION_BASELINE_CANDIDATE",
+  "program": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
+  "preservedTarget": "TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
+  "gate": "F1_CONSTRUCTION_BASELINE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "construction/methods-models-integrated-environment-v1",
+  "governingMain": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+  "governingTree": "420e56a71801034c3e40e66d1048302a39a55da7",
+  "governingMainSigned": true,
+  "checkpoint7": {
+    "status": "PASS_CLOSED",
+    "pr": 736,
+    "finalPremergeHead": "79295ee2937af4af3a0f843a77b9562944c5c6cd",
+    "mergeCommit": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+    "mergeTree": "420e56a71801034c3e40e66d1048302a39a55da7",
+    "repairedVerificationRun": 31202868618,
+    "postMergeRepositoryCertificationRun": 31203029188,
+    "ratificationComment": 5220195543
+  },
+  "finalProgramAuthority": {
+    "issue": 738,
+    "activationComment": 5220220972,
+    "formerCheckpoint8": "RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT",
+    "f1MayBegin": true,
+    "f1PassEarnedAtInput": false,
+    "f2ConstructionAuthorityAtInput": false
+  },
+  "handoff": {
+    "path": "control-plane/whole-estate/first-safe-vertical-case-selection-v1/final-checkpoint-handoff-contract.v1.json",
+    "blob": "fbb8f79a5bf6b2118dcb44caa9bb9c68f0d76da7"
+  },
+  "mainDriftPolicy": "FAIL_F1_IF_MAIN_DIFFERS_FROM_GOVERNING_MAIN_DURING_EXACT_VERIFICATION",
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false,
+  "f2ExecutionAuthorizedBeforeF1Pass": false
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F5_ENTRYPOINT_REGISTRY_v1",
+  "status": "F5_CONSTRUCTION_CANDIDATE",
+  "canonicalBaseRoute": "/laws/research/methods-and-models/",
+  "entryPoints": [
+    {
+      "entryPointId": "BIO_LAB",
+      "bindingId": "BIO_LAB_F4_STATE_BINDING_v1",
+      "contentId": "BIO_LAB",
+      "expectedObjectClass": "TEST_INSTANCE",
+      "expectedObjectId": "BIO_LAB",
+      "authority": "F4_EXACT_STATE_BINDING_ONLY"
+    },
+    {
+      "entryPointId": "HURRICANE_RAW_TC_RADAR_QC_CORRECTED",
+      "bindingId": "HURRICANE_RAW_TC_RADAR_F4_STATE_BINDING_v1",
+      "contentId": "HURRICANE_RAW_TC_RADAR_QC_CORRECTED",
+      "expectedObjectClass": "EVIDENCE_OBJECT",
+      "expectedObjectId": "HURRICANE_RAW_TC_RADAR_QC_CORRECTED",
+      "authority": "F4_EXACT_STATE_BINDING_ONLY"
+    }
+  ],
+  "entryLaw": "DIRECT_ENTRY_MAY_RESTORE_ONLY_THE_EXACT_F4_BOUND_STATE_FOR_THE_REGISTERED_ENTRY_POINT",
+  "entryDoesNotAssertRelationBetweenEntryPoints": true,
+  "unregisteredEntryDisposition": "FAIL_CLOSED_NO_MATCH"
+}

@@ -312,6 +312,18 @@
       "scopeHash": "829f23705557beebb52268181d148379af118f0a65d7eb5875e615a79492af58",
       "state": "ADMITTED_LOCKED"
     },
+    "8454f0f1162ba0263b05c2d1d48a6c70d398cf753a1ddb5ca4f56f0e038180c4": {
+      "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
+      "lockGeneration": 389,
+      "lockScope": "IMI:SUCCESSOR:MEASUREMENT_OBJECT_REGISTRY:V1",
+      "operationId": "IMI_WEIGHTED_DIRECTIONAL_SUCCESSOR_MEASUREMENT_OBJECT_REGISTRY_v1",
+      "procedureLocatorDigest": "23c550b94ef9b80f7054faac6279ab4ff1eef5e8277846857d9593f2559735f1",
+      "released": false,
+      "requestDigest": "6730335853960f067cc18e8dcb1650642d4c921c24061d752a45bb221b507878",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8454f0f1162ba0263b05c2d1d48a6c70d398cf753a1ddb5ca4f56f0e038180c4",
+      "state": "ADMITTED_LOCKED"
+    },
     "85257deb4efad6cc2d2a6c57ae5a193ccb85c2d4968b838847e439fee4ff8bb4": {
       "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
       "lockGeneration": 386,
@@ -832,7 +844,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 388,
+  "lockGeneration": 389,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

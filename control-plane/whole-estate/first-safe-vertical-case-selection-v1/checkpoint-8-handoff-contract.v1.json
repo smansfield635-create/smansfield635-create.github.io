@@ -1,0 +1,51 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_8_HANDOFF_CONTRACT_v1",
+  "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
+  "nextOperation": "TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
+  "activationCondition": "CHECKPOINT_7_PASS_CLOSED_AFTER_SEPARATE_MERGE_AND_RATIFICATION_AUTHORITY",
+  "selectedVerticalCase": "BIO_LAB",
+  "requiredStateAxes": [
+    "SYSTEM",
+    "SCIENTIFIC_OBJECT",
+    "MODEL",
+    "METHOD_STAGE",
+    "EVIDENCE",
+    "EXECUTION",
+    "CUSTODY",
+    "CLAIM_CEILING",
+    "SUPPORT_MODE",
+    "LENS",
+    "VIEW_MODE",
+    "ROUTE_HISTORY",
+    "CONTENT_VERSION"
+  ],
+  "cp8MayConsume": [
+    "selected case identity",
+    "system boundary",
+    "identity criterion",
+    "registered relation map",
+    "decoy controls",
+    "official outcome correspondence",
+    "source evidence standing",
+    "claim ceiling",
+    "provenance and contamination qualifiers"
+  ],
+  "cp8MayNotInfer": [
+    "prospective confirmation",
+    "independent human confirmation",
+    "universal law",
+    "preserved-capacity success",
+    "scientific standing from visual prominence",
+    "new relations from spatial adjacency"
+  ],
+  "hurricaneDeltaAvailability": {
+    "standing": "POSITIVE_SIGNAL_INCONCLUSIVE",
+    "selectedFirstVertical": false,
+    "mayRemainDiscoverableAsLaterEvidenceState": true,
+    "mayNotReplaceSelectedVerticalWithoutNewExplicitAdjudication": true
+  },
+  "userVisualApprovalRequired": true,
+  "publicMutationAuthorized": false,
+  "liveMergeAuthorized": false,
+  "checkpoint8Execution": "NOT_STARTED"
+}

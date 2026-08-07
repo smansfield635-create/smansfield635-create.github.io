@@ -1,0 +1,25 @@
+{
+  "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_CONTINUITY_CHANGED_PATH_MANIFEST_v1",
+  "operationId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENTATION_v2",
+  "governingHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+  "exactPathCount": 14,
+  "exactPaths": [
+    ".github/workflows/h-earth-audralia-open-world-spatial-migration-continuity.yml",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/AGENTS.md",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/authority-and-lineage.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/changed-path-manifest.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/checkpoint-registry.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/construction-procedure.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/continuity-state.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/instrument.locator.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/operation-request.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/schemas.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/spatial-invariants.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/successor-room-recovery.v1.json",
+    "h-earth-3d/control-plane/audralia-open-world-spatial-migration/verification-contract.v1.json",
+    "tools/h-earth-audralia-open-world-spatial-migration/continuity-verifier.v1.mjs"
+  ],
+  "classification": "NONPRODUCT_INSTRUMENTATION_ONLY",
+  "workflowCreatedLast": true,
+  "prohibitedMutationClasses": ["PRODUCT", "TERRAIN", "RUNTIME", "LIVE_NAVIGATION", "LIVE_WATER", "SHOWROOM", "REGISTRY_DURING_CONSTRUCTION", "DEPLOYMENT", "RELEASE"]
+}

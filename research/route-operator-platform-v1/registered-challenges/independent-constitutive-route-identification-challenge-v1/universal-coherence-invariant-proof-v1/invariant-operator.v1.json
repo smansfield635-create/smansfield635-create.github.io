@@ -1,0 +1,53 @@
+{
+  "empirical_universality_status": "NOT_ESTABLISHED",
+  "formal_status": "PROVED_CONDITIONALLY_FROM_FROZEN_AXIOMS",
+  "inputs": {
+    "admissible_routes_by_capacity": "R_I_k",
+    "evidence_state": [
+      "INVALID",
+      "UNEVALUABLE",
+      "NUMERIC"
+    ],
+    "identity_criterion": "I",
+    "relation_integrity": "q_e_t",
+    "required_capacities": "K_I",
+    "required_relations_by_route": "E_r",
+    "route_admissibility": "a_I_r_t"
+  },
+  "invariants": [
+    "CONJUNCTION_WITHIN_REQUIRED_ROUTE",
+    "DISJUNCTION_ACROSS_ADMISSIBLE_ALTERNATIVE_ROUTES",
+    "CONJUNCTION_ACROSS_IDENTITY_REQUIRED_CAPACITIES",
+    "PROVENANCE_AND_SUPPORT_ARE_ROUTE_ADMISSIBILITY_PROPERTIES",
+    "TEMPORAL_COMPARISON_REQUIRES_STRUCTURE_AND_VERSION_CORRESPONDENCE",
+    "RESTORATION_REQUIRES_ROUTE_REOPENING_AND_REENTRY_CLEARANCE",
+    "POST_OUTCOME_ROUTE_OR_BOUNDARY_REPAIR_PROHIBITED"
+  ],
+  "lattice_expression": "MEET_required_capacities(JOIN_admissible_routes(MEET(route_admissibility, required_relations)))",
+  "numeric_godel_expression": "min_k max_r min(a_I(r,t), min_e q_e(t))",
+  "operation_id": "UNIVERSAL_COHERENCE_INVARIANT_EXISTING_PORTFOLIO_PROOF_v1",
+  "operational_parent_head": "e98f680ab21eced021caaa82d3adee2887f40863",
+  "parent_protocol_head": "1357c7d6f91f7b6708ec4127ea22016ffe6f7b00",
+  "permitted_variation": [
+    "RAW_EVIDENCE_MODALITY",
+    "PREDECLARED_NORMALIZATION_TO_RELATION_INTEGRITY",
+    "SYSTEM_TOPOLOGY",
+    "IDENTITY_CRITERION",
+    "MEASUREMENT_UNCERTAINTY"
+  ],
+  "precedence": "INVALID > UNEVALUABLE > NUMERIC",
+  "prohibited_variation": [
+    "DOMAIN_SPECIFIC_TOP_LEVEL_COHERENCE_LAW",
+    "POST_RESULT_IDENTITY_CRITERION",
+    "POST_RESULT_ROUTE_TOPOLOGY",
+    "POST_RESULT_THRESHOLD_OR_BASELINE_REPAIR"
+  ],
+  "rejected_universal_operators": [
+    "GLOBAL_PRODUCT_OVER_ALL_FACTORS",
+    "GLOBAL_ADDITIVE_AVERAGE",
+    "WEAKEST_RAW_FACTOR_WITHOUT_ROUTE_TOPOLOGY",
+    "OUTPUT_HISTORY_AS_IDENTITY_CONTINUITY"
+  ],
+  "schema_id": "UNIVERSAL_COHERENCE_INVARIANT_OPERATOR_v1",
+  "version": "1.0.0"
+}

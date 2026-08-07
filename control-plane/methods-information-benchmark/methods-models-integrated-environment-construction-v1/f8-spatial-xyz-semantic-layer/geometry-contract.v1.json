@@ -1,0 +1,20 @@
+{
+  "schema":"METHODS_MODELS_F8_GEOMETRY_CONTRACT_v1",
+  "version":"1.0.0",
+  "coordinateSystem":"NORMALIZED_CARTESIAN_PRESENTATION_SPACE",
+  "bounds":{"x":[-1,1],"y":[-1,1],"z":[-1,1]},
+  "layoutMode":"DETERMINISTIC_SEMANTIC_SLOT_GRID_v1",
+  "axisSemantics":{
+    "x":"STABLE_PRESENTATION_SLOT_WITHIN_NODE_KIND_NO_SCIENTIFIC_MEANING",
+    "y":"DECLARED_NODE_KIND_LANE_PRESENTATION_ONLY",
+    "z":"STABLE_PRESENTATION_WRAP_SLOT_NO_EVIDENTIARY_OR_TEMPORAL_MEANING"
+  },
+  "nodeKindLanes":{"STUDY_OBJECT_NODE":0.70,"SCIENTIFIC_OBJECT_NODE":0.25,"CLAIM_NODE":-0.20,"ESTATE_DESTINATION_REGION":-0.70},
+  "slotAlgorithm":{"columns":6,"xStart":-0.75,"xStep":0.30,"zStart":-0.75,"zStep":0.30,"stableOrder":"LEXICOGRAPHIC_CANONICAL_ID"},
+  "visualWeight":1,
+  "edgeWeight":1,
+  "camera":{"mode":"FIXED_NON_USER_CONTROLLED","orbit":false,"pan":false,"zoom":false,"gestureCamera":false},
+  "motion":{"required":false,"semanticInformationInMotion":false},
+  "invalidGeometryDisposition":"FAIL_CLOSED",
+  "laws":["COORDINATE_CHANGE_IS_REPRESENTATION_CHANGE_ONLY","NO_COORDINATE_MAY_ENCODE_EVIDENCE_STRENGTH_OR_CLAIM_CEILING","NO_CAMERA_STATE_MAY_CHANGE_SCIENTIFIC_OR_INQUIRY_STATE","GEOMETRY_MUST_REMAIN_TEXT_FIRST_OPTIONAL_AND_NONCONTROLLING"]
+}

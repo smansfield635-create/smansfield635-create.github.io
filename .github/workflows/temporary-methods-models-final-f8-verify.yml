@@ -1,0 +1,51 @@
+name: Temporary Methods Models Final F8 Verify
+on:
+  push:
+    branches:
+      - construction/methods-models-integrated-environment-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/**'
+      - '.github/workflows/temporary-methods-models-final-f8-verify.yml'
+permissions:
+  contents: read
+concurrency:
+  group: methods-models-final-f8-verify
+  cancel-in-progress: true
+jobs:
+  verify-f8-spatial-xyz-semantic-layer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify F8 spatial XYZ semantic layer fail-closed
+        run: |
+          node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/verify.v1.mjs | tee f8-verification.log
+      - name: Prove exact F8 changed-path scope from accepted pre-F8 terminal head
+        shell: bash
+        run: |
+          git diff --name-only 42b72f4fe78e8e79dacf2914a24143e851e66cdb..HEAD > /tmp/f8-changed.txt
+          cat /tmp/f8-changed.txt
+          if grep -Ev '^(control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/|\.github/workflows/temporary-methods-models-final-f8-verify\.yml$)' /tmp/f8-changed.txt | grep -q .; then
+            echo 'Unexpected non-F8 path changed'; exit 1
+          fi
+          if grep -Ei '(^|/)f9-|integrated-environment-assembly|(^|/)laws/|showroom|frontier' /tmp/f8-changed.txt | grep -v 'f8-spatial-xyz-semantic-layer' | grep -q .; then
+            echo 'F9/public path detected'; exit 1
+          fi
+      - name: Classify governing main drift without rebasing
+        shell: bash
+        run: |
+          git fetch origin main
+          git diff --name-only a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc..origin/main > /tmp/main-drift.txt
+          cat /tmp/main-drift.txt
+          if grep -E '^(control-plane/methods-information-benchmark/|laws/research/methods-and-models/)' /tmp/main-drift.txt | grep -q .; then
+            echo 'Methods governing surface drift detected'; exit 1
+          fi
+          if git diff -U0 a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc..origin/main -- .github/ai-router/router.v1.json | grep -E '^[+-][^+-]' | grep -i 'methods-information-benchmark' | grep -q .; then
+            echo 'Methods-specific global router drift detected'; exit 1
+          fi
+      - name: Preserve F8 verification log
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-models-final-program-f8-spatial-xyz-semantic-layer-verification
+          path: f8-verification.log

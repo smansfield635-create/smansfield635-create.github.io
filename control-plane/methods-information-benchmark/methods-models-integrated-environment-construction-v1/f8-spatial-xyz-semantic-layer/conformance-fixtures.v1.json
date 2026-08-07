@@ -1,0 +1,15 @@
+{
+  "schema":"METHODS_MODELS_F8_CONFORMANCE_FIXTURES_v1",
+  "version":"1.0.0",
+  "fixtures":[
+    {"fixtureId":"VALID_DECLARED_RELATION","expected":"ACCEPT","candidate":{"relationId":"HOSP_ADD_HIDE_COLLAPSE","studyId":"HOSPITAL_MEASURE_LEVEL_ROBUSTNESS","claimId":"UCIC_CLAIM_FACTOR_NONREDUNDANCY","type":"NONCOMPENSATION_HIDDEN_COLLAPSE","direction":"SUPPORTING","standing":"BOUNDED"}},
+    {"fixtureId":"INVALID_INFERRED_PROXIMITY_RELATION","expected":"REJECT","candidate":{"relationId":"PROXIMITY_INFERENCE","studyId":"BIO_LAB","claimId":"UCIC_CLAIM_HURRICANE_MECHANISTIC_EARLY_WARNING","type":"VISUAL_PROXIMITY","direction":"SUPPORTING","standing":"INFERRED"}},
+    {"fixtureId":"VALID_GOVERNED_PROJECTION","expected":"ACCEPT","claimId":"UCIC_CLAIM_ROUTE_SPECIFICITY","destination":"LAWS"},
+    {"fixtureId":"INVALID_UNAUTHORIZED_PROJECTION","expected":"REJECT","claimId":"UCIC_CLAIM_GENERAL_BANK_COLLAPSE_EARLY_WARNING","destination":"LAWS"},
+    {"fixtureId":"VALID_FIXED_CAMERA","expected":"ACCEPT","camera":{"mode":"FIXED_NON_USER_CONTROLLED","orbit":false,"pan":false,"zoom":false,"userControlled":false}},
+    {"fixtureId":"INVALID_USER_CAMERA","expected":"REJECT","camera":{"mode":"ORBIT","orbit":true,"pan":true,"zoom":true,"userControlled":true}},
+    {"fixtureId":"INVALID_EVIDENCE_TO_SIZE_MAPPING","expected":"REJECT","mapping":"EVIDENCE_STANDING_TO_SIZE"},
+    {"fixtureId":"INVALID_CLAIM_TO_HEIGHT_MAPPING","expected":"REJECT","mapping":"CLAIM_CEILING_TO_HEIGHT"},
+    {"fixtureId":"INVALID_SPATIAL_ONLY_NAVIGATION","expected":"REJECT","operation":"NAVIGATE_ROUTE","basis":"XYZ_PROXIMITY_ONLY"}
+  ]
+}

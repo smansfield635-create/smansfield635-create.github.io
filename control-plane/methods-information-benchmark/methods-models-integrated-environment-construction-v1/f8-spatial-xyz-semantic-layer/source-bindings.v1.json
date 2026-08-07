@@ -1,0 +1,25 @@
+{
+  "schema": "METHODS_MODELS_F8_SOURCE_BINDINGS_v1",
+  "status": "F8_CONSTRUCTION_CANDIDATE",
+  "inputBranch": "construction/methods-models-integrated-environment-v1",
+  "acceptedInputHead": "42b72f4fe78e8e79dacf2914a24143e851e66cdb",
+  "acceptedInputTree": "69a7f12c37734186e2de55ff6f69a0761d7b5e40",
+  "governingMethodsBaseline": {"head":"a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc","tree":"420e56a71801034c3e40e66d1048302a39a55da7"},
+  "observedMainAtF8Start": {"head":"c50d0a06a73ed149286508a15e697d8efa254865","tree":"652d78f0768e2ee957423e9c657d3ac6f35f0775","driftClassification":"NON_METHODS_UNRELATED_ESTATE_DRIFT_NO_REBASE","changedSurface":"AUDRALIA_H_EARTH_CONTINUITY_PLUS_GLOBAL_ROUTER_WITH_NO_METHODS_SPECIFIC_ROUTER_DELTA"},
+  "authoritativeInputClasses": ["CANONICAL_SCIENTIFIC_OBJECTS","TYPED_SCIENTIFIC_RELATIONS","GOVERNED_CROSS_ESTATE_PROJECTIONS"],
+  "exactUpstreamBlobs": {
+    "preF8Receipt": "87fb8dbb5044b2dde9f5a8bba213a9e1a982691c",
+    "scientificObjectInventory": "bed2dba5e92261cb9a72b83eb202a76e8d350473",
+    "canonicalCoherenceObject": "69a1dc8446c221a706d9d9ee1b8f40c83932f9ed",
+    "studyRegistryIndex": "c5281b8f5faa113bca90eeab4aa731eadab25dfd",
+    "typedRelationRegistryIndex": "64e6c025c58294898b8ff3931b7c288ddb655a19",
+    "claimProjectionMatrix": "037a6a7cc1e9d0ed32d150fe30e926e51f15324b",
+    "f5SuccessorEntrypoints": "f2c67cd76ea93807d18e36c5407dff31577858e2",
+    "f6SuccessorDepthProfiles": "f10294d9221b31be850716fdc67bc509121910d7",
+    "f7SuccessorAccessibility": "15f522a234220f1e4beef8794c59d29af72ab4ca",
+    "f7SemanticControls": "4287eae8ea87cd9b7427f4b093f1775368dd46ee",
+    "textFirstRatification": "0375241beb7ae76030402fb882d9cc1d46b257a5"
+  },
+  "portfolioCounts": {"studies":22,"levelAStateful":16,"canonicalClaims":19,"typedResultClaimRelations":38},
+  "mutationBoundaries": {"f2AxisExpansion":false,"f3ResolverMutation":false,"f1ThroughF7Rewrite":false,"publicMethodsMutation":false,"publicLawsMutation":false,"pr541Mutation":false,"f9Construction":false,"scientificClaimUpgrade":false}
+}

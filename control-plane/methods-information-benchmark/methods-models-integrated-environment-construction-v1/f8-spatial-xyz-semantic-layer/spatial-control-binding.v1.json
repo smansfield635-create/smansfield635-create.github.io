@@ -1,0 +1,20 @@
+{
+  "schema":"METHODS_MODELS_F8_SPATIAL_CONTROL_BINDING_v1",
+  "version":"1.0.0",
+  "f7SemanticControlBlob":"4287eae8ea87cd9b7427f4b093f1775368dd46ee",
+  "f7Modalities":["POINTER","KEYBOARD","TOUCH","ASSISTIVE_TECHNOLOGY"],
+  "f8CreatesNewSemanticControls":false,
+  "defaultSpatialNodeActivation":"NONACTIVATING",
+  "delegationRules":[
+    {"requestedOperation":"REQUEST_DEPTH","authority":"F6_VIA_F7_REGISTERED_DEPTH_CONTROLS","f8MayReimplement":false},
+    {"requestedOperation":"INQUIRE_FIELD","authority":"F6_VIA_F7_INQUIRE_FIELD","f8MayReimplement":false},
+    {"requestedOperation":"NAVIGATE_ROUTE","authority":"F5_VIA_F7_NAVIGATE_ROUTE","f8MayReimplement":false},
+    {"requestedOperation":"SET_MOTION_PREFERENCE","authority":"F7_MOTION_PREFERENCE","f8MayReimplement":false},
+    {"requestedOperation":"FOCUS_MOVE","authority":"F7_FOCUS_TARGET","f8MayReimplement":false}
+  ],
+  "crossObjectSpatialActivation":"REJECT_UNLESS_AN_EXPLICIT_UPSTREAM_ROUTE_BINDING_EXISTS",
+  "focusLaw":"FOCUS_ON_A_SPATIAL_NODE_DOES_NOT_ACTIVATE_IT",
+  "cameraControl":"PROHIBITED",
+  "gestureOnlyOperation":"PROHIBITED",
+  "laws":["INPUT_MODALITY_DOES_NOT_CHANGE_SPATIAL_OR_SCIENTIFIC_AUTHORITY","F8_DOES_NOT_CREATE_A_SPATIAL_ONLY_OPERATION_PATH","SPATIAL_SELECTION_MAY_NOT_BYPASS_F5_F6_OR_F7"]
+}

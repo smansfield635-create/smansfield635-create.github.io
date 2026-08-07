@@ -1,56 +1,48 @@
 {
   "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_APPROACH_VIEW_ADJACENCY_CONTRACT_v1",
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
-  "twoHillRelation": {
-    "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
-    "rightHill": {"x": 152, "y": 42.73941022157669, "z": -224},
-    "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
-    "minimumLaw": "SUCCESSOR_MUST_NOT_RAISE_SADDLE_OR_LOWER_HILL_CORE_BY_GEOMETRIC_OFFSET",
-    "readability": "MUST_REMAIN_LEGIBLE"
+  "successorRepairRevision": 3,
+  "estateRelation": {
+    "atriumHill": {"x": 80, "z": -172, "role": "HIGH_360_VIEW_ATRIUM_ANCHOR"},
+    "largeHill": {"x": 152, "z": -224, "role": "LARGE_HILL_MANOR_AND_HIDDEN_VAULT_MASS"},
+    "saddle": {"x": 112.41666666666667, "z": -194.83333333333334, "role": "ESTATE_CONNECTIVE_SPINE"},
+    "readability": "MUST_REMAIN_LEGIBLE_AS_TWO_HILLS_CONNECTED_BY_ESTATE_TERRAIN",
+    "saddleRequiredToRemainEmpty": false,
+    "finalGroundPassageDecision": "DEFERRED_TO_MANOR_ARCHITECTURE_OPERATION"
   },
-  "lowCorridor": {
-    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
-    "axis": {"x": 0.5931990380498502, "z": 0.805055837353368},
-    "hardOpenHalfWidth": 10,
-    "transitionHalfWidth": 18,
-    "successorGeometricOffsetInsideHardOpen": 0,
-    "mustRemainOpen": true
+  "mountainHydrologyRelation": {
+    "waterfallGap": {"x": -48, "visibleCrestZ": -268, "landingZ": -230},
+    "reservoir": {"x": -44, "z": -216, "enclosed": true},
+    "cavernExteriorReserve": {"x": -16, "z": -236, "side": "RIGHT_OF_WATERFALL"},
+    "rearMountainBoundary": "MUST_CONCEAL_UNDEVELOPED_UPPER_WATERSHED_AND_PREVENT_BACKSIDE_READABILITY"
   },
   "viewCorridors": [
     {
       "id": "BEACHWARD_GROUND_VIEW",
-      "status": "PROTECTED",
-      "sourceMaximumObstruction": -0.041573455929757586,
-      "successorLaw": "NO_NEW_POSITIVE_OBSTRUCTION_ALONG_PROTECTED_RAY_SET"
+      "status": "PRESERVE_COAST_AND_EVENTUAL_MANOR_LANDMARK_RELATION",
+      "successorLaw": "MAP_RENEWAL_MAY_REVEAL_COASTLINE_CONTEXT_BUT_MUST_NOT_MERGE_ENTRY_INTO_ESTATE"
     },
     {
       "id": "MOUNTAINWARD_GROUND_VIEW",
-      "status": "PROTECTED",
-      "sourceMaximumObstruction": -3.0548654910176936,
-      "successorLaw": "MOUNTAINWARD_RELIEF_MAY_STRENGTHEN_DISTANT_FORM_BUT_MUST_NOT_OCCLUDE_NEAR_GROUND_CORRIDOR"
+      "status": "RENEW_TO_DEEP_MOUNTAIN_WATERFALL_BACKDROP",
+      "successorLaw": "MOUNTAIN_DEPTH_MAY_INCREASE_AND_REAR_RANGE_MAY_CLOSE_BACKSIDE_WHILE_NEARFIELD_RESERVOIR_AND_CAVERN_APPROACH_REMAIN_ACCESSIBLE"
     }
   ],
   "entryRegion": {
     "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
     "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96},
-    "geometricOffset": 0,
+    "presentationOffset": 0,
     "mustRemainSeparateFromEstate": true,
     "mustRemainRegionallyConnected": true
   },
-  "estateAdjacency": {
-    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
-    "buildingGeometry": "DEFERRED",
-    "environmentalNesting": "AUTHORIZED",
-    "approachNetworkSelection": "DEFERRED",
-    "newHardBarriers": "PROHIBITED"
-  },
   "hardFailures": [
-    "LOW_CORRIDOR_CLOSED",
-    "TWO_HILL_RELATION_ERASED",
-    "BEACHWARD_VIEW_NEWLY_OCCLUDED",
-    "MOUNTAINWARD_NEAR_CORRIDOR_OCCLUDED",
     "ENTRY_ZONE_MERGED_INTO_ESTATE",
-    "ENTRY_ZONE_DISCONNECTED",
-    "MANOR_GEOMETRY_SELECTED_OR_CONSTRUCTED"
+    "ENTRY_ZONE_PRESENTATION_OFFSET_CHANGED",
+    "MOUNTAIN_RANGE_REMAINS_A_THIN_REAR_PLATE_WITH_VISIBLE_BACKSIDE",
+    "WATERFALL_RESERVOIR_CAVERN_RELATION_LOST",
+    "ATRIUM_HILL_IDENTITY_ERASED",
+    "ESTATE_CONNECTION_TO_LARGE_HILL_REMOVED",
+    "HIDDEN_VAULT_FORCED_TO_HAVE_SURFACE_EXPRESSION",
+    "MANOR_CAVERN_OR_VAULT_INTERIOR_GEOMETRY_SELECTED_OR_CONSTRUCTED"
   ]
 }

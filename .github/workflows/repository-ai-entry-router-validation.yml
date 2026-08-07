@@ -1,92 +1,358 @@
-name: Repository AI Entry Router Validation
+name: Disposable Three-Tier Substrate and H-Earth Builder Execution Carrier
 
 on:
-  pull_request:
-    paths:
-      - 'AGENTS.md'
-      - 'AI_ENTRYPOINT.json'
-      - '.github/ai-router/**'
-      - 'tools/repository-ai-entry-router.mjs'
-      - '.github/workflows/repository-ai-entry-router-validation.yml'
   push:
+    branches:
+      - 'execution/three-tier-substrate-bootstrap-h-earth-builder-carrier-v1-001'
     paths:
-      - 'AGENTS.md'
-      - 'AI_ENTRYPOINT.json'
-      - '.github/ai-router/**'
-      - 'tools/repository-ai-entry-router.mjs'
       - '.github/workflows/repository-ai-entry-router-validation.yml'
-  workflow_dispatch:
 
 permissions:
   contents: read
 
+env:
+  CARRIER_GOVERNING_HEAD: 889197b2cbe73de171756b7545446f12a726cde7
+  SUBSTRATE_HEAD: 22377f38b733c674a8858ca95163a66923308167
+  H_EARTH_TARGET_HEAD: 69a776ab4de61cddb6fad3602625164bea4b6323
+  H_EARTH_LOCK_SCOPE_HASH: 205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3
+
 jobs:
-  validate-router:
-    runs-on: ubuntu-latest
+  carrier-preflight:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact workflow head
+      - name: Check out exact carrier commit
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Run repository AI router self-test
-        run: |
-          node tools/repository-ai-entry-router.mjs \
-            --self-test \
-            --output /tmp/repository-ai-entry-router-self-test.json
-
-      - name: Exercise H-Earth registered route
-        run: |
-          node tools/repository-ai-entry-router.mjs \
-            --path h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
-            --task "Workflow registered-route validation" \
-            --output /tmp/repository-ai-entry-router-h-earth-route.json
-
-      - name: Exercise unregistered mutation guard
+      - name: Verify one-path carrier boundary and registered route
         shell: bash
         run: |
-          set +e
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$CARRIER_GOVERNING_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          mapfile -t changed < <(git diff --name-only "$CARRIER_GOVERNING_HEAD..HEAD")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = ".github/workflows/repository-ai-entry-router-validation.yml"
           node tools/repository-ai-entry-router.mjs \
+            --path .github/workflows/repository-ai-entry-router-validation.yml \
             --mutation-intent \
-            --path future-project/example.txt \
-            --task "Workflow unregistered-mutation validation" \
-            --output /tmp/repository-ai-entry-router-unregistered-mutation.json
-          status=$?
-          set -e
-          test "$status" -eq 1
-          grep -q '"disposition": "BLOCK"' /tmp/repository-ai-entry-router-unregistered-mutation.json
+            --task THREE_TIER_SUBSTRATE_BOOTSTRAP_AND_H_EARTH_BUILDER_EXECUTION_CARRIER_v1 \
+            --output /tmp/carrier-router-receipt.json
 
-      - name: Exercise H-Earth candidate admission negative backend
-        shell: bash
-        run: |
-          set +e
-          node h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs \
-            --candidate 95504c9927922318225da1d61fa303cec70497f9 \
-            --output /tmp/h-earth-r06-c10-negative-admission.json
-          status=$?
-          set -e
-          test "$status" -eq 1
-          python - <<'PY'
-          import json
-          path = '/tmp/h-earth-r06-c10-negative-admission.json'
-          with open(path, 'r', encoding='utf-8') as handle:
-              receipt = json.load(handle)
-          assert receipt['schema'] == 'H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_GATE_FAILURE_v1'
-          assert receipt['gateResult'] == 'FAIL_CLOSED_INSTRUMENT_OR_BINDING_ERROR'
-          assert receipt['candidateArgument'] == '95504c9927922318225da1d61fa303cec70497f9'
-          assert receipt['error'].startswith('AUTHORITY_IDENTITY_MISMATCH:')
-          assert receipt['conversationMemoryRequired'] is False
-          PY
-
-      - name: Upload router validation receipts
+      - name: Upload carrier preflight receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: repository-ai-entry-router-validation-receipts
-          path: |
-            /tmp/repository-ai-entry-router-self-test.json
-            /tmp/repository-ai-entry-router-h-earth-route.json
-            /tmp/repository-ai-entry-router-unregistered-mutation.json
-            /tmp/h-earth-r06-c10-negative-admission.json
+          name: carrier-preflight-receipt
+          path: /tmp/carrier-router-receipt.json
           if-no-files-found: error
           retention-days: 30
+
+  substrate-builder:
+    needs: carrier-preflight
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact substrate candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 22377f38b733c674a8858ca95163a66923308167
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Execute exact substrate Builder verifier
+        id: execute
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SUBSTRATE_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          set +e
+          node .github/ai-router/codespace-execution/verify-substrate.v1.mjs \
+            --mode builder \
+            --output /tmp/three-tier-substrate-builder.json \
+            > /tmp/three-tier-substrate-builder.stdout.txt \
+            2> /tmp/three-tier-substrate-builder.stderr.txt
+          status=$?
+          set -e
+          printf '%s\n' "$status" > /tmp/three-tier-substrate-builder.exit.txt
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload substrate Builder evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: three-tier-substrate-builder
+          path: |
+            /tmp/three-tier-substrate-builder.json
+            /tmp/three-tier-substrate-builder.stdout.txt
+            /tmp/three-tier-substrate-builder.stderr.txt
+            /tmp/three-tier-substrate-builder.exit.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Require real substrate Builder PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ steps.execute.outputs.status }}" = "0"
+          node - <<'NODE'
+          const fs = require('fs');
+          const r = JSON.parse(fs.readFileSync('/tmp/three-tier-substrate-builder.json', 'utf8'));
+          if (r.result !== 'PASS') throw new Error(`SUBSTRATE_BUILDER_${r.result}`);
+          if (r.mode !== 'builder') throw new Error('SUBSTRATE_BUILDER_MODE_MISMATCH');
+          if (r.candidateHead !== process.env.SUBSTRATE_HEAD) throw new Error('SUBSTRATE_BUILDER_HEAD_MISMATCH');
+          NODE
+
+  substrate-fresh-verifier:
+    needs: substrate-builder
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact substrate candidate in fresh runner
+        uses: actions/checkout@v4
+        with:
+          ref: 22377f38b733c674a8858ca95163a66923308167
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Execute exact fresh verifier
+        id: execute
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SUBSTRATE_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          set +e
+          node .github/ai-router/codespace-execution/verify-substrate.v1.mjs \
+            --mode fresh-verifier \
+            --output /tmp/three-tier-substrate-fresh-verifier.json \
+            > /tmp/three-tier-substrate-fresh-verifier.stdout.txt \
+            2> /tmp/three-tier-substrate-fresh-verifier.stderr.txt
+          status=$?
+          set -e
+          printf '%s\n' "$status" > /tmp/three-tier-substrate-fresh-verifier.exit.txt
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Upload fresh-verifier evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: three-tier-substrate-fresh-verifier
+          path: |
+            /tmp/three-tier-substrate-fresh-verifier.json
+            /tmp/three-tier-substrate-fresh-verifier.stdout.txt
+            /tmp/three-tier-substrate-fresh-verifier.stderr.txt
+            /tmp/three-tier-substrate-fresh-verifier.exit.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Require real fresh-verifier PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ steps.execute.outputs.status }}" = "0"
+          node - <<'NODE'
+          const fs = require('fs');
+          const r = JSON.parse(fs.readFileSync('/tmp/three-tier-substrate-fresh-verifier.json', 'utf8'));
+          if (r.result !== 'PASS') throw new Error(`SUBSTRATE_FRESH_${r.result}`);
+          if (r.mode !== 'fresh-verifier') throw new Error('SUBSTRATE_FRESH_MODE_MISMATCH');
+          if (r.candidateHead !== process.env.SUBSTRATE_HEAD) throw new Error('SUBSTRATE_FRESH_HEAD_MISMATCH');
+          NODE
+
+  substrate-equality:
+    needs:
+      - substrate-builder
+      - substrate-fresh-verifier
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: three-tier-substrate-builder
+          path: /tmp/substrate-builder-artifact
+
+      - name: Download fresh-verifier evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: three-tier-substrate-fresh-verifier
+          path: /tmp/substrate-fresh-artifact
+
+      - name: Compare immutable substrate fingerprints
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const bp = '/tmp/substrate-builder-artifact/three-tier-substrate-builder.json';
+          const fp = '/tmp/substrate-fresh-artifact/three-tier-substrate-fresh-verifier.json';
+          const bb = fs.readFileSync(bp);
+          const fb = fs.readFileSync(fp);
+          const b = JSON.parse(bb);
+          const f = JSON.parse(fb);
+          const sha = x => crypto.createHash('sha256').update(x).digest('hex');
+          const equal =
+            b.result === 'PASS' &&
+            f.result === 'PASS' &&
+            b.candidateHead === process.env.SUBSTRATE_HEAD &&
+            f.candidateHead === process.env.SUBSTRATE_HEAD &&
+            b.substrateFingerprint === f.substrateFingerprint;
+          const receipt = {
+            schema: 'THREE_TIER_SUBSTRATE_INDEPENDENT_EQUALITY_EXECUTION_RECEIPT_v1',
+            result: equal ? 'PASS_EXACT_EQUALITY' : 'FAIL_CLOSED_MISMATCH',
+            exactTargetHead: process.env.SUBSTRATE_HEAD,
+            builderReceiptSha256: sha(bb),
+            freshVerifierReceiptSha256: sha(fb),
+            builderFingerprint: b.substrateFingerprint ?? null,
+            freshVerifierFingerprint: f.substrateFingerprint ?? null,
+            equal,
+            builderEnvironmentReusedByFreshVerifier: false
+          };
+          fs.writeFileSync('/tmp/three-tier-substrate-equality.json', JSON.stringify(receipt, null, 2) + '\n');
+          if (!equal) process.exit(1);
+          NODE
+
+      - name: Upload equality receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: three-tier-substrate-equality
+          path: /tmp/three-tier-substrate-equality.json
+          if-no-files-found: error
+          retention-days: 30
+
+  h-earth-builder:
+    needs: substrate-equality
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact H-Earth Builder target
+        uses: actions/checkout@v4
+        with:
+          ref: 69a776ab4de61cddb6fad3602625164bea4b6323
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact target and live generation-422 lock without mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$H_EARTH_TARGET_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          git fetch --no-tags origin \
+            refs/heads/operation-locks/repository-operation-intake-v1:refs/remotes/origin/operation-locks/repository-operation-intake-v1
+          git show refs/remotes/origin/operation-locks/repository-operation-intake-v1:.github/operation-intake/active-operation-ledger.v1.json \
+            > /tmp/h-earth-live-lock-ledger.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const ledger = JSON.parse(fs.readFileSync('/tmp/h-earth-live-lock-ledger.json', 'utf8'));
+          const r = ledger.activeScopes?.[process.env.H_EARTH_LOCK_SCOPE_HASH];
+          if (!r) throw new Error('H_EARTH_LOCK_SCOPE_NOT_ACTIVE');
+          if (r.lockGeneration !== 422) throw new Error('H_EARTH_LOCK_GENERATION_MISMATCH');
+          if (r.operationId !== 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1') throw new Error('H_EARTH_LOCK_OPERATION_MISMATCH');
+          if (r.state !== 'ADMITTED_LOCKED' || r.released !== false) throw new Error('H_EARTH_LOCK_NOT_ACTIVE_LOCKED');
+          if (r.governingHead !== '3f51f0cd159df33571905c6cb14253ebdd137e3b') throw new Error('H_EARTH_LOCK_GOVERNING_HEAD_MISMATCH');
+          NODE
+
+      - name: Execute existing H-Earth Builder command
+        id: execute
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' "$(git rev-parse HEAD)" > /tmp/h-earth-head-before.txt
+          printf '%s' "$(git status --porcelain=v1 --untracked-files=all)" > /tmp/h-earth-status-before.txt
+          set +e
+          node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs \
+            --output /tmp/h-earth-map-wide-environment-redevelopment-v1 \
+            > /tmp/h-earth-builder.stdout.txt \
+            2> /tmp/h-earth-builder.stderr.txt
+          status=$?
+          set -e
+          printf '%s\n' "$status" > /tmp/h-earth-builder.exit.txt
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Build immutable H-Earth execution envelope
+        if: always()
+        shell: bash
+        run: |
+          printf '%s\n' "$(git rev-parse HEAD)" > /tmp/h-earth-head-after.txt
+          printf '%s' "$(git status --porcelain=v1 --untracked-files=all)" > /tmp/h-earth-status-after.txt
+          node - <<'NODE'
+          const fs = require('fs');
+          const crypto = require('crypto');
+          const p = '/tmp/h-earth-map-wide-environment-redevelopment-v1/builder.verification-receipt.v1.json';
+          const exists = fs.existsSync(p);
+          const bytes = exists ? fs.readFileSync(p) : null;
+          const receipt = bytes ? JSON.parse(bytes) : null;
+          const shaFile = p => fs.existsSync(p) ? crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex') : null;
+          const exitStatus = Number(fs.readFileSync('/tmp/h-earth-builder.exit.txt', 'utf8').trim());
+          const before = fs.readFileSync('/tmp/h-earth-head-before.txt', 'utf8').trim();
+          const after = fs.readFileSync('/tmp/h-earth-head-after.txt', 'utf8').trim();
+          const beforeStatus = fs.readFileSync('/tmp/h-earth-status-before.txt', 'utf8');
+          const afterStatus = fs.readFileSync('/tmp/h-earth-status-after.txt', 'utf8');
+          let classification = 'INFRASTRUCTURE_OR_VERIFIER_FAILURE';
+          if (exists && receipt?.result === 'PASS' && exitStatus === 0 && before === process.env.H_EARTH_TARGET_HEAD && after === before && beforeStatus === '' && afterStatus === '') {
+            classification = 'REAL_BUILDER_PASS';
+          } else if (exists && receipt?.result === 'FAIL_CLOSED' && exitStatus !== 0 && before === process.env.H_EARTH_TARGET_HEAD && after === before && beforeStatus === '' && afterStatus === '') {
+            classification = 'REAL_BUILDER_FAIL';
+          }
+          const envelope = {
+            schema: 'H_EARTH_BUILDER_EXECUTION_ENVELOPE_v1',
+            classification,
+            exactTargetHead: process.env.H_EARTH_TARGET_HEAD,
+            governingHead: '3f51f0cd159df33571905c6cb14253ebdd137e3b',
+            lockGeneration: 422,
+            lockScopeHash: process.env.H_EARTH_LOCK_SCOPE_HASH,
+            exactCommand: 'node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs --output /tmp/h-earth-map-wide-environment-redevelopment-v1',
+            exitStatus,
+            commandReceiptPresent: exists,
+            commandReceiptResult: receipt?.result ?? null,
+            commandReceiptSha256: bytes ? crypto.createHash('sha256').update(bytes).digest('hex') : null,
+            constructionFingerprint: receipt?.constructionFingerprint ?? null,
+            headBefore: before,
+            headAfter: after,
+            worktreeCleanBefore: beforeStatus === '',
+            worktreeCleanAfter: afterStatus === '',
+            stdoutSha256: shaFile('/tmp/h-earth-builder.stdout.txt'),
+            stderrSha256: shaFile('/tmp/h-earth-builder.stderr.txt'),
+            candidateMutation: false,
+            generation422Mutation: false,
+            newProductPaths: false
+          };
+          fs.writeFileSync('/tmp/h-earth-builder-execution-envelope.json', JSON.stringify(envelope, null, 2) + '\n');
+          NODE
+
+      - name: Upload H-Earth Builder evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-real-builder-execution
+          path: |
+            /tmp/h-earth-map-wide-environment-redevelopment-v1/
+            /tmp/h-earth-builder-execution-envelope.json
+            /tmp/h-earth-builder.stdout.txt
+            /tmp/h-earth-builder.stderr.txt
+            /tmp/h-earth-builder.exit.txt
+            /tmp/h-earth-head-before.txt
+            /tmp/h-earth-head-after.txt
+            /tmp/h-earth-status-before.txt
+            /tmp/h-earth-status-after.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Classify Builder result
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const e = JSON.parse(fs.readFileSync('/tmp/h-earth-builder-execution-envelope.json', 'utf8'));
+          if (e.classification === 'REAL_BUILDER_PASS') process.exit(0);
+          if (e.classification === 'REAL_BUILDER_FAIL') {
+            console.error('REAL_BUILDER_FAIL');
+            process.exit(1);
+          }
+          throw new Error(`NOT_A_REAL_BUILDER_RESULT:${e.classification}`);
+          NODE

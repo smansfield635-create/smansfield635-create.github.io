@@ -192,6 +192,18 @@
       "scopeHash": "2c946bc67cbfd3140e828d1ced47c80e37d13915af125c35e106e0dc40434b67",
       "state": "ADMITTED_LOCKED"
     },
+    "3604afb2c90275381cbf8af3f3e04d1cebd307d037b5b6b2417cb3054cc5aeca": {
+      "governingHead": "c50d0a06a73ed149286508a15e697d8efa254865",
+      "lockGeneration": 473,
+      "lockScope": "H_EARTH:AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION:OW01:GRATITUDE_CONTINENTAL_SKELETON_TRUE_COASTAL_ENTRY:V1:EXACT_6_PATH_AUTHORING_SCOPE",
+      "operationId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_v1",
+      "procedureLocatorDigest": "2be277f4d0e7624ad0d0dc9093c1f8a9d36117419860d08bbf5066c32620c8a5",
+      "released": false,
+      "requestDigest": "a8171c6b87db3ae624cb07c3cc01e1bcc6bf6394649ce21d4c9ac93534d2b62e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3604afb2c90275381cbf8af3f3e04d1cebd307d037b5b6b2417cb3054cc5aeca",
+      "state": "ADMITTED_LOCKED"
+    },
     "3774dc0ae012f09ec1f5bf4311aaf1235b5688fb85a4515e235c644c454bea8e": {
       "governingHead": "6b927d74913391041153f6cb3acdba8924bad8a4",
       "lockGeneration": 199,
@@ -1060,7 +1072,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 472,
+  "lockGeneration": 473,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,0 +1,12 @@
+{
+  "PAGE_READY_RESEARCH_RECORD.md": "b257e1bf9125b06e0c2f07576ccdc68fde3b16ff34497ffcb94dd4a6b902781d",
+  "checkpoint-1-protocol-freeze.v1.json": "14877c9f047912759fcbd543e23b1386386af6002e5f0585e6300f47f37fa7e6",
+  "checkpoint-2-failure-source-extraction.v1.json": "0d707feaa7e9a571e5a64954588fbf9e8299d20289697d437f6bb498343e6bd5",
+  "checkpoint-2-source-schema-correction.v1.json": "898aee415df118695243dad1d9cae0dbc5919aac3ae1c6faf22d50c8a75f5bfc",
+  "checkpoint-3-control-match-freeze.v1.json": "7604cd0761c6bf270024f457a2fedf1235b768b6e793c1648402db2d3a8cb230",
+  "checkpoint-4-operationalization-freeze.v1.json": "d040edf694b1014f4eda77e42d35af8c445701cab6943cca3b35f8bddf06015b",
+  "checkpoint-4-warning-execution.v1.json": "3e790c942e58a8ea282d096904fe1e0696efd6c84e06211e7dac8359bda608e1",
+  "checkpoint-5-comparator-false-positive-execution.v1.json": "5758b4d2d450ebbd794d3860b35138218e4769d74f123087a6b2596acf52972a",
+  "checkpoint-5-operationalization-freeze.v1.json": "cb69b9ab8d5e7359416c80b41b15ba06592b35e31aaebd4b193ed002716d2599",
+  "checkpoint-6-terminal-adjudication.v1.json": "73d65eb09e53321e750d5afc250d92aef1e44c7d5d236d55078b3be39235c93b"
+}

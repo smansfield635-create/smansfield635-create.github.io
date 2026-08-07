@@ -1,0 +1,63 @@
+{
+  "additive_all_analogous_thresholds_pass": true,
+  "additive_comparator_metrics": {
+    "actionable_30d_detections": 7,
+    "discrimination_margin": 0.36363636363636365,
+    "early_90d_detections": 6,
+    "evaluable_control_assignments": 22,
+    "evaluable_failed_banks": 11,
+    "false_positive_assignments": 6,
+    "false_positive_rate": 0.2727272727272727,
+    "median_lead_days_detected": 1387,
+    "pre_failure_detections": 7,
+    "sensitivity": 0.6363636363636364,
+    "unique_control_institutions": 21
+  },
+  "additive_weak_dominance_rule": false,
+  "checkpoint": "CP6_TERMINAL_ADJUDICATION_AND_PAGE_READY_RECORD",
+  "does_not_establish": [
+    "independent human confirmation",
+    "true prospective confirmation",
+    "universal collapse metric",
+    "universal law",
+    "superiority of UCIC over additive models"
+  ],
+  "failed_frozen_ucic_thresholds": [
+    "maximum_ucic_false_positive_rate",
+    "minimum_discrimination_margin"
+  ],
+  "generated_at_utc": "2026-08-07T04:35:02.133239+00:00",
+  "interpretation": {
+    "failed_bank_sensitivity": "HIGH_BUT_NONDISCRIMINATING",
+    "financial_generalization": "NOT_SUPPORTED",
+    "matched_control_specificity": "FAILED",
+    "post_result_retuning": "PROHIBITED",
+    "universal_collapse_metric": "NOT_ESTABLISHED"
+  },
+  "merge_authority": "NOT_GRANTED",
+  "operation": "UCIC_ARM_B_FDIC_LONGITUDINAL_COLLAPSE_EARLY_WARNING_EXTENSION_v1",
+  "page_ready": true,
+  "parent_two_arm_state_after_extension": {
+    "arm_a_cross_domain_temporal_transfer": "UCIC_CROSS_DOMAIN_TEMPORAL_ROUTE_TRANSFER_SUPPORTED_WITH_LIMITATIONS",
+    "arm_b_fdic_longitudinal_generalization": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+    "arm_b_systemic_elliott_control_pilot": "EARLY_WARNING_AND_RELATIONAL_MITIGATION_CONTRAST_SUPPORTED",
+    "overall_noncompensating_state": "MIXED_NONCOMPENSATING_RESULT"
+  },
+  "scientific_ceiling": "RETROSPECTIVE_EXTERNAL_TEMPORAL_AND_EARLY_WARNING_EVIDENCE_WITH_FAILED_FINANCIAL_GENERALIZATION",
+  "scientific_consequence": "The frozen public-financial noncompensatory warning operationalization is falsified as a discriminating bank-collapse early-warning rule. This does not falsify the fixed UCIC invariant candidate; it rejects this registered financial generalization and must remain visible in the portfolio.",
+  "status": "PASS_CLOSED",
+  "terminal_fdic_extension_disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+  "ucic_metrics": {
+    "actionable_30d_detections": 11,
+    "discrimination_margin": 0.0,
+    "early_90d_detections": 11,
+    "evaluable_control_assignments": 22,
+    "evaluable_failed_banks": 11,
+    "false_positive_assignments": 22,
+    "false_positive_rate": 1.0,
+    "median_lead_days_detected": 2313,
+    "pre_failure_detections": 11,
+    "sensitivity": 1.0,
+    "unique_control_institutions": 21
+  }
+}

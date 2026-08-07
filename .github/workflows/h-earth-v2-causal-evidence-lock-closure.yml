@@ -1,0 +1,156 @@
+name: H-Earth V2 Causal Evidence Lock Closure
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  issues: read
+  pull-requests: read
+
+concurrency:
+  group: h-earth-v2-causal-evidence-lock-closure
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  TARGET_PR: '680'
+  EXACT_CANDIDATE_HEAD: 940fe2623501da8a4c2b7362d709ed36de851fb8
+  EXACT_MERGE_COMMIT: 214db7387456699183922e316171e19ad9a2950f
+  REQUEST_MARKER: H_EARTH_V2_CAUSAL_EVIDENCE_LOCK_CLOSURE_EXECUTION_REQUEST_v1
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+
+jobs:
+  close-applicable-locks:
+    if: >-
+      ${{
+        github.event.issue.pull_request &&
+        github.event.issue.number == 680 &&
+        github.event.comment.body == 'H_EARTH_V2_CAUSAL_EVIDENCE_LOCK_CLOSURE_EXECUTION_REQUEST_v1'
+      }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out current protected main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Bind exact merge and authorized request
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          COMMENT_ASSOCIATION: ${{ github.event.comment.author_association }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set -euo pipefail
+          case "$COMMENT_ASSOCIATION" in
+            OWNER|MEMBER|COLLABORATOR) ;;
+            *) echo "UNAUTHORIZED_COMMENT_ASSOCIATION:$COMMENT_ASSOCIATION" >&2; exit 1 ;;
+          esac
+          test "$COMMENT_BODY" = "$REQUEST_MARKER"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)"
+          git merge-base --is-ancestor "$EXACT_MERGE_COMMIT" HEAD
+          node --input-type=module <<'NODE'
+          const headers = {
+            Accept: 'application/vnd.github+json',
+            Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            'X-GitHub-Api-Version': '2022-11-28'
+          };
+          async function get(path) {
+            const response = await fetch(`https://api.github.com${path}`, {headers});
+            const text = await response.text();
+            const body = text ? JSON.parse(text) : null;
+            if (!response.ok) throw new Error(`GITHUB_API_ERROR:${response.status}:${path}:${text}`);
+            return body;
+          }
+          const [owner, repo] = process.env.REPOSITORY.split('/');
+          const pr = await get(`/repos/${owner}/${repo}/pulls/${process.env.TARGET_PR}`);
+          if (pr.merged !== true) throw new Error('TARGET_PR_NOT_MERGED');
+          if (pr.head.sha !== process.env.EXACT_CANDIDATE_HEAD) throw new Error('TARGET_HEAD_MISMATCH');
+          if (pr.merge_commit_sha !== process.env.EXACT_MERGE_COMMIT) throw new Error('TARGET_MERGE_COMMIT_MISMATCH');
+          const main = await get(`/repos/${owner}/${repo}/git/ref/heads/main`);
+          if (main.object.sha !== process.env.GITHUB_SHA) throw new Error('WORKFLOW_NOT_BOUND_TO_CURRENT_MAIN');
+          NODE
+
+      - name: Close exact applicable locks through CAS manager
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-v2-lock-closure
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {closeRemote, stable} from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+
+          const shared = {
+            repository: process.env.REPOSITORY,
+            lockRef: process.env.LOCK_REF,
+            token: process.env.GITHUB_TOKEN
+          };
+          const requests = [
+            {
+              operationId: 'B31133485684',
+              lockScope: 'ACTIVATION:31133485684:1',
+              lockGeneration: 388,
+              terminalDisposition: 'FAIL_CLOSED',
+              rationale: 'ORPHANED_FAILED_PREFLIGHT_ACTIVATION'
+            },
+            {
+              operationId: 'H_EARTH_V2_CAUSAL_EVIDENCE_001_GOVERNANCE_REGISTRY_REPAIR_001',
+              lockScope: 'H_EARTH_V2_CAUSAL_EVIDENCE_001_GOVERNANCE_REGISTRY_REPAIR_EXACT_4_PATH_SCOPE',
+              lockGeneration: 391,
+              terminalDisposition: 'PASS_CLOSED',
+              rationale: 'REPAIR_MERGED_AND_CERTIFIED'
+            },
+            {
+              operationId: 'H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001',
+              lockScope: 'H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001_EXACT_25_PATH_SCOPE',
+              lockGeneration: 386,
+              terminalDisposition: 'PASS_CLOSED',
+              rationale: 'PR_680_MERGED_AFTER_REQUIRED_RERUNS'
+            }
+          ];
+
+          const closures = [];
+          for (const request of requests) {
+            const receipt = await closeRemote({...shared, ...request});
+            if (receipt.result !== 'TERMINAL_CLOSURE_COMMITTED' || receipt.lockReleased !== true) {
+              throw new Error(`LOCK_CLOSURE_FAILED:${request.lockGeneration}:${JSON.stringify(receipt)}`);
+            }
+            closures.push(stable({...receipt, rationale: request.rationale}));
+          }
+
+          const aggregate = stable({
+            schema: 'H_EARTH_V2_CAUSAL_EVIDENCE_LOCK_CLOSURE_RETURN_v1',
+            result: 'PASS_CLOSED',
+            repository: process.env.REPOSITORY,
+            targetPullRequest: Number(process.env.TARGET_PR),
+            exactCandidateHead: process.env.EXACT_CANDIDATE_HEAD,
+            exactMergeCommit: process.env.EXACT_MERGE_COMMIT,
+            closureCount: closures.length,
+            closures,
+            ledgerEditedDirectly: false,
+            lockManagerUsed: true,
+            terrainConstructionPerformed: false,
+            estateConstructionPerformed: false,
+            manorConstructionPerformed: false,
+            constructionAuthorityIssued: false
+          });
+          fs.writeFileSync(
+            '/tmp/h-earth-v2-lock-closure/lock-closure-return.v1.json',
+            JSON.stringify(aggregate, null, 2) + '\n'
+          );
+          NODE
+
+      - name: Upload exact closure return
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-causal-evidence-lock-closure-return-v1
+          path: /tmp/h-earth-v2-lock-closure/lock-closure-return.v1.json
+          if-no-files-found: error
+          retention-days: 90

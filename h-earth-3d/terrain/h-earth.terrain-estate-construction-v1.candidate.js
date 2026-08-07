@@ -2,8 +2,9 @@
  * H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_v1
  *
  * Non-live map-authoring terrain successor. Run8B remains immutable terrain truth.
- * This revision renews mountain asymmetry, waterfall/reservoir scale, coastline,
- * beach morphology, and sandbars for user inspection only.
+ * Revision 7 preserves the accepted estate shaping while restoring the inland bay,
+ * grading the beach into existing terrain, naturalizing the reservoir outline, and
+ * defining authoring-only mountain continuation beyond the current region.
  */
 
 import {
@@ -30,6 +31,7 @@ const bell = (value, center, radius) => {
 
 const GOVERNING_HEAD = '3f51f0cd159df33571905c6cb14253ebdd137e3b';
 const POSITIVE_REFERENCE = '97003e9de386a8962fb46d0b370005b900a167d6';
+const CURRENT_REGION_REAR_Z = -320;
 
 export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_ID =
   'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_v1';
@@ -99,26 +101,39 @@ const RESERVOIR_WATER_SURFACE_ELEVATION = clamp(RESERVOIR_SOURCE_ELEVATION - 1.1
 const RESERVOIR_FLOOR_ELEVATION = RESERVOIR_WATER_SURFACE_ELEVATION - 5.8;
 
 const COASTLINE = freeze({
-  beachInlandWidth: 34,
-  beachSeawardWidth: 10,
-  shelfWidth: 46,
-  dryBeachHighElevation: 4.8,
-  wetBeachElevation: 0.46,
-  shelfFloorElevation: -3.6,
+  beachInlandWidth: 32,
+  beachSeawardWidth: 9,
+  shelfWidth: 42,
+  dryBeachMaximumElevation: 7.2,
+  wetBeachElevation: 0.42,
+  shelfFloorElevation: -3.4,
+  bay: freeze({
+    id: 'RESTORED_EASTERN_INLAND_BAY',
+    centerX: 118,
+    halfWidth: 82,
+    maximumInlandReach: 48,
+    westernHeadlandX: 48,
+    easternHeadlandX: 198,
+    class: 'ASYMMETRIC_CURVED_INLAND_BAY_NOT_STRAIGHT_CUT'
+  }),
   sandbars: freeze([
     freeze({ id: 'WEST_SANDBAR', center: freeze({ x: -132, z: 2 }), radius: freeze({ x: 48, z: 10 }), rotation: -0.12, crestElevation: 0.72 }),
     freeze({ id: 'CENTRAL_SANDBAR', center: freeze({ x: -12, z: 10 }), radius: freeze({ x: 58, z: 12 }), rotation: 0.07, crestElevation: 0.82 }),
-    freeze({ id: 'EAST_SANDBAR', center: freeze({ x: 116, z: 0 }), radius: freeze({ x: 44, z: 9 }), rotation: -0.08, crestElevation: 0.64 })
+    freeze({ id: 'BAY_MOUTH_SANDBAR', center: freeze({ x: 126, z: -5 }), radius: freeze({ x: 46, z: 9 }), rotation: -0.16, crestElevation: 0.66 })
   ])
 });
 
 export function resolveHEarthMapWideShorelineZ(worldX) {
   if (!finite(worldX)) return Number.NaN;
-  const longWave = 9.5 * Math.sin((worldX + 34) / 72);
-  const mediumWave = 4.6 * Math.sin((worldX - 18) / 31);
-  const westCove = -7.5 * bell(worldX, -142, 92);
-  const eastPoint = 6.0 * bell(worldX, 118, 84);
-  return -47 + longWave + mediumWave + westCove + eastPoint;
+  const longWave = 8.6 * Math.sin((worldX + 34) / 74);
+  const mediumWave = 4.1 * Math.sin((worldX - 18) / 33);
+  const westCove = -8.5 * bell(worldX, -142, 92);
+  const bay = COASTLINE.bay;
+  const bayCore = -bay.maximumInlandReach * bell(worldX, bay.centerX, bay.halfWidth);
+  const bayAsymmetry = -9.0 * bell(worldX, bay.centerX + 22, 44);
+  const westernHeadland = 10.5 * bell(worldX, bay.westernHeadlandX, 42);
+  const easternHeadland = 7.5 * bell(worldX, bay.easternHeadlandX, 46);
+  return -45 + longWave + mediumWave + westCove + bayCore + bayAsymmetry + westernHeadland + easternHeadland;
 }
 
 function rotatedEllipseRadius(worldX, worldZ, zone) {
@@ -153,6 +168,22 @@ function sandbarTargetElevation(worldX, worldZ) {
   return total > 0 ? weighted / total : H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.seaLevelY - 1;
 }
 
+function reservoirRadialScale(angle) {
+  const scale = 0.84 +
+    0.12 * Math.sin(angle * 3 + 0.55) +
+    0.08 * Math.sin(angle * 5 - 1.20) +
+    0.07 * Math.cos(angle * 2 + 0.35);
+  return clamp(scale, 0.64, 1.10);
+}
+
+function irregularReservoirRadius(worldX, worldZ, reservoir) {
+  const dx = worldX - reservoir.center.x;
+  const dz = worldZ - reservoir.center.z;
+  const angle = Math.atan2(dz / reservoir.radius.z, dx / reservoir.radius.x);
+  const base = Math.hypot(dx / reservoir.radius.x, dz / reservoir.radius.z);
+  return base / reservoirRadialScale(angle);
+}
+
 export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY = freeze({
   seaLevelY: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain.seaLevelY ?? 0,
   coastlineContext: freeze({
@@ -162,8 +193,9 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY = freeze({
     localHydrologyChangedByEstateSystem: true,
     mapPreviewWaterContextAuthorized: true,
     liveWaterMutationAuthorized: false,
-    shorelineGeometry: 'IRREGULAR_CURVED_COAST_WITH_GRADED_FULL_BEACH',
-    sandbarSystem: 'THREE_SEPARATED_EMERGENT_SANDBARS_WITH_SHALLOW_CHANNELS'
+    shorelineGeometry: 'RESTORED_ASYMMETRIC_INLAND_BAY_WITH_NATURAL_CURVED_HEADLANDS',
+    beachGeometry: 'TERRAIN_CONFORMING_GRADED_BEACH_NOT_PLATEAU',
+    sandbarSystem: 'THREE_SEPARATED_EMERGENT_SANDBARS_RECONCILED_TO_BAY_MOUTH'
   }),
   waterfall: freeze({
     hiddenUpperSource: freeze({ x: -50, z: -314 }),
@@ -173,20 +205,22 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY = freeze({
     transitionHalfWidth: 27,
     terrainChannelCutDepth: 7.2,
     visibleWaterHalfWidth: 7.5,
-    sourceNarrative: 'UNDEVELOPED_INACCESSIBLE_UPPER_WATERSHED_BEHIND_MOUNTAIN_BARRIER'
+    sourceNarrative: 'UPPER_WATERSHED_CONTINUES_BEYOND_CURRENT_REGION_INTO_FUTURE_TERRAIN'
   }),
   reservoir: freeze({
     center: RESERVOIR_SOURCE_CENTER,
-    radius: freeze({ x: 52, z: 36 }),
-    coreRadius: 0.60,
-    rimOuterRadius: 1.30,
+    radius: freeze({ x: 58, z: 42 }),
+    coreRadius: 0.58,
+    rimOuterRadius: 1.22,
     waterSurfaceElevation: RESERVOIR_WATER_SURFACE_ELEVATION,
     floorElevation: RESERVOIR_FLOOR_ELEVATION,
     enclosed: true,
     visibleDrainageToCoast: false,
     concealedPumpIntakeReserved: true,
     pumpConstructionAuthorized: false,
-    intendedRead: 'NATURAL_POND_OR_SMALL_LAKE_NOT_MANUFACTURED_PUMP_HOLE'
+    outlineClass: 'IRREGULAR_TERRAIN_CONFORMING_MOUNTAIN_TOE_BASIN',
+    artificialCircularShorelineProhibited: true,
+    intendedRead: 'NATURAL_POND_OR_SMALL_LAKE_CONFORMING_TO_SURROUNDING_LANDFORM'
   }),
   cavern: freeze({
     center: freeze({ x: -7, z: -238 }),
@@ -205,18 +239,28 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY = freeze({
   })
 });
 
+export function resolveHEarthMapWideReservoirBoundaryPoint(angle) {
+  if (!finite(angle)) return null;
+  const reservoir = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir;
+  const scale = reservoirRadialScale(angle);
+  return freeze({
+    x: reservoir.center.x + Math.cos(angle) * reservoir.radius.x * scale,
+    z: reservoir.center.z + Math.sin(angle) * reservoir.radius.z * scale
+  });
+}
+
 export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE = freeze({
   profileId: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE_ID,
   governingHead: GOVERNING_HEAD,
   lockGeneration: 422,
-  successorRepairRevision: 6,
+  successorRepairRevision: 7,
   sourceIdentity: freeze({
     classification: 'POSITIVE_DESIGN_SOURCE_NOT_MERGED_MAIN_NOT_AUTOMATIC_TRANSPLANT',
     commit: POSITIVE_REFERENCE,
     tree: '7cd51523649788ad6fb226aea16f6799a5c58177',
     sourceProfileId: 'H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2'
   }),
-  implementationClass: 'RUN8B_TRUTH_PLUS_ASYMMETRIC_MOUNTAIN_RANGE_FULL_BEACH_SANDBARS_LARGE_RESERVOIR_WIDE_WATERFALL_AND_MULTI_HILL_ESTATE_PREPARATION',
+  implementationClass: 'RUN8B_TRUTH_PLUS_ASYMMETRIC_MOUNTAIN_RANGE_RESTORED_BAY_TERRAIN_CONFORMING_BEACH_IRREGULAR_RESERVOIR_FUTURE_REGION_CONTINUATION_AND_PROTECTED_ESTATE_PREPARATION',
   macroLandforms: freeze([
     freeze({ id: 'REAR_WATERSHED_MASS', center: freeze({ x: -62, z: -300 }), radius: freeze({ x: 206, z: 90 }), amplitude: 11 }),
     freeze({ id: 'WESTERN_HIGH_PEAK', center: freeze({ x: -168, z: -286 }), radius: freeze({ x: 74, z: 58 }), amplitude: 24 }),
@@ -233,8 +277,19 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE = freeze(
     zFullBy: -308,
     zZeroBy: -251,
     maximumAddedElevation: 13,
-    traversalBehindRange: 'PROHIBITED_IN_EVENTUAL_LIVE_INTEGRATION',
-    visibilityBehindRange: 'PROHIBITED_IN_EVENTUAL_LIVE_INTEGRATION'
+    mountainsAreWorldEdge: false,
+    currentTraversalBeyondRange: 'PROHIBITED',
+    terrainContinuationBeyondCurrentRegion: 'REQUIRED',
+    visibleFlatRearBoundary: 'PROHIBITED',
+    futureRegionContinuity: 'PRESERVED'
+  }),
+  futureRegionContinuation: freeze({
+    authoringPreviewOnly: true,
+    currentRegionRearZ: CURRENT_REGION_REAR_Z,
+    previewContinuationToZ: -500,
+    canonicalRun8BExtensionClaimed: false,
+    liveTraversalAuthorized: false,
+    purpose: 'SHOW_MOUNTAIN_BACKS_CONTINUING_INTO_FUTURE_REGION_WITHOUT_FLAT_WORLD_CUTOFF'
   }),
   mesoLandform: freeze({
     maximumMagnitude: 1.9,
@@ -245,6 +300,7 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE = freeze(
     ])
   }),
   estateTerrainComposition: ESTATE_TERRAIN_COMPOSITION,
+  estateRevision6ShapeProtected: true,
   entryCore: freeze({ xMinimum: -24, xMaximum: 24, zMinimum: -132, zMaximum: -88, transitionMargin: 8 }),
   coastalProtection: freeze({ fullReliefByZ: -118, zeroReliefByZ: -78 }),
   coastline: COASTLINE,
@@ -275,13 +331,13 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE = free
   contractId: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_ID,
   operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
   lockGeneration: 422,
-  successorRepairRevision: 6,
+  successorRepairRevision: 7,
   governingHead: GOVERNING_HEAD,
   baseTerrainFieldContractId: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
   baseTerrainFieldGenerationRevision: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.generationRevision,
   worldDomain: freeze({ ...H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain }),
   reliefProfileId: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE_ID,
-  mapWideApplication: 'ALL_VALID_RUN8B_TERRAIN_SAMPLES_WITH_BOUNDED_AUTHORING_RELIEF_HYDROLOGY_COASTAL_MORPHOLOGY_AND_ESTATE_PREPARATION',
+  mapWideApplication: 'ALL_VALID_RUN8B_TERRAIN_SAMPLES_WITH_BOUNDED_AUTHORING_RELIEF_HYDROLOGY_COASTAL_MORPHOLOGY_AND_PROTECTED_ESTATE_PREPARATION',
   reservedEstateEnvelope: freeze({
     bounds: ESTATE_TERRAIN_COMPOSITION.reservedEnvelope,
     atriumAnchor: ESTATE_TERRAIN_COMPOSITION.atriumTerrace.center,
@@ -289,10 +345,12 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE = free
     largeHillInterface: ESTATE_TERRAIN_COMPOSITION.hillInterfaceTerrace.center,
     hiddenVaultReserve: ESTATE_TERRAIN_COMPOSITION.hiddenVaultReserve,
     effect: 'IRREGULAR_MULTI_HILL_ESTATE_TERRAIN_COMPOSITION_WITHOUT_MANOR_GEOMETRY',
+    revision6ShapeProtected: true,
     manorGeometryConstructed: false
   }),
   hydrology: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY,
   coastline: COASTLINE,
+  futureRegionContinuation: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE.futureRegionContinuation,
   preservation: freeze({
     run8BTruthElevationMutated: false,
     run8BSourceMutated: false,
@@ -367,12 +425,12 @@ function rearBoundaryBarrierOffset(worldX, worldZ) {
   const xWeight = smoothstep(barrier.xMinimum, barrier.xMinimum + 34, worldX) *
     (1 - smoothstep(barrier.xMaximum - 34, barrier.xMaximum, worldX));
   const zWeight = 1 - smoothstep(barrier.zFullBy, barrier.zZeroBy, worldZ);
-  const ridgeVariation = 0.72 +
-    0.14 * Math.sin((worldX + 92) / 31) +
-    0.09 * Math.sin((worldX - 11) / 17) +
-    0.10 * bell(worldX, -170, 70) +
-    0.07 * bell(worldX, -28, 58);
-  return barrier.maximumAddedElevation * xWeight * zWeight * clamp(ridgeVariation, 0.48, 1.12);
+  const ridgeVariation = 0.70 +
+    0.17 * Math.sin((worldX + 92) / 31) +
+    0.11 * Math.sin((worldX - 11) / 17) +
+    0.11 * bell(worldX, -170, 70) +
+    0.09 * bell(worldX, -28, 58);
+  return barrier.maximumAddedElevation * xWeight * zWeight * clamp(ridgeVariation, 0.42, 1.18);
 }
 
 function waterfallCorridorWeight(worldX, worldZ) {
@@ -382,12 +440,12 @@ function waterfallCorridorWeight(worldX, worldZ) {
 }
 function reservoirWeight(worldX, worldZ) {
   const reservoir = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir;
-  return 1 - smoothstep(reservoir.coreRadius, 1, ellipseRadius(worldX, worldZ, reservoir));
+  return 1 - smoothstep(reservoir.coreRadius, 1, irregularReservoirRadius(worldX, worldZ, reservoir));
 }
 function reservoirRimWeight(worldX, worldZ) {
   const reservoir = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir;
-  const radius = ellipseRadius(worldX, worldZ, reservoir);
-  return smoothstep(0.74, 0.96, radius) * (1 - smoothstep(1.06, reservoir.rimOuterRadius, radius));
+  const radius = irregularReservoirRadius(worldX, worldZ, reservoir);
+  return smoothstep(0.80, 0.98, radius) * (1 - smoothstep(1.03, reservoir.rimOuterRadius, radius));
 }
 function cavernReserveWeight(worldX, worldZ) {
   return ellipseWeight(worldX, worldZ, H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.cavern);
@@ -417,29 +475,38 @@ function applyCoastalTerrain(worldX, worldZ, elevation) {
   const distanceToShore = worldZ - shorelineZ;
   const coast = COASTLINE;
   const sea = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.seaLevelY;
-  const inlandWeight = 1 - smoothstep(-coast.beachInlandWidth - 12, -coast.beachInlandWidth, distanceToShore);
-  const coastalZoneWeight = smoothstep(-coast.beachInlandWidth - 16, -coast.beachInlandWidth, distanceToShore) *
-    (1 - smoothstep(coast.shelfWidth, coast.shelfWidth + 18, distanceToShore));
+  const coastalZoneWeight = smoothstep(-coast.beachInlandWidth - 14, -coast.beachInlandWidth, distanceToShore) *
+    (1 - smoothstep(coast.shelfWidth, coast.shelfWidth + 16, distanceToShore));
 
-  let target = elevation;
+  let result = elevation;
   let beachWeight = 0;
   let wetSandWeight = 0;
   let shelfWeight = 0;
 
   if (distanceToShore >= -coast.beachInlandWidth && distanceToShore <= 0) {
-    const t = smoothstep(-coast.beachInlandWidth, 0, distanceToShore);
-    target = mix(coast.dryBeachHighElevation, coast.wetBeachElevation, t);
-    beachWeight = 1;
-    wetSandWeight = smoothstep(-10, 2, distanceToShore);
+    const shoreProgress = smoothstep(-coast.beachInlandWidth, 0, distanceToShore);
+    const duneVariation =
+      0.55 * Math.sin(worldX * 0.061 + distanceToShore * 0.075) +
+      0.28 * Math.sin(worldX * 0.027 - distanceToShore * 0.11);
+    const naturalProfile = mix(
+      sea + coast.dryBeachMaximumElevation + duneVariation,
+      sea + coast.wetBeachElevation,
+      Math.pow(shoreProgress, 1.18)
+    );
+    const conformityBlend = mix(0.30, 0.78, shoreProgress);
+    result = mix(elevation, naturalProfile, conformityBlend * coastalZoneWeight);
+    beachWeight = coastalZoneWeight;
+    wetSandWeight = smoothstep(-9, 1.5, distanceToShore) * coastalZoneWeight;
   } else if (distanceToShore > 0 && distanceToShore <= coast.shelfWidth) {
     const t = smoothstep(0, coast.shelfWidth, distanceToShore);
-    target = mix(coast.wetBeachElevation, sea + coast.shelfFloorElevation, t);
-    beachWeight = 1 - smoothstep(0, coast.beachSeawardWidth, distanceToShore);
-    wetSandWeight = 1 - smoothstep(0, 7, distanceToShore);
-    shelfWeight = smoothstep(0, 12, distanceToShore);
+    const shelfProfile = mix(sea + coast.wetBeachElevation, sea + coast.shelfFloorElevation, t);
+    const shelfConformity = mix(0.86, 0.54, t);
+    result = mix(elevation, shelfProfile, shelfConformity * coastalZoneWeight);
+    beachWeight = (1 - smoothstep(0, coast.beachSeawardWidth, distanceToShore)) * coastalZoneWeight;
+    wetSandWeight = (1 - smoothstep(0, 7, distanceToShore)) * coastalZoneWeight;
+    shelfWeight = smoothstep(0, 12, distanceToShore) * coastalZoneWeight;
   }
 
-  let result = mix(elevation, target, coastalZoneWeight);
   const barWeight = sandbarWeight(worldX, worldZ);
   if (barWeight > 0) {
     const barTarget = sandbarTargetElevation(worldX, worldZ);
@@ -450,12 +517,13 @@ function applyCoastalTerrain(worldX, worldZ, elevation) {
     elevation: result,
     shorelineZ,
     distanceToShore,
-    beachWeight: beachWeight * coastalZoneWeight,
-    wetSandWeight: wetSandWeight * coastalZoneWeight,
-    shelfWeight: shelfWeight * coastalZoneWeight,
+    beachWeight,
+    wetSandWeight,
+    shelfWeight,
     sandbarWeight: barWeight,
     coastalZoneWeight,
-    inlandUnchangedWeight: inlandWeight
+    terrainConformingBeach: true,
+    restoredBay: true
   };
 }
 
@@ -487,8 +555,10 @@ function applyHydrologyTerrain(worldX, worldZ, basePresentationElevation) {
   const cavernWeight = cavernReserveWeight(worldX, worldZ);
   let elevation = basePresentationElevation;
   elevation -= waterfallWeight * hydro.waterfall.terrainChannelCutDepth;
-  elevation += reservoirRim * 1.05;
-  elevation = mix(elevation, hydro.reservoir.floorElevation, reservoirBasinWeight);
+  elevation += reservoirRim * 0.28;
+  const basinFloor = hydro.reservoir.floorElevation +
+    0.45 * Math.sin((worldX + 42) * 0.065) * Math.sin((worldZ + 213) * 0.071);
+  elevation = mix(elevation, basinFloor, reservoirBasinWeight);
   elevation -= cavernWeight * hydro.cavern.shallowApronCutDepth;
   return freeze({ elevation, waterfallWeight, reservoirWeight: reservoirBasinWeight, reservoirRimWeight: reservoirRim, cavernReserveWeight: cavernWeight });
 }
@@ -561,9 +631,9 @@ export function sampleHEarthMapWideEnvironmentTerrainCandidate(worldX, worldZ) {
     presentationReliefOffset,
     environmentalReliefOffset,
     sitePreparationOffset: estate.elevation - hydro.elevation,
-    sitePreparation: freeze({ active: estate.weight > 0, fullyPrepared: estate.weight >= 1 - 1e-9, weight: estate.weight, zoneWeights: estate.zoneWeights, atriumTargetElevation: estate.atriumTargetElevation, hillInterfaceTargetElevation: estate.hillInterfaceTargetElevation, treatment: ESTATE_TERRAIN_COMPOSITION.treatment }),
-    hydrology: freeze({ waterfallWeight: hydro.waterfallWeight, reservoirWeight: hydro.reservoirWeight, reservoirRimWeight: hydro.reservoirRimWeight, cavernReserveWeight: hydro.cavernReserveWeight, reservoirWaterSurfaceElevation: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir.waterSurfaceElevation, reservoirFloorElevation: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir.floorElevation, enclosedReservoir: true, visibleDrainageToCoast: false }),
-    coastline: freeze({ shorelineZ: coastal.shorelineZ, distanceToShore: coastal.distanceToShore, beachWeight: coastal.beachWeight, wetSandWeight: coastal.wetSandWeight, shelfWeight: coastal.shelfWeight, sandbarWeight: coastal.sandbarWeight, fullBeachConstructed: true, sandbarsConstructed: true }),
+    sitePreparation: freeze({ active: estate.weight > 0, fullyPrepared: estate.weight >= 1 - 1e-9, weight: estate.weight, zoneWeights: estate.zoneWeights, atriumTargetElevation: estate.atriumTargetElevation, hillInterfaceTargetElevation: estate.hillInterfaceTargetElevation, treatment: ESTATE_TERRAIN_COMPOSITION.treatment, revision6ShapeProtected: true }),
+    hydrology: freeze({ waterfallWeight: hydro.waterfallWeight, reservoirWeight: hydro.reservoirWeight, reservoirRimWeight: hydro.reservoirRimWeight, cavernReserveWeight: hydro.cavernReserveWeight, reservoirWaterSurfaceElevation: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir.waterSurfaceElevation, reservoirFloorElevation: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir.floorElevation, reservoirOutlineClass: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir.outlineClass, enclosedReservoir: true, visibleDrainageToCoast: false }),
+    coastline: freeze({ shorelineZ: coastal.shorelineZ, distanceToShore: coastal.distanceToShore, beachWeight: coastal.beachWeight, wetSandWeight: coastal.wetSandWeight, shelfWeight: coastal.shelfWeight, sandbarWeight: coastal.sandbarWeight, fullBeachConstructed: true, terrainConformingBeach: coastal.terrainConformingBeach, restoredBay: coastal.restoredBay, sandbarsConstructed: true }),
     presentationGeometryIsCandidateOnly: true,
     normal: source.normal ?? null,
     reliefProfileId: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE_ID,
@@ -574,6 +644,38 @@ export function sampleHEarthMapWideEnvironmentTerrainCandidate(worldX, worldZ) {
     manorGeometryConstructed: false,
     cavernInteriorConstructed: false,
     vaultInteriorConstructed: false
+  });
+}
+
+export function sampleHEarthMapWideFutureRegionContinuation(worldX, worldZ) {
+  const continuation = H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE.futureRegionContinuation;
+  if (![worldX, worldZ].every(finite) || worldZ > continuation.currentRegionRearZ || worldZ < continuation.previewContinuationToZ) {
+    return freeze({ valid: false, status: 'H_EARTH_FUTURE_REGION_CONTINUATION_SAMPLE_REJECTED', worldX, worldZ });
+  }
+  const x = clamp(worldX, -256, 256);
+  const boundary = sampleHEarthMapWideEnvironmentTerrainCandidate(x, CURRENT_REGION_REAR_Z);
+  if (boundary.valid !== true) return freeze({ valid: false, status: 'H_EARTH_FUTURE_REGION_BOUNDARY_SOURCE_INVALID', worldX, worldZ });
+  const depth = clamp((CURRENT_REGION_REAR_Z - worldZ) / (CURRENT_REGION_REAR_Z - continuation.previewContinuationToZ), 0, 1);
+  const ridgeA = 13 * bell(x, -170, 78);
+  const ridgeB = 18 * bell(x, -62, 74);
+  const ridgeC = 11 * bell(x, 48, 92);
+  const ridgeD = 8 * bell(x, 178, 76);
+  const longitudinalVariation =
+    5.5 * Math.sin((x + 44) / 37 + depth * 2.2) +
+    3.2 * Math.sin((x - 19) / 21 - depth * 3.1);
+  const rearRise = depth * (8 + ridgeA + ridgeB + ridgeC + ridgeD) +
+    Math.sin(depth * Math.PI) * longitudinalVariation;
+  const presentationElevation = boundary.presentationElevation + rearRise;
+  return freeze({
+    valid: true,
+    status: 'H_EARTH_FUTURE_REGION_CONTINUATION_SAMPLE_COMPLETE',
+    world: freeze({ x, y: presentationElevation, z: worldZ }),
+    presentationElevation,
+    boundaryElevation: boundary.presentationElevation,
+    continuationDepth: depth,
+    authoringPreviewOnly: true,
+    canonicalRun8BExtensionClaimed: false,
+    liveTraversalAuthorized: false
   });
 }
 
@@ -588,8 +690,12 @@ export function evaluateHEarthMapWideEnvironmentTerrainCandidate() {
   const waterfall = sampleHEarthMapWideEnvironmentTerrainCandidate(-48, -252);
   const cavern = sampleHEarthMapWideEnvironmentTerrainCandidate(-7, -238);
   const rearBarrier = sampleHEarthMapWideEnvironmentTerrainCandidate(-64, -310);
-  const beach = sampleHEarthMapWideEnvironmentTerrainCandidate(0, resolveHEarthMapWideShorelineZ(0) - 12);
+  const beach = sampleHEarthMapWideEnvironmentTerrainCandidate(0, resolveHEarthMapWideShorelineZ(0) - 10);
   const centralSandbar = sampleHEarthMapWideEnvironmentTerrainCandidate(-12, 10);
+  const bayCenterZ = resolveHEarthMapWideShorelineZ(COASTLINE.bay.centerX);
+  const bayWestZ = resolveHEarthMapWideShorelineZ(COASTLINE.bay.centerX - COASTLINE.bay.halfWidth);
+  const bayEastZ = resolveHEarthMapWideShorelineZ(COASTLINE.bay.centerX + COASTLINE.bay.halfWidth);
+  const futureContinuation = sampleHEarthMapWideFutureRegionContinuation(-62, -420);
   const reliefWitnesses = [
     sampleHEarthMapWideEnvironmentTerrainCandidate(-96, -271),
     sampleHEarthMapWideEnvironmentTerrainCandidate(-8, -258),
@@ -603,16 +709,17 @@ export function evaluateHEarthMapWideEnvironmentTerrainCandidate() {
   if (Math.abs(entry.presentationReliefOffset) > 1e-9) issues.push('ENTRY_REGION_PRESENTATION_OFFSET_NONZERO');
   if (!reliefWitnesses.some((sample) => Math.abs(sample.presentationReliefOffset) >= 4)) issues.push('MATERIAL_MACRO_RELIEF_NOT_DEMONSTRATED');
   if (!(rearBarrier.rearBoundaryBarrierOffset > 2)) issues.push('REAR_MOUNTAIN_BARRIER_NOT_EXTENDED_TO_WORLD_EDGE');
-  if (!(atrium.sitePreparation?.zoneWeights?.atrium > 0.9)) issues.push('ATRIUM_TERRACE_NOT_PREPARED');
-  if (!(saddle.sitePreparation?.zoneWeights?.connectiveSpine > 0.9)) issues.push('ESTATE_CONNECTIVE_SADDLE_NOT_RESERVED');
-  if (!(hillInterface.sitePreparation?.zoneWeights?.hillInterface > 0.9)) issues.push('LARGE_HILL_ESTATE_INTERFACE_NOT_PREPARED');
-  if (!(reservoir.hydrology?.reservoirWeight > 0.9)) issues.push('RESERVOIR_BASIN_NOT_CONSTRUCTED');
+  if (!(atrium.sitePreparation?.zoneWeights?.atrium > 0.9 && atrium.sitePreparation?.revision6ShapeProtected === true)) issues.push('ATRIUM_TERRACE_NOT_PRESERVED');
+  if (!(saddle.sitePreparation?.zoneWeights?.connectiveSpine > 0.9)) issues.push('ESTATE_CONNECTIVE_SADDLE_NOT_PRESERVED');
+  if (!(hillInterface.sitePreparation?.zoneWeights?.hillInterface > 0.9)) issues.push('LARGE_HILL_ESTATE_INTERFACE_NOT_PRESERVED');
+  if (!(reservoir.hydrology?.reservoirWeight > 0.9 && reservoir.hydrology?.reservoirOutlineClass === 'IRREGULAR_TERRAIN_CONFORMING_MOUNTAIN_TOE_BASIN')) issues.push('RESERVOIR_NOT_NATURALIZED');
   if (!(reservoir.presentationElevation < reservoir.hydrology.reservoirWaterSurfaceElevation - 4)) issues.push('RESERVOIR_DEPTH_INSUFFICIENT');
-  if (!(H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir.radius.x >= 48 && H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.reservoir.radius.z >= 32)) issues.push('RESERVOIR_NOT_SMALL_LAKE_SCALE');
   if (!(waterfall.hydrology?.waterfallWeight > 0.5 && H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.waterfall.halfWidth >= 12)) issues.push('WATERFALL_CLEFT_NOT_BROAD_ENOUGH');
   if (!(cavern.hydrology?.cavernReserveWeight > 0.5)) issues.push('CAVERN_EXTERIOR_RESERVE_NOT_CONSTRUCTED');
-  if (!(beach.coastline?.beachWeight > 0.5 && beach.coastline?.fullBeachConstructed === true)) issues.push('FULL_BEACH_NOT_CONSTRUCTED');
+  if (!(beach.coastline?.beachWeight > 0.5 && beach.coastline?.terrainConformingBeach === true)) issues.push('TERRAIN_CONFORMING_BEACH_NOT_CONSTRUCTED');
   if (!(centralSandbar.coastline?.sandbarWeight > 0.5 && centralSandbar.presentationElevation > H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY.seaLevelY)) issues.push('SANDBAR_NOT_EMERGENT');
+  if (!(bayCenterZ < Math.min(bayWestZ, bayEastZ) - 18)) issues.push('INLAND_BAY_NOT_RESTORED');
+  if (!(futureContinuation.valid === true && futureContinuation.presentationElevation > futureContinuation.boundaryElevation && futureContinuation.canonicalRun8BExtensionClaimed === false)) issues.push('FUTURE_REGION_MOUNTAIN_CONTINUATION_NOT_ESTABLISHED');
   if (witnesses.some((sample) => !finite(sample.virtualReliefHeight))) issues.push('VIRTUAL_RELIEF_WITNESS_NONFINITE');
   if (witnesses.some((sample) => sample.manorGeometryConstructed !== false || sample.cavernInteriorConstructed !== false || sample.vaultInteriorConstructed !== false)) issues.push('DEFERRED_INTERIOR_OR_MANOR_SCOPE_VIOLATION');
   return freeze({
@@ -621,17 +728,20 @@ export function evaluateHEarthMapWideEnvironmentTerrainCandidate() {
     contractId: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_ID,
     baseTerrainFieldContractId: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
     reliefProfileId: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_RELIEF_PROFILE_ID,
-    successorRepairRevision: 6,
+    successorRepairRevision: 7,
     witnesses,
-    estateTerrainComposition: freeze({ atriumTargetElevation: ATRIUM_TARGET_ELEVATION, hillInterfaceTargetElevation: HILL_INTERFACE_TARGET_ELEVATION, reservedEnvelope: ESTATE_TERRAIN_COMPOSITION.reservedEnvelope }),
+    estateTerrainComposition: freeze({ atriumTargetElevation: ATRIUM_TARGET_ELEVATION, hillInterfaceTargetElevation: HILL_INTERFACE_TARGET_ELEVATION, reservedEnvelope: ESTATE_TERRAIN_COMPOSITION.reservedEnvelope, revision6ShapeProtected: true }),
     hydrology: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY,
     coastline: COASTLINE,
+    futureRegionContinuation,
     run8BTruthElevationMutation: false,
     candidatePresentationElevationConstructed: true,
     physicalEstateTerrainPreparationConstructed: true,
     mapHydrologyContextConstructed: true,
-    fullBeachConstructed: true,
-    sandbarsConstructed: true,
+    restoredBayConstructed: true,
+    terrainConformingBeachConstructed: true,
+    irregularReservoirConstructed: true,
+    futureRegionMountainContinuationConstructed: true,
     manorGeometryConstructed: false,
     issues: freeze(issues)
   });

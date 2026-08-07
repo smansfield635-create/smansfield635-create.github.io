@@ -1,6 +1,6 @@
 # First Safe Vertical Case Selection v1
 
-Status: `CHECKPOINT_7_CONSTRUCTION_CANDIDATE`
+Status: `CHECKPOINT_7_REPAIR_CANDIDATE`
 
 Operation: `FIRST_SAFE_VERTICAL_CASE_SELECTION_v1`
 
@@ -26,13 +26,32 @@ Frozen falsifiers:
 - the case duplicates the full Frontier study;
 - the case requires a scientific claim upgrade.
 
-## Scientific delta admitted before selection
+## Scientific-delta repair before merge
 
-The TC-RADAR hurricane execution at PR `#734`, exact head `f6a7267e010a42cce94a7ea292af8e1974591ae2`, is admitted as a `FUTURE_EVIDENCE_DELTA` with `NEW_PROJECT_EMPIRICAL_RESULT = TRUE` and terminal standing `SIGNAL_PRESENT_INCONCLUSIVE`.
+The earlier CP7 candidate admitted the TC-RADAR metadata execution as `SIGNAL_PRESENT_INCONCLUSIVE`. Subsequent audit established that the hurricane evaluation path had not excluded the TC-RADAR/SHIPS `999.9` SST missing-value sentinel. That earlier hurricane standing is quarantined and is not used as scientific support in this package.
 
-The bounded result is preserved exactly as a retrospective structural-metadata result. It does not confirm UCIC/IMI hurricane early warning, does not establish causality, prospectivity, universality, or raw-radar mechanistic structure, and does not repair the earlier negative HURDAT2/static-geometry result.
+The authoritative replacement is the corrected raw TC-RADAR mechanistic execution:
 
-The hurricane line is not selected as the first vertical case because it remains an evolving scientific line, its primary 95% interval crosses zero, its full raw-radar mechanistic successor remains unexecuted, and the executed momentum term uses a bounded raw difference over 6–36 h rather than the previously preferred time-normalized slope. This is a presentation-selection decision, not a scientific rejection of the hurricane result.
+- operation: `UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1`
+- workflow run: `31195025635`
+- workflow head SHA: `2fe335c165a0de004980e429b60830d76e4ce6bc`
+- artifact: `9001275013`
+- artifact ZIP SHA-256: `637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c`
+- frozen protocol SHA-256: `52199364e8880188230831080c333a3a83a52fcccd57e7086aa7fac45d45463d`
+- corrected result SHA-256: `9bfe86b5036d8a44aed34fa24c949abf5362d421b59c6838e8a2256d78aab5fe`
+- correction: `SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION`
+- terminal disposition: `RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED`
+
+Corrected primary comparison:
+
+- BASE AUC: `0.7691387559808613`
+- BASE + noncompensatory C/M AUC: `0.7595693779904307`
+- incremental AUC: `-0.009569377990430672`
+- storm-cluster bootstrap 95% CI: `[-0.04339188231463211, 0.035535714285714205]`
+
+The additive structural representation produced a higher point estimate (`0.8133971291866029`) than BASE, but its bootstrap interval for the difference crossed zero (`[-0.03179495542509231, 0.11906047077922066]`). It remains a bounded, inconclusive research signal and does not alter the adverse terminal disposition of the frozen noncompensatory test.
+
+This repair changes no selected case and creates no claim upgrade. The hurricane line remains active research suitable only for bounded Methods & Models perspective/research context under its explicit limitations.
 
 ## Selected vertical case
 
@@ -69,7 +88,7 @@ with preserved target:
 
 `TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1`
 
-Checkpoint 7 may hand authority only to F1 Construction Baseline after Checkpoint 7 itself is `PASS_CLOSED` under separate merge and post-merge certification authority. F2 and all later construction remain prohibited until F1 passes.
+Checkpoint 7 may hand authority only to `F1_CONSTRUCTION_BASELINE` after Checkpoint 7 itself is `PASS_CLOSED` under separate merge and post-merge certification authority. F2 and all later construction remain prohibited until F1 passes.
 
 ## Stop boundary
 
@@ -82,4 +101,15 @@ Checkpoint 7 may hand authority only to F1 Construction Baseline after Checkpoin
 - `FORMER_CHECKPOINT_8 = RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT`
 - `FINAL_CHECKPOINT_PROGRAM = METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1`
 - `FINAL_PROGRAM_EXECUTION = NOT_STARTED_PENDING_CP7_PASS_CLOSED`
-- `MERGE_AUTHORITY = REQUIRED_SEPARATELY`
+
+## Verification requirement
+
+The repaired verifier must independently bind:
+
+1. the immutable PR709 source blobs used for the Bio-Lab selection;
+2. the exact corrected hurricane Actions artifact ZIP digest;
+3. the SHA-256 identities of the protocol, result, corrected feature table, correction note, and execution log inside that artifact;
+4. the corrected terminal disposition and principal metrics parsed from the artifact itself;
+5. the Final Checkpoint handoff boundary and F1-only activation rule.
+
+Only after that verification passes may the temporary verifier be removed, the exact repaired head be certified, and Checkpoint 7 be merged.

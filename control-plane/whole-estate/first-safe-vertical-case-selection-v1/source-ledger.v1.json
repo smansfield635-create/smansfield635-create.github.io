@@ -1,6 +1,6 @@
 {
   "schema": "WHOLE_ESTATE_CHECKPOINT_7_SOURCE_LEDGER_v1",
-  "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
+  "status": "CHECKPOINT_7_REPAIR_CANDIDATE",
   "governingBaseline": {
     "main": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
     "tree": "aff84c63fcd96d5c8d4b1d29f4b86a374394b8a8",
@@ -53,21 +53,48 @@
     "repositoryAdmission": "OPEN_DRAFT_UNMERGED"
   },
   "hurricaneDeltaSources": {
-    "pr": 734,
-    "exactHead": "f6a7267e010a42cce94a7ea292af8e1974591ae2",
-    "baseHead": "3bb1b21997d5f5f01f99511a8c9a8f75a5282b6b",
-    "operation": "UCIC_HURRICANE_MECHANISTIC_EARLY_WARNING_EXECUTION_v1",
-    "executionProtocolPath": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/execution-protocol.v1.json",
-    "executionProtocolBlob": "3d225c034d8ca23d7a39c39852db43717a08820d",
-    "executionScriptPath": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/run-execution-v1.py",
-    "executionScriptBlob": "162af3e852308cbca3af8e8fe294ba8bcfd91478",
-    "workflowRun": 31160027240,
+    "sourceType": "QC_CORRECTED_RAW_TC_RADAR_ACTIONS_ARTIFACT",
+    "sourcePr": 735,
+    "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+    "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+    "workflowRun": 31195025635,
     "workflowResult": "SUCCESS",
-    "artifactId": 8986676118,
-    "artifactDigest": "sha256:e28e31a070e8b3a7d2350bb4d642898d74f7a717fa923ea62761c3a443d7ad12",
-    "inputSourceSha256": "ec1c873225cea14f9f8f00b2517081e0ddb4890e058e3ee3e34165c8bfa3b5a1",
-    "terminalDisposition": "SIGNAL_PRESENT_INCONCLUSIVE",
-    "repositoryAdmission": "OPEN_DRAFT_UNMERGED"
+    "artifactId": 9001275013,
+    "artifactName": "ucic-hurricane-raw-tc-radar-mechanistic-qc-corrected-rerun-v1",
+    "artifactZipSha256": "637f00dbcd701a90f5348b812f4dcb8a9d41a41effcc8ec548a4726aaa17ba9c",
+    "artifactFiles": {
+      "protocol": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-protocol.v1.json",
+        "sha256": "52199364e8880188230831080c333a3a83a52fcccd57e7086aa7fac45d45463d"
+      },
+      "result": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-qc-corrected-result.v1.json",
+        "sha256": "9bfe86b5036d8a44aed34fa24c949abf5362d421b59c6838e8a2256d78aab5fe"
+      },
+      "features": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-qc-corrected-features.v1.csv",
+        "sha256": "8fb7684683a8f8a4a846299e1f3e19e44524297c7a3dcd2d49508d740760a306"
+      },
+      "qcCorrectionNote": {
+        "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/RAW_TC_RADAR_SST_SENTINEL_QC_CORRECTION_v1.md",
+        "sha256": "6ebdf6e3290f0d0d4e37f71fb0c39faecbb0ebde8df153b3ad74c6543fbd0be6"
+      },
+      "executionLog": {
+        "path": "raw-tc-radar-mechanistic-qc-corrected-execution.log",
+        "sha256": "adb4c52770edabc7f2a794c2c47e4bc527bbae7d2dd48aa03947732f42691c95"
+      }
+    },
+    "qcCorrection": "SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION",
+    "terminalDisposition": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+    "priorMetadataExecution": {
+      "pr": 734,
+      "exactHead": "f6a7267e010a42cce94a7ea292af8e1974591ae2",
+      "workflowRun": 31160027240,
+      "artifactId": 8986676118,
+      "priorStanding": "SIGNAL_PRESENT_INCONCLUSIVE",
+      "currentAdmission": "QUARANTINED_SUPERSEDED_BY_QC_CORRECTED_RAW_RESULT",
+      "reason": "unhandled SST sentinel contaminated evaluation input"
+    }
   },
   "sourceMutationAuthorized": false,
   "sciencePrMergeAuthorized": false,

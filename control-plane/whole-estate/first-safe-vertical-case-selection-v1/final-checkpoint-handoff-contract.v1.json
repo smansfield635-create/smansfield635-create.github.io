@@ -1,6 +1,6 @@
 {
   "schema": "WHOLE_ESTATE_FINAL_CHECKPOINT_HANDOFF_CONTRACT_v1",
-  "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
+  "status": "CHECKPOINT_7_REPAIR_CANDIDATE",
   "successorProgram": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
   "preservedTarget": "TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
   "formerCheckpoint8": "RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT",
@@ -49,9 +49,11 @@
     "FINAL_PASS_REQUIRES_THE_INTEGRATED_OBJECT_NOT_THE_SUM_OF_COMPONENT_PASSES"
   ],
   "hurricaneDeltaAvailability": {
-    "standing": "POSITIVE_SIGNAL_INCONCLUSIVE",
+    "standing": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
     "selectedFirstVertical": false,
     "mayRemainDiscoverableAsLaterEvidenceState": true,
+    "mayRemainDiscoverableAsPerspectiveResearchState": true,
+    "researchBoundary": "adverse frozen noncompensatory raw-radar test; additive structural point signal remains inconclusive; warning-time improvement not tested",
     "mayNotReplaceSelectedVerticalWithoutNewExplicitAdjudication": true
   },
   "f1BaselineRequiredBeforeConstruction": true,

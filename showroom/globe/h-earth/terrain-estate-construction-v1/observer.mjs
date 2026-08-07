@@ -10,7 +10,9 @@ const REQUIRED_SOURCE = 'ad9e72adb97df7ab867af1fe20df2c29de763d28';
 export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const snapshot = renderer.getSnapshot();
   const planet = snapshot.planetStatistics;
+  const continent = snapshot.continentStatistics;
   const gratitude = snapshot.gratitudeStatistics;
+  const stitch = snapshot.stitchStatistics;
   const water = snapshot.waterStatistics;
   const camera = renderer.getCameraSafety();
   const contract = snapshot.worldContract;
@@ -42,24 +44,68 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       geography?.fullScaleLocalGratitudePreserved === true,
     trueCoastalHarborBinding:
       contract?.trueCoastalHarborBinding === true &&
-      planet?.trueCoastalHarborBinding === true &&
       gratitude?.trueCoastalHarborBinding === true &&
       geography?.trueCoastalHarborBinding === true &&
       geography?.maximumCoastalBindingError < 1e-9 &&
-      geography?.coastalBindingSampleCount >= 7,
-    geometricBoundaryStitchConstructed:
-      contract?.localMacroTransition === 'GEOMETRIC_STITCH_TO_SHARED_CONTINENTAL_SURFACE' &&
-      contract?.geometricStitchWidthAuthoringUnits >= 64 &&
-      gratitude?.geometricStitchWidthAuthoringUnits >= 64 &&
-      gratitude?.boundaryPositionConvergesToMacro === true &&
-      gratitude?.boundaryElevationMaximumError < 1e-9 &&
-      geography?.geometricStitchConstructed === true &&
-      geography?.detailBoundaryConvergesToMacro === true &&
-      geography?.maximumBoundaryElevationError < 1e-9 &&
-      geography?.planetSupportTracksLocalDetail === true,
+      geography?.coastalBindingSampleCount === 7,
+    deliberateClosedCoastlineConstructed:
+      contract?.gratitudeContinentalSkeleton === 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
+      contract?.gratitudeCoastlineIsUnionOfEllipses === false &&
+      continent?.coastlineRepresentation === 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
+      continent?.coastlineUnionOfEllipses === false &&
+      continent?.coastlineControlPointCount >= 30 &&
+      continent?.coastlineSampleCount >= 180 &&
+      geography?.coastlineRepresentation === 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
+      geography?.coastlineUnionOfEllipses === false &&
+      geography?.coastlinePlanarArea > 1000000 &&
+      geography?.coastlinePlanarPerimeter > 4000,
+    planetaryGratitudeLandRemoved:
+      contract?.planetaryGratitudeLandRemoved === true &&
+      planet?.planetaryGratitudeLandRemoved === true &&
+      planet?.planetaryGratitudeLandVertices === 0 &&
+      geography?.planetaryGratitudeLandRemoved === true,
+    separateContinentalMeshConstructed:
+      contract?.gratitudeContinentalMeshSeparate === true &&
+      continent?.continentalMeshSeparateFromPlanetaryBase === true &&
+      continent?.triangleCount > 0 &&
+      geography?.gratitudeContinentalMeshSeparate === true,
+    continentalApertureClear:
+      contract?.continentalApertureConstructed === true &&
+      continent?.continentalApertureConstructed === true &&
+      continent?.apertureClear === true &&
+      continent?.apertureIntrusionTriangleCount === 0 &&
+      geography?.continentalApertureConstructed === true &&
+      geography?.continentalApertureClear === true &&
+      geography?.continentalApertureIntrusionTriangleCount === 0,
+    boundedExplicitStitchAnnulus:
+      contract?.localMacroTransition === 'EXPLICIT_APERTURE_PLUS_SHARED_STITCH_ANNULUS' &&
+      contract?.stitchWidthAuthoringUnits === 96 &&
+      stitch?.explicitAnnulusConstructed === true &&
+      stitch?.separateMesh === true &&
+      stitch?.triangleCount > 0 &&
+      stitch?.boundedTriangleEdges === true &&
+      stitch?.maximumTriangleEdgeLength <= 80 &&
+      stitch?.localBoundarySharedGeometrically === true &&
+      stitch?.maximumLocalBoundaryPositionError < 1e-6 &&
+      stitch?.outerBoundaryConvergesToMacro === true &&
+      stitch?.maximumOuterBoundaryMacroElevationError < 1e-9 &&
+      geography?.explicitStitchAnnulusConstructed === true &&
+      geography?.stitchTrianglesBounded === true &&
+      geography?.stitchMaximumTriangleEdgeLength <= 80 &&
+      geography?.stitchLocalBoundarySharedGeometrically === true &&
+      geography?.stitchOuterBoundaryConvergesToMacro === true,
+    localTerrainTopologyClippedAtCoastline:
+      contract?.localTerrainTopologyClippedAtCoastline === true &&
+      gratitude?.topologyClippedAtCoastline === true &&
+      gratitude?.transparentTerrainTriangleCount === 0 &&
+      gratitude?.renderedTerrainTriangles > 0 &&
+      gratitude?.omittedOceanTriangles > 0 &&
+      geography?.localTerrainTopologyClippedAtCoastline === true &&
+      geography?.localTransparentTerrainTriangleCount === 0,
     singleSurfaceOceanReconciled:
       contract?.planetaryOceanSingleSurface === true &&
       contract?.localOceanOverlayConstructed === false &&
+      planet?.planetaryOceanSingleSurface === true &&
       gratitude?.singleSurfaceOceanUsesPlanetaryMesh === true &&
       gratitude?.localOceanOverlayConstructed === false &&
       water?.planetaryOceanSingleSurface === true &&
@@ -67,22 +113,15 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       water?.oceanTriangleCount === 0 &&
       geography?.planetaryOceanSingleSurface === true &&
       geography?.localOceanOverlayConstructed === false,
-    gratitudeContinentalSkeletonAsymmetric:
-      contract?.gratitudeContinentalSkeleton === 'ASYMMETRIC_COMPOUND_TANGENT_FIELD' &&
-      planet?.gratitudeSkeletonAsymmetric === true &&
-      geography?.gratitudeSkeletonAsymmetric === true,
     primaryInlandAxesBound:
       contract?.primaryInlandMountainWatershedAxes === true &&
-      planet?.primaryInlandMountainWatershedAxes === true &&
-      planet?.primaryInlandAxisCount === 3 &&
+      continent?.primaryInlandMountainWatershedAxes === true &&
+      continent?.primaryInlandAxisCount === 3 &&
       geography?.primaryInlandAxisCount === 3,
     ow02ScopeNotLeaked:
       contract?.ow02DetailedContinuationConstructed === false &&
-      planet?.ow02DetailedContinuationConstructed === false &&
+      continent?.ow02DetailedContinuationConstructed === false &&
       geography?.ow02DetailedContinuationConstructed === false,
-    detailBoundaryDoesNotDefineWorld:
-      gratitude?.rectangularBoundaryVisible === false &&
-      gratitude?.authoringRegionIsWorldBoundary === false,
     audraliaPlanetInspectable:
       planet?.closedPlanetarySurface === true,
     planetHasNoRectangularWorldBorder:
@@ -92,14 +131,14 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       snapshot.wholePlanetMustFitViewport === false,
     exactlyNineContinentsDefined:
       planet?.definedContinentCount === 9 &&
-      planet?.unresolvedContinentCount === 8 &&
-      planet?.gratitudeResolved === true,
+      contract?.continentCount === 9 &&
+      contract?.unresolvedContinentCount === 8,
     otherContinentsRemainNoncanonical:
       planet?.otherContinentsPlacementsCanonical === false &&
       contract?.otherContinentsPlacementsCanonical === false &&
       geography?.otherEightContinentsRemainNoncanonical === true,
     gratitudeNineSummitsTrackPresent:
-      planet?.gratitudeSummitAnchorCount === 9 &&
+      continent?.gratitudeSummitAnchorCount === 9 &&
       contract?.gratitudeSummitAnchorCount === 9,
     continuousFourScaleHierarchy:
       Array.isArray(contract?.continuousZoomHierarchy) &&
@@ -110,6 +149,9 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       water?.waterfallTriangleCount > 0,
     cameraContractSafe:
       Object.values(camera).every(Boolean),
+    mechanicalPassCannotClaimUserAcceptance:
+      contract?.mechanicalPassIsNotUserAcceptance === true &&
+      geography?.mechanicalPassIsNotUserAcceptance === true,
     manorGeometryUnconstructed:
       snapshot.manorGeometryConstructed === false,
     liveRuntimeUnmutated:
@@ -125,11 +167,13 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const failedChecks = Object.entries(checks)
     .filter(([, value]) => value !== true)
     .map(([name]) => name);
-  const result = failedChecks.length === 0 ? 'PASS' : 'FAIL_CLOSED';
+  const mechanicalChecksPassed = failedChecks.length === 0;
 
   return freeze({
-    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v3',
-    result,
+    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v4',
+    result: mechanicalChecksPassed ? 'MECHANICAL_PASS_AWAITING_USER' : 'FAIL_CLOSED',
+    mechanicalChecksPassed,
+    userAcceptanceEstablished: false,
     operationId: REQUIRED_OPERATION,
     checkpoint: 'OW01',
     lockGeneration: 473,
@@ -140,7 +184,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
     resolvedContinent: 'GRATITUDE',
     continentCount: 9,
     gratitudeSummitTrackCount: 9,
-    hierarchy: freeze(['AUDRALIA', 'GRATITUDE_CONTINENT', 'GRATITUDE_REGION', 'HIGH_RESOLUTION_LOCAL_TERRAIN']),
+    hierarchy: freeze(['AUDRALIA', 'GRATITUDE_CONTINENT', 'STITCH_ANNULUS', 'HIGH_RESOLUTION_LOCAL_TERRAIN']),
     checks: freeze(checks),
     failedChecks: freeze(failedChecks),
     geographicEvidence: geography,
@@ -148,8 +192,9 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
     boundaries: freeze({
       authoringPreviewOnly: true,
       userGeographicDifferentialRecorded: true,
-      userDifferentialDisposition: 'MATERIAL_DIRECTIONAL_SUCCESS_WITH_BOUNDARY_CONTAMINATION_REPAIR_REQUIRED',
-      repairRound: 'OW01_GEOMETRIC_STITCH_AND_SINGLE_SURFACE_WATER_RECONCILIATION',
+      latestUserDifferentialDisposition: 'REGRESSION_ARCHITECTURE_RESET_ACTIVE',
+      userAcceptanceEstablished: false,
+      repairRound: 'OW01_SEPARATE_CONTINENT_APERTURE_AND_STITCH_ANNULUS',
       ow02Authorized: false,
       liveIntegrationAuthorized: false,
       frontPageIntegrationAuthorized: false,

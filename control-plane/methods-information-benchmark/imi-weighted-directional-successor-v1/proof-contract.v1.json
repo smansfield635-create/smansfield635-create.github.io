@@ -1,0 +1,67 @@
+{
+  "schema": "IMI_SUCCESSOR_OBJECT_REGISTRY_PROOF_CONTRACT_v1",
+  "requiredObjectCount": 17,
+  "requiredObjectSymbols": [
+    "O_i",
+    "Q_r(t)",
+    "R_ir",
+    "C_r",
+    "S_ir",
+    "U_ir",
+    "P_i",
+    "Delta_ir",
+    "D_ir",
+    "A_ir",
+    "OVERLAP_ATTRIBUTION_UNIT",
+    "SUPPORT_MODE",
+    "ROUTE_STATUS",
+    "RESTORATION",
+    "REPLACEMENT_OR_SUCCESSOR_FORMATION",
+    "IDENTITY_CONDITIONED_REACHABILITY",
+    "Z_t"
+  ],
+  "requiredDefinitionFields": [
+    "meaning",
+    "notMeaning",
+    "unit",
+    "denominator",
+    "evidenceAdmission",
+    "firstNewsStation",
+    "laterNewsStations",
+    "compensationRule",
+    "overlapRule",
+    "missingnessRule",
+    "uncertainty",
+    "counterexample",
+    "falsificationCondition",
+    "websiteDisposition",
+    "validationStatus"
+  ],
+  "requiredNewsStations": [
+    "F1_NORTH",
+    "F3_EAST_SOURCE",
+    "F5_EAST_CONSTRUCTION",
+    "F8_CENTER_SURFACE_TRUTH",
+    "F13_WEST_RUNTIME_PROBE",
+    "F21_WEST_RUNTIME_INTERPRETATION",
+    "F34_SOUTH_HANDOFF",
+    "F55_SOUTH_RESTITUTION",
+    "F89_NORTH_RETURN"
+  ],
+  "operatorBoundary": {
+    "withinRoute": "Q_r(t)=PRODUCT_OF_JOINTLY_NECESSARY_ROUTE_TERMS",
+    "acrossChanges": "D_ir=G_ir*Delta_ir",
+    "provisionalGovernedReach": "G_ir=R_ir*C_r*S_ir*U_ir*P_i",
+    "evidenceRule": "A_ir remains separate from substantive system impact"
+  },
+  "laws": [
+    "FROZEN_GAUNTLET_NONMUTATION",
+    "NO_HELD_OUT_OUTCOME_ACCESS",
+    "EPISTEMIC_SUBSTANTIVE_SEPARATION",
+    "NO_FLAT_EQUILATERAL_WEIGHTING",
+    "PRODUCT_ONLY_FOR_JOINT_NECESSITY",
+    "NO_DUPLICATE_ATTRIBUTION",
+    "NO_UNRELATED_ROUTE_COMPENSATION"
+  ],
+  "terminalBoundary": "REGISTRY_DEFINITION_ONLY_NO_EQUATION_FINALIZATION_OR_PORTFOLIO_EXECUTION"
+}

@@ -160,9 +160,22 @@ export async function runHEarthMapWideEnvironmentRedevelopmentVerification({ rol
   check(checks, 'PREVIEW_ALL_FILES_PRESENT', previewPresent);
   if (previewPresent) {
     const previewText = previewPaths.map((repositoryPath) => fs.readFileSync(path.join(ROOT, repositoryPath), 'utf8')).join('\n');
+    const rendererText = fs.readFileSync(path.join(ROOT, previewPaths[2]), 'utf8');
     check(checks, 'PREVIEW_NONPUBLIC_LABEL', /NONPUBLIC|nonpublic/i.test(previewText));
     check(checks, 'PREVIEW_NO_REMOTE_RUNTIME_DEPENDENCY', !/(?:src|href)=["']https?:\/\//i.test(previewText));
-    check(checks, 'PREVIEW_INTERACTIVE_3D_PRESENTATION', /presentationElevation/.test(previewText) && /orbit\(/.test(previewText) && /triangleNormal/.test(previewText));
+    check(checks, 'PREVIEW_WEBGL2_EXECUTION', /getContext\(['"]webgl2['"]/.test(rendererText) && /createProgram\(/.test(rendererText));
+    check(checks, 'PREVIEW_V2_NORMAL_RELIEF_EXECUTION',
+      /perturbTerrainNormal\(/.test(rendererText) &&
+      /limitTerrainNormalDeviation\(/.test(rendererText) &&
+      /3\.306939635357677/.test(rendererText) &&
+      /2\.7318196987737333/.test(rendererText) &&
+      /2\.243994752564138/.test(rendererText) &&
+      /microReliefSignal\*0\.22/.test(rendererText) &&
+      /0\.9271838545667874/.test(rendererText) &&
+      /0\.3746065934159120/.test(rendererText) &&
+      /smoothstep\(120\.0,300\.0,distanceToCamera\)/.test(rendererText)
+    );
+    check(checks, 'PREVIEW_INTERACTIVE_3D_PRESENTATION', /presentationElevation/.test(previewText) && /orbit\(/.test(previewText));
     check(checks, 'PREVIEW_NO_MANOR_GEOMETRY', !/createManor|buildManor|manorMesh|manorGeometryConstructed\s*:\s*true/i.test(previewText));
   }
 

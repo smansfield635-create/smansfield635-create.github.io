@@ -1,0 +1,33 @@
+{
+  "schema": "THREE_TIER_CODESPACE_OUTAGE_CONTINUITY_POLICY_v1",
+  "status": "ACTIVE_CONTRACT_CANDIDATE",
+  "primaryPrinciple": "EXECUTION_PROOF_MUST_SURVIVE_LOSS_OF_ANY_SINGLE_INTERACTIVE_ENVIRONMENT",
+  "backendOrder": [
+    "CODESPACE_DISPOSABLE_EXECUTION",
+    "LOCAL_CLEAN_GIT",
+    "GITHUB_ACTIONS_CLEAN_EXECUTION"
+  ],
+  "fallbackRules": [
+    {
+      "from": "CODESPACE_DISPOSABLE_EXECUTION",
+      "to": "LOCAL_CLEAN_GIT",
+      "when": "CODESPACE_UNAVAILABLE_BUT_EXACT_COMMITS_AND_RUNTIME_AVAILABLE"
+    },
+    {
+      "from": "CODESPACE_DISPOSABLE_EXECUTION",
+      "to": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+      "when": "INTERACTIVE_OR_LOCAL_EXECUTION_TRANSPORT_UNAVAILABLE_AND_ACTIVE_PROJECT_WORKFLOW_EXISTS"
+    },
+    {
+      "from": "LOCAL_CLEAN_GIT",
+      "to": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+      "when": "NETWORK_OR_RUNTIME_UNAVAILABLE_AND_ACTIVE_PROJECT_WORKFLOW_EXISTS"
+    }
+  ],
+  "noActiveFallbackDisposition": "BLOCKED_NONTERMINAL_EXECUTION_SURFACE_UNAVAILABLE",
+  "manualMetadataReconstructionAsExecutionProof": false,
+  "movingTargetSubstitutionAllowed": false,
+  "resultSubstitutionAllowed": false,
+  "actionsReplayTemplate": ".github/ai-router/codespace-execution/templates/actions-replay-workflow.template.v1.yml",
+  "actionsReplayTemplateStatus": "NONACTIVE_REQUIRES_SEPARATE_ACTIVATION"
+}

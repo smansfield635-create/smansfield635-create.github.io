@@ -1,0 +1,26 @@
+{
+  "schema": "THREE_TIER_CODESPACE_PROJECT_EXECUTION_PROFILE_v1",
+  "projectId": "H_EARTH",
+  "status": "ACTIVE_CONTRACT_CANDIDATE",
+  "substrateId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_v1",
+  "operationClasses": [
+    "H_EARTH_NONMUTATING_BUILDER_VERIFICATION",
+    "H_EARTH_FRESH_ROLE3_REPRODUCTION",
+    "H_EARTH_DETERMINISTIC_RECEIPT_COMPARISON"
+  ],
+  "targetIdentityRule": "EXACT_40_CHARACTER_COMMIT_ONLY",
+  "commandRule": "PROJECT_DECLARED_FIXED_COMMAND_ONLY",
+  "builderFreshVerifierSeparation": "REQUIRED",
+  "outputs": "OUTSIDE_REPOSITORY_OR_IGNORED_UNLESS_SEPARATELY_AUTHORIZED",
+  "productMutationAuthorityCreated": false,
+  "mergeAuthorityCreated": false,
+  "scientificClaimAuthorityCreated": false,
+  "nativeTerminalTransportRequired": false,
+  "failureDisposition": "FAIL_CLOSED",
+  "protectedRules": [
+    "CANDIDATE_MUTATION_REQUIRES_SEPARATE_H_EARTH_AUTHORITY",
+    "OPERATION_LOCK_MUTATION_PROHIBITED",
+    "NEW_PRODUCT_PATHS_PROHIBITED_BY_EXECUTION_ONLY_OPERATIONS",
+    "EXECUTION_PASS_DOES_NOT_AUTHORIZE_MERGE_OR_DEPLOYMENT"
+  ]
+}

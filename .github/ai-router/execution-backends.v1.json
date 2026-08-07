@@ -26,7 +26,9 @@
         "COMMAND_EMITTED_RECEIPT",
         "ARTIFACT_UPLOAD_ON_SUCCESS_OR_FAILURE"
       ],
-      "manualReconstructionAllowed": false
+      "manualReconstructionAllowed": false,
+      "replayTemplate": ".github/ai-router/codespace-execution/templates/actions-replay-workflow.template.v1.yml",
+      "replayTemplateStatus": "NONACTIVE_TEMPLATE_REQUIRES_SEPARATE_WORKFLOW_ACTIVATION_AUTHORITY"
     },
     {
       "backendId": "CONNECTED_GITHUB_METADATA_INSPECTION",
@@ -38,6 +40,27 @@
         "BLOCK_CAUSE_DIAGNOSIS"
       ],
       "prohibitedClaim": "DOES_NOT_REPLACE_A_REQUIRED_COMMAND_EXECUTION_OR_REPRODUCTION_FINGERPRINT"
+    },
+    {
+      "backendId": "CODESPACE_DISPOSABLE_EXECUTION",
+      "classification": "AUTHORITATIVE_WHEN_PROCEDURE_AND_PROJECT_PROFILE_DECLARE_IT",
+      "substrateContract": ".github/ai-router/codespace-execution/execution-environment-contract.v1.json",
+      "requirements": [
+        "EXACT_TARGET_HEAD",
+        "FULL_HISTORY_WHEN_LINEAGE_IS_TESTED",
+        "DECLARED_RUNTIME_AVAILABLE",
+        "CLEAN_WORKTREE",
+        "DECLARED_FIXED_COMMAND",
+        "OUTPUTS_OUTSIDE_REPOSITORY_OR_IGNORED",
+        "COMMAND_EMITTED_RECEIPT",
+        "NO_BUILDER_VERIFIER_MUTABLE_STATE_REUSE"
+      ],
+      "nativeChatGPTTerminalTransportRequired": false,
+      "nativeChatGPTTerminalTransportCreated": false,
+      "authorityInflationAllowed": false,
+      "persistentCodespaceAuthorityAllowed": false,
+      "failureRouting": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+      "replayPolicy": ".github/ai-router/codespace-execution/outage-continuity-policy.v1.json"
     }
   ]
 }

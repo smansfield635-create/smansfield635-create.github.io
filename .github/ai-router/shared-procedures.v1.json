@@ -114,6 +114,61 @@
         "Execute rollback in an isolated branch or worktree.",
         "Verify protected blobs and accepted baseline identities are restored exactly."
       ]
+    },
+    {
+      "procedureId": "DISPOSABLE_EXECUTION_REQUEST",
+      "purpose": "Turn an admitted repository-governed execution request into one exact-head nonmutating command execution without requiring interactive chat terminal access.",
+      "contract": ".github/ai-router/codespace-execution/execution-environment-contract.v1.json",
+      "steps": [
+        "Resolve the separately admitted operation and owning project profile.",
+        "Resolve the exact target commit and declared fixed command.",
+        "Create or select a disposable clean execution environment permitted by the project profile.",
+        "Checkout the target commit detached with full history when lineage is tested.",
+        "Verify a clean worktree before execution.",
+        "Execute only the declared command with outputs outside the repository or in an ignored disposable path.",
+        "Emit environment and command-execution receipts.",
+        "Destroy or invalidate the mutable environment after receipt capture."
+      ],
+      "forbiddenSubstitutes": [
+        "INTERACTIVE_TERMINAL_TRANSCRIPT_AS_PROOF",
+        "MANUAL_METADATA_RECONSTRUCTION",
+        "MOVING_BRANCH_AS_TARGET_IDENTITY"
+      ],
+      "authorityCreated": false
+    },
+    {
+      "procedureId": "FRESH_VERIFIER_REEXECUTION",
+      "purpose": "Reexecute the same frozen target and command in a distinct clean environment with no mutable-state reuse.",
+      "profile": ".github/ai-router/codespace-execution/fresh-verifier-profile.v1.json",
+      "steps": [
+        "Create a fresh environment with a distinct environment identity.",
+        "Resolve the same exact target commit independently.",
+        "Execute the same declared command without builder outputs except immutable declared inputs.",
+        "Emit a fresh-verifier command receipt and output digests."
+      ],
+      "authorityCreated": false
+    },
+    {
+      "procedureId": "INDEPENDENT_EXECUTION_EQUALITY",
+      "purpose": "Compare builder and fresh-verifier immutable outputs without allowing favorable-result substitution.",
+      "steps": [
+        "Bind builder and fresh-verifier receipt digests.",
+        "Compare the declared equality domain byte-for-byte or by the procedure-declared canonical hash.",
+        "Emit PASS_EXACT_EQUALITY or FAIL_CLOSED_MISMATCH.",
+        "Do not reinterpret mismatches as success."
+      ],
+      "authorityCreated": false
+    },
+    {
+      "procedureId": "EXECUTION_ENVIRONMENT_DESTRUCTION",
+      "purpose": "Prove that a disposable environment is no longer relied upon as continuing authority after execution.",
+      "steps": [
+        "Record environment identity and last exact target.",
+        "Remove the disposable worktree/container/Codespace when the caller has destruction capability, or mark it explicitly nonauthoritative when physical destruction is outside the caller transport.",
+        "Emit a destruction receipt that distinguishes destroyed from merely detached.",
+        "Never treat a long-lived environment as canonical scientific custody."
+      ],
+      "authorityCreated": false
     }
   ]
 }

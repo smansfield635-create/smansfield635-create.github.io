@@ -1,0 +1,16 @@
+{
+  "name": "Three-tier disposable execution substrate template",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+  "remoteUser": "node",
+  "containerEnv": {
+    "THREE_TIER_EXECUTION_SUBSTRATE": "1",
+    "THREE_TIER_NATIVE_CHATGPT_TERMINAL_REQUIRED": "0"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  },
+  "postCreateCommand": "git status --porcelain=v1",
+  "shutdownAction": "stopContainer"
+}

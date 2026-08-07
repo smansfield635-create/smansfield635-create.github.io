@@ -10,7 +10,10 @@ if (!(canvas instanceof HTMLCanvasElement)) {
 }
 
 const renderer = createMapWideEnvironmentRenderer(canvas);
-const receipt = buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer.mesh.statistics);
+const receipt = buildHEarthMapWideEnvironmentPreviewObserverReceipt(
+  renderer.mesh.statistics,
+  renderer.waterMesh.statistics
+);
 const pointers = new Map();
 let gesture = null;
 
@@ -111,7 +114,7 @@ window.addEventListener('resize', render);
 window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
   operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
   lockGeneration: 422,
-  inspectorRepairRevision: 2,
+  inspectorRepairRevision: 3,
   renderer,
   observerReceipt: receipt
 });

@@ -1,0 +1,35 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ESTATE_SITE_PLAN_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "siteStatus": "RESERVED_FUTURE_CONSTRUCTION_ENVELOPE_ONLY",
+  "center": {"x": 80, "z": -172},
+  "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+  "transitionEnvelope": {"xMinimum": 52, "xMaximum": 108, "zMinimum": -200, "zMaximum": -144},
+  "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
+  "terrainTreatment": {
+    "coreGeometricOffset": 0,
+    "transitionRule": "SMOOTHLY_FADE_SUCCESSOR_RELIEF_TO_ZERO_BEFORE_CORE_ENVELOPE",
+    "surroundingPurpose": "FRAME_AND_NEST_RESERVED_SITE_WITHOUT_PRESELECTING_BUILDING_GEOMETRY",
+    "gradingAuthorized": false,
+    "foundationAuthorized": false
+  },
+  "deferredManor": {
+    "footprint": "UNASSIGNED",
+    "orientation": "UNASSIGNED",
+    "entrance": "UNASSIGNED",
+    "atrium": "UNASSIGNED",
+    "garden": "UNASSIGNED",
+    "sculptures": "UNASSIGNED",
+    "architecture": "UNASSIGNED",
+    "construction": "UNAUTHORIZED_IN_THIS_OPERATION",
+    "selectionByInferenceProhibited": true
+  },
+  "requiredAdjacencies": {
+    "lowCorridor": "PRESERVE_OPEN",
+    "beachwardGroundView": "PRESERVE_CLEAR",
+    "mountainwardGroundView": "PRESERVE_CLEAR",
+    "entryZone": "PRESERVE_SEPARATE_AND_CONNECTED",
+    "terrainTraversal": "PRESERVE_CONTINUOUS"
+  },
+  "acceptanceLaw": "ENVIRONMENT_MAY_BE_REDEVELOPED_AROUND_RESERVED_SITE_BUT_SITE_IDENTITY_AND_FUTURE_OPTIONALITY_MUST_NOT_BE_CONSUMED"
+}

@@ -20,7 +20,7 @@ const reportFailure = (stage, error) => {
   setDiagnostic(`${stage}_FAILED: ${message}`);
   window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW_ERROR__ = Object.freeze({
     operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
-    inspectorRepairRevision: 7,
+    inspectorRepairRevision: 8,
     stage,
     message
   });
@@ -90,7 +90,7 @@ function wireControls(renderer) {
   canvas.addEventListener('dblclick', () => renderer.fitWorld());
 
   window.addEventListener('keydown', (event) => {
-    const distance = event.shiftKey ? 16 : 7;
+    const distance = event.shiftKey ? 24 : 10;
     const key = event.key.toLowerCase();
     if (event.key === 'ArrowLeft' || key === 'a') renderer.pan(-distance, 0);
     if (event.key === 'ArrowRight' || key === 'd') renderer.pan(distance, 0);
@@ -114,12 +114,16 @@ async function loadObserverAfterFirstPaint(renderer) {
     const cameraSafety = renderer.getCameraSafety();
     const safe = Object.values(cameraSafety).every((value) => value === true);
     const pass = receipt.result === 'PASS' && safe;
+
     setVisibleStatus(pass ? 'PASS' : 'READY', pass ? 'PASS' : 'OBSERVER_PENDING_OR_FAIL');
-    setDiagnostic('One finger: orbit · two fingers: pan + pinch · wheel: zoom · W/A/S/D or arrows: move.');
+    setDiagnostic(
+      'Whole-continent authoring view · Gratitude is high-detail · distant regions are intentionally unresolved. One finger: orbit · two fingers: pan + pinch.'
+    );
+
     window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
       operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
       lockGeneration: 422,
-      inspectorRepairRevision: 7,
+      inspectorRepairRevision: 8,
       renderer,
       observerReceipt: receipt
     });
@@ -130,7 +134,7 @@ async function loadObserverAfterFirstPaint(renderer) {
     window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
       operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
       lockGeneration: 422,
-      inspectorRepairRevision: 7,
+      inspectorRepairRevision: 8,
       renderer,
       observerReceipt: null,
       observerDeferredFailure: true
@@ -140,22 +144,27 @@ async function loadObserverAfterFirstPaint(renderer) {
 
 async function initialize() {
   try {
-    if (!(canvas instanceof HTMLCanvasElement)) throw new Error('H_EARTH_MAP_WIDE_CANVAS_MISSING');
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      throw new Error('H_EARTH_MAP_WIDE_CANVAS_MISSING');
+    }
 
     setVisibleStatus('terrain…', 'IMPORTING_TERRAIN_RENDERER');
-    setDiagnostic('Importing terrain renderer…');
+    setDiagnostic('Importing Gratitude terrain and continental authoring shell…');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const rendererModule = await import('./renderer.mjs');
     setVisibleStatus('building…', 'BUILDING_TERRAIN');
-    setDiagnostic('Building terrain and future-region continuation meshes…');
+    setDiagnostic('Building Gratitude detail, coastal morphology, and low-resolution continental terrain…');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const renderer = rendererModule.createMapWideEnvironmentRenderer(canvas);
     renderer.render();
     wireControls(renderer);
+
     setVisibleStatus('READY', 'VISUAL_READY');
-    setDiagnostic('One finger: orbit · two fingers: pan + pinch · wheel: zoom · W/A/S/D or arrows: move.');
+    setDiagnostic(
+      'Whole-continent authoring view · Gratitude is high-detail · distant regions are intentionally unresolved. One finger: orbit · two fingers: pan + pinch.'
+    );
 
     requestAnimationFrame(() => loadObserverAfterFirstPaint(renderer));
   } catch (error) {
@@ -164,5 +173,5 @@ async function initialize() {
 }
 
 setVisibleStatus('boot…', 'BOOTSTRAP_ACTIVE');
-setDiagnostic('Starting inspector…');
+setDiagnostic('Starting continental world inspector…');
 initialize();

@@ -1,0 +1,208 @@
+name: H-Earth Inter-Hill Estate V2 Causal Evidence Execution 001
+
+on:
+  workflow_dispatch:
+    inputs:
+      authorized_candidate_head:
+        description: Exact admitted candidate head
+        required: true
+        type: string
+      execution_authorized:
+        description: Must be TRUE after canonical admission and fresh exact-path lock
+        required: true
+        default: "FALSE"
+        type: choice
+        options: ["FALSE", "TRUE"]
+
+permissions:
+  contents: read
+
+env:
+  OPERATION_ID: H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001
+  NODE_VERSION: 22.23.1
+  MAXIMUM_SEEDS_PER_SHARD: "64"
+  MAXIMUM_SHARDS_PER_WAVE: "128"
+  MAXIMUM_PARALLEL_SHARDS: "8"
+
+jobs:
+  verify-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.authorized_candidate_head }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: node h-earth-3d/validation/h-earth.inter-hill-estate-v2-causal-evidence-execution-001.mjs verify
+
+  count-preflight:
+    needs: verify-candidate
+    if: inputs.execution_authorized == 'TRUE'
+    strategy:
+      fail-fast: false
+      matrix:
+        source_mode:
+          - CURRENT_MAIN_BASELINE
+          - CURRENT_MAIN_PLUS_ACCEPTED_R06_C10_ANALYSIS_COMPOSITE
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.authorized_candidate_head }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: mkdir -p artifacts/preflight/${{ matrix.source_mode }}
+      - run: >-
+          node h-earth-3d/validation/h-earth.inter-hill-estate-v2-causal-evidence-execution-001.mjs
+          preflight --source-mode "${{ matrix.source_mode }}"
+          --output "artifacts/preflight/${{ matrix.source_mode }}/${{ matrix.source_mode }}.eligible-seed-manifest.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-causal-001-preflight-${{ matrix.source_mode }}
+          path: artifacts/preflight/${{ matrix.source_mode }}
+          if-no-files-found: error
+          retention-days: 30
+
+  freeze-plan:
+    needs: count-preflight
+    if: inputs.execution_authorized == 'TRUE'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      wave_count: ${{ steps.plan.outputs.wave_count }}
+      wave_0: ${{ steps.plan.outputs.wave_0 }}
+      wave_1: ${{ steps.plan.outputs.wave_1 }}
+      wave_2: ${{ steps.plan.outputs.wave_2 }}
+      wave_3: ${{ steps.plan.outputs.wave_3 }}
+      wave_4: ${{ steps.plan.outputs.wave_4 }}
+      wave_5: ${{ steps.plan.outputs.wave_5 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.authorized_candidate_head }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: h-earth-v2-causal-001-preflight-*
+          path: artifacts/preflight
+          merge-multiple: true
+      - id: plan
+        run: >-
+          node h-earth-3d/validation/h-earth.inter-hill-estate-v2-causal-evidence-execution-001.mjs
+          plan --preflight-root artifacts/preflight --output artifacts/execution-plan.json --github-output "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-v2-causal-001-frozen-plan
+          path: artifacts/execution-plan.json
+          if-no-files-found: error
+          retention-days: 30
+
+  epoch-a-wave-0:
+    needs: freeze-plan
+    if: inputs.execution_authorized == 'TRUE' && fromJSON(needs.freeze-plan.outputs.wave_count) > 0
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: A, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_0 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-a-wave-1:
+    needs: [freeze-plan, epoch-a-wave-0]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-a-wave-0.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 1
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: A, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_1 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-a-wave-2:
+    needs: [freeze-plan, epoch-a-wave-1]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-a-wave-1.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 2
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: A, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_2 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-a-wave-3:
+    needs: [freeze-plan, epoch-a-wave-2]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-a-wave-2.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 3
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: A, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_3 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-a-wave-4:
+    needs: [freeze-plan, epoch-a-wave-3]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-a-wave-3.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 4
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: A, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_4 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-a-wave-5:
+    needs: [freeze-plan, epoch-a-wave-4]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-a-wave-4.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 5
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: A, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_5 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+
+  reduce-epoch-a:
+    needs: [freeze-plan, epoch-a-wave-0, epoch-a-wave-1, epoch-a-wave-2, epoch-a-wave-3, epoch-a-wave-4, epoch-a-wave-5]
+    if: always() && inputs.execution_authorized == 'TRUE'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ inputs.authorized_candidate_head }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ env.NODE_VERSION }}" }
+      - uses: actions/download-artifact@v4
+        with: { pattern: "h-earth-v2-causal-001-A-*", path: artifacts/epoch-a }
+      - uses: actions/download-artifact@v4
+        with: { name: h-earth-v2-causal-001-frozen-plan, path: artifacts }
+      - run: node h-earth-3d/validation/h-earth.inter-hill-estate-v2-causal-evidence-execution-001.mjs reduce --plan artifacts/execution-plan.json --artifact-root artifacts/epoch-a --output artifacts/reducer-a.json
+      - uses: actions/upload-artifact@v4
+        with: { name: h-earth-v2-causal-001-reducer-A, path: artifacts/reducer-a.json, if-no-files-found: error, retention-days: 30 }
+
+  # Epoch B is deliberately a second complete invocation using the frozen plan.
+  # The controller reuses the same six ordered wave slots after reducer A passes.
+  epoch-b-wave-0:
+    needs: [freeze-plan, reduce-epoch-a]
+    if: inputs.execution_authorized == 'TRUE' && needs.reduce-epoch-a.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 0
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: B, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_0 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-b-wave-1:
+    needs: [freeze-plan, epoch-b-wave-0]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-b-wave-0.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 1
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: B, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_1 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-b-wave-2:
+    needs: [freeze-plan, epoch-b-wave-1]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-b-wave-1.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 2
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: B, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_2 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-b-wave-3:
+    needs: [freeze-plan, epoch-b-wave-2]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-b-wave-2.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 3
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: B, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_3 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-b-wave-4:
+    needs: [freeze-plan, epoch-b-wave-3]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-b-wave-3.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 4
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: B, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_4 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+  epoch-b-wave-5:
+    needs: [freeze-plan, epoch-b-wave-4]
+    if: always() && inputs.execution_authorized == 'TRUE' && needs.epoch-b-wave-4.result == 'success' && fromJSON(needs.freeze-plan.outputs.wave_count) > 5
+    uses: ./.github/workflows/h-earth-inter-hill-estate-v2-causal-evidence-wave-001.yml
+    with: { epoch: B, wave_descriptor_json: "${{ needs.freeze-plan.outputs.wave_5 }}", authorized_candidate_head: "${{ inputs.authorized_candidate_head }}" }
+
+  reduce-and-compare:
+    needs: [freeze-plan, reduce-epoch-a, epoch-b-wave-0, epoch-b-wave-1, epoch-b-wave-2, epoch-b-wave-3, epoch-b-wave-4, epoch-b-wave-5]
+    if: always() && inputs.execution_authorized == 'TRUE'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ inputs.authorized_candidate_head }}" }
+      - uses: actions/setup-node@v4
+        with: { node-version: "${{ env.NODE_VERSION }}" }
+      - uses: actions/download-artifact@v4
+        with: { pattern: "h-earth-v2-causal-001-B-*", path: artifacts/epoch-b }
+      - uses: actions/download-artifact@v4
+        with: { name: h-earth-v2-causal-001-frozen-plan, path: artifacts }
+      - uses: actions/download-artifact@v4
+        with: { name: h-earth-v2-causal-001-reducer-A, path: artifacts }
+      - run: node h-earth-3d/validation/h-earth.inter-hill-estate-v2-causal-evidence-execution-001.mjs reduce --plan artifacts/execution-plan.json --artifact-root artifacts/epoch-b --output artifacts/reducer-b.json
+      - run: node h-earth-3d/validation/h-earth.inter-hill-estate-v2-causal-evidence-execution-001.mjs compare --left artifacts/reducer-a.json --right artifacts/reducer-b.json --output artifacts/rerun-comparison.json
+      - uses: actions/upload-artifact@v4
+        with: { name: h-earth-v2-causal-001-terminal-receipts, path: "artifacts/reducer-b.json
+artifacts/rerun-comparison.json", if-no-files-found: error, retention-days: 30 }

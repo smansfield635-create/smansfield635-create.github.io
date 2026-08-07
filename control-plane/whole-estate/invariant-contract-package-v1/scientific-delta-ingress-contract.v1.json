@@ -1,0 +1,51 @@
+{
+  "schema": "WHOLE_ESTATE_SCIENTIFIC_DELTA_INGRESS_CONTRACT_v1",
+  "status": "CHECKPOINT_6_CONSTRUCTION_CANDIDATE",
+  "governingMain": "b2533139bacbf876f818892a06c691824fa216dd",
+  "deltaDispositionVocabulary": [
+    "COMPATIBLE_DELTA",
+    "FUTURE_EVIDENCE_DELTA",
+    "SCIENTIFIC_RELATION_CORRECTION",
+    "CONSTITUTIONAL_CORRECTION",
+    "NO_MATERIAL_EFFECT"
+  ],
+  "requiredDeltaFields": [
+    "DELTA_ID",
+    "SOURCE_IDENTITY",
+    "DEVELOPMENT_CLASS",
+    "CONSTITUTIONAL_IMPACT",
+    "CP_REPAIR_REQUIRED",
+    "NARRATIVE_IMPACT",
+    "CLAIM_CEILING",
+    "PROVENANCE_STATUS",
+    "DISPOSITION"
+  ],
+  "laws": [
+    "NEW_EVIDENCE_DOES_NOT_RETROACTIVELY_CHANGE_PRIOR_PROTOCOL_STATUS",
+    "EXTERNAL_MOTIVATING_EVIDENCE_IS_NOT_INDEPENDENT_CONFIRMATION_OF_PROJECT_CONSTRUCT",
+    "UNEXECUTED_PROTOCOL_IS_NOT_EMPIRICAL_EVIDENCE",
+    "NEGATIVE_RESULT_REMAINS_NEGATIVE_WHEN_SUCCESSOR_TEST_IS_PROPOSED",
+    "FAILED_GENERALIZATION_MAY_GENERATE_NEW_HYPOTHESIS_BUT_IS_NOT_REPAIRED_BY_IT",
+    "EVIDENCE_DELTA_MAY_UPDATE_STANDING_ONLY_THROUGH_EXPLICIT_ADJUDICATION",
+    "CONSTRUCTION_MAY_INGEST_STANDING_BUT_MAY_NOT_CREATE_STANDING"
+  ],
+  "hurricaneDelta": {
+    "deltaId": "UCIC_IMI_HURRICANE_SUCCESSOR_MEASUREMENT_BOUNDARY_2026_08",
+    "developmentClass": "FUTURE_EVIDENCE_DELTA",
+    "newProjectEmpiricalResult": false,
+    "constitutionalImpact": false,
+    "priorCheckpointRepairRequired": false,
+    "staticHURDAT2Proxy": "NEGATIVE",
+    "temporalStructuralPremise": "EXTERNALLY_SUPPORTED",
+    "externalSupportRole": "MOTIVATING_METEOROLOGICAL_PREMISE_NOT_INDEPENDENT_IMI_RESULT",
+    "successorSource": "NOAA_TC_RADAR_V3M",
+    "successorProjectTestStatus": "NOT_YET_EXECUTED",
+    "imiCompositeMechanismSpecificity": "NOT_YET_TESTED",
+    "heldOutPredictiveIncrement": "NOT_YET_TESTED",
+    "earlierWarningVsShipsOrDtops": "NOT_YET_TESTED",
+    "hurricaneConfirmationOfIMI": "NOT_ESTABLISHED",
+    "checkpoint6BlockingEffect": "NONE"
+  },
+  "scientificClaimUpgradeAuthorized": false,
+  "publicMutationAuthorized": false
+}

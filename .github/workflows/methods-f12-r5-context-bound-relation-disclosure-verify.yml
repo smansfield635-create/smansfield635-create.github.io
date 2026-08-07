@@ -1,0 +1,58 @@
+name: Methods F12 R5 Context-Bound Relation Disclosure Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r5-context-bound-relation-disclosure-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-*'
+      - '.github/workflows/methods-f12-r5-context-bound-relation-disclosure-verify.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-f12-r5-context-bound-relation-disclosure-verify
+  cancel-in-progress: false
+
+jobs:
+  verify-r5-exact-head:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact R4 parent and frozen inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "149a9eb5c24a9b3d6188ec87bd64aee4bfd8d813"
+          test "$(git rev-parse 149a9eb5c24a9b3d6188ec87bd64aee4bfd8d813^{tree})" = "efa41491b54d32cd0beb2a524621b5e9f31f481f"
+          test "$(git rev-parse 149a9eb5c24a9b3d6188ec87bd64aee4bfd8d813:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-recursive-navigation-state-contract.v1.json)" = "097e48abd3bce3434c20e92721f7d52f95be3ee7"
+          test "$(git rev-parse 149a9eb5c24a9b3d6188ec87bd64aee4bfd8d813:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-recursive-navigation-state.v1.mjs)" = "5a116e74952299f30d1757a696bfccafc7df8118"
+          test "$(git rev-parse 149a9eb5c24a9b3d6188ec87bd64aee4bfd8d813:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-recursive-navigation-state.verify.v1.mjs)" = "11a54f53aa80bbdd97f5b7e545ec78c20cc61513"
+      - name: Verify R5 context-bound relation disclosure
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-context-bound-relation-disclosure.verify.v1.mjs | tee r5-relation-disclosure-verification.json
+      - name: Prove exact R5 diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only 149a9eb5c24a9b3d6188ec87bd64aee4bfd8d813..HEAD | tee r5-changed-paths.txt
+          test "$(wc -l < r5-changed-paths.txt)" -eq 4
+          grep -Fxq '.github/workflows/methods-f12-r5-context-bound-relation-disclosure-verify.yml' r5-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-context-bound-relation-disclosure-contract.v1.json' r5-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-context-bound-relation-disclosure.v1.mjs' r5-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r5-context-bound-relation-disclosure.verify.v1.mjs' r5-changed-paths.txt
+          if git diff --name-only 149a9eb5c24a9b3d6188ec87bd64aee4bfd8d813..HEAD | grep -E '(^|/)(f1-|f2-|f3-|f4-|f5-|f6-|f7-|f8-|f9-|f10-|f11-|r1-|r2-|r3-|r4-|laws/research/methods-and-models/|review/methods-models/)' | grep -q .; then
+            echo 'PROHIBITED_UPSTREAM_OR_VISIBLE_PATH_MUTATION'; exit 1
+          fi
+      - name: Preserve R5 verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r5-context-bound-relation-disclosure-evidence
+          path: |
+            r5-relation-disclosure-verification.json
+            r5-changed-paths.txt

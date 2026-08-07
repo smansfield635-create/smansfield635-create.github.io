@@ -1,0 +1,53 @@
+name: Methods F12 R3 Spatial Context Interpreter Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r3-spatial-context-interpreter-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/**'
+      - '.github/workflows/methods-f12-r3-spatial-context-interpreter-verify.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-f12-r3-spatial-context-interpreter-verify
+  cancel-in-progress: false
+
+jobs:
+  verify-r3-exact-head:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact frozen scientific object is available
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e d39d9f110ed7fe16109ddcb5b8043b3752c1a36e^{commit}
+          test "$(git rev-parse d39d9f110ed7fe16109ddcb5b8043b3752c1a36e^{tree})" = "e42a5267c10c1ae5183e2935a49b97af6545f9eb"
+      - name: Verify R3 interpreter
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r3-spatial-context-interpreter.verify.v1.mjs | tee r3-interpreter-verification.json
+      - name: Prove R3 diff scope from exact R2 head
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only dd06df84bcf94ffbaba777e2739a763fc2ef1856..HEAD | tee r3-changed-paths.txt
+          if grep -Ev '^(control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/|\.github/workflows/methods-f12-r3-spatial-context-interpreter-verify\.yml$)' r3-changed-paths.txt | grep -q .; then
+            echo 'OUT_OF_SCOPE_R3_PATH'; exit 1
+          fi
+          if git diff --name-only dd06df84bcf94ffbaba777e2739a763fc2ef1856..HEAD | grep -E '(^|/)(f1-|f2-|f3-|f4-|f5-|f6-|f7-|f8-|f9-|f10-|f11-|laws/research/methods-and-models/|review/methods-models/)' | grep -q .; then
+            echo 'PROHIBITED_UPSTREAM_OR_VISIBLE_PATH_MUTATION'; exit 1
+          fi
+      - name: Preserve R3 verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r3-spatial-context-interpreter-evidence
+          path: |
+            r3-interpreter-verification.json
+            r3-changed-paths.txt

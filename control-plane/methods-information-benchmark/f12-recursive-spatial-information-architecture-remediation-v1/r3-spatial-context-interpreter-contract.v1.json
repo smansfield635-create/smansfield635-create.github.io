@@ -1,0 +1,123 @@
+{
+  "schema": "METHODS_MODELS_F12_R3_SPATIAL_CONTEXT_INTERPRETER_CONTRACT_v1",
+  "program": "F12_RECURSIVE_SPATIAL_INFORMATION_ARCHITECTURE_REMEDIATION_v1",
+  "checkpoint": "R3_SPATIAL_CONTEXT_INTERPRETER",
+  "status": "PASS_CLOSED",
+  "constructionClass": "NONVISUAL_CONTROL_PLANE_INTERPRETER",
+  "parent": {
+    "id": "R2_SPATIAL_CONTEXT_FRAME",
+    "head": "dd06df84bcf94ffbaba777e2739a763fc2ef1856",
+    "tree": "bee54492d865c6f50efa6c9ff4ad70d56cbc416d",
+    "contractGitBlobSha": "86b35f9c0b590fb9c65c28a2914b1964866f8d3b"
+  },
+  "interpreter": {
+    "id": "SPATIAL_CONTEXT_INTERPRETER_v1",
+    "frameContract": "SPATIAL_CONTEXT_FRAME_v1",
+    "scientificAuthority": false,
+    "presentationAuthority": false,
+    "mayRenderVisibleInterface": false
+  },
+  "frozenAuthority": {
+    "head": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+    "tree": "e42a5267c10c1ae5183e2935a49b97af6545f9eb",
+    "scientificStateDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+    "f11Head": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2",
+    "payloadFingerprint": "caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99",
+    "readMode": "EXACT_GIT_OBJECT_BY_COMMIT_PATH_AND_BLOB",
+    "copyForwardPermitted": false
+  },
+  "sourceGraphDigests": {
+    "class": "SHA256_CANONICAL_JSON_OF_EXACT_FROZEN_GIT_OBJECT_IDENTITY_MANIFEST",
+    "relation": "4dabc8872082535d01d9bfae3cd9661be68dcf7e1cd6aed5280a9028d4b8137b",
+    "projection": "9ebef4a6b8102ffd251c8e7809d379bff560d09fe9c75baa3f707768927b6ce8",
+    "scientificDigestInvented": false
+  },
+  "exactBlobAnchors": {
+    "coherence": "69a1dc8446c221a706d9d9ee1b8f40c83932f9ed",
+    "studyIndex": "c5281b8f5faa113bca90eeab4aa731eadab25dfd",
+    "studyMain": "43d6364569b6e8ed3f086e0894ad0e15fb2a4f93",
+    "studySupplement": "6c35de96a0a537c8100d0385f48a47857005f5d9",
+    "relationIndex": "64e6c025c58294898b8ff3931b7c288ddb655a19",
+    "relationMain": "f46ea30c2b72813985eec201ad13e8f908670b43",
+    "relationSupplement": "6bd2fb17d3c132c4cd2d750ab5b361d1a495a04a",
+    "projection": "037a6a7cc1e9d0ed32d150fe30e926e51f15324b"
+  },
+  "selectors": [
+    "ROOT",
+    "DESTINATION",
+    "CLAIM",
+    "RELATION",
+    "STUDY"
+  ],
+  "laws": [
+    "NON_ROOT_FRAME_REQUIRES_EXACT_ADMITTED_PARENT_TRANSITION",
+    "UNKNOWN_REFERENCE_FAILS_CLOSED",
+    "UNDECLARED_RELATION_FAILS_CLOSED",
+    "UNAUTHORIZED_PROJECTION_FAILS_CLOSED",
+    "ALL_RELATIONS_FOR_ACTIVE_CLAIM_REMAIN_VISIBLE_WITHOUT_DIRECTION_FILTERING",
+    "SCIENTIFIC_RELATION_AND_PROJECTION_DIGESTS_REMAIN_INVARIANT_ACROSS_FRAMES",
+    "FRAME_ID_AND_FRAME_DIGEST_ARE_DETERMINISTIC",
+    "RETURN_PATH_IS_NONAUTHORITATIVE_LINEAGE_ONLY",
+    "ACCESSIBILITY_AND_TEXT_FIRST_EQUIVALENTS_REQUIRED",
+    "SPATIAL_TRANSFORMATION_RUNTIME_NOT_CONSTRUCTED_AT_R3"
+  ],
+  "trace": {
+    "forward": [
+      "L1_CANONICAL_SCIENTIFIC_INVENTORY",
+      "L2_TYPED_SCIENTIFIC_RELATION_GRAPH",
+      "L3_GOVERNED_ESTATE_PROJECTION_GRAPH",
+      "L4_RECURSIVE_SPATIAL_INFORMATION_INTERPRETER",
+      "L5_NAVIGATION_STATE",
+      "L6_PRESENTATION_STATE"
+    ],
+    "reverse": true,
+    "reverseCreatesAuthority": false
+  },
+  "authorized": [
+    "CONSTRUCT_NONVISUAL_INTERPRETER",
+    "RESOLVE_EXACT_FROZEN_GIT_OBJECTS",
+    "DERIVE_GRAPH_IDENTITY_DIGESTS",
+    "INSTANTIATE_SPATIAL_CONTEXT_FRAME_v1",
+    "ADMIT_EXPLICIT_DELIVERY_TRANSITIONS",
+    "VERIFY_FRAME_DIGEST",
+    "PROVE_SCIENTIFIC_STATE_INVARIANCE",
+    "PROVE_FORWARD_AND_REVERSE_TRACE",
+    "PROVE_RELATION_NONSUPPRESSION"
+  ],
+  "prohibited": [
+    "VISIBLE_RECONSTRUCTION",
+    "FINAL_INTERFACE_CONSTRUCTION",
+    "PUBLIC_METHODS_REPLACEMENT",
+    "LIVE_DEPLOYMENT",
+    "MERGE_TO_MAIN",
+    "F1_THROUGH_F11_MUTATION",
+    "SCIENTIFIC_REOPENING",
+    "SCIENTIFIC_CLAIM_UPGRADE",
+    "REJECTED_SPECIMEN_PROMOTION",
+    "BROWSER_NAVIGATION_RUNTIME",
+    "CAMERA_RUNTIME",
+    "SPATIAL_TRANSFORMATION_RUNTIME",
+    "STYLE_OR_LAYOUT_CONSTRUCTION"
+  ],
+  "verification": {
+    "workflow": ".github/workflows/methods-f12-r3-spatial-context-interpreter-verify.yml",
+    "verifier": "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r3-spatial-context-interpreter.verify.v1.mjs",
+    "fetchDepth": 0,
+    "closureRule": "EXACT_HEAD_REMOTE_VERIFICATION_PASS_AND_NO_OUT_OF_SCOPE_DIFF",
+    "terminalReverificationRequired": true
+  },
+  "closure": {
+    "scientificStateMutated": false,
+    "certifiedPayloadMutated": false,
+    "rejectedSpecimenMutated": false,
+    "visibleExperienceMutated": false,
+    "publicStateMutated": false,
+    "mergeToMain": false,
+    "r4Eligibility": "ELIGIBLE_READY_FOR_EXECUTION"
+  },
+  "onPass": {
+    "r4": "ELIGIBLE_READY_FOR_EXECUTION",
+    "visibleReconstruction": "STILL_PROHIBITED"
+  },
+  "userDifferentialRequired": false
+}

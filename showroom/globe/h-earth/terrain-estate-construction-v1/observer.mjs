@@ -13,17 +13,23 @@ const freeze = (value, seen = new WeakSet()) => {
   return Object.isFrozen(value) ? value : Object.freeze(value);
 };
 
-export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatistics = null) {
+export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(
+  meshStatistics = null,
+  waterStatistics = null
+) {
   const environmentEvaluation = evaluateHEarthMapWideEnvironmentPresentation();
-  const estate = sampleHEarthMapWideEnvironmentTerrainCandidate(80, -172);
   const entry = sampleHEarthMapWideEnvironmentTerrainCandidate(0, -96);
-  const saddle = sampleHEarthMapWideEnvironmentTerrainCandidate(
-    112.41666666666667,
-    -194.83333333333334
-  );
+  const atrium = sampleHEarthMapWideEnvironmentTerrainCandidate(80, -172);
+  const saddle = sampleHEarthMapWideEnvironmentTerrainCandidate(112.41666666666667, -194.83333333333334);
+  const hillInterface = sampleHEarthMapWideEnvironmentTerrainCandidate(136, -208);
+  const hiddenVaultMass = sampleHEarthMapWideEnvironmentTerrainCandidate(152, -224);
+  const reservoir = sampleHEarthMapWideEnvironmentTerrainCandidate(-44, -216);
+  const waterfall = sampleHEarthMapWideEnvironmentTerrainCandidate(-48, -250);
+  const cavern = sampleHEarthMapWideEnvironmentTerrainCandidate(-16, -236);
+  const rearMountain = sampleHEarthMapWideEnvironmentTerrainCandidate(-64, -310);
   const reliefWitnesses = [
-    sampleHEarthMapWideEnvironmentTerrainCandidate(-64, -274),
-    sampleHEarthMapWideEnvironmentTerrainCandidate(-184, -212),
+    sampleHEarthMapWideEnvironmentTerrainCandidate(-96, -271),
+    sampleHEarthMapWideEnvironmentTerrainCandidate(-8, -258),
     sampleHEarthMapWideEnvironmentTerrainCandidate(196, -252)
   ];
 
@@ -31,72 +37,97 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatisti
     terrainEvaluationPass:
       H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_EVALUATION.eligible === true,
     environmentEvaluationPass: environmentEvaluation.result === 'PASS',
-    estateCoreValid: estate.valid === true,
-    estateSitePhysicallyPrepared:
-      estate.valid === true &&
-      estate.sitePreparation?.fullyPrepared === true &&
-      estate.presentationElevation < estate.elevation - 0.5,
-    estateSitePreparationEnvironmentVisible:
-      estate.valid === true && estate.sitePreparation?.weight >= 0.999,
-    entryCorePresentationOffsetZero:
+    entryCorePreserved:
       entry.valid === true && Math.abs(entry.presentationReliefOffset) <= 1e-9,
-    lowCorridorPresentationOffsetZero:
-      saddle.valid === true && Math.abs(saddle.presentationReliefOffset) <= 1e-9,
+    atriumCrownPrepared:
+      atrium.valid === true && (atrium.sitePreparation?.zoneWeights?.atrium ?? 0) > 0.9,
+    estateSaddleReserved:
+      saddle.valid === true && (saddle.sitePreparation?.zoneWeights?.connectiveSpine ?? 0) > 0.9,
+    largeHillInterfacePrepared:
+      hillInterface.valid === true && (hillInterface.sitePreparation?.zoneWeights?.hillInterface ?? 0) > 0.9,
+    hiddenVaultHasNoSurfaceGeometry:
+      hiddenVaultMass.valid === true &&
+      hiddenVaultMass.vaultInteriorConstructed === false &&
+      hiddenVaultMass.manorGeometryConstructed === false,
+    enclosedReservoirPresent:
+      reservoir.valid === true &&
+      (reservoir.hydrology?.reservoirWeight ?? 0) > 0.9 &&
+      reservoir.hydrology?.enclosedReservoir === true &&
+      reservoir.hydrology?.visibleDrainageToCoast === false,
+    waterfallCorridorPresent:
+      waterfall.valid === true && (waterfall.hydrology?.waterfallWeight ?? 0) > 0.5,
+    cavernExteriorReservePresent:
+      cavern.valid === true &&
+      (cavern.hydrology?.cavernReserveWeight ?? 0) > 0.5 &&
+      cavern.cavernInteriorConstructed === false,
+    rearMountainBoundaryPresent:
+      rearMountain.valid === true && rearMountain.rearBoundaryBarrierOffset > 2,
     materialReliefWitnessPresent:
       reliefWitnesses.some((sample) =>
         sample.valid === true && Math.abs(sample.presentationReliefOffset) >= 4
       ),
-    inspectorDenseEnoughForSiteReview:
+    inspectorDenseEnoughForTerrainReview:
       meshStatistics === null ||
       (
-        meshStatistics.validSampleCount >= 12000 &&
-        meshStatistics.sitePreparationSampleCount > 0
+        meshStatistics.validSampleCount >= 19000 &&
+        meshStatistics.sitePreparationSampleCount > 0 &&
+        meshStatistics.reservoirSampleCount > 0 &&
+        meshStatistics.waterfallSampleCount > 0 &&
+        meshStatistics.cavernReserveSampleCount > 0
+      ),
+    staticWaterContextPresent:
+      waterStatistics === null ||
+      (
+        waterStatistics.oceanTriangleCount >= 2 &&
+        waterStatistics.reservoirTriangleCount > 0 &&
+        waterStatistics.waterfallTriangleCount > 0 &&
+        waterStatistics.liveWaterMutation === false
       ),
     inspectorStableCameraContractPresent: true,
     guideOverlayRenderPathAbsent:
       meshStatistics === null || meshStatistics.guideOverlayRenderPathPresent === false,
-    inspectorChromeSeparatedFromViewport: true,
     manorGeometryConstructed: false,
+    cavernInteriorConstructed: false,
+    vaultInteriorConstructed: false,
     liveRuntimeMutated: false,
-    cameraMutated: false,
-    navigationMutated: false,
-    waterMutated: false
+    liveCameraMutated: false,
+    liveNavigationMutated: false,
+    liveWaterMutated: false
   };
 
-  const result = Object.entries(checks)
-    .filter(([key]) => ![
-      'manorGeometryConstructed',
-      'liveRuntimeMutated',
-      'cameraMutated',
-      'navigationMutated',
-      'waterMutated'
-    ].includes(key))
-    .every(([, value]) => value === true) &&
-    checks.manorGeometryConstructed === false &&
-    checks.liveRuntimeMutated === false &&
-    checks.cameraMutated === false &&
-    checks.navigationMutated === false &&
-    checks.waterMutated === false
-    ? 'PASS'
-    : 'FAIL_CLOSED';
+  const falseRequired = new Set([
+    'manorGeometryConstructed',
+    'cavernInteriorConstructed',
+    'vaultInteriorConstructed',
+    'liveRuntimeMutated',
+    'liveCameraMutated',
+    'liveNavigationMutated',
+    'liveWaterMutated'
+  ]);
+  const result = Object.entries(checks).every(([key, value]) =>
+    falseRequired.has(key) ? value === false : value === true
+  ) ? 'PASS' : 'FAIL_CLOSED';
 
   return freeze({
     schema: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW_OBSERVER_RECEIPT_v1',
     result,
     operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
     lockGeneration: 422,
-    inspectorRepairRevision: 2,
+    inspectorRepairRevision: 3,
     governingHead: '3f51f0cd159df33571905c6cb14253ebdd137e3b',
     candidateBranch: 'build/h-earth-map-wide-environment-redevelopment-v1-001',
     checks,
     meshStatistics,
+    waterStatistics,
     terrainEvaluation: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_EVALUATION,
     environmentEvaluation,
     reliefWitnesses,
     boundaries: {
       nonpublicPreviewOnly: true,
+      mapAuthoringIteration: true,
       userDifferentialRecorded: false,
       role5RatifiedForSuccessor: false,
+      liveIntegrationAuthorized: false,
       mergeAuthorized: false,
       deploymentAuthorized: false,
       releaseAuthorized: false

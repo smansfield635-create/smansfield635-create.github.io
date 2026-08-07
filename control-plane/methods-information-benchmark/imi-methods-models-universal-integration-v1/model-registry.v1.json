@@ -1,0 +1,64 @@
+{
+  "schema": "IMI_METHODS_MODELS_MODEL_REGISTRY_v1",
+  "status": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+  "models": [
+    {
+      "id": "CONSTITUTIVE_ROUTE_MODEL",
+      "role": "PRIMARY_CANDIDATE_REPRESENTATION",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false
+    },
+    {
+      "id": "GENERIC_GRAPH_COMPARATOR",
+      "role": "COMPARATOR",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false
+    },
+    {
+      "id": "OUTPUT_HISTORY_COMPARATOR",
+      "role": "COMPARATOR",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false
+    },
+    {
+      "id": "BLACK_BOX_COMPARATOR",
+      "role": "COMPARATOR",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false
+    },
+    {
+      "id": "SUPPORT_SUBSTITUTION_MODEL",
+      "role": "AUXILIARY_CLASSIFIER",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false
+    },
+    {
+      "id": "RESTORATION_REENTRY_MODEL",
+      "role": "AUXILIARY_TEMPORAL_MODEL",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false
+    },
+    {
+      "id": "PRESSURE_AND_CAPACITY_MODEL",
+      "role": "BOUNDED_SUPPORTING_LENS",
+      "receivesSameAdmissibleEvidence": false,
+      "globalProduct": false,
+      "expressions": [
+        "Π = G × X",
+        "K = P × R × A × C",
+        "PCR = Π / max(K, εK)"
+      ],
+      "claimLimits": [
+        "NOT_UNIVERSAL_IMI",
+        "NOT_VALIDATED_GLOBAL_PRODUCT",
+        "NOT_PROSPECTIVE_RESULT",
+        "NOT_MULTIPLICATIVE_SPECIFICITY_EVIDENCE"
+      ]
+    }
+  ],
+  "rejectedModels": [
+    {"id": "GLOBAL_MULTIPLICATIVE_PRODUCT", "reason": "GLOBAL_PRODUCT_REJECTED"},
+    {"id": "UNIVERSAL_PRESSURE_CAPACITY_IDENTITY", "reason": "SCIENTIFIC_OBJECT_CONFLATION"}
+  ],
+  "comparatorParityRequired": true
+}

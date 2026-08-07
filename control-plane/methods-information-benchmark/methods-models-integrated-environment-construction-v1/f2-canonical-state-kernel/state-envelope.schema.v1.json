@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "METHODS_MODELS_CANONICAL_ENVIRONMENT_STATE_SCHEMA_v1",
+  "title": "Methods & Models Canonical Environment State v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "kernelVersion", "axes"],
+  "properties": {
+    "schema": {"const": "METHODS_MODELS_CANONICAL_ENVIRONMENT_STATE_v1"},
+    "kernelVersion": {"const": "TEXT_FIRST_STATEFUL_METHODS_MODELS_CANONICAL_STATE_v1"},
+    "axes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "SYSTEM",
+        "SCIENTIFIC_OBJECT",
+        "MODEL",
+        "METHOD_STAGE",
+        "EVIDENCE",
+        "EXECUTION",
+        "CUSTODY",
+        "CLAIM_CEILING",
+        "SUPPORT_MODE",
+        "LENS",
+        "VIEW_MODE",
+        "ROUTE_HISTORY",
+        "CONTENT_VERSION"
+      ],
+      "properties": {
+        "SYSTEM": {"$ref": "#/$defs/systemAxis"},
+        "SCIENTIFIC_OBJECT": {"$ref": "#/$defs/scientificObjectAxis"},
+        "MODEL": {"$ref": "#/$defs/modelAxis"},
+        "METHOD_STAGE": {"$ref": "#/$defs/methodStageAxis"},
+        "EVIDENCE": {"$ref": "#/$defs/evidenceAxis"},
+        "EXECUTION": {"$ref": "#/$defs/executionAxis"},
+        "CUSTODY": {"$ref": "#/$defs/custodyAxis"},
+        "CLAIM_CEILING": {"$ref": "#/$defs/claimCeilingAxis"},
+        "SUPPORT_MODE": {"$ref": "#/$defs/supportModeAxis"},
+        "LENS": {"$ref": "#/$defs/lensAxis"},
+        "VIEW_MODE": {"$ref": "#/$defs/viewModeAxis"},
+        "ROUTE_HISTORY": {"$ref": "#/$defs/routeHistoryAxis"},
+        "CONTENT_VERSION": {"$ref": "#/$defs/contentVersionAxis"}
+      }
+    }
+  },
+  "$defs": {
+    "baseAxisMetadata": {
+      "type": "object",
+      "required": ["status", "authorityRef", "sourceRef", "value"],
+      "properties": {
+        "status": {"enum": ["DECLARED", "UNSET", "UNEVALUABLE", "NOT_APPLICABLE"]},
+        "authorityRef": {"type": "string", "minLength": 1},
+        "sourceRef": {"type": "string", "minLength": 1}
+      }
+    },
+    "nonDeclaredAxis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "authorityRef", "sourceRef", "value"],
+      "properties": {
+        "status": {"enum": ["UNSET", "UNEVALUABLE", "NOT_APPLICABLE"]},
+        "authorityRef": {"type": "string", "minLength": 1},
+        "sourceRef": {"type": "string", "minLength": 1},
+        "value": {"type": "null"}
+      }
+    },
+    "systemAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["systemId", "boundaryRef"], "properties": {"systemId": {"type": "string", "minLength": 1}, "boundaryRef": {"type": "string", "minLength": 1}}}
+          }
+        }
+      ]
+    },
+    "scientificObjectAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["objectClass", "objectId"], "properties": {"objectClass": {"type": "string", "minLength": 1}, "objectId": {"type": "string", "minLength": 1}}}
+          }
+        }
+      ]
+    },
+    "modelAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["modelId", "role"], "properties": {"modelId": {"type": "string", "minLength": 1}, "role": {"type": "string", "minLength": 1}}}
+          }
+        }
+      ]
+    },
+    "methodStageAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["stageId", "order", "custodyDomain"], "properties": {"stageId": {"type": "string", "minLength": 1}, "order": {"type": "integer", "minimum": 1}, "custodyDomain": {"enum": ["SOURCE_SIDE", "ANALYST_SIDE", "OUTCOME_SIDE", "SCORING_SIDE"]}}}
+          }
+        }
+      ]
+    },
+    "evidenceAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["evidenceObjectId", "evidenceStatus", "classification", "disposition", "independenceStatus", "contaminationStatus"], "properties": {"evidenceObjectId": {"type": "string", "minLength": 1}, "evidenceStatus": {"type": "string", "minLength": 1}, "classification": {"type": "string", "minLength": 1}, "disposition": {"type": "string", "minLength": 1}, "independenceStatus": {"type": "string", "minLength": 1}, "contaminationStatus": {"type": "string", "minLength": 1}}}
+          }
+        }
+      ]
+    },
+    "executionAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["executionId", "executionStatus", "scientificResultStatus"], "properties": {"executionId": {"type": "string", "minLength": 1}, "executionStatus": {"type": "string", "minLength": 1}, "scientificResultStatus": {"type": "string", "minLength": 1}}}
+          }
+        }
+      ]
+    },
+    "custodyAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["custodyDomain", "custodyStatus"], "properties": {"custodyDomain": {"enum": ["SOURCE_SIDE", "ANALYST_SIDE", "OUTCOME_SIDE", "SCORING_SIDE"]}, "custodyStatus": {"type": "string", "minLength": 1}}}
+          }
+        }
+      ]
+    },
+    "claimCeilingAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["ceilingId", "scopeRef", "prohibitions"], "properties": {"ceilingId": {"type": "string", "minLength": 1}, "scopeRef": {"type": "string", "minLength": 1}, "prohibitions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}}
+          }
+        }
+      ]
+    },
+    "supportModeAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {
+            "status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1},
+            "value": {"type": "object", "additionalProperties": false, "required": ["mode"], "properties": {"mode": {"enum": ["INTRINSIC", "SUPPORTED", "SUBSTITUTED", "MIXED"]}}}
+          }
+        }
+      ]
+    },
+    "lensAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {"status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1}, "value": {"type": "object", "additionalProperties": false, "required": ["lensId"], "properties": {"lensId": {"type": "string", "minLength": 1}}}}
+        }
+      ]
+    },
+    "viewModeAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {"status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1}, "value": {"type": "object", "additionalProperties": false, "required": ["viewModeId"], "properties": {"viewModeId": {"type": "string", "minLength": 1}}}}
+        }
+      ]
+    },
+    "routeHistoryAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {"status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1}, "value": {"type": "array", "items": {"type": "string", "minLength": 1}}}
+        }
+      ]
+    },
+    "contentVersionAxis": {
+      "oneOf": [
+        {"$ref": "#/$defs/nonDeclaredAxis"},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "authorityRef", "sourceRef", "value"],
+          "properties": {"status": {"const": "DECLARED"}, "authorityRef": {"type": "string", "minLength": 1}, "sourceRef": {"type": "string", "minLength": 1}, "value": {"type": "object", "additionalProperties": false, "required": ["contentVersionId", "contentFingerprint"], "properties": {"contentVersionId": {"type": "string", "minLength": 1}, "contentFingerprint": {"type": "string", "minLength": 1}}}}
+        }
+      ]
+    }
+  }
+}

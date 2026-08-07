@@ -1,111 +1,255 @@
-name: H-Earth Terrain Estate Construction Registry Prerequisite
+name: H-Earth Map-Wide Environment Redevelopment Fresh Role 3
 
 on:
   push:
     branches:
-      - repair/h-earth-terrain-estate-construction-v1-registry-prerequisite-001
+      - execution/h-earth-map-wide-environment-redevelopment-fresh-role3-v1-001
 
 permissions:
-  contents: write
-  issues: read
+  contents: read
 
 concurrency:
-  group: h-earth-terrain-estate-construction-registry-prerequisite
+  group: h-earth-map-wide-environment-redevelopment-fresh-role3-v1
   cancel-in-progress: false
 
 jobs:
-  materialize-and-verify:
+  fresh-role3-independent-verification:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact frozen candidate detached
+        uses: actions/checkout@v4
         with:
+          ref: 69a776ab4de61cddb6fad3602625164bea4b6323
           fetch-depth: 0
+          persist-credentials: false
+          clean: true
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Materialize exact admitted prerequisite and verify
+      - name: Execute fresh Role 3 verification
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          EXACT_BRANCH: repair/h-earth-terrain-estate-construction-v1-registry-prerequisite-001
-          GOVERNING_HEAD: 2b4fae98b06a46370f2e3f1af94ace49905657a9
-          PAYLOAD_COMMENT_IDS: 5211727901 5211733638 5211739477 5211744604 5211747130
-          PAYLOAD_BASE64_LENGTH: '15240'
-          PAYLOAD_SHA256: 241fd153befc7127efcf6555a708a82a0f0bda32150be167fa56fd6aabd2ca5b
-          AMENDMENT_SHA256: 2408547e536055fbcf4fee0b71805a9979c210cd34f98fc673fd351f35cdd35a
-          LOADER_SHA256: 113e9ecce793c8d61d9f39fb2012eaadbc8ed9c0d371670e997672b771af1bf5
-          VERIFIER_SHA256: 48b2f3b3c0ca3db3cc80520b3db9e8a25ac53793c615a1d6a59392f037c33444
+          TARGET_HEAD: 69a776ab4de61cddb6fad3602625164bea4b6323
+          TARGET_SCOPE_HASH: 205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3
+          TARGET_LOCK_GENERATION: '422'
+          TARGET_OPERATION_ID: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1
+          CARRIER_SCOPE_HASH: 1f408280d494dff0e25394d79101acbd6542e52b901e0d481fb32bd69b853b08
+          CARRIER_LOCK_GENERATION: '437'
+          CARRIER_OPERATION_ID: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_FRESH_ROLE3_EXECUTION_CARRIER_v1
+          REQUIRED_CONSTRUCTION_FINGERPRINT: 7834a4bbf42104690457b2dfe929e11875f0f10abbb8bfda053021530ed9a21b
+          BUILDER_RECEIPT_SHA256: d89da9140969dbb32638e72a6e549d3d24f22a369d3459773537cf66b8f162f3
+          OUTPUT_DIR: /tmp/h-earth-map-wide-environment-redevelopment-role3
         run: |
           set -euo pipefail
-          test "$GITHUB_REF_NAME" = "$EXACT_BRANCH"
-          git merge-base --is-ancestor "$GOVERNING_HEAD" HEAD
+          rm -rf "$OUTPUT_DIR"
+          mkdir -p "$OUTPUT_DIR"
 
-          work="$RUNNER_TEMP/h-earth-registry-prerequisite"
-          mkdir -p "$work/payload" "$work/receipts"
-          : > "$work/payload.b64"
+          fail_code="UNEXPECTED_ERROR"
+          target_tree_before=""
+          target_tree_after=""
+          target_lock_before=""
+          target_lock_after=""
+          carrier_lock_before=""
+          carrier_lock_after=""
+          ledger_blob_before=""
+          ledger_blob_after=""
+          construction_fingerprint=""
+          receipt_sha256=""
+          builder_fingerprint_equality=false
+          verifier_result="NOT_RUN"
+          exact_detached_target_checkout=false
+          candidate_mutation=false
+          lock_422_mutation=false
+          carrier_lock_mutation=false
 
-          for comment_id in $PAYLOAD_COMMENT_IDS; do
-            body="$work/comment-$comment_id.txt"
-            gh api "repos/$GITHUB_REPOSITORY/issues/comments/$comment_id" --jq .body > "$body"
-            grep -qx 'H_EARTH_TERRAIN_ESTATE_CONSTRUCTION_REGISTRY_PREREQUISITE_PAYLOAD_CHUNK_v1' "$body"
-            grep -qx "PAYLOAD_SHA256 = $PAYLOAD_SHA256" "$body"
-            sed -n '/^BASE64_BEGIN$/,/^BASE64_END$/p' "$body" | sed '1d;$d' | tr -d '\r\n' >> "$work/payload.b64"
-          done
-
-          test "$(wc -c < "$work/payload.b64" | tr -d ' ')" = "$PAYLOAD_BASE64_LENGTH"
-          base64 -d "$work/payload.b64" > "$work/payload.tar.gz"
-          test "$(sha256sum "$work/payload.tar.gz" | awk '{print $1}')" = "$PAYLOAD_SHA256"
-          tar -xzf "$work/payload.tar.gz" -C "$work/payload"
-          test "$(sha256sum "$work/payload/amendment.js" | awk '{print $1}')" = "$AMENDMENT_SHA256"
-          test "$(sha256sum "$work/payload/loader.js" | awk '{print $1}')" = "$LOADER_SHA256"
-          test "$(sha256sum "$work/payload/verifier.mjs" | awk '{print $1}')" = "$VERIFIER_SHA256"
-
-          install -D -m 0644 "$work/payload/amendment.js" h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.terrain-estate-construction-v1-authorized-candidate-scope.js
-          install -D -m 0644 "$work/payload/loader.js" h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
-          install -D -m 0755 "$work/payload/verifier.mjs" tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs
-
-          if [ -n "$(git status --short)" ]; then
-            actual="$(git status --porcelain | awk '{print $2}' | sort | tr '\n' ' ')"
-            expected="h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.terrain-estate-construction-v1-authorized-candidate-scope.js h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs "
-            test "$actual" = "$expected"
-            git config user.name github-actions[bot]
-            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-            git add -- \
-              h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.terrain-estate-construction-v1-authorized-candidate-scope.js \
-              h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js \
-              tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs
-            git commit -m "Install H-Earth construction registry prerequisite"
-            git push origin "HEAD:$EXACT_BRANCH"
-          fi
-
-          node tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs \
-            --verify --role BUILDER --output "$work/receipts/builder.json"
-
-          fresh="$work/fresh"
-          git clone --quiet --branch "$EXACT_BRANCH" --single-branch \
-            "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git" "$fresh"
-          (
-            cd "$fresh"
-            node tools/h-earth-terrain-estate-construction-registry-prerequisite.v1.mjs \
-              --verify --role ROLE_3 --output "$work/receipts/role3.json"
-          )
-
-          node --input-type=module - "$work/receipts/builder.json" "$work/receipts/role3.json" <<'NODE'
+          write_envelope() {
+            local result="$1"
+            node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const [builderPath, role3Path] = process.argv.slice(2);
-          const builder = JSON.parse(fs.readFileSync(builderPath, 'utf8'));
-          const role3 = JSON.parse(fs.readFileSync(role3Path, 'utf8'));
-          if (builder.result !== 'PASS' || role3.result !== 'PASS') throw new Error('VERIFICATION_NOT_PASS');
-          if (builder.verificationFingerprint !== role3.verificationFingerprint) throw new Error('ROLE3_FINGERPRINT_MISMATCH');
+          const env = process.env;
+          const parseMaybe = (s) => { try { return s ? JSON.parse(s) : null; } catch { return s || null; } };
+          const out = {
+            schema: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_FRESH_ROLE3_EXECUTION_ENVELOPE_v1',
+            result: env.ENVELOPE_RESULT,
+            disposition: env.ENVELOPE_RESULT === 'PASS' ? 'PASS_CLOSED' : 'FAIL_CLOSED',
+            errorCode: env.FAIL_CODE || null,
+            workflowRun: env.GITHUB_RUN_ID,
+            workflowAttempt: env.GITHUB_RUN_ATTEMPT,
+            workflowSha: env.GITHUB_SHA,
+            workflowRef: env.GITHUB_REF,
+            runnerName: env.RUNNER_NAME || null,
+            runnerOs: env.RUNNER_OS || null,
+            runnerArch: env.RUNNER_ARCH || null,
+            targetHead: env.TARGET_HEAD,
+            targetTreeBefore: env.TARGET_TREE_BEFORE || null,
+            targetTreeAfter: env.TARGET_TREE_AFTER || null,
+            exactDetachedTargetCheckout: env.EXACT_DETACHED_TARGET_CHECKOUT === 'true',
+            targetScopeHash: env.TARGET_SCOPE_HASH,
+            targetLockGeneration: Number(env.TARGET_LOCK_GENERATION),
+            targetOperationId: env.TARGET_OPERATION_ID,
+            targetLockBefore: parseMaybe(env.TARGET_LOCK_BEFORE),
+            targetLockAfter: parseMaybe(env.TARGET_LOCK_AFTER),
+            carrierScopeHash: env.CARRIER_SCOPE_HASH,
+            carrierLockGeneration: Number(env.CARRIER_LOCK_GENERATION),
+            carrierOperationId: env.CARRIER_OPERATION_ID,
+            carrierLockBefore: parseMaybe(env.CARRIER_LOCK_BEFORE),
+            carrierLockAfter: parseMaybe(env.CARRIER_LOCK_AFTER),
+            ledgerBlobBefore: env.LEDGER_BLOB_BEFORE || null,
+            ledgerBlobAfter: env.LEDGER_BLOB_AFTER || null,
+            verifierResult: env.VERIFIER_RESULT,
+            constructionFingerprint: env.CONSTRUCTION_FINGERPRINT || null,
+            requiredConstructionFingerprint: env.REQUIRED_CONSTRUCTION_FINGERPRINT,
+            builderReceiptSha256: env.BUILDER_RECEIPT_SHA256,
+            builderFingerprintEquality: env.BUILDER_FINGERPRINT_EQUALITY === 'true',
+            role3ReceiptSha256: env.RECEIPT_SHA256 || null,
+            candidateMutation: env.CANDIDATE_MUTATION === 'true',
+            lock422Mutation: env.LOCK_422_MUTATION === 'true',
+            carrierLockMutation: env.CARRIER_LOCK_MUTATION === 'true',
+            merge: false,
+            deployment: false,
+            release: false
+          };
+          fs.writeFileSync(`${env.OUTPUT_DIR}/fresh-role3.execution-envelope.v1.json`, JSON.stringify(out, null, 2) + '\n');
+          NODE
+          }
+
+          export FAIL_CODE="$fail_code"
+          export ENVELOPE_RESULT="FAIL"
+          export TARGET_TREE_BEFORE="$target_tree_before"
+          export TARGET_TREE_AFTER="$target_tree_after"
+          export TARGET_LOCK_BEFORE="$target_lock_before"
+          export TARGET_LOCK_AFTER="$target_lock_after"
+          export CARRIER_LOCK_BEFORE="$carrier_lock_before"
+          export CARRIER_LOCK_AFTER="$carrier_lock_after"
+          export LEDGER_BLOB_BEFORE="$ledger_blob_before"
+          export LEDGER_BLOB_AFTER="$ledger_blob_after"
+          export CONSTRUCTION_FINGERPRINT="$construction_fingerprint"
+          export RECEIPT_SHA256="$receipt_sha256"
+          export BUILDER_FINGERPRINT_EQUALITY="$builder_fingerprint_equality"
+          export VERIFIER_RESULT="$verifier_result"
+          export EXACT_DETACHED_TARGET_CHECKOUT="$exact_detached_target_checkout"
+          export CANDIDATE_MUTATION="$candidate_mutation"
+          export LOCK_422_MUTATION="$lock_422_mutation"
+          export CARRIER_LOCK_MUTATION="$carrier_lock_mutation"
+
+          trap 'rc=$?; if [ "$rc" -ne 0 ]; then export ENVELOPE_RESULT="FAIL"; export FAIL_CODE="$fail_code"; export TARGET_TREE_BEFORE="$target_tree_before"; export TARGET_TREE_AFTER="$target_tree_after"; export TARGET_LOCK_BEFORE="$target_lock_before"; export TARGET_LOCK_AFTER="$target_lock_after"; export CARRIER_LOCK_BEFORE="$carrier_lock_before"; export CARRIER_LOCK_AFTER="$carrier_lock_after"; export LEDGER_BLOB_BEFORE="$ledger_blob_before"; export LEDGER_BLOB_AFTER="$ledger_blob_after"; export CONSTRUCTION_FINGERPRINT="$construction_fingerprint"; export RECEIPT_SHA256="$receipt_sha256"; export BUILDER_FINGERPRINT_EQUALITY="$builder_fingerprint_equality"; export VERIFIER_RESULT="$verifier_result"; export EXACT_DETACHED_TARGET_CHECKOUT="$exact_detached_target_checkout"; export CANDIDATE_MUTATION="$candidate_mutation"; export LOCK_422_MUTATION="$lock_422_mutation"; export CARRIER_LOCK_MUTATION="$carrier_lock_mutation"; write_envelope FAIL || true; fi; exit "$rc"' EXIT
+
+          fail_code="TARGET_HEAD_MISMATCH"
+          test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+
+          fail_code="MOVING_BRANCH_CHECKOUT"
+          if git symbolic-ref -q HEAD >/dev/null 2>&1; then
+            exit 21
+          fi
+          exact_detached_target_checkout=true
+          target_tree_before="$(git rev-parse HEAD^{tree})"
+          test -z "$(git status --porcelain)"
+
+          read_lock_state() {
+            local output_json="$1"
+            local api_json="$2"
+            gh api "repos/$GITHUB_REPOSITORY/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1" > "$api_json"
+            node --input-type=module "$api_json" "$output_json" <<'NODE'
+          import fs from 'node:fs';
+          const [apiPath, outPath] = process.argv.slice(2);
+          const api = JSON.parse(fs.readFileSync(apiPath, 'utf8'));
+          const ledger = JSON.parse(Buffer.from(String(api.content).replace(/\s/g, ''), 'base64').toString('utf8'));
+          const target = ledger.activeScopes?.[process.env.TARGET_SCOPE_HASH] ?? null;
+          const carrier = ledger.activeScopes?.[process.env.CARRIER_SCOPE_HASH] ?? null;
+          fs.writeFileSync(outPath, JSON.stringify({ blobSha: api.sha ?? null, target, carrier }, null, 2) + '\n');
+          NODE
+          }
+
+          fail_code="LOCK_422_IDENTITY_MISMATCH"
+          read_lock_state "$OUTPUT_DIR/lock-readback.before.v1.json" "$OUTPUT_DIR/ledger-api.before.json"
+          ledger_blob_before="$(node -p "require('$OUTPUT_DIR/lock-readback.before.v1.json').blobSha")"
+          target_lock_before="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.before.v1.json');process.stdout.write(JSON.stringify(j.target))")"
+          carrier_lock_before="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.before.v1.json');process.stdout.write(JSON.stringify(j.carrier))")"
+          node --input-type=module "$OUTPUT_DIR/lock-readback.before.v1.json" <<'NODE'
+          import fs from 'node:fs';
+          const p = process.argv[2];
+          const r = JSON.parse(fs.readFileSync(p, 'utf8'));
+          const exact = (x, generation, scope, operation) => x && x.lockGeneration === generation && x.scopeHash === scope && x.operationId === operation && x.state === 'ADMITTED_LOCKED' && x.released === false;
+          if (!exact(r.target, Number(process.env.TARGET_LOCK_GENERATION), process.env.TARGET_SCOPE_HASH, process.env.TARGET_OPERATION_ID)) throw new Error('LOCK_422_IDENTITY_MISMATCH');
+          if (!exact(r.carrier, Number(process.env.CARRIER_LOCK_GENERATION), process.env.CARRIER_SCOPE_HASH, process.env.CARRIER_OPERATION_ID)) throw new Error('CARRIER_LOCK_IDENTITY_MISMATCH');
           NODE
 
-      - uses: actions/upload-artifact@v4
+          fail_code="ROLE3_VERIFICATION_NONPASS"
+          node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs --output /tmp/h-earth-map-wide-environment-redevelopment-role3
+          test -f "$OUTPUT_DIR/builder.verification-receipt.v1.json"
+          cp "$OUTPUT_DIR/builder.verification-receipt.v1.json" "$OUTPUT_DIR/verification.receipt.v1.json"
+          verifier_result="$(node -p "require('$OUTPUT_DIR/verification.receipt.v1.json').result")"
+          test "$verifier_result" = "PASS"
+
+          fail_code="CONSTRUCTION_FINGERPRINT_MISMATCH"
+          construction_fingerprint="$(node -p "require('$OUTPUT_DIR/verification.receipt.v1.json').constructionFingerprint")"
+          test "$construction_fingerprint" = "$REQUIRED_CONSTRUCTION_FINGERPRINT"
+          builder_fingerprint_equality=true
+          receipt_sha256="$(sha256sum "$OUTPUT_DIR/verification.receipt.v1.json" | awk '{print $1}')"
+
+          fail_code="CANDIDATE_MUTATION"
+          target_tree_after="$(git rev-parse HEAD^{tree})"
+          test "$(git rev-parse HEAD)" = "$TARGET_HEAD"
+          test "$target_tree_after" = "$target_tree_before"
+          test -z "$(git status --porcelain)"
+          git diff --exit-code
+          git diff --cached --exit-code
+          candidate_mutation=false
+
+          fail_code="LOCK_MUTATION"
+          read_lock_state "$OUTPUT_DIR/lock-readback.after.v1.json" "$OUTPUT_DIR/ledger-api.after.json"
+          ledger_blob_after="$(node -p "require('$OUTPUT_DIR/lock-readback.after.v1.json').blobSha")"
+          target_lock_after="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.after.v1.json');process.stdout.write(JSON.stringify(j.target))")"
+          carrier_lock_after="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.after.v1.json');process.stdout.write(JSON.stringify(j.carrier))")"
+          node --input-type=module "$OUTPUT_DIR/lock-readback.after.v1.json" <<'NODE'
+          import fs from 'node:fs';
+          const p = process.argv[2];
+          const r = JSON.parse(fs.readFileSync(p, 'utf8'));
+          const exact = (x, generation, scope, operation) => x && x.lockGeneration === generation && x.scopeHash === scope && x.operationId === operation && x.state === 'ADMITTED_LOCKED' && x.released === false;
+          if (!exact(r.target, Number(process.env.TARGET_LOCK_GENERATION), process.env.TARGET_SCOPE_HASH, process.env.TARGET_OPERATION_ID)) throw new Error('LOCK_422_IDENTITY_MISMATCH_AFTER');
+          if (!exact(r.carrier, Number(process.env.CARRIER_LOCK_GENERATION), process.env.CARRIER_SCOPE_HASH, process.env.CARRIER_OPERATION_ID)) throw new Error('CARRIER_LOCK_IDENTITY_MISMATCH_AFTER');
+          NODE
+          test "$target_lock_after" = "$target_lock_before"
+          test "$carrier_lock_after" = "$carrier_lock_before"
+          lock_422_mutation=false
+          carrier_lock_mutation=false
+
+          fail_code=""
+          export ENVELOPE_RESULT="PASS"
+          export FAIL_CODE=""
+          export TARGET_TREE_BEFORE="$target_tree_before"
+          export TARGET_TREE_AFTER="$target_tree_after"
+          export TARGET_LOCK_BEFORE="$target_lock_before"
+          export TARGET_LOCK_AFTER="$target_lock_after"
+          export CARRIER_LOCK_BEFORE="$carrier_lock_before"
+          export CARRIER_LOCK_AFTER="$carrier_lock_after"
+          export LEDGER_BLOB_BEFORE="$ledger_blob_before"
+          export LEDGER_BLOB_AFTER="$ledger_blob_after"
+          export CONSTRUCTION_FINGERPRINT="$construction_fingerprint"
+          export RECEIPT_SHA256="$receipt_sha256"
+          export BUILDER_FINGERPRINT_EQUALITY="$builder_fingerprint_equality"
+          export VERIFIER_RESULT="$verifier_result"
+          export EXACT_DETACHED_TARGET_CHECKOUT="$exact_detached_target_checkout"
+          export CANDIDATE_MUTATION="$candidate_mutation"
+          export LOCK_422_MUTATION="$lock_422_mutation"
+          export CARRIER_LOCK_MUTATION="$carrier_lock_mutation"
+          write_envelope PASS
+          trap - EXIT
+
+      - name: Upload immutable Role 3 receipts
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: h-earth-terrain-estate-construction-registry-prerequisite
-          path: ${{ runner.temp }}/h-earth-registry-prerequisite/receipts
+          name: h-earth-map-wide-environment-redevelopment-fresh-role3-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/h-earth-map-wide-environment-redevelopment-role3/verification.receipt.v1.json
+            /tmp/h-earth-map-wide-environment-redevelopment-role3/fresh-role3.execution-envelope.v1.json
+            /tmp/h-earth-map-wide-environment-redevelopment-role3/lock-readback.before.v1.json
+            /tmp/h-earth-map-wide-environment-redevelopment-role3/lock-readback.after.v1.json
           if-no-files-found: error
           retention-days: 90

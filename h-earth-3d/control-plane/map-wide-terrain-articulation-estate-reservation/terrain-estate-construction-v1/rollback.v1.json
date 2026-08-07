@@ -1,0 +1,29 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ROLLBACK_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "lockGeneration": 422,
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "constructionBranch": "build/h-earth-map-wide-environment-redevelopment-v1-001",
+  "rollbackBase": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "rollbackStrategy": "ABANDON_OR_DELETE_FRESH_CONSTRUCTION_BRANCH_WITHOUT_MAIN_MUTATION",
+  "preserveUnchanged": [
+    "refs/heads/main",
+    "build/h-earth-terrain-estate-construction-v1-001@82bbf57d706a428172709d3a2e050ce3afcc014a",
+    "PR_712_MERGED_REGISTRY_BYTES",
+    "POSITIVE_DESIGN_SOURCE_97003e9de386a8962fb46d0b370005b900a167d6"
+  ],
+  "rollbackTriggers": [
+    "EXACT_28_PATH_SCOPE_VIOLATION",
+    "MANOR_GEOMETRY_OR_AUTHORING_MUTATION",
+    "RESERVED_ESTATE_ENVELOPE_VIOLATION",
+    "TWO_HILL_LOW_CORRIDOR_OR_VIEW_REGRESSION",
+    "ENTRY_ZONE_SEPARATION_OR_CONNECTIVITY_REGRESSION",
+    "CONTINUOUS_TERRAIN_TRAVERSAL_REGRESSION",
+    "UNAUTHORIZED_LIVE_RUNTIME_CAMERA_NAVIGATION_WATER_MUTATION",
+    "SOURCE_IDENTITY_DRIFT",
+    "VERIFICATION_FAIL_CLOSED"
+  ],
+  "automaticMergeAfterRollback": false,
+  "automaticDeploymentAfterRollback": false,
+  "automaticReleaseAfterRollback": false
+}

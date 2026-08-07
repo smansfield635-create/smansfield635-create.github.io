@@ -1,0 +1,16 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_FRESH_ROLE3_RECEIPT_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "gate": "ROLE_3_FRESH_INDEPENDENT_VERIFICATION",
+  "status": "NOT_EXECUTED",
+  "result": "NONE",
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "lockGeneration": 422,
+  "candidateHead": null,
+  "builderPassRequired": true,
+  "freshCheckoutRequired": true,
+  "repairAuthority": false,
+  "requiredCommand": "node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs --role ROLE_3 --output /tmp/h-earth-map-wide-environment-redevelopment-v1-role3",
+  "continuation": "BLOCKED_UNTIL_BUILDER_PASS_AT_EXACT_FROZEN_CANDIDATE_HEAD",
+  "evidenceInvented": false
+}

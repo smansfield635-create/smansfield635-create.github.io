@@ -1,0 +1,96 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F4_MODEL_CONTENT_REGISTRY_v1",
+  "status": "F4_CONSTRUCTION_CANDIDATE",
+  "sourceRef": "GATE0_MODEL_REGISTRY",
+  "authorityRef": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+  "contentVersion": "v1",
+  "models": [
+    {
+      "contentId": "CONSTITUTIVE_ROUTE_MODEL",
+      "contentClass": "MODEL_DEFINITION",
+      "role": "PRIMARY_CANDIDATE_REPRESENTATION",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false,
+      "claimCeilingRef": "SOURCE_DEFINED_NO_F4_UPGRADE",
+      "limitations": ["MODEL_IS_NOT_METHOD", "MODEL_IS_NOT_RESULT"],
+      "provenance": ["model-registry.v1.json"]
+    },
+    {
+      "contentId": "GENERIC_GRAPH_COMPARATOR",
+      "contentClass": "MODEL_DEFINITION",
+      "role": "COMPARATOR",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false,
+      "claimCeilingRef": "COMPARATOR_ONLY",
+      "limitations": ["COMPARATOR_MAY_NOT_BE_REPORTED_AS_INSTRUMENT"],
+      "provenance": ["model-registry.v1.json"]
+    },
+    {
+      "contentId": "OUTPUT_HISTORY_COMPARATOR",
+      "contentClass": "MODEL_DEFINITION",
+      "role": "COMPARATOR",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false,
+      "claimCeilingRef": "COMPARATOR_ONLY",
+      "limitations": ["COMPARATOR_MAY_NOT_BE_REPORTED_AS_INSTRUMENT"],
+      "provenance": ["model-registry.v1.json"]
+    },
+    {
+      "contentId": "BLACK_BOX_COMPARATOR",
+      "contentClass": "MODEL_DEFINITION",
+      "role": "COMPARATOR",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false,
+      "claimCeilingRef": "COMPARATOR_ONLY",
+      "limitations": ["COMPARATOR_MAY_NOT_BE_REPORTED_AS_INSTRUMENT"],
+      "provenance": ["model-registry.v1.json"]
+    },
+    {
+      "contentId": "SUPPORT_SUBSTITUTION_MODEL",
+      "contentClass": "MODEL_DEFINITION",
+      "role": "AUXILIARY_CLASSIFIER",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false,
+      "claimCeilingRef": "AUXILIARY_CLASSIFIER_ONLY",
+      "limitations": ["SUPPORT_CLASSIFICATION_IS_NOT_OUTPUT_SUCCESS"],
+      "provenance": ["model-registry.v1.json"]
+    },
+    {
+      "contentId": "RESTORATION_REENTRY_MODEL",
+      "contentClass": "MODEL_DEFINITION",
+      "role": "AUXILIARY_TEMPORAL_MODEL",
+      "receivesSameAdmissibleEvidence": true,
+      "globalProduct": false,
+      "claimCeilingRef": "AUXILIARY_TEMPORAL_MODEL_ONLY",
+      "limitations": ["RESTORATION_MODEL_IS_NOT_PROSPECTIVE_CONFIRMATION"],
+      "provenance": ["model-registry.v1.json"]
+    },
+    {
+      "contentId": "PRESSURE_AND_CAPACITY_MODEL",
+      "contentClass": "MODEL_DEFINITION",
+      "role": "BOUNDED_SUPPORTING_LENS",
+      "receivesSameAdmissibleEvidence": false,
+      "globalProduct": false,
+      "formalExpressions": [
+        "Π = G × X",
+        "K = P × R × A × C",
+        "PCR = Π / max(K, εK)"
+      ],
+      "claimCeilingRef": "BOUNDED_SUPPORTING_MODEL_ONLY",
+      "claimLimits": [
+        "NOT_UNIVERSAL_IMI",
+        "NOT_VALIDATED_GLOBAL_PRODUCT",
+        "NOT_PROSPECTIVE_RESULT",
+        "NOT_MULTIPLICATIVE_SPECIFICITY_EVIDENCE"
+      ],
+      "limitations": ["GLOBAL_MULTIPLICATIVE_PRODUCT_REJECTED", "UNIVERSAL_PRESSURE_CAPACITY_IDENTITY_REJECTED_FOR_SCIENTIFIC_OBJECT_CONFLATION"],
+      "provenance": ["model-registry.v1.json", "scientific-source-and-claim-ledger.v1.json"]
+    }
+  ],
+  "rejectedModels": [
+    {"contentId":"GLOBAL_MULTIPLICATIVE_PRODUCT","reason":"GLOBAL_PRODUCT_REJECTED"},
+    {"contentId":"UNIVERSAL_PRESSURE_CAPACITY_IDENTITY","reason":"SCIENTIFIC_OBJECT_CONFLATION"}
+  ],
+  "comparatorParityRequired": true,
+  "registryLaw": "EMPIRICAL_RESULTS_MAY_UPDATE_EVIDENCE_BOUND_TO_A_MODEL_BUT_MAY_NOT_REWRITE_THE_MODEL_DEFINITION"
+}

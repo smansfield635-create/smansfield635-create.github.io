@@ -1,0 +1,52 @@
+{
+  "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_CONTINUITY_STATE_v1",
+  "instrumentId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
+  "stateVersion": 1,
+  "authoritativeStateClass": "REPOSITORY_DURABLE_STATE",
+  "roomPrivateStateAuthoritative": false,
+  "governingHeadAtStateConstruction": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+  "instrumentConstructionLockGeneration": 462,
+  "currentCheckpoint": {
+    "id": "OW00",
+    "name": "OFFICIAL_CONTINUITY_INSTRUMENTATION",
+    "status": "CANDIDATE_CONSTRUCTED_PENDING_EXACT_HEAD_REGISTRY_ACTIVATION_AND_MERGE"
+  },
+  "latestDurableAuthoringSource": {
+    "revision": "REVISION_10_CONTINUOUS_MULTISCALE_WORLD_MODEL",
+    "head": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
+    "tree": "d630fed42bcf19a65129afbe97c1134d1d632422",
+    "classification": "MIGRATION_SOURCE",
+    "productMergedToMain": false
+  },
+  "userSpatialDisposition": {
+    "status": "CONCEPTUAL_DIRECTION_APPROVED_WITH_MATERIAL_GEOGRAPHIC_DEFECTS",
+    "positive": "CONTINUOUS_MULTISCALE_DIRECTION_MUCH_CLOSER_TO_TARGET",
+    "defects": [
+      "HARBOR_NOT_ON_TRUE_CONTINENTAL_EDGE",
+      "CONTINENTS_TOO_CIRCULAR_BLOB_LIKE",
+      "MOUNTAINS_ARTIFICIALLY_CONSTRAINED_BY_OLD_BOX"
+    ]
+  },
+  "constructionProgress": {
+    "openWorldGeographyProductMutationStarted": false,
+    "continuityInstrumentationCandidateBuilt": true,
+    "rootRouterPrerequisiteMerged": true,
+    "exactOccurrenceRegistryActivationComplete": false,
+    "liveIntegrationStarted": false,
+    "liveTraversalExpansionStarted": false
+  },
+  "requiredFutureOutcome": {
+    "startingPointTraversalRangeExpansion": "REQUIRED",
+    "newDevelopedRegionsJoinSameTraversalWorld": "REQUIRED",
+    "temporaryDevelopmentFrontiersAllowed": true,
+    "permanentRectangularWorldBoundaryAllowed": false
+  },
+  "nextLawfulAction": "RATIFY_AND_PERMANENTLY_ACTIVATE_THIS_EXACT_INSTRUMENT_PACKAGE_THEN_ADVANCE_TO_OW01_UNDER_FRESH_ADMITTED_OPERATION",
+  "recoveryPointer": "successor-room-recovery.v1.json",
+  "checkpointRegistryPointer": "checkpoint-registry.v1.json",
+  "knownPendingGovernanceReconciliation": [
+    {"lockGeneration": 457, "reason": "PRE_ROUTER_PARENT_INSTRUMENT_ADMISSION_STALE"},
+    {"lockGeneration": 458, "reason": "ROUTER_CONSTRUCTION_COMPLETED_AND_MERGED"},
+    {"lockGeneration": 460, "reason": "ROUTER_MERGE_AUTHORITY_EXECUTED"}
+  ]
+}

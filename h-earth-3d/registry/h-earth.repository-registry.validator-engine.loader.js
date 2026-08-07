@@ -5,7 +5,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import registryFacade, {
+import registryFacade from './accepted-amendments/h-earth.repository-registry.audralia-open-world-continuity-instrument-scope-registration.js';
+import {
   H_EARTH_TERRAIN_ESTATE_CONSTRUCTION_V1_AUTHORIZED_CANDIDATE_SCOPE_NODE as CONSTRUCTION_SCOPE_NODE,
   H_EARTH_TERRAIN_ESTATE_CONSTRUCTION_V1_AUTHORIZED_CANDIDATE_SCOPE_EVIDENCE as CONSTRUCTION_SCOPE_EVIDENCE,
   H_EARTH_TERRAIN_ESTATE_CONSTRUCTION_V1_AUTHORIZED_PATHS as CONSTRUCTION_SCOPE_PATHS,

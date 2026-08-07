@@ -1,0 +1,66 @@
+{
+  "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_AUTHORITY_AND_LINEAGE_v1",
+  "instrumentId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "userAuthority": {
+    "authorityIssue": 719,
+    "openWorldPreflightComment": 5220803833,
+    "mandate": "CREATE_OFFICIAL_DURABLE_CROSS_ROOM_INSTRUMENTATION_FOR_OPEN_WORLD_SPATIAL_MIGRATION_AND_SUBSEQUENT_CHECKPOINT_CONTINUITY"
+  },
+  "construction": {
+    "operationId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENTATION_v2",
+    "governingHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+    "governingTree": "602378bd8eae82c202de73d56ee74f67a7210625",
+    "lockGeneration": 462,
+    "scopeHash": "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e",
+    "exactPathCount": 14
+  },
+  "routerPrerequisite": {
+    "pr": 739,
+    "candidateHead": "8dd94f446900cdd34541f35ee978b9c6afa8aeb2",
+    "mergeCommit": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+    "validationRun": 31210011756,
+    "result": "PASS_MERGED"
+  },
+  "sourceRevision10": {
+    "commit": "ad9e72adb97df7ab867af1fe20df2c29de763d28",
+    "tree": "d630fed42bcf19a65129afbe97c1134d1d632422",
+    "userDisposition": "CONCEPTUAL_DIRECTION_APPROVED_WITH_MATERIAL_GEOGRAPHIC_DEFECTS",
+    "knownDefects": [
+      "GRATITUDE_HARBOR_EMBEDDED_NEAR_CONTINENT_CENTER",
+      "CONTINENTS_READ_AS_RADIAL_CIRCULAR_BLOBS",
+      "MOUNTAIN_SYSTEM_REMAINS_CONSTRAINED_BY_OLD_AUTHORING_BOX"
+    ]
+  },
+  "predecessor": {
+    "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+    "constructionLockGeneration": 422,
+    "oldWorldAssumption": "CONTINUOUS_512_BY_512_FIELD",
+    "disposition": "SPATIAL_PREMISE_SUPERSEDED_BY_OPEN_WORLD_MIGRATION;PRESERVE_VALID_LOCAL_GEOGRAPHY_AND_EVIDENCE"
+  },
+  "historicalLocks": [
+    {
+      "generation": 457,
+      "status": "STALE_PRE_ROUTER_INSTRUMENT_ADMISSION_NOT_CURRENT_AUTHORITY"
+    },
+    {
+      "generation": 458,
+      "status": "ROUTER_CONSTRUCTION_COMPLETED_MERGED_TERMINAL_RECONCILIATION_PENDING"
+    },
+    {
+      "generation": 460,
+      "status": "ROUTER_MERGE_AUTHORITY_EXECUTED_TERMINAL_RECONCILIATION_PENDING"
+    }
+  ],
+  "authorityLimits": [
+    "NO_TERRAIN_MUTATION",
+    "NO_RUNTIME_MUTATION",
+    "NO_LIVE_TRAVERSAL_MUTATION",
+    "NO_SHOWROOM_PRODUCT_MUTATION",
+    "NO_MANOR_GEOMETRY",
+    "NO_DEPLOYMENT",
+    "NO_RELEASE",
+    "NO_AUTOMATIC_MERGE",
+    "NO_INHERITED_PRODUCT_AUTHORITY"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "METHODS_SPATIAL_DATABASE_CHECKPOINT_4_OPERATION_CLOSURE_RECEIPT_v1",
+  "status": "CONSTRUCTION_COMPLETE_HELD_FOR_NONPUBLIC_USER_TEST",
+  "constructionBase": {
+    "head": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
+    "tree": "9c1fa274cdf53afcbb26a7c84a5dc55fc8f7ca51"
+  },
+  "branch": "construction/methods-spatial-database-checkpoint4-text-first-v2-001",
+  "coreFingerprint": "9735a99659f221a98c8c292e936bcddd3d70cac823a418da61659dfcbf32f79d",
+  "normalizedFingerprint": "8c2466a0187082166a9ef29327055cff1b958dca481f8ed087492216dd878374",
+  "builderFreshVerifierEquality": true,
+  "nonpublicUserTestArtifact": "index.html",
+  "authorityAfterClosure": {
+    "constructionAuthorityActive": false,
+    "mergeAuthorized": false,
+    "publicDeploymentAuthorized": false,
+    "releaseAuthorized": false,
+    "perceptualAcceptanceClaimed": false
+  },
+  "nextGoverningEvent": "USER_PERCEPTUAL_REVIEW_OR_SEPARATE_DISPOSITION"
+}

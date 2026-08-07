@@ -1,0 +1,18 @@
+{
+  "aad": "UCIC_THEORY_TEAM_PROSPECTIVE_FINAL_REPORT_SPECIFICITY_FREEZE_v1",
+  "algorithm": "AES-256-GCM",
+  "classification": "THEORY_TEAM_PROSPECTIVE_TO_AUTHORITATIVE_FINAL_REPORT_PROCESS_SEPARATED",
+  "decoy_count": 15,
+  "fixed_invariant_head": "cac25b781909d12f6b53b4c3440adcd7c1356eb0",
+  "freeze_time": "2026-08-06T21:55:00-05:00",
+  "independent_human_confirmation": "NOT_CLAIMED",
+  "operation": "UCIC_THEORY_TEAM_PROSPECTIVE_FINAL_REPORT_SPECIFICITY_FREEZE_v1",
+  "outcome_access": "PROHIBITED_UNTIL_PREDICTION_FREEZE_COMMITTED",
+  "packet_parent_head": "fb8cfb622ca992a158e53eee9cb55845b11edc54",
+  "plaintext_sha256": "b58fcb031f332b36712d77269dbc20e7757601536b7803beab2c2d4195988bee",
+  "prospective_status": "PREDICTIONS_FROZEN_BEFORE_AUTHORITATIVE_FINAL_REPORT",
+  "scientific_result": null,
+  "sealed_blob_sha256": "b75eb657370a7ad2daa0e4220a1764b6c014721be0012aef7d684c9d73b5880b",
+  "source_cutoff": "2026-08-06T20:34:00-05:00",
+  "target_count": 5
+}

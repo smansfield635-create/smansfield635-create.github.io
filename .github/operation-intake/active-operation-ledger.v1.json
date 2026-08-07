@@ -540,6 +540,18 @@
       "scopeHash": "a78fffa03c9cd7e1639ba441caab37ef334959d0599b4a2c0af6c0c493ac089b",
       "state": "ADMITTED_LOCKED"
     },
+    "aa53681c8031a7e59affe6a2763018e45f8ced56416d18b3da9f474e57d8ad1f": {
+      "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
+      "lockGeneration": 390,
+      "lockScope": "METHODS_INFORMATION_BENCHMARK:FULL_CORPUS_SPATIAL_ENVIRONMENT_SUCCESSOR:CONSTRUCTION:V1",
+      "operationId": "METHODS_FULL_CORPUS_SPATIAL_ENVIRONMENT_SUCCESSOR_CONSTRUCTION_v1",
+      "procedureLocatorDigest": "117580babd5ea751b9ae499ac0a01af004e2a324106da78041f6c5a2c59a1f94",
+      "released": false,
+      "requestDigest": "332b489b6aabcaaac1d5037b3956d2e67f95e700ff65dd5b7ee9d629e7b74ef3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "aa53681c8031a7e59affe6a2763018e45f8ced56416d18b3da9f474e57d8ad1f",
+      "state": "ADMITTED_LOCKED"
+    },
     "b005780502dd946f07165ee8dc69dabc7435554d107eb54a089ac8d16fdfed99": {
       "governingHead": "f1016a29d28b0790041567eae1c05dab572bb6ed",
       "lockGeneration": 156,
@@ -844,7 +856,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 389,
+  "lockGeneration": 390,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

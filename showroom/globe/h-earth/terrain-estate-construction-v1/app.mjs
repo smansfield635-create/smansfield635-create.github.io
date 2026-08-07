@@ -20,7 +20,7 @@ const reportFailure = (stage, error) => {
   setDiagnostic(`${stage}_FAILED: ${message}`);
   window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW_ERROR__ = Object.freeze({
     operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
-    inspectorRepairRevision: 6,
+    inspectorRepairRevision: 7,
     stage,
     message
   });
@@ -52,7 +52,6 @@ function wireControls(renderer) {
   canvas.addEventListener('pointermove', (event) => {
     const previous = pointers.get(event.pointerId);
     if (!previous) return;
-
     const next = { x: event.clientX, y: event.clientY };
     pointers.set(event.pointerId, next);
 
@@ -109,7 +108,8 @@ async function loadObserverAfterFirstPaint(renderer) {
     const observerModule = await import('./observer.mjs');
     const receipt = observerModule.buildHEarthMapWideEnvironmentPreviewObserverReceipt(
       renderer.mesh.statistics,
-      renderer.waterMesh.statistics
+      renderer.waterMesh.statistics,
+      renderer.continuationMesh.statistics
     );
     const cameraSafety = renderer.getCameraSafety();
     const safe = Object.values(cameraSafety).every((value) => value === true);
@@ -119,7 +119,7 @@ async function loadObserverAfterFirstPaint(renderer) {
     window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
       operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
       lockGeneration: 422,
-      inspectorRepairRevision: 6,
+      inspectorRepairRevision: 7,
       renderer,
       observerReceipt: receipt
     });
@@ -130,7 +130,7 @@ async function loadObserverAfterFirstPaint(renderer) {
     window.__H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_PREVIEW__ = Object.freeze({
       operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
       lockGeneration: 422,
-      inspectorRepairRevision: 6,
+      inspectorRepairRevision: 7,
       renderer,
       observerReceipt: null,
       observerDeferredFailure: true
@@ -148,7 +148,7 @@ async function initialize() {
 
     const rendererModule = await import('./renderer.mjs');
     setVisibleStatus('building…', 'BUILDING_TERRAIN');
-    setDiagnostic('Building terrain mesh…');
+    setDiagnostic('Building terrain and future-region continuation meshes…');
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const renderer = rendererModule.createMapWideEnvironmentRenderer(canvas);

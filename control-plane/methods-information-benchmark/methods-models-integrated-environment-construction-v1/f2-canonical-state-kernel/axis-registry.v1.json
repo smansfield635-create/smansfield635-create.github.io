@@ -1,0 +1,137 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F2_AXIS_REGISTRY_v1",
+  "status": "F2_CONSTRUCTION_CANDIDATE",
+  "axisOrder": [
+    "SYSTEM",
+    "SCIENTIFIC_OBJECT",
+    "MODEL",
+    "METHOD_STAGE",
+    "EVIDENCE",
+    "EXECUTION",
+    "CUSTODY",
+    "CLAIM_CEILING",
+    "SUPPORT_MODE",
+    "LENS",
+    "VIEW_MODE",
+    "ROUTE_HISTORY",
+    "CONTENT_VERSION"
+  ],
+  "axisCount": 13,
+  "axisStatusVocabulary": ["DECLARED", "UNSET", "UNEVALUABLE", "NOT_APPLICABLE"],
+  "axes": {
+    "SYSTEM": {
+      "plane": "SCIENTIFIC_REFERENT",
+      "meaningBearing": true,
+      "identityBearing": true,
+      "valueShape": ["systemId", "boundaryRef"],
+      "mutationAuthority": "SCIENTIFIC_OR_CONSTITUTIONAL_AUTHORITY_ONLY",
+      "law": "SYSTEM_REFERENT_MAY_NOT_BE_INFERRED_FROM_VIEW_OR_ROUTE"
+    },
+    "SCIENTIFIC_OBJECT": {
+      "plane": "SCIENTIFIC_REFERENT",
+      "meaningBearing": true,
+      "identityBearing": true,
+      "valueShape": ["objectClass", "objectId"],
+      "mutationAuthority": "SCIENTIFIC_OR_CONSTITUTIONAL_AUTHORITY_ONLY",
+      "law": "ONE_LABEL_MAY_NOT_SILENTLY_SERVE_MULTIPLE_OBJECT_CLASSES"
+    },
+    "MODEL": {
+      "plane": "ANALYTIC_CONTEXT",
+      "meaningBearing": true,
+      "identityBearing": false,
+      "valueShape": ["modelId", "role"],
+      "mutationAuthority": "REGISTERED_MODEL_SELECTION_ONLY",
+      "law": "MODEL_MAY_NOT_BE_REPORTED_AS_METHOD_OR_INSTRUMENT"
+    },
+    "METHOD_STAGE": {
+      "plane": "ANALYTIC_CONTEXT",
+      "meaningBearing": true,
+      "identityBearing": false,
+      "valueShape": ["stageId", "order", "custodyDomain"],
+      "mutationAuthority": "REGISTERED_METHOD_SEQUENCE_ONLY",
+      "law": "PROTOCOL_READINESS_MAY_NOT_BE_REPORTED_AS_SCIENTIFIC_RESULT"
+    },
+    "EVIDENCE": {
+      "plane": "EVIDENTIARY_STATE",
+      "meaningBearing": true,
+      "identityBearing": true,
+      "valueShape": ["evidenceObjectId", "evidenceStatus", "classification", "disposition", "independenceStatus", "contaminationStatus"],
+      "mutationAuthority": "EVIDENCE_ADJUDICATION_ONLY",
+      "law": "EVIDENCE_STATE_MAY_NOT_BE_CHANGED_BY_INTERFACE_OR_VISUAL_PROMINENCE"
+    },
+    "EXECUTION": {
+      "plane": "EVIDENTIARY_STATE",
+      "meaningBearing": true,
+      "identityBearing": true,
+      "valueShape": ["executionId", "executionStatus", "scientificResultStatus"],
+      "mutationAuthority": "EXECUTION_OR_ADJUDICATION_AUTHORITY_ONLY",
+      "law": "EXECUTION_STATUS_IS_DISTINCT_FROM_EVIDENCE_STATUS"
+    },
+    "CUSTODY": {
+      "plane": "EVIDENTIARY_STATE",
+      "meaningBearing": true,
+      "identityBearing": true,
+      "valueShape": ["custodyDomain", "custodyStatus"],
+      "mutationAuthority": "CUSTODY_AUTHORITY_ONLY",
+      "law": "CUSTODY_STATUS_MAY_NOT_BE_INFERRED_FROM_INTERFACE_AVAILABILITY"
+    },
+    "CLAIM_CEILING": {
+      "plane": "EVIDENTIARY_STATE",
+      "meaningBearing": true,
+      "identityBearing": true,
+      "valueShape": ["ceilingId", "scopeRef", "prohibitions"],
+      "mutationAuthority": "EVIDENCE_ADJUDICATION_ONLY",
+      "law": "NO_SUB_CHECKPOINT_MAY_RAISE_THE_SCIENTIFIC_CLAIM_CEILING"
+    },
+    "SUPPORT_MODE": {
+      "plane": "ANALYTIC_CONTEXT",
+      "meaningBearing": true,
+      "identityBearing": false,
+      "valueShape": ["mode"],
+      "allowedDeclaredModes": ["INTRINSIC", "SUPPORTED", "SUBSTITUTED", "MIXED"],
+      "mutationAuthority": "SCIENTIFIC_CLASSIFICATION_AUTHORITY_ONLY",
+      "law": "SUPPORT_OR_SUBSTITUTION_CLASSIFICATION_IS_NOT_OUTPUT_SUCCESS"
+    },
+    "LENS": {
+      "plane": "REPRESENTATION",
+      "meaningBearing": false,
+      "identityBearing": false,
+      "valueShape": ["lensId"],
+      "mutationAuthority": "REPRESENTATION_AUTHORITY",
+      "law": "LENS_CHANGE_MAY_CHANGE_REPRESENTATION_BUT_NOT_SCIENTIFIC_STATE"
+    },
+    "VIEW_MODE": {
+      "plane": "REPRESENTATION",
+      "meaningBearing": false,
+      "identityBearing": false,
+      "valueShape": ["viewModeId"],
+      "mutationAuthority": "REPRESENTATION_AUTHORITY",
+      "law": "VIEW_CHANGE_MAY_CHANGE_REPRESENTATION_BUT_NOT_CANONICAL_SCIENTIFIC_STATE"
+    },
+    "ROUTE_HISTORY": {
+      "plane": "NAVIGATION",
+      "meaningBearing": false,
+      "identityBearing": false,
+      "valueShape": ["orderedRouteEntries"],
+      "mutationAuthority": "NAVIGATION_STATE_ONLY",
+      "law": "NAVIGATION_MAY_CHANGE_LOCATION_BUT_NOT_CANONICAL_SCIENTIFIC_STATE"
+    },
+    "CONTENT_VERSION": {
+      "plane": "CONTENT_BINDING",
+      "meaningBearing": false,
+      "identityBearing": false,
+      "valueShape": ["contentVersionId", "contentFingerprint"],
+      "mutationAuthority": "VERSIONED_CONTENT_AUTHORITY_ONLY",
+      "law": "CONTENT_VERSION_PARTICIPATES_IN_EXACT_RESTORATION_BUT_IS_NOT_EVIDENTIARY_STRENGTH"
+    }
+  },
+  "distinctions": [
+    "UNSET_NOT_EQUAL_UNEVALUABLE",
+    "UNEVALUABLE_NOT_EQUAL_NOT_APPLICABLE",
+    "EVIDENCE_NOT_EQUAL_EXECUTION",
+    "CUSTODY_NOT_EQUAL_INTERFACE",
+    "SUPPORT_MODE_NOT_EQUAL_OUTPUT_SUCCESS",
+    "REPRESENTATION_STATE_NOT_EQUAL_SCIENTIFIC_STATE",
+    "NAVIGATION_STATE_NOT_EQUAL_SCIENTIFIC_STATE"
+  ]
+}

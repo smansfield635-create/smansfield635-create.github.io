@@ -1,0 +1,59 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F2_CONFORMANCE_FIXTURES_v1",
+  "status": "F2_CONSTRUCTION_CANDIDATE",
+  "valid": [
+    {
+      "id": "FULLY_DECLARED_SYNTHETIC_STATE",
+      "state": {
+        "schema": "METHODS_MODELS_CANONICAL_ENVIRONMENT_STATE_v1",
+        "kernelVersion": "TEXT_FIRST_STATEFUL_METHODS_MODELS_CANONICAL_STATE_v1",
+        "axes": {
+          "SYSTEM": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"systemId": "SYNTHETIC_SYSTEM", "boundaryRef": "SYNTHETIC_BOUNDARY"}},
+          "SCIENTIFIC_OBJECT": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"objectClass": "TEST_INSTANCE", "objectId": "SYNTHETIC_OBJECT"}},
+          "MODEL": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"modelId": "CONSTITUTIVE_ROUTE_MODEL", "role": "PRIMARY_CANDIDATE_REPRESENTATION"}},
+          "METHOD_STAGE": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"stageId": "TARGET_REGISTRATION", "order": 1, "custodyDomain": "SOURCE_SIDE"}},
+          "EVIDENCE": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"evidenceObjectId": "SYNTHETIC_EVIDENCE", "evidenceStatus": "SYNTHETIC_ONLY", "classification": "SYNTHETIC", "disposition": "NO_SCIENTIFIC_CLAIM", "independenceStatus": "NOT_APPLICABLE_TO_FIXTURE", "contaminationStatus": "NOT_APPLICABLE_TO_FIXTURE"}},
+          "EXECUTION": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"executionId": "SYNTHETIC_EXECUTION", "executionStatus": "STRUCTURE_TEST_ONLY", "scientificResultStatus": "NONE"}},
+          "CUSTODY": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"custodyDomain": "SOURCE_SIDE", "custodyStatus": "SYNTHETIC"}},
+          "CLAIM_CEILING": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"ceilingId": "NO_SCIENTIFIC_CLAIM", "scopeRef": "F2_FIXTURE_ONLY", "prohibitions": ["NO_EMPIRICAL_INFERENCE", "NO_VALIDATION_INFERENCE"]}},
+          "SUPPORT_MODE": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"mode": "INTRINSIC"}},
+          "LENS": {"status": "DECLARED", "authorityRef": "REPRESENTATION_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"lensId": "DEFAULT_TEXT_LENS"}},
+          "VIEW_MODE": {"status": "DECLARED", "authorityRef": "REPRESENTATION_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"viewModeId": "TEXT_FIRST"}},
+          "ROUTE_HISTORY": {"status": "DECLARED", "authorityRef": "NAVIGATION_STATE_ONLY", "sourceRef": "F2_SYNTHETIC", "value": ["ROOT", "METHODS_MODELS"]},
+          "CONTENT_VERSION": {"status": "DECLARED", "authorityRef": "VERSIONED_CONTENT_AUTHORITY_ONLY", "sourceRef": "F2_SYNTHETIC", "value": {"contentVersionId": "SYNTHETIC_V1", "contentFingerprint": "SYNTHETIC_FINGERPRINT"}}
+        }
+      }
+    },
+    {
+      "id": "EXPLICIT_NONDECLARED_STATES",
+      "state": {
+        "schema": "METHODS_MODELS_CANONICAL_ENVIRONMENT_STATE_v1",
+        "kernelVersion": "TEXT_FIRST_STATEFUL_METHODS_MODELS_CANONICAL_STATE_v1",
+        "axes": {
+          "SYSTEM": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"systemId": "SYNTHETIC_SYSTEM", "boundaryRef": "SYNTHETIC_BOUNDARY"}},
+          "SCIENTIFIC_OBJECT": {"status": "DECLARED", "authorityRef": "F2_FIXTURE_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"objectClass": "TEST_INSTANCE", "objectId": "SYNTHETIC_OBJECT"}},
+          "MODEL": {"status": "UNSET", "authorityRef": "REGISTERED_MODEL_SELECTION_ONLY", "sourceRef": "F2_SYNTHETIC", "value": null},
+          "METHOD_STAGE": {"status": "UNSET", "authorityRef": "REGISTERED_METHOD_SEQUENCE_ONLY", "sourceRef": "F2_SYNTHETIC", "value": null},
+          "EVIDENCE": {"status": "UNEVALUABLE", "authorityRef": "EVIDENCE_ADJUDICATION_ONLY", "sourceRef": "F2_SYNTHETIC", "value": null},
+          "EXECUTION": {"status": "DECLARED", "authorityRef": "EXECUTION_OR_ADJUDICATION_AUTHORITY_ONLY", "sourceRef": "F2_SYNTHETIC", "value": {"executionId": "SYNTHETIC_EXECUTION", "executionStatus": "NOT_STARTED", "scientificResultStatus": "NONE"}},
+          "CUSTODY": {"status": "NOT_APPLICABLE", "authorityRef": "CUSTODY_AUTHORITY_ONLY", "sourceRef": "F2_SYNTHETIC", "value": null},
+          "CLAIM_CEILING": {"status": "DECLARED", "authorityRef": "EVIDENCE_ADJUDICATION_ONLY", "sourceRef": "F2_SYNTHETIC", "value": {"ceilingId": "NO_SCIENTIFIC_CLAIM", "scopeRef": "F2_FIXTURE_ONLY", "prohibitions": ["NO_EMPIRICAL_INFERENCE"]}},
+          "SUPPORT_MODE": {"status": "UNEVALUABLE", "authorityRef": "SCIENTIFIC_CLASSIFICATION_AUTHORITY_ONLY", "sourceRef": "F2_SYNTHETIC", "value": null},
+          "LENS": {"status": "DECLARED", "authorityRef": "REPRESENTATION_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"lensId": "DEFAULT_TEXT_LENS"}},
+          "VIEW_MODE": {"status": "DECLARED", "authorityRef": "REPRESENTATION_AUTHORITY", "sourceRef": "F2_SYNTHETIC", "value": {"viewModeId": "TEXT_FIRST"}},
+          "ROUTE_HISTORY": {"status": "DECLARED", "authorityRef": "NAVIGATION_STATE_ONLY", "sourceRef": "F2_SYNTHETIC", "value": []},
+          "CONTENT_VERSION": {"status": "DECLARED", "authorityRef": "VERSIONED_CONTENT_AUTHORITY_ONLY", "sourceRef": "F2_SYNTHETIC", "value": {"contentVersionId": "SYNTHETIC_V1", "contentFingerprint": "SYNTHETIC_FINGERPRINT"}}
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {"id": "MISSING_AXIS", "mutation": "REMOVE_CONTENT_VERSION", "expected": "REJECT"},
+    {"id": "EXTRA_AUTHORITY_AXIS", "mutation": "ADD_AUTHORITY_AS_FOURTEENTH_AXIS", "expected": "REJECT"},
+    {"id": "DECLARED_NULL", "mutation": "SET_MODEL_STATUS_DECLARED_WITH_NULL_VALUE", "expected": "REJECT"},
+    {"id": "NONDECLARED_NON_NULL", "mutation": "SET_EVIDENCE_STATUS_UNEVALUABLE_WITH_NON_NULL_VALUE", "expected": "REJECT"},
+    {"id": "UNKNOWN_STATUS", "mutation": "SET_SYSTEM_STATUS_UNKNOWN", "expected": "REJECT"},
+    {"id": "INVALID_SUPPORT_MODE_TOKEN", "mutation": "SET_SUPPORT_MODE_TO_OUTPUT_SUCCESS", "expected": "REJECT"}
+  ],
+  "fixtureScientificStanding": "SYNTHETIC_STRUCTURE_TEST_ONLY_NO_EMPIRICAL_OR_VALIDATION_CLAIM"
+}

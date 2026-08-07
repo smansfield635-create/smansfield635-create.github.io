@@ -6,6 +6,52 @@ const freeze = (value) => Object.freeze(value);
 const REQUIRED_OPERATION = 'H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_v1';
 const REQUIRED_HEAD = 'c50d0a06a73ed149286508a15e697d8efa254865';
 const REQUIRED_SOURCE = 'ad9e72adb97df7ab867af1fe20df2c29de763d28';
+const PARENT_COHERENCE_OPERATION = 'H_EARTH_V2_COASTAL_INTEGRATION_AND_POSITIONAL_IDENTITY_CLOSURE';
+const GOVERNING_ACCEPTED_BASELINE = '6836288462bbbc7ab7c03d5f12fafaab119f9e36';
+const REVIEWED_RELIEF_REFERENCE = '97003e9de386a8962fb46d0b370005b900a167d6';
+const PROTECTED_WORKING_REFERENCE = 'bc8974e0ff28da4457559567d8059e14156ca5f0';
+
+export const OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST = freeze({
+  schema: 'H_EARTH_OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST_v1',
+  parentOperation: PARENT_COHERENCE_OPERATION,
+  governingAcceptedBaseline: GOVERNING_ACCEPTED_BASELINE,
+  reviewedReliefReference: REVIEWED_RELIEF_REFERENCE,
+  protectedWorkingReference: PROTECTED_WORKING_REFERENCE,
+  canonicalCoordinateAuthority: 'GRATITUDE_LOCAL_AUTHORING_XZ_MAPPED_TO_AUDRALIA_SPHERE',
+  invariant: 'CANONICAL_GEOGRAPHIC_IDENTITY',
+  requiredRepresentations: freeze(['LOCAL', 'REGION', 'CONTINENT', 'PLANETARY']),
+  roundTripToleranceAuthoringUnits: 1e-6,
+  mutationOrder: 'ANCHORS_FROZEN_BEFORE_COASTAL_INTEGRATION',
+  anchors: freeze([
+    freeze({ id: 'PRIMARY_PEAK', x: -79, z: -286, class: 'MOUNTAIN_PEAK' }),
+    freeze({ id: 'SECONDARY_PEAK', x: -12, z: -282, class: 'MOUNTAIN_PEAK' }),
+    freeze({ id: 'WATERFALL_CREST', x: -50, z: -278, class: 'WATERFALL_CREST' }),
+    freeze({ id: 'WATERFALL_BASIN_CENTER', x: -44, z: -211, class: 'RESERVOIR_CENTER' }),
+    freeze({ id: 'RESERVOIR_EAST_EDGE', x: 7.847094968629811, z: -211, class: 'RESERVOIR_BOUNDARY' }),
+    freeze({ id: 'RESERVOIR_WEST_EDGE', x: -97.2206114596909, z: -211, class: 'RESERVOIR_BOUNDARY' }),
+    freeze({ id: 'HARBOR_WEST_COAST_BEND', x: -192, z: -56.81629425546011, class: 'COASTLINE' }),
+    freeze({ id: 'HARBOR_CENTER_COAST_BEND', x: 0, z: -43.31331986864843, class: 'COASTLINE' }),
+    freeze({ id: 'INLAND_BAY_APEX', x: 118, z: -89.99197537809627, class: 'COASTLINE' }),
+    freeze({ id: 'EASTERN_HEADLAND', x: 198, z: -40.577666952243305, class: 'HEADLAND' }),
+    freeze({ id: 'PENINSULA_COAST_REFERENCE', x: 256, z: -47.74780290241972, class: 'COASTLINE' }),
+    freeze({ id: 'ESTATE_REFERENCE_POINT', x: 80, z: -172, class: 'PROTECTED_ESTATE_REFERENCE' })
+  ]),
+  perceptualTrackSet: freeze([
+    'PRIMARY_PEAK',
+    'WATERFALL_BASIN_CENTER',
+    'HARBOR_CENTER_COAST_BEND',
+    'EASTERN_HEADLAND'
+  ]),
+  waterfallReservoirRegionProtected: true,
+  acceptedReliefAndDepthProtected: true,
+  outerCoastalShapePreserveUnlessRequired: true,
+  beachCorrectionClass: 'TERRAIN_INTEGRATION_NOT_DECORATION',
+  beachGeometryObjectVisualAuthority: 'TO_BE_REMOVED_AFTER_THIS_FREEZE',
+  newVisualToolingAuthorized: false,
+  newTerrainSystemAuthorized: false,
+  newLodFrameworkAuthorized: false,
+  newPerceptualScorerAuthorized: false
+});
 
 export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const snapshot = renderer.getSnapshot();
@@ -252,6 +298,13 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
     cameraContractSafe:
       Object.values(camera).every(Boolean),
 
+    canonicalAnchorManifestFrozenBeforeBeachMutation:
+      OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.anchors.length === 12 &&
+      OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.perceptualTrackSet.length === 4 &&
+      OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.governingAcceptedBaseline === GOVERNING_ACCEPTED_BASELINE &&
+      OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.protectedWorkingReference === PROTECTED_WORKING_REFERENCE &&
+      OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.mutationOrder === 'ANCHORS_FROZEN_BEFORE_COASTAL_INTEGRATION',
+
     mechanicalPassCannotClaimUserAcceptance:
       contract?.mechanicalPassIsNotUserAcceptance === true &&
       geography?.mechanicalPassIsNotUserAcceptance === true,
@@ -278,20 +331,25 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const mechanicalChecksPassed = failedChecks.length === 0;
 
   return freeze({
-    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v7',
+    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v8',
     result: mechanicalChecksPassed ? 'MECHANICAL_PASS_AWAITING_USER' : 'FAIL_CLOSED',
     mechanicalChecksPassed,
     userAcceptanceEstablished: false,
     operationId: REQUIRED_OPERATION,
+    parentCoherenceOperation: PARENT_COHERENCE_OPERATION,
     checkpoint: 'OW01',
     lockGeneration: 473,
     governingHead: REQUIRED_HEAD,
+    governingAcceptedBaseline: GOVERNING_ACCEPTED_BASELINE,
+    reviewedReliefReference: REVIEWED_RELIEF_REFERENCE,
+    protectedWorkingReference: PROTECTED_WORKING_REFERENCE,
     immutableRevision10Source: REQUIRED_SOURCE,
     planetIdentity: 'AUDRALIA',
     hEarthClass: 'PLAYER_EXPERIENCE_ON_AUDRALIA',
     resolvedContinent: 'GRATITUDE',
     continentCount: 9,
     gratitudeSummitTrackCount: 9,
+    canonicalGeographicAnchorManifest: OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST,
     hierarchy: freeze([
       'AUDRALIA',
       'GRATITUDE_CONTINENT',
@@ -311,7 +369,11 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
         'MATERIAL_WORLD_CONTINUITY_SUCCESS_WITH_LOCAL_STITCH_TOPOLOGY_TEAR_CORRECTION_REQUIRED',
       userAcceptanceEstablished: false,
       repairRound:
-        'OW01_SHARED_HARBOR_COAST_AUTHORITY_AND_STITCH_TOPOLOGY_CLOSURE',
+        'H_EARTH_V2_COASTAL_INTEGRATION_AND_POSITIONAL_IDENTITY_CLOSURE_ANCHOR_FREEZE',
+      canonicalAnchorsFrozenBeforeBeachMutation: true,
+      coastalIntegrationMutationStarted: false,
+      positionalGateStatus: 'NOT_YET_EXECUTED',
+      perceptualGateStatus: 'USER_REQUIRED_AFTER_ENGINEERING',
       ow02Authorized: false,
       liveIntegrationAuthorized: false,
       frontPageIntegrationAuthorized: false,

@@ -1,0 +1,112 @@
+{
+  "schema": "WHOLE_ESTATE_ROUTE_AND_ROOM_INVENTORY_v1",
+  "status": "CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "roleEnum": ["FOUNDATION", "ORIENTATION", "EPISTEMIC_LAW", "MEASUREMENT", "DIAGNOSIS", "APPLICATION", "IMPLEMENTATION", "PROVENANCE"],
+  "routeAuthority": {
+    "primaryDeclaredRouteTruth": "assets/manor-blueprint/manor.blueprint.registry.js",
+    "primaryDeclaredRouteTruthBlob": "f7e72cb61e02ff3001ae059d0ad73e6d7a75986f",
+    "compassOrientationDeclaration": "index.html",
+    "compassOrientationBlob": "1cc9a1de90bb58de6463bafe52a1b1f91c5bef4a",
+    "manorDeclaredRouteCount": 32,
+    "compassDeclaredRoomCount": 19,
+    "sitemapCompleteness": "KNOWN_INCOMPLETE",
+    "sitemapUrlCount": 4
+  },
+  "manorDeclaredRoutes": [
+    {"id":"compass","path":"/","room":"Compass Desk","primaryRole":"ORIENTATION"},
+    {"id":"door","path":"/door/","room":"Front Door","primaryRole":"ORIENTATION"},
+    {"id":"home","path":"/home/","room":"Main Hall","primaryRole":"ORIENTATION"},
+    {"id":"site-guide","path":"/site-guide/","room":"Guide Desk","primaryRole":"ORIENTATION","registryStatus":"planned","observedPageExists":true},
+    {"id":"laws","path":"/laws/","room":"Law Library","primaryRole":"EPISTEMIC_LAW"},
+    {"id":"governance","path":"/governance/","room":"Council Room","primaryRole":"EPISTEMIC_LAW"},
+    {"id":"gauges","path":"/gauges/","room":"The Lab","primaryRole":"MEASUREMENT"},
+    {"id":"gauges-h-earth","path":"/gauges/h-earth/","room":"H-Earth Lab Bench","primaryRole":"MEASUREMENT"},
+    {"id":"products","path":"/products/","room":"Product Gallery","primaryRole":"IMPLEMENTATION"},
+    {"id":"meet-sean","path":"/about-this-underdog/","room":"Host Portrait","primaryRole":"ORIENTATION"},
+    {"id":"showroom-door","path":"/showroom/","room":"Atrium","primaryRole":"IMPLEMENTATION"},
+    {"id":"mirrorland-field","path":"/showroom/globe/","room":"Atlas Study","primaryRole":"IMPLEMENTATION"},
+    {"id":"zionts","path":"/showroom/globe/earth/","room":"ZIONTS Room","primaryRole":"IMPLEMENTATION"},
+    {"id":"audralia","path":"/showroom/globe/audralia/","room":"Audralia Conservatory","primaryRole":"IMPLEMENTATION"},
+    {"id":"audralia-planet","path":"/showroom/globe/audralia/planet/","room":"Audralia Worldroom","primaryRole":"IMPLEMENTATION"},
+    {"id":"audralia-cockpit","path":"/showroom/globe/audralia/disposition/","room":"Control Cockpit","primaryRole":"IMPLEMENTATION","adjacentRoles":["MEASUREMENT"]},
+    {"id":"hearth","path":"/showroom/globe/hearth/","room":"Hearth Room","primaryRole":"IMPLEMENTATION"},
+    {"id":"h-earth","path":"/showroom/globe/h-earth/","room":"H-Earth Annex","primaryRole":"IMPLEMENTATION"},
+    {"id":"characters","path":"/characters/","room":"Portrait Hall","primaryRole":"IMPLEMENTATION"},
+    {"id":"nine-summits-universe","path":"/nine-summits/universe/","room":"Universe Gallery","primaryRole":"IMPLEMENTATION"},
+    {"id":"frontier","path":"/explore/frontier/","room":"Frontier Workshop Yard","primaryRole":"APPLICATION"},
+    {"id":"frontier-energy","path":"/explore/frontier/energy/","room":"Fusion Bench","primaryRole":"APPLICATION"},
+    {"id":"frontier-water","path":"/explore/frontier/water/","room":"Closed Water Systems Bench","primaryRole":"APPLICATION"},
+    {"id":"frontier-waste","path":"/explore/frontier/waste/","room":"Wastewater Systems Bench","primaryRole":"APPLICATION"},
+    {"id":"frontier-closed-loop","path":"/explore/frontier/closed-loop/","room":"Closed Loop Table","primaryRole":"APPLICATION"},
+    {"id":"frontier-infrastructure","path":"/explore/frontier/infrastructure/","room":"Infrastructure Bay","primaryRole":"APPLICATION"},
+    {"id":"frontier-lattice","path":"/explore/frontier/lattice/","room":"Lattice Table","primaryRole":"APPLICATION"},
+    {"id":"frontier-manual","path":"/explore/frontier/manual/","room":"Field Manual Desk","primaryRole":"APPLICATION"},
+    {"id":"frontier-shimmer","path":"/explore/frontier/shimmer/","room":"Shimmer Signal Table","primaryRole":"APPLICATION"},
+    {"id":"frontier-trajectory","path":"/explore/frontier/trajectory/","room":"Trajectory Table","primaryRole":"APPLICATION"},
+    {"id":"frontier-vision","path":"/explore/frontier/vision/","room":"Vision Window","primaryRole":"APPLICATION"},
+    {"id":"frontier-urban","path":"/explore/frontier/urban/","room":"Urban Planning Table","primaryRole":"APPLICATION"}
+  ],
+  "compassDeclaredRooms": {
+    "north": [
+      {"label":"Products","path":"/products/"},
+      {"label":"Guide Desk","path":"/site-guide/"},
+      {"label":"Front Door","path":"/door/"},
+      {"label":"Meet Sean","path":"/meet-sean-mansfield/"},
+      {"label":"Philosophy Library","path":"/nine-summits-of-love/"}
+    ],
+    "east": [
+      {"label":"Atlas Study","path":"/showroom/globe/"},
+      {"label":"ZIONTS","path":"/showroom/globe/earth/"},
+      {"label":"Audralia Conservatory","path":"/showroom/globe/audralia/"},
+      {"label":"Hearth","path":"/showroom/globe/hearth/"},
+      {"label":"H-Earth","path":"/showroom/globe/h-earth/"}
+    ],
+    "south": [
+      {"label":"The Lab","path":"/gauges/"},
+      {"label":"Law Library","path":"/laws/"},
+      {"label":"Council Room","path":"/governance/"},
+      {"label":"Control Cockpit","path":"/showroom/globe/audralia/disposition/"}
+    ],
+    "west": [
+      {"label":"Frontier Workshop Yard","path":"/explore/frontier/"},
+      {"label":"Energy Bench","path":"/explore/frontier/energy/"},
+      {"label":"Water Bench","path":"/explore/frontier/water/"},
+      {"label":"Infrastructure Bay","path":"/explore/frontier/infrastructure/"},
+      {"label":"Vision Window","path":"/explore/frontier/vision/"}
+    ]
+  },
+  "compassDirectAndGuidedRoutes": [
+    {"label":"Narrative","path":"/characters/","primaryRole":"IMPLEMENTATION","mode":"DIRECT_DESTINATION"},
+    {"label":"Frontier","path":"/explore/frontier/","primaryRole":"APPLICATION","mode":"DIRECT_DESTINATION"},
+    {"label":"Product","path":"/products/","primaryRole":"IMPLEMENTATION","mode":"DIRECT_DESTINATION"},
+    {"label":"Laws","path":"/laws/","primaryRole":"EPISTEMIC_LAW","mode":"DIRECT_DESTINATION"},
+    {"label":"Coherence Diagnostic","path":"/coherence-diagnostic/","primaryRole":"DIAGNOSIS","mode":"GUIDED_AID"},
+    {"label":"Talk to the House","path":"/showroom/globe/hearth/jeeves/","primaryRole":"ORIENTATION","mode":"GUIDED_AID"}
+  ],
+  "scientificAndProvenanceRoutes": [
+    {"id":"reality","path":"/laws/","routeMode":"CONSOLIDATED_PAGE_ANCHORS","primaryRole":"EPISTEMIC_LAW","authority":"answerability, evidence, measurement, interpretation, limits"},
+    {"id":"ucic","path":null,"routeMode":"EMBEDDED_WITHIN_INTEGRITY_LAWS_JOURNEY","primaryRole":"FOUNDATION","scientificObject":"INVARIANT_CANDIDATE","dedicatedPublicRouteEstablished":false},
+    {"id":"imi","path":null,"routeMode":"RESEARCH_AND_INSTRUMENT_INFRASTRUCTURE_WITHOUT_DEDICATED_PUBLIC_ROUTE","primaryRole":"MEASUREMENT","scientificObject":"INSTRUMENT","dedicatedPublicRouteEstablished":false},
+    {"id":"laws-research","path":"/laws/research/","primaryRole":"PROVENANCE"},
+    {"id":"evidence-and-sources","path":"/laws/research/evidence-and-sources/","primaryRole":"PROVENANCE"},
+    {"id":"methods-and-models","path":"/laws/research/methods-and-models/","primaryRole":"EPISTEMIC_LAW","adjacentRoles":["PROVENANCE"]},
+    {"id":"applied-investigations","path":"/laws/research/applied-investigations/","primaryRole":"APPLICATION"},
+    {"id":"findings-and-boundaries","path":"/laws/research/findings-and-boundaries/","primaryRole":"PROVENANCE"},
+    {"id":"test","path":"/laws/test/","primaryRole":"EPISTEMIC_LAW"},
+    {"id":"result-and-record","path":"/laws/test/result-and-record/","primaryRole":"PROVENANCE"},
+    {"id":"reverse-audit","path":"/laws/test/reverse-audit/","primaryRole":"EPISTEMIC_LAW"},
+    {"id":"forward-construction","path":"/laws/test/forward-construction/","primaryRole":"EPISTEMIC_LAW"},
+    {"id":"route-operator-platform","path":"research/route-operator-platform-v1/","routeMode":"REPOSITORY_RESEARCH_INFRASTRUCTURE","primaryRole":"PROVENANCE","publicNavigationRoom":false}
+  ],
+  "knownBaselineDefects": [
+    {"id":"SITEMAP_INCOMPLETE","detail":"sitemap.xml lists four URLs and cannot represent the declared estate"},
+    {"id":"MEET_SEAN_ROUTE_MISMATCH","detail":"Compass declares /meet-sean-mansfield/ while Manor route truth declares /about-this-underdog/"},
+    {"id":"GUIDE_DESK_STATUS_MISMATCH","detail":"Manor registry marks Guide Desk planned while the page exists and Compass links it"},
+    {"id":"COMPASS_ROUTE_REGISTRY_SCOPE_DIFFERENCE","detail":"Compass declares 19 orientation rooms while Manor declares 32 route-truth entries; neither count may silently replace the other"},
+    {"id":"UCIC_NO_DEDICATED_PUBLIC_ROUTE","detail":"UCIC is constitutionally located within Integrity/Laws but has no dedicated public route established at baseline"},
+    {"id":"IMI_NO_DEDICATED_PUBLIC_ROUTE","detail":"IMI is an instrument with research infrastructure but no dedicated public route established at baseline"},
+    {"id":"GATE0_CONSTITUTIONAL_EDGE_TENSION","detail":"Gate 0 preserves IMI TESTS_CANDIDATE UCIC while the newer estate hierarchy nests UCIC foundation above IMI measurement; downstream reconciliation required without retrospective Gate 0 mutation"}
+  ],
+  "completenessDisposition": "PASS_DECLARED_ROUTE_AUTHORITIES_FROZEN_WITH_DEFECTS_VISIBLE",
+  "publicMutationAuthorized": false
+}

@@ -1,0 +1,81 @@
+{
+  "operation": "UCIC_ARM_B_FDIC_LONGITUDINAL_COLLAPSE_EARLY_WARNING_EXTENSION_v1",
+  "checkpoint": "CP5_OPERATIONALIZATION_FREEZE_BEFORE_CONTROL_AND_COMPARATOR_EXECUTION",
+  "status": "PASS_CLOSED",
+  "inputs_already_closed": [
+    "checkpoint-1-protocol-freeze.v1.json",
+    "checkpoint-2-failure-source-extraction.v1.json",
+    "checkpoint-3-control-match-freeze.v1.json",
+    "checkpoint-4-operationalization-freeze.v1.json",
+    "checkpoint-4-warning-execution.v1.json"
+  ],
+  "matched_control_unit": {
+    "primary_unit": "MATCHED_CONTROL_ASSIGNMENT",
+    "reason": "Each of the 22 preregistered control assignments is indexed to a specific failed bank and pseudo-index date; a repeated institution under a different pseudo-index date is a distinct matched-control observation.",
+    "assignment_count": 22,
+    "unique_control_institutions": 21,
+    "both_counts_must_be_reported": true
+  },
+  "control_warning_window": "Only warning-evaluable quarters strictly before the assigned failed bank pseudo-index date are eligible for false-positive classification.",
+  "control_evaluable_rule": "At least one warning-evaluable quarter before the pseudo-index date after the rolling histories mature.",
+  "additive_rank_scale": {
+    "raw_health_rank_range": "1_to_9",
+    "normalized_rank": "raw_health_rank/9",
+    "quarter_score": "arithmetic mean normalized health rank across evaluable factors",
+    "warning_condition": "quarter_score <= 1/3 for two consecutive reported quarters",
+    "minimum_evaluable_factors_per_quarter": 2,
+    "missing_factor_rule": "excluded_from_mean_without_positive_or_negative_credit"
+  },
+  "additive_lead_and_false_positive_rules": "Identical to UCIC lead-time, pseudo-index, missing-data, and control evaluability rules.",
+  "additive_analogous_thresholds": {
+    "minimum_evaluable_failures": 9,
+    "minimum_sensitivity": 0.60,
+    "minimum_actionable_30d_failures": 5,
+    "minimum_median_lead_days": 90,
+    "minimum_evaluable_control_assignments": 18,
+    "maximum_false_positive_rate": 0.30,
+    "minimum_discrimination_margin": 0.30
+  },
+  "redundancy_rule": {
+    "classification": "ADDITIVE_WEAK_DOMINANCE",
+    "requires_additive_all_analogous_thresholds_pass": true,
+    "and_all": [
+      "additive_sensitivity >= ucic_sensitivity",
+      "additive_false_positive_rate <= ucic_false_positive_rate",
+      "additive_median_lead_days >= ucic_median_lead_days"
+    ],
+    "interpretation": "If true, the FDIC extension provides no empirical advantage for the noncompensatory UCIC warning rule over the frozen additive comparator on the primary failure/control metrics."
+  },
+  "terminal_mapping": [
+    {
+      "when": "fewer than 9 failed banks or fewer than 18 matched control assignments are evaluable",
+      "disposition": "UNEVALUABLE_FDIC_DATA_OR_CONTROL_MATCH_FAILURE"
+    },
+    {
+      "when": "any of the seven frozen UCIC continuation thresholds fails",
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED"
+    },
+    {
+      "when": "all seven UCIC thresholds pass and ADDITIVE_WEAK_DOMINANCE is true",
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_REDUNDANT_WITH_ADDITIVE_COMPARATOR"
+    },
+    {
+      "when": "all seven UCIC thresholds pass, additive also passes all analogous thresholds, but ADDITIVE_WEAK_DOMINANCE is false",
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_SUPPORTED_WITH_LIMITATIONS"
+    },
+    {
+      "when": "all seven UCIC thresholds pass and additive fails at least one analogous threshold",
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_SUPPORTED"
+    }
+  ],
+  "preserved_scientific_ceiling": "RETROSPECTIVE_PUBLIC_FINANCIAL_EARLY_WARNING_EVIDENCE_ONLY",
+  "prohibitions": [
+    "post_control_threshold_repair",
+    "changing_matched_control_unit",
+    "changing_additive_warning_threshold",
+    "changing_redundancy_rule_after_comparison",
+    "claiming_prospective_or_independent_confirmation",
+    "claiming_universal_collapse_metric"
+  ],
+  "next_action": "EXECUTE_CP5_CONTROLS_AND_ADDITIVE_COMPARATOR"
+}

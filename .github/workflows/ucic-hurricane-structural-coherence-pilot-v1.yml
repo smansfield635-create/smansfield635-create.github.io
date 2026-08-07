@@ -1,0 +1,71 @@
+name: UCIC Hurricane Structural Coherence Temporal Holdout Pilot v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-structural-coherence-pilot-v1/**'
+      - '.github/workflows/ucic-hurricane-structural-coherence-pilot-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire-score-adjudicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify pre-acquisition protocol freeze
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE='research/route-operator-platform-v1/registered-challenges/ucic-hurricane-structural-coherence-pilot-v1/protocol.v1.json'
+          EXPECTED_GIT_BLOB='1cd073b89abd34df589b8f545268a1a9a8d4ab98'
+          ACTUAL_GIT_BLOB="$(git hash-object "$FILE")"
+          echo "protocol_git_blob=$ACTUAL_GIT_BLOB"
+          test "$ACTUAL_GIT_BLOB" = "$EXPECTED_GIT_BLOB"
+          sha256sum "$FILE"
+      - name: Acquire NOAA HURDAT2, score once, and adjudicate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/route-operator-platform-v1/registered-challenges/ucic-hurricane-structural-coherence-pilot-v1/run-hurricane-pilot-v1.py | tee hurricane-pilot-run.log
+      - name: Verify terminal result
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('research/route-operator-platform-v1/registered-challenges/ucic-hurricane-structural-coherence-pilot-v1/result.v1.json')
+          x = json.loads(p.read_text())
+          allowed = {
+              'HURRICANE_STRUCTURAL_COHERENCE_UNEVALUABLE',
+              'HURRICANE_STRUCTURAL_COHERENCE_INCREMENT_NOT_SUPPORTED',
+              'HURRICANE_STRUCTURAL_COHERENCE_REDUNDANT_WITH_STATE_HISTORY',
+              'HURRICANE_STRUCTURAL_COHERENCE_AMBIGUOUS',
+              'HURRICANE_STRUCTURAL_SIGNAL_PRESENT_NONCOMPENSATORY_SPECIFICITY_NOT_SUPPORTED',
+              'UCIC_HURRICANE_STRUCTURAL_COHERENCE_SUPPORTED_WITH_LIMITATIONS',
+          }
+          assert x['terminal_disposition'] in allowed, x
+          assert x.get('post_result_scientific_repair_permitted') is False, x
+          print(json.dumps({
+              'terminal_disposition': x['terminal_disposition'],
+              'source': x.get('source'),
+              'metrics': x.get('metrics'),
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Preserve frozen execution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-hurricane-structural-coherence-pilot-v1
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-structural-coherence-pilot-v1/protocol.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-structural-coherence-pilot-v1/result.v1.json
+            hurricane-pilot-run.log

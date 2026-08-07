@@ -1,0 +1,134 @@
+{
+  "operation": "UCIC_HURRICANE_STRUCTURAL_COHERENCE_TEMPORAL_HOLDOUT_PILOT_v1",
+  "parent_operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
+  "parent_exact_head": "0088d0e05ea6c9f4254a6c2c9f7a1e137bd4667c",
+  "invariant_reference_head": "cac25b781909d12f6b53b4c3440adcd7c1356eb0",
+  "protocol_status": "FROZEN_BEFORE_HURDAT2_ROW_EXTRACTION_OR_SCORING",
+  "scientific_classification": "RETROSPECTIVE_PREACQUISITION_FROZEN_TEMPORAL_HOLDOUT_PILOT",
+  "scientific_ceiling": "Retrospective Atlantic hurricane structural-coherence discrimination only. No independent-human route-identification, outcome-blind, prospective, causal, universal-law, or universal-invariant confirmation claim.",
+  "noncompensation_between_studies": "This hurricane arm is noncompensating with all prior UCIC arms. A favorable result cannot rescue the adverse FDIC longitudinal result; an adverse result cannot erase separately supported prior arms.",
+  "source": {
+    "authority": "NOAA_NATIONAL_HURRICANE_CENTER",
+    "dataset": "Atlantic HURDAT2 1851-2025",
+    "archive_page": "https://www.nhc.noaa.gov/data/",
+    "primary_url": "https://www.nhc.noaa.gov/data/hurdat/hurdat2-1851-2025-02272026.txt",
+    "published_update": "2026-02-27",
+    "reason_for_2004_cutoff": "NHC documents storm-size fields beginning in 2004.",
+    "acquisition_sha256": "TO_BE_RECORDED_ONLY_AFTER_PROTOCOL_FREEZE"
+  },
+  "study_window": {
+    "basin": "ATLANTIC",
+    "years": [2004, 2025],
+    "calibration_years": [2004, 2018],
+    "held_out_years": [2019, 2025],
+    "unit": "six_hourly_hurricane_state"
+  },
+  "eligibility": {
+    "status": "HU",
+    "minimum_current_wind_kt": 65,
+    "required_current_fields": [
+      "max_wind",
+      "min_pressure",
+      "r34_ne", "r34_se", "r34_sw", "r34_nw",
+      "r50_ne", "r50_se", "r50_sw", "r50_nw",
+      "r64_ne", "r64_se", "r64_sw", "r64_nw"
+    ],
+    "missing_radius_code": -999,
+    "zero_radius_interpretation": "Observed zero is retained as absence of that threshold wind in that quadrant and is not treated as missing.",
+    "temporal_requirements": [
+      "same-storm observation exactly 24 hours earlier for history comparator",
+      "same-storm observation exactly 24 hours later for target"
+    ]
+  },
+  "target": {
+    "primary": "RAPID_INTENSIFICATION_24H",
+    "definition": "future_max_wind_24h - current_max_wind >= 30 kt",
+    "authority_definition": "NHC rapid intensification definition",
+    "secondary": "future_max_wind_24h - current_max_wind"
+  },
+  "frozen_structural_representation": {
+    "threshold_symmetry": "For each of 34, 50, and 64 kt radii: min(NE,SE,SW,NW) / max(NE,SE,SW,NW), with observed zeros retained; if max radius is zero the threshold symmetry is zero.",
+    "nesting_quality": "Fraction of the eight adjacent threshold relations across four quadrants satisfying r34 >= r50 and r50 >= r64, with all radii nonnegative.",
+    "ucic_noncompensatory_score": "min(symmetry34, symmetry50, symmetry64, nesting_quality)",
+    "additive_structural_comparator": "mean(symmetry34, symmetry50, symmetry64, nesting_quality)",
+    "interpretive_boundary": "These are frozen wind-field geometric relation proxies, not independently established constitutive routes. Failure of the proxy does not by itself falsify the full constitutive-route premise."
+  },
+  "comparators": {
+    "STATE_HISTORY_LOGISTIC": {
+      "features": ["current_max_wind", "current_min_pressure", "prior_24h_wind_change"],
+      "training": "Fit only on 2004-2018 eligible observations; apply unchanged to 2019-2025 holdout.",
+      "optimizer": "deterministic standardized logistic gradient descent",
+      "iterations": 4000,
+      "learning_rate": 0.08,
+      "l2": 0.001
+    },
+    "STATE_HISTORY_PLUS_UCIC": {
+      "features": ["current_max_wind", "current_min_pressure", "prior_24h_wind_change", "ucic_noncompensatory_score"],
+      "training": "Fit only on 2004-2018 eligible observations; apply unchanged to 2019-2025 holdout.",
+      "optimizer": "identical to STATE_HISTORY_LOGISTIC"
+    },
+    "UCIC_SCORE_ONLY": "Direct scalar AUC of ucic_noncompensatory_score on holdout.",
+    "ADDITIVE_STRUCTURAL_ONLY": "Direct scalar AUC of additive_structural_comparator on holdout."
+  },
+  "metrics": {
+    "primary": [
+      "holdout_history_auc",
+      "holdout_history_plus_ucic_auc",
+      "incremental_auc",
+      "storm_cluster_bootstrap_95pct_ci_incremental_auc"
+    ],
+    "secondary": [
+      "holdout_ucic_only_auc",
+      "holdout_additive_structural_auc",
+      "ucic_minus_additive_auc",
+      "holdout_ri_prevalence",
+      "calibration_count",
+      "holdout_count",
+      "holdout_ri_count",
+      "holdout_non_ri_count",
+      "holdout_storm_count",
+      "spearman_ucic_vs_24h_wind_change"
+    ],
+    "bootstrap": {
+      "unit": "storm",
+      "replicates": 1000,
+      "seed": 45161,
+      "predictions_refit_per_bootstrap": false
+    }
+  },
+  "minimum_evaluability": {
+    "calibration_observations": 200,
+    "holdout_observations": 100,
+    "holdout_ri_events": 10,
+    "holdout_non_ri_events": 50,
+    "holdout_unique_storms": 15
+  },
+  "terminal_rules_in_order": [
+    {
+      "disposition": "HURRICANE_STRUCTURAL_COHERENCE_UNEVALUABLE",
+      "when": "Any minimum evaluability threshold fails, acquisition fails, required source schema is absent, or either class is absent for a required AUC."
+    },
+    {
+      "disposition": "HURRICANE_STRUCTURAL_COHERENCE_INCREMENT_NOT_SUPPORTED",
+      "when": "incremental_auc <= 0 OR bootstrap_95pct_ci_upper <= 0"
+    },
+    {
+      "disposition": "HURRICANE_STRUCTURAL_COHERENCE_REDUNDANT_WITH_STATE_HISTORY",
+      "when": "incremental_auc <= 0.02 AND bootstrap_95pct_ci_upper <= 0.02"
+    },
+    {
+      "disposition": "HURRICANE_STRUCTURAL_COHERENCE_AMBIGUOUS",
+      "when": "bootstrap_95pct_ci_lower <= 0 OR incremental_auc < 0.02"
+    },
+    {
+      "disposition": "HURRICANE_STRUCTURAL_SIGNAL_PRESENT_NONCOMPENSATORY_SPECIFICITY_NOT_SUPPORTED",
+      "when": "incremental_auc >= 0.02 AND bootstrap_95pct_ci_lower > 0 AND additive_structural_auc > ucic_only_auc + 0.02"
+    },
+    {
+      "disposition": "UCIC_HURRICANE_STRUCTURAL_COHERENCE_SUPPORTED_WITH_LIMITATIONS",
+      "when": "incremental_auc >= 0.02 AND bootstrap_95pct_ci_lower > 0 AND additive_structural_auc <= ucic_only_auc + 0.02"
+    }
+  ],
+  "stopping_rule": "Perform one complete deterministic acquisition and scoring pass after this protocol is frozen. No post-result change to years, eligibility, structural score, target, comparators, optimizer, metrics, bootstrap, thresholds, or terminal logic is permitted. Technical-only source transport or parser corrections are permitted only if scientific semantics remain unchanged and the failed attempt is preserved.",
+  "post_result_scientific_repair_permitted": false
+}

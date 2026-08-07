@@ -13,6 +13,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const continent = snapshot.continentStatistics;
   const gratitude = snapshot.gratitudeStatistics;
   const stitch = snapshot.stitchStatistics;
+  const beach = snapshot.beachStatistics;
   const water = snapshot.waterStatistics;
   const camera = renderer.getCameraSafety();
   const contract = snapshot.worldContract;
@@ -58,16 +59,13 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       geography?.coastalBindingSampleCount === 7,
 
     deliberateClosedCoastlineConstructed:
-      contract?.gratitudeContinentalSkeleton ===
-        'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
+      contract?.gratitudeContinentalSkeleton === 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
       contract?.gratitudeCoastlineIsUnionOfEllipses === false &&
-      continent?.coastlineRepresentation ===
-        'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
+      continent?.coastlineRepresentation === 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
       continent?.coastlineUnionOfEllipses === false &&
       continent?.coastlineControlPointCount >= 30 &&
-      continent?.coastlineSampleCount >= 400 &&
-      geography?.coastlineRepresentation ===
-        'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
+      continent?.coastlineSampleCount >= 600 &&
+      geography?.coastlineRepresentation === 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1' &&
       geography?.coastlineUnionOfEllipses === false &&
       geography?.coastlinePlanarArea > 1000000 &&
       geography?.coastlinePlanarPerimeter > 4000,
@@ -80,6 +78,33 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       gratitude?.clippedCoastlineTriangleCount > 0 &&
       geography?.coastlineTopology === 'SUBCELL_SCALAR_FIELD_CLIPPED' &&
       geography?.localCoastlineClipTriangleCount > 0,
+
+    continuousCoastalRibbonConstructed:
+      contract?.coastalRibbonReconstructed === true &&
+      contract?.coastalRibbonLandwardEdgeContinuous === true &&
+      beach?.coastalRibbonConstructed === true &&
+      beach?.landwardEdgeContinuous === true &&
+      beach?.seawardEdgeContinuous === true &&
+      beach?.sharesHarborShorelineFunction === true &&
+      beach?.segmentCount >= 300 &&
+      beach?.lateralLayerCount >= 6 &&
+      geography?.coastalRibbonConstructed === true &&
+      geography?.coastalRibbonLandwardEdgeContinuous === true,
+
+    diverseSandbarFieldConstructed:
+      contract?.previewSandbarDiversityConstructed === true &&
+      gratitude?.previewSandbarDiversityConstructed === true &&
+      gratitude?.previewSandbarCount >= 12 &&
+      geography?.previewSandbarDiversityConstructed === true &&
+      geography?.previewSandbarCount >= 12,
+
+    unresolvedContinentsRemainNoncanonicalButReadable:
+      contract?.unresolvedContinentPresentationNoncanonical === true &&
+      contract?.unresolvedContinentPresentation === 'ANISOTROPIC_WARPED_CONTOUR_PREVIEW' &&
+      planet?.unresolvedContinentPresentation === 'ANISOTROPIC_WARPED_CONTOUR_PREVIEW' &&
+      geography?.unresolvedContinentPresentation === 'ANISOTROPIC_WARPED_CONTOUR_PREVIEW' &&
+      planet?.otherContinentsPlacementsCanonical === false &&
+      contract?.otherContinentsPlacementsCanonical === false,
 
     planetaryGratitudeLandRemoved:
       contract?.planetaryGratitudeLandRemoved === true &&
@@ -103,8 +128,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       geography?.continentalApertureIntrusionTriangleCount === 0,
 
     alignedBoundedStitchAnnulus:
-      contract?.localMacroTransition ===
-        'ALIGNED_APERTURE_PLUS_SCALAR_CLIPPED_STITCH_ANNULUS' &&
+      contract?.localMacroTransition === 'ALIGNED_APERTURE_PLUS_SCALAR_CLIPPED_STITCH_ANNULUS' &&
       contract?.stitchWidthAuthoringUnits === 128 &&
       stitch?.explicitAnnulusConstructed === true &&
       stitch?.separateMesh === true &&
@@ -143,15 +167,12 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       geography?.sourceTerrainMutation === false,
 
     continentalReliefHierarchyNormalized:
-      contract?.continentalReliefHierarchy ===
-        'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN' &&
+      contract?.continentalReliefHierarchy === 'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN' &&
       contract?.mountainCoverageBounded === true &&
-      continent?.continentalReliefHierarchy ===
-        'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN' &&
+      continent?.continentalReliefHierarchy === 'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN' &&
       relief?.lowlandMajority === true &&
       relief?.mountainCoverageBounded === true &&
-      geography?.continentalReliefHierarchy ===
-        'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN' &&
+      geography?.continentalReliefHierarchy === 'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN' &&
       geography?.reliefLowlandMajority === true &&
       geography?.reliefMountainCoverageBounded === true,
 
@@ -209,8 +230,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
 
     continuousFourScaleHierarchy:
       Array.isArray(contract?.continuousZoomHierarchy) &&
-      contract.continuousZoomHierarchy.join('|') ===
-        'LOCAL|REGION|CONTINENT|PLANETARY',
+      contract.continuousZoomHierarchy.join('|') === 'LOCAL|REGION|CONTINENT|PLANETARY',
 
     localHydrologyStillCurvesWithPlanet:
       water?.curvedToPlanetSurface === true &&
@@ -243,16 +263,11 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const failedChecks = Object.entries(checks)
     .filter(([, value]) => value !== true)
     .map(([name]) => name);
-
   const mechanicalChecksPassed = failedChecks.length === 0;
 
   return freeze({
-    schema:
-      'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v5',
-    result:
-      mechanicalChecksPassed
-        ? 'MECHANICAL_PASS_AWAITING_USER'
-        : 'FAIL_CLOSED',
+    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v6',
+    result: mechanicalChecksPassed ? 'MECHANICAL_PASS_AWAITING_USER' : 'FAIL_CLOSED',
     mechanicalChecksPassed,
     userAcceptanceEstablished: false,
     operationId: REQUIRED_OPERATION,
@@ -269,6 +284,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       'AUDRALIA',
       'GRATITUDE_CONTINENT',
       'ALIGNED_STITCH_ANNULUS',
+      'CONTINUOUS_COASTAL_RIBBON',
       'HIGH_RESOLUTION_LOCAL_TERRAIN'
     ]),
     checks: freeze(checks),
@@ -279,10 +295,10 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       authoringPreviewOnly: true,
       userGeographicDifferentialRecorded: true,
       latestUserDifferentialDisposition:
-        'MATERIAL_SIGNIFICANT_IMPROVEMENT_WITH_BOUNDED_CORRECTIONS_REQUIRED',
+        'MATERIAL_WORLD_CONTINUITY_SUCCESS_WITH_BOUNDED_COASTAL_AND_CONTINENT_REFINEMENT_REQUIRED',
       userAcceptanceEstablished: false,
       repairRound:
-        'OW01_SUBCELL_COASTLINE_CLEANUP_AND_CONTINENTAL_RELIEF_NORMALIZATION',
+        'OW01_COASTAL_RIBBON_SANDBAR_DIVERSITY_AND_NONCANONICAL_CONTINENT_REFINEMENT',
       ow02Authorized: false,
       liveIntegrationAuthorized: false,
       frontPageIntegrationAuthorized: false,

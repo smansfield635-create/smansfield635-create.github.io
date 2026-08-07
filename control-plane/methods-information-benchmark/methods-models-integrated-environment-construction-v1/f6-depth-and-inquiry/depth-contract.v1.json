@@ -1,0 +1,39 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F6_DEPTH_CONTRACT_v1",
+  "status": "F6_CONSTRUCTION_CANDIDATE",
+  "depthSequence": ["D0","D1","D2","D3","D4"],
+  "depths": {
+    "D0": {"name":"ORIENTATION","purpose":"Identify the object, its current standing, its claim ceiling, and any material qualifier whose omission could change the user's conclusion."},
+    "D1": {"name":"MEANING","purpose":"Explain what the object or test means within its declared scope without reclassification."},
+    "D2": {"name":"STRUCTURE","purpose":"Expose registered structural relations, model/test structure, or other already-declared internal organization without inventing relations."},
+    "D3": {"name":"EVIDENCE","purpose":"Expose evidence details, adverse findings, limitations, scores, uncertainty, and comparator context without changing standing."},
+    "D4": {"name":"PROVENANCE","purpose":"Expose source identity, authority, versions, hashes, workflow or artifact identity, and custody/provenance facts already bound upstream."}
+  },
+  "cumulativeDisclosure": true,
+  "structuralBoundary": {
+    "depthIsF2Axis": false,
+    "depthMutatesLensAxis": false,
+    "depthMutatesViewModeAxis": false,
+    "depthParameterClass": "INQUIRY_ENVELOPE_ONLY",
+    "canonicalScientificStateMustRemainByteEquivalent": true
+  },
+  "laws": [
+    "DEPTH_CHANGES_RESOLUTION_OF_EXPLANATION_NOT_AUTHORITY_OF_THE_SCIENCE",
+    "DELTA_D_DOES_NOT_IMPLY_DELTA_I",
+    "DEPTH_CHANGE_MAY_NOT_MUTATE_ANY_F2_AXIS",
+    "DEPTH_CHANGE_MAY_NOT_RAISE_EVIDENCE_STANDING_OR_CLAIM_CEILING",
+    "DEPTH_CHANGE_MAY_NOT_FILL_UNSET_UNEVALUABLE_OR_NOT_APPLICABLE_FIELDS",
+    "DEPTH_CHANGE_MAY_NOT_CREATE_DELETE_OR_RECLASSIFY_SEMANTIC_RELATIONS",
+    "DEPTH_CHANGE_MAY_NOT_CONVERT_ADVERSE_OR_UNRESOLVED_EVIDENCE_TO_SUPPORT",
+    "DEEPER_DISCLOSURE_MAY_ADD_AUTHORIZED_FIELDS_BUT_MAY_NOT_REPLACE_OR_SUPPRESS_REQUIRED_SHALLOW_QUALIFIERS",
+    "DIRECT_ENTRY_AT_ANY_DEPTH_MUST_BE_VALID_WITHOUT_PRIOR_NARRATIVE_TRAVERSAL",
+    "MATERIAL_QUALIFIERS_MUST_APPEAR_AT_OR_BEFORE_THE_DEPTH_AT_WHICH_OMISSION_COULD_CHANGE_USER_CONCLUSION"
+  ],
+  "invalidDispositions": ["DEPTH_NO_MATCH","DEPTH_INSUFFICIENT","CONTENT_NO_MATCH","CONTENT_AMBIGUOUS","PROFILE_INVALID","STATE_AUTHORITY_FAILURE","FIELD_NOT_AUTHORIZED_AT_DEPTH"],
+  "silentDepthEscalationAuthorized": false,
+  "silentScientificFallbackAuthorized": false,
+  "publicMutationAuthorized": false,
+  "visualConstructionAuthorized": false,
+  "spatialTopologyAuthorized": false,
+  "geometryAuthorized": false
+}

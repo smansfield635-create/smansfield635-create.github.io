@@ -1,0 +1,38 @@
+{
+  "operation": "UCIC_ARM_B_FDIC_LONGITUDINAL_COLLAPSE_EARLY_WARNING_EXTENSION_v1",
+  "checkpoint": "CP2_SOURCE_SCHEMA_CORRECTION_BEFORE_SCIENTIFIC_EXECUTION",
+  "status": "PASS_CLOSED_TECHNICAL_CORRECTION",
+  "trigger_run": 31147106344,
+  "trigger_artifact": 8981871200,
+  "trigger_observation": {
+    "official_responses_downloaded": 11,
+    "source_evaluable_banks_reported": 0,
+    "cause_1": "REPDTE values are returned as YYYYMMDD but extractor initially parsed only YYYY-MM-DD",
+    "cause_2": "FDIC NIM is net interest income, while the preregistered factor is net interest margin"
+  },
+  "corrections": [
+    {
+      "type": "DATE_PARSER_TRANSPORT_REPAIR",
+      "from": "YYYY-MM-DD only",
+      "to": "accept YYYYMMDD or YYYY-MM-DD",
+      "scientific_effect": "NONE"
+    },
+    {
+      "type": "SOURCE_FIELD_IDENTIFIER_CORRECTION",
+      "intended_factor": "MARGIN_CAPACITY = Net Interest Margin",
+      "incorrect_identifier": "NIM",
+      "correct_identifier": "NIMY",
+      "semantic_change": "NONE",
+      "basis": "FDIC/RIS terminology: NIM is net interest income; NIMY is net interest margin ratio"
+    }
+  ],
+  "prohibited": [
+    "factor_change",
+    "threshold_change",
+    "cohort_change",
+    "outcome_specific_repair",
+    "use_of_failed_run_as_scientific_result"
+  ],
+  "disposition_of_trigger_run": "TECHNICAL_FAIL_BEFORE_SCIENTIFIC_SCORING",
+  "next_action": "RERUN_CP2_WITH_ONLY_THE_TWO_FROZEN_TECHNICAL_CORRECTIONS"
+}

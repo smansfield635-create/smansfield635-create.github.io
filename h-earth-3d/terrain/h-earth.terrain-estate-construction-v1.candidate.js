@@ -146,7 +146,7 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY = freeze({
     pumpConstructionAuthorized: false
   },
   cavern: {
-    exteriorReserveCenter: { x: -16, z: -236 },
+    center: { x: -16, z: -236 },
     radius: { x: 16, z: 13 },
     coreRadius: 0.58,
     shallowApronCutDepth: 1.5,

@@ -1,10 +1,6 @@
 name: UCIC Hurricane Raw TC-RADAR Mechanistic QC Corrected Rerun v1
 
 on:
-  pull_request:
-    paths:
-      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/**'
-      - '.github/workflows/ucic-hurricane-raw-tc-radar-mechanistic-qc-corrected-rerun-v1.yml'
   workflow_dispatch:
 
 permissions:

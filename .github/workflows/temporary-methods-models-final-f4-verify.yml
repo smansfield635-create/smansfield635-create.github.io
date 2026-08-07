@@ -1,0 +1,37 @@
+name: Temporary Final Program F4 Scientific Content Binding Verify
+
+on:
+  push:
+    branches:
+      - construction/methods-models-integrated-environment-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/**'
+      - '.github/workflows/temporary-methods-models-final-f4-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-f4-scientific-content-binding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify F4 scientific content binding fail-closed
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/verify.v1.mjs | tee /tmp/f4-verification.log
+      - name: Require terminal F4 contract
+        shell: bash
+        run: grep -F 'PASS_F4_SCIENTIFIC_CONTENT_BINDING_v1' /tmp/f4-verification.log
+      - name: Preserve F4 verification log
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-models-final-program-f4-scientific-content-binding-verification
+          if-no-files-found: error
+          retention-days: 90
+          path: /tmp/f4-verification.log

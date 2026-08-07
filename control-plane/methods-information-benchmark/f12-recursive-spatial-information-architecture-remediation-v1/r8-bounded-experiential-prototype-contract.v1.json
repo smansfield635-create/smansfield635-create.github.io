@@ -1,0 +1,191 @@
+{
+  "schema": "METHODS_MODELS_F12_R8_BOUNDED_EXPERIENTIAL_PROTOTYPE_CONTRACT_v1",
+  "program": "F12_RECURSIVE_SPATIAL_INFORMATION_ARCHITECTURE_REMEDIATION_v1",
+  "checkpoint": "R8_BOUNDED_EXPERIENTIAL_PROTOTYPE",
+  "status": "ENGINEERING_CANDIDATE_AWAITING_USER_DIFFERENTIAL",
+  "constructionClass": "ISOLATED_VISIBLE_PHONE_USABLE_RECURSIVE_SPATIAL_PROTOTYPE",
+  "parentAuthority": {
+    "operation": "F12_R8_R12_CONTINUATION_CORRIDOR_FREEZE_v1",
+    "head": "b0efa41c13fa061828bf7674a97b35aacaa34071",
+    "tree": "321feeacdad97388eca6c329225e057ecd2e8272",
+    "contractGitBlobSha": "86ea28520cc4954ab533142fc22abd0cac5a9d9e",
+    "verifierGitBlobSha": "21350fd8c403dfb7e05190dd5f5ec44b1de2b546",
+    "workflowGitBlobSha": "cb8b94397667bdafcab632e53ab067c0a662131c",
+    "r8Status": "ELIGIBLE_READY_FOR_EXECUTION"
+  },
+  "frozenScientificAuthority": {
+    "head": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+    "scientificStateDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+    "relationGraphDigest": "4dabc8872082535d01d9bfae3cd9661be68dcf7e1cd6aed5280a9028d4b8137b",
+    "projectionGraphDigest": "9ebef4a6b8102ffd251c8e7809d379bff560d09fe9c75baa3f707768927b6ce8",
+    "scientificMutationPermitted": false
+  },
+  "consumes": {
+    "R3": "SPATIAL_CONTEXT_INTERPRETER_v1",
+    "R4": "SPATIAL_RECURSIVE_NAVIGATION_STATE_v1",
+    "R5": "SPATIAL_CONTEXT_BOUND_RELATION_DISCLOSURE_v1",
+    "R6": "SPATIAL_TRANSFORMATION_GRAMMAR_v1",
+    "R7": "SPATIAL_CONTINUITY_ACCESSIBILITY_STATE_v1"
+  },
+  "prototype": {
+    "prototypeId": "METHODS_F12_R8_BATTERY_VERTICAL_PROTOTYPE_v1",
+    "reviewSurface": "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/index.html",
+    "scope": "ONE_BOUNDED_METHODS_AND_MODELS_BATTERY_VERTICAL",
+    "destination": "METHODS_AND_MODELS",
+    "studyId": "BATTERY_COHERENCE_HELDOUT_STUDY",
+    "studyStanding": "DOMAIN_SPECIFIC_HELD_OUT_EMPIRICAL_SUPPORT_WITH_ADVERSE_COMPONENT_TESTS",
+    "evaluationCycles": 1653,
+    "claimIds": [
+      "UCIC_CLAIM_BATTERY_HELDOUT_DOMAIN_SIGNAL",
+      "UCIC_CLAIM_BATTERY_INCREMENT_OVER_BURDEN",
+      "UCIC_CLAIM_BATTERY_HSTAR_INCREMENT",
+      "UCIC_CLAIM_BATTERY_HARD_MQ"
+    ],
+    "relationIds": [
+      "BATTERY_DOMAIN",
+      "BATTERY_BURDEN",
+      "BATTERY_HSTAR",
+      "BATTERY_MQ"
+    ],
+    "relationDirectionRequirement": {
+      "minimumSupporting": 1,
+      "minimumAdverse": 1,
+      "actualSupporting": 1,
+      "actualAdverse": 3
+    },
+    "boundedScopeDisclosureRequired": true,
+    "mayRepresentDestinationAsComplete": false
+  },
+  "requiredStructuralDiversity": {
+    "familyTraversal": true,
+    "recursiveDepth": true,
+    "foregroundBackgroundChange": true,
+    "typedRelations": true,
+    "adverseOrMixedEvidence": true,
+    "backtracking": true,
+    "orientationRetention": true,
+    "textFirstAccessibilityEquivalence": true,
+    "meaningfulSpatialTransformation": true
+  },
+  "navigation": {
+    "semanticRoute": [
+      "ROOT",
+      "DESTINATION::METHODS_AND_MODELS",
+      "CLAIM::<BATTERY_CLAIM>",
+      "RELATION::<BATTERY_RELATION>",
+      "STUDY::BATTERY_COHERENCE_HELDOUT_STUDY"
+    ],
+    "returnLaw": "BACK_RESTORES_EXACT_PRIOR_PROTOTYPE_CONTEXT_AND_METHODS_AND_MODELS_ORIENTATION",
+    "touchPointerKeyboardEquivalentControls": true,
+    "primaryNavigationMustBeSemanticControl": true,
+    "decorativeTransformAsPrimaryNavigation": false
+  },
+  "foregroundBackgroundHierarchy": {
+    "foreground": "CURRENT_ACTIVE_CONTEXT_CARD_AND_CURRENT_LOCAL_EVIDENCE",
+    "background": "ANCESTOR_CONTEXT_CARDS_AND_NONACTIVE_LOCAL_NEIGHBORS",
+    "backgroundMaySuppressRequiredAdverseEvidence": false,
+    "foregroundMayPromoteScientificStanding": false,
+    "visualProximityMayCreateScientificRelation": false
+  },
+  "relationDisclosure": {
+    "default": "CONTEXT_LOCAL_ONLY",
+    "studyContextMayExpose": "ONLY_DECLARED_RELATIONS_FROM_CURRENT_SOURCE_STUDY_WITHIN_CURRENT_DESTINATION",
+    "claimContextMayExpose": "ONLY_DECLARED_RELATIONS_FOR_CURRENT_CLAIM",
+    "globalRelationDumpDefault": false,
+    "adverseRelationsMustRemainVisible": true,
+    "claimCeilingMustRemainVisible": true
+  },
+  "spatialPresentation": {
+    "r6AuthorizedTransformationCountInCurrentCorpus": 0,
+    "r6TransformExecutionAuthorized": false,
+    "presentationResponseTransform": "RECURSIVE_DEPTH_EMBODIMENT_v1",
+    "presentationTransformAuthorityBasis": "R8_ISOLATED_VISIBLE_PROTOTYPE_AUTHORITY_PLUS_R4_ACTIVE_DEPTH_AND_R3_FOREGROUND_BACKGROUND_STATE",
+    "presentationTransformScientificAuthority": false,
+    "presentationTransformNavigationAuthority": false,
+    "presentationTransformCreatesR6SemanticAuthority": false,
+    "presentationTransformIsPrimaryNavigation": false,
+    "meaning": "VISUALLY_EMBODY_ALREADY_AUTHORIZED_RECURSIVE_DEPTH_AND_CONTEXT_CHANGE_WITH_REVERSIBLE_CARD_TRANSLATION_SCALE_AND_DEPTH",
+    "reducedMotionEquivalentRequired": true,
+    "law": "R8_MAY_EMBODY_EXISTING_NAVIGATION_DEPTH_BUT_MAY_NOT_LAUNDER_PRESENTATION_RESPONSE_INTO_R6_TRANSFORMATION_AUTHORITY"
+  },
+  "accessibilityAndTextFirst": {
+    "sameSemanticStateCore": true,
+    "sameRelationSet": true,
+    "sameClaimCeilings": true,
+    "sameReturnOperations": true,
+    "sameOrientation": true,
+    "spatialPresentationMayBeDisabled": true,
+    "scientificRecoverabilityMayRequireSpatialInteraction": false,
+    "keyboardBackOperations": ["Escape", "Alt+ArrowLeft", "BackspaceOutsideEditableControl"],
+    "pointerTouchBackGesture": "RIGHT_SWIPE_ON_SPATIAL_STAGE",
+    "focusManagementRequired": true,
+    "reducedMotionRequired": true
+  },
+  "authorized": [
+    "CONSTRUCT_ISOLATED_VISIBLE_PROTOTYPE",
+    "CONSUME_R3_INTERPRETER",
+    "CONSUME_R4_RECURSIVE_NAVIGATION",
+    "CONSUME_R5_CONTEXT_BOUND_RELATION_DISCLOSURE",
+    "CONSUME_R6_TRANSFORMATION_SEMANTICS_AS_EMPTY_CURRENT_CORPUS_AUTHORITY",
+    "CONSUME_R7_CONTINUITY_AND_ACCESSIBILITY",
+    "IMPLEMENT_TOUCH_POINTER_KEYBOARD_EQUIVALENT_CONTROLS",
+    "IMPLEMENT_FOREGROUND_BACKGROUND_HIERARCHY",
+    "IMPLEMENT_RECURSIVE_DEPTH",
+    "IMPLEMENT_RETURN_PATH",
+    "IMPLEMENT_CONTEXT_LOCAL_RELATION_DISCLOSURE",
+    "IMPLEMENT_NONAUTHORITATIVE_RECURSIVE_DEPTH_PRESENTATION_TRANSFORM",
+    "EXPOSE_PHONE_USABLE_REVIEW_SURFACE"
+  ],
+  "prohibited": [
+    "FULL_ESTATE_MATERIALIZATION",
+    "PUBLIC_METHODS_REPLACEMENT",
+    "LIVE_DEPLOYMENT",
+    "MERGE_TO_MAIN",
+    "F1_THROUGH_F11_MUTATION",
+    "R0_THROUGH_R7_MUTATION",
+    "SCIENTIFIC_REOPENING",
+    "SCIENTIFIC_CLAIM_UPGRADE",
+    "UNDECLARED_RELATION_CREATION",
+    "GLOBAL_RELATION_DUMP_AS_DEFAULT",
+    "DECORATIVE_TRANSFORM_AS_PRIMARY_NAVIGATION",
+    "R6_TRANSFORMATION_AUTHORITY_INVENTION",
+    "ADVERSE_EVIDENCE_SUPPRESSION",
+    "CLAIM_CEILING_PROMOTION",
+    "VISUAL_PROXIMITY_INFERENCE"
+  ],
+  "engineeringGates": {
+    "engineeringPassRequired": true,
+    "authorityPassRequired": true,
+    "traceabilityPassRequired": true,
+    "exactHeadVerificationRequired": true,
+    "phoneUsableReviewSurfaceRequired": true,
+    "userDifferential": "NOT_YET_REVIEWED",
+    "userDifferentialRequired": true,
+    "passClosed": false,
+    "r9Unlock": false
+  },
+  "userDifferential": {
+    "current": "NOT_YET_REVIEWED",
+    "authorized": [
+      "MATERIAL_IMPROVEMENT",
+      "NO_MATERIAL_IMPROVEMENT",
+      "REGRESSION",
+      "MIXED",
+      "NOT_YET_REVIEWED"
+    ],
+    "terminalPassLaw": "R8_PASS_CLOSED_IFF_ENGINEERING_PASS_AND_AUTHORITY_PASS_AND_TRACEABILITY_PASS_AND_USER_DIFFERENTIAL_MATERIAL_IMPROVEMENT",
+    "reviewMustTargetExactCandidateHead": true,
+    "closureAfterMaterialImprovement": "SEPARATE_USER_DIFFERENTIAL_RECEIPT_MAY_CLOSE_R8_ONLY_IF_PROTOTYPE_PAYLOAD_IS_UNCHANGED_FROM_REVIEWED_HEAD"
+  },
+  "onEngineeringPass": {
+    "R8": "ENGINEERING_PASS_AWAITING_USER_DIFFERENTIAL",
+    "R9": "BLOCKED_BY_R8_USER_DIFFERENTIAL",
+    "R10": "BLOCKED_BY_R9",
+    "R11": "BLOCKED_BY_R10",
+    "R12": "BLOCKED_BY_R11",
+    "mainMutation": "NONE",
+    "publicMutation": "NONE",
+    "scientificMutation": "NONE"
+  },
+  "userDifferentialRequired": true
+}

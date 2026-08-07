@@ -336,6 +336,18 @@
       "scopeHash": "5b4f6b33d301429d23265c40ef4bd95a8555aec92574b5bf78da426e6eac74b5",
       "state": "ADMITTED_LOCKED"
     },
+    "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8": {
+      "governingHead": "c961469d366f39422e143a2c6156e79b1c991735",
+      "lockGeneration": 471,
+      "lockScope": "H_EARTH:AUDRALIA_OPEN_WORLD_CONTINUITY:PR741:EXACT_HEAD_STATE_RECONCILIATION_MERGE:V3",
+      "operationId": "H_EARTH_AUDRALIA_OPEN_WORLD_OW00_CLOSURE_OW01_HANDOFF_MERGE_v3",
+      "procedureLocatorDigest": "80b3138846590cbb06c033a15b93ef94a2694f655a7c2a3ca24f6af69d6e2111",
+      "released": false,
+      "requestDigest": "16742d635ad3a0c8726b2349fe01cfdf69b7e651e989fab89d21284643c22ff4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8",
+      "state": "ADMITTED_LOCKED"
+    },
     "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 460,
@@ -1048,7 +1060,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 470,
+  "lockGeneration": 471,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

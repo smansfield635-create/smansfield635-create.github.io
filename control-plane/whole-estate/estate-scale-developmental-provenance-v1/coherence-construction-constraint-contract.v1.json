@@ -1,0 +1,42 @@
+{
+  "schema": "WHOLE_ESTATE_COHERENCE_CONSTRUCTION_CONSTRAINT_CONTRACT_v1",
+  "status": "CHECKPOINT_4_CONSTRUCTION_CANDIDATE",
+  "boundedStatement": "Multiple estate artifacts and later governance formalizations are consistent with coherence operating as a construction constraint across identity, routing, authority, evidence handling and representation.",
+  "statementClass": "DEVELOPMENTAL_PROVENANCE",
+  "claimCeiling": "ESTATE_SCALE_DEVELOPMENTAL_CONCORDANCE_ONLY",
+  "scientificStandingCreated": false,
+  "preregistrationCreated": false,
+  "prospectiveConfirmationCreated": false,
+  "ucicValidationCreated": false,
+  "universalClaimCreated": false,
+  "rules": [
+    "DEVELOPMENTAL_CONCORDANCE_DOES_NOT_EQUAL_SCIENTIFIC_VALIDATION",
+    "CONSTRUCTION_CONSTRAINT_DOES_NOT_EQUAL_SCIENTIFIC_PREDICTION",
+    "CONSTRUCTION_SUCCESS_DOES_NOT_EQUAL_UCIC_CONFIRMATION",
+    "LATER_FRAMEWORK_ALIGNMENT_DOES_NOT_EQUAL_EARLIER_DECLARED_INTENT",
+    "REPOSITORY_CHRONOLOGY_DOES_NOT_EQUAL_PREREGISTRATION",
+    "CI_OR_HASH_PROVENANCE_DOES_NOT_EQUAL_SCIENTIFIC_TRUTH"
+  ],
+  "permittedUses": [
+    "explain design lineage",
+    "explain why identity, routing and authority separation recur across estate artifacts",
+    "show which constraints were explicit at which time",
+    "connect estate development to later formalized governance without backdating intent",
+    "support navigation into source provenance given the current evidence standing"
+  ],
+  "prohibitedUses": [
+    "claim the estate itself is an empirical validation study",
+    "claim the estate was preregistered as a UCIC test",
+    "claim visual or product success confirms UCIC",
+    "use later governance coherence to overwrite adverse scientific results",
+    "use scientific results to retroactively prove earlier design intent",
+    "upgrade a retrospective source to a contemporaneous source"
+  ],
+  "falsifiers": [
+    "RETROSPECTIVE_INTERPRETATION_PRESENTED_AS_PREREGISTRATION",
+    "CONSTRUCTION_PRESENTED_AS_PROOF_OF_UCIC"
+  ],
+  "rollback": "restore Checkpoint 1 provenance ledger",
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false
+}

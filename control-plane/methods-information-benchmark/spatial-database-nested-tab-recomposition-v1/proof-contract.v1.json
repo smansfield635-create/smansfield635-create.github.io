@@ -27,7 +27,7 @@
       "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/information-architecture.v1.json",
       "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/interaction-state-contract.v1.json"
     ],
-    "expected": "9735a99659f221a98c8c292e936bcddd3d70cac823a418da61659dfcbf32f79d"
+    "expected": "8b0fb44da3ee677d91af8d8d93149d777942df5e626e56b447aeef0a9158b809"
   },
   "sourceBindings": {
     "permanentRatificationReceiptBlob": "0375241beb7ae76030402fb882d9cc1d46b257a5",

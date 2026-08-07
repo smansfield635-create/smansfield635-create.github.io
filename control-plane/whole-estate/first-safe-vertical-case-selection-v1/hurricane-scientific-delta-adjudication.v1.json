@@ -1,0 +1,108 @@
+{
+  "schema": "WHOLE_ESTATE_SCIENTIFIC_DELTA_ADJUDICATION_v1",
+  "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
+  "delta": {
+    "DELTA_ID": "UCIC_HURRICANE_TC_RADAR_METADATA_EXECUTION_2026_08_07",
+    "SOURCE_IDENTITY": {
+      "pr": 734,
+      "prState": "OPEN_DRAFT_UNMERGED",
+      "exactHead": "f6a7267e010a42cce94a7ea292af8e1974591ae2",
+      "baseHead": "3bb1b21997d5f5f01f99511a8c9a8f75a5282b6b",
+      "workflowRun": 31160027240,
+      "workflowResult": "SUCCESS",
+      "artifactId": 8986676118,
+      "artifactDigest": "sha256:e28e31a070e8b3a7d2350bb4d642898d74f7a717fa923ea62761c3a443d7ad12",
+      "executionProtocolBlob": "3d225c034d8ca23d7a39c39852db43717a08820d",
+      "inputSourceSha256": "ec1c873225cea14f9f8f00b2517081e0ddb4890e058e3ee3e34165c8bfa3b5a1"
+    },
+    "DEVELOPMENT_CLASS": "FUTURE_EVIDENCE_DELTA",
+    "CONSTITUTIONAL_IMPACT": false,
+    "CP_REPAIR_REQUIRED": false,
+    "NARRATIVE_IMPACT": "UPDATE_HURRICANE_STANDING_FROM_SUCCESSOR_TEST_UNEXECUTED_TO_BOUNDED_EMPIRICAL_SIGNAL_PRESENT_INCONCLUSIVE",
+    "CLAIM_CEILING": "retrospective TC-RADAR structural early-warning evidence only; not constitutive-route identification, causality, prospectivity, or universality",
+    "PROVENANCE_STATUS": "EXECUTION_HASH_AND_ACTIONS_ARTIFACT_IDENTIFIED",
+    "DISPOSITION": "ADMIT_BOUNDED_EMPIRICAL_RESULT_WITHOUT_CLAIM_UPGRADE"
+  },
+  "operation": "UCIC_HURRICANE_MECHANISTIC_EARLY_WARNING_EXECUTION_v1",
+  "executionClassification": "RETROSPECTIVE_PREACQUISITION_FIXED_ANALYSIS_ON_TC_RADAR_MERGED_METADATA",
+  "sourceObject": "NOAA TC-RADAR merged-analysis metadata as distributed by TC-ATLAS",
+  "analysisWindow": [2004, 2024],
+  "calibrationYears": [2004, 2018],
+  "holdoutYears": [2019, 2024],
+  "outcome": "24h rapid intensification defined as dvmax_24h >= 30 kt",
+  "structuralProxy": {
+    "C_t": "min(1-ECDF_train(tilt), 1-ECDF_train(rmw), ECDF_train(coverage))",
+    "relations": [
+      "low vortex tilt",
+      "compact radius of maximum wind",
+      "radar structural coverage"
+    ],
+    "M_t": "C_t - previous same-storm C_t",
+    "eligiblePreviousIntervalHours": [6, 36],
+    "rawRadarMechanisticReconstruction": "NOT_EXECUTED"
+  },
+  "sample": {
+    "sourceTotalCases": 436,
+    "eligibleCompleteRows": 352,
+    "momentumEvaluableRows": 228,
+    "calibrationRows": 87,
+    "holdoutRows": 141,
+    "calibrationStorms": 36,
+    "holdoutStorms": 35,
+    "calibrationRiEvents": 9,
+    "holdoutRiEvents": 16,
+    "holdoutNonRi": 125,
+    "COnlyAllHoldoutRows": 202,
+    "COnlyAllHoldoutEvents": 19
+  },
+  "results": {
+    "stateEnvironmentAuc": 0.6525,
+    "structuralCMOnlyAuc": 0.63825,
+    "combinedAuc": 0.6765,
+    "incrementalAuc": 0.02400000000000002,
+    "stormClusterBootstrap": {
+      "replicates": 2000,
+      "ci95": [-0.003222629986553102, 0.061581661259962304],
+      "median": 0.020833333333333315
+    },
+    "COnlyAllEligibleAuc": 0.6738567730802415,
+    "matchedStateContrast": {
+      "pairs": 69,
+      "highCoherenceRiRate": 0.15942028985507245,
+      "lowCoherenceRiRate": 0.07246376811594203,
+      "riskDifference": 0.08695652173913042
+    },
+    "terminalDisposition": "SIGNAL_PRESENT_INCONCLUSIVE"
+  },
+  "adjudication": {
+    "newProjectEmpiricalResult": true,
+    "staticHurdat2ProxyRemains": "NEGATIVE",
+    "structuralMetadataStanding": "POSITIVE_SIGNAL_INCONCLUSIVE",
+    "incrementalPredictionSupportThresholdCleared": false,
+    "reason": "observed incremental AUC is positive but storm-cluster bootstrap 95% interval includes zero",
+    "hurricaneEarlyWarningConfirmed": false,
+    "causalityEstablished": false,
+    "prospectivityEstablished": false,
+    "universalityEstablished": false,
+    "rawRadarMechanisticStructureTested": false,
+    "scientificClaimUpgradeAuthorized": false
+  },
+  "trajectorySpecificationBoundary": {
+    "previousPreferredSpecification": "time-normalized or window-normalized slope because reconnaissance timing is irregular",
+    "executedSpecification": "raw C_t difference with previous observation admitted only when interval is 6-36 hours",
+    "specificationDifferencePresent": true,
+    "effectOnStanding": "does not erase the bounded result but prevents treating M_t as execution of the strongest previously preferred time-normalized trajectory construct"
+  },
+  "checkpoint7Impact": {
+    "eligibleForCandidateConsideration": true,
+    "selectedAsFirstVerticalCase": false,
+    "reasonNotSelected": [
+      "terminal standing is SIGNAL_PRESENT_INCONCLUSIVE",
+      "scientific line remains active and raw-radar mechanistic successor is unexecuted",
+      "M_t specification is not the previously preferred time-normalized slope",
+      "a completed registered case with a simpler fixed ceiling is available for the first controlled demonstration"
+    ],
+    "scientificRejection": false,
+    "laterMethodsModelsUsePermitted": true
+  }
+}

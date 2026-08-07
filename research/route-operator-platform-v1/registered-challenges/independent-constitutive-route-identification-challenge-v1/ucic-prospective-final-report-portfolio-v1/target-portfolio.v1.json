@@ -1,0 +1,82 @@
+{
+  "governing_invariant_head": "cac25b781909d12f6b53b4c3440adcd7c1356eb0",
+  "operation_id": "UCIC_PROSPECTIVE_FINAL_REPORT_TARGET_PORTFOLIO_v1",
+  "parent_internal_adjudication_head": "9f322fa2726c75ca7f742ff11ad9843fc52e7c9b",
+  "portfolio_state": {
+    "domains_represented": 5,
+    "final_report_unblinding": "PROHIBITED",
+    "independent_analysts_registered": 0,
+    "pre_outcome_packets_complete": 0,
+    "prediction_freeze": false,
+    "scientific_result": null,
+    "targets_registered": 5
+  },
+  "selection_rule": {
+    "adverse_sparse_difficult_cases_retained": true,
+    "authoritative_registries_only": true,
+    "final_probable_cause_absent_required": true,
+    "one_case_per_materially_distinct_domain": true,
+    "ongoing_at_cutoff_required": true,
+    "pre_event_architecture_evidence_required": true,
+    "preliminary_public_record_required": true,
+    "replacement_allowed_only_for": [
+      "CUSTODY_FAILURE",
+      "FINAL_REPORT_PUBLISHED_BEFORE_PREDICTION_FREEZE",
+      "INSUFFICIENT_PRE_EVENT_ARCHITECTURE_EVIDENCE"
+    ]
+  },
+  "source_cutoff": "2026-08-06T20:34:00-05:00",
+  "targets": [
+    {
+      "agency": "NTSB",
+      "case_id": "TARGET_AVIATION_DCA26MA161",
+      "domain": "AVIATION",
+      "event_date": "2026-03-22",
+      "investigation_id": "DCA26MA161",
+      "source_url": "https://www.ntsb.gov/investigations/Pages/DCA26MA161.aspx",
+      "status_at_cutoff": "ONGOING",
+      "title": "LaGuardia runway collision"
+    },
+    {
+      "agency": "NTSB",
+      "case_id": "TARGET_RAIL_RRD26FR016",
+      "domain": "RAILROAD",
+      "event_date": "2026-06-11",
+      "investigation_id": "RRD26FR016",
+      "source_url": "https://www.ntsb.gov/investigations/Pages/RRD26FR016.aspx",
+      "status_at_cutoff": "ONGOING",
+      "title": "Norfolk Southern derailment and hazardous-materials release near Wartburg, Tennessee"
+    },
+    {
+      "agency": "NTSB",
+      "case_id": "TARGET_MARINE_DCA26FM012",
+      "domain": "MARINE_MOVABLE_INFRASTRUCTURE",
+      "event_date": "2026-03-31",
+      "investigation_id": "DCA26FM012",
+      "source_url": "https://www.ntsb.gov/investigations/Pages/DCA26FM012.aspx",
+      "status_at_cutoff": "ONGOING",
+      "title": "Contact of towing vessel Karen Andrie with the EJ&E Railroad Bridge"
+    },
+    {
+      "agency": "NTSB",
+      "case_id": "TARGET_PIPELINE_PLD26FR007",
+      "domain": "PIPELINE",
+      "event_date": "2026-05-28",
+      "investigation_id": "PLD26FR007",
+      "source_url": "https://www.ntsb.gov/investigations/Pages/PLD26FR007.aspx",
+      "status_at_cutoff": "ONGOING",
+      "title": "Dallas natural-gas pipeline incident"
+    },
+    {
+      "agency": "CSB",
+      "case_id": "TARGET_PROCESS_NIPPON_DYNAWAVE_2026_05_26",
+      "domain": "PROCESS_CHEMICAL_INFRASTRUCTURE",
+      "event_date": "2026-05-26",
+      "investigation_id": "NIPPON_DYNAWAVE_2026_05_26",
+      "source_url": "https://www.csb.gov/nippon-dynawave-packaging-company-fatal-tank-collapse-/",
+      "status_at_cutoff": "CURRENT_FINAL_REPORT_ABSENT",
+      "title": "Nippon Dynawave Packaging Company fatal tank collapse"
+    }
+  ],
+  "version": "1.0.0"
+}

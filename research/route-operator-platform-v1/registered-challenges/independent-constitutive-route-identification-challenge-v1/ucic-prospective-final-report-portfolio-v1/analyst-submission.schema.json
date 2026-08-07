@@ -1,0 +1,81 @@
+{
+  "$id": "UCIC_PROSPECTIVE_FINAL_REPORT_ANALYST_SUBMISSION_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analyst_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "arm": {
+      "enum": [
+        "UCIC_CONSTITUTIVE_ROUTE",
+        "GENERIC_DEPENDENCY_GRAPH",
+        "OUTPUT_HISTORY_OR_BLACK_BOX"
+      ]
+    },
+    "case_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "explicit_falsifiers": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "identity_criterion": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "intervention_predictions": {
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "required_capacities": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "routes": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "submission_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "system_boundary": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "uncertainty": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "case_id",
+    "arm",
+    "analyst_id",
+    "system_boundary",
+    "identity_criterion",
+    "required_capacities",
+    "routes",
+    "intervention_predictions",
+    "uncertainty",
+    "explicit_falsifiers",
+    "submission_hash"
+  ],
+  "type": "object"
+}

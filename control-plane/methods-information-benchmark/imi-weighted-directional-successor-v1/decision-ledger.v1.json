@@ -1,0 +1,57 @@
+{
+  "schema": "IMI_SUCCESSOR_DECISION_LEDGER_v1",
+  "status": "OPEN_DECISIONS_PRESERVED",
+  "protectedFrozenHead": "5941e4841f2faf2664a0ec400642d85fd68e37e9",
+  "decisions": [
+    {
+      "id": "GOVERNED_SCOPE_DENOMINATOR",
+      "disposition": "RESOLVED_RULE",
+      "rule": "Every S_ir must use a route-specific declared denominator; output, population, capacity, route share, and maneuverability denominators are not interchangeable."
+    },
+    {
+      "id": "RELATION_MEMBERSHIP_VS_CRITICALITY_VS_CAUSAL_REACH",
+      "disposition": "RESOLVED_SEPARATION",
+      "rule": "R_ir, C_r, and causal attribution are separate scientific objects."
+    },
+    {
+      "id": "PERSISTENCE_TAXONOMY",
+      "disposition": "RESOLVED_AS_VECTOR",
+      "rule": "Duration, recurrence, continuation evidence, memory, and irreversibility remain separate components rather than one generic multiplier."
+    },
+    {
+      "id": "DIRECTION_SCALE",
+      "disposition": "HELD_DOMAIN_NORMALIZATION",
+      "rule": "Direction sign is universal; magnitude normalization must be frozen per domain before outcomes."
+    },
+    {
+      "id": "OVERLAP_ATTRIBUTION",
+      "disposition": "RESOLVED_RULE",
+      "rule": "Use canonical event-route-time attribution units and dependency-graph allocation to prevent duplicate counting."
+    },
+    {
+      "id": "HIERARCHICAL_ROUTE_AGGREGATION",
+      "disposition": "HELD_FOR_FORMAL_OPERATOR",
+      "rule": "Aggregate changes within a route first, then combine routes under explicit critical-route gates."
+    },
+    {
+      "id": "CRITICAL_ROUTE_NONCOMPENSATION",
+      "disposition": "RESOLVED_PRINCIPLE",
+      "rule": "Failure of an indispensable constitutive route cannot be offset by unrelated gains elsewhere."
+    },
+    {
+      "id": "INTRINSIC_RESTORATION_VS_EXTERNAL_SUPPORT",
+      "disposition": "RESOLVED_SEPARATION",
+      "rule": "Restoration requires intrinsic rebuilding and reduced dependency; supported output continuity is a separate state."
+    },
+    {
+      "id": "HEALTH_STOCK_VS_TRAJECTORY_FLOW",
+      "disposition": "RESOLVED_SEPARATION",
+      "rule": "Condition is a stock and direction is a flow; both remain visible in the factorial system state Z_t."
+    },
+    {
+      "id": "GOVERNED_FUTURE_TRAJECTORY",
+      "disposition": "HELD_FOR_OPERATIONALIZATION",
+      "rule": "Candidate measures include admissible reachable-state share, redundancy, restoration options, support dependence, and irreversible-transition risk."
+    }
+  ]
+}

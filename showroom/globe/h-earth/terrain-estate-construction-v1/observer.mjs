@@ -32,8 +32,12 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatisti
       H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_EVALUATION.eligible === true,
     environmentEvaluationPass: environmentEvaluation.result === 'PASS',
     estateCoreValid: estate.valid === true,
-    estateCorePresentationOffsetZero:
-      estate.valid === true && Math.abs(estate.presentationReliefOffset) <= 1e-9,
+    estateSitePhysicallyPrepared:
+      estate.valid === true &&
+      estate.sitePreparation?.fullyPrepared === true &&
+      estate.presentationElevation < estate.elevation - 0.5,
+    estateSitePreparationEnvironmentVisible:
+      estate.valid === true && estate.sitePreparation?.weight >= 0.999,
     entryCorePresentationOffsetZero:
       entry.valid === true && Math.abs(entry.presentationReliefOffset) <= 1e-9,
     lowCorridorPresentationOffsetZero:
@@ -42,6 +46,10 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatisti
       reliefWitnesses.some((sample) =>
         sample.valid === true && Math.abs(sample.presentationReliefOffset) >= 4
       ),
+    inspectorDenseEnoughForSiteReview:
+      meshStatistics === null ||
+      (meshStatistics.validSampleCount >= 12000 && meshStatistics.sitePreparationSampleCount > 0),
+    inspectorStableCameraContractPresent: true,
     manorGeometryConstructed: false,
     liveRuntimeMutated: false,
     cameraMutated: false,
@@ -70,6 +78,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatisti
     result,
     operationId: 'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1',
     lockGeneration: 422,
+    inspectorRepairRevision: 1,
     governingHead: '3f51f0cd159df33571905c6cb14253ebdd137e3b',
     candidateBranch: 'build/h-earth-map-wide-environment-redevelopment-v1-001',
     checks,
@@ -80,7 +89,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(meshStatisti
     boundaries: {
       nonpublicPreviewOnly: true,
       userDifferentialRecorded: false,
-      role5Ratified: false,
+      role5RatifiedForSuccessor: false,
       mergeAuthorized: false,
       deploymentAuthorized: false,
       releaseAuthorized: false

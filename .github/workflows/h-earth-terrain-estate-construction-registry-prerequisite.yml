@@ -154,7 +154,7 @@ jobs:
             local output_json="$1"
             local api_json="$2"
             gh api "repos/$GITHUB_REPOSITORY/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks/repository-operation-intake-v1" > "$api_json"
-            node --input-type=module "$api_json" "$output_json" <<'NODE'
+            node --input-type=module - "$api_json" "$output_json" <<'NODE'
           import fs from 'node:fs';
           const [apiPath, outPath] = process.argv.slice(2);
           const api = JSON.parse(fs.readFileSync(apiPath, 'utf8'));
@@ -170,7 +170,7 @@ jobs:
           ledger_blob_before="$(node -p "require('$OUTPUT_DIR/lock-readback.before.v1.json').blobSha")"
           target_lock_before="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.before.v1.json');process.stdout.write(JSON.stringify(j.target))")"
           carrier_lock_before="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.before.v1.json');process.stdout.write(JSON.stringify(j.carrier))")"
-          node --input-type=module "$OUTPUT_DIR/lock-readback.before.v1.json" <<'NODE'
+          node --input-type=module - "$OUTPUT_DIR/lock-readback.before.v1.json" <<'NODE'
           import fs from 'node:fs';
           const p = process.argv[2];
           const r = JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -206,7 +206,7 @@ jobs:
           ledger_blob_after="$(node -p "require('$OUTPUT_DIR/lock-readback.after.v1.json').blobSha")"
           target_lock_after="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.after.v1.json');process.stdout.write(JSON.stringify(j.target))")"
           carrier_lock_after="$(node -e "const j=require('$OUTPUT_DIR/lock-readback.after.v1.json');process.stdout.write(JSON.stringify(j.carrier))")"
-          node --input-type=module "$OUTPUT_DIR/lock-readback.after.v1.json" <<'NODE'
+          node --input-type=module - "$OUTPUT_DIR/lock-readback.after.v1.json" <<'NODE'
           import fs from 'node:fs';
           const p = process.argv[2];
           const r = JSON.parse(fs.readFileSync(p, 'utf8'));

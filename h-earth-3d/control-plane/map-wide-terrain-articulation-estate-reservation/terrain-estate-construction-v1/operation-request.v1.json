@@ -1,0 +1,76 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_OPERATION_REQUEST_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "projectId": "H_EARTH",
+  "authorityIssue": 719,
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "governingTree": "3116d5c35bfdd575922dac614fb2e9f1d4f61ec5",
+  "constructionBranch": "build/h-earth-map-wide-environment-redevelopment-v1-001",
+  "operationLock": {
+    "generation": 422,
+    "scope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:CONTINUOUS_WORLD_FIELD:V1:EXACT_28_PATH_SCOPE",
+    "scopeHash": "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3",
+    "state": "ADMITTED_LOCKED",
+    "released": false
+  },
+  "predecessor": {
+    "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+    "lockGeneration": 411,
+    "terminalDisposition": "SUPERSEDED",
+    "preservedStep2Branch": "build/h-earth-terrain-estate-construction-v1-001",
+    "preservedStep2Head": "82bbf57d706a428172709d3a2e050ce3afcc014a",
+    "rewriteAuthorized": false
+  },
+  "terrainTruth": {
+    "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+    "sourceHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+    "gitBlobSha": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+    "mutationInPlaceAuthorized": false
+  },
+  "positiveDesignReference": {
+    "commit": "97003e9de386a8962fb46d0b370005b900a167d6",
+    "tree": "7cd51523649788ad6fb226aea16f6799a5c58177",
+    "classification": "POSITIVE_DESIGN_SOURCE_NOT_MERGED_MAIN_NOT_AUTOMATIC_TRANSPLANT"
+  },
+  "requestedOutcome": {
+    "mapWideContinuousEnvironment": true,
+    "materialTerrainReliefAdvancement": true,
+    "materialLandformReadabilityAdvancement": true,
+    "longRangeEnvironmentalCoherence": true,
+    "reservedEstateEnvelopeIntegrated": true,
+    "manorGeometryConstructed": false,
+    "nonpublicReviewSurfaceRequired": true
+  },
+  "protectedWorld": {
+    "logicalWidth": 512,
+    "logicalDepth": 512,
+    "lattice": "16x16",
+    "cellCount": 256,
+    "estateEnvelope": {
+      "center": {"x": 80, "z": -172},
+      "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156}
+    }
+  },
+  "executingAuthority": "ROLE_1_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_INTAKE_AND_CONSTRUCTION_AUTHORITY",
+  "independentVerificationAuthority": "ROLE_3_FRESH_INDEPENDENT_VERIFICATION_AUTHORITY",
+  "integratedRatificationAuthority": "ROLE_5_INDEPENDENT_INTEGRATED_ENVIRONMENT_RATIFICATION_AUTHORITY",
+  "constructionStartAfterAdmission": "AUTHORIZED_WITHOUT_FURTHER_ROLE_4_START_APPROVAL",
+  "prohibitions": [
+    "MANOR_GEOMETRY_SELECTION",
+    "MANOR_ARCHITECTURE",
+    "MANOR_CONSTRUCTION",
+    "FRONTIER_PLAINS_CONSTRUCTION",
+    "CAVERN_INTERIOR_CONSTRUCTION",
+    "LIVE_RUNTIME_MUTATION",
+    "CAMERA_MUTATION",
+    "NAVIGATION_MUTATION",
+    "WATER_MUTATION",
+    "REGISTRY_REWRITE",
+    "PRESERVED_STEP2_REWRITE",
+    "MAIN_MUTATION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE"
+  ]
+}

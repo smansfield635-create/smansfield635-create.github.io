@@ -1,0 +1,57 @@
+name: Methods F12 R4 Recursive Navigation State Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r4-recursive-navigation-state-v1
+    paths:
+      - 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-*'
+      - '.github/workflows/methods-f12-r4-recursive-navigation-state-verify.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-f12-r4-recursive-navigation-state-verify
+  cancel-in-progress: false
+
+jobs:
+  verify-r4-exact-head:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact R3 parent and frozen inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "5aad623f6399fcb5aebfbf0bb3b81f060ada56af"
+          test "$(git rev-parse 5aad623f6399fcb5aebfbf0bb3b81f060ada56af^{tree})" = "8965f5e7dfa6e6b0fb569301ddb4d1a6acec22d7"
+          test "$(git rev-parse 5aad623f6399fcb5aebfbf0bb3b81f060ada56af:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r3-spatial-context-interpreter-contract.v1.json)" = "79b443c80407cd5be7e552af06a92c14c3d530ff"
+          test "$(git rev-parse 5aad623f6399fcb5aebfbf0bb3b81f060ada56af:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r3-spatial-context-interpreter.v1.mjs)" = "f10826190eb919076868d87defd1bd382b76f44b"
+      - name: Verify R4 navigation runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-recursive-navigation-state.verify.v1.mjs | tee r4-navigation-verification.json
+      - name: Prove exact R4 diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only 5aad623f6399fcb5aebfbf0bb3b81f060ada56af..HEAD | tee r4-changed-paths.txt
+          test "$(wc -l < r4-changed-paths.txt)" -eq 4
+          grep -Fxq '.github/workflows/methods-f12-r4-recursive-navigation-state-verify.yml' r4-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-recursive-navigation-state-contract.v1.json' r4-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-recursive-navigation-state.v1.mjs' r4-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r4-recursive-navigation-state.verify.v1.mjs' r4-changed-paths.txt
+          if git diff --name-only 5aad623f6399fcb5aebfbf0bb3b81f060ada56af..HEAD | grep -E '(^|/)(f1-|f2-|f3-|f4-|f5-|f6-|f7-|f8-|f9-|f10-|f11-|r1-|r2-|r3-|laws/research/methods-and-models/|review/methods-models/)' | grep -q .; then
+            echo 'PROHIBITED_UPSTREAM_OR_VISIBLE_PATH_MUTATION'; exit 1
+          fi
+      - name: Preserve R4 verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r4-recursive-navigation-state-evidence
+          path: |
+            r4-navigation-verification.json
+            r4-changed-paths.txt

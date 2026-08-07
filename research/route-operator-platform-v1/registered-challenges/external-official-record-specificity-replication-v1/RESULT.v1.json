@@ -1,0 +1,79 @@
+{
+  "case_scores": {
+    "BIO_LAB": {
+      "causal_coverage": 0.8,
+      "false_route_rate": 0.0,
+      "mean_decoy_route_hit_rate": 0.08333333333333333,
+      "preserved_capacity_accuracy": null,
+      "preserved_capacity_status": "UNEVALUABLE_FROM_SUMMARY_RECORD",
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 0.8166666666666667,
+      "true_route_score": 0.9
+    },
+    "CUISINE": {
+      "causal_coverage": 1.0,
+      "false_route_rate": 0.0,
+      "mean_decoy_route_hit_rate": 0.16666666666666666,
+      "preserved_capacity_accuracy": null,
+      "preserved_capacity_status": "UNEVALUABLE_FROM_SUMMARY_RECORD",
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 0.8333333333333334,
+      "true_route_score": 1.0
+    },
+    "DOW": {
+      "causal_coverage": 1.0,
+      "false_route_rate": 0.0,
+      "mean_decoy_route_hit_rate": 0.08333333333333333,
+      "preserved_capacity_accuracy": null,
+      "preserved_capacity_status": "UNEVALUABLE_FROM_SUMMARY_RECORD",
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 0.9166666666666666,
+      "true_route_score": 1.0
+    },
+    "GIVAUDAN": {
+      "causal_coverage": 0.8,
+      "false_route_rate": 0.0,
+      "mean_decoy_route_hit_rate": 0.08333333333333333,
+      "preserved_capacity_accuracy": null,
+      "preserved_capacity_status": "UNEVALUABLE_FROM_SUMMARY_RECORD",
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 0.8166666666666667,
+      "true_route_score": 0.9
+    },
+    "PEMEX": {
+      "causal_coverage": 1.0,
+      "false_route_rate": 0.0,
+      "mean_decoy_route_hit_rate": 0.0,
+      "preserved_capacity_accuracy": null,
+      "preserved_capacity_status": "UNEVALUABLE_FROM_SUMMARY_RECORD",
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 1.0,
+      "true_route_score": 1.0
+    }
+  },
+  "evidence_ceiling": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+  "fixed_invariant_retained": true,
+  "global_multiplicative_operator": "REMAINS_REJECTED",
+  "independent_human_confirmation": "NOT_ESTABLISHED",
+  "operation": "UCIC_CSB_FIVE_CASE_EXTERNAL_OFFICIAL_RECORD_SPECIFICITY_REPLICATION_v1",
+  "outcome_blindness": "NOT_ESTABLISHED",
+  "portfolio_scores": {
+    "cases_false_route_rate_gt_0_50": 0,
+    "cases_positive_true_minus_decoy_advantage": 5,
+    "median_causal_coverage": 1.0,
+    "median_route_hit_rate": 1.0,
+    "median_true_minus_decoy_advantage": 0.8333333333333334
+  },
+  "prospective_confirmation": "NOT_ESTABLISHED",
+  "public_outcome_contamination": "PRESENT",
+  "scientific_classification": "PROCESS_SEPARATED_RETROSPECTIVE_EXTERNAL_REPLICATION",
+  "terminal_disposition": "UCIC_ROUTE_SPECIFICITY_SUPPORTED_EXTERNAL_CSB",
+  "threshold_passes": {
+    "coverage": true,
+    "decoy": true,
+    "false_route": true,
+    "positive_cases": true,
+    "route_hit": true
+  },
+  "universal_law": "NOT_ESTABLISHED"
+}

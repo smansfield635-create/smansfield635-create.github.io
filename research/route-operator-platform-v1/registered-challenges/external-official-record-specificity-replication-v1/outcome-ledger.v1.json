@@ -1,0 +1,74 @@
+{
+  "BIO_LAB": {
+    "additional_systemic_findings_not_required_for_local_boundary": [
+      "industry guidance gaps",
+      "regulatory coverage gaps"
+    ],
+    "causal_findings_covered": 4,
+    "causal_findings_material_for_scoring": 5,
+    "material_route_findings": [
+      "corroded sprinkler leaked water onto reactive chlorinated isocyanurates",
+      "run-to-failure of degraded sprinkler protection",
+      "storage hazard identification/safeguards inadequate for reactive inventory, packaging, moisture and ventilation",
+      "risk management and oversight inadequate"
+    ],
+    "official_source": "https://www.csb.gov/csb-releases-bio-lab-conyers-final-investigation-report/",
+    "route_hits": 4,
+    "route_predictions": 4
+  },
+  "CUISINE": {
+    "causal_findings_covered": 4,
+    "causal_findings_material_for_scoring": 4,
+    "material_route_findings": [
+      "heat-exchanger upset caused surge-drum overpressure",
+      "two-phase ammonia relief discharged to unsafe atmospheric location near evacuation path",
+      "detection/alarm did not trigger and no emergency shutdown was initiated",
+      "emergency plan/training/drills did not adequately handle outdoor toxic release and wind/shelter decisions"
+    ],
+    "official_source": "https://www.csb.gov/us-chemical-safety-board-releases-final-report-on-july-2024-hazardous-ammonia-release-at-cuisine-solutions-facility-in-sterling-virginia/",
+    "route_hits": 4,
+    "route_predictions": 4
+  },
+  "DOW": {
+    "causal_findings_covered": 4,
+    "causal_findings_material_for_scoring": 4,
+    "material_route_findings": [
+      "foreign work lights left in reflux drum and debris punctured rupture disc",
+      "inert atmosphere in relief piping was lost without active awareness",
+      "relief topology allowed flame propagation back into reflux drum",
+      "rupture disc breach enabled EtO entry into air-filled piping"
+    ],
+    "official_source": "https://www.csb.gov/us-chemical-safety-board-releases-investigation-report-on-the-2023-explosion-and-toxic-ethylene-oxide-release-at-dow-plant-in-plaquemine-louisiana/",
+    "route_hits": 4,
+    "route_predictions": 4
+  },
+  "GIVAUDAN": {
+    "additional_systemic_findings_not_required_for_local_boundary": [
+      "broader process safety management strengthening"
+    ],
+    "causal_findings_covered": 4,
+    "causal_findings_material_for_scoring": 5,
+    "material_route_findings": [
+      "runaway decomposition/reactive hazard not recognized",
+      "critical process safeguards and safe-operating-limit controls inadequate",
+      "emergency relief incapable of credible runaway scenario",
+      "occupied control room not blast resistant / facility siting inadequate"
+    ],
+    "official_source": "https://www.csb.gov/us-chemical-safety-board-releases-final-report-on-fatal-2024-explosion-at-givaudan-facility-in-louisville-kentucky/",
+    "route_hits": 4,
+    "route_predictions": 4
+  },
+  "PEMEX": {
+    "causal_findings_covered": 4,
+    "causal_findings_material_for_scoring": 4,
+    "material_route_findings": [
+      "wrong flange opened because exact equipment was not positively identified",
+      "work permit/hazard controls lacked effective hold points and operator verification",
+      "reassigned contractors were not adequately informed of hazards in active unit",
+      "conduct-of-operations deviations separated written procedure from actual practice"
+    ],
+    "official_source": "https://www.csb.gov/us-chemical-safety-board-releases-investigation-report-on-fatal-hydrogen-sulfide-release-at-the-pemex-deer-park-refinery-in-texas/",
+    "route_hits": 4,
+    "route_predictions": 4
+  }
+}

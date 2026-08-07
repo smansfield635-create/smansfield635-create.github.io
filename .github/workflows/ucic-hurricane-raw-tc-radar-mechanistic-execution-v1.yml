@@ -1,11 +1,6 @@
 name: UCIC Hurricane Raw TC-RADAR Mechanistic Execution v1
 
 on:
-  pull_request:
-    paths:
-      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-protocol.v1.json'
-      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/run-raw-tc-radar-mechanistic-v1.py'
-      - '.github/workflows/ucic-hurricane-raw-tc-radar-mechanistic-execution-v1.yml'
   workflow_dispatch:
 
 permissions:

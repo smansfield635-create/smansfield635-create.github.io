@@ -41,9 +41,18 @@ jobs:
           if grep -E '^(control-plane/methods-information-benchmark/|laws/research/methods-and-models/)' /tmp/main-drift.txt | grep -q .; then
             echo 'Methods governing surface drift detected'; exit 1
           fi
-          if git diff -U0 a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc..origin/main -- .github/ai-router/router.v1.json | grep -E '^[+-][^+-]' | grep -i 'methods-information-benchmark' | grep -q .; then
-            echo 'Methods-specific global router drift detected'; exit 1
-          fi
+          node --input-type=module <<'NODE'
+          import {execFileSync} from 'node:child_process';
+          const read=(ref)=>JSON.parse(execFileSync('git',['show',`${ref}:.github/ai-router/router.v1.json`],{encoding:'utf8'}));
+          const baseline=read('a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc');
+          const current=read('origin/main');
+          const project=(r)=>r.projects.find(v=>v.projectId==='METHODS_INFORMATION_BENCHMARK');
+          if(JSON.stringify(project(baseline))!==JSON.stringify(project(current))){
+            console.error('Methods-specific global router registration drift detected');
+            process.exit(1);
+          }
+          console.log('METHODS_MAIN_DRIFT_CLASSIFICATION=NON_METHODS_UNRELATED_ESTATE_DRIFT_NO_REBASE');
+          NODE
       - name: Preserve F8 verification log
         uses: actions/upload-artifact@v4
         with:

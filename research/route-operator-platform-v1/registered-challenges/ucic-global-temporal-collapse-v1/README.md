@@ -2,17 +2,17 @@
 
 ## Purpose
 
-This operation adds two noncompensating empirical arms to the fixed Universal Coherence Invariant Candidate (UCIC-v1).
+This operation contains two noncompensating empirical arms for the fixed Universal Coherence Invariant Candidate (UCIC-v1).
 
 Arm A tests whether one unchanged relation-based operator transfers across aviation, railroad, bulk-energy, and pipeline systems when only material publicly available before the authoritative final finding is admitted to the reconstruction.
 
-Arm B tests whether constitutive-route degradation can appear before terminal systemic collapse, and whether later preservation/support relations distinguish severe stress without comparable collapse.
+Arm B tests whether constitutive-route degradation can appear before terminal systemic collapse and whether the same general early-warning idea transfers to an objectively frozen FDIC bank-failure cohort.
 
 ## Scientific boundaries
 
 This is historical temporal reconstruction. The theory team knows the historical events ultimately failed, so outcome blindness and true prospective prediction are not claimed.
 
-The pre-final source cutoff is nevertheless enforced case by case. Later authoritative findings are used only as scoring ground truth. No domain-specific operator change, global-product revival, favorable-case exclusion, or post-score route repair is permitted.
+The pre-final source cutoff is enforced case by case. Later authoritative findings are used only as scoring ground truth. No domain-specific operator change, global-product revival, favorable-case exclusion, post-score route repair, or post-result threshold repair is permitted.
 
 ## Arm A terminal disposition
 
@@ -30,23 +30,62 @@ The pipeline case preserves adverse residue: one predicted monitoring/isolation 
 
 Evidence ceiling: `TEMPORAL_AVAILABILITY_AND_CROSS_DOMAIN_ROUTE_TRANSFER_SUPPORT_ONLY`.
 
-## Arm B current disposition
+## Arm B terminal disposition
 
-`SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_COHORT_PENDING`
+`SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_EXTENSION_NOT_SUPPORTED`
 
-The pre-Elliott public record identified the same broad constitutive vulnerabilities later implicated in Elliott: generator cold-weather operability, natural-gas fuel continuity, and gas-electric coordination. Those warnings existed 402 days before the event through the 2021 Uri report and were reiterated 64 days before Elliott in FERC's 2022-2023 winter assessment.
+The systemic pilot remains supported. Before Winter Storm Elliott, the public record identified broad vulnerabilities later implicated in the event: generator cold-weather operability, natural-gas fuel continuity, and gas-electric coordination. Those warnings existed 402 days before Elliott and were reiterated 64 days before the event. Elliott later produced approximately 90,000 MW of coincident unplanned generation loss and more than 5,400 MW of system-operator-initiated firm load shed. The January 2024 Gerri/Heather review reported zero system-operator-initiated load shed while documenting improved preparation, coordination, fuel alternatives, storage/line-pack support, alerts, and forecasting.
 
-Winter Storm Elliott later produced approximately 90,000 MW of coincident unplanned generation loss and more than 5,400 MW of system-operator-initiated firm load shed. By contrast, the January 2024 Gerri/Heather review reported zero system-operator-initiated load shed while documenting improved communication/coordination, winter preparedness, alternate fuel supplies, gas storage/line pack, earlier alerts, and improved forecasting.
+That pilot is a bounded early-warning and relational-mitigation contrast. It does not establish a universal collapse metric.
 
-This supports an early-warning and relational-mitigation contrast. It does not yet establish a universal collapse metric.
+## FDIC longitudinal financial extension — terminal negative result
 
-## Financial-collapse extension
+The financial extension is no longer pending.
 
-The objective FDIC failure cohort is frozen at all eleven failures from March 10, 2023 through May 1, 2026. FDIC BankFind provides quarterly financial data suitable for longitudinal scoring. Full institution-quarter extraction and survivor/control matching remain pending; therefore no bank-level lead-time or false-positive result is claimed in this version.
+The exact eleven-bank FDIC failure cohort was frozen first. A separate protocol was then frozen before bank-quarter values were extracted. That protocol fixed the observation window, four financial routes, peer standardization, two-quarter persistence rule, matched controls, comparators, success thresholds, adverse terminal outcomes, and a one-pass stopping rule.
 
-## Preserved prior constraints
+Protocol freeze:
+- commit: `52a1017d2a3b9877bc748e5511d6de50cf62142d`;
+- protocol SHA-256: `4df693a6e313ca87f32474a8e37d45de0b950143d925260f3ae41ddaf3e4c36c`;
+- post-result scientific repair: prohibited.
+
+The deterministic execution acquired all 25 registered FDIC quarters from 2020-03-31 through 2026-03-31, evaluated all 11 failed institutions, and produced 35 evaluable matched-control trajectories.
+
+Frozen-rule results:
+- failed institutions warned: `3/11`;
+- failure sensitivity: `0.2727272727`;
+- matched-control warnings: `1/35`;
+- control false-positive rate: `0.0285714286`;
+- median lead time among the three detected failures: `578` days;
+- UCIC balanced accuracy: `0.6220779221`;
+- best frozen simple-comparator balanced accuracy: `0.5935064935`;
+- UCIC minus best comparator: `0.0285714286`.
+
+The three failures that met the frozen warning rule were Republic First Bank, Metropolitan Capital Bank & Trust, and Community Bank and Trust - West Georgia. The rule did not warn on eight failures, including Silicon Valley Bank, Signature Bank, and First Republic Bank.
+
+The protocol required failure sensitivity of at least `0.60`. Observed sensitivity was `0.2727`. Therefore the mandatory terminal disposition is:
+
+`FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED`
+
+Low false-positive rate and long lead time among detected cases cannot compensate for missing eight of eleven failures. The nonredundancy margin also was not reached: UCIC exceeded the best frozen comparator in balanced accuracy by only `0.02857`, below the frozen `0.05` margin.
+
+This is material adverse evidence. Under this operationalization, the constitutive-route warning rule is not supported as a general retrospective early-warning detector for FDIC bank collapse.
+
+## Combined interpretation
+
+The study is deliberately mixed rather than averaged into a single favorable score.
+
+- Arm A: cross-domain temporal route transfer supported with limitations.
+- Arm B systemic pilot: early-warning and relational-mitigation contrast supported.
+- Arm B FDIC generalization: not supported.
+- One arm cannot rescue another.
+
+The negative FDIC result narrows the claim. It does not erase the earlier controlled mechanism evidence or the systemic pilot, but it prevents treating the present warning rule as a broadly established collapse detector.
+
+## Preserved constraints
 
 - global multiplicative operator remains rejected;
 - independent-human confirmation remains unestablished;
 - true prospective confirmation remains the separately frozen five-case future-report challenge;
-- universality remains unestablished.
+- universality remains unestablished;
+- the FDIC result is frozen adverse evidence and may not be repaired by changing thresholds after the fact.

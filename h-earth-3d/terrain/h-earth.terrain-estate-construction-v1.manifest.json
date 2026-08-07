@@ -1,17 +1,18 @@
 {
   "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_MANIFEST_v1",
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "successorRepairRevision": 3,
   "lockGeneration": 422,
   "lockScope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:CONTINUOUS_WORLD_FIELD:V1:EXACT_28_PATH_SCOPE",
   "scopeHash": "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3",
   "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
   "constructionBranch": "build/h-earth-map-wide-environment-redevelopment-v1-001",
-  "constructionStage": "MATERIAL_TERRAIN_PRESENTATION_CANDIDATE_ACTIVE",
+  "constructionStage": "ITERATIVE_MAP_TERRAIN_AUTHORING_RENEWAL_ACTIVE",
   "candidate": {
     "path": "h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js",
     "contractId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_v1",
-    "reliefProfileId": "H_EARTH_MAP_WIDE_BAND_LIMITED_RELIEF_PROFILE_v2",
-    "implementationClass": "RUN8B_TRUTH_PLUS_SEPARATE_BOUNDED_PRESENTATION_ELEVATION_AND_VIRTUAL_NORMAL_RELIEF",
+    "reliefProfileId": "H_EARTH_MAP_WIDE_BAND_LIMITED_RELIEF_PROFILE_v3",
+    "implementationClass": "RUN8B_TRUTH_PLUS_DEEP_MOUNTAIN_HYDROLOGY_MULTI_HILL_ESTATE_AND_BOUNDED_PRESENTATION_RELIEF",
     "candidatePresentationElevationConstructed": true,
     "run8BTruthElevationMutation": false
   },
@@ -22,55 +23,50 @@
     "worldDomain": {"xMinimum": -256, "xMaximum": 256, "zMinimum": -320, "zMaximum": 64, "seaLevelY": 0},
     "mutated": false
   },
-  "macroLandforms": [
-    {"id": "MOUNTAINWARD_BACKBONE", "center": {"x": -64, "z": -274}, "radius": {"x": 172, "z": 72}, "maximumAddedPresentationElevation": 18},
-    {"id": "WESTERN_SHOULDER", "center": {"x": -184, "z": -212}, "radius": {"x": 82, "z": 92}, "maximumAddedPresentationElevation": 9},
-    {"id": "EASTERN_SHOULDER", "center": {"x": 196, "z": -252}, "radius": {"x": 84, "z": 88}, "maximumAddedPresentationElevation": 12}
-  ],
-  "mesoLandform": {
-    "maximumMagnitude": 3.5,
-    "componentCount": 3,
-    "bandLimited": true
+  "mountainRenewal": {
+    "deep3DLandformsRequired": true,
+    "rearBoundaryMassPresent": true,
+    "hiddenUpperWatershed": true,
+    "futureBacksideTraversalAllowed": false,
+    "futureBacksideVisibilityAllowed": false
   },
-  "positiveReliefReference": {
-    "commit": "97003e9de386a8962fb46d0b370005b900a167d6",
-    "tree": "7cd51523649788ad6fb226aea16f6799a5c58177",
-    "sourceProfileId": "H_EARTH_CURRENT_LIVE_BAND_LIMITED_TERRAIN_RELIEF_PRESENTATION_PROFILE_v2",
-    "classification": "POSITIVE_DESIGN_SOURCE_NOT_MERGED_MAIN_NOT_AUTOMATIC_TRANSPLANT"
+  "hydrologyAuthoring": {
+    "waterfall": {"crest": {"x": -48, "z": -268}, "landing": {"x": -44, "z": -230}},
+    "reservoir": {"center": {"x": -44, "z": -216}, "enclosed": true, "visibleDrainageToCoast": false},
+    "cavernExteriorReserve": {"center": {"x": -16, "z": -236}, "interiorConstructed": false},
+    "concealedPumpAndVaultWaterRoute": "RESERVED_NOT_CONSTRUCTED"
   },
-  "virtualNormalRelief": {
-    "directionalPhaseCount": 3,
-    "virtualReliefHeightAmplitude": 0.22,
-    "maximumNormalDeviationDegrees": 22,
-    "distanceEnvelope": {"fullInfluenceThrough": 120, "zeroInfluenceBy": 300},
-    "presentationOnly": true
-  },
-  "protectedZeroOffsetGeometry": {
-    "reservedEstateCore": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
-    "reservedEstateTransitionMargin": 12,
-    "entryCore": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
-    "entryTransitionMargin": 8,
-    "lowCorridorHardHalfWidth": 10,
-    "lowCorridorTransitionHalfWidth": 18,
-    "coastalZeroReliefByZ": -72
-  },
-  "reservedEstateEnvelope": {
-    "center": {"x": 80, "z": -172},
-    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
-    "effect": "PROTECTED_FUTURE_CONSTRUCTION_ENVELOPE_ONLY",
+  "estateTerrain": {
+    "atriumAnchor": {"x": 80, "z": -172},
+    "connectiveSaddle": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "largeHillInterface": {"x": 136, "z": -208},
+    "largeHillVaultMass": {"x": 152, "z": -224},
+    "reservedBounds": {"xMinimum": 52, "xMaximum": 176, "zMinimum": -242, "zMaximum": -144},
+    "singleRectangularPadIsFinalFootprint": false,
     "manorGeometryConstructed": false
+  },
+  "inspectorPresentation": {
+    "terrainGrid": {"columns": 161, "rows": 121, "sampleCount": 19481},
+    "verticalScale": 1.35,
+    "sourceVirtualReliefAmplitude": 0.22,
+    "inspectorVirtualReliefScale": 0.42,
+    "steepSurfaceReliefSuppression": true,
+    "oceanContext": true,
+    "reservoirContext": true,
+    "waterfallContext": true,
+    "guideOverlayRenderPath": false
   },
   "preservation": {
     "run8BTruthElevationMutation": false,
     "liveRuntimeMutation": false,
-    "cameraMutation": false,
-    "navigationMutation": false,
-    "waterMutation": false,
+    "liveCameraMutation": false,
+    "liveNavigationMutation": false,
+    "liveWaterMutation": false,
     "registryMutation": false,
     "manorGeometryMutation": false,
-    "frontierPlainsConstruction": false,
     "cavernInteriorConstruction": false,
+    "vaultInteriorConstruction": false,
     "mergeDeploymentRelease": false
   },
-  "nextConstructionBoundary": "ENVIRONMENT_ZONE_AND_NONPUBLIC_PREVIEW_INTEGRATION_WITHIN_EXISTING_28_PATH_LOCK_ONLY"
+  "nextConstructionBoundary": "ITERATE_NONPUBLIC_MAP_UNTIL_USER_ACCEPTS_GEOGRAPHY_THEN_OPEN_SEPARATE_LIVE_INTEGRATION_OPERATION"
 }

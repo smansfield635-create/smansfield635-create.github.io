@@ -19,18 +19,19 @@ const required = [
   'candidate-case-register.v1.json',
   'selected-vertical-case-contract.v1.json',
   'claim-and-frontier-ownership-contract.v1.json',
-  'checkpoint-8-handoff-contract.v1.json',
+  'final-checkpoint-handoff-contract.v1.json',
   'source-ledger.v1.json',
   'verify.v1.mjs'
 ];
 for (const f of required) ok(fs.existsSync(path.join(ROOT,f)), `missing_package_file:${f}`);
+ok(!fs.existsSync(path.join(ROOT,'checkpoint-8-handoff-contract.v1.json')), 'retired_checkpoint8_handoff_file_must_be_absent');
 
 const op = read('checkpoint-7-operation-contract.v1.json');
 const hurricane = read('hurricane-scientific-delta-adjudication.v1.json');
 const candidates = read('candidate-case-register.v1.json');
 const selected = read('selected-vertical-case-contract.v1.json');
 const ownership = read('claim-and-frontier-ownership-contract.v1.json');
-const handoff = read('checkpoint-8-handoff-contract.v1.json');
+const handoff = read('final-checkpoint-handoff-contract.v1.json');
 const ledger = read('source-ledger.v1.json');
 
 // Governing Checkpoint 7 registration must remain exact.
@@ -47,9 +48,14 @@ eq(op.stopBoundary.spatialTopologyFreeze, 'BLOCKED', 'topology_freeze');
 ok(op.stopBoundary.geometryAuthority === false, 'geometry_authority');
 ok(op.stopBoundary.scientificClaimUpgrade === false, 'claim_upgrade');
 ok(op.stopBoundary.pr541Mutation === false, 'pr541_mutation');
-eq(op.stopBoundary.checkpoint8Execution, 'NOT_STARTED', 'checkpoint8_execution');
+eq(op.successorProgram.program, 'METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1', 'successor_program');
+eq(op.successorProgram.preservedTarget, 'TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1', 'preserved_target');
+eq(op.successorProgram.firstGate, 'F1_CONSTRUCTION_BASELINE', 'first_gate');
+eq(op.successorProgram.formerCheckpoint8, 'RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT', 'retired_checkpoint8');
+eq(op.stopBoundary.finalProgramExecution, 'NOT_STARTED_PENDING_CP7_PASS_CLOSED', 'final_program_execution');
+ok(op.stopBoundary.f2ConstructionAuthority === false, 'f2_authority_must_be_false');
 
-// Re-read the original registration from the governing lineage now present in this branch.
+// Re-read the original Checkpoint 7 registration from the governing lineage now present in this branch.
 const prospectivePath = 'control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/prospective-change-register.v1.json';
 const prospective = JSON.parse(fs.readFileSync(prospectivePath,'utf8'));
 const cp7 = prospective.entries.find(x => x.checkpoint === 7);
@@ -119,17 +125,29 @@ ok(selected.methodsModelsDemonstrationBoundary.fullFiveCasePortfolioDuplication 
 eq(selected.methodsModelsDemonstrationBoundary.frontierStudyOwnership, 'PRESERVED', 'frontier_ownership');
 ok(selected.methodsModelsDemonstrationBoundary.sourcePrMergeAuthorized === false, 'source_pr_merge_authority');
 
-// Ownership and Checkpoint 8 handoff remain bounded.
+// Ownership and Final Checkpoint handoff remain bounded.
 eq(ownership.sourceStudyOwner, 'FRONTIER', 'source_study_owner');
 eq(ownership.sourceProvenanceOwner, 'RESEARCH_PROVENANCE', 'provenance_owner');
 eq(ownership.methodsModelsRole, 'EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE', 'methods_models_role');
 ok(ownership.demonstrationScope.oneCaseOnly === true, 'one_case_only');
 ok(ownership.demonstrationScope.fullPortfolioReconstruction === false, 'no_full_portfolio');
-eq(handoff.nextOperation, 'TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1', 'next_operation');
+eq(handoff.schema, 'WHOLE_ESTATE_FINAL_CHECKPOINT_HANDOFF_CONTRACT_v1', 'handoff_schema');
+eq(handoff.successorProgram, 'METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1', 'handoff_successor_program');
+eq(handoff.preservedTarget, 'TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1', 'handoff_preserved_target');
+eq(handoff.formerCheckpoint8, 'RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT', 'handoff_retired_checkpoint8');
+eq(handoff.firstAuthorizedGateAfterActivation, 'F1_CONSTRUCTION_BASELINE', 'handoff_first_gate');
+eq(handoff.progressiveGateLaw, 'F_n_MUST_PASS_BEFORE_F_n_PLUS_1_MAY_TREAT_ITS_OUTPUTS_AS_AUTHORITY', 'progressive_gate_law');
+ok(handoff.programLaws.includes('NO_DOWNSTREAM_BUILD_ON_UNVERIFIED_UPSTREAM'), 'missing_no_downstream_build_law');
+ok(handoff.programLaws.includes('NO_SUB_CHECKPOINT_MAY_RAISE_THE_SCIENTIFIC_CLAIM_CEILING'), 'missing_claim_ceiling_law');
+ok(handoff.programLaws.includes('VISUAL_STATE_MAY_REPRESENT_MEANING_BUT_MAY_NOT_CREATE_MEANING'), 'missing_visual_semantic_law');
+ok(handoff.programLaws.includes('FINAL_PASS_REQUIRES_THE_INTEGRATED_OBJECT_NOT_THE_SUM_OF_COMPONENT_PASSES'), 'missing_integrated_object_law');
+ok(handoff.f1BaselineRequiredBeforeConstruction === true, 'f1_baseline_required');
+ok(handoff.f2ConstructionAuthorized === false, 'f2_not_authorized');
+eq(handoff.userVisualApprovalGate, 'F12_USER_VISUAL_AND_EXPERIENTIAL_REVIEW', 'f12_visual_gate');
 ok(handoff.userVisualApprovalRequired === true, 'visual_approval_gate');
-ok(handoff.publicMutationAuthorized === false, 'cp8_public_mutation');
-ok(handoff.liveMergeAuthorized === false, 'cp8_live_merge');
-eq(handoff.checkpoint8Execution, 'NOT_STARTED', 'cp8_not_started');
+ok(handoff.publicMutationAuthorized === false, 'final_program_public_mutation');
+ok(handoff.liveMergeAuthorized === false, 'final_program_live_merge');
+eq(handoff.finalProgramExecution, 'NOT_STARTED_PENDING_CP7_PASS_CLOSED', 'final_program_not_started');
 
 // Exact source lineage must match the immutable remote objects fetched by the verification workflow.
 const s = ledger.selectedStudySources;
@@ -167,6 +185,7 @@ console.log(JSON.stringify({
   selectedSourceHead: selected.selectedCase.sourceHead,
   hurricaneDelta: hurricane.results.terminalDisposition,
   hurricaneIncrementalAuc: hurricane.results.incrementalAuc,
-  checkpoint8: handoff.checkpoint8Execution,
+  finalProgram: handoff.successorProgram,
+  firstGate: handoff.firstAuthorizedGateAfterActivation,
   publicMutation: op.stopBoundary.publicPageMutation
 }, null, 2));

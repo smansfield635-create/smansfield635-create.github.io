@@ -59,6 +59,18 @@ with:
 
 Checkpoint 7 selects only a bounded demonstration slice. It does not merge PR #709, reproduce the full five-case Frontier study, alter its scientific standing, or create new evidence.
 
+## Final-program handoff
+
+The former standalone Checkpoint 8 label is retired. The successor is the single gated construction program:
+
+`METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1`
+
+with preserved target:
+
+`TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1`
+
+Checkpoint 7 may hand authority only to F1 Construction Baseline after Checkpoint 7 itself is `PASS_CLOSED` under separate merge and post-merge certification authority. F2 and all later construction remain prohibited until F1 passes.
+
 ## Stop boundary
 
 - `PUBLIC_PAGE_MUTATION = FALSE`
@@ -67,5 +79,7 @@ Checkpoint 7 selects only a bounded demonstration slice. It does not merge PR #7
 - `GEOMETRY_AUTHORITY = FALSE`
 - `SCIENTIFIC_CLAIM_UPGRADE = FALSE`
 - `PR541_MUTATION = FALSE`
-- `CHECKPOINT_8_EXECUTION = NOT_STARTED`
+- `FORMER_CHECKPOINT_8 = RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT`
+- `FINAL_CHECKPOINT_PROGRAM = METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1`
+- `FINAL_PROGRAM_EXECUTION = NOT_STARTED_PENDING_CP7_PASS_CLOSED`
 - `MERGE_AUTHORITY = REQUIRED_SEPARATELY`

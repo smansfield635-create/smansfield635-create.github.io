@@ -1,8 +1,11 @@
 {
-  "schema": "WHOLE_ESTATE_CHECKPOINT_8_HANDOFF_CONTRACT_v1",
+  "schema": "WHOLE_ESTATE_FINAL_CHECKPOINT_HANDOFF_CONTRACT_v1",
   "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
-  "nextOperation": "TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
-  "activationCondition": "CHECKPOINT_7_PASS_CLOSED_AFTER_SEPARATE_MERGE_AND_RATIFICATION_AUTHORITY",
+  "successorProgram": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
+  "preservedTarget": "TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
+  "formerCheckpoint8": "RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT",
+  "activationCondition": "CHECKPOINT_7_PASS_CLOSED_AFTER_SEPARATE_MERGE_AND_POST_MERGE_CERTIFICATION_AUTHORITY",
+  "firstAuthorizedGateAfterActivation": "F1_CONSTRUCTION_BASELINE",
   "selectedVerticalCase": "BIO_LAB",
   "requiredStateAxes": [
     "SYSTEM",
@@ -19,7 +22,7 @@
     "ROUTE_HISTORY",
     "CONTENT_VERSION"
   ],
-  "cp8MayConsume": [
+  "finalProgramMayConsumeAtF1OrLater": [
     "selected case identity",
     "system boundary",
     "identity criterion",
@@ -30,7 +33,7 @@
     "claim ceiling",
     "provenance and contamination qualifiers"
   ],
-  "cp8MayNotInfer": [
+  "finalProgramMayNotInfer": [
     "prospective confirmation",
     "independent human confirmation",
     "universal law",
@@ -38,14 +41,24 @@
     "scientific standing from visual prominence",
     "new relations from spatial adjacency"
   ],
+  "progressiveGateLaw": "F_n_MUST_PASS_BEFORE_F_n_PLUS_1_MAY_TREAT_ITS_OUTPUTS_AS_AUTHORITY",
+  "programLaws": [
+    "NO_DOWNSTREAM_BUILD_ON_UNVERIFIED_UPSTREAM",
+    "NO_SUB_CHECKPOINT_MAY_RAISE_THE_SCIENTIFIC_CLAIM_CEILING",
+    "VISUAL_STATE_MAY_REPRESENT_MEANING_BUT_MAY_NOT_CREATE_MEANING",
+    "FINAL_PASS_REQUIRES_THE_INTEGRATED_OBJECT_NOT_THE_SUM_OF_COMPONENT_PASSES"
+  ],
   "hurricaneDeltaAvailability": {
     "standing": "POSITIVE_SIGNAL_INCONCLUSIVE",
     "selectedFirstVertical": false,
     "mayRemainDiscoverableAsLaterEvidenceState": true,
     "mayNotReplaceSelectedVerticalWithoutNewExplicitAdjudication": true
   },
+  "f1BaselineRequiredBeforeConstruction": true,
+  "f2ConstructionAuthorized": false,
+  "userVisualApprovalGate": "F12_USER_VISUAL_AND_EXPERIENTIAL_REVIEW",
   "userVisualApprovalRequired": true,
   "publicMutationAuthorized": false,
   "liveMergeAuthorized": false,
-  "checkpoint8Execution": "NOT_STARTED"
+  "finalProgramExecution": "NOT_STARTED_PENDING_CP7_PASS_CLOSED"
 }

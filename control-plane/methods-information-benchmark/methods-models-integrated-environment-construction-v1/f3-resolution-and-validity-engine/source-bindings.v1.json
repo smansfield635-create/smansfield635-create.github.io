@@ -1,0 +1,57 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F3_SOURCE_BINDINGS_v1",
+  "status": "F3_CONSTRUCTION_CANDIDATE",
+  "program": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
+  "gate": "F3_RESOLUTION_AND_VALIDITY_ENGINE",
+  "inputF2": {
+    "finalHead": "1381807be7f5420588ea107f73d449cbbd61b65f",
+    "finalTree": "61e0369af8a65bb5598ac9e4c56677d89bdb672e",
+    "effectiveDisposition": "PASS_F2_CANONICAL_STATE_KERNEL_v1"
+  },
+  "governingMainFrozenByF1": {
+    "commit": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+    "tree": "420e56a71801034c3e40e66d1048302a39a55da7"
+  },
+  "f2Sources": [
+    {
+      "id": "F2_TERMINAL_RECEIPT",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f2-canonical-state-kernel/f2-terminal-receipt.v1.json",
+      "blob": "f332ecc995e728733975ace43e32d0ecb178f47d",
+      "authority": "F3_CONSTRUCTION_AUTHORITY"
+    },
+    {
+      "id": "F2_CANONICAL_STATE_KERNEL",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f2-canonical-state-kernel/canonical-state-kernel.v1.json",
+      "blob": "5fe4506824b7fb4c8816583f59423911d7301157",
+      "authority": "13_AXIS_KERNEL_AND_EXCLUDED_BEHAVIOR"
+    },
+    {
+      "id": "F2_AXIS_REGISTRY",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f2-canonical-state-kernel/axis-registry.v1.json",
+      "blob": "c3dcaf8efd5822c151e17eb9267a8d55acfd0892",
+      "authority": "AXIS_SHAPES_PLANES_AND_MUTATION_AUTHORITY"
+    },
+    {
+      "id": "F2_STATE_ENVELOPE_SCHEMA",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f2-canonical-state-kernel/state-envelope.schema.v1.json",
+      "blob": "3ddd8e549200f0c0c6e673369fa3c02290a68683",
+      "authority": "SHAPE_LEVEL_CONFORMANCE"
+    },
+    {
+      "id": "F2_AUTHORITY_AND_PLANE_CONTRACT",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f2-canonical-state-kernel/authority-and-plane-contract.v1.json",
+      "blob": "5c9062e19be617936cb137cde4cf9fc450d30d88",
+      "authority": "PLANE_ISOLATION_AND_F3_RESERVED_AUTHORITY"
+    },
+    {
+      "id": "F2_SOURCE_BINDINGS",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f2-canonical-state-kernel/source-bindings.v1.json",
+      "blob": "2bc09f28af80dbb8734551e3e392cce86e46e0a1",
+      "authority": "UPSTREAM_PROVENANCE_CHAIN"
+    }
+  ],
+  "sourceRule": "F3_MAY_RESOLVE_AND_VALIDATE_F2_STATE_BUT_MAY_NOT_CHANGE_F2_ONTOLOGY_OR_SOURCE_SCIENTIFIC_STANDING",
+  "researchSpecificResolutionLogicAuthorized": false,
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false
+}

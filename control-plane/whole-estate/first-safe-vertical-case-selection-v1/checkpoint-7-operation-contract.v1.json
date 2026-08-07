@@ -1,0 +1,56 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_7_OPERATION_CONTRACT_v1",
+  "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
+  "operation": "FIRST_SAFE_VERTICAL_CASE_SELECTION_v1",
+  "governingMain": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
+  "governingTree": "aff84c63fcd96d5c8d4b1d29f4b86a374394b8a8",
+  "checkpoint6": {
+    "status": "PASS_CLOSED",
+    "sourcePr": 733,
+    "postMergeCertificationRun": 31156024178,
+    "postMergeCertificationAttempt": 2,
+    "postMergeCertification": "SUCCESS"
+  },
+  "registeredIntervention": "select one safe completed case for controlled Methods-Models demonstration",
+  "preservedCapacities": [
+    "NO_PROSPECTIVE_CONTAMINATION",
+    "CLAIM_CEILINGS",
+    "FRONTIER_STUDY_OWNERSHIP"
+  ],
+  "falsifiers": [
+    "case requires hidden outcome access",
+    "case duplicates full Frontier study",
+    "case requires claim upgrade"
+  ],
+  "rollback": "select no case and return to registered candidate set",
+  "constructionLaws": [
+    "CASE_SELECTION_FOR_PRESENTATION_IS_NOT_NEW_SCIENTIFIC_EVIDENCE",
+    "RETROSPECTIVE_CASE_MAY_NOT_BE_RELABELED_PROSPECTIVE",
+    "SELECTED_SLICE_MAY_NOT_REPLACE_OR_ABSORB_FRONTIER_STUDY",
+    "DEMONSTRATION_MAY_NOT_RAISE_SOURCE_CLAIM_CEILING",
+    "ADVERSE_MIXED_OR_UNEVALUABLE_SOURCE_FINDINGS_MUST_REMAIN_VISIBLE",
+    "HIDDEN_OUTCOME_ACCESS_IS_NOT_REQUIRED_FOR_THE_SELECTED_DEMONSTRATION",
+    "SCIENTIFIC_DELTA_MUST_BE_ADJUDICATED_BEFORE_CASE_SELECTION_WHEN_IT_COULD_AFFECT_SELECTION",
+    "FORMER_CHECKPOINT_8_IS_RETIRED_AS_A_STANDALONE_ESTATE_CHECKPOINT",
+    "CHECKPOINT_7_MAY_HAND_AUTHORITY_ONLY_TO_F1_CONSTRUCTION_BASELINE_AFTER_PASS_CLOSED"
+  ],
+  "successorProgram": {
+    "program": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
+    "preservedTarget": "TEXT_FIRST_STATEFUL_METHODS_MODELS_ENVIRONMENT_v1",
+    "firstGate": "F1_CONSTRUCTION_BASELINE",
+    "formerCheckpoint8": "RETIRED_AS_STANDALONE_ESTATE_CHECKPOINT"
+  },
+  "stopBoundary": {
+    "publicPageMutation": false,
+    "visualConstruction": "NOT_STARTED",
+    "canonicalIdentityDeliveryCrosswalkMaterialized": false,
+    "typedSemanticRelationGraphMaterialized": false,
+    "spatialTopologyFreeze": "BLOCKED",
+    "geometryAuthority": false,
+    "scientificClaimUpgrade": false,
+    "pr541Mutation": false,
+    "finalProgramExecution": "NOT_STARTED_PENDING_CP7_PASS_CLOSED",
+    "f2ConstructionAuthority": false,
+    "mergeAuthority": "REQUIRED_SEPARATELY"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "WHOLE_ESTATE_CHECKPOINT_7_CANDIDATE_CASE_REGISTER_v1",
+  "status": "CHECKPOINT_7_REPAIR_CANDIDATE",
+  "selectionPurpose": "choose one bounded completed case for the first controlled Methods-Models demonstration; selection itself creates no scientific evidence",
+  "candidateSetScope": "registered CP7 candidate plus scientific deltas admitted before selection; not an exhaustive inventory of the entire scientific portfolio",
+  "selectionRule": {
+    "primary": "prefer a completed case with explicit source identity, frozen scientific standing, visible limitations, no hidden-outcome requirement, no claim upgrade requirement, and a bounded demonstration slice that leaves Frontier study ownership intact",
+    "antiCherryPick": "when selecting within an already frozen multi-case source, use a pre-existing non-performance order rather than selecting the highest-scoring case"
+  },
+  "candidates": [
+    {
+      "candidateId": "CSB_PR709_BIO_LAB",
+      "sourcePr": 709,
+      "sourceOperation": "UCIC_CSB_FIVE_CASE_EXTERNAL_OFFICIAL_RECORD_SPECIFICITY_REPLICATION_v1",
+      "sourceHead": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+      "scientificExecution": "COMPLETE",
+      "exactHeadVerification": "PASS",
+      "caseId": "BIO_LAB",
+      "caseTitle": "Bio-Lab Inc. Conyers Fire and Chemical Release",
+      "caseFinalReportDate": "2026-07-21",
+      "positionInFrozenSelectionOrder": 1,
+      "scientificClassification": "PROCESS_SEPARATED_RETROSPECTIVE_EXTERNAL_REPLICATION",
+      "evidenceCeiling": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+      "outcomeBlindness": "NOT_ESTABLISHED",
+      "publicOutcomeContamination": "PRESENT",
+      "prospectiveConfirmation": "NOT_ESTABLISHED",
+      "universalLaw": "NOT_ESTABLISHED",
+      "independentHumanConfirmation": "NOT_ESTABLISHED",
+      "globalMultiplicativeOperator": "REMAINS_REJECTED",
+      "metrics": {
+        "routeHitRate": 1.0,
+        "causalCoverage": 0.8,
+        "trueRouteScore": 0.9,
+        "meanDecoyRouteHitRate": 0.08333333333333333,
+        "trueMinusDecoyAdvantage": 0.8166666666666667,
+        "falseRouteRate": 0.0,
+        "preservedCapacityStatus": "UNEVALUABLE_FROM_SUMMARY_RECORD"
+      },
+      "falsifierAssessment": {
+        "requiresHiddenOutcomeAccess": false,
+        "duplicatesFullFrontierStudy": false,
+        "requiresClaimUpgrade": false
+      },
+      "selectionDisposition": "SELECTED",
+      "selectionBasis": "first case in the pre-existing frozen PR709 selection order; not selected for having the strongest score"
+    },
+    {
+      "candidateId": "HURRICANE_RAW_TC_RADAR_QC_CORRECTED",
+      "sourcePr": 735,
+      "sourceOperation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+      "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+      "executionRun": 31195025635,
+      "artifactId": 9001275013,
+      "scientificExecution": "COMPLETE_QC_CORRECTED_RAW_TC_RADAR",
+      "terminalStanding": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+      "claimCeiling": "bounded retrospective evidence about internal hurricane structural organization and 24-h rapid intensification; does not by itself establish causality, prospective operational utility, independently recovered constitutive routes, or universality",
+      "primaryIncrementalAuc": -0.009569377990430672,
+      "primaryIncrementalAucCi95": [-0.04339188231463211, 0.035535714285714205],
+      "additiveCombinedAuc": 0.8133971291866029,
+      "additiveIncrementalAucCi95": [-0.03179495542509231, 0.11906047077922066],
+      "qcCorrection": "SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION",
+      "priorMetadataStanding": "QUARANTINED_SUPERSEDED_BY_QC_CORRECTED_RAW_RESULT",
+      "falsifierAssessment": {
+        "requiresHiddenOutcomeAccess": false,
+        "duplicatesFullFrontierStudyIfBounded": false,
+        "requiresClaimUpgrade": false
+      },
+      "selectionDisposition": "ACTIVE_RESEARCH_NOT_SELECTED_FIRST",
+      "selectionBasis": "the authoritative corrected raw mechanistic test is adverse for the frozen noncompensatory formulation; the line remains active research, while the first demonstration uses a completed case with a stable fixed ceiling",
+      "currentFrozenTestAdverse": true,
+      "scientificRejection": false
+    }
+  ],
+  "selectedCandidate": "CSB_PR709_BIO_LAB",
+  "selectionCreatesScientificCredit": false,
+  "selectionChangesSourceStanding": false,
+  "hurricaneRepairChangesSelectedCandidate": false
+}

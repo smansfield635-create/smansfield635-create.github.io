@@ -1,0 +1,108 @@
+{
+  "schema": "METHODS_MODELS_FIRST_SAFE_VERTICAL_CASE_CONTRACT_v1",
+  "status": "CHECKPOINT_7_CONSTRUCTION_CANDIDATE",
+  "selectedCase": {
+    "caseId": "BIO_LAB",
+    "title": "Bio-Lab Inc. Conyers Fire and Chemical Release",
+    "sourceStudy": "UCIC_CSB_FIVE_CASE_EXTERNAL_OFFICIAL_RECORD_SPECIFICITY_REPLICATION_v1",
+    "sourcePr": 709,
+    "sourceHead": "54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+    "selectionSourceOrder": 1,
+    "selectionRule": "FIRST_CASE_IN_EXISTING_FROZEN_PR709_SELECTION_ORDER",
+    "selectionIsScientificSampling": false,
+    "selectionIsNewEvidence": false
+  },
+  "sourceStanding": {
+    "scientificClassification": "PROCESS_SEPARATED_RETROSPECTIVE_EXTERNAL_REPLICATION",
+    "terminalDisposition": "UCIC_ROUTE_SPECIFICITY_SUPPORTED_EXTERNAL_CSB",
+    "evidenceCeiling": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+    "outcomeBlindness": "NOT_ESTABLISHED",
+    "publicOutcomeContamination": "PRESENT",
+    "independentHumanConfirmation": "NOT_ESTABLISHED",
+    "prospectiveConfirmation": "NOT_ESTABLISHED",
+    "universalLaw": "NOT_ESTABLISHED",
+    "globalMultiplicativeOperator": "REMAINS_REJECTED",
+    "preservedCapacityStatus": "UNEVALUABLE_FROM_SUMMARY_RECORD"
+  },
+  "scientificObject": {
+    "systemBoundary": "Plant 12 reactive-chemical storage and its immediate protection/containment controls",
+    "identityCriterion": "continued safe performance of the registered hazardous-process capacity without loss of its required containment/control relations",
+    "uncertainty": "MODERATE",
+    "predictedFailedRelations": [
+      "Reactive pool-treatment chemicals remain isolated from water/moisture during storage.",
+      "Sprinkler/fire-protection components remain mechanically compatible, corrosion-controlled, and leak-free around reactive inventory.",
+      "Storage-hazard identification accounts for reactivity, packaging, inventory scale, segregation, and ventilation.",
+      "Risk-management/oversight detects and corrects degraded safeguards before continued storage operation."
+    ],
+    "explicitFalsifier": "final official findings materially locate the causal route outside the registered predicted relations or contradict more than half of the registered failed relations"
+  },
+  "officialOutcomeSummary": {
+    "officialSource": "https://www.csb.gov/csb-releases-bio-lab-conyers-final-investigation-report/",
+    "materialRouteFindings": [
+      "corroded sprinkler leaked water onto reactive chlorinated isocyanurates",
+      "run-to-failure of degraded sprinkler protection",
+      "storage hazard identification/safeguards inadequate for reactive inventory, packaging, moisture and ventilation",
+      "risk management and oversight inadequate"
+    ],
+    "additionalSystemicFindingsNotRequiredForLocalBoundary": [
+      "industry guidance gaps",
+      "regulatory coverage gaps"
+    ],
+    "routeHits": 4,
+    "routePredictions": 4,
+    "causalFindingsCovered": 4,
+    "causalFindingsMaterialForScoring": 5
+  },
+  "decoyControls": [
+    {
+      "id": "IMPORTED_CUISINE",
+      "description": "ammonia refrigeration overpressure/relief/detection/EAP map imported from CUISINE",
+      "routeHitRate": 0.0
+    },
+    {
+      "id": "BOUNDARY_SHIFT",
+      "description": "community notification and evacuation-only boundary",
+      "routeHitRate": 0.25
+    },
+    {
+      "id": "PERMUTED_REQUIRED_OPTIONAL",
+      "description": "warehouse logistics, power continuity, and site-access relations substituted for reactive-storage constraints",
+      "routeHitRate": 0.0
+    }
+  ],
+  "caseScore": {
+    "routeHitRate": 1.0,
+    "causalCoverage": 0.8,
+    "falseRouteRate": 0.0,
+    "meanDecoyRouteHitRate": 0.08333333333333333,
+    "trueMinusDecoyAdvantage": 0.8166666666666667,
+    "trueRouteScore": 0.9
+  },
+  "methodsModelsDemonstrationBoundary": {
+    "purpose": "show how one declared system boundary, one fixed route map, decoy alternatives, official outcome correspondence, evidence standing, limitations, and provenance remain distinct but navigable",
+    "mayShow": [
+      "system boundary",
+      "identity criterion",
+      "registered relations",
+      "explicit falsifier",
+      "decoy controls",
+      "official outcome correspondence",
+      "case score",
+      "evidence ceiling",
+      "contamination and uncertainty qualifiers",
+      "source provenance"
+    ],
+    "mayNotShowAsEstablished": [
+      "prospective prediction success",
+      "independent human confirmation",
+      "universal law",
+      "preserved-capacity accuracy",
+      "global multiplicative operator",
+      "causal proof beyond the source study ceiling"
+    ],
+    "fullFiveCasePortfolioDuplication": false,
+    "frontierStudyOwnership": "PRESERVED",
+    "sourcePrMergeRequiredForDemonstrationSelection": false,
+    "sourcePrMergeAuthorized": false
+  }
+}

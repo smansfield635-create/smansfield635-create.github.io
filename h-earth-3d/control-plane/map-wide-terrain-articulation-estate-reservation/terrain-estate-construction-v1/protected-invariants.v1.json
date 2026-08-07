@@ -3,13 +3,8 @@
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
   "authorityIssue": 719,
   "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
-  "successorRepairRevision": 1,
-  "worldIdentity": {
-    "width": 512,
-    "depth": 512,
-    "lattice": "16x16",
-    "cellCount": 256
-  },
+  "successorRepairRevision": 3,
+  "worldIdentity": {"width": 512, "depth": 512, "lattice": "16x16", "cellCount": 256},
   "terrainTruthSource": {
     "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
     "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
@@ -28,82 +23,98 @@
       "fullInfluenceThroughDistance": 120,
       "fadeToZeroByDistance": 300,
       "directionalPhaseCount": 3
-    }
+    },
+    "authoringInspectorScale": 0.42
+  },
+  "mountainSystem": {
+    "form": "DEEP_CONTINUOUS_3D_MOUNTAIN_RANGE_NOT_THIN_VERTICAL_PLATES",
+    "rearBoundary": "EXTEND_MOUNTAIN_MASS_TO_REAR_WORLD_REGION",
+    "eventualTraversalBehindRange": "PROHIBITED",
+    "eventualVisibilityBehindRange": "PROHIBITED",
+    "waterfallGap": {"x": -48, "zApproximate": -250},
+    "hiddenUpperWatershed": "BEYOND_CURRENTLY_DEVELOPED_ACCESSIBLE_ENVIRONMENT"
+  },
+  "hydrology": {
+    "waterfall": "DESCENDS_BETWEEN_PRINCIPAL_PEAKS",
+    "reservoir": {
+      "center": {"x": -44, "z": -216},
+      "enclosed": true,
+      "visibleDrainageToCoast": false,
+      "concealedPumpIntakeReserved": true
+    },
+    "cavernExteriorReserve": {"x": -16, "z": -236, "relationship": "RIGHT_OF_WATERFALL"},
+    "vaultWaterRoute": "RESERVED_ONLY_NOT_CONSTRUCTED",
+    "liveWaterMutationAuthorized": false
+  },
+  "coastline": {
+    "seaLevelY": 0,
+    "currentBeach": "EXPOSED_RECEDED_LOCAL_COASTLINE",
+    "formerWaterExtent": "FARTHER_INLAND",
+    "oceanLevelLoweredByEstate": false,
+    "boundedLocalHydrologyChanged": true,
+    "mapAuthoringOceanShorelineContextRequired": true
   },
   "estateSite": {
-    "center": {"x": 80, "z": -172},
-    "reservedBounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
-    "preparedBuildablePad": {"xMinimum": 69, "xMaximum": 91, "zMinimum": -181, "zMaximum": -163},
-    "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
-    "effect": "PHYSICALLY_PREPARED_BUILDABLE_TERRACE_WITH_SMOOTH_TERRAIN_TRANSITION",
+    "atriumAnchor": {"x": 80, "z": -172},
+    "atrium360ViewRequired": true,
+    "largeHill": {"x": 152, "z": -224},
+    "saddle": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "reservedBounds": {"xMinimum": 52, "xMaximum": 176, "zMinimum": -242, "zMaximum": -144},
+    "footprintIntent": "LARGE_IRREGULAR_ESTATE_EXTENDING_FROM_ATRIUM_HILL_THROUGH_SADDLE_TOWARD_LARGE_HILL",
+    "singleSquarePadIsFinalFootprint": false,
     "gradingAuthorized": true,
     "foundationAuthorized": false,
     "manorGeometryAuthorized": false,
-    "developerOverlayMayBeDisabled": true,
     "siteMustRemainLegibleWithoutOverlay": true
   },
-  "twoHillRelation": {
-    "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
-    "rightHill": {"x": 152, "y": 42.73941022157669, "z": -224},
-    "hillSeparation": 94.40338976964756,
-    "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
-    "lowerHillToSaddleDrop": 10.537935137748718,
-    "mustRemainLegible": true,
-    "localEstateTerraceMayCutIntoLeftHillWithoutErasingBroaderHillMass": true
-  },
-  "lowCorridor": {
-    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
-    "pairAxis": {"x": 0.805055837353368, "z": -0.5931990380498502},
-    "corridorAxis": {"x": 0.5931990380498502, "z": 0.805055837353368},
-    "noBuildHalfWidth": 6,
-    "mustRemainOpen": true
-  },
-  "views": {
-    "beachwardGroundView": "MUST_REMAIN_CLEAR",
-    "sourceMaximumObstruction": -0.041573455929757586,
-    "mountainwardGroundView": "MUST_REMAIN_CLEAR",
-    "sourceMountainwardMaximumObstruction": -3.0548654910176936
+  "hiddenVault": {
+    "center": {"x": 152, "z": -224},
+    "surfaceExpression": "NONE",
+    "publicKnowledge": "SECRET",
+    "orcoinChamberFutureProgram": true,
+    "waterInfrastructureFutureProgram": true,
+    "interiorConstructionAuthorized": false
   },
   "entryZone": {
     "mustRemainSeparateFromEstateEnvelope": true,
     "mustRemainRegionallyConnected": true,
     "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
-    "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96}
+    "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96},
+    "presentationOffsetMustRemainZero": true
   },
   "worldInspector": {
     "singlePointerOrbitMustRemainRecoverable": true,
     "minimumPitchRadians": 0.46,
     "maximumPitchRadians": 1.49,
     "fitWorldRecoveryRequired": true,
-    "estateFocusRequired": true,
-    "topViewRequired": true,
     "mobilePinchZoomRequired": true,
     "twoPointerPanRequired": true,
     "ordinaryInteractionMayStrandCamera": false,
-    "developerEstateGuideDefault": "OFF"
+    "guideOverlayRenderPathAllowed": false,
+    "staticOceanReservoirWaterfallContextRequired": true,
+    "terrainSampleMinimum": 19000,
+    "productionVisualClaim": false
   },
   "requiredPreservationLaws": [
-    "ENTRY_WATER_REMAINS_HARD_BOUNDARY",
-    "CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE",
-    "ENTRY_ZONE_REMAINS_SEPARATE_FROM_ESTATE_SITE",
-    "LOW_CORRIDOR_REMAINS_OPEN",
-    "TWO_HILL_RELATION_REMAINS_LEGIBLE",
-    "BEACHWARD_AND_MOUNTAINWARD_VIEWS_REMAIN_CLEAR",
-    "CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED_WITHOUT_INTERIOR_CONSTRUCTION",
-    "FRONTIER_PLAINS_REMAINS_UNCONSTRUCTED",
-    "CONTINUOUS_TERRAIN_TRAVERSAL_MUST_NOT_REGRESS",
-    "ESTATE_ZONING_REQUIRES_PHYSICAL_TERRAIN_SITE_PREPARATION_NOT_OVERLAY_ONLY",
-    "NO_MANOR_GEOMETRY_SELECTION_OR_AUTHORING",
-    "NO_LIVE_RUNTIME_CAMERA_NAVIGATION_WATER_MUTATION",
+    "RUN8B_SOURCE_REMAINS_IMMUTABLE",
+    "ENTRY_ZONE_REMAINS_SEPARATE_AND_CONNECTED",
+    "MOUNTAINS_GAIN_DEPTH_WITHOUT_THIN_PLATE_PRESENTATION",
+    "REAR_MOUNTAIN_RANGE_SUPPORTS_EVENTUAL_NATURAL_WORLD_BOUNDARY",
+    "WATERFALL_RESERVOIR_CAVERN_RELATION_REMAINS_SPATIALLY_LEGIBLE",
+    "RESERVOIR_REMAINS_ENCLOSED",
+    "CAVERN_AND_SECRET_VAULT_NETWORKS_REMAIN_SEPARATE",
+    "ATRIUM_REMAINS_HIGH_VIEW_ANCHOR",
+    "ESTATE_EXTENDS_ACROSS_SADDLE_TOWARD_LARGE_HILL",
+    "SECRET_VAULT_HAS_NO_REQUIRED_SURFACE_EXPRESSION",
+    "MAP_SHOWS_COASTLINE_AND_WATER_CONTEXT_WITHOUT_MUTATING_LIVE_WATER",
+    "NO_MANOR_CAVERN_OR_VAULT_INTERIOR_GEOMETRY",
+    "NO_LIVE_RUNTIME_CAMERA_NAVIGATION_OR_WATER_MUTATION",
     "NO_MERGE_DEPLOYMENT_RELEASE_WITHOUT_SEPARATE_AUTHORITY"
   ],
-  "deferredGeometry": {
-    "exactBuildingFootprint": "UNASSIGNED_WITHIN_PREPARED_SITE",
-    "buildingOrientation": "UNASSIGNED",
-    "atriumGeometry": "UNASSIGNED",
-    "entranceCoordinates": "UNASSIGNED",
-    "gardenLayout": "UNASSIGNED",
-    "sculpturePositions": "UNASSIGNED",
-    "selectionByInferenceProhibited": true
-  }
+  "supersededPriorAssumptions": [
+    "SINGLE_22_BY_18_ESTATE_PAD_AS_FINAL_MANOR_FOOTPRINT",
+    "ATRIUM_UNASSIGNED",
+    "LOW_SADDLE_REQUIRED_TO_REMAIN_PERMANENTLY_EMPTY",
+    "MAP_INSPECTOR_WITHOUT_COASTLINE_OR_WATER_CONTEXT"
+  ]
 }

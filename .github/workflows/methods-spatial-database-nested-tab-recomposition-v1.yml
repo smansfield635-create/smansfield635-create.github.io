@@ -1,0 +1,103 @@
+name: Methods Spatial Database Checkpoint 4
+
+on:
+  push:
+    branches:
+      - construction/methods-spatial-database-checkpoint4-text-first-v2-001
+    paths:
+      - ".github/workflows/methods-spatial-database-nested-tab-recomposition-v1.yml"
+      - "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-checkpoint4-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  builder:
+    name: Builder
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify exact construction
+        run: node control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/verify.v1.mjs --role builder --output /tmp/builder.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-checkpoint4-builder
+          path: /tmp/builder.json
+          retention-days: 90
+
+  fresh-verifier:
+    name: Fresh verifier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Independently verify exact construction
+        run: node control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/verify.v1.mjs --role fresh-verifier --output /tmp/fresh-verifier.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-checkpoint4-fresh-verifier
+          path: /tmp/fresh-verifier.json
+          retention-days: 90
+
+  exact-equality:
+    name: Exact fingerprint equality
+    needs:
+      - builder
+      - fresh-verifier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-checkpoint4-builder
+          path: /tmp/builder
+      - uses: actions/download-artifact@v4
+        with:
+          name: methods-checkpoint4-fresh-verifier
+          path: /tmp/fresh
+      - name: Require exact normalized equality
+        run: >-
+          node control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/verify.v1.mjs
+          --compare /tmp/builder/builder.json
+          /tmp/fresh/fresh-verifier.json
+          --output /tmp/independent-equality.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: methods-checkpoint4-independent-equality
+          path: /tmp/independent-equality.json
+          retention-days: 90
+
+  stop-boundary:
+    name: Stop boundary
+    needs:
+      - exact-equality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hold before merge, deployment, or acceptance
+        run: |
+          echo "NONPUBLIC_USER_TEST_ARTIFACT_READY"
+          echo "MERGE_NOT_AUTHORIZED"
+          echo "PUBLIC_DEPLOYMENT_NOT_AUTHORIZED"
+          echo "PERCEPTUAL_ACCEPTANCE_NOT_CLAIMED"

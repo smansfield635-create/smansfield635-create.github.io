@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "final_report_date": "2026-07-21",
+      "id": "BIO_LAB",
+      "title": "Bio-Lab Inc. Conyers Fire and Chemical Release"
+    },
+    {
+      "final_report_date": "2026-05-27",
+      "id": "GIVAUDAN",
+      "title": "Givaudan Sense Colour Explosion"
+    },
+    {
+      "final_report_date": "2026-02-26",
+      "id": "DOW",
+      "title": "Dow Louisiana Operations Explosions"
+    },
+    {
+      "final_report_date": "2026-02-23",
+      "id": "PEMEX",
+      "title": "PEMEX Deer Park Chemical Release"
+    },
+    {
+      "final_report_date": "2025-09-25",
+      "id": "CUISINE",
+      "title": "Cuisine Solutions Ammonia Release"
+    }
+  ],
+  "classification": "PROCESS_SEPARATED_RETROSPECTIVE_EXTERNAL_REPLICATION",
+  "cutoff": "2026-08-06T21:30:00-05:00",
+  "fixed_invariant_head": "cac25b781909d12f6b53b4c3440adcd7c1356eb0",
+  "operation": "UCIC_CSB_FIVE_CASE_EXTERNAL_OFFICIAL_RECORD_SPECIFICITY_REPLICATION_v1",
+  "prohibitions": [
+    "no case replacement because of adverse results",
+    "no operator substitution",
+    "no route-map repair after official findings are opened",
+    "no threshold change after scoring",
+    "no revival of rejected global multiplicative operator",
+    "no independent-human or prospective language",
+    "no universal-law claim from this study"
+  ],
+  "selection_rule": "five most recent CSB completed investigations by final-report release date at cutoff; no favorable-case replacement",
+  "thresholds": {
+    "max_cases_false_route_rate_gt_0_50": 1,
+    "median_causal_coverage_min": 0.6,
+    "median_route_hit_rate_min": 0.7,
+    "median_true_minus_decoy_advantage_min": 0.2,
+    "min_cases_positive_true_minus_decoy_advantage": 4
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F5_NAVIGATION_CONTRACT_v1",
+  "status": "F5_CONSTRUCTION_CANDIDATE",
+  "program": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
+  "governingPrinciple": "NAVIGATION_MAY_CHANGE_LOCATION_BUT_MAY_NOT_CHANGE_SCIENTIFIC_MEANING",
+  "operationClasses": {
+    "NAVIGATION_MUTATION": {
+      "meaning": "move within the currently loaded canonical environment state",
+      "allowedStateMutation": ["ROUTE_HISTORY"],
+      "validator": "F3_VALIDATE_TRANSITION_NAVIGATION"
+    },
+    "ENTRY_RESTORE": {
+      "meaning": "load an exact state snapshot already authorized upstream",
+      "derivationFromCurrentState": false,
+      "requiresExactF3CanonicalRestoration": true
+    },
+    "RELOAD_RESTORE": {
+      "meaning": "restore the exact canonical state encoded by the current canonical URL capsule",
+      "derivationFromCurrentState": false,
+      "requiresExactF3CanonicalRestoration": true
+    },
+    "HISTORY_RESTORE": {
+      "meaning": "browser back or forward restores the exact prior or next canonical URL capsule",
+      "derivationFromCurrentState": false,
+      "requiresExactF3CanonicalRestoration": true
+    },
+    "RETURN_RESTORE": {
+      "meaning": "restore the exact declared origin state carried by return context",
+      "derivationFromDestinationState": false,
+      "requiresExactF3CanonicalRestoration": true
+    },
+    "CROSS_OBJECT_TRAVERSAL": {
+      "meaning": "move from one scientific object to another",
+      "requiresDeclaredSemanticRelation": true,
+      "silentRelationSynthesis": false
+    }
+  },
+  "laws": [
+    "URL_TEXT_IS_ADDRESSING_METADATA_NOT_SCIENTIFIC_AUTHORITY",
+    "ROUTE_HISTORY_IS_THE_ONLY_AXIS_MUTABLE_BY_NAVIGATION",
+    "DEEP_LINK_ENTRY_RESTORES_AN_EXISTING_AUTHORIZED_STATE_AND_DOES_NOT_DERIVE_ONE",
+    "RELOAD_MUST_RESTORE_EXACT_CANONICAL_STATE_OR_FAIL_CLOSED",
+    "BACK_AND_FORWARD_MUST_REPLAY_EXACT_HISTORY_ENTRIES_OR_FAIL_CLOSED",
+    "RETURN_MUST_RESTORE_EXACT_DECLARED_ORIGIN_OR_SIGNAL_NON_RESTORABLE",
+    "CROSS_OBJECT_TRAVERSAL_REQUIRES_AN_UPSTREAM_DECLARED_SEMANTIC_RELATION",
+    "DESTINATION_EXISTENCE_DOES_NOT_UPGRADE_ORIGINAL_STANDING",
+    "ADVERSE_OR_UNRESOLVED_EVIDENCE_MAY_REMAIN_A_NAVIGATION_ORIGIN",
+    "NAVIGATIONAL_IMPORTANCE_IS_NOT_EVIDENTIARY_STRENGTH",
+    "NO_SILENT_FALLBACK",
+    "NO_NAVIGATION_PATH_MAY_FILL_UNSET_OR_UNEVALUABLE_SCIENTIFIC_AXES"
+  ],
+  "f5DoesNotDefine": [
+    "NEW_SCIENTIFIC_OBJECTS",
+    "NEW_SCIENTIFIC_RELATIONS",
+    "SCIENTIFIC_CLAIM_UPGRADES",
+    "DEPTH_SEMANTICS",
+    "ACCESSIBILITY_SYSTEM",
+    "SPATIAL_TOPOLOGY",
+    "GEOMETRY",
+    "VISUAL_LAYOUT"
+  ],
+  "nextGateOwnerForDepthSemantics": "F6_DEPTH_AND_INQUIRY",
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false
+}

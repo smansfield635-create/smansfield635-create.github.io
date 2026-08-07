@@ -22,7 +22,13 @@ const fixtures=read('conformance-fixtures.v1.json');
 const contract=read('assembly-contract.v1.json');
 const receipt=read('f9-terminal-receipt.v1.json');
 const sourceBindings=read('source-bindings.v1.json');
-const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const normalize=value=>{
+  if(Array.isArray(value)) return value.map(normalize);
+  if(value!==null&&typeof value==='object') return Object.fromEntries(Object.keys(value).sort().map(key=>[key,normalize(value[key])]));
+  return value;
+};
+const stable=value=>JSON.stringify(normalize(value));
+const same=(a,b)=>stable(a)===stable(b);
 const sorted=a=>[...a].sort((x,y)=>String(x).localeCompare(String(y)));
 const assert=(condition,message)=>{if(!condition) throw new Error(message);};
 const action=(controlId,modality='KEYBOARD',payload={})=>({schema:'METHODS_MODELS_INTERACTION_ACTION_v1',kind:'ACTIVATE',modality,controlId,payload});
@@ -57,7 +63,7 @@ for(const entryPointId of environment.registries.statefulEntryIds){
   assert(opened.valid,`ENTRY_OPEN_FAILED:${entryPointId}:${opened.errors}`);
   assert(opened.session.entryPointId===entryPointId,`ENTRY_IDENTITY_MISMATCH:${entryPointId}`);
   assert(axisValue(opened.session,'SCIENTIFIC_OBJECT').value.objectId===entryPointId,`SCIENTIFIC_OBJECT_MISMATCH:${entryPointId}`);
-  const originalClaim=JSON.stringify(axisValue(opened.session,'CLAIM_CEILING'));
+  const originalClaim=stable(axisValue(opened.session,'CLAIM_CEILING'));
   const originalBinding=opened.session.interactionSession.scientificBindingSha256;
   const originalScene=opened.session.sceneScienceDigest;
 
@@ -67,7 +73,7 @@ for(const entryPointId of environment.registries.statefulEntryIds){
     assert(moved.valid,`DEPTH_FAILED:${entryPointId}:${depth}:${moved.errors}`);
     assert(moved.session.interactionSession.scientificBindingSha256===originalBinding,`DEPTH_BINDING_DRIFT:${entryPointId}:${depth}`);
     assert(moved.session.sceneScienceDigest===originalScene,`DEPTH_SCENE_DRIFT:${entryPointId}:${depth}`);
-    assert(JSON.stringify(axisValue(moved.session,'CLAIM_CEILING'))===originalClaim,`DEPTH_CLAIM_DRIFT:${entryPointId}:${depth}`);
+    assert(stable(axisValue(moved.session,'CLAIM_CEILING'))===originalClaim,`DEPTH_CLAIM_DRIFT:${entryPointId}:${depth}`);
     current=moved.session;
   }
 
@@ -90,13 +96,13 @@ for(const entryPointId of environment.registries.statefulEntryIds){
   assert(routed.valid,`ROUTE_FAILED:${entryPointId}:${routed.errors}`);
   assert(same(routed.output.changedAxes,['ROUTE_HISTORY']),`ROUTE_CHANGED_WRONG_AXES:${entryPointId}`);
   assert(axisValue(routed.session,'SCIENTIFIC_OBJECT').value.objectId===entryPointId,`ROUTE_OBJECT_DRIFT:${entryPointId}`);
-  assert(JSON.stringify(axisValue(routed.session,'CLAIM_CEILING'))===originalClaim,`ROUTE_CLAIM_DRIFT:${entryPointId}`);
+  assert(stable(axisValue(routed.session,'CLAIM_CEILING'))===originalClaim,`ROUTE_CLAIM_DRIFT:${entryPointId}`);
   assert(routed.session.interactionSession.scientificBindingSha256===originalBinding,`ROUTE_BINDING_DRIFT:${entryPointId}`);
   const deepLink=createIntegratedDeepLink(routed.session,environment);
   const restored=restoreIntegratedDeepLink(deepLink,environment);
   assert(restored.valid,`DEEPLINK_RESTORE_FAILED:${entryPointId}:${restored.errors}`);
   assert(restored.session.interactionSession.scientificStateSha256===routed.session.interactionSession.scientificStateSha256,`DEEPLINK_STATE_MISMATCH:${entryPointId}`);
-  assert(JSON.stringify(axisValue(restored.session,'CLAIM_CEILING'))===originalClaim,`DEEPLINK_CLAIM_DRIFT:${entryPointId}`);
+  assert(stable(axisValue(restored.session,'CLAIM_CEILING'))===originalClaim,`DEEPLINK_CLAIM_DRIFT:${entryPointId}`);
 }
 
 for(const id of environment.registries.nonStatefulPortfolioIds){

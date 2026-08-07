@@ -2,8 +2,8 @@
   "schema": "METHODS_SPATIAL_DATABASE_CHECKPOINT_4_FRESH_VERIFIER_RECEIPT_v1",
   "status": "PASS",
   "role": "fresh-verifier",
-  "coreFingerprint": "9735a99659f221a98c8c292e936bcddd3d70cac823a418da61659dfcbf32f79d",
-  "normalizedFingerprint": "8c2466a0187082166a9ef29327055cff1b958dca481f8ed087492216dd878374",
+  "coreFingerprint": "8b0fb44da3ee677d91af8d8d93149d777942df5e626e56b447aeef0a9158b809",
+  "normalizedFingerprint": "eb555d3f38bc9ba3317df998d2f1431483066c0a55e9dc047d628bbc07a7a684",
   "exactPathCount": 19,
   "checks": [
     "NO_METHODS_DRIFT_FROM_502F_TO_E876",

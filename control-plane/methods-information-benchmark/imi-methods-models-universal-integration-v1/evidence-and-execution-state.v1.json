@@ -1,0 +1,52 @@
+{
+  "schema": "IMI_METHODS_MODELS_EVIDENCE_AND_EXECUTION_STATE_v1",
+  "status": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+  "scientificBindings": {
+    "fixedInvariantRetained": true,
+    "globalProductRejected": true,
+    "multiplicativeSpecificity": false,
+    "generalObservationalSuperiority": false
+  },
+  "retrospectiveEvidence": {
+    "classification": "INTERNAL_RETROSPECTIVE",
+    "disposition": "SURVIVES_INTERNAL_RETROSPECTIVE_PORTFOLIO_ADJUDICATION_WITH_CONSTRAINTS",
+    "continuationJustified": true,
+    "controlledMechanismSupported": true,
+    "externalSoftwareRouteAccuracy": 1.0,
+    "outputHistoryAccuracy": 0.6667,
+    "matchedOutputRouteAdvantage": 0.6667,
+    "crossSectionalSupportingDomains": 3,
+    "independentProspectiveConfirmation": false
+  },
+  "prospectiveExecution": {
+    "portfolioFreeze": "PASS",
+    "targetsRegistered": 5,
+    "domains": 5,
+    "preOutcomePacketsComplete": 0,
+    "preOutcomePacketsRequired": 5,
+    "independentAnalysts": 0,
+    "predictionsFrozen": false,
+    "outcomeAccess": "PROHIBITED",
+    "scientificResult": "NONE"
+  },
+  "custodyStates": [
+    "SOURCE_SIDE",
+    "ANALYST_SIDE",
+    "OUTCOME_SIDE",
+    "SCORING_SIDE"
+  ],
+  "stateSeparationRules": [
+    "RETROSPECTIVE_EVIDENCE_IS_NOT_PROSPECTIVE_CONFIRMATION",
+    "PROTOCOL_READINESS_IS_NOT_SCIENTIFIC_RESULT",
+    "CI_SUCCESS_IS_NOT_INVARIANT_SURVIVAL",
+    "OUTCOME_ACCESS_REQUIRES_PREDICTION_FREEZE_AND_AUTHORITY",
+    "INTERFACE_STATUS_IS_NOT_EVIDENCE_STATUS"
+  ],
+  "terminalDispositions": [
+    "UCIC_FALSE",
+    "UCIC_UNDERDEFINED",
+    "UCIC_REDUNDANT",
+    "UCIC_SURVIVES_PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+    "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE"
+  ]
+}

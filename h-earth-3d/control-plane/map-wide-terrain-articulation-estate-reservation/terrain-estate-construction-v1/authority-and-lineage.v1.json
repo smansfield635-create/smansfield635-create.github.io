@@ -1,0 +1,91 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_AUTHORITY_AND_LINEAGE_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "authorityIssue": 719,
+  "authorityId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_AUTHORITY_v1",
+  "governingRepositoryIdentity": {
+    "commit": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+    "tree": "3116d5c35bfdd575922dac614fb2e9f1d4f61ec5"
+  },
+  "canonicalAdmission": {
+    "requestComment": 5212408476,
+    "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "lockGeneration": 422,
+    "lockScope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:CONTINUOUS_WORLD_FIELD:V1:EXACT_28_PATH_SCOPE",
+    "scopeHash": "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3"
+  },
+  "predecessorSupersession": {
+    "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+    "lockGeneration": 411,
+    "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f",
+    "terminalDisposition": "SUPERSEDED",
+    "released": true,
+    "preservedStep2Head": "82bbf57d706a428172709d3a2e050ce3afcc014a"
+  },
+  "authorityChain": [
+    {
+      "class": "ROLE_4_MAP_WIDE_REDEVELOPMENT_AUTHORITY",
+      "source": "ISSUE_719",
+      "effect": "AUTHORIZE_BOUNDED_NONPUBLIC_MAP_WIDE_ENVIRONMENT_CONSTRUCTION_AFTER_FRESH_CANONICAL_ADMISSION",
+      "furtherStartApprovalRequiredAfterAdmission": false,
+      "mergeAuthority": false,
+      "deploymentAuthority": false,
+      "releaseAuthority": false
+    },
+    {
+      "class": "CANONICAL_OPERATION_INTAKE",
+      "sourceComment": 5212408476,
+      "result": "ADMITTED_AND_LOCKED",
+      "lockGeneration": 422
+    },
+    {
+      "class": "PREDECESSOR_CONSTRUCTION_EVIDENCE",
+      "sourceHead": "82bbf57d706a428172709d3a2e050ce3afcc014a",
+      "effect": "PRESERVE_STEP2_CONTROL_PLANE_AND_SPATIAL_CONSTRAINT_EVIDENCE_ONLY",
+      "productMutationInherited": false
+    },
+    {
+      "class": "REGISTRY_PREREQUISITE",
+      "sourcePullRequest": 712,
+      "sourceMergeCommit": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+      "effect": "PRESERVE_REGISTERED_TERRAIN_ESTATE_CANDIDATE_SCOPE_HISTORY_WITHOUT_REWRITE"
+    },
+    {
+      "class": "CAUSAL_EVIDENCE",
+      "sourcePullRequest": 680,
+      "sourceMergeCommit": "214db7387456699183922e316171e19ad9a2950f",
+      "packageSha256": "48da9f306fc3631e4e6744ac15cab2ae0f7c55e63d9ea525c764e51b736338a8",
+      "zeroPassInfeasibilityInferenceAuthorized": false
+    },
+    {
+      "class": "TERRAIN_TRUTH",
+      "sourcePath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "sourceHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+      "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+      "effect": "SUCCESSOR_CANDIDATE_MUST_COMPOSE_OVER_RUN8B_TRUTH_WITHOUT_MUTATING_IT_IN_PLACE"
+    },
+    {
+      "class": "POSITIVE_VISUAL_DESIGN_REFERENCE",
+      "sourceCommit": "97003e9de386a8962fb46d0b370005b900a167d6",
+      "sourceTree": "7cd51523649788ad6fb226aea16f6799a5c58177",
+      "effect": "PERMIT_DERIVATION_OF_BOUNDED_RELIEF_DIRECTION_ONLY",
+      "mergedMain": false,
+      "automaticTransplant": false
+    }
+  ],
+  "roleBoundaries": {
+    "role1": "CONSTRUCT_WITHIN_EXACT_28_PATH_LOCK_ONLY",
+    "role3": "FRESH_INDEPENDENT_REPRODUCTION_NO_REPAIR",
+    "role4": "NO_FURTHER_START_APPROVAL_REQUIRED_AFTER_ADMISSION;SEPARATE_LATER_GOVERNANCE_ONLY",
+    "role5": "INTEGRATED_ENVIRONMENT_RATIFICATION_BEFORE_USER_REVIEW"
+  },
+  "authorityLimitations": [
+    "NO_MAIN_MUTATION",
+    "NO_MANOR_GEOMETRY_ARCHITECTURE_OR_CONSTRUCTION",
+    "NO_REGISTRY_REWRITE",
+    "NO_LIVE_RUNTIME_CAMERA_NAVIGATION_OR_WATER_MUTATION",
+    "NO_FRONTIER_PLAINS_OR_CAVERN_INTERIOR_CONSTRUCTION",
+    "NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLIC_PROMOTION"
+  ]
+}

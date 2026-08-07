@@ -2,46 +2,49 @@
   "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_RECEIPT_v1",
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
   "gate": "BUILDER",
-  "status": "BLOCKED_NONTERMINAL_EXECUTION_SURFACE_UNAVAILABLE",
-  "result": "NONE",
+  "status": "PASS_COMPLETE",
+  "result": "PASS",
   "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
-  "lockGeneration": 422,
-  "scopeHash": "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3",
-  "constructionBranch": "build/h-earth-map-wide-environment-redevelopment-v1-001",
-  "constructionHeadBeforeReceiptUpdate": "d1abbdaf2f52d82ec5e80b58442259f64affd16c",
+  "constructionLockGeneration": 422,
+  "verifiedCandidateHead": "69a776ab4de61cddb6fad3602625164bea4b6323",
   "exactPathCount": 28,
-  "exactPathDeltaStaticCheck": "PASS",
-  "allPathsMaterializedStaticCheck": "PASS",
-  "mainIdentityStaticCheck": "PASS_3f51f0cd159df33571905c6cb14253ebdd137e3b",
-  "lockIdentityStaticCheck": "PASS_GENERATION_422_ADMITTED_LOCKED_RELEASED_FALSE",
-  "automaticRepositoryRegistryPreflight": {
-    "runId": 31148880465,
-    "head": "d1abbdaf2f52d82ec5e80b58442259f64affd16c",
-    "result": "SUCCESS",
-    "builderSubstitution": false
+  "changedPathCount": 28,
+  "fingerprintPathCount": 23,
+  "constructionFingerprint": "7834a4bbf42104690457b2dfe929e11875f0f10abbb8bfda053021530ed9a21b",
+  "workflowExecution": {
+    "carrierOperationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_ROLE3_EXECUTION_CARRIER_002",
+    "carrierLockGeneration": 424,
+    "carrierScopeHash": "2edf0b798097d5e1b806c8a0f46cddfd3b39f6dbe3efd23f60a6d5c06d5a844e",
+    "workflowRun": 31149565528,
+    "workflowHead": "01750c59aec1cae69d8d109192b456fa61a70d8b",
+    "artifactId": 8982777704,
+    "artifactDigest": "sha256:9a6aade94f2922d7cdfe747e59a85a52f4d4e1105538389fa95af9bcedf562d5",
+    "builderStepResult": "SUCCESS"
   },
-  "requiredCommand": "node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs --output /tmp/h-earth-map-wide-environment-redevelopment-v1",
-  "executionAttempts": [
-    {
-      "surface": "LOCAL_EXECUTION_SANDBOX",
-      "result": "UNAVAILABLE",
-      "reason": "GITHUB_HOST_DNS_UNAVAILABLE_TO_SANDBOX_CLONE"
-    },
-    {
-      "surface": "EXISTING_BRANCH_PUSH_ACTIONS",
-      "result": "NO_BUILDER_EXECUTOR_PRESENT",
-      "observedCheck": "AUTOMATIC_H_EARTH_REPOSITORY_REGISTRY_PREFLIGHT_SUCCESS_ONLY"
-    },
-    {
-      "surface": "CONNECTED_GITHUB_WRITE_TOOLS",
-      "result": "NO_WORKFLOW_OR_REPOSITORY_DISPATCH_ACTION_EXPOSED"
-    }
-  ],
-  "constructionFingerprint": null,
-  "verifiedConstructionHead": null,
-  "candidateFreezeAuthorized": false,
-  "role3Authorized": false,
-  "role3Prohibition": "ROLE_3_MUST_NOT_BEGIN_UNTIL_EXECUTED_BUILDER_PASS_AND_EXACT_CANDIDATE_FREEZE",
+  "verification": {
+    "allVerifierChecksPassed": true,
+    "issues": [],
+    "run8bTruthPreserved": true,
+    "materialPresentationReliefDemonstrated": true,
+    "estateCoreZeroOffset": true,
+    "entryCoreZeroOffset": true,
+    "lowCorridorZeroOffset": true,
+    "webgl2PreviewExecutionVerified": true,
+    "v2NormalReliefExecutionVerified": true,
+    "manorGeometryPathAbsent": true,
+    "outsideLiveSurfaceMutationAbsent": true
+  },
+  "priorFailedAttempt": {
+    "workflowRun": 31149151401,
+    "candidateHead": "2b8061d61d852f920036ff5254f0cb69914399c5",
+    "result": "FAIL_CLOSED",
+    "cause": "STATIC_PREVIEW_DETECTION_FALSE_NEGATIVE_TRIANGLE_NORMAL_REQUIREMENT_FOR_SHADER_BASED_WEBGL2_RENDERER",
+    "terrainOrEnvironmentFailure": false,
+    "repairPath": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs"
+  },
+  "receiptFilesExcludedFromConstructionFingerprint": true,
+  "role3Authorized": true,
+  "role5AuthorizedAfterFreshRole3Pass": true,
   "mergeAuthorized": false,
   "deploymentAuthorized": false,
   "releaseAuthorized": false,

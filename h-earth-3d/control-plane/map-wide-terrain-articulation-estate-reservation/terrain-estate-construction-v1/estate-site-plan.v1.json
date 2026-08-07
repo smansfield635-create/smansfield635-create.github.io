@@ -1,20 +1,31 @@
 {
   "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ESTATE_SITE_PLAN_v1",
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
-  "siteStatus": "RESERVED_FUTURE_CONSTRUCTION_ENVELOPE_ONLY",
+  "successorRepairRevision": 1,
+  "siteStatus": "PHYSICALLY_PREPARED_FUTURE_CONSTRUCTION_SITE_WITHOUT_MANOR_GEOMETRY",
   "center": {"x": 80, "z": -172},
   "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
-  "transitionEnvelope": {"xMinimum": 52, "xMaximum": 108, "zMinimum": -200, "zMaximum": -144},
+  "transitionEnvelope": {"xMinimum": 57, "xMaximum": 103, "zMinimum": -193, "zMaximum": -151},
   "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
   "terrainTreatment": {
-    "coreGeometricOffset": 0,
-    "transitionRule": "SMOOTHLY_FADE_SUCCESSOR_RELIEF_TO_ZERO_BEFORE_CORE_ENVELOPE",
-    "surroundingPurpose": "FRAME_AND_NEST_RESERVED_SITE_WITHOUT_PRESELECTING_BUILDING_GEOMETRY",
-    "gradingAuthorized": false,
-    "foundationAuthorized": false
+    "treatmentClass": "CUT_AND_BLEND_BUILDABLE_TERRACE_WITHOUT_BUILDING_GEOMETRY",
+    "buildablePad": {"xMinimum": 69, "xMaximum": 91, "zMinimum": -181, "zMaximum": -163},
+    "buildablePadWidth": 22,
+    "buildablePadDepth": 18,
+    "transitionMargin": 12,
+    "maximumCenterCutDepth": 4.5,
+    "minimumCenterCutDepth": 1.0,
+    "targetElevationRule": "LOWER_LOCAL_PERIMETER_PLUS_0_65_CLAMPED_TO_CENTER_MINUS_4_5_THROUGH_CENTER_MINUS_1_0",
+    "coreGeometricOffset": "NONZERO_WHERE_REQUIRED_TO_CREATE_BUILDABLE_TERRACE",
+    "transitionRule": "SMOOTHSTEP_BLEND_PREPARED_TERRACE_BACK_TO_SURROUNDING_RUN8B_PRESENTATION_TERRAIN",
+    "surroundingPurpose": "PHYSICALLY_PREPARE_FUTURE_BUILDING_SITE_WHILE_PRESERVING_HILL_IDENTITY_AND_VIEW_RELATIONSHIPS",
+    "gradingAuthorized": true,
+    "foundationAuthorized": false,
+    "buildingGeometryAuthorized": false,
+    "overlayRequiredForSiteLegibility": false
   },
   "deferredManor": {
-    "footprint": "UNASSIGNED",
+    "footprint": "UNASSIGNED_WITHIN_PREPARED_BUILDABLE_SITE",
     "orientation": "UNASSIGNED",
     "entrance": "UNASSIGNED",
     "atrium": "UNASSIGNED",
@@ -29,7 +40,8 @@
     "beachwardGroundView": "PRESERVE_CLEAR",
     "mountainwardGroundView": "PRESERVE_CLEAR",
     "entryZone": "PRESERVE_SEPARATE_AND_CONNECTED",
-    "terrainTraversal": "PRESERVE_CONTINUOUS"
+    "terrainTraversal": "PRESERVE_CONTINUOUS",
+    "preparedSite": "MUST_BE_VISIBLE_FROM_TERRAIN_GEOMETRY_AND_MATERIAL_WITH_DEVELOPER_GUIDE_OFF"
   },
-  "acceptanceLaw": "ENVIRONMENT_MAY_BE_REDEVELOPED_AROUND_RESERVED_SITE_BUT_SITE_IDENTITY_AND_FUTURE_OPTIONALITY_MUST_NOT_BE_CONSUMED"
+  "acceptanceLaw": "ZONING_REQUIRES_PHYSICAL_SITE_PREPARATION_IN_TERRAIN_NOT_RECTANGLE_OVERLAY_ONLY;MANOR_GEOMETRY_REMAINS_DEFERRED"
 }

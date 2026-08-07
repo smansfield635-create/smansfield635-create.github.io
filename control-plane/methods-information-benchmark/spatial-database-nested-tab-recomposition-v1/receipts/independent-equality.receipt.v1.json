@@ -1,0 +1,9 @@
+{
+  "schema": "METHODS_SPATIAL_DATABASE_CHECKPOINT_4_INDEPENDENT_EQUALITY_RECEIPT_v1",
+  "status": "PASS",
+  "exactNormalizedEquality": true,
+  "coreFingerprint": "9735a99659f221a98c8c292e936bcddd3d70cac823a418da61659dfcbf32f79d",
+  "normalizedFingerprint": "8c2466a0187082166a9ef29327055cff1b958dca481f8ed087492216dd878374",
+  "builderReceiptPath": "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/builder.receipt.v1.json",
+  "freshVerifierReceiptPath": "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/receipts/fresh-verifier.receipt.v1.json"
+}

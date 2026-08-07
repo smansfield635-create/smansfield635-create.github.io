@@ -61,18 +61,31 @@ function validateActionShape(action) {
   if (!isNonEmpty(action.controlId) || !isObject(action.payload)) throw new Error('ACTION_PAYLOAD_INVALID');
 }
 
-function validateSession(session) {
+function validateSessionShape(session) {
   if (!isObject(session) || session.schema !== SESSION_SCHEMA) throw new Error('SESSION_INVALID');
   if (!isNonEmpty(session.entryPointId) || !isObject(session.state)) throw new Error('SESSION_INVALID');
   if (!isNonEmpty(session.scientificStateSha256) || !isNonEmpty(session.scientificBindingSha256)) throw new Error('SESSION_DIGEST_INVALID');
   if (!['D0','D1','D2','D3','D4'].includes(session.activeDepth)) throw new Error('SESSION_DEPTH_INVALID');
+  if (!isObject(session.projection)) throw new Error('SESSION_PROJECTION_INVALID');
   if (session.focusTarget !== null && !isNonEmpty(session.focusTarget)) throw new Error('SESSION_FOCUS_INVALID');
   if (!MOTION_MODES.includes(session.motionPreference)) throw new Error('SESSION_MOTION_INVALID');
   if (!VIEWPORT_CLASSES.includes(session.viewportClass)) throw new Error('SESSION_VIEWPORT_INVALID');
 }
 
+function validateAuthorizedSession(session, context) {
+  validateSessionShape(session);
+  const authorized = validateAuthorizedState(session.state, session.entryPointId, context.authorityRegistry);
+  if (!authorized.valid) throw new Error(`SESSION_STATE_UNAUTHORIZED:${authorized.errors.join('|')}`);
+  if (authorized.sha256 !== session.scientificStateSha256) throw new Error('SESSION_STATE_DIGEST_MISMATCH');
+  const expectedProjection = projectDepth(session.entryPointId, session.activeDepth, context.empiricalRegistry, context.stateBindings, context.depthProfileRegistry);
+  if (!expectedProjection.valid) throw new Error(`SESSION_PROJECTION_RECOMPUTE_FAILED:${expectedProjection.errors.join('|')}`);
+  if (expectedProjection.projection.scientificStateSha256 !== session.scientificBindingSha256) throw new Error('SESSION_BINDING_DIGEST_MISMATCH');
+  if (!same(expectedProjection.projection, session.projection)) throw new Error('SESSION_PROJECTION_TAMPERED');
+  return authorized;
+}
+
 function recoverySnapshot(session) {
-  validateSession(session);
+  validateSessionShape(session);
   return {
     ENTRY_POINT_ID: session.entryPointId,
     SCIENTIFIC_STATE_SHA256: session.scientificStateSha256,
@@ -131,19 +144,20 @@ export function createInteractionSession(entryPointId, context, depth = 'D0') {
       motionPreference: 'SYSTEM',
       viewportClass: 'DESKTOP'
     };
-    validateSession(session);
+    validateAuthorizedSession(session, context);
     return { valid: true, errors: [], session };
   } catch (error) {
     return { valid: false, errors: [error.message], session: null };
   }
 }
 
-export function adaptViewport(session, viewportClass) {
+export function adaptViewport(session, viewportClass, context) {
   try {
-    validateSession(session);
+    validateAuthorizedSession(session, context);
     if (!VIEWPORT_CLASSES.includes(viewportClass)) throw new Error('VIEWPORT_CLASS_INVALID');
     const next = clone(session);
     next.viewportClass = viewportClass;
+    validateAuthorizedSession(next, context);
     if (next.scientificStateSha256 !== session.scientificStateSha256 || next.scientificBindingSha256 !== session.scientificBindingSha256 || next.activeDepth !== session.activeDepth) throw new Error('VIEWPORT_ADAPTATION_MUTATED_AUTHORITY');
     return { valid: true, errors: [], session: next, output: { viewportClass } };
   } catch (error) {
@@ -153,7 +167,7 @@ export function adaptViewport(session, viewportClass) {
 
 export function performInteraction(session, action, context) {
   try {
-    validateSession(session);
+    validateAuthorizedSession(session, context);
     validateActionShape(action);
     const control = controlById(context.controlRegistry, action.controlId);
 
@@ -162,6 +176,7 @@ export function performInteraction(session, action, context) {
       if (Object.keys(action.payload).length !== 0) throw new Error('FOCUS_PAYLOAD_MUST_BE_EMPTY');
       const next = clone(session);
       next.focusTarget = control.controlId;
+      validateAuthorizedSession(next, context);
       return { valid: true, errors: [], session: next, output: { operation: 'FOCUS_MOVE', controlId: control.controlId } };
     }
 
@@ -214,6 +229,7 @@ export function performInteraction(session, action, context) {
 
     if (control.operation !== 'NAVIGATE_ROUTE' && next.scientificStateSha256 !== session.scientificStateSha256) throw new Error('INTERACTION_MUTATED_SCIENTIFIC_STATE');
     if (next.scientificBindingSha256 !== session.scientificBindingSha256) throw new Error('INTERACTION_MUTATED_SCIENTIFIC_BINDING');
+    validateAuthorizedSession(next, context);
     return { valid: true, errors: [], session: next, output };
   } catch (error) {
     return fail(session, error);
@@ -237,6 +253,6 @@ export function sessionRecoverySnapshot(session) {
 }
 
 export function bindingStateForSession(session, context) {
-  validateSession(session);
+  validateAuthorizedSession(session, context);
   return clone(bindingByContent(context.stateBindings, session.entryPointId).state);
 }

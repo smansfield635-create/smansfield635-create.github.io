@@ -4,50 +4,55 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>H-Earth Map-Wide Environment Redevelopment — Nonpublic Candidate</title>
+  <title>H-Earth Map-Wide Environment Redevelopment — Nonpublic Inspector</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <main class="preview-shell" aria-label="H-Earth map-wide environment redevelopment nonpublic preview">
+  <main class="preview-shell" aria-label="H-Earth map-wide environment redevelopment nonpublic inspector">
     <canvas
       class="preview-canvas"
       data-h-earth-map-wide-canvas
-      aria-label="Interactive 3D terrain candidate"
+      aria-label="Interactive 3D H-Earth terrain inspector"
     ></canvas>
 
     <section class="preview-panel" aria-live="polite">
-      <h1>H-Earth · Map-Wide Environment Redevelopment</h1>
+      <h1>H-Earth · World Inspector</h1>
       <p>
-        Nonpublic construction candidate on immutable Run8B terrain truth.
-        Presentation landforms and the accepted bounded relief direction are active;
-        manor geometry remains deferred.
+        Nonpublic map-wide terrain candidate on immutable Run8B truth.
+        The future estate site is physically prepared in the terrain; manor geometry remains deferred.
       </p>
       <div class="preview-status" data-h-earth-status>Loading candidate…</div>
       <div class="preview-stats" data-h-earth-stats></div>
-      <div class="preview-controls" aria-label="Preview controls">
+
+      <div class="preview-actions" aria-label="Camera recovery and inspection views">
+        <button class="preview-button" type="button" data-fit-world>fit world</button>
+        <button class="preview-button" type="button" data-estate-focus>estate site</button>
+        <button class="preview-button" type="button" data-top-view>top view</button>
+      </div>
+
+      <div class="preview-controls" aria-label="Developer display controls">
         <label class="preview-control">
           <input type="checkbox" data-toggle-relief checked>
           presentation relief
         </label>
         <label class="preview-control">
-          <input type="checkbox" data-toggle-estate checked>
-          estate envelope
+          <input type="checkbox" data-toggle-estate>
+          estate guide
         </label>
         <label class="preview-control">
-          <input type="checkbox" data-toggle-entry checked>
-          entry region
+          <input type="checkbox" data-toggle-entry>
+          entry guide
         </label>
         <label class="preview-control">
           <input type="checkbox" data-toggle-wire>
           mesh
         </label>
-        <button class="preview-button" type="button" data-reset-view>reset view</button>
       </div>
     </section>
 
     <aside class="preview-help">
-      Drag to orbit · wheel/pinch to zoom · arrow keys or W/A/S/D to move across the field.
-      <span class="preview-boundary">Gold outline = protected future estate envelope; no manor is constructed.</span>
+      One finger: orbit · two fingers: pan and pinch · mouse wheel: zoom · W/A/S/D or arrows: move target.
+      <span class="preview-boundary">Guides are optional and off by default; the prepared estate site must remain visible from the terrain itself.</span>
     </aside>
   </main>
 

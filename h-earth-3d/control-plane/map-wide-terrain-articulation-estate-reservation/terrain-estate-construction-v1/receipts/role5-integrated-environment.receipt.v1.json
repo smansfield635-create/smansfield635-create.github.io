@@ -1,0 +1,15 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ROLE5_INTEGRATED_ENVIRONMENT_RECEIPT_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "gate": "ROLE_5_INTEGRATED_ENVIRONMENT_RATIFICATION",
+  "status": "NOT_EXECUTED",
+  "result": "NONE",
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "lockGeneration": 422,
+  "candidateHead": null,
+  "builderPassRequired": true,
+  "freshRole3PassRequired": true,
+  "userReviewUrlAuthorized": false,
+  "continuation": "BLOCKED_UNTIL_BUILDER_AND_FRESH_ROLE3_PASS_AT_EXACT_FROZEN_CANDIDATE_HEAD",
+  "evidenceInvented": false
+}

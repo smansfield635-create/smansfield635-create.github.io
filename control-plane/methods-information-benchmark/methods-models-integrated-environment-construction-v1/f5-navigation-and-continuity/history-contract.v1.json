@@ -1,0 +1,28 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F5_HISTORY_CONTRACT_v1",
+  "status": "F5_CONSTRUCTION_CANDIDATE",
+  "historyEntry": {
+    "storedValue": "EXACT_CANONICAL_F5_URL",
+    "stateAuthority": "EMBEDDED_F3_CANONICAL_STATE_BYTES",
+    "derivationOnBackForward": false
+  },
+  "pushRules": [
+    "NEW_ENTRY_APPENDS_AFTER_CURRENT_INDEX",
+    "PUSH_AFTER_BACK_TRUNCATES_FORWARD_ENTRIES",
+    "ENTRY_URL_MUST_PARSE_AND_RESTORE_BEFORE_ADMISSION"
+  ],
+  "backRules": [
+    "DECREMENT_INDEX_ONLY_IF_PRIOR_ENTRY_EXISTS",
+    "RESTORE_EXACT_PRIOR_ENTRY",
+    "NO_PRIOR_ENTRY_RETURNS_EXPLICIT_NO_MATCH"
+  ],
+  "forwardRules": [
+    "INCREMENT_INDEX_ONLY_IF_NEXT_ENTRY_EXISTS",
+    "RESTORE_EXACT_NEXT_ENTRY",
+    "NO_NEXT_ENTRY_RETURNS_EXPLICIT_NO_MATCH"
+  ],
+  "reloadRule": "REPARSE_CURRENT_EXACT_URL_AND_RESTORE_WITHOUT_STATE_DERIVATION",
+  "historyMayNotInferScientificState": true,
+  "historyMayNotUpgradeClaimStanding": true,
+  "silentFallbackAuthorized": false
+}

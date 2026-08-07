@@ -1,0 +1,361 @@
+{
+  "contractId": "SPATIAL_CONTEXT_FRAME_v1",
+  "programId": "F12_RECURSIVE_SPATIAL_INFORMATION_ARCHITECTURE_REMEDIATION_v1",
+  "checkpointId": "R2_SPATIAL_CONTEXT_FRAME",
+  "contractStatus": "FROZEN_NONSCIENTIFIC_DELIVERY_SCHEMA",
+  "objectClass": "NON_SCIENTIFIC_DELIVERY_CONTEXT",
+  "authorityBoundary": {
+    "scientificAuthorityLayers": [
+      "L1_CANONICAL_SCIENTIFIC_INVENTORY",
+      "L2_TYPED_SCIENTIFIC_RELATION_GRAPH",
+      "L3_GOVERNED_ESTATE_PROJECTION_GRAPH"
+    ],
+    "deliveryAuthorityLayers": [
+      "L4_RECURSIVE_SPATIAL_INFORMATION_INTERPRETER",
+      "L5_NAVIGATION_STATE",
+      "L6_PRESENTATION_STATE"
+    ],
+    "boundaryLaw": "SCIENTIFIC_AUTHORITY_NE_PRESENTATION_AUTHORITY",
+    "scientificStateNavigationStatePresentationStateDistinct": true,
+    "upstreamAuthorityMayBeRead": true,
+    "upstreamAuthorityMayBeMutated": false
+  },
+  "sourceAuthorityAnchors": {
+    "r1AuthorityBoundaryContract": {
+      "head": "137cb90c315694e07fb82da6d69562257028a551",
+      "tree": "731739042359f75a952cb8c7c1b67ef1bc2e24f0"
+    },
+    "movingRepositoryIntegrationBase": {
+      "head": "c50d0a06a73ed149286508a15e697d8efa254865",
+      "tree": "652d78f0768e2ee957423e9c657d3ac6f35f0775"
+    },
+    "f11CertifiedAuthority": {
+      "head": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2",
+      "tree": "0413ec4966e4849780dccc041ef7636c93cbd5ed",
+      "candidatePayloadFingerprintSha256": "caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99"
+    },
+    "certifiedEnvironmentPayload": {
+      "head": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+      "tree": "e42a5267c10c1ae5183e2935a49b97af6545f9eb",
+      "environmentScienceDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+      "sceneScienceDigest": "82ad07a6e99424229c9fdee014de0e764474fb0fc382383aae06cb15dfb797ff"
+    },
+    "rejectedF12Specimen": {
+      "head": "9386d771526cb60e773295d3a98a7dbe2a11adf9",
+      "tree": "4934dd2b277e59234504e6808996907df29d1978",
+      "standing": "NONCONTROLLING_FAILURE_EVIDENCE"
+    }
+  },
+  "frameSchema": {
+    "contextFrameId": {
+      "type": "string",
+      "required": true,
+      "semantic": "Stable identity for one resolved delivery context frame."
+    },
+    "contextVersion": {
+      "type": "string",
+      "required": true,
+      "semantic": "Schema/version identity of the context frame."
+    },
+    "parentContextFrameId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "required": true,
+      "semantic": "Immediate semantic parent; null only at a root frame."
+    },
+    "rootContextFrameId": {
+      "type": "string",
+      "required": true,
+      "semantic": "Root frame identity for the current recursive navigation lineage."
+    },
+    "sourceScientificStateDigest": {
+      "type": "sha256",
+      "required": true,
+      "semantic": "Immutable digest reference to the frozen scientific state consumed by the frame."
+    },
+    "sourceRelationGraphDigest": {
+      "type": "sha256",
+      "required": true,
+      "semantic": "Immutable digest reference to the frozen declared scientific relation graph consumed by the frame."
+    },
+    "sourceProjectionGraphDigest": {
+      "type": "sha256",
+      "required": true,
+      "semantic": "Immutable digest reference to the frozen governed estate projection graph consumed by the frame."
+    },
+    "activeSection": {
+      "type": [
+        "scientific_reference_id",
+        "null"
+      ],
+      "required": true,
+      "semantic": "Active section reference; reference-only and non-mutating."
+    },
+    "activeFamily": {
+      "type": [
+        "scientific_or_delivery_reference_id",
+        "null"
+      ],
+      "required": true,
+      "semantic": "Active object family reference."
+    },
+    "activeObject": {
+      "type": [
+        "scientific_reference_id",
+        "null"
+      ],
+      "required": true,
+      "semantic": "Active scientific object reference; selection does not mutate the object."
+    },
+    "activeView": {
+      "type": [
+        "delivery_view_id",
+        "null"
+      ],
+      "required": true,
+      "semantic": "Active non-scientific view identity."
+    },
+    "activeSubobject": {
+      "type": [
+        "scientific_or_delivery_reference_id",
+        "null"
+      ],
+      "required": true,
+      "semantic": "Active subordinate object reference."
+    },
+    "activeRelation": {
+      "type": [
+        "declared_relation_id",
+        "null"
+      ],
+      "required": true,
+      "semantic": "Selected relation; when non-null it must already exist in the frozen declared relation graph and be authorized by projection."
+    },
+    "activeDepth": {
+      "type": "nonnegative_integer",
+      "required": true,
+      "semantic": "Semantic recursive depth, not scientific standing."
+    },
+    "foregroundObjects": {
+      "type": "array<reference_id>",
+      "required": true,
+      "semantic": "Objects emphasized in the current presentation context; emphasis cannot alter scientific standing."
+    },
+    "backgroundObjects": {
+      "type": "array<reference_id>",
+      "required": true,
+      "semantic": "Objects retained as contextual neighbors; de-emphasis cannot suppress required adverse evidence."
+    },
+    "authorizedVisibleRelations": {
+      "type": "array<declared_relation_id>",
+      "required": true,
+      "semantic": "Declared relations lawfully visible in the current projected context."
+    },
+    "authorizedNextTransitions": {
+      "type": "array<transition_descriptor>",
+      "required": true,
+      "semantic": "Only delivery transitions the interpreter may accept from this frame."
+    },
+    "returnPath": {
+      "type": "array<context_frame_or_transition_id>",
+      "required": true,
+      "semantic": "Deterministic semantic return lineage; it carries no scientific authority."
+    },
+    "disclosureLevel": {
+      "type": "delivery_disclosure_level",
+      "required": true,
+      "semantic": "Current information disclosure level within existing authority ceilings."
+    },
+    "orientationAnchor": {
+      "type": "orientation_anchor_descriptor",
+      "required": true,
+      "semantic": "Stable human orientation reference for the frame."
+    },
+    "deepLinkIdentity": {
+      "type": "deep_link_identity",
+      "required": true,
+      "semantic": "Reproducible selector identity; it cannot encode a scientific mutation or new relation."
+    },
+    "allowedSpatialTransformations": {
+      "type": "array<spatial_transformation_id>",
+      "required": true,
+      "semantic": "Spatial operations authorized for this frame."
+    },
+    "transformationSemantics": {
+      "type": "array<transformation_semantic_binding>",
+      "required": true,
+      "semantic": "One declared informational semantic for every allowed spatial transformation."
+    },
+    "accessibilityEquivalent": {
+      "type": "accessibility_equivalent_descriptor",
+      "required": true,
+      "semantic": "Equivalent accessible operation/content path for the frame."
+    },
+    "textFirstEquivalent": {
+      "type": "text_first_equivalent_descriptor",
+      "required": true,
+      "semantic": "Equivalent text-first representation without authority inflation."
+    },
+    "frameDigest": {
+      "type": "sha256",
+      "required": true,
+      "semantic": "Digest of the resolved frame under the canonical frame-digest procedure."
+    }
+  },
+  "digestBindingPolicy": {
+    "r2DoesNotCreateScientificDigests": true,
+    "sourceScientificStateDigest": {
+      "binding": "BOUND_FROM_FROZEN_UPSTREAM_AUTHORITY_AT_FRAME_INSTANTIATION",
+      "knownCertifiedEnvironmentAnchor": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5"
+    },
+    "sourceRelationGraphDigest": {
+      "binding": "BOUND_FROM_FROZEN_UPSTREAM_AUTHORITY_AT_FRAME_INSTANTIATION",
+      "r2InventedValuePermitted": false
+    },
+    "sourceProjectionGraphDigest": {
+      "binding": "BOUND_FROM_FROZEN_UPSTREAM_AUTHORITY_AT_FRAME_INSTANTIATION",
+      "r2InventedValuePermitted": false
+    },
+    "frameDigestProcedure": {
+      "id": "CANONICAL_CONTEXT_FRAME_SHA256_v1",
+      "algorithm": "SHA-256",
+      "input": "UTF-8 deterministic JSON serialization of the resolved SPATIAL_CONTEXT_FRAME excluding frameDigest",
+      "objectKeyOrder": "LEXICOGRAPHIC",
+      "arrayOrder": "PRESERVE_GOVERNED_ORDER",
+      "insignificantWhitespace": "OMIT",
+      "r3MustReproduceExactly": true
+    }
+  },
+  "transitionDescriptorMinimum": {
+    "transitionId": "required",
+    "actionId": "required",
+    "fromContextFrameId": "required",
+    "targetSelector": "required",
+    "informationalSemanticId": "required",
+    "authorityBasis": "required",
+    "scientificMutationPermitted": false
+  },
+  "transformationSemanticBindingMinimum": {
+    "spatialTransformationId": "required",
+    "informationalSemanticId": "required",
+    "fromSelector": "required",
+    "toSelector": "required",
+    "authorityBasis": "required",
+    "decorativeOnlyPrimaryNavigationPermitted": false
+  },
+  "invariants": [
+    {
+      "id": "R2_I01_STATE_CLASS_SEPARATION",
+      "law": "SCIENTIFIC_STATE_NE_NAVIGATION_STATE_NE_PRESENTATION_STATE"
+    },
+    {
+      "id": "R2_I02_VISIBLE_RELATION_SUBSET",
+      "law": "VISIBLE_RELATIONS_SUBSET_OF_DECLARED_AND_PROJECTED_RELATIONS"
+    },
+    {
+      "id": "R2_I03_NO_SCIENTIFIC_AUTHORSHIP",
+      "law": "FRAME_MAY_NOT_CREATE_OR_MUTATE_CLAIMS_RELATIONS_EVIDENCE_STANDING_CLAIM_CEILINGS_OR_SCIENTIFIC_OBJECT_IDENTITY"
+    },
+    {
+      "id": "R2_I04_EXACT_UPSTREAM_RESOLUTION",
+      "law": "EVERY_VISIBLE_SCIENTIFIC_REFERENCE_MUST_RESOLVE_TO_EXACT_UPSTREAM_AUTHORITY"
+    },
+    {
+      "id": "R2_I05_ACTIVE_RELATION_ADMISSIBILITY",
+      "law": "ACTIVE_RELATION_IF_PRESENT_MUST_BE_DECLARED_AND_AUTHORIZED_VISIBLE"
+    },
+    {
+      "id": "R2_I06_PRESENTATION_NONCONTROLLING",
+      "law": "FOREGROUND_BACKGROUND_GEOMETRY_PROXIMITY_ORDER_AND_EMPHASIS_HAVE_NO_SCIENTIFIC_AUTHORITY"
+    },
+    {
+      "id": "R2_I07_TRANSFORMATION_SEMANTIC",
+      "law": "EVERY_ALLOWED_SPATIAL_TRANSFORMATION_HAS_EXACTLY_ONE_DECLARED_INFORMATIONAL_SEMANTIC_BINDING"
+    },
+    {
+      "id": "R2_I08_TRANSITION_ADMISSION",
+      "law": "ONLY_AUTHORIZED_NEXT_TRANSITIONS_MAY_ADVANCE_A_FRAME"
+    },
+    {
+      "id": "R2_I09_RETURN_ORIENTATION",
+      "law": "RETURN_PATH_MUST_BE_DETERMINISTIC_RECOVERABLE_AND_NONAUTHORITATIVE"
+    },
+    {
+      "id": "R2_I10_DEEP_LINK_NONAUTHORSHIP",
+      "law": "DEEP_LINK_IDENTITY_MAY_REPRODUCE_CONTEXT_BUT_MAY_NOT_EMBED_OR_CREATE_SCIENTIFIC_MEANING"
+    },
+    {
+      "id": "R2_I11_MODAL_EQUIVALENCE",
+      "law": "ACCESSIBILITY_EQUIVALENT_AND_TEXT_FIRST_EQUIVALENT_ARE_REQUIRED_FOR_EVERY_VALID_FRAME"
+    },
+    {
+      "id": "R2_I12_NO_VISUAL_INFERENCE",
+      "law": "VISUAL_PROXIMITY_GROUPING_ROTATION_DEPTH_OR_REORDERING_MAY_NOT_CREATE_A_SCIENTIFIC_RELATION"
+    },
+    {
+      "id": "R2_I13_ADVERSE_EVIDENCE_PRESERVATION",
+      "law": "DELIVERY_DEPTH_OR_DEEMPHASIS_MAY_NOT_SUPPRESS_ADVERSE_NEGATIVE_MIXED_OR_UNRESOLVED_EVIDENCE_REQUIRED_BY_THE_ACTIVE_PROJECTION"
+    },
+    {
+      "id": "R2_I14_SCIENTIFIC_MUTATION_PROHIBITION",
+      "law": "NAVIGATION_ACTION_MAY_CHANGE_ACTIVE_REFERENCES_ONLY_AND_MAY_NOT_MUTATE_REFERENCED_SCIENTIFIC_OBJECTS"
+    },
+    {
+      "id": "R2_I15_CLAIM_CEILING_MONOTONICITY",
+      "law": "PROJECTION_CLAIM_CEILING_MUST_NOT_EXCEED_CONSTRUCT_OR_EVIDENCE_SUPPORTED_CEILING"
+    }
+  ],
+  "failClosedReasons": [
+    "UNKNOWN_SCIENTIFIC_REFERENCE",
+    "UNDECLARED_RELATION",
+    "UNAUTHORIZED_PROJECTION",
+    "CLAIM_CEILING_PROMOTION",
+    "SPATIAL_TRANSFORM_WITHOUT_INFORMATIONAL_SEMANTIC",
+    "TRANSITION_NOT_AUTHORIZED",
+    "INVALID_RETURN_PATH",
+    "NONDETERMINISTIC_FRAME",
+    "MISSING_ACCESSIBILITY_EQUIVALENT",
+    "MISSING_TEXT_FIRST_EQUIVALENT",
+    "SOURCE_DIGEST_MISSING",
+    "SOURCE_DIGEST_MISMATCH",
+    "FRAME_DIGEST_MISMATCH",
+    "SCIENTIFIC_STATE_MUTATION_ATTEMPT",
+    "PRESENTATION_DERIVED_SCIENTIFIC_MEANING",
+    "REQUIRED_ADVERSE_EVIDENCE_SUPPRESSED"
+  ],
+  "authorizedR2Scope": [
+    "DEFINE_NONSCIENTIFIC_SPATIAL_CONTEXT_FRAME_SCHEMA",
+    "DEFINE_FRAME_DIGEST_AND_SOURCE_BINDING_RULES",
+    "DEFINE_CONTEXT_LEVEL_FAIL_CLOSED_INVARIANTS",
+    "DEFINE_R3_HANDOFF_REQUIREMENTS"
+  ],
+  "prohibitedR2Scope": [
+    "INTERPRETER_RUNTIME_CONSTRUCTION",
+    "RECURSIVE_NAVIGATION_BEHAVIOR_CONSTRUCTION",
+    "CONTEXT_RELATION_DISCLOSURE_RUNTIME",
+    "SPATIAL_TRANSFORMATION_RUNTIME",
+    "VISIBLE_RECONSTRUCTION",
+    "FINAL_INTERFACE_CONSTRUCTION",
+    "PUBLIC_MUTATION",
+    "LIVE_DEPLOYMENT",
+    "MERGE_TO_MAIN",
+    "F1_THROUGH_F11_MUTATION",
+    "SCIENTIFIC_REOPENING",
+    "SCIENTIFIC_CLAIM_UPGRADE",
+    "REJECTED_SPECIMEN_PROMOTION"
+  ],
+  "r3HandoffRequirements": [
+    "CONSUME_ONLY_FROZEN_UPSTREAM_SCIENTIFIC_RELATION_AND_PROJECTION_AUTHORITY",
+    "DETERMINISTICALLY_RESOLVE_VALID_INPUTS_TO_SPATIAL_CONTEXT_FRAME_v1",
+    "REJECT_INVALID_REFERENCES_RELATIONS_PROJECTIONS_DIGEST_MISMATCHES_AND_UNAUTHORIZED_TRANSITIONS",
+    "PROVE_SCIENTIFIC_STATE_INVARIANCE_ACROSS_AUTHORIZED_DELIVERY_TRANSITIONS",
+    "PROVE_FORWARD_TRACE_SCIENCE_TO_CONTEXT_TO_NAVIGATION_TO_PRESENTATION",
+    "PROVE_REVERSE_TRACE_VISIBLE_CONTROL_TO_PRESENTATION_TO_NAVIGATION_TO_CONTEXT_TO_PROJECTION_TO_SCIENTIFIC_AUTHORITY",
+    "REPRODUCE_CANONICAL_CONTEXT_FRAME_SHA256_v1",
+    "MAKE_NO_VISIBLE_RECONSTRUCTION"
+  ],
+  "closureClass": "NONVISUAL_GATE",
+  "userDifferentialRequired": false
+}

@@ -624,6 +624,18 @@
       "scopeHash": "b863779715ea5296a89b644328fa6e0466f7dfad97a7600c2723ade21b92639c",
       "state": "ADMITTED_LOCKED"
     },
+    "b8f407e3498f703352e151108b4fcead1b369b8bb391b392a8b1a736fa09a38d": {
+      "governingHead": "889197b2cbe73de171756b7545446f12a726cde7",
+      "lockGeneration": 430,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:EXECUTION_CARRIER:THREE_TIER_SUBSTRATE_AND_H_EARTH_BUILDER:V1",
+      "operationId": "THREE_TIER_SUBSTRATE_BOOTSTRAP_AND_H_EARTH_BUILDER_EXECUTION_CARRIER_v1",
+      "procedureLocatorDigest": "dc22ed263bf8d9cdd290b75dbc032e4c1edfcb269cd01127b01d6816f6e88e15",
+      "released": false,
+      "requestDigest": "31a3ea055cdb64d41270b092c4cb002c1b9155532498fb30bf451a436ba7f371",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b8f407e3498f703352e151108b4fcead1b369b8bb391b392a8b1a736fa09a38d",
+      "state": "ADMITTED_LOCKED"
+    },
     "b97df7525443f153ed5ce9410430bebb6d692bb9040df2810e892126f3a10198": {
       "governingHead": "7ab3408099c80a0eeb6cf29b39cc28c8ca0bd602",
       "lockGeneration": 373,
@@ -904,7 +916,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 429,
+  "lockGeneration": 430,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

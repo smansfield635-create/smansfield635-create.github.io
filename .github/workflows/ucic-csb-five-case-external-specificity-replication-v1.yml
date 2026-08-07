@@ -1,0 +1,15 @@
+name: UCIC CSB Five-Case External Specificity Replication v1
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/external-official-record-specificity-replication-v1/**'
+      - '.github/workflows/ucic-csb-five-case-external-specificity-replication-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python research/route-operator-platform-v1/registered-challenges/external-official-record-specificity-replication-v1/verify.py

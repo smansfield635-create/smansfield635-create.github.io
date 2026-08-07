@@ -1,0 +1,87 @@
+{
+  "BIO_LAB": [
+    {
+      "description": "ammonia refrigeration overpressure/relief/detection/EAP map imported from CUISINE",
+      "id": "IMPORTED_CUISINE",
+      "route_hit_rate": 0.0
+    },
+    {
+      "description": "community notification and evacuation-only boundary",
+      "id": "BOUNDARY_SHIFT",
+      "route_hit_rate": 0.25
+    },
+    {
+      "description": "warehouse logistics, power continuity, and site-access relations substituted for reactive-storage constraints",
+      "id": "PERMUTED_REQUIRED_OPTIONAL",
+      "route_hit_rate": 0.0
+    }
+  ],
+  "CUISINE": [
+    {
+      "description": "equipment-identification/work-permit/contractor-reassignment map imported from PEMEX",
+      "id": "IMPORTED_PEMEX",
+      "route_hit_rate": 0.0
+    },
+    {
+      "description": "emergency-response-only boundary, omitting initiating overpressure and relief-path relations",
+      "id": "BOUNDARY_SHIFT",
+      "route_hit_rate": 0.5
+    },
+    {
+      "description": "food-production throughput and non-ammonia utilities substituted for refrigeration safety routes",
+      "id": "PERMUTED_REQUIRED_OPTIONAL",
+      "route_hit_rate": 0.0
+    }
+  ],
+  "DOW": [
+    {
+      "description": "runaway-reactivity/sized-reactor-relief/control-room-siting map imported from GIVAUDAN",
+      "id": "IMPORTED_GIVAUDAN",
+      "route_hit_rate": 0.25
+    },
+    {
+      "description": "community shelter and downstream production-only boundary",
+      "id": "BOUNDARY_SHIFT",
+      "route_hit_rate": 0.0
+    },
+    {
+      "description": "unrelated product-flow and staffing routes substituted for vessel closure/inerting/relief topology",
+      "id": "PERMUTED_REQUIRED_OPTIONAL",
+      "route_hit_rate": 0.0
+    }
+  ],
+  "GIVAUDAN": [
+    {
+      "description": "water-exclusion/sprinkler-corrosion/storage-configuration map imported from BIO_LAB",
+      "id": "IMPORTED_BIOLAB",
+      "route_hit_rate": 0.25
+    },
+    {
+      "description": "offsite emergency-response-only boundary",
+      "id": "BOUNDARY_SHIFT",
+      "route_hit_rate": 0.0
+    },
+    {
+      "description": "ordinary production throughput and non-safety utility routes substituted for reaction safeguards",
+      "id": "PERMUTED_REQUIRED_OPTIONAL",
+      "route_hit_rate": 0.0
+    }
+  ],
+  "PEMEX": [
+    {
+      "description": "foreign-material/inerting/relief-propagation map imported from DOW",
+      "id": "IMPORTED_DOW",
+      "route_hit_rate": 0.0
+    },
+    {
+      "description": "neighboring-unit emergency-response-only boundary",
+      "id": "BOUNDARY_SHIFT",
+      "route_hit_rate": 0.0
+    },
+    {
+      "description": "unit production throughput and unrelated mechanical-integrity routes substituted for line-opening controls",
+      "id": "PERMUTED_REQUIRED_OPTIONAL",
+      "route_hit_rate": 0.0
+    }
+  ]
+}

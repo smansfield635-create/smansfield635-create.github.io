@@ -1,0 +1,23 @@
+{
+  "arm_a_disposition": "UCIC_CROSS_DOMAIN_TEMPORAL_ROUTE_TRANSFER_SUPPORTED_WITH_LIMITATIONS",
+  "arm_a_evidence_ceiling": "TEMPORAL_AVAILABILITY_AND_CROSS_DOMAIN_ROUTE_TRANSFER_SUPPORT_ONLY",
+  "arm_a_portfolio_scores": {
+    "cases_false_route_rate_gt_0_50": 0,
+    "median_causal_coverage": 1.0,
+    "median_route_hit_rate": 1.0,
+    "median_true_minus_decoy_advantage": 0.9583333333333333,
+    "positive_true_minus_decoy_cases": 4
+  },
+  "arm_b_control_load_shed_mw": 0,
+  "arm_b_disposition": "SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_COHORT_PENDING",
+  "arm_b_financial_cohort_status": "COHORT_FROZEN_LONGITUDINAL_SCORING_PENDING",
+  "arm_b_first_warning_lead_days": 402,
+  "arm_b_latest_pre_event_warning_lead_days": 64,
+  "arm_b_systemic_pilot": "EARLY_WARNING_AND_RELATIONAL_MITIGATION_CONTRAST_SUPPORTED",
+  "global_multiplicative_operator": "REMAINS_REJECTED",
+  "independent_human_confirmation": "NOT_ESTABLISHED",
+  "operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
+  "overall_disposition": "NEW_CONVERGENT_SUPPORT_TEMPORAL_TRANSFER_PLUS_SYSTEMIC_EARLY_WARNING_PILOT",
+  "true_prospective_confirmation": "SEPARATE_FIVE_CASE_FREEZE_RUNNING",
+  "universal_law": "NOT_ESTABLISHED"
+}

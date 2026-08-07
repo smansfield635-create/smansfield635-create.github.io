@@ -1,0 +1,93 @@
+{
+  "arm": "B_COLLAPSE_EARLY_WARNING",
+  "classification": "RETROSPECTIVE_EARLY_WARNING_PILOT",
+  "financial_collapse_cohort": {
+    "authority": "FDIC",
+    "failed_institutions": 11,
+    "period": "2023-03-10_through_2026-05-01",
+    "reason": "FDIC failure cohort and BankFind quarterly-financial endpoint are verified, but complete institution-quarter extraction is not yet frozen in this package; no bank-level lead-time or false-positive claim is made.",
+    "status": "COHORT_FROZEN_LONGITUDINAL_SCORING_PENDING"
+  },
+  "false_positive_claim": "NOT_ESTABLISHED",
+  "operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
+  "source_ledger": [
+    {
+      "date": "2021-11-16",
+      "role": "PRE_FAILURE_WARNING",
+      "url": "https://www.ferc.gov/news-events/news/final-report-february-2021-freeze-underscores-winterization-recommendations"
+    },
+    {
+      "date": "2022-10-20",
+      "role": "PRE_FAILURE_WARNING",
+      "url": "https://www.ferc.gov/news-events/news/ferc-winter-assessment-keeping-focus-reliability-demand-prices"
+    },
+    {
+      "date": "2023-11-07",
+      "role": "FAILURE_GROUND_TRUTH",
+      "url": "https://www.ferc.gov/news-events/news/ferc-nerc-release-final-report-lessons-winter-storm-elliott"
+    },
+    {
+      "date": "2024-04-25",
+      "role": "STRESS_CONTROL",
+      "url": "https://www.ferc.gov/news-events/news/january-2024-arctic-storms-review-finds-no-major-gas-electric-performance-problems"
+    },
+    {
+      "date": "2026-05-01",
+      "role": "FDIC_FAILURE_COHORT",
+      "url": "https://www.fdic.gov/bank-failures/failed-bank-list"
+    },
+    {
+      "date": "2026-08-06",
+      "role": "FDIC_QUARTERLY_DATA_API",
+      "url": "https://api.fdic.gov/banks/docs"
+    }
+  ],
+  "systemic_collapse_pilot": {
+    "failure_case": "WINTER_STORM_ELLIOTT_2022",
+    "failure_outcome": {
+      "route_failures": [
+        "generator cold-weather operability",
+        "natural-gas production/delivery",
+        "gas-electric interdependence/coordination"
+      ],
+      "system_operator_initiated_load_shed_mw_over": 5400,
+      "unplanned_generation_loss_mw_approx": 90000
+    },
+    "first_warning_lead_days": 402,
+    "latest_pre_event_warning_lead_days": 64,
+    "pilot_disposition": "EARLY_WARNING_AND_RELATIONAL_MITIGATION_CONTRAST_SUPPORTED",
+    "pre_failure_warning_sources": [
+      {
+        "date": "2021-11-16",
+        "source": "FERC/NERC Winter Storm Uri final report",
+        "warning_relations": [
+          "generator cold-weather critical component protection",
+          "natural-gas fuel supply continuity",
+          "gas-electric coordination"
+        ]
+      },
+      {
+        "date": "2022-10-20",
+        "source": "FERC 2022-2023 Winter Energy Market and Reliability Assessment",
+        "warning_relations": [
+          "extreme-weather regional reliability challenge",
+          "winter natural-gas fuel constraints"
+        ]
+      }
+    ],
+    "stress_without_comparable_collapse_control": {
+      "event": "WINTER_STORMS_GERRI_HEATHER_2024",
+      "preserved_or_support_relations": [
+        "improved gas-electric communication and coordination",
+        "improved winter preparedness",
+        "alternate fuel supplies",
+        "higher gas storage / line pack and alternate supply paths",
+        "earlier alerts and improved forecasting"
+      ],
+      "system_operator_initiated_load_shed_mw": 0
+    },
+    "terminal_failure_date": "2022-12-23"
+  },
+  "terminal_disposition": "SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_COHORT_PENDING",
+  "universal_collapse_metric": "NOT_ESTABLISHED"
+}

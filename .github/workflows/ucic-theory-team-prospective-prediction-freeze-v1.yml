@@ -1,0 +1,15 @@
+name: UCIC Theory-Team Prospective Prediction Freeze v1
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/independent-constitutive-route-identification-challenge-v1/ucic-theory-team-prospective-specificity-freeze-v1/**'
+      - '.github/workflows/ucic-theory-team-prospective-prediction-freeze-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python research/route-operator-platform-v1/registered-challenges/independent-constitutive-route-identification-challenge-v1/ucic-theory-team-prospective-specificity-freeze-v1/verify.py

@@ -1,0 +1,113 @@
+name: H-Earth C2-R1 Role 3 +8 Camera Evidence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [control/h-earth-c2-r1-role3-plus8-camera-evidence-001]
+    paths: ['.github/workflows/h-earth-c2-r1-role3-plus8-camera-evidence.yml']
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/h-earth-c2-r1-role3-plus8-camera-evidence.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-c2-r1-role3-plus8-camera-evidence-6d1b3e20
+  cancel-in-progress: false
+
+env:
+  OPERATION_ID: H_EARTH_C2_R1_ROLE_3_PLUS_8_EXACT_HEAD_CAMERA_EVIDENCE_VERIFICATION_001
+  CARRIER_BRANCH: control/h-earth-c2-r1-role3-plus8-camera-evidence-001
+  CARRIER_HEAD: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+  CARRIER_STARTING_HEAD: 9940ea15434eeb5c7dcddd5d6b21ea532cc1b574
+  RUNNER_SOURCE_HEAD: d91b62b4c458d289158b1d7469f2bd0673e57e76
+  PRODUCT_PR: '512'
+  PRODUCT_BRANCH: agent/h-earth-c2-r1-coast-entry-plus-8-camera-correction-001
+  PRODUCT_HEAD: 6d1b3e20bc5d24a7a6dce46fd897c4dd4cdfe3ec
+  PRODUCT_BASE_HEAD: 501505fe66dbeede467240d8c7d93f194f7d10d2
+  AUTHORIZED_PRODUCT_PATH: showroom/globe/h-earth/functional-landscape/navigation.js
+  AUTHORIZED_WORKFLOW_PATH: .github/workflows/h-earth-c2-r1-role3-plus8-camera-evidence.yml
+  AUTHORITY_ROOT: research/route-operator-platform-v1/remedy-authority/h-earth-c2-r1-coast-entry-to-gratitude-v4-plus8
+  CORRECTION_MANIFEST_SHA256: e05e896cd2e791508d65824c17298ef42b4fd0cafde9d14a348a6cc1c4eab1bb
+  EVIDENCE_CONTRACT_SHA256: accf3cd22b413ebff314a8bd365803b4610c7ee87422634f1450f6eece97973e
+  INSTRUMENT_BUNDLE_SHA256: 49162b7ff730a9efc71bd2151ad00b34e8b9f46271018a015defb5534c7fb3b2
+  PRIVATE_CORE_SHA256: 0be0608fa9aab10d75eeba796530421e96efc7829364172e52f7925ca74d9c87
+  PACKAGE_IDENTITY: H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_773DAE4E
+  PACKAGE_DIGEST: fnv1a32:773dae4e
+  ARTIFACT_NAME: h-earth-c2-r1-role3-plus8-camera-evidence-6d1b3e20
+  PLAYWRIGHT_VERSION: 1.55.0
+
+jobs:
+  exact-head-camera-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact carrier head read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CARRIER_HEAD }}
+          path: carrier
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout exact product head read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PRODUCT_HEAD }}
+          path: candidate
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Execute read-only exact-head evidence capture
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/h-earth-c2-r1-role3-plus8-camera-evidence"
+          runtime="$RUNNER_TEMP/role3-plus8-runtime"
+          mkdir -p "$root/frames" "$root/input-evidence" "$root/diagnostics" "$runtime"
+          printf '%s\n' "$root" > "$RUNNER_TEMP/role3-plus8-evidence-root"
+          cd "$runtime"
+          npm init -y >/dev/null
+          npm install --no-audit --no-fund --save-exact "playwright@$PLAYWRIGHT_VERSION"
+          npx playwright install --with-deps chromium
+          git -C "$GITHUB_WORKSPACE/carrier" show "$RUNNER_SOURCE_HEAD:$AUTHORIZED_WORKFLOW_PATH" > prior-workflow.yml
+          python3 - <<'PY'
+          import base64, gzip, pathlib, re
+          text = pathlib.Path('prior-workflow.yml').read_text()
+          match = re.search(r"printf '%s' '([A-Za-z0-9+/=]+)' \| base64 -d \| gzip -d > runner\.mjs", text)
+          if match is None:
+              raise SystemExit('RUNNER_SOURCE_PAYLOAD_NOT_FOUND')
+          runner = gzip.decompress(base64.b64decode(match.group(1))).decode()
+          runner = runner.replace('process.env.GITHUB_SHA', 'process.env.CARRIER_HEAD')
+          old_hash = "verifyCanonicalField(manifest,'manifest_sha256',MANIFEST_SHA);verifyCanonicalField(contract,'contract_sha256',CONTRACT_SHA);"
+          new_hash = "execFileSync('python3',[path.join(AUTHORITY_ROOT,'verify_role6_records_v1.py')],{stdio:'inherit'});must(manifest.manifest_sha256===MANIFEST_SHA,'MANIFEST_SHA256_IDENTITY_MISMATCH');must(contract.contract_sha256===CONTRACT_SHA,'CONTRACT_SHA256_IDENTITY_MISMATCH');"
+          if old_hash not in runner:
+              raise SystemExit('CANONICAL_VERIFIER_PATCH_TARGET_NOT_FOUND')
+          runner = runner.replace(old_hash, new_hash)
+          old_capture = "const record=await inspect(page,viewport,cycle);"
+          new_capture = "await page.evaluate(()=>document.getElementById('h-earth-functional-landscape-canvas').scrollIntoView({block:'center',inline:'nearest'}));await page.waitForTimeout(300);const record=await inspect(page,viewport,cycle);"
+          if old_capture not in runner:
+              raise SystemExit('VISIBLE_FRAME_PATCH_TARGET_NOT_FOUND')
+          runner = runner.replace(old_capture, new_capture)
+          pathlib.Path('runner.mjs').write_text(runner)
+          PY
+          node --check runner.mjs
+          node runner.mjs
+
+      - name: Prepare exact artifact internal root
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/role3-plus8-upload"
+          cp -a "$RUNNER_TEMP/h-earth-c2-r1-role3-plus8-camera-evidence" "$RUNNER_TEMP/role3-plus8-upload/"
+
+      - name: Upload immutable exact-head evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ runner.temp }}/role3-plus8-upload
+          if-no-files-found: error
+          retention-days: 90

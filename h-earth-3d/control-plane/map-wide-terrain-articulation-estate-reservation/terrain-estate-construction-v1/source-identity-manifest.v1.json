@@ -1,0 +1,75 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_SOURCE_IDENTITY_MANIFEST_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+  "sources": [
+    {
+      "id": "CURRENT_RUN8B_TERRAIN_TRUTH",
+      "repositoryPath": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "commit": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+      "gitBlobSha": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "contractId": "H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_8_SUCCESSOR_v1",
+      "usage": "IMMUTABLE_WORLD_SPACE_ELEVATION_AND_NORMAL_TRUTH"
+    },
+    {
+      "id": "PRESERVED_STEP2_SPATIAL_EVIDENCE",
+      "branch": "build/h-earth-terrain-estate-construction-v1-001",
+      "commit": "82bbf57d706a428172709d3a2e050ce3afcc014a",
+      "tree": "93df83b9e1a7af780617738ac5bfdf5147c253cc",
+      "usage": "READ_ONLY_SITE_CORRIDOR_VIEW_AND_CONSTRAINT_EVIDENCE",
+      "rewriteAuthorized": false
+    },
+    {
+      "id": "REGISTERED_SCOPE_PREREQUISITE",
+      "pullRequest": 712,
+      "mergeCommit": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+      "usage": "PRESERVE_REGISTERED_TERRAIN_ESTATE_SCOPE_HISTORY"
+    },
+    {
+      "id": "POSITIVE_BANDLIMITED_RELIEF_REFERENCE",
+      "commit": "97003e9de386a8962fb46d0b370005b900a167d6",
+      "tree": "7cd51523649788ad6fb226aea16f6799a5c58177",
+      "referencePath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "usage": "POSITIVE_DESIGN_REFERENCE_ONLY",
+      "mergedMain": false,
+      "automaticTransplant": false,
+      "boundedReferenceParameters": {
+        "reliefHeightAmplitude": 0.22,
+        "maximumNormalDeviationDegrees": 22,
+        "fullInfluenceThroughDistance": 120,
+        "fadeToZeroByDistance": 300,
+        "directionalPhaseCount": 3
+      }
+    },
+    {
+      "id": "CAUSAL_EVIDENCE_PACKAGE",
+      "pullRequest": 680,
+      "packageSha256": "48da9f306fc3631e4e6744ac15cab2ae0f7c55e63d9ea525c764e51b736338a8",
+      "sourceMergeCommit": "214db7387456699183922e316171e19ad9a2950f",
+      "usage": "CONSTRAINT_EVIDENCE_ONLY",
+      "terrainInfeasibilityEstablished": false,
+      "estateInfeasibilityEstablished": false
+    },
+    {
+      "id": "ROLE4_REDEVELOPMENT_AUTHORITY",
+      "issue": 719,
+      "authorityId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_AUTHORITY_v1",
+      "usage": "CONTROLLING_CONSTRUCTION_AUTHORITY"
+    },
+    {
+      "id": "CANONICAL_SUCCESSOR_INTAKE",
+      "issue": 719,
+      "comment": 5212408476,
+      "lockGeneration": 422,
+      "scopeHash": "205da80d5647b2323d970d0232c425ef47ebb653e5fc2f0a981aa8896681cdb3",
+      "usage": "EXACT_SCOPE_MUTATION_AUTHORITY"
+    }
+  ],
+  "identityLaw": [
+    "NO_SOURCE_IDENTITY_SUBSTITUTION",
+    "NO_97003_MERGED_MAIN_RECLASSIFICATION",
+    "NO_STEP2_REWRITE",
+    "NO_ZERO_PASS_INFEASIBILITY_INFERENCE",
+    "NO_RUN8B_IN_PLACE_MUTATION"
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F4_SCIENTIFIC_OBJECT_REGISTRY_v1",
+  "status": "F4_CONSTRUCTION_CANDIDATE",
+  "sourceAuthority": "GATE0_UNIVERSAL_OBJECT_MODEL_AND_CANONICAL_HIERARCHY",
+  "objects": [
+    {
+      "contentId": "IMI",
+      "contentClass": "SCIENTIFIC_OBJECT_DEFINITION",
+      "objectClass": "INSTRUMENT",
+      "definition": "Observer-grade instrument and measurement framework.",
+      "canonicalStatement": "instrument",
+      "sourceRef": "GATE0_UNIVERSAL_OBJECT_MODEL",
+      "authorityRef": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+      "contentVersion": "v1",
+      "claimCeilingRef": "SOURCE_DEFINED_NO_F4_UPGRADE",
+      "limitations": ["COMPARATOR_MAY_NOT_BE_REPORTED_AS_INSTRUMENT"],
+      "provenance": ["universal-object-model.v1.json", "canonical-hierarchy.v1.json"]
+    },
+    {
+      "contentId": "UCIC",
+      "contentClass": "SCIENTIFIC_OBJECT_DEFINITION",
+      "objectClass": "INVARIANT_CANDIDATE",
+      "definition": "Fixed invariant candidate exposed to severe falsification.",
+      "canonicalStatement": "invariant candidate",
+      "sourceRef": "GATE0_UNIVERSAL_OBJECT_MODEL",
+      "authorityRef": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+      "contentVersion": "v1",
+      "claimCeilingRef": "SOURCE_DEFINED_NO_F4_UPGRADE",
+      "limitations": ["FIXED_INVARIANT_RETAINED_IS_NOT_PROSPECTIVE_CONFIRMATION"],
+      "provenance": ["universal-object-model.v1.json", "canonical-hierarchy.v1.json"]
+    },
+    {
+      "contentId": "METHODS",
+      "contentClass": "METHOD_DEFINITION",
+      "objectClass": "METHOD",
+      "definition": "Scientific procedure governing evidence, independence, custody, freezing, scoring, and adjudication.",
+      "canonicalStatement": "scientific procedure",
+      "sourceRef": "GATE0_UNIVERSAL_OBJECT_MODEL",
+      "authorityRef": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+      "contentVersion": "v1",
+      "claimCeilingRef": "SOURCE_DEFINED_NO_F4_UPGRADE",
+      "limitations": ["MODEL_MAY_NOT_BE_REPORTED_AS_METHOD", "PROTOCOL_READINESS_MAY_NOT_BE_REPORTED_AS_SCIENTIFIC_RESULT"],
+      "provenance": ["universal-object-model.v1.json", "canonical-hierarchy.v1.json", "methods-sequence.v1.json"]
+    },
+    {
+      "contentId": "MODEL_REGISTRY",
+      "contentClass": "MODEL_DEFINITION",
+      "objectClass": "MODEL",
+      "definition": "A representation used to describe or predict system behavior.",
+      "canonicalStatement": "competing system representations",
+      "sourceRef": "GATE0_UNIVERSAL_OBJECT_MODEL",
+      "authorityRef": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+      "contentVersion": "v1",
+      "claimCeilingRef": "SOURCE_DEFINED_NO_F4_UPGRADE",
+      "limitations": ["MODEL_MAY_NOT_BE_REPORTED_AS_METHOD", "GLOBAL_MULTIPLICATIVE_PRODUCT_REJECTED_AS_GOVERNING_MODEL"],
+      "provenance": ["universal-object-model.v1.json", "canonical-hierarchy.v1.json", "model-registry.v1.json"]
+    },
+    {
+      "contentId": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "contentClass": "SCIENTIFIC_OBJECT_DEFINITION",
+      "objectClass": "TEST_INSTANCE",
+      "definition": "Frozen five-domain prospective severe-test portfolio.",
+      "canonicalStatement": "active severe-test instance",
+      "sourceRef": "GATE0_UNIVERSAL_OBJECT_MODEL",
+      "authorityRef": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+      "contentVersion": "v1",
+      "claimCeilingRef": "NO_PROSPECTIVE_RESULT",
+      "limitations": ["PROSPECTIVE_SCIENTIFIC_RESULT_NONE", "PREDICTIONS_NOT_FROZEN", "OUTCOME_ACCESS_PROHIBITED"],
+      "provenance": ["universal-object-model.v1.json", "canonical-hierarchy.v1.json", "evidence-and-execution-state.v1.json"]
+    },
+    {
+      "contentId": "HUMAN_AND_3D_CONSTRUCT",
+      "contentClass": "SCIENTIFIC_OBJECT_DEFINITION",
+      "objectClass": "INTERFACE_STATE",
+      "definition": "Navigation and presentation state with no authority to alter scientific meaning.",
+      "canonicalStatement": "synchronized navigation and explanation layer",
+      "sourceRef": "GATE0_UNIVERSAL_OBJECT_MODEL",
+      "authorityRef": "MERGED_GATE_0_SCIENTIFIC_NORMALIZATION_AUTHORITY",
+      "contentVersion": "v1",
+      "claimCeilingRef": "NONSCIENTIFIC_PRESENTATION_ONLY",
+      "limitations": ["INTERFACE_STATE_MAY_NOT_MUTATE_SCIENTIFIC_STATE"],
+      "provenance": ["universal-object-model.v1.json", "canonical-hierarchy.v1.json"]
+    }
+  ],
+  "registryLaw": "DEFINITIONS_ARE_UPSTREAM_NORMALIZATION_CONTENT_AND_MAY_NOT_BE_REDEFINED_BY_EMPIRICAL_INSTANCES"
+}

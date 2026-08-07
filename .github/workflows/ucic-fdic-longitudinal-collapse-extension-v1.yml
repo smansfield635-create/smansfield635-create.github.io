@@ -1,0 +1,71 @@
+name: UCIC FDIC Longitudinal Collapse Extension v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/arm-b-fdic-longitudinal-protocol.v1.json'
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/run-fdic-longitudinal-extension-v1.py'
+      - '.github/workflows/ucic-fdic-longitudinal-collapse-extension-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  acquire-score-adjudicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Freeze integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          FILE='research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/arm-b-fdic-longitudinal-protocol.v1.json'
+          EXPECTED='8a5d3ea7137288bffa098f08941ed8096abc18b92470fb6e6c7313756dd86d07'
+          ACTUAL="$(sha256sum "$FILE" | awk '{print $1}')"
+          echo "protocol_sha256=$ACTUAL"
+          test "$ACTUAL" = "$EXPECTED"
+      - name: Install acquisition dependency
+        run: python -m pip install --disable-pip-version-check requests
+      - name: Acquire score and adjudicate once
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/run-fdic-longitudinal-extension-v1.py | tee fdic-longitudinal-run.log
+      - name: Verify terminal closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/arm-b-fdic-longitudinal-result.v1.json')
+          x = json.loads(p.read_text())
+          allowed = {
+              'FDIC_LONGITUDINAL_UNEVALUABLE_DATA_OR_MATCHING_FAILURE',
+              'FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED',
+              'FDIC_LONGITUDINAL_SIGNAL_REDUNDANT_WITH_SIMPLE_FINANCIAL_DISTRESS',
+              'FDIC_LONGITUDINAL_EARLY_WARNING_SUPPORTED_WITH_LIMITATIONS',
+              'FDIC_LONGITUDINAL_EARLY_WARNING_SUPPORTED',
+          }
+          assert x['terminal_disposition'] in allowed, x
+          assert x.get('post_result_scientific_repair_permitted') is False, x
+          print(json.dumps({
+              'terminal_disposition': x['terminal_disposition'],
+              'acquisition_status': x.get('acquisition_status'),
+              'metrics': x.get('metrics'),
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Preserve frozen execution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-fdic-longitudinal-collapse-extension-v1
+          if-no-files-found: error
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/arm-b-fdic-longitudinal-protocol.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/arm-b-fdic-longitudinal-result.v1.json
+            fdic-longitudinal-run.log

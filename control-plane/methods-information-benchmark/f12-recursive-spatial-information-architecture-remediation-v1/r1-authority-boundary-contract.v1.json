@@ -1,0 +1,140 @@
+{
+  "schema": "METHODS_MODELS_F12_R1_AUTHORITY_BOUNDARY_CONTRACT_v1",
+  "program": "F12_RECURSIVE_SPATIAL_INFORMATION_ARCHITECTURE_REMEDIATION_v1",
+  "checkpoint": "R1_AUTHORITY_BOUNDARY_CONTRACT",
+  "status": "PASS_CLOSED",
+  "constructionClass": "NONPUBLIC_CONTROL_PLANE_GOVERNANCE_ONLY",
+  "governingRepositoryBase": {
+    "branch": "main",
+    "head": "c50d0a06a73ed149286508a15e697d8efa254865",
+    "tree": "652d78f0768e2ee957423e9c657d3ac6f35f0775",
+    "authorityClass": "MOVING_REPOSITORY_INTEGRATION_BASE_ONLY",
+    "scientificAuthority": false
+  },
+  "frozenIdentities": {
+    "f11CertifiedAuthority": {
+      "head": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2",
+      "tree": "0413ec4966e4849780dccc041ef7636c93cbd5ed",
+      "payloadFingerprintSha256": "caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99",
+      "authorityClass": "TERMINAL_CERTIFICATION_ENVELOPE",
+      "mutableByF12Remediation": false
+    },
+    "certifiedEnvironmentPayload": {
+      "head": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+      "tree": "e42a5267c10c1ae5183e2935a49b97af6545f9eb",
+      "environmentScienceDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+      "sceneScienceDigest": "82ad07a6e99424229c9fdee014de0e764474fb0fc382383aae06cb15dfb797ff",
+      "authorityClass": "FROZEN_SCIENTIFIC_AND_DECLARED_SPATIAL_INPUT",
+      "mutableByF12Remediation": false
+    },
+    "rejectedF12ReviewSpecimen": {
+      "head": "9386d771526cb60e773295d3a98a7dbe2a11adf9",
+      "tree": "4934dd2b277e59234504e6808996907df29d1978",
+      "payloadFingerprintSha256": "caf6af4d3eb13420a78efdc1a4c1c89fd113c884312b1d6113eaceca4080ee99",
+      "authorityClass": "PERMANENT_NONCONTROLLING_FAILURE_EVIDENCE",
+      "mayBeInspectedForDefectRecovery": true,
+      "mayBeUsedAsSuccessorPresentationBaseline": false,
+      "mayBeMergedAsFinalExperience": false
+    },
+    "r0RejectedUserEvidence": {
+      "videoFile": "1000051747.mp4",
+      "videoSha256": "cebb56e760872ae5ee7d2494cc7ad4518cac88342c1d994e6dcaa0bd5b039a7e",
+      "videoSizeBytes": 22306125,
+      "contactImageSha256": "ed20ec25240b2ee95962c156bd5c3b1111df944d439a4525df90a54f79fd6a7b",
+      "authorityClass": "USER_REJECTION_EVIDENCE",
+      "presentationAcceptance": "REJECTED"
+    }
+  },
+  "identityNonEquivalenceLaw": [
+    "F11_CERTIFIED_AUTHORITY_NE_CERTIFIED_ENVIRONMENT_PAYLOAD",
+    "CERTIFIED_ENVIRONMENT_PAYLOAD_NE_REJECTED_F12_REVIEW_SPECIMEN",
+    "REJECTED_F12_REVIEW_SPECIMEN_NE_CURRENT_MAIN",
+    "CURRENT_MAIN_NE_F11_CERTIFIED_AUTHORITY"
+  ],
+  "precedence": [
+    "FROZEN_SCIENTIFIC_MEANING_AND_EVIDENCE_STATE",
+    "FROZEN_DECLARED_RELATION_AND_PROJECTION_SEMANTICS",
+    "EXPLICIT_SUCCESSOR_NONSCIENTIFIC_INTERPRETATION_CONTRACTS",
+    "SUCCESSOR_NAVIGATION_AND_PRESENTATION",
+    "REJECTED_SPECIMEN_DIAGNOSTIC_EVIDENCE_ONLY",
+    "MOVING_REPOSITORY_STATE"
+  ],
+  "scientificAuthorityBoundary": {
+    "scientificMeaningSource": "F11_CERTIFIED_F1_THROUGH_F10_PAYLOAD_ONLY",
+    "scientificClaimUpgradeAllowed": false,
+    "scientificReopeningAllowed": false,
+    "f1ThroughF11MutationAllowed": false,
+    "sourceAdmissionMutationAllowed": false,
+    "typedRelationMutationAllowed": false,
+    "canonicalClaimMutationAllowed": false,
+    "claimCeilingMutationAllowed": false,
+    "statefulEntryMutationAllowed": false,
+    "methodModelCrosswalkMutationAllowed": false,
+    "estateProjectionScientificMeaningMutationAllowed": false
+  },
+  "spatialAuthorityBoundary": {
+    "f8GeometryObjectMutable": false,
+    "f8CoordinatesRemain": "PRESENTATION_ONLY_NONSCIENTIFIC_NONCONTROLLING",
+    "f8CoordinateScientificReinterpretationAllowed": false,
+    "successorPresentationTransformsAllowed": true,
+    "successorPresentationTransformCondition": "SEPARATELY_VERSIONED_NONSCIENTIFIC_DERIVATION_THAT_DOES_NOT_MUTATE_OR_REINTERPRET_F8_SCIENTIFIC_MEANING",
+    "cameraOrNavigationMayChangeScientificState": false,
+    "motionMayCarryScientificMeaning": false,
+    "textFirstScientificRecoverabilityRequired": true
+  },
+  "remediationAuthorityGrantedAfterR1": {
+    "class": "SUCCESSOR_INFORMATION_ARCHITECTURE_AND_INTERACTION_ONLY",
+    "authorizedCapabilities": [
+      "CONSTRUCT_CONTEXT_INTERPRETER",
+      "CONSTRUCT_RECURSIVE_NAVIGATION",
+      "CONSTRUCT_FOREGROUND_BACKGROUND_INFORMATION_HIERARCHY",
+      "CONSTRUCT_INFORMATIONAL_TRANSFORMATION_SEMANTICS",
+      "CONSTRUCT_PROGRESSIVE_DISCLOSURE_AND_LOCAL_RELATION_EXPOSURE",
+      "CONSTRUCT_SEPARATELY_VERSIONED_PRESENTATION_TRANSFORMS",
+      "USE_FROZEN_CERTIFIED_DATA_AS_READ_ONLY_INPUT",
+      "INSPECT_REJECTED_SPECIMEN_AS_NONAUTHORITATIVE_FAILURE_EVIDENCE"
+    ],
+    "conditions": [
+      "ALL_SUCCESSOR_DERIVATIONS_MUST_BE_EXPLICIT_AND_REPRODUCIBLE",
+      "NO_SUCCESSOR_VIEW_STATE_MAY_CREATE_OR_UPGRADE_SCIENTIFIC_AUTHORITY",
+      "NO_PRESENTATION_DERIVATION_MAY_BE_BACKWRITTEN_INTO_F1_THROUGH_F11",
+      "NO_REJECTED_LAYOUT_OR_NAVIGATION_MODEL_INHERITS_AUTHORITY_BY_COPY",
+      "SCIENTIFIC_RECORDS_MUST_REMAIN_RECOVERABLE_WITHOUT_SPATIAL_INTERACTION",
+      "PUBLIC_OR_VISIBLE_RECONSTRUCTION_REQUIRES_LATER_EXPLICIT_CHECKPOINT_AUTHORITY"
+    ]
+  },
+  "explicitlyProhibitedAtR1": [
+    "PUBLIC_MUTATION",
+    "VISIBLE_RECONSTRUCTION",
+    "FINAL_INTERFACE_CONSTRUCTION",
+    "LIVE_DEPLOYMENT",
+    "MERGE_TO_MAIN",
+    "F1_THROUGH_F11_MUTATION",
+    "SCIENTIFIC_CLAIM_UPGRADE",
+    "SCIENTIFIC_REOPENING",
+    "REJECTED_SPECIMEN_PROMOTION",
+    "REJECTED_SPECIMEN_ACCEPTANCE_AS_BASELINE",
+    "UNDECLARED_SEMANTIC_INFERENCE_FROM_POSITION_DISTANCE_COLOR_MOTION_OR_CAMERA"
+  ],
+  "r0DefectsCarriedForward": [
+    "MISSING_CONTEXT_INTERPRETER",
+    "MISSING_RECURSIVE_NAVIGATION",
+    "GLOBAL_RELATION_OVEREXPOSURE",
+    "WEAK_FOREGROUND_BACKGROUND_SEMANTICS",
+    "INSUFFICIENT_INFORMATIONAL_TRANSFORMATION_SEMANTICS"
+  ],
+  "r1Disposition": {
+    "authorityBoundaryEstablished": true,
+    "scientificStateMutated": false,
+    "certifiedPayloadMutated": false,
+    "rejectedSpecimenMutated": false,
+    "publicStateMutated": false,
+    "visibleExperienceMutated": false,
+    "userDifferentialRequired": false,
+    "r2Eligibility": "ELIGIBLE_READY_FOR_EXECUTION"
+  },
+  "rollbackScientificAuthority": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2",
+  "rollbackCertifiedEnvironment": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+  "rejectedSpecimenPreservation": "PERMANENT_NONCONTROLLING_FAILURE_EVIDENCE",
+  "terminalLaw": "R1_CREATES_NO_PRODUCT_OR_SCIENTIFIC_AUTHORITY;IT_ONLY_DEFINES_WHICH_FROZEN_OBJECTS_CONTROL_AND_WHICH_SUCCESSOR_PRESENTATION_OPERATIONS_MAY_BEGIN_LATER"
+}

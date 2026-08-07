@@ -240,18 +240,6 @@
       "scopeHash": "459ae4873571efb6c15c5a2c33c22ae04e2ece3d6ec37fd5a5d576ab01c58a06",
       "state": "ADMITTED_LOCKED"
     },
-    "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f": {
-      "governingHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
-      "lockGeneration": 411,
-      "lockScope": "H_EARTH:TERRAIN_AND_ESTATE_CONSTRUCTION:GRATITUDE_REGION_MIRROR_MANOR_PRECINCT:V1:EXACT_32_PATH_SCOPE",
-      "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
-      "procedureLocatorDigest": "d5889eaec30b3c1f416bc98c884b017b22ade80db639b525375b375642fdb924",
-      "released": false,
-      "requestDigest": "bd9837d0b9ac555f957c1c460922a8ffa4aa9385bed8ad4d9998d5e26a60cfd3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f",
-      "state": "ADMITTED_LOCKED"
-    },
     "4943ff7c798b57432d8a426021f5d80f0009acc498840e8b9d6f2ec58ad306a1": {
       "governingHead": "b38bc63c99411da65f1fa254a14c84ffea77ee0b",
       "lockGeneration": 244,
@@ -5392,6 +5380,19 @@
       "scopeHash": "c3198c2f6768ae7760ffad415f6c4aeacbdb38ed901ced971107c764692eee7b",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+      "lockGeneration": 411,
+      "lockScope": "H_EARTH:TERRAIN_AND_ESTATE_CONSTRUCTION:GRATITUDE_REGION_MIRROR_MANOR_PRECINCT:V1:EXACT_32_PATH_SCOPE",
+      "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+      "procedureLocatorDigest": "d5889eaec30b3c1f416bc98c884b017b22ade80db639b525375b375642fdb924",
+      "released": true,
+      "requestDigest": "bd9837d0b9ac555f957c1c460922a8ffa4aa9385bed8ad4d9998d5e26a60cfd3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

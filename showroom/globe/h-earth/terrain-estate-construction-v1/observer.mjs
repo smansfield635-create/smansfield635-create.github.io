@@ -46,7 +46,7 @@ export const OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST = freeze({
   acceptedReliefAndDepthProtected: true,
   outerCoastalShapePreserveUnlessRequired: true,
   beachCorrectionClass: 'TERRAIN_INTEGRATION_NOT_DECORATION',
-  beachGeometryObjectVisualAuthority: 'TO_BE_REMOVED_AFTER_THIS_FREEZE',
+  beachGeometryObjectVisualAuthority: 'REMOVED_FOR_LANDWARD_BEACH',
   newVisualToolingAuthorized: false,
   newTerrainSystemAuthorized: false,
   newLodFrameworkAuthorized: false,
@@ -64,6 +64,9 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const camera = renderer.getCameraSafety();
   const contract = snapshot.worldContract;
   const geography = renderer.getOW01GeographicEvidence();
+  const positionalIdentity = renderer.evaluateCanonicalGeographicIdentity(
+    OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST
+  );
   const relief = continent?.reliefStatistics;
 
   const checks = {
@@ -85,6 +88,11 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
 
     continuousAudraliaWorldModel:
       contract?.schema === 'AUDRALIA_CONTINUOUS_MULTISCALE_WORLD_MODEL_v1',
+
+    exactCoherenceOperation:
+      contract?.coherenceOperation === PARENT_COHERENCE_OPERATION &&
+      geography?.coherenceOperation === PARENT_COHERENCE_OPERATION &&
+      positionalIdentity?.coherenceOperation === PARENT_COHERENCE_OPERATION,
 
     authoringRegionNoLongerWorldBoundary:
       snapshot.authoringRegionIsWorldBoundary === false &&
@@ -136,17 +144,32 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       geography?.coastlineTopology === 'SUBCELL_SCALAR_FIELD_CLIPPED' &&
       geography?.localCoastlineClipTriangleCount > 0,
 
-    continuousCoastalRibbonConstructed:
-      contract?.coastalRibbonReconstructed === true &&
-      contract?.coastalRibbonLandwardEdgeContinuous === true &&
-      beach?.coastalRibbonConstructed === true &&
-      beach?.landwardEdgeContinuous === true &&
-      beach?.seawardEdgeContinuous === true &&
+    coastalTerrainMaterialIntegrated:
+      contract?.coastalRibbonReconstructed === false &&
+      contract?.coastalTerrainMaterialIntegrated === true &&
+      contract?.independentBeachVisualAuthority === false &&
+      contract?.landwardBeachRibbonConstructed === false &&
+      contract?.seawardWetTransitionPreserved === true &&
+      gratitude?.terrainIntegratedSand === true &&
+      gratitude?.independentBeachVisualAuthority === false &&
+      gratitude?.terrainIntegratedSandSampleCount > 0 &&
+      beach?.coastalRibbonConstructed === false &&
+      beach?.independentBeachVisualAuthority === false &&
+      beach?.landwardBeachRibbonConstructed === false &&
+      beach?.seawardWetTransitionConstructed === true &&
+      beach?.terrainIntegratedSand === true &&
       beach?.sharesHarborShorelineFunction === true &&
       beach?.segmentCount >= 300 &&
-      beach?.lateralLayerCount >= 6 &&
-      geography?.coastalRibbonConstructed === true &&
-      geography?.coastalRibbonLandwardEdgeContinuous === true,
+      geography?.coastalRibbonConstructed === false &&
+      geography?.coastalTerrainMaterialIntegrated === true &&
+      geography?.independentBeachVisualAuthority === false &&
+      geography?.landwardBeachRibbonConstructed === false &&
+      geography?.seawardWetTransitionConstructed === true,
+
+    outerCoastalShapeProtected:
+      contract?.outerCoastalShapePreserved === true &&
+      beach?.outerCoastalShapePreserved === true &&
+      geography?.outerCoastalShapePreserved === true,
 
     diverseSandbarFieldConstructed:
       contract?.previewSandbarDiversityConstructed === true &&
@@ -293,7 +316,8 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
     localHydrologyStillCurvesWithPlanet:
       water?.curvedToPlanetSurface === true &&
       water?.reservoirTriangleCount > 0 &&
-      water?.waterfallTriangleCount > 0,
+      water?.waterfallTriangleCount > 0 &&
+      water?.waterfallReservoirProtectedReference === true,
 
     cameraContractSafe:
       Object.values(camera).every(Boolean),
@@ -304,6 +328,16 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
       OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.governingAcceptedBaseline === GOVERNING_ACCEPTED_BASELINE &&
       OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.protectedWorkingReference === PROTECTED_WORKING_REFERENCE &&
       OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.mutationOrder === 'ANCHORS_FROZEN_BEFORE_COASTAL_INTEGRATION',
+
+    canonicalPositionalIdentityGate:
+      contract?.canonicalGeographicIdentityGateConstructed === true &&
+      positionalIdentity?.manifestSchema === OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST.schema &&
+      positionalIdentity?.anchorCount === 12 &&
+      positionalIdentity?.requiredRepresentationCount === 4 &&
+      positionalIdentity?.toleranceAuthoringUnits === 1e-6 &&
+      positionalIdentity?.maximumRoundTripError <= 1e-6 &&
+      positionalIdentity?.maximumFeatureBindingError <= 1e-6 &&
+      positionalIdentity?.canonicalPositionalIdentityPassed === true,
 
     mechanicalPassCannotClaimUserAcceptance:
       contract?.mechanicalPassIsNotUserAcceptance === true &&
@@ -331,7 +365,7 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
   const mechanicalChecksPassed = failedChecks.length === 0;
 
   return freeze({
-    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v8',
+    schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_GRATITUDE_WORLD_PREVIEW_OBSERVER_RECEIPT_v9',
     result: mechanicalChecksPassed ? 'MECHANICAL_PASS_AWAITING_USER' : 'FAIL_CLOSED',
     mechanicalChecksPassed,
     userAcceptanceEstablished: false,
@@ -350,12 +384,14 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
     continentCount: 9,
     gratitudeSummitTrackCount: 9,
     canonicalGeographicAnchorManifest: OW01_CANONICAL_GEOGRAPHIC_ANCHOR_MANIFEST,
+    canonicalPositionalIdentity: positionalIdentity,
     hierarchy: freeze([
       'AUDRALIA',
       'GRATITUDE_CONTINENT',
       'ALIGNED_STITCH_ANNULUS',
       'SHARED_HARBOR_COAST_AUTHORITY',
-      'CONTINUOUS_COASTAL_RIBBON',
+      'TERRAIN_INTEGRATED_COASTAL_SAND',
+      'SEAWARD_WET_TRANSITION',
       'HIGH_RESOLUTION_LOCAL_TERRAIN'
     ]),
     checks: freeze(checks),
@@ -369,11 +405,14 @@ export function buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer) {
         'MATERIAL_WORLD_CONTINUITY_SUCCESS_WITH_LOCAL_STITCH_TOPOLOGY_TEAR_CORRECTION_REQUIRED',
       userAcceptanceEstablished: false,
       repairRound:
-        'H_EARTH_V2_COASTAL_INTEGRATION_AND_POSITIONAL_IDENTITY_CLOSURE_ANCHOR_FREEZE',
+        'H_EARTH_V2_COASTAL_INTEGRATION_AND_POSITIONAL_IDENTITY_CLOSURE',
       canonicalAnchorsFrozenBeforeBeachMutation: true,
-      coastalIntegrationMutationStarted: false,
-      positionalGateStatus: 'NOT_YET_EXECUTED',
+      coastalIntegrationMutationStarted: true,
+      independentBeachVisualAuthorityRemoved: true,
+      positionalGateStatus:
+        positionalIdentity?.canonicalPositionalIdentityPassed === true ? 'PASS' : 'FAIL_CLOSED',
       perceptualGateStatus: 'USER_REQUIRED_AFTER_ENGINEERING',
+      mirageCorrectionAuthorizedOnlyIfRequiredAfterGateReview: true,
       ow02Authorized: false,
       liveIntegrationAuthorized: false,
       frontPageIntegrationAuthorized: false,

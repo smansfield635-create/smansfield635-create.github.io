@@ -1,0 +1,19 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F7_SEMANTIC_CONTROL_REGISTRY_v1",
+  "status": "F7_CONSTRUCTION_CANDIDATE",
+  "controls": [
+    {"controlId":"FOCUS_TARGET","role":"GENERIC_FOCUS_TARGET","operation":"FOCUS_MOVE","focusable":true,"accessibleName":"Move focus","requiresExplicitActivation":false},
+    {"controlId":"DEPTH_D0","role":"TAB","operation":"REQUEST_DEPTH","payload":{"depth":"D0"},"focusable":true,"accessibleName":"Orientation depth","requiresExplicitActivation":true},
+    {"controlId":"DEPTH_D1","role":"TAB","operation":"REQUEST_DEPTH","payload":{"depth":"D1"},"focusable":true,"accessibleName":"Meaning depth","requiresExplicitActivation":true},
+    {"controlId":"DEPTH_D2","role":"TAB","operation":"REQUEST_DEPTH","payload":{"depth":"D2"},"focusable":true,"accessibleName":"Structure depth","requiresExplicitActivation":true},
+    {"controlId":"DEPTH_D3","role":"TAB","operation":"REQUEST_DEPTH","payload":{"depth":"D3"},"focusable":true,"accessibleName":"Evidence depth","requiresExplicitActivation":true},
+    {"controlId":"DEPTH_D4","role":"TAB","operation":"REQUEST_DEPTH","payload":{"depth":"D4"},"focusable":true,"accessibleName":"Provenance depth","requiresExplicitActivation":true},
+    {"controlId":"INQUIRE_FIELD","role":"BUTTON","operation":"INQUIRE_FIELD","focusable":true,"accessibleName":"Inspect disclosed field","requiresExplicitActivation":true},
+    {"controlId":"NAVIGATE_ROUTE","role":"LINK","operation":"NAVIGATE_ROUTE","focusable":true,"accessibleName":"Navigate within current scientific object","requiresExplicitActivation":true},
+    {"controlId":"MOTION_PREFERENCE","role":"RADIOGROUP","operation":"SET_MOTION_PREFERENCE","focusable":true,"accessibleName":"Motion preference","requiresExplicitActivation":true},
+    {"controlId":"VIEWPORT_CLASS","role":"SYSTEM_ADAPTATION","operation":"SET_VIEWPORT_CLASS","focusable":false,"accessibleName":"Viewport adaptation","requiresExplicitActivation":false}
+  ],
+  "controlLaw": "SEMANTIC_ROLE_ACCESSIBLE_NAME_AND_REGISTERED_OPERATION_ARE_MODALITY_INVARIANT",
+  "visualStylingAuthority": false,
+  "spatialRelationAuthority": false
+}

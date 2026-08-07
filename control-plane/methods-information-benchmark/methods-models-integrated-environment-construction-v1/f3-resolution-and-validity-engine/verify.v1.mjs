@@ -178,7 +178,7 @@ assert(serialized.bytes && serialized.sha256);
 const restored = restoreCanonical(serialized.bytes);
 assert.equal(restored.canonical, true);
 assert.equal(restored.sha256, serialized.sha256);
-assert.equal(JSON.stringify(restored.state), JSON.stringify(resolved));
+assert.deepEqual(restored.state, resolved);
 
 const nonCanonicalBytes = JSON.stringify(JSON.parse(serialized.bytes), null, 2);
 assert.equal(restoreCanonical(nonCanonicalBytes).resolutionClass, 'INVALID');

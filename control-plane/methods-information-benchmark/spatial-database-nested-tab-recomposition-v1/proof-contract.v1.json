@@ -1,0 +1,72 @@
+{
+  "schema": "METHODS_SPATIAL_DATABASE_CHECKPOINT_4_PROOF_CONTRACT_v1",
+  "status": "NONPUBLIC_USER_TEST_CANDIDATE",
+  "operationId": "METHODS_SPATIAL_DATABASE_NESTED_TAB_RECOMPOSITION_CHECKPOINT_4_CONSTRUCTION_v1",
+  "constructionBase": {
+    "mainHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
+    "mainTree": "9c1fa274cdf53afcbb26a7c84a5dc55fc8f7ca51",
+    "methodsDriftFrom502fToBase": false
+  },
+  "branch": "construction/methods-spatial-database-checkpoint4-text-first-v2-001",
+  "registeredExactPathCount": 19,
+  "fingerprintDomain": {
+    "algorithm": "SHA256",
+    "serialization": "PATH_NUL_UTF8_BYTES_NUL",
+    "paths": [
+      ".github/workflows/methods-spatial-database-nested-tab-recomposition-v1.yml",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/README.md",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/index.html",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/styles.css",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/data.mjs",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/math.mjs",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/state.mjs",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/renderer.mjs",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/navigation.mjs",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/app.mjs",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/design-grammar.v1.json",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/information-architecture.v1.json",
+      "control-plane/methods-information-benchmark/spatial-database-nested-tab-recomposition-v1/interaction-state-contract.v1.json"
+    ],
+    "expected": "9735a99659f221a98c8c292e936bcddd3d70cac823a418da61659dfcbf32f79d"
+  },
+  "sourceBindings": {
+    "permanentRatificationReceiptBlob": "0375241beb7ae76030402fb882d9cc1d46b257a5",
+    "entrypointBlob": "e85d35a1bce1925b380eed87b9eee586f05a355f",
+    "designGrammarFingerprint": "13c93b713c936365564d9fd95e76a7cabbfce3d9ac9c3e658edbde0d70d98991",
+    "informationArchitectureFingerprint": "9428d8764026c6e8c75aa38d680be9db54e5d37aee3b3aa0480e41a0db247b3f",
+    "interactionContractFingerprint": "7f19aab646a09187369d6c4da00135b0e3623d3bfae288050318a04fb12845ef",
+    "immutablePredecessorHead": "64a83bfa9403198b060b8cb9930fb4a2648218a4",
+    "immutablePredecessorFingerprint": "51575d2a45db96ae2cfd1f370d09e987fdbbf78bcefec12d0da62d23519efd4c"
+  },
+  "scope": {
+    "lane": "pressure-and-capacity",
+    "records": [
+      "pressure-field",
+      "capacity-field",
+      "pcr"
+    ],
+    "laterLaneExpansionAuthorized": false
+  },
+  "requiredBehaviors": [
+    "SEMANTIC_TEXT_PRIMARY",
+    "VISIBLE_RECORD_TABS",
+    "PRACTICAL_DEFAULT",
+    "ONE_ACTIVE_LENS",
+    "NESTED_TABS",
+    "STANDARD_SCROLLING",
+    "SELECTED_ADVANCES_PEERS_RECEDE",
+    "EQUATION_CHOREOGRAPHY",
+    "KEYBOARD_ACCESS",
+    "FOCUS_RESTORATION",
+    "SCROLL_RESTORATION",
+    "REDUCED_MOTION_EQUIVALENCE",
+    "EXACT_CONTEXTUAL_RETURN",
+    "EVIDENCE_BOUNDARIES"
+  ],
+  "stopBoundary": {
+    "mergeAuthorized": false,
+    "publicDeploymentAuthorized": false,
+    "releaseAuthorized": false,
+    "perceptualAcceptanceClaimed": false
+  }
+}

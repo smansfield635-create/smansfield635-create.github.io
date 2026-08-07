@@ -13,7 +13,7 @@ const wrapAngle = (value) => Math.atan2(Math.sin(value), Math.cos(value));
 export const PREVIEW_DOMAIN = Object.freeze({ xMinimum: -256, xMaximum: 256, zMinimum: -320, zMaximum: 64, columns: 129, rows: 97 });
 const WORLD_CENTER = Object.freeze({ x: 0, z: -128 });
 const ESTATE_CENTER = Object.freeze({ x: 80, z: -172 });
-const CAMERA_LIMITS = Object.freeze({ minimumPitch: 0.46, maximumPitch: 1.49, minimumDistance: 105, maximumDistance: 1100, worldFitDistance: 710, estateFocusDistance: 185, maximumTargetX: 246, minimumTargetX: -246, maximumTargetZ: 54, minimumTargetZ: -310 });
+const CAMERA_LIMITS = Object.freeze({ minimumPitch: 0.46, maximumPitch: 1.49, minimumDistance: 105, maximumDistance: 1600, worldFitDistance: 1325, estateFocusDistance: 185, maximumTargetX: 246, minimumTargetX: -246, maximumTargetZ: 54, minimumTargetZ: -310 });
 
 function perspective(fov, aspect, near, far) {
   const f = 1 / Math.tan(fov / 2); const nf = 1 / (near - far);

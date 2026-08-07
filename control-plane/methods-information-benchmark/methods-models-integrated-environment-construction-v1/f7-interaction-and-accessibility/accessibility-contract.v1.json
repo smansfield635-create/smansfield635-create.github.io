@@ -1,0 +1,42 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F7_ACCESSIBILITY_CONTRACT_v1",
+  "status": "F7_CONSTRUCTION_CANDIDATE",
+  "textFirstAuthority": "METHODS_SPATIAL_DATABASE_TEXT_FIRST_INTERACTION_STATE_CONTRACT_v2",
+  "requirements": {
+    "semanticDomTextPrimary": true,
+    "standardTextualScrolling": true,
+    "keyboardOperableRegisteredControls": true,
+    "focusOrderDeterministic": true,
+    "focusVisibleSemanticsRequiredAtImplementation": true,
+    "assistiveTechnologyUsesSameRegisteredControls": true,
+    "touchUsesSameRegisteredControls": true,
+    "mobileAdaptationPreservesInformationAndOperations": true,
+    "reducedMotionPreservesInformationAndOperations": true,
+    "d0ThroughD4AccessibleWithoutPointerDependency": true,
+    "invalidInteractionProducesRecoverablePriorContext": true,
+    "invalidInteractionDoesNotSilentlyFallback": true
+  },
+  "motionModes": ["SYSTEM","FULL","REDUCED"],
+  "viewportClasses": ["MOBILE","TABLET","DESKTOP"],
+  "recoveryEnvelopeMustPreserve": [
+    "ENTRY_POINT_ID",
+    "SCIENTIFIC_STATE_SHA256",
+    "SCIENTIFIC_BINDING_SHA256",
+    "ACTIVE_DEPTH",
+    "FOCUS_TARGET",
+    "MOTION_PREFERENCE",
+    "VIEWPORT_CLASS"
+  ],
+  "laws": [
+    "REDUCED_MOTION_IS_NOT_REDUCED_INFORMATION",
+    "MOBILE_IS_NOT_REDUCED_SCIENTIFIC_MEANING",
+    "SCREEN_READER_OR_SEMANTIC_ACTIVATION_IS_NOT_A_SEPARATE_AUTHORITY_PATH",
+    "FOCUS_ORDER_MAY_CHANGE_WITH_AVAILABLE_CONTROLS_BUT_MAY_NOT_CHANGE_CONTROL_MEANING",
+    "ERROR_RECOVERY_MUST_PRESERVE_PRIOR_AUTHORIZED_STATE_OR_FAIL_CLOSED",
+    "NO_GESTURE_ONLY_OPERATION_MAY_BE_REQUIRED_FOR_CORE_INQUIRY"
+  ],
+  "publicImplementationAuthorized": false,
+  "visualConstructionAuthorized": false,
+  "spatialTopologyAuthorized": false,
+  "geometryAuthorized": false
+}

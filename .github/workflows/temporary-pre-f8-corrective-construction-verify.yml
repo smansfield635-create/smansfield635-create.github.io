@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Verify corrective package
         run: node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/verify.v1.mjs
       - name: Prove no public or F8 construction paths changed from F7 terminal
@@ -20,12 +22,9 @@ jobs:
         run: |
           git diff --name-only 915538c30b17ef1a1746352a7bb221181190b739..HEAD > /tmp/changed.txt
           cat /tmp/changed.txt
-          if grep -Ev '^(control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/|\.github/workflows/temporary-pre-f8-corrective-construction-verify\.yml$)' /tmp/changed.txt | grep -q .; then
-            echo 'Unexpected path changed'; exit 1
-          fi
-          if grep -E '^(laws/|frontier/|showroom/)' /tmp/changed.txt | grep -q .; then
-            echo 'Public mutation detected'; exit 1
-          fi
-          if grep -Ei 'f8-spatial|geometry|webgl' /tmp/changed.txt | grep -v 'pre-f8-corrective-construction-v1' | grep -q .; then
-            echo 'F8/geometry path detected'; exit 1
-          fi
+          unexpected=$(grep -Ev '^(control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/|\.github/workflows/temporary-pre-f8-corrective-construction-verify\.yml$)' /tmp/changed.txt || true)
+          if [ -n "$unexpected" ]; then echo "$unexpected"; echo 'Unexpected path changed'; exit 1; fi
+          public=$(grep -E '^(laws/|frontier/|showroom/)' /tmp/changed.txt || true)
+          if [ -n "$public" ]; then echo "$public"; echo 'Public mutation detected'; exit 1; fi
+          spatial=$(grep -Ei 'f8-spatial|geometry|webgl' /tmp/changed.txt | grep -v 'pre-f8-corrective-construction-v1' || true)
+          if [ -n "$spatial" ]; then echo "$spatial"; echo 'F8/geometry path detected'; exit 1; fi

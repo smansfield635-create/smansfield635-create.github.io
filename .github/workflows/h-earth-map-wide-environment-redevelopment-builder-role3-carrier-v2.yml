@@ -1,0 +1,107 @@
+name: H-Earth Map-Wide Environment Redevelopment Builder + Fresh Role 3 V2
+
+on:
+  push:
+    branches:
+      - verification/h-earth-map-wide-environment-redevelopment-builder-role3-v2-001
+    paths:
+      - .github/workflows/h-earth-map-wide-environment-redevelopment-builder-role3-carrier-v2.yml
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: h-earth-map-wide-environment-redevelopment-builder-role3-v2-001
+  cancel-in-progress: false
+
+env:
+  GOVERNING_MAIN: 3f51f0cd159df33571905c6cb14253ebdd137e3b
+  CANDIDATE_HEAD: 69a776ab4de61cddb6fad3602625164bea4b6323
+  CONSTRUCTION_OPERATION: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1
+  CONSTRUCTION_LOCK_GENERATION: '422'
+  CARRIER_LOCK_GENERATION: '424'
+  CARRIER_SCOPE_HASH: 2edf0b798097d5e1b806c8a0f46cddfd3b39f6dbe3efd23f60a6d5c06d5a844e
+  VERIFY_PATH: h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs
+
+jobs:
+  builder-and-fresh-role3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact Builder candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CANDIDATE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+          path: candidate
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Bind exact candidate and governing ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C candidate rev-parse HEAD)" = "$CANDIDATE_HEAD"
+          test "$(git -C candidate merge-base "$GOVERNING_MAIN" "$CANDIDATE_HEAD")" = "$GOVERNING_MAIN"
+          test -z "$(git -C candidate status --porcelain=v1 --untracked-files=all)"
+          test -f "candidate/$VERIFY_PATH"
+
+      - name: Run Builder exact verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/h-earth-map-wide-environment-redevelopment-builder-role3-v2"
+          mkdir -p "$root/builder"
+          (
+            cd candidate
+            node "$VERIFY_PATH" --output "$root/builder"
+          ) | tee "$root/builder/stdout.json"
+          ROOT="$root" node --input-type=module -e "import fs from 'node:fs'; const r=JSON.parse(fs.readFileSync(process.env.ROOT+'/builder/builder.verification-receipt.v1.json','utf8')); if(r.result!=='PASS') throw new Error('BUILDER_NOT_PASS:'+JSON.stringify(r.issues)); if(r.candidateHead!==process.env.CANDIDATE_HEAD) throw new Error('BUILDER_CANDIDATE_HEAD_MISMATCH'); if(r.exactPathCount!==28||r.changedPathCount!==28) throw new Error('BUILDER_PATH_COUNT_MISMATCH'); if(!r.constructionFingerprint) throw new Error('BUILDER_FINGERPRINT_MISSING');"
+
+      - name: Check out exact candidate independently for fresh Role 3
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CANDIDATE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+          path: fresh-role3
+
+      - name: Require fresh independent checkout identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C fresh-role3 rev-parse HEAD)" = "$CANDIDATE_HEAD"
+          test "$(git -C fresh-role3 merge-base "$GOVERNING_MAIN" "$CANDIDATE_HEAD")" = "$GOVERNING_MAIN"
+          test -z "$(git -C fresh-role3 status --porcelain=v1 --untracked-files=all)"
+
+      - name: Run fresh Role 3 verifier without repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/h-earth-map-wide-environment-redevelopment-builder-role3-v2"
+          mkdir -p "$root/role3"
+          (
+            cd fresh-role3
+            node "$VERIFY_PATH" --role ROLE_3 --output "$root/role3"
+          ) | tee "$root/role3/stdout.json"
+          ROOT="$root" node --input-type=module -e "import fs from 'node:fs'; const r=JSON.parse(fs.readFileSync(process.env.ROOT+'/role3/role-3.verification-receipt.v1.json','utf8')); if(r.result!=='PASS') throw new Error('ROLE3_NOT_PASS:'+JSON.stringify(r.issues)); if(r.candidateHead!==process.env.CANDIDATE_HEAD) throw new Error('ROLE3_CANDIDATE_HEAD_MISMATCH'); if(r.exactPathCount!==28||r.changedPathCount!==28) throw new Error('ROLE3_PATH_COUNT_MISMATCH'); if(!r.constructionFingerprint) throw new Error('ROLE3_FINGERPRINT_MISSING');"
+
+      - name: Require deterministic Builder and Role 3 equality
+        shell: bash
+        run: |
+          set -euo pipefail
+          root="$RUNNER_TEMP/h-earth-map-wide-environment-redevelopment-builder-role3-v2"
+          ROOT="$root" node --input-type=module -e "import fs from 'node:fs';import crypto from 'node:crypto'; const b=JSON.parse(fs.readFileSync(process.env.ROOT+'/builder/builder.verification-receipt.v1.json','utf8')); const r=JSON.parse(fs.readFileSync(process.env.ROOT+'/role3/role-3.verification-receipt.v1.json','utf8')); if(b.constructionFingerprint!==r.constructionFingerprint) throw new Error('CONSTRUCTION_FINGERPRINT_MISMATCH'); const e={schema:'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_ROLE3_EQUALITY_RECEIPT_v1',result:'PASS',operationId:process.env.CONSTRUCTION_OPERATION,candidateHead:process.env.CANDIDATE_HEAD,governingMain:process.env.GOVERNING_MAIN,constructionLockGeneration:Number(process.env.CONSTRUCTION_LOCK_GENERATION),carrierLockGeneration:Number(process.env.CARRIER_LOCK_GENERATION),carrierScopeHash:process.env.CARRIER_SCOPE_HASH,builderResult:b.result,role3Result:r.result,constructionFingerprint:b.constructionFingerprint,exactPathCount:b.exactPathCount,changedPathCount:b.changedPathCount,repairPerformedDuringRole3:false,constructionCandidateMutatedByCarrier:false,mainMutatedByCarrier:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false}; const t=JSON.stringify(e,null,2)+'\n'; fs.writeFileSync(process.env.ROOT+'/equality.receipt.v1.json',t); fs.writeFileSync(process.env.ROOT+'/equality.sha256',crypto.createHash('sha256').update(t).digest('hex')+'\n');"
+
+      - name: Upload exact verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-environment-redevelopment-builder-role3-v2
+          path: ${{ runner.temp }}/h-earth-map-wide-environment-redevelopment-builder-role3-v2
+          if-no-files-found: error
+          retention-days: 90

@@ -2,7 +2,7 @@
 
 ## Governing disposition
 
-- Status: `PROTOCOL_FROZEN_CANDIDATE`
+- Status: `FROZEN_BEFORE_SYSTEM_ADMISSION`
 - Scientific position: `FIRST_ADVERSARIAL_DEPENDENCY_TEST`
 - Theory layer under test: `EMPIRICAL_IDENTIFIABILITY_OF_CONSTITUTIVE_ROUTES`
 - IMI scalar equation tested: `FALSE`
@@ -26,7 +26,7 @@ One valid admitted counterexample may falsify the universal independent-identifi
 
 ## Execution state
 
-Protocol construction is frozen as a candidate. Scientific execution has not started. No system is admitted, no target analyst has received evidence, no prediction has been submitted, and no held-out outcome may be opened.
+The protocol is frozen before system admission. Scientific execution has not started. No system is admitted, no target analyst has received evidence, no prediction has been submitted, and no held-out outcome may be opened.
 
 ## Lineage
 

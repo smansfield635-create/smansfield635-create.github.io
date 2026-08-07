@@ -9,51 +9,23 @@
 </head>
 <body>
   <main class="preview-shell" aria-label="H-Earth map-wide environment redevelopment nonpublic inspector">
-    <canvas
-      class="preview-canvas"
-      data-h-earth-map-wide-canvas
-      aria-label="Interactive 3D H-Earth terrain inspector"
-    ></canvas>
+    <header class="preview-toolbar" aria-live="polite">
+      <div class="preview-brand">H-Earth · World Inspector</div>
+      <div class="preview-status" data-h-earth-status>loading…</div>
+      <button class="preview-button" type="button" data-fit-world>reset view</button>
+    </header>
 
-    <section class="preview-panel" aria-live="polite">
-      <h1>H-Earth · World Inspector</h1>
-      <p>
-        Nonpublic map-wide terrain candidate on immutable Run8B truth.
-        The future estate site is physically prepared in the terrain; manor geometry remains deferred.
-      </p>
-      <div class="preview-status" data-h-earth-status>Loading candidate…</div>
-      <div class="preview-stats" data-h-earth-stats></div>
-
-      <div class="preview-actions" aria-label="Camera recovery and inspection views">
-        <button class="preview-button" type="button" data-fit-world>fit world</button>
-        <button class="preview-button" type="button" data-estate-focus>estate site</button>
-        <button class="preview-button" type="button" data-top-view>top view</button>
-      </div>
-
-      <div class="preview-controls" aria-label="Developer display controls">
-        <label class="preview-control">
-          <input type="checkbox" data-toggle-relief checked>
-          presentation relief
-        </label>
-        <label class="preview-control">
-          <input type="checkbox" data-toggle-estate>
-          estate guide
-        </label>
-        <label class="preview-control">
-          <input type="checkbox" data-toggle-entry>
-          entry guide
-        </label>
-        <label class="preview-control">
-          <input type="checkbox" data-toggle-wire>
-          mesh
-        </label>
-      </div>
+    <section class="preview-viewport" aria-label="Interactive H-Earth map viewport">
+      <canvas
+        class="preview-canvas"
+        data-h-earth-map-wide-canvas
+        aria-label="Interactive 3D H-Earth terrain inspector"
+      ></canvas>
     </section>
 
-    <aside class="preview-help">
-      One finger: orbit · two fingers: pan and pinch · mouse wheel: zoom · W/A/S/D or arrows: move target.
-      <span class="preview-boundary">Guides are optional and off by default; the prepared estate site must remain visible from the terrain itself.</span>
-    </aside>
+    <footer class="preview-help">
+      One finger: orbit · two fingers: pan + pinch · wheel: zoom · W/A/S/D or arrows: move.
+    </footer>
   </main>
 
   <script type="module" src="./app.mjs"></script>

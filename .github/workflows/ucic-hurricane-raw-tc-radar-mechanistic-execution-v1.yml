@@ -1,0 +1,60 @@
+name: UCIC Hurricane Raw TC-RADAR Mechanistic Execution v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-protocol.v1.json'
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/run-raw-tc-radar-mechanistic-v1.py'
+      - '.github/workflows/ucic-hurricane-raw-tc-radar-mechanistic-execution-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  raw-mechanistic-study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: python -m pip install --disable-pip-version-check numpy pandas scikit-learn netCDF4
+      - name: Verify pre-outcome protocol freeze lineage
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-protocol.v1.json')
+          x=json.loads(p.read_text())
+          assert x['classification']=='FROZEN_RETROSPECTIVE_TEMPORAL_HOLDOUT_MECHANISTIC_TEST'
+          assert x['preflight_head']=='3bb1b21997d5f5f01f99511a8c9a8f75a5282b6b'
+          assert x['post_result_retuning']=='PROHIBITED'
+          print('PASS_RAW_TC_RADAR_PROTOCOL_FREEZE')
+          PY
+      - name: Execute raw TC-RADAR mechanistic temporal holdout
+        run: python research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/run-raw-tc-radar-mechanistic-v1.py | tee raw-tc-radar-mechanistic-execution.log
+      - name: Verify terminal result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-result.v1.json')
+          x=json.loads(p.read_text())
+          allowed={'RAW_TC_RADAR_MECHANISTIC_SUPPORTED_WITH_LIMITATIONS','STRUCTURAL_SIGNAL_PRESENT_NONCOMPENSATORY_SPECIFICITY_NOT_SUPPORTED','RAW_TC_RADAR_SIGNAL_PRESENT_INCONCLUSIVE','RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED','RAW_TC_RADAR_MECHANISTIC_UNEVALUABLE'}
+          assert x['terminal_disposition'] in allowed
+          print('TERMINAL_DISPOSITION='+x['terminal_disposition'])
+          PY
+      - name: Preserve raw mechanistic study artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-hurricane-raw-tc-radar-mechanistic-execution-v1
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-protocol.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-result.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-features.v1.csv
+            raw-tc-radar-mechanistic-execution.log

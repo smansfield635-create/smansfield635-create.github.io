@@ -23,7 +23,7 @@
       ></canvas>
     </section>
 
-    <footer class="preview-help">
+    <footer class="preview-help" data-h-earth-diagnostic>
       One finger: orbit · two fingers: pan + pinch · wheel: zoom · W/A/S/D or arrows: move.
     </footer>
   </main>
@@ -31,16 +31,24 @@
   <script>
     (() => {
       const statusNode = document.querySelector('[data-h-earth-status]');
-      const markFailure = (label) => {
-        if (!statusNode) return;
-        statusNode.textContent = 'ERROR';
-        statusNode.dataset.status = label;
+      const diagnosticNode = document.querySelector('[data-h-earth-diagnostic]');
+      const describe = (value) => {
+        if (value instanceof Error) return value.message || value.name;
+        if (value && typeof value === 'object' && 'message' in value) return String(value.message);
+        return String(value ?? 'unknown browser error');
       };
-      window.addEventListener('error', () => markFailure('WINDOW_ERROR'));
-      window.addEventListener('unhandledrejection', () => markFailure('UNHANDLED_REJECTION'));
+      const markFailure = (label, detail) => {
+        if (statusNode) {
+          statusNode.textContent = 'ERROR';
+          statusNode.dataset.status = label;
+        }
+        if (diagnosticNode) diagnosticNode.textContent = `${label}: ${describe(detail)}`;
+      };
+      window.addEventListener('error', (event) => markFailure('WINDOW_ERROR', event.error || event.message));
+      window.addEventListener('unhandledrejection', (event) => markFailure('UNHANDLED_REJECTION', event.reason));
       window.__H_EARTH_INSPECTOR_BOOTSTRAP_ACTIVE__ = true;
     })();
   </script>
-  <script type="module" src="./app.mjs?repair=5"></script>
+  <script type="module" src="./app.mjs"></script>
 </body>
 </html>

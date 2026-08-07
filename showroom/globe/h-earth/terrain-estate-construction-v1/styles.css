@@ -35,6 +35,7 @@ body {
   width: 100%;
   height: 100%;
   touch-action: none;
+  overscroll-behavior: none;
   cursor: grab;
 }
 
@@ -47,11 +48,11 @@ body {
   z-index: 5;
   top: max(14px, env(safe-area-inset-top));
   left: max(14px, env(safe-area-inset-left));
-  width: min(430px, calc(100vw - 28px));
+  width: min(470px, calc(100vw - 28px));
   padding: 14px 15px;
   border: 1px solid rgba(229, 240, 224, 0.16);
   border-radius: 14px;
-  background: rgba(15, 23, 17, 0.82);
+  background: rgba(15, 23, 17, 0.84);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(14px);
 }
@@ -92,13 +93,18 @@ body {
   line-height: 1.4;
 }
 
+.preview-actions,
 .preview-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 12px;
-  margin-top: 12px;
+  gap: 8px 10px;
+  margin-top: 11px;
   padding-top: 10px;
   border-top: 1px solid rgba(229, 240, 224, 0.12);
+}
+
+.preview-controls {
+  gap: 8px 12px;
 }
 
 .preview-control {
@@ -116,8 +122,8 @@ body {
 }
 
 .preview-button {
-  min-height: 30px;
-  padding: 0 10px;
+  min-height: 32px;
+  padding: 0 11px;
   border: 1px solid rgba(229, 240, 224, 0.18);
   border-radius: 9px;
   background: rgba(235, 243, 225, 0.08);
@@ -127,8 +133,10 @@ body {
   cursor: pointer;
 }
 
-.preview-button:hover {
+.preview-button:hover,
+.preview-button:focus-visible {
   background: rgba(235, 243, 225, 0.14);
+  outline: none;
 }
 
 .preview-help {
@@ -136,19 +144,19 @@ body {
   z-index: 5;
   right: max(14px, env(safe-area-inset-right));
   bottom: max(14px, env(safe-area-inset-bottom));
-  max-width: min(390px, calc(100vw - 28px));
+  max-width: min(440px, calc(100vw - 28px));
   padding: 10px 12px;
   border: 1px solid rgba(229, 240, 224, 0.12);
   border-radius: 12px;
-  background: rgba(15, 23, 17, 0.72);
-  color: rgba(237, 243, 235, 0.70);
+  background: rgba(15, 23, 17, 0.74);
+  color: rgba(237, 243, 235, 0.72);
   font-size: 11px;
   line-height: 1.45;
   backdrop-filter: blur(12px);
 }
 
 .preview-boundary {
-  color: rgba(250, 226, 169, 0.88);
+  color: rgba(250, 226, 169, 0.9);
 }
 
 @media (max-width: 650px) {
@@ -156,11 +164,27 @@ body {
     top: max(8px, env(safe-area-inset-top));
     left: 8px;
     width: calc(100vw - 16px);
-    padding: 11px 12px;
+    padding: 10px 11px;
+    max-height: 44vh;
+    overflow: auto;
   }
 
   .preview-panel h1 {
     font-size: 15px;
+  }
+
+  .preview-panel p {
+    font-size: 11px;
+  }
+
+  .preview-actions,
+  .preview-controls {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+
+  .preview-button {
+    min-height: 34px;
   }
 
   .preview-help {

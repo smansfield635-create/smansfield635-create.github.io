@@ -1,0 +1,33 @@
+name: UCIC Arm B FDIC CP2 Extraction
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/**'
+      - '.github/workflows/ucic-arm-b-fdic-cp2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  extract-cp2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute frozen CP2 FDIC extraction
+        run: python research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/extract-cp2.py
+      - name: Hash CP2 output
+        if: always()
+        run: |
+          cd research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1
+          if [ -f checkpoint-2-failure-source-extraction.v1.json ]; then sha256sum checkpoint-2-failure-source-extraction.v1.json > checkpoint-2.sha256; fi
+          if [ -d cp2-raw ]; then find cp2-raw -type f -print0 | sort -z | xargs -0 sha256sum > cp2-raw.sha256 || true; fi
+      - name: Upload CP2 checkpoint artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ucic-arm-b-fdic-cp2
+          path: |
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2-failure-source-extraction.v1.json
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/checkpoint-2.sha256
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/cp2-raw.sha256
+            research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/fdic-longitudinal-extension-v1/cp2-raw/
+          if-no-files-found: warn

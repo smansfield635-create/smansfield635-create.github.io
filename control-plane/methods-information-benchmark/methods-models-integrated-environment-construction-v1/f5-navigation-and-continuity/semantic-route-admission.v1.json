@@ -1,0 +1,12 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F5_SEMANTIC_ROUTE_ADMISSION_v1",
+  "status": "F5_CONSTRUCTION_CANDIDATE",
+  "bundledRelations": [],
+  "law": "NAVIGABLE_RELATION_REQUIRES_DECLARED_SEMANTIC_RELATION",
+  "crossObjectTraversalWithoutRelation": "FAIL_CLOSED",
+  "entryPointCoexistenceCreatesRelation": false,
+  "routeProximityCreatesRelation": false,
+  "historyAdjacencyCreatesRelation": false,
+  "visualAdjacencyCreatesRelation": false,
+  "futureRelationIngress": "REQUIRES_SEPARATE_UPSTREAM_AUTHORITY_AND_MUST_NOT_BE_SYNTHESIZED_BY_F5"
+}

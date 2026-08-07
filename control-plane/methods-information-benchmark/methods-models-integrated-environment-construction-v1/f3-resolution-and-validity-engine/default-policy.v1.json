@@ -1,0 +1,30 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F3_DEFAULT_POLICY_v1",
+  "status": "F3_CONSTRUCTION_CANDIDATE",
+  "policy": "EXPLICIT_REGISTERED_DEFAULTS_ONLY",
+  "bundledDefaults": [],
+  "allowedTargetStatus": "UNSET",
+  "forbiddenTargetStatuses": ["DECLARED", "UNEVALUABLE", "NOT_APPLICABLE"],
+  "requiredRegistrationFields": [
+    "defaultId",
+    "axis",
+    "mutationAuthority",
+    "authorityRef",
+    "sourceRef",
+    "value"
+  ],
+  "rules": [
+    "NO_BUNDLED_SUBSTANTIVE_DEFAULT_VALUES_IN_F3",
+    "DEFAULT_MAY_APPLY_ONLY_TO_EXPLICIT_UNSET_AXIS",
+    "UNEVALUABLE_MAY_NOT_BE_DEFAULTED",
+    "NOT_APPLICABLE_MAY_NOT_BE_DEFAULTED",
+    "DECLARED_VALUE_MAY_NOT_BE_REPLACED_BY_DEFAULT",
+    "DEFAULT_MUTATION_AUTHORITY_MUST_EQUAL_F2_AXIS_MUTATION_AUTHORITY",
+    "DEFAULT_VALUE_MUST_CONFORM_TO_F2_AXIS_VALUE_SHAPE",
+    "DEFAULT_AUTHORITY_REF_AND_SOURCE_REF_MUST_BE_NONEMPTY",
+    "NO_DEFAULT_FROM_LENS_VIEW_ROUTE_OR_SPATIAL_POSITION",
+    "NO_RESEARCH_OBJECT_SPECIFIC_DEFAULTS_IN_F3_CORE"
+  ],
+  "silentFallbackAuthorized": false,
+  "researchSpecificDefaultsAuthorized": false
+}

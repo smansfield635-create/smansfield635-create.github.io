@@ -1,0 +1,26 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F4_CONFORMANCE_FIXTURES_v1",
+  "status": "F4_CONSTRUCTION_CANDIDATE",
+  "positiveFixtures": [
+    {"id":"BIO_LAB_BOUND_STATE","expectedResolutionClass":"RESOLVED"},
+    {"id":"HURRICANE_ADVERSE_BOUND_STATE","expectedResolutionClass":"PARTIAL"},
+    {"id":"PRESSURE_CAPACITY_BOUNDED_EXPRESSIONS","expected":"PRESERVE_WITH_CLAIM_LIMITS"},
+    {"id":"RETROSPECTIVE_EVIDENCE_POSTURE","expected":"PRESERVE_NOT_PROSPECTIVE"}
+  ],
+  "negativeFixtures": [
+    {"id":"EMPIRICAL_OBJECT_REDEFINES_METHOD","expected":"REJECT"},
+    {"id":"BIO_LAB_CLAIM_CEILING_RAISED_TO_PROSPECTIVE","expected":"REJECT"},
+    {"id":"HURRICANE_ADVERSE_RESULT_RELABELED_SUPPORTIVE","expected":"REJECT"},
+    {"id":"HURRICANE_UNSET_SYSTEM_DEFAULTED_BY_F4","expected":"REJECT"},
+    {"id":"NEW_OBJECT_CLASS_INTRODUCED_BY_CASE_STUDY","expected":"REJECT"},
+    {"id":"GLOBAL_MULTIPLICATIVE_PRODUCT_REINTRODUCED","expected":"REJECT"},
+    {"id":"PUBLIC_OR_NAVIGATION_MUTATION_IN_F4","expected":"REJECT"}
+  ],
+  "requiredSourcePostures": {
+    "bioLabCeiling": "EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+    "hurricaneStanding": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED",
+    "hurricaneUsage": "BOUNDED_PERSPECTIVE_RESEARCH_CONTEXT_ONLY_UNLESS_FUTURE_EVIDENCE_CHANGES_STANDING",
+    "globalMultiplicativeProduct": "REJECTED_AS_GOVERNING_MODEL",
+    "prospectiveScientificResult": "NONE"
+  }
+}

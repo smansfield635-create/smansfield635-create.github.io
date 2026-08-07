@@ -1,0 +1,109 @@
+{
+  "schema": "WHOLE_ESTATE_NARRATIVE_SPINE_v1",
+  "status": "CHECKPOINT_2_CONSTRUCTION_CANDIDATE",
+  "checkpoint": 2,
+  "operation": "NARRATIVE_SPINE_CONSTITUTION_v1",
+  "governingBaseline": {
+    "main": "c73a4f8854b8b2bf8f7b12fa860f0bc85d666544",
+    "tree": "aedef3f75a3c4fd445a736bf8eeb73125bea3fb4",
+    "checkpoint1": "PASS_CLOSED"
+  },
+  "governingPrinciple": "DISTINCT_CAPACITIES_REMAIN_DISTINCT_WHILE_PARTICIPATING_IN_ONE_ESTATE",
+  "humanCenter": "WHAT_YOU_SEE_IS_NOT_ALWAYS_WHAT_YOU_GET_AND_WHAT_APPEARS_AHEAD_IS_NOT_YET_WHAT_MUST_HAPPEN",
+  "supportingSaying": "WHAT_YOU_BECOME_WHEN_YOU_REACH_THE_DESTINATION_IS_FAR_MORE_IMPORTANT_THAN_THE_DESTINATION_ITSELF",
+  "mirrorlandTranslation": "THE_PRESENT_MAY_CAST_A_SHADOW_INTO_THE_FUTURE_BUT_THE_SHADOW_IS_NOT_THE_DESTINATION",
+  "mirrorlandPhrase": "SHADOWS_NEVER_SHATTER_IN_MIRRORLAND",
+  "journey": [
+    {
+      "order": 1,
+      "verb": "DISCOVER",
+      "estateObject": "COMPASS",
+      "primaryRole": "ORIENTATION",
+      "question": "What exists here, and where can I begin?",
+      "narrativeFunction": "ORIENT_WITHOUT_REQUIRING_ONTOLOGY_MASTERY"
+    },
+    {
+      "order": 2,
+      "verb": "QUESTION",
+      "estateObject": "REALITY",
+      "primaryRole": "EPISTEMIC_LAW",
+      "question": "What can be known, measured, interpreted, or left unresolved?",
+      "narrativeFunction": "SEPARATE_PERCEPTION_FROM_ANSWERABLE_STANDING"
+    },
+    {
+      "order": 3,
+      "verb": "CONSTRAIN",
+      "estateObject": "LAWS_AND_TEST",
+      "primaryRole": "EPISTEMIC_LAW",
+      "question": "What rules, boundaries, admissibility conditions, and falsifiers constrain the answer?",
+      "narrativeFunction": "MAKE_CLAIMS_ANSWERABLE"
+    },
+    {
+      "order": 4,
+      "verb": "UNDERSTAND_RELATIONS",
+      "estateObject": "UCIC",
+      "primaryRole": "FOUNDATION",
+      "question": "What constitutive relational condition is being proposed, and what would falsify it?",
+      "scientificStatus": "INVARIANT_CANDIDATE",
+      "narrativeFunction": "MOVE_FROM_APPEARANCE_TO_RELATIONAL_STRUCTURE"
+    },
+    {
+      "order": 5,
+      "verb": "OBSERVE",
+      "estateObject": "IMI",
+      "primaryRole": "MEASUREMENT",
+      "question": "How can aspects of condition, relation, support and trajectory be observed under declared boundaries?",
+      "scientificStatus": "INSTRUMENT",
+      "narrativeFunction": "DISTINGUISH_OBSERVATION_FROM_THEORY_CONFIRMATION"
+    },
+    {
+      "order": 6,
+      "verb": "REFLECT",
+      "estateObject": "COHERENCE_DIAGNOSTIC",
+      "primaryRole": "DIAGNOSIS",
+      "question": "How can bounded coherence concepts support private structured reflection without becoming scientific or clinical confirmation?",
+      "narrativeFunction": "PERSONAL_APPLICATION_WITHOUT_AUTHORITY_ESCALATION"
+    },
+    {
+      "order": 7,
+      "verb": "INVESTIGATE",
+      "estateObject": "FRONTIER",
+      "primaryRole": "APPLICATION",
+      "question": "How do these ideas behave in real systems, experiments, prototypes and unresolved problems?",
+      "narrativeFunction": "EXPOSE_POSITIVE_ADVERSE_AND_UNRESOLVED_RESULTS"
+    },
+    {
+      "order": 8,
+      "verb": "ACT_AND_EXPLORE",
+      "estateObject": "PRODUCTS_WORLDS_CHARACTERS_CAMPAIGNS",
+      "primaryRole": "IMPLEMENTATION",
+      "question": "What can be built, experienced, narrated or acted upon given the standing actually established?",
+      "narrativeFunction": "TRANSLATE_WITHOUT_OUTRUNNING_EVIDENCE"
+    },
+    {
+      "order": 9,
+      "verb": "VERIFY_AND_RETURN",
+      "estateObject": "METHODS_MODELS_AND_PROVENANCE",
+      "primaryRole": "EPISTEMIC_LAW_AND_PROVENANCE",
+      "question": "What does the present evidence permit me to conclude, and where may I lawfully explore from there?",
+      "narrativeFunction": "EVIDENCE_GATE_RELATION_MAP_DISCOVERY_BRIDGE"
+    }
+  ],
+  "navigation": {
+    "directEntryAllowed": true,
+    "sequenceIsExplanatoryNotAccessControl": true,
+    "globalOrientationAuthority": "COMPASS",
+    "methodsModelsGlobalNavigationAuthority": false,
+    "returnToCompassPreserved": true
+  },
+  "narrativeLaws": [
+    "NO_ROOM_IS_THE_WHOLE_ESTATE",
+    "NARRATIVE_WORDING_MAY_NOT_CHANGE_SCIENTIFIC_STANDING",
+    "METAPHOR_MAY_TRANSLATE_BUT_MAY_NOT_SUBSTITUTE_FOR_EVIDENCE",
+    "ADVERSE_OR_UNRESOLVED_EVIDENCE_REMAINS_DISCOVERABLE",
+    "EXPLORATION_MAY_FOLLOW_EVIDENCE_BUT_MAY_NEVER_OUTRUN_IT",
+    "CURRENT_CONDITION_IS_NOT_IDENTICAL_TO_PROJECTED_TRAJECTORY_OR_INEVITABLE_FUTURE",
+    "TERMINAL_OUTCOME_ALONE_IS_INSUFFICIENT_TO_CHARACTERIZE_SYSTEM_TRAJECTORY_CONTINUITY_OR_TRANSFORMATION"
+  ],
+  "publicMutationAuthorized": false
+}

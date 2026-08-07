@@ -1,0 +1,20 @@
+{
+  "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_OPERATION_CLOSURE_RECEIPT_v1",
+  "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
+  "gate": "OPERATION_CLOSURE",
+  "status": "NOT_EXECUTED",
+  "result": "NONE",
+  "lockGeneration": 422,
+  "candidateHead": null,
+  "requiredPriorGates": [
+    "BUILDER_PASS",
+    "FRESH_ROLE3_PASS",
+    "ROLE5_PASS",
+    "USER_DIFFERENTIAL_RECORDED"
+  ],
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "releaseAuthorized": false,
+  "continuation": "STOP_OPEN_UNTIL_ALL_REQUIRED_GATES_COMPLETE_AND_SEPARATE_TERMINAL_AUTHORITY_EXISTS",
+  "evidenceInvented": false
+}

@@ -1,0 +1,70 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F4_EVIDENCE_AND_CLAIM_REGISTRY_v1",
+  "status": "F4_CONSTRUCTION_CANDIDATE",
+  "sourceRef": "GATE0_EVIDENCE_EXECUTION_STATE_AND_F1_SCIENTIFIC_LEDGER",
+  "authorityRef": "MERGED_GATE_0_AND_F1_FROZEN_SCIENTIFIC_AUTHORITY",
+  "contentVersion": "v1",
+  "claimPosture": {
+    "fixedInvariantRetained": true,
+    "globalProductRejected": true,
+    "multiplicativeSpecificity": false,
+    "generalObservationalSuperiority": false,
+    "claimCeilingRef": "CURRENT_FROZEN_POSTURE_NO_F4_UPGRADE"
+  },
+  "retrospectiveEvidence": {
+    "contentId": "INTERNAL_RETROSPECTIVE_PORTFOLIO",
+    "contentClass": "EVIDENCE_POSTURE",
+    "classification": "INTERNAL_RETROSPECTIVE",
+    "disposition": "SURVIVES_INTERNAL_RETROSPECTIVE_PORTFOLIO_ADJUDICATION_WITH_CONSTRAINTS",
+    "continuationJustified": true,
+    "controlledMechanismSupported": true,
+    "externalSoftwareRouteAccuracy": 1.0,
+    "outputHistoryAccuracy": 0.6667,
+    "matchedOutputRouteAdvantage": 0.6667,
+    "crossSectionalSupportingDomains": 3,
+    "independentProspectiveConfirmation": false,
+    "claimCeilingRef": "INTERNAL_RETROSPECTIVE_WITH_CONSTRAINTS_NOT_PROSPECTIVE_CONFIRMATION",
+    "limitations": [
+      "RETROSPECTIVE_EVIDENCE_IS_NOT_PROSPECTIVE_CONFIRMATION",
+      "GENERAL_OBSERVATIONAL_SUPERIORITY_FALSE",
+      "MULTIPLICATIVE_SPECIFICITY_FALSE"
+    ],
+    "provenance": ["evidence-and-execution-state.v1.json"]
+  },
+  "prospectiveExecution": {
+    "contentId": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO_EXECUTION",
+    "contentClass": "EXECUTION_POSTURE",
+    "portfolioFreeze": "PASS",
+    "targetsRegistered": 5,
+    "domains": 5,
+    "preOutcomePacketsComplete": 0,
+    "preOutcomePacketsRequired": 5,
+    "independentAnalysts": 0,
+    "predictionsFrozen": false,
+    "outcomeAccess": "PROHIBITED",
+    "scientificResult": "NONE",
+    "claimCeilingRef": "NO_PROSPECTIVE_SCIENTIFIC_RESULT",
+    "limitations": [
+      "PROTOCOL_READINESS_IS_NOT_SCIENTIFIC_RESULT",
+      "CI_SUCCESS_IS_NOT_INVARIANT_SURVIVAL",
+      "OUTCOME_ACCESS_REQUIRES_PREDICTION_FREEZE_AND_AUTHORITY"
+    ],
+    "provenance": ["evidence-and-execution-state.v1.json", "methods-sequence.v1.json"]
+  },
+  "terminalDispositionVocabulary": [
+    "UCIC_FALSE",
+    "UCIC_UNDERDEFINED",
+    "UCIC_REDUNDANT",
+    "UCIC_SURVIVES_PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+    "UNEVALUABLE_CUSTODY_OR_POWER_FAILURE"
+  ],
+  "separationRules": [
+    "RETROSPECTIVE_EVIDENCE_IS_NOT_PROSPECTIVE_CONFIRMATION",
+    "PROTOCOL_READINESS_IS_NOT_SCIENTIFIC_RESULT",
+    "CI_SUCCESS_IS_NOT_INVARIANT_SURVIVAL",
+    "INTERFACE_STATUS_IS_NOT_EVIDENCE_STATUS",
+    "MODEL_IS_NOT_RESULT",
+    "EXECUTION_IS_NOT_EVIDENCE_STANDING"
+  ],
+  "registryLaw": "F4_BINDS_EXISTING_CLAIM_AND_EVIDENCE_POSTURE_WITHOUT_PROMOTION"
+}

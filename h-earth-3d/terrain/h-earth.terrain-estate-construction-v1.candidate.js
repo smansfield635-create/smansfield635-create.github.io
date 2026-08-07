@@ -733,7 +733,7 @@ export function evaluateHEarthMapWideEnvironmentTerrainCandidate() {
     estateTerrainComposition: freeze({ atriumTargetElevation: ATRIUM_TARGET_ELEVATION, hillInterfaceTargetElevation: HILL_INTERFACE_TARGET_ELEVATION, reservedEnvelope: ESTATE_TERRAIN_COMPOSITION.reservedEnvelope, revision6ShapeProtected: true }),
     hydrology: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY,
     coastline: COASTLINE,
-    futureRegionContinuation,
+    futureRegionContinuation: futureContinuation,
     run8BTruthElevationMutation: false,
     candidatePresentationElevationConstructed: true,
     physicalEstateTerrainPreparationConstructed: true,

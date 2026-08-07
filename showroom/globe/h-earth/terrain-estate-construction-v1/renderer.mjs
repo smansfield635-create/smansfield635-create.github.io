@@ -146,8 +146,8 @@ function sampleCanonicalGratitude(u,v){
     else{elevation=localElevation;color=localTerrainColor(terrain,localElevation);}
     const bar=c01(terrain.coastline?.sandbarWeight??0);field=Math.max(field,(bar-.20)*18);
   }
-  if(field<0)return freeze({u,v,z,field,inside:false,elevation:HYDRO.seaLevelY,color:PALETTE.ocean,terrain,authority:SURFACE_AUTHORITY});
-  return freeze({u,v,z,field,inside:true,elevation,color,terrain,authority:SURFACE_AUTHORITY});
+  if(field<0)return {u,v,z,field,inside:false,elevation:HYDRO.seaLevelY,color:PALETTE.ocean,terrain,authority:SURFACE_AUTHORITY};
+  return {u,v,z,field,inside:true,elevation,color,terrain,authority:SURFACE_AUTHORITY};
 }
 
 function buildAxis(min,max,fineMin,fineMax){

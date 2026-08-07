@@ -1,47 +1,69 @@
 {
   "schema": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_ESTATE_SITE_PLAN_v1",
   "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1",
-  "successorRepairRevision": 1,
-  "siteStatus": "PHYSICALLY_PREPARED_FUTURE_CONSTRUCTION_SITE_WITHOUT_MANOR_GEOMETRY",
-  "center": {"x": 80, "z": -172},
-  "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
-  "transitionEnvelope": {"xMinimum": 57, "xMaximum": 103, "zMinimum": -193, "zMaximum": -151},
-  "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
+  "successorRepairRevision": 3,
+  "siteStatus": "IRREGULAR_MULTI_HILL_ESTATE_TERRAIN_COMPOSITION_PREPARED_WITHOUT_MANOR_GEOMETRY",
+  "designCorrection": "THE_PRIOR_SINGLE_RECTANGULAR_PAD_WAS_NOT_THE_FINAL_MANOR_FOOTPRINT",
+  "atrium": {
+    "status": "ASSIGNED_TERRAIN_ANCHOR",
+    "center": {"x": 80, "z": -172},
+    "formationMembership": "H_EARTH_NAVIGABLE_HILL_001",
+    "surfaceRole": "HIGH_CROWN_ATRIUM_WITH_360_DEGREE_VIEW",
+    "finalArchitecture": "DEFERRED"
+  },
+  "estateExtent": {
+    "reservedBounds": {"xMinimum": 52, "xMaximum": 176, "zMinimum": -242, "zMaximum": -144},
+    "terrainComposition": [
+      "ATRIUM_CROWN_TERRACE",
+      "ESTATE_CONNECTIVE_SADDLE_SPINE",
+      "LARGE_HILL_EMBEDDED_MANOR_INTERFACE"
+    ],
+    "footprintClass": "LARGE_IRREGULAR_TERRAIN_RESPONSIVE_ESTATE",
+    "singleSquareOrRectangularFootprint": false,
+    "extendsAcrossBothHills": true,
+    "saddleMayCarryFutureArchitecture": true
+  },
   "terrainTreatment": {
-    "treatmentClass": "CUT_AND_BLEND_BUILDABLE_TERRACE_WITHOUT_BUILDING_GEOMETRY",
-    "buildablePad": {"xMinimum": 69, "xMaximum": 91, "zMinimum": -181, "zMaximum": -163},
-    "buildablePadWidth": 22,
-    "buildablePadDepth": 18,
-    "transitionMargin": 12,
-    "maximumCenterCutDepth": 4.5,
-    "minimumCenterCutDepth": 1.0,
-    "targetElevationRule": "LOWER_LOCAL_PERIMETER_PLUS_0_65_CLAMPED_TO_CENTER_MINUS_4_5_THROUGH_CENTER_MINUS_1_0",
-    "coreGeometricOffset": "NONZERO_WHERE_REQUIRED_TO_CREATE_BUILDABLE_TERRACE",
-    "transitionRule": "SMOOTHSTEP_BLEND_PREPARED_TERRACE_BACK_TO_SURROUNDING_RUN8B_PRESENTATION_TERRAIN",
-    "surroundingPurpose": "PHYSICALLY_PREPARE_FUTURE_BUILDING_SITE_WHILE_PRESERVING_HILL_IDENTITY_AND_VIEW_RELATIONSHIPS",
+    "treatmentClass": "MULTI_HILL_CUT_BLEND_AND_CONNECTIVE_TERRAIN_PREPARATION_WITHOUT_BUILDING_GEOMETRY",
     "gradingAuthorized": true,
     "foundationAuthorized": false,
     "buildingGeometryAuthorized": false,
-    "overlayRequiredForSiteLegibility": false
+    "finalManorFootprintAuthorized": false,
+    "overlayRequiredForSiteLegibility": false,
+    "atriumTerraceCutDepth": 1.4,
+    "connectiveSpineBoundedCutDepth": 0.8,
+    "largeHillInterfaceCutDepth": 2.2,
+    "continuityRule": "ALL_PREPARATION_BLENDS_CONTINUOUSLY_INTO_SURROUNDING_TERRAIN_AND_PRESERVES_MAJOR_HILL_MASS"
+  },
+  "hiddenVaultReserve": {
+    "center": {"x": 152, "z": -224},
+    "horizontalRadius": {"x": 34, "z": 34},
+    "reservedDepthBelowSurface": 34,
+    "surfaceExpression": "NONE",
+    "publicKnowledge": "SECRET",
+    "primaryAccess": "INTERNAL_MANOR_ONLY_FOR_NOW",
+    "secondaryDoorsOrTrapDoor": "DEFERRED",
+    "orcoinChamber": "FUTURE_INTERNAL_VAULT_PROGRAM",
+    "waterInfrastructureChamber": "FUTURE_INTERNAL_VAULT_SUPPORT_PROGRAM",
+    "interiorConstructionAuthorized": false
   },
   "deferredManor": {
-    "footprint": "UNASSIGNED_WITHIN_PREPARED_BUILDABLE_SITE",
-    "orientation": "UNASSIGNED",
-    "entrance": "UNASSIGNED",
-    "atrium": "UNASSIGNED",
-    "garden": "UNASSIGNED",
-    "sculptures": "UNASSIGNED",
-    "architecture": "UNASSIGNED",
-    "construction": "UNAUTHORIZED_IN_THIS_OPERATION",
+    "exactFootprint": "DEFERRED_PENDING_FUTURE_MANOR_ARCHITECTURE_OPERATION",
+    "orientation": "DEFERRED",
+    "entrance": "DEFERRED",
+    "garden": "DEFERRED",
+    "sculptures": "DEFERRED",
+    "architecture": "MONUMENTAL_ELEGANT_IRREGULAR_TERRAIN_INTEGRATED_COMPLEX_INTENT_ONLY",
+    "construction": "UNAUTHORIZED_IN_THIS_MAP_RENEWAL",
     "selectionByInferenceProhibited": true
   },
   "requiredAdjacencies": {
-    "lowCorridor": "PRESERVE_OPEN",
-    "beachwardGroundView": "PRESERVE_CLEAR",
-    "mountainwardGroundView": "PRESERVE_CLEAR",
+    "beachwardGroundView": "PRESERVE_PRIMARY_ESTATE_LANDMARK_RELATION",
+    "mountainwardGroundView": "PRESERVE_MOUNTAIN_BACKDROP_AND_WATERFALL_RELATION",
     "entryZone": "PRESERVE_SEPARATE_AND_CONNECTED",
-    "terrainTraversal": "PRESERVE_CONTINUOUS",
-    "preparedSite": "MUST_BE_VISIBLE_FROM_TERRAIN_GEOMETRY_AND_MATERIAL_WITH_DEVELOPER_GUIDE_OFF"
+    "terrainTraversal": "PRESERVE_CONTINUOUS_WHERE_NOT_EVENTUALLY_BLOCKED_BY_REAR_MOUNTAIN_BOUNDARY",
+    "saddle": "RESERVED_FOR_ESTATE_CONNECTION_NOT_REQUIRED_TO_REMAIN_EMPTY",
+    "hiddenVault": "PRESERVE_LARGE_HILL_SUBSURFACE_MASS_WITHOUT_SURFACE_DISCLOSURE"
   },
-  "acceptanceLaw": "ZONING_REQUIRES_PHYSICAL_SITE_PREPARATION_IN_TERRAIN_NOT_RECTANGLE_OVERLAY_ONLY;MANOR_GEOMETRY_REMAINS_DEFERRED"
+  "acceptanceLaw": "ESTATE_ZONING_IS_MULTI_HILL_TERRAIN_COMPOSITION_NOT_A_SQUARE_PAD;ATRIUM_ANCHOR_AND_SADDLE_CONNECTION_ARE_ASSIGNED;FINAL_MANOR_GEOMETRY_REMAINS_DEFERRED"
 }

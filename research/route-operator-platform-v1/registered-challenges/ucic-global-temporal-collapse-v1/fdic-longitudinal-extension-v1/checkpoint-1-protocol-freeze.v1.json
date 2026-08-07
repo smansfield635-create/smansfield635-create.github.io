@@ -1,0 +1,84 @@
+{
+  "operation": "UCIC_ARM_B_FDIC_LONGITUDINAL_COLLAPSE_EARLY_WARNING_EXTENSION_v1",
+  "checkpoint": "CP1_PROTOCOL_FREEZE",
+  "status": "PASS_CLOSED",
+  "parent_pr": 715,
+  "parent_head": "0088d0e05ea6c9f4254a6c2c9f7a1e137bd4667c",
+  "governing_issue": 717,
+  "immutable_parent_states": {
+    "arm_a": "PASS_CLOSED_WITH_LIMITATIONS",
+    "arm_b_systemic_pilot": "PASS_CLOSED"
+  },
+  "failure_cohort": [
+    {"cert":24735,"name":"Silicon Valley Bank","faildate":"2023-03-10"},
+    {"cert":57053,"name":"Signature Bank","faildate":"2023-03-12"},
+    {"cert":59017,"name":"First Republic Bank","faildate":"2023-05-01"},
+    {"cert":25851,"name":"Heartland Tri-State Bank","faildate":"2023-07-28"},
+    {"cert":8758,"name":"Citizens Bank","faildate":"2023-11-03"},
+    {"cert":27332,"name":"Republic Bank","faildate":"2024-04-26"},
+    {"cert":4134,"name":"First National Bank of Lindsay","faildate":"2024-10-18"},
+    {"cert":28611,"name":"Pulaski Savings Bank","faildate":"2025-01-17"},
+    {"cert":5520,"name":"Santa Anna National Bank","faildate":"2025-06-27"},
+    {"cert":57488,"name":"Metropolitan Capital Bank & Trust","faildate":"2026-01-30"},
+    {"cert":25796,"name":"Community Bank and Trust - West Georgia","faildate":"2026-05-01"}
+  ],
+  "primary_source": "FDIC BankFind Suite financials quarterly endpoint",
+  "raw_fields": ["CERT","REPDTE","ASSET","DEP","EQ","LNLSNET","ROA","NIM"],
+  "factors": {
+    "CAPITAL_CUSHION": {"formula":"EQ/ASSET","orientation":"HIGHER_HEALTHIER"},
+    "LOAN_FUNDING_STRAIN": {"formula":"LNLSNET/DEP","orientation":"LOWER_HEALTHIER"},
+    "EARNINGS_CAPACITY": {"formula":"ROA","orientation":"HIGHER_HEALTHIER"},
+    "MARGIN_CAPACITY": {"formula":"NIM","orientation":"HIGHER_HEALTHIER"},
+    "DEPOSIT_CONTINUITY": {"formula":"DEP_t/DEP_t_minus_1-1","orientation":"HIGHER_HEALTHIER"}
+  },
+  "normalization": {
+    "window": "preceding_8_reported_quarters_plus_current",
+    "oriented_rank_points": 9,
+    "factor_impaired": "oriented_current_rank <= 2/9",
+    "minimum_prior_usable_observations": 8
+  },
+  "ucic_warning": {
+    "persistent": "at_least_2_distinct_impaired_factors_for_2_consecutive_quarters",
+    "acute": "at_least_3_distinct_impaired_factors_in_1_quarter",
+    "first_warning_date": "earliest_persistent_or_acute_qualifying_quarter_end",
+    "compensation": "PROHIBITED"
+  },
+  "lead_time": {
+    "formula": "FAILDATE-FIRST_WARNING_DATE",
+    "detected_pre_failure": ">0_days",
+    "actionable_30d": ">=30_days",
+    "early_90d": ">=90_days"
+  },
+  "controls": {
+    "count_per_failure": 2,
+    "exclude_failure_cohort": true,
+    "must_remain_nonfailed_through_cutoff": true,
+    "match_primary": "same_charter_class_when_at_least_two_eligible",
+    "match_secondary": "minimum_absolute_difference_in_log_ASSET_at_last_complete_pre_failure_quarter",
+    "tie_break": "ascending_CERT",
+    "pseudo_index_date": "matched_failure_FAILDATE",
+    "replacement_for_unfavorable_result": "PROHIBITED"
+  },
+  "additive_comparator": {
+    "inputs": "same_oriented_9_point_factor_ranks",
+    "score": "arithmetic_mean_across_evaluable_factors",
+    "warning": "mean_oriented_factor_rank <= 1/3_for_2_consecutive_quarters",
+    "same_missing_data_controls_and_windows": true
+  },
+  "primary_metrics": [
+    "evaluable_failed_banks","pre_failure_detections","sensitivity","actionable_30d_detections","early_90d_detections","median_lead_days_detected","evaluable_controls","false_positive_controls","false_positive_rate","sensitivity_minus_false_positive_rate"
+  ],
+  "continuation_thresholds": {
+    "minimum_evaluable_failures": 9,
+    "minimum_ucic_sensitivity": 0.60,
+    "minimum_actionable_30d_failures": 5,
+    "minimum_median_lead_days": 90,
+    "minimum_evaluable_controls": 18,
+    "maximum_ucic_false_positive_rate": 0.30,
+    "minimum_discrimination_margin": 0.30
+  },
+  "prohibitions": [
+    "cohort_replacement","post_result_factor_addition_or_deletion","threshold_repair","outcome_specific_remapping","global_multiplicative_operator_revival","independent_human_claim","prospective_claim","universal_law_claim","parent_arm_rescoring"
+  ],
+  "next_checkpoint": "CP2_FAILURE_COHORT_AND_SOURCE_EXTRACTION_FREEZE"
+}

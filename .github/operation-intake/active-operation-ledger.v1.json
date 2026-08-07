@@ -552,18 +552,6 @@
       "scopeHash": "a78fffa03c9cd7e1639ba441caab37ef334959d0599b4a2c0af6c0c493ac089b",
       "state": "ADMITTED_LOCKED"
     },
-    "aa22e34651773ea77af5f8460bd598e248bc6178808c87ef417f649adc7d14b7": {
-      "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
-      "lockGeneration": 423,
-      "lockScope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:BUILDER_ROLE3_EXECUTION_CARRIER:V1:EXACT_1_PATH_SCOPE",
-      "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_ROLE3_EXECUTION_CARRIER_001",
-      "procedureLocatorDigest": "1eca06083e1fc4c7d4a81e3a900f27387b9d8d53a3f0bff659af796e91ee0660",
-      "released": false,
-      "requestDigest": "fe3504f6bc7a15597c6cd3e236fba0d30382f05cf56a7c7d92160ac358243156",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "aa22e34651773ea77af5f8460bd598e248bc6178808c87ef417f649adc7d14b7",
-      "state": "ADMITTED_LOCKED"
-    },
     "aa53681c8031a7e59affe6a2763018e45f8ced56416d18b3da9f474e57d8ad1f": {
       "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
       "lockGeneration": 390,
@@ -5418,6 +5406,19 @@
       "scopeHash": "c94e8ac3a71e4ae8208e1c00a056c4b21205421d69b28dbaa6e92840f74f35fc",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+      "lockGeneration": 423,
+      "lockScope": "H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:BUILDER_ROLE3_EXECUTION_CARRIER:V1:EXACT_1_PATH_SCOPE",
+      "operationId": "H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_ROLE3_EXECUTION_CARRIER_001",
+      "procedureLocatorDigest": "1eca06083e1fc4c7d4a81e3a900f27387b9d8d53a3f0bff659af796e91ee0660",
+      "released": true,
+      "requestDigest": "fe3504f6bc7a15597c6cd3e236fba0d30382f05cf56a7c7d92160ac358243156",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "aa22e34651773ea77af5f8460bd598e248bc6178808c87ef417f649adc7d14b7",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

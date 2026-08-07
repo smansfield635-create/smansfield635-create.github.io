@@ -1,0 +1,117 @@
+{
+  "controlled_causal": {
+    "hidden_structure": {
+      "boundary": "EXACT_MATCH",
+      "classification": "PROCESS_ISOLATED_ENGINEERED_PILOT",
+      "held_out_predictions_correct": 6,
+      "held_out_predictions_total": 6,
+      "observer_isolation": true,
+      "ordered_route": "EXACT_MATCH",
+      "relation_set": "EXACT_MATCH"
+    },
+    "level4_relation_disruption": {
+      "classification": "ENGINEERED_CAUSAL_PROOF_OF_CONCEPT",
+      "frozen_predictions_correct": 9,
+      "frozen_predictions_total": 9,
+      "hysteresis_reentry": true,
+      "matched_output_discrimination": true,
+      "noncompensation": true,
+      "relation_specific_restoration": true
+    }
+  },
+  "cross_sectional": {
+    "dssi_debt": {
+      "additive_multiplicative_rank_spearman": 0.9956,
+      "default_prediction_established": false,
+      "factor_spearman": 0.222,
+      "hard_collapse_cases": 0,
+      "supports_nonredundancy_or_hidden_collapse": true
+    },
+    "hospital": {
+      "additive_scores_on_hidden_collapses_max": 0.8,
+      "additive_scores_on_hidden_collapses_min": 0.75,
+      "hard_collapse_cases_permissive": 3,
+      "mortality_safety_pearson_complete": 0.042,
+      "supports_nonredundancy_or_hidden_collapse": true
+    },
+    "speech": {
+      "clinical_validity_established": false,
+      "cronbach_alpha": 0.413,
+      "first_pca_component_fraction": 0.365,
+      "preferred_gmm_components": 1,
+      "supports_nonredundancy_or_hidden_collapse": true
+    }
+  },
+  "evidence_identity": {
+    "post_result_model_repair": false,
+    "raw_data_reanalysis": false,
+    "source": "authoritative repository study and PR records"
+  },
+  "external_software_bridge": {
+    "additive_correct": 12,
+    "additive_total": 24,
+    "classification": "EXTERNALLY_AUTHORED_SYSTEMS_THEORY_TEAM_WRAPPERS",
+    "exact_relation_recovery": 4,
+    "matched_output_correct": 4,
+    "matched_output_total": 12,
+    "matched_route_correct": 12,
+    "matched_route_total": 12,
+    "output_history_correct": 16,
+    "output_history_total": 24,
+    "route_predictions_correct": 24,
+    "route_predictions_total": 24,
+    "systems": 4
+  },
+  "independence": {
+    "independent_human_graph_analysts": 0,
+    "independent_human_route_analysts": 0,
+    "prospectively_concealed_real_intervention_portfolios": 0
+  },
+  "prospective_industrial_bridge": {
+    "ai4i": {
+      "black_box": 0.711114894796124,
+      "metric": "average_precision_higher_better",
+      "output_history": 0.38602327297984906,
+      "route_relational": 0.3666094301733127
+    },
+    "hydraulic": {
+      "black_box": 0.6050106121551703,
+      "metric": "macro_f1_higher_better",
+      "output_history": 0.5865665169841687,
+      "route_relational": 0.22356091030789826
+    },
+    "naval": {
+      "all_held_out_r2_negative": true,
+      "black_box": 0.7483337941639205,
+      "metric": "normalized_rmse_lower_better",
+      "output_history": 1.7138000958868318,
+      "route_relational": 0.7118341932938196
+    },
+    "route_beats_output_history": 1,
+    "route_within_5pct_blackbox": 1,
+    "systems": 3
+  },
+  "temporal_operator_tests": {
+    "agricultural_successor": {
+      "direction_increment_supported": false,
+      "increment_over_outcome_history_supported": false,
+      "multiplicative_specificity_supported": false,
+      "persistence_increment_supported": false
+    },
+    "agricultural_temporal_block": {
+      "additive_mean4_rmse": 0.045319173431,
+      "loss_only_rmse": 0.046688948539,
+      "multiplicative_cs4_rmse": 0.045644355954,
+      "uncertainty_intervals_cross_zero": true,
+      "varroa_rmse": 0.047170597636
+    },
+    "cmapss_fd001": {
+      "additive_factorial_rmse": 22.33198,
+      "age_only_rmse": 33.83175,
+      "condition_rmse": 32.75375,
+      "full_sensor_rmse": 20.7697,
+      "multiplicative_factorial_rmse": 28.83082,
+      "weakest_factorial_rmse": 25.12619
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+  "classification": "FROZEN_RETROSPECTIVE_TEMPORAL_HOLDOUT_MECHANISTIC_TEST",
+  "preflight_head": "3bb1b21997d5f5f01f99511a8c9a8f75a5282b6b",
+  "preflight_run": 31152453818,
+  "preflight_artifact": 8984101070,
+  "sources": {
+    "raw_zarr": [
+      "gs://tc-atlas-zarr/tc-radar/merge_early",
+      "gs://tc-atlas-zarr/tc-radar/merge_recent"
+    ],
+    "identity_metadata": "https://raw.githubusercontent.com/MichaelFischerWx/TC-ATLAS/main/tc_radar_metadata_merge.json",
+    "provenance": "NOAA/AOML WP-3D tail Doppler radar merged analyses distributed through TC-ATLAS"
+  },
+  "analysis_window": [2004, 2024],
+  "calibration_years": [2004, 2018],
+  "holdout_years": [2019, 2024],
+  "ships_lags_hours": {
+    "prior_state": -24,
+    "current_state": 0,
+    "outcome": 24
+  },
+  "outcome": {
+    "name": "rapid_intensification_24h",
+    "formula": "vmax_ships(+24h) - vmax_ships(0h) >= 30 kt"
+  },
+  "raw_predictor_fields": [
+    "recentered_tangential_wind",
+    "recentered_relative_vorticity",
+    "recentered_divergence",
+    "recentered_reflectivity",
+    "tc_tilt_magnitude",
+    "tc_rmw"
+  ],
+  "mechanistic_relations": {
+    "R1_vertical_alignment": {
+      "raw_measure": "tc_tilt_magnitude near 8 km divided by max(tc_rmw near 2 km, 10 km)",
+      "direction": "LOWER_IS_MORE_COHERENT"
+    },
+    "R2_tangential_column_coherence": {
+      "raw_measure": "median Pearson correlation between 2-km radial tangential-wind profile and profiles near 4, 6, and 8 km, using 0-150 km radius in fixed 15-km annuli",
+      "direction": "HIGHER_IS_MORE_COHERENT"
+    },
+    "R3_vorticity_column_coherence": {
+      "raw_measure": "median cosine similarity between positive-vorticity radial profiles near 2 km and profiles near 4, 6, and 8 km, using 0-100 km radius in fixed 20-km annuli",
+      "direction": "HIGHER_IS_MORE_COHERENT"
+    },
+    "R4_inflow_outflow_coupling": {
+      "raw_measure": "minimum of inner-core low-level convergence magnitude and upper-level divergence magnitude; low level = mean near 2 and 4 km, upper level = mean near 8 and 10 km, radius <=100 km",
+      "direction": "HIGHER_IS_MORE_COHERENT"
+    },
+    "R5_convective_vertical_continuity": {
+      "raw_measure": "mean fraction of >=20 dBZ pixels near 2 km within radius <=100 km that remain >=20 dBZ at the same horizontal locations near 6 and 8 km",
+      "direction": "HIGHER_IS_MORE_COHERENT"
+    }
+  },
+  "normalization": "Each relation is transformed to a [0,1] empirical calibration-period percentile in its frozen coherence direction. Holdout outcomes are never used for normalization.",
+  "noncompensatory_coherence": {
+    "name": "C_t",
+    "formula": "min(R1_score, R2_score, R3_score, R4_score, R5_score)"
+  },
+  "additive_coherence_comparator": {
+    "name": "A_t",
+    "formula": "mean(R1_score, R2_score, R3_score, R4_score, R5_score)"
+  },
+  "temporal_variables": {
+    "M_t": "C_t minus previous same-storm C_t when prior radar case is 6-36 h earlier",
+    "dA_t": "A_t minus previous same-storm A_t under the same interval rule",
+    "component_deltas": "current normalized relation score minus previous same-storm score under the same interval rule"
+  },
+  "state_history_environment_comparator": [
+    "vmax_ships(0h)",
+    "pres_ships(0h)",
+    "vmax_ships(0h)-vmax_ships(-24h)",
+    "shdc_ships(0h) or shgc_ships(0h) if shdc unavailable",
+    "sst_ships(0h)",
+    "rhlo_ships(0h)",
+    "mpi_ships(0h)"
+  ],
+  "models": {
+    "BASE": "state/history/environment comparator",
+    "STRUCTURAL_NONCOMP": ["C_t", "M_t"],
+    "STRUCTURAL_ADDITIVE": ["A_t", "dA_t"],
+    "STRUCTURAL_COMPONENT": "five normalized relation scores plus five component deltas",
+    "COMBINED_NONCOMP": "BASE plus C_t and M_t",
+    "COMBINED_ADDITIVE": "BASE plus A_t and dA_t",
+    "COMBINED_COMPONENT": "BASE plus all relation scores and component deltas"
+  },
+  "fit": "StandardScaler plus L2 logistic regression; all model fitting restricted to 2004-2018 calibration observations.",
+  "primary_test": "holdout ROC AUC(COMBINED_NONCOMP) - ROC AUC(BASE)",
+  "noncompensation_specificity_test": "compare COMBINED_NONCOMP against COMBINED_ADDITIVE and COMBINED_COMPONENT on the same holdout",
+  "secondary_metrics": [
+    "ROC AUC",
+    "average precision",
+    "Brier score",
+    "structural-only ROC AUC",
+    "matched-state high-C versus low-C RI risk difference"
+  ],
+  "uncertainty": {
+    "method": "storm-cluster bootstrap on holdout storms",
+    "replicates": 2000,
+    "seed": 45125661
+  },
+  "eligibility": {
+    "required": "complete outcome, BASE variables, all five raw relation measures, and a previous same-storm radar case 6-36 h earlier for the primary C_t/M_t test",
+    "missing": "UNEVALUABLE for the affected model; no imputation"
+  },
+  "terminal_rules": {
+    "RAW_TC_RADAR_MECHANISTIC_SUPPORTED_WITH_LIMITATIONS": "primary incremental AUC > 0 and storm-cluster 95% CI lower bound > 0, with COMBINED_NONCOMP not inferior to both additive comparators",
+    "STRUCTURAL_SIGNAL_PRESENT_NONCOMPENSATORY_SPECIFICITY_NOT_SUPPORTED": "primary incremental AUC > 0 with CI lower bound > 0, but an additive comparator has greater holdout AUC than COMBINED_NONCOMP",
+    "RAW_TC_RADAR_SIGNAL_PRESENT_INCONCLUSIVE": "primary incremental AUC > 0 but storm-cluster 95% CI includes 0",
+    "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED": "primary incremental AUC <= 0",
+    "RAW_TC_RADAR_MECHANISTIC_UNEVALUABLE": "holdout lacks both outcome classes or fewer than 10 primary evaluable holdout observations"
+  },
+  "post_result_retuning": "PROHIBITED",
+  "claim_ceiling": "bounded retrospective evidence about internal hurricane structural organization and 24-h rapid intensification; does not by itself establish causality, prospective operational utility, independently recovered constitutive routes, or universality"
+}

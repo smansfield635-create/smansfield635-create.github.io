@@ -38,6 +38,8 @@ concurrency:
 env:
   EXACT_GOVERNING_HEAD: 2b4fae98b06a46370f2e3f1af94ace49905657a9
   EXACT_GOVERNING_TREE: 81c2d80b45e40da7e935d2c72f3a3b2804b99704
+  CURRENT_REGISTRY_HEAD: 3f51f0cd159df33571905c6cb14253ebdd137e3b
+  CURRENT_REGISTRY_TREE: 3116d5c35bfdd575922dac614fb2e9f1d4f61ec5
   EXACT_BRANCH: build/h-earth-terrain-estate-construction-v1-001
   OPERATION_ID: H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1
   LOCK_GENERATION: '411'
@@ -61,7 +63,7 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Bind admitted branch and governing ancestry
+      - name: Bind admitted branch, governing ancestry, and merged registry head
         shell: bash
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -73,6 +75,9 @@ jobs:
           test "$(git rev-parse "$EXACT_GOVERNING_HEAD^{tree}")" = "$EXACT_GOVERNING_TREE"
           git merge-base --is-ancestor "$EXACT_GOVERNING_HEAD" HEAD
           test "$(git diff --name-only "$EXACT_GOVERNING_HEAD" HEAD | grep -Ev '^$' | sort -u | wc -l | tr -d ' ')" -le 32
+          git fetch --no-tags origin main
+          test "$(git rev-parse origin/main)" = "$CURRENT_REGISTRY_HEAD"
+          test "$(git rev-parse "$CURRENT_REGISTRY_HEAD^{tree}")" = "$CURRENT_REGISTRY_TREE"
 
       - name: Materialize exact admitted path list
         shell: bash
@@ -101,17 +106,25 @@ jobs:
           if (paths.length !== 32 || paths.some((value) => typeof value !== 'string' || !value)) {
             throw new Error('MANIFEST_PATH_SET_INVALID');
           }
-          fs.writeFileSync(`${process.env.RUNNER_TEMP}/h-earth-terrain-estate-construction-v1/exact-paths.txt`, `${paths.sort().join('\n')}\n`);
+          fs.writeFileSync(
+            `${process.env.RUNNER_TEMP}/h-earth-terrain-estate-construction-v1/exact-paths.txt`,
+            `${paths.sort().join('\n')}\n`
+          );
           NODE
 
-      - name: Execute exact H-Earth registry preflight
+      - name: Execute exact H-Earth registry preflight from merged registry head
         shell: bash
         run: |
           set -euo pipefail
+          REGISTRY_WORKTREE="$RUNNER_TEMP/h-earth-current-registry-main"
+          rm -rf "$REGISTRY_WORKTREE"
+          git worktree add --detach "$REGISTRY_WORKTREE" "$CURRENT_REGISTRY_HEAD"
+          test "$(git -C "$REGISTRY_WORKTREE" rev-parse HEAD)" = "$CURRENT_REGISTRY_HEAD"
+          test "$(git -C "$REGISTRY_WORKTREE" rev-parse HEAD^{tree})" = "$CURRENT_REGISTRY_TREE"
           node --experimental-default-type=module \
-            tools/h-earth-repository-registry-auto-preflight.mjs \
+            "$REGISTRY_WORKTREE/tools/h-earth-repository-registry-auto-preflight.mjs" \
             --paths-file "$RUNNER_TEMP/h-earth-terrain-estate-construction-v1/exact-paths.txt" \
-            --task "H-Earth terrain-and-estate construction V1 exact 32-path preconstruction preflight" \
+            --task "H-Earth terrain-and-estate construction V1 exact 32-path preconstruction preflight against merged registry head" \
             --mutation-intent \
             --output "$RUNNER_TEMP/h-earth-terrain-estate-construction-v1/registry-preflight.receipt.json"
 
@@ -135,12 +148,17 @@ jobs:
             '/.github/ai-router/projects/h-earth/entrypoint.v1.json',
             '/.github/workflows/h-earth-terrain-and-estate-construction-v1.yml'
           ];
-          if (JSON.stringify(outside) !== JSON.stringify(expectedOutside)) throw new Error('PREFLIGHT_OUTSIDE_PATH_SET_MISMATCH');
+          if (JSON.stringify(outside) !== JSON.stringify(expectedOutside)) {
+            throw new Error('PREFLIGHT_OUTSIDE_PATH_SET_MISMATCH');
+          }
           const receipt = {
-            schema: 'H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_PRECONSTRUCTION_PREFLIGHT_RECEIPT_v1',
+            schema: 'H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_PRECONSTRUCTION_PREFLIGHT_RECEIPT_v2',
             result: 'PASS',
             operationId: process.env.OPERATION_ID,
             exactGoverningHead: process.env.EXACT_GOVERNING_HEAD,
+            exactGoverningTree: process.env.EXACT_GOVERNING_TREE,
+            registryEvaluationHead: process.env.CURRENT_REGISTRY_HEAD,
+            registryEvaluationTree: process.env.CURRENT_REGISTRY_TREE,
             candidateHead: process.env.GITHUB_SHA,
             lockGeneration: Number(process.env.LOCK_GENERATION),
             lockScope: process.env.LOCK_SCOPE,
@@ -149,6 +167,9 @@ jobs:
             hEarthScopedPathCount: 30,
             outsideRouterPathCount: 2,
             registryPreflightReceiptSha256: crypto.createHash('sha256').update(bytes).digest('hex'),
+            constructionBranchRebased: false,
+            currentMainMergedIntoConstructionBranch: false,
+            registryEvaluationSeparatedFromConstructionCandidate: true,
             terrainConstructionPerformed: false,
             estateConstructionPerformed: false,
             manorConstructionPerformed: false,
@@ -158,7 +179,10 @@ jobs:
             releasePerformed: false,
             nextAction: 'MATERIALIZE_CONTROL_PLANE_CONTRACTS_AND_SOURCE_IDENTITIES'
           };
-          fs.writeFileSync(`${directory}/preconstruction-preflight.receipt.json`, `${JSON.stringify(receipt, null, 2)}\n`);
+          fs.writeFileSync(
+            `${directory}/preconstruction-preflight.receipt.json`,
+            `${JSON.stringify(receipt, null, 2)}\n`
+          );
           NODE
 
       - name: Upload exact preconstruction receipts

@@ -1,0 +1,56 @@
+name: Methods F12 R7 Continuity and Accessibility Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r7-continuity-and-accessibility-v1
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r7-exact-head:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact R6 parent and frozen inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "afb93ca867a1f13a99acb721e5d664fe9fb53967"
+          test "$(git rev-parse afb93ca867a1f13a99acb721e5d664fe9fb53967^{tree})" = "e65a72c3bf9c550498a63cc1766a593214afbf9f"
+          test "$(git rev-parse afb93ca867a1f13a99acb721e5d664fe9fb53967:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar-contract.v1.json)" = "6abb8d6b30fc92aa1eaff44ca7f8ec4e567b5938"
+          test "$(git rev-parse afb93ca867a1f13a99acb721e5d664fe9fb53967:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar.v1.mjs)" = "ae7ecb6f4bc40b72e7ef90bae6a6de7a0eceaf5a"
+          test "$(git rev-parse afb93ca867a1f13a99acb721e5d664fe9fb53967:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r6-spatial-transformation-grammar.verify.v1.mjs)" = "3c7936b3d0876a0552a29a699328b65216600b0a"
+
+      - name: Verify R7 continuity and accessibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r7-continuity-and-accessibility.verify.v1.mjs | tee r7-continuity-and-accessibility-verification.json
+
+      - name: Prove exact R7 diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only afb93ca867a1f13a99acb721e5d664fe9fb53967..HEAD | tee r7-changed-paths.txt
+          test "$(wc -l < r7-changed-paths.txt)" -eq 4
+          grep -Fxq '.github/workflows/methods-f12-r7-continuity-and-accessibility-verify.yml' r7-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r7-continuity-and-accessibility-contract.v1.json' r7-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r7-continuity-and-accessibility.v1.mjs' r7-changed-paths.txt
+          grep -Fxq 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r7-continuity-and-accessibility.verify.v1.mjs' r7-changed-paths.txt
+          if git diff --name-only afb93ca867a1f13a99acb721e5d664fe9fb53967..HEAD | grep -E '(^|/)(f1-|f2-|f3-|f4-|f5-|f6-|f7-|f8-|f9-|f10-|f11-|r1-|r2-|r3-|r4-|r5-|r6-|laws/research/methods-and-models/|review/methods-models/)' | grep -q .; then
+            echo 'PROHIBITED_UPSTREAM_OR_VISIBLE_PATH_MUTATION'; exit 1
+          fi
+
+      - name: Preserve R7 verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r7-continuity-and-accessibility-evidence
+          path: |
+            r7-continuity-and-accessibility-verification.json
+            r7-changed-paths.txt

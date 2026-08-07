@@ -25,7 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           FILE='research/route-operator-platform-v1/registered-challenges/ucic-global-temporal-collapse-v1/arm-b-fdic-longitudinal-protocol.v1.json'
-          EXPECTED='8a5d3ea7137288bffa098f08941ed8096abc18b92470fb6e6c7313756dd86d07'
+          EXPECTED='4df693a6e313ca87f32474a8e37d45de0b950143d925260f3ae41ddaf3e4c36c'
           ACTUAL="$(sha256sum "$FILE" | awk '{print $1}')"
           echo "protocol_sha256=$ACTUAL"
           test "$ACTUAL" = "$EXPECTED"

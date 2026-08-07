@@ -1,7 +1,7 @@
 {
   "schema": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_LOCATOR_v1",
   "instrumentId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENT_v1",
-  "status": "CONSTRUCTION_CANDIDATE_PENDING_EXACT_HEAD_REGISTRATION_AND_PERMANENT_ACTIVATION",
+  "status": "ACTIVE_PERMANENT_CROSS_ROOM_CONTINUITY_INSTRUMENT",
   "project": "H_EARTH",
   "planetIdentity": "AUDRALIA",
   "playerExperienceIdentity": "H_EARTH",
@@ -35,8 +35,17 @@
   "verificationPointer": "verification-contract.v1.json",
   "permanentActivation": {
     "required": true,
-    "status": "NOT_YET_RATIFIED",
-    "method": "SEPARATE_EXACT_HEAD_H_EARTH_REGISTRY_ACCEPTED_OCCURRENCE_REGISTRATION_AND_MERGE"
+    "status": "PASS_ACTIVE",
+    "immutablePackageCommit": "ae65d17ce1019831a7e9ea27af9441fb5686887a",
+    "immutablePackageTree": "0c5fdf5692f8c256b97354f95359f60d5dae9cd0",
+    "packageFingerprint": "124fae0a63ef90edb0e8988ab5c65cc6692772b192baeefa00a8c9c55773097a",
+    "registryActivationCandidateHead": "fbfe1ada4ff676f264c94952eebf746e643c7dbe",
+    "registryActivationLockGeneration": 464,
+    "ratificationMergeLockGeneration": 467,
+    "mergeCommit": "c961469d366f39422e143a2c6156e79b1c991735",
+    "mergeTree": "b06352cfe65f0b96bb60c5fb545cb9ccf8c44458",
+    "pullRequest": 740,
+    "method": "EXACT_HEAD_H_EARTH_REGISTRY_ACCEPTED_OCCURRENCE_REGISTRATION_AND_EXACT_HEAD_MERGE"
   },
   "productMutationAuthority": false,
   "liveIntegrationAuthority": false,

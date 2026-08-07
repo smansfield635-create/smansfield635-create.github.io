@@ -1,0 +1,73 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F5_SOURCE_BINDINGS_v1",
+  "status": "F5_CONSTRUCTION_CANDIDATE",
+  "program": "METHODS_MODELS_INTEGRATED_ENVIRONMENT_CONSTRUCTION_v1",
+  "gate": "F5_NAVIGATION_AND_CONTINUITY",
+  "inputF4": {
+    "finalHead": "343077118a3e6b00478369b64b11f47db7c9568e",
+    "finalTree": "59f9d0c2c67ac3fc6d08e6438331db54e66733cc",
+    "terminalReceiptPath": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/f4-terminal-receipt.v1.json",
+    "terminalReceiptBlob": "e25c7922e56417c207935d79e7790fc1b1095dff",
+    "effectiveDisposition": "PASS_F4_SCIENTIFIC_CONTENT_BINDING_v1"
+  },
+  "governingMainFrozenByF1": {
+    "commit": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
+    "tree": "420e56a71801034c3e40e66d1048302a39a55da7"
+  },
+  "sources": [
+    {
+      "id": "F4_STATE_BINDINGS",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/state-bindings.v1.json",
+      "blob": "c140e326272ade6bb093eb71048fac353162cc1c",
+      "authority": "EXACT_EMPIRICAL_ENTRY_STATE_BINDINGS"
+    },
+    {
+      "id": "F3_RESOLVER",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f3-resolution-and-validity-engine/resolver.v1.mjs",
+      "blob": "3654d269ad38fc19d3b670fe8331f7c72cef1e26",
+      "authority": "STATE_VALIDATION_CANONICALIZATION_RESTORATION_AND_NAVIGATION_TRANSITION"
+    },
+    {
+      "id": "F3_VALIDITY_CONTRACT",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f3-resolution-and-validity-engine/validity-contract.v1.json",
+      "blob": "c67ddf8bd744b837ac94cf475a729ddf3a60d409",
+      "authority": "NAVIGATION_MUTATION_ISOLATION"
+    },
+    {
+      "id": "F3_CANONICALIZATION_CONTRACT",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f3-resolution-and-validity-engine/canonicalization-contract.v1.json",
+      "blob": "cd8ba4ca872788f53cc0d2efb0846a48ce6948f9",
+      "authority": "EXACT_CANONICAL_STATE_BYTES_AND_DIGEST"
+    },
+    {
+      "id": "CP6_GLOBAL_INVARIANTS",
+      "path": "control-plane/whole-estate/invariant-contract-package-v1/invariant-registry.v1.json",
+      "blob": "748f017d9ea37214d0853d21622ebd764d390915",
+      "authority": "NAVIGATION_MEANING_AND_RETURN_CONTEXT_INVARIANTS"
+    },
+    {
+      "id": "CP6_ROUTING_RETURN_CONTEXT",
+      "path": "control-plane/whole-estate/invariant-contract-package-v1/routing-return-context-invariant-contract.v1.json",
+      "blob": "e73c70a587b796ca722b209407c171f22bae0117",
+      "authority": "EXACT_RETURN_AND_DECLARED_RELATION_BOUNDARY"
+    },
+    {
+      "id": "F1_PUBLIC_RUNTIME_BASELINE",
+      "path": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f1-construction-baseline/public-and-runtime-baseline.v1.json",
+      "blob": "58e42ffa3727895092a300bc49bf15f2ef56b41e",
+      "authority": "EXISTING_METHODS_ROUTE_AND_NONPUBLIC_CONSTRUCTION_BOUNDARY"
+    },
+    {
+      "id": "TEXT_FIRST_V2_RATIFICATION",
+      "path": ".github/ai-router/projects/methods-information-benchmark/spatial-database-text-first-interaction-contract-v2-permanent-ratification.v1.json",
+      "blob": "0375241beb7ae76030402fb882d9cc1d46b257a5",
+      "authority": "EXACT_CONTEXTUAL_RETURN_AND_TEXT_FIRST_INTERACTION_AUTHORITY"
+    }
+  ],
+  "sourceRule": "F5_MAY_ADDRESS_RESTORE_AND_MOVE_THROUGH_FROZEN_STATE_BUT_MAY_NOT_DERIVE_SCIENTIFIC_MEANING_FROM_NAVIGATION",
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false,
+  "visualConstructionAuthorized": false,
+  "spatialTopologyAuthorized": false,
+  "geometryAuthorized": false
+}

@@ -1,0 +1,207 @@
+{
+  "arm": "A_CROSS_DOMAIN_TEMPORAL_HOLDOUT_AND_TRANSFER",
+  "case_scores": {
+    "AVIATION_DCA24MA063": {
+      "causal_coverage": 1.0,
+      "false_route_rate": 0.0,
+      "mean_decoy_score": 0.0,
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 1.0,
+      "true_route_score": 1.0
+    },
+    "ENERGY_WINTER_STORM_ELLIOTT": {
+      "causal_coverage": 1.0,
+      "false_route_rate": 0.0,
+      "mean_decoy_score": 0.08333333333333333,
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 0.9166666666666666,
+      "true_route_score": 1.0
+    },
+    "PIPELINE_PLD18MR003": {
+      "causal_coverage": 1.0,
+      "false_route_rate": 0.25,
+      "mean_decoy_score": 0.0,
+      "route_hit_rate": 0.75,
+      "true_minus_decoy_advantage": 0.875,
+      "true_route_score": 0.875
+    },
+    "RAIL_RRD23MR005": {
+      "causal_coverage": 1.0,
+      "false_route_rate": 0.0,
+      "mean_decoy_score": 0.0,
+      "route_hit_rate": 1.0,
+      "true_minus_decoy_advantage": 1.0,
+      "true_route_score": 1.0
+    }
+  },
+  "cases": {
+    "AVIATION_DCA24MA063": {
+      "decoy_scores": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_supported_relations": [
+        "MED_PLUG_SECURING_HARDWARE_COMPLETENESS",
+        "PARTS_REMOVAL_REINSTALLATION_DOCUMENTATION_AND_VERIFICATION",
+        "MANUFACTURING_TRAINING_GUIDANCE_AND_OVERSIGHT",
+        "FAA_PRODUCTION_COMPLIANCE_SURVEILLANCE_AND_AUDIT"
+      ],
+      "pre_final_cutoff": "2024-08-09",
+      "pre_final_sources": [
+        "NTSB preliminary report DCA24MA063",
+        "NTSB investigative hearing/docket material publicly available by cutoff"
+      ],
+      "predicted_failed_relations": [
+        "MED_PLUG_SECURING_HARDWARE_COMPLETENESS",
+        "PARTS_REMOVAL_REINSTALLATION_DOCUMENTATION_AND_VERIFICATION",
+        "MANUFACTURING_TRAINING_GUIDANCE_AND_OVERSIGHT",
+        "FAA_PRODUCTION_COMPLIANCE_SURVEILLANCE_AND_AUDIT"
+      ]
+    },
+    "ENERGY_WINTER_STORM_ELLIOTT": {
+      "decoy_scores": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "final_supported_relations": [
+        "GENERATOR_COLD_WEATHER_OPERABILITY",
+        "NATURAL_GAS_PRODUCTION_AND_DELIVERY_CONTINUITY",
+        "GAS_ELECTRIC_COORDINATION",
+        "FIRM_LOAD_CONTINUITY_UNDER_RESOURCE_LOSS"
+      ],
+      "limitation": "Pre-final September presentation already disclosed many key mechanisms; this case is primarily an operator-transfer check, not a strong causal holdout.",
+      "pre_final_cutoff": "2023-09-21",
+      "pre_final_sources": [
+        "FERC/NERC preliminary findings presentation 2023-09-21"
+      ],
+      "predicted_failed_relations": [
+        "GENERATOR_COLD_WEATHER_OPERABILITY",
+        "NATURAL_GAS_PRODUCTION_AND_DELIVERY_CONTINUITY",
+        "GAS_ELECTRIC_COORDINATION",
+        "FIRM_LOAD_CONTINUITY_UNDER_RESOURCE_LOSS"
+      ]
+    },
+    "PIPELINE_PLD18MR003": {
+      "adverse_residue": "Monitoring center lacked direct valve control in the preliminary record, but this relation was not part of the NTSB terminal probable-cause/contributing-cause statement; it receives no hit credit.",
+      "decoy_scores": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_supported_relations": [
+        "REGULATOR_SENSING_LINE_REFERENCE_INTEGRITY_DURING_MAIN_ABANDONMENT",
+        "ENGINEERING_WORK_PACKAGE_PRESERVATION_OF_CONTROL_RELATIONS",
+        "INDEPENDENT_OVERPRESSURE_PROTECTION"
+      ],
+      "pre_final_cutoff": "2018-10-11",
+      "pre_final_sources": [
+        "NTSB preliminary report PLD18MR003"
+      ],
+      "predicted_failed_relations": [
+        "REGULATOR_SENSING_LINE_REFERENCE_INTEGRITY_DURING_MAIN_ABANDONMENT",
+        "ENGINEERING_WORK_PACKAGE_PRESERVATION_OF_CONTROL_RELATIONS",
+        "INDEPENDENT_OVERPRESSURE_PROTECTION",
+        "MONITORING_TO_DIRECT_ISOLATION_CONTROL_ROUTE"
+      ]
+    },
+    "RAIL_RRD23MR005": {
+      "decoy_scores": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "final_supported_relations": [
+        "WHEEL_BEARING_THERMAL_MECHANICAL_INTEGRITY",
+        "HAZMAT_TANK_CAR_CRASHWORTHINESS_DOT111",
+        "RELEVANT_EXPERTISE_AND_DISSENT_COMMUNICATION_TO_INCIDENT_COMMANDER",
+        "TRAIN_CONSIST_INFORMATION_TRANSMISSION_TO_EMERGENCY_RESPONDERS"
+      ],
+      "pre_final_cutoff": "2024-01-25",
+      "pre_final_sources": [
+        "NTSB preliminary report RRD23MR005",
+        "NTSB public factual/hearing dockets released before final report"
+      ],
+      "predicted_failed_relations": [
+        "WHEEL_BEARING_THERMAL_MECHANICAL_INTEGRITY",
+        "HAZMAT_TANK_CAR_CRASHWORTHINESS_DOT111",
+        "RELEVANT_EXPERTISE_AND_DISSENT_COMMUNICATION_TO_INCIDENT_COMMANDER",
+        "TRAIN_CONSIST_INFORMATION_TRANSMISSION_TO_EMERGENCY_RESPONDERS"
+      ]
+    }
+  },
+  "classification": "PROCESS_SEPARATED_RETROSPECTIVE_TEMPORAL_RECONSTRUCTION",
+  "evidence_ceiling": "TEMPORAL_AVAILABILITY_AND_CROSS_DOMAIN_ROUTE_TRANSFER_SUPPORT_ONLY",
+  "fixed_operator_changed": false,
+  "operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
+  "outcome_blindness": "NOT_ESTABLISHED",
+  "portfolio_scores": {
+    "cases_false_route_rate_gt_0_50": 0,
+    "median_causal_coverage": 1.0,
+    "median_route_hit_rate": 1.0,
+    "median_true_minus_decoy_advantage": 0.9583333333333333,
+    "positive_true_minus_decoy_cases": 4
+  },
+  "source_ledger": {
+    "AVIATION_DCA24MA063": [
+      {
+        "date": "2024-02-06",
+        "role": "PRE_FINAL",
+        "url": "https://www.ntsb.gov/investigations/Documents/DCA24MA063%20Preliminary%20report.pdf"
+      },
+      {
+        "date": "2024-08-07",
+        "role": "PRE_FINAL",
+        "url": "https://www.ntsb.gov/news/events/Pages/Alaska-Airlines-1282-Inv-Hearing.aspx"
+      },
+      {
+        "date": "2025-06-24",
+        "role": "FINAL",
+        "url": "https://www.ntsb.gov/investigations/pages/DCA24MA063.aspx"
+      }
+    ],
+    "ENERGY_WINTER_STORM_ELLIOTT": [
+      {
+        "date": "2023-09-21",
+        "role": "PRE_FINAL",
+        "url": "https://www.ferc.gov/news-events/news/elliott-report-complete-electricity-standards-implement-gas-reliability-rules"
+      },
+      {
+        "date": "2023-11-07",
+        "role": "FINAL",
+        "url": "https://www.ferc.gov/news-events/news/ferc-nerc-release-final-report-lessons-winter-storm-elliott"
+      }
+    ],
+    "PIPELINE_PLD18MR003": [
+      {
+        "date": "2018-10-11",
+        "role": "PRE_FINAL",
+        "url": "https://data.ntsb.gov/Docket/Document/docBLOB?FileExtension=.PDF&FileName=Preliminary+Report+Columbia+Gas+Over-Pressurization+of+13Sep2018-Master.PDF&ID=40476197"
+      },
+      {
+        "date": "2019-09-24",
+        "role": "FINAL",
+        "url": "https://www.ntsb.gov/investigations/pages/pld18mr003.aspx"
+      }
+    ],
+    "RAIL_RRD23MR005": [
+      {
+        "date": "2023-02-23",
+        "role": "PRE_FINAL",
+        "url": "https://www.ntsb.gov/investigations/Documents/RRD23MR005%20East%20Palestine%20OH%20Prelim.pdf"
+      },
+      {
+        "date": "2024-01-25",
+        "role": "PRE_FINAL",
+        "url": "https://data.ntsb.gov/Docket/?NTSBNumber=RRD23MR005"
+      },
+      {
+        "date": "2024-06-25",
+        "role": "FINAL",
+        "url": "https://www.ntsb.gov/investigations/Pages/RRD23MR005.aspx"
+      }
+    ]
+  },
+  "terminal_disposition": "UCIC_CROSS_DOMAIN_TEMPORAL_ROUTE_TRANSFER_SUPPORTED_WITH_LIMITATIONS"
+}

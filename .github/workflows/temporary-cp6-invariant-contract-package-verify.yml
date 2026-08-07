@@ -1,0 +1,19 @@
+name: Temporary CP6 Invariant Contract Package Verify
+
+on:
+  pull_request:
+    paths:
+      - 'control-plane/whole-estate/invariant-contract-package-v1/**'
+      - '.github/workflows/temporary-cp6-invariant-contract-package-verify.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-checkpoint-6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Checkpoint 6 invariant contract package
+        run: node control-plane/whole-estate/invariant-contract-package-v1/verify.v1.mjs

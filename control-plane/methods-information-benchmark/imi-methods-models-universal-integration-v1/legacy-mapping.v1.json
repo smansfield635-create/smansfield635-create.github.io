@@ -1,0 +1,29 @@
+{
+  "schema": "IMI_METHODS_MODELS_LEGACY_MAPPING_v1",
+  "status": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+  "legacySource": {
+    "head": "9f1edcb8ab0e5d7e28f8e4098642fc6ea153bcb3",
+    "lane": "pressure-and-capacity",
+    "records": ["pressure-field", "capacity-field", "pcr"]
+  },
+  "mappings": [
+    {"legacy": "SEMANTIC_DOM_TEXT_PRIMARY", "disposition": "RETAIN_UNCHANGED", "successor": "SEMANTIC_TEXT_PRIMARY"},
+    {"legacy": "VISIBLE_RECORD_TABS", "disposition": "RETAIN_WITH_NARROWED_MEANING", "successor": "SYNCHRONIZED_TEXT_CONTROLS"},
+    {"legacy": "PRACTICAL_ENGINEERING_EVIDENCE_LENSES", "disposition": "RETAIN_UNCHANGED", "successor": "HUMAN_EXPLANATION_LENSES"},
+    {"legacy": "ONE_ACTIVE_LENS", "disposition": "RETAIN_UNCHANGED", "successor": "ONE_ACTIVE_LENS"},
+    {"legacy": "NESTED_TABS", "disposition": "RETAIN_UNCHANGED", "successor": "NESTED_DISCLOSURE"},
+    {"legacy": "EXACT_CONTEXTUAL_RETURN", "disposition": "RETAIN_UNCHANGED", "successor": "EXACT_CONTEXTUAL_RETURN"},
+    {"legacy": "REDUCED_MOTION_EQUIVALENCE", "disposition": "RETAIN_UNCHANGED", "successor": "REDUCED_MOTION_EQUIVALENCE"},
+    {"legacy": "SELECTED_ADVANCES_PEERS_RECEDE", "disposition": "RETAIN_UNCHANGED", "successor": "SPATIAL_FOCUS_HIERARCHY"},
+    {"legacy": "WEBGL_OPTIONAL_SUPPORTING_NONCONTROLLING", "disposition": "RETAIN_UNCHANGED", "successor": "RENDERING_TECHNOLOGY_NONAUTHORITATIVE"},
+    {"legacy": "USER_CONTROLLED_CAMERA_PROHIBITED", "disposition": "RETAIN_WITH_NARROWED_MEANING", "successor": "FREE_CAMERA_NOT_SOLE_PRIMARY_INTERFACE"},
+    {"legacy": "ONE_LANE_PRESSURE_AND_CAPACITY_GOVERNS_ARCHITECTURE", "disposition": "DEPRECATE_LEGACY_ONLY", "successor": "MULTI_OBJECT_SUCCESSOR_ARCHITECTURE"},
+    {"legacy": "PI_EQUALS_G_TIMES_X", "disposition": "RETAIN_WITH_NARROWED_MEANING", "successor": "PRESSURE_AND_CAPACITY_SUPPORTING_MODEL"},
+    {"legacy": "K_EQUALS_P_TIMES_R_TIMES_A_TIMES_C", "disposition": "RETAIN_WITH_NARROWED_MEANING", "successor": "PRESSURE_AND_CAPACITY_SUPPORTING_MODEL"},
+    {"legacy": "PCR_EQUALS_PI_OVER_MAX_K_EPSILON", "disposition": "RETAIN_WITH_NARROWED_MEANING", "successor": "PRESSURE_AND_CAPACITY_SUPPORTING_MODEL"},
+    {"legacy": "PRESSURE_AND_CAPACITY_AS_UNIVERSAL_IMI", "disposition": "REJECT_AS_CONFLICTING", "successor": null},
+    {"legacy": "GLOBAL_PRODUCT_AS_GOVERNING_MODEL", "disposition": "REJECT_AS_CONFLICTING", "successor": null}
+  ],
+  "legacyImmutability": true,
+  "legacyMutationAuthorized": false
+}

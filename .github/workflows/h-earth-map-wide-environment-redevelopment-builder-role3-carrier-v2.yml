@@ -1,4 +1,4 @@
-name: H-Earth Map-Wide Environment Redevelopment Builder + Fresh Role 3 V2
+name: H-Earth Map-Wide Environment Redevelopment Carrier 424 Closure
 
 on:
   push:
@@ -8,100 +8,88 @@ on:
       - .github/workflows/h-earth-map-wide-environment-redevelopment-builder-role3-carrier-v2.yml
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 concurrency:
-  group: h-earth-map-wide-environment-redevelopment-builder-role3-v2-001
+  group: h-earth-map-wide-environment-redevelopment-carrier-424-closure
   cancel-in-progress: false
 
 env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
   GOVERNING_MAIN: 3f51f0cd159df33571905c6cb14253ebdd137e3b
-  CANDIDATE_HEAD: 69a776ab4de61cddb6fad3602625164bea4b6323
-  CONSTRUCTION_OPERATION: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_v1
-  CONSTRUCTION_LOCK_GENERATION: '422'
-  CARRIER_LOCK_GENERATION: '424'
-  CARRIER_SCOPE_HASH: 2edf0b798097d5e1b806c8a0f46cddfd3b39f6dbe3efd23f60a6d5c06d5a844e
-  VERIFY_PATH: h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  OPERATION_ID: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_ROLE3_EXECUTION_CARRIER_002
+  LOCK_SCOPE: H_EARTH:MAP_WIDE_ENVIRONMENT_REDEVELOPMENT:BUILDER_ROLE3_EXECUTION_CARRIER:V2:EXACT_1_PATH_SCOPE
+  LOCK_GENERATION: '424'
+  SCOPE_HASH: 2edf0b798097d5e1b806c8a0f46cddfd3b39f6dbe3efd23f60a6d5c06d5a844e
+  TERMINAL_DISPOSITION: PASS_CLOSED
+  EXPECTED_LOCK_MANAGER_BLOB: 0aa440a3de30e145c7912fcfe2833fb8430ffbb0
 
 jobs:
-  builder-and-fresh-role3:
+  close-carrier-424:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
-      - name: Check out exact Builder candidate
+      - name: Check out exact carrier branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.CANDIDATE_HEAD }}
+          ref: ${{ github.sha }}
           fetch-depth: 0
           persist-credentials: false
-          path: candidate
 
       - name: Set up Node 22
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Bind exact candidate and governing ancestry
+      - name: Bind exact main and canonical lock manager
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C candidate rev-parse HEAD)" = "$CANDIDATE_HEAD"
-          test "$(git -C candidate merge-base "$GOVERNING_MAIN" "$CANDIDATE_HEAD")" = "$GOVERNING_MAIN"
-          test -z "$(git -C candidate status --porcelain=v1 --untracked-files=all)"
-          test -f "candidate/$VERIFY_PATH"
+          test "$(git ls-remote origin refs/heads/main | awk '{print $1}')" = "$GOVERNING_MAIN"
+          test "$(git hash-object tools/operation-intake/repository-operation-lock-manager.v1.mjs)" = "$EXPECTED_LOCK_MANAGER_BLOB"
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
 
-      - name: Run Builder exact verifier
+      - name: Close carrier generation 424 as PASS_CLOSED
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          root="$RUNNER_TEMP/h-earth-map-wide-environment-redevelopment-builder-role3-v2"
-          mkdir -p "$root/builder"
-          (
-            cd candidate
-            node "$VERIFY_PATH" --output "$root/builder"
-          ) | tee "$root/builder/stdout.json"
-          ROOT="$root" node --input-type=module -e "import fs from 'node:fs'; const r=JSON.parse(fs.readFileSync(process.env.ROOT+'/builder/builder.verification-receipt.v1.json','utf8')); if(r.result!=='PASS') throw new Error('BUILDER_NOT_PASS:'+JSON.stringify(r.issues)); if(r.candidateHead!==process.env.CANDIDATE_HEAD) throw new Error('BUILDER_CANDIDATE_HEAD_MISMATCH'); if(r.exactPathCount!==28||r.changedPathCount!==28) throw new Error('BUILDER_PATH_COUNT_MISMATCH'); if(!r.constructionFingerprint) throw new Error('BUILDER_FINGERPRINT_MISSING');"
+          mkdir -p "$RUNNER_TEMP/h-earth-carrier-424-closure"
+          for attempt in $(seq 1 12); do
+            set +e
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "$REPOSITORY" \
+              --lock-ref "$LOCK_REF" \
+              --operation-id "$OPERATION_ID" \
+              --lock-scope "$LOCK_SCOPE" \
+              --lock-generation "$LOCK_GENERATION" \
+              --terminal-disposition "$TERMINAL_DISPOSITION" \
+              --output "$RUNNER_TEMP/h-earth-carrier-424-closure/closure.json"
+            status=$?
+            set -e
+            if [ "$status" -eq 0 ]; then break; fi
+            node --input-type=module -e "import fs from 'node:fs'; const p=process.env.RUNNER_TEMP+'/h-earth-carrier-424-closure/closure.json'; const r=JSON.parse(fs.readFileSync(p,'utf8')); if(r.errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(r.httpStatus)) throw new Error('NONRETRYABLE_CLOSURE_FAILURE:'+JSON.stringify(r));"
+            test "$attempt" -lt 12
+            sleep $((attempt + 1))
+          done
+          node --input-type=module -e "import fs from 'node:fs'; const p=process.env.RUNNER_TEMP+'/h-earth-carrier-424-closure/closure.json'; const r=JSON.parse(fs.readFileSync(p,'utf8')); const e={result:'TERMINAL_CLOSURE_COMMITTED',operationId:process.env.OPERATION_ID,lockScope:process.env.LOCK_SCOPE,scopeHash:process.env.SCOPE_HASH,lockGeneration:Number(process.env.LOCK_GENERATION),terminalDisposition:process.env.TERMINAL_DISPOSITION,lockReleased:true}; for(const [k,v] of Object.entries(e)){if(r[k]!==v) throw new Error('CLOSURE_RECEIPT_MISMATCH:'+k+':'+JSON.stringify(r));}"
 
-      - name: Check out exact candidate independently for fresh Role 3
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.CANDIDATE_HEAD }}
-          fetch-depth: 0
-          persist-credentials: false
-          path: fresh-role3
-
-      - name: Require fresh independent checkout identity
+      - name: Verify terminal history and active-scope removal
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          test "$(git -C fresh-role3 rev-parse HEAD)" = "$CANDIDATE_HEAD"
-          test "$(git -C fresh-role3 merge-base "$GOVERNING_MAIN" "$CANDIDATE_HEAD")" = "$GOVERNING_MAIN"
-          test -z "$(git -C fresh-role3 status --porcelain=v1 --untracked-files=all)"
+          node --input-type=module -e "const h={Accept:'application/vnd.github+json',Authorization:'Bearer '+process.env.GITHUB_TOKEN,'X-GitHub-Api-Version':'2022-11-28'}; const base='https://api.github.com/repos/'+process.env.REPOSITORY; const get=async u=>{const x=await fetch(u,{headers:h});const t=await x.text();if(!x.ok)throw new Error('GITHUB_API_ERROR:'+x.status+':'+t);return JSON.parse(t)}; const ref=await get(base+'/git/ref/heads/operation-locks/repository-operation-intake-v1'); const head=ref.object.sha; const f=await get(base+'/contents/.github/operation-intake/active-operation-ledger.v1.json?ref='+head); const l=JSON.parse(Buffer.from(f.content.replace(/\\s/g,''),'base64').toString('utf8')); if(l.activeScopes[process.env.SCOPE_HASH]) throw new Error('CLOSED_SCOPE_STILL_ACTIVE'); const term=l.terminalHistory.find(e=>e.scopeHash===process.env.SCOPE_HASH&&e.operationId===process.env.OPERATION_ID&&e.lockGeneration===Number(process.env.LOCK_GENERATION)&&e.state==='TERMINAL'&&e.released===true&&e.terminalDisposition===process.env.TERMINAL_DISPOSITION); if(!term)throw new Error('PASS_CLOSED_TERMINAL_HISTORY_NOT_FOUND');"
 
-      - name: Run fresh Role 3 verifier without repair
-        shell: bash
-        run: |
-          set -euo pipefail
-          root="$RUNNER_TEMP/h-earth-map-wide-environment-redevelopment-builder-role3-v2"
-          mkdir -p "$root/role3"
-          (
-            cd fresh-role3
-            node "$VERIFY_PATH" --role ROLE_3 --output "$root/role3"
-          ) | tee "$root/role3/stdout.json"
-          ROOT="$root" node --input-type=module -e "import fs from 'node:fs'; const r=JSON.parse(fs.readFileSync(process.env.ROOT+'/role3/role-3.verification-receipt.v1.json','utf8')); if(r.result!=='PASS') throw new Error('ROLE3_NOT_PASS:'+JSON.stringify(r.issues)); if(r.candidateHead!==process.env.CANDIDATE_HEAD) throw new Error('ROLE3_CANDIDATE_HEAD_MISMATCH'); if(r.exactPathCount!==28||r.changedPathCount!==28) throw new Error('ROLE3_PATH_COUNT_MISMATCH'); if(!r.constructionFingerprint) throw new Error('ROLE3_FINGERPRINT_MISSING');"
-
-      - name: Require deterministic Builder and Role 3 equality
-        shell: bash
-        run: |
-          set -euo pipefail
-          root="$RUNNER_TEMP/h-earth-map-wide-environment-redevelopment-builder-role3-v2"
-          ROOT="$root" node --input-type=module -e "import fs from 'node:fs';import crypto from 'node:crypto'; const b=JSON.parse(fs.readFileSync(process.env.ROOT+'/builder/builder.verification-receipt.v1.json','utf8')); const r=JSON.parse(fs.readFileSync(process.env.ROOT+'/role3/role-3.verification-receipt.v1.json','utf8')); if(b.constructionFingerprint!==r.constructionFingerprint) throw new Error('CONSTRUCTION_FINGERPRINT_MISMATCH'); const e={schema:'H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_BUILDER_ROLE3_EQUALITY_RECEIPT_v1',result:'PASS',operationId:process.env.CONSTRUCTION_OPERATION,candidateHead:process.env.CANDIDATE_HEAD,governingMain:process.env.GOVERNING_MAIN,constructionLockGeneration:Number(process.env.CONSTRUCTION_LOCK_GENERATION),carrierLockGeneration:Number(process.env.CARRIER_LOCK_GENERATION),carrierScopeHash:process.env.CARRIER_SCOPE_HASH,builderResult:b.result,role3Result:r.result,constructionFingerprint:b.constructionFingerprint,exactPathCount:b.exactPathCount,changedPathCount:b.changedPathCount,repairPerformedDuringRole3:false,constructionCandidateMutatedByCarrier:false,mainMutatedByCarrier:false,mergePerformed:false,deploymentPerformed:false,releasePerformed:false}; const t=JSON.stringify(e,null,2)+'\n'; fs.writeFileSync(process.env.ROOT+'/equality.receipt.v1.json',t); fs.writeFileSync(process.env.ROOT+'/equality.sha256',crypto.createHash('sha256').update(t).digest('hex')+'\n');"
-
-      - name: Upload exact verification evidence
+      - name: Upload closure evidence
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-map-wide-environment-redevelopment-builder-role3-v2
-          path: ${{ runner.temp }}/h-earth-map-wide-environment-redevelopment-builder-role3-v2
+          name: h-earth-map-wide-environment-redevelopment-carrier-424-pass-closed
+          path: ${{ runner.temp }}/h-earth-carrier-424-closure
           if-no-files-found: error
           retention-days: 90

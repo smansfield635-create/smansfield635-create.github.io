@@ -13,25 +13,20 @@ jobs:
   cancel-redundant-runs:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel redundant hurricane runs and preserve authoritative QC rerun
+      - name: Cancel superseded corrected run and preserve current corrected run
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
         shell: bash
         run: |
           set -euo pipefail
-          KEEP=31193672956
+          KEEP=31195025635
           CANCEL_RUNS=(
-            31193672426
-            31193668683
-            31193638213
-            31193637926
-            31193573790
-            31193572254
+            31193672956
           )
-          echo "Authoritative QC run preserved: ${KEEP}"
+          echo "Current authoritative QC run preserved: ${KEEP}"
           for run_id in "${CANCEL_RUNS[@]}"; do
-            echo "Cancelling redundant run ${run_id}"
+            echo "Cancelling superseded run ${run_id}"
             code=$(curl -sS -o /tmp/cancel-${run_id}.txt -w '%{http_code}' \
               -X POST \
               -H "Accept: application/vnd.github+json" \

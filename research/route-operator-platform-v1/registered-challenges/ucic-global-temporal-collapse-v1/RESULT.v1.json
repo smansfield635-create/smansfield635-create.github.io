@@ -9,15 +9,27 @@
     "positive_true_minus_decoy_cases": 4
   },
   "arm_b_control_load_shed_mw": 0,
-  "arm_b_disposition": "SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_COHORT_PENDING",
-  "arm_b_financial_cohort_status": "COHORT_FROZEN_LONGITUDINAL_SCORING_PENDING",
+  "arm_b_disposition": "SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_EXTENSION_NOT_SUPPORTED",
+  "arm_b_financial_cohort_status": "LONGITUDINAL_SCORING_CLOSED_NOT_SUPPORTED",
+  "arm_b_financial_constraint": "The frozen bank-warning rule detected only 3 of 11 failures and failed the pre-value sensitivity minimum of 0.60. This is adverse evidence against general bank-collapse early warning under this operationalization.",
+  "arm_b_financial_metrics": {
+    "balanced_accuracy": 0.622077922077922,
+    "best_comparator_balanced_accuracy": 0.5935064935064935,
+    "control_false_positive_rate": 0.02857142857142857,
+    "evaluable_control_count": 35,
+    "evaluable_failure_count": 11,
+    "failure_sensitivity": 0.2727272727272727,
+    "median_failure_lead_time_days": 578.0,
+    "ucic_minus_best_comparator_balanced_accuracy": 0.02857142857142847
+  },
+  "arm_b_financial_terminal_disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
   "arm_b_first_warning_lead_days": 402,
   "arm_b_latest_pre_event_warning_lead_days": 64,
   "arm_b_systemic_pilot": "EARLY_WARNING_AND_RELATIONAL_MITIGATION_CONTRAST_SUPPORTED",
   "global_multiplicative_operator": "REMAINS_REJECTED",
   "independent_human_confirmation": "NOT_ESTABLISHED",
   "operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
-  "overall_disposition": "NEW_CONVERGENT_SUPPORT_TEMPORAL_TRANSFER_PLUS_SYSTEMIC_EARLY_WARNING_PILOT",
+  "overall_disposition": "MIXED_TEMPORAL_EVIDENCE_CROSS_DOMAIN_TRANSFER_AND_SYSTEMIC_PILOT_SUPPORTED_FDIC_BANK_GENERALIZATION_NOT_SUPPORTED",
   "true_prospective_confirmation": "SEPARATE_FIVE_CASE_FREEZE_RUNNING",
   "universal_law": "NOT_ESTABLISHED"
 }

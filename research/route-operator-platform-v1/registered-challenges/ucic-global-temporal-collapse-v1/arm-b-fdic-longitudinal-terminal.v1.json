@@ -1,0 +1,207 @@
+{
+  "classification": "RETROSPECTIVE_LONGITUDINAL_FAILURE_DISCRIMINATION",
+  "execution": {
+    "acquisition_status": "PASS",
+    "artifact_id": 8981803573,
+    "artifact_zip_bytes": 54077,
+    "artifact_zip_sha256": "d1c2e5f036613590d6bf0783926969025ee554caaf3ccfd6b58549a515f2cf1a",
+    "bankfind_endpoint_used": "https://api.fdic.gov/banks/financials",
+    "quarter_count": 25,
+    "quarter_range": [
+      "20200331",
+      "20260331"
+    ],
+    "supported_fields": [
+      "ASSET",
+      "BKCLASS",
+      "CERT",
+      "DEP",
+      "NCLNLSR",
+      "RBC1AAJ",
+      "RBCT1J",
+      "REPDTE",
+      "ROA"
+    ],
+    "workflow_job_id": 92767987043,
+    "workflow_run_id": 31146873683
+  },
+  "frozen_threshold_failure": {
+    "observed_failure_sensitivity": 0.2727272727272727,
+    "reason": "Failure sensitivity was below the pre-value frozen 0.60 minimum. Low false-positive rate and long lead time among detected failures cannot compensate for insufficient sensitivity.",
+    "required_failure_sensitivity_minimum": 0.6,
+    "threshold_passed": false
+  },
+  "global_multiplicative_operator": "REMAINS_REJECTED",
+  "interpretation": [
+    "The frozen bank-level early-warning rule detected 3 of 11 failed institutions and therefore did not support general FDIC-bank collapse early warning.",
+    "The rule produced one warning among 35 evaluable matched-control trajectories, so specificity was high under this matching design.",
+    "The three detected failures had a median lead time of 578 days, but lead time among detected cases cannot compensate for the 27.27% failure sensitivity.",
+    "UCIC balanced accuracy exceeded the best frozen simple comparator by only 0.02857, below the 0.05 nonredundancy margin.",
+    "This negative financial extension does not erase the separate Winter Storm Elliott systemic pilot or Arm A temporal-transfer result; the arms are explicitly noncompensating."
+  ],
+  "metrics": {
+    "additive_mean": {
+      "balanced_accuracy": 0.5454545454545454,
+      "control_false_positive_rate": 0.0,
+      "evaluable_controls": 35,
+      "evaluable_failures": 11,
+      "failure_sensitivity": 0.09090909090909091
+    },
+    "balanced_accuracy": 0.622077922077922,
+    "best_comparator_balanced_accuracy": 0.5935064935064935,
+    "control_false_positive_rate": 0.02857142857142857,
+    "evaluable_control_count": 35,
+    "evaluable_failure_count": 11,
+    "failure_sensitivity": 0.2727272727272727,
+    "median_failure_lead_time_days": 578.0,
+    "roa_only": {
+      "balanced_accuracy": 0.5935064935064935,
+      "control_false_positive_rate": 0.08571428571428572,
+      "evaluable_controls": 35,
+      "evaluable_failures": 11,
+      "failure_sensitivity": 0.2727272727272727
+    },
+    "ucic_minus_best_comparator_balanced_accuracy": 0.02857142857142847
+  },
+  "operation": "UCIC_FDIC_LONGITUDINAL_COLLAPSE_EXTENSION_v1",
+  "parent_operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
+  "portfolio": {
+    "evaluable_failures": 11,
+    "evaluable_matched_control_trajectories": 35,
+    "failed_institutions": 11,
+    "targets": [
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 24735,
+        "evaluable_quarters": 8,
+        "failure_date": "2023-03-10",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 5,
+        "name": "Silicon Valley Bank",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 57053,
+        "evaluable_quarters": 8,
+        "failure_date": "2023-03-12",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 5,
+        "name": "Signature Bank",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 59017,
+        "evaluable_quarters": 8,
+        "failure_date": "2023-05-01",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 5,
+        "name": "First Republic Bank",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 25851,
+        "evaluable_quarters": 7,
+        "failure_date": "2023-07-28",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 0,
+        "name": "Heartland Tri-State Bank",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 8758,
+        "evaluable_quarters": 8,
+        "failure_date": "2023-11-03",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 5,
+        "name": "Citizens Bank",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 27332,
+        "evaluable_quarters": 7,
+        "failure_date": "2024-04-26",
+        "first_warning_repdte": "20220930",
+        "lead_time_days": 574,
+        "matched_controls": 0,
+        "name": "Republic First Bank dba Republic Bank",
+        "warning": true
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 4134,
+        "evaluable_quarters": 8,
+        "failure_date": "2024-10-18",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 5,
+        "name": "The First National Bank of Lindsay",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 28611,
+        "evaluable_quarters": 7,
+        "failure_date": "2025-01-17",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 0,
+        "name": "Pulaski Savings Bank",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 5520,
+        "evaluable_quarters": 8,
+        "failure_date": "2025-06-27",
+        "first_warning_repdte": null,
+        "lead_time_days": null,
+        "matched_controls": 5,
+        "name": "The Santa Anna National Bank",
+        "warning": false
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 57488,
+        "evaluable_quarters": 8,
+        "failure_date": "2026-01-30",
+        "first_warning_repdte": "20240331",
+        "lead_time_days": 670,
+        "matched_controls": 5,
+        "name": "Metropolitan Capital Bank & Trust",
+        "warning": true
+      },
+      {
+        "capital_field": "RBC1AAJ",
+        "cert": 25796,
+        "evaluable_quarters": 7,
+        "failure_date": "2026-05-01",
+        "first_warning_repdte": "20240930",
+        "lead_time_days": 578,
+        "matched_controls": 0,
+        "name": "Community Bank and Trust - West Georgia",
+        "warning": true
+      }
+    ],
+    "warning_controls": 1,
+    "warning_failures": 3
+  },
+  "protocol_freeze": {
+    "commit": "52a1017d2a3b9877bc748e5511d6de50cf62142d",
+    "post_result_scientific_repair_permitted": false,
+    "sha256": "4df693a6e313ca87f32474a8e37d45de0b950143d925260f3ae41ddaf3e4c36c",
+    "status": "FROZEN_BEFORE_BANK_QUARTER_VALUE_EXTRACTION"
+  },
+  "scientific_ceiling": "Retrospective longitudinal discrimination only; no independent-human, outcome-blind, prospective, or universal-law claim.",
+  "terminal_disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+  "universal_law": "NOT_ESTABLISHED"
+}

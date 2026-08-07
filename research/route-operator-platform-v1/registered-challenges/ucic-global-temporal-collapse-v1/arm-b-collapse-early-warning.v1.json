@@ -1,14 +1,32 @@
 {
   "arm": "B_COLLAPSE_EARLY_WARNING",
-  "classification": "RETROSPECTIVE_EARLY_WARNING_PILOT",
+  "classification": "RETROSPECTIVE_EARLY_WARNING_PILOT_PLUS_FROZEN_FDIC_LONGITUDINAL_EXTENSION",
+  "false_positive_claim": "ONE_OF_35_EVALUABLE_MATCHED_CONTROL_TRAJECTORIES_WARNED_UNDER_THIS_FROZEN_RETROSPECTIVE_DESIGN",
   "financial_collapse_cohort": {
+    "artifact_id": 8981803573,
+    "artifact_zip_sha256": "d1c2e5f036613590d6bf0783926969025ee554caaf3ccfd6b58549a515f2cf1a",
     "authority": "FDIC",
+    "balanced_accuracy": 0.622077922077922,
+    "best_comparator_balanced_accuracy": 0.5935064935064935,
+    "control_false_positive_rate": 0.02857142857142857,
+    "evaluable_failures": 11,
+    "evaluable_matched_control_trajectories": 35,
     "failed_institutions": 11,
+    "failure_sensitivity": 0.2727272727272727,
+    "frozen_failure_reason": "Failure sensitivity 0.2727272727272727 was below the pre-value frozen minimum of 0.60; specificity and lead time cannot compensate.",
+    "median_failure_lead_time_days": 578.0,
     "period": "2023-03-10_through_2026-05-01",
-    "reason": "FDIC failure cohort and BankFind quarterly-financial endpoint are verified, but complete institution-quarter extraction is not yet frozen in this package; no bank-level lead-time or false-positive claim is made.",
-    "status": "COHORT_FROZEN_LONGITUDINAL_SCORING_PENDING"
+    "protocol_file": "arm-b-fdic-longitudinal-protocol.v1.json",
+    "protocol_sha256": "4df693a6e313ca87f32474a8e37d45de0b950143d925260f3ae41ddaf3e4c36c",
+    "status": "LONGITUDINAL_SCORING_CLOSED_NOT_SUPPORTED",
+    "terminal_disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+    "terminal_file": "arm-b-fdic-longitudinal-terminal.v1.json",
+    "ucic_minus_best_comparator_balanced_accuracy": 0.02857142857142847,
+    "warning_controls": 1,
+    "warning_failures": 3,
+    "workflow_run_id": 31146873683
   },
-  "false_positive_claim": "NOT_ESTABLISHED",
+  "noncompensation": "The systemic pilot and FDIC extension are scored independently. The supported systemic pilot cannot rescue the failed FDIC generalization, and the failed FDIC generalization does not erase the systemic pilot.",
   "operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
   "source_ledger": [
     {
@@ -88,6 +106,6 @@
     },
     "terminal_failure_date": "2022-12-23"
   },
-  "terminal_disposition": "SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_COHORT_PENDING",
+  "terminal_disposition": "SYSTEMIC_COLLAPSE_EARLY_WARNING_PILOT_SUPPORTED_FINANCIAL_EXTENSION_NOT_SUPPORTED",
   "universal_collapse_metric": "NOT_ESTABLISHED"
 }

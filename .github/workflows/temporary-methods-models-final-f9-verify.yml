@@ -31,7 +31,9 @@ jobs:
           test "$(git rev-parse HEAD:control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer)" = "ab7a87b9428200f73bad2f468c953d0e116711c6"
           test "$(git rev-parse HEAD:control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1)" = "07375924b86f4a0981eb12519735262bce315cdf"
       - name: Execute assembled F9 environment verifier
+        shell: bash
         run: |
+          set -o pipefail
           node control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f9-integrated-environment-assembly/verify.v1.mjs | tee f9-verification.log
       - name: Prove exact F9 changed-path scope from F8 terminal head
         shell: bash

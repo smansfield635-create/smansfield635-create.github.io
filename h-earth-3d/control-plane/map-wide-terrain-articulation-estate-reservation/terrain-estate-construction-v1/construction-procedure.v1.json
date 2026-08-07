@@ -1,0 +1,75 @@
+{
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "procedureId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_PROCEDURE_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "operationClass": "BOUNDED_NONPUBLIC_TERRAIN_AND_ESTATE_CONSTRUCTION",
+  "exactGoverningHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+  "exactGoverningTree": "81c2d80b45e40da7e935d2c72f3a3b2804b99704",
+  "constructionBranch": "build/h-earth-terrain-estate-construction-v1-001",
+  "activeLockGeneration": 411,
+  "exactAllowedRepositoryPathsManifest": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/changed-path-manifest.v1.json",
+  "registryEvaluation": {
+    "exactMergedRegistryHead": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+    "exactMergedRegistryTree": "3116d5c35bfdd575922dac614fb2e9f1d4f61ec5",
+    "evaluationOnly": true,
+    "constructionBranchRebaseRequired": false,
+    "constructionBranchMergeRequired": false
+  },
+  "exactBranchAndCommitSequence": [
+    {"step": 1, "action": "RUN_H_EARTH_REGISTRY_PREFLIGHT_FOR_ENTRYPOINT_MUTATION_AND_REGISTER_ONLY_THE_NEW_EXACT_WORKFLOW_PATH", "status": "PASS_COMPLETE"},
+    {"step": 2, "action": "MATERIALIZE_CONTROL_PLANE_CONTRACTS_SOURCE_IDENTITIES_PLANS_INVARIANTS_ROLLBACK_AND_PROOF_CONTRACT", "status": "ACTIVE"},
+    {"step": 3, "action": "CONSTRUCT_ADDITIVE_TERRAIN_ESTATE_MANOR_CANDIDATE_MODULES_AND_NONPUBLIC_PREVIEW_ONLY", "status": "HELD_PENDING_STEP_2_PASS_AND_EXACT_IMPLEMENTATION_SOURCE"},
+    {"step": 4, "action": "RUN_BUILDER_VERIFICATION_AND_EMIT_BUILDER_RECEIPT", "status": "HELD"},
+    {"step": 5, "action": "RUN_FRESH_ROLE_3_REPRODUCTION_WITHOUT_REPAIR_AND_EMIT_RECEIPT", "status": "HELD"},
+    {"step": 6, "action": "RUN_ROLE_5_INTEGRATED_ENVIRONMENT_RATIFICATION_BEFORE_ANY_USER_REVIEW_URL", "status": "HELD"},
+    {"step": 7, "action": "CREATE_NONPUBLIC_REVIEW_SURFACE_AND_RECORD_USER_DIFFERENTIAL_BEFORE_CHECKPOINT_CLOSURE", "status": "HELD"},
+    {"step": 8, "action": "STOP_BEFORE_MERGE_DEPLOYMENT_OR_RELEASE_PENDING_SEPARATE_AUTHORITY", "status": "MANDATORY"}
+  ],
+  "evaluationToolingHeadBindingRule": "BIND_OPERATION_SOURCE_IDENTITIES_TO_EXACT_GOVERNING_HEAD_2B4FAE98;USE_3F51F0CD_ONLY_AS_READ_ONLY_MERGED_REGISTRY_EVALUATION_OVERLAY;READ_ACCEPTED_R06_C10_REFERENCE_ONLY_AND_NEVER_LABEL_IT_AS_MERGED_MAIN",
+  "implementationRule": {
+    "implementationInferenceAuthorized": false,
+    "deferredGeometryMayBeSelectedByStep2": false,
+    "step3MayBeginWithoutExactImplementationSource": false,
+    "postOutcomeRetuning": false,
+    "hiddenDefaults": false,
+    "silentFallbacks": false
+  },
+  "step2Atomicity": {
+    "required": true,
+    "reason": "NO_WORKFLOW_OR_REVIEW_MAY_OBSERVE_A_PARTIAL_CONTROL_PLANE_PACKAGE",
+    "terrainConstructionPerformed": false,
+    "estateConstructionPerformed": false,
+    "manorConstructionPerformed": false
+  },
+  "stopConditions": [
+    "ACTIVE_LOCK_411_IDENTITY_MISMATCH",
+    "EXACT_PATH_BOUNDARY_MISMATCH",
+    "SOURCE_IDENTITY_DRIFT",
+    "REGISTRY_PREFLIGHT_FAILURE",
+    "SITE_ENVELOPE_EXCEEDED",
+    "LOW_CORRIDOR_BLOCKED",
+    "TWO_HILL_RELATION_LOST",
+    "MOUNTAINWARD_OR_BEACHWARD_VIEW_FAILURE",
+    "ENTRY_ZONE_SEPARATION_OR_CONNECTIVITY_FAILURE",
+    "TERRAIN_CONTINUITY_OR_TRAVERSAL_FAILURE",
+    "FRONTIER_PLAINS_OR_CAVERN_INTERIOR_INTRUSION",
+    "ZERO_PASS_INFERENCE_VIOLATION",
+    "DEFERRED_GEOMETRY_SELECTED_WITHOUT_EXACT_AUTHORITY",
+    "OUT_OF_SCOPE_MUTATION",
+    "MERGE_DEPLOYMENT_OR_RELEASE_REQUESTED"
+  ],
+  "verificationSequence": [
+    "STEP_2_CONTROL_PLANE_STATIC_AND_SOURCE_IDENTITY_VERIFICATION",
+    "STEP_3_CANDIDATE_CONSTRUCTION_ONLY_AFTER_EXACT_IMPLEMENTATION_SOURCE",
+    "BUILDER_VERIFICATION",
+    "FRESH_ROLE_3_REPRODUCTION_WITHOUT_REPAIR",
+    "ROLE_5_INTEGRATED_ENVIRONMENT_RATIFICATION",
+    "NONPUBLIC_USER_DIFFERENTIAL",
+    "SEPARATE_TERMINAL_CLOSURE"
+  ],
+  "exactTestRunnerCommand": "node h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/verify.v1.mjs --output \"$RUNNER_TEMP/h-earth-terrain-estate-construction-v1\"",
+  "workflowPath": ".github/workflows/h-earth-terrain-and-estate-construction-v1.yml",
+  "mergeAuthority": false,
+  "deploymentAuthority": false,
+  "releaseAuthority": false
+}

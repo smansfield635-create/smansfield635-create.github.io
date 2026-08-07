@@ -1,0 +1,72 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_APPROACH_VIEW_ADJACENCY_CONTRACT_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "contractClass": "SOURCE_MEASUREMENT_PRESERVATION_AND_FUTURE_ROUTE_GATING",
+  "mirrorManorSite": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156}
+  },
+  "twoHillRelation": {
+    "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
+    "rightHill": {"x": 152, "y": 42.73941022157669, "z": -224},
+    "hillSeparation": 94.40338976964756,
+    "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
+    "lowerHillToSaddleDrop": 10.537935137748718
+  },
+  "lowCorridorSourceMeasurement": {
+    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "pairAxis": {"x": 0.805055837353368, "z": -0.5931990380498502},
+    "corridorAxis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+    "noBuildHalfWidth": 6,
+    "traceElevationRange": {"minimum": 5.1480324268341064, "maximum": 27.971787095069885},
+    "acceptedAsFinalRoute": false,
+    "finalCenterline": false
+  },
+  "viewRequirements": {
+    "beachward": {
+      "sourceStatus": "CLEAR",
+      "sourceMaximumObstruction": -0.041573455929757586,
+      "requiredFutureStatus": "CLEAR"
+    },
+    "mountainward": {
+      "sourceStatus": "CLEAR",
+      "sourceMaximumObstruction": -3.0548654910176936,
+      "requiredFutureStatus": "CLEAR"
+    }
+  },
+  "approachSourceMeasurement": {
+    "eligible": true,
+    "sampleCount": 27,
+    "maximumSlope": 0.5888144667208294,
+    "maximumNeighborElevationDelta": 2.2297231554985046,
+    "acceptedAsFinalRoute": false,
+    "finalRoute": false
+  },
+  "entryZoneAdjacency": {
+    "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+    "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96},
+    "relationshipToManor": "SEPARATE_CONNECTED_REGIONAL_AREAS",
+    "sourceBoundsDistance": 46.6476151587624,
+    "mustRemainSeparate": true,
+    "futureCandidateMustDemonstrateConnectivity": true
+  },
+  "cavernAdjacency": {
+    "exteriorFace": {"x": 40, "z": -284},
+    "apron": {"x": 48, "z": -284},
+    "precinctCenter": {"x": 56, "z": -284},
+    "relationshipToManor": "LAWFUL_APPROACH_TO_CONCEALED_MOUNTAIN_EXTERIOR",
+    "sourceApproachPathDistance": 113.94112549695429,
+    "interiorConstructionAuthorized": false
+  },
+  "futureRouteRule": {
+    "finalApproachRouteSelectedByThisContract": false,
+    "deriveFinalRouteFromSourceTraceByDefault": false,
+    "implementationInferenceAuthorized": false,
+    "requiredAuthority": "EXACT_STEP_3_IMPLEMENTATION_SOURCE_OR_SEPARATE_EXPLICIT_AUTHORITY",
+    "mustVerifyTraversal": true,
+    "mustVerifyTerrainContinuity": true,
+    "mustVerifyBothViews": true,
+    "mustVerifyLowCorridorOpen": true
+  },
+  "step2Effect": "NO_ROUTE_OR_VIEW_GEOMETRY_MUTATION"
+}

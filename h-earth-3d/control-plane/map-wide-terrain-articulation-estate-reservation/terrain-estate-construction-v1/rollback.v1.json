@@ -1,0 +1,49 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_ROLLBACK_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "rollbackClass": "BRANCH_ONLY_EXACT_IDENTITY_ROLLBACK",
+  "constructionBranch": "build/h-earth-terrain-estate-construction-v1-001",
+  "step2StartingHead": "30851f695c8b5eace399f624fd37137ed24e633d",
+  "step2StartingTree": "8c9a59893037c2ab39d27a4d635c98223e66b53a",
+  "governingSource": {
+    "commit": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+    "tree": "81c2d80b45e40da7e935d2c72f3a3b2804b99704"
+  },
+  "sourceTerrainIdentity": {
+    "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "gitBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc"
+  },
+  "rollbackTriggers": [
+    "STEP_2_PATH_BOUNDARY_FAILURE",
+    "STEP_2_SOURCE_IDENTITY_FAILURE",
+    "STEP_2_JSON_OR_CONTRACT_VALIDATION_FAILURE",
+    "ACTIVE_LOCK_411_IDENTITY_FAILURE",
+    "REGISTRY_PREFLIGHT_FAILURE",
+    "DEFERRED_GEOMETRY_SELECTION_DETECTED",
+    "PRODUCT_OR_CONSTRUCTION_BYTE_MUTATION_DETECTED_DURING_STEP_2",
+    "OUT_OF_SCOPE_MUTATION"
+  ],
+  "step2Rollback": {
+    "method": "MOVE_CONSTRUCTION_BRANCH_BACK_TO_EXACT_STEP2_STARTING_HEAD_ONLY_AFTER_FAIL_CLOSED_AUTHORITY",
+    "targetHead": "30851f695c8b5eace399f624fd37137ed24e633d",
+    "mainMutation": false,
+    "registryMutation": false,
+    "runtimeMutation": false,
+    "productRuntimeRollbackRequired": false,
+    "operationLock411ClosureImplied": false
+  },
+  "futureStep3Rollback": {
+    "requiredBeforeProductConstruction": true,
+    "mustBindExactStep2PassHead": true,
+    "mustListEveryConstructedCandidatePath": true,
+    "mustPreserveSourceTerrainIdentity": true,
+    "mustNotUseMainAsRollbackSurface": true
+  },
+  "preservationRequirements": [
+    "DO_NOT_REOPEN_REGISTRY_PREREQUISITE_GENERATION_413",
+    "DO_NOT_REOPEN_REGISTRY_CLOSURE_GENERATION_419",
+    "DO_NOT_MUTATE_CONSTRUCTION_LOCK_411_DURING_STEP_2",
+    "DO_NOT_MUTATE_LOCKS_279_OR_280",
+    "DO_NOT_MERGE_DEPLOY_PUBLISH_OR_RELEASE"
+  ]
+}

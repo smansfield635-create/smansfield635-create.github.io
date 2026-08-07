@@ -1,0 +1,63 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_TERRAIN_ARTICULATION_PLAN_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "planClass": "STEP_2_NONMUTATING_TERRAIN_ARTICULATION_PLAN",
+  "sourceTerrain": {
+    "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+    "gitBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+    "governingHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9"
+  },
+  "targetWorldField": {
+    "width": 512,
+    "depth": 512,
+    "lattice": "16x16",
+    "cells": 256,
+    "requiredContinuity": "CONTINUOUS_MAP_WIDE_FIELD",
+    "requiredTraversal": "LAWFUL_TRAVERSABLE"
+  },
+  "objectives": [
+    "ARTICULATE_THE_EXISTING_CONTINUOUS_512_BY_512_TERRAIN_FIELD_WITHOUT_REPLACING_ITS_IDENTITY",
+    "PRESERVE_THE_ACCEPTED_GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE",
+    "PRESERVE_THE_LOW_CORRIDOR_AND_TWO_HILL_RELATION",
+    "PRESERVE_MOUNTAINWARD_AND_BEACHWARD_VIEW_CORRIDORS",
+    "PRESERVE_SEPARATE_CONNECTED_ENTRY_ZONE",
+    "PRESERVE_EXISTING_WATER_CAMERA_NAVIGATION_AND_RUNTIME_BOUNDARIES"
+  ],
+  "protectedSite": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156}
+  },
+  "protectedLowCorridor": {
+    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "corridorAxis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+    "noBuildHalfWidth": 6,
+    "status": "SOURCE_MEASUREMENT_TO_BE_PRESERVED_NOT_A_FINAL_ROUTE"
+  },
+  "implementationParameters": {
+    "terrainDisplacementFunction": "UNASSIGNED_PENDING_EXACT_STEP_3_IMPLEMENTATION_SOURCE",
+    "articulationAmplitude": "UNASSIGNED_PENDING_EXACT_STEP_3_IMPLEMENTATION_SOURCE",
+    "frequencyOrScale": "UNASSIGNED_PENDING_EXACT_STEP_3_IMPLEMENTATION_SOURCE",
+    "blendLaw": "UNASSIGNED_PENDING_EXACT_STEP_3_IMPLEMENTATION_SOURCE",
+    "estateTransitionLaw": "UNASSIGNED_PENDING_EXACT_STEP_3_IMPLEMENTATION_SOURCE",
+    "selectionByInferenceProhibited": true
+  },
+  "acceptedReadOnlyReference": {
+    "path": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js",
+    "head": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+    "gitBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+    "presentOnGoverningMain": false,
+    "mayInformExactAuthorizedStep3Only": true,
+    "mayBeCopiedOrAppliedWithoutExactAuthority": false
+  },
+  "excludedRegions": [
+    "GRATITUDE_REGION_FRONTIER_PLAINS",
+    "GRATITUDE_REGION_CAVERN_INTERIOR"
+  ],
+  "step2Effect": {
+    "terrainBytesMutated": false,
+    "estateBytesMutated": false,
+    "manorBytesMutated": false,
+    "planOnly": true
+  },
+  "step3AdmissionCondition": "EXACT_IMPLEMENTATION_SOURCE_OR_SEPARATE_EXPLICIT_AUTHORITY_MUST_RESOLVE_ALL_UNASSIGNED_IMPLEMENTATION_PARAMETERS"
+}

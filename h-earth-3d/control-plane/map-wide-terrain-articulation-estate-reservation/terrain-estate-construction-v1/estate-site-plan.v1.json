@@ -1,0 +1,68 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_ESTATE_SITE_PLAN_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "siteId": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+  "lifecycleDisposition": "ACCEPTED",
+  "placementDisposition": "ACCEPT_UPPER_CONNECTED_HILL_SITE_ENVELOPE_ONLY",
+  "sourceCandidateId": "GRATITUDE_REGION_MIRROR_MANOR_SITE_ENVELOPE_CANDIDATE_01",
+  "acceptedSiteEnvelope": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "elevationRange": {"minimum": 24.005557656288147, "maximum": 29.543441355228424},
+    "slopeRange": {"minimum": 0.04806739259546734, "maximum": 0.5083486719355141},
+    "connectedSampleCount": 49,
+    "approximateSampleAreaWorldUnitsSquared": 784,
+    "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
+    "centerSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C11",
+    "centerPhysicalChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12",
+    "envelopeDigest": "318be224df8518c7693302439b7b21e07462f95116300c47a0b6144b13384f21",
+    "sourceCandidateDigest": "b502f9503dd2cb753b4ab7a80cf3d4ca5afa7b40566dabe71c6d7009bffca5dd"
+  },
+  "measuredCompatibleFootprints": [
+    {"width": 12, "depth": 12, "sourceCompatible": true, "elevationRange": 2.761919379, "maximumSlope": 0.356723473, "corridorConflictCount": 0},
+    {"width": 20, "depth": 16, "sourceCompatible": true, "elevationRange": 4.467058659, "maximumSlope": 0.429238325, "corridorConflictCount": 0},
+    {"width": 28, "depth": 20, "sourceCompatible": true, "elevationRange": 6.490048051, "maximumSlope": 0.48133755, "corridorConflictCount": 0}
+  ],
+  "footprintSelection": {
+    "selected": false,
+    "selectionAuthorizedByThisPlan": false,
+    "reason": "FINAL_PLACEMENT_ACCEPTED_THE_SITE_ENVELOPE_BUT_DEFERRED_EXACT_BUILDING_FOOTPRINT"
+  },
+  "regionalAdjacency": {
+    "entryZone": {
+      "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+      "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96},
+      "relationship": "SEPARATE_CONNECTED_REGIONAL_AREAS",
+      "sourceBoundsDistance": 46.6476151587624
+    },
+    "cavernPrecinct": {
+      "exteriorFace": {"x": 40, "z": -284},
+      "apron": {"x": 48, "z": -284},
+      "precinctCenter": {"x": 56, "z": -284},
+      "relationship": "LAWFUL_APPROACH_TO_CONCEALED_MOUNTAIN_EXTERIOR",
+      "interiorConstructionAuthorized": false
+    },
+    "frontierPlains": {
+      "lifecycleDisposition": "RETAINED_ELIGIBLE_NONFINAL",
+      "constructionAuthorized": false
+    }
+  },
+  "requiredEstatePreservation": [
+    "SITE_REMAINS_WITHIN_ACCEPTED_ENVELOPE",
+    "LOW_CORRIDOR_REMAINS_OPEN",
+    "TWO_HILL_RELATION_REMAINS_LEGIBLE",
+    "BEACHWARD_VIEW_REMAINS_CLEAR",
+    "MOUNTAINWARD_VIEW_REMAINS_CLEAR",
+    "ENTRY_ZONE_REMAINS_SEPARATE_AND_CONNECTED",
+    "LAWFUL_TERRAIN_CONTINUITY_AND_TRAVERSAL_REMAIN_PASSING"
+  ],
+  "deferred": [
+    "EXACT_BUILDING_FOOTPRINT",
+    "BUILDING_ORIENTATION",
+    "ATRIUM_GEOMETRY",
+    "ENTRANCE_COORDINATES",
+    "GARDEN_LAYOUT",
+    "SCULPTURE_POSITIONS"
+  ],
+  "step2ConstructionEffect": "NONE_CONTROL_PLANE_PLAN_ONLY"
+}

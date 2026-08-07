@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_MIRROR_MANOR_GEOMETRY_CONTRACT_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "contractClass": "DEFERRED_GEOMETRY_FAIL_CLOSED_CONTRACT",
+  "acceptedSiteEnvelope": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156}
+  },
+  "sourceCompatibleFootprintEvidence": [
+    {"width": 12, "depth": 12, "compatible": true, "corridorConflictCount": 0},
+    {"width": 20, "depth": 16, "compatible": true, "corridorConflictCount": 0},
+    {"width": 28, "depth": 20, "compatible": true, "corridorConflictCount": 0}
+  ],
+  "sourceEvidenceMeaning": "MEASURED_COMPATIBILITY_ONLY_NOT_A_SELECTION_OR_BUILD_AUTHORITY",
+  "geometryState": {
+    "exactBuildingFootprint": null,
+    "buildingOrientation": null,
+    "atriumGeometry": null,
+    "entranceCoordinates": null,
+    "gardenLayout": null,
+    "sculpturePositions": null,
+    "geometrySelected": false
+  },
+  "selectionRules": {
+    "implementationInferenceAuthorized": false,
+    "chooseSmallestCompatibleFootprintByDefault": false,
+    "chooseLargestCompatibleFootprintByDefault": false,
+    "chooseAnyMeasuredFootprintWithoutAuthority": false,
+    "deriveOrientationFromViewsWithoutAuthority": false,
+    "deriveEntranceFromApproachWithoutAuthority": false,
+    "postOutcomeRetuning": false,
+    "requiredAuthority": "EXACT_STEP_3_IMPLEMENTATION_SOURCE_OR_SEPARATE_EXPLICIT_AUTHORITY"
+  },
+  "mandatoryGeometryConstraintsWhenAuthorized": [
+    "ALL_MANOR_GEOMETRY_MUST_REMAIN_INSIDE_ACCEPTED_SITE_ENVELOPE",
+    "NO_MANOR_GEOMETRY_MAY_ENTER_PROTECTED_LOW_CORRIDOR",
+    "TWO_HILL_RELATION_MUST_REMAIN_LEGIBLE",
+    "BEACHWARD_GROUND_VIEW_MUST_REMAIN_CLEAR",
+    "MOUNTAINWARD_GROUND_VIEW_MUST_REMAIN_CLEAR",
+    "ENTRY_ZONE_MUST_REMAIN_SPATIALLY_SEPARATE",
+    "CAVERN_INTERIOR_AND_FRONTIER_PLAINS_MUST_REMAIN_UNCONSTRUCTED"
+  ],
+  "protectedLowCorridor": {
+    "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+    "corridorAxis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+    "noBuildHalfWidth": 6,
+    "sourceAccepted": false,
+    "sourceFinalCenterline": false,
+    "contractEffect": "PRESERVE_OPEN_RELATION_WITHOUT_PROMOTING_SOURCE_TRACE_TO_FINAL_ROUTE"
+  },
+  "viewEvidence": {
+    "beachwardGroundView": "CLEAR",
+    "beachwardMaximumObstruction": -0.041573455929757586,
+    "mountainwardGroundView": "CLEAR",
+    "mountainwardMaximumObstruction": -3.0548654910176936
+  },
+  "step2Effect": {
+    "buildingGeometryConstructed": false,
+    "geometryAuthorityCreated": false,
+    "contractOnly": true
+  }
+}

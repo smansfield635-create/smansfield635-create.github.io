@@ -1,0 +1,82 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_OPERATION_REQUEST_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "projectId": "H_EARTH",
+  "stage": "STEP_2_CONTROL_PLANE_MATERIALIZATION",
+  "exactGoverningHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+  "exactGoverningTree": "81c2d80b45e40da7e935d2c72f3a3b2804b99704",
+  "constructionBranch": "build/h-earth-terrain-estate-construction-v1-001",
+  "step2StartingHead": "30851f695c8b5eace399f624fd37137ed24e633d",
+  "registryEvaluationOverlay": {
+    "commit": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+    "tree": "3116d5c35bfdd575922dac614fb2e9f1d4f61ec5",
+    "purpose": "READ_ONLY_REGISTRY_PREFLIGHT_ONLY",
+    "mergedIntoConstructionBranch": false
+  },
+  "activeOperationLock": {
+    "generation": 411,
+    "scope": "H_EARTH:TERRAIN_AND_ESTATE_CONSTRUCTION:GRATITUDE_REGION_MIRROR_MANOR_PRECINCT:V1:EXACT_32_PATH_SCOPE",
+    "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f",
+    "stateRequired": "ADMITTED_LOCKED",
+    "releasedRequired": false
+  },
+  "authority": {
+    "issue": 706,
+    "authorityId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_AUTHORITY_v1",
+    "requestingRole": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "executingRole": "ROLE_1_TERRAIN_AND_ESTATE_CONSTRUCTION_INTAKE_AND_EXECUTION_AUTHORITY",
+    "freshIndependentVerifier": "ROLE_3_FRESH_INDEPENDENT_VERIFICATION_AUTHORITY",
+    "role5RequiredBeforeUserReview": true,
+    "furtherUserAuthorityForInScopeStartRequired": false,
+    "repositoryWritesAuthorized": true,
+    "workflowExecutionAuthorized": true,
+    "implementationInferenceAuthorized": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "releaseAuthority": false
+  },
+  "exactPathManifest": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/changed-path-manifest.v1.json",
+  "exactPathCount": 32,
+  "acceptedEstateArea": "GRATITUDE_REGION_MIRROR_MANOR_PRECINCT",
+  "acceptedSiteEnvelope": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156}
+  },
+  "worldField": {
+    "width": 512,
+    "depth": 512,
+    "lattice": "16x16",
+    "cells": 256
+  },
+  "scientificEvidence": {
+    "causalEvidencePullRequest": 680,
+    "causalEvidenceHead": "940fe2623501da8a4c2b7362d709ed36de851fb8",
+    "causalEvidenceMergeCommit": "214db7387456699183922e316171e19ad9a2950f",
+    "causalEvidencePackageSha256": "48da9f306fc3631e4e6744ac15cab2ae0f7c55e63d9ea525c764e51b736338a8",
+    "canonicalScientificReceiptDigest": "0f38f6e36f07c7b5ab7eebcc183bdc1244e71c71012070a52f267b21fc3c59ca",
+    "deterministicCrossEpochDigest": "5bbf1bf53a01760ea529318a39eaa393e080d7ca5bf9915910d04d2e0da62b4a"
+  },
+  "requiredStep2Outputs": [
+    "AUTHORITY_AND_LINEAGE",
+    "SOURCE_IDENTITY_MANIFEST",
+    "PROTECTED_INVARIANTS",
+    "TERRAIN_ARTICULATION_PLAN",
+    "ESTATE_SITE_PLAN",
+    "MIRROR_MANOR_GEOMETRY_CONTRACT_WITH_DEFERRED_GEOMETRY_PRESERVED",
+    "APPROACH_VIEW_ADJACENCY_CONTRACT",
+    "ROLLBACK_CONTRACT",
+    "PROOF_CONTRACT"
+  ],
+  "nonInferenceBoundary": {
+    "zeroPassingArrangementsEstablishTerrainInfeasibility": false,
+    "zeroPassingArrangementsEstablishEstateInfeasibility": false,
+    "feasibleArrangementEstablished": false,
+    "exactBuildingFootprintSelected": false,
+    "buildingOrientationSelected": false,
+    "atriumGeometrySelected": false,
+    "entranceCoordinatesSelected": false,
+    "gardenLayoutSelected": false,
+    "sculpturePositionsSelected": false
+  },
+  "nextStepIfStep2Passes": "STEP_3_REQUIRES_EXACT_IMPLEMENTATION_SOURCE_OR_SEPARATE_EXPLICIT_AUTHORITY_BEFORE_DEFERRED_GEOMETRY_IS_SELECTED"
+}

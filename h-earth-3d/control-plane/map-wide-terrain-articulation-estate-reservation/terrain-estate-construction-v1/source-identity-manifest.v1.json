@@ -1,0 +1,95 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_SOURCE_IDENTITY_MANIFEST_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "governingRepository": {
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "commit": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+    "tree": "81c2d80b45e40da7e935d2c72f3a3b2804b99704"
+  },
+  "constructionState": {
+    "branch": "build/h-earth-terrain-estate-construction-v1-001",
+    "step2StartingHead": "30851f695c8b5eace399f624fd37137ed24e633d",
+    "step2StartingTree": "8c9a59893037c2ab39d27a4d635c98223e66b53a",
+    "lockGeneration": 411,
+    "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f"
+  },
+  "registryEvaluationOverlay": {
+    "commit": "3f51f0cd159df33571905c6cb14253ebdd137e3b",
+    "tree": "3116d5c35bfdd575922dac614fb2e9f1d4f61ec5",
+    "registryCandidateHead": "cb3be6358c98f9cca4a443bf53ff0231cbfce811",
+    "usage": "READ_ONLY_REGISTRY_RESOLUTION",
+    "partOfGoverningConstructionSource": false
+  },
+  "sourceIdentities": {
+    "currentTerrain": {
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "gitBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "verifiedPresentAtGoverningHead": true
+    },
+    "acceptedR06C10Reference": {
+      "path": "h-earth-3d/terrain/h-earth.r06-c10.official-landform-candidate-001.js",
+      "acceptedReferenceHead": "d1147c67c366fad53e824c64519998e7ccd5f8f5",
+      "gitBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+      "verifiedPresentAtGoverningHead": false,
+      "usage": "READ_ONLY_ACCEPTED_ANALYSIS_REFERENCE",
+      "mayBeLabeledMergedMain": false
+    },
+    "finalSpatialPlacementDisposition": {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+      "gitBlob": "ad6a7ac1871e1f248c40ac7836d487f786dc48e4",
+      "verifiedPresentAtGoverningHead": true
+    },
+    "mirrorManorReconciliationReceipt": {
+      "path": "h-earth-3d/validation/h-earth.gratitude-region.mirror-manor-reconciliation.receipt.v1.json",
+      "gitBlob": "9dfc45298d0e5f07537807e0518e9743840839d9",
+      "verifiedPresentAtGoverningHead": true
+    },
+    "mapWideInstrumentLocator": {
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/instrument.locator.v1.json",
+      "gitBlob": "5e356ccdc8f5f9a053b1f9c040ded92d19d0e112",
+      "verifiedPresentAtGoverningHead": true,
+      "instrumentId": "H_EARTH_MAP_WIDE_TERRAIN_ARTICULATION_AND_ESTATE_RESERVATION_INSTRUMENT_v1"
+    },
+    "mapWideInstrumentConstructionProcedure": {
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/construction-procedure.v1.json",
+      "gitBlob": "7aac442e32dc2a7ebc6f5a048b2346a82d9cab5c",
+      "verifiedPresentAtGoverningHead": true
+    },
+    "causalEvidenceSourceManifest": {
+      "path": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/inter-hill-estate-v2-causal-evidence-execution-001/source-evidence-manifest.v1.json",
+      "gitBlob": "125035b77b529ebdbe7321c5b1f208c581b9202d",
+      "verifiedPresentAtGoverningHead": true
+    },
+    "causalEvaluator": {
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/causal-trace-evaluator.v2.mjs",
+      "gitBlob": "c5216445f8bd8267e94d7651c7b06c5f38ab1c83"
+    },
+    "estateSearchGenerator": {
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/estate-multizone-search.v1.mjs",
+      "gitBlob": "80ff6fa6f8b349babf668fa40f54456ed140452b"
+    },
+    "successorEvaluatorOrchestrator": {
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/successor-evaluator.v1.mjs",
+      "gitBlob": "d443e7e900e260b4399dfd6014bce4e158ac32c9"
+    },
+    "realTerrainPartition": {
+      "path": "tools/h-earth-map-wide-terrain/inter-hill-estate/real-terrain-partition.v1.mjs",
+      "gitBlob": "28cbbcc8882ad061fad99cce6b772f4914dc3d86"
+    }
+  },
+  "causalEvidenceIdentity": {
+    "pullRequest": 680,
+    "candidateHead": "940fe2623501da8a4c2b7362d709ed36de851fb8",
+    "mergeCommit": "214db7387456699183922e316171e19ad9a2950f",
+    "packageSha256": "48da9f306fc3631e4e6744ac15cab2ae0f7c55e63d9ea525c764e51b736338a8",
+    "canonicalScientificReceiptDigest": "0f38f6e36f07c7b5ab7eebcc183bdc1244e71c71012070a52f267b21fc3c59ca",
+    "deterministicCrossEpochDigest": "5bbf1bf53a01760ea529318a39eaa393e080d7ca5bf9915910d04d2e0da62b4a"
+  },
+  "sourceLimitations": [
+    "ACCEPTED_R06_C10_REFERENCE_IS_NOT_PRESENT_ON_GOVERNING_MAIN",
+    "ZERO_PASSING_ARRANGEMENTS_DO_NOT_ESTABLISH_TERRAIN_INFEASIBILITY",
+    "ZERO_PASSING_ARRANGEMENTS_DO_NOT_ESTABLISH_ESTATE_INFEASIBILITY",
+    "FINAL_PLACEMENT_ACCEPTS_SITE_ENVELOPE_NOT_EXACT_BUILDING_GEOMETRY",
+    "SOURCE_MEASUREMENTS_MUST_NOT_BE_RELABELED_AS_POST_CONSTRUCTION_RESULTS"
+  ]
+}

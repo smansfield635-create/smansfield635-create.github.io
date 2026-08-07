@@ -1,0 +1,99 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_PROTECTED_INVARIANTS_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "worldIdentity": {
+    "width": 512,
+    "depth": 512,
+    "lattice": "16x16",
+    "cellCount": 256
+  },
+  "acceptedMirrorManorEnvelope": {
+    "center": {"x": 80, "z": -172},
+    "bounds": {"xMinimum": 64, "xMaximum": 96, "zMinimum": -188, "zMaximum": -156},
+    "formationMembership": ["H_EARTH_NAVIGABLE_HILL_001"],
+    "centerSemanticAddressId": "H_EARTH_GROUND_CELL_001:R06:C11",
+    "centerPhysicalChunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C09_C12"
+  },
+  "sourceTerrainMeasurements": {
+    "siteElevationRange": {"minimum": 24.005557656288147, "maximum": 29.543441355228424},
+    "siteSlopeRange": {"minimum": 0.04806739259546734, "maximum": 0.5083486719355141},
+    "connectedSampleCount": 49,
+    "approximateSampleAreaWorldUnitsSquared": 784,
+    "twoHillRelation": {
+      "leftHill": {"x": 76, "y": 29.00972193479538, "z": -168},
+      "rightHill": {"x": 152, "y": 42.73941022157669, "z": -224},
+      "hillSeparation": 94.40338976964756,
+      "saddle": {"x": 112.41666666666667, "y": 18.47178679704666, "z": -194.83333333333334},
+      "lowerHillToSaddleDrop": 10.537935137748718
+    },
+    "lowCorridor": {
+      "origin": {"x": 112.41666666666667, "z": -194.83333333333334},
+      "pairAxis": {"x": 0.805055837353368, "z": -0.5931990380498502},
+      "corridorAxis": {"x": 0.5931990380498502, "z": 0.805055837353368},
+      "noBuildHalfWidth": 6,
+      "sourceTraceElevationRange": {"minimum": 5.1480324268341064, "maximum": 27.971787095069885},
+      "sourceAccepted": false,
+      "sourceFinalCenterline": false
+    },
+    "views": {
+      "beachwardGroundView": "CLEAR",
+      "beachwardMaximumObstruction": -0.041573455929757586,
+      "mountainwardGroundView": "CLEAR",
+      "mountainwardMaximumObstruction": -3.0548654910176936
+    },
+    "approach": {
+      "sourceEligible": true,
+      "sampleCount": 27,
+      "maximumSlope": 0.5888144667208294,
+      "maximumNeighborElevationDelta": 2.2297231554985046,
+      "sourceAccepted": false,
+      "sourceFinalRoute": false
+    }
+  },
+  "entryZone": {
+    "lifecycleDisposition": "ACCEPTED",
+    "mustRemainSeparateFromManor": true,
+    "mustRemainConnectedRegionally": true,
+    "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+    "activeArrival": {"waypointId": "COAST", "x": 0, "z": -96}
+  },
+  "requiredPreservationLaws": [
+    "ENTRY_WATER_REMAINS_HARD_BOUNDARY",
+    "ENTRY_CURRENT_NAVIGATION_MODEL_REMAINS_BASELINE",
+    "ENTRY_MUST_NOT_COLLAPSE_INTO_MANOR",
+    "MANOR_LOW_CORRIDOR_REMAINS_OPEN",
+    "MANOR_TWO_HILL_RELATION_REMAINS_LEGIBLE",
+    "MANOR_BOTH_VIEWS_REMAIN_CLEAR",
+    "CAVERN_MOUNTAIN_EXTERIOR_ATTACHMENT_PRESERVED_WITHOUT_INTERIOR_CONSTRUCTION",
+    "CAVERN_INTERIOR_REMAINS_SEPARATE",
+    "FRONTIER_PLAINS_REMAINS_ELIGIBLE_NONFINAL_WITHOUT_CONSTRUCTION",
+    "GLOBAL_NO_AUTHORITY_OVERREACH"
+  ],
+  "deferredGeometry": {
+    "exactBuildingFootprint": "UNASSIGNED",
+    "buildingOrientation": "UNASSIGNED",
+    "atriumGeometry": "UNASSIGNED",
+    "entranceCoordinates": "UNASSIGNED",
+    "gardenLayout": "UNASSIGNED",
+    "sculpturePositions": "UNASSIGNED",
+    "selectionByInferenceProhibited": true
+  },
+  "zeroPassBoundary": {
+    "terrainInfeasibilityEstablished": false,
+    "estateInfeasibilityEstablished": false,
+    "feasibleArrangementEstablished": false
+  },
+  "prohibitedMutationDomains": [
+    "MAIN",
+    "H_EARTH_REGISTRY",
+    "PRIOR_CAUSAL_EVIDENCE_PACKAGE",
+    "PRIOR_SUCCESSOR_EVALUATOR",
+    "RUNTIME",
+    "CAMERA",
+    "NAVIGATION",
+    "WATER",
+    "FRONTIER_PLAINS",
+    "CAVERN_INTERIOR",
+    "ANY_PATH_OUTSIDE_EXACT_32_PATH_MANIFEST"
+  ]
+}

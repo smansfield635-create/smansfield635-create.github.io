@@ -1,0 +1,86 @@
+{
+  "schema": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_PROOF_CONTRACT_v1",
+  "operationId": "H_EARTH_TERRAIN_AND_ESTATE_CONSTRUCTION_v1",
+  "proofClass": "FAIL_CLOSED_EXACT_IDENTITY_AND_ENVIRONMENT_PROOF",
+  "exactGoverningHead": "2b4fae98b06a46370f2e3f1af94ace49905657a9",
+  "exactGoverningTree": "81c2d80b45e40da7e935d2c72f3a3b2804b99704",
+  "activeLock": {
+    "generation": 411,
+    "scopeHash": "472cb4b8b715a26055afa4ba34cf821a327c30c9d7f4380166e4964165ab2e6f"
+  },
+  "exactPathManifest": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/changed-path-manifest.v1.json",
+  "step2RequiredProofs": [
+    "EXACT_BRANCH_HEAD_ANCESTRY_TO_GOVERNING_HEAD",
+    "EXACT_32_PATH_SCOPE_PRESERVED",
+    "ALL_STEP_2_JSON_DOCUMENTS_PARSE",
+    "SOURCE_IDENTITY_MANIFEST_MATCHES_GOVERNING_SOURCE_OR_EXPLICIT_READ_ONLY_REFERENCE_CLASS",
+    "CURRENT_TERRAIN_BLOB_EQUALS_0BD36EEC01A75311BF6441D575BAE5A057195BBC",
+    "ACCEPTED_R06_C10_REFERENCE_IS_EXPLICITLY_NOT_PRESENT_ON_GOVERNING_MAIN",
+    "FINAL_PLACEMENT_SOURCE_BLOB_EQUALS_AD6A7AC1871E1F248C40AC7836D487F786DC48E4",
+    "MIRROR_MANOR_MEASUREMENT_RECEIPT_BLOB_EQUALS_9DFC45298D0E5F07537807E0518E9743840839D9",
+    "MAP_WIDE_INSTRUMENT_LOCATOR_BLOB_EQUALS_5E356CCDC8F5F9A053B1F9C040DED92D19D0E112",
+    "NO_TERRAIN_ESTATE_MANOR_OR_PREVIEW_PRODUCT_BYTES_ADDED_BY_STEP_2",
+    "NO_DEFERRED_BUILDING_GEOMETRY_SELECTED",
+    "ZERO_PASS_NON_INFERENCE_BOUNDARY_EXPLICIT",
+    "GENERATION_411_REMAINS_ACTIVE_AND_UNRELEASED",
+    "REGISTRY_GENERATIONS_413_AND_419_REMAIN_TERMINAL_AND_UNREOPENED"
+  ],
+  "futureStep3RequiredProofs": [
+    "EXACT_IMPLEMENTATION_SOURCE_OR_SEPARATE_EXPLICIT_AUTHORITY_EXISTS_BEFORE_DEFERRED_GEOMETRY_SELECTION",
+    "CONTINUOUS_512_BY_512_TERRAIN_FIELD_ARTICULATION",
+    "SITE_ENVELOPE_CONTAINMENT",
+    "LOW_CORRIDOR_PRESERVATION",
+    "TWO_HILL_RELATION_PRESERVATION",
+    "MOUNTAINWARD_VIEW_CLEAR",
+    "BEACHWARD_VIEW_CLEAR",
+    "TERRAIN_CONTINUITY_PASS",
+    "TRAVERSAL_PASS",
+    "ENTRY_ZONE_SEPARATE_AND_CONNECTED",
+    "NO_FRONTIER_PLAINS_CONSTRUCTION",
+    "NO_CAVERN_INTERIOR_CONSTRUCTION",
+    "ZERO_PASS_NON_INFERENCE_PRESERVED"
+  ],
+  "verificationAuthorities": {
+    "builder": {
+      "required": true,
+      "receiptPath": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/builder.receipt.v1.json"
+    },
+    "freshRole3": {
+      "required": true,
+      "repairAuthority": false,
+      "freshCheckoutAtExactCandidateHead": true,
+      "receiptPath": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/fresh-role3.receipt.v1.json"
+    },
+    "role5IntegratedEnvironment": {
+      "requiredBeforeAnyUserReviewUrl": true,
+      "receiptPath": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/role5-integrated-environment.receipt.v1.json"
+    },
+    "userDifferential": {
+      "requiredBeforeCheckpointClosure": true,
+      "receiptPath": "h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/terrain-estate-construction-v1/receipts/user-differential.receipt.v1.json"
+    }
+  },
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_OPERATION_LOCK_MISMATCH",
+    "PATH_BOUNDARY_MISMATCH",
+    "SOURCE_IDENTITY_MISMATCH",
+    "DEFERRED_GEOMETRY_AUTHORITY_MISSING",
+    "SITE_ENVELOPE_VIOLATION",
+    "LOW_CORRIDOR_BLOCKED",
+    "TWO_HILL_RELATION_LOST",
+    "MOUNTAINWARD_VIEW_FAILURE",
+    "BEACHWARD_VIEW_FAILURE",
+    "TERRAIN_CONTINUITY_FAILURE",
+    "TRAVERSAL_FAILURE",
+    "ENTRY_ZONE_CONNECTIVITY_FAILURE",
+    "FRONTIER_OR_CAVERN_SCOPE_INTRUSION",
+    "ZERO_PASS_INFERENCE_VIOLATION",
+    "BUILDER_VERIFICATION_FAILURE",
+    "ROLE_3_REPRODUCTION_FAILURE",
+    "ROLE_5_RATIFICATION_FAILURE",
+    "USER_DIFFERENTIAL_NOT_RECORDED",
+    "UNEXPECTED_ERROR"
+  ],
+  "terminalRule": "NO_CHECKPOINT_CLOSURE_AND_NO_MERGE_DEPLOYMENT_OR_RELEASE_UNTIL_ALL_APPLICABLE_PROOFS_AND_SEPARATE_AUTHORITIES_EXIST"
+}

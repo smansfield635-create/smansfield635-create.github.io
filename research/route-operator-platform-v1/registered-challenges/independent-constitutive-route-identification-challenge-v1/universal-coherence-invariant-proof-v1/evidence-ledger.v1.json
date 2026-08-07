@@ -1,0 +1,244 @@
+{
+  "inclusion_policy": "INCLUDE_ALL_IDENTIFIED_MATERIAL_POSITIVE_NEGATIVE_MIXED_AND_UNEVALUABLE_RESULTS",
+  "portfolio_disposition": {
+    "blinded_hidden_structure_in_engineered_system": "SUPPORTED",
+    "coherence_mechanism_in_controlled_systems": "SUPPORTED",
+    "external_software_transfer": "EXPLORATORILY_SUPPORTED",
+    "general_observational_predictive_superiority": "NOT_SUPPORTED",
+    "global_multiplicative_operator": "REJECTED_AS_UNIVERSAL",
+    "surviving_candidate": "INVARIANT_LATTICE_ROUTE_OPERATOR_PENDING_INDEPENDENT_IDENTIFIABILITY_AND_REAL_INTERVENTION_TEST",
+    "universal_natural_law": "NOT_ESTABLISHED"
+  },
+  "records": [
+    {
+      "does_not_establish": [
+        "EMPIRICAL_VALIDITY",
+        "UNIVERSAL_LAW"
+      ],
+      "id": "ROUTE_OPERATOR_PLATFORM_V1",
+      "pr": 496,
+      "result": "PASS_PLATFORM_CONFORMANCE",
+      "role": "SCIENTIFIC_CUSTODY_AND_OPERATOR_PRECEDENCE",
+      "supports": [
+        "FAIL_CLOSED_EVIDENCE",
+        "IDENTITY_AND_VERSION_BINDING"
+      ]
+    },
+    {
+      "does_not_establish": [
+        "EMPIRICAL_RELIABILITY",
+        "PREDICTIVE_VALIDITY"
+      ],
+      "id": "OBSERVER_GRADE_DEPLOYABLE_INSTANCES",
+      "prs": [
+        498,
+        499,
+        500
+      ],
+      "result": "CONFORMANCE_PASS_VALIDITY_OPEN",
+      "role": "INSTRUMENT_IMPLEMENTATION_AND_ROUTE_VERSIONING",
+      "supports": [
+        "ROUTE_DECLARATION",
+        "VERSION_CORRESPONDENCE",
+        "PREDECLARED_REPAIR"
+      ]
+    },
+    {
+      "id": "HOSPITAL_MEASURE_LEVEL_ROBUSTNESS",
+      "limits": [
+        "COLLAPSES_UNEVALUABLE_UNDER_STRICTER_COVERAGE",
+        "STATIC_NO_TRAJECTORY",
+        "NO_OUTCOME_VALIDATION"
+      ],
+      "pr": 545,
+      "result": "THREE_REQUIRED_FACTOR_COLLAPSES_CONCEALED_BY_ADDITIVE_075_TO_080_ON_PERMISSIVE_ROUTE",
+      "sample": {
+        "hospitals": 4769,
+        "measures": 19,
+        "rows": 90611
+      },
+      "supports": [
+        "NONCOMPENSATION_NEED",
+        "AVERAGE_CAN_HIDE_REQUIRED_COLLAPSE",
+        "FACTOR_NONREDUNDANCY"
+      ]
+    },
+    {
+      "id": "FOUR_DOMAIN_PHASE3_EXTERNAL_TESTS",
+      "negative_or_limits": [
+        "HOSPITAL_NO_OUTCOME_TEST",
+        "SPEECH_NO_CLINICAL_DISCRIMINATION",
+        "BEE_NO_RELIABLE_HELD_OUT_TEMPORAL_ASSOCIATION",
+        "DSSI_NO_OUTCOME_TEST"
+      ],
+      "pr": 589,
+      "result": "FOUR_TRACKS_PASS_CLOSED_MINIMUM_EVIDENCE_NO_PHASE4_CANDIDATE",
+      "supports": [
+        "CROSS_SOURCE_EXECUTABILITY",
+        "FROZEN_ROUTE_TRANSFER"
+      ],
+      "tracks": [
+        "DATASUS_HOSPITAL_557",
+        "CLAC_SPEECH_240",
+        "BEE_LONGER_PANEL",
+        "DSSI_CONTINUATION"
+      ]
+    },
+    {
+      "disposition": "MULTIDIMENSIONAL_INCREMENT_SUPPORTED_BUT_OPERATOR_NOT_DISTINGUISHED",
+      "id": "AGRICULTURAL_CS4_TEMPORAL_BLOCK",
+      "limits": [
+        "RETROSPECTIVE",
+        "UNCERTAINTY_INCLUDED_ZERO",
+        "FIXED_EFFECTS_REMOVED_ADVANTAGE"
+      ],
+      "pr": 640,
+      "rejects": [
+        "MULTIPLICATIVE_SUPERIORITY"
+      ],
+      "result": {
+        "cs4_rmse": 0.045644355954,
+        "loss_only_rmse": 0.046688948539,
+        "loss_varroa_rmse": 0.047170597636,
+        "mean4_rmse": 0.045319173431
+      },
+      "supports": [
+        "MULTIDIMENSIONAL_INFORMATION_CAN_ADD_VALUE"
+      ]
+    },
+    {
+      "best_models": {
+        "compressed": "ADDITIVE_FACTORIAL",
+        "overall": "FULL_SENSOR_RIDGE"
+      },
+      "id": "CMAPSS_FD001_UNTOUCHED_VALIDATION",
+      "pr": 648,
+      "rejects": [
+        "GLOBAL_PRODUCT_AS_PRIVILEGED_PREDICTOR"
+      ],
+      "result": "FACTORIAL_TEMPORAL_UTILITY_SUPPORTED_MULTIPLICATIVE_SPECIFICITY_NOT_SUPPORTED",
+      "supports": [
+        "TIME_AND_STATE_SHOULD_BE_SEPARATED",
+        "TRAJECTORY_INFORMATION_CAN_MATTER"
+      ]
+    },
+    {
+      "id": "FACTORIAL_TEMPORAL_DIAGNOSTIC_EXTENSION",
+      "limits": [
+        "MOST_PORTFOLIO_STUDIES_SNAPSHOT_ONLY"
+      ],
+      "pr": 651,
+      "result": "STRUCTURAL_EXTENSION_PASS_NO_UNIVERSAL_THRESHOLDS_CREATED",
+      "supports": [
+        "SEPARATE_CONDITION_DIRECTION_PERSISTENCE_BOTTLENECK"
+      ]
+    },
+    {
+      "id": "AGRICULTURAL_FACTORIAL_TEMPORAL_SUCCESSOR",
+      "limits": [
+        "VARROA_BOTTLENECK_IN_ALL_60_ELIGIBLE_RECORDS",
+        "RETROSPECTIVE_NONCONFIRMATORY"
+      ],
+      "pr": 655,
+      "rejects": [
+        "FIXED_DIRECTION_INCREMENT",
+        "FIXED_PERSISTENCE_INCREMENT",
+        "MULTIPLICATIVE_SPECIFICITY",
+        "INCREMENT_OVER_ORDINARY_OUTCOME_HISTORY"
+      ],
+      "result": "FACTORIAL_TEMPORAL_INCREMENT_NOT_ESTABLISHED",
+      "supports": [
+        "WEAKEST_AND_VARROA_MODELS_WERE_INFERIOR"
+      ]
+    },
+    {
+      "id": "CONTROLLED_RELATION_DISRUPTION_GAUNTLET",
+      "limits": [
+        "THEORY_AUTHORED_ENGINEERED_SYSTEM",
+        "NOT_NATURAL_SYSTEM_VALIDATION"
+      ],
+      "pr": 659,
+      "result": "ENGINEERED_LEVEL4_PREDICTIONS_SURVIVED_9_OF_9",
+      "supports": [
+        "MATCHED_OUTPUT_PROVENANCE_DIFFERENCE",
+        "SELECTIVE_ROUTE_LOSS",
+        "UNRELATED_CAPACITY_NONCOMPENSATION",
+        "SUPPORT_WITHDRAWAL_FAILURE",
+        "RELATION_SPECIFIC_RESTORATION",
+        "FUNCTIONAL_SUBSTITUTION_DISTINCTION",
+        "HYSTERETIC_REENTRY"
+      ]
+    },
+    {
+      "id": "OBSERVER_BLINDED_HIDDEN_STRUCTURE_GAUNTLET",
+      "limits": [
+        "COMPUTATIONAL_OBSERVER",
+        "ENGINEERED_SYSTEM",
+        "NOT_INDEPENDENT_HUMAN_OR_CROSS_DOMAIN_PROOF"
+      ],
+      "pr": 661,
+      "result": "EXACT_RELATION_BOUNDARY_ROUTE_RECOVERY_AND_6_OF_6_HELD_OUT_PREDICTIONS",
+      "supports": [
+        "HIDDEN_STRUCTURE_RECOVERABILITY_IN_BOUNDED_SYSTEM",
+        "OBSERVER_ISOLATION",
+        "HELD_OUT_SELECTIVE_PREDICTION"
+      ]
+    },
+    {
+      "id": "EXTERNALLY_SOURCED_MULTI_SYSTEM_BRIDGE",
+      "industrial_result": {
+        "disposition": "BRIDGE_MIXED",
+        "route_beats_output_history": "1/3",
+        "route_within_5pct_black_box": "1/3",
+        "systems": 3
+      },
+      "limits": [
+        "THEORY_TEAM_WRAPPERS_AND_FEATURE_PARTITIONS",
+        "CONSTITUTIVE_RELATIONS_NOT_INDEPENDENTLY_IDENTIFIED"
+      ],
+      "pr": 671,
+      "rejects": [
+        "GENERAL_OBSERVATIONAL_ROUTE_FEATURE_SUPERIORITY"
+      ],
+      "software_result": {
+        "exact_relation_recovery": "4/4",
+        "matched_output_discrimination": "12/12",
+        "route_predictions": "24/24",
+        "systems": 4
+      },
+      "supports": [
+        "EXTERNALLY_AUTHORED_SOFTWARE_TRANSFER",
+        "ONE_NAVAL_RELATIVE_SUCCESS"
+      ]
+    },
+    {
+      "id": "REAL_INTERVENTION_GAUNTLET_PROTOCOL",
+      "pr": 673,
+      "result": "FROZEN_NOT_EXECUTED",
+      "role": "PRIMARY_MECHANISM_FALSIFICATION_STANDARD",
+      "tests": [
+        "SELECTIVE_ROUTE_LOSS",
+        "NONCOMPENSATION",
+        "SUPPORTED_OUTPUT",
+        "RESTORATION",
+        "HYSTERESIS"
+      ]
+    },
+    {
+      "claim_scope": "UNIVERSAL_IDENTIFIABILITY",
+      "id": "INDEPENDENT_ROUTE_IDENTIFICATION_PROTOCOL",
+      "pr": 684,
+      "result": "FROZEN_VERIFIED_NOT_EXECUTED",
+      "role": "DECISIVE_UNRESOLVED_PREMISE_TEST"
+    },
+    {
+      "calibration_systems_selected": 2,
+      "id": "LIVE_EXECUTION_ACTIVATION",
+      "pr": 687,
+      "result": "ACTIVE_PRE_TARGET_EXECUTION",
+      "scientific_result": "NONE"
+    }
+  ],
+  "schema_id": "UNIVERSAL_COHERENCE_EXISTING_PORTFOLIO_EVIDENCE_LEDGER_v1",
+  "version": "1.0.0"
+}

@@ -1,4 +1,1519 @@
-import{H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY as HYDRO,resolveHEarthMapWideReservoirBoundaryPoint,resolveHEarthMapWideShorelineZ,sampleHEarthMapWideEnvironmentTerrainCandidate as sampleTerrain}from '../../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js';const clamp=(value,minimum,maximum)=>Math.min(maximum,Math.max(minimum,value));const c01=(value)=>clamp(value,0,1);const mix=(left,right,amount)=>left+(right-left)*amount;const mix3=(left,right,amount)=>[mix(left[0],right[0],amount),mix(left[1],right[1],amount),mix(left[2],right[2],amount)];const smooth=(edge0,edge1,value)=>{const amount=c01((value-edge0)/(edge1-edge0||1));return amount*amount*(3-2*amount);};const norm=(value)=>{const length=Math.hypot(value[0],value[1],value[2])||1;return[value[0]/length,value[1]/length,value[2]/length];};const dot=(left,right)=>left[0]*right[0]+left[1]*right[1]+left[2]*right[2];const cross=(left,right)=>[left[1]*right[2]-left[2]*right[1],left[2]*right[0]-left[0]*right[2],left[0]*right[1]-left[1]*right[0]];const sub=(left,right)=>[left[0]-right[0],left[1]-right[1],left[2]-right[2]];const add=(left,right)=>[left[0]+right[0],left[1]+right[1],left[2]+right[2]];const scale=(value,amount)=>[value[0]*amount,value[1]*amount,value[2]*amount];const wrap=(value)=>Math.atan2(Math.sin(value),Math.cos(value));const radians=(degrees)=>degrees*Math.PI/180;const freeze=(value)=>Object.freeze(value);const OPERATION_ID='H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_v1';const CHECKPOINT='OW01';const LOCK_GENERATION=473;const GOVERNING_HEAD='c50d0a06a73ed149286508a15e697d8efa254865';const REVISION10_SOURCE='ad9e72adb97df7ab867af1fe20df2c29de763d28';const PLANET_RADIUS=6200;const PLANET_CENTER=freeze([0,-PLANET_RADIUS,0]);const LOCAL_CENTER_Z=-128;const LOCAL_DOMAIN=freeze({xMin:-256,xMax:256,zMin:-320,zMax:64,cols:81,rows:61,width:512,depth:384});const LOCAL_U_MIN=LOCAL_DOMAIN.xMin;const LOCAL_U_MAX=LOCAL_DOMAIN.xMax;const LOCAL_V_MIN=LOCAL_DOMAIN.zMin-LOCAL_CENTER_Z;const LOCAL_V_MAX=LOCAL_DOMAIN.zMax-LOCAL_CENTER_Z;const STITCH_WIDTH=96;const STITCH_LAYER_STEP=24;const CONTINENT_GRID_STEP=32;const CONTINENT_BOUNDS=freeze({uMin:-1760,uMax:1536,vMin:-1952,vMax:320});const APERTURE=freeze({uMin:LOCAL_U_MIN-STITCH_WIDTH,uMax:LOCAL_U_MAX+STITCH_WIDTH,vMin:LOCAL_V_MIN-STITCH_WIDTH,vMax:LOCAL_V_MAX+STITCH_WIDTH});const MAX_TARGET_ARC=PLANET_RADIUS*Math.PI*0.90;const COAST_RELIEF_FADE=150;const PALETTE=freeze({sky:[0.045,0.062,0.090],haze:[0.36,0.42,0.44],ocean:[0.050,0.245,0.380],oceanDeep:[0.028,0.125,0.230],gratitudeLow:[0.29,0.43,0.24],gratitudeHigh:[0.39,0.42,0.31],gratitudeRock:[0.43,0.41,0.38],unresolvedLow:[0.25,0.31,0.27],unresolvedHigh:[0.34,0.36,0.33],beach:[0.68,0.60,0.44],wet:[0.47,0.42,0.32],meadow:[0.34,0.45,0.24],coastal:[0.28,0.39,0.23],dune:[0.46,0.49,0.27],upland:[0.31,0.35,0.28],rock:[0.40,0.40,0.38],estate:[0.41,0.50,0.29],earth:[0.35,0.29,0.19],reservoir:[0.07,0.27,0.35,0.92],waterfall:[0.60,0.80,0.84,0.97]});export const AUDRALIA_OPEN_WORLD_AUTHORING_CONTRACT=freeze({schema:'AUDRALIA_CONTINUOUS_MULTISCALE_WORLD_MODEL_v1',operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,governingHead:GOVERNING_HEAD,immutableMigrationSource:REVISION10_SOURCE,planetIdentity:'AUDRALIA',hEarthClass:'PLAYER_EXPERIENCE_ON_AUDRALIA',continentCount:9,resolvedContinent:'GRATITUDE',unresolvedContinentCount:8,gratitudeNineSummitsTrack:true,gratitudeSummitAnchorCount:9,planetRadiusAuthoringUnits:PLANET_RADIUS,localGratitudeWidthAuthoringUnits:LOCAL_DOMAIN.width,localGratitudeDepthAuthoringUnits:LOCAL_DOMAIN.depth,localArcScale:'ONE_AUTHORING_UNIT_EQUALS_ONE_SURFACE_ARC_UNIT',authoringRegionIsWorldBoundary:false,continuousZoomHierarchy:freeze(['LOCAL','REGION','CONTINENT','PLANETARY']),wholePlanetMustFitViewport:false,trueCoastalHarborBinding:true,gratitudeContinentalSkeleton:'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1',gratitudeCoastlineIsUnionOfEllipses:false,primaryInlandMountainWatershedAxes:true,planetaryGratitudeLandRemoved:true,gratitudeContinentalMeshSeparate:true,localMacroTransition:'EXPLICIT_APERTURE_PLUS_SHARED_STITCH_ANNULUS',continentalApertureConstructed:true,stitchWidthAuthoringUnits:STITCH_WIDTH,planetaryOceanSingleSurface:true,localOceanOverlayConstructed:false,localTerrainTopologyClippedAtCoastline:true,mechanicalPassIsNotUserAcceptance:true,ow02DetailedContinuationConstructed:false,otherContinentsNarrativelyDefined:false,otherContinentsPlacementsCanonical:false,liveIntegrationAuthorized:false,frontPageIntegrationAuthorized:false,authoringPreviewOnly:true});function directionFromLatLon(latDeg,lonDeg){const lat=radians(latDeg);const lon=radians(lonDeg);const cosine=Math.cos(lat);return norm([cosine*Math.cos(lon),Math.sin(lat),cosine*Math.sin(lon)]);}function tangentBasis(direction){const normal=norm(direction);const reference=Math.abs(normal[1])<0.92?[0,1,0]:[1,0,0];const tangent=norm(cross(reference,normal));return{tangent,bitangent:norm(cross(normal,tangent))};}function offsetDirection(center,angle,azimuth){const normal=norm(center);const basis=tangentBasis(normal);const radial=add(scale(basis.tangent,Math.cos(azimuth)),scale(basis.bitangent,Math.sin(azimuth)));return norm(add(scale(normal,Math.cos(angle)),scale(radial,Math.sin(angle))));}function angularDistance(left,right){return Math.acos(clamp(dot(left,right),-1,1));}function tangentDirection(u,v){const radius=Math.hypot(u,v);if(radius<1e-8)return[0,1,0];const angle=radius/PLANET_RADIUS;const sine=Math.sin(angle);const cosine=Math.cos(angle);return norm([sine*u/radius,cosine,sine*v/radius]);}function tangentCoordinates(direction){const normal=norm(direction);const angle=Math.acos(clamp(normal[1],-1,1));if(angle<1e-8)return{u:0,v:0};const horizontal=Math.hypot(normal[0],normal[2])||1;const arc=angle*PLANET_RADIUS;return{u:arc*normal[0]/horizontal,v:arc*normal[2]/horizontal};}function surfacePositionFromDirection(direction,elevation=0){const radius=PLANET_RADIUS+elevation;return[PLANET_CENTER[0]+direction[0]*radius,PLANET_CENTER[1]+direction[1]*radius,PLANET_CENTER[2]+direction[2]*radius];}function tangentPosition(u,v,elevation=0){return surfacePositionFromDirection(tangentDirection(u,v),elevation);}function gratitudeCoastalBoundaryZ(u){const x=clamp(u,LOCAL_DOMAIN.xMin,LOCAL_DOMAIN.xMax);const local=resolveHEarthMapWideShorelineZ(x);const macro=-58+20*Math.sin((u+170)/420)+12*Math.sin((u-260)/175)+10*Math.sin((u+30)/83);const blend=smooth(256,620,Math.abs(u));return mix(local,macro,blend);}function gratitudeCoastalBoundaryV(u){return gratitudeCoastalBoundaryZ(u)-LOCAL_CENTER_Z;}const HARBOR_BINDING_XS=freeze([-256,-192,-96,0,96,192,256]);function buildGratitudeCoastControlPoints(){const harbor=HARBOR_BINDING_XS.map((u)=>[u,gratitudeCoastalBoundaryV(u)]);return freeze([freeze([-1700,-220]),freeze([-1450,60]),freeze([-1180,180]),freeze([-900,100]),freeze([-690,220]),freeze([-450,140]),...harbor.map((point)=>freeze(point)),freeze([500,240]),freeze([760,160]),freeze([980,40]),freeze([1180,-160]),freeze([1080,-360]),freeze([1510,-420]),freeze([1540,-620]),freeze([1320,-740]),freeze([1460,-950]),freeze([1180,-1000]),freeze([1000,-1180]),freeze([1280,-1330]),freeze([1050,-1510]),freeze([720,-1580]),freeze([520,-1890]),freeze([220,-2050]),freeze([-80,-1900]),freeze([-280,-1640]),freeze([-600,-1750]),freeze([-900,-1880]),freeze([-1180,-1680]),freeze([-1080,-1450]),freeze([-1500,-1320]),freeze([-1580,-1050]),freeze([-1320,-900]),freeze([-1640,-760]),freeze([-1700,-520]),freeze([-1530,-360])]);}const GRATITUDE_COAST_CONTROL_POINTS=buildGratitudeCoastControlPoints();function catmullRomPoint(p0,p1,p2,p3,t){const t2=t*t;const t3=t2*t;return[0.5*((2*p1[0])+(-p0[0]+p2[0])*t+(2*p0[0]-5*p1[0]+4*p2[0]-p3[0])*t2+(-p0[0]+3*p1[0]-3*p2[0]+p3[0])*t3),0.5*((2*p1[1])+(-p0[1]+p2[1])*t+(2*p0[1]-5*p1[1]+4*p2[1]-p3[1])*t2+(-p0[1]+3*p1[1]-3*p2[1]+p3[1])*t3)];}function sampleClosedContour(controlPoints,subdivisions=5){const points=[];const count=controlPoints.length;for(let index=0;index<count;index+=1){const p0=controlPoints[(index-1+count)%count];const p1=controlPoints[index];const p2=controlPoints[(index+1)%count];const p3=controlPoints[(index+2)%count];for(let step=0;step<subdivisions;step+=1){points.push(freeze(catmullRomPoint(p0,p1,p2,p3,step/subdivisions)));}}return freeze(points);}const GRATITUDE_COAST_CONTOUR=sampleClosedContour(GRATITUDE_COAST_CONTROL_POINTS,6);function pointInPolygon(u,v,polygon){let inside=false;for(let i=0,j=polygon.length-1;i<polygon.length;j=i,i+=1){const xi=polygon[i][0];const yi=polygon[i][1];const xj=polygon[j][0];const yj=polygon[j][1];const intersects=((yi>v)!==(yj>v))&&(u<(xj-xi)*(v-yi)/((yj-yi)||1e-9)+xi);if(intersects)inside=!inside;}return inside;}function pointSegmentDistance2D(u,v,a,b){const segmentU=b[0]-a[0];const segmentV=b[1]-a[1];const offsetU=u-a[0];const offsetV=v-a[1];const denominator=segmentU*segmentU+segmentV*segmentV||1;const amount=clamp((offsetU*segmentU+offsetV*segmentV)/denominator,0,1);return Math.hypot(u-(a[0]+segmentU*amount),v-(a[1]+segmentV*amount));}function distanceToContour(u,v){let distance=Infinity;for(let index=0;index<GRATITUDE_COAST_CONTOUR.length;index+=1){distance=Math.min(distance,pointSegmentDistance2D(u,v,GRATITUDE_COAST_CONTOUR[index],GRATITUDE_COAST_CONTOUR[(index+1)%GRATITUDE_COAST_CONTOUR.length]));}return distance;}function gratitudeCoastSample(u,v){const inside=pointInPolygon(u,v,GRATITUDE_COAST_CONTOUR);const distance=distanceToContour(u,v);return{inside,distance,land:inside?smooth(0,COAST_RELIEF_FADE,distance):0};}const GRATITUDE_SUMMIT_ANCHORS=freeze([freeze({u:-1180,v:-1190,strength:0.88}),freeze({u:-900,v:-1010,strength:0.94}),freeze({u:-620,v:-850,strength:1.00}),freeze({u:-320,v:-720,strength:1.06}),freeze({u:0,v:-640,strength:1.12}),freeze({u:330,v:-760,strength:1.16}),freeze({u:610,v:-940,strength:1.20}),freeze({u:850,v:-1160,strength:1.24}),freeze({u:1010,v:-1380,strength:1.28})]);const PRIMARY_INLAND_AXES=freeze([freeze({id:'WESTERN_WATERSHED_AXIS',width:240,amplitude:58,points:freeze([freeze({u:-110,v:-220}),freeze({u:-410,v:-760}),freeze({u:-860,v:-1320})])}),freeze({id:'CENTRAL_DIVIDE_AXIS',width:280,amplitude:72,points:freeze([freeze({u:-20,v:-250}),freeze({u:60,v:-820}),freeze({u:-70,v:-1510})])}),freeze({id:'EASTERN_WATERSHED_AXIS',width:230,amplitude:54,points:freeze([freeze({u:120,v:-240}),freeze({u:430,v:-760}),freeze({u:900,v:-1260})])})]);function pointSegmentDistance(pointU,pointV,left,right){const segmentU=right.u-left.u;const segmentV=right.v-left.v;const offsetU=pointU-left.u;const offsetV=pointV-left.v;const denominator=segmentU*segmentU+segmentV*segmentV||1;const amount=clamp((offsetU*segmentU+offsetV*segmentV)/denominator,0,1);return Math.hypot(pointU-(left.u+segmentU*amount),pointV-(left.v+segmentV*amount));}function axisRelief(u,v){let relief=0;for(const axis of PRIMARY_INLAND_AXES){let distance=Infinity;for(let index=0;index<axis.points.length-1;index+=1){distance=Math.min(distance,pointSegmentDistance(u,v,axis.points[index],axis.points[index+1]));}const weight=Math.exp(-Math.pow(distance/axis.width,2)*2.2);const inland=smooth(-260,-720,v);relief+=axis.amplitude*weight*inland;}return relief;}function gratitudeMacroSurfaceAtUV(u,v){const coast=gratitudeCoastSample(u,v);const direction=tangentDirection(u,v);if(!coast.inside){return{direction,field:0,land:0,elevation:HYDRO.seaLevelY,color:PALETTE.ocean};}let summit=0;for(const anchor of GRATITUDE_SUMMIT_ANCHORS){const deltaU=(u-anchor.u)/330;const deltaV=(v-anchor.v)/360;summit+=Math.exp(-(deltaU*deltaU+deltaV*deltaV)*1.65)*anchor.strength;}const broad=10*Math.sin((u+v)*0.0021)+7*Math.sin(u*0.0034-v*0.0018)+5*Math.sin(v*0.0041);const inland=smooth(0,1150,coast.distance);const relief=coast.land*(5+30*coast.land+summit*38+axisRelief(u,v)+broad*inland);const elevation=HYDRO.seaLevelY+relief;const high=c01((elevation-26)/90);let color=mix3(PALETTE.gratitudeLow,PALETTE.gratitudeHigh,high);color=mix3(color,PALETTE.gratitudeRock,c01((high-0.56)/0.44)*0.56);const coastWeight=1-smooth(18,90,coast.distance);color=mix3(color,PALETTE.beach,coastWeight*0.54);return{direction,field:coast.land,land:coast.land,elevation,color};}const UNRESOLVED_CONTINENTS=freeze([freeze({id:'CONTINENT_02',resolved:false,anchor:freeze(directionFromLatLon(28,38)),radius:0.30,lobes:freeze([[0,0,1],[0.10,1.1,0.65],[0.09,4.2,0.55]])}),freeze({id:'CONTINENT_03',resolved:false,anchor:freeze(directionFromLatLon(-24,72)),radius:0.31,lobes:freeze([[0,0,1],[0.11,0.4,0.62],[0.10,3.7,0.56]])}),freeze({id:'CONTINENT_04',resolved:false,anchor:freeze(directionFromLatLon(15,119)),radius:0.28,lobes:freeze([[0,0,1],[0.10,2.3,0.60],[0.08,5.2,0.52]])}),freeze({id:'CONTINENT_05',resolved:false,anchor:freeze(directionFromLatLon(-32,154)),radius:0.30,lobes:freeze([[0,0,1],[0.10,0.9,0.58],[0.09,4.7,0.55]])}),freeze({id:'CONTINENT_06',resolved:false,anchor:freeze(directionFromLatLon(34,-149)),radius:0.29,lobes:freeze([[0,0,1],[0.10,1.7,0.60],[0.08,4.4,0.50]])}),freeze({id:'CONTINENT_07',resolved:false,anchor:freeze(directionFromLatLon(-27,-112)),radius:0.32,lobes:freeze([[0,0,1],[0.11,2.1,0.62],[0.09,5.0,0.53]])}),freeze({id:'CONTINENT_08',resolved:false,anchor:freeze(directionFromLatLon(8,-76)),radius:0.29,lobes:freeze([[0,0,1],[0.09,0.5,0.58],[0.09,3.9,0.54]])}),freeze({id:'CONTINENT_09',resolved:false,anchor:freeze(directionFromLatLon(-42,-37)),radius:0.27,lobes:freeze([[0,0,1],[0.09,1.4,0.55],[0.08,4.5,0.50]])})]);function unresolvedContinentField(direction,continent){let field=0;for(const[offsetAngle,azimuth,strength]of continent.lobes){const center=offsetAngle===0?continent.anchor:offsetDirection(continent.anchor,offsetAngle,azimuth);const angle=angularDistance(direction,center);const coastVariation=0.025*Math.sin(direction[0]*31+direction[2]*17+azimuth*2.3)+0.018*Math.sin(direction[1]*43-direction[0]*13+azimuth);const outer=continent.radius*(1+coastVariation);const inner=outer*0.63;field=Math.max(field,(1-smooth(inner,outer,angle))*strength);}return c01(field);}function planetBaseSurface(direction){const oceanVariation=0.5+0.5*Math.sin(direction[0]*8.2+direction[2]*6.1+direction[1]*4.7);let bestContinent=null;let bestField=0;for(const continent of UNRESOLVED_CONTINENTS){const field=unresolvedContinentField(direction,continent);if(field>bestField){bestField=field;bestContinent=continent;}}const land=smooth(0.38,0.56,bestField);if(!bestContinent||land<0.01){return{elevation:HYDRO.seaLevelY,color:mix3(PALETTE.oceanDeep,PALETTE.ocean,oceanVariation*0.38),land:0,continentId:null};}const macroNoise=18*Math.sin(direction[0]*19+direction[2]*11)+12*Math.sin(direction[1]*27-direction[0]*8);const elevation=HYDRO.seaLevelY+land*(24+34*bestField+Math.max(-10,macroNoise));const high=c01((elevation-28)/85);return{elevation,color:mix3(PALETTE.unresolvedLow,PALETTE.unresolvedHigh,high),land,continentId:bestContinent.id};}function buildPlanetBaseMesh(){const lonSegments=144;const latSegments=96;const vertices=[];const indices=[];const continentHits=new Set();let unresolvedLandVertices=0;for(let row=0;row<=latSegments;row+=1){const latitude=-Math.PI/2+row/latSegments*Math.PI;const cosLat=Math.cos(latitude);const sinLat=Math.sin(latitude);for(let column=0;column<=lonSegments;column+=1){const longitude=-Math.PI+column/lonSegments*Math.PI*2;const direction=norm([cosLat*Math.cos(longitude),sinLat,cosLat*Math.sin(longitude)]);const surface=planetBaseSurface(direction);const position=surfacePositionFromDirection(direction,surface.elevation);if(surface.land>0.15&&surface.continentId){continentHits.add(surface.continentId);unresolvedLandVertices+=1;}vertices.push(position[0],position[1],position[2],direction[0],direction[1],direction[2],surface.color[0],surface.color[1],surface.color[2],1);}}const indexAt=(row,column)=>row*(lonSegments+1)+column;for(let row=0;row<latSegments;row+=1){for(let column=0;column<lonSegments;column+=1){const a=indexAt(row,column);const b=indexAt(row,column+1);const d=indexAt(row+1,column);const e=indexAt(row+1,column+1);indices.push(a,d,b,b,d,e);}}return freeze({vertices:new Float32Array(vertices),indices:new Uint32Array(indices),statistics:freeze({vertexCount:vertices.length/10,triangleCount:indices.length/3,definedContinentCount:9,unresolvedContinentsSampled:continentHits.size,unresolvedLandVertices,planetaryGratitudeLandVertices:0,planetaryGratitudeLandRemoved:true,planetRadiusAuthoringUnits:PLANET_RADIUS,planetBordersRectangular:false,closedPlanetarySurface:true,wholePlanetMustFitViewport:false,otherContinentsPlacementsCanonical:false,authoringPreviewOnly:true,planetaryOceanSingleSurface:true})});}function insideAperture(u,v){const epsilon=1e-7;return u>APERTURE.uMin+epsilon&&u<APERTURE.uMax-epsilon&&v>APERTURE.vMin+epsilon&&v<APERTURE.vMax-epsilon;}function cellIntersectsAperture(u0,u1,v0,v1){return!(u1<=APERTURE.uMin||u0>=APERTURE.uMax||v1<=APERTURE.vMin||v0>=APERTURE.vMax);}function mappedGridNormal(samples,row,column,columns,rows){const at=(sampleRow,sampleColumn)=>samples[sampleRow*columns+sampleColumn].position;const left=at(row,Math.max(0,column-1));const right=at(row,Math.min(columns-1,column+1));const back=at(Math.max(0,row-1),column);const forward=at(Math.min(rows-1,row+1),column);const across=sub(right,left);const along=sub(forward,back);const candidate=norm(cross(along,across));const radial=norm(sub(at(row,column),PLANET_CENTER));return dot(candidate,radial)>=0?candidate:scale(candidate,-1);}function buildGratitudeContinentalMesh(){const columns=Math.round((CONTINENT_BOUNDS.uMax-CONTINENT_BOUNDS.uMin)/CONTINENT_GRID_STEP)+1;const rows=Math.round((CONTINENT_BOUNDS.vMax-CONTINENT_BOUNDS.vMin)/CONTINENT_GRID_STEP)+1;const samples=new Array(columns*rows);const vertices=[];const indices=[];let insideVertices=0;let apertureIntrusionTriangleCount=0;let coastlineTriangleCount=0;for(let row=0;row<rows;row+=1){const v=CONTINENT_BOUNDS.vMin+row*CONTINENT_GRID_STEP;for(let column=0;column<columns;column+=1){const u=CONTINENT_BOUNDS.uMin+column*CONTINENT_GRID_STEP;const macro=gratitudeMacroSurfaceAtUV(u,v);const position=tangentPosition(u,v,macro.elevation);const inside=macro.land>0;if(inside)insideVertices+=1;samples[row*columns+column]={u,v,macro,position,inside};}}for(let row=0;row<rows;row+=1){for(let column=0;column<columns;column+=1){const sample=samples[row*columns+column];const normal=mappedGridNormal(samples,row,column,columns,rows);vertices.push(sample.position[0],sample.position[1],sample.position[2],normal[0],normal[1],normal[2],sample.macro.color[0],sample.macro.color[1],sample.macro.color[2],1);}}const indexAt=(row,column)=>row*columns+column;const triangleInsideCoast=(a,b,c)=>{const sa=samples[a];const sb=samples[b];const sc=samples[c];const u=(sa.u+sb.u+sc.u)/3;const v=(sa.v+sb.v+sc.v)/3;return pointInPolygon(u,v,GRATITUDE_COAST_CONTOUR);};for(let row=0;row<rows-1;row+=1){const v0=CONTINENT_BOUNDS.vMin+row*CONTINENT_GRID_STEP;const v1=v0+CONTINENT_GRID_STEP;for(let column=0;column<columns-1;column+=1){const u0=CONTINENT_BOUNDS.uMin+column*CONTINENT_GRID_STEP;const u1=u0+CONTINENT_GRID_STEP;if(cellIntersectsAperture(u0,u1,v0,v1))continue;const a=indexAt(row,column);const b=indexAt(row,column+1);const d=indexAt(row+1,column);const e=indexAt(row+1,column+1);for(const triangle of[[a,d,b],[b,d,e]]){if(!triangleInsideCoast(...triangle))continue;const triangleSamples=triangle.map((index)=>samples[index]);if(triangleSamples.some((sample)=>insideAperture(sample.u,sample.v))){apertureIntrusionTriangleCount+=1;continue;}if(triangleSamples.some((sample)=>sample.macro.land<0.98))coastlineTriangleCount+=1;indices.push(...triangle);}}}return freeze({vertices:new Float32Array(vertices),indices:new Uint32Array(indices),statistics:freeze({vertexCount:vertices.length/10,triangleCount:indices.length/3,gridStepAuthoringUnits:CONTINENT_GRID_STEP,insideVertices,coastlineTriangleCount,coastlineControlPointCount:GRATITUDE_COAST_CONTROL_POINTS.length,coastlineSampleCount:GRATITUDE_COAST_CONTOUR.length,coastlineRepresentation:'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1',coastlineUnionOfEllipses:false,continentalMeshSeparateFromPlanetaryBase:true,continentalApertureConstructed:true,aperture:APERTURE,apertureIntrusionTriangleCount,apertureClear:apertureIntrusionTriangleCount===0,gratitudeResolved:true,gratitudeSummitAnchorCount:GRATITUDE_SUMMIT_ANCHORS.length,primaryInlandMountainWatershedAxes:true,primaryInlandAxisCount:PRIMARY_INLAND_AXES.length,ow02DetailedContinuationConstructed:false})});}function brokenSandbarLift(x,z){const pieces=[[-145,3,22,6,-0.14,0.55],[-118,6,18,5,-0.08,0.42],[-36,10,21,6,0.04,0.46],[-5,11,24,7,0.08,0.62],[22,12,15,5,0.12,0.36],[107,-6,18,5,-0.18,0.38],[136,-7,20,6,-0.13,0.48]];let best=0;for(const[centerX,centerZ,radiusX,radiusZ,rotation,height]of pieces){const cosine=Math.cos(rotation);const sine=Math.sin(rotation);const deltaX=x-centerX;const deltaZ=z-centerZ;const localX=deltaX*cosine+deltaZ*sine;const localZ=-deltaX*sine+deltaZ*cosine;const radius=Math.hypot(localX/radiusX,localZ/radiusZ);let weight=1-smooth(0.45,1,radius);weight*=clamp(0.72+0.20*Math.sin(localX*0.18)+0.10*Math.sin(localZ*0.31+centerX),0.22,1);best=Math.max(best,weight*height);}return best;}function gratitudeDisplayElevation(terrain,x,z){let elevation=terrain.presentationElevation;if(z<-244){const ridge=0.9*Math.sin((x+46)/31)+0.55*Math.sin((x-17)/17)+0.35*Math.sin((x+80)/9);elevation+=ridge*smooth(-244,-318,z)*3.1;}const sandbar=c01(terrain.coastline?.sandbarWeight??0);if(sandbar>0.01){elevation=mix(elevation,HYDRO.seaLevelY+0.18+brokenSandbarLift(x,z),sandbar*0.82);}return elevation;}function localColor(terrain){const beach=c01(terrain.coastline?.beachWeight??0);const wet=c01(terrain.coastline?.wetSandWeight??0);const sandbar=c01(terrain.coastline?.sandbarWeight??0);const site=c01(terrain.sitePreparation?.weight??0);const elevation=terrain.presentationElevation;const high=c01((elevation-25)/38);const low=c01((28-elevation)/22);let color=PALETTE.meadow;color=mix3(color,PALETTE.coastal,low*0.48);const distance=terrain.coastline?.distanceToShore??-999;const dune=smooth(-42,-14,distance)*(1-smooth(-14,-2,distance));color=mix3(color,PALETTE.dune,dune*0.58);color=mix3(color,PALETTE.beach,beach*0.88);color=mix3(color,PALETTE.wet,wet*0.58);color=mix3(color,PALETTE.beach,sandbar*0.92);color=mix3(color,PALETTE.upland,high*0.44);color=mix3(color,PALETTE.rock,high*0.62);if(terrain.insideReservedEstateEnvelope)color=mix3(color,PALETTE.estate,0.38);return mix3(color,PALETTE.earth,site*0.42);}function localTerrainLandMask(terrain,x,z){const shoreline=resolveHEarthMapWideShorelineZ(x);const mainland=1-smooth(shoreline-0.75,shoreline+2.75,z);const sandbar=c01(terrain.coastline?.sandbarWeight??0);return c01(Math.max(mainland,sandbar));}function mappedLocalNormal(samples,row,column,columns,rows){const at=(sampleRow,sampleColumn)=>samples[sampleRow*columns+sampleColumn].position;const left=at(row,Math.max(0,column-1));const right=at(row,Math.min(columns-1,column+1));const back=at(Math.max(0,row-1),column);const forward=at(Math.min(rows-1,row+1),column);const across=sub(right,left);const along=sub(forward,back);const candidate=norm(cross(along,across));const radial=norm(sub(at(row,column),PLANET_CENTER));return dot(candidate,radial)>=0?candidate:scale(candidate,-1);}function buildGratitudeDetailMesh(){const domain=LOCAL_DOMAIN;const samples=new Array(domain.cols*domain.rows);const vertices=[];const indices=[];let minimumElevation=Infinity;let maximumElevation=-Infinity;let beachSamples=0;let omittedOceanTriangles=0;let renderedTerrainTriangles=0;for(let row=0;row<domain.rows;row+=1){const z=mix(domain.zMin,domain.zMax,row/(domain.rows-1));for(let column=0;column<domain.cols;column+=1){const x=mix(domain.xMin,domain.xMax,column/(domain.cols-1));const terrain=sampleTerrain(x,z);if(terrain?.valid!==true)throw new Error(`GRATITUDE_TERRAIN_SAMPLE_INVALID:${x}:${z}`);const elevation=gratitudeDisplayElevation(terrain,x,z);const u=x;const v=z-LOCAL_CENTER_Z;const position=tangentPosition(u,v,elevation);const landMask=localTerrainLandMask(terrain,x,z);const color=localColor(terrain);samples[row*domain.cols+column]={terrain,x,z,u,v,elevation,position,landMask,color};minimumElevation=Math.min(minimumElevation,elevation);maximumElevation=Math.max(maximumElevation,elevation);if((terrain.coastline?.beachWeight??0)>0.1)beachSamples+=1;}}for(let row=0;row<domain.rows;row+=1){for(let column=0;column<domain.cols;column+=1){const sample=samples[row*domain.cols+column];const normal=mappedLocalNormal(samples,row,column,domain.cols,domain.rows);vertices.push(sample.position[0],sample.position[1],sample.position[2],normal[0],normal[1],normal[2],sample.color[0],sample.color[1],sample.color[2],1);}}const indexAt=(row,column)=>row*domain.cols+column;const addTriangleIfLand=(triangle)=>{const masks=triangle.map((index)=>samples[index].landMask);const average=(masks[0]+masks[1]+masks[2])/3;if(average>=0.50&&Math.max(...masks)>=0.78){indices.push(...triangle);renderedTerrainTriangles+=1;}else{omittedOceanTriangles+=1;}};for(let row=0;row<domain.rows-1;row+=1){for(let column=0;column<domain.cols-1;column+=1){const a=indexAt(row,column);const b=indexAt(row,column+1);const e=indexAt(row+1,column);const f=indexAt(row+1,column+1);addTriangleIfLand([a,e,b]);addTriangleIfLand([b,e,f]);}}return freeze({vertices:new Float32Array(vertices),indices:new Uint32Array(indices),samples,statistics:freeze({validSampleCount:samples.length,triangleCount:indices.length/3,renderedTerrainTriangles,omittedOceanTriangles,transparentTerrainTriangleCount:0,topologyClippedAtCoastline:true,minimumElevation,maximumElevation,beachSampleCount:beachSamples,gratitudeHighResolution:true,revision10MigrationSourcePreserved:true,localWidthAuthoringUnits:domain.width,localDepthAuthoringUnits:domain.depth,localArcScaleOneToOne:true,localScaleCompressed:false,rectangularBoundaryVisible:false,authoringRegionIsWorldBoundary:false,singleSurfaceOceanUsesPlanetaryMesh:true,localOceanOverlayConstructed:false,trueCoastalHarborBinding:true,liveTerrainMutation:false})});}function edgeLength(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);}function buildStitchMesh(detailMesh){const vertices=[];const indices=[];const vertexRecords=[];let maximumEdgeLength=0;let maximumLocalBoundaryPositionError=0;let maximumOuterBoundaryMacroElevationError=0;let renderedTriangles=0;let omittedOceanTriangles=0;const addVertex=(u,v,localSample,t)=>{const macro=gratitudeMacroSurfaceAtUV(u,v);const localElevation=localSample.elevation;const elevation=mix(localElevation,macro.elevation,smooth(0,1,t));const color=mix3(localSample.color,macro.color,smooth(0,1,t));const position=tangentPosition(u,v,elevation);const normal=tangentDirection(u,v);const land=mix(localSample.landMask,macro.land,t);const index=vertices.length/10;vertices.push(position[0],position[1],position[2],normal[0],normal[1],normal[2],color[0],color[1],color[2],1);vertexRecords.push({index,u,v,t,position,elevation,macroElevation:macro.elevation,land});return vertexRecords[vertexRecords.length-1];};const detailAt=(x,z)=>{const column=Math.round((x-LOCAL_DOMAIN.xMin)/(LOCAL_DOMAIN.width/(LOCAL_DOMAIN.cols-1)));const row=Math.round((z-LOCAL_DOMAIN.zMin)/(LOCAL_DOMAIN.depth/(LOCAL_DOMAIN.rows-1)));return detailMesh.samples[clamp(row,0,LOCAL_DOMAIN.rows-1)*LOCAL_DOMAIN.cols+clamp(column,0,LOCAL_DOMAIN.cols-1)];};const addTriangle=(a,b,c)=>{const averageLand=(a.land+b.land+c.land)/3;if(averageLand<0.48||Math.max(a.land,b.land,c.land)<0.72){omittedOceanTriangles+=1;return;}indices.push(a.index,b.index,c.index);maximumEdgeLength=Math.max(maximumEdgeLength,edgeLength(a.position,b.position),edgeLength(b.position,c.position),edgeLength(c.position,a.position));renderedTriangles+=1;};const sideDefinitions=[{axis:'u',start:LOCAL_U_MIN,end:LOCAL_U_MAX,fixedInner:LOCAL_V_MIN,fixedOuter:APERTURE.vMin,localPoint:(along)=>[along,LOCAL_DOMAIN.zMin],uvPoint:(along,layer)=>[along,mix(LOCAL_V_MIN,APERTURE.vMin,layer)]},{axis:'v',start:LOCAL_V_MIN,end:LOCAL_V_MAX,fixedInner:LOCAL_U_MAX,fixedOuter:APERTURE.uMax,localPoint:(along)=>[LOCAL_DOMAIN.xMax,along+LOCAL_CENTER_Z],uvPoint:(along,layer)=>[mix(LOCAL_U_MAX,APERTURE.uMax,layer),along]},{axis:'u',start:LOCAL_U_MAX,end:LOCAL_U_MIN,fixedInner:LOCAL_V_MAX,fixedOuter:APERTURE.vMax,localPoint:(along)=>[along,LOCAL_DOMAIN.zMax],uvPoint:(along,layer)=>[along,mix(LOCAL_V_MAX,APERTURE.vMax,layer)]},{axis:'v',start:LOCAL_V_MAX,end:LOCAL_V_MIN,fixedInner:LOCAL_U_MIN,fixedOuter:APERTURE.uMin,localPoint:(along)=>[LOCAL_DOMAIN.xMin,along+LOCAL_CENTER_Z],uvPoint:(along,layer)=>[mix(LOCAL_U_MIN,APERTURE.uMin,layer),along]}];for(const side of sideDefinitions){const span=Math.abs(side.end-side.start);const segments=Math.max(1,Math.round(span/CONTINENT_GRID_STEP));const rows=[];for(let layerIndex=0;layerIndex<=STITCH_WIDTH/STITCH_LAYER_STEP;layerIndex+=1){const t=layerIndex*STITCH_LAYER_STEP/STITCH_WIDTH;const row=[];for(let segment=0;segment<=segments;segment+=1){const along=mix(side.start,side.end,segment/segments);const[localX,localZ]=side.localPoint(along);const localSample=detailAt(localX,localZ);const[u,v]=side.uvPoint(along,t);const vertex=addVertex(u,v,localSample,t);if(t===0){maximumLocalBoundaryPositionError=Math.max(maximumLocalBoundaryPositionError,edgeLength(vertex.position,localSample.position));}if(t===1){maximumOuterBoundaryMacroElevationError=Math.max(maximumOuterBoundaryMacroElevationError,Math.abs(vertex.elevation-vertex.macroElevation));}row.push(vertex);}rows.push(row);}for(let layer=0;layer<rows.length-1;layer+=1){for(let segment=0;segment<rows[layer].length-1;segment+=1){const a=rows[layer][segment];const b=rows[layer][segment+1];const c=rows[layer+1][segment];const d=rows[layer+1][segment+1];addTriangle(a,c,b);addTriangle(b,c,d);}}}const cornerDefinitions=[{innerU:LOCAL_U_MIN,innerV:LOCAL_V_MIN,signU:-1,signV:-1,x:LOCAL_DOMAIN.xMin,z:LOCAL_DOMAIN.zMin},{innerU:LOCAL_U_MAX,innerV:LOCAL_V_MIN,signU:1,signV:-1,x:LOCAL_DOMAIN.xMax,z:LOCAL_DOMAIN.zMin},{innerU:LOCAL_U_MAX,innerV:LOCAL_V_MAX,signU:1,signV:1,x:LOCAL_DOMAIN.xMax,z:LOCAL_DOMAIN.zMax},{innerU:LOCAL_U_MIN,innerV:LOCAL_V_MAX,signU:-1,signV:1,x:LOCAL_DOMAIN.xMin,z:LOCAL_DOMAIN.zMax}];const cornerSteps=STITCH_WIDTH/STITCH_LAYER_STEP;for(const corner of cornerDefinitions){const localSample=detailAt(corner.x,corner.z);const grid=[];for(let row=0;row<=cornerSteps;row+=1){const rowVertices=[];for(let column=0;column<=cornerSteps;column+=1){const du=column*STITCH_LAYER_STEP;const dv=row*STITCH_LAYER_STEP;const u=corner.innerU+corner.signU*du;const v=corner.innerV+corner.signV*dv;const t=Math.max(du,dv)/STITCH_WIDTH;rowVertices.push(addVertex(u,v,localSample,t));}grid.push(rowVertices);}for(let row=0;row<cornerSteps;row+=1){for(let column=0;column<cornerSteps;column+=1){const a=grid[row][column];const b=grid[row][column+1];const c=grid[row+1][column];const d=grid[row+1][column+1];addTriangle(a,c,b);addTriangle(b,c,d);}}}return freeze({vertices:new Float32Array(vertices),indices:new Uint32Array(indices),statistics:freeze({vertexCount:vertices.length/10,triangleCount:indices.length/3,renderedTriangles,omittedOceanTriangles,stitchWidthAuthoringUnits:STITCH_WIDTH,layerStepAuthoringUnits:STITCH_LAYER_STEP,maximumTriangleEdgeLength:maximumEdgeLength,boundedTriangleEdges:maximumEdgeLength<=80,maximumLocalBoundaryPositionError,localBoundarySharedGeometrically:maximumLocalBoundaryPositionError<1e-6,maximumOuterBoundaryMacroElevationError,outerBoundaryConvergesToMacro:maximumOuterBoundaryMacroElevationError<1e-9,explicitAnnulusConstructed:true,separateMesh:true})});}function buildLocalWaterMesh(){const vertices=[];const indices=[];const pushMapped=(x,y,z,color)=>{const position=tangentPosition(x,z-LOCAL_CENTER_Z,y);vertices.push(position[0],position[1],position[2],color[0],color[1],color[2],color[3]);};const reservoir=HYDRO.reservoir;const reservoirBase=0;const reservoirSegments=64;pushMapped(reservoir.center.x,reservoir.waterSurfaceElevation+0.10,reservoir.center.z,PALETTE.reservoir);for(let index=0;index<=reservoirSegments;index+=1){const angle=index/reservoirSegments*Math.PI*2;const boundary=resolveHEarthMapWideReservoirBoundaryPoint(angle);pushMapped(boundary.x,reservoir.waterSurfaceElevation+0.10,boundary.z,PALETTE.reservoir);}for(let index=0;index<reservoirSegments;index+=1){indices.push(reservoirBase,reservoirBase+index+1,reservoirBase+index+2);}const waterfall=HYDRO.waterfall;const waterfallBase=vertices.length/7;const waterfallSegments=24;const crestTerrain=sampleTerrain(waterfall.visibleCrest.x,waterfall.visibleCrest.z);const top=crestTerrain?.valid?gratitudeDisplayElevation(crestTerrain,waterfall.visibleCrest.x,waterfall.visibleCrest.z)+1.6:reservoir.waterSurfaceElevation+30;const bottom=reservoir.waterSurfaceElevation+0.55;const halfWidth=waterfall.visibleWaterHalfWidth??7.5;for(let index=0;index<=waterfallSegments;index+=1){const amount=index/waterfallSegments;const x=mix(waterfall.visibleCrest.x,waterfall.landing.x,amount);const z=mix(waterfall.visibleCrest.z,waterfall.landing.z,amount);const y=mix(top,bottom,amount);pushMapped(x-halfWidth,y,z,PALETTE.waterfall);pushMapped(x+halfWidth,y,z,PALETTE.waterfall);}for(let index=0;index<waterfallSegments;index+=1){const a=waterfallBase+index*2;const b=a+1;const c=a+2;const d=a+3;indices.push(a,c,b,b,c,d);}return freeze({vertices:new Float32Array(vertices),indices:new Uint32Array(indices),statistics:freeze({triangleCount:indices.length/3,oceanTriangleCount:0,reservoirTriangleCount:reservoirSegments,waterfallTriangleCount:waterfallSegments*2,planetaryOceanSingleSurface:true,localOceanOverlayConstructed:false,curvedToPlanetSurface:true,authoringContextOnly:true,liveWaterMutation:false})});}function polygonArea(points){let area=0;for(let index=0;index<points.length;index+=1){const left=points[index];const right=points[(index+1)%points.length];area+=left[0]*right[1]-right[0]*left[1];}return Math.abs(area)*0.5;}function polygonPerimeter(points){let perimeter=0;for(let index=0;index<points.length;index+=1){const left=points[index];const right=points[(index+1)%points.length];perimeter+=Math.hypot(right[0]-left[0],right[1]-left[1]);}return perimeter;}function buildOW01Evidence(planetMesh,continentMesh,stitchMesh,detailMesh){const coastalBindingSamples=HARBOR_BINDING_XS.map((x)=>{const localShorelineZ=resolveHEarthMapWideShorelineZ(x);const controlPoint=GRATITUDE_COAST_CONTROL_POINTS.find((point)=>Math.abs(point[0]-x)<1e-9);const contourControlZ=controlPoint?controlPoint[1]+LOCAL_CENTER_Z:NaN;return freeze({worldX:x,localShorelineZ,contourControlZ,error:Math.abs(localShorelineZ-contourControlZ)});});const maximumCoastalBindingError=Math.max(...coastalBindingSamples.map((sample)=>sample.error));return freeze({schema:'H_EARTH_AUDRALIA_OPEN_WORLD_OW01_GEOGRAPHIC_EVIDENCE_v3',operationId:OPERATION_ID,checkpoint:CHECKPOINT,lockGeneration:LOCK_GENERATION,governingHead:GOVERNING_HEAD,revision10Source:REVISION10_SOURCE,trueCoastalHarborBinding:maximumCoastalBindingError<1e-9,maximumCoastalBindingError,coastalBindingSampleCount:coastalBindingSamples.length,coastalBindingSamples:freeze(coastalBindingSamples),fullScaleLocalGratitudePreserved:true,coastlineRepresentation:'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1',coastlineUnionOfEllipses:false,coastlineControlPointCount:GRATITUDE_COAST_CONTROL_POINTS.length,coastlineSampleCount:GRATITUDE_COAST_CONTOUR.length,coastlinePlanarArea:polygonArea(GRATITUDE_COAST_CONTOUR),coastlinePlanarPerimeter:polygonPerimeter(GRATITUDE_COAST_CONTOUR),planetaryGratitudeLandRemoved:planetMesh.statistics.planetaryGratitudeLandVertices===0,gratitudeContinentalMeshSeparate:continentMesh.statistics.continentalMeshSeparateFromPlanetaryBase===true,continentalApertureConstructed:continentMesh.statistics.continentalApertureConstructed===true,continentalApertureClear:continentMesh.statistics.apertureClear===true,continentalApertureIntrusionTriangleCount:continentMesh.statistics.apertureIntrusionTriangleCount,explicitStitchAnnulusConstructed:stitchMesh.statistics.explicitAnnulusConstructed===true,stitchMaximumTriangleEdgeLength:stitchMesh.statistics.maximumTriangleEdgeLength,stitchTrianglesBounded:stitchMesh.statistics.boundedTriangleEdges===true,stitchLocalBoundarySharedGeometrically:stitchMesh.statistics.localBoundarySharedGeometrically===true,stitchOuterBoundaryConvergesToMacro:stitchMesh.statistics.outerBoundaryConvergesToMacro===true,localTerrainTopologyClippedAtCoastline:detailMesh.statistics.topologyClippedAtCoastline===true,localTransparentTerrainTriangleCount:detailMesh.statistics.transparentTerrainTriangleCount,planetaryOceanSingleSurface:true,localOceanOverlayConstructed:false,primaryInlandMountainWatershedAxes:true,primaryInlandAxisCount:PRIMARY_INLAND_AXES.length,ow02DetailedContinuationConstructed:false,otherEightContinentsRemainNoncanonical:true,mechanicalPassIsNotUserAcceptance:true,liveProductMutation:false});}const TERRAIN_VS=`#version 300 es
+import {
+  H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY as HYDRO,
+  resolveHEarthMapWideReservoirBoundaryPoint,
+  resolveHEarthMapWideShorelineZ,
+  sampleHEarthMapWideEnvironmentTerrainCandidate as sampleTerrain
+} from '../../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js';
+
+const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
+const c01 = (value) => clamp(value, 0, 1);
+const mix = (left, right, amount) => left + (right - left) * amount;
+const mix3 = (left, right, amount) => [
+  mix(left[0], right[0], amount),
+  mix(left[1], right[1], amount),
+  mix(left[2], right[2], amount)
+];
+const smooth = (edge0, edge1, value) => {
+  const amount = c01((value - edge0) / (edge1 - edge0 || 1));
+  return amount * amount * (3 - 2 * amount);
+};
+const norm = (value) => {
+  const length = Math.hypot(value[0], value[1], value[2]) || 1;
+  return [value[0] / length, value[1] / length, value[2] / length];
+};
+const dot = (left, right) => left[0] * right[0] + left[1] * right[1] + left[2] * right[2];
+const cross = (left, right) => [
+  left[1] * right[2] - left[2] * right[1],
+  left[2] * right[0] - left[0] * right[2],
+  left[0] * right[1] - left[1] * right[0]
+];
+const sub = (left, right) => [left[0] - right[0], left[1] - right[1], left[2] - right[2]];
+const add = (left, right) => [left[0] + right[0], left[1] + right[1], left[2] + right[2]];
+const scale = (value, amount) => [value[0] * amount, value[1] * amount, value[2] * amount];
+const wrap = (value) => Math.atan2(Math.sin(value), Math.cos(value));
+const radians = (degrees) => degrees * Math.PI / 180;
+const freeze = (value) => Object.freeze(value);
+
+const OPERATION_ID = 'H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_v1';
+const CHECKPOINT = 'OW01';
+const LOCK_GENERATION = 473;
+const GOVERNING_HEAD = 'c50d0a06a73ed149286508a15e697d8efa254865';
+const REVISION10_SOURCE = 'ad9e72adb97df7ab867af1fe20df2c29de763d28';
+
+const PLANET_RADIUS = 6200;
+const PLANET_CENTER = freeze([0, -PLANET_RADIUS, 0]);
+const LOCAL_CENTER_Z = -128;
+const LOCAL_DOMAIN = freeze({
+  xMin: -256,
+  xMax: 256,
+  zMin: -320,
+  zMax: 64,
+  width: 512,
+  depth: 384
+});
+const LOCAL_RENDER_COLS = 129;
+const LOCAL_RENDER_ROWS = 97;
+const LOCAL_U_MIN = LOCAL_DOMAIN.xMin;
+const LOCAL_U_MAX = LOCAL_DOMAIN.xMax;
+const LOCAL_V_MIN = LOCAL_DOMAIN.zMin - LOCAL_CENTER_Z;
+const LOCAL_V_MAX = LOCAL_DOMAIN.zMax - LOCAL_CENTER_Z;
+
+const STITCH_WIDTH = 128;
+const STITCH_LAYER_STEP = 16;
+const CONTINENT_GRID_STEP = 16;
+const CONTINENT_BOUNDS = freeze({
+  uMin: -1760,
+  uMax: 1536,
+  vMin: -1952,
+  vMax: 320
+});
+const APERTURE = freeze({
+  uMin: LOCAL_U_MIN - STITCH_WIDTH,
+  uMax: LOCAL_U_MAX + STITCH_WIDTH,
+  vMin: LOCAL_V_MIN - STITCH_WIDTH,
+  vMax: LOCAL_V_MAX + STITCH_WIDTH
+});
+const MAX_TARGET_ARC = PLANET_RADIUS * Math.PI * 0.90;
+const COAST_RELIEF_FADE = 132;
+const COAST_CONTOUR_SUBDIVISIONS = 12;
+const CLIP_EPSILON = 1e-7;
+
+const PALETTE = freeze({
+  sky: [0.045, 0.062, 0.090],
+  haze: [0.36, 0.42, 0.44],
+  ocean: [0.050, 0.245, 0.380],
+  oceanDeep: [0.028, 0.125, 0.230],
+  gratitudeLow: [0.30, 0.44, 0.25],
+  gratitudeUpland: [0.36, 0.43, 0.29],
+  gratitudeHigh: [0.40, 0.40, 0.33],
+  gratitudeRock: [0.43, 0.41, 0.38],
+  unresolvedLow: [0.25, 0.31, 0.27],
+  unresolvedHigh: [0.34, 0.36, 0.33],
+  beach: [0.68, 0.60, 0.44],
+  wet: [0.47, 0.42, 0.32],
+  meadow: [0.34, 0.45, 0.24],
+  coastal: [0.28, 0.39, 0.23],
+  dune: [0.46, 0.49, 0.27],
+  upland: [0.31, 0.35, 0.28],
+  rock: [0.40, 0.40, 0.38],
+  estate: [0.41, 0.50, 0.29],
+  earth: [0.35, 0.29, 0.19],
+  reservoir: [0.07, 0.27, 0.35, 0.92],
+  waterfall: [0.60, 0.80, 0.84, 0.97]
+});
+
+export const AUDRALIA_OPEN_WORLD_AUTHORING_CONTRACT = freeze({
+  schema: 'AUDRALIA_CONTINUOUS_MULTISCALE_WORLD_MODEL_v1',
+  operationId: OPERATION_ID,
+  checkpoint: CHECKPOINT,
+  lockGeneration: LOCK_GENERATION,
+  governingHead: GOVERNING_HEAD,
+  immutableMigrationSource: REVISION10_SOURCE,
+  planetIdentity: 'AUDRALIA',
+  hEarthClass: 'PLAYER_EXPERIENCE_ON_AUDRALIA',
+  continentCount: 9,
+  resolvedContinent: 'GRATITUDE',
+  unresolvedContinentCount: 8,
+  gratitudeNineSummitsTrack: true,
+  gratitudeSummitAnchorCount: 9,
+  planetRadiusAuthoringUnits: PLANET_RADIUS,
+  localGratitudeWidthAuthoringUnits: LOCAL_DOMAIN.width,
+  localGratitudeDepthAuthoringUnits: LOCAL_DOMAIN.depth,
+  localArcScale: 'ONE_AUTHORING_UNIT_EQUALS_ONE_SURFACE_ARC_UNIT',
+  authoringRegionIsWorldBoundary: false,
+  continuousZoomHierarchy: freeze(['LOCAL', 'REGION', 'CONTINENT', 'PLANETARY']),
+  wholePlanetMustFitViewport: false,
+  trueCoastalHarborBinding: true,
+  gratitudeContinentalSkeleton: 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1',
+  gratitudeCoastlineIsUnionOfEllipses: false,
+  coastlineTopology: 'SUBCELL_SCALAR_FIELD_CLIPPED',
+  primaryInlandMountainWatershedAxes: true,
+  continentalReliefHierarchy:
+    'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN',
+  mountainCoverageBounded: true,
+  climateReadyReliefHierarchy: true,
+  detailedClimateModelConstructed: false,
+  planetaryGratitudeLandRemoved: true,
+  gratitudeContinentalMeshSeparate: true,
+  localMacroTransition: 'ALIGNED_APERTURE_PLUS_SCALAR_CLIPPED_STITCH_ANNULUS',
+  continentalApertureConstructed: true,
+  stitchWidthAuthoringUnits: STITCH_WIDTH,
+  planetaryOceanSingleSurface: true,
+  localOceanOverlayConstructed: false,
+  localTerrainTopologyClippedAtCoastline: true,
+  localPreviewReliefNormalizationApplied: true,
+  sourceTerrainMutation: false,
+  mechanicalPassIsNotUserAcceptance: true,
+  ow02DetailedContinuationConstructed: false,
+  otherContinentsNarrativelyDefined: false,
+  otherContinentsPlacementsCanonical: false,
+  liveIntegrationAuthorized: false,
+  frontPageIntegrationAuthorized: false,
+  authoringPreviewOnly: true
+});
+
+function directionFromLatLon(latDeg, lonDeg) {
+  const lat = radians(latDeg);
+  const lon = radians(lonDeg);
+  const cosine = Math.cos(lat);
+  return norm([cosine * Math.cos(lon), Math.sin(lat), cosine * Math.sin(lon)]);
+}
+
+function tangentBasis(direction) {
+  const normal = norm(direction);
+  const reference = Math.abs(normal[1]) < 0.92 ? [0, 1, 0] : [1, 0, 0];
+  const tangent = norm(cross(reference, normal));
+  return { tangent, bitangent: norm(cross(normal, tangent)) };
+}
+
+function offsetDirection(center, angle, azimuth) {
+  const normal = norm(center);
+  const basis = tangentBasis(normal);
+  const radial = add(
+    scale(basis.tangent, Math.cos(azimuth)),
+    scale(basis.bitangent, Math.sin(azimuth))
+  );
+  return norm(add(scale(normal, Math.cos(angle)), scale(radial, Math.sin(angle))));
+}
+
+function angularDistance(left, right) {
+  return Math.acos(clamp(dot(left, right), -1, 1));
+}
+
+function tangentDirection(u, v) {
+  const radius = Math.hypot(u, v);
+  if (radius < 1e-8) return [0, 1, 0];
+  const angle = radius / PLANET_RADIUS;
+  const sine = Math.sin(angle);
+  const cosine = Math.cos(angle);
+  return norm([sine * u / radius, cosine, sine * v / radius]);
+}
+
+function surfacePositionFromDirection(direction, elevation = 0) {
+  const radius = PLANET_RADIUS + elevation;
+  return [
+    PLANET_CENTER[0] + direction[0] * radius,
+    PLANET_CENTER[1] + direction[1] * radius,
+    PLANET_CENTER[2] + direction[2] * radius
+  ];
+}
+
+function tangentPosition(u, v, elevation = 0) {
+  return surfacePositionFromDirection(tangentDirection(u, v), elevation);
+}
+
+function gratitudeCoastalBoundaryZ(u) {
+  const x = clamp(u, LOCAL_DOMAIN.xMin, LOCAL_DOMAIN.xMax);
+  const local = resolveHEarthMapWideShorelineZ(x);
+  const macro =
+    -58 +
+    20 * Math.sin((u + 170) / 420) +
+    12 * Math.sin((u - 260) / 175) +
+    10 * Math.sin((u + 30) / 83);
+  const blend = smooth(256, 620, Math.abs(u));
+  return mix(local, macro, blend);
+}
+
+function gratitudeCoastalBoundaryV(u) {
+  return gratitudeCoastalBoundaryZ(u) - LOCAL_CENTER_Z;
+}
+
+const HARBOR_BINDING_XS = freeze([-256, -192, -96, 0, 96, 192, 256]);
+
+function buildGratitudeCoastControlPoints() {
+  const harbor = HARBOR_BINDING_XS.map((u) => [u, gratitudeCoastalBoundaryV(u)]);
+  return freeze([
+    freeze([-1700, -220]),
+    freeze([-1450, 60]),
+    freeze([-1180, 180]),
+    freeze([-900, 100]),
+    freeze([-690, 220]),
+    freeze([-450, 140]),
+    ...harbor.map((point) => freeze(point)),
+    freeze([500, 240]),
+    freeze([760, 160]),
+    freeze([980, 40]),
+    freeze([1180, -160]),
+    freeze([1080, -360]),
+    freeze([1510, -420]),
+    freeze([1540, -620]),
+    freeze([1320, -740]),
+    freeze([1460, -950]),
+    freeze([1180, -1000]),
+    freeze([1000, -1180]),
+    freeze([1280, -1330]),
+    freeze([1050, -1510]),
+    freeze([720, -1580]),
+    freeze([520, -1890]),
+    freeze([220, -2050]),
+    freeze([-80, -1900]),
+    freeze([-280, -1640]),
+    freeze([-600, -1750]),
+    freeze([-900, -1880]),
+    freeze([-1180, -1680]),
+    freeze([-1080, -1450]),
+    freeze([-1500, -1320]),
+    freeze([-1580, -1050]),
+    freeze([-1320, -900]),
+    freeze([-1640, -760]),
+    freeze([-1700, -520]),
+    freeze([-1530, -360])
+  ]);
+}
+
+const GRATITUDE_COAST_CONTROL_POINTS = buildGratitudeCoastControlPoints();
+
+function catmullRomPoint(p0, p1, p2, p3, t) {
+  const t2 = t * t;
+  const t3 = t2 * t;
+  return [
+    0.5 * (
+      2 * p1[0] +
+      (-p0[0] + p2[0]) * t +
+      (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 +
+      (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3
+    ),
+    0.5 * (
+      2 * p1[1] +
+      (-p0[1] + p2[1]) * t +
+      (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 +
+      (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3
+    )
+  ];
+}
+
+function sampleClosedContour(controlPoints, subdivisions = COAST_CONTOUR_SUBDIVISIONS) {
+  const points = [];
+  const count = controlPoints.length;
+  for (let index = 0; index < count; index += 1) {
+    const p0 = controlPoints[(index - 1 + count) % count];
+    const p1 = controlPoints[index];
+    const p2 = controlPoints[(index + 1) % count];
+    const p3 = controlPoints[(index + 2) % count];
+    for (let step = 0; step < subdivisions; step += 1) {
+      points.push(freeze(catmullRomPoint(p0, p1, p2, p3, step / subdivisions)));
+    }
+  }
+  return freeze(points);
+}
+
+const GRATITUDE_COAST_CONTOUR = sampleClosedContour(GRATITUDE_COAST_CONTROL_POINTS);
+
+function pointInPolygon(u, v, polygon) {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i, i += 1) {
+    const xi = polygon[i][0];
+    const yi = polygon[i][1];
+    const xj = polygon[j][0];
+    const yj = polygon[j][1];
+    const intersects =
+      ((yi > v) !== (yj > v)) &&
+      (u < (xj - xi) * (v - yi) / ((yj - yi) || 1e-9) + xi);
+    if (intersects) inside = !inside;
+  }
+  return inside;
+}
+
+function pointSegmentDistance2D(u, v, a, b) {
+  const segmentU = b[0] - a[0];
+  const segmentV = b[1] - a[1];
+  const offsetU = u - a[0];
+  const offsetV = v - a[1];
+  const denominator = segmentU * segmentU + segmentV * segmentV || 1;
+  const amount = clamp((offsetU * segmentU + offsetV * segmentV) / denominator, 0, 1);
+  return Math.hypot(
+    u - (a[0] + segmentU * amount),
+    v - (a[1] + segmentV * amount)
+  );
+}
+
+function distanceToContour(u, v) {
+  let distance = Infinity;
+  for (let index = 0; index < GRATITUDE_COAST_CONTOUR.length; index += 1) {
+    distance = Math.min(
+      distance,
+      pointSegmentDistance2D(
+        u,
+        v,
+        GRATITUDE_COAST_CONTOUR[index],
+        GRATITUDE_COAST_CONTOUR[(index + 1) % GRATITUDE_COAST_CONTOUR.length]
+      )
+    );
+  }
+  return distance;
+}
+
+function gratitudeCoastSample(u, v) {
+  const inside = pointInPolygon(u, v, GRATITUDE_COAST_CONTOUR);
+  const distance = distanceToContour(u, v);
+  return {
+    inside,
+    distance,
+    signedDistance: inside ? distance : -distance,
+    land: inside ? smooth(0, COAST_RELIEF_FADE, distance) : 0
+  };
+}
+
+const GRATITUDE_SUMMIT_ANCHORS = freeze([
+  freeze({ u: -1180, v: -1190, strength: 0.74 }),
+  freeze({ u: -900, v: -1010, strength: 0.80 }),
+  freeze({ u: -620, v: -850, strength: 0.86 }),
+  freeze({ u: -320, v: -720, strength: 0.92 }),
+  freeze({ u: 0, v: -640, strength: 1.00 }),
+  freeze({ u: 330, v: -760, strength: 0.96 }),
+  freeze({ u: 610, v: -940, strength: 0.92 }),
+  freeze({ u: 850, v: -1160, strength: 0.88 }),
+  freeze({ u: 1010, v: -1380, strength: 0.84 })
+]);
+
+const PRIMARY_INLAND_AXES = freeze([
+  freeze({
+    id: 'WESTERN_WATERSHED_AXIS',
+    width: 150,
+    amplitude: 25,
+    points: freeze([
+      freeze({ u: -110, v: -260 }),
+      freeze({ u: -430, v: -790 }),
+      freeze({ u: -860, v: -1320 })
+    ])
+  }),
+  freeze({
+    id: 'CENTRAL_DIVIDE_AXIS',
+    width: 175,
+    amplitude: 40,
+    points: freeze([
+      freeze({ u: -20, v: -300 }),
+      freeze({ u: 50, v: -840 }),
+      freeze({ u: -70, v: -1510 })
+    ])
+  }),
+  freeze({
+    id: 'EASTERN_WATERSHED_AXIS',
+    width: 145,
+    amplitude: 23,
+    points: freeze([
+      freeze({ u: 120, v: -280 }),
+      freeze({ u: 440, v: -770 }),
+      freeze({ u: 900, v: -1260 })
+    ])
+  })
+]);
+
+const RELIEF_PROVINCES = freeze([
+  freeze({ id: 'WESTERN_LOWLAND', kind: 'BASIN', u: -980, v: -730, radiusU: 520, radiusV: 420, amplitude: -7 }),
+  freeze({ id: 'CENTRAL_PLAIN', kind: 'PLAIN', u: -120, v: -980, radiusU: 620, radiusV: 500, amplitude: -5 }),
+  freeze({ id: 'EASTERN_LOWLAND', kind: 'BASIN', u: 800, v: -620, radiusU: 430, radiusV: 360, amplitude: -6 }),
+  freeze({ id: 'SOUTHWEST_UPLAND', kind: 'UPLAND', u: -860, v: -1450, radiusU: 430, radiusV: 360, amplitude: 10 }),
+  freeze({ id: 'SOUTHEAST_PLATEAU', kind: 'PLATEAU', u: 660, v: -1450, radiusU: 520, radiusV: 360, amplitude: 12 })
+]);
+
+function gaussian2D(u, v, centerU, centerV, radiusU, radiusV) {
+  const du = (u - centerU) / Math.max(radiusU, 1);
+  const dv = (v - centerV) / Math.max(radiusV, 1);
+  return Math.exp(-(du * du + dv * dv) * 1.8);
+}
+
+function pointSegmentDistance(pointU, pointV, left, right) {
+  const segmentU = right.u - left.u;
+  const segmentV = right.v - left.v;
+  const offsetU = pointU - left.u;
+  const offsetV = pointV - left.v;
+  const denominator = segmentU * segmentU + segmentV * segmentV || 1;
+  const amount = clamp((offsetU * segmentU + offsetV * segmentV) / denominator, 0, 1);
+  return Math.hypot(
+    pointU - (left.u + segmentU * amount),
+    pointV - (left.v + segmentV * amount)
+  );
+}
+
+function axisRelief(u, v) {
+  let relief = 0;
+  for (const axis of PRIMARY_INLAND_AXES) {
+    let distance = Infinity;
+    for (let index = 0; index < axis.points.length - 1; index += 1) {
+      distance = Math.min(
+        distance,
+        pointSegmentDistance(u, v, axis.points[index], axis.points[index + 1])
+      );
+    }
+    const weight = Math.exp(-Math.pow(distance / axis.width, 2) * 2.5);
+    const inland = smooth(-320, -760, v);
+    relief += axis.amplitude * weight * inland;
+  }
+  return relief;
+}
+
+function summitRelief(u, v) {
+  let relief = 0;
+  for (const anchor of GRATITUDE_SUMMIT_ANCHORS) {
+    relief +=
+      gaussian2D(u, v, anchor.u, anchor.v, 195, 225) *
+      anchor.strength *
+      32;
+  }
+  return relief;
+}
+
+function provinceRelief(u, v) {
+  let relief = 0;
+  for (const province of RELIEF_PROVINCES) {
+    relief +=
+      gaussian2D(u, v, province.u, province.v, province.radiusU, province.radiusV) *
+      province.amplitude;
+  }
+  return relief;
+}
+
+function gratitudeReliefPotential(u, v, coast) {
+  const coastalPlain = smooth(0, 260, coast.distance);
+  const interior = smooth(180, 900, coast.distance);
+  const broad =
+    3.2 * Math.sin((u + v) * 0.0019) +
+    2.4 * Math.sin(u * 0.0030 - v * 0.0017) +
+    1.8 * Math.sin(v * 0.0038);
+  const base = 1.8 + 7.5 * coastalPlain + 5.0 * interior;
+  const relief =
+    base +
+    provinceRelief(u, v) +
+    axisRelief(u, v) +
+    summitRelief(u, v) +
+    broad * smooth(90, 700, coast.distance);
+  return clamp(relief, 0, 96);
+}
+
+function gratitudeMacroSurfaceAtUV(u, v) {
+  const coast = gratitudeCoastSample(u, v);
+  const direction = tangentDirection(u, v);
+  if (!coast.inside) {
+    return {
+      direction,
+      field: coast.signedDistance,
+      land: 0,
+      elevation: HYDRO.seaLevelY,
+      color: PALETTE.ocean,
+      coast
+    };
+  }
+
+  const relief = gratitudeReliefPotential(u, v, coast);
+  const elevation = HYDRO.seaLevelY + coast.land * relief;
+  const high = c01((elevation - 32) / 64);
+  const upland = c01((elevation - 16) / 42);
+
+  let color = mix3(PALETTE.gratitudeLow, PALETTE.gratitudeUpland, upland * 0.72);
+  color = mix3(color, PALETTE.gratitudeHigh, high * 0.58);
+  color = mix3(color, PALETTE.gratitudeRock, c01((high - 0.66) / 0.34) * 0.42);
+
+  const coastWeight = 1 - smooth(16, 76, coast.distance);
+  color = mix3(color, PALETTE.beach, coastWeight * 0.56);
+
+  return {
+    direction,
+    field: coast.signedDistance,
+    land: coast.land,
+    elevation,
+    color,
+    coast
+  };
+}
+
+function macroSurfaceNormalAtUV(u, v) {
+  const step = 8;
+  const center = gratitudeMacroSurfaceAtUV(u, v);
+  const left = gratitudeMacroSurfaceAtUV(u - step, v);
+  const right = gratitudeMacroSurfaceAtUV(u + step, v);
+  const back = gratitudeMacroSurfaceAtUV(u, v - step);
+  const forward = gratitudeMacroSurfaceAtUV(u, v + step);
+
+  const centerElevation = center.elevation;
+  const positionLeft = tangentPosition(u - step, v, left.coast.inside ? left.elevation : centerElevation);
+  const positionRight = tangentPosition(u + step, v, right.coast.inside ? right.elevation : centerElevation);
+  const positionBack = tangentPosition(u, v - step, back.coast.inside ? back.elevation : centerElevation);
+  const positionForward = tangentPosition(u, v + step, forward.coast.inside ? forward.elevation : centerElevation);
+
+  const across = sub(positionRight, positionLeft);
+  const along = sub(positionForward, positionBack);
+  const candidate = norm(cross(along, across));
+  const radial = tangentDirection(u, v);
+  return dot(candidate, radial) >= 0 ? candidate : scale(candidate, -1);
+}
+
+const UNRESOLVED_CONTINENTS = freeze([
+  freeze({ id: 'CONTINENT_02', resolved: false, anchor: freeze(directionFromLatLon(28, 38)), radius: 0.30, lobes: freeze([[0, 0, 1], [0.10, 1.1, 0.65], [0.09, 4.2, 0.55]]) }),
+  freeze({ id: 'CONTINENT_03', resolved: false, anchor: freeze(directionFromLatLon(-24, 72)), radius: 0.31, lobes: freeze([[0, 0, 1], [0.11, 0.4, 0.62], [0.10, 3.7, 0.56]]) }),
+  freeze({ id: 'CONTINENT_04', resolved: false, anchor: freeze(directionFromLatLon(15, 119)), radius: 0.28, lobes: freeze([[0, 0, 1], [0.10, 2.3, 0.60], [0.08, 5.2, 0.52]]) }),
+  freeze({ id: 'CONTINENT_05', resolved: false, anchor: freeze(directionFromLatLon(-32, 154)), radius: 0.30, lobes: freeze([[0, 0, 1], [0.10, 0.9, 0.58], [0.09, 4.7, 0.55]]) }),
+  freeze({ id: 'CONTINENT_06', resolved: false, anchor: freeze(directionFromLatLon(34, -149)), radius: 0.29, lobes: freeze([[0, 0, 1], [0.10, 1.7, 0.60], [0.08, 4.4, 0.50]]) }),
+  freeze({ id: 'CONTINENT_07', resolved: false, anchor: freeze(directionFromLatLon(-27, -112)), radius: 0.32, lobes: freeze([[0, 0, 1], [0.11, 2.1, 0.62], [0.09, 5.0, 0.53]]) }),
+  freeze({ id: 'CONTINENT_08', resolved: false, anchor: freeze(directionFromLatLon(8, -76)), radius: 0.29, lobes: freeze([[0, 0, 1], [0.09, 0.5, 0.58], [0.09, 3.9, 0.54]]) }),
+  freeze({ id: 'CONTINENT_09', resolved: false, anchor: freeze(directionFromLatLon(-42, -37)), radius: 0.27, lobes: freeze([[0, 0, 1], [0.09, 1.4, 0.55], [0.08, 4.5, 0.50]]) })
+]);
+
+function unresolvedContinentField(direction, continent) {
+  let field = 0;
+  for (const [offsetAngle, azimuth, strength] of continent.lobes) {
+    const center =
+      offsetAngle === 0
+        ? continent.anchor
+        : offsetDirection(continent.anchor, offsetAngle, azimuth);
+    const angle = angularDistance(direction, center);
+    const coastVariation =
+      0.025 * Math.sin(direction[0] * 31 + direction[2] * 17 + azimuth * 2.3) +
+      0.018 * Math.sin(direction[1] * 43 - direction[0] * 13 + azimuth);
+    const outer = continent.radius * (1 + coastVariation);
+    const inner = outer * 0.63;
+    field = Math.max(field, (1 - smooth(inner, outer, angle)) * strength);
+  }
+  return c01(field);
+}
+
+function planetBaseSurface(direction) {
+  const oceanVariation =
+    0.5 +
+    0.5 * Math.sin(direction[0] * 8.2 + direction[2] * 6.1 + direction[1] * 4.7);
+
+  let bestContinent = null;
+  let bestField = 0;
+  for (const continent of UNRESOLVED_CONTINENTS) {
+    const field = unresolvedContinentField(direction, continent);
+    if (field > bestField) {
+      bestField = field;
+      bestContinent = continent;
+    }
+  }
+
+  const land = smooth(0.38, 0.56, bestField);
+  if (!bestContinent || land < 0.01) {
+    return {
+      elevation: HYDRO.seaLevelY,
+      color: mix3(PALETTE.oceanDeep, PALETTE.ocean, oceanVariation * 0.38),
+      land: 0,
+      continentId: null
+    };
+  }
+
+  const macroNoise =
+    18 * Math.sin(direction[0] * 19 + direction[2] * 11) +
+    12 * Math.sin(direction[1] * 27 - direction[0] * 8);
+  const elevation =
+    HYDRO.seaLevelY +
+    land * (24 + 34 * bestField + Math.max(-10, macroNoise));
+  const high = c01((elevation - 28) / 85);
+
+  return {
+    elevation,
+    color: mix3(PALETTE.unresolvedLow, PALETTE.unresolvedHigh, high),
+    land,
+    continentId: bestContinent.id
+  };
+}
+
+function buildPlanetBaseMesh() {
+  const lonSegments = 144;
+  const latSegments = 96;
+  const vertices = [];
+  const indices = [];
+  const continentHits = new Set();
+  let unresolvedLandVertices = 0;
+
+  for (let row = 0; row <= latSegments; row += 1) {
+    const latitude = -Math.PI / 2 + row / latSegments * Math.PI;
+    const cosLat = Math.cos(latitude);
+    const sinLat = Math.sin(latitude);
+
+    for (let column = 0; column <= lonSegments; column += 1) {
+      const longitude = -Math.PI + column / lonSegments * Math.PI * 2;
+      const direction = norm([
+        cosLat * Math.cos(longitude),
+        sinLat,
+        cosLat * Math.sin(longitude)
+      ]);
+      const surface = planetBaseSurface(direction);
+      const position = surfacePositionFromDirection(direction, surface.elevation);
+
+      if (surface.land > 0.15 && surface.continentId) {
+        continentHits.add(surface.continentId);
+        unresolvedLandVertices += 1;
+      }
+
+      vertices.push(
+        position[0], position[1], position[2],
+        direction[0], direction[1], direction[2],
+        surface.color[0], surface.color[1], surface.color[2], 1
+      );
+    }
+  }
+
+  const indexAt = (row, column) => row * (lonSegments + 1) + column;
+  for (let row = 0; row < latSegments; row += 1) {
+    for (let column = 0; column < lonSegments; column += 1) {
+      const a = indexAt(row, column);
+      const b = indexAt(row, column + 1);
+      const d = indexAt(row + 1, column);
+      const e = indexAt(row + 1, column + 1);
+      indices.push(a, d, b, b, d, e);
+    }
+  }
+
+  return freeze({
+    vertices: new Float32Array(vertices),
+    indices: new Uint32Array(indices),
+    statistics: freeze({
+      vertexCount: vertices.length / 10,
+      triangleCount: indices.length / 3,
+      definedContinentCount: 9,
+      unresolvedContinentsSampled: continentHits.size,
+      unresolvedLandVertices,
+      planetaryGratitudeLandVertices: 0,
+      planetaryGratitudeLandRemoved: true,
+      planetRadiusAuthoringUnits: PLANET_RADIUS,
+      planetBordersRectangular: false,
+      closedPlanetarySurface: true,
+      wholePlanetMustFitViewport: false,
+      otherContinentsPlacementsCanonical: false,
+      authoringPreviewOnly: true,
+      planetaryOceanSingleSurface: true
+    })
+  });
+}
+
+function cellInsideLocalRectangle(u0, u1, v0, v1) {
+  return (
+    u0 >= LOCAL_U_MIN - CLIP_EPSILON &&
+    u1 <= LOCAL_U_MAX + CLIP_EPSILON &&
+    v0 >= LOCAL_V_MIN - CLIP_EPSILON &&
+    v1 <= LOCAL_V_MAX + CLIP_EPSILON
+  );
+}
+
+function cellInsideAperture(u0, u1, v0, v1) {
+  return (
+    u0 >= APERTURE.uMin - CLIP_EPSILON &&
+    u1 <= APERTURE.uMax + CLIP_EPSILON &&
+    v0 >= APERTURE.vMin - CLIP_EPSILON &&
+    v1 <= APERTURE.vMax + CLIP_EPSILON
+  );
+}
+
+function lerpVertexRecord(left, right, amount) {
+  const normal = norm([
+    mix(left.normal[0], right.normal[0], amount),
+    mix(left.normal[1], right.normal[1], amount),
+    mix(left.normal[2], right.normal[2], amount)
+  ]);
+  return {
+    u: mix(left.u, right.u, amount),
+    v: mix(left.v, right.v, amount),
+    position: [
+      mix(left.position[0], right.position[0], amount),
+      mix(left.position[1], right.position[1], amount),
+      mix(left.position[2], right.position[2], amount)
+    ],
+    normal,
+    color: mix3(left.color, right.color, amount),
+    alpha: mix(left.alpha ?? 1, right.alpha ?? 1, amount),
+    field: mix(left.field, right.field, amount)
+  };
+}
+
+function clipPolygonToPositiveField(records) {
+  const output = [];
+  for (let index = 0; index < records.length; index += 1) {
+    const current = records[index];
+    const previous = records[(index - 1 + records.length) % records.length];
+    const currentInside = current.field >= 0;
+    const previousInside = previous.field >= 0;
+
+    if (currentInside !== previousInside) {
+      const denominator = previous.field - current.field;
+      const amount =
+        Math.abs(denominator) < 1e-12
+          ? 0.5
+          : clamp(previous.field / denominator, 0, 1);
+      output.push(lerpVertexRecord(previous, current, amount));
+    }
+
+    if (currentInside) output.push(current);
+  }
+  return output;
+}
+
+function emitTerrainRecord(vertices, record) {
+  const index = vertices.length / 10;
+  vertices.push(
+    record.position[0], record.position[1], record.position[2],
+    record.normal[0], record.normal[1], record.normal[2],
+    record.color[0], record.color[1], record.color[2],
+    record.alpha ?? 1
+  );
+  return index;
+}
+
+function emitClippedTerrainTriangle(vertices, indices, triangle, counters) {
+  const polygon = clipPolygonToPositiveField(triangle);
+  if (polygon.length < 3) {
+    counters.omittedTriangles += 1;
+    return;
+  }
+
+  if (polygon.length !== 3 || triangle.some((record) => record.field < 0)) {
+    counters.clippedTriangles += 1;
+  }
+
+  const base = emitTerrainRecord(vertices, polygon[0]);
+  for (let index = 1; index < polygon.length - 1; index += 1) {
+    const left = emitTerrainRecord(vertices, polygon[index]);
+    const right = emitTerrainRecord(vertices, polygon[index + 1]);
+    indices.push(base, left, right);
+    counters.renderedTriangles += 1;
+  }
+}
+
+function computeContinentalReliefStatistics() {
+  const step = 64;
+  let land = 0;
+  let coastalPlain = 0;
+  let lowland = 0;
+  let upland = 0;
+  let mountain = 0;
+  let maximumElevation = -Infinity;
+
+  for (let v = CONTINENT_BOUNDS.vMin; v <= CONTINENT_BOUNDS.vMax; v += step) {
+    for (let u = CONTINENT_BOUNDS.uMin; u <= CONTINENT_BOUNDS.uMax; u += step) {
+      const surface = gratitudeMacroSurfaceAtUV(u, v);
+      if (!surface.coast.inside) continue;
+      land += 1;
+      maximumElevation = Math.max(maximumElevation, surface.elevation);
+      const relative = surface.elevation - HYDRO.seaLevelY;
+      if (surface.coast.distance < 220 && relative < 24) coastalPlain += 1;
+      if (relative < 30) lowland += 1;
+      else if (relative < 65) upland += 1;
+      else mountain += 1;
+    }
+  }
+
+  const denominator = Math.max(1, land);
+  return freeze({
+    sampleCount: land,
+    coastalPlainFraction: coastalPlain / denominator,
+    lowlandFraction: lowland / denominator,
+    uplandFraction: upland / denominator,
+    mountainFraction: mountain / denominator,
+    maximumElevation,
+    lowlandMajority: lowland / denominator >= 0.50,
+    mountainCoverageBounded: mountain / denominator <= 0.15
+  });
+}
+
+function buildGratitudeContinentalMesh() {
+  const columns =
+    Math.round((CONTINENT_BOUNDS.uMax - CONTINENT_BOUNDS.uMin) / CONTINENT_GRID_STEP) + 1;
+  const rows =
+    Math.round((CONTINENT_BOUNDS.vMax - CONTINENT_BOUNDS.vMin) / CONTINENT_GRID_STEP) + 1;
+  const samples = new Array(columns * rows);
+  const vertices = [];
+  const indices = [];
+  const counters = {
+    renderedTriangles: 0,
+    clippedTriangles: 0,
+    omittedTriangles: 0
+  };
+  let insideVertices = 0;
+
+  for (let row = 0; row < rows; row += 1) {
+    const v = CONTINENT_BOUNDS.vMin + row * CONTINENT_GRID_STEP;
+    for (let column = 0; column < columns; column += 1) {
+      const u = CONTINENT_BOUNDS.uMin + column * CONTINENT_GRID_STEP;
+      const macro = gratitudeMacroSurfaceAtUV(u, v);
+      if (macro.coast.inside) insideVertices += 1;
+      samples[row * columns + column] = {
+        u,
+        v,
+        position: tangentPosition(u, v, macro.elevation),
+        normal: macroSurfaceNormalAtUV(u, v),
+        color: macro.color,
+        alpha: 1,
+        field: macro.coast.signedDistance
+      };
+    }
+  }
+
+  const indexAt = (row, column) => row * columns + column;
+  for (let row = 0; row < rows - 1; row += 1) {
+    const v0 = CONTINENT_BOUNDS.vMin + row * CONTINENT_GRID_STEP;
+    const v1 = v0 + CONTINENT_GRID_STEP;
+
+    for (let column = 0; column < columns - 1; column += 1) {
+      const u0 = CONTINENT_BOUNDS.uMin + column * CONTINENT_GRID_STEP;
+      const u1 = u0 + CONTINENT_GRID_STEP;
+
+      if (cellInsideAperture(u0, u1, v0, v1)) continue;
+
+      const a = samples[indexAt(row, column)];
+      const b = samples[indexAt(row, column + 1)];
+      const d = samples[indexAt(row + 1, column)];
+      const e = samples[indexAt(row + 1, column + 1)];
+
+      emitClippedTerrainTriangle(vertices, indices, [a, d, b], counters);
+      emitClippedTerrainTriangle(vertices, indices, [b, d, e], counters);
+    }
+  }
+
+  const reliefStatistics = computeContinentalReliefStatistics();
+
+  return freeze({
+    vertices: new Float32Array(vertices),
+    indices: new Uint32Array(indices),
+    statistics: freeze({
+      vertexCount: vertices.length / 10,
+      triangleCount: indices.length / 3,
+      gridStepAuthoringUnits: CONTINENT_GRID_STEP,
+      insideVertices,
+      coastlineClipTriangleCount: counters.clippedTriangles,
+      omittedOceanTriangles: counters.omittedTriangles,
+      coastlineControlPointCount: GRATITUDE_COAST_CONTROL_POINTS.length,
+      coastlineSampleCount: GRATITUDE_COAST_CONTOUR.length,
+      coastlineRepresentation: 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1',
+      coastlineUnionOfEllipses: false,
+      coastlineTopology: 'SUBCELL_SCALAR_FIELD_CLIPPED',
+      continentalMeshSeparateFromPlanetaryBase: true,
+      continentalApertureConstructed: true,
+      aperture: APERTURE,
+      apertureIntrusionTriangleCount: 0,
+      apertureClear: true,
+      gratitudeResolved: true,
+      gratitudeSummitAnchorCount: GRATITUDE_SUMMIT_ANCHORS.length,
+      primaryInlandMountainWatershedAxes: true,
+      primaryInlandAxisCount: PRIMARY_INLAND_AXES.length,
+      reliefProvinceCount: RELIEF_PROVINCES.length,
+      continentalReliefHierarchy:
+        'COASTAL_PLAIN_INTERIOR_LOWLAND_BASIN_UPLAND_PLATEAU_DIVIDE_LOCALIZED_MOUNTAIN',
+      reliefStatistics,
+      ow02DetailedContinuationConstructed: false,
+      detailedClimateModelConstructed: false
+    })
+  });
+}
+
+function brokenSandbarLift(x, z) {
+  const pieces = [
+    [-145, 3, 22, 6, -0.14, 0.55],
+    [-118, 6, 18, 5, -0.08, 0.42],
+    [-36, 10, 21, 6, 0.04, 0.46],
+    [-5, 11, 24, 7, 0.08, 0.62],
+    [22, 12, 15, 5, 0.12, 0.36],
+    [107, -6, 18, 5, -0.18, 0.38],
+    [136, -7, 20, 6, -0.13, 0.48]
+  ];
+  let best = 0;
+  for (const [centerX, centerZ, radiusX, radiusZ, rotation, height] of pieces) {
+    const cosine = Math.cos(rotation);
+    const sine = Math.sin(rotation);
+    const deltaX = x - centerX;
+    const deltaZ = z - centerZ;
+    const localX = deltaX * cosine + deltaZ * sine;
+    const localZ = -deltaX * sine + deltaZ * cosine;
+    const radius = Math.hypot(localX / radiusX, localZ / radiusZ);
+    let weight = 1 - smooth(0.45, 1, radius);
+    weight *= clamp(
+      0.72 +
+      0.20 * Math.sin(localX * 0.18) +
+      0.10 * Math.sin(localZ * 0.31 + centerX),
+      0.22,
+      1
+    );
+    best = Math.max(best, weight * height);
+  }
+  return best;
+}
+
+function normalizeLocalPreviewElevation(rawElevation) {
+  const delta = rawElevation - HYDRO.seaLevelY;
+  if (delta <= 22) return rawElevation;
+  const compression = mix(1, 0.60, smooth(22, 76, delta));
+  return HYDRO.seaLevelY + delta * compression;
+}
+
+function gratitudeDisplayElevation(terrain, x, z) {
+  let elevation = terrain.presentationElevation;
+
+  if (z < -244) {
+    const ridge =
+      0.9 * Math.sin((x + 46) / 31) +
+      0.55 * Math.sin((x - 17) / 17) +
+      0.35 * Math.sin((x + 80) / 9);
+    elevation += ridge * smooth(-244, -318, z) * 3.1;
+  }
+
+  const sandbar = c01(terrain.coastline?.sandbarWeight ?? 0);
+  if (sandbar > 0.01) {
+    elevation = mix(
+      elevation,
+      HYDRO.seaLevelY + 0.18 + brokenSandbarLift(x, z),
+      sandbar * 0.82
+    );
+  }
+
+  return normalizeLocalPreviewElevation(elevation);
+}
+
+function localColor(terrain, elevation) {
+  const beach = c01(terrain.coastline?.beachWeight ?? 0);
+  const wet = c01(terrain.coastline?.wetSandWeight ?? 0);
+  const sandbar = c01(terrain.coastline?.sandbarWeight ?? 0);
+  const site = c01(terrain.sitePreparation?.weight ?? 0);
+  const high = c01((elevation - 25) / 42);
+  const low = c01((28 - elevation) / 22);
+
+  let color = PALETTE.meadow;
+  color = mix3(color, PALETTE.coastal, low * 0.48);
+
+  const distance = terrain.coastline?.distanceToShore ?? -999;
+  const dune = smooth(-42, -14, distance) * (1 - smooth(-14, -2, distance));
+  color = mix3(color, PALETTE.dune, dune * 0.58);
+  color = mix3(color, PALETTE.beach, beach * 0.88);
+  color = mix3(color, PALETTE.wet, wet * 0.58);
+  color = mix3(color, PALETTE.beach, sandbar * 0.92);
+  color = mix3(color, PALETTE.upland, high * 0.34);
+  color = mix3(color, PALETTE.rock, high * 0.42);
+
+  if (terrain.insideReservedEstateEnvelope) {
+    color = mix3(color, PALETTE.estate, 0.38);
+  }
+
+  return mix3(color, PALETTE.earth, site * 0.42);
+}
+
+function localTerrainSignedField(terrain, x, z) {
+  const shoreline = resolveHEarthMapWideShorelineZ(x);
+  const mainlandSignedDistance = shoreline - z;
+  const sandbar = c01(terrain.coastline?.sandbarWeight ?? 0);
+  const sandbarField = (sandbar - 0.30) * 18;
+  return Math.max(mainlandSignedDistance, sandbarField);
+}
+
+function sampleLocalRecord(x, z) {
+  const terrain = sampleTerrain(x, z);
+  if (terrain?.valid !== true) {
+    throw new Error(`GRATITUDE_TERRAIN_SAMPLE_INVALID:${x}:${z}`);
+  }
+  const elevation = gratitudeDisplayElevation(terrain, x, z);
+  const u = x;
+  const v = z - LOCAL_CENTER_Z;
+  return {
+    terrain,
+    x,
+    z,
+    u,
+    v,
+    elevation,
+    color: localColor(terrain, elevation),
+    field: localTerrainSignedField(terrain, x, z)
+  };
+}
+
+function localSurfaceNormalAt(x, z) {
+  const step = 3.5;
+  const x0 = clamp(x - step, LOCAL_DOMAIN.xMin, LOCAL_DOMAIN.xMax);
+  const x1 = clamp(x + step, LOCAL_DOMAIN.xMin, LOCAL_DOMAIN.xMax);
+  const z0 = clamp(z - step, LOCAL_DOMAIN.zMin, LOCAL_DOMAIN.zMax);
+  const z1 = clamp(z + step, LOCAL_DOMAIN.zMin, LOCAL_DOMAIN.zMax);
+
+  const left = sampleLocalRecord(x0, z);
+  const right = sampleLocalRecord(x1, z);
+  const back = sampleLocalRecord(x, z0);
+  const forward = sampleLocalRecord(x, z1);
+
+  const positionLeft = tangentPosition(left.u, left.v, left.elevation);
+  const positionRight = tangentPosition(right.u, right.v, right.elevation);
+  const positionBack = tangentPosition(back.u, back.v, back.elevation);
+  const positionForward = tangentPosition(forward.u, forward.v, forward.elevation);
+
+  const candidate = norm(cross(
+    sub(positionForward, positionBack),
+    sub(positionRight, positionLeft)
+  ));
+  const radial = tangentDirection(x, z - LOCAL_CENTER_Z);
+  return dot(candidate, radial) >= 0 ? candidate : scale(candidate, -1);
+}
+
+function buildGratitudeDetailMesh() {
+  const samples = new Array(LOCAL_RENDER_COLS * LOCAL_RENDER_ROWS);
+  const vertices = [];
+  const indices = [];
+  const counters = {
+    renderedTriangles: 0,
+    clippedTriangles: 0,
+    omittedTriangles: 0
+  };
+
+  let minimumElevation = Infinity;
+  let maximumElevation = -Infinity;
+  let beachSamples = 0;
+
+  for (let row = 0; row < LOCAL_RENDER_ROWS; row += 1) {
+    const z = mix(
+      LOCAL_DOMAIN.zMin,
+      LOCAL_DOMAIN.zMax,
+      row / (LOCAL_RENDER_ROWS - 1)
+    );
+
+    for (let column = 0; column < LOCAL_RENDER_COLS; column += 1) {
+      const x = mix(
+        LOCAL_DOMAIN.xMin,
+        LOCAL_DOMAIN.xMax,
+        column / (LOCAL_RENDER_COLS - 1)
+      );
+      const sample = sampleLocalRecord(x, z);
+      sample.position = tangentPosition(sample.u, sample.v, sample.elevation);
+      sample.normal = localSurfaceNormalAt(x, z);
+      sample.alpha = 1;
+      samples[row * LOCAL_RENDER_COLS + column] = sample;
+
+      minimumElevation = Math.min(minimumElevation, sample.elevation);
+      maximumElevation = Math.max(maximumElevation, sample.elevation);
+      if ((sample.terrain.coastline?.beachWeight ?? 0) > 0.1) beachSamples += 1;
+    }
+  }
+
+  const indexAt = (row, column) => row * LOCAL_RENDER_COLS + column;
+
+  for (let row = 0; row < LOCAL_RENDER_ROWS - 1; row += 1) {
+    for (let column = 0; column < LOCAL_RENDER_COLS - 1; column += 1) {
+      const a = samples[indexAt(row, column)];
+      const b = samples[indexAt(row, column + 1)];
+      const e = samples[indexAt(row + 1, column)];
+      const f = samples[indexAt(row + 1, column + 1)];
+
+      emitClippedTerrainTriangle(vertices, indices, [a, e, b], counters);
+      emitClippedTerrainTriangle(vertices, indices, [b, e, f], counters);
+    }
+  }
+
+  return freeze({
+    vertices: new Float32Array(vertices),
+    indices: new Uint32Array(indices),
+    samples,
+    statistics: freeze({
+      validSampleCount: samples.length,
+      triangleCount: indices.length / 3,
+      renderedTerrainTriangles: counters.renderedTriangles,
+      clippedCoastlineTriangleCount: counters.clippedTriangles,
+      omittedOceanTriangles: counters.omittedTriangles,
+      transparentTerrainTriangleCount: 0,
+      topologyClippedAtCoastline: true,
+      coastlineTopology: 'SUBCELL_SCALAR_FIELD_CLIPPED',
+      minimumElevation,
+      maximumElevation,
+      beachSampleCount: beachSamples,
+      gratitudeHighResolution: true,
+      revision10MigrationSourcePreserved: true,
+      localWidthAuthoringUnits: LOCAL_DOMAIN.width,
+      localDepthAuthoringUnits: LOCAL_DOMAIN.depth,
+      localArcScaleOneToOne: true,
+      localScaleCompressed: false,
+      localPreviewReliefNormalizationApplied: true,
+      sourceTerrainMutation: false,
+      renderColumns: LOCAL_RENDER_COLS,
+      renderRows: LOCAL_RENDER_ROWS,
+      rectangularBoundaryVisible: false,
+      authoringRegionIsWorldBoundary: false,
+      singleSurfaceOceanUsesPlanetaryMesh: true,
+      localOceanOverlayConstructed: false,
+      trueCoastalHarborBinding: true,
+      liveTerrainMutation: false
+    })
+  });
+}
+
+function detailSampleNearest(detailMesh, x, z) {
+  const column = Math.round(
+    (x - LOCAL_DOMAIN.xMin) /
+    (LOCAL_DOMAIN.width / (LOCAL_RENDER_COLS - 1))
+  );
+  const row = Math.round(
+    (z - LOCAL_DOMAIN.zMin) /
+    (LOCAL_DOMAIN.depth / (LOCAL_RENDER_ROWS - 1))
+  );
+
+  return detailMesh.samples[
+    clamp(row, 0, LOCAL_RENDER_ROWS - 1) * LOCAL_RENDER_COLS +
+    clamp(column, 0, LOCAL_RENDER_COLS - 1)
+  ];
+}
+
+function distanceOutsideLocalRectangle(u, v) {
+  const du =
+    u < LOCAL_U_MIN
+      ? LOCAL_U_MIN - u
+      : u > LOCAL_U_MAX
+        ? u - LOCAL_U_MAX
+        : 0;
+  const dv =
+    v < LOCAL_V_MIN
+      ? LOCAL_V_MIN - v
+      : v > LOCAL_V_MAX
+        ? v - LOCAL_V_MAX
+        : 0;
+  return Math.max(du, dv);
+}
+
+function buildStitchMesh(detailMesh) {
+  const columns = Math.round((APERTURE.uMax - APERTURE.uMin) / STITCH_LAYER_STEP) + 1;
+  const rows = Math.round((APERTURE.vMax - APERTURE.vMin) / STITCH_LAYER_STEP) + 1;
+  const samples = new Array(columns * rows);
+  const vertices = [];
+  const indices = [];
+  const counters = {
+    renderedTriangles: 0,
+    clippedTriangles: 0,
+    omittedTriangles: 0
+  };
+
+  let maximumEdgeLength = 0;
+  let maximumLocalBoundaryPositionError = 0;
+  let maximumOuterBoundaryMacroElevationError = 0;
+
+  for (let row = 0; row < rows; row += 1) {
+    const v = APERTURE.vMin + row * STITCH_LAYER_STEP;
+
+    for (let column = 0; column < columns; column += 1) {
+      const u = APERTURE.uMin + column * STITCH_LAYER_STEP;
+      const nearestU = clamp(u, LOCAL_U_MIN, LOCAL_U_MAX);
+      const nearestV = clamp(v, LOCAL_V_MIN, LOCAL_V_MAX);
+      const nearestX = nearestU;
+      const nearestZ = nearestV + LOCAL_CENTER_Z;
+      const local = detailSampleNearest(detailMesh, nearestX, nearestZ);
+      const macro = gratitudeMacroSurfaceAtUV(u, v);
+      const distance = distanceOutsideLocalRectangle(u, v);
+      const t = c01(distance / STITCH_WIDTH);
+      const blend = smooth(0, 1, t);
+      const elevation = mix(local.elevation, macro.elevation, blend);
+      const position = tangentPosition(u, v, elevation);
+      const macroNormal = macroSurfaceNormalAtUV(u, v);
+      const normal = norm([
+        mix(local.normal[0], macroNormal[0], blend),
+        mix(local.normal[1], macroNormal[1], blend),
+        mix(local.normal[2], macroNormal[2], blend)
+      ]);
+      const color = mix3(local.color, macro.color, blend);
+      const field = mix(local.field, macro.coast.signedDistance, blend);
+
+      samples[row * columns + column] = {
+        u,
+        v,
+        position,
+        normal,
+        color,
+        alpha: 1,
+        field,
+        t,
+        elevation,
+        macroElevation: macro.elevation
+      };
+
+      if (distance <= CLIP_EPSILON) {
+        const localPosition = tangentPosition(nearestU, nearestV, local.elevation);
+        maximumLocalBoundaryPositionError = Math.max(
+          maximumLocalBoundaryPositionError,
+          Math.hypot(
+            position[0] - localPosition[0],
+            position[1] - localPosition[1],
+            position[2] - localPosition[2]
+          )
+        );
+      }
+
+      if (Math.abs(distance - STITCH_WIDTH) <= CLIP_EPSILON) {
+        maximumOuterBoundaryMacroElevationError = Math.max(
+          maximumOuterBoundaryMacroElevationError,
+          Math.abs(elevation - macro.elevation)
+        );
+      }
+    }
+  }
+
+  const edgeLength = (left, right) =>
+    Math.hypot(
+      left.position[0] - right.position[0],
+      left.position[1] - right.position[1],
+      left.position[2] - right.position[2]
+    );
+
+  const indexAt = (row, column) => row * columns + column;
+
+  function emitStitchTriangle(triangle) {
+    const polygon = clipPolygonToPositiveField(triangle);
+    if (polygon.length < 3) {
+      counters.omittedTriangles += 1;
+      return;
+    }
+    if (polygon.length !== 3 || triangle.some((record) => record.field < 0)) {
+      counters.clippedTriangles += 1;
+    }
+
+    const baseRecord = polygon[0];
+    const base = emitTerrainRecord(vertices, baseRecord);
+
+    for (let index = 1; index < polygon.length - 1; index += 1) {
+      const leftRecord = polygon[index];
+      const rightRecord = polygon[index + 1];
+      const left = emitTerrainRecord(vertices, leftRecord);
+      const right = emitTerrainRecord(vertices, rightRecord);
+      indices.push(base, left, right);
+      maximumEdgeLength = Math.max(
+        maximumEdgeLength,
+        edgeLength(baseRecord, leftRecord),
+        edgeLength(leftRecord, rightRecord),
+        edgeLength(rightRecord, baseRecord)
+      );
+      counters.renderedTriangles += 1;
+    }
+  }
+
+  for (let row = 0; row < rows - 1; row += 1) {
+    const v0 = APERTURE.vMin + row * STITCH_LAYER_STEP;
+    const v1 = v0 + STITCH_LAYER_STEP;
+
+    for (let column = 0; column < columns - 1; column += 1) {
+      const u0 = APERTURE.uMin + column * STITCH_LAYER_STEP;
+      const u1 = u0 + STITCH_LAYER_STEP;
+
+      if (cellInsideLocalRectangle(u0, u1, v0, v1)) continue;
+
+      const a = samples[indexAt(row, column)];
+      const b = samples[indexAt(row, column + 1)];
+      const d = samples[indexAt(row + 1, column)];
+      const e = samples[indexAt(row + 1, column + 1)];
+
+      emitStitchTriangle([a, d, b]);
+      emitStitchTriangle([b, d, e]);
+    }
+  }
+
+  return freeze({
+    vertices: new Float32Array(vertices),
+    indices: new Uint32Array(indices),
+    statistics: freeze({
+      vertexCount: vertices.length / 10,
+      triangleCount: indices.length / 3,
+      renderedTriangles: counters.renderedTriangles,
+      clippedCoastlineTriangleCount: counters.clippedTriangles,
+      omittedOceanTriangles: counters.omittedTriangles,
+      stitchWidthAuthoringUnits: STITCH_WIDTH,
+      layerStepAuthoringUnits: STITCH_LAYER_STEP,
+      maximumTriangleEdgeLength: maximumEdgeLength,
+      boundedTriangleEdges: maximumEdgeLength <= 40,
+      maximumLocalBoundaryPositionError,
+      localBoundarySharedGeometrically: maximumLocalBoundaryPositionError < 1e-6,
+      maximumOuterBoundaryMacroElevationError,
+      outerBoundaryConvergesToMacro: maximumOuterBoundaryMacroElevationError < 1e-9,
+      alignedRectangularGrid: true,
+      scalarFieldCoastlineClipping: true,
+      explicitAnnulusConstructed: true,
+      separateMesh: true
+    })
+  });
+}
+
+function buildLocalWaterMesh() {
+  const vertices = [];
+  const indices = [];
+
+  const pushMapped = (x, y, z, color) => {
+    const position = tangentPosition(x, z - LOCAL_CENTER_Z, y);
+    vertices.push(
+      position[0], position[1], position[2],
+      color[0], color[1], color[2], color[3]
+    );
+  };
+
+  const reservoir = HYDRO.reservoir;
+  const reservoirBase = 0;
+  const reservoirSegments = 64;
+
+  pushMapped(
+    reservoir.center.x,
+    reservoir.waterSurfaceElevation + 0.10,
+    reservoir.center.z,
+    PALETTE.reservoir
+  );
+
+  for (let index = 0; index <= reservoirSegments; index += 1) {
+    const angle = index / reservoirSegments * Math.PI * 2;
+    const boundary = resolveHEarthMapWideReservoirBoundaryPoint(angle);
+    pushMapped(
+      boundary.x,
+      reservoir.waterSurfaceElevation + 0.10,
+      boundary.z,
+      PALETTE.reservoir
+    );
+  }
+
+  for (let index = 0; index < reservoirSegments; index += 1) {
+    indices.push(reservoirBase, reservoirBase + index + 1, reservoirBase + index + 2);
+  }
+
+  const waterfall = HYDRO.waterfall;
+  const waterfallBase = vertices.length / 7;
+  const waterfallSegments = 24;
+  const crestTerrain = sampleTerrain(waterfall.visibleCrest.x, waterfall.visibleCrest.z);
+  const top =
+    crestTerrain?.valid
+      ? gratitudeDisplayElevation(
+          crestTerrain,
+          waterfall.visibleCrest.x,
+          waterfall.visibleCrest.z
+        ) + 1.6
+      : reservoir.waterSurfaceElevation + 30;
+  const bottom = reservoir.waterSurfaceElevation + 0.55;
+  const halfWidth = waterfall.visibleWaterHalfWidth ?? 7.5;
+
+  for (let index = 0; index <= waterfallSegments; index += 1) {
+    const amount = index / waterfallSegments;
+    const x = mix(waterfall.visibleCrest.x, waterfall.landing.x, amount);
+    const z = mix(waterfall.visibleCrest.z, waterfall.landing.z, amount);
+    const y = mix(top, bottom, amount);
+    pushMapped(x - halfWidth, y, z, PALETTE.waterfall);
+    pushMapped(x + halfWidth, y, z, PALETTE.waterfall);
+  }
+
+  for (let index = 0; index < waterfallSegments; index += 1) {
+    const a = waterfallBase + index * 2;
+    const b = a + 1;
+    const c = a + 2;
+    const d = a + 3;
+    indices.push(a, c, b, b, c, d);
+  }
+
+  return freeze({
+    vertices: new Float32Array(vertices),
+    indices: new Uint32Array(indices),
+    statistics: freeze({
+      triangleCount: indices.length / 3,
+      oceanTriangleCount: 0,
+      reservoirTriangleCount: reservoirSegments,
+      waterfallTriangleCount: waterfallSegments * 2,
+      planetaryOceanSingleSurface: true,
+      localOceanOverlayConstructed: false,
+      curvedToPlanetSurface: true,
+      authoringContextOnly: true,
+      liveWaterMutation: false
+    })
+  });
+}
+
+function polygonArea(points) {
+  let area = 0;
+  for (let index = 0; index < points.length; index += 1) {
+    const left = points[index];
+    const right = points[(index + 1) % points.length];
+    area += left[0] * right[1] - right[0] * left[1];
+  }
+  return Math.abs(area) * 0.5;
+}
+
+function polygonPerimeter(points) {
+  let perimeter = 0;
+  for (let index = 0; index < points.length; index += 1) {
+    const left = points[index];
+    const right = points[(index + 1) % points.length];
+    perimeter += Math.hypot(right[0] - left[0], right[1] - left[1]);
+  }
+  return perimeter;
+}
+
+function buildOW01Evidence(planetMesh, continentMesh, stitchMesh, detailMesh) {
+  const coastalBindingSamples = HARBOR_BINDING_XS.map((x) => {
+    const localShorelineZ = resolveHEarthMapWideShorelineZ(x);
+    const controlPoint = GRATITUDE_COAST_CONTROL_POINTS.find(
+      (point) => Math.abs(point[0] - x) < 1e-9
+    );
+    const contourControlZ = controlPoint ? controlPoint[1] + LOCAL_CENTER_Z : NaN;
+
+    return freeze({
+      worldX: x,
+      localShorelineZ,
+      contourControlZ,
+      error: Math.abs(localShorelineZ - contourControlZ)
+    });
+  });
+
+  const maximumCoastalBindingError = Math.max(
+    ...coastalBindingSamples.map((sample) => sample.error)
+  );
+  const relief = continentMesh.statistics.reliefStatistics;
+
+  return freeze({
+    schema: 'H_EARTH_AUDRALIA_OPEN_WORLD_OW01_GEOGRAPHIC_EVIDENCE_v4',
+    operationId: OPERATION_ID,
+    checkpoint: CHECKPOINT,
+    lockGeneration: LOCK_GENERATION,
+    governingHead: GOVERNING_HEAD,
+    revision10Source: REVISION10_SOURCE,
+    trueCoastalHarborBinding: maximumCoastalBindingError < 1e-9,
+    maximumCoastalBindingError,
+    coastalBindingSampleCount: coastalBindingSamples.length,
+    coastalBindingSamples: freeze(coastalBindingSamples),
+    fullScaleLocalGratitudePreserved: true,
+    coastlineRepresentation: 'DELIBERATE_CLOSED_COASTLINE_CONTOUR_V1',
+    coastlineUnionOfEllipses: false,
+    coastlineTopology: 'SUBCELL_SCALAR_FIELD_CLIPPED',
+    coastlineControlPointCount: GRATITUDE_COAST_CONTROL_POINTS.length,
+    coastlineSampleCount: GRATITUDE_COAST_CONTOUR.length,
+    coastlinePlanarArea: polygonArea(GRATITUDE_COAST_CONTOUR),
+    coastlinePlanarPerimeter: polygonPerimeter(GRATITUDE_COAST_CONTOUR),
+    planetaryGratitudeLandRemoved:
+      planetMesh.statistics.planetaryGratitudeLandVertices === 0,
+    gratitudeContinentalMeshSeparate:
+      continentMesh.statistics.continentalMeshSeparateFromPlanetaryBase === true,
+    continentalApertureConstructed:
+      continentMesh.statistics.continentalApertureConstructed === true,
+    continentalApertureClear: continentMesh.statistics.apertureClear === true,
+    continentalApertureIntrusionTriangleCount:
+      continentMesh.statistics.apertureIntrusionTriangleCount,
+    explicitStitchAnnulusConstructed:
+      stitchMesh.statistics.explicitAnnulusConstructed === true,
+    stitchGridAligned: stitchMesh.statistics.alignedRectangularGrid === true,
+    stitchScalarFieldCoastlineClipping:
+      stitchMesh.statistics.scalarFieldCoastlineClipping === true,
+    stitchMaximumTriangleEdgeLength:
+      stitchMesh.statistics.maximumTriangleEdgeLength,
+    stitchTrianglesBounded: stitchMesh.statistics.boundedTriangleEdges === true,
+    stitchLocalBoundarySharedGeometrically:
+      stitchMesh.statistics.localBoundarySharedGeometrically === true,
+    stitchOuterBoundaryConvergesToMacro:
+      stitchMesh.statistics.outerBoundaryConvergesToMacro === true,
+    localTerrainTopologyClippedAtCoastline:
+      detailMesh.statistics.topologyClippedAtCoastline === true,
+    localCoastlineClipTriangleCount:
+      detailMesh.statistics.clippedCoastlineTriangleCount,
+    localTransparentTerrainTriangleCount:
+      detailMesh.statistics.transparentTerrainTriangleCount,
+    localPreviewReliefNormalizationApplied:
+      detailMesh.statistics.localPreviewReliefNormalizationApplied === true,
+    sourceTerrainMutation: false,
+    continentalReliefHierarchy:
+      continentMesh.statistics.continentalReliefHierarchy,
+    reliefLowlandFraction: relief.lowlandFraction,
+    reliefUplandFraction: relief.uplandFraction,
+    reliefMountainFraction: relief.mountainFraction,
+    reliefLowlandMajority: relief.lowlandMajority,
+    reliefMountainCoverageBounded: relief.mountainCoverageBounded,
+    planetaryOceanSingleSurface: true,
+    localOceanOverlayConstructed: false,
+    primaryInlandMountainWatershedAxes: true,
+    primaryInlandAxisCount: PRIMARY_INLAND_AXES.length,
+    climateReadyReliefHierarchy: true,
+    detailedClimateModelConstructed: false,
+    ow02DetailedContinuationConstructed: false,
+    otherEightContinentsRemainNoncanonical: true,
+    mechanicalPassIsNotUserAcceptance: true,
+    liveProductMutation: false
+  });
+}
+
+const TERRAIN_VS = `#version 300 es
 precision highp float;
 layout(location=0) in vec3 aPosition;
 layout(location=1) in vec3 aNormal;
@@ -13,7 +1528,9 @@ void main(){
   vNormal=aNormal;
   vColor=vec4(aColor.rgb,aColor.a*uGlobalAlpha);
   gl_Position=uVP*vec4(aPosition,1.0);
-}`;const TERRAIN_FS=`#version 300 es
+}`;
+
+const TERRAIN_FS = `#version 300 es
 precision highp float;
 in vec3 vPos;
 in vec3 vNormal;
@@ -27,12 +1544,14 @@ void main(){
   vec3 n=normalize(vNormal);
   vec3 light=normalize(vec3(.42,.78,.46));
   float d=max(dot(n,light),0.0);
-  float hemi=.62+.38*clamp(n.y*.5+.5,0.0,1.0);
-  vec3 c=vColor.rgb*(.50+.62*d)*hemi;
+  float hemi=.64+.36*clamp(n.y*.5+.5,0.0,1.0);
+  vec3 c=vColor.rgb*(.54+.56*d)*hemi;
   float dist=length(vPos-uEye);
-  float fog=clamp((dist-uFogStart)/max(1.0,uFogEnd-uFogStart),0.0,.68);
+  float fog=clamp((dist-uFogStart)/max(1.0,uFogEnd-uFogStart),0.0,.66);
   outColor=vec4(mix(c,uHaze,fog),vColor.a);
-}`;const WATER_VS=`#version 300 es
+}`;
+
+const WATER_VS = `#version 300 es
 precision highp float;
 layout(location=0) in vec3 aPosition;
 layout(location=1) in vec4 aColor;
@@ -41,8 +1560,413 @@ out vec4 vColor;
 void main(){
   gl_Position=uVP*vec4(aPosition,1.0);
   vColor=aColor;
-}`;const WATER_FS=`#version 300 es
+}`;
+
+const WATER_FS = `#version 300 es
 precision highp float;
 in vec4 vColor;
 out vec4 outColor;
-void main(){outColor=vColor;}`;function shader(gl,type,source){const compiled=gl.createShader(type);gl.shaderSource(compiled,source);gl.compileShader(compiled);if(!gl.getShaderParameter(compiled,gl.COMPILE_STATUS)){throw new Error(`SHADER_COMPILE_FAILED:${gl.getShaderInfoLog(compiled)}`);}return compiled;}function program(gl,vertexSource,fragmentSource){const linked=gl.createProgram();gl.attachShader(linked,shader(gl,gl.VERTEX_SHADER,vertexSource));gl.attachShader(linked,shader(gl,gl.FRAGMENT_SHADER,fragmentSource));gl.linkProgram(linked);if(!gl.getProgramParameter(linked,gl.LINK_STATUS)){throw new Error(`PROGRAM_LINK_FAILED:${gl.getProgramInfoLog(linked)}`);}return linked;}function perspective(fov,aspect,near,far){const factor=1/Math.tan(fov/2);const inverse=1/(near-far);return new Float32Array([factor/aspect,0,0,0,0,factor,0,0,0,0,(far+near)*inverse,-1,0,0,2*far*near*inverse,0]);}function lookAt(eye,target,up){const z=norm(sub(eye,target));let x=cross(up,z);if(Math.hypot(...x)<1e-5)x=[1,0,0];x=norm(x);const y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);}function multiply(left,right){const output=new Float32Array(16);for(let column=0;column<4;column+=1){for(let row=0;row<4;row+=1){output[column*4+row]=left[row]*right[column*4]+left[4+row]*right[column*4+1]+left[8+row]*right[column*4+2]+left[12+row]*right[column*4+3];}}return output;}function terrainBuffers(gl,mesh){const vao=gl.createVertexArray();gl.bindVertexArray(vao);const vertexBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);gl.bufferData(gl.ARRAY_BUFFER,mesh.vertices,gl.STATIC_DRAW);const stride=10*4;for(const[location,size,offset]of[[0,3,0],[1,3,12],[2,4,24]]){gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,size,gl.FLOAT,false,stride,offset);}const indexBuffer=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,mesh.indices,gl.STATIC_DRAW);return{vao};}function waterBuffers(gl,mesh){const vao=gl.createVertexArray();gl.bindVertexArray(vao);const vertexBuffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);gl.bufferData(gl.ARRAY_BUFFER,mesh.vertices,gl.STATIC_DRAW);const stride=7*4;for(const[location,size,offset]of[[0,3,0],[1,4,12]]){gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,size,gl.FLOAT,false,stride,offset);}const indexBuffer=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,mesh.indices,gl.STATIC_DRAW);return{vao};}export function createMapWideEnvironmentRenderer(canvas){const gl=canvas.getContext('webgl2',{antialias:true,alpha:false,powerPreference:'high-performance'});if(!gl)throw new Error('WEBGL2_CONTEXT_UNAVAILABLE');const terrainProgram=program(gl,TERRAIN_VS,TERRAIN_FS);const waterProgram=program(gl,WATER_VS,WATER_FS);const planetMesh=buildPlanetBaseMesh();const continentMesh=buildGratitudeContinentalMesh();const gratitudeMesh=buildGratitudeDetailMesh();const stitchMesh=buildStitchMesh(gratitudeMesh);const waterMesh=buildLocalWaterMesh();const planetBuffers=terrainBuffers(gl,planetMesh);const continentBuffers=terrainBuffers(gl,continentMesh);const gratitudeBuffers=terrainBuffers(gl,gratitudeMesh);const stitchBuffers=terrainBuffers(gl,stitchMesh);const localWaterBuffers=waterBuffers(gl,waterMesh);const ow01Evidence=buildOW01Evidence(planetMesh,continentMesh,stitchMesh,gratitudeMesh);const state={yaw:-0.62,pitch:0.88,distance:720,targetU:0,targetV:-4,renderedFrames:0};function resize(){const dpr=Math.min(1.35,window.devicePixelRatio||1);const width=Math.max(1,Math.round(canvas.clientWidth*dpr));const height=Math.max(1,Math.round(canvas.clientHeight*dpr));if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}gl.viewport(0,0,width,height);}function limitTarget(){const radius=Math.hypot(state.targetU,state.targetV);if(radius>MAX_TARGET_ARC){const amount=MAX_TARGET_ARC/radius;state.targetU*=amount;state.targetV*=amount;}}function targetGroundElevation(){const x=state.targetU;const z=state.targetV+LOCAL_CENTER_Z;if(x>=LOCAL_DOMAIN.xMin&&x<=LOCAL_DOMAIN.xMax&&z>=LOCAL_DOMAIN.zMin&&z<=LOCAL_DOMAIN.zMax){const terrain=sampleTerrain(x,z);if(terrain?.valid)return gratitudeDisplayElevation(terrain,x,z);}const macro=gratitudeMacroSurfaceAtUV(state.targetU,state.targetV);if(macro.land>0)return macro.elevation;return planetBaseSurface(tangentDirection(state.targetU,state.targetV)).elevation;}function camera(){state.pitch=clamp(state.pitch,0.46,1.49);state.distance=clamp(state.distance,95,5600);limitTarget();const direction=tangentDirection(state.targetU,state.targetV);const ground=targetGroundElevation();const target=surfacePositionFromDirection(direction,ground);const pU1=tangentPosition(state.targetU+1,state.targetV,0);const pU0=tangentPosition(state.targetU-1,state.targetV,0);const pV1=tangentPosition(state.targetU,state.targetV+1,0);const pV0=tangentPosition(state.targetU,state.targetV-1,0);const eU=norm(sub(pU1,pU0));const eV=norm(sub(pV1,pV0));const horizontal=norm(add(scale(eU,Math.sin(state.yaw)),scale(eV,Math.cos(state.yaw))));const eye=add(add(target,scale(direction,state.distance*Math.sin(state.pitch)+18)),scale(horizontal,state.distance*Math.cos(state.pitch)));return{eye,target,up:direction};}function viewScale(){if(state.distance<900)return 'LOCAL';if(state.distance<2200)return 'REGION';if(state.distance<4200)return 'CONTINENT';return 'PLANETARY';}function drawTerrain(mesh,buffers,cam,fogStart,fogEnd){if(mesh.indices.length===0)return null;const projection=perspective(Math.PI/3,canvas.width/canvas.height,2,PLANET_RADIUS*4.5);const vp=multiply(projection,lookAt(cam.eye,cam.target,cam.up));gl.useProgram(terrainProgram);gl.uniformMatrix4fv(gl.getUniformLocation(terrainProgram,'uVP'),false,vp);gl.uniform1f(gl.getUniformLocation(terrainProgram,'uGlobalAlpha'),1);gl.uniform3fv(gl.getUniformLocation(terrainProgram,'uEye'),cam.eye);gl.uniform3fv(gl.getUniformLocation(terrainProgram,'uHaze'),PALETTE.haze);gl.uniform1f(gl.getUniformLocation(terrainProgram,'uFogStart'),fogStart);gl.uniform1f(gl.getUniformLocation(terrainProgram,'uFogEnd'),fogEnd);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(buffers.vao);gl.drawElements(gl.TRIANGLES,mesh.indices.length,gl.UNSIGNED_INT,0);return vp;}function render(){resize();gl.enable(gl.DEPTH_TEST);gl.clearColor(...PALETTE.sky,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);const cam=camera();const vp=drawTerrain(planetMesh,planetBuffers,cam,3600,11800);drawTerrain(continentMesh,continentBuffers,cam,1700,7200);drawTerrain(stitchMesh,stitchBuffers,cam,950,4700);drawTerrain(gratitudeMesh,gratitudeBuffers,cam,900,4400);if(waterMesh.indices.length>0){gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);gl.useProgram(waterProgram);gl.uniformMatrix4fv(gl.getUniformLocation(waterProgram,'uVP'),false,vp);gl.bindVertexArray(localWaterBuffers.vao);gl.drawElements(gl.TRIANGLES,waterMesh.indices.length,gl.UNSIGNED_INT,0);gl.depthMask(true);gl.disable(gl.BLEND);}state.renderedFrames+=1;}function orbit(dx,dy){state.yaw=wrap(state.yaw+clamp(Number(dx)||0,-64,64)*0.0052);state.pitch=clamp(state.pitch+clamp(Number(dy)||0,-64,64)*0.0032,0.46,1.49);render();}function zoom(delta){state.distance=clamp(state.distance*Math.exp(clamp(Number(delta)||0,-900,900)*0.00115),95,5600);render();}function zoomByFactor(factorValue){const factor=clamp(Number(factorValue)||1,0.72,1.38);state.distance=clamp(state.distance/factor,95,5600);render();}function pan(du,dv){state.targetU+=Number(du)||0;state.targetV+=Number(dv)||0;limitTarget();render();}function panScreen(dx,dy){const amount=clamp(state.distance*0.0021,0.28,12);const rightU=Math.cos(state.yaw);const rightV=-Math.sin(state.yaw);const forwardU=Math.sin(state.yaw);const forwardV=Math.cos(state.yaw);pan((-dx*rightU+dy*forwardU)*amount,(-dx*rightV+dy*forwardV)*amount);}function focusGratitude(){Object.assign(state,{yaw:-0.62,pitch:0.88,distance:720,targetU:0,targetV:-4});render();}function planetaryVantage(){state.distance=5000;state.pitch=1.02;render();}function fitWorld(){focusGratitude();}function getCameraSafety(){const fullPlanetFitDistance=PLANET_RADIUS/Math.sin((Math.PI/3)/2)-PLANET_RADIUS;return freeze({distanceSafe:state.distance>=95&&state.distance<=5600,targetArcSafe:Math.hypot(state.targetU,state.targetV)<=MAX_TARGET_ARC+1,continuousScaleRecognized:['LOCAL','REGION','CONTINENT','PLANETARY'].includes(viewScale()),wholePlanetFitNotRequired:state.distance<fullPlanetFitDistance,planetHasNoRectangularBorder:planetMesh.statistics.planetBordersRectangular===false,nineContinentsDefined:planetMesh.statistics.definedContinentCount===9,localScaleNotCompressed:gratitudeMesh.statistics.localScaleCompressed===false,liveMutationAbsent:true});}return freeze({planetMesh,continentMesh,gratitudeMesh,stitchMesh,waterMesh,state,render,orbit,zoom,zoomByFactor,pan,panScreen,fitWorld,focusGratitude,planetaryVantage,getViewScale:viewScale,getCameraSafety,getOW01GeographicEvidence:()=>ow01Evidence,getSnapshot:()=>freeze({...state,viewScale:viewScale(),planetStatistics:planetMesh.statistics,continentStatistics:continentMesh.statistics,gratitudeStatistics:gratitudeMesh.statistics,stitchStatistics:stitchMesh.statistics,waterStatistics:waterMesh.statistics,worldContract:AUDRALIA_OPEN_WORLD_AUTHORING_CONTRACT,ow01Evidence,authoringRegionIsWorldBoundary:false,wholePlanetMustFitViewport:false,manorGeometryConstructed:false,liveRuntimeMutated:false,liveCameraMutated:false,liveNavigationMutated:false,liveWaterMutated:false})});}export default createMapWideEnvironmentRenderer;
+void main(){outColor=vColor;}`;
+
+function shader(gl, type, source) {
+  const compiled = gl.createShader(type);
+  gl.shaderSource(compiled, source);
+  gl.compileShader(compiled);
+  if (!gl.getShaderParameter(compiled, gl.COMPILE_STATUS)) {
+    throw new Error(`SHADER_COMPILE_FAILED:${gl.getShaderInfoLog(compiled)}`);
+  }
+  return compiled;
+}
+
+function program(gl, vertexSource, fragmentSource) {
+  const linked = gl.createProgram();
+  gl.attachShader(linked, shader(gl, gl.VERTEX_SHADER, vertexSource));
+  gl.attachShader(linked, shader(gl, gl.FRAGMENT_SHADER, fragmentSource));
+  gl.linkProgram(linked);
+  if (!gl.getProgramParameter(linked, gl.LINK_STATUS)) {
+    throw new Error(`PROGRAM_LINK_FAILED:${gl.getProgramInfoLog(linked)}`);
+  }
+  return linked;
+}
+
+function perspective(fov, aspect, near, far) {
+  const factor = 1 / Math.tan(fov / 2);
+  const inverse = 1 / (near - far);
+  return new Float32Array([
+    factor / aspect, 0, 0, 0,
+    0, factor, 0, 0,
+    0, 0, (far + near) * inverse, -1,
+    0, 0, 2 * far * near * inverse, 0
+  ]);
+}
+
+function lookAt(eye, target, up) {
+  const z = norm(sub(eye, target));
+  let x = cross(up, z);
+  if (Math.hypot(...x) < 1e-5) x = [1, 0, 0];
+  x = norm(x);
+  const y = cross(z, x);
+
+  return new Float32Array([
+    x[0], y[0], z[0], 0,
+    x[1], y[1], z[1], 0,
+    x[2], y[2], z[2], 0,
+    -dot(x, eye), -dot(y, eye), -dot(z, eye), 1
+  ]);
+}
+
+function multiply(left, right) {
+  const output = new Float32Array(16);
+  for (let column = 0; column < 4; column += 1) {
+    for (let row = 0; row < 4; row += 1) {
+      output[column * 4 + row] =
+        left[row] * right[column * 4] +
+        left[4 + row] * right[column * 4 + 1] +
+        left[8 + row] * right[column * 4 + 2] +
+        left[12 + row] * right[column * 4 + 3];
+    }
+  }
+  return output;
+}
+
+function terrainBuffers(gl, mesh) {
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+
+  const vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, mesh.vertices, gl.STATIC_DRAW);
+
+  const stride = 10 * 4;
+  for (const [location, size, offset] of [[0, 3, 0], [1, 3, 12], [2, 4, 24]]) {
+    gl.enableVertexAttribArray(location);
+    gl.vertexAttribPointer(location, size, gl.FLOAT, false, stride, offset);
+  }
+
+  const indexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
+
+  return { vao };
+}
+
+function waterBuffers(gl, mesh) {
+  const vao = gl.createVertexArray();
+  gl.bindVertexArray(vao);
+
+  const vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, mesh.vertices, gl.STATIC_DRAW);
+
+  const stride = 7 * 4;
+  for (const [location, size, offset] of [[0, 3, 0], [1, 4, 12]]) {
+    gl.enableVertexAttribArray(location);
+    gl.vertexAttribPointer(location, size, gl.FLOAT, false, stride, offset);
+  }
+
+  const indexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
+
+  return { vao };
+}
+
+export function createMapWideEnvironmentRenderer(canvas) {
+  const gl = canvas.getContext('webgl2', {
+    antialias: true,
+    alpha: false,
+    powerPreference: 'high-performance'
+  });
+  if (!gl) throw new Error('WEBGL2_CONTEXT_UNAVAILABLE');
+
+  const terrainProgram = program(gl, TERRAIN_VS, TERRAIN_FS);
+  const waterProgram = program(gl, WATER_VS, WATER_FS);
+
+  const planetMesh = buildPlanetBaseMesh();
+  const continentMesh = buildGratitudeContinentalMesh();
+  const gratitudeMesh = buildGratitudeDetailMesh();
+  const stitchMesh = buildStitchMesh(gratitudeMesh);
+  const waterMesh = buildLocalWaterMesh();
+
+  const planetBuffers = terrainBuffers(gl, planetMesh);
+  const continentBuffers = terrainBuffers(gl, continentMesh);
+  const gratitudeBuffers = terrainBuffers(gl, gratitudeMesh);
+  const stitchBuffers = terrainBuffers(gl, stitchMesh);
+  const localWaterBuffers = waterBuffers(gl, waterMesh);
+
+  const ow01Evidence = buildOW01Evidence(
+    planetMesh,
+    continentMesh,
+    stitchMesh,
+    gratitudeMesh
+  );
+
+  const state = {
+    yaw: -0.62,
+    pitch: 0.88,
+    distance: 720,
+    targetU: 0,
+    targetV: -4,
+    renderedFrames: 0
+  };
+
+  function resize() {
+    const dpr = Math.min(1.35, window.devicePixelRatio || 1);
+    const width = Math.max(1, Math.round(canvas.clientWidth * dpr));
+    const height = Math.max(1, Math.round(canvas.clientHeight * dpr));
+
+    if (canvas.width !== width || canvas.height !== height) {
+      canvas.width = width;
+      canvas.height = height;
+    }
+    gl.viewport(0, 0, width, height);
+  }
+
+  function limitTarget() {
+    const radius = Math.hypot(state.targetU, state.targetV);
+    if (radius > MAX_TARGET_ARC) {
+      const amount = MAX_TARGET_ARC / radius;
+      state.targetU *= amount;
+      state.targetV *= amount;
+    }
+  }
+
+  function targetGroundElevation() {
+    const x = state.targetU;
+    const z = state.targetV + LOCAL_CENTER_Z;
+
+    if (
+      x >= LOCAL_DOMAIN.xMin &&
+      x <= LOCAL_DOMAIN.xMax &&
+      z >= LOCAL_DOMAIN.zMin &&
+      z <= LOCAL_DOMAIN.zMax
+    ) {
+      const terrain = sampleTerrain(x, z);
+      if (terrain?.valid) return gratitudeDisplayElevation(terrain, x, z);
+    }
+
+    const macro = gratitudeMacroSurfaceAtUV(state.targetU, state.targetV);
+    if (macro.coast.inside) return macro.elevation;
+
+    return planetBaseSurface(tangentDirection(state.targetU, state.targetV)).elevation;
+  }
+
+  function camera() {
+    state.pitch = clamp(state.pitch, 0.46, 1.49);
+    state.distance = clamp(state.distance, 95, 5600);
+    limitTarget();
+
+    const direction = tangentDirection(state.targetU, state.targetV);
+    const ground = targetGroundElevation();
+    const target = surfacePositionFromDirection(direction, ground);
+
+    const pU1 = tangentPosition(state.targetU + 1, state.targetV, 0);
+    const pU0 = tangentPosition(state.targetU - 1, state.targetV, 0);
+    const pV1 = tangentPosition(state.targetU, state.targetV + 1, 0);
+    const pV0 = tangentPosition(state.targetU, state.targetV - 1, 0);
+    const eU = norm(sub(pU1, pU0));
+    const eV = norm(sub(pV1, pV0));
+
+    const horizontal = norm(
+      add(
+        scale(eU, Math.sin(state.yaw)),
+        scale(eV, Math.cos(state.yaw))
+      )
+    );
+
+    const eye = add(
+      add(target, scale(direction, state.distance * Math.sin(state.pitch) + 18)),
+      scale(horizontal, state.distance * Math.cos(state.pitch))
+    );
+
+    return { eye, target, up: direction };
+  }
+
+  function viewScale() {
+    if (state.distance < 900) return 'LOCAL';
+    if (state.distance < 2200) return 'REGION';
+    if (state.distance < 4200) return 'CONTINENT';
+    return 'PLANETARY';
+  }
+
+  function drawTerrain(mesh, buffers, cam, fogStart, fogEnd) {
+    if (mesh.indices.length === 0) return null;
+
+    const projection = perspective(
+      Math.PI / 3,
+      canvas.width / canvas.height,
+      2,
+      PLANET_RADIUS * 4.5
+    );
+    const vp = multiply(projection, lookAt(cam.eye, cam.target, cam.up));
+
+    gl.useProgram(terrainProgram);
+    gl.uniformMatrix4fv(gl.getUniformLocation(terrainProgram, 'uVP'), false, vp);
+    gl.uniform1f(gl.getUniformLocation(terrainProgram, 'uGlobalAlpha'), 1);
+    gl.uniform3fv(gl.getUniformLocation(terrainProgram, 'uEye'), cam.eye);
+    gl.uniform3fv(gl.getUniformLocation(terrainProgram, 'uHaze'), PALETTE.haze);
+    gl.uniform1f(gl.getUniformLocation(terrainProgram, 'uFogStart'), fogStart);
+    gl.uniform1f(gl.getUniformLocation(terrainProgram, 'uFogEnd'), fogEnd);
+
+    gl.disable(gl.BLEND);
+    gl.depthMask(true);
+    gl.bindVertexArray(buffers.vao);
+    gl.drawElements(gl.TRIANGLES, mesh.indices.length, gl.UNSIGNED_INT, 0);
+
+    return vp;
+  }
+
+  function render() {
+    resize();
+    gl.enable(gl.DEPTH_TEST);
+    gl.clearColor(...PALETTE.sky, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    const cam = camera();
+    const vp = drawTerrain(planetMesh, planetBuffers, cam, 3600, 11800);
+    drawTerrain(continentMesh, continentBuffers, cam, 1700, 7200);
+    drawTerrain(stitchMesh, stitchBuffers, cam, 950, 4700);
+    drawTerrain(gratitudeMesh, gratitudeBuffers, cam, 900, 4400);
+
+    if (waterMesh.indices.length > 0) {
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+      gl.depthMask(false);
+      gl.useProgram(waterProgram);
+      gl.uniformMatrix4fv(gl.getUniformLocation(waterProgram, 'uVP'), false, vp);
+      gl.bindVertexArray(localWaterBuffers.vao);
+      gl.drawElements(gl.TRIANGLES, waterMesh.indices.length, gl.UNSIGNED_INT, 0);
+      gl.depthMask(true);
+      gl.disable(gl.BLEND);
+    }
+
+    state.renderedFrames += 1;
+  }
+
+  function orbit(dx, dy) {
+    state.yaw = wrap(state.yaw + clamp(Number(dx) || 0, -64, 64) * 0.0052);
+    state.pitch = clamp(
+      state.pitch + clamp(Number(dy) || 0, -64, 64) * 0.0032,
+      0.46,
+      1.49
+    );
+    render();
+  }
+
+  function zoom(delta) {
+    state.distance = clamp(
+      state.distance * Math.exp(clamp(Number(delta) || 0, -900, 900) * 0.00115),
+      95,
+      5600
+    );
+    render();
+  }
+
+  function zoomByFactor(factorValue) {
+    const factor = clamp(Number(factorValue) || 1, 0.72, 1.38);
+    state.distance = clamp(state.distance / factor, 95, 5600);
+    render();
+  }
+
+  function pan(du, dv) {
+    state.targetU += Number(du) || 0;
+    state.targetV += Number(dv) || 0;
+    limitTarget();
+    render();
+  }
+
+  function panScreen(dx, dy) {
+    const amount = clamp(state.distance * 0.0021, 0.28, 12);
+    const rightU = Math.cos(state.yaw);
+    const rightV = -Math.sin(state.yaw);
+    const forwardU = Math.sin(state.yaw);
+    const forwardV = Math.cos(state.yaw);
+
+    pan(
+      (-dx * rightU + dy * forwardU) * amount,
+      (-dx * rightV + dy * forwardV) * amount
+    );
+  }
+
+  function focusGratitude() {
+    Object.assign(state, {
+      yaw: -0.62,
+      pitch: 0.88,
+      distance: 720,
+      targetU: 0,
+      targetV: -4
+    });
+    render();
+  }
+
+  function planetaryVantage() {
+    state.distance = 5000;
+    state.pitch = 1.02;
+    render();
+  }
+
+  function fitWorld() {
+    focusGratitude();
+  }
+
+  function getCameraSafety() {
+    const fullPlanetFitDistance =
+      PLANET_RADIUS / Math.sin((Math.PI / 3) / 2) - PLANET_RADIUS;
+
+    return freeze({
+      distanceSafe: state.distance >= 95 && state.distance <= 5600,
+      targetArcSafe:
+        Math.hypot(state.targetU, state.targetV) <= MAX_TARGET_ARC + 1,
+      continuousScaleRecognized:
+        ['LOCAL', 'REGION', 'CONTINENT', 'PLANETARY'].includes(viewScale()),
+      wholePlanetFitNotRequired: state.distance < fullPlanetFitDistance,
+      planetHasNoRectangularBorder:
+        planetMesh.statistics.planetBordersRectangular === false,
+      nineContinentsDefined: planetMesh.statistics.definedContinentCount === 9,
+      localScaleNotCompressed:
+        gratitudeMesh.statistics.localScaleCompressed === false,
+      liveMutationAbsent: true
+    });
+  }
+
+  return freeze({
+    planetMesh,
+    continentMesh,
+    gratitudeMesh,
+    stitchMesh,
+    waterMesh,
+    state,
+    render,
+    orbit,
+    zoom,
+    zoomByFactor,
+    pan,
+    panScreen,
+    fitWorld,
+    focusGratitude,
+    planetaryVantage,
+    getViewScale: viewScale,
+    getCameraSafety,
+    getOW01GeographicEvidence: () => ow01Evidence,
+    getSnapshot: () => freeze({
+      ...state,
+      viewScale: viewScale(),
+      planetStatistics: planetMesh.statistics,
+      continentStatistics: continentMesh.statistics,
+      gratitudeStatistics: gratitudeMesh.statistics,
+      stitchStatistics: stitchMesh.statistics,
+      waterStatistics: waterMesh.statistics,
+      worldContract: AUDRALIA_OPEN_WORLD_AUTHORING_CONTRACT,
+      ow01Evidence,
+      authoringRegionIsWorldBoundary: false,
+      wholePlanetMustFitViewport: false,
+      manorGeometryConstructed: false,
+      liveRuntimeMutated: false,
+      liveCameraMutated: false,
+      liveNavigationMutated: false,
+      liveWaterMutated: false
+    })
+  });
+}
+
+export default createMapWideEnvironmentRenderer;

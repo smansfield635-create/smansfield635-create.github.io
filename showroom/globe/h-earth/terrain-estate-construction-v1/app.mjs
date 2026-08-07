@@ -17,10 +17,10 @@ function updateScaleUI(renderer){
   if(brandNode)brandNode.textContent=`Audralia · Gratitude · OW01 · ${scale.toLowerCase()}`;
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
-    LOCAL:'LOCAL · 1:1 Gratitude terrain · topology-clipped coast · inspect the aperture/stitch handoff and Harbor.',
-    REGION:'REGION · separate Gratitude continental mesh · explicit local aperture · bounded stitch annulus.',
-    CONTINENT:'CONTINENT · deliberate closed Gratitude coastline contour · inspect bays, capes, asymmetry, and inland axes.',
-    PLANETARY:'PLANETARY · Gratitude is separate from the coarse planetary base; the other eight continents remain noncanonical.'
+    LOCAL:'LOCAL · 1:1 Gratitude terrain · sub-cell coast clipping · inspect the smooth local/stitch handoff and Harbor.',
+    REGION:'REGION · aligned 128-unit stitch annulus · one planetary ocean · inspect transition continuity.',
+    CONTINENT:'CONTINENT · deliberate Gratitude coastline · lowlands, basins, uplands, bounded divides, and localized mountains.',
+    PLANETARY:'PLANETARY · Gratitude remains separate from the coarse planetary base; the other eight continents remain noncanonical.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -64,7 +64,7 @@ async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw new Error('H_EARTH_OW01_CANVAS_MISSING');
     setStatus('world…','IMPORTING_AUDRALIA_OW01_WORLD');
-    setDiagnostic('Building separate Gratitude continental mesh, explicit aperture, and bounded local stitch annulus…');
+    setDiagnostic('Building scalar-clipped coastline, aligned stitch topology, and normalized continental relief hierarchy…');
     await new Promise(r=>requestAnimationFrame(r));
     const module=await import('./renderer.mjs');
     setStatus('building…','BUILDING_OW01_GEOGRAPHIC_MODEL');

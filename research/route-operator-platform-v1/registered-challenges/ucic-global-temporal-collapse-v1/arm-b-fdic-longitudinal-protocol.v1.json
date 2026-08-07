@@ -1,0 +1,217 @@
+{
+  "cohort": [
+    {
+      "cert": 24735,
+      "failure_date": "2023-03-10",
+      "name": "Silicon Valley Bank"
+    },
+    {
+      "cert": 57053,
+      "failure_date": "2023-03-12",
+      "name": "Signature Bank"
+    },
+    {
+      "cert": 59017,
+      "failure_date": "2023-05-01",
+      "name": "First Republic Bank"
+    },
+    {
+      "cert": 25851,
+      "failure_date": "2023-07-28",
+      "name": "Heartland Tri-State Bank"
+    },
+    {
+      "cert": 8758,
+      "failure_date": "2023-11-03",
+      "name": "Citizens Bank"
+    },
+    {
+      "cert": 27332,
+      "failure_date": "2024-04-26",
+      "name": "Republic First Bank dba Republic Bank"
+    },
+    {
+      "cert": 4134,
+      "failure_date": "2024-10-18",
+      "name": "The First National Bank of Lindsay"
+    },
+    {
+      "cert": 28611,
+      "failure_date": "2025-01-17",
+      "name": "Pulaski Savings Bank"
+    },
+    {
+      "cert": 5520,
+      "failure_date": "2025-06-27",
+      "name": "The Santa Anna National Bank"
+    },
+    {
+      "cert": 57488,
+      "failure_date": "2026-01-30",
+      "name": "Metropolitan Capital Bank & Trust"
+    },
+    {
+      "cert": 25796,
+      "failure_date": "2026-05-01",
+      "name": "Community Bank and Trust - West Georgia"
+    }
+  ],
+  "comparators": {
+    "ADDITIVE_MEAN": {
+      "purpose": "generic compensatory aggregate comparator",
+      "rule": "Mean adverse percentile across all available routes >= 0.90 in 2 consecutive quarters, with at least 3 routes observed per quarter."
+    },
+    "ROA_ONLY": {
+      "purpose": "single-output financial distress baseline",
+      "rule": "ROA adverse peer percentile >= 0.90 with within-bank confirmation in 2 consecutive quarters."
+    }
+  },
+  "controls": {
+    "control_warning_window": "Apply the identical route, percentile, persistence, and eight-quarter rules ending at the matched target anchor quarter.",
+    "controls_per_failure": 5,
+    "eligibility": [
+      "control has data at the anchor quarter",
+      "control remains outside the frozen FDIC failure cohort through at least 365 days after the matched target failure date or through the dataset cutoff if less than 365 future days are available",
+      "control has at least four evaluable quarters in the matched eight-quarter window"
+    ],
+    "false_positive": "A matched control satisfies the identical financial warning rule.",
+    "ranking": "same BKCLASS first when available, then absolute log asset difference at anchor quarter, then numeric CERT ascending",
+    "reuse": "allowed across different target failures; prohibited within the same target match set",
+    "selection_anchor": "latest target reporting quarter strictly before failure"
+  },
+  "freeze_basis": {
+    "classification": "RETROSPECTIVE_LONGITUDINAL_FAILURE_DISCRIMINATION",
+    "fallback_rule": "Fallback must be declared before scoring and may not alter cohort, metrics, thresholds, matching, comparators, or terminal rules.",
+    "known_outcome": "All target institutions are known FDIC failures; financial trajectories have not been extracted or scored at protocol freeze.",
+    "official_upstream_fallback": "FFIEC_CALL_REPORTS_ONLY_IF_BANKFIND_ENDPOINT_IS_TECHNICALLY_UNAVAILABLE",
+    "outcome_blinding": false,
+    "parent_exact_head": "0088d0e05ea6c9f4254a6c2c9f7a1e137bd4667c",
+    "registered_source": "FDIC_BANKFIND_FINANCIALS",
+    "source_documentation": "https://api.fdic.gov/banks/docs",
+    "source_endpoint": "https://api.fdic.gov/banks/financials"
+  },
+  "metrics": {
+    "balanced_accuracy": "0.5 * (failure_sensitivity + (1 - control_false_positive_rate))",
+    "primary": [
+      "failure_sensitivity",
+      "control_false_positive_rate",
+      "median_failure_lead_time_days",
+      "balanced_accuracy"
+    ],
+    "secondary": [
+      "per_bank_warning",
+      "per_bank_lead_time_days",
+      "comparator_balanced_accuracy",
+      "ucic_minus_best_comparator_balanced_accuracy",
+      "evaluable_failure_count",
+      "evaluable_control_count"
+    ]
+  },
+  "noncompensation_between_study_arms": "The existing Arm B systemic pilot result remains separate. The FDIC extension cannot rescue or be rescued by the systemic pilot.",
+  "observation_window": {
+    "minimum_evaluable_failures_for_portfolio": 7,
+    "minimum_evaluable_quarters_per_bank": 4,
+    "post_failure_data_forbidden_for_target_features": true,
+    "quarter_rule": "Use the latest available quarter strictly before failure and up to seven preceding quarters.",
+    "target_quarters": 8
+  },
+  "operation": "UCIC_FDIC_LONGITUDINAL_COLLAPSE_EXTENSION_v1",
+  "parent_operation": "UCIC_GLOBAL_TEMPORAL_HOLDOUT_TRANSFER_AND_COLLAPSE_EARLY_WARNING_v1",
+  "peer_standardization": {
+    "adverse_percentile_threshold": 0.9,
+    "asset_field": "ASSET",
+    "class_field_priority": [
+      "BKCLASS"
+    ],
+    "no_threshold_tuning_after_values": true,
+    "peer_rule": [
+      "Start with institutions in the same reporting quarter, same BKCLASS when BKCLASS is available for both target and candidates, and total assets between 0.25x and 4.0x target assets.",
+      "Exclude the target institution.",
+      "Exclude institutions known to fail on or before 365 days after the target failure date from control eligibility.",
+      "For percentile estimation, require at least 20 peer observations for a route; if fewer than 20 remain, ignore BKCLASS but retain the 0.25x-4.0x asset band.",
+      "If fewer than 20 peers remain after class relaxation, widen asset band once to 0.10x-10.0x.",
+      "If fewer than 20 peers remain after the single widening, that route-quarter is UNEVALUABLE."
+    ],
+    "percentile_method": "empirical_midrank",
+    "route_degraded_rule": "Adverse peer percentile >= 0.90 AND within-bank confirmation is true.",
+    "unit": "bank-quarter"
+  },
+  "protocol_status": "FROZEN_BEFORE_BANK_QUARTER_VALUE_EXTRACTION",
+  "routes": [
+    {
+      "adverse_direction": "LOW",
+      "concept": "loss-absorption capacity",
+      "field_priority": [
+        "LEVCAP",
+        "RBC1AAJ",
+        "RBCT1J"
+      ],
+      "field_selection_rule": "Use the first field in priority order that is present and non-null for at least 75% of the target bank's evaluable quarters and its peer observations; otherwise route is missing for that bank.",
+      "route_id": "CAPITAL_ADEQUACY",
+      "within_bank_confirmation": "Current value must be no better than the median of the bank's preceding four available quarters; with fewer than four preceding quarters, use all preceding quarters if at least two exist."
+    },
+    {
+      "adverse_direction": "LOW",
+      "concept": "internal earnings capacity",
+      "field_priority": [
+        "ROA"
+      ],
+      "field_selection_rule": "Use ROA when present and non-null; otherwise route is missing for that bank-quarter.",
+      "route_id": "EARNINGS",
+      "within_bank_confirmation": "Current value must be no better than the median of the bank's preceding four available quarters; with fewer than four preceding quarters, use all preceding quarters if at least two exist."
+    },
+    {
+      "adverse_direction": "HIGH",
+      "concept": "performing-asset integrity",
+      "field_priority": [
+        "NCLNLSR"
+      ],
+      "field_selection_rule": "Use NCLNLSR when present and non-null; otherwise route is missing for that bank-quarter.",
+      "route_id": "ASSET_QUALITY",
+      "within_bank_confirmation": "Current value must be no better than the median of the bank's preceding four available quarters; with fewer than four preceding quarters, use all preceding quarters if at least two exist."
+    },
+    {
+      "adverse_direction": "LOW",
+      "concept": "deposit-funding continuity",
+      "derived_metric": "quarter_over_quarter_fractional_deposit_change",
+      "field_priority": [
+        "DEP"
+      ],
+      "field_selection_rule": "Compute (DEP_t - DEP_t-1) / abs(DEP_t-1) when both values are non-null and prior deposits are nonzero; otherwise route is missing.",
+      "route_id": "FUNDING_STABILITY",
+      "within_bank_confirmation": "Current deposit growth must be no better than the median of the bank's preceding four available quarter-over-quarter deposit-growth observations; with fewer than four preceding observations, use all preceding observations if at least two exist."
+    }
+  ],
+  "scientific_ceiling": "Retrospective longitudinal discrimination only; no independent-human, outcome-blind, prospective, or universal-law claim.",
+  "stopping_rule": "After one complete deterministic acquisition/scoring pass, issue exactly one terminal financial-extension disposition. No post-result route, threshold, matching, comparator, cohort, or terminal-rule repair is permitted. Technical parser/API repairs may be made only if they do not change scientific semantics and must be labeled technical-only.",
+  "terminal_rules": [
+    {
+      "disposition": "FDIC_LONGITUDINAL_UNEVALUABLE_DATA_OR_MATCHING_FAILURE",
+      "when": "evaluable_failure_count < 7 OR evaluable_control_count < 20"
+    },
+    {
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_NOT_SUPPORTED",
+      "when": "failure_sensitivity < 0.60 OR control_false_positive_rate > 0.20 OR median_failure_lead_time_days < 90"
+    },
+    {
+      "disposition": "FDIC_LONGITUDINAL_SIGNAL_REDUNDANT_WITH_SIMPLE_FINANCIAL_DISTRESS",
+      "when": "primary thresholds pass AND ucic_minus_best_comparator_balanced_accuracy <= 0.05"
+    },
+    {
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_SUPPORTED_WITH_LIMITATIONS",
+      "when": "primary thresholds pass AND ucic_minus_best_comparator_balanced_accuracy > 0.05, but not all stricter support criteria pass"
+    },
+    {
+      "disposition": "FDIC_LONGITUDINAL_EARLY_WARNING_SUPPORTED",
+      "when": "evaluable_failure_count == 11 AND evaluable_control_count >= 40 AND failure_sensitivity >= 0.70 AND control_false_positive_rate <= 0.15 AND median_failure_lead_time_days >= 180 AND ucic_minus_best_comparator_balanced_accuracy >= 0.10"
+    }
+  ],
+  "warning_rule": {
+    "financial_warning": "At least 2 of 4 routes are degraded in each of 2 consecutive evaluable quarters.",
+    "first_warning_date": "Earlier reporting date of the first qualifying two-quarter run.",
+    "lead_time_days": "failure_date minus first_warning_date",
+    "minimum_routes_observed_per_quarter": 3,
+    "no_global_product_score": true,
+    "no_route_compensation": "A very strong value on one route cannot cancel a degraded route; warning is based on route states, not an average magnitude."
+  }
+}

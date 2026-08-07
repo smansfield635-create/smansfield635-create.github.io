@@ -39,6 +39,31 @@ function wire(renderer){
   focusButton?.addEventListener('click',()=>{renderer.focusGratitude();after();});window.addEventListener('resize',()=>renderer.render());
 }
 
+function installInspectorShaderHeaderNormalization(){
+  const prototype=globalThis.WebGL2RenderingContext?.prototype;
+  if(!prototype||typeof prototype.shaderSource!=='function')return()=>{};
+  const descriptor=Object.getOwnPropertyDescriptor(prototype,'shaderSource');
+  const original=prototype.shaderSource;
+  const normalizedShaderSource=function(shader,source){
+    const normalized=typeof source==='string'
+      ?source.replace(/^#version 300 es(?=precision\b)/,'#version 300 es\n')
+      :source;
+    return original.call(this,shader,normalized);
+  };
+  try{
+    if(descriptor){Object.defineProperty(prototype,'shaderSource',{...descriptor,value:normalizedShaderSource});}
+    else{prototype.shaderSource=normalizedShaderSource;}
+  }catch(error){
+    throw new Error(`SHADER_HEADER_NORMALIZATION_INSTALL_FAILED:${error instanceof Error?error.message:String(error)}`);
+  }
+  return()=>{
+    try{
+      if(descriptor){Object.defineProperty(prototype,'shaderSource',descriptor);}
+      else if(prototype.shaderSource===normalizedShaderSource){prototype.shaderSource=original;}
+    }catch(error){console.warn('AUDRALIA_OW01_SHADER_HEADER_NORMALIZATION_RESTORE_FAILED',error);}
+  };
+}
+
 async function observerAfterPaint(renderer){
   try{
     await new Promise(r=>setTimeout(r,0));
@@ -72,7 +97,13 @@ async function initialize(){
     const module=await import('./renderer.mjs');
     setStatus('building…','BUILDING_OW01_GEOGRAPHIC_MODEL');
     await new Promise(r=>requestAnimationFrame(r));
-    const renderer=module.createMapWideEnvironmentRenderer(canvas);
+    const restoreShaderSource=installInspectorShaderHeaderNormalization();
+    let renderer;
+    try{
+      renderer=module.createMapWideEnvironmentRenderer(canvas);
+    }finally{
+      restoreShaderSource();
+    }
     renderer.render();
     wire(renderer);
     updateScaleUI(renderer);

@@ -1,0 +1,48 @@
+{
+  "id": "4vmtc",
+  "type": "nodes",
+  "title": "The Circle of Life",
+  "description": "This project presents a minimal, observer-invariant framework for understanding life and death without narrative, metaphysics, or intent-based explanation.\nLife is defined as the persistence of coherence under constraint.\nDeath is defined as the boundary transition that occurs when coherence can no longer be preserved.\nUnder this framework, life and death are not opposites, failures, or moral states. They are phases within a single lawful process governed by constraint, coherence, and boundary conditions across scale.\nPressure does not destroy systems; loss of coherence does.\nWhen coherence cannot be maintained, transition is forced.\nThis transition is not an error—it is the mechanism by which structure reorganizes and persists at other scales.\nThe “circle of life” is therefore not metaphorical. It is a structural cycle:\ncoherence emerges,\ncoherence is maintained,\nconstraints tighten,\na boundary is crossed,\nform dissolves,\ncomponents re-enter the system elsewhere.\nThis project does not propose new entities, forces, or intentions.\nIt does not replace biology, physics, or medicine.\nIt offers a coordinate system that unifies how life, illness, collapse, death, and renewal are understood across domains.\nCore Law (Condensed)\nCoherence persists under constraint; loss of coherence forces boundary transition.\nScope and Status\nClosed\nMinimal\nObserver-invariant\nDomain-invariant\nBias-free\nExecutable\nFalsifiable\nThis project is intentionally complete as written.\nAny extension or modification constitutes a separate project.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-24T04:30:27.440709",
+  "date_modified": "2026-08-01T06:05:39.489930",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/4vmtc/",
+  "api_url": "https://api.osf.io/v2/nodes/4vmtc/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:57:49.712116+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "CORE_LAWS_CANDIDATE",
+    "law_relevance_score": 23,
+    "law_term_hits": [
+      "law",
+      "coherence",
+      "constraint",
+      "invariant",
+      "failure",
+      "boundary"
+    ],
+    "evidence_signal_score": 5,
+    "evidence_term_hits": [
+      "falsif",
+      "table"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

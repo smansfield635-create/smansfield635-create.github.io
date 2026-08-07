@@ -1,0 +1,45 @@
+{
+  "id": "h9k5z",
+  "type": "nodes",
+  "title": "Translating Coherence Across Domains",
+  "description": "This project translates the Diamond System and downstream coherence dynamics into domain-specific contexts without modifying, extending, or reinterpreting the underlying ontology. It demonstrates how admissible coherence conditions and post-admissibility dynamics manifest in applied domains (e.g., environment, policy, organizations, technology) while preserving strict separation from foundational claims.\nThis project is illustrative and translational, not foundational or theoretical. It introduces no new theorems, admissibility conditions, or universal constraints. All analyses assume the validity of upstream projects and operate strictly within their stated boundaries. Domain examples are used to clarify application pathways, failure modes, and interpretation limits—not to generalize results back into the ontology.\nThis project functions as a communication and adoption surface, enabling practitioners, analysts, and domain specialists to apply the work correctly without contaminating the foundational Diamond System or the exploratory dynamics layer.\nThis project applies existing theorems and dynamics to specific domains only. It does not revise admissibility conditions, redefine coherence, or generate new foundational claimsThis project applies existing theorems and dynamics to specific domains only. It does not revise admissibility conditions, redefine coherence, or generate new foundational claims.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-15T03:59:24.281943",
+  "date_modified": "2026-08-01T06:06:07.127101",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/h9k5z/",
+  "api_url": "https://api.osf.io/v2/nodes/h9k5z/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:58:43.709075+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 11,
+    "law_term_hits": [
+      "coherence",
+      "constraint",
+      "failure"
+    ],
+    "evidence_signal_score": 4,
+    "evidence_term_hits": [
+      "result",
+      "results"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

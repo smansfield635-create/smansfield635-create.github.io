@@ -1,0 +1,46 @@
+{
+  "id": "2cg9k",
+  "type": "nodes",
+  "title": "Diamond Dynamics: Possibility, Trajectory, and Use in Coherent Systems",
+  "description": "This project explores the dynamic behavior and use-space of systems once admissibility conditions and Diamond Theorems are satisfied. It examines how state, motion, possibility, visibility, and predictive value interact over time, including how option spaces expand or collapse, how trajectories stabilize or fail, and how decision quality emerges from increased visibility rather than prediction.\nUnlike the foundational Diamond Theorems, this project is exploratory and iterative. It may include hypotheses, partial results, domain-touching examples, and use-oriented analysis intended to understand how coherent systems behave after admissibility is established. Claims in this project are contextual and do not assert universality or citation-safe constraints in isolation.\nThis project functions as a use and discovery surface, supporting experimentation, interpretation, and downstream application without altering or extending the foundational theorems.\nThis project assumes admissibility and coherence as given. It does not redefine foundational constraints and should not be cited as a source of admissibility conditions.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-15T03:55:51.151413",
+  "date_modified": "2026-08-01T06:06:16.012671",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/2cg9k/",
+  "api_url": "https://api.osf.io/v2/nodes/2cg9k/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:56:32.483670+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 12,
+    "law_term_hits": [
+      "coherence",
+      "constraint",
+      "trajectory"
+    ],
+    "evidence_signal_score": 7,
+    "evidence_term_hits": [
+      "result",
+      "results",
+      "experiment"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

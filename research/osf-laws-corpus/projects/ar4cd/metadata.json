@@ -1,0 +1,41 @@
+{
+  "id": "ar4cd",
+  "type": "nodes",
+  "title": "Social Order and Disorder as Coherence Phenomena",
+  "description": "Description\nThis paper analyzes social stability as a function of constraint coherence across norms, enforcement, and outcomes. It demonstrates how disorder emerges when constraint fragmentation increases corrective load and rule proliferation, independent of cultural interpretation or subjective belief.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-11T23:24:26.933429",
+  "date_modified": "2026-08-01T06:08:24.813390",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/ar4cd/",
+  "api_url": "https://api.osf.io/v2/nodes/ar4cd/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:57:41.965979+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 9,
+    "law_term_hits": [
+      "coherence",
+      "constraint"
+    ],
+    "evidence_signal_score": 0,
+    "evidence_term_hits": [],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

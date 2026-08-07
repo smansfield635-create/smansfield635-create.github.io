@@ -1,0 +1,42 @@
+{
+  "id": "qeabr",
+  "type": "nodes",
+  "title": "Universal Archetype: Monoclosure Execution Engine (UA-MEE)",
+  "description": "The Universal Archetype: Monoclosure Execution Engine (UA-MEE) formalizes a first-order, domain-agnostic execution discipline that determines whether any system, process, or structure is admissible before it is allowed to proceed, repeat, or scale.\nUA-MEE does not explain phenomena, optimize outcomes, or prescribe behavior. Instead, it enforces a single closure gate—monoclosure—through which all motion must pass. The engine evaluates admissibility using a minimal diamond-structured metric relating capacity, load, variation, and collapse. If a system’s capacity to absorb variation exceeds imposed load, motion is permitted; if not, continuation is halted.\nThis framework defines a Universal Archetype not as a symbolic or recurring form, but as the pre-form constraint that governs survivability itself. Archetypal patterns emerge secondarily, as repeated solutions that satisfy this constraint across domains.\nUA-MEE functions as an execution engine, not a theory or worldview. It produces a binary outcome—Proceed / Halt—and enforces closure before repetition. Parallel closures, narrative overrides, and exception-based permissions are explicitly disallowed. All admissible cycles must return to the same gate.\nThe engine applies uniformly across physics, biology, engineering, organizations, learning systems, exploration missions, and governance structures. It reframes ethics, methodology, scientific validity, and discipline as second-order expressions governed by a single first-order admissibility rule.\nUA-MEE is intended as a foundational instrument for early warning, early arrival, survivability analysis, and execution discipline in complex, non-stationary environments.\nContact:smansfield635@gmail.com",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-26T08:53:32.639874",
+  "date_modified": "2026-08-01T06:02:44.434748",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/qeabr/",
+  "api_url": "https://api.osf.io/v2/nodes/qeabr/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:58:51.371830+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "APPLIED_OR_CONTEXTUAL_CANDIDATE",
+    "law_relevance_score": 4,
+    "law_term_hits": [
+      "constraint"
+    ],
+    "evidence_signal_score": 2,
+    "evidence_term_hits": [
+      "method"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

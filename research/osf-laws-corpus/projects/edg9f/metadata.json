@@ -1,0 +1,50 @@
+{
+  "id": "edg9f",
+  "type": "nodes",
+  "title": "APPLIED FORMALISM (INSTANTIATION) M256 Coherence Geometry",
+  "description": "M256 Coherence Geometry is a finite, executable instantiation of the Universal Coherence Admissibility Quotient (UCAQ).\nIt realizes coherence as a closed, 256-state quotient geometry in which admissibility, trajectory, and correction are structurally observable rather than inferred.\nOrganized around a bell-lattice embedding and observer-invariant transitions, M256 demonstrates how coherence behaves under constraint, motion, and scale within a fully bounded system. It does not decide outcomes or enforce authority; it makes coherence visible, comparable, and inspectable at engineering resolution.\nM256 serves as the reference geometry for applied systems: a working formalism that bridges abstract admissibility theory and executable architectures without introducing interpretation, optimization, or policy.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-02-02T19:29:47.367406",
+  "date_modified": "2026-08-01T06:03:45.174485",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/edg9f/",
+  "api_url": "https://api.osf.io/v2/nodes/edg9f/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:55:30.151989+00:00",
+  "file_inventory_count": 2,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "CORE_LAWS_CANDIDATE",
+    "law_relevance_score": 29,
+    "law_term_hits": [
+      "coherence",
+      "constraint",
+      "invariant",
+      "quotient",
+      "trajectory",
+      "instantiation",
+      "formalism",
+      "m256"
+    ],
+    "evidence_signal_score": 3,
+    "evidence_term_hits": [
+      "result",
+      "table"
+    ],
+    "extractable_file_count": 2,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

@@ -1,0 +1,47 @@
+{
+  "id": "9y2p5",
+  "type": "nodes",
+  "title": "First Order of Cyclical Dynamics (Transitory Science)",
+  "description": "First-Order Dynamics of Phase, Trajectory, and Realignment Science formalizes the primary cyclical dynamics governing how systems persist, destabilize, and reconstitute over time. Rather than treating change as linear or purely stochastic, this project classifies phenomena according to structural phase, trajectory formation, and realignment mechanisms.\nThe project introduces no new measurements, does not redefine physical time, and does not replace empirical clocks. It provides a first-order interpretive framework for identifying phase misalignment (systemic drift) and phase realignment (restored coherence) across domains, while preserving all existing data.\nThis work operates as an applied extension of General Science, resolving persistent paradoxes by enforcing phase-consistent interpretation.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-22T23:17:34.057619",
+  "date_modified": "2026-08-01T06:05:30.984209",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/9y2p5/",
+  "api_url": "https://api.osf.io/v2/nodes/9y2p5/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:56:48.016539+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 17,
+    "law_term_hits": [
+      "coherence",
+      "trajectory",
+      "transitory",
+      "cyclical",
+      "alignment"
+    ],
+    "evidence_signal_score": 5,
+    "evidence_term_hits": [
+      "data",
+      "empirical"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

@@ -1,0 +1,64 @@
+{
+  "receipt_id": "OSF_PUBLIC_LAWS_DISCOVERY_CORPUS_HARVEST_COMPLETION_v1",
+  "status": "PASS_COMPLETE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/osf-laws-corpus-harvest-001",
+  "pull_request": 461,
+  "source_profile": "https://osf.io/g5294/",
+  "generated_at": "2026-08-01T06:43:14.672418+00:00",
+  "public_resources_harvested": 29,
+  "root_projects": 29,
+  "components": 0,
+  "registrations": 1,
+  "resources_with_extractable_public_files": 4,
+  "extractable_public_files": 10,
+  "extractable_file_types": {
+    "pdf": 10
+  },
+  "public_datasets_detected": 0,
+  "public_analytic_code_files_detected": 0,
+  "metadata_only_resources": 25,
+  "discovery_errors": 0,
+  "registration_recovery": {
+    "registration_id": "7jnxq",
+    "title": "Universal Law of Coherence Dynamics",
+    "files_recovered": 5,
+    "files": [
+      "Diagnostic_Rules_Coherence_Framework.pdf",
+      "Methods_Appendix_Diagnostic_Framework.pdf",
+      "Diagnostic_Protocol_Rulebook.pdf",
+      "Case_Selection_and_Evidence_Windows-1.pdf",
+      "Observer_Replication_Guide.pdf"
+    ],
+    "material_value": [
+      "fixed diagnostic rules",
+      "non-experimental classification method",
+      "externally observable evidence requirement",
+      "fixed evidence windows",
+      "no tuning or post-hoc adjustment",
+      "five-diagnostic protocol",
+      "observer convergence criterion",
+      "explicit falsification conditions"
+    ]
+  },
+  "primary_paths": {
+    "index": "research/osf-laws-corpus/README.md",
+    "manifest": "research/osf-laws-corpus/manifest.json",
+    "machine_corpus": "research/osf-laws-corpus/corpus.jsonl",
+    "human_assessment": "research/osf-laws-corpus/LAWS_CHAMBER_VALUE_ASSESSMENT.md",
+    "machine_assessment": "research/osf-laws-corpus/laws-chamber-assessment.json",
+    "per_project_root": "research/osf-laws-corpus/projects/<OSF_ID>/",
+    "harvester": "tools/osf-laws-corpus/harvest_osf_corpus.py",
+    "registration_wrapper": "tools/osf-laws-corpus/harvest_osf_corpus_with_registrations.py",
+    "workflow": ".github/workflows/osf-laws-corpus-harvest.yml"
+  },
+  "claim_boundary": "Discovery and placement corpus only. The receipt confirms successful public-source recovery, not correctness, novelty, empirical validation, replication, or Laws Chamber admission.",
+  "result": {
+    "github_corpus_created": true,
+    "all_public_osf_resources_enumerated": true,
+    "public_registration_files_recovered": true,
+    "project_by_project_value_assessment_created": true,
+    "other_room_handoff_ready": true,
+    "merged_to_main": false
+  }
+}

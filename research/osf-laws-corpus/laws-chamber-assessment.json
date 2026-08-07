@@ -1,0 +1,246 @@
+{
+  "assessment_id": "OSF_LAWS_CORPUS_VALUE_ASSESSMENT_v1",
+  "source_profile": "https://osf.io/g5294/",
+  "corpus_id": "OSF_PUBLIC_LAWS_DISCOVERY_CORPUS_v1",
+  "resource_count": 29,
+  "assessment_authority": "DISCOVERY_AND_PLACEMENT_ONLY",
+  "claim_boundary": "No validation, novelty, empirical-claim upgrade, or automatic Laws Chamber admission is conferred by this assessment.",
+  "corpus_findings": {
+    "public_registrations": 1,
+    "public_components": 0,
+    "resources_with_extractable_files_initial_harvest": 3,
+    "extractable_public_files_initial_harvest": 5,
+    "public_datasets_detected_initial_harvest": 0,
+    "public_analytic_code_files_detected_initial_harvest": 0,
+    "metadata_only_resources_initial_harvest": 24,
+    "strong_context_and_method_value": true,
+    "formalism_value": "MATERIAL_BUT_REVIEW_REQUIRED",
+    "empirical_study_design_value": "MATERIAL",
+    "direct_empirical_confirmation": "NOT_ESTABLISHED_BY_CURRENT_PUBLIC_CORPUS",
+    "automatic_laws_chamber_admission": false
+  },
+  "disposition_counts": {
+    "CORE_CANONICAL_REFERENCE": 2,
+    "CORE_METHOD_REFERENCE": 5,
+    "FORMALISM_REFERENCE": 2,
+    "INSTRUMENT_CANDIDATE": 3,
+    "EMPIRICAL_EXECUTION_CANDIDATE_NO_DATA": 2,
+    "APPLIED_OR_CONTEXTUAL_HOLD": 11,
+    "PHILOSOPHICAL_CONTEXT_HOLD": 2,
+    "EXCLUDE_DIRECT_LAWS": 2
+  },
+  "projects": [
+    {
+      "id": "9u6vd",
+      "title": "Law of Transitory Coherence",
+      "disposition": "CORE_CANONICAL_REFERENCE",
+      "value": ["explicit law statement", "operational definition", "scope and nonclaims", "observable violation symptoms", "falsification conditions"],
+      "evidence_status": "CANONICAL_PROPOSITION_NO_PUBLIC_EXECUTED_STUDY"
+    },
+    {
+      "id": "7jnxq",
+      "title": "Universal Law of Coherence Dynamics",
+      "disposition": "CORE_CANONICAL_REFERENCE",
+      "value": ["only recovered public registration", "frozen framework custody", "law-versus-instrument separation"],
+      "evidence_status": "FROZEN_PROVENANCE_NOT_EMPIRICAL_CONFIRMATION"
+    },
+    {
+      "id": "9ut2z",
+      "title": "Alignment Diagnostics, an Integrity-Based Platform",
+      "disposition": "CORE_METHOD_REFERENCE",
+      "value": ["observation", "hypothesis", "1-2-3 reduction", "falsification", "iteration", "termination", "11-13 compression"],
+      "evidence_status": "METHOD_SPECIFICATION_WITH_TWO_PUBLIC_PDFS"
+    },
+    {
+      "id": "7vkgs",
+      "title": "As Easy as A-B-C-D: Diagnosing Coherence Before Collapse",
+      "disposition": "CORE_METHOD_REFERENCE",
+      "value": ["internal coherence", "constraint alignment", "fragmentation under load", "trajectory", "no-prediction boundary"],
+      "evidence_status": "PROCEDURE_NO_PUBLIC_EXECUTION_RECORD"
+    },
+    {
+      "id": "n82xh",
+      "title": "Formal Falsification Path — Break This If You Can",
+      "disposition": "CORE_METHOD_REFERENCE",
+      "value": ["domain-specific falsification", "false-positive criteria", "false-negative criteria", "observer-dependence criterion", "intervention contradiction", "scope limits"],
+      "evidence_status": "FALSIFICATION_PROTOCOL_NO_PUBLIC_DATASET_OR_RESULTS"
+    },
+    {
+      "id": "rjdms",
+      "title": "Methods Appendix: Diagnostic Application and Evaluation Protocol",
+      "disposition": "CORE_METHOD_REFERENCE",
+      "value": ["admissible evidence", "evaluation windows", "observer invariance", "classification rules", "reproducibility", "preregistration"],
+      "evidence_status": "METHODS_SPECIFICATION_ONLY"
+    },
+    {
+      "id": "2fh4g",
+      "title": "The Scientific Method as a Constraint System",
+      "disposition": "CORE_METHOD_REFERENCE",
+      "value": ["constraint-based scientific method", "survival under repeated testing", "non-certainty framing"],
+      "evidence_status": "METHODOLOGICAL_INTERPRETATION"
+    },
+    {
+      "id": "edg9f",
+      "title": "APPLIED FORMALISM (INSTANTIATION) M256 Coherence Geometry",
+      "disposition": "FORMALISM_REFERENCE",
+      "value": ["coherence operator", "inadmissible kernel", "admissible quotient", "observer invariance", "256-state space", "receipt-gated progression", "bell-lattice embedding"],
+      "evidence_status": "FORMAL_CONSTRUCTION_TWO_PUBLIC_PDFS_SYMBOL_REVIEW_REQUIRED"
+    },
+    {
+      "id": "pyd6g",
+      "title": "The If-and-Only-If Boundary / CCMM",
+      "disposition": "FORMALISM_REFERENCE",
+      "value": ["admissibility boundary", "inference-execution-interpretation gate", "quotient closure framing"],
+      "evidence_status": "DESCRIPTION_ONLY_GITHUB_IMPLEMENTATION_REVIEW_REQUIRED"
+    },
+    {
+      "id": "6ehrj",
+      "title": "Coherence Constraint Instantiation System (CCIS)",
+      "disposition": "INSTRUMENT_CANDIDATE",
+      "value": ["real-condition constraint execution", "behavior recording", "hold-or-fail exposure"],
+      "evidence_status": "SPECIFICATION_ONLY"
+    },
+    {
+      "id": "etn4d",
+      "title": "Detecting Institutional Hypocrisy: An X-Y-Z Coherence Test",
+      "disposition": "INSTRUMENT_CANDIDATE",
+      "value": ["commitment-action-outcome test", "persistence requirement", "missing-evidence no-conclusion rule"],
+      "evidence_status": "OPERATIONAL_SPECIFICATION_NO_EXECUTED_CASES"
+    },
+    {
+      "id": "2hvbg",
+      "title": "The Propagation-Failure Quotient (PFQ)",
+      "disposition": "INSTRUMENT_CANDIDATE",
+      "value": ["propagation-versus-failure separation", "post-hoc classification", "category-error reduction"],
+      "evidence_status": "RUBRIC_AND_VALIDATION_PENDING"
+    },
+    {
+      "id": "vazr6",
+      "title": "Priority Knowledge: Why Failure Is Predictable Before It Appears",
+      "disposition": "EMPIRICAL_EXECUTION_CANDIDATE_NO_DATA",
+      "value": ["priority inversion test", "finite-resource ordering", "repair dynamics", "cross-domain test candidates"],
+      "evidence_status": "AUTHOR_REPORTED_PILOT_CLAIMS_NO_PUBLIC_DATA_OR_ANALYSIS"
+    },
+    {
+      "id": "bnhq3",
+      "title": "Global Cross-Era Pilot v2",
+      "disposition": "EMPIRICAL_EXECUTION_CANDIDATE_NO_DATA",
+      "value": ["20-window sample frame", "unstable-system cases", "stability controls", "lead-time measurement", "explicit falsification"],
+      "evidence_status": "STUDY_DESIGN_NO_PUBLIC_CASE_LEDGER_OR_RESULTS"
+    },
+    {
+      "id": "9y2p5",
+      "title": "First Order of Cyclical Dynamics",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["phase vocabulary", "trajectory", "drift", "realignment"],
+      "evidence_status": "INTERPRETIVE_FRAMEWORK"
+    },
+    {
+      "id": "pw8ua",
+      "title": "Universal First-Order Discipline",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["admissibility gate", "pre-method discipline"],
+      "evidence_status": "BROAD_CLAIM_NO_OPERATIONAL_TEST"
+    },
+    {
+      "id": "7fupz",
+      "title": "Coherence as a Field Phenomenon",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["field-flow model", "resistance", "thresholds", "phase transitions", "diamond-growth research lead"],
+      "evidence_status": "ONLY_PUBLIC_FILE_IS_ATTRIBUTION_STATEMENT_PRIMARY_TECHNICAL_EVIDENCE_MISSING"
+    },
+    {
+      "id": "2cg9k",
+      "title": "Diamond Dynamics",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["post-admissibility dynamics", "exploratory use surface", "foundational separation"],
+      "evidence_status": "EXPLORATORY_NO_PUBLIC_RESULTS"
+    },
+    {
+      "id": "h9k5z",
+      "title": "Translating Coherence Across Domains",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["translation boundary", "anti-contamination rule", "domain application guidance"],
+      "evidence_status": "COMMUNICATION_AND_APPLICATION_SURFACE"
+    },
+    {
+      "id": "ju7qr",
+      "title": "The Octave of Change",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["eight-phase taxonomy", "lock-in boundary condition"],
+      "evidence_status": "DESCRIPTIVE_TAXONOMY_NO_PUBLIC_DERIVATION_OR_RELIABILITY_STUDY"
+    },
+    {
+      "id": "ar4cd",
+      "title": "Social Order and Disorder as Coherence Phenomena",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["norm-enforcement-outcome application", "corrective load", "rule proliferation"],
+      "evidence_status": "CONCEPTUAL_DESCRIPTION_ONLY"
+    },
+    {
+      "id": "ck5m2",
+      "title": "The Seven Invariants: A Placement Guide for Coherent Systems",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["invariant-versus-context placement intent"],
+      "evidence_status": "TITLE_DESCRIPTION_MISMATCH_AND_NO_ENUMERATED_SEVEN_ITEM_SOURCE"
+    },
+    {
+      "id": "5vgfd",
+      "title": "Energy Distribution Under Closed-Loop Abundance",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["upstream high-energy separation", "storage and dispatch", "simplified downstream endpoints"],
+      "evidence_status": "ARCHITECTURAL_PRINCIPLE_NO_OSF_ENGINEERING_DATA"
+    },
+    {
+      "id": "qeabr",
+      "title": "Universal Archetype: Monoclosure Execution Engine",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["proceed-halt gate", "capacity-load-variation-collapse structure", "single closure authority"],
+      "evidence_status": "CONCEPTUAL_NO_PUBLIC_CALIBRATION_IMPLEMENTATION_OR_TEST_DATA"
+    },
+    {
+      "id": "4vmtc",
+      "title": "The Circle of Life",
+      "disposition": "APPLIED_OR_CONTEXTUAL_HOLD",
+      "value": ["persistence and boundary-transition vocabulary"],
+      "evidence_status": "BROAD_CROSS_DOMAIN_CLAIMS_WITHOUT_DOMAIN_SPECIFIC_EVIDENCE"
+    },
+    {
+      "id": "bgd86",
+      "title": "Did Metaphysics Ever Exist",
+      "disposition": "PHILOSOPHICAL_CONTEXT_HOLD",
+      "value": ["meaning-system diagnostic boundary", "no metaphysical truth adjudication"],
+      "evidence_status": "INTERPRETIVE_APPLICATION"
+    },
+    {
+      "id": "54es8",
+      "title": "Fork of Metaphysics Framework Closed",
+      "disposition": "PHILOSOPHICAL_CONTEXT_HOLD",
+      "value": ["metaphysics-physics boundary", "model-admissibility framing"],
+      "evidence_status": "CLAIMED_REPORTS_AND_VALIDATION_NOT_PRESENT_IN_PUBLIC_FILE_INVENTORY"
+    },
+    {
+      "id": "s6dzj",
+      "title": "The Metaverse Didn't Stop — It Changed Layers",
+      "disposition": "EXCLUDE_DIRECT_LAWS",
+      "value": ["project history and roadmap"],
+      "evidence_status": "NO_DIRECT_LAW_METHOD_FORMALISM_OR_EMPIRICAL_SUPPORT"
+    },
+    {
+      "id": "sfjn6",
+      "title": "Broke the Four-Minute Mile in Tech",
+      "disposition": "EXCLUDE_DIRECT_LAWS",
+      "value": ["public achievement narrative"],
+      "evidence_status": "PROMOTIONAL_POSITIONING_WITHOUT_UNDERLYING_EVIDENCE_PACKAGE"
+    }
+  ],
+  "priority_recovery_targets": [
+    "Publish the 20-case cross-era coding ledger, sources, observer assignments, agreement statistics, lead-time calculations, and results.",
+    "Publish executed falsification studies or preregistrations for SDTL, including false-positive and false-negative analysis.",
+    "Publish the primary technical paper, measurements, and diamond-growth application data for Coherence as a Field Phenomenon.",
+    "Publish the stress-test, adversarial, observer-invariance, and empirical reports claimed by the Metaphysics Closure project.",
+    "Publish scoring rubrics, annotated cases, and reliability studies for PFQ, CCIS, and X-Y-Z instruments.",
+    "Publish executable M256/CCM reference code and machine-checkable tests.",
+    "Resolve the Seven Invariants/Seven Variants mismatch and publish the definitive enumerated source."
+  ]
+}

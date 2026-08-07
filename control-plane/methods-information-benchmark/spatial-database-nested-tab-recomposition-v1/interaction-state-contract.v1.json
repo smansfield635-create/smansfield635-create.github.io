@@ -1,0 +1,61 @@
+{
+  "schema": "METHODS_SPATIAL_DATABASE_INTERACTION_STATE_CONTRACT_v2",
+  "status": "PERMANENTLY_RATIFIED",
+  "id": "METHODS_SPATIAL_DATABASE_TEXT_FIRST_INTERACTION_STATE_CONTRACT_v2",
+  "fingerprint": "7f19aab646a09187369d6c4da00135b0e3623d3bfae288050318a04fb12845ef",
+  "semanticDomTextPrimary": true,
+  "informationRecordsAsVisibleTabs": true,
+  "standardTextualScrolling": true,
+  "practicalDefault": true,
+  "oneLensActiveAtATime": true,
+  "nestedTabs": true,
+  "exactContextualReturn": true,
+  "reducedMotionEquivalence": true,
+  "webgl": "OPTIONAL_SUPPORTING_NONCONTROLLING",
+  "userControlledCameraProhibited": true,
+  "gestureHeavyFirstProofProhibited": true,
+  "states": [
+    "LANE_READY",
+    "RECORD_SELECTED",
+    "LENS_SELECTED",
+    "SUBTAB_SELECTED",
+    "TERM_SELECTED",
+    "TRANSITIONING",
+    "RETURNING",
+    "HELD"
+  ],
+  "stableStateFields": [
+    "activeLane",
+    "activeRecord",
+    "activeLens",
+    "activeSubtab",
+    "activeTerm",
+    "recordScrollPosition",
+    "priorFocusTarget",
+    "reducedMotion",
+    "contentVersion"
+  ],
+  "returnRestorationFields": [
+    "activeRecord",
+    "activeLens",
+    "activeSubtab",
+    "activeTerm",
+    "recordScrollPosition",
+    "priorFocusTarget"
+  ],
+  "keyboard": [
+    "ARROW_KEYS",
+    "HOME",
+    "END",
+    "ENTER",
+    "SPACE",
+    "ESCAPE"
+  ],
+  "transitionProhibitions": [
+    "LENS_SWITCH_MAY_NOT_ALTER_RECORD",
+    "EVIDENCE_MAY_NOT_PROMOTE_CLAIM",
+    "TERM_FOCUS_MAY_NOT_ERASE_EXPRESSION",
+    "RETURN_MAY_NOT_RESET_ARBITRARILY",
+    "INVALID_RETURN_MAY_NOT_BE_IGNORED"
+  ]
+}

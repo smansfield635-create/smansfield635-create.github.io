@@ -420,6 +420,18 @@
       "scopeHash": "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412",
       "state": "ADMITTED_LOCKED"
     },
+    "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e": {
+      "governingHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
+      "lockGeneration": 462,
+      "lockScope": "H_EARTH:AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION:CONTINUITY_INSTRUMENTATION:V2:EXACT_14_PATH_SCOPE",
+      "operationId": "H_EARTH_AUDRALIA_OPEN_WORLD_SPATIAL_MIGRATION_CONTINUITY_INSTRUMENTATION_v2",
+      "procedureLocatorDigest": "740b6bf9a4a66ce372af5b0c46c7d5ce66a5abfc4118f9e68667aa61f498ae0b",
+      "released": false,
+      "requestDigest": "1e6ed434b2e97ed691a97d43279c8b5df09aa5148f1c6bb459a409e4cfeac598",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e",
+      "state": "ADMITTED_LOCKED"
+    },
     "89dd85077d021635eebc6e3a710b3cfcb6cd896c80a9ecdb5579ccbc42f3142f": {
       "governingHead": "b58e43b8f71c97e95b357058e6f41f01293b1cf8",
       "lockGeneration": 218,
@@ -1000,7 +1012,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 461,
+  "lockGeneration": 462,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

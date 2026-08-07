@@ -1,0 +1,44 @@
+{
+  "schema": "METHODS_MODELS_FINAL_PROGRAM_F7_INTERACTION_CONTRACT_v1",
+  "status": "F7_CONSTRUCTION_CANDIDATE",
+  "governingPrinciple": "INTERACTION_MAY_OPERATE_THE_ENVIRONMENT_BUT_MAY_NOT_ALTER_SCIENTIFIC_STATE_WITHOUT_AN_ALREADY_AUTHORIZED_TRANSITION",
+  "sessionMetadataNotScientificState": [
+    "FOCUS_TARGET",
+    "INPUT_MODALITY",
+    "MOTION_PREFERENCE",
+    "VIEWPORT_CLASS",
+    "ACTIVE_DEPTH",
+    "LAST_INTERACTION_ERROR"
+  ],
+  "operationClasses": {
+    "FOCUS_MOVE": {"scientificMutationAuthorized": false, "depthMutationAuthorized": false},
+    "REQUEST_DEPTH": {"scientificMutationAuthorized": false, "depthMutationAuthorized": true, "requiresExplicitDepth": true},
+    "INQUIRE_FIELD": {"scientificMutationAuthorized": false, "depthMutationAuthorized": false},
+    "NAVIGATE_ROUTE": {"scientificMutationAuthorized": false, "delegatesTo": "F5_NAVIGATION_ROUTE_HISTORY_ONLY"},
+    "SET_MOTION_PREFERENCE": {"scientificMutationAuthorized": false, "depthMutationAuthorized": false},
+    "SET_VIEWPORT_CLASS": {"scientificMutationAuthorized": false, "depthMutationAuthorized": false}
+  },
+  "laws": [
+    "FOCUS_CHANGE_MAY_NOT_ACTIVATE_A_CONTROL",
+    "MODALITY_CHANGE_MAY_NOT_CHANGE_OPERATION_SEMANTICS",
+    "KEYBOARD_POINTER_TOUCH_AND_ASSISTIVE_ACTIVATION_OF_THE_SAME_CONTROL_MUST_DISPATCH_THE_SAME_REGISTERED_OPERATION",
+    "REDUCED_MOTION_MAY_REMOVE_OR_REDUCE_ANIMATION_BUT_MAY_NOT_REMOVE_INFORMATION_OR_FUNCTION",
+    "VIEWPORT_ADAPTATION_MAY_CHANGE_LAYOUT_BUT_MAY_NOT_CHANGE_AVAILABLE_SCIENTIFIC_MEANING",
+    "DEPTH_CHANGES_REQUIRE_EXPLICIT_USER_REQUEST_AND_DELEGATE_TO_F6",
+    "FIELD_INQUIRY_MAY_NOT_SILENTLY_ESCALATE_DEPTH",
+    "ROUTE_NAVIGATION_DELEGATES_TO_F5_AND_MAY_CHANGE_ROUTE_HISTORY_ONLY",
+    "INVALID_INTERACTIONS_FAIL_CLOSED_AND_RETURN_RECOVERABLE_PRIOR_CONTEXT",
+    "INTERACTION_MAY_NOT_FILL_UNSET_UNEVALUABLE_OR_NOT_APPLICABLE_FIELDS",
+    "INTERACTION_MAY_NOT_RAISE_EVIDENCE_STANDING_OR_CLAIM_CEILING",
+    "INTERACTION_MAY_NOT_CHANGE_SCIENTIFIC_OBJECT_IDENTITY_BY_FOCUS_OR_MODALITY",
+    "INTERACTION_MAY_NOT_CREATE_SEMANTIC_RELATIONS",
+    "INTERACTION_SESSION_METADATA_IS_NOT_A_F2_AXIS"
+  ],
+  "silentFallbackAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false,
+  "ontologyExpansionAuthorized": false,
+  "publicMutationAuthorized": false,
+  "visualConstructionAuthorized": false,
+  "spatialTopologyAuthorized": false,
+  "geometryAuthorized": false
+}

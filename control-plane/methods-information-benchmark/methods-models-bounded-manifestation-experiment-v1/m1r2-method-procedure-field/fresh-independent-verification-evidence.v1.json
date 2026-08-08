@@ -1,0 +1,140 @@
+{
+  "schema": "METHODS_MODELS_M1R2_FRESH_INDEPENDENT_VERIFICATION_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1R2_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BOUNDED_FRESH_INDEPENDENT_VERIFICATION_WITH_NETWORK_CHECKOUT_LIMITATION",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+    "governingLaw": "M_MAY_SEARCH_FOR_AN_EXPRESSION_OF_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR",
+    "freshVerificationDistinctFromGithubActionsCI": true
+  },
+  "lineage": {
+    "candidateCommit": "7ab27d421233433b691ad34a7f79a904b08c7705",
+    "builderHardGateReceiptHead": "a37c8fa40ae7ecf89473c7c4786760cb3544e7c4",
+    "runtimeEvidenceHead": "07dbb047414fb6c554645fa2db5f262c5d33ae05",
+    "accessibilityResponsiveEvidenceHead": "af0e7c532bf72a544ea410323b565487fc5ec65f",
+    "perceptualReevaluationHead": "6183fb15aebeea7b9b690b26e7dee8667a9dfefd",
+    "freshVerifierCommit": "31258ddfd33a6f1c84c6bdcf2f67031eb764d72a",
+    "branch": "agent/methods-models-manifestation-m1r2-v1",
+    "candidateFilesMutatedByFreshVerification": false
+  },
+  "evidenceClass": {
+    "class": "CONNECTOR_EXACT_HEAD_SCOPE_AND_IDENTITY_AUDIT_PLUS_DETACHED_FRESH_ADVERSARIAL_DERIVATION",
+    "independentFromPriorBuilderRuntimeAccessibilityVerifierCode": true,
+    "priorEvidenceReceiptsUsedAs": "LINEAGE_AND_EVIDENCE_COMPLETENESS_RECORDS_NOT_PREMISES_FOR_FRESH_SEMANTIC_OR_GEOMETRY_DERIVATION",
+    "githubActionsCI": "NOT_CLAIMED_AS_FRESH_VERIFICATION",
+    "networkCheckout": "NOT_RUN_RUNTIME_DNS_UNAVAILABLE",
+    "networkServedBrowserReproduction": "NOT_RUN_ENVIRONMENT_BLOCKED"
+  },
+  "byteIdentity": {
+    "freshVerifierBlob": "6918fa6b8686749cd9da7aa1e6d8bfb9641ffab8",
+    "freshVerifierSourceSha256": "9144944e7f7b7617fb6ffe933eb7f74b0c49d0b15136f4f9f0b53a34d75a3a3e",
+    "freshExecutionReceiptSha256": "4bdd6ba108b4ee6b1314271f9374d1a4fd176f42a6c9bc4537fba0a4af9b2a44",
+    "authorityBlob": "e939e8c64bc9e181f0fc86e6c59d99891a25a680",
+    "topologyBlob": "b9cac99d89e2aff0804816e4b7c3cdea92e52c5e",
+    "bindingContractBlob": "e663e937f77755ad645a3c36698ff28cf1084d62",
+    "hardGatesBlob": "0d9e2f404ecd760a7bb2622405ff382c1957f1d9",
+    "candidateManifestBlob": "801db6d538decc0e44569cc1d37bf44bc9adaffc",
+    "candidateHtmlBlob": "008252335514ea3a00d8bd6d8748f22fe4df9bc4",
+    "candidateManifestationRuntimeBlob": "ccda8533435e90f5cd377575ca6ad99e389ec86b",
+    "reusedManifestationCssBlob": "0310b5b941c890dfeb8839a1a9a18ba56a24583e",
+    "reusedSemanticRuntimeBlob": "b57245e49ba49953bc13a788750723ba800424b8",
+    "reusedBindingPlanBlob": "4f7ca77ef3058e6c585c1445e3cd7b2719770059",
+    "methodRegistryBlob": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+    "scientificObjectRegistryBlob": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c",
+    "builderReceiptBlob": "4fbd01f7117c0733cead62e7af693805d66e97eb",
+    "runtimeReceiptBlob": "9a4c0bdfba432fbeee3d70536661bbd50c5ca8fd",
+    "accessibilityReceiptBlob": "1c25d323be23be9975233ad5bfeb527ef14557cb",
+    "perceptualReceiptBlob": "d81e177bea67289c8088bc983bc62eb7efe6bc4c",
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865"
+  },
+  "freshExecution": {
+    "assertionsPassed": 138,
+    "assertionsFailed": 0,
+    "checkedBindings": 16,
+    "checkedDeclaredRelations": 16,
+    "methodSequenceRecomputedFromIndependentSequenceRecord": "PASS_EXACT_SHA256",
+    "hardGates": {
+      "I_EMBODIMENT": "PASS",
+      "I_LOCUS": "PASS",
+      "I_ORIENTATION": "PASS",
+      "I_ROUTE_EQUIVALENCE": "PASS"
+    },
+    "hardGateCount": 4,
+    "hardGateConjunction": "PASS",
+    "causalTraceIsAdditionalGate": false,
+    "pointerTouchKeyboardAssistiveSemanticEquality": "PASS_16_OF_16",
+    "scientificStateNonmutation": "PASS_16_OF_16_ALL_ROUTES",
+    "wrongLocusFailsClosed": "PASS_16_OF_16",
+    "invalidAccessibleTouchFailsClosed": "PASS_16_OF_16",
+    "declaredRelationSet": "PASS_EXACT_16_NO_EXTRA_NO_MISSING",
+    "legacySemanticInheritance": "REJECT",
+    "visualProximityAdjacency": "REJECT",
+    "thematicSimilarityAdjacency": "REJECT",
+    "absenceOfCurrentAuthorityInheritance": "REJECT",
+    "independentTargetBoundaryGeometry": {
+      "targetClearancePx": 10,
+      "representativeDirectionCases": 4,
+      "clearance": "PASS_EXACT",
+      "endpointOutsideTargetRectangle": "PASS_4_OF_4"
+    }
+  },
+  "directContractAudit": {
+    "topologyComponents": "PASS_N_STAR_C_STAR_A_STAR_L_STAR_DELTA_STAR_P_STAR",
+    "routeEquivalence": "PASS_OPERATION_TARGET_SEMANTIC_OUTCOME_ONLY",
+    "nonsemanticGeometryMayCreateScientificMeaning": false,
+    "visualProximityCreatesAdjacency": false,
+    "thematicSimilarityCreatesAdjacency": false,
+    "absenceOfReplacementPermitsInheritance": false,
+    "hardGateTermsExact": true,
+    "hardGateCount": 4,
+    "causalTraceFifthGate": false,
+    "publicMethodsMutationAuthority": false
+  },
+  "priorEvidenceChainAudit": {
+    "builderHardGateReceipt": "PASS_CONSISTENT_CANDIDATE_AND_FOUR_GATES",
+    "runtimeReceipt": "PASS_CONSISTENT_CANDIDATE_AND_278_OF_278",
+    "accessibilityResponsiveReceipt": "PASS_CONSISTENT_CANDIDATE_AND_35_OF_35",
+    "perceptualReceipt": "PASS_CONSISTENT_CANDIDATE_MATERIAL_FAILURES_CLOSED_2_PERSISTING_0",
+    "candidateIdentityConsistentAcrossStages": true,
+    "candidateMutationAfterConstruction": false,
+    "stageOrderConsistentWithAuthority": true
+  },
+  "scopeAudit": {
+    "authorityBase": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "preFreshPerceptualHead": "6183fb15aebeea7b9b690b26e7dee8667a9dfefd",
+    "status": "PASS_ALL_37_CHANGED_PATHS_WITHIN_AUTHORIZED_EXPERIMENT_OR_VERIFICATION_WORKSPACE",
+    "aheadBy": 26,
+    "behindBy": 0,
+    "changedPaths": 37,
+    "prohibitedPublicMethodsPathChanges": 0,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "scientificClaimUpgrade": false
+  },
+  "evidenceBoundary": {
+    "hardGateConformance": "PASS",
+    "runtimeAndInteractionEvidence": "PASS_BOUNDED",
+    "accessibilityAndResponsiveEquivalence": "PASS_BOUNDED",
+    "perceptualReevaluation": "PASS_BOUNDED",
+    "freshIndependentVerification": "PASS_BOUNDED",
+    "githubActionsCIForThisStage": "NOT_RUN_NOT_REQUIRED_FOR_FRESH_CLASS",
+    "freshNetworkCheckout": "NOT_RUN_ENVIRONMENT_BLOCKED",
+    "externalAssistiveTechnologyDeviceExecution": "NOT_RUN",
+    "userDifferential": "NOT_RUN_NEXT_LAWFUL_STAGE",
+    "candidateAccepted": false,
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "limitations": [
+    "FRESH_VERIFICATION_COMBINES_CONNECTOR_EXACT_HEAD_IDENTITY_AND_SCOPE_AUDIT_WITH_A_NEWLY_AUTHORED_DETACHED_ADVERSARIAL_DERIVATION",
+    "NO_NETWORK_CHECKOUT_OR_NETWORK_SERVED_BROWSER_REPRODUCTION_WAS_AVAILABLE",
+    "THE_FRESH_GEOMETRY_DERIVATION_DOES_NOT_REPLACE_THE_PRIOR_CHROMIUM_RUNTIME_OR_PERCEPTUAL_EVIDENCE",
+    "EXTERNAL_PHYSICAL_SCREEN_READER_OR_ASSISTIVE_DEVICE_EXECUTION_REMAINS_UNRUN",
+    "DESKTOP_HORIZONTAL_OVERFLOW_REMAINS_A_BOUNDED_PRESENTATION_QUALITY_LIMITATION",
+    "NO_USER_DIFFERENTIAL_OR_PUBLIC_PROMOTION_CLAIM"
+  ],
+  "nextLawfulStage": "USER_DIFFERENTIAL_FOR_M1R2"
+}

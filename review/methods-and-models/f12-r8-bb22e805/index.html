@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en"
+  data-preview-class="TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER"
+  data-delivery-operation-id="R8_REVIEW_OCCURRENCE_DELIVERY_v1"
+  data-exact-candidate-head="bb22e805ca6a029d7caa95d16dc710ae280d40da"
+  data-public-methods-mutation="false"
+  data-live-methods-route-mutation="false"
+  data-r9-execution="false">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Methods & Models · R8 Exact Candidate Review</title>
+  <style>
+    :root{color-scheme:dark;font-family:Inter,system-ui,sans-serif;background:#061018;color:#eef8ff}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at 70% 10%,#17354a 0,transparent 38rem),#061018}
+    main{width:min(760px,100%);padding:22px;border:1px solid #3a6177;border-radius:20px;background:#0a1821ee;box-shadow:0 24px 80px #0009}
+    h1{margin:.75rem 0 .5rem;font-size:clamp(1.35rem,4vw,2rem)}
+    p{margin:.55rem 0;color:#bed2dd;line-height:1.55}
+    code{overflow-wrap:anywhere;color:#e1f6ff}
+    .status{display:inline-flex;padding:7px 10px;border:1px solid #77b9d555;border-radius:999px;color:#c8efff;background:#19465c33;font-size:.75rem;font-weight:800}
+    [data-state="failed"] .status{border-color:#d67d7d77;color:#ffd0d0;background:#5b161655}
+  </style>
+</head>
+<body>
+  <main id="r8-review-carrier" data-state="loading">
+    <span class="status">Exact R8 candidate · temporary review carrier</span>
+    <h1>Loading the verified R8 browser candidate</h1>
+    <p id="carrier-status">Resolving the immutable source head and its relative resource graph.</p>
+    <p><strong>Exact candidate:</strong><br><code>bb22e805ca6a029d7caa95d16dc710ae280d40da</code></p>
+    <p>Public Methods mutation: false · live Methods route mutation: false · R9 execution: false.</p>
+  </main>
+<script>
+(() => {
+  'use strict';
+  const DELIVERY_OPERATION_ID = 'R8_REVIEW_OCCURRENCE_DELIVERY_v1';
+  const EXACT_CANDIDATE_HEAD = 'bb22e805ca6a029d7caa95d16dc710ae280d40da';
+  const SOURCE_DIRECTORY = 'control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/';
+  const EXACT_REPOSITORY_ROOT = `https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${EXACT_CANDIDATE_HEAD}/`;
+  const EXACT_SOURCE_ROOT = `${EXACT_REPOSITORY_ROOT}${SOURCE_DIRECTORY}`;
+  const EXACT_ENTRY_DOCUMENT = `${EXACT_SOURCE_ROOT}index.html`;
+  const deliveryReceipt = Object.freeze({
+    DELIVERY_OPERATION_ID,
+    carrierClass:'TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER',
+    EXACT_CANDIDATE_HEAD,
+    exactSourceRoot:EXACT_SOURCE_ROOT,
+    exactEntryDocument:EXACT_ENTRY_DOCUMENT,
+    publicMethodsMutation:false,
+    liveMethodsRouteMutation:false,
+    r9Execution:false,
+    controllingCandidateMutation:false
+  });
+  window.METHODS_F12_R8_REVIEW_OCCURRENCE = deliveryReceipt;
+  const root = document.getElementById('r8-review-carrier');
+  const status = document.getElementById('carrier-status');
+  const fail = (error) => {
+    root.dataset.state = 'failed';
+    status.textContent = `Exact-head carrier failed before candidate execution: ${error?.message ?? String(error)}`;
+    window.METHODS_F12_R8_REVIEW_OCCURRENCE_FAILURE = Object.freeze({...deliveryReceipt,message:error?.message ?? String(error)});
+  };
+  const absoluteResource = (value) => {
+    const source = String(value || '').trim();
+    if (!source || source.startsWith('#') || /^(?:data|blob|javascript|mailto|tel):/i.test(source)) return source;
+    if (/^https?:/i.test(source)) return source;
+    return new URL(source, EXACT_SOURCE_ROOT).href;
+  };
+  fetch(EXACT_ENTRY_DOCUMENT,{method:'GET',mode:'cors',cache:'no-store',credentials:'omit'})
+    .then((response) => {
+      if (!response.ok) throw new Error(`EXACT_ENTRY_HTTP_${response.status}`);
+      return response.text();
+    })
+    .then((sourceHtml) => {
+      if (!/^\s*<!doctype html>/i.test(sourceHtml) || !/<html\b/i.test(sourceHtml)) throw new Error('EXACT_ENTRY_DOCUMENT_NOT_HTML');
+      const parsed = new DOMParser().parseFromString(sourceHtml,'text/html');
+      if (!parsed.documentElement || !parsed.head || !parsed.body) throw new Error('EXACT_ENTRY_DOCUMENT_PARSE_FAILED');
+      parsed.querySelectorAll('base').forEach((node)=>node.remove());
+      const base = parsed.createElement('base');
+      base.href = EXACT_SOURCE_ROOT;
+      parsed.head.prepend(base);
+      const robots = parsed.createElement('meta');
+      robots.name='robots'; robots.content='noindex,nofollow,noarchive'; parsed.head.append(robots);
+      for (const [selector,attribute] of [
+        ['script[src]','src'],['link[href]','href'],['img[src]','src'],['source[src]','src'],['video[poster]','poster'],['audio[src]','src'],['object[data]','data']
+      ]) parsed.querySelectorAll(selector).forEach((node)=>node.setAttribute(attribute,absoluteResource(node.getAttribute(attribute))));
+      Object.assign(parsed.documentElement.dataset,{
+        previewClass:'TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER',
+        deliveryOperationId:DELIVERY_OPERATION_ID,
+        exactCandidateHead:EXACT_CANDIDATE_HEAD,
+        publicMethodsMutation:'false',
+        liveMethodsRouteMutation:'false',
+        r9Execution:'false'
+      });
+      const marker = parsed.createElement('script');
+      marker.textContent = `window.METHODS_F12_R8_REVIEW_OCCURRENCE=Object.freeze(${JSON.stringify(deliveryReceipt)});`;
+      parsed.body.append(marker);
+      document.open('text/html','replace');
+      document.write('<!doctype html>\n'+parsed.documentElement.outerHTML);
+      document.close();
+    })
+    .catch(fail);
+})();
+</script>
+</body>
+</html>

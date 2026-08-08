@@ -1,0 +1,106 @@
+name: Audralia Cloud Spatial Runtime Diagnostic
+
+on:
+  push:
+    branches:
+      - agent/audralia-cloud-spatial-integration-001
+
+permissions:
+  contents: read
+
+jobs:
+  audralia-runtime:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact head
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Validate candidate source syntax
+        run: node --check showroom/globe/audralia/cloud-spatial-repair-bootstrap.mjs
+
+      - name: Start exact-head server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/audralia-server.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/showroom/globe/audralia/ >/dev/null; then
+              exit 0
+            fi
+            sleep 0.25
+          done
+          cat /tmp/audralia-server.log
+          exit 1
+
+      - name: Execute exact Audralia runtime probe
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'NODE'
+          const puppeteer = require('puppeteer-core');
+          (async () => {
+            const browser = await puppeteer.launch({
+              executablePath: process.env.CHROME_PATH,
+              headless: 'new',
+              args: ['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']
+            });
+            const page = await browser.newPage();
+            await page.setViewport({width: 720, height: 1280, deviceScaleFactor: 1});
+            const consoleErrors=[];
+            const pageErrors=[];
+            page.on('console', msg => { if(msg.type()==='error') consoleErrors.push(msg.text()); });
+            page.on('pageerror', err => pageErrors.push(String(err?.stack||err)));
+            await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/', {waitUntil:'domcontentloaded', timeout:60000});
+            await page.waitForFunction(() => {
+              const status=document.querySelector('[data-h-earth-status]');
+              const state=status?.dataset?.status||'';
+              const text=status?.textContent?.trim()||'';
+              return text==='REVIEW'||state.includes('USER_REVIEW_REQUIRED')||state.includes('VISUAL_READY')||state.includes('FAILED')||text==='ERROR'||text==='FAIL';
+            }, {timeout:60000}).catch(()=>{});
+            await new Promise(resolve=>setTimeout(resolve,1500));
+            const result=await page.evaluate(() => {
+              const status=document.querySelector('[data-h-earth-status]');
+              const diagnostic=document.querySelector('[data-h-earth-diagnostic]');
+              const loader=document.querySelector('[data-audralia-loader]');
+              return {
+                statusText: status?.textContent?.trim()||null,
+                statusState: status?.dataset?.status||null,
+                diagnostic: diagnostic?.textContent?.trim()||null,
+                loaderHidden: Boolean(loader?.hidden),
+                loaderClass: loader?.className||null,
+                cloudError: window.__AUDRALIA_CLOUD_SPATIAL_ERROR__||null,
+                cloudIntegration: window.__AUDRALIA_CLOUD_SPATIAL_INTEGRATION__||null,
+                worldReady: Boolean(window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__)
+              };
+            });
+            console.log(JSON.stringify({result,consoleErrors,pageErrors},null,2));
+            await page.screenshot({path:'audralia-cloud-spatial-runtime.png',fullPage:true});
+            const failed = result.cloudError || result.statusText==='ERROR' || String(result.statusState||'').includes('FAILED') || pageErrors.length>0 || !result.cloudIntegration;
+            await browser.close();
+            if(failed) process.exit(1);
+          })().catch(error=>{console.error(error);process.exit(1);});
+          NODE
+
+      - name: Upload runtime screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audralia-cloud-spatial-runtime-diagnostic
+          path: |
+            audralia-cloud-spatial-runtime.png
+            /tmp/audralia-server.log
+          if-no-files-found: warn

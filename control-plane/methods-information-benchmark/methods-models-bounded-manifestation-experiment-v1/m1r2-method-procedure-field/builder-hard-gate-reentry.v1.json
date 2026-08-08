@@ -1,0 +1,98 @@
+{
+  "schema": "METHODS_MODELS_M1R2_BUILDER_HARD_GATE_REENTRY_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1R2_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BUILDER_HARD_GATE_REENTRY",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+    "governingLaw": "M_MAY_SEARCH_FOR_AN_EXPRESSION_OF_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR"
+  },
+  "lineage": {
+    "predecessorCandidate": "f805dfddde9b9d8ce274f211d07aff0a3c784b2f",
+    "predecessorPerceptualReevaluationHead": "ee5ebac36615c5f231c3c4fd0ade9b945d80b5e5",
+    "predecessorDisposition": "FAIL_PERCEPTUAL_REEVALUATION_REVISION_REQUIRED_WITHIN_MANIFESTATION_SCOPE",
+    "candidateCommit": "7ab27d421233433b691ad34a7f79a904b08c7705",
+    "branch": "agent/methods-models-manifestation-m1r2-v1",
+    "contractConflict": false
+  },
+  "byteIdentity": {
+    "status": "PASS_LOCAL_EXECUTION_BYTES_EQUAL_COMMITTED_GIT_BLOBS",
+    "candidateAndVerifierBlobs": {
+      "README.md": "01331f5cb4e3916809ac217a642b72d2ba22aaa6",
+      "candidate-manifest.v1.json": "801db6d538decc0e44569cc1d37bf44bc9adaffc",
+      "manifestation.v1.html": "008252335514ea3a00d8bd6d8748f22fe4df9bc4",
+      "manifestation.v1.mjs": "ccda8533435e90f5cd377575ca6ad99e389ec86b",
+      "verification/methods-models-bounded-manifestation-experiment-m1r2-v1.mjs": "267c653892441fb2b4cf27c3ef327935e3b3747d"
+    },
+    "reusedExactPredecessorBlobs": {
+      "manifestation.v1.css": "0310b5b941c890dfeb8839a1a9a18ba56a24583e",
+      "semantic-runtime.v1.mjs": "b57245e49ba49953bc13a788750723ba800424b8",
+      "binding-plan.v1.json": "4f7ca77ef3058e6c585c1445e3cd7b2719770059"
+    },
+    "sourceBlobs": {
+      "method-content-registry.v1.json": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+      "scientific-object-registry.v1.json": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c"
+    },
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865",
+    "verifierSourceSha256": "3f56bb30820e8087a0311640f456d937288f975a65dd9160c2a4082a232bafcb",
+    "executionReceiptSha256": "9589f026f51a51f4df3d54d5bc40beae9b9ae7885ae747f642f08e9c5f20abd8"
+  },
+  "evaluation": {
+    "assertionsPassed": 135,
+    "assertionsFailed": 0,
+    "checkedBindings": 16,
+    "checkedDeclaredRelations": 16,
+    "hardGates": {
+      "I_EMBODIMENT": "PASS",
+      "I_LOCUS": "PASS",
+      "I_ORIENTATION": "PASS",
+      "I_ROUTE_EQUIVALENCE": "PASS"
+    },
+    "hardGateConjunction": "PASS",
+    "hardGateCount": 4,
+    "causalTraceHardGate": false,
+    "causalTrace": "PRESENT_REQUIRED_NON_GATE"
+  },
+  "revisionIntegrity": {
+    "semanticPopulationChangeFromM1R1": "NONE",
+    "declaredRelationPopulationChangeFromM1R1": "NONE",
+    "semanticRuntimeBlobReusedExactlyFromM1R1": true,
+    "bindingPlanBlobReusedExactlyFromM1R1": true,
+    "cssBlobReusedExactlyFromM1R1": true,
+    "targetCenterEndpointRemoved": "PRESENT_NON_GATE_REPAIR_CHECK",
+    "targetBoundaryArrowClearance": "PRESENT_10PX_NONSEMANTIC_CLEARANCE_NON_GATE_REPAIR_CHECK",
+    "successful390pxWholeTopologyReflowPreserved": "PRESENT_NON_GATE_REPAIR_CHECK",
+    "selectedIncidentRelationEmphasisPreserved": "PRESENT_NON_GATE_REPAIR_CHECK",
+    "responsiveOrEndpointGeometryCreatesScientificMeaning": false
+  },
+  "manifestationBoundary": {
+    "M1R1Mutation": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "legacySemanticInheritance": false,
+    "scientificRelationFromLayout": false,
+    "scientificMutationFromInteraction": false,
+    "claimCeilingUpgrade": false,
+    "publicMethodsMutation": false,
+    "publicDefaultPromotion": false
+  },
+  "evidenceBoundary": {
+    "hardGateConformance": "PASS",
+    "runtimeAndInteractionEvidence": "NOT_RUN_FOR_M1R2",
+    "accessibilityAndResponsiveEquivalence": "NOT_RUN_FOR_M1R2",
+    "perceptualReevaluation": "NOT_RUN_FOR_M1R2",
+    "freshIndependentVerification": "NOT_RUN",
+    "userDifferential": "NOT_RUN",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "limitations": [
+    "M1R1_PRIOR_RUNTIME_ACCESSIBILITY_AND_PERCEPTUAL_EVIDENCE_DO_NOT_TRANSFER_AS_PASS_EVIDENCE_TO_M1R2",
+    "TARGET_BOUNDARY_CLEARANCE_CHECK_IS_A_MANIFESTATION_REPAIR_CHECK_NOT_PERCEPTUAL_REEVALUATION",
+    "THIS_IS_BUILDER_HARD_GATE_REENTRY_NOT_FRESH_INDEPENDENT_VERIFICATION",
+    "NO_PUBLIC_PROMOTION_CLAIM"
+  ],
+  "nextLawfulStage": "RUNTIME_AND_INTERACTION_EVIDENCE_FOR_M1R2"
+}

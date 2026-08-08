@@ -1,0 +1,154 @@
+name: Tests L0 L1 Compass Integrated M1 Runtime Review
+
+on:
+  push:
+    branches:
+      - agent/m1-compass-integrated-runtime-review-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m1-compass-integrated-runtime-review-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  SUBJECT: 0c84cc4bb5b75245d225a47fde68d3de879cdaed
+  CONSTRUCTION_AUTHORITY: 9eb936918ce063cef6c6f5d800f39ae966f3d3aa
+  M1_PACKAGE: control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1
+  EVIDENCE_PACKAGE: control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-runtime-evidence-v1
+  REGISTRY_PATH: control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json
+
+jobs:
+  exact-subject-freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout runtime evidence branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify immutable subject and evidence-only scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/m1-compass-integrated-runtime-evidence
+          HEAD_SHA="$(git rev-parse HEAD)"
+          test "$(git merge-base HEAD "$SUBJECT")" = "$SUBJECT"
+
+          mapfile -t CHANGED < <(git diff --name-only "$SUBJECT"...HEAD | sort)
+          EXPECTED=(
+            ".github/workflows/tests-l0-l1-compass-integrated-m1-runtime-review.yml"
+            "$EVIDENCE_PACKAGE/README.md"
+            "$EVIDENCE_PACKAGE/runtime-review-manifest.v1.json"
+            "$EVIDENCE_PACKAGE/verify.runtime.mjs"
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 4
+          test "$(printf '%s\n' "${CHANGED[@]}")" = "$(printf '%s\n' "${EXPECTED_SORTED[@]}")"
+          test "$(git diff --diff-filter=AMD --name-status "$SUBJECT"...HEAD | awk '$1 != "A" {count++} END {print count+0}')" -eq 0
+
+          git diff --quiet "$SUBJECT" -- "$M1_PACKAGE" "$REGISTRY_PATH"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/index.html)" = "bbbd898e3ac5232c07d06560cab31a9e33ecff77"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/manifestation.css)" = "6140be8a2d5c26e60a33a20b48bb2dc6a3e4f9a6"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/manifestation.mjs)" = "dece6b95247794a82bb2b94db1365071b108fdc4"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/candidate-manifest.v1.json)" = "47846fad14c28d95105d7f9487675f47e6e6e40b"
+          test "$(git rev-parse HEAD:$REGISTRY_PATH)" = "b801a11e342051a6b00e6f7098b1d691685ad0b6"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-compass-entry-adapter.v1.mjs)" = "be5c2a50fda75d25d0cc7ec4cab27a9d312781d9"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-compass-return-adapter.v1.mjs)" = "6607f860169db05dab0f6565c4d7559482fc7b4a"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-field-state-adapter.v1.mjs)" = "d8763aba8ed62bdabcfea4459631d48ca1ce7daf"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-focus-adapter.v1.mjs)" = "efac723437ee1c17dbaaf820f616534341e7d7eb"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-neighbor-projection-adapter.v1.mjs)" = "4fd73293fe1f4c10de8b922bbfc7d4e93bc0961c"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-depth-transformation-adapter.v1.mjs)" = "9a27b8d3e3153edac554646869972044967e1233"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-direct-manipulation-adapter.v1.mjs)" = "16c66331cc513393bd01fcff583b334f664c9f0c"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-responsive-projection-adapter.v1.mjs)" = "f8b65b98f4df7117cb96998627d0396bbc71b487"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/adapters/tests-continuity-state-adapter.v1.mjs)" = "a4e74079c81c59b062f51fde4ae076c1f8e7a29b"
+
+          export HEAD_SHA
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = {
+            schema: 'M1_COMPASS_INTEGRATED_RUNTIME_SUBJECT_FREEZE_RECEIPT_v1',
+            subject: process.env.SUBJECT,
+            constructionAuthority: process.env.CONSTRUCTION_AUTHORITY,
+            evidenceHead: process.env.HEAD_SHA,
+            subjectMutation: false,
+            candidatePathMutation: false,
+            registryMutation: false,
+            evidencePathCount: 4,
+            result: 'PASS_EXACT_SUBJECT_FROZEN_FOR_RUNTIME_REVIEW'
+          };
+          fs.writeFileSync('/tmp/m1-compass-integrated-runtime-evidence/subject-freeze-receipt.v1.json', JSON.stringify(receipt, null, 2) + '\n');
+          NODE
+
+      - name: Upload subject freeze receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: m1-compass-integrated-runtime-subject-freeze-${{ github.run_id }}
+          path: /tmp/m1-compass-integrated-runtime-evidence/subject-freeze-receipt.v1.json
+          if-no-files-found: error
+          retention-days: 30
+
+  chromium-runtime-review:
+    needs: exact-subject-freeze
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout evidence harness
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify harness syntax
+        run: node --check "$EVIDENCE_PACKAGE/verify.runtime.mjs"
+
+      - name: Materialize exact immutable runtime subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/m1-compass-integrated-subject
+          git worktree add --detach /tmp/m1-compass-integrated-subject "$SUBJECT"
+          test "$(git -C /tmp/m1-compass-integrated-subject rev-parse HEAD)" = "$SUBJECT"
+          test "$(git -C /tmp/m1-compass-integrated-subject status --porcelain | wc -l | xargs)" -eq 0
+
+      - name: Install Chromium runtime authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Start exact-subject local server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory /tmp/m1-compass-integrated-subject >/tmp/m1-compass-integrated-runtime-server.log 2>&1 &
+          echo $! >/tmp/m1-compass-integrated-runtime-server.pid
+          for attempt in $(seq 1 30); do
+            if curl -fsS "http://127.0.0.1:4173/$M1_PACKAGE/" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/m1-compass-integrated-runtime-server.log || true
+          exit 1
+
+      - name: Execute exact-subject Chromium runtime review
+        shell: bash
+        env:
+          M1_BASE_URL: http://127.0.0.1:4173
+          M1_RUNTIME_EVIDENCE_DIR: /tmp/m1-compass-integrated-runtime-evidence
+        run: |
+          set -euo pipefail
+          node "$EVIDENCE_PACKAGE/verify.runtime.mjs"
+
+      - name: Upload runtime receipt and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m1-compass-integrated-runtime-review-${{ github.run_id }}
+          path: /tmp/m1-compass-integrated-runtime-evidence
+          if-no-files-found: error
+          retention-days: 30

@@ -3,6 +3,7 @@ name: Audralia Weather Presentation Reconciliation
 on:
   pull_request:
     paths:
+      - 'showroom/globe/audralia/index.html'
       - 'showroom/globe/audralia/weather-presentation-reconciliation/**'
       - '.github/workflows/audralia-weather-presentation-reconciliation.yml'
   workflow_dispatch:
@@ -64,7 +65,7 @@ jobs:
           done
           cat /tmp/audralia-reconciliation-server.log
           exit 1
-      - name: Execute reconciliation page
+      - name: Execute reconciliation and live Audralia pages
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
@@ -126,8 +127,25 @@ jobs:
                 status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null
               };
             });
-            console.log(JSON.stringify({result,pageErrors,consoleErrors},null,2));
             const failed=pageErrors.length||!result.localPass||!result.planetaryPass||!result.idsStable||result.localActive>result.localCap||result.loaderProgress!=='4'||result.cameraSemanticsMutated||result.zoomSemanticsMutated||result.travelSemanticsMutated||result.localCutoff<500||result.planetaryCutoff!==0||result.skyEvidence.nearTerrainVeil!==false||result.exteriorEvidence.nearFieldExtinctionAuthority!==false||!result.celestial||!String(result.status).includes('USER_REVIEW_REQUIRED');
-            await browser.close();if(failed)process.exit(1);
+            console.log(JSON.stringify({reconciliation:result,pageErrors,consoleErrors},null,2));
+            if(failed){await browser.close();process.exit(1);}
+
+            const live=await browser.newPage();await live.setViewport({width:720,height:1280,deviceScaleFactor:1});
+            const liveErrors=[];live.on('pageerror',e=>liveErrors.push(String(e?.stack||e)));
+            await live.goto('http://127.0.0.1:4173/showroom/globe/audralia/',{waitUntil:'domcontentloaded',timeout:60000});
+            await live.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:30000});
+            await live.waitForFunction(()=>document.querySelector('[data-audralia-loader]')?.dataset?.progress==='4',{timeout:5000});
+            await live.waitForFunction(()=>window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector,{timeout:30000});
+            const liveResult=await live.evaluate(()=>({
+              integration:window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__,
+              loaderProgress:document.querySelector('[data-audralia-loader]')?.dataset?.progress||null,
+              status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+              celestial:Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector),
+              nav:[...document.querySelectorAll('.audralia-live-nav a')].map(a=>a.textContent.trim())
+            }));
+            console.log(JSON.stringify({live:liveResult,liveErrors},null,2));
+            const liveFailed=liveErrors.length||liveResult.integration?.schema!=='AUDRALIA_LIVE_PLANETARY_INTEGRATION_v2'||liveResult.integration?.weatherPresentationReconciliation!==true||liveResult.integration?.cameraSemanticsFrozen!==true||liveResult.loaderProgress!=='4'||!String(liveResult.status).includes('USER_REVIEW_REQUIRED')||!liveResult.celestial||!['H-Earth · Play','Compass','Mirrorland'].every(label=>liveResult.nav.includes(label));
+            await browser.close();if(liveFailed)process.exit(1);
           })().catch(error=>{console.error(error);process.exit(1);});
           NODE

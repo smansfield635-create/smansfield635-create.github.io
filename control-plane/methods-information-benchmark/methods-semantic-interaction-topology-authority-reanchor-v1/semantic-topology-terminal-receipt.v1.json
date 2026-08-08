@@ -1,0 +1,59 @@
+{
+  "schema": "METHODS_SEMANTIC_INTERACTION_TOPOLOGY_TERMINAL_RECEIPT_v1",
+  "version": "1.0.0",
+  "operation": "METHODS_SEMANTIC_INTERACTION_TOPOLOGY_DERIVATION_v1",
+  "status": "PASS_FRESH_INDEPENDENT_SOURCE_BOUND_VERIFICATION",
+  "verifiedCandidate": {
+    "head": "ac18dc72c8a0f9bd8baf3cfdaba541b5e8fc50e5",
+    "scientificBase": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2",
+    "baseClass": "F11_FINAL_NONPUBLIC_CONTROL_PLANE_HEAD_BEFORE_F12_MANIFESTATION_REVIEW_SURFACE"
+  },
+  "verification": {
+    "mode": "INDEPENDENT_EXACT_HEAD_SOURCE_AUDIT_PLUS_ADVERSARIAL_FIXTURE_EXECUTION",
+    "exactHeadContractReads": "PASS",
+    "upstreamAuthorityContinuity": "PASS_NO_UPSTREAM_AUTHORITY_FILES_CHANGED_FROM_F11_BASE",
+    "adversarialFixtures": {"status": "PASS", "passed": 24, "failed": 0, "lawfulAccepted": 8, "forbiddenOrIncoherentRejected": 16},
+    "staticContractCrossChecks": "PASS",
+    "dedicatedRepositoryVerifierPresent": true,
+    "dedicatedRepositoryVerifierExecution": "NOT_EXECUTED_IN_THIS_RECEIPT",
+    "githubActionsCI": "NOT_RUN_NO_PULL_REQUEST_WORKFLOW_RUN_MATERIALIZED",
+    "ciPassClaimed": false
+  },
+  "verifiedContracts": [
+    "authority-reanchor.v1.json",
+    "semantic-interaction-topology-contract.v1.json",
+    "embodiment-binding-contract.v1.json",
+    "contextual-architecture-hard-gates.v1.json",
+    "adversarial-fixtures.v1.json"
+  ],
+  "hardGates": {
+    "status": "DEFINED",
+    "operator": "AND",
+    "terms": ["I_EMBODIMENT", "I_LOCUS", "I_ORIENTATION", "I_ROUTE_EQUIVALENCE"],
+    "count": 4,
+    "aggregateOverrideAllowed": false,
+    "causalTraceIsAdditionalGate": false,
+    "auditTraceRequired": "ACTION_TO_TARGET_TO_TRANSFORMATION_TO_INFORMATION_DELTA"
+  },
+  "terminalPosture": {
+    "minimumAuthorizedOntology": "AVAILABLE_BOUNDED",
+    "semanticInteractionTopology": "AVAILABLE_BOUNDED",
+    "embodimentBindingContract": "AVAILABLE",
+    "hardGates": "DEFINED",
+    "legacySemanticInheritance": "BLOCKED",
+    "manifestationCandidate": "NONE",
+    "manifestationConformance": "NOT_EVALUABLE",
+    "pageConstructionAuthority": "WITHHELD",
+    "publicMutation": "NONE",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "nonAuthority": [
+    "THIS_RECEIPT_DOES_NOT_AUTHORIZE_MANIFESTATION",
+    "THIS_RECEIPT_DOES_NOT_AUTHORIZE_PUBLIC_METHODS_PAGE_MUTATION",
+    "THIS_RECEIPT_DOES_NOT_AUTHORIZE_GEOMETRY_OR_VISUAL_STYLE",
+    "THIS_RECEIPT_DOES_NOT_UPGRADE_ANY_SCIENTIFIC_CLAIM",
+    "THIS_RECEIPT_DOES_NOT_CONVERT_PRIOR_F8_F11_TECHNICAL_PASSES_INTO_TOPOLOGY_AUTHORITY",
+    "THIS_RECEIPT_IS_NOT_A_GITHUB_ACTIONS_CI_PASS"
+  ],
+  "nextLawfulDependency": "SEPARATE_MANIFESTATION_EXPERIMENT_AUTHORITY_MAY_BE_CONSIDERED_ONLY_AFTER_THIS_CONTRACT_PACKAGE_IS_ACCEPTED_WITH_CONSTRUCTION_AUTHORITY_REMAINING_SEPARATE"
+}

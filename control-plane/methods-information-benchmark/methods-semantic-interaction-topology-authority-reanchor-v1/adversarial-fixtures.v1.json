@@ -1,0 +1,33 @@
+{
+  "schema": "METHODS_SEMANTIC_TOPOLOGY_ADVERSARIAL_FIXTURES_v1",
+  "version": "1.0.0",
+  "status": "VERIFICATION_INPUT",
+  "positive": [
+    {"id": "POS_METHODS_CONTAINS_STAGES", "type": "CONTAINMENT", "input": {"source": "F4_METHOD_SEQUENCE", "relation": "CONTAINS_METHOD_STAGE", "inferred": false}, "expected": "ACCEPT"},
+    {"id": "POS_METHOD_REQUIRES_EDGE", "type": "ADJACENCY", "input": {"source": "F4_METHOD_SEQUENCE", "relation": "REQUIRES", "declared": true}, "expected": "ACCEPT"},
+    {"id": "POS_TYPED_RESULT_CLAIM", "type": "ADJACENCY", "input": {"source": "PRE_F8_TYPED_RESULT_CLAIM_RELATION", "declared": true}, "expected": "ACCEPT"},
+    {"id": "POS_ENTITY_DIRECT_LOCUS", "type": "LOCUS", "input": {"bindingClass": "ENTITY", "targetMatch": true, "explicitBinding": true}, "expected": "ACCEPT"},
+    {"id": "POS_RELATION_DIRECT_LOCUS", "type": "LOCUS", "input": {"bindingClass": "DECLARED_RELATION", "relationDeclared": true, "relationMatch": true}, "expected": "ACCEPT"},
+    {"id": "POS_ACCESS_ROUTE_EQUIVALENT", "type": "ROUTE_EQUIVALENCE", "input": {"operationEqual": true, "targetEqual": true, "semanticOutcomeEqual": true}, "expected": "ACCEPT"},
+    {"id": "POS_PERSPECTIVE_NONMUTATION", "type": "TRANSITION", "input": {"operation": "CHANGE_PERSPECTIVE", "scientificMutation": false}, "expected": "ACCEPT"},
+    {"id": "POS_SPARSE_CONTAINMENT", "type": "CONTAINMENT", "input": {"source": "NONE", "inferred": false}, "expected": "ACCEPT"}
+  ],
+  "negative": [
+    {"id": "NEG_LEGACY_FOUR_FAMILIES", "type": "NODE_ADMISSION", "input": {"source": "LEGACY_FOUR_PRESENTATION_FAMILIES"}, "expected": "REJECT"},
+    {"id": "NEG_LEGACY_25_RECORDS", "type": "NODE_ADMISSION", "input": {"source": "LEGACY_25_PRESENTATION_RECORDS_AS_PEER_SCIENTIFIC_OBJECTS"}, "expected": "REJECT"},
+    {"id": "NEG_LEGACY_LENS_TAXONOMY", "type": "TOPOLOGY_SOURCE", "input": {"source": "LEGACY_PRACTICAL_ENGINEERING_EVIDENCE_TAXONOMY"}, "expected": "REJECT"},
+    {"id": "NEG_FAMILY_LENS_RECORD_CONTAINMENT", "type": "CONTAINMENT", "input": {"source": "LEGACY_FAMILY_LENS_RECORD_NESTING", "inferred": true}, "expected": "REJECT"},
+    {"id": "NEG_F8_SLOT_GRID_TOPOLOGY", "type": "TOPOLOGY_SOURCE", "input": {"source": "F8_DETERMINISTIC_SLOT_GRID"}, "expected": "REJECT"},
+    {"id": "NEG_VISUAL_PROXIMITY_EDGE", "type": "ADJACENCY", "input": {"source": "VISUAL_PROXIMITY", "declared": false}, "expected": "REJECT"},
+    {"id": "NEG_THEMATIC_SIMILARITY_EDGE", "type": "ADJACENCY", "input": {"source": "THEMATIC_SIMILARITY", "declared": false}, "expected": "REJECT"},
+    {"id": "NEG_NONSEMANTIC_LOCUS", "type": "LOCUS", "input": {"bindingClass": "NONSEMANTIC", "targetMatch": true, "explicitBinding": true}, "expected": "REJECT"},
+    {"id": "NEG_UNBOUND_LOCUS", "type": "LOCUS", "input": {"bindingClass": "ENTITY", "targetMatch": true, "explicitBinding": false}, "expected": "REJECT"},
+    {"id": "NEG_WRONG_TARGET_LOCUS", "type": "LOCUS", "input": {"bindingClass": "ENTITY", "targetMatch": false, "explicitBinding": true}, "expected": "REJECT"},
+    {"id": "NEG_PERSPECTIVE_MUTATES_SCIENCE", "type": "TRANSITION", "input": {"operation": "CHANGE_PERSPECTIVE", "scientificMutation": true}, "expected": "REJECT"},
+    {"id": "NEG_DEPTH_MUTATES_SCIENCE", "type": "TRANSITION", "input": {"operation": "REQUEST_DEPTH", "scientificMutation": true}, "expected": "REJECT"},
+    {"id": "NEG_ROUTE_TARGET_MISMATCH", "type": "ROUTE_EQUIVALENCE", "input": {"operationEqual": true, "targetEqual": false, "semanticOutcomeEqual": true}, "expected": "REJECT"},
+    {"id": "NEG_ROUTE_OUTCOME_MISMATCH", "type": "ROUTE_EQUIVALENCE", "input": {"operationEqual": true, "targetEqual": true, "semanticOutcomeEqual": false}, "expected": "REJECT"},
+    {"id": "NEG_EDGE_RAISES_CLAIM_CEILING", "type": "ADJACENCY", "input": {"source": "PRE_F8_TYPED_RESULT_CLAIM_RELATION", "declared": true, "raisesClaimCeiling": true}, "expected": "REJECT"},
+    {"id": "NEG_ABSENCE_AS_AUTHORITY", "type": "TOPOLOGY_SOURCE", "input": {"source": "ABSENCE_OF_CURRENT_AUTHORITY"}, "expected": "REJECT"}
+  ]
+}

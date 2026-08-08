@@ -1,0 +1,80 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const dir=path.join(root,'control-plane/methods-information-benchmark/methods-models-bounded-manifestation-experiment-v1/m1-method-procedure-field');
+const src=path.join(root,'control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding');
+const read=p=>fs.readFileSync(p,'utf8');
+const html=read(path.join(dir,'manifestation.v1.html'));
+const css=read(path.join(dir,'manifestation.v1.css'));
+const manifestation=read(path.join(dir,'manifestation.v1.mjs'));
+const semantic=read(path.join(dir,'semantic-runtime.v1.mjs'));
+const method=JSON.parse(read(path.join(src,'method-content-registry.v1.json')));
+const objects=JSON.parse(read(path.join(src,'scientific-object-registry.v1.json')));
+const plan=JSON.parse(read(path.join(dir,'binding-plan.v1.json')));
+const candidate=JSON.parse(read(path.join(dir,'candidate-manifest.v1.json')));
+const expectedHash=candidate.sources.methodSequenceSha256;
+const chromeBin=process.env.CHROME_PATH||'/usr/bin/chromium';
+const port=Number(process.env.M1_CDP_PORT||9227);
+const profile=`/tmp/m1-runtime-${process.pid}`;
+const chrome=spawn(chromeBin,['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',`--remote-debugging-port=${port}`,'--remote-allow-origins=*',`--user-data-dir=${profile}`,'about:blank'],{stdio:'ignore'});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const failures=[],passes=[];
+const ok=(v,id,detail=null)=>{(v?passes:failures).push({id,detail});if(!v)throw new Error(`${id}: ${JSON.stringify(detail)}`)};
+let ws;
+try{
+  let targets;
+  for(let i=0;i<100;i++){
+    try{targets=await fetch(`http://127.0.0.1:${port}/json`).then(r=>r.json());if(targets?.length)break}catch{}
+    await sleep(100);
+  }
+  const target=targets?.find(x=>x.type==='page');
+  if(!target)throw new Error('CHROMIUM_TARGET_UNAVAILABLE');
+  ws=new WebSocket(target.webSocketDebuggerUrl);
+  await new Promise((resolve,reject)=>{ws.addEventListener('open',resolve,{once:true});ws.addEventListener('error',reject,{once:true})});
+  let id=0;const pending=new Map(),events=[];
+  ws.addEventListener('message',ev=>{const m=JSON.parse(ev.data);if(m.id&&pending.has(m.id)){const {resolve,reject}=pending.get(m.id);pending.delete(m.id);m.error?reject(new Error(JSON.stringify(m.error))):resolve(m.result||{})}else events.push(m)});
+  const cmd=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}))});
+  const evaljs=async(expression,awaitPromise=false)=>{const r=await cmd('Runtime.evaluate',{expression,returnByValue:true,awaitPromise});if(r.exceptionDetails)throw new Error(r.exceptionDetails.text||'RUNTIME_EVAL_EXCEPTION');return r.result?.value};
+  await cmd('Page.enable');await cmd('Runtime.enable');await cmd('Log.enable');
+  const cleanHtml=html.replace('<link rel="stylesheet" href="./manifestation.v1.css">','').replace('<script type="module" src="./manifestation.v1.mjs"></script>','');
+  const setup=`document.open();document.write(${JSON.stringify(cleanHtml)});document.close();const st=document.createElement('style');st.textContent=${JSON.stringify(css)};document.head.append(st);const h=${JSON.stringify(expectedHash)},bytes=Uint8Array.from(h.match(/../g).map(x=>parseInt(x,16)));Object.defineProperty(crypto,'subtle',{value:{digest:async()=>bytes.buffer.slice(0)}});window.__M1_DATA={method:${JSON.stringify(method)},objects:${JSON.stringify(objects)},plan:${JSON.stringify(plan)}};window.fetch=async input=>{const u=String(input);if(u.endsWith('method-content-registry.v1.json'))return new Response(JSON.stringify(__M1_DATA.method),{status:200});if(u.endsWith('scientific-object-registry.v1.json'))return new Response(JSON.stringify(__M1_DATA.objects),{status:200});if(u.endsWith('binding-plan.v1.json'))return new Response(JSON.stringify(__M1_DATA.plan),{status:200});throw new Error('HARNESS_FETCH_UNEXPECTED:'+u)};true`;
+  await evaljs(setup);
+  const rtUrl=await evaljs(`URL.createObjectURL(new Blob([${JSON.stringify(semantic)}],{type:'text/javascript'}))`);
+  await evaljs(`(async()=>{window.__m1rt=await import(${JSON.stringify(rtUrl)});return true})()`,true);
+  const modified=manifestation.replace("from'./semantic-runtime.v1.mjs'",`from'${rtUrl}'`);
+  ok(modified.replace(`from'${rtUrl}'`,"from'./semantic-runtime.v1.mjs'")===manifestation,'HARNESS_SINGLE_IMPORT_LOCATOR_SUBSTITUTION');
+  const modUrl=await evaljs(`URL.createObjectURL(new Blob([${JSON.stringify(modified)}],{type:'text/javascript'}))`);
+  await evaljs(`(async()=>{await import(${JSON.stringify(modUrl)});return true})()`,true);await sleep(150);
+  const hash=await evaljs("document.querySelector('#hash').textContent");
+  ok(hash===expectedHash,'INITIAL_HASH',hash);
+  ok(await evaljs("document.querySelectorAll('#nodes .stage').length")===15,'STAGE_COUNT');
+  ok(await evaljs("document.querySelectorAll('button.node').length")===16,'BOUND_BUTTON_COUNT');
+  ok(await evaljs("document.querySelectorAll('#edges .edge').length")===16,'EDGE_COUNT');
+  const edgeIds=await evaljs("[...document.querySelectorAll('#edges .edge')].map(x=>x.dataset.bindingId)");
+  ok(edgeIds.length===16&&edgeIds.every(x=>x.startsWith('DECLARED_RELATION:METHOD_DEPENDENCY:')),'EDGE_IDS_DECLARED_ONLY',edgeIds);
+  ok(await evaljs("document.querySelector('#field').dataset.bindingClass")==='NONSEMANTIC','FIELD_NONSEMANTIC');
+  ok(await evaljs("document.querySelector('#methods').getAttribute('aria-pressed')")==='true','INITIAL_REFERENT_METHODS');
+  const active=()=>evaljs("[...document.querySelectorAll('button.node')].find(x=>x.getAttribute('aria-pressed')==='true')?.dataset.bindingId");
+  const trace=()=>evaljs("document.querySelector('#trace li')?.textContent||''");
+  const center=ref=>evaljs(`(()=>{const e=[...document.querySelectorAll('button.node')].find(e=>e.dataset.bindingId==='METHOD_STAGE:${ref}'||e.dataset.bindingId==='ENTITY:${ref}'),r=e.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2}})()`);
+  let p=await center('CASE_NEUTRALIZATION');
+  await cmd('Input.dispatchMouseEvent',{type:'mouseMoved',x:p.x,y:p.y});await cmd('Input.dispatchMouseEvent',{type:'mousePressed',x:p.x,y:p.y,button:'left',clickCount:1});await cmd('Input.dispatchMouseEvent',{type:'mouseReleased',x:p.x,y:p.y,button:'left',clickCount:1});await sleep(80);
+  ok(await active()==='METHOD_STAGE:CASE_NEUTRALIZATION','POINTER_ACTIVE_REFERENT',await active());ok((await trace()).includes('DIRECT:POINTER:FOCUS_MOVE'),'POINTER_TRACE',await trace());ok(await evaljs("document.querySelector('#hash').textContent")===hash,'POINTER_HASH_NONMUTATION');
+  await evaljs("(()=>{const e=[...document.querySelectorAll('button.node')].find(e=>e.dataset.bindingId==='METHOD_STAGE:SOURCE_CUTOFF');e.focus();e.click();return true})()");await sleep(50);
+  ok(await active()==='METHOD_STAGE:SOURCE_CUTOFF','ACCESSIBLE_ACTIVE_REFERENT',await active());ok((await trace()).includes('ACCESSIBLE:KEYBOARD:FOCUS_MOVE'),'ACCESSIBLE_TRACE',await trace());ok(await evaljs("document.querySelector('#hash').textContent")===hash,'ACCESSIBLE_HASH_NONMUTATION');
+  await cmd('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1});p=await center('OUTCOME_SEQUESTRATION');await cmd('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:p.x,y:p.y,radiusX:1,radiusY:1,force:1,id:1}]});await cmd('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await sleep(100);
+  ok(await active()==='METHOD_STAGE:OUTCOME_SEQUESTRATION','TOUCH_ACTIVE_REFERENT',await active());ok((await trace()).includes('DIRECT:TOUCH:FOCUS_MOVE'),'TOUCH_TRACE',await trace());ok(await evaljs("document.querySelector('#hash').textContent")===hash,'TOUCH_HASH_NONMUTATION');await cmd('Emulation.setTouchEmulationEnabled',{enabled:false,maxTouchPoints:1});
+  const before=[await active(),await evaljs("document.querySelectorAll('#trace li').length"),await evaljs("document.querySelector('#hash').textContent")];await evaljs("document.querySelector('#field').click();true");const after=[await active(),await evaljs("document.querySelectorAll('#trace li').length"),await evaljs("document.querySelector('#hash').textContent")];ok(JSON.stringify(before)===JSON.stringify(after),'NONSEMANTIC_SURFACE_INERT',{before,after});
+  for(const ref of ['TARGET_REGISTRATION','SOURCE_ACQUISITION','ANALYST_QUALIFICATION','ROUTE_AND_COMPARATOR_SUBMISSION','AUTHORIZED_UNBLINDING','BLINDED_SCORING','TERMINAL_DISPOSITION']){await evaljs(`(()=>{const e=[...document.querySelectorAll('button.node')].find(e=>e.dataset.bindingId==='METHOD_STAGE:${ref}');e.focus();e.click();return true})()`)}
+  ok(await active()==='METHOD_STAGE:TERMINAL_DISPOSITION','SEQUENTIAL_FINAL_REFERENT',await active());ok(await evaljs("document.querySelectorAll('#trace li').length")===6,'AUDIT_TRACE_CAP_6');ok(await evaljs("document.querySelector('#hash').textContent")===hash,'SEQUENTIAL_HASH_NONMUTATION');ok(await evaljs("document.querySelectorAll('#edges .edge').length")===16,'RELATION_COUNT_PERSISTENCE');
+  const invalid=await evaljs("(()=>{const m=__m1rt,d=__M1_DATA,reg=m.buildBindingRegistry(d.method,d.objects,d.plan),s=m.createInitialState(reg,'H'),b=reg.bindings[1];return{badTarget:m.dispatchFocus({state:s,registry:reg,bindingId:b.bindingId,target:'__WRONG__',route:'DIRECT',modality:'POINTER'}),badRoute:m.dispatchFocus({state:s,registry:reg,bindingId:b.bindingId,target:b.primaryReferent,route:'ACCESSIBLE',modality:'TOUCH'})}})()");
+  ok(!invalid.badTarget.valid&&invalid.badTarget.errors.includes('LOCUS_TARGET_MISMATCH'),'INVALID_TARGET_REJECTED',invalid.badTarget);ok(!invalid.badRoute.valid&&invalid.badRoute.errors.includes('ROUTE_MODALITY_INVALID'),'INVALID_ROUTE_MODALITY_REJECTED',invalid.badRoute);ok(!('state'in invalid.badTarget)&&!('state'in invalid.badRoute),'INVALID_DISPATCH_NO_MUTATED_STATE');
+  const beforeResize=[await active(),await evaljs("document.querySelector('#hash').textContent")];await cmd('Emulation.setDeviceMetricsOverride',{width:800,height:900,deviceScaleFactor:1,mobile:false});await sleep(100);ok(JSON.stringify(beforeResize)===JSON.stringify([await active(),await evaljs("document.querySelector('#hash').textContent")]),'RESIZE_RUNTIME_STATE_PRESERVED');ok(await evaljs("document.querySelectorAll('#edges .edge').length")===16,'RESIZE_EDGE_COUNT_PRESERVED');
+  await sleep(50);const errs=events.filter(e=>e.method==='Runtime.exceptionThrown'||(e.method==='Log.entryAdded'&&e.params?.entry?.level==='error'));ok(errs.length===0,'NO_BROWSER_RUNTIME_ERRORS',errs);
+  const receipt={schema:'METHODS_MODELS_M1_RUNTIME_INTERACTION_EVIDENCE_v1',candidateId:candidate.candidateId,candidateCommit:'0025241602b5dd5de6140ace84ef0e11f6b34094',status:'PASS_BOUNDED_RUNTIME_INTERACTION_EVIDENCE_WITH_ENVIRONMENTAL_LOADER_LIMITATION',mode:'CHROMIUM_ABOUT_BLANK_EXACT_DOM_CSS_EXACT_SEMANTIC_RUNTIME_MANIFESTATION_SINGLE_IMPORT_LOCATOR_SUBSTITUTION',scientificStateHash:hash,declaredDependencyRelations:edgeIds.length,checks:{passed:passes.length,failed:failures.length},limitations:['CHROMIUM_MANAGED_URLBLOCKLIST_PREVENTED_LOCAL_OR_NETWORK_PAGE_NAVIGATION','ABOUT_BLANK_IS_NOT_SECURE_CONTEXT_SO_WEBCRYPTO_DIGEST_WAS_POLYFILLED_TO_ALREADY_VERIFIED_METHOD_SEQUENCE_SHA256','ACCESSIBLE_BROWSER_ROUTE_USED_NATIVE_BUTTON_CLICK_DETAIL_ZERO_NOT_PHYSICAL_KEYBOARD_DEVICE','NOT_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE_EVALUATION','NOT_PERCEPTUAL_EVALUATION','NOT_FRESH_INDEPENDENT_VERIFICATION','NOT_USER_DIFFERENTIAL','NO_PUBLIC_PROMOTION_CLAIM'],evidenceClass:{runtimeInteraction:'PASS',accessibilityResponsiveEquivalence:'NOT_RUN',perceptualEvaluation:'NOT_RUN',freshIndependentVerification:'NOT_RUN',userDifferential:'NOT_RUN'},failures};
+  process.stdout.write(JSON.stringify(receipt,null,2)+'\n');
+}finally{try{ws?.close()}catch{}chrome.kill('SIGTERM')}

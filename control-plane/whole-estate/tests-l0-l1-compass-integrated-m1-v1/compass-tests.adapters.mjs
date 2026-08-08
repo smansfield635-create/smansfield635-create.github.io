@@ -142,15 +142,24 @@ export function createDepthTransformationAdapter({ fieldState }) {
 
 export function createDirectManipulationAdapter({ element, fieldState, objectIds, focusAdapter, onProposal }) {
   const allowed = Object.freeze([...objectIds]);
-  const gesture = { pointerId: null, startX: 0, lastX: 0, startTime: 0, dragging: false };
+  const gesture = { pointerId: null, startX: 0, lastX: 0, startTime: 0, dragging: false, captured: false };
   const deadZone = 6;
   const settleThreshold = 0.18;
 
-  function cancel() {
+  function resetGesture() {
     gesture.pointerId = null;
     gesture.dragging = false;
+    gesture.captured = false;
+  }
+
+  function cancel() {
+    const pointerId = gesture.pointerId;
+    resetGesture();
     fieldState.replace({ orientationOffset: 0 });
     onProposal?.(fieldState.getState(), "CANCEL");
+    if (pointerId !== null) {
+      try { element.releasePointerCapture?.(pointerId); } catch {}
+    }
   }
 
   function onPointerDown(event) {
@@ -159,14 +168,20 @@ export function createDirectManipulationAdapter({ element, fieldState, objectIds
     gesture.startX = gesture.lastX = event.clientX;
     gesture.startTime = performance.now();
     gesture.dragging = false;
-    element.setPointerCapture?.(event.pointerId);
+    gesture.captured = false;
   }
 
   function onPointerMove(event) {
     if (event.pointerId !== gesture.pointerId) return;
     gesture.lastX = event.clientX;
     const delta = gesture.lastX - gesture.startX;
-    if (!gesture.dragging && Math.abs(delta) >= deadZone) gesture.dragging = true;
+    if (!gesture.dragging && Math.abs(delta) >= deadZone) {
+      gesture.dragging = true;
+      try {
+        element.setPointerCapture?.(event.pointerId);
+        gesture.captured = true;
+      } catch {}
+    }
     if (!gesture.dragging) return;
     const viewport = Math.max(240, element.clientWidth || 1);
     const proposal = clamp(-delta / (viewport * 0.42), -1.25, 1.25);
@@ -178,7 +193,11 @@ export function createDirectManipulationAdapter({ element, fieldState, objectIds
   function onPointerUp(event) {
     if (event.pointerId !== gesture.pointerId) return;
     const offset = fieldState.getState().orientationOffset;
-    if (gesture.dragging && Math.abs(offset) >= settleThreshold) {
+    const wasDragging = gesture.dragging;
+    const wasCaptured = gesture.captured;
+    const pointerId = gesture.pointerId;
+    resetGesture();
+    if (wasDragging && Math.abs(offset) >= settleThreshold) {
       const currentFocus = fieldState.getState().focus;
       const currentIndex = allowed.indexOf(currentFocus);
       const direction = offset > 0 ? -1 : 1;
@@ -188,9 +207,9 @@ export function createDirectManipulationAdapter({ element, fieldState, objectIds
       fieldState.replace({ orientationOffset: 0 });
     }
     onProposal?.(fieldState.getState(), "SETTLE");
-    try { element.releasePointerCapture?.(event.pointerId); } catch {}
-    gesture.pointerId = null;
-    gesture.dragging = false;
+    if (wasCaptured) {
+      try { element.releasePointerCapture?.(pointerId); } catch {}
+    }
   }
 
   element.addEventListener("pointerdown", onPointerDown);

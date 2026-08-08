@@ -1,58 +1,46 @@
 import fs from 'node:fs';
-import {pathToFileURL} from 'node:url';
-
 const assert=(v,m)=>{if(!v)throw new Error(m)};
-const manifest=JSON.parse(fs.readFileSync('laws/orbital-tranche-a0-a3/manifest.v1.json','utf8'));
-const runtimeSource=fs.readFileSync('laws/orbital-tranche-a0-a3/common-grammar.js','utf8');
+const read=p=>fs.readFileSync(p,'utf8');
+const manifest=JSON.parse(read('laws/orbital-tranche-a0-a3/manifest.v1.json'));
+const runtime=read('laws/orbital-tranche-a0-a3/orientation.js');
 
-if(fs.existsSync('laws/orbital-tranche-a0-a3/common-grammar.js')){
-  await import(pathToFileURL(process.cwd()+'/laws/orbital-tranche-a0-a3/common-grammar.js'));
-  const c=globalThis.DGBLawsOrbitalCore;
-  assert(c,'core export');
-  assert(c.stepIndex(0,-1,24,'BOUNDED')===0,'bounded lower');
-  assert(c.stepIndex(0,1,24,'BOUNDED')===1,'forward');
-  assert(c.stepIndex(1,-1,24,'BOUNDED')===0,'reverse traversal');
-  assert(c.stepIndex(23,1,24,'BOUNDED')===23,'bounded upper');
-  assert(c.visibleOffsets(0,24).every(x=>x.index>=0),'no wrap preview at story 1');
-  assert(c.visibleOffsets(23,24).every(x=>x.index<=23),'no wrap preview at story 24');
-  assert(c.dragProgress(-54,180,1,24)<0,'left drag produces forward orbital progress');
-  assert(c.dragProgress(54,180,1,24)>0,'right drag produces reverse orbital progress');
-  assert(Math.abs(c.dragProgress(90,180,0,24))<0.2,'story 1 reverse boundary applies resistance');
-  assert(c.dragDirection(-0.2,0)===1,'moderate left displacement commits forward');
-  assert(c.dragDirection(0.2,0)===-1,'moderate right displacement commits reverse');
-  assert(c.dragDirection(-0.05,-0.3)===1,'left flick commits forward');
-  assert(c.dragDirection(0.05,0.3)===-1,'right flick commits reverse');
-  assert(c.dragDirection(0.05,0.05)===0,'tiny gesture may snap back');
-}
+assert(manifest.navigationTopology?.model==='SIMPLIFIED_MULTI_GRAPH_V1','simplified multi-graph model');
+assert(manifest.navigationTopology?.persistentEnvironment?.semanticType==='PERSISTENT_STAGE','persistent stage');
+assert(manifest.navigationTopology?.category?.semanticType==='CATEGORY_CONSTELLATION','category constellation');
+assert(manifest.navigationTopology?.sequence?.presentation==='SEPARATE_CONTEXT_CONTROL','sequence is separate control');
+assert(manifest.navigationTopology?.localStoryboard?.status==='NOT_RECOVERED','local storyboard remains unrecovered');
+assert(manifest.navigationTopology?.localStoryboard?.navigationAuthority===false,'no invented local storyboard authority');
+assert(manifest.stories.length===24,'24 canonical positions');
+assert(manifest.stories.every((s,i)=>s.position===i+1),'canonical order unchanged');
 
-assert(manifest.stories[0].route==='/laws/research/applied-investigations/','story1 route');
-assert(manifest.stories[1].route==='/laws/research/evidence-and-sources/','story2 route');
-assert(manifest.stories[2].route==='/laws/research/methods-and-models/','story3 route');
-assert(manifest.stories[3].route==='/laws/categories/flow/signals/','story4 outward boundary');
-assert(runtimeSource.includes("CALIBRATION_END=1"),'A1-A2 calibration range');
-assert(runtimeSource.includes('laws-orbital-scene-viewport'),'persistent scene viewport exists');
-assert(runtimeSource.includes('bindPointerSurface(state.viewport)'),'page body itself owns horizontal gestures');
-assert(runtimeSource.includes('layoutScenes(state.livePageProgress'),'neighbor arrival preserves live finger position');
-assert(runtimeSource.includes("endPointer=(e,endType)"),'pointer end resolver exists');
-assert(runtimeSource.includes("endType==='pointercancel'?'gesture-cancel-resolved':'gesture'"),'pointercancel resolves actual gesture instead of forcing snapback');
-assert(!runtimeSource.includes('cancelled?0:core.dragDirection'),'legacy forced-cancel snapback removed');
-assert(!runtimeSource.includes("lostpointercapture',e=>"),'capture loss no longer forces cancellation');
-assert(runtimeSource.includes('COMMIT_DISTANCE=24'),'direct manipulation commit distance is explicit');
-assert(runtimeSource.includes('history.pushState'),'in-document route state is preserved');
-assert(runtimeSource.includes("lawsOrbitalSceneCommit='in-document'"),'scene commit is explicitly in-document');
-assert(runtimeSource.includes("location.assign(stories[targetIndex].route)"),'outward/fail-closed full route remains available');
+const families=manifest.navigationTopology.category.families;
+assert(families.length===6,'six major families');
+const covered=families.flatMap(f=>f.members).slice().sort((a,b)=>a-b);
+assert(covered.length===24&&covered.every((p,i)=>p===i+1),'families cover each canonical position exactly once in simplified projection');
+assert(manifest.stories.every(s=>Array.isArray(s.categoryMembership)&&s.categoryMembership.length>=1),'category membership represented as plural-capable relation');
+
+assert(runtime.includes("shell.className='laws-spatial-environment'"),'persistent Laws shell constructed');
+assert(runtime.includes("shell.dataset.semanticType='PERSISTENT_STAGE'"),'persistent stage semantic type');
+assert(runtime.includes('laws-category-orbit'),'category orbit exists');
+assert(runtime.includes('laws-family-members'),'family-member semantic traversal exists');
+assert(runtime.includes('laws-sequence-context'),'canonical sequence context exists separately');
+assert(runtime.includes('fetchStory'),'canonical views mount into stage');
+assert(runtime.includes('stageContent.replaceChildren'),'stage content replaces inside persistent shell');
+assert(runtime.includes('history.pushState'),'story selection updates history without document destruction');
+assert(runtime.includes("u.searchParams.set('story'"),'persistent route state stored on Laws shell');
+assert(runtime.includes("sourceCandidates"),'canonical view source fallback exists');
+assert(runtime.includes("pointermove"),'gesture navigation exists');
+assert(runtime.includes("category-swipe"),'semantic traversal can commit from swipe');
+assert(!runtime.includes('location.assign('),'persistent Laws shell does not use full-document navigation for canonical position changes');
 
 console.log(JSON.stringify({
   status:'PASS',
-  boundedTraversal:true,
-  canonicalOrderPreserved:true,
-  fullSceneDrag:true,
-  pageBodyGestureSurface:true,
-  neighborArrivalPreservesLiveProgress:true,
-  androidPointerCancelResolvesDisplacement:true,
-  forcedCancelSnapbackRemoved:true,
-  directCommitDistancePx:24,
-  calibrationRange:'STORY_01_TO_STORY_02',
-  inDocumentCommit:true,
-  story3AdapterStillWithheld:true
+  persistentEnvironment:true,
+  canonicalPositions:24,
+  categoryFamilies:6,
+  localStoryboardAuthority:'NOT_RECOVERED',
+  categoryGesture:true,
+  relatedPositionSwipe:true,
+  canonicalSequenceSeparate:true,
+  documentDestructionForPositionChange:false
 },null,2));

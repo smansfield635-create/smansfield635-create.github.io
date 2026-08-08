@@ -1,0 +1,174 @@
+name: Repository Operation Lock Read-After-Write Stabilization Validation
+
+on:
+  push:
+    branches:
+      - agent/repository-operation-lock-read-after-write-stabilization-v1
+  workflow_dispatch:
+    inputs:
+      validation_subject_head:
+        description: Exact validation subject head; certification tooling remains pinned to the workflow head
+        required: true
+        default: e1660c46fb94657723d88693fb48ceef39c533a1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-operation-lock-read-after-write-stabilization-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  INFRASTRUCTURE_BASE_HEAD: 45d8a7d3b642d99a4377110f63bca15d14c8b900
+  VALIDATION_SUBJECT_HEAD: ${{ inputs.validation_subject_head || 'e1660c46fb94657723d88693fb48ceef39c533a1' }}
+  CERTIFICATION_INFRASTRUCTURE_HEAD: ${{ github.sha }}
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+
+jobs:
+  deterministic-stabilization-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CERTIFICATION_INFRASTRUCTURE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify infrastructure scope and deterministic stabilization cases
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CERTIFICATION_INFRASTRUCTURE_HEAD"
+          git cat-file -e "$VALIDATION_SUBJECT_HEAD^{commit}"
+          EXPECTED=$(cat <<'EOF'
+          .github/operation-intake/evidence/repository-operation-intake.remote-ledger-read-after-write-failure-521.v1.json
+          .github/workflows/repository-operation-lock-read-after-write-stabilization-validation.yml
+          tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          tools/operation-intake/repository-operation-lock-read-after-write-stabilization.v1.mjs
+          EOF
+          )
+          ACTUAL=$(git diff --name-only "$INFRASTRUCTURE_BASE_HEAD..$CERTIFICATION_INFRASTRUCTURE_HEAD" | sort)
+          test "$ACTUAL" = "$(printf '%s\n' "$EXPECTED" | sed 's/^          //' | sort)"
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          node tools/operation-intake/repository-operation-lock-read-after-write-stabilization.v1.mjs > /tmp/stabilization-test-receipt.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('/tmp/stabilization-test-receipt.json','utf8'));
+          if(r.result!=='PASS_CLOSED'||r.testCount!==9||r.passCount!==9||r.failCount!==0)throw Error('DETERMINISTIC_STABILIZATION_TEST_FAILURE');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-lock-stabilization-deterministic-v1
+          path: /tmp/stabilization-test-receipt.json
+          if-no-files-found: error
+
+  cross-head-remote-cas-certification:
+    needs: deterministic-stabilization-verification
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CERTIFICATION_INFRASTRUCTURE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Certify repaired remote CAS closure against frozen validation subject
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CERTIFICATION_INFRASTRUCTURE_HEAD"
+          git cat-file -e "$VALIDATION_SUBJECT_HEAD^{commit}"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          import {ensureRef,acquireRemote,closeRemote} from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+          const e=process.env,d='/tmp/lock-stabilization';
+          const scope=`INFRA_STABILIZATION:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`;
+          const digest=x=>createHash('sha256').update(x).digest('hex');
+          const common={repository:e.REPOSITORY,lockRef:e.LOCK_REF,token:e.GITHUB_TOKEN,lockScope:scope,governingHead:e.VALIDATION_SUBJECT_HEAD,requestDigest:digest(scope+':request'),procedureLocatorDigest:digest(scope+':procedure'),barrierFile:d+'/go'};
+          fs.mkdirSync(d,{recursive:true});
+          await ensureRef({repository:e.REPOSITORY,lockRef:e.LOCK_REF,baseHead:e.VALIDATION_SUBJECT_HEAD,token:e.GITHUB_TOKEN});
+          const pending=[
+            acquireRemote({...common,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),
+            acquireRemote({...common,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})
+          ];
+          for(let i=0;i<300&&!(fs.existsSync(d+'/a')&&fs.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));
+          if(!(fs.existsSync(d+'/a')&&fs.existsSync(d+'/b')))throw Error('PREWRITE_BARRIER_NOT_REACHED');
+          const a=JSON.parse(fs.readFileSync(d+'/a','utf8')),b=JSON.parse(fs.readFileSync(d+'/b','utf8'));
+          if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION_BLOB_DIVERGENCE');
+          fs.writeFileSync(d+'/go','');
+          const results=await Promise.all(pending),winners=results.filter(x=>x.lockAcquired),losers=results.filter(x=>!x.lockAcquired);
+          if(winners.length!==1||losers.length!==1)throw Error('CAS_CARDINALITY');
+          const winner=winners[0],loser=losers[0];
+          const loserCorrect=loser.errorCode==='LEDGER_COMPARE_AND_SWAP_CONFLICT'&&[409,422].includes(loser.httpStatus);
+          const closure=await closeRemote({...common,operationId:winner.operationId,lockGeneration:winner.lockGeneration,terminalDisposition:loserCorrect?'PASS_CLOSED':'FAIL_CLOSED',acquisitionCommitSha:winner.acquisitionCommitSha,committedLedgerBlobSha:winner.committedLedgerBlobSha,stabilizationMaxReads:24,stabilizationDelayMs:125,closureCasMaxAttempts:8});
+          if(!loserCorrect)throw Error('CAS_LOSER_CLASSIFICATION');
+          if(!closure.lockReleased||closure.stabilizationMode!=='ACQUISITION_ANCHORED_BOUNDED_REREAD')throw Error('ANCHORED_CLOSURE_NOT_ESTABLISHED');
+          fs.writeFileSync('/tmp/cross-head-remote-cas-certification.json',JSON.stringify({
+            schema:'REPOSITORY_OPERATION_LOCK_READ_AFTER_WRITE_CROSS_HEAD_REMOTE_CAS_CERTIFICATION_v1',
+            result:'PASS_CLOSED',
+            validationSubjectHead:e.VALIDATION_SUBJECT_HEAD,
+            certificationInfrastructureHead:e.CERTIFICATION_INFRASTRUCTURE_HEAD,
+            subjectAndInfrastructureSeparated:e.VALIDATION_SUBJECT_HEAD!==e.CERTIFICATION_INFRASTRUCTURE_HEAD,
+            winner,
+            loser,
+            closure,
+            strandedGeneration521CleanupPerformed:false
+          },null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-lock-stabilization-remote-cas-v1
+          path: /tmp/cross-head-remote-cas-certification.json
+          if-no-files-found: error
+
+  certification-package:
+    needs: [deterministic-stabilization-verification, cross-head-remote-cas-certification]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-lock-stabilization-deterministic-v1
+          path: /tmp/certification/deterministic
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-lock-stabilization-remote-cas-v1
+          path: /tmp/certification/remote
+      - name: Bind subject and infrastructure identities into terminal infrastructure receipt
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/certification/final
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const read=p=>fs.readFileSync(p);
+          const json=p=>JSON.parse(read(p));
+          const hash=p=>createHash('sha256').update(read(p)).digest('hex');
+          const d='/tmp/certification/deterministic/stabilization-test-receipt.json';
+          const r='/tmp/certification/remote/cross-head-remote-cas-certification.json';
+          const dt=json(d),rt=json(r);
+          if(dt.result!=='PASS_CLOSED'||rt.result!=='PASS_CLOSED')throw Error('UPSTREAM_CERTIFICATION_NOT_PASS');
+          if(rt.validationSubjectHead!==process.env.VALIDATION_SUBJECT_HEAD||rt.certificationInfrastructureHead!==process.env.CERTIFICATION_INFRASTRUCTURE_HEAD)throw Error('IDENTITY_BINDING_MISMATCH');
+          const out={
+            schema:'REPOSITORY_OPERATION_LOCK_READ_AFTER_WRITE_STABILIZATION_CERTIFICATION_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            validationSubjectHead:process.env.VALIDATION_SUBJECT_HEAD,
+            certificationInfrastructureHead:process.env.CERTIFICATION_INFRASTRUCTURE_HEAD,
+            subjectAndInfrastructureSeparated:process.env.VALIDATION_SUBJECT_HEAD!==process.env.CERTIFICATION_INFRASTRUCTURE_HEAD,
+            deterministicReceiptSha256:hash(d),
+            remoteCasReceiptSha256:hash(r),
+            deterministicTests:{testCount:dt.testCount,passCount:dt.passCount,failCount:dt.failCount},
+            remoteClosure:{stabilizationMode:rt.closure.stabilizationMode,stabilizationReadCount:rt.closure.stabilizationReadCount,closureCasAttempts:rt.closure.closureCasAttempts},
+            failure521EvidencePreserved:true,
+            strandedGeneration521CleanupPerformed:false,
+            pullRequest759RerunPerformed:false,
+            testsArchitectureMutation:false
+          };
+          fs.writeFileSync('/tmp/certification/final/certification-receipt.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-lock-read-after-write-stabilization-certification-v1
+          path: /tmp/certification/final/certification-receipt.json
+          if-no-files-found: error

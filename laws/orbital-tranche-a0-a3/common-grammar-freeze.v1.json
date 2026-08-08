@@ -1,0 +1,16 @@
+{
+  "recordId":"LAWS_ORBITAL_COMMON_GRAMMAR_FREEZE_v1",
+  "status":"FROZEN_FOR_A3_ADAPTER",
+  "constructionBase":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "verifiedHead":"3258792c9aca49859fd9927d6965b7a075649246",
+  "surfaceId":"LAWS_COMPLETE_STORY",
+  "semanticType":"NARRATIVE_SEQUENCE",
+  "wrapPolicy":"BOUNDED",
+  "selectedMeaning":"PRIMARY_INTERACTION_FOCUS_ONLY",
+  "parallelLensScientificSequence":false,
+  "commonGrammarCssSha256":"213565381a11bf6dc868a2be32cb72be4ade26379b7e68bcb25bd6eaad709164",
+  "commonGrammarJsSha256":"4faeb7e654c4bd70979daeef0aee9a0cbcc2181fc3731d101092a0d7bac6b150",
+  "manifestSha256":"7f82bebadfce432a6f371bb174c7c0510ea274d7ca6aad31f524403b2e712d88",
+  "methodsMayConsumeGrammar":true,
+  "methodsMayRedefineGrammar":false
+}

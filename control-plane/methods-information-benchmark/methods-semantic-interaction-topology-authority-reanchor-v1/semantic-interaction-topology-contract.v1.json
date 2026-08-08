@@ -1,0 +1,97 @@
+{
+  "schema": "METHODS_SEMANTIC_INTERACTION_TOPOLOGY_CONTRACT_v1",
+  "version": "1.0.0",
+  "status": "AVAILABLE_BOUNDED_CANDIDATE_PENDING_FRESH_VERIFICATION",
+  "authorityBasis": {
+    "reanchorRef": "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/authority-reanchor.v1.json",
+    "law": "ONLY_ACTIVE_SOURCE_BOUND_ONTOLOGY_AND_EXPLICIT_DECLARED_RELATIONS_MAY_SUPPLY_TOPOLOGY",
+    "legacyManifestationAuthority": false,
+    "absenceOfReplacementPermitsInheritance": false
+  },
+  "topology": {"symbol": "T*", "components": ["N*", "C*", "A*", "L*", "DELTA*", "P*"]},
+  "N": {
+    "definition": "ACTIVE_SOURCE_BOUND_SCIENTIFIC_AND_PROCEDURAL_ENTITIES_ONLY",
+    "admissionLaw": "NODE_ADMITTED_IFF_ACTIVE_SOURCE_BOUND_IDENTITY_OR_STANDING_EXISTS",
+    "sourceRefs": [
+      "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/scientific-object-registry.v1.json",
+      "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/method-content-registry.v1.json",
+      "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/scientific-object-inventory.v1.json",
+      "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/study-result-to-claim-typed-relation-registry.v1.json"
+    ],
+    "nodeClasses": ["SCIENTIFIC_OBJECT", "METHOD_STAGE", "MODEL_OR_COMPARATOR", "RESULT", "CLAIM"],
+    "presentationOnlyAdmission": "PROHIBITED_UNLESS_SEPARATELY_SOURCE_BOUND_AS_NONSCIENTIFIC_ENTITY_AND_NEVER_UPGRADED_TO_SCIENTIFIC_IDENTITY",
+    "forbiddenCanonicalPopulations": ["LEGACY_FOUR_PRESENTATION_FAMILIES", "LEGACY_25_PRESENTATION_RECORDS_AS_PEER_SCIENTIFIC_OBJECTS"]
+  },
+  "C": {
+    "definition": "EXPLICIT_SOURCE_SUPPORTED_SEMANTIC_OR_PROCEDURAL_CONTAINMENT_ONLY",
+    "minimumDeclaredContainment": [{"parent": "METHODS", "childrenSource": "F4_METHOD_CONTENT_REGISTRY.sequence", "relation": "CONTAINS_METHOD_STAGE"}],
+    "admissionTypes": ["PART_OF", "MEMBER_OF", "CONTAINS_METHOD_STAGE"],
+    "law": "NO_DECLARED_CONTAINMENT_IMPLIES_NO_INFERRED_CONTAINMENT",
+    "visualEnclosureCreatesContainment": false,
+    "presentationGroupingCreatesContainment": false,
+    "sparsityAllowed": true
+  },
+  "A": {
+    "definition": "DECLARED_METHOD_DEPENDENCIES_PLUS_DECLARED_SCIENTIFIC_RELATIONS",
+    "families": [
+      {"id": "METHOD_DEPENDENCY", "sourceRef": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/method-content-registry.v1.json", "edgeSemantics": "REQUIRES_OR_IMMEDIATE_DEPENDENCY"},
+      {"id": "DECLARED_SCIENTIFIC_RELATION", "sourceRef": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/study-result-to-claim-typed-relation-registry.v1.json", "edgeShape": ["result", "relationType", "claim", "direction", "standing"]}
+    ],
+    "visualProximityCreatesAdjacency": false,
+    "thematicSimilarityCreatesAdjacency": false,
+    "undeclaredCrossObjectTraversal": "PROHIBITED",
+    "claimCeilingPromotionByEdge": false
+  },
+  "L": {
+    "definition": "PRIMARY_DIRECT_MANIPULATION_LOCUS_MUST_BIND_TO_THE_SEMANTIC_TARGET_OR_DECLARED_RELATION_OF_THE_OPERATION",
+    "entityLaw": "LOCUS_BINDING_PRIMARY_REFERENT_MUST_EQUAL_OPERATION_TARGET",
+    "relationLaw": "RELATION_LOCUS_BINDING_RELATION_REF_MUST_EQUAL_DECLARED_RELATION_USED_BY_OPERATION",
+    "unrelatedControlPanelAsPrimaryDirectLocus": false,
+    "accessibleAlternateRouteAllowed": true,
+    "legacyF8NonactivatingNode": "REQUIRES_READMISSION_UNTIL_BINDING_AND_LOCUS_EQUIVALENCE_PROVED"
+  },
+  "DELTA": {
+    "definition": "REGISTERED_OPERATION_SEMANTICS_NOT_VISUAL_AFTEREFFECT",
+    "operations": {
+      "FOCUS_MOVE": {"meaning": "CHANGE_ATTENTION_ONLY", "scientificMutation": false, "activation": false},
+      "CHANGE_PERSPECTIVE": {"meaning": "CHANGE_REPRESENTATION_OF_SAME_REFERENT", "scientificMutation": false},
+      "REQUEST_DEPTH": {"meaning": "CHANGE_EXPLANATION_RESOLUTION_ONLY", "scientificMutation": false},
+      "INQUIRE_FIELD": {"meaning": "DISCLOSE_ALREADY_AUTHORIZED_REGISTERED_FIELD", "scientificMutation": false, "silentDepthEscalation": false},
+      "NAVIGATE_RELATION": {"meaning": "MOVE_TO_REFERENT_CONNECTED_BY_DECLARED_RELATION", "scientificMutation": false, "requiresDeclaredRelation": true},
+      "ENTRY_RELOAD_HISTORY_RETURN_RESTORE": {"meaning": "RESTORE_EXACT_PREVIOUSLY_AUTHORIZED_CANONICAL_REFERENT", "scientificMutation": false},
+      "CHANGE_MODALITY": {"meaning": "CHANGE_ACCESS_MECHANISM_ONLY", "scientificMutation": false, "operationSemanticsChange": false},
+      "CHANGE_VIEWPORT_OR_MOTION": {"meaning": "CHANGE_PRESENTATION_BEHAVIOR_ONLY", "scientificMutation": false, "informationLossAuthorized": false}
+    },
+    "law": "SEMANTIC_TRANSITION_MEANING_IS_DECLARED_BEFORE_MANIFESTATION"
+  },
+  "P": {
+    "definition": "CANONICAL_IDENTITY_PERSISTS_THROUGH_NONSCIENTIFIC_INTERACTION",
+    "identityInvariantUnder": ["FOCUS", "DEPTH", "PERSPECTIVE", "VIEW", "MODALITY", "MOTION_PREFERENCE", "VIEWPORT", "ROUTE_HISTORY"],
+    "crossObjectTraversalLaw": "ACTIVE_REFERENT_MAY_CHANGE_ONLY_BY_AUTHORIZED_TRAVERSAL_WITHOUT_REWRITING_ORIGIN_IDENTITY",
+    "returnLaw": "EXACT_RETURN_RESTORES_DECLARED_ORIGIN_CONTEXT",
+    "authorizedScientificTransitionException": "ONLY_EXPLICIT_SCIENTIFIC_OR_CONSTITUTIONAL_AUTHORITY_MAY_CHANGE_IDENTITY_BEARING_STATE"
+  },
+  "orientation": {
+    "symbol": "Q",
+    "baseContext": ["IDENTITY", "CLASS", "STANDING", "CLAIM_CEILING", "MATERIAL_QUALIFIER", "REQUIRED_RELATIONS"],
+    "methodStageAdditions": ["METHODS_PARENT", "PREREQUISITES", "IMMEDIATE_DEPENDENTS", "CUSTODY_DOMAIN"],
+    "resultClaimRelationAdditions": ["RESULT", "CLAIM", "RELATION_TYPE", "DIRECTION", "STANDING"],
+    "selectionLaw": "SELECTED_REFERENT_REQUIRES_ORIENTATION_CONTEXT_TO_REMAIN_SEMANTICALLY_AVAILABLE",
+    "screenGeometrySpecified": false
+  },
+  "routeEquivalence": {
+    "directAndAccessible": {"operationEqual": true, "targetEqual": true, "semanticOutcomeEqual": true},
+    "semanticOutcomeFieldsAsApplicable": ["ACTIVE_REFERENT", "SCIENTIFIC_STATE_HASH", "ROUTE_DESTINATION", "DEPTH", "AUTHORIZED_DISCLOSED_FIELDS"],
+    "gestureTraceEqualityRequired": false,
+    "experienceEqualityRequired": false
+  },
+  "auditTrace": {"status": "REQUIRED_NON_GATE_AUDITABILITY", "trace": ["ACTION", "TARGET", "TRANSFORMATION", "INFORMATION_DELTA"], "hardGateMembership": false},
+  "explicitNonAuthority": {
+    "manifestationConformance": false,
+    "manifestationCandidate": "NONE",
+    "pageConstructionAuthority": "WITHHELD",
+    "publicMutationAuthority": false,
+    "scientificClaimUpgradeAuthority": false,
+    "visualStyleOrGeometryAuthority": false
+  }
+}

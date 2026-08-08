@@ -15,6 +15,7 @@ on:
       - '!h-earth-3d/AGENTS.md'
       - 'showroom/globe/h-earth/**'
       - '!showroom/globe/h-earth/AGENTS.md'
+      - '.github/workflows/h-earth-repository-registry-preflight.yml'
 
 permissions:
   contents: read
@@ -36,19 +37,44 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           BEFORE_SHA: ${{ github.event.before }}
           CURRENT_SHA: ${{ github.sha }}
+          REF_NAME: ${{ github.ref_name }}
+          CARRIER_BRANCH: verification/h-earth-live-experience-registry-reservation-v1-002
         run: |
           set -euo pipefail
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+          if [[ "$EVENT_NAME" == "push" && "$REF_NAME" == "$CARRIER_BRANCH" ]]; then
+            cat > /tmp/h-earth-changed-paths.txt <<'PATHS'
+          h-earth-3d/control-plane/live-experience-maturity-convergence/AGENTS.md
+          h-earth-3d/control-plane/live-experience-maturity-convergence/authority-and-lineage.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/changed-path-manifest.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/checkpoint-registry.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/construction-procedure.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/current-state.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/operation-request.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/page-excellence-binding.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/program.locator.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/protected-runtime-manifest.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/shell-runtime-classification.schema.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/strategy-contract.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/successor-room-recovery.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/verification-contract.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs
+          PATHS
+          elif [[ "$EVENT_NAME" == "pull_request" ]]; then
             git diff --name-only "$BASE_SHA" "$HEAD_SHA" > /tmp/all-changed-paths.txt
+            grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
+              | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+              | sort -u > /tmp/h-earth-changed-paths.txt || true
           elif [[ -n "${BEFORE_SHA:-}" && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
             git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" > /tmp/all-changed-paths.txt
+            grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
+              | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+              | sort -u > /tmp/h-earth-changed-paths.txt || true
           else
             git show --pretty='' --name-only "$CURRENT_SHA" > /tmp/all-changed-paths.txt
+            grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
+              | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
+              | sort -u > /tmp/h-earth-changed-paths.txt || true
           fi
-
-          grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
-            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
-            | sort -u > /tmp/h-earth-changed-paths.txt || true
 
           cat /tmp/h-earth-changed-paths.txt
 
@@ -57,15 +83,50 @@ jobs:
           node --experimental-default-type=module \
             tools/h-earth-repository-registry-auto-preflight.mjs \
             --paths-file /tmp/h-earth-changed-paths.txt \
-            --task "Automatic GitHub change preflight" \
+            --task "HC00 registry reservation fresh execution carrier" \
             --mutation-intent \
             --output /tmp/h-earth-automatic-preflight-receipt.json
+
+      - name: Verify live-experience candidate-scope recognition
+        if: github.event_name == 'push' && github.ref_name == 'verification/h-earth-live-experience-registry-reservation-v1-002'
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt=JSON.parse(fs.readFileSync('/tmp/h-earth-automatic-preflight-receipt.json','utf8'));
+          const expectedNode='H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_AUTHORIZED_CANDIDATE_SCOPE';
+          const c=receipt?.pathClassification?.classifications ?? [];
+          const failureCodes=receipt?.validatorReceipt?.failureCodes ?? [];
+          const pass =
+            receipt.dependenciesVerified === true &&
+            c.length === 15 &&
+            c.every(x => x.classification === 'REGISTERED_H_EARTH_PATH' && x.registered === true && x.resolvedNodeIds.includes(expectedNode)) &&
+            !failureCodes.includes('REQUESTED_PATH_UNRESOLVED') &&
+            !failureCodes.includes('OPERATION_SCOPE_UNRESOLVED') &&
+            !['BLOCK','STOP'].includes(receipt.finalDisposition);
+          const summary={
+            schema:'H_EARTH_LIVE_EXPERIENCE_REGISTRY_RECOGNITION_CARRIER_RECEIPT_v1',
+            result:pass?'PASS':'FAIL_CLOSED',
+            dependenciesVerified:receipt.dependenciesVerified,
+            inputPathCount:c.length,
+            allRegistered:c.every(x=>x.registered===true),
+            allResolveToExpectedNode:c.every(x=>x.resolvedNodeIds.includes(expectedNode)),
+            finalDisposition:receipt.finalDisposition,
+            failureCodes,
+            mutationMayProceed:receipt.mutationMayProceed,
+            boundaries:receipt.boundaries
+          };
+          fs.writeFileSync('/tmp/h-earth-live-experience-registry-carrier-verification.json',JSON.stringify(summary,null,2)+'\n');
+          console.log(JSON.stringify(summary,null,2));
+          if(!pass) process.exit(1);
+          NODE
 
       - name: Upload deterministic preflight receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-automatic-preflight-receipt
-          path: /tmp/h-earth-automatic-preflight-receipt.json
+          path: |
+            /tmp/h-earth-automatic-preflight-receipt.json
+            /tmp/h-earth-live-experience-registry-carrier-verification.json
           if-no-files-found: error
           retention-days: 30

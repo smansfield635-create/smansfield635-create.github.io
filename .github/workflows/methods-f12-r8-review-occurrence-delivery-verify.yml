@@ -1,0 +1,61 @@
+name: Methods F12 R8 Review Occurrence Delivery Verify
+
+on:
+  push:
+    branches:
+      - review/methods-f12-r8-bb22e805-user-occurrence-001-final
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r8-review-occurrence-delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact R8 candidate parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "bb22e805ca6a029d7caa95d16dc710ae280d40da"
+          test "$(git rev-parse bb22e805ca6a029d7caa95d16dc710ae280d40da^{tree})" = "27825a0d38f043bd36975d9ba1aa1356e13b7663"
+
+      - name: Verify delivery contract and carrier
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-review-occurrence-delivery.verify.v1.mjs
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-review-occurrence-delivery.verify.v1.mjs | tee r8-review-occurrence-delivery-verification.json
+          grep -Fq '"status": "PASS_DELIVERY_CANDIDATE_READY_FOR_REACHABILITY_CHECK"' r8-review-occurrence-delivery-verification.json
+          grep -Fq '"r8PassClosed": false' r8-review-occurrence-delivery-verification.json
+          grep -Fq '"r9Unlock": false' r8-review-occurrence-delivery-verification.json
+
+      - name: Prove exact bounded delivery diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git diff --name-only HEAD^ HEAD | sort)
+          expected=(
+            ".github/workflows/methods-f12-r8-review-occurrence-delivery-verify.yml"
+            "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-review-occurrence-delivery.v1.json"
+            "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-review-occurrence-delivery.verify.v1.mjs"
+            "review/methods-and-models/f12-r8-bb22e805/index.html"
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#files[@]}" -eq "${#expected_sorted[@]}"
+          for i in "${!files[@]}"; do test "${files[$i]}" = "${expected_sorted[$i]}"; done
+          test -z "$(git diff --diff-filter=DMRTUXB --name-only HEAD^ HEAD)"
+
+      - name: Preserve delivery evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r8-review-occurrence-delivery-evidence
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            r8-review-occurrence-delivery-verification.json
+            review/methods-and-models/f12-r8-bb22e805/index.html
+            control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-review-occurrence-delivery.v1.json

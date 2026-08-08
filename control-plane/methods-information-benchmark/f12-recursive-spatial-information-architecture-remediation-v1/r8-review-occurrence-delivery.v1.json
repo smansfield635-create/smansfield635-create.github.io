@@ -1,0 +1,64 @@
+{
+  "schema": "METHODS_MODELS_F12_R8_REVIEW_OCCURRENCE_DELIVERY_CONTRACT_v1",
+  "program": "F12_RECURSIVE_SPATIAL_INFORMATION_ARCHITECTURE_REMEDIATION_v1",
+  "operation": "R8_REVIEW_OCCURRENCE_DELIVERY_v1",
+  "operationClass": "R8_NONCHECKPOINT_DELIVERY_SUBOPERATION",
+  "status": "DELIVERY_CANDIDATE",
+  "controllingR8Candidate": {
+    "checkpoint": "R8_BOUNDED_EXPERIENTIAL_PROTOTYPE",
+    "head": "bb22e805ca6a029d7caa95d16dc710ae280d40da",
+    "tree": "27825a0d38f043bd36975d9ba1aa1356e13b7663",
+    "engineeringPass": true,
+    "authorityPass": true,
+    "traceabilityPass": true,
+    "userDifferential": "NOT_AVAILABLE_UNTIL_OCCURRENCE_DELIVERED",
+    "passClosed": false,
+    "r9Unlock": false
+  },
+  "purpose": "DELIVER_A_PHONE_USABLE_INSPECTABLE_OCCURRENCE_OF_THE_EXACT_VERIFIED_R8_BROWSER_PAYLOAD_WITHOUT_MUTATING_THE_CONTROLLING_R8_CANDIDATE_MAIN_OR_THE_PUBLIC_METHODS_ROUTE",
+  "authorityBasis": [
+    "R8_EXPOSE_PHONE_USABLE_REVIEW_SURFACE",
+    "R8_USER_DIFFERENTIAL_REQUIRED",
+    "EXISTING_TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER_PATTERN"
+  ],
+  "deliveryModel": {
+    "carrierClass": "TEMPORARY_SOURCE_HEAD_PINNED_REVIEW_CARRIER",
+    "sourceHeadPinned": true,
+    "exactCandidateHead": "bb22e805ca6a029d7caa95d16dc710ae280d40da",
+    "exactSourceDirectory": "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/",
+    "sourceTransport": "JSDELIVR_IMMUTABLE_COMMIT_CDN",
+    "carrierMayRewriteResourceURLsOnly": true,
+    "carrierMayRewriteCandidateContent": false,
+    "carrierMayCreateScientificContent": false,
+    "carrierMayAlterScientificStanding": false
+  },
+  "mutations": {
+    "controllingR8Candidate": false,
+    "main": false,
+    "publicMethodsRoute": false,
+    "scientificState": false,
+    "relationGraph": false,
+    "projectionGraph": false
+  },
+  "deliveryBoundary": {
+    "isProductionMethodsDeployment": false,
+    "isFullEstateMaterialization": false,
+    "isR9Execution": false,
+    "isR8Closure": false,
+    "userDifferentialMayBeRequestedOnlyAfterOccurrenceIsReachable": true
+  },
+  "scientificInvariants": {
+    "scientificStateDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+    "relationGraphDigest": "4dabc8872082535d01d9bfae3cd9661be68dcf7e1cd6aed5280a9028d4b8137b",
+    "projectionGraphDigest": "9ebef4a6b8102ffd251c8e7809d379bff560d09fe9c75baa3f707768927b6ce8"
+  },
+  "verification": {
+    "carrierPath": "review/methods-and-models/f12-r8-bb22e805/index.html",
+    "contractPath": "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-review-occurrence-delivery.v1.json",
+    "verifierPath": "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-review-occurrence-delivery.verify.v1.mjs",
+    "workflowPath": ".github/workflows/methods-f12-r8-review-occurrence-delivery-verify.yml",
+    "requiredDiff": "EXACT_FOUR_FILE_ADDITIVE_DELIVERY_DIFF",
+    "requiredParent": "bb22e805ca6a029d7caa95d16dc710ae280d40da",
+    "evidenceArtifact": "methods-f12-r8-review-occurrence-delivery-evidence"
+  }
+}

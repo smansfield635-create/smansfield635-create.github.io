@@ -25,17 +25,18 @@ if(fs.existsSync('laws/orbital-tranche-a0-a3/common-grammar.js')){
   assert(c.dragDirection(0.1,0.1)===0,'small gesture snaps back');
 }
 
-assert(runtimeSource.includes("const PERSISTENT_END=2"),'persistent tranche closes at Story 3');
-assert(runtimeSource.includes('history.pushState'),'persistent story commit updates URL without document destruction');
-assert(runtimeSource.includes("window.addEventListener('popstate'"),'browser history restores persistent story state');
-assert(runtimeSource.includes('const mountStory=async'),'persistent story content mount exists');
-assert(runtimeSource.includes("root.dataset.lawsOrbitalDocumentReload='false'"),'runtime declares no document reload inside persistent tranche');
-assert(runtimeSource.includes("location.assign(stories[targetIndex].route)"),'outward/fail-closed full-document fallback remains explicit');
-
 assert(manifest.stories[0].route==='/laws/research/applied-investigations/','story1 route');
 assert(manifest.stories[1].route==='/laws/research/evidence-and-sources/','story2 route');
 assert(manifest.stories[2].route==='/laws/research/methods-and-models/','story3 route');
 assert(manifest.stories[3].route==='/laws/categories/flow/signals/','story4 outward boundary');
+assert(runtimeSource.includes("CALIBRATION_END=1"),'A1-A2 calibration range');
+assert(runtimeSource.includes('laws-orbital-scene-viewport'),'persistent scene viewport exists');
+assert(runtimeSource.includes('prepareScene'),'neighbor scene is prepared before commit');
+assert(runtimeSource.includes('layoutScenes'),'story body participates in drag interpolation');
+assert(runtimeSource.includes('page moves with your hand'),'gesture cue describes full-scene behavior');
+assert(runtimeSource.includes('history.pushState'),'in-document route state is preserved');
+assert(runtimeSource.includes("lawsOrbitalSceneCommit='in-document'"),'scene commit is explicitly in-document');
+assert(runtimeSource.includes("location.assign(stories[targetIndex].route)"),'outward/fail-closed full route remains available');
 
 console.log(JSON.stringify({
   status:'PASS',
@@ -43,8 +44,9 @@ console.log(JSON.stringify({
   canonicalOrderPreserved:true,
   continuousDragContract:true,
   gestureCommitAndSnapback:true,
-  persistentStoryStateRange:'STORY_01_TO_STORY_03',
-  historyBackForward:true,
-  documentReloadWithinPersistentRange:false,
-  story4OutwardBoundaryPreserved:true
+  fullSceneDrag:true,
+  neighborScenePreloaded:true,
+  calibrationRange:'STORY_01_TO_STORY_02',
+  inDocumentCommit:true,
+  story3AdapterStillWithheld:true
 },null,2));

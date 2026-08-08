@@ -1,0 +1,126 @@
+{
+  "schema": "METHODS_MODELS_M1R2_PERCEPTUAL_REEVALUATION_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1R2_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BOUNDED_PERCEPTUAL_REEVALUATION_WITH_DESKTOP_OVERFLOW_LIMITATION",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "governingLaw": "M_MAY_SEARCH_FOR_AN_EXPRESSION_OF_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR"
+  },
+  "lineage": {
+    "predecessorPerceptualFailureHead": "ee5ebac36615c5f231c3c4fd0ade9b945d80b5e5",
+    "candidateCommit": "7ab27d421233433b691ad34a7f79a904b08c7705",
+    "builderHardGateReceiptHead": "a37c8fa40ae7ecf89473c7c4786760cb3544e7c4",
+    "runtimeEvidenceHead": "07dbb047414fb6c554645fa2db5f262c5d33ae05",
+    "accessibilityResponsiveEvidenceHead": "af0e7c532bf72a544ea410323b565487fc5ec65f",
+    "branch": "agent/methods-models-manifestation-m1r2-v1",
+    "candidateFilesMutatedByPerceptualReevaluation": false
+  },
+  "evaluationClass": {
+    "class": "BOUNDED_SOURCE_BOUND_PERCEPTUAL_REEVALUATION",
+    "purpose": "DETERMINE_WHETHER_M1R2_CLOSES_THE_REMAINING_M1R1_DEPENDENCY_DIRECTION_PERCEPTUAL_FAILURE_WHILE_PRESERVING_THE_CLOSED_MOBILE_TOPOLOGY_REPAIR",
+    "notAestheticRanking": true,
+    "notFreshIndependentVerification": true,
+    "notUserDifferential": true,
+    "notPublicPromotionReview": true
+  },
+  "byteIdentity": {
+    "candidateHtmlBlob": "008252335514ea3a00d8bd6d8748f22fe4df9bc4",
+    "candidateManifestationRuntimeBlob": "ccda8533435e90f5cd377575ca6ad99e389ec86b",
+    "reusedManifestationCssBlob": "0310b5b941c890dfeb8839a1a9a18ba56a24583e",
+    "reusedSemanticRuntimeBlob": "b57245e49ba49953bc13a788750723ba800424b8",
+    "reusedBindingPlanBlob": "4f7ca77ef3058e6c585c1445e3cd7b2719770059",
+    "methodRegistryBlob": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+    "scientificObjectRegistryBlob": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c"
+  },
+  "renderEvidence": {
+    "mode": "LOCAL_CHROMIUM_VISUAL_RECONSTRUCTION_FROM_EXACT_COMMITTED_HTML_CSS_MANIFESTATION_GEOMETRY_AND_F4_METHOD_GRAPH",
+    "browser": "Chromium 144.0.7559.96",
+    "probeSourceSha256": "f1b5018d35d64cf65881603d2dfce7c2f1c922ec0470c51429366479aca42efc",
+    "probeResultSha256": "4271385bf2dda1f248bbf0a94f341fee06e2e4a1d00ed802ce386366c61e5b56",
+    "screenshots": {
+      "desktopInitialSha256": "85779941f901119e5d06948fa6b21dcb16da8aacc1c757995c44ea246e11c524",
+      "mobileInitialSha256": "2a8a7f84501486b234923a4bbe77a8812e6e6ec7f1786123df4897a624463daf",
+      "desktopSelectedAuthorizedUnblindingSha256": "0c3095336c6ac35c390e4f269905edd4bd269c898d14a8432976eeb9829a5fe0",
+      "mobileSelectedAuthorizedUnblindingSha256": "58ad945dcffe7560d2faa430afa28c7298e31d5bcb0e57187c961def9c3baede"
+    },
+    "inspectionStates": [
+      "DESKTOP_1440x900_INITIAL_UNSELECTED_RELATIONS",
+      "MOBILE_390x844_INITIAL_UNSELECTED_RELATIONS",
+      "DESKTOP_1440x900_AUTHORIZED_UNBLINDING_SELECTED",
+      "MOBILE_390x844_AUTHORIZED_UNBLINDING_SELECTED"
+    ],
+    "claimBoundary": "VISUAL_RECONSTRUCTION_TESTS_PERCEPTUAL_EXPRESSION_OF_THE_EXACT_COMMITTED_GEOMETRY_AND_STYLE_BUT_IS_NOT_FRESH_NETWORK_SERVED_BROWSER_REPRODUCTION"
+  },
+  "priorMaterialFailureReevaluation": {
+    "P1_DEPENDENCY_DIRECTION_NOT_PERCEPTIBLE": {
+      "status": "CLOSED",
+      "technicalRepairPresent": true,
+      "perceptualRepairEffective": true,
+      "basis": "UNSELECTED DECLARED DEPENDENCY PATHS TERMINATE IN VISIBLY EXPOSED TRIANGULAR ARROWHEADS BEFORE TARGET CARD BOUNDARIES ON BOTH DESKTOP AND 390PX REALIZATIONS SO REQUIRED_STAGE_TO_DEPENDENT_STAGE_DIRECTION_IS READABLE FROM THE GRAPH ITSELF",
+      "legendRequiredForDirectionDiscovery": false,
+      "selectionRequiredForDirectionDiscovery": false
+    },
+    "P2_RESPONSIVE_TOPOLOGY_FRAGMENTATION": {
+      "status": "REMAINS_CLOSED",
+      "basis": "THE 390PX TWO_COLUMN WHOLE_FIELD REALIZATION REMAINS NONFRAGMENTED AND THE COMPLETE PROCEDURE GRAPH READS AS ONE VERTICAL TOPOLOGY"
+    }
+  },
+  "criteria": {
+    "ENTITY_AND_LOCUS_LEGIBILITY": "PASS",
+    "METHOD_CONTAINMENT_LEGIBILITY": "PASS_BOUNDED",
+    "DECLARED_DEPENDENCY_EXISTENCE_LEGIBILITY": "PASS",
+    "DECLARED_DEPENDENCY_DIRECTION_LEGIBILITY": "PASS",
+    "PROCEDURE_SEQUENCE_LEGIBILITY": "PASS_BOUNDED",
+    "CUSTODY_LEGIBILITY": "PASS_IMPROVED",
+    "ORIENTATION_CONTEXT_LEGIBILITY": "PASS_IMPROVED_BOUNDED",
+    "RESPONSIVE_GLOBAL_TOPOLOGY_LEGIBILITY_390PX": "PASS",
+    "SELECTED_INCIDENT_RELATION_LEGIBILITY": "PASS_BOUNDED",
+    "NONSEMANTIC_GEOMETRY_DISCIPLINE": "PASS",
+    "DESKTOP_GLOBAL_TOPOLOGY_LEGIBILITY": "PASS_BOUNDED_WITH_HORIZONTAL_OVERFLOW"
+  },
+  "secondaryFindings": [
+    "DESKTOP_FIELD_RETAINS_APPROXIMATELY_1100PX_SCROLL_WIDTH_INSIDE_AN_APPROXIMATELY_965_TO_980PX CLIENT_WIDTH AND THEREFORE REQUIRES LIMITED_HORIZONTAL_EXPLORATION_FOR THE RIGHTMOST STAGES",
+    "DESKTOP_HORIZONTAL_OVERFLOW DOES_NOT_OBSCURE_THE_DIRECTIONAL_MORPHOLOGY_OF_VISIBLE_RELATIONS_AND_DOES_NOT_RECREATE_THE_MOBILE_FRAGMENTATION_FAILURE",
+    "SELECTED_INCIDENT_RELATION_EMPHASIS IMPROVES LOCAL TRACEABILITY BUT IS NOT REQUIRED TO PERCEIVE GLOBAL EDGE DIRECTION",
+    "HUMAN_READABLE_RELATION_LABELS CONTINUE TO SUPPORT Q_CONTEXT WITHOUT REWRITING RELATION IDENTITY"
+  ],
+  "disposition": {
+    "perceptualReevaluation": "PASS_BOUNDED",
+    "materialFailuresClosed": 2,
+    "materialFailuresPersisting": 0,
+    "candidateAccepted": false,
+    "candidateRejectedTerminally": false,
+    "contractConflict": false,
+    "contractConflictReceiptRequired": false,
+    "TStarReopeningRequired": false,
+    "BStarReopeningRequired": false,
+    "ontologyReopeningRequired": false,
+    "freshIndependentVerification": "NOT_RUN_NEXT_LAWFUL_STAGE",
+    "userDifferential": "NOT_RUN",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "manifestationBoundary": {
+    "M1R2CandidateMutationDuringStage": false,
+    "M1R1Mutation": false,
+    "semanticPopulationChange": false,
+    "declaredRelationChange": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "legacySemanticInheritance": false,
+    "scientificRelationFromLayout": false,
+    "claimCeilingUpgrade": false,
+    "publicMethodsMutation": false,
+    "publicDefaultPromotion": false
+  },
+  "limitations": [
+    "THIS_IS_BOUNDED_PERCEPTUAL_REEVALUATION_NOT_FRESH_INDEPENDENT_VERIFICATION",
+    "LOCAL_VISUAL_RECONSTRUCTION_IS_NOT_NETWORK_SERVED_BROWSER_REPRODUCTION",
+    "DESKTOP_HORIZONTAL_OVERFLOW_REMAINS_A_NONTERMINAL_PRESENTATION_QUALITY_LIMITATION",
+    "NO_USER_DIFFERENTIAL_HAS_BEEN_OBTAINED",
+    "NO_PUBLIC_PROMOTION_OR_SCIENTIFIC_CLAIM_UPGRADE"
+  ],
+  "nextLawfulStage": "FRESH_INDEPENDENT_VERIFICATION_FOR_M1R2"
+}

@@ -85,7 +85,7 @@ check(html.includes("L2 INSPECT withheld") && html.includes("L3 FOLLOW / provena
 check(!/<a\b/i.test(html), "NO_ROUTE_ANCHORS");
 check(!/showroom\/|archcoin|h-earth/i.test(adapters + implementation + html + css), "EXCLUDED_IMPLEMENTATION_DONORS_ABSENT");
 check(!/research[^\n]{0,80}(dataset|finding|analysis|study|paper)/i.test(adapters + implementation + html), "NO_RESEARCH_CONTENT_DUPLICATION_PATTERN");
-check(css.includes("perspective") && css.includes("translate3d") && css.includes("transform-style: preserve-3d"), "SPATIAL_3D_INFORMATION_TABS_PRESENT");
+check(css.includes("perspective") && css.includes("transform-style: preserve-3d") && implementation.includes("translate3d"), "SPATIAL_3D_INFORMATION_TABS_PRESENT");
 check(html.includes("projection-tab") && html.includes("information-tab") === false, "HTML_USES_RUNTIME_INFORMATION_OBJECTS");
 check(implementation.includes("className = \"information-tab\""), "INFORMATION_OBJECTS_CREATED_AS_SPATIAL_TABS");
 check(implementation.includes("renderRelations(registry)"), "DECLARED_RELATIONS_RENDERED");

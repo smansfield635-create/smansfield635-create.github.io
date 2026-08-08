@@ -1,0 +1,129 @@
+{
+  "schema": "METHODS_MODELS_M1R1_PERCEPTUAL_REEVALUATION_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1R1_METHOD_PROCEDURE_FIELD",
+  "status": "FAIL_PERCEPTUAL_REEVALUATION_REVISION_REQUIRED_WITHIN_MANIFESTATION_SCOPE",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "governingLaw": "M_MAY_SEARCH_FOR_AN_EXPRESSION_OF_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR",
+    "postGateFailureDisposition": "REJECT_OR_REVISE_WITHIN_MANIFESTATION_SCOPE_ONLY"
+  },
+  "lineage": {
+    "predecessorCandidate": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+    "predecessorPerceptualFailureHead": "8366ed385ca8349cddc30cb93df4c2f84136aa0f",
+    "candidateCommit": "f805dfddde9b9d8ce274f211d07aff0a3c784b2f",
+    "builderHardGateReceiptHead": "e7321b91a42c3e2e057299c60204a05f62bbf639",
+    "runtimeEvidenceHead": "36b9b00c47ddfc72c5ddfc93b3d72a3fa61769ec",
+    "accessibilityResponsiveEvidenceHead": "f3019d294ae08dab8b98693fd93cf50aed759903",
+    "candidateFilesMutatedByPerceptualReevaluation": false
+  },
+  "evaluationClass": {
+    "class": "BOUNDED_SOURCE_BOUND_PERCEPTUAL_REEVALUATION",
+    "purpose": "DETERMINE_WHETHER_M1R1_CLOSES_THE_TWO_MATERIAL_M1_PERCEPTUAL_FAILURES_IN_RENDERED_FORM",
+    "notAestheticRanking": true,
+    "notFreshIndependentVerification": true,
+    "notUserDifferential": true,
+    "notPublicPromotionReview": true
+  },
+  "renderEvidence": {
+    "mode": "LOCAL_VISUAL_RECONSTRUCTION_FROM_EXACT_COMMITTED_HTML_CSS_MANIFESTATION_POSITION_TABLE_AND_F4_METHOD_GRAPH",
+    "candidateHtmlBlob": "191afadda12946948ad32110862d88765119ca3f",
+    "candidateCssBlob": "0310b5b941c890dfeb8839a1a9a18ba56a24583e",
+    "candidateManifestationRuntimeBlob": "512b41c2967f6be0649235e6b1a38db156fe5554",
+    "semanticRuntimeBlob": "b57245e49ba49953bc13a788750723ba800424b8",
+    "methodRegistryBlob": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+    "selectedReferentForInspection": "AUTHORIZED_UNBLINDING",
+    "mobileViewport": {
+      "width": 390,
+      "height": 844,
+      "fieldClientWidth": 346,
+      "fieldScrollWidth": 346,
+      "fullyVisibleStages": 15,
+      "intersectingStages": 15,
+      "declaredEdgesRendered": 16,
+      "markerEndAttributesPresent": 16,
+      "selectedIncidentEdges": 3,
+      "horizontalFragmentationObserved": false
+    },
+    "desktopViewport": {
+      "width": 1440,
+      "height": 900,
+      "fieldClientWidth": 980,
+      "fieldScrollWidth": 1102,
+      "fullyVisibleStagesAtInitialScroll": 12,
+      "intersectingStagesAtInitialScroll": 15,
+      "declaredEdgesRendered": 16,
+      "markerEndAttributesPresent": 16,
+      "selectedIncidentEdges": 3,
+      "horizontalOverflowObserved": true
+    },
+    "directionOcclusionMechanism": {
+      "pathTargetEndpoint": "TARGET_NODE_CENTER",
+      "sourceCodeBasis": "x2=b.left+b.width/2; y2=b.top+b.height/2; marker-end=url(#dependency-arrow)",
+      "layerOrder": "SVG_EDGES_PRECEDE_NODE_CONTAINER_AND_NODES_PAINT_ABOVE_EDGES",
+      "effect": "ARROWHEAD_TERMINAL_MARKER_IS_PLACED_INSIDE_AND_BEHIND_TARGET_NODE",
+      "renderedResult": "CONNECTOR_LINE_VISIBLE_BUT_ARROWHEAD_NOT_PERCEPTUALLY_EXPOSED_AT_TARGET_BOUNDARY"
+    }
+  },
+  "priorMaterialFailureReevaluation": {
+    "P1_DEPENDENCY_DIRECTION_NOT_PERCEPTIBLE": {
+      "status": "PERSISTS_MATERIAL",
+      "technicalRepairPresent": true,
+      "perceptualRepairEffective": false,
+      "basis": "ALL_16_RELATIONS_HAVE_MARKER_END_ATTRIBUTES_BUT_MARKER_ENDPOINTS_ARE_AT_TARGET_NODE_CENTERS_AND_ARE_OCCLUDED_BY_THE_NODE_LAYER_SO_SOURCE_TO_TARGET_DIRECTION_IS_NOT_IMMEDIATELY LEGIBLE_FROM_THE_GRAPH",
+      "selectedRelationDashCue": "BOUNDED_AUXILIARY_CUE_ONLY_NOT_GLOBAL_DIRECTION_EXPRESSION",
+      "legendSubstitutionAllowed": false,
+      "manifestationLocalRepairAvailable": true
+    },
+    "P2_RESPONSIVE_TOPOLOGY_FRAGMENTATION": {
+      "status": "CLOSED",
+      "technicalRepairPresent": true,
+      "perceptualRepairEffective": true,
+      "basis": "AT_390PX_ALL_15_STAGE_CONTROLS_AND_THE_COMPLETE_DECLARED_RELATION_FIELD_OCCUPY_ONE_346PX_WIDE_NONSCROLLING_FIELD_AND_READ_AS_A_SINGLE_PROCEDURE_TOPOLOGY",
+      "manifestationLocalRepairRequired": false
+    }
+  },
+  "criteria": {
+    "ENTITY_AND_LOCUS_LEGIBILITY": "PASS",
+    "METHOD_CONTAINMENT_LEGIBILITY": "PASS_BOUNDED",
+    "DECLARED_DEPENDENCY_EXISTENCE_LEGIBILITY": "PASS",
+    "DECLARED_DEPENDENCY_DIRECTION_LEGIBILITY": "FAIL_MATERIAL",
+    "PROCEDURE_SEQUENCE_LEGIBILITY": "PASS_BOUNDED",
+    "CUSTODY_LEGIBILITY": "PASS_IMPROVED",
+    "ORIENTATION_CONTEXT_LEGIBILITY": "PASS_IMPROVED_BOUNDED",
+    "RESPONSIVE_GLOBAL_TOPOLOGY_LEGIBILITY_390PX": "PASS",
+    "SELECTED_INCIDENT_RELATION_LEGIBILITY": "PASS_BOUNDED",
+    "NONSEMANTIC_GEOMETRY_DISCIPLINE": "PASS"
+  },
+  "secondaryFindings": [
+    "DESKTOP_INITIAL_FIELD_STILL_HAS_HORIZONTAL_OVERFLOW_AND_ONLY_TWELVE_OF_FIFTEEN_STAGES_ARE_FULLY_VISIBLE_AT_INITIAL_SCROLL",
+    "OUTGOING_SELECTED_RELATIONS_USE_DASHING_WHILE_INCOMING_RELATIONS_ARE_SOLID_BUT_THIS DIFFERENCE_IS_NOT A SUBSTITUTE_FOR VISIBLE GLOBAL SOURCE_TO_TARGET_ARROW MORPHOLOGY",
+    "HUMAN_READABLE_RELATION_LABELS_MATERIALLY_IMPROVE_Q_CONTEXT_LEGIBILITY"
+  ],
+  "disposition": {
+    "perceptualReevaluation": "FAIL_REVISION_REQUIRED",
+    "candidateAccepted": false,
+    "candidateRejectedTerminally": false,
+    "materialFailuresClosed": 1,
+    "materialFailuresPersisting": 1,
+    "revisionAuthorizedUnderExistingManifestationAuthority": true,
+    "contractConflict": false,
+    "contractConflictReceiptRequired": false,
+    "TStarReopeningRequired": false,
+    "BStarReopeningRequired": false,
+    "ontologyReopeningRequired": false,
+    "freshVerification": "NOT_RUN_NOT_REACHED",
+    "userDifferential": "NOT_RUN_NOT_REACHED",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "lawfulRevisionEnvelope": [
+    "TERMINATE_EACH_DECLARED_DEPENDENCY_PATH_AT_OR_BEFORE_THE_TARGET_NODE_BOUNDARY_SO_THE_ARROWHEAD_IS VISUALLY_EXPOSED",
+    "PRESERVE_EXACT_SOURCE_TARGET_RELATION_IDENTITIES_AND_DO_NOT_ADD_REMOVE_REVERSE_OR_INFER_RELATIONS",
+    "PRESERVE_THE_SUCCESSFUL_390PX_WHOLE_TOPOLOGY_REFLOW",
+    "PRESERVE_SELECTED_INCIDENT_RELATION_EMPHASIS_WITHOUT_USING_IT_AS_THE_ONLY_DIRECTION_CUE",
+    "PRESERVE_HUMAN_READABLE_Q_RELATION_LABELS_WITHOUT_REWRITING_UNDERLYING_RELATION_IDENTITIES",
+    "OPTIONALLY_REDUCE_DESKTOP_INITIAL_HORIZONTAL_OVERFLOW_WITHIN_NONSEMANTIC_GEOMETRY_AUTHORITY"
+  ],
+  "nextLawfulStage": "REVISE_M1R1_WITHIN_EXISTING_MANIFESTATION_AUTHORITY_TO_M1R2_OR_EQUIVALENT_NEW_CANDIDATE_IDENTITY_THEN_REENTER_THE_FOUR_HARD_GATES_AND_REQUIRED_EVIDENCE_SEQUENCE"
+}

@@ -18,10 +18,10 @@ function updateScaleUI(renderer){
   if(brandNode)brandNode.textContent=`Audralia · Gratitude · OW01 · ${scale.toLowerCase()}`;
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
-    LOCAL:'LOCAL · same evolving cloud systems continue through descent · bounded volumetric density may pass overhead or around the camera · frozen coast, terrain, water, opacity and gestures remain protected.',
-    REGION:'REGION · persistent world-anchored cloud fields advect east/north through the frozen 30°N planetary frame · regional authorities now resolve into many separated cloud bodies.',
-    CONTINENT:'CONTINENT · WMO-informed low, middle and high cloud morphologies share one evolving 3D density authority · weather fields preserve clear slots and broken cloud populations.',
-    PLANETARY:'PLANETARY · planetary cloud-occupancy pass · eight persistent regional weather authorities generate many separated volumetric cloud bodies across ocean and land · no spherical alpha cloud shell.'
+    LOCAL:'LOCAL · reviewed volumetric cloud interiors remain authoritative through descent · bounded density may pass overhead or around the camera · frozen coast, terrain, water, opacity and gestures remain protected.',
+    REGION:'REGION · weak continuous world-anchored cloud support now fills the climate background while the eight persistent weather authorities remain organized regional intensifications.',
+    CONTINENT:'CONTINENT · broken equatorial, subtropical, midlatitude and high-cloud support spans the planetary frame beneath the existing WMO-informed organized systems · clear slots remain explicit.',
+    PLANETARY:'PLANETARY · continuous planetary cloud-support pass · cloud activity is no longer confined to eight isolated regional footprints · the eight existing systems remain stronger organized structures · no spherical alpha cloud shell.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -261,6 +261,29 @@ float morphology(float g,vec2 xy,float z,float seed,float time,float fieldScale)
     return max(tower,anvil);
   }
 }
+float climateBand(float lat,float center,float halfWidth){
+  return 1.0-smoothstep(halfWidth*.58,halfWidth,abs(lat-center));
+}
+float globalCloudSupport(vec3 radial,float h,float lat,float lon){
+  float t=uTimeHours*.0065;
+  float equatorCenter=.045*sin(lon*2.0+t)+.018*sin(lon*5.0-t*.7);
+  float equator=climateBand(lat,equatorCenter,.23);
+  float subtropical=climateBand(lat,.43+.026*sin(lon*1.5-t*.45),.18)+climateBand(lat,-.43+.024*sin(lon*1.7+t*.38),.18);
+  float midlatitude=climateBand(lat,.76+.042*sin(lon*2.1+t*.24),.22)+climateBand(lat,-.75+.040*sin(lon*2.0-t*.22),.22);
+  float highlatitude=climateBand(lat,1.05+.028*sin(lon*2.7+t*.18),.24)+climateBand(lat,-1.04+.026*sin(lon*2.5-t*.17),.24);
+  float low=smoothstep(30.0,35.0,h)*(1.0-smoothstep(54.0,65.0,h));
+  float middle=smoothstep(44.0,51.0,h)*(1.0-smoothstep(75.0,86.0,h));
+  float high=smoothstep(67.0,76.0,h)*(1.0-smoothstep(99.0,108.0,h));
+  vec3 advect=radial*8.2+vec3(t*.72,-t*.21,t*.36);
+  float broad=fbm(advect);
+  float detail=fbm(radial*18.0+vec3(-t*.34,t*.19,t*.51));
+  float longitudinal=.5+.5*sin(lon*3.2+sin(lat*5.1)*1.25+t*.46);
+  float broken=smoothstep(.50,.70,broad*.72+detail*.28+.075*longitudinal);
+  float clearWave=.5+.5*sin(lon*1.12-lat*2.35+t*.20);
+  float clearSlot=.64+.36*(1.0-smoothstep(.72,.93,clearWave));
+  float climate=equator*(low*.58+middle*.34)+subtropical*low*.42+midlatitude*(middle*.60+high*.18)+highlatitude*high*.28;
+  return clamp(climate*broken*clearSlot*.38,0.0,.34);
+}
 vec3 densityAt(vec3 p){
   vec3 q=p-CENTER;
   float rr=length(q);
@@ -269,7 +292,10 @@ vec3 densityAt(vec3 p){
   vec3 radial=q/rr;
   float lat=asin(clamp(dot(radial,NORTH),-1.0,1.0));
   float lon=atan(dot(radial,EAST),dot(radial,MERIDIAN));
-  float mass=0.0,iceMass=0.0,precipMass=0.0;
+  float background=globalCloudSupport(radial,h,lat,lon);
+  float backgroundIce=background*smoothstep(66.0,96.0,h)*.78;
+  float backgroundPrecip=background*(1.0-smoothstep(58.0,82.0,h))*.10;
+  float mass=background,iceMass=backgroundIce,precipMass=backgroundPrecip;
   for(int i=0;i<8;i++){
     if(i>=uSystemCount)break;
     vec4 a=uSysA[i],b=uSysB[i],c=uSysC[i],d=uSysD[i];
@@ -408,7 +434,7 @@ void main(){
   const start=()=>{if(running)return;running=true;lastFrame=0;raf=requestAnimationFrame(tick);};
   const stop=()=>{running=false;if(raf)cancelAnimationFrame(raf);raf=0;};
   const evidence=Object.freeze({
-    schema:'H_EARTH_OW01_EVOLVING_VOLUMETRIC_CLOUD_CHECKPOINT_v2',
+    schema:'H_EARTH_OW01_EVOLVING_VOLUMETRIC_CLOUD_CHECKPOINT_v3',
     planetaryReferenceFrameMerge:PLANETARY_REFERENCE_FRAME_MERGE,
     evolvingCloudStateMerge:EVOLVING_CLOUD_STATE_MERGE,
     acceptedAtmosphereHead:'8381f3323261b4facf70ec1f236c015b7d5df5a9',
@@ -417,6 +443,11 @@ void main(){
     gratitudeLongitudeDeg:0,
     cloudSystemCount:SYSTEMS.length,
     generaPresent:Object.freeze([...new Set(SYSTEMS.map(system=>system.genus))]),
+    continuousPlanetarySupport:true,
+    backgroundSupportWorldAnchored:true,
+    backgroundSupportCameraGenerated:false,
+    organizedSystemsModulateGlobalSupport:true,
+    explicitClearSkySlots:true,
     regionalFieldBodyMultiplication:true,
     lifecyclePresenceFloor:LIFECYCLE_PRESENCE_FLOOR,
     volumetricRayIntegration:true,
@@ -511,26 +542,26 @@ async function observerAfterPaint(renderer,atmosphere,clouds){
   try{
     await new Promise(resolve=>setTimeout(resolve,0));
     const module=await import('./observer.mjs'),receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer),pos=receipt?.canonicalPositionalIdentity?.canonicalPositionalIdentityPassed===true,corr=receipt?.surfaceCorrespondence?.pass===true;
-    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_EVOLVING_VOLUMETRIC_CLOUD_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · planetary cloud-occupancy pass preserves eight weather authorities while resolving them into many broken volumetric bodies · judge abundance, clear-sky balance, 3D identity, motion, orbital-to-local continuity, and confirm atmosphere, Mirage, opacity, coast, water, terrain and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
+    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_GLOBAL_CONTINUOUS_CLOUD_SUPPORT_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · continuous world-anchored climate support now underlies the existing eight organized weather authorities · judge planetary occupancy, clear-sky balance, preserved cloud-body/interior quality, motion, orbital-to-local continuity, and confirm atmosphere, Mirage, opacity, coast, water, terrain and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
     window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OP,coherenceOperation:COH,renderer,observerReceipt:receipt,atmosphereEvidence:atmosphere.getEvidence(),cloudEvidence:clouds.getEvidence()});
     window.__H_EARTH_OW01_ATMOSPHERE_LAYER__=atmosphere;
     window.__H_EARTH_OW01_CLOUD_LAYER__=clouds;
-  }catch(error){console.warn('AUDRALIA_OW01_OBSERVER_FAILED',error);setStatus('REVIEW','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`EVOLVING_VOLUMETRIC_CLOUD_VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);}
+  }catch(error){console.warn('AUDRALIA_OW01_OBSERVER_FAILED',error);setStatus('REVIEW','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`GLOBAL_CONTINUOUS_CLOUD_SUPPORT_VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);}
 }
 
 async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw Error('H_EARTH_OW01_CANVAS_MISSING');
     setStatus('world…','IMPORTING_ACCEPTED_ATMOSPHERE_PARENT');
-    setDiagnostic('Loading the accepted Gratitude + atmosphere parent before constructing the persistent evolving volumetric cloud observation layer…');
+    setDiagnostic('Loading the reviewed Gratitude + atmosphere + volumetric cloud parent before adding continuous planetary cloud support…');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const module=await import('./renderer.mjs');
-    setStatus('building…','BUILDING_EVOLVING_VOLUMETRIC_CLOUD_CHECKPOINT');
+    setStatus('building…','BUILDING_GLOBAL_CONTINUOUS_CLOUD_SUPPORT_CHECKPOINT');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const renderer=module.createMapWideEnvironmentRenderer(canvas);renderer.render();
     const atmosphere=createAtmosphereLayer(renderer);atmosphere.render();
     const clouds=createCloudLayer(renderer);clouds.render();clouds.start();
-    wire(renderer,atmosphere,clouds);updateScaleUI(renderer);setStatus('REVIEW','EVOLVING_VOLUMETRIC_CLOUD_VISUAL_READY_USER_REVIEW_REQUIRED');requestAnimationFrame(()=>observerAfterPaint(renderer,atmosphere,clouds));
+    wire(renderer,atmosphere,clouds);updateScaleUI(renderer);setStatus('REVIEW','GLOBAL_CONTINUOUS_CLOUD_SUPPORT_VISUAL_READY_USER_REVIEW_REQUIRED');requestAnimationFrame(()=>observerAfterPaint(renderer,atmosphere,clouds));
   }catch(error){fail('INITIALIZATION',error);}
 }
-setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting evolving volumetric-cloud checkpoint over the accepted Gratitude atmosphere parent…');initialize();
+setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting continuous planetary cloud-support checkpoint over the reviewed volumetric-cloud candidate…');initialize();

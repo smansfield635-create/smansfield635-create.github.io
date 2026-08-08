@@ -11,10 +11,13 @@ permissions:
   contents: read
 
 env:
-  SUBJECT_HEAD: a0b5951855277cb5f8ed99437e058777da0f096b
+  SUBJECT_HEAD: 0995a07ebd5ed7b88480739059c950e8f1265d94
   SUBJECT_BRANCH: agent/compass-tests-architecture-binding-v1
   PACKAGE: control-plane/whole-estate/compass-tests-architecture-binding-v1
-  EXPECTED_VERIFIER_BLOB: 0d545b99ac135026adb3e4c9fc664bec6a723b0c
+  EXPECTED_VERIFIER_BLOB: 49170a768ef8fd285e585da2213b90c76fe7660f
+  EXPECTED_STRUCTURAL_ASSERTIONS: '133'
+  EXPECTED_SOURCE_BLOB_ASSERTIONS: '12'
+  EXPECTED_TOTAL_ASSERTIONS: '145'
 
 jobs:
   exact-head-binding-certification:
@@ -40,7 +43,8 @@ jobs:
           import fs from 'node:fs';
           const v=JSON.parse(fs.readFileSync('/tmp/compass-tests-binding-verifier.json','utf8'));
           if(v.result!=='PASS_COMPASS_TESTS_ARCHITECTURE_BINDING_v1')throw Error('BINDING_RESULT_NOT_PASS');
-          if(v.assertions!==133)throw Error(`ASSERTION_COUNT:${v.assertions}`);
+          const expectedTotal=Number(process.env.EXPECTED_TOTAL_ASSERTIONS);
+          if(v.assertions!==expectedTotal)throw Error(`ASSERTION_COUNT:${v.assertions}:expected=${expectedTotal}`);
           if(v.requiredCapabilities!==9||v.admittedWithAdapter!==9)throw Error('CAPABILITY_ADMISSION_MISMATCH');
           if(v.constructionAuthorized!==false)throw Error('CONSTRUCTION_AUTHORITY_ESCALATION');
           const receipt={
@@ -50,7 +54,9 @@ jobs:
             validationSubjectBranch:process.env.SUBJECT_BRANCH,
             committedVerifierBlob:process.env.EXPECTED_VERIFIER_BLOB,
             verifierResult:v.result,
-            assertions:v.assertions,
+            structuralAssertions:Number(process.env.EXPECTED_STRUCTURAL_ASSERTIONS),
+            sourceBlobAssertions:Number(process.env.EXPECTED_SOURCE_BLOB_ASSERTIONS),
+            totalAssertions:v.assertions,
             requiredCapabilities:v.requiredCapabilities,
             admittedWithAdapter:v.admittedWithAdapter,
             constructionAuthorized:false,

@@ -1,0 +1,75 @@
+{
+  "schema": "METHODS_MODELS_BOUNDED_MANIFESTATION_EXPERIMENT_AUTHORITY_RECEIPT_v1",
+  "version": "1.0.0",
+  "operation": "METHODS_MODELS_BOUNDED_MANIFESTATION_EXPERIMENT_AUTHORITY_v1",
+  "status": "PASS_AUTHORITY_ISSUED_BOUNDED_NONPUBLIC_CONSTRUCTION_ONLY",
+  "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+  "authorityBranch": "authority/methods-models-bounded-manifestation-experiment-v1",
+  "rootTerminalClosure": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+  "lineageVerification": {
+    "status": "PASS",
+    "aheadBy": 1,
+    "behindBy": 0,
+    "changedFiles": [
+      "control-plane/methods-information-benchmark/methods-models-bounded-manifestation-experiment-authority-v1/manifestation-experiment-authority.v1.json"
+    ],
+    "semanticContractFilesChanged": false,
+    "scientificSourceFilesChanged": false,
+    "publicMethodsFilesChanged": false,
+    "manifestationCandidateFilesChanged": false
+  },
+  "frozenInputs": {
+    "minimumAuthorizedOntology": "AVAILABLE_BOUNDED",
+    "semanticInteractionTopology": "AVAILABLE_BOUNDED_IMMUTABLE_IN_THIS_OPERATION",
+    "embodimentBindingContract": "AVAILABLE_IMMUTABLE_IN_THIS_OPERATION",
+    "hardGates": ["I_EMBODIMENT", "I_LOCUS", "I_ORIENTATION", "I_ROUTE_EQUIVALENCE"],
+    "hardGateCount": 4,
+    "causalTraceAdditionalGate": false,
+    "legacySemanticInheritance": "PROHIBITED"
+  },
+  "authorityGranted": {
+    "manifestationExperimentConstruction": "GRANTED_BOUNDED_NONPUBLIC",
+    "multipleCompetingCandidates": true,
+    "authorizedCandidateSymbol": "M_i",
+    "publicPageMutation": false,
+    "publicDefaultPromotion": false,
+    "scientificClaimUpgrade": false,
+    "ontologyExpansion": false,
+    "topologyMutation": false,
+    "bindingMutation": false
+  },
+  "firstAcceptanceLayer": {
+    "operator": "AND",
+    "terms": ["I_EMBODIMENT", "I_LOCUS", "I_ORIENTATION", "I_ROUTE_EQUIVALENCE"],
+    "anyFalseRejectsCandidate": true,
+    "aggregateOverrideAllowed": false
+  },
+  "postGateEvidenceSequence": [
+    "CONTRACT_CONFORMANCE",
+    "RUNTIME_AND_INTERACTION_EVIDENCE",
+    "ACCESSIBILITY_AND_RESPONSIVE_EQUIVALENCE",
+    "PERCEPTUAL_EVALUATION",
+    "FRESH_VERIFICATION",
+    "USER_DIFFERENTIAL"
+  ],
+  "contractConflictDisposition": {
+    "silentAccommodation": "PROHIBITED",
+    "requiredOnActualContradiction": "STOP_AND_EMIT_CONTRACT_CONFLICT_RECEIPT",
+    "automaticReopening": "PROHIBITED",
+    "separateReopeningAuthorityRequired": true
+  },
+  "evidenceClassSeparation": {
+    "freshExactHeadVerification": "DISTINCT",
+    "githubActionsCI": "DISTINCT",
+    "substitutionAllowed": false
+  },
+  "stateAfterIssuance": {
+    "semanticDiscoveryPhase": "CLOSED",
+    "manifestationExperimentPhase": "AUTHORIZED_TO_BEGIN_NONPUBLICLY",
+    "manifestationCandidate": "NONE",
+    "manifestationConformance": "NOT_EVALUABLE",
+    "publicDefault": "UNCHANGED",
+    "publicPromotionAuthority": "WITHHELD"
+  },
+  "nextLawfulTask": "CONSTRUCT_INITIAL_NONPUBLIC_MANIFESTATION_CANDIDATE_OR_CANDIDATES_WITHIN_AUTHORIZED_WORKSPACE_AND_EVALUATE_THE_FOUR_HARD_GATES_BEFORE_BROADER_PAGE_EXCELLENCE_OR_USER_DIFFERENTIAL"
+}

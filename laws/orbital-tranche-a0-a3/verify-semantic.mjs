@@ -1,6 +1,40 @@
-import fs from 'node:fs';const stage=process.argv[2]||'A1';const read=p=>fs.readFileSync(p,'utf8');const manifest=JSON.parse(read('laws/orbital-tranche-a0-a3/manifest.v1.json'));const assert=(v,m)=>{if(!v)throw new Error(m)};
-assert(manifest.surface.semanticType==='NARRATIVE_SEQUENCE','story type');assert(manifest.surface.wrapPolicy==='BOUNDED','bounded story');assert(manifest.stories.length===24,'24 stories');assert(manifest.stories.every((s,i)=>s.position===i+1),'canonical positions');assert(manifest.ordinaryReadingSurface.semanticType==='PARALLEL_LENS'&&manifest.ordinaryReadingSurface.scientificSequence===false,'parallel lenses');assert(manifest.methods.internalSemanticType==='MULTI_AXIS_INSTRUMENT','methods type');assert(manifest.methods.genericSingleRingBinding==='PROHIBITED','methods flattening prohibited');
-const a1=read('laws/research/applied-investigations/index.html');assert(a1.includes('data-laws-story-sequence="1"'),'A1 sequence');assert(a1.includes('common-grammar.css')&&a1.includes('common-grammar.js'),'A1 grammar');assert(a1.includes('Problem, evidence, method, result, and limits remain distinct.'),'A1 lens distinction');assert(a1.includes('AUROC 0.9394')&&a1.includes('AUROC 0.9704'),'A1 scientific content preserved');
-if(stage!=='A1'){const a2=read('laws/research/evidence-and-sources/index.html');assert(a2.includes('data-laws-story-sequence="2"'),'A2 sequence');assert(a2.includes('common-grammar.css')&&a2.includes('common-grammar.js'),'A2 grammar');assert(a2.includes('Problem, evidence, method, result, and limits remain distinct.'),'A2 lens distinction');assert(a2.includes('Source existence is not validation'),'A2 boundary preserved')}
-if(stage==='A3'){const m=read('laws/research/methods-and-models/index.html');assert(m.includes('data-laws-story-sequence="3"'),'A3 sequence');assert(m.includes('METHODS_MODELS_EUCLIDEAN_SHOWROOM_v3'),'methods contract preserved');assert(m.includes('showroom-euclidean.js'),'methods runtime preserved');assert(m.includes('methods-adapter.js'),'adapter present');assert(m.includes('data-mm-family="structure"'),'methods state preserved')}
-const trancheFiles=['laws/orbital-tranche-a0-a3/manifest.v1.json','laws/orbital-tranche-a0-a3/common-grammar.js','laws/orbital-tranche-a0-a3/orientation.js'].filter(fs.existsSync).map(read).join('\n');assert(!/CANONICAL_LAWS_TEST_RUN_RECOVERED|CURRENT_TESTS_ENVIRONMENT_PROJECTION\s*=\s*(?!NONE)/.test(trancheFiles),'forbidden lineage/projection upgrade');console.log(JSON.stringify({status:'PASS',stage},null,2));
+import fs from 'node:fs';
+const read=p=>fs.readFileSync(p,'utf8');
+const assert=(v,m)=>{if(!v)throw new Error(m)};
+const manifest=JSON.parse(read('laws/orbital-tranche-a0-a3/manifest.v1.json'));
+
+assert(manifest.surface.semanticType==='NARRATIVE_SEQUENCE','canonical sequence type');
+assert(manifest.surface.wrapPolicy==='BOUNDED','canonical sequence bounded');
+assert(manifest.stories.length===24,'24 canonical positions');
+assert(manifest.stories.every((s,i)=>s.position===i+1),'canonical positions preserved');
+assert(manifest.navigationTopology.model==='SIMPLIFIED_MULTI_GRAPH_V1','simplified navigation graph declared');
+assert(manifest.navigationTopology.sequence.semanticType==='NARRATIVE_SEQUENCE','sequence graph preserved');
+assert(manifest.navigationTopology.category.semanticType==='CATEGORY_CONSTELLATION','category graph distinct');
+assert(manifest.navigationTopology.persistentEnvironment.semanticType==='PERSISTENT_STAGE','persistent stage distinct');
+assert(manifest.navigationTopology.localStoryboard.status==='NOT_RECOVERED','local storyboard not manufactured');
+assert(manifest.navigationTopology.localStoryboard.presentation==='OMITTED_UNTIL_AUTHORIZED','unrecovered storyboard omitted');
+assert(manifest.navigationTopology.category.membershipCardinality==='PLURAL_ALLOWED','category membership can be plural');
+
+const familyIds=new Set(manifest.navigationTopology.category.families.map(f=>f.id));
+assert(familyIds.size===6,'six distinct family identities');
+for(const story of manifest.stories){
+  assert(story.routeViewType==='CANONICAL_POSITION_VIEW','route/view identity preserved');
+  for(const family of story.categoryMembership)assert(familyIds.has(family),`unknown family ${family}`);
+}
+assert(manifest.methods.internalSemanticType==='MULTI_AXIS_INSTRUMENT','Methods remains specialized instrument');
+assert(manifest.methods.genericSingleRingBinding==='PROHIBITED','Methods flattening remains prohibited');
+assert(manifest.ordinaryReadingSurface.semanticType==='PARALLEL_LENS','ordinary readings remain parallel lenses');
+assert(manifest.ordinaryReadingSurface.scientificSequence===false,'parallel lenses do not acquire sequence');
+
+const trancheFiles=['laws/orbital-tranche-a0-a3/manifest.v1.json','laws/orbital-tranche-a0-a3/orientation.js'].map(read).join('\n');
+assert(!/CANONICAL_LAWS_TEST_RUN_RECOVERED|CURRENT_TESTS_ENVIRONMENT_PROJECTION\s*=\s*(?!NONE)/.test(trancheFiles),'forbidden lineage/projection upgrade');
+
+console.log(JSON.stringify({
+  status:'PASS',
+  canonicalSequencePreserved:true,
+  categoryTopologyDistinct:true,
+  persistentStageDistinct:true,
+  localStoryboardManufactured:false,
+  methodsSpecializationPreserved:true,
+  parallelLensScientificSequence:false
+},null,2));

@@ -125,7 +125,8 @@ function buildSandbar(bar,index){
     right.push(freeze([p[0]+nx*w,p[1]+nz*w]));left.push(freeze([p[0]-nx*w,p[1]-nz*w]));
   }
   const loop=[...right];for(let i=count-1;i>=1;i--)loop.push(left[i]);
-  return freeze({id:bar.id,index,crestElevation:bar.crestElevation,centerline:freeze(centerline),loop:dedupeLoop(loop),maximumHalfWidth:bar.radius.z,approximateHalfLength:bar.radius.x,rotation:bar.rotation??0});
+  const resolvedLoop=dedupeLoop(loop),xs=resolvedLoop.map(point=>point[0]),zs=resolvedLoop.map(point=>point[1]);
+  return freeze({id:bar.id,index,crestElevation:bar.crestElevation,centerline:freeze(centerline),loop:resolvedLoop,bounds:freeze({xMin:Math.min(...xs),xMax:Math.max(...xs),zMin:Math.min(...zs),zMax:Math.max(...zs)}),maximumHalfWidth:bar.radius.z,approximateHalfLength:bar.radius.x,rotation:bar.rotation??0});
 }
 const SANDBARS=freeze(BAR_MIGRATION.map((bar,index)=>buildSandbar(bar,index)));
 
@@ -163,17 +164,18 @@ function sampleSandbar(bar,x,z){
   const width=barWidth(BAR_MIGRATION[bar.index],progress,bar.index),weight=inside?clamp(1-centerDistance/Math.max(width,1e-6),0,1):0;
   return freeze({id:bar.id,inside,boundaryDistance,centerDistance,progress,width,weight,crestElevation:bar.crestElevation});
 }
-function nearestBoundary(x,z){
-  let distance=indexedDistance(MAINLAND_LOOP,MAINLAND_DISTANCE_INDEX,x,z),component='MAINLAND';
-  for(const bar of SANDBARS){const d=directLoopDistance(bar.loop,x,z);if(d<distance){distance=d;component=bar.id;}}
-  return freeze({distance,component});
-}
+function distanceToBounds(bounds,x,z){const dx=x<bounds.xMin?bounds.xMin-x:x>bounds.xMax?x-bounds.xMax:0,dz=z<bounds.zMin?bounds.zMin-z:z>bounds.zMax?z-bounds.zMax:0;return Math.hypot(dx,dz);}
 function sampleCanonicalCoast(x,z){
-  const mainland=loopContains(MAINLAND_LOOP,x,z,MAINLAND_RAY_INDEX),barSamples=SANDBARS.map(bar=>sampleSandbar(bar,x,z)),insideBar=barSamples.find(sample=>sample.inside)??null,inside=mainland||Boolean(insideBar),nearest=nearestBoundary(x,z);
-  return freeze({inside,distance:nearest.distance,field:inside?nearest.distance:-nearest.distance,component:insideBar?.id??(mainland?'MAINLAND':nearest.component),sandbar:insideBar,authority:'H_EARTH_OW01_CANONICAL_COAST_BOUNDARY_v1'});
+  const mainland=loopContains(MAINLAND_LOOP,x,z,MAINLAND_RAY_INDEX);let distance=indexedDistance(MAINLAND_LOOP,MAINLAND_DISTANCE_INDEX,x,z),nearestComponent='MAINLAND',insideBar=null;
+  for(const bar of SANDBARS){
+    const lowerBound=distanceToBounds(bar.bounds,x,z);if(lowerBound>distance&&!insideBar)continue;
+    const sample=sampleSandbar(bar,x,z);if(sample.inside&&!insideBar)insideBar=sample;if(sample.boundaryDistance<distance){distance=sample.boundaryDistance;nearestComponent=bar.id;}
+  }
+  const inside=mainland||Boolean(insideBar),component=insideBar?.id??(mainland?'MAINLAND':nearestComponent);
+  return freeze({inside,distance,field:inside?distance:-distance,component,sandbar:insideBar,authority:'H_EARTH_OW01_CANONICAL_COAST_BOUNDARY_v1'});
 }
 function sampleCanonicalSandbar(x,z){
-  let best=null;for(const bar of SANDBARS){const sample=sampleSandbar(bar,x,z);if(!best||sample.boundaryDistance<best.boundaryDistance)best=sample;}return best;
+  let best=null,bestDistance=Infinity;for(const bar of SANDBARS){const lowerBound=distanceToBounds(bar.bounds,x,z);if(lowerBound>bestDistance)continue;const sample=sampleSandbar(bar,x,z);if(sample.boundaryDistance<bestDistance){best=sample;bestDistance=sample.boundaryDistance;}}return best;
 }
 function fnv1a(text){let hash=0x811c9dc5;for(let i=0;i<text.length;i++){hash^=text.charCodeAt(i);hash=Math.imul(hash,0x01000193)>>>0;}return hash>>>0;}
 const HASH_INPUT=[...MAINLAND_LOOP,...SANDBARS.flatMap(bar=>bar.loop)].map(point=>`${point[0].toFixed(3)},${point[1].toFixed(3)}`).join('|');

@@ -1,0 +1,96 @@
+name: Tests L0 L1 Compass Integrated M1 Runtime Diagnostic R1
+
+on:
+  push:
+    branches:
+      - agent/m1-compass-integrated-runtime-review-v1
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m1-compass-integrated-runtime-diagnostic-r1-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  SUBJECT: 0c84cc4bb5b75245d225a47fde68d3de879cdaed
+  M1_PACKAGE: control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1
+  EVIDENCE_PACKAGE: control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-runtime-evidence-v1
+  REGISTRY_PATH: control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json
+
+jobs:
+  exact-subject-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout evidence branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify immutable subject remains unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git merge-base HEAD "$SUBJECT")" = "$SUBJECT"
+          git diff --quiet "$SUBJECT" -- "$M1_PACKAGE" "$REGISTRY_PATH"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/index.html)" = "bbbd898e3ac5232c07d06560cab31a9e33ecff77"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/manifestation.css)" = "6140be8a2d5c26e60a33a20b48bb2dc6a3e4f9a6"
+          test "$(git rev-parse HEAD:$M1_PACKAGE/manifestation.mjs)" = "dece6b95247794a82bb2b94db1365071b108fdc4"
+          test "$(git rev-parse HEAD:$REGISTRY_PATH)" = "b801a11e342051a6b00e6f7098b1d691685ad0b6"
+          BAD="$(git diff --name-status "$SUBJECT"...HEAD | awk '$1 != "A" {print}')"
+          test -z "$BAD"
+          MUTATED="$(git diff --name-only "$SUBJECT"...HEAD | grep -E '^(control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/|control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/)' || true)"
+          test -z "$MUTATED"
+
+      - name: Verify diagnostic syntax
+        run: node --check "$EVIDENCE_PACKAGE/verify.pointer-neighbor-diagnostic.v1.mjs"
+
+      - name: Materialize exact immutable subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/m1-compass-integrated-subject
+          git worktree add --detach /tmp/m1-compass-integrated-subject "$SUBJECT"
+          test "$(git -C /tmp/m1-compass-integrated-subject rev-parse HEAD)" = "$SUBJECT"
+          test -z "$(git -C /tmp/m1-compass-integrated-subject status --porcelain)"
+
+      - name: Install Chromium runtime authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Start exact-subject local server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory /tmp/m1-compass-integrated-subject >/tmp/m1-compass-integrated-runtime-diagnostic-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl -fsS "http://127.0.0.1:4173/$M1_PACKAGE/" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/m1-compass-integrated-runtime-diagnostic-server.log || true
+          exit 1
+
+      - name: Execute settled-frame pointer-neighbor diagnostic
+        shell: bash
+        env:
+          M1_BASE_URL: http://127.0.0.1:4173
+          M1_RUNTIME_EVIDENCE_DIR: /tmp/m1-compass-integrated-runtime-diagnostic
+        run: |
+          set -euo pipefail
+          node "$EVIDENCE_PACKAGE/verify.pointer-neighbor-diagnostic.v1.mjs"
+
+      - name: Upload diagnostic receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: m1-compass-integrated-pointer-neighbor-diagnostic-${{ github.run_id }}
+          path: /tmp/m1-compass-integrated-runtime-diagnostic
+          if-no-files-found: error
+          retention-days: 30

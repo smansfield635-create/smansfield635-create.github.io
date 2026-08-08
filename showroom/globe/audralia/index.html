@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0e1510">
-  <meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again.">
+  <meta name="description" content="Explore Audralia continuously from planetary scale to surface-horizon view and back again.">
   <title>Audralia · Planetary World</title>
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/app.mjs">
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs">
   <link rel="modulepreload" href="../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js">
+  <link rel="modulepreload" href="./surface-horizon-bootstrap.mjs">
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1">
+  <link rel="stylesheet" href="./surface-horizon.css?v=AUDRALIA_SURFACE_HORIZON_TRAVERSAL_v1">
 </head>
 <body>
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
@@ -21,7 +23,7 @@
       <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing the world…</div>
       <div class="audralia-loading-track" aria-hidden="true"><span></span></div>
       <div class="audralia-loading-time" data-audralia-loader-time>0.0 s</div>
-      <div class="audralia-loading-note">Building one continuous world from Gratitude to planetary scale.</div>
+      <div class="audralia-loading-note">Building one continuous world from planetary scale to the surface horizon.</div>
     </div>
   </div>
 
@@ -41,14 +43,23 @@
       <canvas
         class="audralia-world-canvas"
         data-h-earth-map-wide-canvas
-        aria-label="Interactive Audralia world. One finger inspects, two fingers travel, pinch descends and spread ascends."
+        aria-label="Interactive Audralia world. Drag one finger to look independently. Slide two fingers together in the same direction to travel. Pinch two fingers together to go lower toward the surface. Spread two fingers apart to go higher toward planetary view."
       ></canvas>
       <p class="audralia-sr-only" data-h-earth-diagnostic aria-live="polite"></p>
     </section>
 
-    <footer class="audralia-live-help" aria-label="Interaction guide">
-      <span class="audralia-help-touch">1 finger · inspect directionally &nbsp;·&nbsp; 2 fingers · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
-      <span class="audralia-help-pointer">drag · inspect &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
+    <footer class="audralia-live-help" aria-label="Four-step exploration guide">
+      <div class="audralia-help-rule">1 finger = LOOK · 2 fingers = MOVE · same gap = TRAVEL · change the gap = HEIGHT</div>
+      <div class="audralia-help-steps" role="group" aria-label="Open an exploration step">
+        <button class="audralia-help-step" type="button" data-help-step="1" aria-expanded="false" aria-controls="audralia-help-detail"><span class="audralia-help-step-number">1</span><span>LOOK</span></button>
+        <button class="audralia-help-step" type="button" data-help-step="2" aria-expanded="false" aria-controls="audralia-help-detail"><span class="audralia-help-step-number">2</span><span>TRAVEL</span></button>
+        <button class="audralia-help-step" type="button" data-help-step="3" aria-expanded="false" aria-controls="audralia-help-detail"><span class="audralia-help-step-number">3</span><span>LOWER</span></button>
+        <button class="audralia-help-step" type="button" data-help-step="4" aria-expanded="false" aria-controls="audralia-help-detail"><span class="audralia-help-step-number">4</span><span>HIGHER</span></button>
+      </div>
+      <div class="audralia-help-panel" id="audralia-help-detail" data-help-panel hidden aria-live="polite">
+        <strong data-help-panel-title></strong>
+        <p data-help-panel-copy></p>
+      </div>
     </footer>
   </main>
 
@@ -57,7 +68,9 @@
       schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v1',
       legacyPlanetActive: false,
       diagnosticTrackPreserved: true,
-      planetarySourceHead: 'f7f14a8748a2a782f5795ad395ae5967a7d3949d'
+      planetarySourceHead: 'f7f14a8748a2a782f5795ad395ae5967a7d3949d',
+      surfaceHorizonTraversalCandidate: true,
+      surfaceHorizonBaseHead: '798d3b034ed9814574e5cbe189ef280eb857602e'
     });
 
     (() => {
@@ -72,7 +85,7 @@
       const stageLabels = Object.freeze({
         BOOTSTRAP_ACTIVE: 'Preparing the world…',
         IMPORTING_CLOUD_VISUAL_REFERENCE: 'Loading planetary systems…',
-        BUILDING_CLOUD_PERFORMANCE_SUCCESSOR: 'Building Gratitude terrain and coastline…'
+        BUILDING_CLOUD_PERFORMANCE_SUCCESSOR: 'Building surface-horizon traversal…'
       });
       const elapsed = () => Math.max(0, performance.now() - startedAt);
       const renderElapsed = () => { timeNode.textContent = `${(elapsed() / 1000).toFixed(1)} s`; };
@@ -90,7 +103,8 @@
           readyState: statusNode.dataset.status || statusNode.textContent.trim(),
           measuredInBrowser: true,
           geometryReducedForLoadTime: false,
-          modulePreloadEnabled: true
+          modulePreloadEnabled: true,
+          surfaceHorizonTraversalCandidate: true
         });
         window.setTimeout(() => { loader.hidden = true; }, 420);
       };
@@ -121,7 +135,6 @@
       update();
     })();
   </script>
-  <script type="module" src="../h-earth/terrain-estate-construction-v1/app.mjs"></script>
-  <script type="module" src="./celestial-checkpoint-1.mjs"></script>
+  <script type="module" src="./surface-horizon-bootstrap.mjs?v=AUDRALIA_SURFACE_HORIZON_TRAVERSAL_v1"></script>
 </body>
 </html>

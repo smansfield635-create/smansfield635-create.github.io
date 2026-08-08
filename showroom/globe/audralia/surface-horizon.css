@@ -1,0 +1,107 @@
+.audralia-live-help{
+  min-height:58px;
+  padding:7px max(10px,env(safe-area-inset-right)) max(7px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  border-top:1px solid rgba(229,240,224,.12);
+  background:rgba(13,20,15,.98);
+  color:rgba(237,243,235,.82);
+  font-size:11px;
+  line-height:1.35;
+  text-align:left;
+}
+
+.audralia-help-rule{
+  text-align:center;
+  color:rgba(237,243,235,.62);
+  font-size:9.5px;
+  line-height:1.2;
+  letter-spacing:.01em;
+}
+
+.audralia-help-steps{
+  width:min(760px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+}
+
+.audralia-help-step{
+  min-width:0;
+  min-height:34px;
+  padding:5px 4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  border:1px solid rgba(229,240,224,.14);
+  border-radius:8px;
+  background:rgba(235,243,225,.045);
+  color:rgba(246,249,244,.94);
+  font-size:9.5px;
+  font-weight:720;
+  line-height:1.1;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+.audralia-help-step[aria-expanded="true"]{
+  border-color:rgba(205,231,177,.34);
+  background:rgba(205,231,177,.12);
+}
+
+.audralia-help-step-number{
+  display:inline-grid;
+  place-items:center;
+  min-width:18px;
+  height:18px;
+  border-radius:50%;
+  background:rgba(237,243,235,.10);
+  font-variant-numeric:tabular-nums;
+}
+
+.audralia-help-panel{
+  width:min(760px,100%);
+  margin:0 auto;
+  padding:8px 10px;
+  border:1px solid rgba(229,240,224,.12);
+  border-radius:9px;
+  background:rgba(235,243,225,.035);
+}
+
+.audralia-help-panel[hidden]{display:none}
+
+.audralia-help-panel strong{
+  display:block;
+  margin-bottom:3px;
+  color:rgba(246,249,244,.97);
+  font-size:11px;
+}
+
+.audralia-help-panel p{
+  margin:0;
+  color:rgba(237,243,235,.72);
+  font-size:10px;
+  line-height:1.4;
+}
+
+@media (hover:hover) and (pointer:fine){
+  .audralia-help-touch,.audralia-help-pointer{display:initial}
+}
+
+@media (max-width:460px){
+  .audralia-live-help{padding-left:max(7px,env(safe-area-inset-left));padding-right:max(7px,env(safe-area-inset-right));gap:5px}
+  .audralia-help-rule{font-size:8.5px}
+  .audralia-help-steps{gap:4px}
+  .audralia-help-step{min-height:32px;padding:4px 2px;gap:2px;font-size:8.5px;border-radius:7px}
+  .audralia-help-step-number{min-width:16px;height:16px}
+  .audralia-help-panel{padding:7px 8px}
+  .audralia-help-panel strong{font-size:10px}
+  .audralia-help-panel p{font-size:9.5px}
+}
+
+@media (forced-colors:active){
+  .audralia-help-step,.audralia-help-panel{border-color:CanvasText}
+}

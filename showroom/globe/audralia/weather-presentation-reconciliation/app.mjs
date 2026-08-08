@@ -90,7 +90,12 @@ async function initialize(){
     window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__=receipt;
     if(first?.invariants?.pass!==true)throw new Error(`RECONCILIATION_CANONICAL_INVARIANT_FAIL:${(first?.invariants?.failures||[]).join(',')}`);
     setStatus('REVIEW','AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_USER_REVIEW_REQUIRED');if(loaderStage)loaderStage.textContent='Audralia ready';if(loader){loader.classList.add('is-ready');setTimeout(()=>{loader.hidden=true;},420);}
-  }catch(error){console.error('AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_FAILED',error);setStatus('ERROR','AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_FAILED');if(loaderStage)loaderStage.textContent='Audralia reconciliation could not finish loading';loader?.classList.add('is-error');}
+  }catch(error){
+    const message=error instanceof Error?error.message:String(error),stack=error instanceof Error?error.stack:null;
+    window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_ERROR__=Object.freeze({schema:RECONCILIATION_SCHEMA,message,stack});
+    console.error('AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_FAILED',message,stack||'');
+    setStatus('ERROR','AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_FAILED');if(loaderStage)loaderStage.textContent=`Audralia reconciliation could not finish loading · ${message}`;loader?.classList.add('is-error');
+  }
 }
 
 setStatus('boot…','AUDRALIA_WEATHER_RECONCILIATION_BOOT');initialize();

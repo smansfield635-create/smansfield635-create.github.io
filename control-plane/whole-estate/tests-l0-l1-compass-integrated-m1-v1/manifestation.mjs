@@ -32,6 +32,7 @@ const els = {
   contextMessage: document.querySelector("#context-message"),
   openTests: document.querySelector("#open-tests"),
   restoreContext: document.querySelector("#restore-context"),
+  globalFailure: document.querySelector("#global-failure"),
   projectionStage: document.querySelector("#projection-stage"),
   methodsStage: document.querySelector("#methods-stage"),
   openMethods: document.querySelector("#open-methods"),
@@ -72,6 +73,10 @@ function sorted(values) { return [...values].sort(); }
 function relationSignature(r) { return `${r.SOURCE_OBJECT}|${r.RELATION}|${r.TARGET_OBJECT}`; }
 function expectedRelationSignature(r) { return `${r.source}|${r.relation}|${r.target}`; }
 function humanizeRelation(value) { return value.toLowerCase().replaceAll("_", " "); }
+function standingLabel(standing) {
+  const authorityStanding = standing?.AUTHORITY_STANDING;
+  return authorityStanding ? `Standing · ${authorityStanding.toLowerCase().replaceAll("_", " ")}` : "Standing recorded";
+}
 
 function validateRegistry(registry) {
   invariant(registry?.schema === "WHOLE_ESTATE_TESTS_L0_L1_OBJECT_PROJECTION_REGISTRY_v1", "REGISTRY_SCHEMA_MISMATCH");
@@ -117,7 +122,7 @@ function renderObjectCards(registry) {
       <span class="tab-kicker">${object.OBJECT_CLASS}</span>
       <strong>${object.DISPLAY_LABEL}</strong>
       <span class="tab-id">${object.OBJECT_ID}</span>
-      <span class="tab-standing">${object.CURRENT_STANDING || "Standing recorded"}</span>
+      <span class="tab-standing">${standingLabel(object.CURRENT_STANDING)}</span>
     `;
     button.addEventListener("click", () => commitFocus(object.OBJECT_ID, "POINTER_OR_ACTIVATION"));
     button.addEventListener("keydown", handleTabKeydown);
@@ -277,7 +282,12 @@ function failClosed(error) {
   els.relationPaths.replaceChildren();
   els.relationLabels.replaceChildren();
   els.relationKey.replaceChildren();
+  els.projectionStage.hidden = true;
+  els.methodsStage.hidden = true;
   els.failure.hidden = false;
+  els.globalFailure.hidden = false;
+  els.openTests.disabled = true;
+  els.restoreContext.disabled = true;
   els.liveStatus.textContent = "Authority validation failed. Integrated manifestation withheld.";
   window.__M1_COMPASS_INTEGRATED__ = undefined;
 }
@@ -343,6 +353,7 @@ async function boot() {
     applyDepth(runtime.fieldState.getState().depth);
     updatePresentation();
     els.failure.hidden = true;
+    els.globalFailure.hidden = true;
 
     window.__M1_COMPASS_INTEGRATED__ = Object.freeze({
       candidateId: "M1_COMPASS_INTEGRATED",

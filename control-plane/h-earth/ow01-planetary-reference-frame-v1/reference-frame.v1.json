@@ -1,0 +1,84 @@
+{
+  "schema": "H_EARTH_AUDRALIA_PLANETARY_REFERENCE_FRAME_v1",
+  "status": "CANDIDATE_PENDING_DETERMINISTIC_VERIFICATION",
+  "authorityIssue": 751,
+  "governanceParent": "44281a055cc60eb41f9691a306816ad8bbd8befa",
+  "protectedVisualParent": "8381f3323261b4facf70ec1f236c015b7d5df5a9",
+  "productMutation": false,
+  "acceptedGeometry": {
+    "planetRadiusAuthoringUnits": 6200,
+    "planetCenter": [0, -6200, 0],
+    "gratitudeCenterWorld": [0, 0, 0],
+    "gratitudeRadialUnit": [0, 1, 0],
+    "geometryRelocationAuthorized": false
+  },
+  "referenceFrame": {
+    "northAxisUnit": [0, 0.5, -0.8660254037844386],
+    "zeroLongitudeEquatorialUnit": [0, 0.8660254037844386, 0.5],
+    "eastEquatorialUnit": [1, 0, 0],
+    "basisHandedness": "RIGHT_HANDED_N_CROSS_M_EQUALS_E",
+    "latitudeFormula": "asin(dot(r,N))",
+    "longitudeFormula": "atan2(dot(r,E),dot(r,M))",
+    "radialFromLatLonFormula": "cos(phi)*cos(lambda)*M + cos(phi)*sin(lambda)*E + sin(phi)*N",
+    "longitudeRangeDegrees": [-180, 180],
+    "latitudeRangeDegrees": [-90, 90]
+  },
+  "gratitudePlacement": {
+    "centerLatitudeDegrees": 30,
+    "centerLongitudeDegrees": 0,
+    "climateBandInterpretation": "SUBTROPICAL_WARM_TEMPERATE_TRANSITION",
+    "climateIsFullyDeterminedByLatitude": false,
+    "localCompassAtCenter": {
+      "east": [1, 0, 0],
+      "west": [-1, 0, 0],
+      "north": [0, 0, -1],
+      "south": [0, 0, 1],
+      "up": [0, 1, 0]
+    }
+  },
+  "derivedLandmarks": {
+    "northPoleWorld": [0, -3100, -5369.357503463519],
+    "southPoleWorld": [0, -9300, 5369.357503463519],
+    "equatorZeroLongitudeWorld": [0, -830.642496536481, 3100],
+    "equatorNinetyEastWorld": [6200, -6200, 0]
+  },
+  "rotationConvention": {
+    "positiveAngularVelocityAxis": "northAxisUnit",
+    "sense": "RIGHT_HANDED",
+    "surfaceMotionAtGratitudeForPositiveRotation": "EAST_POSITIVE_X",
+    "rotationPeriod": "NOT_YET_FROZEN",
+    "axialTilt": "NOT_YET_FROZEN",
+    "orbitalSeasonPhase": "NOT_YET_FROZEN"
+  },
+  "cloudProgramAuthority": {
+    "referenceFrameRequiredBeforeNextCloudCandidate": true,
+    "fullNumericalWeatherSimulationRequiredBeforeNextCloudCandidate": false,
+    "gateHRequiredBeforeNextCloudCandidate": false,
+    "canonicalCloudCoordinates": ["longitude", "latitude", "altitude", "time"],
+    "cameraDependentWeatherOrientation": "PROHIBITED",
+    "futureWeatherSimulationRole": "DRIVER_OF_THE_SAME_CANONICAL_CLOUD_STATE"
+  },
+  "prohibitions": [
+    "NO_GRATITUDE_GEOMETRY_RELOCATION",
+    "NO_COASTLINE_MUTATION",
+    "NO_TERRAIN_MUTATION",
+    "NO_RENDERER_MUTATION",
+    "NO_CAMERA_OR_GESTURE_MUTATION",
+    "NO_CAMERA_RELATIVE_NORTH",
+    "NO_SCALE_DEPENDENT_WEATHER_REORIENTATION",
+    "NO_GUESSED_ROTATION_PERIOD",
+    "NO_GUESSED_AXIAL_TILT"
+  ],
+  "verification": {
+    "tolerance": 1e-10,
+    "requiredChecks": [
+      "ORTHONORMAL_BASIS",
+      "GRATITUDE_30N_0E",
+      "GRATITUDE_LOCAL_EAST_POSITIVE_X",
+      "GRATITUDE_LOCAL_NORTH_NEGATIVE_Z",
+      "POLE_AND_EQUATOR_CONSISTENCY",
+      "LAT_LON_ROUND_TRIP_LATTICE",
+      "POSITIVE_ROTATION_IS_EASTWARD_AT_GRATITUDE"
+    ]
+  }
+}

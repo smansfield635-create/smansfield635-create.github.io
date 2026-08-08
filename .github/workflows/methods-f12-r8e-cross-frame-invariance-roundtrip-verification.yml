@@ -1,0 +1,94 @@
+name: Methods F12 R8E Cross Frame Invariance Roundtrip Verification
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r8e-cross-frame-invariance-roundtrip-verification-v1
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r8e-roundtrip:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact terminal R8D parent and frozen boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1"
+          test "$(git rev-parse HEAD^)" = "e3c45e93237286933bd07f843d7d06bcf73a4a2c"
+          test "$(git rev-parse e3c45e93237286933bd07f843d7d06bcf73a4a2c^{tree})" = "538902a082f55479a279a7e28be8bf17e283dfec"
+          test "$(git rev-parse HEAD:$ROOT/r8d-deterministic-coordinate-embedding-engine-contract.v1.json)" = "c851d474a662d4f80c0342ec93c3d7ebe062e53b"
+          test "$(git rev-parse HEAD:$ROOT/r8d-deterministic-coordinate-embedding-engine.v1.mjs)" = "0605d450116b0583592fa2906bca71eb4c2598fa"
+          test "$(git rev-parse HEAD:$ROOT/r8c-transform-projection-presentation-separation.v1.json)" = "d0c8441bb88b68b91282ff334270b739305ed97b"
+          test "$(git rev-parse HEAD:$ROOT/r8b-system-coordinate-atlas-contract.v1.json)" = "ccbe92dc0f4bcee99a34f17ef9efdfcea4329ccf"
+          test "$(git rev-parse HEAD:$ROOT/r8a-canonical-delivery-state-space-contract.v1.json)" = "3f593061fa3d4906c769707904108249943e3826"
+          test "$(git rev-parse HEAD:$ROOT/r6-spatial-transformation-grammar-contract.v1.json)" = "6abb8d6b30fc92aa1eaff44ca7f8ec4e567b5938"
+          test "$(git rev-parse HEAD:$ROOT/r7-continuity-and-accessibility-contract.v1.json)" = "475aa283c3feb2fb6520f953c0a96d94285bc214"
+
+      - name: Verify exact terminal R8E payload blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1"
+          test "$(git rev-parse HEAD:$ROOT/r8e-cross-frame-invariance-roundtrip-verification-contract.v1.json)" = "d41ae88ac3911efbd92a646e121e3cf2942d4871"
+          test "$(git rev-parse HEAD:$ROOT/r8e-cross-frame-invariance-roundtrip-verification.v1.mjs)" = "ddc7d5fb7198f5a22847e3c59075ef0a6886d3cc"
+          test "$(git rev-parse HEAD:$ROOT/r8e-cross-frame-invariance-roundtrip-verification.verify.v1.mjs)" = "0c34d9525a12116c4e927ed235d9389aa1cea3c3"
+          node -e "JSON.parse(require('fs').readFileSync('$ROOT/r8e-cross-frame-invariance-roundtrip-verification-contract.v1.json','utf8'))"
+          node --check "$ROOT/r8e-cross-frame-invariance-roundtrip-verification.v1.mjs"
+          node --check "$ROOT/r8e-cross-frame-invariance-roundtrip-verification.verify.v1.mjs"
+
+      - name: Verify terminal R8E cross-frame invariance and roundtrip
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1"
+          node "$ROOT/r8e-cross-frame-invariance-roundtrip-verification.verify.v1.mjs" | tee r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"status": "PASS_CLOSED"' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"roundtripAToBToAExact": true' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"roundtripBToAToBExact": true' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"crossFrameVerificationHarnessConstructed": true' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"coordinateTransitionRuntimeConstructed": false' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"projectionRuntimeConstructed": false' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"presentationRuntimeConstructed": false' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"visiblePrototypeConstructed": false' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"r8ePassClosed": true' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"r8PassClosed": false' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"r9Unlock": false' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"nextSubcheckpointOnPass": "R8F_REVISED_BOUNDED_EXPERIENTIAL_PROTOTYPE"' r8e-cross-frame-invariance-roundtrip-verification.json
+          grep -Fq '"r8fEligibility": "ELIGIBLE_READY_FOR_EXECUTION"' r8e-cross-frame-invariance-roundtrip-verification.json
+
+      - name: Prove exact additive R8E terminal diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only e3c45e93237286933bd07f843d7d06bcf73a4a2c..HEAD | tee r8e-cross-frame-invariance-roundtrip-changed-paths.txt
+          test "$(wc -l < r8e-cross-frame-invariance-roundtrip-changed-paths.txt)" -eq 4
+          expected="$(mktemp)"
+          cat > "$expected" <<'EOF'
+          .github/workflows/methods-f12-r8e-cross-frame-invariance-roundtrip-verification.yml
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8e-cross-frame-invariance-roundtrip-verification-contract.v1.json
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8e-cross-frame-invariance-roundtrip-verification.v1.mjs
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8e-cross-frame-invariance-roundtrip-verification.verify.v1.mjs
+          EOF
+          sed -i 's/^          //' "$expected"
+          sort r8e-cross-frame-invariance-roundtrip-changed-paths.txt > actual.sorted
+          sort "$expected" > expected.sorted
+          diff -u expected.sorted actual.sorted
+          test -z "$(git diff --diff-filter=MDR --name-only e3c45e93237286933bd07f843d7d06bcf73a4a2c..HEAD)"
+
+      - name: Preserve terminal R8E verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r8e-cross-frame-invariance-roundtrip-verification-evidence
+          path: |
+            control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8e-cross-frame-invariance-roundtrip-verification-contract.v1.json
+            r8e-cross-frame-invariance-roundtrip-verification.json
+            r8e-cross-frame-invariance-roundtrip-changed-paths.txt

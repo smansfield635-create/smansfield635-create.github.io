@@ -1,0 +1,131 @@
+{
+  "schema": "H_EARTH_AUDRALIA_CANONICAL_EVOLVING_CLOUD_STATE_v1",
+  "status": "FROZEN_CANDIDATE",
+  "governingMain": "def62786f469a5a9d0027898810d4878642dbf32",
+  "planetaryReferenceFrame": {
+    "status": "PASS_CLOSED",
+    "mergeCommit": "def62786f469a5a9d0027898810d4878642dbf32",
+    "planetRadiusAuthoringUnits": 6200,
+    "gratitudeCenter": { "latitudeDeg": 30, "longitudeDeg": 0 },
+    "northAxis": [0, 0.5, -0.8660254037844386],
+    "primeMeridianEquatorialBasis": [0, 0.8660254037844386, 0.5],
+    "eastBasis": [1, 0, 0]
+  },
+  "authorityLaw": {
+    "canonicalOrdering": "ENVIRONMENTAL_DRIVER_TO_PERSISTENT_CLOUD_STATE_TO_DENSITY_TO_RENDERING",
+    "cameraMayCreateWeather": false,
+    "cameraMayChangeCloudIdentity": false,
+    "noiseMayCreateWeatherSupport": false,
+    "noiseMayAddBoundedSubgridStructure": true,
+    "fullNumericalWeatherSolverRequired": false
+  },
+  "canonicalTime": {
+    "epochIso": "2026-08-08T00:00:00.000Z",
+    "stateEvaluation": "DETERMINISTIC_FUNCTION_OF_CANONICAL_TIME",
+    "defaultVisualTimeScale": 24,
+    "timeScaleClass": "PRESENTATION_RATE_NOT_PHYSICAL_CONSTANT"
+  },
+  "environmentalDriver": {
+    "worldAnchored": true,
+    "fields": [
+      "windEastKmH",
+      "windNorthKmH",
+      "moistureSupport",
+      "convectiveSupport",
+      "stability",
+      "shearEastKmHPerKm",
+      "shearNorthKmHPerKm",
+      "highLevelIceSupport"
+    ],
+    "normalizedFields": ["moistureSupport", "convectiveSupport", "stability", "highLevelIceSupport"],
+    "role": "LIGHTWEIGHT_VISUAL_WEATHER_DRIVER_REPLACEABLE_BY_FUTURE_WEATHER_SIMULATION"
+  },
+  "cloudSystemState": {
+    "requiredFields": [
+      "id",
+      "seed",
+      "genus",
+      "longitudeDeg",
+      "latitudeDeg",
+      "baseAltitudeKm",
+      "topAltitudeKm",
+      "majorRadiusKm",
+      "minorRadiusKm",
+      "orientationDeg",
+      "windEastKmH",
+      "windNorthKmH",
+      "shearEastKmHPerKm",
+      "shearNorthKmHPerKm",
+      "density",
+      "iceFraction",
+      "precipitationPotential",
+      "support",
+      "lifecyclePhase",
+      "lifecycleProgress"
+    ],
+    "forbiddenFields": [
+      "screenX",
+      "screenY",
+      "cameraX",
+      "cameraY",
+      "cameraZ",
+      "cameraDistance",
+      "viewScale"
+    ],
+    "lifecyclePhases": ["FORMING", "GROWING", "MATURE", "DECAYING", "DISSIPATED"],
+    "identityPersistsAcrossLifecycle": true,
+    "identityPersistsAcrossCameraScale": true
+  },
+  "advection": {
+    "method": "SPHERICAL_EAST_NORTH_TANGENT_ADVECTION",
+    "earthLikeRadiusKmForVisualWeatherKinematics": 6200,
+    "deltaLatitudeRad": "windNorthKmH * dtHours / radiusKm",
+    "deltaLongitudeRad": "windEastKmH * dtHours / (radiusKm * max(cos(latitude), 0.15))",
+    "longitudeWrap": "[-180,180)",
+    "latitudeBound": "[-89,89]",
+    "teleportationPermitted": false
+  },
+  "densityAuthority": {
+    "oneDensityTruth": true,
+    "conceptualFormula": "rho = support * lifecycleEnvelope * verticalProfile * morphology * condensateProxy * subgridErosion",
+    "orbitalObservation": "COLUMN_INTEGRATION_OF_SAME_DENSITY",
+    "localObservation": "BOUNDED_RAY_INTEGRATION_OF_SAME_DENSITY",
+    "arbitraryAlphaShellAuthority": false
+  },
+  "genera": {
+    "Ci": { "name": "Cirrus", "baseKm": [6, 12], "topKm": [8, 18], "morphology": "HIGH_ICE_FILAMENT", "iceFraction": [0.85, 1], "precipitationPotential": [0, 0.12] },
+    "Cc": { "name": "Cirrocumulus", "baseKm": [6, 11], "topKm": [7, 14], "morphology": "HIGH_SMALL_CELL_FIELD", "iceFraction": [0.75, 1], "precipitationPotential": [0, 0.1] },
+    "Cs": { "name": "Cirrostratus", "baseKm": [6, 11], "topKm": [8, 15], "morphology": "HIGH_THIN_ICE_SHEET", "iceFraction": [0.8, 1], "precipitationPotential": [0, 0.08] },
+    "Ac": { "name": "Altocumulus", "baseKm": [2, 6], "topKm": [3, 8], "morphology": "MID_BROKEN_CELL_FIELD", "iceFraction": [0.05, 0.55], "precipitationPotential": [0, 0.3] },
+    "As": { "name": "Altostratus", "baseKm": [2, 5], "topKm": [4, 9], "morphology": "MID_BROAD_LAYER", "iceFraction": [0.1, 0.65], "precipitationPotential": [0.05, 0.55] },
+    "Ns": { "name": "Nimbostratus", "baseKm": [0.6, 3], "topKm": [5, 10], "morphology": "DEEP_STRATIFORM_PRECIPITATING_LAYER", "iceFraction": [0.1, 0.7], "precipitationPotential": [0.6, 1] },
+    "Sc": { "name": "Stratocumulus", "baseKm": [0.4, 2], "topKm": [1.2, 3.5], "morphology": "LOW_BROKEN_CAPPED_LAYER", "iceFraction": [0, 0.15], "precipitationPotential": [0, 0.35] },
+    "St": { "name": "Stratus", "baseKm": [0.1, 1.2], "topKm": [0.6, 2.2], "morphology": "LOW_STABLE_SHEET", "iceFraction": [0, 0.1], "precipitationPotential": [0, 0.3] },
+    "Cu": { "name": "Cumulus", "baseKm": [0.6, 2.2], "topKm": [1.5, 6], "morphology": "LOW_BUOYANT_TOWER_FIELD", "iceFraction": [0, 0.25], "precipitationPotential": [0, 0.45] },
+    "Cb": { "name": "Cumulonimbus", "baseKm": [0.5, 2], "topKm": [8, 18], "morphology": "DEEP_CONVECTIVE_TOWER_WITH_ANVIL", "iceFraction": [0.25, 0.85], "precipitationPotential": [0.75, 1] }
+  },
+  "declaredTransitions": {
+    "Ci": ["Ci", "Cs", "DISSIPATED"],
+    "Cc": ["Cc", "Ci", "Cs", "DISSIPATED"],
+    "Cs": ["Cs", "Ci", "DISSIPATED"],
+    "Ac": ["Ac", "As", "Cu", "DISSIPATED"],
+    "As": ["As", "Ns", "Ac", "DISSIPATED"],
+    "Ns": ["Ns", "As", "DISSIPATED"],
+    "Sc": ["Sc", "St", "Cu", "DISSIPATED"],
+    "St": ["St", "Sc", "DISSIPATED"],
+    "Cu": ["Cu", "Cb", "Sc", "DISSIPATED"],
+    "Cb": ["Cb", "Cu", "Ci", "Cs", "DISSIPATED"]
+  },
+  "renderingBoundary": {
+    "physicalStateUsesKm": true,
+    "authoringAltitudeMappingFrozenHere": false,
+    "reason": "VISUAL_VERTICAL_MAPPING_MUST_BE_CALIBRATED_AGAINST_ACCEPTED_TERRAIN_AND_ATMOSPHERE_WITHOUT_CHANGING_CLOUD_PHYSICAL_IDENTITY",
+    "orbitalAndLocalMustShareState": true
+  },
+  "constructionAuthority": {
+    "liveCandidatePermittedAfterVerification": true,
+    "acceptedAtmosphereHead": "8381f3323261b4facf70ec1f236c015b7d5df5a9",
+    "rendererMutationAuthorized": false,
+    "geographyMutationAuthorized": false
+  }
+}

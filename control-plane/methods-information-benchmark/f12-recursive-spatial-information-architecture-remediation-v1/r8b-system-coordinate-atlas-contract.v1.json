@@ -1,0 +1,369 @@
+{
+  "schema": "METHODS_MODELS_F12_R8B_SYSTEM_COORDINATE_ATLAS_CONTRACT_v1",
+  "program": "F12_RECURSIVE_SPATIAL_INFORMATION_ARCHITECTURE_REMEDIATION_v1",
+  "checkpoint": "R8_BOUNDED_EXPERIENTIAL_PROTOTYPE",
+  "subcheckpoint": "R8B_SYSTEM_COORDINATE_ATLAS_CONTRACT",
+  "status": "PASS_CLOSED",
+  "constructionClass": "NONVISUAL_NONSCIENTIFIC_SYSTEM_COORDINATE_ATLAS_CONTRACT",
+  "parentAuthority": {
+    "subcheckpoint": "R8A_CANONICAL_DELIVERY_STATE_SPACE_CONTRACT",
+    "head": "1238fb73df7554e05da7714dfd3d7668b4749485",
+    "tree": "ce84819184c6117520bd1882bcf1b49a9b9c2ac2",
+    "contractGitBlobSha": "3f593061fa3d4906c769707904108249943e3826",
+    "verifierGitBlobSha": "17d72ecf489adbc2d83bc0791cf2d36c1f7d6200",
+    "workflowGitBlobSha": "69475a907adcea805fd549281e4e53ff34e08ff2",
+    "r8aPassClosed": true,
+    "r8Status": "OPEN_REMEDIATION",
+    "r9Status": "BLOCKED_BY_R8"
+  },
+  "corridorAuthority": {
+    "operation": "F12_R8_R12_CONTINUATION_CORRIDOR_FREEZE_v1",
+    "head": "b0efa41c13fa061828bf7674a97b35aacaa34071",
+    "tree": "321feeacdad97388eca6c329225e057ecd2e8272",
+    "contractGitBlobSha": "86ea28520cc4954ab533142fc22abd0cac5a9d9e",
+    "r8HumanDifferentialGate": "MATERIAL_IMPROVEMENT",
+    "r9UnlockRequiresR8PassClosed": true
+  },
+  "authorityBoundary": {
+    "scientificAuthority": false,
+    "scientificOntologyAuthority": false,
+    "typedRelationAuthority": false,
+    "claimAuthority": false,
+    "claimCeilingAuthority": false,
+    "sourceAdmissionAuthority": false,
+    "presentationAuthority": false,
+    "projectionAuthority": false,
+    "spatialTransformationExecutionAuthority": false,
+    "coordinateTransitionRuntimeAuthority": false,
+    "visiblePrototypeAuthority": false,
+    "mayMutateR0ThroughR7": false,
+    "mayMutateR8A": false,
+    "mayMutateF1ThroughF11": false,
+    "mayMutatePublicMethods": false,
+    "mayMutateMain": false
+  },
+  "frozenScientificInputs": {
+    "head": "d39d9f110ed7fe16109ddcb5b8043b3752c1a36e",
+    "scientificStateDigest": "dde02e9b56c157caf7e6bf511067089c6bb65c068731883efd610f6722fcb0a5",
+    "relationGraphDigest": "4dabc8872082535d01d9bfae3cd9661be68dcf7e1cd6aed5280a9028d4b8137b",
+    "projectionGraphDigest": "9ebef4a6b8102ffd251c8e7809d379bff560d09fe9c75baa3f707768927b6ce8",
+    "mode": "READ_ONLY"
+  },
+  "r8aCanonicalStateSpace": {
+    "id": "CANONICAL_DELIVERY_INFORMATION_STATE_SPACE_v1",
+    "symbol": "M_D",
+    "manifoldStatus": "NOT_ASSUMED",
+    "systemCoordinatesStoredInCanonicalState": false,
+    "presentationPropertiesStoredInCanonicalState": false,
+    "canonicalInvariantSet": [
+      "IDENTITY",
+      "SOURCE_AUTHORITY",
+      "LINEAGE",
+      "TYPED_RELATIONS",
+      "EVIDENCE_STANDING",
+      "CLAIM_CEILING",
+      "SCIENTIFIC_STATE"
+    ]
+  },
+  "systemCoordinateAtlas": {
+    "id": "SYSTEM_COORDINATE_ATLAS_v1",
+    "symbol": "A_D",
+    "definition": "GOVERNED_COLLECTION_OF_PARTIAL_SYSTEM_COORDINATE_CHART_CONTRACTS_OVER_THE_CANONICAL_DELIVERY_INFORMATION_STATE_SPACE",
+    "atlasIsScientificOntology": false,
+    "atlasIsPresentation": false,
+    "atlasIsProjection": false,
+    "atlasIsSpatialTransformationRuntime": false,
+    "atlasMayBePartial": true,
+    "atlasCompletenessClaimed": false,
+    "concreteChartInstancesConstructedAtR8B": false,
+    "coordinateEmbeddingRuntimeConstructedAtR8B": false,
+    "coordinateTransitionRuntimeConstructedAtR8B": false,
+    "canonicalLaw": "A_SYSTEM_COORDINATE_CHART_MAY_REPRESENT_A_CANONICAL_DELIVERY_STATE_BUT_MAY_NOT_REWRITE_ITS_CANONICAL_IDENTITY_OR_SCIENTIFIC_MEANING"
+  },
+  "chartContract": {
+    "notation": "phi_S:U_S subset M_D -> V_S subset R^(n_S)",
+    "domainClass": "DECLARED_SUBSET_OF_CANONICAL_DELIVERY_INFORMATION_STATE_SPACE",
+    "codomainClass": "DECLARED_FINITE_DIMENSIONAL_NUMERIC_COORDINATE_SPACE",
+    "dimensionCountMustBePositiveInteger": true,
+    "chartMayBePartial": true,
+    "chartMustDeclareCanonicalDomain": true,
+    "chartMustDeclareRepresentedDimensions": true,
+    "chartMustDeclareCoordinateSemantics": true,
+    "chartMustDeclareRecoverabilityClass": true,
+    "chartMustDeclareMetricPolicy": true,
+    "chartMustDeclareTopologyPolicy": true,
+    "chartMustDeclareOverlapPolicy": true,
+    "systemCoordinatesAreDerived": true,
+    "systemCoordinatesAreCanonicalScientificTruth": false,
+    "systemCoordinatesMayDifferAcrossSystems": true,
+    "sameCanonicalStateMayHaveDifferentCoordinatesAcrossCharts": true,
+    "chartMembershipCreatesScientificMeaning": false,
+    "coordinateValueCreatesScientificMeaning": false
+  },
+  "chartRecordMinimum": {
+    "requiredFields": [
+      "chartId",
+      "chartVersion",
+      "systemId",
+      "canonicalDomainDeclaration",
+      "codomainDimension",
+      "representedDimensions",
+      "coordinateSemantics",
+      "recoverabilityClass",
+      "metricPolicy",
+      "topologyPolicy",
+      "overlapDeclarations",
+      "authorityBasis",
+      "chartDigest"
+    ],
+    "forbiddenFields": [
+      "scientificClaimRewrite",
+      "typedRelationRewrite",
+      "evidenceStandingRewrite",
+      "claimCeilingRewrite",
+      "sourceAuthorityRewrite",
+      "canonicalIdentityRewrite",
+      "presentationStyle",
+      "cameraState"
+    ]
+  },
+  "coordinateDimensionContract": {
+    "requiredFields": [
+      "dimensionId",
+      "dimensionIndex",
+      "label",
+      "semanticClass",
+      "sourceDeliveryFieldRefs",
+      "valueDomain",
+      "normalizationRule",
+      "distanceParticipation",
+      "authorityBasis"
+    ],
+    "permittedSemanticClasses": [
+      "SCALAR",
+      "ORDINAL_NUMERIC",
+      "TEMPORAL_NUMERIC",
+      "TOPOLOGICAL_COORDINATE",
+      "INDEX_COORDINATE",
+      "EMBEDDING_ONLY"
+    ],
+    "dimensionIndexUniqueWithinChart": true,
+    "coordinateSemanticMustBeExplicit": true,
+    "undeclaredDimensionMeaningProhibited": true,
+    "coordinateMayNotEncodeUndeclaredEvidenceStrength": true,
+    "coordinateMayNotEncodeUndeclaredClaimCeiling": true,
+    "coordinateMayNotEncodeUndeclaredScientificRelation": true
+  },
+  "metricPolicy": {
+    "defaultDistanceMeaning": "NONE",
+    "euclideanDistanceScientificMeaningByDefault": false,
+    "distanceMeaningRequiresExplicitDeclaration": true,
+    "distanceMeaningDeclarationRequiresMetricId": true,
+    "distanceMeaningDeclarationRequiresSemanticScope": true,
+    "distanceMeaningDeclarationRequiresDomainScope": true,
+    "metricMayCreateScientificRelation": false,
+    "metricMayUpgradeEvidenceStanding": false,
+    "metricMayRaiseClaimCeiling": false,
+    "universalEuclideanScientificMetricAssumed": false
+  },
+  "topologyPolicy": {
+    "defaultNeighborhoodMeaning": "NONE",
+    "neighborhoodOrContinuityMeaningRequiresExplicitTopology": true,
+    "implicitEuclideanTopologyScientificMeaningProhibited": true,
+    "topologyMayCreateScientificRelation": false,
+    "topologyMayUpgradeEvidenceStanding": false,
+    "topologyMayRaiseClaimCeiling": false
+  },
+  "chartRecoverability": {
+    "permittedClasses": [
+      "EXACT_COORDINATE_CHART",
+      "NONINVERTIBLE_REPRESENTATION_NOT_A_COORDINATE_CHART"
+    ],
+    "trueCoordinateChartRequiresRecoverableCanonicalIdentityOnDeclaredDomain": true,
+    "noninvertibleRepresentationMustBeClassifiedAsProjectionOrPresentationDownstream": true,
+    "coordinateTransitionEligibilityRequiresExactCoordinateChart": true
+  },
+  "chartOverlapContract": {
+    "overlapNotation": "U_A intersection U_B",
+    "transitionNotation": "T_B<-A=phi_B o phi_A^-1",
+    "transitionDefinedOnlyOnDeclaredCanonicalOverlap": true,
+    "trueTransitionRequiresRoundtrip": true,
+    "roundtripLaw": "T_A<-B(T_B<-A(phi_A(m)))=phi_A(m) FOR m IN U_A INTERSECTION U_B",
+    "canonicalInvariantLaw": "I_CANONICAL_AFTER_TRANSITION=I_CANONICAL_BEFORE_TRANSITION",
+    "outsideOverlapDisposition": "NO_COMMON_COORDINATE_DOMAIN",
+    "transitionMayCreateScientificMeaning": false,
+    "transitionMayCreateCanonicalPresence": false,
+    "transitionRuntimeConstructedAtR8B": false
+  },
+  "representationDispositions": {
+    "canonicalPresenceStates": [
+      "PRESENT_IN_CANONICAL_STATE",
+      "ABSENT_FROM_CANONICAL_STATE"
+    ],
+    "chartRepresentationStates": [
+      "REPRESENTABLE_IN_SELECTED_CHART",
+      "NOT_REPRESENTABLE_IN_SELECTED_CHART"
+    ],
+    "projectionDisclosureStatesReservedForR8C": [
+      "EXPOSED_BY_PROJECTION",
+      "HIDDEN_BY_PROJECTION",
+      "NOT_REPRESENTABLE_IN_SELECTED_PROJECTION"
+    ],
+    "laws": [
+      "NOT_REPRESENTABLE_IN_SELECTED_CHART_NE_ABSENT_FROM_CANONICAL_STATE",
+      "HIDDEN_BY_PROJECTION_NE_ABSENT_FROM_CANONICAL_STATE",
+      "CHART_NONREPRESENTABILITY_NE_PROJECTION_HIDDEN"
+    ]
+  },
+  "systemSpecificStateBoundary": {
+    "systemSpecificStateSigmaMayExistInChartState": true,
+    "systemSpecificStateSigmaBelongsInCanonicalDeliveryRecord": false,
+    "systemSpecificStateSigmaCreatesScientificState": false,
+    "systemSpecificStateSigmaMayMutateScientificState": false,
+    "systemSpecificStateSigmaSemanticsMustBeDeclaredByChart": true
+  },
+  "coordinateStateRecord": {
+    "conceptualNotation": "C_S(m)",
+    "recordClass": "DERIVED_NONSCIENTIFIC_SYSTEM_COORDINATE_STATE",
+    "runtimeConstructedAtR8B": false,
+    "requiredFutureFields": [
+      "coordinateStateId",
+      "sourceDeliveryStateId",
+      "chartId",
+      "chartVersion",
+      "systemId",
+      "coordinateVector",
+      "representedDimensionIds",
+      "systemSpecificStateSigma",
+      "canonicalInvariantDigest",
+      "chartDigest",
+      "coordinateStateDigest"
+    ],
+    "mayReplaceCanonicalDeliveryState": false,
+    "mayMutateCanonicalDeliveryState": false,
+    "mayCreateScientificObject": false,
+    "mayCreateTypedRelation": false
+  },
+  "r6Compatibility": {
+    "law": "SPATIAL_EMBEDDING_NE_SPATIAL_TRANSFORMATION",
+    "r6AuthorizedTransformationCountRemains": 0,
+    "coordinateAssignmentIsSpatialTransformation": false,
+    "coordinateTransitionIsR6SpatialTransformation": false,
+    "coordinateChartDefinitionRequiresR6Reopen": false,
+    "coordinateStateAuthorizesUserExecutedTransformation": false
+  },
+  "r7Compatibility": {
+    "expectedSpatialTransformationDependentStateCountRemains": 0,
+    "scientificRecoverabilityWithoutSpatialInteractionRemainsRequired": true,
+    "accessibilityAndTextFirstBindToSameContinuityCore": true,
+    "coordinateAtlasMayNotBecomeRequiredForScientificRecoverability": true
+  },
+  "r8cBoundary": {
+    "nextSubcheckpoint": "R8C_TRANSFORM_PROJECTION_PRESENTATION_SEPARATION",
+    "r8cPurpose": "FREEZE_THE_NONCONFLATION_BOUNDARIES_AND_ADMISSIBLE_INTERFACES_AMONG_COORDINATE_TRANSITION_PROJECTION_AND_PRESENTATION",
+    "r8cMayConsumeR8BAtlasAsFrozenInput": true,
+    "projectionRuntimeConstructedAtR8B": false,
+    "presentationRuntimeConstructedAtR8B": false,
+    "visiblePrototypeConstructedAtR8B": false
+  },
+  "r8dBoundary": {
+    "runtimeTarget": "R8D_DETERMINISTIC_COORDINATE_EMBEDDING_ENGINE",
+    "statusAtR8BClosure": "BLOCKED_BY_R8C",
+    "r8dMayBeginAtR8BClosure": false
+  },
+  "authorized": [
+    "DEFINE_SYSTEM_COORDINATE_ATLAS_CONTRACT",
+    "DEFINE_SYSTEM_COORDINATE_CHART_SCHEMA",
+    "DEFINE_COORDINATE_DIMENSION_SEMANTIC_REQUIREMENTS",
+    "DEFINE_METRIC_AND_TOPOLOGY_DECLARATION_REQUIREMENTS",
+    "DEFINE_CHART_RECOVERABILITY_CLASSES",
+    "DEFINE_DECLARED_CHART_OVERLAP_AND_ROUNDTRIP_LAWS",
+    "DEFINE_CANONICAL_INVARIANCE_ACROSS_COORDINATE_CHANGE",
+    "DEFINE_CHART_NONREPRESENTABILITY_DISPOSITION",
+    "DEFINE_SYSTEM_SPECIFIC_STATE_BOUNDARY",
+    "DECLARE_R8C_INTERFACE_REQUIREMENTS_WITHOUT_CONSTRUCTING_R8C"
+  ],
+  "prohibited": [
+    "CREATE_OR_MUTATE_SCIENTIFIC_OBJECT",
+    "CREATE_OR_MUTATE_SCIENTIFIC_RELATION",
+    "MUTATE_EVIDENCE_STANDING",
+    "MUTATE_CLAIM_OR_CLAIM_CEILING",
+    "MUTATE_SOURCE_AUTHORITY",
+    "STORE_SYSTEM_COORDINATES_IN_CANONICAL_DELIVERY_STATE",
+    "ASSUME_UNIVERSAL_EUCLIDEAN_SCIENTIFIC_METRIC",
+    "INFER_SCIENTIFIC_RELATION_FROM_DISTANCE",
+    "INFER_SCIENTIFIC_RELATION_FROM_PROXIMITY",
+    "INFER_EVIDENCE_STRENGTH_FROM_COORDINATE",
+    "CONSTRUCT_CONCRETE_SYSTEM_CHART_INSTANCE",
+    "CONSTRUCT_COORDINATE_EMBEDDING_RUNTIME",
+    "CONSTRUCT_COORDINATE_TRANSITION_RUNTIME",
+    "CONSTRUCT_PROJECTION_RUNTIME",
+    "CONSTRUCT_PRESENTATION_RUNTIME",
+    "CONSTRUCT_VISIBLE_R8_PROTOTYPE",
+    "EXECUTE_SPATIAL_TRANSFORMATION",
+    "REOPEN_R6",
+    "REOPEN_R7",
+    "REOPEN_R8A",
+    "MUTATE_R0_THROUGH_R8A",
+    "MUTATE_F1_THROUGH_F11",
+    "PUBLIC_METHODS_REPLACEMENT",
+    "LIVE_DEPLOYMENT",
+    "MERGE_TO_MAIN",
+    "EXECUTE_R9"
+  ],
+  "failClosedReasons": [
+    "R8A_PARENT_MISMATCH",
+    "SCIENTIFIC_DIGEST_DRIFT",
+    "RELATION_GRAPH_DRIFT",
+    "PROJECTION_GRAPH_DRIFT",
+    "CANONICAL_INVARIANT_SET_DRIFT",
+    "SYSTEM_COORDINATE_IN_CANONICAL_STATE",
+    "UNDECLARED_CHART_DIMENSION",
+    "DUPLICATE_CHART_DIMENSION_INDEX",
+    "UNDECLARED_COORDINATE_SEMANTIC",
+    "UNDECLARED_DISTANCE_MEANING",
+    "DISTANCE_MEANING_WITHOUT_METRIC",
+    "NEIGHBORHOOD_MEANING_WITHOUT_TOPOLOGY",
+    "UNIVERSAL_EUCLIDEAN_SCIENTIFIC_METRIC_ASSUMPTION",
+    "NONINVERTIBLE_REPRESENTATION_MISCLASSIFIED_AS_COORDINATE_CHART",
+    "COORDINATE_TRANSITION_OUTSIDE_DECLARED_OVERLAP",
+    "COORDINATE_TRANSITION_ROUNDTRIP_FAILURE",
+    "CANONICAL_INVARIANT_DRIFT_ACROSS_COORDINATE_CHANGE",
+    "CHART_NONREPRESENTABILITY_TREATED_AS_CANONICAL_ABSENCE",
+    "COORDINATE_TRANSFORM_PROJECTION_CONFLATION",
+    "COORDINATE_TRANSFORM_PRESENTATION_CONFLATION",
+    "R6_TRANSFORMATION_AUTHORITY_INFLATION",
+    "R7_SPATIAL_DEPENDENCY_INTRODUCTION",
+    "VISIBLE_PROTOTYPE_CONSTRUCTION_ATTEMPT",
+    "PUBLIC_OR_MAIN_MUTATION_ATTEMPT",
+    "R9_EXECUTION_ATTEMPT"
+  ],
+  "verification": {
+    "workflow": ".github/workflows/methods-f12-r8b-system-coordinate-atlas-contract-verify.yml",
+    "verifier": "control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8b-system-coordinate-atlas-contract.verify.v1.mjs",
+    "expectedDiffClass": "EXACT_THREE_FILE_ADDITIVE_DIFF_FROM_TERMINAL_R8A",
+    "requiredParent": "1238fb73df7554e05da7714dfd3d7668b4749485",
+    "requiredTerminalStatus": "PASS_CLOSED",
+    "evidenceArtifact": "methods-f12-r8b-system-coordinate-atlas-contract-evidence"
+  },
+  "closure": {
+    "r8bPassClosed": true,
+    "r8RemainsOpen": true,
+    "r8PassClosed": false,
+    "r9Unlock": false,
+    "userDifferentialCarried": "NO_MATERIAL_IMPROVEMENT",
+    "scientificMutation": "NONE",
+    "publicMutation": "NONE",
+    "mainMutation": "NONE",
+    "concreteChartInstancesConstructed": false,
+    "coordinateEmbeddingRuntimeConstructed": false,
+    "coordinateTransitionRuntimeConstructed": false,
+    "projectionRuntimeConstructed": false,
+    "presentationRuntimeConstructed": false,
+    "visiblePrototypeConstructed": false,
+    "nextSubcheckpointOnPass": "R8C_TRANSFORM_PROJECTION_PRESENTATION_SEPARATION",
+    "r8cEligibility": "ELIGIBLE_READY_FOR_EXECUTION",
+    "r8dStatus": "BLOCKED_BY_R8C"
+  },
+  "terminalLaw": "R8B_PASS_CLOSED_SEALS_ONLY_THE_NONSCIENTIFIC_SYSTEM_COORDINATE_ATLAS_CONTRACT;NO_COORDINATE_PROJECTION_PRESENTATION_OR_VISIBLE_RUNTIME_IS_CONSTRUCTED;R8_REMAINS_OPEN_AND_R9_REMAINS_BLOCKED"
+}

@@ -23,6 +23,7 @@ jobs:
           node --check showroom/globe/audralia/weather-presentation-reconciliation/exterior-classification.mjs
           node --check showroom/globe/audralia/weather-presentation-reconciliation/clear-atmosphere.mjs
           node --check showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.mjs
+          node --check showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs
           node --check showroom/globe/audralia/weather-presentation-reconciliation/app.mjs
       - name: Verify reconciliation prohibitions
         run: |
@@ -79,12 +80,14 @@ jobs:
             let ready=false;
             try{
               await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:30000});
+              await page.waitForFunction(()=>document.querySelector('[data-audralia-loader]')?.dataset?.progress==='4',{timeout:5000});
               ready=true;
             }catch(error){
               const diagnostic=await page.evaluate(()=>({
                 statusText:document.querySelector('[data-h-earth-status]')?.textContent?.trim()||null,
                 status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
                 loaderStage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,
+                loaderProgress:document.querySelector('[data-audralia-loader]')?.dataset?.progress||null,
                 reconciliationPresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__),
                 runtimePresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()),
                 previewError:window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW_ERROR__||null,
@@ -116,6 +119,7 @@ jobs:
                 idsStable:JSON.stringify(ids0)===JSON.stringify(ids1)&&JSON.stringify(ids1)===JSON.stringify(ids2),
                 localActive:local.spatial.activeLocalCount,
                 localCap:local.spatial.maxLocalCount,
+                loaderProgress:document.querySelector('[data-audralia-loader]')?.dataset?.progress||null,
                 skyEvidence:proof.sky.getEvidence(),
                 exteriorEvidence:proof.exterior.getEvidence(),
                 celestial:Boolean(window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector),
@@ -123,7 +127,7 @@ jobs:
               };
             });
             console.log(JSON.stringify({result,pageErrors,consoleErrors},null,2));
-            const failed=pageErrors.length||!result.localPass||!result.planetaryPass||!result.idsStable||result.localActive>result.localCap||result.cameraSemanticsMutated||result.zoomSemanticsMutated||result.travelSemanticsMutated||result.localCutoff<500||result.planetaryCutoff!==0||result.skyEvidence.nearTerrainVeil!==false||result.exteriorEvidence.nearFieldExtinctionAuthority!==false||!result.celestial||!String(result.status).includes('USER_REVIEW_REQUIRED');
+            const failed=pageErrors.length||!result.localPass||!result.planetaryPass||!result.idsStable||result.localActive>result.localCap||result.loaderProgress!=='4'||result.cameraSemanticsMutated||result.zoomSemanticsMutated||result.travelSemanticsMutated||result.localCutoff<500||result.planetaryCutoff!==0||result.skyEvidence.nearTerrainVeil!==false||result.exteriorEvidence.nearFieldExtinctionAuthority!==false||!result.celestial||!String(result.status).includes('USER_REVIEW_REQUIRED');
             await browser.close();if(failed)process.exit(1);
           })().catch(error=>{console.error(error);process.exit(1);});
           NODE

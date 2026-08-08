@@ -1,0 +1,45 @@
+{
+  "schema": "METHODS_EMBODIMENT_BINDING_CONTRACT_v1",
+  "version": "1.0.0",
+  "status": "AVAILABLE_CANDIDATE_PENDING_FRESH_VERIFICATION",
+  "authorityBasis": {
+    "topologyRef": "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/semantic-interaction-topology-contract.v1.json",
+    "law": "EVERY_MEANING_BEARING_MANIPULABLE_MANIFESTATION_REQUIRES_EXPLICIT_BINDING_BEFORE_USE"
+  },
+  "bindingFunction": {
+    "symbol": "B*",
+    "domain": "FUTURE_MANIFESTATIONS_M",
+    "codomain": ["N*", "A*", "ACCESS_ROUTE", "NONSEMANTIC"],
+    "shape": ["bindingClass", "primaryReferent", "relationRef", "allowedOperations", "authorityRef", "orientationContext"]
+  },
+  "bindingClasses": {
+    "ENTITY": {"primaryReferentRequired": true, "relationRefAllowed": false, "primaryReferentMustBeIn": "N*", "manipulable": true},
+    "METHOD_STAGE": {"primaryReferentRequired": true, "relationRefAllowed": false, "primaryReferentMustBeIn": "N*::METHOD_STAGE", "manipulable": true},
+    "DECLARED_RELATION": {"primaryReferentRequired": false, "relationRefRequired": true, "relationRefMustBeIn": "A*", "manipulable": true},
+    "ACCESS_SURFACE": {"primaryReferentRequired": true, "relationRefAllowed": true, "mustDeclareEquivalentDirectBinding": true, "manipulable": true},
+    "NONSEMANTIC": {"primaryReferentRequired": false, "relationRefAllowed": false, "allowedOperations": [], "manipulable": false, "mayCreateAdjacency": false, "mayCreateContainment": false, "mayCreateIdentity": false, "mayCreateEvidentiaryStrength": false}
+  },
+  "locusRules": [
+    "MEANING_BEARING_MANIPULABLE_MANIFESTATION_REQUIRES_EXPLICIT_BINDING",
+    "PRIMARY_DIRECT_LOCUS_MUST_BIND_TO_OPERATION_TARGET_OR_DECLARED_RELATION",
+    "UNRELATED_ACCESS_SURFACE_MAY_NOT_SERVE_AS_PRIMARY_DIRECT_LOCUS",
+    "NONSEMANTIC_BINDING_MAY_NOT_ENTER_MANIPULATION_LOCUS"
+  ],
+  "accessRouteEquivalence": {
+    "requiredEqualities": ["REGISTERED_OPERATION", "SEMANTIC_TARGET", "SEMANTIC_OUTCOME"],
+    "notRequiredEqualities": ["GESTURE_TRACE", "PHYSICAL_MOTOR_PATTERN", "VISUAL_EXPERIENCE"],
+    "semanticOutcomeFieldsAsApplicable": ["ACTIVE_REFERENT", "SCIENTIFIC_STATE_HASH", "ROUTE_DESTINATION", "DEPTH", "AUTHORIZED_DISCLOSED_FIELDS"]
+  },
+  "orientationBinding": {"required": true, "source": "TOPOLOGY_Q_CONTEXT", "law": "BINDING_MUST_DECLARE_OR_RESOLVE_ORIENTATION_CONTEXT_WITHOUT_INVENTING_SCIENTIFIC_STATE"},
+  "forbiddenBindingSources": [
+    "LEGACY_FOUR_FAMILIES",
+    "LEGACY_25_RECORDS_AS_PEER_OBJECTS",
+    "LEGACY_PRACTICAL_ENGINEERING_EVIDENCE_TAXONOMY",
+    "LEGACY_FAMILY_LENS_RECORD_NESTING",
+    "F8_DETERMINISTIC_SLOT_GRID",
+    "VISUAL_PROXIMITY",
+    "THEMATIC_SIMILARITY",
+    "ABSENCE_OF_CURRENT_AUTHORITY"
+  ],
+  "explicitNonAuthority": {"shape": false, "coordinates": false, "visualStyle": false, "labelText": false, "twoDOrThreeDChoice": false, "pageConstructionAuthority": "WITHHELD", "manifestationCandidate": "NONE"}
+}

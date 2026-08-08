@@ -1,0 +1,91 @@
+name: Tests L0 L1 Object Projection Registry Validation
+
+on:
+  push:
+    branches:
+      - agent/tests-l0-l1-object-projection-registry-v1
+  pull_request:
+    paths:
+      - control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/**
+      - .github/workflows/tests-l0-l1-object-projection-registry-validation.yml
+
+permissions:
+  contents: read
+
+jobs:
+  exact-scope-and-source-identity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact construction scope and pinned source blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=21e1115557ce37507b9b01f4d45d5a6173714637
+          test "$(git merge-base HEAD "$BASE")" = "$BASE"
+
+          mapfile -t actual < <(git diff --name-only "$BASE"...HEAD | sort)
+          expected=(
+            ".github/workflows/tests-l0-l1-object-projection-registry-validation.yml"
+            "control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/README.md"
+            "control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json"
+            "control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/source-admission-ledger.v1.json"
+            "control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/verify.v1.mjs"
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected_sorted[@]}") <(printf '%s\n' "${actual[@]}")
+
+          check_blob() {
+            local path="$1"
+            local expected_sha="$2"
+            local actual_sha
+            actual_sha="$(git rev-parse "$BASE:$path")"
+            test "$actual_sha" = "$expected_sha"
+          }
+
+          check_blob "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json" "0bfab791c005ca71cee771a5d14d27f8dfab3177"
+          check_blob "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/object-projection-registry-contract.v1.json" "ed969c87359c42444c477a752f332f07f0059a30"
+          check_blob "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/source-authority-ledger.v1.json" "fe37b67fe3faf0d62b969ec3860c2d083e2e8185"
+          check_blob "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json" "c2d7383ff6377cdbe6b31710011db1d4287e49e4"
+          check_blob "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/baseline-identities.v1.json" "b86cc4094901989fdd2b3a3f13e65c5d50b73005"
+
+          mkdir -p artifacts
+          HEAD_SHA="$(git rev-parse HEAD)"
+          cat > artifacts/scope-source-audit.v1.json <<EOF
+          {
+            "schema": "WHOLE_ESTATE_TESTS_L0_L1_OBJECT_PROJECTION_SCOPE_SOURCE_AUDIT_v1",
+            "result": "PASS",
+            "constructionBaseMain": "$BASE",
+            "candidateHead": "$HEAD_SHA",
+            "changedPathCount": ${#actual[@]},
+            "sourceBlobCount": 5,
+            "publicMutation": false,
+            "visualConstruction": false
+          }
+          EOF
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tests-l0-l1-object-projection-scope-source-audit-v1
+          path: artifacts/scope-source-audit.v1.json
+
+  registry-contract-verification:
+    needs: exact-scope-and-source-identity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Execute bounded registry verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          node control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/verify.v1.mjs | tee artifacts/object-projection-registry-verification.v1.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tests-l0-l1-object-projection-registry-verification-v1
+          path: artifacts/object-projection-registry-verification.v1.json

@@ -1,0 +1,58 @@
+{
+  "schema": "M1_COMPASS_INTEGRATED_RUNTIME_REVIEW_MANIFEST_v1",
+  "version": "1.0.0",
+  "operation": "M1_COMPASS_INTEGRATED_RUNTIME_REVIEW_v1",
+  "status": "RUNTIME_REVIEW_EVIDENCE_CANDIDATE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "immutableSubject": "0c84cc4bb5b75245d225a47fde68d3de879cdaed",
+  "constructionAuthority": "9eb936918ce063cef6c6f5d800f39ae966f3d3aa",
+  "subjectPackage": "control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1",
+  "registryPath": "control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json",
+  "subjectBlobs": {
+    "index.html": "bbbd898e3ac5232c07d06560cab31a9e33ecff77",
+    "manifestation.css": "6140be8a2d5c26e60a33a20b48bb2dc6a3e4f9a6",
+    "manifestation.mjs": "dece6b95247794a82bb2b94db1365071b108fdc4",
+    "candidate-manifest.v1.json": "47846fad14c28d95105d7f9487675f47e6e6e40b",
+    "registry": "b801a11e342051a6b00e6f7098b1d691685ad0b6",
+    "C01": "be5c2a50fda75d25d0cc7ec4cab27a9d312781d9",
+    "C02": "6607f860169db05dab0f6565c4d7559482fc7b4a",
+    "C03": "d8763aba8ed62bdabcfea4459631d48ca1ce7daf",
+    "C04": "efac723437ee1c17dbaaf820f616534341e7d7eb",
+    "C05": "4fd73293fe1f4c10de8b922bbfc7d4e93bc0961c",
+    "C06": "9a27b8d3e3153edac554646869972044967e1233",
+    "C07": "16c66331cc513393bd01fcff583b334f664c9f0c",
+    "C08": "f8b65b98f4df7117cb96998627d0396bbc71b487",
+    "C09": "a4e74079c81c59b062f51fde4ae076c1f8e7a29b"
+  },
+  "reviewScope": [
+    "ENTRY_INTO_TESTS_ENVIRONMENT",
+    "RETURN_BEHAVIOR",
+    "FIELD_STATE_PERSISTENCE",
+    "ACTIVE_OBJECT_FOCUS",
+    "NEIGHBOR_RETENTION",
+    "L0_L1_TRANSITIONS",
+    "POINTER_DRAG_SWIPE",
+    "WHEEL_NAVIGATION",
+    "KEYBOARD_NAVIGATION",
+    "PREVIOUS_NEXT_CONTROLS",
+    "RESPONSIVE_BEHAVIOR",
+    "STATE_RESTORATION_AFTER_NAVIGATION",
+    "INVALID_TARGET_FAIL_CLOSED",
+    "CORRUPT_REGISTRY_FAIL_CLOSED",
+    "REGISTRY_FETCH_FAILURE_FAIL_CLOSED"
+  ],
+  "protectedProperties": {
+    "objectCount": 3,
+    "relationCount": 2,
+    "scientificOperation": "FOCUS",
+    "scientificMutationPermitted": false,
+    "publicRouteMutationPermitted": false,
+    "m1r2MutationPermitted": false
+  },
+  "nonClaims": [
+    "NO_PERCEPTUAL_ACCEPTANCE_CLAIM",
+    "NO_BASELINE_REGRESSION_CLOSURE_CLAIM",
+    "NO_EXACT_HEAD_CERTIFICATION_CLAIM",
+    "NO_PROMOTION_CLAIM"
+  ]
+}

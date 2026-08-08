@@ -78,8 +78,8 @@
       "branch": "agent/methods-models-manifestation-m1r2-v1",
       "head": "6840cf0b99914263628e937453497e5af3f16166",
       "headMessage": "methods: record M1R2 fresh independent verification",
-      "runtimeEvidenceCommit": "4825ddb922c2f019b6742799b21cd41d16c2566b",
-      "candidateCommit": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+      "runtimeEvidenceCommit": "07dbb047414fb6c554645fa2db5f262c5d33ae05",
+      "candidateCommit": "7ab27d421233433b691ad34a7f79a904b08c7705",
       "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
       "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
       "admittedFacts": [

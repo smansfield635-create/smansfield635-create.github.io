@@ -1,0 +1,151 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #111712;
+  color: #edf3eb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #111712;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+.preview-shell {
+  width: 100%;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: #111712;
+}
+
+.preview-toolbar {
+  min-height: 46px;
+  padding:
+    max(7px, env(safe-area-inset-top))
+    max(10px, env(safe-area-inset-right))
+    7px
+    max(10px, env(safe-area-inset-left));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 9px;
+  border-bottom: 1px solid rgba(229, 240, 224, 0.12);
+  background: rgba(15, 23, 17, 0.96);
+}
+
+.preview-brand {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.preview-status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.preview-status[data-status="PASS"] {
+  color: #cfe8b3;
+}
+
+.preview-status[data-status="FAIL_CLOSED"] {
+  color: #f5b4a9;
+}
+
+.preview-button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(229, 240, 224, 0.18);
+  border-radius: 8px;
+  background: rgba(235, 243, 225, 0.08);
+  color: #edf3eb;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.preview-button:hover,
+.preview-button:focus-visible {
+  background: rgba(235, 243, 225, 0.14);
+  outline: none;
+}
+
+.preview-viewport {
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+  background: #111712;
+}
+
+.preview-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  overscroll-behavior: none;
+  cursor: grab;
+}
+
+.preview-canvas:active {
+  cursor: grabbing;
+}
+
+.preview-help {
+  min-height: 30px;
+  padding:
+    7px
+    max(10px, env(safe-area-inset-right))
+    max(7px, env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+  border-top: 1px solid rgba(229, 240, 224, 0.10);
+  background: rgba(15, 23, 17, 0.96);
+  color: rgba(237, 243, 235, 0.66);
+  font-size: 10px;
+  line-height: 1.25;
+  text-align: center;
+}
+
+@media (max-width: 650px) {
+  .preview-toolbar {
+    min-height: 42px;
+    gap: 7px;
+  }
+
+  .preview-brand {
+    font-size: 13px;
+  }
+
+  .preview-status {
+    font-size: 10px;
+  }
+
+  .preview-button {
+    min-height: 28px;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+
+  .preview-help {
+    font-size: 9px;
+  }
+}

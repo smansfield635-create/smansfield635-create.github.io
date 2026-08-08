@@ -126,12 +126,11 @@ void main(){outColor=vec4(0.0);}\`;
   const terrainDepthIndexCount=renderer.gratitudeMesh.indices.length;
   const terrainDepthVP=gl.getUniformLocation(depthProgram,'uVP');
 `;
-  next=replaceRequired(
-    next,
-    '  const vao=gl.createVertexArray();gl.bindVertexArray(vao);',
-    `  const vao=gl.createVertexArray();gl.bindVertexArray(vao);${depthSetup}`,
-    'CLOUD_TERRAIN_DEPTH_RESOURCES'
-  );
+  const cloudVaoAnchor='  const vao=gl.createVertexArray();gl.bindVertexArray(vao);';
+  const firstVaoIndex=next.indexOf(cloudVaoAnchor);
+  const cloudVaoIndex=firstVaoIndex<0?-1:next.indexOf(cloudVaoAnchor,firstVaoIndex+cloudVaoAnchor.length);
+  if(firstVaoIndex<0||cloudVaoIndex<0)throw new Error('TRANSFORM_MISSING:CLOUD_TERRAIN_DEPTH_RESOURCES');
+  next=next.slice(0,cloudVaoIndex)+`${cloudVaoAnchor}${depthSetup}`+next.slice(cloudVaoIndex+cloudVaoAnchor.length);
 
   const cameraMath=`
   const perspective=(fov,aspect,near,far)=>{const f=1/Math.tan(fov/2),inv=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*inv,-1,0,0,2*far*near*inv,0]);};

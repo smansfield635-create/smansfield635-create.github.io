@@ -5,11 +5,46 @@
     "surfaceId": "LAWS_COMPLETE_STORY",
     "semanticType": "NARRATIVE_SEQUENCE",
     "canonicalOrder": "1_TO_24",
-    "orderingAuthority": ["LAWS_COMPLETE_NARRATIVE_MAP_v1", "LAWS_COMPLETE_NARRATIVE_MAP_FREEZE_RECORD_v1"],
+    "orderingAuthority": [
+      "LAWS_COMPLETE_NARRATIVE_MAP_v1",
+      "LAWS_COMPLETE_NARRATIVE_MAP_FREEZE_RECORD_v1"
+    ],
     "wrapPolicy": "BOUNDED",
     "selectionMeaning": "NARRATIVE_INTERACTION_FOCUS",
     "routeBehavior": "DIRECT_ENTRY_PLUS_BOUNDED_PREVIOUS_NEXT",
     "statePersistence": "ROUTE_IDENTITY"
+  },
+  "navigationTopology": {
+    "model": "SIMPLIFIED_MULTI_GRAPH_V1",
+    "persistentEnvironment": {
+      "route": "/laws/",
+      "semanticType": "PERSISTENT_STAGE",
+      "stageMount": "CANONICAL_POSITION_VIEW"
+    },
+    "sequence": {
+      "semanticType": "NARRATIVE_SEQUENCE",
+      "memberCount": 24,
+      "wrapPolicy": "BOUNDED",
+      "presentation": "SEPARATE_CONTEXT_CONTROL"
+    },
+    "category": {
+      "semanticType": "CATEGORY_CONSTELLATION",
+      "membershipCardinality": "PLURAL_ALLOWED",
+      "presentation": "ORBITAL_FIELD",
+      "families": [
+        {"id":"RESEARCH","label":"Research","members":[1,2,3,24]},
+        {"id":"FLOW","label":"Flow","members":[4,5,6,7]},
+        {"id":"INTEGRITY","label":"Integrity","members":[8,9,10,11]},
+        {"id":"REALITY","label":"Reality","members":[12,13,14,15]},
+        {"id":"STRUCTURE","label":"Structure","members":[16,17,18,19]},
+        {"id":"TEST","label":"Test","members":[20,21,22,23]}
+      ]
+    },
+    "localStoryboard": {
+      "status": "NOT_RECOVERED",
+      "navigationAuthority": false,
+      "presentation": "OMITTED_UNTIL_AUTHORIZED"
+    }
   },
   "ordinaryReadingSurface": {
     "semanticType": "PARALLEL_LENS",
@@ -21,32 +56,32 @@
     "storyMember": "STORY_03",
     "internalSemanticType": "MULTI_AXIS_INSTRUMENT",
     "genericSingleRingBinding": "PROHIBITED",
-    "axes": {"X": "MODELS", "Y": "INTERPRETIVE_LENSES", "Z": "MODEL_FAMILIES"}
+    "axes": {"X":"MODELS","Y":"INTERPRETIVE_LENSES","Z":"MODEL_FAMILIES"}
   },
   "stories": [
-    {"position":1,"memberId":"STORY_01","label":"Applied Investigations","route":"/laws/research/applied-investigations/"},
-    {"position":2,"memberId":"STORY_02","label":"Evidence and Sources","route":"/laws/research/evidence-and-sources/"},
-    {"position":3,"memberId":"STORY_03","label":"Methods and Models","route":"/laws/research/methods-and-models/"},
-    {"position":4,"memberId":"STORY_04","label":"Flow / Signals","route":"/laws/categories/flow/signals/"},
-    {"position":5,"memberId":"STORY_05","label":"Flow / Feedback","route":"/laws/categories/flow/feedback/"},
-    {"position":6,"memberId":"STORY_06","label":"Flow / Cycles","route":"/laws/categories/flow/cycles/"},
-    {"position":7,"memberId":"STORY_07","label":"Flow / Handoffs","route":"/laws/categories/flow/handoffs/"},
-    {"position":8,"memberId":"STORY_08","label":"Integrity / Consistency","route":"/laws/categories/integrity/consistency/"},
-    {"position":9,"memberId":"STORY_09","label":"Integrity / Accountability","route":"/laws/categories/integrity/accountability/"},
-    {"position":10,"memberId":"STORY_10","label":"Integrity / Continuity","route":"/laws/categories/integrity/continuity/"},
-    {"position":11,"memberId":"STORY_11","label":"Integrity / Coherence","route":"/laws/categories/integrity/coherence/"},
-    {"position":12,"memberId":"STORY_12","label":"Reality / Theory","route":"/laws/categories/reality/theory/"},
-    {"position":13,"memberId":"STORY_13","label":"Reality / Evidence","route":"/laws/categories/reality/evidence/"},
-    {"position":14,"memberId":"STORY_14","label":"Reality / Measure","route":"/laws/categories/reality/measure/"},
-    {"position":15,"memberId":"STORY_15","label":"Reality / Limits","route":"/laws/categories/reality/limits/"},
-    {"position":16,"memberId":"STORY_16","label":"Structure / Constraints","route":"/laws/categories/structure/constraints/"},
-    {"position":17,"memberId":"STORY_17","label":"Structure / Interfaces","route":"/laws/categories/structure/interfaces/"},
-    {"position":18,"memberId":"STORY_18","label":"Structure / Boundaries","route":"/laws/categories/structure/boundaries/"},
-    {"position":19,"memberId":"STORY_19","label":"Structure / Governance","route":"/laws/categories/structure/governance/"},
-    {"position":20,"memberId":"STORY_20","label":"Test / Admission and Baseline","route":"/laws/test/admission-and-baseline/"},
-    {"position":21,"memberId":"STORY_21","label":"Test / Forward Construction","route":"/laws/test/forward-construction/"},
-    {"position":22,"memberId":"STORY_22","label":"Test / Reverse Audit","route":"/laws/test/reverse-audit/"},
-    {"position":23,"memberId":"STORY_23","label":"Test / Result and Record","route":"/laws/test/result-and-record/"},
-    {"position":24,"memberId":"STORY_24","label":"Research / Findings and Boundaries","route":"/laws/research/findings-and-boundaries/","terminalRoute":"/frontier/energy/battery-coherence-study/"}
+    {"position":1,"memberId":"STORY_01","label":"Applied Investigations","route":"/laws/research/applied-investigations/","categoryMembership":["RESEARCH"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"PARALLEL_LENS_READING"},
+    {"position":2,"memberId":"STORY_02","label":"Evidence and Sources","route":"/laws/research/evidence-and-sources/","categoryMembership":["RESEARCH"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"PARALLEL_LENS_READING"},
+    {"position":3,"memberId":"STORY_03","label":"Methods and Models","route":"/laws/research/methods-and-models/","categoryMembership":["RESEARCH"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"MULTI_AXIS_INSTRUMENT"},
+    {"position":4,"memberId":"STORY_04","label":"Flow / Signals","route":"/laws/categories/flow/signals/","categoryMembership":["FLOW"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":5,"memberId":"STORY_05","label":"Flow / Feedback","route":"/laws/categories/flow/feedback/","categoryMembership":["FLOW"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":6,"memberId":"STORY_06","label":"Flow / Cycles","route":"/laws/categories/flow/cycles/","categoryMembership":["FLOW"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":7,"memberId":"STORY_07","label":"Flow / Handoffs","route":"/laws/categories/flow/handoffs/","categoryMembership":["FLOW"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":8,"memberId":"STORY_08","label":"Integrity / Consistency","route":"/laws/categories/integrity/consistency/","categoryMembership":["INTEGRITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":9,"memberId":"STORY_09","label":"Integrity / Accountability","route":"/laws/categories/integrity/accountability/","categoryMembership":["INTEGRITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":10,"memberId":"STORY_10","label":"Integrity / Continuity","route":"/laws/categories/integrity/continuity/","categoryMembership":["INTEGRITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":11,"memberId":"STORY_11","label":"Integrity / Coherence","route":"/laws/categories/integrity/coherence/","categoryMembership":["INTEGRITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":12,"memberId":"STORY_12","label":"Reality / Theory","route":"/laws/categories/reality/theory/","categoryMembership":["REALITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":13,"memberId":"STORY_13","label":"Reality / Evidence","route":"/laws/categories/reality/evidence/","categoryMembership":["REALITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":14,"memberId":"STORY_14","label":"Reality / Measure","route":"/laws/categories/reality/measure/","categoryMembership":["REALITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":15,"memberId":"STORY_15","label":"Reality / Limits","route":"/laws/categories/reality/limits/","categoryMembership":["REALITY"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":16,"memberId":"STORY_16","label":"Structure / Constraints","route":"/laws/categories/structure/constraints/","categoryMembership":["STRUCTURE"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":17,"memberId":"STORY_17","label":"Structure / Interfaces","route":"/laws/categories/structure/interfaces/","categoryMembership":["STRUCTURE"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":18,"memberId":"STORY_18","label":"Structure / Boundaries","route":"/laws/categories/structure/boundaries/","categoryMembership":["STRUCTURE"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":19,"memberId":"STORY_19","label":"Structure / Governance","route":"/laws/categories/structure/governance/","categoryMembership":["STRUCTURE"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":20,"memberId":"STORY_20","label":"Test / Admission and Baseline","route":"/laws/test/admission-and-baseline/","categoryMembership":["TEST"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":21,"memberId":"STORY_21","label":"Test / Forward Construction","route":"/laws/test/forward-construction/","categoryMembership":["TEST"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":22,"memberId":"STORY_22","label":"Test / Reverse Audit","route":"/laws/test/reverse-audit/","categoryMembership":["TEST"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":23,"memberId":"STORY_23","label":"Test / Result and Record","route":"/laws/test/result-and-record/","categoryMembership":["TEST"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1"},
+    {"position":24,"memberId":"STORY_24","label":"Research / Findings and Boundaries","route":"/laws/research/findings-and-boundaries/","categoryMembership":["RESEARCH"],"routeViewType":"CANONICAL_POSITION_VIEW","experienceType":"NOT_CLASSIFIED_IN_SIMPLIFIED_V1","terminalRoute":"/frontier/energy/battery-coherence-study/"}
   ]
 }

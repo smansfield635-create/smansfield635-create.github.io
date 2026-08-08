@@ -1,0 +1,113 @@
+{
+  "schema": "TESTS_L0_L1_COMPASS_INTEGRATED_M1_CANDIDATE_v1",
+  "version": "1.0.0",
+  "operation": "TESTS_L0_L1_COMPASS_INTEGRATED_M1_v1",
+  "candidateId": "M1_COMPASS_INTEGRATED",
+  "status": "NONPUBLIC_CONSTRUCTION_CANDIDATE",
+  "constructionAuthorityAnchor": "9eb936918ce063cef6c6f5d800f39ae966f3d3aa",
+  "constructionAuthoritySubject": "16968bdc3c0e914a6cc87f7750b65e28e745c701",
+  "compassTestsBindingPromotion": "5dc56c1b73743706078afeb07cfe2dc144b72c90",
+  "isolatedM1": {
+    "candidateId": "M1_TESTS_METHODS_OPERATIONAL_FIELD",
+    "candidateHead": "9370bba7841b8a831f7f1c034d0b74fb83dab2e0",
+    "promotionMerge": "391c3543fd048bac90493232f04973911468d3eb",
+    "role": "FROZEN_SCIENTIFIC_AND_PROCEDURAL_CONTROL_BASELINE",
+    "mutationAuthorized": false
+  },
+  "m1r2": {
+    "identity": "M1R2_METHOD_PROCEDURE_FIELD",
+    "classification": "VALID_DEEP_PROCEDURAL_INSTRUMENT",
+    "preservedEvidenceHead": "6840cf0b99914263628e937453497e5af3f16166",
+    "entryAuthorized": false,
+    "rewriteAuthorized": false
+  },
+  "differentialConstraint": {
+    "O_integrated_equals_O_isolated": true,
+    "R_integrated_equals_R_isolated": true,
+    "A_integrated_equals_A_isolated": true,
+    "N_integrated_differs_from_N_isolated": true
+  },
+  "fixedScientificSubject": {
+    "projection": "METHODS",
+    "objectCount": 3,
+    "relationCount": 2,
+    "objects": [
+      {"OBJECT_ID": "METHODS", "OBJECT_CLASS": "METHOD"},
+      {"OBJECT_ID": "ROUTE_OPERATOR_PLATFORM", "OBJECT_CLASS": "METHOD"},
+      {"OBJECT_ID": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "OBJECT_CLASS": "TEST_INSTANCE"}
+    ],
+    "relations": [
+      {"RELATION_ID": "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "SOURCE_OBJECT": "METHODS", "RELATION": "GOVERNS_PROCEDURE_FOR", "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"},
+      {"RELATION_ID": "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "SOURCE_OBJECT": "ROUTE_OPERATOR_PLATFORM", "RELATION": "EXECUTES", "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"}
+    ],
+    "scientificMutationAuthorized": false
+  },
+  "navigationBoundary": {
+    "layers": ["L_MINUS_1_ORIENTATION", "L0", "L1"],
+    "operations": ["FOCUS"],
+    "compassEntryContextPreservation": true,
+    "compassReturnContextRestoration": true,
+    "directManipulationProducesNavigationProposalOnly": true,
+    "presentationGeometrySemanticAuthority": false
+  },
+  "approvedCapabilities": [
+    {"capabilityId":"C01","adapter":"TESTS_COMPASS_ENTRY_ADAPTER_v1","donorId":"MAIN_COMPASS_CONTROLLER","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C02","adapter":"TESTS_COMPASS_RETURN_ADAPTER_v1","donorId":"MAIN_COMPASS_CONTROLLER","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C03","adapter":"TESTS_FIELD_STATE_ADAPTER_v1","donorId":"MAIN_COMPASS_CONTROLLER","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C04","adapter":"TESTS_FOCUS_ADAPTER_v1","donorId":"MAIN_COMPASS_CONTROLLER","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C05","adapter":"TESTS_NEIGHBOR_PROJECTION_ADAPTER_v1","donorId":"MAIN_COMPASS_CRYSTALS","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C06","adapter":"TESTS_DEPTH_TRANSFORMATION_ADAPTER_v1","donorId":"LAWS_COMPASS_CONTROLLER","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C07","adapter":"TESTS_DIRECT_MANIPULATION_ADAPTER_v1","donorId":"MAIN_COMPASS_CRYSTALS","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C08","adapter":"TESTS_RESPONSIVE_PROJECTION_ADAPTER_v1","donorId":"MAIN_COMPASS_UPSTREAM_RENDERER","disposition":"ADMIT_WITH_ADAPTER"},
+    {"capabilityId":"C09","adapter":"TESTS_CONTINUITY_STATE_ADAPTER_v1","donorId":"MAIN_COMPASS_CONTROLLER","disposition":"ADMIT_WITH_ADAPTER"}
+  ],
+  "manifestationIntent": {
+    "informationObjectsHaveSpatialPresence": true,
+    "celestialObjectIdentityUsed": false,
+    "domainSpecificTabsRemainInformationObjects": true,
+    "activeObjectPerceptuallyDominant": true,
+    "neighborsRemainVisible": true,
+    "depthChangePreservesOrientation": true,
+    "returnRestoresNavigationContext": true,
+    "declaredRelationsOnlyAreRenderedAsRelations": true,
+    "spatialOrderCreatesScientificSequence": false
+  },
+  "withheld": [
+    "L2_INSPECT",
+    "L3_FOLLOW",
+    "L3_PROVENANCE_TRAVERSAL",
+    "L4_ENTER",
+    "M1R2_ENTRY",
+    "BROADER_METHODS_POPULATION",
+    "MODELS_POPULATION",
+    "EXPERIMENTS_POPULATION",
+    "EVIDENCE_POPULATION",
+    "PUBLIC_ROUTE_ATTACHMENT",
+    "PUBLIC_PROMOTION",
+    "SCIENTIFIC_CLAIM_UPGRADE"
+  ],
+  "excludedDonors": [
+    "UNIVERSAL_COMPASS_PROTOTYPE",
+    "SHOWROOM_COMPASS",
+    "ARCHCOIN_COMPASS",
+    "H_EARTH_WORLD_NAVIGATION"
+  ],
+  "researchBoundary": {
+    "researchContentCopied": false,
+    "researchAuthorityMutated": false,
+    "allowedFutureProjectionForm": ["REFERENCE", "STANDING", "ROUTE"]
+  },
+  "publicBoundary": {
+    "publicRouteCreated": false,
+    "liveRouteMutated": false,
+    "publicPromotionAuthorized": false
+  },
+  "evidenceBoundary": {
+    "structuralVerification": "AUTHORIZED_NEXT",
+    "runtimeReview": "NOT_YET_ESTABLISHED",
+    "perceptualReview": "NOT_YET_ESTABLISHED",
+    "baselineRegression": "NOT_YET_ESTABLISHED",
+    "exactHeadCertification": "NOT_YET_ESTABLISHED",
+    "candidateAcceptance": "WITHHELD_PENDING_SEPARATE_PROMOTION_DECISION"
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schema": "METHODS_MODELS_M1_BUILDER_HARD_GATE_EVALUATION_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BUILDER_HARD_GATE_EVALUATION",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+    "scientificBase": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2"
+  },
+  "candidate": {
+    "candidateCommit": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+    "branch": "agent/methods-models-manifestation-m1-v1",
+    "parent": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "aheadBy": 1,
+    "behindBy": 0,
+    "changedFileCount": 8,
+    "publicMethodsMutation": false
+  },
+  "sourceIdentities": {
+    "methodContentRegistryBlob": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+    "scientificObjectRegistryBlob": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c",
+    "semanticInteractionTopologyBlob": "b9cac99d89e2aff0804816e4b7c3cdea92e52c5e",
+    "embodimentBindingContractBlob": "e663e937f77755ad645a3c36698ff28cf1084d62",
+    "contextualHardGatesBlob": "0d9e2f404ecd760a7bb2622405ff382c1957f1d9",
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865"
+  },
+  "committedByteIdentity": {
+    "status": "PASS_ALL_CANDIDATE_AND_VERIFIER_BLOBS_EQUAL_EXECUTED_BYTES",
+    "blobs": {
+      "candidate-manifest.v1.json": "67e66b4f6da16f78575f0e52fa9f95a9f5ca8a52",
+      "binding-plan.v1.json": "93cde1c1a1f943e12535dc4fd5b8b2a8319d89bb",
+      "semantic-runtime.v1.mjs": "b57245e49ba49953bc13a788750723ba800424b8",
+      "manifestation.v1.html": "c01523b6fbece306c87dd9c78deca66f44578ccb",
+      "manifestation.v1.css": "a409cb0623ad30488bbb62afbaabd27179bc75a2",
+      "manifestation.v1.mjs": "11b9c6ce4936f8742ee0316d5750e1fdf580c8ca",
+      "README.md": "2343c968eda1dc4cab49fd071adf499b1d386a22",
+      "verification/methods-models-bounded-manifestation-experiment-m1-v1.mjs": "60a831de3ae6a6d39d753ad8ad2caae6018ef2de"
+    }
+  },
+  "evaluation": {
+    "hardGateTerms": ["I_EMBODIMENT", "I_LOCUS", "I_ORIENTATION", "I_ROUTE_EQUIVALENCE"],
+    "hardGateCount": 4,
+    "I_EMBODIMENT": true,
+    "I_LOCUS": true,
+    "I_ORIENTATION": true,
+    "I_ROUTE_EQUIVALENCE": true,
+    "conjunction": true,
+    "aggregateOverrideUsed": false,
+    "causalTrace": "REQUIRED_PRESENT_NON_GATE",
+    "checkedBindings": 16,
+    "checkedDeclaredMethodDependencyRelations": 16,
+    "totalAssertions": 123,
+    "failedAssertions": 0,
+    "directModalitiesExercised": ["POINTER", "TOUCH"],
+    "accessibleModalitiesExercised": ["KEYBOARD"],
+    "scientificStateMutationObserved": false
+  },
+  "manifestationBoundary": {
+    "manifested": "METHODS_PLUS_FIFTEEN_SOURCE_BOUND_METHOD_STAGES_AND_DECLARED_METHOD_DEPENDENCIES",
+    "omittedAuthorizedOntologyCreatesDenialOrReclassification": false,
+    "layoutCreatesScientificRelation": false,
+    "legacySemanticInheritance": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "claimCeilingUpgrade": false
+  },
+  "evidencePosture": {
+    "contractConformanceFirstLayer": "PASS_BUILDER_EVALUATION",
+    "freshIndependentVerification": "NOT_RUN_NOT_YET_DUE_IN_POST_GATE_SEQUENCE",
+    "freshNetworkCheckout": "NOT_RUN_RUNTIME_DNS_UNAVAILABLE",
+    "perceptualEvaluation": "NOT_RUN",
+    "userDifferential": "NOT_RUN",
+    "physicalDeviceEvaluation": "NOT_RUN",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "nextLawfulStage": "RUNTIME_AND_INTERACTION_EVIDENCE"
+}

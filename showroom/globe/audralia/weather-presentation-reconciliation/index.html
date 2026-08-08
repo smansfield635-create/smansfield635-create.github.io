@@ -18,10 +18,10 @@
     <div class="audralia-loading-panel">
       <div class="audralia-loading-orbit" aria-hidden="true"></div>
       <div class="audralia-loading-title">Audralia</div>
-      <div class="audralia-loading-stage" data-audralia-loader-stage>Starting Audralia…</div>
-      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
-      <div class="audralia-loading-time" data-audralia-loader-progress>0 of 6 systems ready</div>
-      <div class="audralia-loading-note">Building the same world progressively: camera, atmosphere, weather, and celestial context.</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing world and camera…</div>
+      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
+      <div class="audralia-loading-time" data-audralia-loader-progress>0 of 4 systems ready</div>
+      <div class="audralia-loading-note">Building the same world progressively: surface atmosphere, regional weather, and bounded local weather.</div>
     </div>
   </div>
 
@@ -56,6 +56,7 @@
     </footer>
   </main>
 
+  <script type="module" src="./loader-progress.mjs"></script>
   <script type="module" src="./app.mjs"></script>
   <script type="module" src="../celestial-checkpoint-1.mjs"></script>
 </body>

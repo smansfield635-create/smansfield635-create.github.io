@@ -1,0 +1,41 @@
+name: Tests L0 L1 Compass Integrated M1 Structural Conformance
+
+on:
+  push:
+    branches:
+      - agent/tests-l0-l1-compass-integrated-m1-v1
+  pull_request:
+    paths:
+      - 'control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/**'
+      - 'verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/**'
+      - '.github/workflows/tests-l0-l1-compass-integrated-m1-structural.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  structural-conformance:
+    runs-on: ubuntu-24.04
+    env:
+      AUTHORITY_ANCHOR: 9eb936918ce063cef6c6f5d800f39ae966f3d3aa
+      M1_COMPASS_STRUCTURAL_RECEIPT: /tmp/m1-compass-integrated-structural-receipt.v1.json
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify candidate source syntax
+        run: |
+          node --check control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/compass-tests.adapters.mjs
+          node --check control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/manifestation.mjs
+          node --check verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/verify.structural.mjs
+      - name: Verify bounded Compass-integrated M1 structure
+        run: node verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/verify.structural.mjs
+      - name: Upload structural receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: m1-compass-integrated-structural-${{ github.run_id }}
+          path: /tmp/m1-compass-integrated-structural-receipt.v1.json
+          if-no-files-found: error
+          retention-days: 30

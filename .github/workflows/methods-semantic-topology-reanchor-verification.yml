@@ -1,0 +1,52 @@
+name: Methods Semantic Topology Re-anchoring Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/**"
+      - ".github/workflows/methods-semantic-topology-reanchor-verification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: methods-semantic-topology-reanchor-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  EXECUTION_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  semantic-topology-reanchor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact execution head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+
+      - name: Verify exact checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate verifier syntax
+        run: node --check control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/verify.v1.mjs
+
+      - name: Execute fresh adversarial topology verification
+        run: node control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/verify.v1.mjs
+
+      - name: Upload exact-head verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-semantic-topology-reanchor-evidence
+          path: methods-semantic-topology-verification.receipt.json
+          if-no-files-found: error
+          retention-days: 30

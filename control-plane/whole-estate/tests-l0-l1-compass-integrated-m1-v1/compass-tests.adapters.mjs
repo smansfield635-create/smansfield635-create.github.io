@@ -111,10 +111,11 @@ export function createNeighborProjectionAdapter({ objectIds }) {
         while (relative > half) relative -= allowed.length;
         while (relative < -half) relative += allowed.length;
         const angle = relative * 0.92;
-        const x = Math.sin(angle) * 270 * spread;
-        const z = (Math.cos(angle) - 1) * 210 * spread;
-        const y = Math.abs(relative) * 26;
-        const prominence = clamp(1 - Math.abs(relative) * 0.23, 0.56, 1);
+        const distance = Math.abs(relative);
+        const x = Math.sin(angle) * 400 * spread;
+        const z = (Math.cos(angle) - 1) * 320 * spread;
+        const y = distance * 42;
+        const prominence = clamp(1 - distance * 0.38, 0.50, 1);
         return Object.freeze({ objectId, relative, x, y, z, prominence, active: objectId === focus });
       });
     }
@@ -140,7 +141,7 @@ export function createDepthTransformationAdapter({ fieldState }) {
   });
 }
 
-export function createDirectManipulationAdapter({ element, fieldState, objectIds, focusAdapter, onProposal }) {
+export function createDirectManipulationAdapter({ element, fieldState, objectIds, onFocusProposal, onProposal }) {
   const allowed = Object.freeze([...objectIds]);
   const gesture = { pointerId: null, startX: 0, lastX: 0, startTime: 0, dragging: false, captured: false };
   const deadZone = 6;
@@ -202,11 +203,11 @@ export function createDirectManipulationAdapter({ element, fieldState, objectIds
       const currentIndex = allowed.indexOf(currentFocus);
       const direction = offset > 0 ? -1 : 1;
       const nextIndex = (currentIndex + direction + allowed.length) % allowed.length;
-      focusAdapter.focus(allowed[nextIndex], "DIRECT_MANIPULATION");
+      onFocusProposal?.(allowed[nextIndex], "DIRECT_MANIPULATION");
     } else {
       fieldState.replace({ orientationOffset: 0 });
+      onProposal?.(fieldState.getState(), "SETTLE");
     }
-    onProposal?.(fieldState.getState(), "SETTLE");
     if (wasCaptured) {
       try { element.releasePointerCapture?.(pointerId); } catch {}
     }
@@ -233,7 +234,7 @@ export function createResponsiveProjectionAdapter() {
       const dpr = clamp(window.devicePixelRatio || 1, 1, 2);
       const compact = width < 560;
       const perspective = clamp(Math.round(width * (compact ? 2.65 : 2.15)), 760, 1500);
-      const spread = clamp(width / 760, 0.56, 1.08);
+      const spread = compact ? 0.68 : clamp(width / 760, 0.78, 1.08);
       return Object.freeze({ width, height, dpr, compact, perspective, spread, promotionEligible: true });
     }
   });

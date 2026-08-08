@@ -1,0 +1,354 @@
+{
+  "schema": "METHODS_SEMANTIC_INTERACTION_TOPOLOGY_AUTHORITY_DISPOSITION_AND_REANCHORING_PASS_v1",
+  "version": "1.0.0",
+  "operation": "METHODS_SEMANTIC_INTERACTION_TOPOLOGY_AUTHORITY_DISPOSITION_AND_REANCHORING_PASS_v1",
+  "target": "METHODS_AND_MODELS_SEMANTIC_AUTHORITY_CHAIN",
+  "status": "PASS_REANCHORING_WITH_BOUNDED_ONTOLOGY_AND_UNRESOLVED_TOPOLOGY_CONSTRUCTION_BLOCKED",
+  "repositoryIdentity": {
+    "observedMain": "c50d0a06a73ed149286508a15e697d8efa254865",
+    "nonpublicCandidateBase": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2",
+    "repairBranch": "repair/methods-models-semantic-authority-reanchor-v1",
+    "baseSelectionLaw": "ROOT_AT_F11_FINAL_NONPUBLIC_CONTROL_PLANE_HEAD_BEFORE_F12_MANIFESTATION_REVIEW_SURFACE"
+  },
+  "boundary": {
+    "construction": "PROHIBITED",
+    "pageMutation": "PROHIBITED",
+    "designExploration": "NONAUTHORITATIVE",
+    "existingProvenanceDeletion": "PROHIBITED",
+    "unscopedLegacyInheritance": "PROHIBITED",
+    "defaultAuthorityPosture": "FAIL_CLOSED",
+    "manifestationCandidate": "NONE",
+    "publicMutation": "NONE",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "dispositionVocabulary": {
+    "ACTIVE": "MAY_GOVERN_NEW_CONSTRUCTION_WITHIN_EXPLICIT_SCOPE_ONLY",
+    "ACTIVE_MECHANISM_ONLY": "IMPLEMENTATION_CAPABILITY_REUSABLE_SEMANTICS_EXCLUDED",
+    "REQUIRES_READMISSION": "NO_CURRENT_CONSTRUCTION_AUTHORITY",
+    "HOLD": "UNDECIDED_AND_NONINHERITABLE",
+    "SUPERSEDED": "REPLACED_BY_NAMED_AUTHORITY",
+    "FORBIDDEN_INHERITANCE": "MUST_NOT_PROPAGATE_INTO_NEW_CONSTRUCTION",
+    "HISTORICAL_EVIDENCE": "PROVENANCE_RETAINED_ZERO_PROSPECTIVE_AUTHORITY",
+    "NOT_APPLICABLE": "OUTSIDE_THIS_AUTHORITY_CHAIN"
+  },
+  "enforcement": {
+    "mayGovern": "TRUE_IFF_ACTIVE_AND_SCOPE_MATCHES_AND_NOT_SUPERSEDED_WITHIN_SCOPE",
+    "mayProvideMechanism": "TRUE_IFF_ACTIVE_MECHANISM_ONLY_AND_MECHANISM_SCOPE_MATCHES",
+    "activeMechanismOnlyMayTransmitSemantics": false,
+    "unclassifiedReachableUnitMayGovern": false,
+    "absenceOfCurrentAuthorityPermitsInheritance": false,
+    "historicalEvidenceMaySelfReadmit": false,
+    "unknownDisposition": "BLOCK"
+  },
+  "authorityDisposition": [
+    {
+      "id": "CP5_ROLE_CONSTITUTION",
+      "source": "control-plane/whole-estate/methods-models-role-constitution-v1/methods-models-role-contract.v1.json",
+      "unit": "PRESENTATION_IDENTITIES_ARE_NOT_SCIENTIFIC_IDENTITIES_AND_TOPOLOGY_REQUIRES_NORMALIZED_SCIENTIFIC_AUTHORITY",
+      "disposition": "ACTIVE",
+      "scope": "ONTOLOGY_TOPOLOGY_DEPENDENCY_AND_FAIL_CLOSED_AUTHORITY_ORDERING"
+    },
+    {
+      "id": "CP6_CANONICAL_STATE_INVARIANTS",
+      "source": "control-plane/whole-estate/invariant-contract-package-v1/canonical-state-invariant-contract.v1.json",
+      "unit": "PRESENTATION_GROUPING_MAY_NOT_CREATE_CANONICAL_CONTAINMENT_OR_TOPOLOGY",
+      "disposition": "ACTIVE",
+      "scope": "CANONICAL_STATE_AND_TOPOLOGY_NONINFERENCE"
+    },
+    {
+      "id": "CP6_LENS_CLASS",
+      "source": "control-plane/whole-estate/invariant-contract-package-v1/lens-view-invariant-contract.v1.json",
+      "unit": "ABSTRACT_REVERSIBLE_LENS_CLASS_WITHOUT_CANONICAL_IDENTITY_PARENTAGE_CONTAINMENT_ROUTE_OR_EVIDENCE_MUTATION",
+      "disposition": "ACTIVE",
+      "scope": "ABSTRACT_REPRESENTATION_PERSPECTIVE_CLASS_ONLY"
+    },
+    {
+      "id": "F2_STATE_DISTINCTIONS",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f2-canonical-state-kernel/axis-registry.v1.json",
+      "unit": "SCIENTIFIC_ANALYTIC_EVIDENTIARY_REPRESENTATION_NAVIGATION_AND_CONTENT_BINDING_AXES_REMAIN_DISTINCT",
+      "disposition": "ACTIVE",
+      "scope": "STATE_DISTINCTIONS_ONLY_NOT_TOPOLOGY_OR_MANIFESTATION",
+      "note": "LENS_AND_VIEW_MODE_ARE_NON_MEANING_BEARING_REPRESENTATION_AXES"
+    },
+    {
+      "id": "F4_SCIENTIFIC_OBJECT_REGISTRY",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/scientific-object-registry.v1.json",
+      "unit": "SOURCE_BOUND_SCIENTIFIC_OBJECT_IDENTITIES_AND_CLASSES",
+      "disposition": "ACTIVE",
+      "scope": "NONPUBLIC_REANCHOR_ONTOLOGY_INPUT_ONLY"
+    },
+    {
+      "id": "F4_METHOD_SEQUENCE",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/method-content-registry.v1.json",
+      "unit": "FIFTEEN_STEP_METHOD_SEQUENCE_WITH_CUSTODY_AND_DECLARED_DEPENDENCIES",
+      "disposition": "ACTIVE",
+      "scope": "SCIENTIFIC_METHOD_SEQUENCE_AND_DEPENDENCIES_ONLY"
+    },
+    {
+      "id": "PRE_F8_SCIENTIFIC_OBJECT_INVENTORY",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/scientific-object-inventory.v1.json",
+      "unit": "SOURCE_STANDING_CLASSIFICATIONS_ACROSS_INSTRUMENT_METHOD_MODEL_COMPARATOR_FORMAL_DERIVATION_EXECUTION_PROTOCOL_AND_PRESENTATION_ONLY_OBJECTS",
+      "disposition": "ACTIVE",
+      "scope": "NONPUBLIC_REANCHOR_CLASSIFICATION_INPUT_ONLY"
+    },
+    {
+      "id": "PRE_F8_TYPED_RESULT_CLAIM_RELATIONS",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/pre-f8-corrective-construction-v1/study-result-to-claim-typed-relation-registry.v1.json",
+      "unit": "SOURCE_BOUND_RESULT_TO_SPECIFIC_CLAIM_RELATIONS_WITH_DIRECTION_AND_STANDING",
+      "disposition": "ACTIVE",
+      "scope": "SCIENTIFIC_EVIDENCE_RELATION_SEMANTICS_ONLY_NOT_INTERACTION_TOPOLOGY"
+    },
+    {
+      "id": "F7_NONMUTATION_AND_MODALITY_EQUIVALENCE_LAWS",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f7-interaction-and-accessibility/interaction-contract.v1.json",
+      "unit": "INTERACTION_MAY_NOT_CREATE_SCIENTIFIC_RELATIONS_OR_MUTATE_SCIENTIFIC_IDENTITY_AND_EQUIVALENT_MODALITIES_DISPATCH_THE_SAME_OPERATION",
+      "disposition": "ACTIVE",
+      "scope": "INTERACTION_SAFETY_AND_MODALITY_EQUIVALENCE_INVARIANTS_ONLY"
+    },
+    {
+      "id": "F5_F6_F7_EXECUTION_MACHINERY",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f5-navigation-and-continuity;f6-depth-and-inquiry;f7-interaction-and-accessibility",
+      "unit": "NAVIGATION_DEPTH_INTERACTION_AND_ACCESSIBILITY_IMPLEMENTATION_CAPABILITY",
+      "disposition": "ACTIVE_MECHANISM_ONLY",
+      "scope": "REUSABLE_EXECUTION_CAPABILITY_SUBJECT_TO_NEW_TOPOLOGY_BINDING",
+      "semanticTransmission": "PROHIBITED"
+    },
+    {
+      "id": "F8_NONAUTHORING_SAFETY_LAWS",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/geometry-contract.v1.json",
+      "unit": "COORDINATES_CAMERA_OR_VISUAL_PROMINENCE_MAY_NOT_CREATE_OR_MUTATE_SCIENTIFIC_MEANING",
+      "disposition": "ACTIVE",
+      "scope": "NEGATIVE_SAFETY_INVARIANT_ONLY"
+    },
+    {
+      "id": "F8_SCENE_PROJECTOR",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/scene-projector.v1.mjs",
+      "unit": "SCENE_PROJECTION_IMPLEMENTATION_CAPABILITY",
+      "disposition": "ACTIVE_MECHANISM_ONLY",
+      "scope": "RENDERING_OR_PROJECTION_CAPABILITY_ONLY",
+      "semanticTransmission": "PROHIBITED"
+    },
+    {
+      "id": "F8_SLOT_GRID_AS_TOPOLOGY",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/geometry-contract.v1.json",
+      "unit": "NODE_KIND_LANES_LEXICOGRAPHIC_SLOT_PLACEMENT_AND_SCIENTIFICALLY_MEANINGLESS_XYZ_AS_PROSPECTIVE_INTERACTION_TOPOLOGY",
+      "disposition": "FORBIDDEN_INHERITANCE",
+      "scope": "NONE"
+    },
+    {
+      "id": "F8_NONACTIVATING_NODE_AS_INTERACTION_LOCUS",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/spatial-control-binding.v1.json",
+      "unit": "NONACTIVATING_SPATIAL_NODES_WITH_MEANINGFUL_OPERATIONS_DELEGATED_TO_SEPARATE_CONTROLS",
+      "disposition": "REQUIRES_READMISSION",
+      "scope": "NONE_UNTIL_LOCUS_AND_ROUTE_EQUIVALENCE_ARE_PROVED"
+    },
+    {
+      "id": "F8_TEXT_FIRST_RATIFICATION_SEMANTIC_INPUT",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f8-spatial-xyz-semantic-layer/source-bindings.v1.json",
+      "unit": "LEGACY_TEXT_FIRST_RATIFICATION_AS_UNSCOPED_SEMANTIC_INPUT_TO_NEW_SPATIAL_CONSTRUCTION",
+      "disposition": "FORBIDDEN_INHERITANCE",
+      "scope": "PROVENANCE_OR_MECHANISM_REFERENCE_ONLY"
+    },
+    {
+      "id": "F9_RUNTIME_COMPOSITION",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f9-integrated-environment-assembly/integrated-environment-runtime.v1.mjs",
+      "unit": "MULTIPLANE_RUNTIME_COMPOSITION_CAPABILITY",
+      "disposition": "ACTIVE_MECHANISM_ONLY",
+      "scope": "COMPOSITION_CAPABILITY_ONLY",
+      "semanticTransmission": "PROHIBITED"
+    },
+    {
+      "id": "F9_SPATIAL_SEMANTIC_PLANE_BINDING",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f9-integrated-environment-assembly/assembly-contract.v1.json",
+      "unit": "F8_XYZ_PRESENTATION_PLANE_SEPARATED_FROM_NAVIGATION_INQUIRY_AND_INTERACTION_PLANES",
+      "disposition": "REQUIRES_READMISSION",
+      "scope": "NONE_UNTIL_CONTEXTUAL_ARCHITECTURE_GATES_PASS"
+    },
+    {
+      "id": "F10_F11_VERIFICATION_MACHINERY",
+      "source": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f10-adversarial-verification;f11-exact-candidate-certification",
+      "unit": "ADVERSARIAL_VERIFICATION_EXACT_IDENTITY_AND_CERTIFICATION_CAPABILITY",
+      "disposition": "ACTIVE_MECHANISM_ONLY",
+      "scope": "FRESH_REVERIFICATION_CAPABILITY_ONLY",
+      "semanticTransmission": "PROHIBITED"
+    },
+    {
+      "id": "F8_F9_F10_F11_PRIOR_PASS_RECEIPTS",
+      "source": "NONPUBLIC_FINAL_PROGRAM_TERMINAL_RECEIPTS",
+      "unit": "PRIOR_TECHNICAL_PASS_AND_EXACT_CANDIDATE_CERTIFICATION_RESULTS",
+      "disposition": "HISTORICAL_EVIDENCE",
+      "scope": "TECHNICAL_PROVENANCE_ONLY_ZERO_TOPOLOGY_AUTHORITY"
+    },
+    {
+      "id": "LEGACY_FOUR_FAMILIES_AS_CANONICAL_CLASSES",
+      "source": "context-displacement-existing-spatial-construct-adoption-v1_AND_TEXT_FIRST_SUCCESSOR_LINEAGE",
+      "unit": "FOUR_PRESENTATION_FAMILIES_AS_CANONICAL_LIFECYCLE_OR_SCIENTIFIC_IDENTITIES",
+      "disposition": "FORBIDDEN_INHERITANCE",
+      "scope": "NONE"
+    },
+    {
+      "id": "LEGACY_25_RECORDS_AS_PEER_SCIENTIFIC_OBJECTS",
+      "source": "context-displacement-existing-spatial-construct-adoption-v1_AND_TEXT_FIRST_SUCCESSOR_LINEAGE",
+      "unit": "TWENTY_FIVE_PRESENTATION_RECORDS_AS_PEER_CANONICAL_SCIENTIFIC_OBJECTS",
+      "disposition": "FORBIDDEN_INHERITANCE",
+      "scope": "NONE"
+    },
+    {
+      "id": "LEGACY_EXACT_LENS_TAXONOMY",
+      "source": "context-displacement-existing-spatial-construct-adoption-v1_AND_TEXT_FIRST_SUCCESSOR_LINEAGE",
+      "unit": "PRACTICAL_ENGINEERING_EVIDENCE_AS_CURRENT_CANONICAL_LENS_VALUES",
+      "disposition": "FORBIDDEN_INHERITANCE",
+      "scope": "NONE"
+    },
+    {
+      "id": "LEGACY_FAMILY_LENS_RECORD_NESTING",
+      "source": "context-displacement-existing-spatial-construct-adoption-v1_AND_TEXT_FIRST_SUCCESSOR_LINEAGE",
+      "unit": "FAMILY_TO_LENS_TO_RECORD_NESTING_AS_ONTOLOGY_OR_TOPOLOGY",
+      "disposition": "FORBIDDEN_INHERITANCE",
+      "scope": "NONE"
+    },
+    {
+      "id": "UNRELATED_CURRENT_MAIN_DRIFT",
+      "source": "main@c50d0a06a73ed149286508a15e697d8efa254865",
+      "unit": "AUDRALIA_H_EARTH_AND_OTHER_UNRELATED_ESTATE_CHANGES",
+      "disposition": "NOT_APPLICABLE",
+      "scope": "NONE"
+    }
+  ],
+  "forbiddenInheritanceAndSupersessionGraph": [
+    {
+      "from": "LEGACY_PRESENTATION_TAXONOMY",
+      "to": "CP5_ROLE_CONSTITUTION",
+      "relation": "SUPERSEDED_FOR_PROSPECTIVE_SCIENTIFIC_IDENTITY",
+      "effect": "PRESENTATION_IDENTITIES_HAVE_ZERO_CANONICAL_AUTHORITY"
+    },
+    {
+      "from": "LEGACY_PRESENTATION_GROUPING_TO_TOPOLOGY",
+      "to": "CP6_CANONICAL_STATE_INVARIANTS",
+      "relation": "FORBIDDEN_BY",
+      "effect": "NO_TOPOLOGY_BY_PRESENTATION_GROUPING"
+    },
+    {
+      "from": "LEGACY_EXACT_LENS_VALUES",
+      "to": "CP6_LENS_CLASS",
+      "relation": "NOT_READMITTED_BY",
+      "effect": "ABSTRACT_LENS_CLASS_SURVIVES_EXACT_VALUES_DO_NOT"
+    },
+    {
+      "from": "F8_TEXT_FIRST_RATIFICATION_SEMANTICS",
+      "to": "NEW_METHODS_CONSTRUCTION",
+      "relation": "FORBIDDEN_INHERITANCE",
+      "effect": "MECHANISM_OR_PROVENANCE_ONLY_WITHOUT_CLAIM_LEVEL_READMISSION"
+    },
+    {
+      "from": "F8_SLOT_GRID_GEOMETRY",
+      "to": "NEW_METHODS_SEMANTIC_INTERACTION_TOPOLOGY",
+      "relation": "FORBIDDEN_INHERITANCE",
+      "effect": "NONSEMANTIC_PRESENTATION_SLOTS_CANNOT_SUPPLY_TOPOLOGY"
+    },
+    {
+      "from": "F8_F9_F10_F11_PRIOR_PASS_RECEIPTS",
+      "to": "NEW_CONTEXTUAL_ARCHITECTURE_ACCEPTANCE",
+      "relation": "NO_AUTHORITY_TRANSFER",
+      "effect": "PRIOR_TECHNICAL_PASS_CANNOT_SATISFY_NEW_CONTEXTUAL_GATES"
+    }
+  ],
+  "minimumAuthorizedOntology": {
+    "status": "AVAILABLE_BOUNDED",
+    "authorizedElements": [
+      "SCIENTIFIC_OBJECT_IDENTITIES_AND_CLASSES_FROM_SOURCE_BOUND_REGISTRIES",
+      "METHOD_AS_SCIENTIFIC_PROCEDURE",
+      "FIFTEEN_STEP_METHOD_SEQUENCE_AND_DECLARED_DEPENDENCIES",
+      "REGISTERED_MODEL_AND_COMPARATOR_IDENTITIES_WITH_SOURCE_STANDING",
+      "SOURCE_BOUND_STUDY_RESULT_TO_SPECIFIC_CLAIM_TYPED_RELATIONS",
+      "EVIDENCE_EXECUTION_CUSTODY_CLAIM_CEILING_AND_SUPPORT_MODE_DISTINCTIONS",
+      "REPRESENTATION_STATE_IS_NOT_SCIENTIFIC_STATE"
+    ],
+    "notAuthorizedAsOntology": [
+      "LEGACY_FOUR_FAMILY_PRESENTATION_TAXONOMY",
+      "LEGACY_25_PEER_RECORD_MODEL",
+      "LEGACY_EXACT_LENS_TAXONOMY",
+      "PRESENTATION_CONTAINER_OR_SLOT_RELATIONSHIP"
+    ],
+    "sufficiencyForTopology": "INSUFFICIENT",
+    "missingForTopology": [
+      "EXPERIENTIAL_CONTAINMENT",
+      "PERSISTENCE",
+      "SEMANTIC_ADJACENCY",
+      "MANIPULATION_LOCUS",
+      "TRANSITION_MEANING",
+      "ROUTE_EQUIVALENCE"
+    ]
+  },
+  "semanticInteractionTopology": {
+    "status": "UNRESOLVED_BLOCKING",
+    "constructionAuthority": "WITHHELD",
+    "mayBeInferredFromLegacyManifestation": false,
+    "mayBeInferredFromAbsenceOfReplacement": false,
+    "mayBeInferredFromF8SlotGrid": false
+  },
+  "embodimentBinding": {
+    "status": "UNRESOLVED_BLOCKING",
+    "constructionAuthority": "WITHHELD"
+  },
+  "invariants": {
+    "hardContextualArchitectureGates": [
+      "I_EMBODIMENT",
+      "I_LOCUS",
+      "I_ORIENTATION",
+      "I_ROUTE_EQUIVALENCE"
+    ],
+    "conformanceLaw": "ALL_FOUR_TRUE_OR_CONTEXTUAL_ARCHITECTURE_CONFORMANCE_FAIL",
+    "perceptualExcellenceMayRescueFailure": false,
+    "additionalLaws": [
+      "PRESENTATION_MAY_NOT_CREATE_SCIENTIFIC_IDENTITY",
+      "PRESENTATION_GROUPING_MAY_NOT_CREATE_CANONICAL_TOPOLOGY",
+      "INTERACTION_MAY_NOT_CREATE_SCIENTIFIC_RELATIONS",
+      "REPRESENTATION_STATE_MAY_NOT_MUTATE_SCIENTIFIC_STATE",
+      "ACTIVE_MECHANISM_ONLY_MAY_NOT_TRANSMIT_SEMANTIC_BINDINGS",
+      "UNKNOWN_AUTHORITY_BLOCKS_INHERITANCE"
+    ]
+  },
+  "verificationObligations": {
+    "freshVerifierRequired": true,
+    "builderVerifierIndependenceRequired": true,
+    "requiredChecks": [
+      "EVERY_REACHABLE_AUTHORITY_UNIT_HAS_EXPLICIT_DISPOSITION_AND_SCOPE",
+      "NO_FORBIDDEN_INHERITANCE_EDGE_REACHES_NEW_CONSTRUCTION",
+      "ACTIVE_MECHANISM_ONLY_REUSE_IS_SEMANTICALLY_ISOLATED",
+      "ANY_LATER_TOPOLOGY_IS_DERIVED_ONLY_FROM_ACTIVE_SCOPE_VALID_NONSUPERSEDED_AUTHORITY",
+      "I_EMBODIMENT_I_LOCUS_I_ORIENTATION_I_ROUTE_EQUIVALENCE_ARE_INDEPENDENT_HARD_GATES",
+      "PRIOR_F8_F11_PASS_RECEIPTS_DO_NOT_SATISFY_NEW_CONTEXTUAL_GATES",
+      "NO_MANIFESTATION_CANDIDATE_EXISTS_IN_THIS_PACKAGE",
+      "NO_PUBLIC_METHODS_OR_LAWS_MUTATION_OCCURS",
+      "NO_SCIENTIFIC_CLAIM_STANDING_OR_CEILING_IS_UPGRADED"
+    ],
+    "negativeFixtures": [
+      "LEGACY_FOUR_FAMILY_INHERITANCE_MUST_FAIL",
+      "LEGACY_25_RECORD_PEER_ONTOLOGY_MUST_FAIL",
+      "PRACTICAL_ENGINEERING_EVIDENCE_AUTO_READMISSION_MUST_FAIL",
+      "TEXT_FIRST_SEMANTIC_INHERITANCE_THROUGH_F8_MUST_FAIL",
+      "F8_SLOT_GRID_AS_TOPOLOGY_MUST_FAIL",
+      "ACTIVE_MECHANISM_ONLY_SEMANTIC_TRANSMISSION_MUST_FAIL",
+      "PRIOR_PASS_RECEIPT_AS_TOPOLOGY_AUTHORITY_MUST_FAIL",
+      "UNCLASSIFIED_REACHABLE_UNIT_INHERITANCE_MUST_FAIL"
+    ]
+  },
+  "terminal": {
+    "authorityInventory": "COMPLETE_FOR_IDENTIFIED_PROSPECTIVE_INFLUENCE_CHAIN",
+    "claimLevelDisposition": "COMPLETE_FOR_REACHABLE_SEMANTIC_UNITS_REQUIRED_TO_DECIDE_CURRENT_CONSTRUCTION_AUTHORITY",
+    "prospectiveAuthorityScope": "EXPLICIT",
+    "forbiddenInheritanceGraph": "COMPLETE_FOR_IDENTIFIED_FAILURE_PATHS",
+    "supersessionGraph": "COMPLETE_FOR_IDENTIFIED_FAILURE_PATHS",
+    "ontologyAuthority": "AVAILABLE_BOUNDED",
+    "topologyContract": "UNAVAILABLE_INSUFFICIENT_ACTIVE_RELATIONAL_AUTHORITY",
+    "embodimentBindingContract": "UNAVAILABLE_TOPOLOGY_BLOCKED",
+    "invariantSet": "FROZEN",
+    "verificationObligations": "DEFINED",
+    "freshVerifierRequirement": "DEFINED",
+    "pageConstructionAuthority": "WITHHELD",
+    "manifestationCandidate": "NONE",
+    "publicMutation": "NONE",
+    "reanchoringPass": "PASS"
+  }
+}

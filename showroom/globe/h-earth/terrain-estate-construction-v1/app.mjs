@@ -19,9 +19,9 @@ function updateScaleUI(renderer){
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
     LOCAL:'LOCAL · same evolving cloud systems continue through descent · bounded volumetric density may pass overhead or around the camera · frozen coast, terrain, water, opacity and gestures remain protected.',
-    REGION:'REGION · persistent world-anchored cloud systems advect east/north through the frozen 30°N planetary frame · no camera-generated cloud reset.',
-    CONTINENT:'CONTINENT · WMO-informed low, middle and high cloud morphologies share one evolving 3D density authority above Gratitude.',
-    PLANETARY:'PLANETARY · globe-distributed evolving volumetric weather fields · land, ocean, atmosphere and cloud systems remain separate physical layers · no spherical alpha cloud shell.'
+    REGION:'REGION · persistent world-anchored cloud fields advect east/north through the frozen 30°N planetary frame · regional authorities now resolve into many separated cloud bodies.',
+    CONTINENT:'CONTINENT · WMO-informed low, middle and high cloud morphologies share one evolving 3D density authority · weather fields preserve clear slots and broken cloud populations.',
+    PLANETARY:'PLANETARY · planetary cloud-occupancy pass · eight persistent regional weather authorities generate many separated volumetric cloud bodies across ocean and land · no spherical alpha cloud shell.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -110,17 +110,18 @@ function createCloudLayer(renderer){
   const CLOUD_OUTER_ALTITUDE=108;
   const PLANET_OCCLUSION_ALTITUDE=27;
   const TIME_SCALE=24;
+  const LIFECYCLE_PRESENCE_FLOOR=.38;
   const EPOCH_MS=Date.parse('2026-08-08T03:26:20.000Z');
   const GENUS=Object.freeze({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9});
   const SYSTEMS=Object.freeze([
-    Object.freeze({id:'SC_GRATITUDE_COASTAL',seed:.17,genus:'Sc',lat:29.0,lon:-4.0,base:0.8,top:2.2,major:520,minor:280,orientation:-18,windE:35,windN:5,shearE:2.0,shearN:-1.0,density:.54,ice:.03,precip:.14,support:.72,phase:.36,lifetime:320}),
-    Object.freeze({id:'CU_GRATITUDE_TRADE',seed:.31,genus:'Cu',lat:27.0,lon:8.0,base:1.1,top:4.4,major:360,minor:220,orientation:12,windE:28,windN:8,shearE:3.0,shearN:1.0,density:.72,ice:.05,precip:.22,support:.82,phase:.28,lifetime:250}),
-    Object.freeze({id:'CB_TROPICAL_EAST',seed:.47,genus:'Cb',lat:17.0,lon:58.0,base:1.0,top:15.5,major:520,minor:300,orientation:24,windE:20,windN:10,shearE:6.5,shearN:2.0,density:.92,ice:.58,precip:.92,support:.92,phase:.45,lifetime:280}),
-    Object.freeze({id:'AC_NORTH_MIDLAT',seed:.59,genus:'Ac',lat:41.0,lon:112.0,base:3.5,top:6.8,major:980,minor:520,orientation:-8,windE:58,windN:2,shearE:4.0,shearN:-2.0,density:.48,ice:.20,precip:.12,support:.67,phase:.52,lifetime:360}),
-    Object.freeze({id:'CS_NORTH_JET',seed:.71,genus:'Cs',lat:56.0,lon:-146.0,base:7.5,top:12.5,major:2300,minor:760,orientation:15,windE:85,windN:1,shearE:7.0,shearN:1.0,density:.31,ice:.92,precip:.03,support:.70,phase:.50,lifetime:520}),
-    Object.freeze({id:'CI_SOUTH_JET',seed:.83,genus:'Ci',lat:-41.0,lon:-38.0,base:9.0,top:15.8,major:2500,minor:460,orientation:29,windE:82,windN:-3,shearE:9.0,shearN:2.0,density:.30,ice:.98,precip:.01,support:.72,phase:.60,lifetime:560}),
-    Object.freeze({id:'AS_SOUTH_STORM',seed:.93,genus:'As',lat:-24.0,lon:158.0,base:2.5,top:7.8,major:1700,minor:920,orientation:-14,windE:48,windN:4,shearE:3.0,shearN:0.0,density:.40,ice:.32,precip:.32,support:.66,phase:.42,lifetime:430}),
-    Object.freeze({id:'NS_EQUATORIAL_WEST',seed:.07,genus:'Ns',lat:4.0,lon:-96.0,base:1.8,top:8.5,major:1550,minor:860,orientation:6,windE:16,windN:3,shearE:2.5,shearN:1.0,density:.58,ice:.28,precip:.78,support:.78,phase:.33,lifetime:410})
+    Object.freeze({id:'SC_SUBTROPICAL_GRATITUDE',seed:.17,genus:'Sc',lat:30.0,lon:-12.0,base:0.8,top:2.3,major:1450,minor:820,orientation:-18,windE:35,windN:5,shearE:2.0,shearN:-1.0,density:.62,ice:.03,precip:.14,support:.76,phase:.36,lifetime:320}),
+    Object.freeze({id:'CU_SUBTROPICAL_EAST',seed:.31,genus:'Cu',lat:23.0,lon:34.0,base:1.1,top:4.6,major:1200,minor:690,orientation:12,windE:28,windN:8,shearE:3.0,shearN:1.0,density:.76,ice:.05,precip:.22,support:.84,phase:.28,lifetime:250}),
+    Object.freeze({id:'CB_TROPICAL_EAST',seed:.47,genus:'Cb',lat:9.0,lon:72.0,base:1.0,top:15.5,major:1320,minor:760,orientation:24,windE:20,windN:10,shearE:6.5,shearN:2.0,density:.90,ice:.58,precip:.92,support:.92,phase:.45,lifetime:280}),
+    Object.freeze({id:'NS_EQUATORIAL_WEST',seed:.07,genus:'Ns',lat:-3.0,lon:-58.0,base:1.8,top:8.8,major:1580,minor:920,orientation:6,windE:16,windN:3,shearE:2.5,shearN:1.0,density:.64,ice:.28,precip:.78,support:.80,phase:.33,lifetime:410}),
+    Object.freeze({id:'AC_NORTH_MIDLAT',seed:.59,genus:'Ac',lat:43.0,lon:82.0,base:3.5,top:6.8,major:2050,minor:820,orientation:-8,windE:58,windN:2,shearE:4.0,shearN:-2.0,density:.56,ice:.20,precip:.12,support:.72,phase:.52,lifetime:360}),
+    Object.freeze({id:'CS_NORTH_JET',seed:.71,genus:'Cs',lat:57.0,lon:-88.0,base:7.5,top:12.5,major:3100,minor:980,orientation:15,windE:85,windN:1,shearE:7.0,shearN:1.0,density:.38,ice:.92,precip:.03,support:.74,phase:.50,lifetime:520}),
+    Object.freeze({id:'CI_SOUTH_JET',seed:.83,genus:'Ci',lat:-42.0,lon:48.0,base:9.0,top:15.8,major:3250,minor:920,orientation:29,windE:82,windN:-3,shearE:9.0,shearN:2.0,density:.34,ice:.98,precip:.01,support:.76,phase:.60,lifetime:560}),
+    Object.freeze({id:'AS_SOUTH_STORM',seed:.93,genus:'As',lat:-31.0,lon:-108.0,base:2.5,top:7.8,major:2650,minor:1120,orientation:-14,windE:48,windN:4,shearE:3.0,shearN:0.0,density:.48,ice:.32,precip:.32,support:.72,phase:.42,lifetime:430})
   ]);
   const norm=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l);};
   const add=(a,b)=>a.map((v,i)=>v+b[i]);
@@ -213,41 +214,50 @@ vec2 raySphere(vec3 ro,vec3 rd,float radius){
 float verticalEnvelope(float z){
   return smoothstep(0.0,.09,z)*(1.0-smoothstep(.80,1.0,z));
 }
-float morphology(float g,vec2 xy,float z,float seed,float time){
+float morphology(float g,vec2 xy,float z,float seed,float time,float fieldScale){
   float r=length(xy);
-  float edge=1.0-smoothstep(.72,1.08,r);
-  float n=fbm(vec3(xy*2.35,z*3.2)+vec3(seed*19.0,time*.018,-time*.012));
+  float edge=1.0-smoothstep(.74,1.10,r);
+  float detailScale=clamp(fieldScale,1.0,9.0);
+  vec2 q=xy*detailScale;
+  float n=fbm(vec3(q*2.15,z*3.2)+vec3(seed*19.0,time*.018,-time*.012));
   float v=verticalEnvelope(z);
   if(g<.5){
-    float filament=.5+.5*sin(xy.x*18.0+xy.y*4.0+n*4.0+time*.035+seed*11.0);
-    return edge*v*smoothstep(.48,.78,n+.22*filament)*.48;
+    float filament=.5+.5*sin(q.x*5.4+q.y*1.8+n*4.0+time*.035+seed*11.0);
+    return edge*v*smoothstep(.50,.77,n+.24*filament)*.48;
   }else if(g<1.5){
-    float cells=.5+.5*sin(xy.x*13.0+seed*9.0)*cos(xy.y*12.0-time*.018);
-    return edge*v*smoothstep(.48,.74,n+.25*cells)*.55;
+    float cells=.5+.5*sin(q.x*4.2+seed*9.0)*cos(q.y*3.8-time*.018);
+    return edge*v*smoothstep(.49,.72,n+.27*cells)*.55;
   }else if(g<2.5){
-    return edge*v*smoothstep(.32,.66,n)*.42;
+    float veil=.5+.5*sin(q.x*1.7+q.y*.8+seed*7.0);
+    return edge*v*smoothstep(.38,.66,n+.13*veil)*.42;
   }else if(g<3.5){
-    float cells=.5+.5*sin(xy.x*10.0+n*3.0)*cos(xy.y*11.0-time*.014);
-    return edge*v*smoothstep(.45,.72,n+.24*cells)*.62;
+    float cells=.5+.5*sin(q.x*3.7+n*3.0)*cos(q.y*3.9-time*.014);
+    return edge*v*smoothstep(.46,.70,n+.26*cells)*.62;
   }else if(g<4.5){
-    return edge*v*smoothstep(.30,.62,n)*.66;
+    float bands=.5+.5*sin(q.x*1.25+q.y*.52+seed*6.0);
+    return edge*v*smoothstep(.37,.64,n+.12*bands)*.66;
   }else if(g<5.5){
-    return edge*v*smoothstep(.28,.58,n)*.95;
+    float rainBands=.5+.5*sin(q.x*1.5-q.y*.7+seed*8.0);
+    return edge*v*smoothstep(.35,.61,n+.14*rainBands)*.95;
   }else if(g<6.5){
-    float broken=.5+.5*sin(xy.x*7.5+n*3.0)*cos(xy.y*8.5+seed*8.0);
-    return edge*v*smoothstep(.43,.72,n+.20*broken)*.72;
+    float broken=.5+.5*sin(q.x*3.0+n*3.0)*cos(q.y*3.25+seed*8.0);
+    return edge*v*smoothstep(.46,.69,n+.24*broken)*.72;
   }else if(g<7.5){
-    return edge*v*smoothstep(.34,.64,n)*.56;
+    float sheets=.5+.5*sin(q.x*1.45+q.y*.55+seed*5.0);
+    return edge*v*smoothstep(.40,.65,n+.10*sheets)*.56;
   }else if(g<8.5){
     float taper=mix(.98,.46,smoothstep(.08,.95,z));
-    float tower=1.0-smoothstep(taper*.68,taper*1.08,r);
+    float clusters=.5+.5*sin(q.x*2.8+seed*9.0)*cos(q.y*2.5-time*.014);
+    float tower=(1.0-smoothstep(taper*.68,taper*1.08,r))*smoothstep(.48,.68,n+.25*clusters);
     float puffs=.72+.28*sin(z*19.0+n*5.0+seed*12.0);
-    return tower*v*smoothstep(.38,.67,n+.18*puffs)*.92;
+    return tower*v*puffs*.92;
   }else{
     float taper=mix(.82,.38,smoothstep(.05,.70,z));
-    float tower=(1.0-smoothstep(taper*.65,taper*1.08,r))*v*smoothstep(.34,.62,n+.18);
+    float clusters=.5+.5*sin(q.x*2.45+seed*7.0)*cos(q.y*2.2-time*.012);
+    float breakup=smoothstep(.43,.64,n+.22*clusters);
+    float tower=(1.0-smoothstep(taper*.65,taper*1.08,r))*v*breakup;
     float anvilBand=smoothstep(.66,.78,z)*(1.0-smoothstep(.94,1.0,z));
-    float anvil=(1.0-smoothstep(.52,1.30,r))*anvilBand*smoothstep(.30,.60,n)*.82;
+    float anvil=(1.0-smoothstep(.52,1.30,r))*anvilBand*smoothstep(.38,.61,n+.15*clusters)*.82;
     return max(tower,anvil);
   }
 }
@@ -273,8 +283,9 @@ vec3 densityAt(vec3 p){
     float co=cos(b.z),si=sin(b.z);
     vec2 local=vec2(co*dx+si*dy,-si*dx+co*dy);
     vec2 xy=vec2(local.x/max(b.x,1.0),local.y/max(b.y,1.0));
-    if(length(xy)>1.35)continue;
-    float shape=morphology(b.w,xy,z,c.y,uTimeHours);
+    if(length(xy)>1.38)continue;
+    float fieldScale=clamp(sqrt(max(b.x*b.y,1.0))/240.0,1.0,9.0);
+    float shape=morphology(b.w,xy,z,c.y,uTimeHours,fieldScale);
     float den=shape*c.x;
     mass+=den;
     iceMass+=den*c.z;
@@ -340,18 +351,18 @@ void main(){
   };
   const evolveSystems=timeHours=>SYSTEMS.map(system=>{
     const phase=((system.phase+timeHours/system.lifetime)%1+1)%1;
-    const life=lifecycleEnvelope(phase);
+    const life=LIFECYCLE_PRESENCE_FLOOR+(1-LIFECYCLE_PRESENCE_FLOOR)*lifecycleEnvelope(phase);
     const lat0=degToRad(system.lat);
     const windE=system.windE+5*Math.sin(timeHours*.035+system.seed*17);
     const windN=system.windN+2.5*Math.cos(timeHours*.029+system.seed*11);
     const lat=clamp(system.lat+radToDeg(windN*timeHours/PLANET_RADIUS),-89,89);
     const lon=wrapLon(system.lon+radToDeg(windE*timeHours/(PLANET_RADIUS*Math.max(Math.cos(lat0),.15))));
-    const support=clamp(system.support+.10*Math.sin(timeHours*.043+system.seed*21+degToRad(lat+lon)),.22,1);
+    const support=clamp(system.support+.10*Math.sin(timeHours*.043+system.seed*21+degToRad(lat+lon)),.30,1);
     const baseAuth=BASE_CLEARANCE+system.base*KM_TO_AUTHORING;
     const topKm=system.base+(system.top-system.base)*(.82+.18*support);
     const topAuth=BASE_CLEARANCE+topKm*KM_TO_AUTHORING;
-    const size=(.84+.18*life)*(.92+.12*support);
-    const density=system.density*life*(.82+.22*support);
+    const size=(.90+.12*life)*(.94+.10*support);
+    const density=system.density*life*(.86+.18*support);
     const verticalSpan=Math.max(.1,topKm-system.base);
     return {
       ...system,lat,lon,baseAuth,topAuth,
@@ -397,7 +408,7 @@ void main(){
   const start=()=>{if(running)return;running=true;lastFrame=0;raf=requestAnimationFrame(tick);};
   const stop=()=>{running=false;if(raf)cancelAnimationFrame(raf);raf=0;};
   const evidence=Object.freeze({
-    schema:'H_EARTH_OW01_EVOLVING_VOLUMETRIC_CLOUD_CHECKPOINT_v1',
+    schema:'H_EARTH_OW01_EVOLVING_VOLUMETRIC_CLOUD_CHECKPOINT_v2',
     planetaryReferenceFrameMerge:PLANETARY_REFERENCE_FRAME_MERGE,
     evolvingCloudStateMerge:EVOLVING_CLOUD_STATE_MERGE,
     acceptedAtmosphereHead:'8381f3323261b4facf70ec1f236c015b7d5df5a9',
@@ -406,6 +417,8 @@ void main(){
     gratitudeLongitudeDeg:0,
     cloudSystemCount:SYSTEMS.length,
     generaPresent:Object.freeze([...new Set(SYSTEMS.map(system=>system.genus))]),
+    regionalFieldBodyMultiplication:true,
+    lifecyclePresenceFloor:LIFECYCLE_PRESENCE_FLOOR,
     volumetricRayIntegration:true,
     sphericalAlphaCloudShell:false,
     analyticPlanetOcclusion:true,
@@ -498,7 +511,7 @@ async function observerAfterPaint(renderer,atmosphere,clouds){
   try{
     await new Promise(resolve=>setTimeout(resolve,0));
     const module=await import('./observer.mjs'),receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer),pos=receipt?.canonicalPositionalIdentity?.canonicalPositionalIdentityPassed===true,corr=receipt?.surfaceCorrespondence?.pass===true;
-    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_EVOLVING_VOLUMETRIC_CLOUD_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · globe-distributed persistent cloud fields are evolving in a bounded volumetric pass · judge planetary coverage, 3D cloud identity, motion, orbital-to-local continuity, and confirm atmosphere, Mirage, opacity, coast, water, terrain and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
+    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_EVOLVING_VOLUMETRIC_CLOUD_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · planetary cloud-occupancy pass preserves eight weather authorities while resolving them into many broken volumetric bodies · judge abundance, clear-sky balance, 3D identity, motion, orbital-to-local continuity, and confirm atmosphere, Mirage, opacity, coast, water, terrain and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
     window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OP,coherenceOperation:COH,renderer,observerReceipt:receipt,atmosphereEvidence:atmosphere.getEvidence(),cloudEvidence:clouds.getEvidence()});
     window.__H_EARTH_OW01_ATMOSPHERE_LAYER__=atmosphere;
     window.__H_EARTH_OW01_CLOUD_LAYER__=clouds;

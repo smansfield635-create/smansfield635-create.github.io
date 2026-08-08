@@ -9,6 +9,7 @@ const COH='H_EARTH_V2_COASTAL_INTEGRATION_AND_POSITIONAL_IDENTITY_CLOSURE';
 const ATMOSPHERE_BASE_HEAD='91a2b3b8ffbe1d14605f19ffefd68f4dee161597';
 const EVOLVING_CLOUD_STATE_MERGE='45d8a7d3b642d99a4377110f63bca15d14c8b900';
 const PLANETARY_REFERENCE_FRAME_MERGE='def62786f469a5a9d0027898810d4878642dbf32';
+const CLOUD_VISUAL_REFERENCE_HEAD='69da15a26811ddfc11b8c41c4707894e9248a90c';
 const setStatus=(text,state=text)=>{if(statusNode){statusNode.textContent=text;statusNode.dataset.status=state;}};
 const setDiagnostic=text=>{if(diagnosticNode)diagnosticNode.textContent=text;};
 const fail=(stage,error)=>{const message=error instanceof Error?error.message:String(error);console.error(`AUDRALIA_OW01_${stage}_FAILED`,error);setStatus('ERROR',`${stage}_FAILED`);setDiagnostic(`${stage}_FAILED: ${message}`);window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW_ERROR__=Object.freeze({operationId:OP,coherenceOperation:COH,stage,message});};
@@ -18,10 +19,10 @@ function updateScaleUI(renderer){
   if(brandNode)brandNode.textContent=`Audralia · Gratitude · OW01 · ${scale.toLowerCase()}`;
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
-    LOCAL:'LOCAL · reviewed volumetric cloud interiors remain authoritative through descent · bounded density may pass overhead or around the camera · frozen coast, terrain, water, opacity and gestures remain protected.',
-    REGION:'REGION · weak continuous world-anchored cloud support now fills the climate background while the eight persistent weather authorities remain organized regional intensifications.',
-    CONTINENT:'CONTINENT · broken equatorial, subtropical, midlatitude and high-cloud support spans the planetary frame beneath the existing WMO-informed organized systems · clear slots remain explicit.',
-    PLANETARY:'PLANETARY · continuous planetary cloud-support pass · cloud activity is no longer confined to eight isolated regional footprints · the eight existing systems remain stronger organized structures · no spherical alpha cloud shell.'
+    LOCAL:'LOCAL · protected volumetric cloud interiors remain full-quality when settled · tablet/mobile interaction now uses an adaptive cloud budget without changing terrain, water, opacity or gesture authority.',
+    REGION:'REGION · continuous world-anchored cloud support and the eight organized weather authorities are preserved · cloud rendering now decouples from raw pointer-event frequency.',
+    CONTINENT:'CONTINENT · full visual cloud quality returns automatically after interaction settles · larger screens receive a bounded cloud-pixel budget instead of an unbounded fragment-cost increase.',
+    PLANETARY:'PLANETARY · protected global cloud distribution preserved · adaptive interaction quality and bounded render pixels reduce tablet load while settled planetary weather retains the 36-step reference pass.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -111,6 +112,14 @@ function createCloudLayer(renderer){
   const PLANET_OCCLUSION_ALTITUDE=27;
   const TIME_SCALE=24;
   const LIFECYCLE_PRESENCE_FLOOR=.38;
+  const REST_RAY_STEPS=36;
+  const INTERACTION_RAY_STEPS=18;
+  const REST_MAX_PIXELS=175000;
+  const INTERACTION_MAX_PIXELS=70000;
+  const REST_FRAME_INTERVAL_MS=240;
+  const INTERACTION_FRAME_INTERVAL_MS=135;
+  const INTERACTION_SYSTEM_LIMIT=5;
+  const INTERACTION_SETTLE_MS=110;
   const EPOCH_MS=Date.parse('2026-08-08T03:26:20.000Z');
   const GENUS=Object.freeze({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9});
   const SYSTEMS=Object.freeze([
@@ -128,6 +137,7 @@ function createCloudLayer(renderer){
   const sub=(a,b)=>a.map((v,i)=>v-b[i]);
   const scale=(a,s)=>a.map(v=>v*s);
   const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
   const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
   const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a||1),0,1);return t*t*(3-2*t);};
   const wrapLon=lon=>((lon+180)%360+360)%360-180;
@@ -164,6 +174,8 @@ uniform float uAspect;
 uniform float uTanHalfFov;
 uniform float uTimeHours;
 uniform int uSystemCount;
+uniform int uStepCount;
+uniform float uFullDetail;
 uniform vec4 uSysA[8];
 uniform vec4 uSysB[8];
 uniform vec4 uSysC[8];
@@ -276,7 +288,8 @@ float globalCloudSupport(vec3 radial,float h,float lat,float lon){
   float high=smoothstep(67.0,76.0,h)*(1.0-smoothstep(99.0,108.0,h));
   vec3 advect=radial*8.2+vec3(t*.72,-t*.21,t*.36);
   float broad=fbm(advect);
-  float detail=fbm(radial*18.0+vec3(-t*.34,t*.19,t*.51));
+  float detail=broad;
+  if(uFullDetail>.5)detail=fbm(radial*18.0+vec3(-t*.34,t*.19,t*.51));
   float longitudinal=.5+.5*sin(lon*3.2+sin(lat*5.1)*1.25+t*.46);
   float broken=smoothstep(.50,.70,broad*.72+detail*.28+.075*longitudinal);
   float clearWave=.5+.5*sin(lon*1.12-lat*2.35+t*.20);
@@ -328,15 +341,15 @@ void main(){
   vec2 planetHit=raySphere(uEye,rd,OCCLUDER);
   if(planetHit.x>0.0)t1=min(t1,planetHit.x);
   if(t1<=t0){outColor=vec4(0.0);return;}
-  const int STEPS=36;
-  float stepLen=(t1-t0)/float(STEPS);
+  float stepCount=max(float(uStepCount),1.0);
+  float stepLen=(t1-t0)/stepCount;
   float jitter=hash31(vec3(gl_FragCoord.xy,uTimeHours*.01));
   float t=t0+stepLen*jitter;
   vec3 premul=vec3(0.0);
   float alpha=0.0;
   vec3 sun=normalize(uSunDir);
-  for(int s=0;s<STEPS;s++){
-    if(t>t1||alpha>.965)break;
+  for(int s=0;s<36;s++){
+    if(s>=uStepCount||t>t1||alpha>.965)break;
     vec3 p=uEye+rd*t;
     vec3 cloudSample=densityAt(p);
     float den=cloudSample.x;
@@ -369,6 +382,10 @@ void main(){
   const cameraFrame=snapshot=>{
     const pitch=clamp(snapshot.pitch,.46,1.49),distance=clamp(snapshot.distance,95,5600),yaw=snapshot.yaw,targetU=snapshot.targetU,targetV=snapshot.targetV,direction=tangentDirection(targetU,targetV),target=surfacePosition(direction,0),pU1=tangentPosition(targetU+1,targetV),pU0=tangentPosition(targetU-1,targetV),pV1=tangentPosition(targetU,targetV+1),pV0=tangentPosition(targetU,targetV-1),eU=norm(sub(pU1,pU0)),eV=norm(sub(pV1,pV0)),horizontal=norm(add(scale(eU,Math.sin(yaw)),scale(eV,Math.cos(yaw)))),eye=add(add(target,scale(direction,distance*Math.sin(pitch)+18)),scale(horizontal,distance*Math.cos(pitch))),forward=norm(sub(target,eye)),right=norm(cross(forward,direction)),up=norm(cross(right,forward));return{eye,target,up,right,forward};
   };
+  const directionFromLatLon=(latDeg,lonDeg)=>{
+    const lat=degToRad(latDeg),lon=degToRad(lonDeg),cosLat=Math.cos(lat);
+    return norm(add(scale(NORTH,Math.sin(lat)),add(scale(MERIDIAN,cosLat*Math.cos(lon)),scale(EAST,cosLat*Math.sin(lon)))));
+  };
   const lifecycleEnvelope=progress=>{
     if(progress<.12)return smooth(0,.12,progress);
     if(progress<.62)return 1;
@@ -398,22 +415,36 @@ void main(){
       shearShiftN:system.shearN*verticalSpan*1.45
     };
   });
+  const selectSystems=(systems,cam,interactive)=>{
+    if(!interactive)return systems;
+    const eyeRadial=norm(sub(cam.eye,PLANET_CENTER));
+    return systems.map(system=>({system,score:dot(directionFromLatLon(system.lat,system.lon),eyeRadial)}))
+      .filter(entry=>entry.score>-.45)
+      .sort((a,b)=>b.score-a.score)
+      .slice(0,INTERACTION_SYSTEM_LIMIT)
+      .map(entry=>entry.system);
+  };
   const uniform=(name)=>gl.getUniformLocation(program,name);
   const U=Object.freeze({
     eye:uniform('uEye'),forward:uniform('uForward'),right:uniform('uRight'),up:uniform('uUp'),sun:uniform('uSunDir'),
-    aspect:uniform('uAspect'),tanHalfFov:uniform('uTanHalfFov'),time:uniform('uTimeHours'),count:uniform('uSystemCount'),
+    aspect:uniform('uAspect'),tanHalfFov:uniform('uTanHalfFov'),time:uniform('uTimeHours'),count:uniform('uSystemCount'),steps:uniform('uStepCount'),fullDetail:uniform('uFullDetail'),
     a:uniform('uSysA[0]'),b:uniform('uSysB[0]'),c:uniform('uSysC[0]'),d:uniform('uSysD[0]')
   });
-  const resize=()=>{
+  const resize=interactive=>{
     const rect=canvas.getBoundingClientRect(),parentRect=parent.getBoundingClientRect();
     overlay.style.left=`${rect.left-parentRect.left}px`;overlay.style.top=`${rect.top-parentRect.top}px`;overlay.style.width=`${rect.width}px`;overlay.style.height=`${rect.height}px`;
-    const dpr=Math.min(.72,Math.max(.50,(window.devicePixelRatio||1)*.22)),w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+    const baseScale=Math.min(.72,Math.max(.50,(window.devicePixelRatio||1)*.22));
+    const area=Math.max(1,rect.width*rect.height),maxPixels=interactive?INTERACTION_MAX_PIXELS:REST_MAX_PIXELS,capScale=Math.sqrt(maxPixels/area),qualityScale=interactive?baseScale*.72:baseScale,renderScale=Math.max(.24,Math.min(qualityScale,capScale));
+    const w=Math.max(1,Math.round(rect.width*renderScale)),h=Math.max(1,Math.round(rect.height*renderScale));
     if(overlay.width!==w||overlay.height!==h){overlay.width=w;overlay.height=h;}
     gl.viewport(0,0,w,h);
+    overlay.dataset.renderScale=renderScale.toFixed(3);overlay.dataset.renderPixels=String(w*h);
   };
-  const render=()=>{
-    resize();
-    const snapshot=renderer.getSnapshot(),cam=cameraFrame(snapshot),timeHours=Math.max(0,(Date.now()-EPOCH_MS)/3600000*TIME_SCALE),systems=evolveSystems(timeHours);
+  let interactionActive=false,raf=0,lastFrame=0,running=false,settleTimer=0;
+  const render=(quality=interactionActive?'interaction':'rest')=>{
+    const interactive=quality==='interaction';
+    resize(interactive);
+    const snapshot=renderer.getSnapshot(),cam=cameraFrame(snapshot),timeHours=Math.max(0,(Date.now()-EPOCH_MS)/3600000*TIME_SCALE),evolved=evolveSystems(timeHours),systems=selectSystems(evolved,cam,interactive);
     const a=new Float32Array(8*4),b=new Float32Array(8*4),c=new Float32Array(8*4),d=new Float32Array(8*4);
     systems.forEach((system,index)=>{
       a.set([degToRad(system.lat),degToRad(system.lon),system.baseAuth,system.topAuth],index*4);
@@ -424,17 +455,29 @@ void main(){
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
     gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.useProgram(program);gl.bindVertexArray(vao);
     gl.uniform3fv(U.eye,cam.eye);gl.uniform3fv(U.forward,cam.forward);gl.uniform3fv(U.right,cam.right);gl.uniform3fv(U.up,cam.up);gl.uniform3fv(U.sun,SUN);
-    gl.uniform1f(U.aspect,overlay.width/Math.max(1,overlay.height));gl.uniform1f(U.tanHalfFov,Math.tan(55*Math.PI/360));gl.uniform1f(U.time,timeHours);gl.uniform1i(U.count,systems.length);
+    gl.uniform1f(U.aspect,overlay.width/Math.max(1,overlay.height));gl.uniform1f(U.tanHalfFov,Math.tan(55*Math.PI/360));gl.uniform1f(U.time,timeHours);gl.uniform1i(U.count,systems.length);gl.uniform1i(U.steps,interactive?INTERACTION_RAY_STEPS:REST_RAY_STEPS);gl.uniform1f(U.fullDetail,interactive?0:1);
     gl.uniform4fv(U.a,a);gl.uniform4fv(U.b,b);gl.uniform4fv(U.c,c);gl.uniform4fv(U.d,d);
     gl.drawArrays(gl.TRIANGLES,0,3);
-    overlay.dataset.timeHours=timeHours.toFixed(3);overlay.dataset.systemCount=String(systems.length);
+    overlay.dataset.timeHours=timeHours.toFixed(3);overlay.dataset.systemCount=String(systems.length);overlay.dataset.quality=interactive?'interaction':'rest';overlay.dataset.raySteps=String(interactive?INTERACTION_RAY_STEPS:REST_RAY_STEPS);
   };
-  let raf=0,lastFrame=0,running=false;
-  const tick=now=>{if(!running)return;if(now-lastFrame>=92){lastFrame=now;render();}raf=requestAnimationFrame(tick);};
+  const scheduleSettledRender=()=>{
+    if(settleTimer)clearTimeout(settleTimer);
+    settleTimer=setTimeout(()=>{interactionActive=false;render('rest');lastFrame=performance.now();settleTimer=0;},INTERACTION_SETTLE_MS);
+  };
+  const beginInteraction=()=>{interactionActive=true;if(settleTimer){clearTimeout(settleTimer);settleTimer=0;}};
+  const touchInteraction=()=>{interactionActive=true;scheduleSettledRender();};
+  const endInteraction=()=>{scheduleSettledRender();};
+  const tick=now=>{
+    if(!running)return;
+    const interval=interactionActive?INTERACTION_FRAME_INTERVAL_MS:REST_FRAME_INTERVAL_MS;
+    if(!document.hidden&&now-lastFrame>=interval){lastFrame=now;render(interactionActive?'interaction':'rest');}
+    raf=requestAnimationFrame(tick);
+  };
   const start=()=>{if(running)return;running=true;lastFrame=0;raf=requestAnimationFrame(tick);};
-  const stop=()=>{running=false;if(raf)cancelAnimationFrame(raf);raf=0;};
+  const stop=()=>{running=false;if(raf)cancelAnimationFrame(raf);raf=0;if(settleTimer)clearTimeout(settleTimer);settleTimer=0;};
   const evidence=Object.freeze({
-    schema:'H_EARTH_OW01_EVOLVING_VOLUMETRIC_CLOUD_CHECKPOINT_v3',
+    schema:'H_EARTH_OW01_EVOLVING_VOLUMETRIC_CLOUD_PERFORMANCE_CHECKPOINT_v1',
+    visualReferenceHead:CLOUD_VISUAL_REFERENCE_HEAD,
     planetaryReferenceFrameMerge:PLANETARY_REFERENCE_FRAME_MERGE,
     evolvingCloudStateMerge:EVOLVING_CLOUD_STATE_MERGE,
     acceptedAtmosphereHead:'8381f3323261b4facf70ec1f236c015b7d5df5a9',
@@ -455,13 +498,22 @@ void main(){
     analyticPlanetOcclusion:true,
     continuousEvolution:true,
     defaultVisualTimeScale:TIME_SCALE,
+    adaptiveInteractionQuality:true,
+    directPointerMoveCloudRender:false,
+    restRaySteps:REST_RAY_STEPS,
+    interactionRaySteps:INTERACTION_RAY_STEPS,
+    restMaxPixels:REST_MAX_PIXELS,
+    interactionMaxPixels:INTERACTION_MAX_PIXELS,
+    restFrameIntervalMs:REST_FRAME_INTERVAL_MS,
+    interactionFrameIntervalMs:INTERACTION_FRAME_INTERVAL_MS,
+    interactionSystemLimit:INTERACTION_SYSTEM_LIMIT,
+    fullDetailGlobalSupportAtRest:true,
+    reducedGlobalSupportDetailDuringInteraction:true,
     authoringAltitudeMapping:Object.freeze({candidateOnly:true,baseClearanceAuthoringUnits:BASE_CLEARANCE,authoringUnitsPerPhysicalKm:KM_TO_AUTHORING,outerCloudAltitudeAuthoringUnits:CLOUD_OUTER_ALTITUDE}),
-    lowResolutionIndependentPass:true,
-    maxRaySteps:36,
     rendererMutation:false,
     geographicAuthority:false
   });
-  return Object.freeze({overlay,render,start,stop,getEvidence:()=>evidence,destroy:()=>{stop();overlay.remove();}});
+  return Object.freeze({overlay,render:()=>render('rest'),start,stop,beginInteraction,touchInteraction,endInteraction,getEvidence:()=>evidence,destroy:()=>{stop();overlay.remove();}});
 }
 
 function wire(renderer,atmosphere,clouds){
@@ -479,11 +531,13 @@ function wire(renderer,atmosphere,clouds){
     gesture={ids:[entries[0][0],entries[1][0]],startA:a,startB:b,startMid:mid,startDistance:dist,lastMid:mid,lastDistance:dist,mode:'PENDING'};
   };
   const refreshGesture=()=>{if(pointers.size===2)beginTwoFingerGesture();else gesture=null;};
-  const after=()=>{updateScaleUI(renderer);atmosphere.render();clouds.render();};
+  const afterCameraMutation=()=>{updateScaleUI(renderer);atmosphere.render();clouds.touchInteraction();};
+  const afterSettledMutation=()=>{updateScaleUI(renderer);atmosphere.render();clouds.endInteraction();};
 
   canvas.addEventListener('pointerdown',event=>{
     canvas.setPointerCapture(event.pointerId);
     pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+    clouds.beginInteraction();
     if(pointers.size===2)beginTwoFingerGesture();
     else if(pointers.size>2)gesture=null;
   });
@@ -491,7 +545,7 @@ function wire(renderer,atmosphere,clouds){
   canvas.addEventListener('pointermove',event=>{
     const previous=pointers.get(event.pointerId);if(!previous)return;
     const next={x:event.clientX,y:event.clientY};pointers.set(event.pointerId,next);
-    if(pointers.size===1){renderer.orbit(safe(next.x-previous.x),safe(next.y-previous.y));after();return;}
+    if(pointers.size===1){renderer.orbit(safe(next.x-previous.x),safe(next.y-previous.y));afterCameraMutation();return;}
     if(pointers.size!==2)return;
     if(!gesture)beginTwoFingerGesture();
     if(!gesture)return;
@@ -525,43 +579,43 @@ function wire(renderer,atmosphere,clouds){
     }
     gesture.lastMid=mid;
     gesture.lastDistance=dist;
-    after();
+    afterCameraMutation();
   });
 
-  const clear=event=>{pointers.delete(event.pointerId);refreshGesture();};
+  const clear=event=>{pointers.delete(event.pointerId);refreshGesture();if(pointers.size===0)clouds.endInteraction();else clouds.beginInteraction();};
   canvas.addEventListener('pointerup',clear);
   canvas.addEventListener('pointercancel',clear);
   canvas.addEventListener('lostpointercapture',clear);
-  canvas.addEventListener('wheel',event=>{event.preventDefault();renderer.zoom(event.deltaY);after();},{passive:false});
-  canvas.addEventListener('dblclick',()=>{renderer.focusGratitude();after();});
-  focusButton?.addEventListener('click',()=>{renderer.focusGratitude();after();});
-  window.addEventListener('resize',()=>{renderer.render();atmosphere.render();clouds.render();});
+  canvas.addEventListener('wheel',event=>{event.preventDefault();clouds.beginInteraction();renderer.zoom(event.deltaY);afterCameraMutation();},{passive:false});
+  canvas.addEventListener('dblclick',()=>{renderer.focusGratitude();afterSettledMutation();});
+  focusButton?.addEventListener('click',()=>{renderer.focusGratitude();afterSettledMutation();});
+  window.addEventListener('resize',()=>{renderer.render();atmosphere.render();clouds.endInteraction();});
 }
 
 async function observerAfterPaint(renderer,atmosphere,clouds){
   try{
     await new Promise(resolve=>setTimeout(resolve,0));
     const module=await import('./observer.mjs'),receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer),pos=receipt?.canonicalPositionalIdentity?.canonicalPositionalIdentityPassed===true,corr=receipt?.surfaceCorrespondence?.pass===true;
-    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_GLOBAL_CONTINUOUS_CLOUD_SUPPORT_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · continuous world-anchored climate support now underlies the existing eight organized weather authorities · judge planetary occupancy, clear-sky balance, preserved cloud-body/interior quality, motion, orbital-to-local continuity, and confirm atmosphere, Mirage, opacity, coast, water, terrain and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
+    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_CLOUD_PERFORMANCE_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · visual reference ${CLOUD_VISUAL_REFERENCE_HEAD.slice(0,8)} preserved as the quality target · pointer movement no longer forces a synchronous full cloud ray-march · judge tablet responsiveness, settled cloud quality, planetary occupancy, cloud-interior traversal, motion, atmosphere, Mirage, coast, water, terrain and gestures.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
     window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OP,coherenceOperation:COH,renderer,observerReceipt:receipt,atmosphereEvidence:atmosphere.getEvidence(),cloudEvidence:clouds.getEvidence()});
     window.__H_EARTH_OW01_ATMOSPHERE_LAYER__=atmosphere;
     window.__H_EARTH_OW01_CLOUD_LAYER__=clouds;
-  }catch(error){console.warn('AUDRALIA_OW01_OBSERVER_FAILED',error);setStatus('REVIEW','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`GLOBAL_CONTINUOUS_CLOUD_SUPPORT_VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);}
+  }catch(error){console.warn('AUDRALIA_OW01_OBSERVER_FAILED',error);setStatus('REVIEW','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`CLOUD_PERFORMANCE_VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);}
 }
 
 async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw Error('H_EARTH_OW01_CANVAS_MISSING');
-    setStatus('world…','IMPORTING_ACCEPTED_ATMOSPHERE_PARENT');
-    setDiagnostic('Loading the reviewed Gratitude + atmosphere + volumetric cloud parent before adding continuous planetary cloud support…');
+    setStatus('world…','IMPORTING_CLOUD_VISUAL_REFERENCE');
+    setDiagnostic('Loading the approved cloud visual reference before applying the bounded tablet/mobile performance successor…');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const module=await import('./renderer.mjs');
-    setStatus('building…','BUILDING_GLOBAL_CONTINUOUS_CLOUD_SUPPORT_CHECKPOINT');
+    setStatus('building…','BUILDING_CLOUD_PERFORMANCE_SUCCESSOR');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const renderer=module.createMapWideEnvironmentRenderer(canvas);renderer.render();
     const atmosphere=createAtmosphereLayer(renderer);atmosphere.render();
     const clouds=createCloudLayer(renderer);clouds.render();clouds.start();
-    wire(renderer,atmosphere,clouds);updateScaleUI(renderer);setStatus('REVIEW','GLOBAL_CONTINUOUS_CLOUD_SUPPORT_VISUAL_READY_USER_REVIEW_REQUIRED');requestAnimationFrame(()=>observerAfterPaint(renderer,atmosphere,clouds));
+    wire(renderer,atmosphere,clouds);updateScaleUI(renderer);setStatus('REVIEW','CLOUD_PERFORMANCE_VISUAL_READY_USER_REVIEW_REQUIRED');requestAnimationFrame(()=>observerAfterPaint(renderer,atmosphere,clouds));
   }catch(error){fail('INITIALIZATION',error);}
 }
-setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting continuous planetary cloud-support checkpoint over the reviewed volumetric-cloud candidate…');initialize();
+setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting tablet/mobile cloud-performance successor over the approved visual reference…');initialize();

@@ -1,0 +1,152 @@
+name: Tests L0 L1 Navigation Shell Authority Repair Cross-Head Certification
+
+on:
+  push:
+    branches:
+      - agent/tests-l0-l1-navigation-shell-authority-repair-cert-v1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-l0-l1-navigation-shell-authority-repair-cert-v1
+  cancel-in-progress: false
+
+env:
+  PREDECESSOR_REVIEWED_HEAD: e1660c46fb94657723d88693fb48ceef39c533a1
+  VALIDATION_SUBJECT_HEAD: 8097f84b98fcf0c9784bad18ed23320d104c831c
+  CERTIFIED_INFRASTRUCTURE_HEAD: 6f8b665bd9b5021a459dfbf887deb95fb1ae844e
+  CERTIFIED_MANAGER_BLOB: e34303e22687c3b875d4d2cbf3b60f5124742903
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  PACKAGE: control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1
+
+jobs:
+  exact-subject-authority-verification:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CERTIFIED_INFRASTRUCTURE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify exact repaired authority subject and bounded repair envelope
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CERTIFIED_INFRASTRUCTURE_HEAD"
+          test "$(git rev-parse "$CERTIFIED_INFRASTRUCTURE_HEAD:tools/operation-intake/repository-operation-lock-manager.v1.mjs")" = "$CERTIFIED_MANAGER_BLOB"
+          git fetch --no-tags origin "$VALIDATION_SUBJECT_HEAD" "$PREDECESSOR_REVIEWED_HEAD"
+          test "$(git rev-parse FETCH_HEAD^{commit})" = "$PREDECESSOR_REVIEWED_HEAD" || true
+          git cat-file -e "$VALIDATION_SUBJECT_HEAD^{commit}"
+          git cat-file -e "$PREDECESSOR_REVIEWED_HEAD^{commit}"
+
+          REPAIR_PATHS=$(git diff --name-only "$PREDECESSOR_REVIEWED_HEAD..$VALIDATION_SUBJECT_HEAD" | sort)
+          EXPECTED_REPAIR=$(printf '%s\n' \
+            "$PACKAGE/source-authority-ledger.v1.json" \
+            "$PACKAGE/verify.v1.mjs" | sort)
+          test "$REPAIR_PATHS" = "$EXPECTED_REPAIR"
+          test "$(git rev-list --count "$PREDECESSOR_REVIEWED_HEAD..$VALIDATION_SUBJECT_HEAD")" = "2"
+
+          mkdir -p /tmp/subject
+          git archive "$VALIDATION_SUBJECT_HEAD" "$PACKAGE" | tar -x -C /tmp/subject
+          node "/tmp/subject/$PACKAGE/verify.v1.mjs" | tee /tmp/package-verifier-output.txt
+          grep -qx 'PASS_TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_v1' /tmp/package-verifier-output.txt
+
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const base='/tmp/subject/'+process.env.PACKAGE;
+          const ledger=JSON.parse(fs.readFileSync(base+'/source-authority-ledger.v1.json','utf8'));
+          const m1r2=ledger.sources.find(s=>s.id==='M1R2_DEEP_PROCEDURAL_INSTRUMENT');
+          if(!m1r2)throw Error('M1R2_SOURCE_MISSING');
+          if(m1r2.head!=='6840cf0b99914263628e937453497e5af3f16166')throw Error('M1R2_HEAD_DRIFT');
+          if(m1r2.candidateCommit!=='7ab27d421233433b691ad34a7f79a904b08c7705')throw Error('M1R2_CANDIDATE_DRIFT');
+          if(m1r2.runtimeEvidenceCommit!=='07dbb047414fb6c554645fa2db5f262c5d33ae05')throw Error('M1R2_RUNTIME_DRIFT');
+          const receipt={schema:'TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_EXACT_SUBJECT_VERIFICATION_v1',result:'PASS_CLOSED',predecessorReviewedHead:process.env.PREDECESSOR_REVIEWED_HEAD,validationSubjectHead:process.env.VALIDATION_SUBJECT_HEAD,certifiedInfrastructureHead:process.env.CERTIFIED_INFRASTRUCTURE_HEAD,repairPaths:[process.env.PACKAGE+'/source-authority-ledger.v1.json',process.env.PACKAGE+'/verify.v1.mjs'],packageVerifier:'PASS_TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_v1',m1r2:{head:m1r2.head,candidateCommit:m1r2.candidateCommit,runtimeEvidenceCommit:m1r2.runtimeEvidenceCommit},publicMutation:false,architectureMutationFromPredecessor:false};
+          fs.writeFileSync('/tmp/exact-subject-authority-verification.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tests-l0-l1-authority-repair-exact-subject-v1
+          path: /tmp/exact-subject-authority-verification.json
+          if-no-files-found: error
+
+  repaired-infrastructure-remote-cas:
+    needs: exact-subject-authority-verification
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CERTIFIED_INFRASTRUCTURE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Certify anchored remote CAS against exact repaired authority subject
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CERTIFIED_INFRASTRUCTURE_HEAD"
+          test "$(git rev-parse "$CERTIFIED_INFRASTRUCTURE_HEAD:tools/operation-intake/repository-operation-lock-manager.v1.mjs")" = "$CERTIFIED_MANAGER_BLOB"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          import {ensureRef,acquireRemote,closeRemote} from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+          const e=process.env,d='/tmp/tests-l0-l1-authority-repair-cas';
+          const scope=`TESTS_L0_L1_AUTHORITY_REPAIR:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`;
+          const digest=x=>createHash('sha256').update(x).digest('hex');
+          const common={repository:e.REPOSITORY,lockRef:e.LOCK_REF,token:e.GITHUB_TOKEN,lockScope:scope,governingHead:e.VALIDATION_SUBJECT_HEAD,requestDigest:digest(scope+':request'),procedureLocatorDigest:digest(scope+':procedure'),barrierFile:d+'/go'};
+          fs.mkdirSync(d,{recursive:true});
+          await ensureRef({repository:e.REPOSITORY,lockRef:e.LOCK_REF,baseHead:e.VALIDATION_SUBJECT_HEAD,token:e.GITHUB_TOKEN});
+          const pending=[acquireRemote({...common,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),acquireRemote({...common,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})];
+          for(let i=0;i<300&&!(fs.existsSync(d+'/a')&&fs.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));
+          if(!(fs.existsSync(d+'/a')&&fs.existsSync(d+'/b')))throw Error('PREWRITE_BARRIER_NOT_REACHED');
+          const a=JSON.parse(fs.readFileSync(d+'/a','utf8')),b=JSON.parse(fs.readFileSync(d+'/b','utf8'));
+          if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION_BLOB_DIVERGENCE');
+          fs.writeFileSync(d+'/go','');
+          const results=await Promise.all(pending),winners=results.filter(x=>x.lockAcquired),losers=results.filter(x=>!x.lockAcquired);
+          if(winners.length!==1||losers.length!==1)throw Error('CAS_CARDINALITY');
+          const winner=winners[0],loser=losers[0];
+          if(loser.errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(loser.httpStatus))throw Error('CAS_LOSER_CLASSIFICATION');
+          const closure=await closeRemote({...common,operationId:winner.operationId,lockGeneration:winner.lockGeneration,terminalDisposition:'PASS_CLOSED',acquisitionCommitSha:winner.acquisitionCommitSha,committedLedgerBlobSha:winner.committedLedgerBlobSha,stabilizationMaxReads:24,stabilizationDelayMs:125,closureCasMaxAttempts:8});
+          if(!closure.lockReleased||closure.stabilizationMode!=='ACQUISITION_ANCHORED_BOUNDED_REREAD')throw Error('ANCHORED_CLOSURE_FAILURE');
+          fs.writeFileSync('/tmp/repaired-authority-remote-cas.json',JSON.stringify({schema:'TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_REPAIR_REMOTE_CAS_CERTIFICATION_v1',result:'PASS_CLOSED',validationSubjectHead:e.VALIDATION_SUBJECT_HEAD,certificationInfrastructureHead:e.CERTIFIED_INFRASTRUCTURE_HEAD,winner,loser,closure},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tests-l0-l1-authority-repair-remote-cas-v1
+          path: /tmp/repaired-authority-remote-cas.json
+          if-no-files-found: error
+
+  terminal-certification-package:
+    needs: [exact-subject-authority-verification, repaired-infrastructure-remote-cas]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tests-l0-l1-authority-repair-exact-subject-v1
+          path: /tmp/package/subject
+      - uses: actions/download-artifact@v4
+        with:
+          name: tests-l0-l1-authority-repair-remote-cas-v1
+          path: /tmp/package/cas
+      - name: Bind repaired authority certification
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/package/final
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const s='/tmp/package/subject/exact-subject-authority-verification.json',c='/tmp/package/cas/repaired-authority-remote-cas.json';
+          const read=p=>fs.readFileSync(p),json=p=>JSON.parse(read(p)),hash=p=>createHash('sha256').update(read(p)).digest('hex');
+          const sj=json(s),cj=json(c);
+          if(sj.result!=='PASS_CLOSED'||cj.result!=='PASS_CLOSED')throw Error('UPSTREAM_NOT_PASS');
+          if(sj.validationSubjectHead!==process.env.VALIDATION_SUBJECT_HEAD||cj.validationSubjectHead!==process.env.VALIDATION_SUBJECT_HEAD)throw Error('SUBJECT_IDENTITY_MISMATCH');
+          const out={schema:'TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_REPAIR_TERMINAL_CERTIFICATION_v1',result:'PASS_CLOSED',predecessorReviewedHead:process.env.PREDECESSOR_REVIEWED_HEAD,validationSubjectHead:process.env.VALIDATION_SUBJECT_HEAD,certifiedInfrastructureHead:process.env.CERTIFIED_INFRASTRUCTURE_HEAD,exactSubjectReceiptSha256:hash(s),remoteCasReceiptSha256:hash(c),repairScope:'TWO_POINTER_CORRECTIONS_PLUS_EXACT_VERIFIER_BINDING_ONLY',authorityPromotionPerformed:false,mergePerformed:false,objectProjectionRegistryConstructionStarted:false,publicMutation:false};
+          fs.writeFileSync('/tmp/package/final/terminal-certification.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tests-l0-l1-navigation-shell-authority-repair-terminal-certification-v1
+          path: /tmp/package/final/terminal-certification.json
+          if-no-files-found: error

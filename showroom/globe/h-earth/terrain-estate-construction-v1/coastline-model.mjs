@@ -176,7 +176,7 @@ function sampleCanonicalSandbar(x,z){
   let best=null;for(const bar of SANDBARS){const sample=sampleSandbar(bar,x,z);if(!best||sample.boundaryDistance<best.boundaryDistance)best=sample;}return best;
 }
 function fnv1a(text){let hash=0x811c9dc5;for(let i=0;i<text.length;i++){hash^=text.charCodeAt(i);hash=Math.imul(hash,0x01000193)>>>0;}return hash>>>0;}
-const HASH_INPUT=[MAINLAND_LOOP,...SANDBARS.flatMap(bar=>bar.loop)].map(point=>`${point[0].toFixed(3)},${point[1].toFixed(3)}`).join('|');
+const HASH_INPUT=[...MAINLAND_LOOP,...SANDBARS.flatMap(bar=>bar.loop)].map(point=>`${point[0].toFixed(3)},${point[1].toFixed(3)}`).join('|');
 export const BOUNDARY_IDENTITY_HASH=`fnv1a32:${fnv1a(HASH_INPUT).toString(16).padStart(8,'0')}`;
 export const CANONICAL_COAST_MODEL=freeze({
   schema:'H_EARTH_OW01_CANONICAL_COAST_MODEL_v1',

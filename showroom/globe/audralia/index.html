@@ -11,7 +11,7 @@
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/app.mjs">
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs">
   <link rel="modulepreload" href="../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js">
-  <link rel="stylesheet" href="./index.css?v=AUDRALIA_PRESENTATION_POLISH_v1">
+  <link rel="stylesheet" href="./index.css?v=AUDRALIA_PRESENTATION_POLISH_v2">
 </head>
 <body>
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
@@ -41,23 +41,23 @@
       <canvas
         class="audralia-world-canvas"
         data-h-earth-map-wide-canvas
-        aria-label="Interactive Audralia world. One finger looks around, two fingers travel, pinch together moves closer and down, and spreading fingers apart moves farther away and up."
+        aria-label="Interactive Audralia world. One finger looks around, two fingers travel across the world, pinch moves closer and spread moves farther away."
       ></canvas>
       <p class="audralia-sr-only" data-h-earth-diagnostic aria-live="polite"></p>
     </section>
 
-    <footer class="audralia-live-help" aria-label="How to move around Audralia">
-      <div class="audralia-help-touch" aria-label="Touch controls">
-        <span class="audralia-help-item"><strong>1 finger</strong><span>Look around</span></span>
-        <span class="audralia-help-item"><strong>2 fingers</strong><span>Travel across the world</span></span>
-        <span class="audralia-help-item"><strong>Pinch together</strong><span>Move closer · go down</span></span>
-        <span class="audralia-help-item"><strong>Spread apart</strong><span>Move farther · go up</span></span>
+    <footer class="audralia-live-help" aria-label="How to explore Audralia">
+      <div class="audralia-help-touch audralia-help-grid" aria-label="Touch controls">
+        <span><strong>1 finger</strong><small>Look around</small></span>
+        <span><strong>2 fingers</strong><small>Travel across the world</small></span>
+        <span><strong>Pinch together</strong><small>Move closer · go down</small></span>
+        <span><strong>Spread apart</strong><small>Move farther · go up</small></span>
       </div>
-      <div class="audralia-help-pointer" aria-label="Mouse and keyboard controls">
-        <span class="audralia-help-item"><strong>Drag</strong><span>Look around</span></span>
-        <span class="audralia-help-item"><strong>Mouse wheel</strong><span>Move closer / farther</span></span>
-        <span class="audralia-help-item"><strong>W A S D</strong><span>Travel</span></span>
-        <span class="audralia-help-item"><strong>Focus Gratitude</strong><span>Return to the known region</span></span>
+      <div class="audralia-help-pointer audralia-help-grid" aria-label="Mouse and keyboard controls">
+        <span><strong>Drag</strong><small>Look around</small></span>
+        <span><strong>Mouse wheel</strong><small>Move closer / farther</small></span>
+        <span><strong>W A S D · arrows</strong><small>Travel across the world</small></span>
+        <span><strong>Focus Gratitude</strong><small>Return if you get lost</small></span>
       </div>
     </footer>
   </main>
@@ -133,6 +133,6 @@
   </script>
   <script type="module" src="../h-earth/terrain-estate-construction-v1/app.mjs"></script>
   <script type="module" src="./celestial-checkpoint-1.mjs"></script>
-  <script type="module" src="./audralia-presentation-polish.mjs"></script>
+  <script type="module" src="./audralia-presentation-polish.mjs?v=AUDRALIA_PRESENTATION_POLISH_v2"></script>
 </body>
 </html>

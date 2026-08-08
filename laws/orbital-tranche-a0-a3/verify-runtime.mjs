@@ -18,11 +18,11 @@ if(fs.existsSync('laws/orbital-tranche-a0-a3/common-grammar.js')){
   assert(c.dragProgress(-54,180,1,24)<0,'left drag produces forward orbital progress');
   assert(c.dragProgress(54,180,1,24)>0,'right drag produces reverse orbital progress');
   assert(Math.abs(c.dragProgress(90,180,0,24))<0.2,'story 1 reverse boundary applies resistance');
-  assert(c.dragDirection(-0.3,0)===1,'left displacement commits forward');
-  assert(c.dragDirection(0.3,0)===-1,'right displacement commits reverse');
-  assert(c.dragDirection(-0.05,-0.6)===1,'left flick commits forward');
-  assert(c.dragDirection(0.05,0.6)===-1,'right flick commits reverse');
-  assert(c.dragDirection(0.1,0.1)===0,'small gesture snaps back');
+  assert(c.dragDirection(-0.2,0)===1,'moderate left displacement commits forward');
+  assert(c.dragDirection(0.2,0)===-1,'moderate right displacement commits reverse');
+  assert(c.dragDirection(-0.05,-0.3)===1,'left flick commits forward');
+  assert(c.dragDirection(0.05,0.3)===-1,'right flick commits reverse');
+  assert(c.dragDirection(0.05,0.05)===0,'tiny gesture may snap back');
 }
 
 assert(manifest.stories[0].route==='/laws/research/applied-investigations/','story1 route');
@@ -31,9 +31,13 @@ assert(manifest.stories[2].route==='/laws/research/methods-and-models/','story3 
 assert(manifest.stories[3].route==='/laws/categories/flow/signals/','story4 outward boundary');
 assert(runtimeSource.includes("CALIBRATION_END=1"),'A1-A2 calibration range');
 assert(runtimeSource.includes('laws-orbital-scene-viewport'),'persistent scene viewport exists');
-assert(runtimeSource.includes('prepareScene'),'neighbor scene is prepared before commit');
-assert(runtimeSource.includes('layoutScenes'),'story body participates in drag interpolation');
-assert(runtimeSource.includes('page moves with your hand'),'gesture cue describes full-scene behavior');
+assert(runtimeSource.includes('bindPointerSurface(state.viewport)'),'page body itself owns horizontal gestures');
+assert(runtimeSource.includes('layoutScenes(state.livePageProgress'),'neighbor arrival preserves live finger position');
+assert(runtimeSource.includes("endPointer=(e,endType)"),'pointer end resolver exists');
+assert(runtimeSource.includes("endType==='pointercancel'?'gesture-cancel-resolved':'gesture'"),'pointercancel resolves actual gesture instead of forcing snapback');
+assert(!runtimeSource.includes('cancelled?0:core.dragDirection'),'legacy forced-cancel snapback removed');
+assert(!runtimeSource.includes("lostpointercapture',e=>"),'capture loss no longer forces cancellation');
+assert(runtimeSource.includes('COMMIT_DISTANCE=24'),'direct manipulation commit distance is explicit');
 assert(runtimeSource.includes('history.pushState'),'in-document route state is preserved');
 assert(runtimeSource.includes("lawsOrbitalSceneCommit='in-document'"),'scene commit is explicitly in-document');
 assert(runtimeSource.includes("location.assign(stories[targetIndex].route)"),'outward/fail-closed full route remains available');
@@ -42,10 +46,12 @@ console.log(JSON.stringify({
   status:'PASS',
   boundedTraversal:true,
   canonicalOrderPreserved:true,
-  continuousDragContract:true,
-  gestureCommitAndSnapback:true,
   fullSceneDrag:true,
-  neighborScenePreloaded:true,
+  pageBodyGestureSurface:true,
+  neighborArrivalPreservesLiveProgress:true,
+  androidPointerCancelResolvesDisplacement:true,
+  forcedCancelSnapbackRemoved:true,
+  directCommitDistancePx:24,
   calibrationRange:'STORY_01_TO_STORY_02',
   inDocumentCommit:true,
   story3AdapterStillWithheld:true

@@ -1,0 +1,72 @@
+{
+  "schema": "METHODS_MODELS_BOUNDED_MANIFESTATION_CANDIDATE_v1",
+  "version": "1.0.0",
+  "candidateId": "M1R1_METHOD_PROCEDURE_FIELD",
+  "status": "CONSTRUCTED_NONPUBLIC_PENDING_HARD_GATE_REENTRY",
+  "authority": {
+    "operation": "METHODS_MODELS_BOUNDED_MANIFESTATION_EXPERIMENT_AUTHORITY_v1",
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+    "law": "M_i_MAY_EXPRESS_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR"
+  },
+  "revisionLineage": {
+    "predecessorCandidateId": "M1_METHOD_PROCEDURE_FIELD",
+    "predecessorCandidateCommit": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+    "predecessorPerceptualEvaluationHead": "8366ed385ca8349cddc30cb93df4c2f84136aa0f",
+    "predecessorDisposition": "FAIL_PERCEPTUAL_EVALUATION_REVISION_REQUIRED_WITHIN_MANIFESTATION_SCOPE",
+    "contractConflict": false
+  },
+  "scope": {
+    "manifested": "METHODS_AND_ALL_FIFTEEN_SOURCE_BOUND_METHOD_STAGES_WITH_DECLARED_METHOD_DEPENDENCIES",
+    "semanticPopulationChangeFromM1": "NONE",
+    "declaredRelationChangeFromM1": "NONE",
+    "omittedAuthorizedOntology": ["IMI","UCIC","MODEL_REGISTRY","PROSPECTIVE_FINAL_REPORT_PORTFOLIO","HUMAN_AND_3D_CONSTRUCT","SOURCE_BOUND_RESULT_TO_CLAIM_RELATIONS"],
+    "omissionLaw": "NONMANIFESTATION_IN_M1R1_CREATES_NO_DENIAL_RECLASSIFICATION_OR_SUPERSESSION"
+  },
+  "sources": {
+    "method": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/method-content-registry.v1.json",
+    "objects": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/scientific-object-registry.v1.json",
+    "topology": "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/semantic-interaction-topology-contract.v1.json",
+    "binding": "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/embodiment-binding-contract.v1.json",
+    "gates": "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/contextual-architecture-hard-gates.v1.json",
+    "scientificBase": "19a7e6405b7f4a9d9041c8c158e1552fb2a5edd2",
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865"
+  },
+  "manifestation": {
+    "class": "TWO_D_RESPONSIVE_DIRECTIONAL_PROCEDURE_FIELD",
+    "interaction": "BOUND_NODE_PREVIEW_COMMIT_FOCUS_MOVE",
+    "edgeMeaning": "DECLARED_METHOD_DEPENDENCY_ONLY",
+    "dependencyDirectionCue": "SOURCE_TO_TARGET_ARROWHEAD",
+    "selectedRelationCue": "INCOMING_AND_OUTGOING_DECLARED_RELATIONS_ONLY",
+    "wideRealization": "SPATIAL_FIELD",
+    "narrowRealization": "TWO_COLUMN_WHOLE_TOPOLOGY_REFLOW_WITHOUT_HORIZONTAL_FRAGMENTATION",
+    "positionDistanceGroupingMeaning": "NONE",
+    "orientation": "PERSISTENT_Q_CONTEXT_WITH_HUMAN_READABLE_RELATION_LABELS",
+    "accessibleRoute": "NATIVE_BOUND_NODE_KEYBOARD_OR_ASSISTIVE_ACTIVATION",
+    "causalAuditTrace": "ACTION_TARGET_TRANSFORMATION_INFORMATION_DELTA"
+  },
+  "repairTargets": {
+    "P1_DEPENDENCY_DIRECTION_NOT_PERCEPTIBLE": "ADD_DIRECTIONAL_MORPHOLOGY_TO_EXISTING_DECLARED_DEPENDENCY_CONNECTORS_WITHOUT_NEW_RELATIONS",
+    "P2_RESPONSIVE_TOPOLOGY_FRAGMENTATION": "REFLOW_SAME_BOUND_NODES_AND_RELATIONS_TO_FIT_NARROW_FIELD_WITHOUT_HORIZONTAL_SCROLL",
+    "secondarySelectedRelationIsolation": "EMPHASIZE_ONLY_INCIDENT_DECLARED_RELATIONS_FOR_ACTIVE_REFERENT",
+    "secondaryCustodySalience": "STRENGTHEN_TEXTUAL_CUSTODY_CUE_WITHOUT_GROUPING_AUTHORITY",
+    "secondaryOrientationDensity": "HUMANIZE_DISPLAY_OF_EXACT_RELATION_IDENTIFIERS_WITHOUT_SEMANTIC_REWRITE"
+  },
+  "hardGatePolicy": {
+    "terms": ["I_EMBODIMENT","I_LOCUS","I_ORIENTATION","I_ROUTE_EQUIVALENCE"],
+    "operator": "AND",
+    "count": 4,
+    "aggregateOverrideAllowed": false,
+    "causalTraceHardGate": false
+  },
+  "prohibitions": {
+    "TStarMutation": true,
+    "BStarMutation": true,
+    "ontologyExpansion": true,
+    "scientificRelationFromLayout": true,
+    "scientificMutationFromInteraction": true,
+    "claimCeilingUpgrade": true,
+    "publicMethodsMutation": true,
+    "publicPromotion": true
+  }
+}

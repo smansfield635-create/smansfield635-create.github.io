@@ -1,0 +1,208 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_v1",
+  "version": "1.0.0",
+  "operation": "TESTS_L0_L1_NAVIGATION_SHELL_AUTHORITY_v1",
+  "status": "FROZEN_CONSTRUCTION_AUTHORITY_CANDIDATE",
+  "operationClass": "ADDITIVE_HIGHER_ORDER_NAVIGATION_LAYER",
+  "primaryObject": "TESTS_L0_L1_NAVIGATION_SHELL",
+  "purpose": "ESTABLISH_HUMAN_NAVIGATION_OF_THE_TESTS_SCIENTIFIC_ENVIRONMENT_BEFORE_DESCENT_INTO_VALIDATED_INSTRUMENTS_PROCEDURES_EXPERIMENTS_MODELS_OR_EVIDENCE_ROUTES",
+  "authorityDiscipline": {
+    "researchFirstLaw": "RESEARCH_COMES_FIRST",
+    "researchFirstLockedDeclaration": "RESEARCH COMES F.I.R.S.T.",
+    "firstExpansion": {
+      "F": "FLOW",
+      "I": "INTEGRITY",
+      "R": "REALITY",
+      "S": "STRUCTURE",
+      "T": "TEST"
+    },
+    "threadContextAuthority": "PROHIBITED",
+    "speculativeContextInheritance": "PROHIBITED",
+    "priorPrototypeAuthorityByExistence": "PROHIBITED",
+    "absenceOfCurrentAuthorityMeansPermissionToInherit": false,
+    "unresolvedAuthorityDisposition": "FAIL_CLOSED_NOT_MANIFESTED",
+    "currentExplicitDirectiveRole": "CONSTRUCTION_INPUT_ONLY_UNTIL_FROZEN_IN_REPOSITORY_AUTHORITY",
+    "repositoryAuthorityRequirement": "EVERY_MANIFESTED_OBJECT_RELATION_EVIDENCE_ROUTE_AND_DEEP_ENTRY_MUST_RESOLVE_TO_AN_EXPLICIT_AUTHORITY_POINTER"
+  },
+  "controllingArchitecture": {
+    "domainRelationship": "RESEARCH_AUTHORITY_BIDIRECTIONAL_TESTS_ENVIRONMENT",
+    "researchRole": "INDEPENDENT_AUTHORITATIVE_DOMAIN_FOR_INVESTIGATIONS_DATASETS_ANALYSES_PAPERS_EMPIRICAL_FINDINGS_AND_RESEARCH_SPECIFIC_PROVENANCE",
+    "testsRole": "OPERATIONAL_ENVIRONMENT_THAT_TESTS_COMPARES_RELATES_AND_PROJECTS_STANDING_WITHOUT_BECOMING_A_DUPLICATE_RESEARCH_REPOSITORY",
+    "testsProjections": ["METHODS", "MODELS", "EXPERIMENTS", "EVIDENCE"],
+    "eResearchRule": ["REFERENCE", "STANDING", "ROUTE"],
+    "evidenceAuthorityVocabulary": ["RESEARCH_AUTHORITY", "TEST_AUTHORITY"],
+    "ambiguousEvidenceOwnershipPermitted": false
+  },
+  "lawsChamberReconciliation": {
+    "lawsRole": "SUPPLIES_CONSTRAINTS_ADMISSIBILITY_FIRST_STRUCTURE_AND_TEST_BOUNDARIES",
+    "existingResearchMethodsModelsRoute": "/laws/research/methods-and-models/",
+    "existingResearchMethodsModelsRouteRole": "RESEARCH_CUSTODY_AND_REFERENCE_SURFACE",
+    "testsMethodsSelectorRole": "OPERATIONAL_PROJECTION_CONTROL",
+    "testsModelsSelectorRole": "OPERATIONAL_PROJECTION_CONTROL",
+    "sameObjectByLabelSimilarity": false,
+    "publicRouteRelocationAuthorized": false,
+    "publicLawsMutationAuthorized": false,
+    "interpretation": "RESEARCH_RETAINS_SCIENTIFIC_CUSTODY_WHILE_TESTS_MAY_PROJECT_METHOD_AND_MODEL_OBJECTS_FOR_OPERATION_COMPARISON_AND_TRAVERSAL_ONLY_BY_REFERENCE_TO_AUTHORITY",
+    "prohibitedCollapse": [
+      "RESEARCH_METHODS_MODELS_ROUTE_EQUALS_TESTS_SHELL",
+      "TESTS_PROJECTION_OWNS_RESEARCH_CONTENT",
+      "TESTS_SELECTOR_MEMBERSHIP_CREATES_ONTOLOGY",
+      "RESEARCH_ROUTE_LABEL_DETERMINES_TESTS_OBJECT_IDENTITY"
+    ]
+  },
+  "preservationLaw": {
+    "outsideMutationScope": [
+      "T_STAR",
+      "B_STAR",
+      "M1R2_INTERNALS",
+      "EXISTING_M1R2_VALIDATION_EVIDENCE",
+      "RESEARCH_CONTENT",
+      "RESEARCH_AUTHORITY",
+      "EXISTING_SCIENTIFIC_FINDINGS",
+      "EXISTING_SCIENTIFIC_RELATIONSHIPS",
+      "PUBLIC_METHODS_MODELS_PAGE",
+      "PUBLIC_NAVIGATION",
+      "F4_SOURCE_REGISTRIES",
+      "EXISTING_HARD_GATE_MACHINERY"
+    ],
+    "m1r2Classification": "VALID_DEEP_PROCEDURAL_INSTRUMENT",
+    "m1r2NotClassification": "THE_METHODS_MODELS_PAGE",
+    "m1r2IntegrationPath": ["TESTS", "METHODS", "AUTHORIZED_METHOD_OBJECT", "INSPECT", "ENTER", "M1R2"],
+    "m1r2ReferenceOnlyInitially": true,
+    "m1r2RedefinitionAuthorized": false,
+    "shellAdditionPlusReferenceImpliesMutation": false
+  },
+  "layerModel": {
+    "L_MINUS_1": ["RESEARCH", "TESTS"],
+    "L0": ["METHODS", "MODELS", "EXPERIMENTS", "EVIDENCE"],
+    "L1": "SPATIAL_RELATED_OBJECT_FIELD",
+    "L2": "OBJECT_INSPECTION",
+    "L3": "DECLARED_RELATION_TRAVERSAL_AND_PROVENANCE_ROUTING",
+    "L4": "DEEP_INSTRUMENTS_PROCEDURES_AND_LEGITIMATE_CONTAINED_ENVIRONMENTS",
+    "currentConstructionPrimaryLayers": ["L0", "L1"],
+    "fullFiveLayerConstructionAuthorized": false
+  },
+  "graphicalGrammar": {
+    "sequence": ["ORIENTATION", "EXPLORATION", "INSPECTION", "RELATION", "DEPTH"],
+    "L0Controls": ["METHODS", "MODELS", "EXPERIMENTS", "EVIDENCE"],
+    "L0ControlsAreScientificObjects": false,
+    "L1PrimarySpatialEnvironment": true,
+    "activeObjectPerceptualPrimacy": true,
+    "literalOrbitalImageryRequired": false,
+    "purpose": "NAVIGATIONAL_CONTINUITY_NOT_DECORATIVE_SPECTACLE"
+  },
+  "nonSemanticSpatialityLaw": [
+    "SPATIAL_ADJACENCY_DOES_NOT_IMPLY_SCIENTIFIC_RELATIONSHIP",
+    "SELECTOR_MEMBERSHIP_DOES_NOT_CREATE_ONTOLOGY",
+    "ORBITAL_PLACEMENT_DOES_NOT_CREATE_ONTOLOGY",
+    "SCREEN_DISTANCE_DOES_NOT_EXPRESS_RELATION_STRENGTH",
+    "OBJECT_SCALE_DOES_NOT_EXPRESS_SCIENTIFIC_IMPORTANCE",
+    "ANIMATION_PATH_DOES_NOT_EXPRESS_CAUSAL_PATHWAY",
+    "NAVIGATION_ORDER_DOES_NOT_EXPRESS_SCIENTIFIC_SEQUENCE",
+    "MANIFESTATION_MAY_EXPRESS_AUTHORITY_BUT_MAY_NOT_MANUFACTURE_AUTHORITY"
+  ],
+  "navigationOperations": {
+    "FOCUS": {
+      "meaning": "MOVE_ATTENTION_WITHIN_CURRENT_SPATIAL_FIELD",
+      "opensObject": false,
+      "assertsScientificRelation": false,
+      "descends": false
+    },
+    "INSPECT": {
+      "meaning": "REVEAL_BOUNDED_AUTHORIZED_INFORMATION_WHILE_PRESERVING_ENVIRONMENTAL_ORIENTATION",
+      "authorizedQuestions": ["WHAT_IS_THIS", "CURRENT_STANDING", "WHY_PRESENT_IN_PROJECTION", "DECLARED_CONNECTIONS", "DEEPER_STRUCTURE_EXISTS"],
+      "abandonsEnvironment": false
+    },
+    "FOLLOW": {
+      "meaning": "TRAVERSE_EXPLICITLY_DECLARED_AUTHORITY_BACKED_RELATIONSHIP",
+      "requiresDeclaredRelationAuthority": true,
+      "equivalentToSpatialNeighborMovement": false
+    },
+    "ENTER": {
+      "meaning": "DESCEND_INTO_LEGITIMATE_CONTAINED_INSTRUMENT_PROCEDURE_OR_DEEPER_ENVIRONMENT",
+      "requiresAuthorizedContainment": true,
+      "equivalentToFollow": false
+    }
+  },
+  "provenanceRouting": {
+    "internalTestsTraversal": "PRESERVE_TESTS_ENVIRONMENT_CONTINUITY",
+    "crossDomainResearchTraversal": "VISIBLE_DOMAIN_BOUNDARY_REQUIRED",
+    "crossDomainRequiredState": {
+      "currentDomain": "TESTS",
+      "authorityLocation": "RESEARCH",
+      "destination": "SOURCE_DOMAIN"
+    },
+    "crossDomainGrammarMayMatchOrdinaryTestsNavigation": false,
+    "researchSourceBecomesPartOfTestsByTraversal": false
+  },
+  "initialPopulationRule": {
+    "corpusCompletenessRequired": false,
+    "projectionCount": 1,
+    "objectCountMinimum": 3,
+    "objectCountMaximum": 5,
+    "preferredProjection": "METHODS_IF_AUTHORITY_BACKED_SET_IS_ADEQUATE",
+    "registryBeforeVisualManifestation": true,
+    "placeholderScientificObjectsPermitted": false,
+    "inventedModelsPermitted": false,
+    "inventedExperimentsPermitted": false,
+    "inventedEvidencePermitted": false,
+    "speculativeRelationshipsPermitted": false,
+    "unsupportedInteractionDisposition": "ABSENT"
+  },
+  "minimalCandidateRequirements": [
+    "STABLE_L0_SELECTOR_CONTROL",
+    "ONE_PERCEPTUALLY_DOMINANT_ACTIVE_L1_OBJECT",
+    "MULTIPLE_NEIGHBORING_OBJECTS_RETAINED_SPATIALLY",
+    "BOUNDED_FOCUS_MOVEMENT_INPUT",
+    "FIELD_LIKE_ATTENTION_MOVEMENT_NOT_ORDINARY_VERTICAL_DOCUMENT_TRANSLATION",
+    "INSPECTION_PRESERVES_ORIENTATION",
+    "AT_LEAST_ONE_AUTHORIZED_DECLARED_RELATION_TRAVERSAL_IF_AUTHORITY_SUPPORTS_IT",
+    "AT_LEAST_ONE_VISIBLE_PROVENANCE_ROUTE_IF_LEGITIMATELY_AVAILABLE",
+    "ENTER_ONLY_WHERE_DEEP_STRUCTURE_IS_AUTHORIZED",
+    "M1R2_ATTACHED_AS_UNCHANGED_L4_TARGET_ONLY_IF_PARENT_METHOD_OBJECT_IS_AUTHORITY_BACKED"
+  ],
+  "acceptanceGates": {
+    "A": "AUTHORITY_AND_PROVENANCE",
+    "B": "NAVIGATION_SEMANTICS",
+    "C": "ORIENTATION",
+    "D": "SPATIAL_GRAMMAR",
+    "E": "RELATION_AND_PROVENANCE",
+    "F": "DEPTH_PRESERVATION",
+    "G": "ACCESSIBILITY_AND_INPUT",
+    "H": "PERCEPTUAL_EVALUATION"
+  },
+  "hardFailureConditions": [
+    "RESEARCH_CONTENT_COPIED_INTO_TESTS_AS_LOCAL_AUTHORITY",
+    "AMBIGUOUS_EVIDENCE_AUTHORITY",
+    "SPATIAL_ADJACENCY_PRESENTED_AS_UNAUTHORIZED_SCIENTIFIC_RELATIONSHIP",
+    "SELECTOR_CREATES_OR_CHANGES_ONTOLOGY",
+    "T_STAR_OR_B_STAR_MUTATED",
+    "M1R2_INTERNALS_ALTERED_FOR_SHELL",
+    "M1R2_PRESENTED_AS_WHOLE_METHODS_ENVIRONMENT",
+    "INSPECTION_DESTROYS_ORIENTATION",
+    "FOLLOW_AND_ENTER_SEMANTICALLY_INDISTINGUISHABLE",
+    "CROSS_DOMAIN_RESEARCH_TRAVERSAL_LOOKS_IDENTICAL_TO_TESTS_INTERNAL_NAVIGATION",
+    "PLACEHOLDER_RELATIONSHIPS_INVENTED_FOR_DEMO",
+    "PUBLIC_PAGE_MODIFIED_BEFORE_BOUNDED_EVALUATION",
+    "CONTENT_POPULATION_EXPANDED_BEFORE_NAVIGATION_GRAMMAR_ACCEPTANCE",
+    "THREAD_CONTEXT_USED_AS_OBJECT_OR_RELATION_AUTHORITY",
+    "UNRESOLVED_SOURCE_AUTHORITY_SILENTLY_INHERITED"
+  ],
+  "constructionSequence": [
+    "FREEZE_RESEARCH_TESTS_PROVENANCE_NAVIGATION_CONTRACT",
+    "EXTRACT_BOUNDED_OBJECT_PROJECTION_REGISTRY_FROM_CURRENT_AUTHORITY",
+    "SELECT_ONE_PROJECTION_AND_THREE_TO_FIVE_GENUINE_OBJECTS",
+    "CONSTRUCT_NONPUBLIC_L0_L1_SHELL",
+    "ADD_MINIMUM_L2_INSPECTION_BEHAVIOR",
+    "DEMONSTRATE_ONE_LEGITIMATE_L3_RELATIONSHIP_OR_PROVENANCE_PATH_WHERE_AUTHORITY_PERMITS",
+    "ATTACH_M1R2_AS_UNCHANGED_L4_DEEP_ENTRY_TARGET",
+    "RUN_AUTHORITY_RUNTIME_ACCESSIBILITY_PERCEPTUAL_AND_FRESH_VERIFICATION_GATES",
+    "CONDUCT_EXPLICIT_HUMAN_PERCEPTUAL_USER_EVALUATION",
+    "ONLY_AFTER_SUCCESSFUL_DISPOSITION_PROPOSE_BROADER_MODELS_EXPERIMENTS_EVIDENCE_POPULATION"
+  ],
+  "immediateNextExecutableObject": "AUTHORITY_BACKED_OBJECT_PROJECTION_REGISTRY",
+  "visualCandidateAuthorizedBeforeRegistry": false,
+  "publicMutationAuthorized": false,
+  "scientificClaimUpgradeAuthorized": false,
+  "mergeAuthorityGrantedByContract": false
+}

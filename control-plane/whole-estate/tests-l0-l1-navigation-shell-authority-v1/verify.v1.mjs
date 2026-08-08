@@ -39,7 +39,10 @@ assert(ledger.explicitNonSources.includes('PRIOR_PROTOTYPE_DEFAULTS'), 'prototyp
 assert(ledger.sources.some((s) => s.id === 'LAWS_CP6_1_AUTHORITY_MAP' && s.blob === '2d71a35533908b34e2c8ef988de4ce1bebfa0182'), 'laws source pinned');
 assert(ledger.sources.some((s) => s.id === 'WHOLE_ESTATE_AUTHORITY_AND_OWNERSHIP_MATRIX' && s.blob === 'c24c86b89d0650dd597988d4b3148bec41304b4a'), 'estate authority pinned');
 assert(ledger.sources.some((s) => s.id === 'METHODS_MODELS_ROLE_CONSTITUTION' && s.mergeCommit === 'b2533139bacbf876f818892a06c691824fa216dd'), 'Methods/Models constitution pinned');
-assert(ledger.sources.some((s) => s.id === 'M1R2_DEEP_PROCEDURAL_INSTRUMENT' && s.head === '6840cf0b99914263628e937453497e5af3f16166'), 'M1R2 head pinned');
+const m1r2 = ledger.sources.find((s) => s.id === 'M1R2_DEEP_PROCEDURAL_INSTRUMENT');
+assert(m1r2?.head === '6840cf0b99914263628e937453497e5af3f16166', 'M1R2 head pinned');
+assert(m1r2?.candidateCommit === '7ab27d421233433b691ad34a7f79a904b08c7705', 'M1R2 candidate pinned');
+assert(m1r2?.runtimeEvidenceCommit === '07dbb047414fb6c554645fa2db5f262c5d33ae05', 'M1R2 runtime evidence pinned');
 
 assert(registry.requiredFields.includes('AUTHORITY_POINTER'), 'registry authority pointer required');
 assert(registry.requiredFields.includes('RELATION_AUTHORITY_POINTERS'), 'relation authority pointers required');

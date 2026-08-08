@@ -21,7 +21,7 @@ function updateScaleUI(renderer){
     LOCAL:'LOCAL · same evolving cloud systems continue through descent · bounded volumetric density may pass overhead or around the camera · frozen coast, terrain, water, opacity and gestures remain protected.',
     REGION:'REGION · persistent world-anchored cloud systems advect east/north through the frozen 30°N planetary frame · no camera-generated cloud reset.',
     CONTINENT:'CONTINENT · WMO-informed low, middle and high cloud morphologies share one evolving 3D density authority above Gratitude.',
-    PLANETARY:'PLANETARY · evolving volumetric-cloud checkpoint · land, ocean, atmosphere and cloud systems are separate physical layers · no spherical alpha cloud shell.'
+    PLANETARY:'PLANETARY · globe-distributed evolving volumetric weather fields · land, ocean, atmosphere and cloud systems remain separate physical layers · no spherical alpha cloud shell.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -113,13 +113,14 @@ function createCloudLayer(renderer){
   const EPOCH_MS=Date.parse('2026-08-08T03:26:20.000Z');
   const GENUS=Object.freeze({Ci:0,Cc:1,Cs:2,Ac:3,As:4,Ns:5,Sc:6,St:7,Cu:8,Cb:9});
   const SYSTEMS=Object.freeze([
-    Object.freeze({id:'SC_WEST_COASTAL',seed:.17,genus:'Sc',lat:29.0,lon:-4.8,base:0.8,top:2.1,major:220,minor:110,orientation:-18,windE:35,windN:5,shearE:2.0,shearN:-1.0,density:.54,ice:.03,precip:.14,support:.72,phase:.36,lifetime:320}),
-    Object.freeze({id:'CU_SOUTHWEST',seed:.31,genus:'Cu',lat:27.2,lon:-1.8,base:1.1,top:4.2,major:145,minor:92,orientation:12,windE:28,windN:8,shearE:3.0,shearN:1.0,density:.72,ice:.05,precip:.22,support:.82,phase:.28,lifetime:250}),
-    Object.freeze({id:'CB_SOUTHEAST',seed:.47,genus:'Cb',lat:24.5,lon:5.2,base:1.0,top:15.0,major:118,minor:86,orientation:24,windE:20,windN:12,shearE:6.5,shearN:2.0,density:.92,ice:.58,precip:.92,support:.92,phase:.45,lifetime:280}),
-    Object.freeze({id:'AC_EAST',seed:.59,genus:'Ac',lat:30.5,lon:4.5,base:3.5,top:6.5,major:185,minor:122,orientation:-8,windE:50,windN:2,shearE:4.0,shearN:-2.0,density:.48,ice:.20,precip:.12,support:.67,phase:.52,lifetime:360}),
-    Object.freeze({id:'CS_NORTH',seed:.71,genus:'Cs',lat:34.0,lon:-1.0,base:7.5,top:12.0,major:430,minor:225,orientation:15,windE:75,windN:1,shearE:7.0,shearN:1.0,density:.31,ice:.92,precip:.03,support:.70,phase:.50,lifetime:520}),
-    Object.freeze({id:'CI_NORTHEAST',seed:.83,genus:'Ci',lat:33.0,lon:6.5,base:9.5,top:15.5,major:340,minor:105,orientation:29,windE:90,windN:-3,shearE:9.0,shearN:2.0,density:.30,ice:.98,precip:.01,support:.72,phase:.60,lifetime:560}),
-    Object.freeze({id:'AS_SOUTHWEST',seed:.93,genus:'As',lat:27.8,lon:-6.5,base:2.5,top:7.5,major:390,minor:205,orientation:-14,windE:45,windN:4,shearE:3.0,shearN:0.0,density:.40,ice:.32,precip:.32,support:.66,phase:.42,lifetime:430})
+    Object.freeze({id:'SC_GRATITUDE_COASTAL',seed:.17,genus:'Sc',lat:29.0,lon:-4.0,base:0.8,top:2.2,major:520,minor:280,orientation:-18,windE:35,windN:5,shearE:2.0,shearN:-1.0,density:.54,ice:.03,precip:.14,support:.72,phase:.36,lifetime:320}),
+    Object.freeze({id:'CU_GRATITUDE_TRADE',seed:.31,genus:'Cu',lat:27.0,lon:8.0,base:1.1,top:4.4,major:360,minor:220,orientation:12,windE:28,windN:8,shearE:3.0,shearN:1.0,density:.72,ice:.05,precip:.22,support:.82,phase:.28,lifetime:250}),
+    Object.freeze({id:'CB_TROPICAL_EAST',seed:.47,genus:'Cb',lat:17.0,lon:58.0,base:1.0,top:15.5,major:520,minor:300,orientation:24,windE:20,windN:10,shearE:6.5,shearN:2.0,density:.92,ice:.58,precip:.92,support:.92,phase:.45,lifetime:280}),
+    Object.freeze({id:'AC_NORTH_MIDLAT',seed:.59,genus:'Ac',lat:41.0,lon:112.0,base:3.5,top:6.8,major:980,minor:520,orientation:-8,windE:58,windN:2,shearE:4.0,shearN:-2.0,density:.48,ice:.20,precip:.12,support:.67,phase:.52,lifetime:360}),
+    Object.freeze({id:'CS_NORTH_JET',seed:.71,genus:'Cs',lat:56.0,lon:-146.0,base:7.5,top:12.5,major:2300,minor:760,orientation:15,windE:85,windN:1,shearE:7.0,shearN:1.0,density:.31,ice:.92,precip:.03,support:.70,phase:.50,lifetime:520}),
+    Object.freeze({id:'CI_SOUTH_JET',seed:.83,genus:'Ci',lat:-41.0,lon:-38.0,base:9.0,top:15.8,major:2500,minor:460,orientation:29,windE:82,windN:-3,shearE:9.0,shearN:2.0,density:.30,ice:.98,precip:.01,support:.72,phase:.60,lifetime:560}),
+    Object.freeze({id:'AS_SOUTH_STORM',seed:.93,genus:'As',lat:-24.0,lon:158.0,base:2.5,top:7.8,major:1700,minor:920,orientation:-14,windE:48,windN:4,shearE:3.0,shearN:0.0,density:.40,ice:.32,precip:.32,support:.66,phase:.42,lifetime:430}),
+    Object.freeze({id:'NS_EQUATORIAL_WEST',seed:.07,genus:'Ns',lat:4.0,lon:-96.0,base:1.8,top:8.5,major:1550,minor:860,orientation:6,windE:16,windN:3,shearE:2.5,shearN:1.0,density:.58,ice:.28,precip:.78,support:.78,phase:.33,lifetime:410})
   ]);
   const norm=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l);};
   const add=(a,b)=>a.map((v,i)=>v+b[i]);
@@ -497,7 +498,7 @@ async function observerAfterPaint(renderer,atmosphere,clouds){
   try{
     await new Promise(resolve=>setTimeout(resolve,0));
     const module=await import('./observer.mjs'),receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer),pos=receipt?.canonicalPositionalIdentity?.canonicalPositionalIdentityPassed===true,corr=receipt?.surfaceCorrespondence?.pass===true;
-    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_EVOLVING_VOLUMETRIC_CLOUD_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · persistent 30°N cloud systems are evolving in a bounded volumetric pass · judge 3D cloud identity, motion, orbital-to-local continuity, and confirm atmosphere, Mirage, opacity, coast, water, terrain and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
+    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_EVOLVING_VOLUMETRIC_CLOUD_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · globe-distributed persistent cloud fields are evolving in a bounded volumetric pass · judge planetary coverage, 3D cloud identity, motion, orbital-to-local continuity, and confirm atmosphere, Mirage, opacity, coast, water, terrain and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
     window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OP,coherenceOperation:COH,renderer,observerReceipt:receipt,atmosphereEvidence:atmosphere.getEvidence(),cloudEvidence:clouds.getEvidence()});
     window.__H_EARTH_OW01_ATMOSPHERE_LAYER__=atmosphere;
     window.__H_EARTH_OW01_CLOUD_LAYER__=clouds;

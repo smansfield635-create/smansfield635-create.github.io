@@ -1,0 +1,111 @@
+{
+  "schema": "METHODS_MODELS_M1_RUNTIME_INTERACTION_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BOUNDED_RUNTIME_INTERACTION_EVIDENCE_WITH_ENVIRONMENTAL_LOADER_LIMITATION",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4"
+  },
+  "candidate": {
+    "candidateCommit": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+    "branch": "agent/methods-models-manifestation-m1-v1",
+    "builderHardGateReceiptHead": "5e451879722bd8d340e722d6fb221a9b1ff500d3",
+    "runtimeVerifierCommit": "0a0dfb0950164f6a35c0491e905b69007b45e0d3",
+    "candidateFilesMutatedByRuntimeStage": false
+  },
+  "byteIdentity": {
+    "status": "PASS_ALL_EIGHT_CANDIDATE_BLOBS_RECONSTRUCTED_TO_EXACT_GIT_IDENTITIES",
+    "candidateBlobs": {
+      "README.md": "2343c968eda1dc4cab49fd071adf499b1d386a22",
+      "binding-plan.v1.json": "93cde1c1a1f943e12535dc4fd5b8b2a8319d89bb",
+      "candidate-manifest.v1.json": "67e66b4f6da16f78575f0e52fa9f95a9f5ca8a52",
+      "manifestation.v1.css": "a409cb0623ad30488bbb62afbaabd27179bc75a2",
+      "manifestation.v1.html": "c01523b6fbece306c87dd9c78deca66f44578ccb",
+      "manifestation.v1.mjs": "11b9c6ce4936f8742ee0316d5750e1fdf580c8ca",
+      "semantic-runtime.v1.mjs": "b57245e49ba49953bc13a788750723ba800424b8",
+      "verification/methods-models-bounded-manifestation-experiment-m1-v1.mjs": "60a831de3ae6a6d39d753ad8ad2caae6018ef2de"
+    },
+    "sourceBlobs": {
+      "method-content-registry.v1.json": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+      "scientific-object-registry.v1.json": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c"
+    },
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865"
+  },
+  "runtimeVerifier": {
+    "path": "verification/methods-models-bounded-manifestation-experiment-m1-runtime-v1.mjs",
+    "sourceSha256AtExecution": "7f383a90676d52e44d8e3217fd72e96ed48173306ff338838c439905e0318381",
+    "executionReceiptSha256": "8c580a61a7a16b2f7b9580783f65b60d2428c82f7753c57b1a943e2c7f6261c4",
+    "runtime": "node-v22.16.0",
+    "browser": "Chromium 144.0.7559.96"
+  },
+  "executionMode": {
+    "class": "CHROMIUM_ABOUT_BLANK_EXACT_CANDIDATE_RUNTIME_HARNESS",
+    "reason": "INSTALLED_CHROMIUM_MANAGED_POLICY_URLBLOCKLIST_STAR_BLOCKED_LOCAL_FILE_LOCAL_HTTP_AND_NETWORK_PAGE_NAVIGATION",
+    "networkClone": "NOT_RUN_DNS_RESOLUTION_UNAVAILABLE",
+    "candidateDom": "EXACT_MANIFESTATION_HTML_DOM_WITH_EXTERNAL_RESOURCE_TAGS_SUPPRESSED_FOR_HARNESS_LOADING_ONLY",
+    "candidateCss": "EXACT",
+    "semanticRuntime": "EXACT_ES_MODULE_BYTES_LOADED_AS_BLOB_MODULE",
+    "manifestationRuntime": "EXACT_EXCEPT_SINGLE_SEMANTIC_RUNTIME_IMPORT_LOCATOR_SUBSTITUTION_TO_VERIFIED_BLOB_MODULE",
+    "sourceRegistryLoading": "HARNESS_FETCH_ADAPTER_RETURNED_EXACT_RECONSTRUCTED_F4_JSON_BYTES",
+    "webCrypto": "ABOUT_BLANK_NOT_SECURE_CONTEXT_DIGEST_POLYFILLED_TO_ALREADY_VERIFIED_METHOD_SEQUENCE_SHA256",
+    "sourceSemanticMutationIntroducedByHarness": false
+  },
+  "evaluation": {
+    "assertionsPassed": 28,
+    "assertionsFailed": 0,
+    "initialBoundButtons": 16,
+    "renderedMethodStages": 15,
+    "renderedDeclaredDependencyRelations": 16,
+    "initialReferent": "METHODS",
+    "pointerInputViaChromiumCDP": "PASS",
+    "touchInputViaChromiumCDP": "PASS",
+    "accessibleBrowserRoute": "PASS_NATIVE_BUTTON_CLICK_DETAIL_ZERO",
+    "physicalKeyboardDeviceClaim": "NONE",
+    "pointerFocusMove": "PASS",
+    "touchFocusMove": "PASS",
+    "accessibleFocusMove": "PASS",
+    "scientificStateHashNonmutation": "PASS",
+    "orientationStateTransition": "PASS",
+    "declaredRelationRenderingIdentity": "PASS",
+    "declaredRelationCountPersistence": "PASS",
+    "nonsemanticFieldInertness": "PASS",
+    "invalidTargetFailsClosed": "PASS_LOCUS_TARGET_MISMATCH",
+    "invalidRouteModalityFailsClosed": "PASS_ROUTE_MODALITY_INVALID",
+    "invalidDispatchReturnsNoMutatedState": "PASS",
+    "sequentialInteractionStatePersistence": "PASS",
+    "auditTraceCap": "PASS_SIX_ENTRIES",
+    "resizeRuntimeStatePreservation": "PASS_NONMUTATION_ONLY",
+    "browserRuntimeErrors": 0,
+    "causalAuditTrace": "PRESENT_NON_GATE"
+  },
+  "evidenceBoundary": {
+    "runtimeAndInteractionEvidence": "PASS",
+    "accessibilityAndResponsiveEquivalence": "NOT_RUN",
+    "perceptualEvaluation": "NOT_RUN",
+    "freshIndependentVerification": "NOT_RUN",
+    "freshNetworkServedBrowserReproduction": "NOT_RUN_ENVIRONMENT_BLOCKED",
+    "userDifferential": "NOT_RUN",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "manifestationBoundary": {
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "legacySemanticInheritance": false,
+    "scientificRelationFromLayout": false,
+    "claimCeilingUpgrade": false,
+    "publicMethodsMutation": false,
+    "publicDefaultPromotion": false
+  },
+  "limitations": [
+    "THIS_IS_RUNTIME_AND_INTERACTION_EVIDENCE_NOT_FRESH_INDEPENDENT_VERIFICATION",
+    "BROWSER_PAGE_NAVIGATION_COULD_NOT_BE_EXECUTED_FROM_THE_COMMITTED_URL_OR_FILE_PATH_BECAUSE_THE_INSTALLED_CHROMIUM_IS_MANAGED_WITH_URLBLOCKLIST_STAR",
+    "WEBCRYPTO_DIGEST_IN_THE_ABOUT_BLANK_HARNESS_USED_THE_ALREADY_VERIFIED_METHOD_SEQUENCE_HASH_BECAUSE_ABOUT_BLANK_IS_NOT_A_SECURE_CONTEXT",
+    "ACCESSIBLE_BROWSER_ROUTE_WAS_EXERCISED_THROUGH_NATIVE_BUTTON_CLICK_DETAIL_ZERO_AND_DOES_NOT_CONSTITUTE_PHYSICAL_KEYBOARD_OR_ASSISTIVE_TECHNOLOGY_DEVICE_EVIDENCE",
+    "RESIZE_CHECK_ESTABLISHED_RUNTIME_STATE_NONMUTATION_ONLY_AND_IS_NOT_RESPONSIVE_EQUIVALENCE_EVIDENCE",
+    "NO_PERCEPTUAL_ACCEPTANCE_USER_DIFFERENTIAL_OR_PUBLIC_PROMOTION_CLAIM"
+  ],
+  "nextLawfulStage": "ACCESSIBILITY_AND_RESPONSIVE_EQUIVALENCE"
+}

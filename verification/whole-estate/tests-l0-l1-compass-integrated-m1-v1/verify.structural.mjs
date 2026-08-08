@@ -113,5 +113,5 @@ const receipt = {
 };
 fs.mkdirSync(path.dirname(RECEIPT), { recursive: true });
 fs.writeFileSync(RECEIPT, JSON.stringify(receipt, null, 2) + "\n");
-console.log(JSON.stringify({ result: receipt.result, assertions, failures: failures.length, receipt: RECEIPT }, null, 2));
+console.log(JSON.stringify({ result: receipt.result, assertions, failures: failures.length, failureDetails: failures, receipt: RECEIPT }, null, 2));
 if (failures.length) process.exit(1);

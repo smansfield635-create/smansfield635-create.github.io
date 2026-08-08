@@ -1,0 +1,131 @@
+{
+  "schema": "METHODS_MODELS_M1_PERCEPTUAL_EVALUATION_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1_METHOD_PROCEDURE_FIELD",
+  "status": "FAIL_PERCEPTUAL_EVALUATION_REVISION_REQUIRED_WITHIN_MANIFESTATION_SCOPE",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "governingLaw": "M_MAY_SEARCH_FOR_AN_EXPRESSION_OF_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR",
+    "postGateFailureDisposition": "REJECT_OR_REVISE_WITHIN_MANIFESTATION_SCOPE_ONLY"
+  },
+  "lineage": {
+    "candidateCommit": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+    "runtimeEvidenceHead": "4825ddb922c2f019b6742799b21cd41d16c2566b",
+    "accessibilityResponsiveVerifierCommit": "f650910f3cfd239ba6d007cae0ea3fe2902c082a",
+    "accessibilityResponsiveEvidenceHead": "f3e77ef4c3f461fd8b738c84ab1356bbdf104982",
+    "candidateFilesMutatedByPerceptualEvaluation": false
+  },
+  "evaluationClass": {
+    "class": "BOUNDED_SOURCE_BOUND_PERCEPTUAL_EVALUATION",
+    "purpose": "DETERMINE_WHETHER_M1_MAKES_FROZEN_SEMANTIC_TOPOLOGY_PERCEPTIBLE_WITHOUT_TREATING_AESTHETIC_PREFERENCE_AS_SEMANTIC_AUTHORITY",
+    "notAestheticRanking": true,
+    "notFreshIndependentVerification": true,
+    "notUserDifferential": true,
+    "notPublicPromotionReview": true
+  },
+  "authoritativeMeaningEvaluated": {
+    "topologyRef": "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/semantic-interaction-topology-contract.v1.json",
+    "methodRegistryRef": "control-plane/methods-information-benchmark/methods-models-integrated-environment-construction-v1/f4-scientific-content-binding/method-content-registry.v1.json",
+    "requiredContainment": "METHODS_CONTAINS_FIFTEEN_SOURCE_BOUND_METHOD_STAGES",
+    "requiredAdjacency": "DECLARED_METHOD_DEPENDENCY_REQUIRES_EDGES_ONLY",
+    "requiredRelationDirectionBasis": "sequence[].requires[]_REQUIRED_STAGE_TO_DEPENDENT_STAGE",
+    "requiredOrientation": "Q_CONTEXT_FOR_SELECTED_REFERENT",
+    "geometryAuthority": "NONE_SEMANTIC_POSITION_DISTANCE_GROUPING_NONAUTHORITATIVE"
+  },
+  "renderEvidence": {
+    "mode": "LOCAL_VISUAL_RECONSTRUCTION_FROM_EXACT_COMMITTED_HTML_CSS_POSITION_TABLE_AND_SOURCE_REGISTRY",
+    "candidateHtmlBlob": "c01523b6fbece306c87dd9c78deca66f44578ccb",
+    "candidateCssBlob": "a409cb0623ad30488bbb62afbaabd27179bc75a2",
+    "candidateManifestationRuntimeBlob": "11b9c6ce4936f8742ee0316d5750e1fdf580c8ca",
+    "methodRegistryBlob": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+    "desktopViewport": {"width": 1440, "height": 900, "fieldClientWidth": 980, "fieldScrollWidth": 1102, "fullyVisibleStagesAtInitialScroll": 12, "declaredEdgesRendered": 16, "directionMarkersRendered": 0},
+    "mobileViewport": {"width": 390, "height": 844, "fieldClientWidth": 326, "fieldScrollWidth": 1102, "fullyVisibleStagesAtInitialScroll": 2, "intersectingStagesAtInitialScroll": 4, "declaredEdgesRendered": 16, "directionMarkersRendered": 0},
+    "responsiveFieldWidthRatioMobile": 3.380368098159509,
+    "candidateCodeProvidesSelectedReferentRecentering": false,
+    "candidateCodeProvidesRelationDirectionMarker": false,
+    "candidateCodeProvidesSelectedIncidentRelationHighlighting": false
+  },
+  "criteria": {
+    "ENTITY_AND_LOCUS_LEGIBILITY": {
+      "status": "PASS",
+      "basis": "STAGE_NUMBER_NAME_AND_CUSTODY_ARE_VISIBLE_ON_MANIPULABLE_STAGE_NODES_AND_ACTIVE_SELECTION_HAS_DISTINCT_VISUAL_STATE"
+    },
+    "METHOD_CONTAINMENT_LEGIBILITY": {
+      "status": "PASS_BOUNDED",
+      "basis": "METHODS_IS_VISUALLY_SUPERORDINATE_WITH_STAGE_FIELD_BENEATH_IT_AND_Q_CONTEXT_EXPOSES_METHODS_PARENT_BUT_CONTAINMENT_IS_NOT_EXPRESSED_AS_A_SEPARATE_RELATION_MARK"
+    },
+    "DECLARED_DEPENDENCY_EXISTENCE_LEGIBILITY": {
+      "status": "PASS",
+      "basis": "SIXTEEN_DRAWN_CONNECTORS_CORRESPOND_TO_THE_SIXTEEN_DECLARED_REQUIRES_EDGES"
+    },
+    "DECLARED_DEPENDENCY_DIRECTION_LEGIBILITY": {
+      "status": "FAIL_MATERIAL",
+      "basis": "ALL_DECLARED_DEPENDENCY_CONNECTORS_USE_THE_SAME_UNDIRECTED_PATH_STYLE_WITH_NO_ARROWHEAD_TERMINAL_MARKER_OR_OTHER_SOURCE_TARGET_CUE_SO_REQUIRES_DIRECTION_IS_NOT_PERCEPTIBLE_FROM_THE_FIELD"
+    },
+    "PROCEDURE_SEQUENCE_LEGIBILITY": {
+      "status": "PASS_BOUNDED",
+      "basis": "STAGE_NUMBERS_ONE_THROUGH_FIFTEEN_EXPLICITLY_CARRY_ORDER_WHILE_GEOMETRY_REMAINS_DECLARED_NONSEMANTIC"
+    },
+    "CUSTODY_LEGIBILITY": {
+      "status": "PASS_BOUNDED_LOW_SALIENCE",
+      "basis": "SOURCE_ANALYST_OUTCOME_AND_SCORING_CUSTODY_ARE_TEXTUALLY_PRESENT_ON_STAGE_NODES_BUT_NOT_STRONGLY_DIFFERENTIATED_PERCEPTUALLY"
+    },
+    "ORIENTATION_CONTEXT_LEGIBILITY": {
+      "status": "PASS_BOUNDED",
+      "basis": "REQUIRED_Q_FIELDS_REMAIN_PRESENT_BUT_RELATION_ARRAYS_ARE_RENDERED_AS_DENSE_MACHINE_IDENTIFIERS_AND_THE_ORIENTATION_SURFACE_IS_SPATIALLY_SEPARATED_FROM_THE_FIELD_ON_NARROW_VIEWPORTS"
+    },
+    "RESPONSIVE_GLOBAL_TOPOLOGY_LEGIBILITY": {
+      "status": "FAIL_MATERIAL",
+      "basis": "AT_390PX_THE_1102PX_FIELD_REQUIRES_MORE_THAN_THREE_VIEWPORT_WIDTHS_OF_HORIZONTAL_EXPLORATION_AND_ONLY_TWO_OF_FIFTEEN_STAGES_ARE_FULLY_VISIBLE_AT_INITIAL_SCROLL_SO_THE_PROCEDURE_GRAPH_IS_PERCEIVED_AS_FRAGMENTS_RATHER_THAN_A_COHERENT_TOPOLOGY"
+    },
+    "NONSEMANTIC_GEOMETRY_DISCIPLINE": {
+      "status": "PASS",
+      "basis": "THE_PAGE_EXPLICITLY_STATES_POSITION_DISTANCE_AND_GROUPING_CARRY_NO_SCIENTIFIC_RELATION_AND_ONLY_DECLARED_RELATION_CONNECTORS_ARE_RENDERED_AS_EDGES"
+    }
+  },
+  "materialFindings": [
+    {
+      "id": "P1_DEPENDENCY_DIRECTION_NOT_PERCEPTIBLE",
+      "severity": "MATERIAL",
+      "contractObject": "T_STAR_A_METHOD_DEPENDENCY",
+      "finding": "CONNECTIVITY_IS_VISIBLE_BUT_REQUIRED_TO_DEPENDENT_DIRECTION_IS_NOT",
+      "manifestationLocalRepairAvailable": true
+    },
+    {
+      "id": "P2_RESPONSIVE_TOPOLOGY_FRAGMENTATION",
+      "severity": "MATERIAL",
+      "contractObject": "PERCEPTUAL_MANIFESTATION_OF_SOURCE_BOUND_PROCEDURE_TOPOLOGY",
+      "finding": "NARROW_VIEWPORT_PRESERVES_INFORMATION_AND_OPERATIONS_BUT_DOES_NOT_PRESERVE_COHERENT_GRAPH_PERCEPTION",
+      "manifestationLocalRepairAvailable": true
+    }
+  ],
+  "secondaryFindings": [
+    "SELECTED_STAGE_DOES_NOT_VISUALLY_EMPHASIZE_ITS_INCOMING_AND_OUTGOING_DECLARED_RELATIONS",
+    "CUSTODY_IS_SOURCE_BOUND_AND_PRESENT_BUT_VISUALLY_LOW_SALIENCE",
+    "Q_RELATION_VALUES_USE_MACHINE_STYLE_IDENTIFIERS_THAT_ARE_SEMANTICALLY_EXACT_BUT_PERCEPTUALLY_DENSE",
+    "DESKTOP_INITIAL_FIELD_REQUIRES_HORIZONTAL_OVERFLOW_FOR_FULL_VISIBILITY_OF_TERMINAL_STAGES"
+  ],
+  "disposition": {
+    "perceptualEvaluation": "FAIL_REVISION_REQUIRED",
+    "candidateAccepted": false,
+    "candidateRejectedTerminally": false,
+    "revisionAuthorizedUnderExistingManifestationAuthority": true,
+    "contractConflict": false,
+    "contractConflictReceiptRequired": false,
+    "TStarReopeningRequired": false,
+    "BStarReopeningRequired": false,
+    "ontologyReopeningRequired": false,
+    "freshVerification": "NOT_RUN_NOT_REACHED",
+    "userDifferential": "NOT_RUN_NOT_REACHED",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "lawfulRevisionEnvelope": [
+    "ADD_DIRECTIONAL_MORPHOLOGY_TO_EXISTING_DECLARED_DEPENDENCY_CONNECTORS_WITHOUT_CREATING_NEW_RELATIONS",
+    "MAKE_SELECTED_STAGE_INCOMING_AND_OUTGOING_DECLARED_RELATIONS_PERCEPTUALLY_DISTINCT_WITHOUT_CHANGING_RELATION_IDENTITY",
+    "INTRODUCE_RESPONSIVE_OVERVIEW_REFLOW_OR_FIT_MECHANISM_THAT_PRESERVES_NONSEMANTIC_GEOMETRY_AND_ALL_DECLARED_RELATIONS",
+    "IMPROVE_CUSTODY_AND_Q_LABEL_PRESENTATION_WITHOUT_TREATING_VISUAL_GROUPING_AS_NEW_CONTAINMENT_OR_ADJACENCY",
+    "PRESERVE_STAGE_NUMBERS_AS_THE_EXPLICIT_SOURCE_BOUND_ORDER_CUE"
+  ],
+  "nextLawfulStage": "REVISE_M1_WITHIN_EXISTING_MANIFESTATION_AUTHORITY_THEN_REENTER_REQUIRED_CONFORMANCE_AND_EVIDENCE_SEQUENCE_FOR_THE_NEW_CANDIDATE_IDENTITY"
+}

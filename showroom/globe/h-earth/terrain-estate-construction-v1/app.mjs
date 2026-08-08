@@ -15,10 +15,10 @@ function updateScaleUI(renderer){
   if(brandNode)brandNode.textContent=`Audralia · Gratitude · OW01 · ${scale.toLowerCase()}`;
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
-    LOCAL:'LOCAL · restored high-density canonical terrain · sand is terrain material · gesture intent lock active · inspect coast, basin, Harbor, and peaks.',
-    REGION:'REGION · same canonical surface · two-finger travel and target-locked pinch are separated by gesture intent.',
-    CONTINENT:'CONTINENT · same resolved Gratitude surface · no camera-dependent geographic substitution.',
-    PLANETARY:'PLANETARY · same Gratitude surface on Audralia; other continents remain noncanonical previews.'
+    LOCAL:'LOCAL · restored high-density terrain · canonical conforming coast · curved sandbars · sand remains terrain material · gesture intent lock active.',
+    REGION:'REGION · one Gratitude boundary shared by land and shallow water · no triangle-clipped coast · two-finger travel and target-locked pinch preserved.',
+    CONTINENT:'CONTINENT · same canonical coastline and terrain identity · no camera-dependent geography · inspect macro silhouette for blob regression.',
+    PLANETARY:'PLANETARY · Gratitude masks one planetary ocean from the same boundary · unresolved future continents remain atmospheric, not authoritative blobs.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -104,7 +104,7 @@ async function observerAfterPaint(renderer){
   try{
     await new Promise(resolve=>setTimeout(resolve,0));
     const module=await import('./observer.mjs'),receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer),pos=receipt?.canonicalPositionalIdentity?.canonicalPositionalIdentityPassed===true,corr=receipt?.surfaceCorrespondence?.pass===true;
-    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_COLLABORATIVE_PASS_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL PASS · 12/12 anchors · Mirage-solved surface preserved · gesture intent lock active · judge two-finger travel, pinch stability, and coastline smoothness.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
+    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_COASTLINE_REPLACEMENT_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL PASS · 12/12 anchors · shared boundary ${receipt.boundaryIdentityHash||'verified'} · conforming coast · judge shards, sandbar shape, Mirage, and touch travel.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
     window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OP,coherenceOperation:COH,renderer,observerReceipt:receipt});
   }catch(error){console.warn('AUDRALIA_OW01_OBSERVER_FAILED',error);setStatus('REVIEW','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);}
 }
@@ -112,13 +112,13 @@ async function observerAfterPaint(renderer){
 async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw Error('H_EARTH_OW01_CANVAS_MISSING');
-    setStatus('world…','IMPORTING_COLLABORATIVE_PASS');
-    setDiagnostic('Preserving the Mirage-solved canonical world while repairing touch intent and coastline boundary resolution…');
+    setStatus('world…','IMPORTING_COASTLINE_REPLACEMENT');
+    setDiagnostic('Loading the frozen OW01 coastline replacement while preserving Mirage-solved camera behavior and touch intent…');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const module=await import('./renderer.mjs');
-    setStatus('building…','BUILDING_COLLABORATIVE_PASS');
+    setStatus('building…','BUILDING_COASTLINE_REPLACEMENT');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const renderer=module.createMapWideEnvironmentRenderer(canvas);renderer.render();wire(renderer);updateScaleUI(renderer);setStatus('REVIEW','VISUAL_READY_USER_REVIEW_REQUIRED');requestAnimationFrame(()=>observerAfterPaint(renderer));
   }catch(error){fail('INITIALIZATION',error);}
 }
-setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting OW01 collaborative touch-and-coast correction inspector…');initialize();
+setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting OW01 canonical coastline replacement inspector…');initialize();

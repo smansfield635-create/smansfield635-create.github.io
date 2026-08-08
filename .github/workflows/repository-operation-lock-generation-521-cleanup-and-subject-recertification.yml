@@ -1,0 +1,192 @@
+name: Repository Operation Lock Generation 521 Cleanup and Subject Recertification
+
+on:
+  push:
+    branches:
+      - agent/repository-operation-lock-generation-521-cleanup-v1
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-operation-lock-generation-521-cleanup-v1
+  cancel-in-progress: false
+
+env:
+  CERTIFIED_INFRASTRUCTURE_HEAD: 6f8b665bd9b5021a459dfbf887deb95fb1ae844e
+  CERTIFIED_MANAGER_BLOB: e34303e22687c3b875d4d2cbf3b60f5124742903
+  VALIDATION_SUBJECT_HEAD: e1660c46fb94657723d88693fb48ceef39c533a1
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  GENERATION_521_ACQUISITION_COMMIT: 651c4f741514540ed36d61fb79e20ddb88e924f6
+  GENERATION_521_LEDGER_BLOB: 0c810249e374333a73a4985db8643acf214beb6a
+  GENERATION_521_OPERATION: A31265873904
+  GENERATION_521_SCOPE: ACTIVATION:31265873904:1
+
+jobs:
+  explicit-generation-521-closure:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CERTIFIED_INFRASTRUCTURE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Close stranded generation 521 using certified infrastructure
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CERTIFIED_INFRASTRUCTURE_HEAD"
+          test "$(git rev-parse "$CERTIFIED_INFRASTRUCTURE_HEAD:tools/operation-intake/repository-operation-lock-manager.v1.mjs")" = "$CERTIFIED_MANAGER_BLOB"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {closeRemote} from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+          const e=process.env;
+          const closure=await closeRemote({
+            repository:e.REPOSITORY,
+            lockRef:e.LOCK_REF,
+            token:e.GITHUB_TOKEN,
+            operationId:e.GENERATION_521_OPERATION,
+            lockScope:e.GENERATION_521_SCOPE,
+            lockGeneration:521,
+            terminalDisposition:'FAIL_CLOSED',
+            acquisitionCommitSha:e.GENERATION_521_ACQUISITION_COMMIT,
+            committedLedgerBlobSha:e.GENERATION_521_LEDGER_BLOB,
+            stabilizationMaxReads:24,
+            stabilizationDelayMs:125,
+            closureCasMaxAttempts:8
+          });
+          if(!closure.lockReleased)throw Error('GENERATION_521_NOT_RELEASED');
+          if(closure.stabilizationMode!=='ACQUISITION_ANCHORED_BOUNDED_REREAD')throw Error('GENERATION_521_NOT_CLOSED_WITH_CERTIFIED_MODE');
+          fs.writeFileSync('/tmp/generation-521-cleanup-receipt.json',JSON.stringify({
+            schema:'REPOSITORY_OPERATION_LOCK_GENERATION_521_EXPLICIT_CLEANUP_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            certifiedInfrastructureHead:e.CERTIFIED_INFRASTRUCTURE_HEAD,
+            certifiedManagerBlob:e.CERTIFIED_MANAGER_BLOB,
+            failedOccurrence:{runId:31265873904,operationId:e.GENERATION_521_OPERATION,lockScope:e.GENERATION_521_SCOPE,lockGeneration:521,acquisitionCommitSha:e.GENERATION_521_ACQUISITION_COMMIT,committedLedgerBlobSha:e.GENERATION_521_LEDGER_BLOB},
+            cleanupDisposition:'FAIL_CLOSED',
+            cleanupReason:'FAILED_REMOTE_CAS_CERTIFICATION_OCCURRENCE_CLOSED_AFTER_READ_AFTER_WRITE_STABILIZATION_REPAIR_WAS_CERTIFIED',
+            closure,
+            manualDeletionPerformed:false,
+            silentNormalizationPerformed:false,
+            validationSubjectMutation:false
+          },null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-lock-generation-521-cleanup-v1
+          path: /tmp/generation-521-cleanup-receipt.json
+          if-no-files-found: error
+
+  post-cleanup-frozen-subject-recertification:
+    needs: explicit-generation-521-closure
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      REPOSITORY: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CERTIFIED_INFRASTRUCTURE_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Re-run repaired certifier against exact frozen PR 759 subject
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$CERTIFIED_INFRASTRUCTURE_HEAD"
+          test "$(git rev-parse "$CERTIFIED_INFRASTRUCTURE_HEAD:tools/operation-intake/repository-operation-lock-manager.v1.mjs")" = "$CERTIFIED_MANAGER_BLOB"
+          git cat-file -e "$VALIDATION_SUBJECT_HEAD^{commit}"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          import {ensureRef,acquireRemote,closeRemote} from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+          const e=process.env,d='/tmp/post-cleanup-recertification';
+          const scope=`POST_REPAIR_SUBJECT_CERTIFICATION:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`;
+          const digest=x=>createHash('sha256').update(x).digest('hex');
+          const common={repository:e.REPOSITORY,lockRef:e.LOCK_REF,token:e.GITHUB_TOKEN,lockScope:scope,governingHead:e.VALIDATION_SUBJECT_HEAD,requestDigest:digest(scope+':request'),procedureLocatorDigest:digest(scope+':procedure'),barrierFile:d+'/go'};
+          fs.mkdirSync(d,{recursive:true});
+          await ensureRef({repository:e.REPOSITORY,lockRef:e.LOCK_REF,baseHead:e.VALIDATION_SUBJECT_HEAD,token:e.GITHUB_TOKEN});
+          const pending=[
+            acquireRemote({...common,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),
+            acquireRemote({...common,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})
+          ];
+          for(let i=0;i<300&&!(fs.existsSync(d+'/a')&&fs.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));
+          if(!(fs.existsSync(d+'/a')&&fs.existsSync(d+'/b')))throw Error('PREWRITE_BARRIER_NOT_REACHED');
+          const a=JSON.parse(fs.readFileSync(d+'/a','utf8')),b=JSON.parse(fs.readFileSync(d+'/b','utf8'));
+          if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION_BLOB_DIVERGENCE');
+          fs.writeFileSync(d+'/go','');
+          const results=await Promise.all(pending),winners=results.filter(x=>x.lockAcquired),losers=results.filter(x=>!x.lockAcquired);
+          if(winners.length!==1||losers.length!==1)throw Error('CAS_CARDINALITY');
+          const winner=winners[0],loser=losers[0];
+          if(loser.errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(loser.httpStatus))throw Error('CAS_LOSER_CLASSIFICATION');
+          const closure=await closeRemote({...common,operationId:winner.operationId,lockGeneration:winner.lockGeneration,terminalDisposition:'PASS_CLOSED',acquisitionCommitSha:winner.acquisitionCommitSha,committedLedgerBlobSha:winner.committedLedgerBlobSha,stabilizationMaxReads:24,stabilizationDelayMs:125,closureCasMaxAttempts:8});
+          if(!closure.lockReleased||closure.stabilizationMode!=='ACQUISITION_ANCHORED_BOUNDED_REREAD')throw Error('SUBJECT_RECERTIFICATION_CLOSURE_FAILURE');
+          fs.writeFileSync('/tmp/post-cleanup-frozen-subject-recertification.json',JSON.stringify({
+            schema:'REPOSITORY_OPERATION_LOCK_POST_CLEANUP_FROZEN_SUBJECT_RECERTIFICATION_v1',
+            result:'PASS_CLOSED',
+            validationSubjectHead:e.VALIDATION_SUBJECT_HEAD,
+            certificationInfrastructureHead:e.CERTIFIED_INFRASTRUCTURE_HEAD,
+            certifiedManagerBlob:e.CERTIFIED_MANAGER_BLOB,
+            validationSubjectAndInfrastructureSeparated:e.VALIDATION_SUBJECT_HEAD!==e.CERTIFIED_INFRASTRUCTURE_HEAD,
+            winner,
+            loser,
+            closure,
+            generation521CleanupPrerequisite:'PASS_REQUIRED_BY_JOB_DEPENDENCY',
+            pullRequest759Mutation:false
+          },null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-lock-post-cleanup-frozen-subject-recertification-v1
+          path: /tmp/post-cleanup-frozen-subject-recertification.json
+          if-no-files-found: error
+
+  cleanup-and-recertification-package:
+    needs: [explicit-generation-521-closure, post-cleanup-frozen-subject-recertification]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-lock-generation-521-cleanup-v1
+          path: /tmp/package/cleanup
+      - uses: actions/download-artifact@v4
+        with:
+          name: repository-operation-lock-post-cleanup-frozen-subject-recertification-v1
+          path: /tmp/package/recertification
+      - name: Bind cleanup and frozen-subject recertification
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/package/final
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const c='/tmp/package/cleanup/generation-521-cleanup-receipt.json';
+          const r='/tmp/package/recertification/post-cleanup-frozen-subject-recertification.json';
+          const read=p=>fs.readFileSync(p),json=p=>JSON.parse(read(p)),hash=p=>createHash('sha256').update(read(p)).digest('hex');
+          const cj=json(c),rj=json(r);
+          if(cj.result!=='PASS_CLOSED'||rj.result!=='PASS_CLOSED')throw Error('UPSTREAM_NOT_PASS');
+          if(cj.cleanupDisposition!=='FAIL_CLOSED'||rj.validationSubjectHead!==process.env.VALIDATION_SUBJECT_HEAD||rj.certificationInfrastructureHead!==process.env.CERTIFIED_INFRASTRUCTURE_HEAD)throw Error('BOUND_IDENTITY_MISMATCH');
+          fs.writeFileSync('/tmp/package/final/cleanup-and-recertification-receipt.json',JSON.stringify({
+            schema:'REPOSITORY_OPERATION_LOCK_FAILURE_521_CLEANUP_AND_FROZEN_SUBJECT_RECERTIFICATION_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            certifiedInfrastructureHead:process.env.CERTIFIED_INFRASTRUCTURE_HEAD,
+            certifiedManagerBlob:process.env.CERTIFIED_MANAGER_BLOB,
+            validationSubjectHead:process.env.VALIDATION_SUBJECT_HEAD,
+            generation521CleanupDisposition:'FAIL_CLOSED',
+            generation521CleanupReceiptSha256:hash(c),
+            frozenSubjectRecertificationReceiptSha256:hash(r),
+            pullRequest759RerunPerformed:false,
+            pullRequest759Mutation:false,
+            authorityPromotionPerformed:false
+          },null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-lock-failure-521-cleanup-and-recertification-v1
+          path: /tmp/package/final/cleanup-and-recertification-receipt.json
+          if-no-files-found: error

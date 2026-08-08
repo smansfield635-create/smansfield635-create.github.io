@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { execFileSync } from "node:child_process";
 import { chromium } from "playwright";
 
 const ROOT = process.cwd();
@@ -32,6 +33,7 @@ function semanticSnapshot(state) {
 function sameSemanticSnapshot(a, b) {
   return JSON.stringify(semanticSnapshot(a)) === JSON.stringify(semanticSnapshot(b));
 }
+function git(...args) { return execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim(); }
 async function waitReady(page) {
   await page.waitForFunction(() => Boolean(window.__M1_COMPASS_INTEGRATED__), null, { timeout: 10000 });
 }
@@ -43,6 +45,7 @@ async function screenshot(page, name) {
 }
 
 fs.mkdirSync(OUT, { recursive: true });
+const candidateHead = git("rev-parse", "HEAD");
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: "no-preference" });
 const page = await context.newPage();
@@ -57,8 +60,8 @@ try {
   check(initial.registryValidated === true, "REGISTRY_VALIDATED_AT_BOOT");
   check(initial.depth === "L_MINUS_1", "INITIAL_DEPTH_L_MINUS_1", initial.depth);
   check(initial.focus === "METHODS", "INITIAL_FOCUS_METHODS", initial.focus);
-  check(sameSet(initial.objectIds, EXPECTED_OBJECTS), "INITIAL_OBJECT_SET_EXACT");
-  check(sameSet(initial.relationIds, EXPECTED_RELATIONS), "INITIAL_RELATION_SET_EXACT");
+  check(sameSet(initial.objectIds, EXPECTED_OBJECTS), "INITIAL_OBJECT_SET_EXACT", JSON.stringify(initial.objectIds));
+  check(sameSet(initial.relationIds, EXPECTED_RELATIONS), "INITIAL_RELATION_SET_EXACT", JSON.stringify(initial.relationIds));
   const baselineSemantic = semanticSnapshot(initial);
 
   const priorContext = await page.evaluate(() => window.__M1_COMPASS_INTEGRATED__.restorePriorContext());
@@ -86,27 +89,39 @@ try {
 
   const visibleCards = await page.locator(".information-tab").evaluateAll((nodes) => nodes.map((node) => {
     const rect = node.getBoundingClientRect();
-    return { id: node.dataset.objectId, width: rect.width, height: rect.height, opacity: Number(getComputedStyle(node).opacity), transform: node.style.transform };
+    return {
+      id: node.dataset.objectId,
+      active: node.dataset.active,
+      width: rect.width,
+      height: rect.height,
+      opacity: Number(getComputedStyle(node).opacity),
+      zIndex: Number(getComputedStyle(node).zIndex),
+      transform: node.style.transform,
+      standing: node.querySelector(".tab-standing")?.textContent || ""
+    };
   }));
   check(visibleCards.every((card) => card.width > 0 && card.height > 0 && card.opacity >= 0.5), "C05_NEIGHBORS_RETAINED_AND_VISIBLE", JSON.stringify(visibleCards));
-  check(visibleCards.every((card) => card.transform.includes("translate3d")), "C08_RUNTIME_3D_PROJECTION_APPLIED");
-  check(visibleCards.filter((card) => card.id === "METHODS")[0]?.transform.includes("scale(1.000)"), "C04_ACTIVE_OBJECT_DOMINANCE_METHODS");
+  check(visibleCards.every((card) => card.transform.includes("translate3d")), "C08_RUNTIME_3D_PROJECTION_APPLIED", JSON.stringify(visibleCards));
+  const methodsCard = visibleCards.find((card) => card.id === "METHODS");
+  const maxZ = Math.max(...visibleCards.map((card) => card.zIndex));
+  check(methodsCard?.active === "true" && methodsCard?.zIndex === maxZ, "C04_ACTIVE_OBJECT_DOMINANCE_METHODS", JSON.stringify(visibleCards));
+  check(visibleCards.every((card) => !card.standing.includes("[object Object]")), "CURRENT_STANDING_RENDERED_AS_AUTHORITY_TEXT", JSON.stringify(visibleCards.map((card) => card.standing)));
 
   await page.evaluate(() => window.__M1_COMPASS_INTEGRATED__.setFocus("ROUTE_OPERATOR_PLATFORM"));
   state = await getState(page);
-  check(state.focus === "ROUTE_OPERATOR_PLATFORM", "C04_PROGRAMMATIC_FOCUS");
+  check(state.focus === "ROUTE_OPERATOR_PLATFORM", "C04_PROGRAMMATIC_FOCUS", JSON.stringify(state));
   check(sameSemanticSnapshot(initial, state), "PROGRAMMATIC_FOCUS_SEMANTIC_INVARIANCE");
   const programmaticReceipt = await page.evaluate(() => window.__M1_COMPASS_LAST_FOCUS__);
   check(programmaticReceipt?.semanticMutation === false, "PROGRAMMATIC_FOCUS_DECLARED_NONSEMANTIC");
 
   await page.locator('[data-object-id="PROSPECTIVE_FINAL_REPORT_PORTFOLIO"]').click();
   state = await getState(page);
-  check(state.focus === "PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "C04_POINTER_FOCUS");
+  check(state.focus === "PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "C04_POINTER_FOCUS", JSON.stringify(state));
   check(sameSemanticSnapshot(initial, state), "POINTER_FOCUS_SEMANTIC_INVARIANCE");
 
   await page.locator('[data-object-id="PROSPECTIVE_FINAL_REPORT_PORTFOLIO"]').press("ArrowLeft");
   state = await getState(page);
-  check(state.focus === "ROUTE_OPERATOR_PLATFORM", "C04_KEYBOARD_FOCUS");
+  check(state.focus === "ROUTE_OPERATOR_PLATFORM", "C04_KEYBOARD_FOCUS", JSON.stringify(state));
   check(sameSemanticSnapshot(initial, state), "KEYBOARD_FOCUS_SEMANTIC_INVARIANCE");
 
   const beforeDrag = state.focus;
@@ -189,7 +204,7 @@ try {
   });
   await corrupt.goto(PAGE_URL, { waitUntil: "networkidle" });
   await corrupt.waitForTimeout(200);
-  check(await corrupt.locator("#field-failure").isVisible(), "CORRUPT_REGISTRY_FAILS_CLOSED");
+  check(await corrupt.locator("#global-failure").isVisible(), "CORRUPT_REGISTRY_FAILS_CLOSED");
   check((await corrupt.locator(".information-tab").count()) === 0, "CORRUPT_REGISTRY_RENDERS_ZERO_OBJECTS");
   check((await corrupt.locator("#relation-paths path").count()) === 0, "CORRUPT_REGISTRY_RENDERS_ZERO_RELATIONS");
   check(await corrupt.evaluate(() => typeof window.__M1_COMPASS_INTEGRATED__ === "undefined"), "CORRUPT_REGISTRY_EXPOSES_NO_READY_API");
@@ -200,7 +215,7 @@ try {
   await missing.route("**/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json", (route) => route.fulfill({ status: 503, body: "withheld" }));
   await missing.goto(PAGE_URL, { waitUntil: "networkidle" });
   await missing.waitForTimeout(200);
-  check(await missing.locator("#field-failure").isVisible(), "MISSING_REGISTRY_FAILS_CLOSED");
+  check(await missing.locator("#global-failure").isVisible(), "MISSING_REGISTRY_FAILS_CLOSED");
   check((await missing.locator(".information-tab").count()) === 0, "MISSING_REGISTRY_RENDERS_ZERO_OBJECTS");
   check(await missing.evaluate(() => typeof window.__M1_COMPASS_INTEGRATED__ === "undefined"), "MISSING_REGISTRY_EXPOSES_NO_READY_API");
   await missingContext.close();
@@ -208,7 +223,7 @@ try {
   const receipt = {
     schema: "TESTS_L0_L1_COMPASS_INTEGRATED_M1_RUNTIME_RECEIPT_v1",
     result: failures.length ? "FAIL_BOUNDED_COMPASS_INTEGRATED_M1_RUNTIME_REVIEW" : "PASS_BOUNDED_COMPASS_INTEGRATED_M1_RUNTIME_REVIEW",
-    candidateHead: process.env.GITHUB_SHA || null,
+    candidateHead,
     browser: await browser.version(),
     assertions,
     failures,

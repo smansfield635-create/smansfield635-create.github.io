@@ -1,0 +1,140 @@
+{
+  "schema": "METHODS_MODELS_M1R2_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1R2_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BOUNDED_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE_WITH_EXTERNAL_ASSISTIVE_DEVICE_LIMITATION",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+    "governingLaw": "M_MAY_SEARCH_FOR_AN_EXPRESSION_OF_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR"
+  },
+  "lineage": {
+    "predecessorPerceptualFailureHead": "ee5ebac36615c5f231c3c4fd0ade9b945d80b5e5",
+    "candidateCommit": "7ab27d421233433b691ad34a7f79a904b08c7705",
+    "builderHardGateReceiptHead": "a37c8fa40ae7ecf89473c7c4786760cb3544e7c4",
+    "runtimeEvidenceHead": "07dbb047414fb6c554645fa2db5f262c5d33ae05",
+    "accessibilityResponsiveVerifierCommit": "f6698345e184ea44ccfc6cdc84a7682fe80cdff8",
+    "branch": "agent/methods-models-manifestation-m1r2-v1",
+    "candidateFilesMutatedByThisStage": false
+  },
+  "byteIdentity": {
+    "status": "PASS_EXECUTED_BYTES_EQUAL_COMMITTED_OR_EXACT_REUSED_GIT_BLOBS",
+    "candidateAndReusedBlobs": {
+      "manifestation.v1.html": "008252335514ea3a00d8bd6d8748f22fe4df9bc4",
+      "manifestation.v1.mjs": "ccda8533435e90f5cd377575ca6ad99e389ec86b",
+      "reusedManifestationCss": "0310b5b941c890dfeb8839a1a9a18ba56a24583e",
+      "reusedSemanticRuntime": "b57245e49ba49953bc13a788750723ba800424b8",
+      "reusedBindingPlan": "4f7ca77ef3058e6c585c1445e3cd7b2719770059",
+      "method-content-registry.v1.json": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+      "scientific-object-registry.v1.json": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c"
+    },
+    "verifierBlob": "86df740275d99bf7eb71715a918bef7c8a1bcdd2",
+    "verifierSourceSha256": "62da32ce01238823f47435d1dbe86e8a33c591fcef2287e9b4ce6a3ad3fd3154",
+    "executionReceiptSha256": "e1bd272d26e3ce2b8d059eca5a017d2b2f805ef212d52030789dfb2a18a53215",
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865"
+  },
+  "execution": {
+    "runtime": "node-v22.16.0",
+    "browser": "Chromium 144.0.7559.96",
+    "class": "CHROMIUM_ABOUT_BLANK_EXACT_BLOB_ACCESSIBILITY_RESPONSIVE_HARNESS",
+    "committedVerifierReproducedAfterCommit": true,
+    "assertionsPassed": 35,
+    "assertionsFailed": 0,
+    "browserRuntimeErrors": 0
+  },
+  "accessibility": {
+    "keyboardTabOrder": "PASS_16_OF_16_SOURCE_ORDER",
+    "keyboardEnterActivation": "PASS_CHROMIUM_KEY_EVENT_PATH",
+    "focusVisible": "PASS_MOBILE_TABLET_DESKTOP",
+    "accessibilityTreeBoundButtons": "PASS_16_OF_16",
+    "accessibilityTreePressedState": "PASS",
+    "liveStatusExposure": "PASS",
+    "pointerKeyboardAssistiveSemanticEquality": "PASS_16_OF_16_OPERATION_TARGET_AND_OUTCOME",
+    "externalPhysicalScreenReaderOrAssistiveDevice": "NOT_RUN"
+  },
+  "responsive": {
+    "profiles": [
+      {
+        "id": "MOBILE",
+        "viewport": "390x844",
+        "fieldClientWidth": 346,
+        "fieldScrollWidth": 346,
+        "horizontalFieldOverflow": false,
+        "allStageControlsInsideField": true
+      },
+      {
+        "id": "TABLET",
+        "viewport": "768x1024",
+        "fieldClientWidth": 683,
+        "fieldScrollWidth": 683,
+        "horizontalFieldOverflow": false,
+        "allStageControlsInsideField": true
+      },
+      {
+        "id": "DESKTOP",
+        "viewport": "1440x900",
+        "fieldClientWidth": 965,
+        "fieldScrollWidth": 1100,
+        "horizontalFieldOverflow": true,
+        "classification": "PRESERVED_EQUIVALENCE_WITH_REMAINING_PERCEPTUAL_QUALITY_QUESTION"
+      }
+    ],
+    "informationFunctionRelationPreservation": "PASS",
+    "declaredRelationIdentity": "PASS_16_OF_16",
+    "directionalMorphology": "PASS_16_OF_16",
+    "targetClearanceMetadata": "PASS_16_OF_16_AT_10PX",
+    "narrowViewportHorizontalFragmentation": "NONE_OBSERVED",
+    "orientationContextRetention": "PASS",
+    "scientificStateNonmutation": "PASS"
+  },
+  "reducedMotion": {
+    "nodeTransitionDuration": "0s",
+    "edgeTransitionDuration": "0s",
+    "informationAndOperationPreservation": "PASS",
+    "declaredRelationsPreserved": "PASS_16_OF_16",
+    "directionAndTargetClearancePreserved": "PASS_16_OF_16",
+    "orientationContextRetention": "PASS",
+    "scientificStateNonmutation": "PASS"
+  },
+  "recovery": {
+    "invalidAccessibleTouchRoute": "REJECT_ROUTE_MODALITY_INVALID",
+    "priorAuthorizedStatePreserved": true,
+    "silentFallback": false
+  },
+  "evidenceBoundary": {
+    "hardGateConformance": "PASS",
+    "runtimeAndInteractionEvidence": "PASS_BOUNDED",
+    "accessibilityAndResponsiveEquivalence": "PASS_BOUNDED",
+    "externalAssistiveTechnologyDeviceExecution": "NOT_RUN",
+    "perceptualReevaluation": "NOT_RUN_FOR_M1R2",
+    "freshIndependentVerification": "NOT_RUN",
+    "userDifferential": "NOT_RUN",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "manifestationBoundary": {
+    "M1R2CandidateMutationDuringStage": false,
+    "M1R1Mutation": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "declaredRelationChange": false,
+    "legacySemanticInheritance": false,
+    "scientificRelationFromLayout": false,
+    "claimCeilingUpgrade": false,
+    "publicMethodsMutation": false,
+    "publicDefaultPromotion": false
+  },
+  "limitations": [
+    "NO_PHYSICAL_SCREEN_READER_OR_EXTERNAL_ASSISTIVE_TECHNOLOGY_DEVICE_EXECUTION",
+    "ASSISTIVE_TECHNOLOGY_EVIDENCE_IS_BOUNDED_TO_NATIVE_BROWSER_ACCESSIBILITY_TREE_EXPOSURE_PLUS_SEMANTIC_ASSISTIVE_ROUTE_EQUIVALENCE",
+    "COMMITTED_PAGE_NAVIGATION_REMAINS_ENVIRONMENT_BLOCKED_SO_EXACT_BLOB_ABOUT_BLANK_HARNESS_WAS_USED",
+    "TARGET_CLEARANCE_PRESERVATION_IS_NOT_PERCEPTUAL_ARROWHEAD_EFFECTIVENESS",
+    "RESPONSIVE_GEOMETRY_CHECKS_ESTABLISH_INFORMATION_FUNCTION_AND_RELATION_PRESERVATION_NOT_PERCEPTUAL_ACCEPTANCE",
+    "DESKTOP_HORIZONTAL_FIELD_OVERFLOW_REMAINS_A_PERCEPTUAL_QUALITY_QUESTION",
+    "NOT_FRESH_INDEPENDENT_VERIFICATION",
+    "NOT_USER_DIFFERENTIAL",
+    "NO_PUBLIC_PROMOTION_CLAIM"
+  ],
+  "nextLawfulStage": "PERCEPTUAL_REEVALUATION_FOR_M1R2"
+}

@@ -1,0 +1,106 @@
+name: Methods F12 R8F Revised Bounded Experiential Prototype Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r8f-revised-bounded-experiential-prototype-v1
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r8f-prototype:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact terminal R8E parent and frozen boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1"
+          test "$(git rev-parse HEAD^)" = "5c570a7f5c0e77b91130fbad3df16abf059a53ee"
+          test "$(git rev-parse 5c570a7f5c0e77b91130fbad3df16abf059a53ee^{tree})" = "b1882a64df1790fe217f6664d1eb49c6391b09b5"
+          test "$(git rev-parse HEAD:$ROOT/r8e-cross-frame-invariance-roundtrip-verification-contract.v1.json)" = "d41ae88ac3911efbd92a646e121e3cf2942d4871"
+          test "$(git rev-parse HEAD:$ROOT/r8e-cross-frame-invariance-roundtrip-verification.v1.mjs)" = "ddc7d5fb7198f5a22847e3c59075ef0a6886d3cc"
+          test "$(git rev-parse HEAD:$ROOT/r8e-cross-frame-invariance-roundtrip-verification.verify.v1.mjs)" = "0c34d9525a12116c4e927ed235d9389aa1cea3c3"
+          test "$(git rev-parse HEAD:$ROOT/r8d-deterministic-coordinate-embedding-engine.v1.mjs)" = "0605d450116b0583592fa2906bca71eb4c2598fa"
+
+      - name: Verify exact R8F payload blobs and syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1"
+          PROTO="$ROOT/r8f-revised-bounded-experiential-prototype"
+          test "$(git rev-parse HEAD:$ROOT/r8f-revised-bounded-experiential-prototype-contract.v1.json)" = "9962da7416c865bc3fd454498e1ed9792f5fc0b2"
+          test "$(git rev-parse HEAD:$ROOT/r8f-revised-bounded-experiential-prototype.verify.v1.mjs)" = "147b68ae9a011ace28c21597214dddba6541d94a"
+          test "$(git rev-parse HEAD:$PROTO/prototype-data.js)" = "981e3c64223bfd2dda2bc00b543e14886711afad"
+          test "$(git rev-parse HEAD:$PROTO/prototype-coordinate-state.js)" = "c2ed3f6ddc0c28434e77a7c50c3200a5a6bda005"
+          test "$(git rev-parse HEAD:$PROTO/prototype-projection-state.js)" = "d1c1a49641f1f8c9b91fecceccf72fff33c65da9"
+          test "$(git rev-parse HEAD:$PROTO/app.js)" = "2156df300bede4a15aabd12e4017802bb2c8ca81"
+          test "$(git rev-parse HEAD:$PROTO/index.html)" = "41facc3a7bba2895b7dc477b49a3a7952b90bbb1"
+          test "$(git rev-parse HEAD:$PROTO/styles.css)" = "c5c5e2a8cfb5ab07c50a56e5190afe7a35361e4c"
+          node -e "JSON.parse(require('fs').readFileSync('$ROOT/r8f-revised-bounded-experiential-prototype-contract.v1.json','utf8'))"
+          node --check "$ROOT/r8f-revised-bounded-experiential-prototype.verify.v1.mjs"
+          node --check "$PROTO/prototype-data.js"
+          node --check "$PROTO/prototype-coordinate-state.js"
+          node --check "$PROTO/prototype-projection-state.js"
+          node --check "$PROTO/app.js"
+
+      - name: Verify terminal R8F native spatial prototype
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1"
+          node "$ROOT/r8f-revised-bounded-experiential-prototype.verify.v1.mjs" | tee r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"status": "PASS_CLOSED"' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"nativeSpatialArchitecture": true' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"spatialModeSelectable": false' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"canonicalDeliveryStateCount": 14' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"coordinateChartCount": 2' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"coordinateEmbeddingConformance": true' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"crossFrameInvariantPreserved": true' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"visiblePrototypeConstructed": true' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"productionCoordinateTransitionRuntimeConstructed": false' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"userDifferential": "NOT_YET_REVIEWED"' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"r8PassClosed": false' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"r9Unlock": false' r8f-revised-bounded-experiential-prototype-verification.json
+          grep -Fq '"nextSubcheckpointOnPass": "R8G_USER_DIFFERENTIAL"' r8f-revised-bounded-experiential-prototype-verification.json
+
+      - name: Prove exact additive R8F terminal diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only 5c570a7f5c0e77b91130fbad3df16abf059a53ee..HEAD | tee r8f-revised-bounded-experiential-prototype-changed-paths.txt
+          test "$(wc -l < r8f-revised-bounded-experiential-prototype-changed-paths.txt)" -eq 9
+          expected="$(mktemp)"
+          cat > "$expected" <<'EOF'
+          .github/workflows/methods-f12-r8f-revised-bounded-experiential-prototype-verify.yml
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype-contract.v1.json
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype.verify.v1.mjs
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype/app.js
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype/index.html
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype/prototype-coordinate-state.js
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype/prototype-data.js
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype/prototype-projection-state.js
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype/styles.css
+          EOF
+          sed -i 's/^          //' "$expected"
+          sort r8f-revised-bounded-experiential-prototype-changed-paths.txt > actual.sorted
+          sort "$expected" > expected.sorted
+          diff -u expected.sorted actual.sorted
+          test -z "$(git diff --diff-filter=MDR --name-only 5c570a7f5c0e77b91130fbad3df16abf059a53ee..HEAD)"
+
+      - name: Preserve exact R8F review candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r8f-revised-bounded-experiential-prototype-review-candidate
+          path: |
+            control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype/
+            control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8f-revised-bounded-experiential-prototype-contract.v1.json
+            r8f-revised-bounded-experiential-prototype-verification.json
+            r8f-revised-bounded-experiential-prototype-changed-paths.txt

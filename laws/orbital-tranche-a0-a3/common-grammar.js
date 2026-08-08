@@ -21,8 +21,8 @@
       return p;
     },
     dragDirection(progress,velocity=0){
-      if(progress<=-0.24||velocity<=-0.45)return 1;
-      if(progress>=0.24||velocity>=0.45)return -1;
+      if(progress<=-0.12||velocity<=-0.25)return 1;
+      if(progress>=0.12||velocity>=0.25)return -1;
       return 0;
     }
   };
@@ -36,6 +36,9 @@
   const MANIFEST='/laws/orbital-tranche-a0-a3/manifest.v1.json';
   const CALIBRATION_START=0;
   const CALIBRATION_END=1;
+  const COMMIT_DISTANCE=24;
+  const COMMIT_VELOCITY=.22;
+  const SETTLE_MS=260;
   const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const normalizePath=value=>{
     try{return new URL(value,location.href).pathname.replace(/\/+/g,'/')}catch{return value||''}
@@ -68,7 +71,9 @@
         cache:new Map(),
         docs:new Map(),
         scenes:new Map(),
-        viewport:null
+        viewport:null,
+        livePageProgress:0,
+        liveCardProgress:0
       };
 
       const shell=document.createElement('section');
@@ -77,7 +82,7 @@
       shell.dataset.semanticType=m.surface.semanticType;
       shell.dataset.wrapPolicy=m.surface.wrapPolicy;
       shell.setAttribute('aria-label','Laws narrative orbit');
-      shell.innerHTML=`<header class="laws-orbital-story__head"><div><p class="laws-orbital-story__eyebrow">Laws · canonical narrative</p><h2 data-orbit-title></h2></div><p class="laws-orbital-story__position" data-orbit-position></p></header><div class="laws-orbital-story__stage" tabindex="0" aria-describedby="laws-orbital-cue"><div class="laws-orbital-story__ring"></div></div><div class="laws-orbital-story__controls"><button class="laws-orbital-story__control" type="button" data-orbit-prev></button><span class="laws-orbital-story__cue" id="laws-orbital-cue">Drag the story field · page moves with your hand</span><button class="laws-orbital-story__control" type="button" data-orbit-next></button></div>`;
+      shell.innerHTML=`<header class="laws-orbital-story__head"><div><p class="laws-orbital-story__eyebrow">Laws · canonical narrative</p><h2 data-orbit-title></h2></div><p class="laws-orbital-story__position" data-orbit-position></p></header><div class="laws-orbital-story__stage" tabindex="0" aria-describedby="laws-orbital-cue"><div class="laws-orbital-story__ring"></div></div><div class="laws-orbital-story__controls"><button class="laws-orbital-story__control" type="button" data-orbit-prev></button><span class="laws-orbital-story__cue" id="laws-orbital-cue">Swipe the card or page · release to settle</span><button class="laws-orbital-story__control" type="button" data-orbit-next></button></div>`;
 
       const stage=shell.querySelector('.laws-orbital-story__stage');
       const ring=shell.querySelector('.laws-orbital-story__ring');
@@ -112,10 +117,11 @@
       };
       setupSceneViewport();
 
-      const spacing=()=>{
+      const cardSpacing=()=>{
         const w=stage.clientWidth||window.innerWidth||320;
-        return window.matchMedia('(max-width:720px)').matches?Math.max(150,w*0.54):Math.min(window.innerWidth*0.23,288);
+        return window.matchMedia('(max-width:720px)').matches?Math.max(150,w*.54):Math.min(window.innerWidth*.23,288);
       };
+      const pageWidth=()=>Math.max(1,state.viewport?.clientWidth||window.innerWidth||320);
 
       const cardMarkup=(story,index,offset)=>`<a class="laws-orbital-story__member" style="--o:${offset}" data-orbit-offset="${offset}" href="${story.route}" data-story-index="${index}" data-member-id="${story.memberId}" data-selected="${index===state.index?'true':'false'}" ${index===state.index?'aria-current="page"':''}><small>Story ${story.position} of ${stories.length}</small><strong>${story.label}</strong></a>`;
 
@@ -150,6 +156,19 @@
         return doc;
       };
 
+      const layoutScenes=(progress=state.livePageProgress,settling=false)=>{
+        if(!state.viewport)return;
+        state.livePageProgress=progress;
+        state.viewport.classList.toggle('is-settling',settling);
+        state.scenes.forEach((record,index)=>{
+          const offset=(index-state.index)+progress;
+          record.node.style.transform=`translate3d(${offset*100}%,0,0) scale(${Math.max(.965,1-Math.abs(offset)*.018)})`;
+          record.node.style.opacity=String(Math.max(.48,1-Math.abs(offset)*.28));
+          record.node.style.pointerEvents=Math.abs(offset)<.01?'auto':'none';
+          record.node.setAttribute('aria-hidden',Math.abs(offset)<.01?'false':'true');
+        });
+      };
+
       const prepareScene=async index=>{
         if(!state.viewport||!isCalibration(index)||state.scenes.has(index))return state.scenes.get(index)||null;
         const doc=await parseStory(index);
@@ -162,34 +181,24 @@
         state.viewport.appendChild(scene);
         const record={node:scene,doc};
         state.scenes.set(index,record);
-        layoutScenes(0);
+        layoutScenes(state.livePageProgress,state.viewport.classList.contains('is-settling'));
+        root.dataset.lawsOrbitalNeighborScene='ready';
         return record;
       };
 
-      const layoutScenes=(progress=0,settling=false)=>{
-        if(!state.viewport)return;
-        state.viewport.classList.toggle('is-settling',settling);
-        state.scenes.forEach((record,index)=>{
-          const offset=(index-state.index)+progress;
-          record.node.style.transform=`translate3d(${offset*100}%,0,0) scale(${Math.max(.965,1-Math.abs(offset)*.018)})`;
-          record.node.style.opacity=String(Math.max(.48,1-Math.abs(offset)*.28));
-          record.node.style.pointerEvents=Math.abs(offset)<.01?'auto':'none';
-          record.node.setAttribute('aria-hidden',Math.abs(offset)<.01?'false':'true');
-        });
-      };
-
-      const renderDrag=p=>{
+      const renderCards=progress=>{
+        state.liveCardProgress=progress;
         const cards=[...ring.querySelectorAll('.laws-orbital-story__member')];
-        const gap=spacing();
+        const gap=cardSpacing();
         const mobile=window.matchMedia('(max-width:720px)').matches;
         let closest=null,closestAbs=Infinity;
         cards.forEach(card=>{
           const base=Number(card.dataset.orbitOffset||0);
-          const e=base+p;
+          const e=base+progress;
           const abs=Math.abs(e);
           if(abs<closestAbs){closestAbs=abs;closest=card}
-          const scale=Math.max(0.72,1-(e*e*0.075));
-          const opacity=Math.max(0.28,1-(e*e*0.18));
+          const scale=Math.max(.72,1-(e*e*.075));
+          const opacity=Math.max(.28,1-(e*e*.18));
           const z=-(e*e*28);
           const ry=e*(mobile?-10:-16);
           card.style.transform=`translate(-50%,-50%) translateX(${e*gap}px) translateZ(${z}px) rotateY(${ry}deg) scale(${scale})`;
@@ -197,11 +206,33 @@
           card.style.zIndex=String(20-Math.round(abs*5));
         });
         cards.forEach(card=>card.classList.toggle('is-gesture-front',card===closest));
-        shell.style.setProperty('--gesture-progress',String(p));
-        if(state.viewport)layoutScenes(p,false);
+        shell.style.setProperty('--gesture-progress',String(progress));
+      };
+
+      const interactionProgress=dx=>{
+        let page=clamp(dx/pageWidth(),-1.08,1.08);
+        let card=clamp(dx/cardSpacing(),-1.15,1.15);
+        const reverseBoundary=(state.index===0&&dx>0)||(state.index===stories.length-1&&dx<0);
+        if(reverseBoundary){page*=.22;card*=.22}
+        return {page,card};
+      };
+
+      const renderFromDx=dx=>{
+        const p=interactionProgress(dx);
+        layoutScenes(p.page,false);
+        renderCards(p.card);
+      };
+
+      const renderSettled=(direction=0)=>{
+        const page=direction?-direction:0;
+        const card=direction?-direction:0;
+        layoutScenes(page,true);
+        renderCards(card);
       };
 
       const clearDrag=()=>{
+        state.livePageProgress=0;
+        state.liveCardProgress=0;
         ring.querySelectorAll('.laws-orbital-story__member').forEach(card=>{
           card.style.removeProperty('transform');
           card.style.removeProperty('opacity');
@@ -209,8 +240,9 @@
           card.classList.remove('is-gesture-front');
         });
         shell.style.removeProperty('--gesture-progress');
-        stage.classList.remove('is-dragging','is-settling');
-        if(state.viewport){state.viewport.classList.remove('is-dragging','is-settling');layoutScenes(0,false)}
+        stage.classList.remove('is-dragging','is-settling','is-committing');
+        state.viewport?.classList.remove('is-dragging','is-settling');
+        layoutScenes(0,false);
       };
 
       const boundary=()=>{
@@ -257,17 +289,12 @@
         syncMetadata(doc);
         state.index=index;
         state.scenes.forEach((entry,sceneIndex)=>{
-          if(sceneIndex===index){
-            entry.node.classList.add('is-current');
-            entry.node.style.position='relative';
-          }else{
-            entry.node.remove();
-            state.scenes.delete(sceneIndex);
-          }
+          entry.node.classList.toggle('is-current',sceneIndex===index);
+          entry.node.style.position=sceneIndex===index?'relative':'absolute';
         });
+        state.livePageProgress=0;
         layoutScenes(0,false);
         renderMembers();
-        clearDrag();
         if(historyMode==='push')history.pushState({lawsStoryIndex:index},'',stories[index].route);
         if(historyMode==='replace')history.replaceState({lawsStoryIndex:index},'',stories[index].route);
         root.dataset.lawsOrbitalPersistentState=stories[index].memberId;
@@ -278,32 +305,31 @@
           el.dataset.orbitalSemanticType='PARALLEL_LENS';
           el.dataset.scientificSequence='false';
         });
-        const neighbor=index===0?1:0;
-        prepareScene(neighbor).catch(()=>{});
+        clearDrag();
       };
 
       const commitToIndex=async(targetIndex,{historyMode='push',source='gesture'}={})=>{
         if(state.mounting||targetIndex===state.index)return;
-        if(targetIndex<0||targetIndex>=stories.length)return boundary();
+        if(targetIndex<0||targetIndex>=stories.length){renderSettled(0);await delay(SETTLE_MS);clearDrag();boundary();return}
         const direction=targetIndex>state.index?1:-1;
         const next=core.stepIndex(state.index,direction,stories.length,'BOUNDED');
-        if(next===state.index)return boundary();
+        if(next===state.index){renderSettled(0);await delay(SETTLE_MS);clearDrag();boundary();return}
         targetIndex=next;
         state.mounting=true;
         stage.classList.remove('is-dragging');
         stage.classList.add('is-settling','is-committing');
-        if(state.viewport)state.viewport.classList.add('is-settling');
+        state.viewport?.classList.remove('is-dragging');
+        state.viewport?.classList.add('is-settling');
         root.dataset.lawsOrbitalTransitionSource=source;
         try{
           if(isCalibration(state.index)&&isCalibration(targetIndex)){
             await prepareScene(targetIndex);
-            renderDrag(direction>0?-1:1);
-            layoutScenes(direction>0?-1:1,true);
-            await delay(280);
+            renderSettled(direction);
+            await delay(SETTLE_MS);
             await promoteCalibrationScene(targetIndex,{historyMode});
           }else{
-            renderDrag(direction>0?-1:1);
-            await delay(240);
+            renderSettled(direction);
+            await delay(220);
             location.assign(stories[targetIndex].route);
             return;
           }
@@ -317,6 +343,92 @@
         }
       };
 
+      const resolveDirection=drag=>{
+        const dx=drag.dx||0;
+        if(Math.abs(dx)>=COMMIT_DISTANCE)return dx<0?1:-1;
+        if(Math.abs(drag.velocity)>=COMMIT_VELOCITY)return drag.velocity<0?1:-1;
+        const cardProgress=interactionProgress(dx).card;
+        return core.dragDirection(cardProgress,drag.velocity);
+      };
+
+      const beginPointer=e=>{
+        if(state.mounting||state.drag)return;
+        if(e.pointerType==='mouse'&&e.button!==0)return;
+        state.drag={
+          id:e.pointerId,
+          owner:e.currentTarget,
+          startX:e.clientX,
+          startY:e.clientY,
+          lastX:e.clientX,
+          lastT:performance.now(),
+          velocity:0,
+          axis:null,
+          dx:0,
+          moved:false
+        };
+        stage.classList.remove('is-settling');
+        state.viewport?.classList.remove('is-settling');
+      };
+
+      const movePointer=e=>{
+        const drag=state.drag;
+        if(!drag||drag.id!==e.pointerId||state.mounting)return;
+        const dx=e.clientX-drag.startX;
+        const dy=e.clientY-drag.startY;
+        drag.dx=dx;
+        if(!drag.axis&&(Math.abs(dx)>5||Math.abs(dy)>5)){
+          drag.axis=Math.abs(dx)>Math.abs(dy)*1.05?'x':'y';
+          if(drag.axis==='x'){
+            drag.owner?.setPointerCapture?.(e.pointerId);
+            stage.classList.add('is-dragging');
+            state.viewport?.classList.add('is-dragging');
+            const candidate=dx<0?state.index+1:state.index-1;
+            if(isCalibration(state.index)&&isCalibration(candidate))prepareScene(candidate).catch(()=>{});
+          }
+        }
+        if(drag.axis!=='x')return;
+        e.preventDefault();
+        const now=performance.now();
+        const dt=Math.max(1,now-drag.lastT);
+        drag.velocity=(e.clientX-drag.lastX)/dt;
+        drag.lastX=e.clientX;
+        drag.lastT=now;
+        drag.moved=drag.moved||Math.abs(dx)>8;
+        renderFromDx(dx);
+        root.dataset.lawsOrbitalLiveDx=String(Math.round(dx));
+      };
+
+      const endPointer=(e,endType)=>{
+        const drag=state.drag;
+        if(!drag||drag.id!==e.pointerId)return;
+        state.drag=null;
+        root.dataset.lawsOrbitalLastPointerEnd=endType;
+        if(drag.axis!=='x')return;
+        if(drag.moved)state.suppressClickUntil=performance.now()+700;
+        const direction=resolveDirection(drag);
+        stage.classList.remove('is-dragging');
+        state.viewport?.classList.remove('is-dragging');
+        root.dataset.lawsOrbitalResolvedDirection=String(direction);
+        if(direction)commitToIndex(state.index+direction,{source:endType==='pointercancel'?'gesture-cancel-resolved':'gesture'});
+        else{
+          stage.classList.add('is-settling');
+          state.viewport?.classList.add('is-settling');
+          renderSettled(0);
+          setTimeout(clearDrag,SETTLE_MS);
+        }
+      };
+
+      const bindPointerSurface=surface=>{
+        if(!surface)return;
+        surface.addEventListener('pointerdown',beginPointer);
+        surface.addEventListener('pointermove',movePointer,{passive:false});
+        surface.addEventListener('pointerup',e=>endPointer(e,'pointerup'));
+        surface.addEventListener('pointercancel',e=>endPointer(e,'pointercancel'));
+        surface.addEventListener('dragstart',e=>e.preventDefault());
+      };
+      bindPointerSurface(stage);
+      bindPointerSurface(state.viewport);
+
       prevButton.addEventListener('click',()=>commitToIndex(state.index-1,{source:'control'}));
       nextButton.addEventListener('click',()=>commitToIndex(state.index+1,{source:'control'}));
       stage.addEventListener('keydown',e=>{
@@ -328,71 +440,14 @@
       stage.addEventListener('wheel',e=>{
         if(cool||state.mounting)return;
         wheel+=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
-        if(Math.abs(wheel)>90){
+        if(Math.abs(wheel)>70){
           e.preventDefault();
           cool=true;
           commitToIndex(state.index+(wheel>0?1:-1),{source:'wheel'});
           wheel=0;
-          setTimeout(()=>cool=false,600);
+          setTimeout(()=>cool=false,500);
         }
       },{passive:false});
-
-      stage.addEventListener('pointerdown',e=>{
-        if(state.mounting)return;
-        if(e.pointerType==='mouse'&&e.button!==0)return;
-        state.drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,lastX:e.clientX,lastT:performance.now(),velocity:0,axis:null,progress:0,moved:false};
-        stage.classList.remove('is-settling');
-        if(state.viewport)state.viewport.classList.remove('is-settling');
-      });
-
-      stage.addEventListener('pointermove',e=>{
-        const drag=state.drag;
-        if(!drag||drag.id!==e.pointerId||state.mounting)return;
-        const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;
-        if(!drag.axis&&(Math.abs(dx)>6||Math.abs(dy)>6)){
-          drag.axis=Math.abs(dx)>Math.abs(dy)*1.1?'x':'y';
-          if(drag.axis==='x'){
-            stage.setPointerCapture?.(e.pointerId);
-            stage.classList.add('is-dragging');
-            if(state.viewport)state.viewport.classList.add('is-dragging');
-            const candidate=dx<0?state.index+1:state.index-1;
-            if(isCalibration(state.index)&&isCalibration(candidate))prepareScene(candidate).catch(()=>{});
-            renderDrag(0);
-          }
-        }
-        if(drag.axis!=='x')return;
-        e.preventDefault();
-        const now=performance.now(),dt=Math.max(1,now-drag.lastT);
-        drag.velocity=(e.clientX-drag.lastX)/dt;
-        drag.lastX=e.clientX;drag.lastT=now;
-        drag.moved=drag.moved||Math.abs(dx)>8;
-        drag.progress=core.dragProgress(dx,spacing(),state.index,stories.length);
-        renderDrag(drag.progress);
-      },{passive:false});
-
-      const finishDrag=(e,cancelled=false)=>{
-        const drag=state.drag;
-        if(!drag||drag.id!==e.pointerId)return;
-        state.drag=null;
-        if(drag.axis!=='x')return;
-        if(drag.moved)state.suppressClickUntil=performance.now()+650;
-        const direction=cancelled?0:core.dragDirection(drag.progress,drag.velocity);
-        stage.classList.remove('is-dragging');
-        if(state.viewport)state.viewport.classList.remove('is-dragging');
-        if(direction){
-          commitToIndex(state.index+direction,{source:'gesture'});
-        }else{
-          stage.classList.add('is-settling');
-          if(state.viewport)state.viewport.classList.add('is-settling');
-          renderDrag(0);
-          setTimeout(clearDrag,280);
-        }
-      };
-
-      stage.addEventListener('pointerup',e=>finishDrag(e,false));
-      stage.addEventListener('pointercancel',e=>finishDrag(e,true));
-      stage.addEventListener('lostpointercapture',e=>{if(state.drag&&state.drag.id===e.pointerId)finishDrag(e,true)});
-      stage.addEventListener('dragstart',e=>e.preventDefault());
 
       shell.addEventListener('click',e=>{
         const card=e.target.closest?.('.laws-orbital-story__member');
@@ -404,6 +459,10 @@
       },true);
 
       document.addEventListener('click',e=>{
+        if(performance.now()<state.suppressClickUntil){
+          const anchor=e.target.closest?.('a[href]');
+          if(anchor){e.preventDefault();e.stopPropagation();return}
+        }
         const anchor=e.target.closest?.('a[href]');
         if(!anchor||shell.contains(anchor)||e.defaultPrevented)return;
         if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||anchor.target==='_blank')return;
@@ -422,18 +481,20 @@
       });
 
       window.addEventListener('resize',()=>{
-        if(stage.classList.contains('is-dragging')&&state.drag)renderDrag(state.drag.progress);
+        if(state.drag?.axis==='x')renderFromDx(state.drag.dx);
+        else layoutScenes(0,false);
       },{passive:true});
 
       renderMembers();
       history.replaceState({lawsStoryIndex:state.index},'',location.pathname+location.search+location.hash);
       root.dataset.lawsOrbitalStoryStatus='ready';
-      root.dataset.lawsOrbitalGestureMode=isCalibration(state.index)?'A1_A2_FULL_SCENE_DRAG':'ORBIT_STAGE_ONLY';
+      root.dataset.lawsOrbitalGestureMode=isCalibration(state.index)?'A1_A2_DIRECT_SCENE_CONTROL':'ORBIT_STAGE_ONLY';
       root.dataset.lawsOrbitalPersistentRange='STORY_01_TO_STORY_02';
       root.dataset.lawsOrbitalDocumentReload='false';
+      root.dataset.lawsOrbitalCommitDistance=String(COMMIT_DISTANCE);
       if(isCalibration(state.index)){
         const neighbor=state.index===0?1:0;
-        prepareScene(neighbor).then(()=>{root.dataset.lawsOrbitalNeighborScene='ready'}).catch(()=>{root.dataset.lawsOrbitalNeighborScene='unavailable'});
+        prepareScene(neighbor).catch(()=>{root.dataset.lawsOrbitalNeighborScene='unavailable'});
       }
     })
     .catch(fail);

@@ -72,10 +72,28 @@ jobs:
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
             const page=await browser.newPage();await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
-            const pageErrors=[];page.on('pageerror',e=>pageErrors.push(String(e?.stack||e)));
+            const pageErrors=[],consoleErrors=[];
+            page.on('pageerror',e=>pageErrors.push(String(e?.stack||e)));
+            page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});
             await page.goto('http://127.0.0.1:4173/showroom/globe/audralia/weather-presentation-reconciliation/',{waitUntil:'domcontentloaded',timeout:60000});
-            await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:60000});
-            await page.waitForFunction(()=>window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector,{timeout:60000});
+            let ready=false;
+            try{
+              await page.waitForFunction(()=>window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime()?.invariants?.pass===true,{timeout:30000});
+              ready=true;
+            }catch(error){
+              const diagnostic=await page.evaluate(()=>({
+                statusText:document.querySelector('[data-h-earth-status]')?.textContent?.trim()||null,
+                status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null,
+                loaderStage:document.querySelector('[data-audralia-loader-stage]')?.textContent?.trim()||null,
+                reconciliationPresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__),
+                runtimePresent:Boolean(window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.getRuntime?.()),
+                previewError:window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW_ERROR__||null,
+                celestialError:window.__AUDRALIA_CELESTIAL_CONTEXT_ERROR__||null
+              }));
+              console.error('RECONCILIATION_BOOT_DIAGNOSTIC',JSON.stringify({diagnostic,pageErrors,consoleErrors,waitError:String(error)},null,2));
+            }
+            if(!ready){await browser.close();process.exit(1);}
+            await page.waitForFunction(()=>window.__AUDRALIA_CELESTIAL_STATE__?.getSolarVector,{timeout:30000});
             const result=await page.evaluate(()=>{
               const proof=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__;
               const ids0=proof.canonicalObjects.map(x=>x.ID_i);
@@ -104,7 +122,7 @@ jobs:
                 status:document.querySelector('[data-h-earth-status]')?.dataset?.status||null
               };
             });
-            console.log(JSON.stringify({result,pageErrors},null,2));
+            console.log(JSON.stringify({result,pageErrors,consoleErrors},null,2));
             const failed=pageErrors.length||!result.localPass||!result.planetaryPass||!result.idsStable||result.localActive>result.localCap||result.cameraSemanticsMutated||result.zoomSemanticsMutated||result.travelSemanticsMutated||result.localCutoff<500||result.planetaryCutoff!==0||result.skyEvidence.nearTerrainVeil!==false||result.exteriorEvidence.nearFieldExtinctionAuthority!==false||!result.celestial||!String(result.status).includes('USER_REVIEW_REQUIRED');
             await browser.close();if(failed)process.exit(1);
           })().catch(error=>{console.error(error);process.exit(1);});

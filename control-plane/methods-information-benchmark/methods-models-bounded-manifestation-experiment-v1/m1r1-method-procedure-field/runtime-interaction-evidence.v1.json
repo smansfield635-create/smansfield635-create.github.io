@@ -1,0 +1,123 @@
+{
+  "schema": "METHODS_MODELS_M1R1_RUNTIME_INTERACTION_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1R1_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BOUNDED_RUNTIME_INTERACTION_EVIDENCE_WITH_ENVIRONMENTAL_LOADER_LIMITATION",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4",
+    "governingLaw": "M_MAY_SEARCH_FOR_AN_EXPRESSION_OF_T_STAR_AND_B_STAR_BUT_MAY_NOT_REDEFINE_T_STAR_OR_B_STAR"
+  },
+  "lineage": {
+    "predecessorPerceptualFailureHead": "8366ed385ca8349cddc30cb93df4c2f84136aa0f",
+    "candidateCommit": "f805dfddde9b9d8ce274f211d07aff0a3c784b2f",
+    "builderHardGateReceiptHead": "e7321b91a42c3e2e057299c60204a05f62bbf639",
+    "branch": "agent/methods-models-manifestation-m1r1-v1",
+    "candidateFilesMutatedByRuntimeStage": false
+  },
+  "byteIdentity": {
+    "status": "PASS_RUNTIME_CRITICAL_CANDIDATE_AND_SOURCE_BLOBS_EQUAL_EXECUTED_BYTES",
+    "candidateBlobs": {
+      "manifestation.v1.html": "191afadda12946948ad32110862d88765119ca3f",
+      "manifestation.v1.css": "0310b5b941c890dfeb8839a1a9a18ba56a24583e",
+      "manifestation.v1.mjs": "512b41c2967f6be0649235e6b1a38db156fe5554",
+      "semantic-runtime.v1.mjs": "b57245e49ba49953bc13a788750723ba800424b8",
+      "binding-plan.v1.json": "4f7ca77ef3058e6c585c1445e3cd7b2719770059"
+    },
+    "sourceBlobs": {
+      "method-content-registry.v1.json": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+      "scientific-object-registry.v1.json": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c"
+    },
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865"
+  },
+  "executionInstrument": {
+    "class": "LOCAL_EXACT_BLOB_CHROMIUM_CDP_HARNESS",
+    "sourceSha256": "f5bd0624c28b533260d22db2db6f0d0fc757073add6847a375c86a9f8fa6240c",
+    "executionReceiptSha256": "d25c56634226a7956217edc5b37d1055bd88ed89334e649374d1997be4e7b49b",
+    "runtime": "node-v22.16.0",
+    "browser": "Chromium 144.0.7559.96",
+    "committedVerifier": false,
+    "claimLaw": "THE_EXECUTION_INSTRUMENT_HASH_IDENTIFIES_THE_LOCAL_VERIFIER_BYTES_BUT_DOES_NOT_CONSTITUTE_A_COMMITTED_REPOSITORY_VERIFIER"
+  },
+  "executionMode": {
+    "class": "CHROMIUM_ABOUT_BLANK_EXACT_CANDIDATE_RUNTIME_HARNESS",
+    "reason": "NETWORK_GIT_TRANSPORT_COULD_NOT_RESOLVE_GITHUB_COM_AND_INSTALLED_CHROMIUM_ENVIRONMENT_REQUIRES_BOUNDED_LOADER_SUBSTITUTION",
+    "networkClone": "NOT_RUN_DNS_RESOLUTION_UNAVAILABLE",
+    "candidateDom": "EXACT_MANIFESTATION_HTML_DOM_WITH_EXTERNAL_RESOURCE_TAGS_SUPPRESSED_FOR_HARNESS_LOADING_ONLY",
+    "candidateCss": "EXACT",
+    "semanticRuntime": "EXACT_ES_MODULE_BYTES_LOADED_AS_BLOB_MODULE",
+    "manifestationRuntime": "EXACT_EXCEPT_SINGLE_SEMANTIC_RUNTIME_IMPORT_LOCATOR_SUBSTITUTION_TO_VERIFIED_BLOB_MODULE",
+    "sourceRegistryLoading": "HARNESS_FETCH_ADAPTER_RETURNED_EXACT_RECONSTRUCTED_F4_JSON_BYTES",
+    "webCrypto": "ABOUT_BLANK_DIGEST_BOUND_TO_INDEPENDENTLY_RECOMPUTED_AND_VERIFIED_METHOD_SEQUENCE_SHA256",
+    "sourceSemanticMutationIntroducedByHarness": false
+  },
+  "evaluation": {
+    "assertionsPassed": 44,
+    "assertionsFailed": 0,
+    "initialBoundControls": 16,
+    "renderedMethodStages": 15,
+    "renderedDeclaredDependencyRelations": 16,
+    "directionMarkerPresent": "PASS",
+    "allDeclaredRelationsArrowed": "PASS",
+    "relationSourceTargetIdentityBound": "PASS",
+    "pointerInputViaChromiumCDP": "PASS",
+    "touchInputViaChromiumCDP": "PASS",
+    "accessibleBrowserRoute": "PASS_NATIVE_BUTTON_CLICK_DETAIL_ZERO",
+    "physicalKeyboardDeviceEvidence": "NOT_RUN_THIS_STAGE",
+    "pointerFocusMove": "PASS",
+    "touchFocusMove": "PASS",
+    "accessibleFocusMove": "PASS_BOUNDED_BROWSER_ROUTE",
+    "scientificStateHashNonmutation": "PASS",
+    "selectedIncidentRelationEmphasis": "PASS_RUNTIME_BEHAVIOR",
+    "incomingOutgoingDirectionClassification": "PASS_RUNTIME_BEHAVIOR",
+    "humanReadableRelationDisplay": "PASS_RUNTIME_BEHAVIOR",
+    "invalidTargetFailsClosed": "PASS_LOCUS_TARGET_MISMATCH",
+    "invalidRouteModalityFailsClosed": "PASS_ROUTE_MODALITY_INVALID",
+    "invalidDispatchReturnsNoMutatedState": "PASS",
+    "sequentialInteractionStatePersistence": "PASS",
+    "auditTraceCap": "PASS_SIX_ENTRIES",
+    "resizeActiveReferentPreservation": "PASS_RUNTIME_NONMUTATION_ONLY",
+    "resizeScientificStatePreservation": "PASS_RUNTIME_NONMUTATION_ONLY",
+    "resizeDeclaredRelationPersistence": "PASS_16_OF_16",
+    "resizeArrowMarkerPersistence": "PASS",
+    "resizeIncidentRelationEmphasisPersistence": "PASS",
+    "narrowFieldHorizontalOverflowAtRuntime": "NONE_OBSERVED",
+    "browserRuntimeErrors": 0,
+    "causalAuditTrace": "PRESENT_NON_GATE"
+  },
+  "evidenceBoundary": {
+    "hardGateConformance": "PASS",
+    "runtimeAndInteractionEvidence": "PASS_BOUNDED",
+    "accessibilityAndResponsiveEquivalence": "NOT_RUN_FOR_M1R1",
+    "physicalKeyboardAndExternalAssistiveTechnology": "NOT_RUN_FOR_M1R1",
+    "perceptualReevaluation": "NOT_RUN_FOR_M1R1",
+    "freshIndependentVerification": "NOT_RUN",
+    "freshNetworkServedBrowserReproduction": "NOT_RUN_ENVIRONMENT_BLOCKED",
+    "userDifferential": "NOT_RUN",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "manifestationBoundary": {
+    "M1Mutation": false,
+    "M1R1CandidateMutationDuringRuntimeStage": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "declaredRelationChange": false,
+    "legacySemanticInheritance": false,
+    "scientificRelationFromLayout": false,
+    "claimCeilingUpgrade": false,
+    "publicMethodsMutation": false,
+    "publicDefaultPromotion": false
+  },
+  "limitations": [
+    "THIS_IS_M1R1_RUNTIME_AND_INTERACTION_EVIDENCE_NOT_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE",
+    "ACCESSIBLE_BROWSER_ROUTE_USED_NATIVE_BUTTON_CLICK_DETAIL_ZERO_AND_IS_NOT_PHYSICAL_KEYBOARD_OR_EXTERNAL_ASSISTIVE_TECHNOLOGY_DEVICE_EVIDENCE",
+    "RESIZE_CHECKS_ESTABLISH_RUNTIME_STATE_AND_RELATION_PRESERVATION_ONLY_AND_ARE_NOT_RESPONSIVE_EQUIVALENCE_EVIDENCE",
+    "DIRECTIONAL_MORPHOLOGY_AND_INCIDENT_RELATION_EMPHASIS_EXECUTED_CORRECTLY_BUT_THIS_IS_NOT_PERCEPTUAL_REEVALUATION",
+    "NETWORK_CHECKOUT_AND_NETWORK_SERVED_BROWSER_REPRODUCTION_NOT_RUN_BECAUSE_GITHUB_COM_DNS_RESOLUTION_FAILED",
+    "LOCAL_EXECUTION_INSTRUMENT_IS_HASH_IDENTIFIED_BUT_NOT_COMMITTED_AS_A_REPOSITORY_VERIFIER",
+    "NO_FRESH_INDEPENDENT_VERIFICATION_USER_DIFFERENTIAL_OR_PUBLIC_PROMOTION_CLAIM"
+  ],
+  "nextLawfulStage": "ACCESSIBILITY_AND_RESPONSIVE_EQUIVALENCE_FOR_M1R1"
+}

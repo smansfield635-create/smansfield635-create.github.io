@@ -1,0 +1,87 @@
+{
+  "schema": "H_EARTH_AUDRALIA_HURRICANE_OBSERVER_ADAPTER_v1",
+  "status": "NONPRODUCT_FROZEN_ADAPTER",
+  "role": "STORM_STRUCTURE_OBSERVER_AND_REGRESSION_SUITE_ONLY",
+  "physicsAuthority": false,
+  "sourceStudy": {
+    "operation": "UCIC_HURRICANE_RAW_TC_RADAR_MECHANISTIC_EARLY_WARNING_v1",
+    "sourcePr": 735,
+    "authoritativeAdjudicationPath": "control-plane/whole-estate/first-safe-vertical-case-selection-v1/hurricane-scientific-delta-adjudication.v1.json",
+    "workflowHead": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+    "workflowRun": 31195025635,
+    "artifactId": 9001275013,
+    "protocolSha256": "52199364e8880188230831080c333a3a83a52fcccd57e7086aa7fac45d45463d",
+    "qcCorrection": "SST_SHIPS_ABS_GE_900_TREATED_AS_MISSING_NO_IMPUTATION",
+    "terminalDisposition": "RAW_TC_RADAR_MECHANISTIC_NOT_SUPPORTED"
+  },
+  "qcCorrectedSample": {
+    "rawRows": 426,
+    "primaryRows": 170,
+    "calibrationRows": 83,
+    "calibrationStorms": 34,
+    "calibrationRiEvents": 9,
+    "holdoutRows": 87,
+    "holdoutStorms": 23,
+    "holdoutRiEvents": 11
+  },
+  "qcCorrectedResults": {
+    "baseRocAuc": 0.7691387559808613,
+    "combinedNoncompRocAuc": 0.7595693779904307,
+    "primaryIncrementalAuc": -0.009569377990430672,
+    "noncompBootstrapMedian": -0.009803921568627416,
+    "noncompBootstrapCi95": [-0.04339188231463211, 0.035535714285714205],
+    "combinedAdditiveRocAuc": 0.8133971291866029,
+    "additiveBootstrapMedian": 0.04638388719714026,
+    "additiveBootstrapCi95": [-0.03179495542509231, 0.11906047077922066]
+  },
+  "relations": {
+    "R1_vertical_alignment": {
+      "referenceMeasure": "tc_tilt_magnitude near 8 km divided by max(tc_rmw near 2 km, 10 km)",
+      "simulationDiagnostic": "distance between low-level and upper-level vortex centers normalized by simulated low-level RMW",
+      "coherentDirection": "LOWER"
+    },
+    "R2_tangential_column_coherence": {
+      "referenceMeasure": "median Pearson correlation between 2-km radial tangential-wind profile and 4/6/8-km profiles within 0-150 km",
+      "simulationDiagnostic": "radial tangential-wind profile similarity across diagnostic levels",
+      "coherentDirection": "HIGHER"
+    },
+    "R3_vorticity_column_coherence": {
+      "referenceMeasure": "median cosine similarity between positive-vorticity radial profiles near 2 km and 4/6/8-km profiles within 0-100 km",
+      "simulationDiagnostic": "positive-vorticity radial-profile similarity across diagnostic levels",
+      "coherentDirection": "HIGHER"
+    },
+    "R4_inflow_outflow_coupling": {
+      "referenceMeasure": "minimum of inner-core low-level convergence magnitude and upper-level divergence magnitude",
+      "simulationDiagnostic": "paired low-level convergence and upper-level divergence strength inside storm core",
+      "coherentDirection": "HIGHER"
+    },
+    "R5_convective_vertical_continuity": {
+      "referenceMeasure": "fraction of >=20 dBZ low-level convective pixels remaining >=20 dBZ near 6 and 8 km",
+      "simulationDiagnostic": "fraction of supported deep-convective columns continuous from low to upper diagnostic levels",
+      "coherentDirection": "HIGHER"
+    }
+  },
+  "historicalComparability": {
+    "CtMayBeComputed": true,
+    "CtFormula": "min(R1_score,R2_score,R3_score,R4_score,R5_score)",
+    "CtMayDrivePhysics": false,
+    "CtMayBeCalledSupportedRiPredictor": false
+  },
+  "syntheticRegressionFixtures": [
+    "VERTICALLY_ALIGNED_WARM_CORE",
+    "SHEAR_TILTED_VORTEX",
+    "ORGANIZED_INFLOW_OUTFLOW",
+    "DECOUPLED_CIRCULATION",
+    "DEEP_CONVECTIVE_CONTINUITY",
+    "SHALLOW_CONVECTIVE_DISCONTINUITY",
+    "DRY_AIR_INTRUSION",
+    "LANDFALL_FLUX_LOSS",
+    "OCEAN_COOLING_COLD_WAKE"
+  ],
+  "causalLaw": "ENVIRONMENT_PLUS_DYNAMICS_PLUS_THERMODYNAMICS_PLUS_CONVECTION_TO_STORM_STRUCTURE_TO_OBSERVER",
+  "prohibited": [
+    "COHERENCE_SCORE_FORCES_INTENSIFICATION",
+    "NEGATIVE_HELDOUT_RESULT_RELABELED_AS_SUPPORT",
+    "POST_RESULT_RETUNING_OF_CANONICAL_TC_RADAR_STUDY"
+  ]
+}

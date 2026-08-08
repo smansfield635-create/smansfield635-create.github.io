@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - verification/methods-models-semantic-topology-f11-v1
     paths:
       - "control-plane/methods-information-benchmark/methods-semantic-interaction-topology-authority-reanchor-v1/**"
       - ".github/workflows/methods-semantic-topology-reanchor-verification.yml"

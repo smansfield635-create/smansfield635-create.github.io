@@ -252,7 +252,8 @@ async function initialize() {
       supplementalWorldAnchoredStars: STAR_FIELD.length,
       starDaylightSuppressionUsesCelestialAuthority: true,
       worldCoordinatesMutated: false,
-      celestialAuthorityMutated: false
+      celestialAuthorityMutated: false,
+      unsafeCloudCanvasFilterPresent: false
     });
     requestAnimationFrame(tick);
   } catch (error) {

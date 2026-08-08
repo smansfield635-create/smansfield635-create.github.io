@@ -1,0 +1,70 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_L0_L1_M1_RUNTIME_INTERACTION_EVIDENCE_MANIFEST_v1",
+  "version": "1.0.0",
+  "operation": "M1_RUNTIME_INTERACTION_EVIDENCE_v1",
+  "status": "EVIDENCE_CONSTRUCTION_LANE_ONLY",
+  "governingManifestation": {
+    "candidateId": "M1_TESTS_METHODS_OPERATIONAL_FIELD",
+    "candidateHead": "9370bba7841b8a831f7f1c034d0b74fb83dab2e0",
+    "promotionMerge": "391c3543fd048bac90493232f04973911468d3eb",
+    "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1"
+  },
+  "governingRegistry": {
+    "promotionMerge": "64d0ea7673d1ecb61372a0dd8b127b889157da1d",
+    "projection": "METHODS",
+    "objectCount": 3,
+    "relationCount": 2
+  },
+  "implementedLayerBoundary": {
+    "L0": true,
+    "L1": true,
+    "FOCUS": true,
+    "L2_INSPECT": false,
+    "L3_FOLLOW": false,
+    "L3_PROVENANCE": false,
+    "L4_ENTER": false
+  },
+  "runtimeInvariant": "DELTA_PERCEPTION_DOES_NOT_MUTATE_SCIENTIFIC_SEMANTICS",
+  "fixtures": [
+    "PROMOTED_REGISTRY_BOOT",
+    "EXACT_OBJECT_IDENTITY_AND_CLASS",
+    "EXACT_RELATION_IDENTITY_DIRECTION_AND_LABEL",
+    "PROGRAMMATIC_FOCUS_SEMANTIC_INVARIANCE",
+    "POINTER_FOCUS_SEMANTIC_INVARIANCE",
+    "KEYBOARD_FOCUS_SEMANTIC_INVARIANCE",
+    "RESPONSIVE_REFLOW_SEMANTIC_INVARIANCE",
+    "DISABLED_PROJECTION_ISOLATION",
+    "WITHHELD_OPERATION_INTERACTIVE_ABSENCE",
+    "RELATION_GEOMETRY_SURVIVES_REFLOW_WITHOUT_SEMANTIC_CHANGE",
+    "CORRUPT_REGISTRY_FAIL_CLOSED",
+    "REGISTRY_FETCH_FAILURE_FAIL_CLOSED"
+  ],
+  "profiles": [
+    {"id": "DESKTOP", "width": 1440, "height": 1000},
+    {"id": "TABLET_RUNTIME", "width": 820, "height": 1180},
+    {"id": "PHONE_RUNTIME", "width": 390, "height": 844}
+  ],
+  "claimBoundary": {
+    "runtimeInteractionMayBeEstablished": true,
+    "accessibilityResponsiveEquivalence": "NOT_CLAIMED_BY_THIS_LANE",
+    "perceptualEvaluation": "NOT_CLAIMED_BY_THIS_LANE",
+    "freshIndependentVerification": "NOT_CLAIMED_BY_THIS_LANE",
+    "userDifferential": "NOT_CLAIMED_BY_THIS_LANE",
+    "publicPromotionFitness": "NOT_CLAIMED_BY_THIS_LANE",
+    "scientificClaimUpgrade": false
+  },
+  "mutationBoundary": {
+    "publicMutation": false,
+    "publicRouteCreation": false,
+    "m1SourceMutation": false,
+    "registryMutation": false,
+    "researchAuthorityMutation": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "M1R2Mutation": false,
+    "broaderModelsPopulation": false,
+    "broaderExperimentsPopulation": false,
+    "broaderEvidencePopulation": false
+  },
+  "evidenceDisposition": "CI_ARTIFACTS_REQUIRE_SEPARATE_REVIEW_BEFORE_ANY_PROMOTION_OR_NEXT_GATE"
+}

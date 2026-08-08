@@ -1,0 +1,45 @@
+{
+  "schema": "METHODS_MODELS_M1R1_BINDING_PLAN_v1",
+  "candidateId": "M1R1_METHOD_PROCEDURE_FIELD",
+  "status": "SOURCE_BOUND_DETERMINISTIC_BINDING_PLAN",
+  "parent": {
+    "bindingClass": "ENTITY",
+    "referent": "METHODS",
+    "operation": "FOCUS_MOVE",
+    "authority": "F4_SCIENTIFIC_OBJECT_REGISTRY::METHODS"
+  },
+  "stageRule": {
+    "forEach": "F4_METHOD_CONTENT_REGISTRY.sequence",
+    "bindingClass": "METHOD_STAGE",
+    "referent": "sequence[].id",
+    "operation": "FOCUS_MOVE",
+    "authority": "F4_METHOD_CONTENT_REGISTRY.sequence"
+  },
+  "relationRule": {
+    "forEach": "sequence[].requires[]",
+    "bindingClass": "DECLARED_RELATION",
+    "relationRef": "METHOD_DEPENDENCY:{required}->{stage.id}",
+    "semantics": "REQUIRES_OR_IMMEDIATE_DEPENDENCY",
+    "manipulable": false
+  },
+  "orientation": {
+    "base": ["IDENTITY","CLASS","STANDING","CLAIM_CEILING","MATERIAL_QUALIFIER","REQUIRED_RELATIONS"],
+    "methodStage": ["METHODS_PARENT","PREREQUISITES","IMMEDIATE_DEPENDENTS","CUSTODY_DOMAIN"]
+  },
+  "routes": {
+    "direct": {"modalities": ["POINTER","TOUCH"]},
+    "accessible": {"modalities": ["KEYBOARD","ASSISTIVE_TECHNOLOGY"]},
+    "equalities": ["OPERATION","TARGET","SEMANTIC_OUTCOME"],
+    "gestureEqualityRequired": false,
+    "experienceEqualityRequired": false
+  },
+  "nonsemantic": ["FIELD_BACKDROP","GEOMETRY_GRID","RESPONSIVE_REFLOW_GEOMETRY"],
+  "nonsemanticLaw": "NO_ADJACENCY_CONTAINMENT_IDENTITY_OR_EVIDENTIARY_STRENGTH",
+  "revisionFrom": {
+    "candidateId": "M1_METHOD_PROCEDURE_FIELD",
+    "candidateCommit": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+    "perceptualEvaluationHead": "8366ed385ca8349cddc30cb93df4c2f84136aa0f",
+    "semanticPopulationChanged": false,
+    "relationPopulationChanged": false
+  }
+}

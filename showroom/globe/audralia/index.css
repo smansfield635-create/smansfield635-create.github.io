@@ -140,15 +140,8 @@ a{color:inherit}
   border-color:rgba(237,243,235,.24);
 }
 
-@keyframes audralia-loading-orbit{
-  to{transform:rotate(360deg)}
-}
-
-@keyframes audralia-loading-track{
-  0%{left:-40%}
-  50%{left:54%}
-  100%{left:104%}
-}
+@keyframes audralia-loading-orbit{to{transform:rotate(360deg)}}
+@keyframes audralia-loading-track{0%{left:-40%}50%{left:54%}100%{left:104%}}
 
 .audralia-live-shell{
   width:100%;
@@ -250,15 +243,47 @@ a{color:inherit}
 .audralia-live-help{
   position:relative;
   z-index:20;
-  min-height:32px;
-  padding:7px max(10px,env(safe-area-inset-right)) max(7px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));
-  border-top:1px solid rgba(229,240,224,.1);
-  background:rgba(13,20,15,.96);
-  color:rgba(237,243,235,.67);
+  min-height:104px;
+  padding:10px max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+  border-top:1px solid rgba(229,240,224,.12);
+  background:rgba(13,20,15,.97);
+  color:rgba(237,243,235,.78);
+}
+
+.audralia-help-grid{
+  width:min(980px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px 10px;
+}
+
+.audralia-help-grid span{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:4px;
+  padding:8px 10px;
+  border:1px solid rgba(229,240,224,.10);
+  border-radius:8px;
+  background:rgba(235,243,225,.035);
+  text-align:left;
+}
+
+.audralia-help-grid strong{
+  color:rgba(246,249,244,.96);
+  font-size:11px;
+  line-height:1.2;
+  font-weight:760;
+}
+
+.audralia-help-grid small{
+  color:rgba(237,243,235,.70);
   font-size:10px;
-  line-height:1.25;
-  text-align:center;
-  white-space:normal;
+  line-height:1.35;
+  font-weight:520;
 }
 
 .audralia-help-pointer{display:none}
@@ -277,14 +302,17 @@ a{color:inherit}
 
 @media (hover:hover) and (pointer:fine){
   .audralia-help-touch{display:none}
-  .audralia-help-pointer{display:inline}
+  .audralia-help-pointer{display:grid}
+  .audralia-help-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 
 @media (max-width:720px){
   .audralia-live-toolbar{gap:8px}
   .audralia-live-brand{font-size:13px}
   .audralia-live-action{min-height:29px;padding:0 9px;font-size:10px}
-  .audralia-live-help{font-size:9px}
+  .audralia-live-help{min-height:126px;padding-top:9px}
+  .audralia-help-grid strong{font-size:10.5px}
+  .audralia-help-grid small{font-size:9.5px}
 }
 
 @media (max-width:460px){
@@ -293,6 +321,10 @@ a{color:inherit}
   .audralia-live-action{padding:0 8px}
   .audralia-loading-panel{width:min(320px,88vw)}
   .audralia-loading-note{font-size:9px}
+  .audralia-live-help{min-height:148px;padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+  .audralia-help-grid{gap:6px}
+  .audralia-help-grid span{padding:7px 8px}
+  .audralia-help-grid small{font-size:9px}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -300,6 +332,6 @@ a{color:inherit}
 }
 
 @media (forced-colors:active){
-  .audralia-live-toolbar,.audralia-live-help,.audralia-live-action{border-color:CanvasText}
+  .audralia-live-toolbar,.audralia-live-help,.audralia-live-action,.audralia-help-grid span{border-color:CanvasText}
   .audralia-loading-orbit,.audralia-loading-track{border-color:CanvasText}
 }

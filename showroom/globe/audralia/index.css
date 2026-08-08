@@ -243,46 +243,46 @@ a{color:inherit}
 .audralia-live-help{
   position:relative;
   z-index:20;
-  min-height:66px;
-  padding:9px max(12px,env(safe-area-inset-right)) max(9px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+  min-height:104px;
+  padding:10px max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
   border-top:1px solid rgba(229,240,224,.12);
   background:rgba(13,20,15,.97);
-  color:rgba(237,243,235,.76);
+  color:rgba(237,243,235,.78);
 }
 
 .audralia-help-grid{
-  width:min(820px,100%);
+  width:min(980px,100%);
   margin:0 auto;
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:7px 10px;
+  gap:8px 10px;
 }
 
 .audralia-help-grid span{
   min-width:0;
   display:flex;
   flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:2px;
-  padding:5px 6px;
+  align-items:flex-start;
+  justify-content:flex-start;
+  gap:4px;
+  padding:8px 10px;
   border:1px solid rgba(229,240,224,.10);
   border-radius:8px;
   background:rgba(235,243,225,.035);
-  text-align:center;
+  text-align:left;
 }
 
 .audralia-help-grid strong{
   color:rgba(246,249,244,.96);
   font-size:11px;
-  line-height:1.15;
+  line-height:1.2;
   font-weight:760;
 }
 
 .audralia-help-grid small{
-  color:rgba(237,243,235,.64);
-  font-size:9px;
-  line-height:1.25;
+  color:rgba(237,243,235,.70);
+  font-size:10px;
+  line-height:1.35;
   font-weight:520;
 }
 
@@ -310,9 +310,9 @@ a{color:inherit}
   .audralia-live-toolbar{gap:8px}
   .audralia-live-brand{font-size:13px}
   .audralia-live-action{min-height:29px;padding:0 9px;font-size:10px}
-  .audralia-live-help{min-height:72px;padding-top:8px}
-  .audralia-help-grid strong{font-size:10px}
-  .audralia-help-grid small{font-size:8.5px}
+  .audralia-live-help{min-height:126px;padding-top:9px}
+  .audralia-help-grid strong{font-size:10.5px}
+  .audralia-help-grid small{font-size:9.5px}
 }
 
 @media (max-width:460px){
@@ -321,9 +321,10 @@ a{color:inherit}
   .audralia-live-action{padding:0 8px}
   .audralia-loading-panel{width:min(320px,88vw)}
   .audralia-loading-note{font-size:9px}
-  .audralia-live-help{min-height:78px;padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
+  .audralia-live-help{min-height:148px;padding-left:max(8px,env(safe-area-inset-left));padding-right:max(8px,env(safe-area-inset-right))}
   .audralia-help-grid{gap:6px}
-  .audralia-help-grid span{padding:5px 4px}
+  .audralia-help-grid span{padding:7px 8px}
+  .audralia-help-grid small{font-size:9px}
 }
 
 @media (prefers-reduced-motion:reduce){

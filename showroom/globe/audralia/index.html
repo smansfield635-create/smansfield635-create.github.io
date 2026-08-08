@@ -8,20 +8,21 @@
   <meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again.">
   <title>Audralia · Planetary World</title>
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
-  <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/app.mjs">
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs">
-  <link rel="modulepreload" href="../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js">
+  <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-model.mjs">
+  <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-renderer.mjs">
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1">
+  <link rel="stylesheet" href="./weather-presentation-reconciliation/reconciliation.css?v=AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_v2">
 </head>
 <body>
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
     <div class="audralia-loading-panel">
       <div class="audralia-loading-orbit" aria-hidden="true"></div>
       <div class="audralia-loading-title">Audralia</div>
-      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing the world…</div>
-      <div class="audralia-loading-track" aria-hidden="true"><span></span></div>
-      <div class="audralia-loading-time" data-audralia-loader-time>0.0 s</div>
-      <div class="audralia-loading-note">Building one continuous world from Gratitude to planetary scale.</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing world and camera…</div>
+      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
+      <div class="audralia-loading-time" data-audralia-loader-progress>0 of 4 systems ready</div>
+      <div class="audralia-loading-note">Building the same world progressively: surface atmosphere, regional weather, and bounded local weather.</div>
     </div>
   </div>
 
@@ -41,87 +42,28 @@
       <canvas
         class="audralia-world-canvas"
         data-h-earth-map-wide-canvas
-        aria-label="Interactive Audralia world. One finger inspects, two fingers travel, pinch descends and spread ascends."
+        aria-label="Interactive Audralia world. One finger looks, two fingers travel, pinch descends and spread ascends."
       ></canvas>
       <p class="audralia-sr-only" data-h-earth-diagnostic aria-live="polite"></p>
     </section>
 
     <footer class="audralia-live-help" aria-label="Interaction guide">
-      <span class="audralia-help-touch">1 finger · inspect directionally &nbsp;·&nbsp; 2 fingers · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
-      <span class="audralia-help-pointer">drag · inspect &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
+      <span class="audralia-help-touch">1 finger · look &nbsp;·&nbsp; 2 fingers together · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
+      <span class="audralia-help-pointer">drag · look &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
     </footer>
   </main>
 
   <script>
     window.__AUDRALIA_LIVE_PLANETARY_INTEGRATION__ = Object.freeze({
-      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v1',
+      schema: 'AUDRALIA_LIVE_PLANETARY_INTEGRATION_v2',
       legacyPlanetActive: false,
-      diagnosticTrackPreserved: true,
-      planetarySourceHead: 'f7f14a8748a2a782f5795ad395ae5967a7d3949d'
+      canonicalWeatherSpatialLod: true,
+      weatherPresentationReconciliation: true,
+      cameraSemanticsFrozen: true
     });
-
-    (() => {
-      const loader = document.querySelector('[data-audralia-loader]');
-      const stageNode = document.querySelector('[data-audralia-loader-stage]');
-      const timeNode = document.querySelector('[data-audralia-loader-time]');
-      const statusNode = document.querySelector('[data-h-earth-status]');
-      if (!loader || !stageNode || !timeNode || !statusNode) return;
-
-      const startedAt = performance.now();
-      let finished = false;
-      const stageLabels = Object.freeze({
-        BOOTSTRAP_ACTIVE: 'Preparing the world…',
-        IMPORTING_CLOUD_VISUAL_REFERENCE: 'Loading planetary systems…',
-        BUILDING_CLOUD_PERFORMANCE_SUCCESSOR: 'Building Gratitude terrain and coastline…'
-      });
-      const elapsed = () => Math.max(0, performance.now() - startedAt);
-      const renderElapsed = () => { timeNode.textContent = `${(elapsed() / 1000).toFixed(1)} s`; };
-
-      const finish = () => {
-        if (finished) return;
-        finished = true;
-        const elapsedMs = elapsed();
-        renderElapsed();
-        stageNode.textContent = 'World ready';
-        loader.classList.add('is-ready');
-        window.__AUDRALIA_STARTUP_LOADING_RECEIPT__ = Object.freeze({
-          schema: 'AUDRALIA_LIVE_STARTUP_LOADING_RECEIPT_v1',
-          elapsedMs,
-          readyState: statusNode.dataset.status || statusNode.textContent.trim(),
-          measuredInBrowser: true,
-          geometryReducedForLoadTime: false,
-          modulePreloadEnabled: true
-        });
-        window.setTimeout(() => { loader.hidden = true; }, 420);
-      };
-
-      const update = () => {
-        const state = statusNode.dataset.status || '';
-        const text = statusNode.textContent.trim();
-        renderElapsed();
-        if (state.includes('FAILED') || text === 'ERROR' || text === 'FAIL') {
-          finished = true;
-          stageNode.textContent = 'Audralia could not finish loading';
-          loader.classList.add('is-error');
-          return;
-        }
-        if (text === 'REVIEW' || state.includes('VISUAL_READY') || state.includes('USER_REVIEW_REQUIRED')) {
-          finish();
-          return;
-        }
-        stageNode.textContent = stageLabels[state] || (text && !text.includes('…') ? text : 'Building the world…');
-      };
-
-      const observer = new MutationObserver(update);
-      observer.observe(statusNode, { attributes: true, attributeFilter: ['data-status'], childList: true, subtree: true });
-      const ticker = window.setInterval(() => {
-        if (finished) { window.clearInterval(ticker); observer.disconnect(); return; }
-        renderElapsed();
-      }, 250);
-      update();
-    })();
   </script>
-  <script type="module" src="../h-earth/terrain-estate-construction-v1/app.mjs"></script>
+  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs"></script>
+  <script type="module" src="./weather-presentation-reconciliation/app.mjs"></script>
   <script type="module" src="./celestial-checkpoint-1.mjs"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/app.mjs">
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs">
   <link rel="modulepreload" href="../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js">
-  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1">
+  <link rel="stylesheet" href="./index.css?v=AUDRALIA_PRESENTATION_POLISH_v1">
 </head>
 <body>
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
@@ -41,14 +41,24 @@
       <canvas
         class="audralia-world-canvas"
         data-h-earth-map-wide-canvas
-        aria-label="Interactive Audralia world. One finger inspects, two fingers travel, pinch descends and spread ascends."
+        aria-label="Interactive Audralia world. One finger looks around, two fingers travel, pinch together moves closer and down, and spreading fingers apart moves farther away and up."
       ></canvas>
       <p class="audralia-sr-only" data-h-earth-diagnostic aria-live="polite"></p>
     </section>
 
-    <footer class="audralia-live-help" aria-label="Interaction guide">
-      <span class="audralia-help-touch">1 finger · inspect directionally &nbsp;·&nbsp; 2 fingers · travel &nbsp;·&nbsp; pinch · descend &nbsp;·&nbsp; spread · ascend</span>
-      <span class="audralia-help-pointer">drag · inspect &nbsp;·&nbsp; wheel · descend / ascend &nbsp;·&nbsp; W/A/S/D or arrows · travel</span>
+    <footer class="audralia-live-help" aria-label="How to move around Audralia">
+      <div class="audralia-help-touch" aria-label="Touch controls">
+        <span class="audralia-help-item"><strong>1 finger</strong><span>Look around</span></span>
+        <span class="audralia-help-item"><strong>2 fingers</strong><span>Travel across the world</span></span>
+        <span class="audralia-help-item"><strong>Pinch together</strong><span>Move closer · go down</span></span>
+        <span class="audralia-help-item"><strong>Spread apart</strong><span>Move farther · go up</span></span>
+      </div>
+      <div class="audralia-help-pointer" aria-label="Mouse and keyboard controls">
+        <span class="audralia-help-item"><strong>Drag</strong><span>Look around</span></span>
+        <span class="audralia-help-item"><strong>Mouse wheel</strong><span>Move closer / farther</span></span>
+        <span class="audralia-help-item"><strong>W A S D</strong><span>Travel</span></span>
+        <span class="audralia-help-item"><strong>Focus Gratitude</strong><span>Return to the known region</span></span>
+      </div>
     </footer>
   </main>
 
@@ -123,5 +133,6 @@
   </script>
   <script type="module" src="../h-earth/terrain-estate-construction-v1/app.mjs"></script>
   <script type="module" src="./celestial-checkpoint-1.mjs"></script>
+  <script type="module" src="./audralia-presentation-polish.mjs"></script>
 </body>
 </html>

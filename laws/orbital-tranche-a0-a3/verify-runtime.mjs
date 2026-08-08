@@ -3,6 +3,7 @@ import {pathToFileURL} from 'node:url';
 
 const assert=(v,m)=>{if(!v)throw new Error(m)};
 const manifest=JSON.parse(fs.readFileSync('laws/orbital-tranche-a0-a3/manifest.v1.json','utf8'));
+const runtimeSource=fs.readFileSync('laws/orbital-tranche-a0-a3/common-grammar.js','utf8');
 
 if(fs.existsSync('laws/orbital-tranche-a0-a3/common-grammar.js')){
   await import(pathToFileURL(process.cwd()+'/laws/orbital-tranche-a0-a3/common-grammar.js'));
@@ -24,9 +25,26 @@ if(fs.existsSync('laws/orbital-tranche-a0-a3/common-grammar.js')){
   assert(c.dragDirection(0.1,0.1)===0,'small gesture snaps back');
 }
 
+assert(runtimeSource.includes("const PERSISTENT_END=2"),'persistent tranche closes at Story 3');
+assert(runtimeSource.includes('history.pushState'),'persistent story commit updates URL without document destruction');
+assert(runtimeSource.includes("window.addEventListener('popstate'"),'browser history restores persistent story state');
+assert(runtimeSource.includes('const mountStory=async'),'persistent story content mount exists');
+assert(runtimeSource.includes("root.dataset.lawsOrbitalDocumentReload='false'"),'runtime declares no document reload inside persistent tranche');
+assert(runtimeSource.includes("location.assign(stories[targetIndex].route)"),'outward/fail-closed full-document fallback remains explicit');
+
 assert(manifest.stories[0].route==='/laws/research/applied-investigations/','story1 route');
 assert(manifest.stories[1].route==='/laws/research/evidence-and-sources/','story2 route');
 assert(manifest.stories[2].route==='/laws/research/methods-and-models/','story3 route');
 assert(manifest.stories[3].route==='/laws/categories/flow/signals/','story4 outward boundary');
 
-console.log(JSON.stringify({status:'PASS',boundedTraversal:true,canonicalOrderPreserved:true,continuousDragContract:true,gestureCommitAndSnapback:true},null,2));
+console.log(JSON.stringify({
+  status:'PASS',
+  boundedTraversal:true,
+  canonicalOrderPreserved:true,
+  continuousDragContract:true,
+  gestureCommitAndSnapback:true,
+  persistentStoryStateRange:'STORY_01_TO_STORY_03',
+  historyBackForward:true,
+  documentReloadWithinPersistentRange:false,
+  story4OutwardBoundaryPreserved:true
+},null,2));

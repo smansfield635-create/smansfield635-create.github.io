@@ -1,0 +1,87 @@
+{
+  "schema": "REPOSITORY_OPERATION_INTAKE_REMOTE_LEDGER_READ_AFTER_WRITE_FAILURE_EVIDENCE_v1",
+  "version": "1.0.0",
+  "status": "FROZEN_INFRASTRUCTURE_FAILURE_EVIDENCE_NO_CLEANUP_PERFORMED",
+  "failureClassification": "REMOTE_LEDGER_READ_AFTER_WRITE_STABILIZATION_DEFECT",
+  "validationSubject": {
+    "pullRequest": 759,
+    "head": "e1660c46fb94657723d88693fb48ceef39c533a1",
+    "branch": "agent/tests-l0-l1-navigation-shell-authority-v1",
+    "candidateMutationAuthorizedByThisEvidence": false
+  },
+  "workflowOccurrence": {
+    "workflow": "Repository Operation Intake Bootstrap Validation",
+    "runId": 31265873904,
+    "runAttempt": 1,
+    "remoteLedgerCasJobId": 93123856084,
+    "remoteLedgerCasJobConclusion": "failure",
+    "builderJobConclusion": "success",
+    "freshBootstrapVerifierJobConclusion": "success",
+    "packageBootstrapCertificationConclusion": "skipped",
+    "failureErrorCode": "ACTIVE_LOCK_NOT_FOUND",
+    "failureField": "lockScope",
+    "failureSourceDocument": "ledger"
+  },
+  "winningAcquisition": {
+    "operationId": "A31265873904",
+    "lockScope": "ACTIVATION:31265873904:1",
+    "scopeHash": "d965712157fe8c4dc3b062d87b4c8f4fdd3c15634675dd0302b651b3778c149f",
+    "lockGeneration": 521,
+    "governingHead": "e1660c46fb94657723d88693fb48ceef39c533a1",
+    "state": "ADMITTED_LOCKED",
+    "released": false,
+    "acquisitionCommitSha": "651c4f741514540ed36d61fb79e20ddb88e924f6",
+    "acquisitionCommitMessage": "Acquire operation lock 521: A31265873904",
+    "acquisitionCommitObservedAt": "2026-08-08T16:01:08Z"
+  },
+  "postAcquisitionFailure": {
+    "observedAtApprox": "2026-08-08T16:01:09Z",
+    "callPath": [
+      "remote-ledger-cas-certification",
+      "closeRemote",
+      "readRemote",
+      "closeLocal"
+    ],
+    "observedSemanticFailure": "ACTIVE_LOCK_NOT_FOUND",
+    "causalInterpretation": "THE_SUCCESSFUL_CONTENTS_API_ACQUISITION_WAS_DURABLY_COMMITTED_BUT_THE_IMMEDIATE_POST_WRITE_CLOSURE_READ_DID_NOT_EXPOSE_THAT_ACQUIRED_SCOPE_TO_CLOSELOCAL"
+  },
+  "repositoryStateAfterFailure": {
+    "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "observedLockRefHead": "651c4f741514540ed36d61fb79e20ddb88e924f6",
+    "interveningClosureCommitForGeneration521Observed": false,
+    "strandedScopeStillRepresentedByLockRefHead": true
+  },
+  "implementationFinding": {
+    "managerBlobAtValidationSubject": "0aa440a3de30e145c7912fcfe2833fb8430ffbb0",
+    "acquireRemoteReturnsAcquisitionCommitSha": true,
+    "acquireRemoteReturnsCommittedLedgerBlobSha": true,
+    "closeRemoteConsumesAcquisitionCommitSha": false,
+    "closeRemoteConsumesCommittedLedgerBlobSha": false,
+    "closeRemoteBoundedPostWriteStabilization": false,
+    "closeRemoteImmediateReadPassedDirectlyToCloseLocal": true
+  },
+  "requiredRepairProperties": [
+    "CAUSALLY_BIND_CLOSURE_TO_SUCCESSFUL_ACQUISITION_RECEIPT",
+    "BOUNDED_REREAD_WHEN_SUCCESSFULLY_ACQUIRED_SCOPE_IS_TEMPORARILY_NOT_VISIBLE",
+    "FAIL_CLOSED_ON_WRONG_OPERATION_WRONG_GENERATION_PERMANENT_ABSENCE_OR_TIMEOUT",
+    "PRESERVE_CLOSURE_COMPARE_AND_SWAP_AND_RECOMPUTE_AGAINST_NEWER_LEDGER_AFTER_CONCURRENT_UNRELATED_WRITE",
+    "SEPARATE_VALIDATION_SUBJECT_HEAD_FROM_CERTIFICATION_INFRASTRUCTURE_HEAD"
+  ],
+  "strandedLockDisposition": {
+    "scope": "ACTIVATION:31265873904:1",
+    "operationId": "A31265873904",
+    "lockGeneration": 521,
+    "state": "ADMITTED_LOCKED",
+    "cleanupPerformedByThisOperation": false,
+    "manualDeletionAuthorized": false,
+    "silentNormalizationAuthorized": false,
+    "requiredFutureDisposition": "EXPLICIT_INFRASTRUCTURE_CLOSURE_OR_CLEANUP_AFTER_REPAIR_CERTIFICATION"
+  },
+  "boundaries": {
+    "pullRequest759RerunAuthorized": false,
+    "pullRequest759Mutation": false,
+    "testsArchitectureMutation": false,
+    "sharedLockBranchMutationByThisEvidenceCommit": false,
+    "scientificClaimUpgrade": false
+  }
+}

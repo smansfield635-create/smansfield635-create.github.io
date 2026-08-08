@@ -77,6 +77,7 @@ function standingLabel(standing) {
   const authorityStanding = standing?.AUTHORITY_STANDING;
   return authorityStanding ? `Standing · ${authorityStanding.toLowerCase().replaceAll("_", " ")}` : "Standing recorded";
 }
+function clamp(value, minimum, maximum) { return Math.max(minimum, Math.min(maximum, value)); }
 
 function validateRegistry(registry) {
   invariant(registry?.schema === "WHOLE_ESTATE_TESTS_L0_L1_OBJECT_PROJECTION_REGISTRY_v1", "REGISTRY_SCHEMA_MISMATCH");
@@ -260,6 +261,7 @@ function layoutRelations() {
   if (els.methodsStage.hidden) return;
   const width = els.viewport.clientWidth;
   const height = els.viewport.clientHeight;
+  const compact = width < 560;
   els.relationLayer.setAttribute("viewBox", `0 0 ${width} ${height}`);
   const relationPaths = [...els.relationPaths.querySelectorAll("path[data-relation-id]")];
   relationPaths.forEach((path, index) => {
@@ -272,16 +274,31 @@ function layoutRelations() {
     const length = Math.max(1, Math.hypot(dx, dy));
     const normalX = -dy / length;
     const normalY = dx / length;
-    const corridorSign = index % 2 === 0 ? -1 : 1;
-    const corridorDepth = Math.min(190, Math.max(145, width * 0.20));
-    const controlX = (p.x1 + p.x2) / 2 + normalX * corridorDepth * corridorSign;
-    const controlY = (p.y1 + p.y2) / 2 + normalY * corridorDepth * corridorSign;
+    let controlX;
+    let controlY;
+
+    if (compact) {
+      const verticalSign = index % 2 === 0 ? -1 : 1;
+      const verticalDepth = 190;
+      controlX = (p.x1 + p.x2) / 2;
+      controlY = (p.y1 + p.y2) / 2 + verticalDepth * verticalSign;
+    } else {
+      const corridorSign = index % 2 === 0 ? -1 : 1;
+      const corridorDepth = Math.min(190, Math.max(145, width * 0.20));
+      controlX = (p.x1 + p.x2) / 2 + normalX * corridorDepth * corridorSign;
+      controlY = (p.y1 + p.y2) / 2 + normalY * corridorDepth * corridorSign;
+    }
+
     path.setAttribute("d", `M ${p.x1.toFixed(2)} ${p.y1.toFixed(2)} Q ${controlX.toFixed(2)} ${controlY.toFixed(2)} ${p.x2.toFixed(2)} ${p.y2.toFixed(2)}`);
 
     const label = els.relationLabels.querySelector(`[data-relation-id="${CSS.escape(path.dataset.relationId)}"]`);
     if (label) {
-      const labelX = 0.25 * p.x1 + 0.5 * controlX + 0.25 * p.x2;
-      const labelY = 0.25 * p.y1 + 0.5 * controlY + 0.25 * p.y2;
+      let labelX = 0.25 * p.x1 + 0.5 * controlX + 0.25 * p.x2;
+      let labelY = 0.25 * p.y1 + 0.5 * controlY + 0.25 * p.y2;
+      if (compact) {
+        labelX = clamp(labelX, 74, width - 74);
+        labelY = clamp(labelY, 28, height - 28);
+      }
       label.style.left = `${labelX.toFixed(2)}px`;
       label.style.top = `${labelY.toFixed(2)}px`;
     }

@@ -223,7 +223,7 @@ function updatePresentation() {
     node.tabIndex = position.active ? 0 : -1;
     const tilt = position.relative * -12;
     node.style.transform = `translate3d(calc(-50% + ${position.x.toFixed(2)}px), calc(-50% + ${position.y.toFixed(2)}px), ${position.z.toFixed(2)}px) rotateY(${tilt.toFixed(2)}deg) scale(${position.prominence.toFixed(3)})`;
-    node.style.opacity = String(Math.max(0.58, position.prominence));
+    node.style.opacity = String(position.active ? 1 : Math.max(0.46, position.prominence));
     node.style.zIndex = String(Math.round(1000 + position.z));
   }
   scheduleRelationLayout();
@@ -269,8 +269,14 @@ function layoutRelations() {
     path.setAttribute("d", `M ${p.x1.toFixed(2)} ${p.y1.toFixed(2)} L ${p.x2.toFixed(2)} ${p.y2.toFixed(2)}`);
     const label = els.relationLabels.querySelector(`[data-relation-id="${CSS.escape(path.dataset.relationId)}"]`);
     if (label) {
-      label.style.left = `${((p.x1 + p.x2) / 2).toFixed(2)}px`;
-      label.style.top = `${((p.y1 + p.y2) / 2).toFixed(2)}px`;
+      const dx = p.x2 - p.x1;
+      const dy = p.y2 - p.y1;
+      const length = Math.max(1, Math.hypot(dx, dy));
+      const normalX = -dy / length;
+      const normalY = dx / length;
+      const corridorOffset = 18;
+      label.style.left = `${(((p.x1 + p.x2) / 2) + normalX * corridorOffset).toFixed(2)}px`;
+      label.style.top = `${(((p.y1 + p.y2) / 2) + normalY * corridorOffset).toFixed(2)}px`;
     }
   }
 }
@@ -321,7 +327,7 @@ async function boot() {
       element: els.viewport,
       fieldState: runtime.fieldState,
       objectIds,
-      focusAdapter: runtime.focusAdapter,
+      onFocusProposal: (objectId, modality) => commitFocus(objectId, modality),
       onProposal: (state, phase) => {
         updatePresentation();
         if (phase === "SETTLE") runtime.continuityAdapter.save(state);

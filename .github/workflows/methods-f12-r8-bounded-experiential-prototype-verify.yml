@@ -1,0 +1,78 @@
+name: Methods F12 R8 Bounded Experiential Prototype Verify
+
+on:
+  push:
+    branches:
+      - agent/methods-f12-r8-bounded-experiential-prototype-v1-final
+
+permissions:
+  contents: read
+
+jobs:
+  verify-r8-engineering-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify exact continuation-freeze parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "b0efa41c13fa061828bf7674a97b35aacaa34071"
+          test "$(git rev-parse b0efa41c13fa061828bf7674a97b35aacaa34071^{tree})" = "321feeacdad97388eca6c329225e057ecd2e8272"
+          test "$(git rev-parse b0efa41c13fa061828bf7674a97b35aacaa34071:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/f12-r8-r12-continuation-corridor-freeze.v1.json)" = "86ea28520cc4954ab533142fc22abd0cac5a9d9e"
+          test "$(git rev-parse b0efa41c13fa061828bf7674a97b35aacaa34071:control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/f12-r8-r12-continuation-corridor-freeze.verify.v1.mjs)" = "21350fd8c403dfb7e05190dd5f5ec44b1de2b546"
+          test "$(git rev-parse b0efa41c13fa061828bf7674a97b35aacaa34071:.github/workflows/methods-f12-r8-r12-continuation-corridor-freeze-verify.yml)" = "cb8b94397667bdafcab632e53ab067c0a662131c"
+
+      - name: Syntax-check isolated review surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/prototype-data.js
+          node --check control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/prototype-state.js
+          node --check control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/app.js
+
+      - name: Verify R8 engineering authority and traceability
+        shell: bash
+        run: |
+          set -euo pipefail
+          node control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype.verify.v1.mjs | tee r8-bounded-experiential-prototype-verification.json
+          grep -Fq '"status": "ENGINEERING_PASS_USER_REVIEW_PENDING"' r8-bounded-experiential-prototype-verification.json
+          grep -Fq '"userDifferential": "NOT_YET_REVIEWED"' r8-bounded-experiential-prototype-verification.json
+          grep -Fq '"passClosed": false' r8-bounded-experiential-prototype-verification.json
+          grep -Fq '"r9Unlock": false' r8-bounded-experiential-prototype-verification.json
+
+      - name: Prove exact bounded R8 diff scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only b0efa41c13fa061828bf7674a97b35aacaa34071..HEAD | tee r8-bounded-experiential-prototype-changed-paths.txt
+          test "$(wc -l < r8-bounded-experiential-prototype-changed-paths.txt)" -eq 8
+          expected="$(mktemp)"
+          cat > "$expected" <<'EOF'
+          .github/workflows/methods-f12-r8-bounded-experiential-prototype-verify.yml
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype-contract.v1.json
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype.verify.v1.mjs
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/app.js
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/index.html
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/prototype-data.js
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/prototype-state.js
+          control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/styles.css
+          EOF
+          sort r8-bounded-experiential-prototype-changed-paths.txt > actual.sorted
+          sort "$expected" > expected.sorted
+          diff -u expected.sorted actual.sorted
+          test -z "$(git diff --diff-filter=MDR --name-only b0efa41c13fa061828bf7674a97b35aacaa34071..HEAD)"
+
+      - name: Preserve exact R8 user-review candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: methods-f12-r8-bounded-experiential-prototype-review-candidate
+          path: |
+            control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype/
+            control-plane/methods-information-benchmark/f12-recursive-spatial-information-architecture-remediation-v1/r8-bounded-experiential-prototype-contract.v1.json
+            r8-bounded-experiential-prototype-verification.json
+            r8-bounded-experiential-prototype-changed-paths.txt

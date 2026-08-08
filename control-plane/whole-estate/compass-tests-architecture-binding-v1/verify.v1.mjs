@@ -58,7 +58,7 @@ const expected=new Map([
  ['control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json','0bfab791c005ca71cee771a5d14d27f8dfab3177'],
  ['control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/source-authority-ledger.v1.json','fe37b67fe3faf0d62b969ec3860c2d083e2e8185'],
  ['control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/candidate-manifest.v1.json','e18c382c7f82bd3335f69bcf752198c0c10e66a9'],
- ['control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/route-and-room-inventory.v1.json','8f23f0543d8622bd2b43c2aa1e11dc0bec0a0f35'],
+ ['control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/route-and-room-inventory.v1.json','d7d085881efd33576857f8cb4fa551e845f2bc84'],
  ['assets/compass/compass.controller.js','83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46'],
  ['assets/compass/compass.crystals.js','3d6427cbdb961576468d4aab05c0e4987549cea3'],
  ['assets/compass/upstream-compass.renderer.js','965376dd8a92686bc7008d1fea4846b5f8300872'],

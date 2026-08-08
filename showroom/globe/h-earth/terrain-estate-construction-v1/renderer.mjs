@@ -7,8 +7,7 @@ import {
 import {
   CANONICAL_COAST_MODEL as COAST_MODEL,
   BOUNDARY_IDENTITY_HASH,
-  sampleCanonicalCoast,
-  sampleCanonicalSandbar
+  sampleCanonicalCoast
 } from './coastline-model.mjs';
 
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
@@ -115,7 +114,7 @@ function sampleLocalSource(x,z){
   return freeze({terrain,weight,boundary:true,sampleX:sx,sampleZ:sz});
 }
 function sampleCanonicalGratitude(u,v){
-  const z=v+LOCAL_CENTER_Z,coast=sampleCanonicalCoast(u,v),baseElevation=macroElevation(u,v,coast),bar=sampleCanonicalSandbar(u,v);
+  const z=v+LOCAL_CENTER_Z,coast=sampleCanonicalCoast(u,v),baseElevation=macroElevation(u,v,coast),bar=coast.sandbar;
   let elevation=baseElevation,color=macroColor(u,v,baseElevation,coast),local=sampleLocalSource(u,z),terrain=null;
   if(local){terrain=local.terrain;const localElevation=normalizeLocalElevation(terrain.presentationElevation);
     if(local.boundary){const boundaryV=local.sampleZ-LOCAL_CENTER_Z,boundaryCoast=sampleCanonicalCoast(local.sampleX,boundaryV),boundaryMacro=macroElevation(local.sampleX,boundaryV,boundaryCoast),delta=localElevation-boundaryMacro;elevation=baseElevation+delta*local.weight;color=mix3(color,localTerrainColor(terrain,localElevation),local.weight*.90);}
@@ -160,8 +159,8 @@ function polygonTokens(caseIndex,centerPositive){
     8:[[e(3),e(2),c(3)]],9:[[c(0),e(0),e(2),c(3)]],11:[[c(0),c(1),e(1),e(2),c(3)]],
     12:[[e(3),e(1),c(2),c(3)]],13:[[c(0),e(0),e(1),c(2),c(3)]],14:[[e(0),c(1),c(2),c(3),e(3)]],15:[[c(0),c(1),c(2),c(3)]]
   };
-  if(caseIndex===5)return centerPositive?[[c(0),e(0),'m',e(3)],[e(1),c(2),e(2),'m']]:[[c(0),e(0),e(3)],[e(1),c(2),e(2)]];
-  if(caseIndex===10)return centerPositive?[[e(0),c(1),e(1),'m'],['m',e(2),c(3),e(3)]]:[[e(0),c(1),e(1)],[e(2),c(3),e(3)]];
+  if(caseIndex===5)return centerPositive?[[c(0),e(0),e(1),c(2),e(2),e(3)]]:[[c(0),e(0),e(3)],[e(1),c(2),e(2)]];
+  if(caseIndex===10)return centerPositive?[[e(0),c(1),e(1),e(2),c(3),e(3)]]:[[e(0),c(1),e(1)],[e(2),c(3),e(3)]];
   return table[caseIndex]??[];
 }
 function resolveCellPolygons(corners,wantLand,cache){
@@ -173,15 +172,35 @@ function resolveCellPolygons(corners,wantLand,cache){
   };
   const centerSample=decorateSample(sampleCanonicalGratitude((corners[0].u+corners[2].u)*.5,(corners[0].v+corners[2].v)*.5)),centerPositive=wantLand?centerSample.field>=0:centerSample.field<0;
   const tokens=polygonTokens(caseIndex,centerPositive),polygons=tokens.map(polygon=>polygon.map(token=>{
-    if(token==='m')return wantLand?centerSample:waterRecord(centerSample.u,centerSample.v,Math.abs(centerSample.field));
     const type=token[0],index=Number(token.slice(1));if(type==='e')return rootRecord(index);
     const corner=corners[index];return wantLand?corner:waterRecord(corner.u,corner.v,Math.abs(corner.field));
   }));
   return freeze({caseIndex,polygons:freeze(polygons.map(freeze)),ambiguous:caseIndex===5||caseIndex===10});
 }
+function polygonArea(polygon){let area=0;for(let i=0;i<polygon.length;i++){const a=polygon[i],b=polygon[(i+1)%polygon.length];area+=a.u*b.v-b.u*a.v;}return area*.5;}
+function pointInTriangle2D(p,a,b,c){
+  const sign=(p1,p2,p3)=>(p1.u-p3.u)*(p2.v-p3.v)-(p2.u-p3.u)*(p1.v-p3.v),d1=sign(p,a,b),d2=sign(p,b,c),d3=sign(p,c,a),hasNeg=d1<-1e-9||d2<-1e-9||d3<-1e-9,hasPos=d1>1e-9||d2>1e-9||d3>1e-9;return !(hasNeg&&hasPos);
+}
+function triangulatePolygon(polygon){
+  if(polygon.length<3)return[];if(polygon.length===3)return[[0,1,2]];
+  const orientation=polygonArea(polygon)>=0?1:-1,remaining=polygon.map((_,index)=>index),triangles=[];
+  let guard=0;
+  while(remaining.length>3&&guard++<32){
+    let clipped=false;
+    for(let cursor=0;cursor<remaining.length;cursor++){
+      const ia=remaining[(cursor-1+remaining.length)%remaining.length],ib=remaining[cursor],ic=remaining[(cursor+1)%remaining.length],a=polygon[ia],b=polygon[ib],c=polygon[ic],turn=((b.u-a.u)*(c.v-b.v)-(b.v-a.v)*(c.u-b.u))*orientation;
+      if(turn<=1e-10)continue;
+      let contains=false;for(const candidate of remaining){if(candidate===ia||candidate===ib||candidate===ic)continue;if(pointInTriangle2D(polygon[candidate],a,b,c)){contains=true;break;}}
+      if(contains)continue;triangles.push([ia,ib,ic]);remaining.splice(cursor,1);clipped=true;break;
+    }
+    if(!clipped)break;
+  }
+  if(remaining.length===3)triangles.push([remaining[0],remaining[1],remaining[2]]);
+  return triangles.length===polygon.length-2?triangles:[];
+}
 function emitPolygon(polygon,vertices,indices,water=false){
-  if(polygon.length<3)return 0;const emit=water?emitWaterRecord:emitTerrainRecord,base=emit(vertices,polygon[0]);let triangles=0;
-  for(let i=1;i<polygon.length-1;i++){const ib=emit(vertices,polygon[i]),ic=emit(vertices,polygon[i+1]);indices.push(base,ib,ic);triangles++;}return triangles;
+  if(polygon.length<3)return 0;const triangles=triangulatePolygon(polygon);if(triangles.length===0)return 0;const emit=water?emitWaterRecord:emitTerrainRecord,local=polygon.map(record=>emit(vertices,record));
+  for(const triangle of triangles)indices.push(local[triangle[0]],local[triangle[1]],local[triangle[2]]);return triangles.length;
 }
 function buildGratitudeMeshes(){
   const us=buildAxis(CANONICAL_BOUNDS.uMin,CANONICAL_BOUNDS.uMax,FINE_U_MIN,FINE_U_MAX),vs=buildAxis(CANONICAL_BOUNDS.vMin,CANONICAL_BOUNDS.vMax,FINE_V_MIN,FINE_V_MAX),columns=us.length,rows=vs.length,samples=new Array(columns*rows),landVertices=[],landIndices=[],waterVertices=[],waterIndices=[],edgeRoots=new Map();

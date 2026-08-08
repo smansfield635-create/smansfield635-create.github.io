@@ -2,7 +2,7 @@ const WORLD_CANVAS = document.querySelector('[data-h-earth-map-wide-canvas]');
 const PLANET_RADIUS = 6200;
 const ATMOSPHERE_RADIUS = 6320;
 const PLANET_CENTER = Object.freeze([0, -PLANET_RADIUS, 0]);
-const POLISH_SCHEMA = 'AUDRALIA_PRESENTATION_POLISH_v1';
+const POLISH_SCHEMA = 'AUDRALIA_PRESENTATION_POLISH_v2';
 
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
@@ -97,20 +97,19 @@ function makeStarDirections(count, phase, depthClass) {
   return points;
 }
 
-const FAR_STARS = Object.freeze(makeStarDirections(270, 1.7, 0));
-const MID_STARS = Object.freeze(makeStarDirections(96, 19.4, 1));
-const BRIGHT_STARS = Object.freeze(makeStarDirections(26, 43.8, 2));
-const STAR_FIELD = Object.freeze([...FAR_STARS, ...MID_STARS, ...BRIGHT_STARS]);
+const STAR_FIELD = Object.freeze([
+  ...makeStarDirections(270, 1.7, 0),
+  ...makeStarDirections(96, 19.4, 1),
+  ...makeStarDirections(26, 43.8, 2)
+]);
 
 let renderer = null;
 let celestialState = null;
-let cloudCanvas = null;
 let starCanvas = null;
 let starContext = null;
 let running = true;
 let lastSignature = '';
 let lastStarRenderMs = 0;
-let lastCloudBlur = -1;
 
 function createStarCanvas() {
   if (!(WORLD_CANVAS instanceof HTMLCanvasElement)) throw new Error('AUDRALIA_POLISH_WORLD_CANVAS_MISSING');
@@ -205,27 +204,9 @@ function renderStars(now = performance.now()) {
     starContext.arc(x, y, radius * star.size, 0, Math.PI * 2);
     starContext.fill();
   }
+
   lastStarRenderMs = now;
   starCanvas.dataset.visibility = visibility.toFixed(3);
-}
-
-function updateCloudSmoothing() {
-  if (!renderer) return;
-  cloudCanvas ||= document.querySelector('[data-h-earth-clouds]');
-  if (!(cloudCanvas instanceof HTMLCanvasElement)) return;
-  const snapshot = renderer.getSnapshot();
-  const distance = clamp(Number(snapshot.distance) || 0, 95, 5600);
-  let blur = 0;
-  if (distance >= 4100) blur = 0.55;
-  else if (distance >= 3000) blur = 0.42;
-  else if (distance >= 2100) blur = 0.27;
-  else if (distance >= 1550) blur = 0.14;
-  if (Math.abs(blur - lastCloudBlur) < 0.01) return;
-  lastCloudBlur = blur;
-  cloudCanvas.style.filter = blur > 0 ? `blur(${blur}px)` : '';
-  cloudCanvas.style.transform = blur > 0 ? 'scale(1.0015)' : '';
-  cloudCanvas.style.transformOrigin = '50% 50%';
-  cloudCanvas.dataset.grazingPolishBlur = blur.toFixed(2);
 }
 
 function snapshotSignature(snapshot) {
@@ -242,7 +223,6 @@ function tick(now) {
     const changed = signature !== lastSignature;
     if (changed || now - lastStarRenderMs > 950) {
       lastSignature = signature;
-      updateCloudSmoothing();
       renderStars(now);
     }
   }
@@ -260,7 +240,6 @@ async function initialize() {
     }
     if (!renderer || !celestialState) throw new Error('AUDRALIA_POLISH_AUTHORITY_TIMEOUT');
     createStarCanvas();
-    updateCloudSmoothing();
     renderStars();
     window.addEventListener('resize', () => {
       lastSignature = '';
@@ -269,8 +248,7 @@ async function initialize() {
     window.__AUDRALIA_PRESENTATION_POLISH__ = Object.freeze({
       schema: POLISH_SCHEMA,
       cloudArchitectureMutated: false,
-      cloudGrazingPresentationSmoothing: true,
-      localCloudBlur: false,
+      cloudPresentationMutated: false,
       supplementalWorldAnchoredStars: STAR_FIELD.length,
       starDaylightSuppressionUsesCelestialAuthority: true,
       worldCoordinatesMutated: false,

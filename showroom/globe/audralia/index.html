@@ -8,9 +8,23 @@
   <meta name="description" content="Explore Audralia continuously from planetary scale to Gratitude and back again.">
   <title>Audralia · Planetary World</title>
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
-  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_PLANETARY_INTEGRATION_v1">
+  <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/app.mjs">
+  <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs">
+  <link rel="modulepreload" href="../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js">
+  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1">
 </head>
 <body>
+  <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
+    <div class="audralia-loading-panel">
+      <div class="audralia-loading-orbit" aria-hidden="true"></div>
+      <div class="audralia-loading-title">Audralia</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing the world…</div>
+      <div class="audralia-loading-track" aria-hidden="true"><span></span></div>
+      <div class="audralia-loading-time" data-audralia-loader-time>0.0 s</div>
+      <div class="audralia-loading-note">Building one continuous world from Gratitude to planetary scale.</div>
+    </div>
+  </div>
+
   <main class="audralia-live-shell" aria-label="Audralia planetary world">
     <header class="audralia-live-toolbar" aria-label="Audralia world navigation">
       <div class="audralia-live-brand" aria-label="Audralia">Audralia</div>
@@ -45,6 +59,67 @@
       diagnosticTrackPreserved: true,
       planetarySourceHead: 'f7f14a8748a2a782f5795ad395ae5967a7d3949d'
     });
+
+    (() => {
+      const loader = document.querySelector('[data-audralia-loader]');
+      const stageNode = document.querySelector('[data-audralia-loader-stage]');
+      const timeNode = document.querySelector('[data-audralia-loader-time]');
+      const statusNode = document.querySelector('[data-h-earth-status]');
+      if (!loader || !stageNode || !timeNode || !statusNode) return;
+
+      const startedAt = performance.now();
+      let finished = false;
+      const stageLabels = Object.freeze({
+        BOOTSTRAP_ACTIVE: 'Preparing the world…',
+        IMPORTING_CLOUD_VISUAL_REFERENCE: 'Loading planetary systems…',
+        BUILDING_CLOUD_PERFORMANCE_SUCCESSOR: 'Building Gratitude terrain and coastline…'
+      });
+      const elapsed = () => Math.max(0, performance.now() - startedAt);
+      const renderElapsed = () => { timeNode.textContent = `${(elapsed() / 1000).toFixed(1)} s`; };
+
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        const elapsedMs = elapsed();
+        renderElapsed();
+        stageNode.textContent = 'World ready';
+        loader.classList.add('is-ready');
+        window.__AUDRALIA_STARTUP_LOADING_RECEIPT__ = Object.freeze({
+          schema: 'AUDRALIA_LIVE_STARTUP_LOADING_RECEIPT_v1',
+          elapsedMs,
+          readyState: statusNode.dataset.status || statusNode.textContent.trim(),
+          measuredInBrowser: true,
+          geometryReducedForLoadTime: false,
+          modulePreloadEnabled: true
+        });
+        window.setTimeout(() => { loader.hidden = true; }, 420);
+      };
+
+      const update = () => {
+        const state = statusNode.dataset.status || '';
+        const text = statusNode.textContent.trim();
+        renderElapsed();
+        if (state.includes('FAILED') || text === 'ERROR' || text === 'FAIL') {
+          finished = true;
+          stageNode.textContent = 'Audralia could not finish loading';
+          loader.classList.add('is-error');
+          return;
+        }
+        if (text === 'REVIEW' || state.includes('VISUAL_READY') || state.includes('USER_REVIEW_REQUIRED')) {
+          finish();
+          return;
+        }
+        stageNode.textContent = stageLabels[state] || (text && !text.includes('…') ? text : 'Building the world…');
+      };
+
+      const observer = new MutationObserver(update);
+      observer.observe(statusNode, { attributes: true, attributeFilter: ['data-status'], childList: true, subtree: true });
+      const ticker = window.setInterval(() => {
+        if (finished) { window.clearInterval(ticker); observer.disconnect(); return; }
+        renderElapsed();
+      }, 250);
+      update();
+    })();
   </script>
   <script type="module" src="../h-earth/terrain-estate-construction-v1/app.mjs"></script>
 </body>

@@ -1,0 +1,121 @@
+{
+  "schema": "METHODS_MODELS_M1_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE_EVIDENCE_RECEIPT_v1",
+  "version": "1.0.0",
+  "candidateId": "M1_METHOD_PROCEDURE_FIELD",
+  "status": "PASS_BOUNDED_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE_WITH_ASSISTIVE_TECHNOLOGY_DEVICE_LIMITATION",
+  "authority": {
+    "authorityCommit": "454620f0c45c622e3d9e0f152c3dd0bd055ef958",
+    "terminalSemanticClosureCommit": "7ff3fb5e2e33cae76f98aab2409041f178a54ed4"
+  },
+  "lineage": {
+    "candidateCommit": "0025241602b5dd5de6140ace84ef0e11f6b34094",
+    "builderHardGateReceiptHead": "5e451879722bd8d340e722d6fb221a9b1ff500d3",
+    "runtimeVerifierCommit": "0a0dfb0950164f6a35c0491e905b69007b45e0d3",
+    "runtimeEvidenceHead": "4825ddb922c2f019b6742799b21cd41d16c2566b",
+    "accessibilityResponsiveVerifierCommit": "f650910f3cfd239ba6d007cae0ea3fe2902c082a",
+    "branch": "agent/methods-models-manifestation-m1-v1",
+    "candidateFilesMutatedByAccessibilityResponsiveStage": false
+  },
+  "verifierIdentity": {
+    "path": "verification/methods-models-bounded-manifestation-experiment-m1-accessibility-responsive-v1.mjs",
+    "gitBlobSha": "2c1803b546b6d3d29520e4609cdd5b8b7da5768a",
+    "sourceSha256AtExecution": "30bf1582d199148e0a105b6b594bf64476d0d2bec1f1fe53350c4566549f70fd",
+    "executionReceiptSha256": "00dcf3eeb76fd636ec14ca0a04fe1372999d5dfa8cfbcc132810a32183ca8f80",
+    "postCommitReexecution": "PASS_IDENTICAL_EXECUTION_RECEIPT_SHA256",
+    "runtime": "node-v22.16.0",
+    "browser": "Chromium 144.0.7559.96"
+  },
+  "byteIdentity": {
+    "methodSequenceSha256": "b9c6faf0f55251e457501313ca507d48a7c16236a78f0121859d70f356e7d865",
+    "verifiedBrowserRelevantCandidateBlobs": {
+      "manifestation.v1.html": "c01523b6fbece306c87dd9c78deca66f44578ccb",
+      "manifestation.v1.css": "a409cb0623ad30488bbb62afbaabd27179bc75a2",
+      "manifestation.v1.mjs": "11b9c6ce4936f8742ee0316d5750e1fdf580c8ca",
+      "semantic-runtime.v1.mjs": "b57245e49ba49953bc13a788750723ba800424b8",
+      "binding-plan.v1.json": "93cde1c1a1f943e12535dc4fd5b8b2a8319d89bb"
+    },
+    "verifiedSourceBlobs": {
+      "method-content-registry.v1.json": "a2980d52da356b3bc43bd6152706922e3b2153e5",
+      "scientific-object-registry.v1.json": "8cdfb8fd96c3c93f79cb9d525b8596c52b4bad5c"
+    }
+  },
+  "executionMode": {
+    "class": "CHROMIUM_ABOUT_BLANK_EXACT_CANDIDATE_ACCESSIBILITY_RESPONSIVE_HARNESS",
+    "candidateDom": "EXACT_MANIFESTATION_HTML_DOM_WITH_EXTERNAL_RESOURCE_TAGS_SUPPRESSED_FOR_HARNESS_LOADING_ONLY",
+    "candidateCss": "EXACT",
+    "semanticRuntime": "EXACT_ES_MODULE_BYTES_LOADED_AS_BLOB_MODULE",
+    "manifestationRuntime": "EXACT_EXCEPT_SINGLE_SEMANTIC_RUNTIME_IMPORT_LOCATOR_SUBSTITUTION_TO_VERIFIED_BLOB_MODULE",
+    "sourceRegistryLoading": "HARNESS_FETCH_ADAPTER_RETURNED_EXACT_F4_JSON_BYTES",
+    "webCrypto": "ABOUT_BLANK_NOT_SECURE_CONTEXT_DIGEST_BOUND_TO_ALREADY_VERIFIED_METHOD_SEQUENCE_SHA256",
+    "sourceSemanticMutationIntroducedByHarness": false
+  },
+  "evaluation": {
+    "assertionsPassed": 68,
+    "assertionsFailed": 0,
+    "viewports": [
+      {"id": "MOBILE", "width": 390, "height": 844, "workspaceGrid": "358px"},
+      {"id": "TABLET", "width": 768, "height": 1024, "workspaceGrid": "706.938px"},
+      {"id": "DESKTOP", "width": 1440, "height": 900, "workspaceGrid": "997px 340px"}
+    ],
+    "nativeBoundControlsInAccessibilityTree": 16,
+    "liveStatusRegionInAccessibilityTree": true,
+    "physicalKeyboardTabOrder": "PASS_SOURCE_BOUND_DETERMINISTIC_ORDER",
+    "physicalKeyboardActivation": "PASS_NATIVE_BUTTON_ENTER_ACTIVATION",
+    "focusVisible": "PASS_ALL_VIEWPORT_CLASSES",
+    "pointerKeyboardAssistiveSemanticEquality": "PASS_ALL_16_BINDINGS_OPERATION_TARGET_OUTCOME_EQUAL",
+    "assistiveTechnologySemanticDispatch": "PASS",
+    "responsiveInformationPreservation": "PASS",
+    "responsiveOperationPreservation": "PASS",
+    "declaredRelationPersistence": "PASS_16_OF_16",
+    "orientationContextRetention": "PASS",
+    "scientificStateHashNonmutation": "PASS",
+    "reducedMotionMediaQuery": "PASS",
+    "reducedMotionTransitionSuppression": "PASS",
+    "reducedMotionInformationPreservation": "PASS",
+    "reducedMotionOperationPreservation": "PASS",
+    "invalidAccessibleRouteFailClosed": "PASS_ROUTE_MODALITY_INVALID",
+    "invalidAccessibleRoutePriorStatePreserved": "PASS",
+    "browserRuntimeErrors": 0
+  },
+  "assistiveTechnologyBoundary": {
+    "nativeAccessibilityTreeExposure": "PASS",
+    "accessibleProgrammaticNativeButtonActivation": "PASS",
+    "semanticRuntimeAssistiveTechnologyRoute": "PASS",
+    "physicalScreenReaderOrExternalAssistiveTechnologyDeviceExecution": "NOT_RUN",
+    "claimLaw": "AX_TREE_EXPOSURE_AND_SEMANTIC_ASSISTIVE_EQUIVALENCE_DO_NOT_CONSTITUTE_PHYSICAL_SCREEN_READER_DEVICE_EVIDENCE"
+  },
+  "stageScope": {
+    "accessibilityResponsiveEquivalence": "PASS_BOUNDED",
+    "redesignPerformed": false,
+    "candidateMutationPerformed": false,
+    "publicMethodsMutation": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "ontologyExpansion": false,
+    "legacySemanticInheritance": false,
+    "scientificClaimUpgrade": false
+  },
+  "evidenceBoundary": {
+    "hardGateConformance": "PASS",
+    "runtimeAndInteractionEvidence": "PASS",
+    "accessibilityAndResponsiveEquivalence": "PASS_BOUNDED_WITH_PHYSICAL_ASSISTIVE_DEVICE_LIMITATION",
+    "perceptualEvaluation": "NOT_RUN",
+    "freshIndependentVerification": "NOT_RUN",
+    "networkServedBrowserReproduction": "NOT_RUN_ENVIRONMENT_BLOCKED",
+    "physicalScreenReaderDeviceExecution": "NOT_RUN",
+    "userDifferential": "NOT_RUN",
+    "publicPromotion": "WITHHELD",
+    "scientificClaimUpgrade": "NONE"
+  },
+  "limitations": [
+    "NO_PHYSICAL_SCREEN_READER_OR_EXTERNAL_ASSISTIVE_TECHNOLOGY_DEVICE_EXECUTION",
+    "ASSISTIVE_TECHNOLOGY_BROWSER_EVIDENCE_IS_BOUNDED_TO_NATIVE_AX_TREE_EXPOSURE_PLUS_ACCESSIBLE_PROGRAMMATIC_ACTIVATION_AND_SEMANTIC_RUNTIME_ASSISTIVE_TECHNOLOGY_EQUIVALENCE",
+    "CHROMIUM_MANAGED_URLBLOCKLIST_PREVENTS_COMMITTED_URL_FILE_OR_LOCAL_HTTP_NAVIGATION",
+    "ABOUT_BLANK_IS_NOT_SECURE_CONTEXT_SO_WEBCRYPTO_DIGEST_IS_BOUND_TO_ALREADY_VERIFIED_METHOD_SEQUENCE_SHA256",
+    "THIS_IS_NOT_PERCEPTUAL_EVALUATION",
+    "THIS_IS_NOT_FRESH_INDEPENDENT_VERIFICATION",
+    "THIS_IS_NOT_USER_DIFFERENTIAL",
+    "NO_PUBLIC_PROMOTION_CLAIM"
+  ],
+  "nextLawfulStage": "PERCEPTUAL_EVALUATION"
+}

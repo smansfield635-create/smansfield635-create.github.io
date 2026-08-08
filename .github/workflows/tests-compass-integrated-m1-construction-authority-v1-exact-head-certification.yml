@@ -1,0 +1,89 @@
+name: Tests Compass Integrated M1 Construction Authority Exact Head Certification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/tests-compass-integrated-m1-construction-authority-v1-exact-head-certification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SUBJECT_HEAD: 16968bdc3c0e914a6cc87f7750b65e28e745c701
+  SUBJECT_BRANCH: agent/tests-compass-integrated-m1-construction-authority-v1
+  PACKAGE: control-plane/whole-estate/tests-compass-integrated-m1-construction-authority-v1
+  EXPECTED_VERIFIER_BLOB: 146a00ef29ce1b7ddc34f679a0004751bf75ed60
+  M1R2_BRANCH: agent/methods-models-manifestation-m1r2-v1
+  M1R2_HEAD: 6840cf0b99914263628e937453497e5af3f16166
+
+jobs:
+  exact-head-construction-authority-certification:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact frozen construction authority subject
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SUBJECT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact subject, source authorities, and construction boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SUBJECT_HEAD"
+          git fetch origin "$SUBJECT_BRANCH" --quiet
+          test "$(git rev-parse FETCH_HEAD)" = "$SUBJECT_HEAD"
+          test "$(git rev-parse HEAD:$PACKAGE/verify.v1.mjs)" = "$EXPECTED_VERIFIER_BLOB"
+
+          git fetch origin "$M1R2_BRANCH" --quiet
+          test "$(git rev-parse FETCH_HEAD)" = "$M1R2_HEAD"
+
+          node "$PACKAGE/verify.v1.mjs" | tee /tmp/tests-compass-integrated-m1-construction-authority-verifier.json
+
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const v=JSON.parse(fs.readFileSync('/tmp/tests-compass-integrated-m1-construction-authority-verifier.json','utf8'));
+          if(v.result!=='PASS_TESTS_COMPASS_INTEGRATED_M1_CONSTRUCTION_AUTHORITY_v1')throw Error('AUTHORITY_RESULT_NOT_PASS');
+          if(!Number.isInteger(v.assertions)||v.assertions<=0)throw Error('INVALID_ASSERTION_COUNT');
+          if(v.target!=='M1_COMPASS_INTEGRATED')throw Error('TARGET_MISMATCH');
+          if(v.requiredCapabilities!==9||v.allCapabilitiesRequireAdapters!==true)throw Error('CAPABILITY_ADMISSION_MISMATCH');
+          if(v.scientificSubjectMutationAuthorized!==false)throw Error('SCIENTIFIC_SUBJECT_MUTATION_ESCALATION');
+          if(v.m1r2RewriteAuthorized!==false)throw Error('M1R2_REWRITE_ESCALATION');
+          if(v.publicMutationAuthorized!==false)throw Error('PUBLIC_MUTATION_ESCALATION');
+          if(v.scientificClaimUpgradeAuthorized!==false)throw Error('SCIENTIFIC_CLAIM_ESCALATION');
+          if(v.constructionCandidateAuthorizedAfterPromotion!==true)throw Error('CONSTRUCTION_AUTHORITY_NOT_ISSUED');
+          if(v.separateCandidatePromotionRequired!==true)throw Error('CANDIDATE_PROMOTION_BOUNDARY_MISSING');
+          const receipt={
+            schema:'TESTS_COMPASS_INTEGRATED_M1_CONSTRUCTION_AUTHORITY_EXACT_HEAD_CERTIFICATION_RECEIPT_v1',
+            operation:'TESTS_COMPASS_INTEGRATED_M1_CONSTRUCTION_AUTHORITY_v1',
+            validationSubjectHead:process.env.SUBJECT_HEAD,
+            validationSubjectBranch:process.env.SUBJECT_BRANCH,
+            committedVerifierBlob:process.env.EXPECTED_VERIFIER_BLOB,
+            preservedM1R2Head:process.env.M1R2_HEAD,
+            verifierResult:v.result,
+            assertions:v.assertions,
+            target:v.target,
+            requiredCapabilities:v.requiredCapabilities,
+            allCapabilitiesRequireAdapters:true,
+            scientificSubjectMutationAuthorized:false,
+            m1r2RewriteAuthorized:false,
+            publicMutationAuthorized:false,
+            scientificClaimUpgradeAuthorized:false,
+            constructionCandidateAuthorizedAfterPromotion:true,
+            separateCandidatePromotionRequired:true,
+            result:'PASS_CLOSED_EXACT_HEAD_CONSTRUCTION_AUTHORITY_CERTIFICATION'
+          };
+          fs.writeFileSync('/tmp/tests-compass-integrated-m1-construction-authority-exact-head-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+
+      - name: Upload exact-head construction authority certification receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-compass-integrated-m1-construction-authority-v1-exact-head-certification
+          path: |
+            /tmp/tests-compass-integrated-m1-construction-authority-verifier.json
+            /tmp/tests-compass-integrated-m1-construction-authority-exact-head-receipt.json
+          if-no-files-found: error

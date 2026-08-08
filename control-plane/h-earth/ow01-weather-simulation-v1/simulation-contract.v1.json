@@ -1,0 +1,90 @@
+{
+  "schema": "H_EARTH_AUDRALIA_WEATHER_SIMULATION_CONTRACT_v1",
+  "status": "NONPRODUCT_COMPUTABLE_ARCHITECTURE_CANDIDATE",
+  "productConstructionAuthorized": false,
+  "governanceParent": "c50d0a06a73ed149286508a15e697d8efa254865",
+  "protectedVisualParent": "8381f3323261b4facf70ec1f236c015b7d5df5a9",
+  "failedCloudLineage": {
+    "pr": 745,
+    "head": "e17e28ae54f0b92573baf938d0fe2c5f04404d1a",
+    "disposition": "RESEARCH_EVIDENCE_ONLY_DO_NOT_PROMOTE"
+  },
+  "governingLaw": "WEATHER_IS_SIMULATED_CLOUDS_ARE_CONSEQUENCES_RENDERING_IS_OBSERVATION",
+  "grid": {
+    "topology": "GNOMONIC_CUBED_SPHERE",
+    "faces": 6,
+    "method": "CONSERVATIVE_FINITE_VOLUME",
+    "cameraIndependent": true,
+    "faceResolutionCandidates": [16, 24, 32, 48],
+    "horizontalCellCounts": {
+      "C16": 1536,
+      "C24": 3456,
+      "C32": 6144,
+      "C48": 13824
+    },
+    "finalResolution": "GATE_H_DEVICE_MEASURED"
+  },
+  "physicalScale": {
+    "planetRenderRadiusAuthoringUnits": 6200,
+    "altitudeCalibration": "1_AUTHORING_UNIT_APPROX_1_KM_FOR_ATMOSPHERIC_ALTITUDE_ONLY",
+    "ordinaryCloudDomainKm": [0, 18],
+    "diagnosticHeightsKm": [0, 1, 2, 4, 7, 10, 14, 18],
+    "opticalAtmosphereSeparate": true
+  },
+  "dynamicCore": {
+    "type": "LAYERED_MOIST_ROTATING_SHALLOW_WATER_PLUS_COLUMN_PHYSICS",
+    "layerCountCandidates": [3, 5],
+    "preferredLayerCount": "5_IF_GATE_H_PASSES",
+    "minimumLayerCount": 3,
+    "prognosticPerLayer": ["h", "hu", "hv", "theta", "qv", "ql", "qi"],
+    "columnState": ["ps", "precipitation", "cloudWaterPath", "cloudIcePath"],
+    "surfaceState": ["terrainHeight", "terrainGradient", "landOceanClass", "surfaceTemperature", "waterTemperatureOrSST", "albedo", "roughness", "moistureAvailability"],
+    "planetInputs": ["rotationRateOmega", "gravity", "solarDirection", "solarFlux"],
+    "operatorOrder": ["massFlux", "momentumFluxAndPressureGradient", "coriolis", "thermalTransport", "moistureTransport", "columnPhysics", "verticalExchange", "boundedDiffusionDamping"],
+    "coriolis": "f=2*Omega*sin(latitude)",
+    "audraliaUnknownPlanetConstantsMustComeFromUpstream": true
+  },
+  "verticalMotion": {
+    "authority": "DERIVED_CONSTRAINED",
+    "components": ["horizontalConvergence", "orographicLift", "convectiveTransport", "frontalLargeScaleAscent", "layerExchange"],
+    "randomIndependentVerticalVelocityProhibited": true
+  },
+  "moistThermodynamics": {
+    "method": "SATURATION_ADJUSTMENT_WITH_LATENT_HEAT_FEEDBACK",
+    "processes": ["saturationDiagnosis", "condensation", "deposition", "evaporation", "sublimation", "liquidIcePartition", "precipitationFallout", "precipitationReevaporation", "surfaceEvaporation", "convectiveTransport", "stableLayerSuppression", "orographicAscent", "convergenceFrontalAscent", "dryAirIntrusion", "verticalShear"],
+    "closedColumnTotalWaterConservationRequired": true
+  },
+  "cloudSupport": {
+    "formula": "rho_cloud = SUPPORT * VERTICAL_PROFILE * CONDENSATE * STRUCTURE",
+    "supportInputs": ["saturation", "condensate", "lift", "stability", "layerDepth", "persistence"],
+    "proceduralStructureRole": "SUBGRID_ONLY",
+    "noiseCreatesWeather": false,
+    "noiseMayChangeCanonicalWeatherIdentity": false
+  },
+  "mesoscale": {
+    "type": "PERSISTENT_WORLD_ANCHORED_REFINEMENT_PATCH",
+    "eligibleSystems": ["tropicalCyclone", "organizedConvection", "frontNearActiveTraversal"],
+    "boundaryConditionsFromGlobalField": true,
+    "boundedFeedbackToGlobalField": true,
+    "cameraMayCreateWeatherPatch": false,
+    "finalPatchResolution": "GATE_H_DEVICE_MEASURED"
+  },
+  "tropicalCyclone": {
+    "visualVortexSpawnProhibited": true,
+    "requiredSupport": ["warmMoistOceanSupport", "lowLevelConvergence", "cyclonicVorticity", "deepMoistConvection", "organizedVerticalCirculation"],
+    "modifiers": ["verticalShear", "dryAirIntrusion", "landSurfaceFluxLoss", "oceanCoolingColdWake", "precipitationOrganization", "upperOutflowSupport"],
+    "persistentIdentityThroughIntensityChange": true
+  },
+  "time": {
+    "simulationTickRateEqualsRenderFrameRate": false,
+    "wallCadenceCandidatesHz": [0.5, 1, 2, 4],
+    "simulationDtSeconds": "NUMERICAL_STABILITY_SELECTED_SEPARATELY",
+    "renderInterpolationBetweenCanonicalStates": true
+  },
+  "determinism": {
+    "inputs": ["initialState", "canonicalSurface", "planetParameters", "simulationSeed", "timeStepSequence"],
+    "sameInputsReproduceSameCanonicalEvolutionWithinTolerance": true,
+    "subgridSeedDomain": ["canonicalPosition", "canonicalSystemIdentity", "simulationTime"]
+  },
+  "prohibitions": ["CAMERA_DEPENDENT_WEATHER", "RANDOM_GENUS_SELECTION", "ORDINARY_CLOUDS_AT_92KM", "ALPHA_SHELL_AS_CLOUD_AUTHORITY", "RESEED_ON_SCALE_CHANGE", "COHERENCE_SCORE_DRIVES_HURRICANE", "WHOLE_PLANET_LOCAL_VOLUMETRIC_RAYMARCH", "PRODUCT_GEOGRAPHY_MUTATION_FOR_WEATHER", "GESTURE_REGRESSION_AS_ACCEPTABLE_COST"]
+}

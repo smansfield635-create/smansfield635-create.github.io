@@ -33,16 +33,19 @@
   const initialSequence=Number(root.dataset.lawsStorySequence);
   if(!Number.isInteger(initialSequence)||initialSequence<1)return;
 
-  const manifestUrl='/laws/orbital-tranche-a0-a3/manifest.v1.json';
-  const PERSISTENT_START=0;
-  const PERSISTENT_END=2;
-  const fail=()=>{root.dataset.lawsOrbitalStoryStatus='fail-closed'};
+  const MANIFEST='/laws/orbital-tranche-a0-a3/manifest.v1.json';
+  const CALIBRATION_START=0;
+  const CALIBRATION_END=1;
   const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const normalizePath=value=>{
     try{return new URL(value,location.href).pathname.replace(/\/+/g,'/')}catch{return value||''}
   };
+  const fail=err=>{
+    root.dataset.lawsOrbitalStoryStatus='fail-closed';
+    if(err)root.dataset.lawsOrbitalFailure=String(err?.message||err);
+  };
 
-  fetch(manifestUrl,{credentials:'same-origin'})
+  fetch(MANIFEST,{credentials:'same-origin'})
     .then(r=>{if(!r.ok)throw new Error('manifest');return r.json()})
     .then(m=>{
       if(m.surface?.semanticType!=='NARRATIVE_SEQUENCE'||m.surface?.wrapPolicy!=='BOUNDED')throw new Error('surface');
@@ -50,13 +53,22 @@
       const initialIndex=initialSequence-1;
       if(!stories[initialIndex]||stories[initialIndex].position!==initialSequence)throw new Error('binding');
 
+      const isCalibration=index=>index>=CALIBRATION_START&&index<=CALIBRATION_END;
+      const storyIndexForPath=path=>stories.findIndex(s=>normalizePath(s.route)===normalizePath(path));
+      const currentPageShell=()=>document.querySelector('.lr-shell,.mm-shell');
+      const currentTopbar=()=>document.querySelector('.lr-topbar,.mm-topbar');
+      const currentSkip=()=>document.querySelector('.lr-skip,.mm-skip');
+      const currentMain=()=>currentPageShell()?.querySelector('main');
+
       const state={
         index:initialIndex,
         mounting:false,
         drag:null,
         suppressClickUntil:0,
-        mountSerial:0,
-        cache:new Map()
+        cache:new Map(),
+        docs:new Map(),
+        scenes:new Map(),
+        viewport:null
       };
 
       const shell=document.createElement('section');
@@ -65,7 +77,7 @@
       shell.dataset.semanticType=m.surface.semanticType;
       shell.dataset.wrapPolicy=m.surface.wrapPolicy;
       shell.setAttribute('aria-label','Laws narrative orbit');
-      shell.innerHTML=`<header class="laws-orbital-story__head"><div><p class="laws-orbital-story__eyebrow">Laws · canonical narrative</p><h2 data-orbit-title></h2></div><p class="laws-orbital-story__position" data-orbit-position></p></header><div class="laws-orbital-story__stage" tabindex="0" aria-describedby="laws-orbital-cue"><div class="laws-orbital-story__ring"></div></div><div class="laws-orbital-story__controls"><button class="laws-orbital-story__control" type="button" data-orbit-prev></button><span class="laws-orbital-story__cue" id="laws-orbital-cue">Drag the story field · release to settle</span><button class="laws-orbital-story__control" type="button" data-orbit-next></button></div>`;
+      shell.innerHTML=`<header class="laws-orbital-story__head"><div><p class="laws-orbital-story__eyebrow">Laws · canonical narrative</p><h2 data-orbit-title></h2></div><p class="laws-orbital-story__position" data-orbit-position></p></header><div class="laws-orbital-story__stage" tabindex="0" aria-describedby="laws-orbital-cue"><div class="laws-orbital-story__ring"></div></div><div class="laws-orbital-story__controls"><button class="laws-orbital-story__control" type="button" data-orbit-prev></button><span class="laws-orbital-story__cue" id="laws-orbital-cue">Drag the story field · page moves with your hand</span><button class="laws-orbital-story__control" type="button" data-orbit-next></button></div>`;
 
       const stage=shell.querySelector('.laws-orbital-story__stage');
       const ring=shell.querySelector('.laws-orbital-story__ring');
@@ -74,17 +86,31 @@
       const prevButton=shell.querySelector('[data-orbit-prev]');
       const nextButton=shell.querySelector('[data-orbit-next]');
 
-      const currentPageShell=()=>document.querySelector('.lr-shell,.mm-shell');
-      const currentTopbar=()=>document.querySelector('.lr-topbar,.mm-topbar');
-      const currentSkip=()=>document.querySelector('.lr-skip,.mm-skip');
       const attachOrbit=()=>{
         const topbar=currentTopbar();
-        const pageShell=currentPageShell();
-        if(!topbar||!pageShell)return false;
+        if(!topbar)return false;
         topbar.insertAdjacentElement('afterend',shell);
         return true;
       };
       if(!attachOrbit())throw new Error('page-shell');
+
+      const setupSceneViewport=()=>{
+        if(!isCalibration(state.index))return;
+        const main=currentMain();
+        if(!main)throw new Error('main');
+        const viewport=document.createElement('div');
+        viewport.className='laws-orbital-scene-viewport';
+        viewport.dataset.lawsSpatialViewport='A1_A2_CALIBRATION';
+        const scene=document.createElement('div');
+        scene.className='laws-orbital-scene is-current';
+        scene.dataset.storyIndex=String(state.index);
+        main.parentNode.insertBefore(viewport,main);
+        scene.appendChild(main);
+        viewport.appendChild(scene);
+        state.viewport=viewport;
+        state.scenes.set(state.index,{node:scene,doc:null});
+      };
+      setupSceneViewport();
 
       const spacing=()=>{
         const w=stage.clientWidth||window.innerWidth||320;
@@ -95,8 +121,7 @@
 
       const renderMembers=()=>{
         const current=stories[state.index];
-        const visible=core.visibleOffsets(state.index,stories.length);
-        ring.innerHTML=visible.map(({index,offset})=>cardMarkup(stories[index],index,offset)).join('');
+        ring.innerHTML=core.visibleOffsets(state.index,stories.length).map(({index,offset})=>cardMarkup(stories[index],index,offset)).join('');
         shell.dataset.selectedMember=current.memberId;
         titleEl.textContent=current.label;
         positionEl.textContent=`Story ${current.position} / ${stories.length}`;
@@ -106,6 +131,51 @@
         nextButton.textContent=`${next?next.label:'End'} →`;
         prevButton.setAttribute('aria-disabled',String(!prev));
         nextButton.setAttribute('aria-disabled',String(!next));
+      };
+
+      const fetchStoryText=async index=>{
+        if(state.cache.has(index))return state.cache.get(index);
+        const promise=fetch(stories[index].route,{credentials:'same-origin'})
+          .then(r=>{if(!r.ok)throw new Error(`story-fetch-${r.status}`);return r.text()});
+        state.cache.set(index,promise);
+        try{return await promise}catch(err){state.cache.delete(index);throw err}
+      };
+
+      const parseStory=async index=>{
+        if(state.docs.has(index))return state.docs.get(index);
+        const text=await fetchStoryText(index);
+        const doc=new DOMParser().parseFromString(text,'text/html');
+        if(Number(doc.documentElement.dataset.lawsStorySequence)!==stories[index].position)throw new Error('target-binding');
+        state.docs.set(index,doc);
+        return doc;
+      };
+
+      const prepareScene=async index=>{
+        if(!state.viewport||!isCalibration(index)||state.scenes.has(index))return state.scenes.get(index)||null;
+        const doc=await parseStory(index);
+        const sourceMain=doc.querySelector('main');
+        if(!sourceMain)throw new Error('target-main');
+        const scene=document.createElement('div');
+        scene.className='laws-orbital-scene';
+        scene.dataset.storyIndex=String(index);
+        scene.appendChild(document.importNode(sourceMain,true));
+        state.viewport.appendChild(scene);
+        const record={node:scene,doc};
+        state.scenes.set(index,record);
+        layoutScenes(0);
+        return record;
+      };
+
+      const layoutScenes=(progress=0,settling=false)=>{
+        if(!state.viewport)return;
+        state.viewport.classList.toggle('is-settling',settling);
+        state.scenes.forEach((record,index)=>{
+          const offset=(index-state.index)+progress;
+          record.node.style.transform=`translate3d(${offset*100}%,0,0) scale(${Math.max(.965,1-Math.abs(offset)*.018)})`;
+          record.node.style.opacity=String(Math.max(.48,1-Math.abs(offset)*.28));
+          record.node.style.pointerEvents=Math.abs(offset)<.01?'auto':'none';
+          record.node.setAttribute('aria-hidden',Math.abs(offset)<.01?'false':'true');
+        });
       };
 
       const renderDrag=p=>{
@@ -128,6 +198,7 @@
         });
         cards.forEach(card=>card.classList.toggle('is-gesture-front',card===closest));
         shell.style.setProperty('--gesture-progress',String(p));
+        if(state.viewport)layoutScenes(p,false);
       };
 
       const clearDrag=()=>{
@@ -139,6 +210,7 @@
         });
         shell.style.removeProperty('--gesture-progress');
         stage.classList.remove('is-dragging','is-settling');
+        if(state.viewport){state.viewport.classList.remove('is-dragging','is-settling');layoutScenes(0,false)}
       };
 
       const boundary=()=>{
@@ -147,118 +219,67 @@
         shell.classList.add('is-boundary');
       };
 
-      const isPersistentIndex=index=>index>=PERSISTENT_START&&index<=PERSISTENT_END;
-      const storyIndexForPath=path=>stories.findIndex(s=>normalizePath(s.route)===normalizePath(path));
-
-      const fetchStoryText=async index=>{
-        if(state.cache.has(index))return state.cache.get(index);
-        const promise=fetch(stories[index].route,{credentials:'same-origin',headers:{'X-Laws-Orbital-Mount':'1'}})
-          .then(r=>{if(!r.ok)throw new Error(`story-fetch-${r.status}`);return r.text()});
-        state.cache.set(index,promise);
-        try{return await promise}catch(err){state.cache.delete(index);throw err}
-      };
-
-      const syncStyles=async doc=>{
-        const targets=[...doc.querySelectorAll('link[rel="stylesheet"][href]')].map(source=>new URL(source.getAttribute('href'),location.href));
-        const targetPaths=new Set(targets.map(abs=>abs.pathname));
-        document.querySelectorAll('link[rel="stylesheet"][href]').forEach(link=>{
-          const path=new URL(link.href,location.href).pathname;
-          const familyScoped=path.startsWith('/assets/laws-destination/renewal')||path.startsWith('/laws/research/methods-and-models/showroom');
-          if(familyScoped&&!targetPaths.has(path))link.remove();
-        });
-        const existing=new Set([...document.querySelectorAll('link[rel="stylesheet"][href]')].map(link=>new URL(link.href,location.href).pathname));
-        const pending=[];
-        targets.forEach(abs=>{
-          if(existing.has(abs.pathname))return;
-          const link=document.createElement('link');
-          link.rel='stylesheet';
-          link.href=abs.href;
-          link.dataset.lawsOrbitalMountedAsset='true';
-          pending.push(new Promise(resolve=>{link.onload=resolve;link.onerror=resolve}));
-          document.head.appendChild(link);
-          existing.add(abs.pathname);
-        });
-        if(pending.length)await Promise.all(pending);
-      };
-
-      const executeScript=src=>new Promise((resolve,reject)=>{
-        const abs=new URL(src,location.href);
-        if(abs.pathname.endsWith('/laws/orbital-tranche-a0-a3/common-grammar.js'))return resolve();
+      const executeRenewal=()=>new Promise((resolve,reject)=>{
         const script=document.createElement('script');
-        script.src=abs.pathname+abs.search+(abs.search?'&':'?')+`orbitalMount=${++state.mountSerial}`;
-        script.async=false;
-        script.dataset.lawsOrbitalMountedAsset='true';
+        script.src=`/assets/laws-destination/renewal.js?v=LAWS_COMPLETE_RENEWAL_COLLAPSIBLE_NAVIGATION_V1&orbitalMount=${Date.now()}`;
         script.onload=()=>{script.remove();resolve()};
-        script.onerror=()=>{script.remove();reject(new Error(`script-${abs.pathname}`))};
+        script.onerror=()=>{script.remove();reject(new Error('renewal-runtime'))};
         document.head.appendChild(script);
       });
 
-      const executeTargetScripts=async doc=>{
-        const sources=[...doc.querySelectorAll('head script[src]')].map(script=>script.getAttribute('src')).filter(Boolean);
-        for(const src of sources)await executeScript(src);
-      };
-
-      const syncRootMetadata=doc=>{
+      const syncMetadata=doc=>{
         const target=doc.documentElement;
-        const keys=['data-route','data-narrative-route','data-page-family','data-laws-story-sequence','data-laws-orbital-surface','data-laws-orbital-member','data-laws-wrap-policy','data-methods-models-contract','data-canonical-archive','data-source-completeness','data-product-acceptance'];
-        keys.forEach(name=>{
+        ['data-route','data-narrative-route','data-page-family','data-laws-story-sequence','data-laws-orbital-surface','data-laws-orbital-member','data-laws-wrap-policy'].forEach(name=>{
           if(target.hasAttribute(name))root.setAttribute(name,target.getAttribute(name));
           else root.removeAttribute(name);
         });
-        [...document.body.attributes].filter(a=>a.name.startsWith('data-mm-')).forEach(a=>document.body.removeAttribute(a.name));
-        [...doc.body.attributes].filter(a=>a.name.startsWith('data-mm-')).forEach(a=>document.body.setAttribute(a.name,a.value));
         document.title=doc.title;
         const targetCanonical=doc.querySelector('link[rel="canonical"]');
         const canonical=document.querySelector('link[rel="canonical"]');
         if(targetCanonical&&canonical)canonical.href=targetCanonical.href;
       };
 
-      const extractPageNodes=doc=>{
-        const pageShell=doc.querySelector('.lr-shell,.mm-shell');
-        if(!pageShell)throw new Error('target-shell');
-        const skip=doc.querySelector('.lr-skip,.mm-skip');
-        return {pageShell,skip};
-      };
-
-      const mountStory=async(index,{historyMode='push'}={})=>{
-        if(!isPersistentIndex(index))throw new Error('outside-persistent-tranche');
-        const text=await fetchStoryText(index);
-        const doc=new DOMParser().parseFromString(text,'text/html');
-        const targetSequence=Number(doc.documentElement.dataset.lawsStorySequence);
-        if(targetSequence!==stories[index].position)throw new Error('target-binding');
-        await syncStyles(doc);
-        const {pageShell:sourceShell,skip:sourceSkip}=extractPageNodes(doc);
-        const newShell=document.importNode(sourceShell,true);
-        const newSkip=sourceSkip?document.importNode(sourceSkip,true):null;
-        const oldShell=currentPageShell();
+      const promoteCalibrationScene=async(index,{historyMode='push'}={})=>{
+        const record=await prepareScene(index);
+        const doc=record?.doc||await parseStory(index);
+        const sourceTopbar=doc.querySelector('.lr-topbar');
+        const sourceSkip=doc.querySelector('.lr-skip');
+        if(!sourceTopbar)throw new Error('target-topbar');
+        const oldTopbar=currentTopbar();
+        if(!oldTopbar)throw new Error('current-topbar');
+        oldTopbar.replaceWith(document.importNode(sourceTopbar,true));
         const oldSkip=currentSkip();
-        if(!oldShell)throw new Error('current-shell');
-
-        shell.remove();
-        if(newSkip){
+        if(sourceSkip){
+          const newSkip=document.importNode(sourceSkip,true);
           if(oldSkip)oldSkip.replaceWith(newSkip);
-          else document.body.insertBefore(newSkip,oldShell);
-        }else if(oldSkip){oldSkip.remove()}
-        oldShell.replaceWith(newShell);
-        syncRootMetadata(doc);
-        if(!attachOrbit())throw new Error('reattach-orbit');
-
+          else document.body.insertBefore(newSkip,currentPageShell());
+        }
+        syncMetadata(doc);
         state.index=index;
+        state.scenes.forEach((entry,sceneIndex)=>{
+          if(sceneIndex===index){
+            entry.node.classList.add('is-current');
+            entry.node.style.position='relative';
+          }else{
+            entry.node.remove();
+            state.scenes.delete(sceneIndex);
+          }
+        });
+        layoutScenes(0,false);
         renderMembers();
         clearDrag();
-        root.dataset.lawsOrbitalPersistentState=stories[index].memberId;
-        root.dataset.lawsOrbitalDocumentReload='false';
         if(historyMode==='push')history.pushState({lawsStoryIndex:index},'',stories[index].route);
         if(historyMode==='replace')history.replaceState({lawsStoryIndex:index},'',stories[index].route);
-
-        await executeTargetScripts(doc);
+        root.dataset.lawsOrbitalPersistentState=stories[index].memberId;
+        root.dataset.lawsOrbitalDocumentReload='false';
+        root.dataset.lawsOrbitalSceneCommit='in-document';
+        await executeRenewal();
         document.querySelectorAll('[data-lr-tabs],.lr-tablist').forEach(el=>{
           el.dataset.orbitalSemanticType='PARALLEL_LENS';
           el.dataset.scientificSequence='false';
         });
-        currentPageShell()?.classList.add('laws-orbital-content-enter');
-        setTimeout(()=>currentPageShell()?.classList.remove('laws-orbital-content-enter'),320);
-        document.dispatchEvent(new CustomEvent('laws:story-mounted',{detail:{index,story:stories[index]}}));
+        const neighbor=index===0?1:0;
+        prepareScene(neighbor).catch(()=>{});
       };
 
       const commitToIndex=async(targetIndex,{historyMode='push',source='gesture'}={})=>{
@@ -271,14 +292,18 @@
         state.mounting=true;
         stage.classList.remove('is-dragging');
         stage.classList.add('is-settling','is-committing');
-        renderDrag(direction>0?-1:1);
+        if(state.viewport)state.viewport.classList.add('is-settling');
         root.dataset.lawsOrbitalTransitionSource=source;
         try{
-          if(isPersistentIndex(targetIndex)){
-            await Promise.all([fetchStoryText(targetIndex),delay(230)]);
-            await mountStory(targetIndex,{historyMode});
+          if(isCalibration(state.index)&&isCalibration(targetIndex)){
+            await prepareScene(targetIndex);
+            renderDrag(direction>0?-1:1);
+            layoutScenes(direction>0?-1:1,true);
+            await delay(280);
+            await promoteCalibrationScene(targetIndex,{historyMode});
           }else{
-            await delay(230);
+            renderDrag(direction>0?-1:1);
+            await delay(240);
             location.assign(stories[targetIndex].route);
             return;
           }
@@ -317,7 +342,9 @@
         if(e.pointerType==='mouse'&&e.button!==0)return;
         state.drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,lastX:e.clientX,lastT:performance.now(),velocity:0,axis:null,progress:0,moved:false};
         stage.classList.remove('is-settling');
+        if(state.viewport)state.viewport.classList.remove('is-settling');
       });
+
       stage.addEventListener('pointermove',e=>{
         const drag=state.drag;
         if(!drag||drag.id!==e.pointerId||state.mounting)return;
@@ -327,6 +354,9 @@
           if(drag.axis==='x'){
             stage.setPointerCapture?.(e.pointerId);
             stage.classList.add('is-dragging');
+            if(state.viewport)state.viewport.classList.add('is-dragging');
+            const candidate=dx<0?state.index+1:state.index-1;
+            if(isCalibration(state.index)&&isCalibration(candidate))prepareScene(candidate).catch(()=>{});
             renderDrag(0);
           }
         }
@@ -348,14 +378,17 @@
         if(drag.moved)state.suppressClickUntil=performance.now()+650;
         const direction=cancelled?0:core.dragDirection(drag.progress,drag.velocity);
         stage.classList.remove('is-dragging');
+        if(state.viewport)state.viewport.classList.remove('is-dragging');
         if(direction){
           commitToIndex(state.index+direction,{source:'gesture'});
         }else{
           stage.classList.add('is-settling');
+          if(state.viewport)state.viewport.classList.add('is-settling');
           renderDrag(0);
-          setTimeout(clearDrag,240);
+          setTimeout(clearDrag,280);
         }
       };
+
       stage.addEventListener('pointerup',e=>finishDrag(e,false));
       stage.addEventListener('pointercancel',e=>finishDrag(e,true));
       stage.addEventListener('lostpointercapture',e=>{if(state.drag&&state.drag.id===e.pointerId)finishDrag(e,true)});
@@ -375,7 +408,7 @@
         if(!anchor||shell.contains(anchor)||e.defaultPrevented)return;
         if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||anchor.target==='_blank')return;
         const targetIndex=storyIndexForPath(anchor.href);
-        if(isPersistentIndex(targetIndex)){
+        if(isCalibration(state.index)&&isCalibration(targetIndex)){
           e.preventDefault();
           commitToIndex(targetIndex,{source:'in-page-link'});
         }
@@ -383,10 +416,11 @@
 
       window.addEventListener('popstate',()=>{
         const targetIndex=storyIndexForPath(location.pathname);
-        if(isPersistentIndex(targetIndex)&&targetIndex!==state.index){
+        if(isCalibration(state.index)&&isCalibration(targetIndex)&&targetIndex!==state.index){
           commitToIndex(targetIndex,{historyMode:'none',source:'history'});
         }
       });
+
       window.addEventListener('resize',()=>{
         if(stage.classList.contains('is-dragging')&&state.drag)renderDrag(state.drag.progress);
       },{passive:true});
@@ -394,10 +428,13 @@
       renderMembers();
       history.replaceState({lawsStoryIndex:state.index},'',location.pathname+location.search+location.hash);
       root.dataset.lawsOrbitalStoryStatus='ready';
-      root.dataset.lawsOrbitalGestureMode='persistent-spatial-state';
-      root.dataset.lawsOrbitalPersistentRange='STORY_01_TO_STORY_03';
+      root.dataset.lawsOrbitalGestureMode=isCalibration(state.index)?'A1_A2_FULL_SCENE_DRAG':'ORBIT_STAGE_ONLY';
+      root.dataset.lawsOrbitalPersistentRange='STORY_01_TO_STORY_02';
       root.dataset.lawsOrbitalDocumentReload='false';
-      [state.index-1,state.index+1].filter(isPersistentIndex).forEach(index=>fetchStoryText(index).catch(()=>{}));
+      if(isCalibration(state.index)){
+        const neighbor=state.index===0?1:0;
+        prepareScene(neighbor).then(()=>{root.dataset.lawsOrbitalNeighborScene='ready'}).catch(()=>{root.dataset.lawsOrbitalNeighborScene='unavailable'});
+      }
     })
     .catch(fail);
 })(globalThis);

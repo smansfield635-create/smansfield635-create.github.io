@@ -300,17 +300,17 @@ void main(){
   for(int s=0;s<STEPS;s++){
     if(t>t1||alpha>.965)break;
     vec3 p=uEye+rd*t;
-    vec3 sample=densityAt(p);
-    float den=sample.x;
+    vec3 cloudSample=densityAt(p);
+    float den=cloudSample.x;
     if(den>.003){
       vec3 radial=normalize(p-CENTER);
       float daylight=.42+.58*clamp(dot(radial,sun)*.5+.5,0.0,1.0);
       float forward=pow(max(dot(rd,sun),0.0),7.0);
-      float core=clamp(den*.62+sample.z*.18,0.0,.72);
+      float core=clamp(den*.62+cloudSample.z*.18,0.0,.72);
       vec3 bright=mix(vec3(.82,.86,.90),vec3(1.03,1.01,.96),daylight);
       vec3 dark=vec3(.40,.43,.48);
       vec3 col=mix(bright,dark,core);
-      col=mix(col,vec3(.84,.90,.98),sample.y*.10);
+      col=mix(col,vec3(.84,.90,.98),cloudSample.y*.10);
       col+=vec3(1.0,.94,.82)*forward*.08;
       float a=1.0-exp(-den*stepLen*.021);
       premul+=(1.0-alpha)*col*a;

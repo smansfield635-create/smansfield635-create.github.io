@@ -16,10 +16,10 @@ function updateScaleUI(renderer){
   if(brandNode)brandNode.textContent=`Audralia · Gratitude · OW01 · ${scale.toLowerCase()}`;
   if(focusButton)focusButton.textContent=scale==='LOCAL'?'reset view':'focus Gratitude';
   const descriptions={
-    LOCAL:'LOCAL · frozen Gratitude visual-map baseline · atmosphere is presentation only · canonical coast, curved sandbars, terrain, opacity, and gesture intent remain protected.',
-    REGION:'REGION · planet-centered atmosphere checkpoint · same Gratitude boundary and shallow-water transition · no camera-dependent geography.',
-    CONTINENT:'CONTINENT · analytic atmospheric limb/haze over the frozen continent · inspect scale continuity and confirm coastline identity does not move.',
-    PLANETARY:'PLANETARY · first atmosphere checkpoint · planet-centered scattering shell above one opaque Audralia ocean · clouds intentionally not constructed yet.'
+    LOCAL:'LOCAL · frozen Gratitude visual-map baseline · tuned atmosphere fades below the horizon regime · canonical coast, terrain, opacity, and gestures remain protected.',
+    REGION:'REGION · tuned planet-centered atmosphere · horizon scattering retained while broad dark-shell presentation is suppressed.',
+    CONTINENT:'CONTINENT · concentrated Rayleigh-like limb over the frozen continent · inspect atmospheric depth without a visible secondary sphere.',
+    PLANETARY:'PLANETARY · tuned atmosphere checkpoint · thin illuminated limb above one opaque Audralia ocean · clouds intentionally not constructed yet.'
   };
   setDiagnostic(descriptions[scale]||descriptions.LOCAL);
 }
@@ -27,7 +27,7 @@ function updateScaleUI(renderer){
 function createAtmosphereLayer(renderer){
   const PLANET_RADIUS=6200;
   const PLANET_CENTER=[0,-PLANET_RADIUS,0];
-  const SHELL_HEIGHT=210;
+  const SHELL_HEIGHT=120;
   const SHELL_RADIUS=PLANET_RADIUS+SHELL_HEIGHT;
   const SUN=[.42,.78,.46];
   const norm=v=>{const l=Math.hypot(...v)||1;return v.map(x=>x/l);};
@@ -50,7 +50,7 @@ function createAtmosphereLayer(renderer){
   if(!gl)throw Error('H_EARTH_ATMOSPHERE_WEBGL2_UNAVAILABLE');
 
   const VS=`#version 300 es\nprecision highp float;\nlayout(location=0) in vec3 aPosition;\nlayout(location=1) in vec3 aNormal;\nuniform mat4 uVP;\nout vec3 vPos;\nout vec3 vNormal;\nvoid main(){vPos=aPosition;vNormal=aNormal;gl_Position=uVP*vec4(aPosition,1.0);}`;
-  const FS=`#version 300 es\nprecision highp float;\nin vec3 vPos;\nin vec3 vNormal;\nuniform vec3 uEye;\nuniform vec3 uSunDir;\nuniform float uOpacity;\nout vec4 outColor;\nvoid main(){vec3 n=normalize(vNormal);vec3 viewDir=normalize(uEye-vPos);float facing=abs(dot(n,viewDir));float limb=pow(1.0-clamp(facing,0.0,1.0),1.55);float daylight=.24+.76*clamp(dot(n,normalize(uSunDir))*.5+.5,0.0,1.0);float mie=pow(max(dot(normalize(uSunDir),-viewDir),0.0),10.0);vec3 rayleigh=vec3(.18,.48,.98);vec3 horizon=vec3(.62,.78,.98);vec3 c=mix(rayleigh,horizon,clamp(limb*.92+mie*.08,0.0,1.0))*(.72+.28*daylight);float a=uOpacity*clamp(.008+limb*.38+mie*.045,0.0,.44);outColor=vec4(c,a);}`;
+  const FS=`#version 300 es\nprecision highp float;\nin vec3 vPos;\nin vec3 vNormal;\nuniform vec3 uEye;\nuniform vec3 uSunDir;\nuniform float uOpacity;\nout vec4 outColor;\nvoid main(){vec3 n=normalize(vNormal);vec3 viewDir=normalize(uEye-vPos);vec3 sun=normalize(uSunDir);float facing=abs(dot(n,viewDir));float tangent=1.0-clamp(facing,0.0,1.0);float limb=pow(tangent,5.4);float daylight=.38+.62*clamp(dot(n,sun)*.5+.5,0.0,1.0);float mie=pow(max(dot(sun,-viewDir),0.0),20.0);vec3 rayleigh=vec3(.26,.66,1.0);vec3 horizon=vec3(.70,.90,1.0);float glow=clamp(limb*1.28+mie*.12,0.0,1.0);vec3 c=mix(rayleigh,horizon,glow)*(.82+.18*daylight);float a=uOpacity*clamp(limb*.24+mie*.018,0.0,.18);outColor=vec4(c,a);}`;
   const compile=(type,source)=>{const shader=gl.createShader(type);gl.shaderSource(shader,source);gl.compileShader(shader);if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))throw Error(`ATMOSPHERE_SHADER_COMPILE_FAILED:${gl.getShaderInfoLog(shader)}`);return shader;};
   const program=gl.createProgram();gl.attachShader(program,compile(gl.VERTEX_SHADER,VS));gl.attachShader(program,compile(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(`ATMOSPHERE_PROGRAM_LINK_FAILED:${gl.getProgramInfoLog(program)}`);
 
@@ -84,7 +84,7 @@ function createAtmosphereLayer(renderer){
     const dpr=Math.min(1.35,window.devicePixelRatio||1),w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));if(overlay.width!==w||overlay.height!==h){overlay.width=w;overlay.height=h;}gl.viewport(0,0,w,h);
   };
   const render=()=>{
-    resize();const snapshot=renderer.getSnapshot(),cam=cameraFrame(snapshot),altitude=Math.max(0,Math.hypot(...sub(cam.eye,PLANET_CENTER))-PLANET_RADIUS),outside=smooth(150,900,altitude),opacity=outside*(1-smooth(5000,7600,altitude));
+    resize();const snapshot=renderer.getSnapshot(),cam=cameraFrame(snapshot),altitude=Math.max(0,Math.hypot(...sub(cam.eye,PLANET_CENTER))-PLANET_RADIUS),entry=smooth(700,2600,altitude),distant=1-smooth(5200,7600,altitude),opacity=.74*entry*distant;
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);if(opacity<=.002)return;
     const vp=multiply(perspective(55*Math.PI/180,overlay.width/overlay.height,2,PLANET_RADIUS*4.5),lookAt(cam.eye,cam.target,cam.up));
     gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.enable(gl.CULL_FACE);gl.cullFace(altitude<SHELL_HEIGHT?gl.FRONT:gl.BACK);
@@ -92,7 +92,7 @@ function createAtmosphereLayer(renderer){
     gl.disable(gl.CULL_FACE);gl.disable(gl.BLEND);gl.depthMask(true);
     overlay.dataset.altitude=altitude.toFixed(2);overlay.dataset.opacity=opacity.toFixed(4);
   };
-  const evidence=Object.freeze({schema:'H_EARTH_OW01_ATMOSPHERE_PRESENTATION_CHECKPOINT_v1',protectedBaseHead:ATMOSPHERE_BASE_HEAD,planetCentered:true,cameraCentered:false,geographicAuthority:false,shellHeightAuthoringUnits:SHELL_HEIGHT,analyticScattering:true,cloudSystemConstructed:false,separatePresentationCanvas:true,rendererMutation:false});
+  const evidence=Object.freeze({schema:'H_EARTH_OW01_ATMOSPHERE_PRESENTATION_CHECKPOINT_v2',protectedBaseHead:ATMOSPHERE_BASE_HEAD,planetCentered:true,cameraCentered:false,geographicAuthority:false,shellHeightAuthoringUnits:SHELL_HEIGHT,analyticScattering:true,limbConcentrationExponent:5.4,broadShellDarkeningRemoved:true,descentFade:true,cloudSystemConstructed:false,separatePresentationCanvas:true,rendererMutation:false});
   return Object.freeze({overlay,render,getEvidence:()=>evidence,destroy:()=>overlay.remove()});
 }
 
@@ -174,7 +174,7 @@ async function observerAfterPaint(renderer,atmosphere){
   try{
     await new Promise(resolve=>setTimeout(resolve,0));
     const module=await import('./observer.mjs'),receipt=module.buildHEarthMapWideEnvironmentPreviewObserverReceipt(renderer),pos=receipt?.canonicalPositionalIdentity?.canonicalPositionalIdentityPassed===true,corr=receipt?.surfaceCorrespondence?.pass===true;
-    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_ATMOSPHERE_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · atmosphere layer is planet-centered and nongeographic · judge limb realism and confirm Mirage, opacity, coast, water, and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
+    if(receipt.mechanicalChecksPassed===true&&pos&&corr){setStatus('REVIEW','OW01_ATMOSPHERE_TUNING_USER_REVIEW_REQUIRED');setDiagnostic(`MECHANICAL BASE PASS · 12/12 geographic anchors · tuned atmosphere is planet-centered and nongeographic · judge thin limb, horizon depth, descent fade, and confirm Mirage, opacity, coast, water, and touch travel remain unchanged.`);}else{setStatus('FAIL','OW01_MECHANICAL_FAIL');setDiagnostic(`MECHANICAL_FAIL · ${(receipt.failedChecks||['unknown']).join(', ')}`);}
     window.__H_EARTH_AUDRALIA_OPEN_WORLD_OW01_PREVIEW__=Object.freeze({operationId:OP,coherenceOperation:COH,renderer,observerReceipt:receipt,atmosphereEvidence:atmosphere.getEvidence()});
     window.__H_EARTH_OW01_ATMOSPHERE_LAYER__=atmosphere;
   }catch(error){console.warn('AUDRALIA_OW01_OBSERVER_FAILED',error);setStatus('REVIEW','VISUAL_READY_OBSERVER_DEFERRED');setDiagnostic(`ATMOSPHERE_VISUAL_READY · observer deferred: ${error instanceof Error?error.message:String(error)}`);}
@@ -184,14 +184,14 @@ async function initialize(){
   try{
     if(!(canvas instanceof HTMLCanvasElement))throw Error('H_EARTH_OW01_CANVAS_MISSING');
     setStatus('world…','IMPORTING_FROZEN_GRATITUDE_BASELINE');
-    setDiagnostic('Loading the frozen Gratitude visual-map baseline before adding the independent atmosphere presentation layer…');
+    setDiagnostic('Loading the frozen Gratitude visual-map baseline before applying the tuned independent atmosphere presentation layer…');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const module=await import('./renderer.mjs');
-    setStatus('building…','BUILDING_ATMOSPHERE_CHECKPOINT');
+    setStatus('building…','BUILDING_TUNED_ATMOSPHERE_CHECKPOINT');
     await new Promise(resolve=>requestAnimationFrame(resolve));
     const renderer=module.createMapWideEnvironmentRenderer(canvas);renderer.render();
     const atmosphere=createAtmosphereLayer(renderer);atmosphere.render();
-    wire(renderer,atmosphere);updateScaleUI(renderer);setStatus('REVIEW','ATMOSPHERE_VISUAL_READY_USER_REVIEW_REQUIRED');requestAnimationFrame(()=>observerAfterPaint(renderer,atmosphere));
+    wire(renderer,atmosphere);updateScaleUI(renderer);setStatus('REVIEW','ATMOSPHERE_TUNING_VISUAL_READY_USER_REVIEW_REQUIRED');requestAnimationFrame(()=>observerAfterPaint(renderer,atmosphere));
   }catch(error){fail('INITIALIZATION',error);}
 }
-setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting atmosphere checkpoint over the frozen Gratitude visual-map baseline…');initialize();
+setStatus('boot…','BOOTSTRAP_ACTIVE');setDiagnostic('Starting tuned atmosphere checkpoint over the frozen Gratitude visual-map baseline…');initialize();

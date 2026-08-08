@@ -46,7 +46,8 @@ function transformApp(source,appUrl,rendererBlobUrl){
 
   const cameraBindings=(next.match(/cam=cameraFrame\(snapshot\)/g)||[]).length;
   if(cameraBindings!==2)throw new Error(`TRANSFORM_CAMERA_BINDINGS:${cameraBindings}`);
-  next=next.replaceAll('cam=cameraFrame(snapshot)','cam=renderer.getCameraFrame()');
+  next=replaceRequired(next,'cam=cameraFrame(snapshot)',"cam=(()=>{const frame=renderer.getCameraFrame();return{...frame,up:frame.surfaceUp};})()",'ATMOSPHERE_EXACT_CAMERA_FRAME');
+  next=replaceRequired(next,'cam=cameraFrame(snapshot)','cam=renderer.getCameraFrame()','CLOUD_EXACT_CAMERA_FRAME');
 
   next=replaceRequired(next,'const BASE_CLEARANCE=30;','const BASE_CLEARANCE=66;','CLOUD_BASE_CLEARANCE');
   next=replaceRequired(next,'const CLOUD_OUTER_ALTITUDE=108;','const CLOUD_OUTER_ALTITUDE=136;','CLOUD_OUTER_ALTITUDE');
@@ -134,7 +135,7 @@ void main(){outColor=vec4(0.0);}\`;
 
   const cameraMath=`
   const perspective=(fov,aspect,near,far)=>{const f=1/Math.tan(fov/2),inv=1/(near-far);return new Float32Array([f/aspect,0,0,0,0,f,0,0,0,0,(far+near)*inv,-1,0,0,2*far*near*inv,0]);};
-  const lookAt=(eye,target,up)=>{const z=norm(sub(eye,target));let x=cross(up,z);if(Math.hypot(...x)<1e-5)x=[1,0,0];x=norm(x);const y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),1]);};
+  const lookAt=(eye,target,up)=>{const z=norm(sub(eye,target));let x=cross(up,z);if(Math.hypot(...x)<1e-5)x=[1,0,0];x=norm(x);const y=cross(z,x);return new Float32Array([x[0],y[0],z[0],0,x[1],y[1],z[1],0,x[2],y[2],z[2],0,-dot(x,eye),-dot(y,eye),-dot(z,eye),1]);};
   const multiply=(left,right)=>{const output=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)output[c*4+r]=left[r]*right[c*4]+left[4+r]*right[c*4+1]+left[8+r]*right[c*4+2]+left[12+r]*right[c*4+3];return output;};
 `;
   next=replaceRequired(
@@ -204,7 +205,10 @@ async function initialize(){
       terrainMutated:false,
       coastlineMutated:false,
       cloudCameraRegistration:'EXACT_RENDERER_FRAME',
+      atmosphereUsesRendererSurfaceUp:true,
+      cloudUsesRendererCameraBasis:true,
       gratitudeTerrainDepthPrepass:true,
+      cloudDepthViewMatrixLength:16,
       lowCloudBaseClearanceAuthoringUnits:66,
       cloudOuterAltitudeAuthoringUnits:136,
       planetOcclusionAltitudeAuthoringUnits:0,

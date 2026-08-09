@@ -816,37 +816,6 @@
       "scopeHash": "91498847235a51be58ef771a735c58e11a5e9b4ae49e65b29a5f9fc377c830ee",
       "state": "ADMITTED_LOCKED"
     },
-    "91a8ac4b480ab72e440c070baa69d189644358d7b2709d13a1c94fdb18783ea1": {
-      "governingHead": "f624b55096c69c63909d4ee260fcd5615f8d9aa6",
-      "lockGeneration": 839,
-      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
-      "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "331284949940c95db80a332235492de4c80d3d43",
-        "lockGeneration": 832,
-        "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
-        "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002",
-        "preservedEvidenceRefs": [
-          "GENERATION_832_CANONICAL_ADMISSION",
-          "RUN_31333629470_BOOTSTRAP_ROUTER_8_OF_8_PASS",
-          "RUN_31334006870_FRESH_CARRIER_VERIFICATION_18_OF_18_PASS",
-          "PR_845_CANDIDATE_HEAD_0E4721FC96D53EA8EAEEE1420CF348D3717BD87D",
-          "RUN_31334006848_DIFFERENTIAL_REGRESSION_PASS",
-          "PR_844_MAIN_ADVANCE_F624B550_DISJOINT_FROM_CARRIER_EIGHT_PATH_DOMAIN"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "BOUNDED_EXACT_HEAD_CARRIER_GEN832_TO_F624B550_20260809_001"
-      },
-      "procedureLocatorDigest": "83ade0e650837b57753d1437193dfd6dba8fd265469b5ac35ab845d7bd91972c",
-      "released": false,
-      "requestDigest": "147496c09cdac2c86a4ae6400598114df1dc62b48b9cbfaeda1bdab607763b6e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "91a8ac4b480ab72e440c070baa69d189644358d7b2709d13a1c94fdb18783ea1",
-      "state": "ADMITTED_LOCKED"
-    },
     "93492f953dfda80ce2e528609802c1c28c9ba73fb126b13c692b72ac97762c65": {
       "governingHead": "794f31c52a853bae005732e3112bd282b03066d6",
       "lockGeneration": 212,
@@ -12124,6 +12093,38 @@
       "requestDigest": "289d63d1bc8fcaf15538d2cd9ac85e415fd9107f49a4276617ccf398c3117073",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "73dacc1941a3e380d45d437f6ad72fdcb3028dff360704d80839a609dadcfac1",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "f624b55096c69c63909d4ee260fcd5615f8d9aa6",
+      "lockGeneration": 839,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
+      "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "331284949940c95db80a332235492de4c80d3d43",
+        "lockGeneration": 832,
+        "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
+        "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002",
+        "preservedEvidenceRefs": [
+          "GENERATION_832_CANONICAL_ADMISSION",
+          "RUN_31333629470_BOOTSTRAP_ROUTER_8_OF_8_PASS",
+          "RUN_31334006870_FRESH_CARRIER_VERIFICATION_18_OF_18_PASS",
+          "PR_845_CANDIDATE_HEAD_0E4721FC96D53EA8EAEEE1420CF348D3717BD87D",
+          "RUN_31334006848_DIFFERENTIAL_REGRESSION_PASS",
+          "PR_844_MAIN_ADVANCE_F624B550_DISJOINT_FROM_CARRIER_EIGHT_PATH_DOMAIN"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "BOUNDED_EXACT_HEAD_CARRIER_GEN832_TO_F624B550_20260809_001"
+      },
+      "procedureLocatorDigest": "83ade0e650837b57753d1437193dfd6dba8fd265469b5ac35ab845d7bd91972c",
+      "released": true,
+      "requestDigest": "147496c09cdac2c86a4ae6400598114df1dc62b48b9cbfaeda1bdab607763b6e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "91a8ac4b480ab72e440c070baa69d189644358d7b2709d13a1c94fdb18783ea1",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

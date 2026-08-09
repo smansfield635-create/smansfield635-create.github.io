@@ -8,30 +8,28 @@
       "kind": "SHARED_CONTROL_PLANE_DEPENDENCY",
       "mergedHead": "d0d0ea03b9f6d867dcb9689bc4ed4050bd7e57da",
       "sourcePr": 819,
-      "workflowPaths": [
-        ".github/workflows/progressive-system-continuity-v1.yml"
-      ],
-      "prohibitions": [
-        "NO_TRIGGER_MUTATION",
-        "NO_PERMISSION_MUTATION",
-        "NO_RETIREMENT",
-        "NO_REPLACEMENT_BY_LIFECYCLE_OBSERVATION_PHASE"
-      ]
+      "workflowPaths": [".github/workflows/progressive-system-continuity-v1.yml"],
+      "prohibitions": ["NO_TRIGGER_MUTATION","NO_PERMISSION_MUTATION","NO_RETIREMENT","NO_REPLACEMENT_BY_LIFECYCLE_OBSERVATION_PHASE"]
     },
     {
       "id": "LAWS_BOUNDED_SPATIAL_MANIFESTATION_IN_PROGRESS",
       "kind": "ACTIVE_PROJECT_WORKSTREAM",
       "sourcePr": 815,
       "projectId": "LAWS",
-      "workflowPaths": [
-        ".github/workflows/laws-compass-six-authority-benchmark.yml"
+      "workflowPaths": [".github/workflows/laws-compass-six-authority-benchmark.yml"],
+      "prohibitions": ["NO_TRIGGER_MUTATION","NO_PERMISSION_MUTATION","NO_RETIREMENT","NO_DOWNGRADE_FROM_ACTIVE_COMPATIBILITY_WHILE_EVIDENCE_CARRIER_UNRESOLVED"]
+    },
+    {
+      "id": "EXECUTION_ROUTE_DISCOVERY_ADOPTION_GAP_REPAIR_V1",
+      "kind": "SHARED_CONTROL_PLANE_CONCURRENT_PROVIDER",
+      "sourcePr": 823,
+      "candidateHead": "2b6f2fe5f39b20b5c5cae14458519495f270aea8",
+      "ownedPaths": [
+        ".github/ai-router/execution-backends.v1.json",
+        ".github/ai-router/system-continuity/gap-registry.v1.json",
+        "tools/repository-ai-entry-router.mjs"
       ],
-      "prohibitions": [
-        "NO_TRIGGER_MUTATION",
-        "NO_PERMISSION_MUTATION",
-        "NO_RETIREMENT",
-        "NO_DOWNGRADE_FROM_ACTIVE_COMPATIBILITY_WHILE_EVIDENCE_CARRIER_UNRESOLVED"
-      ]
+      "prohibitions": ["NO_SOURCE_PATH_MUTATION_BY_INTEGRATED_PIPELINE","NO_REPLACEMENT","NO_MERGE_OR_RATIFICATION_INHERITANCE","NO_RETIREMENT"]
     }
   ]
 }

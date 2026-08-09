@@ -901,13 +901,32 @@
       "state": "ADMITTED_LOCKED"
     },
     "9e43fbbb9fc036c868755b1e8bbf4c1aa156911b01656e88bb4004893d438261": {
-      "governingHead": "64ec16ce6a4f65c72d54a5460071c1c20caf126f",
-      "lockGeneration": 779,
+      "governingHead": "4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d",
+      "lockGeneration": 782,
       "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DIFFERENTIAL_CONTINUITY:V1",
-      "operationId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_V1_20260809_001",
-      "procedureLocatorDigest": "6678888f3ad0f42fbe21043ca06c6c5958855f44545e88f70240acfeb96281d4",
+      "operationId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_V1_20260809_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "64ec16ce6a4f65c72d54a5460071c1c20caf126f",
+        "lockGeneration": 779,
+        "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DIFFERENTIAL_CONTINUITY:V1",
+        "operationId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_V1_20260809_001",
+        "preservedEvidenceRefs": [
+          "ADMISSION_RECEIPT_SHA256:6b01ac7260812ade6591215378487abf571676a2ec0e8983d876bf979fab2cac",
+          "PREDECESSOR_LOCK_GENERATION:779",
+          "CONSTRUCTION_BRANCH:agent/differential-continuity-proof-churn-suppression-v1",
+          "DIFFERENTIAL_PROTOCOL_COMMIT:eb1f741ad4473fa512e05b497bdfe9a9e5617fc1",
+          "DIFFERENTIAL_SELF_TEST_COMMIT:262a97512944ae5bc0f20c4e6b400dbddb0a3f86",
+          "WORKFLOW_HARDENING_COMMIT:91b6d80bf56a6a4c12deda5b7bae16381d9a4137"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "DIFFERENTIAL_CONTINUITY_V1_SUCCESSOR_20260809_001"
+      },
+      "procedureLocatorDigest": "ad26ebc8865675bdc81b5aa9f3013afd0d00e142d18ce2dabfdf46da5253ed3b",
       "released": false,
-      "requestDigest": "9c25895e68a7c661a83d5edd481c2352bcbc9c435db59b48f778f0719efc8cac",
+      "requestDigest": "4bdf42404de55a96ccc85de86d57c3b40d6e037135545a1bc40ad20150ea077b",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "9e43fbbb9fc036c868755b1e8bbf4c1aa156911b01656e88bb4004893d438261",
       "state": "ADMITTED_LOCKED"
@@ -1507,7 +1526,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 781,
+  "lockGeneration": 782,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -10557,6 +10576,38 @@
       "scopeHash": "e5ddf7f4ef68c7dfeaae4ee6510f9e30b63e5b03c4b7a2a6ef733db81c773c11",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "64ec16ce6a4f65c72d54a5460071c1c20caf126f",
+      "lockGeneration": 779,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DIFFERENTIAL_CONTINUITY:V1",
+      "operationId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_V1_20260809_001",
+      "procedureLocatorDigest": "6678888f3ad0f42fbe21043ca06c6c5958855f44545e88f70240acfeb96281d4",
+      "released": true,
+      "requestDigest": "9c25895e68a7c661a83d5edd481c2352bcbc9c435db59b48f778f0719efc8cac",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9e43fbbb9fc036c868755b1e8bbf4c1aa156911b01656e88bb4004893d438261",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "ADMISSION_RECEIPT_SHA256:6b01ac7260812ade6591215378487abf571676a2ec0e8983d876bf979fab2cac",
+          "PREDECESSOR_LOCK_GENERATION:779",
+          "CONSTRUCTION_BRANCH:agent/differential-continuity-proof-churn-suppression-v1",
+          "DIFFERENTIAL_PROTOCOL_COMMIT:eb1f741ad4473fa512e05b497bdfe9a9e5617fc1",
+          "DIFFERENTIAL_SELF_TEST_COMMIT:262a97512944ae5bc0f20c4e6b400dbddb0a3f86",
+          "WORKFLOW_HARDENING_COMMIT:91b6d80bf56a6a4c12deda5b7bae16381d9a4137"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d",
+        "successorLockGeneration": 782,
+        "successorLockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DIFFERENTIAL_CONTINUITY:V1",
+        "successorOperationId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_V1_20260809_001_SUCCESSOR_001",
+        "transitionId": "DIFFERENTIAL_CONTINUITY_V1_SUCCESSOR_20260809_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

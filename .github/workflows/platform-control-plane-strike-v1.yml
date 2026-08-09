@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - instrumentation/l2-control-plane-platform-deficit-strike-v1-001
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -17,6 +20,7 @@ jobs:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -1,0 +1,37 @@
+{
+  "schema": "PROGRESSIVE_SYSTEM_CONTINUITY_PROTOCOL_v1",
+  "protocolId": "REPOSITORY_PROGRESSIVE_SYSTEM_CONTINUITY_TRACK_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_WHEN_PRESENT_ON_DEFAULT_BRANCH_AND_VALIDATION_PASS",
+  "purpose": "Require shared infrastructure changes to prove producer-consumer continuity and downstream operation before SYSTEM_GAP_CLOSED may be claimed.",
+  "governingLaw": "SYSTEM_A_CORRECT_PLUS_SYSTEM_B_CORRECT_DOES_NOT_IMPLY_A_TO_B_CORRECT",
+  "sequence": ["GAP_DISCOVERY","ACTIVE_GAP_RECONCILIATION","CONTRACT_EXTRACTION","ADJACENCY_CHECK","TRANSITION_SIMULATION","REMOTE_INVOCATION_PROOF","POST_MERGE_CONTINUITY_PROOF","SYSTEM_CLOSURE"],
+  "closureClasses": ["OPEN","LOCAL_CAPABILITY_CLOSED","INTERFACE_CONTINUITY_CLOSED","SYSTEM_GAP_CLOSED"],
+  "systemClosureRequirements": ["LOCAL_CORRECTNESS_PASS","INTERFACE_COMPATIBILITY_PASS","TRANSITION_SIMULATION_PASS","REAL_REMOTE_INVOCATION_PASS","POST_MERGE_CONTINUITY_PASS","NO_UNRESOLVED_RELATED_OPEN_GAP"],
+  "interfaceChecks": {
+    "operationIdPolicies": ["STABLE_OPERATION_ID","FRESH_SUCCESSOR_OPERATION_ID_REQUIRED","ANY_EXPLICIT_OPERATION_ID"],
+    "consumerOperationIdPolicies": ["EXACT_REGISTERED_OPERATION_ID","SUCCESSOR_LINEAGE_OPERATION_ID_ACCEPTED","ANY_EXPLICIT_OPERATION_ID"],
+    "adapterStatusRequired": "PROVEN",
+    "receiptSchemaExactUnlessAdapter": true,
+    "producerAndConsumerDeclarationRequired": true
+  },
+  "proofClasses": ["localCorrectness","interfaceCompatibility","transitionSimulation","remoteInvocation","postMergeContinuity"],
+  "gapRegistry": ".github/ai-router/system-continuity/gap-registry.v1.json",
+  "gate": ".github/ai-router/system-continuity/progressive-system-continuity-gate.v1.mjs",
+  "selfTest": ".github/ai-router/system-continuity/progressive-system-continuity-self-test.v1.mjs",
+  "remoteWorkflow": ".github/workflows/progressive-system-continuity-v1.yml",
+  "remoteInvocationMarker": "PROGRESSIVE_SYSTEM_CONTINUITY_REQUEST_V1",
+  "authorityBoundary": {
+    "repositoryMutationAuthority": false,
+    "lifecycleAuthority": false,
+    "terminalClosureAuthority": false,
+    "successorAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "productAuthority": false,
+    "semanticAuthority": false,
+    "scientificClaimAuthority": false,
+    "genericCommandAuthority": false
+  },
+  "nonReplacementLaw": "THIS_TRACK_OBSERVES_AND_CLASSIFIES_CONTINUITY;IT_DOES_NOT_REPLACE_INTAKE_SUCCESSOR_TERMINAL_CLOSURE_PROJECT_ROUTING_OR_PROJECT_AUTHORITY"
+}

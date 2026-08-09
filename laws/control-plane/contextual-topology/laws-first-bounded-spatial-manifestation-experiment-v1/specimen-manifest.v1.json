@@ -1,0 +1,114 @@
+{
+  "schema": "LAWS_PHI1_SPATIAL_SPECIMEN_MANIFEST_v1",
+  "version": "1.0.0",
+  "specimenId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_SPECIMEN_001",
+  "experimentId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_v1",
+  "consumer": {
+    "consumerId": "LAWS_FIRST_BOUNDED_SPATIAL_CONSUMER_v1",
+    "consumerVersion": "1.0.0"
+  },
+  "operationBinding": {
+    "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_003",
+    "lockGeneration": 857,
+    "governingHeadAtAdmission": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+    "branch": "agent/laws-first-bounded-spatial-manifestation-experiment-v1-003"
+  },
+  "authorityBinding": {
+    "authorityId": "LAWS_BOUNDED_SPATIAL_MANIFESTATION_AUTHORITY_v1",
+    "authorityVersion": "1.0.0",
+    "authorityHead": "18bd40b4f27ed9775778346011cca7d7f6bec47e",
+    "authorityManifestPath": "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-authority-v1.json",
+    "authorityManifestBlob": "a016289e91799f09967cc00cd62da09518aefb93",
+    "graphDigest": "40873d2cdcae915f66cee8abed1afc810cfbf3df0d44a331af57ba9e263cdedc",
+    "projectionPolicyPath": "laws/control-plane/contextual-topology/laws-semantics-preserving-projection-policy-v1.json",
+    "projectionPolicyBlob": "93f8d8d9edcb961f2bacf6f82be799f347b19217",
+    "projectionDescriptionPath": "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-projection-description-v1.json",
+    "projectionDescriptionBlob": "ce0b0629aa89aa78a42c902ea9bac11e38bb0541",
+    "projectionDescriptionDigest": "b1210d5e68c2337cbcd9a5d993b73f2563f45aa805e427e495e042785f5e8922",
+    "projectionConformanceReceiptPath": "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-projection-conformance-receipt-v1.json",
+    "projectionConformanceReceiptBlob": "4639c7fe26b0ae1282a046033eecbc14de436233",
+    "projectionConformanceDisposition": "PASS_SEMANTICS_PRESERVING_PROJECTION_DESCRIPTION",
+    "projectionConformanceLrpv1ReceiptPath": "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-projection-conformance-lrpv1-receipt-v1.json",
+    "projectionConformanceLrpv1ReceiptBlob": "1e2e8eac5fb16da054084f10f40788d730e91a70",
+    "projectionConformanceLrpv1LineageDigest": "e15e70c6a982ff633f3640149f91af8b2171e160339ae7f014342fcbe0382f95"
+  },
+  "preconstructionEvidence": {
+    "freshRouterRun": 31335919264,
+    "freshRouterNativeReceiptDigest": "9609c5e273d708a36ab1cb17e919ecd07973cef5ae1a44a677971146f127a0de",
+    "pageArchitectureRun": 31336805550,
+    "pageArchitectureNativeReceiptDigest": "26f2f5d8d77e2ce6e6d39d5b426342e8cd3f4b82ff6593952dc303c65df967eb",
+    "pageArchitectureBundleDigest": "3d89e1217194311205768131380e5af91998c8e04e6d9079f6674de03c2f4428",
+    "pageArchitectureFindingsDigest": "fe6672ccac303df29e30ddf849a640277e7024c01b8e25b76047107ecb40e6d6",
+    "pageArchitectureImplementationClass": "EXISTING_CONSTRUCT_ADOPTION"
+  },
+  "implementationBinding": {
+    "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
+    "contentAdapterMayDefineVisualArchitecture": false,
+    "adoptedSources": [
+      {
+        "sourceId": "CURRENT_LAWS_COMPOSITOR",
+        "path": "laws/index.compositor.js",
+        "commitSha": "331284949940c95db80a332235492de4c80d3d43",
+        "gitBlobSha": "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa",
+        "adoptedCapabilities": ["CAMERA_AND_VIEW_PROJECTION_MECHANICS","VIEWPORT_MODEL","VISUAL_DEPTH_CLASSIFICATION","WORLD_TO_SCREEN_LAYERING"],
+        "semanticInheritance": false
+      },
+      {
+        "sourceId": "PR468_WEBGL2_RENDERER",
+        "path": "research/prototypes/laws-geometric-grammar-lab/renderer-webgl2.js",
+        "commitSha": "49d9890a0405c22aaac407e3724fbd5bae6ccafc",
+        "gitBlobSha": "32c6ba855f49dec1ef45e7312c55ce6b56f26488",
+        "adoptedCapabilities": ["REAL_WEBGL2_DRAW_PIPELINE","DEPTH_TEST_AND_GPU_BUFFER_MECHANICS","VIEWPORT_RESIZE_MECHANICS"],
+        "semanticInheritance": false
+      },
+      {
+        "sourceId": "PR468_APP_LIFECYCLE",
+        "path": "research/prototypes/laws-geometric-grammar-lab/app.js",
+        "commitSha": "49d9890a0405c22aaac407e3724fbd5bae6ccafc",
+        "gitBlobSha": "2ddba762992f64bbd6c9245ee858aefcb750fb72",
+        "adoptedCapabilities": ["RESIZE_LIFECYCLE","VISIBILITY_LIFECYCLE","REDUCED_MOTION_AND_STATIC_EQUIVALENCE"],
+        "semanticInheritance": false
+      }
+    ],
+    "searchedButNotAdopted": [
+      {
+        "sourceId": "PR544_LAWS_CHILD_SPATIAL_STAGE",
+        "commitSha": "69bef3918ed26fb1fce21cdc5084a9eb6410381a",
+        "reason": "Previous/next and Methods-specific stage semantics are prohibited substitutes for this specimen."
+      }
+    ]
+  },
+  "semanticSourceRule": {
+    "runtimeSemanticSource": "../laws-bounded-spatial-manifestation-projection-description-v1.json",
+    "semanticValuesDuplicatedInAdapterJavascript": false,
+    "projectionWritebackEnabled": false,
+    "graphWritebackEnabled": false
+  },
+  "spatialLayout": {
+    "semanticClassification": "NON_SEMANTIC_PRESENTATION",
+    "doesNotAssertRelation": true,
+    "doesNotModifyStanding": true,
+    "doesNotModifyClaimCeiling": true,
+    "ambiguousChannelsAreNonSemantic": ["PROXIMITY","DISTANCE","SIZE","LUMINANCE","LINE_WEIGHT","COLOR","OPACITY","PLACEMENT","DEPTH","GROUPING"],
+    "cameraAndInteractionAreNonSemantic": true,
+    "nodes": [
+      {"objectId":"METHODS","position":[-2.15,0.85,-0.55],"semanticClassification":"NON_SEMANTIC_PRESENTATION","doesNotAssertRelation":true,"doesNotModifyStanding":true,"doesNotModifyClaimCeiling":true},
+      {"objectId":"PROSPECTIVE_FINAL_REPORT_PORTFOLIO","position":[0,0,0],"semanticClassification":"NON_SEMANTIC_PRESENTATION","doesNotAssertRelation":true,"doesNotModifyStanding":true,"doesNotModifyClaimCeiling":true},
+      {"objectId":"ROUTE_OPERATOR_PLATFORM","position":[2.15,-0.85,0.55],"semanticClassification":"NON_SEMANTIC_PRESENTATION","doesNotAssertRelation":true,"doesNotModifyStanding":true,"doesNotModifyClaimCeiling":true}
+    ]
+  },
+  "semanticChannelsRenderedFromFrozenProjection": ["DIRECT_CONNECTION","DIRECTION_MARKER","RELATION_TYPE_LABEL","RELATION_QUALIFIER_DISPLAY","INSPECTION_DETAIL","RESOLUTION_STATE_LITERAL"],
+  "runtimeConditions": ["REAL_SPATIAL_RENDERING_ENVIRONMENT","PRIMARY_DIRECT_MANIPULATION","REAL_BROWSER_RUNTIME","REDUCED_MOTION_OR_STATIC_EQUIVALENCE","FROZEN_APHI_SEMANTIC_IDENTITY_PRESERVATION"],
+  "prohibitedSubstitutes": ["PSEUDO_SPATIAL_CAROUSEL","VISIBLE_PREVIOUS_NEXT_PRIMARY_UI","SEMANTIC_INHERITANCE_FROM_SOURCE_CONSTRUCT","PUBLIC_LAWS_PAGE_MUTATION","NEW_VISUAL_ARCHITECTURE_BY_ADAPTER","SOURCE_SCENE_SEMANTICS_REUSE"],
+  "authorityBoundary": {
+    "specimenCount": 1,
+    "semanticAuthorityCreated": false,
+    "graphMutationPerformed": false,
+    "projectionMutationPerformed": false,
+    "publicLawsMutationPerformed": false,
+    "mergeAuthority": false,
+    "productionAuthority": false,
+    "scientificClaimAuthority": false,
+    "visualAcceptanceAuthority": false
+  }
+}

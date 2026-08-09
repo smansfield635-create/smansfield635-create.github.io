@@ -1,0 +1,131 @@
+{
+  "contract": "LAWS_CONTEXTUAL_TOPOLOGY_FREEZE_v1",
+  "mode": "USER_AUTHORIZED_NON_PRODUCT_TOPOLOGY_FREEZE",
+  "status": "FROZEN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-contextual-topology-freeze-001",
+  "freeze_input_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "user_authority": {
+    "instruction": "Okay, do the freeze and proceed with the next lawful gate and action.",
+    "explicit": true,
+    "topology_freeze_authorized": true,
+    "residual_mechanics_test_authorized": true,
+    "product_implementation_authorized": false,
+    "merge_authorized": false,
+    "deployment_authorized": false
+  },
+  "pre_route_gate": {
+    "name": "TARGET_RESIDUAL_EXISTS",
+    "rule": "A mechanical-transfer IMI route may open only after a destination capability residual is established against the exact target subject.",
+    "duplicate_or_already_present_capability_disposition": "REJECT_PRE_ROUTE",
+    "transferability_does_not_establish_necessity": true
+  },
+  "topology": {
+    "symbol": "T_C",
+    "members": ["C", "O", "Gamma(O,C)", "Recenter(O)"],
+    "C": {
+      "name": "CONTEXTUAL_ORIGIN",
+      "type": "CONTEXTUAL_AUTHORITY_POINTER",
+      "required_fields": ["objectIdentity", "contextScope", "authority", "version"],
+      "not_euclidean_origin": true,
+      "independent_from_orbit_focus": true,
+      "independent_from_selection": true
+    },
+    "O": {
+      "name": "AUTHORITATIVE_OBJECT",
+      "required_fields": ["identity", "objectClass", "authority", "version", "provenance"],
+      "visual_manifestation_is_not_object": true,
+      "eligible_classes_not_exhaustive": [
+        "LAW",
+        "RESEARCH_ARTIFACT",
+        "TEST",
+        "EVIDENCE",
+        "RESULT_RECORD",
+        "H_EARTH_OBJECT",
+        "ARCHCOIN_OBJECT",
+        "OTHER_PROPERLY_ADMITTED_ESTATE_OBJECT"
+      ]
+    },
+    "Gamma": {
+      "name": "CONTEXTUAL_RELATION",
+      "signature": "Gamma:(O,C)->R_OC",
+      "relation_record_candidate_fields": [
+        "relationClass",
+        "directionality",
+        "scope",
+        "authority",
+        "evidence",
+        "version",
+        "status"
+      ],
+      "exact_relation_taxonomy_frozen": false,
+      "relation_must_preexist_spatial_manifestation": true,
+      "screen_proximity_does_not_establish_relation": true,
+      "euclidean_direction_does_not_establish_relation": true,
+      "shared_category_does_not_establish_relation": true
+    },
+    "Recenter": {
+      "name": "CONTEXTUAL_ORIGIN_TRANSACTION",
+      "signature": "Recenter(O*):C0->C1=O*",
+      "authorization_required": true,
+      "changes_context_not_identity": true,
+      "requires_relation_reconsideration_after_commit": true,
+      "screen_centering_is_not_recenter": true
+    }
+  },
+  "invariants": {
+    "I1_IDENTITY_INVARIANCE": "Recenter never changes authoritative object identity, authority, version, or provenance.",
+    "I2_MECHANICAL_SUBSTRATE_INVARIANCE": "Context change does not silently redefine the existing Laws Euclidean coordinate constitution.",
+    "I3_STATE_SEPARATION": "Contextual origin, orbit focus, and selection remain independently authoritative states even when values coincide.",
+    "I4_RELATION_BEFORE_PROJECTION": "Spatial placement may not manufacture a scientific or domain relationship.",
+    "I5_FAIL_CLOSED_ON_UNKNOWN_RELATION": "Unknown or unevaluable contextual relation may be retained, suppressed, or held explicitly but may not be spatially placed in a way that implies an unestablished relation.",
+    "I6_REVERSIBLE_CONTEXT": "A lawful contextual transition preserves sufficient prior authoritative state for C0->C1->C0 restoration without reconstructing C0 from visual state."
+  },
+  "existing_substrate_boundary": {
+    "existing_six_direction_field_is_universal_relation_taxonomy": false,
+    "existing_euclidean_field_may_be_reused_mechanically": true,
+    "contextual_origin_is_not_coordinate_origin": true,
+    "spatial_manifestation_has_no_semantic_authority": true
+  },
+  "source_subject": {
+    "controller": {
+      "path": "laws/index.controller.js",
+      "blob_sha": "e6eef54a8d808c12ea0e5db85539bc521f29f3b2"
+    },
+    "crystals": {
+      "path": "laws/index.crystals.js",
+      "blob_sha": "27577c49250f42b03d123f8105e1d55d59c3a4b4"
+    },
+    "compositor": {
+      "path": "laws/index.compositor.js",
+      "blob_sha": "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa"
+    },
+    "interactions": {
+      "path": "laws/index.interactions.js",
+      "blob_sha": "be365cc331ee5643f916abee204d4f5f45376c04"
+    },
+    "selection": {
+      "path": "laws/index.selection.js",
+      "blob_sha": "456008782e6a4e656e8fc9b04b76f69a6dc68abd"
+    }
+  },
+  "preserved_boundaries": {
+    "product_mutation": "NOT_AUTHORIZED",
+    "laws_runtime_mutation": "NOT_AUTHORIZED",
+    "laws_visual_mutation": "NOT_AUTHORIZED",
+    "laws_route_mutation": "NOT_AUTHORIZED",
+    "scientific_or_semantic_taxonomy_mutation": "NOT_AUTHORIZED",
+    "relation_taxonomy_freeze": "NOT_AUTHORIZED_BY_THIS_RECORD",
+    "mechanical_transfer_route_freeze": "NOT_AUTHORIZED_BY_THIS_RECORD",
+    "IMI_transfer_scoring": "HELD_UNTIL_REAL_TRANSFER_RESIDUAL_EXISTS",
+    "LRPv1_bridge_construction": "NOT_AUTHORIZED",
+    "donor_transfer": "NOT_AUTHORIZED",
+    "merge": "NOT_AUTHORIZED_BY_THIS_FREEZE",
+    "deployment": "NOT_AUTHORIZED"
+  },
+  "change_control": {
+    "supersession_requires": "LATER_EXPLICIT_USER_AUTHORITY_AND_NAMED_SUCCESSOR_RECORD",
+    "silent_drift": "PROHIBITED",
+    "implementation_may_consume_but_not_rewrite_frozen_topology": true
+  }
+}

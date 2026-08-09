@@ -1,0 +1,242 @@
+{
+  "schema": "LAWS_CONTEXTUAL_RELATION_ONTOLOGY_RECONCILIATION_v1",
+  "version": "1.0.0",
+  "status": "RECONCILIATION_CLOSED_READY_FOR_FROZEN_RELATION_REGISTRY",
+  "operation": "RELATIONSHIP_ONTOLOGY_RECONCILIATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "source_subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "governance_branch": "agent/laws-contextual-topology-freeze-001",
+  "governance_head_before_reconciliation": "cccb1c876d6efdab4e1c67a6025593c57018ac40",
+  "purpose": "Determine which relation meanings Laws is authorized to represent before Gamma resolution or spatial manifestation. This is governance/schema work only.",
+  "governing_question": "WHAT_DOES_CONNECTED_TO_THE_CURRENT_CONTEXT_HAVE_AUTHORITY_TO_MEAN",
+  "source_ledger": [
+    {
+      "id": "SRC01",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/README.md",
+      "git_blob": "c2de32a289c1b2f28c4162a176331dec38464f35",
+      "role": "declared-semantic-relation and representation boundary"
+    },
+    {
+      "id": "SRC02",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/uncertainty-and-standing-relation-contract.v1.json",
+      "git_blob": "93154d9d3fc90dea785467253a78f42d23190a6f",
+      "role": "relation-state shape, standing vocabulary, uncertainty laws"
+    },
+    {
+      "id": "SRC03",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/constitutional-adjacency-contracts.v1.json",
+      "git_blob": "9b300aa688487fc99f7e6401e58e8be0c8a3e7dc",
+      "role": "typed capacity relations and forbidden spatial implications"
+    },
+    {
+      "id": "SRC04",
+      "path": "control-plane/whole-estate/constitutional-room-relation-contracts-v1/constitutional-room-contracts.v1.json",
+      "git_blob": "1d9ee109dcfc86ae1a8a8f61e5db9650c9abf481",
+      "role": "room/capacity authority, inputs, outputs, non-substitution"
+    },
+    {
+      "id": "SRC05",
+      "path": "control-plane/whole-estate/methods-models-role-constitution-v1/README.md",
+      "git_blob": "bff4c72d70b3be75a3af4bb5860348d66bd177af",
+      "role": "evidence-gate/relation-map/discovery boundary and object separations"
+    },
+    {
+      "id": "SRC06",
+      "path": "control-plane/whole-estate/methods-models-role-constitution-v1/canonical-presentation-precondition-contract.v1.json",
+      "git_blob": "b645f3dc2b4dd89c430c64b1d42f4c470c407da1",
+      "role": "typed semantic relation graph required before topology/geometry"
+    },
+    {
+      "id": "SRC07",
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json",
+      "git_blob": "0bfab791c005ca71cee771a5d14d27f8dfab3177",
+      "role": "Research custody, Tests operational projection, declared relation traversal"
+    },
+    {
+      "id": "SRC08",
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/object-projection-registry-contract.v1.json",
+      "git_blob": "ed969c87359c42444c477a752f332f07f0059a30",
+      "role": "object/relation authority-pointer admission law"
+    },
+    {
+      "id": "SRC09",
+      "path": "control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json",
+      "git_blob": "b801a11e342051a6b00e6f7098b1d691685ad0b6",
+      "role": "current authority-backed object relation instances EXECUTES and GOVERNS_PROCEDURE_FOR"
+    },
+    {
+      "id": "SRC10",
+      "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+      "git_blob": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+      "role": "source-defined typed object edges; source status caveat preserved"
+    },
+    {
+      "id": "SRC11",
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/relationship-crosswalk.v1.json",
+      "git_blob": "d9d1e8f86e5a0f1c61548e16da30cf0f872234c5",
+      "role": "whole-estate capacity ownership and non-substitution"
+    },
+    {
+      "id": "SRC12",
+      "path": "laws/test/index.html",
+      "git_blob": "5e13a7c72357d4e1c6ecf2f313d320297a44111e",
+      "role": "current Laws Test authority semantics and ordered Test phases"
+    },
+    {
+      "id": "SRC13",
+      "path": "laws/research/index.html",
+      "git_blob": "58b06514bf03bf8c32d8c1ed4d6d39a8693df9cd",
+      "role": "current Research custody/support/boundary semantics"
+    },
+    {
+      "id": "SRC14",
+      "path": "laws/research/evidence-and-sources/index.html",
+      "git_blob": "546816616371f40b513c5bf821ee56e592bc6044",
+      "role": "source-observation-admission-supportable-claim chain; direct/derived evidence"
+    },
+    {
+      "id": "SRC15",
+      "path": "laws/research/findings-and-boundaries/index.html",
+      "git_blob": "7a7d2c19776d30667988d71e03b102f15734265d",
+      "role": "supported/negative/mixed/unresolved standing and claim ceilings"
+    },
+    {
+      "id": "SRC16",
+      "path": "laws/test/result-and-record/index.html",
+      "git_blob": "e080602de2bc5ee5816779f39f834ae32923ab21",
+      "role": "Test disposition, result record, custody and no-upgrade boundary"
+    }
+  ],
+  "reconciliation_rules": [
+    "RELATION_TYPE_AND_ENDPOINT_CLASSES_MUST_BE_DEFINED_BEFORE_INSTANCE_ASSERTION",
+    "EVERY_ASSERTED_RELATION_INSTANCE_REQUIRES_EXACT_AUTHORITY_POINTER_AND_VERSION",
+    "RELATION_EXISTENCE_AND_SCIENTIFIC_STANDING_ARE_DISTINCT",
+    "CUSTODY_AND_OPERATIONAL_PROJECTION_ARE_DISTINCT",
+    "TEST_PARTICIPATION_AND_TEST_SUCCESS_ARE_DISTINCT",
+    "EXECUTION_AND_EVIDENCE_STANDING_ARE_DISTINCT",
+    "PRESENTATION_RELATION_AND_SCIENTIFIC_RELATION_ARE_DISTINCT",
+    "CAPACITY_LEVEL_RELATIONS_MAY_NOT_BE_GENERALIZED_TO_ARBITRARY_OBJECTS",
+    "SPATIAL_OR_NAVIGATIONAL_FACTS_MAY_NOT_CREATE_RELATIONS",
+    "MERE_ABSENCE_OF_A_RELATION_ASSERTION_DOES_NOT_ESTABLISH_NONE",
+    "THREAD_CONTEXT_IS_NOT_RELATION_AUTHORITY"
+  ],
+  "candidate_dispositions": [
+    {
+      "candidate": "CUSTODIED_BY",
+      "disposition": "NORMALIZE_AND_ADMIT",
+      "basis": ["SRC07", "SRC11", "SRC12", "SRC13", "SRC14", "SRC16"],
+      "reason": "Research/source/provenance/Frontier custody is repeatedly distinguished from Tests projection, execution, presentation and validation. A narrow custody edge is necessary to represent that existing authority without treating storage or navigation as ownership."
+    },
+    {
+      "candidate": "OPERATIONALLY_PROJECTED_INTO",
+      "disposition": "NORMALIZE_AND_ADMIT",
+      "basis": ["SRC07", "SRC08", "SRC09"],
+      "reason": "Tests explicitly projects authority-backed Research objects into METHODS/MODELS/EXPERIMENTS/EVIDENCE contexts by reference, without transferring custody or creating ontology."
+    },
+    {
+      "candidate": "PARTICIPATES_IN_TEST_PHASE",
+      "disposition": "NORMALIZE_AND_ADMIT",
+      "basis": ["SRC12", "SRC16"],
+      "reason": "Current Test authority defines an ordered four-stage procedural lifecycle. Participation must be run- and phase-scoped and must not be conflated with success or standing."
+    },
+    {
+      "candidate": "EVIDENCE_BEARING_ON",
+      "disposition": "NORMALIZE_AND_ADMIT",
+      "basis": ["SRC02", "SRC05", "SRC13", "SRC14", "SRC15"],
+      "reason": "Evidence relevance and evidentiary standing are distinct in current authority. This normalized edge carries relevance only; positive, adverse, mixed, unresolved or other scientific standing remains a separate field."
+    },
+    {
+      "candidate": "DERIVED_FROM",
+      "disposition": "NORMALIZE_AND_ADMIT_WITH_STRICT_PROVENANCE_BOUNDARY",
+      "basis": ["SRC14", "SRC16"],
+      "reason": "Current Research explicitly distinguishes direct from derived evidence and current Test records contain source-bound derivative records. The edge asserts transformation lineage only and never inherits scientific standing."
+    },
+    {
+      "candidate": "EXECUTES",
+      "disposition": "ADMIT_EXISTING_TYPED_RELATION",
+      "basis": ["SRC09", "SRC10"],
+      "reason": "A current Tests projection registry already contains an authority-backed ROUTE_OPERATOR_PLATFORM -> PROSPECTIVE_FINAL_REPORT_PORTFOLIO EXECUTES instance."
+    },
+    {
+      "candidate": "GOVERNS_PROCEDURE_FOR",
+      "disposition": "ADMIT_EXISTING_TYPED_RELATION",
+      "basis": ["SRC09", "SRC10"],
+      "reason": "A current Tests projection registry already contains an authority-backed METHODS -> PROSPECTIVE_FINAL_REPORT_PORTFOLIO GOVERNS_PROCEDURE_FOR instance."
+    },
+    {
+      "candidate": "TESTS_CANDIDATE",
+      "disposition": "PRESERVE_SOURCE_DEFINED_TYPE_INSTANCE_REQUIRES_CURRENT_AUTHORITY",
+      "basis": ["SRC10"],
+      "reason": "The source hierarchy defines INSTRUMENT -> INVARIANT_CANDIDATE with this relation, but that hierarchy is itself marked SUCCESSOR_NORMALIZATION_CANDIDATE. Relation instances may not be manifested without a current authority pointer."
+    },
+    {
+      "candidate": "SUPPLIES_COMPETING_REPRESENTATIONS_TO",
+      "disposition": "PRESERVE_SOURCE_DEFINED_TYPE_INSTANCE_REQUIRES_CURRENT_AUTHORITY",
+      "basis": ["SRC05", "SRC10"],
+      "reason": "The relation is explicitly typed in the source hierarchy and fits controlled-comparison semantics, but each instance requires current authority."
+    },
+    {
+      "candidate": "IS_BOUNDED_SUPPORTING_MEMBER_OF",
+      "disposition": "PRESERVE_SOURCE_DEFINED_TYPE_INSTANCE_REQUIRES_CURRENT_AUTHORITY",
+      "basis": ["SRC10"],
+      "reason": "The source hierarchy declares the bounded model-membership edge. Membership does not itself upgrade standing and each instance requires current authority."
+    },
+    {
+      "candidate": "PRESENTS_WITHOUT_REDEFINING",
+      "disposition": "NORMALIZE_AND_ADMIT_TYPE_INSTANCE_REQUIRES_AUTHORITY",
+      "basis": ["SRC01", "SRC03", "SRC04", "SRC06", "SRC10"],
+      "reason": "Representation authority may present declared relations without redefining scientific state. Existing source-defined instances support the type, but presentation cannot create scientific relation or standing."
+    },
+    {
+      "candidate": "SUPPORTS",
+      "disposition": "REJECT_AS_GENERIC_RELATION_TYPE",
+      "basis": ["SRC02", "SRC14", "SRC15"],
+      "reason": "SUPPORTED_WITHIN_BOUNDARY is already a scientific-standing state. Treating SUPPORTS as a generic edge would collapse relation existence into evidentiary strength. Use EVIDENCE_BEARING_ON plus SCIENTIFIC_STANDING=SUPPORTED_WITHIN_BOUNDARY."
+    },
+    {
+      "candidate": "CHALLENGES",
+      "disposition": "REJECT_AS_GENERIC_RELATION_TYPE",
+      "basis": ["SRC02", "SRC15", "SRC16"],
+      "reason": "Negative, contradicted, mixed and adverse outcomes are standing/disposition states, not one universal relation. Use EVIDENCE_BEARING_ON plus the applicable standing unless a narrower comparator relation is separately authorized."
+    },
+    {
+      "candidate": "EVALUATES",
+      "disposition": "DEFER_GENERIC_TYPE_TOO_BROAD",
+      "basis": ["SRC05", "SRC12", "SRC16"],
+      "reason": "Current usage spans testing, controlled comparison, calibration and result comparison. A single EVALUATES edge would be semantically underdetermined; use narrower admitted relations or define a future typed comparison contract."
+    },
+    {
+      "candidate": "USES_EVIDENCE",
+      "disposition": "DEFER_PENDING_EXPLICIT_INPUT_BINDING_CONTRACT",
+      "basis": ["SRC07", "SRC08", "SRC12", "SRC14"],
+      "reason": "Evidence input is authorized conceptually, but a universal object-level uses-evidence edge needs explicit test/run input binding and evidence authority."
+    },
+    {
+      "candidate": "PRODUCED_BY",
+      "disposition": "DEFER_PENDING_EXECUTION_RESULT_IDENTITY_CONTRACT",
+      "basis": ["SRC12", "SRC16"],
+      "reason": "Test returns bounded result records, but current sources do not authorize a universal inverse producer relation for all result types. Do not infer PRODUCED_BY merely from EXECUTES."
+    }
+  ],
+  "capacity_relation_disposition": {
+    "status": "PRESERVE_EXACT_ENDPOINT_TYPES_ONLY",
+    "source": "SRC03",
+    "rule": "Existing constitutional room/capacity relations remain valid only for their declared capacity endpoints unless a separate object-level authority explicitly reuses the type.",
+    "not_object_graph_by_default": true
+  },
+  "imi_disposition": {
+    "invoked": false,
+    "reason": "No multi-factor maneuverability question emerged. The task is semantic authority reconciliation, not transferability or trajectory measurement."
+  },
+  "claim_boundaries": {
+    "product_mutation": false,
+    "Gamma_implemented": false,
+    "relation_resolver_constructed": false,
+    "spatial_reprojection_constructed": false,
+    "scientific_claim_upgrade": false,
+    "relation_instances_created_from_geometry": false,
+    "merge_authorized": false,
+    "deployment_authorized": false
+  },
+  "next_artifact": "LAWS_CONTEXTUAL_RELATION_REGISTRY_v1"
+}

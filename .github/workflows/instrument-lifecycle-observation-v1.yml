@@ -44,6 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -224,7 +225,7 @@ jobs:
             --input "$RUNNER_TEMP/continuity-request.json" \
             --registry "$CONTINUITY_GAP_REGISTRY_PATH" \
             --output "$RUNNER_TEMP/continuity-assessment.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/continuity-assessment.json');if(r.result!=='PASS'||r.classification!=='OPEN'||r.systemClosureGranted!==false||r.repositoryWritesAuthorized!==false||r.lifecycleAuthorityGranted!==false||r.mergeAuthorityGranted!==false)process.exit(1)"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/continuity-assessment.json');if(r.result!=='PASS'||r.subjectHead!==process.env.SUBJECT_HEAD||r.classification!=='OPEN'||r.systemClosureGranted!==false||r.repositoryWritesAuthorized!==false||r.lifecycleAuthorityGranted!==false||r.mergeAuthorityGranted!==false)process.exit(1)"
 
       - name: Build exact-head observation receipts
         shell: bash

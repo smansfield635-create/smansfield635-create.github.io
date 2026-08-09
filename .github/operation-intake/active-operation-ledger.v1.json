@@ -1056,36 +1056,6 @@
       "scopeHash": "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2",
       "state": "ADMITTED_LOCKED"
     },
-    "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad": {
-      "governingHead": "d2455e87226586379b2f985a7c277f1f74b0a765",
-      "lockGeneration": 820,
-      "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
-      "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "7036251b476288abd636ae2f033ff27fc1861863",
-        "lockGeneration": 812,
-        "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
-        "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_001",
-        "preservedEvidenceRefs": [
-          "PR_838_GENERATION_812_ONE_RECORD_CANDIDATE",
-          "PR_839_CLOSURE_AWARE_SELF_TEST_MERGE_D2455E87",
-          "GENERATION_811_PASS_CLOSED",
-          "PR_831_PROVIDER_RATIFICATION",
-          "GENERATION_781_PASS_CLOSED"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "SUCCESSOR_GAP_REGISTRY_GEN812_TO_D2455E87_20260809_001"
-      },
-      "procedureLocatorDigest": "f8a70bc165284d2e7082d7cde6689614b2105d2bb7250351d24aec1318bad39c",
-      "released": false,
-      "requestDigest": "09dbb59c6154f388e4d9118fb5a5c55404e26ba4e742171a13c111a7f2b07f4c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad",
-      "state": "ADMITTED_LOCKED"
-    },
     "c02de25d477b2d8c830de7fe8551abe5af2cc0d0817ba0b1a6caee91e311a1fa": {
       "governingHead": "0f2515813e5962b43da90513b409e1730991bb6b",
       "lockGeneration": 768,
@@ -11545,6 +11515,37 @@
       "requestDigest": "8cec0b0e160dcd5733e0bc47222a987f978148205adf6a6f69098f9878631531",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "09e4f86b6494c3f5f3c132e3188dd48a8ebaa14de5db3f4c1a3133cbce521f5a",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "d2455e87226586379b2f985a7c277f1f74b0a765",
+      "lockGeneration": 820,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
+      "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "7036251b476288abd636ae2f033ff27fc1861863",
+        "lockGeneration": 812,
+        "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
+        "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_001",
+        "preservedEvidenceRefs": [
+          "PR_838_GENERATION_812_ONE_RECORD_CANDIDATE",
+          "PR_839_CLOSURE_AWARE_SELF_TEST_MERGE_D2455E87",
+          "GENERATION_811_PASS_CLOSED",
+          "PR_831_PROVIDER_RATIFICATION",
+          "GENERATION_781_PASS_CLOSED"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "SUCCESSOR_GAP_REGISTRY_GEN812_TO_D2455E87_20260809_001"
+      },
+      "procedureLocatorDigest": "f8a70bc165284d2e7082d7cde6689614b2105d2bb7250351d24aec1318bad39c",
+      "released": true,
+      "requestDigest": "09dbb59c6154f388e4d9118fb5a5c55404e26ba4e742171a13c111a7f2b07f4c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

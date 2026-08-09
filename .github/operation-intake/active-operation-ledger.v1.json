@@ -1523,12 +1523,24 @@
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e",
       "state": "ADMITTED_LOCKED"
+    },
+    "fde34f0be303c2205fb5079cb458b8b91718d830a037fb817f048252bfe556e9": {
+      "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+      "lockGeneration": 854,
+      "lockScope": "IMI_CONTROL_PLANE_PLATFORM:L2_PLATFORM_DEFICIT_STRIKE:V1:EXACT_18_PATH_ADDITIVE_SCOPE",
+      "operationId": "L2_CONTROL_PLANE_PLATFORM_DEFICIT_STRIKE_v1",
+      "procedureLocatorDigest": "379910047e58c891ca98551319fd9ba0b76c3cace34f575f49e02118da4be26c",
+      "released": false,
+      "requestDigest": "8caa0e2a09a222f98f538bf49d45457297a7e4504a395e05bd8f7d9eabdae7ef",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fde34f0be303c2205fb5079cb458b8b91718d830a037fb817f048252bfe556e9",
+      "state": "ADMITTED_LOCKED"
     }
   },
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 853,
+  "lockGeneration": 854,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

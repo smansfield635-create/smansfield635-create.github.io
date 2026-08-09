@@ -5,8 +5,9 @@
   "records": [
     {
       "gapId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_CONTINUITY",
-      "status": "OPEN",
+      "status": "CLOSED_BOUNDED",
       "discoveredAtHead": "9608702942bd3b09ece55023d5becf2d2b4cdb0b",
+      "closedAtHead": "7036251b476288abd636ae2f033ff27fc1861863",
       "coordinationIssue": 817,
       "summary": "A fresh lifecycle successor must use a changed operationId and produces a successor-transition receipt, while the current closed-world AI-room resolver binds execution to an exact registered operationId and an ordinary admission receipt.",
       "interfaceKeys": [
@@ -22,14 +23,20 @@
       ],
       "evidenceRefs": [
         "PR_814_GENERIC_SUCCESSOR_PROTOCOL",
-        "ISSUE_817_CONTINUITY_TRACK_COORDINATION"
+        "ISSUE_817_CONTINUITY_TRACK_COORDINATION",
+        "PR_825_SUCCESSOR_AWARE_CLOSED_WORLD_RESOLVER",
+        "GENERATION_752_PASS_CLOSED",
+        "PR_829_REMOTE_OPERATION_SUCCESSOR_ROUTE",
+        "GENERATION_651_SUPERSEDED_BY_GENERATION_781",
+        "GENERATION_774_PASS_CLOSED",
+        "GENERATION_781_PASS_CLOSED",
+        "RUN_31329000335_REAL_SUCCESSOR_PAGE_EXCELLENCE_COMMAND_PASS",
+        "RUN_31329093626_UNRELATED_OPERATION_SUCCESSOR_OPERATION_ID_MISMATCH_FAIL_CLOSED",
+        "PR_831_PROVIDER_RATIFICATION_MERGE_257EBC15",
+        "GENERATION_781_CANONICAL_CLOSURE_E1EEB3AC",
+        "PR_833_STRICT_SUCCESSOR_FALLBACK_PRESERVED_7036251B"
       ],
-      "closureRequirements": [
-        "SUCCESSOR_OPERATION_ID_EXECUTABLE_WITHOUT_BESPOKE_DESCRIPTOR_CHURN",
-        "SUCCESSOR_RECEIPT_CONSUMABLE_OR_CANONICALLY_ADAPTED_BY_EXECUTION_PATH",
-        "REAL_SUCCESSOR_TO_EXECUTION_TRANSITION_PROOF",
-        "POST_MERGE_REMOTE_PROOF"
-      ],
+      "closureRequirements": [],
       "authorityCreated": false
     },
     {

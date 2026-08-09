@@ -1,0 +1,116 @@
+name: Laws Non-Spatial Projection Conformance Harness v1
+
+on:
+  push:
+    branches:
+      - agent/laws-nonspatial-projection-conformance-harness-001
+    paths:
+      - '.github/workflows/laws-nonspatial-projection-conformance-harness-v1.yml'
+      - 'laws/control-plane/contextual-topology/laws-nonspatial-projection-conformance-harness-v1.mjs'
+      - 'laws/control-plane/contextual-topology/verify-laws-nonspatial-projection-conformance-harness-v1.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXPECTED_PARENT: c60b2102998cfbacd0a2bcb2b7cccf123e17738c
+  EXPECTED_POLICY_BLOB: 93f8d8d9edcb961f2bacf6f82be799f347b19217
+  EXPECTED_GRAPH_CONTRACT_BLOB: 240dbb7dca3db8f5a0a21e77d1aee91f1d21cb5a
+  EXPECTED_ASSEMBLER_BLOB: f94fd5840316c338b7456957eeed8e77b24ac5fc
+  EXPECTED_NATIVE_RECEIPT_PROFILE_BLOB: 2107a8de1ef21daf36bbd1759e5a4c4bc62291cd
+  EXPECTED_NATIVE_RECEIPT_EMITTER_BLOB: 0d927b635d4de051e7a0a55c26de9657c7d941df
+  EXPECTED_GAMMA_RESOLVER_BLOB: 1d715884d71419ac25892da452ca7b6d21e6c909
+  EXPECTED_RELATION_REGISTRY_BLOB: 5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e
+  EXPECTED_LRPV1_JS_BLOB: 98b8173893a437f31bb8d71ffbf06ae5a1eec4e2
+  EXPECTED_TESTS_REGISTRY_BLOB: b801a11e342051a6b00e6f7098b1d691685ad0b6
+  EXPECTED_HARNESS_BLOB: 19ad7a16f37357a5ac91090139b510416d54b4f5
+  EXPECTED_VERIFIER_BLOB: d9e5d2ecdcbd2cec320e9c1c479ea358892100d7
+
+jobs:
+  verify-nonspatial-projection-conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact harness head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact lineage, bounded scope, and immutable upstreams
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          test "$(git rev-list --parents -n 1 HEAD | awk '{print NF}')" -eq 2
+
+          mapfile -t CHANGED < <(git diff --name-status "$EXPECTED_PARENT"...HEAD | sort)
+          EXPECTED=(
+            $'A\t.github/workflows/laws-nonspatial-projection-conformance-harness-v1.yml'
+            $'A\tlaws/control-plane/contextual-topology/laws-nonspatial-projection-conformance-harness-v1.mjs'
+            $'A\tlaws/control-plane/contextual-topology/verify-laws-nonspatial-projection-conformance-harness-v1.mjs'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 3
+          test "$(printf '%s\n' "${CHANGED[@]}")" = "$(printf '%s\n' "${EXPECTED_SORTED[@]}")"
+
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-semantics-preserving-projection-policy-v1.json)" = "$EXPECTED_POLICY_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-contract-v1.json)" = "$EXPECTED_GRAPH_CONTRACT_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-assembler-v1.mjs)" = "$EXPECTED_ASSEMBLER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-native-receipt-profile-v1.json)" = "$EXPECTED_NATIVE_RECEIPT_PROFILE_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-native-receipt-v1.mjs)" = "$EXPECTED_NATIVE_RECEIPT_EMITTER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-gamma-resolver-v1.mjs)" = "$EXPECTED_GAMMA_RESOLVER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-relation-registry-v1.json)" = "$EXPECTED_RELATION_REGISTRY_BLOB"
+          test "$(git rev-parse HEAD:infrastructure/lineage-receipt-protocol-v1/javascript/lineage_receipt_protocol_v1.mjs)" = "$EXPECTED_LRPV1_JS_BLOB"
+          test "$(git rev-parse HEAD:control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json)" = "$EXPECTED_TESTS_REGISTRY_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-nonspatial-projection-conformance-harness-v1.mjs)" = "$EXPECTED_HARNESS_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/verify-laws-nonspatial-projection-conformance-harness-v1.mjs)" = "$EXPECTED_VERIFIER_BLOB"
+
+      - name: Prove zero spatial runtime dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = "laws/control-plane/contextual-topology/laws-nonspatial-projection-conformance-harness-v1.mjs";
+          const text = fs.readFileSync(path, "utf8");
+          const imports = [...text.matchAll(/from\s+["']([^"']+)["']/g)].map((match) => match[1]);
+          const allowed = new Set([
+            "../../../infrastructure/lineage-receipt-protocol-v1/javascript/lineage_receipt_protocol_v1.mjs"
+          ]);
+          const forbiddenImports = /^(three|@react-three|react|react-dom|canvas|jsdom|playwright|puppeteer)(\/|$)/;
+          for (const specifier of imports) {
+            if (forbiddenImports.test(specifier)) throw new Error(`FORBIDDEN_SPATIAL_DEPENDENCY:${specifier}`);
+            if (!allowed.has(specifier)) throw new Error(`UNDECLARED_HARNESS_DEPENDENCY:${specifier}`);
+          }
+          const forbiddenRuntimeGlobals = /\b(document|window|WebGLRenderingContext|HTMLCanvasElement|CanvasRenderingContext2D)\b/;
+          if (forbiddenRuntimeGlobals.test(text)) throw new Error("FORBIDDEN_SPATIAL_RUNTIME_GLOBAL");
+          console.log(JSON.stringify({
+            zeroSpatialDependencies: true,
+            imports
+          }));
+          NODE
+
+      - name: Verify harness and verifier syntax
+        run: |
+          node --check laws/control-plane/contextual-topology/laws-nonspatial-projection-conformance-harness-v1.mjs
+          node --check laws/control-plane/contextual-topology/verify-laws-nonspatial-projection-conformance-harness-v1.mjs
+
+      - name: Execute positive, adversarial, and LRPv1 verification
+        shell: bash
+        env:
+          LAWS_PROJECTION_CONFORMANCE_EVIDENCE_DIR: /tmp/laws-projection-conformance-evidence
+        run: |
+          set -euo pipefail
+          mkdir -p "$LAWS_PROJECTION_CONFORMANCE_EVIDENCE_DIR"
+          node laws/control-plane/contextual-topology/verify-laws-nonspatial-projection-conformance-harness-v1.mjs
+
+      - name: Upload non-spatial projection conformance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-nonspatial-projection-conformance-harness-v1-${{ github.run_id }}
+          path: /tmp/laws-projection-conformance-evidence
+          if-no-files-found: error
+          retention-days: 30

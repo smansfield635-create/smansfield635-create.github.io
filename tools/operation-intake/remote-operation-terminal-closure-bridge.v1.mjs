@@ -17,7 +17,7 @@ export const ROUTE_ID = 'REMOTE_OPERATION_TERMINAL_CLOSURE_v1';
 export const REQUEST_SCHEMA = 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1';
 export const RECEIPT_SCHEMA = 'REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_RECEIPT_v1';
 export const LOCK_MANAGER_PATH = 'tools/operation-intake/repository-operation-lock-manager.v1.mjs';
-export const LOCK_MANAGER_BLOB = '0aa440a3de30e145c7912fcfe2833fb8430ffbb0';
+export const LOCK_MANAGER_BLOB = 'edb249f76cc326ea2f07aae20510f894c0e4511c';
 const REQUIRED_KEYS = Object.freeze([
   'schema',
   'repository',

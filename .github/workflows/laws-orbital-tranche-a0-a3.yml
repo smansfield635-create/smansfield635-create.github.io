@@ -42,7 +42,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
           git merge-base --is-ancestor "$REPAIR_PREDECESSOR" HEAD
-          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '4710211f96bc14e650e5a702072bf63b837ece5b'
+          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '8aca31a19637c3a0a071a3a87eca7b4cfc5af01d'
           mapfile -t delta < <(git diff --name-only "$REPAIR_PREDECESSOR" HEAD | sort)
           printf '%s\n' "${delta[@]}"
           test "${#delta[@]}" -eq 3
@@ -132,7 +132,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
           git merge-base --is-ancestor "$REPAIR_PREDECESSOR" HEAD
-          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '4710211f96bc14e650e5a702072bf63b837ece5b'
+          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '8aca31a19637c3a0a071a3a87eca7b4cfc5af01d'
           mapfile -t delta < <(git diff --name-only "$REPAIR_PREDECESSOR" HEAD | sort)
           printf '%s\n' "${delta[@]}"
           test "${#delta[@]}" -eq 3

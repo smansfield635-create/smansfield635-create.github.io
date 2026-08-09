@@ -637,13 +637,32 @@
       "state": "ADMITTED_LOCKED"
     },
     "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59": {
-      "governingHead": "331284949940c95db80a332235492de4c80d3d43",
-      "lockGeneration": 825,
+      "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+      "lockGeneration": 855,
       "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
-      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002",
-      "procedureLocatorDigest": "ae4e2524e36b52b6838b44184b3ba274b93fbd1d84d9a282abe53027db695cd0",
+      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "331284949940c95db80a332235492de4c80d3d43",
+        "lockGeneration": 825,
+        "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002",
+        "preservedEvidenceRefs": [
+          "GENERATION_825_CANONICAL_ADMISSION",
+          "RUN_31335005724_PREDECESSOR_FIVE_PATH_ROUTER_PASS_REFERENCE_ONLY",
+          "GENERATION_839_CARRIER_PASS_CLOSED",
+          "PR_848_CARRIER_GAP_CLOSED_BOUNDED_01DA797F",
+          "GEN825_APHI_MANIFEST_BLOB_MISMATCH_DISCOVERED",
+          "GEN825_PR468_PR544_SOURCE_IDENTITIES_UNRESOLVABLE_DISCOVERED"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_PHI1_GEN825_TO_CURRENT_HEAD_CORRECTED_IDENTITIES_20260809_001"
+      },
+      "procedureLocatorDigest": "0e178ebdc20ebc20af3b1d2a93e60eda094c0f47d48837d8531c77d5184ebff0",
       "released": false,
-      "requestDigest": "f2ecb75c24ab1b0e3bfdfa21c5e333b55f78d7d0b3aff6faf3633ecb15247c67",
+      "requestDigest": "ab3824965e77bc7b254ed2ff1d6c881f406045899e48ca6664a2261cc8c622b4",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
       "state": "ADMITTED_LOCKED"
@@ -1540,7 +1559,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 854,
+  "lockGeneration": 855,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -12139,6 +12158,38 @@
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7fb214d1737dba52d0547ce1c64f4f28568d2c333540114538cf0a747519740a",
       "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "331284949940c95db80a332235492de4c80d3d43",
+      "lockGeneration": 825,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002",
+      "procedureLocatorDigest": "ae4e2524e36b52b6838b44184b3ba274b93fbd1d84d9a282abe53027db695cd0",
+      "released": true,
+      "requestDigest": "f2ecb75c24ab1b0e3bfdfa21c5e333b55f78d7d0b3aff6faf3633ecb15247c67",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GENERATION_825_CANONICAL_ADMISSION",
+          "RUN_31335005724_PREDECESSOR_FIVE_PATH_ROUTER_PASS_REFERENCE_ONLY",
+          "GENERATION_839_CARRIER_PASS_CLOSED",
+          "PR_848_CARRIER_GAP_CLOSED_BOUNDED_01DA797F",
+          "GEN825_APHI_MANIFEST_BLOB_MISMATCH_DISCOVERED",
+          "GEN825_PR468_PR544_SOURCE_IDENTITIES_UNRESOLVABLE_DISCOVERED"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+        "successorLockGeneration": 855,
+        "successorLockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "successorOperationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002_SUCCESSOR_001",
+        "transitionId": "LAWS_PHI1_GEN825_TO_CURRENT_HEAD_CORRECTED_IDENTITIES_20260809_001"
+      },
       "terminalDisposition": "SUPERSEDED"
     }
   ]

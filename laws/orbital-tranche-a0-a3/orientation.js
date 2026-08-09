@@ -353,7 +353,7 @@
       const finishFamily=e=>{
         const d=state.familyDrag;if(!d||d.id!==e.pointerId)return;
         state.familyDrag=null;
-        if(d.axis!=='x'){state.familyRotation=0;renderFamilyOrbit(0);return}
+        if(d.axis!=='x'){state.familyRotation=0;return}
         const step=(Math.PI*2)/families.length;
         const shift=Math.round(-state.familyRotation/step);
         setFamily(state.familyIndex+shift,{animate:true});

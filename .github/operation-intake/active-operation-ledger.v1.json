@@ -912,6 +912,18 @@
       "scopeHash": "a78fffa03c9cd7e1639ba441caab37ef334959d0599b4a2c0af6c0c493ac089b",
       "state": "ADMITTED_LOCKED"
     },
+    "a8b4877947e257dd290d2b809e96e946c7a611487f40bd1b5507edb75034aeba": {
+      "governingHead": "de4de1e8b0800c219424afbb047b204870c3e6ce",
+      "lockGeneration": 677,
+      "lockScope": "ESTATE_VALIDATION:READ_ONLY_COVERAGE:NARRATIVE_FRONTIER_PRODUCTS_MIRRORLAND:V1",
+      "operationId": "ESTATE_VALIDATION_COVERAGE_EXPANSION_NARRATIVE_FRONTIER_PRODUCTS_MIRRORLAND_20260809",
+      "procedureLocatorDigest": "c344e4a2c2c91315438eb0245b7f0dd95c0859abf456dfbaec32e446a3034782",
+      "released": false,
+      "requestDigest": "fb42882a885560c32ad01de9b020251d9113fe5a20ec7e196f5d9e16e97fe23e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a8b4877947e257dd290d2b809e96e946c7a611487f40bd1b5507edb75034aeba",
+      "state": "ADMITTED_LOCKED"
+    },
     "aa53681c8031a7e59affe6a2763018e45f8ced56416d18b3da9f474e57d8ad1f": {
       "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
       "lockGeneration": 390,
@@ -1444,7 +1456,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 676,
+  "lockGeneration": 677,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

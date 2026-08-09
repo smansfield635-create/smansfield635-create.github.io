@@ -263,9 +263,19 @@ export function runSelfTest() {
 
   const regressions = [
     runNativeRegression(
+      'PROGRESSIVE_SYSTEM_CONTINUITY_NATIVE_SELF_TEST',
+      '.github/ai-router/system-continuity/progressive-system-continuity-self-test.v1.mjs',
+      r => { if (r.result !== 'PASS' || r.failedCount !== 0 || r.productMutationPerformed !== false || r.repositoryMutationPerformedBySelfTest !== false || r.lifecycleMutationPerformed !== false || r.genericCommandAuthority !== false) throw new Error('PROGRESSIVE_SYSTEM_CONTINUITY_REGRESSION_NONPASS'); }
+    ),
+    runNativeRegression(
       'DIFFERENTIAL_CONTINUITY_NATIVE_SELF_TEST',
       '.github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs',
       r => { if (r.result !== 'PASS_CLOSED' || r.failCount !== 0 || r.passCount !== r.testCount) throw new Error('DIFFERENTIAL_CONTINUITY_REGRESSION_NONPASS'); }
+    ),
+    runNativeRegression(
+      'INSTRUMENT_LIFECYCLE_NATIVE_SELF_TEST',
+      '.github/ai-router/instrument-lifecycle/instrument-lifecycle-self-test.v1.mjs',
+      r => { if (r.result !== 'PASS' || r.failedCount !== 0 || r.repositoryMutationPerformed !== false || r.workflowDeactivationPerformed !== false || r.physicalRetirementPerformed !== false) throw new Error('INSTRUMENT_LIFECYCLE_REGRESSION_NONPASS'); }
     ),
     runNativeRegression(
       'STRICT_SUCCESSOR_NATIVE_SELF_TEST',

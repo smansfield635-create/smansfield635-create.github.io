@@ -1,0 +1,283 @@
+name: Laws Firefox Spacecraft Receipt Observability
+
+on:
+  push:
+    branches:
+      - agent/laws-firefox-spacecraft-observability-001
+    paths:
+      - '.github/workflows/laws-firefox-spacecraft-observability.yml'
+      - 'laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: laws-firefox-spacecraft-receipt-observability
+  cancel-in-progress: false
+
+env:
+  SUBJECT_HEAD: 5b7d02fba947634c6e9587446cfcb454e8e4ca48
+  DIAGNOSTIC_HEAD: ${{ github.sha }}
+  LAWS_RUNTIME_BASE_URL: http://127.0.0.1:4173
+
+jobs:
+  builder_observation:
+    name: Firefox receipt observation — builder
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out diagnostic tooling head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DIAGNOSTIC_HEAD }}
+          path: diagnostic
+          fetch-depth: 0
+
+      - name: Check out immutable product subject
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SUBJECT_HEAD }}
+          path: subject
+          fetch-depth: 1
+
+      - name: Prove diagnostic-only delta and frozen subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C diagnostic rev-parse HEAD)" = "$DIAGNOSTIC_HEAD"
+          test "$(git -C subject rev-parse HEAD)" = "$SUBJECT_HEAD"
+          mapfile -t delta < <(git -C diagnostic diff --name-only "$SUBJECT_HEAD" "$DIAGNOSTIC_HEAD" | sort)
+          printf '%s\n' "${delta[@]}"
+          test "${#delta[@]}" -eq 2
+          test "${delta[0]}" = '.github/workflows/laws-firefox-spacecraft-observability.yml'
+          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs'
+          git -C diagnostic diff --check "$SUBJECT_HEAD" "$DIAGNOSTIC_HEAD"
+          test "$(git -C subject rev-parse HEAD:laws/index.spacecraft.background.js)" = "$(git -C diagnostic rev-parse "$SUBJECT_HEAD:laws/index.spacecraft.background.js")"
+          test "$(git -C subject rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = "$(git -C diagnostic rev-parse "$SUBJECT_HEAD:laws/orbital-tranche-a0-a3/orientation.js")"
+
+      - name: Route diagnostic paths through Laws router
+        shell: bash
+        working-directory: diagnostic
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs --path .github/workflows/laws-firefox-spacecraft-observability.yml --task "Laws Firefox spacecraft receipt observability workflow" --mutation-intent --output /tmp/router-workflow-builder.json
+          node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs --task "Laws Firefox spacecraft receipt diagnostic probe" --mutation-intent --output /tmp/router-probe-builder.json
+          node <<'NODE'
+          const fs = require('fs');
+          for (const file of ['/tmp/router-workflow-builder.json', '/tmp/router-probe-builder.json']) {
+            const receipt = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (receipt.disposition !== 'PASS' || !Array.isArray(receipt.routes) || !receipt.routes.length || receipt.routes.some(route => route.projectId !== 'LAWS' || route.disposition !== 'PASS')) {
+              throw new Error(`ROUTER_NOT_PASS:${file}`);
+            }
+          }
+          NODE
+          test -z "$(git status --porcelain)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pinned Firefox harness
+        working-directory: diagnostic
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps firefox
+
+      - name: Validate diagnostic probe syntax
+        working-directory: diagnostic
+        run: node --check laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs
+
+      - name: Start immutable-subject static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory subject > /tmp/laws-firefox-builder-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/laws-firefox-builder-server.log
+          exit 1
+
+      - name: Capture Firefox spacecraft receipt as builder
+        working-directory: diagnostic
+        run: >-
+          node laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs
+          --base-url http://127.0.0.1:4173
+          --subject-head ${{ env.SUBJECT_HEAD }}
+          --role builder
+          --output /tmp/laws-firefox-spacecraft-builder.json
+
+      - name: Upload builder diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-firefox-spacecraft-builder-${{ github.run_id }}
+          path: |
+            /tmp/laws-firefox-spacecraft-builder.json
+            /tmp/router-workflow-builder.json
+            /tmp/router-probe-builder.json
+            /tmp/laws-firefox-builder-server.log
+          if-no-files-found: error
+          retention-days: 90
+
+  fresh_observation:
+    name: Firefox receipt observation — fresh verifier
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out diagnostic tooling head independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DIAGNOSTIC_HEAD }}
+          path: diagnostic
+          fetch-depth: 0
+
+      - name: Check out immutable product subject independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.SUBJECT_HEAD }}
+          path: subject
+          fetch-depth: 1
+
+      - name: Independently prove diagnostic-only delta and frozen subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C diagnostic rev-parse HEAD)" = "$DIAGNOSTIC_HEAD"
+          test "$(git -C subject rev-parse HEAD)" = "$SUBJECT_HEAD"
+          mapfile -t delta < <(git -C diagnostic diff --name-only "$SUBJECT_HEAD" "$DIAGNOSTIC_HEAD" | sort)
+          printf '%s\n' "${delta[@]}"
+          test "${#delta[@]}" -eq 2
+          test "${delta[0]}" = '.github/workflows/laws-firefox-spacecraft-observability.yml'
+          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs'
+          git -C diagnostic diff --check "$SUBJECT_HEAD" "$DIAGNOSTIC_HEAD"
+          test "$(git -C subject rev-parse HEAD:laws/index.spacecraft.background.js)" = "$(git -C diagnostic rev-parse "$SUBJECT_HEAD:laws/index.spacecraft.background.js")"
+          test "$(git -C subject rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = "$(git -C diagnostic rev-parse "$SUBJECT_HEAD:laws/orbital-tranche-a0-a3/orientation.js")"
+
+      - name: Independently route diagnostic paths through Laws router
+        shell: bash
+        working-directory: diagnostic
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs --path .github/workflows/laws-firefox-spacecraft-observability.yml --task "Laws Firefox spacecraft receipt observability workflow" --mutation-intent --output /tmp/router-workflow-fresh.json
+          node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs --task "Laws Firefox spacecraft receipt diagnostic probe" --mutation-intent --output /tmp/router-probe-fresh.json
+          node <<'NODE'
+          const fs = require('fs');
+          for (const file of ['/tmp/router-workflow-fresh.json', '/tmp/router-probe-fresh.json']) {
+            const receipt = JSON.parse(fs.readFileSync(file, 'utf8'));
+            if (receipt.disposition !== 'PASS' || !Array.isArray(receipt.routes) || !receipt.routes.length || receipt.routes.some(route => route.projectId !== 'LAWS' || route.disposition !== 'PASS')) {
+              throw new Error(`ROUTER_NOT_PASS:${file}`);
+            }
+          }
+          NODE
+          test -z "$(git status --porcelain)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Independently install pinned Firefox harness
+        working-directory: diagnostic
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps firefox
+
+      - name: Independently validate diagnostic probe syntax
+        working-directory: diagnostic
+        run: node --check laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs
+
+      - name: Start independent immutable-subject static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory subject > /tmp/laws-firefox-fresh-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/laws-firefox-fresh-server.log
+          exit 1
+
+      - name: Capture Firefox spacecraft receipt as fresh verifier
+        working-directory: diagnostic
+        run: >-
+          node laws/orbital-tranche-a0-a3/observe-spacecraft-receipt.mjs
+          --base-url http://127.0.0.1:4173
+          --subject-head ${{ env.SUBJECT_HEAD }}
+          --role fresh-verifier
+          --output /tmp/laws-firefox-spacecraft-fresh.json
+
+      - name: Upload fresh diagnostic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-firefox-spacecraft-fresh-${{ github.run_id }}
+          path: |
+            /tmp/laws-firefox-spacecraft-fresh.json
+            /tmp/router-workflow-fresh.json
+            /tmp/router-probe-fresh.json
+            /tmp/laws-firefox-fresh-server.log
+          if-no-files-found: error
+          retention-days: 90
+
+  equality:
+    name: Independent Firefox receipt equality
+    needs: [builder_observation, fresh_observation]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: laws-firefox-spacecraft-builder-${{ github.run_id }}
+          path: /tmp/builder
+
+      - name: Download fresh evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: laws-firefox-spacecraft-fresh-${{ github.run_id }}
+          path: /tmp/fresh
+
+      - name: Require independent four-field confirmation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('fs');
+          const builder = JSON.parse(fs.readFileSync('/tmp/builder/laws-firefox-spacecraft-builder.json', 'utf8'));
+          const fresh = JSON.parse(fs.readFileSync('/tmp/fresh/laws-firefox-spacecraft-fresh.json', 'utf8'));
+          const expected = {
+            status: 'held',
+            webGlAvailable: false,
+            lastAction: 'spacecraft-background-initialization-failed',
+            lastError: 'LAWS_SPACECRAFT_WEBGL_UNAVAILABLE'
+          };
+          const same = JSON.stringify(builder.observed) === JSON.stringify(fresh.observed);
+          const confirmed = same && JSON.stringify(builder.observed) === JSON.stringify(expected);
+          const receipt = {
+            contract: 'LAWS_FIREFOX_SPACECRAFT_RECEIPT_EQUALITY_v1',
+            subjectHead: process.env.SUBJECT_HEAD,
+            diagnosticHead: process.env.DIAGNOSTIC_HEAD,
+            builderRole: builder.role,
+            freshVerifierRole: fresh.role,
+            builderObserved: builder.observed,
+            freshObserved: fresh.observed,
+            independentEquality: same,
+            fourFieldExecutionConfirmation: confirmed,
+            outcome: confirmed ? 'CONFIRMED' : 'FALSIFIED'
+          };
+          fs.writeFileSync('/tmp/laws-firefox-spacecraft-equality.json', `${JSON.stringify(receipt, null, 2)}\n`);
+          console.log(JSON.stringify(receipt, null, 2));
+          if (!confirmed) process.exit(1);
+          NODE
+
+      - name: Upload equality receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-firefox-spacecraft-equality-${{ github.run_id }}
+          path: /tmp/laws-firefox-spacecraft-equality.json
+          if-no-files-found: error
+          retention-days: 90

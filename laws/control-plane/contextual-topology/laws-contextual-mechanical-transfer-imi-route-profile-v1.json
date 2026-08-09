@@ -1,0 +1,77 @@
+{
+  "route_id": "LAWS_CONTEXTUAL_MECHANICAL_TRANSFER_ROUTE_v1",
+  "route_name": "Laws Contextual State Bounded Mechanical Transferability",
+  "route_version": "1.0.0",
+  "construct_target": "INTRINSIC_MANEUVERABILITY_OF_TRANSFERRING_BOUNDED_SNAPSHOT_TRANSACTION_AND_RESTORATION_MECHANICS_INTO_THE_FROZEN_LAWS_CONTEXTUAL_STATE_INTERFACE_WITHOUT_DONOR_SEMANTIC_IMPORT",
+  "start_state": "REAL_TRANSFER_CANDIDATE_IDENTIFIED_DESTINATION_INTERFACE_FROZEN_TRANSFER_NOT_ADMITTED",
+  "target_or_outcome_state": "MECHANICALLY_TRANSFERABLE_CANDIDATE_READY_FOR_SEPARATE_ARCHITECTURAL_ADMISSION_DECISION",
+  "population_or_system_domain": "DGB_LAWS_CONTEXTUAL_STATE_RUNTIME_ARCHITECTURE",
+  "primary_time_unit": "VERSIONED_EVALUATION_SNAPSHOT",
+  "observation_schedule": ["PRE_TRANSFER_ARCHITECTURAL_EVALUATION"],
+  "required_factor_ids": ["MT01", "MT02", "MT03", "MT04", "MT05", "MT06"],
+  "optional_factor_ids": [],
+  "conditional_factor_ids": [],
+  "conditional_trigger_rules": {},
+  "dependency_groups": {
+    "ADAPTER_EXECUTION_COMPATIBILITY": ["MT03", "MT04", "MT05"]
+  },
+  "duplicate_groups": {},
+  "alternative_route_ids": [],
+  "primary_route_designation": true,
+  "route_level_imi_threshold_if_any": null,
+  "persistence_parameters": {
+    "applicable": false,
+    "reason": "SINGLE_VERSIONED_TRANSFERABILITY_SNAPSHOT",
+    "minimum_observations": 1,
+    "minimum_time_span": null,
+    "minimum_severe_fraction": null,
+    "recovery_break_observations": null
+  },
+  "recovery_attempt_adequacy_rules": {
+    "applicable": false,
+    "reason": "THIS_ROUTE_EVALUATES_PRE_TRANSFER_MECHANICAL_AVAILABILITY_NOT_POST_FAILURE_RECOVERY"
+  },
+  "meaningful_change_thresholds": {
+    "IMI_delta": null,
+    "factor_deltas": {
+      "MT01": 1,
+      "MT02": 1,
+      "MT03": 1,
+      "MT04": 1,
+      "MT05": 1,
+      "MT06": 1
+    }
+  },
+  "terminality_parameters": {
+    "applicable": false,
+    "reason": "IMI_7_TERMINAL_LOCK_IS_NOT_A_TARGET_CLASSIFICATION_FOR_THIS_SINGLE_PRE_TRANSFER_SNAPSHOT",
+    "requires_base_level_at_least": 5,
+    "requires_persistence": true,
+    "requires_nonreversibility": true,
+    "requires_no_effective_recovery_path": true,
+    "requires_route_version_continuity": true,
+    "requires_attempts_or_structural_impossibility": true
+  },
+  "factor_dictionary_version": "1.0.0",
+  "normalization_version": "1.0.0",
+  "source_registry_version": "1.0.0",
+  "temporal_protocol_version": "1.0.0",
+  "classifier_version": "1.0.0",
+  "implementation_version": "1.0.0",
+  "freeze_timestamp": "2026-08-08T23:49:00-05:00",
+  "author": "CHATGPT_ASSISTED_GOVERNANCE_DERIVATION",
+  "approver": "USER_AUTHORITY_EXPLICIT_FREEZE_AND_PROCEED_INSTRUCTION",
+  "route_boundaries": {
+    "TARGET_RESIDUAL_EXISTS": true,
+    "candidate_donor_path": "assets/compass/compass.controller.js",
+    "candidate_donor_blob": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+    "candidate_transfer_scope": [
+      "snapshot mechanics",
+      "guarded transaction skeleton",
+      "restoration skeleton"
+    ],
+    "donor_semantics_forbidden": true,
+    "IMI_result_is_not_transfer_admission": true,
+    "IMI_result_is_not_product_construction_authority": true
+  }
+}

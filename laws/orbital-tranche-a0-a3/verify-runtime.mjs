@@ -79,20 +79,64 @@ async function assertHitTarget(page, selector, label) {
   await locator.waitFor({ state: 'visible', timeout: 8000 });
   await locator.scrollIntoViewIfNeeded();
   const hit = await locator.evaluate((control, selectorValue) => {
+    const round = value => Math.round(value * 10) / 10;
+    const rectData = element => {
+      if (!element) return null;
+      const rect = element.getBoundingClientRect();
+      return {
+        left: round(rect.left),
+        top: round(rect.top),
+        right: round(rect.right),
+        bottom: round(rect.bottom),
+        width: round(rect.width),
+        height: round(rect.height)
+      };
+    };
+    const describe = element => element ? {
+      tag: element.tagName?.toLowerCase() || '',
+      id: element.id || '',
+      className: typeof element.className === 'string' ? element.className.slice(0, 160) : '',
+      family: element.dataset?.family || '',
+      memberId: element.dataset?.memberId || ''
+    } : null;
     const rect = control.getBoundingClientRect();
-    const x = Math.min(innerWidth - 1, Math.max(0, rect.left + rect.width / 2));
-    const y = Math.min(innerHeight - 1, Math.max(0, rect.top + rect.height / 2));
+    const rawX = rect.left + rect.width / 2;
+    const rawY = rect.top + rect.height / 2;
+    const x = Math.min(innerWidth - 1, Math.max(0, rawX));
+    const y = Math.min(innerHeight - 1, Math.max(0, rawY));
     const target = document.elementFromPoint(x, y);
+    const stack = document.elementsFromPoint(x, y).slice(0, 8).map(describe);
+    const html = document.documentElement;
+    const body = document.body;
     return {
       width: rect.width,
       height: rect.height,
       disabled: Boolean(control.disabled),
-      hit: Boolean(target && (target === control || control.contains(target) || target.closest?.(selectorValue) === control))
+      hit: Boolean(target && (target === control || control.contains(target) || target.closest?.(selectorValue) === control)),
+      control: describe(control),
+      target: describe(target),
+      stack,
+      rect: rectData(control),
+      viewport: { width: innerWidth, height: innerHeight },
+      rawCenter: { x: round(rawX), y: round(rawY) },
+      clampedPoint: { x: round(x), y: round(y) },
+      rawCenterInsideViewport: rawX >= 0 && rawX < innerWidth && rawY >= 0 && rawY < innerHeight,
+      scroll: { x: round(scrollX), y: round(scrollY) },
+      documentWidths: {
+        documentClientWidth: html.clientWidth,
+        documentScrollWidth: html.scrollWidth,
+        bodyClientWidth: body?.clientWidth || 0,
+        bodyScrollWidth: body?.scrollWidth || 0
+      },
+      shellRect: rectData(document.querySelector('.laws-spatial-environment')),
+      categoryFieldRect: rectData(document.querySelector('.laws-category-field')),
+      categoryOrbitRect: rectData(document.querySelector('[data-category-orbit]'))
     };
   }, selector);
-  assert(hit.width > 0 && hit.height > 0, `${label}:ZERO_SIZE_CONTROL`);
-  assert(!hit.disabled, `${label}:DISABLED_CONTROL`);
-  assert(hit.hit, `${label}:CONTROL_NOT_HIT_TESTABLE`);
+  const diagnostic = JSON.stringify(hit);
+  assert(hit.width > 0 && hit.height > 0, `${label}:ZERO_SIZE_CONTROL:${diagnostic}`);
+  assert(!hit.disabled, `${label}:DISABLED_CONTROL:${diagnostic}`);
+  assert(hit.hit, `${label}:CONTROL_NOT_HIT_TESTABLE:${diagnostic}`);
 }
 
 async function shellSnapshot(page) {

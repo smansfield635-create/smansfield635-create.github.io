@@ -71,6 +71,7 @@ jobs:
           .github/ai-router/router.v1.json
           .github/ai-router/system-continuity/gap-registry.v1.json
           .github/workflows/differential-continuity-v1.yml
+          .github/workflows/integrated-development-pipeline-v1.yml
           AI_ENTRYPOINT.json
           PATHS
             sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
@@ -78,7 +79,7 @@ jobs:
             test -z "$OUTSIDE"
           fi
 
-      - name: Run differential continuity and strict-successor regression self-tests
+      - name: Run differential continuity, strict-successor, and integrated-pipeline regression self-tests
         shell: bash
         run: |
           set -euo pipefail
@@ -86,12 +87,15 @@ jobs:
           node --check "$DC_DIR/differential-continuity-self-test.v1.mjs"
           node "$DC_DIR/differential-continuity-self-test.v1.mjs" --output "$RUNNER_TEMP/differential-self-test.json"
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs --output "$RUNNER_TEMP/successor-self-test.json"
+          node .github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs --output "$RUNNER_TEMP/integrated-pipeline-self-test.json"
           node - <<'NODE'
           const fs=require('node:fs');
           for (const name of ['differential-self-test.json','successor-self-test.json']) {
             const r=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/${name}`,'utf8'));
             if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.passCount!==r.testCount) throw new Error(`SELF_TEST_NONPASS:${name}`);
           }
+          const integrated=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/integrated-pipeline-self-test.json`,'utf8'));
+          if(integrated.result!=='PASS'||integrated.failedCount!==0||integrated.physicalRetirementPerformed!==false||integrated.mergeAuthorityCreated!==false||integrated.productAuthorityCreated!==false) throw new Error('INTEGRATED_PIPELINE_SELF_TEST_NONPASS');
           NODE
 
       - name: Verify root discovery, router ownership, and open continuity gap
@@ -140,6 +144,7 @@ jobs:
           mkdir -p artifacts/differential-continuity
           cp "$RUNNER_TEMP/differential-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/successor-self-test.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/integrated-pipeline-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/router-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/differential-continuity-receipt.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/dependency-surface-receipt.json" artifacts/differential-continuity/

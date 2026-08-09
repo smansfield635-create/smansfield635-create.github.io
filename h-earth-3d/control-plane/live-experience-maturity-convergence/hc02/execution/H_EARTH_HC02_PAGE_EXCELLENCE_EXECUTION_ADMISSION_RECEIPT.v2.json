@@ -1,0 +1,52 @@
+{
+  "authorityInherited": false,
+  "authorityPolicy": "FRESH_SUCCESSOR_REQUEST_REQUIRED_NO_IMPLICIT_INHERITANCE",
+  "authoritySource": "FRESH_SUCCESSOR_REQUEST_AND_CONSTRUCTION_PROCEDURE",
+  "branchCreationAuthorized": true,
+  "casAttempt": 1,
+  "casRetryLimit": 8,
+  "committedLedgerBlobSha": "e923e95cf37f06ee85b3cac565a5e7975cdf8c0d",
+  "evidencePolicy": "EXACT_HEAD_REVALIDATION_REQUIRED",
+  "exactHeadRevalidationRequired": true,
+  "governingRef": "refs/heads/main",
+  "implementationInferenceAuthorized": false,
+  "ledgerCompareAndSwapCommitted": true,
+  "ledgerGenerationAfter": 781,
+  "ledgerGenerationBefore": 780,
+  "liveGoverningHead": "4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d",
+  "observedLedgerBlobSha": "97000993d47d050d12ccfe90d3de5153ffd1e437",
+  "observedLockRefHead": "5ea1e85da7b4415349b20c8cf4910a206c839bab",
+  "oneLedgerMutationRequired": true,
+  "operationStarted": true,
+  "predecessor": {
+    "governingHead": "5b11583f42ee7f57791ebf4200ab5c05f043c00a",
+    "lockGeneration": 651,
+    "lockScope": "H_EARTH:HC02:PAGE_EXCELLENCE_ARCHITECTURE_EXECUTION:EVIDENCE_CARRIER:V2",
+    "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1",
+    "scopeHash": "e94929ec6adcf996a8d46334a705aa891772742f4ccb0a98dcf2b6ffb58df003",
+    "terminalDisposition": "SUPERSEDED",
+    "terminalHistoryPreserved": true
+  },
+  "preservedEvidenceRefs": [
+    "ISSUE_781:GENERATION_651_CANONICAL_ADMISSION",
+    "ISSUE_817:PR_829_REMOTE_SUCCESSOR_ROUTE_INSTALLATION"
+  ],
+  "reasonCode": "GOVERNING_HEAD_ADVANCED",
+  "repositoryWritesAuthorized": true,
+  "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+  "schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
+  "successor": {
+    "governingHead": "4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d",
+    "lockGeneration": 781,
+    "lockScope": "H_EARTH:HC02:PAGE_EXCELLENCE_ARCHITECTURE_EXECUTION:EVIDENCE_CARRIER:V2",
+    "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1_SUCCESSOR_20260809_001",
+    "procedureLocatorDigest": "5f37e594dc59992df9d99b5734315f5451e25e107bf4a44f62c6e555b93b3959",
+    "projectId": "H_EARTH",
+    "requestDigest": "0c11183cd869c76b0597d31f7b1ceef83a484be4d4171f14083ca9f91285bc4b",
+    "scopeHash": "e94929ec6adcf996a8d46334a705aa891772742f4ccb0a98dcf2b6ffb58df003",
+    "state": "ADMITTED_LOCKED"
+  },
+  "transitionCommitSha": "7f850cb25810604dc2dec40b0d9a0a5a687c7706",
+  "transitionId": "H_EARTH_HC02_PAGE_EXCELLENCE_GEN651_TO_CURRENT_MAIN_20260809_001",
+  "workflowExecutionAuthorized": true
+}

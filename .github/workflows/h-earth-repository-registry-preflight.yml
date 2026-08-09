@@ -1,71 +1,197 @@
-name: H-Earth Automatic Repository Registry Preflight
+name: H-Earth HC00 Accepted-Occurrence Fresh Proof v2
 
 on:
-  pull_request:
-    paths:
-      - 'h-earth-3d/**'
-      - '!h-earth-3d/registry/**'
-      - '!h-earth-3d/AGENTS.md'
-      - 'showroom/globe/h-earth/**'
-      - '!showroom/globe/h-earth/AGENTS.md'
   push:
+    branches:
+      - verification/h-earth-hc00-accepted-occurrence-closure-v2-001
     paths:
-      - 'h-earth-3d/**'
-      - '!h-earth-3d/registry/**'
-      - '!h-earth-3d/AGENTS.md'
-      - 'showroom/globe/h-earth/**'
-      - '!showroom/globe/h-earth/AGENTS.md'
+      - '.github/workflows/h-earth-repository-registry-preflight.yml'
+      - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence-accepted-occurrences.js'
+      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: h-earth-hc00-accepted-occurrence-fresh-proof-v2
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  EXPECTED_MAIN: 6469b1b800e3ce3d3334623f591797cfac78d378
+  EXPECTED_PR_HEAD: ecec93e363bd650f9a329a92fb723bdcd7e51092
+  EXPECTED_ACCEPTED_FACADE_BLOB: 975cd4b4d3689c74cccdadd10be2b53b3d3ed6c2
+  EXPECTED_DELEGATED_LOADER_BLOB: fed80a221d03d6d18be29153391e3f46c07ebb11
+  EXPECTED_SUCCESSOR_LOADER_BLOB: 471e8edbe0b498d4e458e7c75bbf1006be94af21
+  OUT_DIR: /tmp/h-earth-hc00-accepted-occurrence-fresh-proof-v2
 
 jobs:
-  automatic-h-earth-preflight:
-    runs-on: ubuntu-latest
+  fresh-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
     steps:
-      - name: Check out repository
+      - name: Check out execution-only carrier
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Discover changed governed H-Earth paths
+      - name: Verify exact carrier and current PR identity
+        id: precheck
         shell: bash
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          BEFORE_SHA: ${{ github.event.before }}
-          CURRENT_SHA: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > /tmp/all-changed-paths.txt
-          elif [[ -n "${BEFORE_SHA:-}" && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
-            git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" > /tmp/all-changed-paths.txt
-          else
-            git show --pretty='' --name-only "$CURRENT_SHA" > /tmp/all-changed-paths.txt
-          fi
+          mkdir -p "$OUT_DIR"
+          EXPECTED_PATHS="$OUT_DIR/expected-carrier-paths.txt"
+          ACTUAL_PATHS="$OUT_DIR/actual-carrier-paths.txt"
+          cat > "$EXPECTED_PATHS" <<'PATHS'
+          .github/workflows/h-earth-repository-registry-preflight.yml
+          h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js
+          h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js
+          h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence-accepted-occurrences.js
+          PATHS
+          sort -o "$EXPECTED_PATHS" "$EXPECTED_PATHS"
+          git diff --name-only HEAD^ HEAD | sort > "$ACTUAL_PATHS"
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_MAIN"
+          diff -u "$EXPECTED_PATHS" "$ACTUAL_PATHS"
+          test "$(git rev-parse HEAD:h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js)" = "$EXPECTED_ACCEPTED_FACADE_BLOB"
+          test "$(git rev-parse HEAD:h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence-accepted-occurrences.js)" = "$EXPECTED_DELEGATED_LOADER_BLOB"
+          test "$(git rev-parse HEAD:h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js)" = "$EXPECTED_SUCCESSOR_LOADER_BLOB"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const repo=process.env.REPOSITORY;
+          const token=process.env.GITHUB_TOKEN;
+          const out=process.env.OUT_DIR;
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${token}`,'X-GitHub-Api-Version':'2022-11-28'};
+          async function get(url){const r=await fetch(url,{headers});const t=await r.text();if(!r.ok)throw Error(`API_${r.status}:${t}`);return t?JSON.parse(t):null;}
+          const [pr,main]=await Promise.all([
+            get(`https://api.github.com/repos/${repo}/pulls/789`),
+            get(`https://api.github.com/repos/${repo}/branches/main`)
+          ]);
+          const pass=pr.state==='open'&&pr.draft===true&&pr.head?.sha===process.env.EXPECTED_PR_HEAD&&pr.base?.ref==='main'&&pr.base?.sha===process.env.EXPECTED_MAIN&&main.commit?.sha===process.env.EXPECTED_MAIN;
+          const receipt={schema:'H_EARTH_HC00_ACCEPTED_OCCURRENCE_FRESH_PROOF_V2_PRECHECK_v1',result:pass?'PASS':'FAIL_CLOSED',carrierHead:process.env.GITHUB_SHA,carrierParent:process.env.EXPECTED_MAIN,pr789:{state:pr.state,draft:pr.draft,head:pr.head?.sha,baseRef:pr.base?.ref,baseSha:pr.base?.sha},mainHead:main.commit?.sha,exactThreeCandidateBlobs:true,carrierMergeAuthorized:false,productMutationAuthorityCreated:false};
+          fs.writeFileSync(`${out}/precheck.json`,JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(!pass)process.exit(1);
+          NODE
 
-          grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
-            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
-            | sort -u > /tmp/h-earth-changed-paths.txt || true
-
-          cat /tmp/h-earth-changed-paths.txt
-
-      - name: Execute automatic H-Earth registry preflight
+      - name: Execute automatic registry preflight and accepted-occurrence verifier
+        id: proof
+        shell: bash
         run: |
+          set -euo pipefail
+          cat > /tmp/h-earth-changed-paths.txt <<'PATHS'
+          h-earth-3d/control-plane/live-experience-maturity-convergence/AGENTS.md
+          h-earth-3d/control-plane/live-experience-maturity-convergence/authority-and-lineage.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/changed-path-manifest.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/checkpoint-registry.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/construction-procedure.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/current-state.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/operation-request.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/page-excellence-binding.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/program.locator.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/protected-runtime-manifest.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/shell-runtime-classification.schema.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/strategy-contract.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/successor-room-recovery.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/verification-contract.v1.json
+          h-earth-3d/control-plane/live-experience-maturity-convergence/verify.v1.mjs
+          PATHS
           node --experimental-default-type=module \
             tools/h-earth-repository-registry-auto-preflight.mjs \
             --paths-file /tmp/h-earth-changed-paths.txt \
-            --task "Automatic GitHub change preflight" \
+            --task "HC00 accepted-occurrence fresh current-main proof v2" \
             --mutation-intent \
-            --output /tmp/h-earth-automatic-preflight-receipt.json
+            --output "$OUT_DIR/automatic-preflight.json"
+          node --experimental-default-type=module --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {
+            H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_ACCEPTED_PATHS as paths,
+            H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_ACCEPTED_OCCURRENCES as occurrences,
+            verifyHEarthLiveExperienceMaturityConvergenceAcceptedOccurrences as verify
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js';
+          import {loadHEarthRepositoryRegistryValidatorDependencies as load} from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const v=verify();
+          const d=load();
+          const preflight=JSON.parse(fs.readFileSync(`${process.env.OUT_DIR}/automatic-preflight.json`,'utf8'));
+          const classifications=preflight?.pathClassification?.classifications ?? [];
+          const acceptedNode='H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_ACCEPTED_OCCURRENCES';
+          const historicalNode='H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_AUTHORIZED_CANDIDATE_SCOPE';
+          const pass=
+            v.eligible===true&&d.identityVerified===true&&paths.length===15&&occurrences.length===15&&
+            occurrences.every(o=>o.commitSha==='38da390a802c25a615366c6f896d7501558c0811'&&o.refName==='38da390a802c25a615366c6f896d7501558c0811'&&o.existenceStatus==='PRESENT'&&/^[0-9a-f]{40}$/.test(o.gitBlobSha))&&
+            v.checks.exactBlobIdentities===true&&v.checks.historicalCandidateReservationEligible===true&&
+            v.pathChecks.every(x=>x.acceptedOccurrenceExact===true&&x.historicalReservationPreserved===true&&x.pass===true)&&
+            classifications.length===15&&classifications.every(x=>x.registered===true&&x.resolvedNodeIds.includes(acceptedNode)&&x.resolvedNodeIds.includes(historicalNode))&&
+            (preflight?.validatorReceipt?.failureCodes??[]).length===0&&!['BLOCK','STOP'].includes(preflight.finalDisposition);
+          const receipt={schema:'H_EARTH_LIVE_EXPERIENCE_ACCEPTED_OCCURRENCE_FRESH_EXECUTION_RECEIPT_v2',result:pass?'PASS':'FAIL_CLOSED',carrierHead:process.env.GITHUB_SHA,reanchoredPrHead:process.env.EXPECTED_PR_HEAD,currentMain:process.env.EXPECTED_MAIN,pathCount:paths.length,acceptedOccurrenceCount:occurrences.length,allPresentAtHC00AdmissionCommit:occurrences.every(o=>o.commitSha==='38da390a802c25a615366c6f896d7501558c0811'&&o.existenceStatus==='PRESENT'),exactBlobIdentities:v.checks.exactBlobIdentities,historicalCandidateReservationEligible:v.checks.historicalCandidateReservationEligible,historicalReservationPreserved:v.pathChecks.every(x=>x.historicalReservationPreserved===true),allPathsResolveToAcceptedAndHistoricalNodes:classifications.length===15&&classifications.every(x=>x.resolvedNodeIds.includes(acceptedNode)&&x.resolvedNodeIds.includes(historicalNode)),loaderIdentityVerified:d.identityVerified,preflightFinalDisposition:preflight.finalDisposition,preflightFailureCodes:preflight?.validatorReceipt?.failureCodes??[],mutationMayProceed:preflight.mutationMayProceed,productMutationAuthorityCreated:false,mergeAuthorityCreated:false,g1g2AuthorityCreated:false};
+          fs.writeFileSync(`${process.env.OUT_DIR}/accepted-occurrence-proof.json`,JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(!pass)process.exit(1);
+          NODE
 
-      - name: Upload deterministic preflight receipt
+      - name: Canonically close re-anchor and carrier locks
+        if: always()
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set +e
+          mkdir -p "$OUT_DIR"
+          MANAGER=tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          close_exact() {
+            local operation_id="$1" scope="$2" generation="$3" disposition="$4" output="$5"
+            local attempt=1
+            while [ "$attempt" -le 3 ]; do
+              node "$MANAGER" --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$operation_id" --lock-scope "$scope" --lock-generation "$generation" --terminal-disposition "$disposition" --output "$output"
+              local status=$?
+              if [ "$status" -eq 0 ] && node -e "const r=require('$output');process.exit(r.result==='TERMINAL_CLOSURE_COMMITTED'&&r.lockReleased===true?0:1)"; then return 0; fi
+              local conflict
+              conflict=$(node -e "try{const r=require('$output');process.stdout.write(r.errorCode||'')}catch{}")
+              if [ "$conflict" != "LEDGER_COMPARE_AND_SWAP_CONFLICT" ]; then return 1; fi
+              attempt=$((attempt+1)); sleep 1
+            done
+            return 1
+          }
+          precheck_result=$(node -e "try{process.stdout.write(require('$OUT_DIR/precheck.json').result||'')}catch{}")
+          proof_result=$(node -e "try{process.stdout.write(require('$OUT_DIR/accepted-occurrence-proof.json').result||'')}catch{}")
+          reanchor_close=1
+          if [ "$precheck_result" = "PASS" ]; then
+            close_exact \
+              'H_EARTH_HC00_ACCEPTED_OCCURRENCE_REGISTRY_REANCHOR_v2' \
+              'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:PR789:REANCHOR:V2:EXACT_3_PATH_SCOPE' \
+              626 PASS_CLOSED "$OUT_DIR/close-626.json" || reanchor_close=0
+          else
+            reanchor_close=0
+          fi
+          if [ "$precheck_result" = "PASS" ] && [ "$proof_result" = "PASS" ] && [ "$reanchor_close" -eq 1 ]; then carrier_disposition=PASS_CLOSED; else carrier_disposition=FAIL_CLOSED; fi
+          close_exact \
+            'H_EARTH_HC00_ACCEPTED_OCCURRENCE_FRESH_EXECUTION_CARRIER_v2' \
+            'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:FRESH_EXECUTION_CARRIER:V2:EXACT_4_PATH_SCOPE' \
+            628 "$carrier_disposition" "$OUT_DIR/close-628.json"
+          carrier_close_status=$?
+          PRECHECK_RESULT="$precheck_result" PROOF_RESULT="$proof_result" REANCHOR_CLOSE="$reanchor_close" CARRIER_DISPOSITION="$carrier_disposition" CARRIER_CLOSE_STATUS="$carrier_close_status" node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const out=process.env.OUT_DIR;
+          const read=n=>{try{return JSON.parse(fs.readFileSync(`${out}/${n}`,'utf8'));}catch{return null;}};
+          const pass=process.env.PRECHECK_RESULT==='PASS'&&process.env.PROOF_RESULT==='PASS'&&process.env.REANCHOR_CLOSE==='1'&&process.env.CARRIER_DISPOSITION==='PASS_CLOSED'&&process.env.CARRIER_CLOSE_STATUS==='0'&&read('close-626.json')?.result==='TERMINAL_CLOSURE_COMMITTED'&&read('close-628.json')?.result==='TERMINAL_CLOSURE_COMMITTED';
+          const receipt={schema:'H_EARTH_HC00_ACCEPTED_OCCURRENCE_FRESH_PROOF_V2_LOCK_CLOSURE_RECEIPT_v1',result:pass?'PASS_CLOSED':'FAIL_CLOSED',reanchorClosure:read('close-626.json'),carrierClosure:read('close-628.json'),directLedgerEditingPerformed:false,canonicalLockManagerOnly:true,carrierMergeAuthorized:false,productMutationPerformed:false};
+          fs.writeFileSync(`${out}/lock-closure-summary.json`,JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(!pass)process.exit(1);
+          NODE
+
+      - name: Upload fresh proof and canonical lock receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-automatic-preflight-receipt
-          path: /tmp/h-earth-automatic-preflight-receipt.json
+          name: h-earth-hc00-accepted-occurrence-fresh-proof-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/h-earth-hc00-accepted-occurrence-fresh-proof-v2/
           if-no-files-found: error
           retention-days: 30

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import cp from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { stable, hashObject, validateRequest, validateAndResolve } from './carrier.v1.mjs';
 
@@ -72,6 +74,26 @@ function expectFail(name, expectedCode, fn, results) {
   try { fn(); results.push({ name, expected: expectedCode, observed: 'UNEXPECTED_PASS' }); }
   catch (error) { results.push({ name, expected: expectedCode, observed: error.code ?? error.message }); }
 }
+function runNativeRegression(name, script, validate) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'bounded-carrier-regression-'));
+  const output = path.join(dir, `${name}.json`);
+  try {
+    cp.execFileSync(process.execPath, [script, '--output', output], {
+      cwd: ROOT,
+      env: { ...process.env },
+      shell: false,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      maxBuffer: 32 * 1024 * 1024
+    });
+    const receipt = JSON.parse(fs.readFileSync(output, 'utf8'));
+    validate(receipt);
+    return stable({ name, result: 'PASS', receiptSchema: receipt.schema ?? null, nativeResult: receipt.result ?? null });
+  } catch (error) {
+    return stable({ name, result: 'FAIL', detail: error.message });
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+}
 
 export function runSelfTest() {
   const results = [];
@@ -124,12 +146,36 @@ export function runSelfTest() {
     const broken = clone(registry); broken.descriptors[0].shell = true; const { request, ledger } = baseFixture();
     expectFail('SHELL_PROHIBITED', 'DESCRIPTOR_NOT_FAIL_CLOSED', () => validateAndResolve({ rawRequest: request, registry: broken, ledger }), results);
   }
-  const pass = results.every(item => item.observed === item.expected || (item.expected === 'PASS' && item.observed === 'PASS'));
+
+  const regressions = [
+    runNativeRegression(
+      'DIFFERENTIAL_CONTINUITY_NATIVE_SELF_TEST',
+      '.github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs',
+      r => { if (r.result !== 'PASS_CLOSED' || r.failCount !== 0 || r.passCount !== r.testCount) throw new Error('DIFFERENTIAL_CONTINUITY_REGRESSION_NONPASS'); }
+    ),
+    runNativeRegression(
+      'STRICT_SUCCESSOR_NATIVE_SELF_TEST',
+      '.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs',
+      r => { if (r.result !== 'PASS_CLOSED' || r.failCount !== 0 || r.passCount !== r.testCount) throw new Error('STRICT_SUCCESSOR_REGRESSION_NONPASS'); }
+    ),
+    runNativeRegression(
+      'INTEGRATED_DEVELOPMENT_PIPELINE_NATIVE_SELF_TEST',
+      '.github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs',
+      r => { if (r.result !== 'PASS' || r.failedCount !== 0 || r.physicalRetirementPerformed !== false || r.mergeAuthorityCreated !== false || r.productAuthorityCreated !== false) throw new Error('INTEGRATED_PIPELINE_REGRESSION_NONPASS'); }
+    )
+  ];
+
+  const fixturePass = results.every(item => item.observed === item.expected || (item.expected === 'PASS' && item.observed === 'PASS'));
+  const regressionPass = regressions.every(item => item.result === 'PASS');
+  const pass = fixturePass && regressionPass;
   return stable({
     schema: 'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_SELF_TEST_RECEIPT_v1',
     result: pass ? 'PASS' : 'FAIL',
     total: results.length,
     passed: results.filter(item => item.observed === item.expected || (item.expected === 'PASS' && item.observed === 'PASS')).length,
+    nativeRegressionCount: regressions.length,
+    nativeRegressionPassCount: regressions.filter(item => item.result === 'PASS').length,
+    nativeRegressions: regressions,
     authorityInflationObserved: false,
     arbitraryCommandAccepted: false,
     fixtures: results

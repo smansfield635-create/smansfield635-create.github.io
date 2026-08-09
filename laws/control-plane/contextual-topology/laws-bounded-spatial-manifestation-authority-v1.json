@@ -1,0 +1,107 @@
+{
+  "schema": "LAWS_BOUNDED_SPATIAL_MANIFESTATION_AUTHORITY_v1",
+  "authorityId": "LAWS_BOUNDED_SPATIAL_MANIFESTATION_AUTHORITY_v1",
+  "authorityVersion": "1.0.0",
+  "authorityClass": "DECLARATIVE_AUTHORITY_MANIFEST",
+  "computationalRole": "NONE",
+  "semanticLogicAuthority": "NONE",
+  "graphBinding": {
+    "receiptSchema": "LAWS_CONTEXT_GRAPH_NATIVE_RECEIPT_v1",
+    "sourceWorkflowRun": 31300505411,
+    "sourceWorkflowHead": "a54c7ada99c94d42c9eb3655512c2c611b2d22cc",
+    "sourceArtifactId": 9034336452,
+    "sourceArtifactDigest": "sha256:9fd8abfc6af01ce698ef4abb23fc1bbd6d5d728c45e6a6c7fed1269e3bdb8c01",
+    "representativeGraphOnly": true,
+    "productionGraphClaimed": false
+  },
+  "graphDigest": "40873d2cdcae915f66cee8abed1afc810cfbf3df0d44a331af57ba9e263cdedc",
+  "projectionPolicyBinding": {
+    "schema": "LAWS_SEMANTICS_PRESERVING_PROJECTION_POLICY_v1",
+    "version": "1.0.0",
+    "path": "laws/control-plane/contextual-topology/laws-semantics-preserving-projection-policy-v1.json",
+    "freezeCommit": "c60b2102998cfbacd0a2bcb2b7cccf123e17738c",
+    "gitBlob": "93f8d8d9edcb961f2bacf6f82be799f347b19217"
+  },
+  "projectionPolicyDigest": {
+    "algorithm": "GIT_BLOB_SHA1",
+    "value": "93f8d8d9edcb961f2bacf6f82be799f347b19217"
+  },
+  "projectionDescriptionBinding": {
+    "schema": "LAWS_ABSTRACT_PROJECTION_DESCRIPTION_v1",
+    "projectionId": "PROJECTION_DESCRIPTION_BASE",
+    "path": "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-projection-description-v1.json",
+    "canonicalization": "JCS-RFC8785-SAFEINT",
+    "digestAlgorithm": "SHA-256"
+  },
+  "projectionDescriptionDigest": "b1210d5e68c2337cbcd9a5d993b73f2563f45aa805e427e495e042785f5e8922",
+  "projectionConformanceReceiptBinding": {
+    "schema": "LAWS_PROJECTION_CONFORMANCE_RECEIPT_v1",
+    "path": "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-projection-conformance-receipt-v1.json",
+    "sourceWorkflowRun": 31301103202,
+    "sourceWorkflowHead": "ccca6b707aa4a35678d33399375224950d39af3c",
+    "sourceArtifactId": 9034505177,
+    "sourceArtifactDigest": "sha256:7f8759fd039bcd27f443f8bfee23ca67c843a103baa42eef8e1e7ec53bcdf581"
+  },
+  "projectionConformanceDisposition": "PASS_SEMANTICS_PRESERVING_PROJECTION_DESCRIPTION",
+  "projectionConformanceLrpv1ReceiptBinding": {
+    "path": "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-projection-conformance-lrpv1-receipt-v1.json",
+    "canonicalization": "JCS-RFC8785-SAFEINT",
+    "digestAlgorithm": "SHA-256",
+    "lineageDigest": "e15e70c6a982ff633f3640149f91af8b2171e160339ae7f014342fcbe0382f95"
+  },
+  "authorizedConsumer": {
+    "consumerId": "LAWS_FIRST_BOUNDED_SPATIAL_CONSUMER_v1",
+    "consumerVersion": "1.0.0",
+    "role": "NON_AUTHORITATIVE_SPATIAL_CONSUMER",
+    "identitySubstitutionAuthority": "NONE"
+  },
+  "authorizedExperimentId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_v1",
+  "bindingApplicability": "EXACT_IDENTITY_ONLY",
+  "bindingMismatchDisposition": "AUTHORITY_NOT_APPLICABLE",
+  "exactBindingFields": [
+    "graphDigest",
+    "projectionPolicyDigest",
+    "projectionDescriptionDigest",
+    "projectionConformanceReceiptBinding.sourceWorkflowHead",
+    "projectionConformanceLrpv1ReceiptBinding.lineageDigest",
+    "authorizedConsumer.consumerId",
+    "authorizedConsumer.consumerVersion",
+    "authorizedExperimentId"
+  ],
+  "allowedMutationPaths": [],
+  "repositoryMutationAuthority": "NONE",
+  "repositoryPathAuthorityNote": "Repository paths for the spatial specimen require separate canonical repository intake; this manifest grants no repository-write authority.",
+  "forbiddenMutationPaths": [
+    "laws/control-plane/contextual-topology/laws-context-graph-contract-v1.json",
+    "laws/control-plane/contextual-topology/laws-semantics-preserving-projection-policy-v1.json",
+    "laws/control-plane/contextual-topology/laws-nonspatial-projection-conformance-harness-v1.mjs",
+    "laws/control-plane/contextual-topology/verify-laws-nonspatial-projection-conformance-harness-v1.mjs",
+    "laws/control-plane/contextual-topology/laws-bounded-spatial-manifestation-projection-description-v1.json"
+  ],
+  "semanticWriteAuthority": "NONE",
+  "graphWriteAuthority": "NONE",
+  "projectionRewriteAuthority": "NONE",
+  "browserVerificationRequired": true,
+  "semanticDifferentialRequired": true,
+  "lrpv1SealRequired": true,
+  "browserFailureLaw": "FAILURE_CAPTURE_SEAL_PERSIST_TEARDOWN",
+  "authorityScope": "ONE_SPECIMEN_ONLY",
+  "authorityTermination": "ON_EXPERIMENT_COMPLETION",
+  "postTerminationDisposition": "EXHAUSTED",
+  "successCreatesSuccessorAuthority": false,
+  "constructionAuthority": "SPATIAL_MANIFESTATION_ONLY",
+  "mergeAuthority": "NONE",
+  "productionAuthority": "NONE",
+  "scientificClaimAuthority": "NONE",
+  "visualAcceptanceAuthority": "NONE",
+  "semanticAuthorityCreation": "PROHIBITED",
+  "semanticAuthoritySource": "REFERENCED_BINDINGS_ONLY",
+  "disposition": "AUTHORIZED_BOUNDED",
+  "operationAdmissionBinding": {
+    "operationId": "LAWS_BOUNDED_SPATIAL_MANIFESTATION_AUTHORITY_V1_FREEZE_AND_BIND_20260809_V3",
+    "generation": 717,
+    "exactGoverningHead": "9608702942bd3b09ece55023d5becf2d2b4cdb0b",
+    "acquisitionCommit": "6023b4c6136110c0520926bc0af1b782571ba111",
+    "canonicalReceiptSha256": "a84f5c9d4e563264225899b5cc0f777446a163ac471c0ccc5dd7bc272b83c612"
+  }
+}

@@ -219,9 +219,10 @@ export function successorActionForReceipt(receipt) {
 
 async function successorWrapper({ transition, request, procedure, repository, lockRef, token, casRetryLimit }) {
   const differentialRequest = transition?.differentialContinuityRequest ?? null;
+  let differentialReceipt = null;
   if (differentialRequest) {
     const normalized = { ...differentialRequest, schema: REQUEST_SCHEMA, repository, baseHead: transition?.predecessor?.governingHead, targetHead: transition?.successor?.governingHead };
-    const differentialReceipt = await assessRemote(normalized, { token });
+    differentialReceipt = await assessRemote(normalized, { token });
     if (successorActionForReceipt(differentialReceipt) === 'STOP_SUCCESSOR_CARRY_FORWARD') {
       return stable({
         schema: WRAPPER_RECEIPT_SCHEMA,
@@ -244,7 +245,7 @@ async function successorWrapper({ transition, request, procedure, repository, lo
     result: 'STRICT_SUCCESSOR_DELEGATED',
     transitionId: transition?.transitionId ?? null,
     successorDelegated: true,
-    differentialReceipt: differentialRequest ? await assessRemote({ ...differentialRequest, schema: REQUEST_SCHEMA, repository, baseHead: transition?.predecessor?.governingHead, targetHead: transition?.successor?.governingHead }, { token }) : null,
+    differentialReceipt,
     successorReceipt,
     ledgerMutationPerformed: successorReceipt?.ledgerCompareAndSwapCommitted === true,
     continuationUnderExistingBoundedAuthorityAdmissible: false,

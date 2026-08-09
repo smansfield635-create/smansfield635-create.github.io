@@ -372,18 +372,6 @@
       "scopeHash": "4e4c43e0804b4ad70b6e69c4119748bfe56fbaa74b67ae8174fd77ac12691925",
       "state": "ADMITTED_LOCKED"
     },
-    "53f36e87d3148edc67d275e4e70ec41b52c5056679cbc6b591f45fd744ded3af": {
-      "governingHead": "38da390a802c25a615366c6f896d7501558c0811",
-      "lockGeneration": 613,
-      "lockScope": "H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:PR789:EXACT_HEAD_RATIFICATION_AND_MERGE:V1",
-      "operationId": "H_EARTH_HC00_ACCEPTED_OCCURRENCE_EXACT_HEAD_RATIFICATION_AND_MERGE_v1",
-      "procedureLocatorDigest": "840dd3b5d869784685809bf0eaae64c18c9693853f3cc8eae9e1cddef055c702",
-      "released": false,
-      "requestDigest": "de491fb8a0dfe478c7352b93dac7d8daebe462f6d2a16f2d9adcc9fc0e073b2d",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "53f36e87d3148edc67d275e4e70ec41b52c5056679cbc6b591f45fd744ded3af",
-      "state": "ADMITTED_LOCKED"
-    },
     "58185bc73a55d5818fc4f191d2f77edf6d710f90d4d6169167f0ca783da7a652": {
       "governingHead": "5123ad418fcb1b88795470120e4632705ceaf288",
       "lockGeneration": 340,
@@ -8010,6 +7998,19 @@
       "scopeHash": "03fd2275b8bbf5dfc9263c256592169e5d2c79d922aedb240f791bee1610f281",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "38da390a802c25a615366c6f896d7501558c0811",
+      "lockGeneration": 613,
+      "lockScope": "H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:PR789:EXACT_HEAD_RATIFICATION_AND_MERGE:V1",
+      "operationId": "H_EARTH_HC00_ACCEPTED_OCCURRENCE_EXACT_HEAD_RATIFICATION_AND_MERGE_v1",
+      "procedureLocatorDigest": "840dd3b5d869784685809bf0eaae64c18c9693853f3cc8eae9e1cddef055c702",
+      "released": true,
+      "requestDigest": "de491fb8a0dfe478c7352b93dac7d8daebe462f6d2a16f2d9adcc9fc0e073b2d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "53f36e87d3148edc67d275e4e70ec41b52c5056679cbc6b591f45fd744ded3af",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

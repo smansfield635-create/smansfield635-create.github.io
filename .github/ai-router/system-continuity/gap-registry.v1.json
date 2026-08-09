@@ -169,6 +169,39 @@
         "REAL_COMPLETE_DEPENDENCY_SURFACE_DISJOINT_MAIN_MOVE_CARRY_FORWARD_PROOF"
       ],
       "authorityCreated": false
+    },
+    {
+      "gapId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_CONTINUITY",
+      "status": "OPEN",
+      "discoveredAtHead": "331284949940c95db80a332235492de4c80d3d43",
+      "coordinationIssue": 578,
+      "summary": "An admitted closed-world operation can have a registered repository command and still lack an accessible clean exact-head execution carrier, forcing bespoke workflows or terminal inability despite complete authority and command definition.",
+      "interfaceKeys": [
+        "BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_v1",
+        "BOUNDED_EXECUTABLE_DESCRIPTOR_v1",
+        "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+        "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1"
+      ],
+      "pathScopes": [
+        ".github/ai-router/bounded-exact-head-execution-carrier/",
+        ".github/ai-router/execution-backends.v1.json",
+        ".github/workflows/bounded-exact-head-execution-carrier-v1.yml"
+      ],
+      "evidenceRefs": [
+        "GENERATION_825_ADMITTED_LOCKED",
+        "GENERATION_825_ROUTER_NOT_EXECUTED_INFRASTRUCTURE_UNAVAILABLE",
+        "GENERATION_832_CARRIER_INSTALLATION_ADMISSION",
+        "GENERATION_839_CARRIER_INSTALLATION_SUCCESSOR_ADMISSION",
+        "RUN_31333629470_EIGHT_PATH_COMMAND_EMITTED_ROUTER_PASS"
+      ],
+      "closureRequirements": [
+        "ADVERSARIAL_SELF_TEST_PASS",
+        "FRESH_EXACT_HEAD_GITHUB_ACTIONS_VERIFICATION_PASS",
+        "RATIFIED_DEFAULT_BRANCH_INTEGRATION",
+        "REAL_GENERATION_825_FIVE_PATH_ROUTER_COMMAND_PASS",
+        "POST_MERGE_PROGRESSIVE_SYSTEM_CONTINUITY_PASS"
+      ],
+      "authorityCreated": false
     }
   ]
 }

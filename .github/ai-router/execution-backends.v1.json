@@ -53,6 +53,25 @@
       "genericWorkflowDispatchAllowed": false,
       "manualReconstructionAllowed": false,
       "terminalInabilityAllowedWhenValid": false
+    },
+    {
+      "backendId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER",
+      "classification": "AUTHORITATIVE_FOR_REGISTERED_CLOSED_WORLD_COMMAND_EXECUTION_WHEN_OPERATION_ADMITTED",
+      "requirements": [
+        "ACTIVE_CANONICAL_OPERATION_LOCK",
+        "REQUEST_AND_PROCEDURE_DIGEST_MATCH",
+        "REGISTERED_IMMUTABLE_EXECUTABLE_DESCRIPTOR",
+        "CALLER_CANNOT_SUPPLY_COMMAND_EXECUTABLE_ARGUMENTS_PATHS_TARGET_HEAD_OR_ENVIRONMENT",
+        "DETACHED_CLEAN_EXACT_TARGET_HEAD_WORKTREE",
+        "COMMAND_EMITTED_NATIVE_RECEIPT",
+        "NATIVE_RECEIPT_PRESERVED_UNALTERED"
+      ],
+      "executionWorkflow": ".github/workflows/bounded-exact-head-execution-carrier-v1.yml",
+      "registry": ".github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json",
+      "genericWorkflowDispatchAllowed": false,
+      "arbitraryCommandAuthority": false,
+      "repositoryWriteAuthority": false,
+      "manualReconstructionAllowed": false
     }
   ],
   "routeTransitions": [
@@ -67,6 +86,17 @@
       "genericWorkflowDispatchAllowed": false,
       "terminalInabilityAllowedWhenBridgeValid": false,
       "invalidBridgeDisposition": "STOP_FAIL_CLOSED"
+    },
+    {
+      "transitionId": "ADMITTED_REGISTERED_COMMAND_LOCAL_UNAVAILABLE_TO_BOUNDED_EXACT_HEAD_CARRIER_v1",
+      "appliesTo": "CANONICAL_ADMITTED_CLOSED_WORLD_COMMAND_EXECUTION",
+      "whenLocalCleanGitExecutionUnavailable": true,
+      "requiredBackend": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER",
+      "requiredInvocationMarker": "BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_V1",
+      "requiredDescriptorRegistry": ".github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json",
+      "genericWorkflowDispatchAllowed": false,
+      "arbitraryCommandAuthority": false,
+      "invalidDescriptorOrOperationDisposition": "STOP_FAIL_CLOSED"
     }
   ]
 }

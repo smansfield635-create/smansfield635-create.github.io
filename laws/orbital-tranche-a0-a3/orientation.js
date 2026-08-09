@@ -109,6 +109,7 @@
       const storyIndexByPosition=new Map(stories.map((s,i)=>[s.position,i]));
       const storyIndexByRoute=new Map(stories.map((s,i)=>[normalizePath(s.route),i]));
       const cache=new Map();
+      const mountCache=new Map();
       const state={storyIndex:0,familyIndex:0,familyRotation:0,familyDrag:null,memberFocus:0,memberDrag:null,serial:0};
 
       const storyFamilyId=story=>story.categoryMembership?.[0]||'';
@@ -141,16 +142,54 @@
         try{return await task}catch(err){cache.delete(story.memberId);throw err}
       };
 
-      const prepareStylesForStory=story=>{
-        if(story.experienceType==='MULTI_AXIS_INSTRUMENT'){
-          [
-            '/laws/research/methods-and-models/showroom.css',
-            '/laws/research/methods-and-models/showroom-refinement.css',
-            '/laws/research/methods-and-models/showroom-euclidean.css',
-            '/laws/research/methods-and-models/showroom-euclidean-interaction.css'
-          ].forEach(ensureStyle);
-        }
-      };
+      const hydrateReadingMount=holder=>{
+  if(holder.dataset.readingHydrated==='true')return;
+  holder.dataset.readingHydrated='true';
+  holder.querySelectorAll('[data-lr-tabs]').forEach((group,groupIndex)=>{
+    const tablist=group.querySelector('[role="tablist"]');
+    const buttons=Array.from(group.querySelectorAll('[role="tab"],.lr-tab'));
+    const panels=Array.from(group.querySelectorAll('[role="tabpanel"],.lr-panel'));
+    if(!tablist||!buttons.length||buttons.length!==panels.length)return;
+    tablist.setAttribute('role','group');
+    const collapse=()=>{buttons.forEach(button=>button.setAttribute('aria-expanded','false'));panels.forEach(panel=>{panel.hidden=true;panel.tabIndex=-1})};
+    const expand=index=>{collapse();const button=buttons[index],panel=panels[index];if(!button||!panel)return;button.setAttribute('aria-expanded','true');panel.hidden=false;panel.tabIndex=0};
+    buttons.forEach((button,index)=>{
+      const buttonId=button.id||`laws-stage-reading-${groupIndex}-${index}`;
+      const panelId=panels[index].id||`laws-stage-reading-panel-${groupIndex}-${index}`;
+      button.id=buttonId;panels[index].id=panelId;button.removeAttribute('role');button.removeAttribute('aria-selected');button.removeAttribute('tabindex');button.setAttribute('aria-controls',panelId);button.setAttribute('aria-expanded','false');panels[index].setAttribute('role','region');panels[index].setAttribute('aria-labelledby',buttonId);
+      button.addEventListener('click',()=>{const wasOpen=button.getAttribute('aria-expanded')==='true';collapse();if(!wasOpen)expand(index)});
+      button.addEventListener('keydown',event=>{let next=index;if(event.key==='ArrowRight'||event.key==='ArrowDown')next=(index+1)%buttons.length;else if(event.key==='ArrowLeft'||event.key==='ArrowUp')next=(index-1+buttons.length)%buttons.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=buttons.length-1;else return;event.preventDefault();buttons[next]?.focus()});
+    });
+    collapse();
+  });
+};
+
+const hydrateMethodsMount=async holder=>{
+  if(holder.dataset.methodsHydrated==='true')return;
+  holder.dataset.methodsHydrated='pending';
+  ensureStyle('/laws/research/methods-and-models/showroom.css?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1');
+  if(root.dataset.methodsModelsShowroom!=='active')await import('/laws/research/methods-and-models/showroom.js?stage=LAWS_PERSISTENT_STAGE_V2');
+  if(root.dataset.methodsModelsEuclideanShowroom!=='active')await import('/laws/research/methods-and-models/showroom-euclidean.js?stage=LAWS_PERSISTENT_STAGE_V2');
+  const showroom=holder.querySelector('[data-mm-showroom]');
+  if(!showroom||root.dataset.methodsModelsShowroom!=='active'||root.dataset.methodsModelsEuclideanShowroom!=='active'){holder.dataset.methodsHydrated='fail-closed';throw new Error('methods-runtime-not-ready')}
+  holder.dataset.methodsHydrated='true';showroom.dataset.lawsStagedInstrument='true';
+};
+
+const buildStageMount=(story,result)=>{
+  const holder=document.createElement('div');holder.className='laws-spatial-stage__mount';holder.dataset.storyMember=story.memberId;holder.dataset.experienceType=story.experienceType||'UNCLASSIFIED';holder.dataset.stageSource=result.url;
+  const view=document.createElement('div');view.className=`laws-stage-view ${result.main.className||''}`.trim();
+  if(story.experienceType==='MULTI_AXIS_INSTRUMENT'){
+    view.classList.add('laws-stage-view--methods');const showroom=result.main.querySelector('[data-mm-showroom]');if(!showroom)throw new Error('methods-showroom-missing');view.replaceChildren(document.importNode(showroom,true));result.main.querySelectorAll('.mm-support').forEach(node=>view.appendChild(document.importNode(node,true)));const dialog=result.doc.querySelector('[data-mm-dialog]');if(dialog)holder.appendChild(document.importNode(dialog,true));
+  }else{
+    view.classList.add(story.experienceType==='PARALLEL_LENS_READING'?'laws-stage-view--reading':'laws-stage-view--canonical');Array.from(result.main.children).forEach(node=>{if(node.matches?.('.lr-story-nav,.mm-story-nav'))return;view.appendChild(document.importNode(node,true))});
+  }
+  view.querySelectorAll('.lr-story-nav,.mm-story-nav').forEach(node=>node.remove());holder.prepend(view);if(story.experienceType==='PARALLEL_LENS_READING')hydrateReadingMount(holder);return holder;
+};
+
+const getStageMount=async story=>{
+  if(mountCache.has(story.memberId))return mountCache.get(story.memberId);
+  const task=(async()=>{const result=await fetchStory(story);return {holder:buildStageMount(story,result),result,hydrated:false}})();mountCache.set(story.memberId,task);try{return await task}catch(error){mountCache.delete(story.memberId);throw error}
+};
 
       const renderSequence=()=>{
         const story=stories[state.storyIndex];
@@ -264,61 +303,16 @@
       };
 
       const selectStory=async(index,{historyMode='push',source='unknown'}={})=>{
-        index=clamp(index,0,stories.length-1);
-        const story=stories[index];
-        const serial=++state.serial;
-        state.storyIndex=index;
-        const familyId=storyFamilyId(story);
-        const fi=familyIndexById.get(familyId);
-        if(Number.isInteger(fi))state.familyIndex=fi;
-        prepareStylesForStory(story);
-
-        shell.dataset.transitionSource=source;
-        shell.classList.add('is-stage-loading');
-        els.status.textContent='Loading staged position…';
-        els.stageFamily.textContent=families[state.familyIndex]?.label||familyId;
-        els.stagePosition.textContent=`Canonical ${story.position} / ${stories.length}`;
-        els.stageTitle.textContent=story.label;
-        renderFamilyOrbit(0);
-        renderFamilyMembers();
-        renderSequence();
-
-        try{
-          const result=await fetchStory(story);
-          if(serial!==state.serial)return;
-          const mounted=document.importNode(result.main,true);
-          mounted.removeAttribute('id');
-          mounted.dataset.stagedCanonicalPosition=String(story.position);
-          const holder=document.createElement('div');
-          holder.className='laws-spatial-stage__mount';
-          holder.appendChild(mounted);
-          els.stageContent.replaceChildren(holder);
-          els.stageViewport.scrollTop=0;
-          requestAnimationFrame(()=>holder.classList.add('is-entered'));
-          els.status.textContent=`${families[state.familyIndex]?.label||familyId} · position ${story.position}`;
-          root.dataset.lawsSpatialActiveStory=story.memberId;
-          root.dataset.lawsSpatialActiveFamily=familyId;
-          root.dataset.lawsSpatialStageSource=result.url;
-          if(historyMode==='push'){
-            const u=new URL(location.href);u.searchParams.set('story',String(story.position));
-            history.pushState({lawsSpatialStory:story.position},'',u.pathname+u.search+u.hash);
-          }else if(historyMode==='replace'){
-            const u=new URL(location.href);u.searchParams.set('story',String(story.position));
-            history.replaceState({lawsSpatialStory:story.position},'',u.pathname+u.search+u.hash);
-          }
-          const currentFamilyMembers=familyStories(families[state.familyIndex]);
-          const mi=currentFamilyMembers.findIndex(s=>s.memberId===story.memberId);
-          if(mi>=0)state.memberFocus=mi;
-          renderFamilyMembers();
-        }catch(err){
-          if(serial!==state.serial)return;
-          els.stageContent.innerHTML=`<div class="laws-spatial-stage__error"><strong>${story.label}</strong><p>This canonical view could not be staged in the persistent shell.</p><code>${String(err?.message||err)}</code></div>`;
-          els.status.textContent='Stage source unavailable';
-          root.dataset.lawsSpatialStageError=String(err?.message||err);
-        }finally{
-          if(serial===state.serial)shell.classList.remove('is-stage-loading');
-        }
-      };
+  index=clamp(index,0,stories.length-1);const story=stories[index];const serial=++state.serial;state.storyIndex=index;const familyId=storyFamilyId(story);const fi=familyIndexById.get(familyId);if(Number.isInteger(fi))state.familyIndex=fi;
+  shell.dataset.transitionSource=source;shell.classList.add('is-stage-loading');els.status.textContent='Loading staged position…';els.stageFamily.textContent=families[state.familyIndex]?.label||familyId;els.stagePosition.textContent=`Canonical ${story.position} / ${stories.length}`;els.stageTitle.textContent=story.label;renderFamilyOrbit(0);renderFamilyMembers();renderSequence();
+  try{
+    const record=await getStageMount(story);if(serial!==state.serial)return;const holder=record.holder;holder.classList.remove('is-entered');els.stageContent.replaceChildren(holder);
+    if(story.experienceType==='MULTI_AXIS_INSTRUMENT'&&!record.hydrated){await hydrateMethodsMount(holder);record.hydrated=true}
+    if(serial!==state.serial)return;requestAnimationFrame(()=>holder.classList.add('is-entered'));els.status.textContent=`${families[state.familyIndex]?.label||familyId} · position ${story.position}`;root.dataset.lawsSpatialActiveStory=story.memberId;root.dataset.lawsSpatialActiveFamily=familyId;root.dataset.lawsSpatialStageSource=record.result.url;root.dataset.lawsSpatialStageLifecycle='retained-mount';
+    if(historyMode==='push'){const u=new URL(location.href);u.searchParams.set('story',String(story.position));history.pushState({lawsSpatialStory:story.position},'',u.pathname+u.search+u.hash)}else if(historyMode==='replace'){const u=new URL(location.href);u.searchParams.set('story',String(story.position));history.replaceState({lawsSpatialStory:story.position},'',u.pathname+u.search+u.hash)}
+    const currentFamilyMembers=familyStories(families[state.familyIndex]);const mi=currentFamilyMembers.findIndex(s=>s.memberId===story.memberId);if(mi>=0)state.memberFocus=mi;renderFamilyMembers();
+  }catch(err){if(serial!==state.serial)return;els.stageContent.innerHTML=`<div class="laws-spatial-stage__error"><strong>${story.label}</strong><p>This canonical view could not be staged in the persistent shell.</p><code>${String(err?.message||err)}</code></div>`;els.status.textContent='Stage source unavailable';root.dataset.lawsSpatialStageError=String(err?.message||err)}finally{if(serial===state.serial)shell.classList.remove('is-stage-loading')}
+};
 
       els.stageContent.addEventListener('click',e=>{
         const a=e.target.closest?.('a[href]');if(!a)return;
@@ -373,7 +367,7 @@
       const initialFamily=familyIndexById.get(storyFamilyId(stories[state.storyIndex]));
       state.familyIndex=Number.isInteger(initialFamily)?initialFamily:0;
       root.dataset.lawsSpatialShell='ready';
-      root.dataset.lawsOrbitalOrientationStatus='superseded-by-persistent-stage';
+      root.dataset.lawsOrbitalOrientationStatus='superseded-by-persistent-stage-v2';
       selectStory(state.storyIndex,{historyMode:'replace',source:'initial'});
     })
     .catch(err=>{

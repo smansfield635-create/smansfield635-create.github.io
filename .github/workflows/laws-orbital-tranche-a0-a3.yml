@@ -6,6 +6,7 @@ on:
       - repair/laws-persistent-stage-functional-v2-001
     paths:
       - '.github/workflows/laws-orbital-tranche-a0-a3.yml'
+      - 'laws/orbital-tranche-a0-a3/orientation.js'
       - 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
   workflow_dispatch:
 
@@ -41,12 +42,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
           git merge-base --is-ancestor "$REPAIR_PREDECESSOR" HEAD
-          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '06806a2e802d3beffaa5b6f9ed20f1f7c371b086'
+          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '4710211f96bc14e650e5a702072bf63b837ece5b'
           mapfile -t delta < <(git diff --name-only "$REPAIR_PREDECESSOR" HEAD | sort)
           printf '%s\n' "${delta[@]}"
-          test "${#delta[@]}" -eq 2
+          test "${#delta[@]}" -eq 3
           test "${delta[0]}" = '.github/workflows/laws-orbital-tranche-a0-a3.yml'
-          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
+          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/orientation.js'
+          test "${delta[2]}" = 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
           git diff --check "$REPAIR_PREDECESSOR" HEAD
 
       - name: Route exact affected paths through Laws router
@@ -54,10 +56,11 @@ jobs:
         run: |
           set -euo pipefail
           node tools/repository-ai-entry-router.mjs --path .github/workflows/laws-orbital-tranche-a0-a3.yml --task "Laws persistent stage runtime verification workflow" --mutation-intent --output /tmp/router-workflow-builder.json
+          node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/orientation.js --task "Laws persistent stage category orbit hit geometry" --mutation-intent --output /tmp/router-orientation-builder.json
           node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/verify-runtime.mjs --task "Laws persistent stage real browser verifier" --mutation-intent --output /tmp/router-verifier-builder.json
           node <<'NODE'
           const fs=require('fs');
-          for(const file of ['/tmp/router-workflow-builder.json','/tmp/router-verifier-builder.json']){
+          for(const file of ['/tmp/router-workflow-builder.json','/tmp/router-orientation-builder.json','/tmp/router-verifier-builder.json']){
             const r=JSON.parse(fs.readFileSync(file,'utf8'));
             if(r.disposition!=='PASS'||!Array.isArray(r.routes)||!r.routes.length||r.routes.some(route=>route.projectId!=='LAWS'||route.disposition!=='PASS'))throw new Error(`ROUTER_NOT_PASS:${file}`);
           }
@@ -73,8 +76,10 @@ jobs:
           npm install --no-save --no-package-lock playwright@1.55.0
           npx playwright install --with-deps chromium firefox webkit
 
-      - name: Validate verifier syntax
-        run: node --check laws/orbital-tranche-a0-a3/verify-runtime.mjs
+      - name: Validate runtime and verifier syntax
+        run: |
+          node --check laws/orbital-tranche-a0-a3/orientation.js
+          node --check laws/orbital-tranche-a0-a3/verify-runtime.mjs
 
       - name: Start exact-head static server
         shell: bash
@@ -104,6 +109,7 @@ jobs:
           path: |
             /tmp/browser-functional-builder.v2.json
             /tmp/router-workflow-builder.json
+            /tmp/router-orientation-builder.json
             /tmp/router-verifier-builder.json
             /tmp/laws-runtime-builder-server.log
           if-no-files-found: error
@@ -126,12 +132,13 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
           git merge-base --is-ancestor "$REPAIR_PREDECESSOR" HEAD
-          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '06806a2e802d3beffaa5b6f9ed20f1f7c371b086'
+          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '4710211f96bc14e650e5a702072bf63b837ece5b'
           mapfile -t delta < <(git diff --name-only "$REPAIR_PREDECESSOR" HEAD | sort)
           printf '%s\n' "${delta[@]}"
-          test "${#delta[@]}" -eq 2
+          test "${#delta[@]}" -eq 3
           test "${delta[0]}" = '.github/workflows/laws-orbital-tranche-a0-a3.yml'
-          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
+          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/orientation.js'
+          test "${delta[2]}" = 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
           git diff --check "$REPAIR_PREDECESSOR" HEAD
 
       - name: Independently route exact affected paths through Laws router
@@ -139,10 +146,11 @@ jobs:
         run: |
           set -euo pipefail
           node tools/repository-ai-entry-router.mjs --path .github/workflows/laws-orbital-tranche-a0-a3.yml --task "Laws persistent stage runtime verification workflow" --mutation-intent --output /tmp/router-workflow-fresh.json
+          node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/orientation.js --task "Laws persistent stage category orbit hit geometry" --mutation-intent --output /tmp/router-orientation-fresh.json
           node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/verify-runtime.mjs --task "Laws persistent stage real browser verifier" --mutation-intent --output /tmp/router-verifier-fresh.json
           node <<'NODE'
           const fs=require('fs');
-          for(const file of ['/tmp/router-workflow-fresh.json','/tmp/router-verifier-fresh.json']){
+          for(const file of ['/tmp/router-workflow-fresh.json','/tmp/router-orientation-fresh.json','/tmp/router-verifier-fresh.json']){
             const r=JSON.parse(fs.readFileSync(file,'utf8'));
             if(r.disposition!=='PASS'||!Array.isArray(r.routes)||!r.routes.length||r.routes.some(route=>route.projectId!=='LAWS'||route.disposition!=='PASS'))throw new Error(`ROUTER_NOT_PASS:${file}`);
           }
@@ -158,8 +166,10 @@ jobs:
           npm install --no-save --no-package-lock playwright@1.55.0
           npx playwright install --with-deps chromium firefox webkit
 
-      - name: Independently validate verifier syntax
-        run: node --check laws/orbital-tranche-a0-a3/verify-runtime.mjs
+      - name: Independently validate runtime and verifier syntax
+        run: |
+          node --check laws/orbital-tranche-a0-a3/orientation.js
+          node --check laws/orbital-tranche-a0-a3/verify-runtime.mjs
 
       - name: Start independent exact-head static server
         shell: bash
@@ -189,6 +199,7 @@ jobs:
           path: |
             /tmp/browser-functional-fresh-verifier.v2.json
             /tmp/router-workflow-fresh.json
+            /tmp/router-orientation-fresh.json
             /tmp/router-verifier-fresh.json
             /tmp/laws-runtime-fresh-server.log
           if-no-files-found: error

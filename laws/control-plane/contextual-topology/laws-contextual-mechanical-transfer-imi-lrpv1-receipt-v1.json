@@ -1,0 +1,74 @@
+{
+  "protocol": "LRP",
+  "protocol_version": "1.0.0",
+  "canonicalization": "JCS-RFC8785-SAFEINT",
+  "digest_algorithm": "SHA-256",
+  "payload": {
+    "profile": "DGB_LAWS_CONTEXTUAL_MECHANICAL_TRANSFER_IMI_LINEAGE_v1",
+    "profile_version": "1.0.0",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "source_subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+    "governance_branch": "agent/laws-contextual-topology-freeze-001",
+    "governance_head_before_lrp_seal": "727677e8719716b20d669665cd7e2bdf7bb30d95",
+    "lrpv1": {
+      "standard_merge_commit": "5b11583f42ee7f57791ebf4200ab5c05f043c00a",
+      "python_reference_path": "infrastructure/lineage-receipt-protocol-v1/python/lineage_receipt_protocol_v1.py",
+      "python_reference_git_blob": "e62ba8e9a6594ae3f2b120e3cd24ac482e33261a"
+    },
+    "imi_instrument": {
+      "drive_file_id": "1N6qY67rf5TxPE8gvj3CDataPqUrdU37A",
+      "file_name": "imi_reference_v1.py",
+      "sha256": "b56f9c330953445c3051c83f39e331801ecd33f13f00514c43793faedd4625ca"
+    },
+    "imi_route": {
+      "route_id": "LAWS_CONTEXTUAL_MECHANICAL_TRANSFER_ROUTE_v1",
+      "route_version": "1.0.0",
+      "route_profile_path": "laws/control-plane/contextual-topology/laws-contextual-mechanical-transfer-imi-route-profile-v1.json",
+      "route_profile_git_blob": "550fac83e7bd49d7ddb9b89a9f0fdba6e1949061",
+      "factor_dictionary_path": "laws/control-plane/contextual-topology/laws-contextual-mechanical-transfer-imi-factor-dictionary-v1.csv",
+      "factor_dictionary_git_blob": "d5b20b530a5f56bdc91883467f076fada05d5fa3"
+    },
+    "destination_interface": {
+      "path": "laws/control-plane/contextual-topology/laws-contextual-state-interface-contract-v1.json",
+      "git_blob": "35b1cc7c03ba387f7c8c240ff8f6d92e3ce1a5c7"
+    },
+    "donor": {
+      "path": "assets/compass/compass.controller.js",
+      "git_blob": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+      "transfer_units": [
+        "GUARDED_TRANSACTION_SKELETON",
+        "PRESERVED_STATE_SNAPSHOT_MECHANICS",
+        "AUTHORITATIVE_RESTORATION_SKELETON"
+      ]
+    },
+    "evidence": {
+      "adapter_evidence_path": "laws/control-plane/contextual-topology/laws-contextual-transfer-adapter-evidence-v1.json",
+      "adapter_evidence_git_blob": "b30e5b1f48548a538ce7ee92a417b1c0c8f87096",
+      "architectural_admission_path": "laws/control-plane/contextual-topology/laws-contextual-transfer-architectural-admission-v1.json",
+      "architectural_admission_git_blob": "43cdaf50b6b0931c862ed40ff6e6a3fb8900d09b"
+    },
+    "imi_result": {
+      "state": "NUMERIC",
+      "native_receipt_sha256": "ba3cd109f4e48343efbab8a8595ed0c85343f1a55111299129db56e177442e01",
+      "snapshot_path": "laws/control-plane/contextual-topology/laws-contextual-mechanical-transfer-imi-snapshot-v1.json",
+      "snapshot_git_blob": "a264f529f9d80104307e00149ded012791146be7",
+      "snapshot_commit": "a652157a7fab556f975877e7f01e7d67a7f69bb6"
+    },
+    "architectural_disposition": {
+      "status": "ADMIT_WITH_ADAPTER",
+      "admission_commit": "727677e8719716b20d669665cd7e2bdf7bb30d95",
+      "destination_adapter": "LAWS_CONTEXTUAL_STATE_ADAPTER_v1"
+    },
+    "claim_boundary": {
+      "lrpv1_proves_content_identity_only": true,
+      "scientific_validity_claimed": false,
+      "runtime_pass_claimed": false,
+      "visual_pass_claimed": false,
+      "product_construction_authorized": false,
+      "merge_authorized": false,
+      "deployment_authorized": false,
+      "native_imi_floats_reserialized_into_lrp": false
+    }
+  },
+  "lineage_digest": "5b222d174dd1b4491557c10cc65ece4aed49327b92bf0b2acd9f8264cbb9edd3"
+}

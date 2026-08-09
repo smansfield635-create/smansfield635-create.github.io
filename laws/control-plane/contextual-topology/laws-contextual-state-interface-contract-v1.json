@@ -1,0 +1,177 @@
+{
+  "contract": "LAWS_CONTEXTUAL_STATE_INTERFACE_CONTRACT_v1",
+  "mode": "NON_PRODUCT_DESTINATION_INTERFACE_DEFINITION",
+  "status": "FROZEN_INTERFACE_FOR_TRANSFERABILITY_EVALUATION_ONLY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-contextual-topology-freeze-001",
+  "subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "governing_topology": "LAWS_CONTEXTUAL_TOPOLOGY_FREEZE_v1",
+  "origin_classification_commit": "dc0d3c1e8e39aea5912ab45ae6eb50933be7e224",
+  "purpose": "Define the minimum destination-side contextual state surface required to evaluate whether existing donor snapshot/transaction/restoration mechanics are transferable. This record does not implement the surface.",
+  "context_state": {
+    "C_required_fields": ["objectIdentity", "contextScope", "authority", "version"],
+    "contextRevision": "NONNEGATIVE_INTEGER_MONOTONIC_ON_COMMITTED_CONTEXT_CHANGE",
+    "coordinate_fields_forbidden": true,
+    "screen_position_fields_forbidden": true,
+    "orbit_focus_fields_forbidden": true,
+    "selection_fields_forbidden": true,
+    "visual_manifestation_fields_forbidden": true
+  },
+  "authoritative_object_input": {
+    "O_required_fields": ["identity", "objectClass", "authority", "version", "provenance"],
+    "target_must_be_pre_admitted_authoritative_object": true,
+    "visual_node_cannot_be_recenter_target_by_visual_identity_alone": true
+  },
+  "transaction_state": {
+    "phases": ["IDLE", "BEGUN", "COMMITTED", "CANCELLED"],
+    "single_active_recenter_transaction": true,
+    "begin_mutates_context": false,
+    "commit_is_only_forward_context_mutation": true,
+    "cancel_restores_pre_transaction_context_without_visual_inference": true,
+    "stale_expected_revision_fails_closed": true
+  },
+  "required_interface": [
+    {
+      "name": "getContextOrigin",
+      "signature": "getContextOrigin() -> Frozen<C>",
+      "authority": "READ_ONLY_CONTEXT_STATE"
+    },
+    {
+      "name": "getContextRevision",
+      "signature": "getContextRevision() -> nonnegative_integer",
+      "authority": "READ_ONLY_CONTEXT_VERSION"
+    },
+    {
+      "name": "resolveAuthoritativeObject",
+      "signature": "resolveAuthoritativeObject(objectIdentity) -> Frozen<O> | null",
+      "authority": "OBJECT_BINDING_ONLY",
+      "fail_closed_on_unknown": true
+    },
+    {
+      "name": "beginRecenter",
+      "signature": "beginRecenter({targetObjectIdentity, expectedContextRevision}) -> Frozen<Transaction> | false",
+      "authority": "STAGE_ONLY_NO_CONTEXT_MUTATION",
+      "required_checks": [
+        "target object resolves to admitted O",
+        "target carries authority and version",
+        "expectedContextRevision equals current contextRevision",
+        "no other recenter transaction active"
+      ]
+    },
+    {
+      "name": "commitRecenter",
+      "signature": "commitRecenter(transactionId) -> Frozen<ContextCommitReceipt> | false",
+      "authority": "SOLE_FORWARD_CONTEXT_MUTATION",
+      "required_effects": [
+        "preserve exact prior C in authoritative history before mutation",
+        "set C1 from admitted target O binding",
+        "increment contextRevision exactly once",
+        "publish context-committed notification",
+        "request relation recomputation by notification only"
+      ]
+    },
+    {
+      "name": "cancelRecenter",
+      "signature": "cancelRecenter(transactionId, reason) -> true | false",
+      "authority": "TRANSACTION_CANCELLATION",
+      "required_effects": [
+        "leave committed C unchanged",
+        "discard staged transaction",
+        "publish cancellation receipt"
+      ]
+    },
+    {
+      "name": "restorePriorContext",
+      "signature": "restorePriorContext({expectedContextRevision}) -> Frozen<ContextCommitReceipt> | false",
+      "authority": "AUTHORITATIVE_HISTORY_RESTORATION",
+      "required_effects": [
+        "restore only from preserved authoritative context history",
+        "never infer prior C from screen position focus or selection",
+        "increment contextRevision exactly once on successful restoration",
+        "publish context-restored notification",
+        "request relation recomputation by notification only"
+      ]
+    },
+    {
+      "name": "subscribeContextState",
+      "signature": "subscribeContextState(callback) -> unsubscribe",
+      "authority": "CONTEXT_STATE_NOTIFICATION"
+    }
+  ],
+  "authoritative_history": {
+    "minimum_model": "ORDERED_CONTEXT_SNAPSHOT_STACK",
+    "snapshot_fields": [
+      "contextOrigin",
+      "contextRevisionAtCapture",
+      "captureReason",
+      "sourceTransactionId"
+    ],
+    "visual_state_is_not_authoritative_history": true,
+    "focus_state_is_not_context_history": true,
+    "selection_state_is_not_context_history": true,
+    "minimum_reversibility": "C0_TO_C1_TO_C0",
+    "nested_recenter_support_reserved": true
+  },
+  "notifications": {
+    "CONTEXT_COMMITTED": {
+      "required_fields": ["previousContext", "currentContext", "contextRevision", "transactionId"]
+    },
+    "CONTEXT_RESTORED": {
+      "required_fields": ["previousContext", "currentContext", "contextRevision", "transactionId"]
+    },
+    "CONTEXT_CANCELLED": {
+      "required_fields": ["unchangedContext", "contextRevision", "transactionId", "reason"]
+    },
+    "RELATION_RECOMPUTE_REQUESTED": {
+      "required_fields": ["contextOrigin", "contextRevision"],
+      "does_not_define_Gamma": true,
+      "does_not_define_relation_taxonomy": true
+    }
+  },
+  "state_separation_invariants": {
+    "C_independent_of_orbitFocus": true,
+    "C_independent_of_selection": true,
+    "C_independent_of_semanticProjection": true,
+    "recenter_does_not_directly_mutate_orbit_quaternion": true,
+    "recenter_does_not_directly_mutate_selected_object": true,
+    "projection_change_requires_downstream_relation_and_manifestation_processing": true
+  },
+  "failure_contract": {
+    "unknown_target_object": "REJECT_NO_CONTEXT_MUTATION",
+    "missing_authority_or_version": "REJECT_NO_CONTEXT_MUTATION",
+    "stale_context_revision": "REJECT_NO_CONTEXT_MUTATION",
+    "active_transaction_conflict": "REJECT_NO_CONTEXT_MUTATION",
+    "history_empty_on_restore": "REJECT_NO_CONTEXT_MUTATION",
+    "Gamma_unknown_after_commit": "CONTEXT_MAY_REMAIN_COMMITTED_BUT_RELATION_MANIFESTATION_MUST_FAIL_CLOSED_PER_I5",
+    "screen_position_may_not_be_used_as_recovery_source": true
+  },
+  "transfer_evaluation_boundary": {
+    "candidate_donor": "MAIN_COMPASS_CONTROLLER",
+    "candidate_donor_blob": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+    "candidate_mechanics": [
+      "snapshot state container mechanics",
+      "guarded transaction mechanics",
+      "restoration mechanics"
+    ],
+    "donor_semantics_excluded": true,
+    "interface_now_defined_for_IMI_target_compatibility_evaluation": true,
+    "transfer_not_yet_admitted": true
+  },
+  "preserved_boundaries": {
+    "product_code_created": false,
+    "product_code_modified": false,
+    "runtime_api_created": false,
+    "relation_taxonomy_frozen": false,
+    "Gamma_implemented": false,
+    "IMI_route_frozen": false,
+    "IMI_scoring_performed": false,
+    "donor_transfer_authorized": false,
+    "merge_authorized": false,
+    "deployment_authorized": false
+  },
+  "next_gate": {
+    "name": "MECHANICAL_TRANSFER_IMI_FACTOR_ADMISSION",
+    "scope": "Evaluate only the bounded Main Compass snapshot/transaction/restoration mechanics against this destination interface.",
+    "generic_estate_transfer_route": false
+  }
+}

@@ -38,6 +38,35 @@
         "BLOCK_CAUSE_DIAGNOSIS"
       ],
       "prohibitedClaim": "DOES_NOT_REPLACE_A_REQUIRED_COMMAND_EXECUTION_OR_REPRODUCTION_FINGERPRINT"
+    },
+    {
+      "backendId": "PRE_REGISTRATION_INTAKE_BRIDGE_EXECUTION",
+      "classification": "AUTHORITATIVE_FOR_CANONICAL_OPERATION_INTAKE_WHEN_ROOT_DECLARED_ACTIVE",
+      "requirements": [
+        "LOCAL_AUTHENTICATED_OPERATION_INTAKE_EXECUTION_UNAVAILABLE",
+        "ROOT_PRE_REGISTRATION_BRIDGE_STATUS_ACTIVE_PERMANENT",
+        "ROOT_PRE_REGISTRATION_BRIDGE_IDENTITY_VALID",
+        "ISSUE_COMMENT_INVOCATION_MARKER_EXACT",
+        "CANONICAL_GATE_EXECUTION_WITH_WORKFLOW_GITHUB_TOKEN",
+        "CANONICAL_RECEIPT_RETURNED_UNALTERED"
+      ],
+      "genericWorkflowDispatchAllowed": false,
+      "manualReconstructionAllowed": false,
+      "terminalInabilityAllowedWhenValid": false
+    }
+  ],
+  "routeTransitions": [
+    {
+      "transitionId": "OPERATION_INTAKE_LOCAL_AUTH_UNAVAILABLE_TO_PRE_REGISTRATION_BRIDGE_v1",
+      "appliesTo": "CANONICAL_REPOSITORY_OPERATION_INTAKE",
+      "whenLocalAuthenticatedExecutionUnavailable": true,
+      "requiredRootBridgeStatus": "ACTIVE_PERMANENT_PRE_REGISTRATION_CAPABILITY",
+      "requiredCapabilityId": "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1",
+      "requiredBackend": "PRE_REGISTRATION_INTAKE_BRIDGE_EXECUTION",
+      "requiredInvocationMarker": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1",
+      "genericWorkflowDispatchAllowed": false,
+      "terminalInabilityAllowedWhenBridgeValid": false,
+      "invalidBridgeDisposition": "STOP_FAIL_CLOSED"
     }
   ]
 }

@@ -96,6 +96,8 @@ function failClosedReceipt(request, error, selectedBackend = null) {
     requestId: request?.requestId ?? 'UNRESOLVED_REQUEST',
     descriptorId,
     operationId,
+    authorizedOperationId: operationId,
+    successorCompatibilityUsed: false,
     toolId: 'UNRESOLVED_TOOL',
     exactToolingHead: '0000000000000000000000000000000000000000',
     selectedBackend: selectedBackend ?? 'NONE',
@@ -113,11 +115,11 @@ function failClosedReceipt(request, error, selectedBackend = null) {
   });
 }
 
-export function dispatchLoaded({ request, registry, admissionReceipt, routerReceipt, root, allowCandidate = false }) {
+export function dispatchLoaded({ request, registry, admissionReceipt, admissionReceiptIdentity = null, routerReceipt, root, allowCandidate = false }) {
   let selection = null;
   let toolRoot = null;
   try {
-    const resolution = resolveToolset({ request, registry, admissionReceipt, routerReceipt, allowCandidate });
+    const resolution = resolveToolset({ request, registry, admissionReceipt, admissionReceiptIdentity, routerReceipt, allowCandidate });
     selection = selectBackend({ resolutionReceipt: resolution, capabilities: request.availableCapabilities });
     const descriptor = resolution.descriptor;
     if (selection.selectedBackend !== 'GITHUB_ACTIONS_CLEAN_EXECUTION' && selection.selectedBackend !== 'LOCAL_CLEAN_GIT') fail('SELECTED_BACKEND_NOT_EXECUTABLE', selection.selectedBackend);
@@ -141,11 +143,20 @@ export function dispatchLoaded({ request, registry, admissionReceipt, routerRece
       try { payloadSchema = JSON.parse(bytes.toString('utf8')).schema ?? null; } catch { payloadSchema = null; }
     }
     const passed = execution.status === 0 && execution.error == null && Object.keys(outputDigests).length > 0;
+    const compatibility = resolution.successorCompatibilityReceipt;
     return stable({
       schema: 'COMMAND_EXECUTION_RECEIPT_v1',
       requestId: request.requestId,
       descriptorId: descriptor.descriptorId,
       operationId: descriptor.operationId,
+      descriptorOperationId: descriptor.operationId,
+      authorizedOperationId: resolution.authorizedOperationId,
+      authorizationMode: resolution.authorizationMode,
+      successorCompatibilityUsed: resolution.successorCompatibilityUsed,
+      successorProofSha256: compatibility?.successorProofSha256 ?? null,
+      successorReceiptDigest: compatibility?.successorReceiptDigest ?? null,
+      successorOperationId: compatibility?.successorOperationId ?? null,
+      predecessorOperationId: compatibility?.predecessorOperationId ?? null,
       toolId: descriptor.toolId,
       exactToolingHead: descriptor.exactToolingHead,
       selectedBackend: selection.selectedBackend,
@@ -172,9 +183,17 @@ export function dispatchLoaded({ request, registry, admissionReceipt, routerRece
 }
 
 export function dispatchFromIdentities({ request, registry, root, allowCandidate = false }) {
-  const admission = loadJsonAtIdentity(root, request.admissionReceiptIdentity).value;
-  const router = loadJsonAtIdentity(root, request.routerReceiptIdentity).value;
-  return dispatchLoaded({ request, registry, admissionReceipt: admission, routerReceipt: router, root, allowCandidate });
+  const admission = loadJsonAtIdentity(root, request.admissionReceiptIdentity);
+  const router = loadJsonAtIdentity(root, request.routerReceiptIdentity);
+  return dispatchLoaded({
+    request,
+    registry,
+    admissionReceipt: admission.value,
+    admissionReceiptIdentity: admission.identity,
+    routerReceipt: router.value,
+    root,
+    allowCandidate
+  });
 }
 
 function main() {

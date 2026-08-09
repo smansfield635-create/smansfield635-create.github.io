@@ -1,0 +1,79 @@
+name: Laws Context Graph Assembler v1
+
+on:
+  push:
+    branches:
+      - agent/laws-context-graph-assembler-construction-001
+    paths:
+      - '.github/workflows/laws-context-graph-assembler-v1.yml'
+      - 'laws/control-plane/contextual-topology/laws-context-graph-assembler-v1.mjs'
+      - 'laws/control-plane/contextual-topology/verify-laws-context-graph-assembler-v1.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXPECTED_CONSTRUCTION_PARENT: 84cd86ff93e657af6c38b52cfc6525da594f01a7
+  EXPECTED_CONTRACT_BLOB: 240dbb7dca3db8f5a0a21e77d1aee91f1d21cb5a
+  EXPECTED_GAMMA_RESOLVER_BLOB: 1d715884d71419ac25892da452ca7b6d21e6c909
+  EXPECTED_GAMMA_VERIFIER_BLOB: e3a4aec42dc9d35c025fa4b004a91fbb59e2098d
+  EXPECTED_RELATION_REGISTRY_BLOB: 5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e
+  EXPECTED_TESTS_REGISTRY_BLOB: b801a11e342051a6b00e6f7098b1d691685ad0b6
+
+jobs:
+  verify-context-graph-assembler:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact construction head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact construction lineage and scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_CONSTRUCTION_PARENT"
+          test "$(git rev-list --parents -n 1 HEAD | awk '{print NF}')" -eq 2
+
+          mapfile -t CHANGED < <(git diff --name-status "$EXPECTED_CONSTRUCTION_PARENT"...HEAD | sort)
+          EXPECTED=(
+            $'A\t.github/workflows/laws-context-graph-assembler-v1.yml'
+            $'A\tlaws/control-plane/contextual-topology/laws-context-graph-assembler-v1.mjs'
+            $'A\tlaws/control-plane/contextual-topology/verify-laws-context-graph-assembler-v1.mjs'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 3
+          test "$(printf '%s\n' "${CHANGED[@]}")" = "$(printf '%s\n' "${EXPECTED_SORTED[@]}")"
+
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-contract-v1.json)" = "$EXPECTED_CONTRACT_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-gamma-resolver-v1.mjs)" = "$EXPECTED_GAMMA_RESOLVER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/verify-laws-contextual-gamma-resolver-v1.mjs)" = "$EXPECTED_GAMMA_VERIFIER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-relation-registry-v1.json)" = "$EXPECTED_RELATION_REGISTRY_BLOB"
+          test "$(git rev-parse HEAD:control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json)" = "$EXPECTED_TESTS_REGISTRY_BLOB"
+
+      - name: Verify assembler and verifier syntax
+        run: |
+          node --check laws/control-plane/contextual-topology/laws-context-graph-assembler-v1.mjs
+          node --check laws/control-plane/contextual-topology/verify-laws-context-graph-assembler-v1.mjs
+
+      - name: Execute bounded assembler verification
+        shell: bash
+        env:
+          LAWS_CONTEXT_GRAPH_ASSEMBLER_EVIDENCE_DIR: /tmp/laws-context-graph-assembler-evidence
+        run: |
+          set -euo pipefail
+          mkdir -p "$LAWS_CONTEXT_GRAPH_ASSEMBLER_EVIDENCE_DIR"
+          node laws/control-plane/contextual-topology/verify-laws-context-graph-assembler-v1.mjs
+
+      - name: Upload assembler verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-context-graph-assembler-v1-${{ github.run_id }}
+          path: /tmp/laws-context-graph-assembler-evidence
+          if-no-files-found: error
+          retention-days: 30

@@ -444,6 +444,18 @@
       "scopeHash": "5bc67567f5afbbced9d6d86bc2dfd30ca8fbdd52e05dd3aad2608296769a2b7b",
       "state": "ADMITTED_LOCKED"
     },
+    "5e5c30caab71198dc5563abfb095ef69a55d3530130d2a7510ee3243cd73b83d": {
+      "governingHead": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+      "lockGeneration": 656,
+      "lockScope": "ESTATE_VALIDATION:NONPRODUCT_SIDECAR:BOOTSTRAP_AND_MATERIALIZATION:V1",
+      "operationId": "ESTATE_WIDE_VALIDATION_SIDECAR_BOOTSTRAP_20260808",
+      "procedureLocatorDigest": "6e3f78f775b39d485de4f37a57c6c5ee2fa1b30a7fb15a8bb6466cc1de1ad7e9",
+      "released": false,
+      "requestDigest": "6fb0cfacf0dfcd6cb5f62c29c0acb07f5aea6c4e53ec78eeec06c490b35add6b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5e5c30caab71198dc5563abfb095ef69a55d3530130d2a7510ee3243cd73b83d",
+      "state": "ADMITTED_LOCKED"
+    },
     "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8": {
       "governingHead": "c961469d366f39422e143a2c6156e79b1c991735",
       "lockGeneration": 471,
@@ -1360,7 +1372,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 655,
+  "lockGeneration": 656,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

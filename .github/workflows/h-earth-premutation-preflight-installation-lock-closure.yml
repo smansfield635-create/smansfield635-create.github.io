@@ -1,0 +1,279 @@
+name: H-Earth Pre-Mutation Preflight Installation Lock Closure
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-repository-preflight-remote-execution.yml'
+      - '.github/workflows/h-earth-premutation-preflight-installation-lock-closure.yml'
+  workflow_run:
+    workflows: ['H-Earth Pre-Mutation Preflight Remote Execution']
+    types: [completed]
+
+permissions: {}
+
+env:
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+  LOCK_MANAGER_PATH: tools/operation-intake/repository-operation-lock-manager.v1.mjs
+  LOCK_MANAGER_BLOB: 0aa440a3de30e145c7912fcfe2833fb8430ffbb0
+  REMOTE_WORKFLOW_PATH: .github/workflows/h-earth-repository-preflight-remote-execution.yml
+  CLOSURE_WORKFLOW_PATH: .github/workflows/h-earth-premutation-preflight-installation-lock-closure.yml
+
+jobs:
+  validate-closure-contract:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify canonical lock manager and live target locks
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git rev-parse HEAD:$LOCK_MANAGER_PATH)" = "$LOCK_MANAGER_BLOB"
+          git fetch --no-tags origin "$LOCK_REF"
+          git show FETCH_HEAD:"$LEDGER_PATH" > "$RUNNER_TEMP/ledger-before.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const ledger = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/ledger-before.json', 'utf8'));
+          const targets = [
+            {generation:667,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_BINDING_ROUTE_REGISTRATION_v1',lockScope:'ROUTER:H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_BINDING:EXACT_3_PATH_REGISTRATION:V1',scopeHash:'ea74095728d2d3d62ab7d033891a7d0da45e574b914a523fe3c97bb28ed97941'},
+            {generation:670,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_BINDING_REGISTRATION_v1',lockScope:'H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_BINDING:REGISTRATION:V1',scopeHash:'4e03a8262fee2763d2f0cf736f4f615f5a83e0966393e22e6af2b72a109e8fd3'},
+            {generation:684,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_ROUTE_REGISTRATION_v1',lockScope:'ROUTER:H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_INVOCATION:EXACT_2_WORKFLOW_PATHS:V1',scopeHash:'3244e055e119636fa3d4f566f1f564af8db4cb087a61c23e6d2c3c467e289411'},
+            {generation:687,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE_v1',lockScope:'H_EARTH:PREMUTATION_PREFLIGHT:REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE:EXACT_2_WORKFLOWS:V1',scopeHash:'c7eba32f9dc99a00ff7b47cf902b54ac335b774ba5f7bd3440e2183a25eeb10e'}
+          ];
+          for (const target of targets) {
+            const lock = ledger.activeScopes?.[target.scopeHash];
+            if (!lock || lock.released || lock.state !== 'ADMITTED_LOCKED' || lock.operationId !== target.operationId || lock.lockGeneration !== target.generation || lock.lockScope !== target.lockScope) throw new Error(`TARGET_LOCK_IDENTITY_MISMATCH:${target.generation}`);
+          }
+          const hc02 = ledger.activeScopes?.['5593ea087263deac6365670c07170f7fa467ade1de671099bc72acd654d1b4f6'];
+          if (!hc02 || hc02.lockGeneration !== 660 || hc02.operationId !== 'H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1' || hc02.released) throw new Error('GENERATION_660_EXCLUSION_IDENTITY_MISMATCH');
+          const receipt = {
+            schema:'H_EARTH_PREMUTATION_PREFLIGHT_INSTALLATION_CLOSURE_CONTRACT_VALIDATION_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            targetGenerations:targets.map((target)=>target.generation),
+            generation660Excluded:true,
+            directLedgerEditAuthorized:false,
+            productMutationPerformed:false,
+            hc02MutationPerformed:false
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/closure-contract-validation.json', JSON.stringify(receipt, null, 2) + '\n');
+          NODE
+
+      - name: Verify remote workflow and closure workflow contract markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_REQUEST_V1' "$REMOTE_WORKFLOW_PATH"
+          grep -Fq 'H_EARTH_PREMUTATION_PREFLIGHT_OPERATIONAL_PROOF' "$REMOTE_WORKFLOW_PATH"
+          grep -Fq 'fullNativeReceiptArtifact: true' "$REMOTE_WORKFLOW_PATH"
+          grep -Fq 'allowedMutationPaths' .github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json
+          grep -Fq 'generation:687' "$CLOSURE_WORKFLOW_PATH"
+          grep -Fq 'generation:660' "$CLOSURE_WORKFLOW_PATH"
+          grep -Fq 'GENERATION_660_UNTOUCHED' "$CLOSURE_WORKFLOW_PATH"
+
+      - name: Upload closure contract validation
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-premutation-preflight-installation-lock-closure-contract-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/closure-contract-validation.json
+          if-no-files-found: error
+          retention-days: 90
+
+  close-installation-locks:
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'issue_comment'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    env:
+      REMOTE_RUN_ID: ${{ github.event.workflow_run.id }}
+      REMOTE_HEAD: ${{ github.event.workflow_run.head_sha }}
+      REMOTE_ARTIFACT_PATTERN: h-earth-premutation-preflight-remote-execution-${{ github.event.workflow_run.id }}-*
+      GENERATION_660_UNTOUCHED: 'true'
+    steps:
+      - name: Check out exact remote-proof head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download exact remote proof artifact
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ${{ env.REMOTE_ARTIFACT_PATTERN }}
+          path: ${{ runner.temp }}/remote-proof
+          merge-multiple: true
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.REMOTE_RUN_ID }}
+
+      - name: Validate operational proof and decide closure
+        id: proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const root = process.env.RUNNER_TEMP + '/remote-proof/';
+          const required = ['request.json','adapter-execution-receipt.json','native-preflight-receipt.json','transport-receipt.json'];
+          for (const file of required) if (!fs.existsSync(root + file)) throw new Error(`REMOTE_ARTIFACT_FILE_MISSING:${file}`);
+          const bytes = (file) => fs.readFileSync(root + file);
+          const hash = (file) => crypto.createHash('sha256').update(bytes(file)).digest('hex');
+          const request = JSON.parse(bytes('request.json'));
+          const adapter = JSON.parse(bytes('adapter-execution-receipt.json'));
+          const native = JSON.parse(bytes('native-preflight-receipt.json'));
+          const transport = JSON.parse(bytes('transport-receipt.json'));
+
+          const isProof = transport.operationalProof === true && transport.requestId === 'H_EARTH_PREMUTATION_PREFLIGHT_OPERATIONAL_PROOF';
+          if (!isProof) {
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_close=false\n');
+            fs.writeFileSync(process.env.RUNNER_TEMP + '/closure-skip.json', JSON.stringify({schema:'H_EARTH_PREMUTATION_PREFLIGHT_INSTALLATION_CLOSURE_SKIP_v1',result:'NOT_OPERATIONAL_PROOF_NO_CLOSURE',remoteRunId:Number(process.env.REMOTE_RUN_ID)}, null, 2) + '\n');
+            process.exit(0);
+          }
+
+          const expectedPaths = ['showroom/globe/h-earth/index.css','showroom/globe/h-earth/index.html'];
+          if (Number(transport.runId) !== Number(process.env.REMOTE_RUN_ID)) throw new Error('REMOTE_RUN_ID_MISMATCH');
+          if (transport.eventName !== 'issue_comment' || transport.issueNumber !== 781) throw new Error('REMOTE_PROOF_SOURCE_MISMATCH');
+          if (transport.activeHead !== process.env.REMOTE_HEAD || transport.subjectHead !== process.env.REMOTE_HEAD || request.subjectHead !== process.env.REMOTE_HEAD) throw new Error('REMOTE_PROOF_HEAD_MISMATCH');
+          if (JSON.stringify([...request.paths].sort()) !== JSON.stringify(expectedPaths) || JSON.stringify([...transport.paths].sort()) !== JSON.stringify(expectedPaths)) throw new Error('REMOTE_PROOF_PATH_SET_MISMATCH');
+          if (transport.nativeReceiptSha256 !== hash('native-preflight-receipt.json') || transport.adapterReceiptSha256 !== hash('adapter-execution-receipt.json')) throw new Error('REMOTE_PROOF_DIGEST_MISMATCH');
+          if (transport.result !== 'PASS_CLOSED' || transport.fullNativeReceiptArtifact !== true || transport.mutationMayProceed !== false || transport.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') throw new Error('REMOTE_TRANSPORT_SEMANTIC_FAILURE');
+          if (native.finalDisposition !== 'PASS' || native.mutationMayProceed !== false || native.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') throw new Error('NATIVE_PREFLIGHT_SEMANTIC_FAILURE');
+          if (adapter.result !== 'PASS_CLOSED' || adapter.productMutationPerformed || adapter.constructionAuthorityGranted || adapter.branchCreated || adapter.genericCommandAuthority || adapter.runtimeOrRendererMutationPerformed || adapter.cameraOrNavigationMutationPerformed || adapter.terrainOrWaterMutationPerformed || adapter.mergePerformed || adapter.deploymentPerformed || adapter.releasePerformed) throw new Error('ADAPTER_SIDE_EFFECT_OR_AUTHORITY_LEAK');
+          if (transport.productMutationPerformed || transport.constructionAuthorityGranted || transport.branchCreated || transport.genericCommandAuthority || transport.runtimeOrRendererMutationPerformed || transport.cameraOrNavigationMutationPerformed || transport.terrainOrWaterMutationPerformed || transport.mergePerformed || transport.deploymentPerformed || transport.releasePerformed) throw new Error('TRANSPORT_SIDE_EFFECT_OR_AUTHORITY_LEAK');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, 'should_close=true\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/validated-remote-proof.json', JSON.stringify({schema:'H_EARTH_PREMUTATION_PREFLIGHT_VALIDATED_OPERATIONAL_PROOF_v1',result:'PASS_CLOSED',remoteRunId:Number(process.env.REMOTE_RUN_ID),remoteHead:process.env.REMOTE_HEAD,nativeReceiptSha256:transport.nativeReceiptSha256,adapterReceiptSha256:transport.adapterReceiptSha256,requestId:transport.requestId,paths:expectedPaths,productMutationPerformed:false,constructionAuthorityGranted:false}, null, 2) + '\n');
+          NODE
+
+      - name: Precheck exact active lock identities
+        if: steps.proof.outputs.should_close == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$REMOTE_HEAD"
+          test "$(git rev-parse HEAD:$LOCK_MANAGER_PATH)" = "$LOCK_MANAGER_BLOB"
+          git fetch --no-tags origin "$LOCK_REF"
+          git show FETCH_HEAD:"$LEDGER_PATH" > "$RUNNER_TEMP/ledger-before-closure.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const ledger = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/ledger-before-closure.json', 'utf8'));
+          const targets = [
+            {generation:667,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_BINDING_ROUTE_REGISTRATION_v1',lockScope:'ROUTER:H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_BINDING:EXACT_3_PATH_REGISTRATION:V1',scopeHash:'ea74095728d2d3d62ab7d033891a7d0da45e574b914a523fe3c97bb28ed97941'},
+            {generation:670,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_BINDING_REGISTRATION_v1',lockScope:'H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_BINDING:REGISTRATION:V1',scopeHash:'4e03a8262fee2763d2f0cf736f4f615f5a83e0966393e22e6af2b72a109e8fd3'},
+            {generation:684,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_ROUTE_REGISTRATION_v1',lockScope:'ROUTER:H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_INVOCATION:EXACT_2_WORKFLOW_PATHS:V1',scopeHash:'3244e055e119636fa3d4f566f1f564af8db4cb087a61c23e6d2c3c467e289411'},
+            {generation:687,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE_v1',lockScope:'H_EARTH:PREMUTATION_PREFLIGHT:REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE:EXACT_2_WORKFLOWS:V1',scopeHash:'c7eba32f9dc99a00ff7b47cf902b54ac335b774ba5f7bd3440e2183a25eeb10e'}
+          ];
+          for (const target of targets) {
+            const lock = ledger.activeScopes?.[target.scopeHash];
+            if (!lock || lock.released || lock.state !== 'ADMITTED_LOCKED' || lock.operationId !== target.operationId || lock.lockGeneration !== target.generation || lock.lockScope !== target.lockScope) throw new Error(`TARGET_LOCK_IDENTITY_MISMATCH:${target.generation}`);
+          }
+          const hc02 = ledger.activeScopes?.['5593ea087263deac6365670c07170f7fa467ade1de671099bc72acd654d1b4f6'];
+          if (!hc02 || hc02.lockGeneration !== 660 || hc02.operationId !== 'H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1' || hc02.released) throw new Error('GENERATION_660_NOT_ACTIVE_BEFORE_CLOSURE');
+          NODE
+
+      - name: PASS-close exact instrumentation locks through canonical lock manager
+        if: steps.proof.outputs.should_close == 'true'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          close_lock() {
+            local generation="$1"
+            local operation_id="$2"
+            local lock_scope="$3"
+            local output="$RUNNER_TEMP/closure-${generation}.json"
+            node "$LOCK_MANAGER_PATH" \
+              --action close \
+              --repository "$GITHUB_REPOSITORY" \
+              --lock-ref "$LOCK_REF" \
+              --operation-id "$operation_id" \
+              --lock-scope "$lock_scope" \
+              --lock-generation "$generation" \
+              --terminal-disposition PASS_CLOSED \
+              --output "$output"
+            node -e "const r=require('$output');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.terminalDisposition!=='PASS_CLOSED'||r.lockReleased!==true||r.lockGeneration!==Number('$generation'))process.exit(1)"
+          }
+          close_lock 667 H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_BINDING_ROUTE_REGISTRATION_v1 'ROUTER:H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_BINDING:EXACT_3_PATH_REGISTRATION:V1'
+          close_lock 670 H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_BINDING_REGISTRATION_v1 'H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_BINDING:REGISTRATION:V1'
+          close_lock 684 H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_ROUTE_REGISTRATION_v1 'ROUTER:H_EARTH:PREMUTATION_PREFLIGHT_REMOTE_INVOCATION:EXACT_2_WORKFLOW_PATHS:V1'
+          close_lock 687 H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE_v1 'H_EARTH:PREMUTATION_PREFLIGHT:REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE:EXACT_2_WORKFLOWS:V1'
+
+      - name: Verify terminal history and generation 660 untouched
+        if: steps.proof.outputs.should_close == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --force origin "$LOCK_REF"
+          git show FETCH_HEAD:"$LEDGER_PATH" > "$RUNNER_TEMP/ledger-after-closure.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const ledgerBytes = fs.readFileSync(process.env.RUNNER_TEMP + '/ledger-after-closure.json');
+          const ledger = JSON.parse(ledgerBytes);
+          const targets = [
+            {generation:667,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_BINDING_ROUTE_REGISTRATION_v1',scopeHash:'ea74095728d2d3d62ab7d033891a7d0da45e574b914a523fe3c97bb28ed97941'},
+            {generation:670,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_BINDING_REGISTRATION_v1',scopeHash:'4e03a8262fee2763d2f0cf736f4f615f5a83e0966393e22e6af2b72a109e8fd3'},
+            {generation:684,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_ROUTE_REGISTRATION_v1',scopeHash:'3244e055e119636fa3d4f566f1f564af8db4cb087a61c23e6d2c3c467e289411'},
+            {generation:687,operationId:'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE_v1',scopeHash:'c7eba32f9dc99a00ff7b47cf902b54ac335b774ba5f7bd3440e2183a25eeb10e'}
+          ];
+          for (const target of targets) {
+            if (ledger.activeScopes?.[target.scopeHash]) throw new Error(`TARGET_LOCK_STILL_ACTIVE:${target.generation}`);
+            const terminal = [...(ledger.terminalHistory ?? [])].reverse().find((entry) => entry.operationId === target.operationId && entry.lockGeneration === target.generation);
+            if (!terminal || terminal.state !== 'TERMINAL' || terminal.terminalDisposition !== 'PASS_CLOSED' || terminal.released !== true) throw new Error(`TERMINAL_HISTORY_MISSING:${target.generation}`);
+          }
+          const hc02 = ledger.activeScopes?.['5593ea087263deac6365670c07170f7fa467ade1de671099bc72acd654d1b4f6'];
+          if (!hc02 || hc02.lockGeneration !== 660 || hc02.operationId !== 'H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1' || hc02.released) throw new Error('GENERATION_660_WAS_TOUCHED');
+          const closures = targets.map((target) => JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + `/closure-${target.generation}.json`, 'utf8')));
+          const proof = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/validated-remote-proof.json', 'utf8'));
+          const aggregate = {
+            schema:'H_EARTH_PREMUTATION_PREFLIGHT_INSTALLATION_CLOSURE_AGGREGATE_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            remoteRunId:Number(process.env.REMOTE_RUN_ID),
+            remoteHead:process.env.REMOTE_HEAD,
+            nativeReceiptSha256:proof.nativeReceiptSha256,
+            closedGenerations:targets.map((target)=>target.generation),
+            closureCommits:closures.map((receipt)=>({generation:receipt.lockGeneration,closureCommitSha:receipt.closureCommitSha,committedLedgerBlobSha:receipt.committedLedgerBlobSha})),
+            generation660Untouched:true,
+            generation660StillActive:true,
+            directLedgerEditPerformed:false,
+            canonicalLockManagerUsed:true,
+            finalLedgerSha256:crypto.createHash('sha256').update(ledgerBytes).digest('hex'),
+            productMutationPerformed:false,
+            hc02MutationPerformed:false
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/installation-closure-aggregate.json', JSON.stringify(aggregate, null, 2) + '\n');
+          NODE
+
+      - name: Upload installation closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-premutation-preflight-installation-lock-closure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/validated-remote-proof.json
+            ${{ runner.temp }}/closure-skip.json
+            ${{ runner.temp }}/closure-667.json
+            ${{ runner.temp }}/closure-670.json
+            ${{ runner.temp }}/closure-684.json
+            ${{ runner.temp }}/closure-687.json
+            ${{ runner.temp }}/installation-closure-aggregate.json
+          if-no-files-found: warn
+          retention-days: 90

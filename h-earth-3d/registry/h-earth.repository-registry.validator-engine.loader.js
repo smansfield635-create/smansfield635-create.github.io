@@ -1,27 +1,27 @@
 /**
- * H-Earth repository registry validator dependency loader v6 successor.
+ * H-Earth repository registry validator dependency loader v7 successor.
  *
- * The v5 loader is preserved byte-for-byte in
- * h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence.js.
- * This wrapper delegates all existing loader checks and substitutes only the newest
- * additive registry facade so the admitted HC00 candidate paths can be recognized.
+ * The v6 live-experience candidate-scope loader is preserved byte-for-byte in
+ * h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence-accepted-occurrences.js.
+ * This wrapper delegates all existing checks and substitutes only the newest
+ * additive accepted-occurrence registry facade.
  */
 
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
   runHEarthC2R1MC5AutomaticRegistryPreflight
-} from './h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence.js';
+} from './h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence-accepted-occurrences.js';
 import registryFacade, {
-  verifyHEarthLiveExperienceMaturityConvergenceAuthorizedCandidateScope
-} from './accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-authorized-candidate-scope.js';
+  verifyHEarthLiveExperienceMaturityConvergenceAcceptedOccurrences
+} from './accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const base = loadBaseDependencies();
-  const candidateScopeVerification =
-    verifyHEarthLiveExperienceMaturityConvergenceAuthorizedCandidateScope();
+  const acceptedOccurrenceVerification =
+    verifyHEarthLiveExperienceMaturityConvergenceAcceptedOccurrences();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -31,7 +31,11 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       base.exactHeadRegistrationVerified === true,
     predecessorConstructionCandidateScopeVerified:
       base.constructionCandidateScopeVerified === true,
-    candidateScopeEligible: candidateScopeVerification.eligible === true,
+    predecessorLiveExperienceCandidateScopeEligible:
+      base.liveExperienceCandidateScopeVerification?.eligible === true,
+    acceptedOccurrencesEligible: acceptedOccurrenceVerification.eligible === true,
+    historicalCandidateReservationPreserved:
+      acceptedOccurrenceVerification.checks.historicalCandidateReservationEligible === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -51,30 +55,34 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v6_LIVE_EXPERIENCE_CANDIDATE_SCOPE_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v7_LIVE_EXPERIENCE_ACCEPTED_OCCURRENCE_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
     identityChecks: deepFreeze({
       ...base.identityChecks,
-      liveExperienceCandidateScope: Object.values(successorChecks).every(Boolean)
+      liveExperienceAcceptedOccurrences: Object.values(successorChecks).every(Boolean)
     }),
     identityVerified:
       base.identityVerified === true &&
       Object.values(successorChecks).every(Boolean),
-    liveExperienceCandidateScopeVerification: candidateScopeVerification,
-    liveExperienceCandidateScopeChecks: deepFreeze(successorChecks),
+    liveExperienceAcceptedOccurrenceVerification: acceptedOccurrenceVerification,
+    liveExperienceAcceptedOccurrenceChecks: deepFreeze(successorChecks),
     boundary: deepFreeze({
       ...base.boundary,
-      liveExperienceCandidateScopePathResolutionOnly: true,
-      liveExperienceCandidateScopeProductMutationAuthorityCreated: false,
-      liveExperienceCandidateScopeMergeAuthorityCreated: false
+      liveExperienceAcceptedOccurrenceProvenanceOnly: true,
+      historicalLiveExperienceCandidateReservationPreserved: true,
+      liveExperienceAcceptedOccurrenceProductMutationAuthorityCreated: false,
+      liveExperienceAcceptedOccurrenceMergeAuthorityCreated: false,
+      liveExperienceAcceptedOccurrenceG1G2AuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
-      liveExperienceCandidateScopeLoaded: true,
-      liveExperienceCandidateScopeProductMutationAuthorized: false,
-      liveExperienceCandidateScopeMergeAuthorized: false
+      liveExperienceAcceptedOccurrencesLoaded: true,
+      historicalLiveExperienceCandidateReservationPreserved: true,
+      liveExperienceAcceptedOccurrenceProductMutationAuthorized: false,
+      liveExperienceAcceptedOccurrenceMergeAuthorized: false,
+      liveExperienceAcceptedOccurrenceG1G2Authorized: false
     })
   });
 }

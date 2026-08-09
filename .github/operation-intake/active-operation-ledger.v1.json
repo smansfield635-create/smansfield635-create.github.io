@@ -528,34 +528,6 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
-    "6912c24c9b9e14cd03977911def846e383cc917d1f62f5b978eb0fc3877648f4": {
-      "governingHead": "7036251b476288abd636ae2f033ff27fc1861863",
-      "lockGeneration": 811,
-      "lockScope": "REPOSITORY_CONTROL_PLANE:PROGRESSIVE_SYSTEM_CONTINUITY:SELF_TEST_CLOSURE_AWARENESS:V1",
-      "operationId": "PROGRESSIVE_SYSTEM_CONTINUITY_CLOSURE_AWARE_SELF_TEST_REPAIR_20260809_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "257ebc15ff973b7e4a605c8382846ffeff9a34e5",
-        "lockGeneration": 806,
-        "lockScope": "REPOSITORY_CONTROL_PLANE:PROGRESSIVE_SYSTEM_CONTINUITY:SELF_TEST_CLOSURE_AWARENESS:V1",
-        "operationId": "PROGRESSIVE_SYSTEM_CONTINUITY_CLOSURE_AWARE_SELF_TEST_REPAIR_20260809_001",
-        "preservedEvidenceRefs": [
-          "PR_836_PROGRESSIVE_SYSTEM_CONTINUITY_PASS_ON_CANDIDATE_18D73F11",
-          "GENERATION_806_CANONICAL_ADMISSION",
-          "PR_834_EXPOSED_STALE_SELF_TEST_OPEN_STATE_ASSUMPTION"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "PSC_CLOSURE_AWARE_SELF_TEST_806_TO_CURRENT_MAIN_20260809_001"
-      },
-      "procedureLocatorDigest": "eec2e6ac7ce7071da3a955399f41ca8bf326feac65453d0bab6081e808dd33ce",
-      "released": false,
-      "requestDigest": "89623acd0f21f4c92e158dfdb29b46140768bbb698282edc272839ec975d2c98",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "6912c24c9b9e14cd03977911def846e383cc917d1f62f5b978eb0fc3877648f4",
-      "state": "ADMITTED_LOCKED"
-    },
     "6980513befdd9b12258a8f280ddf2a045c0d91db4d4ceca5166c020ce89f54c1": {
       "governingHead": "18d73f117c8c6a09860c64866ccf073a310f2275",
       "lockGeneration": 810,
@@ -11402,6 +11374,35 @@
       "requestDigest": "e8b088492322457be1d048af9329dd62f1332e0a539d652d70f5dd71c39d2811",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "29c821c4b859700c0122d81b95589264eac5bdc72c853b21273cf49d1364b01c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "7036251b476288abd636ae2f033ff27fc1861863",
+      "lockGeneration": 811,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:PROGRESSIVE_SYSTEM_CONTINUITY:SELF_TEST_CLOSURE_AWARENESS:V1",
+      "operationId": "PROGRESSIVE_SYSTEM_CONTINUITY_CLOSURE_AWARE_SELF_TEST_REPAIR_20260809_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "257ebc15ff973b7e4a605c8382846ffeff9a34e5",
+        "lockGeneration": 806,
+        "lockScope": "REPOSITORY_CONTROL_PLANE:PROGRESSIVE_SYSTEM_CONTINUITY:SELF_TEST_CLOSURE_AWARENESS:V1",
+        "operationId": "PROGRESSIVE_SYSTEM_CONTINUITY_CLOSURE_AWARE_SELF_TEST_REPAIR_20260809_001",
+        "preservedEvidenceRefs": [
+          "PR_836_PROGRESSIVE_SYSTEM_CONTINUITY_PASS_ON_CANDIDATE_18D73F11",
+          "GENERATION_806_CANONICAL_ADMISSION",
+          "PR_834_EXPOSED_STALE_SELF_TEST_OPEN_STATE_ASSUMPTION"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "PSC_CLOSURE_AWARE_SELF_TEST_806_TO_CURRENT_MAIN_20260809_001"
+      },
+      "procedureLocatorDigest": "eec2e6ac7ce7071da3a955399f41ca8bf326feac65453d0bab6081e808dd33ce",
+      "released": true,
+      "requestDigest": "89623acd0f21f4c92e158dfdb29b46140768bbb698282edc272839ec975d2c98",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6912c24c9b9e14cd03977911def846e383cc917d1f62f5b978eb0fc3877648f4",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

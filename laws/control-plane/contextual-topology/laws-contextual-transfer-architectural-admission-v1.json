@@ -1,0 +1,116 @@
+{
+  "contract": "LAWS_CONTEXTUAL_TRANSFER_ARCHITECTURAL_ADMISSION_v1",
+  "mode": "ARCHITECTURAL_ADMISSION_ONLY_NO_PRODUCT_CONSTRUCTION",
+  "status": "ADMIT_WITH_ADAPTER",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-contextual-topology-freeze-001",
+  "source_subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "evidence_chain": {
+    "topology_freeze_commit": "1492663193a503ce3d2e136135421cea0077e8da",
+    "residual_map_commit": "cc14e2ad0853ba8af36f117e538123776fe26258",
+    "origin_classification_commit": "dc0d3c1e8e39aea5912ab45ae6eb50933be7e224",
+    "destination_interface_commit": "c8ffa32c5c9d23e36f7369d9a4c8474895070149",
+    "factor_admission_commit": "38dc9119eb856026266edccc21e036a4da26af54",
+    "route_profile_commit": "377f33c39db5b9ce594f2765f93fb98d2743467a",
+    "factor_dictionary_commit": "75ee2a0c89514c3555a8aa2502293132c07d2250",
+    "adapter_evidence_commit": "5b42cb5292b2f605c4057fe47e3f501bf7fbc4b6",
+    "imi_snapshot_commit": "a652157a7fab556f975877e7f01e7d67a7f69bb6",
+    "imi_native_receipt_sha256": "ba3cd109f4e48343efbab8a8595ed0c85343f1a55111299129db56e177442e01"
+  },
+  "imi_disposition": {
+    "state": "NUMERIC",
+    "IMI": 1.0,
+    "CS": 0.0,
+    "WMI": 1.0,
+    "zero_count": 0,
+    "hard_collapse": false,
+    "ordinal_IMI": 0,
+    "interpretation_boundary": "FULL_MEASURED_AVAILABILITY_OF_THE_SIX_REQUIRED_TRANSFERABILITY_FACTORS_FOR_THIS_BOUNDED_DESIGN_ROUTE_ONLY",
+    "not_runtime_pass": true,
+    "not_transfer_admission_by_itself": true,
+    "not_construction_authority": true
+  },
+  "admitted_transfer_units": [
+    {
+      "residual_id": "R5",
+      "donor": "MAIN_COMPASS_CONTROLLER",
+      "donor_path": "assets/compass/compass.controller.js",
+      "donor_blob_sha": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+      "unit": "GUARDED_TRANSACTION_SKELETON",
+      "destination_adapter": "LAWS_CONTEXTUAL_STATE_ADAPTER_v1",
+      "disposition": "ADMIT_WITH_ADAPTER"
+    },
+    {
+      "residual_id": "R8",
+      "donor": "MAIN_COMPASS_CONTROLLER",
+      "donor_path": "assets/compass/compass.controller.js",
+      "donor_blob_sha": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+      "unit": "PRESERVED_STATE_SNAPSHOT_MECHANICS",
+      "destination_adapter": "LAWS_CONTEXTUAL_STATE_ADAPTER_v1",
+      "disposition": "ADMIT_WITH_ADAPTER"
+    },
+    {
+      "residual_id": "R9",
+      "donor": "MAIN_COMPASS_CONTROLLER",
+      "donor_path": "assets/compass/compass.controller.js",
+      "donor_blob_sha": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+      "unit": "AUTHORITATIVE_RESTORATION_SKELETON",
+      "destination_adapter": "LAWS_CONTEXTUAL_STATE_ADAPTER_v1",
+      "disposition": "ADMIT_WITH_ADAPTER"
+    }
+  ],
+  "destination_owned_authorities_not_transferred": [
+    "R1 CONTEXTUAL_ORIGIN_STATE",
+    "R2 AUTHORITATIVE_OBJECT_BINDING",
+    "R3 RELATION_RECORD_CONTRACT",
+    "R4 GAMMA_RELATION_RESOLUTION_AUTHORITY",
+    "R6 RELATION_RECOMPUTATION",
+    "R7 CONTEXT_DRIVEN_REPROJECTION_TRIGGER",
+    "R10 UNKNOWN_OR_UNEVALUABLE_RELATION_STATUS",
+    "R11 IDENTITY_AND_PROVENANCE_BINDING",
+    "R12 CONTEXT_FOCUS_SELECTION_PROJECTION_STATE_SEPARATION"
+  ],
+  "prohibited_inheritance": [
+    "DONOR_OBJECT_IDENTITIES",
+    "DONOR_LABELS_AND_TAXONOMY",
+    "DONOR_CONTAINMENT_SEMANTICS",
+    "DONOR_ADJACENCY_SEMANTICS",
+    "DONOR_SEQUENCE_SEMANTICS",
+    "DONOR_IMPORTANCE_SEMANTICS",
+    "DONOR_STANDING",
+    "DONOR_SCIENTIFIC_RELATIONS",
+    "DONOR_DOMAIN_METAPHOR",
+    "DONOR_SPECIFIC_NAVIGATION_MEANING",
+    "CARDINAL_MEANING",
+    "ROOM_MEANING",
+    "MIRRORLAND_MEANING"
+  ],
+  "adapter_requirements": {
+    "consume_only_frozen_destination_interface": true,
+    "context_fields_only_destination_defined": true,
+    "history_schema_only_destination_defined": true,
+    "expected_context_revision_guard_required": true,
+    "begin_must_not_mutate_context": true,
+    "commit_single_revision_increment": true,
+    "restore_history_only": true,
+    "visual_state_forbidden_as_recovery_authority": true,
+    "orbit_focus_selection_and_quaternion_direct_mutation_forbidden": true,
+    "relation_recompute_notification_required": true,
+    "Gamma_definition_forbidden_inside_adapter": true
+  },
+  "remaining_open_design_gate": {
+    "name": "CONTEXTUAL_RELATION_TAXONOMY_AND_GAMMA_CONTRACT",
+    "reason": "The exact relation taxonomy remains intentionally unfrozen. Product construction of a complete contextual knowledge-space cannot lawfully infer Gamma from the six existing directions or from spatial placement.",
+    "must_close_before_complete_contextual_manifestation_construction": true
+  },
+  "preserved_boundaries": {
+    "product_code_mutation": false,
+    "adapter_implementation": false,
+    "Gamma_implementation": false,
+    "relation_taxonomy_frozen": false,
+    "runtime_verification": false,
+    "visual_verification": false,
+    "merge_authorized": false,
+    "deployment_authorized": false
+  }
+}

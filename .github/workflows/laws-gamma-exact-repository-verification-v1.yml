@@ -1,0 +1,83 @@
+name: Laws Gamma Exact Repository Verification v1
+
+on:
+  push:
+    branches:
+      - agent/laws-gamma-resolver-001
+    paths:
+      - .github/workflows/laws-gamma-exact-repository-verification-v1.yml
+
+permissions:
+  contents: read
+
+jobs:
+  exact-repository-gamma-verification:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact Gamma candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 334ea9e0dfbe2d6866df871ec5f5da021d59d459
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Assert exact immutable subject and clean start
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "334ea9e0dfbe2d6866df871ec5f5da021d59d459"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-gamma-resolver-v1.mjs)" = "1d715884d71419ac25892da452ca7b6d21e6c909"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/verify-laws-contextual-gamma-resolver-v1.mjs)" = "e3a4aec42dc9d35c025fa4b004a91fbb59e2098d"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-relation-registry-v1.json)" = "5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e"
+          test "$(git rev-parse HEAD:control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json)" = "b801a11e342051a6b00e6f7098b1d691685ad0b6"
+          test -z "$(git status --porcelain=v1)"
+
+      - name: Execute committed Gamma semantic verifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          node laws/control-plane/contextual-topology/verify-laws-contextual-gamma-resolver-v1.mjs | tee "$RUNNER_TEMP/gamma-verifier-output.json"
+          test "$(jq -r '.status' "$RUNNER_TEMP/gamma-verifier-output.json")" = "PASS"
+          test "$(jq -r '.checks' "$RUNNER_TEMP/gamma-verifier-output.json")" = "16"
+
+      - name: Assert clean completion and emit execution receipt
+        shell: bash
+        env:
+          EXECUTION_HARNESS_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1)"
+          verifier_sha="$(sha256sum "$RUNNER_TEMP/gamma-verifier-output.json" | awk '{print $1}')"
+          tree_sha="$(git rev-parse HEAD^{tree})"
+          node_version="$(node --version)"
+          jq -n \
+            --arg schema "LAWS_CONTEXTUAL_GAMMA_EXACT_REPOSITORY_EXECUTION_RECEIPT_v1" \
+            --arg result "PASS" \
+            --arg subjectHead "334ea9e0dfbe2d6866df871ec5f5da021d59d459" \
+            --arg subjectTree "$tree_sha" \
+            --arg executionHarnessCommit "$EXECUTION_HARNESS_COMMIT" \
+            --arg nodeVersion "$node_version" \
+            --arg resolverBlob "1d715884d71419ac25892da452ca7b6d21e6c909" \
+            --arg verifierBlob "e3a4aec42dc9d35c025fa4b004a91fbb59e2098d" \
+            --arg relationRegistryBlob "5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e" \
+            --arg testsRegistryBlob "b801a11e342051a6b00e6f7098b1d691685ad0b6" \
+            --arg verifierOutputSha256 "$verifier_sha" \
+            --argjson checks 16 \
+            '{schema:$schema,result:$result,subjectHead:$subjectHead,subjectTree:$subjectTree,executionHarnessCommit:$executionHarnessCommit,nodeVersion:$nodeVersion,resolverBlob:$resolverBlob,verifierBlob:$verifierBlob,relationRegistryBlob:$relationRegistryBlob,testsRegistryBlob:$testsRegistryBlob,verifierOutputSha256:$verifierOutputSha256,checks:$checks,repositoryCleanBefore:true,repositoryCleanAfter:true,resolverMutationPerformed:false,relationRegistryMutationPerformed:false,productMutationPerformed:false,contextGraphConstructed:false,spatialReprojectionConstructed:false,mergePerformed:false,deploymentPerformed:false}' \
+            > "$RUNNER_TEMP/laws-gamma-exact-repository-execution-receipt-v1.json"
+          cat "$RUNNER_TEMP/laws-gamma-exact-repository-execution-receipt-v1.json"
+
+      - name: Upload bounded Gamma execution receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-gamma-exact-repository-execution-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/laws-gamma-exact-repository-execution-receipt-v1.json
+            ${{ runner.temp }}/gamma-verifier-output.json
+          if-no-files-found: error
+          retention-days: 30

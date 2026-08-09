@@ -1,0 +1,30 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "6e8e1d88b021da9e76bf89d66618eb4648988b4f",
+    "committedLedgerBlobSha": "7ec4f919224a87015bf4175e7c0850cae0f7d753",
+    "lockAcquired": true,
+    "lockGeneration": 651,
+    "lockScope": "H_EARTH:HC02:PAGE_EXCELLENCE_ARCHITECTURE_EXECUTION:EVIDENCE_CARRIER:V2",
+    "observedBranchHead": "f9d264019f38c543fdecc8c594ceee337d44b87b",
+    "observedLedgerBlobSha": "ecc90bf1be0a3f42eb67fa8eb35a175ddec34d41",
+    "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "e94929ec6adcf996a8d46334a705aa891772742f4ccb0a98dcf2b6ffb58df003"
+  },
+  "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1",
+  "operationStarted": true,
+  "procedureLocatorDigest": "16c52148105b6dc347009afa8bc840f1db96f8ad7c21690cbf349fb8114d175f",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "2fb692915f4bd1afc72c74c7571e87c0be7f3d5053ce0bcd05fe19162c8aa41a",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

@@ -77,6 +77,21 @@ export const H_EARTH_RUN_8C_NORMAL_LIGHT_MATERIAL_PROFILE = freeze({
   }
 });
 
+export const H_EARTH_ENVIRONMENTAL_LIGHT_DEPTH_PROFILE_v1 = freeze({
+  profileId: 'H_EARTH_ENVIRONMENTAL_LIGHT_DEPTH_MATURITY_01_v1',
+  ambientBase: 0.12,
+  ambientSunGain: 0.28,
+  ambientUpGain: 0.09,
+  ambientMinimum: 0.12,
+  ambientMaximum: 0.54,
+  slopeBase: 0.62,
+  slopeUpGain: 0.38,
+  slopeMinimum: 0.44,
+  slopeMaximum: 1,
+  diffuseGain: 0.98,
+  lightMaximum: 1.35
+});
+
 export function projectHEarthRun8CVertexMaterialLighting({ world, normal, surfaceMaterial, atmosphereState, cameraWorld }) {
   if (!world || !normal || !cameraWorld ||
       ![world.x, world.y, world.z, normal.x, normal.y, normal.z, cameraWorld.x, cameraWorld.y, cameraWorld.z].every(finite) ||
@@ -84,15 +99,34 @@ export function projectHEarthRun8CVertexMaterialLighting({ world, normal, surfac
       evaluateHEarthAtmosphereStateSample(atmosphereState).eligible !== true) {
     return freeze({ eligible: false, status: 'RUN_8C_VERTEX_LIGHT_MATERIAL_REJECTED', issues: ['INVALID_VERTEX_LIGHT_MATERIAL_INPUT'] });
   }
+  const lightDepth = H_EARTH_ENVIRONMENTAL_LIGHT_DEPTH_PROFILE_v1;
   const normalDotSun = clamp(dot(normal, atmosphereState.sunDirection), -1, 1);
   const diffuseLightFactor = clamp01(Math.max(0, normalDotSun) * atmosphereState.sunIntensity);
-  const ambientLightFactor = clamp(0.15 + atmosphereState.sunIntensity * 0.33 + Math.max(0, normal.y) * 0.12, 0.14, 0.62);
-  const slopeShadeFactor = clamp(0.66 + Math.max(0, normal.y) * 0.34, 0.48, 1);
+  const ambientLightFactor = clamp(
+    lightDepth.ambientBase +
+      atmosphereState.sunIntensity * lightDepth.ambientSunGain +
+      Math.max(0, normal.y) * lightDepth.ambientUpGain,
+    lightDepth.ambientMinimum,
+    lightDepth.ambientMaximum
+  );
+  const slopeShadeFactor = clamp(
+    lightDepth.slopeBase + Math.max(0, normal.y) * lightDepth.slopeUpGain,
+    lightDepth.slopeMinimum,
+    lightDepth.slopeMaximum
+  );
   const curvatureOcclusionFactor = clamp(1 - Math.max(0, -surfaceMaterial.curvature) * 0.72, 0.72, 1);
   const wetnessResponse = clamp(1 - surfaceMaterial.wetness * 0.17, 0.79, 1);
   const roughnessResponse = clamp(1 - surfaceMaterial.roughness * 0.1, 0.88, 1);
   const reflectanceResponse = clamp01(surfaceMaterial.reflectance * (1 - surfaceMaterial.roughness) * diffuseLightFactor * (0.08 + surfaceMaterial.wetness * 0.22));
-  const lightFactor = clamp((ambientLightFactor + diffuseLightFactor * 0.86) * slopeShadeFactor * curvatureOcclusionFactor * wetnessResponse * roughnessResponse, 0, 1.35);
+  const lightFactor = clamp(
+    (ambientLightFactor + diffuseLightFactor * lightDepth.diffuseGain) *
+      slopeShadeFactor *
+      curvatureOcclusionFactor *
+      wetnessResponse *
+      roughnessResponse,
+    0,
+    lightDepth.lightMaximum
+  );
   const base = surfaceMaterial.baseColorProfile;
   const sunLinear = {
     r: srgb8ToLinear(atmosphereState.sunColor[0]),

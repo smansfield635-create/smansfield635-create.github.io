@@ -5,8 +5,6 @@ on:
     branches: [main]
     paths:
       - '.github/ai-router/differential-continuity/**'
-      - '.github/ai-router/operation-lifecycle/successor-protocol.v1.json'
-      - '.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs'
       - '.github/ai-router/system-continuity/gap-registry.v1.json'
       - '.github/ai-router/router.v1.json'
       - '.github/workflows/differential-continuity-v1.yml'
@@ -15,8 +13,6 @@ on:
     branches: [main]
     paths:
       - '.github/ai-router/differential-continuity/**'
-      - '.github/ai-router/operation-lifecycle/successor-protocol.v1.json'
-      - '.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs'
       - '.github/ai-router/system-continuity/gap-registry.v1.json'
       - '.github/ai-router/router.v1.json'
       - '.github/workflows/differential-continuity-v1.yml'
@@ -35,10 +31,186 @@ concurrency:
 env:
   DC_DIR: .github/ai-router/differential-continuity
   DC_MARKER: DIFFERENTIAL_CONTINUITY_REQUEST_V1
+  ADMITTED_MAIN: 4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d
+  CONSTRUCTION_BRANCH: agent/differential-continuity-proof-churn-suppression-v1
+  PINNED_SUCCESSOR_GATE_BLOB: b174bb20a19e62f9aaf6e819171e24416321b9e4
+  PINNED_SUCCESSOR_SELF_TEST_BLOB: f4e9d4beb77cb603ea2c8e360790e97c1b511b1c
+  PINNED_SUCCESSOR_PROTOCOL_BLOB: 3e3368b96ca13363115ed245b655e7f5c9046c2a
+  PINNED_REMOTE_SUCCESSOR_WORKFLOW_BLOB: 8017fad21d98ea9e68417dbabe71b51302aa8c4a
 
 jobs:
+  materialize-root-integration:
+    if: github.event_name == 'pull_request' && github.head_ref == 'agent/differential-continuity-proof-churn-suppression-v1'
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.materialize.outputs.changed }}
+    steps:
+      - name: Check out exact candidate head with branch credential
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fail closed unless admitted main and pinned strict successor identities still match
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_HEAD_REF}" = "${CONSTRUCTION_BRANCH}"
+          LIVE_MAIN="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          test "$LIVE_MAIN" = "$ADMITTED_MAIN"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "$PINNED_SUCCESSOR_GATE_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "$PINNED_SUCCESSOR_SELF_TEST_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/successor-protocol.v1.json)" = "$PINNED_SUCCESSOR_PROTOCOL_BLOB"
+          test "$(git rev-parse HEAD:.github/workflows/remote-operation-successor-v1.yml)" = "$PINNED_REMOTE_SUCCESSOR_WORKFLOW_BLOB"
+
+      - name: Materialize exact root discovery, router ownership, and open continuity gap
+        id: materialize
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+
+          const workflow = '.github/workflows/differential-continuity-v1.yml';
+          const protocol = '.github/ai-router/differential-continuity/differential-continuity-protocol.v1.json';
+          const gate = '.github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs';
+          const selfTest = '.github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs';
+          const strictGate = '.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs';
+          const strictRemote = '.github/workflows/remote-operation-successor-v1.yml';
+
+          const entry = JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json', 'utf8'));
+          entry.differentialContinuitySystem = {
+            systemId: 'REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_v1',
+            status: 'ACTIVE_WHEN_PRESENT_ON_DEFAULT_BRANCH_AND_VALIDATION_PASS',
+            protocol,
+            gateCli: gate,
+            selfTest,
+            workflow,
+            remoteInvocationMarker: 'DIFFERENTIAL_CONTINUITY_REQUEST_V1',
+            comparisonRule: 'LAST_PROVEN_HEAD_DIRECTLY_TO_LATEST_MAIN',
+            carryForwardRequirement: 'COMPLETE_DECLARED_DEPENDENCY_SURFACE_AND_COMPLETE_DISJOINT_CUMULATIVE_DIFF',
+            carryForwardMeaning: 'BOUNDED_RELEVANT_STATE_EQUIVALENCE_NOT_AUTHORITY_INHERITANCE',
+            ambiguousOrMaterialDisposition: 'STRICT_SUCCESSOR_REQUIRED',
+            strictSuccessorGate: strictGate,
+            strictSuccessorRemoteWorkflow: strictRemote,
+            intermediateHeadReplayRequired: false,
+            proofCarrierAutomaticClosureAuthorized: false,
+            authorityInherited: false,
+            newAuthorityCreated: false,
+            mergeAuthorityCreated: false,
+            productAuthorityCreated: false,
+            semanticAuthorityCreated: false,
+            scientificAuthorityCreated: false
+          };
+          entry.operationIntakeGate ??= {};
+          entry.operationIntakeGate.successorLifecycle ??= {};
+          entry.operationIntakeGate.successorLifecycle.differentialPreflight = {
+            systemId: entry.differentialContinuitySystem.systemId,
+            gateCli: gate,
+            workflow,
+            requiredBeforeStrictSuccessorWhenCompleteDependencySurfaceAvailable: true,
+            carryForwardDoesNotExpandAuthority: true,
+            fallbackOnOverlapAmbiguityDivergenceOrIncompleteEvidence: 'STRICT_SUCCESSOR'
+          };
+          const addedRules = [
+            'DIFFERENTIAL_CONTINUITY_BEFORE_STRICT_SUCCESSOR_WHEN_COMPLETE_DEPENDENCY_SURFACE_AVAILABLE',
+            'HEAD_CHANGE_ALONE_DOES_NOT_FORCE_SUCCESSOR_WHEN_COMPLETE_DISJOINT_DIFFERENTIAL_RECEIPT_EXISTS',
+            'AMBIGUOUS_INCOMPLETE_DIVERGED_OR_OVERLAPPING_DIFFERENTIAL_REQUIRES_STRICT_SUCCESSOR',
+            'MULTIPLE_INTERMEDIATE_HEADS_COALESCE_TO_LAST_PROVEN_HEAD_VS_LATEST_MAIN',
+            'PROOF_CARRIER_CLOSE_ELIGIBILITY_DOES_NOT_CREATE_CLOSE_OR_MERGE_AUTHORITY'
+          ];
+          entry.rules ??= [];
+          const successorRule = 'STALE_ACTIVE_OPERATION_USES_SUCCESSOR_GATE_NOT_MANUAL_CLOSE_AND_READMISSION';
+          const insertionIndex = Math.max(0, entry.rules.indexOf(successorRule));
+          for (const rule of addedRules) {
+            if (!entry.rules.includes(rule)) entry.rules.splice(insertionIndex, 0, rule);
+          }
+          fs.writeFileSync('AI_ENTRYPOINT.json', `${JSON.stringify(entry)}\n`);
+
+          const router = JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json', 'utf8'));
+          const owned = router.routerInfrastructure?.ownedExactPaths;
+          if (!Array.isArray(owned)) throw new Error('ROUTER_INFRASTRUCTURE_OWNED_EXACT_PATHS_INVALID');
+          if (!owned.includes(workflow)) owned.push(workflow);
+          fs.writeFileSync('.github/ai-router/router.v1.json', `${JSON.stringify(router)}\n`);
+
+          const gapPath = '.github/ai-router/system-continuity/gap-registry.v1.json';
+          const gaps = JSON.parse(fs.readFileSync(gapPath, 'utf8'));
+          if (!Array.isArray(gaps.records)) throw new Error('GAP_REGISTRY_RECORDS_INVALID');
+          const gapId = 'EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN';
+          if (!gaps.records.some((record) => record.gapId === gapId)) {
+            gaps.records.push({
+              gapId,
+              status: 'OPEN',
+              discoveredAtHead: '64ec16ce6a4f65c72d54a5460071c1c20caf126f',
+              coordinationIssue: 830,
+              summary: 'Exact-head safety currently forces successor/proof reconstruction for every main movement even when a complete dependency declaration can prove the cumulative change is irrelevant; differential continuity must suppress only provably non-impacting churn while preserving strict successor fallback.',
+              interfaceKeys: [
+                'DIFFERENTIAL_CONTINUITY_RECEIPT_v1',
+                'DEPENDENCY_SURFACE_RECEIPT_v1',
+                'REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1',
+                'LATEST_MAIN_CUMULATIVE_COMPARE'
+              ],
+              pathScopes: [
+                '.github/ai-router/differential-continuity/',
+                strictGate,
+                strictRemote,
+                'AI_ENTRYPOINT.json',
+                '.github/ai-router/router.v1.json'
+              ],
+              evidenceRefs: [
+                'PR_827_VALIDATION_ONLY_PROOF_CHURN',
+                'PR_828_VALIDATION_ONLY_PROOF_CHURN',
+                'ISSUE_830_DIFFERENTIAL_CONTINUITY_COORDINATION',
+                'GENERATION_784_CORRECTED_DIFFERENTIAL_CONTINUITY_ADMISSION'
+              ],
+              closureRequirements: [
+                'DETERMINISTIC_DIFFERENTIAL_SELF_TEST_PASS',
+                'PINNED_STRICT_SUCCESSOR_REGRESSION_PASS',
+                'ROUTER_AND_ROOT_DISCOVERY_PASS',
+                'REMOTE_DIFFERENTIAL_ASSESSMENT_PASS',
+                'POST_MERGE_PUSH_VALIDATION_PASS',
+                'REAL_COMPLETE_DEPENDENCY_SURFACE_DISJOINT_MAIN_MOVE_CARRY_FORWARD_PROOF'
+              ],
+              authorityCreated: false
+            });
+          }
+          fs.writeFileSync(gapPath, `${JSON.stringify(gaps, null, 2)}\n`);
+          NODE
+
+          mapfile -t changed < <(git diff --name-only)
+          printf '%s\n' "${changed[@]}" | sort > "$RUNNER_TEMP/root-changed.txt"
+          cat > "$RUNNER_TEMP/root-allowed.txt" <<'PATHS'
+          .github/ai-router/router.v1.json
+          .github/ai-router/system-continuity/gap-registry.v1.json
+          AI_ENTRYPOINT.json
+          PATHS
+          sort -o "$RUNNER_TEMP/root-allowed.txt" "$RUNNER_TEMP/root-allowed.txt"
+          test -z "$(comm -23 "$RUNNER_TEMP/root-changed.txt" "$RUNNER_TEMP/root-allowed.txt")"
+
+          if git diff --quiet -- AI_ENTRYPOINT.json .github/ai-router/router.v1.json .github/ai-router/system-continuity/gap-registry.v1.json; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add AI_ENTRYPOINT.json .github/ai-router/router.v1.json .github/ai-router/system-continuity/gap-registry.v1.json
+          git diff --cached --name-only | sort > "$RUNNER_TEMP/staged.txt"
+          test -z "$(comm -23 "$RUNNER_TEMP/staged.txt" "$RUNNER_TEMP/root-allowed.txt")"
+          git commit -m 'Register differential continuity root integration'
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+
   validate-package:
-    if: github.event_name != 'issue_comment'
+    needs: materialize-root-integration
+    if: always() && github.event_name != 'issue_comment' && (github.event_name != 'pull_request' || needs.materialize-root-integration.outputs.changed != 'true')
     permissions:
       contents: read
     runs-on: ubuntu-24.04
@@ -54,57 +226,68 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify bounded construction surface on pull request
-        if: github.event_name == 'pull_request'
+      - name: Verify bounded construction surface and pinned strict successor identities
         shell: bash
         run: |
           set -euo pipefail
-          BASE="${{ github.event.pull_request.base.sha }}"
-          git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
-          cat > "$RUNNER_TEMP/allowed.txt" <<'PATHS'
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "$PINNED_SUCCESSOR_GATE_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "$PINNED_SUCCESSOR_SELF_TEST_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/successor-protocol.v1.json)" = "$PINNED_SUCCESSOR_PROTOCOL_BLOB"
+          test "$(git rev-parse HEAD:.github/workflows/remote-operation-successor-v1.yml)" = "$PINNED_REMOTE_SUCCESSOR_WORKFLOW_BLOB"
+          if [ "${{ github.event_name }}" = 'pull_request' ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
+            cat > "$RUNNER_TEMP/allowed.txt" <<'PATHS'
           .github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs
           .github/ai-router/differential-continuity/differential-continuity-protocol.v1.json
           .github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs
-          .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs
-          .github/ai-router/operation-lifecycle/successor-protocol.v1.json
           .github/ai-router/router.v1.json
           .github/ai-router/system-continuity/gap-registry.v1.json
           .github/workflows/differential-continuity-v1.yml
           AI_ENTRYPOINT.json
           PATHS
-          sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
-          OUTSIDE="$(comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" || true)"
-          if [ -n "$OUTSIDE" ]; then
-            echo 'PATH_OUTSIDE_DIFFERENTIAL_CONTINUITY_OPERATION_SCOPE' >&2
-            printf '%s\n' "$OUTSIDE" >&2
-            exit 1
+            sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
+            OUTSIDE="$(comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" || true)"
+            test -z "$OUTSIDE"
           fi
-          test -z "$(grep -E '^(showroom/|laws/|h-earth-3d/|tests/|products/|validation/|tools/operation-intake/repository-operation-lock-manager\.v1\.mjs$|tools/operation-intake/repository-operation-intake-gate\.v1\.mjs$|\.github/operation-intake/active-operation-ledger\.v1\.json$|\.github/ai-router/execution-backends\.v1\.json$)' "$RUNNER_TEMP/changed.txt" || true)"
 
-      - name: Verify syntax and deterministic differential self-test
+      - name: Run differential continuity and pinned successor self-tests
         shell: bash
         run: |
           set -euo pipefail
           node --check "$DC_DIR/differential-continuity-gate.v1.mjs"
           node --check "$DC_DIR/differential-continuity-self-test.v1.mjs"
           node "$DC_DIR/differential-continuity-self-test.v1.mjs" --output "$RUNNER_TEMP/differential-self-test.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/differential-self-test.json');if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.passCount!==r.testCount)process.exit(1)"
-
-      - name: Verify strict successor regression self-test
-        shell: bash
-        run: |
-          set -euo pipefail
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs --output "$RUNNER_TEMP/successor-self-test.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/successor-self-test.json');if(r.result!=='PASS_CLOSED'||r.failCount!==0)process.exit(1)"
+          node - <<'NODE'
+          const fs=require('node:fs');
+          for (const name of ['differential-self-test.json','successor-self-test.json']) {
+            const r=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/${name}`,'utf8'));
+            if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.passCount!==r.testCount) throw new Error(`SELF_TEST_NONPASS:${name}`);
+          }
+          NODE
 
-      - name: Verify repository router
+      - name: Verify root discovery, router ownership, and open gap registration
         shell: bash
         run: |
           set -euo pipefail
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const router=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const gaps=JSON.parse(fs.readFileSync('.github/ai-router/system-continuity/gap-registry.v1.json','utf8'));
+          const dc=entry.differentialContinuitySystem;
+          if(dc?.systemId!=='REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_v1') throw new Error('ROOT_DC_DISCOVERY_MISSING');
+          if(dc?.carryForwardMeaning!=='BOUNDED_RELEVANT_STATE_EQUIVALENCE_NOT_AUTHORITY_INHERITANCE') throw new Error('CARRY_FORWARD_SEMANTIC_MISMATCH');
+          if(dc?.strictSuccessorGate!=='.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs') throw new Error('STRICT_SUCCESSOR_FALLBACK_MISMATCH');
+          if(!router.routerInfrastructure?.ownedExactPaths?.includes('.github/workflows/differential-continuity-v1.yml')) throw new Error('DC_WORKFLOW_NOT_ROUTER_OWNED');
+          const gap=gaps.records?.find((r)=>r.gapId==='EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN');
+          if(!gap||gap.status!=='OPEN'||gap.authorityCreated!==false) throw new Error('DC_GAP_REGISTRATION_INVALID');
+          NODE
           node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
           node -e "const r=require(process.env.RUNNER_TEMP+'/router-self-test.json');if(r.result!=='PASS')process.exit(1)"
 
-      - name: Exercise carry-forward and material-change decisions
+      - name: Exercise carry-forward, material change, coalescing, and proof lifecycle decisions
         shell: bash
         run: |
           set -euo pipefail
@@ -115,28 +298,25 @@ jobs:
           const dependencySurface={complete:true,paths:['control/critical/'],interfaceKeys:['CONTROL_INTERFACE'],evidenceRefs:['WORKFLOW_VALIDATION_FIXTURE']};
           const disjoint=assessDifferential({assessmentId:'WORKFLOW_DISJOINT',baseHead:base,targetHead:target,dependencySurface,changedFiles:['product/unrelated.txt'],filesComplete:true,compareStatus:'ahead',proofCarrier:{kind:'VALIDATION_ONLY_PR',status:'SUPERSEDED',mergeAuthorized:false}});
           const material=assessDifferential({assessmentId:'WORKFLOW_MATERIAL',baseHead:base,targetHead:target,dependencySurface,changedFiles:['control/critical/router.json'],filesComplete:true,compareStatus:'ahead'});
-          if(disjoint.result!=='PASS_CARRY_FORWARD_ADMISSIBLE'||disjoint.successorRequired!==false||disjoint.coalescedFromBaseDirectlyToTarget!==true)process.exit(1);
-          if(material.result!=='PASS_SUCCESSOR_REQUIRED'||material.successorRequired!==true)process.exit(1);
+          if(disjoint.result!=='PASS_CARRY_FORWARD_ADMISSIBLE'||disjoint.successorRequired!==false||disjoint.coalescedFromBaseDirectlyToTarget!==true) throw new Error('DISJOINT_FIXTURE_NONPASS');
+          if(disjoint.proofCarrierLifecycle?.classification!=='CLOSE_ELIGIBLE_SUPERSEDED'||disjoint.proofCarrierLifecycle?.closeEligible!==true) throw new Error('PROOF_LIFECYCLE_FIXTURE_NONPASS');
+          if(material.result!=='PASS_SUCCESSOR_REQUIRED'||material.successorRequired!==true) throw new Error('MATERIAL_FIXTURE_NONPASS');
           fs.writeFileSync(process.env.RUNNER_TEMP+'/differential-continuity-receipt.json',JSON.stringify(disjoint,null,2)+'\n');
           fs.writeFileSync(process.env.RUNNER_TEMP+'/dependency-surface-receipt.json',JSON.stringify({schema:'DEPENDENCY_SURFACE_RECEIPT_v1',result:'PASS_COMPLETE',dependencySurface,dependencySurfaceDigest:disjoint.dependencySurfaceDigest},null,2)+'\n');
           fs.writeFileSync(process.env.RUNNER_TEMP+'/proof-carrier-lifecycle-receipt.json',JSON.stringify(disjoint.proofCarrierLifecycle,null,2)+'\n');
           NODE
 
-      - name: Package validation evidence and exact source context
+      - name: Package validation evidence
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/differential-continuity/source-context
+          mkdir -p artifacts/differential-continuity
           cp "$RUNNER_TEMP/differential-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/successor-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/router-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/differential-continuity-receipt.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/dependency-surface-receipt.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/proof-carrier-lifecycle-receipt.json" artifacts/differential-continuity/
-          cp AI_ENTRYPOINT.json artifacts/differential-continuity/source-context/AI_ENTRYPOINT.json
-          cp .github/ai-router/router.v1.json artifacts/differential-continuity/source-context/router.v1.json
-          cp .github/ai-router/system-continuity/gap-registry.v1.json artifacts/differential-continuity/source-context/gap-registry.v1.json
-          cp .github/ai-router/operation-lifecycle/successor-protocol.v1.json artifacts/differential-continuity/source-context/successor-protocol.v1.json
 
       - uses: actions/upload-artifact@v4
         with:
@@ -189,9 +369,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          node "$DC_DIR/differential-continuity-gate.v1.mjs" \
-            --differential-request "$RUNNER_TEMP/differential-request.json" \
-            --output "$RUNNER_TEMP/differential-continuity-receipt.json"
+          node "$DC_DIR/differential-continuity-gate.v1.mjs" --differential-request "$RUNNER_TEMP/differential-request.json" --output "$RUNNER_TEMP/differential-continuity-receipt.json"
           node -e "const r=require(process.env.RUNNER_TEMP+'/differential-continuity-receipt.json');if(!['PASS_CARRY_FORWARD_ADMISSIBLE','PASS_SUCCESSOR_REQUIRED','FAIL_CLOSED_SUCCESSOR_REQUIRED'].includes(r.result))process.exit(1);if(r.repositoryMutationAuthorized!==false||r.mergeAuthorityCreated!==false)process.exit(1)"
 
       - name: Return exact receipt to invoking conversation

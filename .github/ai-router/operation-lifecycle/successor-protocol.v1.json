@@ -62,7 +62,9 @@
     "successorState": "ADMITTED_LOCKED",
     "generationRule": "SUCCESSOR_LOCK_GENERATION_EQUALS_LEDGER_LOCK_GENERATION_PLUS_ONE",
     "atomicityRule": "PREDECESSOR_TERMINATION_AND_SUCCESSOR_ADMISSION_SHARE_ONE_CONTENTS_API_SHA_GUARDED_LEDGER_WRITE",
-    "casConflictDisposition": "SUCCESSOR_NOT_ADMITTED",
+    "casConflictDisposition": "BOUNDED_REREAD_REVALIDATE_AND_RETRY_THEN_SUCCESSOR_NOT_ADMITTED",
+    "casRetryLimit": 8,
+    "casRetryLaw": "EVERY_RETRY_REREADS_LIVE_MAIN_AND_LEDGER_AND_REVALIDATES_THE_EXACT_PREDECESSOR_BEFORE_ANOTHER_SHA_GUARDED_WRITE",
     "historyPreserved": true,
     "bidirectionalLineageRequired": true
   },
@@ -80,7 +82,7 @@
     "schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
     "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED"
   },
-  "failureLaw": "ANY_IDENTITY_HEAD_GENERATION_SCOPE_AUTHORITY_OR_COMPARE_AND_SWAP_MISMATCH_FAILS_CLOSED_WITH_NO_SUCCESSOR_AUTHORITY",
+  "failureLaw": "ANY_IDENTITY_HEAD_GENERATION_SCOPE_AUTHORITY_OR_EXHAUSTED_COMPARE_AND_SWAP_MISMATCH_FAILS_CLOSED_WITH_NO_SUCCESSOR_AUTHORITY",
   "usage": {
     "command": "GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>",
     "continuationRule": "CONTINUE_ONLY_ON_SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED_AND_SEPARATELY_REQUIRED_PROJECT_ROUTING_VALIDATION"

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "THREE_TIER_CODESPACE_INDEPENDENT_EQUALITY_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "operationId", "exactTargetHead", "builderReceiptSha256", "freshVerifierReceiptSha256", "equalityDomain", "equal", "result"],
+  "properties": {
+    "schema": {"const": "THREE_TIER_CODESPACE_INDEPENDENT_EQUALITY_RECEIPT_v1"},
+    "operationId": {"type": "string", "minLength": 1},
+    "exactTargetHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "builderReceiptSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "freshVerifierReceiptSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "equalityDomain": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "equal": {"type": "boolean"},
+    "result": {"enum": ["PASS_EXACT_EQUALITY", "FAIL_CLOSED_MISMATCH"]}
+  }
+}

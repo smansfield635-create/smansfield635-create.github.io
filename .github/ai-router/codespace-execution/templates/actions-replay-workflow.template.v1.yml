@@ -1,0 +1,40 @@
+# NONACTIVE TEMPLATE — activation under .github/workflows requires a separate admitted operation.
+name: Three-tier exact-head execution replay template
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_head:
+        description: Exact immutable 40-character target commit
+        required: true
+        type: string
+      project_profile:
+        description: Repository path to the separately authorized project execution profile
+        required: true
+        type: string
+      request_artifact:
+        description: Immutable execution-request artifact identity or path
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Stop unless this template has been separately activated
+        shell: bash
+        run: |
+          echo "NONACTIVE_TEMPLATE_REQUIRES_SEPARATE_ACTIVATION_AUTHORITY"
+          exit 1
+
+      # A separately admitted activation operation may replace the stop step with:
+      # 1. exact target validation;
+      # 2. checkout of inputs.target_head with fetch-depth: 0 and persist-credentials: false;
+      # 3. project-profile and execution-request validation;
+      # 4. execution of only the request's already-registered fixed command;
+      # 5. immutable receipt upload on success or failure;
+      # 6. fresh-verifier execution in a distinct job/environment;
+      # 7. equality receipt generation.

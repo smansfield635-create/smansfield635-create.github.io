@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "THREE_TIER_CODESPACE_DESTRUCTION_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "environmentId", "operationId", "exactTargetHead", "destructionState", "continuingAuthority", "result"],
+  "properties": {
+    "schema": {"const": "THREE_TIER_CODESPACE_DESTRUCTION_RECEIPT_v1"},
+    "environmentId": {"type": "string", "minLength": 1},
+    "operationId": {"type": "string", "minLength": 1},
+    "exactTargetHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "destructionState": {"enum": ["DESTROYED", "DETACHED_NONAUTHORITATIVE"]},
+    "continuingAuthority": {"const": false},
+    "result": {"enum": ["PASS_DESTROYED", "PASS_DETACHED_NONAUTHORITATIVE", "FAIL_CLOSED"]}
+  }
+}

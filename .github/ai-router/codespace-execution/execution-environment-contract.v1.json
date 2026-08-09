@@ -1,0 +1,55 @@
+{
+  "schema": "THREE_TIER_CODESPACE_EXECUTION_ENVIRONMENT_CONTRACT_v1",
+  "substrateId": "THREE_TIER_CODESPACE_EXECUTION_SUBSTRATE_v1",
+  "status": "CANDIDATE_NONPRODUCT_INSTRUMENTATION",
+  "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
+  "constructionLock": {
+    "generation": 387,
+    "scopeHash": "7134a2ba0f38a426070bac6da4c63e369fc55654ddd7b4bd27a93f1cc6e9a87d"
+  },
+  "purpose": "STANDARDIZE_AND_PROVE_EXECUTION_NOT_CREATE_PLATFORM_TERMINAL_TRANSPORT",
+  "nativeChatGPTTerminalTransportCreated": false,
+  "nativeChatGPTTerminalTransportRequired": false,
+  "persistentCodespaceAuthorityAllowed": false,
+  "requiredEnvironmentProperties": [
+    "UNIQUE_ENVIRONMENT_ID",
+    "EXACT_40_CHARACTER_TARGET_COMMIT",
+    "DETACHED_OR_EQUIVALENT_IMMUTABLE_CHECKOUT",
+    "CLEAN_WORKTREE_BEFORE_EXECUTION",
+    "FULL_HISTORY_WHEN_LINEAGE_IS_TESTED",
+    "DECLARED_RUNTIME",
+    "DECLARED_FIXED_COMMAND",
+    "OUTPUTS_OUTSIDE_REPOSITORY_OR_IGNORED",
+    "NO_MUTABLE_STATE_REUSE_BETWEEN_BUILDER_AND_FRESH_VERIFIER"
+  ],
+  "allowedBackends": [
+    "CODESPACE_DISPOSABLE_EXECUTION",
+    "LOCAL_CLEAN_GIT",
+    "GITHUB_ACTIONS_CLEAN_EXECUTION"
+  ],
+  "executionPhases": [
+    "ENVIRONMENT_ATTESTATION",
+    "FIXED_COMMAND_EXECUTION",
+    "RECEIPT_CAPTURE",
+    "FRESH_REEXECUTION",
+    "EQUALITY",
+    "DESTRUCTION_OR_NONAUTHORITY"
+  ],
+  "prohibitedSideEffects": [
+    "PRODUCT_MUTATION",
+    "DIRECT_MAIN_WRITE",
+    "LOCK_LEDGER_MUTATION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE",
+    "OUTCOME_UNBLINDING",
+    "SCIENTIFIC_CLAIM_PROMOTION"
+  ],
+  "receiptSchemas": {
+    "environment": ".github/ai-router/codespace-execution/schemas/environment-receipt.schema.v1.json",
+    "command": ".github/ai-router/codespace-execution/schemas/command-execution-receipt.schema.v1.json",
+    "equality": ".github/ai-router/codespace-execution/schemas/equality-receipt.schema.v1.json",
+    "destruction": ".github/ai-router/codespace-execution/schemas/destruction-receipt.schema.v1.json"
+  },
+  "failureDisposition": "FAIL_CLOSED"
+}

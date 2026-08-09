@@ -1,0 +1,36 @@
+{
+  "schema": "L2_REPOSITORY_ENFORCEMENT_POLICY_v1",
+  "policyId": "L2_REPOSITORY_ENFORCEMENT_SHADOW_POLICY_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_SHADOW_ONLY_WHEN_REFERENCED",
+  "mode": "SHADOW_ONLY",
+  "targetRepository": "smansfield635-create/smansfield635-create.github.io",
+  "targetBranch": "main",
+  "desiredPerimeter": {
+    "branchProtected": true,
+    "pullRequestRequired": true,
+    "directPushAllowed": false,
+    "requiredChecks": ["L2 Platform Control Plane / verify"],
+    "exactHeadEvidenceRequired": true,
+    "explicitMergeAuthorityRequired": true,
+    "silentBypassAllowed": false
+  },
+  "governingLaws": [
+    "SHADOW_DECISION_DOES_NOT_ENFORCE",
+    "LIVE_REPOSITORY_SETTINGS_CHANGE_REQUIRES_SEPARATE_SYNCHRONIZATION_AUTHORITY",
+    "ACTIVE_TRANSACTIONS_MAY_NOT_BE_RE_GOVERNED_RETROACTIVELY",
+    "BYPASS_REQUIRES_EXPLICIT_SEPARATE_AUTHORITY",
+    "MISSING_REQUIRED_CHECK_FAILS_SHADOW_CLOSED",
+    "UNPROTECTED_MAIN_FAILS_SHADOW_CLOSED"
+  ],
+  "authorityBoundary": {
+    "liveActivationAllowed": false,
+    "repositorySettingsMutationAllowed": false,
+    "branchProtectionMutationAllowed": false,
+    "rulesetMutationAllowed": false,
+    "authorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false
+  }
+}

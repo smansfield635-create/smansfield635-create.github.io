@@ -1,0 +1,62 @@
+{
+  "schema": "REPOSITORY_INSTRUMENT_LIFECYCLE_PROTOCOL_v1",
+  "protocolId": "REPOSITORY_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CLASSIFICATION_v1",
+  "status": "OBSERVATION_ONLY_FAIL_CLOSED",
+  "lifecycleStates": [
+    "ACTIVE_CURRENT",
+    "ACTIVE_COMPATIBILITY",
+    "HISTORICAL_PINNED",
+    "SUPERSEDED",
+    "QUARANTINED",
+    "REVIEW_REQUIRED"
+  ],
+  "signalClasses": [
+    "NO_JOBS_FALSE_DANGER",
+    "NOT_APPLICABLE",
+    "EXPECTED_NEGATIVE",
+    "FAIL_CLOSED_PROTECTION",
+    "STALE_TARGET",
+    "INFRASTRUCTURE_FAILURE",
+    "TRUE_REGRESSION",
+    "UNKNOWN_REVIEW_REQUIRED"
+  ],
+  "laws": [
+    "GITHUB_ACTIVE_STATE_DOES_NOT_CREATE_CURRENT_AUTHORITY",
+    "UNREGISTERED_WORKFLOW_DOES_NOT_CREATE_CURRENT_AUTHORITY",
+    "HISTORICAL_REPRODUCIBILITY_DOES_NOT_CREATE_CURRENT_HEALTH_SIGNAL",
+    "CLASSIFICATION_DOES_NOT_PHYSICALLY_RETIRE_A_WORKFLOW",
+    "NO_PHYSICAL_RETIREMENT_WITHOUT_PROGRESSIVE_SYSTEM_CONTINUITY_PROOF",
+    "NO_ACTIVE_COMPATIBILITY_RETIREMENT_WHILE_A_PROTECTED_CONSUMER_REMAINS_UNRESOLVED",
+    "ZERO_JOB_FAILURE_IS_NOT_A_TRUE_INSTRUMENT_REGRESSION",
+    "FAIL_CLOSED_PROTECTION_IS_NOT_COLLAPSED_INTO_TRUE_REGRESSION",
+    "OBSERVATION_PHASE_CREATES_NO_MUTATION_OR_ENFORCEMENT_AUTHORITY"
+  ],
+  "defaultDerivation": {
+    "routerRegisteredWorkflow": "ACTIVE_CURRENT",
+    "unregisteredReadOnlyWorkflow": "REVIEW_REQUIRED",
+    "unregisteredWriteCapableWorkflow": "QUARANTINED",
+    "explicitRegistryRecordOverridesDerivedState": true,
+    "protectedWorkflowMayNotBeAutomaticallyRetired": true
+  },
+  "activationSequence": [
+    "INVENTORY",
+    "CLASSIFY",
+    "PROTECT_LIVE_DEPENDENCIES",
+    "SIGNAL_NORMALIZATION",
+    "PROGRESSIVE_CONTINUITY_ASSESSMENT",
+    "EXPLICIT_ENFORCEMENT_AUTHORITY",
+    "BOUNDED_RETIREMENT"
+  ],
+  "observationPhaseAuthority": {
+    "repositoryMutation": false,
+    "existingWorkflowTriggerMutation": false,
+    "existingWorkflowPermissionMutation": false,
+    "workflowDeactivation": false,
+    "physicalRetirement": false,
+    "productMutation": false,
+    "lawsMutation": false,
+    "hEarthMutation": false,
+    "mergeAuthority": false,
+    "systemClosureAuthority": false
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "ESTATE_VALIDATION",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "validation/"
+  ],
+  "ownedExactPaths": [
+    ".github/workflows/estate-validation-v1.yml"
+  ],
+  "entrypoint": ".github/ai-router/projects/estate-validation/entrypoint.v1.json",
+  "authorityBoundary": [
+    "VALIDATION_IS_A_NONPRODUCT_READ_ONLY_SIDECAR_AND_DOES_NOT_CREATE_PRODUCT_SCIENTIFIC_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
+    "VALIDATION_MAY_OBSERVE_COPY_HASH_REPLAY_COMPARE_AND_CHALLENGE_BUT_MAY_NOT_SILENTLY_MUTATE_THE_OBJECT_BEING_VALIDATED",
+    "INTERNAL_CONFORMANCE_OR_REPRODUCTION_DOES_NOT_CREATE_EXTERNAL_CERTIFICATION_ACCREDITATION_OR_THIRD_PARTY_VALIDATION",
+    "SOFTWARE_IMPLEMENTATION_VERIFICATION_AND_SCIENTIFIC_EMPIRICAL_VALIDITY_MUST_REMAIN_SEPARATE CLAIM_CLASSES",
+    "LRPV1_LINEAGE_INTEGRITY_DOES_NOT_ESTABLISH_FACTUAL_TRUTH_SOURCE_AUTHENTICITY_PRODUCER_AUTHORIZATION_OR_APPEND_ONLY_HISTORY",
+    "FAILURE_EVIDENCE_MUST_REMAIN_PRESERVED_AFTER_LATER_SUCCESS"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    "validation/master-validation-register.v1.json",
+    "validation/standards/standards-registry.v1.json",
+    "validation/claims/validation-classes.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_BEFORE_MUTATION",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path <PATH> [--path <PATH> ...] --task <TASK> [--mutation-intent] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/estate-validation-router-receipt.json",
+    "validationWorkflow": ".github/workflows/estate-validation-v1.yml",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "REPOSITORY_AI_ROUTER_PASS",
+      "ADDITIVE_VALIDATION_SIDECAR_MATERIALIZATION",
+      "MANIFEST_AND_SCHEMA_VERIFICATION",
+      "NEGATIVE_OVERCLAIM_FIXTURE_REJECTION",
+      "FRESH_GITHUB_ACTIONS_REPRODUCTION",
+      "DRAFT_PR_REVIEW",
+      "STOP_BEFORE_MERGE"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "FULL_REPOSITORY_CHECKOUT",
+      "EXACT_SUBJECT_HEAD",
+      "CLEAN_WORKTREE",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_RECEIPT_FOR_EVERY_AFFECTED_PATH"
+    ]
+  },
+  "githubActionsExecution": {
+    "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
+    "estateValidationWorkflow": ".github/workflows/estate-validation-v1.yml"
+  },
+  "stoppingRules": [
+    "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",
+    "STOP_IF_ROUTER_DISPOSITION_IS_BLOCK_REVIEW_REQUIRED_OR_STOP_FOR_A_MUTATION_PATH",
+    "STOP_IF_VALIDATION_HARNESS_MUTATES_A_PRODUCTION_OR_SCIENTIFIC_SUBJECT",
+    "STOP_IF_MANIFEST_OR_SCHEMA_VERIFICATION_FAILS",
+    "STOP_IF_NEGATIVE_OVERCLAIM_FIXTURE_IS_ACCEPTED",
+    "STOP_IF_INTERNAL_EVIDENCE_IS_PROMOTED_TO_EXTERNAL_CERTIFICATION_OR_INDEPENDENT_VALIDATION",
+    "STOP_BEFORE_MERGE_WITHOUT_SEPARATE_EXACT_HEAD_AUTHORITY"
+  ]
+}

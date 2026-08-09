@@ -1,0 +1,124 @@
+{
+  "contract": "LAWS_CONTEXTUAL_TRANSFER_ADAPTER_EVIDENCE_v1",
+  "mode": "NON_PRODUCT_TRANSFERABILITY_EVIDENCE",
+  "status": "EVIDENCE_RECORD_ONLY",
+  "subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "destination_interface": "LAWS_CONTEXTUAL_STATE_INTERFACE_CONTRACT_v1",
+  "donor": {
+    "path": "assets/compass/compass.controller.js",
+    "blob_sha": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+    "verified_symbols": ["preserveCompassState", "applyPreservedState", "restorePreservedCompassState"],
+    "donor_status_note": "Mechanical evidence only; donor semantics and donor standing are not inherited."
+  },
+  "adapter_mapping": [
+    {
+      "donor_mechanic": "preserveCompassState snapshot pattern",
+      "destination_operation": "commitRecenter pre-mutation authoritative history capture",
+      "mapping_boundary": "Copy snapshot/freeze mechanics only; snapshot schema is destination-defined C history, not donor Compass state."
+    },
+    {
+      "donor_mechanic": "applyPreservedState restoration pattern",
+      "destination_operation": "restorePriorContext authoritative history restoration",
+      "mapping_boundary": "Copy restoration transaction skeleton only; restored fields are destination-defined C state."
+    },
+    {
+      "donor_mechanic": "guarded controller transition pattern",
+      "destination_operation": "beginRecenter/commitRecenter/cancelRecenter",
+      "mapping_boundary": "Use guarded begin/commit/cancel mechanics with destination revision checks; no donor route/cardinal/room meaning."
+    }
+  ],
+  "destination_interface_coverage": {
+    "getContextOrigin": "DESTINATION_NATIVE_READ",
+    "getContextRevision": "DESTINATION_NATIVE_READ",
+    "resolveAuthoritativeObject": "DESTINATION_NATIVE_BINDING",
+    "beginRecenter": "DONOR_GUARDED_TRANSACTION_PATTERN_ADAPTABLE",
+    "commitRecenter": "DONOR_GUARDED_TRANSACTION_PLUS_SNAPSHOT_PATTERN_ADAPTABLE",
+    "cancelRecenter": "DONOR_CANCEL_PATTERN_ADAPTABLE",
+    "restorePriorContext": "DONOR_RESTORATION_PATTERN_ADAPTABLE",
+    "subscribeContextState": "EXISTING_LAWS_PUBLISH_SUBSCRIBE_PATTERN_REUSABLE_NATIVELY"
+  },
+  "dependency_closure": {
+    "required_destination_primitives": [
+      "controller-owned state object",
+      "immutable snapshot construction",
+      "monotonic context revision integer",
+      "authoritative object resolver",
+      "ordered context history store",
+      "controller notification publisher"
+    ],
+    "existing_laws_substrate_support": [
+      "controller-owned state object",
+      "Object.freeze based immutable state publication",
+      "revision counters for orbit and semantic projection",
+      "canonical law/member lookup maps",
+      "channel subscription and publication",
+      "guarded applyState transition mechanism"
+    ],
+    "new_destination_native_fields_required": [
+      "contextOrigin",
+      "contextRevision",
+      "contextHistory",
+      "activeRecenterTransaction"
+    ],
+    "external_library_dependency_required": false,
+    "renderer_dependency_required": false,
+    "camera_dependency_required": false,
+    "donor_semantic_state_dependency_required": false,
+    "closure_disposition": "CLOSED_AT_ARCHITECTURAL_TRANSFERABILITY_LEVEL"
+  },
+  "invariant_matrix": {
+    "I1_IDENTITY_INVARIANCE": "PASS_BY_ADAPTER_BOUNDARY_TARGET_O_IS_READ_ONLY_AND_CONTEXT_COMMIT_DOES_NOT_MUTATE_O",
+    "I2_MECHANICAL_SUBSTRATE_INVARIANCE": "PASS_NO_EUCLIDEAN_OR_QUATERNION_FIELDS_IN_CONTEXT_INTERFACE",
+    "I3_STATE_SEPARATION": "PASS_CONTEXT_FIELDS_ARE_SEPARATE_FROM_ORBIT_FOCUS_SELECTION_AND_PROJECTION",
+    "I4_RELATION_BEFORE_PROJECTION": "PASS_COMMIT_ONLY_REQUESTS_RELATION_RECOMPUTE_AND_DOES_NOT_POSITION_OBJECTS",
+    "I5_FAIL_CLOSED_ON_UNKNOWN_RELATION": "PASS_RELATION_MANIFESTATION_REMAINS_DOWNSTREAM_AND_MUST_HOLD_ON_UNKNOWN",
+    "I6_REVERSIBLE_CONTEXT": "PASS_PRE_MUTATION_CONTEXT_SNAPSHOT_AND_HISTORY_ONLY_RESTORATION_REQUIRED"
+  },
+  "predeclared_verification": [
+    "V01_BEGIN_RECENTER_DOES_NOT_MUTATE_C_OR_CONTEXT_REVISION",
+    "V02_UNKNOWN_OR_UNAUTHORIZED_TARGET_REJECTS_WITHOUT_CONTEXT_MUTATION",
+    "V03_STALE_EXPECTED_CONTEXT_REVISION_REJECTS_WITHOUT_CONTEXT_MUTATION",
+    "V04_COMMIT_CAPTURES_EXACT_PRIOR_C_BEFORE_MUTATION",
+    "V05_COMMIT_INCREMENTS_CONTEXT_REVISION_EXACTLY_ONCE",
+    "V06_CANCEL_LEAVES_COMMITTED_C_AND_CONTEXT_REVISION_UNCHANGED",
+    "V07_RESTORE_USES_ONLY_AUTHORITATIVE_CONTEXT_HISTORY",
+    "V08_RESTORE_INCREMENTS_CONTEXT_REVISION_EXACTLY_ONCE",
+    "V09_RECENTER_AND_RESTORE_DO_NOT_DIRECTLY_MUTATE_ORBIT_FOCUS_SELECTION_OR_QUATERNION",
+    "V10_CONTEXT_HISTORY_CONTAINS_NO_SCREEN_POSITION_AS_RECOVERY_AUTHORITY",
+    "V11_CONTEXT_COMMIT_AND_RESTORE_PUBLISH_RELATION_RECOMPUTE_REQUEST",
+    "V12_RELATION_RECOMPUTE_REQUEST_DOES_NOT_DEFINE_GAMMA_OR_RELATION_TAXONOMY"
+  ],
+  "imi_observation_support": {
+    "MT03_DESTINATION_INTERFACE_COMPATIBILITY": {
+      "raw_value": 1,
+      "source_class": "SC2",
+      "source_confidence": "C",
+      "basis": "Complete bounded adapter mapping exists for candidate donor mechanics to the frozen destination interface."
+    },
+    "MT04_RUNTIME_DEPENDENCY_CLOSURE": {
+      "raw_value": 1,
+      "source_class": "SC2",
+      "source_confidence": "C",
+      "basis": "All external mechanical dependencies are either already present in the Laws controller substrate or are destination-native fields defined by the interface; no donor semantic subsystem or external runtime is required."
+    },
+    "MT05_DESTINATION_INVARIANT_PRESERVATION": {
+      "raw_value": 1,
+      "source_class": "SC2",
+      "source_confidence": "C",
+      "basis": "The bounded mapping can preserve I1-I6 and the interface failure/state-separation contract without copying donor meaning."
+    },
+    "MT06_VERIFICATION_OBSERVABILITY": {
+      "raw_value": 1,
+      "source_class": "SC2",
+      "source_confidence": "C",
+      "basis": "Twelve deterministic nonvisual checks are predeclared against controller state, revisions, history, transaction receipts, and notifications."
+    }
+  },
+  "claim_boundary": {
+    "runtime_implementation_exists": false,
+    "runtime_verification_executed": false,
+    "transfer_admitted": false,
+    "product_construction_authorized": false,
+    "IMI_may_consume_this_as_SC2_transferability_evidence": true
+  }
+}

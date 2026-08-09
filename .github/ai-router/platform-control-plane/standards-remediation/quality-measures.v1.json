@@ -1,0 +1,74 @@
+{
+  "schema": "L2_QUALITY_MEASURE_CATALOG_v1",
+  "benchmark": "ISO_IEC_25023_2016_REVISION_WATCH",
+  "measurePolicy": {
+    "explicitNumerator": true,
+    "explicitDenominator": true,
+    "observationWindowRequired": true,
+    "acceptanceRuleRequired": true,
+    "longitudinalMeasuresRequireTwoDistinctWindows": true
+  },
+  "measures": [
+    {
+      "id": "QM_EXACT_HEAD_BINDING_RATE",
+      "numerator": "exact-head checks passed",
+      "denominator": "exact-head checks executed",
+      "acceptance": {
+        "operator": ">=",
+        "threshold": 1.0
+      },
+      "longitudinal": true
+    },
+    {
+      "id": "QM_FAIL_CLOSED_NEGATIVE_RATE",
+      "numerator": "negative cases correctly stopped",
+      "denominator": "negative cases executed",
+      "acceptance": {
+        "operator": ">=",
+        "threshold": 1.0
+      },
+      "longitudinal": true
+    },
+    {
+      "id": "QM_EVIDENCE_COMPLETENESS",
+      "numerator": "required evidence items present",
+      "denominator": "required evidence items expected",
+      "acceptance": {
+        "operator": ">=",
+        "threshold": 1.0
+      },
+      "longitudinal": true
+    },
+    {
+      "id": "QM_TRACEABILITY_COVERAGE",
+      "numerator": "complete required trace links",
+      "denominator": "required trace links",
+      "acceptance": {
+        "operator": ">=",
+        "threshold": 1.0
+      },
+      "longitudinal": false
+    },
+    {
+      "id": "QM_VV_INDEPENDENCE_COVERAGE",
+      "numerator": "independence-required operations independently verified",
+      "denominator": "independence-required operations evaluated",
+      "acceptance": {
+        "operator": ">=",
+        "threshold": 1.0
+      },
+      "longitudinal": false
+    },
+    {
+      "id": "QM_STANDARDS_THEME_CLOSURE",
+      "numerator": "applicable benchmark themes evidenced",
+      "denominator": "applicable benchmark themes evaluated",
+      "acceptance": {
+        "operator": ">=",
+        "threshold": 1.0
+      },
+      "longitudinal": false
+    }
+  ],
+  "claimBoundary": "PROJECT_SPECIFIC_QUALITY_MEASURES_FOR_EXTERNAL_BENCHMARKING_NOT_ISO_CERTIFICATION_GRADES"
+}

@@ -976,7 +976,8 @@ function initialize() {
     globalThis.dispatchEvent(new CustomEvent("LAWS_SPACECRAFT_FAILURE", {
       detail: Object.freeze({ message: state.lastError })
     }));
-    console.error(error);
+    if (state.lastError === "LAWS_SPACECRAFT_WEBGL_UNAVAILABLE") console.warn(error);
+    else console.error(error);
     return publish();
   }
 }

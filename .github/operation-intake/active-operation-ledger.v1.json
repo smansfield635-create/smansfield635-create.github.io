@@ -1056,6 +1056,18 @@
       "scopeHash": "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2",
       "state": "ADMITTED_LOCKED"
     },
+    "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad": {
+      "governingHead": "4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d",
+      "lockGeneration": 799,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
+      "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001",
+      "procedureLocatorDigest": "1a99cc3858a4295ac34086b00b7be1e1e64121fd0d43f0cd51263989a1c7ecd5",
+      "released": false,
+      "requestDigest": "f7895058094bd34fcf5a475a8e36d0de11f9ba41793637f4cb41f40b77378ac3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad",
+      "state": "ADMITTED_LOCKED"
+    },
     "c02de25d477b2d8c830de7fe8551abe5af2cc0d0817ba0b1a6caee91e311a1fa": {
       "governingHead": "0f2515813e5962b43da90513b409e1730991bb6b",
       "lockGeneration": 768,
@@ -1492,7 +1504,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 798,
+  "lockGeneration": 799,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

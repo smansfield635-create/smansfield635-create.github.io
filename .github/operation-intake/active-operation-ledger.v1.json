@@ -1057,30 +1057,31 @@
       "state": "ADMITTED_LOCKED"
     },
     "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad": {
-      "governingHead": "7036251b476288abd636ae2f033ff27fc1861863",
-      "lockGeneration": 812,
+      "governingHead": "d2455e87226586379b2f985a7c277f1f74b0a765",
+      "lockGeneration": 820,
       "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
-      "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_001",
+      "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_002",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d",
-        "lockGeneration": 799,
+        "governingHead": "7036251b476288abd636ae2f033ff27fc1861863",
+        "lockGeneration": 812,
         "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
-        "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001",
+        "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_001",
         "preservedEvidenceRefs": [
-          "PR_834_GENERATION_799_PREDECESSOR_CANDIDATE",
-          "PR_831_PROVIDER_RATIFICATION_MERGE_257EBC15",
-          "GENERATION_781_PASS_CLOSED_COMMIT_E1EEB3AC",
-          "PR_833_DIFFERENTIAL_CONTINUITY_MERGE_7036251B"
+          "PR_838_GENERATION_812_ONE_RECORD_CANDIDATE",
+          "PR_839_CLOSURE_AWARE_SELF_TEST_MERGE_D2455E87",
+          "GENERATION_811_PASS_CLOSED",
+          "PR_831_PROVIDER_RATIFICATION",
+          "GENERATION_781_PASS_CLOSED"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "SUCCESSOR_GAP_REGISTRY_GEN799_TO_CURRENT_MAIN_20260809_001"
+        "transitionId": "SUCCESSOR_GAP_REGISTRY_GEN812_TO_D2455E87_20260809_001"
       },
-      "procedureLocatorDigest": "c904709f8b78338317e4d5787cf37812605d02fb928e559145001101025fdf24",
+      "procedureLocatorDigest": "f8a70bc165284d2e7082d7cde6689614b2105d2bb7250351d24aec1318bad39c",
       "released": false,
-      "requestDigest": "5812d7e4ada8e3729d88f893196e2f8c291461de6b93f64d793a52d1a762f39e",
+      "requestDigest": "09dbb59c6154f388e4d9118fb5a5c55404e26ba4e742171a13c111a7f2b07f4c",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad",
       "state": "ADMITTED_LOCKED"
@@ -1521,7 +1522,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 819,
+  "lockGeneration": 820,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -11418,6 +11419,54 @@
       "scopeHash": "5038f48660316a11a272f3288c12755d56add3b3728f5f1feb04c829f71a0f1e",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "7036251b476288abd636ae2f033ff27fc1861863",
+      "lockGeneration": 812,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
+      "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "4ad656a1fd9cd4aaac89b45a3bdee2065fbbec1d",
+        "lockGeneration": 799,
+        "lockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
+        "operationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001",
+        "preservedEvidenceRefs": [
+          "PR_834_GENERATION_799_PREDECESSOR_CANDIDATE",
+          "PR_831_PROVIDER_RATIFICATION_MERGE_257EBC15",
+          "GENERATION_781_PASS_CLOSED_COMMIT_E1EEB3AC",
+          "PR_833_DIFFERENTIAL_CONTINUITY_MERGE_7036251B"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "SUCCESSOR_GAP_REGISTRY_GEN799_TO_CURRENT_MAIN_20260809_001"
+      },
+      "procedureLocatorDigest": "c904709f8b78338317e4d5787cf37812605d02fb928e559145001101025fdf24",
+      "released": true,
+      "requestDigest": "5812d7e4ada8e3729d88f893196e2f8c291461de6b93f64d793a52d1a762f39e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "be5cd5d8bc1ca367d95af1950b1cadba43c7d89baf303eeda8da61b66e97d9ad",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR_838_GENERATION_812_ONE_RECORD_CANDIDATE",
+          "PR_839_CLOSURE_AWARE_SELF_TEST_MERGE_D2455E87",
+          "GENERATION_811_PASS_CLOSED",
+          "PR_831_PROVIDER_RATIFICATION",
+          "GENERATION_781_PASS_CLOSED"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "d2455e87226586379b2f985a7c277f1f74b0a765",
+        "successorLockGeneration": 820,
+        "successorLockScope": "REPOSITORY_CONTROL_PLANE:SYSTEM_CONTINUITY_GAP:SUCCESSOR_TO_CLOSED_WORLD_EXECUTION:CLOSURE:V1",
+        "successorOperationId": "SUCCESSOR_TO_CLOSED_WORLD_EXECUTION_GAP_REGISTRY_CLOSURE_20260809_001_SUCCESSOR_002",
+        "transitionId": "SUCCESSOR_GAP_REGISTRY_GEN812_TO_D2455E87_20260809_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

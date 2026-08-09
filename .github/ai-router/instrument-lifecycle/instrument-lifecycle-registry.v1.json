@@ -1,0 +1,52 @@
+{
+  "schema": "REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1",
+  "registryId": "REPOSITORY_ACTIONS_INSTRUMENT_LIFECYCLE_REGISTRY_v1",
+  "status": "OBSERVATION_ONLY_FAIL_CLOSED",
+  "defaultUnregisteredReadOnlyState": "REVIEW_REQUIRED",
+  "defaultUnregisteredWriteCapableState": "QUARANTINED",
+  "records": [
+    {
+      "workflowPath": ".github/workflows/progressive-system-continuity-v1.yml",
+      "state": "ACTIVE_CURRENT",
+      "reason": "Merged shared control-plane continuity dependency from PR 819.",
+      "currentAuthority": true,
+      "protected": true,
+      "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/instrument-lifecycle-observation-v1.yml",
+      "state": "ACTIVE_CURRENT",
+      "reason": "Observation-only lifecycle candidate installed under canonical pre-registration admission generation 731.",
+      "currentAuthority": false,
+      "protected": true,
+      "candidateOnly": true,
+      "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/laws-compass-six-authority-benchmark.yml",
+      "state": "ACTIVE_COMPATIBILITY",
+      "reason": "Compatibility-protected while the active Laws spatial-manifestation work resolves its evidence carrier.",
+      "currentAuthority": true,
+      "protected": true,
+      "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/laws-cp5-final-celestial-naturalization.yml",
+      "state": "HISTORICAL_PINNED",
+      "reason": "Historical branch-bound construction/reproduction workflow; audit confirmed current failure notifications may contain zero executed jobs.",
+      "currentAuthority": false,
+      "protected": false,
+      "transition": "RETIREMENT_PENDING_CONTINUITY_PROOF",
+      "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/h-earth-c2-r1-active-review-tunnel.yml",
+      "state": "HISTORICAL_PINNED",
+      "reason": "Historical immutable publication/review occurrence bound to legacy product identities and PR 418; audit confirmed current failure notifications may contain zero executed jobs.",
+      "currentAuthority": false,
+      "protected": false,
+      "transition": "RETIREMENT_PENDING_CONTINUITY_PROOF",
+      "physicalRetirementAuthorized": false
+    }
+  ]
+}

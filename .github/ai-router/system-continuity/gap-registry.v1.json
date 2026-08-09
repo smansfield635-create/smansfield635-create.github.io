@@ -9,10 +9,27 @@
       "discoveredAtHead": "9608702942bd3b09ece55023d5becf2d2b4cdb0b",
       "coordinationIssue": 817,
       "summary": "A fresh lifecycle successor must use a changed operationId and produces a successor-transition receipt, while the current closed-world AI-room resolver binds execution to an exact registered operationId and an ordinary admission receipt.",
-      "interfaceKeys": ["operationId","REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1","REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1","AUTHORIZED_TOOLSET_DESCRIPTOR_v1"],
-      "pathScopes": [".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs","tools/ai-room-transport/toolset-resolver.v1.mjs",".github/ai-toolset-transport/authorized-toolset-registry.v1.json"],
-      "evidenceRefs": ["PR_814_GENERIC_SUCCESSOR_PROTOCOL","ISSUE_817_CONTINUITY_TRACK_COORDINATION"],
-      "closureRequirements": ["SUCCESSOR_OPERATION_ID_EXECUTABLE_WITHOUT_BESPOKE_DESCRIPTOR_CHURN","SUCCESSOR_RECEIPT_CONSUMABLE_OR_CANONICALLY_ADAPTED_BY_EXECUTION_PATH","REAL_SUCCESSOR_TO_EXECUTION_TRANSITION_PROOF","POST_MERGE_REMOTE_PROOF"],
+      "interfaceKeys": [
+        "operationId",
+        "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
+        "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+        "AUTHORIZED_TOOLSET_DESCRIPTOR_v1"
+      ],
+      "pathScopes": [
+        ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
+        "tools/ai-room-transport/toolset-resolver.v1.mjs",
+        ".github/ai-toolset-transport/authorized-toolset-registry.v1.json"
+      ],
+      "evidenceRefs": [
+        "PR_814_GENERIC_SUCCESSOR_PROTOCOL",
+        "ISSUE_817_CONTINUITY_TRACK_COORDINATION"
+      ],
+      "closureRequirements": [
+        "SUCCESSOR_OPERATION_ID_EXECUTABLE_WITHOUT_BESPOKE_DESCRIPTOR_CHURN",
+        "SUCCESSOR_RECEIPT_CONSUMABLE_OR_CANONICALLY_ADAPTED_BY_EXECUTION_PATH",
+        "REAL_SUCCESSOR_TO_EXECUTION_TRANSITION_PROOF",
+        "POST_MERGE_REMOTE_PROOF"
+      ],
       "authorityCreated": false
     },
     {
@@ -22,10 +39,55 @@
       "closedAtHead": "0cd88a4965f354de93e37a8cb9ab607263536b46",
       "coordinationIssue": 817,
       "summary": "The remote closure route required preservation of the native remote receipt schema and PR-conversation receipt return permission.",
-      "interfaceKeys": ["REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1","REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1","PR_CONVERSATION_RECEIPT_RETURN"],
-      "pathScopes": ["tools/operation-intake/repository-operation-lock-manager.v1.mjs","tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs","tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs",".github/workflows/remote-operation-terminal-closure-v1.yml"],
-      "evidenceRefs": ["PR_818","RUN_31323108429","GENERATION_721_PASS_CLOSED"],
+      "interfaceKeys": [
+        "REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1",
+        "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1",
+        "PR_CONVERSATION_RECEIPT_RETURN"
+      ],
+      "pathScopes": [
+        "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+        "tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs",
+        "tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs",
+        ".github/workflows/remote-operation-terminal-closure-v1.yml"
+      ],
+      "evidenceRefs": [
+        "PR_818",
+        "RUN_31323108429",
+        "GENERATION_721_PASS_CLOSED"
+      ],
       "closureRequirements": [],
+      "authorityCreated": false
+    },
+    {
+      "gapId": "WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY",
+      "status": "OPEN",
+      "discoveredAtHead": "d0d0ea03b9f6d867dcb9689bc4ed4050bd7e57da",
+      "coordinationIssue": 820,
+      "summary": "The GitHub Actions event surface contains legacy and unregistered workflows whose active/failed UI state is not equivalent to current authority or current system health; lifecycle classification, signal normalization, continuity-safe adoption, and bounded retirement remain to be proven end to end.",
+      "interfaceKeys": [
+        "GITHUB_ACTIONS_WORKFLOW_STATE",
+        "REPOSITORY_AI_ROUTER_REGISTRY_v1",
+        "REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1",
+        "INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1"
+      ],
+      "pathScopes": [
+        ".github/workflows/",
+        ".github/ai-router/router.v1.json",
+        ".github/ai-router/instrument-lifecycle/"
+      ],
+      "evidenceRefs": [
+        "ISSUE_820_AUDIT",
+        "GMAIL_FAILURE_CORPUS_AUGUST_7_9",
+        "PRE_REGISTRATION_ADMISSION_GENERATION_731"
+      ],
+      "closureRequirements": [
+        "FULL_ACTIONS_SURFACE_INVENTORY",
+        "CURRENT_AUTHORITY_CLASSIFICATION",
+        "ZERO_JOB_AND_EXPECTED_FAILURE_SIGNAL_NORMALIZATION",
+        "PROTECTED_LIVE_WORKSTREAM_NONINTERFERENCE",
+        "CONTINUITY_PROOF_FOR_EACH_PHYSICAL_RETIREMENT_CLASS",
+        "POST_MERGE_OBSERVATION_PROOF"
+      ],
       "authorityCreated": false
     }
   ]

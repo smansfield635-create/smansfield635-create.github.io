@@ -1,0 +1,186 @@
+{
+  "contract": "LAWS_CONTEXTUAL_TOPOLOGY_RESIDUAL_MECHANICS_TEST_v1",
+  "mode": "READ_ONLY_EXACT_SUBJECT_RESIDUAL_TEST",
+  "status": "CLOSED_BOUNDED_RESIDUAL_MAP_ESTABLISHED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-contextual-topology-freeze-001",
+  "subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "topology_freeze_commit": "1492663193a503ce3d2e136135421cea0077e8da",
+  "topology_contract": "LAWS_CONTEXTUAL_TOPOLOGY_FREEZE_v1",
+  "test_question": "CAN_CURRENT_LAWS_REPRESENT_AND_EXECUTE_T_C_WITHOUT_NEW_MECHANICS",
+  "allowed_dispositions": ["PRESENT", "PARTIAL", "ABSENT", "UNEVALUABLE"],
+  "evidence_subjects": [
+    {
+      "path": "laws/index.controller.js",
+      "blob_sha": "e6eef54a8d808c12ea0e5db85539bc521f29f3b2",
+      "relevant_existing_mechanics": [
+        "fixed six-direction authority field",
+        "orbit focus and preview focus",
+        "selection state",
+        "frozen law/member registries",
+        "committed and preview quaternion state",
+        "gesture-origin restoration",
+        "return-to-orbit and return-to-constellation transitions",
+        "semantic projection registry and revision publication",
+        "generic held state"
+      ]
+    },
+    {
+      "path": "laws/index.crystals.js",
+      "blob_sha": "27577c49250f42b03d123f8105e1d55d59c3a4b4",
+      "relevant_existing_mechanics": [
+        "RIGHT_HANDED_EUCLIDEAN_XYZ",
+        "UNIT_QUATERNION",
+        "six fixed authority vectors",
+        "cluster geometry"
+      ]
+    },
+    {
+      "path": "laws/index.compositor.js",
+      "blob_sha": "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa",
+      "relevant_existing_mechanics": [
+        "world-to-screen projection",
+        "camera matrices",
+        "depth classification",
+        "semantic layer orchestration"
+      ]
+    },
+    {
+      "path": "laws/index.interactions.js",
+      "blob_sha": "be365cc331ee5643f916abee204d4f5f45376c04",
+      "relevant_existing_mechanics": [
+        "quaternion direct manipulation",
+        "primary-direction derivation from fixed authority field",
+        "controller-authority separation"
+      ]
+    },
+    {
+      "path": "laws/index.selection.js",
+      "blob_sha": "456008782e6a4e656e8fc9b04b76f69a6dc68abd",
+      "relevant_existing_mechanics": [
+        "spatial primary calculation",
+        "focus glow presentation",
+        "projection-driven primary manifestation"
+      ]
+    }
+  ],
+  "residuals": [
+    {
+      "id": "R1",
+      "capability": "CONTEXTUAL_ORIGIN_STATE",
+      "disposition": "ABSENT",
+      "basis": "Controller state exposes navigationState, orbitFocus, selection, orientation, clusters, and semanticProjection, but no independent contextual-origin/current-subject authority pointer was found. Repository search returned no contextOrigin or currentSubject implementation.",
+      "transfer_required": false
+    },
+    {
+      "id": "R2",
+      "capability": "AUTHORITATIVE_OBJECT_REGISTRY_INDEPENDENT_OF_RENDERING",
+      "disposition": "PARTIAL",
+      "basis": "Frozen canonical law/member runtime records exist independently of screen projection, but their records are Laws-specific and contain identity/direction/label/route/class/source rather than the frozen generic O fields identity, objectClass, authority, version, provenance.",
+      "transfer_required": false
+    },
+    {
+      "id": "R3",
+      "capability": "RELATION_RECORD_REPRESENTATION",
+      "disposition": "PARTIAL",
+      "basis": "Presentation metadata can carry a relationship string, but no authoritative R_OC record with relation class, directionality, scope, authority, evidence, version, and status was found.",
+      "transfer_required": false
+    },
+    {
+      "id": "R4",
+      "capability": "GAMMA_RELATION_RESOLUTION_AUTHORITY",
+      "disposition": "ABSENT",
+      "basis": "Current controller resolves fixed direction membership, route identity, focus, selection, and projection eligibility; no authority was found that computes Gamma(O,C) from an authoritative object and contextual origin.",
+      "transfer_required": false
+    },
+    {
+      "id": "R5",
+      "capability": "RECENTER_AUTHORIZATION_TRANSACTION",
+      "disposition": "ABSENT",
+      "basis": "Current transactions cover orbit/cluster preview, commit, cancel, category/law/member selection, and bounded returns. No transaction changes an independent contextual origin from C0 to C1=O*.",
+      "transfer_required": false
+    },
+    {
+      "id": "R6",
+      "capability": "RELATION_RECOMPUTATION_AFTER_RECENTER",
+      "disposition": "ABSENT",
+      "basis": "Because no contextual-origin transaction or Gamma resolver exists, no post-recenter relation recomputation mechanism exists.",
+      "transfer_required": false
+    },
+    {
+      "id": "R7",
+      "capability": "CONTEXT_DRIVEN_SPATIAL_REPROJECTION_TRIGGER",
+      "disposition": "ABSENT",
+      "basis": "Semantic projection has an explicit revision channel and update mechanism, but updates consume renderer/compositor projection records for the fixed field; no contextual-relation change trigger was found.",
+      "transfer_required": false
+    },
+    {
+      "id": "R8",
+      "capability": "PRIOR_CONTEXT_PRESERVATION",
+      "disposition": "PARTIAL",
+      "basis": "Current Laws preserves committed orientations and gesture origins and retains selected direction during bounded return transitions, but it has no general prior contextual-origin snapshot or context history for C0->C1 restoration.",
+      "transfer_required": false,
+      "possible_donor_mechanics_exist_elsewhere": true
+    },
+    {
+      "id": "R9",
+      "capability": "LAWFUL_CONTEXT_RESTORATION",
+      "disposition": "PARTIAL",
+      "basis": "Return-to-orbit and return-to-constellation lawfully restore bounded Laws navigation/orientation states, including previousDirection, but cannot restore an arbitrary prior contextual origin because such an origin is not represented.",
+      "transfer_required": false,
+      "possible_donor_mechanics_exist_elsewhere": true
+    },
+    {
+      "id": "R10",
+      "capability": "UNKNOWN_OR_UNEVALUABLE_RELATION_HOLD_STATE",
+      "disposition": "PARTIAL",
+      "basis": "A generic terminal SYSTEM_HELD state exists and disables interaction on runtime failure, but there is no relation-specific UNKNOWN/UNEVALUABLE status or non-deceptive unresolved spatial disposition.",
+      "transfer_required": false
+    },
+    {
+      "id": "R11",
+      "capability": "IDENTITY_AND_PROVENANCE_PERSISTENCE_THROUGH_CONTEXT_CHANGE",
+      "disposition": "PARTIAL",
+      "basis": "Current canonical law/member identities and routes remain stable through existing focus/selection/orientation changes, but provenance/version authority fields are not part of those runtime records and no contextual-origin change exists to verify the full invariant.",
+      "transfer_required": false
+    },
+    {
+      "id": "R12",
+      "capability": "SEPARATION_OF_CONTEXT_FOCUS_SELECTION_AND_VISUAL_POSITION",
+      "disposition": "PARTIAL",
+      "basis": "Orbit focus, selection, and semantic screen projection are already independently represented. The fourth authority, contextual origin C, is absent, so the complete four-way separation is not yet executable.",
+      "transfer_required": false
+    }
+  ],
+  "summary": {
+    "present": 0,
+    "partial": 6,
+    "absent": 6,
+    "unevaluable": 0,
+    "target_residual_exists": true,
+    "residual_is_not_new_euclidean_engine": true,
+    "residual_center": "CONTEXT_AUTHORITY_AND_RELATION_RESOLUTION",
+    "existing_euclidean_and_projection_substrate_reusable": true
+  },
+  "gate_result": {
+    "TARGET_RESIDUAL_EXISTS": "PASS",
+    "mechanical_transfer_route_may_open_generically": false,
+    "reason": "Residual existence is established, but transfer candidacy must be decided per residual. ABSENT/PARTIAL does not imply donor transfer.",
+    "next_gate": "RESIDUAL_ORIGIN_CLASSIFICATION",
+    "next_question": "FOR_EACH_REAL_RESIDUAL_IS_THE_LAWFUL_SOURCE_NATIVE_CONSTRUCTION_EXISTING_DONOR_TRANSFER_OR_NEITHER"
+  },
+  "preserved_boundaries": {
+    "product_mutation": false,
+    "runtime_mutation": false,
+    "visual_mutation": false,
+    "route_mutation": false,
+    "relation_taxonomy_frozen": false,
+    "IMI_transfer_route_opened": false,
+    "IMI_scoring_performed": false,
+    "LRPv1_bridge_constructed": false,
+    "donor_transfer_authorized": false,
+    "native_construction_authorized": false,
+    "merge_authorized": false,
+    "deployment_authorized": false
+  }
+}

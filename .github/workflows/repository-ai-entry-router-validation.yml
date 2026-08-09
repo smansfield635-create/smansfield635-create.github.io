@@ -45,6 +45,28 @@ jobs:
             --self-test \
             --output /tmp/repository-ai-entry-router-self-test.json
 
+      - name: Exercise operation lifecycle infrastructure mutation routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path .github/ai-router/operation-lifecycle/successor-protocol.v1.json \
+            --path .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs \
+            --path .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
+            --path AGENTS.md \
+            --path AI_ENTRYPOINT.json \
+            --path .github/workflows/repository-ai-entry-router-validation.yml \
+            --task "Generic stale-head successor protocol mutation-route validation" \
+            --output /tmp/repository-operation-successor-router-receipt.json
+          node -e "const r=require('/tmp/repository-operation-successor-router-receipt.json');if(r.disposition!=='PASS'||r.routes.length!==6||!r.routes.every(x=>x.projectId==='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'&&x.disposition==='PASS'))process.exit(1)"
+
+      - name: Run generic stale-head successor protocol self-test
+        run: |
+          node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
+            --output /tmp/repository-operation-successor-self-test.json
+          node -e "const r=require('/tmp/repository-operation-successor-self-test.json');if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.testCount<11)process.exit(1)"
+
       - name: Exercise H-Earth registered route
         run: |
           node tools/repository-ai-entry-router.mjs \
@@ -134,11 +156,398 @@ jobs:
           name: repository-ai-entry-router-validation-receipts
           path: |
             /tmp/repository-ai-entry-router-self-test.json
+            /tmp/repository-operation-successor-router-receipt.json
+            /tmp/repository-operation-successor-self-test.json
             /tmp/repository-ai-entry-router-h-earth-route.json
             /tmp/repository-ai-entry-router-laws-route.json
             /tmp/repository-ai-entry-router-lrpv1-route.json
             /tmp/repository-ai-entry-router-estate-validation-route.json
             /tmp/repository-ai-entry-router-unregistered-mutation.json
             /tmp/h-earth-r06-c10-negative-admission.json
+          if-no-files-found: error
+          retention-days: 30
+
+  successor-protocol-remote-certification:
+    if: github.event_name == 'pull_request'
+    needs: validate-router
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+
+      - name: Execute real remote atomic successor transition and replay rejection
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          MAIN_HEAD="$(git rev-parse FETCH_HEAD)"
+          BASE_HEAD="${{ github.event.pull_request.base.sha }}"
+          test "$MAIN_HEAD" = "$BASE_HEAD"
+          OLD_HEAD="$(git rev-parse "${MAIN_HEAD}^1")"
+          SCOPE="REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SUCCESSOR_PROTOCOL:REMOTE_CERT:${RUN_ID}:${RUN_ATTEMPT}"
+          PREDECESSOR_ID="SUCCESSOR_PROTOCOL_REMOTE_CERT_PREDECESSOR_${RUN_ID}_${RUN_ATTEMPT}"
+          SUCCESSOR_ID="SUCCESSOR_PROTOCOL_REMOTE_CERT_SUCCESSOR_${RUN_ID}_${RUN_ATTEMPT}"
+          ACTIVE_OPERATION="$PREDECESSOR_ID"
+          ACTIVE_GENERATION=""
+          cleanup() {
+            if test -n "$ACTIVE_GENERATION"; then
+              set +e
+              for attempt in $(seq 1 8); do
+                node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+                  --action close \
+                  --repository "$REPOSITORY" \
+                  --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+                  --operation-id "$ACTIVE_OPERATION" \
+                  --lock-scope "$SCOPE" \
+                  --lock-generation "$ACTIVE_GENERATION" \
+                  --terminal-disposition FAIL_CLOSED \
+                  --output /tmp/repository-operation-successor-emergency-cleanup.json
+                if node -e "const r=require('/tmp/repository-operation-successor-emergency-cleanup.json');process.exit(r.result==='TERMINAL_CLOSURE_COMMITTED'?0:1)"; then
+                  break
+                fi
+                if ! node -e "const r=require('/tmp/repository-operation-successor-emergency-cleanup.json');process.exit(r.result==='LOCK_NOT_CLOSED'&&r.errorCode==='LEDGER_COMPARE_AND_SWAP_CONFLICT'?0:1)"; then
+                  break
+                fi
+                sleep 1
+              done
+              set -e
+            fi
+          }
+          trap cleanup EXIT
+
+          predecessor_acquired=0
+          for attempt in $(seq 1 8); do
+            set +e
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action acquire \
+              --repository "$REPOSITORY" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id "$PREDECESSOR_ID" \
+              --lock-scope "$SCOPE" \
+              --governing-head "$OLD_HEAD" \
+              --request-digest aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+              --procedure-digest bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb \
+              --output /tmp/repository-operation-successor-predecessor-acquire.json
+            acquire_status=$?
+            set -e
+            if node -e "const r=require('/tmp/repository-operation-successor-predecessor-acquire.json');process.exit(r.result==='ADMITTED_AND_LOCKED'?0:1)"; then
+              predecessor_acquired=1
+              break
+            fi
+            if node -e "const r=require('/tmp/repository-operation-successor-predecessor-acquire.json');process.exit(r.result==='LOCK_NOT_ACQUIRED'&&r.errorCode==='LEDGER_COMPARE_AND_SWAP_CONFLICT'?0:1)"; then
+              sleep 1
+              continue
+            fi
+            cat /tmp/repository-operation-successor-predecessor-acquire.json
+            exit "$acquire_status"
+          done
+          test "$predecessor_acquired" -eq 1
+          ACTIVE_GENERATION="$(node -e "const r=require('/tmp/repository-operation-successor-predecessor-acquire.json');if(r.result!=='ADMITTED_AND_LOCKED')process.exit(1);process.stdout.write(String(r.lockGeneration))")"
+
+          export MAIN_HEAD OLD_HEAD SCOPE PREDECESSOR_ID SUCCESSOR_ID ACTIVE_GENERATION
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          const main = process.env.MAIN_HEAD;
+          const old = process.env.OLD_HEAD;
+          const scope = process.env.SCOPE;
+          const pred = process.env.PREDECESSOR_ID;
+          const succ = process.env.SUCCESSOR_ID;
+          const generation = Number(process.env.ACTIVE_GENERATION);
+          const allowedPaths = ['.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs'];
+          const artifactPaths = ['/tmp/repository-operation-successor-remote-certification.json'];
+          const errorPrecedence = ['GOVERNING_HEAD_MISMATCH','MISSING_REQUIRED_REQUEST_FIELD'];
+          const workflowPath = '.github/workflows/repository-ai-entry-router-validation.yml';
+          const command = 'node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs --output /tmp/repository-operation-successor-self-test.json';
+          const fingerprint = { domainId: 'REMOTE_SUCCESSOR_CERTIFICATION_v1', algorithm: 'sha256' };
+          const request = {
+            schema: 'REPOSITORY_OPERATION_REQUEST_v1', operationId: succ, projectId: 'REPOSITORY_AI_ROUTER_INFRASTRUCTURE',
+            lockScope: scope, exactGoverningHead: main, subjectIdentity: { certificationRun: process.env.RUN_ID },
+            requestingAuthority: { authorityId: 'REMOTE_SUCCESSOR_CERTIFICATION_AUTHORITY', mergeAuthority: false },
+            executingRole: { roleId: 'REMOTE_SUCCESSOR_CERTIFICATION_CONSTRUCTOR' },
+            independentVerifier: { roleId: 'REMOTE_SUCCESSOR_CERTIFICATION_VERIFIER', mustBeDistinctFromConstructor: true },
+            constructionProcedureLocator: 'REMOTE_SUCCESSOR_CERTIFICATION_PROCEDURE_v1',
+            requiredInputs: [{ id: 'LIVE_MAIN', resolved: true }], allowedPaths, prohibitedPaths: ['h-earth-3d/'],
+            requiredOutputs: ['REMOTE_SUCCESSOR_RECEIPT'], exactTestCommand: command, workflowPath, artifactPaths,
+            fingerprintDomain: fingerprint, errorPrecedence, stopConditions: ['MAIN_HEAD_CHANGED'],
+            terminalDispositions: ['PASS_CLOSED','FAIL_CLOSED','SUPERSEDED']
+          };
+          const procedure = {
+            schema: 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1', procedureId: 'REMOTE_SUCCESSOR_CERTIFICATION_PROCEDURE_v1',
+            operationClass: 'REMOTE_SUCCESSOR_CERTIFICATION', exactGoverningHead: main,
+            exactAllowedRepositoryPaths: allowedPaths, exactBranchAndCommitSequence: [{ step: 1, action: 'REMOTE_CERTIFICATION_ONLY' }],
+            evaluationToolingHeadBindingRule: 'CERTIFICATION_CANDIDATE_HEAD_ONLY', canonicalInputSchemas: ['REPOSITORY_OPERATION_REQUEST_v1'],
+            canonicalOutputSchemas: ['REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1'],
+            errorCodeAndValidationPrecedence: errorPrecedence, exactTestRunnerCommand: command,
+            independentVerifierDefinition: { mayRepair: false }, workflowAndArtifactPackagingPaths: { workflowPath, artifactPaths },
+            bridgeOutputFingerprintDomain: fingerprint, priorAttemptInspectionLimits: { mayAuthorizeProductMutation: false }
+          };
+          const transition = {
+            schema: 'REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_REQUEST_v1',
+            transitionId: `REMOTE_SUCCESSOR_CERT_${process.env.RUN_ID}_${process.env.RUN_ATTEMPT}`,
+            reasonCode: 'GOVERNING_HEAD_ADVANCED', governingRef: 'refs/heads/main',
+            authorityPolicy: 'FRESH_SUCCESSOR_REQUEST_REQUIRED_NO_IMPLICIT_INHERITANCE',
+            evidencePolicy: 'EXACT_HEAD_REVALIDATION_REQUIRED',
+            predecessor: { operationId: pred, lockScope: scope, lockGeneration: generation, governingHead: old },
+            successor: { operationId: succ, lockScope: scope, governingHead: main },
+            inheritedAuthority: [], preservedEvidenceRefs: ['REMOTE_CERT_PREDECESSOR_ACQUIRE_RECEIPT']
+          };
+          fs.writeFileSync('/tmp/remote-successor-request.json', JSON.stringify(request, null, 2));
+          fs.writeFileSync('/tmp/remote-successor-procedure.json', JSON.stringify(procedure, null, 2));
+          fs.writeFileSync('/tmp/remote-successor-transition.json', JSON.stringify(transition, null, 2));
+          NODE
+
+          node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs \
+            --transition /tmp/remote-successor-transition.json \
+            --request /tmp/remote-successor-request.json \
+            --procedure /tmp/remote-successor-procedure.json \
+            --repository "$REPOSITORY" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --output /tmp/repository-operation-successor-remote-success.json
+          ACTIVE_OPERATION="$SUCCESSOR_ID"
+          ACTIVE_GENERATION="$(node -e "const r=require('/tmp/repository-operation-successor-remote-success.json');if(r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED'||r.authorityInherited!==false||r.exactHeadRevalidationRequired!==true||r.ledgerCompareAndSwapCommitted!==true)process.exit(1);process.stdout.write(String(r.successor.lockGeneration))")"
+
+          set +e
+          node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs \
+            --transition /tmp/remote-successor-transition.json \
+            --request /tmp/remote-successor-request.json \
+            --procedure /tmp/remote-successor-procedure.json \
+            --repository "$REPOSITORY" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --output /tmp/repository-operation-successor-remote-replay.json
+          replay_status=$?
+          set -e
+          test "$replay_status" -ne 0
+          node -e "const r=require('/tmp/repository-operation-successor-remote-replay.json');if(r.result!=='SUCCESSOR_NOT_ADMITTED'||!['PREDECESSOR_OPERATION_ID_MISMATCH','ACTIVE_PREDECESSOR_NOT_FOUND','LEDGER_COMPARE_AND_SWAP_CONFLICT'].includes(r.errorCode))process.exit(1)"
+
+          successor_closed=0
+          for attempt in $(seq 1 8); do
+            set +e
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "$REPOSITORY" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id "$ACTIVE_OPERATION" \
+              --lock-scope "$SCOPE" \
+              --lock-generation "$ACTIVE_GENERATION" \
+              --terminal-disposition PASS_CLOSED \
+              --output /tmp/repository-operation-successor-remote-cleanup.json
+            cleanup_status=$?
+            set -e
+            if node -e "const r=require('/tmp/repository-operation-successor-remote-cleanup.json');process.exit(r.result==='TERMINAL_CLOSURE_COMMITTED'&&r.terminalDisposition==='PASS_CLOSED'?0:1)"; then
+              successor_closed=1
+              break
+            fi
+            if node -e "const r=require('/tmp/repository-operation-successor-remote-cleanup.json');process.exit(r.result==='LOCK_NOT_CLOSED'&&r.errorCode==='LEDGER_COMPARE_AND_SWAP_CONFLICT'?0:1)"; then
+              sleep 1
+              continue
+            fi
+            cat /tmp/repository-operation-successor-remote-cleanup.json
+            exit "$cleanup_status"
+          done
+          test "$successor_closed" -eq 1
+          ACTIVE_GENERATION=""
+          trap - EXIT
+
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const read = p => JSON.parse(fs.readFileSync(p, 'utf8'));
+          const payload = {
+            schema: 'REPOSITORY_OPERATION_SUCCESSOR_REMOTE_CERTIFICATION_RECEIPT_v1',
+            result: 'PASS_CLOSED',
+            candidateHead: process.env.EXPECTED_HEAD,
+            governingMainHead: process.env.MAIN_HEAD,
+            predecessorAcquire: read('/tmp/repository-operation-successor-predecessor-acquire.json'),
+            successorTransition: read('/tmp/repository-operation-successor-remote-success.json'),
+            replayRejection: read('/tmp/repository-operation-successor-remote-replay.json'),
+            cleanup: read('/tmp/repository-operation-successor-remote-cleanup.json'),
+            assertions: {
+              oneLedgerCompareAndSwapCommitted: true,
+              predecessorSuperseded: true,
+              freshSuccessorAdmitted: true,
+              implicitAuthorityInheritanceRejected: true,
+              replayRejected: true,
+              sharedLedgerCasRacesRemainFailClosed: true,
+              syntheticSuccessorLockReleased: true
+            }
+          };
+          const canonical = JSON.stringify(payload);
+          payload.sha256 = crypto.createHash('sha256').update(canonical).digest('hex');
+          fs.writeFileSync('/tmp/repository-operation-successor-remote-certification.json', JSON.stringify(payload, null, 2) + '\n');
+          NODE
+
+      - name: Upload remote successor certification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-successor-remote-certification
+          path: |
+            /tmp/repository-operation-successor-predecessor-acquire.json
+            /tmp/repository-operation-successor-remote-success.json
+            /tmp/repository-operation-successor-remote-replay.json
+            /tmp/repository-operation-successor-remote-cleanup.json
+            /tmp/repository-operation-successor-remote-certification.json
+            /tmp/repository-operation-successor-emergency-cleanup.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  retire-prior-successor-installation-attempts:
+    if: github.event_name == 'pull_request'
+    needs: successor-protocol-remote-certification
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+
+      - name: Fail-close unused or invalid prior installation locks
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import { closeRemote, LEDGER_PATH, stable } from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+          const repository = process.env.REPOSITORY;
+          const token = process.env.GITHUB_TOKEN;
+          const lockRef = 'refs/heads/operation-locks/repository-operation-intake-v1';
+          const targets = [
+            { operationId: 'GENERIC_STALE_HEAD_SUCCESSOR_ROUTER_OWNERSHIP_PREREQUISITE_v1', lockScope: 'REPOSITORY_AI_ROUTER_INFRASTRUCTURE:STALE_HEAD_SUCCESSOR_PROTOCOL:ROUTER_OWNERSHIP:V1', lockGeneration: 698 },
+            { operationId: 'GENERIC_STALE_HEAD_SUCCESSOR_AND_SUPERSESSION_PROTOCOL_INSTALLATION_v1', lockScope: 'REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATION_LIFECYCLE:STALE_HEAD_SUCCESSOR:INSTALLATION:V1', lockGeneration: 699 }
+          ];
+          const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
+          async function terminalExists(target) {
+            const branch = lockRef.slice('refs/heads/'.length);
+            const ref = await fetch(`https://api.github.com/repos/${repository}/git/ref/${encodeURIComponent('heads/' + branch)}`, { headers });
+            if (!ref.ok) throw new Error(`LOCK_REF_READ_FAILED:${ref.status}`);
+            const head = (await ref.json()).object.sha;
+            const encoded = LEDGER_PATH.split('/').map(encodeURIComponent).join('/');
+            const response = await fetch(`https://api.github.com/repos/${repository}/contents/${encoded}?ref=${encodeURIComponent(head)}`, { headers });
+            if (!response.ok) throw new Error(`LEDGER_READ_FAILED:${response.status}`);
+            const file = await response.json();
+            const ledger = JSON.parse(Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8'));
+            return ledger.terminalHistory.some(x => x.operationId === target.operationId && x.lockGeneration === target.lockGeneration && x.terminalDisposition === 'FAIL_CLOSED' && x.released === true);
+          }
+          async function closeExact(target) {
+            for (let attempt = 1; attempt <= 8; attempt += 1) {
+              try {
+                const receipt = await closeRemote({ ...target, repository, lockRef, token, terminalDisposition: 'FAIL_CLOSED' });
+                if (receipt.result === 'TERMINAL_CLOSURE_COMMITTED') return { ...target, result: 'FAIL_CLOSED_COMMITTED', attempt, receipt };
+                if (receipt.result === 'LOCK_NOT_CLOSED' && receipt.errorCode === 'LEDGER_COMPARE_AND_SWAP_CONFLICT') {
+                  await new Promise(resolve => setTimeout(resolve, attempt * 125));
+                  continue;
+                }
+                throw new Error(`CLOSURE_NOT_COMMITTED:${target.lockGeneration}:${receipt.result}:${receipt.errorCode || 'NO_ERROR_CODE'}`);
+              } catch (error) {
+                if (error.code === 'ACTIVE_LOCK_NOT_FOUND' && await terminalExists(target)) return { ...target, result: 'ALREADY_FAIL_CLOSED_VERIFIED', attempt };
+                throw error;
+              }
+            }
+            throw new Error(`CLOSURE_CAS_RETRIES_EXHAUSTED:${target.lockGeneration}`);
+          }
+          const results = [];
+          for (const target of targets) results.push(await closeExact(target));
+          fs.writeFileSync('/tmp/repository-operation-successor-prior-lock-retirement.json', JSON.stringify(stable({
+            schema: 'REPOSITORY_OPERATION_SUCCESSOR_PRIOR_INSTALLATION_LOCK_RETIREMENT_RECEIPT_v1',
+            result: 'PASS_CLOSED',
+            targets: results
+          }), null, 2) + '\n');
+          NODE
+
+      - name: Upload prior-lock retirement receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-successor-prior-lock-retirement
+          path: /tmp/repository-operation-successor-prior-lock-retirement.json
+          if-no-files-found: error
+          retention-days: 30
+
+  finalize-successor-protocol-installation-lock:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: validate-router
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check out exact merged head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+
+      - name: Pass-close corrected installation generation 700
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import { closeRemote, LEDGER_PATH, stable } from './tools/operation-intake/repository-operation-lock-manager.v1.mjs';
+          const target = {
+            operationId: 'GENERIC_STALE_HEAD_SUCCESSOR_AND_SUPERSESSION_PROTOCOL_INSTALLATION_v1_CORRECTED_001',
+            lockScope: 'REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATION_LIFECYCLE:STALE_HEAD_SUCCESSOR:INSTALLATION:V1:CORRECTED:001',
+            lockGeneration: 700
+          };
+          const repository = process.env.REPOSITORY;
+          const token = process.env.GITHUB_TOKEN;
+          const lockRef = 'refs/heads/operation-locks/repository-operation-intake-v1';
+          const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
+          async function terminalExists() {
+            const branch = lockRef.slice('refs/heads/'.length);
+            const ref = await fetch(`https://api.github.com/repos/${repository}/git/ref/${encodeURIComponent('heads/' + branch)}`, { headers });
+            if (!ref.ok) throw new Error(`LOCK_REF_READ_FAILED:${ref.status}`);
+            const head = (await ref.json()).object.sha;
+            const encoded = LEDGER_PATH.split('/').map(encodeURIComponent).join('/');
+            const response = await fetch(`https://api.github.com/repos/${repository}/contents/${encoded}?ref=${encodeURIComponent(head)}`, { headers });
+            if (!response.ok) throw new Error(`LEDGER_READ_FAILED:${response.status}`);
+            const file = await response.json();
+            const ledger = JSON.parse(Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8'));
+            return ledger.terminalHistory.some(x => x.operationId === target.operationId && x.lockGeneration === target.lockGeneration && x.terminalDisposition === 'PASS_CLOSED' && x.released === true);
+          }
+          async function closeExact() {
+            for (let attempt = 1; attempt <= 8; attempt += 1) {
+              try {
+                const receipt = await closeRemote({ ...target, repository, lockRef, token, terminalDisposition: 'PASS_CLOSED' });
+                if (receipt.result === 'TERMINAL_CLOSURE_COMMITTED') return { result: 'PASS_CLOSED_COMMITTED', attempt, receipt };
+                if (receipt.result === 'LOCK_NOT_CLOSED' && receipt.errorCode === 'LEDGER_COMPARE_AND_SWAP_CONFLICT') {
+                  await new Promise(resolve => setTimeout(resolve, attempt * 125));
+                  continue;
+                }
+                throw new Error(`INSTALLATION_CLOSURE_NOT_COMMITTED:${receipt.result}:${receipt.errorCode || 'NO_ERROR_CODE'}`);
+              } catch (error) {
+                if (error.code === 'ACTIVE_LOCK_NOT_FOUND' && await terminalExists()) return { result: 'ALREADY_PASS_CLOSED_VERIFIED', attempt };
+                throw error;
+              }
+            }
+            throw new Error('INSTALLATION_CLOSURE_CAS_RETRIES_EXHAUSTED');
+          }
+          const result = await closeExact();
+          fs.writeFileSync('/tmp/repository-operation-successor-installation-closure.json', JSON.stringify(stable({
+            schema: 'REPOSITORY_OPERATION_SUCCESSOR_INSTALLATION_CLOSURE_RECEIPT_v1',
+            operation: target,
+            mergedHead: process.env.EXPECTED_HEAD,
+            ...result
+          }), null, 2) + '\n');
+          NODE
+
+      - name: Upload installation closure receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-successor-installation-closure
+          path: /tmp/repository-operation-successor-installation-closure.json
           if-no-files-found: error
           retention-days: 30

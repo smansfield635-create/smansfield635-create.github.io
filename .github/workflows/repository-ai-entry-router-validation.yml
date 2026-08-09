@@ -113,6 +113,18 @@ jobs:
             --output /tmp/repository-ai-entry-router-estate-validation-route.json
           node -e "const r=require('/tmp/repository-ai-entry-router-estate-validation-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
 
+      - name: Exercise State-Bound Admissibility Kernel registered mutation route
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path infrastructure/state-bound-admissibility-kernel-v1/README.md \
+            --path .github/workflows/state-bound-admissibility-kernel-v1.yml \
+            --task "Workflow State-Bound Admissibility Kernel registered-route validation" \
+            --output /tmp/repository-ai-entry-router-state-bound-admissibility-kernel-route.json
+          node -e "const r=require('/tmp/repository-ai-entry-router-state-bound-admissibility-kernel-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='STATE_BOUND_ADMISSIBILITY_KERNEL'&&x.disposition==='PASS'))process.exit(1)"
+
       - name: Exercise unregistered mutation guard
         shell: bash
         run: |
@@ -162,6 +174,7 @@ jobs:
             /tmp/repository-ai-entry-router-laws-route.json
             /tmp/repository-ai-entry-router-lrpv1-route.json
             /tmp/repository-ai-entry-router-estate-validation-route.json
+            /tmp/repository-ai-entry-router-state-bound-admissibility-kernel-route.json
             /tmp/repository-ai-entry-router-unregistered-mutation.json
             /tmp/h-earth-r06-c10-negative-admission.json
           if-no-files-found: error

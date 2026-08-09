@@ -77,12 +77,19 @@ jobs:
             --path .github/workflows/lrpv1-conformance.yml \
             --task "Workflow LRPv1 registered-route validation" \
             --output /tmp/repository-ai-entry-router-lrpv1-route.json
-          node - <<'NODE'
-          const receipt = require('/tmp/repository-ai-entry-router-lrpv1-route.json');
-          if (receipt.disposition !== 'PASS') process.exit(1);
-          if (receipt.routes.length !== 2) process.exit(1);
-          if (!receipt.routes.every((route) => route.projectId === 'LINEAGE_RECEIPT_PROTOCOL' && route.disposition === 'PASS')) process.exit(1);
-          NODE
+          node -e "const r=require('/tmp/repository-ai-entry-router-lrpv1-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='LINEAGE_RECEIPT_PROTOCOL'&&x.disposition==='PASS'))process.exit(1)"
+
+      - name: Exercise Estate Validation registered mutation route
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path validation/README.md \
+            --path .github/workflows/estate-validation-v1.yml \
+            --task "Workflow Estate Validation registered-route validation" \
+            --output /tmp/repository-ai-entry-router-estate-validation-route.json
+          node -e "const r=require('/tmp/repository-ai-entry-router-estate-validation-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
 
       - name: Exercise unregistered mutation guard
         shell: bash
@@ -130,6 +137,7 @@ jobs:
             /tmp/repository-ai-entry-router-h-earth-route.json
             /tmp/repository-ai-entry-router-laws-route.json
             /tmp/repository-ai-entry-router-lrpv1-route.json
+            /tmp/repository-ai-entry-router-estate-validation-route.json
             /tmp/repository-ai-entry-router-unregistered-mutation.json
             /tmp/h-earth-r06-c10-negative-admission.json
           if-no-files-found: error

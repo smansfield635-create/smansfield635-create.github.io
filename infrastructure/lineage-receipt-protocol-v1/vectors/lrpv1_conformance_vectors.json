@@ -1,0 +1,86 @@
+{
+  "protocol": "LRP",
+  "protocol_version": "1.0.0",
+  "canonicalization": "JCS-RFC8785-SAFEINT",
+  "digest_algorithm": "SHA-256",
+  "vectors": [
+    {
+      "id": "basic_execution",
+      "payload": {
+        "input_identity": {
+          "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "code_identity": {
+          "git_commit": "abc123"
+        },
+        "configuration": {
+          "mode": "test",
+          "retries": 3
+        },
+        "result": {
+          "status": "PASS"
+        }
+      },
+      "canonical_body": "{\"canonicalization\":\"JCS-RFC8785-SAFEINT\",\"digest_algorithm\":\"SHA-256\",\"payload\":{\"code_identity\":{\"git_commit\":\"abc123\"},\"configuration\":{\"mode\":\"test\",\"retries\":3},\"input_identity\":{\"sha256\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"},\"result\":{\"status\":\"PASS\"}},\"protocol\":\"LRP\",\"protocol_version\":\"1.0.0\"}",
+      "lineage_digest": "6007ddcc0f40d9ab5e20855a8130b4040ecdf5eb34fa2fd812f628eed2eb0fb3"
+    },
+    {
+      "id": "rfc8785_property_order",
+      "payload": {
+        "€": "Euro Sign",
+        "\r": "Carriage Return",
+        "דּ": "Hebrew Letter Dalet With Dagesh",
+        "1": "One",
+        "😀": "Emoji: Grinning Face",
+        "": "Control",
+        "ö": "Latin Small Letter O With Diaeresis"
+      },
+      "canonical_body": "{\"canonicalization\":\"JCS-RFC8785-SAFEINT\",\"digest_algorithm\":\"SHA-256\",\"payload\":{\"\\r\":\"Carriage Return\",\"1\":\"One\",\"\":\"Control\",\"ö\":\"Latin Small Letter O With Diaeresis\",\"€\":\"Euro Sign\",\"😀\":\"Emoji: Grinning Face\",\"דּ\":\"Hebrew Letter Dalet With Dagesh\"},\"protocol\":\"LRP\",\"protocol_version\":\"1.0.0\"}",
+      "lineage_digest": "0134584fc99f690e4f2f61a8bcc6bcd7e1ccad8a92d310bf61f5e384fbe8b0bf"
+    },
+    {
+      "id": "control_strings",
+      "payload": {
+        "string": "€$\u000f\nA'B\"\\\\\"/",
+        "literals": [
+          null,
+          true,
+          false
+        ]
+      },
+      "canonical_body": "{\"canonicalization\":\"JCS-RFC8785-SAFEINT\",\"digest_algorithm\":\"SHA-256\",\"payload\":{\"literals\":[null,true,false],\"string\":\"€$\\u000f\\nA'B\\\"\\\\\\\\\\\"/\"},\"protocol\":\"LRP\",\"protocol_version\":\"1.0.0\"}",
+      "lineage_digest": "95492e6d70bd0b89cab2a23a61970765b7d7ec0d65a2ea4d8e22064fcfd036a0"
+    },
+    {
+      "id": "safe_integer_boundaries",
+      "payload": {
+        "min": -9007199254740991,
+        "max": 9007199254740991,
+        "zero": 0
+      },
+      "canonical_body": "{\"canonicalization\":\"JCS-RFC8785-SAFEINT\",\"digest_algorithm\":\"SHA-256\",\"payload\":{\"max\":9007199254740991,\"min\":-9007199254740991,\"zero\":0},\"protocol\":\"LRP\",\"protocol_version\":\"1.0.0\"}",
+      "lineage_digest": "d0aa20a810d3f2f5e77caa8a9feeca98647df93c4a3df33590f1d1f5fbd8fa0b"
+    },
+    {
+      "id": "nested_arrays",
+      "payload": {
+        "items": [
+          {
+            "z": 1,
+            "a": 2
+          },
+          [
+            true,
+            false,
+            null,
+            "text"
+          ]
+        ],
+        "empty_object": {},
+        "empty_array": []
+      },
+      "canonical_body": "{\"canonicalization\":\"JCS-RFC8785-SAFEINT\",\"digest_algorithm\":\"SHA-256\",\"payload\":{\"empty_array\":[],\"empty_object\":{},\"items\":[{\"a\":2,\"z\":1},[true,false,null,\"text\"]]},\"protocol\":\"LRP\",\"protocol_version\":\"1.0.0\"}",
+      "lineage_digest": "50fa430e9d9c083a93fbed59ca4a38bd01412b8d3b746c308c795c177c59f67a"
+    }
+  ]
+}

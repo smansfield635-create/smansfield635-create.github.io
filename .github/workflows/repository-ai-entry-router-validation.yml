@@ -67,44 +67,15 @@ jobs:
             printf '%s\n' '{"schema":"REPOSITORY_AI_ENTRY_ROUTER_LAWS_ROUTE_WORKFLOW_RECEIPT_v1","result":"SKIPPED_LAWS_NOT_REGISTERED_AT_HEAD","disposition":"NOT_APPLICABLE"}' > /tmp/repository-ai-entry-router-laws-route.json
           fi
 
-      - name: Materialize and verify LRPv1 router registration candidate
+      - name: Exercise LRPv1 registered mutation route
         shell: bash
         run: |
           set -euo pipefail
-          node <<'NODE'
-          const fs = require('node:fs');
-          const routerPath = '.github/ai-router/router.v1.json';
-          const entryPath = '.github/ai-router/projects/lineage-receipt-protocol/entrypoint.v1.json';
-          const router = JSON.parse(fs.readFileSync(routerPath, 'utf8'));
-          const entry = JSON.parse(fs.readFileSync(entryPath, 'utf8'));
-          const registration = {
-            projectId: entry.projectId,
-            status: entry.status,
-            ownedPathPrefixes: entry.ownedPathPrefixes,
-            ownedExactPaths: entry.ownedExactPaths,
-            entrypoint: entry.entrypoint,
-            priority: 100
-          };
-          const existing = router.projects.find((project) => project.projectId === entry.projectId);
-          if (existing) {
-            const actual = JSON.stringify(existing);
-            const expected = JSON.stringify(registration);
-            if (actual !== expected) throw new Error(`LRPV1_REGISTRATION_DRIFT:${actual}:${expected}`);
-          } else {
-            router.projects.push(registration);
-          }
-          fs.writeFileSync('/tmp/repository-ai-router-lrpv1-registration-candidate.json', `${JSON.stringify(router)}\n`);
-          NODE
-          cp .github/ai-router/router.v1.json /tmp/repository-ai-router-original.json
-          cp /tmp/repository-ai-router-lrpv1-registration-candidate.json .github/ai-router/router.v1.json
-          node tools/repository-ai-entry-router.mjs \
-            --self-test \
-            --output /tmp/repository-ai-entry-router-lrpv1-candidate-self-test.json
           node tools/repository-ai-entry-router.mjs \
             --mutation-intent \
             --path infrastructure/lineage-receipt-protocol-v1/README.md \
             --path .github/workflows/lrpv1-conformance.yml \
-            --task "LRPv1 registration validation" \
+            --task "Workflow LRPv1 registered-route validation" \
             --output /tmp/repository-ai-entry-router-lrpv1-route.json
           node - <<'NODE'
           const receipt = require('/tmp/repository-ai-entry-router-lrpv1-route.json');
@@ -112,7 +83,6 @@ jobs:
           if (receipt.routes.length !== 2) process.exit(1);
           if (!receipt.routes.every((route) => route.projectId === 'LINEAGE_RECEIPT_PROTOCOL' && route.disposition === 'PASS')) process.exit(1);
           NODE
-          mv /tmp/repository-ai-router-original.json .github/ai-router/router.v1.json
 
       - name: Exercise unregistered mutation guard
         shell: bash
@@ -159,8 +129,6 @@ jobs:
             /tmp/repository-ai-entry-router-self-test.json
             /tmp/repository-ai-entry-router-h-earth-route.json
             /tmp/repository-ai-entry-router-laws-route.json
-            /tmp/repository-ai-router-lrpv1-registration-candidate.json
-            /tmp/repository-ai-entry-router-lrpv1-candidate-self-test.json
             /tmp/repository-ai-entry-router-lrpv1-route.json
             /tmp/repository-ai-entry-router-unregistered-mutation.json
             /tmp/h-earth-r06-c10-negative-admission.json

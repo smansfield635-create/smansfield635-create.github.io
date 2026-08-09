@@ -134,7 +134,7 @@ async function verifyReading(page, storyId, label) {
   const count = await buttons.count();
   assert(count > 0, `${label}:READING_BUTTONS_MISSING`);
   assert(await panels.count() === count, `${label}:READING_PANEL_COUNT_MISMATCH`);
-  assert(await buttons.locator('[aria-expanded="true"]').count() === 0, `${label}:READING_NOT_COLLAPSED_ON_ENTRY`);
+  assert(await group.locator('.lr-tab[aria-expanded="true"]').count() === 0, `${label}:READING_NOT_COLLAPSED_ON_ENTRY`);
 
   const selector = `[data-stage-content] [data-lr-tabs] .lr-tab`;
   await assertHitTarget(page, selector, `${label}:READING`);
@@ -166,6 +166,7 @@ async function verifyMethods(page, label) {
     document.querySelector('[data-stage-content] .laws-spatial-stage__mount')?.dataset.methodsHydrated === 'true' &&
     document.documentElement.dataset.methodsModelsShowroom === 'active' &&
     document.documentElement.dataset.methodsModelsEuclideanShowroom === 'active',
+    null,
     { timeout: 15000 }
   );
 
@@ -206,7 +207,7 @@ async function verifyMethods(page, label) {
   assert(await page.locator('dialog[open] [data-mm-dialog-title]').count() === 1, `${label}:METHODS_DIALOG_TITLE_MISSING`);
   await assertHitTarget(page, 'dialog[open] [data-mm-dialog-close]', `${label}:METHODS_DIALOG_CLOSE`);
   await page.locator('dialog[open] [data-mm-dialog-close]').click();
-  await page.waitForFunction(() => !document.querySelector('dialog')?.open, { timeout: 5000 });
+  await page.waitForFunction(() => !document.querySelector('dialog')?.open, null, { timeout: 5000 });
 
   await page.evaluate(() => {
     globalThis.__lawsRuntimeMethodsHolder = document.querySelector('[data-stage-content] .laws-spatial-stage__mount[data-story-member="STORY_03"]');
@@ -250,7 +251,7 @@ async function verifyProfile(browserName, browser, profileName, viewport) {
 
   await assertHitTarget(page, '[data-category-members] button[data-family="FLOW"]', `${browserName}/${profileName}:FLOW_CATEGORY`);
   await page.locator('[data-category-members] button[data-family="FLOW"]').click();
-  await page.waitForFunction(() => document.querySelector('[data-category-core]')?.textContent.trim() === 'Flow', { timeout: 5000 });
+  await page.waitForFunction(() => document.querySelector('[data-category-core]')?.textContent.trim() === 'Flow', null, { timeout: 5000 });
   await assertHitTarget(page, '[data-family-members] [data-member-id="STORY_04"]', `${browserName}/${profileName}:STORY4_MEMBER`);
   await page.locator('[data-family-members] [data-member-id="STORY_04"]').click();
   await waitForStory(page, 'STORY_04');
@@ -291,6 +292,7 @@ async function verifyProfile(browserName, browser, profileName, viewport) {
   assert(!(await page.locator('[data-sequence-prev]').isDisabled()), `${browserName}/${profileName}:STORY24_PREV_DISABLED`);
   const terminal = await shellSnapshot(page);
   assertNoNestedStageTrap(terminal, `${browserName}/${profileName}:STORY24`);
+  assert(errors.length === 0, `${browserName}/${profileName}:TERMINAL_BROWSER_ERRORS:${errors.join('|')}`);
 
   await context.close();
   return {

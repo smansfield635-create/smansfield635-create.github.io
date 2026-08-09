@@ -1,0 +1,162 @@
+{
+  "contract": "LAWS_CONTEXTUAL_TOPOLOGY_RESIDUAL_ORIGIN_CLASSIFICATION_v1",
+  "mode": "NON_PRODUCT_ARCHITECTURAL_ORIGIN_CLASSIFICATION",
+  "status": "CLOSED_BOUNDED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-contextual-topology-freeze-001",
+  "subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "residual_test_commit": "cc14e2ad0853ba8af36f117e538123776fe26258",
+  "governing_rules": {
+    "ABSENT_OR_PARTIAL_DOES_NOT_IMPLY_TRANSFER": true,
+    "DESTINATION_SEMANTIC_AUTHORITY_IS_NOT_TRANSFERABLE_MECHANICS": true,
+    "DONOR_MECHANICS_MUST_BE_STRIPPED_OF_DONOR_SEMANTICS": true,
+    "IMI_MAY_OPEN_ONLY_FOR_A_REAL_TRANSFER_CANDIDATE": true,
+    "PRODUCT_CONSTRUCTION_REMAINS_SEPARATE": true
+  },
+  "current_donor_evidence": {
+    "main_compass_controller": {
+      "path": "assets/compass/compass.controller.js",
+      "blob_sha": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+      "verified_current_at_subject_head": true,
+      "relevant_mechanics": [
+        "preserveCompassState snapshot mechanism",
+        "applyPreservedState restoration mechanism",
+        "guarded selection/navigation transaction skeleton",
+        "persistent constellation and cluster orientation state"
+      ]
+    },
+    "existing_donor_map": {
+      "path": "control-plane/whole-estate/compass-tests-architecture-binding-v1/donor-capability-map.v1.json",
+      "transfer_law": "T_donor:(M_mechanical,S_donor)->(M_mechanical,EMPTY); M_mechanical+S_destination->P_destination",
+      "currentness_does_not_authorize_transfer": true
+    }
+  },
+  "classifications": [
+    {
+      "residual_id": "R1",
+      "capability": "CONTEXTUAL_ORIGIN_STATE",
+      "origin_class": "NATIVE_CONTEXT_AUTHORITY",
+      "reason": "The meaning and authority of C are destination semantics. A donor state container may later assist implementation, but cannot supply contextual-origin authority.",
+      "IMI_transfer_candidate": false
+    },
+    {
+      "residual_id": "R2",
+      "capability": "AUTHORITATIVE_OBJECT_REGISTRY_INDEPENDENT_OF_RENDERING",
+      "origin_class": "NATIVE_BINDING_TO_EXISTING_ESTATE_AUTHORITIES",
+      "reason": "Laws needs an adapter/binding from already authoritative estate objects into O; importing another chamber's object registry would import donor identity and taxonomy.",
+      "IMI_transfer_candidate": false
+    },
+    {
+      "residual_id": "R3",
+      "capability": "RELATION_RECORD_REPRESENTATION",
+      "origin_class": "NATIVE_RELATION_CONTRACT",
+      "reason": "R_OC is destination semantic authority. Mechanical serialization may be generic, but the relation record contract cannot be inherited from donor chamber meaning.",
+      "IMI_transfer_candidate": false,
+      "relation_taxonomy_still_unfrozen": true
+    },
+    {
+      "residual_id": "R4",
+      "capability": "GAMMA_RELATION_RESOLUTION_AUTHORITY",
+      "origin_class": "NATIVE_RELATION_RESOLUTION_AUTHORITY",
+      "reason": "Gamma determines authorized contextual meaning and therefore must be Laws/context-governed rather than donor-derived.",
+      "IMI_transfer_candidate": false
+    },
+    {
+      "residual_id": "R5",
+      "capability": "RECENTER_AUTHORIZATION_TRANSACTION",
+      "origin_class": "HYBRID_NATIVE_AUTHORITY_WITH_POSSIBLE_DONOR_TRANSACTION_MECHANICS",
+      "reason": "Authorization and C0->C1 meaning must be native. Snapshot, guarded transition, commit/cancel, and restoration skeletons may be transferable mechanics once the destination interface exists.",
+      "IMI_transfer_candidate": true,
+      "candidate_donor": "MAIN_COMPASS_CONTROLLER",
+      "candidate_transfer_unit": "STATE_SNAPSHOT_AND_GUARDED_TRANSACTION_SKELETON_ONLY"
+    },
+    {
+      "residual_id": "R6",
+      "capability": "RELATION_RECOMPUTATION_AFTER_RECENTER",
+      "origin_class": "NATIVE_GAMMA_DEPENDENT_MECHANIC",
+      "reason": "Recomputation is the execution of the destination Gamma authority after C changes; donor semantics cannot define it.",
+      "IMI_transfer_candidate": false
+    },
+    {
+      "residual_id": "R7",
+      "capability": "CONTEXT_DRIVEN_SPATIAL_REPROJECTION_TRIGGER",
+      "origin_class": "NATIVE_EXTENSION_OF_EXISTING_LAWS_PROJECTION_CHANNEL",
+      "reason": "Laws already owns semanticProjection revision/publication. The missing trigger is contextual, so a new donor projection engine is not presently justified.",
+      "IMI_transfer_candidate": false
+    },
+    {
+      "residual_id": "R8",
+      "capability": "PRIOR_CONTEXT_PRESERVATION",
+      "origin_class": "DONOR_MECHANICS_CANDIDATE_AFTER_DESTINATION_INTERFACE",
+      "reason": "Current Laws preservation is partial; current Main Compass has explicit snapshot/restoration mechanics already recognized by the whole-estate donor map. Only the mechanics, not donor context meaning, are candidates.",
+      "IMI_transfer_candidate": true,
+      "candidate_donor": "MAIN_COMPASS_CONTROLLER",
+      "candidate_transfer_unit": "PRESERVE_STATE_SNAPSHOT_MECHANICS_ONLY"
+    },
+    {
+      "residual_id": "R9",
+      "capability": "LAWFUL_CONTEXT_RESTORATION",
+      "origin_class": "DONOR_MECHANICS_CANDIDATE_AFTER_DESTINATION_INTERFACE",
+      "reason": "Current Laws has bounded return mechanics but not arbitrary C restoration; Main Compass applyPreservedState/return restoration mechanics are a legitimate mechanical candidate after C state is defined at an executable interface.",
+      "IMI_transfer_candidate": true,
+      "candidate_donor": "MAIN_COMPASS_CONTROLLER",
+      "candidate_transfer_unit": "RESTORATION_SKELETON_ONLY"
+    },
+    {
+      "residual_id": "R10",
+      "capability": "UNKNOWN_OR_UNEVALUABLE_RELATION_HOLD_STATE",
+      "origin_class": "NATIVE_RELATION_STATUS_WITH_REUSE_OF_EXISTING_LAWS_HELD_MECHANISM",
+      "reason": "Relation UNKNOWN/UNEVALUABLE is contextual semantics; existing Laws held behavior may be reused internally without importing a donor system.",
+      "IMI_transfer_candidate": false
+    },
+    {
+      "residual_id": "R11",
+      "capability": "IDENTITY_AND_PROVENANCE_PERSISTENCE_THROUGH_CONTEXT_CHANGE",
+      "origin_class": "BIND_EXISTING_IDENTITY_AND_PROVENANCE_AUTHORITIES",
+      "reason": "This should consume existing authoritative object/provenance/lineage identities rather than transfer another chamber's runtime semantics. LRPv1 may seal artifacts but does not itself supply truth or authority.",
+      "IMI_transfer_candidate": false
+    },
+    {
+      "residual_id": "R12",
+      "capability": "SEPARATION_OF_CONTEXT_FOCUS_SELECTION_AND_VISUAL_POSITION",
+      "origin_class": "NATIVE_ADDITIVE_STATE_SEPARATION",
+      "reason": "Focus, selection, and visual projection are already separated in Laws. The remaining work is to add C as an independent authority, not import a donor interaction model.",
+      "IMI_transfer_candidate": false
+    }
+  ],
+  "transfer_candidate_set": {
+    "residual_ids": ["R5", "R8", "R9"],
+    "donor": "MAIN_COMPASS_CONTROLLER",
+    "candidate_scope": [
+      "snapshot mechanics",
+      "guarded transaction skeleton",
+      "restoration skeleton"
+    ],
+    "explicitly_excluded": [
+      "donor object identities",
+      "donor labels or taxonomy",
+      "donor containment or adjacency semantics",
+      "donor route meaning",
+      "cardinal meaning",
+      "room meaning",
+      "scientific standing",
+      "contextual relation meaning"
+    ]
+  },
+  "gate_result": {
+    "real_transfer_candidate_exists": true,
+    "IMI_route_opening_ready": false,
+    "blocking_reason": "The candidate transfer mechanics require an executable destination interface for C snapshot/commit/restore. The topology is frozen, but the non-product contextual state interface contract has not yet been defined.",
+    "next_lawful_gate": "CONTEXTUAL_STATE_INTERFACE_CONTRACT",
+    "next_lawful_action": "Define the minimal non-product interface for contextual origin read, authorized recenter begin/commit/cancel, prior-context snapshot, restoration, and relation-recompute notification without implementing product code."
+  },
+  "preserved_boundaries": {
+    "product_mutation": false,
+    "donor_transfer": false,
+    "IMI_route_frozen": false,
+    "IMI_scoring_performed": false,
+    "relation_taxonomy_frozen": false,
+    "merge_authorized": false,
+    "deployment_authorized": false
+  }
+}

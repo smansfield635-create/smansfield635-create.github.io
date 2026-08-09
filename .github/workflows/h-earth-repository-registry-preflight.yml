@@ -1,71 +1,160 @@
-name: H-Earth Automatic Repository Registry Preflight
+name: H-Earth HC00 Final Lock Closure Carrier
 
 on:
-  pull_request:
-    paths:
-      - 'h-earth-3d/**'
-      - '!h-earth-3d/registry/**'
-      - '!h-earth-3d/AGENTS.md'
-      - 'showroom/globe/h-earth/**'
-      - '!showroom/globe/h-earth/AGENTS.md'
   push:
+    branches:
+      - verification/h-earth-hc00-final-lock-closure-v1-001
     paths:
-      - 'h-earth-3d/**'
-      - '!h-earth-3d/registry/**'
-      - '!h-earth-3d/AGENTS.md'
-      - 'showroom/globe/h-earth/**'
-      - '!showroom/globe/h-earth/AGENTS.md'
+      - '.github/workflows/h-earth-repository-registry-preflight.yml'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: h-earth-hc00-final-lock-closure-v1
+  cancel-in-progress: false
+
+env:
+  REPOSITORY: smansfield635-create/smansfield635-create.github.io
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  EXPECTED_MAIN: bb9febd7843683728810109f6225fdf782ae3d55
+  EXPECTED_TREE: 7ce9ba065e35b0a807d382ad2224e4ad3489c8d0
+  WORKFLOW_PATH: .github/workflows/h-earth-repository-registry-preflight.yml
+  OUT_DIR: /tmp/h-earth-hc00-final-lock-closure-receipts
 
 jobs:
-  automatic-h-earth-preflight:
-    runs-on: ubuntu-latest
+  close-final-locks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - name: Check out repository
+      - name: Check out execution-only carrier
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Discover changed governed H-Earth paths
+      - name: Verify exact carrier, authoritative main, registry blobs, and active locks
         shell: bash
         env:
-          EVENT_NAME: ${{ github.event_name }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          BEFORE_SHA: ${{ github.event.before }}
-          CURRENT_SHA: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > /tmp/all-changed-paths.txt
-          elif [[ -n "${BEFORE_SHA:-}" && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
-            git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" > /tmp/all-changed-paths.txt
-          else
-            git show --pretty='' --name-only "$CURRENT_SHA" > /tmp/all-changed-paths.txt
-          fi
+          mkdir -p "$OUT_DIR"
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_MAIN"
+          test "$(git diff --name-only HEAD^ HEAD | wc -l | tr -d ' ')" = "1"
+          test "$(git diff --name-only HEAD^ HEAD)" = "$WORKFLOW_PATH"
+          test "$(git rev-parse HEAD^:{tree})" != "" 2>/dev/null || true
+          test "$(git rev-parse HEAD:h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js)" = "975cd4b4d3689c74cccdadd10be2b53b3d3ed6c2"
+          test "$(git rev-parse HEAD:h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.pre-live-experience-maturity-convergence-accepted-occurrences.js)" = "fed80a221d03d6d18be29153391e3f46c07ebb11"
+          test "$(git rev-parse HEAD:h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js)" = "471e8edbe0b498d4e458e7c75bbf1006be94af21"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const repo=process.env.REPOSITORY, token=process.env.GITHUB_TOKEN, out=process.env.OUT_DIR;
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${token}`,'X-GitHub-Api-Version':'2022-11-28'};
+          async function get(url){const r=await fetch(url,{headers});const t=await r.text();if(!r.ok)throw Error(`API_${r.status}:${t}`);return t?JSON.parse(t):null;}
+          const [main,ref]=await Promise.all([
+            get(`https://api.github.com/repos/${repo}/branches/main`),
+            get(`https://api.github.com/repos/${repo}/git/ref/heads/operation-locks/repository-operation-intake-v1`)
+          ]);
+          if(main.commit?.sha!==process.env.EXPECTED_MAIN||main.commit?.commit?.tree?.sha!==process.env.EXPECTED_TREE) throw Error('AUTHORITATIVE_MAIN_IDENTITY_MISMATCH');
+          const file=await get(`https://api.github.com/repos/${repo}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=${ref.object.sha}`);
+          const ledger=JSON.parse(Buffer.from(file.content.replace(/\s/g,''),'base64').toString());
+          const expected=[
+            {generation:607,operationId:'H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE_v1',scope:'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE:V1:EXACT_3_PATH_SCOPE'},
+            {generation:629,operationId:'H_EARTH_HC00_ACCEPTED_OCCURRENCE_EXACT_HEAD_RATIFICATION_AND_MERGE_v2',scope:'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:PR789:EXACT_HEAD_RATIFICATION_AND_MERGE:V2'},
+            {generation:631,operationId:'H_EARTH_HC00_AUTHORITATIVE_OCCURRENCE_FINAL_LOCK_CLOSURE_CARRIER_v1',scope:'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:FINAL_LOCK_CLOSURE_CARRIER:V1:EXACT_1_WORKFLOW_PATH_SCOPE'}
+          ];
+          const active=Object.values(ledger.activeScopes??{});
+          const checks=expected.map(e=>({...e,activeExact:Boolean(active.find(v=>v.lockGeneration===e.generation&&v.operationId===e.operationId&&v.lockScope===e.scope&&v.released===false))}));
+          const pass=checks.every(x=>x.activeExact);
+          const receipt={schema:'H_EARTH_HC00_FINAL_LOCK_CLOSURE_PRECHECK_v1',result:pass?'PASS':'FAIL_CLOSED',mainHead:main.commit.sha,mainTree:main.commit.commit.tree.sha,lockRefHead:ref.object.sha,checks,exactRegistryBlobs:true,carrierChangedPathOnly:process.env.WORKFLOW_PATH,directLedgerEditingPerformed:false};
+          fs.writeFileSync(`${out}/precheck.json`,JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(!pass)process.exit(1);
+          NODE
+          printf '%s\n' "$EXPECTED_MAIN" > "$OUT_DIR/main-before.txt"
 
-          grep -E '^(h-earth-3d/|showroom/globe/h-earth/)' /tmp/all-changed-paths.txt \
-            | grep -Ev '^(h-earth-3d/registry/|h-earth-3d/AGENTS\.md$|showroom/globe/h-earth/AGENTS\.md$)' \
-            | sort -u > /tmp/h-earth-changed-paths.txt || true
-
-          cat /tmp/h-earth-changed-paths.txt
-
-      - name: Execute automatic H-Earth registry preflight
+      - name: Close construction, ratification, and carrier locks through canonical manager
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          node --experimental-default-type=module \
-            tools/h-earth-repository-registry-auto-preflight.mjs \
-            --paths-file /tmp/h-earth-changed-paths.txt \
-            --task "Automatic GitHub change preflight" \
-            --mutation-intent \
-            --output /tmp/h-earth-automatic-preflight-receipt.json
+          set +e
+          mkdir -p "$OUT_DIR"
+          MANAGER=tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          close_exact() {
+            local operation_id="$1" scope="$2" generation="$3" disposition="$4" output="$5"
+            local attempt=1
+            while [ "$attempt" -le 3 ]; do
+              node "$MANAGER" --action close --repository "$REPOSITORY" --lock-ref "$LOCK_REF" --operation-id "$operation_id" --lock-scope "$scope" --lock-generation "$generation" --terminal-disposition "$disposition" --output "$output"
+              local status=$?
+              if [ "$status" -eq 0 ] && node -e "const r=require('$output');process.exit(r.result==='TERMINAL_CLOSURE_COMMITTED'&&r.lockReleased===true?0:1)"; then return 0; fi
+              local conflict
+              conflict=$(node -e "try{const r=require('$output');process.stdout.write(r.errorCode||'')}catch{}")
+              if [ "$conflict" != "LEDGER_COMPARE_AND_SWAP_CONFLICT" ]; then return 1; fi
+              attempt=$((attempt+1)); sleep 1
+            done
+            return 1
+          }
 
-      - name: Upload deterministic preflight receipt
+          targets_ok=1
+          close_exact \
+            'H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE_v1' \
+            'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE:V1:EXACT_3_PATH_SCOPE' \
+            607 PASS_CLOSED "$OUT_DIR/close-607.json" || targets_ok=0
+          close_exact \
+            'H_EARTH_HC00_ACCEPTED_OCCURRENCE_EXACT_HEAD_RATIFICATION_AND_MERGE_v2' \
+            'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:PR789:EXACT_HEAD_RATIFICATION_AND_MERGE:V2' \
+            629 PASS_CLOSED "$OUT_DIR/close-629.json" || targets_ok=0
+
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const repo=process.env.REPOSITORY,token=process.env.GITHUB_TOKEN,out=process.env.OUT_DIR;
+          const headers={Accept:'application/vnd.github+json',Authorization:`Bearer ${token}`,'X-GitHub-Api-Version':'2022-11-28'};
+          async function get(url){const r=await fetch(url,{headers});const t=await r.text();if(!r.ok)throw Error(`API_${r.status}:${t}`);return t?JSON.parse(t):null;}
+          const [main,ref]=await Promise.all([
+            get(`https://api.github.com/repos/${repo}/branches/main`),
+            get(`https://api.github.com/repos/${repo}/git/ref/heads/operation-locks/repository-operation-intake-v1`)
+          ]);
+          const file=await get(`https://api.github.com/repos/${repo}/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=${ref.object.sha}`);
+          const ledger=JSON.parse(Buffer.from(file.content.replace(/\s/g,''),'base64').toString());
+          const active=Object.values(ledger.activeScopes??{});
+          const terminal=new Map((ledger.terminalHistory??[]).map(v=>[v.lockGeneration,v]));
+          const targetsRemoved=[607,629].every(g=>!active.some(v=>v.lockGeneration===g));
+          const targetsTerminal=terminal.get(607)?.terminalDisposition==='PASS_CLOSED'&&terminal.get(629)?.terminalDisposition==='PASS_CLOSED';
+          const carrierStillActive=active.some(v=>v.lockGeneration===631&&v.operationId==='H_EARTH_HC00_AUTHORITATIVE_OCCURRENCE_FINAL_LOCK_CLOSURE_CARRIER_v1'&&v.released===false);
+          const mainStable=main.commit?.sha===process.env.EXPECTED_MAIN&&main.commit?.commit?.tree?.sha===process.env.EXPECTED_TREE;
+          const receipt={schema:'H_EARTH_HC00_FINAL_LOCK_CLOSURE_TARGET_POSTCHECK_v1',result:targetsRemoved&&targetsTerminal&&carrierStillActive&&mainStable?'PASS':'FAIL_CLOSED',targetsRemovedFromActiveScopes:targetsRemoved,targetTerminalDispositionsExact:targetsTerminal,carrierStillActive,mainHead:main.commit?.sha,mainTree:main.commit?.commit?.tree?.sha,mainStable,lockRefHead:ref.object.sha};
+          fs.writeFileSync(`${out}/target-postcheck.json`,JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(receipt.result!=='PASS')process.exit(1);
+          NODE
+          postcheck_status=$?
+
+          if [ "$targets_ok" -eq 1 ] && [ "$postcheck_status" -eq 0 ]; then carrier_disposition=PASS_CLOSED; else carrier_disposition=FAIL_CLOSED; fi
+          close_exact \
+            'H_EARTH_HC00_AUTHORITATIVE_OCCURRENCE_FINAL_LOCK_CLOSURE_CARRIER_v1' \
+            'H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC00_ACCEPTED_OCCURRENCE:FINAL_LOCK_CLOSURE_CARRIER:V1:EXACT_1_WORKFLOW_PATH_SCOPE' \
+            631 "$carrier_disposition" "$OUT_DIR/close-631.json"
+          carrier_close_status=$?
+
+          TARGETS_OK="$targets_ok" POSTCHECK_STATUS="$postcheck_status" CARRIER_DISPOSITION="$carrier_disposition" CARRIER_CLOSE_STATUS="$carrier_close_status" node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const out=process.env.OUT_DIR;
+          const read=n=>{try{return JSON.parse(fs.readFileSync(`${out}/${n}`,'utf8'));}catch{return null;}};
+          const pass=process.env.TARGETS_OK==='1'&&process.env.POSTCHECK_STATUS==='0'&&process.env.CARRIER_DISPOSITION==='PASS_CLOSED'&&process.env.CARRIER_CLOSE_STATUS==='0'&&read('close-607.json')?.result==='TERMINAL_CLOSURE_COMMITTED'&&read('close-629.json')?.result==='TERMINAL_CLOSURE_COMMITTED'&&read('close-631.json')?.result==='TERMINAL_CLOSURE_COMMITTED';
+          const receipt={schema:'H_EARTH_HC00_AUTHORITATIVE_OCCURRENCE_FINAL_CLOSURE_RECEIPT_v1',result:pass?'PASS_CLOSED':'FAIL_CLOSED',authoritativeMain:process.env.EXPECTED_MAIN,authoritativeTree:process.env.EXPECTED_TREE,hc00MergeCommit:'38da390a802c25a615366c6f896d7501558c0811',registryClosureMergeCommit:'bb9febd7843683728810109f6225fdf782ae3d55',constructionClosure:read('close-607.json'),ratificationClosure:read('close-629.json'),carrierClosure:read('close-631.json'),targetPostcheck:read('target-postcheck.json'),directLedgerEditingPerformed:false,canonicalLockManagerOnly:true,mainMutationPerformed:false,registryMutationPerformed:false,productMutationPerformed:false,carrierMergeAuthorized:false,g1g2Started:false,governanceState:pass?'HC00_MERGED_PLUS_HC00_AUTHORITATIVE_OCCURRENCE_RECORDED_CLOSED':'NOT_CLOSED'};
+          fs.writeFileSync(`${out}/summary.json`,JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(!pass)process.exit(1);
+          NODE
+
+      - name: Upload final canonical closure receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-automatic-preflight-receipt
-          path: /tmp/h-earth-automatic-preflight-receipt.json
+          name: h-earth-hc00-final-lock-closure-receipts-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/h-earth-hc00-final-lock-closure-receipts/
           if-no-files-found: error
           retention-days: 30

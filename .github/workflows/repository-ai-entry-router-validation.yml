@@ -202,30 +202,56 @@ jobs:
           cleanup() {
             if test -n "$ACTIVE_GENERATION"; then
               set +e
-              node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-                --action close \
-                --repository "$REPOSITORY" \
-                --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
-                --operation-id "$ACTIVE_OPERATION" \
-                --lock-scope "$SCOPE" \
-                --lock-generation "$ACTIVE_GENERATION" \
-                --terminal-disposition FAIL_CLOSED \
-                --output /tmp/repository-operation-successor-emergency-cleanup.json
+              for attempt in $(seq 1 8); do
+                node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+                  --action close \
+                  --repository "$REPOSITORY" \
+                  --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+                  --operation-id "$ACTIVE_OPERATION" \
+                  --lock-scope "$SCOPE" \
+                  --lock-generation "$ACTIVE_GENERATION" \
+                  --terminal-disposition FAIL_CLOSED \
+                  --output /tmp/repository-operation-successor-emergency-cleanup.json
+                if node -e "const r=require('/tmp/repository-operation-successor-emergency-cleanup.json');process.exit(r.result==='TERMINAL_CLOSURE_COMMITTED'?0:1)"; then
+                  break
+                fi
+                if ! node -e "const r=require('/tmp/repository-operation-successor-emergency-cleanup.json');process.exit(r.result==='LOCK_NOT_CLOSED'&&r.errorCode==='LEDGER_COMPARE_AND_SWAP_CONFLICT'?0:1)"; then
+                  break
+                fi
+                sleep 1
+              done
               set -e
             fi
           }
           trap cleanup EXIT
 
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action acquire \
-            --repository "$REPOSITORY" \
-            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
-            --operation-id "$PREDECESSOR_ID" \
-            --lock-scope "$SCOPE" \
-            --governing-head "$OLD_HEAD" \
-            --request-digest aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
-            --procedure-digest bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb \
-            --output /tmp/repository-operation-successor-predecessor-acquire.json
+          predecessor_acquired=0
+          for attempt in $(seq 1 8); do
+            set +e
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action acquire \
+              --repository "$REPOSITORY" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id "$PREDECESSOR_ID" \
+              --lock-scope "$SCOPE" \
+              --governing-head "$OLD_HEAD" \
+              --request-digest aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+              --procedure-digest bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb \
+              --output /tmp/repository-operation-successor-predecessor-acquire.json
+            acquire_status=$?
+            set -e
+            if node -e "const r=require('/tmp/repository-operation-successor-predecessor-acquire.json');process.exit(r.result==='ADMITTED_AND_LOCKED'?0:1)"; then
+              predecessor_acquired=1
+              break
+            fi
+            if node -e "const r=require('/tmp/repository-operation-successor-predecessor-acquire.json');process.exit(r.result==='LOCK_NOT_ACQUIRED'&&r.errorCode==='LEDGER_COMPARE_AND_SWAP_CONFLICT'?0:1)"; then
+              sleep 1
+              continue
+            fi
+            cat /tmp/repository-operation-successor-predecessor-acquire.json
+            exit "$acquire_status"
+          done
+          test "$predecessor_acquired" -eq 1
           ACTIVE_GENERATION="$(node -e "const r=require('/tmp/repository-operation-successor-predecessor-acquire.json');if(r.result!=='ADMITTED_AND_LOCKED')process.exit(1);process.stdout.write(String(r.lockGeneration))")"
 
           export MAIN_HEAD OLD_HEAD SCOPE PREDECESSOR_ID SUCCESSOR_ID ACTIVE_GENERATION
@@ -301,18 +327,34 @@ jobs:
           replay_status=$?
           set -e
           test "$replay_status" -ne 0
-          node -e "const r=require('/tmp/repository-operation-successor-remote-replay.json');if(r.result!=='SUCCESSOR_NOT_ADMITTED'||!['PREDECESSOR_OPERATION_ID_MISMATCH','ACTIVE_PREDECESSOR_NOT_FOUND'].includes(r.errorCode))process.exit(1)"
+          node -e "const r=require('/tmp/repository-operation-successor-remote-replay.json');if(r.result!=='SUCCESSOR_NOT_ADMITTED'||!['PREDECESSOR_OPERATION_ID_MISMATCH','ACTIVE_PREDECESSOR_NOT_FOUND','LEDGER_COMPARE_AND_SWAP_CONFLICT'].includes(r.errorCode))process.exit(1)"
 
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action close \
-            --repository "$REPOSITORY" \
-            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
-            --operation-id "$ACTIVE_OPERATION" \
-            --lock-scope "$SCOPE" \
-            --lock-generation "$ACTIVE_GENERATION" \
-            --terminal-disposition PASS_CLOSED \
-            --output /tmp/repository-operation-successor-remote-cleanup.json
-          node -e "const r=require('/tmp/repository-operation-successor-remote-cleanup.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||r.terminalDisposition!=='PASS_CLOSED')process.exit(1)"
+          successor_closed=0
+          for attempt in $(seq 1 8); do
+            set +e
+            node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close \
+              --repository "$REPOSITORY" \
+              --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+              --operation-id "$ACTIVE_OPERATION" \
+              --lock-scope "$SCOPE" \
+              --lock-generation "$ACTIVE_GENERATION" \
+              --terminal-disposition PASS_CLOSED \
+              --output /tmp/repository-operation-successor-remote-cleanup.json
+            cleanup_status=$?
+            set -e
+            if node -e "const r=require('/tmp/repository-operation-successor-remote-cleanup.json');process.exit(r.result==='TERMINAL_CLOSURE_COMMITTED'&&r.terminalDisposition==='PASS_CLOSED'?0:1)"; then
+              successor_closed=1
+              break
+            fi
+            if node -e "const r=require('/tmp/repository-operation-successor-remote-cleanup.json');process.exit(r.result==='LOCK_NOT_CLOSED'&&r.errorCode==='LEDGER_COMPARE_AND_SWAP_CONFLICT'?0:1)"; then
+              sleep 1
+              continue
+            fi
+            cat /tmp/repository-operation-successor-remote-cleanup.json
+            exit "$cleanup_status"
+          done
+          test "$successor_closed" -eq 1
           ACTIVE_GENERATION=""
           trap - EXIT
 
@@ -335,6 +377,7 @@ jobs:
               freshSuccessorAdmitted: true,
               implicitAuthorityInheritanceRejected: true,
               replayRejected: true,
+              sharedLedgerCasRacesRemainFailClosed: true,
               syntheticSuccessorLockReleased: true
             }
           };

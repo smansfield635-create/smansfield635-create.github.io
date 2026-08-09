@@ -805,13 +805,32 @@
       "state": "ADMITTED_LOCKED"
     },
     "91a8ac4b480ab72e440c070baa69d189644358d7b2709d13a1c94fdb18783ea1": {
-      "governingHead": "331284949940c95db80a332235492de4c80d3d43",
-      "lockGeneration": 832,
+      "governingHead": "f624b55096c69c63909d4ee260fcd5615f8d9aa6",
+      "lockGeneration": 839,
       "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
-      "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002",
-      "procedureLocatorDigest": "7baa7699e2468c3aafa72cd44d283c4a735d7c1b94f418fe8502982afaa5a83a",
+      "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "331284949940c95db80a332235492de4c80d3d43",
+        "lockGeneration": 832,
+        "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
+        "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002",
+        "preservedEvidenceRefs": [
+          "GENERATION_832_CANONICAL_ADMISSION",
+          "RUN_31333629470_BOOTSTRAP_ROUTER_8_OF_8_PASS",
+          "RUN_31334006870_FRESH_CARRIER_VERIFICATION_18_OF_18_PASS",
+          "PR_845_CANDIDATE_HEAD_0E4721FC96D53EA8EAEEE1420CF348D3717BD87D",
+          "RUN_31334006848_DIFFERENTIAL_REGRESSION_PASS",
+          "PR_844_MAIN_ADVANCE_F624B550_DISJOINT_FROM_CARRIER_EIGHT_PATH_DOMAIN"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "BOUNDED_EXACT_HEAD_CARRIER_GEN832_TO_F624B550_20260809_001"
+      },
+      "procedureLocatorDigest": "83ade0e650837b57753d1437193dfd6dba8fd265469b5ac35ab845d7bd91972c",
       "released": false,
-      "requestDigest": "3d3a526ceebd155eba1609e6630e7cd11d56fc4b0690fc73f4bad9f897bfcf42",
+      "requestDigest": "147496c09cdac2c86a4ae6400598114df1dc62b48b9cbfaeda1bdab607763b6e",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "91a8ac4b480ab72e440c070baa69d189644358d7b2709d13a1c94fdb18783ea1",
       "state": "ADMITTED_LOCKED"
@@ -1540,7 +1559,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 838,
+  "lockGeneration": 839,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -11782,6 +11801,38 @@
       "scopeHash": "ecbec49ebf9c77fe33c8433f7694116a81d304ab81ef05cef726b5bff788c634",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "331284949940c95db80a332235492de4c80d3d43",
+      "lockGeneration": 832,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
+      "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002",
+      "procedureLocatorDigest": "7baa7699e2468c3aafa72cd44d283c4a735d7c1b94f418fe8502982afaa5a83a",
+      "released": true,
+      "requestDigest": "3d3a526ceebd155eba1609e6630e7cd11d56fc4b0690fc73f4bad9f897bfcf42",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "91a8ac4b480ab72e440c070baa69d189644358d7b2709d13a1c94fdb18783ea1",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GENERATION_832_CANONICAL_ADMISSION",
+          "RUN_31333629470_BOOTSTRAP_ROUTER_8_OF_8_PASS",
+          "RUN_31334006870_FRESH_CARRIER_VERIFICATION_18_OF_18_PASS",
+          "PR_845_CANDIDATE_HEAD_0E4721FC96D53EA8EAEEE1420CF348D3717BD87D",
+          "RUN_31334006848_DIFFERENTIAL_REGRESSION_PASS",
+          "PR_844_MAIN_ADVANCE_F624B550_DISJOINT_FROM_CARRIER_EIGHT_PATH_DOMAIN"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "f624b55096c69c63909d4ee260fcd5615f8d9aa6",
+        "successorLockGeneration": 839,
+        "successorLockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:INSTALLATION:V1",
+        "successorOperationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001",
+        "transitionId": "BOUNDED_EXACT_HEAD_CARRIER_GEN832_TO_F624B550_20260809_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

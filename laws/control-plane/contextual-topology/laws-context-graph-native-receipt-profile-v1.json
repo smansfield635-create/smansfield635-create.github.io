@@ -1,0 +1,47 @@
+{
+  "schema": "LAWS_CONTEXT_GRAPH_NATIVE_RECEIPT_PROFILE_v1",
+  "version": "1.0.0",
+  "status": "EVIDENCE_PROFILE_FOR_VERIFIED_REPRESENTATIVE_GRAPH",
+  "nativeReceiptSchema": "LAWS_CONTEXT_GRAPH_NATIVE_RECEIPT_v1",
+  "receiptClass": "SEMANTIC_GRAPH_ASSEMBLY_EVIDENCE",
+  "graphContract": {
+    "version": "1.0.0",
+    "freezeCommit": "84cd86ff93e657af6c38b52cfc6525da594f01a7",
+    "blob": "240dbb7dca3db8f5a0a21e77d1aee91f1d21cb5a"
+  },
+  "assembler": {
+    "schema": "LAWS_CONTEXT_GRAPH_ASSEMBLER_v1",
+    "version": "1.0.0",
+    "constructionCommit": "eb17fe67e8eb486b9f04dc221331ae96ed33d4fa",
+    "blob": "f94fd5840316c338b7456957eeed8e77b24ac5fc"
+  },
+  "requiredFields": [
+    "schema",
+    "profileVersion",
+    "receiptClass",
+    "graphContractVersion",
+    "graphContractIdentity",
+    "assemblerIdentity",
+    "contextBinding",
+    "sourceBindings",
+    "assertedNodeIds",
+    "assertedEdgeIds",
+    "assertedEdges",
+    "resolutionLedger",
+    "assemblyIdentity",
+    "assemblyRejections",
+    "assemblyDisposition"
+  ],
+  "laws": [
+    "NATIVE_GRAPH_RECEIPT_IS_EVIDENCE_OF_SEMANTIC_ASSEMBLY_NOT_VISUAL_STATE",
+    "RECEIPT_MUST_PRESERVE_ASSEMBLER_OUTPUT_WITHOUT_SEMANTIC_UPGRADE",
+    "RECEIPT_MUST_PRESERVE_ALL_RESOLUTION_LEDGER_ENTRIES",
+    "RECEIPT_MUST_PRESERVE_ASSERTED_EDGE_PAYLOADS_EXACTLY",
+    "VISUAL_OR_GEOMETRY_STATE_MAY_NOT_ENTER_GRAPH_AUTHORITY"
+  ],
+  "visualStateReceipt": false,
+  "productionContextGraph": false,
+  "projectionAuthorized": false,
+  "newReceiptProtocol": false,
+  "lineageSealProtocol": "LINEAGE_RECEIPT_PROTOCOL_v1"
+}

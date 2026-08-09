@@ -1,0 +1,105 @@
+name: Laws Context Graph Evidence Conformance v1
+
+on:
+  push:
+    branches:
+      - agent/laws-context-graph-evidence-conformance-binding-001
+    paths:
+      - '.github/workflows/laws-context-graph-evidence-conformance-v1.yml'
+      - 'laws/control-plane/contextual-topology/laws-context-graph-native-receipt-profile-v1.json'
+      - 'laws/control-plane/contextual-topology/laws-context-graph-native-receipt-v1.mjs'
+      - 'laws/control-plane/contextual-topology/laws-context-graph-evidence-conformance-v1.mjs'
+      - 'laws/control-plane/contextual-topology/verify-laws-context-graph-evidence-conformance-v1.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXPECTED_PARENT: eb17fe67e8eb486b9f04dc221331ae96ed33d4fa
+  EXPECTED_ASSEMBLER_BLOB: f94fd5840316c338b7456957eeed8e77b24ac5fc
+  EXPECTED_CONTRACT_BLOB: 240dbb7dca3db8f5a0a21e77d1aee91f1d21cb5a
+  EXPECTED_GAMMA_RESOLVER_BLOB: 1d715884d71419ac25892da452ca7b6d21e6c909
+  EXPECTED_RELATION_REGISTRY_BLOB: 5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e
+  EXPECTED_LRPV1_JS_BLOB: 98b8173893a437f31bb8d71ffbf06ae5a1eec4e2
+  ESTATE_813_HEAD: 8df49529c3895ff07ee4655f3dd3ec708bb977aa
+  ESTATE_813_CONTRACTS_BLOB: d492553d96fbeafb6550fd422e543c98c3b12a55
+  ESTATE_813_CORE_BLOB: 42b6469dec1a36cfaad41cb9d022f40c20841ae4
+
+jobs:
+  verify-native-graph-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact graph-evidence candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify bounded construction lineage and immutable upstreams
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          test "$(git rev-list --parents -n 1 HEAD | awk '{print NF}')" -eq 2
+
+          mapfile -t CHANGED < <(git diff --name-status "$EXPECTED_PARENT"...HEAD | sort)
+          EXPECTED=(
+            $'A\t.github/workflows/laws-context-graph-evidence-conformance-v1.yml'
+            $'A\tlaws/control-plane/contextual-topology/laws-context-graph-native-receipt-profile-v1.json'
+            $'A\tlaws/control-plane/contextual-topology/laws-context-graph-native-receipt-v1.mjs'
+            $'A\tlaws/control-plane/contextual-topology/laws-context-graph-evidence-conformance-v1.mjs'
+            $'A\tlaws/control-plane/contextual-topology/verify-laws-context-graph-evidence-conformance-v1.mjs'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 5
+          test "$(printf '%s\n' "${CHANGED[@]}")" = "$(printf '%s\n' "${EXPECTED_SORTED[@]}")"
+
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-assembler-v1.mjs)" = "$EXPECTED_ASSEMBLER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-contract-v1.json)" = "$EXPECTED_CONTRACT_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-gamma-resolver-v1.mjs)" = "$EXPECTED_GAMMA_RESOLVER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-relation-registry-v1.json)" = "$EXPECTED_RELATION_REGISTRY_BLOB"
+          test "$(git rev-parse HEAD:infrastructure/lineage-receipt-protocol-v1/javascript/lineage_receipt_protocol_v1.mjs)" = "$EXPECTED_LRPV1_JS_BLOB"
+
+      - name: Check out authoritative #813 substrate read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.ESTATE_813_HEAD }}
+          path: .authority/estate-conformance-813
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact authoritative #813 identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          AUTH_ROOT="$GITHUB_WORKSPACE/.authority/estate-conformance-813"
+          test "$(git -C "$AUTH_ROOT" rev-parse HEAD)" = "$ESTATE_813_HEAD"
+          test "$(git -C "$AUTH_ROOT" rev-parse HEAD:validation/integration/semantic-evidence-conformance-v1/contracts.v1.json)" = "$ESTATE_813_CONTRACTS_BLOB"
+          test "$(git -C "$AUTH_ROOT" rev-parse HEAD:validation/integration/semantic-evidence-conformance-v1/conformance-core.v1.mjs)" = "$ESTATE_813_CORE_BLOB"
+
+      - name: Verify evidence-layer syntax
+        run: |
+          node --check laws/control-plane/contextual-topology/laws-context-graph-native-receipt-v1.mjs
+          node --check laws/control-plane/contextual-topology/laws-context-graph-evidence-conformance-v1.mjs
+          node --check laws/control-plane/contextual-topology/verify-laws-context-graph-evidence-conformance-v1.mjs
+
+      - name: Execute native graph evidence, #813 conformance, and LRPv1 sealing
+        shell: bash
+        env:
+          ESTATE_CONFORMANCE_ROOT: ${{ github.workspace }}/.authority/estate-conformance-813
+          LAWS_CONTEXT_GRAPH_EVIDENCE_DIR: /tmp/laws-context-graph-evidence
+        run: |
+          set -euo pipefail
+          mkdir -p "$LAWS_CONTEXT_GRAPH_EVIDENCE_DIR"
+          node laws/control-plane/contextual-topology/verify-laws-context-graph-evidence-conformance-v1.mjs
+
+      - name: Upload graph evidence receipts and adversarial verification
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-context-graph-evidence-conformance-v1-${{ github.run_id }}
+          path: /tmp/laws-context-graph-evidence
+          if-no-files-found: error
+          retention-days: 30

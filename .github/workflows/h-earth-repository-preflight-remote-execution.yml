@@ -42,7 +42,7 @@ jobs:
       EXPECTED_DESCRIPTOR_ID: H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_DESCRIPTOR_V1
       EXPECTED_OPERATION_ID: H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_v1
       EXPECTED_TOOL_ID: H_EARTH_REPOSITORY_REGISTRY_AUTO_PREFLIGHT_REMOTE_ADAPTER_V1
-      EXPECTED_TOOLING_HEAD: d9ee6216067687ec7af300a1ef0d79a92d4aa73b
+      EXPECTED_TOOLING_HEAD: 7ad9b628dd94d44ec08dbbae8370c501fb3aca73
       EXPECTED_ADAPTER_PATH: tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs
       ARTIFACT_NAME: h-earth-premutation-preflight-remote-execution-${{ github.run_id }}-${{ github.run_attempt }}
 
@@ -180,6 +180,30 @@ jobs:
           test -z "$(git -C "$TOOLING_ROOT" status --porcelain=v1 --untracked-files=all)"
           test -f "$TOOLING_ROOT/$EXPECTED_ADAPTER_PATH"
 
+      - name: Prove immutable adapter positive and negative receipt preservation
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLING_ROOT="$RUNNER_TEMP/immutable-tooling"
+          (
+            cd "$TOOLING_ROOT"
+            node "$EXPECTED_ADAPTER_PATH" \
+              --self-test \
+              --output "$RUNNER_TEMP/adapter-self-test-receipt.json"
+          )
+          node - <<'NODE'
+          const receipt = require(process.env.RUNNER_TEMP + '/adapter-self-test-receipt.json');
+          if (receipt.result !== 'PASS_CLOSED') process.exit(1);
+          if (receipt.positiveNativeDisposition !== 'PASS') process.exit(1);
+          if (!['REVIEW_REQUIRED','BLOCK','STOP'].includes(receipt.negativeNativeDisposition)) process.exit(1);
+          if (receipt.negativeClassification !== 'UNREGISTERED_H_EARTH_SCOPED_PATH') process.exit(1);
+          if (receipt.negativeNativeReceiptPreserved !== true) process.exit(1);
+          if (receipt.productMutationPerformed !== false) process.exit(1);
+          if (receipt.constructionAuthorityGranted !== false) process.exit(1);
+          if (receipt.genericCommandAuthority !== false) process.exit(1);
+          NODE
+
       - name: Execute immutable adapter against exact subject head
         shell: bash
         run: |
@@ -211,16 +235,26 @@ jobs:
           const request = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/request.json', 'utf8'));
           const adapterBytes = fs.readFileSync(process.env.RUNNER_TEMP + '/adapter-execution-receipt.json');
           const adapter = JSON.parse(adapterBytes);
-          if (adapter.schema !== 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_RECEIPT_v1' || adapter.result !== 'PASS_CLOSED') fail('ADAPTER_RECEIPT_NOT_PASS');
+          if (adapter.schema !== 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_RECEIPT_v1') fail('ADAPTER_RECEIPT_SCHEMA_MISMATCH');
+          if (!['PASS_CLOSED','FAIL_CLOSED'].includes(adapter.result)) fail('ADAPTER_RECEIPT_RESULT_INVALID');
           if (adapter.subjectHead !== request.subjectHead) fail('ADAPTER_SUBJECT_HEAD_MISMATCH');
           if (JSON.stringify([...adapter.paths].sort()) !== JSON.stringify([...request.paths].sort())) fail('ADAPTER_PATH_SET_MISMATCH');
-          if (adapter.nativePreflightReceipt?.finalDisposition !== 'PASS') fail('NATIVE_PREFLIGHT_NOT_PASS');
-          if (adapter.nativePreflightReceipt?.mutationMayProceed !== false) fail('NATIVE_PREFLIGHT_MUTATION_AUTHORITY_LEAK');
-          if (adapter.nativePreflightReceipt?.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') fail('NATIVE_PREFLIGHT_CONTINUATION_MISMATCH');
+          const native = adapter.nativePreflightReceipt;
+          if (!native || typeof native !== 'object') fail('NATIVE_PREFLIGHT_RECEIPT_MISSING');
+          if (native.mutationMayProceed !== false) fail('NATIVE_PREFLIGHT_MUTATION_AUTHORITY_LEAK');
           if (adapter.productMutationPerformed || adapter.constructionAuthorityGranted || adapter.branchCreated || adapter.genericCommandAuthority || adapter.runtimeOrRendererMutationPerformed || adapter.cameraOrNavigationMutationPerformed || adapter.terrainOrWaterMutationPerformed || adapter.mergePerformed || adapter.deploymentPerformed || adapter.releasePerformed) fail('SIDE_EFFECT_OR_AUTHORITY_LEAK');
           if (!adapter.repositoryCleanBefore || !adapter.repositoryCleanAfter || !adapter.subjectWorktreeCleanBefore || !adapter.subjectWorktreeCleanAfter) fail('WORKTREE_CLEANLINESS_FAILURE');
 
-          const nativeText = JSON.stringify(stable(adapter.nativePreflightReceipt), null, 2) + '\n';
+          if (adapter.result === 'PASS_CLOSED') {
+            if (native.finalDisposition !== 'PASS') fail('PASS_ADAPTER_NATIVE_DISPOSITION_MISMATCH');
+            if (native.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') fail('NATIVE_PREFLIGHT_CONTINUATION_MISMATCH');
+          } else {
+            if (!['REVIEW_REQUIRED','BLOCK','STOP'].includes(native.finalDisposition)) fail('FAIL_CLOSED_NATIVE_DISPOSITION_INVALID');
+            if (adapter.errorCode !== 'NATIVE_PREFLIGHT_NOT_PASS') fail('FAIL_CLOSED_ERROR_CODE_MISMATCH');
+            if (typeof native.continuation !== 'string' || native.continuation.length === 0) fail('FAIL_CLOSED_CONTINUATION_MISSING');
+          }
+
+          const nativeText = JSON.stringify(stable(native), null, 2) + '\n';
           fs.writeFileSync(process.env.RUNNER_TEMP + '/native-preflight-receipt.json', nativeText);
           const nativeBytes = fs.readFileSync(process.env.RUNNER_TEMP + '/native-preflight-receipt.json');
           const activeHead = fs.readFileSync(process.env.RUNNER_TEMP + '/active-head.txt', 'utf8').trim();
@@ -230,7 +264,7 @@ jobs:
           const operationalProof = process.env.GITHUB_EVENT_NAME === 'issue_comment' && request.requestId === 'H_EARTH_PREMUTATION_PREFLIGHT_OPERATIONAL_PROOF';
           const receipt = stable({
             schema: 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_TRANSPORT_RECEIPT_v1',
-            result: 'PASS_CLOSED',
+            result: adapter.result,
             eventName: process.env.GITHUB_EVENT_NAME,
             runId: Number(process.env.GITHUB_RUN_ID),
             runAttempt: Number(process.env.GITHUB_RUN_ATTEMPT),
@@ -247,9 +281,9 @@ jobs:
             paths: request.paths,
             adapterReceiptSha256: hash(adapterBytes),
             nativeReceiptSha256: hash(nativeBytes),
-            nativeDisposition: adapter.nativePreflightReceipt.finalDisposition,
-            mutationMayProceed: adapter.nativePreflightReceipt.mutationMayProceed,
-            continuation: adapter.nativePreflightReceipt.continuation,
+            nativeDisposition: native.finalDisposition,
+            mutationMayProceed: native.mutationMayProceed,
+            continuation: native.continuation,
             fullNativeReceiptArtifact: true,
             operationalProof,
             repositoryCleanBefore: adapter.repositoryCleanBefore,
@@ -266,6 +300,7 @@ jobs:
             releasePerformed: false
           });
           fs.writeFileSync(process.env.RUNNER_TEMP + '/transport-receipt.json', JSON.stringify(receipt, null, 2) + '\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/transport-result.txt', adapter.result + '\n');
           NODE
 
       - name: Verify active checkout remained read-only
@@ -283,6 +318,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: |
             ${{ runner.temp }}/request.json
+            ${{ runner.temp }}/adapter-self-test-receipt.json
             ${{ runner.temp }}/adapter-execution-receipt.json
             ${{ runner.temp }}/native-preflight-receipt.json
             ${{ runner.temp }}/transport-receipt.json
@@ -296,3 +332,20 @@ jobs:
           if [[ -d "$RUNNER_TEMP/immutable-tooling" ]]; then
             git worktree remove --force "$RUNNER_TEMP/immutable-tooling" || true
           fi
+
+      - name: Enforce fail-closed disposition after evidence packaging
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$RUNNER_TEMP/transport-result.txt"
+          RESULT="$(tr -d '\n' < "$RUNNER_TEMP/transport-result.txt")"
+          if [[ "$RESULT" == "PASS_CLOSED" ]]; then
+            exit 0
+          fi
+          if [[ "$RESULT" == "FAIL_CLOSED" ]]; then
+            echo "Native preflight failed closed; full diagnostic evidence was packaged."
+            exit 1
+          fi
+          echo "Unexpected transport result: $RESULT" >&2
+          exit 1

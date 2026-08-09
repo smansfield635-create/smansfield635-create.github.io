@@ -6,53 +6,47 @@
     {
       "backendId": "LOCAL_CLEAN_GIT",
       "classification": "AUTHORITATIVE_WHEN_PROCEDURE_DECLARED",
-      "requirements": [
-        "NETWORK_OR_REQUIRED_COMMITS_ALREADY_PRESENT",
-        "GIT_AVAILABLE",
-        "DECLARED_RUNTIME_AVAILABLE",
-        "CLEAN_WORKTREE",
-        "EXACT_COMMAND"
-      ],
+      "requirements": ["NETWORK_OR_REQUIRED_COMMITS_ALREADY_PRESENT","GIT_AVAILABLE","DECLARED_RUNTIME_AVAILABLE","CLEAN_WORKTREE","EXACT_COMMAND"],
       "failureRouting": "GITHUB_ACTIONS_CLEAN_EXECUTION"
     },
     {
       "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
       "classification": "AUTHORITATIVE_WHEN_PROJECT_DECLARED",
-      "requirements": [
-        "PROCEDURE_SPECIFIC_WORKFLOW",
-        "EXACT_GOVERNING_HEAD",
-        "EXACT_TARGET_HEAD",
-        "FULL_HISTORY_WHEN_LINEAGE_IS_TESTED",
-        "COMMAND_EMITTED_RECEIPT",
-        "ARTIFACT_UPLOAD_ON_SUCCESS_OR_FAILURE"
-      ],
+      "requirements": ["PROCEDURE_SPECIFIC_WORKFLOW","EXACT_GOVERNING_HEAD","EXACT_TARGET_HEAD","FULL_HISTORY_WHEN_LINEAGE_IS_TESTED","COMMAND_EMITTED_RECEIPT","ARTIFACT_UPLOAD_ON_SUCCESS_OR_FAILURE"],
       "manualReconstructionAllowed": false
     },
     {
       "backendId": "CONNECTED_GITHUB_METADATA_INSPECTION",
       "classification": "EVIDENCE_AND_DIAGNOSIS_ONLY",
-      "allowedUses": [
-        "DISCOVERY",
-        "COMMIT_AND_BLOB_IDENTITY_RESOLUTION",
-        "CHANGED_PATH_COMPARISON",
-        "BLOCK_CAUSE_DIAGNOSIS"
-      ],
+      "allowedUses": ["DISCOVERY","COMMIT_AND_BLOB_IDENTITY_RESOLUTION","CHANGED_PATH_COMPARISON","BLOCK_CAUSE_DIAGNOSIS"],
       "prohibitedClaim": "DOES_NOT_REPLACE_A_REQUIRED_COMMAND_EXECUTION_OR_REPRODUCTION_FINGERPRINT"
     },
     {
       "backendId": "PRE_REGISTRATION_INTAKE_BRIDGE_EXECUTION",
       "classification": "AUTHORITATIVE_FOR_CANONICAL_OPERATION_INTAKE_WHEN_ROOT_DECLARED_ACTIVE",
-      "requirements": [
-        "LOCAL_AUTHENTICATED_OPERATION_INTAKE_EXECUTION_UNAVAILABLE",
-        "ROOT_PRE_REGISTRATION_BRIDGE_STATUS_ACTIVE_PERMANENT",
-        "ROOT_PRE_REGISTRATION_BRIDGE_IDENTITY_VALID",
-        "ISSUE_COMMENT_INVOCATION_MARKER_EXACT",
-        "CANONICAL_GATE_EXECUTION_WITH_WORKFLOW_GITHUB_TOKEN",
-        "CANONICAL_RECEIPT_RETURNED_UNALTERED"
-      ],
+      "requirements": ["LOCAL_AUTHENTICATED_OPERATION_INTAKE_EXECUTION_UNAVAILABLE","ROOT_PRE_REGISTRATION_BRIDGE_STATUS_ACTIVE_PERMANENT","ROOT_PRE_REGISTRATION_BRIDGE_IDENTITY_VALID","ISSUE_COMMENT_INVOCATION_MARKER_EXACT","CANONICAL_GATE_EXECUTION_WITH_WORKFLOW_GITHUB_TOKEN","CANONICAL_RECEIPT_RETURNED_UNALTERED"],
       "genericWorkflowDispatchAllowed": false,
       "manualReconstructionAllowed": false,
       "terminalInabilityAllowedWhenValid": false
+    },
+    {
+      "backendId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER",
+      "classification": "AUTHORITATIVE_FOR_REGISTERED_CLOSED_WORLD_COMMAND_EXECUTION_WHEN_OPERATION_ADMITTED",
+      "requirements": [
+        "ACTIVE_CANONICAL_OPERATION_LOCK",
+        "REQUEST_AND_PROCEDURE_DIGEST_MATCH",
+        "REGISTERED_IMMUTABLE_EXECUTABLE_DESCRIPTOR",
+        "CALLER_CANNOT_SUPPLY_COMMAND_EXECUTABLE_ARGUMENTS_PATHS_TARGET_HEAD_OR_ENVIRONMENT",
+        "DETACHED_CLEAN_EXACT_TARGET_HEAD_WORKTREE",
+        "COMMAND_EMITTED_NATIVE_RECEIPT",
+        "NATIVE_RECEIPT_PRESERVED_UNALTERED"
+      ],
+      "executionWorkflow": ".github/workflows/bounded-exact-head-execution-carrier-v1.yml",
+      "registry": ".github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json",
+      "genericWorkflowDispatchAllowed": false,
+      "arbitraryCommandAuthority": false,
+      "repositoryWriteAuthority": false,
+      "manualReconstructionAllowed": false
     }
   ],
   "routeTransitions": [
@@ -67,6 +61,17 @@
       "genericWorkflowDispatchAllowed": false,
       "terminalInabilityAllowedWhenBridgeValid": false,
       "invalidBridgeDisposition": "STOP_FAIL_CLOSED"
+    },
+    {
+      "transitionId": "ADMITTED_REGISTERED_COMMAND_LOCAL_UNAVAILABLE_TO_BOUNDED_EXACT_HEAD_CARRIER_v1",
+      "appliesTo": "CANONICAL_ADMITTED_CLOSED_WORLD_COMMAND_EXECUTION",
+      "whenLocalCleanGitExecutionUnavailable": true,
+      "requiredBackend": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER",
+      "requiredInvocationMarker": "BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_V1",
+      "requiredDescriptorRegistry": ".github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json",
+      "genericWorkflowDispatchAllowed": false,
+      "arbitraryCommandAuthority": false,
+      "invalidDescriptorOrOperationDisposition": "STOP_FAIL_CLOSED"
     }
   ]
 }

@@ -457,13 +457,38 @@
       "state": "ADMITTED_LOCKED"
     },
     "5593ea087263deac6365670c07170f7fa467ade1de671099bc72acd654d1b4f6": {
-      "governingHead": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
-      "lockGeneration": 660,
+      "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+      "lockGeneration": 856,
       "lockScope": "H_EARTH:HC02:VIEWPORT_AUTHORITY_UNBOXING:PRODUCT:V1",
-      "operationId": "H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1",
-      "procedureLocatorDigest": "b7d08b744047b60b9354c8cbebf2c0af8be9d03e4107b956f6bf59ea4c18d495",
+      "operationId": "H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1_SUCCESSOR_20260809_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+        "lockGeneration": 660,
+        "lockScope": "H_EARTH:HC02:VIEWPORT_AUTHORITY_UNBOXING:PRODUCT:V1",
+        "operationId": "H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1",
+        "preservedEvidenceRefs": [
+          "GENERATION_660_REQUEST_DIGEST:e7e79acaf65fdf8cbd69800c9023bb8b642335d0fa42ab969befb28a753da804",
+          "GENERATION_660_PROCEDURE_LOCATOR_DIGEST:b7d08b744047b60b9354c8cbebf2c0af8be9d03e4107b956f6bf59ea4c18d495",
+          "PAGE_EXCELLENCE_SUBSTANTIVE_PASS_RUN:31329000335",
+          "PAGE_EXCELLENCE_COMMAND_RECEIPT_SHA256:23272d5490fa79e7102498f0e08f5bab84baa6cc1ca22fd05cecaeab7c340f3d",
+          "PAGE_EXCELLENCE_PROVIDER_RATIFICATION:PR_831",
+          "GENERATION_781:PASS_CLOSED",
+          "DIFFERENTIAL_CONTINUITY_PRIOR_RECEIPT:ISSUE_817_COMMENT_5233280078",
+          "DIFFERENTIAL_CONTINUITY_FRESH_RECEIPT:ISSUE_817_COMMENT_5233809325:PASS_SUCCESSOR_REQUIRED",
+          "CURRENT_PREFLIGHT_DESCRIPTOR_BLOB:54ca231e7784f9fbafcb94c0bbc0b86109b20d77",
+          "CURRENT_PREFLIGHT_EXACT_TOOLING_HEAD:7ad9b628dd94d44ec08dbbae8370c501fb3aca73",
+          "CURRENT_INDEX_HTML_BLOB:bc868995d9065ce03a5948bcf9f27804b178bc0b",
+          "CURRENT_INDEX_CSS_BLOB:f208b7f11096a7bf5da282226903ac634c1eab01"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_HC02_GEN660_TO_CURRENT_MAIN_01DA797F_20260809_002"
+      },
+      "procedureLocatorDigest": "e27015e3cce933f76ff6580f0d11503f46a06a0faf540e44a6f743bd47e1e66e",
       "released": false,
-      "requestDigest": "e7e79acaf65fdf8cbd69800c9023bb8b642335d0fa42ab969befb28a753da804",
+      "requestDigest": "9375c3d3ef9aab17e0a13787134379b5a024280f07bcc1eb811c8525a5c33c48",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "5593ea087263deac6365670c07170f7fa467ade1de671099bc72acd654d1b4f6",
       "state": "ADMITTED_LOCKED"
@@ -1559,7 +1584,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 855,
+  "lockGeneration": 856,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -12189,6 +12214,44 @@
         "successorLockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
         "successorOperationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002_SUCCESSOR_001",
         "transitionId": "LAWS_PHI1_GEN825_TO_CURRENT_HEAD_CORRECTED_IDENTITIES_20260809_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+      "lockGeneration": 660,
+      "lockScope": "H_EARTH:HC02:VIEWPORT_AUTHORITY_UNBOXING:PRODUCT:V1",
+      "operationId": "H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1",
+      "procedureLocatorDigest": "b7d08b744047b60b9354c8cbebf2c0af8be9d03e4107b956f6bf59ea4c18d495",
+      "released": true,
+      "requestDigest": "e7e79acaf65fdf8cbd69800c9023bb8b642335d0fa42ab969befb28a753da804",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5593ea087263deac6365670c07170f7fa467ade1de671099bc72acd654d1b4f6",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GENERATION_660_REQUEST_DIGEST:e7e79acaf65fdf8cbd69800c9023bb8b642335d0fa42ab969befb28a753da804",
+          "GENERATION_660_PROCEDURE_LOCATOR_DIGEST:b7d08b744047b60b9354c8cbebf2c0af8be9d03e4107b956f6bf59ea4c18d495",
+          "PAGE_EXCELLENCE_SUBSTANTIVE_PASS_RUN:31329000335",
+          "PAGE_EXCELLENCE_COMMAND_RECEIPT_SHA256:23272d5490fa79e7102498f0e08f5bab84baa6cc1ca22fd05cecaeab7c340f3d",
+          "PAGE_EXCELLENCE_PROVIDER_RATIFICATION:PR_831",
+          "GENERATION_781:PASS_CLOSED",
+          "DIFFERENTIAL_CONTINUITY_PRIOR_RECEIPT:ISSUE_817_COMMENT_5233280078",
+          "DIFFERENTIAL_CONTINUITY_FRESH_RECEIPT:ISSUE_817_COMMENT_5233809325:PASS_SUCCESSOR_REQUIRED",
+          "CURRENT_PREFLIGHT_DESCRIPTOR_BLOB:54ca231e7784f9fbafcb94c0bbc0b86109b20d77",
+          "CURRENT_PREFLIGHT_EXACT_TOOLING_HEAD:7ad9b628dd94d44ec08dbbae8370c501fb3aca73",
+          "CURRENT_INDEX_HTML_BLOB:bc868995d9065ce03a5948bcf9f27804b178bc0b",
+          "CURRENT_INDEX_CSS_BLOB:f208b7f11096a7bf5da282226903ac634c1eab01"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+        "successorLockGeneration": 856,
+        "successorLockScope": "H_EARTH:HC02:VIEWPORT_AUTHORITY_UNBOXING:PRODUCT:V1",
+        "successorOperationId": "H_EARTH_HC02_VIEWPORT_AUTHORITY_UNBOXING_v1_SUCCESSOR_20260809_002",
+        "transitionId": "H_EARTH_HC02_GEN660_TO_CURRENT_MAIN_01DA797F_20260809_002"
       },
       "terminalDisposition": "SUPERSEDED"
     }

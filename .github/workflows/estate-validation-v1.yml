@@ -55,6 +55,31 @@ jobs:
             --output /tmp/estate-validation-router-route.json
           node -e "const r=require('/tmp/estate-validation-router-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
 
+      - name: Require coverage expansion mutation routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path validation/master-validation-register.v1.json \
+            --path validation/manifest.v1.json \
+            --path validation/harness/verify-estate-validation.v1.mjs \
+            --path validation/schemas/coverage-profile.schema.v1.json \
+            --path validation/profiles/narrative.v1.json \
+            --path validation/profiles/frontier.v1.json \
+            --path validation/profiles/products.v1.json \
+            --path validation/profiles/mirrorland.v1.json \
+            --task "estate-validation-coverage-expansion-route-check" \
+            --output /tmp/estate-validation-coverage-router-probe.json
+          node - <<'NODE'
+          const r = require('/tmp/estate-validation-coverage-router-probe.json');
+          if (
+            r.disposition !== 'PASS' ||
+            r.routes.length !== 8 ||
+            !r.routes.every((route) => route.projectId === 'ESTATE_VALIDATION' && route.disposition === 'PASS')
+          ) process.exit(1);
+          NODE
+
       - name: Verify estate validation sidecar
         run: |
           node validation/harness/verify-estate-validation.v1.mjs \
@@ -68,6 +93,7 @@ jobs:
           path: |
             /tmp/estate-validation-router-self-test.json
             /tmp/estate-validation-router-route.json
+            /tmp/estate-validation-coverage-router-probe.json
             /tmp/estate-validation-receipt.json
           if-no-files-found: error
           retention-days: 30

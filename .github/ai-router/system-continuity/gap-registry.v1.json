@@ -89,6 +89,41 @@
         "POST_MERGE_OBSERVATION_PROOF"
       ],
       "authorityCreated": false
+    },
+    {
+      "gapId": "EXECUTION_ROUTE_DISCOVERY_ADOPTION_GAP",
+      "status": "OPEN",
+      "discoveredAtHead": "67816c8d89c9bc0aed8a83a736b6f7870ca782aa",
+      "coordinationIssue": 822,
+      "summary": "The root entrypoint already declared the permanent pre-registration intake bridge and the local-execution-unavailable fallback law, but mutation routing did not emit an executable specialized backend transition when local authenticated canonical intake execution was unavailable, allowing rooms to terminate unnecessarily.",
+      "interfaceKeys": [
+        "LOCAL_EXECUTION_UNAVAILABLE_USES_DECLARED_GITHUB_ACTIONS_BACKEND",
+        "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1",
+        "REPOSITORY_AI_EXECUTION_BACKEND_REGISTRY_v1",
+        "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1",
+        "REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1"
+      ],
+      "pathScopes": [
+        "tools/repository-ai-entry-router.mjs",
+        ".github/ai-router/execution-backends.v1.json",
+        ".github/workflows/repository-ai-entry-router-validation.yml"
+      ],
+      "evidenceRefs": [
+        "PR_822_EXPOSED_GAP",
+        "PRE_REGISTRATION_BRIDGE_ACTIVE_PERMANENT_AT_0CD88A_AND_D0D0EA",
+        "PRE_REGISTRATION_BRIDGE_RUN_31326203213",
+        "PRE_REGISTRATION_ADMISSION_GENERATION_751"
+      ],
+      "closureRequirements": [
+        "LOCAL_AUTHENTICATED_INTAKE_UNAVAILABLE_RESOLVES_TO_CERTIFIED_PRE_REGISTRATION_BRIDGE",
+        "ACTIVE_VALID_BRIDGE_PROHIBITS_TERMINAL_INABILITY_FALLTHROUGH",
+        "ABSENT_INACTIVE_OR_IDENTITY_INVALID_BRIDGE_FAILS_CLOSED",
+        "GENERIC_WORKFLOW_DISPATCH_SUBSTITUTION_REMAINS_PROHIBITED",
+        "PROTECTED_LAWS_WORKSTREAM_NONINTERFERENCE",
+        "REAL_REMOTE_INVOCATION_PROOF",
+        "POST_MERGE_CONTINUITY_PROOF"
+      ],
+      "authorityCreated": false
     }
   ]
 }

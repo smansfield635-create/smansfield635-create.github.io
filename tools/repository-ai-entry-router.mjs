@@ -4,6 +4,11 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const ENTRYPOINT_PATH = 'AI_ENTRYPOINT.json';
+const BRIDGE_CAPABILITY_ID = 'CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1';
+const BRIDGE_STATUS = 'ACTIVE_PERMANENT_PRE_REGISTRATION_CAPABILITY';
+const BRIDGE_MARKER = 'PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1';
+const BRIDGE_BACKEND_ID = 'PRE_REGISTRATION_INTAKE_BRIDGE_EXECUTION';
+const BRIDGE_TRANSITION_ID = 'OPERATION_INTAKE_LOCAL_AUTH_UNAVAILABLE_TO_PRE_REGISTRATION_BRIDGE_v1';
 
 function die(message, code = 1) {
   process.stderr.write(`${message}\n`);
@@ -165,6 +170,93 @@ function repositoryState(root) {
   };
 }
 
+function validateExecutionBackendRegistry(registry) {
+  if (!registry || registry.schema !== 'REPOSITORY_AI_EXECUTION_BACKEND_REGISTRY_v1' || registry.status !== 'ACTIVE') {
+    throw new Error('EXECUTION_BACKEND_REGISTRY_INVALID');
+  }
+  if (!Array.isArray(registry.backends)) throw new Error('EXECUTION_BACKEND_REGISTRY_BACKENDS_INVALID');
+  return registry;
+}
+
+function bridgeIdentityValid(bridge) {
+  return bridge &&
+    bridge.status === BRIDGE_STATUS &&
+    bridge.capabilityId === BRIDGE_CAPABILITY_ID &&
+    bridge.invocationMarker === BRIDGE_MARKER &&
+    typeof bridge.executionWorkflow === 'string' && bridge.executionWorkflow.length > 0 &&
+    typeof bridge.fixedCommand === 'string' && bridge.fixedCommand.length > 0 &&
+    typeof bridge.activationFingerprint === 'string' && /^[0-9a-f]{64}$/.test(bridge.activationFingerprint) &&
+    typeof bridge.canonicalGateBlob === 'string' && /^[0-9a-f]{40}$/.test(bridge.canonicalGateBlob) &&
+    bridge.generalRepositoryMutationAuthorityCreated === false &&
+    bridge.mergeAuthorityCreated === false &&
+    bridge.prMutationAuthorityCreated === false;
+}
+
+function resolveOperationIntakeExecution(entrypoint, backendRegistry, localAuthenticatedExecutionAvailable) {
+  validateExecutionBackendRegistry(backendRegistry);
+  const transition = (backendRegistry.routeTransitions ?? []).find((item) => item.transitionId === BRIDGE_TRANSITION_ID) ?? null;
+  if (localAuthenticatedExecutionAvailable) {
+    return {
+      schema: 'REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1',
+      result: 'LOCAL_CANONICAL_INTAKE_ROUTE',
+      backendId: 'LOCAL_CLEAN_GIT',
+      canonicalGate: entrypoint.operationIntakeGate?.gateCli ?? null,
+      terminalInabilityAllowed: false,
+      genericWorkflowDispatchAllowed: false,
+      reasonCode: 'LOCAL_AUTHENTICATED_EXECUTION_AVAILABLE'
+    };
+  }
+
+  const bridge = entrypoint.preRegistrationIntakeBridge;
+  if (!bridgeIdentityValid(bridge)) {
+    return {
+      schema: 'REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1',
+      result: 'STOP',
+      backendId: null,
+      errorCode: 'CERTIFIED_PRE_REGISTRATION_BRIDGE_UNAVAILABLE_OR_IDENTITY_INVALID',
+      terminalInabilityAllowed: true,
+      genericWorkflowDispatchAllowed: false,
+      reasonCode: 'LOCAL_AUTHENTICATED_EXECUTION_UNAVAILABLE_AND_CERTIFIED_BRIDGE_INVALID'
+    };
+  }
+
+  const transitionValid = transition &&
+    transition.requiredBackend === BRIDGE_BACKEND_ID &&
+    transition.requiredCapabilityId === BRIDGE_CAPABILITY_ID &&
+    transition.requiredInvocationMarker === BRIDGE_MARKER &&
+    transition.genericWorkflowDispatchAllowed === false &&
+    transition.terminalInabilityAllowedWhenBridgeValid === false &&
+    transition.invalidBridgeDisposition === 'STOP_FAIL_CLOSED';
+  const backend = backendRegistry.backends.find((item) => item.backendId === BRIDGE_BACKEND_ID) ?? null;
+  if (!transitionValid || !backend) {
+    return {
+      schema: 'REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1',
+      result: 'STOP',
+      backendId: null,
+      errorCode: 'CERTIFIED_PRE_REGISTRATION_BRIDGE_TRANSITION_NOT_REGISTERED',
+      terminalInabilityAllowed: true,
+      genericWorkflowDispatchAllowed: false,
+      reasonCode: 'DECLARED_BRIDGE_EXISTS_BUT_BACKEND_TRANSITION_IS_NOT_EXECUTABLE'
+    };
+  }
+
+  return {
+    schema: 'REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1',
+    result: 'CERTIFIED_PRE_REGISTRATION_BRIDGE_REQUIRED',
+    backendId: BRIDGE_BACKEND_ID,
+    capabilityId: bridge.capabilityId,
+    invocationMarker: bridge.invocationMarker,
+    executionWorkflow: bridge.executionWorkflow,
+    fixedCommand: bridge.fixedCommand,
+    activationFingerprint: bridge.activationFingerprint,
+    canonicalGateBlob: bridge.canonicalGateBlob,
+    lockRef: bridge.lockRef,
+    terminalInabilityAllowed: false,
+    genericWorkflowDispatchAllowed: false,
+    reasonCode: 'LOCAL_AUTHENTICATED_EXECUTION_UNAVAILABLE_USES_DECLARED_CERTIFIED_BRIDGE'
+  };
+}
+
 function validateRegistry(root, entrypoint, router) {
   const requiredFiles = [
     ENTRYPOINT_PATH,
@@ -189,6 +281,7 @@ function validateRegistry(root, entrypoint, router) {
 
 function executeSelfTest(root, entrypoint, router) {
   validateRegistry(root, entrypoint, router);
+  const backendRegistry = validateExecutionBackendRegistry(readJson(root, entrypoint.executionBackendRegistry));
   const scenarios = [
     ['h-earth-3d/terrain/example.js', 'H_EARTH', 'PASS'],
     ['showroom/globe/h-earth/index.html', 'H_EARTH', 'PASS'],
@@ -209,6 +302,45 @@ function executeSelfTest(root, entrypoint, router) {
     actualDisposition: mutationGuard.disposition,
     pass: mutationGuard.disposition === 'BLOCK'
   });
+
+  const localRoute = resolveOperationIntakeExecution(entrypoint, backendRegistry, true);
+  results.push({
+    scenario: 'LOCAL_AUTHENTICATED_OPERATION_INTAKE',
+    expectedResult: 'LOCAL_CANONICAL_INTAKE_ROUTE',
+    actualResult: localRoute.result,
+    pass: localRoute.result === 'LOCAL_CANONICAL_INTAKE_ROUTE' && localRoute.terminalInabilityAllowed === false
+  });
+
+  const bridgeRoute = resolveOperationIntakeExecution(entrypoint, backendRegistry, false);
+  results.push({
+    scenario: 'LOCAL_AUTHENTICATED_EXECUTION_UNAVAILABLE',
+    expectedResult: 'CERTIFIED_PRE_REGISTRATION_BRIDGE_REQUIRED',
+    actualResult: bridgeRoute.result,
+    pass: bridgeRoute.result === 'CERTIFIED_PRE_REGISTRATION_BRIDGE_REQUIRED' &&
+      bridgeRoute.backendId === BRIDGE_BACKEND_ID &&
+      bridgeRoute.invocationMarker === BRIDGE_MARKER &&
+      bridgeRoute.terminalInabilityAllowed === false &&
+      bridgeRoute.genericWorkflowDispatchAllowed === false
+  });
+
+  const invalidBridgeEntrypoint = { ...entrypoint, preRegistrationIntakeBridge: { ...entrypoint.preRegistrationIntakeBridge, status: 'INACTIVE' } };
+  const invalidBridgeRoute = resolveOperationIntakeExecution(invalidBridgeEntrypoint, backendRegistry, false);
+  results.push({
+    scenario: 'CERTIFIED_BRIDGE_INACTIVE_FAIL_CLOSED',
+    expectedResult: 'STOP',
+    actualResult: invalidBridgeRoute.result,
+    pass: invalidBridgeRoute.result === 'STOP' && invalidBridgeRoute.errorCode === 'CERTIFIED_PRE_REGISTRATION_BRIDGE_UNAVAILABLE_OR_IDENTITY_INVALID'
+  });
+
+  const missingTransitionRegistry = { ...backendRegistry, routeTransitions: [] };
+  const missingTransitionRoute = resolveOperationIntakeExecution(entrypoint, missingTransitionRegistry, false);
+  results.push({
+    scenario: 'BRIDGE_DECLARED_WITHOUT_EXECUTABLE_TRANSITION_FAIL_CLOSED',
+    expectedResult: 'STOP',
+    actualResult: missingTransitionRoute.result,
+    pass: missingTransitionRoute.result === 'STOP' && missingTransitionRoute.errorCode === 'CERTIFIED_PRE_REGISTRATION_BRIDGE_TRANSITION_NOT_REGISTERED'
+  });
+
   const failures = results.filter((result) => !result.pass);
   return {
     schema: 'REPOSITORY_AI_ENTRY_ROUTER_SELF_TEST_RECEIPT_v1',
@@ -236,6 +368,7 @@ try {
   const root = discoverRoot(process.cwd());
   const entrypoint = readJson(root, ENTRYPOINT_PATH);
   const router = readJson(root, entrypoint.routerRegistry);
+  const backendRegistry = validateExecutionBackendRegistry(readJson(root, entrypoint.executionBackendRegistry));
 
   if (args.selfTest) {
     const selfTest = executeSelfTest(root, entrypoint, router);
@@ -251,14 +384,21 @@ try {
 
   const normalizedPaths = [...new Set(args.paths.map(normalizeRepositoryPath))].sort();
   const routes = normalizedPaths.map((filePath) => routeOne(root, router, filePath, args.mutationIntent));
-  const disposition = aggregateDisposition(routes);
+  let disposition = aggregateDisposition(routes);
   const state = repositoryState(root);
-  const reasonCodes = [...new Set(routes.map((route) => {
-    if (route.routeClass === 'UNREGISTERED') return 'NO_REGISTERED_PROJECT_AUTHORITY';
-    if (route.routeClass === 'AMBIGUOUS') return 'MULTIPLE_EQUAL_PRIORITY_PROJECT_ROUTES';
-    if (route.routeClass === 'ROUTER_INFRASTRUCTURE') return 'ROUTER_INFRASTRUCTURE_VALIDATION_REQUIRED';
-    return 'REGISTERED_PROJECT_ROUTE_RESOLVED';
-  }))];
+  const operationIntakeExecution = args.mutationIntent
+    ? resolveOperationIntakeExecution(entrypoint, backendRegistry, Boolean(process.env.GITHUB_TOKEN))
+    : null;
+  if (operationIntakeExecution?.result === 'STOP') disposition = 'STOP';
+  const reasonCodes = [...new Set([
+    ...routes.map((route) => {
+      if (route.routeClass === 'UNREGISTERED') return 'NO_REGISTERED_PROJECT_AUTHORITY';
+      if (route.routeClass === 'AMBIGUOUS') return 'MULTIPLE_EQUAL_PRIORITY_PROJECT_ROUTES';
+      if (route.routeClass === 'ROUTER_INFRASTRUCTURE') return 'ROUTER_INFRASTRUCTURE_VALIDATION_REQUIRED';
+      return 'REGISTERED_PROJECT_ROUTE_RESOLVED';
+    }),
+    ...(operationIntakeExecution ? [operationIntakeExecution.reasonCode] : [])
+  ])];
 
   const receipt = {
     schema: 'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1',
@@ -269,6 +409,7 @@ try {
     mutationIntent: args.mutationIntent,
     workingTreeClean: state.workingTreeClean,
     routes,
+    operationIntakeExecution,
     disposition,
     reasonCodes,
     conversationMemoryRequired: false

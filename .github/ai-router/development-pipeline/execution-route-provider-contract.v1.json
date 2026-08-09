@@ -1,0 +1,33 @@
+{
+  "schema": "INTEGRATED_DEVELOPMENT_PIPELINE_EXECUTION_ROUTE_PROVIDER_CONTRACT_v1",
+  "contractId": "EXECUTION_ROUTE_DISCOVERY_PROVIDER_PR823_v1",
+  "status": "CANDIDATE_PROVIDER_VALIDATED_NOT_RATIFIED",
+  "provider": {
+    "sourcePr": 823,
+    "branch": "agent/execution-route-discovery-adoption-gap-repair-v1-001",
+    "candidateHead": "2b6f2fe5f39b20b5c5cae14458519495f270aea8",
+    "receiptSchema": "REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1",
+    "acceptedResults": [
+      "LOCAL_CANONICAL_INTAKE_ROUTE",
+      "CERTIFIED_PRE_REGISTRATION_BRIDGE_REQUIRED",
+      "STOP"
+    ],
+    "certifiedBackend": "PRE_REGISTRATION_INTAKE_BRIDGE_EXECUTION",
+    "transitionId": "OPERATION_INTAKE_LOCAL_AUTH_UNAVAILABLE_TO_PRE_REGISTRATION_BRIDGE_v1"
+  },
+  "consumerRequirements": {
+    "receiptSchemaExact": true,
+    "providerHeadExactWhileCandidate": true,
+    "unknownResultFailsClosed": true,
+    "stopResultMayNotBeRewritten": true,
+    "providerMergeRequiredBeforeCurrentMainAuthorityClaim": true
+  },
+  "nonInterference": {
+    "providerSourceMutationAuthorized": false,
+    "providerMergeAuthorized": false,
+    "providerRatificationInherited": false,
+    "executionBackendRegistryMutationAuthorized": false,
+    "routerImplementationMutationAuthorized": false,
+    "systemGapRegistryMutationAuthorized": false
+  }
+}

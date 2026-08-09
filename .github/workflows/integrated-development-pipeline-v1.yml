@@ -1,0 +1,192 @@
+name: Integrated Development Pipeline v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-router/development-pipeline/**'
+      - '.github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json'
+      - '.github/ai-router/instrument-lifecycle/protected-live-operations.v1.json'
+      - '.github/workflows/instrument-lifecycle-observation-v1.yml'
+      - '.github/workflows/integrated-development-pipeline-v1.yml'
+      - '.github/ai-router/router.v1.json'
+      - 'AI_ENTRYPOINT.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/ai-router/development-pipeline/**'
+      - '.github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json'
+      - '.github/ai-router/instrument-lifecycle/protected-live-operations.v1.json'
+      - '.github/workflows/instrument-lifecycle-observation-v1.yml'
+      - '.github/workflows/integrated-development-pipeline-v1.yml'
+      - '.github/ai-router/router.v1.json'
+      - 'AI_ENTRYPOINT.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+concurrency:
+  group: integrated-development-pipeline-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PIPELINE_DIR: .github/ai-router/development-pipeline
+  POLICY_REGISTRY: .github/ai-router/development-pipeline/policy-registry.v1.json
+  PROVIDER_CONTRACT: .github/ai-router/development-pipeline/execution-route-provider-contract.v1.json
+  LIFECYCLE_REGISTRY: .github/ai-router/instrument-lifecycle/instrument-lifecycle-registry.v1.json
+  PROTECTED_REGISTRY: .github/ai-router/instrument-lifecycle/protected-live-operations.v1.json
+
+jobs:
+  validate-attest-and-observe:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact construction boundary for this integrated stack
+        if: github.event_name != 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then BASE="${{ github.event.pull_request.base.sha }}"; else BASE="${{ github.event.before }}"; fi
+          git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
+          cat > "$RUNNER_TEMP/allowed.txt" <<'PATHS'
+          .github/ai-router/development-pipeline/evidence-bundle.v1.mjs
+          .github/ai-router/development-pipeline/execution-route-provider-contract.v1.json
+          .github/ai-router/development-pipeline/integrated-development-pipeline-gate.v1.mjs
+          .github/ai-router/development-pipeline/integrated-development-pipeline-protocol.v1.json
+          .github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs
+          .github/ai-router/development-pipeline/policy-gate.v1.mjs
+          .github/ai-router/development-pipeline/policy-registry.v1.json
+          .github/ai-router/development-pipeline/retirement-eligibility-gate.v1.mjs
+          .github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json
+          .github/ai-router/instrument-lifecycle/protected-live-operations.v1.json
+          .github/ai-router/router.v1.json
+          .github/workflows/instrument-lifecycle-observation-v1.yml
+          .github/workflows/integrated-development-pipeline-v1.yml
+          AI_ENTRYPOINT.json
+          PATHS
+          sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
+          OUTSIDE="$(comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" || true)"
+          if [ -n "$OUTSIDE" ]; then echo "PATH_OUTSIDE_INTEGRATED_OPERATION_SCOPE" >&2; printf '%s\n' "$OUTSIDE" >&2; exit 1; fi
+          test -z "$(grep -E '^(showroom/|laws/|h-earth-3d/|tests/|products/|validation/|tools/repository-ai-entry-router\.mjs$|\.github/ai-router/execution-backends\.v1\.json$|\.github/ai-router/system-continuity/gap-registry\.v1\.json$|\.github/operation-intake/active-operation-ledger\.v1\.json$)' "$RUNNER_TEMP/changed.txt" || true)"
+
+      - name: Verify package syntax and exact self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check "$PIPELINE_DIR/policy-gate.v1.mjs"
+          node --check "$PIPELINE_DIR/retirement-eligibility-gate.v1.mjs"
+          node --check "$PIPELINE_DIR/evidence-bundle.v1.mjs"
+          node --check "$PIPELINE_DIR/integrated-development-pipeline-gate.v1.mjs"
+          node --check "$PIPELINE_DIR/integrated-development-pipeline-self-test.v1.mjs"
+          node "$PIPELINE_DIR/integrated-development-pipeline-self-test.v1.mjs" --output "$RUNNER_TEMP/self-test.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.physicalRetirementPerformed!==false||r.mergeAuthorityCreated!==false||r.productAuthorityCreated!==false)process.exit(1)"
+
+      - name: Execute integrated policy evidence and retirement instrumentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          SUBJECT_HEAD="$(git rev-parse HEAD^{commit})"
+          export SUBJECT_HEAD
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const request={
+            schema:'INTEGRATED_DEVELOPMENT_PIPELINE_REQUEST_v1',
+            operationId:`INTEGRATED_PIPELINE_VALIDATION_${process.env.SUBJECT_HEAD.slice(0,12)}`,
+            subjectHead:process.env.SUBJECT_HEAD,
+            currentMainHead:process.env.SUBJECT_HEAD,
+            requestedPaths:['.github/ai-router/development-pipeline/policy-registry.v1.json'],
+            requestedAuthorityClasses:['READ_ONLY_OBSERVATION_AUTHORITY'],
+            explicitProjectAuthority:false,
+            requestPhysicalRetirement:false,
+            attestationUsedAsAuthoritySource:false,
+            observerHistoricalConstructionScopeEnforcement:false,
+            retirementTarget:'.github/workflows/laws-cp5-final-celestial-naturalization.yml',
+            retirementContinuityProof:null,
+            continuityRef:{systemId:'REPOSITORY_PROGRESSIVE_SYSTEM_CONTINUITY_TRACK_v1',status:'SEPARATELY_GOVERNED_DEPENDENCY'}
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/integrated-request.json',JSON.stringify(request,null,2)+'\n');
+          NODE
+          node "$PIPELINE_DIR/integrated-development-pipeline-gate.v1.mjs" \
+            --input "$RUNNER_TEMP/integrated-request.json" \
+            --policy "$POLICY_REGISTRY" \
+            --provider "$PROVIDER_CONTRACT" \
+            --lifecycle "$LIFECYCLE_REGISTRY" \
+            --protected "$PROTECTED_REGISTRY" \
+            --output "$RUNNER_TEMP/integrated-development-pipeline-receipt.json" \
+            --evidence "$RUNNER_TEMP/evidence-bundle.json" \
+            --policy-output "$RUNNER_TEMP/policy-decision-receipt.json" \
+            --retirement-output "$RUNNER_TEMP/retirement-eligibility-receipt.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/integrated-development-pipeline-receipt.json');if(!String(r.result).startsWith('PASS_')||r.subjectHead!==process.env.SUBJECT_HEAD||r.repositoryMutationPerformed!==false||r.physicalRetirementPerformed!==false||r.authorityBoundary.mergeAuthorityCreated!==false||r.authorityBoundary.productAuthorityCreated!==false)process.exit(1)"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/retirement-eligibility-receipt.json');if(r.result!=='NOT_ELIGIBLE_CONTINUITY_UNPROVEN'||r.physicalRetirementPerformed!==false)process.exit(1)"
+
+      - name: Verify repository router
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/router-self-test.json');if(r.result!=='PASS')process.exit(1)"
+
+      - name: Package canonical evidence subjects
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/integrated-development-pipeline
+          cp "$RUNNER_TEMP/self-test.json" artifacts/integrated-development-pipeline/self-test.json
+          cp "$RUNNER_TEMP/integrated-development-pipeline-receipt.json" artifacts/integrated-development-pipeline/integrated-development-pipeline-receipt.json
+          cp "$RUNNER_TEMP/policy-decision-receipt.json" artifacts/integrated-development-pipeline/policy-decision-receipt.json
+          cp "$RUNNER_TEMP/retirement-eligibility-receipt.json" artifacts/integrated-development-pipeline/retirement-eligibility-receipt.json
+          cp "$RUNNER_TEMP/evidence-bundle.json" artifacts/integrated-development-pipeline/evidence-bundle.json
+          cp "$RUNNER_TEMP/router-self-test.json" artifacts/integrated-development-pipeline/router-self-test.json
+          test -z "$(git status --porcelain=v1 --untracked-files=all | grep -v '^?? artifacts/integrated-development-pipeline/' || true)"
+
+      - name: Generate signed GitHub artifact attestation for integrated evidence bundle
+        id: attest
+        uses: actions/attest@v4
+        with:
+          subject-path: artifacts/integrated-development-pipeline/evidence-bundle.json
+
+      - name: Record attestation result without authority inflation
+        shell: bash
+        env:
+          ATTESTATION_ID: ${{ steps.attest.outputs.attestation-id }}
+          ATTESTATION_URL: ${{ steps.attest.outputs.attestation-url }}
+        run: |
+          set -euo pipefail
+          test -n "$ATTESTATION_ID"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt={
+            schema:'INTEGRATED_DEVELOPMENT_PIPELINE_ATTESTATION_RECEIPT_v1',
+            result:'PASS_ATTESTED',
+            attestationId:process.env.ATTESTATION_ID,
+            attestationUrl:process.env.ATTESTATION_URL||null,
+            subject:'artifacts/integrated-development-pipeline/evidence-bundle.json',
+            evidenceRewritten:false,
+            authorityCreated:false,
+            mergeAuthorityCreated:false,
+            productAuthorityCreated:false,
+            semanticAuthorityCreated:false,
+            scientificClaimAuthorityCreated:false
+          };
+          fs.writeFileSync('artifacts/integrated-development-pipeline/attestation-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: integrated-development-pipeline-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/integrated-development-pipeline/
+          if-no-files-found: error
+          retention-days: 90

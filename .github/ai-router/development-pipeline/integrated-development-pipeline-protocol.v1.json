@@ -1,0 +1,67 @@
+{
+  "schema": "REPOSITORY_INTEGRATED_DEVELOPMENT_PIPELINE_PROTOCOL_v1",
+  "protocolId": "REPOSITORY_INTEGRATED_DEVELOPMENTAL_INSTRUMENTATION_STACK_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_WHEN_PRESENT_ON_DEFAULT_BRANCH_AND_VALIDATION_PASS",
+  "purpose": "Compose execution-route discovery, declarative policy, canonical intake and execution, progressive continuity, evidence attestation, and retirement eligibility into one fail-closed developmental instrumentation pipeline without inheriting project authority.",
+  "sequence": [
+    "RESOLVE_EXECUTION_ROUTE",
+    "EVALUATE_DECLARATIVE_POLICY",
+    "REQUIRE_EXISTING_CANONICAL_INTAKE_AND_SCOPE_LOCK_FOR_MUTATION",
+    "EXECUTE_ONLY_THROUGH_AUTHORIZED_BACKEND",
+    "ASSESS_PROGRESSIVE_SYSTEM_CONTINUITY",
+    "BUILD_CANONICAL_EVIDENCE_BUNDLE",
+    "ATTEST_EVIDENCE_BUNDLE",
+    "ASSESS_RETIREMENT_ELIGIBILITY_WITHOUT_RETIRING"
+  ],
+  "governingLaws": [
+    "CAPABILITY_EXISTS_DOES_NOT_IMPLY_CAPABILITY_WAS_DISCOVERED",
+    "POLICY_ALLOW_DOES_NOT_CREATE_PROJECT_AUTHORITY",
+    "AUTHORITY_FOR_H0_DOES_NOT_IMPLY_AUTHORITY_FOR_H1",
+    "SYSTEM_A_CORRECT_PLUS_SYSTEM_B_CORRECT_DOES_NOT_IMPLY_A_TO_B_CORRECT",
+    "EVIDENCE_ATTESTATION_DOES_NOT_CREATE_MERGE_PRODUCT_SEMANTIC_OR_SCIENTIFIC_AUTHORITY",
+    "RETIREMENT_ELIGIBILITY_DOES_NOT_AUTHORIZE_PHYSICAL_RETIREMENT",
+    "UNKNOWN_OR_AMBIGUOUS_POLICY_FAILS_CLOSED_OR_REQUIRES_REVIEW",
+    "OBSERVATION_MAY_CLASSIFY_CONCURRENT_WORK_BUT_MAY_NOT_ENFORCE_ITS_ORIGINAL_CONSTRUCTION_SCOPE_ON_UNRELATED_OPERATIONS"
+  ],
+  "components": {
+    "executionRouteProviderContract": ".github/ai-router/development-pipeline/execution-route-provider-contract.v1.json",
+    "policyRegistry": ".github/ai-router/development-pipeline/policy-registry.v1.json",
+    "policyGate": ".github/ai-router/development-pipeline/policy-gate.v1.mjs",
+    "existingIntakeGate": "tools/operation-intake/repository-operation-intake-gate.v1.mjs",
+    "existingSuccessorProtocol": ".github/ai-router/operation-lifecycle/successor-protocol.v1.json",
+    "existingContinuityProtocol": ".github/ai-router/system-continuity/progressive-system-continuity-protocol.v1.json",
+    "evidenceBundle": ".github/ai-router/development-pipeline/evidence-bundle.v1.mjs",
+    "retirementEligibilityGate": ".github/ai-router/development-pipeline/retirement-eligibility-gate.v1.mjs",
+    "integratedGate": ".github/ai-router/development-pipeline/integrated-development-pipeline-gate.v1.mjs",
+    "selfTest": ".github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs",
+    "workflow": ".github/workflows/integrated-development-pipeline-v1.yml"
+  },
+  "attestation": {
+    "mechanism": "GITHUB_ARTIFACT_ATTESTATION_ACTION_V4",
+    "subject": "INTEGRATED_EVIDENCE_BUNDLE_v1",
+    "requiredPermissions": ["contents:read", "id-token:write", "attestations:write"],
+    "signatureAuthority": "GITHUB_ACTIONS_OIDC_TO_SIGSTORE",
+    "attestationDoesNotRewriteEvidence": true
+  },
+  "authorityBoundary": {
+    "projectAuthorityCreated": false,
+    "repositoryMutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "physicalRetirementAuthorityCreated": false,
+    "productAuthorityCreated": false,
+    "semanticAuthorityCreated": false,
+    "scientificClaimAuthorityCreated": false,
+    "genericCommandAuthorityCreated": false
+  },
+  "ratificationRequirements": [
+    "EXACT_HEAD_SELF_TEST_PASS",
+    "EXACT_HEAD_WORKFLOW_PASS",
+    "ROUTER_VALIDATION_PASS",
+    "PROGRESSIVE_CONTINUITY_PASS",
+    "LIFECYCLE_OBSERVER_CONCURRENCY_PASS",
+    "ARTIFACT_ATTESTATION_PASS",
+    "POST_MERGE_EXACT_HEAD_PASS"
+  ]
+}

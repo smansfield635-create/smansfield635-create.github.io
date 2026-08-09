@@ -1,0 +1,29 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "governingHead": "2e1b39287a296185b83172715e844d0adcea0743",
+    "lockGeneration": 645,
+    "lockScope": "H_EARTH:HC02:PAGE_EXCELLENCE_ARCHITECTURE_EXECUTION:EVIDENCE_CARRIER:V1",
+    "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1",
+    "procedureLocatorDigest": "2878d77dc87505c051bfaa5a9e613f1a799390a1e1f83a9af40d335e626620db",
+    "released": false,
+    "requestDigest": "99701f6b370f321ef2f4a0e91d357afea6c59b8ef7420403ba0973aa031fc856",
+    "schema": "REPOSITORY_OPERATION_LOCK_v1",
+    "scopeHash": "d70fe6a0b02255b935d282c4fcd87176847b5c1fd9b7298a1d16490abe18bf20",
+    "state": "ADMITTED_LOCKED"
+  },
+  "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1",
+  "operationStarted": true,
+  "procedureLocatorDigest": "2878d77dc87505c051bfaa5a9e613f1a799390a1e1f83a9af40d335e626620db",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "99701f6b370f321ef2f4a0e91d357afea6c59b8ef7420403ba0973aa031fc856",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

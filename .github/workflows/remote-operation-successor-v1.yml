@@ -1,0 +1,228 @@
+name: Remote Operation Successor v1
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/remote-operation-successor-v1.yml'
+      - '.github/ai-router/router.v1.json'
+      - 'AI_ENTRYPOINT.json'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/remote-operation-successor-v1.yml'
+      - '.github/ai-router/router.v1.json'
+      - 'AI_ENTRYPOINT.json'
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: remote-operation-successor-v1-${{ github.event.issue.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-contract:
+    if: github.event_name != 'issue_comment'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify frozen successor lifecycle identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "b174bb20a19e62f9aaf6e819171e24416321b9e4"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "f4e9d4beb77cb603ea2c8e360790e97c1b511b1c"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/successor-protocol.v1.json)" = "3e3368b96ca13363115ed245b655e7f5c9046c2a"
+
+      - name: Run canonical successor self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
+            --output "$RUNNER_TEMP/remote-operation-successor-route-self-test.json"
+          node - "$RUNNER_TEMP/remote-operation-successor-route-self-test.json" <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (receipt.schema !== 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_RECEIPT_v1') throw new Error('SELF_TEST_SCHEMA_MISMATCH');
+          if (receipt.result !== 'PASS_CLOSED') throw new Error(`SELF_TEST_NONPASS:${receipt.result}`);
+          if (receipt.failCount !== 0 || receipt.passCount !== receipt.testCount) throw new Error('SELF_TEST_COUNTS_NONPASS');
+          NODE
+
+      - name: Verify route registration contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const router = JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json', 'utf8'));
+          const entry = JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json', 'utf8'));
+          const workflow = '.github/workflows/remote-operation-successor-v1.yml';
+          if (!router.routerInfrastructure?.ownedExactPaths?.includes(workflow)) throw new Error('REMOTE_SUCCESSOR_WORKFLOW_NOT_ROUTER_OWNED');
+          const lifecycle = entry.operationIntakeGate?.successorLifecycle;
+          if (!lifecycle) throw new Error('SUCCESSOR_LIFECYCLE_DISCOVERY_MISSING');
+          if (lifecycle.remoteInvocationMarker !== 'REMOTE_OPERATION_SUCCESSOR_REQUEST_V1') throw new Error('REMOTE_SUCCESSOR_MARKER_MISMATCH');
+          if (lifecycle.remoteInvocationWorkflow !== workflow) throw new Error('REMOTE_SUCCESSOR_WORKFLOW_DISCOVERY_MISMATCH');
+          if (lifecycle.remoteInvocationSchema !== 'REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1') throw new Error('REMOTE_SUCCESSOR_SCHEMA_DISCOVERY_MISMATCH');
+          if (lifecycle.remoteInvocationAuthorityInherited !== false) throw new Error('REMOTE_SUCCESSOR_AUTHORITY_INHERITANCE_FORBIDDEN');
+          if (lifecycle.remoteInvocationGenericCommandAuthority !== false) throw new Error('REMOTE_SUCCESSOR_GENERIC_COMMAND_AUTHORITY_FORBIDDEN');
+          NODE
+
+      - name: Upload validation receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: remote-operation-successor-route-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/remote-operation-successor-route-self-test.json
+          if-no-files-found: error
+          retention-days: 90
+
+  execute-successor:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
+      startsWith(github.event.comment.body, 'REMOTE_OPERATION_SUCCESSOR_REQUEST_V1')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    steps:
+      - name: Check out exact installed event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify installed route identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "b174bb20a19e62f9aaf6e819171e24416321b9e4"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "f4e9d4beb77cb603ea2c8e360790e97c1b511b1c"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/successor-protocol.v1.json)" = "3e3368b96ca13363115ed245b655e7f5c9046c2a"
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const router = JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json', 'utf8'));
+          const entry = JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json', 'utf8'));
+          const workflow = '.github/workflows/remote-operation-successor-v1.yml';
+          if (!router.routerInfrastructure?.ownedExactPaths?.includes(workflow)) throw new Error('REMOTE_SUCCESSOR_WORKFLOW_NOT_ROUTER_OWNED');
+          const lifecycle = entry.operationIntakeGate?.successorLifecycle;
+          if (lifecycle?.remoteInvocationMarker !== 'REMOTE_OPERATION_SUCCESSOR_REQUEST_V1') throw new Error('REMOTE_SUCCESSOR_MARKER_MISMATCH');
+          if (lifecycle?.remoteInvocationWorkflow !== workflow) throw new Error('REMOTE_SUCCESSOR_WORKFLOW_DISCOVERY_MISMATCH');
+          if (lifecycle?.remoteInvocationSchema !== 'REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1') throw new Error('REMOTE_SUCCESSOR_SCHEMA_DISCOVERY_MISMATCH');
+          NODE
+
+      - name: Run canonical successor self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
+            --output "$RUNNER_TEMP/remote-operation-successor-route-self-test.json"
+          node - "$RUNNER_TEMP/remote-operation-successor-route-self-test.json" <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (receipt.schema !== 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_RECEIPT_v1' || receipt.result !== 'PASS_CLOSED' || receipt.failCount !== 0) {
+            throw new Error('SUCCESSOR_SELF_TEST_FAIL_CLOSED');
+          }
+          NODE
+
+      - name: Parse exact remote successor request
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          EXPECTED_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          node - "$RUNNER_TEMP" <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const marker = 'REMOTE_OPERATION_SUCCESSOR_REQUEST_V1';
+          const body = String(process.env.COMMENT_BODY ?? '').replace(/\r\n/g, '\n');
+          if (!body.startsWith(`${marker}\n`)) throw new Error('REQUEST_MARKER_MISMATCH');
+          const text = body.slice(marker.length + 1).trim();
+          let payload;
+          try { payload = JSON.parse(text); } catch { throw new Error('REQUEST_JSON_INVALID'); }
+          const exactKeys = ['constructionProcedure', 'operationRequest', 'repository', 'schema', 'transition'];
+          const keys = Object.keys(payload).sort();
+          if (JSON.stringify(keys) !== JSON.stringify(exactKeys)) throw new Error(`REQUEST_KEYS_NOT_CLOSED:${keys.join(',')}`);
+          if (payload.schema !== 'REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1') throw new Error('REQUEST_SCHEMA_MISMATCH');
+          if (payload.repository !== process.env.EXPECTED_REPOSITORY) throw new Error('REPOSITORY_IDENTITY_MISMATCH');
+          if (!payload.transition || !payload.operationRequest || !payload.constructionProcedure) throw new Error('REQUEST_COMPONENT_MISSING');
+          const out = process.argv[2];
+          fs.writeFileSync(path.join(out, 'transition.json'), `${JSON.stringify(payload.transition, null, 2)}\n`);
+          fs.writeFileSync(path.join(out, 'operation-request.json'), `${JSON.stringify(payload.operationRequest, null, 2)}\n`);
+          fs.writeFileSync(path.join(out, 'construction-procedure.json'), `${JSON.stringify(payload.constructionProcedure, null, 2)}\n`);
+          NODE
+
+      - name: Execute canonical remote successor gate
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs \
+            --transition "$RUNNER_TEMP/transition.json" \
+            --request "$RUNNER_TEMP/operation-request.json" \
+            --procedure "$RUNNER_TEMP/construction-procedure.json" \
+            --repository "${GITHUB_REPOSITORY}" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --output "$RUNNER_TEMP/remote-operation-successor-invocation-receipt.json"
+
+      - name: Verify native successor receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - "$RUNNER_TEMP/remote-operation-successor-invocation-receipt.json" <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (receipt.schema !== 'REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1') throw new Error('SUCCESSOR_RECEIPT_SCHEMA_MISMATCH');
+          if (receipt.result !== 'SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED') throw new Error(`SUCCESSOR_RECEIPT_NONPASS:${receipt.result}`);
+          if (receipt.authorityInherited !== false) throw new Error('SUCCESSOR_AUTHORITY_INHERITANCE_FORBIDDEN');
+          if (receipt.exactHeadRevalidationRequired !== true) throw new Error('SUCCESSOR_EXACT_HEAD_REVALIDATION_NOT_REQUIRED');
+          if (receipt.oneLedgerMutationRequired !== true) throw new Error('SUCCESSOR_ATOMIC_LEDGER_TRANSITION_NOT_PROVEN');
+          if (receipt.predecessor?.terminalDisposition !== 'SUPERSEDED') throw new Error('PREDECESSOR_NOT_SUPERSEDED');
+          if (receipt.successor?.state !== 'ADMITTED_LOCKED') throw new Error('SUCCESSOR_NOT_ADMITTED_LOCKED');
+          NODE
+
+      - name: Upload native successor receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: remote-operation-successor-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/remote-operation-successor-invocation-receipt.json
+            ${{ runner.temp }}/remote-operation-successor-route-self-test.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Return native receipt to invoking issue
+        uses: actions/github-script@v7
+        env:
+          RECEIPT_PATH: ${{ runner.temp }}/remote-operation-successor-invocation-receipt.json
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            const fs = require('node:fs');
+            const receipt = fs.readFileSync(process.env.RECEIPT_PATH, 'utf8').trim();
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `REMOTE_OPERATION_SUCCESSOR_RECEIPT_V1\n\n\`\`\`json\n${receipt}\n\`\`\``
+            });

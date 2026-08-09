@@ -1,4 +1,4 @@
-name: Laws Persistent Stage Functional Repair V2 Construction
+name: Laws Persistent Stage Functional Repair V2 Runtime Verification
 
 on:
   push:
@@ -6,187 +6,266 @@ on:
       - repair/laws-persistent-stage-functional-v2-001
     paths:
       - '.github/workflows/laws-orbital-tranche-a0-a3.yml'
+      - 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   actions: read
 
 concurrency:
-  group: laws-persistent-stage-functional-v2-construction
+  group: laws-persistent-stage-functional-v2-runtime
   cancel-in-progress: false
 
 env:
-  GOVERNING_MAIN: 6469b1b800e3ce3d3334623f591797cfac78d378
-  REJECTED_PREDECESSOR: 0c2564b4d2f3ce91e91296673fbeb258670fc33b
-  RECONCILED_SUBJECT: 434fbead1d83fade3da47e52105897561e11451b
-  PRECONSTRUCTION_HEAD: e3f321e1b21efa8b5c77163cdb5d087cc3ca0325
-  PRECONSTRUCTION_RUN: '31285666756'
-  PRECONSTRUCTION_ARTIFACT: laws-persistent-stage-functional-v2-preconstruction-31285666756
+  REPAIR_PREDECESSOR: eb9cae0750ba2a065ebcb46cd5686a0f46671fac
   BRANCH: repair/laws-persistent-stage-functional-v2-001
-  GH_TOKEN: ${{ github.token }}
+  EXECUTION_COMMIT: ${{ github.sha }}
+  LAWS_RUNTIME_BASE_URL: http://127.0.0.1:4173
 
 jobs:
-  construct:
+  browser_builder:
+    name: Real browser builder matrix
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
-      - name: Check out exact construction branch
+      - name: Check out exact runtime head
         uses: actions/checkout@v4
         with:
-          ref: repair/laws-persistent-stage-functional-v2-001
+          ref: ${{ env.EXECUTION_COMMIT }}
           fetch-depth: 0
-          persist-credentials: true
 
-      - name: Verify exact lineage and admitted preimages
+      - name: Verify exact head, lineage, and bounded runtime mutation
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git branch --show-current)" = "$BRANCH"
-          git merge-base --is-ancestor "$GOVERNING_MAIN" HEAD
-          git merge-base --is-ancestor "$REJECTED_PREDECESSOR" HEAD
-          git merge-base --is-ancestor "$PRECONSTRUCTION_HEAD" HEAD
-          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '7e0d8bca4c02dada6deeeb3c1f92d9854bbcf6fb'
-          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.css)" = 'eb3d35c95760a519536d17c7e42d6b204fcedce8'
-          test "$(git rev-parse HEAD:assets/laws-destination/renewal.js)" = '52fccf83e50c5616234a1c79879bd0f4032ab77b'
-          test "$(git rev-parse HEAD:laws/research/methods-and-models/showroom.js)" = '5037da7a0ad32dcb6eee2d25dc2b236bd9574965'
-          test "$(git rev-parse HEAD:laws/research/methods-and-models/showroom-refinement.js)" = 'fe5ac6d1c8326d0ea2de17ae509ea2e2bfaa9c1f'
-          test "$(git rev-parse HEAD:laws/research/methods-and-models/showroom-euclidean.js)" = 'e2289469b7efed2d21d0d55c873e56402c893932'
-          mapfile -t delta < <(git diff --name-only "$PRECONSTRUCTION_HEAD" HEAD | sort)
+          test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+          git merge-base --is-ancestor "$REPAIR_PREDECESSOR" HEAD
+          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '06806a2e802d3beffaa5b6f9ed20f1f7c371b086'
+          mapfile -t delta < <(git diff --name-only "$REPAIR_PREDECESSOR" HEAD | sort)
           printf '%s\n' "${delta[@]}"
           test "${#delta[@]}" -eq 2
           test "${delta[0]}" = '.github/workflows/laws-orbital-tranche-a0-a3.yml'
-          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/orientation.css'
+          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
+          git diff --check "$REPAIR_PREDECESSOR" HEAD
 
-      - name: Reproduce command-emitted preconstruction approvals
+      - name: Route exact affected paths through Laws router
         shell: bash
         run: |
           set -euo pipefail
-          conclusion="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PRECONSTRUCTION_RUN}" --jq .conclusion)"
-          run_head="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PRECONSTRUCTION_RUN}" --jq .head_sha)"
-          test "$conclusion" = success
-          test "$run_head" = "$PRECONSTRUCTION_HEAD"
-          rm -rf /tmp/laws-preconstruction
-          mkdir -p /tmp/laws-preconstruction
-          gh run download "$PRECONSTRUCTION_RUN" --repo "$GITHUB_REPOSITORY" --name "$PRECONSTRUCTION_ARTIFACT" --dir /tmp/laws-preconstruction
+          node tools/repository-ai-entry-router.mjs --path .github/workflows/laws-orbital-tranche-a0-a3.yml --task "Laws persistent stage runtime verification workflow" --mutation-intent --output /tmp/router-workflow-builder.json
+          node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/verify-runtime.mjs --task "Laws persistent stage real browser verifier" --mutation-intent --output /tmp/router-verifier-builder.json
           node <<'NODE'
           const fs=require('fs');
-          const dir='/tmp/laws-preconstruction';
-          const router=JSON.parse(fs.readFileSync(`${dir}/router-preconstruction.v2.json`,'utf8'));
-          const architecture=JSON.parse(fs.readFileSync(`${dir}/page-excellence-architecture-gate.v2.json`,'utf8'));
-          const implementation=JSON.parse(fs.readFileSync(`${dir}/page-excellence-implementation-gate.v2.json`,'utf8'));
-          const bundle=JSON.parse(fs.readFileSync(`${dir}/page-excellence-phase-bundle.v2.json`,'utf8'));
-          if(router.disposition!=='PASS'||router.workingTreeClean!==true||router.routes.some(r=>r.projectId!=='LAWS'||r.disposition!=='PASS'))process.exit(1);
-          if(architecture.result!=='PASS'||architecture.phase!=='ARCHITECTURE'||architecture.delegatedRouterReceipt?.disposition!=='PASS')process.exit(1);
-          if(implementation.result!=='PASS'||implementation.phase!=='IMPLEMENTATION'||implementation.delegatedRouterReceipt?.disposition!=='PASS')process.exit(1);
-          if(bundle.toolsetId!=='MANDATORY_PAGE_TOOLSET'||bundle.toolsetVersion!=='1.1.0'||bundle.subjectHead!==process.env.PRECONSTRUCTION_HEAD)process.exit(1);
+          for(const file of ['/tmp/router-workflow-builder.json','/tmp/router-verifier-builder.json']){
+            const r=JSON.parse(fs.readFileSync(file,'utf8'));
+            if(r.disposition!=='PASS'||r.projectId!=='LAWS')throw new Error(`ROUTER_NOT_PASS:${file}`);
+          }
+          NODE
+          test -z "$(git status --porcelain)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pinned Playwright browser harness
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium firefox webkit
+
+      - name: Validate verifier syntax
+        run: node --check laws/orbital-tranche-a0-a3/verify-runtime.mjs
+
+      - name: Start exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-runtime-builder-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/laws-runtime-builder-server.log
+          exit 1
+
+      - name: Execute admitted real-browser matrix as builder
+        run: >-
+          node laws/orbital-tranche-a0-a3/verify-runtime.mjs
+          --base-url http://127.0.0.1:4173
+          --browser all
+          --profile phone-tablet-desktop
+          --role builder
+          --output /tmp/browser-functional-builder.v2.json
+
+      - name: Upload builder runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-persistent-stage-browser-builder-${{ github.run_id }}
+          path: |
+            /tmp/browser-functional-builder.v2.json
+            /tmp/router-workflow-builder.json
+            /tmp/router-verifier-builder.json
+            /tmp/laws-runtime-builder-server.log
+          if-no-files-found: error
+          retention-days: 90
+
+  browser_fresh_verifier:
+    name: Real browser fresh verifier matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out exact runtime head independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+          fetch-depth: 0
+
+      - name: Independently verify exact head, lineage, and bounded runtime mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+          git merge-base --is-ancestor "$REPAIR_PREDECESSOR" HEAD
+          test "$(git rev-parse HEAD:laws/orbital-tranche-a0-a3/orientation.js)" = '06806a2e802d3beffaa5b6f9ed20f1f7c371b086'
+          mapfile -t delta < <(git diff --name-only "$REPAIR_PREDECESSOR" HEAD | sort)
+          printf '%s\n' "${delta[@]}"
+          test "${#delta[@]}" -eq 2
+          test "${delta[0]}" = '.github/workflows/laws-orbital-tranche-a0-a3.yml'
+          test "${delta[1]}" = 'laws/orbital-tranche-a0-a3/verify-runtime.mjs'
+          git diff --check "$REPAIR_PREDECESSOR" HEAD
+
+      - name: Independently route exact affected paths through Laws router
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs --path .github/workflows/laws-orbital-tranche-a0-a3.yml --task "Laws persistent stage runtime verification workflow" --mutation-intent --output /tmp/router-workflow-fresh.json
+          node tools/repository-ai-entry-router.mjs --path laws/orbital-tranche-a0-a3/verify-runtime.mjs --task "Laws persistent stage real browser verifier" --mutation-intent --output /tmp/router-verifier-fresh.json
+          node <<'NODE'
+          const fs=require('fs');
+          for(const file of ['/tmp/router-workflow-fresh.json','/tmp/router-verifier-fresh.json']){
+            const r=JSON.parse(fs.readFileSync(file,'utf8'));
+            if(r.disposition!=='PASS'||r.projectId!=='LAWS')throw new Error(`ROUTER_NOT_PASS:${file}`);
+          }
+          NODE
+          test -z "$(git status --porcelain)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Independently install pinned Playwright browser harness
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium firefox webkit
+
+      - name: Independently validate verifier syntax
+        run: node --check laws/orbital-tranche-a0-a3/verify-runtime.mjs
+
+      - name: Start independent exact-head static server
+        shell: bash
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-runtime-fresh-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:4173/laws/ >/dev/null; then exit 0; fi
+            sleep 0.25
+          done
+          cat /tmp/laws-runtime-fresh-server.log
+          exit 1
+
+      - name: Execute admitted real-browser matrix as fresh verifier
+        run: >-
+          node laws/orbital-tranche-a0-a3/verify-runtime.mjs
+          --base-url http://127.0.0.1:4173
+          --browser all
+          --profile phone-tablet-desktop
+          --role fresh-verifier
+          --output /tmp/browser-functional-fresh-verifier.v2.json
+
+      - name: Upload fresh verifier runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-persistent-stage-browser-fresh-${{ github.run_id }}
+          path: |
+            /tmp/browser-functional-fresh-verifier.v2.json
+            /tmp/router-workflow-fresh.json
+            /tmp/router-verifier-fresh.json
+            /tmp/laws-runtime-fresh-server.log
+          if-no-files-found: error
+          retention-days: 90
+
+  browser_equality:
+    name: Independent browser equality
+    needs: [browser_builder, browser_fresh_verifier]
+    if: always() && needs.browser_builder.result == 'success' && needs.browser_fresh_verifier.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact runtime head for equality
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXECUTION_COMMIT }}
+
+      - name: Verify equality checkout identity
+        run: test "$(git rev-parse HEAD)" = "$EXECUTION_COMMIT"
+
+      - name: Download builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: laws-persistent-stage-browser-builder-${{ github.run_id }}
+          path: /tmp/builder
+
+      - name: Download fresh verifier evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: laws-persistent-stage-browser-fresh-${{ github.run_id }}
+          path: /tmp/fresh
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Require independent normalized browser equality
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const crypto=require('crypto');
+          const path=require('path');
+          const find=(root,name)=>{
+            const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);
+            return walk(root).find(p=>path.basename(p)===name);
+          };
+          const builder=JSON.parse(fs.readFileSync(find('/tmp/builder','browser-functional-builder.v2.json'),'utf8'));
+          const fresh=JSON.parse(fs.readFileSync(find('/tmp/fresh','browser-functional-fresh-verifier.v2.json'),'utf8'));
+          if(builder.status!=='PASS'||fresh.status!=='PASS')throw new Error('BROWSER_RECEIPT_NOT_PASS');
+          if(builder.subjectHead!==process.env.EXECUTION_COMMIT||fresh.subjectHead!==process.env.EXECUTION_COMMIT)throw new Error('SUBJECT_HEAD_MISMATCH');
+          if(builder.role===fresh.role)throw new Error('VERIFIER_ROLE_NOT_DISTINCT');
+          if(builder.normalizedFingerprint!==fresh.normalizedFingerprint)throw new Error('INDEPENDENT_BROWSER_FINGERPRINT_MISMATCH');
+          const normalized={contract:builder.contract,subjectHead:builder.subjectHead,browserNames:builder.browserNames,profileNames:builder.profileNames,matrix:builder.matrix};
+          const rebuilt=crypto.createHash('sha256').update(JSON.stringify(normalized)).digest('hex');
+          if(rebuilt!==builder.normalizedFingerprint)throw new Error('NORMALIZED_FINGERPRINT_REBUILD_MISMATCH');
+          if(JSON.stringify(builder.matrix)!==JSON.stringify(fresh.matrix))throw new Error('INDEPENDENT_BROWSER_MATRIX_MISMATCH');
+          const receipt={
+            contract:'LAWS_PERSISTENT_STAGE_BROWSER_FUNCTIONAL_EQUALITY_v2',
+            subjectHead:process.env.EXECUTION_COMMIT,
+            status:'PASS',
+            builderRole:builder.role,
+            freshVerifierRole:fresh.role,
+            normalizedFingerprint:rebuilt,
+            browserNames:builder.browserNames,
+            profileNames:builder.profileNames,
+            matrixExecutions:builder.matrix.length
+          };
+          fs.writeFileSync('/tmp/browser-functional-equality.v2.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
           NODE
 
-      - name: Apply approved persistent-stage lifecycle repair
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          path=Path('laws/orbital-tranche-a0-a3/orientation.js')
-          source=path.read_text()
-          source=source.replace("      const cache=new Map();\n      const state=","      const cache=new Map();\n      const mountCache=new Map();\n      const state=",1)
-          begin=source.index("      const prepareStylesForStory=story=>{")
-          end=source.index("      const renderSequence=()=>{",begin)
-          helpers=r'''      const hydrateReadingMount=holder=>{
-            if(holder.dataset.readingHydrated==='true')return;
-            holder.dataset.readingHydrated='true';
-            holder.querySelectorAll('[data-lr-tabs]').forEach((group,groupIndex)=>{
-              const tablist=group.querySelector('[role="tablist"]');
-              const buttons=Array.from(group.querySelectorAll('[role="tab"],.lr-tab'));
-              const panels=Array.from(group.querySelectorAll('[role="tabpanel"],.lr-panel'));
-              if(!tablist||!buttons.length||buttons.length!==panels.length)return;
-              tablist.setAttribute('role','group');
-              const collapse=()=>{buttons.forEach(button=>button.setAttribute('aria-expanded','false'));panels.forEach(panel=>{panel.hidden=true;panel.tabIndex=-1})};
-              const expand=index=>{collapse();const button=buttons[index],panel=panels[index];if(!button||!panel)return;button.setAttribute('aria-expanded','true');panel.hidden=false;panel.tabIndex=0};
-              buttons.forEach((button,index)=>{
-                const buttonId=button.id||`laws-stage-reading-${groupIndex}-${index}`;
-                const panelId=panels[index].id||`laws-stage-reading-panel-${groupIndex}-${index}`;
-                button.id=buttonId;panels[index].id=panelId;button.removeAttribute('role');button.removeAttribute('aria-selected');button.removeAttribute('tabindex');button.setAttribute('aria-controls',panelId);button.setAttribute('aria-expanded','false');panels[index].setAttribute('role','region');panels[index].setAttribute('aria-labelledby',buttonId);
-                button.addEventListener('click',()=>{const wasOpen=button.getAttribute('aria-expanded')==='true';collapse();if(!wasOpen)expand(index)});
-                button.addEventListener('keydown',event=>{let next=index;if(event.key==='ArrowRight'||event.key==='ArrowDown')next=(index+1)%buttons.length;else if(event.key==='ArrowLeft'||event.key==='ArrowUp')next=(index-1+buttons.length)%buttons.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=buttons.length-1;else return;event.preventDefault();buttons[next]?.focus()});
-              });
-              collapse();
-            });
-          };
-
-          const hydrateMethodsMount=async holder=>{
-            if(holder.dataset.methodsHydrated==='true')return;
-            holder.dataset.methodsHydrated='pending';
-            ensureStyle('/laws/research/methods-and-models/showroom.css?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1');
-            if(root.dataset.methodsModelsShowroom!=='active')await import('/laws/research/methods-and-models/showroom.js?stage=LAWS_PERSISTENT_STAGE_V2');
-            if(root.dataset.methodsModelsEuclideanShowroom!=='active')await import('/laws/research/methods-and-models/showroom-euclidean.js?stage=LAWS_PERSISTENT_STAGE_V2');
-            const showroom=holder.querySelector('[data-mm-showroom]');
-            if(!showroom||root.dataset.methodsModelsShowroom!=='active'||root.dataset.methodsModelsEuclideanShowroom!=='active'){holder.dataset.methodsHydrated='fail-closed';throw new Error('methods-runtime-not-ready')}
-            holder.dataset.methodsHydrated='true';showroom.dataset.lawsStagedInstrument='true';
-          };
-
-          const buildStageMount=(story,result)=>{
-            const holder=document.createElement('div');holder.className='laws-spatial-stage__mount';holder.dataset.storyMember=story.memberId;holder.dataset.experienceType=story.experienceType||'UNCLASSIFIED';holder.dataset.stageSource=result.url;
-            const view=document.createElement('div');view.className=`laws-stage-view ${result.main.className||''}`.trim();
-            if(story.experienceType==='MULTI_AXIS_INSTRUMENT'){
-              view.classList.add('laws-stage-view--methods');const showroom=result.main.querySelector('[data-mm-showroom]');if(!showroom)throw new Error('methods-showroom-missing');view.replaceChildren(document.importNode(showroom,true));result.main.querySelectorAll('.mm-support').forEach(node=>view.appendChild(document.importNode(node,true)));const dialog=result.doc.querySelector('[data-mm-dialog]');if(dialog)holder.appendChild(document.importNode(dialog,true));
-            }else{
-              view.classList.add(story.experienceType==='PARALLEL_LENS_READING'?'laws-stage-view--reading':'laws-stage-view--canonical');Array.from(result.main.children).forEach(node=>{if(node.matches?.('.lr-story-nav,.mm-story-nav'))return;view.appendChild(document.importNode(node,true))});
-            }
-            view.querySelectorAll('.lr-story-nav,.mm-story-nav').forEach(node=>node.remove());holder.prepend(view);if(story.experienceType==='PARALLEL_LENS_READING')hydrateReadingMount(holder);return holder;
-          };
-
-          const getStageMount=async story=>{
-            if(mountCache.has(story.memberId))return mountCache.get(story.memberId);
-            const task=(async()=>{const result=await fetchStory(story);return {holder:buildStageMount(story,result),result,hydrated:false}})();mountCache.set(story.memberId,task);try{return await task}catch(error){mountCache.delete(story.memberId);throw error}
-          };
-
-          '''
-          source=source[:begin]+helpers+source[end:]
-          begin=source.index("      const selectStory=async(index,{historyMode='push',source='unknown'}={})=>{")
-          end=source.index("      els.stageContent.addEventListener('click'",begin)
-          selection=r'''      const selectStory=async(index,{historyMode='push',source='unknown'}={})=>{
-            index=clamp(index,0,stories.length-1);const story=stories[index];const serial=++state.serial;state.storyIndex=index;const familyId=storyFamilyId(story);const fi=familyIndexById.get(familyId);if(Number.isInteger(fi))state.familyIndex=fi;
-            shell.dataset.transitionSource=source;shell.classList.add('is-stage-loading');els.status.textContent='Loading staged position…';els.stageFamily.textContent=families[state.familyIndex]?.label||familyId;els.stagePosition.textContent=`Canonical ${story.position} / ${stories.length}`;els.stageTitle.textContent=story.label;renderFamilyOrbit(0);renderFamilyMembers();renderSequence();
-            try{
-              const record=await getStageMount(story);if(serial!==state.serial)return;const holder=record.holder;holder.classList.remove('is-entered');els.stageContent.replaceChildren(holder);
-              if(story.experienceType==='MULTI_AXIS_INSTRUMENT'&&!record.hydrated){await hydrateMethodsMount(holder);record.hydrated=true}
-              if(serial!==state.serial)return;requestAnimationFrame(()=>holder.classList.add('is-entered'));els.status.textContent=`${families[state.familyIndex]?.label||familyId} · position ${story.position}`;root.dataset.lawsSpatialActiveStory=story.memberId;root.dataset.lawsSpatialActiveFamily=familyId;root.dataset.lawsSpatialStageSource=record.result.url;root.dataset.lawsSpatialStageLifecycle='retained-mount';
-              if(historyMode==='push'){const u=new URL(location.href);u.searchParams.set('story',String(story.position));history.pushState({lawsSpatialStory:story.position},'',u.pathname+u.search+u.hash)}else if(historyMode==='replace'){const u=new URL(location.href);u.searchParams.set('story',String(story.position));history.replaceState({lawsSpatialStory:story.position},'',u.pathname+u.search+u.hash)}
-              const currentFamilyMembers=familyStories(families[state.familyIndex]);const mi=currentFamilyMembers.findIndex(s=>s.memberId===story.memberId);if(mi>=0)state.memberFocus=mi;renderFamilyMembers();
-            }catch(err){if(serial!==state.serial)return;els.stageContent.innerHTML=`<div class="laws-spatial-stage__error"><strong>${story.label}</strong><p>This canonical view could not be staged in the persistent shell.</p><code>${String(err?.message||err)}</code></div>`;els.status.textContent='Stage source unavailable';root.dataset.lawsSpatialStageError=String(err?.message||err)}finally{if(serial===state.serial)shell.classList.remove('is-stage-loading')}
-          };
-
-          '''
-          source=source[:begin]+selection+source[end:]
-          source=source.replace("root.dataset.lawsOrbitalOrientationStatus='superseded-by-persistent-stage';","root.dataset.lawsOrbitalOrientationStatus='superseded-by-persistent-stage-v2';",1)
-          if source.count("lawsSpatialStageLifecycle='retained-mount'")!=1:raise SystemExit('retained mount repair not materialized exactly once')
-          if 'showroom-refinement.js' in source or 'showroom-euclidean.css' in source:raise SystemExit('prohibited direct-page refinement dependency remains')
-          path.write_text(source)
-          PY
-
-      - name: Verify constructed JavaScript and bounded mutation
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --check laws/orbital-tranche-a0-a3/orientation.js
-          git diff --check
-          mapfile -t pending < <(git diff --name-only | sort)
-          test "${#pending[@]}" -eq 1
-          test "${pending[0]}" = 'laws/orbital-tranche-a0-a3/orientation.js'
-          grep -q "lawsSpatialStageLifecycle='retained-mount'" laws/orbital-tranche-a0-a3/orientation.js
-          grep -q "await import('/laws/research/methods-and-models/showroom.js?stage=LAWS_PERSISTENT_STAGE_V2')" laws/orbital-tranche-a0-a3/orientation.js
-          grep -q "await import('/laws/research/methods-and-models/showroom-euclidean.js?stage=LAWS_PERSISTENT_STAGE_V2')" laws/orbital-tranche-a0-a3/orientation.js
-          ! grep -q "showroom-refinement.js" laws/orbital-tranche-a0-a3/orientation.js
-          ! grep -q "showroom-euclidean.css" laws/orbital-tranche-a0-a3/orientation.js
-
-      - name: Commit bounded construction
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "laws-persistent-stage-construction-bot"
-          git config user.email "laws-persistent-stage-construction-bot@users.noreply.github.com"
-          git add laws/orbital-tranche-a0-a3/orientation.js
-          git commit -m "Repair Laws persistent stage runtime lifecycle"
-          git push origin "$BRANCH"
-          echo "CONSTRUCTED_HEAD=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Upload equality receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-persistent-stage-browser-equality-${{ github.run_id }}
+          path: /tmp/browser-functional-equality.v2.json
+          if-no-files-found: error
+          retention-days: 90

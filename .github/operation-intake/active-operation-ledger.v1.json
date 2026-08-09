@@ -612,18 +612,6 @@
       "scopeHash": "8ccf90290f81bb5fe5d0b2da4883ee4b228d626aaf61de02d7f683386641f467",
       "state": "ADMITTED_LOCKED"
     },
-    "8dc5749fa82be2a2c0f60a465515f98389cdc0df0590e3bb717363af322fc41f": {
-      "governingHead": "38da390a802c25a615366c6f896d7501558c0811",
-      "lockGeneration": 607,
-      "lockScope": "H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE:V1:EXACT_3_PATH_SCOPE",
-      "operationId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE_v1",
-      "procedureLocatorDigest": "e9ea336638267282513bdedad2690805c664bdfc07e78cbce4395bb4b503c156",
-      "released": false,
-      "requestDigest": "6b35d56404985c1dcf57fbc73b8c33a9108d3ad1503f16dcc5df3e8e54b571b1",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "8dc5749fa82be2a2c0f60a465515f98389cdc0df0590e3bb717363af322fc41f",
-      "state": "ADMITTED_LOCKED"
-    },
     "8e4ee899e4baaf8a3cbdb23d3ab55e6b9845df2ae4d66c81c1e17b2a4071e2b5": {
       "governingHead": "bb9febd7843683728810109f6225fdf782ae3d55",
       "lockGeneration": 631,
@@ -8087,6 +8075,19 @@
       "requestDigest": "cea59a3d051440248ec000a1c7a442517b2e1591c0bc3d88d379ced3366d9a54",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "3357f8bfe6fa3f40f363e28a0268d7cf7647499d7f8a16c25c347356db65fd63",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "38da390a802c25a615366c6f896d7501558c0811",
+      "lockGeneration": 607,
+      "lockScope": "H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE:V1:EXACT_3_PATH_SCOPE",
+      "operationId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_ACCEPTED_OCCURRENCE_REGISTRY_CLOSURE_v1",
+      "procedureLocatorDigest": "e9ea336638267282513bdedad2690805c664bdfc07e78cbce4395bb4b503c156",
+      "released": true,
+      "requestDigest": "6b35d56404985c1dcf57fbc73b8c33a9108d3ad1503f16dcc5df3e8e54b571b1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8dc5749fa82be2a2c0f60a465515f98389cdc0df0590e3bb717363af322fc41f",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

@@ -132,18 +132,6 @@
       "scopeHash": "1559d75062df8a40b3ef12b71793346c9a87053597d1ff75209723a4217668a8",
       "state": "ADMITTED_LOCKED"
     },
-    "188479af5124079971c4f34926a391e0e33d34b1089f294eee3dbe6127cef905": {
-      "governingHead": "610b95e0cf6722fbbf9df2df28625c589d0d3744",
-      "lockGeneration": 760,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:INTEGRATED_DEVELOPMENT_PIPELINE:V1",
-      "operationId": "REPOSITORY_INTEGRATED_DEVELOPMENTAL_INSTRUMENTATION_STACK_V1_20260809_002",
-      "procedureLocatorDigest": "3699d4b3d4380c6bc5df5c3263c33c5585ff2249ae88a36b129f8f2286bf6eaa",
-      "released": false,
-      "requestDigest": "950867e90c25a177de63939e67d843b9d9856c4cd7ea851397133bfcf1a8cb27",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "188479af5124079971c4f34926a391e0e33d34b1089f294eee3dbe6127cef905",
-      "state": "ADMITTED_LOCKED"
-    },
     "18b76db5a84dece3ef9779cca3798b87f3c0f47f85edd8d39fccb0287e2fb703": {
       "governingHead": "d54514daf2096d3353ad7e3d4bdca1dbcd08a35f",
       "lockGeneration": 641,
@@ -10303,6 +10291,19 @@
       "scopeHash": "0ea7d22184f8ddf616765e1d44f10de7e09fe6f3f8b52e5bd3b7d1c74b16d2cf",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "610b95e0cf6722fbbf9df2df28625c589d0d3744",
+      "lockGeneration": 760,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:INTEGRATED_DEVELOPMENT_PIPELINE:V1",
+      "operationId": "REPOSITORY_INTEGRATED_DEVELOPMENTAL_INSTRUMENTATION_STACK_V1_20260809_002",
+      "procedureLocatorDigest": "3699d4b3d4380c6bc5df5c3263c33c5585ff2249ae88a36b129f8f2286bf6eaa",
+      "released": true,
+      "requestDigest": "950867e90c25a177de63939e67d843b9d9856c4cd7ea851397133bfcf1a8cb27",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "188479af5124079971c4f34926a391e0e33d34b1089f294eee3dbe6127cef905",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

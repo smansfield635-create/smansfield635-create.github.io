@@ -1,0 +1,64 @@
+{
+  "schema": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_PROTOCOL_v1",
+  "protocolId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_v1",
+  "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
+  "purpose": "Transport already-authorized closed-world repository commands into a clean exact-head execution environment without creating or expanding authority.",
+  "laws": [
+    "UNIVERSAL_TRANSPORT_IS_NOT_UNIVERSAL_AUTHORITY",
+    "REQUESTS_MAY_NAME_ONLY_A_REGISTERED_DESCRIPTOR_AND_CANONICAL_OPERATION_IDENTITY",
+    "EXECUTABLE_ARGUMENT_PATH_TARGET_HEAD_AND_ENVIRONMENT_ARE_DERIVED_NOT_CALLER_SUPPLIED",
+    "ACTIVE_OPERATION_LOCK_AND_REQUEST_PROCEDURE_DIGESTS_MUST_MATCH_CANONICAL_LEDGER",
+    "TARGET_EXECUTION_USES_A_DETACHED_CLEAN_EXACT_HEAD_WORKTREE",
+    "NATIVE_COMMAND_RECEIPTS_ARE_PRESERVED_AND_HASHED",
+    "NO_REPOSITORY_WRITE_MERGE_PRODUCT_SEMANTIC_OR_SCIENTIFIC_AUTHORITY_IS_CREATED_BY_THE_CARRIER",
+    "ARBITRARY_SHELL_SCRIPT_ENVIRONMENT_AND_EXTRA_ARGUMENTS_ARE_PROHIBITED",
+    "ANY_IDENTITY_SCOPE_CLEANLINESS_OR_RECEIPT_MISMATCH_FAILS_CLOSED"
+  ],
+  "requestSchema": {
+    "schema": "BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_v1",
+    "required": [
+      "schema",
+      "requestId",
+      "descriptorId",
+      "operationRequest",
+      "constructionProcedure",
+      "admissionReceipt",
+      "requestNonce"
+    ],
+    "allowed": [
+      "schema",
+      "requestId",
+      "descriptorId",
+      "operationRequest",
+      "constructionProcedure",
+      "admissionReceipt",
+      "requestNonce"
+    ],
+    "explicitlyProhibited": [
+      "command",
+      "shell",
+      "shellCommand",
+      "script",
+      "scriptBody",
+      "executable",
+      "arguments",
+      "extraArguments",
+      "environment",
+      "environmentOverride",
+      "paths",
+      "targetHead",
+      "workingDirectory",
+      "workflowOverride"
+    ]
+  },
+  "authorityBoundary": {
+    "createsAuthority": false,
+    "inheritsOnlyCanonicalActiveOperationAuthority": true,
+    "arbitraryCommandAuthority": false,
+    "repositoryWriteAuthority": false,
+    "mergeAuthority": false,
+    "productAuthority": false,
+    "semanticAuthority": false,
+    "scientificClaimAuthority": false
+  }
+}

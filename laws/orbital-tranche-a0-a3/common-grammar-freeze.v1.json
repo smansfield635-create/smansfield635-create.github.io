@@ -1,0 +1,37 @@
+{
+  "recordId":"LAWS_ORBITAL_COMMON_GRAMMAR_FREEZE_v1",
+  "status":"SUPERSEDED_BY_SIMPLIFIED_PERSISTENT_STAGE_CANDIDATE_PENDING_BROWSER_ACCEPTANCE",
+  "constructionBase":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "priorLinearOrbitalCandidateStatus":"REJECTED_BY_RUNTIME_EXPERIENCE_REVIEW",
+  "rejectedFailure":"CANONICAL_SEQUENCE_WAS_MANIFESTED_AS_PAGE_TO_PAGE_ORBITAL_CAROUSEL_AND_DESTROYED_EXPERIENTIAL_CONTINUITY",
+  "replacementModel":"SIMPLIFIED_MULTI_GRAPH_V1",
+  "classificationHead":"844599569a1e41c26487fd745a53f3c48cf56f59",
+  "persistentStageRuntimeHead":"ecb223ed0a7b29e8031b2e7843f68bd359dd7688",
+  "persistentStagePresentationHead":"613702cfa0297784e716bc60c4de495a475cad61",
+  "runtimeVerifierHead":"cbde8bc2f57a7904fdda0f926734175b4ba0dce0",
+  "semanticVerifierHead":"216ecce416bae2aed56c725c1d9a3a7f97293f97",
+  "governingSeparations":[
+    "CANONICAL_SEQUENCE_NE_CATEGORY_TOPOLOGY",
+    "CATEGORY_TOPOLOGY_NE_LOCAL_STORYBOARD_TOPOLOGY",
+    "CATEGORY_MEMBERSHIP_NE_CANONICAL_POSITION",
+    "SPATIAL_PROXIMITY_NE_SCIENTIFIC_OR_NARRATIVE_PRIORITY"
+  ],
+  "persistentEnvironment":{
+    "route":"/laws/",
+    "semanticType":"PERSISTENT_STAGE",
+    "canonicalPositionCount":24,
+    "categoryFamilyCount":6,
+    "categoryTraversal":"ORBITAL_CONSTELLATION",
+    "relatedPositionTraversal":"SWIPEABLE_CATEGORY_MEMBER_FIELD",
+    "canonicalSequenceTraversal":"SEPARATE_PREVIOUS_NEXT_CONTEXT_CONTROL"
+  },
+  "localStoryboardTopology":{
+    "status":"NOT_RECOVERED",
+    "navigationAuthority":false,
+    "presentation":"OMITTED_UNTIL_AUTHORIZED"
+  },
+  "legacyCommonGrammarRole":"NONPRIMARY_DIRECT_ROUTE_CANDIDATE_ONLY",
+  "methodsSpecializationPreserved":true,
+  "browserAcceptance":"PENDING",
+  "refreezeRequiredAfterBrowserAcceptance":true
+}

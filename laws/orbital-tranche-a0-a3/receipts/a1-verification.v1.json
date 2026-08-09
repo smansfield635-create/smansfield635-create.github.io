@@ -1,0 +1,15 @@
+{
+  "recordId":"LAWS_ORBITAL_A1_VERIFICATION_RECEIPT_v1",
+  "status":"PASS",
+  "constructionBase":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "verifiedHead":"04f308f1df69c134ecfa2e96e8ecab05edd2214d",
+  "surface":"STORY_01_APPLIED_INVESTIGATIONS",
+  "canonicalOrderPreserved":true,
+  "boundedTraversalPreserved":true,
+  "parallelLensesPreserved":true,
+  "contentReauthoring":false,
+  "scientificAuthorityMutation":false,
+  "manifestationInferredSemantics":false,
+  "commonGrammarStatus":"CALIBRATION_PASS_NOT_YET_FROZEN",
+  "methodsAdmission":false
+}

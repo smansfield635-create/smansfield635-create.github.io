@@ -1,0 +1,338 @@
+name: Laws Orbital Tranche A0-A3
+
+on:
+  push:
+    branches:
+      - agent/laws-orbital-tranche-a0-a3-v1
+    paths:
+      - .github/workflows/laws-orbital-tranche-a0-a3.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: laws-orbital-tranche-a0-a3-v1
+  cancel-in-progress: false
+
+jobs:
+  construct:
+    runs-on: ubuntu-latest
+    env:
+      BASE_SHA: 9eb636d33cff36b2344bb721726db7b4e8dcd2bc
+      BASE_TREE: d850728805825599f268e9021fb669f2e9f5790b
+      BRANCH: agent/laws-orbital-tranche-a0-a3-v1
+    steps:
+      - name: Checkout authorized branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-orbital-tranche-a0-a3-v1
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Preflight authority and branch relation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "$BRANCH"
+          git cat-file -e "$BASE_SHA^{commit}"
+          test "$(git rev-parse "$BASE_SHA^{tree}")" = "$BASE_TREE"
+          git merge-base --is-ancestor "$BASE_SHA" HEAD
+          git config user.name "laws-orbital-construction-bot"
+          git config user.email "laws-orbital-construction-bot@users.noreply.github.com"
+
+      - name: A0 — orientation integration and tranche controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p laws/orbital-tranche-a0-a3/receipts
+
+          cat > laws/orbital-tranche-a0-a3/manifest.v1.json <<'EOF'
+          {
+            "recordId": "LAWS_ORBITAL_TRANCHE_A0_A3_MANIFEST_v1",
+            "constructionBase": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+            "surface": {
+              "surfaceId": "LAWS_COMPLETE_STORY",
+              "semanticType": "NARRATIVE_SEQUENCE",
+              "canonicalOrder": "1_TO_24",
+              "orderingAuthority": ["LAWS_COMPLETE_NARRATIVE_MAP_v1", "LAWS_COMPLETE_NARRATIVE_MAP_FREEZE_RECORD_v1"],
+              "wrapPolicy": "BOUNDED",
+              "selectionMeaning": "NARRATIVE_INTERACTION_FOCUS",
+              "routeBehavior": "DIRECT_ENTRY_PLUS_BOUNDED_PREVIOUS_NEXT",
+              "statePersistence": "ROUTE_IDENTITY"
+            },
+            "ordinaryReadingSurface": {
+              "semanticType": "PARALLEL_LENS",
+              "canonicalOrder": null,
+              "scientificSequence": false,
+              "selectionMeaning": "ACTIVE_READING_FOCUS"
+            },
+            "methods": {
+              "storyMember": "STORY_03",
+              "internalSemanticType": "MULTI_AXIS_INSTRUMENT",
+              "genericSingleRingBinding": "PROHIBITED",
+              "axes": {"X": "MODELS", "Y": "INTERPRETIVE_LENSES", "Z": "MODEL_FAMILIES"}
+            },
+            "stories": [
+              {"position":1,"memberId":"STORY_01","label":"Applied Investigations","route":"/laws/research/applied-investigations/"},
+              {"position":2,"memberId":"STORY_02","label":"Evidence and Sources","route":"/laws/research/evidence-and-sources/"},
+              {"position":3,"memberId":"STORY_03","label":"Methods and Models","route":"/laws/research/methods-and-models/"},
+              {"position":4,"memberId":"STORY_04","label":"Flow / Signals","route":"/laws/categories/flow/signals/"},
+              {"position":5,"memberId":"STORY_05","label":"Flow / Feedback","route":"/laws/categories/flow/feedback/"},
+              {"position":6,"memberId":"STORY_06","label":"Flow / Cycles","route":"/laws/categories/flow/cycles/"},
+              {"position":7,"memberId":"STORY_07","label":"Flow / Handoffs","route":"/laws/categories/flow/handoffs/"},
+              {"position":8,"memberId":"STORY_08","label":"Integrity / Consistency","route":"/laws/categories/integrity/consistency/"},
+              {"position":9,"memberId":"STORY_09","label":"Integrity / Accountability","route":"/laws/categories/integrity/accountability/"},
+              {"position":10,"memberId":"STORY_10","label":"Integrity / Continuity","route":"/laws/categories/integrity/continuity/"},
+              {"position":11,"memberId":"STORY_11","label":"Integrity / Coherence","route":"/laws/categories/integrity/coherence/"},
+              {"position":12,"memberId":"STORY_12","label":"Reality / Theory","route":"/laws/categories/reality/theory/"},
+              {"position":13,"memberId":"STORY_13","label":"Reality / Evidence","route":"/laws/categories/reality/evidence/"},
+              {"position":14,"memberId":"STORY_14","label":"Reality / Measure","route":"/laws/categories/reality/measure/"},
+              {"position":15,"memberId":"STORY_15","label":"Reality / Limits","route":"/laws/categories/reality/limits/"},
+              {"position":16,"memberId":"STORY_16","label":"Structure / Constraints","route":"/laws/categories/structure/constraints/"},
+              {"position":17,"memberId":"STORY_17","label":"Structure / Interfaces","route":"/laws/categories/structure/interfaces/"},
+              {"position":18,"memberId":"STORY_18","label":"Structure / Boundaries","route":"/laws/categories/structure/boundaries/"},
+              {"position":19,"memberId":"STORY_19","label":"Structure / Governance","route":"/laws/categories/structure/governance/"},
+              {"position":20,"memberId":"STORY_20","label":"Test / Admission and Baseline","route":"/laws/test/admission-and-baseline/"},
+              {"position":21,"memberId":"STORY_21","label":"Test / Forward Construction","route":"/laws/test/forward-construction/"},
+              {"position":22,"memberId":"STORY_22","label":"Test / Reverse Audit","route":"/laws/test/reverse-audit/"},
+              {"position":23,"memberId":"STORY_23","label":"Test / Result and Record","route":"/laws/test/result-and-record/"},
+              {"position":24,"memberId":"STORY_24","label":"Research / Findings and Boundaries","route":"/laws/research/findings-and-boundaries/","terminalRoute":"/frontier/energy/battery-coherence-study/"}
+            ]
+          }
+          EOF
+
+          cat > laws/orbital-tranche-a0-a3/orientation.css <<'EOF'
+          .laws-orientation-portal{position:relative;z-index:6;margin:clamp(.8rem,2vw,1.5rem) auto 0;width:min(1180px,calc(100% - 2rem));padding:clamp(1rem,2.6vw,1.6rem);border:1px solid rgba(185,218,255,.18);border-radius:1.3rem;background:linear-gradient(145deg,rgba(6,14,26,.86),rgba(13,26,44,.66));box-shadow:0 24px 70px rgba(0,0,0,.24);backdrop-filter:blur(14px)}
+          .laws-orientation-portal__grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:center}.laws-orientation-portal__kicker{margin:0 0 .35rem;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;opacity:.7}.laws-orientation-portal h2{margin:0;font-size:clamp(1.25rem,3vw,2rem);line-height:1.05}.laws-orientation-portal__meta{margin:.55rem 0 0;opacity:.74}.laws-orientation-portal__entry{display:inline-flex;align-items:center;gap:.7rem;padding:.78rem 1rem;border:1px solid rgba(213,235,255,.24);border-radius:999px;text-decoration:none;color:inherit;background:rgba(121,180,237,.08);white-space:nowrap}.laws-orientation-portal__entry::after{content:'→';font-size:1.1em}.laws-orientation-portal__track{grid-column:1/-1;display:grid;grid-template-columns:repeat(24,1fr);gap:.22rem;margin-top:.15rem}.laws-orientation-portal__track span{height:3px;border-radius:999px;background:rgba(208,230,255,.16)}.laws-orientation-portal__track span:first-child{background:currentColor;opacity:.8}@media(max-width:760px){.laws-orientation-portal__grid{grid-template-columns:1fr}.laws-orientation-portal__entry{justify-self:start;white-space:normal}.laws-orientation-portal__track{gap:.12rem}}
+          EOF
+
+          cat > laws/orbital-tranche-a0-a3/orientation.js <<'EOF'
+          (()=>{const MANIFEST='/laws/orbital-tranche-a0-a3/manifest.v1.json';const root=document.documentElement;if(!root||root.dataset.route!='/laws/')return;fetch(MANIFEST,{credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error('manifest');return r.json()}).then(m=>{const first=m.stories&&m.stories[0];const estate=document.querySelector('.laws-estate');if(!first||!estate)return;const section=document.createElement('section');section.className='laws-orientation-portal';section.dataset.orbitalOrientation='LAWS_COMPLETE_STORY';section.setAttribute('aria-label','Laws narrative orientation');section.innerHTML=`<div class="laws-orientation-portal__grid"><div><p class="laws-orientation-portal__kicker">Laws narrative · orientation</p><h2>24 authorized story positions</h2><p class="laws-orientation-portal__meta">Bounded sequence · the Laws Compass remains outside the numbered story.</p></div><a class="laws-orientation-portal__entry" href="${first.route}">Begin · Story 1 · ${first.label}</a><div class="laws-orientation-portal__track" aria-hidden="true">${m.stories.map(()=>'<span></span>').join('')}</div></div>`;estate.insertBefore(section,estate.firstElementChild);root.dataset.lawsOrbitalOrientationStatus='ready'}).catch(()=>{root.dataset.lawsOrbitalOrientationStatus='fail-closed'})})();
+          EOF
+
+          cat > laws/orbital-tranche-a0-a3/verify-structural.mjs <<'EOF'
+          import fs from 'node:fs';import cp from 'node:child_process';
+          const base=process.env.BASE_SHA||'9eb636d33cff36b2344bb721726db7b4e8dcd2bc';
+          const allowed=new Set(['laws/index.html','laws/research/applied-investigations/index.html','laws/research/evidence-and-sources/index.html','laws/research/methods-and-models/index.html','laws/orbital-tranche-a0-a3/common-grammar.css','laws/orbital-tranche-a0-a3/common-grammar.js','laws/orbital-tranche-a0-a3/orientation.css','laws/orbital-tranche-a0-a3/orientation.js','laws/orbital-tranche-a0-a3/methods-adapter.css','laws/orbital-tranche-a0-a3/methods-adapter.js','laws/orbital-tranche-a0-a3/manifest.v1.json','laws/orbital-tranche-a0-a3/verify-structural.mjs','laws/orbital-tranche-a0-a3/verify-semantic.mjs','laws/orbital-tranche-a0-a3/verify-runtime.mjs','laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json','laws/orbital-tranche-a0-a3/receipts/a1-verification.v1.json','laws/orbital-tranche-a0-a3/receipts/a1-a2-common-grammar.v1.json','laws/orbital-tranche-a0-a3/receipts/a3-verification.v1.json','.github/workflows/laws-orbital-tranche-a0-a3.yml']);
+          const changed=cp.execFileSync('git',['diff','--name-only',`${base}..HEAD`],{encoding:'utf8'}).trim().split(/\n/).filter(Boolean);const unauthorized=changed.filter(p=>!allowed.has(p));if(unauthorized.length)throw new Error(`Unauthorized paths: ${unauthorized.join(', ')}`);
+          const protectedPaths=['assets/laws-destination/renewal.css','assets/laws-destination/renewal-navigation.css','assets/laws-destination/renewal-batch.css','assets/laws-destination/renewal.js','laws/research/methods-and-models/showroom.css','laws/research/methods-and-models/showroom-refinement.css','laws/research/methods-and-models/showroom-euclidean.css','laws/research/methods-and-models/showroom-euclidean-interaction.css','laws/research/methods-and-models/showroom.js','laws/research/methods-and-models/showroom-refinement.js','laws/research/methods-and-models/showroom-euclidean.js'];
+          for(const p of protectedPaths){if(cp.spawnSync('git',['diff','--quiet',base,'--',p]).status!==0)throw new Error(`Protected path changed: ${p}`)}
+          console.log(JSON.stringify({status:'PASS',changed,protectedPathsUnchanged:true},null,2));
+          EOF
+
+          cat > laws/orbital-tranche-a0-a3/verify-semantic.mjs <<'EOF'
+          import fs from 'node:fs';const stage=process.argv[2]||'A1';const read=p=>fs.readFileSync(p,'utf8');const manifest=JSON.parse(read('laws/orbital-tranche-a0-a3/manifest.v1.json'));const assert=(v,m)=>{if(!v)throw new Error(m)};
+          assert(manifest.surface.semanticType==='NARRATIVE_SEQUENCE','story type');assert(manifest.surface.wrapPolicy==='BOUNDED','bounded story');assert(manifest.stories.length===24,'24 stories');assert(manifest.stories.every((s,i)=>s.position===i+1),'canonical positions');assert(manifest.ordinaryReadingSurface.semanticType==='PARALLEL_LENS'&&manifest.ordinaryReadingSurface.scientificSequence===false,'parallel lenses');assert(manifest.methods.internalSemanticType==='MULTI_AXIS_INSTRUMENT','methods type');assert(manifest.methods.genericSingleRingBinding==='PROHIBITED','methods flattening prohibited');
+          const a1=read('laws/research/applied-investigations/index.html');assert(a1.includes('data-laws-story-sequence="1"'),'A1 sequence');assert(a1.includes('common-grammar.css')&&a1.includes('common-grammar.js'),'A1 grammar');assert(a1.includes('Problem, evidence, method, result, and limits remain distinct.'),'A1 lens distinction');assert(a1.includes('AUROC 0.9394')&&a1.includes('AUROC 0.9704'),'A1 scientific content preserved');
+          if(stage!=='A1'){const a2=read('laws/research/evidence-and-sources/index.html');assert(a2.includes('data-laws-story-sequence="2"'),'A2 sequence');assert(a2.includes('common-grammar.css')&&a2.includes('common-grammar.js'),'A2 grammar');assert(a2.includes('Problem, evidence, method, result, and limits remain distinct.'),'A2 lens distinction');assert(a2.includes('Source existence is not validation'),'A2 boundary preserved')}
+          if(stage==='A3'){const m=read('laws/research/methods-and-models/index.html');assert(m.includes('data-laws-story-sequence="3"'),'A3 sequence');assert(m.includes('METHODS_MODELS_EUCLIDEAN_SHOWROOM_v3'),'methods contract preserved');assert(m.includes('showroom-euclidean.js'),'methods runtime preserved');assert(m.includes('methods-adapter.js'),'adapter present');assert(m.includes('data-mm-family="structure"'),'methods state preserved')}
+          const trancheFiles=['laws/orbital-tranche-a0-a3/manifest.v1.json','laws/orbital-tranche-a0-a3/common-grammar.js','laws/orbital-tranche-a0-a3/orientation.js'].filter(fs.existsSync).map(read).join('\n');assert(!/CANONICAL_LAWS_TEST_RUN_RECOVERED|CURRENT_TESTS_ENVIRONMENT_PROJECTION\s*=\s*(?!NONE)/.test(trancheFiles),'forbidden lineage/projection upgrade');console.log(JSON.stringify({status:'PASS',stage},null,2));
+          EOF
+
+          cat > laws/orbital-tranche-a0-a3/verify-runtime.mjs <<'EOF'
+          import fs from 'node:fs';import {pathToFileURL} from 'node:url';const assert=(v,m)=>{if(!v)throw new Error(m)};const manifest=JSON.parse(fs.readFileSync('laws/orbital-tranche-a0-a3/manifest.v1.json','utf8'));if(fs.existsSync('laws/orbital-tranche-a0-a3/common-grammar.js')){await import(pathToFileURL(process.cwd()+'/laws/orbital-tranche-a0-a3/common-grammar.js'));const c=globalThis.DGBLawsOrbitalCore;assert(c,'core export');assert(c.stepIndex(0,-1,24,'BOUNDED')===0,'bounded lower');assert(c.stepIndex(0,1,24,'BOUNDED')===1,'forward');assert(c.stepIndex(1,-1,24,'BOUNDED')===0,'reverse traversal');assert(c.stepIndex(23,1,24,'BOUNDED')===23,'bounded upper');assert(c.visibleOffsets(0,24).every(x=>x.index>=0),'no wrap preview at story 1');assert(c.visibleOffsets(23,24).every(x=>x.index<=23),'no wrap preview at story 24')};assert(manifest.stories[0].route==='/laws/research/applied-investigations/','story1 route');assert(manifest.stories[1].route==='/laws/research/evidence-and-sources/','story2 route');assert(manifest.stories[2].route==='/laws/research/methods-and-models/','story3 route');assert(manifest.stories[3].route==='/laws/categories/flow/signals/','story4 outward boundary');console.log(JSON.stringify({status:'PASS',boundedTraversal:true,canonicalOrderPreserved:true},null,2));
+          EOF
+
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('laws/index.html');s=p.read_text()
+          marker='data-laws-orbital-orientation="A0_v1"'
+          if marker not in s:
+              s=s.replace('<html ', '<html data-laws-orbital-orientation="A0_v1" ', 1)
+          block='''<link data-laws-orbital-tranche="A0" rel="stylesheet" href="/laws/orbital-tranche-a0-a3/orientation.css?v=LAWS_ORBITAL_TRANCHE_A0_A3_V1">\n<script data-laws-orbital-tranche="A0" defer src="/laws/orbital-tranche-a0-a3/orientation.js?v=LAWS_ORBITAL_TRANCHE_A0_A3_V1"></script>\n'''
+          if 'data-laws-orbital-tranche="A0"' not in s:s=s.replace('</head>',block+'</head>',1)
+          p.write_text(s)
+          PY
+
+          git add laws/index.html laws/orbital-tranche-a0-a3/manifest.v1.json laws/orbital-tranche-a0-a3/orientation.css laws/orbital-tranche-a0-a3/orientation.js laws/orbital-tranche-a0-a3/verify-structural.mjs laws/orbital-tranche-a0-a3/verify-semantic.mjs laws/orbital-tranche-a0-a3/verify-runtime.mjs
+          git commit -m "Construct Laws orbital A0 orientation"
+          git push origin "$BRANCH"
+
+      - name: A1 — common narrative grammar calibration
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > laws/orbital-tranche-a0-a3/common-grammar.css <<'EOF'
+          .laws-orbital-story{--orbital-gap:clamp(.55rem,1.6vw,1rem);position:relative;isolation:isolate;margin:clamp(.8rem,2vw,1.5rem) auto clamp(1rem,2.4vw,1.8rem);width:min(1180px,calc(100% - 2rem));padding:clamp(.85rem,2vw,1.25rem);border:1px solid rgba(190,220,255,.16);border-radius:1.35rem;background:radial-gradient(circle at 50% -30%,rgba(116,175,235,.18),transparent 48%),linear-gradient(145deg,rgba(4,12,24,.94),rgba(11,23,40,.82));box-shadow:0 24px 75px rgba(0,0,0,.28);overflow:hidden}.laws-orbital-story::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 44%,rgba(152,203,255,.045) 45%,transparent 47%);pointer-events:none}.laws-orbital-story__head{position:relative;z-index:2;display:flex;justify-content:space-between;gap:1rem;align-items:flex-end;margin-bottom:.75rem}.laws-orbital-story__eyebrow{margin:0 0 .25rem;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;opacity:.64}.laws-orbital-story__head h2{margin:0;font-size:clamp(1rem,2.2vw,1.45rem);font-weight:650}.laws-orbital-story__position{margin:0;font-variant-numeric:tabular-nums;font-size:.78rem;opacity:.62;white-space:nowrap}.laws-orbital-story__stage{position:relative;z-index:1;min-height:clamp(9.3rem,18vw,12rem);perspective:1100px;touch-action:pan-y;outline:none}.laws-orbital-story__ring{position:absolute;inset:0}.laws-orbital-story__member{--o:0;position:absolute;left:50%;top:50%;width:min(17rem,42vw);min-height:5.7rem;display:flex;flex-direction:column;justify-content:center;gap:.3rem;padding:.75rem .9rem;border:1px solid rgba(198,225,255,.13);border-radius:1rem;background:rgba(12,27,46,.78);color:inherit;text-decoration:none;transform:translate(-50%,-50%) translateX(calc(var(--o) * min(23vw,18rem))) translateZ(calc((2 - max(-2,var(--o)) * max(-2,var(--o))) * -28px)) rotateY(calc(var(--o) * -16deg)) scale(calc(1 - max(-2,var(--o)) * max(-2,var(--o)) * .075));opacity:calc(1 - max(-2,var(--o)) * max(-2,var(--o)) * .18);transition:transform .22s ease,opacity .22s ease,border-color .22s ease,background .22s ease;box-shadow:0 16px 32px rgba(0,0,0,.16)}.laws-orbital-story__member small{font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;opacity:.55}.laws-orbital-story__member strong{font-size:.88rem;line-height:1.16}.laws-orbital-story__member[data-selected="true"]{z-index:5;border-color:rgba(211,235,255,.42);background:linear-gradient(145deg,rgba(38,72,108,.9),rgba(18,40,66,.94));box-shadow:0 22px 50px rgba(0,0,0,.28),0 0 0 1px rgba(207,233,255,.08) inset}.laws-orbital-story__member:not([data-selected="true"]):hover{border-color:rgba(211,235,255,.3)}.laws-orbital-story__controls{position:relative;z-index:2;display:grid;grid-template-columns:1fr auto 1fr;gap:.7rem;align-items:center;margin-top:.45rem}.laws-orbital-story__control{display:flex;align-items:center;gap:.55rem;padding:.55rem .72rem;border:0;background:transparent;color:inherit;text-decoration:none;font:inherit;cursor:pointer;opacity:.76}.laws-orbital-story__control:last-child{justify-self:end}.laws-orbital-story__control[aria-disabled="true"]{opacity:.24;cursor:not-allowed}.laws-orbital-story__cue{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.45;text-align:center}.laws-orbital-story.is-traversing-forward .laws-orbital-story__ring{transform:translateX(-1.2rem);transition:transform .16s ease}.laws-orbital-story.is-traversing-back .laws-orbital-story__ring{transform:translateX(1.2rem);transition:transform .16s ease}.laws-orbital-story.is-boundary{animation:laws-orbital-boundary .22s ease}@keyframes laws-orbital-boundary{50%{transform:translateX(.25rem)}}[data-orbital-semantic-type="PARALLEL_LENS"]{position:relative}[data-orbital-semantic-type="PARALLEL_LENS"]::before{content:'Parallel readings';display:block;margin:0 0 .55rem;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;opacity:.46}@media(max-width:720px){.laws-orbital-story{width:min(100% - 1rem,1180px);padding:.8rem}.laws-orbital-story__head{align-items:flex-start}.laws-orbital-story__stage{min-height:9.4rem}.laws-orbital-story__member{width:min(15rem,66vw);transform:translate(-50%,-50%) translateX(calc(var(--o) * 54vw)) rotateY(calc(var(--o) * -10deg)) scale(calc(1 - max(-2,var(--o)) * max(-2,var(--o)) * .09))}.laws-orbital-story__controls{grid-template-columns:1fr 1fr}.laws-orbital-story__cue{display:none}}
+          EOF
+
+          cat > laws/orbital-tranche-a0-a3/common-grammar.js <<'EOF'
+          ((g)=>{const core={stepIndex(i,d,n,w='BOUNDED'){if(!Number.isInteger(i)||!Number.isInteger(d)||n<1)return i;const next=i+d;if(w==='CYCLIC')return((next%n)+n)%n;return Math.max(0,Math.min(n-1,next))},visibleOffsets(i,n,r=2){const out=[];for(let d=-r;d<=r;d++){const x=i+d;if(x>=0&&x<n)out.push({index:x,offset:d})}return out}};g.DGBLawsOrbitalCore=core;if(typeof document==='undefined')return;const root=document.documentElement;const sequence=Number(root.dataset.lawsStorySequence);if(!Number.isInteger(sequence)||sequence<1)return;const manifestUrl='/laws/orbital-tranche-a0-a3/manifest.v1.json';const interactive=t=>t&&t.closest&&t.closest('a,button,input,select,textarea,summary');const fail=()=>{root.dataset.lawsOrbitalStoryStatus='fail-closed'};fetch(manifestUrl,{credentials:'same-origin'}).then(r=>{if(!r.ok)throw new Error('manifest');return r.json()}).then(m=>{if(m.surface?.semanticType!=='NARRATIVE_SEQUENCE'||m.surface?.wrapPolicy!=='BOUNDED')throw new Error('surface');const stories=m.stories||[];const i=sequence-1;const current=stories[i];if(!current||current.position!==sequence)throw new Error('binding');const main=document.querySelector('main');if(!main)return fail();const shell=document.createElement('section');shell.className='laws-orbital-story';shell.dataset.orbitalSurface=m.surface.surfaceId;shell.dataset.semanticType=m.surface.semanticType;shell.dataset.wrapPolicy=m.surface.wrapPolicy;shell.dataset.selectedMember=current.memberId;shell.setAttribute('aria-label','Laws narrative orbit');const visible=core.visibleOffsets(i,stories.length);const members=visible.map(({index,offset})=>{const s=stories[index],selected=index===i;return `<a class="laws-orbital-story__member" style="--o:${offset}" href="${s.route}" data-member-id="${s.memberId}" data-selected="${selected?'true':'false'}" ${selected?'aria-current="page"':''}><small>Story ${s.position} of ${stories.length}</small><strong>${s.label}</strong></a>`}).join('');const prev=i>0?stories[i-1]:null,next=i<stories.length-1?stories[i+1]:null;shell.innerHTML=`<header class="laws-orbital-story__head"><div><p class="laws-orbital-story__eyebrow">Laws · canonical narrative</p><h2>${current.label}</h2></div><p class="laws-orbital-story__position">Story ${current.position} / ${stories.length}</p></header><div class="laws-orbital-story__stage" tabindex="0" aria-describedby="laws-orbital-cue"><div class="laws-orbital-story__ring">${members}</div></div><div class="laws-orbital-story__controls"><button class="laws-orbital-story__control" type="button" data-orbit-prev aria-disabled="${prev?'false':'true'}">← ${prev?prev.label:'Beginning'}</button><span class="laws-orbital-story__cue" id="laws-orbital-cue">Drag · wheel · arrow keys</span><button class="laws-orbital-story__control" type="button" data-orbit-next aria-disabled="${next?'false':'true'}">${next?next.label:'End'} →</button></div>`;main.insertBefore(shell,main.firstElementChild);const go=d=>{const ni=core.stepIndex(i,d,stories.length,'BOUNDED');if(ni===i){shell.classList.remove('is-boundary');void shell.offsetWidth;shell.classList.add('is-boundary');return}shell.classList.add(d>0?'is-traversing-forward':'is-traversing-back');setTimeout(()=>location.assign(stories[ni].route),150)};shell.querySelector('[data-orbit-prev]').addEventListener('click',()=>go(-1));shell.querySelector('[data-orbit-next]').addEventListener('click',()=>go(1));const stage=shell.querySelector('.laws-orbital-story__stage');stage.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(1)}if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}});let wheel=0,cool=false;stage.addEventListener('wheel',e=>{if(cool)return;wheel+=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;if(Math.abs(wheel)>90){e.preventDefault();cool=true;go(wheel>0?1:-1);wheel=0;setTimeout(()=>cool=false,600)}},{passive:false});let start=null;stage.addEventListener('pointerdown',e=>{if(interactive(e.target))return;start={x:e.clientX,y:e.clientY};stage.setPointerCapture?.(e.pointerId)});stage.addEventListener('pointerup',e=>{if(!start)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>44&&Math.abs(dx)>Math.abs(dy))go(dx<0?1:-1)});document.querySelectorAll('[data-lr-tabs],.lr-tablist').forEach(el=>{el.dataset.orbitalSemanticType='PARALLEL_LENS';el.dataset.scientificSequence='false'});root.dataset.lawsOrbitalStoryStatus='ready'}).catch(fail)})(globalThis);
+          EOF
+
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('laws/research/applied-investigations/index.html');s=p.read_text()
+          if 'data-laws-orbital-member="STORY_01"' not in s:s=s.replace('<html ', '<html data-laws-orbital-surface="LAWS_COMPLETE_STORY" data-laws-orbital-member="STORY_01" data-laws-wrap-policy="BOUNDED" ',1)
+          block='''  <link rel="stylesheet" href="/laws/orbital-tranche-a0-a3/common-grammar.css?v=LAWS_ORBITAL_COMMON_GRAMMAR_V1">\n  <script defer src="/laws/orbital-tranche-a0-a3/common-grammar.js?v=LAWS_ORBITAL_COMMON_GRAMMAR_V1"></script>\n'''
+          if 'LAWS_ORBITAL_COMMON_GRAMMAR_V1' not in s:s=s.replace('</head>',block+'</head>',1)
+          p.write_text(s)
+          PY
+          git add laws/orbital-tranche-a0-a3/common-grammar.css laws/orbital-tranche-a0-a3/common-grammar.js laws/research/applied-investigations/index.html
+          git commit -m "Construct Laws orbital A1 common grammar calibration"
+          git push origin "$BRANCH"
+
+      - name: Verify A1 and preserve receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node laws/orbital-tranche-a0-a3/verify-structural.mjs
+          node laws/orbital-tranche-a0-a3/verify-semantic.mjs A1
+          node laws/orbital-tranche-a0-a3/verify-runtime.mjs
+          VERIFIED_HEAD="$(git rev-parse HEAD)"
+          cat > laws/orbital-tranche-a0-a3/receipts/a1-verification.v1.json <<EOF
+          {
+            "recordId":"LAWS_ORBITAL_A1_VERIFICATION_RECEIPT_v1",
+            "status":"PASS",
+            "constructionBase":"$BASE_SHA",
+            "verifiedHead":"$VERIFIED_HEAD",
+            "surface":"STORY_01_APPLIED_INVESTIGATIONS",
+            "canonicalOrderPreserved":true,
+            "boundedTraversalPreserved":true,
+            "parallelLensesPreserved":true,
+            "contentReauthoring":false,
+            "scientificAuthorityMutation":false,
+            "manifestationInferredSemantics":false,
+            "commonGrammarStatus":"CALIBRATION_PASS_NOT_YET_FROZEN",
+            "methodsAdmission":false
+          }
+          EOF
+          git add laws/orbital-tranche-a0-a3/receipts/a1-verification.v1.json
+          git commit -m "Verify Laws orbital A1 calibration"
+          git push origin "$BRANCH"
+
+      - name: A2 — replicate common grammar on Story 2
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('laws/research/evidence-and-sources/index.html');s=p.read_text()
+          if 'data-laws-orbital-member="STORY_02"' not in s:s=s.replace('<html ', '<html data-laws-orbital-surface="LAWS_COMPLETE_STORY" data-laws-orbital-member="STORY_02" data-laws-wrap-policy="BOUNDED" ',1)
+          block='''  <link rel="stylesheet" href="/laws/orbital-tranche-a0-a3/common-grammar.css?v=LAWS_ORBITAL_COMMON_GRAMMAR_V1">\n  <script defer src="/laws/orbital-tranche-a0-a3/common-grammar.js?v=LAWS_ORBITAL_COMMON_GRAMMAR_V1"></script>\n'''
+          if 'LAWS_ORBITAL_COMMON_GRAMMAR_V1' not in s:s=s.replace('</head>',block+'</head>',1)
+          p.write_text(s)
+          PY
+          git add laws/research/evidence-and-sources/index.html
+          git commit -m "Construct Laws orbital A2 common grammar replication"
+          git push origin "$BRANCH"
+
+      - name: Verify A1+A2, freeze common grammar, admit A3
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(node -e "console.log(require('./laws/orbital-tranche-a0-a3/receipts/a1-verification.v1.json').status)")" = PASS
+          node laws/orbital-tranche-a0-a3/verify-structural.mjs
+          node laws/orbital-tranche-a0-a3/verify-semantic.mjs A2
+          node laws/orbital-tranche-a0-a3/verify-runtime.mjs
+          VERIFIED_HEAD="$(git rev-parse HEAD)"
+          CSS_SHA="$(sha256sum laws/orbital-tranche-a0-a3/common-grammar.css | awk '{print $1}')"
+          JS_SHA="$(sha256sum laws/orbital-tranche-a0-a3/common-grammar.js | awk '{print $1}')"
+          MANIFEST_SHA="$(sha256sum laws/orbital-tranche-a0-a3/manifest.v1.json | awk '{print $1}')"
+          cat > laws/orbital-tranche-a0-a3/receipts/a1-a2-common-grammar.v1.json <<EOF
+          {
+            "recordId":"LAWS_ORBITAL_A1_A2_COMMON_GRAMMAR_RECEIPT_v1",
+            "status":"COMMON_GRAMMAR_PASS",
+            "constructionBase":"$BASE_SHA",
+            "verifiedHead":"$VERIFIED_HEAD",
+            "stories":[1,2],
+            "sameExperienceTopology":true,
+            "sameScientificContent":false,
+            "canonicalOrderPreserved":true,
+            "boundedTraversalPreserved":true,
+            "parallelLensesPreserved":true,
+            "contentReauthoring":false,
+            "scientificAuthorityMutation":false,
+            "manifestationInferredSemantics":false,
+            "methodsAdmission":true
+          }
+          EOF
+          cat > laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json <<EOF
+          {
+            "recordId":"LAWS_ORBITAL_COMMON_GRAMMAR_FREEZE_v1",
+            "status":"FROZEN_FOR_A3_ADAPTER",
+            "constructionBase":"$BASE_SHA",
+            "verifiedHead":"$VERIFIED_HEAD",
+            "surfaceId":"LAWS_COMPLETE_STORY",
+            "semanticType":"NARRATIVE_SEQUENCE",
+            "wrapPolicy":"BOUNDED",
+            "selectedMeaning":"PRIMARY_INTERACTION_FOCUS_ONLY",
+            "parallelLensScientificSequence":false,
+            "commonGrammarCssSha256":"$CSS_SHA",
+            "commonGrammarJsSha256":"$JS_SHA",
+            "manifestSha256":"$MANIFEST_SHA",
+            "methodsMayConsumeGrammar":true,
+            "methodsMayRedefineGrammar":false
+          }
+          EOF
+          git add laws/orbital-tranche-a0-a3/receipts/a1-a2-common-grammar.v1.json laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json
+          git commit -m "Freeze Laws A1-A2 common orbital grammar"
+          git push origin "$BRANCH"
+
+      - name: A3 gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(node -e "console.log(require('./laws/orbital-tranche-a0-a3/receipts/a1-a2-common-grammar.v1.json').status)")" = COMMON_GRAMMAR_PASS
+          test "$(node -e "console.log(require('./laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json').status)")" = FROZEN_FOR_A3_ADAPTER
+
+      - name: A3 — specialized Methods adapter
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > laws/orbital-tranche-a0-a3/methods-adapter.css <<'EOF'
+          html[data-laws-orbital-methods-adapter="v1"] .mm-main>.laws-orbital-story{margin-top:clamp(.8rem,2vw,1.4rem);margin-bottom:clamp(1rem,2.2vw,1.6rem)}html[data-laws-orbital-methods-adapter="v1"] .mm-showroom[data-orbital-semantic-type="MULTI_AXIS_INSTRUMENT"]{position:relative;isolation:isolate}html[data-laws-orbital-methods-adapter="v1"] .mm-showroom[data-orbital-semantic-type="MULTI_AXIS_INSTRUMENT"]::before{content:'Story 3 · specialized multi-axis instrument';display:block;margin:0 0 .7rem;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;opacity:.48}html[data-laws-orbital-methods-adapter="v1"] [data-mm-axis]{scroll-margin-top:7rem}
+          EOF
+          cat > laws/orbital-tranche-a0-a3/methods-adapter.js <<'EOF'
+          (()=>{const root=document.documentElement;if(root.dataset.route!='/laws/research/methods-and-models/'||root.dataset.lawsStorySequence!=='3')return;const showroom=document.querySelector('[data-mm-showroom]');const models=document.querySelector('[data-mm-model-deck]');const lenses=document.querySelector('.mm-lens-tabs');const families=document.querySelector('[data-mm-family-tabs]');if(!showroom||!models||!lenses||!families){root.dataset.lawsOrbitalMethodsAdapterStatus='fail-closed';return}root.dataset.lawsOrbitalMethodsAdapter='v1';root.dataset.lawsOrbitalMethodsAdapterStatus='ready';showroom.dataset.orbitalSemanticType='MULTI_AXIS_INSTRUMENT';showroom.dataset.lawsStoryMembership='STORY_03';showroom.dataset.genericSingleRingBinding='PROHIBITED';models.dataset.mmAxis='X_MODELS';lenses.dataset.mmAxis='Y_INTERPRETIVE_LENSES';families.dataset.mmAxis='Z_MODEL_FAMILIES'})();
+          EOF
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('laws/research/methods-and-models/index.html');s=p.read_text()
+          if 'data-laws-orbital-member="STORY_03"' not in s:
+              s=s.replace('<html lang="en"', '<html lang="en"\n  data-narrative-route="/laws/research/methods-and-models/"\n  data-laws-story-sequence="3"\n  data-laws-orbital-surface="LAWS_COMPLETE_STORY"\n  data-laws-orbital-member="STORY_03"\n  data-laws-wrap-policy="BOUNDED"',1)
+          block='''  <link rel="stylesheet" href="/laws/orbital-tranche-a0-a3/common-grammar.css?v=LAWS_ORBITAL_COMMON_GRAMMAR_V1">\n  <link rel="stylesheet" href="/laws/orbital-tranche-a0-a3/methods-adapter.css?v=LAWS_ORBITAL_METHODS_ADAPTER_V1">\n  <script defer src="/laws/orbital-tranche-a0-a3/common-grammar.js?v=LAWS_ORBITAL_COMMON_GRAMMAR_V1"></script>\n  <script defer src="/laws/orbital-tranche-a0-a3/methods-adapter.js?v=LAWS_ORBITAL_METHODS_ADAPTER_V1"></script>\n'''
+          if 'LAWS_ORBITAL_METHODS_ADAPTER_V1' not in s:s=s.replace('</head>',block+'</head>',1)
+          p.write_text(s)
+          PY
+          git add laws/orbital-tranche-a0-a3/methods-adapter.css laws/orbital-tranche-a0-a3/methods-adapter.js laws/research/methods-and-models/index.html
+          git commit -m "Construct Laws orbital A3 Methods adapter"
+          git push origin "$BRANCH"
+
+      - name: Verify A3 and preserve receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          node laws/orbital-tranche-a0-a3/verify-structural.mjs
+          node laws/orbital-tranche-a0-a3/verify-semantic.mjs A3
+          node laws/orbital-tranche-a0-a3/verify-runtime.mjs
+          VERIFIED_HEAD="$(git rev-parse HEAD)"
+          cat > laws/orbital-tranche-a0-a3/receipts/a3-verification.v1.json <<EOF
+          {
+            "recordId":"LAWS_ORBITAL_A3_METHODS_ADAPTER_VERIFICATION_v1",
+            "status":"PASS",
+            "constructionBase":"$BASE_SHA",
+            "verifiedHead":"$VERIFIED_HEAD",
+            "storyMember":"STORY_03",
+            "storySemanticType":"NARRATIVE_SEQUENCE",
+            "methodsInternalSemanticType":"MULTI_AXIS_INSTRUMENT",
+            "genericSingleRingBinding":"PROHIBITED",
+            "existingMethodsRuntimeModified":false,
+            "commonGrammarRedefinedByMethods":false,
+            "batteryLineageUpgrade":false,
+            "testsProjectionCreated":false,
+            "browserVisualAcceptance":"NOT_CLAIMED"
+          }
+          EOF
+          git add laws/orbital-tranche-a0-a3/receipts/a3-verification.v1.json
+          git commit -m "Verify Laws orbital A3 Methods adapter"
+          git push origin "$BRANCH"
+
+      - name: Final bounded structural verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          node laws/orbital-tranche-a0-a3/verify-structural.mjs
+          git status --porcelain=v1
+          test -z "$(git status --porcelain=v1)"
+          echo "LAWS_ORBITAL_TRANCHE_A0_A3_CONSTRUCTED_STRUCTURAL_PASS"

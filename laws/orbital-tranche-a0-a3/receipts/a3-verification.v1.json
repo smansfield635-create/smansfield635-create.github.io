@@ -1,0 +1,17 @@
+{
+  "recordId":"LAWS_ORBITAL_A3_METHODS_ADAPTER_VERIFICATION_v1",
+  "status":"SUPERSEDED_PENDING_COMMON_GRAMMAR_REFREEZE",
+  "constructionBase":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "priorVerifiedHead":"df620ced95b38f1a4d019702bcc7643653064232",
+  "storyMember":"STORY_03",
+  "storySemanticType":"NARRATIVE_SEQUENCE",
+  "methodsInternalSemanticType":"MULTI_AXIS_INSTRUMENT",
+  "genericSingleRingBinding":"PROHIBITED",
+  "existingMethodsRuntimeModified":false,
+  "commonGrammarRedefinedByMethods":false,
+  "batteryLineageUpgrade":false,
+  "testsProjectionCreated":false,
+  "priorBrowserVisualAcceptance":"NOT_CLAIMED",
+  "currentAcceptance":"WITHHELD_PENDING_PERSISTENT_SPATIAL_RUNTIME_ACCEPTANCE",
+  "requiredPrecondition":"COMMON_GRAMMAR_REFROZEN_AFTER_STORY_01_TO_STORY_03_PERSISTENT_STATE_ACCEPTANCE"
+}

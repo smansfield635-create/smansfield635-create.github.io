@@ -1,0 +1,16 @@
+{
+  "recordId":"LAWS_ORBITAL_A1_A2_COMMON_GRAMMAR_RECEIPT_v1",
+  "status":"COMMON_GRAMMAR_PASS",
+  "constructionBase":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+  "verifiedHead":"3258792c9aca49859fd9927d6965b7a075649246",
+  "stories":[1,2],
+  "sameExperienceTopology":true,
+  "sameScientificContent":false,
+  "canonicalOrderPreserved":true,
+  "boundedTraversalPreserved":true,
+  "parallelLensesPreserved":true,
+  "contentReauthoring":false,
+  "scientificAuthorityMutation":false,
+  "manifestationInferredSemantics":false,
+  "methodsAdmission":true
+}

@@ -1428,6 +1428,18 @@
       "scopeHash": "eb87ec24600c8f605e2cd9610f935dcd5ec48f61a14f91ebde6105917587e361",
       "state": "ADMITTED_LOCKED"
     },
+    "eb98fc14b2a34388fd93ba2bbbe054241a954510f7837759f283ac2357d3f488": {
+      "governingHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+      "lockGeneration": 890,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:REFERENCE_CLASS_AWARDS_ADMISSION:PREACTIVATION_CONTROL_PACKAGE:V1",
+      "operationId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_V1_20260809_001",
+      "procedureLocatorDigest": "48c5f949e4352567f02119c052aaef917a8be2562da0d37f1357fc3617d46bf7",
+      "released": false,
+      "requestDigest": "d6dec1f6fab73e84d679f8c1eb16493a5a9cd4755ea001cbc579fb8081123b18",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "eb98fc14b2a34388fd93ba2bbbe054241a954510f7837759f283ac2357d3f488",
+      "state": "ADMITTED_LOCKED"
+    },
     "eda01b18bf0bdaf287a61a576788a1b1bb87646c283eb5c476630a723b50d6fa": {
       "governingHead": "275a639d647f5bf156fd4fe39c1be386594e6888",
       "lockGeneration": 746,
@@ -1552,7 +1564,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 889,
+  "lockGeneration": 890,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

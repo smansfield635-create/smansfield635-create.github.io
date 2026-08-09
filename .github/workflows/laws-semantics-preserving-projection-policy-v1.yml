@@ -1,0 +1,127 @@
+name: Laws Semantics-Preserving Projection Policy v1
+
+on:
+  push:
+    branches:
+      - agent/laws-semantics-preserving-projection-policy-freeze-001
+    paths:
+      - '.github/workflows/laws-semantics-preserving-projection-policy-v1.yml'
+      - 'laws/control-plane/contextual-topology/laws-semantics-preserving-projection-policy-v1.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  EXPECTED_PARENT: a54c7ada99c94d42c9eb3655512c2c611b2d22cc
+  EXPECTED_GRAPH_CONTRACT_BLOB: 240dbb7dca3db8f5a0a21e77d1aee91f1d21cb5a
+  EXPECTED_ASSEMBLER_BLOB: f94fd5840316c338b7456957eeed8e77b24ac5fc
+  EXPECTED_NATIVE_RECEIPT_PROFILE_BLOB: 2107a8de1ef21daf36bbd1759e5a4c4bc62291cd
+  EXPECTED_RELATION_REGISTRY_BLOB: 5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e
+
+jobs:
+  verify-projection-policy-freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact policy-freeze head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact lineage, scope, and immutable semantic upstreams
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PARENT"
+          test "$(git rev-list --parents -n 1 HEAD | awk '{print NF}')" -eq 2
+
+          mapfile -t CHANGED < <(git diff --name-status "$EXPECTED_PARENT"...HEAD | sort)
+          EXPECTED=(
+            $'A\t.github/workflows/laws-semantics-preserving-projection-policy-v1.yml'
+            $'A\tlaws/control-plane/contextual-topology/laws-semantics-preserving-projection-policy-v1.json'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 2
+          test "$(printf '%s\n' "${CHANGED[@]}")" = "$(printf '%s\n' "${EXPECTED_SORTED[@]}")"
+
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-contract-v1.json)" = "$EXPECTED_GRAPH_CONTRACT_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-assembler-v1.mjs)" = "$EXPECTED_ASSEMBLER_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-context-graph-native-receipt-profile-v1.json)" = "$EXPECTED_NATIVE_RECEIPT_PROFILE_BLOB"
+          test "$(git rev-parse HEAD:laws/control-plane/contextual-topology/laws-contextual-relation-registry-v1.json)" = "$EXPECTED_RELATION_REGISTRY_BLOB"
+
+      - name: Verify frozen projection policy semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const assert = require('node:assert/strict');
+          const fs = require('node:fs');
+          const policy = JSON.parse(fs.readFileSync('laws/control-plane/contextual-topology/laws-semantics-preserving-projection-policy-v1.json', 'utf8'));
+          const registry = JSON.parse(fs.readFileSync('laws/control-plane/contextual-topology/laws-contextual-relation-registry-v1.json', 'utf8'));
+
+          assert.equal(policy.schema, 'LAWS_SEMANTICS_PRESERVING_PROJECTION_POLICY_v1');
+          assert.equal(policy.version, '1.0.0');
+          assert.equal(policy.status, 'FROZEN_PROJECTION_POLICY_FOR_NONSPATIAL_CONFORMANCE_HARNESS_DESIGN');
+          assert.equal(policy.authorityBindings.acceptedGraphEvidence.evidenceCommit, process.env.EXPECTED_PARENT);
+          assert.equal(policy.visualClassification.noThirdCategory, true);
+          assert.deepEqual(policy.visualClassification.allowedClasses.slice().sort(), ['NON_SEMANTIC_PRESENTATION', 'SEMANTIC_EXPRESSION']);
+
+          const registered = registry.relation_types.map((r) => r.id).sort();
+          const mapped = Object.keys(policy.relationTypeMappings).sort();
+          assert.deepEqual(mapped, registered);
+          for (const mapping of Object.values(policy.relationTypeMappings)) {
+            assert.equal(mapping.profile, 'DIRECT_TYPED_RELATION_V1');
+          }
+
+          assert.equal(policy.directTypedRelationProfile.requiredGraphState, 'ASSERTED');
+          assert.equal(policy.directTypedRelationProfile.directionRule, 'PRESERVE_FROM_OBJECT_TO_OBJECT_EXACTLY');
+          assert.equal(policy.directTypedRelationProfile.multiplicityRule, 'PRESERVE_EVERY_DISTINCT_RELATION_ID');
+          assert.equal(policy.directTypedRelationProfile.inverseSynthesisAllowed, false);
+          assert.equal(policy.directTypedRelationProfile.genericRelationSubstitutionAllowed, false);
+
+          assert.equal(policy.ambiguousPerceptualChannels.v1CurrentRelationTypeMappingsAuthorizeAmbiguousSemanticUse, false);
+          assert.equal(policy.animationRules.semanticAnimationV1, 'PROHIBITED_PENDING_EXPLICIT_RELATION_TYPE_MAPPING');
+          assert.equal(policy.unresolvedStateRules.semanticEdgeAllowed, false);
+          assert.deepEqual(policy.unresolvedStateRules.states.slice().sort(), ['CONFLICTED', 'NONE', 'UNEVALUABLE', 'UNKNOWN']);
+          assert.equal(policy.filteringRules.notShownMayBeReportedAsNonexistent, false);
+          assert.equal(policy.aggregationRules.visualClusterIsAuthoritativeObject, false);
+          assert.equal(policy.reversibilityRules.projectionMayWriteBackToGraph, false);
+          assert.equal(policy.reversibilityRules.entireProjectionImplementationMayBeReplacedWithoutChangingGraphTruth, true);
+
+          assert.equal(policy.claimBoundaries.nonSpatialProjectionHarnessConstructed, false);
+          assert.equal(policy.claimBoundaries.spatialImplementationAuthorized, false);
+          assert.equal(policy.claimBoundaries.spatialImplementationConstructed, false);
+          assert.equal(policy.claimBoundaries.productCodeCreated, false);
+          assert.equal(policy.claimBoundaries.productCodeModified, false);
+          assert.equal(policy.claimBoundaries.graphModified, false);
+          assert.equal(policy.claimBoundaries.assemblerModified, false);
+          assert.equal(policy.claimBoundaries.IMIInvoked, false);
+          assert.equal(policy.nextGate.name, 'NON_SPATIAL_PROJECTION_CONFORMANCE_HARNESS');
+          assert.equal(policy.nextGate.spatialImplementationRemainsClosed, true);
+
+          const requiredCases = new Set(policy.requiredNonSpatialConformanceCases);
+          for (const required of [
+            'VISUAL_EDGE_FOR_UNKNOWN_IS_REJECTED',
+            'REVERSE_ARROW_FOR_ONE_WAY_RELATION_IS_REJECTED',
+            'CLAIM_CEILING_CANNOT_BE_INCREASED_BY_LABEL_OR_EMPHASIS',
+            'MULTIPLE_RELATIONS_CANNOT_COLLAPSE_TO_ANONYMOUS_GENERIC_CONNECTION',
+            'VISUAL_CLUSTER_CANNOT_BECOME_AUTHORITATIVE_OBJECT',
+            'HIDDEN_ASSERTED_RELATION_CANNOT_BE_REPORTED_NONEXISTENT',
+            'ANIMATION_CANNOT_IMPLY_UNAUTHORIZED_CAUSALITY_OR_TEMPORALITY',
+            'PROXIMITY_CANNOT_CREATE_RELATION',
+            'FILTERING_CANNOT_DESTROY_UNRESOLVED_STATE_ACCESS'
+          ]) assert.ok(requiredCases.has(required), required);
+
+          console.log(JSON.stringify({
+            schema: policy.schema,
+            version: policy.version,
+            registeredRelationMappings: registered.length,
+            semanticVisualChannels: Object.keys(policy.semanticVisualChannels).length,
+            requiredNonSpatialConformanceCases: policy.requiredNonSpatialConformanceCases.length,
+            disposition: 'PROJECTION_POLICY_FREEZE_VERIFIED',
+            nextGate: policy.nextGate.name,
+            spatialImplementationAuthorized: policy.claimBoundaries.spatialImplementationAuthorized
+          }, null, 2));
+          NODE

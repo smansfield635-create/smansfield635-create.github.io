@@ -1,0 +1,51 @@
+{
+  "CS": 0.0,
+  "IMI": 1.0,
+  "WMI": 1.0,
+  "base_ordinal": 0,
+  "classifier_version": "1.0.0",
+  "factor_dictionary_version": "1.0.0",
+  "factor_threshold_failure": false,
+  "hard_collapse": false,
+  "implementation_version": "1.0.0",
+  "instrument_version": "1.0.0",
+  "normalization_version": "1.0.0",
+  "ordinal_IMI": 0,
+  "product_band": 0,
+  "receipt_sha256": "ba3cd109f4e48343efbab8a8595ed0c85343f1a55111299129db56e177442e01",
+  "required_factor_values": {
+    "MT01": 1.0,
+    "MT02": 1.0,
+    "MT03": 1.0,
+    "MT04": 1.0,
+    "MT05": 1.0,
+    "MT06": 1.0
+  },
+  "route_id": "LAWS_CONTEXTUAL_MECHANICAL_TRANSFER_ROUTE_v1",
+  "route_threshold_failure": false,
+  "route_version": "1.0.0",
+  "source_classes": {
+    "MT01": "SC2",
+    "MT02": "SC2",
+    "MT03": "SC2",
+    "MT04": "SC2",
+    "MT05": "SC2",
+    "MT06": "SC2"
+  },
+  "source_confidence": {
+    "MT01": "A",
+    "MT02": "C",
+    "MT03": "C",
+    "MT04": "C",
+    "MT05": "C",
+    "MT06": "C"
+  },
+  "source_registry_version": "1.0.0",
+  "state": "NUMERIC",
+  "temporal_protocol_version": "1.0.0",
+  "terminal_lock": "FALSE",
+  "terminal_unmet_or_unknown": [],
+  "threshold_failure": false,
+  "threshold_floor": 0,
+  "zero_count": 0
+}

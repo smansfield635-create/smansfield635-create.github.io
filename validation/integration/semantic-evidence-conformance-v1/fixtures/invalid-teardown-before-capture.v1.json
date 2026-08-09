@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "RUNTIME_CAPTURE_ORDER_PROFILE_v1",
+  "captureId": "RUNTIME_FIXTURE_INVALID_TEARDOWN_001",
+  "failureObserved": true,
+  "capturePayloadPresent": true,
+  "sealedReceiptPresent": true,
+  "persistedArtifactPresent": true,
+  "events": [
+    {
+      "sequence": 1,
+      "type": "FAILURE_OBSERVED"
+    },
+    {
+      "sequence": 2,
+      "type": "TEARDOWN"
+    },
+    {
+      "sequence": 3,
+      "type": "CAPTURED"
+    },
+    {
+      "sequence": 4,
+      "type": "SEALED"
+    },
+    {
+      "sequence": 5,
+      "type": "PERSISTED"
+    }
+  ]
+}

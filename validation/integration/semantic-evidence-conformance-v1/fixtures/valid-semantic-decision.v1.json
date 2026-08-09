@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "SEMANTIC_EVIDENCE_DECISION_PROFILE_v1",
+  "receiptClass": "SEMANTIC_RELATION_DECISION",
+  "decisionId": "DECISION_FIXTURE_VALID_UNKNOWN_001",
+  "resolverIdentity": {
+    "id": "FIXTURE_RELATION_RESOLVER",
+    "version": "1.0.0"
+  },
+  "contextBinding": {
+    "contextId": "FIXTURE_CONTEXT",
+    "contextRevision": "rev-1"
+  },
+  "relation": {
+    "relationId": "OBJECT_A__RELATES_TO__OBJECT_B",
+    "relationType": "RELATES_TO",
+    "fromObjectIdentity": "OBJECT_A",
+    "toObjectIdentity": "OBJECT_B",
+    "resolutionState": "UNKNOWN",
+    "edgeEligible": false
+  },
+  "authority": {
+    "authorityId": "FIXTURE_AUTHORITY",
+    "authorityVersion": "1",
+    "standing": "SOURCE_ADMITTED",
+    "claimCeiling": "UNKNOWN_RELATION_ONLY"
+  },
+  "sourceIdentities": [
+    "SOURCE_A@1",
+    "SOURCE_B@1"
+  ],
+  "provenancePointers": [
+    "fixture://source-a",
+    "fixture://source-b"
+  ],
+  "qualifiers": [
+    "NO_INFERENCE_FROM_LAYOUT"
+  ],
+  "failureReasons": [
+    "INSUFFICIENT_AUTHORIZED_RELATION_EVIDENCE"
+  ],
+  "inputDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

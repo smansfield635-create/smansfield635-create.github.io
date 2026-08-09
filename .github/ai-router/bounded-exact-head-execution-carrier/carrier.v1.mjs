@@ -10,8 +10,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.
 const REGISTRY_PATH = path.join(ROOT, '.github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json');
 const LOCK_REF = 'refs/remotes/origin/operation-locks/repository-operation-intake-v1';
 const LOCK_LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
+const PAGE_TOOLSET_PATH = '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json';
 const REQUIRED_REQUEST_KEYS = ['schema', 'requestId', 'descriptorId', 'operationRequest', 'constructionProcedure', 'admissionReceipt', 'requestNonce'];
-const FORBIDDEN_REQUEST_KEYS = ['command','shell','shellCommand','script','scriptBody','executable','arguments','extraArguments','environment','environmentOverride','paths','targetHead','workingDirectory','workflowOverride'];
+const FORBIDDEN_REQUEST_KEYS = ['command','shell','shellCommand','script','scriptBody','executable','arguments','extraArguments','environment','environmentOverride','paths','targetHead','workingDirectory','workflowOverride','architectureBundle','receiptBundle','pageReceiptBundle'];
 
 export const stable = value => Array.isArray(value)
   ? value.map(stable)
@@ -23,7 +24,7 @@ export const sha256 = value => crypto.createHash('sha256').update(value).digest(
 export const hashObject = value => sha256(Buffer.from(canonical(value), 'utf8'));
 
 function fail(code, detail = null) {
-  const error = new Error(detail == null ? code : `${code}:${detail}`);
+  const error = new Error(detail == null ? code : `${code}:${typeof detail === 'string' ? detail : JSON.stringify(detail)}`);
   error.code = code;
   error.detail = detail;
   throw error;
@@ -42,6 +43,10 @@ function assertCommit(value, code) {
 }
 function assertDigest(value, code) {
   if (!/^[0-9a-f]{64}$/.test(value ?? '')) fail(code, String(value));
+  return value;
+}
+function assertBlob(value, code) {
+  if (!/^[0-9a-f]{40}$/.test(value ?? '')) fail(code, String(value));
   return value;
 }
 function assertRepositoryPath(value, code) {
@@ -78,6 +83,9 @@ function parseArgs(argv) {
   }
   return out;
 }
+function gitBlobSha(bytes) {
+  return crypto.createHash('sha1').update(Buffer.concat([Buffer.from(`blob ${bytes.length}\0`), bytes])).digest('hex');
+}
 
 export function validateRequest(raw) {
   assertClosedKeys(raw, REQUIRED_REQUEST_KEYS, REQUIRED_REQUEST_KEYS, 'CARRIER_REQUEST');
@@ -100,9 +108,19 @@ function resolveDescriptor(registry, descriptorId) {
   if (matches.length !== 1) fail(matches.length === 0 ? 'UNREGISTERED_EXECUTABLE' : 'EXECUTABLE_DESCRIPTOR_AMBIGUOUS');
   const descriptor = stable(matches[0]);
   if (!['ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH'].includes(descriptor.status)) fail('DESCRIPTOR_NOT_ACTIVE', descriptor.status);
-  if (descriptor.shell !== false || descriptor.extraArgumentsAllowed !== false || descriptor.environmentOverridesAllowed !== false) fail('DESCRIPTOR_NOT_FAIL_CLOSED');
-  if (descriptor.executable !== 'node' || descriptor.scriptPath !== 'tools/repository-ai-entry-router.mjs') fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
+  if (descriptor.shell !== false || descriptor.extraArgumentsAllowed !== false || descriptor.environmentOverridesAllowed !== false || descriptor.callerSuppliedBundleAllowed !== false) fail('DESCRIPTOR_NOT_FAIL_CLOSED');
+  if (descriptor.executable !== 'node') fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
   if (descriptor.pathDerivation !== 'OPERATION_REQUEST_ALLOWED_PATHS_EXACT') fail('DESCRIPTOR_PATH_DERIVATION_UNSUPPORTED');
+  if (descriptor.executionClass === 'ROUTER_MUTATION_V1') {
+    if (descriptor.scriptPath !== 'tools/repository-ai-entry-router.mjs') fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
+  } else if (descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1') {
+    if (descriptor.scriptPath !== '.github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs') fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
+    if (descriptor.pagePhase !== 'ARCHITECTURE') fail('PAGE_PHASE_NOT_ALLOWED');
+    assertBlob(descriptor.scriptBlob, 'PAGE_GATE_BLOB_INVALID');
+    if (!Number.isInteger(descriptor.boundLockGeneration) || descriptor.boundLockGeneration < 1) fail('DESCRIPTOR_LOCK_BINDING_INVALID');
+    assertCommit(descriptor.boundTargetHead, 'DESCRIPTOR_TARGET_HEAD_BINDING_INVALID');
+    assertString(descriptor.boundOperationId, 'DESCRIPTOR_OPERATION_BINDING_INVALID');
+  } else fail('DESCRIPTOR_EXECUTION_CLASS_UNSUPPORTED', descriptor.executionClass);
   return descriptor;
 }
 function validateOperationDocuments(request) {
@@ -142,6 +160,93 @@ function deriveTask(op, descriptor) {
   if (!/^[A-Z0-9_.:-]+$/.test(raw)) fail('DERIVED_TASK_INVALID', raw);
   return raw;
 }
+function declaredSourceIdentitySet(op) {
+  const sources = op.subjectIdentity?.existingConstructSearchSources;
+  if (!Array.isArray(sources) || sources.length === 0) fail('ARCHITECTURE_SOURCE_DECLARATIONS_MISSING');
+  const set = new Set();
+  for (const source of sources) {
+    assertCommit(source.commitSha, 'ARCHITECTURE_SOURCE_COMMIT_INVALID');
+    if (!Array.isArray(source.files) || source.files.length === 0) fail('ARCHITECTURE_SOURCE_FILES_MISSING');
+    for (const file of source.files) {
+      const p = assertRepositoryPath(file.path, 'ARCHITECTURE_SOURCE_PATH_INVALID');
+      const blob = assertBlob(file.gitBlobSha, 'ARCHITECTURE_SOURCE_BLOB_INVALID');
+      set.add(`${p}|${source.commitSha}|${blob}`);
+    }
+  }
+  return set;
+}
+export function validatePageArchitectureDescriptor(descriptor, docs, targetHead) {
+  if (descriptor.executionClass !== 'PAGE_EXCELLENCE_ARCHITECTURE_V1') fail('PAGE_DESCRIPTOR_REQUIRED');
+  if (descriptor.projectId !== docs.op.projectId) fail('DESCRIPTOR_PROJECT_BINDING_MISMATCH');
+  if (descriptor.boundOperationId !== docs.op.operationId) fail('DESCRIPTOR_OPERATION_BINDING_MISMATCH');
+  if (descriptor.boundLockGeneration !== docs.lock.lockGeneration) fail('DESCRIPTOR_LOCK_BINDING_MISMATCH');
+  if (descriptor.boundTargetHead !== targetHead) fail('DESCRIPTOR_TARGET_HEAD_BINDING_MISMATCH');
+  const findings = assertObject(descriptor.architectureFindings, 'ARCHITECTURE_FINDINGS_MISSING');
+  if (findings.schema !== 'CONTEXTUAL_ARCHITECTURE_FINDINGS_v1') fail('ARCHITECTURE_FINDINGS_SCHEMA_MISMATCH');
+  if (findings.implementationClass !== 'EXISTING_CONSTRUCT_ADOPTION') fail('ARCHITECTURE_IMPLEMENTATION_CLASS_NOT_ALLOWED');
+  if (findings.existingConstructSearch?.executed !== true || !Array.isArray(findings.existingConstructSearch?.searchedScopes) || findings.existingConstructSearch.searchedScopes.length === 0) fail('EXISTING_CONSTRUCT_SEARCH_INCOMPLETE');
+  const declared = declaredSourceIdentitySet(docs.op);
+  if (!Array.isArray(findings.exactSourceConstructIdentities) || findings.exactSourceConstructIdentities.length === 0) fail('ARCHITECTURE_SOURCE_IDENTITIES_MISSING');
+  const adoptedSourceIds = new Set();
+  for (const source of findings.exactSourceConstructIdentities) {
+    assertString(source.sourceId, 'ARCHITECTURE_SOURCE_ID_INVALID');
+    const p = assertRepositoryPath(source.path, 'ARCHITECTURE_SOURCE_PATH_INVALID');
+    const commit = assertCommit(source.commitSha, 'ARCHITECTURE_SOURCE_COMMIT_INVALID');
+    const blob = assertBlob(source.gitBlobSha, 'ARCHITECTURE_SOURCE_BLOB_INVALID');
+    if (source.adoptionDisposition !== 'ADOPT_IMPLEMENTATION_SOURCE') fail('ARCHITECTURE_SOURCE_DISPOSITION_INVALID');
+    if (!declared.has(`${p}|${commit}|${blob}`)) fail('ARCHITECTURE_SOURCE_IDENTITY_MISMATCH', source.sourceId);
+    adoptedSourceIds.add(source.sourceId);
+  }
+  if (!Array.isArray(findings.adoptionMatrix) || findings.adoptionMatrix.length !== adoptedSourceIds.size) fail('ARCHITECTURE_ADOPTION_MATRIX_INVALID');
+  for (const row of findings.adoptionMatrix) {
+    if (!adoptedSourceIds.has(row.sourceId)) fail('ARCHITECTURE_ADOPTION_SOURCE_UNBOUND', row.sourceId);
+    if (row.sourceRelation === 'INSPIRATION_ONLY') fail('ARCHITECTURE_INSPIRATION_SUBSTITUTION_PROHIBITED', row.sourceId);
+    if (!Array.isArray(row.adoptedCapabilities) || row.adoptedCapabilities.length === 0) fail('ARCHITECTURE_ADOPTED_CAPABILITIES_MISSING', row.sourceId);
+    if (!Array.isArray(row.adaptations) || !Array.isArray(row.exclusions)) fail('ARCHITECTURE_ADOPTION_MATRIX_INVALID', row.sourceId);
+  }
+  if (findings.visualArchitectureAuthority?.contentAdapterMayDefineVisualArchitecture !== false) fail('ADAPTER_VISUAL_ARCHITECTURE_AUTHORITY_PROHIBITED');
+  if (!['EXISTING_SOURCE_CONSTRUCTS','EXISTING_SOURCE_CONSTRUCTS_WITH_BOUNDED_ADAPTER'].includes(findings.visualArchitectureAuthority?.authorityHolder)) fail('VISUAL_ARCHITECTURE_AUTHORITY_INVALID');
+  if (!Array.isArray(findings.prohibitedSubstituteArchitectures) || findings.prohibitedSubstituteArchitectures.length === 0) fail('PROHIBITED_SUBSTITUTE_ARCHITECTURES_MISSING');
+  if (!Array.isArray(findings.requiredRuntimeConditions) || findings.requiredRuntimeConditions.length === 0) fail('REQUIRED_RUNTIME_CONDITIONS_MISSING');
+  if (findings.separateNewConstructAuthority !== null) fail('UNEXPECTED_NEW_CONSTRUCT_AUTHORITY');
+  return stable(findings);
+}
+function collectInstrumentVersions(value) {
+  const candidates = [];
+  const visit = node => {
+    if (!node || typeof node !== 'object') return;
+    if (Array.isArray(node)) {
+      if (node.length > 0 && node.every(item => item && typeof item === 'object' && typeof item.id === 'string' && typeof item.version === 'string') && node.some(item => item.id === 'contextualArchitectureConformanceInstrument')) candidates.push(node);
+      for (const item of node) visit(item);
+      return;
+    }
+    for (const child of Object.values(node)) visit(child);
+  };
+  visit(value);
+  if (candidates.length !== 1) fail('INSTRUMENT_REGISTRY_NOT_UNIQUE', candidates.length);
+  return Object.fromEntries(candidates[0].map(item => [item.id, item.version]));
+}
+export function makePageArchitectureBundle(descriptor, toolset, targetHead, operationId) {
+  const toolsetId = toolset?.locator?.toolsetId;
+  const toolsetVersion = toolset?.locator?.version;
+  if (toolset?.status !== 'ACTIVE_VERSION_BOUND' || toolset?.locator?.status !== 'ACTIVE_VERSION_BOUND') fail('PAGE_TOOLSET_NOT_ACTIVE');
+  if (toolsetId !== 'MANDATORY_PAGE_TOOLSET' || toolsetVersion !== '1.1.0') fail('PAGE_TOOLSET_VERSION_MISMATCH');
+  const findings = stable(descriptor.architectureFindings);
+  const instrumentVersions = collectInstrumentVersions(toolset);
+  return stable({
+    schema: 'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1',
+    toolsetId,
+    toolsetVersion,
+    subjectHead: targetHead,
+    phaseReceipts: [{
+      phase: 'ARCHITECTURE',
+      result: 'PASS',
+      instrumentVersions,
+      receiptDigest: hashObject({ descriptorId: descriptor.descriptorId, operationId, targetHead, findings }),
+      findings
+    }]
+  });
+}
 
 export function validateAndResolve({ rawRequest, registry, ledger }) {
   const request = validateRequest(rawRequest);
@@ -158,8 +263,12 @@ export function validateAndResolve({ rawRequest, registry, ledger }) {
   const targetHead = deriveTargetHead(docs.op, descriptor);
   const task = deriveTask(docs.op, descriptor);
   const paths = docs.allowedPaths;
+  const architectureFindings = descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1'
+    ? validatePageArchitectureDescriptor(descriptor, docs, targetHead)
+    : null;
   return stable({
     descriptor,
+    executionClass: descriptor.executionClass,
     operationId: docs.op.operationId,
     projectId: docs.op.projectId,
     lockGeneration: docs.lock.lockGeneration,
@@ -169,7 +278,8 @@ export function validateAndResolve({ rawRequest, registry, ledger }) {
     paths,
     requestDigest,
     procedureDigest,
-    admissionReceipt: docs.admission
+    admissionReceipt: docs.admission,
+    architectureFindings
   });
 }
 
@@ -194,13 +304,105 @@ function assertClean(cwd, code = 'WORKTREE_NOT_CLEAN') {
   const status = execGit(['status', '--porcelain=v1', '--untracked-files=all'], cwd);
   if (status.trim() !== '') fail(code, status.trim());
 }
+function baseSafeEnv(tempRoot, admissionPath) {
+  return {
+    PATH: process.env.PATH ?? '',
+    HOME: process.env.HOME ?? tempRoot,
+    TMPDIR: process.env.RUNNER_TEMP ?? os.tmpdir(),
+    LANG: process.env.LANG ?? 'C.UTF-8',
+    LC_ALL: process.env.LC_ALL ?? 'C.UTF-8',
+    INTAKE_ADMISSION_RECEIPT: admissionPath
+  };
+}
+function executeRouter(resolution, worktree, tempRoot, admissionPath) {
+  const nativeReceiptPath = path.join(tempRoot, 'native-receipt.json');
+  const args = [
+    resolution.descriptor.scriptPath,
+    '--mutation-intent',
+    ...resolution.paths.flatMap(p => ['--path', p]),
+    '--task', resolution.task,
+    '--output', nativeReceiptPath
+  ];
+  let exitCode = 0;
+  try {
+    cp.execFileSync(resolution.descriptor.executable, args, { cwd: worktree, env: baseSafeEnv(tempRoot, admissionPath), shell: false, stdio: ['ignore','pipe','pipe'], maxBuffer: 32 * 1024 * 1024 });
+  } catch (error) {
+    exitCode = Number.isInteger(error.status) ? error.status : 1;
+  }
+  if (!fs.existsSync(nativeReceiptPath)) fail('NATIVE_RECEIPT_MISSING_OR_INVALID');
+  let nativeReceipt;
+  try { nativeReceipt = readJson(nativeReceiptPath); } catch { fail('NATIVE_RECEIPT_MISSING_OR_INVALID'); }
+  if (nativeReceipt.schema !== resolution.descriptor.nativeReceiptSchema) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'schema');
+  const routePaths = Array.isArray(nativeReceipt.routes) ? nativeReceipt.routes.map(r => r.path).sort() : [];
+  if (canonical(routePaths) !== canonical([...resolution.paths].sort())) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'route path set');
+  const nativePass = nativeReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue;
+  return {
+    exitCode,
+    nativePass,
+    nativeReceipt,
+    nativeReceiptDigest: sha256(fs.readFileSync(nativeReceiptPath)),
+    commandDigest: hashObject({ executable: resolution.descriptor.executable, args }),
+    extraReceiptFields: {}
+  };
+}
+function executePageArchitecture(resolution, worktree, tempRoot, admissionPath) {
+  const gateBytes = fs.readFileSync(path.join(worktree, resolution.descriptor.scriptPath));
+  const actualGateBlob = gitBlobSha(gateBytes);
+  if (actualGateBlob !== resolution.descriptor.scriptBlob) fail('PAGE_EXCELLENCE_GATE_BLOB_MISMATCH', `${resolution.descriptor.scriptBlob}:${actualGateBlob}`);
+  const toolset = readJson(path.join(worktree, PAGE_TOOLSET_PATH));
+  const bundle = makePageArchitectureBundle(resolution.descriptor, toolset, resolution.targetHead, resolution.operationId);
+  const bundlePath = path.join(tempRoot, 'page-architecture-bundle.json');
+  const routerReceiptPath = path.join(tempRoot, 'delegated-router-receipt.json');
+  const gateReceiptPath = path.join(tempRoot, 'native-gate-receipt.json');
+  writeJson(bundlePath, bundle);
+  const args = [
+    resolution.descriptor.scriptPath,
+    '--mutation-intent',
+    ...resolution.paths.flatMap(p => ['--path', p]),
+    '--task', resolution.task,
+    '--page-phase', resolution.descriptor.pagePhase,
+    '--page-receipt-bundle', bundlePath,
+    '--output', routerReceiptPath
+  ];
+  const safeEnv = { ...baseSafeEnv(tempRoot, admissionPath), PAGE_OPERATION_SUBJECT_HEAD: resolution.targetHead };
+  const child = cp.spawnSync(resolution.descriptor.executable, args, { cwd: worktree, env: safeEnv, shell: false, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+  const exitCode = child.error ? 1 : (Number.isInteger(child.status) ? child.status : 1);
+  let gateReceipt = null;
+  try { gateReceipt = child.stdout ? JSON.parse(child.stdout) : null; } catch {}
+  if (!gateReceipt || gateReceipt.schema !== resolution.descriptor.nativeReceiptSchema) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'page gate receipt');
+  writeJson(gateReceiptPath, gateReceipt);
+  if (!fs.existsSync(routerReceiptPath)) fail('DELEGATED_ROUTER_RECEIPT_MISSING');
+  let routerReceipt;
+  try { routerReceipt = readJson(routerReceiptPath); } catch { fail('DELEGATED_ROUTER_RECEIPT_INVALID'); }
+  if (routerReceipt.schema !== resolution.descriptor.delegatedRouterReceiptSchema) fail('DELEGATED_ROUTER_RECEIPT_INVALID', 'schema');
+  const routePaths = Array.isArray(routerReceipt.routes) ? routerReceipt.routes.map(r => r.path).sort() : [];
+  if (canonical(routePaths) !== canonical([...resolution.paths].sort())) fail('DELEGATED_ROUTER_RECEIPT_INVALID', 'route path set');
+  if (!routerReceipt.routes.every(route => route.projectId === resolution.projectId && route.disposition === 'PASS')) fail('DELEGATED_ROUTER_RECEIPT_NONPASS');
+  const gateClass = gateReceipt?.mandatoryReceipt?.contextualArchitecture?.implementationClass;
+  if (gateClass !== resolution.architectureFindings.implementationClass) fail('PAGE_ARCHITECTURE_CLASS_MISMATCH', gateClass);
+  const nativePass = gateReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue && routerReceipt.disposition === 'PASS';
+  return {
+    exitCode,
+    nativePass,
+    nativeReceipt: gateReceipt,
+    nativeReceiptDigest: sha256(fs.readFileSync(gateReceiptPath)),
+    commandDigest: hashObject({ executable: resolution.descriptor.executable, args, derivedEnvironment: { PAGE_OPERATION_SUBJECT_HEAD: resolution.targetHead } }),
+    extraReceiptFields: {
+      pagePhase: resolution.descriptor.pagePhase,
+      architectureBundleDigest: sha256(fs.readFileSync(bundlePath)),
+      architectureFindingsDigest: hashObject(resolution.architectureFindings),
+      delegatedRouterReceiptDigest: sha256(fs.readFileSync(routerReceiptPath)),
+      delegatedRouterReceipt: routerReceipt,
+      pageGateBlobVerified: true
+    }
+  };
+}
 
 export function executeResolved(resolution, { root = ROOT } = {}) {
   ensureCommitAvailable(resolution.targetHead);
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'bounded-exact-head-carrier-'));
   const worktree = path.join(tempRoot, 'worktree');
   const admissionPath = path.join(tempRoot, 'admission.json');
-  const nativeReceiptPath = path.join(tempRoot, 'native-receipt.json');
   writeJson(admissionPath, resolution.admissionReceipt);
   let worktreeAdded = false;
   try {
@@ -209,55 +411,33 @@ export function executeResolved(resolution, { root = ROOT } = {}) {
     const actualHead = execGit(['rev-parse', 'HEAD^{commit}'], worktree).trim();
     if (actualHead !== resolution.targetHead) fail('EXACT_HEAD_CHECKOUT_FAILURE', `${resolution.targetHead}:${actualHead}`);
     assertClean(worktree);
-    const args = [
-      resolution.descriptor.scriptPath,
-      '--mutation-intent',
-      ...resolution.paths.flatMap(p => ['--path', p]),
-      '--task', resolution.task,
-      '--output', nativeReceiptPath
-    ];
-    const safeEnv = {
-      PATH: process.env.PATH ?? '',
-      HOME: process.env.HOME ?? tempRoot,
-      TMPDIR: process.env.RUNNER_TEMP ?? os.tmpdir(),
-      LANG: process.env.LANG ?? 'C.UTF-8',
-      LC_ALL: process.env.LC_ALL ?? 'C.UTF-8',
-      INTAKE_ADMISSION_RECEIPT: admissionPath
-    };
-    let exitCode = 0;
-    try {
-      cp.execFileSync(resolution.descriptor.executable, args, { cwd: worktree, env: safeEnv, shell: false, stdio: ['ignore','pipe','pipe'], maxBuffer: 32 * 1024 * 1024 });
-    } catch (error) {
-      exitCode = Number.isInteger(error.status) ? error.status : 1;
-    }
+    const execution = resolution.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1'
+      ? executePageArchitecture(resolution, worktree, tempRoot, admissionPath)
+      : executeRouter(resolution, worktree, tempRoot, admissionPath);
     assertClean(worktree);
-    if (!fs.existsSync(nativeReceiptPath)) fail('NATIVE_RECEIPT_MISSING_OR_INVALID');
-    let nativeReceipt;
-    try { nativeReceipt = readJson(nativeReceiptPath); } catch { fail('NATIVE_RECEIPT_MISSING_OR_INVALID'); }
-    if (nativeReceipt.schema !== resolution.descriptor.nativeReceiptSchema) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'schema');
-    const routePaths = Array.isArray(nativeReceipt.routes) ? nativeReceipt.routes.map(r => r.path).sort() : [];
-    if (canonical(routePaths) !== canonical([...resolution.paths].sort())) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'route path set');
-    const nativePass = nativeReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue;
     return stable({
       schema: 'BOUNDED_EXACT_HEAD_EXECUTION_RECEIPT_v1',
-      result: nativePass && exitCode === 0 ? 'COMMAND_EXECUTED_AND_PASSED' : 'COMMAND_EXECUTED_AND_RETURNED_NONPASS',
+      result: execution.nativePass && execution.exitCode === 0 ? 'COMMAND_EXECUTED_AND_PASSED' : 'COMMAND_EXECUTED_AND_RETURNED_NONPASS',
       descriptorId: resolution.descriptor.descriptorId,
+      executionClass: resolution.executionClass,
       operationId: resolution.operationId,
       lockGeneration: resolution.lockGeneration,
       targetHead: resolution.targetHead,
       task: resolution.task,
       paths: resolution.paths,
-      commandDigest: hashObject({ executable: resolution.descriptor.executable, args }),
+      commandDigest: execution.commandDigest,
       exactHeadVerified: true,
       workingTreeCleanBeforeAndAfter: true,
       commandExecuted: true,
-      commandExitCode: exitCode,
-      nativeReceiptSchema: nativeReceipt.schema,
-      nativeReceiptDigest: sha256(fs.readFileSync(nativeReceiptPath)),
+      commandExitCode: execution.exitCode,
+      nativeReceiptSchema: execution.nativeReceipt.schema,
+      nativeReceiptDigest: execution.nativeReceiptDigest,
       nativeReceiptRewritten: false,
-      nativeReceipt,
+      nativeReceipt: execution.nativeReceipt,
+      ...execution.extraReceiptFields,
       repositoryWritesPerformed: false,
       arbitraryCommandAuthority: false,
+      callerSuppliedBundleAccepted: false,
       semanticAuthorityCreated: false,
       productAuthorityCreated: false
     });
@@ -295,6 +475,7 @@ if (invoked) {
       detail: error.detail ?? error.message,
       repositoryWritesPerformed: false,
       arbitraryCommandAuthority: false,
+      callerSuppliedBundleAccepted: false,
       semanticAuthorityCreated: false,
       productAuthorityCreated: false
     });

@@ -11,12 +11,14 @@
       "descriptorId": "REPOSITORY_AI_ENTRY_ROUTER_MUTATION_V1",
       "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
       "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "executionClass": "ROUTER_MUTATION_V1",
       "executable": "node",
       "scriptPath": "tools/repository-ai-entry-router.mjs",
       "shell": false,
       "mutationIntent": true,
       "extraArgumentsAllowed": false,
       "environmentOverridesAllowed": false,
+      "callerSuppliedBundleAllowed": false,
       "pathDerivation": "OPERATION_REQUEST_ALLOWED_PATHS_EXACT",
       "targetHeadDerivation": "SUBJECT_IDENTITY_REQUIRED_STARTING_HEAD_ELSE_EXACT_GOVERNING_HEAD",
       "taskDerivation": "SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID",
@@ -24,6 +26,151 @@
       "nativePassField": "disposition",
       "nativePassValue": "PASS",
       "repositoryWritesExpected": false
+    },
+    {
+      "schema": "BOUNDED_EXECUTABLE_DESCRIPTOR_v1",
+      "descriptorId": "LAWS_PHI1_GEN857_PAGE_EXCELLENCE_ARCHITECTURE_V1",
+      "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
+      "projectId": "LAWS",
+      "executionClass": "PAGE_EXCELLENCE_ARCHITECTURE_V1",
+      "boundOperationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_003",
+      "boundLockGeneration": 857,
+      "boundTargetHead": "18bd40b4f27ed9775778346011cca7d7f6bec47e",
+      "executable": "node",
+      "scriptPath": ".github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs",
+      "scriptBlob": "40330849ac94f701199bc41489b44fd6c9d69e96",
+      "shell": false,
+      "mutationIntent": true,
+      "pagePhase": "ARCHITECTURE",
+      "extraArgumentsAllowed": false,
+      "environmentOverridesAllowed": false,
+      "callerSuppliedBundleAllowed": false,
+      "pathDerivation": "OPERATION_REQUEST_ALLOWED_PATHS_EXACT",
+      "targetHeadDerivation": "SUBJECT_IDENTITY_REQUIRED_STARTING_HEAD_ELSE_EXACT_GOVERNING_HEAD",
+      "taskDerivation": "SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID",
+      "nativeReceiptSchema": "MANDATORY_PAGE_OPERATION_GATE_RECEIPT_v2",
+      "nativePassField": "result",
+      "nativePassValue": "PASS",
+      "delegatedRouterReceiptSchema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1",
+      "repositoryWritesExpected": false,
+      "architectureFindings": {
+        "schema": "CONTEXTUAL_ARCHITECTURE_FINDINGS_v1",
+        "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
+        "classificationRationale": "Repository-grounded existing sources collectively provide the required spatial projection, real WebGL2 rendering, viewport/depth handling, and runtime lifecycle mechanics. They are adopted only as implementation sources; frozen A-Phi remains the sole semantic authority and the bounded adapter may not define visual architecture.",
+        "existingConstructSearch": {
+          "executed": true,
+          "searchedScopes": [
+            "laws/index.html@331284949940c95db80a332235492de4c80d3d43",
+            "laws/index.compositor.js@331284949940c95db80a332235492de4c80d3d43",
+            "research/prototypes/laws-geometric-grammar-lab/@49d9890a0405c22aaac407e3724fbd5bae6ccafc",
+            "verification/methods-categorical-spatial-context-equation-embodiment-v1/@69bef3918ed26fb1fce21cdc5084a9eb6410381a"
+          ],
+          "candidates": [
+            "CURRENT_LAWS_COMPASS_BASELINE",
+            "PR468_GEOMETRIC_GRAMMAR_LAB",
+            "PR544_LAWS_CHILD_SPATIAL_STAGE"
+          ]
+        },
+        "exactSourceConstructIdentities": [
+          {
+            "sourceId": "CURRENT_LAWS_COMPOSITOR",
+            "path": "laws/index.compositor.js",
+            "commitSha": "331284949940c95db80a332235492de4c80d3d43",
+            "gitBlobSha": "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa",
+            "adoptionDisposition": "ADOPT_IMPLEMENTATION_SOURCE"
+          },
+          {
+            "sourceId": "PR468_WEBGL2_RENDERER",
+            "path": "research/prototypes/laws-geometric-grammar-lab/renderer-webgl2.js",
+            "commitSha": "49d9890a0405c22aaac407e3724fbd5bae6ccafc",
+            "gitBlobSha": "32c6ba855f49dec1ef45e7312c55ce6b56f26488",
+            "adoptionDisposition": "ADOPT_IMPLEMENTATION_SOURCE"
+          },
+          {
+            "sourceId": "PR468_APP_LIFECYCLE",
+            "path": "research/prototypes/laws-geometric-grammar-lab/app.js",
+            "commitSha": "49d9890a0405c22aaac407e3724fbd5bae6ccafc",
+            "gitBlobSha": "2ddba762992f64bbd6c9245ee858aefcb750fb72",
+            "adoptionDisposition": "ADOPT_IMPLEMENTATION_SOURCE"
+          }
+        ],
+        "adoptionMatrix": [
+          {
+            "sourceId": "CURRENT_LAWS_COMPOSITOR",
+            "sourceRelation": "IMPLEMENTATION_SOURCE",
+            "adoptedCapabilities": [
+              "CAMERA_AND_VIEW_PROJECTION_MECHANICS",
+              "VIEWPORT_MODEL",
+              "VISUAL_DEPTH_CLASSIFICATION",
+              "WORLD_TO_SCREEN_LAYERING"
+            ],
+            "adaptations": [
+              "ISOLATE_AS_NONSEMANTIC_SPATIAL_PRESENTATION_MECHANICS",
+              "BIND_RENDERED_IDENTITIES_TO_FROZEN_APHI_ONLY"
+            ],
+            "exclusions": [
+              "PUBLIC_LAWS_PAGE_MUTATION",
+              "CONTENT_OR_NAVIGATION_SEMANTICS",
+              "NEW_SEMANTIC_CLASSIFICATION"
+            ]
+          },
+          {
+            "sourceId": "PR468_WEBGL2_RENDERER",
+            "sourceRelation": "IMPLEMENTATION_SOURCE",
+            "adoptedCapabilities": [
+              "REAL_WEBGL2_DRAW_PIPELINE",
+              "DEPTH_TEST_AND_GPU_BUFFER_MECHANICS",
+              "VIEWPORT_RESIZE_MECHANICS"
+            ],
+            "adaptations": [
+              "REPLACE_LAB_SCENE_INPUT_WITH_FROZEN_APHI_BOUND_SPECIMEN_DATA",
+              "KEEP_RENDERER_MECHANICS_SEPARATE_FROM_SEMANTIC_AUTHORITY"
+            ],
+            "exclusions": [
+              "LAB_SCENE_SPEC_SEMANTICS",
+              "STAGE_TAXONOMY",
+              "DEMO_NAVIGATION"
+            ]
+          },
+          {
+            "sourceId": "PR468_APP_LIFECYCLE",
+            "sourceRelation": "IMPLEMENTATION_SOURCE",
+            "adoptedCapabilities": [
+              "RESIZE_LIFECYCLE",
+              "VISIBILITY_LIFECYCLE",
+              "REDUCED_MOTION_AND_STATIC_EQUIVALENCE"
+            ],
+            "adaptations": [
+              "REMOVE_LAB_SPECIFIC_UI_AND_SCENE_BINDINGS"
+            ],
+            "exclusions": [
+              "PREVIOUS_NEXT_NAVIGATION",
+              "LAB_COPY_AND_LABELS",
+              "SOURCE_SCENE_MEANING"
+            ]
+          }
+        ],
+        "visualArchitectureAuthority": {
+          "authorityHolder": "EXISTING_SOURCE_CONSTRUCTS_WITH_BOUNDED_ADAPTER",
+          "contentAdapterMayDefineVisualArchitecture": false
+        },
+        "prohibitedSubstituteArchitectures": [
+          "PSEUDO_SPATIAL_CAROUSEL",
+          "VISIBLE_PREVIOUS_NEXT_PRIMARY_UI",
+          "SEMANTIC_INHERITANCE_FROM_SOURCE_CONSTRUCT",
+          "PUBLIC_LAWS_PAGE_MUTATION",
+          "NEW_VISUAL_ARCHITECTURE_BY_ADAPTER",
+          "SOURCE_SCENE_SEMANTICS_REUSE"
+        ],
+        "requiredRuntimeConditions": [
+          "REAL_SPATIAL_RENDERING_ENVIRONMENT",
+          "PRIMARY_DIRECT_MANIPULATION",
+          "REAL_BROWSER_RUNTIME",
+          "REDUCED_MOTION_OR_STATIC_EQUIVALENCE",
+          "FROZEN_APHI_SEMANTIC_IDENTITY_PRESERVATION"
+        ],
+        "separateNewConstructAuthority": null
+      }
     }
   ]
 }

@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "AI_EVIDENCE_CONFORMANCE_PROFILE_v1",
+  "transformationId": "AI_FIXTURE_INVALID_INFLATION_001",
+  "inputAuthority": {
+    "sourceReceiptIds": [
+      "lrp:fixture-source-unknown"
+    ],
+    "sourceRelationStates": [
+      "UNKNOWN"
+    ],
+    "permittedOutputClaimClasses": [
+      "HYPOTHESIS"
+    ],
+    "preserveUnresolvedStates": true
+  },
+  "output": {
+    "mutatesSourceReceipt": false,
+    "claims": [
+      {
+        "claimId": "CLAIM_001",
+        "claimClass": "ESTABLISHED_CAUSAL_CLAIM",
+        "epistemicMode": "SYNTHESIS",
+        "relationState": "ASSERTED",
+        "sourceReceiptIds": [
+          "lrp:fixture-source-unknown"
+        ],
+        "authorizedTransitionReceiptId": null,
+        "suppressesUnresolvedState": true
+      }
+    ]
+  }
+}

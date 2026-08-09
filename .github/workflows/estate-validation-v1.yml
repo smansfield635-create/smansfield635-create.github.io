@@ -69,6 +69,11 @@ jobs:
           node validation/harness/verify-estate-validation.v1.mjs \
             --output /tmp/estate-validation-receipt.json
 
+      - name: Verify semantic evidence conformance support
+        run: |
+          node validation/integration/semantic-evidence-conformance-v1/verify.v1.mjs \
+            --output /tmp/semantic-evidence-conformance-v1.json
+
       - name: Upload validation receipts
         if: always()
         uses: actions/upload-artifact@v4
@@ -78,5 +83,6 @@ jobs:
             /tmp/estate-validation-router-self-test.json
             /tmp/estate-validation-router-route.json
             /tmp/estate-validation-receipt.json
+            /tmp/semantic-evidence-conformance-v1.json
           if-no-files-found: error
           retention-days: 30

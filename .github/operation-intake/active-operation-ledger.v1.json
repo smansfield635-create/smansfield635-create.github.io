@@ -1056,18 +1056,6 @@
       "scopeHash": "c69e36ab428ae19cd898a5701a460585c7b2736289f8ac6684f5322da7861bbf",
       "state": "ADMITTED_LOCKED"
     },
-    "c7eba32f9dc99a00ff7b47cf902b54ac335b774ba5f7bd3440e2183a25eeb10e": {
-      "governingHead": "46dd6db4eddb3e390cb8180e088da2d97025adc4",
-      "lockGeneration": 687,
-      "lockScope": "H_EARTH:PREMUTATION_PREFLIGHT:REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE:EXACT_2_WORKFLOWS:V1",
-      "operationId": "H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE_v1",
-      "procedureLocatorDigest": "15b60a4f7c97e596be4fd7501fd544b0b0e913e2c55d51ce2e5de8f4c97954f1",
-      "released": false,
-      "requestDigest": "53de00011b99925fe58fbd1a68257f9ea3b53583038b9617aa1a7e7ae1c44790",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c7eba32f9dc99a00ff7b47cf902b54ac335b774ba5f7bd3440e2183a25eeb10e",
-      "state": "ADMITTED_LOCKED"
-    },
     "c8170225ecfd16b065547b18e3190cc6c6531cbef77ab380a628c0413467b267": {
       "governingHead": "d3e15d44eacd7bfc30b708721dca6ad4c175c887",
       "lockGeneration": 20,
@@ -8829,6 +8817,19 @@
       "requestDigest": "32172bbb9baf2846d81596fca80f11309b759cbfe94bf8cf7041189a0c2be9c4",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "3244e055e119636fa3d4f566f1f564af8db4cb087a61c23e6d2c3c467e289411",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "46dd6db4eddb3e390cb8180e088da2d97025adc4",
+      "lockGeneration": 687,
+      "lockScope": "H_EARTH:PREMUTATION_PREFLIGHT:REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE:EXACT_2_WORKFLOWS:V1",
+      "operationId": "H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_INVOCATION_AND_INSTALLATION_CLOSURE_v1",
+      "procedureLocatorDigest": "15b60a4f7c97e596be4fd7501fd544b0b0e913e2c55d51ce2e5de8f4c97954f1",
+      "released": true,
+      "requestDigest": "53de00011b99925fe58fbd1a68257f9ea3b53583038b9617aa1a7e7ae1c44790",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c7eba32f9dc99a00ff7b47cf902b54ac335b774ba5f7bd3440e2183a25eeb10e",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

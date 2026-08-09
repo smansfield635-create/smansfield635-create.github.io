@@ -1,0 +1,162 @@
+name: H-Earth HC02 Page Excellence Execution Binding Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
+      - '.github/ai-toolset-transport/h-earth-hc02-page-excellence-execution-binding.v1.json'
+      - '.github/workflows/h-earth-hc02-page-excellence-execution-binding-validation.yml'
+      - 'tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs'
+  push:
+    branches: [main]
+    paths:
+      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
+      - '.github/ai-toolset-transport/h-earth-hc02-page-excellence-execution-binding.v1.json'
+      - '.github/workflows/h-earth-hc02-page-excellence-execution-binding-validation.yml'
+      - 'tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  REGISTRATION_BASE: 796b6f5535690ebd45ce20ec3df8295fbe66d47e
+  DESCRIPTOR_PATH: .github/ai-toolset-transport/h-earth-hc02-page-excellence-execution-binding.v1.json
+  REGISTRY_PATH: .github/ai-toolset-transport/authorized-toolset-registry.v1.json
+  ADAPTER_PATH: tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs
+  WORKFLOW_PATH: .github/workflows/h-earth-hc02-page-excellence-execution-binding-validation.yml
+  PAGE_GATE_PATH: .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs
+  PAGE_GATE_BLOB: 40330849ac94f701199bc41489b44fd6c9d69e96
+  PAGE_TOOLSET_VERSION: '1.1.0'
+  DESCRIPTOR_ID: H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_DESCRIPTOR_V1
+  EXECUTION_OPERATION_ID: H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1
+  REGISTRATION_OPERATION_ID: H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_BINDING_REGISTRATION_v2
+  REGISTRATION_LOCK_SCOPE: H_EARTH:HC02:PAGE_EXCELLENCE_REMOTE_EXECUTION_BINDING:REGISTRATION:V2
+  REGISTRATION_LOCK_GENERATION: '636'
+  STALE_OPERATION_ID: H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_BINDING_REGISTRATION_v1
+  STALE_LOCK_SCOPE: H_EARTH:HC02:PAGE_EXCELLENCE_REMOTE_EXECUTION_BINDING:REGISTRATION:V1
+  STALE_LOCK_GENERATION: '632'
+  ROUTE_OPERATION_ID: H_EARTH_HC02_PAGE_EXCELLENCE_BINDING_ROUTE_REGISTRATION_v1
+  ROUTE_LOCK_SCOPE: ROUTER:H_EARTH:HC02_PAGE_EXCELLENCE_BINDING:EXACT_3_PATH_REGISTRATION:V1
+  ROUTE_LOCK_GENERATION: '633'
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact four-path package and immutable tooling split
+        run: |
+          set -euo pipefail
+          mapfile -t changed < <(git diff --name-only "$REGISTRATION_BASE" HEAD | sort)
+          expected=("$REGISTRY_PATH" "$DESCRIPTOR_PATH" "$WORKFLOW_PATH" "$ADAPTER_PATH")
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#changed[@]}" -eq 4
+          test "$(printf '%s\n' "${changed[@]}")" = "$(printf '%s\n' "${expected_sorted[@]}")"
+          test "$(git rev-parse "HEAD:$PAGE_GATE_PATH")" = "$PAGE_GATE_BLOB"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import cp from 'node:child_process'; import crypto from 'node:crypto';
+          const descriptor=JSON.parse(fs.readFileSync(process.env.DESCRIPTOR_PATH,'utf8')); const registry=JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH,'utf8'));
+          const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v; const eq=(a,b)=>JSON.stringify(stable(a))===JSON.stringify(stable(b));
+          const matches=registry.tools.filter(tool=>tool.descriptorId===process.env.DESCRIPTOR_ID&&tool.operationId===process.env.EXECUTION_OPERATION_ID);
+          if(descriptor.schema!=='AUTHORIZED_TOOLSET_DESCRIPTOR_v1'||descriptor.descriptorId!==process.env.DESCRIPTOR_ID||descriptor.operationId!==process.env.EXECUTION_OPERATION_ID||descriptor.projectId!=='H_EARTH'||descriptor.descriptorActivationStatus!=='ACTIVE_CERTIFIED'||descriptor.workflowPath!=='.github/workflows/ai-room-execution-transport.yml'||descriptor.exactToolingHead.length!==40||matches.length!==1||!eq(matches[0],descriptor))process.exit(1);
+          cp.execFileSync('git',['merge-base','--is-ancestor',descriptor.exactToolingHead,'HEAD']);
+          const toolingDelta=cp.execFileSync('git',['diff','--name-only',process.env.REGISTRATION_BASE,descriptor.exactToolingHead],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
+          const registrationDelta=cp.execFileSync('git',['diff','--name-only',descriptor.exactToolingHead,'HEAD'],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean).sort();
+          if(JSON.stringify(toolingDelta)!==JSON.stringify([process.env.ADAPTER_PATH,process.env.WORKFLOW_PATH].sort())||JSON.stringify(registrationDelta)!==JSON.stringify([process.env.DESCRIPTOR_PATH,process.env.REGISTRY_PATH].sort()))process.exit(1);
+          const gateAtTooling=cp.execFileSync('git',['rev-parse',`${descriptor.exactToolingHead}:${process.env.PAGE_GATE_PATH}`],{encoding:'utf8'}).trim(); if(gateAtTooling!==process.env.PAGE_GATE_BLOB)process.exit(1);
+          const fingerprint=crypto.createHash('sha256').update(JSON.stringify(stable({descriptor,exactToolingHead:descriptor.exactToolingHead,pageGateBlob:gateAtTooling}))).digest('hex');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/package-identity.json',JSON.stringify({schema:'H_EARTH_HC02_PAGE_EXCELLENCE_BINDING_PACKAGE_IDENTITY_v1',result:'PASS',descriptorId:descriptor.descriptorId,operationId:descriptor.operationId,exactToolingHead:descriptor.exactToolingHead,pageGateBlob:gateAtTooling,packageFingerprint:fingerprint,productMutationPerformed:false,hc02AdmissionPerformed:false,unboxingPerformed:false},null,2)+'\n');
+          NODE
+      - name: Execute exact adapter self-test from clean checkout
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node "$ADAPTER_PATH" --self-test --output "$RUNNER_TEMP/adapter-self-test.json"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node -e "const fs=require('fs');const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/adapter-self-test.json','utf8'));if(r.schema!=='H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_SELF_TEST_RECEIPT_v1'||r.result!=='PASS'||r.nativePageExcellenceSelfTestResult!=='PASS'||r.exactGateBlob!==process.env.PAGE_GATE_BLOB||r.toolsetVersion!==process.env.PAGE_TOOLSET_VERSION||r.repositoryCleanBefore!==true||r.repositoryCleanAfter!==true||r.productMutationPerformed!==false||r.hc02AdmissionPerformed!==false||r.unboxingPerformed!==false||r.genericCommandAuthority!==false)process.exit(1)"
+      - name: Execute closed-world descriptor through transport dispatcher
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import cp from 'node:child_process';
+          import {makeFixtureBundle,verifyBoundToolset,jsonText} from './tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs';
+          import {dispatchLoaded} from './tools/ai-room-transport/fixed-command-dispatcher.v1.mjs'; import {validateCommandReceipt} from './tools/ai-room-transport/command-receipt-validator.v1.mjs';
+          const root=process.cwd(); const descriptor=JSON.parse(fs.readFileSync(process.env.DESCRIPTOR_PATH,'utf8')); const registry=JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH,'utf8')); const subjectHead=cp.execFileSync('git',['rev-parse','HEAD^{commit}'],{encoding:'utf8'}).trim(); const toolset=verifyBoundToolset(root); const bundle=makeFixtureBundle(root,toolset,subjectHead); const receiptBundleBase64=Buffer.from(jsonText(bundle),'utf8').toString('base64');
+          const request={schema:'AI_ROOM_EXECUTION_REQUEST_v1',requestId:'HC02_PAGE_EXCELLENCE_BINDING_VALIDATION',descriptorId:descriptor.descriptorId,operationId:descriptor.operationId,admissionReceiptIdentity:{sourceClass:'VALIDATION_FIXTURE_ONLY',exactHead:subjectHead,path:'runtime/synthetic-admission.json',sha256:'a'.repeat(64)},routerReceiptIdentity:{sourceClass:'VALIDATION_FIXTURE_ONLY',exactHead:subjectHead,path:'runtime/synthetic-router.json',sha256:'b'.repeat(64)},inputs:{subjectHead,receiptBundleBase64,executionHolder:'HC02_PAGE_EXCELLENCE_TRANSPORT_VALIDATION'},availableCapabilities:{schema:'AVAILABLE_CAPABILITY_RECEIPT_v1',availableBackends:['GITHUB_ACTIONS_CLEAN_EXECUTION'],availableWorkflowPaths:['.github/workflows/ai-room-execution-transport.yml'],availableToolingHeads:[descriptor.exactToolingHead]},requestNonce:'c'.repeat(64)};
+          const admissionReceipt={schema:'REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1',result:'ADMITTED_AND_LOCKED',operationId:descriptor.operationId,projectId:descriptor.projectId,operationStarted:true,workflowExecutionAuthorized:true,lock:{operationId:descriptor.operationId,lockGeneration:999999,state:'ADMITTED_LOCKED',released:false}};
+          const routerReceipt={schema:'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1',disposition:'PASS',routes:[{projectId:descriptor.projectId,disposition:'PASS'}]};
+          const commandReceipt=dispatchLoaded({request,registry,admissionReceipt,routerReceipt,root}); const validation=validateCommandReceipt({descriptor,receipt:commandReceipt});
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/transport-command-receipt.json',JSON.stringify(commandReceipt,null,2)+'\n'); fs.writeFileSync(process.env.RUNNER_TEMP+'/transport-validation.json',JSON.stringify(validation,null,2)+'\n');
+          if(commandReceipt.executionDisposition!=='COMMAND_EXECUTED_AND_PASSED'||commandReceipt.commandPayloadSchema!=='H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_RECEIPT_v1'||commandReceipt.exitStatus!==0||commandReceipt.prohibitedSideEffectsObserved!==false||!Array.isArray(commandReceipt.changedPaths)||commandReceipt.changedPaths.length!==0||validation.valid!==true||validation.validationDisposition!=='VALIDATED_PASS')process.exit(1);
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+      - name: Build durable verification artifact after clean execution
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          cp "$RUNNER_TEMP/package-identity.json" artifacts/package-identity.json
+          cp "$RUNNER_TEMP/adapter-self-test.json" artifacts/adapter-self-test.json
+          cp "$RUNNER_TEMP/transport-command-receipt.json" artifacts/transport-command-receipt.json
+          cp "$RUNNER_TEMP/transport-validation.json" artifacts/transport-validation.json
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import crypto from 'node:crypto';
+          const identity=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/package-identity.json','utf8')); const self=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/adapter-self-test.json','utf8')); const command=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/transport-command-receipt.json','utf8')); const validation=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/transport-validation.json','utf8')); const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
+          const normalizedFingerprint=crypto.createHash('sha256').update(JSON.stringify(stable({identity,selfResult:self.result,selfBundle:self.bundleSha256,commandDigest:command.commandDigest,inputDigest:command.inputDigest,commandReceiptDigest:validation.commandReceiptDigest,descriptorDigest:validation.descriptorDigest}))).digest('hex');
+          fs.writeFileSync('artifacts/h-earth-hc02-page-excellence-binding-validation.json',JSON.stringify({schema:'H_EARTH_HC02_PAGE_EXCELLENCE_EXECUTION_BINDING_VALIDATION_RECEIPT_v1',result:'PASS',normalizedFingerprint,descriptorId:process.env.DESCRIPTOR_ID,executionOperationId:process.env.EXECUTION_OPERATION_ID,exactToolingHead:identity.exactToolingHead,exactPageExcellenceGateBlob:process.env.PAGE_GATE_BLOB,pageExcellenceToolsetVersion:process.env.PAGE_TOOLSET_VERSION,cleanGitHubActionsExecution:true,receiptValidated:validation.validationDisposition==='VALIDATED_PASS',productMutationPerformed:false,hc02AdmissionPerformed:false,genericCommandAuthorityCreated:false,unboxingPerformed:false},null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-hc02-page-excellence-binding-validation
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 90
+
+  terminal-closure:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify merged binding before lock closure
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node "$ADAPTER_PATH" --self-test --output "$RUNNER_TEMP/post-merge-self-test.json"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          node -e "const fs=require('fs');const s=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/post-merge-self-test.json','utf8')),d=require('./${DESCRIPTOR_PATH}'),r=require('./${REGISTRY_PATH}');const m=r.tools.filter(t=>t.descriptorId===process.env.DESCRIPTOR_ID&&t.operationId===process.env.EXECUTION_OPERATION_ID);if(s.result!=='PASS'||m.length!==1||JSON.stringify(m[0])!==JSON.stringify(d))process.exit(1)"
+      - name: Close superseded, prerequisite, and binding locks
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          close_lock(){ local operation_id="$1" scope="$2" generation="$3" disposition="$4" output="$5" closed=false; for attempt in {1..8}; do set +e; node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" --operation-id "$operation_id" --lock-scope "$scope" --lock-generation "$generation" --terminal-disposition "$disposition" --output "$output"; status=$?; set -e; if [ "$status" -eq 0 ]; then closed=true; break; fi; if [ "$status" -ne 4 ]; then cat "$output"; exit "$status"; fi; sleep $((attempt*2)); done; test "$closed" = true; }
+          close_lock "$STALE_OPERATION_ID" "$STALE_LOCK_SCOPE" "$STALE_LOCK_GENERATION" SUPERSEDED "$RUNNER_TEMP/stale-closure.json"
+          close_lock "$ROUTE_OPERATION_ID" "$ROUTE_LOCK_SCOPE" "$ROUTE_LOCK_GENERATION" PASS_CLOSED "$RUNNER_TEMP/route-closure.json"
+          close_lock "$REGISTRATION_OPERATION_ID" "$REGISTRATION_LOCK_SCOPE" "$REGISTRATION_LOCK_GENERATION" PASS_CLOSED "$RUNNER_TEMP/registration-closure.json"
+          mkdir -p artifacts
+          cp "$RUNNER_TEMP/stale-closure.json" artifacts/
+          cp "$RUNNER_TEMP/route-closure.json" artifacts/
+          cp "$RUNNER_TEMP/registration-closure.json" artifacts/
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; const stale=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/stale-closure.json','utf8')),route=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/route-closure.json','utf8')),registration=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/registration-closure.json','utf8')); const good=r=>r.result==='TERMINAL_CLOSURE_COMMITTED'&&r.lockReleased===true; const pass=good(stale)&&stale.terminalDisposition==='SUPERSEDED'&&good(route)&&route.terminalDisposition==='PASS_CLOSED'&&good(registration)&&registration.terminalDisposition==='PASS_CLOSED'; fs.writeFileSync('artifacts/h-earth-hc02-page-excellence-binding-terminal.json',JSON.stringify({schema:'H_EARTH_HC02_PAGE_EXCELLENCE_EXECUTION_BINDING_TERMINAL_RECEIPT_v1',result:pass?'PASS':'FAIL',staleBindingGeneration632:stale,routePrerequisiteGeneration633:route,bindingRegistrationGeneration636:registration,executionBindingVerified:pass,hc02AdmissionPerformed:false,productMutationPerformed:false,unboxingPerformed:false},null,2)+'\n'); if(!pass)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-hc02-page-excellence-binding-terminal
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 90

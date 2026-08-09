@@ -1,0 +1,312 @@
+name: Remote Operation Successor Transition v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/operation-lifecycle/remote-operation-successor-transition-bridge.v1.mjs'
+      - '.github/ai-router/operation-lifecycle/remote-operation-successor-transition-bridge.v1.test.mjs'
+      - '.github/workflows/remote-operation-successor-transition-v1.yml'
+  issue_comment:
+    types: [created]
+
+permissions: {}
+
+env:
+  ROUTE_ID: REMOTE_OPERATION_SUCCESSOR_TRANSITION_v1
+  REQUEST_MARKER: REMOTE_OPERATION_SUCCESSOR_TRANSITION_REQUEST_V1
+  WORKFLOW_PATH: .github/workflows/remote-operation-successor-transition-v1.yml
+  ROUTER_PATH: .github/ai-router/router.v1.json
+  BRIDGE_PATH: .github/ai-router/operation-lifecycle/remote-operation-successor-transition-bridge.v1.mjs
+  BRIDGE_BLOB: 7fe462b42c12aaaaa51a025b91ffb5795ad93944
+  TEST_PATH: .github/ai-router/operation-lifecycle/remote-operation-successor-transition-bridge.v1.test.mjs
+  TEST_BLOB: 02358bc6c6321e75bbfdfb833add7438f9feb712
+  SUCCESSOR_GATE_PATH: .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs
+  SUCCESSOR_GATE_BLOB: b174bb20a19e62f9aaf6e819171e24416321b9e4
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+
+jobs:
+  validate-contract:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify immutable dependency identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
+          test "$(git rev-parse HEAD:"$SUCCESSOR_GATE_PATH")" = "$SUCCESSOR_GATE_BLOB"
+          test "$(git rev-parse HEAD:"$BRIDGE_PATH")" = "$BRIDGE_BLOB"
+          test "$(git rev-parse HEAD:"$TEST_PATH")" = "$TEST_BLOB"
+
+      - name: Verify all four admitted paths route uniquely
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs \
+            --path "$ROUTER_PATH" \
+            --path "$BRIDGE_PATH" \
+            --path "$TEST_PATH" \
+            --path "$WORKFLOW_PATH" \
+            --task "Validate remote successor transition v1 exact four-path infrastructure candidate" \
+            --mutation-intent \
+            --output "$RUNNER_TEMP/router-receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/router-receipt.json`, 'utf8'));
+          if (receipt.disposition !== 'PASS') throw new Error(`ROUTER_NONPASS:${receipt.disposition}`);
+          if (!Array.isArray(receipt.routes) || receipt.routes.length !== 4) throw new Error('ROUTER_PATH_COUNT_MISMATCH');
+          for (const route of receipt.routes) {
+            if (route.disposition !== 'PASS' || route.projectId !== 'REPOSITORY_AI_ROUTER_INFRASTRUCTURE') {
+              throw new Error(`ROUTER_OWNERSHIP_MISMATCH:${route.path}:${route.projectId}:${route.disposition}`);
+            }
+          }
+          NODE
+
+      - name: Run exact bridge adversarial tests
+        shell: bash
+        run: node --test "$TEST_PATH"
+
+      - name: Verify narrow workflow and bridge contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'issue_comment:' "$WORKFLOW_PATH"
+          grep -Fq "startsWith(github.event.comment.body, 'REMOTE_OPERATION_SUCCESSOR_TRANSITION_REQUEST_V1')" "$WORKFLOW_PATH"
+          grep -Fq 'contents: write' "$WORKFLOW_PATH"
+          grep -Fq 'issues: write' "$WORKFLOW_PATH"
+          grep -Fq 'pull-requests: write' "$WORKFLOW_PATH"
+          grep -Fq 'persist-credentials: false' "$WORKFLOW_PATH"
+          grep -Fq 'successorRemote' "$BRIDGE_PATH"
+          grep -Fq "SUCCESSOR_GATE_BLOB = 'b174bb20a19e62f9aaf6e819171e24416321b9e4'" "$BRIDGE_PATH"
+          grep -Fq 'nativeReceiptRewritten: false' "$BRIDGE_PATH"
+          grep -Fq 'successorGateMutated: false' "$BRIDGE_PATH"
+          grep -Fq 'directLedgerEditPerformed: false' "$BRIDGE_PATH"
+          grep -Fq 'genericCommandAuthority: false' "$BRIDGE_PATH"
+          grep -Fq 'arbitrarySuccessorAuthority: false' "$BRIDGE_PATH"
+          ! grep -Eq 'child_process|spawnSync|execSync|eval\(|/contents/|git/refs' "$BRIDGE_PATH"
+          ! grep -Eq 'workflow_dispatch:' "$WORKFLOW_PATH"
+
+      - name: Write contract validation receipt
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const sha = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+          const receipt = {
+            schema: 'REMOTE_OPERATION_SUCCESSOR_TRANSITION_CONTRACT_VALIDATION_RECEIPT_v1',
+            result: 'PASS_CLOSED',
+            routeId: process.env.ROUTE_ID,
+            pullRequestHead: process.env.GITHUB_SHA,
+            successorGateBlob: process.env.SUCCESSOR_GATE_BLOB,
+            bridgeBlob: process.env.BRIDGE_BLOB,
+            testBlob: process.env.TEST_BLOB,
+            routerReceiptSha256: sha(`${process.env.RUNNER_TEMP}/router-receipt.json`),
+            authenticatedIssueCommentInvocation: true,
+            nativeSuccessorGateOnly: true,
+            nativeReceiptPreserved: true,
+            successorGateMutationAuthorized: false,
+            directLedgerEditAuthorized: false,
+            genericCommandAuthority: false,
+            arbitrarySuccessorAuthority: false,
+            productMutationPerformed: false
+          };
+          fs.writeFileSync(`${process.env.RUNNER_TEMP}/remote-operation-successor-transition-contract-validation.json`, JSON.stringify(receipt, null, 2) + '\n');
+          NODE
+
+      - name: Upload validation receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: remote-operation-successor-transition-contract-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/router-receipt.json
+            ${{ runner.temp }}/remote-operation-successor-transition-contract-validation.json
+          if-no-files-found: error
+          retention-days: 90
+
+  execute-successor:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      startsWith(github.event.comment.body, 'REMOTE_OPERATION_SUCCESSOR_TRANSITION_REQUEST_V1') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Check out exact installed event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify installed route identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD:"$SUCCESSOR_GATE_PATH")" = "$SUCCESSOR_GATE_BLOB"
+          test "$(git rev-parse HEAD:"$BRIDGE_PATH")" = "$BRIDGE_BLOB"
+          test "$(git rev-parse HEAD:"$TEST_PATH")" = "$TEST_BLOB"
+          node --test "$TEST_PATH"
+
+      - name: Extract exact successor request
+        id: parse
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        shell: bash
+        run: |
+          set +e
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const marker = process.env.REQUEST_MARKER;
+          const body = String(process.env.COMMENT_BODY ?? '').trim();
+          let status = 0;
+          try {
+            if (!body.startsWith(marker)) throw new Error('REQUEST_MARKER_MISSING');
+            const tail = body.slice(marker.length).trim();
+            if (!tail.startsWith('{') || !tail.endsWith('}')) throw new Error('REQUEST_JSON_NOT_EXACT');
+            const request = JSON.parse(tail);
+            fs.writeFileSync(`${process.env.RUNNER_TEMP}/successor-input.json`, JSON.stringify(request, null, 2) + '\n');
+          } catch (error) {
+            status = 1;
+            fs.writeFileSync(`${process.env.RUNNER_TEMP}/workflow-failure-receipt.json`, JSON.stringify({
+              schema: 'REMOTE_OPERATION_SUCCESSOR_TRANSITION_WORKFLOW_FAILURE_RECEIPT_v1',
+              result: 'FAIL_CLOSED_NO_SUCCESSOR',
+              routeId: process.env.ROUTE_ID,
+              errorCode: error.message,
+              successorGateMutated: false,
+              directLedgerEditPerformed: false,
+              genericCommandAuthority: false,
+              arbitrarySuccessorAuthority: false
+            }, null, 2) + '\n');
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `status=${status}\n`);
+          NODE
+          exit 0
+
+      - name: Execute canonical successorRemote bridge
+        id: successor
+        if: steps.parse.outputs.status == '0'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +e
+          node "$BRIDGE_PATH" \
+            --input "$RUNNER_TEMP/successor-input.json" \
+            --output "$RUNNER_TEMP/remote-operation-successor-transition-receipt.json" \
+            --native-output "$RUNNER_TEMP/native-successor-transition-receipt.json"
+          status=$?
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Verify returned receipt identity
+        if: always() && steps.parse.outputs.status == '0'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const wrapperPath = `${process.env.RUNNER_TEMP}/remote-operation-successor-transition-receipt.json`;
+          if (!fs.existsSync(wrapperPath)) throw new Error('INVOCATION_RECEIPT_MISSING');
+          const wrapper = JSON.parse(fs.readFileSync(wrapperPath, 'utf8'));
+          if (wrapper.schema !== 'REMOTE_OPERATION_SUCCESSOR_TRANSITION_INVOCATION_RECEIPT_v1') throw new Error('INVOCATION_RECEIPT_SCHEMA_MISMATCH');
+          if (wrapper.routeId !== process.env.ROUTE_ID || wrapper.successorGateBlob !== process.env.SUCCESSOR_GATE_BLOB || wrapper.nativeReceiptRewritten !== false || wrapper.successorGateMutated !== false || wrapper.directLedgerEditPerformed !== false || wrapper.genericCommandAuthority !== false || wrapper.arbitrarySuccessorAuthority !== false || wrapper.productMutationPerformed !== false) throw new Error('INVOCATION_RECEIPT_IDENTITY_MISMATCH');
+          if (wrapper.result === 'SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED') {
+            const nativePath = `${process.env.RUNNER_TEMP}/native-successor-transition-receipt.json`;
+            if (!fs.existsSync(nativePath)) throw new Error('NATIVE_RECEIPT_MISSING');
+            const nativeBytes = fs.readFileSync(nativePath);
+            const native = JSON.parse(nativeBytes);
+            if (native.schema !== 'REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1' || native.result !== 'SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED' || native.authorityInherited !== false || native.exactHeadRevalidationRequired !== true || native.ledgerCompareAndSwapCommitted !== true || native.predecessor?.terminalDisposition !== 'SUPERSEDED' || native.successor?.state !== 'ADMITTED_LOCKED') throw new Error('NATIVE_RECEIPT_NOT_SUCCESSOR_ADMITTED');
+            if (crypto.createHash('sha256').update(nativeBytes).digest('hex') !== wrapper.nativeReceiptSha256) throw new Error('NATIVE_RECEIPT_DIGEST_MISMATCH');
+          }
+          NODE
+
+      - name: Upload successor receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remote-operation-successor-transition-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/remote-operation-successor-transition-receipt.json
+            ${{ runner.temp }}/native-successor-transition-receipt.json
+            ${{ runner.temp }}/workflow-failure-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Return receipt to invoking conversation
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const candidates = [
+            `${process.env.RUNNER_TEMP}/remote-operation-successor-transition-receipt.json`,
+            `${process.env.RUNNER_TEMP}/workflow-failure-receipt.json`
+          ];
+          const file = candidates.find(candidate => fs.existsSync(candidate));
+          const receipt = file ? JSON.parse(fs.readFileSync(file, 'utf8')) : {
+            schema: 'REMOTE_OPERATION_SUCCESSOR_TRANSITION_WORKFLOW_FAILURE_RECEIPT_v1',
+            result: 'FAIL_CLOSED_NO_SUCCESSOR',
+            routeId: process.env.ROUTE_ID,
+            errorCode: 'RECEIPT_NOT_PRODUCED',
+            successorGateMutated: false,
+            directLedgerEditPerformed: false,
+            genericCommandAuthority: false,
+            arbitrarySuccessorAuthority: false
+          };
+          const body = `REMOTE_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_V1\n\n\`\`\`json\n${JSON.stringify(receipt, null, 2)}\n\`\`\``;
+          const response = await fetch(`https://api.github.com/repos/${process.env.REPOSITORY}/issues/${process.env.ISSUE_NUMBER}/comments`, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/vnd.github+json',
+              Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+              'X-GitHub-Api-Version': '2022-11-28',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ body })
+          });
+          if (!response.ok) throw new Error(`RECEIPT_COMMENT_RETURN_FAILED:${response.status}`);
+          NODE
+
+      - name: Enforce fail-closed result
+        if: always()
+        env:
+          PARSE_STATUS: ${{ steps.parse.outputs.status }}
+          SUCCESSOR_STATUS: ${{ steps.successor.outputs.status }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PARSE_STATUS" = "0"
+          test "$SUCCESSOR_STATUS" = "0"

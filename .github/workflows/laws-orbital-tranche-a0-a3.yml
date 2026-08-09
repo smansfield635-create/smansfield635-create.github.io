@@ -59,7 +59,7 @@ jobs:
           const fs=require('fs');
           for(const file of ['/tmp/router-workflow-builder.json','/tmp/router-verifier-builder.json']){
             const r=JSON.parse(fs.readFileSync(file,'utf8'));
-            if(r.disposition!=='PASS'||r.projectId!=='LAWS')throw new Error(`ROUTER_NOT_PASS:${file}`);
+            if(r.disposition!=='PASS'||!Array.isArray(r.routes)||!r.routes.length||r.routes.some(route=>route.projectId!=='LAWS'||route.disposition!=='PASS'))throw new Error(`ROUTER_NOT_PASS:${file}`);
           }
           NODE
           test -z "$(git status --porcelain)"
@@ -144,7 +144,7 @@ jobs:
           const fs=require('fs');
           for(const file of ['/tmp/router-workflow-fresh.json','/tmp/router-verifier-fresh.json']){
             const r=JSON.parse(fs.readFileSync(file,'utf8'));
-            if(r.disposition!=='PASS'||r.projectId!=='LAWS')throw new Error(`ROUTER_NOT_PASS:${file}`);
+            if(r.disposition!=='PASS'||!Array.isArray(r.routes)||!r.routes.length||r.routes.some(route=>route.projectId!=='LAWS'||route.disposition!=='PASS'))throw new Error(`ROUTER_NOT_PASS:${file}`);
           }
           NODE
           test -z "$(git status --porcelain)"

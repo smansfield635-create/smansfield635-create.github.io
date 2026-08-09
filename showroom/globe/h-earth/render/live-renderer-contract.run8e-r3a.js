@@ -38,7 +38,7 @@ const normalize = (value) => {
 };
 
 export const H_EARTH_RUN_8E_R3A_CONTRACT_ID = 'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1';
-export const H_EARTH_HC05_EXPECTED_PACKAGE_IDENTITY = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898';
+export const H_EARTH_HC05_EXPECTED_PACKAGE_IDENTITY = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_263563C5';
 
 function lookAt(position, target, up) {
   const forward = normalize(subtract(target, position));

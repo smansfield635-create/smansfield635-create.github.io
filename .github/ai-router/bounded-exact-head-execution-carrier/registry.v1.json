@@ -1,0 +1,29 @@
+{
+  "schema": "BOUNDED_EXECUTABLE_DESCRIPTOR_REGISTRY_v1",
+  "registryId": "REPOSITORY_BOUNDED_EXACT_HEAD_EXECUTABLES_v1",
+  "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
+  "closedWorld": true,
+  "arbitraryCommandAccepted": false,
+  "movingExecutableRefsAccepted": false,
+  "descriptors": [
+    {
+      "schema": "BOUNDED_EXECUTABLE_DESCRIPTOR_v1",
+      "descriptorId": "REPOSITORY_AI_ENTRY_ROUTER_MUTATION_V1",
+      "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "executable": "node",
+      "scriptPath": "tools/repository-ai-entry-router.mjs",
+      "shell": false,
+      "mutationIntent": true,
+      "extraArgumentsAllowed": false,
+      "environmentOverridesAllowed": false,
+      "pathDerivation": "OPERATION_REQUEST_ALLOWED_PATHS_EXACT",
+      "targetHeadDerivation": "SUBJECT_IDENTITY_REQUIRED_STARTING_HEAD_ELSE_EXACT_GOVERNING_HEAD",
+      "taskDerivation": "SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID",
+      "nativeReceiptSchema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1",
+      "nativePassField": "disposition",
+      "nativePassValue": "PASS",
+      "repositoryWritesExpected": false
+    }
+  ]
+}

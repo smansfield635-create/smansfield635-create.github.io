@@ -77,12 +77,7 @@ jobs:
             --path .github/workflows/lrpv1-conformance.yml \
             --task "Workflow LRPv1 registered-route validation" \
             --output /tmp/repository-ai-entry-router-lrpv1-route.json
-          node - <<'NODE'
-          const receipt = require('/tmp/repository-ai-entry-router-lrpv1-route.json');
-          if (receipt.disposition !== 'PASS') process.exit(1);
-          if (receipt.routes.length !== 2) process.exit(1);
-          if (!receipt.routes.every((route) => route.projectId === 'LINEAGE_RECEIPT_PROTOCOL' && route.disposition === 'PASS')) process.exit(1);
-          NODE
+          node -e "const r=require('/tmp/repository-ai-entry-router-lrpv1-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='LINEAGE_RECEIPT_PROTOCOL'&&x.disposition==='PASS'))process.exit(1)"
 
       - name: Exercise Estate Validation registered mutation route when present
         shell: bash
@@ -95,12 +90,7 @@ jobs:
               --path .github/workflows/estate-validation-v1.yml \
               --task "Workflow Estate Validation registered-route validation" \
               --output /tmp/repository-ai-entry-router-estate-validation-route.json
-            node - <<'NODE'
-            const receipt = require('/tmp/repository-ai-entry-router-estate-validation-route.json');
-            if (receipt.disposition !== 'PASS') process.exit(1);
-            if (receipt.routes.length !== 2) process.exit(1);
-            if (!receipt.routes.every((route) => route.projectId === 'ESTATE_VALIDATION' && route.disposition === 'PASS')) process.exit(1);
-            NODE
+            node -e "const r=require('/tmp/repository-ai-entry-router-estate-validation-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
           else
             printf '%s\n' '{"schema":"REPOSITORY_AI_ENTRY_ROUTER_ESTATE_VALIDATION_WORKFLOW_RECEIPT_v1","result":"SKIPPED_ESTATE_VALIDATION_NOT_REGISTERED_AT_HEAD","disposition":"NOT_APPLICABLE"}' > /tmp/repository-ai-entry-router-estate-validation-route.json
           fi
@@ -169,8 +159,7 @@ jobs:
           const path = '.github/ai-router/router.v1.json';
           const router = JSON.parse(fs.readFileSync(path, 'utf8'));
           if (!Array.isArray(router.projects)) throw new Error('ROUTER_PROJECTS_NOT_ARRAY');
-          const existing = router.projects.find((project) => project.projectId === 'ESTATE_VALIDATION');
-          if (existing) process.exit(0);
+          if (router.projects.some((project) => project.projectId === 'ESTATE_VALIDATION')) process.exit(0);
           router.projects.push({
             projectId: 'ESTATE_VALIDATION',
             status: 'ACTIVE_REGISTERED_PROJECT',

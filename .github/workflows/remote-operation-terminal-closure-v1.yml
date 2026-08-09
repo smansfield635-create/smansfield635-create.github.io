@@ -5,8 +5,10 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/remote-operation-terminal-closure-v1.yml'
+      - 'tools/operation-intake/repository-operation-lock-manager.v1.mjs'
       - 'tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs'
       - 'tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs'
+      - 'tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs'
   issue_comment:
     types: [created]
 
@@ -17,11 +19,13 @@ env:
   REQUEST_MARKER: REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1
   WORKFLOW_PATH: .github/workflows/remote-operation-terminal-closure-v1.yml
   BRIDGE_PATH: tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
-  BRIDGE_BLOB: 67cb01e09da098049fcc0099170f52d9af86e094
+  BRIDGE_BLOB: 7d8dd52e177805717916bf524acded9f4152c174
   TEST_PATH: tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
   TEST_BLOB: e34f3110a1630f087a8b9829059e5efb9de7512a
+  REMOTE_RECEIPT_TEST_PATH: tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
+  REMOTE_RECEIPT_TEST_BLOB: e134d08cb9ccfd237dfd23803ae8ba6cc0ff1a93
   LOCK_MANAGER_PATH: tools/operation-intake/repository-operation-lock-manager.v1.mjs
-  LOCK_MANAGER_BLOB: 0aa440a3de30e145c7912fcfe2833fb8430ffbb0
+  LOCK_MANAGER_BLOB: edb249f76cc326ea2f07aae20510f894c0e4511c
   LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
 
 jobs:
@@ -51,10 +55,11 @@ jobs:
           test "$(git rev-parse HEAD:"$LOCK_MANAGER_PATH")" = "$LOCK_MANAGER_BLOB"
           test "$(git rev-parse HEAD:"$BRIDGE_PATH")" = "$BRIDGE_BLOB"
           test "$(git rev-parse HEAD:"$TEST_PATH")" = "$TEST_BLOB"
+          test "$(git rev-parse HEAD:"$REMOTE_RECEIPT_TEST_PATH")" = "$REMOTE_RECEIPT_TEST_BLOB"
 
-      - name: Run exact bridge self-test
+      - name: Run exact bridge and remote-receipt self-tests
         shell: bash
-        run: node --test "$TEST_PATH"
+        run: node --test "$TEST_PATH" "$REMOTE_RECEIPT_TEST_PATH"
 
       - name: Verify narrow workflow contract
         shell: bash
@@ -64,8 +69,10 @@ jobs:
           grep -Fq "startsWith(github.event.comment.body, 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1')" "$WORKFLOW_PATH"
           grep -Fq 'contents: write' "$WORKFLOW_PATH"
           grep -Fq 'issues: write' "$WORKFLOW_PATH"
+          grep -Fq 'pull-requests: write' "$WORKFLOW_PATH"
           grep -Fq 'persist-credentials: false' "$WORKFLOW_PATH"
           grep -Fq 'closeRemote' "$BRIDGE_PATH"
+          grep -Fq "schema:'REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1'" "$LOCK_MANAGER_PATH"
           grep -Fq 'directLedgerEditPerformed: false' "$BRIDGE_PATH"
           grep -Fq 'genericCommandAuthority: false' "$BRIDGE_PATH"
           ! grep -Eq 'create_file|update_file|delete_file|/contents/|git/refs|child_process|spawnSync|execSync|eval\(' "$BRIDGE_PATH"
@@ -83,8 +90,11 @@ jobs:
             lockManagerBlob: process.env.LOCK_MANAGER_BLOB,
             bridgeBlob: process.env.BRIDGE_BLOB,
             testBlob: process.env.TEST_BLOB,
+            remoteReceiptTestBlob: process.env.REMOTE_RECEIPT_TEST_BLOB,
             authenticatedIssueCommentInvocation: true,
             nativeCloseRemoteOnly: true,
+            remoteReceiptSchemaRegressionCovered: true,
+            pullRequestReceiptReturnPermissionBound: true,
             directLedgerEditAuthorized: false,
             genericCommandAuthority: false,
             semanticAuthorityCreated: false
@@ -111,6 +121,7 @@ jobs:
     permissions:
       contents: write
       issues: write
+      pull-requests: write
     steps:
       - name: Check out exact installed event head
         uses: actions/checkout@v4
@@ -132,7 +143,8 @@ jobs:
           test "$(git rev-parse HEAD:"$LOCK_MANAGER_PATH")" = "$LOCK_MANAGER_BLOB"
           test "$(git rev-parse HEAD:"$BRIDGE_PATH")" = "$BRIDGE_BLOB"
           test "$(git rev-parse HEAD:"$TEST_PATH")" = "$TEST_BLOB"
-          node --test "$TEST_PATH"
+          test "$(git rev-parse HEAD:"$REMOTE_RECEIPT_TEST_PATH")" = "$REMOTE_RECEIPT_TEST_BLOB"
+          node --test "$TEST_PATH" "$REMOTE_RECEIPT_TEST_PATH"
 
       - name: Extract exact closure request
         id: parse

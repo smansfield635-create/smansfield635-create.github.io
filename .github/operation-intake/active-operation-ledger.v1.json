@@ -624,6 +624,18 @@
       "scopeHash": "77e9d50eb7b12a10edb88aa4520d9d7c1333f174f9fbbc325bf8f0234749d07e",
       "state": "ADMITTED_LOCKED"
     },
+    "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59": {
+      "governingHead": "331284949940c95db80a332235492de4c80d3d43",
+      "lockGeneration": 825,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002",
+      "procedureLocatorDigest": "ae4e2524e36b52b6838b44184b3ba274b93fbd1d84d9a282abe53027db695cd0",
+      "released": false,
+      "requestDigest": "f2ecb75c24ab1b0e3bfdfa21c5e333b55f78d7d0b3aff6faf3633ecb15247c67",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
+      "state": "ADMITTED_LOCKED"
+    },
     "829f23705557beebb52268181d148379af118f0a65d7eb5875e615a79492af58": {
       "governingHead": "5298f541c05097c96ec65ef60cb9de7735652b07",
       "lockGeneration": 164,
@@ -1492,7 +1504,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 824,
+  "lockGeneration": 825,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

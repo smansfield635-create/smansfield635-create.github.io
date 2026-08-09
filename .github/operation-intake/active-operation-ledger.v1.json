@@ -528,6 +528,18 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
+    "6912c24c9b9e14cd03977911def846e383cc917d1f62f5b978eb0fc3877648f4": {
+      "governingHead": "257ebc15ff973b7e4a605c8382846ffeff9a34e5",
+      "lockGeneration": 806,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:PROGRESSIVE_SYSTEM_CONTINUITY:SELF_TEST_CLOSURE_AWARENESS:V1",
+      "operationId": "PROGRESSIVE_SYSTEM_CONTINUITY_CLOSURE_AWARE_SELF_TEST_REPAIR_20260809_001",
+      "procedureLocatorDigest": "a5f05916fc7d5817e1ad31aa4b46dddd6f3617249406a9e8d0caab2a1817cab7",
+      "released": false,
+      "requestDigest": "fad110cb875aec01bfa8f431ca55adf5703d72a82eee96fa9f1c06a7bfcdc3cb",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6912c24c9b9e14cd03977911def846e383cc917d1f62f5b978eb0fc3877648f4",
+      "state": "ADMITTED_LOCKED"
+    },
     "6a611d97ff157638b4ad6b8555c2d9001fee2116feb56c36a1a106e311de2cdf": {
       "governingHead": "44d810dbde479e520d3d772232da8f10eebe100b",
       "lockGeneration": 236,
@@ -1524,7 +1536,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 805,
+  "lockGeneration": 806,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

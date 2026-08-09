@@ -180,6 +180,30 @@ jobs:
           test -z "$(git -C "$TOOLING_ROOT" status --porcelain=v1 --untracked-files=all)"
           test -f "$TOOLING_ROOT/$EXPECTED_ADAPTER_PATH"
 
+      - name: Prove immutable adapter positive and negative receipt preservation
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOLING_ROOT="$RUNNER_TEMP/immutable-tooling"
+          (
+            cd "$TOOLING_ROOT"
+            node "$EXPECTED_ADAPTER_PATH" \
+              --self-test \
+              --output "$RUNNER_TEMP/adapter-self-test-receipt.json"
+          )
+          node - <<'NODE'
+          const receipt = require(process.env.RUNNER_TEMP + '/adapter-self-test-receipt.json');
+          if (receipt.result !== 'PASS_CLOSED') process.exit(1);
+          if (receipt.positiveNativeDisposition !== 'PASS') process.exit(1);
+          if (!['REVIEW_REQUIRED','BLOCK','STOP'].includes(receipt.negativeNativeDisposition)) process.exit(1);
+          if (receipt.negativeClassification !== 'UNREGISTERED_H_EARTH_SCOPED_PATH') process.exit(1);
+          if (receipt.negativeNativeReceiptPreserved !== true) process.exit(1);
+          if (receipt.productMutationPerformed !== false) process.exit(1);
+          if (receipt.constructionAuthorityGranted !== false) process.exit(1);
+          if (receipt.genericCommandAuthority !== false) process.exit(1);
+          NODE
+
       - name: Execute immutable adapter against exact subject head
         shell: bash
         run: |
@@ -294,6 +318,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: |
             ${{ runner.temp }}/request.json
+            ${{ runner.temp }}/adapter-self-test-receipt.json
             ${{ runner.temp }}/adapter-execution-receipt.json
             ${{ runner.temp }}/native-preflight-receipt.json
             ${{ runner.temp }}/transport-receipt.json

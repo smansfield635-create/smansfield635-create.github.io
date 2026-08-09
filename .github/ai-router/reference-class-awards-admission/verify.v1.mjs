@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const BASE = '.github/ai-router/reference-class-awards-admission';
-const EXPECTED_HEAD = 'eb9a1730f201ba8a8c3822b65ecb984592de38bd';
+const EXPECTED_GOVERNING_HEAD = 'eb9a1730f201ba8a8c3822b65ecb984592de38bd';
 const EXPECTED_OPERATION = 'REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_V1_20260809_001';
 const EXPECTED_GENERATION = 890;
 const EXPECTED_PATHS = Object.freeze([
@@ -41,15 +41,32 @@ const check = (id, condition, detail = null) => {
   if (!pass) failures.push({ id, detail });
 };
 const git = args => childProcess.execFileSync('git', args, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore','pipe','pipe'] }).trim();
+const gitPasses = args => {
+  try { childProcess.execFileSync('git', args, { cwd: ROOT, stdio: 'ignore' }); return true; }
+  catch { return false; }
+};
 
 if (process.argv.length !== 3 || process.argv[2] !== '--verify-static') {
   process.stderr.write('Usage: node verify.v1.mjs --verify-static\n');
   process.exit(2);
 }
 
+const executionHead = git(['rev-parse', 'HEAD^{commit}']);
+check('EXECUTION_HEAD_VALID', HEX40.test(executionHead), executionHead);
+check('EXECUTION_HEAD_NOT_GOVERNING_BASE', executionHead !== EXPECTED_GOVERNING_HEAD, executionHead);
+check('GOVERNING_HEAD_IS_ANCESTOR', gitPasses(['merge-base', '--is-ancestor', EXPECTED_GOVERNING_HEAD, executionHead]));
+let observedChangedPaths = [];
+try {
+  observedChangedPaths = git(['diff', '--name-only', `${EXPECTED_GOVERNING_HEAD}...${executionHead}`]).split(/\r?\n/).map(x=>x.trim()).filter(Boolean).sort();
+} catch (error) {
+  check('EXACT_CANDIDATE_DIFF_AVAILABLE', false, String(error?.message ?? error));
+}
+check('EXACT_CANDIDATE_DIFF_TEN_PATHS', canonical(observedChangedPaths) === canonical([...EXPECTED_PATHS].sort()), { observedChangedPaths, expectedPaths: [...EXPECTED_PATHS].sort() });
+check('WORKTREE_CLEAN', git(['status', '--porcelain=v1', '--untracked-files=all']) === '');
+
 for (const relative of EXPECTED_PATHS) check(`FILE_PRESENT:${relative}`, fs.existsSync(path.join(ROOT, relative)));
 if (failures.length) {
-  console.log(JSON.stringify({ schema:'REFERENCE_CLASS_AWARDS_ADMISSION_STATIC_VERIFICATION_RECEIPT_v1', result:'FAIL', failures, checks }, null, 2));
+  console.log(JSON.stringify({ schema:'REFERENCE_CLASS_AWARDS_ADMISSION_STATIC_VERIFICATION_RECEIPT_v1', result:'FAIL', executionHead, failures, checks }, null, 2));
   process.exit(1);
 }
 
@@ -65,8 +82,8 @@ const state = readJson(`${BASE}/current-state.v1.json`);
 check('OPERATION_SCHEMA', op.schema === 'REPOSITORY_OPERATION_REQUEST_v1');
 check('PROCEDURE_SCHEMA', procedure.schema === 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1');
 check('OPERATION_ID', op.operationId === EXPECTED_OPERATION);
-check('GOVERNING_HEAD_REQUEST', op.exactGoverningHead === EXPECTED_HEAD);
-check('GOVERNING_HEAD_PROCEDURE', procedure.exactGoverningHead === EXPECTED_HEAD);
+check('GOVERNING_HEAD_REQUEST', op.exactGoverningHead === EXPECTED_GOVERNING_HEAD);
+check('GOVERNING_HEAD_PROCEDURE', procedure.exactGoverningHead === EXPECTED_GOVERNING_HEAD);
 check('EXACT_TEN_ALLOWED_PATHS', op.allowedPaths.length === 10 && new Set(op.allowedPaths).size === 10);
 check('REQUEST_PROCEDURE_PATH_EQUALITY', canonical(op.allowedPaths) === canonical(procedure.exactAllowedRepositoryPaths));
 check('REQUEST_PATH_SET_EXACT', canonical([...op.allowedPaths].sort()) === canonical([...EXPECTED_PATHS].sort()));
@@ -75,8 +92,10 @@ check('WORKFLOW_EQUALITY', op.workflowPath === procedure.workflowAndArtifactPack
 check('ARTIFACT_PATH_EQUALITY', canonical(op.artifactPaths) === canonical(procedure.workflowAndArtifactPackagingPaths.artifactPaths));
 check('FINGERPRINT_DOMAIN_EQUALITY', canonical(op.fingerprintDomain) === canonical(procedure.bridgeOutputFingerprintDomain));
 check('ERROR_PRECEDENCE_EQUALITY', canonical(op.errorPrecedence) === canonical(procedure.errorCodeAndValidationPrecedence));
-check('REQUEST_DIGEST_MATCHES_ADMISSION', sha256(canonical(op)) === state.admission.requestDigest, { observed: sha256(canonical(op)), expected: state.admission.requestDigest });
-check('PROCEDURE_DIGEST_MATCHES_ADMISSION', sha256(canonical(procedure)) === state.admission.procedureLocatorDigest, { observed: sha256(canonical(procedure)), expected: state.admission.procedureLocatorDigest });
+const observedRequestDigest = sha256(canonical(op));
+const observedProcedureDigest = sha256(canonical(procedure));
+check('REQUEST_DIGEST_MATCHES_ADMISSION', observedRequestDigest === state.admission.requestDigest, { observed: observedRequestDigest, expected: state.admission.requestDigest });
+check('PROCEDURE_DIGEST_MATCHES_ADMISSION', observedProcedureDigest === state.admission.procedureLocatorDigest, { observed: observedProcedureDigest, expected: state.admission.procedureLocatorDigest });
 
 check('REGISTRATION_SCHEMA', registration.schema === 'REFERENCE_CLASS_AWARDS_ADMISSION_REGISTRATION_SURFACE_RECONCILIATION_v1');
 check('SHARED_CONTROL_PLANE_HOME', registration.resolvedHome?.projectId === 'REPOSITORY_AI_ROUTER_INFRASTRUCTURE');
@@ -112,7 +131,7 @@ for (const ref of [...corpus.positiveReferences, ...corpus.negativeControls]) {
     try {
       const observed = git(['rev-parse', `${ref.exactCommitSha}:${source.path}`]);
       check(`REFERENCE_BLOB_IDENTITY:${ref.referenceId}:${source.path}`, observed === source.gitBlobSha, { observed, expected: source.gitBlobSha });
-    } catch (error) {
+    } catch {
       check(`REFERENCE_BLOB_IDENTITY:${ref.referenceId}:${source.path}`, false, 'REFERENCE_COMMIT_OR_PATH_UNAVAILABLE');
     }
   }
@@ -131,7 +150,7 @@ check('NO_SELF_ACTIVATION', fixtures.activationCalibrationRequirements?.instrume
 check('STATE_SCHEMA', state.schema === 'REFERENCE_CLASS_AWARDS_ADMISSION_CURRENT_STATE_v1');
 check('STATE_OPERATION_ID', state.operationId === EXPECTED_OPERATION);
 check('STATE_GENERATION', state.lockGeneration === EXPECTED_GENERATION);
-check('STATE_GOVERNING_HEAD', state.exactGoverningHead === EXPECTED_HEAD);
+check('STATE_GOVERNING_HEAD', state.exactGoverningHead === EXPECTED_GOVERNING_HEAD);
 check('STATE_ROUTER_PASS', state.preMutationRouter?.result === 'PASS' && state.preMutationRouter?.routeCount === 10 && state.preMutationRouter?.exactHeadVerified === true);
 check('STATE_NOT_ACTIVE', state.authority?.candidateInstrumentActive === false && state.authority?.productionEnforcementActive === false && state.authority?.awardsAdmissionAuthorityCreated === false && state.authority?.namedAwardReadinessAuthorityCreated === false && state.authority?.mergeAuthorityCreated === false);
 check('ADMISSION_DIGESTS_HEX', HEX64.test(state.admission?.requestDigest ?? '') && HEX64.test(state.admission?.procedureLocatorDigest ?? '') && HEX64.test(state.admission?.scopeHash ?? ''));
@@ -143,11 +162,15 @@ const receipt = {
   instrumentId: 'REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1',
   operationId: EXPECTED_OPERATION,
   lockGeneration: EXPECTED_GENERATION,
-  governingHead: EXPECTED_HEAD,
+  governingHead: EXPECTED_GOVERNING_HEAD,
+  executionHead,
+  observedChangedPaths,
   packagePathCount: EXPECTED_PATHS.length,
   checkCount: checks.length,
   passedCheckCount: checks.filter(x=>x.pass).length,
   failedCheckCount: failures.length,
+  requestDigest: observedRequestDigest,
+  procedureDigest: observedProcedureDigest,
   packageFingerprint,
   activationAuthorityCreated: false,
   awardsAuthorityCreated: false,

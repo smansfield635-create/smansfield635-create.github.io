@@ -22,6 +22,7 @@ env:
   OPERATION_ID: LAWS_PERSISTENT_STAGE_FUNCTIONAL_REPAIR_v2
   LOCK_GENERATION: '625'
   PAGE_OPERATION_SUBJECT_HEAD: ${{ github.sha }}
+  ARTIFACT_DIR: /tmp/laws-persistent-stage-v2
 
 jobs:
   preconstruction-gates:
@@ -59,176 +60,108 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/laws-persistent-stage
+          mkdir -p "$ARTIFACT_DIR"
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-
+          const out = process.env.ARTIFACT_DIR;
           const subjectHead = process.env.GITHUB_SHA;
           const instrumentVersions = Object.fromEntries([
-            'informationArchitectureInstrument',
-            'perceptualExcellenceInstrument',
-            'accessibilityInstrument',
-            'responsiveEquivalenceInstrument',
-            'interactionQualityInstrument',
-            'performanceOptimizationInstrument',
-            'stateAndRecoveryInstrument',
-            'provenanceAndEvidenceInstrument',
-            'contextualArchitectureConformanceInstrument'
+            'informationArchitectureInstrument','perceptualExcellenceInstrument','accessibilityInstrument',
+            'responsiveEquivalenceInstrument','interactionQualityInstrument','performanceOptimizationInstrument',
+            'stateAndRecoveryInstrument','provenanceAndEvidenceInstrument','contextualArchitectureConformanceInstrument'
           ].map(id => [id, '1.1.0']));
-
           const architectureFindings = {
-            schema: 'CONTEXTUAL_ARCHITECTURE_FINDINGS_v1',
-            implementationClass: 'EXISTING_CONSTRUCT_ADOPTION',
-            classificationRationale: 'Repair the existing Laws persistent-stage construct by adopting its persistent shell and the exact direct-page interaction runtimes as implementation sources; exclude the rejected full-page-import lifecycle and fixed nested viewport.',
-            existingConstructSearch: {
-              executed: true,
-              searchedScopes: [
-                'laws/orbital-tranche-a0-a3/',
-                'assets/laws-destination/',
-                'laws/research/methods-and-models/'
-              ],
-              candidates: [
-                'LAWS_PERSISTENT_STAGE_PREDECESSOR',
-                'LAWS_READING_RUNTIME',
-                'METHODS_SHOWROOM_RUNTIME',
-                'METHODS_REFINEMENT_RUNTIME',
-                'METHODS_EUCLIDEAN_RUNTIME'
-              ]
-            },
-            exactSourceConstructIdentities: [
+            schema:'CONTEXTUAL_ARCHITECTURE_FINDINGS_v1',
+            implementationClass:'EXISTING_CONSTRUCT_ADOPTION',
+            classificationRationale:'Repair the existing Laws persistent-stage construct by adopting its persistent shell and exact direct-page interaction runtimes as implementation sources; exclude the rejected full-page-import lifecycle and fixed nested viewport.',
+            existingConstructSearch:{executed:true,searchedScopes:['laws/orbital-tranche-a0-a3/','assets/laws-destination/','laws/research/methods-and-models/'],candidates:['LAWS_PERSISTENT_STAGE_PREDECESSOR','LAWS_READING_RUNTIME','METHODS_SHOWROOM_RUNTIME','METHODS_REFINEMENT_RUNTIME','METHODS_EUCLIDEAN_RUNTIME']},
+            exactSourceConstructIdentities:[
               {sourceId:'LAWS_PERSISTENT_STAGE_PREDECESSOR',path:'laws/orbital-tranche-a0-a3/orientation.js',commitSha:subjectHead,gitBlobSha:'7e0d8bca4c02dada6deeeb3c1f92d9854bbcf6fb',adoptionDisposition:'ADOPT_IMPLEMENTATION_SOURCE'},
               {sourceId:'LAWS_READING_RUNTIME',path:'assets/laws-destination/renewal.js',commitSha:subjectHead,gitBlobSha:'52fccf83e50c5616234a1c79879bd0f4032ab77b',adoptionDisposition:'ADOPT_IMPLEMENTATION_SOURCE'},
               {sourceId:'METHODS_SHOWROOM_RUNTIME',path:'laws/research/methods-and-models/showroom.js',commitSha:subjectHead,gitBlobSha:'5037da7a0ad32dcb6eee2d25dc2b236bd9574965',adoptionDisposition:'ADOPT_IMPLEMENTATION_SOURCE'},
               {sourceId:'METHODS_REFINEMENT_RUNTIME',path:'laws/research/methods-and-models/showroom-refinement.js',commitSha:subjectHead,gitBlobSha:'fe5ac6d1c8326d0ea2de17ae509ea2e2bfaa9c1f',adoptionDisposition:'ADOPT_IMPLEMENTATION_SOURCE'},
               {sourceId:'METHODS_EUCLIDEAN_RUNTIME',path:'laws/research/methods-and-models/showroom-euclidean.js',commitSha:subjectHead,gitBlobSha:'e2289469b7efed2d21d0d55c873e56402c893932',adoptionDisposition:'ADOPT_IMPLEMENTATION_SOURCE'}
             ],
-            adoptionMatrix: [
+            adoptionMatrix:[
               {sourceId:'LAWS_PERSISTENT_STAGE_PREDECESSOR',sourceRelation:'IMPLEMENTATION_SOURCE',adoptedCapabilities:['PERSISTENT_SHELL','CATEGORY_TRAVERSAL','CANONICAL_CONTEXT','HISTORY_STATE'],adaptations:['RETAINED_STAGE_MOUNTS','NON_NESTED_STAGE_COMPOSITION','SCOPED_HYDRATION'],exclusions:['FULL_PAGE_MAIN_IMPORT_AS_LIVE_RUNTIME','FIXED_58VH_STAGE_VIEWPORT','SOURCE_STRING_RUNTIME_ACCEPTANCE']},
               {sourceId:'LAWS_READING_RUNTIME',sourceRelation:'IMPLEMENTATION_SOURCE',adoptedCapabilities:['PARALLEL_LENS_SELECTION','DISCLOSURE_INTERACTION','KEYBOARD_SEMANTICS'],adaptations:['SCOPED_STAGE_HYDRATION'],exclusions:['DOCUMENT_LOAD_SINGLETON_ASSUMPTION']},
               {sourceId:'METHODS_SHOWROOM_RUNTIME',sourceRelation:'IMPLEMENTATION_SOURCE',adoptedCapabilities:['MODEL_DECK','INSPECTION_DIALOG','MODEL_PREVIOUS_NEXT'],adaptations:['SCOPED_STAGE_MOUNT'],exclusions:['GLOBAL_DOCUMENT_SINGLETON_ASSUMPTION']},
               {sourceId:'METHODS_REFINEMENT_RUNTIME',sourceRelation:'IMPLEMENTATION_SOURCE',adoptedCapabilities:['COLLAPSE_DOCK_STATE','SHOWROOM_REFINEMENT'],adaptations:['SCOPED_STAGE_MOUNT'],exclusions:['PAGE_LEVEL_DOCK_PLACEMENT_OUTSIDE_STAGE']},
               {sourceId:'METHODS_EUCLIDEAN_RUNTIME',sourceRelation:'IMPLEMENTATION_SOURCE',adoptedCapabilities:['X_MODEL_AXIS','Y_LENS_AXIS','Z_FAMILY_AXIS'],adaptations:['SCOPED_STAGE_MOUNT'],exclusions:['STORY_SEMANTICS_ON_INTERNAL_METHODS_AXES']}
             ],
-            visualArchitectureAuthority: {
-              authorityHolder: 'EXISTING_SOURCE_CONSTRUCTS_WITH_BOUNDED_ADAPTER',
-              contentAdapterMayDefineVisualArchitecture: false
-            },
-            prohibitedSubstituteArchitectures: [
-              'PAGE_TO_PAGE_ORBITAL_CAROUSEL',
-              'FULL_PAGE_MAIN_IMPORT_AS_STORYBOARD_STATE',
-              'NESTED_FIXED_SCROLL_VIEWPORT_FOR_FULL_PAGE_CONTENT',
-              'VISIBLE_PREVIOUS_NEXT_AS_PRIMARY_INTERACTION',
-              'CONTENT_ADAPTER_AS_VISUAL_ARCHITECTURE_OWNER'
-            ],
-            requiredRuntimeConditions: [
-              'PERSISTENT_LAWS_PAGE_SHELL_SURVIVES_STORY_CHANGE',
-              'VISIBLE_CONTROLS_HAVE_LIVE_EVENT_LIFECYCLES',
-              'METHODS_X_Y_Z_INTERACTIONS_OPERATE_WHEN_STAGED',
-              'METHODS_INSPECTION_DIALOG_OPERATES_WHEN_STAGED',
-              'READING_TABS_AND_DISCLOSURES_OPERATE_WHEN_STAGED',
-              'PHONE_TABLET_DESKTOP_NO_NESTED_STAGE_SCROLL_TRAP',
-              'CATEGORY_AND_CANONICAL_TRAVERSAL_PRESERVE_DISTINCT_SEMANTICS',
-              'HISTORY_STATE_DOES_NOT_DESTROY_DOCUMENT',
-              'NO_VISUAL_ACCEPTANCE_REQUEST_BEFORE_REAL_BROWSER_RUNTIME_PASS'
-            ],
-            separateNewConstructAuthority: null,
-            informationHierarchy: 'ACTIVE_STAGE_PRIMARY_THEN_COMPACT_SEMANTIC_NAVIGATION_THEN_CANONICAL_CONTEXT',
-            userIntentRoutes: ['LOCAL_STAGE_INTERACTION','SEMANTIC_CATEGORY_TRAVERSAL','CANONICAL_NARRATIVE_TRAVERSAL'],
-            dependencyRepresentation: 'EXPLICIT_STAGE_ADAPTER_AND_RUNTIME_HYDRATION_PER_EXPERIENCE_TYPE',
-            contentDensity: 'STAGE_DOMINANT_NAVIGATION_RECEDES',
-            navigationModel: 'PERSISTENT_STAGE_PLUS_DISTINCT_CATEGORY_AND_CANONICAL_GRAPHS',
-            responsivePriority: 'STAGE_FIRST_PHONE_TABLET_DESKTOP_EQUIVALENCE',
-            accessibilityStructure: 'NATIVE_CONTROLS_FOCUS_CONTINUITY_LIVE_REGION_WITHOUT_FOCUS_THEFT'
+            visualArchitectureAuthority:{authorityHolder:'EXISTING_SOURCE_CONSTRUCTS_WITH_BOUNDED_ADAPTER',contentAdapterMayDefineVisualArchitecture:false},
+            prohibitedSubstituteArchitectures:['PAGE_TO_PAGE_ORBITAL_CAROUSEL','FULL_PAGE_MAIN_IMPORT_AS_STORYBOARD_STATE','NESTED_FIXED_SCROLL_VIEWPORT_FOR_FULL_PAGE_CONTENT','VISIBLE_PREVIOUS_NEXT_AS_PRIMARY_INTERACTION','CONTENT_ADAPTER_AS_VISUAL_ARCHITECTURE_OWNER'],
+            requiredRuntimeConditions:['PERSISTENT_LAWS_PAGE_SHELL_SURVIVES_STORY_CHANGE','VISIBLE_CONTROLS_HAVE_LIVE_EVENT_LIFECYCLES','METHODS_X_Y_Z_INTERACTIONS_OPERATE_WHEN_STAGED','METHODS_INSPECTION_DIALOG_OPERATES_WHEN_STAGED','READING_TABS_AND_DISCLOSURES_OPERATE_WHEN_STAGED','PHONE_TABLET_DESKTOP_NO_NESTED_STAGE_SCROLL_TRAP','CATEGORY_AND_CANONICAL_TRAVERSAL_PRESERVE_DISTINCT_SEMANTICS','HISTORY_STATE_DOES_NOT_DESTROY_DOCUMENT','NO_VISUAL_ACCEPTANCE_REQUEST_BEFORE_REAL_BROWSER_RUNTIME_PASS'],
+            separateNewConstructAuthority:null,
+            informationHierarchy:'ACTIVE_STAGE_PRIMARY_THEN_COMPACT_SEMANTIC_NAVIGATION_THEN_CANONICAL_CONTEXT',
+            userIntentRoutes:['LOCAL_STAGE_INTERACTION','SEMANTIC_CATEGORY_TRAVERSAL','CANONICAL_NARRATIVE_TRAVERSAL'],
+            dependencyRepresentation:'EXPLICIT_STAGE_ADAPTER_AND_RUNTIME_HYDRATION_PER_EXPERIENCE_TYPE',
+            contentDensity:'STAGE_DOMINANT_NAVIGATION_RECEDES',
+            navigationModel:'PERSISTENT_STAGE_PLUS_DISTINCT_CATEGORY_AND_CANONICAL_GRAPHS',
+            responsivePriority:'STAGE_FIRST_PHONE_TABLET_DESKTOP_EQUIVALENCE',
+            accessibilityStructure:'NATIVE_CONTROLS_FOCUS_CONTINUITY_LIVE_REGION_WITHOUT_FOCUS_THEFT'
           };
-
           const implementationFindings = {
-            schema: 'LAWS_PERSISTENT_STAGE_IMPLEMENTATION_FINDINGS_v2',
-            contextualArchitectureBindingPreserved: true,
-            semanticMarkup: 'Preserve imported native controls and companion dialog semantics; adapters do not replace buttons with nonsemantic hit surfaces.',
-            focusManagement: 'Stage swaps preserve shell focus model and do not steal focus; dialogs restore trigger focus.',
-            keyboardModel: 'Native buttons, tabs, category keyboard arrows, and Methods controls remain keyboard operable.',
-            stateRecovery: 'Retained per-story mounts preserve staged state; history popstate selects the retained mount without document destruction.',
-            bundleStructure: 'One bounded stage runtime adapter; existing direct-page source runtimes remain immutable.',
-            renderingStrategy: 'Retained stage mounts with only the active mount exposed; no nested full-page scroll viewport.',
-            searchAndGraphComplexity: '24 canonical records plus six category families remain bounded and preindexed.',
-            deviceLayoutRules: 'Natural-height stage on phone/tablet/desktop; semantic/category controls compact below the stage.',
-            plannedMutationPaths: [
-              'laws/orbital-tranche-a0-a3/orientation.js',
-              'laws/orbital-tranche-a0-a3/orientation.css',
-              'laws/orbital-tranche-a0-a3/verify-runtime.mjs',
-              'laws/orbital-tranche-a0-a3/manifest.v1.json',
-              'laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json'
-            ],
-            sourceRuntimeMutation: false,
-            publicPageMutationAtPreconstructionPhase: false
+            schema:'LAWS_PERSISTENT_STAGE_IMPLEMENTATION_FINDINGS_v2',contextualArchitectureBindingPreserved:true,
+            semanticMarkup:'Preserve imported native controls and companion dialog semantics; adapters do not replace buttons with nonsemantic hit surfaces.',
+            focusManagement:'Stage swaps preserve shell focus model and do not steal focus; dialogs restore trigger focus.',
+            keyboardModel:'Native buttons, tabs, category keyboard arrows, and Methods controls remain keyboard operable.',
+            stateRecovery:'Retained per-story mounts preserve staged state; history popstate selects the retained mount without document destruction.',
+            bundleStructure:'One bounded stage runtime adapter; existing direct-page source runtimes remain immutable.',
+            renderingStrategy:'Retained stage mounts with only the active mount exposed; no nested full-page scroll viewport.',
+            searchAndGraphComplexity:'24 canonical records plus six category families remain bounded and preindexed.',
+            deviceLayoutRules:'Natural-height stage on phone/tablet/desktop; semantic/category controls compact below the stage.',
+            plannedMutationPaths:['laws/orbital-tranche-a0-a3/orientation.js','laws/orbital-tranche-a0-a3/orientation.css','laws/orbital-tranche-a0-a3/verify-runtime.mjs','laws/orbital-tranche-a0-a3/manifest.v1.json','laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json'],
+            sourceRuntimeMutation:false,publicPageMutationAtPreconstructionPhase:false
           };
-
           const digest = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
-          const architectureReceipt = {phase:'ARCHITECTURE',result:'PASS',receiptDigest:digest(architectureFindings),instrumentVersions,findings:architectureFindings};
-          const implementationReceipt = {phase:'IMPLEMENTATION',result:'PASS',receiptDigest:digest(implementationFindings),instrumentVersions,findings:implementationFindings};
-          const bundle = {
-            schema:'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1',
-            toolsetId:'MANDATORY_PAGE_TOOLSET',
-            toolsetVersion:'1.1.0',
-            subjectHead,
-            operationId:process.env.OPERATION_ID,
-            lockGeneration:Number(process.env.LOCK_GENERATION),
-            phaseReceipts:[architectureReceipt,implementationReceipt]
-          };
-          fs.writeFileSync('artifacts/laws-persistent-stage/page-excellence-phase-bundle.v2.json',JSON.stringify(bundle,null,2)+'\n');
+          const bundle={schema:'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1',toolsetId:'MANDATORY_PAGE_TOOLSET',toolsetVersion:'1.1.0',subjectHead,operationId:process.env.OPERATION_ID,lockGeneration:Number(process.env.LOCK_GENERATION),phaseReceipts:[
+            {phase:'ARCHITECTURE',result:'PASS',receiptDigest:digest(architectureFindings),instrumentVersions,findings:architectureFindings},
+            {phase:'IMPLEMENTATION',result:'PASS',receiptDigest:digest(implementationFindings),instrumentVersions,findings:implementationFindings}
+          ]};
+          fs.writeFileSync(`${out}/page-excellence-phase-bundle.v2.json`,JSON.stringify(bundle,null,2)+'\n');
           NODE
 
       - name: Run registered repository router before page mutation
         shell: bash
         run: |
           set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
+          node tools/repository-ai-entry-router.mjs --mutation-intent \
             --path laws/orbital-tranche-a0-a3/orientation.js \
             --path laws/orbital-tranche-a0-a3/orientation.css \
             --path laws/orbital-tranche-a0-a3/verify-runtime.mjs \
             --path laws/orbital-tranche-a0-a3/manifest.v1.json \
             --path laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json \
             --task "Laws persistent-stage page functional repair V2" \
-            --output artifacts/laws-persistent-stage/router-preconstruction.v2.json
-          node -e "const r=require('./artifacts/laws-persistent-stage/router-preconstruction.v2.json');if(r.disposition!=='PASS'||r.routes.some(x=>x.projectId!=='LAWS'||x.disposition!=='PASS'))process.exit(1)"
+            --output "$ARTIFACT_DIR/router-preconstruction.v2.json"
+          node -e "const r=require(process.env.ARTIFACT_DIR+'/router-preconstruction.v2.json');if(r.disposition!=='PASS'||r.routes.some(x=>x.projectId!=='LAWS'||x.disposition!=='PASS')||r.workingTreeClean!==true)process.exit(1)"
 
       - name: Require Page Excellence Architecture PASS
         shell: bash
         run: |
           set -euo pipefail
-          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs \
-            --mutation-intent \
-            --page-phase ARCHITECTURE \
-            --page-receipt-bundle artifacts/laws-persistent-stage/page-excellence-phase-bundle.v2.json \
-            --path laws/orbital-tranche-a0-a3/orientation.js \
-            --path laws/orbital-tranche-a0-a3/orientation.css \
-            --path laws/orbital-tranche-a0-a3/verify-runtime.mjs \
-            --path laws/orbital-tranche-a0-a3/manifest.v1.json \
+          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --mutation-intent --page-phase ARCHITECTURE \
+            --page-receipt-bundle "$ARTIFACT_DIR/page-excellence-phase-bundle.v2.json" \
+            --path laws/orbital-tranche-a0-a3/orientation.js --path laws/orbital-tranche-a0-a3/orientation.css \
+            --path laws/orbital-tranche-a0-a3/verify-runtime.mjs --path laws/orbital-tranche-a0-a3/manifest.v1.json \
             --path laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json \
-            --task "Laws persistent-stage page functional repair V2" \
-            --output /tmp/laws-page-architecture-router.json \
-            > artifacts/laws-persistent-stage/page-excellence-architecture-gate.v2.json
-          node -e "const r=require('./artifacts/laws-persistent-stage/page-excellence-architecture-gate.v2.json');if(r.result!=='PASS'||r.phase!=='ARCHITECTURE'||r.delegatedRouterReceipt?.disposition!=='PASS')process.exit(1)"
+            --task "Laws persistent-stage page functional repair V2" --output /tmp/laws-page-architecture-router.json \
+            > "$ARTIFACT_DIR/page-excellence-architecture-gate.v2.json"
+          node -e "const r=require(process.env.ARTIFACT_DIR+'/page-excellence-architecture-gate.v2.json');if(r.result!=='PASS'||r.phase!=='ARCHITECTURE'||r.delegatedRouterReceipt?.disposition!=='PASS')process.exit(1)"
 
       - name: Require Page Excellence Implementation PASS
         shell: bash
         run: |
           set -euo pipefail
-          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs \
-            --mutation-intent \
-            --page-phase IMPLEMENTATION \
-            --page-receipt-bundle artifacts/laws-persistent-stage/page-excellence-phase-bundle.v2.json \
-            --path laws/orbital-tranche-a0-a3/orientation.js \
-            --path laws/orbital-tranche-a0-a3/orientation.css \
-            --path laws/orbital-tranche-a0-a3/verify-runtime.mjs \
-            --path laws/orbital-tranche-a0-a3/manifest.v1.json \
+          node .github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs --mutation-intent --page-phase IMPLEMENTATION \
+            --page-receipt-bundle "$ARTIFACT_DIR/page-excellence-phase-bundle.v2.json" \
+            --path laws/orbital-tranche-a0-a3/orientation.js --path laws/orbital-tranche-a0-a3/orientation.css \
+            --path laws/orbital-tranche-a0-a3/verify-runtime.mjs --path laws/orbital-tranche-a0-a3/manifest.v1.json \
             --path laws/orbital-tranche-a0-a3/common-grammar-freeze.v1.json \
-            --task "Laws persistent-stage page functional repair V2" \
-            --output /tmp/laws-page-implementation-router.json \
-            > artifacts/laws-persistent-stage/page-excellence-implementation-gate.v2.json
-          node -e "const r=require('./artifacts/laws-persistent-stage/page-excellence-implementation-gate.v2.json');if(r.result!=='PASS'||r.phase!=='IMPLEMENTATION'||r.delegatedRouterReceipt?.disposition!=='PASS')process.exit(1)"
+            --task "Laws persistent-stage page functional repair V2" --output /tmp/laws-page-implementation-router.json \
+            > "$ARTIFACT_DIR/page-excellence-implementation-gate.v2.json"
+          node -e "const r=require(process.env.ARTIFACT_DIR+'/page-excellence-implementation-gate.v2.json');if(r.result!=='PASS'||r.phase!=='IMPLEMENTATION'||r.delegatedRouterReceipt?.disposition!=='PASS')process.exit(1)"
 
       - name: Assert no page mutation occurred during preconstruction gating
         shell: bash
@@ -244,6 +177,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: laws-persistent-stage-functional-v2-preconstruction-${{ github.run_id }}
-          path: artifacts/laws-persistent-stage/*.json
+          path: /tmp/laws-persistent-stage-v2/*.json
           if-no-files-found: error
           retention-days: 90

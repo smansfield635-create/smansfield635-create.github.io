@@ -696,34 +696,6 @@
       "scopeHash": "8454f0f1162ba0263b05c2d1d48a6c70d398cf753a1ddb5ca4f56f0e038180c4",
       "state": "ADMITTED_LOCKED"
     },
-    "859f7e84a9f661a34e0acf214a409a7f6a86729771b9f6de401694bd25e66d40": {
-      "governingHead": "25355a1b8aaec3cc60f90a6f6335dd5aa796b267",
-      "lockGeneration": 896,
-      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_SCOPE",
-      "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_20260809_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
-        "lockGeneration": 891,
-        "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_SCOPE",
-        "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_20260809_001",
-        "preservedEvidenceRefs": [
-          "PREDECESSOR_ADMISSION_RECEIPT_SHA256_274605fc5ca6b2088237662f6af335af950c5fcfed632824b3181523fc1f2b98",
-          "PREDECESSOR_ROUTER_RECEIPT_SHA256_8e39b5060b9cf794413b3189141706f80244d566eb19e3aff197e043705ba36e",
-          "PREDECESSOR_VALIDATED_CANDIDATE_HEAD_9eda5626efefa6cf4cf0f63e861166c91b538b14"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_SUCCESSOR_20260809_001"
-      },
-      "procedureLocatorDigest": "72c4777fd66f596f11a905f0438917ae60c10de1285af3f5552ec5f208b21a53",
-      "released": false,
-      "requestDigest": "bc4cf097839f2755ef32cc0acbff912ce97b45617919b26e705cdc0031e4ce56",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "859f7e84a9f661a34e0acf214a409a7f6a86729771b9f6de401694bd25e66d40",
-      "state": "ADMITTED_LOCKED"
-    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -13291,6 +13263,35 @@
       "requestDigest": "9d1ac236e34a370e6ba81f287b5ac4ebec0edf2ada03ef17c4a435b80a729a59",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7f228a2b6a4ce140cf5640ce10b3c62509d8f69fb1b2f12d4d388aaf750fdde8",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "25355a1b8aaec3cc60f90a6f6335dd5aa796b267",
+      "lockGeneration": 896,
+      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_SCOPE",
+      "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_20260809_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+        "lockGeneration": 891,
+        "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_SCOPE",
+        "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_20260809_001",
+        "preservedEvidenceRefs": [
+          "PREDECESSOR_ADMISSION_RECEIPT_SHA256_274605fc5ca6b2088237662f6af335af950c5fcfed632824b3181523fc1f2b98",
+          "PREDECESSOR_ROUTER_RECEIPT_SHA256_8e39b5060b9cf794413b3189141706f80244d566eb19e3aff197e043705ba36e",
+          "PREDECESSOR_VALIDATED_CANDIDATE_HEAD_9eda5626efefa6cf4cf0f63e861166c91b538b14"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_ROUTER_REGISTRATION_SUCCESSOR_20260809_001"
+      },
+      "procedureLocatorDigest": "72c4777fd66f596f11a905f0438917ae60c10de1285af3f5552ec5f208b21a53",
+      "released": true,
+      "requestDigest": "bc4cf097839f2755ef32cc0acbff912ce97b45617919b26e705cdc0031e4ce56",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "859f7e84a9f661a34e0acf214a409a7f6a86729771b9f6de401694bd25e66d40",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

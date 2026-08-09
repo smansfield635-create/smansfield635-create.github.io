@@ -661,37 +661,6 @@
       "scopeHash": "77e9d50eb7b12a10edb88aa4520d9d7c1333f174f9fbbc325bf8f0234749d07e",
       "state": "ADMITTED_LOCKED"
     },
-    "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59": {
-      "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
-      "lockGeneration": 855,
-      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
-      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002_SUCCESSOR_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "331284949940c95db80a332235492de4c80d3d43",
-        "lockGeneration": 825,
-        "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
-        "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002",
-        "preservedEvidenceRefs": [
-          "GENERATION_825_CANONICAL_ADMISSION",
-          "RUN_31335005724_PREDECESSOR_FIVE_PATH_ROUTER_PASS_REFERENCE_ONLY",
-          "GENERATION_839_CARRIER_PASS_CLOSED",
-          "PR_848_CARRIER_GAP_CLOSED_BOUNDED_01DA797F",
-          "GEN825_APHI_MANIFEST_BLOB_MISMATCH_DISCOVERED",
-          "GEN825_PR468_PR544_SOURCE_IDENTITIES_UNRESOLVABLE_DISCOVERED"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_PHI1_GEN825_TO_CURRENT_HEAD_CORRECTED_IDENTITIES_20260809_001"
-      },
-      "procedureLocatorDigest": "0e178ebdc20ebc20af3b1d2a93e60eda094c0f47d48837d8531c77d5184ebff0",
-      "released": false,
-      "requestDigest": "ab3824965e77bc7b254ed2ff1d6c881f406045899e48ca6664a2261cc8c622b4",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
-      "state": "ADMITTED_LOCKED"
-    },
     "829f23705557beebb52268181d148379af118f0a65d7eb5875e615a79492af58": {
       "governingHead": "5298f541c05097c96ec65ef60cb9de7735652b07",
       "lockGeneration": 164,
@@ -12254,6 +12223,38 @@
         "transitionId": "H_EARTH_HC02_GEN660_TO_CURRENT_MAIN_01DA797F_20260809_002"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+      "lockGeneration": 855,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "331284949940c95db80a332235492de4c80d3d43",
+        "lockGeneration": 825,
+        "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_002",
+        "preservedEvidenceRefs": [
+          "GENERATION_825_CANONICAL_ADMISSION",
+          "RUN_31335005724_PREDECESSOR_FIVE_PATH_ROUTER_PASS_REFERENCE_ONLY",
+          "GENERATION_839_CARRIER_PASS_CLOSED",
+          "PR_848_CARRIER_GAP_CLOSED_BOUNDED_01DA797F",
+          "GEN825_APHI_MANIFEST_BLOB_MISMATCH_DISCOVERED",
+          "GEN825_PR468_PR544_SOURCE_IDENTITIES_UNRESOLVABLE_DISCOVERED"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_PHI1_GEN825_TO_CURRENT_HEAD_CORRECTED_IDENTITIES_20260809_001"
+      },
+      "procedureLocatorDigest": "0e178ebdc20ebc20af3b1d2a93e60eda094c0f47d48837d8531c77d5184ebff0",
+      "released": true,
+      "requestDigest": "ab3824965e77bc7b254ed2ff1d6c881f406045899e48ca6664a2261cc8c622b4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
+      "state": "TERMINAL",
+      "terminalDisposition": "VOIDED"
     }
   ]
 }

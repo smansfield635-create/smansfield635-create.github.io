@@ -1,0 +1,143 @@
+{
+  "contract": "LAWS_CONTEXTUAL_MECHANICAL_TRANSFER_IMI_FACTOR_ADMISSION_v1",
+  "mode": "IMI_FACTOR_ADMISSION_ONLY",
+  "status": "ADMITTED_FOR_BOUNDED_ROUTE_CONFIGURATION",
+  "subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+  "governing_imi_specification": "IMI_OBSERVER_GRADE_SCORING_INSTRUMENT_SPECIFICATION_v1",
+  "imi_core_version": "1.0.0",
+  "destination_interface_contract": "LAWS_CONTEXTUAL_STATE_INTERFACE_CONTRACT_v1",
+  "candidate_donor": {
+    "path": "assets/compass/compass.controller.js",
+    "blob_sha": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+    "candidate_transfer_scope": [
+      "snapshot mechanics",
+      "guarded transaction skeleton",
+      "restoration skeleton"
+    ]
+  },
+  "excluded_candidate_factor": {
+    "name": "COORDINATE_COMPATIBILITY",
+    "disposition": "REJECT_NOT_APPLICABLE",
+    "reason": "The bounded transfer unit is state/transaction/restoration mechanics and does not transfer Euclidean geometry or coordinate semantics."
+  },
+  "admitted_factors": [
+    {
+      "factor_id": "MT01",
+      "factor_name": "DONOR_IDENTITY_TRACEABILITY",
+      "semantic_definition": "Availability of an exact, versioned, content-addressed donor artifact and exact candidate transfer unit.",
+      "Q1_semantically_distinct": "YES",
+      "Q2_necessary_for_route": "YES_REQUIRED",
+      "Q5_substitute": "NO_WITHIN_THIS_ROUTE",
+      "Q6_dependency": "NO_DEPENDENCY_FLAG",
+      "Q7_zero_observable": "YES",
+      "Q8_directional_normalization": "YES_BINARY",
+      "Q9_source_classes_declared": ["SC2", "SC4"],
+      "zero_definition": "Any required donor commit/path/blob/transfer-unit identity is unresolved or inconsistent.",
+      "one_definition": "All required donor commit/path/blob/transfer-unit identities are exact and mutually consistent.",
+      "disposition": "ADMIT_REQUIRED"
+    },
+    {
+      "factor_id": "MT02",
+      "factor_name": "MECHANICAL_SEMANTIC_SEPARABILITY",
+      "semantic_definition": "Ability to isolate the candidate mechanics from donor object identity, taxonomy, containment, route meaning, standing, or domain semantics.",
+      "Q1_semantically_distinct": "YES",
+      "Q2_necessary_for_route": "YES_REQUIRED",
+      "Q5_substitute": "NO_WITHIN_THIS_ROUTE",
+      "Q6_dependency": "NO_DEPENDENCY_FLAG",
+      "Q7_zero_observable": "YES",
+      "Q8_directional_normalization": "YES_BINARY",
+      "Q9_source_classes_declared": ["SC2", "SC4", "SC5"],
+      "zero_definition": "The candidate mechanic cannot operate without importing one or more prohibited donor semantics.",
+      "one_definition": "The candidate mechanic can be specified and executed as destination-neutral mechanics with prohibited donor semantics stripped.",
+      "disposition": "ADMIT_REQUIRED"
+    },
+    {
+      "factor_id": "MT03",
+      "factor_name": "DESTINATION_INTERFACE_COMPATIBILITY",
+      "semantic_definition": "Availability of a bounded adapter mapping from candidate donor mechanics to the frozen Laws contextual state interface without changing destination authority semantics.",
+      "Q1_semantically_distinct": "YES",
+      "Q2_necessary_for_route": "YES_REQUIRED",
+      "Q5_substitute": "NO_WITHIN_THIS_ROUTE",
+      "Q6_dependency": "ASSIGN_DEPENDENCY_GROUP:ADAPTER_EXECUTION_COMPATIBILITY",
+      "Q7_zero_observable": "YES",
+      "Q8_directional_normalization": "YES_BINARY",
+      "Q9_source_classes_declared": ["SC2", "SC4"],
+      "zero_definition": "At least one required destination interface operation has no bounded semantics-preserving mapping from the donor transfer unit.",
+      "one_definition": "Every required candidate transfer operation has a bounded mapping to the destination interface without modifying destination authority semantics.",
+      "disposition": "ADMIT_REQUIRED"
+    },
+    {
+      "factor_id": "MT04",
+      "factor_name": "RUNTIME_DEPENDENCY_CLOSURE",
+      "semantic_definition": "Availability of all runtime dependencies required by the transferred mechanics without requiring prohibited donor semantic state.",
+      "Q1_semantically_distinct": "YES",
+      "Q2_necessary_for_route": "YES_REQUIRED",
+      "Q5_substitute": "NO_WITHIN_THIS_ROUTE",
+      "Q6_dependency": "ASSIGN_DEPENDENCY_GROUP:ADAPTER_EXECUTION_COMPATIBILITY",
+      "Q7_zero_observable": "YES",
+      "Q8_directional_normalization": "YES_BINARY",
+      "Q9_source_classes_declared": ["SC2", "SC4"],
+      "zero_definition": "At least one required mechanical runtime dependency is unavailable or only satisfiable by importing prohibited donor semantics.",
+      "one_definition": "All required runtime dependencies are available directly or through bounded destination adapters without prohibited semantic import.",
+      "disposition": "ADMIT_REQUIRED"
+    },
+    {
+      "factor_id": "MT05",
+      "factor_name": "DESTINATION_INVARIANT_PRESERVATION",
+      "semantic_definition": "Ability of the bounded transfer to preserve the frozen contextual topology invariants, state separation, fail-closed behavior, and context-history authority.",
+      "Q1_semantically_distinct": "YES",
+      "Q2_necessary_for_route": "YES_REQUIRED",
+      "Q5_substitute": "NO_WITHIN_THIS_ROUTE",
+      "Q6_dependency": "ASSIGN_DEPENDENCY_GROUP:ADAPTER_EXECUTION_COMPATIBILITY",
+      "Q7_zero_observable": "YES",
+      "Q8_directional_normalization": "YES_BINARY",
+      "Q9_source_classes_declared": ["SC2", "SC4", "SC5"],
+      "zero_definition": "The candidate transfer necessarily violates at least one frozen topology/interface invariant.",
+      "one_definition": "All frozen topology/interface invariants can be preserved by the bounded transfer and adapter contract.",
+      "disposition": "ADMIT_REQUIRED"
+    },
+    {
+      "factor_id": "MT06",
+      "factor_name": "VERIFICATION_OBSERVABILITY",
+      "semantic_definition": "Ability to verify the transferred snapshot/transaction/restoration mechanics using predeclared observable checks without inferring success from visual state.",
+      "Q1_semantically_distinct": "YES",
+      "Q2_necessary_for_route": "YES_REQUIRED",
+      "Q5_substitute": "NO_WITHIN_THIS_ROUTE",
+      "Q6_dependency": "NO_DEPENDENCY_FLAG",
+      "Q7_zero_observable": "YES",
+      "Q8_directional_normalization": "YES_BINARY",
+      "Q9_source_classes_declared": ["SC2", "SC4"],
+      "zero_definition": "One or more required transfer behaviors cannot be deterministically observed under a predeclared verification procedure.",
+      "one_definition": "All required transfer behaviors have deterministic nonvisual observables and predeclared verification procedures.",
+      "disposition": "ADMIT_REQUIRED"
+    }
+  ],
+  "duplicate_groups": {},
+  "dependency_groups": {
+    "ADAPTER_EXECUTION_COMPATIBILITY": ["MT03", "MT04", "MT05"]
+  },
+  "route_level_alternative": {
+    "native_implementation_may_exist": true,
+    "must_be_scored_as_separate_route_if_formalized": true,
+    "may_not_silently_replace_transfer_route": true
+  },
+  "admission_result": {
+    "factor_count": 6,
+    "all_required": true,
+    "all_have_observable_zero": true,
+    "all_have_frozen_directional_normalizer": true,
+    "all_have_declared_source_classes": true,
+    "unresolved_duplicates": false,
+    "route_configuration_may_proceed": true,
+    "numeric_scoring_authorized_by_this_record": false
+  },
+  "preserved_boundaries": {
+    "product_mutation": false,
+    "donor_transfer": false,
+    "relation_taxonomy_freeze": false,
+    "IMI_observations_collected": false,
+    "IMI_numeric_result_claimed": false,
+    "merge_authorized": false,
+    "deployment_authorized": false
+  }
+}

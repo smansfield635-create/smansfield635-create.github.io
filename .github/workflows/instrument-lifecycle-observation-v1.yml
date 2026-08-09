@@ -33,6 +33,8 @@ env:
   GATE_PATH: .github/ai-router/instrument-lifecycle/instrument-lifecycle-gate.v1.mjs
   SELF_TEST_PATH: .github/ai-router/instrument-lifecycle/instrument-lifecycle-self-test.v1.mjs
   WORKFLOW_PATH: .github/workflows/instrument-lifecycle-observation-v1.yml
+  CONTINUITY_GATE_PATH: .github/ai-router/system-continuity/progressive-system-continuity-gate.v1.mjs
+  CONTINUITY_GAP_REGISTRY_PATH: .github/ai-router/system-continuity/gap-registry.v1.json
   ADMISSION_GENERATION: '731'
   ADMISSION_RECEIPT_SHA256: 2dffcc0b1ec6d78cb7a45c3146f3f2c7d2de34bf922bb5494d8fae2f11a2509d
 
@@ -161,6 +163,69 @@ jobs:
           fs.writeFileSync(process.env.RUNNER_TEMP+'/root-proposal.json',JSON.stringify(out,null,2)+'\n');
           NODE
 
+      - name: Assess candidate continuity as explicitly open
+        shell: bash
+        run: |
+          set -euo pipefail
+          SUBJECT_HEAD="$(git rev-parse HEAD^{commit})"
+          export SUBJECT_HEAD
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const request={
+            schema:'PROGRESSIVE_SYSTEM_CONTINUITY_ASSESSMENT_REQUEST_v1',
+            assessmentId:`INSTRUMENT_LIFECYCLE_OBSERVATION_CANDIDATE_${process.env.SUBJECT_HEAD.slice(0,12)}`,
+            subjectHead:process.env.SUBJECT_HEAD,
+            systemId:'REPOSITORY_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CLASSIFICATION_v1',
+            changedPaths:[
+              'AI_ENTRYPOINT.json',
+              '.github/ai-router/router.v1.json',
+              '.github/ai-router/system-continuity/gap-registry.v1.json',
+              '.github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json',
+              '.github/ai-router/instrument-lifecycle/instrument-lifecycle-registry.v1.json',
+              '.github/ai-router/instrument-lifecycle/protected-live-operations.v1.json',
+              '.github/ai-router/instrument-lifecycle/instrument-lifecycle-gate.v1.mjs',
+              '.github/ai-router/instrument-lifecycle/instrument-lifecycle-self-test.v1.mjs',
+              '.github/workflows/instrument-lifecycle-observation-v1.yml'
+            ],
+            interfaceKeys:['GITHUB_ACTIONS_WORKFLOW_STATE','REPOSITORY_AI_ROUTER_REGISTRY_v1','REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1','INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1'],
+            relatedGapIds:['WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY'],
+            producerContracts:[{
+              contractId:'INSTRUMENT_LIFECYCLE_OBSERVER_PRODUCER_v1',
+              operationIdPolicy:'ANY_EXPLICIT_OPERATION_ID',
+              outputReceiptSchemas:['INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1'],
+              interfaceKeys:['GITHUB_ACTIONS_WORKFLOW_STATE','REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1']
+            }],
+            consumerContracts:[{
+              contractId:'REPOSITORY_LIFECYCLE_GOVERNANCE_CONSUMER_v1',
+              operationIdPolicy:'ANY_EXPLICIT_OPERATION_ID',
+              acceptedReceiptSchemas:['INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1'],
+              interfaceKeys:['REPOSITORY_AI_ROUTER_REGISTRY_v1','REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1']
+            }],
+            edges:[{
+              edgeId:'OBSERVATION_RECEIPT_TO_LIFECYCLE_GOVERNANCE',
+              producerContractId:'INSTRUMENT_LIFECYCLE_OBSERVER_PRODUCER_v1',
+              consumerContractId:'REPOSITORY_LIFECYCLE_GOVERNANCE_CONSUMER_v1',
+              producerReceiptSchema:'INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1',
+              adapterId:null
+            }],
+            adapters:[],
+            proofs:{
+              localCorrectness:{status:'PASS',refs:['INSTRUMENT_LIFECYCLE_SELF_TEST_RECEIPT_v1:13_OF_13']},
+              interfaceCompatibility:{status:'PASS',refs:['DIRECT_RECEIPT_SCHEMA_AND_OPERATION_POLICY_MATCH']},
+              transitionSimulation:{status:'NOT_PROVEN',refs:[]},
+              remoteInvocation:{status:'NOT_PROVEN',refs:[]},
+              postMergeContinuity:{status:'NOT_PROVEN',refs:[]}
+            },
+            requestedClosure:'OPEN'
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/continuity-request.json',JSON.stringify(request,null,2)+'\n');
+          NODE
+          node "$CONTINUITY_GATE_PATH" \
+            --input "$RUNNER_TEMP/continuity-request.json" \
+            --registry "$CONTINUITY_GAP_REGISTRY_PATH" \
+            --output "$RUNNER_TEMP/continuity-assessment.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/continuity-assessment.json');if(r.result!=='PASS'||r.classification!=='OPEN'||r.systemClosureGranted!==false||r.repositoryWritesAuthorized!==false||r.lifecycleAuthorityGranted!==false||r.mergeAuthorityGranted!==false)process.exit(1)"
+
       - name: Build exact-head observation receipts
         shell: bash
         run: |
@@ -169,6 +234,7 @@ jobs:
           cp "$RUNNER_TEMP/self-test.json" artifacts/instrument-lifecycle/self-test.json
           cp "$RUNNER_TEMP/observation.json" artifacts/instrument-lifecycle/observation-receipt.json
           cp "$RUNNER_TEMP/root-proposal.json" artifacts/instrument-lifecycle/router-receipt.json
+          cp "$RUNNER_TEMP/continuity-assessment.json" artifacts/instrument-lifecycle/continuity-assessment.json
           test -z "$(git status --porcelain=v1 --untracked-files=all | grep -v '^?? artifacts/instrument-lifecycle/' || true)"
 
       - uses: actions/upload-artifact@v4

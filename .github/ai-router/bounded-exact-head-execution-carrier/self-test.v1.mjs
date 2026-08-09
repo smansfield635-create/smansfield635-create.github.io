@@ -7,11 +7,66 @@ import { fileURLToPath } from 'node:url';
 import { stable, hashObject, validateRequest, validateAndResolve, makePageArchitectureBundle } from './carrier.v1.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
+const SELF_TEST_REPO_PATH = '.github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs';
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, '.github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json'), 'utf8'));
 const toolset = JSON.parse(fs.readFileSync(path.join(ROOT, '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json'), 'utf8'));
 
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 function nonce(char = 'a') { return char.repeat(64); }
+function git(args, cwd = ROOT) { return cp.execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 }).trim(); }
+function executionHead() { return git(['rev-parse', 'HEAD^{commit}']); }
+function assertClean(cwd) {
+  const status = git(['status', '--porcelain=v1', '--untracked-files=all'], cwd);
+  if (status !== '') throw new Error(`WORKTREE_NOT_CLEAN:${status}`);
+}
+function pullRequestHeadFromEvent() {
+  if (process.env.CARRIER_EXACT_HEAD_REEXEC === '1' || process.env.GITHUB_EVENT_NAME !== 'pull_request' || !process.env.GITHUB_EVENT_PATH) return null;
+  const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+  const head = event?.pull_request?.head?.sha ?? null;
+  if (head == null) return null;
+  if (!/^[0-9a-f]{40}$/.test(head)) throw new Error(`PR_HEAD_INVALID:${head}`);
+  return head;
+}
+function runExactHeadReexecution(head) {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'bounded-carrier-exact-head-self-test-'));
+  const worktree = path.join(tempRoot, 'worktree');
+  const output = path.join(tempRoot, 'self-test.json');
+  let added = false;
+  try {
+    cp.execFileSync('git', ['cat-file', '-e', `${head}^{commit}`], { cwd: ROOT, stdio: 'ignore' });
+    cp.execFileSync('git', ['worktree', 'add', '--detach', worktree, head], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 32 * 1024 * 1024 });
+    added = true;
+    const observedHead = git(['rev-parse', 'HEAD^{commit}'], worktree);
+    if (observedHead !== head) throw new Error(`EXACT_HEAD_CHECKOUT_MISMATCH:${head}:${observedHead}`);
+    assertClean(worktree);
+    cp.execFileSync(process.execPath, [SELF_TEST_REPO_PATH, '--output', output], {
+      cwd: worktree,
+      env: { ...process.env, CARRIER_EXACT_HEAD_REEXEC: '1' },
+      shell: false,
+      stdio: ['ignore', 'pipe', 'pipe'],
+      maxBuffer: 32 * 1024 * 1024
+    });
+    assertClean(worktree);
+    const receipt = JSON.parse(fs.readFileSync(output, 'utf8'));
+    if (receipt.result !== 'PASS' || receipt.executionHead !== head || receipt.passed !== receipt.total || receipt.nativeRegressionPassCount !== receipt.nativeRegressionCount) throw new Error('EXACT_HEAD_SELF_TEST_NONPASS');
+    return stable({
+      result: 'PASS',
+      requestedHead: head,
+      observedHead,
+      selfTestResult: receipt.result,
+      fixturePassCount: receipt.passed,
+      fixtureCount: receipt.total,
+      nativeRegressionPassCount: receipt.nativeRegressionPassCount,
+      nativeRegressionCount: receipt.nativeRegressionCount,
+      workingTreeCleanBeforeAndAfter: true
+    });
+  } finally {
+    if (added) {
+      try { cp.execFileSync('git', ['worktree', 'remove', '--force', worktree], { cwd: ROOT, stdio: 'ignore' }); } catch {}
+    }
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
+}
 function finalizeFixture(operationRequest, constructionProcedure, admissionReceipt, generation, scopeHash) {
   const requestDigest = hashObject(operationRequest);
   const procedureDigest = hashObject(constructionProcedure);
@@ -291,10 +346,11 @@ export function runSelfTest() {
 
   const fixturePass = results.every(item => item.observed === item.expected || (item.expected === 'PASS' && item.observed === 'PASS'));
   const regressionPass = regressions.every(item => item.result === 'PASS');
-  const pass = fixturePass && regressionPass;
   return stable({
     schema: 'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_SELF_TEST_RECEIPT_v1',
-    result: pass ? 'PASS' : 'FAIL',
+    result: fixturePass && regressionPass ? 'PASS' : 'FAIL',
+    executionHead: executionHead(),
+    exactHeadReexecutionMode: process.env.CARRIER_EXACT_HEAD_REEXEC === '1',
     total: results.length,
     passed: results.filter(item => item.observed === item.expected || (item.expected === 'PASS' && item.observed === 'PASS')).length,
     nativeRegressionCount: regressions.length,
@@ -313,7 +369,12 @@ function main() {
   const args = process.argv.slice(2);
   const index = args.indexOf('--output');
   const output = index >= 0 ? args[index + 1] : null;
-  const receipt = runSelfTest();
+  const local = runSelfTest();
+  let exactCandidateReexecution = null;
+  const prHead = pullRequestHeadFromEvent();
+  if (prHead) exactCandidateReexecution = runExactHeadReexecution(prHead);
+  const pass = local.result === 'PASS' && (exactCandidateReexecution == null || exactCandidateReexecution.result === 'PASS');
+  const receipt = stable({ ...local, result: pass ? 'PASS' : 'FAIL', exactCandidateReexecution });
   if (output) {
     fs.mkdirSync(path.dirname(path.resolve(output)), { recursive: true });
     fs.writeFileSync(path.resolve(output), `${JSON.stringify(receipt, null, 2)}\n`);

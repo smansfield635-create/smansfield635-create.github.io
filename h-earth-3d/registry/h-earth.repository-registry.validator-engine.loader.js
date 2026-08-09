@@ -1,9 +1,8 @@
 /**
- * H-Earth repository registry validator dependency loader v8 successor.
+ * H-Earth repository registry validator dependency loader v9 successor.
  *
- * Preserves the complete predecessor chain and advances only the active
- * additive facade needed for HC02 Page Excellence V2 execution-carrier and
- * presentation-host path resolution.
+ * Preserves the complete predecessor chain and adds audit-only recognition for
+ * the exact two already-live GPU identity consumers required by HC05 preflight.
  */
 
 import {
@@ -13,9 +12,12 @@ import {
 import {
   verifyHEarthLiveExperienceMaturityConvergenceAcceptedOccurrences
 } from './accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js';
-import registryFacade, {
+import {
   verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2
 } from './accepted-amendments/h-earth.repository-registry.hc02-page-excellence-execution-carrier-scope.v2.js';
+import registryFacade, {
+  verifyHEarthHC05LiveGPUPathRecognition
+} from './accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -26,6 +28,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     verifyHEarthLiveExperienceMaturityConvergenceAcceptedOccurrences();
   const hc02CarrierScopeVerification =
     verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2();
+  const hc05LiveGPUPathRecognitionVerification =
+    verifyHEarthHC05LiveGPUPathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -47,6 +51,19 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02CarrierScopeVerification.checks.noUnboxingAuthority === true,
     hc02IndexHtmlPredecessorRegistrationPreserved:
       hc02CarrierScopeVerification.checks.indexHtmlPredecessorRegistrationPreserved === true,
+    hc05LiveGPUPathRecognitionEligible:
+      hc05LiveGPUPathRecognitionVerification.eligible === true,
+    hc05ExactTwoRuntimePathsResolved:
+      hc05LiveGPUPathRecognitionVerification.checks.exactRuntimePathCount === true &&
+      hc05LiveGPUPathRecognitionVerification.checks.allRuntimePathsResolve === true,
+    hc05RuntimeBlobCustodyPreserved:
+      hc05LiveGPUPathRecognitionVerification.checks.exactR3ABlob === true &&
+      hc05LiveGPUPathRecognitionVerification.checks.exactCP2Blob === true,
+    hc05AuditOnlyNoAuthorityLeak:
+      hc05LiveGPUPathRecognitionVerification.checks.auditOnly === true &&
+      hc05LiveGPUPathRecognitionVerification.checks.noProductAuthority === true &&
+      hc05LiveGPUPathRecognitionVerification.checks.noRuntimeMutationAuthority === true &&
+      hc05LiveGPUPathRecognitionVerification.checks.noRendererAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -66,7 +83,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v8_HC02_PAGE_EXCELLENCE_EXECUTION_CARRIER_V2_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v9_HC05_LIVE_GPU_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -75,7 +92,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       liveExperienceAcceptedOccurrences:
         acceptedOccurrenceVerification.eligible === true,
       hc02PageExcellenceExecutionCarrierScopeV2:
-        hc02CarrierScopeVerification.eligible === true
+        hc02CarrierScopeVerification.eligible === true,
+      hc05LiveGPUPathRecognition:
+        hc05LiveGPUPathRecognitionVerification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
@@ -89,7 +108,23 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     }),
     hc02PageExcellenceExecutionCarrierScopeVerification:
       hc02CarrierScopeVerification,
-    hc02PageExcellenceExecutionCarrierScopeChecks: deepFreeze(successorChecks),
+    hc02PageExcellenceExecutionCarrierScopeChecks: deepFreeze({
+      hc02CarrierScopeEligible: successorChecks.hc02CarrierScopeEligible,
+      hc02CarrierPathResolutionOnly: successorChecks.hc02CarrierPathResolutionOnly,
+      hc02IndexHtmlPredecessorRegistrationPreserved:
+        successorChecks.hc02IndexHtmlPredecessorRegistrationPreserved
+    }),
+    hc05LiveGPUPathRecognitionVerification,
+    hc05LiveGPUPathRecognitionChecks: deepFreeze({
+      hc05LiveGPUPathRecognitionEligible:
+        successorChecks.hc05LiveGPUPathRecognitionEligible,
+      hc05ExactTwoRuntimePathsResolved:
+        successorChecks.hc05ExactTwoRuntimePathsResolved,
+      hc05RuntimeBlobCustodyPreserved:
+        successorChecks.hc05RuntimeBlobCustodyPreserved,
+      hc05AuditOnlyNoAuthorityLeak:
+        successorChecks.hc05AuditOnlyNoAuthorityLeak
+    }),
     boundary: deepFreeze({
       ...base.boundary,
       liveExperienceAcceptedOccurrenceProvenanceOnly: true,
@@ -97,7 +132,12 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02PageExcellenceExecutionCarrierPathResolutionOnly: true,
       hc02PageExcellenceExecutionCarrierProductMutationAuthorityCreated: false,
       hc02PageExcellenceExecutionCarrierHC02AdmissionAuthorityCreated: false,
-      hc02PageExcellenceExecutionCarrierUnboxingAuthorityCreated: false
+      hc02PageExcellenceExecutionCarrierUnboxingAuthorityCreated: false,
+      hc05LiveGPUPathRecognitionOnly: true,
+      hc05ProductMutationAuthorityCreated: false,
+      hc05RuntimeMutationAuthorityCreated: false,
+      hc05RendererAuthorityCreated: false,
+      hc05MergeAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
@@ -106,7 +146,12 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02PageExcellenceExecutionCarrierScopeLoaded: true,
       hc02PageExcellenceExecutionCarrierProductMutationAuthorized: false,
       hc02PageExcellenceExecutionCarrierHC02AdmissionAuthorized: false,
-      hc02PageExcellenceExecutionCarrierUnboxingAuthorized: false
+      hc02PageExcellenceExecutionCarrierUnboxingAuthorized: false,
+      hc05LiveGPUPathRecognitionLoaded: true,
+      hc05LiveGPUProductMutationAuthorized: false,
+      hc05LiveGPURuntimeMutationAuthorized: false,
+      hc05LiveGPURendererMutationAuthorized: false,
+      hc05LiveGPUMergeAuthorized: false
     })
   });
 }

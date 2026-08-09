@@ -49,11 +49,20 @@ jobs:
           set -euo pipefail
           node tools/repository-ai-entry-router.mjs \
             --mutation-intent \
-            --path validation/README.md \
             --path .github/workflows/estate-validation-v1.yml \
-            --task "estate-validation-route-check" \
+            --path validation/integration/semantic-evidence-conformance-v1/README.md \
+            --path validation/integration/semantic-evidence-conformance-v1/contracts.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/conformance-core.v1.mjs \
+            --path validation/integration/semantic-evidence-conformance-v1/semantic-receipt-profile.v1.schema.json \
+            --path validation/integration/semantic-evidence-conformance-v1/authority-transition-ledger.schema.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/valid-semantic-decision.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/invalid-unknown-edge.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/invalid-ai-claim-inflation.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/fixtures/invalid-teardown-before-capture.v1.json \
+            --path validation/integration/semantic-evidence-conformance-v1/verify.v1.mjs \
+            --task "estate-semantic-evidence-conformance-route-check" \
             --output /tmp/estate-validation-router-route.json
-          node -e "const r=require('/tmp/estate-validation-router-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
+          node -e "const r=require('/tmp/estate-validation-router-route.json');if(r.disposition!=='PASS'||r.routes.length!==11||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
 
       - name: Verify estate validation sidecar
         run: |

@@ -124,6 +124,41 @@
         "POST_MERGE_CONTINUITY_PROOF"
       ],
       "authorityCreated": false
+    },
+    {
+      "gapId": "EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN",
+      "status": "OPEN",
+      "discoveredAtHead": "64ec16ce6a4f65c72d54a5460071c1c20caf126f",
+      "coordinationIssue": 830,
+      "summary": "Exact-head safety currently forces successor/proof reconstruction for every main movement even when a complete dependency declaration can prove the cumulative change is irrelevant; differential continuity must suppress only provably non-impacting churn while preserving strict successor fallback.",
+      "interfaceKeys": [
+        "DIFFERENTIAL_CONTINUITY_RECEIPT_v1",
+        "DEPENDENCY_SURFACE_RECEIPT_v1",
+        "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
+        "LATEST_MAIN_CUMULATIVE_COMPARE"
+      ],
+      "pathScopes": [
+        ".github/ai-router/differential-continuity/",
+        ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
+        ".github/workflows/remote-operation-successor-v1.yml",
+        "AI_ENTRYPOINT.json",
+        ".github/ai-router/router.v1.json"
+      ],
+      "evidenceRefs": [
+        "PR_827_VALIDATION_ONLY_PROOF_CHURN",
+        "PR_828_VALIDATION_ONLY_PROOF_CHURN",
+        "ISSUE_830_DIFFERENTIAL_CONTINUITY_COORDINATION",
+        "GENERATION_784_CORRECTED_DIFFERENTIAL_CONTINUITY_ADMISSION"
+      ],
+      "closureRequirements": [
+        "DETERMINISTIC_DIFFERENTIAL_SELF_TEST_PASS",
+        "PINNED_STRICT_SUCCESSOR_REGRESSION_PASS",
+        "ROUTER_AND_ROOT_DISCOVERY_PASS",
+        "REMOTE_DIFFERENTIAL_ASSESSMENT_PASS",
+        "POST_MERGE_PUSH_VALIDATION_PASS",
+        "REAL_COMPLETE_DEPENDENCY_SURFACE_DISJOINT_MAIN_MOVE_CARRY_FORWARD_PROOF"
+      ],
+      "authorityCreated": false
     }
   ]
 }

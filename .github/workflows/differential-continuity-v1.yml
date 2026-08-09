@@ -1,0 +1,222 @@
+name: Differential Continuity v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
+      - '.github/ai-router/router.v1.json'
+      - '.github/workflows/differential-continuity-v1.yml'
+      - 'AI_ENTRYPOINT.json'
+  push:
+    branches: [main]
+    paths:
+      - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
+      - '.github/ai-router/router.v1.json'
+      - '.github/workflows/differential-continuity-v1.yml'
+      - 'AI_ENTRYPOINT.json'
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: differential-continuity-${{ github.event_name }}-${{ github.event.issue.number || github.ref }}
+  cancel-in-progress: false
+
+env:
+  DC_DIR: .github/ai-router/differential-continuity
+  PINNED_SUCCESSOR_GATE_BLOB: b174bb20a19e62f9aaf6e819171e24416321b9e4
+  PINNED_SUCCESSOR_SELF_TEST_BLOB: f4e9d4beb77cb603ea2c8e360790e97c1b511b1c
+  PINNED_SUCCESSOR_PROTOCOL_BLOB: 3e3368b96ca13363115ed245b655e7f5c9046c2a
+  PINNED_REMOTE_SUCCESSOR_WORKFLOW_BLOB: 8017fad21d98ea9e68417dbabe71b51302aa8c4a
+
+jobs:
+  validate-package:
+    if: github.event_name != 'issue_comment'
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify bounded candidate surface and pinned strict successor identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "$PINNED_SUCCESSOR_GATE_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "$PINNED_SUCCESSOR_SELF_TEST_BLOB"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/successor-protocol.v1.json)" = "$PINNED_SUCCESSOR_PROTOCOL_BLOB"
+          test "$(git rev-parse HEAD:.github/workflows/remote-operation-successor-v1.yml)" = "$PINNED_REMOTE_SUCCESSOR_WORKFLOW_BLOB"
+          if [ "${{ github.event_name }}" = 'pull_request' ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
+            cat > "$RUNNER_TEMP/allowed.txt" <<'PATHS'
+          .github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs
+          .github/ai-router/differential-continuity/differential-continuity-protocol.v1.json
+          .github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs
+          .github/ai-router/router.v1.json
+          .github/ai-router/system-continuity/gap-registry.v1.json
+          .github/workflows/differential-continuity-v1.yml
+          .github/workflows/integrated-development-pipeline-v1.yml
+          AI_ENTRYPOINT.json
+          PATHS
+            sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
+            OUTSIDE="$(comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" || true)"
+            test -z "$OUTSIDE"
+          fi
+
+      - name: Run differential continuity, strict-successor, and integrated-pipeline regression self-tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check "$DC_DIR/differential-continuity-gate.v1.mjs"
+          node --check "$DC_DIR/differential-continuity-self-test.v1.mjs"
+          node "$DC_DIR/differential-continuity-self-test.v1.mjs" --output "$RUNNER_TEMP/differential-self-test.json"
+          node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs --output "$RUNNER_TEMP/successor-self-test.json"
+          node .github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs --output "$RUNNER_TEMP/integrated-pipeline-self-test.json"
+          node - <<'NODE'
+          const fs=require('node:fs');
+          for (const name of ['differential-self-test.json','successor-self-test.json']) {
+            const r=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/${name}`,'utf8'));
+            if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.passCount!==r.testCount) throw new Error(`SELF_TEST_NONPASS:${name}`);
+          }
+          const integrated=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/integrated-pipeline-self-test.json`,'utf8'));
+          if(integrated.result!=='PASS'||integrated.failedCount!==0||integrated.physicalRetirementPerformed!==false||integrated.mergeAuthorityCreated!==false||integrated.productAuthorityCreated!==false) throw new Error('INTEGRATED_PIPELINE_SELF_TEST_NONPASS');
+          NODE
+
+      - name: Verify root discovery, router ownership, and open continuity gap
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('node:fs');
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const router=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const gaps=JSON.parse(fs.readFileSync('.github/ai-router/system-continuity/gap-registry.v1.json','utf8'));
+          const dc=entry.differentialContinuitySystem;
+          if(dc?.systemId!=='REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_v1') throw new Error('ROOT_DC_DISCOVERY_MISSING');
+          if(dc?.carryForwardMeaning!=='BOUNDED_RELEVANT_STATE_EQUIVALENCE_NOT_AUTHORITY_INHERITANCE') throw new Error('CARRY_FORWARD_SEMANTIC_MISMATCH');
+          if(dc?.strictSuccessorGate!=='.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs') throw new Error('STRICT_SUCCESSOR_FALLBACK_MISMATCH');
+          if(!router.routerInfrastructure?.ownedExactPaths?.includes('.github/workflows/differential-continuity-v1.yml')) throw new Error('DC_WORKFLOW_NOT_ROUTER_OWNED');
+          const gap=gaps.records?.find((r)=>r.gapId==='EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN');
+          if(!gap||gap.status!=='OPEN'||gap.authorityCreated!==false) throw new Error('DC_GAP_REGISTRATION_INVALID');
+          NODE
+          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/router-self-test.json');if(r.result!=='PASS')process.exit(1)"
+
+      - name: Exercise carry-forward, material-change, coalescing, and proof-lifecycle decisions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { assessDifferential } from './.github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs';
+          const base='1'.repeat(40), target='2'.repeat(40);
+          const dependencySurface={complete:true,paths:['control/critical/'],interfaceKeys:['CONTROL_INTERFACE'],evidenceRefs:['WORKFLOW_VALIDATION_FIXTURE']};
+          const disjoint=assessDifferential({assessmentId:'WORKFLOW_DISJOINT',baseHead:base,targetHead:target,dependencySurface,changedFiles:['product/unrelated.txt'],filesComplete:true,compareStatus:'ahead',proofCarrier:{kind:'VALIDATION_ONLY_PR',status:'SUPERSEDED',mergeAuthorized:false}});
+          const material=assessDifferential({assessmentId:'WORKFLOW_MATERIAL',baseHead:base,targetHead:target,dependencySurface,changedFiles:['control/critical/router.json'],filesComplete:true,compareStatus:'ahead'});
+          if(disjoint.result!=='PASS_CARRY_FORWARD_ADMISSIBLE'||disjoint.successorRequired!==false||disjoint.coalescedFromBaseDirectlyToTarget!==true) throw new Error('DISJOINT_FIXTURE_NONPASS');
+          if(disjoint.proofCarrierLifecycle?.classification!=='CLOSE_ELIGIBLE_SUPERSEDED'||disjoint.proofCarrierLifecycle?.closeEligible!==true) throw new Error('PROOF_LIFECYCLE_FIXTURE_NONPASS');
+          if(material.result!=='PASS_SUCCESSOR_REQUIRED'||material.successorRequired!==true) throw new Error('MATERIAL_FIXTURE_NONPASS');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/differential-continuity-receipt.json',JSON.stringify(disjoint,null,2)+'\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/dependency-surface-receipt.json',JSON.stringify({schema:'DEPENDENCY_SURFACE_RECEIPT_v1',result:'PASS_COMPLETE',dependencySurface,dependencySurfaceDigest:disjoint.dependencySurfaceDigest},null,2)+'\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/proof-carrier-lifecycle-receipt.json',JSON.stringify(disjoint.proofCarrierLifecycle,null,2)+'\n');
+          NODE
+
+      - name: Package validation evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/differential-continuity
+          cp "$RUNNER_TEMP/differential-self-test.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/successor-self-test.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/integrated-pipeline-self-test.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/router-self-test.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/differential-continuity-receipt.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/dependency-surface-receipt.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/proof-carrier-lifecycle-receipt.json" artifacts/differential-continuity/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: differential-continuity-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/differential-continuity/
+          if-no-files-found: error
+          retention-days: 90
+
+  remote-assessment:
+    if: github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'DIFFERENTIAL_CONTINUITY_REQUEST_V1')
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact installed default-branch head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Parse exact differential request
+        shell: bash
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const marker='DIFFERENTIAL_CONTINUITY_REQUEST_V1';
+          const body=process.env.COMMENT_BODY||'';
+          if(!body.startsWith(marker)) throw new Error('MARKER_MISMATCH');
+          const payload=body.slice(marker.length).trim();
+          if(!payload) throw new Error('REQUEST_JSON_MISSING');
+          const request=JSON.parse(payload);
+          if(request.schema!=='DIFFERENTIAL_CONTINUITY_REQUEST_v1') throw new Error('REQUEST_SCHEMA_MISMATCH');
+          if(request.repository!==process.env.GITHUB_REPOSITORY) throw new Error('REPOSITORY_MISMATCH');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/differential-request.json',JSON.stringify(request,null,2)+'\n');
+          NODE
+
+      - name: Execute read-only cumulative differential assessment
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node "$DC_DIR/differential-continuity-gate.v1.mjs" --differential-request "$RUNNER_TEMP/differential-request.json" --output "$RUNNER_TEMP/differential-continuity-receipt.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/differential-continuity-receipt.json');if(!['PASS_CARRY_FORWARD_ADMISSIBLE','PASS_SUCCESSOR_REQUIRED','FAIL_CLOSED_SUCCESSOR_REQUIRED'].includes(r.result))process.exit(1);if(r.repositoryMutationAuthorized!==false||r.mergeAuthorityCreated!==false)process.exit(1)"
+
+      - name: Return exact receipt to invoking conversation
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          { echo 'DIFFERENTIAL_CONTINUITY_RECEIPT_V1'; echo; echo '```json'; cat "$RUNNER_TEMP/differential-continuity-receipt.json"; echo '```'; } > "$RUNNER_TEMP/comment.md"
+          gh api "repos/${GITHUB_REPOSITORY}/issues/${ISSUE_NUMBER}/comments" --method POST -F body=@"$RUNNER_TEMP/comment.md" >/dev/null
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: differential-continuity-remote-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/differential-continuity-receipt.json
+          if-no-files-found: error
+          retention-days: 90

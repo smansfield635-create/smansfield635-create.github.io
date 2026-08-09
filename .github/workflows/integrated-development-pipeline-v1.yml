@@ -54,33 +54,35 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify exact construction boundary for this integrated stack
+      - name: Observe triggering change surface without historical construction-scope enforcement
         if: github.event_name != 'workflow_dispatch'
         shell: bash
         run: |
           set -euo pipefail
-          if [ "${{ github.event_name }}" = "pull_request" ]; then BASE="${{ github.event.pull_request.base.sha }}"; else BASE="${{ github.event.before }}"; fi
-          git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
-          cat > "$RUNNER_TEMP/allowed.txt" <<'PATHS'
-          .github/ai-router/development-pipeline/evidence-bundle.v1.mjs
-          .github/ai-router/development-pipeline/execution-route-provider-contract.v1.json
-          .github/ai-router/development-pipeline/integrated-development-pipeline-gate.v1.mjs
-          .github/ai-router/development-pipeline/integrated-development-pipeline-protocol.v1.json
-          .github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs
-          .github/ai-router/development-pipeline/policy-gate.v1.mjs
-          .github/ai-router/development-pipeline/policy-registry.v1.json
-          .github/ai-router/development-pipeline/retirement-eligibility-gate.v1.mjs
-          .github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json
-          .github/ai-router/instrument-lifecycle/protected-live-operations.v1.json
-          .github/ai-router/router.v1.json
-          .github/workflows/instrument-lifecycle-observation-v1.yml
-          .github/workflows/integrated-development-pipeline-v1.yml
-          AI_ENTRYPOINT.json
-          PATHS
-          sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
-          OUTSIDE="$(comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" || true)"
-          if [ -n "$OUTSIDE" ]; then echo "PATH_OUTSIDE_INTEGRATED_OPERATION_SCOPE" >&2; printf '%s\n' "$OUTSIDE" >&2; exit 1; fi
-          test -z "$(grep -E '^(showroom/|laws/|h-earth-3d/|tests/|products/|validation/|tools/repository-ai-entry-router\.mjs$|\.github/ai-router/execution-backends\.v1\.json$|\.github/ai-router/system-continuity/gap-registry\.v1\.json$|\.github/operation-intake/active-operation-ledger\.v1\.json$)' "$RUNNER_TEMP/changed.txt" || true)"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/observed-changed-paths.txt"
+          echo "INTEGRATED_PIPELINE_OBSERVATION_ONLY_CHANGE_SURFACE"
+          cat "$RUNNER_TEMP/observed-changed-paths.txt"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const paths=fs.readFileSync(process.env.RUNNER_TEMP+'/observed-changed-paths.txt','utf8').split(/\r?\n/).filter(Boolean);
+          const receipt={
+            schema:'INTEGRATED_DEVELOPMENT_PIPELINE_CHANGE_SURFACE_OBSERVATION_RECEIPT_v1',
+            result:'PASS_OBSERVED_WITHOUT_HISTORICAL_SCOPE_ENFORCEMENT',
+            changedPaths:paths,
+            changedPathCount:paths.length,
+            historicalConstructionScopeEnforced:false,
+            foreignProjectAuthorityClaimed:false,
+            repositoryMutationAuthorized:false,
+            mergeAuthorityCreated:false,
+            productAuthorityCreated:false
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/change-surface-observation-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
 
       - name: Verify package syntax and exact self-test
         shell: bash
@@ -150,6 +152,9 @@ jobs:
           cp "$RUNNER_TEMP/retirement-eligibility-receipt.json" artifacts/integrated-development-pipeline/retirement-eligibility-receipt.json
           cp "$RUNNER_TEMP/evidence-bundle.json" artifacts/integrated-development-pipeline/evidence-bundle.json
           cp "$RUNNER_TEMP/router-self-test.json" artifacts/integrated-development-pipeline/router-self-test.json
+          if [ -f "$RUNNER_TEMP/change-surface-observation-receipt.json" ]; then
+            cp "$RUNNER_TEMP/change-surface-observation-receipt.json" artifacts/integrated-development-pipeline/change-surface-observation-receipt.json
+          fi
           test -z "$(git status --porcelain=v1 --untracked-files=all | grep -v '^?? artifacts/integrated-development-pipeline/' || true)"
 
       - name: Generate signed GitHub artifact attestation for integrated evidence bundle

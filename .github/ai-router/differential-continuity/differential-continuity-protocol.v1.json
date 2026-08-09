@@ -1,0 +1,61 @@
+{
+  "schema": "REPOSITORY_DIFFERENTIAL_CONTINUITY_PROTOCOL_v1",
+  "protocolId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_WHEN_PRESENT_ON_DEFAULT_BRANCH_AND_VALIDATION_PASS",
+  "purpose": "Prevent irrelevant main-head movement from forcing full successor/proof reconstruction while preserving fail-closed stale-head safety.",
+  "governingLaw": "HEAD_IDENTITY_CHANGE_ALONE_DOES_NOT_ESTABLISH_MATERIAL_DEPENDENCY_CHANGE",
+  "sequence": [
+    "DECLARE_COMPLETE_DEPENDENCY_SURFACE",
+    "RESOLVE_LATEST_MAIN",
+    "COMPARE_LAST_PROVEN_HEAD_DIRECTLY_TO_LATEST_MAIN",
+    "CLASSIFY_DEPENDENCY_IMPACT",
+    "CARRY_FORWARD_IF_PROVABLY_DISJOINT",
+    "REQUIRE_SUCCESSOR_IF_OVERLAPPING_AMBIGUOUS_OR_UNPROVEN",
+    "CLASSIFY_VALIDATION_ONLY_PROOF_CARRIER_LIFECYCLE"
+  ],
+  "impactClasses": [
+    "SAME_HEAD",
+    "DISJOINT_DEPENDENCY_CHANGE",
+    "MATERIAL_DEPENDENCY_CHANGE",
+    "AMBIGUOUS_OR_UNPROVEN_CHANGE"
+  ],
+  "carryForwardRequirements": [
+    "DEPENDENCY_SURFACE_COMPLETE_TRUE",
+    "BASE_HEAD_VALID",
+    "TARGET_HEAD_IS_LATEST_MAIN",
+    "COMPARE_STATUS_AHEAD_OR_IDENTICAL",
+    "CHANGED_FILE_SET_COMPLETE",
+    "NO_CHANGED_OR_PREVIOUS_RENAME_PATH_OVERLAPS_DEPENDENCY_SURFACE"
+  ],
+  "coalescingLaw": "MULTIPLE_INTERMEDIATE_MAIN_MOVEMENTS_ARE_EVALUATED_AS_ONE_CUMULATIVE_BASE_TO_LATEST_TARGET_DIFF",
+  "successorLaw": "MATERIAL_AMBIGUOUS_DIVERGED_INCOMPLETE_OR_UNPROVEN_IMPACT_REQUIRES_EXISTING_GENERIC_SUCCESSOR_PROTOCOL",
+  "proofCarrierClasses": [
+    "ACTIVE_PROOF",
+    "CLOSE_ELIGIBLE_CONSUMED",
+    "CLOSE_ELIGIBLE_SUPERSEDED",
+    "RETAIN_REVIEW_REQUIRED"
+  ],
+  "proofCarrierLaw": "CLASSIFICATION_DOES_NOT_CLOSE_OR_MERGE_A_PULL_REQUEST_AND_NEVER_CREATES_MERGE_AUTHORITY",
+  "gate": ".github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs",
+  "selfTest": ".github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs",
+  "workflow": ".github/workflows/differential-continuity-v1.yml",
+  "remoteInvocationMarker": "DIFFERENTIAL_CONTINUITY_REQUEST_V1",
+  "successorIntegration": {
+    "existingProtocol": ".github/ai-router/operation-lifecycle/successor-protocol.v1.json",
+    "existingGate": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
+    "wrapperBehavior": "CARRY_FORWARD_RECEIPT_STOPS_UNNECESSARY_SUCCESSOR;OTHERWISE_DELEGATE_TO_EXISTING_SUCCESSOR_GATE",
+    "legacySuccessorCallsWithoutDifferentialEvidence": "PRESERVE_STRICT_EXISTING_BEHAVIOR"
+  },
+  "authorityBoundary": {
+    "newOperationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "productAuthorityCreated": false,
+    "semanticAuthorityCreated": false,
+    "scientificAuthorityCreated": false,
+    "branchProtectionAuthorityCreated": false,
+    "directLedgerMutationAuthorityCreated": false,
+    "proofCarrierClosureAuthorityCreated": false
+  },
+  "failClosedLaw": "NO_COMPLETE_DEPENDENCY_SURFACE_OR_NO_COMPLETE_COMPARE_PROOF_MEANS_NO_CARRY_FORWARD"
+}

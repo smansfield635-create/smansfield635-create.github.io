@@ -27,8 +27,6 @@ on:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
 
 concurrency:
   group: differential-continuity-${{ github.event_name }}-${{ github.event.issue.number || github.ref }}
@@ -41,6 +39,8 @@ env:
 jobs:
   validate-package:
     if: github.event_name != 'issue_comment'
+    permissions:
+      contents: read
     runs-on: ubuntu-24.04
     steps:
       - name: Check out exact event head
@@ -122,17 +122,21 @@ jobs:
           fs.writeFileSync(process.env.RUNNER_TEMP+'/proof-carrier-lifecycle-receipt.json',JSON.stringify(disjoint.proofCarrierLifecycle,null,2)+'\n');
           NODE
 
-      - name: Package validation evidence
+      - name: Package validation evidence and exact source context
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifacts/differential-continuity
+          mkdir -p artifacts/differential-continuity/source-context
           cp "$RUNNER_TEMP/differential-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/successor-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/router-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/differential-continuity-receipt.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/dependency-surface-receipt.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/proof-carrier-lifecycle-receipt.json" artifacts/differential-continuity/
+          cp AI_ENTRYPOINT.json artifacts/differential-continuity/source-context/AI_ENTRYPOINT.json
+          cp .github/ai-router/router.v1.json artifacts/differential-continuity/source-context/router.v1.json
+          cp .github/ai-router/system-continuity/gap-registry.v1.json artifacts/differential-continuity/source-context/gap-registry.v1.json
+          cp .github/ai-router/operation-lifecycle/successor-protocol.v1.json artifacts/differential-continuity/source-context/successor-protocol.v1.json
 
       - uses: actions/upload-artifact@v4
         with:
@@ -143,6 +147,10 @@ jobs:
 
   remote-assessment:
     if: github.event_name == 'issue_comment' && startsWith(github.event.comment.body, 'DIFFERENTIAL_CONTINUITY_REQUEST_V1')
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-24.04
     steps:
       - name: Check out exact installed default-branch head

@@ -1,0 +1,290 @@
+{
+  "schema": "LAWS_CONTEXT_GRAPH_CONTRACT_v1",
+  "version": "1.0.0",
+  "status": "FROZEN_CONTEXT_GRAPH_CONTRACT_FOR_ASSEMBLER_DESIGN",
+  "operation": "FREEZE_THE_LAWS_CONTEXT_GRAPH_CONTRACT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governanceBranch": "agent/laws-context-graph-contract-freeze-001",
+  "lawsLineageBase": "021966d18aa3e50b7d87e63d3768385c2f45109b",
+  "purpose": "Define the bounded semantic context-graph object downstream of verified Gamma without constructing the graph assembler, assigning Euclidean positions, changing scientific standing, or authorizing product/runtime mutation.",
+  "authorityBindings": {
+    "verifiedGamma": {
+      "subjectHead": "334ea9e0dfbe2d6866df871ec5f5da021d59d459",
+      "subjectTree": "3e8c24143f12630d254e43a82723d44b6047830a",
+      "resolverBlob": "1d715884d71419ac25892da452ca7b6d21e6c909",
+      "verifierBlob": "e3a4aec42dc9d35c025fa4b004a91fbb59e2098d",
+      "relationRegistryBlob": "5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e",
+      "testsRegistryBlob": "b801a11e342051a6b00e6f7098b1d691685ad0b6",
+      "exactRepositoryVerificationCommit": "b1a5d44e39917940cac797b154c264c29443168c",
+      "verificationReceiptBlob": "5418a993046149522bc8ec8b6907d696ba76b237",
+      "verificationRunId": 31297509423,
+      "checks": 16,
+      "status": "VERIFIED",
+      "lrpv1SealHead": "021966d18aa3e50b7d87e63d3768385c2f45109b",
+      "lrpv1ReceiptBlob": "32529d3d32d52914194be1d5657c5e7394536ee1",
+      "lrpv1LineageDigest": "5ee7cca52ecacebbc37bd0349741c1d705f2e55ad300ce71b476245bb0bd694c"
+    },
+    "frozenRelationRegistry": {
+      "freezeCommit": "f5be01b29bdc3bdb4787e0efbb6f1c5a62bd51ac",
+      "blob": "5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e",
+      "schema": "LAWS_CONTEXTUAL_RELATION_REGISTRY_v1",
+      "status": "FROZEN_RELATION_SCHEMA_FOR_GAMMA_DESIGN"
+    },
+    "sharedEstateConformance": {
+      "authoritativeMainHead": "8df49529c3895ff07ee4655f3dd3ec708bb977aa",
+      "mergePr": 813,
+      "operationId": "ESTATE_SEMANTIC_EVIDENCE_CONFORMANCE_SUPPORT_v1",
+      "contractsPath": "validation/integration/semantic-evidence-conformance-v1/contracts.v1.json",
+      "contractsBlobAtAuthoritativeMain": "d492553d96fbeafb6550fd422e543c98c3b12a55",
+      "authorityTreatment": "AVAILABLE_SHARED_CONFORMANCE_SUBSTRATE",
+      "graphConformanceTreatment": "CONSUMER_BINDING_DEFERRED_UNTIL_GRAPH_ASSEMBLER_AND_NATIVE_GRAPH_RECEIPT_EXIST"
+    }
+  },
+  "graphDefinition": {
+    "symbol": "G_C",
+    "formal": "G_C = Assemble(C, Gamma, admittedObjects, frozenRelationRegistry)",
+    "v1TopologyClass": "CONTEXT_CENTERED_DIRECT_RELATION_MULTIGRAPH",
+    "meaning": "A bounded semantic graph centered on one authoritative contextual origin. V1 contains only direct asserted Gamma relations between the current context object C and individually evaluated authoritative objects O_i.",
+    "notInducedEstateGraph": true,
+    "neighborToNeighborResolution": false,
+    "recursiveExpansion": false,
+    "spatialManifestation": false
+  },
+  "contextBinding": {
+    "requiredFields": [
+      "objectIdentity",
+      "contextScope",
+      "authority",
+      "version",
+      "contextRevision"
+    ],
+    "contextRevisionType": "NONNEGATIVE_INTEGER",
+    "exactlyOneContextOrigin": true,
+    "graphBoundToExactContextRevision": true,
+    "recenterRequiresFreshAssembly": true,
+    "staleGraphReuseForbidden": true,
+    "contextOriginIsNotEuclideanOrigin": true,
+    "contextOriginIsNotOrbitFocus": true,
+    "contextOriginIsNotSelection": true
+  },
+  "nodeAdmission": {
+    "contextNodeAlwaysPresent": true,
+    "assertedNodeRequiredFields": [
+      "identity",
+      "objectClass",
+      "authority",
+      "version",
+      "provenance"
+    ],
+    "rule": "EVERY_ASSERTED_GRAPH_NODE_MUST_ALREADY_RESOLVE_TO_AN_ADMITTED_AUTHORITATIVE_OBJECT",
+    "relationEndpointMayCreateObject": false,
+    "visualNodeIdentityMayCreateObject": false,
+    "unresolvedCandidateBecomesGraphNode": false,
+    "nonAssertedCandidatesPreservedOnlyInResolutionLedger": true,
+    "assertedNodePopulation": "CONTEXT_NODE_PLUS_UNIQUE_ENDPOINT_OBJECTS_OF_ASSERTED_EDGES"
+  },
+  "edgeAdmission": {
+    "edgeEligibilityRule": "EDGE_ELIGIBLE_IMPLIES_ASSERTED",
+    "requiredGammaOutcome": "ASSERTED",
+    "nonEdgeOutcomes": [
+      "NONE",
+      "UNKNOWN",
+      "UNEVALUABLE",
+      "CONFLICTED"
+    ],
+    "edgeMustBeLosslessProjectionOfResolvedRelation": true,
+    "requiredFields": [
+      "RELATION_ID",
+      "RELATION_TYPE",
+      "FROM_OBJECT",
+      "TO_OBJECT",
+      "RELATION_DEFINITION_VERSION",
+      "AUTHORITY_POINTERS",
+      "EVIDENCE_REFERENCES",
+      "CONTEXT_SCOPE",
+      "TEMPORAL_SCOPE",
+      "QUALIFIERS",
+      "EXISTENCE_STATE",
+      "SCIENTIFIC_STANDING",
+      "CLAIM_CEILING",
+      "SOURCE_OR_PROVENANCE",
+      "CURRENT_VERSION"
+    ],
+    "existenceStateMustEqual": "ASSERTED",
+    "oneEndpointMustEqualCurrentContext": true,
+    "otherEndpointMustEqualEvaluatedObject": true,
+    "neighborToNeighborEdgeCreationForbidden": true,
+    "inverseEdgeSynthesisForbidden": true,
+    "symmetrySynthesisForbidden": true,
+    "relationTypeGeneralizationForbidden": true,
+    "standingInferenceForbidden": true,
+    "claimCeilingUpgradeForbidden": true
+  },
+  "multiplicity": {
+    "parallelEdgesPermitted": true,
+    "rule": "MULTIPLE_DISTINCT_AUTHORIZED_RELATIONS_BETWEEN_THE_SAME_TWO_OBJECTS_MUST_REMAIN_DISTINCT",
+    "collapseToBestRelationForbidden": true,
+    "collapseBySharedEndpointsForbidden": true,
+    "duplicateRelationIdPolicy": "SAME_RELATION_ID_MAY_APPEAR_ONCE_ONLY; NONIDENTICAL_DUPLICATE_RELATION_ID_FAILS_CLOSED"
+  },
+  "resolutionLedger": {
+    "required": true,
+    "purpose": "Preserve the semantic distinction between no asserted edge because NONE was established and no asserted edge because the relation is UNKNOWN, UNEVALUABLE, or CONFLICTED.",
+    "requiredEntryFields": [
+      "contextObjectIdentity",
+      "evaluatedObjectIdentity",
+      "contextRevision",
+      "gammaOutcome",
+      "resolvedRelationIds",
+      "sourceBinding",
+      "resolverIdentity"
+    ],
+    "allowedGammaOutcomes": [
+      "ASSERTED",
+      "NONE",
+      "UNKNOWN",
+      "UNEVALUABLE",
+      "CONFLICTED"
+    ],
+    "everyEvaluatedObjectRequiresEntry": true,
+    "nonAssertedStateMayBeSuppressed": false,
+    "noneMayBeInferredFromAbsence": false,
+    "unknownMayBecomeAssertedByGraphAssembly": false,
+    "unevaluableMayBecomeAssertedByGraphAssembly": false,
+    "conflictedMayBecomeAssertedByGraphAssembly": false
+  },
+  "standingAndAuthorityPreservation": {
+    "relationExistenceIsNotScientificStanding": true,
+    "graphMembershipMayUpgradeStanding": false,
+    "graphMembershipMayUpgradeClaimCeiling": false,
+    "graphAssemblyMayResolveScientificConflict": false,
+    "graphAssemblyMayAdjudicateAuthority": false,
+    "graphAssemblyMayCreateRelationAuthority": false,
+    "adverseMixedContradictedAndUnresolvedStandingMustRemainPreserved": true,
+    "authorityPointersMustRemainAttachedToEdges": true,
+    "provenanceMustRemainAttachedToEdges": true
+  },
+  "semanticSpatialBoundary": {
+    "graphEdgeIsNotVisualConnection": true,
+    "graphAdjacencyIsNotEuclideanProximity": true,
+    "graphCentralityIsNotImportance": true,
+    "screenPositionIsNotScientificPriority": true,
+    "geometryMayNotCreateRelation": true,
+    "spatialManifestationHasNoScientificRelationAuthority": true,
+    "forbiddenGraphAuthorityFields": [
+      "x",
+      "y",
+      "z",
+      "screenX",
+      "screenY",
+      "screenPosition",
+      "projectedRadius",
+      "depth",
+      "depthLayer",
+      "orbitRadius",
+      "quaternion",
+      "camera",
+      "visualPriority",
+      "visualScale",
+      "color",
+      "animation"
+    ]
+  },
+  "determinismAndIdentity": {
+    "sameExactInputsRequireSameSemanticGraph": true,
+    "inputIdentityComponents": [
+      "contextBinding",
+      "Gamma resolver identity",
+      "frozen relation-registry identity",
+      "authoritative object source identities",
+      "Gamma resolution records"
+    ],
+    "orderingRule": "ASSEMBLER_MUST_DEFINE_A_DETERMINISTIC_CANONICAL_ORDER_FOR_NODES_EDGES_AND_LEDGER_ENTRIES_BEFORE_NATIVE_GRAPH_RECEIPT_SEALING",
+    "nativeGraphReceiptRequiredBeforeConformanceBinding": true,
+    "nativeGraphReceiptMayNotBeReconstructedFromVisualState": true,
+    "lrpv1Role": "SEAL_EXACT_NATIVE_GRAPH_RECEIPT_AND_LINEAGE_AFTER_GRAPH_ASSEMBLER_VERIFICATION; LRPV1_DOES_NOT_DECIDE_GRAPH_SEMANTIC_ADMISSION"
+  },
+  "failureContract": {
+    "staleContextRevision": "FAIL_CLOSED_NO_GRAPH",
+    "missingOrInvalidContextAuthority": "FAIL_CLOSED_NO_GRAPH",
+    "unadmittedContextObject": "FAIL_CLOSED_NO_GRAPH",
+    "unadmittedEvaluatedObject": "REJECT_OBJECT_NO_EDGE_AND_RECORD_INPUT_REJECTION_OUTSIDE_GAMMA_STATE_VOCABULARY",
+    "assertedRelationWithUnadmittedEndpoint": "FAIL_CLOSED_NO_EDGE",
+    "assertedRelationMissingAuthorityOrProvenance": "FAIL_CLOSED_NO_EDGE",
+    "nonAssertedOutcomePresentedAsEdge": "CONFORMANCE_FAILURE",
+    "nonidenticalDuplicateRelationId": "FAIL_CLOSED_GRAPH_ASSEMBLY_ERROR",
+    "attemptedInverseOrSymmetrySynthesis": "CONFORMANCE_FAILURE",
+    "attemptedStandingOrClaimUpgrade": "CONFORMANCE_FAILURE",
+    "attemptedGeometryDerivedRelation": "CONFORMANCE_FAILURE"
+  },
+  "graphSnapshotShape": {
+    "requiredFields": [
+      "schema",
+      "graphContractVersion",
+      "contextBinding",
+      "contextNode",
+      "assertedNodes",
+      "assertedEdges",
+      "resolutionLedger",
+      "sourceBindings",
+      "assemblyIdentity"
+    ],
+    "schemaValue": "LAWS_CONTEXT_GRAPH_SNAPSHOT_v1",
+    "assertedNodesIncludeOnlyContextAndAssertedEdgeEndpoints": true,
+    "assertedEdgesIncludeOnlyGammaAssertedRelations": true,
+    "resolutionLedgerIncludesAllEvaluatedCandidates": true,
+    "sourceBindingsMustIdentifyGammaAndRelationRegistryExactly": true,
+    "assemblyIdentityMustBindExactAssemblerVersion": true
+  },
+  "requiredAssemblerVerificationCases": [
+    "REAL_EXECUTES_EDGE_SURVIVES_ASSEMBLY",
+    "REAL_GOVERNS_PROCEDURE_FOR_EDGE_SURVIVES_ASSEMBLY",
+    "MULTIPLE_AUTHORIZED_RELATIONS_BETWEEN_SAME_ENDPOINTS_SURVIVE",
+    "UNKNOWN_CREATES_NO_ASSERTED_EDGE_AND_REMAINS_IN_LEDGER",
+    "UNEVALUABLE_CREATES_NO_ASSERTED_EDGE_AND_REMAINS_IN_LEDGER",
+    "CONFLICTED_CREATES_NO_ASSERTED_EDGE_AND_REMAINS_IN_LEDGER",
+    "NONE_CREATES_NO_ASSERTED_EDGE_AND_REMAINS_DISTINCT_FROM_UNKNOWN",
+    "INVERSE_EDGE_IS_NOT_SYNTHESIZED",
+    "SCIENTIFIC_STANDING_REMAINS_UNCHANGED",
+    "CLAIM_CEILING_REMAINS_UNCHANGED",
+    "STALE_CONTEXT_REVISION_FAILS_CLOSED",
+    "UNADMITTED_ENDPOINT_CANNOT_ENTER_ASSERTED_GRAPH",
+    "SAME_EXACT_INPUTS_PRODUCE_IDENTICAL_SEMANTIC_GRAPH",
+    "GEOMETRY_FIELDS_ARE_ABSENT_FROM_GRAPH_AUTHORITY",
+    "NEIGHBOR_TO_NEIGHBOR_RELATIONS_ARE_NOT_RECURSIVELY_DISCOVERED"
+  ],
+  "sharedConformanceFutureBinding": {
+    "authoritativeSubstrateAvailable": true,
+    "bindingAllowedOnlyAfterNativeGraphReceiptExists": true,
+    "requiredExistingLaws": [
+      "NON_ASSERTED_RESOLUTION_MAY_NOT_BE_PRESENTED_AS_ASSERTED_CONNECTIVITY",
+      "GRAPH_OR_GEOMETRY_MAY_NOT_UPGRADE_UPSTREAM_STANDING_OR_CLAIM_CEILING",
+      "SPATIAL_MANIFESTATION_HAS_NO_SCIENTIFIC_RELATION_AUTHORITY"
+    ],
+    "graphSpecificConformanceImplementationConstructedNow": false,
+    "newDigestProtocolAuthorized": false,
+    "newReceiptProtocolAuthorized": false
+  },
+  "claimBoundaries": {
+    "graphContractFrozen": true,
+    "graphAssemblerConstructed": false,
+    "contextGraphConstructed": false,
+    "graphConformanceConsumerConstructed": false,
+    "spatialProjectionPolicyConstructed": false,
+    "spatialReprojectionConstructed": false,
+    "productCodeCreated": false,
+    "productCodeModified": false,
+    "GammaModified": false,
+    "relationRegistryModified": false,
+    "scientificClaimUpgraded": false,
+    "IMIInvoked": false,
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false,
+    "releaseAuthorized": false
+  },
+  "nextGate": {
+    "name": "LAWS_CONTEXT_GRAPH_ASSEMBLER_CONSTRUCTION",
+    "precondition": "THIS_FROZEN_CONTRACT_REMAINS_UNCHANGED_AND_ASSEMBLER_CONSUMES_ONLY_VERIFIED_GAMMA_OUTPUTS_AND_ADMITTED_AUTHORITATIVE_OBJECTS",
+    "spatialReprojectionRemainsClosed": true
+  }
+}

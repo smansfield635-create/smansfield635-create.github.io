@@ -1,0 +1,179 @@
+name: Instrument Lifecycle Observation v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
+      - '.github/ai-router/instrument-lifecycle/**'
+      - '.github/workflows/instrument-lifecycle-observation-v1.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/system-continuity/gap-registry.v1.json'
+      - '.github/ai-router/instrument-lifecycle/**'
+      - '.github/workflows/instrument-lifecycle-observation-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: instrument-lifecycle-observation-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PROTOCOL_PATH: .github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json
+  REGISTRY_PATH: .github/ai-router/instrument-lifecycle/instrument-lifecycle-registry.v1.json
+  PROTECTED_PATH: .github/ai-router/instrument-lifecycle/protected-live-operations.v1.json
+  GATE_PATH: .github/ai-router/instrument-lifecycle/instrument-lifecycle-gate.v1.mjs
+  SELF_TEST_PATH: .github/ai-router/instrument-lifecycle/instrument-lifecycle-self-test.v1.mjs
+  WORKFLOW_PATH: .github/workflows/instrument-lifecycle-observation-v1.yml
+  ADMISSION_GENERATION: '731'
+  ADMISSION_RECEIPT_SHA256: 2dffcc0b1ec6d78cb7a45c3146f3f2c7d2de34bf922bb5494d8fae2f11a2509d
+
+jobs:
+  observe-and-validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact observation-only mutation boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            BASE="${{ github.event.before }}"
+          else
+            BASE="HEAD^"
+          fi
+          git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
+          cat > "$RUNNER_TEMP/allowed.txt" <<'PATHS'
+          .github/ai-router/instrument-lifecycle/instrument-lifecycle-gate.v1.mjs
+          .github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json
+          .github/ai-router/instrument-lifecycle/instrument-lifecycle-registry.v1.json
+          .github/ai-router/instrument-lifecycle/instrument-lifecycle-self-test.v1.mjs
+          .github/ai-router/instrument-lifecycle/protected-live-operations.v1.json
+          .github/ai-router/router.v1.json
+          .github/ai-router/system-continuity/gap-registry.v1.json
+          .github/workflows/instrument-lifecycle-observation-v1.yml
+          AI_ENTRYPOINT.json
+          PATHS
+          sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
+          if comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" | grep -q .; then
+            echo PATH_OUTSIDE_ADMITTED_OBSERVATION_SCOPE >&2
+            comm -23 "$RUNNER_TEMP/changed.txt" "$RUNNER_TEMP/allowed.txt" >&2
+            exit 1
+          fi
+          grep '^\.github/workflows/' "$RUNNER_TEMP/changed.txt" | grep -Fvx "$WORKFLOW_PATH" > "$RUNNER_TEMP/existing-workflow-changes.txt" || true
+          test ! -s "$RUNNER_TEMP/existing-workflow-changes.txt"
+
+      - name: Verify package identities and run self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node -e "const p=require('./${PROTOCOL_PATH}'),r=require('./${REGISTRY_PATH}'),x=require('./${PROTECTED_PATH}');if(p.status!=='OBSERVATION_ONLY_FAIL_CLOSED'||r.status!=='OBSERVATION_ONLY_FAIL_CLOSED'||x.status!=='ACTIVE_OBSERVATION_PROTECTION')process.exit(1)"
+          node --check "$GATE_PATH"
+          node --check "$SELF_TEST_PATH"
+          node "$SELF_TEST_PATH" --output "$RUNNER_TEMP/self-test.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.repositoryMutationPerformed!==false||r.workflowDeactivationPerformed!==false||r.physicalRetirementPerformed!==false)process.exit(1)"
+
+      - name: Observe current Actions surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          node "$GATE_PATH" \
+            --repo-root . \
+            --registry "$REGISTRY_PATH" \
+            --router .github/ai-router/router.v1.json \
+            --protected "$PROTECTED_PATH" \
+            --output "$RUNNER_TEMP/observation.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/observation.json');if(r.result!=='PASS_OBSERVATION'||r.systemGapClosed!==false||r.enforcementAuthorized!==false||r.physicalRetirementPerformed!==false)process.exit(1)"
+
+      - name: Verify router state and prepare bounded root-integration proposal
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const workflow=process.env.WORKFLOW_PATH;
+          const router=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const gaps=JSON.parse(fs.readFileSync('.github/ai-router/system-continuity/gap-registry.v1.json','utf8'));
+          const registered=router.routerInfrastructure.ownedExactPaths.includes(workflow);
+          const proposedRouter=structuredClone(router);
+          if(!proposedRouter.routerInfrastructure.ownedExactPaths.includes(workflow)) proposedRouter.routerInfrastructure.ownedExactPaths.push(workflow);
+          const proposedEntry=structuredClone(entry);
+          proposedEntry.instrumentLifecycleSystem={
+            systemId:'REPOSITORY_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CLASSIFICATION_v1',
+            status:'OBSERVATION_ONLY_WHEN_PRESENT_AND_VALIDATED',
+            protocol:process.env.PROTOCOL_PATH,
+            registry:process.env.REGISTRY_PATH,
+            protectedLiveOperations:process.env.PROTECTED_PATH,
+            gateCli:process.env.GATE_PATH,
+            selfTest:process.env.SELF_TEST_PATH,
+            workflow,
+            continuityDependency:'REPOSITORY_PROGRESSIVE_SYSTEM_CONTINUITY_TRACK_v1',
+            enforcementAuthorized:false,
+            physicalRetirementAuthorized:false
+          };
+          const proposedGaps=structuredClone(gaps);
+          const gapId='WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY';
+          if(!proposedGaps.records.some(record=>record.gapId===gapId)) proposedGaps.records.push({
+            gapId,
+            status:'OPEN',
+            discoveredAtHead:'d0d0ea03b9f6d867dcb9689bc4ed4050bd7e57da',
+            coordinationIssue:820,
+            summary:'The GitHub Actions event surface contains legacy and unregistered workflows whose active/failed UI state is not equivalent to current authority or current system health; lifecycle classification, signal normalization, continuity-safe adoption, and bounded retirement remain to be proven end to end.',
+            interfaceKeys:['GITHUB_ACTIONS_WORKFLOW_STATE','REPOSITORY_AI_ROUTER_REGISTRY_v1','REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1','INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1'],
+            pathScopes:['.github/workflows/','.github/ai-router/router.v1.json','.github/ai-router/instrument-lifecycle/'],
+            evidenceRefs:['ISSUE_820_AUDIT','GMAIL_FAILURE_CORPUS_AUGUST_7_9','PRE_REGISTRATION_ADMISSION_GENERATION_731'],
+            closureRequirements:['FULL_ACTIONS_SURFACE_INVENTORY','CURRENT_AUTHORITY_CLASSIFICATION','ZERO_JOB_AND_EXPECTED_FAILURE_SIGNAL_NORMALIZATION','PROTECTED_LIVE_WORKSTREAM_NONINTERFERENCE','CONTINUITY_PROOF_FOR_EACH_PHYSICAL_RETIREMENT_CLASS','POST_MERGE_OBSERVATION_PROOF'],
+            authorityCreated:false
+          });
+          const out={
+            schema:'INSTRUMENT_LIFECYCLE_ROOT_INTEGRATION_PROPOSAL_v1',
+            result:'PASS',
+            routerRegistrationState:registered?'REGISTERED_OBSERVATION_ONLY':'PRE_REGISTRATION_OBSERVATION_ONLY',
+            admissionGeneration:Number(process.env.ADMISSION_GENERATION),
+            admissionReceiptSha256:process.env.ADMISSION_RECEIPT_SHA256,
+            proposedRouter,
+            proposedEntry,
+            proposedGaps,
+            existingWorkflowTriggerMutationAuthorized:false,
+            workflowDeactivationAuthorized:false,
+            physicalRetirementAuthorized:false
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/root-proposal.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+
+      - name: Build exact-head observation receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/instrument-lifecycle
+          cp "$RUNNER_TEMP/self-test.json" artifacts/instrument-lifecycle/self-test.json
+          cp "$RUNNER_TEMP/observation.json" artifacts/instrument-lifecycle/observation-receipt.json
+          cp "$RUNNER_TEMP/root-proposal.json" artifacts/instrument-lifecycle/router-receipt.json
+          test -z "$(git status --porcelain=v1 --untracked-files=all | grep -v '^?? artifacts/instrument-lifecycle/' || true)"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instrument-lifecycle-observation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/instrument-lifecycle/
+          if-no-files-found: error
+          retention-days: 90

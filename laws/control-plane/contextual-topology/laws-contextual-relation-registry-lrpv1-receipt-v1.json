@@ -1,0 +1,71 @@
+{
+  "protocol": "LRP",
+  "protocol_version": "1.0.0",
+  "canonicalization": "JCS-RFC8785-SAFEINT",
+  "digest_algorithm": "SHA-256",
+  "payload": {
+    "profile": "DGB_LAWS_CONTEXTUAL_RELATION_REGISTRY_LINEAGE_v1",
+    "profile_version": "1.0.0",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "source_subject_head": "0573296d0051d30ba0670dc7a0927ba4289cfb59",
+    "governance_branch": "agent/laws-contextual-topology-freeze-001",
+    "governance_head_before_lrp_seal": "f5be01b29bdc3bdb4787e0efbb6f1c5a62bd51ac",
+    "lrpv1": {
+      "standard_merge_commit": "5b11583f42ee7f57791ebf4200ab5c05f043c00a",
+      "python_reference_path": "infrastructure/lineage-receipt-protocol-v1/python/lineage_receipt_protocol_v1.py",
+      "python_reference_git_blob": "e62ba8e9a6594ae3f2b120e3cd24ac482e33261a"
+    },
+    "relation_reconciliation": {
+      "path": "laws/control-plane/contextual-topology/laws-contextual-relation-ontology-reconciliation-v1.json",
+      "commit": "efded4fe14a319c0b852789e2a89d4bacfc80447",
+      "git_blob": "1707edb9cbfc17e1e241581972103d6b340930b9"
+    },
+    "relation_registry": {
+      "path": "laws/control-plane/contextual-topology/laws-contextual-relation-registry-v1.json",
+      "commit": "f5be01b29bdc3bdb4787e0efbb6f1c5a62bd51ac",
+      "git_blob": "5d79eca4ee7d9366f8d8c2287c34001ae37ffc4e",
+      "schema": "LAWS_CONTEXTUAL_RELATION_REGISTRY_v1",
+      "version": "1.0.0",
+      "status": "FROZEN_RELATION_SCHEMA_FOR_GAMMA_DESIGN"
+    },
+    "source_blobs": {
+      "SRC01": "c2de32a289c1b2f28c4162a176331dec38464f35",
+      "SRC02": "93154d9d3fc90dea785467253a78f42d23190a6f",
+      "SRC03": "9b300aa688487fc99f7e6401e58e8be0c8a3e7dc",
+      "SRC04": "1d9ee109dcfc86ae1a8a8f61e5db9650c9abf481",
+      "SRC05": "bff4c72d70b3be75a3af4bb5860348d66bd177af",
+      "SRC06": "b645f3dc2b4dd89c430c64b1d42f4c470c407da1",
+      "SRC07": "0bfab791c005ca71cee771a5d14d27f8dfab3177",
+      "SRC08": "ed969c87359c42444c477a752f332f07f0059a30",
+      "SRC09": "b801a11e342051a6b00e6f7098b1d691685ad0b6",
+      "SRC10": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+      "SRC11": "d9d1e8f86e5a0f1c61548e16da30cf0f872234c5",
+      "SRC12": "5e13a7c72357d4e1c6ecf2f313d320297a44111e",
+      "SRC13": "58b06514bf03bf8c32d8c1ed4d6d39a8693df9cd",
+      "SRC14": "546816616371f40b513c5bf821ee56e592bc6044",
+      "SRC15": "7a7d2c19776d30667988d71e03b102f15734265d",
+      "SRC16": "e080602de2bc5ee5816779f39f834ae32923ab21"
+    },
+    "relation_type_summary": {
+      "normalized_admitted": ["CUSTODIED_BY", "OPERATIONALLY_PROJECTED_INTO", "PARTICIPATES_IN_TEST_PHASE", "EVIDENCE_BEARING_ON", "DERIVED_FROM"],
+      "existing_typed_admitted": ["EXECUTES", "GOVERNS_PROCEDURE_FOR"],
+      "source_defined_conditional": ["TESTS_CANDIDATE", "SUPPLIES_COMPETING_REPRESENTATIONS_TO", "IS_BOUNDED_SUPPORTING_MEMBER_OF", "PRESENTS_WITHOUT_REDEFINING"],
+      "generic_rejected_or_deferred": ["SUPPORTS", "CHALLENGES", "EVALUATES", "USES_EVIDENCE", "PRODUCED_BY"]
+    },
+    "instrumentation": {
+      "IMI_invoked": false,
+      "reason": "NO_MULTI_FACTOR_MANEUVERABILITY_QUESTION",
+      "LRPv1_role": "CONTENT_IDENTITY_AND_LINEAGE_ONLY"
+    },
+    "claim_boundary": {
+      "scientific_truth_claimed": false,
+      "relation_instances_created": false,
+      "Gamma_implemented": false,
+      "product_mutation": false,
+      "spatial_reprojection_implemented": false,
+      "merge_authorized": false,
+      "deployment_authorized": false
+    }
+  },
+  "lineage_digest": "ce6bf0205b7bc39169989ab0ff078f4bcd87e9e68240c9906f88eddbfc990f73"
+}

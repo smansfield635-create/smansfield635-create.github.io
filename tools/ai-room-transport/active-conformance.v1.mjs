@@ -5,6 +5,7 @@ import cp from 'node:child_process';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolveToolset } from './toolset-resolver.v1.mjs';
+import { runSuccessorCompatibilitySelfTest } from './successor-compatibility-self-test.v1.mjs';
 
 const GENESIS_BASE = '56b6ab1f192aec994af0c537dd7c9dad1be14d7f';
 const GENESIS_HEAD = '1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500';
@@ -138,6 +139,7 @@ export function runConformance({ root, expectedHead, holder }) {
     const fixture = resolutionFixture(descriptor, index + 1);
     const receipt = resolveToolset({ ...fixture, registry, allowCandidate: false });
     assert(receipt.result === 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED', 'DESCRIPTOR_RESOLUTION_FAILED', descriptor.descriptorId);
+    assert(receipt.authorizationMode === 'EXACT_OPERATION_ID' && receipt.authorizedOperationId === descriptor.operationId, 'DIRECT_DESCRIPTOR_AUTHORIZATION_CHANGED', descriptor.descriptorId);
     resolutions.push({ descriptorId: descriptor.descriptorId, operationId: descriptor.operationId, projectId: descriptor.projectId, exactToolingHead: descriptor.exactToolingHead, descriptorDigest: receipt.descriptorDigest, provenance });
   });
   const first = registry.tools[0];
@@ -150,6 +152,14 @@ export function runConformance({ root, expectedHead, holder }) {
   expectedFailure(() => resolveToolset({ ...fixture, registry: shellRegistry }), 'SHELL_EXECUTION_PROHIBITED');
   const unknown = structuredClone(fixture); unknown.request.descriptorId = 'UNKNOWN_DESCRIPTOR';
   expectedFailure(() => resolveToolset({ ...unknown, registry }), 'AUTHORIZED_TOOLSET_NOT_FOUND');
+
+  const successorCompatibility = runSuccessorCompatibilitySelfTest();
+  assert(successorCompatibility.result === 'PASS_CLOSED_LOCAL_SUCCESSOR_COMPATIBILITY', 'SUCCESSOR_COMPATIBILITY_SELF_TEST_FAILED');
+  assert(successorCompatibility.positiveFixturesPassed === successorCompatibility.positiveFixtureCount, 'SUCCESSOR_POSITIVE_FIXTURE_MISMATCH');
+  assert(successorCompatibility.negativeFixturesPassed === successorCompatibility.negativeFixtureCount, 'SUCCESSOR_NEGATIVE_FIXTURE_MISMATCH');
+  assert(successorCompatibility.directPathPreserved === true && successorCompatibility.fixedDescriptorPreserved === true && successorCompatibility.fixedCommandPreserved === true && successorCompatibility.exactToolingHeadPreserved === true, 'SUCCESSOR_COMPATIBILITY_CHANGED_CLOSED_WORLD_COMMAND');
+  assert(successorCompatibility.genericCommandAuthorityCreated === false && successorCompatibility.wildcardDescriptorAuthorityCreated === false && successorCompatibility.arbitrarySuccessorAuthorityCreated === false, 'SUCCESSOR_COMPATIBILITY_BROADENED_AUTHORITY');
+
   const standaloneDescriptorFileCount = resolutions.filter(x => x.provenance === 'STANDALONE_ACTIVE_FILE').length;
   const frozenActivationInlineDescriptorCount = resolutions.filter(x => x.provenance === 'FROZEN_ACTIVATION_INLINE').length;
   const payload = stable({
@@ -157,7 +167,13 @@ export function runConformance({ root, expectedHead, holder }) {
     activationHead: ACTIVATION_HEAD, activationRegistryBlob: ACTIVATION_REGISTRY_BLOB,
     registryDigest: sha256(canonical(registry)), activationRegistryDigest: sha256(canonical(activationRegistry)),
     standaloneDescriptorFileCount, frozenActivationInlineDescriptorCount, resolutions,
-    negativeTests: ['DUPLICATE_DESCRIPTOR', 'MOVING_REF', 'SHELL', 'UNKNOWN_DESCRIPTOR']
+    negativeTests: ['DUPLICATE_DESCRIPTOR', 'MOVING_REF', 'SHELL', 'UNKNOWN_DESCRIPTOR'],
+    successorCompatibility: {
+      result: successorCompatibility.result,
+      positiveFixtureCount: successorCompatibility.positiveFixtureCount,
+      negativeFixtureCount: successorCompatibility.negativeFixtureCount,
+      packageFingerprint: successorCompatibility.packageFingerprint
+    }
   });
   return stable({
     schema: 'ACTIVE_TOOLSET_TRANSPORT_CONFORMANCE_RECEIPT_v1', result: 'PASS_CLOSED_ACTIVE_CONFORMANCE', executionHolder: holder,
@@ -165,7 +181,14 @@ export function runConformance({ root, expectedHead, holder }) {
     registryStatus: registry.status, closedWorld: registry.closedWorld, descriptorCount: registry.tools.length,
     descriptorFileCount: files.length, standaloneDescriptorFileCount, frozenActivationInlineDescriptorCount,
     descriptorsResolved: resolutions.length, resolutionReceipts: resolutions,
-    negativeFixtureCount: 4, negativeFixturesPassed: 4, packageFingerprint: sha256(canonical(payload)),
+    negativeFixtureCount: 4, negativeFixturesPassed: 4,
+    successorCompatibilityPassed: true,
+    successorCompatibilityPositiveFixtureCount: successorCompatibility.positiveFixtureCount,
+    successorCompatibilityPositiveFixturesPassed: successorCompatibility.positiveFixturesPassed,
+    successorCompatibilityNegativeFixtureCount: successorCompatibility.negativeFixtureCount,
+    successorCompatibilityNegativeFixturesPassed: successorCompatibility.negativeFixturesPassed,
+    successorCompatibilityFingerprint: successorCompatibility.packageFingerprint,
+    packageFingerprint: sha256(canonical(payload)),
     productMutationPerformed: false, roleActivationPerformed: false, methodsAuditExecuted: false, hEarthRepairPerformed: false,
     pr570Mutated: false, mergePerformed: false, repairPerformed: false
   });

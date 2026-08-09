@@ -21,7 +21,7 @@ env:
   EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   validate-router:
@@ -79,21 +79,17 @@ jobs:
             --output /tmp/repository-ai-entry-router-lrpv1-route.json
           node -e "const r=require('/tmp/repository-ai-entry-router-lrpv1-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='LINEAGE_RECEIPT_PROTOCOL'&&x.disposition==='PASS'))process.exit(1)"
 
-      - name: Exercise Estate Validation registered mutation route when present
+      - name: Exercise Estate Validation registered mutation route
         shell: bash
         run: |
           set -euo pipefail
-          if node -e "const r=require('./.github/ai-router/router.v1.json');process.exit(r.projects?.some(p=>p.projectId==='ESTATE_VALIDATION')?0:1)"; then
-            node tools/repository-ai-entry-router.mjs \
-              --mutation-intent \
-              --path validation/README.md \
-              --path .github/workflows/estate-validation-v1.yml \
-              --task "Workflow Estate Validation registered-route validation" \
-              --output /tmp/repository-ai-entry-router-estate-validation-route.json
-            node -e "const r=require('/tmp/repository-ai-entry-router-estate-validation-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
-          else
-            printf '%s\n' '{"schema":"REPOSITORY_AI_ENTRY_ROUTER_ESTATE_VALIDATION_WORKFLOW_RECEIPT_v1","result":"SKIPPED_ESTATE_VALIDATION_NOT_REGISTERED_AT_HEAD","disposition":"NOT_APPLICABLE"}' > /tmp/repository-ai-entry-router-estate-validation-route.json
-          fi
+          node tools/repository-ai-entry-router.mjs \
+            --mutation-intent \
+            --path validation/README.md \
+            --path .github/workflows/estate-validation-v1.yml \
+            --task "Workflow Estate Validation registered-route validation" \
+            --output /tmp/repository-ai-entry-router-estate-validation-route.json
+          node -e "const r=require('/tmp/repository-ai-entry-router-estate-validation-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
 
       - name: Exercise unregistered mutation guard
         shell: bash
@@ -146,35 +142,3 @@ jobs:
             /tmp/h-earth-r06-c10-negative-admission.json
           if-no-files-found: error
           retention-days: 30
-
-      - name: Bootstrap Estate Validation router registration on authorized branch
-        if: github.event_name == 'pull_request' && github.head_ref == 'agent/estate-wide-validation-sidecar-v1'
-        env:
-          HEAD_BRANCH: ${{ github.head_ref }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const path = '.github/ai-router/router.v1.json';
-          const router = JSON.parse(fs.readFileSync(path, 'utf8'));
-          if (!Array.isArray(router.projects)) throw new Error('ROUTER_PROJECTS_NOT_ARRAY');
-          if (router.projects.some((project) => project.projectId === 'ESTATE_VALIDATION')) process.exit(0);
-          router.projects.push({
-            projectId: 'ESTATE_VALIDATION',
-            status: 'ACTIVE_REGISTERED_PROJECT',
-            ownedPathPrefixes: ['validation/'],
-            ownedExactPaths: ['.github/workflows/estate-validation-v1.yml'],
-            entrypoint: '.github/ai-router/projects/estate-validation/entrypoint.v1.json',
-            priority: 100
-          });
-          fs.writeFileSync(path, JSON.stringify(router) + '\n');
-          NODE
-          if git diff --quiet -- .github/ai-router/router.v1.json; then
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/ai-router/router.v1.json
-          git commit -m "Register estate validation sidecar route"
-          git push origin "HEAD:${HEAD_BRANCH}"

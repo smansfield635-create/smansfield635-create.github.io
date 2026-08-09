@@ -100,6 +100,28 @@ async function shellSnapshot(page) {
     const viewport = document.querySelector('[data-stage-viewport]');
     const style = viewport ? getComputedStyle(viewport) : null;
     const html = document.documentElement;
+    const clientWidth = document.documentElement.clientWidth;
+    const overflowOffenders = Array.from(document.querySelectorAll('body *'))
+      .map(element => {
+        const rect = element.getBoundingClientRect();
+        const computed = getComputedStyle(element);
+        const leftExcess = Math.max(0, -rect.left);
+        const rightExcess = Math.max(0, rect.right - clientWidth);
+        return {
+          tag: element.tagName.toLowerCase(),
+          id: element.id || '',
+          className: typeof element.className === 'string' ? element.className.slice(0, 120) : '',
+          left: Math.round(rect.left * 10) / 10,
+          right: Math.round(rect.right * 10) / 10,
+          width: Math.round(rect.width * 10) / 10,
+          position: computed.position,
+          overflowX: computed.overflowX,
+          excess: Math.round(Math.max(leftExcess, rightExcess) * 10) / 10
+        };
+      })
+      .filter(item => item.width > 0 && item.excess > 2)
+      .sort((a, b) => b.excess - a.excess)
+      .slice(0, 12);
     return {
       shellCount: document.querySelectorAll('.laws-spatial-environment').length,
       shellReady: html.dataset.lawsSpatialShell,
@@ -110,7 +132,11 @@ async function shellSnapshot(page) {
       path: location.pathname,
       search: location.search,
       bodyPosition: getComputedStyle(document.body).position,
-      horizontalOverflow: Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0) - document.documentElement.clientWidth,
+      clientWidth,
+      documentScrollWidth: document.documentElement.scrollWidth,
+      bodyScrollWidth: document.body?.scrollWidth || 0,
+      horizontalOverflow: Math.max(document.documentElement.scrollWidth, document.body?.scrollWidth || 0) - clientWidth,
+      overflowOffenders,
       stageOverflowY: style?.overflowY || '',
       stageClientHeight: viewport?.clientHeight || 0,
       stageScrollHeight: viewport?.scrollHeight || 0
@@ -122,7 +148,7 @@ function assertNoNestedStageTrap(snapshot, label) {
   const trappingOverflow = ['auto', 'scroll'].includes(snapshot.stageOverflowY) &&
     snapshot.stageScrollHeight > snapshot.stageClientHeight + 2;
   assert(!trappingOverflow, `${label}:NESTED_STAGE_SCROLL_TRAP`);
-  assert(snapshot.horizontalOverflow <= 2, `${label}:HORIZONTAL_OVERFLOW:${snapshot.horizontalOverflow}`);
+  assert(snapshot.horizontalOverflow <= 2, `${label}:HORIZONTAL_OVERFLOW:${snapshot.horizontalOverflow}:OFFENDERS:${JSON.stringify(snapshot.overflowOffenders)}`);
 }
 
 async function verifyReading(page, storyId, label) {

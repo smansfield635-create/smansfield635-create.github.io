@@ -1,0 +1,37 @@
+{
+  "schema": "REPOSITORY_PROTECTED_LIVE_OPERATIONS_v1",
+  "registryId": "INSTRUMENT_LIFECYCLE_PROTECTED_LIVE_OPERATIONS_v1",
+  "status": "ACTIVE_OBSERVATION_PROTECTION",
+  "records": [
+    {
+      "id": "PROGRESSIVE_SYSTEM_CONTINUITY_TRACK_V1",
+      "kind": "SHARED_CONTROL_PLANE_DEPENDENCY",
+      "mergedHead": "d0d0ea03b9f6d867dcb9689bc4ed4050bd7e57da",
+      "sourcePr": 819,
+      "workflowPaths": [
+        ".github/workflows/progressive-system-continuity-v1.yml"
+      ],
+      "prohibitions": [
+        "NO_TRIGGER_MUTATION",
+        "NO_PERMISSION_MUTATION",
+        "NO_RETIREMENT",
+        "NO_REPLACEMENT_BY_LIFECYCLE_OBSERVATION_PHASE"
+      ]
+    },
+    {
+      "id": "LAWS_BOUNDED_SPATIAL_MANIFESTATION_IN_PROGRESS",
+      "kind": "ACTIVE_PROJECT_WORKSTREAM",
+      "sourcePr": 815,
+      "projectId": "LAWS",
+      "workflowPaths": [
+        ".github/workflows/laws-compass-six-authority-benchmark.yml"
+      ],
+      "prohibitions": [
+        "NO_TRIGGER_MUTATION",
+        "NO_PERMISSION_MUTATION",
+        "NO_RETIREMENT",
+        "NO_DOWNGRADE_FROM_ACTIVE_COMPATIBILITY_WHILE_EVIDENCE_CARRIER_UNRESOLVED"
+      ]
+    }
+  ]
+}

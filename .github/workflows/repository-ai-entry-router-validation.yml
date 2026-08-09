@@ -399,17 +399,25 @@ jobs:
             const ledger = JSON.parse(Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8'));
             return ledger.terminalHistory.some(x => x.operationId === target.operationId && x.lockGeneration === target.lockGeneration && x.terminalDisposition === 'FAIL_CLOSED' && x.released === true);
           }
-          const results = [];
-          for (const target of targets) {
-            try {
-              const receipt = await closeRemote({ ...target, repository, lockRef, token, terminalDisposition: 'FAIL_CLOSED' });
-              if (receipt.result !== 'TERMINAL_CLOSURE_COMMITTED') throw new Error(`CLOSURE_NOT_COMMITTED:${target.lockGeneration}`);
-              results.push({ ...target, result: 'FAIL_CLOSED_COMMITTED', receipt });
-            } catch (error) {
-              if (error.code !== 'ACTIVE_LOCK_NOT_FOUND' || !(await terminalExists(target))) throw error;
-              results.push({ ...target, result: 'ALREADY_FAIL_CLOSED_VERIFIED' });
+          async function closeExact(target) {
+            for (let attempt = 1; attempt <= 8; attempt += 1) {
+              try {
+                const receipt = await closeRemote({ ...target, repository, lockRef, token, terminalDisposition: 'FAIL_CLOSED' });
+                if (receipt.result === 'TERMINAL_CLOSURE_COMMITTED') return { ...target, result: 'FAIL_CLOSED_COMMITTED', attempt, receipt };
+                if (receipt.result === 'LOCK_NOT_CLOSED' && receipt.errorCode === 'LEDGER_COMPARE_AND_SWAP_CONFLICT') {
+                  await new Promise(resolve => setTimeout(resolve, attempt * 125));
+                  continue;
+                }
+                throw new Error(`CLOSURE_NOT_COMMITTED:${target.lockGeneration}:${receipt.result}:${receipt.errorCode || 'NO_ERROR_CODE'}`);
+              } catch (error) {
+                if (error.code === 'ACTIVE_LOCK_NOT_FOUND' && await terminalExists(target)) return { ...target, result: 'ALREADY_FAIL_CLOSED_VERIFIED', attempt };
+                throw error;
+              }
             }
+            throw new Error(`CLOSURE_CAS_RETRIES_EXHAUSTED:${target.lockGeneration}`);
           }
+          const results = [];
+          for (const target of targets) results.push(await closeExact(target));
           fs.writeFileSync('/tmp/repository-operation-successor-prior-lock-retirement.json', JSON.stringify(stable({
             schema: 'REPOSITORY_OPERATION_SUCCESSOR_PRIOR_INSTALLATION_LOCK_RETIREMENT_RECEIPT_v1',
             result: 'PASS_CLOSED',
@@ -467,15 +475,24 @@ jobs:
             const ledger = JSON.parse(Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8'));
             return ledger.terminalHistory.some(x => x.operationId === target.operationId && x.lockGeneration === target.lockGeneration && x.terminalDisposition === 'PASS_CLOSED' && x.released === true);
           }
-          let result;
-          try {
-            const receipt = await closeRemote({ ...target, repository, lockRef, token, terminalDisposition: 'PASS_CLOSED' });
-            if (receipt.result !== 'TERMINAL_CLOSURE_COMMITTED') throw new Error('INSTALLATION_CLOSURE_NOT_COMMITTED');
-            result = { result: 'PASS_CLOSED_COMMITTED', receipt };
-          } catch (error) {
-            if (error.code !== 'ACTIVE_LOCK_NOT_FOUND' || !(await terminalExists())) throw error;
-            result = { result: 'ALREADY_PASS_CLOSED_VERIFIED' };
+          async function closeExact() {
+            for (let attempt = 1; attempt <= 8; attempt += 1) {
+              try {
+                const receipt = await closeRemote({ ...target, repository, lockRef, token, terminalDisposition: 'PASS_CLOSED' });
+                if (receipt.result === 'TERMINAL_CLOSURE_COMMITTED') return { result: 'PASS_CLOSED_COMMITTED', attempt, receipt };
+                if (receipt.result === 'LOCK_NOT_CLOSED' && receipt.errorCode === 'LEDGER_COMPARE_AND_SWAP_CONFLICT') {
+                  await new Promise(resolve => setTimeout(resolve, attempt * 125));
+                  continue;
+                }
+                throw new Error(`INSTALLATION_CLOSURE_NOT_COMMITTED:${receipt.result}:${receipt.errorCode || 'NO_ERROR_CODE'}`);
+              } catch (error) {
+                if (error.code === 'ACTIVE_LOCK_NOT_FOUND' && await terminalExists()) return { result: 'ALREADY_PASS_CLOSED_VERIFIED', attempt };
+                throw error;
+              }
+            }
+            throw new Error('INSTALLATION_CLOSURE_CAS_RETRIES_EXHAUSTED');
           }
+          const result = await closeExact();
           fs.writeFileSync('/tmp/repository-operation-successor-installation-closure.json', JSON.stringify(stable({
             schema: 'REPOSITORY_OPERATION_SUCCESSOR_INSTALLATION_CLOSURE_RECEIPT_v1',
             operation: target,

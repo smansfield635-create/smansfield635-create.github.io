@@ -18,6 +18,7 @@ export const DEFAULT_LOCK_REF = 'refs/heads/operation-locks/repository-operation
 export const DEFAULT_GOVERNING_REF = 'refs/heads/main';
 export const AUTHORITY_POLICY = 'FRESH_SUCCESSOR_REQUEST_REQUIRED_NO_IMPLICIT_INHERITANCE';
 export const EVIDENCE_POLICY = 'EXACT_HEAD_REVALIDATION_REQUIRED';
+export const DEFAULT_CAS_RETRY_LIMIT = 8;
 const ACTIVE_STATES = new Set(['ADMITTED_LOCKED', 'EXECUTING', 'BLOCKED_OPEN']);
 
 function failure(code, field, source, detail = null) {
@@ -50,6 +51,15 @@ function requiredArray(value, field, source) {
 function branchFromRef(ref, field = 'lockRef') {
   if (typeof ref !== 'string' || !ref.startsWith('refs/heads/')) throw failure('INVALID_BRANCH_REF', field, 'successor-transition');
   return ref.slice('refs/heads/'.length);
+}
+
+function retryLimit(value) {
+  if (!Number.isInteger(value) || value < 1 || value > 32) throw failure('INVALID_CAS_RETRY_LIMIT', 'casRetryLimit', 'remote-successor');
+  return value;
+}
+
+function delay(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
 export function validateTransition(raw) {
@@ -306,51 +316,83 @@ async function putLedgerRemote({ repository, lockRef = DEFAULT_LOCK_REF, token, 
   }
 }
 
-export async function successorRemote({ repository, lockRef = DEFAULT_LOCK_REF, token, transition, request, procedure }) {
+export async function successorRemote({
+  repository,
+  lockRef = DEFAULT_LOCK_REF,
+  token,
+  transition,
+  request,
+  procedure,
+  casRetryLimit = DEFAULT_CAS_RETRY_LIMIT
+}) {
   const validatedTransition = validateTransition(transition);
   const prepared = prepare(request, procedure);
+  const maxAttempts = retryLimit(casRetryLimit);
   if (validatedTransition.successor.governingHead !== prepared.request.exactGoverningHead) {
     throw failure('SUCCESSOR_GOVERNING_HEAD_MISMATCH', 'successor.governingHead', 'transition-and-request');
   }
-  const liveGoverningHead = await readRefHead({ repository, ref: validatedTransition.governingRef, token });
-  if (liveGoverningHead !== prepared.request.exactGoverningHead) {
-    throw failure('LIVE_GOVERNING_HEAD_MISMATCH', 'exactGoverningHead', 'remote-successor', `expected=${prepared.request.exactGoverningHead}:observed=${liveGoverningHead}`);
-  }
-  const observed = await readLedgerRemote({ repository, lockRef, token });
-  const local = successorLocal(observed.ledger, validatedTransition, prepared.request, prepared.procedure);
-  const committed = await putLedgerRemote({
-    repository,
-    lockRef,
-    token,
-    blob: observed.blob,
-    nextLedger: local.ledger,
-    message: `Supersede operation ${local.receipt.predecessor.lockGeneration} with successor ${local.receipt.successor.lockGeneration}: ${local.receipt.successor.operationId}`
-  });
-  if (!committed.ok) {
-    return stable({
-      schema: RECEIPT_SCHEMA,
-      result: 'SUCCESSOR_NOT_ADMITTED',
+
+  let lastConflict = null;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    const liveGoverningHead = await readRefHead({ repository, ref: validatedTransition.governingRef, token });
+    if (liveGoverningHead !== prepared.request.exactGoverningHead) {
+      throw failure('LIVE_GOVERNING_HEAD_MISMATCH', 'exactGoverningHead', 'remote-successor', `expected=${prepared.request.exactGoverningHead}:observed=${liveGoverningHead}`);
+    }
+
+    const observed = await readLedgerRemote({ repository, lockRef, token });
+    const local = successorLocal(observed.ledger, validatedTransition, prepared.request, prepared.procedure);
+    const committed = await putLedgerRemote({
+      repository,
+      lockRef,
+      token,
+      blob: observed.blob,
+      nextLedger: local.ledger,
+      message: `Supersede operation ${local.receipt.predecessor.lockGeneration} with successor ${local.receipt.successor.lockGeneration}: ${local.receipt.successor.operationId}`
+    });
+    if (committed.ok) {
+      return stable({
+        ...local.receipt,
+        liveGoverningHead,
+        observedLedgerBlobSha: observed.blob,
+        observedLockRefHead: observed.branchHead,
+        committedLedgerBlobSha: committed.blob,
+        transitionCommitSha: committed.commit,
+        ledgerCompareAndSwapCommitted: true,
+        casAttempt: attempt,
+        casRetryLimit: maxAttempts
+      });
+    }
+
+    lastConflict = stable({
       errorCode: committed.errorCode,
       httpStatus: committed.httpStatus,
-      transitionId: validatedTransition.transitionId,
-      predecessor: local.receipt.predecessor,
-      successor: local.receipt.successor,
       observedLedgerBlobSha: observed.blob,
       observedLockRefHead: observed.branchHead,
       liveGoverningHead,
-      authorityInherited: false,
-      exactHeadRevalidationRequired: true,
-      repositoryWritesAuthorized: false
+      predecessor: local.receipt.predecessor,
+      successor: local.receipt.successor
     });
+    if (committed.errorCode !== 'LEDGER_COMPARE_AND_SWAP_CONFLICT' || attempt === maxAttempts) break;
+    await delay(attempt * 125);
   }
+
   return stable({
-    ...local.receipt,
-    liveGoverningHead,
-    observedLedgerBlobSha: observed.blob,
-    observedLockRefHead: observed.branchHead,
-    committedLedgerBlobSha: committed.blob,
-    transitionCommitSha: committed.commit,
-    ledgerCompareAndSwapCommitted: true
+    schema: RECEIPT_SCHEMA,
+    result: 'SUCCESSOR_NOT_ADMITTED',
+    errorCode: lastConflict?.errorCode || 'SUCCESSOR_REMOTE_COMMIT_FAILED',
+    httpStatus: lastConflict?.httpStatus || null,
+    transitionId: validatedTransition.transitionId,
+    predecessor: lastConflict?.predecessor || null,
+    successor: lastConflict?.successor || null,
+    observedLedgerBlobSha: lastConflict?.observedLedgerBlobSha || null,
+    observedLockRefHead: lastConflict?.observedLockRefHead || null,
+    liveGoverningHead: lastConflict?.liveGoverningHead || null,
+    authorityInherited: false,
+    exactHeadRevalidationRequired: true,
+    repositoryWritesAuthorized: false,
+    ledgerCompareAndSwapCommitted: false,
+    casAttempts: maxAttempts,
+    casRetryLimit: maxAttempts
   });
 }
 
@@ -388,7 +430,8 @@ async function main() {
     token: process.env.GITHUB_TOKEN,
     transition,
     request,
-    procedure
+    procedure,
+    casRetryLimit: args['cas-retry-limit'] ? Number(args['cas-retry-limit']) : DEFAULT_CAS_RETRY_LIMIT
   });
   writeJson(args.output, receipt);
   if (receipt.result !== 'SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED') process.exitCode = 4;

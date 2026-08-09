@@ -408,18 +408,6 @@
       "scopeHash": "5bc67567f5afbbced9d6d86bc2dfd30ca8fbdd52e05dd3aad2608296769a2b7b",
       "state": "ADMITTED_LOCKED"
     },
-    "610ecf607c8cac3982d7c3f36ed13e695a57fe1d080b12b356d5f36acf24b559": {
-      "governingHead": "bb9febd7843683728810109f6225fdf782ae3d55",
-      "lockGeneration": 633,
-      "lockScope": "ROUTER:H_EARTH:HC02_PAGE_EXCELLENCE_BINDING:EXACT_3_PATH_REGISTRATION:V1",
-      "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_BINDING_ROUTE_REGISTRATION_v1",
-      "procedureLocatorDigest": "f32f91263971db355d215ea2fb92291c2f733bc33744a976b0dc4394ff791f8c",
-      "released": false,
-      "requestDigest": "8e4bc8a27515313311de68bda0bc270c6a97324783be0b96e3d3950f3c09a0d2",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "610ecf607c8cac3982d7c3f36ed13e695a57fe1d080b12b356d5f36acf24b559",
-      "state": "ADMITTED_LOCKED"
-    },
     "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8": {
       "governingHead": "c961469d366f39422e143a2c6156e79b1c991735",
       "lockGeneration": 471,
@@ -8181,6 +8169,19 @@
       "scopeHash": "14c2a94a0de0d18fa50a41dca1c5fd2be70670643e0d3c3ed62ced665495366c",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "bb9febd7843683728810109f6225fdf782ae3d55",
+      "lockGeneration": 633,
+      "lockScope": "ROUTER:H_EARTH:HC02_PAGE_EXCELLENCE_BINDING:EXACT_3_PATH_REGISTRATION:V1",
+      "operationId": "H_EARTH_HC02_PAGE_EXCELLENCE_BINDING_ROUTE_REGISTRATION_v1",
+      "procedureLocatorDigest": "f32f91263971db355d215ea2fb92291c2f733bc33744a976b0dc4394ff791f8c",
+      "released": true,
+      "requestDigest": "8e4bc8a27515313311de68bda0bc270c6a97324783be0b96e3d3950f3c09a0d2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "610ecf607c8cac3982d7c3f36ed13e695a57fe1d080b12b356d5f36acf24b559",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

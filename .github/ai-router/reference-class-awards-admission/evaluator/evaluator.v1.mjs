@@ -11,6 +11,8 @@ const HEX40 = /^[0-9a-f]{40}$/;
 const HEX64 = /^[0-9a-f]{64}$/;
 const STATES = ['INITIAL_RENDERED_STATE','MEANINGFUL_INTERACTION_STATE','RESULT_OR_NAVIGATION_STATE'];
 const DEVICES = ['PHONE','TABLET','DESKTOP'];
+const CONTEXTUAL_CLASS = 'THREE_DIMENSIONAL_CONTEXTUAL_INFORMATION_SPACE';
+const CONTEXTUAL_REFERENCE_SENTINEL = 'NO_POSITIVE_CONTEXTUAL_REFERENCE_ADMITTED';
 const DIMENSIONS = [
   'RESOLVED_AUTHORSHIP',
   'VISUAL_SPATIAL_COHERENCE',
@@ -24,6 +26,16 @@ const DIMENSIONS = [
   'ABSENCE_OF_PROTOTYPE_OR_DEBUG_RESIDUE'
 ];
 const DIMENSION_RESULTS = ['PARITY_OR_ABOVE','BELOW_PARITY','UNEVALUABLE'];
+const CONTEXTUAL_CATASTROPHIC = new Set([
+  'PRIMARY_INFORMATION_REMAINS_CARD_PANEL_OR_FLAT_PLANE_COMPOSITION',
+  'SPATIAL_DIMENSIONS_HAVE_NO_INFORMATIONAL_CONSEQUENCE',
+  'CAMERA_PARALLAX_WITHOUT_INFORMATION_STRUCTURE',
+  'HIERARCHY_REMAINS_FLAT_UI_HIERARCHY',
+  'RELATIONSHIPS_REMAIN_DIAGRAMMATIC_NOT_TRAVERSABLE',
+  'DIRECT_MANIPULATION_DOES_NOT_REVEAL_TRAVERSE_OR_INSPECT_INFORMATION',
+  'SPATIAL_COHERENCE_REQUIRES_EXPLANATORY_TEXT_TO_BE_PERCEIVED',
+  'CONTEXT_COLLAPSES_TO_CAROUSEL_DASHBOARD_FLOWCHART_OR_PROTOTYPE'
+]);
 const CATASTROPHIC = new Set([
   'NOT_COMPOSED_AS_A_WHOLE',
   'PRIMARY_EXPERIENCE_IS_PROTOTYPE_OR_DEBUG_SURFACE',
@@ -34,7 +46,8 @@ const CATASTROPHIC = new Set([
   'PURPOSE_FORM_DISINTEGRATION',
   'PRIMARY_FUNCTIONAL_PATH_NONFUNCTIONAL',
   'RENDERED_EVIDENCE_INSUFFICIENT',
-  'REFERENCE_IDENTITY_UNBOUND'
+  'REFERENCE_IDENTITY_UNBOUND',
+  ...CONTEXTUAL_CATASTROPHIC
 ]);
 
 export const stable = value => Array.isArray(value)
@@ -125,10 +138,9 @@ function validateRenderedEvidence(bundle, classRule) {
   }
   return [];
 }
-function validateAdjudication(adjudication, bundle, reference) {
+function validateAdjudicatorCore(adjudication, bundle) {
   if (!isObject(adjudication) || adjudication.schema !== 'REFERENCE_CLASS_AWARDS_ADMISSION_PERCEPTUAL_ADJUDICATION_v1') return ['PERCEPTUAL_ADJUDICATION_SCHEMA_INVALID'];
   if (adjudication.candidateCommitSha !== bundle.candidate.commitSha) return ['ADJUDICATION_CANDIDATE_BINDING_MISMATCH'];
-  if (adjudication.referenceId !== reference.referenceId || adjudication.referenceCommitSha !== reference.exactCommitSha) return ['ADJUDICATION_REFERENCE_BINDING_MISMATCH'];
   if (adjudication.evidenceBundleDigest !== bundle.evidenceDigest) return ['ADJUDICATION_EVIDENCE_BINDING_MISMATCH'];
   if (!isObject(adjudication.adjudicator) || !['HUMAN_REVIEWER','INDEPENDENT_MULTIMODAL_EVALUATOR'].includes(adjudication.adjudicator.kind) || adjudication.adjudicator.independentOfCandidateConstruction !== true || typeof adjudication.adjudicator.id !== 'string' || adjudication.adjudicator.id.length === 0) return ['ADJUDICATOR_INDEPENDENCE_FAILURE'];
   if (adjudication.styleSimilarityUsedAsRequirement !== false) return ['STYLE_IMITATION_REQUIREMENT_DETECTED'];
@@ -141,6 +153,48 @@ function validateAdjudication(adjudication, bundle, reference) {
   if (!Array.isArray(adjudication.catastrophicFailures) || adjudication.catastrophicFailures.some(x => !CATASTROPHIC.has(x))) return ['CATASTROPHIC_FAILURE_SET_INVALID'];
   return [];
 }
+function validateAdjudication(adjudication, bundle, reference) {
+  const core = validateAdjudicatorCore(adjudication, bundle);
+  if (core.length) return core;
+  if (adjudication.referenceId !== reference.referenceId || adjudication.referenceCommitSha !== reference.exactCommitSha) return ['ADJUDICATION_REFERENCE_BINDING_MISMATCH'];
+  return [];
+}
+function validateContextualNegativeGuardAdjudication(adjudication, bundle, classRule) {
+  const core = validateAdjudicatorCore(adjudication, bundle);
+  if (core.length) return core;
+  if (adjudication.referenceId !== CONTEXTUAL_REFERENCE_SENTINEL || adjudication.referenceCommitSha !== null) return ['CONTEXTUAL_NEGATIVE_GUARD_REFERENCE_SENTINEL_INVALID'];
+  const declared = new Set(classRule.negativeGuardFailureCodes ?? []);
+  if (declared.size !== CONTEXTUAL_CATASTROPHIC.size || [...CONTEXTUAL_CATASTROPHIC].some(x => !declared.has(x))) return ['CONTEXTUAL_NEGATIVE_GUARD_CLASS_CONTRACT_MISMATCH'];
+  return [];
+}
+function contextualNegativeGuard(bundle, adjudication, classRule) {
+  if (!isObject(bundle.reference) || bundle.reference.referenceId !== CONTEXTUAL_REFERENCE_SENTINEL || bundle.reference.commitSha !== null) {
+    return unevaluable('CONTEXTUAL_NEGATIVE_GUARD_REFERENCE_SENTINEL_REQUIRED');
+  }
+  const errors = validateContextualNegativeGuardAdjudication(adjudication, bundle, classRule);
+  if (errors.length) return unevaluable('PERCEPTUAL_ADJUDICATION_INVALID', { errors });
+  const common = {
+    candidateId: bundle.candidate.candidateId,
+    candidateCommitSha: bundle.candidate.commitSha,
+    manifestationClass: bundle.candidate.manifestationClass,
+    referenceId: CONTEXTUAL_REFERENCE_SENTINEL,
+    referenceCommitSha: null,
+    evidenceBundleDigest: bundle.evidenceDigest,
+    adjudicatorId: adjudication.adjudicator.id,
+    adjudicatorKind: adjudication.adjudicator.kind,
+    positiveContextualReferenceAdmitted: false
+  };
+  if (bundle.interactionTrace.meaningfulConsequenceObserved !== true) {
+    return below('CATASTROPHIC_FAILURE_PRESENT', { catastrophicFailures: ['MEANINGFUL_PRIMARY_INTERACTION_ABSENT_OR_TRIVIAL_WHEN_REQUIRED'] }, common);
+  }
+  if (adjudication.catastrophicFailures.length > 0) {
+    return below('CATASTROPHIC_FAILURE_PRESENT', { catastrophicFailures: adjudication.catastrophicFailures }, common);
+  }
+  return unevaluable('POSITIVE_CONTEXTUAL_REFERENCE_NOT_ADMITTED', {
+    requiredAction: 'SEPARATE_REFERENCE_CORPUS_REVISION_AND_REAL_RENDERED_CALIBRATION',
+    admissibleResultBlocked: true
+  }, common);
+}
 
 export function evaluate(evidenceBundle, perceptualAdjudication, foundationOverride = null) {
   const foundation = foundationOverride ?? loadFoundation();
@@ -148,11 +202,6 @@ export function evaluate(evidenceBundle, perceptualAdjudication, foundationOverr
   const bundle = evidenceBundle;
   if (!isObject(bundle) || bundle.schema !== 'REFERENCE_CLASS_AWARDS_ADMISSION_EVIDENCE_BUNDLE_v1') return unevaluable('EVIDENCE_SCHEMA_INVALID');
   if (!isObject(bundle.candidate) || typeof bundle.candidate.candidateId !== 'string' || !HEX40.test(bundle.candidate.commitSha ?? '') || typeof bundle.candidate.manifestationClass !== 'string') return unevaluable('EVIDENCE_IDENTITY_UNBOUND', { target: 'candidate' });
-  if (!isObject(bundle.reference) || typeof bundle.reference.referenceId !== 'string' || !HEX40.test(bundle.reference.commitSha ?? '')) return unevaluable('EVIDENCE_IDENTITY_UNBOUND', { target: 'reference' });
-  const reference = positiveReference(foundation, bundle.reference.referenceId);
-  if (!reference) return unevaluable('REFERENCE_IDENTITY_UNBOUND', { referenceId: bundle.reference.referenceId });
-  if (reference.exactCommitSha !== bundle.reference.commitSha) return unevaluable('REFERENCE_IDENTITY_MISMATCH', { expected: reference.exactCommitSha, observed: bundle.reference.commitSha });
-  if (reference.manifestationClass !== bundle.candidate.manifestationClass) return unevaluable('REFERENCE_CLASS_MISMATCH', { candidateClass: bundle.candidate.manifestationClass, referenceClass: reference.manifestationClass });
   const classRule = foundation.classRequirements.classes?.[bundle.candidate.manifestationClass];
   if (!classRule) return unevaluable('MANIFESTATION_CLASS_UNSUPPORTED', { manifestationClass: bundle.candidate.manifestationClass });
   if (!isObject(bundle.pageExcellence) || bundle.pageExcellence.result !== 'PASS' || !HEX64.test(bundle.pageExcellence.receiptDigest ?? '')) return unevaluable('PAGE_EXCELLENCE_PREREQUISITE_NOT_SATISFIED');
@@ -163,6 +212,16 @@ export function evaluate(evidenceBundle, perceptualAdjudication, foundationOverr
   if (renderedErrors.length) return unevaluable('REQUIRED_RENDERED_EVIDENCE_INCOMPLETE', { errors: renderedErrors });
   if (!isObject(bundle.interactionTrace) || typeof bundle.interactionTrace.required !== 'boolean' || typeof bundle.interactionTrace.meaningfulConsequenceObserved !== 'boolean' || !HEX64.test(bundle.interactionTrace.traceDigest ?? '')) return unevaluable('INTERACTION_TRACE_INVALID');
   if (classRule.interactive === true && bundle.interactionTrace.required !== true) return unevaluable('INTERACTION_TRACE_REQUIRED');
+
+  const contextualSentinelMode = bundle.candidate.manifestationClass === CONTEXTUAL_CLASS
+    && bundle.reference?.referenceId === CONTEXTUAL_REFERENCE_SENTINEL;
+  if (contextualSentinelMode) return contextualNegativeGuard(bundle, perceptualAdjudication, classRule);
+
+  if (!isObject(bundle.reference) || typeof bundle.reference.referenceId !== 'string' || !HEX40.test(bundle.reference.commitSha ?? '')) return unevaluable('EVIDENCE_IDENTITY_UNBOUND', { target: 'reference' });
+  const reference = positiveReference(foundation, bundle.reference.referenceId);
+  if (!reference) return unevaluable('REFERENCE_IDENTITY_UNBOUND', { referenceId: bundle.reference.referenceId });
+  if (reference.exactCommitSha !== bundle.reference.commitSha) return unevaluable('REFERENCE_IDENTITY_MISMATCH', { expected: reference.exactCommitSha, observed: bundle.reference.commitSha });
+  if (reference.manifestationClass !== bundle.candidate.manifestationClass) return unevaluable('REFERENCE_CLASS_MISMATCH', { candidateClass: bundle.candidate.manifestationClass, referenceClass: reference.manifestationClass });
   const adjudicationErrors = validateAdjudication(perceptualAdjudication, bundle, reference);
   if (adjudicationErrors.length) return unevaluable('PERCEPTUAL_ADJUDICATION_INVALID', { errors: adjudicationErrors });
   const common = {

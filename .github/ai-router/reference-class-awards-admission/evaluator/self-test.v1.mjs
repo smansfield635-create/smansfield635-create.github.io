@@ -9,9 +9,22 @@ const FOUNDATION = path.resolve(DIR, '..');
 const corpus = JSON.parse(fs.readFileSync(path.join(FOUNDATION, 'reference-corpus.v1.json'), 'utf8'));
 const protocol = JSON.parse(fs.readFileSync(path.join(DIR, 'protocol.v1.json'), 'utf8'));
 const activation = JSON.parse(fs.readFileSync(path.join(DIR, 'activation-criteria.v1.json'), 'utf8'));
+const classRequirements = JSON.parse(fs.readFileSync(path.join(DIR, 'class-requirements.v1.json'), 'utf8'));
 const reference = corpus.positiveReferences.find(r => r.referenceId === 'R_C_LAWS_COMPASS_SIX_AUTHORITY');
 if (!reference) throw new Error('R_C reference missing');
 
+const CONTEXTUAL_CLASS = 'THREE_DIMENSIONAL_CONTEXTUAL_INFORMATION_SPACE';
+const CONTEXTUAL_SENTINEL = 'NO_POSITIVE_CONTEXTUAL_REFERENCE_ADMITTED';
+const CONTEXTUAL_FAILURES = [
+  'PRIMARY_INFORMATION_REMAINS_CARD_PANEL_OR_FLAT_PLANE_COMPOSITION',
+  'SPATIAL_DIMENSIONS_HAVE_NO_INFORMATIONAL_CONSEQUENCE',
+  'CAMERA_PARALLAX_WITHOUT_INFORMATION_STRUCTURE',
+  'HIERARCHY_REMAINS_FLAT_UI_HIERARCHY',
+  'RELATIONSHIPS_REMAIN_DIAGRAMMATIC_NOT_TRAVERSABLE',
+  'DIRECT_MANIPULATION_DOES_NOT_REVEAL_TRAVERSE_OR_INSPECT_INFORMATION',
+  'SPATIAL_COHERENCE_REQUIRES_EXPLANATORY_TEXT_TO_BE_PERCEIVED',
+  'CONTEXT_COLLAPSES_TO_CAROUSEL_DASHBOARD_FLOWCHART_OR_PROTOTYPE'
+];
 const H64 = c => c.repeat(64);
 const H40 = c => c.repeat(40);
 const DIMENSIONS = [
@@ -19,6 +32,16 @@ const DIMENSIONS = [
 ];
 const clone = value => structuredClone(value);
 
+function renderedEvidence() {
+  return [
+    { artifactId:'phone-initial', kind:'SCREENSHOT', stateClass:'INITIAL_RENDERED_STATE', deviceClass:'PHONE', sha256:H64('2') },
+    { artifactId:'phone-interaction', kind:'VIDEO', stateClass:'MEANINGFUL_INTERACTION_STATE', deviceClass:'PHONE', sha256:H64('3') },
+    { artifactId:'phone-result', kind:'SCREENSHOT', stateClass:'RESULT_OR_NAVIGATION_STATE', deviceClass:'PHONE', sha256:H64('4') },
+    { artifactId:'desktop-initial', kind:'SCREENSHOT', stateClass:'INITIAL_RENDERED_STATE', deviceClass:'DESKTOP', sha256:H64('5') },
+    { artifactId:'desktop-interaction', kind:'VIDEO', stateClass:'MEANINGFUL_INTERACTION_STATE', deviceClass:'DESKTOP', sha256:H64('6') },
+    { artifactId:'desktop-result', kind:'SCREENSHOT', stateClass:'RESULT_OR_NAVIGATION_STATE', deviceClass:'DESKTOP', sha256:H64('7') }
+  ];
+}
 function baseBundle() {
   return withEvidenceDigest({
     schema: 'REFERENCE_CLASS_AWARDS_ADMISSION_EVIDENCE_BUNDLE_v1',
@@ -33,15 +56,27 @@ function baseBundle() {
     },
     pageExcellence: { result: 'PASS', receiptDigest: H64('1') },
     applicableDevices: ['PHONE','DESKTOP'],
-    renderedEvidence: [
-      { artifactId:'phone-initial', kind:'SCREENSHOT', stateClass:'INITIAL_RENDERED_STATE', deviceClass:'PHONE', sha256:H64('2') },
-      { artifactId:'phone-interaction', kind:'VIDEO', stateClass:'MEANINGFUL_INTERACTION_STATE', deviceClass:'PHONE', sha256:H64('3') },
-      { artifactId:'phone-result', kind:'SCREENSHOT', stateClass:'RESULT_OR_NAVIGATION_STATE', deviceClass:'PHONE', sha256:H64('4') },
-      { artifactId:'desktop-initial', kind:'SCREENSHOT', stateClass:'INITIAL_RENDERED_STATE', deviceClass:'DESKTOP', sha256:H64('5') },
-      { artifactId:'desktop-interaction', kind:'VIDEO', stateClass:'MEANINGFUL_INTERACTION_STATE', deviceClass:'DESKTOP', sha256:H64('6') },
-      { artifactId:'desktop-result', kind:'SCREENSHOT', stateClass:'RESULT_OR_NAVIGATION_STATE', deviceClass:'DESKTOP', sha256:H64('7') }
-    ],
+    renderedEvidence: renderedEvidence(),
     interactionTrace: { required:true, meaningfulConsequenceObserved:true, traceDigest:H64('8') },
+    technicalContext: { webgl2:true, drag:true, pinch:true, accessibilityScore:100, performanceScore:100, featureCount:999 }
+  });
+}
+function contextualBundle() {
+  return withEvidenceDigest({
+    schema: 'REFERENCE_CLASS_AWARDS_ADMISSION_EVIDENCE_BUNDLE_v1',
+    candidate: {
+      candidateId: 'SYNTHETIC_CONTEXTUAL_3D_CANDIDATE',
+      commitSha: H40('d'),
+      manifestationClass: CONTEXTUAL_CLASS
+    },
+    reference: {
+      referenceId: CONTEXTUAL_SENTINEL,
+      commitSha: null
+    },
+    pageExcellence: { result: 'PASS', receiptDigest: H64('a') },
+    applicableDevices: ['PHONE','DESKTOP'],
+    renderedEvidence: renderedEvidence(),
+    interactionTrace: { required:true, meaningfulConsequenceObserved:true, traceDigest:H64('b') },
     technicalContext: { webgl2:true, drag:true, pinch:true, accessibilityScore:100, performanceScore:100, featureCount:999 }
   });
 }
@@ -60,8 +95,8 @@ function baseAdjudication(bundle) {
     featureInventoryUsedAsPassBasis: false
   };
 }
-function expect(name, expectedResult, expectedReason, mutateBundle = null, mutateAdjudication = null) {
-  let bundle = baseBundle();
+function expect(name, expectedResult, expectedReason, mutateBundle = null, mutateAdjudication = null, bundleFactory = baseBundle) {
+  let bundle = bundleFactory();
   if (mutateBundle) bundle = mutateBundle(clone(bundle));
   let adjudication = baseAdjudication(bundle);
   if (mutateAdjudication) adjudication = mutateAdjudication(clone(adjudication), bundle);
@@ -95,15 +130,34 @@ const tests = [
   expect('DIMENSION_UNRESOLVED', 'UNEVALUABLE', 'PERCEPTUAL_ADJUDICATION_INCOMPLETE', null, a => { a.dimensionVerdicts.RESOLVED_AUTHORSHIP='UNEVALUABLE'; return a; }),
   expect('CLASS_MISMATCH', 'UNEVALUABLE', 'REFERENCE_CLASS_MISMATCH', b => redigest(Object.assign(b,{candidate:{...b.candidate,manifestationClass:'LIVE_ENVIRONMENTAL_INTERACTIVE_EXPERIENCE'}}))),
   expect('STYLE_DIFFERENCE_HAS_NO_NEGATIVE_INPUT', 'AWARDS_CONVERSATION_ADMISSIBLE', 'REFERENCE_CLASS_MATURITY_REACHED'),
-  expect('SPARSE_RESOLVED_NOT_AUTO_FAILED', 'AWARDS_CONVERSATION_ADMISSIBLE', 'REFERENCE_CLASS_MATURITY_REACHED', b => redigest(Object.assign(b,{technicalContext:{objectCount:3,featureCount:3}})))
+  expect('SPARSE_RESOLVED_NOT_AUTO_FAILED', 'AWARDS_CONVERSATION_ADMISSIBLE', 'REFERENCE_CLASS_MATURITY_REACHED', b => redigest(Object.assign(b,{technicalContext:{objectCount:3,featureCount:3}}))),
+  ...CONTEXTUAL_FAILURES.map((failure, index) => expect(
+    `CONTEXTUAL_3D_NEGATIVE_GUARD_${index + 1}_${failure}`,
+    'BELOW_AWARDS_CONVERSATION',
+    'CATASTROPHIC_FAILURE_PRESENT',
+    null,
+    a => { a.catastrophicFailures=[failure]; return a; },
+    contextualBundle
+  )),
+  expect('CONTEXTUAL_3D_TRIVIAL_INTERACTION_REJECTED', 'BELOW_AWARDS_CONVERSATION', 'CATASTROPHIC_FAILURE_PRESENT', b => redigest(Object.assign(b,{interactionTrace:{...b.interactionTrace,meaningfulConsequenceObserved:false}})), null, contextualBundle),
+  expect('CONTEXTUAL_3D_NO_POSITIVE_REFERENCE_CANNOT_ADMIT', 'UNEVALUABLE', 'POSITIVE_CONTEXTUAL_REFERENCE_NOT_ADMITTED', null, null, contextualBundle),
+  expect('CONTEXTUAL_3D_SENTINEL_COMMIT_MUST_REMAIN_NULL', 'UNEVALUABLE', 'CONTEXTUAL_NEGATIVE_GUARD_REFERENCE_SENTINEL_REQUIRED', b => redigest(Object.assign(b,{reference:{...b.reference,commitSha:H40('e')}})), null, contextualBundle),
+  expect('CONTEXTUAL_3D_ADJUDICATOR_MUST_BE_INDEPENDENT', 'UNEVALUABLE', 'PERCEPTUAL_ADJUDICATION_INVALID', null, a => { a.adjudicator.independentOfCandidateConstruction=false; return a; }, contextualBundle)
 ];
 
+const contextualRule = classRequirements.classes?.[CONTEXTUAL_CLASS];
+const contextualPositiveReferences = corpus.positiveReferences.filter(r => r.manifestationClass === CONTEXTUAL_CLASS);
 const authorityChecks = [
   { name:'PROTOCOL_NOT_ACTIVE', pass:protocol.authorityBoundary?.active===false },
   { name:'PROTOCOL_NO_SELF_ACTIVATION', pass:protocol.authorityBoundary?.maySelfActivate===false },
   { name:'ACTIVATION_NOT_SATISFIED', pass:activation.status==='NOT_SATISFIED_PRECALIBRATION' },
   { name:'REAL_CALIBRATION_REQUIRED', pass:Array.isArray(activation.requiredRealCalibrationControls)&&activation.requiredRealCalibrationControls.length===4 },
-  { name:'SEPARATE_RATIFICATION_REQUIRED', pass:activation.activationRequiresSeparateRatification===true }
+  { name:'SEPARATE_RATIFICATION_REQUIRED', pass:activation.activationRequiresSeparateRatification===true },
+  { name:'CONTEXTUAL_3D_CLASS_PRESENT', pass:Boolean(contextualRule)&&contextualRule.interactive===true },
+  { name:'CONTEXTUAL_3D_FAILURE_SET_EXACT', pass:Array.isArray(contextualRule?.negativeGuardFailureCodes)&&JSON.stringify([...contextualRule.negativeGuardFailureCodes].sort())===JSON.stringify([...CONTEXTUAL_FAILURES].sort()) },
+  { name:'NO_POSITIVE_CONTEXTUAL_REFERENCE_INVENTED', pass:contextualPositiveReferences.length===0 },
+  { name:'CONTEXTUAL_3D_ADMISSION_WITHOUT_REFERENCE_PROHIBITED', pass:activation.activationProhibitions?.includes('CONTEXTUAL_CLASS_ADMISSIBLE_RESULT_WITHOUT_SEPARATELY_ADMITTED_POSITIVE_CONTEXTUAL_REFERENCE')===true },
+  { name:'REFERENCE_CORPUS_MUTATION_NOT_AUTHORIZED', pass:activation.contextual3dActivationRequirement?.referenceCorpusMutationAuthorizedByThisExtension===false }
 ];
 const all = [...tests, ...authorityChecks];
 const passed = all.filter(x=>x.pass).length;
@@ -115,6 +169,8 @@ const receipt = {
   failCount:all.length-passed,
   deterministicEvaluator:true,
   noncompensatory:true,
+  contextual3dNegativeGuardPresent:true,
+  contextual3dPositiveReferenceInvented:false,
   featureInventoryCanCreatePass:false,
   styleSimilarityRequired:false,
   activationAuthorityCreated:false,

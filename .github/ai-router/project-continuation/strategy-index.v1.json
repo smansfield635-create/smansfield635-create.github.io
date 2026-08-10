@@ -1,0 +1,31 @@
+{
+  "schema": "PROJECT_CONTINUATION_STRATEGY_INDEX_v1",
+  "indexId": "DIAMOND_GATE_THREE_LANE_DEVICE_STRATEGY_INDEX_v1",
+  "status": "ACTIVE_EXPERIMENTAL_NONAUTHORITY_INDEX",
+  "authorityEffect": "NONE",
+  "protocol": ".github/ai-router/project-continuation/protocol.v1.json",
+  "resolutionRule": "DEVICE_ASSIGNMENT_OR_EXPLICIT_LANE_ID_MUST_RESOLVE_TO_EXACTLY_ONE_LANE",
+  "lanes": [
+    {
+      "device": "S26 Ultra",
+      "laneId": "H_EARTH_PRODUCT",
+      "label": "H-Earth",
+      "manifest": ".github/ai-router/project-continuation/h-earth.continuation.v1.json"
+    },
+    {
+      "device": "A19 tablet",
+      "laneId": "INSTRUMENTATION_PLATFORM",
+      "label": "Instrument research / instrumentation platform",
+      "manifest": ".github/ai-router/project-continuation/instrumentation.continuation.v1.json"
+    },
+    {
+      "device": "S25 Ultra",
+      "laneId": "LAWS_CONTEXTUAL_3D",
+      "label": "Contextual 3D orbital-layout work surrounding the Laws chamber",
+      "manifest": ".github/ai-router/project-continuation/laws-contextual-3d.continuation.v1.json"
+    }
+  ],
+  "failureRule": "STOP_IF_DEVICE_OR_EXPLICIT_LANE_IS_MISSING_AMBIGUOUS_OR_CONFLICTS_WITH_THIS_INDEX",
+  "liveRevalidationRequired": true,
+  "otherRoomsAreContinuityDependencies": false
+}

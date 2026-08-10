@@ -1,0 +1,78 @@
+{
+  "schema": "PROJECT_CONTINUATION_PROTOCOL_v1",
+  "protocolId": "DIAMOND_GATE_MULTI_PROJECT_REPOSITORY_CONTINUATION_STANDARD_v1",
+  "status": "EXPERIMENTAL_NONAUTHORITY_CONTINUATION_STANDARD",
+  "authorityEffect": "NONE",
+  "continuityLaw": "CONVERSATION_MEMORY_OPTIONAL_REPOSITORY_CONTINUITY_MANDATORY",
+  "roomDependencyLaw": "OTHER_ROOMS_ARE_NOT_CONTINUITY_DEPENDENCIES",
+  "repositoryTruthLaw": "LIVE_REPOSITORY_STATE_OVERRIDES_MANIFEST_SNAPSHOTS_CONVERSATION_MEMORY_AND_PRIVATE_HANDOFFS",
+  "operatingModel": [
+    "ROOM_STARTS",
+    "AI_ENTRY_POINT",
+    "DEVICE_LANE_INDEX",
+    "PROJECT_MANIFEST",
+    "LIVE_REPOSITORY_STATE",
+    "CURRENT_FRONTIER",
+    "CONTINUE"
+  ],
+  "rootDiscovery": {
+    "entrypoint": "AI_ENTRYPOINT.json",
+    "agentInstructions": "AGENTS.md",
+    "strategyIndex": ".github/ai-router/project-continuation/strategy-index.v1.json"
+  },
+  "coldStartProcedure": [
+    "READ_ROOT_AI_ENTRYPOINT_AND_AGENT_INSTRUCTIONS",
+    "RESOLVE_DEVICE_OR_EXPLICIT_LANE_THROUGH_STRATEGY_INDEX",
+    "LOAD_EXACT_LANE_MANIFEST",
+    "FETCH_CURRENT_MAIN_AND_CANONICAL_OPERATION_LOCK_REF",
+    "LOAD_CURRENT_PROJECT_ENTRYPOINT_REQUIRED_INSTRUCTIONS_AND_REGISTRIES",
+    "COLLECT_RELEVANT_NONTERMINAL_OPERATIONS_OPEN_PULL_REQUESTS_BRANCHES_WORKFLOW_RUNS_ARTIFACTS_AND_COMMAND_EMITTED_RECEIPTS",
+    "DISCARD_STALE_RELEASED_TERMINAL_OR_SUPERSEDED_CANDIDATES_AS_ACTION_AUTHORITY",
+    "RECONCILE_ALL_LIVE_EVIDENCE_AND_DERIVE_ONE_CURRENT_LAWFUL_FRONTIER",
+    "STOP_IF_FRONTIER_IS_AMBIGUOUS_CONTRADICTORY_OR_UNPROVEN",
+    "BEFORE_ANY_MUTATION_RUN_CURRENT_CANONICAL_INTAKE_OR_SUCCESSOR_ROUTER_AND_ALL_NARROWER_PROJECT_GATES",
+    "EXECUTE_ONLY_SEPARATELY_AUTHORIZED_ACTION",
+    "WRITE_REQUIRED_COMMAND_EMITTED_RECEIPTS_BRANCH_PR_WORKFLOW_OR_TERMINAL_STATE_BACK_TO_REPOSITORY_SURFACES_REQUIRED_BY_THE_CONTROLLING_PROCEDURE"
+  ],
+  "canonicalLiveState": {
+    "defaultBranch": "refs/heads/main",
+    "operationLedgerRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "operationLedgerPath": ".github/operation-intake/active-operation-ledger.v1.json",
+    "mustInspectGitHubObjects": [
+      "RELEVANT_OPEN_PULL_REQUESTS",
+      "RELEVANT_BRANCH_HEADS",
+      "RELEVANT_WORKFLOW_RUNS_AND_CHECKS",
+      "REQUIRED_WORKFLOW_ARTIFACTS",
+      "COMMAND_EMITTED_RECEIPTS"
+    ]
+  },
+  "staleStatePolicy": {
+    "staticFrontierMayAuthorizeAction": false,
+    "conversationSummaryMayAuthorizeAction": false,
+    "privateRoomHandoffMayAuthorizeAction": false,
+    "manifestMayHardcodeNextMutation": false,
+    "liveRevalidationRequiredAtEveryColdStart": true,
+    "movingHeadSuccessorRuleRemainsControlling": true
+  },
+  "authorityBoundary": {
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "productAuthorityCreated": false,
+    "semanticAuthorityCreated": false,
+    "scientificAuthorityCreated": false,
+    "standardsConformanceAuthorityCreated": false,
+    "lifecycleAuthorityCreated": false
+  },
+  "writeBackLaw": "A_COMPLETED_ACTION_MUST_BE_DISCOVERABLE_FROM_REPOSITORY_EVIDENCE_REQUIRED_BY_ITS_CONTROLLING_PROCEDURE_WITHOUT_PRIVATE_ROOM_EXPLANATION",
+  "empiricalRecoveryTest": {
+    "requiredAfterMerge": true,
+    "rooms": 3,
+    "privateHandoffAllowed": false,
+    "mustUseThenCurrentMain": true,
+    "mustIdentifyOwnLane": true,
+    "mustRevalidateLiveState": true,
+    "mustStateDerivedLawfulFrontier": true,
+    "terminalCapabilityClaimBeforeThreeRoomTest": false
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "PROJECT_CONTINUATION_LANE_MANIFEST_v1",
+  "laneId": "H_EARTH_PRODUCT",
+  "device": "S26 Ultra",
+  "status": "ACTIVE_EXPERIMENTAL_NONAUTHORITY_MANIFEST",
+  "authorityEffect": "NONE",
+  "projectIdentity": {
+    "projectId": "H_EARTH",
+    "label": "H-Earth",
+    "repositoryProjectEntrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json"
+  },
+  "authoritativeStateLocations": {
+    "rootEntrypoint": "AI_ENTRYPOINT.json",
+    "rootInstructions": "AGENTS.md",
+    "projectEntrypoint": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+    "requiredInstructionRoots": ["h-earth-3d/AGENTS.md", "showroom/globe/h-earth/AGENTS.md"],
+    "projectRegistries": [
+      "h-earth-3d/registry/h-earth.repository-registry.bootstrap.json",
+      "h-earth-3d/registry/h-earth.repository-registry.tool-instruction.json",
+      "h-earth-3d/registry/h-earth.repository-registry.github-instruction.md",
+      "h-earth-3d/registry/H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1.md"
+    ],
+    "operationLedger": {
+      "ref": "refs/heads/operation-locks/repository-operation-intake-v1",
+      "path": ".github/operation-intake/active-operation-ledger.v1.json"
+    },
+    "projectPathPrefixes": ["h-earth-3d/", "showroom/globe/h-earth/"],
+    "declaredWorkflows": [
+      ".github/workflows/h-earth-repository-registry-preflight.yml",
+      ".github/workflows/h-earth-r06-c10-candidate-admission.yml"
+    ]
+  },
+  "frontierDerivation": {
+    "liveRevalidationRequired": true,
+    "staticFrontierStored": false,
+    "orderedMethod": [
+      "FETCH_LATEST_MAIN",
+      "LOAD_CURRENT_H_EARTH_PROJECT_ENTRYPOINT_AND_ALL_NAMED_REQUIRED_INSTRUCTIONS_AND_REGISTRIES",
+      "FETCH_CANONICAL_OPERATION_LEDGER_FROM_ITS_LOCK_REF_AND_SELECT_RELEVANT_H_EARTH_OR_PATH_INTERSECTING_NONTERMINAL_OPERATIONS",
+      "INSPECT_RELEVANT_OPEN_PULL_REQUESTS_BRANCH_HEADS_WORKFLOW_RUNS_CHECKS_ARTIFACTS_AND_COMMAND_EMITTED_RECEIPTS",
+      "RECONCILE_CANDIDATE_HEADS_AND_OPERATION_LIFECYCLE_AGAINST_LATEST_MAIN",
+      "DISCARD_RELEASED_TERMINAL_SUPERSEDED_OR_STALE_EVIDENCE_AS_CURRENT_ACTION_AUTHORITY",
+      "DERIVE_THE_UNIQUE_HIGHEST_LAWFUL_UNRESOLVED_TRANSITION",
+      "RUN_H_EARTH_AUTOMATIC_PREFLIGHT_AND_ALL_CURRENT_PROJECT_GATES_BEFORE_SUBSTANTIVE_ACTION",
+      "STOP_IF_NO_UNIQUE_PROVEN_FRONTIER_EXISTS"
+    ]
+  },
+  "actionAuthorityAndConstraints": {
+    "manifestCreatesMutationAuthority": false,
+    "manifestCreatesMergeAuthority": false,
+    "manifestCreatesDeploymentAuthority": false,
+    "manifestCreatesProductAuthority": false,
+    "manifestCreatesSemanticAuthority": false,
+    "canonicalIntakeRequiredBeforeMutation": true,
+    "movingHeadSuccessorRequiredWhenCurrentRulesTrigger": true,
+    "repositoryRouterRequiredForEveryAffectedPath": true,
+    "hEarthRegistryPreflightRequired": true,
+    "stopRatherThanInferMissingAuthorityOrEvidence": true
+  },
+  "writeBackRequirements": {
+    "rule": "WRITE_BACK_ONLY_WHAT_THE_SEPARATELY_AUTHORIZED_H_EARTH_PROCEDURE_REQUIRES",
+    "requiredEvidenceClassesWhenApplicable": [
+      "COMMAND_EMITTED_ADMISSION_OR_SUCCESSOR_RECEIPT",
+      "ROUTER_AND_H_EARTH_PREFLIGHT_RECEIPTS",
+      "CANDIDATE_BRANCH_OR_PULL_REQUEST_STATE",
+      "WORKFLOW_CHECK_AND_REQUIRED_ARTIFACT_EVIDENCE",
+      "CANONICAL_TERMINAL_OR_SUCCESSOR_LIFECYCLE_RECEIPT"
+    ],
+    "privateRoomSummaryIsSufficientWriteBack": false
+  }
+}

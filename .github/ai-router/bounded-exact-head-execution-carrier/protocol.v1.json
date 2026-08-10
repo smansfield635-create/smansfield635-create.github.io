@@ -11,6 +11,7 @@
     "PAGE_ARCHITECTURE_SOURCE_IDENTITIES_MUST_BE_A_SUBSET_OF_CANONICAL_OPERATION_DECLARATIONS",
     "REFERENCE_CLASS_VERIFIER_ARGUMENT_AND_TARGET_HEAD_ARE_DESCRIPTOR_BOUND_NOT_CALLER_SUPPLIED",
     "REFERENCE_CLASS_VERIFIER_SCRIPT_BLOB_MUST_MATCH_THE_REGISTERED_IMMUTABLE_BLOB",
+    "REFERENCE_CLASS_EVALUATOR_SELF_TEST_TARGET_HEAD_SCRIPT_AND_ARGUMENTS_ARE_DESCRIPTOR_BOUND",
     "ACTIVE_OPERATION_LOCK_AND_REQUEST_PROCEDURE_DIGESTS_MUST_MATCH_CANONICAL_LEDGER",
     "TARGET_EXECUTION_USES_A_DETACHED_CLEAN_EXACT_HEAD_WORKTREE",
     "NATIVE_COMMAND_RECEIPTS_ARE_PRESERVED_AND_HASHED",
@@ -39,47 +40,21 @@
       "targetHeadSource": "RATIFIED_DESCRIPTOR_ONLY",
       "scriptBlobSource": "RATIFIED_DESCRIPTOR_ONLY",
       "callerSuppliedBundleAllowed": false
+    },
+    {
+      "executionClass": "REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_V1",
+      "nativeCommand": "REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_RECEIPT_v1",
+      "argumentSource": "RATIFIED_DESCRIPTOR_ONLY",
+      "targetHeadSource": "RATIFIED_DESCRIPTOR_ONLY",
+      "scriptBlobSource": "RATIFIED_DESCRIPTOR_ONLY",
+      "callerSuppliedBundleAllowed": false
     }
   ],
   "requestSchema": {
     "schema": "BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_v1",
-    "required": [
-      "schema",
-      "requestId",
-      "descriptorId",
-      "operationRequest",
-      "constructionProcedure",
-      "admissionReceipt",
-      "requestNonce"
-    ],
-    "allowed": [
-      "schema",
-      "requestId",
-      "descriptorId",
-      "operationRequest",
-      "constructionProcedure",
-      "admissionReceipt",
-      "requestNonce"
-    ],
-    "explicitlyProhibited": [
-      "command",
-      "shell",
-      "shellCommand",
-      "script",
-      "scriptBody",
-      "executable",
-      "arguments",
-      "extraArguments",
-      "environment",
-      "environmentOverride",
-      "paths",
-      "targetHead",
-      "workingDirectory",
-      "workflowOverride",
-      "architectureBundle",
-      "receiptBundle",
-      "pageReceiptBundle"
-    ]
+    "required": ["schema","requestId","descriptorId","operationRequest","constructionProcedure","admissionReceipt","requestNonce"],
+    "allowed": ["schema","requestId","descriptorId","operationRequest","constructionProcedure","admissionReceipt","requestNonce"],
+    "explicitlyProhibited": ["command","shell","shellCommand","script","scriptBody","executable","arguments","extraArguments","environment","environmentOverride","paths","targetHead","workingDirectory","workflowOverride","architectureBundle","receiptBundle","pageReceiptBundle"]
   },
   "authorityBoundary": {
     "createsAuthority": false,

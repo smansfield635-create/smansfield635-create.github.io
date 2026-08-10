@@ -1,0 +1,55 @@
+{
+  "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
+  "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_TWO_EQUATION_SPECIMEN_V1",
+  "operationId": "LAWS_CONTEXTUAL_3D_READABLE_TABS_TWO_EQUATION_SPECIMEN_V1_20260810_001_CORRECTED_001",
+  "lockGeneration": 1012,
+  "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
+  "privateControlPlaneCustody": {
+    "repository": "smansfield635-create/geodiametrics1",
+    "branch": "commercial-control-plane-migration",
+    "head": "5baff7de03357e338087855976fbed77b74f1d9c",
+    "migrationReceiptBlob": "84bf88c087b489034ee4939b91911939d5caab55",
+    "publicOperationalDependenciesPreserved": true
+  },
+  "contentSource": {
+    "path": "laws/research/methods-and-models/showroom.js",
+    "gitBlobSha": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965"
+  },
+  "implementationSources": [
+    {"path":"laws/research/methods-and-models/showroom.css","gitBlobSha":"dd4e484cbc170a7841bce4ebe95eb47f4057b92b"},
+    {"path":"laws/research/methods-and-models/showroom-euclidean.css","gitBlobSha":"985bc039f8b66c2e9c85bcb276615f3e7a9f1494"},
+    {"path":"laws/research/methods-and-models/showroom-euclidean.js","gitBlobSha":"e2289469b7efed2d21d0d55c873e56402c893932"},
+    {"path":"laws/index.css","gitBlobSha":"48c99c991a897297894fd3dae6923c432ec3f2b3"}
+  ],
+  "designLaw": {
+    "identity": "CONTEXTUAL_TAB_EQUALS_EUCLIDEAN_OBJECT",
+    "contentEqualsObject": true,
+    "tabObjectCount": 2,
+    "proxyObjectCount": 0,
+    "popupReplacementAllowed": false,
+    "carouselAllowed": false
+  },
+  "selectedModels": [
+    {"id":"collapse-qualified","title":"Qualified Collapse Predicate"},
+    {"id":"pcr","title":"Pressure-to-Capacity Ratio"}
+  ],
+  "pageExcellence": {
+    "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
+    "bundleDigest": "bb43b07ddca1f717ad9fe7d8de40103b72383d8b85990ede17e4ec5de707c43d",
+    "carrierRun": 31414997035,
+    "result": "PASS"
+  },
+  "rejectedPredecessor": {
+    "pullRequest": 886,
+    "commitSha": "2647dee9e84b1cf2cc863a5a2a867dc599f4389c",
+    "terminalDisposition": "REJECTED_CLOSED",
+    "failureClass": "COMPASS_REPLICATION",
+    "use": "NEGATIVE_REFERENCE_ONLY"
+  },
+  "authority": {
+    "merge": false,
+    "production": false,
+    "visualAcceptance": false,
+    "semanticMutation": false
+  }
+}

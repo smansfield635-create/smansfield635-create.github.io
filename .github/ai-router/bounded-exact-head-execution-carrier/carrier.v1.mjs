@@ -13,6 +13,8 @@ const LOCK_LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.js
 const PAGE_TOOLSET_PATH = '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json';
 const REFERENCE_CLASS_VERIFIER_PATH = '.github/ai-router/reference-class-awards-admission/verify.v1.mjs';
 const REFERENCE_CLASS_EVALUATOR_SELF_TEST_PATH = '.github/ai-router/reference-class-awards-admission/evaluator/self-test.v1.mjs';
+const PAGE_GATE_PATH = '.github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs';
+const GENERIC_PAGE_CLASS = 'PAGE_EXCELLENCE_ARCHITECTURE_FROM_CANONICAL_OPERATION_V1';
 const REQUIRED_REQUEST_KEYS = ['schema', 'requestId', 'descriptorId', 'operationRequest', 'constructionProcedure', 'admissionReceipt', 'requestNonce'];
 const FORBIDDEN_REQUEST_KEYS = ['command','shell','shellCommand','script','scriptBody','executable','arguments','extraArguments','environment','environmentOverride','paths','targetHead','workingDirectory','workflowOverride','architectureBundle','receiptBundle','pageReceiptBundle'];
 
@@ -116,12 +118,21 @@ function resolveDescriptor(registry, descriptorId) {
   if (descriptor.executionClass === 'ROUTER_MUTATION_V1') {
     if (descriptor.scriptPath !== 'tools/repository-ai-entry-router.mjs') fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
   } else if (descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1') {
-    if (descriptor.scriptPath !== '.github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs') fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
+    if (descriptor.scriptPath !== PAGE_GATE_PATH) fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
     if (descriptor.pagePhase !== 'ARCHITECTURE') fail('PAGE_PHASE_NOT_ALLOWED');
     assertBlob(descriptor.scriptBlob, 'PAGE_GATE_BLOB_INVALID');
     if (!Number.isInteger(descriptor.boundLockGeneration) || descriptor.boundLockGeneration < 1) fail('DESCRIPTOR_LOCK_BINDING_INVALID');
     assertCommit(descriptor.boundTargetHead, 'DESCRIPTOR_TARGET_HEAD_BINDING_INVALID');
     assertString(descriptor.boundOperationId, 'DESCRIPTOR_OPERATION_BINDING_INVALID');
+  } else if (descriptor.executionClass === GENERIC_PAGE_CLASS) {
+    if (descriptor.projectId !== 'REPOSITORY_AI_ROUTER_INFRASTRUCTURE') fail('GENERIC_PAGE_DESCRIPTOR_PROJECT_INVALID');
+    if (descriptor.scriptPath !== PAGE_GATE_PATH || descriptor.pagePhase !== 'ARCHITECTURE' || descriptor.mutationIntent !== true) fail('GENERIC_PAGE_DESCRIPTOR_INVALID');
+    if (descriptor.targetHeadDerivation !== 'OPERATION_EXACT_GOVERNING_HEAD') fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
+    if (descriptor.pageSubjectHeadDerivation !== 'SUBJECT_IDENTITY_PAGE_OPERATION_SUBJECT_HEAD_ELSE_FROZEN_AUTHORITY_HEAD') fail('PAGE_SUBJECT_HEAD_DERIVATION_UNSUPPORTED');
+    if (descriptor.architectureFindingsDerivation !== 'OPERATION_SUBJECT_IDENTITY_PAGE_ARCHITECTURE_FINDINGS_EXACT') fail('ARCHITECTURE_FINDINGS_DERIVATION_UNSUPPORTED');
+    if (descriptor.sourceIdentityDerivation !== 'OPERATION_SUBJECT_IDENTITY_EXISTING_CONSTRUCT_SEARCH_SOURCES_EXACT') fail('ARCHITECTURE_SOURCE_DERIVATION_UNSUPPORTED');
+    if (descriptor.scriptBlobDerivation !== 'TARGET_HEAD_EXACT_BLOB') fail('PAGE_GATE_BLOB_DERIVATION_UNSUPPORTED');
+    for (const key of ['boundOperationId','boundLockGeneration','boundTargetHead','scriptBlob','architectureFindings']) if (Object.hasOwn(descriptor, key)) fail('GENERIC_PAGE_DESCRIPTOR_MUST_NOT_BE_OPERATION_BOUND', key);
   } else if (descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1') {
     if (descriptor.scriptPath !== REFERENCE_CLASS_VERIFIER_PATH) fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
     if (descriptor.mutationIntent !== false) fail('REFERENCE_CLASS_VERIFIER_MUTATION_INTENT_PROHIBITED');
@@ -171,8 +182,15 @@ function deriveTargetHead(op, descriptor) {
   let value;
   if (descriptor.targetHeadDerivation === 'SUBJECT_IDENTITY_REQUIRED_STARTING_HEAD_ELSE_EXACT_GOVERNING_HEAD') value = op.subjectIdentity?.requiredStartingHead ?? op.exactGoverningHead;
   else if (descriptor.targetHeadDerivation === 'BOUND_DESCRIPTOR_TARGET_HEAD') value = descriptor.boundTargetHead;
+  else if (descriptor.targetHeadDerivation === 'OPERATION_EXACT_GOVERNING_HEAD') value = op.exactGoverningHead;
   else fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
   return assertCommit(value, 'TARGET_HEAD_NOT_AUTHORIZED');
+}
+function derivePageSubjectHead(op, descriptor, targetHead) {
+  if (descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1') return targetHead;
+  if (descriptor.executionClass !== GENERIC_PAGE_CLASS) return null;
+  const value = op.subjectIdentity?.pageOperationSubjectHead ?? op.subjectIdentity?.frozenAuthorityHead;
+  return assertCommit(value, 'PAGE_SUBJECT_HEAD_NOT_CANONICALLY_BOUND');
 }
 function deriveTask(op, descriptor) {
   if (descriptor.taskDerivation !== 'SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID') fail('TASK_DERIVATION_UNSUPPORTED');
@@ -195,17 +213,8 @@ function declaredSourceIdentitySet(op) {
   }
   return set;
 }
-export function validatePageArchitectureDescriptor(descriptor, docs, targetHead) {
-  if (descriptor.executionClass !== 'PAGE_EXCELLENCE_ARCHITECTURE_V1') fail('PAGE_DESCRIPTOR_REQUIRED');
-  if (descriptor.projectId !== docs.op.projectId) fail('DESCRIPTOR_PROJECT_BINDING_MISMATCH');
-  if (descriptor.boundOperationId !== docs.op.operationId) fail('DESCRIPTOR_OPERATION_BINDING_MISMATCH');
-  if (descriptor.boundLockGeneration !== docs.lock.lockGeneration) fail('DESCRIPTOR_LOCK_BINDING_MISMATCH');
-  if (descriptor.boundTargetHead !== targetHead) fail('DESCRIPTOR_TARGET_HEAD_BINDING_MISMATCH');
-  const findings = assertObject(descriptor.architectureFindings, 'ARCHITECTURE_FINDINGS_MISSING');
-  if (findings.schema !== 'CONTEXTUAL_ARCHITECTURE_FINDINGS_v1') fail('ARCHITECTURE_FINDINGS_SCHEMA_MISMATCH');
-  if (findings.implementationClass !== 'EXISTING_CONSTRUCT_ADOPTION') fail('ARCHITECTURE_IMPLEMENTATION_CLASS_NOT_ALLOWED');
-  if (findings.existingConstructSearch?.executed !== true || !Array.isArray(findings.existingConstructSearch?.searchedScopes) || findings.existingConstructSearch.searchedScopes.length === 0) fail('EXISTING_CONSTRUCT_SEARCH_INCOMPLETE');
-  const declared = declaredSourceIdentitySet(docs.op);
+function validateExistingSourceAdoption(findings, op) {
+  const declared = declaredSourceIdentitySet(op);
   if (!Array.isArray(findings.exactSourceConstructIdentities) || findings.exactSourceConstructIdentities.length === 0) fail('ARCHITECTURE_SOURCE_IDENTITIES_MISSING');
   const adoptedSourceIds = new Set();
   for (const source of findings.exactSourceConstructIdentities) {
@@ -226,10 +235,45 @@ export function validatePageArchitectureDescriptor(descriptor, docs, targetHead)
   }
   if (findings.visualArchitectureAuthority?.contentAdapterMayDefineVisualArchitecture !== false) fail('ADAPTER_VISUAL_ARCHITECTURE_AUTHORITY_PROHIBITED');
   if (!['EXISTING_SOURCE_CONSTRUCTS','EXISTING_SOURCE_CONSTRUCTS_WITH_BOUNDED_ADAPTER'].includes(findings.visualArchitectureAuthority?.authorityHolder)) fail('VISUAL_ARCHITECTURE_AUTHORITY_INVALID');
+  if (findings.separateNewConstructAuthority !== null) fail('UNEXPECTED_NEW_CONSTRUCT_AUTHORITY');
+}
+function validateArchitectureFindingsCommon(findings) {
+  assertObject(findings, 'ARCHITECTURE_FINDINGS_MISSING');
+  if (findings.schema !== 'CONTEXTUAL_ARCHITECTURE_FINDINGS_v1') fail('ARCHITECTURE_FINDINGS_SCHEMA_MISMATCH');
+  if (!['EXISTING_CONSTRUCT_ADOPTION','NEW_CONSTRUCT_SEPARATELY_AUTHORIZED','NONVISUAL_CONTENT_ONLY'].includes(findings.implementationClass)) fail('ARCHITECTURE_IMPLEMENTATION_CLASS_NOT_ALLOWED');
+  assertString(findings.classificationRationale, 'ARCHITECTURE_CLASSIFICATION_RATIONALE_MISSING');
+  if (findings.existingConstructSearch?.executed !== true || !Array.isArray(findings.existingConstructSearch?.searchedScopes) || findings.existingConstructSearch.searchedScopes.length === 0) fail('EXISTING_CONSTRUCT_SEARCH_INCOMPLETE');
   if (!Array.isArray(findings.prohibitedSubstituteArchitectures) || findings.prohibitedSubstituteArchitectures.length === 0) fail('PROHIBITED_SUBSTITUTE_ARCHITECTURES_MISSING');
   if (!Array.isArray(findings.requiredRuntimeConditions) || findings.requiredRuntimeConditions.length === 0) fail('REQUIRED_RUNTIME_CONDITIONS_MISSING');
-  if (findings.separateNewConstructAuthority !== null) fail('UNEXPECTED_NEW_CONSTRUCT_AUTHORITY');
-  return stable(findings);
+  if (!findings.visualArchitectureAuthority || typeof findings.visualArchitectureAuthority.contentAdapterMayDefineVisualArchitecture !== 'boolean' || typeof findings.visualArchitectureAuthority.authorityHolder !== 'string' || findings.visualArchitectureAuthority.authorityHolder.length === 0) fail('VISUAL_ARCHITECTURE_AUTHORITY_INVALID');
+}
+export function validatePageArchitectureDescriptor(descriptor, docs, targetHead) {
+  if (descriptor.executionClass !== 'PAGE_EXCELLENCE_ARCHITECTURE_V1') fail('PAGE_DESCRIPTOR_REQUIRED');
+  if (descriptor.projectId !== docs.op.projectId) fail('DESCRIPTOR_PROJECT_BINDING_MISMATCH');
+  if (descriptor.boundOperationId !== docs.op.operationId) fail('DESCRIPTOR_OPERATION_BINDING_MISMATCH');
+  if (descriptor.boundLockGeneration !== docs.lock.lockGeneration) fail('DESCRIPTOR_LOCK_BINDING_MISMATCH');
+  if (descriptor.boundTargetHead !== targetHead) fail('DESCRIPTOR_TARGET_HEAD_BINDING_MISMATCH');
+  const findings = stable(descriptor.architectureFindings);
+  validateArchitectureFindingsCommon(findings);
+  if (findings.implementationClass !== 'EXISTING_CONSTRUCT_ADOPTION') fail('ARCHITECTURE_IMPLEMENTATION_CLASS_NOT_ALLOWED');
+  validateExistingSourceAdoption(findings, docs.op);
+  return findings;
+}
+export function validateCanonicalPageArchitectureFindings(descriptor, docs) {
+  if (descriptor.executionClass !== GENERIC_PAGE_CLASS) fail('GENERIC_PAGE_DESCRIPTOR_REQUIRED');
+  const findings = stable(docs.op.subjectIdentity?.pageArchitectureFindings);
+  validateArchitectureFindingsCommon(findings);
+  if (findings.implementationClass === 'EXISTING_CONSTRUCT_ADOPTION') {
+    validateExistingSourceAdoption(findings, docs.op);
+  } else if (findings.implementationClass === 'NEW_CONSTRUCT_SEPARATELY_AUTHORIZED') {
+    const grant = findings.separateNewConstructAuthority;
+    if (!grant || typeof grant.authorityId !== 'string' || grant.authorityId.length === 0) fail('NEW_CONSTRUCT_AUTHORITY_MISSING');
+    assertCommit(grant.exactGoverningHead, 'NEW_CONSTRUCT_AUTHORITY_MISSING');
+    if (findings.visualArchitectureAuthority.contentAdapterMayDefineVisualArchitecture !== false) fail('ADAPTER_VISUAL_ARCHITECTURE_AUTHORITY_PROHIBITED');
+  } else {
+    if (findings.visualArchitectureAuthority.authorityHolder !== 'NONE' || findings.visualArchitectureAuthority.contentAdapterMayDefineVisualArchitecture !== false) fail('VISUAL_ARCHITECTURE_AUTHORITY_INVALID');
+  }
+  return findings;
 }
 function validateReferenceClassDescriptor(descriptor, docs, targetHead) {
   if (descriptor.executionClass !== 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1') fail('REFERENCE_CLASS_DESCRIPTOR_REQUIRED');
@@ -269,14 +313,14 @@ function collectInstrumentVersions(value) {
   if (candidates.length !== 1) fail('INSTRUMENT_REGISTRY_NOT_UNIQUE', candidates.length);
   return Object.fromEntries(candidates[0].map(item => [item.id, item.version]));
 }
-export function makePageArchitectureBundle(descriptor, toolset, targetHead, operationId) {
+export function makePageArchitectureBundle(descriptor, toolset, subjectHead, operationId, architectureFindings = descriptor.architectureFindings) {
   const toolsetId = toolset?.locator?.toolsetId;
   const toolsetVersion = toolset?.locator?.version;
   if (toolset?.status !== 'ACTIVE_VERSION_BOUND' || toolset?.locator?.status !== 'ACTIVE_VERSION_BOUND') fail('PAGE_TOOLSET_NOT_ACTIVE');
   if (toolsetId !== 'MANDATORY_PAGE_TOOLSET' || toolsetVersion !== '1.1.0') fail('PAGE_TOOLSET_VERSION_MISMATCH');
-  const findings = stable(descriptor.architectureFindings);
+  const findings = stable(architectureFindings);
   const instrumentVersions = collectInstrumentVersions(toolset);
-  return stable({ schema: 'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1', toolsetId, toolsetVersion, subjectHead: targetHead, phaseReceipts: [{ phase: 'ARCHITECTURE', result: 'PASS', instrumentVersions, receiptDigest: hashObject({ descriptorId: descriptor.descriptorId, operationId, targetHead, findings }), findings }] });
+  return stable({ schema: 'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1', toolsetId, toolsetVersion, subjectHead, phaseReceipts: [{ phase: 'ARCHITECTURE', result: 'PASS', instrumentVersions, receiptDigest: hashObject({ descriptorId: descriptor.descriptorId, operationId, subjectHead, findings }), findings }] });
 }
 
 export function validateAndResolve({ rawRequest, registry, ledger }) {
@@ -292,12 +336,17 @@ export function validateAndResolve({ rawRequest, registry, ledger }) {
   if (requestDigest !== live.requestDigest || requestDigest !== docs.admission.requestDigest) fail('REQUEST_OR_PROCEDURE_DIGEST_MISMATCH', 'request');
   if (procedureDigest !== live.procedureLocatorDigest || procedureDigest !== docs.admission.procedureLocatorDigest) fail('REQUEST_OR_PROCEDURE_DIGEST_MISMATCH', 'procedure');
   const targetHead = deriveTargetHead(docs.op, descriptor);
+  const pageSubjectHead = derivePageSubjectHead(docs.op, descriptor, targetHead);
   const task = deriveTask(docs.op, descriptor);
   const paths = docs.allowedPaths;
-  const architectureFindings = descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1' ? validatePageArchitectureDescriptor(descriptor, docs, targetHead) : null;
+  const architectureFindings = descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1'
+    ? validatePageArchitectureDescriptor(descriptor, docs, targetHead)
+    : descriptor.executionClass === GENERIC_PAGE_CLASS
+      ? validateCanonicalPageArchitectureFindings(descriptor, docs)
+      : null;
   const referenceClassBinding = descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1' ? validateReferenceClassDescriptor(descriptor, docs, targetHead) : null;
   const referenceClassEvaluatorBinding = descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_V1' ? validateReferenceClassEvaluatorDescriptor(descriptor, docs, targetHead) : null;
-  return stable({ descriptor, executionClass: descriptor.executionClass, operationId: docs.op.operationId, projectId: docs.op.projectId, lockGeneration: docs.lock.lockGeneration, scopeHash: docs.lock.scopeHash, targetHead, task, paths, requestDigest, procedureDigest, admissionReceipt: docs.admission, architectureFindings, referenceClassBinding, referenceClassEvaluatorBinding });
+  return stable({ descriptor, executionClass: descriptor.executionClass, operationId: docs.op.operationId, projectId: docs.op.projectId, lockGeneration: docs.lock.lockGeneration, scopeHash: docs.lock.scopeHash, targetHead, pageSubjectHead, task, paths, requestDigest, procedureDigest, admissionReceipt: docs.admission, architectureFindings, referenceClassBinding, referenceClassEvaluatorBinding });
 }
 
 function loadCanonicalLedger() {
@@ -314,6 +363,16 @@ function ensureCommitAvailable(commit) {
   catch {
     try { execGit(['fetch', '--no-tags', 'origin', commit]); }
     catch { fail('EXACT_HEAD_CHECKOUT_FAILURE', commit); }
+  }
+}
+function verifyCanonicalSourceBlobs(resolution) {
+  if (resolution.executionClass !== GENERIC_PAGE_CLASS || resolution.architectureFindings?.implementationClass !== 'EXISTING_CONSTRUCT_ADOPTION') return;
+  for (const source of resolution.architectureFindings.exactSourceConstructIdentities) {
+    ensureCommitAvailable(source.commitSha);
+    let observed;
+    try { observed = execGit(['rev-parse', `${source.commitSha}:${source.path}`]).trim(); }
+    catch { fail('ARCHITECTURE_SOURCE_IDENTITY_NOT_REPRODUCIBLE', source.sourceId); }
+    if (observed !== source.gitBlobSha) fail('ARCHITECTURE_SOURCE_IDENTITY_NOT_REPRODUCIBLE', `${source.sourceId}:${source.gitBlobSha}:${observed}`);
   }
 }
 function assertClean(cwd, code = 'WORKTREE_NOT_CLEAN') {
@@ -341,15 +400,16 @@ function executeRouter(resolution, worktree, tempRoot, admissionPath) {
 function executePageArchitecture(resolution, worktree, tempRoot, admissionPath) {
   const gateBytes = fs.readFileSync(path.join(worktree, resolution.descriptor.scriptPath));
   const actualGateBlob = gitBlobSha(gateBytes);
-  if (actualGateBlob !== resolution.descriptor.scriptBlob) fail('PAGE_EXCELLENCE_GATE_BLOB_MISMATCH', `${resolution.descriptor.scriptBlob}:${actualGateBlob}`);
+  if (resolution.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1' && actualGateBlob !== resolution.descriptor.scriptBlob) fail('PAGE_EXCELLENCE_GATE_BLOB_MISMATCH', `${resolution.descriptor.scriptBlob}:${actualGateBlob}`);
+  if (resolution.executionClass === GENERIC_PAGE_CLASS) verifyCanonicalSourceBlobs(resolution);
   const toolset = readJson(path.join(worktree, PAGE_TOOLSET_PATH));
-  const bundle = makePageArchitectureBundle(resolution.descriptor, toolset, resolution.targetHead, resolution.operationId);
+  const bundle = makePageArchitectureBundle(resolution.descriptor, toolset, resolution.pageSubjectHead, resolution.operationId, resolution.architectureFindings);
   const bundlePath = path.join(tempRoot, 'page-architecture-bundle.json');
   const routerReceiptPath = path.join(tempRoot, 'delegated-router-receipt.json');
   const gateReceiptPath = path.join(tempRoot, 'native-gate-receipt.json');
   writeJson(bundlePath, bundle);
   const args = [resolution.descriptor.scriptPath, '--mutation-intent', ...resolution.paths.flatMap(p => ['--path', p]), '--task', resolution.task, '--page-phase', resolution.descriptor.pagePhase, '--page-receipt-bundle', bundlePath, '--output', routerReceiptPath];
-  const safeEnv = { ...baseSafeEnv(tempRoot, admissionPath), PAGE_OPERATION_SUBJECT_HEAD: resolution.targetHead };
+  const safeEnv = { ...baseSafeEnv(tempRoot, admissionPath), PAGE_OPERATION_SUBJECT_HEAD: resolution.pageSubjectHead };
   const child = cp.spawnSync(resolution.descriptor.executable, args, { cwd: worktree, env: safeEnv, shell: false, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
   const exitCode = child.error ? 1 : (Number.isInteger(child.status) ? child.status : 1);
   let gateReceipt = null;
@@ -366,7 +426,7 @@ function executePageArchitecture(resolution, worktree, tempRoot, admissionPath) 
   const gateClass = gateReceipt?.mandatoryReceipt?.contextualArchitecture?.implementationClass;
   if (gateClass !== resolution.architectureFindings.implementationClass) fail('PAGE_ARCHITECTURE_CLASS_MISMATCH', gateClass);
   const nativePass = gateReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue && routerReceipt.disposition === 'PASS';
-  return { exitCode, nativePass, nativeReceipt: gateReceipt, nativeReceiptDigest: sha256(fs.readFileSync(gateReceiptPath)), commandDigest: hashObject({ executable: resolution.descriptor.executable, args, derivedEnvironment: { PAGE_OPERATION_SUBJECT_HEAD: resolution.targetHead } }), extraReceiptFields: { pagePhase: resolution.descriptor.pagePhase, architectureBundleDigest: sha256(fs.readFileSync(bundlePath)), architectureFindingsDigest: hashObject(resolution.architectureFindings), delegatedRouterReceiptDigest: sha256(fs.readFileSync(routerReceiptPath)), delegatedRouterReceipt: routerReceipt, pageGateBlobVerified: true } };
+  return { exitCode, nativePass, nativeReceipt: gateReceipt, nativeReceiptDigest: sha256(fs.readFileSync(gateReceiptPath)), commandDigest: hashObject({ executable: resolution.descriptor.executable, args, derivedEnvironment: { PAGE_OPERATION_SUBJECT_HEAD: resolution.pageSubjectHead }, executionHead: resolution.targetHead }), extraReceiptFields: { pagePhase: resolution.descriptor.pagePhase, pageSubjectHead: resolution.pageSubjectHead, architectureBundleDigest: sha256(fs.readFileSync(bundlePath)), architectureFindingsDigest: hashObject(resolution.architectureFindings), delegatedRouterReceiptDigest: sha256(fs.readFileSync(routerReceiptPath)), delegatedRouterReceipt: routerReceipt, pageGateBlobVerified: true, pageGateBlob: actualGateBlob, canonicalOperationDerived: resolution.executionClass === GENERIC_PAGE_CLASS } };
 }
 function executeReferenceClassAdmissionVerification(resolution, worktree, tempRoot, admissionPath) {
   const scriptBytes = fs.readFileSync(path.join(worktree, resolution.descriptor.scriptPath));
@@ -418,7 +478,7 @@ export function executeResolved(resolution, { root = ROOT } = {}) {
     const actualHead = execGit(['rev-parse', 'HEAD^{commit}'], worktree).trim();
     if (actualHead !== resolution.targetHead) fail('EXACT_HEAD_CHECKOUT_FAILURE', `${resolution.targetHead}:${actualHead}`);
     assertClean(worktree);
-    const execution = resolution.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1'
+    const execution = ['PAGE_EXCELLENCE_ARCHITECTURE_V1', GENERIC_PAGE_CLASS].includes(resolution.executionClass)
       ? executePageArchitecture(resolution, worktree, tempRoot, admissionPath)
       : resolution.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1'
         ? executeReferenceClassAdmissionVerification(resolution, worktree, tempRoot, admissionPath)
@@ -426,7 +486,7 @@ export function executeResolved(resolution, { root = ROOT } = {}) {
           ? executeReferenceClassEvaluatorSelfTest(resolution, worktree, tempRoot, admissionPath)
           : executeRouter(resolution, worktree, tempRoot, admissionPath);
     assertClean(worktree);
-    return stable({ schema: 'BOUNDED_EXACT_HEAD_EXECUTION_RECEIPT_v1', result: execution.nativePass && execution.exitCode === 0 ? 'COMMAND_EXECUTED_AND_PASSED' : 'COMMAND_EXECUTED_AND_RETURNED_NONPASS', descriptorId: resolution.descriptor.descriptorId, executionClass: resolution.executionClass, operationId: resolution.operationId, lockGeneration: resolution.lockGeneration, targetHead: resolution.targetHead, task: resolution.task, paths: resolution.paths, commandDigest: execution.commandDigest, exactHeadVerified: true, workingTreeCleanBeforeAndAfter: true, commandExecuted: true, commandExitCode: execution.exitCode, nativeReceiptSchema: execution.nativeReceipt.schema, nativeReceiptDigest: execution.nativeReceiptDigest, nativeReceiptRewritten: false, nativeReceipt: execution.nativeReceipt, ...execution.extraReceiptFields, repositoryWritesPerformed: false, arbitraryCommandAuthority: false, callerSuppliedBundleAccepted: false, semanticAuthorityCreated: false, productAuthorityCreated: false });
+    return stable({ schema: 'BOUNDED_EXACT_HEAD_EXECUTION_RECEIPT_v1', result: execution.nativePass && execution.exitCode === 0 ? 'COMMAND_EXECUTED_AND_PASSED' : 'COMMAND_EXECUTED_AND_RETURNED_NONPASS', descriptorId: resolution.descriptor.descriptorId, executionClass: resolution.executionClass, operationId: resolution.operationId, lockGeneration: resolution.lockGeneration, targetHead: resolution.targetHead, pageSubjectHead: resolution.pageSubjectHead, task: resolution.task, paths: resolution.paths, commandDigest: execution.commandDigest, exactHeadVerified: true, workingTreeCleanBeforeAndAfter: true, commandExecuted: true, commandExitCode: execution.exitCode, nativeReceiptSchema: execution.nativeReceipt.schema, nativeReceiptDigest: execution.nativeReceiptDigest, nativeReceiptRewritten: false, nativeReceipt: execution.nativeReceipt, ...execution.extraReceiptFields, repositoryWritesPerformed: false, arbitraryCommandAuthority: false, callerSuppliedBundleAccepted: false, semanticAuthorityCreated: false, productAuthorityCreated: false });
   } finally {
     if (worktreeAdded) {
       try { execGit(['worktree', 'remove', '--force', worktree], root); } catch {}

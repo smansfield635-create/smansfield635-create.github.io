@@ -134,6 +134,32 @@
       "nativePassField": "result",
       "nativePassValue": "PASS",
       "repositoryWritesExpected": false
+    },
+    {
+      "schema": "BOUNDED_EXECUTABLE_DESCRIPTOR_v1",
+      "descriptorId": "REFERENCE_CLASS_CONTEXTUAL_3D_GEN938_SELF_TEST_V1",
+      "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "executionClass": "REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_V1",
+      "boundOperationId": "REFERENCE_CLASS_AWARDS_ADMISSION_CONTEXTUAL_3D_CLASS_EXTENSION_V1_20260809_001",
+      "boundLockGeneration": 938,
+      "boundTargetHead": "5602c87a24e9233b276352652cab06a66b9bec4d",
+      "executable": "node",
+      "scriptPath": ".github/ai-router/reference-class-awards-admission/evaluator/self-test.v1.mjs",
+      "scriptBlob": "b945be5da9eee271f3bcb18a7ee20ca78688715c",
+      "fixedArguments": [],
+      "shell": false,
+      "mutationIntent": false,
+      "extraArgumentsAllowed": false,
+      "environmentOverridesAllowed": false,
+      "callerSuppliedBundleAllowed": false,
+      "pathDerivation": "OPERATION_REQUEST_ALLOWED_PATHS_EXACT",
+      "targetHeadDerivation": "BOUND_DESCRIPTOR_TARGET_HEAD",
+      "taskDerivation": "SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID",
+      "nativeReceiptSchema": "REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_RECEIPT_v1",
+      "nativePassField": "result",
+      "nativePassValue": "PASS",
+      "repositoryWritesExpected": false
     }
   ]
 }

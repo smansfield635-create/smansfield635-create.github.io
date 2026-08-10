@@ -45,7 +45,7 @@ jobs:
         with:
           ref: ${{ env.HC05_BASELINE_SHA }}
           path: hc05-baseline
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Checkout exact HC05 candidate read-only
@@ -53,7 +53,7 @@ jobs:
         with:
           ref: ${{ env.HC05_CANDIDATE_SHA }}
           path: hc05-candidate
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
 
       - name: Verify exact subject identities and six-path candidate delta

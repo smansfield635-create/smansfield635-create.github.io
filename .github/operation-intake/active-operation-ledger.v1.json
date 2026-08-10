@@ -709,13 +709,34 @@
       "state": "ADMITTED_LOCKED"
     },
     "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59": {
-      "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
-      "lockGeneration": 969,
+      "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
+      "lockGeneration": 1007,
       "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
-      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001",
-      "procedureLocatorDigest": "c4b724da296d89ac78ea1f529c2f28a1065ee83bd7a1c37da0439b1b4f89aeaf",
+      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
+        "lockGeneration": 969,
+        "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001",
+        "preservedEvidenceRefs": [
+          "GEN969_CANONICAL_ADMISSION_REFERENCE_ONLY",
+          "GEN969_ROUTER_PASS_E52FE4E8_REFERENCE_ONLY",
+          "APHI_18BD40B4_FROZEN",
+          "PHI1_8F3BAFBE_NEGATIVE_ONLY",
+          "PR883_GENERIC_PAGE_ARCHITECTURE_CARRIER_RATIFIED",
+          "PR884_CURRENT_L2_CONTROL_PLANE_MAIN_ADVANCE",
+          "E52FE4E8_TO_B79537C9_NINE_COMMIT_DELTA_DISJOINT_FROM_LAWS_FIVE_PATHS_AND_SPATIAL_SOURCES",
+          "RETRY_001_CORRECTS_REQUEST_PROCEDURE_ERROR_PRECEDENCE_PARITY_ONLY"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_CONTEXTUAL_3D_GEN969_TO_B79537C9_20260810_RETRY_001"
+      },
+      "procedureLocatorDigest": "ff11b33ec4175df01c52474ce5e109d642bf96a8b0173f43c40199c76096f3be",
       "released": false,
-      "requestDigest": "0951644e521b9624cd623028b3252f026b5536719e8fb7654c4cc781d0bbda1b",
+      "requestDigest": "0435977030912c4f124dc8931690bf53668337715e7b196ae63e57c9b581e080",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
       "state": "ADMITTED_LOCKED"
@@ -1696,7 +1717,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1006,
+  "lockGeneration": 1007,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -14877,6 +14898,40 @@
       "scopeHash": "16abd49e18a1ea3484fd89596d05f2f35a488ae520009c6f93a824a0eff5871b",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
+      "lockGeneration": 969,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001",
+      "procedureLocatorDigest": "c4b724da296d89ac78ea1f529c2f28a1065ee83bd7a1c37da0439b1b4f89aeaf",
+      "released": true,
+      "requestDigest": "0951644e521b9624cd623028b3252f026b5536719e8fb7654c4cc781d0bbda1b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN969_CANONICAL_ADMISSION_REFERENCE_ONLY",
+          "GEN969_ROUTER_PASS_E52FE4E8_REFERENCE_ONLY",
+          "APHI_18BD40B4_FROZEN",
+          "PHI1_8F3BAFBE_NEGATIVE_ONLY",
+          "PR883_GENERIC_PAGE_ARCHITECTURE_CARRIER_RATIFIED",
+          "PR884_CURRENT_L2_CONTROL_PLANE_MAIN_ADVANCE",
+          "E52FE4E8_TO_B79537C9_NINE_COMMIT_DELTA_DISJOINT_FROM_LAWS_FIVE_PATHS_AND_SPATIAL_SOURCES",
+          "RETRY_001_CORRECTS_REQUEST_PROCEDURE_ERROR_PRECEDENCE_PARITY_ONLY"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
+        "successorLockGeneration": 1007,
+        "successorLockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "successorOperationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001_SUCCESSOR_001",
+        "transitionId": "LAWS_CONTEXTUAL_3D_GEN969_TO_B79537C9_20260810_RETRY_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

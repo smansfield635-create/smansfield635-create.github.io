@@ -1068,6 +1068,18 @@
       "scopeHash": "aa53681c8031a7e59affe6a2763018e45f8ced56416d18b3da9f474e57d8ad1f",
       "state": "ADMITTED_LOCKED"
     },
+    "ae10b63183a1c37b43d8d2b67ea9328e6c03469287338460623b39255482441e": {
+      "governingHead": "e396421c03da5ace767eaa06763252ee2ed86569",
+      "lockGeneration": 944,
+      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR874_RATIFICATION_AND_MERGE_SCOPE",
+      "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR874_RATIFICATION_AND_MERGE_20260809_001",
+      "procedureLocatorDigest": "3e22df1501f33ac30697261345a3c040a0ac686ed36f5ba5de2fc1c63b3bfd82",
+      "released": false,
+      "requestDigest": "6102313a46d24c1bbb8481908999f7f21ebb696fa8a17d143af418cbda753414",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ae10b63183a1c37b43d8d2b67ea9328e6c03469287338460623b39255482441e",
+      "state": "ADMITTED_LOCKED"
+    },
     "b005780502dd946f07165ee8dc69dabc7435554d107eb54a089ac8d16fdfed99": {
       "governingHead": "f1016a29d28b0790041567eae1c05dab572bb6ed",
       "lockGeneration": 156,
@@ -1672,7 +1684,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 943,
+  "lockGeneration": 944,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

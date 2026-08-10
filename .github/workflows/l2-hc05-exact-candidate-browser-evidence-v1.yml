@@ -1,0 +1,274 @@
+name: L2 HC05 Exact-Candidate Browser Evidence v1
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/l2-hc05-exact-candidate-browser-evidence-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  L2_ADMISSION_HEAD: 2706b68122c708613e46f8c1d28ecb336c46ca8e
+  L2_LOCK_GENERATION: '919'
+  HC05_BASELINE_SHA: 25355a1b8aaec3cc60f90a6f6335dd5aa796b267
+  HC05_CANDIDATE_SHA: b440b95bc73d799578b12678944c0ad73e167d7e
+  HC05_EXPECTED_PACKAGE_ID: H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_263563C5
+  EVIDENCE_DIR: /tmp/l2-hc05-browser-evidence
+
+jobs:
+  exact-candidate-browser-evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact L2 carrier candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Verify exact one-file L2 scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$L2_ADMISSION_HEAD")" = "$L2_ADMISSION_HEAD"
+          git diff --name-only "$L2_ADMISSION_HEAD" HEAD | sort > /tmp/l2-paths.txt
+          printf '%s\n' '.github/workflows/l2-hc05-exact-candidate-browser-evidence-v1.yml' > /tmp/expected-l2-paths.txt
+          diff -u /tmp/expected-l2-paths.txt /tmp/l2-paths.txt
+          mkdir -p "$EVIDENCE_DIR"
+          cp /tmp/l2-paths.txt "$EVIDENCE_DIR/l2-exact-paths.txt"
+
+      - name: Checkout exact HC05 baseline read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HC05_BASELINE_SHA }}
+          path: hc05-baseline
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Checkout exact HC05 candidate read-only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HC05_CANDIDATE_SHA }}
+          path: hc05-candidate
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact subject identities and six-path candidate delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C hc05-baseline rev-parse HEAD)" = "$HC05_BASELINE_SHA"
+          test "$(git -C hc05-candidate rev-parse HEAD)" = "$HC05_CANDIDATE_SHA"
+          git -C hc05-candidate diff --name-only "$HC05_BASELINE_SHA" "$HC05_CANDIDATE_SHA" | sort > "$EVIDENCE_DIR/hc05-candidate-paths.txt"
+          cat > /tmp/expected-hc05-paths.txt <<'EOF'
+          h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
+          h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js
+          showroom/globe/h-earth/render/geometry-shoreline.js
+          showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js
+          showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          EOF
+          sort -o /tmp/expected-hc05-paths.txt /tmp/expected-hc05-paths.txt
+          diff -u /tmp/expected-hc05-paths.txt "$EVIDENCE_DIR/hc05-candidate-paths.txt"
+
+      - name: Install isolated Chromium capability
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/l2-hc05-playwright
+          cd /tmp/l2-hc05-playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-save --package-lock=false playwright pngjs
+          npx playwright install --with-deps chromium
+
+      - name: Start exact baseline and candidate servers
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd hc05-baseline && python3 -m http.server 4173 > "$EVIDENCE_DIR/baseline-server.log" 2>&1 & echo $! > /tmp/hc05-baseline-server.pid)
+          (cd hc05-candidate && python3 -m http.server 4174 > "$EVIDENCE_DIR/candidate-server.log" 2>&1 & echo $! > /tmp/hc05-candidate-server.pid)
+          for port in 4173 4174; do
+            for attempt in $(seq 1 40); do
+              if curl --fail --silent "http://127.0.0.1:${port}/showroom/globe/h-earth/" >/dev/null; then break; fi
+              if [ "$attempt" = 40 ]; then exit 1; fi
+              sleep 1
+            done
+          done
+
+      - name: Execute current desktop and Samsung baseline-candidate matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/l2-hc05-playwright/hc05-browser-evidence.mjs <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import { createHash } from 'node:crypto';
+          import { chromium } from 'playwright';
+          import { PNG } from 'pngjs';
+
+          const output = process.env.EVIDENCE_DIR;
+          const expectedCandidatePackage = process.env.HC05_EXPECTED_PACKAGE_ID;
+          const subjects = [
+            { id: 'baseline', sha: process.env.HC05_BASELINE_SHA, url: 'http://127.0.0.1:4173/showroom/globe/h-earth/' },
+            { id: 'candidate', sha: process.env.HC05_CANDIDATE_SHA, url: 'http://127.0.0.1:4174/showroom/globe/h-earth/' }
+          ];
+          const configs = [
+            { id: 'desktop-landscape', width: 1280, height: 800, isMobile: false, hasTouch: false },
+            { id: 'samsung-mobile-portrait', width: 412, height: 915, isMobile: true, hasTouch: true },
+            { id: 'samsung-mobile-landscape', width: 915, height: 412, isMobile: true, hasTouch: true }
+          ];
+          await fs.mkdir(output, { recursive: true });
+          const browser = await chromium.launch({ headless: true });
+          const results = [];
+
+          async function capture(subject, config) {
+            const context = await browser.newContext({
+              viewport: { width: config.width, height: config.height },
+              isMobile: config.isMobile,
+              hasTouch: config.hasTouch,
+              deviceScaleFactor: 1
+            });
+            const page = await context.newPage();
+            const consoleErrors = [];
+            const pageErrors = [];
+            page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()); });
+            page.on('pageerror', error => pageErrors.push(error.message));
+            const url = `${subject.url}?visual=terrain-relief-v2&l2-hc05=${subject.id}-${config.id}`;
+            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 180000 });
+            await page.waitForFunction(() => {
+              const receipt = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+              if (!receipt) return false;
+              if (receipt.firstFailureStage) return true;
+              return receipt.stages?.FIRST_FRAME_PRESENTED === 'PASS' && receipt.stages?.READY_PUBLISHED === 'PASS';
+            }, null, { timeout: 120000 });
+            const observation = await page.evaluate(async () => {
+              const startup = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null;
+              const module = await import('/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js');
+              const pkg = module.getHEarthRun8ER2CanonicalLiveRenderPackage();
+              const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+              const liveWorld = document.getElementById('h-earth-live-world');
+              const stage = liveWorld?.querySelector('.h-earth-3d-world-stage');
+              const rect = node => node ? {
+                x: node.getBoundingClientRect().x,
+                y: node.getBoundingClientRect().y,
+                width: node.getBoundingClientRect().width,
+                height: node.getBoundingClientRect().height,
+                right: node.getBoundingClientRect().right,
+                bottom: node.getBoundingClientRect().bottom
+              } : null;
+              return {
+                startup,
+                packageIdentity: pkg.packageIdentity,
+                packageContentDigest: pkg.contentDigest,
+                primitiveCount: pkg.primitiveCount,
+                vertexCount: pkg.vertexCount,
+                triangleCount: pkg.triangleCount,
+                canvasRect: rect(canvas),
+                stageRect: rect(stage),
+                viewport: { width: innerWidth, height: innerHeight },
+                publicFaceCandidate: document.documentElement.dataset.hEarthPublicFaceCandidate ?? null
+              };
+            });
+            assert.ok(observation.startup, `${subject.id}/${config.id}: startup receipt missing`);
+            assert.equal(observation.startup.firstFailureStage, null, `${subject.id}/${config.id}: startup failure ${observation.startup.firstFailureStage}`);
+            assert.equal(observation.startup.stages.FIRST_FRAME_PRESENTED, 'PASS');
+            assert.equal(observation.startup.stages.READY_PUBLISHED, 'PASS');
+            assert.equal(pageErrors.length, 0, `${subject.id}/${config.id}: page errors ${JSON.stringify(pageErrors)}`);
+            assert.equal(consoleErrors.length, 0, `${subject.id}/${config.id}: console errors ${JSON.stringify(consoleErrors)}`);
+            if (subject.id === 'candidate') assert.equal(observation.packageIdentity, expectedCandidatePackage);
+            const screenshotPath = path.join(output, `${subject.id}-${config.id}.png`);
+            const screenshot = await page.screenshot({ path: screenshotPath, fullPage: false });
+            const screenshotSha256 = createHash('sha256').update(screenshot).digest('hex');
+            const result = { subject: subject.id, subjectSha: subject.sha, config: config.id, url, observation, consoleErrors, pageErrors, screenshotPath, screenshotSha256 };
+            results.push(result);
+            await context.close();
+            return result;
+          }
+
+          try {
+            for (const config of configs) {
+              for (const subject of subjects) await capture(subject, config);
+            }
+          } finally {
+            await browser.close();
+          }
+
+          const differentials = [];
+          for (const config of configs) {
+            const baseline = PNG.sync.read(await fs.readFile(path.join(output, `baseline-${config.id}.png`)));
+            const candidate = PNG.sync.read(await fs.readFile(path.join(output, `candidate-${config.id}.png`)));
+            assert.equal(baseline.width, candidate.width);
+            assert.equal(baseline.height, candidate.height);
+            let changedPixels = 0;
+            let absoluteRgbDeltaSum = 0;
+            let maximumPixelRgbDelta = 0;
+            const pixels = baseline.width * baseline.height;
+            for (let i = 0; i < baseline.data.length; i += 4) {
+              const delta = Math.abs(baseline.data[i] - candidate.data[i]) +
+                Math.abs(baseline.data[i + 1] - candidate.data[i + 1]) +
+                Math.abs(baseline.data[i + 2] - candidate.data[i + 2]);
+              if (delta >= 12) changedPixels += 1;
+              absoluteRgbDeltaSum += delta;
+              if (delta > maximumPixelRgbDelta) maximumPixelRgbDelta = delta;
+            }
+            differentials.push({
+              config: config.id,
+              width: baseline.width,
+              height: baseline.height,
+              pixelCount: pixels,
+              changedPixelsThreshold12: changedPixels,
+              changedPixelFractionThreshold12: changedPixels / pixels,
+              meanAbsoluteRgbDelta: absoluteRgbDeltaSum / pixels,
+              maximumPixelRgbDelta
+            });
+          }
+          const candidateResults = results.filter(result => result.subject === 'candidate');
+          const baselineResults = results.filter(result => result.subject === 'baseline');
+          const packageIdentityChanged = baselineResults.every((result, index) => result.observation.packageIdentity !== candidateResults[index].observation.packageIdentity);
+          const experienceDifferentialEstablished = differentials.every(diff => diff.changedPixelFractionThreshold12 > 0.02) && differentials.some(diff => diff.meanAbsoluteRgbDelta > 2.0);
+          assert.equal(packageIdentityChanged, true, 'candidate package identity must differ from baseline');
+          assert.equal(experienceDifferentialEstablished, true, `insufficient visual differential: ${JSON.stringify(differentials)}`);
+          const receipt = {
+            receiptType: 'L2_HC05_EXACT_CANDIDATE_BROWSER_EVIDENCE_RECEIPT_v1',
+            baselineSha: process.env.HC05_BASELINE_SHA,
+            candidateSha: process.env.HC05_CANDIDATE_SHA,
+            candidateExpectedPackageIdentity: expectedCandidatePackage,
+            browserEngine: 'PLAYWRIGHT_CHROMIUM',
+            configs: configs.map(({ id, width, height, isMobile, hasTouch }) => ({ id, width, height, isMobile, hasTouch })),
+            baselineResults,
+            candidateResults,
+            differentials,
+            packageIdentityChanged,
+            experienceDifferentialEstablished,
+            authorityInherited: false,
+            productMutationPerformed: false,
+            mergePerformed: false,
+            deploymentPerformed: false,
+            status: 'PASS_CLOSED'
+          };
+          await fs.writeFile(path.join(output, 'receipt.json'), `${JSON.stringify(receipt, null, 2)}\n`);
+          console.log(JSON.stringify(receipt, null, 2));
+          NODE
+          cd /tmp/l2-hc05-playwright
+          NODE_PATH=/tmp/l2-hc05-playwright/node_modules node hc05-browser-evidence.mjs | tee "$EVIDENCE_DIR/browser-execution.log"
+
+      - name: Verify carrier remained non-mutating
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain)"
+          test -z "$(git -C hc05-baseline status --porcelain)"
+          test -z "$(git -C hc05-candidate status --porcelain)"
+
+      - name: Upload exact browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l2-hc05-browser-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.EVIDENCE_DIR }}
+          if-no-files-found: error
+          retention-days: 30

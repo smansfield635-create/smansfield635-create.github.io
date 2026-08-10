@@ -1,4 +1,4 @@
-/** H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1 */
+/** H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v2 */
 import {
   H_EARTH_RUN_8E_R3_CONTRACT_ID,
   evaluateHEarthRun8ER3Control
@@ -21,6 +21,7 @@ import {
 } from './gpu-upload-views.run8e-r2d.js';
 
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
+const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const freeze = (value, seen = new WeakSet()) => {
   if (value === null || typeof value !== 'object' || Object.isFrozen(value) || seen.has(value)) return value;
   seen.add(value);
@@ -37,7 +38,7 @@ const normalize = (value) => {
   return { x: value.x / length, y: value.y / length, z: value.z / length };
 };
 
-export const H_EARTH_RUN_8E_R3A_CONTRACT_ID = 'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1';
+export const H_EARTH_RUN_8E_R3A_CONTRACT_ID = 'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v2';
 export const H_EARTH_HC05_EXPECTED_PACKAGE_IDENTITY = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_263563C5';
 
 function lookAt(position, target, up) {
@@ -69,7 +70,7 @@ function multiply4(left, right) {
 function acceptedGroundSample(worldX, worldZ) {
   const center = sampleHEarthMapWideEnvironmentTerrainCandidate(worldX, worldZ);
   if (center?.valid !== true || !finite(center.presentationElevation)) return null;
-  const step = 2;
+  const step = 1;
   const elevation = (x, z) => {
     const sample = sampleHEarthMapWideEnvironmentTerrainCandidate(x, z);
     return sample?.valid === true && finite(sample.presentationElevation) ? sample.presentationElevation : center.presentationElevation;
@@ -131,6 +132,11 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   const gpuEvaluation = evaluateHEarthRun8ER2DCanonicalGPUUploadViews(gpuViews);
   if (gpuEvaluation.eligible !== true) throw new Error(`R3A_GPU_VIEWS_REJECTED:${gpuEvaluation.issues.join(',')}`);
   const environment = packageRecord.environmentDefaults;
+  const presentationSunIntensity = clamp(environment.sunIntensity * 1.22, 0.78, 1.35);
+  const presentationFogStartDistance = Math.max(120, environment.fogStartDistance);
+  const presentationFogFalloff = Math.max(0.00001, environment.fogFalloff * 0.58);
+  const presentationMaximumFogFactor = clamp(environment.maximumFogFactor * 0.68, 0, 0.74);
+  const presentationDistanceDesaturationStrength = clamp(environment.distanceDesaturationStrength * 0.52, 0, 0.58);
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
     parentContractId: H_EARTH_RUN_8E_R3_CONTRACT_ID,
@@ -152,11 +158,19 @@ export function createHEarthRun8ER3AFrameUniformPacket({
       viewMatrix, projectionMatrix, viewProjectionMatrix
     },
     environmentUniforms: {
-      sunDirection: { ...environment.sunDirection }, sunIntensity: environment.sunIntensity,
+      sunDirection: { ...environment.sunDirection }, sunIntensity: presentationSunIntensity,
       sunColor: [...environment.sunColor], skyZenithColor: [...environment.skyZenithColor],
       skyHorizonColor: [...environment.skyHorizonColor], groundHazeColor: [...environment.groundHazeColor],
-      fogStartDistance: environment.fogStartDistance, fogFalloff: environment.fogFalloff,
-      maximumFogFactor: environment.maximumFogFactor, distanceDesaturationStrength: environment.distanceDesaturationStrength
+      fogStartDistance: presentationFogStartDistance, fogFalloff: presentationFogFalloff,
+      maximumFogFactor: presentationMaximumFogFactor, distanceDesaturationStrength: presentationDistanceDesaturationStrength
+    },
+    presentationAtmosphereRenewal: {
+      sourceEnvironmentMutated: false,
+      purpose: 'RECOVER_MIDGROUND_CONTRAST_AND_DEPTH_WITHOUT_REMOVING_ATMOSPHERIC_PERSPECTIVE',
+      sunIntensityScale: 1.22,
+      fogFalloffScale: 0.58,
+      maximumFogFactorScale: 0.68,
+      desaturationScale: 0.52
     },
     packageIdentity: packageRecord.packageIdentity,
     packageContentDigest: packageRecord.contentDigest,

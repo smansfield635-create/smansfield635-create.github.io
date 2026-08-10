@@ -318,7 +318,7 @@ jobs:
           console.log(JSON.stringify({status:receipt.status,structuralDelta:receipt.structuralDelta,comparisons},null,2));
           NODE
           cd /tmp/hc05-playwright
-          NODE_PATH=/tmp/hc05-playwright/node_modules node run.mjs | tee "$EVIDENCE_DIR/execution.log"
+          NODE_PATH=/tmp/hc05-playwright/node_modules node run.mjs 2>&1 | tee "$EVIDENCE_DIR/execution.log"
 
       - name: Verify carrier and product checkouts remained read-only
         shell: bash

@@ -1,10 +1,12 @@
 /**
  * /h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js
  *
- * H_EARTH_GROUNDED_VEGETATION_ARCHETYPE_AND_INSTANCE_RESOLUTION_RUN_8D_v1
- * HC05 projection successor: accepted deterministic vegetation instances are
- * rooted to the same accepted Gratitude presentation surface used by ground
- * geometry. The accepted world source remains read-only.
+ * H_EARTH_GROUNDED_VEGETATION_ARCHETYPE_AND_INSTANCE_RESOLUTION_RUN_8D_v2
+ * HC05 whole-environment maturity renewal. Deterministic vegetation remains
+ * rooted to the accepted Gratitude presentation surface, but the active-detail
+ * population now spans the mountain/foothill corridor instead of stopping at
+ * the former -224 Z boundary. This is a presentation/runtime population
+ * expansion only; accepted terrain/world truth remains read-only.
  */
 
 import {
@@ -34,15 +36,20 @@ const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 
 export const H_EARTH_RUN_8D_VEGETATION_RESOLUTION_CONTRACT_ID =
-  'H_EARTH_GROUNDED_VEGETATION_ARCHETYPE_AND_INSTANCE_RESOLUTION_RUN_8D_v1';
+  'H_EARTH_GROUNDED_VEGETATION_ARCHETYPE_AND_INSTANCE_RESOLUTION_RUN_8D_v2';
 export const H_EARTH_RUN_8D_VEGETATION_RESOLUTION_SOURCE_FILE =
   '/h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js';
-export const H_EARTH_RUN_8D_POPULATION_BOUNDS = freeze({ xMinimum: -160, xMaximum: 160, zMinimum: -224, zMaximum: -32 });
+export const H_EARTH_RUN_8D_POPULATION_BOUNDS = freeze({
+  xMinimum: -224,
+  xMaximum: 192,
+  zMinimum: -304,
+  zMaximum: -24
+});
 export const H_EARTH_RUN_8D_ACTIVE_DETAIL_LIFECYCLE_CONTEXT = freeze({
   contractId: H_EARTH_SPATIAL_LIFECYCLE_CONTRACT_ID,
   state: 'ACTIVE_DETAIL',
   densityScale: H_EARTH_SPATIAL_LIFECYCLE_PROFILE.statePolicies.ACTIVE_DETAIL.densityScale,
-  maxInstances: Math.min(64, H_EARTH_SPATIAL_LIFECYCLE_PROFILE.statePolicies.ACTIVE_DETAIL.maxInstances),
+  maxInstances: Math.min(192, H_EARTH_SPATIAL_LIFECYCLE_PROFILE.statePolicies.ACTIVE_DETAIL.maxInstances),
   authorityEstablished: true,
   provisional: false,
   profileId: H_EARTH_SPATIAL_LIFECYCLE_PROFILE.profileId
@@ -50,10 +57,25 @@ export const H_EARTH_RUN_8D_ACTIVE_DETAIL_LIFECYCLE_CONTEXT = freeze({
 export const H_EARTH_RUN_8D_ARCHETYPE_RESOLUTION = freeze({
   COASTAL_GRASS_TUFT: {
     acceptedInstanceClasses: ['AQUATIC_MICROHABITAT_MARKER','AQUATIC_GROUNDCOVER','INTERTIDAL_GROUNDCOVER','COASTAL_SEDGE','DUNE_GROUNDCOVER','MEADOW_GROUNDCOVER','MEADOW_FORB','LOWLAND_SEDGE','COASTAL_GROUNDCOVER','COASTAL_FORB','UPLAND_GROUNDCOVER','LICHEN_PATCH','ROCK_CREVICE_GROUNDCOVER'],
-    materialIntent: 'VEGETATION_GRASS_SEDGE_FORB_AND_GROUNDCOVER'
+    materialIntent: 'VEGETATION_GRASS_SEDGE_FORB_AND_GROUNDCOVER',
+    presentationScaleMultiplier: 1.12,
+    minimumPresentationScale: 0.82,
+    maximumPresentationScale: 1.65
   },
-  LOWLAND_SHRUB: { acceptedInstanceClasses: ['LOW_SHRUB','SHRUB','UPLAND_SHRUB'], materialIntent: 'VEGETATION_WOODY_SHRUB' },
-  HIGHLAND_CONIFER_SAPLING: { acceptedInstanceClasses: ['HIGHLAND_CONIFER_SAPLING'], materialIntent: 'VEGETATION_CONIFER_TRUNK_AND_CANOPY' }
+  LOWLAND_SHRUB: {
+    acceptedInstanceClasses: ['LOW_SHRUB','SHRUB','UPLAND_SHRUB'],
+    materialIntent: 'VEGETATION_WOODY_SHRUB',
+    presentationScaleMultiplier: 1.2,
+    minimumPresentationScale: 0.92,
+    maximumPresentationScale: 1.95
+  },
+  HIGHLAND_CONIFER_SAPLING: {
+    acceptedInstanceClasses: ['HIGHLAND_CONIFER_SAPLING'],
+    materialIntent: 'VEGETATION_CONIFER_TRUNK_AND_CANOPY',
+    presentationScaleMultiplier: 1.42,
+    minimumPresentationScale: 1.08,
+    maximumPresentationScale: 2.5
+  }
 });
 const CLASS_TO_ARCHETYPE = new Map(Object.entries(H_EARTH_RUN_8D_ARCHETYPE_RESOLUTION)
   .flatMap(([archetypeId, descriptor]) => descriptor.acceptedInstanceClasses.map((instanceClass) => [instanceClass, archetypeId])));
@@ -66,7 +88,7 @@ function rejectResolution(issues) {
 function acceptedGroundAnchor(worldX, worldZ) {
   const center = sampleHEarthMapWideEnvironmentTerrainCandidate(worldX, worldZ);
   if (center?.valid !== true || !finite(center.presentationElevation)) return null;
-  const step = 2;
+  const step = 1;
   const elevation = (x, z) => {
     const sample = sampleHEarthMapWideEnvironmentTerrainCandidate(x, z);
     return sample?.valid === true && finite(sample.presentationElevation) ? sample.presentationElevation : center.presentationElevation;
@@ -83,14 +105,14 @@ function acceptedGroundAnchor(worldX, worldZ) {
 }
 
 export function buildHEarthRun8DVegetationResolution({
-  atmosphereState = sampleHEarthAtmosphereState({ timeOfDayHours: 15.25, observerElevation: 2.25, viewDistance: 320 })
+  atmosphereState = sampleHEarthAtmosphereState({ timeOfDayHours: 15.25, observerElevation: 2.25, viewDistance: 420 })
 } = {}) {
   if (atmosphereState?.valid !== true || atmosphereState?.contractId !== H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID) {
     return rejectResolution(['RUN_8D_ATMOSPHERE_STATE_INVALID']);
   }
   const populationPlan = planHEarthPopulation({
     bounds: H_EARTH_RUN_8D_POPULATION_BOUNDS,
-    sampleStep: 24,
+    sampleStep: 16,
     deterministicSeed: 'H_EARTH_RUN_8D_GROUNDED_VEGETATION_v1',
     atmosphereState,
     spatialLifecycleContext: H_EARTH_RUN_8D_ACTIVE_DETAIL_LIFECYCLE_CONTEXT
@@ -110,8 +132,10 @@ export function buildHEarthRun8DVegetationResolution({
     if (!terrain || !finite(terrain.elevation) || ![terrain.normal?.x,terrain.normal?.y,terrain.normal?.z].every(finite)) {
       issues.push(`RUN_8D_HC05_ACCEPTED_GROUND_ANCHOR_INVALID:${populationInstance.instanceId}`); continue;
     }
+    const descriptor = H_EARTH_RUN_8D_ARCHETYPE_RESOLUTION[archetypeId];
     const sourceBounds = H_EARTH_RUN_8A_VEGETATION_LOCAL_GEOMETRY_AND_WORLD_ANCHOR_CONTRACT.archetypes[archetypeId].bounds;
-    const boundedScale = clamp(populationInstance.uniformScale, 0.62, 1.4);
+    const scaled = populationInstance.uniformScale * descriptor.presentationScaleMultiplier;
+    const boundedScale = clamp(scaled, descriptor.minimumPresentationScale, descriptor.maximumPresentationScale);
     instances.push(freeze({
       instanceId: `H_EARTH_RUN_8D:${populationInstance.instanceId}`,
       sourcePopulationInstanceId: populationInstance.instanceId,
@@ -137,7 +161,7 @@ export function buildHEarthRun8DVegetationResolution({
         worldY: 'HC05_ACCEPTED_GRATITUDE_PRESENTATION_ELEVATION_PLUS_ROOT_EMBED',
         upAlignment: 'HC05_ACCEPTED_GRATITUDE_PRESENTATION_NORMAL',
         yaw: 'RUN_7E_DETERMINISTIC_INSTANCE_HASH',
-        scale: 'RUN_7E_DETERMINISTIC_BOUNDED_ARCHETYPE_SCALE',
+        scale: 'RUN_7E_DETERMINISTIC_BOUNDED_ARCHETYPE_SCALE_WITH_RUN8D_PRESENTATION_MULTIPLIER',
         cameraRelativePosition: false,
         screenRelativePosition: false,
         sameWorldToCameraTransformAsTerrainRequired: true,
@@ -166,6 +190,8 @@ export function buildHEarthRun8DVegetationResolution({
     acceptedWorldProjectionContractId: H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_ID,
     populationPlannerContractId: H_EARTH_POPULATION_PLANNER_CONTRACT_ID,
     spatialLifecycleContractId: H_EARTH_SPATIAL_LIFECYCLE_CONTRACT_ID,
+    populationBounds: H_EARTH_RUN_8D_POPULATION_BOUNDS,
+    activeDetailMaxInstances: H_EARTH_RUN_8D_ACTIVE_DETAIL_LIFECYCLE_CONTEXT.maxInstances,
     populationPlan,
     instanceCount: instances.length,
     archetypeCounts: freeze(archetypeCounts),
@@ -199,7 +225,7 @@ export function evaluateHEarthRun8DVegetationResolution(resolution) {
   }
   return freeze({
     eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8D_VEGETATION_RESOLUTION_PASS' : 'RUN_8D_VEGETATION_RESOLUTION_FAIL',
+    status: issues.length === 0 ? 'RUN_8D_SUCCESSOR_VEGETATION_PASS' : 'RUN_8D_SUCCESSOR_VEGETATION_FAIL',
     issues: freeze(issues)
   });
 }

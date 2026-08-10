@@ -1,0 +1,51 @@
+{
+  "schema": "REFERENCE_CLASS_AWARDS_ADMISSION_REGISTRATION_SURFACE_RECONCILIATION_v1",
+  "status": "PREACTIVATION_HOME_RESOLVED_NO_REGISTRATION_MUTATION",
+  "instrumentId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1",
+  "governingHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+  "resolvedHome": {
+    "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+    "pathPrefix": ".github/ai-router/reference-class-awards-admission/",
+    "reason": "The instrument is a shared admission boundary between Page Excellence and Awards evaluation and must not consume project-local H-Earth or Laws instrument slots."
+  },
+  "existingSurfaces": [
+    {
+      "id": "PAGE_EXCELLENCE_TOOLCHAIN",
+      "state": "ACTIVE_VERSION_BOUND_CLOSED_WORLD",
+      "registeredInstrumentCount": 9,
+      "mutationInThisOperation": false
+    },
+    {
+      "id": "H_EARTH_INSTRUMENT_PLATFORM",
+      "state": "ACTIVE_FIXED_TOOL_COUNT",
+      "registeredToolCount": 4,
+      "mutationInThisOperation": false
+    },
+    {
+      "id": "REPOSITORY_INSTRUMENT_LIFECYCLE",
+      "state": "OBSERVATION_ONLY_FAIL_CLOSED",
+      "mutationInThisOperation": false
+    }
+  ],
+  "handoffTopology": [
+    "PAGE_EXCELLENCE_SUCCESSFUL_RUNTIME_EVIDENCE",
+    "REFERENCE_CLASS_AWARDS_ADMISSION",
+    "NAMED_AWARD_CATEGORY_ADAPTER_WHEN_APPLICABLE",
+    "AWARDS_EVALUATION"
+  ],
+  "futureActivationSurfaces": [
+    "ROOT_DISCOVERY_AND_ROUTING_VISIBILITY",
+    "INSTRUMENT_LIFECYCLE_REGISTRATION",
+    "PAGE_EXCELLENCE_TO_ADMISSION_HANDOFF_CONTRACT",
+    "AWARDS_ADAPTER_INPUT_CONTRACT",
+    "EXECUTION_WORKFLOW_AND_CONTINUITY_PROOF"
+  ],
+  "laws": {
+    "noPageExcellenceInstrumentCountMutation": true,
+    "noHEarthToolCountMutation": true,
+    "noLawsProductMutation": true,
+    "noAwardsAuthorityCreated": true,
+    "activationRequiresSeparateOperation": true
+  },
+  "result": "REGISTRATION_SURFACE_RECONCILED_FOR_PREACTIVATION_CONSTRUCTION"
+}

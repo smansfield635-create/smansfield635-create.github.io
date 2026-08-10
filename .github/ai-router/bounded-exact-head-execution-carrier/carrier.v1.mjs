@@ -11,6 +11,7 @@ const REGISTRY_PATH = path.join(ROOT, '.github/ai-router/bounded-exact-head-exec
 const LOCK_REF = 'refs/remotes/origin/operation-locks/repository-operation-intake-v1';
 const LOCK_LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
 const PAGE_TOOLSET_PATH = '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json';
+const REFERENCE_CLASS_VERIFIER_PATH = '.github/ai-router/reference-class-awards-admission/verify.v1.mjs';
 const REQUIRED_REQUEST_KEYS = ['schema', 'requestId', 'descriptorId', 'operationRequest', 'constructionProcedure', 'admissionReceipt', 'requestNonce'];
 const FORBIDDEN_REQUEST_KEYS = ['command','shell','shellCommand','script','scriptBody','executable','arguments','extraArguments','environment','environmentOverride','paths','targetHead','workingDirectory','workflowOverride','architectureBundle','receiptBundle','pageReceiptBundle'];
 
@@ -120,6 +121,16 @@ function resolveDescriptor(registry, descriptorId) {
     if (!Number.isInteger(descriptor.boundLockGeneration) || descriptor.boundLockGeneration < 1) fail('DESCRIPTOR_LOCK_BINDING_INVALID');
     assertCommit(descriptor.boundTargetHead, 'DESCRIPTOR_TARGET_HEAD_BINDING_INVALID');
     assertString(descriptor.boundOperationId, 'DESCRIPTOR_OPERATION_BINDING_INVALID');
+  } else if (descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1') {
+    if (descriptor.scriptPath !== REFERENCE_CLASS_VERIFIER_PATH) fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
+    if (descriptor.mutationIntent !== false) fail('REFERENCE_CLASS_VERIFIER_MUTATION_INTENT_PROHIBITED');
+    assertBlob(descriptor.scriptBlob, 'REFERENCE_CLASS_VERIFIER_BLOB_INVALID');
+    if (!Number.isInteger(descriptor.boundLockGeneration) || descriptor.boundLockGeneration < 1) fail('DESCRIPTOR_LOCK_BINDING_INVALID');
+    assertCommit(descriptor.boundTargetHead, 'DESCRIPTOR_TARGET_HEAD_BINDING_INVALID');
+    assertString(descriptor.boundOperationId, 'DESCRIPTOR_OPERATION_BINDING_INVALID');
+    if (canonical(descriptor.fixedArguments) !== canonical(['--verify-static'])) fail('REFERENCE_CLASS_VERIFIER_ARGUMENT_BINDING_INVALID');
+    if (descriptor.targetHeadDerivation !== 'BOUND_DESCRIPTOR_TARGET_HEAD') fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
+    if (descriptor.nativeReceiptSchema !== 'REFERENCE_CLASS_AWARDS_ADMISSION_STATIC_VERIFICATION_RECEIPT_v1' || descriptor.nativePassField !== 'result' || descriptor.nativePassValue !== 'PASS') fail('REFERENCE_CLASS_VERIFIER_NATIVE_RECEIPT_BINDING_INVALID');
   } else fail('DESCRIPTOR_EXECUTION_CLASS_UNSUPPORTED', descriptor.executionClass);
   return descriptor;
 }
@@ -149,6 +160,8 @@ function deriveTargetHead(op, descriptor) {
   let value;
   if (descriptor.targetHeadDerivation === 'SUBJECT_IDENTITY_REQUIRED_STARTING_HEAD_ELSE_EXACT_GOVERNING_HEAD') {
     value = op.subjectIdentity?.requiredStartingHead ?? op.exactGoverningHead;
+  } else if (descriptor.targetHeadDerivation === 'BOUND_DESCRIPTOR_TARGET_HEAD') {
+    value = descriptor.boundTargetHead;
   } else fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
   return assertCommit(value, 'TARGET_HEAD_NOT_AUTHORIZED');
 }
@@ -211,6 +224,25 @@ export function validatePageArchitectureDescriptor(descriptor, docs, targetHead)
   if (findings.separateNewConstructAuthority !== null) fail('UNEXPECTED_NEW_CONSTRUCT_AUTHORITY');
   return stable(findings);
 }
+function validateReferenceClassDescriptor(descriptor, docs, targetHead) {
+  if (descriptor.executionClass !== 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1') fail('REFERENCE_CLASS_DESCRIPTOR_REQUIRED');
+  if (descriptor.projectId !== docs.op.projectId) fail('DESCRIPTOR_PROJECT_BINDING_MISMATCH');
+  if (descriptor.boundOperationId !== docs.op.operationId) fail('DESCRIPTOR_OPERATION_BINDING_MISMATCH');
+  if (descriptor.boundLockGeneration !== docs.lock.lockGeneration) fail('DESCRIPTOR_LOCK_BINDING_MISMATCH');
+  if (descriptor.boundTargetHead !== targetHead) fail('DESCRIPTOR_TARGET_HEAD_BINDING_MISMATCH');
+  if (docs.op.subjectIdentity?.instrumentId !== 'REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1') fail('REFERENCE_CLASS_INSTRUMENT_IDENTITY_MISMATCH');
+  if (docs.op.subjectIdentity?.activationRequested !== false) fail('REFERENCE_CLASS_ACTIVATION_AUTHORITY_LEAK');
+  if (docs.op.exactGoverningHead === targetHead) fail('REFERENCE_CLASS_TARGET_MUST_BE_CANDIDATE_HEAD');
+  return stable({
+    instrumentId: docs.op.subjectIdentity.instrumentId,
+    boundOperationId: descriptor.boundOperationId,
+    boundLockGeneration: descriptor.boundLockGeneration,
+    boundTargetHead: descriptor.boundTargetHead,
+    scriptPath: descriptor.scriptPath,
+    scriptBlob: descriptor.scriptBlob,
+    fixedArguments: descriptor.fixedArguments
+  });
+}
 function collectInstrumentVersions(value) {
   const candidates = [];
   const visit = node => {
@@ -266,6 +298,9 @@ export function validateAndResolve({ rawRequest, registry, ledger }) {
   const architectureFindings = descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1'
     ? validatePageArchitectureDescriptor(descriptor, docs, targetHead)
     : null;
+  const referenceClassBinding = descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1'
+    ? validateReferenceClassDescriptor(descriptor, docs, targetHead)
+    : null;
   return stable({
     descriptor,
     executionClass: descriptor.executionClass,
@@ -279,7 +314,8 @@ export function validateAndResolve({ rawRequest, registry, ledger }) {
     requestDigest,
     procedureDigest,
     admissionReceipt: docs.admission,
-    architectureFindings
+    architectureFindings,
+    referenceClassBinding
   });
 }
 
@@ -397,6 +433,42 @@ function executePageArchitecture(resolution, worktree, tempRoot, admissionPath) 
     }
   };
 }
+function executeReferenceClassAdmissionVerification(resolution, worktree, tempRoot, admissionPath) {
+  const scriptBytes = fs.readFileSync(path.join(worktree, resolution.descriptor.scriptPath));
+  const actualScriptBlob = gitBlobSha(scriptBytes);
+  if (actualScriptBlob !== resolution.descriptor.scriptBlob) fail('REFERENCE_CLASS_VERIFIER_BLOB_MISMATCH', `${resolution.descriptor.scriptBlob}:${actualScriptBlob}`);
+  const args = [resolution.descriptor.scriptPath, ...resolution.descriptor.fixedArguments];
+  const child = cp.spawnSync(resolution.descriptor.executable, args, {
+    cwd: worktree,
+    env: baseSafeEnv(tempRoot, admissionPath),
+    shell: false,
+    encoding: 'utf8',
+    maxBuffer: 32 * 1024 * 1024
+  });
+  const exitCode = child.error ? 1 : (Number.isInteger(child.status) ? child.status : 1);
+  let nativeReceipt = null;
+  try { nativeReceipt = child.stdout ? JSON.parse(child.stdout) : null; } catch {}
+  if (!nativeReceipt || nativeReceipt.schema !== resolution.descriptor.nativeReceiptSchema) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'reference-class verifier receipt');
+  if (nativeReceipt.executionHead !== resolution.targetHead) fail('REFERENCE_CLASS_VERIFIER_EXECUTION_HEAD_MISMATCH', nativeReceipt.executionHead);
+  if (nativeReceipt.operationId !== resolution.operationId || nativeReceipt.lockGeneration !== resolution.lockGeneration) fail('REFERENCE_CLASS_VERIFIER_OPERATION_BINDING_MISMATCH');
+  if (nativeReceipt.packagePathCount !== resolution.paths.length) fail('REFERENCE_CLASS_VERIFIER_PATH_COUNT_MISMATCH', nativeReceipt.packagePathCount);
+  if (nativeReceipt.activationAuthorityCreated !== false || nativeReceipt.awardsAuthorityCreated !== false) fail('REFERENCE_CLASS_VERIFIER_AUTHORITY_INFLATION');
+  const receiptPath = path.join(tempRoot, 'reference-class-verification-receipt.json');
+  writeJson(receiptPath, nativeReceipt);
+  const nativePass = nativeReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue;
+  return {
+    exitCode,
+    nativePass,
+    nativeReceipt,
+    nativeReceiptDigest: sha256(fs.readFileSync(receiptPath)),
+    commandDigest: hashObject({ executable: resolution.descriptor.executable, args, targetHead: resolution.targetHead, scriptBlob: resolution.descriptor.scriptBlob }),
+    extraReceiptFields: {
+      referenceClassVerifierBlobVerified: true,
+      referenceClassVerifierFixedArgumentsVerified: true,
+      referenceClassBinding: resolution.referenceClassBinding
+    }
+  };
+}
 
 export function executeResolved(resolution, { root = ROOT } = {}) {
   ensureCommitAvailable(resolution.targetHead);
@@ -413,7 +485,9 @@ export function executeResolved(resolution, { root = ROOT } = {}) {
     assertClean(worktree);
     const execution = resolution.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1'
       ? executePageArchitecture(resolution, worktree, tempRoot, admissionPath)
-      : executeRouter(resolution, worktree, tempRoot, admissionPath);
+      : resolution.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1'
+        ? executeReferenceClassAdmissionVerification(resolution, worktree, tempRoot, admissionPath)
+        : executeRouter(resolution, worktree, tempRoot, admissionPath);
     assertClean(worktree);
     return stable({
       schema: 'BOUNDED_EXACT_HEAD_EXECUTION_RECEIPT_v1',

@@ -4,12 +4,19 @@ import os from 'node:os';
 import path from 'node:path';
 import cp from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { stable, hashObject, validateRequest, validateAndResolve, makePageArchitectureBundle } from './carrier.v1.mjs';
+import { stable, hashObject, validateRequest, validateAndResolve, makePageArchitectureBundle, executeResolved } from './carrier.v1.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..');
 const SELF_TEST_REPO_PATH = '.github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs';
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, '.github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json'), 'utf8'));
 const toolset = JSON.parse(fs.readFileSync(path.join(ROOT, '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json'), 'utf8'));
+const REFERENCE_DESCRIPTOR_ID = 'REFERENCE_CLASS_AWARDS_ADMISSION_GEN890_VERIFY_V1';
+const REFERENCE_TARGET_HEAD = '0edef35b14af36e6ddaba88fbe07a53c2471fad5';
+const REFERENCE_VERIFIER_BLOB = '3e9584555cc951cc43d245538b512996fd07664f';
+const REFERENCE_OPERATION_ID = 'REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_V1_20260809_001';
+const REFERENCE_OPERATION_PATH = '.github/ai-router/reference-class-awards-admission/operation-request.v1.json';
+const REFERENCE_PROCEDURE_PATH = '.github/ai-router/reference-class-awards-admission/construction-procedure.v1.json';
+const REFERENCE_STATE_PATH = '.github/ai-router/reference-class-awards-admission/current-state.v1.json';
 
 function clone(value) { return JSON.parse(JSON.stringify(value)); }
 function nonce(char = 'a') { return char.repeat(64); }
@@ -18,6 +25,14 @@ function executionHead() { return git(['rev-parse', 'HEAD^{commit}']); }
 function assertClean(cwd) {
   const status = git(['status', '--porcelain=v1', '--untracked-files=all'], cwd);
   if (status !== '') throw new Error(`WORKTREE_NOT_CLEAN:${status}`);
+}
+function ensureCommit(commit) {
+  try { cp.execFileSync('git', ['cat-file', '-e', `${commit}^{commit}`], { cwd: ROOT, stdio: 'ignore' }); }
+  catch { cp.execFileSync('git', ['fetch', '--no-tags', 'origin', commit], { cwd: ROOT, stdio: ['ignore','pipe','pipe'], maxBuffer: 32 * 1024 * 1024 }); }
+}
+function gitJsonAt(commit, repoPath) {
+  ensureCommit(commit);
+  return JSON.parse(git(['show', `${commit}:${repoPath}`]));
 }
 function pullRequestHeadFromEvent() {
   if (process.env.CARRIER_EXACT_HEAD_REEXEC === '1' || process.env.GITHUB_EVENT_NAME !== 'pull_request' || !process.env.GITHUB_EVENT_PATH) return null;
@@ -194,6 +209,51 @@ function pageFixture() {
   };
   return { request, ledger };
 }
+function referenceFixture() {
+  const descriptor = registry.descriptors.find(item => item.descriptorId === REFERENCE_DESCRIPTOR_ID);
+  if (!descriptor) throw new Error('reference-class descriptor missing');
+  if (descriptor.boundTargetHead !== REFERENCE_TARGET_HEAD || descriptor.scriptBlob !== REFERENCE_VERIFIER_BLOB || descriptor.boundOperationId !== REFERENCE_OPERATION_ID || descriptor.boundLockGeneration !== 890) throw new Error('reference descriptor immutable binding mismatch');
+  const operationRequest = gitJsonAt(REFERENCE_TARGET_HEAD, REFERENCE_OPERATION_PATH);
+  const constructionProcedure = gitJsonAt(REFERENCE_TARGET_HEAD, REFERENCE_PROCEDURE_PATH);
+  const state = gitJsonAt(REFERENCE_TARGET_HEAD, REFERENCE_STATE_PATH);
+  if (hashObject(operationRequest) !== state.admission.requestDigest || hashObject(constructionProcedure) !== state.admission.procedureLocatorDigest) throw new Error('reference candidate admission digest mismatch');
+  const admissionReceipt = {
+    schema: 'REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1',
+    result: 'ADMITTED_AND_LOCKED',
+    operationId: operationRequest.operationId,
+    projectId: operationRequest.projectId,
+    operationStarted: true,
+    workflowExecutionAuthorized: true,
+    requestDigest: state.admission.requestDigest,
+    procedureLocatorDigest: state.admission.procedureLocatorDigest,
+    lock: {
+      lockAcquired: true,
+      lockGeneration: state.lockGeneration,
+      lockScope: operationRequest.lockScope,
+      operationId: operationRequest.operationId,
+      scopeHash: state.admission.scopeHash
+    }
+  };
+  const ledger = { activeScopes: { [state.admission.scopeHash]: {
+    operationId: operationRequest.operationId,
+    lockGeneration: state.lockGeneration,
+    lockScope: operationRequest.lockScope,
+    state: 'ADMITTED_LOCKED',
+    released: false,
+    requestDigest: state.admission.requestDigest,
+    procedureLocatorDigest: state.admission.procedureLocatorDigest
+  } } };
+  const request = {
+    schema: 'BOUNDED_EXACT_HEAD_EXECUTION_REQUEST_v1',
+    requestId: 'SYNTHETIC_REFERENCE_CLASS_POSITIVE',
+    descriptorId: descriptor.descriptorId,
+    operationRequest,
+    constructionProcedure,
+    admissionReceipt,
+    requestNonce: nonce('c')
+  };
+  return { request, ledger, descriptor };
+}
 function rehashFixture(fixture) {
   const { request } = fixture;
   const generation = request.admissionReceipt.lock.lockGeneration;
@@ -234,6 +294,17 @@ function runNativeRegression(name, script, validate) {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 }
+function runReferenceClassNativeRegression() {
+  try {
+    const fixture = referenceFixture();
+    const resolution = validateAndResolve({ rawRequest: fixture.request, registry, ledger: fixture.ledger });
+    const receipt = executeResolved(resolution, { root: ROOT });
+    if (receipt.result !== 'COMMAND_EXECUTED_AND_PASSED' || receipt.executionClass !== 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1' || receipt.targetHead !== REFERENCE_TARGET_HEAD || receipt.nativeReceiptSchema !== 'REFERENCE_CLASS_AWARDS_ADMISSION_STATIC_VERIFICATION_RECEIPT_v1' || receipt.nativeReceipt?.result !== 'PASS' || receipt.nativeReceipt?.executionHead !== REFERENCE_TARGET_HEAD || receipt.referenceClassVerifierBlobVerified !== true || receipt.referenceClassVerifierFixedArgumentsVerified !== true || receipt.repositoryWritesPerformed !== false || receipt.arbitraryCommandAuthority !== false) throw new Error('REFERENCE_CLASS_NATIVE_REGRESSION_NONPASS');
+    return stable({ name: 'REFERENCE_CLASS_AWARDS_ADMISSION_NATIVE_VERIFIER', result: 'PASS', receiptSchema: receipt.nativeReceiptSchema, nativeResult: receipt.nativeReceipt.result, targetHead: receipt.targetHead });
+  } catch (error) {
+    return stable({ name: 'REFERENCE_CLASS_AWARDS_ADMISSION_NATIVE_VERIFIER', result: 'FAIL', detail: error.code ?? error.message });
+  }
+}
 
 export function runSelfTest() {
   const results = [];
@@ -251,6 +322,13 @@ export function runSelfTest() {
       if (r.executionClass !== 'PAGE_EXCELLENCE_ARCHITECTURE_V1' || r.targetHead !== '18bd40b4f27ed9775778346011cca7d7f6bec47e' || r.lockGeneration !== 857) throw new Error('page binding wrong');
       const bundle = makePageArchitectureBundle(r.descriptor, toolset, r.targetHead, r.operationId);
       if (bundle.schema !== 'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1' || bundle.subjectHead !== r.targetHead || bundle.phaseReceipts?.[0]?.phase !== 'ARCHITECTURE' || bundle.phaseReceipts?.[0]?.findings?.implementationClass !== 'EXISTING_CONSTRUCT_ADOPTION') throw new Error('bundle derivation wrong');
+    }, results);
+  }
+  {
+    const { request, ledger } = referenceFixture();
+    expectPass('POSITIVE_DESCRIPTOR_BOUND_REFERENCE_CLASS_VERIFIER', () => {
+      const r = validateAndResolve({ rawRequest: request, registry, ledger });
+      if (r.executionClass !== 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1' || r.targetHead !== REFERENCE_TARGET_HEAD || r.lockGeneration !== 890 || r.referenceClassBinding?.scriptBlob !== REFERENCE_VERIFIER_BLOB) throw new Error('reference-class binding wrong');
     }, results);
   }
   {
@@ -315,6 +393,30 @@ export function runSelfTest() {
     const fixture = pageFixture(); const broken = clone(registry); const d = broken.descriptors.find(item => item.descriptorId === fixture.request.descriptorId); d.architectureFindings.exactSourceConstructIdentities[0].path = 'laws/not-declared.js';
     expectFail('PAGE_DESCRIPTOR_UNDECLARED_SOURCE', 'ARCHITECTURE_SOURCE_IDENTITY_MISMATCH', () => validateAndResolve({ rawRequest: fixture.request, registry: broken, ledger: fixture.ledger }), results);
   }
+  {
+    const fixture = referenceFixture(); fixture.request.operationRequest.operationId = 'UNRELATED_REFERENCE_OPERATION'; rehashFixture(fixture);
+    expectFail('REFERENCE_DESCRIPTOR_OPERATION_BINDING', 'DESCRIPTOR_OPERATION_BINDING_MISMATCH', () => validateAndResolve({ rawRequest: fixture.request, registry, ledger: fixture.ledger }), results);
+  }
+  {
+    const fixture = referenceFixture(); const broken = clone(registry); const d = broken.descriptors.find(item => item.descriptorId === REFERENCE_DESCRIPTOR_ID); d.boundLockGeneration += 1;
+    expectFail('REFERENCE_DESCRIPTOR_LOCK_BINDING', 'DESCRIPTOR_LOCK_BINDING_MISMATCH', () => validateAndResolve({ rawRequest: fixture.request, registry: broken, ledger: fixture.ledger }), results);
+  }
+  {
+    const fixture = referenceFixture(); const broken = clone(registry); const d = broken.descriptors.find(item => item.descriptorId === REFERENCE_DESCRIPTOR_ID); d.scriptPath = 'tools/evil.mjs';
+    expectFail('REFERENCE_DESCRIPTOR_PATH_BINDING', 'DESCRIPTOR_EXECUTABLE_NOT_ALLOWED', () => validateAndResolve({ rawRequest: fixture.request, registry: broken, ledger: fixture.ledger }), results);
+  }
+  {
+    const fixture = referenceFixture(); const broken = clone(registry); const d = broken.descriptors.find(item => item.descriptorId === REFERENCE_DESCRIPTOR_ID); d.fixedArguments = ['--verify-static','--extra'];
+    expectFail('REFERENCE_DESCRIPTOR_ARGUMENT_BINDING', 'REFERENCE_CLASS_VERIFIER_ARGUMENT_BINDING_INVALID', () => validateAndResolve({ rawRequest: fixture.request, registry: broken, ledger: fixture.ledger }), results);
+  }
+  {
+    const fixture = referenceFixture(); const broken = clone(registry); const d = broken.descriptors.find(item => item.descriptorId === REFERENCE_DESCRIPTOR_ID); d.mutationIntent = true;
+    expectFail('REFERENCE_DESCRIPTOR_MUTATION_INTENT', 'REFERENCE_CLASS_VERIFIER_MUTATION_INTENT_PROHIBITED', () => validateAndResolve({ rawRequest: fixture.request, registry: broken, ledger: fixture.ledger }), results);
+  }
+  {
+    const fixture = referenceFixture(); const r = validateAndResolve({ rawRequest: fixture.request, registry, ledger: fixture.ledger }); const brokenResolution = clone(r); brokenResolution.descriptor.scriptBlob = 'f'.repeat(40);
+    expectFail('REFERENCE_DESCRIPTOR_BLOB_EXECUTION_BINDING', 'REFERENCE_CLASS_VERIFIER_BLOB_MISMATCH', () => executeResolved(brokenResolution, { root: ROOT }), results);
+  }
 
   const regressions = [
     runNativeRegression(
@@ -341,7 +443,8 @@ export function runSelfTest() {
       'INTEGRATED_DEVELOPMENT_PIPELINE_NATIVE_SELF_TEST',
       '.github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs',
       r => { if (r.result !== 'PASS' || r.failedCount !== 0 || r.physicalRetirementPerformed !== false || r.mergeAuthorityCreated !== false || r.productAuthorityCreated !== false) throw new Error('INTEGRATED_PIPELINE_REGRESSION_NONPASS'); }
-    )
+    ),
+    runReferenceClassNativeRegression()
   ];
 
   const fixturePass = results.every(item => item.observed === item.expected || (item.expected === 'PASS' && item.observed === 'PASS'));
@@ -357,7 +460,9 @@ export function runSelfTest() {
     nativeRegressionPassCount: regressions.filter(item => item.result === 'PASS').length,
     nativeRegressions: regressions,
     pageArchitectureExecutionClassPresent: true,
+    referenceClassAwardsAdmissionExecutionClassPresent: true,
     descriptorBoundArchitectureBundleOnly: true,
+    descriptorBoundReferenceClassTargetAndArgumentsOnly: true,
     authorityInflationObserved: false,
     arbitraryCommandAccepted: false,
     callerSuppliedBundleAccepted: false,

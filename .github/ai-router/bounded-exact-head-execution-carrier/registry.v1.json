@@ -171,6 +171,32 @@
         ],
         "separateNewConstructAuthority": null
       }
+    },
+    {
+      "schema": "BOUNDED_EXECUTABLE_DESCRIPTOR_v1",
+      "descriptorId": "REFERENCE_CLASS_AWARDS_ADMISSION_GEN890_VERIFY_V1",
+      "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "executionClass": "REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1",
+      "boundOperationId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_V1_20260809_001",
+      "boundLockGeneration": 890,
+      "boundTargetHead": "0edef35b14af36e6ddaba88fbe07a53c2471fad5",
+      "executable": "node",
+      "scriptPath": ".github/ai-router/reference-class-awards-admission/verify.v1.mjs",
+      "scriptBlob": "3e9584555cc951cc43d245538b512996fd07664f",
+      "fixedArguments": ["--verify-static"],
+      "shell": false,
+      "mutationIntent": false,
+      "extraArgumentsAllowed": false,
+      "environmentOverridesAllowed": false,
+      "callerSuppliedBundleAllowed": false,
+      "pathDerivation": "OPERATION_REQUEST_ALLOWED_PATHS_EXACT",
+      "targetHeadDerivation": "BOUND_DESCRIPTOR_TARGET_HEAD",
+      "taskDerivation": "SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID",
+      "nativeReceiptSchema": "REFERENCE_CLASS_AWARDS_ADMISSION_STATIC_VERIFICATION_RECEIPT_v1",
+      "nativePassField": "result",
+      "nativePassValue": "PASS",
+      "repositoryWritesExpected": false
     }
   ]
 }

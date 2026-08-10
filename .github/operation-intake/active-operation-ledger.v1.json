@@ -685,13 +685,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59": {
-      "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
-      "lockGeneration": 857,
+      "governingHead": "8b253efb26a22e30c85c28d2666dcfbfb1fbc173",
+      "lockGeneration": 955,
       "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
-      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_003",
-      "procedureLocatorDigest": "3cbb63190c81410ca52174d566de37c1e0324da0a0d1013a804d128fa5a0310d",
+      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_003_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+        "lockGeneration": 857,
+        "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_003",
+        "preservedEvidenceRefs": [
+          "GEN857_ADMISSION_REFERENCE_ONLY",
+          "GEN857_ROUTER_PAGE_ARCHITECTURE_REFERENCE_ONLY",
+          "PHI1_8F3BAFBE_NEGATIVE_ONLY",
+          "APHI_18BD40B4_FROZEN"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_CONTEXTUAL_3D_GEN857_TO_8B253EFB_20260809_001"
+      },
+      "procedureLocatorDigest": "641984efd4e1bfb28628b1cc62578b8f160c1221a0dbc1b8e83afe70ac9ff950",
       "released": false,
-      "requestDigest": "7e125b4b5e910364b5e291a32dbf6fff810e2fa7f0c935de1925eaeccecc6eb0",
+      "requestDigest": "a2deb311430e94ce79e392f42e5f52d14bd1a11c48f49b9cd980d2dba48afb7b",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
       "state": "ADMITTED_LOCKED"
@@ -1636,7 +1653,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 954,
+  "lockGeneration": 955,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -14031,6 +14048,36 @@
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "2c8475184cc2dc3a1ec5e75ec03d2f81c444cbb5ef130ffb1d2303211c89a171",
       "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+      "lockGeneration": 857,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+      "operationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_003",
+      "procedureLocatorDigest": "3cbb63190c81410ca52174d566de37c1e0324da0a0d1013a804d128fa5a0310d",
+      "released": true,
+      "requestDigest": "7e125b4b5e910364b5e291a32dbf6fff810e2fa7f0c935de1925eaeccecc6eb0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN857_ADMISSION_REFERENCE_ONLY",
+          "GEN857_ROUTER_PAGE_ARCHITECTURE_REFERENCE_ONLY",
+          "PHI1_8F3BAFBE_NEGATIVE_ONLY",
+          "APHI_18BD40B4_FROZEN"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "8b253efb26a22e30c85c28d2666dcfbfb1fbc173",
+        "successorLockGeneration": 955,
+        "successorLockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "successorOperationId": "LAWS_FIRST_BOUNDED_SPATIAL_MANIFESTATION_EXPERIMENT_V1_CONSTRUCTION_20260809_003_SUCCESSOR_001",
+        "transitionId": "LAWS_CONTEXTUAL_3D_GEN857_TO_8B253EFB_20260809_001"
+      },
       "terminalDisposition": "SUPERSEDED"
     }
   ]

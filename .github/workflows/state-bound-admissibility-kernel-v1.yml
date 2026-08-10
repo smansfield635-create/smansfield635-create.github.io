@@ -1,0 +1,97 @@
+name: State-Bound Admissibility Kernel v1
+
+on:
+  push:
+    paths:
+      - 'infrastructure/state-bound-admissibility-kernel-v1/**'
+      - '.github/workflows/state-bound-admissibility-kernel-v1.yml'
+  pull_request:
+    paths:
+      - 'infrastructure/state-bound-admissibility-kernel-v1/**'
+      - '.github/workflows/state-bound-admissibility-kernel-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact candidate identity
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Verify extracted source primitive identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/operation-intake/repository-operation-intake-gate.v1.mjs)" = "f0b22e6b9574507632f1ad07647710971a4d63de"
+          test "$(git hash-object .github/ai-router/operation-lifecycle/successor-protocol.v1.json)" = "3e3368b96ca13363115ed245b655e7f5c9046c2a"
+          test "$(git hash-object .github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json)" = "ab6d67e52aac2e414860f579d9ba72edade908c7"
+
+      - name: Verify product routing remains bounded
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/repository-ai-entry-router.mjs --mutation-intent \
+            --path infrastructure/state-bound-admissibility-kernel-v1/README.md \
+            --path infrastructure/state-bound-admissibility-kernel-v1/package.json \
+            --path infrastructure/state-bound-admissibility-kernel-v1/spec/lifecycle.v1.json \
+            --path infrastructure/state-bound-admissibility-kernel-v1/src/canonical.mjs \
+            --path infrastructure/state-bound-admissibility-kernel-v1/src/adapters.mjs \
+            --path infrastructure/state-bound-admissibility-kernel-v1/src/dsse.mjs \
+            --path infrastructure/state-bound-admissibility-kernel-v1/src/kernel.mjs \
+            --path infrastructure/state-bound-admissibility-kernel-v1/src/enforce.mjs \
+            --path infrastructure/state-bound-admissibility-kernel-v1/demo/demo.mjs \
+            --path infrastructure/state-bound-admissibility-kernel-v1/test/self-test.mjs \
+            --path .github/workflows/state-bound-admissibility-kernel-v1.yml \
+            --task STATE_BOUND_ADMISSIBILITY_KERNEL_V1_CANDIDATE_CONFORMANCE \
+            --output /tmp/state-bound-admissibility-kernel-v1-router.json
+          node -e "const r=require('/tmp/state-bound-admissibility-kernel-v1-router.json');if(r.disposition!=='PASS'||r.routes.length!==11||!r.routes.every(x=>x.projectId==='STATE_BOUND_ADMISSIBILITY_KERNEL'&&x.disposition==='PASS'))process.exit(1)"
+
+      - name: Run exact adversarial self-test
+        run: node infrastructure/state-bound-admissibility-kernel-v1/test/self-test.mjs --output /tmp/state-bound-admissibility-kernel-v1-self-test.json
+
+      - name: Run five-minute product demo
+        run: node infrastructure/state-bound-admissibility-kernel-v1/demo/demo.mjs --output /tmp/state-bound-admissibility-kernel-v1-demo.json
+
+      - name: Verify emitted receipts
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');
+          const t=JSON.parse(fs.readFileSync('/tmp/state-bound-admissibility-kernel-v1-self-test.json'));
+          const d=JSON.parse(fs.readFileSync('/tmp/state-bound-admissibility-kernel-v1-demo.json'));
+          if(t.schema!=='STATE_BOUND_ADMISSIBILITY_KERNEL_V1_SELF_TEST_RECEIPT'||t.result!=='PASS_CLOSED'||t.failed!==0||t.testCount<36)process.exit(1);
+          const m=Object.fromEntries(d.scenario.map(x=>[x.step,x.result]));
+          if(d.result!=='PASS'||d.signedReceiptVerified!==true||m.STATE_ADVANCES_TO_B_OLD_ADMISSION_REUSED!=='DENY_STALE_STATE'||m.CONSUMED_B_CAPABILITY_REPLAYED!=='DENY_REPLAY')process.exit(1);
+          NODE
+
+      - name: Upload conformance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: state-bound-admissibility-kernel-v1-conformance
+          path: |
+            /tmp/state-bound-admissibility-kernel-v1-router.json
+            /tmp/state-bound-admissibility-kernel-v1-self-test.json
+            /tmp/state-bound-admissibility-kernel-v1-demo.json
+          if-no-files-found: error
+          retention-days: 90

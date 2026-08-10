@@ -136,12 +136,6 @@ float transitionBand(float signal,float halfWidth){
   float antialiasWidth=max(fwidth(signal)*1.5,0.012);
   return 1.0-smoothstep(halfWidth-antialiasWidth,halfWidth+antialiasWidth,distanceToCenter);
 }
-float contour(float elevation){
-  float interval=2.5;
-  float centered=abs(fract(elevation/interval)-0.5);
-  float width=max(fwidth(elevation/interval)*1.65,0.026);
-  return smoothstep(0.47-width,0.49,centered);
-}
 float radial(vec2 point,vec2 center,float innerRadius,float outerRadius){
   return 1.0-smoothstep(innerRadius,outerRadius,distance(point,center));
 }
@@ -359,24 +353,32 @@ void main(){
     float directionalBreak=mix(faceBandA,faceBandB,0.35+0.45*slopeResponse);
     float fineBreak=mix(0.5,faceBandC,nearDetail);
 
-    palette*=0.62+0.46*broad+0.24*medium+0.14*grain;
-    palette*=mix(0.70,1.30,strata*0.68+crossGrain*0.32);
-    palette*=mix(0.71,1.34,faceBreak);
-    palette*=mix(0.86,1.15,directionalBreak);
-    palette*=mix(0.93,1.08,fineBreak);
-    palette*=mix(1.0,0.72,sharedFaceContact*(0.30+0.24*nearDetail));
-    palette+=vec3(0.026,0.021,0.014)*(faceBandA-faceBandB);
-    palette+=vec3(0.030,0.023,0.014)*(crestSignal-terraceSignal)*(0.30+0.45*slopeResponse);
-    palette=mix(palette,palette*vec3(0.79,0.85,0.88),curvatureResponse*(0.18+0.26*slopeResponse));
-    palette=mix(palette,base,0.27);
-    presentationContact=max(presentationContact,sharedFaceContact*0.24);
-    presentationHighlight=max(presentationHighlight,(1.0-sharedFaceContact)*abs(crestSignal-terraceSignal)*0.16);
+    palette*=0.72+0.34*broad+0.18*medium+0.10*grain;
+    palette*=mix(0.84,1.16,strata*0.54+crossGrain*0.46);
+    palette*=mix(0.84,1.17,faceBreak);
+    palette*=mix(0.92,1.09,directionalBreak);
+    palette*=mix(0.96,1.05,fineBreak);
+    palette*=mix(1.0,0.87,sharedFaceContact*(0.22+0.18*nearDetail));
+    palette+=vec3(0.018,0.015,0.010)*(faceBandA-faceBandB);
+    palette+=vec3(0.018,0.014,0.010)*(crestSignal-terraceSignal)*(0.22+0.30*slopeResponse);
+    palette=mix(palette,palette*vec3(0.88,0.91,0.92),curvatureResponse*(0.10+0.16*slopeResponse));
+    palette=mix(palette,base,0.34);
+    presentationContact=max(presentationContact,sharedFaceContact*0.14);
+    presentationHighlight=max(presentationHighlight,(1.0-sharedFaceContact)*abs(crestSignal-terraceSignal)*0.10);
 
-    float contourLine=contour(vWorldPosition.y);
-    palette*=mix(1.0,0.56,contourLine*(0.30+0.47*slopeResponse));
-    float slopeRake=stableWave(vWorldPosition.x*0.31+vWorldPosition.z*0.22+vWorldPosition.y*0.58);
-    palette*=mix(0.84,1.16,slopeRake*(0.26+0.74*slopeResponse));
-    palette+=vec3(0.020,0.018,0.014)*curvatureResponse*(0.35+0.65*slopeResponse);
+    float naturalLandformTone=clamp(
+      0.94+
+      0.11*(broad-0.5)+
+      0.07*(medium-0.5)+
+      0.06*slopeResponse-
+      0.035*curvatureResponse,
+      0.82,
+      1.12
+    );
+    palette*=naturalLandformTone;
+    float slopeRake=stableWave(vWorldPosition.x*0.19+vWorldPosition.z*0.13+vWorldPosition.y*0.31);
+    palette*=mix(0.94,1.07,slopeRake*(0.18+0.50*slopeResponse));
+    palette+=vec3(0.014,0.013,0.011)*curvatureResponse*(0.25+0.50*slopeResponse);
 
     vec2 manorCenter=vec2(80.0,-172.0);
     float manorRadius=distance(world,manorCenter);
@@ -511,8 +513,8 @@ void main(){
   vec3 haze=mix(uGroundHazeColor,atmosphere,0.44);
   lit=mix(lit,haze,fog*0.48);
   if(vRoleCode==1u){
-    lit*=mix(1.0,0.76,clamp(presentationContact,0.0,1.0));
-    lit+=base*clamp(presentationHighlight,0.0,1.0)*0.038;
+    lit*=mix(1.0,0.82,clamp(presentationContact,0.0,1.0));
+    lit+=base*clamp(presentationHighlight,0.0,1.0)*0.028;
   }
   lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));
   outColor=vec4(lit,outputAlpha);
@@ -535,7 +537,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   canvas.width = width;
   canvas.height = height;
   const gl = canvas.getContext('webgl2', {
-    alpha: false, antialias: false, depth: true, stencil: false,
+    alpha: false, antialias: true, depth: true, stencil: false,
     preserveDrawingBuffer: true, powerPreference: 'high-performance'
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
@@ -649,7 +651,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.bindTexture(gl.TEXTURE_2D, resources.depthTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.DEPTH_COMPONENT24, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_MODE, gl.NONE);
@@ -709,7 +711,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.LINEAR); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
   }
   function captureColorFrame(label, { includePng = true } = {}) {
@@ -718,7 +720,7 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     const pixels = new Uint8Array(width * height * 4); gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels); counters.colorReadbackCount += 1;
     const summary = summarize(pixels, resources.clearColorBytes);
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.LINEAR); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     const pngDataUrl = includePng ? canvas.toDataURL('image/png') : null; if (includePng) counters.pngEncodingCount += 1;
     return Object.freeze({ label, frameNumber: counters.frameCount, width, height, summary, pngDataUrl });
   }
@@ -743,6 +745,9 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         temporallyStableWorldSpaceVariation: true,
         regressionColorDiversityRestoration: true,
         cavernNearThresholdReinforcement: true,
+        cartographicContourBanding: false,
+        naturalContinuousLandformTone: true,
+        antialiasRequested: true,
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },
@@ -751,7 +756,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
         created: true, lost: gl.isContextLost(), vendor: gl.getParameter(gl.VENDOR), renderer: gl.getParameter(gl.RENDERER),
         unmaskedVendor: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL) : null,
         unmaskedRenderer: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_RENDERER_WEBGL) : null,
-        version: gl.getParameter(gl.VERSION), shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
+        version: gl.getParameter(gl.VERSION), shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION),
+        antialias: gl.getContextAttributes()?.antialias === true
       },
       package: {
         logicalPromotedIdentity: LOGICAL_ID, runtimeIdentity: renderPackage.packageIdentity, runtimeContentDigest: renderPackage.contentDigest,

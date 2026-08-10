@@ -1344,34 +1344,6 @@
       "scopeHash": "d83783e3636cd140c13098efc8ee524598e0dd7291e710306fc3c668e585babf",
       "state": "ADMITTED_LOCKED"
     },
-    "da28b0a1f9d256002ce324417e0b0169e468b0b0dc55f94cf1ab1a5f5c1660e8": {
-      "governingHead": "2706b68122c708613e46f8c1d28ecb336c46ca8e",
-      "lockGeneration": 918,
-      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_SCOPE",
-      "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_20260809_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "a621c5c47cbd4c93081c4cde327b6d654243c8ae",
-        "lockGeneration": 916,
-        "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_SCOPE",
-        "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_20260809_001",
-        "preservedEvidenceRefs": [
-          "GEN916_ADMISSION_RECEIPT_SHA256_df4fdf9035da7dfb102b761d964f635983b744e2c6496161ce8393b7dd3c9699",
-          "GEN916_ROUTER_NATIVE_RECEIPT_SHA256_d8f6dab964931cdad9831884025482f6b091f6d97e27f0437c3326b86d526261",
-          "GEN896_PASS_CLOSED_RECEIPT_SHA256_9ebbded488ee917be92f24d474a772a2bc5518cf115947f81c1878620fb55c7e"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "SBK_PR865_MERGE_GEN916_TO_2706B681_20260809_001"
-      },
-      "procedureLocatorDigest": "45eb5901db1513779330d5d126af619992e02f708c03f658f7197eb3cb110755",
-      "released": false,
-      "requestDigest": "57a1a386401050dbbbda6a5a43dda524bed28be9e057130f88bc5d8c87d7f106",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "da28b0a1f9d256002ce324417e0b0169e468b0b0dc55f94cf1ab1a5f5c1660e8",
-      "state": "ADMITTED_LOCKED"
-    },
     "dbb3be875a160b8d1b32c59516c7c8f02a24f72223106b64cddea5fd6bdb5d2d": {
       "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
       "lockGeneration": 603,
@@ -13554,6 +13526,35 @@
       "requestDigest": "79683f015cf4122f4c81ed8df9b1555533387d6fb0fd6db1650e9951d047b0b5",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "74d0adb951edfd2d905f436a614644818346c5ebc9405d1ebed5f437d7395faa",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "2706b68122c708613e46f8c1d28ecb336c46ca8e",
+      "lockGeneration": 918,
+      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_SCOPE",
+      "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_20260809_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "a621c5c47cbd4c93081c4cde327b6d654243c8ae",
+        "lockGeneration": 916,
+        "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_SCOPE",
+        "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_PR865_RATIFICATION_AND_MERGE_20260809_001",
+        "preservedEvidenceRefs": [
+          "GEN916_ADMISSION_RECEIPT_SHA256_df4fdf9035da7dfb102b761d964f635983b744e2c6496161ce8393b7dd3c9699",
+          "GEN916_ROUTER_NATIVE_RECEIPT_SHA256_d8f6dab964931cdad9831884025482f6b091f6d97e27f0437c3326b86d526261",
+          "GEN896_PASS_CLOSED_RECEIPT_SHA256_9ebbded488ee917be92f24d474a772a2bc5518cf115947f81c1878620fb55c7e"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "SBK_PR865_MERGE_GEN916_TO_2706B681_20260809_001"
+      },
+      "procedureLocatorDigest": "45eb5901db1513779330d5d126af619992e02f708c03f658f7197eb3cb110755",
+      "released": true,
+      "requestDigest": "57a1a386401050dbbbda6a5a43dda524bed28be9e057130f88bc5d8c87d7f106",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "da28b0a1f9d256002ce324417e0b0169e468b0b0dc55f94cf1ab1a5f5c1660e8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

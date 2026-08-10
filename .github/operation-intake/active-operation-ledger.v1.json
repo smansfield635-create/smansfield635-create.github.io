@@ -24,6 +24,18 @@
       "scopeHash": "01a314ffcd4d1ec341cedcc0f64e83a3304850361cab9869908dce31cb915862",
       "state": "ADMITTED_LOCKED"
     },
+    "02f16bfae8df6d546324b221415721bf8665d58c238577feed2a8e425c50b527": {
+      "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
+      "lockGeneration": 1018,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:CONTROL_PLANE_TRANSFERABILITY:PR889_RATIFICATION_AND_MERGE:V1",
+      "operationId": "CONTROL_PLANE_TRANSFERABILITY_PR889_RATIFICATION_AND_MERGE_20260810_001",
+      "procedureLocatorDigest": "9378d29511325ad1687da32aa7375f4ca13776f4f4690f02c0d205080e5c17e2",
+      "released": false,
+      "requestDigest": "2c5ea1ee88237fb57e1457c2e137a546cea94c6ed9c3b79b696f07742d5383c4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "02f16bfae8df6d546324b221415721bf8665d58c238577feed2a8e425c50b527",
+      "state": "ADMITTED_LOCKED"
+    },
     "030c5cb6224be06a78d1117e2cc3b8e4984de7aa4fea2dbb42736c90cf51fc86": {
       "governingHead": "888b70bd8a56767f0e33d9c083d412cd55c339f4",
       "lockGeneration": 346,
@@ -1714,7 +1726,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1017,
+  "lockGeneration": 1018,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

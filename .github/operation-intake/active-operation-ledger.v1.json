@@ -708,39 +708,6 @@
       "scopeHash": "77e9d50eb7b12a10edb88aa4520d9d7c1333f174f9fbbc325bf8f0234749d07e",
       "state": "ADMITTED_LOCKED"
     },
-    "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59": {
-      "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
-      "lockGeneration": 1007,
-      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
-      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001_SUCCESSOR_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
-        "lockGeneration": 969,
-        "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
-        "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001",
-        "preservedEvidenceRefs": [
-          "GEN969_CANONICAL_ADMISSION_REFERENCE_ONLY",
-          "GEN969_ROUTER_PASS_E52FE4E8_REFERENCE_ONLY",
-          "APHI_18BD40B4_FROZEN",
-          "PHI1_8F3BAFBE_NEGATIVE_ONLY",
-          "PR883_GENERIC_PAGE_ARCHITECTURE_CARRIER_RATIFIED",
-          "PR884_CURRENT_L2_CONTROL_PLANE_MAIN_ADVANCE",
-          "E52FE4E8_TO_B79537C9_NINE_COMMIT_DELTA_DISJOINT_FROM_LAWS_FIVE_PATHS_AND_SPATIAL_SOURCES",
-          "RETRY_001_CORRECTS_REQUEST_PROCEDURE_ERROR_PRECEDENCE_PARITY_ONLY"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "LAWS_CONTEXTUAL_3D_GEN969_TO_B79537C9_20260810_RETRY_001"
-      },
-      "procedureLocatorDigest": "ff11b33ec4175df01c52474ce5e109d642bf96a8b0173f43c40199c76096f3be",
-      "released": false,
-      "requestDigest": "0435977030912c4f124dc8931690bf53668337715e7b196ae63e57c9b581e080",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
-      "state": "ADMITTED_LOCKED"
-    },
     "829f23705557beebb52268181d148379af118f0a65d7eb5875e615a79492af58": {
       "governingHead": "5298f541c05097c96ec65ef60cb9de7735652b07",
       "lockGeneration": 164,
@@ -15007,6 +14974,40 @@
       "scopeHash": "3996eac1e05ac9a1b3a5f506818c79ed4abb993d45e2c303a31a32901f3b3888",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
+      "lockGeneration": 1007,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
+        "lockGeneration": 969,
+        "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:BOUNDED_SPATIAL_MANIFESTATION:ONE_SPECIMEN:V1",
+        "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_SPECIMEN_CURRENT_MAIN_V1_20260809_001",
+        "preservedEvidenceRefs": [
+          "GEN969_CANONICAL_ADMISSION_REFERENCE_ONLY",
+          "GEN969_ROUTER_PASS_E52FE4E8_REFERENCE_ONLY",
+          "APHI_18BD40B4_FROZEN",
+          "PHI1_8F3BAFBE_NEGATIVE_ONLY",
+          "PR883_GENERIC_PAGE_ARCHITECTURE_CARRIER_RATIFIED",
+          "PR884_CURRENT_L2_CONTROL_PLANE_MAIN_ADVANCE",
+          "E52FE4E8_TO_B79537C9_NINE_COMMIT_DELTA_DISJOINT_FROM_LAWS_FIVE_PATHS_AND_SPATIAL_SOURCES",
+          "RETRY_001_CORRECTS_REQUEST_PROCEDURE_ERROR_PRECEDENCE_PARITY_ONLY"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "LAWS_CONTEXTUAL_3D_GEN969_TO_B79537C9_20260810_RETRY_001"
+      },
+      "procedureLocatorDigest": "ff11b33ec4175df01c52474ce5e109d642bf96a8b0173f43c40199c76096f3be",
+      "released": true,
+      "requestDigest": "0435977030912c4f124dc8931690bf53668337715e7b196ae63e57c9b581e080",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7adc412e569475e6ed4a5c13cd0faa21a69e816859fe73be2061f8fb01d4cf59",
+      "state": "TERMINAL",
+      "terminalDisposition": "REJECTED_CLOSED"
     }
   ]
 }

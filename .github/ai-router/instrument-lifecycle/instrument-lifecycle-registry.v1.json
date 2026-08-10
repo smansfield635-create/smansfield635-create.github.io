@@ -23,6 +23,22 @@
       "physicalRetirementAuthorized": false
     },
     {
+      "workflowPath": ".github/workflows/platform-control-plane-strike-v1.yml",
+      "state": "ACTIVE_CURRENT",
+      "reason": "Current shadow-only L2 control-plane instrumentation adoption candidate. This record becomes repository-current only if the containing candidate is merged; it creates no merge, live-enforcement, repository-settings, or system-gap-closure authority.",
+      "currentAuthority": false,
+      "protected": true,
+      "physicalRetirementAuthorized": false,
+      "adoption": {
+        "sourceCandidatePr": 853,
+        "sourceCandidateHead": "196ac23ee3ff6d8a493ba58c45b20ad747c1c52b",
+        "sourceGeneration": 854,
+        "sourceGenerationDisposition": "PASS_CLOSED",
+        "sourceAuthorityInherited": false,
+        "currentVerifierSemantics": "CURRENT_EXACT_HEAD_AND_INSTALLED_PACKAGE_STATE"
+      }
+    },
+    {
       "workflowPath": ".github/workflows/laws-compass-six-authority-benchmark.yml",
       "state": "ACTIVE_COMPATIBILITY",
       "reason": "Compatibility-protected while the active Laws spatial-manifestation work resolves its evidence carrier.",

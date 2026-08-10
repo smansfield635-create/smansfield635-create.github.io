@@ -972,6 +972,18 @@
       "scopeHash": "9485a119ec533eed9ce9e0d01e6d0d672d2384d21fc0b70a6f0fd8ab413071ab",
       "state": "ADMITTED_LOCKED"
     },
+    "95bd1fc14c8678071858f0755f5e00ce0beb2092d4a8458f9ff4b85ed798ce3a": {
+      "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
+      "lockGeneration": 986,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:GENERIC_PAGE_ARCHITECTURE:RATIFICATION:V1",
+      "operationId": "BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_GENERIC_PAGE_ARCHITECTURE_V1_RATIFICATION_20260810_001",
+      "procedureLocatorDigest": "676060d12832d68c18d2b13c023f56242af3bb5c63c8f980f44ee13196964777",
+      "released": false,
+      "requestDigest": "b66e8bdd94489c09fc30dc4813859c07d0be8e968df4bcb3bf7c870f8a01af8d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "95bd1fc14c8678071858f0755f5e00ce0beb2092d4a8458f9ff4b85ed798ce3a",
+      "state": "ADMITTED_LOCKED"
+    },
     "961b7888499ecbe8fde655fe945fd2b91be8842c0fcbd972345e66aea23ed28f": {
       "governingHead": "36152fc4c64cde138272d35060a9c1cdfc905e2d",
       "lockGeneration": 264,
@@ -1708,7 +1720,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 985,
+  "lockGeneration": 986,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

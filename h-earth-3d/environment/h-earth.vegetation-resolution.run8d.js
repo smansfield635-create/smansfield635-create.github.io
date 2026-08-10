@@ -49,7 +49,7 @@ export const H_EARTH_RUN_8D_ACTIVE_DETAIL_LIFECYCLE_CONTEXT = freeze({
   contractId: H_EARTH_SPATIAL_LIFECYCLE_CONTRACT_ID,
   state: 'ACTIVE_DETAIL',
   densityScale: H_EARTH_SPATIAL_LIFECYCLE_PROFILE.statePolicies.ACTIVE_DETAIL.densityScale,
-  maxInstances: Math.min(192, H_EARTH_SPATIAL_LIFECYCLE_PROFILE.statePolicies.ACTIVE_DETAIL.maxInstances),
+  maxInstances: Math.min(27, H_EARTH_SPATIAL_LIFECYCLE_PROFILE.statePolicies.ACTIVE_DETAIL.maxInstances),
   authorityEstablished: true,
   provisional: false,
   profileId: H_EARTH_SPATIAL_LIFECYCLE_PROFILE.profileId

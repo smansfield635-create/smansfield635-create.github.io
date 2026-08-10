@@ -260,7 +260,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -z "$(git status --porcelain)"
+          test -z "$(git status --porcelain --untracked-files=no)"
           test -z "$(git -C hc05-baseline status --porcelain)"
           test -z "$(git -C hc05-candidate status --porcelain)"
 

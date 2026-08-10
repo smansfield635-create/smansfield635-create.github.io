@@ -468,18 +468,6 @@
       "scopeHash": "4c8ebe4a58daa3f054ab0e21962928f569e1f83c5aa711fa9b9664a18c201294",
       "state": "ADMITTED_LOCKED"
     },
-    "4d076bf41aa6c539898d1f828ab6e38facfbb791dfd6e9412bafae206a118c7e": {
-      "governingHead": "99cf65085446790adb8c271ff48403d1e39a4cc0",
-      "lockGeneration": 998,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:L2_PLATFORM_CONTROL_PLANE:CERTIFICATION_FIXTURE_REPAIR:V1",
-      "operationId": "L2_CONTROL_PLANE_CERTIFICATION_FIXTURE_REPAIR_v1_20260810_001",
-      "procedureLocatorDigest": "f17e3b2f0e2161b7d09838a00734ba0d8235f1013b650175c612ffddf7780854",
-      "released": false,
-      "requestDigest": "32206e155763703db4e0fcfe76314ce28117167a6c1e79b98d9f1a090ebfc530",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "4d076bf41aa6c539898d1f828ab6e38facfbb791dfd6e9412bafae206a118c7e",
-      "state": "ADMITTED_LOCKED"
-    },
     "4e4c43e0804b4ad70b6e69c4119748bfe56fbaa74b67ae8174fd77ac12691925": {
       "governingHead": "8c7821995458c0baf45e2e4a82bf4d3667fe0a3d",
       "lockGeneration": 617,
@@ -14716,6 +14704,19 @@
       "scopeHash": "d0dc8b319fc21250b762984999ff8afeb8d2ccdc2097db134504e0f31a6d46c4",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "99cf65085446790adb8c271ff48403d1e39a4cc0",
+      "lockGeneration": 998,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:L2_PLATFORM_CONTROL_PLANE:CERTIFICATION_FIXTURE_REPAIR:V1",
+      "operationId": "L2_CONTROL_PLANE_CERTIFICATION_FIXTURE_REPAIR_v1_20260810_001",
+      "procedureLocatorDigest": "f17e3b2f0e2161b7d09838a00734ba0d8235f1013b650175c612ffddf7780854",
+      "released": true,
+      "requestDigest": "32206e155763703db4e0fcfe76314ce28117167a6c1e79b98d9f1a090ebfc530",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4d076bf41aa6c539898d1f828ab6e38facfbb791dfd6e9412bafae206a118c7e",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

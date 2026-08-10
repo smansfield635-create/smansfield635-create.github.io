@@ -1,10 +1,32 @@
 /** H_EARTH_RUN_8E_R2_CANONICAL_LIVE_RENDER_PACKAGE_v1 */
 import {
   getHEarthRun8ER2ImmutableLiveRenderPackage as getRawPackage,
-  evaluateHEarthRun8ER2ImmutableLiveRenderPackage
+  evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
+  H_EARTH_RUN_8E_R2_MATERIAL_MODEL,
+  H_EARTH_RUN_8E_R2_ROLE_CODE
 } from './live-render-package.run8e-r2.js';
+import { buildHEarthRun8ENeutralPackage } from './run8e-successor-environment.js';
+import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
+import {
+  H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,
+  buildHEarthRun8EPacket002SuccessorTransfer
+} from '../../../../h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js';
+import {
+  H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
+  sampleHEarthRun8CSuccessorSurfaceMaterial,
+  evaluateHEarthRun8CSuccessorSurfaceMaterial
+} from '../../../../h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
+import {
+  H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
+  sampleHEarthAtmosphereState,
+  evaluateHEarthAtmosphereStateSample
+} from '../../../../h-earth-3d/environment/h-earth.atmosphere-state.js';
+import { H_EARTH_SURFACE_CLASSES } from '../../../../h-earth-3d/environment/h-earth.surface-state-field.js';
+import { H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID } from './renderer.functional-landscape.js';
 
 const GRID_SCALE = 16777216;
+const GPU_DECIMAL_PLACES = 6;
+const GPU_MAXIMUM_ABSOLUTE_ADJUSTMENT = 0.00000051;
 const FLOAT_BUFFER_NAMES = Object.freeze([
   'positions',
   'normals',
@@ -22,9 +44,19 @@ const HASH_BUFFER_ORDER = Object.freeze([
   'roleCodes',
   'indices'
 ]);
-
 const freezeArray = values => Object.freeze(Array.from(values));
 const freezeRecord = value => Object.freeze(value);
+const finite = value => typeof value === 'number' && Number.isFinite(value);
+const clamp01 = value => Math.min(1, Math.max(0, value));
+const srgb8ToLinear = value => {
+  const srgb = clamp01(value / 255);
+  return srgb <= 0.04045 ? srgb / 12.92 : Math.pow((srgb + 0.055) / 1.055, 2.4);
+};
+
+export const H_EARTH_RUN_8E_GEN957_PACKAGE_SUCCESSOR_CONTRACT_ID =
+  'H_EARTH_RUN_8E_GEN957_HIGH_RESOLUTION_LIVE_RENDER_PACKAGE_SUCCESSOR_v1';
+export const H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID =
+  'H_EARTH_RUN_8E_GEN957_HIGH_RESOLUTION_GPU_UPLOAD_VIEWS_v1';
 
 function canonicalNumber(value) {
   if (!Number.isFinite(value)) throw new TypeError('R2_CANONICAL_NONFINITE_NUMBER');
@@ -116,6 +148,669 @@ let cachedPackage = null;
 export function getHEarthRun8ER2CanonicalLiveRenderPackage() {
   if (!cachedPackage) cachedPackage = buildCanonicalPackage();
   return cachedPackage;
+}
+
+function normalizeVector(x, y, z) {
+  const length = Math.hypot(x, y, z);
+  return length > Number.EPSILON
+    ? { x: x / length, y: y / length, z: z / length }
+    : null;
+}
+
+function deriveVertexNormals(vertices, indices) {
+  const sums = Array.from({ length: vertices.length }, () => ({ x: 0, y: 0, z: 0 }));
+  for (let offset = 0; offset + 2 < indices.length; offset += 3) {
+    const ia = indices[offset];
+    const ib = indices[offset + 1];
+    const ic = indices[offset + 2];
+    const a = vertices[ia];
+    const b = vertices[ib];
+    const c = vertices[ic];
+    if (!a || !b || !c) continue;
+    const abx = b.x - a.x;
+    const aby = b.y - a.y;
+    const abz = b.z - a.z;
+    const acx = c.x - a.x;
+    const acy = c.y - a.y;
+    const acz = c.z - a.z;
+    const nx = aby * acz - abz * acy;
+    const ny = abz * acx - abx * acz;
+    const nz = abx * acy - aby * acx;
+    for (const index of [ia, ib, ic]) {
+      sums[index].x += nx;
+      sums[index].y += ny;
+      sums[index].z += nz;
+    }
+  }
+  return sums.map(sum => normalizeVector(sum.x, sum.y, sum.z));
+}
+
+function resolveNormals(geometry, issues, primitiveId) {
+  const vertices = Array.isArray(geometry?.vertices) ? geometry.vertices : [];
+  const supplied = Array.isArray(geometry?.normals) ? geometry.normals : [];
+  if (supplied.length === vertices.length && supplied.every(normal =>
+    normal && [normal.x, normal.y, normal.z].every(finite))) {
+    return { normals: supplied, source: 'SOURCE_GEOMETRY_NORMALS' };
+  }
+  const derived = deriveVertexNormals(vertices, geometry?.indices ?? []);
+  if (derived.length !== vertices.length || derived.some(normal => !normal)) {
+    issues.push(`GEN957_NORMAL_DERIVATION_FAILED:${primitiveId}`);
+    return { normals: [], source: 'FAILED' };
+  }
+  return { normals: derived, source: 'DETERMINISTIC_GEOMETRIC_DERIVATION' };
+}
+
+function roleForPrimitive(primitive, terrainPrimitiveId) {
+  if (primitive.primitiveId === terrainPrimitiveId) return 'TERRAIN';
+  if (primitive.metadata?.run8DInstanceId) return 'VEGETATION';
+  return 'SHORELINE';
+}
+
+function vegetationRgba(primitive) {
+  const intent = String(primitive?.materialHint?.materialIntent ?? '');
+  if (intent.includes('TRUNK') || intent.includes('WOODY')) return [89, 63, 39, 255];
+  if (intent.includes('CONIFER')) return [38, 73, 48, 255];
+  if (intent.includes('SHRUB')) return [52, 94, 52, 255];
+  return [78, 126, 65, 255];
+}
+
+function functionalLandscapeMaterialDefaults(primitive) {
+  const intent = primitive?.materialHint?.materialIntent ??
+    primitive?.materialHint?.materialReference ?? 'DEFAULT';
+  if (String(intent).includes('WATER')) {
+    return { rgba: [46, 118, 144, 210], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (String(intent).includes('FOAM')) {
+    return { rgba: [232, 242, 235, 190], transparencyClass: 'TRANSLUCENT' };
+  }
+  if (String(intent).includes('HIGHLAND') || String(intent).includes('DISTANT')) {
+    return { rgba: [68, 83, 79, 255], transparencyClass: 'OPAQUE' };
+  }
+  return { rgba: [116, 103, 73, 255], transparencyClass: 'OPAQUE' };
+}
+
+function resolvePrimitiveMaterialProjection(primitive, role, issues) {
+  const materialReference = primitive?.materialHint?.materialReference ?? null;
+  const materialIntent = primitive?.materialHint?.materialIntent ?? null;
+  if (role === 'VEGETATION') {
+    return {
+      rgba: vegetationRgba(primitive),
+      transparencyClass: 'OPAQUE',
+      materialReference,
+      materialIntent,
+      sourceAuthorityContractId: 'H_EARTH_RUN_8E_SUCCESSOR_ENVIRONMENT_FRAME_AND_RENDER_INTEGRATION_v1',
+      projectionModel: 'EXISTING_RUN_8E_VEGETATION_COLOR_PROJECTION'
+    };
+  }
+  const directRgba = primitive?.renderMaterial?.rgba;
+  if (Array.isArray(directRgba) && directRgba.length === 4 && directRgba.every(finite)) {
+    const directTransparency = primitive?.renderMaterial?.transparencyClass;
+    return {
+      rgba: [...directRgba],
+      transparencyClass: typeof directTransparency === 'string' && directTransparency.length > 0
+        ? directTransparency : 'OPAQUE',
+      materialReference,
+      materialIntent,
+      sourceAuthorityContractId: 'DIRECT_PRIMITIVE_RENDER_MATERIAL',
+      projectionModel: 'DIRECT_PRIMITIVE_RENDER_MATERIAL'
+    };
+  }
+  if (role === 'SHORELINE' && (materialReference || materialIntent)) {
+    return {
+      ...functionalLandscapeMaterialDefaults(primitive),
+      materialReference,
+      materialIntent,
+      sourceAuthorityContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
+      projectionModel: 'EXACT_RUN_6D_MATERIAL_DEFAULTS'
+    };
+  }
+  issues.push(`GEN957_PRIMITIVE_MATERIAL_PROJECTION_MISSING:${primitive.primitiveId}`);
+  return {
+    rgba: [0, 0, 0, 255],
+    transparencyClass: 'OPAQUE',
+    materialReference,
+    materialIntent,
+    sourceAuthorityContractId: null,
+    projectionModel: 'REJECTED'
+  };
+}
+
+function mergeDrawRange(ranges, candidate) {
+  const previous = ranges[ranges.length - 1];
+  if (previous &&
+      previous.role === candidate.role &&
+      previous.transparencyClass === candidate.transparencyClass &&
+      previous.materialModelCode === candidate.materialModelCode &&
+      previous.indexStart + previous.indexCount === candidate.indexStart) {
+    previous.indexCount += candidate.indexCount;
+    previous.primitiveCount += 1;
+    previous.primitiveIds.push(candidate.primitiveId);
+    return;
+  }
+  ranges.push({
+    role: candidate.role,
+    transparencyClass: candidate.transparencyClass,
+    materialModelCode: candidate.materialModelCode,
+    indexStart: candidate.indexStart,
+    indexCount: candidate.indexCount,
+    primitiveCount: 1,
+    primitiveIds: [candidate.primitiveId]
+  });
+}
+
+function freezeDrawRanges(ranges) {
+  return freezeArray(ranges.map(range => freezeRecord({
+    ...range,
+    primitiveIds: freezeArray(range.primitiveIds)
+  })));
+}
+
+function rejectedSuccessor(issues) {
+  return freezeRecord({
+    eligible: false,
+    status: 'RUN_8E_GEN957_HIGH_RESOLUTION_LIVE_RENDER_PACKAGE_REJECTED',
+    contractId: H_EARTH_RUN_8E_GEN957_PACKAGE_SUCCESSOR_CONTRACT_ID,
+    issues: freezeArray(issues)
+  });
+}
+
+function buildHEarthRun8EGen957SuccessorLiveRenderPackage({
+  timeOfDayHours = 15.25,
+  defaultObserverElevation = 2.25,
+  defaultViewDistance = 512,
+  packageOccurrenceId = 'H_EARTH_RUN_8E_GEN957_SUCCESSOR_PACKAGE_OCCURRENCE_001'
+} = {}) {
+  const issues = [];
+  if (![timeOfDayHours, defaultObserverElevation, defaultViewDistance].every(finite)) {
+    issues.push('GEN957_PACKAGE_ENVIRONMENT_INPUT_NONFINITE');
+  }
+  if (typeof packageOccurrenceId !== 'string' || packageOccurrenceId.trim().length === 0) {
+    issues.push('GEN957_PACKAGE_OCCURRENCE_ID_INVALID');
+  }
+
+  const neutralPackage = buildHEarthRun8ENeutralPackage();
+  if (neutralPackage?.ok !== true) {
+    issues.push(...(neutralPackage?.issues ?? ['GEN957_NEUTRAL_PACKAGE_FAILED']));
+  }
+  const westAdmission = issues.length === 0
+    ? admitHEarthPrimitiveBatch(neutralPackage.primitives, {
+        frameId: `${packageOccurrenceId}:WEST_AGGREGATE`,
+        metadata: {
+          recoveryCheckpoint: 'HC05_GEN957_RUN8E_PACKAGE_SUCCESSOR',
+          packageClass: 'HIGH_RESOLUTION_LIVE_RENDER_PACKAGE_SUCCESSOR'
+        }
+      })
+    : null;
+  if (westAdmission?.valid !== true) issues.push('GEN957_WEST_ADMISSION_FAILED');
+  const transfer = issues.length === 0
+    ? buildHEarthRun8EPacket002SuccessorTransfer({
+        neutralPackage,
+        westBatchAdmissionResult: westAdmission,
+        transferOccurrenceId: `${packageOccurrenceId}:PACKET_002_TRANSFER`
+      })
+    : null;
+  if (transfer?.ok !== true || transfer?.contractId !== H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID) {
+    issues.push(...(transfer?.issues ?? ['GEN957_PACKET_002_TRANSFER_FAILED']));
+  }
+
+  const atmosphere = sampleHEarthAtmosphereState({
+    timeOfDayHours,
+    observerElevation: defaultObserverElevation,
+    viewDistance: defaultViewDistance
+  });
+  const atmosphereEvaluation = evaluateHEarthAtmosphereStateSample(atmosphere);
+  if (atmosphereEvaluation.eligible !== true) issues.push(...atmosphereEvaluation.issues);
+  if (issues.length > 0) return rejectedSuccessor(issues);
+
+  const primitives = transfer.admittedPrimitives;
+  const terrainPrimitiveId = neutralPackage.primitives[0]?.primitiveId;
+  const positions = [];
+  const normals = [];
+  const baseColorsLinear = [];
+  const materialParameters = [];
+  const materialModelCodes = [];
+  const surfaceClassCodes = [];
+  const primitiveIndices = [];
+  const roleCodes = [];
+  const indices = [];
+  const primitiveSpans = [];
+  const drawRanges = [];
+  const normalSourceCounts = { SOURCE_GEOMETRY_NORMALS: 0, DETERMINISTIC_GEOMETRIC_DERIVATION: 0 };
+  const roleCounts = { TERRAIN: 0, SHORELINE: 0, VEGETATION: 0 };
+  const surfaceClassCodesById = Object.fromEntries(
+    H_EARTH_SURFACE_CLASSES.map((surfaceClass, index) => [surfaceClass, index])
+  );
+  const nonTerrainSurfaceClassCode = 255;
+  let vertexOffset = 0;
+
+  primitives.forEach((primitive, primitiveIndex) => {
+    const geometry = primitive.geometry;
+    const vertices = Array.isArray(geometry?.vertices) ? geometry.vertices : [];
+    const localIndices = Array.isArray(geometry?.indices) ? geometry.indices : [];
+    const role = roleForPrimitive(primitive, terrainPrimitiveId);
+    roleCounts[role] += 1;
+    if (vertices.length === 0 || localIndices.length === 0 || localIndices.length % 3 !== 0) {
+      issues.push(`GEN957_PRIMITIVE_GEOMETRY_INVALID:${primitive.primitiveId}`);
+      return;
+    }
+    if (localIndices.some(index => !Number.isSafeInteger(index) || index < 0 || index >= vertices.length)) {
+      issues.push(`GEN957_PRIMITIVE_INDEX_INVALID:${primitive.primitiveId}`);
+      return;
+    }
+    const resolvedNormals = resolveNormals(geometry, issues, primitive.primitiveId);
+    normalSourceCounts[resolvedNormals.source] = (normalSourceCounts[resolvedNormals.source] ?? 0) + 1;
+    const materialModelCode = role === 'TERRAIN'
+      ? H_EARTH_RUN_8E_R2_MATERIAL_MODEL.RUN_8C_INTRINSIC_TERRAIN
+      : H_EARTH_RUN_8E_R2_MATERIAL_MODEL.PRIMITIVE_RGBA;
+    const primitiveMaterial = role === 'TERRAIN'
+      ? null
+      : resolvePrimitiveMaterialProjection(primitive, role, issues);
+    const rgba = primitiveMaterial?.rgba ?? null;
+    const transparencyClass = primitiveMaterial?.transparencyClass ?? 'OPAQUE';
+    const indexStart = indices.length;
+
+    vertices.forEach((vertex, localVertexIndex) => {
+      if (!vertex || ![vertex.x, vertex.y, vertex.z].every(finite)) {
+        issues.push(`GEN957_VERTEX_NONFINITE:${primitive.primitiveId}:${localVertexIndex}`);
+        return;
+      }
+      const normal = resolvedNormals.normals[localVertexIndex];
+      if (!normal || ![normal.x, normal.y, normal.z].every(finite)) {
+        issues.push(`GEN957_NORMAL_NONFINITE:${primitive.primitiveId}:${localVertexIndex}`);
+        return;
+      }
+      positions.push(vertex.x, vertex.y, vertex.z);
+      normals.push(normal.x, normal.y, normal.z);
+      primitiveIndices.push(primitiveIndex);
+      roleCodes.push(H_EARTH_RUN_8E_R2_ROLE_CODE[role]);
+      materialModelCodes.push(materialModelCode);
+
+      if (role === 'TERRAIN') {
+        const material = sampleHEarthRun8CSuccessorSurfaceMaterial(vertex.x, vertex.z);
+        const materialEvaluation = evaluateHEarthRun8CSuccessorSurfaceMaterial(material);
+        if (materialEvaluation.eligible !== true) {
+          issues.push(`GEN957_TERRAIN_MATERIAL_INVALID:${primitive.primitiveId}:${localVertexIndex}`);
+          baseColorsLinear.push(0, 0, 0, 1);
+          materialParameters.push(0, 0, 0, 0);
+          surfaceClassCodes.push(nonTerrainSurfaceClassCode);
+        } else {
+          baseColorsLinear.push(
+            material.baseColorProfile.linearR,
+            material.baseColorProfile.linearG,
+            material.baseColorProfile.linearB,
+            material.baseColorProfile.alpha
+          );
+          materialParameters.push(
+            material.roughness,
+            material.reflectance,
+            material.wetness,
+            material.curvature
+          );
+          surfaceClassCodes.push(surfaceClassCodesById[material.surfaceClass]);
+        }
+      } else {
+        baseColorsLinear.push(
+          srgb8ToLinear(rgba[0]),
+          srgb8ToLinear(rgba[1]),
+          srgb8ToLinear(rgba[2]),
+          clamp01(rgba[3] / 255)
+        );
+        materialParameters.push(0, 0, 0, 0);
+        surfaceClassCodes.push(nonTerrainSurfaceClassCode);
+      }
+    });
+
+    for (const localIndex of localIndices) indices.push(vertexOffset + localIndex);
+    const span = freezeRecord({
+      primitiveIndex,
+      primitiveId: primitive.primitiveId,
+      geometryId: geometry.geometryId,
+      role,
+      roleCode: H_EARTH_RUN_8E_R2_ROLE_CODE[role],
+      materialModelCode,
+      transparencyClass,
+      normalSource: resolvedNormals.source,
+      materialReference: primitiveMaterial?.materialReference ?? null,
+      materialIntent: primitiveMaterial?.materialIntent ?? null,
+      materialProjectionAuthorityContractId: primitiveMaterial?.sourceAuthorityContractId ?? null,
+      materialProjectionModel: primitiveMaterial?.projectionModel ?? null,
+      vertexStart: vertexOffset,
+      vertexCount: vertices.length,
+      indexStart,
+      indexCount: localIndices.length,
+      triangleCount: localIndices.length / 3
+    });
+    primitiveSpans.push(span);
+    mergeDrawRange(drawRanges, { ...span, primitiveId: primitive.primitiveId });
+    vertexOffset += vertices.length;
+  });
+
+  if (issues.length > 0) return rejectedSuccessor(issues);
+  const rawBuffers = {
+    positions,
+    normals,
+    baseColorsLinear,
+    materialParameters,
+    materialModelCodes,
+    surfaceClassCodes,
+    primitiveIndices,
+    roleCodes,
+    indices
+  };
+  const buffers = canonicalizeBuffers(rawBuffers);
+  const vertexCount = buffers.positions.length / 3;
+  const indexCount = buffers.indices.length;
+  const triangleCount = indexCount / 3;
+  const frozenPrimitiveSpans = freezeArray(primitiveSpans);
+  const frozenDrawRanges = freezeDrawRanges(drawRanges);
+  const hash = createHashWriter();
+  hash.string(H_EARTH_RUN_8E_GEN957_PACKAGE_SUCCESSOR_CONTRACT_ID);
+  hash.string(neutralPackage.contractId);
+  hash.string(transfer.contractId);
+  hash.string(H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID);
+  hash.string(H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID);
+  for (const primitive of primitives) hash.string(primitive.primitiveId);
+  for (const name of HASH_BUFFER_ORDER) hash.numbers(buffers[name]);
+  const digest = hash.digest();
+
+  const packageRecord = freezeRecord({
+    eligible: true,
+    status: 'RUN_8E_GEN957_HIGH_RESOLUTION_LIVE_RENDER_PACKAGE_COMPLETE',
+    contractId: H_EARTH_RUN_8E_GEN957_PACKAGE_SUCCESSOR_CONTRACT_ID,
+    packageOccurrenceId: packageOccurrenceId.trim(),
+    packageIdentity: `H_EARTH_RUN_8E_GEN957_LIVE_RENDER_PACKAGE_${digest.toUpperCase()}`,
+    contentDigest: `fnv1a32:${digest}`,
+    revision: 1,
+    predecessorPackageClass: 'H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1',
+    predecessorFixedTopologyCountsInherited: false,
+    topologyCountsDerivedFromActualBuffers: true,
+    geometryReductionPerformed: false,
+    cameraIndependent: true,
+    viewportIndependent: true,
+    worldBuiltOncePerPackageConstruction: true,
+    westAdmissionPerformedOncePerPackageConstruction: true,
+    packet002TransferPerformedOncePerPackageConstruction: true,
+    webglContextCreated: false,
+    renderLoopCreated: false,
+    cameraAuthorityCreated: false,
+    navigationAuthorityCreated: false,
+    publicRouteBound: false,
+    deploymentAuthority: false,
+    primitiveCount: primitives.length,
+    vertexCount,
+    triangleCount,
+    indexCount,
+    roleCounts: freezeRecord({ ...roleCounts }),
+    normalSourceCounts: freezeRecord({ ...normalSourceCounts }),
+    bounds: transfer.bounds,
+    primitiveIds: freezeArray(primitives.map(primitive => primitive.primitiveId)),
+    primitiveSpans: frozenPrimitiveSpans,
+    drawRanges: frozenDrawRanges,
+    buffers,
+    environmentDefaults: freezeRecord({
+      contractId: atmosphere.contractId,
+      timeOfDayHours: atmosphere.timeOfDay.hours,
+      observerElevation: atmosphere.observerElevation,
+      viewDistance: atmosphere.viewDistance,
+      sunDirection: freezeRecord({ ...atmosphere.sunDirection }),
+      sunIntensity: atmosphere.sunIntensity,
+      sunColor: freezeArray(atmosphere.sunColor),
+      skyZenithColor: freezeArray(atmosphere.skyZenithColor),
+      skyHorizonColor: freezeArray(atmosphere.skyHorizonColor),
+      groundHazeColor: freezeArray(atmosphere.groundHazeColor),
+      fogStartDistance: atmosphere.fogStartDistance,
+      fogFalloff: atmosphere.fogFalloff,
+      maximumFogFactor: atmosphere.maximumFogFactor,
+      distanceDesaturationStrength: atmosphere.distanceDesaturationStrength
+    }),
+    sourceAuthorities: freezeRecord({
+      neutralPackageContractId: neutralPackage.contractId,
+      westAdmissionContractId: transfer.westContractId,
+      packet002TransferContractId: transfer.contractId,
+      run8CMaterialContractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
+      functionalLandscapeRendererContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
+      atmosphereContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
+      semanticAddressCount: transfer.semanticAddressCount,
+      terrainAddressCount: transfer.terrainAddressCount,
+      shorelineWaterAddressCount: transfer.shorelineWaterAddressCount,
+      proxySummarizedAddressCount: transfer.proxySummarizedAddressCount,
+      formationIds: freezeArray(transfer.formationIds),
+      shorelineBandIds: freezeArray(transfer.shorelineBandIds),
+      legacyProxyIncluded: transfer.legacyProxyIncluded,
+      successorMountainIncluded: transfer.successorMountainIncluded,
+      numericIdentityBoundary: 'SHARED_COMPLETE_PACKAGE_BUFFER_BOUNDARY',
+      numericCanonicalizationLaw: 'ROUND_TO_BINARY_GRID_2^-24_AND_NORMALIZE_NEGATIVE_ZERO',
+      canonicalizedFloatBuffers: FLOAT_BUFFER_NAMES
+    }),
+    topologyReceipt: freezeRecord({
+      primitiveCount: primitives.length,
+      vertexCount,
+      triangleCount,
+      indexCount,
+      primitiveSpanCount: frozenPrimitiveSpans.length,
+      drawRangeCount: frozenDrawRanges.length,
+      historicalR2PrimitiveCountRequirementApplied: false,
+      historicalR2TriangleCountRequirementApplied: false,
+      historicalR2IndexCountRequirementApplied: false
+    }),
+    issues: freezeArray([])
+  });
+
+  const evaluation = evaluateHEarthRun8EGen957SuccessorLiveRenderPackage(packageRecord);
+  return evaluation.eligible === true ? packageRecord : rejectedSuccessor(evaluation.issues);
+}
+
+export function evaluateHEarthRun8EGen957SuccessorLiveRenderPackage(packageRecord) {
+  const issues = [];
+  const buffers = packageRecord?.buffers;
+  const vertexCount = packageRecord?.vertexCount ?? 0;
+  const primitiveCount = packageRecord?.primitiveCount ?? 0;
+  const indexCount = packageRecord?.indexCount ?? 0;
+  if (packageRecord?.eligible !== true) issues.push('GEN957_PACKAGE_NOT_ELIGIBLE');
+  if (packageRecord?.contractId !== H_EARTH_RUN_8E_GEN957_PACKAGE_SUCCESSOR_CONTRACT_ID) {
+    issues.push('GEN957_PACKAGE_CONTRACT_MISMATCH');
+  }
+  if (!Number.isSafeInteger(primitiveCount) || primitiveCount <= 0) issues.push('GEN957_PRIMITIVE_COUNT_INVALID');
+  if (!Number.isSafeInteger(vertexCount) || vertexCount <= 0) issues.push('GEN957_VERTEX_COUNT_INVALID');
+  if (!Number.isSafeInteger(indexCount) || indexCount <= 0 || indexCount % 3 !== 0) issues.push('GEN957_INDEX_COUNT_INVALID');
+  if (packageRecord?.triangleCount !== indexCount / 3) issues.push('GEN957_TRIANGLE_COUNT_NOT_DERIVED_FROM_INDICES');
+  if (packageRecord?.topologyCountsDerivedFromActualBuffers !== true ||
+      packageRecord?.predecessorFixedTopologyCountsInherited !== false ||
+      packageRecord?.geometryReductionPerformed !== false) {
+    issues.push('GEN957_TOPOLOGY_SUCCESSOR_LAW_INVALID');
+  }
+  if (!buffers || !Object.isFrozen(buffers)) issues.push('GEN957_BUFFERS_NOT_FROZEN');
+  const expectedLengths = {
+    positions: vertexCount * 3,
+    normals: vertexCount * 3,
+    baseColorsLinear: vertexCount * 4,
+    materialParameters: vertexCount * 4,
+    materialModelCodes: vertexCount,
+    surfaceClassCodes: vertexCount,
+    primitiveIndices: vertexCount,
+    roleCodes: vertexCount,
+    indices: indexCount
+  };
+  for (const [name, length] of Object.entries(expectedLengths)) {
+    if (!Array.isArray(buffers?.[name]) || buffers[name].length !== length) {
+      issues.push(`GEN957_BUFFER_LENGTH_INVALID:${name}`);
+    }
+    if (!Object.isFrozen(buffers?.[name])) issues.push(`GEN957_BUFFER_NOT_FROZEN:${name}`);
+    if (Array.isArray(buffers?.[name]) && buffers[name].some(value => !finite(value))) {
+      issues.push(`GEN957_BUFFER_NONFINITE:${name}`);
+    }
+  }
+  if (Array.isArray(buffers?.indices) && buffers.indices.some(index =>
+    !Number.isSafeInteger(index) || index < 0 || index >= vertexCount)) {
+    issues.push('GEN957_INDEX_OUT_OF_RANGE');
+  }
+  if (!Object.isFrozen(packageRecord?.primitiveIds) || packageRecord?.primitiveIds?.length !== primitiveCount) {
+    issues.push('GEN957_PRIMITIVE_IDS_INVALID');
+  }
+  if (!Object.isFrozen(packageRecord?.primitiveSpans) || packageRecord?.primitiveSpans?.length !== primitiveCount) {
+    issues.push('GEN957_PRIMITIVE_SPANS_INVALID');
+  }
+  const primitiveIndexCoverage = (packageRecord?.primitiveSpans ?? []).reduce((sum, span) => sum + span.indexCount, 0);
+  if (primitiveIndexCoverage !== indexCount) issues.push('GEN957_PRIMITIVE_SPAN_COVERAGE_INVALID');
+  const drawIndexCoverage = (packageRecord?.drawRanges ?? []).reduce((sum, range) => sum + range.indexCount, 0);
+  if (drawIndexCoverage !== indexCount) issues.push('GEN957_DRAW_RANGE_COVERAGE_INVALID');
+  let expectedStart = 0;
+  for (const range of packageRecord?.drawRanges ?? []) {
+    if (range.indexStart !== expectedStart) issues.push('GEN957_DRAW_RANGE_NOT_CONTIGUOUS');
+    expectedStart += range.indexCount;
+  }
+  if (packageRecord?.topologyReceipt?.primitiveCount !== primitiveCount ||
+      packageRecord?.topologyReceipt?.vertexCount !== vertexCount ||
+      packageRecord?.topologyReceipt?.triangleCount !== packageRecord?.triangleCount ||
+      packageRecord?.topologyReceipt?.indexCount !== indexCount) {
+    issues.push('GEN957_TOPOLOGY_RECEIPT_COUNT_MISMATCH');
+  }
+  if (packageRecord?.topologyReceipt?.historicalR2PrimitiveCountRequirementApplied !== false ||
+      packageRecord?.topologyReceipt?.historicalR2TriangleCountRequirementApplied !== false ||
+      packageRecord?.topologyReceipt?.historicalR2IndexCountRequirementApplied !== false) {
+    issues.push('GEN957_HISTORICAL_R2_FIXED_COUNT_REQUIREMENT_LEAK');
+  }
+  if (packageRecord?.cameraIndependent !== true || 'camera' in (packageRecord ?? {})) {
+    issues.push('GEN957_CAMERA_INDEPENDENCE_FAILED');
+  }
+  if (packageRecord?.viewportIndependent !== true || 'viewport' in (packageRecord ?? {})) {
+    issues.push('GEN957_VIEWPORT_INDEPENDENCE_FAILED');
+  }
+  if (packageRecord?.webglContextCreated !== false || packageRecord?.renderLoopCreated !== false) {
+    issues.push('GEN957_RENDERER_BOUNDARY_FAILED');
+  }
+  if (packageRecord?.publicRouteBound !== false || packageRecord?.deploymentAuthority !== false) {
+    issues.push('GEN957_ROUTE_BOUNDARY_FAILED');
+  }
+  if (packageRecord?.sourceAuthorities?.legacyProxyIncluded !== false ||
+      packageRecord?.sourceAuthorities?.successorMountainIncluded !== true) {
+    issues.push('GEN957_SUCCESSOR_GEOMETRY_DISPOSITION_INVALID');
+  }
+  if (typeof packageRecord?.packageIdentity !== 'string' ||
+      !packageRecord.packageIdentity.startsWith('H_EARTH_RUN_8E_GEN957_LIVE_RENDER_PACKAGE_')) {
+    issues.push('GEN957_PACKAGE_IDENTITY_INVALID');
+  }
+  return freezeRecord({
+    eligible: issues.length === 0,
+    status: issues.length === 0
+      ? 'RUN_8E_GEN957_HIGH_RESOLUTION_LIVE_RENDER_PACKAGE_PASS'
+      : 'RUN_8E_GEN957_HIGH_RESOLUTION_LIVE_RENDER_PACKAGE_FAIL',
+    issues: freezeArray(issues)
+  });
+}
+
+function canonicalDecimal(value) {
+  if (!finite(value)) throw new TypeError('GEN957_GPU_CANONICALIZATION_NONFINITE');
+  const rounded = Number(value.toFixed(GPU_DECIMAL_PLACES));
+  return Object.is(rounded, -0) ? 0 : rounded;
+}
+
+function canonicalFloat32(source, bufferName) {
+  const result = new Float32Array(source.length);
+  let adjustedElementCount = 0;
+  let maximumAbsoluteAdjustment = 0;
+  for (let index = 0; index < source.length; index += 1) {
+    const before = source[index];
+    const canonical = canonicalDecimal(before);
+    const after = Math.fround(canonical);
+    result[index] = after;
+    const adjustment = Math.abs(after - before);
+    if (adjustment > 0) adjustedElementCount += 1;
+    if (adjustment > maximumAbsoluteAdjustment) maximumAbsoluteAdjustment = adjustment;
+  }
+  if (maximumAbsoluteAdjustment > GPU_MAXIMUM_ABSOLUTE_ADJUSTMENT) {
+    throw new RangeError(`GEN957_GPU_CANONICALIZATION_ADJUSTMENT_EXCEEDED:${bufferName}:${maximumAbsoluteAdjustment}`);
+  }
+  return {
+    view: result,
+    receipt: freezeRecord({
+      bufferName,
+      elementCount: result.length,
+      adjustedElementCount,
+      maximumAbsoluteAdjustment,
+      decimalPlaces: GPU_DECIMAL_PLACES
+    })
+  };
+}
+
+export function createHEarthRun8EGen957SuccessorGPUUploadViews(
+  packageRecord = getHEarthRun8EGen957SuccessorLiveRenderPackage()
+) {
+  const evaluation = evaluateHEarthRun8EGen957SuccessorLiveRenderPackage(packageRecord);
+  if (evaluation.eligible !== true) {
+    throw new Error(`GEN957_GPU_VIEW_SOURCE_INVALID:${evaluation.issues.join(',')}`);
+  }
+  const canonicalNormals = canonicalFloat32(packageRecord.buffers.normals, 'normals');
+  const canonicalMaterialParameters = canonicalFloat32(
+    packageRecord.buffers.materialParameters,
+    'materialParameters'
+  );
+  return freezeRecord({
+    contractId: H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID,
+    positions: new Float32Array(packageRecord.buffers.positions),
+    normals: canonicalNormals.view,
+    baseColorsLinear: new Float32Array(packageRecord.buffers.baseColorsLinear),
+    materialParameters: canonicalMaterialParameters.view,
+    materialModelCodes: new Uint8Array(packageRecord.buffers.materialModelCodes),
+    surfaceClassCodes: new Uint8Array(packageRecord.buffers.surfaceClassCodes),
+    primitiveIndices: new Uint16Array(packageRecord.buffers.primitiveIndices),
+    roleCodes: new Uint8Array(packageRecord.buffers.roleCodes),
+    indices: new Uint32Array(packageRecord.buffers.indices),
+    canonicalizationReceipt: freezeRecord({
+      contractId: H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID,
+      packageIdentityAtSource: packageRecord.packageIdentity,
+      packageContentDigestAtSource: packageRecord.contentDigest,
+      normalBuffer: canonicalNormals.receipt,
+      materialParameterBuffer: canonicalMaterialParameters.receipt,
+      sourcePackageMutated: false,
+      transportEncodingOnly: true
+    }),
+    copyOnRequest: true,
+    deterministicTransportEncoding: true,
+    packageIdentity: packageRecord.packageIdentity,
+    packageContentDigest: packageRecord.contentDigest
+  });
+}
+
+export function evaluateHEarthRun8EGen957SuccessorGPUUploadViews(views) {
+  const issues = [];
+  const expected = {
+    positions: Float32Array,
+    normals: Float32Array,
+    baseColorsLinear: Float32Array,
+    materialParameters: Float32Array,
+    materialModelCodes: Uint8Array,
+    surfaceClassCodes: Uint8Array,
+    primitiveIndices: Uint16Array,
+    roleCodes: Uint8Array,
+    indices: Uint32Array
+  };
+  for (const [key, Constructor] of Object.entries(expected)) {
+    if (!(views?.[key] instanceof Constructor)) issues.push(`GEN957_GPU_VIEW_TYPE_INVALID:${key}`);
+  }
+  if (views?.contractId !== H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID ||
+      views?.canonicalizationReceipt?.contractId !== H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID) {
+    issues.push('GEN957_GPU_CANONICALIZATION_RECEIPT_MISSING');
+  }
+  if (views?.deterministicTransportEncoding !== true) {
+    issues.push('GEN957_GPU_TRANSPORT_ENCODING_NOT_DETERMINISTIC');
+  }
+  return freezeRecord({
+    eligible: issues.length === 0,
+    status: issues.length === 0
+      ? 'RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEWS_PASS'
+      : 'RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEWS_FAIL',
+    issues: freezeArray(issues)
+  });
+}
+
+let cachedGen957SuccessorPackage = null;
+
+export function getHEarthRun8EGen957SuccessorLiveRenderPackage() {
+  if (!cachedGen957SuccessorPackage) {
+    cachedGen957SuccessorPackage = buildHEarthRun8EGen957SuccessorLiveRenderPackage();
+  }
+  return cachedGen957SuccessorPackage;
 }
 
 export default getHEarthRun8ER2CanonicalLiveRenderPackage;

@@ -12,13 +12,14 @@ import {
   H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE_ID,
   sampleHEarthMapWideEnvironmentTerrainCandidate
 } from '../../../../h-earth-3d/terrain/h-earth.terrain-estate-construction-v1.candidate.js';
-import { getHEarthRun8ER2CanonicalLiveRenderPackage } from './live-render-package.run8e-r2.canonical.js';
-import { evaluateHEarthRun8ER2ImmutableLiveRenderPackage } from './live-render-package.run8e-r2.js';
 import {
-  H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
-  createHEarthRun8ER2DCanonicalGPUUploadViews,
-  evaluateHEarthRun8ER2DCanonicalGPUUploadViews
-} from './gpu-upload-views.run8e-r2d.js';
+  H_EARTH_RUN_8E_GEN957_PACKAGE_SUCCESSOR_CONTRACT_ID,
+  H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID,
+  getHEarthRun8EGen957SuccessorLiveRenderPackage,
+  evaluateHEarthRun8EGen957SuccessorLiveRenderPackage,
+  createHEarthRun8EGen957SuccessorGPUUploadViews,
+  evaluateHEarthRun8EGen957SuccessorGPUUploadViews
+} from './live-render-package.run8e-r2.canonical.js';
 
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
@@ -39,7 +40,7 @@ const normalize = (value) => {
 };
 
 export const H_EARTH_RUN_8E_R3A_CONTRACT_ID = 'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v2';
-export const H_EARTH_HC05_EXPECTED_PACKAGE_IDENTITY = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_263563C5';
+export const H_EARTH_HC05_EXPECTED_PACKAGE_CONTRACT_ID = H_EARTH_RUN_8E_GEN957_PACKAGE_SUCCESSOR_CONTRACT_ID;
 
 function lookAt(position, target, up) {
   const forward = normalize(subtract(target, position));
@@ -125,11 +126,11 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   const viewMatrix = lookAt(camera.position, camera.target, camera.up);
   const projectionMatrix = perspective(camera.verticalFovDegrees, width / height, camera.nearPlane, camera.farPlane);
   const viewProjectionMatrix = multiply4(projectionMatrix, viewMatrix);
-  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
-  const packageEvaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
+  const packageRecord = getHEarthRun8EGen957SuccessorLiveRenderPackage();
+  const packageEvaluation = evaluateHEarthRun8EGen957SuccessorLiveRenderPackage(packageRecord);
   if (packageEvaluation.eligible !== true) throw new Error(`R3A_PACKAGE_REJECTED:${packageEvaluation.issues.join(',')}`);
-  const gpuViews = createHEarthRun8ER2DCanonicalGPUUploadViews(packageRecord);
-  const gpuEvaluation = evaluateHEarthRun8ER2DCanonicalGPUUploadViews(gpuViews);
+  const gpuViews = createHEarthRun8EGen957SuccessorGPUUploadViews(packageRecord);
+  const gpuEvaluation = evaluateHEarthRun8EGen957SuccessorGPUUploadViews(gpuViews);
   if (gpuEvaluation.eligible !== true) throw new Error(`R3A_GPU_VIEWS_REJECTED:${gpuEvaluation.issues.join(',')}`);
   const environment = packageRecord.environmentDefaults;
   const presentationSunIntensity = clamp(environment.sunIntensity * 1.22, 0.78, 1.35);
@@ -172,9 +173,11 @@ export function createHEarthRun8ER3AFrameUniformPacket({
       maximumFogFactorScale: 0.68,
       desaturationScale: 0.52
     },
+    packageContractId: packageRecord.contractId,
     packageIdentity: packageRecord.packageIdentity,
     packageContentDigest: packageRecord.contentDigest,
-    gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
+    packageTopologyReceipt: { ...packageRecord.topologyReceipt },
+    gpuTransportContractId: H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID,
     gpuBufferElementCounts: {
       positions: gpuViews.positions.length, normals: gpuViews.normals.length, baseColorsLinear: gpuViews.baseColorsLinear.length,
       materialParameters: gpuViews.materialParameters.length, materialModelCodes: gpuViews.materialModelCodes.length,
@@ -193,12 +196,13 @@ export function createHEarthRun8ER3AFrameUniformPacket({
 }
 
 export function getHEarthRun8ER3ALiveRendererInterface() {
-  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
+  const packageRecord = getHEarthRun8EGen957SuccessorLiveRenderPackage();
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
+    packageContractId: packageRecord.contractId,
     packageIdentity: packageRecord.packageIdentity,
     packageContentDigest: packageRecord.contentDigest,
-    gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
+    gpuTransportContractId: H_EARTH_RUN_8E_GEN957_SUCCESSOR_GPU_UPLOAD_VIEW_CONTRACT_ID,
     attributeLayout: [
       { location: 0, name: 'aPosition', components: 3, buffer: 'positions' },
       { location: 1, name: 'aNormal', components: 3, buffer: 'normals' },
@@ -226,8 +230,17 @@ export function getHEarthRun8ER3ALiveRendererInterface() {
 export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
   const issues = [];
   if (packet?.contractId !== H_EARTH_RUN_8E_R3A_CONTRACT_ID) issues.push('R3A_PACKET_CONTRACT_MISMATCH');
-  if (packet?.packageIdentity !== H_EARTH_HC05_EXPECTED_PACKAGE_IDENTITY) {
-    issues.push(`R3A_PACKAGE_IDENTITY_MISMATCH:EXPECTED=${H_EARTH_HC05_EXPECTED_PACKAGE_IDENTITY}:ACTUAL=${packet?.packageIdentity ?? 'NULL'}`);
+  const expectedPackage = getHEarthRun8EGen957SuccessorLiveRenderPackage();
+  if (packet?.packageContractId !== H_EARTH_HC05_EXPECTED_PACKAGE_CONTRACT_ID) {
+    issues.push(`R3A_PACKAGE_CONTRACT_MISMATCH:EXPECTED=${H_EARTH_HC05_EXPECTED_PACKAGE_CONTRACT_ID}:ACTUAL=${packet?.packageContractId ?? 'NULL'}`);
+  }
+  if (packet?.packageIdentity !== expectedPackage.packageIdentity ||
+      packet?.packageContentDigest !== expectedPackage.contentDigest) {
+    issues.push(`R3A_PACKAGE_IDENTITY_MISMATCH:EXPECTED=${expectedPackage.packageIdentity}:ACTUAL=${packet?.packageIdentity ?? 'NULL'}`);
+  }
+  if (packet?.packageTopologyReceipt?.historicalR2TriangleCountRequirementApplied !== false ||
+      packet?.packageTopologyReceipt?.historicalR2IndexCountRequirementApplied !== false) {
+    issues.push('R3A_SUCCESSOR_TOPOLOGY_RECEIPT_INVALID');
   }
   for (const name of ['viewMatrix','projectionMatrix','viewProjectionMatrix']) {
     const matrix = packet?.camera?.[name];

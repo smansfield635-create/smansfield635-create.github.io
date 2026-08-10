@@ -1,0 +1,36 @@
+{
+  "schema": "REFERENCE_CLASS_AWARDS_ADMISSION_CAPTURE_CONTRACT_v1",
+  "status": "CANDIDATE_NOT_ACTIVE",
+  "requiredStateClasses": [
+    "INITIAL_RENDERED_STATE",
+    "MEANINGFUL_INTERACTION_STATE",
+    "RESULT_OR_NAVIGATION_STATE"
+  ],
+  "artifactKinds": ["SCREENSHOT", "VIDEO", "INTERACTION_TRACE"],
+  "deviceClasses": ["PHONE", "TABLET", "DESKTOP"],
+  "laws": {
+    "allDeclaredApplicableDevicesMustBeCovered": true,
+    "phoneEvidenceRequiredWhenPhoneIsSupported": true,
+    "interactionEvidenceRequiredForInteractiveReferenceClasses": true,
+    "sourceCodeOrFeatureReceiptsCannotSubstituteForRenderedEvidence": true,
+    "technicalMetricReceiptsMayAccompanyButCannotReplaceRenderedEvidence": true,
+    "evidenceArtifactsRequireSha256Identity": true,
+    "candidateCommitMustBeExact": true,
+    "referenceCommitMustBeExact": true,
+    "movingUrlsOrBranchesCannotEstablishIdentity": true
+  },
+  "minimumEvidence": {
+    "INITIAL_RENDERED_STATE": ["SCREENSHOT_OR_VIDEO"],
+    "MEANINGFUL_INTERACTION_STATE": ["VIDEO_OR_INTERACTION_TRACE", "RENDERED_INTERACTION_STATE_SCREENSHOT_OR_VIDEO"],
+    "RESULT_OR_NAVIGATION_STATE": ["SCREENSHOT_OR_VIDEO"]
+  },
+  "captureProhibitions": [
+    "SOURCE_ONLY_EVIDENCE",
+    "FEATURE_LIST_ONLY_EVIDENCE",
+    "AUTOMATED_TECHNICAL_RECEIPT_ONLY_EVIDENCE",
+    "UNHASHED_SCREENSHOT_OR_VIDEO",
+    "UNBOUND_REFERENCE_IMAGE",
+    "CROPPING_THAT_REMOVES_PRIMARY_FAILURE_STATE",
+    "DEVICE_CLASS_OMISSION_FOR_A_DECLARED_APPLICABLE_DEVICE"
+  ]
+}

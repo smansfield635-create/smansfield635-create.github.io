@@ -1368,6 +1368,18 @@
       "scopeHash": "d3713cfb790f3d6b56d22862f66fe154a86f8320a592bffa9fe1292cd9aca6ff",
       "state": "ADMITTED_LOCKED"
     },
+    "d387419ee8af9dcb44790a85f96520817543dc7fa605787485124c2189720f8b": {
+      "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
+      "lockGeneration": 1013,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:CONTROL_PLANE_TRANSFERABILITY:PROJECT_REGISTRATION:V1",
+      "operationId": "CONTROL_PLANE_TRANSFERABILITY_PROJECT_REGISTRATION_20260810_001",
+      "procedureLocatorDigest": "03abd65566544a5117759f72d985e44109991e004ae3a9819c0b6a360c3f0eff",
+      "released": false,
+      "requestDigest": "b48521422e53c8fe7935c35e2c2a3ae28c146e1f75ca996db81c69ccac1c27de",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d387419ee8af9dcb44790a85f96520817543dc7fa605787485124c2189720f8b",
+      "state": "ADMITTED_LOCKED"
+    },
     "d4e382130aa1e21a827ed0cd0abc67f8446720775fda82a13e9f17954e3980f5": {
       "governingHead": "c37b2efac4df714b63b7cc48832e29d88aa71443",
       "lockGeneration": 582,
@@ -1714,7 +1726,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1012,
+  "lockGeneration": 1013,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

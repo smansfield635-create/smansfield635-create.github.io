@@ -1,11 +1,11 @@
 /**
  * /showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js
  *
- * H_EARTH_SUCCESSOR_TERRAIN_AND_MOUNTAIN_NEUTRAL_GEOMETRY_RUN_8B_v1
- * HC05 projection successor: the accepted map-wide Gratitude presentation
- * elevation is materialized on the unchanged Run8B X/Z topology. Run8B remains
- * geometric truth; no new geography, camera, navigation, or renderer authority
- * is created here.
+ * H_EARTH_SUCCESSOR_TERRAIN_AND_MOUNTAIN_NEUTRAL_GEOMETRY_RUN_8B_v2
+ * HC05 presentation-resolution renewal. The accepted map-wide Gratitude
+ * presentation elevation remains the only height source; this file increases
+ * sampling density so that the same lawful surface is no longer presented as
+ * large planar facets on ground-view/mobile inspection.
  */
 
 import {
@@ -43,15 +43,22 @@ const freeze = (value, seen = new WeakSet()) => {
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 
 export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_CONTRACT_ID =
-  'H_EARTH_SUCCESSOR_TERRAIN_AND_MOUNTAIN_NEUTRAL_GEOMETRY_RUN_8B_v1';
+  'H_EARTH_SUCCESSOR_TERRAIN_AND_MOUNTAIN_NEUTRAL_GEOMETRY_RUN_8B_v2';
 export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_SOURCE_FILE =
   '/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js';
 export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_PRIMITIVE_ID =
   'H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001';
 
-const FULL_DETAIL = H_EARTH_RUN_8A_TERRAIN_SAMPLING_AND_REFINEMENT_CONTRACT.profiles.FULL_DETAIL;
+const RUN8A_FULL_DETAIL = H_EARTH_RUN_8A_TERRAIN_SAMPLING_AND_REFINEMENT_CONTRACT.profiles.FULL_DETAIL;
 const DOMAIN = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain;
 const TRANSITION = H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT.transitionBounds;
+
+// Run8A explicitly permits Run8B to choose higher resolution, but prohibits a
+// lower-resolution realization. 2/1 world-unit sampling is intentionally
+// bounded: materially denser than the 4/2 minimum without becoming an
+// unbounded mobile tessellation experiment.
+const PRESENTATION_BASE_SPACING = Math.max(2, RUN8A_FULL_DETAIL.baseSpacingWorldUnits / 2);
+const PRESENTATION_REFINEMENT_SPACING = Math.max(1, RUN8A_FULL_DETAIL.refinementSpacingWorldUnits / 2);
 
 export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE = freeze({
   contractId: H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_CONTRACT_ID,
@@ -62,9 +69,12 @@ export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE = freeze({
   predecessorFormationId: H_EARTH_RUN_8A_MOUNTAIN_REALIZATION_CLASS_DECISION.predecessorFormationId,
   southKernelContractId: H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID,
   topology: 'ONE_CONNECTED_INDEXED_XZ_HEIGHT_FIELD_TRIANGLE_MESH',
-  projectionLaw: 'UNCHANGED_RUN8B_XZ_TOPOLOGY_PLUS_ACCEPTED_MAP_WIDE_PRESENTATION_ELEVATION',
-  baseSpacingWorldUnits: FULL_DETAIL.baseSpacingWorldUnits,
-  refinementSpacingWorldUnits: FULL_DETAIL.refinementSpacingWorldUnits,
+  projectionLaw: 'UNCHANGED_ACCEPTED_WORLD_HEIGHT_SOURCE_WITH_HIGHER_DENSITY_RUN8B_XZ_PRESENTATION_SAMPLING',
+  baseSpacingWorldUnits: PRESENTATION_BASE_SPACING,
+  refinementSpacingWorldUnits: PRESENTATION_REFINEMENT_SPACING,
+  run8AMinimumBaseSpacingWorldUnits: RUN8A_FULL_DETAIL.baseSpacingWorldUnits,
+  run8AMinimumRefinementSpacingWorldUnits: RUN8A_FULL_DETAIL.refinementSpacingWorldUnits,
+  run8AHigherResolutionAllowed: H_EARTH_RUN_8A_TERRAIN_SAMPLING_AND_REFINEMENT_CONTRACT.run8BMayChooseHigherResolution === true,
   refinementRegion: {
     xMinimum: TRANSITION.xMinimum,
     xMaximum: TRANSITION.xMaximum,
@@ -105,12 +115,15 @@ export const H_EARTH_RUN_8B_Z_BANDS = freeze([
 
 function buildRefinedAxis({ minimum, maximum, refinementMinimum, refinementMaximum }) {
   const values = [];
-  for (let value = minimum; value <= maximum; value += FULL_DETAIL.baseSpacingWorldUnits) values.push(value);
-  for (let value = minimum; value < maximum; value += FULL_DETAIL.baseSpacingWorldUnits) {
-    const midpoint = value + FULL_DETAIL.refinementSpacingWorldUnits;
+  for (let value = minimum; value <= maximum + 1e-9; value += PRESENTATION_BASE_SPACING) {
+    values.push(Math.min(maximum, value));
+  }
+  for (let value = minimum; value < maximum - 1e-9; value += PRESENTATION_BASE_SPACING) {
+    const midpoint = value + PRESENTATION_REFINEMENT_SPACING;
     if (midpoint >= refinementMinimum && midpoint <= refinementMaximum && midpoint < maximum) values.push(midpoint);
   }
-  return freeze([...new Set(values)].sort((left, right) => left - right));
+  if (!values.includes(maximum)) values.push(maximum);
+  return freeze([...new Set(values.map((value) => Number(value.toFixed(8))))].sort((left, right) => left - right));
 }
 
 export function getHEarthRun8BSuccessorSamplingAxes() {
@@ -179,7 +192,10 @@ function buildSuccessorTopology() {
       const b = a + 1;
       const c = (row + 1) * columnCount + column;
       const d = c + 1;
-      indices.push(a, c, b, b, c, d);
+      // Alternate the diagonal deterministically to avoid a single directional
+      // triangulation signature across long mountain faces.
+      if ((row + column) % 2 === 0) indices.push(a, c, b, b, c, d);
+      else indices.push(a, c, d, a, d, b);
     }
   }
 
@@ -200,7 +216,9 @@ function buildSuccessorTopology() {
       vertexCount: vertices.length,
       nonZeroProjectionCount,
       nonZeroProjectionFraction: vertices.length > 0 ? nonZeroProjectionCount / vertices.length : 0,
-      maximumAbsoluteProjectionOffset
+      maximumAbsoluteProjectionOffset,
+      presentationBaseSpacingWorldUnits: PRESENTATION_BASE_SPACING,
+      presentationRefinementSpacingWorldUnits: PRESENTATION_REFINEMENT_SPACING
     }),
     zBandVertexCounts: freeze(zBandVertexCounts),
     issues: freeze([])
@@ -301,11 +319,12 @@ export function constructHEarthRun8BSuccessorTerrainAndMountain() {
       successorFormationId: H_EARTH_RUN_8A_MOUNTAIN_REALIZATION_CLASS_DECISION.successorFormationId,
       predecessorFormationId: H_EARTH_RUN_8A_MOUNTAIN_REALIZATION_CLASS_DECISION.predecessorFormationId,
       predecessorDisposition: 'PRESERVED_LEGACY_PROXY_FORMATION',
-      fullRealizationClass: 'CONTINUOUS_XZ_TERRAIN_FOOTPRINT_WITH_ACCEPTED_PRESENTATION_ELEVATION',
+      fullRealizationClass: 'CONTINUOUS_XZ_TERRAIN_FOOTPRINT_WITH_ACCEPTED_PRESENTATION_ELEVATION_HIGHER_DENSITY',
       zBandVertexCounts: topology.zBandVertexCounts,
       projectionSummary: topology.projectionSummary,
-      baseSpacingWorldUnits: FULL_DETAIL.baseSpacingWorldUnits,
-      refinementSpacingWorldUnits: FULL_DETAIL.refinementSpacingWorldUnits,
+      baseSpacingWorldUnits: PRESENTATION_BASE_SPACING,
+      refinementSpacingWorldUnits: PRESENTATION_REFINEMENT_SPACING,
+      run8AHigherResolutionAllowed: true,
       formerBoundaryZ: H_EARTH_RUN_8A_WORLD_DOMAIN_RECONCILIATION.formerBoundaryZ,
       sharedEdgePairCount: sharedEdges.sharedEdgePairCount,
       formerBoundaryContinuityEligible: continuity.eligible,

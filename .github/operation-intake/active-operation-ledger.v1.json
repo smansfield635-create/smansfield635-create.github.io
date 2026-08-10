@@ -1619,12 +1619,24 @@
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "fde34f0be303c2205fb5079cb458b8b91718d830a037fb817f048252bfe556e9",
       "state": "ADMITTED_LOCKED"
+    },
+    "ff7fed19d1b436352d85fa163e3abde7581be4299990e2f165479102ccf4ea74": {
+      "governingHead": "4bf41fcd22e5acbf24491ed6586802f0cc6782b9",
+      "lockGeneration": 933,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:REFERENCE_CLASS_EVALUATOR_SELF_TEST_V1:RATIFY_MERGE",
+      "operationId": "REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_CARRIER_RATIFICATION_AND_MERGE_V1_20260809_001",
+      "procedureLocatorDigest": "3dc96c1ddb889c7757b13c7ccaefdcd85b39e38f42ab93a554366be7c91a3151",
+      "released": false,
+      "requestDigest": "8496c7029f2cba5c02e7266f5987350ea7f585e9d7db94ac4056fe7a600ec97d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ff7fed19d1b436352d85fa163e3abde7581be4299990e2f165479102ccf4ea74",
+      "state": "ADMITTED_LOCKED"
     }
   },
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 932,
+  "lockGeneration": 933,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,0 +1,12 @@
+{
+  "schema": "PRIVATE_PUBLIC_BRIDGE_REMOTE_PROOF_PUBLIC_OUTPUT_v1",
+  "proofId": "PRIVATE_PUBLIC_BRIDGE_COMMISSIONING_PROOF_001",
+  "sourcePrivateHead": "a449f8078c33fa4e835ca6a13980e3e66fbdb829",
+  "boundPublicBaseHead": "ec3fd0e35cdf0c6ee3b23a8e7f542a5c7b889958",
+  "candidateBranch": "control-plane-delivery/bridge-commissioning-proof-001",
+  "publicOutputClass": "BOUNDED_PRODUCT_DELIVERY_PROOF_ONLY",
+  "privateImplementationIncluded": false,
+  "publicMainWriteAuthorized": false,
+  "publicMergeAuthorized": false,
+  "persistentPublicWriteAuthorityCreated": false
+}

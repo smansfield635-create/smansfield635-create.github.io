@@ -1,0 +1,69 @@
+{
+  "schema": "PROJECT_CONTINUATION_LANE_MANIFEST_v1",
+  "laneId": "LAWS_CONTEXTUAL_3D",
+  "device": "S25 Ultra",
+  "status": "ACTIVE_EXPERIMENTAL_NONAUTHORITY_MANIFEST",
+  "authorityEffect": "NONE",
+  "projectIdentity": {
+    "projectId": "LAWS",
+    "label": "Contextual 3D orbital-layout work surrounding the Laws chamber",
+    "repositoryProjectEntrypoint": ".github/ai-router/projects/laws/entrypoint.v1.json"
+  },
+  "authoritativeStateLocations": {
+    "rootEntrypoint": "AI_ENTRYPOINT.json",
+    "rootInstructions": "AGENTS.md",
+    "projectEntrypoint": ".github/ai-router/projects/laws/entrypoint.v1.json",
+    "requiredInstructions": [".github/ai-router/page-excellence-toolchain/README.md"],
+    "sharedEvaluationState": [
+      ".github/ai-router/reference-class-awards-admission/evaluator/class-requirements.v1.json",
+      ".github/ai-router/reference-class-awards-admission/evaluator/activation-criteria.v1.json"
+    ],
+    "operationLedger": {
+      "ref": "refs/heads/operation-locks/repository-operation-intake-v1",
+      "path": ".github/operation-intake/active-operation-ledger.v1.json"
+    },
+    "projectPathPrefixes": ["laws/"],
+    "declaredWorkflows": [".github/workflows/laws-orbital-tranche-a0-a3.yml", ".github/workflows/repository-ai-entry-router-validation.yml"]
+  },
+  "frontierDerivation": {
+    "liveRevalidationRequired": true,
+    "staticFrontierStored": false,
+    "orderedMethod": [
+      "FETCH_LATEST_MAIN",
+      "LOAD_CURRENT_LAWS_PROJECT_ENTRYPOINT_ROOT_INSTRUCTIONS_AND_PAGE_EXCELLENCE_REQUIREMENTS",
+      "FETCH_CANONICAL_OPERATION_LEDGER_FROM_ITS_LOCK_REF_AND_SELECT_RELEVANT_LAWS_CONTEXTUAL_3D_OR_PATH_INTERSECTING_NONTERMINAL_OPERATIONS",
+      "INSPECT_RELEVANT_OPEN_PULL_REQUESTS_BRANCH_HEADS_WORKFLOW_RUNS_CHECKS_ARTIFACTS_AND_COMMAND_EMITTED_RECEIPTS",
+      "INSPECT_CURRENT_CONTEXTUAL_3D_REFERENCE_CLASS_GUARDS_AS_EVALUATION_CONSTRAINTS_NOT_AS_POSITIVE_DESIGN_AUTHORITY",
+      "RECONCILE_CANDIDATE_HEADS_OPERATION_LIFECYCLE_AND_REQUIRED_PAGE_PHASE_RECEIPTS_AGAINST_LATEST_MAIN",
+      "DISCARD_RELEASED_TERMINAL_SUPERSEDED_OR_STALE_EVIDENCE_AS_CURRENT_ACTION_AUTHORITY",
+      "DERIVE_THE_UNIQUE_HIGHEST_LAWFUL_UNRESOLVED_TRANSITION",
+      "BEFORE_PAGE_OR_INTERFACE_MUTATION_REQUIRE_CANONICAL_INTAKE_ROUTER_AND_CURRENT_PAGE_EXCELLENCE_PHASE_GATE",
+      "STOP_IF_NO_UNIQUE_PROVEN_FRONTIER_EXISTS"
+    ]
+  },
+  "actionAuthorityAndConstraints": {
+    "manifestCreatesMutationAuthority": false,
+    "manifestCreatesMergeAuthority": false,
+    "manifestCreatesDeploymentAuthority": false,
+    "manifestCreatesSemanticAuthority": false,
+    "manifestCreatesScientificAuthority": false,
+    "manifestCreatesPositiveContextualReferenceAuthority": false,
+    "canonicalIntakeRequiredBeforeMutation": true,
+    "repositoryRouterRequiredForEveryAffectedPath": true,
+    "pageExcellenceRequiredForPageOrInterfaceMutation": true,
+    "presentationMayNotManufactureLawsAuthority": true,
+    "stopRatherThanInferMissingAuthorityOrEvidence": true
+  },
+  "writeBackRequirements": {
+    "rule": "WRITE_BACK_ONLY_WHAT_THE_SEPARATELY_AUTHORIZED_LAWS_OR_CONTEXTUAL_3D_PROCEDURE_REQUIRES",
+    "requiredEvidenceClassesWhenApplicable": [
+      "COMMAND_EMITTED_ADMISSION_OR_SUCCESSOR_RECEIPT",
+      "ROUTER_AND_PAGE_PHASE_RECEIPTS",
+      "CANDIDATE_BRANCH_OR_PULL_REQUEST_STATE",
+      "RUNTIME_OR_PERCEPTUAL_EVIDENCE_REQUIRED_BY_THE_CONTROLLING_PROCEDURE",
+      "WORKFLOW_CHECK_AND_REQUIRED_ARTIFACT_EVIDENCE",
+      "CANONICAL_TERMINAL_OR_SUCCESSOR_LIFECYCLE_RECEIPT"
+    ],
+    "privateRoomSummaryIsSufficientWriteBack": false
+  }
+}

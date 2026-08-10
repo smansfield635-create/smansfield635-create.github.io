@@ -1,0 +1,75 @@
+{
+  "schema": "PROJECT_CONTINUATION_LANE_MANIFEST_v1",
+  "laneId": "INSTRUMENTATION_PLATFORM",
+  "device": "A19 tablet",
+  "status": "ACTIVE_EXPERIMENTAL_NONAUTHORITY_MANIFEST",
+  "authorityEffect": "NONE",
+  "projectIdentity": {
+    "projectId": "INSTRUMENTATION_PLATFORM",
+    "label": "Instrument research / instrumentation platform",
+    "primaryRoutingAnchorProjectId": "STATE_BOUND_ADMISSIBILITY_KERNEL",
+    "primaryRoutingAnchorEntrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json"
+  },
+  "authoritativeStateLocations": {
+    "rootEntrypoint": "AI_ENTRYPOINT.json",
+    "rootInstructions": "AGENTS.md",
+    "primaryProjectEntrypoint": ".github/ai-router/projects/state-bound-admissibility-kernel/entrypoint.v1.json",
+    "instrumentLifecycle": {
+      "protocol": ".github/ai-router/instrument-lifecycle/instrument-lifecycle-protocol.v1.json",
+      "registry": ".github/ai-router/instrument-lifecycle/instrument-lifecycle-registry.v1.json",
+      "protectedLiveOperations": ".github/ai-router/instrument-lifecycle/protected-live-operations.v1.json"
+    },
+    "integratedDevelopmentPipeline": {
+      "protocol": ".github/ai-router/development-pipeline/integrated-development-pipeline-protocol.v1.json",
+      "policyRegistry": ".github/ai-router/development-pipeline/policy-registry.v1.json",
+      "integratedGate": ".github/ai-router/development-pipeline/integrated-development-pipeline-gate.v1.mjs"
+    },
+    "referenceClassInstrumentation": ".github/ai-router/reference-class-awards-admission/",
+    "systemContinuityGapRegistry": ".github/ai-router/system-continuity/gap-registry.v1.json",
+    "operationLedger": {
+      "ref": "refs/heads/operation-locks/repository-operation-intake-v1",
+      "path": ".github/operation-intake/active-operation-ledger.v1.json"
+    }
+  },
+  "frontierDerivation": {
+    "liveRevalidationRequired": true,
+    "staticFrontierStored": false,
+    "orderedMethod": [
+      "FETCH_LATEST_MAIN_AND_ROOT_AI_ENTRYPOINT",
+      "LOAD_CURRENT_STATE_BOUND_ADMISSIBILITY_KERNEL_ENTRYPOINT_AND_CURRENT_SHARED_INSTRUMENT_LIFECYCLE_DEVELOPMENT_PIPELINE_AND_CONTINUITY_REGISTRIES",
+      "FETCH_CANONICAL_OPERATION_LEDGER_FROM_ITS_LOCK_REF_AND_DISCOVER_NONTERMINAL_INSTRUMENTATION_CONTROL_PLANE_OR_INSTRUMENT_RESEARCH_OPERATIONS_FROM_LIVE_PROJECT_IDS_SCOPES_AND_ALLOWED_PATHS",
+      "INSPECT_RELEVANT_OPEN_PULL_REQUESTS_BRANCH_HEADS_WORKFLOW_RUNS_CHECKS_ARTIFACTS_AND_COMMAND_EMITTED_RECEIPTS",
+      "RECONCILE_ACTIVE_INSTRUMENT_LIFECYCLE_PROTECTED_OPERATIONS_SYSTEM_CONTINUITY_GAPS_AND_CANDIDATE_PROVIDER_STATUS",
+      "DISCARD_RELEASED_TERMINAL_SUPERSEDED_OR_STALE_EVIDENCE_AS_CURRENT_ACTION_AUTHORITY",
+      "DERIVE_THE_UNIQUE_HIGHEST_LAWFUL_UNRESOLVED_INSTRUMENTATION_TRANSITION_FROM_LIVE_REPOSITORY_EVIDENCE",
+      "BEFORE_MUTATION_REQUIRE_CANONICAL_INTAKE_ROUTER_AND_EVERY_NARROWER_INSTRUMENT_OR_CONTROL_PLANE_GATE_RESOLVED_FROM_CURRENT_REPOSITORY_STATE",
+      "STOP_IF_NO_UNIQUE_PROVEN_FRONTIER_EXISTS"
+    ]
+  },
+  "actionAuthorityAndConstraints": {
+    "manifestCreatesMutationAuthority": false,
+    "manifestCreatesMergeAuthority": false,
+    "manifestCreatesDeploymentAuthority": false,
+    "manifestCreatesProductAuthority": false,
+    "manifestCreatesSemanticAuthority": false,
+    "manifestCreatesScientificAuthority": false,
+    "manifestCreatesStandardsConformanceAuthority": false,
+    "canonicalIntakeRequiredBeforeMutation": true,
+    "repositoryRouterRequiredForEveryAffectedPath": true,
+    "sharedControlPlaneChangesMustReconcileOpenSystemGaps": true,
+    "localInstrumentSelfTestDoesNotImplySystemClosure": true,
+    "stopRatherThanInferMissingAuthorityOrEvidence": true
+  },
+  "writeBackRequirements": {
+    "rule": "WRITE_BACK_ONLY_WHAT_THE_SEPARATELY_AUTHORIZED_INSTRUMENT_OR_SHARED_CONTROL_PLANE_PROCEDURE_REQUIRES",
+    "requiredEvidenceClassesWhenApplicable": [
+      "COMMAND_EMITTED_ADMISSION_OR_SUCCESSOR_RECEIPT",
+      "ROUTER_AND_INSTRUMENT_SPECIFIC_GATE_RECEIPTS",
+      "CANDIDATE_BRANCH_OR_PULL_REQUEST_STATE",
+      "SELF_TEST_CONFORMANCE_OR_CONTINUITY_ARTIFACTS_REQUIRED_BY_THE_CONTROLLING_PROCEDURE",
+      "POST_MERGE_CONTINUITY_EVIDENCE_WHEN_SYSTEM_CLOSURE_IS_CLAIMED",
+      "CANONICAL_TERMINAL_OR_SUCCESSOR_LIFECYCLE_RECEIPT"
+    ],
+    "privateRoomSummaryIsSufficientWriteBack": false
+  }
+}

@@ -161,6 +161,9 @@ jobs:
               const r=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
               return !!r && (r.firstFailureStage || (r.stages?.FIRST_FRAME_PRESENTED==='PASS' && r.stages?.READY_PUBLISHED==='PASS'));
             },null,{timeout:120000});
+            const startup=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null);
+            assert.ok(startup,'startup diagnostics unavailable after readiness wait');
+            assert.equal(startup.firstFailureStage,null,JSON.stringify(startup));
             await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:30000});
           }
 

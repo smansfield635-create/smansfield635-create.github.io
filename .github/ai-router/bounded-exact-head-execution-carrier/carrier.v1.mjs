@@ -12,6 +12,7 @@ const LOCK_REF = 'refs/remotes/origin/operation-locks/repository-operation-intak
 const LOCK_LEDGER_PATH = '.github/operation-intake/active-operation-ledger.v1.json';
 const PAGE_TOOLSET_PATH = '.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json';
 const REFERENCE_CLASS_VERIFIER_PATH = '.github/ai-router/reference-class-awards-admission/verify.v1.mjs';
+const REFERENCE_CLASS_EVALUATOR_SELF_TEST_PATH = '.github/ai-router/reference-class-awards-admission/evaluator/self-test.v1.mjs';
 const REQUIRED_REQUEST_KEYS = ['schema', 'requestId', 'descriptorId', 'operationRequest', 'constructionProcedure', 'admissionReceipt', 'requestNonce'];
 const FORBIDDEN_REQUEST_KEYS = ['command','shell','shellCommand','script','scriptBody','executable','arguments','extraArguments','environment','environmentOverride','paths','targetHead','workingDirectory','workflowOverride','architectureBundle','receiptBundle','pageReceiptBundle'];
 
@@ -131,6 +132,16 @@ function resolveDescriptor(registry, descriptorId) {
     if (canonical(descriptor.fixedArguments) !== canonical(['--verify-static'])) fail('REFERENCE_CLASS_VERIFIER_ARGUMENT_BINDING_INVALID');
     if (descriptor.targetHeadDerivation !== 'BOUND_DESCRIPTOR_TARGET_HEAD') fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
     if (descriptor.nativeReceiptSchema !== 'REFERENCE_CLASS_AWARDS_ADMISSION_STATIC_VERIFICATION_RECEIPT_v1' || descriptor.nativePassField !== 'result' || descriptor.nativePassValue !== 'PASS') fail('REFERENCE_CLASS_VERIFIER_NATIVE_RECEIPT_BINDING_INVALID');
+  } else if (descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_V1') {
+    if (descriptor.scriptPath !== REFERENCE_CLASS_EVALUATOR_SELF_TEST_PATH) fail('DESCRIPTOR_EXECUTABLE_NOT_ALLOWED');
+    if (descriptor.mutationIntent !== false) fail('REFERENCE_CLASS_EVALUATOR_MUTATION_INTENT_PROHIBITED');
+    assertBlob(descriptor.scriptBlob, 'REFERENCE_CLASS_EVALUATOR_SELF_TEST_BLOB_INVALID');
+    if (!Number.isInteger(descriptor.boundLockGeneration) || descriptor.boundLockGeneration < 1) fail('DESCRIPTOR_LOCK_BINDING_INVALID');
+    assertCommit(descriptor.boundTargetHead, 'DESCRIPTOR_TARGET_HEAD_BINDING_INVALID');
+    assertString(descriptor.boundOperationId, 'DESCRIPTOR_OPERATION_BINDING_INVALID');
+    if (canonical(descriptor.fixedArguments) !== canonical([])) fail('REFERENCE_CLASS_EVALUATOR_ARGUMENT_BINDING_INVALID');
+    if (descriptor.targetHeadDerivation !== 'BOUND_DESCRIPTOR_TARGET_HEAD') fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
+    if (descriptor.nativeReceiptSchema !== 'REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_RECEIPT_v1' || descriptor.nativePassField !== 'result' || descriptor.nativePassValue !== 'PASS') fail('REFERENCE_CLASS_EVALUATOR_NATIVE_RECEIPT_BINDING_INVALID');
   } else fail('DESCRIPTOR_EXECUTION_CLASS_UNSUPPORTED', descriptor.executionClass);
   return descriptor;
 }
@@ -158,18 +169,14 @@ function validateOperationDocuments(request) {
 }
 function deriveTargetHead(op, descriptor) {
   let value;
-  if (descriptor.targetHeadDerivation === 'SUBJECT_IDENTITY_REQUIRED_STARTING_HEAD_ELSE_EXACT_GOVERNING_HEAD') {
-    value = op.subjectIdentity?.requiredStartingHead ?? op.exactGoverningHead;
-  } else if (descriptor.targetHeadDerivation === 'BOUND_DESCRIPTOR_TARGET_HEAD') {
-    value = descriptor.boundTargetHead;
-  } else fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
+  if (descriptor.targetHeadDerivation === 'SUBJECT_IDENTITY_REQUIRED_STARTING_HEAD_ELSE_EXACT_GOVERNING_HEAD') value = op.subjectIdentity?.requiredStartingHead ?? op.exactGoverningHead;
+  else if (descriptor.targetHeadDerivation === 'BOUND_DESCRIPTOR_TARGET_HEAD') value = descriptor.boundTargetHead;
+  else fail('TARGET_HEAD_DERIVATION_UNSUPPORTED');
   return assertCommit(value, 'TARGET_HEAD_NOT_AUTHORIZED');
 }
 function deriveTask(op, descriptor) {
   if (descriptor.taskDerivation !== 'SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID') fail('TASK_DERIVATION_UNSUPPORTED');
-  const raw = typeof op.subjectIdentity?.experimentId === 'string' && op.subjectIdentity.experimentId.length > 0
-    ? op.subjectIdentity.experimentId.toUpperCase()
-    : op.operationId;
+  const raw = typeof op.subjectIdentity?.experimentId === 'string' && op.subjectIdentity.experimentId.length > 0 ? op.subjectIdentity.experimentId.toUpperCase() : op.operationId;
   if (!/^[A-Z0-9_.:-]+$/.test(raw)) fail('DERIVED_TASK_INVALID', raw);
   return raw;
 }
@@ -233,15 +240,19 @@ function validateReferenceClassDescriptor(descriptor, docs, targetHead) {
   if (docs.op.subjectIdentity?.instrumentId !== 'REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1') fail('REFERENCE_CLASS_INSTRUMENT_IDENTITY_MISMATCH');
   if (docs.op.subjectIdentity?.activationRequested !== false) fail('REFERENCE_CLASS_ACTIVATION_AUTHORITY_LEAK');
   if (docs.op.exactGoverningHead === targetHead) fail('REFERENCE_CLASS_TARGET_MUST_BE_CANDIDATE_HEAD');
-  return stable({
-    instrumentId: docs.op.subjectIdentity.instrumentId,
-    boundOperationId: descriptor.boundOperationId,
-    boundLockGeneration: descriptor.boundLockGeneration,
-    boundTargetHead: descriptor.boundTargetHead,
-    scriptPath: descriptor.scriptPath,
-    scriptBlob: descriptor.scriptBlob,
-    fixedArguments: descriptor.fixedArguments
-  });
+  return stable({ instrumentId: docs.op.subjectIdentity.instrumentId, boundOperationId: descriptor.boundOperationId, boundLockGeneration: descriptor.boundLockGeneration, boundTargetHead: descriptor.boundTargetHead, scriptPath: descriptor.scriptPath, scriptBlob: descriptor.scriptBlob, fixedArguments: descriptor.fixedArguments });
+}
+function validateReferenceClassEvaluatorDescriptor(descriptor, docs, targetHead) {
+  if (descriptor.executionClass !== 'REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_V1') fail('REFERENCE_CLASS_EVALUATOR_DESCRIPTOR_REQUIRED');
+  if (descriptor.projectId !== docs.op.projectId) fail('DESCRIPTOR_PROJECT_BINDING_MISMATCH');
+  if (descriptor.boundOperationId !== docs.op.operationId) fail('DESCRIPTOR_OPERATION_BINDING_MISMATCH');
+  if (descriptor.boundLockGeneration !== docs.lock.lockGeneration) fail('DESCRIPTOR_LOCK_BINDING_MISMATCH');
+  if (descriptor.boundTargetHead !== targetHead) fail('DESCRIPTOR_TARGET_HEAD_BINDING_MISMATCH');
+  if (docs.op.subjectIdentity?.instrumentId !== 'REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1') fail('REFERENCE_CLASS_INSTRUMENT_IDENTITY_MISMATCH');
+  if (docs.op.subjectIdentity?.componentId !== 'REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_v1') fail('REFERENCE_CLASS_EVALUATOR_COMPONENT_IDENTITY_MISMATCH');
+  if (docs.op.subjectIdentity?.activationRequested !== false) fail('REFERENCE_CLASS_ACTIVATION_AUTHORITY_LEAK');
+  if (docs.op.exactGoverningHead === targetHead) fail('REFERENCE_CLASS_TARGET_MUST_BE_CANDIDATE_HEAD');
+  return stable({ instrumentId: docs.op.subjectIdentity.instrumentId, componentId: docs.op.subjectIdentity.componentId, boundOperationId: descriptor.boundOperationId, boundLockGeneration: descriptor.boundLockGeneration, boundTargetHead: descriptor.boundTargetHead, scriptPath: descriptor.scriptPath, scriptBlob: descriptor.scriptBlob, fixedArguments: descriptor.fixedArguments });
 }
 function collectInstrumentVersions(value) {
   const candidates = [];
@@ -265,19 +276,7 @@ export function makePageArchitectureBundle(descriptor, toolset, targetHead, oper
   if (toolsetId !== 'MANDATORY_PAGE_TOOLSET' || toolsetVersion !== '1.1.0') fail('PAGE_TOOLSET_VERSION_MISMATCH');
   const findings = stable(descriptor.architectureFindings);
   const instrumentVersions = collectInstrumentVersions(toolset);
-  return stable({
-    schema: 'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1',
-    toolsetId,
-    toolsetVersion,
-    subjectHead: targetHead,
-    phaseReceipts: [{
-      phase: 'ARCHITECTURE',
-      result: 'PASS',
-      instrumentVersions,
-      receiptDigest: hashObject({ descriptorId: descriptor.descriptorId, operationId, targetHead, findings }),
-      findings
-    }]
-  });
+  return stable({ schema: 'MANDATORY_PAGE_PHASE_RECEIPT_BUNDLE_v1', toolsetId, toolsetVersion, subjectHead: targetHead, phaseReceipts: [{ phase: 'ARCHITECTURE', result: 'PASS', instrumentVersions, receiptDigest: hashObject({ descriptorId: descriptor.descriptorId, operationId, targetHead, findings }), findings }] });
 }
 
 export function validateAndResolve({ rawRequest, registry, ledger }) {
@@ -295,34 +294,15 @@ export function validateAndResolve({ rawRequest, registry, ledger }) {
   const targetHead = deriveTargetHead(docs.op, descriptor);
   const task = deriveTask(docs.op, descriptor);
   const paths = docs.allowedPaths;
-  const architectureFindings = descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1'
-    ? validatePageArchitectureDescriptor(descriptor, docs, targetHead)
-    : null;
-  const referenceClassBinding = descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1'
-    ? validateReferenceClassDescriptor(descriptor, docs, targetHead)
-    : null;
-  return stable({
-    descriptor,
-    executionClass: descriptor.executionClass,
-    operationId: docs.op.operationId,
-    projectId: docs.op.projectId,
-    lockGeneration: docs.lock.lockGeneration,
-    scopeHash: docs.lock.scopeHash,
-    targetHead,
-    task,
-    paths,
-    requestDigest,
-    procedureDigest,
-    admissionReceipt: docs.admission,
-    architectureFindings,
-    referenceClassBinding
-  });
+  const architectureFindings = descriptor.executionClass === 'PAGE_EXCELLENCE_ARCHITECTURE_V1' ? validatePageArchitectureDescriptor(descriptor, docs, targetHead) : null;
+  const referenceClassBinding = descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1' ? validateReferenceClassDescriptor(descriptor, docs, targetHead) : null;
+  const referenceClassEvaluatorBinding = descriptor.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_V1' ? validateReferenceClassEvaluatorDescriptor(descriptor, docs, targetHead) : null;
+  return stable({ descriptor, executionClass: descriptor.executionClass, operationId: docs.op.operationId, projectId: docs.op.projectId, lockGeneration: docs.lock.lockGeneration, scopeHash: docs.lock.scopeHash, targetHead, task, paths, requestDigest, procedureDigest, admissionReceipt: docs.admission, architectureFindings, referenceClassBinding, referenceClassEvaluatorBinding });
 }
 
 function loadCanonicalLedger() {
-  try {
-    execGit(['show', `${LOCK_REF}:${LOCK_LEDGER_PATH}`]);
-  } catch {
+  try { execGit(['show', `${LOCK_REF}:${LOCK_LEDGER_PATH}`]); }
+  catch {
     try { execGit(['fetch', '--no-tags', 'origin', '+refs/heads/operation-locks/repository-operation-intake-v1:refs/remotes/origin/operation-locks/repository-operation-intake-v1']); }
     catch { fail('CANONICAL_LOCK_LEDGER_UNAVAILABLE'); }
   }
@@ -341,30 +321,14 @@ function assertClean(cwd, code = 'WORKTREE_NOT_CLEAN') {
   if (status.trim() !== '') fail(code, status.trim());
 }
 function baseSafeEnv(tempRoot, admissionPath) {
-  return {
-    PATH: process.env.PATH ?? '',
-    HOME: process.env.HOME ?? tempRoot,
-    TMPDIR: process.env.RUNNER_TEMP ?? os.tmpdir(),
-    LANG: process.env.LANG ?? 'C.UTF-8',
-    LC_ALL: process.env.LC_ALL ?? 'C.UTF-8',
-    INTAKE_ADMISSION_RECEIPT: admissionPath
-  };
+  return { PATH: process.env.PATH ?? '', HOME: process.env.HOME ?? tempRoot, TMPDIR: process.env.RUNNER_TEMP ?? os.tmpdir(), LANG: process.env.LANG ?? 'C.UTF-8', LC_ALL: process.env.LC_ALL ?? 'C.UTF-8', INTAKE_ADMISSION_RECEIPT: admissionPath };
 }
 function executeRouter(resolution, worktree, tempRoot, admissionPath) {
   const nativeReceiptPath = path.join(tempRoot, 'native-receipt.json');
-  const args = [
-    resolution.descriptor.scriptPath,
-    '--mutation-intent',
-    ...resolution.paths.flatMap(p => ['--path', p]),
-    '--task', resolution.task,
-    '--output', nativeReceiptPath
-  ];
+  const args = [resolution.descriptor.scriptPath, '--mutation-intent', ...resolution.paths.flatMap(p => ['--path', p]), '--task', resolution.task, '--output', nativeReceiptPath];
   let exitCode = 0;
-  try {
-    cp.execFileSync(resolution.descriptor.executable, args, { cwd: worktree, env: baseSafeEnv(tempRoot, admissionPath), shell: false, stdio: ['ignore','pipe','pipe'], maxBuffer: 32 * 1024 * 1024 });
-  } catch (error) {
-    exitCode = Number.isInteger(error.status) ? error.status : 1;
-  }
+  try { cp.execFileSync(resolution.descriptor.executable, args, { cwd: worktree, env: baseSafeEnv(tempRoot, admissionPath), shell: false, stdio: ['ignore','pipe','pipe'], maxBuffer: 32 * 1024 * 1024 }); }
+  catch (error) { exitCode = Number.isInteger(error.status) ? error.status : 1; }
   if (!fs.existsSync(nativeReceiptPath)) fail('NATIVE_RECEIPT_MISSING_OR_INVALID');
   let nativeReceipt;
   try { nativeReceipt = readJson(nativeReceiptPath); } catch { fail('NATIVE_RECEIPT_MISSING_OR_INVALID'); }
@@ -372,14 +336,7 @@ function executeRouter(resolution, worktree, tempRoot, admissionPath) {
   const routePaths = Array.isArray(nativeReceipt.routes) ? nativeReceipt.routes.map(r => r.path).sort() : [];
   if (canonical(routePaths) !== canonical([...resolution.paths].sort())) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'route path set');
   const nativePass = nativeReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue;
-  return {
-    exitCode,
-    nativePass,
-    nativeReceipt,
-    nativeReceiptDigest: sha256(fs.readFileSync(nativeReceiptPath)),
-    commandDigest: hashObject({ executable: resolution.descriptor.executable, args }),
-    extraReceiptFields: {}
-  };
+  return { exitCode, nativePass, nativeReceipt, nativeReceiptDigest: sha256(fs.readFileSync(nativeReceiptPath)), commandDigest: hashObject({ executable: resolution.descriptor.executable, args }), extraReceiptFields: {} };
 }
 function executePageArchitecture(resolution, worktree, tempRoot, admissionPath) {
   const gateBytes = fs.readFileSync(path.join(worktree, resolution.descriptor.scriptPath));
@@ -391,15 +348,7 @@ function executePageArchitecture(resolution, worktree, tempRoot, admissionPath) 
   const routerReceiptPath = path.join(tempRoot, 'delegated-router-receipt.json');
   const gateReceiptPath = path.join(tempRoot, 'native-gate-receipt.json');
   writeJson(bundlePath, bundle);
-  const args = [
-    resolution.descriptor.scriptPath,
-    '--mutation-intent',
-    ...resolution.paths.flatMap(p => ['--path', p]),
-    '--task', resolution.task,
-    '--page-phase', resolution.descriptor.pagePhase,
-    '--page-receipt-bundle', bundlePath,
-    '--output', routerReceiptPath
-  ];
+  const args = [resolution.descriptor.scriptPath, '--mutation-intent', ...resolution.paths.flatMap(p => ['--path', p]), '--task', resolution.task, '--page-phase', resolution.descriptor.pagePhase, '--page-receipt-bundle', bundlePath, '--output', routerReceiptPath];
   const safeEnv = { ...baseSafeEnv(tempRoot, admissionPath), PAGE_OPERATION_SUBJECT_HEAD: resolution.targetHead };
   const child = cp.spawnSync(resolution.descriptor.executable, args, { cwd: worktree, env: safeEnv, shell: false, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
   const exitCode = child.error ? 1 : (Number.isInteger(child.status) ? child.status : 1);
@@ -417,34 +366,14 @@ function executePageArchitecture(resolution, worktree, tempRoot, admissionPath) 
   const gateClass = gateReceipt?.mandatoryReceipt?.contextualArchitecture?.implementationClass;
   if (gateClass !== resolution.architectureFindings.implementationClass) fail('PAGE_ARCHITECTURE_CLASS_MISMATCH', gateClass);
   const nativePass = gateReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue && routerReceipt.disposition === 'PASS';
-  return {
-    exitCode,
-    nativePass,
-    nativeReceipt: gateReceipt,
-    nativeReceiptDigest: sha256(fs.readFileSync(gateReceiptPath)),
-    commandDigest: hashObject({ executable: resolution.descriptor.executable, args, derivedEnvironment: { PAGE_OPERATION_SUBJECT_HEAD: resolution.targetHead } }),
-    extraReceiptFields: {
-      pagePhase: resolution.descriptor.pagePhase,
-      architectureBundleDigest: sha256(fs.readFileSync(bundlePath)),
-      architectureFindingsDigest: hashObject(resolution.architectureFindings),
-      delegatedRouterReceiptDigest: sha256(fs.readFileSync(routerReceiptPath)),
-      delegatedRouterReceipt: routerReceipt,
-      pageGateBlobVerified: true
-    }
-  };
+  return { exitCode, nativePass, nativeReceipt: gateReceipt, nativeReceiptDigest: sha256(fs.readFileSync(gateReceiptPath)), commandDigest: hashObject({ executable: resolution.descriptor.executable, args, derivedEnvironment: { PAGE_OPERATION_SUBJECT_HEAD: resolution.targetHead } }), extraReceiptFields: { pagePhase: resolution.descriptor.pagePhase, architectureBundleDigest: sha256(fs.readFileSync(bundlePath)), architectureFindingsDigest: hashObject(resolution.architectureFindings), delegatedRouterReceiptDigest: sha256(fs.readFileSync(routerReceiptPath)), delegatedRouterReceipt: routerReceipt, pageGateBlobVerified: true } };
 }
 function executeReferenceClassAdmissionVerification(resolution, worktree, tempRoot, admissionPath) {
   const scriptBytes = fs.readFileSync(path.join(worktree, resolution.descriptor.scriptPath));
   const actualScriptBlob = gitBlobSha(scriptBytes);
   if (actualScriptBlob !== resolution.descriptor.scriptBlob) fail('REFERENCE_CLASS_VERIFIER_BLOB_MISMATCH', `${resolution.descriptor.scriptBlob}:${actualScriptBlob}`);
   const args = [resolution.descriptor.scriptPath, ...resolution.descriptor.fixedArguments];
-  const child = cp.spawnSync(resolution.descriptor.executable, args, {
-    cwd: worktree,
-    env: baseSafeEnv(tempRoot, admissionPath),
-    shell: false,
-    encoding: 'utf8',
-    maxBuffer: 32 * 1024 * 1024
-  });
+  const child = cp.spawnSync(resolution.descriptor.executable, args, { cwd: worktree, env: baseSafeEnv(tempRoot, admissionPath), shell: false, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
   const exitCode = child.error ? 1 : (Number.isInteger(child.status) ? child.status : 1);
   let nativeReceipt = null;
   try { nativeReceipt = child.stdout ? JSON.parse(child.stdout) : null; } catch {}
@@ -456,18 +385,24 @@ function executeReferenceClassAdmissionVerification(resolution, worktree, tempRo
   const receiptPath = path.join(tempRoot, 'reference-class-verification-receipt.json');
   writeJson(receiptPath, nativeReceipt);
   const nativePass = nativeReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue;
-  return {
-    exitCode,
-    nativePass,
-    nativeReceipt,
-    nativeReceiptDigest: sha256(fs.readFileSync(receiptPath)),
-    commandDigest: hashObject({ executable: resolution.descriptor.executable, args, targetHead: resolution.targetHead, scriptBlob: resolution.descriptor.scriptBlob }),
-    extraReceiptFields: {
-      referenceClassVerifierBlobVerified: true,
-      referenceClassVerifierFixedArgumentsVerified: true,
-      referenceClassBinding: resolution.referenceClassBinding
-    }
-  };
+  return { exitCode, nativePass, nativeReceipt, nativeReceiptDigest: sha256(fs.readFileSync(receiptPath)), commandDigest: hashObject({ executable: resolution.descriptor.executable, args, targetHead: resolution.targetHead, scriptBlob: resolution.descriptor.scriptBlob }), extraReceiptFields: { referenceClassVerifierBlobVerified: true, referenceClassVerifierFixedArgumentsVerified: true, referenceClassBinding: resolution.referenceClassBinding } };
+}
+function executeReferenceClassEvaluatorSelfTest(resolution, worktree, tempRoot, admissionPath) {
+  const scriptBytes = fs.readFileSync(path.join(worktree, resolution.descriptor.scriptPath));
+  const actualScriptBlob = gitBlobSha(scriptBytes);
+  if (actualScriptBlob !== resolution.descriptor.scriptBlob) fail('REFERENCE_CLASS_EVALUATOR_SELF_TEST_BLOB_MISMATCH', `${resolution.descriptor.scriptBlob}:${actualScriptBlob}`);
+  const args = [resolution.descriptor.scriptPath, ...resolution.descriptor.fixedArguments];
+  const child = cp.spawnSync(resolution.descriptor.executable, args, { cwd: worktree, env: baseSafeEnv(tempRoot, admissionPath), shell: false, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+  const exitCode = child.error ? 1 : (Number.isInteger(child.status) ? child.status : 1);
+  let nativeReceipt = null;
+  try { nativeReceipt = child.stdout ? JSON.parse(child.stdout) : null; } catch {}
+  if (!nativeReceipt || nativeReceipt.schema !== resolution.descriptor.nativeReceiptSchema) fail('NATIVE_RECEIPT_MISSING_OR_INVALID', 'reference-class evaluator self-test receipt');
+  if (nativeReceipt.testCount !== nativeReceipt.passCount || nativeReceipt.failCount !== 0) fail('REFERENCE_CLASS_EVALUATOR_SELF_TEST_NONPASS_COUNTS', { testCount: nativeReceipt.testCount, passCount: nativeReceipt.passCount, failCount: nativeReceipt.failCount });
+  if (nativeReceipt.activationAuthorityCreated !== false || nativeReceipt.awardWinnerAuthorityCreated !== false || nativeReceipt.namedAwardReadinessAuthorityCreated !== false) fail('REFERENCE_CLASS_EVALUATOR_AUTHORITY_INFLATION');
+  const receiptPath = path.join(tempRoot, 'reference-class-evaluator-self-test-receipt.json');
+  writeJson(receiptPath, nativeReceipt);
+  const nativePass = nativeReceipt[resolution.descriptor.nativePassField] === resolution.descriptor.nativePassValue;
+  return { exitCode, nativePass, nativeReceipt, nativeReceiptDigest: sha256(fs.readFileSync(receiptPath)), commandDigest: hashObject({ executable: resolution.descriptor.executable, args, targetHead: resolution.targetHead, scriptBlob: resolution.descriptor.scriptBlob }), extraReceiptFields: { referenceClassEvaluatorSelfTestBlobVerified: true, referenceClassEvaluatorFixedArgumentsVerified: true, referenceClassEvaluatorBinding: resolution.referenceClassEvaluatorBinding } };
 }
 
 export function executeResolved(resolution, { root = ROOT } = {}) {
@@ -487,34 +422,11 @@ export function executeResolved(resolution, { root = ROOT } = {}) {
       ? executePageArchitecture(resolution, worktree, tempRoot, admissionPath)
       : resolution.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_VERIFY_V1'
         ? executeReferenceClassAdmissionVerification(resolution, worktree, tempRoot, admissionPath)
-        : executeRouter(resolution, worktree, tempRoot, admissionPath);
+        : resolution.executionClass === 'REFERENCE_CLASS_AWARDS_ADMISSION_EVALUATOR_SELF_TEST_V1'
+          ? executeReferenceClassEvaluatorSelfTest(resolution, worktree, tempRoot, admissionPath)
+          : executeRouter(resolution, worktree, tempRoot, admissionPath);
     assertClean(worktree);
-    return stable({
-      schema: 'BOUNDED_EXACT_HEAD_EXECUTION_RECEIPT_v1',
-      result: execution.nativePass && execution.exitCode === 0 ? 'COMMAND_EXECUTED_AND_PASSED' : 'COMMAND_EXECUTED_AND_RETURNED_NONPASS',
-      descriptorId: resolution.descriptor.descriptorId,
-      executionClass: resolution.executionClass,
-      operationId: resolution.operationId,
-      lockGeneration: resolution.lockGeneration,
-      targetHead: resolution.targetHead,
-      task: resolution.task,
-      paths: resolution.paths,
-      commandDigest: execution.commandDigest,
-      exactHeadVerified: true,
-      workingTreeCleanBeforeAndAfter: true,
-      commandExecuted: true,
-      commandExitCode: execution.exitCode,
-      nativeReceiptSchema: execution.nativeReceipt.schema,
-      nativeReceiptDigest: execution.nativeReceiptDigest,
-      nativeReceiptRewritten: false,
-      nativeReceipt: execution.nativeReceipt,
-      ...execution.extraReceiptFields,
-      repositoryWritesPerformed: false,
-      arbitraryCommandAuthority: false,
-      callerSuppliedBundleAccepted: false,
-      semanticAuthorityCreated: false,
-      productAuthorityCreated: false
-    });
+    return stable({ schema: 'BOUNDED_EXACT_HEAD_EXECUTION_RECEIPT_v1', result: execution.nativePass && execution.exitCode === 0 ? 'COMMAND_EXECUTED_AND_PASSED' : 'COMMAND_EXECUTED_AND_RETURNED_NONPASS', descriptorId: resolution.descriptor.descriptorId, executionClass: resolution.executionClass, operationId: resolution.operationId, lockGeneration: resolution.lockGeneration, targetHead: resolution.targetHead, task: resolution.task, paths: resolution.paths, commandDigest: execution.commandDigest, exactHeadVerified: true, workingTreeCleanBeforeAndAfter: true, commandExecuted: true, commandExitCode: execution.exitCode, nativeReceiptSchema: execution.nativeReceipt.schema, nativeReceiptDigest: execution.nativeReceiptDigest, nativeReceiptRewritten: false, nativeReceipt: execution.nativeReceipt, ...execution.extraReceiptFields, repositoryWritesPerformed: false, arbitraryCommandAuthority: false, callerSuppliedBundleAccepted: false, semanticAuthorityCreated: false, productAuthorityCreated: false });
   } finally {
     if (worktreeAdded) {
       try { execGit(['worktree', 'remove', '--force', worktree], root); } catch {}
@@ -542,17 +454,7 @@ if (invoked) {
   try { main(); }
   catch (error) {
     const args = (() => { try { return parseArgs(process.argv.slice(2)); } catch { return {}; } })();
-    const failure = stable({
-      schema: 'BOUNDED_EXACT_HEAD_EXECUTION_FAILURE_v1',
-      result: 'FAIL_CLOSED',
-      errorCode: error.code ?? 'UNEXPECTED_CARRIER_ERROR',
-      detail: error.detail ?? error.message,
-      repositoryWritesPerformed: false,
-      arbitraryCommandAuthority: false,
-      callerSuppliedBundleAccepted: false,
-      semanticAuthorityCreated: false,
-      productAuthorityCreated: false
-    });
+    const failure = stable({ schema: 'BOUNDED_EXACT_HEAD_EXECUTION_FAILURE_v1', result: 'FAIL_CLOSED', errorCode: error.code ?? 'UNEXPECTED_CARRIER_ERROR', detail: error.detail ?? error.message, repositoryWritesPerformed: false, arbitraryCommandAuthority: false, callerSuppliedBundleAccepted: false, semanticAuthorityCreated: false, productAuthorityCreated: false });
     if (args.output) writeJson(args.output, failure);
     else process.stderr.write(`${JSON.stringify(failure, null, 2)}\n`);
     process.exitCode = 1;

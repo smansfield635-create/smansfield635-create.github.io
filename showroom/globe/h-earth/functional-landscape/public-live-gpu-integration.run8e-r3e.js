@@ -64,12 +64,19 @@ const round = (value, precision = 2) => {
 function deriveInitialViewport() {
   const cssWidth = Math.max(320, Math.round(mount.clientWidth || canvas.clientWidth || canvas.width || 640));
   const cssHeight = Math.max(180, Math.round(mount.clientHeight || canvas.clientHeight || canvas.height || 360));
-  const maximumPixels = 960 * 540;
-  const scale = Math.min(1, Math.sqrt(maximumPixels / (cssWidth * cssHeight)));
+  const requestedPixelRatio = Math.min(2, Math.max(1, Number(window.devicePixelRatio) || 1));
+  const requestedWidth = cssWidth * requestedPixelRatio;
+  const requestedHeight = cssHeight * requestedPixelRatio;
+  const maximumPixels = 1440 * 900;
+  const scale = Math.min(1, Math.sqrt(maximumPixels / (requestedWidth * requestedHeight)));
+  const width = Math.max(320, Math.round(requestedWidth * scale));
+  const height = Math.max(180, Math.round(requestedHeight * scale));
   return Object.freeze({
-    width: Math.max(320, Math.round(cssWidth * scale)),
-    height: Math.max(180, Math.round(cssHeight * scale)),
-    pixelRatio: 1
+    width,
+    height,
+    pixelRatio: Math.min(width / cssWidth, height / cssHeight),
+    requestedDevicePixelRatio: requestedPixelRatio,
+    maximumPixels
   });
 }
 

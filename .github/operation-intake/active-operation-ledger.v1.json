@@ -504,18 +504,6 @@
       "scopeHash": "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd",
       "state": "ADMITTED_LOCKED"
     },
-    "53fb7899a90e9ff912fccc4c335bc0c487617681a0559b64ac8ebb2c6abf602b": {
-      "governingHead": "e396421c03da5ace767eaa06763252ee2ed86569",
-      "lockGeneration": 937,
-      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_MVP_EXTRACTION_SCOPE",
-      "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_MVP_EXTRACTION_20260809_001",
-      "procedureLocatorDigest": "8de8b2d06a0c6b2069776bcb5ab97311344742f88f91bf1ec12798690d937fcd",
-      "released": false,
-      "requestDigest": "1b65ccaa55d539998aa530016c9b35343fd33489df16679854b59ce5bae563f1",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "53fb7899a90e9ff912fccc4c335bc0c487617681a0559b64ac8ebb2c6abf602b",
-      "state": "ADMITTED_LOCKED"
-    },
     "55f254a2c22ee5db6f18e7d071a5584707a051b619d968d0e342b3c6df13c094": {
       "governingHead": "25355a1b8aaec3cc60f90a6f6335dd5aa796b267",
       "lockGeneration": 913,
@@ -13827,6 +13815,19 @@
       "requestDigest": "978ab9bb3adc99c9157f0e86befe6ff2857f9e35eaa64baf3bf1bd5f2f6fb3e4",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "231aac3012ab15af9b8259d680509331bf1baae5dc145e71cc883fd2fc33aad9",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "e396421c03da5ace767eaa06763252ee2ed86569",
+      "lockGeneration": 937,
+      "lockScope": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_MVP_EXTRACTION_SCOPE",
+      "operationId": "STATE_BOUND_ADMISSIBILITY_KERNEL_V1_MVP_EXTRACTION_20260809_001",
+      "procedureLocatorDigest": "8de8b2d06a0c6b2069776bcb5ab97311344742f88f91bf1ec12798690d937fcd",
+      "released": true,
+      "requestDigest": "1b65ccaa55d539998aa530016c9b35343fd33489df16679854b59ce5bae563f1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "53fb7899a90e9ff912fccc4c335bc0c487617681a0559b64ac8ebb2c6abf602b",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

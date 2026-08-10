@@ -276,18 +276,6 @@
       "scopeHash": "29faefeb037e128676d0cd86d7542c497e2cf6f151d47a24410af7b1abefb882",
       "state": "ADMITTED_LOCKED"
     },
-    "2c8475184cc2dc3a1ec5e75ec03d2f81c444cbb5ef130ffb1d2303211c89a171": {
-      "governingHead": "25355a1b8aaec3cc60f90a6f6335dd5aa796b267",
-      "lockGeneration": 895,
-      "lockScope": "H_EARTH:HC05:ACCEPTED_GRATITUDE_WORLD_MODEL_GROUND_PROJECTION:PRODUCT:V1",
-      "operationId": "H_EARTH_HC05_ACCEPTED_GRATITUDE_WORLD_MODEL_GROUND_PROJECTION_v1_20260809_002",
-      "procedureLocatorDigest": "3f91e34541e2a26106d7b8b398ec20e6f3f1ee3748c1f2fd51802a4ce71d84d3",
-      "released": false,
-      "requestDigest": "175c1792e5b785a73c16ff4821f56f8b4c79da3ff9a522d67518a4fe4ba930d6",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "2c8475184cc2dc3a1ec5e75ec03d2f81c444cbb5ef130ffb1d2303211c89a171",
-      "state": "ADMITTED_LOCKED"
-    },
     "2c946bc67cbfd3140e828d1ced47c80e37d13915af125c35e106e0dc40434b67": {
       "governingHead": "ced85cddb447cee815c5bb4091327ad37d64abcb",
       "lockGeneration": 320,
@@ -14031,6 +14019,19 @@
       "scopeHash": "fde34f0be303c2205fb5079cb458b8b91718d830a037fb817f048252bfe556e9",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "25355a1b8aaec3cc60f90a6f6335dd5aa796b267",
+      "lockGeneration": 895,
+      "lockScope": "H_EARTH:HC05:ACCEPTED_GRATITUDE_WORLD_MODEL_GROUND_PROJECTION:PRODUCT:V1",
+      "operationId": "H_EARTH_HC05_ACCEPTED_GRATITUDE_WORLD_MODEL_GROUND_PROJECTION_v1_20260809_002",
+      "procedureLocatorDigest": "3f91e34541e2a26106d7b8b398ec20e6f3f1ee3748c1f2fd51802a4ce71d84d3",
+      "released": true,
+      "requestDigest": "175c1792e5b785a73c16ff4821f56f8b4c79da3ff9a522d67518a4fe4ba930d6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2c8475184cc2dc3a1ec5e75ec03d2f81c444cbb5ef130ffb1d2303211c89a171",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

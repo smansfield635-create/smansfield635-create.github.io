@@ -1,0 +1,105 @@
+{
+  "schema": "L2_CONTROL_PLANE_ROLE_POLICY_v1",
+  "policyId": "L2_CONTROL_PLANE_ROLE_POLICY_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "denyOverrides": true,
+  "defaultDecision": "DENY",
+  "knownActions": [
+    "IDENTITY_REGISTRY_READ",
+    "AUTHORIZATION_EVALUATE",
+    "L2_STRIKE_REQUEST",
+    "L2_COMPONENT_CONSTRUCT",
+    "L2_COMPONENT_VERIFY",
+    "L2_SELF_TEST_EXECUTE",
+    "FEDERATION_READ",
+    "OBSERVABILITY_READ",
+    "ENFORCEMENT_SHADOW_EVALUATE",
+    "AUTHORIZATION_RECEIPT_EMIT",
+    "MERGE",
+    "REPOSITORY_SETTINGS_WRITE",
+    "BRANCH_PROTECTION_WRITE",
+    "RULESET_ACTIVATE",
+    "EXTERNAL_REPOSITORY_WRITE",
+    "H_EARTH_MUTATE",
+    "LAWS_MUTATE",
+    "DEPLOYMENT_EXECUTE",
+    "GENERIC_COMMAND_EXECUTE"
+  ],
+  "globalDeniedActions": [
+    "MERGE",
+    "REPOSITORY_SETTINGS_WRITE",
+    "BRANCH_PROTECTION_WRITE",
+    "RULESET_ACTIVATE",
+    "EXTERNAL_REPOSITORY_WRITE",
+    "H_EARTH_MUTATE",
+    "LAWS_MUTATE",
+    "DEPLOYMENT_EXECUTE",
+    "GENERIC_COMMAND_EXECUTE"
+  ],
+  "roles": {
+    "L2_PLATFORM_ORIGINATOR": {
+      "description": "May request and inspect bounded L2 platform work but gains no implementation or repository-perimeter authority from this policy.",
+      "permissions": [
+        {
+          "actions": ["IDENTITY_REGISTRY_READ", "AUTHORIZATION_EVALUATE", "L2_STRIKE_REQUEST", "OBSERVABILITY_READ"],
+          "resourcePrefixes": [".github/ai-router/platform-control-plane/", "control-plane://l2/"]
+        }
+      ]
+    },
+    "L2_STRIKE_CONSTRUCTOR": {
+      "description": "May construct and self-test only within the admitted additive L2 platform-control-plane package and its exact strike workflow path.",
+      "permissions": [
+        {
+          "actions": ["IDENTITY_REGISTRY_READ", "AUTHORIZATION_EVALUATE", "L2_COMPONENT_CONSTRUCT", "L2_SELF_TEST_EXECUTE", "AUTHORIZATION_RECEIPT_EMIT"],
+          "resourcePrefixes": [".github/ai-router/platform-control-plane/"]
+        },
+        {
+          "actions": ["L2_COMPONENT_CONSTRUCT", "L2_SELF_TEST_EXECUTE"],
+          "exactResources": [".github/workflows/platform-control-plane-strike-v1.yml"]
+        }
+      ]
+    },
+    "L2_STRIKE_FRESH_VERIFIER": {
+      "description": "May read, evaluate, and verify L2 strike outputs but may not construct, repair, merge, activate enforcement, or mutate other lanes.",
+      "permissions": [
+        {
+          "actions": ["IDENTITY_REGISTRY_READ", "AUTHORIZATION_EVALUATE", "L2_COMPONENT_VERIFY", "L2_SELF_TEST_EXECUTE", "OBSERVABILITY_READ", "ENFORCEMENT_SHADOW_EVALUATE", "AUTHORIZATION_RECEIPT_EMIT"],
+          "resourcePrefixes": [".github/ai-router/platform-control-plane/", "control-plane://l2/"]
+        }
+      ]
+    },
+    "L2_PLATFORM_AUTOMATION": {
+      "description": "May evaluate authorization and emit bounded receipts during the dedicated L2 workflow; it does not receive repository mutation or external write authority from this role.",
+      "permissions": [
+        {
+          "actions": ["IDENTITY_REGISTRY_READ", "AUTHORIZATION_EVALUATE", "L2_COMPONENT_VERIFY", "L2_SELF_TEST_EXECUTE", "FEDERATION_READ", "OBSERVABILITY_READ", "ENFORCEMENT_SHADOW_EVALUATE", "AUTHORIZATION_RECEIPT_EMIT"],
+          "resourcePrefixes": [".github/ai-router/platform-control-plane/", "control-plane://l2/"]
+        }
+      ]
+    }
+  },
+  "scopeLaws": [
+    "REGISTRY_ROLE_ASSIGNMENT_OVERRIDES_REQUEST_ROLE_ASSERTION",
+    "UNKNOWN_PRINCIPAL_DENY",
+    "UNKNOWN_ACTION_DENY",
+    "CROSS_TENANT_DENY",
+    "CROSS_PROJECT_DENY",
+    "RESOURCE_OUTSIDE_ROLE_SCOPE_DENY",
+    "GLOBAL_DENY_OVERRIDES_ROLE_ALLOW",
+    "ALLOW_DECISION_DOES_NOT_CREATE_NEW_AUTHORITY"
+  ],
+  "authorityBoundary": {
+    "authorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "repositorySettingsAuthorityCreated": false,
+    "branchProtectionAuthorityCreated": false,
+    "rulesetActivationAuthorityCreated": false,
+    "externalRepositoryWriteAuthorityCreated": false,
+    "productAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "genericCommandAuthorityCreated": false
+  }
+}

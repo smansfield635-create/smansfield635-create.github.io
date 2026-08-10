@@ -1,0 +1,53 @@
+{
+  "schema": "L2_PLATFORM_CONTROL_PLANE_PROTOCOL_v1",
+  "protocolId": "L2_CONTROL_PLANE_PLATFORM_DEFICIT_STRIKE_v1",
+  "version": "1.0.0",
+  "status": "CANDIDATE_UNTIL_SEPARATELY_ADOPTED",
+  "admission": {
+    "lockGeneration": 854,
+    "exactGoverningHead": "01da797ff4d46f0b1514dc06a5179818b14b3dfa",
+    "coordinationIssue": 850,
+    "exactAllowedPathCount": 18
+  },
+  "components": {
+    "identity": "identity/authorization-gate.v1.mjs",
+    "federation": "federation/federation-gate.v1.mjs",
+    "observability": "observability/control-plane-state-projector.v1.mjs",
+    "enforcementShadow": "enforcement/enforcement-shadow-gate.v1.mjs"
+  },
+  "sequence": [
+    "AUTHORIZE_PRINCIPAL_ROLE_TENANT_PROJECT_RESOURCE",
+    "VERIFY_READ_ONLY_FEDERATION_IDENTITY_AND_EVIDENCE",
+    "PROJECT_EVIDENCE_PRESERVING_CONTROL_PLANE_STATE",
+    "EVALUATE_REPOSITORY_PERIMETER_IN_SHADOW_MODE",
+    "EMIT_INTEGRATED_NON_AUTHORITATIVE_RECEIPT"
+  ],
+  "concurrencyLaws": [
+    "DIFFERENT_MUTATION_SURFACES_MAY_PROCEED_IN_PARALLEL",
+    "SAME_SHARED_AUTHORITY_SURFACE_REQUIRES_SERIALIZATION",
+    "ADMITTED_OPERATION_REMAINS_PINNED_TO_ADMISSION_AUTHORITY_THROUGH_TERMINAL_DISPOSITION",
+    "EVIDENCE_MAY_PROPAGATE_IMMEDIATELY_AUTHORITY_DOES_NOT",
+    "NEW_CONTROL_PLANE_CAPABILITY_DOES_NOT_RETROACTIVELY_RE_GOVERN_ACTIVE_PRODUCT_OR_LAWS_TRANSACTION"
+  ],
+  "activationBoundary": {
+    "mergeAllowedByThisProtocol": false,
+    "liveRepositoryEnforcementAllowedByThisProtocol": false,
+    "externalRepositoryWritesAllowed": false,
+    "hEarthMutationAllowed": false,
+    "lawsMutationAllowed": false,
+    "separateSynchronizationRequiredBeforeSharedPerimeterActivation": true
+  },
+  "authorityBoundary": {
+    "authorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "repositorySettingsAuthorityCreated": false,
+    "branchProtectionAuthorityCreated": false,
+    "rulesetActivationAuthorityCreated": false,
+    "externalRepositoryWriteAuthorityCreated": false,
+    "productAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false,
+    "scientificClaimAuthorityCreated": false,
+    "genericCommandAuthorityCreated": false
+  }
+}

@@ -300,18 +300,6 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
-    "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095": {
-      "governingHead": "8b253efb26a22e30c85c28d2666dcfbfb1fbc173",
-      "lockGeneration": 965,
-      "lockScope": "L2:HC05:GEN957:BROWSER_NAVIGATION_EVIDENCE:CONTROL_PLANE:V1",
-      "operationId": "L2_HC05_GEN957_BROWSER_NAVIGATION_EVIDENCE_CARRIER_v1_20260809_001",
-      "procedureLocatorDigest": "51ba269c07bdade0c453c121a91cf0b7709ff611124bef9e759f643da0a8fcca",
-      "released": false,
-      "requestDigest": "d4146f2f003087d60427f016d59f9a6493687f34fca44e2ae93d30e73f36c839",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095",
-      "state": "ADMITTED_LOCKED"
-    },
     "3604afb2c90275381cbf8af3f3e04d1cebd307d037b5b6b2417cb3054cc5aeca": {
       "governingHead": "c50d0a06a73ed149286508a15e697d8efa254865",
       "lockGeneration": 473,
@@ -14272,6 +14260,19 @@
       "requestDigest": "49b2bb5aac278dbce5ab68bee2ccad7805af65ad97224d1267ae18090d75586e",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "bcea5c2cc8a7bf8ea595569075be64c4b06f925b248e97b66462c7fe47790799",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "8b253efb26a22e30c85c28d2666dcfbfb1fbc173",
+      "lockGeneration": 965,
+      "lockScope": "L2:HC05:GEN957:BROWSER_NAVIGATION_EVIDENCE:CONTROL_PLANE:V1",
+      "operationId": "L2_HC05_GEN957_BROWSER_NAVIGATION_EVIDENCE_CARRIER_v1_20260809_001",
+      "procedureLocatorDigest": "51ba269c07bdade0c453c121a91cf0b7709ff611124bef9e759f643da0a8fcca",
+      "released": true,
+      "requestDigest": "d4146f2f003087d60427f016d59f9a6493687f34fca44e2ae93d30e73f36c839",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

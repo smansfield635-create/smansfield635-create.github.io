@@ -468,6 +468,18 @@
       "scopeHash": "4c8ebe4a58daa3f054ab0e21962928f569e1f83c5aa711fa9b9664a18c201294",
       "state": "ADMITTED_LOCKED"
     },
+    "4d076bf41aa6c539898d1f828ab6e38facfbb791dfd6e9412bafae206a118c7e": {
+      "governingHead": "99cf65085446790adb8c271ff48403d1e39a4cc0",
+      "lockGeneration": 999,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:L2_PLATFORM_CONTROL_PLANE:CERTIFICATION_FIXTURE_REPAIR:V1",
+      "operationId": "L2_CONTROL_PLANE_CERTIFICATION_FIXTURE_REPAIR_V1_20260810_002",
+      "procedureLocatorDigest": "05e470fc8a5fbe96a984e1a12f73a8f4da038649e073db6b5797c6f340f00621",
+      "released": false,
+      "requestDigest": "74c7dc6d54d1aa9838315de9b04fa598e0d95df41215c00fb334c8282e2810bf",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4d076bf41aa6c539898d1f828ab6e38facfbb791dfd6e9412bafae206a118c7e",
+      "state": "ADMITTED_LOCKED"
+    },
     "4e4c43e0804b4ad70b6e69c4119748bfe56fbaa74b67ae8174fd77ac12691925": {
       "governingHead": "8c7821995458c0baf45e2e4a82bf4d3667fe0a3d",
       "lockGeneration": 617,
@@ -1696,7 +1708,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 998,
+  "lockGeneration": 999,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -128,7 +128,7 @@ function request(head) {
         operationId: 'L2_PLATFORM_CONTROL_PLANE_CURRENT_ADOPTION_v1',
         sequence: 1,
         lane: 'L2_CONTROL_PLANE',
-        status: 'ACTIVE_CURRENT_VERIFICATION',
+        status: 'PASS_CLOSED',
         subjectHead: head,
         evidenceDigest: 'd'.repeat(64)
       }]

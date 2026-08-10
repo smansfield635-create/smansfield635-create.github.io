@@ -163,7 +163,23 @@ jobs:
             },null,{timeout:120000});
             const startup=await page.evaluate(()=>window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null);
             assert.ok(startup,'startup diagnostics unavailable after readiness wait');
-            assert.equal(startup.firstFailureStage,null,JSON.stringify(startup));
+            if(startup.firstFailureStage!==null){
+              const packageDiagnostic=await page.evaluate(async()=>{
+                const module=await import('/showroom/globe/h-earth/render/live-render-package.run8e-r2.js');
+                const raw=module.getHEarthRun8ER2ImmutableLiveRenderPackage();
+                return {
+                  eligible:raw?.eligible??null,
+                  status:raw?.status??null,
+                  contractId:raw?.contractId??null,
+                  primitiveCount:raw?.primitiveCount??null,
+                  vertexCount:raw?.vertexCount??null,
+                  triangleCount:raw?.triangleCount??null,
+                  indexCount:raw?.indexCount??null,
+                  issues:raw?.issues??[]
+                };
+              });
+              assert.equal(startup.firstFailureStage,null,JSON.stringify({startup,packageDiagnostic}));
+            }
             await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:30000});
           }
 

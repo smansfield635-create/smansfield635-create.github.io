@@ -68,3 +68,11 @@ Router dispositions after admission:
 - `NOT_APPLICABLE`: no project-specific router controls the operation.
 
 Conversation memory, screenshots, summaries, private working state, and manually reconstructed execution are not substitutes for repository-resident instructions or command-emitted receipts.
+
+## Repository-backed project continuation
+
+For a cold room start or device-lane recovery, read `.github/ai-router/project-continuation/strategy-index.v1.json` after `AI_ENTRYPOINT.json`, then load the resolved lane manifest and `.github/ai-router/project-continuation/protocol.v1.json`.
+
+Other rooms are not continuity dependencies. Determine progress from live repository evidence, not from another conversation. Re-fetch current `main`, the canonical operation ledger on `refs/heads/operation-locks/repository-operation-intake-v1`, the lane project entrypoint and registries, relevant pull requests and branches, workflow runs and artifacts, and command-emitted receipts before deriving the current frontier.
+
+The continuation layer is non-authoritative metadata. It never supplies a frozen next mutation and never grants mutation, merge, deployment, product, semantic, scientific, page, renderer, standards-conformance, or lifecycle authority. Before any mutation, re-run the current canonical intake or moving-head successor procedure as applicable, the root router for every affected path, and every narrower project gate resolved from the live repository. Stop rather than act from stale, ambiguous, contradictory, or incomplete frontier evidence.

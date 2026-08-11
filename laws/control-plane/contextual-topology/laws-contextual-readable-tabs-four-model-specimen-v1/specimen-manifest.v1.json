@@ -14,6 +14,14 @@
       "index.css": "9303a6ccd5faef48364cce66d03552efc4870a69"
     }
   },
+  "implementation": {
+    "indexJsBlob": "6eabefef2c50fc77f13186ae2dcab6815bcc279b",
+    "visualSourceHtmlCssBytePreserved": true,
+    "initialThetaDeg": 0,
+    "cameraRadiusCompensation": "PARENT_TRANSLATE_Z_NEGATIVE_RADIUS",
+    "rotatedSurfaceHitArbitration": "GEOMETRIC_FRONT_SURFACE_PICK_WITHOUT_POSITION_MUTATION",
+    "focusReaderPresentation": "SELECTED_SURFACE_TO_FRONT_READER_WITH_FROZEN_WHEEL_STATE"
+  },
   "carousel": {
     "class": "EUCLIDEAN_ROTATIONAL_CAROUSEL",
     "sharedAxis": "Y",
@@ -91,10 +99,38 @@
     "FIFTH_CONTEXTUAL_OBJECT"
   ],
   "verification": {
-    "static": "PENDING_EXECUTION",
-    "browserMechanics": "PENDING_EXECUTION",
-    "responsiveReducedMotion": "PENDING_EXECUTION",
-    "visualQuality": "PENDING_EXECUTION"
+    "static": "PASS",
+    "browserMechanics": "PASS",
+    "responsiveReducedMotion": "PASS",
+    "visualQuality": "PASS",
+    "browserHarness": "PLAYWRIGHT_CHROMIUM_EXACT_SOURCE_BYTES_INLINED_INTO_ABOUT_BLANK_BECAUSE_RUNNER_POLICY_BLOCKS_FILE_AND_LOCALHOST_NAVIGATION",
+    "viewports": {
+      "PHONE": "390x844",
+      "TABLET": "820x1180",
+      "DESKTOP": "1440x1000"
+    },
+    "reducedMotionViewports": ["PHONE", "TABLET", "DESKTOP"],
+    "evidence": {
+      "pairwiseAngularSpacingInvariant": true,
+      "sharedMotionAllFourObjects": true,
+      "forwardReverseContinuousRotation": true,
+      "unboundedRotationObservedThetaDeg": 948,
+      "pageSurfaceDragRotatesWithoutFocus": true,
+      "backgroundDragRotates": true,
+      "wheelScrollRotates": true,
+      "allFourDetentPagesTapToExactIdentity": true,
+      "dragThresholdSuppressesFocus": true,
+      "focusWheelInputDoesNotRotate": true,
+      "focusHorizontalInputDoesNotAdvanceOrRotate": true,
+      "focusVerticalReaderScroll": true,
+      "innerInformationControlsPreserveIdentityAndOrientation": true,
+      "escapeDoesNotExitFocus": true,
+      "returnToOrbitExactOrientationRestoration": true,
+      "postReturnCarouselBrowsingContinues": true,
+      "minimalCueContained": true,
+      "activeOrbitSurfaceContained": true,
+      "focusedReaderContained": true
+    }
   },
   "authorityCeiling": "INSPECTION_ONLY_NO_MERGE_NO_PRODUCTION"
 }

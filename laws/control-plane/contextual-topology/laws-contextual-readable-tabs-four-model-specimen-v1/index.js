@@ -11,7 +11,7 @@
   const MINIMAL_CUE = 'Rotate to browse · Tap to read';
   const TAP_DRAG_THRESHOLD = 8;
   const PHI = Object.freeze([0, 90, 180, 270]);
-  const INITIAL_THETA = -18;
+  const INITIAL_THETA = 0;
 
   const space = document.querySelector('[data-context-space]');
   const field = document.querySelector('[data-context-field]');
@@ -41,11 +41,12 @@
     .instruction.carousel-cue.is-used{opacity:.34;border-color:rgba(217,180,98,.1)}
     .context-space{touch-action:none!important}
     .context-space.has-focus{touch-action:pan-y!important}
-    .context-field{display:block!important;padding:0!important;transform:var(--carousel-field-transform)!important;transform-style:preserve-3d!important}
-    .context-tab{transform:var(--carousel-transform)!important;transform-origin:50% 50%!important;touch-action:none!important;will-change:transform,opacity;}
+    .context-field{position:absolute!important;left:0!important;top:0!important;width:100%!important;height:100%!important;display:block!important;padding:0!important;transform-origin:50% var(--carousel-axis-y)!important;transform:var(--carousel-field-transform)!important;transform-style:preserve-3d!important;pointer-events:none!important}
+    .context-tab{left:50%!important;top:var(--carousel-axis-y)!important;transform:var(--carousel-transform)!important;transform-origin:0 0!important;touch-action:none!important;will-change:transform,opacity;backface-visibility:hidden!important;pointer-events:auto!important;}
     .context-tab.is-focused{transform:var(--carousel-transform)!important;touch-action:pan-y!important}
     .context-tab.is-receded{transform:var(--carousel-transform)!important}
     .context-space.is-dragging .context-tab{transition:none!important}
+    @media(max-width:760px){.context-tab.is-focused{max-height:66vh!important}}
     @media(prefers-reduced-motion:reduce){
       html,body{overflow:hidden!important}
       body{min-height:100dvh!important}
@@ -53,9 +54,9 @@
       .specimen-heading{position:fixed!important;top:max(14px,env(safe-area-inset-top))!important;left:18px!important;right:18px!important;padding:0!important;max-width:800px!important}
       .context-space{position:absolute!important;inset:0!important;overflow:hidden!important;perspective:1050px!important;touch-action:none!important}
       .context-space.has-focus{touch-action:pan-y!important}
-      .context-field{position:absolute!important;left:50%!important;width:0!important;height:0!important;display:block!important;padding:0!important;transform:var(--carousel-field-transform)!important;transform-style:preserve-3d!important;transition:none!important}
-      .context-tab,#tab-collapse-qualified,#tab-pcr,#tab-mass-ledger,#tab-first,.context-tab.is-focused,.context-tab.is-receded{position:absolute!important;left:0!important;top:0!important;margin:0!important;width:min(660px,78vw)!important;max-width:calc(100vw - 20px)!important;max-height:min(610px,64vh)!important;transform:var(--carousel-transform)!important;transform-style:preserve-3d!important;transition:none!important;cursor:pointer!important}
-      .context-tab.is-focused{width:min(760px,calc(100vw - 20px))!important;max-width:calc(100vw - 20px)!important;max-height:70vh!important;cursor:default!important;touch-action:pan-y!important}
+      .context-field{position:absolute!important;left:0!important;top:0!important;width:100%!important;height:100%!important;display:block!important;padding:0!important;transform-origin:50% var(--carousel-axis-y)!important;transform:var(--carousel-field-transform)!important;transform-style:preserve-3d!important;transition:none!important}
+      .context-tab,#tab-collapse-qualified,#tab-pcr,#tab-mass-ledger,#tab-first,.context-tab.is-focused,.context-tab.is-receded{position:absolute!important;left:50%!important;top:var(--carousel-axis-y)!important;margin:0!important;width:min(660px,78vw)!important;max-width:calc(100vw - 20px)!important;max-height:min(610px,64vh)!important;transform:var(--carousel-transform)!important;transform-style:preserve-3d!important;transition:none!important;cursor:pointer!important}
+      .context-tab.is-focused{width:min(760px,calc(100vw - 20px))!important;max-width:calc(100vw - 20px)!important;max-height:66vh!important;cursor:default!important;touch-action:pan-y!important}
       .context-tab.is-receded{pointer-events:none!important}
     }
   `;
@@ -79,16 +80,22 @@
         ? clamp(width * 0.47, 300, 390)
         : clamp(width * 0.36, 390, 520);
     state.fieldTop = width <= 760 ? Math.min(height * 0.65, height - 230) : width <= 900 ? height * 0.60 : height * 0.57;
-    field.style.top = `${state.fieldTop.toFixed(1)}px`;
+    field.style.setProperty('--carousel-axis-y', `${state.fieldTop.toFixed(1)}px`);
   };
 
   const orbitTransformFor = (index) => `rotateY(${PHI[index]}deg) translateZ(${state.radius.toFixed(1)}px) translate(-50%,-50%)`;
-  const focusedTransform = () => `rotateY(${(-state.thetaWheel).toFixed(4)}deg) translateZ(110px) translate(-50%,-50%)`;
+  const focusedTransform = () => `translateZ(${state.radius.toFixed(1)}px) translate(-50%,-50%)`;
+  const frozenOrbitTransformFor = (index) => `rotateY(${(state.thetaWheel + PHI[index]).toFixed(4)}deg) translateZ(${state.radius.toFixed(1)}px) translate(-50%,-50%)`;
 
   const applyGeometry = () => {
-    field.style.setProperty('--carousel-field-transform', `rotateX(-2deg) rotateY(${state.thetaWheel.toFixed(4)}deg)`);
+    const fieldTransform = state.mode === 'FOCUS'
+      ? `translateZ(${(-state.radius).toFixed(1)}px) rotateX(-2deg)`
+      : `translateZ(${(-state.radius).toFixed(1)}px) rotateX(-2deg) rotateY(${state.thetaWheel.toFixed(4)}deg)`;
+    field.style.setProperty('--carousel-field-transform', fieldTransform);
     tabs.forEach((tab, index) => {
-      const transform = state.mode === 'FOCUS' && state.focused === tab ? focusedTransform() : orbitTransformFor(index);
+      const transform = state.mode === 'FOCUS'
+        ? (state.focused === tab ? focusedTransform() : frozenOrbitTransformFor(index))
+        : orbitTransformFor(index);
       tab.style.setProperty('--carousel-transform', transform);
       tab.dataset.phi = String(PHI[index]);
       tab.dataset.theta = String(state.thetaWheel + PHI[index]);
@@ -187,10 +194,23 @@
     });
   });
 
+
+  const frontDistance = (index) => {
+    const raw = ((state.thetaWheel + PHI[index] + 180) % 360 + 360) % 360 - 180;
+    return Math.abs(raw);
+  };
+  const pickVisibleTabAtPoint = (x, y) => {
+    const candidates = tabs
+      .map((tab, index) => ({ tab, index, rect: tab.getBoundingClientRect(), frontDistance: frontDistance(index) }))
+      .filter(({ rect, frontDistance }) => frontDistance <= 100 && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom)
+      .sort((a, b) => a.frontDistance - b.frontDistance);
+    return candidates[0]?.tab || null;
+  };
+
   const beginOrbitGesture = (event) => {
     if (state.mode !== 'ORBIT') return;
     if (event.pointerType === 'mouse' && event.button !== 0) return;
-    const touchedTab = event.target.closest?.('[data-tab-object]') || null;
+    const touchedTab = event.target.closest?.('[data-tab-object]') || pickVisibleTabAtPoint(event.clientX, event.clientY);
     state.gesture = {
       pointerId: event.pointerId,
       startX: event.clientX,
@@ -301,7 +321,7 @@
     const theta = angles();
     for (let n = 0; n < theta.length; n += 1) {
       for (let m = 0; m < theta.length; m += 1) {
-        if ((theta[n] - theta[m]) !== (PHI[n] - PHI[m])) return false;
+        if (Math.abs(((theta[n] - theta[m]) - (PHI[n] - PHI[m]))) > 1e-9) return false;
       }
     }
     return true;

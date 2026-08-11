@@ -1068,6 +1068,18 @@
       "scopeHash": "9dddf7da98478eaf8a997d8b6e4dc4cf92b5ec9016f05359a3fe89c19cae0465",
       "state": "ADMITTED_LOCKED"
     },
+    "a22a66c6d8b8d155adeb34d4c224a48d9ffb6b556283eaa1b79bfb45a8187107": {
+      "governingHead": "f99609e4540e5bdf9b2f0c519f631858706f0ba5",
+      "lockGeneration": 1093,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:BROWSER_SCENARIO_MATRIX:CERTIFICATION_IDENTITY_REPAIR:V1",
+      "operationId": "BROWSER_SCENARIO_MATRIX_CERTIFICATION_IDENTITY_REPAIR_V1_20260811_001",
+      "procedureLocatorDigest": "24443e336d78453a6d070f3345bd06381531f58cf31fccb87a8cc2e68da88c6f",
+      "released": false,
+      "requestDigest": "48a44ef77faa7bcc29b407e82cb29cb6c7e4ba33943f2e1663d6ef60614af53d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a22a66c6d8b8d155adeb34d4c224a48d9ffb6b556283eaa1b79bfb45a8187107",
+      "state": "ADMITTED_LOCKED"
+    },
     "a560a48139369f71a75bd11892350f5a65543bd2463caac1e1364c1e07b87245": {
       "governingHead": "8007d88820fa55d2b4e752d47b548e974fc73a68",
       "lockGeneration": 76,
@@ -1696,7 +1708,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1092,
+  "lockGeneration": 1093,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -36,10 +36,30 @@
     "semanticMutationAuthority": false
   },
   "implementationSources": [
-    {"sourceId":"METHODS_READABLE_SURFACE_GRAMMAR","path":"laws/research/methods-and-models/showroom.css","commitSha":"9476afe595b85f7e0e4bb696f7978bc0c62cc04d","gitBlobSha":"dd4e484cbc170a7841bce4ebe95eb47f4057b92b"},
-    {"sourceId":"METHODS_EUCLIDEAN_SURFACE_FIELD","path":"laws/research/methods-and-models/showroom-euclidean.css","commitSha":"9476afe595b85f7e0e4bb696f7978bc0c62cc04d","gitBlobSha":"985bc039f8b66c2e9c85bcb276615f3e7a9f1494"},
-    {"sourceId":"METHODS_EUCLIDEAN_DIRECT_INTERACTION","path":"laws/research/methods-and-models/showroom-euclidean.js","commitSha":"9476afe595b85f7e0e4bb696f7978bc0c62cc04d","gitBlobSha":"e2289469b7efed2d21d0d55c873e56402c893932"},
-    {"sourceId":"LAWS_PRESENTATION_GRAMMAR","path":"laws/index.css","commitSha":"9476afe595b85f7e0e4bb696f7978bc0c62cc04d","gitBlobSha":"48c99c991a897297894fd3dae6923c432ec3f2b3"}
+    {
+      "sourceId": "METHODS_READABLE_SURFACE_GRAMMAR",
+      "path": "laws/research/methods-and-models/showroom.css",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "dd4e484cbc170a7841bce4ebe95eb47f4057b92b"
+    },
+    {
+      "sourceId": "METHODS_EUCLIDEAN_SURFACE_FIELD",
+      "path": "laws/research/methods-and-models/showroom-euclidean.css",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "985bc039f8b66c2e9c85bcb276615f3e7a9f1494"
+    },
+    {
+      "sourceId": "METHODS_EUCLIDEAN_DIRECT_INTERACTION",
+      "path": "laws/research/methods-and-models/showroom-euclidean.js",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "e2289469b7efed2d21d0d55c873e56402c893932"
+    },
+    {
+      "sourceId": "LAWS_PRESENTATION_GRAMMAR",
+      "path": "laws/index.css",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "48c99c991a897297894fd3dae6923c432ec3f2b3"
+    }
   ],
   "router": {
     "nativeReceiptDigest": "067b7ba55e91c146199ed69757f3e1e0b7395728bacbb3c37408a358b33561c7",
@@ -68,26 +88,141 @@
     "innerTabsGesture": "DIRECT_TAP_ONLY_NO_SECOND_HORIZONTAL_SWIPE_LAYER",
     "tapActiveTabDismisses": false,
     "returnControl": "Return to Orbit",
-    "categories": ["Practical","Engineering","Evidence","Information"],
+    "categories": [
+      "Practical",
+      "Engineering",
+      "Evidence",
+      "Information"
+    ],
     "informationDisclosure": "BOUNDED_VERTICAL_EXPANSION_WITHIN_SAME_TAB_OBJECT",
     "horizontalContentOverflowAllowed": false,
-    "viewportClasses": ["PHONE","TABLET","DESKTOP"],
+    "viewportClasses": [
+      "PHONE",
+      "TABLET",
+      "DESKTOP"
+    ],
     "reducedMotionEquivalentRequired": true
   },
   "selectedModels": [
-    {"familyId":"structure","id":"collapse-qualified","title":"Qualified Collapse Predicate"},
-    {"familyId":"pressure","id":"pcr","title":"Pressure-to-Capacity Ratio"},
-    {"familyId":"closure","id":"mass-ledger","title":"Industrial Closure Equation"},
-    {"familyId":"method","id":"first","title":"F.I.R.S.T. Research Method"}
+    {
+      "familyId": "structure",
+      "id": "collapse-qualified",
+      "title": "Qualified Collapse Predicate"
+    },
+    {
+      "familyId": "pressure",
+      "id": "pcr",
+      "title": "Pressure-to-Capacity Ratio"
+    },
+    {
+      "familyId": "closure",
+      "id": "mass-ledger",
+      "title": "Industrial Closure Equation"
+    },
+    {
+      "familyId": "method",
+      "id": "first",
+      "title": "F.I.R.S.T. Research Method"
+    }
   ],
   "runtimeEvidence": {
-    "status": "PENDING_CURRENT_SUCCESSOR_REVERIFICATION",
-    "predecessorStep6PassBound": true
+    "status": "PASS_CURRENT_SUCCESSOR_REVERIFIED",
+    "testedCommit": "2e8a6984fa2480a34e21c192b0f59581ac25740f",
+    "staticVerifier": "PASS",
+    "runtime": "PASS",
+    "checkCount": 53,
+    "failedCheckCount": 0,
+    "browserEvidenceSha256": "a2c8f4d2a585976b3d24856367b1cbd9e78d000165b7a515fb84fe58b85b5278",
+    "sourceBlobs": {
+      "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
+      "index.css": "23f6ef328be1cd0ea58f0e0c301984b2f08de363",
+      "index.js": "1f3a6f5ba7152b16a1164fcd48ccb11220329f98"
+    },
+    "profiles": [
+      {
+        "id": "PHONE",
+        "viewport": "412x915",
+        "result": "PASS"
+      },
+      {
+        "id": "TABLET",
+        "viewport": "834x1112",
+        "result": "PASS"
+      },
+      {
+        "id": "DESKTOP",
+        "viewport": "1440x1000",
+        "result": "PASS"
+      },
+      {
+        "id": "REDUCED_MOTION_PHONE",
+        "viewport": "412x915",
+        "result": "PASS"
+      },
+      {
+        "id": "REDUCED_MOTION_DESKTOP",
+        "viewport": "1440x1000",
+        "result": "PASS"
+      }
+    ]
   },
   "step7": {
-    "status": "PENDING_INTERNAL_VISUAL_REFERENCE_QUALITY",
-    "requiredViewports": ["PHONE","TABLET","DESKTOP"],
-    "temporalMotionEvidenceRequired": true
+    "status": "PASS_INTERNAL_VISUAL_REFERENCE_QUALITY",
+    "judgment": "PASS",
+    "evidenceCoverage": [
+      "PHONE",
+      "TABLET",
+      "DESKTOP",
+      "ORBIT",
+      "FOCUS",
+      "PRACTICAL",
+      "ENGINEERING",
+      "EVIDENCE",
+      "INFORMATION",
+      "INFORMATION_EXPANDED",
+      "HORIZONTAL_ADJACENCY",
+      "VERTICAL_READING",
+      "RETURN_TO_ORBIT",
+      "DIRECT_ORBIT_MANIPULATION",
+      "REDUCED_MOTION",
+      "TEMPORAL_FOCUS_TRANSITION"
+    ],
+    "temporalFramesMs": [
+      0,
+      10,
+      180,
+      460,
+      880
+    ],
+    "independentVerifierMayRepair": false,
+    "repairLoop": [
+      {
+        "defect": "FOCUSED_READER_SPATIAL_OCCLUSION",
+        "diagnosis": "receded objects competed with the focused reading surface",
+        "repairAuthority": "AUTHORIZED_CONSTRUCTOR",
+        "repairPath": "index.css",
+        "repair": "recede nonfocused objects deeper and reduce their visual weight while preserving object identity and 3D context",
+        "result": "PASS"
+      },
+      {
+        "defect": "DESKTOP_HEADER_ORBIT_OVERLAP",
+        "diagnosis": "front orbit object intersected the instruction block",
+        "repairAuthority": "AUTHORIZED_CONSTRUCTOR",
+        "repairPath": "index.css",
+        "repair": "lower the front orbit object by two viewport-height points",
+        "result": "PASS"
+      }
+    ],
+    "referenceQualityFindings": {
+      "authoredSpatialComposition": "PASS",
+      "readabilityAndHierarchy": "PASS",
+      "focusSeparation": "PASS",
+      "interactionCoherence": "PASS",
+      "responsiveFinish": "PASS",
+      "motionContinuity": "PASS",
+      "zeroProxyIntegrity": "PASS"
+    },
+    "browserEvidenceSha256": "a2c8f4d2a585976b3d24856367b1cbd9e78d000165b7a515fb84fe58b85b5278"
   },
   "authority": {
     "internalVisualAdmission": true,

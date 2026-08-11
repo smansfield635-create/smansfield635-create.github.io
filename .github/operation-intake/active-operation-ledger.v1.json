@@ -1632,36 +1632,6 @@
       "scopeHash": "f3e7d9b79038dc499fcdea2acfe643a64e9a6e372f8a9dddecf4e391eeba8dda",
       "state": "ADMITTED_LOCKED"
     },
-    "f4f2ab256346c365f60175c869e6248a842060767a72f7aecd402dbc48ead87b": {
-      "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
-      "lockGeneration": 1008,
-      "lockScope": "H_EARTH:HC05:WHOLE_ENVIRONMENT_MATURITY:PRODUCT:V1",
-      "operationId": "H_EARTH_HC05_GEN957_RUN8E_PACKAGE_RECONCILIATION_SUCCESSOR_v1_20260810_002",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "8b253efb26a22e30c85c28d2666dcfbfb1fbc173",
-        "lockGeneration": 957,
-        "lockScope": "H_EARTH:HC05:WHOLE_ENVIRONMENT_MATURITY:PRODUCT:V1",
-        "operationId": "H_EARTH_HC05_WHOLE_ENVIRONMENT_MATURITY_SUCCESSOR_v1_20260809_002",
-        "preservedEvidenceRefs": [
-          "PR878_A041002C_REFERENCE_ONLY",
-          "RUN31410101179_FAIL_CLOSED_FINGERPRINT_PARITY",
-          "R2_PACKAGE_1699654F39C9E183F4CFC6F75B20BA051641B763_IMMUTABLE",
-          "R2_CONTROL_63AC317CA90B2C71EF8DC366E83AD17B13D6A155_IMMUTABLE",
-          "R2_GPU_785856D7702A0E855C2672E6B8A7325AD5B3BA50_IMMUTABLE"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "H_EARTH_HC05_GEN957_TO_RUN8E_PACKAGE_RECONCILIATION_20260810_RETRY_001"
-      },
-      "procedureLocatorDigest": "b9405ba283e952c3c9e2e4a1958e3fd643e750429279dc9b9b2843b230de2365",
-      "released": false,
-      "requestDigest": "d032c2df069bab5e1a369ce1b2571510cc43f42b8a5c7b362c68a2f63bb6cb5e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "f4f2ab256346c365f60175c869e6248a842060767a72f7aecd402dbc48ead87b",
-      "state": "ADMITTED_LOCKED"
-    },
     "f54587a999ee440a2453ba47011d2d9598d7a882bb5ff39ca4ae51e6a5aa374c": {
       "governingHead": "85c7ae8092e7a9e7b305f89526e250bf72abe428",
       "lockGeneration": 369,
@@ -15255,6 +15225,37 @@
       "scopeHash": "1cfbfdf40a348dceb39e3feace076b7dedb3ec44ee809330fcff6246121f1e37",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "b79537c9a4541cebe634cb674caaba6bdf394f97",
+      "lockGeneration": 1008,
+      "lockScope": "H_EARTH:HC05:WHOLE_ENVIRONMENT_MATURITY:PRODUCT:V1",
+      "operationId": "H_EARTH_HC05_GEN957_RUN8E_PACKAGE_RECONCILIATION_SUCCESSOR_v1_20260810_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8b253efb26a22e30c85c28d2666dcfbfb1fbc173",
+        "lockGeneration": 957,
+        "lockScope": "H_EARTH:HC05:WHOLE_ENVIRONMENT_MATURITY:PRODUCT:V1",
+        "operationId": "H_EARTH_HC05_WHOLE_ENVIRONMENT_MATURITY_SUCCESSOR_v1_20260809_002",
+        "preservedEvidenceRefs": [
+          "PR878_A041002C_REFERENCE_ONLY",
+          "RUN31410101179_FAIL_CLOSED_FINGERPRINT_PARITY",
+          "R2_PACKAGE_1699654F39C9E183F4CFC6F75B20BA051641B763_IMMUTABLE",
+          "R2_CONTROL_63AC317CA90B2C71EF8DC366E83AD17B13D6A155_IMMUTABLE",
+          "R2_GPU_785856D7702A0E855C2672E6B8A7325AD5B3BA50_IMMUTABLE"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_HC05_GEN957_TO_RUN8E_PACKAGE_RECONCILIATION_20260810_RETRY_001"
+      },
+      "procedureLocatorDigest": "b9405ba283e952c3c9e2e4a1958e3fd643e750429279dc9b9b2843b230de2365",
+      "released": true,
+      "requestDigest": "d032c2df069bab5e1a369ce1b2571510cc43f42b8a5c7b362c68a2f63bb6cb5e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f4f2ab256346c365f60175c869e6248a842060767a72f7aecd402dbc48ead87b",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

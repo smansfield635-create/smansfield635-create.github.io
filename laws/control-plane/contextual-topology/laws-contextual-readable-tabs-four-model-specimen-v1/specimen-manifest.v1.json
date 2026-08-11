@@ -1,0 +1,75 @@
+{
+  "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
+  "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1",
+  "operationId": "LAWS_CONTEXTUAL_3D_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1_4D8BA_20260810_001",
+  "lockGeneration": 1026,
+  "governingHead": "4d8ba163f23e29a7c3cccb701ccf69e9ae04958e",
+  "branch": "agent/laws-contextual-readable-tabs-four-model-specimen-v1-4d8ba-001",
+  "donor": {
+    "pullRequest": 888,
+    "head": "63ee26c78eb564b0229e84c30fd110c45618457b",
+    "use": "POSITIVE_IMPLEMENTATION_DONOR_NO_AUTHORITY_INHERITANCE",
+    "files": {
+      "index.html": "678abf6f94eabfca25ed212881e496ccdc1be51e",
+      "index.css": "8de20f8c47dfed87449a4a7c7c4bd182bef4b66c",
+      "index.js": "e53c387ceb5088b6a330e962a923667b4a7cb7d2",
+      "specimen-manifest.v1.json": "41962550e3e20a35aeea2cb8af5b58506f6937dd",
+      "verify.v1.mjs": "2a243d3290ee030b290ed3ebe281a672e04299c3"
+    }
+  },
+  "rejectedPredecessor": {
+    "pullRequest": 886,
+    "commitSha": "2647dee9e84b1cf2cc863a5a2a867dc599f4389c",
+    "terminalDisposition": "REJECTED_CLOSED",
+    "failureClass": "COMPASS_REPLICATION",
+    "use": "NEGATIVE_REFERENCE_ONLY"
+  },
+  "contentSource": {
+    "path": "laws/research/methods-and-models/showroom.js",
+    "commitSha": "4d8ba163f23e29a7c3cccb701ccf69e9ae04958e",
+    "gitBlobSha": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965"
+  },
+  "implementationSources": [
+    {"sourceId":"METHODS_READABLE_SURFACE_GRAMMAR","path":"laws/research/methods-and-models/showroom.css","commitSha":"4d8ba163f23e29a7c3cccb701ccf69e9ae04958e","gitBlobSha":"dd4e484cbc170a7841bce4ebe95eb47f4057b92b"},
+    {"sourceId":"METHODS_EUCLIDEAN_SURFACE_FIELD","path":"laws/research/methods-and-models/showroom-euclidean.css","commitSha":"4d8ba163f23e29a7c3cccb701ccf69e9ae04958e","gitBlobSha":"985bc039f8b66c2e9c85bcb276615f3e7a9f1494"},
+    {"sourceId":"METHODS_EUCLIDEAN_DIRECT_INTERACTION","path":"laws/research/methods-and-models/showroom-euclidean.js","commitSha":"4d8ba163f23e29a7c3cccb701ccf69e9ae04958e","gitBlobSha":"e2289469b7efed2d21d0d55c873e56402c893932"},
+    {"sourceId":"LAWS_PRESENTATION_GRAMMAR","path":"laws/index.css","commitSha":"4d8ba163f23e29a7c3cccb701ccf69e9ae04958e","gitBlobSha":"48c99c991a897297894fd3dae6923c432ec3f2b3"}
+  ],
+  "pageExcellence": {
+    "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
+    "architectureBundleDigest": "1dc966ec8b739a39fc0513d63bc3b0c4a75846afa4c435f779981121f1f9b625",
+    "architectureFindingsDigest": "0b6fcc437ecf11758a968f24e756ae561388472276e9f4e5a6f93314fa8e67ea",
+    "carrierRun": 31447113289,
+    "result": "PASS"
+  },
+  "router": {"nativeReceiptDigest":"fe713db9f3328ec03ea907f63c2598de38fd833c0b1b880c0290a291b2b47f7b","carrierRun":31447028353,"result":"PASS"},
+  "designLaw": {
+    "identity": "CONTEXTUAL_TAB_EQUALS_EUCLIDEAN_OBJECT",
+    "formula": "CONTENT = TAB = SPATIAL_OBJECT",
+    "tabObjectCount": 4,
+    "proxyObjectCount": 0,
+    "popupReplacementAllowed": false,
+    "carouselAllowed": false,
+    "objectIdentityInvariant": "ORBIT=FOCUS=SCROLL=PRACTICAL=ENGINEERING=EVIDENCE=INFORMATION"
+  },
+  "interactionContract": {
+    "verticalSwipe": "SCROLL_ACTIVE_TAB_CONTENT",
+    "horizontalSwipe": "CHANGE_ADJACENT_TAB_WITH_AXIS_LOCK",
+    "innerTabsGesture": "DIRECT_TAP_ONLY_NO_SECOND_HORIZONTAL_SWIPE_LAYER",
+    "tapActiveTabDismisses": false,
+    "returnControl": "Return to Orbit",
+    "categories": ["Practical","Engineering","Evidence","Information"],
+    "informationDisclosure": "BOUNDED_VERTICAL_EXPANSION_WITHIN_SAME_TAB_OBJECT",
+    "horizontalContentOverflowAllowed": false,
+    "viewportClasses": ["PHONE","TABLET","DESKTOP"],
+    "reducedMotionEquivalentRequired": true
+  },
+  "selectedModels": [
+    {"familyId":"structure","id":"collapse-qualified","title":"Qualified Collapse Predicate"},
+    {"familyId":"pressure","id":"pcr","title":"Pressure-to-Capacity Ratio"},
+    {"familyId":"closure","id":"mass-ledger","title":"Industrial Closure Equation"},
+    {"familyId":"method","id":"first","title":"F.I.R.S.T. Research Method"}
+  ],
+  "runtimeEvidence": {"status":"PENDING_STEP_6_EXTERNAL_EXACT_COMMIT_VERIFICATION"},
+  "authority": {"merge":false,"production":false,"visualAcceptance":false,"semanticMutation":false}
+}

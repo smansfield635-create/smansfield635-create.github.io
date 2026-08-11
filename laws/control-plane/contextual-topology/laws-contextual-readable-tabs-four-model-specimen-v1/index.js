@@ -29,6 +29,7 @@
   const applyField = () => {
     document.documentElement.style.setProperty('--field-rx', `${state.rx.toFixed(2)}deg`);
     document.documentElement.style.setProperty('--field-ry', `${state.ry.toFixed(2)}deg`);
+    document.documentElement.style.setProperty('--counter-ry', `${(-state.ry).toFixed(2)}deg`);
     document.documentElement.style.setProperty('--field-roll', `${state.roll.toFixed(2)}deg`);
     document.documentElement.style.setProperty('--field-z', `${state.zoom.toFixed(1)}px`);
   };
@@ -224,7 +225,7 @@
     space.classList.add('is-dragging');
     if (state.pointers.size === 1) {
       state.dragged = false;
-      state.orbitClickSuppressed = false;
+      state.orbitClickSuppressed = true;
     }
     beginFieldGesture();
   });
@@ -274,8 +275,9 @@
     if (state.pointers.size < 2) state.fieldGesture = null;
     if (state.pointers.size === 0) {
       space.classList.remove('is-dragging');
-      if (shouldFocusTouchedTab) setFocused(p.targetTab);
+      const focusTarget = shouldFocusTouchedTab ? p.targetTab : null;
       setTimeout(() => {
+        if (focusTarget) setFocused(focusTarget);
         state.dragged = false;
         state.orbitClickSuppressed = false;
       }, 0);

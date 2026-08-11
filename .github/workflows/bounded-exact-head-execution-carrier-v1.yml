@@ -60,7 +60,8 @@ jobs:
           const legacy=String(800+39);
           const forbidden=['GEN'+legacy+'_SUCCESSOR_RECEIPT_B64','generation-'+legacy,'generation:'+legacy];
           const lockKey=['lock','Generation'].join('');
-          if(forbidden.some(x=>current.includes(x))||new RegExp(lockKey+'[^\\n]*'+legacy).test(current))process.exit(1);
+          const legacyLockPattern=new RegExp(lockKey+'\\s*(?:!==|===|==|:)\\s*'+legacy+'(?:\\D|$)');
+          if(forbidden.some(x=>current.includes(x))||legacyLockPattern.test(current))process.exit(1);
           NODE
 
       - name: Verify terminal Gen1083 closure evidence

@@ -1560,18 +1560,6 @@
       "scopeHash": "eb1c927aa747e2a7849c8bb4480d93c140b30d298534115478767e7659787748",
       "state": "ADMITTED_LOCKED"
     },
-    "eb5c68248aa1be53ad4d54311e95588cf0a7c206bc3302787736487d47991a4a": {
-      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
-      "lockGeneration": 1059,
-      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:BROWSER_VERIFICATION:V1",
-      "operationId": "BOUNDED_EXACT_HEAD_BROWSER_VERIFICATION_CARRIER_EXTENSION_V1_20260810_001",
-      "procedureLocatorDigest": "745f64de89fbdbaffae0bb3a2e2c4ceb36af22d4aba483baf4bb59a1f20e0bfa",
-      "released": false,
-      "requestDigest": "07ae89b55a32e350f453f0f031540fbb7c77bb43c1a5c3c52ed3b5769929b447",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "eb5c68248aa1be53ad4d54311e95588cf0a7c206bc3302787736487d47991a4a",
-      "state": "ADMITTED_LOCKED"
-    },
     "eb87ec24600c8f605e2cd9610f935dcd5ec48f61a14f91ebde6105917587e361": {
       "governingHead": "bc8974e0ff28da4457559567d8059e14156ca5f0",
       "lockGeneration": 486,
@@ -15698,6 +15686,19 @@
       "scopeHash": "78e321ad5dd41222d26c3e1cf84fbab1ee6be314eabe6418212d2fb70f023040",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
+      "lockGeneration": 1059,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:BROWSER_VERIFICATION:V1",
+      "operationId": "BOUNDED_EXACT_HEAD_BROWSER_VERIFICATION_CARRIER_EXTENSION_V1_20260810_001",
+      "procedureLocatorDigest": "745f64de89fbdbaffae0bb3a2e2c4ceb36af22d4aba483baf4bb59a1f20e0bfa",
+      "released": true,
+      "requestDigest": "07ae89b55a32e350f453f0f031540fbb7c77bb43c1a5c3c52ed3b5769929b447",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "eb5c68248aa1be53ad4d54311e95588cf0a7c206bc3302787736487d47991a4a",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

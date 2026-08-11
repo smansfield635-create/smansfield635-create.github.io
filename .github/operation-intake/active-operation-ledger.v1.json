@@ -492,18 +492,6 @@
       "scopeHash": "4e4c43e0804b4ad70b6e69c4119748bfe56fbaa74b67ae8174fd77ac12691925",
       "state": "ADMITTED_LOCKED"
     },
-    "4ef1cafc9ba27200c46b021959b8fc7b38d0880e06de016cf9ea25af7d09c9f2": {
-      "governingHead": "ec3fd0e35cdf0c6ee3b23a8e7f542a5c7b889958",
-      "lockGeneration": 1024,
-      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:V1",
-      "operationId": "LAWS_CONTEXTUAL_3D_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1_20260810_001",
-      "procedureLocatorDigest": "96c5ea5771f73f31d52bf268fe113b1795c05f993c49b19bdb494f13af1a72d1",
-      "released": false,
-      "requestDigest": "c6492dee4b2539461365ce73fa155a76e917a4fe3a6d490c1bf81eb52153cd62",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "4ef1cafc9ba27200c46b021959b8fc7b38d0880e06de016cf9ea25af7d09c9f2",
-      "state": "ADMITTED_LOCKED"
-    },
     "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd": {
       "governingHead": "25355a1b8aaec3cc60f90a6f6335dd5aa796b267",
       "lockGeneration": 903,
@@ -15216,6 +15204,19 @@
       "scopeHash": "0e44e0cc81a7639d7f7fa9f006783f3c0e8ba123a7c28bd57ca1b15910367b77",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "ec3fd0e35cdf0c6ee3b23a8e7f542a5c7b889958",
+      "lockGeneration": 1024,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1_20260810_001",
+      "procedureLocatorDigest": "96c5ea5771f73f31d52bf268fe113b1795c05f993c49b19bdb494f13af1a72d1",
+      "released": true,
+      "requestDigest": "c6492dee4b2539461365ce73fa155a76e917a4fe3a6d490c1bf81eb52153cd62",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4ef1cafc9ba27200c46b021959b8fc7b38d0880e06de016cf9ea25af7d09c9f2",
+      "state": "TERMINAL",
+      "terminalDisposition": "VOIDED"
     }
   ]
 }

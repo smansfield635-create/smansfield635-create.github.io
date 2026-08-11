@@ -1212,6 +1212,18 @@
       "scopeHash": "b97df7525443f153ed5ce9410430bebb6d692bb9040df2810e892126f3a10198",
       "state": "ADMITTED_LOCKED"
     },
+    "bc0ec8e3d1f25511f84acf4fa7c2dd06fcc7e0b9249ed23ac6b063f2f8873668": {
+      "governingHead": "4d8ba163f23e29a7c3cccb701ccf69e9ae04958e",
+      "lockGeneration": 1030,
+      "lockScope": "H_EARTH:G2:ONE_WORLD_RECONCILIATION:PRODUCT:V1",
+      "operationId": "H_EARTH_G2_ONE_WORLD_RECONCILIATION_20260810_001",
+      "procedureLocatorDigest": "c4c44bfccc3f51a1114162be7c0511f0e05f8fa505046530dfb75e33149e298f",
+      "released": false,
+      "requestDigest": "11aaefed0ec93e49132e83f31ddba022052eb5fbc567c94da1ec38c99c943ea8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "bc0ec8e3d1f25511f84acf4fa7c2dd06fcc7e0b9249ed23ac6b063f2f8873668",
+      "state": "ADMITTED_LOCKED"
+    },
     "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2": {
       "governingHead": "1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500",
       "lockGeneration": 14,
@@ -1696,7 +1708,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1029,
+  "lockGeneration": 1030,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

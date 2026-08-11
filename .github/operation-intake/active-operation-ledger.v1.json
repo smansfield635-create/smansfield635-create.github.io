@@ -348,6 +348,18 @@
       "scopeHash": "3774dc0ae012f09ec1f5bf4311aaf1235b5688fb85a4515e235c644c454bea8e",
       "state": "ADMITTED_LOCKED"
     },
+    "39cba10693c26aacd8854a17e0373739f57a3e1e2bd13f6151a20148f4390eb2": {
+      "governingHead": "ed2983e76d3896b13864d9251c42be225f8c5fb4",
+      "lockGeneration": 1082,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:BROWSER_VERIFICATION:PREFLIGHT:V2",
+      "operationId": "LAWS_CONTEXTUAL_3D_GEN1073_BROWSER_PREFLIGHT_20260811_002",
+      "procedureLocatorDigest": "48e8a088f7ace49e4f622f56526223313d1590ef6b26a6822bf4cd72a77830d5",
+      "released": false,
+      "requestDigest": "ba9aad4c1ffe93ee32491adef240da93951787194b92b842ad3dba6550750b63",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "39cba10693c26aacd8854a17e0373739f57a3e1e2bd13f6151a20148f4390eb2",
+      "state": "ADMITTED_LOCKED"
+    },
     "3ca05f8a89b5caf0137a1a389bd84cca4972eba3d67ad2589e9138c05ecd87ba": {
       "governingHead": "67c03ff5072ab35da1713d6ddef197078b7e7bbc",
       "lockGeneration": 263,
@@ -1696,7 +1708,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1081,
+  "lockGeneration": 1082,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

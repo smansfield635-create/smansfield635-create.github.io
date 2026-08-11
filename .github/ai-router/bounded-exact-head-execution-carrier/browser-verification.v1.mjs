@@ -64,6 +64,7 @@ function ensurePlaywright(){
   }
   const cli=path.join(root,'node_modules','playwright','cli.js');
   cp.execFileSync(process.execPath,[cli,'install','--with-deps','chromium'],{stdio:'inherit',env:{...process.env,PLAYWRIGHT_BROWSERS_PATH:path.join(root,'browsers')}});
+  process.env.PLAYWRIGHT_BROWSERS_PATH=path.join(root,'browsers');
   return { root, modulePath:path.join(root,'node_modules','playwright','index.mjs'), browserPath:path.join(root,'browsers') };
 }
 function mime(file){

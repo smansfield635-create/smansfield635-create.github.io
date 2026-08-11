@@ -1068,18 +1068,6 @@
       "scopeHash": "9dddf7da98478eaf8a997d8b6e4dc4cf92b5ec9016f05359a3fe89c19cae0465",
       "state": "ADMITTED_LOCKED"
     },
-    "9e2a82b25e6a8aa670f8b3fb30516147d33b8fd55cf79768c52d88fb7d7bf6f0": {
-      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
-      "lockGeneration": 1069,
-      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:CERTIFICATION_IDENTITY_REPAIR:V1",
-      "operationId": "BROWSER_VERIFICATION_CARRIER_CERTIFICATION_IDENTITY_REPAIR_V1_20260811_001",
-      "procedureLocatorDigest": "0b166518afa18f3a6ae2722c01262bec12ad8a548ca8cbdf7408c986132af428",
-      "released": false,
-      "requestDigest": "5b6eafa3b68df1bd47297c4f3a308c5e40a0a45e3857e449eaea8fc79a7025c0",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9e2a82b25e6a8aa670f8b3fb30516147d33b8fd55cf79768c52d88fb7d7bf6f0",
-      "state": "ADMITTED_LOCKED"
-    },
     "a560a48139369f71a75bd11892350f5a65543bd2463caac1e1364c1e07b87245": {
       "governingHead": "8007d88820fa55d2b4e752d47b548e974fc73a68",
       "lockGeneration": 76,
@@ -15897,6 +15885,19 @@
       "scopeHash": "eb5c68248aa1be53ad4d54311e95588cf0a7c206bc3302787736487d47991a4a",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
+      "lockGeneration": 1069,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:CERTIFICATION_IDENTITY_REPAIR:V1",
+      "operationId": "BROWSER_VERIFICATION_CARRIER_CERTIFICATION_IDENTITY_REPAIR_V1_20260811_001",
+      "procedureLocatorDigest": "0b166518afa18f3a6ae2722c01262bec12ad8a548ca8cbdf7408c986132af428",
+      "released": true,
+      "requestDigest": "5b6eafa3b68df1bd47297c4f3a308c5e40a0a45e3857e449eaea8fc79a7025c0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9e2a82b25e6a8aa670f8b3fb30516147d33b8fd55cf79768c52d88fb7d7bf6f0",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

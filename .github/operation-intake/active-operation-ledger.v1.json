@@ -300,18 +300,6 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
-    "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5": {
-      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
-      "lockGeneration": 1055,
-      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:EUCLIDEAN_CAROUSEL:V1",
-      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_V1_26D90C2_20260810_001",
-      "procedureLocatorDigest": "969f945aefafb3fc3cdda5fa58e38a1584026d4d3da694d49c81ae7efed3307a",
-      "released": false,
-      "requestDigest": "39d05ba6ccd08e6791b5aa9082a65484341da5f155feac3306cb127e71220a78",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5",
-      "state": "ADMITTED_LOCKED"
-    },
     "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095": {
       "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
       "lockGeneration": 980,
@@ -15660,6 +15648,19 @@
       "scopeHash": "34ec0e1d35fec69e63039ed0d4c0727353227e3a6e061f191829ad321fc72464",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
+      "lockGeneration": 1055,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:EUCLIDEAN_CAROUSEL:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_V1_26D90C2_20260810_001",
+      "procedureLocatorDigest": "969f945aefafb3fc3cdda5fa58e38a1584026d4d3da694d49c81ae7efed3307a",
+      "released": true,
+      "requestDigest": "39d05ba6ccd08e6791b5aa9082a65484341da5f155feac3306cb127e71220a78",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

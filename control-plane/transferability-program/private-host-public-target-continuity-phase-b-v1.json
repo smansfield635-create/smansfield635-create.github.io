@@ -1,0 +1,93 @@
+{
+  "schema": "PRIVATE_HOST_PUBLIC_TARGET_CONTINUITY_PHASE_B_RECEIPT_v1",
+  "phase": "PHASE_B_PRIVATE_HOST_PUBLIC_TARGET_CONTINUITY",
+  "status": "AUTHORIZED_BOUNDED_PUBLIC_EFFECT_EXECUTED_SUBJECT_TO_POST_WRITE_VERIFICATION",
+  "purpose": "Prove that an existing privately hosted representative instrument class, authenticated private governance authority, and the existing commissioned private-public bridge can produce one bounded authorized consequence on the public product without requiring the representative implementation to reside publicly.",
+  "representativeInstrument": {
+    "path": ".github/workflows/remote-operation-successor-v1.yml",
+    "gitBlobSha": "8017fad21d98ea9e68417dbabe71b51302aa8c4a",
+    "gateGitBlobSha": "b174bb20a19e62f9aaf6e819171e24416321b9e4",
+    "selfTestGitBlobSha": "f4e9d4beb77cb603ea2c8e360790e97c1b511b1c",
+    "phaseAResult": "SEMANTIC_CONTINUITY_PASS",
+    "publicLocationRequiredByInstrumentSemantics": false
+  },
+  "privateAuthority": {
+    "repository": "smansfield635-create/geodiametrics1",
+    "governingHead": "3c46c2968cfe2162939007e71cb177b73dfbc80a",
+    "operationId": "PRIVATE_HOST_PUBLIC_TARGET_CONTINUITY_PHASE_B_DELIVERY_20260811_001",
+    "lockGeneration": 74,
+    "lockScope": "PRIVATE_PUBLIC_BRIDGE:PRIVATE_HOST_PUBLIC_TARGET_CONTINUITY_PHASE_B_DELIVERY:V1",
+    "scopeHash": "f51259653866f2d272c79e791a1f2478100af4c49df24705212c29cd195a75ac",
+    "operationRequestDigest": "5f5d5502841f7e1cbbd84b0ecf06e2cb228579e16725c3990af8de9047778288",
+    "authorityReference": "sha256:0013ec36385148561f0e0d6bc5fba1a3daa31f31db9dc92c4b0d51555586f61e",
+    "authorityStateAtAuthorization": "ADMITTED_LOCKED",
+    "authorityReleasedAtAuthorization": false
+  },
+  "privateBridge": {
+    "bridgeId": "PRIVATE_PUBLIC_BRIDGE_v1",
+    "implementationPath": "tools/private-public-bridge/private-public-bridge.v1.mjs",
+    "implementationGitBlobSha": "9f0f4fdb414684812f3c01e719992bb48560bb99",
+    "authorizationResult": "PASS_BOUNDED_DELIVERY_AUTHORIZED",
+    "bridgeRequestDigest": "060a6a9899b746c7b487cba3de674dc980411595f73a1527202fe48737cfee72",
+    "authorityVerified": true,
+    "authorityDeliveryBindingVerified": true,
+    "authorityState": "ADMITTED_LOCKED",
+    "boundedCandidateBranchWriteAuthorized": true,
+    "publicPullRequestOpenAuthorized": true,
+    "directPublicMainWriteAuthorized": false,
+    "publicMergeAuthorized": false,
+    "privateImplementationExported": false,
+    "standalonePublicWriteAuthorityCreated": false,
+    "authorizationExpiresOnPublicHeadChange": true,
+    "authorizationExpiresOnAuthorityStateChange": true
+  },
+  "publicAdmission": {
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "operationId": "CONTROL_PLANE_PRIVATE_HOST_PUBLIC_TARGET_PHASE_B_EFFECT_20260811_001",
+    "lockGeneration": 1124,
+    "lockScope": "CONTROL_PLANE_TRANSFERABILITY:PRIVATE_HOST_PUBLIC_TARGET_PHASE_B_EFFECT:V1",
+    "scopeHash": "c15a163dd1e4a7251bc3c212c57121c0c27ee3430aedd61a05fbff3898b78489",
+    "operationRequestDigest": "e486d8ab086a62eccee7ee109954b3db1c6fe79d2cf9ed37cff313407e86e051",
+    "governingHead": "eaa9be55df2a440457f4d3cfe5e13f414a52d386",
+    "routerResult": "PASS",
+    "routerReceiptDigest": "5b7169e5a475672e5025353b55c352de4b3f65511e397c4844c4418c25385d51"
+  },
+  "boundedPublicEffect": {
+    "expectedPublicMainHead": "eaa9be55df2a440457f4d3cfe5e13f414a52d386",
+    "candidateBranch": "control-plane-delivery/private-host-public-target-continuity-phase-b-001",
+    "allowedPublicOutputPaths": [
+      "control-plane/transferability-program/private-host-public-target-continuity-phase-b-v1.json"
+    ],
+    "requestedPublicOutputPaths": [
+      "control-plane/transferability-program/private-host-public-target-continuity-phase-b-v1.json"
+    ],
+    "exactOutputPathCount": 1,
+    "directPublicMainWritePerformed": false,
+    "publicMergePerformed": false,
+    "deploymentPerformed": false,
+    "repositorySettingsMutationPerformed": false,
+    "secretMutationPerformed": false,
+    "privateImplementationExportPerformed": false,
+    "retirementOrDeletionPerformed": false,
+    "actualEffectIdentityEstablishedByGitCommitAndPullRequestMetadata": true
+  },
+  "authorityBoundary": {
+    "retirementAuthorityCreated": false,
+    "workflowDeletionAuthorityCreated": false,
+    "instrumentDeletionAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "deploymentAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false,
+    "researchAuthorityCreated": false
+  },
+  "requiredPostWriteVerification": [
+    "EXACTLY_ONE_PUBLIC_PATH_DIFFERS_FROM_BOUND_PUBLIC_MAIN",
+    "PUBLIC_MAIN_REMAINS_EXACT_BOUND_HEAD",
+    "PUBLIC_PULL_REQUEST_EXISTS_AND_IS_UNMERGED",
+    "PRIVATE_GENERATION_74_REMAINS_ADMITTED_LOCKED_THROUGH_EFFECT",
+    "PUBLIC_GENERATION_1124_REMAINS_ADMITTED_LOCKED_THROUGH_EFFECT",
+    "PUBLIC_PULL_REQUEST_IS_CLOSED_UNMERGED_AFTER_PROOF"
+  ],
+  "failureLaw": "ANY_HEAD_AUTHORITY_SCOPE_PATH_OR_EFFECT_MISMATCH_INVALIDATES_PHASE_B_AND_REQUIRES_FAIL_CLOSED_WITHOUT_PUBLIC_MAIN_MUTATION"
+}

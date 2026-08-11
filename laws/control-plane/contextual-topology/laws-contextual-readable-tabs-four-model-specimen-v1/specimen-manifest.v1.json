@@ -1,215 +1,100 @@
 {
   "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
   "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1",
-  "operationId": "LAWS_CONTEXTUAL_3D_FOUR_TAB_INTERACTION_REPAIR_V1_9476A_20260810_006",
-  "lockGeneration": 1048,
-  "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
-  "branch": "agent/laws-four-tab-interaction-repair-9476a-006",
-  "preservedVisualImplementationSource": {
-    "head": "45fc593408d766504e5a1f74c1e53fb7f33b74a4",
-    "priorOperation": "LAWS_CONTEXTUAL_3D_FOUR_TAB_INTERACTION_REPAIR_V1_9476A_20260810_003",
-    "priorGeneration": 1045,
-    "priorDisposition": "REJECTED_CLOSED",
-    "pullRequest": 898,
-    "use": "VISUAL_SPATIAL_SOURCE_ONLY_INTERACTION_AUTHORITY_FORBIDDEN",
+  "generation": 1057,
+  "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_V1_26D90C2_20260810_002",
+  "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
+  "constructionSource": {
+    "commitSha": "385825db58ee8a9d2242796baa95b25ac4094c3d",
+    "disposition": "POSITIVE_ONLY_FOR_VISUAL_CONTENT_READER",
+    "adopted": ["CARD_TYPOGRAPHY", "SURFACE_TREATMENT", "FOUR_PAGE_CONTENT", "FOCUSED_READER"],
+    "rejected": ["DECK_STACK_GEOMETRY", "BACKGROUND_ONLY_ORBIT_INPUT", "FOCUSED_HORIZONTAL_MOD4_TRAVERSAL"],
     "sourceBlobs": {
       "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
       "index.css": "9303a6ccd5faef48364cce66d03552efc4870a69"
     }
   },
-  "rejectedInteractionReference": {
-    "head": "45fc593408d766504e5a1f74c1e53fb7f33b74a4",
-    "indexJsBlob": "c8da097983c5e2978c52421dfa415091beea7ef8",
-    "manifestBlob": "4818f0659afde7f9f9c8bf98bb1fa721bb357d42",
-    "verifierBlob": "09e647b5c8815187d4f2ef074832a62fbffedee5",
-    "defects": [
-      "CARD_SURFACE_ORBIT_DRAG_REQUIRED",
-      "CROSS_THRESHOLD_ORBIT_OWNERSHIP",
-      "ESCAPE_EXITS_FOCUS",
-      "VERIFIER_POSITIVELY_ASSERTED_CARD_SURFACE_ORBIT_ENTRY"
-    ],
-    "positiveInteractionAuthority": false
-  },
-  "candidateBlobs": {
-    "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
-    "index.css": "9303a6ccd5faef48364cce66d03552efc4870a69",
-    "index.js": "78fd11c52f074897c19352c0c703cc44eb4578bc"
-  },
-  "router": {
-    "carrierRun": 31457008748,
-    "nativeReceiptDigest": "7cddd52a79a92b2816beff8bf60fe139b499ac10298b95901a91ae4d6e7282ea",
-    "result": "PASS"
-  },
-  "pageExcellence": {
-    "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
-    "authorityHolder": "EXISTING_SOURCE_CONSTRUCTS_WITH_BOUNDED_ADAPTER",
-    "carrierRun": 31457068256,
-    "architectureBundleDigest": "72ed2b94dd6301561a5d611e61d60c8e7b4cc0090ec736e9fc1ec74240323c43",
-    "architectureFindingsDigest": "a4e7b7857b6186d8c3c26fd6a7f497ec514cf55de287e962587fb20f371de8d4",
-    "nativeReceiptDigest": "94f62901d57166823fd8b0cfd075c099100c503c41c0e7e3ddc9ebfcfb7dcac2",
-    "result": "PASS"
-  },
-  "designLaw": {
-    "identity": "CONTEXTUAL_TAB_EQUALS_EUCLIDEAN_OBJECT",
-    "formula": "CONTENT = TAB = SPATIAL_OBJECT",
-    "tabObjectCount": 4,
+  "carousel": {
+    "class": "EUCLIDEAN_ROTATIONAL_CAROUSEL",
+    "sharedAxis": "Y",
+    "sharedWheelVariable": "thetaWheel",
+    "formula": "theta_n = thetaWheel + phi_n",
+    "fixedAngularOffsetsDeg": [0, 90, 180, 270],
+    "wheelAngleDomain": "UNBOUNDED_CONTINUOUS_DEGREES",
+    "pairwiseInvariant": "theta_n(t)-theta_m(t)=phi_n-phi_m",
+    "objectCount": 4,
     "proxyObjectCount": 0,
-    "objectIdentityInvariant": "ORBIT=FOCUS=SCROLL=PRACTICAL=ENGINEERING=EVIDENCE=INFORMATION",
-    "interactionDomainInvariant": "ORBIT_INPUT_DOMAIN_INTERSECT_FOCUSED_READER_INPUT_DOMAIN=EMPTY",
-    "focusTransformInvariant": "FOCUS_START_IMPLIES_T_ORBIT_EQUALS_T_FROZEN_UNTIL_RETURN_TO_ORBIT"
+    "independentOrbitCardRepositioning": false,
+    "flatPreviousNextCarousel": false
   },
-  "repairContract": {
-    "scope": "INTERACTION_STATE_ISOLATION_ONLY",
-    "modeDomain": [
-      "ORBIT",
-      "FOCUS"
-    ],
-    "orbitTapDragArbitration": {
-      "thresholdCssPixels": 8,
-      "backgroundPointerCapture": "ON_BACKGROUND_CONTEXT_SPACE_ONLY",
-      "cardPointerCapture": "ON_TOUCHED_CARD_ONLY",
-      "belowThresholdReleaseOnObject": "FOCUS_EXACT_TOUCHED_OBJECT",
-      "crossThreshold": "CANCEL_AND_CONSUME_CARD_GESTURE_WITHOUT_FOCUS_OR_ORBIT_MUTATION",
-      "crossThresholdReleaseMayFocus": false,
-      "cardSurfaceOrbitDrag": false,
-      "pointerCancelMayFocus": false
-    },
+  "interaction": {
+    "modes": ["ORBIT", "FOCUS"],
     "orbit": {
-      "inputDomain": "BACKGROUND_FIELD_ONLY",
-      "yawLaw": "THETA_Y_MOD_360_DEGREES",
-      "continuous": true,
-      "narrowYawClampAllowed": false
+      "backgroundDrag": "ROTATE_SHARED_CAROUSEL",
+      "pageSurfaceDrag": "ROTATE_SHARED_CAROUSEL",
+      "wheelScroll": "ROTATE_SHARED_CAROUSEL",
+      "tapVisiblePage": "FOCUS_EXACT_TOUCHED_PAGE",
+      "tapDragThresholdPx": 8,
+      "dragAboveThreshold": "ROTATE_AND_SUPPRESS_FOCUS"
     },
     "focus": {
-      "entrySnapshotsFullOrbitTransform": true,
-      "transformSnapshotDomain": [
-        "yaw",
-        "pitch",
-        "roll",
-        "zoom",
-        "equivalentSpatialTransform"
-      ],
-      "immutableUntilReturn": true,
-      "soleExit": "RETURN_TO_ORBIT_CONTROL",
-      "escapeMayExit": false,
-      "pointerCancelMayTraverse": false
-    },
-    "focusedAdjacency": {
-      "swipeLeft": "(i+1) MOD 4",
-      "swipeRight": "(i-1+4) MOD 4",
-      "minimumConsecutiveEachDirection": 8,
-      "wrapIndefinitelyBothDirections": true
-    },
-    "axisLock": {
-      "focusedVertical": "SCROLL_ACTIVE_TAB_CONTENT_ONLY",
-      "focusedHorizontal": "OUTER_TAB_TRAVERSAL_ONLY",
-      "innerTabs": "SAME_OBJECT_STATE_ONLY"
+      "carouselOrientation": "FROZEN_EXACTLY_UNTIL_RETURN_TO_ORBIT",
+      "verticalGesture": "NATIVE_READER_SCROLL_ONLY",
+      "horizontalGesture": "NO_PAGE_ADVANCE_NO_CAROUSEL_ROTATION",
+      "innerControls": "SAME_PAGE_CONTENT_STATE_ONLY",
+      "exit": "RETURN_TO_ORBIT_CONTROL_ONLY",
+      "returnDisposition": "RESTORE_EXACT_FROZEN_CAROUSEL_ORIENTATION"
     }
   },
-  "frozenBoundaries": {
-    "htmlByteFrozen": true,
-    "cssByteFrozen": true,
-    "htmlBlob": "4e7e963e144055297910296d9fc865f11a9d5b84",
-    "cssBlob": "9303a6ccd5faef48364cce66d03552efc4870a69",
-    "fifthObject": false,
-    "newReaderSurface": false,
-    "replacementGeometry": false,
-    "architectureRedesign": false,
-    "semanticMutation": false,
-    "templateExtraction": false
+  "presentation": {
+    "initialCue": "Rotate to browse · Tap to read",
+    "cueDispositionAfterInteraction": "DEEMPHASIZE",
+    "cardTypographyPreserved": true,
+    "surfaceTreatmentPreserved": true,
+    "focusedReaderPreserved": true,
+    "responsiveViewports": ["PHONE", "TABLET", "DESKTOP"],
+    "reducedMotion": "FUNCTIONAL_CAROUSEL_EQUIVALENCE_WITH_TRANSITIONS_DISABLED"
   },
-  "selectedModels": [
-    {
-      "familyId": "structure",
-      "id": "collapse-qualified",
-      "title": "Qualified Collapse Predicate"
-    },
-    {
-      "familyId": "pressure",
-      "id": "pcr",
-      "title": "Pressure-to-Capacity Ratio"
-    },
-    {
-      "familyId": "closure",
-      "id": "mass-ledger",
-      "title": "Industrial Closure Equation"
-    },
-    {
-      "familyId": "method",
-      "id": "first",
-      "title": "F.I.R.S.T. Research Method"
-    }
+  "requiredRuntimeConditions": [
+    "EXACTLY_FOUR_CONTEXTUAL_TAB_OBJECTS",
+    "OBJECT_IDENTITY_INVARIANT",
+    "SHARED_AXIS_EUCLIDEAN_CAROUSEL",
+    "FOUR_PAGES_FIXED_ANGULAR_OFFSETS_REQUIRED",
+    "THETA_N_EQUALS_THETA_WHEEL_PLUS_PHI_N",
+    "PAIRWISE_ANGULAR_SPACING_INVARIANT",
+    "CONTINUOUS_CAROUSEL_ROTATION_REQUIRED",
+    "INDEFINITE_WRAPAROUND_REQUIRED",
+    "ORBIT_BACKGROUND_DRAG_ROTATES_SHARED_CAROUSEL",
+    "ORBIT_PAGE_SURFACE_DRAG_ROTATES_SHARED_CAROUSEL",
+    "ORBIT_SCROLL_ROTATES_SHARED_CAROUSEL",
+    "TAP_BELOW_THRESHOLD_FOCUSES_EXACT_TOUCHED_PAGE",
+    "DRAG_ABOVE_TAP_THRESHOLD_ROTATES_AND_SUPPRESSES_FOCUS",
+    "FOCUS_FREEZES_CAROUSEL_ORIENTATION",
+    "FOCUSED_VERTICAL_GESTURE_SCROLL_ONLY",
+    "FOCUSED_HORIZONTAL_PAGE_ADVANCE_PROHIBITED",
+    "FOCUSED_GESTURES_MUST_NOT_ROTATE_CAROUSEL",
+    "INNER_CONTEXT_CONTROLS_SAME_PAGE_ONLY",
+    "RETURN_TO_ORBIT_IS_SOLE_FOCUS_EXIT",
+    "RETURN_TO_ORBIT_RESTORES_FROZEN_CAROUSEL_ORIENTATION",
+    "MINIMAL_INITIAL_INTERACTION_CUE",
+    "PHONE_TABLET_DESKTOP_CONTAINMENT",
+    "REDUCED_MOTION_EQUIVALENCE"
   ],
-  "runtimeEvidence": {
-    "status": "PASS",
-    "sha256": "bfbb952e5afe58c6ef2ea19429ea6ace73d4e5bf803fdc0303ec74e44487d69c",
-    "viewports": {
-      "phone": [
-        412,
-        915
-      ],
-      "tablet": [
-        834,
-        1112
-      ],
-      "desktop": [
-        1440,
-        1000
-      ]
-    },
-    "reducedMotionRequired": true,
-    "checks": {
-      "backgroundOrbitContinuous360": true,
-      "eachCardTapFocusExact": true,
-      "eachCardDragCancelNoOrbitMutation": true,
-      "eightLeftModulo4": true,
-      "eightRightModulo4": true,
-      "mixedFocusOperationsTransformImmutable": true,
-      "returnToOrbitSoleExit": true,
-      "escapeNoExit": true,
-      "returnPreservesFrozenOrientation": true,
-      "phonePass": true,
-      "tabletPass": true,
-      "desktopPass": true,
-      "reducedMotionPass": true
-    }
+  "prohibitedSubstituteArchitectures": [
+    "PROXY_OBJECTS",
+    "COMPASS_REPLICATION",
+    "FLAT_PREVIOUS_NEXT_CAROUSEL",
+    "PSEUDO_SPATIAL_CAROUSEL",
+    "INDEPENDENT_CARD_REPOSITIONING",
+    "DECK_STACK_PSEUDO_DEPTH",
+    "POPUP_READER_REPLACEMENT",
+    "FIFTH_CONTEXTUAL_OBJECT"
+  ],
+  "verification": {
+    "static": "PENDING_EXECUTION",
+    "browserMechanics": "PENDING_EXECUTION",
+    "responsiveReducedMotion": "PENDING_EXECUTION",
+    "visualQuality": "PENDING_EXECUTION"
   },
-  "visualMotionAdmission": {
-    "status": "PASS",
-    "sha256": "20d09867c5c98c931b6826fd2c2c55fbee1912ca63e6ec66513970d35ce077bd",
-    "requiredViewports": [
-      "PHONE",
-      "TABLET",
-      "DESKTOP"
-    ],
-    "temporalMotionEvidenceRequired": true,
-    "fullOrbit": {
-      "continuousSingleDirectionDegrees": 360,
-      "backgroundDriven": true,
-      "quadrantsCovered": 4,
-      "htmlCssByteFrozen": true,
-      "backgroundOrbitKinematicsPreservedFrom45fc5934": true,
-      "compositionDisposition": "PASS"
-    },
-    "focusedTransitions": {
-      "phoneViewportContained": true,
-      "tabletViewportContained": true,
-      "desktopViewportContained": true,
-      "horizontalOverflow": false,
-      "orbitTransformImmutable": true
-    },
-    "preservedVisualSource": "45fc593408d766504e5a1f74c1e53fb7f33b74a4",
-    "disposition": "PASS_FOR_COMMIT_PINNED_INSPECTION"
-  },
-  "authority": {
-    "boundedInteractionRepair": true,
-    "requalification": true,
-    "internalVisualMotionAdmission": true,
-    "commitPinnedInspectionDelivery": true,
-    "merge": false,
-    "production": false,
-    "semanticMutation": false,
-    "architectureRedesign": false,
-    "templateExtraction": false
-  }
+  "authorityCeiling": "INSPECTION_ONLY_NO_MERGE_NO_PRODUCTION"
 }

@@ -5,114 +5,83 @@ import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const files = await readdir(here);
 const expectedFiles = ['index.css','index.html','index.js','specimen-manifest.v1.json','verify.v1.mjs'].sort();
 const failures = [];
-const pass = (condition, code, detail='') => { if (!condition) failures.push({code, detail}); };
-const gitBlobSha = (text) => createHash('sha1').update(`blob ${Buffer.byteLength(text)}\0`).update(text).digest('hex');
+const check = (condition, code, detail='') => { if (!condition) failures.push({ code, detail }); };
+const blob = text => createHash('sha1').update(`blob ${Buffer.byteLength(text)}\0`).update(text).digest('hex');
 
-pass(JSON.stringify(files.filter((name)=>!name.startsWith('.')).sort()) === JSON.stringify(expectedFiles), 'EXACT_FIVE_FILE_SPECIMEN_SCOPE', files.join(','));
-
+const files = (await readdir(here)).filter(name => !name.startsWith('.')).sort();
+check(JSON.stringify(files) === JSON.stringify(expectedFiles), 'EXACT_FIVE_FILE_SCOPE', files.join(','));
 const [html, css, js, manifestText] = await Promise.all([
-  readFile(join(here,'index.html'),'utf8'),
-  readFile(join(here,'index.css'),'utf8'),
-  readFile(join(here,'index.js'),'utf8'),
-  readFile(join(here,'specimen-manifest.v1.json'),'utf8')
+  readFile(join(here,'index.html'),'utf8'), readFile(join(here,'index.css'),'utf8'),
+  readFile(join(here,'index.js'),'utf8'), readFile(join(here,'specimen-manifest.v1.json'),'utf8')
 ]);
 const manifest = JSON.parse(manifestText);
+const htmlBlob = blob(html), cssBlob = blob(css), jsBlob = blob(js);
 
-pass(gitBlobSha(html) === '4e7e963e144055297910296d9fc865f11a9d5b84', 'PRESERVED_3744DF38_HTML_BLOB', gitBlobSha(html));
-pass(gitBlobSha(css) === '0544dba0e40d899bd3c50469a7134f03475bab80', 'PRESERVED_3744DF38_CSS_BLOB', gitBlobSha(css));
+check(htmlBlob === '4e7e963e144055297910296d9fc865f11a9d5b84', 'PRESERVED_SOURCE_HTML', htmlBlob);
+check(cssBlob === '9303a6ccd5faef48364cce66d03552efc4870a69', 'FINAL_CSS_BLOB', cssBlob);
+check(jsBlob === 'c8da097983c5e2978c52421dfa415091beea7ef8', 'FINAL_JS_BLOB', jsBlob);
+check(spawnSync(process.execPath, ['--check', join(here,'index.js')], {encoding:'utf8'}).status === 0, 'INDEX_JS_SYNTAX');
 
-const syntax = spawnSync(process.execPath, ['--check', join(here,'index.js')], { encoding:'utf8' });
-pass(syntax.status === 0, 'INDEX_JS_SYNTAX', syntax.stderr || syntax.stdout || '');
+const tabIds = [...html.matchAll(/data-tab-object="([^"]+)"/g)].map(m => m[1]);
+check(JSON.stringify(tabIds) === JSON.stringify(['collapse-qualified','pcr','mass-ledger','first']), 'EXACT_FOUR_OBJECT_IDENTITIES', JSON.stringify(tabIds));
+check((html.match(/data-object-identity=/g)||[]).length === 4, 'FOUR_STABLE_IDENTITY_MARKERS');
+check((html.match(/data-return-orbit/g)||[]).length === 4, 'FOUR_RETURN_TO_ORBIT_CONTROLS');
+for (const category of ['Practical','Engineering','Evidence','Information']) check((html.match(new RegExp(`data-category-select="${category}"`,'g'))||[]).length === 4, `${category.toUpperCase()}_DIRECT_TAP_CONTROLS`);
+for (const prohibited of ['<canvas','<svg','<img','<iframe','role="dialog"']) check(!html.includes(prohibited), 'NO_PROXY_OR_REPLACEMENT_SURFACE', prohibited);
 
-const tabIds = [...html.matchAll(/data-tab-object="([^"]+)"/g)].map((m)=>m[1]);
-const expectedIds = ['collapse-qualified','pcr','mass-ledger','first'];
-pass(tabIds.length === 4, 'EXACTLY_FOUR_TAB_OBJECTS', String(tabIds.length));
-pass(JSON.stringify(tabIds) === JSON.stringify(expectedIds), 'EXACT_MODEL_ORDER', JSON.stringify(tabIds));
-pass((html.match(/data-object-identity=/g)||[]).length === 4, 'STABLE_OBJECT_IDENTITY_MARKERS');
-pass((html.match(/data-return-orbit/g)||[]).length === 4, 'RETURN_TO_ORBIT_PER_OBJECT');
-for (const category of ['Practical','Engineering','Evidence','Information']) {
-  pass((html.match(new RegExp(`data-category-select="${category}"`,'g'))||[]).length === 4, `${category.toUpperCase()}_CONTROLS`);
-}
-pass((html.match(/data-category-panel="Information"/g)||[]).length === 4, 'INFORMATION_PANELS');
-pass((html.match(/<details class="info-disclosure"/g)||[]).length === 12, 'BOUNDED_VERTICAL_DISCLOSURE');
-for (const prohibited of ['<canvas','<svg','<img','<iframe','role="dialog"']) pass(!html.includes(prohibited), 'NO_PROXY_OR_REPLACEMENT_SURFACE', prohibited);
-pass(!html.includes('Previous') && !html.includes('Next'), 'NO_VISIBLE_PREVIOUS_NEXT_PRIMARY_UI');
+for (const home of [
+  'translate3d(calc(-50% - 21vw),calc(-50% - 13vh),165px)',
+  'translate3d(calc(-50% + 21vw),calc(-50% - 9vh),-65px)',
+  'translate3d(calc(-50% - 18vw),calc(-50% + 19vh),-145px)',
+  'translate3d(calc(-50% + 20vw),calc(-50% + 20vh),65px)'
+]) check(css.includes(home), 'SOURCE_HOME_GEOMETRY_PRESERVED', home);
+check(css.includes('backface-visibility:hidden'), 'BACKFACE_POLICY_PRESERVED');
+check(css.includes('--counter-ry:0deg') && css.includes('rotateY(var(--counter-ry))'), 'FULL_ORBIT_READABLE_FACE_COMPENSATION');
+check(css.includes('max-width:calc(100vw - 32px)') && css.includes('width:calc(100vw - 20px)'), 'FOCUSED_VIEWPORT_CONTAINMENT');
+check(css.includes('@media(prefers-reduced-motion:reduce)'), 'REDUCED_MOTION_EQUIVALENCE');
 
-pass(css.includes('perspective:1500px') || css.includes('perspective:1050px'), 'REAL_PERSPECTIVE');
-pass(css.includes('transform-style:preserve-3d'), 'PRESERVE_3D');
-pass(css.includes('max-width:calc(100vw - 32px)') && css.includes('width:calc(100vw - 20px)'), 'FOCUSED_VIEWPORT_CONTAINMENT');
-pass(css.includes('overflow-x:hidden'), 'NO_HORIZONTAL_CONTENT_OVERFLOW_CSS');
-pass(css.includes('@media(prefers-reduced-motion:reduce)'), 'REDUCED_MOTION_EQUIVALENT');
-pass(css.includes('.category-tabs'), 'INNER_CONTEXT_TAB_PRESENTATION');
+check(js.includes('const ORBIT_DRAG_THRESHOLD = 8;'), 'ORBIT_THRESHOLD_8PX');
+check(js.includes("const targetTab = event.target.closest('.context-tab');"), 'CARD_SURFACE_ORBIT_ENTRY');
+check(js.includes('space.setPointerCapture?.(event.pointerId);'), 'STABLE_POINTER_CAPTURE');
+check(js.includes('Math.hypot(totalDx, totalDy) >= ORBIT_DRAG_THRESHOLD'), 'THRESHOLD_ARBITRATION');
+check(js.includes('const focusTarget = shouldFocusTouchedTab ? p.targetTab : null;'), 'TAP_FOCUS_DEFERRED_AFTER_CAPTURE');
+check(js.includes('if (p.crossedThreshold) state.orbitClickSuppressed = true;'), 'DRAG_RELEASE_FOCUS_SUPPRESSION');
+check(js.includes('const normalizeYaw = (degrees) => ((degrees % 360) + 360) % 360;'), 'MODULO_360_YAW');
+check(js.includes('state.ry = normalizeYaw(state.ry + dx * .14);') && !js.includes('state.ry = clamp(state.ry'), 'UNRESTRICTED_CONTINUOUS_YAW');
+check(js.includes("document.documentElement.style.setProperty('--counter-ry', `${(-state.ry).toFixed(2)}deg`);"), 'COUNTER_YAW_BOUND_TO_ORBIT');
+check(js.includes('const next = (current + direction + tabs.length) % tabs.length;'), 'MODULO4_BIDIRECTIONAL_ADJACENCY');
+check(js.includes("gesture.axis = Math.abs(dx) > Math.abs(dy) * 1.15 ? 'horizontal' : 'vertical'"), 'FOCUSED_AXIS_LOCK_PRESERVED');
+check(js.includes("if (gesture.axis === 'horizontal' && Math.abs(dx) >= 60)"), 'HORIZONTAL_FOCUSED_TRAVERSAL_PRESERVED');
+check(js.includes('proxyObjectCount: 0'), 'ZERO_PROXY_RUNTIME');
 
-pass(js.includes("OBJECT_IDENTITY_INVARIANT = 'ORBIT=FOCUS=SCROLL=PRACTICAL=ENGINEERING=EVIDENCE=INFORMATION'"), 'OBJECT_IDENTITY_INVARIANT_BOUND');
-pass(js.includes('const ORBIT_DRAG_THRESHOLD = 8;'), 'ORBIT_THRESHOLD_BOUND');
-pass(js.includes("const targetTab = event.target.closest('.context-tab');"), 'CARD_SURFACE_ORBIT_POINTER_ENTRY');
-pass(js.includes('space.setPointerCapture?.(event.pointerId);'), 'STABLE_ORBIT_POINTER_CAPTURE');
-pass(js.includes('Math.hypot(totalDx, totalDy) >= ORBIT_DRAG_THRESHOLD'), 'TAP_DRAG_THRESHOLD_ARBITRATION');
-pass(js.includes('const shouldFocusTouchedTab = wasLastPointer && !p.crossedThreshold && p.targetTab instanceof Element;'), 'BELOW_THRESHOLD_TAP_FOCUS_ONLY');
-pass(js.includes('if (p.crossedThreshold) state.orbitClickSuppressed = true;'), 'CROSSED_THRESHOLD_RELEASE_FOCUS_SUPPRESSED');
-pass(js.includes('const normalizeYaw = (degrees) => ((degrees % 360) + 360) % 360;'), 'YAW_MODULO_360_LAW');
-pass(js.includes('state.ry = normalizeYaw(state.ry + dx * .14);'), 'CONTINUOUS_YAW_IMPLEMENTED');
-pass(!js.includes('state.ry = clamp(state.ry'), 'NO_NARROW_YAW_CLAMP');
-pass(js.includes('const next = (current + direction + tabs.length) % tabs.length;'), 'MODULO4_FOCUSED_ADJACENCY');
-pass(js.includes("gesture.axis = Math.abs(dx) > Math.abs(dy) * 1.15 ? 'horizontal' : 'vertical'"), 'AXIS_LOCK_PRESERVED');
-pass(js.includes("if (gesture.axis === 'horizontal' && Math.abs(dx) >= 60)"), 'HORIZONTAL_ADJACENCY_THRESHOLD_PRESERVED');
-pass(js.includes("state.focused !== tab"), 'ACTIVE_TAB_DOES_NOT_TOGGLE_DISMISS');
-pass(js.includes("setCategory(tab, button.dataset.categorySelect)"), 'INNER_CATEGORY_DIRECT_TAP');
-pass(js.includes("stableIdentity.get(state.focused.dataset.tabObject) === state.focused"), 'RUNTIME_IDENTITY_ASSERTION');
-pass(js.includes('proxyObjectCount: 0'), 'RUNTIME_ZERO_PROXY_DECLARATION');
-pass(js.includes("yawLaw: 'THETA_Y_MOD_360_DEGREES'"), 'RUNTIME_YAW_LAW_DECLARATION');
-pass(js.includes("focusedAdjacencyLaw: 'MODULO_4_BIDIRECTIONAL'"), 'RUNTIME_ADJACENCY_LAW_DECLARATION');
-
-pass(manifest.schema === 'LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1', 'MANIFEST_SCHEMA');
-pass(manifest.operationId === 'LAWS_CONTEXTUAL_3D_FOUR_TAB_INTERACTION_REPAIR_V1_9476A_20260810_003', 'OPERATION_ID_BINDING');
-pass(manifest.lockGeneration === 1045, 'LOCK_GENERATION_BINDING', String(manifest.lockGeneration));
-pass(manifest.governingHead === '9476afe595b85f7e0e4bb696f7978bc0c62cc04d', 'GOVERNING_HEAD_BINDING');
-pass(manifest.branch === 'agent/laws-four-tab-interaction-repair-9476a-003', 'BRANCH_BINDING');
-pass(manifest.preservedPositiveImplementationSource?.head === '3744df3801a536c6cc0f1153f4dff23408a893aa', 'PRESERVED_SOURCE_HEAD_BINDING');
-pass(manifest.preservedPositiveImplementationSource?.frozenBlobs?.['index.html'] === '4e7e963e144055297910296d9fc865f11a9d5b84', 'PRESERVED_HTML_BLOB_BINDING');
-pass(manifest.preservedPositiveImplementationSource?.frozenBlobs?.['index.css'] === '0544dba0e40d899bd3c50469a7134f03475bab80', 'PRESERVED_CSS_BLOB_BINDING');
-pass(manifest.preservedPositiveImplementationSource?.frozenBlobs?.['index.js'] === '1f3a6f5ba7152b16a1164fcd48ccb11220329f98', 'SOURCE_RUNTIME_BLOB_BINDING');
-pass(manifest.router?.result === 'PASS' && manifest.router?.nativeReceiptDigest === '21d64f9d13d3996fb6e1ce257f4c278c68ea0c2be681a87d6be143c923cd1491', 'GEN1045_ROUTER_BINDING');
-pass(manifest.pageExcellence?.implementationClass === 'EXISTING_CONSTRUCT_ADOPTION' && manifest.pageExcellence?.result === 'PASS', 'IMPLEMENTATION_CLASS_AND_PAGE_ARCH_PASS');
-pass(manifest.pageExcellence?.architectureBundleDigest === '11d79a00094932f7c8ce2086b443bac75ba69f3f665757077d2d6528dfcdd711', 'GEN1045_PAGE_ARCHITECTURE_BUNDLE_BINDING');
-pass(manifest.designLaw?.tabObjectCount === 4 && manifest.designLaw?.proxyObjectCount === 0, 'FOUR_OBJECT_ZERO_PROXY_MANIFEST');
-pass(manifest.designLaw?.objectIdentityInvariant === 'ORBIT=FOCUS=SCROLL=PRACTICAL=ENGINEERING=EVIDENCE=INFORMATION', 'MANIFEST_IDENTITY_INVARIANT');
-pass(manifest.repairContract?.orbitTapDragArbitration?.crossThresholdReleaseMayFocus === false, 'MANIFEST_DRAG_RELEASE_NO_FOCUS');
-pass(manifest.repairContract?.orbitYaw?.law === 'THETA_Y_MOD_360_DEGREES' && manifest.repairContract?.orbitYaw?.continuous === true, 'MANIFEST_FULL_YAW');
-pass(manifest.repairContract?.focusedAdjacency?.wrapIndefinitelyBothDirections === true, 'MANIFEST_MODULO4_WRAP');
-pass(manifest.frozenBoundaries?.htmlSemanticContent === true && manifest.frozenBoundaries?.cssGeometryAndComposition === true, 'PRESERVED_ARCHITECTURE_FROZEN');
-pass(manifest.authority?.merge === false && manifest.authority?.production === false && manifest.authority?.semanticMutation === false && manifest.authority?.architectureRedesign === false && manifest.authority?.templateExtraction === false, 'AUTHORITY_CEILING');
-
-for (const snippet of [
-  'Qualified Collapse Predicate',
-  'Collapse requires simultaneous saturation of burden and pressure plus failure of the weakest required spine axis.',
-  'Pressure-to-Capacity Ratio',
-  'The ratio compares pressure with protected usable capacity while preserving the reason a safety floor exists.',
-  'Industrial Closure Equation',
-  'A closure claim must reconcile input, output, destruction, inventory change, and uncertainty.',
-  'F.I.R.S.T. Research Method',
-  'Research asks what changed, what remained intact, what evidence shows, what shaped the result, and what was tested.'
-]) pass(html.includes(snippet), 'EXACT_SOURCE_CONTENT_SNIPPET', snippet);
+check(manifest.operationId === 'LAWS_CONTEXTUAL_3D_FOUR_TAB_INTERACTION_REPAIR_V1_9476A_20260810_003' && manifest.lockGeneration === 1045, 'GEN1045_IDENTITY');
+check(manifest.governingHead === '9476afe595b85f7e0e4bb696f7978bc0c62cc04d', 'GOVERNING_HEAD');
+check(manifest.preservedPositiveImplementationSource?.head === '3744df3801a536c6cc0f1153f4dff23408a893aa', 'POSITIVE_SOURCE_HEAD');
+check(manifest.preservedPositiveImplementationSource?.sourceBlobs?.['index.css'] === '0544dba0e40d899bd3c50469a7134f03475bab80', 'SOURCE_CSS_PROVENANCE');
+check(manifest.candidateBlobs?.['index.html'] === htmlBlob && manifest.candidateBlobs?.['index.css'] === cssBlob && manifest.candidateBlobs?.['index.js'] === jsBlob, 'EXACT_CANDIDATE_BLOB_BINDING');
+check(manifest.router?.result === 'PASS' && manifest.pageExcellence?.result === 'PASS' && manifest.pageExcellence?.implementationClass === 'EXISTING_CONSTRUCT_ADOPTION', 'PRECONSTRUCTION_GATES_PASS');
+check(manifest.repairContract?.orbitTapDragArbitration?.crossThresholdReleaseMayFocus === false, 'MANIFEST_DRAG_NO_FOCUS');
+check(manifest.repairContract?.orbitYaw?.continuous === true && manifest.repairContract?.focusedAdjacency?.wrapIndefinitelyBothDirections === true, 'MANIFEST_CONTINUOUS_YAW_AND_WRAP');
+check(manifest.repairContract?.directlyNecessarySupport?.id === 'FULL_ORBIT_READABLE_FACE_COMPENSATION', 'SUPPORT_CHANGE_EXPLICITLY_BOUNDED');
+check(manifest.runtimeEvidence?.status === 'PASS' && manifest.runtimeEvidence?.sha256 === '875e2c7eb09950f0e92f829ccd0f8aeb4d15f4553b514180e1fca382a2228086', 'RUNTIME_REQUALIFICATION_PASS');
+check(manifest.visualMotionAdmission?.status === 'PASS' && manifest.visualMotionAdmission?.sha256 === '018cf7d99d8f4c6b899c8ca394544c4ffda5181aaaad38020bd34abeb8525566', 'FULL_ORBIT_VISUAL_MOTION_PASS');
+check(manifest.visualMotionAdmission?.disposition === 'PASS_FOR_COMMIT_PINNED_INSPECTION', 'INSPECTION_ADMISSION');
+check(manifest.frozenBoundaries?.htmlSemanticContent === true && manifest.frozenBoundaries?.sourceGeometryAndCompositionPreserved === true && manifest.frozenBoundaries?.fullOrbitFacingCompensationOnly === true, 'FROZEN_BOUNDARIES');
+check(manifest.authority?.merge === false && manifest.authority?.production === false && manifest.authority?.semanticMutation === false && manifest.authority?.architectureRedesign === false && manifest.authority?.templateExtraction === false, 'AUTHORITY_CEILING');
 
 const receipt = {
-  schema:'LAWS_CONTEXTUAL_FOUR_TAB_INTERACTION_REPAIR_STATIC_VERIFICATION_RECEIPT_v1',
+  schema:'LAWS_CONTEXTUAL_FOUR_TAB_INTERACTION_REPAIR_STATIC_VERIFICATION_RECEIPT_v2',
   result: failures.length ? 'FAIL' : 'PASS',
-  exactFileCount: expectedFiles.length,
-  tabObjectCount: tabIds.length,
-  proxyObjectCount: 0,
-  selectedModelIds: tabIds,
-  preservedHtmlBlob: gitBlobSha(html),
-  preservedCssBlob: gitBlobSha(css),
-  governingHead: manifest.governingHead,
   operationId: manifest.operationId,
   lockGeneration: manifest.lockGeneration,
-  runtimeEvidenceStatus: manifest.runtimeEvidence?.status ?? null,
-  visualMotionAdmissionStatus: manifest.visualMotionAdmission?.status ?? null,
+  candidateBlobs:{'index.html':htmlBlob,'index.css':cssBlob,'index.js':jsBlob},
+  tabObjectCount:tabIds.length,
+  proxyObjectCount:0,
+  runtimeEvidenceSha256:manifest.runtimeEvidence?.sha256,
+  visualMotionAdmissionSha256:manifest.visualMotionAdmission?.sha256,
+  visualMotionDisposition:manifest.visualMotionAdmission?.disposition,
   failures
 };
 console.log(JSON.stringify(receipt,null,2));

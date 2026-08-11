@@ -504,18 +504,6 @@
       "scopeHash": "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd",
       "state": "ADMITTED_LOCKED"
     },
-    "51a952f44d7a43876d7bc1b98795fa0e5cbdd91e75df4199991b9b9700861fb0": {
-      "governingHead": "ed2983e76d3896b13864d9251c42be225f8c5fb4",
-      "lockGeneration": 1084,
-      "lockScope": "H_EARTH:G2:ROLLBACK_TO_PRE_G2_LOCAL_GAME:V1",
-      "operationId": "H_EARTH_G2_ROLLBACK_TO_PRE_G2_LOCAL_GAME_20260811_001",
-      "procedureLocatorDigest": "def62ebf340c01750a45d9e9616e78a55f3f496908a77a3672a81a7a949173a3",
-      "released": false,
-      "requestDigest": "092e2b9d3fd7dae8891ccf5af1d170190f859d82148af6698ace842cf56880d0",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "51a952f44d7a43876d7bc1b98795fa0e5cbdd91e75df4199991b9b9700861fb0",
-      "state": "ADMITTED_LOCKED"
-    },
     "55f254a2c22ee5db6f18e7d071a5584707a051b619d968d0e342b3c6df13c094": {
       "governingHead": "25355a1b8aaec3cc60f90a6f6335dd5aa796b267",
       "lockGeneration": 913,
@@ -16103,6 +16091,19 @@
       "requestDigest": "2d46247a04fe3d151588814db4d64a953411a4a168ae4b7b86eddc6372c3daa6",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "15b023549be798902e509237320a80072522dfcb332046160a88a506eeafee20",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "ed2983e76d3896b13864d9251c42be225f8c5fb4",
+      "lockGeneration": 1084,
+      "lockScope": "H_EARTH:G2:ROLLBACK_TO_PRE_G2_LOCAL_GAME:V1",
+      "operationId": "H_EARTH_G2_ROLLBACK_TO_PRE_G2_LOCAL_GAME_20260811_001",
+      "procedureLocatorDigest": "def62ebf340c01750a45d9e9616e78a55f3f496908a77a3672a81a7a949173a3",
+      "released": true,
+      "requestDigest": "092e2b9d3fd7dae8891ccf5af1d170190f859d82148af6698ace842cf56880d0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "51a952f44d7a43876d7bc1b98795fa0e5cbdd91e75df4199991b9b9700861fb0",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

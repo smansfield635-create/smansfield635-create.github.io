@@ -672,18 +672,6 @@
       "scopeHash": "717694845676c377c79911d3ad810c72092bb79532b98add81d2ec1e26ff0c37",
       "state": "ADMITTED_LOCKED"
     },
-    "7211ce433b0264857ce1e097231cfa03075ea29b16c30bff474eac70cc07b349": {
-      "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
-      "lockGeneration": 1041,
-      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:INTERACTION_REPAIR:V1",
-      "operationId": "LAWS_CONTEXTUAL_3D_FOUR_TAB_INTERACTION_REPAIR_V1_9476A_20260810_002",
-      "procedureLocatorDigest": "f65e88dc710a72e8d75c71e07bd131236c060b9487a0494d5a8efa0a6d7ffec2",
-      "released": false,
-      "requestDigest": "0c74322a89dbb89b716c635f08104f59445f3f65649f0d9bd34361086dc740d3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "7211ce433b0264857ce1e097231cfa03075ea29b16c30bff474eac70cc07b349",
-      "state": "ADMITTED_LOCKED"
-    },
     "74933798ee5c239a9ce485fc52563349c7e6417eee30beef1ad60091d4652d20": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 457,
@@ -15432,6 +15420,19 @@
       "procedureLocatorDigest": "23700ba27f8e9d55a65b1315497531118664d3ae047ad2f015f5f1e638f1c4d0",
       "released": true,
       "requestDigest": "5eed00da51d23cfe585bf992c7dc25f8458bd07f8d129e3889ee9cd85c37416f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7211ce433b0264857ce1e097231cfa03075ea29b16c30bff474eac70cc07b349",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "lockGeneration": 1041,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:INTERACTION_REPAIR:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_FOUR_TAB_INTERACTION_REPAIR_V1_9476A_20260810_002",
+      "procedureLocatorDigest": "f65e88dc710a72e8d75c71e07bd131236c060b9487a0494d5a8efa0a6d7ffec2",
+      "released": true,
+      "requestDigest": "0c74322a89dbb89b716c635f08104f59445f3f65649f0d9bd34361086dc740d3",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7211ce433b0264857ce1e097231cfa03075ea29b16c30bff474eac70cc07b349",
       "state": "TERMINAL",

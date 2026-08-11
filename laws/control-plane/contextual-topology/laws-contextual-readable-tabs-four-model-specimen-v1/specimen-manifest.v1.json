@@ -12,11 +12,16 @@
     "priorDisposition": "PASS_CLOSED",
     "pullRequest": 896,
     "use": "POSITIVE_IMPLEMENTATION_SOURCE_NO_AUTHORITY_INHERITANCE",
-    "frozenBlobs": {
+    "sourceBlobs": {
       "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
       "index.css": "0544dba0e40d899bd3c50469a7134f03475bab80",
       "index.js": "1f3a6f5ba7152b16a1164fcd48ccb11220329f98"
     }
+  },
+  "candidateBlobs": {
+    "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
+    "index.css": "9303a6ccd5faef48364cce66d03552efc4870a69",
+    "index.js": "c8da097983c5e2978c52421dfa415091beea7ef8"
   },
   "contentSource": {
     "path": "laws/research/methods-and-models/showroom.js",
@@ -47,7 +52,7 @@
     "objectIdentityInvariant": "ORBIT=FOCUS=SCROLL=PRACTICAL=ENGINEERING=EVIDENCE=INFORMATION"
   },
   "repairContract": {
-    "scope": "INTERACTION_ONLY",
+    "scope": "INTERACTION_ONLY_WITH_DIRECTLY_NECESSARY_FULL_ORBIT_SUPPORT",
     "orbitTapDragArbitration": {
       "thresholdCssPixels": 8,
       "pointerCapture": "STABLE_ON_CONTEXT_SPACE",
@@ -70,11 +75,26 @@
       "focusedVertical": "SCROLL_ACTIVE_TAB_CONTENT_ONLY",
       "focusedHorizontal": "OUTER_TAB_TRAVERSAL_ONLY",
       "innerTabs": "DIRECT_TAP_ONLY"
+    },
+    "directlyNecessarySupport": {
+      "id": "FULL_ORBIT_READABLE_FACE_COMPENSATION",
+      "trigger": "SOURCE_BACKFACE_HIDDEN_CREATES_BLANK_OR_MIRRORED_REAR_HEMISPHERE_UNDER_UNRESTRICTED_YAW",
+      "mechanism": "COUNTER_YAW_READABLE_FACE_ONLY",
+      "preserves": [
+        "FOUR_OBJECT_COUNT",
+        "HOME_POSITIONS",
+        "DEPTH_VALUES",
+        "CONTENT",
+        "SAME_READER_SURFACE",
+        "OBJECT_IDENTITY",
+        "ARCHITECTURE_CLASS"
+      ]
     }
   },
   "frozenBoundaries": {
     "htmlSemanticContent": true,
-    "cssGeometryAndComposition": true,
+    "sourceGeometryAndCompositionPreserved": true,
+    "fullOrbitFacingCompensationOnly": true,
     "fifthObject": false,
     "newReaderSurface": false,
     "replacementGeometry": false,
@@ -89,27 +109,43 @@
     {"familyId":"method","id":"first","title":"F.I.R.S.T. Research Method"}
   ],
   "runtimeEvidence": {
-    "status": "PENDING_REQUALIFICATION",
-    "required": [
-      "TAP_BELOW_THRESHOLD_FOCUSES",
-      "DRAG_ABOVE_THRESHOLD_NEVER_FOCUSES_ON_RELEASE",
-      "CARD_SURFACE_ORBIT_DRAG",
-      "CONTINUOUS_FULL_360_YAW",
-      "MODULO4_WRAP_BOTH_DIRECTIONS",
-      "VERTICAL_FOCUSED_SCROLL_PRESERVED",
-      "FOCUSED_AXIS_LOCK_PRESERVED"
-    ]
+    "status": "PASS",
+    "sha256": "875e2c7eb09950f0e92f829ccd0f8aeb4d15f4553b514180e1fca382a2228086",
+    "viewports": {"phone":[412,915],"tablet":[834,1112],"desktop":[1440,1000]},
+    "checks": {
+      "tapBelowThresholdFocuses": true,
+      "dragAboveThresholdNeverFocusesOnRelease": true,
+      "cardSurfaceOrbitDrag": true,
+      "continuousFull360Yaw": true,
+      "modulo4WrapBothDirections": true,
+      "verticalFocusedScrollPreserved": true,
+      "focusedAxisLockPreserved": true,
+      "reducedMotionEquivalent": true,
+      "horizontalOverflow": false
+    }
   },
   "visualMotionAdmission": {
-    "status": "PENDING_FULL_ORBIT_REVIEW",
+    "status": "PASS",
+    "sha256": "018cf7d99d8f4c6b899c8ca394544c4ffda5181aaaad38020bd34abeb8525566",
     "requiredViewports": ["PHONE","TABLET","DESKTOP"],
-    "requiredFullOrbitChecks": [
-      "NO_VIEWPORT_CLIPPING",
-      "NO_UNREADABLE_OVERLAP",
-      "DEPTH_ORDERING_INTACT",
-      "COMPOSITION_NOT_DEGRADED_AT_PREVIOUSLY_UNSEEN_VIEWPOINTS"
-    ],
-    "temporalMotionEvidenceRequired": true
+    "fullOrbit": {
+      "quadrantsCovered": 4,
+      "surfaceFacing": "READABLE_FRONT_FACING_COMPENSATION",
+      "blankRearHemisphere": false,
+      "mirroredRearFaces": false,
+      "objectIdentityPreserved": true,
+      "depthFieldPreserved": true,
+      "compositionDisposition": "PASS"
+    },
+    "focusedAfterOrbit": {
+      "testedYawDegrees": 134.82,
+      "phoneViewportContained": true,
+      "tabletViewportContained": true,
+      "desktopViewportContained": true,
+      "horizontalOverflow": false
+    },
+    "temporalMotionEvidence": true,
+    "disposition": "PASS_FOR_COMMIT_PINNED_INSPECTION"
   },
   "authority": {
     "boundedInteractionRepair": true,

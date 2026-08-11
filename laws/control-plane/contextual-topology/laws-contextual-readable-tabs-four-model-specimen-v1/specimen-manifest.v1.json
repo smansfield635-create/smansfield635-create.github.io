@@ -60,7 +60,10 @@
   },
   "repairContract": {
     "scope": "INTERACTION_STATE_ISOLATION_ONLY",
-    "modeDomain": ["ORBIT", "FOCUS"],
+    "modeDomain": [
+      "ORBIT",
+      "FOCUS"
+    ],
     "orbitTapDragArbitration": {
       "thresholdCssPixels": 8,
       "backgroundPointerCapture": "ON_BACKGROUND_CONTEXT_SPACE_ONLY",
@@ -79,7 +82,13 @@
     },
     "focus": {
       "entrySnapshotsFullOrbitTransform": true,
-      "transformSnapshotDomain": ["yaw", "pitch", "roll", "zoom", "equivalentSpatialTransform"],
+      "transformSnapshotDomain": [
+        "yaw",
+        "pitch",
+        "roll",
+        "zoom",
+        "equivalentSpatialTransform"
+      ],
       "immutableUntilReturn": true,
       "soleExit": "RETURN_TO_ORBIT_CONTROL",
       "escapeMayExit": false,
@@ -110,20 +119,87 @@
     "templateExtraction": false
   },
   "selectedModels": [
-    {"familyId":"structure","id":"collapse-qualified","title":"Qualified Collapse Predicate"},
-    {"familyId":"pressure","id":"pcr","title":"Pressure-to-Capacity Ratio"},
-    {"familyId":"closure","id":"mass-ledger","title":"Industrial Closure Equation"},
-    {"familyId":"method","id":"first","title":"F.I.R.S.T. Research Method"}
+    {
+      "familyId": "structure",
+      "id": "collapse-qualified",
+      "title": "Qualified Collapse Predicate"
+    },
+    {
+      "familyId": "pressure",
+      "id": "pcr",
+      "title": "Pressure-to-Capacity Ratio"
+    },
+    {
+      "familyId": "closure",
+      "id": "mass-ledger",
+      "title": "Industrial Closure Equation"
+    },
+    {
+      "familyId": "method",
+      "id": "first",
+      "title": "F.I.R.S.T. Research Method"
+    }
   ],
   "runtimeEvidence": {
-    "status": "PENDING",
-    "requiredViewports": {"phone":[412,915],"tablet":[834,1112],"desktop":[1440,1000]},
-    "reducedMotionRequired": true
+    "status": "PASS",
+    "sha256": "bfbb952e5afe58c6ef2ea19429ea6ace73d4e5bf803fdc0303ec74e44487d69c",
+    "viewports": {
+      "phone": [
+        412,
+        915
+      ],
+      "tablet": [
+        834,
+        1112
+      ],
+      "desktop": [
+        1440,
+        1000
+      ]
+    },
+    "reducedMotionRequired": true,
+    "checks": {
+      "backgroundOrbitContinuous360": true,
+      "eachCardTapFocusExact": true,
+      "eachCardDragCancelNoOrbitMutation": true,
+      "eightLeftModulo4": true,
+      "eightRightModulo4": true,
+      "mixedFocusOperationsTransformImmutable": true,
+      "returnToOrbitSoleExit": true,
+      "escapeNoExit": true,
+      "returnPreservesFrozenOrientation": true,
+      "phonePass": true,
+      "tabletPass": true,
+      "desktopPass": true,
+      "reducedMotionPass": true
+    }
   },
   "visualMotionAdmission": {
-    "status": "PENDING",
-    "requiredViewports": ["PHONE", "TABLET", "DESKTOP"],
-    "temporalMotionEvidenceRequired": true
+    "status": "PASS",
+    "sha256": "20d09867c5c98c931b6826fd2c2c55fbee1912ca63e6ec66513970d35ce077bd",
+    "requiredViewports": [
+      "PHONE",
+      "TABLET",
+      "DESKTOP"
+    ],
+    "temporalMotionEvidenceRequired": true,
+    "fullOrbit": {
+      "continuousSingleDirectionDegrees": 360,
+      "backgroundDriven": true,
+      "quadrantsCovered": 4,
+      "htmlCssByteFrozen": true,
+      "backgroundOrbitKinematicsPreservedFrom45fc5934": true,
+      "compositionDisposition": "PASS"
+    },
+    "focusedTransitions": {
+      "phoneViewportContained": true,
+      "tabletViewportContained": true,
+      "desktopViewportContained": true,
+      "horizontalOverflow": false,
+      "orbitTransformImmutable": true
+    },
+    "preservedVisualSource": "45fc593408d766504e5a1f74c1e53fb7f33b74a4",
+    "disposition": "PASS_FOR_COMMIT_PINNED_INSPECTION"
   },
   "authority": {
     "boundedInteractionRepair": true,

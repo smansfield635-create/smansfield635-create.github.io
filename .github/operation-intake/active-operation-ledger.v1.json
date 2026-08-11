@@ -300,6 +300,18 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
+    "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5": {
+      "governingHead": "eaa9be55df2a440457f4d3cfe5e13f414a52d386",
+      "lockGeneration": 1140,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:EUCLIDEAN_CAROUSEL:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_NONZERO_PHI_GEOMETRY_REPAIR_V1_EAA9BE55_20260811_002",
+      "procedureLocatorDigest": "b189eb05d3ed8a2c12eb79336105dcd568620e748e32b48aa38847db998c6b81",
+      "released": false,
+      "requestDigest": "340d1c6d42662bbbe173041816e4e00f40525995355ca38c528821eaea8e4ad6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5",
+      "state": "ADMITTED_LOCKED"
+    },
     "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095": {
       "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
       "lockGeneration": 980,
@@ -1708,7 +1720,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1139,
+  "lockGeneration": 1140,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

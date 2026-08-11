@@ -1,8 +1,8 @@
 /**
- * H-Earth repository registry validator dependency loader v9 successor.
+ * H-Earth repository registry validator dependency loader v10 successor.
  *
- * Preserves the complete predecessor chain and adds audit-only recognition for
- * the exact two already-live GPU identity consumers required by HC05 preflight.
+ * Preserves the complete predecessor chain and adds audit-only path recognition
+ * for the exact H1 transition-surface paths blocked by exact-H0 preflight.
  */
 
 import {
@@ -15,9 +15,12 @@ import {
 import {
   verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2
 } from './accepted-amendments/h-earth.repository-registry.hc02-page-excellence-execution-carrier-scope.v2.js';
-import registryFacade, {
+import {
   verifyHEarthHC05LiveGPUPathRecognition
 } from './accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js';
+import registryFacade, {
+  verifyHEarthH1TransitionSurfacePathRecognition
+} from './accepted-amendments/h-earth.repository-registry.h1-transition-surface-path-recognition.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -30,6 +33,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2();
   const hc05LiveGPUPathRecognitionVerification =
     verifyHEarthHC05LiveGPUPathRecognition();
+  const h1TransitionSurfacePathRecognitionVerification =
+    verifyHEarthH1TransitionSurfacePathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -64,6 +69,21 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc05LiveGPUPathRecognitionVerification.checks.noProductAuthority === true &&
       hc05LiveGPUPathRecognitionVerification.checks.noRuntimeMutationAuthority === true &&
       hc05LiveGPUPathRecognitionVerification.checks.noRendererAuthority === true,
+    h1TransitionSurfacePathRecognitionEligible:
+      h1TransitionSurfacePathRecognitionVerification.eligible === true,
+    h1ExactThreeTargetPathsResolved:
+      h1TransitionSurfacePathRecognitionVerification.checks.exactTargetPathCount === true &&
+      h1TransitionSurfacePathRecognitionVerification.checks.allTargetPathsResolve === true,
+    h1PointerH0BlobCustodyPreserved:
+      h1TransitionSurfacePathRecognitionVerification.checks.exactPointerH0Blob === true,
+    h1NewPathAbsenceAtH0Preserved:
+      h1TransitionSurfacePathRecognitionVerification.checks.exactTwoNewPathsAbsentAtH0 === true,
+    h1AuditOnlyNoAuthorityLeak:
+      h1TransitionSurfacePathRecognitionVerification.checks.auditOnly === true &&
+      h1TransitionSurfacePathRecognitionVerification.checks.pathResolutionOnly === true &&
+      h1TransitionSurfacePathRecognitionVerification.checks.noProductAuthority === true &&
+      h1TransitionSurfacePathRecognitionVerification.checks.noCanonicalAuthority === true &&
+      h1TransitionSurfacePathRecognitionVerification.checks.noCorrespondenceAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -83,7 +103,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v9_HC05_LIVE_GPU_PATH_RECOGNITION_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v10_H1_TRANSITION_SURFACE_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -94,7 +114,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02PageExcellenceExecutionCarrierScopeV2:
         hc02CarrierScopeVerification.eligible === true,
       hc05LiveGPUPathRecognition:
-        hc05LiveGPUPathRecognitionVerification.eligible === true
+        hc05LiveGPUPathRecognitionVerification.eligible === true,
+      h1TransitionSurfacePathRecognition:
+        h1TransitionSurfacePathRecognitionVerification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
@@ -125,6 +147,19 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc05AuditOnlyNoAuthorityLeak:
         successorChecks.hc05AuditOnlyNoAuthorityLeak
     }),
+    h1TransitionSurfacePathRecognitionVerification,
+    h1TransitionSurfacePathRecognitionChecks: deepFreeze({
+      h1TransitionSurfacePathRecognitionEligible:
+        successorChecks.h1TransitionSurfacePathRecognitionEligible,
+      h1ExactThreeTargetPathsResolved:
+        successorChecks.h1ExactThreeTargetPathsResolved,
+      h1PointerH0BlobCustodyPreserved:
+        successorChecks.h1PointerH0BlobCustodyPreserved,
+      h1NewPathAbsenceAtH0Preserved:
+        successorChecks.h1NewPathAbsenceAtH0Preserved,
+      h1AuditOnlyNoAuthorityLeak:
+        successorChecks.h1AuditOnlyNoAuthorityLeak
+    }),
     boundary: deepFreeze({
       ...base.boundary,
       liveExperienceAcceptedOccurrenceProvenanceOnly: true,
@@ -137,7 +172,14 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc05ProductMutationAuthorityCreated: false,
       hc05RuntimeMutationAuthorityCreated: false,
       hc05RendererAuthorityCreated: false,
-      hc05MergeAuthorityCreated: false
+      hc05MergeAuthorityCreated: false,
+      h1TransitionSurfacePathRecognitionOnly: true,
+      h1ProductMutationAuthorityCreated: false,
+      h1RuntimeMutationAuthorityCreated: false,
+      h1RendererCameraTerrainGeometryPhysicsMaterialSimulationPersistenceAuthorityCreated: false,
+      h1CanonicalIdentityAuthorityCreated: false,
+      h1CorrespondenceAuthorityCreated: false,
+      h1MergeAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
@@ -151,7 +193,13 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc05LiveGPUProductMutationAuthorized: false,
       hc05LiveGPURuntimeMutationAuthorized: false,
       hc05LiveGPURendererMutationAuthorized: false,
-      hc05LiveGPUMergeAuthorized: false
+      hc05LiveGPUMergeAuthorized: false,
+      h1TransitionSurfacePathRecognitionLoaded: true,
+      h1ProductMutationAuthorized: false,
+      h1RuntimeMutationAuthorized: false,
+      h1CanonicalIdentityAuthorityAuthorized: false,
+      h1CorrespondenceAuthorityAuthorized: false,
+      h1MergeAuthorized: false
     })
   });
 }

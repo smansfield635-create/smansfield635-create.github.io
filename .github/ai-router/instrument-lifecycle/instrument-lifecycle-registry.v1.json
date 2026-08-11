@@ -63,6 +63,42 @@
       "protected": false,
       "transition": "RETIREMENT_PENDING_CONTINUITY_PROOF",
       "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/imi-agricultural-colony-cs4-temporal-block-v1.yml",
+      "state": "HISTORICAL_PINNED",
+      "reason": "Public Retirement Manifest Tranche 1: research-only validator preserved byte-identically in private custody with no live inbound contract, required activation surface, or protected H-Earth dependency established by the bounded retirement audit.",
+      "currentAuthority": false,
+      "protected": false,
+      "transition": "RETIREMENT_PENDING_CONTINUITY_PROOF",
+      "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/imi-falsification-route-extension-v1.yml",
+      "state": "HISTORICAL_PINNED",
+      "reason": "Public Retirement Manifest Tranche 1: research-only validator preserved byte-identically in private custody with no live inbound contract, required activation surface, or protected H-Earth dependency established by the bounded retirement audit.",
+      "currentAuthority": false,
+      "protected": false,
+      "transition": "RETIREMENT_PENDING_CONTINUITY_PROOF",
+      "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/imi-cmapss-fd001-untouched-validation-v1.yml",
+      "state": "HISTORICAL_PINNED",
+      "reason": "Public Retirement Manifest Tranche 1 environmental addendum: workflow_dispatch is an unused capability; the research workflow is preserved byte-identically in private custody and no required check, ruleset, documented manual operation, external caller, or protected H-Earth dependency was established.",
+      "currentAuthority": false,
+      "protected": false,
+      "transition": "RETIREMENT_PENDING_CONTINUITY_PROOF",
+      "physicalRetirementAuthorized": false
+    },
+    {
+      "workflowPath": ".github/workflows/imi-factorial-temporal-diagnostic-extension-v1.yml",
+      "state": "HISTORICAL_PINNED",
+      "reason": "Public Retirement Manifest Tranche 1 environmental addendum: workflow_dispatch is an unused capability; the research workflow is preserved byte-identically in private custody and no required check, ruleset, documented manual operation, external caller, or protected H-Earth dependency was established.",
+      "currentAuthority": false,
+      "protected": false,
+      "transition": "RETIREMENT_PENDING_CONTINUITY_PROOF",
+      "physicalRetirementAuthorized": false
     }
   ]
 }

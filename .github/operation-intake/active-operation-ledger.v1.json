@@ -168,6 +168,18 @@
       "scopeHash": "1b0d9d545e283cde6a2f3a9999f9ecfcf6089b7e18d501db30f67d1138658752",
       "state": "ADMITTED_LOCKED"
     },
+    "1cfbfdf40a348dceb39e3feace076b7dedb3ec44ee809330fcff6246121f1e37": {
+      "governingHead": "ec3fd0e35cdf0c6ee3b23a8e7f542a5c7b889958",
+      "lockGeneration": 1023,
+      "lockScope": "CONTROL_PLANE_TRANSFERABILITY:PRODUCT_QUALIFICATION_BATTERY_V1:PR891:EXACT_HEAD_RATIFICATION:V1",
+      "operationId": "CONTROL_PLANE_PRODUCT_QUALIFICATION_BATTERY_V1_PR891_EXACT_HEAD_RATIFICATION_20260810_001",
+      "procedureLocatorDigest": "4b9c4429e5c44d66348c747911aedf49ad4e852abc294a1cdde1aa0bc2d3844d",
+      "released": false,
+      "requestDigest": "33f66f336c6573d0e72fd94f86110b76007ff52ddd8d17f83789885f3242d2e7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1cfbfdf40a348dceb39e3feace076b7dedb3ec44ee809330fcff6246121f1e37",
+      "state": "ADMITTED_LOCKED"
+    },
     "1e15c6ce4033764ff21796dd1618918d575702bd56793bad4606f01a7258099e": {
       "governingHead": "730b3e628d2ab339904fd4d25015461bc1aaa9ae",
       "lockGeneration": 233,
@@ -1702,7 +1714,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1022,
+  "lockGeneration": 1023,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

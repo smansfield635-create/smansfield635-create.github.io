@@ -19,6 +19,8 @@ const checks={
  noExternalNetwork:!/(fetch\(|XMLHttpRequest|WebSocket|https?:\/\/)/.test(files.app+files.world),
  noSchematicMap:/canvas id="scene"/.test(files.html)&&!/contour|landmark|marker|map label/i.test(files.html),
  noFailureOnlyFallback:!/fallback\.hidden=false;throw new Error\('WEBGL_UNAVAILABLE'\)/.test(files.app),
+ hiddenFallbackContract:/#fallback\[hidden\]\{display:none!important\}/.test(files.css),
+ bootStageInstrumentation:/HTML_BOOT/.test(files.html)&&/MODULE_EXECUTING/.test(files.app)&&/CONTEXT_ACQUIRED/.test(files.app)&&/RENDERER_INITIALIZED/.test(files.app)&&/FIRST_FRAME/.test(files.app),
  exactFiveSurface:['index.html','styles.css','world.mjs','app.mjs','verify.mjs'].every(n=>fs.existsSync(path.join(root,n)))
 };
-const pass=Object.values(checks).every(Boolean);console.log(JSON.stringify({schema:'OPEN_WORLD_O1_SUCCESSOR_SPECIMEN_VERIFICATION_RECEIPT_v1',result:pass?'PASS_INSPECTABLE_ENVIRONMENTAL_SUCCESSOR':'FAIL_CLOSED',checks,rendererPolicy:'WEBGL_PRIMARY_WITH_INDEPENDENT_ENVIRONMENTAL_CANVAS2D_FALLBACK',productionMergeAuthorized:false,correspondenceC1Authorized:false,userInspectionRequired:true},null,2));if(!pass)process.exitCode=1;
+const pass=Object.values(checks).every(Boolean);console.log(JSON.stringify({schema:'OPEN_WORLD_O1_SUCCESSOR_SPECIMEN_VERIFICATION_RECEIPT_v1',result:pass?'PASS_STARTUP_INSTRUMENTED_ENVIRONMENTAL_SUCCESSOR':'FAIL_CLOSED',checks,rendererPolicy:'WEBGL_PRIMARY_WITH_INDEPENDENT_ENVIRONMENTAL_CANVAS2D_FALLBACK',productionMergeAuthorized:false,correspondenceC1Authorized:false,userInspectionRequired:true},null,2));if(!pass)process.exitCode=1;

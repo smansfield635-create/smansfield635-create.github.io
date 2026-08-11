@@ -92,7 +92,7 @@ jobs:
         run: |
           set -euo pipefail
           payload="$(jq -n \
-            --arg ref "$EXPECTED_MAIN" \
+            --arg ref "main" \
             --arg candidate_head "$CANDIDATE_HEAD" \
             --arg operation_id "$OPERATION_ID" \
             --arg lock_generation "$LOCK_GENERATION" \
@@ -125,7 +125,7 @@ jobs:
             --arg procedureDigest "$PROCEDURE_DIGEST" \
             --arg admissionWorkflowPath "$EXPECTED_ADMISSION_WORKFLOW_PATH" \
             --arg admissionWorkflowBlob "$EXPECTED_ADMISSION_WORKFLOW_BLOB" \
-            '{schema:$schema,result:$result,sourceEvent:$sourceEvent,sourceRunId:$sourceRunId,expectedMainHead:$expectedMainHead,candidateHead:$candidateHead,operationId:$operationId,lockGeneration:($lockGeneration|tonumber),scopeHash:$scopeHash,requestDigest:$requestDigest,procedureDigest:$procedureDigest,admissionWorkflowPath:$admissionWorkflowPath,admissionWorkflowBlob:$admissionWorkflowBlob,dispatchAccepted:true,candidateMutationPerformed:false,admissionEffect:"NONE_BRIDGE_ONLY",mergeAuthorityCreated:false,deploymentAuthorityCreated:false}' \
+            '{schema:$schema,result:$result,sourceEvent:$sourceEvent,sourceRunId:$sourceRunId,expectedMainHead:$expectedMainHead,candidateHead:$candidateHead,operationId:$operationId,lockGeneration:($lockGeneration|tonumber),scopeHash:$scopeHash,requestDigest:$requestDigest,procedureDigest:$procedureDigest,admissionWorkflowPath:$admissionWorkflowPath,admissionWorkflowBlob:$admissionWorkflowBlob,dispatchRef:"main",dispatchAccepted:true,candidateMutationPerformed:false,admissionEffect:"NONE_BRIDGE_ONLY",mergeAuthorityCreated:false,deploymentAuthorityCreated:false}' \
             > "$RUNNER_TEMP/h-earth-h1-remote-dispatch/bridge-receipt.json"
 
       - name: Upload bridge receipt
@@ -143,4 +143,4 @@ jobs:
         run: |
           set -euo pipefail
           test -s "$RUNNER_TEMP/h-earth-h1-remote-dispatch/bridge-receipt.json"
-          jq -e '.result == "PASS" and .dispatchAccepted == true and .candidateMutationPerformed == false and .admissionEffect == "NONE_BRIDGE_ONLY" and .mergeAuthorityCreated == false and .deploymentAuthorityCreated == false' "$RUNNER_TEMP/h-earth-h1-remote-dispatch/bridge-receipt.json" >/dev/null
+          jq -e '.result == "PASS" and .dispatchRef == "main" and .dispatchAccepted == true and .candidateMutationPerformed == false and .admissionEffect == "NONE_BRIDGE_ONLY" and .mergeAuthorityCreated == false and .deploymentAuthorityCreated == false' "$RUNNER_TEMP/h-earth-h1-remote-dispatch/bridge-receipt.json" >/dev/null

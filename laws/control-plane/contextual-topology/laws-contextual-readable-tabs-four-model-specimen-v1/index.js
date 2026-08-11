@@ -44,7 +44,7 @@
     .context-space{touch-action:none!important}
     .context-space.has-focus{touch-action:pan-y!important}
     .context-field{display:block!important;padding:0!important;transform:var(--carousel-field-transform)!important;transform-style:preserve-3d!important}
-    .context-tab{transform:var(--carousel-transform)!important;transform-origin:50% 50%!important;touch-action:none!important;will-change:transform,opacity}
+    .context-tab{transform:var(--carousel-transform)!important;transform-origin:0 0!important;touch-action:none!important;will-change:transform,opacity}
     .context-tab.is-focused{width:min(760px,var(--focused-max-width))!important;max-width:var(--focused-max-width)!important;max-height:var(--focused-max-height)!important;transform:var(--carousel-transform)!important;touch-action:pan-y!important}
     .context-tab.is-receded{transform:var(--carousel-transform)!important}
     .context-space.is-dragging .context-tab{transition:none!important}

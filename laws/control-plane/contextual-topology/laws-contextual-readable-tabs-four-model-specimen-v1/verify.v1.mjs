@@ -9,7 +9,7 @@ const PHI = [0, 90, 180, 270];
 const SOURCE_BLOBS = Object.freeze({
   'index.html': '4e7e963e144055297910296d9fc865f11a9d5b84',
   'index.css': '9303a6ccd5faef48364cce66d03552efc4870a69',
-  'index.js': 'f0bec5ce569fcd4751eb45d99823f60fb2652958'
+  'index.js': '030c7a4146942c64166dadbdefa7f9b463b927c1'
 });
 const REQUIRED_FUNCTIONAL = Object.freeze([
   'TITLE','QUESTION','EQUATION','STATEMENT','CATEGORY_CONTROLS','ACTIVE_CONTENT','RETURN_TO_ORBIT'
@@ -59,12 +59,13 @@ const [html, css, js, manifestText, self] = await Promise.all([
 const manifest = JSON.parse(manifestText);
 
 for (const [name,text] of Object.entries({'index.html':html,'index.css':css,'index.js':js})) {
-  assert(blobSha(text) === SOURCE_BLOBS[name], 'GEN1065_IMPLEMENTATION_SOURCE_DRIFT', {name,expected:SOURCE_BLOBS[name],actual:blobSha(text)});
+  assert(blobSha(text) === SOURCE_BLOBS[name], 'IMPLEMENTATION_SOURCE_DRIFT', {name,expected:SOURCE_BLOBS[name],actual:blobSha(text)});
 }
 const objectMatches = [...html.matchAll(/data-tab-object="([^"]+)"/g)].map(m=>m[1]);
 assert(JSON.stringify(objectMatches) === JSON.stringify(IDS), 'FOUR_OBJECT_IDENTITY_OR_ORDER_DRIFT', {objectMatches});
-assert(manifest.generation === 1073, 'MANIFEST_GENERATION_MISMATCH');
-assert(manifest.operationId === 'LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_R1_FUNCTIONAL_CONTAINMENT_V1_26D90C2_20260811_002', 'MANIFEST_OPERATION_MISMATCH');
+assert(manifest.generation === 1140, 'MANIFEST_GENERATION_MISMATCH');
+assert(manifest.operationId === 'LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_NONZERO_PHI_GEOMETRY_REPAIR_V1_EAA9BE55_20260811_002', 'MANIFEST_OPERATION_MISMATCH');
+assert(manifest.governingHead === 'eaa9be55df2a440457f4d3cfe5e13f414a52d386', 'MANIFEST_GOVERNING_HEAD_MISMATCH');
 assert(manifest.inheritanceFirewall?.gen1070QualificationAuthorityInherited === false, 'GEN1070_QUALIFICATION_AUTHORITY_INHERITED');
 assert(manifest.inheritanceFirewall?.gen1065QualificationAuthorityInherited === false, 'GEN1065_QUALIFICATION_AUTHORITY_INHERITED');
 assert(manifest.carousel?.sharedAxis === 'Y', 'SHARED_AXIS_NOT_Y');
@@ -112,18 +113,21 @@ const requiredJsMarkers = [
   'if (state.focusFrozen) state.thetaWheel = state.focusFrozen.thetaWheel',
   'if (!cancelled && !gesture.moved && gesture.touchedTab) enterFocus(gesture.touchedTab)',
   'distance >= TAP_DRAG_THRESHOLD',
-  '@media(prefers-reduced-motion:reduce)'
+  '@media(prefers-reduced-motion:reduce)',
+  'transform-origin:0 0!important'
 ];
 for (const marker of requiredJsMarkers) assert(js.includes(marker), 'PRESERVED_RUNTIME_MARKER_MISSING', {marker});
+assert(!js.includes('transform-origin:50% 50%!important'), 'PREDECESSOR_TRANSFORM_ORIGIN_REAPPEARED');
 const moveWindow = js.match(/const moveOrbitGesture[\s\S]*?const endOrbitGesture/)?.[0] || '';
 assert(moveWindow.includes("gesture.inputDomain === 'BACKGROUND'"), 'R2_BACKGROUND_GUARD_MISSING');
 assert(!/inputDomain\s*===\s*['"]CARD['"][\s\S]{0,400}thetaWheel\s*[+\-]?=/.test(moveWindow), 'R2_CARD_DOMAIN_THETA_MUTATION_STATICALLY_PRESENT');
 
 console.log(JSON.stringify({
   schema:'LAWS_EUCLIDEAN_CAROUSEL_R1_FUNCTIONAL_STATIC_VERIFICATION_RECEIPT_v1',
-  result:'PASS',generation:1073,sharedAxis:'Y',fixedAngularOffsetsDeg:PHI,
-  sourceImplementation:'GEN1065_EXACT_THREE_BLOB_PRESERVATION',
-  gen1065QualificationAuthorityInherited:false,
+  result:'PASS',generation:1140,sharedAxis:'Y',fixedAngularOffsetsDeg:PHI,
+  sourceImplementation:'GEN1119_EXACT_FIVE_BLOB_REPRODUCTION_WITH_ZERO_ORIGIN_REPAIR',
+  authorityInherited:false,
+  zeroOriginGeometryRepair:'PASS_STATIC_BINDING',
   r1Qualification:'FUNCTIONAL_CONTENT_CONTROL_CONTAINMENT',
   totalDecorativeSurfaceContainmentRequired:false,
   orbitSpatialProjectionBleedAllowed:true,

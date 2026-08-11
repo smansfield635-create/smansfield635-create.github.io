@@ -1,9 +1,9 @@
 {
   "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
   "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_FOUR_MODEL_SPECIMEN_R1_FUNCTIONAL_V1",
-  "generation": 1073,
-  "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_R1_FUNCTIONAL_CONTAINMENT_V1_26D90C2_20260811_002",
-  "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
+  "generation": 1140,
+  "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_NONZERO_PHI_GEOMETRY_REPAIR_V1_EAA9BE55_20260811_002",
+  "governingHead": "eaa9be55df2a440457f4d3cfe5e13f414a52d386",
   "inheritanceFirewall": {
     "gen1070QualificationAuthorityInherited": false,
     "gen1070Disposition": "FAIL_CLOSED_ARCHITECTURE_ADOPTION_MATRIX_INVALID",
@@ -13,9 +13,9 @@
     "gen1057QualificationAuthorityInherited": false
   },
   "constructionSources": {
-    "html": {"commitSha":"7e538fa89b1b3e54c405a0a53e417c06cb710cba","gitBlobSha":"4e7e963e144055297910296d9fc865f11a9d5b84","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"},
-    "css": {"commitSha":"7e538fa89b1b3e54c405a0a53e417c06cb710cba","gitBlobSha":"9303a6ccd5faef48364cce66d03552efc4870a69","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"},
-    "js": {"commitSha":"7e538fa89b1b3e54c405a0a53e417c06cb710cba","gitBlobSha":"f0bec5ce569fcd4751eb45d99823f60fb2652958","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"}
+    "html": {"commitSha":"8d192a5bbddae1ef9712254d3ef5d23b7eb5c2b1","gitBlobSha":"4e7e963e144055297910296d9fc865f11a9d5b84","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"},
+    "css": {"commitSha":"8d192a5bbddae1ef9712254d3ef5d23b7eb5c2b1","gitBlobSha":"9303a6ccd5faef48364cce66d03552efc4870a69","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"},
+    "js": {"commitSha":"8d192a5bbddae1ef9712254d3ef5d23b7eb5c2b1","gitBlobSha":"030c7a4146942c64166dadbdefa7f9b463b927c1","disposition":"ADOPT_EXACT_IMPLEMENTATION_SOURCE"}
   },
   "carousel": {
     "class": "EUCLIDEAN_ROTATIONAL_CAROUSEL",

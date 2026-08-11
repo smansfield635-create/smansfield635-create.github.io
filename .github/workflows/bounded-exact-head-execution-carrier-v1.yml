@@ -125,23 +125,28 @@ jobs:
           const fs=require('fs');
           const p=process.env.RUNNER_TEMP+'/target-artifact/self-test.json';
           const r=JSON.parse(fs.readFileSync(p,'utf8'));
-          const legacy=r.legacyCarrierSelfTest??{};
+          const legacy=r.legacyCoreRegression??{};
           const smoke=r.realBrowserSmoke??{};
           const exact=r.exactCandidateReexecution??{};
           const validSmokeDigest=/^[0-9a-f]{64}$/.test(smoke.screenshotSha256??'');
           const ok=
             r.schema==='BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_SELF_TEST_RECEIPT_v1'&&r.result==='PASS'&&r.passed===54&&r.total===54&&
-            r.nativeRegressionPassCount===5&&r.nativeRegressionCount===5&&
-            legacy.result==='PASS'&&legacy.passed===35&&legacy.total===35&&legacy.nativeRegressionPassCount===5&&legacy.nativeRegressionCount===5&&
-            smoke.result==='PASS'&&smoke.skipped===false&&smoke.browser==='chromium'&&smoke.playwrightVersion==='1.55.0'&&smoke.localhostOnly===true&&smoke.screenshotByteLength>100&&validSmokeDigest&&
-            smoke.arbitraryCommandAccepted===false&&smoke.arbitraryUrlAccepted===false&&smoke.callerScriptAccepted===false&&smoke.environmentOverrideAccepted===false&&
+            r.nativeRegressionPassCount===5&&r.nativeRegressionCount===5&&r.nativeRegressionsPreservedFromRatifiedCore===true&&
+            legacy.result==='PASS'&&legacy.fixturePassCount===35&&legacy.fixtureCount===35&&legacy.nativeRegressionPassCount===5&&legacy.nativeRegressionCount===5&&
+            smoke.result==='PASS'&&smoke.skipped===false&&smoke.screenshotByteLength>100&&validSmokeDigest&&
             exact.result==='PASS'&&exact.requestedHead===process.env.TARGET_PR902_HEAD&&exact.observedHead===process.env.TARGET_PR902_HEAD&&exact.fixturePassCount===54&&exact.fixtureCount===54&&exact.nativeRegressionPassCount===5&&exact.nativeRegressionCount===5&&exact.workingTreeCleanBeforeAndAfter===true&&
-            r.genericBrowserVerificationExecutionClassPresent===true&&r.genericBrowserCallerControlSurfaceClosed===true&&r.browserExactCandidateBindingEnforced===true&&r.browserLocalhostOnlyEnforced===true&&r.authorityInflationObserved===false&&r.arbitraryCommandAccepted===false&&r.callerSuppliedBundleAccepted===false;
+            r.genericBrowserExecutionClassPresent===true&&r.genericBrowserCallerControlSurfaceClosed===true&&r.localhostOnlyBrowserTransport===true&&r.canonicalOperationDerivedBrowserContractOnly===true&&r.toolchainHeadSeparatedFromBrowserSubjectHead===true&&r.screenshotEvidenceEmbedded===true&&r.callerSuppliedUrlAccepted===false&&r.callerSuppliedBrowserScriptAccepted===false&&r.authorityInflationObserved===false&&r.arbitraryCommandAccepted===false&&r.callerSuppliedBundleAccepted===false;
           if(!ok) process.exit(1);
           fs.writeFileSync(process.env.RUNNER_TEMP+'/derived-browser-evidence.json',JSON.stringify({
             selfTestResult:r.result,fixturePassCount:r.passed,fixtureCount:r.total,
-            legacyFixturePassCount:legacy.passed,legacyFixtureCount:legacy.total,
+            legacyFixturePassCount:legacy.fixturePassCount,legacyFixtureCount:legacy.fixtureCount,
             nativeRegressionPassCount:r.nativeRegressionPassCount,nativeRegressionCount:r.nativeRegressionCount,
+            canonicalOperationDerivedBrowserContractOnly:r.canonicalOperationDerivedBrowserContractOnly,
+            toolchainHeadSeparatedFromBrowserSubjectHead:r.toolchainHeadSeparatedFromBrowserSubjectHead,
+            localhostOnlyBrowserTransport:r.localhostOnlyBrowserTransport,
+            screenshotEvidenceEmbedded:r.screenshotEvidenceEmbedded,
+            callerSuppliedUrlAccepted:r.callerSuppliedUrlAccepted,
+            callerSuppliedBrowserScriptAccepted:r.callerSuppliedBrowserScriptAccepted,
             exactCandidateReexecution:exact,realBrowserSmoke:smoke
           },null,2)+'\n');
           NODE
@@ -202,10 +207,12 @@ jobs:
             nativeRegressionCount:ev.nativeRegressionCount,
             exactCandidateReexecutionResult:ev.exactCandidateReexecution.result,
             realBrowserSmokeResult:smoke.result,
-            realBrowserSmokeBrowser:smoke.browser,
-            realBrowserSmokePlaywrightVersion:smoke.playwrightVersion,
             realBrowserSmokeScreenshotSha256:smoke.screenshotSha256,
             realBrowserSmokeScreenshotByteLength:smoke.screenshotByteLength,
+            canonicalOperationDerivedBrowserContractOnly:ev.canonicalOperationDerivedBrowserContractOnly,
+            toolchainHeadSeparatedFromBrowserSubjectHead:ev.toolchainHeadSeparatedFromBrowserSubjectHead,
+            localhostOnlyBrowserTransport:ev.localhostOnlyBrowserTransport,
+            screenshotEvidenceEmbedded:ev.screenshotEvidenceEmbedded,
             historicalGeneration839AuthorityUsed:false,
             issueCommentExecutionRoutePreserved:true,
             carrierFunctionalBytesMutated:false,

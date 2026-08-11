@@ -300,18 +300,6 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
-    "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5": {
-      "governingHead": "ba55357f6b2fff2de4d31fbc83eb170b4bde781a",
-      "lockGeneration": 1119,
-      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:EUCLIDEAN_CAROUSEL:V1",
-      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_R1_FUNCTIONAL_CONTAINMENT_V1_BA55357F_20260811_004",
-      "procedureLocatorDigest": "4f513aa51a586d484ef670ce672ac89e8268846e3751459dab57f1d5699ebb88",
-      "released": false,
-      "requestDigest": "e29a92a7bf911cf8459a18205ada516ec86be316ebd9af33eef80afdcae8e298",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5",
-      "state": "ADMITTED_LOCKED"
-    },
     "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095": {
       "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
       "lockGeneration": 980,
@@ -16746,6 +16734,19 @@
       "scopeHash": "8fe0fa051eada87e98d76e0c6a162d6b1a0cafc8331fa66b6bc20c09ad78b46b",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "ba55357f6b2fff2de4d31fbc83eb170b4bde781a",
+      "lockGeneration": 1119,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:EUCLIDEAN_CAROUSEL:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_R1_FUNCTIONAL_CONTAINMENT_V1_BA55357F_20260811_004",
+      "procedureLocatorDigest": "4f513aa51a586d484ef670ce672ac89e8268846e3751459dab57f1d5699ebb88",
+      "released": true,
+      "requestDigest": "e29a92a7bf911cf8459a18205ada516ec86be316ebd9af33eef80afdcae8e298",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5",
+      "state": "TERMINAL",
+      "terminalDisposition": "VOIDED"
     }
   ]
 }

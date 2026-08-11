@@ -70,5 +70,5 @@ function startCanvas2D(target){
  renderFrame=()=>{resize();const w=target.width,h=target.height;if(state.alt>.19)drawGlobe(w,h);else drawLocal(w,h);readout.textContent=scaleName(state.alt);markFirstFrame('canvas2d-environmental');};setBoot('RENDERER_INITIALIZED','canvas2d-environmental');fallback.hidden=true;
 }
 bindInput(canvas);
-try{startWebGL(canvas);}catch(webglError){console.warn('O1 successor WebGL unavailable; using environmental Canvas2D fallback.',webglError);try{startCanvas2D(replaceCanvas());}catch(cpuError){setBoot('RENDERER_STARTUP_FAILED','none',cpuError?.message||cpuError);fallback.hidden=false;fallback.textContent='This device could not start the environmental renderer.';console.error(cpuError);}}
+try{startWebGL(canvas);}catch(webglError){console.warn('O1 successor WebGL unavailable; using environmental Canvas2D fallback.',webglError);try{startCanvas2D(replaceCanvas());}catch(cpuError){setBoot('RENDERER_STARTUP_FAILED','none',cpuError?.message||cpuError);fallback.hidden=false;fallback.textContent=`Startup stopped at RENDERER_STARTUP_FAILED · ${String(cpuError?.message||cpuError).slice(0,160)}`;console.error(cpuError);}}
 function loop(now){renderFrame(now);requestAnimationFrame(loop);}requestAnimationFrame(loop);

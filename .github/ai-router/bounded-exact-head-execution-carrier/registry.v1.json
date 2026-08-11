@@ -65,7 +65,11 @@
             "research/prototypes/laws-geometric-grammar-lab/@49d9890a0405c22aaac407e3724fbd5bae6ccafc",
             "verification/methods-categorical-spatial-context-equation-embodiment-v1/@69bef3918ed26fb1fce21cdc5084a9eb6410381a"
           ],
-          "candidates": ["CURRENT_LAWS_COMPASS_BASELINE","PR468_GEOMETRIC_GRAMMAR_LAB","PR544_LAWS_CHILD_SPATIAL_STAGE"]
+          "candidates": [
+            "CURRENT_LAWS_COMPASS_BASELINE",
+            "PR468_GEOMETRIC_GRAMMAR_LAB",
+            "PR544_LAWS_CHILD_SPATIAL_STAGE"
+          ]
         },
         "exactSourceConstructIdentities": [
           {"sourceId":"CURRENT_LAWS_COMPOSITOR","path":"laws/index.compositor.js","commitSha":"331284949940c95db80a332235492de4c80d3d43","gitBlobSha":"66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa","adoptionDisposition":"ADOPT_IMPLEMENTATION_SOURCE"},
@@ -216,6 +220,34 @@
       "nativePassField": "result",
       "nativePassValue": "PASS",
       "repositoryWritesExpected": false
+    },
+    {
+      "schema": "BOUNDED_EXECUTABLE_DESCRIPTOR_v1",
+      "descriptorId": "BROWSER_VERIFICATION_FROM_CANONICAL_OPERATION_V1",
+      "status": "ACTIVE_RATIFIED_WHEN_ON_DEFAULT_BRANCH",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "executionClass": "BROWSER_VERIFICATION_FROM_CANONICAL_OPERATION_V1",
+      "executable": "node",
+      "scriptPath": ".github/ai-router/bounded-exact-head-execution-carrier/browser-verification.v1.mjs",
+      "shell": false,
+      "mutationIntent": false,
+      "extraArgumentsAllowed": false,
+      "environmentOverridesAllowed": false,
+      "callerSuppliedBundleAllowed": false,
+      "pathDerivation": "OPERATION_REQUEST_ALLOWED_PATHS_EXACT",
+      "targetHeadDerivation": "OPERATION_EXACT_GOVERNING_HEAD",
+      "browserSubjectHeadDerivation": "OPERATION_SUBJECT_IDENTITY_BROWSER_VERIFICATION_CONTRACT_CANDIDATE_HEAD",
+      "taskDerivation": "SUBJECT_IDENTITY_EXPERIMENT_ID_UPPERCASE_ELSE_OPERATION_ID",
+      "browserContractDerivation": "OPERATION_SUBJECT_IDENTITY_BROWSER_VERIFICATION_CONTRACT_EXACT",
+      "scriptBlobDerivation": "TARGET_HEAD_EXACT_BLOB",
+      "nativeReceiptSchema": "CANONICAL_BROWSER_VERIFICATION_RECEIPT_v1",
+      "nativePassField": "result",
+      "nativePassValue": "PASS",
+      "repositoryWritesExpected": false,
+      "localhostOnly": true,
+      "fixedBrowser": "chromium",
+      "fixedPlaywrightVersion": "1.55.0",
+      "screenshotEvidence": "EMBEDDED_IN_NATIVE_RECEIPT"
     }
   ]
 }

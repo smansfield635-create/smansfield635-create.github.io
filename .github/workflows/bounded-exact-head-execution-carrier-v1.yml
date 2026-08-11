@@ -57,7 +57,8 @@ jobs:
           const marker='\n  execute-registered-command:\n';
           const a=current.indexOf(marker),b=base.indexOf(marker);
           if(a<0||b<0||current.slice(a)!==base.slice(b))process.exit(1);
-          if(/GEN839_SUCCESSOR_RECEIPT_B64|generation-839|generation:839|lockGeneration[^\n]*839/.test(current))process.exit(1);
+          const forbidden=['GEN'+'839_SUCCESSOR_RECEIPT_B64','generation-'+'839','generation:'+'839'];
+          if(forbidden.some(x=>current.includes(x))||new RegExp('lockGeneration[^\\n]*'+'839').test(current))process.exit(1);
           NODE
 
       - name: Verify terminal Gen1083 closure evidence

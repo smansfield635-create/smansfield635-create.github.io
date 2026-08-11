@@ -1,0 +1,107 @@
+{
+  "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
+  "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_FOUR_MODEL_SPECIMEN_R1_R2_V1",
+  "generation": 1065,
+  "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_R1_R2_REPAIR_V1_26D90C2_20260811_002",
+  "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
+  "inheritanceFirewall": {
+    "gen1057QualificationAuthorityInherited": false,
+    "gen1057FailedCandidate": "0e94136b66a2e044400a7a835b502cda241cab77",
+    "postFailureHead": "262351e289c5db469ef5f5585c82e031354ff550",
+    "postFailureHeadDisposition": "IMPLEMENTATION_EVIDENCE_ONLY"
+  },
+  "constructionSources": {
+    "visualReader": {
+      "commitSha": "385825db58ee8a9d2242796baa95b25ac4094c3d",
+      "htmlBlob": "4e7e963e144055297910296d9fc865f11a9d5b84",
+      "cssBlob": "9303a6ccd5faef48364cce66d03552efc4870a69",
+      "adopted": ["FOUR_PAGE_CONTENT", "CARD_TYPOGRAPHY", "SURFACE_TREATMENT", "FOCUSED_READER"]
+    },
+    "sharedAxisArchitecture": {
+      "commitSha": "0e94136b66a2e044400a7a835b502cda241cab77",
+      "jsBlob": "8512754e050b15992a330c46ce3a4a516850dcbe",
+      "adopted": ["SHARED_Y_AXIS", "FIXED_OFFSETS_0_90_180_270", "UNBOUNDED_THETA_WHEEL", "PAIRWISE_SPACING", "FOCUS_FREEZE_RETURN"]
+    }
+  },
+  "carousel": {
+    "class": "EUCLIDEAN_ROTATIONAL_CAROUSEL",
+    "sharedAxis": "Y",
+    "sharedWheelVariable": "thetaWheel",
+    "formula": "theta_n = thetaWheel + phi_n",
+    "fixedAngularOffsetsDeg": [0, 90, 180, 270],
+    "wheelAngleDomain": "UNBOUNDED_CONTINUOUS_DEGREES",
+    "pairwiseInvariant": "theta_n(t)-theta_m(t)=phi_n-phi_m",
+    "objectCount": 4,
+    "proxyObjectCount": 0,
+    "independentOrbitCardRepositioning": false,
+    "radiusTopologyRedesigned": false
+  },
+  "repairs": {
+    "R1": {
+      "id": "FOCUSED_RESPONSIVE_CONTAINMENT",
+      "scope": "FOCUSED_READER_PROJECTION_ENVELOPE_ONLY",
+      "requiredViewports": ["390x844", "820x1180", "1440x1000"],
+      "contentStates": ["Practical", "Engineering", "Evidence", "InformationFullyExpanded"],
+      "focusedCaseCount": 48,
+      "internalVerticalScrollRequired": true,
+      "pageLevelHorizontalOverflowAllowed": false
+    },
+    "R2": {
+      "id": "CARD_ORIGIN_POINTER_ISOLATION",
+      "thresholdPx": 8,
+      "backgroundMovement": "ROTATE_SHARED_CAROUSEL",
+      "cardTapBelowThreshold": "FOCUS_EXACT_CARD",
+      "cardMovementAtOrAboveThreshold": "CANCEL_TAP_NO_THETA_MUTATION_NO_FOCUS",
+      "wheelScrollInOrbit": "ROTATE_SHARED_CAROUSEL"
+    }
+  },
+  "focus": {
+    "carouselOrientation": "FROZEN_EXACTLY_UNTIL_RETURN_TO_ORBIT",
+    "verticalGesture": "NATIVE_READER_SCROLL_ONLY",
+    "horizontalGesture": "NO_PAGE_ADVANCE_NO_CAROUSEL_ROTATION",
+    "innerControls": "SAME_PAGE_CONTENT_STATE_ONLY",
+    "exit": "RETURN_TO_ORBIT_CONTROL_ONLY",
+    "returnDisposition": "RESTORE_EXACT_FROZEN_CAROUSEL_ORIENTATION"
+  },
+  "presentation": {
+    "initialCue": "Rotate to browse · Tap to read",
+    "cardTypographyPreserved": true,
+    "surfaceTreatmentPreserved": true,
+    "focusedReaderPreserved": true,
+    "responsiveViewports": ["PHONE", "TABLET", "DESKTOP"],
+    "reducedMotion": "FUNCTIONAL_EQUIVALENCE_WITH_TRANSITIONS_DISABLED"
+  },
+  "requiredRuntimeConditions": [
+    "EXACTLY_FOUR_CONTEXTUAL_TAB_OBJECTS",
+    "OBJECT_IDENTITY_INVARIANT",
+    "SHARED_AXIS_EUCLIDEAN_CAROUSEL",
+    "FIXED_ANGULAR_OFFSETS_0_90_180_270",
+    "THETA_N_EQUALS_THETA_WHEEL_PLUS_PHI_N",
+    "PAIRWISE_ANGULAR_SPACING_INVARIANT",
+    "UNBOUNDED_CONTINUOUS_CAROUSEL",
+    "BACKGROUND_EMPTY_FIELD_DRAG_ROTATES_SHARED_CAROUSEL",
+    "ORBIT_SCROLL_ROTATES_SHARED_CAROUSEL",
+    "CARD_TAP_BELOW_8PX_FOCUSES_EXACT_CARD",
+    "CARD_MOVEMENT_AT_OR_ABOVE_8PX_CANCELS_PENDING_TAP",
+    "CARD_MOVEMENT_AT_OR_ABOVE_8PX_DOES_NOT_MUTATE_THETA_WHEEL",
+    "CARD_MOVEMENT_AT_OR_ABOVE_8PX_DOES_NOT_FOCUS_ON_RELEASE",
+    "FOCUS_FREEZES_THETA_WHEEL",
+    "FOCUSED_VERTICAL_SCROLL_ONLY",
+    "FOCUSED_HORIZONTAL_NO_PAGE_ADVANCE_NO_ROTATION",
+    "RETURN_TO_ORBIT_RESTORES_EXACT_FROZEN_THETA_WHEEL",
+    "FOCUSED_SAFE_ENVELOPE_PHONE_TABLET_DESKTOP",
+    "FOUR_BY_FOUR_BY_THREE_CONTAINMENT_MATRIX",
+    "INFORMATION_FULLY_EXPANDED_CONTAINED",
+    "INTERNAL_VERTICAL_SCROLL_PRESERVED",
+    "NO_PAGE_LEVEL_HORIZONTAL_OVERFLOW",
+    "REDUCED_MOTION_EQUIVALENCE"
+  ],
+  "verification": {
+    "static": "PENDING_EXECUTION",
+    "containment48": "PENDING_EXECUTION",
+    "inputIsolation": "PENDING_EXECUTION",
+    "fullRuntime": "PENDING_EXECUTION",
+    "visualMotionReferenceQuality": "PENDING_EXECUTION"
+  },
+  "authorityCeiling": "INSPECTION_ONLY_NO_MERGE_NO_PRODUCTION"
+}

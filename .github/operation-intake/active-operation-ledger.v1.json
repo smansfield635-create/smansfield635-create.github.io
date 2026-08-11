@@ -300,6 +300,18 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
+    "2f38ccc27a6015e5dce70b90f65b159d63ce7be5cfd749c80a57d2ecb164fb6a": {
+      "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "lockGeneration": 1032,
+      "lockScope": "H_EARTH:G2:PAGE_EXCELLENCE:ARCHITECTURE_EXECUTION:V1",
+      "operationId": "H_EARTH_G2_PAGE_EXCELLENCE_ARCHITECTURE_EXECUTION_20260810_001",
+      "procedureLocatorDigest": "a8d8319a2c84dbb4d27fe3160bbaaa27760432c3a1f8d92b8d97ba1d3761e62c",
+      "released": false,
+      "requestDigest": "c39bcf25c7f49bb4f13e59a78c288eced044bab544f305c4ccc0b4e6cbfe28ce",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2f38ccc27a6015e5dce70b90f65b159d63ce7be5cfd749c80a57d2ecb164fb6a",
+      "state": "ADMITTED_LOCKED"
+    },
     "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095": {
       "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
       "lockGeneration": 980,
@@ -1708,7 +1720,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1031,
+  "lockGeneration": 1032,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

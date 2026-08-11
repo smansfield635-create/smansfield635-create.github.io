@@ -300,18 +300,6 @@
       "scopeHash": "2d8e31bab5c9bfc7ca27a7c9ba88a8d1b17e79867086159dd335ef376f2f4f93",
       "state": "ADMITTED_LOCKED"
     },
-    "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5": {
-      "governingHead": "eaa9be55df2a440457f4d3cfe5e13f414a52d386",
-      "lockGeneration": 1133,
-      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:EUCLIDEAN_CAROUSEL:V1",
-      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_NONZERO_PHI_GEOMETRY_REPAIR_V1_EAA9BE55_20260811_001",
-      "procedureLocatorDigest": "15288867006c38345c1ceef7aaf731141888781d2d0492e7b570202178c2036d",
-      "released": false,
-      "requestDigest": "e0617b03f8b2626d4382c1e629b2b05e5f8775eb109928aff80f86ff22eab3b5",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5",
-      "state": "ADMITTED_LOCKED"
-    },
     "3260334210612761568271d95f8d7e558fb52fe338fdaa7fd2809e31d44a7095": {
       "governingHead": "e52fe4e8fa9e6f6d65710e32ce0dfa6f54b8382e",
       "lockGeneration": 980,
@@ -16954,6 +16942,19 @@
       "scopeHash": "a640e678de0da96a62e3c06c524f34f298ddad4ee8bf2bdc5a5da093835d45ca",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "eaa9be55df2a440457f4d3cfe5e13f414a52d386",
+      "lockGeneration": 1133,
+      "lockScope": "LAWS:CONTEXTUAL_TOPOLOGY:READABLE_TABS:FOUR_MODEL_SPECIMEN:EUCLIDEAN_CAROUSEL:V1",
+      "operationId": "LAWS_CONTEXTUAL_3D_EUCLIDEAN_CAROUSEL_NONZERO_PHI_GEOMETRY_REPAIR_V1_EAA9BE55_20260811_001",
+      "procedureLocatorDigest": "15288867006c38345c1ceef7aaf731141888781d2d0492e7b570202178c2036d",
+      "released": true,
+      "requestDigest": "e0617b03f8b2626d4382c1e629b2b05e5f8775eb109928aff80f86ff22eab3b5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "2e69992475d05a6492652ab1cbe8dad1c04d4122d7f1d6c854bf168974a595b5",
+      "state": "TERMINAL",
+      "terminalDisposition": "VOIDED"
     }
   ]
 }

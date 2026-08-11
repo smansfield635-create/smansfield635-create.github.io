@@ -408,32 +408,6 @@
       "scopeHash": "4108c909a9b8952f198bf6aa7220b5798b1bdc8f8d7e31241fc769616a15ecb9",
       "state": "ADMITTED_LOCKED"
     },
-    "41e62591cfb92c6357666c2945a865406afa14f8684cadd49ca932f202a57e3b": {
-      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
-      "lockGeneration": 1063,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SUCCESSOR_PROTOCOL:REMOTE_CERT:31462267181:1",
-      "operationId": "SUCCESSOR_PROTOCOL_REMOTE_CERT_SUCCESSOR_31462267181_1",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
-        "lockGeneration": 1062,
-        "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SUCCESSOR_PROTOCOL:REMOTE_CERT:31462267181:1",
-        "operationId": "SUCCESSOR_PROTOCOL_REMOTE_CERT_PREDECESSOR_31462267181_1",
-        "preservedEvidenceRefs": [
-          "REMOTE_CERT_PREDECESSOR_ACQUIRE_RECEIPT"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "REMOTE_SUCCESSOR_CERT_31462267181_1"
-      },
-      "procedureLocatorDigest": "d7fa7eaeb4359792d3b290d28d3c93870ac3c0a3d2334e1021e5fa6d6c443d82",
-      "released": false,
-      "requestDigest": "5b8e56fd12d323bc0b4426441d7ad36963acf5ce0b890cc495dc00a0f338041c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "41e62591cfb92c6357666c2945a865406afa14f8684cadd49ca932f202a57e3b",
-      "state": "ADMITTED_LOCKED"
-    },
     "45029177fe304a8f51b34d7175740492c6550519634a82d0f4cfddbe32f46ac0": {
       "governingHead": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
       "lockGeneration": 446,
@@ -15778,6 +15752,33 @@
         "transitionId": "REMOTE_SUCCESSOR_CERT_31462267181_1"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "26d90c2a69478afaf8aa9dcab91b6dd95f2e2910",
+      "lockGeneration": 1063,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SUCCESSOR_PROTOCOL:REMOTE_CERT:31462267181:1",
+      "operationId": "SUCCESSOR_PROTOCOL_REMOTE_CERT_SUCCESSOR_31462267181_1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+        "lockGeneration": 1062,
+        "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:SUCCESSOR_PROTOCOL:REMOTE_CERT:31462267181:1",
+        "operationId": "SUCCESSOR_PROTOCOL_REMOTE_CERT_PREDECESSOR_31462267181_1",
+        "preservedEvidenceRefs": [
+          "REMOTE_CERT_PREDECESSOR_ACQUIRE_RECEIPT"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "REMOTE_SUCCESSOR_CERT_31462267181_1"
+      },
+      "procedureLocatorDigest": "d7fa7eaeb4359792d3b290d28d3c93870ac3c0a3d2334e1021e5fa6d6c443d82",
+      "released": true,
+      "requestDigest": "5b8e56fd12d323bc0b4426441d7ad36963acf5ce0b890cc495dc00a0f338041c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "41e62591cfb92c6357666c2945a865406afa14f8684cadd49ca932f202a57e3b",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

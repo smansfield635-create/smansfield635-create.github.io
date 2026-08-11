@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#07131c">
+  <title>Audralia · Open World</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main id="world" aria-label="Audralia open-world environmental specimen">
+    <canvas id="scene" aria-label="Interactive three-dimensional view of Audralia"></canvas>
+    <section id="hud" aria-live="polite">
+      <strong>Audralia</strong>
+      <span id="scale-readout">planetary</span>
+    </section>
+    <div id="hint">drag to travel · pinch or wheel to change scale</div>
+    <div id="fallback" hidden>This device could not start the environmental renderer.</div>
+  </main>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>

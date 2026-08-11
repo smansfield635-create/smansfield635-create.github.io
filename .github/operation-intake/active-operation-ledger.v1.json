@@ -1308,18 +1308,6 @@
       "scopeHash": "ca7fa03391973ee17ce743c158225d9a454f488e3459d9aac92cc50f75f74260",
       "state": "ADMITTED_LOCKED"
     },
-    "cbbdb600d46137228a6cad578053de77d156346ffb3a942b648f1b334ec74ba5": {
-      "governingHead": "a88cb0f67d2ea0628017063e54995768a3d440fe",
-      "lockGeneration": 1078,
-      "lockScope": "H_EARTH:G2:ONE_WORLD_RECONCILIATION:RATIFICATION:V1",
-      "operationId": "H_EARTH_G2_ONE_WORLD_RATIFICATION_20260811_001",
-      "procedureLocatorDigest": "12d2e3e25b0f790f166b0afebc58a4a0749f2bf78d7bcb2c273f389cedd2299f",
-      "released": false,
-      "requestDigest": "8cd5896f744583038f3bc62c16c2963090dd7c1ceeb9dcee085ddaa86a1cb9f7",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "cbbdb600d46137228a6cad578053de77d156346ffb3a942b648f1b334ec74ba5",
-      "state": "ADMITTED_LOCKED"
-    },
     "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27": {
       "governingHead": "6b2ff2e318ae434e05bb9f1b008a1ee756af0a78",
       "lockGeneration": 144,
@@ -16038,6 +16026,19 @@
       "requestDigest": "3aa136332921e5da9e5f39943ff10d6ff270958ea92d69043a25bf7d60dbb3bf",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "322eb09d41f2348b846931e749fc6c24948e1e1037f5023201893bdc9f3222a2",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "a88cb0f67d2ea0628017063e54995768a3d440fe",
+      "lockGeneration": 1078,
+      "lockScope": "H_EARTH:G2:ONE_WORLD_RECONCILIATION:RATIFICATION:V1",
+      "operationId": "H_EARTH_G2_ONE_WORLD_RATIFICATION_20260811_001",
+      "procedureLocatorDigest": "12d2e3e25b0f790f166b0afebc58a4a0749f2bf78d7bcb2c273f389cedd2299f",
+      "released": true,
+      "requestDigest": "8cd5896f744583038f3bc62c16c2963090dd7c1ceeb9dcee085ddaa86a1cb9f7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cbbdb600d46137228a6cad578053de77d156346ffb3a942b648f1b334ec74ba5",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

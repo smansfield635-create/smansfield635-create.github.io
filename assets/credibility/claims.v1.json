@@ -1,8 +1,11 @@
 {
   "schema": "DIAMOND_GATE_PUBLIC_CREDIBILITY_CLAIMS_v1",
   "status": "ACTIVE_PUBLIC_EVIDENCE_REGISTRY",
+  "currentPublicMainAtAudit": "541804990842744c1e644e49213fd807d9fd523c",
+  "historicalExecutableEvidenceCommit": "89da45a265140e90334371b318bcd4c25733fa98",
+  "publicGovernanceRetirementCommit": "541804990842744c1e644e49213fd807d9fd523c",
   "claimPolicy": {
-    "rule": "Every material technical claim must state its demonstrated scope and stop where the evidence stops.",
+    "rule": "Every material technical claim must state its demonstrated scope, evidence time-state, and where the evidence stops.",
     "proofLevels": [
       {"level": 1, "name": "OBSERVABLE", "meaning": "A visitor can inspect the implementation or live behavior."},
       {"level": 2, "name": "ENFORCED", "meaning": "Executable machinery rejects a prohibited state or operation."},
@@ -15,7 +18,7 @@
     {
       "id": "browser-native-construction",
       "publicClaim": "Browser-native software construction",
-      "status": "DEMONSTRATED",
+      "status": "CURRENTLY_OBSERVABLE",
       "highestProofLevel": 1,
       "scope": "Diamond Gate public product surfaces built with repository-owned HTML, CSS, JavaScript and, where needed, WebGL/WebGL2 and GLSL.",
       "evidence": ["/", "/laws/", "/showroom/globe/h-earth/", "/showroom/globe/audralia/"],
@@ -24,20 +27,21 @@
     {
       "id": "bounded-execution",
       "publicClaim": "Bounded exact-head execution",
-      "status": "ENFORCED_AND_TESTED",
+      "status": "HISTORICALLY_ENFORCED_AND_TESTED_PUBLIC_IMPLEMENTATION_RETIRED",
       "highestProofLevel": 3,
-      "scope": "Registered repository operations executed through the bounded exact-head carrier.",
-      "evidence": [
+      "scope": "Registered repository operations executed through the bounded exact-head carrier at the preserved historical evidence commit.",
+      "historicalEvidence": [
         ".github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs",
         ".github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json",
         ".github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs"
       ],
-      "boundary": "This is a scoped execution property of admitted repository operations, not a claim that arbitrary software execution is impossible."
+      "currentPublicState": "The same public paths now emit PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED handoffs or retirement-compatible data after the P0 public retirement adoption.",
+      "boundary": "This supports a historical public demonstration claim, not a claim that the retired public carrier remains the current active implementation."
     },
     {
       "id": "fail-closed-page-quality",
       "publicClaim": "Fail-closed Page Excellence qualification",
-      "status": "ENFORCED_AND_TESTED",
+      "status": "CURRENTLY_ENFORCED",
       "highestProofLevel": 3,
       "scope": "Page operations governed by the active Page Excellence toolchain and entry gate.",
       "evidence": [
@@ -50,40 +54,42 @@
     {
       "id": "state-and-source-binding",
       "publicClaim": "Exact governing-state and source-identity binding",
-      "status": "ENFORCED",
+      "status": "HISTORICALLY_ENFORCED_PUBLIC_IMPLEMENTATION_RETIRED",
       "highestProofLevel": 2,
-      "scope": "Governed operations whose admission and execution documents bind exact repository state, allowed paths, source identities and digests.",
-      "evidence": [
+      "scope": "Governed public repository operations at the preserved historical evidence commit whose admission and execution documents bound exact repository state, allowed paths, source identities and digests.",
+      "historicalEvidence": [
         ".github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs",
         ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs"
       ],
-      "boundary": "The claim describes identity and scope enforcement inside this repository lifecycle; it is not a general cryptographic-security claim."
+      "boundary": "This supports a historical repository-lifecycle enforcement claim and is not a blanket cryptographic-security or current-public-runtime claim."
     },
     {
       "id": "successor-packet-compiler",
       "publicClaim": "Repository-operation successor packet compiler",
-      "status": "IMPLEMENTED_AND_TESTED",
+      "status": "HISTORICALLY_IMPLEMENTED_AND_TESTED_PUBLIC_IMPLEMENTATION_RETIRED",
       "highestProofLevel": 3,
-      "scope": "Compilation of a predecessor repository operation into a fresh successor packet when the governing head advances, while preserving declared scope and refusing authority inheritance.",
-      "evidence": [
+      "scope": "At the preserved historical evidence commit, compilation of a predecessor repository operation into a fresh successor packet when the governing head advanced, while preserving declared scope and refusing authority inheritance.",
+      "historicalEvidence": [
         ".github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs",
         ".github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs",
         ".github/ai-router/operation-lifecycle/successor-protocol.v1.json"
       ],
-      "boundary": "This is not a general-purpose website compiler and should not be represented as one."
+      "currentPublicState": "The public compiler path is now a fail-closed retirement handoff and no longer exposes the executable compiler implementation on public main.",
+      "boundary": "This is a historical public implementation claim, not a present-tense claim that the public compiler remains active, and not a general-purpose website compiler claim."
     },
     {
       "id": "continuity-and-recovery",
       "publicClaim": "Governed continuity and bounded recovery",
-      "status": "IMPLEMENTED_AND_TESTED",
+      "status": "HISTORICALLY_IMPLEMENTED_AND_TESTED_PUBLIC_IMPLEMENTATION_RETIRED",
       "highestProofLevel": 3,
-      "scope": "Repository workflows for differential continuity, operation succession, instrument lifecycle, and bounded recovery/requalification.",
-      "evidence": [
+      "scope": "Public repository workflows at the preserved historical evidence commit for differential continuity, operation succession, instrument lifecycle and bounded recovery/requalification.",
+      "historicalEvidence": [
         ".github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs",
         ".github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs",
         ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs"
       ],
-      "boundary": "This demonstrates repository-level continuity controls; it does not claim uninterrupted service availability under every external failure mode."
+      "currentPublicState": "The P0 retirement adoption replaced the public implementations at these paths with fail-closed retirement surfaces.",
+      "boundary": "This demonstrates historical public repository-level continuity controls; it does not establish current public execution or uninterrupted service availability."
     }
   ],
   "claimsNotYetAuthorized": [

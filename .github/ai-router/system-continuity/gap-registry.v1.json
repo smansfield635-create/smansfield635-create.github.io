@@ -80,7 +80,7 @@
     },
     {
       "gapId": "POST_RATIFICATION_STRICT_SUCCESSOR_PACKET_RECONSTRUCTION",
-      "status": "LOCAL_CAPABILITY_CLOSED",
+      "status": "OPEN",
       "discoveredAtHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
       "coordinationIssue": 578,
       "summary": "When a materially relevant ratifying merge advances main, the strict successor gate correctly requires a fresh request and procedure, but rooms currently reconstruct those packets manually even when the canonical predecessor contract is already available. A non-authoritative compiler must prepare only explicit exact-head rebinds and leave admission to the existing atomic successor gate.",

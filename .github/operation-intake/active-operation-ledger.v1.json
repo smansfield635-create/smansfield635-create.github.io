@@ -852,18 +852,6 @@
       "scopeHash": "8aa83ef0f77c262e81d2ded245c9ddccf3d87ea40a908b5fc0b7ac7424fea036",
       "state": "ADMITTED_LOCKED"
     },
-    "8c8d0a9bb7f96b8252a9c1a6d1c6d45f20e638fc9c810672692a84625534e333": {
-      "governingHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
-      "lockGeneration": 1176,
-      "lockScope": "REPOSITORY_CONTROL_PLANE:OPERATION_LIFECYCLE:POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER:V1",
-      "operationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_001",
-      "procedureLocatorDigest": "62e2072b8d62dd6ff0d0e9d9e1fe4075f4843f11978789c8d0516e2548260462",
-      "released": false,
-      "requestDigest": "40e293bd4eff1cb78af4bbd00a82d9a0cd4940f153a0c63517b085ddd71d663d",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "8c8d0a9bb7f96b8252a9c1a6d1c6d45f20e638fc9c810672692a84625534e333",
-      "state": "ADMITTED_LOCKED"
-    },
     "8cb4a77845245634f06ccbe135c1bd54d9ba6132473c52dfc793cb767bb2330e": {
       "governingHead": "c4b668302bf676f64df7f1e3c364fc73b3ac6270",
       "lockGeneration": 54,
@@ -17679,6 +17667,19 @@
       "scopeHash": "c48bf9d0357ad307152be707e424993015f8283feb2d4322fb638a7b446965ca",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
+      "lockGeneration": 1176,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:OPERATION_LIFECYCLE:POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER:V1",
+      "operationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_001",
+      "procedureLocatorDigest": "62e2072b8d62dd6ff0d0e9d9e1fe4075f4843f11978789c8d0516e2548260462",
+      "released": true,
+      "requestDigest": "40e293bd4eff1cb78af4bbd00a82d9a0cd4940f153a0c63517b085ddd71d663d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8c8d0a9bb7f96b8252a9c1a6d1c6d45f20e638fc9c810672692a84625534e333",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

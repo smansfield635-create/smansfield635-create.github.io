@@ -864,18 +864,6 @@
       "scopeHash": "8aa83ef0f77c262e81d2ded245c9ddccf3d87ea40a908b5fc0b7ac7424fea036",
       "state": "ADMITTED_LOCKED"
     },
-    "8b8825b6a0c334f7f50c171cc932977a72935e9b8c31b3ce012d13bc8d75f9ae": {
-      "governingHead": "61205c330660bd9941dff52aa623674e8e43bb08",
-      "lockGeneration": 1203,
-      "lockScope": "PLATFORM:P0:PUBLIC_RETIREMENT:FIRST_TRANCHE:PREMERGE_BROWSER_REGRESSION:V1",
-      "operationId": "P0_FIRST_TRANCHE_PREMERGE_PUBLIC_BROWSER_REGRESSION_20260812_001",
-      "procedureLocatorDigest": "60e46d4561192efdae1f4e1247967a398742ea3c2be34cdd103cbc3750c41300",
-      "released": false,
-      "requestDigest": "ce2a38511353cd66f0212137ae1a6e2b5a6eb3a0e9385afe3b52a10a65a674b7",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "8b8825b6a0c334f7f50c171cc932977a72935e9b8c31b3ce012d13bc8d75f9ae",
-      "state": "ADMITTED_LOCKED"
-    },
     "8cb4a77845245634f06ccbe135c1bd54d9ba6132473c52dfc793cb767bb2330e": {
       "governingHead": "c4b668302bf676f64df7f1e3c364fc73b3ac6270",
       "lockGeneration": 54,
@@ -18063,6 +18051,19 @@
       "scopeHash": "233945a4277dccf4a8b4ab8e6f6df8f47e90a4a580a0a2ab50e99e2d4d39d577",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "61205c330660bd9941dff52aa623674e8e43bb08",
+      "lockGeneration": 1203,
+      "lockScope": "PLATFORM:P0:PUBLIC_RETIREMENT:FIRST_TRANCHE:PREMERGE_BROWSER_REGRESSION:V1",
+      "operationId": "P0_FIRST_TRANCHE_PREMERGE_PUBLIC_BROWSER_REGRESSION_20260812_001",
+      "procedureLocatorDigest": "60e46d4561192efdae1f4e1247967a398742ea3c2be34cdd103cbc3750c41300",
+      "released": true,
+      "requestDigest": "ce2a38511353cd66f0212137ae1a6e2b5a6eb3a0e9385afe3b52a10a65a674b7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8b8825b6a0c334f7f50c171cc932977a72935e9b8c31b3ce012d13bc8d75f9ae",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

@@ -48,29 +48,48 @@ void main(){
   vec3 localUp=normalize(uEye-CENTER);
   vec3 sun=normalize(uSunDir);
   float altitude=max(0.0,length(uEye-CENTER)-R);
-  float mu=clamp(dot(rd,localUp),0.0,1.0);
-  float horizon=pow(1.0-mu,2.5);
+  float viewUp=clamp(dot(rd,localUp),-.12,1.0);
+  float mu=clamp(viewUp,0.0,1.0);
+  float horizon=pow(1.0-mu,2.15);
+  float nearHorizon=exp(-pow(mu/.115,2.0));
   float sunHeight=dot(localUp,sun);
-  float daylight=sstep(-.18,.18,sunHeight);
-  float twilight=exp(-abs(sunHeight)*8.0)*(1.0-daylight*.35);
-  float towardSun=pow(max(dot(rd,sun),0.0),12.0);
+  float daylight=sstep(-.20,.16,sunHeight);
+  float civilTwilight=(1.0-sstep(-.26,-.02,sunHeight))*sstep(-.32,.08,sunHeight);
+  float twilight=exp(-abs(sunHeight)*7.0)*(1.0-daylight*.30);
+  float sunAlignment=max(dot(rd,sun),0.0);
+  float solarHalo=pow(sunAlignment,10.0);
+  float solarCore=pow(sunAlignment,72.0);
+  float antiSolar=pow(max(dot(rd,-sun),0.0),4.0);
+  float airmass=1.0/(.20+.80*max(mu,.015));
 
-  vec3 dayZenith=vec3(.075,.255,.52);
-  vec3 dayHorizon=vec3(.57,.76,.92);
-  vec3 nightZenith=vec3(.006,.014,.038);
-  vec3 nightHorizon=vec3(.055,.075,.13);
-  vec3 zenith=mix(nightZenith,dayZenith,daylight);
-  vec3 horizonColor=mix(nightHorizon,dayHorizon,daylight);
-  vec3 color=mix(zenith,horizonColor,horizon);
-  color+=vec3(.90,.40,.16)*twilight*horizon*.34;
-  color+=vec3(1.0,.82,.52)*towardSun*(.025+.08*horizon)*daylight;
+  vec3 dayZenith=vec3(.045,.205,.48);
+  vec3 dayMid=vec3(.20,.47,.72);
+  vec3 dayHorizon=vec3(.62,.79,.93);
+  vec3 nightZenith=vec3(.004,.010,.032);
+  vec3 nightMid=vec3(.014,.030,.072);
+  vec3 nightHorizon=vec3(.045,.070,.125);
+  vec3 dayBase=mix(dayZenith,dayMid,sstep(.18,.72,horizon));
+  dayBase=mix(dayBase,dayHorizon,sstep(.62,1.0,horizon));
+  vec3 nightBase=mix(nightZenith,nightMid,sstep(.18,.74,horizon));
+  nightBase=mix(nightBase,nightHorizon,sstep(.68,1.0,horizon));
+  vec3 color=mix(nightBase,dayBase,daylight);
 
-  float surfacePresence=1.0-sstep(320.0,1650.0,altitude);
-  float upperPresence=1.0-sstep(1500.0,5200.0,altitude);
-  float upperLimb=upperPresence*horizon*(.10+.34*(1.0-sstep(1600.0,4200.0,altitude)));
-  float alpha=clamp(surfacePresence*.985+(1.0-surfacePresence)*upperLimb,0.0,.985);
+  vec3 horizonScatter=vec3(.44,.64,.82)*nearHorizon*(.08+.12*daylight)*clamp(airmass*.22,0.0,.72);
+  vec3 warmTwilight=vec3(.98,.34,.095)*twilight*horizon*(.18+.34*nearHorizon);
+  vec3 twilightGold=vec3(1.0,.60,.25)*civilTwilight*solarHalo*horizon*.12;
+  vec3 sunHaze=vec3(1.0,.84,.58)*solarHalo*(.018+.085*horizon)*daylight;
+  vec3 sunDiskGlow=vec3(1.0,.93,.76)*solarCore*(.016+.035*daylight);
+  vec3 antiSolarCool=vec3(.018,.035,.065)*antiSolar*horizon*(.35+.30*(1.0-daylight));
+  color+=horizonScatter+warmTwilight+twilightGold+sunHaze+sunDiskGlow-antiSolarCool;
+
+  float surfacePresence=1.0-sstep(380.0,1800.0,altitude);
+  float upperPresence=1.0-sstep(1450.0,5400.0,altitude);
+  float spaceMix=sstep(1200.0,5200.0,altitude);
+  color=mix(color,color*vec3(.42,.52,.70),spaceMix*.34);
+  float upperLimb=upperPresence*horizon*(.09+.38*(1.0-sstep(1700.0,4300.0,altitude)));
+  float alpha=clamp(surfacePresence*.988+(1.0-surfacePresence)*upperLimb,0.0,.988);
   if(alpha<.002){outColor=vec4(0.0);return;}
-  outColor=vec4(color,alpha);
+  outColor=vec4(max(color,vec3(0.0)),alpha);
 }`;
 
 export function createClearAtmosphereLayer({renderer,worldCanvas,getSunDirection}={}){

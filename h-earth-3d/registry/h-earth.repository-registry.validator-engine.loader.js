@@ -1,8 +1,8 @@
 /**
- * H-Earth repository registry validator dependency loader v10 successor.
+ * H-Earth repository registry validator dependency loader v11 successor.
  *
  * Preserves the complete predecessor chain and adds audit-only path recognition
- * for the exact H1 transition-surface paths blocked by exact-H0 preflight.
+ * for the exact in-world live GPU binding path blocked by Generation 94.
  */
 
 import {
@@ -18,9 +18,12 @@ import {
 import {
   verifyHEarthHC05LiveGPUPathRecognition
 } from './accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js';
-import registryFacade, {
+import {
   verifyHEarthH1TransitionSurfacePathRecognition
 } from './accepted-amendments/h-earth.repository-registry.h1-transition-surface-path-recognition.js';
+import registryFacade, {
+  verifyHEarthInWorldLiveGPUBindingPathRecognition
+} from './accepted-amendments/h-earth.repository-registry.in-world-live-gpu-binding-path-recognition.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -35,6 +38,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     verifyHEarthHC05LiveGPUPathRecognition();
   const h1TransitionSurfacePathRecognitionVerification =
     verifyHEarthH1TransitionSurfacePathRecognition();
+  const inWorldLiveGPUBindingPathRecognitionVerification =
+    verifyHEarthInWorldLiveGPUBindingPathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -84,6 +89,21 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       h1TransitionSurfacePathRecognitionVerification.checks.noProductAuthority === true &&
       h1TransitionSurfacePathRecognitionVerification.checks.noCanonicalAuthority === true &&
       h1TransitionSurfacePathRecognitionVerification.checks.noCorrespondenceAuthority === true,
+    inWorldLiveGPUBindingPathRecognitionEligible:
+      inWorldLiveGPUBindingPathRecognitionVerification.eligible === true,
+    inWorldExactTargetPathResolved:
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.exactTargetPathCount === true &&
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.targetPathResolves === true &&
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.targetOccurrenceMatched === true,
+    inWorldTargetMainBlobCustodyPreserved:
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.exactTargetMainBlob === true,
+    inWorldAuditOnlyNoAuthorityLeak:
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.auditOnly === true &&
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.pathResolutionOnly === true &&
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.noProductAuthority === true &&
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.noRuntimeAuthority === true &&
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.noCanonicalAuthority === true &&
+      inWorldLiveGPUBindingPathRecognitionVerification.checks.noCorrespondenceAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -103,7 +123,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v10_H1_TRANSITION_SURFACE_PATH_RECOGNITION_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v11_IN_WORLD_LIVE_GPU_BINDING_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -116,7 +136,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc05LiveGPUPathRecognition:
         hc05LiveGPUPathRecognitionVerification.eligible === true,
       h1TransitionSurfacePathRecognition:
-        h1TransitionSurfacePathRecognitionVerification.eligible === true
+        h1TransitionSurfacePathRecognitionVerification.eligible === true,
+      inWorldLiveGPUBindingPathRecognition:
+        inWorldLiveGPUBindingPathRecognitionVerification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
@@ -160,6 +182,17 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       h1AuditOnlyNoAuthorityLeak:
         successorChecks.h1AuditOnlyNoAuthorityLeak
     }),
+    inWorldLiveGPUBindingPathRecognitionVerification,
+    inWorldLiveGPUBindingPathRecognitionChecks: deepFreeze({
+      inWorldLiveGPUBindingPathRecognitionEligible:
+        successorChecks.inWorldLiveGPUBindingPathRecognitionEligible,
+      inWorldExactTargetPathResolved:
+        successorChecks.inWorldExactTargetPathResolved,
+      inWorldTargetMainBlobCustodyPreserved:
+        successorChecks.inWorldTargetMainBlobCustodyPreserved,
+      inWorldAuditOnlyNoAuthorityLeak:
+        successorChecks.inWorldAuditOnlyNoAuthorityLeak
+    }),
     boundary: deepFreeze({
       ...base.boundary,
       liveExperienceAcceptedOccurrenceProvenanceOnly: true,
@@ -179,7 +212,14 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       h1RendererCameraTerrainGeometryPhysicsMaterialSimulationPersistenceAuthorityCreated: false,
       h1CanonicalIdentityAuthorityCreated: false,
       h1CorrespondenceAuthorityCreated: false,
-      h1MergeAuthorityCreated: false
+      h1MergeAuthorityCreated: false,
+      inWorldLiveGPUBindingPathRecognitionOnly: true,
+      inWorldProductMutationAuthorityCreated: false,
+      inWorldRuntimeMutationAuthorityCreated: false,
+      inWorldRendererCameraNavigationTerrainGeometryWorldGameplayAuthorityCreated: false,
+      inWorldCanonicalIdentityAuthorityCreated: false,
+      inWorldCorrespondenceAuthorityCreated: false,
+      inWorldMergeDeploymentAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
@@ -199,7 +239,14 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       h1RuntimeMutationAuthorized: false,
       h1CanonicalIdentityAuthorityAuthorized: false,
       h1CorrespondenceAuthorityAuthorized: false,
-      h1MergeAuthorized: false
+      h1MergeAuthorized: false,
+      inWorldLiveGPUBindingPathRecognitionLoaded: true,
+      inWorldProductMutationAuthorized: false,
+      inWorldRuntimeMutationAuthorized: false,
+      inWorldRendererCameraNavigationTerrainGeometryWorldGameplayAuthorized: false,
+      inWorldCanonicalIdentityAuthorityAuthorized: false,
+      inWorldCorrespondenceAuthorityAuthorized: false,
+      inWorldMergeDeploymentAuthorized: false
     })
   });
 }

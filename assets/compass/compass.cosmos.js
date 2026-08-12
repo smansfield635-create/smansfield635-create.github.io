@@ -801,7 +801,49 @@
     publish({ lastAction: "cosmos-destroyed" });
   }
 
+  function installBuildDoor() {
+    const note = document.querySelector(".compass-accessibility-note");
+    if (!note || document.querySelector("[data-compass-build-door]")) return;
+
+    const section = document.createElement("section");
+    section.className = "compass-supporting-entry__group";
+    section.setAttribute("aria-labelledby", "compass-build-door-title");
+    section.setAttribute("data-compass-build-door", "true");
+
+    const title = document.createElement("h3");
+    title.id = "compass-build-door-title";
+    title.className = "compass-supporting-entry__group-title";
+    title.textContent = "Build with Diamond Gate";
+
+    const nav = document.createElement("nav");
+    nav.className = "compass-route-deck";
+    nav.setAttribute("aria-label", "Website construction");
+
+    const link = document.createElement("a");
+    link.className = "compass-route-card";
+    link.href = "/build/";
+    link.setAttribute("data-direct-estate-route", "build");
+
+    const label = document.createElement("span");
+    label.className = "compass-route-card__label";
+    label.textContent = "Build Your Own Custom Site";
+
+    const purpose = document.createElement("span");
+    purpose.className = "compass-route-card__purpose";
+    purpose.textContent = "Custom website construction is available now. Explore how Diamond Gate builds, compare the engineering, inspect proof of product, or start an inquiry.";
+
+    const action = document.createElement("span");
+    action.className = "compass-route-card__action";
+    action.textContent = "Explore Website Construction";
+
+    link.append(label, purpose, action);
+    nav.append(link);
+    section.append(title, nav);
+    note.replaceWith(section);
+  }
+
   function initialize() {
+    installBuildDoor();
     try {
       createCanvases();
       bindEnvironment();

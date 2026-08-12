@@ -196,7 +196,7 @@ jobs:
             fs.writeFileSync(path.join(out, 'transition.json'), `${JSON.stringify(packet.transition, null, 2)}\n`);
             fs.writeFileSync(path.join(out, 'operation-request.json'), `${JSON.stringify(packet.operationRequest, null, 2)}\n`);
             fs.writeFileSync(path.join(out, 'construction-procedure.json'), `${JSON.stringify(packet.constructionProcedure, null, 2)}\n`);
-            NODE
+          NODE
           fi
 
       - name: Execute canonical atomic successor gate

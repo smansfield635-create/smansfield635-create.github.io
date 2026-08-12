@@ -732,18 +732,6 @@
       "scopeHash": "77e9d50eb7b12a10edb88aa4520d9d7c1333f174f9fbbc325bf8f0234749d07e",
       "state": "ADMITTED_LOCKED"
     },
-    "78b4c4fd8610fe105b4fef24c3470a1db0d9c62a9495f711e31290d9ff329172": {
-      "governingHead": "2febd50d8ffb4ebf550e373e36846b0a1f1174ad",
-      "lockGeneration": 1156,
-      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:R2_OBSERVABILITY:PR922:RATIFICATION_MERGE:V1",
-      "operationId": "BOUNDED_BROWSER_R2_OBSERVABILITY_PR922_RATIFICATION_MERGE_V1_2FEBD50D_20260811_001",
-      "procedureLocatorDigest": "25c67431570a53744ecf9c11a22ce7d1fd86b6aa6d073a0d0a7325c39d1422e4",
-      "released": false,
-      "requestDigest": "1f2c3d78a1b47e0ad6dfcd7742c27c4d9582e1a5c150ec425f61e9fcf4d86d0b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "78b4c4fd8610fe105b4fef24c3470a1db0d9c62a9495f711e31290d9ff329172",
-      "state": "ADMITTED_LOCKED"
-    },
     "829f23705557beebb52268181d148379af118f0a65d7eb5875e615a79492af58": {
       "governingHead": "5298f541c05097c96ec65ef60cb9de7735652b07",
       "lockGeneration": 164,
@@ -17203,6 +17191,19 @@
       "scopeHash": "abd1ab9843f1834208866719a6a8922d656483e7cb39f0b46aef304e2f87fc0f",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "2febd50d8ffb4ebf550e373e36846b0a1f1174ad",
+      "lockGeneration": 1156,
+      "lockScope": "REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:R2_OBSERVABILITY:PR922:RATIFICATION_MERGE:V1",
+      "operationId": "BOUNDED_BROWSER_R2_OBSERVABILITY_PR922_RATIFICATION_MERGE_V1_2FEBD50D_20260811_001",
+      "procedureLocatorDigest": "25c67431570a53744ecf9c11a22ce7d1fd86b6aa6d073a0d0a7325c39d1422e4",
+      "released": true,
+      "requestDigest": "1f2c3d78a1b47e0ad6dfcd7742c27c4d9582e1a5c150ec425f61e9fcf4d86d0b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "78b4c4fd8610fe105b4fef24c3470a1db0d9c62a9495f711e31290d9ff329172",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

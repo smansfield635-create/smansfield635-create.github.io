@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Website Inquiry · Diamond Gate Bridge</title>
+<meta name="description" content="Tell Diamond Gate what kind of website you want to build. Submit complete or incomplete and request follow-up if you need help.">
+<link rel="stylesheet" href="/assets/build/build.css?v=1">
+</head>
+<body>
+<main class="shell">
+  <nav class="topbar" aria-label="Inquiry navigation">
+    <a class="brand" href="/build/">DIAMOND GATE BUILD</a>
+    <a class="back" href="/build/">Back to construction page</a>
+  </nav>
+
+  <section class="hero">
+    <p class="eyebrow">Customer Intake</p>
+    <h1>What are you trying to build?</h1>
+    <p class="lede">You do not need to know every technical answer. Complete what you can. You may submit the questionnaire incomplete and ask a Diamond Gate team member to follow up.</p>
+  </section>
+
+  <section class="form-shell" aria-labelledby="form-title">
+    <form id="build-intake">
+      <div class="fieldset">
+        <h2 id="form-title">1. Your contact information</h2>
+        <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name"></div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email"></div>
+        <div class="field"><label for="business">Business or organization</label><input id="business" name="business" autocomplete="organization"></div>
+      </div>
+
+      <div class="fieldset">
+        <h2>2. What kind of website are you building?</h2>
+        <div class="field"><label for="siteType">Website type</label><select id="siteType" name="siteType"><option value="">Choose one</option><option>Small business / services</option><option>Professional services</option><option>Restaurant / hospitality</option><option>Portfolio / personal brand</option><option>Nonprofit / community</option><option>E-commerce</option><option>Interactive application</option><option>3D / spatial experience</option><option>Existing website redesign</option><option>Other / not sure</option></select></div>
+        <div class="field"><label for="goal">Primary goal</label><textarea id="goal" name="goal" placeholder="What should the site help your visitors do?"></textarea></div>
+        <div class="field"><label for="pages">Pages or sections you expect</label><textarea id="pages" name="pages" placeholder="Home, About, Services, Contact, Gallery, Pricing, etc."></textarea></div>
+      </div>
+
+      <div class="fieldset">
+        <h2>3. Features</h2>
+        <div class="choice-grid">
+          <label class="choice"><input type="checkbox" name="features" value="Contact or lead form">Contact or lead form</label>
+          <label class="choice"><input type="checkbox" name="features" value="Appointments or booking">Appointments or booking</label>
+          <label class="choice"><input type="checkbox" name="features" value="Payments or commerce">Payments or commerce</label>
+          <label class="choice"><input type="checkbox" name="features" value="Gallery or portfolio">Gallery or portfolio</label>
+          <label class="choice"><input type="checkbox" name="features" value="Custom animation or interaction">Custom animation or interaction</label>
+          <label class="choice"><input type="checkbox" name="features" value="User login or accounts">User login or accounts</label>
+          <label class="choice"><input type="checkbox" name="features" value="Database or backend">Database or backend</label>
+          <label class="choice"><input type="checkbox" name="features" value="3D or spatial elements">3D or spatial elements</label>
+        </div>
+      </div>
+
+      <div class="fieldset">
+        <h2>4. What do you already have?</h2>
+        <div class="field"><label for="domain">Domain</label><select id="domain" name="domain"><option value="">Choose one</option><option>I own a domain</option><option>I need a domain</option><option>I am not sure</option></select></div>
+        <div class="field"><label for="existing">Existing website</label><select id="existing" name="existing"><option value="">Choose one</option><option>No existing website</option><option>Yes — I want to replace or redesign it</option><option>Yes — I want to modify it</option><option>I am not sure</option></select></div>
+        <div class="field"><label for="environment">Current technical environment</label><select id="environment" name="environment"><option value="">Choose one</option><option>GitHub</option><option>GitLab</option><option>Cloudflare</option><option>Vercel</option><option>WordPress / cPanel / traditional hosting</option><option>I have hosting but do not know what it is</option><option>I do not have a technical environment yet</option><option>Other</option></select><span class="hint">This does not determine whether Diamond Gate can help. It helps us understand the starting point.</span></div>
+      </div>
+
+      <div class="fieldset">
+        <h2>5. Design and project context</h2>
+        <div class="field"><label for="style">How should the site feel?</label><textarea id="style" name="style" placeholder="Professional, minimal, bold, warm, technical, luxury, playful, etc."></textarea></div>
+        <div class="field"><label for="assets">Branding and assets</label><select id="assets" name="assets"><option value="">Choose one</option><option>I have logo, colors, images and copy</option><option>I have some of these</option><option>I need help creating or organizing them</option><option>I am not sure</option></select></div>
+        <div class="field"><label for="timeline">Desired timing</label><select id="timeline" name="timeline"><option value="">Choose one</option><option>As soon as practical</option><option>Within 30 days</option><option>Within 60–90 days</option><option>No fixed deadline</option><option>Not sure yet</option></select></div>
+        <div class="field"><label for="notes">Additional notes</label><textarea id="notes" name="notes" placeholder="Anything else Diamond Gate should understand about the project, constraints, integrations or questions."></textarea></div>
+      </div>
+
+      <div class="fieldset">
+        <h2>6. Follow-up</h2>
+        <label class="choice"><input id="followup" type="checkbox" name="followup" value="Yes">I would like a Diamond Gate team member to reach out and help me with questions or missing information.</label>
+        <div class="notice">Submitting incomplete is intentional. Your inquiry will be clearly labeled <strong>INCOMPLETE_SUBMITTED</strong> so it is not confused with a completed project intake.</div>
+      </div>
+
+      <div class="form-actions">
+        <button class="button" type="button" data-submit-mode="complete">Submit completed inquiry</button>
+        <button class="button secondary" type="button" data-submit-mode="incomplete">Submit incomplete inquiry</button>
+      </div>
+      <p class="fine">Current launch intake sends the structured questionnaire through your email application to Diamond Gate. The future customer-intake instrument and automated project admission system are still under development.</p>
+    </form>
+  </section>
+
+  <footer class="footer">Diamond Gate Bridge · Customer inquiry surface · <a href="/build/">Return to Build</a></footer>
+</main>
+<script>
+(function(){
+  const form=document.getElementById('build-intake');
+  const buttons=[...document.querySelectorAll('[data-submit-mode]')];
+  function val(id){return (document.getElementById(id)?.value||'').trim()||'NOT PROVIDED'}
+  function features(){return [...form.querySelectorAll('input[name="features"]:checked')].map(x=>x.value).join(', ')||'NONE SELECTED'}
+  function submit(mode){
+    const status=mode==='complete'?'COMPLETE_SUBMITTED':'INCOMPLETE_SUBMITTED';
+    if(mode==='complete' && (!val('name') || !val('email'))){return}
+    const subject=encodeURIComponent('Diamond Gate Website Inquiry — '+status+' — '+val('business'));
+    const body=[
+      'DIAMOND GATE WEBSITE INQUIRY',
+      'STATUS: '+status,
+      'FOLLOW-UP REQUESTED: '+(document.getElementById('followup').checked?'YES':'NO'),
+      '',
+      'CONTACT',
+      'Name: '+val('name'),
+      'Email: '+val('email'),
+      'Business: '+val('business'),
+      '',
+      'PROJECT',
+      'Website type: '+val('siteType'),
+      'Primary goal: '+val('goal'),
+      'Pages / sections: '+val('pages'),
+      'Features: '+features(),
+      '',
+      'CURRENT ENVIRONMENT',
+      'Domain: '+val('domain'),
+      'Existing website: '+val('existing'),
+      'Technical environment: '+val('environment'),
+      '',
+      'DESIGN / TIMING',
+      'Style: '+val('style'),
+      'Assets: '+val('assets'),
+      'Timing: '+val('timeline'),
+      '',
+      'ADDITIONAL NOTES',
+      val('notes')
+    ].join('\n');
+    window.location.href='mailto:geodiametrics@gmail.com?subject='+subject+'&body='+encodeURIComponent(body);
+  }
+  buttons.forEach(b=>b.addEventListener('click',()=>submit(b.dataset.submitMode)));
+})();
+</script>
+</body>
+</html>

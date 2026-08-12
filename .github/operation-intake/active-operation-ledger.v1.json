@@ -86,18 +86,6 @@
       "scopeHash": "0501ae249d87ccf7e89e5afa5b15554a071e9fc1083ab13db3f081a07a5079cf",
       "state": "ADMITTED_LOCKED"
     },
-    "05b1870e94a545bc1a58ac97d7cd124080aae8bd17549841fa4c0c1c16c7001f": {
-      "governingHead": "ad2928219e040850684ce00f64e12345cea15ac1",
-      "lockGeneration": 1209,
-      "lockScope": "PLATFORM:P0:BROWSER_HARNESS:DIRECT_ROUTE_SEMANTICS_REPAIR:V1",
-      "operationId": "P0_BROWSER_HARNESS_DIRECT_ROUTE_SEMANTICS_REPAIR_20260812_003",
-      "procedureLocatorDigest": "3fb95023a92694b3fb04e3e777f2c8a8c3ce8febca2c3ab5721391470a7204ee",
-      "released": false,
-      "requestDigest": "6bef54a7a91d4213ce0f3288b9cc34cb49ceab1a0c4ce29fe41813c650005ecf",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "05b1870e94a545bc1a58ac97d7cd124080aae8bd17549841fa4c0c1c16c7001f",
-      "state": "ADMITTED_LOCKED"
-    },
     "09bf95ed0b631e0161641a0ac2b0ed7e1b4e154372645434a7dd54cfcf5a508f": {
       "governingHead": "ecbcf817c50b54ce5bf2d22f8512be7cb9e7b0c9",
       "lockGeneration": 349,
@@ -18219,6 +18207,19 @@
         "successorOperationId": "SUCCESSOR_PROTOCOL_REMOTE_CERT_SUCCESSOR_31635494897_1",
         "transitionId": "REMOTE_SUCCESSOR_CERT_31635494897_1"
       },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ad2928219e040850684ce00f64e12345cea15ac1",
+      "lockGeneration": 1209,
+      "lockScope": "PLATFORM:P0:BROWSER_HARNESS:DIRECT_ROUTE_SEMANTICS_REPAIR:V1",
+      "operationId": "P0_BROWSER_HARNESS_DIRECT_ROUTE_SEMANTICS_REPAIR_20260812_003",
+      "procedureLocatorDigest": "3fb95023a92694b3fb04e3e777f2c8a8c3ce8febca2c3ab5721391470a7204ee",
+      "released": true,
+      "requestDigest": "6bef54a7a91d4213ce0f3288b9cc34cb49ceab1a0c4ce29fe41813c650005ecf",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "05b1870e94a545bc1a58ac97d7cd124080aae8bd17549841fa4c0c1c16c7001f",
+      "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
     }
   ]

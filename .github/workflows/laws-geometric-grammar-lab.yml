@@ -1,0 +1,86 @@
+name: Laws geometric grammar laboratory
+
+on:
+  push:
+    branches:
+      - agent/laws-geometric-grammar-lab-001
+    paths:
+      - research/prototypes/laws-geometric-grammar-lab/**
+      - .github/workflows/laws-geometric-grammar-lab.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - research/prototypes/laws-geometric-grammar-lab/**
+      - .github/workflows/laws-geometric-grammar-lab.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-isolated-prototype:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out prototype branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Enforce isolated changed-path scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE_SHA="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [[ -z "${BASE_SHA}" || "${BASE_SHA}" =~ ^0+$ ]]; then
+            BASE_SHA="$(git rev-parse HEAD^)"
+          fi
+          git diff --name-only "${BASE_SHA}"...HEAD | tee changed-paths.txt
+          if grep -Ev '^(research/prototypes/laws-geometric-grammar-lab/|\.github/workflows/laws-geometric-grammar-lab\.yml$)' changed-paths.txt | grep -q .; then
+            echo "Prototype branch changed a path outside the isolated research scope."
+            exit 1
+          fi
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check research/prototypes/laws-geometric-grammar-lab/scene-spec.js
+          node --check research/prototypes/laws-geometric-grammar-lab/renderer-webgl2.js
+          node --check research/prototypes/laws-geometric-grammar-lab/app.js
+          node --check research/prototypes/laws-geometric-grammar-lab/verify.mjs
+
+      - name: Verify semantic, motion, and evidence contracts
+        run: |
+          node research/prototypes/laws-geometric-grammar-lab/verify.mjs | tee research/prototypes/laws-geometric-grammar-lab/verification-report.json
+
+      - name: Serve and retrieve the standalone prototype
+        shell: bash
+        run: |
+          python3 -m http.server 4173 >/tmp/laws-grammar-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill ${SERVER_PID}' EXIT
+          for attempt in {1..20}; do
+            if curl --fail --silent --show-error \
+              http://127.0.0.1:4173/research/prototypes/laws-geometric-grammar-lab/ \
+              --output /tmp/laws-geometric-grammar-lab.html; then
+              break
+            fi
+            sleep 1
+          done
+          test -s /tmp/laws-geometric-grammar-lab.html
+          grep -q 'A promise becomes real only when it survives the path.' /tmp/laws-geometric-grammar-lab.html
+
+      - name: Upload inspectable prototype package
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-geometric-grammar-lab
+          path: |
+            research/prototypes/laws-geometric-grammar-lab/
+            changed-paths.txt
+          if-no-files-found: error

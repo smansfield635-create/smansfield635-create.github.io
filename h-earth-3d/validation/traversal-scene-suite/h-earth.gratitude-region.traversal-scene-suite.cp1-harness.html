@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>H-Earth CP1 Traversal Scene Harness</title>
+  <style>
+    html,body{margin:0;background:#000;color:#fff;font-family:monospace}
+    main{display:grid;place-items:center;min-height:100vh}
+    canvas{width:960px;height:540px;max-width:100vw;max-height:100vh;display:block}
+    pre{position:fixed;left:0;bottom:0;max-width:100vw;max-height:25vh;overflow:auto;margin:0;padding:6px;background:rgba(0,0,0,.75);font-size:10px}
+  </style>
+</head>
+<body>
+  <main><canvas id="cp1-canvas" width="960" height="540"></canvas></main>
+  <pre id="cp1-status">initializing</pre>
+  <script type="module">
+    import { createHEarthGratitudeRegionCp1Suite } from './h-earth.gratitude-region.traversal-scene-suite.cp1-browser.mjs';
+    const status = document.getElementById('cp1-status');
+    try {
+      const response = await fetch('../../control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1.v1.json', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`CP1_CONTROL_FETCH_FAILED:${response.status}`);
+      const control = await response.json();
+      window.H_EARTH_CP1_TRAVERSAL_SUITE = await createHEarthGratitudeRegionCp1Suite({
+        canvas: document.getElementById('cp1-canvas'),
+        control
+      });
+      status.textContent = JSON.stringify(window.H_EARTH_CP1_TRAVERSAL_SUITE.getSuiteIdentity(), null, 2);
+      document.documentElement.dataset.cp1Ready = 'true';
+    } catch (error) {
+      document.documentElement.dataset.cp1Ready = 'false';
+      document.documentElement.dataset.cp1Error = 'true';
+      status.textContent = error?.stack ?? String(error);
+      throw error;
+    }
+  </script>
+</body>
+</html>

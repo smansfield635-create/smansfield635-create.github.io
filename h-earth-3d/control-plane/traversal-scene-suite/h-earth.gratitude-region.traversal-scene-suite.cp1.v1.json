@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_TRAVERSAL_SCENE_SUITE_CP1_v1",
+  "checkpoint": {
+    "id": "CP1_PERMANENT_TRAVERSAL_SUITE_AND_BOUNDED_DIAGNOSIS",
+    "requiredResult": "PASS_CLOSED",
+    "authorityQuestion": "CAN_A_PERMANENT_EIGHT_SCENE_TRAVERSAL_SUITE_EXECUTE_AGAINST_THE_FROZEN_BASELINE_AND_ESTABLISH_A_BOUNDED_PRESENTATION_DIAGNOSIS_WITHOUT_PRODUCT_MUTATION_OR_NEW_USER_INSPECTION"
+  },
+  "repository": {
+    "fullName": "smansfield635-create/smansfield635-create.github.io",
+    "frozenBaselineHead": "8a68a163f20c0918f33a3137763af05d4ccb035f",
+    "cp0Head": "79ccbaf70bd2a0ab693cd48e4e91b9c8cc5c791c",
+    "cp0Branch": "agent/h-earth-gratitude-region-traversal-scene-suite-cp0-baseline-001",
+    "checkpointBranch": "agent/h-earth-gratitude-region-traversal-scene-suite-cp1-diagnosis-001",
+    "rollbackBranch": "rollback/h-earth-gratitude-region-pre-traversal-scene-suite-001"
+  },
+  "authoritySeparation": {
+    "perceptualJudgment": "PRIOR_USER_OBSERVATIONS_CONSUMED_AS_INPUT_ONLY_NO_NEW_USER_INSPECTION",
+    "engineeringDiagnosis": "AUTHORIZED_AND_REQUIRED",
+    "repositoryMutation": "CP1_CONTROL_VALIDATION_WORKFLOW_AND_EVIDENCE_PATHS_ONLY",
+    "executedVerification": "REQUIRED",
+    "physicalAcceptance": "NOT_PERFORMED"
+  },
+  "viewport": { "width": 960, "height": 540, "pixelRatio": 1 },
+  "sceneAimLaw": "DERIVE_YAW_AND_PITCH_FROM_FROZEN_TERRAIN_CAMERA_EYE_TO_AUTHORIZED_TARGET_TERRAIN_POINT",
+  "presentationTerrainAuthority": "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_USED_BY_R3A_CAMERA_RECONCILIATION_AND_LIVE_RENDER_PACKAGE",
+  "placementAuthorityPath": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.gratitude-region-final-spatial-placement-disposition.v1.json",
+  "scenes": [
+    {
+      "id": "SCENE_01_HILL_FIELD_FILL",
+      "purpose": "Test whether an approaching upper hill occupies enough of the field to communicate mass and scale.",
+      "camera": { "x": 32, "z": -172, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 44 },
+      "target": { "x": 80, "z": -172, "authority": "MIRROR_MANOR_SITE_CENTER_AS_TERRAIN_TARGET_ONLY" }
+    },
+    {
+      "id": "SCENE_02_ASCENDING_TOWARD_CREST",
+      "purpose": "Test the visual distinction of ascent toward the accepted upper connected hill.",
+      "camera": { "x": 56, "z": -184, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 50 },
+      "target": { "x": 80, "z": -172, "authority": "MIRROR_MANOR_SITE_CENTER_AS_TERRAIN_TARGET_ONLY" }
+    },
+    {
+      "id": "SCENE_03_DESCENDING_WITHOUT_HORIZON",
+      "purpose": "Test downhill travel when a clear distant horizon may not remain visible.",
+      "camera": { "x": 80, "z": -172, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 52 },
+      "target": { "x": 56, "z": -184, "authority": "LOWER_CONNECTED_TERRAIN_TARGET" }
+    },
+    {
+      "id": "SCENE_04_LATERAL_SLOPE_TRAVEL",
+      "purpose": "Test whether lateral movement across the hill reads differently from forward ascent or descent.",
+      "camera": { "x": 68, "z": -156, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 56 },
+      "target": { "x": 92, "z": -156, "authority": "ACCEPTED_MANOR_SITE_ENVELOPE_EDGE" }
+    },
+    {
+      "id": "SCENE_05_RAVINE_APPROACH",
+      "purpose": "Test whether the first inland ravine corridor provides legible route containment.",
+      "camera": { "x": 40, "z": -248, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 52 },
+      "target": { "x": 40, "z": -284, "authority": "ACCEPTED_CAVERN_EXTERIOR_FACE_RELATION", "navigationRequirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK" }
+    },
+    {
+      "id": "SCENE_06_COAST_TO_INLAND_TRANSITION",
+      "purpose": "Test the continuity and visual change from the accepted coastal arrival toward inland terrain.",
+      "camera": { "x": 0, "z": -96, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 56 },
+      "target": { "x": 0, "z": -172, "authority": "INLAND_TERRAIN_DIRECTION_ONLY" }
+    },
+    {
+      "id": "SCENE_07_MANOR_SITE_APPROACH",
+      "purpose": "Test whether the accepted Manor site can be approached reproducibly without implying unconstructed architecture.",
+      "camera": { "x": 48, "z": -172, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 48 },
+      "target": { "x": 80, "z": -172, "authority": "ACCEPTED_MIRROR_MANOR_SITE_CENTER" }
+    },
+    {
+      "id": "SCENE_08_CAVERN_RELATION_APPROACH",
+      "purpose": "Test whether the accepted Cavern exterior relation can be approached reproducibly without implying an unconstructed opening or interior.",
+      "camera": { "x": 40, "z": -248, "aimPolicy": "TARGET_PRESENTATION_TERRAIN_POINT", "verticalFovDegrees": 48 },
+      "target": { "x": 40, "z": -284, "authority": "ACCEPTED_CAVERN_EXTERIOR_FACE", "navigationRequirement": "TARGET_MAY_REMAIN_OUTSIDE_CURRENT_NAVIGABLE_CHUNK" }
+    }
+  ],
+  "requiredSceneCount": 8,
+  "requiredDistinctFrameCount": 8,
+  "allowedMutationPaths": [
+    ".github/workflows/h-earth-gratitude-region-traversal-scene-suite-cp1.yml",
+    "h-earth-3d/control-plane/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1.v1.json",
+    "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-harness.html",
+    "h-earth-3d/validation/traversal-scene-suite/h-earth.gratitude-region.traversal-scene-suite.cp1-browser.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.runner.mjs",
+    "h-earth-3d/validation/h-earth.gratitude-region.traversal-scene-suite.cp1.receipt.v1.json"
+  ],
+  "prohibited": [
+    "PRODUCT_SOURCE_MUTATION",
+    "TERRAIN_MUTATION",
+    "PLACEMENT_MUTATION",
+    "CAMERA_AUTHORITY_MUTATION",
+    "PUBLIC_RUNTIME_MUTATION",
+    "NEW_USER_INSPECTION",
+    "NEW_PHYSICAL_ACCEPTANCE",
+    "ROUND_1_PRESENTATION_CORRECTION"
+  ],
+  "stoppingBoundary": "STOP_AFTER_CP1_DIAGNOSIS_BEFORE_ROUND_1_PRODUCT_MUTATION"
+}

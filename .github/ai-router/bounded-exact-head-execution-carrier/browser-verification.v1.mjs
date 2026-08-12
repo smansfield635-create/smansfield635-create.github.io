@@ -17,10 +17,12 @@ const MATRIX_PROFILES=Object.freeze({
 });
 const MATRIX_INTERACTIONS=new Set(['CLICK','POINTER_DRAG','WHEEL','EXPAND_DETAILS']);
 const MATRIX_ASSERTIONS=new Set([
-  'PAGE_LOAD_OK','NO_CONSOLE_ERRORS','NO_PAGE_ERRORS','SELECTOR_VISIBLE','SELECTOR_EXISTS',
+  'PAGE_LOAD_OK','NO_CONSOLE_ERRORS','NO_PAGE_ERRORS','SELECTOR_VISIBLE','SELECTOR_EXISTS','SELECTOR_NOT_EXISTS',
   'NO_DOCUMENT_HORIZONTAL_OVERFLOW','SELECTOR_HORIZONTAL_VIEWPORT_ACCESSIBLE',
   'SELECTOR_INTERNAL_VERTICAL_SCROLL_PRESERVED','GLOBAL_PATH_EQUALS',
-  'GLOBAL_PATH_UNCHANGED_AFTER_INTERACTION','GLOBAL_PATH_CHANGED_AFTER_INTERACTION','SCREENSHOT_NONEMPTY'
+  'GLOBAL_PATH_UNCHANGED_AFTER_INTERACTION','GLOBAL_PATH_CHANGED_AFTER_INTERACTION',
+  'SELECTOR_COMPUTED_TRANSFORM_UNCHANGED_AFTER_INTERACTION','SELECTOR_COMPUTED_TRANSFORM_CHANGED_AFTER_INTERACTION',
+  'SCREENSHOT_NONEMPTY'
 ]);
 const stable=v=>Array.isArray(v)?v.map(stable):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,stable(v[k])])):v;
 const sha256=b=>crypto.createHash('sha256').update(b).digest('hex');
@@ -39,7 +41,7 @@ function exactKeysForInteraction(x){
 }
 function exactKeysForAssertion(a){
   if(['PAGE_LOAD_OK','NO_CONSOLE_ERRORS','NO_PAGE_ERRORS','NO_DOCUMENT_HORIZONTAL_OVERFLOW','SCREENSHOT_NONEMPTY'].includes(a.type))return ['type'];
-  if(['SELECTOR_VISIBLE','SELECTOR_EXISTS','SELECTOR_HORIZONTAL_VIEWPORT_ACCESSIBLE','SELECTOR_INTERNAL_VERTICAL_SCROLL_PRESERVED'].includes(a.type))return ['type','selector'];
+  if(['SELECTOR_VISIBLE','SELECTOR_EXISTS','SELECTOR_NOT_EXISTS','SELECTOR_HORIZONTAL_VIEWPORT_ACCESSIBLE','SELECTOR_INTERNAL_VERTICAL_SCROLL_PRESERVED','SELECTOR_COMPUTED_TRANSFORM_UNCHANGED_AFTER_INTERACTION','SELECTOR_COMPUTED_TRANSFORM_CHANGED_AFTER_INTERACTION'].includes(a.type))return ['type','selector'];
   if(a.type==='GLOBAL_PATH_EQUALS')return ['type','path','expected'];
   if(['GLOBAL_PATH_UNCHANGED_AFTER_INTERACTION','GLOBAL_PATH_CHANGED_AFTER_INTERACTION'].includes(a.type))return ['type','path'];
   return [];
@@ -109,6 +111,7 @@ async function startServer(root){
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});return {server,port:server.address().port};
 }
 async function globalValue(page,p){return page.evaluate(x=>{let v=window;for(const k of x.split('.'))v=v?.[k];return v;},p);}
+async function computedTransform(page,sel){const loc=page.locator(sel);if(await loc.count()<1)fail('MATRIX_TRANSFORM_TARGET_MISSING',sel);return loc.first().evaluate(el=>getComputedStyle(el).transform);}
 async function visibleBox(page,sel){const loc=page.locator(sel);const n=await loc.count();for(let i=0;i<n;i++){const x=loc.nth(i);if(await x.isVisible()){const b=await x.boundingBox();if(b)return {loc:x,box:b};}}fail('MATRIX_INTERACTION_TARGET_NOT_VISIBLE',sel);}
 async function performMatrixInteraction(page,x){
   if(x.type==='CLICK'){const {box}=await visibleBox(page,x.selector);await page.mouse.click(box.x+box.width/2,box.y+box.height/2);}
@@ -124,12 +127,15 @@ async function matrixAssertion(page,state,a,shot,before){
     if(a.type==='NO_PAGE_ERRORS')return {type:a.type,result:state.pageErrors.length===0?'PASS':'FAIL',observed:state.pageErrors};
     if(a.type==='SELECTOR_VISIBLE'){const ok=await page.locator(a.selector).first().isVisible();return {type:a.type,selector:a.selector,result:ok?'PASS':'FAIL',observed:ok};}
     if(a.type==='SELECTOR_EXISTS'){const n=await page.locator(a.selector).count();return {type:a.type,selector:a.selector,result:n>0?'PASS':'FAIL',observed:n};}
+    if(a.type==='SELECTOR_NOT_EXISTS'){const n=await page.locator(a.selector).count();return {type:a.type,selector:a.selector,result:n===0?'PASS':'FAIL',observed:n};}
     if(a.type==='NO_DOCUMENT_HORIZONTAL_OVERFLOW'){const o=await page.evaluate(()=>({innerWidth:window.innerWidth,root:document.documentElement.scrollWidth,body:document.body?.scrollWidth??0}));const max=Math.max(o.root,o.body),ok=max<=o.innerWidth+1;return {type:a.type,result:ok?'PASS':'FAIL',observed:{...o,maxScrollWidth:max}};}
     if(a.type==='SELECTOR_HORIZONTAL_VIEWPORT_ACCESSIBLE'){const r=await page.locator(a.selector).evaluateAll((els)=>{const v=[];for(const el of els){const cs=getComputedStyle(el),b=el.getBoundingClientRect();if(cs.display==='none'||cs.visibility==='hidden'||b.width<=0||b.height<=0)continue;v.push({left:b.left,right:b.right,width:b.width});}return {innerWidth:window.innerWidth,rects:v};});const ok=r.rects.length>0&&r.rects.every(b=>b.left>=-1&&b.right<=r.innerWidth+1);return {type:a.type,selector:a.selector,result:ok?'PASS':'FAIL',observed:r};}
     if(a.type==='SELECTOR_INTERNAL_VERTICAL_SCROLL_PRESERVED'){const r=await page.locator(a.selector).first().evaluate(el=>{const cs=getComputedStyle(el),before=el.scrollTop,canStyle=['auto','scroll'].includes(cs.overflowY),horizontal=el.scrollWidth<=el.clientWidth+1;let moved=true;if(el.scrollHeight>el.clientHeight+1){el.scrollTop=Math.min(40,el.scrollHeight-el.clientHeight);moved=el.scrollTop>0;el.scrollTop=before;}return {overflowY:cs.overflowY,scrollHeight:el.scrollHeight,clientHeight:el.clientHeight,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,canStyle,horizontal,moved};});const ok=r.canStyle&&r.horizontal&&r.moved;return {type:a.type,selector:a.selector,result:ok?'PASS':'FAIL',observed:r};}
     if(a.type==='GLOBAL_PATH_EQUALS'){const v=await globalValue(page,a.path),ok=Object.is(v,a.expected);return {type:a.type,path:a.path,result:ok?'PASS':'FAIL',expected:a.expected,observed:v??null};}
-    if(a.type==='GLOBAL_PATH_UNCHANGED_AFTER_INTERACTION'){const v=await globalValue(page,a.path),bv=before[a.path],ok=JSON.stringify(v)===JSON.stringify(bv);return {type:a.type,path:a.path,result:ok?'PASS':'FAIL',before:bv??null,observed:v??null};}
-    if(a.type==='GLOBAL_PATH_CHANGED_AFTER_INTERACTION'){const v=await globalValue(page,a.path),bv=before[a.path],ok=JSON.stringify(v)!==JSON.stringify(bv);return {type:a.type,path:a.path,result:ok?'PASS':'FAIL',before:bv??null,observed:v??null};}
+    if(a.type==='GLOBAL_PATH_UNCHANGED_AFTER_INTERACTION'){const v=await globalValue(page,a.path),bv=before[`global:${a.path}`],ok=JSON.stringify(v)===JSON.stringify(bv);return {type:a.type,path:a.path,result:ok?'PASS':'FAIL',before:bv??null,observed:v??null};}
+    if(a.type==='GLOBAL_PATH_CHANGED_AFTER_INTERACTION'){const v=await globalValue(page,a.path),bv=before[`global:${a.path}`],ok=JSON.stringify(v)!==JSON.stringify(bv);return {type:a.type,path:a.path,result:ok?'PASS':'FAIL',before:bv??null,observed:v??null};}
+    if(a.type==='SELECTOR_COMPUTED_TRANSFORM_UNCHANGED_AFTER_INTERACTION'){const v=await computedTransform(page,a.selector),bv=before[`transform:${a.selector}`],ok=v===bv;return {type:a.type,selector:a.selector,result:ok?'PASS':'FAIL',before:bv??null,observed:v??null};}
+    if(a.type==='SELECTOR_COMPUTED_TRANSFORM_CHANGED_AFTER_INTERACTION'){const v=await computedTransform(page,a.selector),bv=before[`transform:${a.selector}`],ok=v!==bv;return {type:a.type,selector:a.selector,result:ok?'PASS':'FAIL',before:bv??null,observed:v??null};}
     if(a.type==='SCREENSHOT_NONEMPTY')return {type:a.type,result:shot.length>100?'PASS':'FAIL',observedBytes:shot.length};
   }catch(e){return {type:a.type,result:'FAIL',error:e.message};}
   return {type:a.type,result:'FAIL',error:'UNSUPPORTED'};
@@ -144,7 +150,10 @@ export async function executeBrowserScenarioMatrixContract(raw,{root=process.cwd
       page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});page.on('pageerror',e=>pageErrors.push(e.message));
       let response=null;try{response=await page.goto(`http://127.0.0.1:${port}${contract.route}`,{waitUntil:'networkidle',timeout:45000});}catch{}
       const state={status:response?.status()??null,loadOk:!!response&&response.status()<400,consoleErrors,pageErrors},before={};
-      for(const a of s.assertions)if(['GLOBAL_PATH_UNCHANGED_AFTER_INTERACTION','GLOBAL_PATH_CHANGED_AFTER_INTERACTION'].includes(a.type))before[a.path]=await globalValue(page,a.path);
+      for(const a of s.assertions){
+        if(['GLOBAL_PATH_UNCHANGED_AFTER_INTERACTION','GLOBAL_PATH_CHANGED_AFTER_INTERACTION'].includes(a.type))before[`global:${a.path}`]=await globalValue(page,a.path);
+        if(['SELECTOR_COMPUTED_TRANSFORM_UNCHANGED_AFTER_INTERACTION','SELECTOR_COMPUTED_TRANSFORM_CHANGED_AFTER_INTERACTION'].includes(a.type))before[`transform:${a.selector}`]=await computedTransform(page,a.selector);
+      }
       let interactionError=null;try{for(const x of s.interactions)await performMatrixInteraction(page,x);}catch(e){interactionError=e.code??e.message;}
       const shot=await page.screenshot({type:'jpeg',quality:contract.screenshot.quality,fullPage:true}),checks=[];
       if(interactionError)checks.push({type:'INTERACTION_SEQUENCE',result:'FAIL',error:interactionError});
@@ -160,6 +169,8 @@ export function runMatrixContractSelfTest(){
   const ok=(n,f)=>{try{f();results.push({name:n,result:'PASS'});}catch(e){results.push({name:n,result:'FAIL',detail:e.code??e.message});}};
   const bad=(n,c,f)=>{try{f();results.push({name:n,result:'FAIL',detail:'UNEXPECTED_PASS'});}catch(e){results.push({name:n,result:(e.code??e.message)===c?'PASS':'FAIL',detail:e.code??e.message});}};
   ok('VALID_MATRIX_CONTRACT',()=>validateMatrixContract(base));
+  ok('R2_CLOSED_WORLD_ASSERTIONS_ACCEPTED',()=>validateMatrixContract({...base,scenarios:[{...base.scenarios[0],assertions:[{type:'SELECTOR_COMPUTED_TRANSFORM_UNCHANGED_AFTER_INTERACTION',selector:'#rotor'},{type:'SELECTOR_COMPUTED_TRANSFORM_CHANGED_AFTER_INTERACTION',selector:'#rotor'},{type:'SELECTOR_NOT_EXISTS',selector:'.focused'}]}]}));
+  bad('R2_ASSERTION_UNKNOWN_FIELD_REJECTED','MATRIX_ASSERTION_KEYSET_INVALID',()=>validateMatrixContract({...base,scenarios:[{...base.scenarios[0],assertions:[{type:'SELECTOR_NOT_EXISTS',selector:'.focused',scriptBody:'evil'}]}]}));
   bad('REMOTE_ROUTE_REJECTED','MATRIX_ROUTE_INVALID',()=>validateMatrixContract({...base,route:'https://example.com'}));
   bad('ARBITRARY_PROFILE_REJECTED','MATRIX_PROFILE_INVALID',()=>validateMatrixContract({...base,scenarios:[{...base.scenarios[0],profile:'CUSTOM'}]}));
   bad('ARBITRARY_VIEWPORT_FIELD_REJECTED','MATRIX_SCENARIO_KEYSET_INVALID',()=>validateMatrixContract({...base,scenarios:[{...base.scenarios[0],viewport:{width:1,height:1}}]}));

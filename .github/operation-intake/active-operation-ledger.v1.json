@@ -1716,18 +1716,6 @@
       "scopeHash": "f54587a999ee440a2453ba47011d2d9598d7a882bb5ff39ca4ae51e6a5aa374c",
       "state": "ADMITTED_LOCKED"
     },
-    "f7f903678000ed31b15fb31fb128585e9f451838f9fe9dd0d059fc45ba95f054": {
-      "governingHead": "24a3acfd80e79fc7e0ce48eae291bf428e2e05e8",
-      "lockGeneration": 1242,
-      "lockScope": "PLATFORM:P0:PUBLIC_RETIREMENT:REPAIRED_RUNNER:DIRECT_ROUTE_FIXTURE:V1",
-      "operationId": "P0_REPAIRED_RUNNER_DIRECT_ROUTE_FIXTURE_20260812_001",
-      "procedureLocatorDigest": "9a0739dcf2950bd13c828d2c1b6ca7ba50cb324ae49b66999e05e87f81eadc45",
-      "released": false,
-      "requestDigest": "d6b4f8a1006fdd6ff01879bd4c1224396c1e975d7af68d90189a66b59795a747",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "f7f903678000ed31b15fb31fb128585e9f451838f9fe9dd0d059fc45ba95f054",
-      "state": "ADMITTED_LOCKED"
-    },
     "f82fe94305cfa25f098c075a46c7b4c0a5c5d6565014f8b18196a08c5195ca1f": {
       "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
       "lockGeneration": 598,
@@ -18664,6 +18652,19 @@
       "scopeHash": "8a37d20a1be3a9f13bc2e0b81621c9c7c4f397b3accdeca61549105c31039d55",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "24a3acfd80e79fc7e0ce48eae291bf428e2e05e8",
+      "lockGeneration": 1242,
+      "lockScope": "PLATFORM:P0:PUBLIC_RETIREMENT:REPAIRED_RUNNER:DIRECT_ROUTE_FIXTURE:V1",
+      "operationId": "P0_REPAIRED_RUNNER_DIRECT_ROUTE_FIXTURE_20260812_001",
+      "procedureLocatorDigest": "9a0739dcf2950bd13c828d2c1b6ca7ba50cb324ae49b66999e05e87f81eadc45",
+      "released": true,
+      "requestDigest": "d6b4f8a1006fdd6ff01879bd4c1224396c1e975d7af68d90189a66b59795a747",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f7f903678000ed31b15fb31fb128585e9f451838f9fe9dd0d059fc45ba95f054",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

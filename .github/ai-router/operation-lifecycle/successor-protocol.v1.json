@@ -104,9 +104,15 @@
     "originalOperationId": "GENERIC_STALE_HEAD_SUCCESSOR_AND_SUPERSESSION_PROTOCOL_INSTALLATION_v1_CORRECTED_001",
     "originalGoverningHead": "8df49529c3895ff07ee4655f3dd3ec708bb977aa",
     "originalLockGeneration": 700,
-    "compilerExtensionOperationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_001",
-    "compilerExtensionLockGeneration": 1176,
+    "failedCompilerExtensionAttempt": {
+      "operationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_001",
+      "lockGeneration": 1176,
+      "terminalDisposition": "FAIL_CLOSED",
+      "reason": "DIFFERENTIAL_CONTINUITY_PINNED_CONSUMER_MISSING_FROM_INITIAL_SCOPE"
+    },
+    "compilerExtensionOperationId": "POST_RATIFICATION_SUCCESSOR_PACKET_COMPILER_V1_CCD2D1F0_20260812_002",
+    "compilerExtensionLockGeneration": 1183,
     "compilerExtensionGoverningHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
-    "activationCondition": "MERGED_TO_DEFAULT_BRANCH_WITH_REQUIRED_ROUTER_SUCCESSOR_AND_COMPILER_VALIDATION_PASS"
+    "activationCondition": "MERGED_TO_DEFAULT_BRANCH_WITH_REQUIRED_ROUTER_SUCCESSOR_COMPILER_DIFFERENTIAL_AND_CONTINUITY_VALIDATION_PASS"
   }
 }

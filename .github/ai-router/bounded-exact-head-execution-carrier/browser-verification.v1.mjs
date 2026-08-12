@@ -113,9 +113,15 @@ async function startServer(root){
 async function globalValue(page,p){return page.evaluate(x=>{let v=window;for(const k of x.split('.'))v=v?.[k];return v;},p);}
 async function computedTransform(page,sel){const loc=page.locator(sel);if(await loc.count()<1)fail('MATRIX_TRANSFORM_TARGET_MISSING',sel);return loc.first().evaluate(el=>getComputedStyle(el).transform);}
 async function visibleBox(page,sel){const loc=page.locator(sel);const n=await loc.count();for(let i=0;i<n;i++){const x=loc.nth(i);if(await x.isVisible()){const b=await x.boundingBox();if(b)return {loc:x,box:b};}}fail('MATRIX_INTERACTION_TARGET_NOT_VISIBLE',sel);}
+async function visibleLocator(page,sel){const loc=page.locator(sel);const n=await loc.count();for(let i=0;i<n;i++){const x=loc.nth(i);if(await x.isVisible())return x;}fail('MATRIX_INTERACTION_TARGET_NOT_VISIBLE',sel);}
 async function performMatrixInteraction(page,x){
-  if(x.type==='CLICK'){const {box}=await visibleBox(page,x.selector);await page.mouse.click(box.x+box.width/2,box.y+box.height/2);}
-  else if(x.type==='POINTER_DRAG'){const {box}=await visibleBox(page,x.selector);const sx=box.x+box.width*x.startX,sy=box.y+box.height*x.startY,ex=box.x+box.width*x.endX,ey=box.y+box.height*x.endY;await page.mouse.move(sx,sy);await page.mouse.down();await page.mouse.move(ex,ey,{steps:10});await page.mouse.up();}
+  if(x.type==='CLICK'){
+    const loc=await visibleLocator(page,x.selector);
+    await loc.click({timeout:10000});
+    await page.waitForLoadState('domcontentloaded',{timeout:10000}).catch(()=>{});
+    return;
+  }
+  if(x.type==='POINTER_DRAG'){const {box}=await visibleBox(page,x.selector);const sx=box.x+box.width*x.startX,sy=box.y+box.height*x.startY,ex=box.x+box.width*x.endX,ey=box.y+box.height*x.endY;await page.mouse.move(sx,sy);await page.mouse.down();await page.mouse.move(ex,ey,{steps:10});await page.mouse.up();}
   else if(x.type==='WHEEL'){await page.mouse.wheel(0,x.deltaY);}
   else if(x.type==='EXPAND_DETAILS'){const loc=page.locator(x.selector);const n=await loc.count();if(n<1)fail('MATRIX_DETAILS_TARGET_MISSING',x.selector);for(let i=0;i<n;i++){const d=loc.nth(i);if(!(await d.isVisible()))continue;await d.evaluate(el=>{if(el instanceof HTMLDetailsElement)el.open=true;});}}
   await page.waitForTimeout(120);
@@ -179,10 +185,35 @@ export function runMatrixContractSelfTest(){
   bad('TOO_MANY_SCENARIOS_REJECTED','MATRIX_SCENARIO_COUNT_INVALID',()=>validateMatrixContract({...base,scenarios:Array.from({length:65},(_,i)=>({...base.scenarios[0],caseId:`c${i}`}))}));
   return stable({schema:'CANONICAL_BROWSER_SCENARIO_MATRIX_RUNNER_SELF_TEST_v1',result:results.every(x=>x.result==='PASS')?'PASS':'FAIL',testCount:results.length,passCount:results.filter(x=>x.result==='PASS').length,failCount:results.filter(x=>x.result!=='PASS').length,playwrightVersion:PLAYWRIGHT_VERSION,localhostOnly:true,fixedViewportProfilesOnly:true,callerScriptAccepted:false,arbitraryViewportAccepted:false,results});
 }
+async function runDirectRouteSemanticClickSelfTest(){
+  const root=fs.mkdtempSync(path.join(os.tmpdir(),'browser-direct-route-selftest-'));
+  try{
+    fs.mkdirSync(path.join(root,'products'),{recursive:true});
+    fs.mkdirSync(path.join(root,'laws'),{recursive:true});
+    fs.mkdirSync(path.join(root,'explore','frontier'),{recursive:true});
+    fs.writeFileSync(path.join(root,'index.html'),'<!doctype html><html><body><a data-route="products" href="/products/">Products</a><a data-route="laws" href="/laws/">Laws</a><a data-route="frontier" href="/explore/frontier/">Frontier</a></body></html>');
+    fs.writeFileSync(path.join(root,'products','index.html'),'<!doctype html><title>Products</title><h1>Products</h1>');
+    fs.writeFileSync(path.join(root,'laws','index.html'),'<!doctype html><title>Laws</title><h1>Laws</h1>');
+    fs.writeFileSync(path.join(root,'explore','frontier','index.html'),'<!doctype html><title>Frontier</title><h1>Frontier</h1>');
+    cp.execFileSync('git',['init','-q'],{cwd:root});
+    cp.execFileSync('git',['config','user.email','browser-selftest@example.invalid'],{cwd:root});
+    cp.execFileSync('git',['config','user.name','Browser Self Test'],{cwd:root});
+    cp.execFileSync('git',['add','.'],{cwd:root});
+    cp.execFileSync('git',['commit','-q','-m','fixture'],{cwd:root});
+    const candidateHead=gitHead(root);
+    const mk=(caseId,profile,route,expected)=>({caseId,profile,interactions:[{type:'CLICK',selector:`[data-route="${route}"]`}],assertions:[{type:'PAGE_LOAD_OK'},{type:'NO_CONSOLE_ERRORS'},{type:'NO_PAGE_ERRORS'},{type:'GLOBAL_PATH_EQUALS',path:'location.pathname',expected},{type:'SCREENSHOT_NONEMPTY'}]});
+    const receipt=await executeBrowserScenarioMatrixContract({schema:'CANONICAL_OPERATION_BROWSER_SCENARIO_MATRIX_CONTRACT_v1',candidateHead,route:'/',scenarios:[mk('DIRECT_PRODUCTS','PHONE_390X844','products','/products/'),mk('DIRECT_LAWS','TABLET_820X1180','laws','/laws/'),mk('DIRECT_FRONTIER','DESKTOP_1440X1000','frontier','/explore/frontier/')],screenshot:{fullPage:true,format:'jpeg',quality:50}},{root});
+    return stable({schema:'DIRECT_ROUTE_SEMANTIC_CLICK_SELF_TEST_v1',result:receipt.result,scenarioCount:receipt.scenarioCount,cases:receipt.cases.map(x=>({caseId:x.caseId,profile:x.profile,result:x.result,pathname:x.assertions.find(a=>a.type==='GLOBAL_PATH_EQUALS')?.observed??null,consoleErrors:x.consoleErrors,pageErrors:x.pageErrors}))});
+  }finally{fs.rmSync(root,{recursive:true,force:true});}
+}
 async function main(){
   const a=process.argv.slice(2);
   if(a.length===2&&a[0]==='--self-test'){const r=runContractSelfTest();fs.writeFileSync(path.resolve(a[1]),JSON.stringify(r,null,2)+'\n');if(r.result!=='PASS')process.exitCode=1;return;}
-  if(a.length===2&&a[0]==='--matrix-self-test'){const r=runMatrixContractSelfTest();fs.writeFileSync(path.resolve(a[1]),JSON.stringify(r,null,2)+'\n');if(r.result!=='PASS')process.exitCode=1;return;}
+  if(a.length===2&&a[0]==='--matrix-self-test'){
+    const contract=runMatrixContractSelfTest(),direct=await runDirectRouteSemanticClickSelfTest();
+    const r=stable({schema:'CANONICAL_BROWSER_SCENARIO_MATRIX_RUNNER_SELF_TEST_v2',result:contract.result==='PASS'&&direct.result==='PASS'?'PASS':'FAIL',contractSelfTest:contract,directRouteSemanticClickSelfTest:direct});
+    fs.writeFileSync(path.resolve(a[1]),JSON.stringify(r,null,2)+'\n');if(r.result!=='PASS')process.exitCode=1;return;
+  }
   if(a.length!==4||!['--contract','--matrix-contract'].includes(a[0])||a[2]!=='--output')fail('CLI_ARGUMENTS_INVALID');
   const raw=JSON.parse(fs.readFileSync(path.resolve(a[1]),'utf8'));let receipt;
   try{receipt=a[0]==='--contract'?await executeBrowserContract(raw):await executeBrowserScenarioMatrixContract(raw);}

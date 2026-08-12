@@ -1020,6 +1020,18 @@
       "scopeHash": "961b7888499ecbe8fde655fe945fd2b91be8842c0fcbd972345e66aea23ed28f",
       "state": "ADMITTED_LOCKED"
     },
+    "989440efd04750319021e470bd14a8a486cbd85dda6904acc081004ec2652f62": {
+      "governingHead": "bcd215e53d55fa1439fc2210228c46a3e8c5fbb7",
+      "lockGeneration": 1247,
+      "lockScope": "PLATFORM:P0:PUBLIC_RETIREMENT:DIRECT_ROUTE_FIXTURE:CORRECTED:V1",
+      "operationId": "P0_CORRECTED_DIRECT_ROUTE_FIXTURE_AND_RETIREMENT_REQUALIFICATION_20260812_002",
+      "procedureLocatorDigest": "175e6d3957bb83e115aadd6d5e1250169d35c1f8a9c71eacab5f48f84679b493",
+      "released": false,
+      "requestDigest": "8dc44cbe148b8c2842dd4479914bcdc59c9d7006034fbaee4b8774639241a44d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "989440efd04750319021e470bd14a8a486cbd85dda6904acc081004ec2652f62",
+      "state": "ADMITTED_LOCKED"
+    },
     "9903f994bbc74e7fc9762285979779d42c8938f623a030d79869a8004ccc6a1c": {
       "governingHead": "778ee21b73d836473e6388cdc7634a05c221e374",
       "lockGeneration": 155,
@@ -1780,7 +1792,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1246,
+  "lockGeneration": 1247,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

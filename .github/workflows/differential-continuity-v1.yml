@@ -5,17 +5,21 @@ on:
     branches: [main]
     paths:
       - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/operation-lifecycle/**'
       - '.github/ai-router/system-continuity/gap-registry.v1.json'
       - '.github/ai-router/router.v1.json'
       - '.github/workflows/differential-continuity-v1.yml'
+      - '.github/workflows/remote-operation-successor-v1.yml'
       - 'AI_ENTRYPOINT.json'
   push:
     branches: [main]
     paths:
       - '.github/ai-router/differential-continuity/**'
+      - '.github/ai-router/operation-lifecycle/**'
       - '.github/ai-router/system-continuity/gap-registry.v1.json'
       - '.github/ai-router/router.v1.json'
       - '.github/workflows/differential-continuity-v1.yml'
+      - '.github/workflows/remote-operation-successor-v1.yml'
       - 'AI_ENTRYPOINT.json'
   issue_comment:
     types: [created]
@@ -32,8 +36,8 @@ env:
   DC_DIR: .github/ai-router/differential-continuity
   PINNED_SUCCESSOR_GATE_BLOB: b174bb20a19e62f9aaf6e819171e24416321b9e4
   PINNED_SUCCESSOR_SELF_TEST_BLOB: f4e9d4beb77cb603ea2c8e360790e97c1b511b1c
-  PINNED_SUCCESSOR_PROTOCOL_BLOB: 3e3368b96ca13363115ed245b655e7f5c9046c2a
-  PINNED_REMOTE_SUCCESSOR_WORKFLOW_BLOB: 8017fad21d98ea9e68417dbabe71b51302aa8c4a
+  PINNED_SUCCESSOR_PROTOCOL_BLOB: afbdbfd66fed89a0333ce69743c4fe539bcfc52a
+  PINNED_REMOTE_SUCCESSOR_WORKFLOW_BLOB: 328c3fff62956aa1e6b79a2fe4702d43813d6ff4
 
 jobs:
   validate-package:
@@ -68,10 +72,14 @@ jobs:
           .github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs
           .github/ai-router/differential-continuity/differential-continuity-protocol.v1.json
           .github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs
+          .github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs
+          .github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs
+          .github/ai-router/operation-lifecycle/successor-protocol.v1.json
           .github/ai-router/router.v1.json
           .github/ai-router/system-continuity/gap-registry.v1.json
           .github/workflows/differential-continuity-v1.yml
           .github/workflows/integrated-development-pipeline-v1.yml
+          .github/workflows/remote-operation-successor-v1.yml
           AI_ENTRYPOINT.json
           PATHS
             sort -o "$RUNNER_TEMP/allowed.txt" "$RUNNER_TEMP/allowed.txt"
@@ -79,7 +87,7 @@ jobs:
             test -z "$OUTSIDE"
           fi
 
-      - name: Run differential continuity, strict-successor, and integrated-pipeline regression self-tests
+      - name: Run differential continuity, strict-successor, successor-compiler, and integrated-pipeline regression self-tests
         shell: bash
         run: |
           set -euo pipefail
@@ -87,10 +95,11 @@ jobs:
           node --check "$DC_DIR/differential-continuity-self-test.v1.mjs"
           node "$DC_DIR/differential-continuity-self-test.v1.mjs" --output "$RUNNER_TEMP/differential-self-test.json"
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs --output "$RUNNER_TEMP/successor-self-test.json"
+          node .github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs --output "$RUNNER_TEMP/successor-compiler-self-test.json"
           node .github/ai-router/development-pipeline/integrated-development-pipeline-self-test.v1.mjs --output "$RUNNER_TEMP/integrated-pipeline-self-test.json"
           node - <<'NODE'
           const fs=require('node:fs');
-          for (const name of ['differential-self-test.json','successor-self-test.json']) {
+          for (const name of ['differential-self-test.json','successor-self-test.json','successor-compiler-self-test.json']) {
             const r=JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/${name}`,'utf8'));
             if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.passCount!==r.testCount) throw new Error(`SELF_TEST_NONPASS:${name}`);
           }
@@ -98,7 +107,7 @@ jobs:
           if(integrated.result!=='PASS'||integrated.failedCount!==0||integrated.physicalRetirementPerformed!==false||integrated.mergeAuthorityCreated!==false||integrated.productAuthorityCreated!==false) throw new Error('INTEGRATED_PIPELINE_SELF_TEST_NONPASS');
           NODE
 
-      - name: Verify root discovery, router ownership, and open continuity gap
+      - name: Verify root discovery, router ownership, and open continuity gaps
         shell: bash
         run: |
           set -euo pipefail
@@ -114,6 +123,8 @@ jobs:
           if(!router.routerInfrastructure?.ownedExactPaths?.includes('.github/workflows/differential-continuity-v1.yml')) throw new Error('DC_WORKFLOW_NOT_ROUTER_OWNED');
           const gap=gaps.records?.find((r)=>r.gapId==='EXACT_HEAD_NON_IMPACTING_CHANGE_PROOF_CHURN');
           if(!gap||gap.status!=='OPEN'||gap.authorityCreated!==false) throw new Error('DC_GAP_REGISTRATION_INVALID');
+          const successorGap=gaps.records?.find((r)=>r.gapId==='POST_RATIFICATION_STRICT_SUCCESSOR_PACKET_RECONSTRUCTION');
+          if(!successorGap||successorGap.status!=='OPEN'||successorGap.authorityCreated!==false) throw new Error('SUCCESSOR_COMPILER_GAP_REGISTRATION_INVALID');
           NODE
           node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
           node -e "const r=require(process.env.RUNNER_TEMP+'/router-self-test.json');if(r.result!=='PASS')process.exit(1)"
@@ -144,6 +155,7 @@ jobs:
           mkdir -p artifacts/differential-continuity
           cp "$RUNNER_TEMP/differential-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/successor-self-test.json" artifacts/differential-continuity/
+          cp "$RUNNER_TEMP/successor-compiler-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/integrated-pipeline-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/router-self-test.json" artifacts/differential-continuity/
           cp "$RUNNER_TEMP/differential-continuity-receipt.json" artifacts/differential-continuity/

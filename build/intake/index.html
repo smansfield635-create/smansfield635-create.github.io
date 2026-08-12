@@ -3,119 +3,184 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Website Inquiry · Diamond Gate Bridge</title>
-<meta name="description" content="Tell Diamond Gate what kind of website you want to build. Submit complete or incomplete and request follow-up if you need help.">
-<link rel="stylesheet" href="/assets/build/build.css?v=1">
+<title>Project Inquiry · Diamond Gate Bridge</title>
+<meta name="description" content="Tell Diamond Gate what you want to build. Businesses, creators, causes and early-stage ideas can submit complete or incomplete and request follow-up.">
+<link rel="stylesheet" href="/assets/build/build.css?v=3">
 </head>
 <body>
 <main class="shell">
   <nav class="topbar" aria-label="Inquiry navigation">
     <a class="brand" href="/build/">DIAMOND GATE BUILD</a>
-    <a class="back" href="/build/">Back to construction page</a>
+    <a class="back" href="/build/">Back to Build</a>
   </nav>
 
   <section class="hero">
-    <p class="eyebrow">Customer Intake</p>
-    <h1>What are you trying to build?</h1>
-    <p class="lede">You do not need to know every technical answer. Complete what you can. You may submit the questionnaire incomplete and ask a Diamond Gate team member to follow up.</p>
+    <p class="eyebrow">Project Intake</p>
+    <h1>What do you want to give a place in the world?</h1>
+    <p class="lede">You do not need a company, a technical background, or every answer. Tell us what you are trying to build, what you already have, and where you need help.</p>
+    <p class="hero-anchor">A finished plan is welcome. An unfinished dream is welcome too.</p>
   </section>
 
   <section class="form-shell" aria-labelledby="form-title">
+    <div class="intake-intro">
+      <strong id="form-title">Move through this at your own pace.</strong>
+      <span>Open each section when you are ready. If you do not know an answer, choose the option that says so or leave it for later. You may submit the form incomplete and still create a valid Diamond Gate inquiry.</span>
+    </div>
+
     <form id="build-intake">
-      <div class="fieldset">
-        <h2 id="form-title">1. Your contact information</h2>
-        <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name"></div>
-        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email"></div>
-        <div class="field"><label for="business">Business or organization</label><input id="business" name="business" autocomplete="organization"></div>
-      </div>
+      <div class="intake-stack">
+        <details class="intake-step" open>
+          <summary><span><span class="step-kicker">01 · You</span><span class="step-title">Who should we talk to?</span><span class="step-note">Just enough information to connect the project to a person.</span></span></summary>
+          <div class="step-body">
+            <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" autocomplete="name" placeholder="Name"></div>
+            <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com"></div>
+            <div class="field"><label for="business">Project, business, organization or creator name <span class="hint">(optional)</span></label><input id="business" name="business" type="text" autocomplete="organization" placeholder="Use your name if the project does not have one yet"></div>
+          </div>
+        </details>
 
-      <div class="fieldset">
-        <h2>2. What kind of website are you building?</h2>
-        <div class="field"><label for="siteType">Website type</label><select id="siteType" name="siteType"><option value="">Choose one</option><option>Small business / services</option><option>Professional services</option><option>Restaurant / hospitality</option><option>Portfolio / personal brand</option><option>Nonprofit / community</option><option>E-commerce</option><option>Interactive application</option><option>3D / spatial experience</option><option>Existing website redesign</option><option>Other / not sure</option></select></div>
-        <div class="field"><label for="goal">Primary goal</label><textarea id="goal" name="goal" placeholder="What should the site help your visitors do?"></textarea></div>
-        <div class="field"><label for="pages">Pages or sections you expect</label><textarea id="pages" name="pages" placeholder="Home, About, Services, Contact, Gallery, Pricing, etc."></textarea></div>
-      </div>
+        <details class="intake-step" open>
+          <summary><span><span class="step-kicker">02 · The Idea</span><span class="step-title">What are you trying to build?</span><span class="step-note">Choose the closest fit. It does not lock the project into a category.</span></span></summary>
+          <div class="step-body">
+            <div class="field">
+              <span class="field-label">Project type</span>
+              <div class="choice-grid">
+                <label class="choice-card"><input type="radio" name="siteType" value="Small business / services"><span><strong>Small business / services</strong><small>Local or service-based company</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="Professional services"><span><strong>Professional services</strong><small>Consulting, legal, financial, technical and similar work</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="Creator / personal project"><span><strong>Creator / personal project</strong><small>Art, writing, media, music, personal work or a passion project</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="Portfolio / personal brand"><span><strong>Portfolio / personal brand</strong><small>A body of work, career presence or public identity</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="Restaurant / hospitality"><span><strong>Restaurant / hospitality</strong><small>Food, lodging, events or guest experience</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="Nonprofit / community / cause"><span><strong>Community / cause</strong><small>Nonprofit, movement, neighborhood or public-interest work</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="E-commerce"><span><strong>E-commerce</strong><small>Products, orders or online sales</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="Interactive application"><span><strong>Interactive application</strong><small>Software-like behavior beyond a conventional website</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="3D / spatial experience"><span><strong>3D / spatial experience</strong><small>Browser-native spatial or immersive construction</small></span></label>
+                <label class="choice-card"><input type="radio" name="siteType" value="Existing website redesign"><span><strong>Existing website redesign</strong><small>Rebuild or substantially improve what already exists</small></span></label>
+                <label class="choice-card wide"><input type="radio" name="siteType" value="New idea / not sure yet"><span><strong>New idea / not sure yet</strong><small>You know what matters to you, but the final form is still emerging.</small></span></label>
+              </div>
+            </div>
+            <div class="field"><label for="goal">What do you want this site to make possible?</label><textarea id="goal" name="goal" placeholder="Tell us what you want people to understand, feel, do, discover, buy, join, support or experience."></textarea></div>
+            <div class="field"><label for="pages">Anything you already imagine being part of it?</label><textarea id="pages" name="pages" placeholder="Home, story, services, gallery, projects, shop, contact, community, journal, booking, something completely different..."></textarea></div>
+          </div>
+        </details>
 
-      <div class="fieldset">
-        <h2>3. Features</h2>
-        <div class="choice-grid">
-          <label class="choice"><input type="checkbox" name="features" value="Contact or lead form">Contact or lead form</label>
-          <label class="choice"><input type="checkbox" name="features" value="Appointments or booking">Appointments or booking</label>
-          <label class="choice"><input type="checkbox" name="features" value="Payments or commerce">Payments or commerce</label>
-          <label class="choice"><input type="checkbox" name="features" value="Gallery or portfolio">Gallery or portfolio</label>
-          <label class="choice"><input type="checkbox" name="features" value="Custom animation or interaction">Custom animation or interaction</label>
-          <label class="choice"><input type="checkbox" name="features" value="User login or accounts">User login or accounts</label>
-          <label class="choice"><input type="checkbox" name="features" value="Database or backend">Database or backend</label>
-          <label class="choice"><input type="checkbox" name="features" value="3D or spatial elements">3D or spatial elements</label>
-        </div>
-      </div>
+        <details class="intake-step">
+          <summary><span><span class="step-kicker">03 · Capability</span><span class="step-title">What should it be able to do?</span><span class="step-note">Select anything that seems relevant. You can leave this blank.</span></span></summary>
+          <div class="step-body">
+            <div class="choice-grid">
+              <label class="choice-card"><input type="checkbox" name="features" value="Contact or lead form"><span><strong>Contact / inquiry</strong><small>Let visitors reach you or request information</small></span></label>
+              <label class="choice-card"><input type="checkbox" name="features" value="Appointments or booking"><span><strong>Appointments / booking</strong><small>Schedule time, services or reservations</small></span></label>
+              <label class="choice-card"><input type="checkbox" name="features" value="Payments or commerce"><span><strong>Payments / commerce</strong><small>Sell, collect payment or accept contributions</small></span></label>
+              <label class="choice-card"><input type="checkbox" name="features" value="Gallery or portfolio"><span><strong>Gallery / portfolio</strong><small>Show work, projects, products or media</small></span></label>
+              <label class="choice-card"><input type="checkbox" name="features" value="Custom animation or interaction"><span><strong>Custom interaction</strong><small>Animation or behavior unique to the project</small></span></label>
+              <label class="choice-card"><input type="checkbox" name="features" value="User login or accounts"><span><strong>User accounts</strong><small>Private or member-specific experiences</small></span></label>
+              <label class="choice-card"><input type="checkbox" name="features" value="Database or backend"><span><strong>Data / backend</strong><small>Stored data, APIs or application services</small></span></label>
+              <label class="choice-card"><input type="checkbox" name="features" value="3D or spatial elements"><span><strong>3D / spatial</strong><small>Interactive browser-native spatial elements</small></span></label>
+            </div>
+          </div>
+        </details>
 
-      <div class="fieldset">
-        <h2>4. What do you already have?</h2>
-        <div class="field"><label for="domain">Domain</label><select id="domain" name="domain"><option value="">Choose one</option><option>I own a domain</option><option>I need a domain</option><option>I am not sure</option></select></div>
-        <div class="field"><label for="existing">Existing website</label><select id="existing" name="existing"><option value="">Choose one</option><option>No existing website</option><option>Yes — I want to replace or redesign it</option><option>Yes — I want to modify it</option><option>I am not sure</option></select></div>
-        <div class="field"><label for="environment">Current technical environment</label><select id="environment" name="environment"><option value="">Choose one</option><option>GitHub</option><option>GitLab</option><option>Cloudflare</option><option>Vercel</option><option>WordPress / cPanel / traditional hosting</option><option>I have hosting but do not know what it is</option><option>I do not have a technical environment yet</option><option>Other</option></select><span class="hint">This does not determine whether Diamond Gate can help. It helps us understand the starting point.</span></div>
-      </div>
+        <details class="intake-step">
+          <summary><span><span class="step-kicker">04 · Starting Point</span><span class="step-title">What do you already have?</span><span class="step-note">Not knowing the technical answer is a valid answer.</span></span></summary>
+          <div class="step-body">
+            <div class="field"><span class="field-label">Domain</span><div class="choice-grid">
+              <label class="choice-card"><input type="radio" name="domain" value="I own a domain"><span>I already own a domain</span></label>
+              <label class="choice-card"><input type="radio" name="domain" value="I need a domain"><span>I need a domain</span></label>
+              <label class="choice-card wide"><input type="radio" name="domain" value="I am not sure"><span>I am not sure what I have or what I need</span></label>
+            </div></div>
+            <div class="field"><span class="field-label">Existing website</span><div class="choice-grid">
+              <label class="choice-card"><input type="radio" name="existing" value="No existing website"><span>No existing website</span></label>
+              <label class="choice-card"><input type="radio" name="existing" value="Yes — replace or redesign"><span>Yes — replace or redesign it</span></label>
+              <label class="choice-card"><input type="radio" name="existing" value="Yes — modify"><span>Yes — modify what I have</span></label>
+              <label class="choice-card"><input type="radio" name="existing" value="I am not sure"><span>I am not sure</span></label>
+            </div></div>
+            <div class="field"><span class="field-label">Current technical environment</span><span class="hint">Choose what you recognize. This does not determine whether Diamond Gate can help.</span><div class="choice-grid">
+              <label class="choice-card"><input type="radio" name="environment" value="GitHub"><span>GitHub</span></label>
+              <label class="choice-card"><input type="radio" name="environment" value="GitLab"><span>GitLab</span></label>
+              <label class="choice-card"><input type="radio" name="environment" value="Cloudflare"><span>Cloudflare</span></label>
+              <label class="choice-card"><input type="radio" name="environment" value="Vercel"><span>Vercel</span></label>
+              <label class="choice-card"><input type="radio" name="environment" value="WordPress / cPanel / traditional hosting"><span>WordPress / cPanel / traditional hosting</span></label>
+              <label class="choice-card"><input type="radio" name="environment" value="Hosting unknown"><span>I have hosting but do not know what it is</span></label>
+              <label class="choice-card"><input type="radio" name="environment" value="No technical environment"><span>I do not have a technical environment yet</span></label>
+              <label class="choice-card"><input type="radio" name="environment" value="Other"><span>Other</span></label>
+            </div></div>
+          </div>
+        </details>
 
-      <div class="fieldset">
-        <h2>5. Design and project context</h2>
-        <div class="field"><label for="style">How should the site feel?</label><textarea id="style" name="style" placeholder="Professional, minimal, bold, warm, technical, luxury, playful, etc."></textarea></div>
-        <div class="field"><label for="assets">Branding and assets</label><select id="assets" name="assets"><option value="">Choose one</option><option>I have logo, colors, images and copy</option><option>I have some of these</option><option>I need help creating or organizing them</option><option>I am not sure</option></select></div>
-        <div class="field"><label for="timeline">Desired timing</label><select id="timeline" name="timeline"><option value="">Choose one</option><option>As soon as practical</option><option>Within 30 days</option><option>Within 60–90 days</option><option>No fixed deadline</option><option>Not sure yet</option></select></div>
-        <div class="field"><label for="notes">Additional notes</label><textarea id="notes" name="notes" placeholder="Anything else Diamond Gate should understand about the project, constraints, integrations or questions."></textarea></div>
-      </div>
+        <details class="intake-step">
+          <summary><span><span class="step-kicker">05 · Expression</span><span class="step-title">How should it feel?</span><span class="step-note">This can be precise or completely intuitive.</span></span></summary>
+          <div class="step-body">
+            <div class="field"><label for="style">Describe the feeling, style or personality.</label><textarea id="style" name="style" placeholder="Professional, warm, strange, luxurious, quiet, technical, playful, cinematic, minimal, bold—or describe it in your own words."></textarea></div>
+            <div class="field"><span class="field-label">Branding and assets</span><div class="choice-grid">
+              <label class="choice-card"><input type="radio" name="assets" value="I have logo, colors, images and copy"><span>I already have most of it</span></label>
+              <label class="choice-card"><input type="radio" name="assets" value="I have some assets"><span>I have some pieces</span></label>
+              <label class="choice-card"><input type="radio" name="assets" value="I need help creating or organizing assets"><span>I need help creating or organizing it</span></label>
+              <label class="choice-card"><input type="radio" name="assets" value="I am not sure"><span>I am not sure yet</span></label>
+            </div></div>
+            <div class="field"><span class="field-label">Timing</span><div class="choice-grid">
+              <label class="choice-card"><input type="radio" name="timeline" value="As soon as practical"><span>As soon as practical</span></label>
+              <label class="choice-card"><input type="radio" name="timeline" value="Within 30 days"><span>Within 30 days</span></label>
+              <label class="choice-card"><input type="radio" name="timeline" value="Within 60–90 days"><span>Within 60–90 days</span></label>
+              <label class="choice-card"><input type="radio" name="timeline" value="No fixed deadline"><span>No fixed deadline</span></label>
+              <label class="choice-card wide"><input type="radio" name="timeline" value="Not sure yet"><span>Not sure yet</span></label>
+            </div></div>
+            <div class="field"><label for="notes">Anything else you want us to understand?</label><textarea id="notes" name="notes" placeholder="Questions, constraints, inspirations, existing links, integrations, concerns, rough ideas—anything useful."></textarea></div>
+          </div>
+        </details>
 
-      <div class="fieldset">
-        <h2>6. Follow-up</h2>
-        <label class="choice"><input id="followup" type="checkbox" name="followup" value="Yes">I would like a Diamond Gate team member to reach out and help me with questions or missing information.</label>
-        <div class="notice">Submitting incomplete is intentional. Your inquiry will be clearly labeled <strong>INCOMPLETE_SUBMITTED</strong> so it is not confused with a completed project intake.</div>
+        <details class="intake-step">
+          <summary><span><span class="step-kicker">06 · Help</span><span class="step-title">Would you like someone to help you finish this?</span><span class="step-note">This is here for people who are uncertain, busy, or simply want to talk first.</span></span></summary>
+          <div class="step-body">
+            <label class="choice-card wide"><input id="followup" type="checkbox" name="followup" value="Yes"><span><strong>Yes, have Diamond Gate reach out.</strong><small>Use the information I have already provided so we do not have to start from zero.</small></span></label>
+            <div class="support-note"><strong>Incomplete is a real submission state.</strong> If you stop here and submit incomplete, Diamond Gate receives a customer inquiry that is clearly distinguished from a completed intake.</div>
+          </div>
+        </details>
       </div>
 
       <div class="form-actions">
         <button class="button" type="button" data-submit-mode="complete">Submit completed inquiry</button>
-        <button class="button secondary" type="button" data-submit-mode="incomplete">Submit incomplete inquiry</button>
+        <button class="button secondary" type="button" data-submit-mode="incomplete">Submit what I have</button>
       </div>
       <p class="fine">Current launch intake sends the structured questionnaire through your email application to Diamond Gate. The future customer-intake instrument and automated project admission system are still under development.</p>
     </form>
   </section>
 
-  <footer class="footer">Diamond Gate Bridge · Customer inquiry surface · <a href="/build/">Return to Build</a></footer>
+  <footer class="footer">Diamond Gate Bridge · Project inquiry surface · <a href="/build/">Return to Build</a></footer>
 </main>
 <script>
 (function(){
   const form=document.getElementById('build-intake');
   const buttons=[...document.querySelectorAll('[data-submit-mode]')];
-  function val(id){return (document.getElementById(id)?.value||'').trim()||'NOT PROVIDED'}
+  function val(id){const v=(document.getElementById(id)?.value||'').trim();return v||'NOT PROVIDED'}
+  function picked(name){const el=form.querySelector('input[name="'+name+'"]:checked');return el?el.value:'NOT PROVIDED'}
   function features(){return [...form.querySelectorAll('input[name="features"]:checked')].map(x=>x.value).join(', ')||'NONE SELECTED'}
   function submit(mode){
     const status=mode==='complete'?'COMPLETE_SUBMITTED':'INCOMPLETE_SUBMITTED';
-    if(mode==='complete' && (!val('name') || !val('email'))){return}
-    const subject=encodeURIComponent('Diamond Gate Website Inquiry — '+status+' — '+val('business'));
+    const subjectName=val('business')==='NOT PROVIDED'?val('name'):val('business');
+    const subject=encodeURIComponent('Diamond Gate Project Inquiry — '+status+' — '+subjectName);
     const body=[
-      'DIAMOND GATE WEBSITE INQUIRY',
+      'DIAMOND GATE PROJECT INQUIRY',
       'STATUS: '+status,
       'FOLLOW-UP REQUESTED: '+(document.getElementById('followup').checked?'YES':'NO'),
       '',
       'CONTACT',
       'Name: '+val('name'),
       'Email: '+val('email'),
-      'Business: '+val('business'),
+      'Project / business / creator name: '+val('business'),
       '',
       'PROJECT',
-      'Website type: '+val('siteType'),
+      'Project type: '+picked('siteType'),
       'Primary goal: '+val('goal'),
-      'Pages / sections: '+val('pages'),
+      'Expected pages / sections: '+val('pages'),
       'Features: '+features(),
       '',
       'CURRENT ENVIRONMENT',
-      'Domain: '+val('domain'),
-      'Existing website: '+val('existing'),
-      'Technical environment: '+val('environment'),
+      'Domain: '+picked('domain'),
+      'Existing website: '+picked('existing'),
+      'Technical environment: '+picked('environment'),
       '',
       'DESIGN / TIMING',
       'Style: '+val('style'),
-      'Assets: '+val('assets'),
-      'Timing: '+val('timeline'),
+      'Assets: '+picked('assets'),
+      'Timing: '+picked('timeline'),
       '',
       'ADDITIONAL NOTES',
       val('notes')

@@ -1,0 +1,34 @@
+[
+  {
+    "node_id": "edg9f",
+    "provider": "osfstorage",
+    "name": "Definitive_Mathematical_Closure_CCM.pdf",
+    "kind": "file",
+    "materialized_path": "/Definitive_Mathematical_Closure_CCM.pdf",
+    "size": 4254,
+    "content_type": null,
+    "date_modified": "2026-02-02T20:54:51.992215",
+    "download_url": "https://osf.io/download/pn7kx/",
+    "osf_file_id": "69810f1b6fbd56849be5e5f1",
+    "extraction_status": "EXTRACTED",
+    "extracted_chars": 1694,
+    "sha256": "8da75f88fc833e418fc03af8e49c19f00b9a1a4e38820698feabfe166c6fd148",
+    "error": null
+  },
+  {
+    "node_id": "edg9f",
+    "provider": "osfstorage",
+    "name": "formalism.pdf",
+    "kind": "file",
+    "materialized_path": "/formalism.pdf",
+    "size": 3603,
+    "content_type": null,
+    "date_modified": "2026-02-02T19:46:10.181034",
+    "download_url": "https://osf.io/download/6980ff02555933d3f2e5e50b/",
+    "osf_file_id": "6980ff02555933d3f2e5e50b",
+    "extraction_status": "EXTRACTED",
+    "extracted_chars": 1322,
+    "sha256": "fb75c4e462954f40d31fd627b2d960259b011b8fda0ee47200a116226a334d93",
+    "error": null
+  }
+]

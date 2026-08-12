@@ -1,0 +1,49 @@
+{
+  "id": "7vkgs",
+  "type": "nodes",
+  "title": "As Easy as A–B–C–D: Diagnosing Coherence Before Collapse",
+  "description": "This paper defines a four-step procedural method for applying The Bridge diagnostic. It enables independent observers to classify system stability using only publicly observable evidence.\nThe method is procedural only. It introduces no new laws, diagnostics, variables, interpretations, or governing conditions.\nABCD Diagnostic Procedure\nA — Internal Coherence\nAssess whether commitments, decisions, actions, and outcomes remain aligned. Persistent internal misalignment indicates instability independent of external conditions.\nB — Constraint Alignment\nAssess whether stated constraints actually govern observed outcomes. Misalignment between rules and behavior indicates constraint failure.\nC — Fragmentation Under Load\nAssess whether misalignment amplifies under pressure into rule proliferation, inconsistency, or corrective escalation. Amplification indicates coherence loss.\nD — Trajectory\nAssess whether the system’s trajectory is stabilizing or degrading across successive observations. Sustained degradation indicates closure of corrective capacity.\nOutput\nThe procedure produces:\ndiagnostic classification only\nobserver-invariant conclusions\nno prediction, prescription, or interpretation\nEach step constrains the next. Skipping steps invalidates the diagnosis.\nScope Limits\nThis method:\ndoes not predict outcomes\ndoes not prescribe intervention\ndoes not assign causation or blame\nIt evaluates coherence state only.\nCanonical Note\nThis procedure is a direct operationalization of The Bridge and is fully compatible with DiamondLogic: The Governing Rule of Relational Stability Under Load. No additional primitives are introduced.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-11T23:17:18.485890",
+  "date_modified": "2026-08-01T06:06:30.754430",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/7vkgs/",
+  "api_url": "https://api.osf.io/v2/nodes/7vkgs/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:55:37.917429+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "CORE_LAWS_CANDIDATE",
+    "law_relevance_score": 28,
+    "law_term_hits": [
+      "law",
+      "coherence",
+      "constraint",
+      "invariant",
+      "failure",
+      "trajectory",
+      "diagnostic",
+      "alignment"
+    ],
+    "evidence_signal_score": 2,
+    "evidence_term_hits": [
+      "method"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

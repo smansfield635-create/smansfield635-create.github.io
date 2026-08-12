@@ -1,0 +1,34 @@
+[
+  {
+    "node_id": "9ut2z",
+    "provider": "osfstorage",
+    "name": "Integral_Platform_HOW_TO-2.pdf",
+    "kind": "file",
+    "materialized_path": "/Integral_Platform_HOW_TO-2.pdf",
+    "size": 2335,
+    "content_type": null,
+    "date_modified": "2026-02-09T00:51:25.649305",
+    "download_url": "https://osf.io/download/69892f8de544b797c4e24eda/",
+    "osf_file_id": "69892f8de544b797c4e24eda",
+    "extraction_status": "EXTRACTED",
+    "extracted_chars": 697,
+    "sha256": "6bf9d21f9e06768e2eb829dae5641ac76bc3b74f98b1d4061910b09bb4ab8e3a",
+    "error": null
+  },
+  {
+    "node_id": "9ut2z",
+    "provider": "osfstorage",
+    "name": "Integral_Platform_Method_Explained.pdf",
+    "kind": "file",
+    "materialized_path": "/Integral_Platform_Method_Explained.pdf",
+    "size": 4588,
+    "content_type": null,
+    "date_modified": "2026-02-09T00:51:15.200729",
+    "download_url": "https://osf.io/download/69892f83ab4786d9f1c72b86/",
+    "osf_file_id": "69892f83ab4786d9f1c72b86",
+    "extraction_status": "EXTRACTED",
+    "extracted_chars": 3267,
+    "sha256": "13adead582dfca3140137ac7eb9d32774c53a74920cc5c104dc99a9216250343",
+    "error": null
+  }
+]

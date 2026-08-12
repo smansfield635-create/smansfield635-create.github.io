@@ -1,0 +1,44 @@
+{
+  "id": "pw8ua",
+  "type": "nodes",
+  "title": "Universal First-Order Discipline:Structural Symptoms of Incoherence",
+  "description": "Universal First-Order Discipline: Structural defines the minimal, domain-agnostic constraint that governs whether any system, method, action, or process may proceed at all. It establishes discipline itself as a first-order structure, not a behavioral trait, moral principle, or optimization strategy.\nThis project formalizes discipline as a structural gate that precedes methodology, ethics, governance, learning, and execution. A system is considered admissible only if it respects invariant constraints that prevent overextension, fragmentation, and collapse. Any activity that bypasses this gate—regardless of intent, speed, or sophistication—is structurally non-admissible.\nThe framework reframes common second-order concepts (e.g., best practices, expertise, specialization, innovation, ethics) as dependent expressions, valid only after first-order discipline is satisfied. It does not prescribe outcomes or values; it determines whether motion is allowed to occur.\nThis project serves as the structural foundation for all downstream instruments and execution engines, including archetypal, metric, and operational layers.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-25T22:00:55.049938",
+  "date_modified": "2026-08-01T06:05:51.511813",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/pw8ua/",
+  "api_url": "https://api.osf.io/v2/nodes/pw8ua/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:58:59.098935+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 13,
+    "law_term_hits": [
+      "coherence",
+      "constraint",
+      "invariant"
+    ],
+    "evidence_signal_score": 2,
+    "evidence_term_hits": [
+      "method"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

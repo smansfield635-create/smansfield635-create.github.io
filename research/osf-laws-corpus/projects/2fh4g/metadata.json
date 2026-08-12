@@ -1,0 +1,45 @@
+{
+  "id": "2fh4g",
+  "type": "nodes",
+  "title": "The Scientific Method as a Constraint System",
+  "description": "The scientific method is commonly described as a process for discovering truth through hypothesis, experimentation, and validation. This description reframes it as a constraint-based system for distinguishing what cannot be sustained from what remains viable under repeated testing.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-10T06:36:12.237022",
+  "date_modified": "2026-08-01T06:06:55.461047",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/2fh4g/",
+  "api_url": "https://api.osf.io/v2/nodes/2fh4g/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:58:28.292527+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 9,
+    "law_term_hits": [
+      "constraint",
+      "scientific method"
+    ],
+    "evidence_signal_score": 8,
+    "evidence_term_hits": [
+      "method",
+      "experiment",
+      "validation"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

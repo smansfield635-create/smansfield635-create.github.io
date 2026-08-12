@@ -1,0 +1,1466 @@
+{
+  "corpus_id": "OSF_PUBLIC_LAWS_DISCOVERY_CORPUS_v1",
+  "osf_user_id": "g5294",
+  "osf_profile_url": "https://osf.io/g5294/",
+  "generated_at": "2026-08-01T07:59:03.189206+00:00",
+  "public_resource_count": 31,
+  "root_project_count": 31,
+  "component_count": 0,
+  "registration_count": 1,
+  "downloaded_bytes": 28509,
+  "discovery_errors": [],
+  "claim_boundary": "Discovery corpus only; no claim upgrade or admission authority.",
+  "projects": [
+    {
+      "id": "9u6vd",
+      "type": "nodes",
+      "title": "Law of Transitory Coherence",
+      "description": "Abstract\nThis paper formalizes the Law of Coherence, a structural constraint governing organized systems across physical, biological, social, institutional, and knowledge domains. The law states that a system cannot project more coherence outward than it possesses internally. Apparent order that exceeds internal consistency is unstable and collapses under stress. This law is descriptive, non-predictive, domain-agnostic, observer-invariant, and falsifiable. It explains why systems that appear orderly, aligned, or trustworthy fail when internal coherence is insufficient, regardless of external enforcement, resources, or intent.\n1. Scope and Non-Claims\nThis paper does not:\npredict outcomes or timelines\nassert inevitability of collapse\nprescribe policy or intervention\ninvoke moral or ideological judgment\nThis paper does:\ndefine a structural upper bound on coherence\napply across domains and scales\nspecify falsification conditions\ndescribe what cannot persist\n2. What Is Coherence (Operational Definition)\nCoherence refers to the internal consistency of structure, meaning, alignment, and coordination within a system.\nA system is coherent when:\ninternal rules do not contradict\nsignals align with actions\nactions align with outcomes\nfeedback loops reinforce rather than conflict\nCoherence is not surface order, compliance, or appearance.\n3. Formal Statement of the Law\nLaw of Coherence (v1.0):\nA system cannot project more coherence outward than it possesses internally.\n4. Interpretation\nThis law establishes a hard upper bound.\nExternal order cannot exceed internal alignment\nTrust cannot exceed internal honesty\nStability cannot exceed internal consistency\nCoordination cannot exceed internal agreement\nWhen external coherence appears higher than internal coherence, it is illusory and collapses under load.\n5. Why This Is a Constraint Law\nThe Law of Coherence:\nforbids specific states\nis invariant under effort or intent\napplies regardless of scale\ncannot be bypassed by enforcement\nNo amount of:\nforce\nfunding\nauthority\npersuasion\ncan sustain coherence beyond internal consistency.\n6. Observable Manifestations of Violation\nWhen the Law of Coherence is violated, systems exhibit:\ncontradiction between stated values and behavior\nenforcement replacing trust\nincreasing rule complexity\ndivergence between metrics and lived outcomes\nfragility under stress\nThese are diagnostic signals, not causes.\n7. Cross-Domain Examples (Non-Exhaustive)\nPhysical systems: structures with internal faults fail despite external reinforcement\nBiological systems: organisms with internal dysregulation cannot sustain health\nInstitutions: organizations enforcing values they do not practice collapse under scrutiny\nMarkets: confidence exceeds fundamentals until sudden correction\nKnowledge systems: theories with internal contradiction fail regardless of popularity\nThe pattern is invariant.\n8. Relation to Other Laws (Boundary)\nThe Law of Coherence constrains how much coherence is possible.\nIt does not govern:\nhow long coherence lasts\nhow coherence transmits\nwhat interventions do under confusion\nThose are governed by separate laws.\n9. Falsification Conditions\nThe Law of Coherence is falsified if a repeatable system demonstrates:\nsustained external coherence exceeding internal consistency\nlong-term stability where internal contradiction persists\ntrust or alignment growing without internal alignment\nIf such cases exist consistently, the law is wrong.\n10. Conclusion\nCoherence cannot be manufactured externally. It must exist internally first. The Law of Coherence formalizes this invariant constraint across organized systems, explaining why apparent order collapses when internal alignment is absent. This law does not predict failure; it defines the boundary beyond which coherence cannot persist.\nVersion & Freeze Declaration\nVersion: Law of Coherence (v1.0)\nStatus: Canonical · Falsifiable · Locked\nDate: [insert date]\nAny modification requires an explicitly versioned successor.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-11T20:11:10.057554",
+      "date_modified": "2026-08-01T06:08:13.224538",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/9u6vd/",
+      "api_url": "https://api.osf.io/v2/nodes/9u6vd/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:18.876751+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 37,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "constraint",
+          "invariant",
+          "falsification",
+          "failure",
+          "transitory",
+          "diagnostic",
+          "alignment",
+          "boundary"
+        ],
+        "evidence_signal_score": 5,
+        "evidence_term_hits": [
+          "falsif",
+          "table"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "7jnxq",
+      "type": "registrations",
+      "title": "Universal Law of Coherence Dynamics",
+      "description": "Description\nThe Universal Law of Coherence Dynamics describes constraint-based coherence behavior across organized systems. It defines the structural conditions under which coherence is preserved, degrades, or collapses, independent of domain, scale, intent, or moral judgment.\nThe law is descriptive, falsifiable, and observer-invariant. It does not predict outcomes, infer causation, or prescribe intervention. Instead, it specifies invariant relationships between constraints, signal resolution, alignment, fragmentation, and determinate trajectory.\nWithin this framework, coherence is bounded by internal consistency and governed by the clarity and stability of constraint signals. When constraints become unresolved or fragmented, misalignment and disorder emerge, and system trajectory becomes non-arbitrary even while specific outcomes remain uncertain.\nThis page serves as the canonical framework reference. Foundational laws are fixed internally at their declared versions. Diagnostic instruments associated with the framework—alignment, transparency, fragmentation, internal misalignment, and trajectory—are treated as measurement tools and may evolve in operational detail without altering the law itself.",
+      "category": "project",
+      "public": true,
+      "registration": true,
+      "preprint": false,
+      "date_created": "2026-01-12T01:40:23.811229",
+      "date_modified": "2026-01-12T01:23:46.617914",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [
+        "Coherence Constraint Dynamics",
+        "Diagnostic framework",
+        "Falsifiability",
+        "Fragmentation",
+        "Social thermodynamics",
+        "System Stability",
+        "Systems theory",
+        "Trojectory observer-invariant"
+      ],
+      "subjects": [
+        [
+          {
+            "id": "584240d954be81056ceca9a1",
+            "text": "Physical Sciences and Mathematics"
+          }
+        ],
+        [
+          {
+            "id": "584240da54be81056cecac48",
+            "text": "Social and Behavioral Sciences"
+          }
+        ]
+      ],
+      "node_license": {
+        "copyright_holders": [],
+        "year": ""
+      },
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/7jnxq/",
+      "api_url": "https://api.osf.io/v2/registrations/7jnxq/",
+      "source_collection": "user_registrations",
+      "harvested_at": "2026-08-01T07:59:03.188508+00:00",
+      "file_inventory_count": 6,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 36,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "constraint",
+          "invariant",
+          "falsification",
+          "failure",
+          "trajectory",
+          "diagnostic",
+          "alignment",
+          "boundary"
+        ],
+        "evidence_signal_score": 14,
+        "evidence_term_hits": [
+          "method",
+          "methods",
+          "experiment",
+          "falsif",
+          "appendix",
+          "table"
+        ],
+        "extractable_file_count": 5,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "9ut2z",
+      "type": "nodes",
+      "title": "Alignment Diagnostics, an Integrity-Based Platform",
+      "description": "Alignment Diagnostics is an integrity-based platform designed to make alignment measurable, repeatable, and accessible across domains. Its primary instrument, the Alignment Diagnostic Assessment (ADA), provides structured diagnostics that detect misalignment early, reduce escalation, and restore coherence in individuals, teams, organizations, and systems—without reliance on motivation, persuasion, authority, or domain-specific interpretation.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-09T00:09:34.948852",
+      "date_modified": "2026-08-01T06:05:13.740618",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/9ut2z/",
+      "api_url": "https://api.osf.io/v2/nodes/9ut2z/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:55:21.255840+00:00",
+      "file_inventory_count": 2,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 35,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "constraint",
+          "invariant",
+          "falsification",
+          "scientific method",
+          "failure",
+          "diagnostic",
+          "alignment"
+        ],
+        "evidence_signal_score": 9,
+        "evidence_term_hits": [
+          "method",
+          "methods",
+          "falsif",
+          "table"
+        ],
+        "extractable_file_count": 2,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "edg9f",
+      "type": "nodes",
+      "title": "APPLIED FORMALISM (INSTANTIATION) M256 Coherence Geometry",
+      "description": "M256 Coherence Geometry is a finite, executable instantiation of the Universal Coherence Admissibility Quotient (UCAQ).\nIt realizes coherence as a closed, 256-state quotient geometry in which admissibility, trajectory, and correction are structurally observable rather than inferred.\nOrganized around a bell-lattice embedding and observer-invariant transitions, M256 demonstrates how coherence behaves under constraint, motion, and scale within a fully bounded system. It does not decide outcomes or enforce authority; it makes coherence visible, comparable, and inspectable at engineering resolution.\nM256 serves as the reference geometry for applied systems: a working formalism that bridges abstract admissibility theory and executable architectures without introducing interpretation, optimization, or policy.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-02T19:29:47.367406",
+      "date_modified": "2026-08-01T06:03:45.174485",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/edg9f/",
+      "api_url": "https://api.osf.io/v2/nodes/edg9f/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:55:30.151989+00:00",
+      "file_inventory_count": 2,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 29,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "invariant",
+          "quotient",
+          "trajectory",
+          "instantiation",
+          "formalism",
+          "m256"
+        ],
+        "evidence_signal_score": 3,
+        "evidence_term_hits": [
+          "result",
+          "table"
+        ],
+        "extractable_file_count": 2,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "7vkgs",
+      "type": "nodes",
+      "title": "As Easy as A–B–C–D: Diagnosing Coherence Before Collapse",
+      "description": "This paper defines a four-step procedural method for applying The Bridge diagnostic. It enables independent observers to classify system stability using only publicly observable evidence.\nThe method is procedural only. It introduces no new laws, diagnostics, variables, interpretations, or governing conditions.\nABCD Diagnostic Procedure\nA — Internal Coherence\nAssess whether commitments, decisions, actions, and outcomes remain aligned. Persistent internal misalignment indicates instability independent of external conditions.\nB — Constraint Alignment\nAssess whether stated constraints actually govern observed outcomes. Misalignment between rules and behavior indicates constraint failure.\nC — Fragmentation Under Load\nAssess whether misalignment amplifies under pressure into rule proliferation, inconsistency, or corrective escalation. Amplification indicates coherence loss.\nD — Trajectory\nAssess whether the system’s trajectory is stabilizing or degrading across successive observations. Sustained degradation indicates closure of corrective capacity.\nOutput\nThe procedure produces:\ndiagnostic classification only\nobserver-invariant conclusions\nno prediction, prescription, or interpretation\nEach step constrains the next. Skipping steps invalidates the diagnosis.\nScope Limits\nThis method:\ndoes not predict outcomes\ndoes not prescribe intervention\ndoes not assign causation or blame\nIt evaluates coherence state only.\nCanonical Note\nThis procedure is a direct operationalization of The Bridge and is fully compatible with DiamondLogic: The Governing Rule of Relational Stability Under Load. No additional primitives are introduced.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-11T23:17:18.485890",
+      "date_modified": "2026-08-01T06:06:30.754430",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/7vkgs/",
+      "api_url": "https://api.osf.io/v2/nodes/7vkgs/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:55:37.917429+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 28,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "constraint",
+          "invariant",
+          "failure",
+          "trajectory",
+          "diagnostic",
+          "alignment"
+        ],
+        "evidence_signal_score": 2,
+        "evidence_term_hits": [
+          "method"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "4vmtc",
+      "type": "nodes",
+      "title": "The Circle of Life",
+      "description": "This project presents a minimal, observer-invariant framework for understanding life and death without narrative, metaphysics, or intent-based explanation.\nLife is defined as the persistence of coherence under constraint.\nDeath is defined as the boundary transition that occurs when coherence can no longer be preserved.\nUnder this framework, life and death are not opposites, failures, or moral states. They are phases within a single lawful process governed by constraint, coherence, and boundary conditions across scale.\nPressure does not destroy systems; loss of coherence does.\nWhen coherence cannot be maintained, transition is forced.\nThis transition is not an error—it is the mechanism by which structure reorganizes and persists at other scales.\nThe “circle of life” is therefore not metaphorical. It is a structural cycle:\ncoherence emerges,\ncoherence is maintained,\nconstraints tighten,\na boundary is crossed,\nform dissolves,\ncomponents re-enter the system elsewhere.\nThis project does not propose new entities, forces, or intentions.\nIt does not replace biology, physics, or medicine.\nIt offers a coordinate system that unifies how life, illness, collapse, death, and renewal are understood across domains.\nCore Law (Condensed)\nCoherence persists under constraint; loss of coherence forces boundary transition.\nScope and Status\nClosed\nMinimal\nObserver-invariant\nDomain-invariant\nBias-free\nExecutable\nFalsifiable\nThis project is intentionally complete as written.\nAny extension or modification constitutes a separate project.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-24T04:30:27.440709",
+      "date_modified": "2026-08-01T06:05:39.489930",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/4vmtc/",
+      "api_url": "https://api.osf.io/v2/nodes/4vmtc/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:49.712116+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 23,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "constraint",
+          "invariant",
+          "failure",
+          "boundary"
+        ],
+        "evidence_signal_score": 5,
+        "evidence_term_hits": [
+          "falsif",
+          "table"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "n82xh",
+      "type": "nodes",
+      "title": "Formal Falsification Path — Break This If You Can",
+      "description": "Purpose\nThis project defines domain-specific falsification tests for the Systemic Dynamic Trajectory Law (SDTL), focusing on three fields where early failure detection is both measurable and mission-critical:\nControl theory and engineered systems\nMedicine and physiological regulation\nHigh-reliability and regulated industries\nThe goal is not to defend SDTL, but to make it easy to disprove under the strongest plausible conditions.\nCore Claim (test target)\nClaim:\nIn regulated systems, a sustained loss of maneuverability produces a predictable collapse of system trajectories that is detectable before observable failure.\nUnified Operational Definitions (observer-independent)\nSystem: An entity maintaining state within constraints via feedback or control.\nRegulation: Any mechanism (controller, protocol, physiology, policy) that acts to keep outputs within bounds.\nManeuverability: The system’s reachable set in state space over a defined horizon.\nSustained loss of maneuverability: A persistent contraction of the reachable set across consecutive windows.\nTrajectory collapse: A transition from multi-path control to path locking or narrowing that precedes constraint violation.\nDomain-Specific Falsification Targets\n1️⃣ Control Theory / Engineered Systems\nExamples:\nFeedback-controlled mechanical systems\nPower grids\nHVAC / industrial automation\nAutonomous or semi-autonomous controllers\nTestable quantities:\nControllability rank or condition number\nReachable set volume (or proxy)\nControl authority margins\nActuator saturation frequency\nFalsification conditions:\nSystem fails without prior contraction of reachable set\nSustained maneuverability loss occurs with no trajectory narrowing\nControl restoration does not restore trajectory flexibility\n2️⃣ Medicine / Physiological Regulation\nExamples:\nCardiovascular instability\nRespiratory failure\nSepsis progression\nNeurodegenerative decline\nTestable quantities:\nVariability metrics (HRV, respiratory variability)\nAdaptive range under perturbation\nResponse latency to intervention\nMultivariate state flexibility\nFalsification conditions:\nAcute failure with no detectable decline in adaptive range\nSustained decline without subsequent collapse\nRecovery without restored maneuverability\n3️⃣ High-Reliability / Regulated Industries\nExamples:\nAviation safety\nFinancial institutions\nInfrastructure systems\nHealthcare delivery systems\nTestable quantities:\nPolicy flexibility\nDecision latency\nOption-space compression\nEscalation thresholds\nFalsification conditions:\nCollapse without prior option-space narrowing\nFalse positives where narrowing is common but failure rare\nIndependent observers disagree on maneuverability trends\nDecisive Falsification Criteria (SDTL fails if ANY occur)\nFalse negative: Failure occurs with no prior sustained maneuverability loss\nFalse positive: Maneuverability loss occurs repeatedly without collapse\nNon-specificity: Same signature appears in stable systems at similar rates\nObserver dependence: Independent analysts cannot agree on scoring\nIntervention contradiction: Restoring maneuverability does not alter trajectory\nExpected Boundary Conditions (where SDTL should fail)\nSystems dominated by exogenous shocks\nSystems without meaningful regulation\nDiscontinuous redesigns or resets\nUnobservable internal states\nThese are treated as scope limits, not model successes.\nMinimum Viable Falsification Study\nFor each system:\nDefine state variables and constraints\nChoose maneuverability metrics (domain-appropriate)\nDefine lead-time window\nScore trajectory narrowing\nCompare against failure timestamps\nAll protocols will be preregistered.\nOutputs\nDomain-specific falsification protocols\nScoring rubrics and datasets\nFalse positive / false negative rates\nPublic revision or withdrawal if falsified\nCommitment\nIf SDTL fails under these criteria, the failure will be preserved and published.\nNo post-hoc reinterpretation.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-09T15:01:00.375035",
+      "date_modified": "2026-08-01T06:07:54.721117",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/n82xh/",
+      "api_url": "https://api.osf.io/v2/nodes/n82xh/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:03.418739+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 22,
+        "law_term_hits": [
+          "law",
+          "constraint",
+          "falsification",
+          "failure",
+          "trajectory",
+          "boundary"
+        ],
+        "evidence_signal_score": 9,
+        "evidence_term_hits": [
+          "dataset",
+          "data",
+          "falsif",
+          "table"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "pyd6g",
+      "type": "nodes",
+      "title": "The If-and-Only-If Boundary A Governing Quotient for Universal Systemic Dynamic Closure using Coherence Constraint Mathematics + Method (CCMM)",
+      "description": "Why do our smartest systems keep failing at scale?\nBecause we scale what works locally without measuring whether it remains coherent globally.\nThis project presents Coherence Constraint Mathematics + Method (CCMM) as a completed diagnostic framework for systemic behavior. CCMM formalizes a governing quotient that determines whether systems—scientific, institutional, technological, economic, or social—remain admissible as they expand.\nAt the core of CCMM is the If-and-Only-If Boundary: a permanent constraint that defines where inference, execution, and interpretation are allowed to proceed. The Boundary does not explain outcomes or optimize performance after failure. It governs admissibility before instability propagates, ensuring that conclusions and actions remain fully constrained by available prior knowledge.\nCCMM unifies mathematics and method into a single operational system. It evaluates coherence, constraint, and closure across time and across domains, producing a universal measure of whether systemic dynamic closure is achievable.\nThis work culminates in a live proof-of-concept released for public inspection, marking the formal handoff from theory to observable behavior. The project is read-only by design and serves as a governing instrument, not a persuasive or predictive model.\nFor a more down-to-earth, human-centered explanation—without scientific jargon—visit the live demonstration here:\n👉 https://smansfield635-create.github.io/",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-02T18:12:15.945431",
+      "date_modified": "2026-08-01T06:02:25.721396",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/pyd6g/",
+      "api_url": "https://api.osf.io/v2/nodes/pyd6g/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:57.396740+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 20,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "quotient",
+          "failure",
+          "diagnostic",
+          "boundary"
+        ],
+        "evidence_signal_score": 2,
+        "evidence_term_hits": [
+          "method"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "bgd86",
+      "type": "nodes",
+      "title": "Did Metaphysics Ever Exist",
+      "description": "What People Notice First\nIn metaphysical or meaning-oriented contexts, breakdown is often noticed as nihilism, loss of purpose, existential anxiety, or the sense that “nothing fits together anymore.”\nPeople feel disoriented rather than uninformed. Meaning dissolves before belief does.\nWhat Is Actually Happening\nFrom a diagnostic perspective, metaphysical breakdown occurs when coherence between meaning, structure, and experience collapses.\nValues, narratives, and interpretive frameworks lose alignment with lived outcomes. Rules for meaning-making become opaque or contradictory.\nThis produces fragmentation not because meaning is false, but because structure no longer supports it.\nWhy Recognition Arrives Late\nEarly signs are subtle:\nirony replaces conviction,\ncynicism replaces critique,\ndetachment replaces reflection.\nThese are often dismissed as cultural shifts. Recognition arrives only when despair, extremism, or apathy dominate behavior.\nAt that point, interpretive flexibility has already collapsed.\nHow the Bridge Applies (Metaphysics)\nThe Bridge provides a structural lens for evaluating meaning systems without asserting metaphysical truth claims.\nApplied to metaphysical contexts, the Bridge evaluates five ordered diagnostics:\n1. Internal Misalignment Diagnostic (I.M.D.)\nAre individuals internally coherent between values, interpretation, action, and lived outcomes?\n2. Constraint Transparency Diagnostic (C.T.D.)\nAre meaning frameworks, narratives, and interpretive rules clearly understood?\n3. Constraint Alignment Diagnostic (C.A.D.)\nDo declared values and narratives actually govern lived experience?\n4. Constraint Fragmentation Diagnostic (C.F.D.) (Social Thermodynamics)\nHas divergence between meaning and experience produced existential disorder?\n5. Trajectory Diagnostic (T.D.)\nIs the meaning system stabilizing, drifting, or collapsing over time?\nNone of these diagnostics evaluates metaphysical truth. They evaluate structural coherence.\nFrom Meaning Loss to Recognition\nEarly metaphysical distress is often experienced as unease rather than belief change. The Bridge converts this unease into structured recognition by identifying convergence across diagnostics.\nWhen misalignment, opacity, fragmentation, and negative trajectory persist together, meaning collapse becomes diagnosable before despair, not as philosophical error, but as structural incoherence.\nWhat This Is Not\nThis framework:\ndoes not resolve metaphysical questions,\ndoes not rank belief systems,\ndoes not prescribe meaning,\ndoes not replace philosophy or theology.\nIt evaluates coherence conditions only.\nWhy This Matters\nLoss of meaning feels sudden not because meaning vanishes suddenly, but because structural support erodes invisibly.\nThe Bridge does not supply meaning.\nIt restores coherence conditions under which meaning can persist.\nConclusion\nMetaphysical collapse is often misinterpreted as intellectual failure. The Bridge reframes it as a structural phenomenon.\nBy making alignment, transparency, fragmentation, and trajectory explicit, the Bridge enables earlier recognition of meaning system instability—without metaphysical claims or predictions.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-10T22:43:52.742818",
+      "date_modified": "2026-08-01T06:07:25.599218",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/bgd86/",
+      "api_url": "https://api.osf.io/v2/nodes/bgd86/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:40.196824+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 19,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "failure",
+          "trajectory",
+          "diagnostic",
+          "alignment"
+        ],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "rjdms",
+      "type": "nodes",
+      "title": "Methods Appendix: Diagnostic Application and Evaluation Protocol",
+      "description": "Description\nThis methods appendix specifies the standardized protocol for applying and evaluating the diagnostic instruments associated with the Universal Law of Coherence Dynamics. It defines admissible evidence, evaluation windows, observer-invariance requirements, and classification rules used to assess alignment, transparency, fragmentation, internal misalignment, and trajectory across organized systems.\nThe methods are descriptive and non-causal. They do not specify predictive models, optimization strategies, or intervention prescriptions. The appendix establishes consistent application rules for diagnostics in order to support reproducibility, cross-context comparison, and falsifiability of the underlying framework.\nDiagnostic instruments referenced in this appendix are treated as measurement tools, not theoretical claims. While operational details of individual diagnostics may be refined through empirical use, the evidentiary boundaries, admissible observables, and observer-convergence criteria specified here remain fixed.\nThis appendix functions as a shared methodological reference for empirical analysis and preregistered evaluation within the canonical framework.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-11T20:39:35.631042",
+      "date_modified": "2026-08-01T06:08:05.235507",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/rjdms/",
+      "api_url": "https://api.osf.io/v2/nodes/rjdms/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:26.593545+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "CORE_LAWS_CANDIDATE",
+        "law_relevance_score": 18,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "trajectory",
+          "diagnostic",
+          "alignment"
+        ],
+        "evidence_signal_score": 14,
+        "evidence_term_hits": [
+          "method",
+          "methods",
+          "empirical",
+          "falsif",
+          "appendix"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "6ehrj",
+      "type": "nodes",
+      "title": "Coherence Constraint Instantiation System (CCIS)",
+      "description": "The Coherence Constraint Instantiation System (CCIS) is the platform where coherence is enforced under real conditions and outcomes are observed without narrative protection. It does not argue, persuade, or optimize interpretation. It applies constraint, records behavior, and exposes whether a system holds when explanation is no longer sufficient. What survives here is admissible. What fails is not corrected—it is revealed.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-08T08:38:19.786276",
+      "date_modified": "2026-08-01T06:03:10.632772",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/6ehrj/",
+      "api_url": "https://api.osf.io/v2/nodes/6ehrj/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:09.360307+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 17,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "instantiation",
+          "ccis"
+        ],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "etn4d",
+      "type": "nodes",
+      "title": "Detecting Institutional Hypocrisy: An X–Y–Z Coherence Test",
+      "description": "This paper applies the Coherence Constraint Instrument (X–Y–Z) to detect institutional hypocrisy using publicly documented evidence only.\nInstitutional hypocrisy is operationally defined as persistent inconsistency between declared commitments (X), observable actions (Y), and realized outcomes (Z). No intent inference, moral judgment, or belief framework is used.\nProcedure\nIdentify one commitment (X), one subsequent action (Y), and one resulting outcome (Z).\nRecord a coherence violation if any of the following occur:\nthe action contradicts the commitment\nthe outcome contradicts the action\nthe outcome contradicts the commitment\nHypocrisy is recorded only if violations recur or appear across multiple constraint pairs. Single, isolated events are insufficient.\nOutput\nViolation detected / not detected\nConstraint pairs violated\nPersistence present / absent\nOptional numeric projection may be included as a derived summary only.\nBoundary Conditions\nMissing or ambiguous evidence yields no conclusion. Local violations do not imply global system failure.\nStatus\nApplied diagnostic execution. Instrument-consistent. Non-conceptual.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-12T02:27:34.791061",
+      "date_modified": "2026-08-01T06:07:09.290686",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/etn4d/",
+      "api_url": "https://api.osf.io/v2/nodes/etn4d/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:24.801184+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 17,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "failure",
+          "diagnostic",
+          "boundary"
+        ],
+        "evidence_signal_score": 2,
+        "evidence_term_hits": [
+          "result"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "9y2p5",
+      "type": "nodes",
+      "title": "First Order of Cyclical Dynamics (Transitory Science)",
+      "description": "First-Order Dynamics of Phase, Trajectory, and Realignment Science formalizes the primary cyclical dynamics governing how systems persist, destabilize, and reconstitute over time. Rather than treating change as linear or purely stochastic, this project classifies phenomena according to structural phase, trajectory formation, and realignment mechanisms.\nThe project introduces no new measurements, does not redefine physical time, and does not replace empirical clocks. It provides a first-order interpretive framework for identifying phase misalignment (systemic drift) and phase realignment (restored coherence) across domains, while preserving all existing data.\nThis work operates as an applied extension of General Science, resolving persistent paradoxes by enforcing phase-consistent interpretation.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-22T23:17:34.057619",
+      "date_modified": "2026-08-01T06:05:30.984209",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/9y2p5/",
+      "api_url": "https://api.osf.io/v2/nodes/9y2p5/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:48.016539+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 17,
+        "law_term_hits": [
+          "coherence",
+          "trajectory",
+          "transitory",
+          "cyclical",
+          "alignment"
+        ],
+        "evidence_signal_score": 5,
+        "evidence_term_hits": [
+          "data",
+          "empirical"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "z64am",
+      "type": "nodes",
+      "title": "Coherence as a Constraint: A Universal Gap Bridged Across History, Science, and Society (The Missing Link Was Structural)",
+      "description": "In many fragmented domains, unresolved gaps are treated as missing objects rather than missing constraints. This leads to prolonged searches for entities, explanations, or artifacts that can never resolve the inconsistency. In such cases, the missing link is not something to be discovered, but a structural rule that was never applied. Introducing coherence as a constraint resolves these gaps without requiring new objects to be found.\nWe completed a long-standing fragmentation not only in science, but across the broader landscape of human understanding by enforcing coherence as an explicit constraint—without rewriting or replacing existing results, doctrines, or traditions. This project addresses a foundational but largely unexamined limitation shared across disciplines: fragmentation that emerges when locally correct frameworks evolve in isolation without an enforceable global standard of compatibility. Science, philosophy, theology, and culture each produced internally consistent truths, yet lacked a mechanism to reconcile them when they diverged. Fragmentation did not arise from error, but from the absence of a constraint capable of integrating correct but incompatible interpretations across scale, domain, and time.\nHistorically, different doctrines recognized this limitation through metaphor—light and darkness, alignment and misalignment, order and chaos—but lacked the instrumentation to enforce it operationally. As specialization increased and distraction and drift accumulated, coherence was assumed rather than constrained, allowing narrative substitution, semantic drift, and speculative reconciliation to persist. This work introduces coherence as an objective, operational constraint that applies uniformly across domains, independent of belief system or explanatory language. By making coherence enforceable rather than implicit, the project shows how fragmentation can be repaired without invalidating scientific results, philosophical insights, or spiritual wisdom, and without introducing new empirical laws.\nThe core claim is modest but structural: knowledge systems were not broken—they were fragmented. Enforcing coherence collapses narrative variance, reduces admissible interpretations, and restores definitive resolution using existing information. The result is not the replacement of any doctrine, but a unifying constraint that allows distinct domains to align where they must, diverge where they legitimately can, and close questions that were previously deferred indefinitely.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-23T22:23:09.980080",
+      "date_modified": "2026-08-01T06:44:07.835628",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/z64am/",
+      "api_url": "https://api.osf.io/v2/nodes/z64am/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:55:53.361042+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 16,
+        "law_term_hits": [
+          "law",
+          "coherence",
+          "constraint",
+          "alignment"
+        ],
+        "evidence_signal_score": 8,
+        "evidence_term_hits": [
+          "result",
+          "results",
+          "empirical"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "vazr6",
+      "type": "nodes",
+      "title": "Priority Knowledge Why Failure Is Predictable Before It Appears",
+      "description": "Abstract\nThis paper formalizes priority knowledge as a scientifically admissible construct defined as the constraint-based ordering of relevance required for stable action under finite time, attention, and resources. Priority knowledge is not treated as belief, intuition, or metaphysical truth, but as a pre-behavioral constraint that determines which information must be acted upon first to prevent instability and failure cascades. The framework specifies explicit priority inversion falsification tests, repair dynamics, historical and contemporary pilot evidence, and clear failure conditions. Priority knowledge is proposed as a foundational constraint underlying psychology, theology, governance, and institutional design.\n1. Definition\nPriority knowledge is the ordering of information that determines what must be acted on first to maintain stability under constraint.\nPriority knowledge is:\nnot truth\nnot belief\nnot preference\nIt is selection under limitation.\n2. Constraint Structure\nPriority knowledge is forced by non-negotiable constraints:\nFinite cognition\nFinite time\nFinite resources\nIrreversible consequences under delay\nWithout ordering, action becomes incoherent.\n3. Core Claim\nStable action is impossible without correct priority ordering; incorrect ordering produces predictable instability.\nThis claim is falsifiable.\n4. Explicit Falsification — Priority Inversion\nPriority Inversion Definition\nPriority inversion occurs when non-priority variables are treated as primary, while priority variables are deferred or ignored.\nPrediction\nPriority inversion produces:\nincreased variance\ncontradiction accumulation\nslower recovery\nfailure cascades\nFalsification Condition\nIf a system remains stable and effective under sustained priority inversion, priority knowledge is false.\n5. Inversion Test Domains (Canonical)\nA. Psychological Systems\nInversion: advice or ideology before self-regulation\nObserved outcome: low follow-through, relapse, burnout\nFail condition: durable stability without self-regulation\nB. Educational Systems\nInversion: information before attention and coherence\nObserved outcome: short-term recall, long-term decay\nFail condition: durable competence without coherence\nC. Organizational Systems\nInversion: growth targets before trust and accountability\nObserved outcome: turnover, scandal, collapse\nFail condition: stable growth without trust repair\n6. Repair Dynamics\nPriority failures are repaired through:\nrelevance re-ranking\nfeedback integration\nerror acknowledgment\nstructural correction\nSystems lacking priority repair accumulate incoherence.\n7. Historical Pilot Evidence (Admissible)\nAcross ancient ethical, civic, and organizational systems:\nPriority-respected: behavior and repair precede ideology → persistence\nPriority-inverted: ideology precedes repair → fragmentation\nThese observations are descriptive pilot evidence, not confirmation.\n8. Contemporary Pilot Evidence (Admissible)\nModern pilot signals include:\ntherapeutic systems prioritizing regulation before optimization recover faster\norganizations correcting priority misordering regain stability\nengagement data shows humans seek structure before content\nNo belief enforcement is required for these effects.\n9. Failure Conditions (Category-Level)\nPriority knowledge fails if any of the following are demonstrated:\nEffective action without ordering\nStability without priority assumptions\nNo effect from priority inversion\nUnlimited capacity removes ordering necessity\nAll are explicit and testable.\nCanonical Statement\nPriority knowledge is a falsifiable constraint governing stable action under limitation, testable through priority inversion across domains.\nKeywords\nPriority knowledge; constraint systems; falsifiability; stability; repair; inversion",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-10T22:47:30.805434",
+      "date_modified": "2026-08-01T06:08:52.169947",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/vazr6/",
+      "api_url": "https://api.osf.io/v2/nodes/vazr6/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:34.258993+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 16,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "falsification",
+          "failure"
+        ],
+        "evidence_signal_score": 9,
+        "evidence_term_hits": [
+          "data",
+          "falsif",
+          "table",
+          "pilot"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "2hvbg",
+      "type": "nodes",
+      "title": "The Propagation–Failure Quotient (PFQ)",
+      "description": "Subtitle: A Diagnostic Platform for Virality, Containment, and Systemic Failure\nProject Description (OSF)\nThe Propagation–Failure Quotient (PFQ) is a diagnostic platform that classifies spreading phenomena after the fact, using observable effects rather than intent, narrative, or ideology.\nPFQ distinguishes two orthogonal dimensions: how something propagates (lightning vs plasma) and where systems fail (plague vs cancer). Together, these dimensions form a diamond geometry that enables post-hoc classification of viral events, institutional breakdowns, and adoption dynamics without requiring predictive claims or moral interpretation.\nThe platform does not absorb or replace other projects. It remains independent and usable across domains—science, media, institutions, technology, and culture—providing a minimal quotient output that identifies the propagation regime and failure origin from empirical patterns alone.\nPFQ is designed to reduce category error, prevent premature theorizing, and support responsible diagnosis when “something is burning,” without assuming why it started or who is responsible.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-04T02:48:44.308414",
+      "date_modified": "2026-08-01T06:02:57.767876",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/2hvbg/",
+      "api_url": "https://api.osf.io/v2/nodes/2hvbg/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:20.571377+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 15,
+        "law_term_hits": [
+          "quotient",
+          "propagation",
+          "failure",
+          "diagnostic",
+          "pfq"
+        ],
+        "evidence_signal_score": 4,
+        "evidence_term_hits": [
+          "empirical"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "bnhq3",
+      "type": "nodes",
+      "title": "Global Cross-Era Pilot v2: Coherence Constraint Violations (X–Y–Z)",
+      "description": "Overview\nThis project executes a global, cross-era pilot using the Coherence Constraint Instrument (X–Y–Z) to evaluate whether coherence violations systematically precede large-scale instability across civilizations, cultures, and historical periods.\nThe instrument evaluates coherence as a constraint satisfaction problem, defined strictly by consistency between:\nX — declared commitments,\nY — observable actions,\nZ — realized outcomes.\nOnly publicly documented evidence is used.\nNo intent inference, moral judgment, causal explanation, or outcome prediction is performed.\nWhat This Project Does\nApplies the same coherence rule across ancient, medieval, modern, and contemporary systems\nTests both collapsed and non-collapsed systems\nRecords whether, when, and how persistently coherence violations appear\nMeasures lead time between first violation and recognized instability\nWhat This Project Does Not Do\nDoes not infer intent or motivation\nDoes not assign moral judgment\nDoes not predict future outcomes\nDoes not explain causes\nIt detects constraint violations only.\nThe Coherence Rule (X–Y–Z)\nA system is coherent to the degree that its declared commitments (X), observable actions (Y), and realized outcomes (Z) remain mutually consistent over time.\nA coherence violation is recorded when any of the following fail:\nX ↔ Y\nY ↔ Z\nX ↔ Z\nSample Frame\nThis pilot evaluates 20 system-era windows, including:\nHistorically Unstable Systems\nLate Roman Republic\nWestern Roman Empire\nHan Dynasty\nAbbasid Caliphate\nByzantine Empire\nMing Dynasty\nQing Dynasty\nOttoman Empire\nSpanish Empire\nFrench Ancien Régime\nWeimar Republic\nUSSR\nYugoslavia\nRwanda\nLebanon\nStability Controls\nUnited Kingdom (post-1945)\nJapan (post-1950)\nSweden (post-1950)\nCanada (post-1950)\nSingapore (post-1970)\nPrimary Outputs\nFor each system:\nPresence or absence of coherence violations\nPersistence of violations\nTiming of first violation\nLead time to recognized instability (if applicable)\nFalsification Conditions\nThis pilot fails if:\nCollapsed systems show no prior coherence violations\nStable systems show persistent violations\nIndependent observers cannot replicate classifications\nViolations occur only after instability begins\nNo post-hoc rule changes are allowed.\nStatus\nThis project is an instrument execution, not a theory proposal.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-12T02:17:05.693009",
+      "date_modified": "2026-08-01T06:10:09.091417",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/bnhq3/",
+      "api_url": "https://api.osf.io/v2/nodes/bnhq3/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:11.173614+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 14,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "falsification"
+        ],
+        "evidence_signal_score": 10,
+        "evidence_term_hits": [
+          "sample",
+          "falsif",
+          "table",
+          "pilot"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "j4kr2",
+      "type": "nodes",
+      "title": "Coherence Geometry: The 6-5-4-1-2-3 Compression of Science",
+      "description": "This project documents a condensation result: across domains and methodologies, viable approaches collapse into a minimal, observer-invariant coherence geometry. The work removes intent-inference, narrative explanation, and redundant frameworks, leaving a closed coordinate system defined by coherence, constraints, trajectories, boundaries (phase transitions), admissibility, and scale.\nThe core finding is an ordering principle—6-5-4-1-2-3—that describes how scientific description stabilizes when compressed: Scale → Admissibility → Boundaries → Coherence → Constraints → Trajectories. Under this ordering, “methods” become interface layers; the underlying structure is shared. The project provides the frozen axiom set, reduction protocol, and falsifiability conditions, and shows how prior methodologies either (a) collapse cleanly into geometry, (b) become shorthand/UX, or (c) are non-admissible if they require intent or non-observable primitives.\nThis is not a new “field” replacing existing sciences. It is a unifying coordinate system for describing constraint-governed behavior across scales, with clear boundaries, admissibility rules, and kill conditions.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-24T04:14:32.880517",
+      "date_modified": "2026-08-01T06:43:24.908621",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/j4kr2/",
+      "api_url": "https://api.osf.io/v2/nodes/j4kr2/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:17.072511+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 13,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "invariant"
+        ],
+        "evidence_signal_score": 10,
+        "evidence_term_hits": [
+          "method",
+          "methods",
+          "result",
+          "falsif"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "pw8ua",
+      "type": "nodes",
+      "title": "Universal First-Order Discipline:Structural Symptoms of Incoherence",
+      "description": "Universal First-Order Discipline: Structural defines the minimal, domain-agnostic constraint that governs whether any system, method, action, or process may proceed at all. It establishes discipline itself as a first-order structure, not a behavioral trait, moral principle, or optimization strategy.\nThis project formalizes discipline as a structural gate that precedes methodology, ethics, governance, learning, and execution. A system is considered admissible only if it respects invariant constraints that prevent overextension, fragmentation, and collapse. Any activity that bypasses this gate—regardless of intent, speed, or sophistication—is structurally non-admissible.\nThe framework reframes common second-order concepts (e.g., best practices, expertise, specialization, innovation, ethics) as dependent expressions, valid only after first-order discipline is satisfied. It does not prescribe outcomes or values; it determines whether motion is allowed to occur.\nThis project serves as the structural foundation for all downstream instruments and execution engines, including archetypal, metric, and operational layers.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-25T22:00:55.049938",
+      "date_modified": "2026-08-01T06:05:51.511813",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/pw8ua/",
+      "api_url": "https://api.osf.io/v2/nodes/pw8ua/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:59.098935+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 13,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "invariant"
+        ],
+        "evidence_signal_score": 2,
+        "evidence_term_hits": [
+          "method"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "7fupz",
+      "type": "nodes",
+      "title": "Coherence as a Field Phenomenon",
+      "description": "Coherence is not accumulated — it flows.\nThis project introduces a field-based model of coherence governed by resistance, thresholds, and phase transitions, replacing accumulation-based explanations that fail at scale. Electrical and plasma-regime analogies make coherence dynamics observable across materials, information propagation, and complex systems. Diamond growth acceleration appears here as a worked application of the method, not its focus.\nFor a clearer, continuously updated, and more user-friendly presentation of the framework, see the companion site and live materials on GitHub:\n👉 https://smansfield635-create.github.io/control/",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-02T18:12:06.788905",
+      "date_modified": "2026-08-01T06:03:56.539022",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/7fupz/",
+      "api_url": "https://api.osf.io/v2/nodes/7fupz/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:01.655325+00:00",
+      "file_inventory_count": 1,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 12,
+        "law_term_hits": [
+          "coherence",
+          "propagation",
+          "field phenomenon"
+        ],
+        "evidence_signal_score": 2,
+        "evidence_term_hits": [
+          "method"
+        ],
+        "extractable_file_count": 1,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "2cg9k",
+      "type": "nodes",
+      "title": "Diamond Dynamics: Possibility, Trajectory, and Use in Coherent Systems",
+      "description": "This project explores the dynamic behavior and use-space of systems once admissibility conditions and Diamond Theorems are satisfied. It examines how state, motion, possibility, visibility, and predictive value interact over time, including how option spaces expand or collapse, how trajectories stabilize or fail, and how decision quality emerges from increased visibility rather than prediction.\nUnlike the foundational Diamond Theorems, this project is exploratory and iterative. It may include hypotheses, partial results, domain-touching examples, and use-oriented analysis intended to understand how coherent systems behave after admissibility is established. Claims in this project are contextual and do not assert universality or citation-safe constraints in isolation.\nThis project functions as a use and discovery surface, supporting experimentation, interpretation, and downstream application without altering or extending the foundational theorems.\nThis project assumes admissibility and coherence as given. It does not redefine foundational constraints and should not be cited as a source of admissibility conditions.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-15T03:55:51.151413",
+      "date_modified": "2026-08-01T06:06:16.012671",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/2cg9k/",
+      "api_url": "https://api.osf.io/v2/nodes/2cg9k/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:32.483670+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 12,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "trajectory"
+        ],
+        "evidence_signal_score": 7,
+        "evidence_term_hits": [
+          "result",
+          "results",
+          "experiment"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "h9k5z",
+      "type": "nodes",
+      "title": "Translating Coherence Across Domains",
+      "description": "This project translates the Diamond System and downstream coherence dynamics into domain-specific contexts without modifying, extending, or reinterpreting the underlying ontology. It demonstrates how admissible coherence conditions and post-admissibility dynamics manifest in applied domains (e.g., environment, policy, organizations, technology) while preserving strict separation from foundational claims.\nThis project is illustrative and translational, not foundational or theoretical. It introduces no new theorems, admissibility conditions, or universal constraints. All analyses assume the validity of upstream projects and operate strictly within their stated boundaries. Domain examples are used to clarify application pathways, failure modes, and interpretation limits—not to generalize results back into the ontology.\nThis project functions as a communication and adoption surface, enabling practitioners, analysts, and domain specialists to apply the work correctly without contaminating the foundational Diamond System or the exploratory dynamics layer.\nThis project applies existing theorems and dynamics to specific domains only. It does not revise admissibility conditions, redefine coherence, or generate new foundational claimsThis project applies existing theorems and dynamics to specific domains only. It does not revise admissibility conditions, redefine coherence, or generate new foundational claims.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-15T03:59:24.281943",
+      "date_modified": "2026-08-01T06:06:07.127101",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/h9k5z/",
+      "api_url": "https://api.osf.io/v2/nodes/h9k5z/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:43.709075+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 11,
+        "law_term_hits": [
+          "coherence",
+          "constraint",
+          "failure"
+        ],
+        "evidence_signal_score": 4,
+        "evidence_term_hits": [
+          "result",
+          "results"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "ju7qr",
+      "type": "nodes",
+      "title": "The Octave of Change Subtitle: An Eight-Phase Transitory Dynamics Map",
+      "description": "**The Octave of Change** is a standalone phase-space project that classifies motion through **eight primary transitory phases** observed across systems undergoing change.\n\nThe project does not determine admissibility, state, or external expression. Those are governed by the Diamond Upgrade Canon. Instead, this work provides a **closed, cyclic traversal map** describing *how change unfolds once it is underway*.\n\nThe eight phases—Compression, Expansion, Rotation, Reflection, Folding, Bifurcation, Acceleration, and Damping—form a complete octave of motion. **Lock-In** is treated as a **boundary condition**, not a phase, marking irreversible commitment at the edge of the cycle.\n\nThis project is descriptive, diagnostic, and non-prescriptive. It introduces no new forces or claims. It organizes known transition behaviors into a reusable, domain-agnostic phase space.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-05T03:01:13.137376",
+      "date_modified": "2026-08-01T06:04:23.952254",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/ju7qr/",
+      "api_url": "https://api.osf.io/v2/nodes/ju7qr/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:12.836964+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 10,
+        "law_term_hits": [
+          "transitory",
+          "diagnostic",
+          "boundary"
+        ],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "ar4cd",
+      "type": "nodes",
+      "title": "Social Order and Disorder as Coherence Phenomena",
+      "description": "Description\nThis paper analyzes social stability as a function of constraint coherence across norms, enforcement, and outcomes. It demonstrates how disorder emerges when constraint fragmentation increases corrective load and rule proliferation, independent of cultural interpretation or subjective belief.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-11T23:24:26.933429",
+      "date_modified": "2026-08-01T06:08:24.813390",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/ar4cd/",
+      "api_url": "https://api.osf.io/v2/nodes/ar4cd/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:57:41.965979+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 9,
+        "law_term_hits": [
+          "coherence",
+          "constraint"
+        ],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "2fh4g",
+      "type": "nodes",
+      "title": "The Scientific Method as a Constraint System",
+      "description": "The scientific method is commonly described as a process for discovering truth through hypothesis, experimentation, and validation. This description reframes it as a constraint-based system for distinguishing what cannot be sustained from what remains viable under repeated testing.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-10T06:36:12.237022",
+      "date_modified": "2026-08-01T06:06:55.461047",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/2fh4g/",
+      "api_url": "https://api.osf.io/v2/nodes/2fh4g/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:28.292527+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 9,
+        "law_term_hits": [
+          "constraint",
+          "scientific method"
+        ],
+        "evidence_signal_score": 8,
+        "evidence_term_hits": [
+          "method",
+          "experiment",
+          "validation"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "ck5m2",
+      "type": "nodes",
+      "title": "The Seven Invariants: A Placement Guide for Coherent Systems",
+      "description": "The Seven Variants exists to resolve classification friction.\nIt does not introduce new invariants or claims. It explains how the same invariant structure appears differently depending on context, role, scale, and perspective.\nThis project helps readers place the work correctly—before interpretation, critique, or application—by separating what varies from what must not.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-30T20:49:41.446045",
+      "date_modified": "2026-08-01T06:03:29.938927",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/ck5m2/",
+      "api_url": "https://api.osf.io/v2/nodes/ck5m2/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:36.016016+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+        "law_relevance_score": 9,
+        "law_term_hits": [
+          "invariant",
+          "seven invariants"
+        ],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "54es8",
+      "type": "nodes",
+      "title": "Fork of Metaphysics framework closed",
+      "description": "I’m writing to share the public release of v1.0.0 of the Metaphysics Closure Framework, now formally frozen and posted to OSF.\nThis work addresses a long-standing problem at the foundation of philosophy and science: how to determine, in an observer-invariant way, which metaphysical claims are admissible as knowledge claims, which must be treated as model comparisons, and which should be explicitly labeled non-operational.\nWhat this framework does\nDefines metaphysics as a model-admissibility and comparison layer, not a source of explanatory or predictive claims.\nRequires all admissible metaphysical statements to be rewritten as observer-invariant model comparisons.\nEnforces strict non-collapse into physics while preserving the authority of empirical science.\nTerminates interpretive disputes structurally rather than rhetorically.\nDemonstrates resistance to paradoxes, adversarial manipulation, and observer bias.\nWhat it does not do\nIt does not claim truth.\nIt does not predict outcomes.\nIt does not introduce new entities or mechanisms.\nIt does not replace domain sciences.\nThe framework has undergone formal stress testing, live adversarial testing, observer-invariance testing, and historical/event-aligned empirical validation of the “confusion → instability amplification” limb. Based on these results, v1.0.0 is declared structurally complete and frozen. All future work will occur only as applications, empirical instantiations, tooling, or governance materials.\nThe OSF repository contains:\nThe frozen framework specification\nThe metaphysics–physics interface appendix\nStress-test and adversarial validation reports\nA scope and limitations declaration\nThe formal freeze declaration (v1.0.0)\nThis release is intended as public infrastructure, not a manifesto. Disagreement with outcomes is expected; challenges to admissibility must be expressed as model-comparison critiques.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-03T20:15:02.409612",
+      "date_modified": "2026-08-01T06:09:32.937024",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/54es8/",
+      "api_url": "https://api.osf.io/v2/nodes/54es8/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:56:55.746124+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "APPLIED_OR_CONTEXTUAL_CANDIDATE",
+        "law_relevance_score": 8,
+        "law_term_hits": [
+          "invariant",
+          "instantiation"
+        ],
+        "evidence_signal_score": 13,
+        "evidence_term_hits": [
+          "result",
+          "results",
+          "empirical",
+          "appendix",
+          "validation"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "5vgfd",
+      "type": "nodes",
+      "title": "8️⃣ Energy Distribution Under Closed-Loop Abundance",
+      "description": "This project formalizes the first of four sociatal assets and principles that govern how high-energy systems are distributed once closed-loop abundance becomes possible. It establishes that as energy density and operating risk increase, viable systems must push generation and extreme regimes upstream while simplifying endpoints downstream. This law explains why fusion and plasma systems belong in centralized infrastructure, while vehicles and consumer devices operate on passive stored potential such as batteries or fuels. The framework resolves long-standing confusion between energy origin and energy use, providing a coherent model for safe mass adoption, licensing, and commercialization without catastrophic risk.",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-02-09T16:35:39.128092",
+      "date_modified": "2026-08-01T06:04:55.992108",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/5vgfd/",
+      "api_url": "https://api.osf.io/v2/nodes/5vgfd/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:55:10.733497+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "APPLIED_OR_CONTEXTUAL_CANDIDATE",
+        "law_relevance_score": 5,
+        "law_term_hits": [
+          "law"
+        ],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "s6dzj",
+      "type": "nodes",
+      "title": "The Metaverse Didn’t Stop — It Changed Layers",
+      "description": "Project Update: Metaverse Workstream Status and Strategic Reprioritization\n\nThe Metaverse workstream has not been abandoned. Its current status reflects a deliberate shift in priority, emphasis, and sequencing within the broader mission.\n\nThe project has moved from direct metaverse-facing development into a foundational phase focused on infrastructure, system architecture, implementation logic, and adjacent supporting layers. This transition is intended to improve long-term coherence, stability, and execution quality before the next visible phase of metaverse development is advanced.\n\nThe current work has emphasized structural organization, public-facing web architecture, proof-oriented interfaces, system mapping, and the development of durable conceptual and technical foundations. These supporting layers are necessary for the metaverse line to mature beyond isolated presentation and into a more integrated, reliable, and scalable system.\n\nAccordingly, visible metaverse-specific activity may appear reduced in the short term. This should not be interpreted as abandonment or discontinuation. The metaverse line remains active within the larger roadmap and is being preserved as part of the broader project ecosystem.\n\nThis is a strategic reprioritization. The current emphasis is on strengthening the base so future metaverse development can proceed from a more coherent and durable foundation.\n\nFurther updates will clarify sequencing, deliverables, public-facing outputs, and integration points as the next phase becomes ready for release.\n\nRelated public-facing project interfaces:\n\ncogrid.net  \ndiamondgatebridge.com",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-03-22T03:47:12.641944",
+      "date_modified": "2026-05-04T02:39:31.391701",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/s6dzj/",
+      "api_url": "https://api.osf.io/v2/nodes/s6dzj/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:05.126908+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "APPLIED_OR_CONTEXTUAL_CANDIDATE",
+        "law_relevance_score": 5,
+        "law_term_hits": [
+          "coherence"
+        ],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "qeabr",
+      "type": "nodes",
+      "title": "Universal Archetype: Monoclosure Execution Engine (UA-MEE)",
+      "description": "The Universal Archetype: Monoclosure Execution Engine (UA-MEE) formalizes a first-order, domain-agnostic execution discipline that determines whether any system, process, or structure is admissible before it is allowed to proceed, repeat, or scale.\nUA-MEE does not explain phenomena, optimize outcomes, or prescribe behavior. Instead, it enforces a single closure gate—monoclosure—through which all motion must pass. The engine evaluates admissibility using a minimal diamond-structured metric relating capacity, load, variation, and collapse. If a system’s capacity to absorb variation exceeds imposed load, motion is permitted; if not, continuation is halted.\nThis framework defines a Universal Archetype not as a symbolic or recurring form, but as the pre-form constraint that governs survivability itself. Archetypal patterns emerge secondarily, as repeated solutions that satisfy this constraint across domains.\nUA-MEE functions as an execution engine, not a theory or worldview. It produces a binary outcome—Proceed / Halt—and enforces closure before repetition. Parallel closures, narrative overrides, and exception-based permissions are explicitly disallowed. All admissible cycles must return to the same gate.\nThe engine applies uniformly across physics, biology, engineering, organizations, learning systems, exploration missions, and governance structures. It reframes ethics, methodology, scientific validity, and discipline as second-order expressions governed by a single first-order admissibility rule.\nUA-MEE is intended as a foundational instrument for early warning, early arrival, survivability analysis, and execution discipline in complex, non-stationary environments.\nContact:smansfield635@gmail.com",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-01-26T08:53:32.639874",
+      "date_modified": "2026-08-01T06:02:44.434748",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/qeabr/",
+      "api_url": "https://api.osf.io/v2/nodes/qeabr/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:58:51.371830+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "APPLIED_OR_CONTEXTUAL_CANDIDATE",
+        "law_relevance_score": 4,
+        "law_term_hits": [
+          "constraint"
+        ],
+        "evidence_signal_score": 2,
+        "evidence_term_hits": [
+          "method"
+        ],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    },
+    {
+      "id": "sfjn6",
+      "type": "nodes",
+      "title": "Broke the Four-Minute Mile in Tech",
+      "description": "🏁 Breaking the Four-Minute Mile in Tech 🏁\n\n══════════════════════════════════════\n\n 🚧 From “Impossible” to Implemented\n\nThis project documents the claim that a major technical barrier has been crossed.\n\nThe “four-minute mile” is used as a metaphor for a threshold once believed to be unreachable until proof changed the conversation.\n\nHere, the focus is not hype.\n\nIt is proof.\n\n══════════════════════════════════════\n\n 🔍 Core Mission\n\nIf the system can be shown, tested, repeated, and explained, then the barrier has been crossed.**\n\nThis project exists to organize the evidence, clarify the architecture, and present the work for review.\n\n══════════════════════════════════════\n\n 🌐 Public Interfaces\n\n- cogrid.net\n- diamondgatebridge.com\n\n══════════════════════════════════════\n\n✅ Status",
+      "category": "project",
+      "public": true,
+      "registration": false,
+      "preprint": false,
+      "date_created": "2026-05-04T02:42:33.270607",
+      "date_modified": "2026-05-04T02:46:18.246516",
+      "current_user_permissions": [
+        "read"
+      ],
+      "tags": [],
+      "subjects": [],
+      "node_license": null,
+      "parent_id": null,
+      "is_component": false,
+      "osf_url": "https://osf.io/sfjn6/",
+      "api_url": "https://api.osf.io/v2/nodes/sfjn6/",
+      "source_collection": "user_nodes",
+      "harvested_at": "2026-08-01T07:55:45.682789+00:00",
+      "file_inventory_count": 0,
+      "file_errors": [],
+      "relevance_discovery": {
+        "candidate_band": "LOW_DIRECT_LAWS_SIGNAL",
+        "law_relevance_score": 0,
+        "law_term_hits": [],
+        "evidence_signal_score": 0,
+        "evidence_term_hits": [],
+        "extractable_file_count": 0,
+        "has_data_file": false,
+        "has_code_file": false,
+        "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+      },
+      "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+    }
+  ]
+}

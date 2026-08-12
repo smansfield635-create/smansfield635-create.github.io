@@ -1,0 +1,98 @@
+{
+  "schema": "DIAMOND_GATE_PUBLIC_CREDIBILITY_CLAIMS_v1",
+  "status": "ACTIVE_PUBLIC_EVIDENCE_REGISTRY",
+  "claimPolicy": {
+    "rule": "Every material technical claim must state its demonstrated scope and stop where the evidence stops.",
+    "proofLevels": [
+      {"level": 1, "name": "OBSERVABLE", "meaning": "A visitor can inspect the implementation or live behavior."},
+      {"level": 2, "name": "ENFORCED", "meaning": "Executable machinery rejects a prohibited state or operation."},
+      {"level": 3, "name": "TESTED", "meaning": "Automated qualification or self-tests exercise the mechanism."},
+      {"level": 4, "name": "BENCHMARKED", "meaning": "Quantitative results exist under a defined protocol."},
+      {"level": 5, "name": "EXTERNALLY_VALIDATED", "meaning": "Independent customers, evaluators, organizations, or market outcomes provide evidence."}
+    ]
+  },
+  "claims": [
+    {
+      "id": "browser-native-construction",
+      "publicClaim": "Browser-native software construction",
+      "status": "DEMONSTRATED",
+      "highestProofLevel": 1,
+      "scope": "Diamond Gate public product surfaces built with repository-owned HTML, CSS, JavaScript and, where needed, WebGL/WebGL2 and GLSL.",
+      "evidence": ["/", "/laws/", "/showroom/globe/h-earth/", "/showroom/globe/audralia/"],
+      "boundary": "This does not claim every possible customer project will be framework-free or that native construction automatically guarantees performance."
+    },
+    {
+      "id": "bounded-execution",
+      "publicClaim": "Bounded exact-head execution",
+      "status": "ENFORCED_AND_TESTED",
+      "highestProofLevel": 3,
+      "scope": "Registered repository operations executed through the bounded exact-head carrier.",
+      "evidence": [
+        ".github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs",
+        ".github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json",
+        ".github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs"
+      ],
+      "boundary": "This is a scoped execution property of admitted repository operations, not a claim that arbitrary software execution is impossible."
+    },
+    {
+      "id": "fail-closed-page-quality",
+      "publicClaim": "Fail-closed Page Excellence qualification",
+      "status": "ENFORCED_AND_TESTED",
+      "highestProofLevel": 3,
+      "scope": "Page operations governed by the active Page Excellence toolchain and entry gate.",
+      "evidence": [
+        ".github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json",
+        ".github/ai-router/page-excellence-toolchain/README.md"
+      ],
+      "boundary": "A passing gate is evidence that declared qualification conditions passed; it is not a universal guarantee that software contains no defects."
+    },
+    {
+      "id": "state-and-source-binding",
+      "publicClaim": "Exact governing-state and source-identity binding",
+      "status": "ENFORCED",
+      "highestProofLevel": 2,
+      "scope": "Governed operations whose admission and execution documents bind exact repository state, allowed paths, source identities and digests.",
+      "evidence": [
+        ".github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs",
+        ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs"
+      ],
+      "boundary": "The claim describes identity and scope enforcement inside this repository lifecycle; it is not a general cryptographic-security claim."
+    },
+    {
+      "id": "successor-packet-compiler",
+      "publicClaim": "Repository-operation successor packet compiler",
+      "status": "IMPLEMENTED_AND_TESTED",
+      "highestProofLevel": 3,
+      "scope": "Compilation of a predecessor repository operation into a fresh successor packet when the governing head advances, while preserving declared scope and refusing authority inheritance.",
+      "evidence": [
+        ".github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs",
+        ".github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs",
+        ".github/ai-router/operation-lifecycle/successor-protocol.v1.json"
+      ],
+      "boundary": "This is not a general-purpose website compiler and should not be represented as one."
+    },
+    {
+      "id": "continuity-and-recovery",
+      "publicClaim": "Governed continuity and bounded recovery",
+      "status": "IMPLEMENTED_AND_TESTED",
+      "highestProofLevel": 3,
+      "scope": "Repository workflows for differential continuity, operation succession, instrument lifecycle, and bounded recovery/requalification.",
+      "evidence": [
+        ".github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs",
+        ".github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs",
+        ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs"
+      ],
+      "boundary": "This demonstrates repository-level continuity controls; it does not claim uninterrupted service availability under every external failure mode."
+    }
+  ],
+  "claimsNotYetAuthorized": [
+    "enterprise-grade",
+    "industry-leading",
+    "world-first",
+    "unbreakable",
+    "mathematically secure",
+    "more secure than named third-party policy systems",
+    "proven enterprise scale"
+  ]
+}

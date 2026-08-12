@@ -6,6 +6,7 @@ import { evaluatePolicy } from './policy-gate.v1.mjs';
 import { evaluateRetirementEligibility } from './retirement-eligibility-gate.v1.mjs';
 import { buildEvidenceBundle } from './evidence-bundle.v1.mjs';
 import { runIntegratedPipeline, validateProviderContract } from './integrated-development-pipeline-gate.v1.mjs';
+import { runDevelopmentalCoordinateSelfTest } from './developmental-coordinate-self-test.v1.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../../..');
 const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8'));
@@ -48,6 +49,7 @@ test('evidence digest is deterministic',()=>{const x={subjectHead:H,policyDecisi
 test('evidence digest changes with evidence',()=>{const x={subjectHead:H,policyDecision:{a:1},providerContract:{b:2},retirementEligibility:{c:3},continuityRef:{d:4},authorityBoundary:{e:false}};if(buildEvidenceBundle(x).evidenceDigest===buildEvidenceBundle({...x,continuityRef:{d:5}}).evidenceDigest)throw new Error('digest_not_changed');});
 test('lifecycle protocol contains concurrency-observation law',()=>{if(!lifecycleProtocol.laws.includes('OBSERVATION_WORKFLOW_MUST_NOT_FAIL_SOLELY_BECAUSE_AN_UNRELATED_PR_MODIFIES_PATHS_OUTSIDE_ITS_ORIGINAL_CONSTRUCTION_SCOPE'))throw new Error('law_missing');});
 test('integrated pipeline passes with provider pending explicitly visible',()=>{const r=runIntegratedPipeline({request:{schema:'INTEGRATED_DEVELOPMENT_PIPELINE_REQUEST_v1',operationId:'SELF_TEST',subjectHead:H,currentMainHead:H,requestedPaths:['.github/ai-router/development-pipeline/policy-registry.v1.json'],requestedAuthorityClasses:['READ_ONLY_OBSERVATION_AUTHORITY'],retirementTarget:'.github/workflows/laws-cp5-final-celestial-naturalization.yml'},policyRegistry:policy,providerContract:provider,lifecycleRegistry:lifecycle,protectedRegistry});eq(r.result,'PASS_OPERATIONAL_PROVIDER_PENDING_RATIFICATION','result');eq(r.authorityBoundary.mergeAuthorityCreated,false,'merge');eq(r.physicalRetirementPerformed,false,'retirement');});
+test('developmental coordinate shadow preserves outcomes and clears frozen kill gate',()=>{const r=runDevelopmentalCoordinateSelfTest();eq(r.result,'PASS','coordinateSelfTest');eq(r.benchmarkSummary.historicalOutcomeDriftCount,0,'historicalOutcomeDrift');eq(r.benchmarkSummary.falseCarryForwardCount,0,'falseCarryForward');eq(r.benchmarkSummary.gateOverrideCount,0,'gateOverride');eq(r.benchmarkSummary.authorityInflationCount,0,'authorityInflation');if(r.benchmarkSummary.aggregateAdvantage<0.30)throw new Error('aggregate_advantage_below_kill_gate');return r.benchmarkSummary;});
 
 const failed=tests.filter(t=>t.result==='FAIL');
 const receipt={schema:'INTEGRATED_DEVELOPMENT_PIPELINE_SELF_TEST_RECEIPT_v1',result:failed.length?'FAIL':'PASS',totalCount:tests.length,passedCount:tests.length-failed.length,failedCount:failed.length,tests,repositoryMutationPerformed:false,workflowDeactivationPerformed:false,physicalRetirementPerformed:false,mergeAuthorityCreated:false,productAuthorityCreated:false,semanticAuthorityCreated:false,scientificClaimAuthorityCreated:false};

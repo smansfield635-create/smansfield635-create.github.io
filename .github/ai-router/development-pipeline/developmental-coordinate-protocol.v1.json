@@ -1,0 +1,102 @@
+{
+  "schema": "DEVELOPMENTAL_COORDINATE_PROTOCOL_v1",
+  "version": "1.0.0-shadow",
+  "status": "SHADOW_READ_ONLY_EXPERIMENT",
+  "governingOperation": {
+    "operationId": "REPOSITORY_DEVELOPMENTAL_COORDINATE_SHADOW_BENCHMARK_V1_20260809_001",
+    "lockGeneration": 826,
+    "exactGoverningHead": "331284949940c95db80a332235492de4c80d3d43",
+    "canonicalAdmissionReceiptSha256": "63ae92a7b505f6f70bc606b1328921fe313cc8d5c10db4b6e85da80f6854f049"
+  },
+  "coordinate": {
+    "orderedFields": ["C", "N", "F", "r", "D", "L", "E"],
+    "meanings": {
+      "C": "accepted center or reference state",
+      "N": "derived NEWS role",
+      "F": "derived Fibonacci synchronization band",
+      "r": "exact local chronological rank",
+      "D": "dependency or fingerprint domain",
+      "L": "lifecycle or authority state",
+      "E": "evidence or receipt state"
+    }
+  },
+  "news": {
+    "status": "DERIVED_CONTROL_PLANE_COORDINATE_NOT_SCIENTIFIC_AUTHORITY",
+    "classificationUnit": "PRIMARY_ATOMIC_FUNCTION",
+    "roles": {
+      "REFERENCE_NO_DISPLACEMENT": "CENTER",
+      "INTAKE_PROBE_BOUNDARY": "NORTH",
+      "CONSTRUCTION_EXPANSION": "EAST",
+      "VALIDATION_CHALLENGE_REPAIR": "WEST",
+      "RESTITUTION_CLOSURE_STABILIZATION": "SOUTH"
+    },
+    "laws": [
+      "ROLE_ASSIGNMENT_MUST_BE_DETERMINISTIC_FROM_PREFROZEN_PRIMARY_FUNCTION",
+      "COMPOUND_ACTIONS_MUST_NOT_BE_POST_HOC_DECOMPOSED_TO_FORCE_A_ROLE",
+      "NEWS_ROLE_CREATES_NO_AUTHORITY_AND_NO_EVIDENCE"
+    ]
+  },
+  "fibonacci": {
+    "status": "DERIVED_SYNCHRONIZATION_COORDINATE_NOT_SCIENTIFIC_AUTHORITY",
+    "bands": [1, 2, 3, 5, 8, 13, 21, 34, 55, 89],
+    "rule": "F_IS_THE_SMALLEST_LISTED_FIBONACCI_BAND_GREATER_THAN_OR_EQUAL_TO_SYNCHRONIZATION_DEPTH",
+    "depthDefinition": "COUNT_OF_DISTINCT_DECLARED_PREREQUISITE_DOMAINS_WITH_MINIMUM_DEPTH_ONE",
+    "laws": [
+      "FIBONACCI_BAND_IS_NOT_EXACT_CHRONOLOGICAL_POSITION",
+      "LOCAL_RANK_r_REMAINS_EXACT_CHRONOLOGY",
+      "FIBONACCI_BAND_CREATES_NO_AUTHORITY_AND_NO_EVIDENCE",
+      "FIBONACCI_MUST_BE_ABLATED_AGAINST_PLAIN_LINEAR_DEPTH"
+    ]
+  },
+  "preservationLaws": [
+    "COORDINATE_MAY_COMPRESS_MEANING_BUT_MAY_NOT_ALTER_SOURCE_OUTCOMES",
+    "HISTORICAL_OUTCOME_IS_IMMUTABLE",
+    "CONTRADICTIONS_AND_LOCALIZED_RESIDUE_MUST_BE_PRESERVED",
+    "COORDINATE_MUST_NOT_EMIT_CARRY_FORWARD_AUTHORITY",
+    "COORDINATE_MUST_NOT_OVERRIDE_ANY_GATE",
+    "COORDINATE_MUST_NOT_CREATE_MERGE_PRODUCT_SEMANTIC_SCIENTIFIC_LIFECYCLE_OR_REPOSITORY_AUTHORITY",
+    "UNKNOWN_OR_AMBIGUOUS_ROLE_INPUT_FAILS_CLOSED"
+  ],
+  "benchmark": {
+    "interpretation": "POST_MATERIALIZATION_QUERY_FOOTPRINT_NOT_SOURCE_INGESTION_COST",
+    "primaryRetrospectiveTrajectory": [834, 838, 840],
+    "supportingCorpusRange": "PR_814_THROUGH_PR_840",
+    "coordinateQueryFootprints": {
+      "stateReconstruction": 7,
+      "localization": 2,
+      "reopening": 3,
+      "nextDecision": 4
+    },
+    "killThresholds": {
+      "stateReconstructionImprovement": 0.50,
+      "localizationImprovement": 0.30,
+      "reopeningImprovement": 0.25,
+      "nextDecisionImprovement": 0.25,
+      "aggregateAdvantage": 0.30,
+      "falseCarryForwardCount": 0,
+      "gateOverrideCount": 0,
+      "authorityInflationCount": 0,
+      "contradictionLossCount": 0,
+      "maxCompositeOverhead": 0.05
+    },
+    "overheadBaseline": {
+      "sourceRun": 31329531872,
+      "pipelineRuntimeMs": 23000,
+      "artifactArchiveBytes": 5999,
+      "compositeRule": "0.5*RUNTIME_RATIO_PLUS_0.5*COMPACT_EVIDENCE_RATIO"
+    },
+    "ablationRequirements": [
+      "NEWS_VS_GENERIC_PRIMARY_FUNCTION_TOKEN",
+      "FIBONACCI_BAND_VS_LINEAR_SYNCHRONIZATION_DEPTH"
+    ]
+  },
+  "authorityBoundary": {
+    "derivedCoordinatesAreAuthority": false,
+    "derivedCoordinatesAreEvidence": false,
+    "mayMutateRepository": false,
+    "mayOverrideGate": false,
+    "mayAuthorizeCarryForward": false,
+    "mayChangeLifecycle": false,
+    "mayChangeHistoricalOutcome": false
+  }
+}

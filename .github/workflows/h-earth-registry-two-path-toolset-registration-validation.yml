@@ -1,87 +1,206 @@
-name: H-Earth Registry Two-Path Toolset Registration Validation
+name: CP10 Remote Admission Projection Compatibility Verification
+
 on:
   pull_request:
+    branches: [main]
     paths:
-      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
-      - '.github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json'
-      - 'tools/h-earth-registry-two-path-toolset/**'
       - '.github/workflows/h-earth-registry-two-path-toolset-registration-validation.yml'
+
 permissions:
   contents: write
   actions: read
+
+env:
+  CANONICAL_RECEIPT_HEAD: 3d2b22d9e7860d867da7bbbb1e70bcbd8faa6494
+  CANONICAL_RECEIPT_PATH: h-earth-3d/control-plane/registry-two-path-operation-b/evidence/admission-receipt.v1.json
+  CANONICAL_RECEIPT_SHA256: 62a5b9538fa69625432859282dcd1b5b506943f48206778b90bdf0c35d0bda41
+  BLOCKED_OPERATION_ID: H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_OPERATION_B_v1
+  BLOCKED_LOCK_SCOPE: H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:OPERATION_B:V1
+  BLOCKED_LOCK_GENERATION: '63'
+  REPAIR_OPERATION_ID: CP10_OPERATION_B_REMOTE_ADMISSION_PROJECTION_COMPATIBILITY_REPAIR_v1
+  REPAIR_LOCK_SCOPE: H_EARTH:AI_ROOM_TRANSPORT:REMOTE_ADMISSION_PROJECTION:CP10:V1
+  REPAIR_LOCK_GENERATION: '66'
+  LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
+  LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+
 jobs:
   builder:
+    name: command-emitted-projection-builder
     runs-on: ubuntu-24.04
-    outputs:
-      tooling_head: ${{ steps.ids.outputs.tooling_head }}
-      registration_head: ${{ steps.ids.outputs.registration_head }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
-        with: {node-version: 22}
-      - id: ids
+        with:
+          node-version: 22
+      - name: Resolve canonical receipt and live Operation B lock
         run: |
-          echo "tooling_head=$(node -e "const d=require('./.github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json');process.stdout.write(d.exactToolingHead)")" >> "$GITHUB_OUTPUT"
-          echo "registration_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-      - run: for f in tools/h-earth-registry-two-path-toolset/*.mjs; do node --check "$f"; done
-      - run: |
-          node tools/h-earth-registry-two-path-toolset/self-test.v1.mjs --tooling-head "${{ steps.ids.outputs.tooling_head }}" --registration-head "${{ steps.ids.outputs.registration_head }}" --execution-holder "CP9_A002_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}" --output /tmp/builder.json
+          set -euo pipefail
+          git fetch --no-tags origin "$CANONICAL_RECEIPT_HEAD"
+          git show "$CANONICAL_RECEIPT_HEAD:$CANONICAL_RECEIPT_PATH" > /tmp/canonical-admission.json
+          test "$(sha256sum /tmp/canonical-admission.json | awk '{print $1}')" = "$CANONICAL_RECEIPT_SHA256"
+          git fetch --no-tags origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:"$LEDGER_PATH" > /tmp/live-ledger.json
+          echo "LOCK_HEAD=$(git rev-parse FETCH_HEAD)" >> "$GITHUB_ENV"
+      - name: Emit deterministic compatibility projection
+        env:
+          EXECUTION_HOLDER: CP10_REMOTE_ADMISSION_PROJECTION_BUILDER
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp10-admission-projection/builder
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const canonicalBytes=fs.readFileSync('/tmp/canonical-admission.json');
+          const canonical=JSON.parse(canonicalBytes);
+          const ledger=JSON.parse(fs.readFileSync('/tmp/live-ledger.json','utf8'));
+          const active=Object.values(ledger.activeScopes??{}).find(x=>x.operationId===process.env.BLOCKED_OPERATION_ID&&Number(x.lockGeneration)===Number(process.env.BLOCKED_LOCK_GENERATION));
+          if(!active)throw Error('BLOCKED_OPERATION_LOCK_NOT_ACTIVE');
+          if(active.lockScope!==process.env.BLOCKED_LOCK_SCOPE||active.state!=='ADMITTED_LOCKED'||active.released!==false)throw Error('BLOCKED_OPERATION_LOCK_NOT_EXECUTABLE');
+          if(canonical.schema!=='REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1'||canonical.result!=='ADMITTED_AND_LOCKED'||canonical.operationId!==process.env.BLOCKED_OPERATION_ID||canonical.projectId!=='H_EARTH')throw Error('CANONICAL_RECEIPT_IDENTITY_MISMATCH');
+          const projection={
+            ...canonical,
+            lock:active,
+            projectionSchema:'REPOSITORY_OPERATION_REMOTE_ADMISSION_EXECUTION_PROJECTION_v1',
+            projectionResult:'CANONICAL_RECEIPT_AND_LIVE_LEDGER_BOUND',
+            canonicalReceiptIdentity:{sourceClass:'REPOSITORY_PATH_AT_EXACT_HEAD',exactHead:process.env.CANONICAL_RECEIPT_HEAD,path:process.env.CANONICAL_RECEIPT_PATH,sha256:process.env.CANONICAL_RECEIPT_SHA256},
+            canonicalRemoteLockReceipt:canonical.lock,
+            liveLedgerIdentity:{lockRef:process.env.LOCK_REF,ledgerHead:process.env.LOCK_HEAD,ledgerPath:process.env.LEDGER_PATH,lockGeneration:Number(process.env.BLOCKED_LOCK_GENERATION)},
+            implementationInferenceAuthorized:false,
+            compatibilityProjectionOnly:true
+          };
+          const text=JSON.stringify(projection,null,2)+'\n';
+          fs.writeFileSync('/tmp/cp10-admission-projection/builder/admission-projection.json',text);
+          fs.writeFileSync('/tmp/cp10-admission-projection/builder/builder-metadata.json',JSON.stringify({schema:'CP10_REMOTE_ADMISSION_PROJECTION_EXECUTION_METADATA_v1',result:'PASS_CLOSED_PROJECTION_EMITTED',executionHolder:process.env.EXECUTION_HOLDER,projectionSha256:crypto.createHash('sha256').update(text).digest('hex'),canonicalReceiptSha256:process.env.CANONICAL_RECEIPT_SHA256,ledgerHead:process.env.LOCK_HEAD,blockedOperationStillActive:true,repositoryMutationPerformed:false,mergePerformed:false},null,2)+'\n');
+          NODE
       - uses: actions/upload-artifact@v4
-        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder.json, if-no-files-found: error, retention-days: 90}
+        with:
+          name: cp10-admission-projection-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp10-admission-projection/builder/
+          if-no-files-found: error
+          retention-days: 90
+
   fresh-verifier:
+    name: command-emitted-projection-fresh-verifier
     needs: builder
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with: {ref: "${{ github.event.pull_request.head.sha }}", fetch-depth: 0}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
-        with: {node-version: 22}
+        with:
+          node-version: 22
       - uses: actions/download-artifact@v4
-        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder}
-      - run: |
-          node tools/h-earth-registry-two-path-toolset/fresh-verifier.v1.mjs --tooling-head "${{ needs.builder.outputs.tooling_head }}" --registration-head "${{ needs.builder.outputs.registration_head }}" --builder-receipt /tmp/builder/builder.json --execution-holder "CP9_A002_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}" --output /tmp/verifier.json
+        with:
+          name: cp10-admission-projection-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/builder
+      - name: Independently resolve source identities
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$CANONICAL_RECEIPT_HEAD"
+          git show "$CANONICAL_RECEIPT_HEAD:$CANONICAL_RECEIPT_PATH" > /tmp/canonical-admission.json
+          test "$(sha256sum /tmp/canonical-admission.json | awk '{print $1}')" = "$CANONICAL_RECEIPT_SHA256"
+          git fetch --no-tags origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:"$LEDGER_PATH" > /tmp/live-ledger.json
+          echo "LOCK_HEAD=$(git rev-parse FETCH_HEAD)" >> "$GITHUB_ENV"
+      - name: Independently reproduce exact projection bytes
+        env:
+          EXECUTION_HOLDER: CP10_REMOTE_ADMISSION_PROJECTION_FRESH_VERIFIER
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cp10-admission-projection/verifier
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const canonical=JSON.parse(fs.readFileSync('/tmp/canonical-admission.json','utf8'));
+          const ledger=JSON.parse(fs.readFileSync('/tmp/live-ledger.json','utf8'));
+          const active=Object.values(ledger.activeScopes??{}).find(x=>x.operationId===process.env.BLOCKED_OPERATION_ID&&Number(x.lockGeneration)===Number(process.env.BLOCKED_LOCK_GENERATION));
+          if(!active||active.lockScope!==process.env.BLOCKED_LOCK_SCOPE||active.state!=='ADMITTED_LOCKED'||active.released!==false)throw Error('BLOCKED_OPERATION_LOCK_NOT_EXECUTABLE');
+          const projection={...canonical,lock:active,projectionSchema:'REPOSITORY_OPERATION_REMOTE_ADMISSION_EXECUTION_PROJECTION_v1',projectionResult:'CANONICAL_RECEIPT_AND_LIVE_LEDGER_BOUND',canonicalReceiptIdentity:{sourceClass:'REPOSITORY_PATH_AT_EXACT_HEAD',exactHead:process.env.CANONICAL_RECEIPT_HEAD,path:process.env.CANONICAL_RECEIPT_PATH,sha256:process.env.CANONICAL_RECEIPT_SHA256},canonicalRemoteLockReceipt:canonical.lock,liveLedgerIdentity:{lockRef:process.env.LOCK_REF,ledgerHead:process.env.LOCK_HEAD,ledgerPath:process.env.LEDGER_PATH,lockGeneration:Number(process.env.BLOCKED_LOCK_GENERATION)},implementationInferenceAuthorized:false,compatibilityProjectionOnly:true};
+          const text=JSON.stringify(projection,null,2)+'\n';
+          fs.writeFileSync('/tmp/cp10-admission-projection/verifier/admission-projection.json',text);
+          fs.writeFileSync('/tmp/cp10-admission-projection/verifier/verifier-metadata.json',JSON.stringify({schema:'CP10_REMOTE_ADMISSION_PROJECTION_EXECUTION_METADATA_v1',result:'PASS_CLOSED_PROJECTION_REPRODUCED',executionHolder:process.env.EXECUTION_HOLDER,projectionSha256:crypto.createHash('sha256').update(text).digest('hex'),canonicalReceiptSha256:process.env.CANONICAL_RECEIPT_SHA256,ledgerHead:process.env.LOCK_HEAD,blockedOperationStillActive:true,repositoryMutationPerformed:false,mergePerformed:false},null,2)+'\n');
+          NODE
+          cmp /tmp/builder/admission-projection.json /tmp/cp10-admission-projection/verifier/admission-projection.json
       - uses: actions/upload-artifact@v4
-        with: {name: "h-earth-two-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/verifier.json, if-no-files-found: error, retention-days: 90}
-  certify-and-close:
+        with:
+          name: cp10-admission-projection-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp10-admission-projection/verifier/
+          if-no-files-found: error
+          retention-days: 90
+
+  certify-and-close-repair:
+    name: certify-projection-and-close-generation-66
     needs: [builder, fresh-verifier]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with: {ref: "${{ github.event.pull_request.head.sha }}", fetch-depth: 0}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
-        with: {node-version: 22}
+        with:
+          node-version: 22
       - uses: actions/download-artifact@v4
-        with: {name: "h-earth-two-path-builder-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/builder}
+        with:
+          name: cp10-admission-projection-builder-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/builder
       - uses: actions/download-artifact@v4
-        with: {name: "h-earth-two-path-verifier-${{ github.run_id }}-${{ github.run_attempt }}", path: /tmp/verifier}
-      - run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';const b=JSON.parse(fs.readFileSync('/tmp/builder/builder.json')),v=JSON.parse(fs.readFileSync('/tmp/verifier/verifier.json'));
-          if(b.result!=='PASS_CLOSED_TOOLSET_CONFORMANT'||v.result!=='PASS_CLOSED_INDEPENDENTLY_REPRODUCED'||b.packageFingerprint!==v.packageFingerprint)throw Error('CERTIFICATION_FAILED');
-          fs.writeFileSync('/tmp/certification.json',JSON.stringify({schema:'CP9_OPERATION_A_TOOLSET_FINAL_CERTIFICATION_v1',result:'PASS_CLOSED_TOOLSET_REGISTERED_AND_REPRODUCED',operationId:'H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_002',toolingHead:b.toolingHead,registrationHead:b.registrationHead,descriptorId:b.descriptorId,packageFingerprint:b.packageFingerprint,builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,exactRouteCount:b.routePositiveCount,negativeRouteCount:b.routeNegativeCount,negativeFixtureCount:b.negativeFixtureCount,productMutationPerformed:false,pr570Mutated:false,mergePerformed:false},null,2)+'\n');
-          NODE
-      - run: |
-          node tools/h-earth-registry-two-path-toolset/termination.v1.mjs --builder /tmp/builder/builder.json --verifier /tmp/verifier/verifier.json --certification /tmp/certification.json --output /tmp/termination.json
-      - env: {GITHUB_TOKEN: "${{ github.token }}"}
+        with:
+          name: cp10-admission-projection-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/verifier
+      - name: Certify byte equality and distinct execution holders
         run: |
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository "${{ github.repository }}" --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_002 --lock-scope 'H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1:RETRY:002' --lock-generation 47 --terminal-disposition PASS_CLOSED --output /tmp/closure.json
-          node -e "const r=require('/tmp/closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED')process.exit(1)"
-      - run: |
+          set -euo pipefail
+          cmp /tmp/builder/admission-projection.json /tmp/verifier/admission-projection.json
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';const c=JSON.parse(fs.readFileSync('/tmp/certification.json')),t=JSON.parse(fs.readFileSync('/tmp/termination.json')),l=JSON.parse(fs.readFileSync('/tmp/closure.json'));const pass=c.result==='PASS_CLOSED_TOOLSET_REGISTERED_AND_REPRODUCED'&&t.result==='PASS_CLOSED_OPERATION_A_AUTHORITY_TERMINATED'&&l.result==='TERMINAL_CLOSURE_COMMITTED';fs.writeFileSync('/tmp/continuation.json',JSON.stringify({schema:'CP9_OPERATION_A_CONTINUATION_GATE_RESULT_v1',result:pass?'CONTINUE_TO_SEPARATE_CP10_AUTHORITY':'STOP',operationBAuthorityInherited:false},null,2)+'\n');if(!pass)process.exit(1);
+          import fs from 'node:fs';import crypto from 'node:crypto';
+          const b=JSON.parse(fs.readFileSync('/tmp/builder/builder-metadata.json','utf8')),v=JSON.parse(fs.readFileSync('/tmp/verifier/verifier-metadata.json','utf8'));
+          if(b.executionHolder===v.executionHolder||b.projectionSha256!==v.projectionSha256)throw Error('INDEPENDENT_REPRODUCTION_MISMATCH');
+          const bytes=fs.readFileSync('/tmp/builder/admission-projection.json');
+          fs.writeFileSync('/tmp/certification.json',JSON.stringify({schema:'CP10_REMOTE_ADMISSION_PROJECTION_CERTIFICATION_v1',result:'PASS_CLOSED_INDEPENDENTLY_REPRODUCED',repairOperationId:process.env.REPAIR_OPERATION_ID,blockedOperationId:process.env.BLOCKED_OPERATION_ID,blockedLockGeneration:Number(process.env.BLOCKED_LOCK_GENERATION),projectionSha256:crypto.createHash('sha256').update(bytes).digest('hex'),builderHolder:b.executionHolder,verifierHolder:v.executionHolder,distinctExecutionHolders:true,canonicalReceiptPreservedAtPriorExactHead:true,activeResolverMutated:false,blockedOperationClosed:false,mergePerformed:false},null,2)+'\n');
           NODE
+      - name: Confirm Operation B remains active before repair closure
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:"$LEDGER_PATH" > /tmp/pre-close-ledger.json
+          node -e "const l=require('/tmp/pre-close-ledger.json');const x=Object.values(l.activeScopes||{}).find(x=>x.operationId===process.env.BLOCKED_OPERATION_ID&&Number(x.lockGeneration)===Number(process.env.BLOCKED_LOCK_GENERATION));if(!x||x.state!=='ADMITTED_LOCKED'||x.released!==false)process.exit(1)"
+      - name: Close only compatibility repair generation 66
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          for attempt in 1 2 3; do
+            if node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+              --action close --repository "${{ github.repository }}" --lock-ref "$LOCK_REF" \
+              --operation-id "$REPAIR_OPERATION_ID" --lock-scope "$REPAIR_LOCK_SCOPE" \
+              --lock-generation "$REPAIR_LOCK_GENERATION" --terminal-disposition PASS_CLOSED \
+              --output /tmp/repair-closure.json; then break; fi
+            test "$attempt" -lt 3; sleep $((attempt * 2))
+          done
+          node -e "const r=require('/tmp/repair-closure.json');if(r.result!=='TERMINAL_CLOSURE_COMMITTED'||!r.lockReleased)process.exit(1)"
+      - name: Verify Operation B generation 63 remains active after closure
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin operation-locks/repository-operation-intake-v1
+          git show FETCH_HEAD:"$LEDGER_PATH" > /tmp/post-close-ledger.json
+          node -e "const l=require('/tmp/post-close-ledger.json');const x=Object.values(l.activeScopes||{}).find(x=>x.operationId===process.env.BLOCKED_OPERATION_ID&&Number(x.lockGeneration)===Number(process.env.BLOCKED_LOCK_GENERATION));if(!x||x.state!=='ADMITTED_LOCKED'||x.released!==false)process.exit(1)"
+      - name: Package terminal projection evidence
+        run: |
+          mkdir -p /tmp/cp10-admission-projection/final
+          cp /tmp/builder/admission-projection.json /tmp/cp10-admission-projection/final/
+          cp /tmp/builder/builder-metadata.json /tmp/cp10-admission-projection/final/
+          cp /tmp/verifier/verifier-metadata.json /tmp/cp10-admission-projection/final/
+          cp /tmp/certification.json /tmp/cp10-admission-projection/final/
+          cp /tmp/repair-closure.json /tmp/cp10-admission-projection/final/
       - uses: actions/upload-artifact@v4
         with:
-          name: "h-earth-two-path-final-${{ github.run_id }}-${{ github.run_attempt }}"
-          path: |
-            /tmp/builder/builder.json
-            /tmp/verifier/verifier.json
-            /tmp/certification.json
-            /tmp/termination.json
-            /tmp/closure.json
-            /tmp/continuation.json
+          name: cp10-admission-projection-final-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/cp10-admission-projection/final/
           if-no-files-found: error
           retention-days: 90

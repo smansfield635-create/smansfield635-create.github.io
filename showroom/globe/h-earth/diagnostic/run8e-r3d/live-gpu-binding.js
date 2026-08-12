@@ -2,6 +2,7 @@ import { createHEarthRun8ER3AFrameUniformPacket } from '../../render/live-render
 
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
+const ACCEPTED_BASELINE_QUERY_VALUE = 'baseline';
 const ADDITIVE_VISUAL_RENDERER_PATH =
   '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
@@ -18,17 +19,24 @@ const locationSearch =
     ? globalThis.location.search
     : '';
 const queryParameters = new URLSearchParams(locationSearch);
-const additiveVisualRequested =
-  queryParameters.get(ADDITIVE_VISUAL_QUERY_KEY) ===
-  ADDITIVE_VISUAL_QUERY_VALUE;
+const visualSelection = queryParameters.get(ADDITIVE_VISUAL_QUERY_KEY);
+const additiveVisualExplicitlyRequested =
+  visualSelection === ADDITIVE_VISUAL_QUERY_VALUE;
+const acceptedBaselineExplicitlyRequested =
+  visualSelection === ACCEPTED_BASELINE_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const selectedRendererPath = additiveVisualRequested
-  ? ADDITIVE_VISUAL_RENDERER_PATH
-  : cp2LiveDifferentialRequested
-    ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH
-    : ACCEPTED_BASELINE_RENDERER_PATH;
+const additiveVisualRequested =
+  additiveVisualExplicitlyRequested ||
+  (!acceptedBaselineExplicitlyRequested && !cp2LiveDifferentialRequested);
+const selectedRendererPath = acceptedBaselineExplicitlyRequested
+  ? ACCEPTED_BASELINE_RENDERER_PATH
+  : additiveVisualRequested
+    ? ADDITIVE_VISUAL_RENDERER_PATH
+    : cp2LiveDifferentialRequested
+      ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH
+      : ADDITIVE_VISUAL_RENDERER_PATH;
 const selectedRendererModule = await import(selectedRendererPath);
 const { createHEarthRun8ER3CPersistentRenderer } = selectedRendererModule;
 
@@ -36,8 +44,12 @@ export const H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID =
   'H_EARTH_RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_BINDING_v1';
 export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
   additiveVisualRequested,
+  additiveVisualExplicitlyRequested,
   additiveVisualQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
   additiveVisualQueryValue: ADDITIVE_VISUAL_QUERY_VALUE,
+  acceptedBaselineExplicitlyRequested,
+  acceptedBaselineQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
+  acceptedBaselineQueryValue: ACCEPTED_BASELINE_QUERY_VALUE,
   selectedRendererPath,
   queryKey: CP2_LIVE_DIFFERENTIAL_QUERY_KEY,
   queryValue: CP2_LIVE_DIFFERENTIAL_QUERY_VALUE,
@@ -47,7 +59,7 @@ export const H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION = Object.freeze({
     : null,
   rendererPath: selectedRendererPath,
   acceptedBaselineRendererSelected:
-    !additiveVisualRequested && !cp2LiveDifferentialRequested
+    selectedRendererPath === ACCEPTED_BASELINE_RENDERER_PATH
 });
 
 const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -240,8 +252,12 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
       status: 'RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE',
       bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,
       additiveVisualRequested,
+      additiveVisualExplicitlyRequested,
       additiveVisualQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
       additiveVisualQueryValue: ADDITIVE_VISUAL_QUERY_VALUE,
+      acceptedBaselineExplicitlyRequested,
+      acceptedBaselineQueryKey: ADDITIVE_VISUAL_QUERY_KEY,
+      acceptedBaselineQueryValue: ACCEPTED_BASELINE_QUERY_VALUE,
       selectedRendererPath,
       liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
       viewport: { width, height, pixelRatio },
@@ -284,7 +300,7 @@ export function createHEarthRun8ER3D3LiveGpuBinding({
         additiveVisualCandidateRequested: additiveVisualRequested,
         cp2DifferentialCandidateRequested: cp2LiveDifferentialRequested,
         acceptedBaselineRendererSelected:
-          !additiveVisualRequested && !cp2LiveDifferentialRequested,
+          selectedRendererPath === ACCEPTED_BASELINE_RENDERER_PATH,
         r3D4WorkStarted: false,
         run8EPassClosed: false
       },

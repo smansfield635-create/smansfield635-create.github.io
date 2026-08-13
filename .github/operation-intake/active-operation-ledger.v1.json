@@ -612,6 +612,18 @@
       "scopeHash": "5bc67567f5afbbced9d6d86bc2dfd30ca8fbdd52e05dd3aad2608296769a2b7b",
       "state": "ADMITTED_LOCKED"
     },
+    "5c5a931f95e7881fcf443210bfe5bfad1b9efd55357dd0092d14817cbfacba11": {
+      "governingHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
+      "lockGeneration": 1400,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:P1:PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT:V1",
+      "operationId": "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_20260813_001",
+      "procedureLocatorDigest": "7f19761e5f5dc0fa2e46bc432a8f5247c48c0c45cfb2d34d67c733baf8ea2211",
+      "released": false,
+      "requestDigest": "7620fa77d4cac54715295edc8ff52e82e66066622717df98e3ed2c6cf91acb9f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5c5a931f95e7881fcf443210bfe5bfad1b9efd55357dd0092d14817cbfacba11",
+      "state": "ADMITTED_LOCKED"
+    },
     "5d2d5af0cffe65cd70650b8b38df76bc49961a0f85e0da0b8d5e3966c989da61": {
       "governingHead": "b3b0a01683bc03e95624ea7622f69b42402e2795",
       "lockGeneration": 1345,
@@ -1900,7 +1912,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1399,
+  "lockGeneration": 1400,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

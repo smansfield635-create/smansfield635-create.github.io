@@ -1,8 +1,8 @@
 /**
- * H-Earth repository registry validator dependency loader v11 successor.
+ * H-Earth repository registry validator dependency loader v12 successor.
  *
  * Preserves the complete predecessor chain and adds audit-only path recognition
- * for the exact in-world live GPU binding path blocked by Generation 94.
+ * for the exact H-Earth Awards public-face occurrence blocked by PR #935.
  */
 
 import {
@@ -21,9 +21,12 @@ import {
 import {
   verifyHEarthH1TransitionSurfacePathRecognition
 } from './accepted-amendments/h-earth.repository-registry.h1-transition-surface-path-recognition.js';
-import registryFacade, {
+import {
   verifyHEarthInWorldLiveGPUBindingPathRecognition
 } from './accepted-amendments/h-earth.repository-registry.in-world-live-gpu-binding-path-recognition.js';
+import registryFacade, {
+  verifyHEarthAwardsPublicFacePathRecognition
+} from './accepted-amendments/h-earth.repository-registry.awards-public-face-path-recognition.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -40,6 +43,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     verifyHEarthH1TransitionSurfacePathRecognition();
   const inWorldLiveGPUBindingPathRecognitionVerification =
     verifyHEarthInWorldLiveGPUBindingPathRecognition();
+  const awardsPublicFacePathRecognitionVerification =
+    verifyHEarthAwardsPublicFacePathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -104,6 +109,20 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       inWorldLiveGPUBindingPathRecognitionVerification.checks.noRuntimeAuthority === true &&
       inWorldLiveGPUBindingPathRecognitionVerification.checks.noCanonicalAuthority === true &&
       inWorldLiveGPUBindingPathRecognitionVerification.checks.noCorrespondenceAuthority === true,
+    awardsPublicFacePathRecognitionEligible:
+      awardsPublicFacePathRecognitionVerification.eligible === true,
+    awardsExactTargetPathResolved:
+      awardsPublicFacePathRecognitionVerification.checks.exactTargetPathCount === true &&
+      awardsPublicFacePathRecognitionVerification.checks.targetPathResolves === true &&
+      awardsPublicFacePathRecognitionVerification.checks.targetOccurrenceMatched === true,
+    awardsTargetMainBlobCustodyPreserved:
+      awardsPublicFacePathRecognitionVerification.checks.exactTargetMainBlob === true,
+    awardsAuditOnlyNoAuthorityLeak:
+      awardsPublicFacePathRecognitionVerification.checks.auditOnly === true &&
+      awardsPublicFacePathRecognitionVerification.checks.pathResolutionOnly === true &&
+      awardsPublicFacePathRecognitionVerification.checks.noAwardsMutationAuthority === true &&
+      awardsPublicFacePathRecognitionVerification.checks.noAwardOutcomeAuthority === true &&
+      awardsPublicFacePathRecognitionVerification.checks.noCanonicalAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -123,7 +142,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v11_IN_WORLD_LIVE_GPU_BINDING_PATH_RECOGNITION_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v12_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -138,7 +157,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       h1TransitionSurfacePathRecognition:
         h1TransitionSurfacePathRecognitionVerification.eligible === true,
       inWorldLiveGPUBindingPathRecognition:
-        inWorldLiveGPUBindingPathRecognitionVerification.eligible === true
+        inWorldLiveGPUBindingPathRecognitionVerification.eligible === true,
+      awardsPublicFacePathRecognition:
+        awardsPublicFacePathRecognitionVerification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
@@ -193,6 +214,17 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       inWorldAuditOnlyNoAuthorityLeak:
         successorChecks.inWorldAuditOnlyNoAuthorityLeak
     }),
+    awardsPublicFacePathRecognitionVerification,
+    awardsPublicFacePathRecognitionChecks: deepFreeze({
+      awardsPublicFacePathRecognitionEligible:
+        successorChecks.awardsPublicFacePathRecognitionEligible,
+      awardsExactTargetPathResolved:
+        successorChecks.awardsExactTargetPathResolved,
+      awardsTargetMainBlobCustodyPreserved:
+        successorChecks.awardsTargetMainBlobCustodyPreserved,
+      awardsAuditOnlyNoAuthorityLeak:
+        successorChecks.awardsAuditOnlyNoAuthorityLeak
+    }),
     boundary: deepFreeze({
       ...base.boundary,
       liveExperienceAcceptedOccurrenceProvenanceOnly: true,
@@ -219,7 +251,13 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       inWorldRendererCameraNavigationTerrainGeometryWorldGameplayAuthorityCreated: false,
       inWorldCanonicalIdentityAuthorityCreated: false,
       inWorldCorrespondenceAuthorityCreated: false,
-      inWorldMergeDeploymentAuthorityCreated: false
+      inWorldMergeDeploymentAuthorityCreated: false,
+      awardsPublicFacePathRecognitionOnly: true,
+      awardsProductMutationAuthorityCreated: false,
+      awardsOutcomeAuthorityCreated: false,
+      awardsSemanticCanonicalAuthorityCreated: false,
+      awardsHEarthRuntimeRendererTerrainGeometryWorldGameplayAuthorityCreated: false,
+      awardsMergeDeploymentPublicationAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
@@ -246,7 +284,12 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       inWorldRendererCameraNavigationTerrainGeometryWorldGameplayAuthorized: false,
       inWorldCanonicalIdentityAuthorityAuthorized: false,
       inWorldCorrespondenceAuthorityAuthorized: false,
-      inWorldMergeDeploymentAuthorized: false
+      inWorldMergeDeploymentAuthorized: false,
+      awardsPublicFacePathRecognitionLoaded: true,
+      awardsProductMutationAuthorized: false,
+      awardsOutcomeAuthorityAuthorized: false,
+      awardsCanonicalIdentityAuthorityAuthorized: false,
+      awardsMergeDeploymentPublicationAuthorized: false
     })
   });
 }

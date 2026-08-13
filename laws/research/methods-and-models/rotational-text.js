@@ -29,18 +29,6 @@
   const orbit = document.querySelector("[data-mm-family-tabs]");
   if (!orbit) return;
 
-  const tabs = Array.from(orbit.querySelectorAll(".mm-family-tab"));
-  if (tabs.length !== 4) {
-    document.documentElement.dataset.mmRotationalTextStatus = "held-tab-count";
-    return;
-  }
-
-  const labels = tabs.map(tab => tab.textContent.trim());
-  if (JSON.stringify(labels) !== JSON.stringify(FAMILY_ORDER)) {
-    document.documentElement.dataset.mmRotationalTextStatus = "held-family-identity";
-    return;
-  }
-
   orbit.dataset.mmRotationalTextOrbit = CONTRACT;
   orbit.dataset.mmCompassReference = SOURCE.referenceId;
   orbit.dataset.mmCompassAuthorityField = SOURCE.authorityFieldContract;
@@ -48,16 +36,44 @@
   orbit.dataset.mmCompassPhysicsDisposition = SOURCE.physicsDisposition;
   orbit.setAttribute("aria-roledescription", "rotational tab navigation");
 
-  let activeIndex = Math.max(0, tabs.findIndex(tab => tab.getAttribute("aria-selected") === "true"));
+  let tabs = [];
+  let activeIndex = 0;
   let pointerId = null;
   let startX = 0;
   let deltaX = 0;
+  let applyQueued = false;
+
+  function refreshTabs() {
+    const next = Array.from(orbit.querySelectorAll(".mm-family-tab"));
+    if (next.length !== FAMILY_ORDER.length) {
+      document.documentElement.dataset.mmRotationalTextStatus = "held-tab-count";
+      return false;
+    }
+
+    const labels = next.map(tab => tab.textContent.trim());
+    if (JSON.stringify(labels) !== JSON.stringify(FAMILY_ORDER)) {
+      document.documentElement.dataset.mmRotationalTextStatus = "held-family-identity";
+      return false;
+    }
+
+    tabs = next;
+    tabs.forEach((tab, index) => {
+      tab.dataset.mmRotationalTextTab = String(index + 1);
+    });
+
+    const selected = tabs.findIndex(tab => tab.getAttribute("aria-selected") === "true");
+    if (selected >= 0) activeIndex = selected;
+    return true;
+  }
 
   function slotFor(index) {
-    return SLOT[(index - activeIndex + tabs.length) % tabs.length];
+    return SLOT[(index - activeIndex + FAMILY_ORDER.length) % FAMILY_ORDER.length];
   }
 
   function applyPositions() {
+    applyQueued = false;
+    if (!refreshTabs()) return;
+
     const styles = getComputedStyle(orbit);
     const rx = parseFloat(styles.getPropertyValue("--mm-orbit-rx")) || 280;
     const ry = parseFloat(styles.getPropertyValue("--mm-orbit-ry")) || 72;
@@ -80,43 +96,44 @@
     document.documentElement.dataset.mmRotationalTextActive = String(activeIndex);
   }
 
+  function queueApply() {
+    if (applyQueued) return;
+    applyQueued = true;
+    requestAnimationFrame(applyPositions);
+  }
+
   function select(index, {focus = true} = {}) {
-    const next = (index + tabs.length) % tabs.length;
+    if (!refreshTabs()) return;
+    const next = (index + FAMILY_ORDER.length) % FAMILY_ORDER.length;
     if (next === activeIndex) {
       if (focus) tabs[next].focus({preventScroll:true});
       return;
     }
-    activeIndex = next;
-    tabs[next].click();
-    applyPositions();
-    if (focus) tabs[next].focus({preventScroll:true});
+
+    const target = tabs[next];
+    target.click();
+    queueApply();
+    if (focus) {
+      requestAnimationFrame(() => {
+        if (refreshTabs()) tabs[next]?.focus({preventScroll:true});
+      });
+    }
   }
 
   function step(direction) {
     select(activeIndex + direction);
   }
 
-  tabs.forEach((tab, index) => {
-    tab.dataset.mmRotationalTextTab = String(index + 1);
-    tab.addEventListener("click", () => {
-      activeIndex = index;
-      requestAnimationFrame(applyPositions);
-    });
-    tab.addEventListener("keydown", event => {
-      if (["ArrowRight","ArrowDown"].includes(event.key)) {
-        event.preventDefault();
-        step(1);
-      } else if (["ArrowLeft","ArrowUp"].includes(event.key)) {
-        event.preventDefault();
-        step(-1);
-      } else if (event.key === "Home") {
-        event.preventDefault();
-        select(0);
-      } else if (event.key === "End") {
-        event.preventDefault();
-        select(tabs.length - 1);
-      }
-    });
+  orbit.addEventListener("keydown", event => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      step(1);
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      step(-1);
+    } else if (["ArrowRight","ArrowLeft","Home","End"].includes(event.key)) {
+      queueApply();
+    }
   });
 
   orbit.addEventListener("pointerdown", event => {
@@ -145,15 +162,22 @@
   orbit.addEventListener("pointerup", finishPointer);
   orbit.addEventListener("pointercancel", finishPointer);
 
-  const observer = new MutationObserver(() => {
-    const selected = tabs.findIndex(tab => tab.getAttribute("aria-selected") === "true");
-    if (selected >= 0 && selected !== activeIndex) {
-      activeIndex = selected;
-      applyPositions();
+  addEventListener("METHODS_MODELS_SHOWROOM_CHANGED", event => {
+    const familyIndex = Number(event.detail?.familyIndex);
+    if (Number.isInteger(familyIndex) && familyIndex >= 0 && familyIndex < FAMILY_ORDER.length) {
+      activeIndex = familyIndex;
     }
+    queueApply();
   });
 
-  tabs.forEach(tab => observer.observe(tab, {attributes:true, attributeFilter:["aria-selected"]}));
-  addEventListener("resize", applyPositions, {passive:true});
+  const observer = new MutationObserver(queueApply);
+  observer.observe(orbit, {
+    childList:true,
+    subtree:true,
+    attributes:true,
+    attributeFilter:["aria-selected"]
+  });
+
+  addEventListener("resize", queueApply, {passive:true});
   applyPositions();
 })();

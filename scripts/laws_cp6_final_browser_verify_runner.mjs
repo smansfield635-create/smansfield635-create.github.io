@@ -19,6 +19,12 @@ const corrections = [
     expected: 2,
     label: 'direct audit-summary locators',
   },
+  {
+    from: `assert(await page.locator('#cp6-work-behind-laws.lr-battery-landing').count() === 1, '/laws/: battery module missing');`,
+    to: `assert(await page.locator('html[data-laws-foundation-first-applied-study="true"]').count() === 1, '/laws/: applied-study foundation marker missing');`,
+    expected: 1,
+    label: 'current Laws applied-study marker',
+  },
 ];
 
 let corrected = fs.readFileSync(sourcePath, 'utf8');

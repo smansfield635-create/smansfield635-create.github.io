@@ -1,0 +1,109 @@
+{
+  "schema": "REFERENCE_CLASS_AWARDS_ADMISSION_REFERENCE_CORPUS_v1",
+  "status": "FROZEN_CALIBRATION_CORPUS_V1",
+  "referenceParityLaw": "COMPARE_MATURITY_AUTHORSHIP_COHERENCE_INTERACTION_AND_FINISH_NOT_STYLE_SIMILARITY",
+  "positiveReferences": [
+    {
+      "referenceId": "R_C_LAWS_COMPASS_SIX_AUTHORITY",
+      "manifestationClass": "SPATIAL_INSTRUMENT_AND_NAVIGATION_MODEL",
+      "expectedCalibrationDisposition": "AWARDS_CONVERSATION_ADMISSIBLE",
+      "exactCommitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+      "route": "/laws/",
+      "sourceFiles": [
+        {
+          "path": "laws/index.html",
+          "gitBlobSha": "df2fc6b74da5791cedf07f0d01449ccf72243c36"
+        },
+        {
+          "path": "laws/index.controller.js",
+          "gitBlobSha": "e6eef54a8d808c12ea0e5db85539bc521f29f3b2"
+        },
+        {
+          "path": "verification/benchmark-tools/laws-compass-six-authority-benchmark-v1/laws-compass-six-authority-benchmark.mjs",
+          "gitBlobSha": "555711688dfc2081bdf79b35050194416b693548"
+        }
+      ],
+      "benchmarkEvidence": {
+        "workflowPath": ".github/workflows/laws-compass-six-authority-benchmark.yml",
+        "role": "EXACT_HEAD_RESPONSIVE_TOUCH_MOUSE_AND_ROUTE_EXECUTION_EVIDENCE",
+        "doesNotSubstituteForPerceptualAdmission": true
+      },
+      "positiveReferenceAuthority": "CURRENT_USER_DESIGN_STANDARD_DIRECTIVE",
+      "styleTemplateAuthority": false
+    },
+    {
+      "referenceId": "R_H_H_EARTH_LIVE_EXPERIENCE",
+      "manifestationClass": "LIVE_ENVIRONMENTAL_INTERACTIVE_EXPERIENCE",
+      "expectedCalibrationDisposition": "AWARDS_CONVERSATION_ADMISSIBLE",
+      "exactCommitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+      "route": "/showroom/globe/h-earth/",
+      "sourceFiles": [
+        {
+          "path": "showroom/globe/h-earth/index.html",
+          "gitBlobSha": "bc868995d9065ce03a5948bcf9f27804b178bc0b"
+        },
+        {
+          "path": "showroom/globe/h-earth/index.css",
+          "gitBlobSha": "5ace2ffb7ebcb33fb0dac336971d81598e6bcdbc"
+        }
+      ],
+      "acceptanceEvidence": {
+        "mainCommitMeaning": "EXACT_USER_ACCEPTED_HC02_VIEWPORT_UNBOXING_STATE",
+        "productStateRelation": "CURRENT_ACCEPTED_H_EARTH_PRESENTATION_BASELINE"
+      },
+      "positiveReferenceAuthority": "CURRENT_USER_DESIGN_STANDARD_DIRECTIVE",
+      "styleTemplateAuthority": false
+    },
+    {
+      "referenceId": "R_G_AUDRALIA_PLANETARY_GLOBE_WORLD",
+      "manifestationClass": "THREE_DIMENSIONAL_PLANETARY_GLOBE_AND_WORLD_SYSTEM",
+      "expectedCalibrationDisposition": "AWARDS_CONVERSATION_ADMISSIBLE",
+      "exactCommitSha": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+      "route": "/showroom/globe/audralia/",
+      "sourceFiles": [
+        {
+          "path": "showroom/globe/audralia/index.html",
+          "gitBlobSha": "5a34e86e17b037788bcfdb21928490da56ca3eba"
+        },
+        {
+          "path": "showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
+          "gitBlobSha": "03ce55c0722b1197db11b99583aeb7ef084d4fb7"
+        }
+      ],
+      "acceptanceEvidence": {
+        "commitMeaning": "ACCEPTED_CANONICAL_WEATHER_RECONCILIATION_MATURE_EXTERIOR_PRESENTATION_NATURAL_SURFACE_ATMOSPHERE_AND_FROZEN_CINEMATIC_CAMERA",
+        "authoritativeRoutePromoted": true
+      },
+      "positiveReferenceAuthority": "CURRENT_USER_DESIGN_STANDARD_DIRECTIVE",
+      "styleTemplateAuthority": false
+    }
+  ],
+  "negativeControls": [
+    {
+      "referenceId": "N_PHI1_FAILED_MANIFESTATION",
+      "manifestationClass": "FAILED_SPATIAL_INSTRUMENT_MANIFESTATION",
+      "expectedCalibrationDisposition": "BELOW_AWARDS_CONVERSATION",
+      "exactCommitSha": "8f3bafbe200c92ac804a979eab6a708bc73997d3",
+      "route": "/laws/control-plane/contextual-topology/laws-first-bounded-spatial-manifestation-experiment-v1/",
+      "sourceFiles": [
+        {
+          "path": "laws/control-plane/contextual-topology/laws-first-bounded-spatial-manifestation-experiment-v1/index.html",
+          "gitBlobSha": "685d75dfd29f953c976eda6f14a997de9c03f5c6"
+        }
+      ],
+      "allowedUse": "NEGATIVE_CALIBRATION_AND_FAILURE_MODE_ANALYSIS_ONLY",
+      "authorityInheritance": false,
+      "designInheritance": false,
+      "priorAutomatedPassMayCreatePositiveStatus": false
+    }
+  ],
+  "corpusRules": {
+    "positiveReferenceCount": 3,
+    "negativeControlCount": 1,
+    "movingRefsProhibited": true,
+    "exactCommitRequired": true,
+    "exactBlobRequired": true,
+    "crossClassStyleImitationProhibited": true,
+    "newReferenceRequiresSeparateCorpusRevision": true
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "REFERENCE_CLASS_AWARDS_ADMISSION_PERCEPTUAL_ADJUDICATION_v1",
+  "title": "Reference-Class Awards Admission Perceptual Adjudication v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema","candidateCommitSha","referenceId","referenceCommitSha","evidenceBundleDigest","adjudicator","dimensionVerdicts","wholeArtifactDisposition","catastrophicFailures","styleSimilarityUsedAsRequirement","featureInventoryUsedAsPassBasis"],
+  "properties": {
+    "schema":{"const":"REFERENCE_CLASS_AWARDS_ADMISSION_PERCEPTUAL_ADJUDICATION_v1"},
+    "candidateCommitSha":{"type":"string","pattern":"^[0-9a-f]{40}$"},
+    "referenceId":{"type":"string","minLength":1},
+    "referenceCommitSha":{"type":"string","pattern":"^[0-9a-f]{40}$"},
+    "evidenceBundleDigest":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+    "adjudicator": {
+      "type":"object","additionalProperties":false,
+      "required":["id","kind","independentOfCandidateConstruction"],
+      "properties": {
+        "id":{"type":"string","minLength":1},
+        "kind":{"enum":["HUMAN_REVIEWER","INDEPENDENT_MULTIMODAL_EVALUATOR"]},
+        "independentOfCandidateConstruction":{"const":true}
+      }
+    },
+    "dimensionVerdicts": {
+      "type":"object","additionalProperties":false,
+      "required":["RESOLVED_AUTHORSHIP","VISUAL_SPATIAL_COHERENCE","COMPOSITIONAL_INTEGRITY","INTENTIONAL_HIERARCHY","INTERACTION_INTEGRATION","FINISH_AND_REFINEMENT","PURPOSE_FORM_FIT","RESPONSIVE_INTEGRITY","CLASS_SPECIFIC_SOPHISTICATION","ABSENCE_OF_PROTOTYPE_OR_DEBUG_RESIDUE"],
+      "properties": {
+        "RESOLVED_AUTHORSHIP":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "VISUAL_SPATIAL_COHERENCE":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "COMPOSITIONAL_INTEGRITY":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "INTENTIONAL_HIERARCHY":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "INTERACTION_INTEGRATION":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "FINISH_AND_REFINEMENT":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "PURPOSE_FORM_FIT":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "RESPONSIVE_INTEGRITY":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "CLASS_SPECIFIC_SOPHISTICATION":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]},
+        "ABSENCE_OF_PROTOTYPE_OR_DEBUG_RESIDUE":{"enum":["PARITY_OR_ABOVE","BELOW_PARITY","UNEVALUABLE"]}
+      }
+    },
+    "wholeArtifactDisposition": {
+      "type":"object","additionalProperties":false,
+      "required":["sameProfessionalConversation"],
+      "properties":{"sameProfessionalConversation":{"type":["boolean","null"]}}
+    },
+    "catastrophicFailures": {
+      "type":"array","uniqueItems":true,
+      "items":{"enum":["NOT_COMPOSED_AS_A_WHOLE","PRIMARY_EXPERIENCE_IS_PROTOTYPE_OR_DEBUG_SURFACE","MEANINGFUL_PRIMARY_INTERACTION_ABSENT_OR_TRIVIAL_WHEN_REQUIRED","PRIMARY_RESPONSIVE_INTEGRITY_COLLAPSE","REFERENCE_CLASS_MATURITY_COLLAPSE","VISUAL_HIERARCHY_OR_LEGIBILITY_COLLAPSE","PURPOSE_FORM_DISINTEGRATION","PRIMARY_FUNCTIONAL_PATH_NONFUNCTIONAL","RENDERED_EVIDENCE_INSUFFICIENT","REFERENCE_IDENTITY_UNBOUND"]}
+    },
+    "styleSimilarityUsedAsRequirement":{"const":false},
+    "featureInventoryUsedAsPassBasis":{"const":false}
+  }
+}

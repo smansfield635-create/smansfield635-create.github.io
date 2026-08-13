@@ -1,5 +1,6 @@
 import { installHEarthRun8ER3D2PointerTouchIntake } from '../diagnostic/run8e-r3d/pointer-touch-intake.js';
 import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js';
+import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
   'H_EARTH_RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_v1';
@@ -76,6 +77,7 @@ function deriveInitialViewport() {
 const viewport = deriveInitialViewport();
 let intake = null;
 let binding = null;
+let representationTransitionSurface = null;
 let lastPresentedFrame = null;
 let firstFramePublished = false;
 
@@ -122,7 +124,7 @@ function activeModuleSources() {
 }
 
 function buildPublicReceipt() {
-  if (!intake || !binding) return null;
+  if (!intake || !binding || !representationTransitionSurface) return null;
   const intakeReceipt = intake.getReceipt();
   const bindingReceipt = binding.getReceipt();
   const moduleSources = activeModuleSources();
@@ -141,6 +143,7 @@ function buildPublicReceipt() {
     moduleSources,
     intake: intakeReceipt,
     liveGpu: bindingReceipt,
+    representationTransition: representationTransitionSurface.getCapabilityDescriptor(),
     runtimeExclusivity: {
       activePublicModuleScriptCount: moduleSources.length,
       legacyModuleScriptCount: legacySources.filter((path) => moduleSources.includes(path)).length,
@@ -162,6 +165,10 @@ function buildPublicReceipt() {
     diagnostics: window.H_EARTH_RUNTIME_DIAGNOSTICS?.getSnapshot?.() ?? null,
     boundaries: {
       publicRouteBranchComposition: true,
+      representationTransitionCapabilityPresent: true,
+      transitionPresentationMutated: false,
+      canonicalIdentityAuthorityCreated: false,
+      correspondenceAuthorityCreated: false,
       browserAuthorityExclusivityAcceptance: false,
       publicRouteBrowserExecutionAcceptance: false,
       deploymentPerformed: false,
@@ -180,6 +187,20 @@ try {
       root.dataset.gestureUsed = 'true';
       updateHud();
     }
+  });
+
+  representationTransitionSurface = createHEarthRepresentationTransitionSurface({
+    hRepresentationAdapter: Object.freeze({
+      listTransitionAnchorIds: () => intake.listTransitionAnchorIds(),
+      isKnownTransitionAnchor: (anchorId) => intake.isKnownTransitionAnchor(anchorId),
+      isTransitionAnchorActive: (anchorId) => intake.isTransitionAnchorActive(anchorId),
+      getReturnContextId: (anchorId) => intake.getReturnContextId(anchorId),
+      isKnownReturnContext: (anchorId, returnContextId) =>
+        intake.isKnownReturnContext(anchorId, returnContextId),
+      prepareRestore: (anchorId, returnContextId) =>
+        intake.prepareRestore(anchorId, returnContextId),
+      commitRestore: (prepared) => intake.commitRestore(prepared)
+    })
   });
 
   emitDiagnosticStage('RENDERER_CONSTRUCTED', 'PENDING', 'Live GPU binding construction requested.');
@@ -245,7 +266,8 @@ export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   getReceipt: buildPublicReceipt,
   getSnapshot: () => buildPublicReceipt(),
   getIntakeReceipt: () => intake.getReceipt(),
-  getLiveGpuReceipt: () => binding.getReceipt()
+  getLiveGpuReceipt: () => binding.getReceipt(),
+  getRepresentationTransitionSurface: () => representationTransitionSurface
 });
 
 window.H_EARTH_RUN8E_PUBLIC_ROUTE = H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API;

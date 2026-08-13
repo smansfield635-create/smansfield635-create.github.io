@@ -1,0 +1,130 @@
+{
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "operationId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_V1_20260809_001",
+  "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+  "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:REFERENCE_CLASS_AWARDS_ADMISSION:PREACTIVATION_CONTROL_PACKAGE:V1",
+  "exactGoverningHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+  "subjectIdentity": {
+    "instrumentId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1",
+    "programPhase": "PREACTIVATION_CONTRACT_AND_CALIBRATION",
+    "purpose": "ESTABLISH_A_FAIL_CLOSED_BOUNDARY_BETWEEN_PAGE_EXCELLENCE_AND_AWARDS_EVALUATION",
+    "positiveReferenceClasses": [
+      "LAWS_COMPASS_SIX_OBJECT_SPATIAL_MODEL",
+      "H_EARTH_LIVE_EXPERIENCE",
+      "THREE_DIMENSIONAL_PLANETARY_GLOBE_WORLD_SYSTEM"
+    ],
+    "negativeCalibrationControl": {
+      "id": "FAILED_PHI1_MANIFESTATION",
+      "candidateCommit": "8f3bafbe200c92ac804a979eab6a708bc73997d3",
+      "use": "NEGATIVE_CALIBRATION_ONLY"
+    },
+    "activationRequested": false
+  },
+  "requestingAuthority": {
+    "role": "USER_DIRECTED_REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_AUTHORITY",
+    "source": "CURRENT_USER_INSTRUCTION_AFTER_SEMANTIC_REVIEW",
+    "effect": "CONSTRUCT_AND_CALIBRATE_NONACTIVE_CANDIDATE_INSTRUMENT_CONTROL_PACKAGE",
+    "mergeAuthority": false,
+    "activationAuthority": false
+  },
+  "executingRole": {
+    "role": "ROLE_1_REFERENCE_CLASS_AWARDS_ADMISSION_PREACTIVATION_CONSTRUCTION",
+    "mutationClass": "EXACT_10_PATH_ADDITIVE_SHARED_CONTROL_PLANE_PACKAGE",
+    "branchAuthorizedAfterAdmission": true,
+    "existingInstrumentMutationAuthority": false,
+    "activationAuthority": false,
+    "mergeAuthority": false
+  },
+  "independentVerifier": {
+    "role": "FRESH_INDEPENDENT_REFERENCE_CLASS_ADMISSION_CONTRACT_VERIFIER",
+    "freshCheckoutRequired": true,
+    "repairAuthority": false,
+    "activationAuthority": false
+  },
+  "constructionProcedureLocator": ".github/ai-router/reference-class-awards-admission/construction-procedure.v1.json",
+  "requiredInputs": [
+    {"id":"CURRENT_MAIN_EB9A1730_VERIFIED","resolved":true},
+    {"id":"PAGE_EXCELLENCE_AND_AWARDS_EVALUATION_CONFIRMED_DISTINCT","resolved":true},
+    {"id":"MISSING_REFERENCE_CLASS_ADMISSION_BOUNDARY_IDENTIFIED","resolved":true},
+    {"id":"THREE_POSITIVE_REFERENCE_CLASSES_IDENTIFIED","resolved":true},
+    {"id":"FAILED_PHI1_NEGATIVE_CONTROL_IDENTIFIED","resolved":true},
+    {"id":"REFERENCE_PARITY_IS_MATURITY_PARITY_NOT_STYLE_IMITATION","resolved":true},
+    {"id":"CATASTROPHIC_DEFECTS_MUST_BE_NONCOMPENSATORY","resolved":true},
+    {"id":"EXACT_REFERENCE_PINNING_IS_A_REQUIRED_OUTPUT_OF_THIS_OPERATION","resolved":true},
+    {"id":"EXISTING_PAGE_EXCELLENCE_H_EARTH_AND_LAWS_INSTRUMENT_COUNTS_MUST_NOT_BE_MUTATED_IN_THIS_OPERATION","resolved":true},
+    {"id":"ACTIVATION_REQUIRES_SEPARATE_POST_CALIBRATION_RATIFICATION","resolved":true}
+  ],
+  "allowedPaths": [
+    ".github/ai-router/reference-class-awards-admission/README.md",
+    ".github/ai-router/reference-class-awards-admission/operation-request.v1.json",
+    ".github/ai-router/reference-class-awards-admission/construction-procedure.v1.json",
+    ".github/ai-router/reference-class-awards-admission/registration-surface-reconciliation.v1.json",
+    ".github/ai-router/reference-class-awards-admission/substantive-contract.v1.json",
+    ".github/ai-router/reference-class-awards-admission/reference-corpus.v1.json",
+    ".github/ai-router/reference-class-awards-admission/decision-boundary.v1.json",
+    ".github/ai-router/reference-class-awards-admission/calibration-fixtures.v1.json",
+    ".github/ai-router/reference-class-awards-admission/current-state.v1.json",
+    ".github/ai-router/reference-class-awards-admission/verify.v1.mjs"
+  ],
+  "prohibitedPaths": [
+    "ALL_PATHS_NOT_EXACTLY_LISTED_AS_ALLOWED",
+    "refs/heads/main",
+    ".github/ai-router/page-excellence-toolchain/",
+    ".github/ai-router/instrument-lifecycle/",
+    ".github/ai-router/router.v1.json",
+    "AI_ENTRYPOINT.json",
+    ".github/workflows/",
+    "h-earth-3d/",
+    "laws/",
+    "showroom/"
+  ],
+  "requiredOutputs": [
+    "REGISTRATION_SURFACE_RECONCILIATION_WITH_NO_EXISTING_INSTRUMENT_COUNT_MUTATION",
+    "FROZEN_REFERENCE_CLASS_AWARDS_ADMISSION_SUBSTANTIVE_CONTRACT",
+    "REFERENCE_CORPUS_WITH_EXACT_IDENTITY_FIELDS_AND_THREE_POSITIVE_CLASSES_PLUS_ONE_NEGATIVE_CONTROL",
+    "BINARY_FAIL_CLOSED_DECISION_BOUNDARY_WITH_UNEVALUABLE_STATE",
+    "NONCOMPENSATORY_CATASTROPHIC_FAILURE_RULES",
+    "REFERENCE_PARITY_NOT_REFERENCE_IMITATION_LAW",
+    "ADVERSARIAL_CALIBRATION_FIXTURE_CONTRACT",
+    "STATIC_VERIFIER_FOR_PACKAGE_INTERNAL_CONSISTENCY",
+    "CURRENT_STATE_MARKED_CANDIDATE_NOT_ACTIVE",
+    "STOP_BEFORE_REGISTRATION_ACTIVATION_RATIFICATION_OR_EXISTING_INSTRUMENT_MUTATION"
+  ],
+  "exactTestCommand": "node .github/ai-router/reference-class-awards-admission/verify.v1.mjs --verify-static",
+  "workflowPath": ".github/workflows/instrument-lifecycle-observation-v1.yml",
+  "artifactPaths": ["reference-class-awards-admission-preactivation-control-package/**"],
+  "fingerprintDomain": {
+    "algorithm": "SHA-256",
+    "includes": "EXACT_10_PREACTIVATION_CONTROL_PACKAGE_FILES",
+    "exactPathCount": 10,
+    "governingHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+    "excludes": ["TIMESTAMPS","WORKFLOW_RUN_IDS","ARTIFACT_IDS","GITHUB_EPHEMERAL_METADATA"]
+  },
+  "errorPrecedence": [
+    "GOVERNING_MAIN_MISMATCH",
+    "PATH_BOUNDARY_MISMATCH",
+    "REGISTRATION_SURFACE_CONFLICT",
+    "REFERENCE_CORPUS_IDENTITY_UNRESOLVED",
+    "DECISION_BOUNDARY_INCOMPLETE",
+    "COMPENSATORY_SCORING_LEAK",
+    "REFERENCE_IMITATION_REQUIREMENT_DETECTED",
+    "NEGATIVE_CONTROL_AUTHORITY_INHERITANCE",
+    "CALIBRATION_CONTRACT_INCOMPLETE",
+    "ACTIVATION_AUTHORITY_LEAK",
+    "FINGERPRINT_MISMATCH",
+    "UNEXPECTED_ERROR"
+  ],
+  "stopConditions": [
+    "STOP_ON_MAIN_DRIFT_BEFORE_ADMISSION",
+    "STOP_ON_ANY_PATH_OUTSIDE_EXACT_10",
+    "STOP_IF_PAGE_EXCELLENCE_TOOLSET_IS_MUTATED",
+    "STOP_IF_H_EARTH_INSTRUMENT_PLATFORM_IS_MUTATED",
+    "STOP_IF_LAWS_PRODUCT_OR_COMPASS_BYTES_ARE_MUTATED",
+    "STOP_IF_A_REFERENCE_CLASS_IS_TREATED_AS_A_STYLE_TEMPLATE",
+    "STOP_IF_CATASTROPHIC_DEFECTS_CAN_BE_AVERAGED_AWAY",
+    "STOP_IF_FAILED_PHI1_NEGATIVE_CONTROL_IS_GRANTED_POSITIVE_AUTHORITY",
+    "STOP_IF_INSTRUMENT_OUTPUT_CAN_CLAIM_AWARD_WIN_OR_NAMED_AWARD_READINESS",
+    "STOP_BEFORE_REGISTRATION_ACTIVATION_RATIFICATION_MERGE_OR_PRODUCTION_ENFORCEMENT"
+  ],
+  "terminalDispositions": ["PASS_CLOSED","FAIL_CLOSED","REJECTED_CLOSED","SUPERSEDED","VOIDED"]
+}

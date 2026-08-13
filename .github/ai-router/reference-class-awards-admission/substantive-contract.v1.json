@@ -1,0 +1,72 @@
+{
+  "schema": "REFERENCE_CLASS_AWARDS_ADMISSION_SUBSTANTIVE_CONTRACT_v1",
+  "status": "FROZEN_FOR_CALIBRATION_NOT_ACTIVE",
+  "instrumentId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1",
+  "singleResponsibility": "DETERMINE_WHETHER_A_FUNCTIONAL_PROFESSIONALLY_RESOLVED_CANDIDATE_IS_MATURE_ENOUGH_TO_ENTER_AN_AWARDS_QUALITY_COMPARISON",
+  "governingQuestion": "Would this rendered and functioning candidate legitimately belong in the same professional-quality conversation as the applicable accepted reference class?",
+  "prerequisite": {
+    "pageExcellenceRequired": true,
+    "pageExcellencePassCreatesAdmission": false,
+    "technicalConformanceCreatesAdmission": false
+  },
+  "requiredEvidenceClasses": [
+    "EXACT_CANDIDATE_IDENTITY",
+    "RENDERED_INITIAL_STATE",
+    "RENDERED_MEANINGFUL_INTERACTION_STATE",
+    "RENDERED_RESULT_OR_NAVIGATION_STATE",
+    "PHONE_TABLET_DESKTOP_EVIDENCE_WHEN_APPLICABLE",
+    "MEANINGFUL_INTERACTION_TRACE_WHEN_INTERACTION_IS_PART_OF_THE_CLASS",
+    "EXACT_REFERENCE_CLASS_BINDING",
+    "PERCEPTUAL_WHOLE_ADJUDICATION"
+  ],
+  "holisticDimensions": [
+    "RESOLVED_AUTHORSHIP",
+    "VISUAL_SPATIAL_COHERENCE",
+    "COMPOSITIONAL_INTEGRITY",
+    "INTENTIONAL_HIERARCHY",
+    "INTERACTION_INTEGRATION",
+    "FINISH_AND_REFINEMENT",
+    "PURPOSE_FORM_FIT",
+    "RESPONSIVE_INTEGRITY",
+    "CLASS_SPECIFIC_SOPHISTICATION",
+    "ABSENCE_OF_PROTOTYPE_OR_DEBUG_RESIDUE"
+  ],
+  "catastrophicFailureClasses": [
+    "NOT_COMPOSED_AS_A_WHOLE",
+    "PRIMARY_EXPERIENCE_IS_PROTOTYPE_OR_DEBUG_SURFACE",
+    "MEANINGFUL_PRIMARY_INTERACTION_ABSENT_OR_TRIVIAL_WHEN_REQUIRED",
+    "PRIMARY_RESPONSIVE_INTEGRITY_COLLAPSE",
+    "REFERENCE_CLASS_MATURITY_COLLAPSE",
+    "VISUAL_HIERARCHY_OR_LEGIBILITY_COLLAPSE",
+    "PURPOSE_FORM_DISINTEGRATION",
+    "PRIMARY_FUNCTIONAL_PATH_NONFUNCTIONAL",
+    "RENDERED_EVIDENCE_INSUFFICIENT",
+    "REFERENCE_IDENTITY_UNBOUND"
+  ],
+  "decisionLaws": {
+    "referenceParityMeansMaturityParityNotImitation": true,
+    "styleSimilarityRequired": false,
+    "featureInventoryMayCreatePass": false,
+    "atomicCapabilityChecklistMayCreatePass": false,
+    "catastrophicFailuresAreNoncompensatory": true,
+    "weightedAverageMayOverrideCatastrophicFailure": false,
+    "wholeRenderedExperienceIsPrimaryUnitOfJudgment": true,
+    "differentDesignMayExcuseLowerMaturity": false,
+    "humanOrEquivalentPerceptualAdjudicationMayBeRequired": true,
+    "uncertainOrInsufficientEvidenceFailsToUnevaluable": true
+  },
+  "allowedDispositions": [
+    "AWARDS_CONVERSATION_ADMISSIBLE",
+    "BELOW_AWARDS_CONVERSATION",
+    "UNEVALUABLE"
+  ],
+  "authorityBoundary": {
+    "mayDeclareAwardWinner": false,
+    "mayDeclareNamedAwardReadiness": false,
+    "mayReplacePageExcellence": false,
+    "mayMutateCandidate": false,
+    "maySelectStyleTemplate": false,
+    "mayAdmitToAwardsConversationWhenActiveAndProven": true,
+    "currentlyActive": false
+  }
+}

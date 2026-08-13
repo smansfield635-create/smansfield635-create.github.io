@@ -15,6 +15,7 @@ const ACTIVATION_ID = 'H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATIO
 const TASK_TEXT = 'Remote pre-mutation H-Earth repository registry preflight';
 const MAX_PATHS = 128;
 const ALLOWED_ROOTS = ['h-earth-3d/', 'showroom/globe/h-earth/'];
+const NEGATIVE_DISPOSITIONS = new Set(['REVIEW_REQUIRED', 'BLOCK', 'STOP']);
 
 function stable(value) {
   if (Array.isArray(value)) return value.map(stable);
@@ -133,22 +134,50 @@ function verifyBoundNativeTool(root, subjectHead) {
   return { nativeBlob, activationBlob };
 }
 
-function validateNativeReceipt(receipt, paths) {
+function validateNativeReceiptEnvelope(receipt, paths) {
   if (!receipt || typeof receipt !== 'object' || Array.isArray(receipt)) fail('NATIVE_RECEIPT_INVALID');
   if (receipt.activationId !== ACTIVATION_ID) fail('NATIVE_RECEIPT_ACTIVATION_ID_MISMATCH');
   if (receipt.activationStatus !== 'ACTIVATED') fail('NATIVE_RECEIPT_NOT_ACTIVATED');
   if (receipt.dependenciesVerified !== true) fail('NATIVE_RECEIPT_DEPENDENCIES_NOT_VERIFIED');
   if (receipt.mutationIntentDetected !== true) fail('NATIVE_RECEIPT_MUTATION_INTENT_MISSING');
-  if (receipt.finalDisposition !== 'PASS') fail('NATIVE_PREFLIGHT_NOT_PASS', receipt.finalDisposition);
   if (receipt.mutationMayProceed !== false) fail('NATIVE_RECEIPT_MUTATION_AUTHORITY_LEAK');
-  if (receipt.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') fail('NATIVE_RECEIPT_CONTINUATION_MISMATCH', receipt.continuation);
+
   const boundaries = receipt.boundaries ?? {};
   if (boundaries.readOnlyPreflight !== true || boundaries.sourceAuthorityCreated !== false || boundaries.mutationAuthorityCreated !== false || boundaries.mergeAuthorityCreated !== false || boundaries.canonicalizationAuthorityCreated !== false) {
     fail('NATIVE_RECEIPT_BOUNDARY_MISMATCH');
   }
+
   const expected = paths.map((value) => `/${value}`).sort((a, b) => a.localeCompare(b));
   const observed = [...(receipt.pathClassification?.normalizedPaths ?? [])].sort((a, b) => a.localeCompare(b));
   if (JSON.stringify(expected) !== JSON.stringify(observed)) fail('NATIVE_RECEIPT_PATH_SET_MISMATCH');
+
+  if (receipt.finalDisposition === 'PASS') {
+    if (receipt.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') {
+      fail('NATIVE_RECEIPT_CONTINUATION_MISMATCH', receipt.continuation);
+    }
+    return 'PASS_CLOSED';
+  }
+
+  if (!NEGATIVE_DISPOSITIONS.has(receipt.finalDisposition)) {
+    fail('NATIVE_PREFLIGHT_DISPOSITION_UNSUPPORTED', receipt.finalDisposition);
+  }
+  if (typeof receipt.continuation !== 'string' || receipt.continuation.length === 0) {
+    fail('NATIVE_RECEIPT_NEGATIVE_CONTINUATION_MISSING');
+  }
+  return 'FAIL_CLOSED';
+}
+
+function validateNativeExit(nativeExecution, adapterResult, nativeDisposition) {
+  if (nativeExecution.error) fail('NATIVE_PREFLIGHT_EXECUTION_ERROR', nativeExecution.error);
+  if (adapterResult === 'PASS_CLOSED' && nativeExecution.status !== 0) {
+    fail('NATIVE_PREFLIGHT_PASS_EXIT_NONZERO', `${nativeExecution.status}:${nativeExecution.stderr}`);
+  }
+  if ((nativeDisposition === 'BLOCK' || nativeDisposition === 'STOP') && nativeExecution.status === 0) {
+    fail('NATIVE_PREFLIGHT_FAIL_CLOSED_EXIT_ZERO', nativeDisposition);
+  }
+  if (nativeDisposition === 'REVIEW_REQUIRED' && nativeExecution.status !== 0) {
+    fail('NATIVE_PREFLIGHT_REVIEW_EXIT_NONZERO', `${nativeExecution.status}:${nativeExecution.stderr}`);
+  }
 }
 
 function execute({ root, subjectHead, pathsBase64, executionHolder }) {
@@ -166,6 +195,7 @@ function execute({ root, subjectHead, pathsBase64, executionHolder }) {
   let subjectWorktreeCleanAfter = false;
   let nativeExecution = null;
   let nativeReceipt = null;
+  let adapterResult = null;
 
   try {
     git(root, ['worktree', 'add', '--detach', subjectRoot, subjectHead]);
@@ -190,10 +220,10 @@ function execute({ root, subjectHead, pathsBase64, executionHolder }) {
     } catch (error) {
       fail('NATIVE_PREFLIGHT_RECEIPT_PARSE_FAILED', error.message);
     }
-    validateNativeReceipt(nativeReceipt, paths);
-    if (nativeExecution.status !== 0 || nativeExecution.error) {
-      fail('NATIVE_PREFLIGHT_EXIT_NONZERO', `${nativeExecution.status}:${nativeExecution.stderr || nativeExecution.error}`);
-    }
+
+    adapterResult = validateNativeReceiptEnvelope(nativeReceipt, paths);
+    validateNativeExit(nativeExecution, adapterResult, nativeReceipt.finalDisposition);
+
     subjectWorktreeCleanAfter = cleanWorktree(subjectRoot);
     if (!subjectWorktreeCleanAfter) fail('SUBJECT_WORKTREE_DIRTY_AFTER_PREFLIGHT');
   } finally {
@@ -204,9 +234,9 @@ function execute({ root, subjectHead, pathsBase64, executionHolder }) {
   if (!repositoryCleanAfter) fail('TOOLING_WORKTREE_DIRTY_AFTER_EXECUTION');
   const nativeBytes = fs.readFileSync(nativeReceiptPath);
 
-  return stable({
+  const receipt = {
     schema: RECEIPT_SCHEMA,
-    result: 'PASS_CLOSED',
+    result: adapterResult,
     executionHolder,
     subjectHead,
     paths,
@@ -232,37 +262,73 @@ function execute({ root, subjectHead, pathsBase64, executionHolder }) {
     mergePerformed: false,
     deploymentPerformed: false,
     releasePerformed: false
-  });
+  };
+
+  if (adapterResult === 'FAIL_CLOSED') {
+    receipt.errorCode = 'NATIVE_PREFLIGHT_NOT_PASS';
+    receipt.detail = nativeReceipt.finalDisposition;
+  }
+
+  return stable(receipt);
 }
 
 function selfTest(root) {
   const head = git(root, ['rev-parse', 'HEAD^{commit}']);
-  const pathsBase64 = Buffer.from(JSON.stringify([
+  const positivePaths = [
     'showroom/globe/h-earth/index.html',
     'showroom/globe/h-earth/index.css'
-  ]), 'utf8').toString('base64');
+  ];
   const positive = execute({
     root,
     subjectHead: head,
-    pathsBase64,
+    pathsBase64: Buffer.from(JSON.stringify(positivePaths), 'utf8').toString('base64'),
     executionHolder: 'H_EARTH_PREMUTATION_PREFLIGHT_ADAPTER_SELF_TEST'
   });
-  if (positive.result !== 'PASS_CLOSED') fail('SELF_TEST_POSITIVE_FAILED');
-  let negativePassed = false;
+  if (positive.result !== 'PASS_CLOSED' || positive.nativePreflightReceipt.finalDisposition !== 'PASS') {
+    fail('SELF_TEST_POSITIVE_FAILED');
+  }
+
+  const negativePath = 'showroom/globe/h-earth/__negative-receipt-preservation-self-test__.txt';
+  const negative = execute({
+    root,
+    subjectHead: head,
+    pathsBase64: Buffer.from(JSON.stringify([negativePath]), 'utf8').toString('base64'),
+    executionHolder: 'H_EARTH_PREMUTATION_PREFLIGHT_NEGATIVE_SELF_TEST'
+  });
+  const negativeClassification = negative.nativePreflightReceipt.pathClassification?.classifications?.find(
+    (entry) => entry.repositoryPath === `/${negativePath}`
+  );
+  if (
+    negative.result !== 'FAIL_CLOSED' ||
+    !NEGATIVE_DISPOSITIONS.has(negative.nativePreflightReceipt.finalDisposition) ||
+    negativeClassification?.classification !== 'UNREGISTERED_H_EARTH_SCOPED_PATH' ||
+    negative.nativePreflightReceipt.mutationMayProceed !== false ||
+    negative.constructionAuthorityGranted !== false ||
+    negative.genericCommandAuthority !== false
+  ) {
+    fail('SELF_TEST_NEGATIVE_RECEIPT_PRESERVATION_FAILED');
+  }
+
+  let outsideScopeRejected = false;
   try {
     decodePaths(Buffer.from(JSON.stringify(['laws/index.html']), 'utf8').toString('base64'));
   } catch (error) {
-    negativePassed = error.code === 'PATH_OUTSIDE_H_EARTH_SCOPE';
+    outsideScopeRejected = error.code === 'PATH_OUTSIDE_H_EARTH_SCOPE';
   }
-  if (!negativePassed) fail('SELF_TEST_NEGATIVE_SCOPE_FAILED');
+  if (!outsideScopeRejected) fail('SELF_TEST_NEGATIVE_SCOPE_FAILED');
+
   return stable({
     schema: 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_SELF_TEST_RECEIPT_v1',
     result: 'PASS_CLOSED',
     subjectHead: head,
     positiveNativeDisposition: positive.nativePreflightReceipt.finalDisposition,
+    negativeNativeDisposition: negative.nativePreflightReceipt.finalDisposition,
+    negativeClassification: negativeClassification.classification,
+    negativeNativeReceiptPreserved: true,
     negativeScopeFixturePassed: true,
     productMutationPerformed: false,
-    constructionAuthorityGranted: false
+    constructionAuthorityGranted: false,
+    genericCommandAuthority: false
   });
 }
 

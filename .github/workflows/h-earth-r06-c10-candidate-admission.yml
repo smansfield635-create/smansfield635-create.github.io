@@ -1,99 +1,240 @@
-name: H-Earth R06 C10 Exact Candidate Admission
+name: H-Earth H1 Exact Candidate Admission
 
 on:
   workflow_dispatch:
     inputs:
       candidate_head:
-        description: Exact 40-character candidate commit SHA
+        description: Exact frozen H1 candidate commit SHA
         required: true
         type: string
-      governing_head:
-        description: Governing commit or ref containing the unchanged admission authority
+      operation_id:
+        description: Exact active Gen58 H1 operation ID
         required: true
-        default: main
         type: string
+      lock_generation:
+        description: Exact active Gen58 lock generation
+        required: true
+        type: string
+      scope_hash:
+        description: Exact active Gen58 scope hash
+        required: true
+        type: string
+      request_digest:
+        description: Exact Gen58 operation request digest
+        required: true
+        type: string
+      procedure_digest:
+        description: Exact Gen58 construction procedure digest
+        required: true
+        type: string
+  push:
+    branches:
+      - agent/h-earth-h1-admission-authority-repair-v1
+    paths:
+      - .github/workflows/h-earth-r06-c10-candidate-admission.yml
 
 permissions:
   contents: read
 
 jobs:
-  exact-candidate-admission:
+  exact-h1-candidate-admission:
     runs-on: ubuntu-latest
-    steps:
-      - name: Check out governing authority
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.governing_head }}
-          fetch-depth: 0
+    env:
+      EXPECTED_CANDIDATE_HEAD: 575a06d5b97fc1501a00c7fb3535786d63d9442b
+      EXPECTED_CANDIDATE_TREE: 1dce0ae74368ced856443d1f56f8a92248993e49
+      EXPECTED_BASE_HEAD: 0b41d4d8c8dbc18ccf0f678be46f027bac8fcbc9
+      EXPECTED_VERIFIER_PATH: h-earth-3d/validation/h-earth.representation-transition-surface-gap-closure.v1.mjs
+      EXPECTED_VERIFIER_BLOB: f4647ccfbac30ce2499880ebd93a25780876e01e
+      EXPECTED_OPERATION_ID: H_EARTH_REPRESENTATION_TRANSITION_SURFACE_GAP_CLOSURE_H1_20260811_002
+      EXPECTED_LOCK_GENERATION: "58"
+      EXPECTED_SCOPE_HASH: 9e08d97821f66fb546578bbb91e8a174059384acebbad8a97e1bb406c9faca7a
+      EXPECTED_REQUEST_DIGEST: f99ad7d742ecc3fa8b2b553b0e9554ed3389140d07295785eac995948fefb44c
+      EXPECTED_PROCEDURE_DIGEST: 3c5dca11f232be665dfeeb0e9ab9c5dc6a548d7b9ea012a092e7b63c3d3cd10a
 
-      - name: Validate exact inputs
+    steps:
+      - name: Validate exact H1 authority binding envelope
         shell: bash
         env:
-          CANDIDATE_HEAD: ${{ inputs.candidate_head }}
+          CANDIDATE_HEAD: ${{ github.event_name == 'workflow_dispatch' && inputs.candidate_head || '575a06d5b97fc1501a00c7fb3535786d63d9442b' }}
+          OPERATION_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.operation_id || 'H_EARTH_REPRESENTATION_TRANSITION_SURFACE_GAP_CLOSURE_H1_20260811_002' }}
+          LOCK_GENERATION: ${{ github.event_name == 'workflow_dispatch' && inputs.lock_generation || '58' }}
+          SCOPE_HASH: ${{ github.event_name == 'workflow_dispatch' && inputs.scope_hash || '9e08d97821f66fb546578bbb91e8a174059384acebbad8a97e1bb406c9faca7a' }}
+          REQUEST_DIGEST: ${{ github.event_name == 'workflow_dispatch' && inputs.request_digest || 'f99ad7d742ecc3fa8b2b553b0e9554ed3389140d07295785eac995948fefb44c' }}
+          PROCEDURE_DIGEST: ${{ github.event_name == 'workflow_dispatch' && inputs.procedure_digest || '3c5dca11f232be665dfeeb0e9ab9c5dc6a548d7b9ea012a092e7b63c3d3cd10a' }}
         run: |
           set -euo pipefail
-          [[ "$CANDIDATE_HEAD" =~ ^[0-9a-f]{40}$ ]]
-          git rev-parse "${CANDIDATE_HEAD}^{commit}"
+          mkdir -p /tmp/h-earth-h1-admission
+
+          validate_binding() {
+            local candidate="$1" operation="$2" generation="$3" scope="$4" request="$5" procedure="$6"
+            [[ "$candidate" == "$EXPECTED_CANDIDATE_HEAD" ]] || return 11
+            [[ "$operation" == "$EXPECTED_OPERATION_ID" ]] || return 12
+            [[ "$generation" == "$EXPECTED_LOCK_GENERATION" ]] || return 13
+            [[ "$scope" == "$EXPECTED_SCOPE_HASH" ]] || return 14
+            [[ "$request" == "$EXPECTED_REQUEST_DIGEST" ]] || return 15
+            [[ "$procedure" == "$EXPECTED_PROCEDURE_DIGEST" ]] || return 16
+          }
+
+          validate_binding "$CANDIDATE_HEAD" "$OPERATION_ID" "$LOCK_GENERATION" "$SCOPE_HASH" "$REQUEST_DIGEST" "$PROCEDURE_DIGEST"
+
+          if validate_binding 0000000000000000000000000000000000000000 "$OPERATION_ID" "$LOCK_GENERATION" "$SCOPE_HASH" "$REQUEST_DIGEST" "$PROCEDURE_DIGEST"; then
+            echo CANDIDATE_SHA_NEGATIVE_CONTROL_NONFAIL_CLOSED >&2
+            exit 21
+          fi
+          if validate_binding "$CANDIDATE_HEAD" INVALID_OPERATION_ID "$LOCK_GENERATION" "$SCOPE_HASH" "$REQUEST_DIGEST" "$PROCEDURE_DIGEST"; then
+            echo OPERATION_ID_NEGATIVE_CONTROL_NONFAIL_CLOSED >&2
+            exit 22
+          fi
+          if validate_binding "$CANDIDATE_HEAD" "$OPERATION_ID" 999 "$SCOPE_HASH" "$REQUEST_DIGEST" "$PROCEDURE_DIGEST"; then
+            echo LOCK_GENERATION_NEGATIVE_CONTROL_NONFAIL_CLOSED >&2
+            exit 23
+          fi
+
+          python - <<'PY'
+          import json, os, pathlib
+          out = pathlib.Path('/tmp/h-earth-h1-admission/binding-preflight.json')
+          record = {
+              'schema': 'H_EARTH_H1_ADMISSION_BINDING_PREFLIGHT_v1',
+              'result': 'PASS',
+              'candidateHead': os.environ['CANDIDATE_HEAD'],
+              'operationId': os.environ['OPERATION_ID'],
+              'lockGeneration': os.environ['LOCK_GENERATION'],
+              'scopeHash': os.environ['SCOPE_HASH'],
+              'requestDigest': os.environ['REQUEST_DIGEST'],
+              'procedureDigest': os.environ['PROCEDURE_DIGEST'],
+              'negativeControls': {
+                  'candidateShaMismatchFailsClosed': True,
+                  'operationIdMismatchFailsClosed': True,
+                  'lockGenerationMismatchFailsClosed': True,
+              },
+              'candidateMutationPerformed': False,
+              'authorityEffect': 'NONE'
+          }
+          out.write_text(json.dumps(record, indent=2) + '\n')
+          PY
+
+      - name: Check out exact frozen H1 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 575a06d5b97fc1501a00c7fb3535786d63d9442b
+          fetch-depth: 0
+
+      - name: Verify candidate, tree, verifier, and four-path surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_CANDIDATE_HEAD"
+          test "$(git rev-parse HEAD^{tree})" = "$EXPECTED_CANDIDATE_TREE"
+          test "$(git rev-parse "HEAD:${EXPECTED_VERIFIER_PATH}")" = "$EXPECTED_VERIFIER_BLOB"
           git status --porcelain=v1 --untracked-files=all | grep -q . && exit 1 || true
 
-      - name: Execute repository-declared admission gate
-        id: gate
+          mapfile -t changed < <(git diff --name-only "$EXPECTED_BASE_HEAD" "$EXPECTED_CANDIDATE_HEAD" | sort)
+          expected=(
+            h-earth-3d/validation/h-earth.representation-transition-surface-gap-closure.v1.mjs
+            showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js
+            showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js
+            showroom/globe/h-earth/functional-landscape/representation-transition-surface.v1.js
+          )
+          mapfile -t expected_sorted < <(printf '%s\n' "${expected[@]}" | sort)
+          test "${#changed[@]}" -eq 4
+          test "$(printf '%s\n' "${changed[@]}")" = "$(printf '%s\n' "${expected_sorted[@]}")"
+          printf '%s\n' "${changed[@]}" > /tmp/h-earth-h1-admission/changed-paths.txt
+
+      - name: Execute exact H1 transition-surface verifier
+        id: verifier
         shell: bash
-        env:
-          CANDIDATE_HEAD: ${{ inputs.candidate_head }}
         run: |
           set +e
-          mkdir -p /tmp/h-earth-r06-c10-admission
-          node h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs \
-            --candidate "$CANDIDATE_HEAD" \
-            --output /tmp/h-earth-r06-c10-admission/gate-receipt.json
+          node "$EXPECTED_VERIFIER_PATH" \
+            --output /tmp/h-earth-h1-admission/h1-verification.json
           status=$?
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Bind workflow execution identity
+      - name: Bind workflow execution identity without expanding authority
         if: always()
         shell: bash
         env:
-          CANDIDATE_HEAD: ${{ inputs.candidate_head }}
-          GOVERNING_HEAD_INPUT: ${{ inputs.governing_head }}
-          GATE_EXIT_CODE: ${{ steps.gate.outputs.exit_code }}
+          VERIFIER_EXIT_CODE: ${{ steps.verifier.outputs.exit_code }}
+          EVENT_NAME: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
           python - <<'PY'
-          import json, os, pathlib, subprocess
-          out = pathlib.Path('/tmp/h-earth-r06-c10-admission/workflow-binding.json')
-          out.parent.mkdir(parents=True, exist_ok=True)
-          def git(*args):
-              return subprocess.check_output(['git', *args], text=True).strip()
+          import hashlib, json, os, pathlib, subprocess
+
+          root = pathlib.Path('/tmp/h-earth-h1-admission')
+          verification_path = root / 'h1-verification.json'
+          verification = json.loads(verification_path.read_text()) if verification_path.exists() else None
+          changed = (root / 'changed-paths.txt').read_text().splitlines() if (root / 'changed-paths.txt').exists() else []
+          exit_code = int(os.environ.get('VERIFIER_EXIT_CODE') or 1)
+          transport_qualified = bool(
+              exit_code == 0 and
+              verification and
+              verification.get('schema') == 'H_EARTH_H1_TRANSITION_SURFACE_VERIFICATION_RECEIPT_v1' and
+              verification.get('result') == 'PASS' and
+              verification.get('eligible') is True
+          )
+          mode = 'TRANSPORT_QUALIFICATION_ONLY' if os.environ['EVENT_NAME'] == 'push' else 'ADMISSION_EXECUTION_EVIDENCE'
+          receipt_sha = hashlib.sha256(verification_path.read_bytes()).hexdigest() if verification_path.exists() else None
           record = {
-              "schema": "H_EARTH_R06_C10_CANDIDATE_ADMISSION_WORKFLOW_BINDING_v1",
-              "repository": os.environ["GITHUB_REPOSITORY"],
-              "workflow": os.environ["GITHUB_WORKFLOW"],
-              "workflowRunId": os.environ["GITHUB_RUN_ID"],
-              "workflowRunAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
-              "workflowJob": os.environ["GITHUB_JOB"],
-              "governingHeadInput": os.environ["GOVERNING_HEAD_INPUT"],
-              "governingHeadResolved": git("rev-parse", "HEAD^{commit}"),
-              "candidateHead": os.environ["CANDIDATE_HEAD"],
-              "gateExitCode": int(os.environ.get("GATE_EXIT_CODE") or 1),
-              "manualMetadataReconstructionUsed": False
+              'schema': 'H_EARTH_H1_CANDIDATE_ADMISSION_WORKFLOW_BINDING_v1',
+              'result': 'PASS' if transport_qualified else 'FAIL_CLOSED',
+              'mode': mode,
+              'repository': os.environ['GITHUB_REPOSITORY'],
+              'workflow': os.environ['GITHUB_WORKFLOW'],
+              'workflowRunId': os.environ['RUN_ID'],
+              'workflowRunAttempt': os.environ['RUN_ATTEMPT'],
+              'refName': os.environ['REF_NAME'],
+              'candidateHead': os.environ['EXPECTED_CANDIDATE_HEAD'],
+              'candidateTree': os.environ['EXPECTED_CANDIDATE_TREE'],
+              'operationId': os.environ['EXPECTED_OPERATION_ID'],
+              'lockGeneration': int(os.environ['EXPECTED_LOCK_GENERATION']),
+              'scopeHash': os.environ['EXPECTED_SCOPE_HASH'],
+              'requestDigest': os.environ['EXPECTED_REQUEST_DIGEST'],
+              'procedureDigest': os.environ['EXPECTED_PROCEDURE_DIGEST'],
+              'verifierPath': os.environ['EXPECTED_VERIFIER_PATH'],
+              'verifierBlob': os.environ['EXPECTED_VERIFIER_BLOB'],
+              'verifierExitCode': exit_code,
+              'verificationReceiptSha256': receipt_sha,
+              'changedPaths': changed,
+              'exactPathCount': len(changed),
+              'frozenCandidateMutationPerformed': False,
+              'openWorldMutationPerformed': False,
+              'correspondenceConstructionPerformed': False,
+              'canonicalIdentityMintedOrRedefined': False,
+              'representationAuthorityExpanded': False,
+              'candidateAdmissionEffect': 'NONE_WITHOUT_FRESH_PRIVATE_GEN58_ACTIVE_REVALIDATION',
+              'requiresFreshPrivateActiveOperationRevalidation': True,
+              'transportQualified': transport_qualified,
+              'manualMetadataReconstructionUsed': False
           }
-          out.write_text(json.dumps(record, indent=2) + "\n")
+          (root / 'workflow-binding.json').write_text(json.dumps(record, indent=2) + '\n')
           PY
 
-      - name: Upload command-emitted admission evidence
+      - name: Upload H1 admission transport evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-r06-c10-candidate-admission-receipt
-          path: /tmp/h-earth-r06-c10-admission/
+          name: h-earth-h1-candidate-admission-receipt
+          path: /tmp/h-earth-h1-admission/
           if-no-files-found: error
           retention-days: 90
 
-      - name: Preserve fail-closed gate conclusion
+      - name: Preserve fail-closed H1 verifier conclusion
         if: always()
         shell: bash
         env:
-          GATE_EXIT_CODE: ${{ steps.gate.outputs.exit_code }}
+          VERIFIER_EXIT_CODE: ${{ steps.verifier.outputs.exit_code }}
         run: |
-          test "${GATE_EXIT_CODE:-1}" -eq 0
+          set -euo pipefail
+          test "${VERIFIER_EXIT_CODE:-1}" -eq 0
+          python - <<'PY'
+          import json, pathlib
+          binding = json.loads(pathlib.Path('/tmp/h-earth-h1-admission/workflow-binding.json').read_text())
+          assert binding['result'] == 'PASS'
+          assert binding['transportQualified'] is True
+          assert binding['frozenCandidateMutationPerformed'] is False
+          assert binding['candidateAdmissionEffect'] == 'NONE_WITHOUT_FRESH_PRIVATE_GEN58_ACTIVE_REVALIDATION'
+          PY

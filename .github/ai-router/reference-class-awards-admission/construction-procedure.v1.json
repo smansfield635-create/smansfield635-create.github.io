@@ -1,0 +1,83 @@
+{
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "procedureId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_CONSTRUCTION_PROCEDURE_v1",
+  "operationClass": "SHARED_REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_CONTROL_PACKAGE",
+  "exactGoverningHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+  "exactAllowedRepositoryPaths": [
+    ".github/ai-router/reference-class-awards-admission/README.md",
+    ".github/ai-router/reference-class-awards-admission/operation-request.v1.json",
+    ".github/ai-router/reference-class-awards-admission/construction-procedure.v1.json",
+    ".github/ai-router/reference-class-awards-admission/registration-surface-reconciliation.v1.json",
+    ".github/ai-router/reference-class-awards-admission/substantive-contract.v1.json",
+    ".github/ai-router/reference-class-awards-admission/reference-corpus.v1.json",
+    ".github/ai-router/reference-class-awards-admission/decision-boundary.v1.json",
+    ".github/ai-router/reference-class-awards-admission/calibration-fixtures.v1.json",
+    ".github/ai-router/reference-class-awards-admission/current-state.v1.json",
+    ".github/ai-router/reference-class-awards-admission/verify.v1.mjs"
+  ],
+  "exactBranchAndCommitSequence": [
+    {"step":1,"action":"CREATE_ISOLATED_BRANCH_FROM_EXACT_GOVERNING_HEAD"},
+    {"step":2,"action":"MATERIALIZE_EXACT_10_PATH_PREACTIVATION_CONTROL_PACKAGE"},
+    {"step":3,"action":"RUN_STATIC_CONTRACT_VERIFIER"},
+    {"step":4,"action":"FREEZE_REFERENCE_CORPUS_IDENTITIES_AND_CALIBRATION_BOUNDARY"},
+    {"step":5,"action":"RUN_FRESH_INDEPENDENT_VERIFICATION_ON_EXACT_CANDIDATE_HEAD"},
+    {"step":6,"action":"STOP_BEFORE_EXISTING_REGISTRY_MUTATION_ACTIVATION_RATIFICATION_OR_MERGE"}
+  ],
+  "evaluationToolingHeadBindingRule": "VERIFY_PACKAGE_ON_EXACT_CANDIDATE_HEAD; REFERENCE_SOURCE_IDENTITIES_MUST_BE_EXACT_COMMIT_AND_BLOB_BOUND; NO_MOVING_REFERENCE_MAY_CREATE_PASS",
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "MANDATORY_PAGE_EXCELLENCE_TOOLCHAIN_BUNDLE_v1",
+    "LAWS_COMPASS_SIX_AUTHORITY_BENCHMARK_v1",
+    "REFERENCE_CLASS_POSITIVE_AND_NEGATIVE_EVIDENCE"
+  ],
+  "canonicalOutputSchemas": [
+    "REFERENCE_CLASS_AWARDS_ADMISSION_REGISTRATION_SURFACE_RECONCILIATION_v1",
+    "REFERENCE_CLASS_AWARDS_ADMISSION_SUBSTANTIVE_CONTRACT_v1",
+    "REFERENCE_CLASS_AWARDS_ADMISSION_REFERENCE_CORPUS_v1",
+    "REFERENCE_CLASS_AWARDS_ADMISSION_DECISION_BOUNDARY_v1",
+    "REFERENCE_CLASS_AWARDS_ADMISSION_CALIBRATION_FIXTURES_v1",
+    "REFERENCE_CLASS_AWARDS_ADMISSION_CURRENT_STATE_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_MAIN_MISMATCH",
+    "PATH_BOUNDARY_MISMATCH",
+    "REGISTRATION_SURFACE_CONFLICT",
+    "REFERENCE_CORPUS_IDENTITY_UNRESOLVED",
+    "DECISION_BOUNDARY_INCOMPLETE",
+    "COMPENSATORY_SCORING_LEAK",
+    "REFERENCE_IMITATION_REQUIREMENT_DETECTED",
+    "NEGATIVE_CONTROL_AUTHORITY_INHERITANCE",
+    "CALIBRATION_CONTRACT_INCOMPLETE",
+    "ACTIVATION_AUTHORITY_LEAK",
+    "FINGERPRINT_MISMATCH",
+    "UNEXPECTED_ERROR"
+  ],
+  "exactTestRunnerCommand": "node .github/ai-router/reference-class-awards-admission/verify.v1.mjs --verify-static",
+  "independentVerifierDefinition": {
+    "role": "FRESH_INDEPENDENT_REFERENCE_CLASS_ADMISSION_CONTRACT_VERIFIER",
+    "freshCheckoutRequired": true,
+    "candidateHeadBindingRequired": true,
+    "repairAuthority": false,
+    "mustRejectAuthorityInflation": true
+  },
+  "workflowAndArtifactPackagingPaths": {
+    "workflowPath": ".github/workflows/instrument-lifecycle-observation-v1.yml",
+    "artifactPaths": ["reference-class-awards-admission-preactivation-control-package/**"]
+  },
+  "bridgeOutputFingerprintDomain": {
+    "algorithm": "SHA-256",
+    "includes": "EXACT_10_PREACTIVATION_CONTROL_PACKAGE_FILES",
+    "exactPathCount": 10,
+    "governingHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+    "excludes": ["TIMESTAMPS","WORKFLOW_RUN_IDS","ARTIFACT_IDS","GITHUB_EPHEMERAL_METADATA"]
+  },
+  "priorAttemptInspectionLimits": {
+    "failedPhi1Commit": "8f3bafbe200c92ac804a979eab6a708bc73997d3",
+    "allowedUse": "NEGATIVE_CALIBRATION_CONTROL_AND_FAILURE_MODE_ANALYSIS_ONLY",
+    "authorityInheritance": false,
+    "designInheritance": false,
+    "priorPassReceiptsMayCreateAdmission": false,
+    "currentReferenceClassesMustBeIndependentlyPinned": true
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "REFERENCE_CLASS_AWARDS_ADMISSION_CALIBRATION_FIXTURES_v1",
+  "status": "PREACTIVATION_REQUIRED_CALIBRATION_SET",
+  "knownControls": [
+    {"id":"R_C_LAWS_COMPASS_SIX_AUTHORITY","kind":"REAL_POSITIVE","expected":"AWARDS_CONVERSATION_ADMISSIBLE"},
+    {"id":"R_H_H_EARTH_LIVE_EXPERIENCE","kind":"REAL_POSITIVE","expected":"AWARDS_CONVERSATION_ADMISSIBLE"},
+    {"id":"R_G_AUDRALIA_PLANETARY_GLOBE_WORLD","kind":"REAL_POSITIVE","expected":"AWARDS_CONVERSATION_ADMISSIBLE"},
+    {"id":"N_PHI1_FAILED_MANIFESTATION","kind":"REAL_NEGATIVE","expected":"BELOW_AWARDS_CONVERSATION"}
+  ],
+  "adversarialFixtureSpecifications": [
+    {
+      "id": "TECHNICALLY_FLAWLESS_VISUALLY_PRIMITIVE",
+      "conditions": ["ALL_REQUIRED_TECHNICAL_FEATURES_PRESENT","PRIMARY_RENDERED_WHOLE_REMAINS_DIAGRAM_OR_PROTOTYPE"],
+      "expected": "BELOW_AWARDS_CONVERSATION"
+    },
+    {
+      "id": "BEAUTIFUL_STATIC_MEANINGLESS_INTERACTION",
+      "conditions": ["HIGH_VISUAL_FINISH","PRIMARY_CLASS_REQUIRES_INTERACTION","INTERACTION_HAS_NO_MEANINGFUL_CONSEQUENCE"],
+      "expected": "BELOW_AWARDS_CONVERSATION"
+    },
+    {
+      "id": "DESKTOP_MATURE_MOBILE_COLLAPSED",
+      "conditions": ["DESKTOP_REFERENCE_CLASS_MATURITY","PRIMARY_MOBILE_LAYOUT_OR_INTERACTION_FAILURE"],
+      "expected": "BELOW_AWARDS_CONVERSATION"
+    },
+    {
+      "id": "ELABORATE_BUT_INCOHERENT",
+      "conditions": ["HIGH_DETAIL_COUNT","PARTS_DO_NOT_RESOLVE_INTO_ONE_VISUAL_INTERACTION_SYSTEM"],
+      "expected": "BELOW_AWARDS_CONVERSATION"
+    },
+    {
+      "id": "SPARSE_BUT_RESOLVED",
+      "conditions": ["LOW_OBJECT_COUNT","INTENTIONAL_COMPOSITION","CLEAR_HIERARCHY","MATURE_CRAFT","PURPOSEFUL_INTERACTION"],
+      "expected": "MUST_NOT_AUTO_FAIL_FROM_SPARSITY"
+    },
+    {
+      "id": "STYLE_DIFFERENT_MATURITY_EQUIVALENT",
+      "conditions": ["VISUAL_LANGUAGE_DIFFERS_FROM_REFERENCE","AUTHORSHIP_COHERENCE_INTERACTION_AND_FINISH_REACH_REFERENCE_CLASS"],
+      "expected": "AWARDS_CONVERSATION_ADMISSIBLE_MAY_BE_VALID"
+    },
+    {
+      "id": "REFERENCE_IMITATION_WITHOUT_PURPOSE_FIT",
+      "conditions": ["SURFACE_STYLE_COPIES_REFERENCE","PURPOSE_FORM_OR_INTERACTION_COHERENCE_FAILS"],
+      "expected": "BELOW_AWARDS_CONVERSATION"
+    },
+    {
+      "id": "VISIBLE_DEBUG_SCAFFOLDING_PRIMARY",
+      "conditions": ["PRIMARY_EXPERIENCE_EXPOSES_MACHINE_IDS_RAW_JSON_OR_DEBUG_PANELS_AS_DOMINANT_PRESENTATION"],
+      "expected": "BELOW_AWARDS_CONVERSATION"
+    },
+    {
+      "id": "MISSING_RENDERED_EVIDENCE",
+      "conditions": ["SOURCE_AND_FEATURE_RECEIPTS_PRESENT","REQUIRED_RENDERED_EVIDENCE_MISSING"],
+      "expected": "UNEVALUABLE"
+    }
+  ],
+  "activationCalibrationRequirements": {
+    "allKnownControlsCorrect": true,
+    "allDeterministicAdversarialFixturesCorrect": true,
+    "noPositivePassByFeatureInventoryAlone": true,
+    "noNegativeFailByStyleDifferenceAlone": true,
+    "nearBoundaryFalsePositiveReviewRequired": true,
+    "nearBoundaryFalseNegativeReviewRequired": true,
+    "instrumentMayActivateOnSelfDeclaredCalibration": false
+  }
+}

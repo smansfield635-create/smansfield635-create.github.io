@@ -12,6 +12,7 @@ import {
   validateInputObject,
   parseArgs
 } from './lib.v1.mjs';
+import { validateSuccessorCompatibility } from './successor-compatibility-validator.v1.mjs';
 
 const REQUEST_REQUIRED = [
   'schema',
@@ -57,6 +58,13 @@ function validateAdmission(admission, descriptor) {
   if (lock.operationId !== descriptor.operationId) fail('DESCRIPTOR_AND_ADMISSION_MISMATCH', 'lock.operationId');
   if (lock.released === true || lock.state === 'TERMINAL') fail('EXPIRED_OR_CLOSED_LOCK');
   if (!['ADMITTED_LOCKED', 'EXECUTING'].includes(lock.state)) fail('LOCK_STATE_NOT_EXECUTABLE', lock.state);
+  return stable({
+    mode: 'EXACT_OPERATION_ID',
+    authorizedOperationId: descriptor.operationId,
+    admissionLockGeneration: lock.lockGeneration,
+    successorCompatibilityUsed: false,
+    successorCompatibilityReceipt: null
+  });
 }
 
 function validateRouter(router, descriptor) {
@@ -77,10 +85,11 @@ function validateRegistry(registry, allowCandidate) {
   if (!Array.isArray(registry.tools) || registry.tools.length === 0) fail('TOOLSET_REGISTRY_EMPTY');
 }
 
-export function resolveToolset({ request: rawRequest, registry, admissionReceipt, routerReceipt, allowCandidate = false }) {
+export function resolveToolset({ request: rawRequest, registry, admissionReceipt, admissionReceiptIdentity = null, routerReceipt, allowCandidate = false }) {
   const request = validateExecutionRequest(rawRequest);
   validateRegistry(registry, allowCandidate);
-  const matches = registry.tools.filter(tool => tool.descriptorId === request.descriptorId && tool.operationId === request.operationId);
+
+  const matches = registry.tools.filter(tool => tool.descriptorId === request.descriptorId);
   if (matches.length !== 1) fail(matches.length === 0 ? 'AUTHORIZED_TOOLSET_NOT_FOUND' : 'AUTHORIZED_TOOLSET_AMBIGUOUS');
   const descriptor = stable(matches[0]);
   if (!allowCandidate && descriptor.descriptorActivationStatus !== 'ACTIVE_CERTIFIED') fail('DESCRIPTOR_NOT_ACTIVE', descriptor.descriptorActivationStatus);
@@ -88,7 +97,26 @@ export function resolveToolset({ request: rawRequest, registry, admissionReceipt
   if (descriptor.commandSpecification?.shell !== false) fail('SHELL_EXECUTION_PROHIBITED');
   if (descriptor.commandSpecification?.extraArgumentsAllowed !== false) fail('EXTRA_ARGUMENTS_PROHIBITION_MISSING');
   if (descriptor.commandSpecification?.environmentOverridesAllowed !== false) fail('ENVIRONMENT_OVERRIDE_PROHIBITION_MISSING');
-  validateAdmission(admissionReceipt, descriptor);
+
+  let authorization;
+  if (request.operationId === descriptor.operationId) {
+    authorization = validateAdmission(admissionReceipt, descriptor);
+  } else {
+    const compatibility = validateSuccessorCompatibility({
+      descriptor,
+      request,
+      successorReceipt: admissionReceipt,
+      receiptIdentity: admissionReceiptIdentity
+    });
+    authorization = stable({
+      mode: 'CANONICAL_ONE_HOP_SUCCESSOR',
+      authorizedOperationId: compatibility.authorizedOperationId,
+      admissionLockGeneration: compatibility.successorLockGeneration,
+      successorCompatibilityUsed: true,
+      successorCompatibilityReceipt: compatibility
+    });
+  }
+
   validateRouter(routerReceipt, descriptor);
   const validatedInputs = validateInputObject(descriptor.canonicalInputSchema, request.inputs);
   return stable({
@@ -96,11 +124,16 @@ export function resolveToolset({ request: rawRequest, registry, admissionReceipt
     result: 'EXACTLY_ONE_AUTHORIZED_DESCRIPTOR_RESOLVED',
     requestId: request.requestId,
     operationId: descriptor.operationId,
+    descriptorOperationId: descriptor.operationId,
+    authorizedOperationId: authorization.authorizedOperationId,
     descriptorId: descriptor.descriptorId,
     descriptorDigest: hashObject(descriptor),
     descriptor,
     validatedInputs,
-    admissionLockGeneration: admissionReceipt.lock.lockGeneration,
+    admissionLockGeneration: authorization.admissionLockGeneration,
+    authorizationMode: authorization.mode,
+    successorCompatibilityUsed: authorization.successorCompatibilityUsed,
+    successorCompatibilityReceipt: authorization.successorCompatibilityReceipt,
     authorityRouteProjectId: descriptor.projectId
   });
 }
@@ -111,6 +144,7 @@ function main() {
     request: readJson(args.request),
     registry: readJson(args.registry),
     admissionReceipt: readJson(args.admission),
+    admissionReceiptIdentity: args['admission-identity'] ? readJson(args['admission-identity']) : null,
     routerReceipt: readJson(args.router),
     allowCandidate: args['allow-candidate'] === 'true'
   });

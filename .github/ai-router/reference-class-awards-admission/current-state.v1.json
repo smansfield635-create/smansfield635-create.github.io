@@ -1,0 +1,43 @@
+{
+  "schema": "REFERENCE_CLASS_AWARDS_ADMISSION_CURRENT_STATE_v1",
+  "instrumentId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_v1",
+  "state": "PREACTIVATION_CONSTRUCTION_IN_PROGRESS",
+  "exactGoverningHead": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+  "operationId": "REFERENCE_CLASS_AWARDS_ADMISSION_INSTRUMENT_PREACTIVATION_V1_20260809_001",
+  "lockGeneration": 890,
+  "branch": "instrumentation/reference-class-awards-admission-preactivation-v1-001",
+  "admission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "requestDigest": "d6dec1f6fab73e84d679f8c1eb16493a5a9cd4755ea001cbc579fb8081123b18",
+    "procedureLocatorDigest": "48c5f949e4352567f02119c052aaef917a8be2562da0d37f1357fc3617d46bf7",
+    "scopeHash": "eb98fc14b2a34388fd93ba2bbbe054241a954510f7837759f283ac2357d3f488"
+  },
+  "preMutationRouter": {
+    "workflowRun": 31342123504,
+    "result": "PASS",
+    "routeCount": 10,
+    "exactHeadVerified": true
+  },
+  "referenceCorpus": {
+    "positiveCount": 3,
+    "negativeControlCount": 1,
+    "exactIdentityPinning": "COMPLETE_FOR_V1_CORPUS"
+  },
+  "authority": {
+    "candidateInstrumentActive": false,
+    "productionEnforcementActive": false,
+    "awardsAdmissionAuthorityCreated": false,
+    "namedAwardReadinessAuthorityCreated": false,
+    "mergeAuthorityCreated": false
+  },
+  "requiredBeforeActivation": [
+    "STATIC_PACKAGE_VERIFICATION_PASS",
+    "FRESH_EXACT_CANDIDATE_VERIFICATION_PASS",
+    "REAL_POSITIVE_AND_NEGATIVE_CALIBRATION_PASS",
+    "ADVERSARIAL_BOUNDARY_CALIBRATION_PASS",
+    "REGISTRATION_AND_EXECUTION_SURFACE_INTEGRATION",
+    "SYSTEM_CONTINUITY_PASS",
+    "SEPARATE_PERMANENT_RATIFICATION"
+  ],
+  "stoppingBoundary": "STOP_BEFORE_REGISTRATION_ACTIVATION_RATIFICATION_MERGE_OR_PRODUCTION_ENFORCEMENT"
+}

@@ -32,6 +32,24 @@ For a proposed change, add `--mutation-intent`. For many paths, use `--paths-fil
 
 The intake gate establishes whether an operation may begin and atomically locks its declared scope. The successor gate establishes only moving-head continuity through a freshly validated successor request and an atomic supersession/admission transaction. Neither gate grants project-specific mutation, merge, canonicalization, runtime, renderer, deployment, or production authority. The root router remains a dispatcher, not a source of project authority. Shared GitHub procedures explain how to resolve commits, create clean checkouts, use GitHub Actions, retrieve artifacts, verify hashes, publish receipts, and verify rollback; they do not grant project authority.
 
+## Progressive system continuity
+
+For a shared infrastructure or control-plane change, inspect `.github/ai-router/system-continuity/gap-registry.v1.json` before declaring the surrounding system closed. If the proposed interfaces or paths intersect an `OPEN` gap, declare and reconcile that gap rather than creating a parallel workaround.
+
+Extract both producer and consumer contracts. In particular, treat operation-ID policy, receipt schemas, authority semantics, lifecycle state, and invocation surfaces as interfaces that must compose. A local self-test or component PASS proves only local correctness unless the downstream transition is also proven.
+
+Use the read-only continuity gate when evaluating shared-system closure:
+
+```text
+node .github/ai-router/system-continuity/progressive-system-continuity-gate.v1.mjs --input <ASSESSMENT_REQUEST.json> --output <ASSESSMENT_RECEIPT.json>
+```
+
+`LOCAL_CAPABILITY_CLOSED` is not `SYSTEM_GAP_CLOSED`. `SYSTEM_GAP_CLOSED` requires local correctness, producer-consumer interface compatibility, transition simulation, a real remote invocation proof, post-merge continuity proof, and no unresolved related open gap. The continuity track never grants repository writes, lifecycle or terminal-closure authority, successor authority, merge/deployment authority, product authority, semantic/scientific authority, or generic command authority.
+
+The continuity track supplements rather than replaces repository intake, moving-head successor handling, canonical terminal closure, project routing, Page Excellence, or project-specific authority. Ordinary project work does not acquire extra authority from continuity PASS; continuity is mandatory only when a shared-system closure claim or shared control-plane interface change is being evaluated.
+
+For remote read-only assessment after the track is installed, use an owner/member/collaborator issue comment beginning with `PROGRESSIVE_SYSTEM_CONTINUITY_REQUEST_V1` followed by the closed assessment JSON. The route may return a receipt to the triggering issue but may not mutate repository content or the operation ledger.
+
 For H-Earth paths, the router delegates to the existing H-Earth registry and automatic preflight. Preserve all narrower instructions below `h-earth-3d/` and `showroom/globe/h-earth/`.
 
 Intake outcomes:

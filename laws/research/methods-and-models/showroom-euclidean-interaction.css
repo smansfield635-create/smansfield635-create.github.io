@@ -1,23 +1,20 @@
 html[data-methods-models-euclidean-showroom="active"] .mm-instrument,
-html[data-methods-models-euclidean-showroom="active"] .mm-model-deck {
-  pointer-events: none !important;
-}
-html[data-methods-models-euclidean-showroom="active"] .mm-model-card[data-mm-x-position="active"] {
-  pointer-events: auto !important;
-}
+html[data-methods-models-euclidean-showroom="active"] .mm-model-deck { pointer-events: none !important; }
+html[data-methods-models-euclidean-showroom="active"] .mm-model-card[data-mm-x-position="active"] { pointer-events: auto !important; }
 html[data-methods-models-euclidean-showroom="active"] .mm-deck-controls,
 html[data-methods-models-euclidean-showroom="active"] .mm-z-axis-controls,
 html[data-methods-models-euclidean-showroom="active"] [data-mm-dock-previous],
-html[data-methods-models-euclidean-showroom="active"] [data-mm-dock-next] {
-  display: none !important;
-}
+html[data-methods-models-euclidean-showroom="active"] [data-mm-dock-next] { display: none !important; }
+html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs { left: 50% !important; right: auto !important; display: flex !important; gap: .45rem !important; width: min(58rem, calc(100% - 4rem)) !important; height: 2.8rem !important; overflow-x: auto !important; transform: translateX(-50%) translateZ(120px) !important; perspective: none !important; }
+html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs::before { display: none !important; }
+html[data-methods-models-euclidean-showroom="active"] .mm-family-tab,
+html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[data-mm-z-position] { position: relative !important; top: auto !important; left: auto !important; flex: 1 1 0 !important; width: auto !important; min-width: 8rem !important; min-height: 2.6rem !important; transform: none !important; opacity: .55 !important; filter: none !important; }
+html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[aria-selected="true"] { opacity: 1 !important; }
 @media (max-width: 720px) {
   html[data-methods-models-euclidean-showroom="active"] .mm-stage__header { display: none !important; }
-  html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs { top: .7rem !important; left: .65rem !important; right: .65rem !important; width: auto !important; height: 2.55rem !important; display: flex !important; gap: .3rem !important; overflow-x: auto !important; transform: none !important; }
-  html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs::before { display: none !important; }
+  html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs { top: .7rem !important; left: .65rem !important; right: .65rem !important; width: auto !important; height: 2.55rem !important; gap: .3rem !important; transform: none !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-family-tab,
-  html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[data-mm-z-position] { position: relative !important; top: auto !important; left: auto !important; flex: 0 0 7rem !important; width: auto !important; min-height: 2.3rem !important; transform: none !important; opacity: .58 !important; filter: none !important; }
-  html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[aria-selected="true"] { opacity: 1 !important; }
+  html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[data-mm-z-position] { flex: 0 0 7rem !important; min-width: 7rem !important; min-height: 2.3rem !important; }
   html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset: 4rem .4rem 9rem !important; }
   html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(86vw, 24rem) !important; height: min(58vh, 32rem) !important; min-height: 24rem !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { top: auto !important; bottom: 5rem !important; left: .65rem !important; width: calc(100% - 1.3rem) !important; height: 2.6rem !important; display: flex !important; gap: .3rem !important; transform: none !important; }

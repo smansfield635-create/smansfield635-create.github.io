@@ -1,0 +1,173 @@
+{
+  "fixtureId": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_V1",
+  "action": "ADMIT",
+  "exactGoverningHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
+  "bridgeImplementationHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
+  "bridgeRequest": {
+    "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1",
+    "requestId": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_20260813_003",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "exactGoverningHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
+    "operationRequest": {
+      "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+      "operationId": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_20260813_003",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:P2:PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT:A:V1",
+      "exactGoverningHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
+      "subjectIdentity": {
+        "coordinationIssue": 982,
+        "retirementFamily": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT",
+        "changeClass": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT",
+        "deletePathCount": 4,
+        "reconcilePathCount": 1,
+        "privatePreservationRepository": "smansfield635-create/geodiametrics1",
+        "privatePreservationHead": "840b885db8d3b0331e9ac3bd207df3d32baf8fb6",
+        "authorityInherited": false
+      },
+      "requestingAuthority": {
+        "source": "USER_EXPLICIT_PROCEED_20260813",
+        "repositoryWritesAuthorized": true,
+        "branchCreationAuthorized": true,
+        "prAuthorized": true,
+        "mergeAuthority": true,
+        "productAuthority": false,
+        "semanticAuthority": false,
+        "scientificAuthority": false
+      },
+      "executingRole": {
+        "role": "P2_PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_BUILDER",
+        "mayMutateOnlyAllowedPaths": true
+      },
+      "independentVerifier": {
+        "role": "FRESH_EXACT_HEAD_ROUTER_AND_CONSUMER_CUT_VERIFIER",
+        "mayRepair": false,
+        "mustVerifyExactFivePathScope": true
+      },
+      "constructionProcedureLocator": ".github/ai-router/fixed-fixture-intake/p2-page-excellence-consumer-cut.v1.json",
+      "requiredInputs": [
+        {"id": "CURRENT_MAIN_3684C3F_EXACT", "resolved": true},
+        {"id": "PR981_P1_RETIREMENT_MERGED", "resolved": true},
+        {"id": "PRIVATE_PAGE_EXCELLENCE_CAPABILITY_PRESERVED_AT_840B885D", "resolved": true},
+        {"id": "PRIVATE_HC02_ADAPTER_AND_REFERENCE_WORKFLOW_COPIES_PRESENT", "resolved": true},
+        {"id": "METHODS_MODELS_PRODUCT_PATHS_EXCLUDED", "resolved": true}
+      ],
+      "allowedPaths": [
+        ".github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml",
+        ".github/workflows/h-earth-hc02-page-excellence-execution-binding-validation.yml",
+        "tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs",
+        ".github/ai-toolset-transport/h-earth-hc02-page-excellence-execution-binding.v1.json",
+        ".github/ai-toolset-transport/authorized-toolset-registry.v1.json"
+      ],
+      "prohibitedPaths": [
+        "laws/research/methods-and-models/",
+        "verification/methods-models-showroom-browser.mjs",
+        ".github/ai-router/trusted-intake-fixture/",
+        ".github/ai-router/page-excellence-toolchain/",
+        ".github/ai-router/reference-class-awards-admission/",
+        "h-earth-3d/",
+        "showroom/",
+        "AI_ENTRYPOINT.json",
+        ".github/ai-router/router.v1.json",
+        ".github/operation-intake/"
+      ],
+      "requiredOutputs": [
+        "FOUR_PUBLIC_CONSUMER_PATHS_ABSENT",
+        "HC02_DESCRIPTOR_REMOVED_FROM_AUTHORIZED_TOOLSET_REGISTRY_ONLY",
+        "ALL_NON_HC02_REGISTRY_DESCRIPTORS_PRESERVED",
+        "EXACT_FIVE_PATH_DIFF",
+        "ROOT_ROUTER_SELF_TEST_PASS",
+        "NO_METHODS_MODELS_PRODUCT_PATH_CHANGE",
+        "NO_H_EARTH_PRODUCT_RUNTIME_PATH_CHANGE",
+        "PRIVATE_PRESERVATION_RECHECK_PASS"
+      ],
+      "exactTestCommand": "node tools/repository-ai-entry-router.mjs --self-test --output /tmp/p2-router-self-test.json && test ! -e .github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml && test ! -e .github/workflows/h-earth-hc02-page-excellence-execution-binding-validation.yml && test ! -e tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs && test ! -e .github/ai-toolset-transport/h-earth-hc02-page-excellence-execution-binding.v1.json && node -e \"const r=require('./.github/ai-toolset-transport/authorized-toolset-registry.v1.json'); if(r.tools.some(t=>t.descriptorId==='H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_DESCRIPTOR_V1'||t.operationId==='H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1')) process.exit(1)\"",
+      "workflowPath": ".github/workflows/repository-ai-entry-router-validation.yml",
+      "artifactPaths": ["/tmp/p2-router-self-test.json"],
+      "fingerprintDomain": {
+        "algorithm": "SHA-256",
+        "domain": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_20260813_003",
+        "governingHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
+        "pathCount": 5
+      },
+      "errorPrecedence": [
+        "GOVERNING_HEAD_MISMATCH",
+        "ACTIVE_SCOPE_CONFLICT",
+        "PATH_SCOPE_VIOLATION",
+        "REGISTRY_SEMANTIC_DRIFT",
+        "PRIVATE_PRESERVATION_FAILURE",
+        "ROUTER_FAIL",
+        "PRODUCT_PATH_CHANGE",
+        "SELF_TEST_FAILURE"
+      ],
+      "stopConditions": [
+        "STOP_ON_MAIN_DRIFT_BEFORE_CANDIDATE",
+        "STOP_ON_ANY_PATH_OUTSIDE_EXACT_FIVE_PATH_SCOPE",
+        "STOP_IF_ANY_METHODS_MODELS_OR_H_EARTH_PRODUCT_PATH_CHANGES",
+        "STOP_IF_ANY_NON_HC02_AUTHORIZED_TOOL_DESCRIPTOR_CHANGES",
+        "STOP_IF_PRIVATE_PRESERVATION_RECHECK_FAILS",
+        "STOP_BEFORE_MERGE_WITHOUT_EXACT_HEAD_VALIDATION_PASS"
+      ],
+      "terminalDispositions": ["PASS_CLOSED", "FAIL_CLOSED", "WITHDRAWN", "SUPERSEDED"]
+    },
+    "constructionProcedure": {
+      "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+      "procedureId": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_PROCEDURE_20260813_003",
+      "operationClass": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT",
+      "exactGoverningHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
+      "exactAllowedRepositoryPaths": [
+        ".github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml",
+        ".github/workflows/h-earth-hc02-page-excellence-execution-binding-validation.yml",
+        "tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs",
+        ".github/ai-toolset-transport/h-earth-hc02-page-excellence-execution-binding.v1.json",
+        ".github/ai-toolset-transport/authorized-toolset-registry.v1.json"
+      ],
+      "exactBranchAndCommitSequence": [
+        {"step": 1, "action": "REQUIRE_CANONICAL_ADMISSION_ADMITTED_AND_LOCKED"},
+        {"step": 2, "action": "CREATE_FRESH_ISOLATED_CANDIDATE_BRANCH_FROM_EXACT_GOVERNING_HEAD"},
+        {"step": 3, "action": "DELETE_EXACT_FOUR_PUBLIC_CONSUMER_PATHS"},
+        {"step": 4, "action": "REMOVE_EXACTLY_ONE_HC02_DESCRIPTOR_FROM_AUTHORIZED_TOOLSET_REGISTRY"},
+        {"step": 5, "action": "VERIFY_EXACT_FIVE_PATH_DIFF_AND_PRIVATE_PRESERVATION"},
+        {"step": 6, "action": "RUN_ROOT_ROUTER_SELF_TEST_AND_FRESH_GITHUB_VALIDATION"},
+        {"step": 7, "action": "OPEN_GUARDED_RETIREMENT_PR_ONLY_IF_ALL_CHECKS_PASS"}
+      ],
+      "evaluationToolingHeadBindingRule": "EXACT_MAIN_3684C3F;EXACT_FIVE_PATH_SCOPE;PRIVATE_PAGE_EXCELLENCE_PRESERVED_AT_840B885D;NO_METHODS_MODELS_OR_H_EARTH_PRODUCT_MUTATION",
+      "canonicalInputSchemas": ["REPOSITORY_OPERATION_REQUEST_v1", "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"],
+      "canonicalOutputSchemas": ["REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1", "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1"],
+      "errorCodeAndValidationPrecedence": [
+        "GOVERNING_HEAD_MISMATCH",
+        "ACTIVE_SCOPE_CONFLICT",
+        "PATH_SCOPE_VIOLATION",
+        "REGISTRY_SEMANTIC_DRIFT",
+        "PRIVATE_PRESERVATION_FAILURE",
+        "ROUTER_FAIL",
+        "PRODUCT_PATH_CHANGE",
+        "SELF_TEST_FAILURE"
+      ],
+      "exactTestRunnerCommand": "node tools/repository-ai-entry-router.mjs --self-test --output /tmp/p2-router-self-test.json && test ! -e .github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml && test ! -e .github/workflows/h-earth-hc02-page-excellence-execution-binding-validation.yml && test ! -e tools/ai-room-transport/h-earth-hc02-page-excellence-remote-execution.v1.mjs && test ! -e .github/ai-toolset-transport/h-earth-hc02-page-excellence-execution-binding.v1.json && node -e \"const r=require('./.github/ai-toolset-transport/authorized-toolset-registry.v1.json'); if(r.tools.some(t=>t.descriptorId==='H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_DESCRIPTOR_V1'||t.operationId==='H_EARTH_HC02_PAGE_EXCELLENCE_REMOTE_EXECUTION_v1')) process.exit(1)\"",
+      "independentVerifierDefinition": {
+        "kind": "GITHUB_ACTIONS_EXACT_HEAD",
+        "mayRepair": false,
+        "requires": ["ROUTER_SELF_TEST_PASS", "EXACT_FIVE_PATH_DIFF", "NO_PRODUCT_PATH_CHANGE", "PRIVATE_PRESERVATION_RECHECK_PASS"]
+      },
+      "workflowAndArtifactPackagingPaths": {
+        "workflowPath": ".github/workflows/repository-ai-entry-router-validation.yml",
+        "artifactPaths": ["/tmp/p2-router-self-test.json"]
+      },
+      "bridgeOutputFingerprintDomain": {
+        "algorithm": "SHA-256",
+        "domain": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_20260813_003",
+        "governingHead": "3684c3fecf47d1ee4213a9c636cfa15606087cb5",
+        "pathCount": 5
+      },
+      "priorAttemptInspectionLimits": {
+        "mayInspectIssue982": true,
+        "mayInspectPriorP2BridgeAttempts": true,
+        "mayInspectPrivatePreservationEvidence": true,
+        "mayMutatePriorOperations": false,
+        "mayExpandBeyondFivePaths": false
+      }
+    },
+    "requestNonce": "8c410d2a355ed9e22b4dfc336cfed68867938764c67e895fb8ee22f4839bc990",
+    "executionHolder": "P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_FIXTURE_003"
+  }
+}

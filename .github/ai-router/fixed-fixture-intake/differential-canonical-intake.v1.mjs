@@ -5,16 +5,19 @@ import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const FIXTURE_ID = 'P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1';
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const LOCK_REF = 'refs/heads/operation-locks/repository-operation-intake-v1';
 const GATE = Object.freeze({path:'tools/operation-intake/repository-operation-intake-gate.v1.mjs', blob:'f0b22e6b9574507632f1ad07647710971a4d63de'});
 const LOCK_MANAGER = Object.freeze({path:'tools/operation-intake/repository-operation-lock-manager.v1.mjs', blob:'bb2c01247db69e1ab9c87fc7ad91ba1336ed10eb'});
-const EXTRA_DEPENDENCIES = Object.freeze([
+const COMMON_DEPENDENCIES = Object.freeze([
   '.github/ai-router/router.v1.json',
   'tools/repository-ai-entry-router.mjs',
   '.github/workflows/repository-ai-entry-router-validation.yml'
 ]);
+const FIXTURES = Object.freeze({
+  P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1: Object.freeze({pathCount:9}),
+  P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_V1: Object.freeze({pathCount:5})
+});
 
 const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;
 const canonical = value => JSON.stringify(stable(value));
@@ -42,16 +45,17 @@ function writeJson(file,value) { fs.mkdirSync(path.dirname(path.resolve(file)),{
 
 function validateSelection(selection) {
   if (selection?.schema !== 'FIXED_FIXTURE_INTAKE_SELECTION_RECEIPT_v1' || selection?.result !== 'FIXTURE_SELECTED_FAIL_CLOSED') fail('SELECTION_RECEIPT_INVALID');
-  if (selection.fixtureId !== FIXTURE_ID || selection.action !== 'ADMIT') fail('FIXTURE_IDENTITY_INVALID');
+  const config = FIXTURES[selection.fixtureId];
+  if (!config || selection.action !== 'ADMIT') fail('FIXTURE_IDENTITY_INVALID', selection.fixtureId);
   if (selection.arbitraryPayloadAccepted !== false || selection.authorityCreated !== false || selection.repositoryMutationPerformed !== false) fail('SELECTION_AUTHORITY_WIDENING');
   const bridge = selection.bridgeRequest;
   if (bridge?.schema !== 'PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1' || bridge.repository !== REPOSITORY) fail('BRIDGE_REQUEST_INVALID');
   if (selection.exactGoverningHead !== bridge.exactGoverningHead || bridge.operationRequest?.exactGoverningHead !== bridge.exactGoverningHead || bridge.constructionProcedure?.exactGoverningHead !== bridge.exactGoverningHead) fail('FROZEN_HEAD_BINDING_MISMATCH');
   const allowed=bridge.operationRequest?.allowedPaths;
   const procedureAllowed=bridge.constructionProcedure?.exactAllowedRepositoryPaths;
-  if (!Array.isArray(allowed) || allowed.length !== 9 || canonical(allowed) !== canonical(procedureAllowed)) fail('EXACT_NINE_PATH_SCOPE_MISMATCH');
-  const deps=[...new Set([...allowed,...EXTRA_DEPENDENCIES].map(normalize))].sort();
-  return {selection:stable(selection),bridge:stable(bridge),dependencies:deps};
+  if (!Array.isArray(allowed) || allowed.length !== config.pathCount || canonical(allowed) !== canonical(procedureAllowed)) fail('EXACT_PATH_SCOPE_MISMATCH',{fixtureId:selection.fixtureId,expectedPathCount:config.pathCount});
+  const deps=[...new Set([...allowed,...COMMON_DEPENDENCIES].map(normalize))].sort();
+  return {selection:stable(selection),bridge:stable(bridge),dependencies:deps,config};
 }
 
 function changedPaths(baseHead,currentHead,cwd=process.cwd()) {
@@ -104,7 +108,7 @@ function executeCanonicalGate(bridge,candidateRoot,outputPath) {
 }
 
 function failureReceipt(error,base={}) {
-  return stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_RECEIPT_v1',result:'FAIL_CLOSED',fixtureId:FIXTURE_ID,errorCode:error.code ?? 'UNEXPECTED_FAILURE',detail:error.detail ?? error.message,canonicalGateExecuted:false,admissionResultRewritten:false,authorityCreated:false,repositoryMutationPerformed:false,...base});
+  return stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_RECEIPT_v1',result:'FAIL_CLOSED',fixtureId:base.fixtureId??null,errorCode:error.code ?? 'UNEXPECTED_FAILURE',detail:error.detail ?? error.message,canonicalGateExecuted:false,admissionResultRewritten:false,authorityCreated:false,repositoryMutationPerformed:false,...base});
 }
 
 function selfTest() {
@@ -112,15 +116,18 @@ function selfTest() {
   ok('POS_001_OVERLAP_EQUAL',overlaps('a/b','a/b'));
   ok('POS_002_OVERLAP_PARENT',overlaps('a','a/b'));
   ok('POS_003_DISJOINT',!overlaps('a/b','c/d'));
-  const dependencies=['AGENTS.md','.github/ai-router/project-continuation/README.md','.github/ai-router/router.v1.json'];
-  const changed=['.github/ai-router/fixed-fixture-intake/self-test.v1.mjs','.github/workflows/repository-operation-intake-validation.yml','tools/operation-intake/repository-operation-lock-manager.v1.mjs'];
+  ok('POS_004_P1_REGISTERED',FIXTURES.P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1.pathCount===9);
+  ok('POS_005_P2_REGISTERED',FIXTURES.P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_V1.pathCount===5);
+  const dependencies=['.github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml','.github/ai-router/router.v1.json'];
+  const changed=['.github/ai-router/fixed-fixture-intake/self-test.v1.mjs','.github/ai-router/fixed-fixture-intake/p2-page-excellence-consumer-cut.v1.json'];
   const collisions=[]; for(const c of changed)for(const d of dependencies)if(overlaps(c,d))collisions.push([c,d]);
-  ok('POS_004_CONTROL_PLANE_CHANGES_DO_NOT_COLLIDE',collisions.length===0);
-  const bad=[]; for(const c of ['AGENTS.md'])for(const d of dependencies)if(overlaps(c,d))bad.push([c,d]);
-  ok('NEG_001_SUBJECT_CHANGE_COLLIDES',bad.length===1);
-  ok('POS_005_EXTERNAL_SURFACE_CLOSED',EXTRA_DEPENDENCIES.length===3);
-  ok('POS_006_CANONICAL_GATE_IDENTITY_UNCHANGED',GATE.blob==='f0b22e6b9574507632f1ad07647710971a4d63de');
-  return stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_SELF_TEST_v1',result:'PASS_CLOSED',checkCount:checks.length,checks,fixtureId:FIXTURE_ID,canonicalGateModified:false,admissionSemanticsDuplicated:false});
+  ok('POS_006_TRANSPORT_REPAIR_DISJOINT_FROM_P2_SUBJECT',collisions.length===0);
+  const bad=[]; for(const c of ['.github/workflows/methods-page-mandatory-excellence-blind-baseline-validation.yml'])for(const d of dependencies)if(overlaps(c,d))bad.push([c,d]);
+  ok('NEG_001_P2_SUBJECT_CHANGE_COLLIDES',bad.length===1);
+  ok('POS_007_EXTERNAL_SURFACE_CLOSED',COMMON_DEPENDENCIES.length===3);
+  ok('POS_008_CANONICAL_GATE_IDENTITY_UNCHANGED',GATE.blob==='f0b22e6b9574507632f1ad07647710971a4d63de');
+  ok('POS_009_BLOB_FALLBACK_LOCK_MANAGER_BOUND',LOCK_MANAGER.blob==='bb2c01247db69e1ab9c87fc7ad91ba1336ed10eb');
+  return stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_SELF_TEST_v1',result:'PASS_CLOSED',checkCount:checks.length,checks,supportedFixtureIds:Object.keys(FIXTURES).sort(),canonicalGateModified:false,admissionSemanticsDuplicated:false});
 }
 
 async function main() {
@@ -129,16 +136,17 @@ async function main() {
   let base={};
   try {
     const validated=validateSelection(readJson(args.selection));
+    base={fixtureId:validated.selection.fixtureId};
     const candidateRoot=process.cwd();
     const currentHead=run('git',['rev-parse','HEAD^{commit}'],{cwd:candidateRoot});
     if (currentHead.status !== 0) fail('CURRENT_HEAD_UNAVAILABLE');
     const observed=currentHead.stdout.trim();
     const differential=assessCarryForward(validated.bridge.exactGoverningHead,observed,validated.dependencies,candidateRoot);
-    base={exactOperationBase:validated.bridge.exactGoverningHead,currentMainHead:observed,differentialReceipt:differential,dependencyPathCount:validated.dependencies.length};
+    base={...base,exactOperationBase:validated.bridge.exactGoverningHead,currentMainHead:observed,differentialReceipt:differential,dependencyPathCount:validated.dependencies.length};
     verifyCandidateTooling(candidateRoot);
     const gate=executeCanonicalGate(validated.bridge,candidateRoot,args.output);
     const result=gate.receipt.result==='ADMITTED_AND_LOCKED'?'CANONICAL_RECEIPT_PRESERVED':'FAIL_CLOSED';
-    const receipt=stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_RECEIPT_v1',result,fixtureId:FIXTURE_ID,exactOperationBase:validated.bridge.exactGoverningHead,currentMainHead:observed,differentialReceipt:differential,dependencyPathCount:validated.dependencies.length,canonicalGateExecuted:true,canonicalGatePath:GATE.path,canonicalGateBlob:GATE.blob,lockManagerBlob:LOCK_MANAGER.blob,requestDigest:gate.requestDigest,procedureLocatorDigest:gate.procedureDigest,canonicalReceiptSha256:sha256(gate.bytes),canonicalReceiptJson:gate.receipt,canonicalChildExitCode:gate.childStatus,admissionResultRewritten:false,authorityCreated:false,repositoryMutationPerformed:false});
+    const receipt=stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_RECEIPT_v1',result,fixtureId:validated.selection.fixtureId,exactOperationBase:validated.bridge.exactGoverningHead,currentMainHead:observed,differentialReceipt:differential,dependencyPathCount:validated.dependencies.length,canonicalGateExecuted:true,canonicalGatePath:GATE.path,canonicalGateBlob:GATE.blob,lockManagerBlob:LOCK_MANAGER.blob,requestDigest:gate.requestDigest,procedureLocatorDigest:gate.procedureDigest,canonicalReceiptSha256:sha256(gate.bytes),canonicalReceiptJson:gate.receipt,canonicalChildExitCode:gate.childStatus,admissionResultRewritten:false,authorityCreated:false,repositoryMutationPerformed:false});
     writeJson(args.output,receipt);
     if (result !== 'CANONICAL_RECEIPT_PRESERVED') process.exitCode=1;
   } catch (error) {

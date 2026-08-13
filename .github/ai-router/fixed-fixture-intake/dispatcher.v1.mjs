@@ -4,6 +4,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REGISTRY_PATH = '.github/ai-router/fixed-fixture-intake/registry.v1.json';
+const SUPPLEMENTAL_FIXTURE_PATHS = Object.freeze([
+  '.github/ai-router/fixed-fixture-intake/p2-page-excellence-consumer-cut.v1.json'
+]);
 const ALLOWED_ACTION = 'ADMIT';
 const fail = (code, detail = null) => { const e = new Error(code); e.code = code; e.detail = detail; throw e; };
 const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(k => [k, stable(value[k])])) : value;
@@ -26,6 +29,20 @@ function runtimeOutput(value) {
   const resolved = path.resolve(value);
   if (!(resolved === base || resolved.startsWith(base + path.sep))) fail('OUTPUT_OUTSIDE_RUNTIME_TEMP');
   return resolved;
+}
+
+export function loadClosedWorldRegistry(repositoryRoot = root()) {
+  const registry = JSON.parse(fs.readFileSync(path.join(repositoryRoot, REGISTRY_PATH), 'utf8'));
+  if (!registry || registry.schema !== 'FIXED_FIXTURE_INTAKE_REGISTRY_v1' || registry.closedWorld !== true || registry.arbitraryPayloadAccepted !== false || !registry.fixtures || typeof registry.fixtures !== 'object') fail('REGISTRY_IDENTITY_INVALID');
+  const fixtures = {...registry.fixtures};
+  for (const relative of SUPPLEMENTAL_FIXTURE_PATHS) {
+    const fixture = JSON.parse(fs.readFileSync(path.join(repositoryRoot, relative), 'utf8'));
+    const fixtureId = fixture?.fixtureId;
+    if (!/^[A-Z0-9][A-Z0-9_.:-]{2,127}$/.test(fixtureId ?? '')) fail('SUPPLEMENTAL_FIXTURE_ID_INVALID', relative);
+    if (Object.hasOwn(fixtures, fixtureId)) fail('SUPPLEMENTAL_FIXTURE_COLLISION', fixtureId);
+    fixtures[fixtureId] = fixture;
+  }
+  return stable({...registry, fixtures});
 }
 
 export function selectFixture({registry, fixtureId, action}) {
@@ -57,7 +74,7 @@ export function selectFixture({registry, fixtureId, action}) {
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
-  const registry = JSON.parse(fs.readFileSync(path.join(root(), REGISTRY_PATH), 'utf8'));
+  const registry = loadClosedWorldRegistry();
   const receipt = selectFixture({registry, fixtureId: args['fixture-id'], action: args.action});
   const output = runtimeOutput(args.output);
   fs.mkdirSync(path.dirname(output), {recursive: true});

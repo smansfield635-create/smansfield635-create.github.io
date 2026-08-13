@@ -1,0 +1,29 @@
+{
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "procedureId": "OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_RECOVERY_PROCEDURE_20260813_001",
+  "operationClass": "NONPRODUCT_OPEN_WORLD_BASELINE_RECOVERY_AND_ADOPTION_PROOF",
+  "exactGoverningHead": "983710354fc8788f555fdd72e1daaee3d7875a5b",
+  "exactAllowedRepositoryPaths": [
+    "open-world/o-side-baseline-recovery-v1/source-identity.v1.json",
+    "open-world/o-side-baseline-recovery-v1/adoption-contract.v1.json",
+    "open-world/o-side-baseline-recovery-v1/comparison-contract.v1.json",
+    "open-world/o-side-baseline-recovery-v1/construction-procedure.v1.json",
+    "open-world/o-side-baseline-recovery-v1/verify.v1.mjs"
+  ],
+  "exactBranchAndCommitSequence": [
+    {"step":1,"action":"CREATE_BOUNDED_PUBLIC_BRANCH_FROM_EXACT_PUBLIC_MAIN"},
+    {"step":2,"action":"MATERIALIZE_EXACT_FIVE_PATH_NONPRODUCT_BASELINE_RECOVERY_PACKAGE"},
+    {"step":3,"action":"VERIFY_ACCEPTED_PLANETARY_SOURCE_IDENTITY_AND_NO_AUTHORITY_TRANSFER"},
+    {"step":4,"action":"FREEZE_O_SIDE_BASELINE_AND_H1_COMPARISON_CLASSIFICATION_CONTRACT"},
+    {"step":5,"action":"OPEN_DRAFT_EVIDENCE_PR_IF_REQUIRED_AND_STOP_BEFORE_PRODUCT_CONSTRUCTION"}
+  ],
+  "evaluationToolingHeadBindingRule": "VERIFY_AGAINST_EXACT_PUBLIC_CANDIDATE_WITH_SOURCE_IDENTITIES_PINNED_TO_ACCEPTED_PLANETARY_EVIDENCE_HEAD_AND_CURRENT_PUBLIC_MAIN",
+  "canonicalInputSchemas": ["OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_SOURCE_SET_v1"],
+  "canonicalOutputSchemas": ["OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_RECOVERY_RECEIPT_v1"],
+  "errorCodeAndValidationPrecedence": ["SOURCE_IDENTITY_MISMATCH","BASELINE_AUTHORITY_SUBSTITUTION","IMPLEMENTATION_AUTHORITY_TRANSFER","PRODUCT_MUTATION_AUTHORITY_LEAK","PATH_BOUNDARY_MISMATCH","VERIFIER_NONPASS"],
+  "exactTestRunnerCommand": "node open-world/o-side-baseline-recovery-v1/verify.v1.mjs",
+  "independentVerifierDefinition": {"kind":"DETERMINISTIC_SOURCE_IDENTITY_AND_ADOPTION_CONTRACT_VERIFIER","freshCheckoutRequired":true,"repairAuthority":false},
+  "workflowAndArtifactPackagingPaths": {"workflowPath":".github/workflows/pre-registration-intake-bridge-execution.yml","artifactPaths":["open-world-o-side-baseline-recovery-v1/**"]},
+  "bridgeOutputFingerprintDomain": {"schema":"OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_RECOVERY_FINGERPRINT_v1","algorithm":"SHA-256","fields":["sourceIdentity","adoptionContract","comparisonContract","constructionProcedure","verifier","publicMain","acceptedPlanetaryEvidenceHead"]},
+  "priorAttemptInspectionLimits": {"rejectedO1MayBeUsedAsNegativeEvidence":true,"pr918MayBeUsedAsPrototypeEvidenceOnly":true,"priorEvidenceMayGrantAuthority":false,"reusePriorCandidate":false}
+}

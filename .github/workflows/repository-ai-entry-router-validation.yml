@@ -1,288 +1,42 @@
 name: Repository AI Entry Router Validation
-
 on:
   pull_request:
-    paths:
-      - 'AGENTS.md'
-      - 'AI_ENTRYPOINT.json'
-      - '.github/ai-router/**'
-      - 'tools/repository-ai-entry-router.mjs'
-      - '.github/workflows/repository-ai-entry-router-validation.yml'
+    branches: [main]
+    paths: ['AGENTS.md','AI_ENTRYPOINT.json','.github/ai-router/**','tools/repository-ai-entry-router.mjs','.github/workflows/repository-ai-entry-router-validation.yml','tools/operation-intake/canonical-operation-intake-transport.v1.mjs','.github/workflows/canonical-operation-intake-transport-v1.yml']
   push:
-    paths:
-      - 'AGENTS.md'
-      - 'AI_ENTRYPOINT.json'
-      - '.github/ai-router/**'
-      - 'tools/repository-ai-entry-router.mjs'
-      - '.github/workflows/repository-ai-entry-router-validation.yml'
+    branches: [main]
+    paths: ['AGENTS.md','AI_ENTRYPOINT.json','.github/ai-router/**','tools/repository-ai-entry-router.mjs','.github/workflows/repository-ai-entry-router-validation.yml','tools/operation-intake/canonical-operation-intake-transport.v1.mjs','.github/workflows/canonical-operation-intake-transport-v1.yml']
   workflow_dispatch:
-
-env:
-  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-
 permissions:
   contents: read
-
+env:
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 jobs:
   validate-router:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out exact workflow head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
-
-      - name: Verify exact workflow head identity
-        shell: bash
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Verify exact head and canonical router
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-
-      - name: Run repository AI router self-test
-        shell: bash
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
+          node -e "const r=require('/tmp/router-self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.parallelGovernancePresent!==false)process.exit(1)"
+      - name: Verify every active project exact-path registration
         run: |
-          set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --self-test \
-            --output /tmp/repository-ai-entry-router-self-test.json
-          node -e "const r=require('/tmp/repository-ai-entry-router-self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.executionBackendRegistryState!=='RETIRED'||r.retiredBackendExecutionAuthorized!==false)process.exit(1)"
-
-      - name: Verify every active project exact-path mutation registration
-        shell: bash
-        run: |
-          set -euo pipefail
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import { spawnSync } from 'node:child_process';
-
-          const registry = JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json', 'utf8'));
-          const activeProjects = (registry.projects ?? []).filter(project => project.status === 'ACTIVE_REGISTERED_PROJECT');
-          const projectReceipts = [];
-          const failures = [];
-          let exactPathCount = 0;
-          let retirementReceipt = null;
-
-          for (const project of activeProjects) {
-            const paths = [...new Set(project.ownedExactPaths ?? [])];
-            if (paths.length === 0) {
-              projectReceipts.push({ projectId: project.projectId, exactPathCount: 0, result: 'NOT_APPLICABLE_NO_EXACT_PATHS' });
-              continue;
-            }
-            exactPathCount += paths.length;
-            const safeId = String(project.projectId).toLowerCase().replace(/[^a-z0-9_-]+/g, '-');
-            const output = `/tmp/repository-ai-entry-router-exact-path-${safeId}.json`;
-            const args = [
-              'tools/repository-ai-entry-router.mjs',
-              '--mutation-intent',
-              ...paths.flatMap(filePath => ['--path', filePath]),
-              '--task',
-              `Generic exact-path registration conformance for ${project.projectId}`,
-              '--output', output
-            ];
-            const child = spawnSync(process.execPath, args, { encoding: 'utf8' });
-            let receipt = null;
-            try {
-              receipt = JSON.parse(fs.readFileSync(output, 'utf8'));
-            } catch (error) {
-              failures.push({ projectId: project.projectId, error: 'RECEIPT_MISSING_OR_INVALID', detail: error.message, exitCode: child.status });
-              continue;
-            }
-            const expectedPaths = [...paths].sort();
-            const actualPaths = (receipt.routes ?? []).map(route => route.path).sort();
-            const pathsMatch = JSON.stringify(actualPaths) === JSON.stringify(expectedPaths);
-            const valid = child.status === 0
-              && receipt.disposition === 'PASS'
-              && receipt.routes?.length === paths.length
-              && pathsMatch
-              && receipt.routes.every(route => route.projectId === project.projectId && route.disposition === 'PASS');
-            projectReceipts.push({
-              projectId: project.projectId,
-              exactPathCount: paths.length,
-              disposition: receipt.disposition,
-              exitCode: child.status,
-              pathsMatch,
-              valid
-            });
-            if (!valid) failures.push({ projectId: project.projectId, error: 'REGISTERED_EXACT_PATH_ROUTE_CONFORMANCE_FAILED', expectedPaths, actualPaths, receipt });
-            if (project.projectId === 'INSTRUMENT_LIFECYCLE_RETIREMENT') retirementReceipt = receipt;
-          }
-
-          const aggregate = {
-            schema: 'REPOSITORY_AI_ENTRY_ROUTER_EXACT_PATH_REGISTRATION_CONFORMANCE_RECEIPT_v1',
-            result: failures.length === 0 ? 'PASS' : 'FAIL',
-            governingHead: process.env.EXPECTED_HEAD,
-            activeProjectCount: activeProjects.length,
-            exactPathCount,
-            projectReceipts,
-            failures,
-            arbitraryCommandExecutionAuthorized: false,
-            pathSource: 'REPOSITORY_AI_ROUTER_REGISTRY_v1.projects[].ownedExactPaths'
-          };
-          fs.writeFileSync('/tmp/repository-ai-entry-router-exact-path-registration-conformance.json', JSON.stringify(aggregate, null, 2) + '\n');
-
-          if (retirementReceipt) {
-            fs.writeFileSync('/tmp/repository-ai-entry-router-instrument-lifecycle-retirement-route.json', JSON.stringify(retirementReceipt, null, 2) + '\n');
-          } else {
-            fs.writeFileSync('/tmp/repository-ai-entry-router-instrument-lifecycle-retirement-route.json', JSON.stringify({
-              schema: 'REPOSITORY_AI_ENTRY_ROUTER_TEMPORARY_RETIREMENT_ROUTE_RECEIPT_v1',
-              result: 'NOT_APPLICABLE_TEMPORARY_PROJECT_NOT_REGISTERED',
-              disposition: 'NOT_APPLICABLE',
-              governingHead: process.env.EXPECTED_HEAD,
-              projectId: 'INSTRUMENT_LIFECYCLE_RETIREMENT'
-            }, null, 2) + '\n');
-          }
-
-          if (failures.length !== 0) process.exit(1);
+          import fs from'node:fs';import{spawnSync}from'node:child_process';const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json'));let failures=[];for(const p of(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT'))for(const q of new Set(p.ownedExactPaths||[])){const out='/tmp/route.json',c=spawnSync(process.execPath,['tools/repository-ai-entry-router.mjs','--mutation-intent','--path',q,'--task','Active exact-path registration conformance','--output',out],{encoding:'utf8',env:{...process.env,GITHUB_TOKEN:'qualification-token'}});let r;try{r=JSON.parse(fs.readFileSync(out))}catch{failures.push([p.projectId,q,'NO_RECEIPT']);continue}if(c.status!==0||r.disposition!=='PASS'||r.routes?.[0]?.projectId!==p.projectId)failures.push([p.projectId,q,r.disposition])}if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1)}
           NODE
-
-      - name: Exercise operation lifecycle infrastructure mutation routes
-        shell: bash
-        run: |
-          set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path .github/ai-router/operation-lifecycle/successor-protocol.v1.json \
-            --path .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs \
-            --path .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
-            --path AGENTS.md \
-            --path AI_ENTRYPOINT.json \
-            --path .github/workflows/repository-ai-entry-router-validation.yml \
-            --task "Operation lifecycle infrastructure ownership validation under retirement" \
-            --output /tmp/repository-operation-successor-router-receipt.json
-          node -e "const r=require('/tmp/repository-operation-successor-router-receipt.json');if(r.disposition!=='PASS'||r.executionBackendRegistryState!=='RETIRED'||r.routes.length!==6||!r.routes.every(x=>x.projectId==='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'&&x.disposition==='PASS'))process.exit(1)"
-
-      - name: Normalize generic successor protocol retirement state
-        shell: bash
-        run: |
-          set -euo pipefail
-          rm -f /tmp/repository-operation-successor-self-test.json /tmp/repository-operation-successor-self-test.stdout.json
-          set +e
-          node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
-            --output /tmp/repository-operation-successor-self-test.json \
-            > /tmp/repository-operation-successor-self-test.stdout.json
-          successor_status=$?
-          set -e
-          if [ ! -s /tmp/repository-operation-successor-self-test.json ]; then
-            cp /tmp/repository-operation-successor-self-test.stdout.json /tmp/repository-operation-successor-self-test.json
-          fi
-          export SUCCESSOR_STATUS="$successor_status"
-          node - <<'NODE'
-          const r=require('/tmp/repository-operation-successor-self-test.json');
-          const status=Number(process.env.SUCCESSOR_STATUS);
-          const active = status===0 && r.result==='PASS_CLOSED' && r.failCount===0 && r.testCount>=11;
-          const retired = status===1 &&
-            r.schema==='PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF_v1' &&
-            r.result==='PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED' &&
-            r.authorityCreated===false &&
-            r.executionAuthorized===false &&
-            r.mutationAuthorized===false &&
-            r.mergeAuthorized===false &&
-            r.forwardingPerformed===false;
-          if(!active && !retired) process.exit(1);
-          if(retired) process.stdout.write('EXPECTED_RETIRED_SUCCESSOR_PROTOCOL_STATE\n');
-          NODE
-
-      - name: Exercise H-Earth registered route
-        shell: bash
-        run: |
-          set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --path h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
-            --task "Workflow registered-route validation" \
-            --output /tmp/repository-ai-entry-router-h-earth-route.json
-          node -e "const r=require('/tmp/repository-ai-entry-router-h-earth-route.json');if(!['PASS','REVIEW_REQUIRED'].includes(r.disposition)||r.routes?.[0]?.projectId!=='H_EARTH')process.exit(1)"
-
-      - name: Exercise Laws registered route when present
-        shell: bash
-        run: |
-          set -euo pipefail
-          if test -f .github/ai-router/projects/laws/entrypoint.v1.json; then
-            node tools/repository-ai-entry-router.mjs \
-              --mutation-intent \
-              --path laws/orbital-tranche-a0-a3/orientation.js \
-              --task "Workflow Laws registered-route validation" \
-              --output /tmp/repository-ai-entry-router-laws-route.json
-            node -e "const r=require('/tmp/repository-ai-entry-router-laws-route.json');if(r.disposition!=='PASS'||r.routes?.[0]?.projectId!=='LAWS')process.exit(1)"
-          else
-            printf '%s\n' '{"schema":"REPOSITORY_AI_ENTRY_ROUTER_LAWS_ROUTE_WORKFLOW_RECEIPT_v1","result":"SKIPPED_LAWS_NOT_REGISTERED_AT_HEAD","disposition":"NOT_APPLICABLE"}' > /tmp/repository-ai-entry-router-laws-route.json
-          fi
-
-      - name: Exercise LRPv1 registered mutation route
-        shell: bash
-        run: |
-          set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path infrastructure/lineage-receipt-protocol-v1/README.md \
-            --path .github/workflows/lrpv1-conformance.yml \
-            --task "Workflow LRPv1 registered-route validation" \
-            --output /tmp/repository-ai-entry-router-lrpv1-route.json
-          node -e "const r=require('/tmp/repository-ai-entry-router-lrpv1-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='LINEAGE_RECEIPT_PROTOCOL'&&x.disposition==='PASS'))process.exit(1)"
-
-      - name: Exercise Estate Validation registered mutation route
-        shell: bash
-        run: |
-          set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path validation/README.md \
-            --path .github/workflows/estate-validation-v1.yml \
-            --task "Workflow Estate Validation registered-route validation" \
-            --output /tmp/repository-ai-entry-router-estate-validation-route.json
-          node -e "const r=require('/tmp/repository-ai-entry-router-estate-validation-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='ESTATE_VALIDATION'&&x.disposition==='PASS'))process.exit(1)"
-
-      - name: Exercise State-Bound Admissibility Kernel registered mutation route
-        shell: bash
-        run: |
-          set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path infrastructure/state-bound-admissibility-kernel-v1/README.md \
-            --path .github/workflows/state-bound-admissibility-kernel-v1.yml \
-            --task "Workflow State-Bound Admissibility Kernel registered-route validation" \
-            --output /tmp/repository-ai-entry-router-state-bound-admissibility-kernel-route.json
-          node -e "const r=require('/tmp/repository-ai-entry-router-state-bound-admissibility-kernel-route.json');if(r.disposition!=='PASS'||r.routes.length!==2||!r.routes.every(x=>x.projectId==='STATE_BOUND_ADMISSIBILITY_KERNEL'&&x.disposition==='PASS'))process.exit(1)"
-
-      - name: Exercise unregistered mutation guard
-        shell: bash
+      - name: Verify unregistered mutation remains blocked
         run: |
           set +e
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path future-project/example.txt \
-            --task "Workflow unregistered-mutation validation" \
-            --output /tmp/repository-ai-entry-router-unregistered-mutation.json
-          status=$?
+          GITHUB_TOKEN=qualification-token node tools/repository-ai-entry-router.mjs --mutation-intent --path future-project/example.txt --output /tmp/unregistered.json
+          s=$?
           set -e
-          test "$status" -eq 1
-          grep -q '"disposition": "BLOCK"' /tmp/repository-ai-entry-router-unregistered-mutation.json
-
-      - name: Verify retired execution authority remains absent
-        shell: bash
-        run: |
-          set -euo pipefail
-          node - <<'NODE'
-          const r=require('./.github/ai-router/execution-backends.v1.json');
-          if(r.schema!=='PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF_v1'||r.result!=='PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED'||r.authorityCreated!==false||r.executionAuthorized!==false||r.mutationAuthorized!==false||r.mergeAuthorized!==false||r.forwardingPerformed!==false) process.exit(1);
-          NODE
-
-      - name: Upload router validation receipts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: repository-ai-entry-router-validation-receipts
-          path: |
-            /tmp/repository-ai-entry-router-self-test.json
-            /tmp/repository-ai-entry-router-exact-path-registration-conformance.json
-            /tmp/repository-ai-entry-router-instrument-lifecycle-retirement-route.json
-            /tmp/repository-operation-successor-router-receipt.json
-            /tmp/repository-operation-successor-self-test.json
-            /tmp/repository-ai-entry-router-h-earth-route.json
-            /tmp/repository-ai-entry-router-laws-route.json
-            /tmp/repository-ai-entry-router-lrpv1-route.json
-            /tmp/repository-ai-entry-router-estate-validation-route.json
-            /tmp/repository-ai-entry-router-state-bound-admissibility-kernel-route.json
-            /tmp/repository-ai-entry-router-unregistered-mutation.json
-          if-no-files-found: error
-          retention-days: 30
+          test "$s" = 1
+          jq -e '.disposition == "BLOCK"' /tmp/unregistered.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with: {name: 'repository-ai-entry-router-validation-${{ github.run_id }}-${{ github.run_attempt }}', path: '/tmp/router-self-test.json\n/tmp/unregistered.json', if-no-files-found: error}

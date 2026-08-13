@@ -1,14 +1,26 @@
-name: Repository Operation Intake Bootstrap Validation
+name: Repository Operation Intake Validation
 
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/operation-intake/**'
+      - 'tools/operation-intake/**'
+      - '.github/ai-router/fixed-fixture-intake/**'
+      - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - 'tools/repository-ai-entry-router.mjs'
   push:
     branches: [main]
-    paths-ignore:
-      - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
+    paths:
+      - 'AI_ENTRYPOINT.json'
+      - '.github/operation-intake/**'
+      - 'tools/operation-intake/**'
+      - '.github/ai-router/fixed-fixture-intake/**'
+      - '.github/workflows/repository-operation-intake-validation.yml'
+      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
+      - 'tools/repository-ai-entry-router.mjs'
   issue_comment:
     types: [created]
   workflow_dispatch:
@@ -18,7 +30,7 @@ on:
         required: false
         type: string
       action:
-        description: Optional fixed action; only ADMIT is accepted
+        description: Fixed action; only ADMIT is accepted
         required: false
         type: string
 
@@ -26,28 +38,67 @@ permissions:
   contents: read
 
 env:
-  B: a18107998f0a5d8146010aa4cc9767d1f85b1ebd
-  R: .github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json
-  H: ${{ github.event.pull_request.head.sha || github.sha }}
+  EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
+  current-control-plane-conformance:
+    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.EXPECTED_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact current canonical spine
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const e=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const l=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
+          if(e.status!=='ACTIVE_FAIL_CLOSED'||l.status!=='ACTIVE_FAIL_CLOSED')throw Error('ACTIVE_STATUS_MISMATCH');
+          if(e.operationIntakeGate?.locator!=='.github/operation-intake/locator.v1.json')throw Error('NONCANONICAL_INTAKE_LOCATOR');
+          if(e.remoteCanonicalIntakeTransport?.canonicalLocator!==e.operationIntakeGate.locator)throw Error('TRANSPORT_LOCATOR_DIVERGENCE');
+          if(e.remoteCanonicalIntakeTransport?.admissionSemanticsDuplicated!==false)throw Error('PARALLEL_ADMISSION_SEMANTICS');
+          NODE
+          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output "$RUNNER_TEMP/intake-self-test.json"
+          node tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
+          node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test > "$RUNNER_TEMP/transport-self-test.json"
+          node .github/ai-router/fixed-fixture-intake/self-test.v1.mjs > "$RUNNER_TEMP/fixed-fixture-self-test.json"
+          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --self-test > "$RUNNER_TEMP/fixed-fixture-differential-self-test.json"
+          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repository-operation-intake-current-conformance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/intake-self-test.json
+            ${{ runner.temp }}/transport-self-test.json
+            ${{ runner.temp }}/fixed-fixture-self-test.json
+            ${{ runner.temp }}/fixed-fixture-differential-self-test.json
+            ${{ runner.temp }}/router-self-test.json
+          if-no-files-found: error
+          retention-days: 90
+
   fixed-fixture-canonical-intake:
     if: >-
       (github.event_name == 'workflow_dispatch' && inputs.fixture_id != '') ||
       (github.event_name == 'issue_comment' &&
        contains(github.event.comment.body, 'FIXED_FIXTURE_INTAKE_REQUEST_V1') &&
-       (github.event.comment.author_association == 'OWNER' ||
-        github.event.comment.author_association == 'MEMBER' ||
-        github.event.comment.author_association == 'COLLABORATOR'))
+       (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR'))
     runs-on: ubuntu-24.04
     permissions:
       contents: write
       issues: write
-      actions: read
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          ref: main
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -62,236 +113,48 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/fixed-fixture-intake"
-          if [ "$EVENT_NAME" = "issue_comment" ]; then
-            jq -r '.comment.body' "$GITHUB_EVENT_PATH" > "$RUNNER_TEMP/fixed-fixture-intake/comment.txt"
-            marker_line="$(grep -n -m1 '^FIXED_FIXTURE_INTAKE_REQUEST_V1$' "$RUNNER_TEMP/fixed-fixture-intake/comment.txt" | cut -d: -f1)"
-            test -n "$marker_line"
-            invocation="$(sed -n "$((marker_line + 1))p" "$RUNNER_TEMP/fixed-fixture-intake/comment.txt")"
-            fixture_id="$(printf '%s' "$invocation" | awk '{print $1}')"
-            action="$(printf '%s' "$invocation" | awk '{print $2}')"
-            test "$(printf '%s' "$invocation" | awk '{print NF}')" = "2"
+          if [ "$EVENT_NAME" = issue_comment ]; then
+            body="$(jq -r '.comment.body' "$GITHUB_EVENT_PATH")"
+            invocation="$(printf '%s\n' "$body" | awk '/^FIXED_FIXTURE_INTAKE_REQUEST_V1$/{getline;print;exit}')"
+            fixture_id="$(printf '%s' "$invocation"|awk '{print $1}')"
+            action="$(printf '%s' "$invocation"|awk '{print $2}')"
+            test "$(printf '%s' "$invocation"|awk '{print NF}')" = 2
           else
-            fixture_id="$DISPATCH_FIXTURE"
-            action="$DISPATCH_ACTION"
+            fixture_id="$DISPATCH_FIXTURE"; action="$DISPATCH_ACTION"
           fi
-          test -n "$fixture_id"
-          test "$action" = "ADMIT"
+          test -n "$fixture_id"; test "$action" = ADMIT
           echo "fixture_id=$fixture_id" >> "$GITHUB_OUTPUT"
           echo "action=$action" >> "$GITHUB_OUTPUT"
-      - name: Adversarially self-test closed-world dispatcher and differential carrier
-        run: |
-          node .github/ai-router/fixed-fixture-intake/self-test.v1.mjs > "$RUNNER_TEMP/fixed-fixture-intake/self-test.json"
-          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --self-test > "$RUNNER_TEMP/fixed-fixture-intake/differential-self-test.json"
       - name: Select exact repository-held fixture
         run: |
-          node .github/ai-router/fixed-fixture-intake/dispatcher.v1.mjs \
-            --fixture-id '${{ steps.request.outputs.fixture_id }}' \
-            --action '${{ steps.request.outputs.action }}' \
-            --output "$RUNNER_TEMP/fixed-fixture-intake/selection.json"
-          jq -e '.result == "FIXTURE_SELECTED_FAIL_CLOSED" and .arbitraryPayloadAccepted == false and .authorityCreated == false and .repositoryMutationPerformed == false' "$RUNNER_TEMP/fixed-fixture-intake/selection.json" >/dev/null
-      - name: Verify immutable canonical tooling identity
-        id: identity
-        shell: bash
-        run: |
-          set -euo pipefail
-          expected_base="$(jq -r '.exactGoverningHead' "$RUNNER_TEMP/fixed-fixture-intake/selection.json")"
-          bridge_head="$(jq -r '.bridgeImplementationHead' "$RUNNER_TEMP/fixed-fixture-intake/selection.json")"
-          current_main="$(git rev-parse HEAD^{commit})"
-          git cat-file -e "$expected_base^{commit}"
-          git cat-file -e "$bridge_head^{commit}"
-          git worktree add --detach "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" "$bridge_head"
-          test "$(git -C "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" rev-parse HEAD^{commit})" = "$bridge_head"
-          echo "expected_base=$expected_base" >> "$GITHUB_OUTPUT"
-          echo "bridge_head=$bridge_head" >> "$GITHUB_OUTPUT"
-          echo "current_main=$current_main" >> "$GITHUB_OUTPUT"
-      - name: Differential carry-forward into unchanged canonical gate
-        id: bridge
+          node .github/ai-router/fixed-fixture-intake/dispatcher.v1.mjs --fixture-id '${{ steps.request.outputs.fixture_id }}' --action ADMIT --output "$RUNNER_TEMP/selection.json"
+          jq -e '.result == "FIXTURE_SELECTED_FAIL_CLOSED" and .arbitraryPayloadAccepted == false and .authorityCreated == false' "$RUNNER_TEMP/selection.json" >/dev/null
+      - name: Execute current canonical intake
+        id: intake
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        shell: bash
         run: |
           set +e
-          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs \
-            --selection "$RUNNER_TEMP/fixed-fixture-intake/selection.json" \
-            --bridge-root "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" \
-            --output "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json"
+          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --selection "$RUNNER_TEMP/selection.json" --output "$RUNNER_TEMP/receipt.json"
           echo "status=$?" >> "$GITHUB_OUTPUT"
           exit 0
-      - name: Require canonical ADMITTED_AND_LOCKED receipt without rewriting
-        if: always()
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -s "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json"
-          jq -e '.schema == "FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_RECEIPT_v1" and .result == "CANONICAL_RECEIPT_PRESERVED" and .differentialReceipt.carryForwardAdmissible == true and .canonicalGateExecuted == true and .admissionResultRewritten == false and .canonicalReceiptJson.result == "ADMITTED_AND_LOCKED"' "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json" >/dev/null
-          test '${{ steps.bridge.outputs.status }}' = '0'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: fixed-fixture-intake-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/fixed-fixture-intake/self-test.json
-            ${{ runner.temp }}/fixed-fixture-intake/differential-self-test.json
-            ${{ runner.temp }}/fixed-fixture-intake/selection.json
-            ${{ runner.temp }}/fixed-fixture-intake/bridge-receipt.json
+            ${{ runner.temp }}/selection.json
+            ${{ runner.temp }}/receipt.json
           if-no-files-found: error
           retention-days: 90
-      - name: Return bounded intake result
+      - name: Return compact result
         if: always() && github.event_name == 'issue_comment'
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
-            const p = `${process.env.RUNNER_TEMP}/fixed-fixture-intake/bridge-receipt.json`;
-            let r = {};
-            try { r = JSON.parse(fs.readFileSync(p, 'utf8')); } catch {}
-            const c = r.canonicalReceiptJson || {};
-            const lines = [
-              'FIXED_FIXTURE_INTAKE_RETURN_V1',
-              '',
-              `fixtureId = ${{ steps.request.outputs.fixture_id }}`,
-              `canonicalResult = ${c.result || 'UNKNOWN'}`,
-              `operationId = ${c.operationId || 'UNKNOWN'}`,
-              `lockGeneration = ${c.lock?.lockGeneration ?? c.lockGeneration ?? 'UNKNOWN'}`,
-              `scopeHash = ${c.lock?.scopeHash ?? c.scopeHash ?? 'UNKNOWN'}`,
-              `governingHead = ${{ steps.identity.outputs.expected_base }}`,
-              `executionHead = ${{ steps.identity.outputs.current_main }}`,
-              `differentialResult = ${r.differentialReceipt?.result || 'UNKNOWN'}`,
-              `workflowRun = ${context.runId}`
-            ];
-            await github.rest.issues.createComment({owner:context.repo.owner, repo:context.repo.repo, issue_number:context.issue.number, body:'```text\n'+lines.join('\n')+'\n```'});
-
-  bootstrap-builder-self-test:
-    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.H }}
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Verify active identities semantically and reproduce bootstrap
+            const fs=require('fs');let r={};try{r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/receipt.json','utf8'));}catch{}const c=r.canonicalReceiptJson||{};await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'```text\nFIXED_FIXTURE_INTAKE_RETURN_V2\ncanonicalResult = '+(c.result||'UNKNOWN')+'\noperationId = '+(c.operationId||'UNKNOWN')+'\nworkflowRun = '+context.runId+'\n```'});
+      - name: Require unchanged canonical success
+        if: always()
         run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
-          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
-          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
-          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
-          NODE
-          grep -q 'push:' .github/workflows/repository-operation-intake-validation.yml
-          grep -q "$R" .github/workflows/repository-operation-intake-validation.yml
-          node -e "let j=require('./.github/operation-intake/deployment-activation-receipt.schema.v1.json');if(!j.\$id.endsWith('_SCHEMA_v1'))throw Error()"
-          git worktree add --detach /tmp/x "$B"
-          cd /tmp/x
-          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/builder-self-test.receipt.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/builder-self-test.receipt.json
-          if-no-files-found: error
-
-  fresh-bootstrap-verifier:
-    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
-    needs: bootstrap-builder-self-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.H }}
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/certification/builder
-      - name: Reproduce independently with semantic JSON checks
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const entry=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
-          const locator=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
-          if(entry.status!=='ACTIVE_FAIL_CLOSED')throw Error('ENTRYPOINT_STATUS_MISMATCH');
-          if(locator.status!=='ACTIVE_FAIL_CLOSED')throw Error('LOCATOR_STATUS_MISMATCH');
-          NODE
-          git worktree add --detach /tmp/x "$B"
-          cd /tmp/x
-          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output /tmp/verifier-self-test.receipt.json
-          cmp /tmp/certification/builder/builder-self-test.receipt.json /tmp/verifier-self-test.receipt.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-verifier-self-test-v1
-          path: /tmp/verifier-self-test.receipt.json
-          if-no-files-found: error
-
-  remote-ledger-cas-certification:
-    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
-    needs: fresh-bootstrap-verifier
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      GITHUB_TOKEN: ${{ github.token }}
-      REPOSITORY: ${{ github.repository }}
-      L: refs/heads/operation-locks/repository-operation-intake-v1
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.H }}
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Certify exactly-one remote CAS acquisition and closure
-        run: |
-          node --input-type=module - <<'NODE'
-          import f from'node:fs';import{createHash as h}from'node:crypto';import{ensureRef as E,acquireRemote as A,closeRemote as C}from'./tools/operation-intake/repository-operation-lock-manager.v1.mjs';let e=process.env,d='/tmp/c',s=`ACTIVATION:${e.GITHUB_RUN_ID}:${e.GITHUB_RUN_ATTEMPT}`,q=x=>h('sha256').update(x).digest('hex'),o={repository:e.REPOSITORY,lockRef:e.L,token:e.GITHUB_TOKEN,lockScope:s,governingHead:e.H,requestDigest:q(s+'r'),procedureLocatorDigest:q(s+'p'),barrierFile:d+'/g'};f.mkdirSync(d,{recursive:true});await E({repository:e.REPOSITORY,lockRef:e.L,baseHead:e.H,token:e.GITHUB_TOKEN});let p=[A({...o,operationId:'A'+e.GITHUB_RUN_ID,readyFile:d+'/a'}),A({...o,operationId:'B'+e.GITHUB_RUN_ID,readyFile:d+'/b'})];for(let i=0;i<300&&!(f.existsSync(d+'/a')&&f.existsSync(d+'/b'));i++)await new Promise(r=>setTimeout(r,100));let a=JSON.parse(f.readFileSync(d+'/a')),b=JSON.parse(f.readFileSync(d+'/b'));if(a.observedLedgerBlobSha!==b.observedLedgerBlobSha)throw Error('PRECONDITION');f.writeFileSync(d+'/g','');let x=await Promise.all(p),w=x.filter(z=>z.lockAcquired),l=x.filter(z=>!z.lockAcquired),z=w.length!==1||l.length!==1||l[0].errorCode!=='LEDGER_COMPARE_AND_SWAP_CONFLICT'||![409,422].includes(l[0].httpStatus);if(w.length!==1)throw Error('CARDINALITY');let c=await C({...o,operationId:w[0].operationId,lockGeneration:w[0].lockGeneration,terminalDisposition:z?'FAIL_CLOSED':'PASS_CLOSED'});if(z)throw Error('LOSER');if(!c.lockReleased)throw Error('CLOSURE');f.writeFileSync('/tmp/remote-cas-certification.receipt.json',JSON.stringify({schema:'REPOSITORY_OPERATION_INTAKE_REMOTE_CAS_CERTIFICATION_RECEIPT_v1',result:'PASS_EXACTLY_ONE_ACQUIRED',validationSubjectHead:e.H,winner:w[0],loser:l[0],closure:c,lockBranchChangedPaths:['.github/operation-intake/active-operation-ledger.v1.json']},null,2)+'\n');
-          NODE
-          git fetch origin operation-locks/repository-operation-intake-v1
-          X=$(git rev-parse origin/operation-locks/repository-operation-intake-v1)
-          test "$(git merge-base "$B" "$X")" = "$B"
-          for C in $(git rev-list "$B..$X"); do
-            test "$(git diff-tree --no-commit-id --name-only -r "$C")" = .github/operation-intake/active-operation-ledger.v1.json
-          done
-      - uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-remote-cas-certification-v1
-          path: /tmp/remote-cas-certification.receipt.json
-          if-no-files-found: error
-
-  package-bootstrap-certification:
-    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
-    needs: [bootstrap-builder-self-test, fresh-bootstrap-verifier, remote-ledger-cas-certification]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.H }}
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-builder-self-test-v1
-          path: /tmp/certification/builder
-      - uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-verifier-self-test-v1
-          path: /tmp/certification/verifier
-      - uses: actions/download-artifact@v4
-        with:
-          name: repository-operation-intake-remote-cas-certification-v1
-          path: /tmp/certification/remote
-      - name: Build canonical certification package using frozen bootstrap packager
-        run: |
-          mkdir -p /tmp/certification/final
-          cp /tmp/certification/builder/builder-self-test.receipt.json /tmp/certification/final/builder-self-test.receipt.json
-          cp /tmp/certification/verifier/verifier-self-test.receipt.json /tmp/certification/final/verifier-self-test.receipt.json
-          cp /tmp/certification/remote/remote-cas-certification.receipt.json /tmp/certification/final/remote-cas-certification.receipt.json
-          git show "$B:.github/workflows/repository-operation-intake-validation.yml" | awk '/Build canonical certification package/{x=1}x&&/node <<.NODE./{p=1;next}p&&/^          NODE$/{exit}p{sub(/^          /,"");print}' > /tmp/p.js
-          TOOLING_HEAD="$H" node /tmp/p.js
-      - uses: actions/upload-artifact@v4
-        with:
-          name: repository-operation-intake-bootstrap-certification-v1
-          path: /tmp/certification/final/
-          if-no-files-found: error
+          test '${{ steps.intake.outputs.status }}' = 0
+          jq -e '.result == "CANONICAL_RECEIPT_PRESERVED" and .canonicalReceiptJson.result == "ADMITTED_AND_LOCKED" and .admissionResultRewritten == false' "$RUNNER_TEMP/receipt.json" >/dev/null

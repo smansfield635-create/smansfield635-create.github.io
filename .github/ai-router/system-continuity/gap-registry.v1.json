@@ -31,14 +31,15 @@
     },
     {
       "gapId": "WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY",
-      "status": "OPEN",
+      "status": "CLOSED_BOUNDED",
       "discoveredAtHead": "d0d0ea03b9f6d867dcb9689bc4ed4050bd7e57da",
+      "closedAtHead": "45a189f62ce020c32b22463ee92444f311d50841",
       "coordinationIssue": 820,
       "summary": "The GitHub Actions event surface contains legacy and unregistered workflows whose active/failed UI state is not equivalent to current authority or current system health; lifecycle classification, signal normalization, continuity-safe adoption, and bounded retirement remain to be proven end to end.",
       "interfaceKeys": ["GITHUB_ACTIONS_WORKFLOW_STATE", "REPOSITORY_AI_ROUTER_REGISTRY_v1", "REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1", "INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1"],
       "pathScopes": [".github/workflows/", ".github/ai-router/router.v1.json", ".github/ai-router/instrument-lifecycle/"],
-      "evidenceRefs": ["ISSUE_820_AUDIT", "GMAIL_FAILURE_CORPUS_AUGUST_7_9", "PRE_REGISTRATION_ADMISSION_GENERATION_731"],
-      "closureRequirements": ["FULL_ACTIONS_SURFACE_INVENTORY", "CURRENT_AUTHORITY_CLASSIFICATION", "ZERO_JOB_AND_EXPECTED_FAILURE_SIGNAL_NORMALIZATION", "PROTECTED_LIVE_WORKSTREAM_NONINTERFERENCE", "CONTINUITY_PROOF_FOR_EACH_PHYSICAL_RETIREMENT_CLASS", "POST_MERGE_OBSERVATION_PROOF"],
+      "evidenceRefs": ["ISSUE_820_AUDIT", "GMAIL_FAILURE_CORPUS_AUGUST_7_9", "PRE_REGISTRATION_ADMISSION_GENERATION_731", "PR_953_ROOT_ROUTER_RECONCILIATION", "RUN_31670243826_CONSUMER_DISCOVERY_ZERO_UNRESOLVED", "RUN_31670250640_ACTIONS_INVENTORY_721", "RUN_31670421304_NATIVE_V2_PASS_CLOSED_ELIGIBLE", "RUN_31670568794_PROGRESSIVE_SYSTEM_CONTINUITY_SYSTEM_GAP_CLOSED"],
+      "closureRequirements": [],
       "authorityCreated": false
     },
     {
@@ -47,7 +48,7 @@
       "discoveredAtHead": "67816c8d89c9bc0aed8a83a736b6f7870ca782aa",
       "coordinationIssue": 822,
       "summary": "The root entrypoint already declared the permanent pre-registration intake bridge and the local-execution-unavailable fallback law, but mutation routing did not emit an executable specialized backend transition when local authenticated canonical intake execution was unavailable, allowing rooms to terminate unnecessarily.",
-      "interfaceKeys": ["LOCAL_EXECUTION_UNAVAILABLE_USES_DECLARED_GITHUB_ACTIONS_BACKEND", "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1", "REPOSITORY_AI_EXECUTION_BACKEND_REGISTRY_v1", "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1", "REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1"],
+      "interfaceKeys": ["LOCAL_AUTHENTICATED_INTAKE_UNAVAILABLE_USES_DECLARED_GITHUB_ACTIONS_BACKEND", "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1", "REPOSITORY_AI_EXECUTION_BACKEND_REGISTRY_v1", "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1", "REPOSITORY_AI_EXECUTION_ROUTE_RESOLUTION_RECEIPT_v1"],
       "pathScopes": ["tools/repository-ai-entry-router.mjs", ".github/ai-router/execution-backends.v1.json", ".github/workflows/repository-ai-entry-router-validation.yml"],
       "evidenceRefs": ["PR_822_EXPOSED_GAP", "PRE_REGISTRATION_BRIDGE_ACTIVE_PERMANENT_AT_0CD88A_AND_D0D0EA", "PRE_REGISTRATION_BRIDGE_RUN_31326203213", "PRE_REGISTRATION_ADMISSION_GENERATION_751"],
       "closureRequirements": ["LOCAL_AUTHENTICATED_INTAKE_UNAVAILABLE_RESOLVES_TO_CERTIFIED_PRE_REGISTRATION_BRIDGE", "ACTIVE_VALID_BRIDGE_PROHIBITS_TERMINAL_INABILITY_FALLTHROUGH", "ABSENT_INACTIVE_OR_IDENTITY_INVALID_BRIDGE_FAILS_CLOSED", "GENERIC_WORKFLOW_DISPATCH_SUBSTITUTION_REMAINS_PROHIBITED", "PROTECTED_LAWS_WORKSTREAM_NONINTERFERENCE", "REAL_REMOTE_INVOCATION_PROOF", "POST_MERGE_CONTINUITY_PROOF"],

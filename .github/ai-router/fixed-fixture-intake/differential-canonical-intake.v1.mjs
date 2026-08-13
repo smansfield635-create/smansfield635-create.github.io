@@ -16,7 +16,8 @@ const COMMON_DEPENDENCIES = Object.freeze([
 ]);
 const FIXTURES = Object.freeze({
   P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1: Object.freeze({pathCount:9}),
-  P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_V1: Object.freeze({pathCount:5})
+  P2_PAGE_EXCELLENCE_PUBLIC_CONSUMER_CUT_A_V1: Object.freeze({pathCount:5}),
+  P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_V1: Object.freeze({pathCount:11})
 });
 
 const stable = value => Array.isArray(value) ? value.map(stable) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(key => [key, stable(value[key])])) : value;

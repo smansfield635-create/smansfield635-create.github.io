@@ -1,0 +1,40 @@
+{
+  "schema": "EXACT_CANDIDATE_ADOPTION_FIXTURE_v1",
+  "fixtureId": "P0_PLATFORM_CONTROL_PLANE_RETIREMENT_GEN1378_ADOPTION_v1",
+  "generation": 1378,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "authorizedBranch": "agent/p0-platform-control-plane-retirement-gen1378",
+  "expectedParent": "7f832b749617b0360ad6bbfafadc37508d328dc3",
+  "candidate": "cb0b892fdc20f612e79c1c35307bd476192cddef",
+  "candidateTree": "5ba4a91627ef2159c7c6d25f7ed9024f7b877b74",
+  "candidateRouterBlob": "0ec4bbfee5da385b6cef305585578b826b2d448a",
+  "routerPath": ".github/ai-router/router.v1.json",
+  "retiredWorkflowPath": ".github/workflows/platform-control-plane-strike-v1.yml",
+  "force": false,
+  "expectedChanges": [
+    {"path":".github/ai-router/platform-control-plane/platform-control-plane-gate.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/platform-control-plane-protocol.v1.json","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/platform-control-plane-self-test.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/enforcement/enforcement-policy.v1.json","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/enforcement/enforcement-self-test.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/enforcement/enforcement-shadow-gate.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/federation/federation-gate.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/federation/federation-protocol.v1.json","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/federation/federation-self-test.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/federation/repository-registry.v1.json","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/identity/authorization-gate.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/identity/authorization-self-test.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/identity/principal-registry.v1.json","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/identity/role-policy.v1.json","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/observability/control-plane-state-projector.v1.mjs","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/observability/observability-protocol.v1.json","status":"removed"},
+    {"path":".github/ai-router/platform-control-plane/observability/observability-self-test.v1.mjs","status":"removed"},
+    {"path":".github/workflows/platform-control-plane-strike-v1.yml","status":"removed"},
+    {"path":".github/ai-router/router.v1.json","status":"modified"}
+  ],
+  "qualification": {
+    "routerSelfTestCommand": "node tools/repository-ai-entry-router.mjs --self-test --output $RUNNER_TEMP/router-self-test-receipt.json",
+    "requireRetiredPathsAbsent": true,
+    "requireRetiredWorkflowReferenceAbsent": true
+  }
+}

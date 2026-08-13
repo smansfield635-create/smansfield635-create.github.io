@@ -1,36 +1,36 @@
 {
-  "schema": "DIAMOND_GATE_PHASE_FOUR_PUBLIC_AUGMENTATION_v1",
+  "schema": "DIAMOND_GATE_PHASE_FOUR_PUBLIC_AUGMENTATION_v2",
   "status": "PUBLIC_EVIDENCE_AUGMENTATION",
   "domain": {
     "id": "integrated",
-    "label": "Integrated Capability",
-    "title": "The breakthrough was getting the capabilities to work together.",
-    "summary": "Phase Four marks a maturity threshold: construction, continuity, recovery and qualification were demonstrated as parts of one evolving product lifecycle rather than isolated accomplishments.",
+    "label": "Technology Readiness",
+    "title": "Operationally demonstrated. Self-assessed at Software TRL 7.",
+    "summary": "Diamond Gate's governed software-construction platform has been assessed against published NASA software Technology Readiness Level criteria and satisfies the TRL 7 threshold within the bounded platform definition.",
     "accent": "214,189,128",
-    "claimIds": ["integrated-construction-capability"]
+    "claimIds": ["operational-readiness-trl7"]
   },
   "claim": {
-    "id": "integrated-construction-capability",
-    "label": "Integrated construction",
-    "title": "More capability does not have to mean less control.",
-    "status": ["Phase Four benchmark", "Integrated demonstration"],
-    "summary": "The milestone is not another isolated mechanism. It is the demonstrated coordination of previously separate capabilities around the same evolving product.",
+    "id": "operational-readiness-trl7",
+    "label": "Software TRL 7",
+    "title": "The platform has moved from integrated testing into demonstrated operational feasibility.",
+    "status": ["Self-assessed Software TRL 7", "Operational feasibility demonstrated"],
+    "summary": "The readiness claim is bounded to the governed software-construction platform: authority and intake, bounded execution, construction, continuity, recovery and qualification operating together in the real repository and automation environment.",
     "practical": {
-      "title": "The system can become more sophisticated without making the journey harder to trust.",
-      "body": "As Diamond Gate grew, the challenge changed. Building another capability was no longer enough. The work had to keep purpose, construction, recovery and quality connected while the product continued to evolve. Phase Four demonstrates that those pieces can operate together instead of becoming separate islands.",
-      "boundary": "This is evidence of integrated operation under the demonstrated conditions. It is not a claim of perfect reliability, universal superiority or external certification."
+      "title": "The machinery behind the work has been demonstrated where it actually operates.",
+      "body": "Diamond Gate is no longer relying only on architectural descriptions or isolated tests. The governed construction platform has repeatedly operated against real repositories, automation, candidate state, recovery conditions and product qualification. Against published software TRL criteria, that supports a bounded self-assessment at TRL 7.",
+      "boundary": "This is a Diamond Gate self-assessment against published criteria. It is not a NASA certification, evaluation, affiliation or endorsement, and it does not assign TRL 7 to every research claim or product in the estate."
     },
     "engineering": {
-      "title": "Independent disciplines were coordinated into one lifecycle.",
-      "body": "The demonstrated architecture combines project-state control, bounded construction, continuity and recovery, and separate product-quality qualification. The significance is the coordination of established engineering disciplines around one changing product, not a claim that Diamond Gate invented the underlying principles.",
-      "boundary": "The benchmark supports the demonstrated integration. It does not imply that every future project uses identical mechanisms or that every operating condition has been tested."
+      "title": "Key platform functions are integrated with the operational environment.",
+      "body": "The assessed boundary includes canonical authority and intake, exact-state bounded execution, deterministic construction/materialization, continuity and successor handling, bounded recovery and requalification, and mandatory product-quality qualification. Those functions have been demonstrated while integrated with the actual GitHub repository and automation environment used by Diamond Gate.",
+      "boundary": "TRL 7 is asserted only for the bounded governed software-construction platform. Active product development continues, so this is not a TRL 8 claim of a completed and fully qualified final system."
     },
     "proof": {
-      "title": "Follow the evidence behind the integrated result.",
-      "body": "The public evidence set preserves observable product surfaces, tested quality behavior, historical execution evidence, state binding, operation succession, and continuity and recovery evidence. Phase Four is the synthesis of those demonstrated capabilities, not a substitute for the underlying records.",
-      "links": [["Current product evidence", "/evidence/#current/browser-native-construction/proof"], ["Execution evidence", "/evidence/#execution/bounded-execution/proof"], ["Continuity and recovery evidence", "/evidence/#continuity/continuity-and-recovery/proof"], ["How Diamond Gate builds", "/governance/"], ["What Diamond Gate can build", "/build/"], ["Why the work is notable", "/showroom/globe/h-earth/awards/"]],
-      "proofState": "Phase Four · Integrated evidence synthesis",
-      "boundary": "The milestone demonstrates integrated operation under the qualified evidence represented here. It does not establish universal reliability, independent external validation or performance outside the demonstrated boundaries."
+      "title": "Inspect the evidence behind the TRL 7 self-assessment.",
+      "body": "The evidence chain includes integrated capability demonstrations, exact-state execution, continuity and recovery, operational-host certification, and mandatory quality qualification. The assessment maps those demonstrated facts to published software TRL 7 criteria rather than inventing a Diamond Gate maturity number.",
+      "links": [["Current product evidence", "/evidence/#current/browser-native-construction/proof"], ["Execution evidence", "/evidence/#execution/bounded-execution/proof"], ["Continuity and recovery evidence", "/evidence/#continuity/continuity-and-recovery/proof"], ["NASA Technology Readiness Levels", "https://www.nasa.gov/directorates/somd/space-communications-navigation-program/technology-readiness-levels/"], ["NASA software TRL guidance", "https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7123_001D_&page_name=AppendixE"], ["Governance", "/governance/"], ["Build", "/build/"], ["Awards & Recognition", "/showroom/globe/h-earth/awards/"]],
+      "proofState": "Bounded self-assessment · Software TRL 7",
+      "boundary": "The evidence supports demonstrated operational feasibility for the assessed platform boundary. It does not establish NASA certification, external endorsement, TRL 8 completion, universal reliability or maturity of every Diamond Gate artifact."
     }
   }
 }

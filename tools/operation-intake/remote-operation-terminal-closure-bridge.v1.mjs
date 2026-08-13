@@ -222,7 +222,7 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const inputPath = runtimePath(args.input, 'input');
   const outputPath = runtimePath(args.output, 'output');
-  const nativeOutputPath = runtimePath(args['native-output']);
+  const nativeOutputPath = runtimePath(args['native-output'], 'native-output');
   const raw = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
   const { receipt, nativeReceipt } = await executeClosure(raw);
   writeJson(outputPath, receipt);

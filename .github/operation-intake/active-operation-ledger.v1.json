@@ -1152,18 +1152,6 @@
       "scopeHash": "9dddf7da98478eaf8a997d8b6e4dc4cf92b5ec9016f05359a3fe89c19cae0465",
       "state": "ADMITTED_LOCKED"
     },
-    "a4495c54a32fdfa6d52752d96f51a8e6756c0c30c405ecf1cb5d1332e9a95e16": {
-      "governingHead": "8493f2f26d2595913b8efc88cc51e0ab9c0acfa8",
-      "lockGeneration": 1376,
-      "lockScope": "ACTIVATION:31719480810:1",
-      "operationId": "A31719480810",
-      "procedureLocatorDigest": "c9ae3053e37f93b1c80e82f30e05ac48b3c59721c46e4410df1e04fb720dddc3",
-      "released": false,
-      "requestDigest": "f0870de72fa9afbd2c44fb928060503e8f01faf344769ea7debf00c400afb59c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a4495c54a32fdfa6d52752d96f51a8e6756c0c30c405ecf1cb5d1332e9a95e16",
-      "state": "ADMITTED_LOCKED"
-    },
     "a560a48139369f71a75bd11892350f5a65543bd2463caac1e1364c1e07b87245": {
       "governingHead": "8007d88820fa55d2b4e752d47b548e974fc73a68",
       "lockGeneration": 76,
@@ -20385,6 +20373,19 @@
       "requestDigest": "290da0088a3de89b1e9b903b65343d64975749873e4fdbe3ad810e917d3834db",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d816657befbe0548b49288498d04f92d19772b2dd167f8ca877db116c4116920",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "8493f2f26d2595913b8efc88cc51e0ab9c0acfa8",
+      "lockGeneration": 1376,
+      "lockScope": "ACTIVATION:31719480810:1",
+      "operationId": "A31719480810",
+      "procedureLocatorDigest": "c9ae3053e37f93b1c80e82f30e05ac48b3c59721c46e4410df1e04fb720dddc3",
+      "released": true,
+      "requestDigest": "f0870de72fa9afbd2c44fb928060503e8f01faf344769ea7debf00c400afb59c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a4495c54a32fdfa6d52752d96f51a8e6756c0c30c405ecf1cb5d1332e9a95e16",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

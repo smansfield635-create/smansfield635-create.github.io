@@ -31,14 +31,15 @@
     },
     {
       "gapId": "WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY",
-      "status": "OPEN",
+      "status": "CLOSED_BOUNDED",
       "discoveredAtHead": "d0d0ea03b9f6d867dcb9689bc4ed4050bd7e57da",
+      "closedAtHead": "45a189f62ce020c32b22463ee92444f311d50841",
       "coordinationIssue": 820,
       "summary": "The GitHub Actions event surface contains legacy and unregistered workflows whose active/failed UI state is not equivalent to current authority or current system health; lifecycle classification, signal normalization, continuity-safe adoption, and bounded retirement remain to be proven end to end.",
       "interfaceKeys": ["GITHUB_ACTIONS_WORKFLOW_STATE", "REPOSITORY_AI_ROUTER_REGISTRY_v1", "REPOSITORY_INSTRUMENT_LIFECYCLE_REGISTRY_v1", "INSTRUMENT_LIFECYCLE_OBSERVATION_RECEIPT_v1"],
       "pathScopes": [".github/workflows/", ".github/ai-router/router.v1.json", ".github/ai-router/instrument-lifecycle/"],
-      "evidenceRefs": ["ISSUE_820_AUDIT", "GMAIL_FAILURE_CORPUS_AUGUST_7_9", "PRE_REGISTRATION_ADMISSION_GENERATION_731"],
-      "closureRequirements": ["FULL_ACTIONS_SURFACE_INVENTORY", "CURRENT_AUTHORITY_CLASSIFICATION", "ZERO_JOB_AND_EXPECTED_FAILURE_SIGNAL_NORMALIZATION", "PROTECTED_LIVE_WORKSTREAM_NONINTERFERENCE", "CONTINUITY_PROOF_FOR_EACH_PHYSICAL_RETIREMENT_CLASS", "POST_MERGE_OBSERVATION_PROOF"],
+      "evidenceRefs": ["ISSUE_820_AUDIT", "GMAIL_FAILURE_CORPUS_AUGUST_7_9", "PRE_REGISTRATION_ADMISSION_GENERATION_731", "PR_953_ROOT_ROUTER_RECONCILIATION", "RUN_31670243826_CONSUMER_DISCOVERY_ZERO_UNRESOLVED", "RUN_31670250640_ACTIONS_INVENTORY_721", "RUN_31670421304_NATIVE_V2_PASS_CLOSED_ELIGIBLE", "RUN_31670568794_PROGRESSIVE_SYSTEM_CONTINUITY_SYSTEM_GAP_CLOSED"],
+      "closureRequirements": [],
       "authorityCreated": false
     },
     {

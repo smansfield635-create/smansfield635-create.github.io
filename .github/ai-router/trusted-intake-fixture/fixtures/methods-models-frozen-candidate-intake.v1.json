@@ -5,6 +5,33 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "exactGoverningHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
   "normalization": {"class": "CANONICAL_DUPLICATE_FIELD_EQUALIZATION_ONLY", "semanticAuthorityChanged": false, "allowedPathsChanged": false, "mergeAuthorityChanged": false},
+  "differentialCarryForward": {
+    "enabled": true,
+    "law": "ONLY_COMPLETE_DISJOINT_DEPENDENCY_CHANGE_MAY_CARRY_FORWARD_EXACT_PRODUCT_BASE",
+    "dependencySurface": {
+      "complete": true,
+      "paths": [
+        "laws/research/methods-and-models/index.html",
+        "laws/research/methods-and-models/canonical-records-v1.html",
+        "laws/research/methods-and-models/showroom.js",
+        "laws/research/methods-and-models/showroom-refinement.js",
+        "laws/research/methods-and-models/showroom-euclidean.js",
+        "laws/research/methods-and-models/showroom.css",
+        "laws/research/methods-and-models/showroom-refinement.css",
+        "laws/research/methods-and-models/showroom-euclidean.css",
+        "laws/research/methods-and-models/showroom-euclidean-interaction.css",
+        "verification/methods-models-showroom-browser.mjs",
+        "tools/repository-ai-entry-router.mjs",
+        "tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs",
+        "tools/operation-intake/repository-operation-intake-gate.v1.mjs",
+        "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+        ".github/operation-intake/request.schema.v1.json",
+        ".github/operation-intake/construction-procedure.schema.v1.json",
+        ".github/operation-intake/admission-receipt.schema.v1.json",
+        ".github/ai-router/page-excellence-toolchain"
+      ]
+    }
+  },
   "operationRequest": {
     "schema": "REPOSITORY_OPERATION_REQUEST_v1",
     "operationId": "METHODS_MODELS_CANDIDATE_BRANCH_PRODUCT_DEVELOPMENT_V1_20260813_001",

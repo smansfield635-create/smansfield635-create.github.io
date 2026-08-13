@@ -240,18 +240,6 @@
       "scopeHash": "2206589091e26f45d03402568f121e3f3f13210569fddef7db74f3d5819c26b1",
       "state": "ADMITTED_LOCKED"
     },
-    "231f427b0308cc4663428d233ac1214dfae407c9201edc460b97164d18c877d1": {
-      "governingHead": "d906c334fee88d15886df281b677c60ec4fec163",
-      "lockGeneration": 1295,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY:INSTRUMENTATION:V2:EXACT_8_PATH_SCOPE",
-      "operationId": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_INSTRUMENTATION_v2",
-      "procedureLocatorDigest": "5775e8996a699a0f8e3bfa14e5ccbe6c23ffad99db01c5498ee3b49e507d55be",
-      "released": false,
-      "requestDigest": "e67575eacc63be78273d40aa3c8aac8d8ea5c040825d8c7b50bf3f3687bcdb52",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "231f427b0308cc4663428d233ac1214dfae407c9201edc460b97164d18c877d1",
-      "state": "ADMITTED_LOCKED"
-    },
     "260ed067eef1da73c6db72e44fa19c2a8f05afb99acce0a3fd1ee9ede6200773": {
       "governingHead": "67b999c80ced56c7f2a15d63ea6dab79ceecbe13",
       "lockGeneration": 788,
@@ -19363,6 +19351,19 @@
       "requestDigest": "7860cd7756d6d0b6cef18025ed685ec41136254368cec883e07cebbd237d8e1a",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "bae72e55f1b7cc596c076ee63cfc52de6ee95a6d4e621ef63c81253f420fe523",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "d906c334fee88d15886df281b677c60ec4fec163",
+      "lockGeneration": 1295,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY:INSTRUMENTATION:V2:EXACT_8_PATH_SCOPE",
+      "operationId": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_INSTRUMENTATION_v2",
+      "procedureLocatorDigest": "5775e8996a699a0f8e3bfa14e5ccbe6c23ffad99db01c5498ee3b49e507d55be",
+      "released": true,
+      "requestDigest": "e67575eacc63be78273d40aa3c8aac8d8ea5c040825d8c7b50bf3f3687bcdb52",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "231f427b0308cc4663428d233ac1214dfae407c9201edc460b97164d18c877d1",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

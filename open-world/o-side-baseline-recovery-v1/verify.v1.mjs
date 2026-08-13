@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+const root=path.dirname(new URL(import.meta.url).pathname);
+const read=n=>JSON.parse(fs.readFileSync(path.join(root,n),'utf8'));
+const source=read('source-identity.v1.json'),adoption=read('adoption-contract.v1.json'),comparison=read('comparison-contract.v1.json'),procedure=read('construction-procedure.v1.json');
+const failures=[];const req=(c,id)=>{if(!c)failures.push(id)};
+req(source.schema==='OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_SOURCE_SET_v1','SOURCE_SCHEMA');
+req(source.publicMainAtAdmission==='7f832b749617b0360ad6bbfafadc37508d328dc3','PUBLIC_MAIN');
+req(source.acceptedPlanetaryBaseline?.commitSha==='65aedb63832c4774f4a7326297fadbfb14552955','ACCEPTED_HEAD');
+req(source.acceptedPlanetaryBaseline?.route==='showroom/globe/audralia/','ACCEPTED_ROUTE');
+req(source.negativeAndPrototypeEvidence?.some(x=>x.pullRequest===916&&String(x.status).includes('NOT_BASELINE')),'PR916_NOT_BASELINE');
+req(source.negativeAndPrototypeEvidence?.some(x=>x.pullRequest===918&&String(x.status).includes('NOT_BASELINE_AUTHORITY')),'PR918_NOT_BASELINE');
+req(source.authority?.globeImplementationAuthorityTransferred===false&&source.authority?.hEarthImplementationAuthorityTransferred===false,'NO_IMPLEMENTATION_TRANSFER');
+req(source.authority?.productMutationAuthorized===false,'NO_PRODUCT_MUTATION');
+req(adoption.baselineSource==='showroom/globe/audralia/@65aedb63832c4774f4a7326297fadbfb14552955','ADOPTION_BASELINE');
+req(adoption.experienceMustRemainUnchangedDuringBaselineAdoption===true,'EXPERIENCE_PRESERVED');
+req(adoption.productMutationAuthorized===false&&adoption.specimenConstructionAuthorized===false,'NO_SPECIMEN_AUTHORITY');
+req(Array.isArray(adoption.prohibited)&&adoption.prohibited.includes('GREENFIELD_O_SIDE_BASELINE'),'GREENFIELD_PROHIBITED');
+req(JSON.stringify(comparison.classificationVocabulary)===JSON.stringify(['CANONICAL_TRUTH','REPRESENTATION_ADVANTAGE','VALID_LOD_DIFFERENCE','DEFECT']),'CLASSIFICATION_VOCABULARY');
+req(comparison.developmentLaw==='DISCOVERY_IN_H_EARTH_OR_GLOBE_THEN_CANONICAL_ADJUDICATION_THEN_REPRESENTATION_SPECIFIC_EXPRESSION','DEVELOPMENT_LAW');
+req(procedure.exactAllowedRepositoryPaths?.length===5,'EXACT_PATH_COUNT');
+const files=['source-identity.v1.json','adoption-contract.v1.json','comparison-contract.v1.json','construction-procedure.v1.json','verify.v1.mjs'];
+const digest=crypto.createHash('sha256');for(const f of files)digest.update(f+'\0'+fs.readFileSync(path.join(root,f))+'\0');
+const receipt={schema:'OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_RECOVERY_RECEIPT_v1',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',failures,acceptedPlanetaryBaseline:'showroom/globe/audralia/@65aedb63832c4774f4a7326297fadbfb14552955',liveHEarthComparison:'showroom/globe/h-earth/@7f832b749617b0360ad6bbfafadc37508d328dc3',baselineAdoptionWithoutImplementationTransfer:true,productMutationAuthorized:false,specimenConstructionAuthorized:false,fingerprintSha256:digest.digest('hex')};
+console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exitCode=1;

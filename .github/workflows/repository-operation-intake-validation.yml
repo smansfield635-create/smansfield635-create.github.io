@@ -9,7 +9,18 @@ on:
     branches: [main]
     paths-ignore:
       - '.github/operation-intake/evidence/repository-operation-intake.post-merge-deployment-activation.receipt.v1.json'
+  issue_comment:
+    types: [created]
   workflow_dispatch:
+    inputs:
+      fixture_id:
+        description: Optional registered fixed-fixture identity
+        required: false
+        type: string
+      action:
+        description: Optional fixed action; only ADMIT is accepted
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -20,7 +31,135 @@ env:
   H: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
+  fixed-fixture-canonical-intake:
+    if: >-
+      (github.event_name == 'workflow_dispatch' && inputs.fixture_id != '') ||
+      (github.event_name == 'issue_comment' &&
+       contains(github.event.comment.body, 'FIXED_FIXTURE_INTAKE_REQUEST_V1') &&
+       (github.event.comment.author_association == 'OWNER' ||
+        github.event.comment.author_association == 'MEMBER' ||
+        github.event.comment.author_association == 'COLLABORATOR'))
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      issues: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Parse low-entropy invocation
+        id: request
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_FIXTURE: ${{ inputs.fixture_id }}
+          DISPATCH_ACTION: ${{ inputs.action }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/fixed-fixture-intake"
+          if [ "$EVENT_NAME" = "issue_comment" ]; then
+            jq -r '.comment.body' "$GITHUB_EVENT_PATH" > "$RUNNER_TEMP/fixed-fixture-intake/comment.txt"
+            marker_line="$(grep -n -m1 '^FIXED_FIXTURE_INTAKE_REQUEST_V1$' "$RUNNER_TEMP/fixed-fixture-intake/comment.txt" | cut -d: -f1)"
+            test -n "$marker_line"
+            invocation="$(sed -n "$((marker_line + 1))p" "$RUNNER_TEMP/fixed-fixture-intake/comment.txt")"
+            fixture_id="$(printf '%s' "$invocation" | awk '{print $1}')"
+            action="$(printf '%s' "$invocation" | awk '{print $2}')"
+            test "$(printf '%s' "$invocation" | awk '{print NF}')" = "2"
+          else
+            fixture_id="$DISPATCH_FIXTURE"
+            action="$DISPATCH_ACTION"
+          fi
+          test -n "$fixture_id"
+          test "$action" = "ADMIT"
+          echo "fixture_id=$fixture_id" >> "$GITHUB_OUTPUT"
+          echo "action=$action" >> "$GITHUB_OUTPUT"
+      - name: Adversarially self-test closed-world dispatcher
+        run: node .github/ai-router/fixed-fixture-intake/self-test.v1.mjs > "$RUNNER_TEMP/fixed-fixture-intake/self-test.json"
+      - name: Select exact repository-held fixture
+        run: |
+          node .github/ai-router/fixed-fixture-intake/dispatcher.v1.mjs \
+            --fixture-id '${{ steps.request.outputs.fixture_id }}' \
+            --action '${{ steps.request.outputs.action }}' \
+            --output "$RUNNER_TEMP/fixed-fixture-intake/selection.json"
+          jq -e '.result == "FIXTURE_SELECTED_FAIL_CLOSED" and .arbitraryPayloadAccepted == false and .authorityCreated == false and .repositoryMutationPerformed == false' "$RUNNER_TEMP/fixed-fixture-intake/selection.json" >/dev/null
+      - name: Verify current main and immutable bridge identity
+        id: identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_main="$(jq -r '.exactGoverningHead' "$RUNNER_TEMP/fixed-fixture-intake/selection.json")"
+          bridge_head="$(jq -r '.bridgeImplementationHead' "$RUNNER_TEMP/fixed-fixture-intake/selection.json")"
+          observed_main="$(git rev-parse HEAD^{commit})"
+          test "$observed_main" = "$expected_main"
+          git cat-file -e "$bridge_head^{commit}"
+          git worktree add --detach "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" "$bridge_head"
+          test "$(git -C "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" rev-parse HEAD^{commit})" = "$bridge_head"
+          jq '.bridgeRequest' "$RUNNER_TEMP/fixed-fixture-intake/selection.json" > "$RUNNER_TEMP/fixed-fixture-intake/bridge-input.json"
+          echo "expected_main=$expected_main" >> "$GITHUB_OUTPUT"
+          echo "bridge_head=$bridge_head" >> "$GITHUB_OUTPUT"
+      - name: Execute immutable permanent bridge into canonical gate
+        id: bridge
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set +e
+          node "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge/tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs" \
+            --input "$RUNNER_TEMP/fixed-fixture-intake/bridge-input.json" \
+            --output "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json"
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Require canonical ADMITTED_AND_LOCKED receipt without rewriting
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json"
+          jq -e '.schema == "PRE_REGISTRATION_INTAKE_BRIDGE_RECEIPT_v1" and .result == "CANONICAL_RECEIPT_RETURNED" and .canonicalGateExecuted == true and .admissionResultRewritten == false and .canonicalReceiptJson.result == "ADMITTED_AND_LOCKED"' "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json" >/dev/null
+          test '${{ steps.bridge.outputs.status }}' = '0'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fixed-fixture-intake-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/fixed-fixture-intake/self-test.json
+            ${{ runner.temp }}/fixed-fixture-intake/selection.json
+            ${{ runner.temp }}/fixed-fixture-intake/bridge-receipt.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Return bounded intake result
+        if: always() && github.event_name == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const p = `${process.env.RUNNER_TEMP}/fixed-fixture-intake/bridge-receipt.json`;
+            let r = {};
+            try { r = JSON.parse(fs.readFileSync(p, 'utf8')); } catch {}
+            const c = r.canonicalReceiptJson || {};
+            const lines = [
+              'FIXED_FIXTURE_INTAKE_RETURN_V1',
+              '',
+              `fixtureId = ${{ steps.request.outputs.fixture_id }}`,
+              `canonicalResult = ${c.result || 'UNKNOWN'}`,
+              `operationId = ${c.operationId || 'UNKNOWN'}`,
+              `lockGeneration = ${c.lock?.lockGeneration ?? c.lockGeneration ?? 'UNKNOWN'}`,
+              `scopeHash = ${c.lock?.scopeHash ?? c.scopeHash ?? 'UNKNOWN'}`,
+              `governingHead = ${{ steps.identity.outputs.expected_main }}`,
+              `workflowRun = ${context.runId}`
+            ];
+            await github.rest.issues.createComment({owner:context.repo.owner, repo:context.repo.repo, issue_number:context.issue.number, body:'```text\n'+lines.join('\n')+'\n```'});
+
   bootstrap-builder-self-test:
+    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,6 +190,7 @@ jobs:
           if-no-files-found: error
 
   fresh-bootstrap-verifier:
+    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
     needs: bootstrap-builder-self-test
     runs-on: ubuntu-latest
     steps:
@@ -84,6 +224,7 @@ jobs:
           if-no-files-found: error
 
   remote-ledger-cas-certification:
+    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
     needs: fresh-bootstrap-verifier
     runs-on: ubuntu-latest
     permissions:
@@ -116,6 +257,7 @@ jobs:
           if-no-files-found: error
 
   package-bootstrap-certification:
+    if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
     needs: [bootstrap-builder-self-test, fresh-bootstrap-verifier, remote-ledger-cas-certification]
     runs-on: ubuntu-latest
     steps:

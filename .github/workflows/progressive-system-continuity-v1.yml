@@ -58,23 +58,60 @@ jobs:
           test -f "$SELF_TEST_PATH"
           test -f "$GAP_REGISTRY_PATH"
           test -f "$WORKFLOW_PATH"
-          node -e "const p=require('./${PROTOCOL_PATH}'),g=require('./${GAP_REGISTRY_PATH}'),e=require('./AI_ENTRYPOINT.json'),r=require('./.github/ai-router/router.v1.json'); if(p.protocolId!=='REPOSITORY_PROGRESSIVE_SYSTEM_CONTINUITY_TRACK_v1'||g.status!=='ACTIVE_FAIL_CLOSED'||e.systemContinuityTrack?.protocol!==process.env.PROTOCOL_PATH||!r.routerInfrastructure.ownedExactPaths.includes(process.env.WORKFLOW_PATH)) process.exit(1)"
-          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
-          node tools/repository-ai-entry-router.mjs --mutation-intent --task "Progressive system continuity route verification" \
-            --path AGENTS.md \
-            --path AI_ENTRYPOINT.json \
-            --path .github/ai-router/router.v1.json \
-            --path "$PROTOCOL_PATH" \
-            --path "$GATE_PATH" \
-            --path "$SELF_TEST_PATH" \
-            --path "$GAP_REGISTRY_PATH" \
-            --path "$WORKFLOW_PATH" \
-            --output "$RUNNER_TEMP/router-eight-path.json"
-          node - <<'NODE'
-          const fs=require('fs');
-          const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));
-          if(x.disposition!=='PASS'||x.routes.length!==8||x.routes.some(r=>r.disposition!=='PASS'||r.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE')) process.exit(1);
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=JSON.parse(fs.readFileSync(process.env.PROTOCOL_PATH,'utf8'));
+          const g=JSON.parse(fs.readFileSync(process.env.GAP_REGISTRY_PATH,'utf8'));
+          const e=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
+          const r=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          if(p.protocolId!=='REPOSITORY_PROGRESSIVE_SYSTEM_CONTINUITY_TRACK_v1') throw new Error('PROGRESSIVE_PROTOCOL_IDENTITY_INVALID');
+          if(g.status!=='ACTIVE_FAIL_CLOSED') throw new Error('GAP_REGISTRY_STATUS_INVALID');
+          if(e.systemContinuityTrack?.protocol!==process.env.PROTOCOL_PATH) throw new Error('ROOT_CONTINUITY_BINDING_INVALID');
+          if(e.executionBackendRegistry!==r.executionBackendRegistry) throw new Error('EXECUTION_BACKEND_POINTER_DIVERGENCE');
+          const paths=['AGENTS.md','AI_ENTRYPOINT.json','.github/ai-router/router.v1.json',process.env.PROTOCOL_PATH,process.env.GATE_PATH,process.env.SELF_TEST_PATH,process.env.GAP_REGISTRY_PATH,process.env.WORKFLOW_PATH];
+          const infra=r.routerInfrastructure;
+          const owned=path=>infra.ownedExactPaths.includes(path)||(infra.ownedPathPrefixes??[]).some(prefix=>path.startsWith(prefix));
+          if(paths.some(path=>!owned(path))) throw new Error('ROUTER_INFRASTRUCTURE_STATIC_OWNERSHIP_INVALID');
+          const backend=JSON.parse(fs.readFileSync(e.executionBackendRegistry,'utf8'));
+          const activeLegacy=backend.schema==='REPOSITORY_AI_EXECUTION_BACKEND_REGISTRY_v1'&&backend.status==='ACTIVE';
+          const retired=backend.schema==='PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF_v1'&&
+            backend.result==='PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED'&&
+            backend.authorityCreated===false&&backend.executionAuthorized===false&&
+            backend.mutationAuthorized===false&&backend.mergeAuthorized===false&&
+            backend.forwardingPerformed===false;
+          if(!activeLegacy&&!retired) throw new Error('EXECUTION_BACKEND_STATE_UNRECOGNIZED_FAIL_CLOSED');
+          const receipt={schema:'PROGRESSIVE_SYSTEM_CONTINUITY_ROUTER_PREREQUISITE_RECEIPT_v1',result:'PASS',mode:activeLegacy?'ACTIVE_LEGACY_ROUTER':'PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF',routerDisposition:'PASS',routerPathCount:paths.length,staticOwnershipVerified:true,retirementHandoffVerified:retired,legacyRouterExecutionRequired:activeLegacy,retiredRouterExecutionProhibited:retired};
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/router-validation.json',JSON.stringify(receipt,null,2)+'\n');
           NODE
+          MODE="$(node -p "require(process.env.RUNNER_TEMP+'/router-validation.json').mode")"
+          if [ "$MODE" = "ACTIVE_LEGACY_ROUTER" ]; then
+            node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+            node tools/repository-ai-entry-router.mjs --mutation-intent --task "Progressive system continuity route verification" \
+              --path AGENTS.md \
+              --path AI_ENTRYPOINT.json \
+              --path .github/ai-router/router.v1.json \
+              --path "$PROTOCOL_PATH" \
+              --path "$GATE_PATH" \
+              --path "$SELF_TEST_PATH" \
+              --path "$GAP_REGISTRY_PATH" \
+              --path "$WORKFLOW_PATH" \
+              --output "$RUNNER_TEMP/router-eight-path.json"
+            node - <<'NODE'
+            const fs=require('fs');
+            const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));
+            if(x.disposition!=='PASS'||x.routes.length!==8||x.routes.some(r=>r.disposition!=='PASS'||r.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE')) process.exit(1);
+            const out=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-validation.json','utf8'));
+            out.legacyRouterSelfTestResult='PASS';
+            out.legacyMutationRouteResult='PASS';
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/router-validation.json',JSON.stringify(out,null,2)+'\n');
+            NODE
+          elif [ "$MODE" = "PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF" ]; then
+            test ! -f "$RUNNER_TEMP/router-self-test.json"
+            test ! -f "$RUNNER_TEMP/router-eight-path.json"
+          else
+            echo "ROUTER_PREREQUISITE_MODE_INVALID:$MODE" >&2
+            exit 1
+          fi
 
       - name: Verify no parallel terminal-closure repair path overlap
         shell: bash
@@ -134,13 +171,14 @@ jobs:
           set -euo pipefail
           mkdir -p artifacts/progressive-system-continuity
           cp "$RUNNER_TEMP/self-test.json" artifacts/progressive-system-continuity/self-test.json
+          cp "$RUNNER_TEMP/router-validation.json" artifacts/progressive-system-continuity/router-prerequisite.json
           node --input-type=module <<'NODE'
           import fs from 'node:fs'; import crypto from 'node:crypto'; import cp from 'node:child_process';
           const head=cp.execFileSync('git',['rev-parse','HEAD^{commit}'],{encoding:'utf8'}).trim();
           const self=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/self-test.json','utf8'));
-          const router=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));
+          const router=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-validation.json','utf8'));
           const digest=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
-          const receipt={schema:'PROGRESSIVE_SYSTEM_CONTINUITY_VALIDATION_RECEIPT_v1',result:'PASS',head,event:process.env.GITHUB_EVENT_NAME,routerDisposition:router.disposition,routerPathCount:router.routes.length,selfTestResult:self.result,selfTestScenarioCount:self.scenarioCount,protocolSha256:digest(process.env.PROTOCOL_PATH),gateSha256:digest(process.env.GATE_PATH),gapRegistrySha256:digest(process.env.GAP_REGISTRY_PATH),parallelRepairPathOverlap:false,productMutationPerformed:false,lifecycleMutationPerformed:false,genericCommandAuthority:false};
+          const receipt={schema:'PROGRESSIVE_SYSTEM_CONTINUITY_VALIDATION_RECEIPT_v1',result:'PASS',head,event:process.env.GITHUB_EVENT_NAME,routerDisposition:router.routerDisposition,routerPathCount:router.routerPathCount,routerValidationMode:router.mode,retirementHandoffVerified:router.retirementHandoffVerified,legacyRouterExecutionRequired:router.legacyRouterExecutionRequired,retiredRouterExecutionProhibited:router.retiredRouterExecutionProhibited,selfTestResult:self.result,selfTestScenarioCount:self.scenarioCount,protocolSha256:digest(process.env.PROTOCOL_PATH),gateSha256:digest(process.env.GATE_PATH),gapRegistrySha256:digest(process.env.GAP_REGISTRY_PATH),parallelRepairPathOverlap:false,productMutationPerformed:false,lifecycleMutationPerformed:false,genericCommandAuthority:false};
           fs.writeFileSync('artifacts/progressive-system-continuity/validation.json',JSON.stringify(receipt,null,2)+'\n');
           NODE
 

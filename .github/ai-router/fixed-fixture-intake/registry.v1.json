@@ -1,0 +1,188 @@
+{
+  "schema": "FIXED_FIXTURE_INTAKE_REGISTRY_v1",
+  "registryId": "REPOSITORY_OPERATION_FIXED_FIXTURE_INTAKE_V1",
+  "status": "BOOTSTRAP_CANDIDATE",
+  "closedWorld": true,
+  "arbitraryPayloadAccepted": false,
+  "fixtures": {
+    "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1": {
+      "fixtureId": "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1",
+      "action": "ADMIT",
+      "exactGoverningHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
+      "bridgeImplementationHead": "9c3daa91a3624632a488853d029dabb25c5ce048",
+      "bridgeRequest": {
+        "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1",
+        "requestId": "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_20260813_001",
+        "repository": "smansfield635-create/smansfield635-create.github.io",
+        "exactGoverningHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
+        "operationRequest": {
+          "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+          "operationId": "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_20260813_001",
+          "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:P1:PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT:V1",
+          "exactGoverningHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
+          "subjectIdentity": {
+            "coordinationIssue": 975,
+            "retirementFamily": "P1_AI_ENTRY_ROUTER_PROJECT_CONTINUATION_TOPOLOGY",
+            "changeClass": "PUBLIC_TOPOLOGY_RETIREMENT",
+            "deletePathCount": 7,
+            "reconcilePathCount": 2,
+            "authorityInherited": false
+          },
+          "requestingAuthority": {
+            "source": "USER_EXPLICIT_PROCEED_20260813",
+            "repositoryWritesAuthorized": true,
+            "branchCreationAuthorized": true,
+            "prAuthorized": true,
+            "mergeAuthority": true,
+            "productAuthority": false,
+            "semanticAuthority": false
+          },
+          "executingRole": {
+            "role": "P1_PUBLIC_TOPOLOGY_RETIREMENT_BUILDER",
+            "mayMutateOnlyAllowedPaths": true
+          },
+          "independentVerifier": {
+            "role": "FRESH_EXACT_HEAD_ROUTER_AND_CONTINUITY_VERIFIER",
+            "mayRepair": false,
+            "mustVerifyExactNinePathScope": true
+          },
+          "constructionProcedureLocator": ".github/ai-router/fixed-fixture-intake/registry.v1.json#P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1",
+          "requiredInputs": [
+            {"id": "CURRENT_MAIN_E0C69D3F_EXACT", "resolved": true},
+            {"id": "P0_PLATFORM_CONTROL_PLANE_RETIREMENT_PASS_CLOSED", "resolved": true},
+            {"id": "ISSUE_975_EXACT_HEAD_P1_CENSUS_COMPLETE", "resolved": true},
+            {"id": "PROJECT_CONTINUATION_HAS_NO_INDEPENDENT_PRODUCT_RUNTIME_CONSUMER", "resolved": true},
+            {"id": "AI_ENTRY_PROJECT_CONTINUATION_METADATA_NON_IMPACTING_TO_LIVE_SUCCESSOR_COMPILER_INTERFACE", "resolved": true}
+          ],
+          "allowedPaths": [
+            ".github/ai-router/project-continuation/README.md",
+            ".github/ai-router/project-continuation/h-earth.continuation.v1.json",
+            ".github/ai-router/project-continuation/instrumentation.continuation.v1.json",
+            ".github/ai-router/project-continuation/laws-contextual-3d.continuation.v1.json",
+            ".github/ai-router/project-continuation/protocol.v1.json",
+            ".github/ai-router/project-continuation/strategy-index.v1.json",
+            ".github/ai-router/project-continuation/verify.v1.mjs",
+            "AGENTS.md",
+            "AI_ENTRYPOINT.json"
+          ],
+          "prohibitedPaths": [
+            ".github/ai-router/router.v1.json",
+            ".github/ai-router/page-excellence-toolchain/",
+            ".github/ai-router/system-continuity/",
+            ".github/ai-router/operation-lifecycle/",
+            ".github/operation-intake/",
+            ".github/workflows/",
+            "tools/",
+            "laws/",
+            "h-earth-3d/",
+            "showroom/",
+            "open-world/",
+            "products/",
+            "validation/"
+          ],
+          "requiredOutputs": [
+            "SEVEN_PROJECT_CONTINUATION_PATHS_ABSENT",
+            "AGENTS_CONTINUATION_INSTRUCTION_REMOVED_ONLY",
+            "AI_ENTRY_PROJECT_CONTINUATION_OBJECT_REMOVED_ONLY",
+            "ROOT_ROUTER_SELF_TEST_PASS",
+            "NO_DANGLING_PROJECT_CONTINUATION_REFERENCES",
+            "NO_PRODUCT_RUNTIME_SEMANTIC_OR_DEPLOYMENT_AUTHORITY_CHANGE",
+            "EXACT_NINE_PATH_DIFF"
+          ],
+          "exactTestCommand": "node tools/repository-ai-entry-router.mjs --self-test --output /tmp/p1-router-self-test.json && test ! -e .github/ai-router/project-continuation && ! grep -q 'projectContinuation' AI_ENTRYPOINT.json && ! grep -q 'Repository-backed project continuation' AGENTS.md",
+          "workflowPath": ".github/workflows/repository-ai-entry-router-validation.yml",
+          "artifactPaths": ["/tmp/p1-router-self-test.json"],
+          "fingerprintDomain": {
+            "algorithm": "SHA-256",
+            "domain": "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_20260813_001",
+            "governingHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
+            "pathCount": 9
+          },
+          "errorPrecedence": [
+            "GOVERNING_HEAD_MISMATCH",
+            "ACTIVE_SCOPE_CONFLICT",
+            "ROUTER_FAIL",
+            "PATH_SCOPE_VIOLATION",
+            "DANGLING_CONTINUATION_REFERENCE",
+            "SURVIVING_AUTHORITY_REGRESSION",
+            "SELF_TEST_FAILURE",
+            "PR_OR_POST_MERGE_VALIDATION_FAILURE"
+          ],
+          "stopConditions": [
+            "STOP_ON_MAIN_DRIFT_BEFORE_CANDIDATE",
+            "STOP_ON_ANY_PATH_OUTSIDE_EXACT_NINE_PATH_SCOPE",
+            "STOP_IF_ANY_PRODUCT_RUNTIME_SEMANTIC_OR_DEPLOYMENT_AUTHORITY_CHANGES",
+            "STOP_IF_ROOT_ROUTER_OR_OPERATION_INTAKE_REGRESSES",
+            "STOP_BEFORE_MERGE_WITHOUT_EXACT_HEAD_VALIDATION_PASS"
+          ],
+          "terminalDispositions": ["PASS_CLOSED", "FAIL_CLOSED", "WITHDRAWN", "SUPERSEDED"]
+        },
+        "constructionProcedure": {
+          "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+          "procedureId": "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_PROCEDURE_20260813_001",
+          "operationClass": "REPOSITORY_AI_ROUTER_PUBLIC_TOPOLOGY_RETIREMENT",
+          "exactGoverningHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
+          "exactAllowedRepositoryPaths": [
+            ".github/ai-router/project-continuation/README.md",
+            ".github/ai-router/project-continuation/h-earth.continuation.v1.json",
+            ".github/ai-router/project-continuation/instrumentation.continuation.v1.json",
+            ".github/ai-router/project-continuation/laws-contextual-3d.continuation.v1.json",
+            ".github/ai-router/project-continuation/protocol.v1.json",
+            ".github/ai-router/project-continuation/strategy-index.v1.json",
+            ".github/ai-router/project-continuation/verify.v1.mjs",
+            "AGENTS.md",
+            "AI_ENTRYPOINT.json"
+          ],
+          "exactBranchAndCommitSequence": [
+            {"step": 1, "action": "CREATE_BRANCH_FROM_EXACT_GOVERNING_HEAD", "branch": "agent/p1-project-continuation-public-topology-retirement-v1"},
+            {"step": 2, "action": "DELETE_EXACT_SEVEN_PROJECT_CONTINUATION_PATHS"},
+            {"step": 3, "action": "MINIMALLY_RECONCILE_AGENTS_AND_AI_ENTRYPOINT_ONLY"},
+            {"step": 4, "action": "RUN_EXACT_TEST_COMMAND_AND_VERIFY_EXACT_NINE_PATH_DIFF"},
+            {"step": 5, "action": "OPEN_DRAFT_PR_AND_REQUIRE_EXACT_HEAD_ROUTER_CONTINUITY_VALIDATION"},
+            {"step": 6, "action": "MERGE_ONLY_AFTER_FRESH_MAIN_AND_EXACT_HEAD_GUARDS"},
+            {"step": 7, "action": "POST_MERGE_VERIFY_ABSENCE_SURVIVORS_AND_CANONICAL_TERMINAL_CLOSURE"}
+          ],
+          "evaluationToolingHeadBindingRule": "EXACT_MAIN_E0C69D3F2581B0917DAB882F5750A45403A523B9;EXACT_NINE_PATH_SCOPE;NO_PRODUCT_RUNTIME_SEMANTIC_OR_DEPLOYMENT_AUTHORITY_CHANGE;NO_ROUTER_OPERATION_INTAKE_OR_PAGE_EXCELLENCE_MUTATION",
+          "canonicalInputSchemas": ["REPOSITORY_OPERATION_REQUEST_v1", "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"],
+          "canonicalOutputSchemas": ["REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1", "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1"],
+          "errorCodeAndValidationPrecedence": [
+            "GOVERNING_HEAD_MISMATCH",
+            "ACTIVE_SCOPE_CONFLICT",
+            "ROUTER_FAIL",
+            "PATH_SCOPE_VIOLATION",
+            "DANGLING_CONTINUATION_REFERENCE",
+            "SURVIVING_AUTHORITY_REGRESSION",
+            "SELF_TEST_FAILURE",
+            "PR_OR_POST_MERGE_VALIDATION_FAILURE"
+          ],
+          "exactTestRunnerCommand": "node tools/repository-ai-entry-router.mjs --self-test --output /tmp/p1-router-self-test.json && test ! -e .github/ai-router/project-continuation && ! grep -q 'projectContinuation' AI_ENTRYPOINT.json && ! grep -q 'Repository-backed project continuation' AGENTS.md",
+          "independentVerifierDefinition": {
+            "kind": "GITHUB_ACTIONS_EXACT_HEAD",
+            "mayRepair": false,
+            "requires": ["ROUTER_SELF_TEST_PASS", "EXACT_NINE_PATH_DIFF", "NO_DANGLING_CONTINUATION_REFERENCES", "POST_MERGE_PUSH_PASS"]
+          },
+          "workflowAndArtifactPackagingPaths": {
+            "workflowPath": ".github/workflows/repository-ai-entry-router-validation.yml",
+            "artifactPaths": ["/tmp/p1-router-self-test.json"]
+          },
+          "bridgeOutputFingerprintDomain": {
+            "algorithm": "SHA-256",
+            "domain": "P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_20260813_001",
+            "governingHead": "e0c69d3f2581b0917dab882f5750a45403a523b9",
+            "pathCount": 9
+          },
+          "priorAttemptInspectionLimits": {
+            "mayInspectIssue975": true,
+            "mayInspectP0ClosureEvidence": true,
+            "mayInspectContinuityGapHistory": true,
+            "mayMutatePriorOperations": false,
+            "mayExpandBeyondNinePaths": false
+          }
+        },
+        "requestNonce": "be968cc52065e47b0d3d072862afff04ab8584c67f44160d71de3aedf1581d9f",
+        "executionHolder": "P1_PROJECT_CONTINUATION_RETIREMENT_FIXTURE_001"
+      }
+    }
+  }
+}

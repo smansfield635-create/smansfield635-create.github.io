@@ -1,0 +1,152 @@
+name: Workflow Lifecycle V2 Remote Execution Binding Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/ai-room-transport/workflow-lifecycle-continuity-v2-remote-execution.v1.mjs'
+      - '.github/workflows/workflow-lifecycle-continuity-v2-execution-binding-validation.yml'
+      - '.github/ai-toolset-transport/workflow-lifecycle-continuity-v2-execution-binding.v1.json'
+      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/ai-room-transport/workflow-lifecycle-continuity-v2-remote-execution.v1.mjs'
+      - '.github/workflows/workflow-lifecycle-continuity-v2-execution-binding-validation.yml'
+      - '.github/ai-toolset-transport/workflow-lifecycle-continuity-v2-execution-binding.v1.json'
+      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
+  workflow_dispatch:
+    inputs:
+      candidate_head:
+        description: Exact two-stage binding candidate head
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CHECKOUT_HEAD: ${{ github.event.pull_request.head.sha || inputs.candidate_head || github.sha }}
+  REGISTRATION_BASE: b46d6453b8d2a8c39b0dd91c1d32db34aee6f073
+  ADAPTER_PATH: tools/ai-room-transport/workflow-lifecycle-continuity-v2-remote-execution.v1.mjs
+  VALIDATION_PATH: .github/workflows/workflow-lifecycle-continuity-v2-execution-binding-validation.yml
+  DESCRIPTOR_PATH: .github/ai-toolset-transport/workflow-lifecycle-continuity-v2-execution-binding.v1.json
+  REGISTRY_PATH: .github/ai-toolset-transport/authorized-toolset-registry.v1.json
+  VERIFIER_PATH: .github/ai-router/workflow-lifecycle-continuity/workflow-lifecycle-continuity-verifier.v1.mjs
+  VERIFIER_BLOB: 1252498ced4960ce7066a51b916f833d8b2895f6
+  DISCOVERY_PATH: .github/ai-router/workflow-lifecycle-continuity/consumer-discovery.v2.mjs
+  DISCOVERY_BLOB: 074a0a0ca772f7e31d8552a5d05308c0bc49f3b8
+
+jobs:
+  validate-binding:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CHECKOUT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve exact two-stage lineage
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTIVE_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$ACTIVE_HEAD" = "$CHECKOUT_HEAD"
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            read -r -a PARENTS <<< "$(git show -s --format=%P "$ACTIVE_HEAD")"
+            test "${#PARENTS[@]}" -eq 2
+            CANDIDATE_HEAD="${PARENTS[1]}"
+          else
+            CANDIDATE_HEAD="$ACTIVE_HEAD"
+          fi
+          TOOLING_HEAD="$(git rev-parse "$CANDIDATE_HEAD^")"
+          CANDIDATE_BASE="$(git rev-parse "$TOOLING_HEAD^")"
+          test "$CANDIDATE_BASE" = "$REGISTRATION_BASE"
+          echo "ACTIVE_HEAD=$ACTIVE_HEAD" >> "$GITHUB_ENV"
+          echo "CANDIDATE_HEAD=$CANDIDATE_HEAD" >> "$GITHUB_ENV"
+          echo "TOOLING_HEAD=$TOOLING_HEAD" >> "$GITHUB_ENV"
+      - name: Verify exact scope, native blobs, and descriptor binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only "$REGISTRATION_BASE" "$TOOLING_HEAD" | sort > "$RUNNER_TEMP/tooling.txt"
+          printf '%s\n' "$ADAPTER_PATH" "$VALIDATION_PATH" | sort > "$RUNNER_TEMP/tooling.expected"
+          diff -u "$RUNNER_TEMP/tooling.expected" "$RUNNER_TEMP/tooling.txt"
+          git diff --name-only "$TOOLING_HEAD" "$CANDIDATE_HEAD" | sort > "$RUNNER_TEMP/registration.txt"
+          printf '%s\n' "$DESCRIPTOR_PATH" "$REGISTRY_PATH" | sort > "$RUNNER_TEMP/registration.expected"
+          diff -u "$RUNNER_TEMP/registration.expected" "$RUNNER_TEMP/registration.txt"
+          test "$(git rev-parse "$CANDIDATE_HEAD:$VERIFIER_PATH")" = "$VERIFIER_BLOB"
+          test "$(git rev-parse "$CANDIDATE_HEAD:$DISCOVERY_PATH")" = "$DISCOVERY_BLOB"
+          node --input-type=module - "$TOOLING_HEAD" <<'NODE'
+          import fs from 'node:fs';
+          const toolingHead=process.argv[2];
+          const d=JSON.parse(fs.readFileSync(process.env.DESCRIPTOR_PATH,'utf8'));
+          const r=JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH,'utf8'));
+          if(d.schema!=='AUTHORIZED_TOOLSET_DESCRIPTOR_v1')throw Error('DESCRIPTOR_SCHEMA_MISMATCH');
+          if(d.exactToolingHead!==toolingHead)throw Error('TOOLING_HEAD_BINDING_MISMATCH');
+          if(d.commandSpecification?.scriptPath!==process.env.ADAPTER_PATH)throw Error('ADAPTER_PATH_MISMATCH');
+          if(d.allowedMutationPaths?.length!==0)throw Error('WRITABLE_PATH_LEAK');
+          if(d.commandSpecification?.shell!==false||d.commandSpecification?.extraArgumentsAllowed!==false||d.commandSpecification?.environmentOverridesAllowed!==false)throw Error('COMMAND_BOUNDARY_INVALID');
+          const m=r.tools.filter(x=>x.descriptorId===d.descriptorId&&x.operationId===d.operationId);
+          if(m.length!==1)throw Error('REGISTRY_DESCRIPTOR_CARDINALITY_MISMATCH');
+          if(JSON.stringify(m[0])!==JSON.stringify(d))throw Error('REGISTRY_DESCRIPTOR_CONTENT_MISMATCH');
+          NODE
+      - name: Run adapter self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check "$ADAPTER_PATH"
+          node "$ADAPTER_PATH" --self-test --output "$RUNNER_TEMP/adapter-self-test.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/adapter-self-test.json');if(r.result!=='PASS_CLOSED'||r.negativeFixturesPassed!==r.negativeFixtureCount||r.genericCommandAuthority)process.exit(1)"
+      - name: Run closed-world active conformance
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/active-conformance.v1.mjs --root . --expected-head "$ACTIVE_HEAD" --holder WORKFLOW_LIFECYCLE_V2_ACTIVE_CONFORMANCE_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT} --output "$RUNNER_TEMP/active-conformance.json"
+          node -e "const r=require(process.env.RUNNER_TEMP+'/active-conformance.json');if(r.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||r.descriptorsResolved!==r.descriptorCount)process.exit(1)"
+      - name: Reproduce fixed-command dispatch with expected fail-closed native fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import {dispatchLoaded} from './tools/ai-room-transport/fixed-command-dispatcher.v1.mjs';
+          import {validateCommandReceipt} from './tools/ai-room-transport/command-receipt-validator.v1.mjs';
+          const d=JSON.parse(fs.readFileSync(process.env.DESCRIPTOR_PATH,'utf8'));
+          const registry=JSON.parse(fs.readFileSync(process.env.REGISTRY_PATH,'utf8'));
+          const negativeAssessment={schema:'WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_ASSESSMENT_v2',governingHead:process.env.ACTIVE_HEAD,gapId:'WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY',requirements:{},signals:[{class:'ZERO_JOB_FAILURE_SIGNAL',executedJobCount:0}],authorityEffects:{physicalRetirementAuthorized:false,gapRegistryMutationAuthorized:false,mergeAuthorized:false,productMutationAuthorized:false,workflowMutationAuthorized:false},consumerDiscovery:{schema:'WORKFLOW_LIFECYCLE_CONSUMER_DISCOVERY_REQUEST_v2'}};
+          const request={schema:'AI_ROOM_EXECUTION_REQUEST_v1',requestId:'WORKFLOW_LIFECYCLE_V2_BINDING_VALIDATION_REQUEST',descriptorId:d.descriptorId,operationId:d.operationId,admissionReceiptIdentity:'SYNTHETIC_VALIDATION_ADMISSION',routerReceiptIdentity:'SYNTHETIC_VALIDATION_ROUTE',inputs:{subjectHead:process.env.ACTIVE_HEAD,assessmentBase64:Buffer.from(JSON.stringify(negativeAssessment)).toString('base64'),executionHolder:'WORKFLOW_LIFECYCLE_V2_DISPATCH_VALIDATION'},availableCapabilities:{schema:'AVAILABLE_CAPABILITY_RECEIPT_v1',availableBackends:['GITHUB_ACTIONS_CLEAN_EXECUTION'],availableWorkflowPaths:[d.workflowPath],availableToolingHeads:[d.exactToolingHead]},requestNonce:'b'.repeat(64)};
+          const admission={schema:'REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1',result:'ADMITTED_AND_LOCKED',operationId:d.operationId,projectId:d.projectId,operationStarted:true,workflowExecutionAuthorized:true,lock:{operationId:d.operationId,state:'ADMITTED_LOCKED',released:false,lockGeneration:999999}};
+          const router={schema:'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1',disposition:'PASS',routes:[{projectId:d.projectId,disposition:'PASS'}]};
+          const receipt=dispatchLoaded({request,registry,admissionReceipt:admission,routerReceipt:router,root:'.',allowCandidate:false});
+          const validation=validateCommandReceipt({descriptor:d,receipt});
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/command-execution-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/command-validation.json',JSON.stringify(validation,null,2)+'\n');
+          if(receipt.executionDisposition!=='COMMAND_EXECUTED_AND_FAILED')throw Error('EXPECTED_FAIL_CLOSED_DISPATCH_NOT_OBSERVED');
+          if(receipt.changedPaths.length!==0||receipt.prohibitedSideEffectsObserved!==false)throw Error('MUTATION_OBSERVED');
+          if(validation.valid!==true||validation.validationDisposition!=='VALIDATED_FAILURE')throw Error('FAILURE_RECEIPT_NOT_STRUCTURALLY_VALID');
+          NODE
+      - name: Emit binding validation receipt
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs');const a=require(process.env.RUNNER_TEMP+'/adapter-self-test.json');const c=require(process.env.RUNNER_TEMP+'/active-conformance.json');const x=require(process.env.RUNNER_TEMP+'/command-execution-receipt.json');const v=require(process.env.RUNNER_TEMP+'/command-validation.json');
+          const out={schema:'WORKFLOW_LIFECYCLE_V2_EXECUTION_BINDING_VALIDATION_RECEIPT_v1',result:'PASS_CLOSED',activeHead:process.env.ACTIVE_HEAD,candidateHead:process.env.CANDIDATE_HEAD,toolingHead:process.env.TOOLING_HEAD,verifierBlob:process.env.VERIFIER_BLOB,consumerDiscoveryBlob:process.env.DISCOVERY_BLOB,adapterSelfTest:a.result,activeConformance:c.result,fixedCommandFailureFixture:x.executionDisposition,fixedCommandFailureReceiptValid:v.valid,zeroWritableRepositoryPaths:x.changedPaths.length===0,genericCommandAuthority:false,gapClosureAuthorized:false,physicalRetirementAuthorized:false,productMutationAuthorized:false,mergeAuthorized:false,realV2AssessmentExecuted:false};
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/binding-validation-summary.json',JSON.stringify(out,null,2)+'\n');
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workflow-lifecycle-v2-binding-validation
+          path: |
+            ${{ runner.temp }}/adapter-self-test.json
+            ${{ runner.temp }}/active-conformance.json
+            ${{ runner.temp }}/command-execution-receipt.json
+            ${{ runner.temp }}/command-validation.json
+            ${{ runner.temp }}/binding-validation-summary.json
+          if-no-files-found: error
+          retention-days: 90

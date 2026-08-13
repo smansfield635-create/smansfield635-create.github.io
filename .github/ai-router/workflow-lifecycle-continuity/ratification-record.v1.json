@@ -1,0 +1,13 @@
+{
+  "schema":"WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_RATIFICATION_RECORD_v1",
+  "instrumentId":"WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_v1",
+  "status":"RATIFIED_ACTIVE_FAIL_CLOSED",
+  "ratifiedAgainstHead":"27d763cce6029ebb19f6325346d120b95003019d",
+  "sourceCandidatePr":943,
+  "sourceCandidateHead":"989dfcf6beb728e91ad31d103965b869b500d12a",
+  "sourceCandidateVerifierBlob":"8d2dd8788b1b035e2f1dd89a57d2d76d3cee673d",
+  "sourceCandidateSelfTestBlob":"3c58bf62da40a9f72e49d6d8beddccd5b9da2711",
+  "independentCandidateVerification":"PASS_CLOSED_7_OF_7",
+  "interveningMainDelta":"gauges/index.html_ONLY_DISJOINT",
+  "authority":{"userDirectedRatification":true,"mergeAuthorizedForExactInstallation":true,"gapClosureAuthorized":false,"physicalRetirementAuthorized":false,"workflowCarrierMutationAuthorized":false}
+}

@@ -68,12 +68,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          set +e
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
             --output /tmp/repository-operation-successor-self-test.json
+          successor_status=$?
+          set -e
+          export SUCCESSOR_STATUS="$successor_status"
           node - <<'NODE'
           const r=require('/tmp/repository-operation-successor-self-test.json');
-          const active = r.result==='PASS_CLOSED' && r.failCount===0 && r.testCount>=11;
-          const retired = r.schema==='PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF_v1' &&
+          const status=Number(process.env.SUCCESSOR_STATUS);
+          const active = status===0 && r.result==='PASS_CLOSED' && r.failCount===0 && r.testCount>=11;
+          const retired = status===1 &&
+            r.schema==='PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF_v1' &&
             r.result==='PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED' &&
             r.authorityCreated===false &&
             r.executionAuthorized===false &&

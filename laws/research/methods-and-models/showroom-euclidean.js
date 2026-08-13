@@ -2,6 +2,8 @@
   "use strict";
 
   const contract = "METHODS_MODELS_ROTATIONAL_TEXT_INSTRUMENT_v1";
+  document.documentElement.dataset.methodsModelsEuclideanShowroom = "active";
+
   const stylesheet = document.createElement("link");
   stylesheet.rel = "stylesheet";
   stylesheet.href = "/laws/research/methods-and-models/rotational-text.css?v=METHODS_MODELS_ROTATIONAL_TEXT_INSTRUMENT_V1";

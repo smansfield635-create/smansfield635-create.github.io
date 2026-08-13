@@ -16,6 +16,19 @@
   const script = document.createElement("script");
   script.src = "/laws/research/methods-and-models/rotational-text.js?v=METHODS_MODELS_ROTATIONAL_TEXT_INSTRUMENT_V1";
   script.dataset.mmRotationalTextLoader = contract;
+  script.addEventListener("load", () => {
+    const orbit = document.querySelector("[data-mm-family-tabs]");
+    if (!orbit) return;
+    const probe = document.createElement("i");
+    probe.setAttribute("aria-hidden", "true");
+    probe.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;width:var(--mm-orbit-rx);height:var(--mm-orbit-ry);";
+    orbit.append(probe);
+    const rect = probe.getBoundingClientRect();
+    probe.remove();
+    if (rect.width > 0) orbit.style.setProperty("--mm-orbit-rx", `${rect.width}px`);
+    if (rect.height > 0) orbit.style.setProperty("--mm-orbit-ry", `${rect.height}px`);
+    dispatchEvent(new Event("resize"));
+  });
 
   document.head.append(stylesheet, interaction, script);
 })();

@@ -35,11 +35,7 @@
     lensIndex: 0,
     transitionTimer: 0,
     wheelLocks: { x: 0, y: 0, z: 0 },
-    pointer: {
-      deck: null,
-      family: null,
-      lens: null
-    }
+    pointer: { deck: null, family: null, lens: null }
   };
 
   const normalize = (value, length) => length ? ((value % length) + length) % length : 0;
@@ -52,29 +48,21 @@
     return forward <= backward ? forward : -backward;
   }
 
-  function familyButtons() {
-    return Array.from(elements.familyTabs.querySelectorAll(".mm-family-tab"));
-  }
-
-  function modelCards() {
-    return Array.from(elements.deck.querySelectorAll(".mm-model-card"));
-  }
+  function familyButtons() { return Array.from(elements.familyTabs.querySelectorAll(".mm-family-tab")); }
+  function modelCards() { return Array.from(elements.deck.querySelectorAll(".mm-model-card")); }
 
   function activeFamilyIndex() {
-    const buttons = familyButtons();
-    const selected = buttons.findIndex(button => button.getAttribute("aria-selected") === "true");
+    const selected = familyButtons().findIndex(button => button.getAttribute("aria-selected") === "true");
     return selected >= 0 ? selected : 0;
   }
 
   function activeModelIndex() {
-    const cards = modelCards();
-    const selected = cards.findIndex(card => card.dataset.position === "active");
+    const selected = modelCards().findIndex(card => card.dataset.position === "active");
     return selected >= 0 ? selected : 0;
   }
 
   function activeLensIndex() {
-    const buttons = elements.lensButtons();
-    const selected = buttons.findIndex(button => button.getAttribute("aria-selected") === "true");
+    const selected = elements.lensButtons().findIndex(button => button.getAttribute("aria-selected") === "true");
     return selected >= 0 ? selected : 0;
   }
 
@@ -89,8 +77,7 @@
 
   function yPosition(offset) {
     if (offset === 0) return "active";
-    if (offset < 0) return "previous";
-    return "next";
+    return offset < 0 ? "previous" : "next";
   }
 
   function zPosition(offset) {
@@ -156,13 +143,8 @@
     });
   }
 
-  function familyLabel() {
-    return familyButtons()[state.familyIndex]?.textContent?.trim() || "Family";
-  }
-
-  function lensLabel() {
-    return elements.lensButtons()[state.lensIndex]?.textContent?.trim() || "Lens";
-  }
+  function familyLabel() { return familyButtons()[state.familyIndex]?.textContent?.trim() || "Family"; }
+  function lensLabel() { return elements.lensButtons()[state.lensIndex]?.textContent?.trim() || "Lens"; }
 
   function coordinateText() {
     const x = `X ${String(state.modelIndex + 1).padStart(2, "0")}/${String(state.modelCount).padStart(2, "0")}`;
@@ -184,7 +166,7 @@
   }
 
   function publish(source) {
-    const detail = Object.freeze({
+    globalThis.dispatchEvent(new CustomEvent("METHODS_MODELS_EUCLIDEAN_STATE_CHANGED", { detail: Object.freeze({
       contract: CONTRACT,
       source,
       x: Object.freeze({ index: state.modelIndex, count: state.modelCount, modelId: root.dataset.mmModel || "" }),
@@ -193,8 +175,7 @@
       display: document.body.dataset.mmDisplay || "expanded",
       productAcceptanceGranted: false,
       sourceCompletenessClaimed: false
-    });
-    globalThis.dispatchEvent(new CustomEvent("METHODS_MODELS_EUCLIDEAN_STATE_CHANGED", { detail }));
+    }) }));
   }
 
   function clearTransition() {
@@ -224,8 +205,7 @@
   }
 
   function restoreLens(index) {
-    const lenses = elements.lensButtons();
-    const target = lenses[index];
+    const target = elements.lensButtons()[index];
     if (target && target.getAttribute("aria-selected") !== "true") target.click();
   }
 
@@ -238,13 +218,10 @@
   function moveFamily(delta, source = "z-control") {
     const buttons = familyButtons();
     if (!buttons.length) return;
-    const preservedLensIndex = state.lensIndex;
+    const preservedLensIndex = activeLensIndex();
     beginTransition("z", delta > 0 ? "next" : "previous");
     buttons[normalize(state.familyIndex + delta, buttons.length)]?.click();
-    const lenses = elements.lensButtons();
-    if (lenses[preservedLensIndex]?.getAttribute("aria-selected") !== "true") {
-      lenses[preservedLensIndex]?.click();
-    }
+    restoreLens(preservedLensIndex);
     publish(source);
   }
 
@@ -252,7 +229,7 @@
     const buttons = elements.lensButtons();
     if (!buttons.length) return;
     beginTransition("y", delta > 0 ? "next" : "previous");
-    buttons[normalize(state.lensIndex + delta, buttons.length)]?.click();
+    buttons[normalize(activeLensIndex() + delta, buttons.length)]?.click();
     publish(source);
   }
 
@@ -270,8 +247,8 @@
     if (!button) return;
     const buttons = elements.lensButtons();
     const target = buttons.indexOf(button);
-    state.lensIndex = target;
     const offset = signedOffset(target, state.lensIndex, buttons.length);
+    state.lensIndex = target;
     if (offset) beginTransition("y", offset > 0 ? "next" : "previous");
   }
 
@@ -279,14 +256,14 @@
     const next = event.target.closest("[data-mm-next], [data-mm-dock-next]");
     const previous = event.target.closest("[data-mm-previous], [data-mm-dock-previous]");
     if (!next && !previous) return;
-    const preservedLensIndex = state.lensIndex;
+    const preservedLensIndex = activeLensIndex();
     beginTransition("x", next ? "next" : "previous");
     queueMicrotask(() => restoreLens(preservedLensIndex));
   }
 
   function pointerStart(slot, event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    state.pointer[slot] = { id: event.pointerId, x: event.clientX, y: event.clientY, lensIndex: state.lensIndex };
+    state.pointer[slot] = { id: event.pointerId, x: event.clientX, y: event.clientY, lensIndex: activeLensIndex() };
   }
 
   function pointerFinish(slot, event, handler) {
@@ -337,9 +314,8 @@
       event.preventDefault();
       moveLens(dy > 0 ? 1 : -1, "y-stage-swipe");
     } else if (Math.abs(dx) >= 44) {
-      const preservedLensIndex = start.lensIndex;
       beginTransition("x", dx < 0 ? "next" : "previous");
-      queueMicrotask(() => restoreLens(preservedLensIndex));
+      queueMicrotask(() => restoreLens(start.lensIndex));
     }
   }), true);
   elements.deck.addEventListener("pointercancel", () => { state.pointer.deck = null; }, true);

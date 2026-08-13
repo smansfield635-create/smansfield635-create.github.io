@@ -223,6 +223,12 @@
     });
   }
 
+  function restoreLens(index) {
+    const lenses = elements.lensButtons();
+    const target = lenses[index];
+    if (target && target.getAttribute("aria-selected") !== "true") target.click();
+  }
+
   function moveModel(delta, source = "x-control") {
     beginTransition("x", delta > 0 ? "next" : "previous");
     (delta > 0 ? elements.next : elements.previous)?.click();
@@ -273,8 +279,12 @@
   }
 
   function captureModelControl(event) {
-    if (event.target.closest("[data-mm-next], [data-mm-dock-next]")) beginTransition("x", "next");
-    if (event.target.closest("[data-mm-previous], [data-mm-dock-previous]")) beginTransition("x", "previous");
+    const next = event.target.closest("[data-mm-next], [data-mm-dock-next]");
+    const previous = event.target.closest("[data-mm-previous], [data-mm-dock-previous]");
+    if (!next && !previous) return;
+    const preservedLensIndex = state.lensIndex;
+    beginTransition("x", next ? "next" : "previous");
+    queueMicrotask(() => restoreLens(preservedLensIndex));
   }
 
   function pointerStart(slot, event) {
@@ -299,6 +309,7 @@
   elements.familyTabs.addEventListener("click", captureFamilyClick, true);
   elements.lensTabs.addEventListener("click", captureLensClick, true);
   root.addEventListener("click", captureModelControl, true);
+  elements.dock?.addEventListener("click", captureModelControl, true);
 
   elements.familyPrevious?.addEventListener("click", () => moveFamily(-1, "z-previous-control"));
   elements.familyNext?.addEventListener("click", () => moveFamily(1, "z-next-control"));
@@ -329,7 +340,9 @@
       event.preventDefault();
       moveLens(dy > 0 ? 1 : -1, "y-stage-swipe");
     } else if (Math.abs(dx) >= 44) {
+      const preservedLensIndex = state.lensIndex;
       beginTransition("x", dx < 0 ? "next" : "previous");
+      queueMicrotask(() => restoreLens(preservedLensIndex));
     }
   }), true);
   elements.deck.addEventListener("pointercancel", () => { state.pointer.deck = null; }, true);

@@ -96,15 +96,7 @@ jobs:
               --path "$GAP_REGISTRY_PATH" \
               --path "$WORKFLOW_PATH" \
               --output "$RUNNER_TEMP/router-eight-path.json"
-            node - <<'NODE'
-            const fs=require('fs');
-            const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));
-            if(x.disposition!=='PASS'||x.routes.length!==8||x.routes.some(r=>r.disposition!=='PASS'||r.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE')) process.exit(1);
-            const out=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-validation.json','utf8'));
-            out.legacyRouterSelfTestResult='PASS';
-            out.legacyMutationRouteResult='PASS';
-            fs.writeFileSync(process.env.RUNNER_TEMP+'/router-validation.json',JSON.stringify(out,null,2)+'\n');
-            NODE
+            node -e "const fs=require('fs');const x=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));if(x.disposition!=='PASS'||x.routes.length!==8||x.routes.some(r=>r.disposition!=='PASS'||r.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'))process.exit(1);const out=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-validation.json','utf8'));out.legacyRouterSelfTestResult='PASS';out.legacyMutationRouteResult='PASS';fs.writeFileSync(process.env.RUNNER_TEMP+'/router-validation.json',JSON.stringify(out,null,2)+'\\n')"
           elif [ "$MODE" = "PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF" ]; then
             test ! -f "$RUNNER_TEMP/router-self-test.json"
             test ! -f "$RUNNER_TEMP/router-eight-path.json"

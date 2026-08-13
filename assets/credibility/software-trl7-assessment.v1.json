@@ -1,6 +1,6 @@
 {
   "schema": "DIAMOND_GATE_SOFTWARE_TRL7_SELF_ASSESSMENT_v1",
-  "status": "PUBLIC_INSPECTABLE_SELF_ASSESSMENT",
+  "status": "PUBLIC_INSPECTABLE_AND_MECHANICALLY_VALIDATED_SELF_ASSESSMENT",
   "assessmentDate": "2026-08-13",
   "assessor": "Diamond Gate",
   "assessedTechnology": "Diamond Gate governed software-construction platform",
@@ -74,6 +74,26 @@
       ]
     }
   ],
+  "mechanicalValidation": {
+    "status": "MANDATORY_FAIL_CLOSED",
+    "validator": "/.github/credibility/validate-software-trl7-assessment.v1.mjs",
+    "workflow": "/.github/workflows/software-trl7-readiness-validation-v1.yml",
+    "receiptArtifact": "software-trl7-mechanical-validation-receipt",
+    "validatedInvariants": [
+      "assessment JSON parses and carries the exact schema identity",
+      "the assessed technology and TRL level remain exact",
+      "NASA NODIS and NASA SWEHB remain the declared external framework sources",
+      "the included and excluded assessment boundaries remain explicit",
+      "all four required TRL 7 criterion identities remain present and unique",
+      "every criterion carries an allowed disposition, substantive rationale and multiple evidence references",
+      "local evidence references resolve to repository files",
+      "historical GitHub implementation evidence is pinned to exact 40-character commit identities",
+      "the closure preserves self-assessment and NASA non-certification language",
+      "the human-facing readiness page and shared TRL presentation preserve the same claim boundary",
+      "no positive NASA approval, certification or endorsement statement is introduced"
+    ],
+    "changePolicy": "Any change to the assessment, shared TRL presentation, readiness page, public claims registry, validator or validation workflow triggers mechanical revalidation. Failure prevents the validation job from passing."
+  },
   "closure": {
     "decision": "TRL_7_SELF_ASSESSMENT_CLOSED_PASS",
     "qualification": "This is a Diamond Gate self-assessment against published NASA software TRL criteria. It is not a NASA certification, evaluation, affiliation or endorsement.",

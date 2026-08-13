@@ -26,6 +26,7 @@ env:
   ADOPTION_CANDIDATE: ${{ inputs.candidate }}
   ADOPTION_REQUEST: ${{ inputs.adopt }}
   ADOPTION_OUTPUT: ${{ runner.temp }}/exact-candidate-adoption-receipt.json
+  FINAL_ADOPTION_OUTPUT: ${{ runner.temp }}/exact-candidate-adoption-final.receipt.json
 
 jobs:
   adopt-and-qualify:
@@ -40,10 +41,54 @@ jobs:
       - name: Run carrier self-test
         run: node .github/ai-router/exact-candidate-adoption/exact-candidate-adoption-self-test.v1.mjs
 
-      - name: Verify and adopt exact candidate
+      - name: Verify and request exact adoption
+        id: adoption
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node .github/ai-router/exact-candidate-adoption/exact-candidate-adoption.v1.mjs
+
+      - name: Reconcile authoritative post-adoption state
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const fixture=JSON.parse(fs.readFileSync('.github/ai-router/exact-candidate-adoption/fixtures/gen1378.v1.json','utf8'));
+          let raw={result:'NO_EXECUTOR_RECEIPT'};
+          if(fs.existsSync(process.env.ADOPTION_OUTPUT)) raw=JSON.parse(fs.readFileSync(process.env.ADOPTION_OUTPUT,'utf8'));
+          const url=`https://api.github.com/repos/${fixture.repository}/branches/${encodeURIComponent(fixture.authorizedBranch)}`;
+          const response=await fetch(url,{headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${process.env.GITHUB_TOKEN}`,'X-GitHub-Api-Version':'2022-11-28'}});
+          if(!response.ok) throw new Error(`POST_ADOPTION_BRANCH_READ_FAILED:${response.status}`);
+          const branch=await response.json();
+          const observed=branch?.commit?.sha ?? null;
+          let result;
+          if(observed===fixture.candidate) result=raw.result==='ALREADY_ADOPTED'?'ALREADY_ADOPTED':'ADOPTED';
+          else if(observed===fixture.expectedParent) result='REFUSED';
+          else result='ADOPTION_OUTCOME_UNKNOWN';
+          const receipt={
+            schema:'EXACT_CANDIDATE_ADOPTION_FINAL_RECEIPT_v1',
+            result,
+            generation:fixture.generation,
+            candidate:fixture.candidate,
+            authorizedBranch:fixture.authorizedBranch,
+            expectedParent:fixture.expectedParent,
+            observedPostState:observed,
+            executorResult:raw.result ?? null,
+            executorErrorCode:raw.errorCode ?? null,
+            mutationObserved:observed===fixture.candidate && observed!==fixture.expectedParent,
+            force:false
+          };
+          fs.writeFileSync(process.env.FINAL_ADOPTION_OUTPUT,JSON.stringify(receipt,null,2)+'\n');
+          if(!['ADOPTED','ALREADY_ADOPTED'].includes(result)) {
+            console.error(JSON.stringify(receipt));
+            process.exit(result==='ADOPTION_OUTCOME_UNKNOWN'?2:1);
+          }
+          console.log(JSON.stringify(receipt));
+          NODE
 
       - name: Checkout adopted candidate for explicit qualification
         if: success()
@@ -82,9 +127,9 @@ jobs:
         run: |
           node - <<'NODE'
           const fs=require('fs'),crypto=require('crypto');
-          const adoption=JSON.parse(fs.readFileSync(process.env.ADOPTION_OUTPUT,'utf8'));
+          const adoption=JSON.parse(fs.readFileSync(process.env.FINAL_ADOPTION_OUTPUT,'utf8'));
           const router=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-self-test-receipt.json','utf8'));
-          const receipt={schema:'EXACT_CANDIDATE_ADOPTION_QUALIFICATION_RECEIPT_v1',result:'PASS_CLOSED',generation:1378,candidate:'cb0b892fdc20f612e79c1c35307bd476192cddef',adoptionResult:adoption.result,fixtureDigest:adoption.fixtureDigest,routerSelfTest:router};
+          const receipt={schema:'EXACT_CANDIDATE_ADOPTION_QUALIFICATION_RECEIPT_v1',result:'PASS_CLOSED',generation:1378,candidate:'cb0b892fdc20f612e79c1c35307bd476192cddef',adoptionResult:adoption.result,routerSelfTest:router};
           const text=JSON.stringify(receipt,null,2)+'\n';
           receipt.receiptDigest=crypto.createHash('sha256').update(text).digest('hex');
           fs.writeFileSync(process.env.RUNNER_TEMP+'/exact-candidate-qualification-receipt.json',JSON.stringify(receipt,null,2)+'\n');
@@ -97,6 +142,7 @@ jobs:
           name: exact-candidate-adoption-receipt-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/exact-candidate-adoption-receipt.json
+            ${{ runner.temp }}/exact-candidate-adoption-final.receipt.json
             ${{ runner.temp }}/exact-candidate-qualification-receipt.json
             ${{ runner.temp }}/router-self-test-receipt.json
           if-no-files-found: warn

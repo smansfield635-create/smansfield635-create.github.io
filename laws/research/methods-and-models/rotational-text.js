@@ -141,21 +141,28 @@
     pointerId = event.pointerId;
     startX = event.clientX;
     deltaX = 0;
-    orbit.dataset.mmDragging = "true";
-    orbit.setPointerCapture?.(pointerId);
+    orbit.dataset.mmDragging = "false";
   });
 
   orbit.addEventListener("pointermove", event => {
     if (pointerId !== event.pointerId) return;
     deltaX = event.clientX - startX;
+    if (Math.abs(deltaX) >= 8) {
+      orbit.dataset.mmDragging = "true";
+      if (orbit.setPointerCapture && !orbit.hasPointerCapture?.(pointerId)) orbit.setPointerCapture(pointerId);
+    }
   });
 
   function finishPointer(event) {
     if (pointerId !== event.pointerId) return;
     const distance = deltaX;
+    const completedPointerId = pointerId;
     pointerId = null;
     deltaX = 0;
     orbit.dataset.mmDragging = "false";
+    if (orbit.releasePointerCapture && orbit.hasPointerCapture?.(completedPointerId)) {
+      orbit.releasePointerCapture(completedPointerId);
+    }
     if (Math.abs(distance) >= 38) step(distance < 0 ? 1 : -1);
   }
 

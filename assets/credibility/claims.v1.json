@@ -1,104 +1,84 @@
 {
-  "schema": "DIAMOND_GATE_PUBLIC_CREDIBILITY_CLAIMS_v1",
+  "schema": "DIAMOND_GATE_PUBLIC_CREDIBILITY_CLAIMS_v2",
   "status": "ACTIVE_PUBLIC_EVIDENCE_REGISTRY",
-  "currentPublicMainAtAudit": "541804990842744c1e644e49213fd807d9fd523c",
   "historicalExecutableEvidenceCommit": "89da45a265140e90334371b318bcd4c25733fa98",
   "publicGovernanceRetirementCommit": "541804990842744c1e644e49213fd807d9fd523c",
   "claimPolicy": {
-    "rule": "Every material technical claim must state its demonstrated scope, evidence time-state, and where the evidence stops.",
+    "rule": "Promise -> evidence -> time-state -> boundary.",
+    "readerLenses": {
+      "practical": "What this means to you.",
+      "engineering": "How the mechanism works.",
+      "proof": "What evidence permits the claim."
+    },
     "proofLevels": [
-      {"level": 1, "name": "OBSERVABLE", "meaning": "A visitor can inspect the implementation or live behavior."},
+      {"level": 1, "name": "OBSERVABLE", "meaning": "The implementation or live behavior can be inspected."},
       {"level": 2, "name": "ENFORCED", "meaning": "Executable machinery rejects a prohibited state or operation."},
       {"level": 3, "name": "TESTED", "meaning": "Automated qualification or self-tests exercise the mechanism."},
       {"level": 4, "name": "BENCHMARKED", "meaning": "Quantitative results exist under a defined protocol."},
-      {"level": 5, "name": "EXTERNALLY_VALIDATED", "meaning": "Independent customers, evaluators, organizations, or market outcomes provide evidence."}
+      {"level": 5, "name": "EXTERNALLY_VALIDATED", "meaning": "Independent creators, evaluators, organizations or market outcomes provide evidence."}
     ]
   },
+  "domains": [
+    {"id":"current","label":"Current Evidence","title":"What Diamond Gate can show you now.","summary":"Start with capabilities that are directly observable or testable on the current public product estate.","accent":"139,225,244","claimIds":["browser-native-construction","fail-closed-page-quality"]},
+    {"id":"execution","label":"Execution Integrity","title":"How Diamond Gate has demonstrated controlled change.","summary":"Preserved demonstrations show how exact state, scope and authority were kept attached to repository operations.","accent":"182,166,244","claimIds":["bounded-execution","state-and-source-binding"]},
+    {"id":"continuity","label":"Continuity","title":"How complex work has been carried forward without manufacturing certainty.","summary":"Preserved demonstrations focus on succession, continuity, stale-state rejection and bounded recovery.","accent":"150,224,188","claimIds":["successor-packet-compiler","continuity-and-recovery"]},
+    {"id":"standard","label":"Claim Standard","title":"How to read every technical claim on this page.","summary":"Understand the promise, inspect the evidence, check its time-state and keep the boundary visible.","accent":"239,208,131","claimIds":["proof-level-standard","claim-boundary-standard"]}
+  ],
   "claims": [
     {
-      "id": "browser-native-construction",
-      "publicClaim": "Browser-native software construction",
-      "status": "CURRENTLY_OBSERVABLE",
-      "highestProofLevel": 1,
-      "scope": "Diamond Gate public product surfaces built with repository-owned HTML, CSS, JavaScript and, where needed, WebGL/WebGL2 and GLSL.",
-      "evidence": ["/", "/laws/", "/showroom/globe/h-earth/", "/showroom/globe/audralia/"],
-      "boundary": "This does not claim every possible customer project will be framework-free or that native construction automatically guarantees performance."
+      "id":"browser-native-construction","label":"Browser-native construction","title":"The product is built where you use it.","status":["Current","Level 1 · Observable"],
+      "summary":"Diamond Gate public products demonstrate repository-owned HTML, CSS and JavaScript, with WebGL/WebGL2 and GLSL where spatial graphics require them.",
+      "practical":{"title":"You can inspect the actual product, not just a description of it.","body":"The public experience is built directly in the browser. You can open the working surfaces and see the result yourself without needing to understand the underlying graphics stack.","boundary":"This does not mean every project will be framework-free, or that native construction automatically guarantees speed, security or low energy use."},
+      "engineering":{"title":"Repository-owned browser construction remains directly observable.","body":"Demonstrated surfaces use HTML, CSS and JavaScript owned in the repository, with direct browser graphics technologies used where the experience requires them.","boundary":"This claim is about demonstrated public surfaces, not a universal requirement imposed on every future build."},
+      "proof":{"title":"Inspect the demonstrated surfaces.","body":"These public routes provide direct observable evidence of the construction approach.","links":[["Compass","/"],["Laws","/laws/"],["H-Earth","/showroom/globe/h-earth/"],["Audralia","/showroom/globe/audralia/"]],"proofState":"Current public evidence · Observable","boundary":"Observable evidence establishes that the implementation can be inspected. It does not by itself establish benchmark superiority."}
     },
     {
-      "id": "bounded-execution",
-      "publicClaim": "Bounded exact-head execution",
-      "status": "HISTORICALLY_ENFORCED_AND_TESTED_PUBLIC_IMPLEMENTATION_RETIRED",
-      "highestProofLevel": 3,
-      "scope": "Registered repository operations executed through the bounded exact-head carrier at the preserved historical evidence commit.",
-      "historicalEvidence": [
-        ".github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs",
-        ".github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json",
-        ".github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs"
-      ],
-      "currentPublicState": "The same public paths now emit PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED handoffs or retirement-compatible data after the P0 public retirement adoption.",
-      "boundary": "This supports a historical public demonstration claim, not a claim that the retired public carrier remains the current active implementation."
+      "id":"fail-closed-page-quality","label":"Page Excellence","title":"Required quality conditions can stop delivery.","status":["Current","Level 3 · Tested"],
+      "summary":"Page Excellence remains a mandatory qualification boundary on current public main, with blocking failure behavior when required conditions do not pass.",
+      "practical":{"title":"A change is not treated as finished simply because it ran.","body":"Required quality conditions can still stop a page operation. The purpose is to keep technical execution from being mistaken for a finished experience.","boundary":"Passing qualification means the declared conditions passed. It is not a universal guarantee that software contains no defect."},
+      "engineering":{"title":"A fail-closed qualification gate evaluates required conditions.","body":"The Page Excellence entry gate can emit a BLOCK disposition when a required condition is non-passing. Qualification is therefore part of execution governance rather than optional documentation.","boundary":"The gate enforces its declared qualification contract; it does not prove every possible quality property."},
+      "proof":{"title":"Inspect the current qualification machinery.","body":"The current public repository exposes the gate, toolset bundle and toolchain documentation.","links":[["entry gate","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/.github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs"],["toolset bundle","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/.github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json"],["toolchain README","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/.github/ai-router/page-excellence-toolchain/README.md"]],"proofState":"Current public implementation · Tested","boundary":"The evidence supports declared qualification behavior, not defect-free software as a universal claim."}
     },
     {
-      "id": "fail-closed-page-quality",
-      "publicClaim": "Fail-closed Page Excellence qualification",
-      "status": "CURRENTLY_ENFORCED",
-      "highestProofLevel": 3,
-      "scope": "Page operations governed by the active Page Excellence toolchain and entry gate.",
-      "evidence": [
-        ".github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs",
-        ".github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json",
-        ".github/ai-router/page-excellence-toolchain/README.md"
-      ],
-      "boundary": "A passing gate is evidence that declared qualification conditions passed; it is not a universal guarantee that software contains no defects."
+      "id":"bounded-execution","label":"Bounded execution","title":"Work can be constrained to the exact operation that was admitted.","status":["Historical","Level 3 · Tested"],
+      "summary":"A preserved public carrier rejected arbitrary command fields, validated admitted identity and scope, and bound delegated execution to exact repository state.",
+      "practical":{"title":"One approved task does not have to quietly become a different task.","body":"The preserved public mechanism kept execution attached to the exact work that had been admitted rather than allowing an open-ended command surface to decide what happened next.","boundary":"This is a historical public demonstration. The retired public carrier is not represented as today’s active public execution mechanism."},
+      "engineering":{"title":"The preserved carrier enforced exact-head, descriptor and scope constraints.","body":"It rejected arbitrary command fields, resolved closed executable descriptors, validated admitted identity and scope, and bound delegated execution to exact repository state.","boundary":"The public implementation was intentionally retired. Historical evidence remains valid as evidence of what was demonstrated."},
+      "proof":{"title":"Inspect the preserved implementation and its retirement state.","body":"The historical implementation remains available at the preserved evidence commit, while the current public path represents retirement state.","links":[["historical carrier","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs"],["historical self-test","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs"],["current retirement path","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/.github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs"]],"proofState":"Historical public implementation · Tested · Retired","boundary":"This does not claim that the retired public carrier is currently active."}
     },
     {
-      "id": "state-and-source-binding",
-      "publicClaim": "Exact governing-state and source-identity binding",
-      "status": "HISTORICALLY_ENFORCED_PUBLIC_IMPLEMENTATION_RETIRED",
-      "highestProofLevel": 2,
-      "scope": "Governed public repository operations at the preserved historical evidence commit whose admission and execution documents bound exact repository state, allowed paths, source identities and digests.",
-      "historicalEvidence": [
-        ".github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs",
-        ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs"
-      ],
-      "boundary": "This supports a historical repository-lifecycle enforcement claim and is not a blanket cryptographic-security or current-public-runtime claim."
+      "id":"state-and-source-binding","label":"Exact state binding","title":"Project identity can be tied to exact repository state.","status":["Historical","Level 2 · Enforced"],
+      "summary":"The preserved public governance implementation bound operation identity, admitted paths, source identities and content digests to exact repository state.",
+      "practical":{"title":"A project does not have to rely on memory about what “current” means.","body":"The demonstrated approach attached important project facts to exact repository state so a moving branch name or changing session could not silently redefine the operation.","boundary":"This is not a blanket cryptographic-security claim and is not represented as a current public runtime."},
+      "engineering":{"title":"Operation identity, admitted paths and source identity were explicitly bound.","body":"The preserved implementation attached operation identity, admitted paths, source identities and content digests to exact repository state rather than relying on branch labels or session memory.","boundary":"The evidence supports exact-state enforcement inside the demonstrated repository lifecycle."},
+      "proof":{"title":"Inspect the preserved state-binding evidence.","body":"The carrier and successor gate provide the preserved public evidence for this claim.","links":[["bounded carrier","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs"],["successor gate","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs"]],"proofState":"Historical public implementation · Enforced · Retired","boundary":"Not a claim of universal cryptographic security."}
     },
     {
-      "id": "successor-packet-compiler",
-      "publicClaim": "Repository-operation successor packet compiler",
-      "status": "HISTORICALLY_IMPLEMENTED_AND_TESTED_PUBLIC_IMPLEMENTATION_RETIRED",
-      "highestProofLevel": 3,
-      "scope": "At the preserved historical evidence commit, compilation of a predecessor repository operation into a fresh successor packet when the governing head advanced, while preserving declared scope and refusing authority inheritance.",
-      "historicalEvidence": [
-        ".github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs",
-        ".github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs",
-        ".github/ai-router/operation-lifecycle/successor-protocol.v1.json"
-      ],
-      "currentPublicState": "The public compiler path is now a fail-closed retirement handoff and no longer exposes the executable compiler implementation on public main.",
-      "boundary": "This is a historical public implementation claim, not a present-tense claim that the public compiler remains active, and not a general-purpose website compiler claim."
+      "id":"successor-packet-compiler","label":"Operation succession","title":"A continuing project can receive a fresh, bounded successor state.","status":["Historical","Level 3 · Tested"],
+      "summary":"A preserved successor-packet compiler transformed predecessor operation documents into fresh successor packets while rejecting forbidden scope, authority and stale-head changes.",
+      "practical":{"title":"Continuing work can preserve its identity instead of starting from guesswork.","body":"The demonstrated mechanism carried forward the parts of an operation that were still valid while refusing undeclared changes to scope, authority or repository state.","boundary":"This was a repository-operation successor compiler, not a general-purpose website compiler, and it is not represented as currently active after public retirement."},
+      "engineering":{"title":"Successor packets were compiled from constrained predecessor state.","body":"The compiler transformed predecessor operation documents into fresh successor packets, rejected forbidden scope or authority changes, refused undeclared stale-head bindings and emitted a compiler receipt.","boundary":"The public implementation was later replaced by a fail-closed retirement handoff."},
+      "proof":{"title":"Inspect the preserved compiler and current retirement path.","body":"The preserved compiler and self-test remain inspectable at the historical evidence commit.","links":[["successor packet compiler","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs"],["compiler self-test","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs"],["current retirement path","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/.github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs"]],"proofState":"Historical public implementation · Tested · Retired","boundary":"The evidence supports repository-operation succession, not a universal compiler claim."}
     },
     {
-      "id": "continuity-and-recovery",
-      "publicClaim": "Governed continuity and bounded recovery",
-      "status": "HISTORICALLY_IMPLEMENTED_AND_TESTED_PUBLIC_IMPLEMENTATION_RETIRED",
-      "highestProofLevel": 3,
-      "scope": "Public repository workflows at the preserved historical evidence commit for differential continuity, operation succession, instrument lifecycle and bounded recovery/requalification.",
-      "historicalEvidence": [
-        ".github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs",
-        ".github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs",
-        ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs"
-      ],
-      "currentPublicState": "The P0 retirement adoption replaced the public implementations at these paths with fail-closed retirement surfaces.",
-      "boundary": "This demonstrates historical public repository-level continuity controls; it does not establish current public execution or uninterrupted service availability."
+      "id":"continuity-and-recovery","label":"Continuity & recovery","title":"Stale authority does not have to be silently treated as current.","status":["Historical","Level 3 · Tested"],
+      "summary":"Preserved public gates and self-tests demonstrated differential continuity, operation succession, instrument lifecycle and recovery/requalification behavior.",
+      "practical":{"title":"When context changes, the system can refuse to pretend nothing changed.","body":"The demonstrated continuity machinery checked whether authority and qualification were still valid instead of silently carrying stale state forward as if it were current.","boundary":"This does not establish uninterrupted service availability under external infrastructure failures or claim current public execution by the retired implementation."},
+      "engineering":{"title":"Continuity and recovery were treated as governed state transitions.","body":"Dedicated gates and self-tests covered differential continuity, operation succession, instrument lifecycle and recovery/requalification, with stale authority or qualification prevented from silently becoming current truth.","boundary":"These public implementations were later retired from the public execution surface."},
+      "proof":{"title":"Inspect the preserved continuity gate and self-test.","body":"The preserved public repository contains executable evidence for differential continuity.","links":[["differential continuity gate","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs"],["continuity self-test","https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs"]],"proofState":"Historical public implementation · Tested · Retired","boundary":"Not a claim of uninterrupted service availability."}
+    },
+    {
+      "id":"proof-level-standard","label":"Proof levels","title":"Different kinds of proof answer different questions.","status":["Evidence standard","Five levels"],"summary":"Observable, Enforced, Tested, Benchmarked and Externally Validated are intentionally different evidence states.","standardType":"proofLevels",
+      "practical":{"title":"You should be able to tell how strong a claim really is.","body":"A live demo is useful, but it is not the same thing as an automated test, a benchmark or independent validation. The labels keep those differences visible so stronger language has to earn stronger evidence.","boundary":"A higher proof level does not automatically make a product better; it describes the kind of evidence available for the specific claim."},
+      "engineering":{"title":"Proof level and time-state are separate dimensions.","body":"Proof level answers how the mechanism was demonstrated. Time-state answers whether the public implementation is current or historical. A claim can therefore be historically tested without being a current public runtime.","boundary":"The evidence model classifies claims; it does not replace the underlying implementation, test protocol or external validation."},
+      "proof":{"title":"The proof ladder is the public classification contract.","body":"Every claim should disclose enough information to distinguish inspection, enforcement, automated testing, quantitative benchmarking and independent validation.","links":[["machine-readable registry","/assets/credibility/claims.v1.json"]],"proofState":"Public evidence classification standard","boundary":"Classification is only useful when underlying evidence remains inspectable and the claim boundary remains explicit."}
+    },
+    {
+      "id":"claim-boundary-standard","label":"Claim boundaries","title":"Precision is part of the product.","status":["Evidence standard","Fail-closed language"],"summary":"Diamond Gate deliberately withholds marketing phrases that require evidence not yet established publicly.","standardType":"notClaimed",
+      "practical":{"title":"You should not have to decode inflated technical language.","body":"If the evidence does not support a phrase, the phrase stays out. That keeps the public promise attached to what can actually be demonstrated.","boundary":"The absence of these phrases is deliberate. They can be adopted later only when the corresponding evidence exists."},
+      "engineering":{"title":"Marketing vocabulary is constrained by evidence state.","body":"Claims such as enterprise scale, industry leadership, universal security or first-of-kind status require distinct benchmark, validation, threat-model or prior-art evidence. They are not inferred from implementation complexity alone.","boundary":"Technical sophistication is not itself evidence for comparative, security, scale or novelty claims."},
+      "proof":{"title":"The boundary list is part of the credibility contract.","body":"These phrases remain outside authorized public claim language until the relevant evidence is established.","proofState":"Promise -> evidence -> time-state -> boundary.","boundary":"The page makes claim limits inspectable rather than burying them in fine print."}
     }
   ],
-  "claimsNotYetAuthorized": [
-    "enterprise-grade",
-    "industry-leading",
-    "world-first",
-    "unbreakable",
-    "mathematically secure",
-    "more secure than named third-party policy systems",
-    "proven enterprise scale"
-  ]
+  "claimsNotYetAuthorized": ["Enterprise-grade","Industry-leading","World's first","Unbreakable or mathematically secure","More secure than named third-party policy systems","Proven enterprise scale"]
 }

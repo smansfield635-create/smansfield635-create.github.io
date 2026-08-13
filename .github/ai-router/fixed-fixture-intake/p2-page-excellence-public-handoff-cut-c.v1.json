@@ -1,0 +1,188 @@
+{
+  "schema": "FIXED_FIXTURE_INTAKE_V1",
+  "fixtureId": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_V1",
+  "action": "ADMIT",
+  "exactGoverningHead": "7a6fd55a6940bef63f06f0e3b6a8290791de690c",
+  "bridgeImplementationHead": "7a6fd55a6940bef63f06f0e3b6a8290791de690c",
+  "bridgeRequest": {
+    "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1",
+    "requestId": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_20260813_004",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "exactGoverningHead": "7a6fd55a6940bef63f06f0e3b6a8290791de690c",
+    "operationRequest": {
+      "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+      "operationId": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_20260813_004",
+      "projectId": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:P2:PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT:C:V1",
+      "exactGoverningHead": "7a6fd55a6940bef63f06f0e3b6a8290791de690c",
+      "subjectIdentity": {
+        "coordinationIssue": 982,
+        "retirementFamily": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT",
+        "changeClass": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_AND_FAIL_CLOSED_HANDOFF",
+        "deletePathCount": 7,
+        "reconcilePathCount": 4,
+        "privatePreservationRepository": "smansfield635-create/geodiametrics1",
+        "privatePreservationHead": "840b885db8d3b0331e9ac3bd207df3d32baf8fb6",
+        "methodsModelsProductMutation": false,
+        "authorityInherited": false
+      },
+      "requestingAuthority": {
+        "source": "USER_EXPLICIT_PROCEED_THROUGH_CANONICAL_INTAKE_AND_BUILD_20260813",
+        "repositoryWritesAuthorized": true,
+        "branchCreationAuthorized": true,
+        "prAuthorized": true,
+        "mergeAuthority": false,
+        "productAuthority": false,
+        "semanticAuthority": false,
+        "scientificAuthority": false
+      },
+      "executingRole": {
+        "role": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_RETIREMENT_BUILDER",
+        "mayMutateOnlyAllowedPaths": true
+      },
+      "independentVerifier": {
+        "role": "FRESH_EXACT_HEAD_PUBLIC_HANDOFF_AND_ROUTER_VERIFIER",
+        "mayRepair": false,
+        "mustVerifyExactElevenPathScope": true
+      },
+      "constructionProcedureLocator": ".github/ai-router/fixed-fixture-intake/p2-page-excellence-public-handoff-cut-c.v1.json",
+      "requiredInputs": [
+        {"id": "CURRENT_MAIN_7A6FD55A_EXACT", "resolved": true},
+        {"id": "P2_SUBTRANCHE_B_REFERENCE_CLASS_RETIREMENT_PASS_CLOSED", "resolved": true},
+        {"id": "PRIVATE_PAGE_EXCELLENCE_CAPABILITY_PRESERVED_AT_840B885D", "resolved": true},
+        {"id": "PRIVATE_OPERATIONAL_HOST_CERTIFICATION_PRESENT", "resolved": true},
+        {"id": "PUBLIC_PAGE_EXCELLENCE_CORE_SEVEN_FILES_PRESENT", "resolved": true},
+        {"id": "METHODS_MODELS_PRODUCT_PATHS_EXCLUDED", "resolved": true}
+      ],
+      "allowedPaths": [
+        ".github/ai-router/page-excellence-toolchain/README.md",
+        ".github/ai-router/page-excellence-toolchain/blind-evaluator.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/compare-reproductions.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json",
+        ".github/ai-router/page-excellence-toolchain/self-test.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json",
+        "AI_ENTRYPOINT.json",
+        ".github/ai-router/router.v1.json",
+        ".github/ai-router/projects/laws/entrypoint.v1.json",
+        "assets/credibility/claims.v1.json"
+      ],
+      "prohibitedPaths": [
+        "laws/research/methods-and-models/",
+        "verification/methods-models-showroom-browser.mjs",
+        ".github/ai-router/trusted-intake-fixture/",
+        ".github/operation-intake/",
+        "tools/operation-intake/",
+        "tools/pre-registration-intake-bridge/",
+        "h-earth-3d/",
+        "showroom/"
+      ],
+      "requiredOutputs": [
+        "SEVEN_PUBLIC_PAGE_EXCELLENCE_IMPLEMENTATION_PATHS_ABSENT",
+        "PUBLIC_ROOT_NO_LONGER_ADVERTISES_OR_INVOKES_PUBLIC_PAGE_EXCELLENCE_EXECUTABLES",
+        "PUBLIC_ROUTER_NO_LONGER_BINDS_MUTATION_TO_PUBLIC_PAGE_EXCELLENCE_EXECUTABLES",
+        "LAWS_ENTRYPOINT_NO_LONGER_REQUIRES_PUBLIC_PAGE_EXCELLENCE_EXECUTABLES",
+        "PUBLIC_CREDIBILITY_CLAIM_RECLASSIFIED_FROM_CURRENT_PUBLIC_IMPLEMENTATION_TO_HISTORICAL_OR_PRIVATE_SUCCESSOR_BOUNDARY",
+        "NO_METHODS_MODELS_PRODUCT_PATH_CHANGE",
+        "PRIVATE_PAGE_EXCELLENCE_PRESERVATION_RECHECK_PASS",
+        "EXACT_ELEVEN_PATH_DIFF",
+        "ROOT_ROUTER_SELF_TEST_PASS"
+      ],
+      "exactTestCommand": "node tools/repository-ai-entry-router.mjs --self-test --output /tmp/p2c-router-self-test.json && test ! -d .github/ai-router/page-excellence-toolchain",
+      "workflowPath": ".github/workflows/repository-ai-entry-router-validation.yml",
+      "artifactPaths": ["/tmp/p2c-router-self-test.json"],
+      "fingerprintDomain": {
+        "algorithm": "SHA-256",
+        "domain": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_20260813_004",
+        "governingHead": "7a6fd55a6940bef63f06f0e3b6a8290791de690c",
+        "pathCount": 11
+      },
+      "errorPrecedence": [
+        "GOVERNING_HEAD_MISMATCH",
+        "ACTIVE_SCOPE_CONFLICT",
+        "PATH_SCOPE_VIOLATION",
+        "PUBLIC_HANDOFF_INCOMPLETE",
+        "PRIVATE_PRESERVATION_FAILURE",
+        "ROUTER_FAIL",
+        "PRODUCT_PATH_CHANGE",
+        "SELF_TEST_FAILURE"
+      ],
+      "stopConditions": [
+        "STOP_ON_MAIN_DRIFT_BEFORE_CANDIDATE",
+        "STOP_ON_ANY_PATH_OUTSIDE_EXACT_ELEVEN_PATH_SCOPE",
+        "STOP_IF_ANY_METHODS_MODELS_PRODUCT_PATH_CHANGES",
+        "STOP_IF_PRIVATE_PRESERVATION_RECHECK_FAILS",
+        "STOP_IF_PUBLIC_ROOT_OR_ROUTER_RETAINS_EXECUTABLE_PAGE_EXCELLENCE_BINDING",
+        "STOP_BEFORE_MERGE_WITHOUT_SEPARATE_MERGE_AUTHORITY"
+      ],
+      "terminalDispositions": ["PASS_CLOSED", "FAIL_CLOSED", "WITHDRAWN", "SUPERSEDED"]
+    },
+    "constructionProcedure": {
+      "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+      "procedureId": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_PROCEDURE_20260813_004",
+      "operationClass": "PUBLIC_QUALITY_INSTRUMENTATION_RETIREMENT_AND_FAIL_CLOSED_HANDOFF",
+      "exactGoverningHead": "7a6fd55a6940bef63f06f0e3b6a8290791de690c",
+      "exactAllowedRepositoryPaths": [
+        ".github/ai-router/page-excellence-toolchain/README.md",
+        ".github/ai-router/page-excellence-toolchain/blind-evaluator.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/compare-reproductions.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/page-operation-entry-gate.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/permanent-ratification.v1.json",
+        ".github/ai-router/page-excellence-toolchain/self-test.v1.mjs",
+        ".github/ai-router/page-excellence-toolchain/toolset.bundle.v1.json",
+        "AI_ENTRYPOINT.json",
+        ".github/ai-router/router.v1.json",
+        ".github/ai-router/projects/laws/entrypoint.v1.json",
+        "assets/credibility/claims.v1.json"
+      ],
+      "exactBranchAndCommitSequence": [
+        {"step": 1, "action": "REQUIRE_CANONICAL_ADMISSION_ADMITTED_AND_LOCKED"},
+        {"step": 2, "action": "REVALIDATE_EXACT_MAIN_AND_PRIVATE_SUCCESSOR"},
+        {"step": 3, "action": "CREATE_FRESH_ISOLATED_CANDIDATE_BRANCH_FROM_EXACT_GOVERNING_HEAD"},
+        {"step": 4, "action": "DELETE_EXACT_SEVEN_PUBLIC_PAGE_EXCELLENCE_CORE_PATHS"},
+        {"step": 5, "action": "RECONCILE_PUBLIC_ROOT_ROUTER_LAWS_ENTRYPOINT_AND_CREDIBILITY_CLAIM_TO_FAIL_CLOSED_RETIREMENT_HANDOFF"},
+        {"step": 6, "action": "VERIFY_EXACT_ELEVEN_PATH_DIFF_AND_NO_METHODS_MODELS_PRODUCT_MUTATION"},
+        {"step": 7, "action": "RUN_ROOT_ROUTER_SELF_TEST_AND_FRESH_EXACT_HEAD_VALIDATION"},
+        {"step": 8, "action": "OPEN_DRAFT_RETIREMENT_PR_ONLY_IF_ALL_CHECKS_PASS"}
+      ],
+      "evaluationToolingHeadBindingRule": "EXACT_MAIN_7A6FD55A;EXACT_ELEVEN_PATH_SCOPE;PRIVATE_PAGE_EXCELLENCE_PRESERVED_AT_840B885D;NO_METHODS_MODELS_PRODUCT_MUTATION",
+      "canonicalInputSchemas": ["REPOSITORY_OPERATION_REQUEST_v1", "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"],
+      "canonicalOutputSchemas": ["REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1", "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v1"],
+      "errorCodeAndValidationPrecedence": [
+        "GOVERNING_HEAD_MISMATCH",
+        "ACTIVE_SCOPE_CONFLICT",
+        "PATH_SCOPE_VIOLATION",
+        "PUBLIC_HANDOFF_INCOMPLETE",
+        "PRIVATE_PRESERVATION_FAILURE",
+        "ROUTER_FAIL",
+        "PRODUCT_PATH_CHANGE",
+        "SELF_TEST_FAILURE"
+      ],
+      "exactTestRunnerCommand": "node tools/repository-ai-entry-router.mjs --self-test --output /tmp/p2c-router-self-test.json && test ! -d .github/ai-router/page-excellence-toolchain",
+      "independentVerifierDefinition": {
+        "kind": "GITHUB_ACTIONS_EXACT_HEAD",
+        "mayRepair": false,
+        "requires": ["ROUTER_SELF_TEST_PASS", "EXACT_ELEVEN_PATH_DIFF", "NO_METHODS_MODELS_PRODUCT_PATH_CHANGE", "PRIVATE_PRESERVATION_RECHECK_PASS"]
+      },
+      "workflowAndArtifactPackagingPaths": {
+        "workflowPath": ".github/workflows/repository-ai-entry-router-validation.yml",
+        "artifactPaths": ["/tmp/p2c-router-self-test.json"]
+      },
+      "bridgeOutputFingerprintDomain": {
+        "algorithm": "SHA-256",
+        "domain": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_20260813_004",
+        "governingHead": "7a6fd55a6940bef63f06f0e3b6a8290791de690c",
+        "pathCount": 11
+      },
+      "priorAttemptInspectionLimits": {
+        "mayInspectIssue982": true,
+        "mayInspectPriorP2Operations": true,
+        "mayInspectPrivatePreservationEvidence": true,
+        "mayMutatePriorOperations": false,
+        "mayExpandBeyondElevenPaths": false
+      }
+    },
+    "requestNonce": "6d7bfa050ea438f59989bf49a975125d3211656120449810806bbd65f4c94f0d",
+    "executionHolder": "P2_PAGE_EXCELLENCE_PUBLIC_HANDOFF_CUT_C_FIXTURE_004"
+  }
+}

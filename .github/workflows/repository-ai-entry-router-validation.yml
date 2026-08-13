@@ -62,10 +62,39 @@ jobs:
           node -e "const r=require('/tmp/repository-operation-successor-router-receipt.json');if(r.disposition!=='PASS'||r.routes.length!==6||!r.routes.every(x=>x.projectId==='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'&&x.disposition==='PASS'))process.exit(1)"
 
       - name: Run generic stale-head successor protocol self-test
+        shell: bash
         run: |
+          set -euo pipefail
+          rm -f /tmp/repository-operation-successor-self-test.json /tmp/repository-operation-successor-self-test.stdout.json
+          set +e
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
-            --output /tmp/repository-operation-successor-self-test.json
-          node -e "const r=require('/tmp/repository-operation-successor-self-test.json');if(r.result!=='PASS_CLOSED'||r.failCount!==0||r.testCount<11)process.exit(1)"
+            --output /tmp/repository-operation-successor-self-test.json \
+            > /tmp/repository-operation-successor-self-test.stdout.json
+          successor_status=$?
+          set -e
+          if [ ! -s /tmp/repository-operation-successor-self-test.json ]; then
+            cp /tmp/repository-operation-successor-self-test.stdout.json /tmp/repository-operation-successor-self-test.json
+          fi
+          export SUCCESSOR_STATUS="$successor_status"
+          set +e
+          node - <<'NODE'
+          const r=require('/tmp/repository-operation-successor-self-test.json');
+          const status=Number(process.env.SUCCESSOR_STATUS);
+          const active = status===0 && r.result==='PASS_CLOSED' && r.failCount===0 && r.testCount>=11;
+          const retired = status!==0 &&
+            r.schema==='PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF_v1' &&
+            r.result==='PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED' &&
+            r.authorityCreated===false &&
+            r.executionAuthorized===false &&
+            r.mutationAuthorized===false &&
+            r.mergeAuthorized===false &&
+            r.forwardingPerformed===false;
+          if(!active && !retired) process.exit(1);
+          if(retired) process.stdout.write('EXPECTED_RETIRED_SUCCESSOR_PROTOCOL_STATE\n');
+          NODE
+          classification_status=$?
+          set -e
+          test "$classification_status" -eq 0
 
       - name: Exercise H-Earth registered route
         run: |

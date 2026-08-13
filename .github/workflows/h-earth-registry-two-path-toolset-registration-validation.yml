@@ -2,7 +2,6 @@ name: H-Earth Registry Two-Path Toolset Registration Validation
 on:
   pull_request:
     paths:
-      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
       - '.github/ai-toolset-transport/h-earth-registry-two-path-toolset-registration.v1.json'
       - 'tools/h-earth-registry-two-path-toolset/**'
       - '.github/workflows/h-earth-registry-two-path-toolset-registration-validation.yml'

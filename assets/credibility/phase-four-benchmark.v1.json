@@ -1,0 +1,36 @@
+{
+  "schema": "DIAMOND_GATE_PHASE_FOUR_PUBLIC_AUGMENTATION_v1",
+  "status": "PUBLIC_EVIDENCE_AUGMENTATION",
+  "domain": {
+    "id": "integrated",
+    "label": "Integrated Capability",
+    "title": "The breakthrough was getting the capabilities to work together.",
+    "summary": "Phase Four marks a maturity threshold: construction, continuity, recovery and qualification were demonstrated as parts of one evolving product lifecycle rather than isolated accomplishments.",
+    "accent": "214,189,128",
+    "claimIds": ["integrated-construction-capability"]
+  },
+  "claim": {
+    "id": "integrated-construction-capability",
+    "label": "Integrated construction",
+    "title": "More capability does not have to mean less control.",
+    "status": ["Phase Four benchmark", "Integrated demonstration"],
+    "summary": "The milestone is not another isolated mechanism. It is the demonstrated coordination of previously separate capabilities around the same evolving product.",
+    "practical": {
+      "title": "The system can become more sophisticated without making the journey harder to trust.",
+      "body": "As Diamond Gate grew, the challenge changed. Building another capability was no longer enough. The work had to keep purpose, construction, recovery and quality connected while the product continued to evolve. Phase Four demonstrates that those pieces can operate together instead of becoming separate islands.",
+      "boundary": "This is evidence of integrated operation under the demonstrated conditions. It is not a claim of perfect reliability, universal superiority or external certification."
+    },
+    "engineering": {
+      "title": "Independent disciplines were coordinated into one lifecycle.",
+      "body": "The demonstrated architecture combines project-state control, bounded construction, continuity and recovery, and separate product-quality qualification. The significance is the coordination of established engineering disciplines around one changing product, not a claim that Diamond Gate invented the underlying principles.",
+      "boundary": "The benchmark supports the demonstrated integration. It does not imply that every future project uses identical mechanisms or that every operating condition has been tested."
+    },
+    "proof": {
+      "title": "Follow the evidence behind the integrated result.",
+      "body": "The public evidence set preserves observable product surfaces, tested quality behavior, historical execution evidence, state binding, operation succession, and continuity and recovery evidence. Phase Four is the synthesis of those demonstrated capabilities, not a substitute for the underlying records.",
+      "links": [["Current product evidence", "/evidence/#current/browser-native-construction/proof"], ["Execution evidence", "/evidence/#execution/bounded-execution/proof"], ["Continuity and recovery evidence", "/evidence/#continuity/continuity-and-recovery/proof"], ["How Diamond Gate builds", "/governance/"], ["What Diamond Gate can build", "/build/"], ["Why the work is notable", "/showroom/globe/h-earth/awards/"]],
+      "proofState": "Phase Four · Integrated evidence synthesis",
+      "boundary": "The milestone demonstrates integrated operation under the qualified evidence represented here. It does not establish universal reliability, independent external validation or performance outside the demonstrated boundaries."
+    }
+  }
+}

@@ -1,0 +1,96 @@
+/* METHODS_MODELS_ROTATIONAL_TEXT_INSTRUMENT_v1
+   Presentation-only specialization of the accepted Laws Compass Euclidean
+   navigation field. Geometry is adopted; no replacement navigation math.
+*/
+
+.mm-family-tabs[data-mm-rotational-text-orbit]{
+  --mm-orbit-rx:clamp(9.25rem,27vw,20rem);
+  --mm-orbit-ry:clamp(2.2rem,7vw,5.25rem);
+  position:relative;
+  display:block;
+  width:min(100%,58rem);
+  height:clamp(11rem,25vw,15.5rem);
+  margin:clamp(.75rem,2vw,1.5rem) auto 1rem;
+  padding:0;
+  border:0;
+  background:transparent;
+  perspective:1100px;
+  touch-action:pan-y;
+  user-select:none;
+  isolation:isolate;
+}
+
+.mm-family-tabs[data-mm-rotational-text-orbit]::before{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:calc(var(--mm-orbit-rx)*2);
+  height:calc(var(--mm-orbit-ry)*2);
+  max-width:92%;
+  border:1px solid color-mix(in srgb,var(--line,#2a3956) 72%,transparent);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  opacity:.72;
+  pointer-events:none;
+}
+
+.mm-family-tabs[data-mm-rotational-text-orbit]::after{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:.35rem;height:.35rem;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:currentColor;
+  opacity:.16;
+  pointer-events:none;
+}
+
+.mm-family-tabs[data-mm-rotational-text-orbit] .mm-family-tab{
+  --mm-x:0px;--mm-y:0px;--mm-z:0px;--mm-scale:1;--mm-opacity:1;
+  position:absolute;
+  left:50%;top:50%;
+  width:min(17rem,42vw);
+  min-height:3.45rem;
+  margin:0;
+  padding:.78rem 1rem;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  border:1px solid color-mix(in srgb,var(--line,#2a3956) 78%,white 8%);
+  border-radius:999px;
+  background:color-mix(in srgb,var(--panel,#08101d) 92%,transparent);
+  color:var(--ink,#fff7df);
+  font:800 clamp(.78rem,1.6vw,.98rem)/1.15 Inter,system-ui,sans-serif;
+  letter-spacing:.01em;
+  transform:translate(-50%,-50%) translate3d(var(--mm-x),var(--mm-y),var(--mm-z)) scale(var(--mm-scale));
+  transform-style:preserve-3d;
+  opacity:var(--mm-opacity);
+  transition:transform 420ms cubic-bezier(.2,.75,.2,1),opacity 320ms ease,border-color 220ms ease,background 220ms ease,box-shadow 220ms ease;
+  will-change:transform;
+  cursor:pointer;
+  z-index:var(--mm-layer,1);
+}
+
+.mm-family-tabs[data-mm-rotational-text-orbit] .mm-family-tab[aria-selected="true"]{
+  border-color:color-mix(in srgb,var(--accent,#a98cff) 82%,white 12%);
+  background:color-mix(in srgb,var(--panel,#08101d) 76%,var(--accent,#a98cff) 24%);
+  box-shadow:0 12px 38px rgba(0,0,0,.38),0 0 0 1px color-mix(in srgb,var(--accent,#a98cff) 28%,transparent) inset;
+}
+
+.mm-family-tabs[data-mm-rotational-text-orbit] .mm-family-tab[data-mm-orbit-depth="rear"]{
+  filter:saturate(.75);
+}
+
+.mm-family-tabs[data-mm-rotational-text-orbit][data-mm-dragging="true"] .mm-family-tab{transition:none}
+.mm-z-axis-controls{display:none!important}
+.mm-euclidean-coordinate[data-mm-coordinate]{width:max-content;max-width:100%;margin-inline:auto}
+
+@media(max-width:720px){
+  .mm-family-tabs[data-mm-rotational-text-orbit]{--mm-orbit-rx:clamp(7rem,34vw,9.5rem);--mm-orbit-ry:3rem;height:12rem}
+  .mm-family-tabs[data-mm-rotational-text-orbit] .mm-family-tab{width:min(12.2rem,56vw);min-height:3.2rem;padding:.68rem .8rem;font-size:.78rem}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .mm-family-tabs[data-mm-rotational-text-orbit] .mm-family-tab{transition:none}
+}

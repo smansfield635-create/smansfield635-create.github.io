@@ -9,9 +9,13 @@
   stylesheet.href = "/laws/research/methods-and-models/rotational-text.css?v=METHODS_MODELS_ROTATIONAL_TEXT_INSTRUMENT_V1";
   stylesheet.dataset.mmRotationalTextLoader = contract;
 
+  const interaction = document.createElement("style");
+  interaction.dataset.mmRotationalTextInteraction = contract;
+  interaction.textContent = 'html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs[data-mm-rotational-text-orbit] .mm-family-tab{pointer-events:auto!important}';
+
   const script = document.createElement("script");
   script.src = "/laws/research/methods-and-models/rotational-text.js?v=METHODS_MODELS_ROTATIONAL_TEXT_INSTRUMENT_V1";
   script.dataset.mmRotationalTextLoader = contract;
 
-  document.head.append(stylesheet, script);
+  document.head.append(stylesheet, interaction, script);
 })();

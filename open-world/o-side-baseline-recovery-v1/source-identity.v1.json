@@ -1,0 +1,39 @@
+{
+  "schema": "OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_SOURCE_SET_v1",
+  "operationId": "OPEN_WORLD_ACCEPTED_PLANETARY_BASELINE_RECOVERY_20260813_001",
+  "publicRepository": "smansfield635-create/smansfield635-create.github.io",
+  "publicMainAtAdmission": "7f832b749617b0360ad6bbfafadc37508d328dc3",
+  "acceptedPlanetaryBaseline": {
+    "commitSha": "65aedb63832c4774f4a7326297fadbfb14552955",
+    "route": "showroom/globe/audralia/",
+    "status": "ACCEPTED_PLANETARY_ENVIRONMENT_O_SIDE_BASELINE_EVIDENCE",
+    "sourcePaths": [
+      "showroom/globe/audralia/index.html",
+      "showroom/globe/audralia/index.css",
+      "showroom/globe/audralia/weather-presentation-reconciliation/app.mjs",
+      "showroom/globe/audralia/celestial-checkpoint-1.mjs"
+    ]
+  },
+  "liveHEarthComparison": {
+    "commitSha": "7f832b749617b0360ad6bbfafadc37508d328dc3",
+    "route": "showroom/globe/h-earth/",
+    "status": "LIVE_ACCEPTED_H1_COMPARISON_EVIDENCE",
+    "sourcePaths": [
+      "showroom/globe/h-earth/index.html",
+      "showroom/globe/h-earth/index.css"
+    ]
+  },
+  "negativeAndPrototypeEvidence": [
+    {"pullRequest":916,"status":"REJECTED_O1_NEGATIVE_EVIDENCE_NOT_BASELINE"},
+    {"pullRequest":918,"status":"PROTOTYPE_EVIDENCE_ONLY_NOT_BASELINE_AUTHORITY"}
+  ],
+  "authority": {
+    "openWorldOwnsRepresentation": true,
+    "acceptedPlanetaryExperienceMayBeAdoptedAsBaselineEvidence": true,
+    "globeImplementationAuthorityTransferred": false,
+    "hEarthImplementationAuthorityTransferred": false,
+    "canonicalWorldAuthorityTransferred": false,
+    "correspondenceAuthorityTransferred": false,
+    "productMutationAuthorized": false
+  }
+}

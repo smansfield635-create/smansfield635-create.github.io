@@ -11,7 +11,7 @@ html[data-methods-models-euclidean-showroom="active"] .mm-deck-controls,
 html[data-methods-models-euclidean-showroom="active"] .mm-z-axis-controls,
 html[data-methods-models-euclidean-showroom="active"] [data-mm-dock-previous],
 html[data-methods-models-euclidean-showroom="active"] [data-mm-dock-next] {
-  display: none !important;
+  opacity: 0 !important;
 }
 
 @media (max-width: 720px) {

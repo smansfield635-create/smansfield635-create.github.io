@@ -468,18 +468,6 @@
       "scopeHash": "459ae4873571efb6c15c5a2c33c22ae04e2ece3d6ec37fd5a5d576ab01c58a06",
       "state": "ADMITTED_LOCKED"
     },
-    "46b3f8797c29ef3af437d809f608894131851e0fb80eac562be556fb07b804cd": {
-      "governingHead": "81b659f196e1b2e89a849f11bb9047d23f9e81b7",
-      "lockGeneration": 1288,
-      "lockScope": "H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC02:PRESENTATION_HOST_UNBOXING:V1",
-      "operationId": "H_EARTH_HC02_PRESENTATION_HOST_UNBOXING_20260812_002",
-      "procedureLocatorDigest": "6bf2f49d12d333deee3835b5feab7116ec0e3329329e23085536ffcfcf5cd09d",
-      "released": false,
-      "requestDigest": "81642085363ab2add3aae748021bc321200e2671d55b25492b4d89937ac9d649",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "46b3f8797c29ef3af437d809f608894131851e0fb80eac562be556fb07b804cd",
-      "state": "ADMITTED_LOCKED"
-    },
     "482589c65fe8f4a99b73e608834d60a11148762f0bbf2dc1c4dba6daaa2e01be": {
       "governingHead": "22377f38b733c674a8858ca95163a66923308167",
       "lockGeneration": 434,
@@ -19248,6 +19236,19 @@
       "scopeHash": "3faf2932530783de25651c6b45873df8d54fb7715229b9939677062d21bfc1a9",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "81b659f196e1b2e89a849f11bb9047d23f9e81b7",
+      "lockGeneration": 1288,
+      "lockScope": "H_EARTH:LIVE_EXPERIENCE_MATURITY_CONVERGENCE:HC02:PRESENTATION_HOST_UNBOXING:V1",
+      "operationId": "H_EARTH_HC02_PRESENTATION_HOST_UNBOXING_20260812_002",
+      "procedureLocatorDigest": "6bf2f49d12d333deee3835b5feab7116ec0e3329329e23085536ffcfcf5cd09d",
+      "released": true,
+      "requestDigest": "81642085363ab2add3aae748021bc321200e2671d55b25492b4d89937ac9d649",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "46b3f8797c29ef3af437d809f608894131851e0fb80eac562be556fb07b804cd",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

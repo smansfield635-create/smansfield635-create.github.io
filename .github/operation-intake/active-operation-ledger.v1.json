@@ -1320,18 +1320,6 @@
       "scopeHash": "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2",
       "state": "ADMITTED_LOCKED"
     },
-    "befb8b7e29579b34188fff9e1e4e6191d99e87fd89ffcac0a45ef11b38b12628": {
-      "governingHead": "4bde5d7dfdab4a6239eb4bce1aac33c7b5801ca9",
-      "lockGeneration": 1363,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:TEMPORARY_RETIREMENT_ROUTER_REGISTRATION:TRANCHE2:V1",
-      "operationId": "TRANCHE2_TEMPORARY_RETIREMENT_ROUTER_REGISTRATION_20260813_002",
-      "procedureLocatorDigest": "b12e4e6911e167f376cb60eefd2165a66f1ca2af660c89550ad37a853ed8b02e",
-      "released": false,
-      "requestDigest": "263bbc9d06511ec74a30f7a5386ab755d00696fe44d69d2b9c9a8356c5455435",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "befb8b7e29579b34188fff9e1e4e6191d99e87fd89ffcac0a45ef11b38b12628",
-      "state": "ADMITTED_LOCKED"
-    },
     "c02de25d477b2d8c830de7fe8551abe5af2cc0d0817ba0b1a6caee91e311a1fa": {
       "governingHead": "0f2515813e5962b43da90513b409e1730991bb6b",
       "lockGeneration": 768,
@@ -20232,6 +20220,19 @@
       "scopeHash": "7caf1d02b6bbc31ad7da00316a3185007e28676a0ad5e3c2e73ae17b40aea4f5",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "4bde5d7dfdab4a6239eb4bce1aac33c7b5801ca9",
+      "lockGeneration": 1363,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:TEMPORARY_RETIREMENT_ROUTER_REGISTRATION:TRANCHE2:V1",
+      "operationId": "TRANCHE2_TEMPORARY_RETIREMENT_ROUTER_REGISTRATION_20260813_002",
+      "procedureLocatorDigest": "b12e4e6911e167f376cb60eefd2165a66f1ca2af660c89550ad37a853ed8b02e",
+      "released": true,
+      "requestDigest": "263bbc9d06511ec74a30f7a5386ab755d00696fe44d69d2b9c9a8356c5455435",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "befb8b7e29579b34188fff9e1e4e6191d99e87fd89ffcac0a45ef11b38b12628",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

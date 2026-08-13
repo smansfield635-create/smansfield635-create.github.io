@@ -8,6 +8,8 @@ on:
     branches:
       - main
     types: [opened, reopened, synchronize]
+    paths:
+      - control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-accessibility-responsive-evidence-v1/**
 
 permissions:
   contents: read

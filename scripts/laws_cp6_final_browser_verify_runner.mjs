@@ -25,6 +25,12 @@ const corrections = [
     expected: 1,
     label: 'current Laws applied-study marker',
   },
+  {
+    from: `} else {\n        await navCheck(page, descriptor.route, profile.name);`,
+    to: `} else if (descriptor.route === '/laws/research/methods-and-models/') {\n        assert(await page.locator('html[data-canonical-archive="METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"]').count() === 1, descriptor.route + ': canonical archive binding missing');\n      } else {\n        await navCheck(page, descriptor.route, profile.name);`,
+    expected: 1,
+    label: 'specialized Methods profile routing',
+  },
 ];
 
 let corrected = fs.readFileSync(sourcePath, 'utf8');

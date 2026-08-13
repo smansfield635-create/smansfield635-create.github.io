@@ -168,8 +168,9 @@ async function verifyProfile(profile, viewport){
   if(dragged.selectedText!=="Method / Falsification"||dragged.family!=="method") failures.push("pointer_drag_state_binding");
 
   await page.emulateMediaFeatures([{name:"prefers-reduced-motion",value:"reduce"}]);
-  await page.reload({waitUntil:"networkidle0"});
+  await page.goto(route,{waitUntil:"networkidle0",timeout:45000});
   await waitReady(page);
+  await waitSelected(page,0);
   await page.focus('[data-mm-family-tabs] .mm-family-tab[aria-selected="true"]');
   await page.keyboard.press("ArrowRight");
   await waitSelected(page,1);

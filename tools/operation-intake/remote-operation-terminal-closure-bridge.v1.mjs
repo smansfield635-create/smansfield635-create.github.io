@@ -17,7 +17,7 @@ export const ROUTE_ID = 'REMOTE_OPERATION_TERMINAL_CLOSURE_v1';
 export const REQUEST_SCHEMA = 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1';
 export const RECEIPT_SCHEMA = 'REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_RECEIPT_v1';
 export const LOCK_MANAGER_PATH = 'tools/operation-intake/repository-operation-lock-manager.v1.mjs';
-export const LOCK_MANAGER_BLOB = 'edb249f76cc326ea2f07aae20510f894c0e4511c';
+export const LOCK_MANAGER_BLOB = 'bb2c01247db69e1ab9c87fc7ad91ba1336ed10eb';
 const REQUIRED_KEYS = Object.freeze([
   'schema',
   'repository',
@@ -222,7 +222,7 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const inputPath = runtimePath(args.input, 'input');
   const outputPath = runtimePath(args.output, 'output');
-  const nativeOutputPath = runtimePath(args['native-output'], 'native-output');
+  const nativeOutputPath = runtimePath(args['native-output']);
   const raw = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
   const { receipt, nativeReceipt } = await executeClosure(raw);
   writeJson(outputPath, receipt);

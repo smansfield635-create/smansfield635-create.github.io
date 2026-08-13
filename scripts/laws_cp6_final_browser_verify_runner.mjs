@@ -31,6 +31,18 @@ const corrections = [
     expected: 1,
     label: 'specialized Methods profile routing',
   },
+  {
+    from: `await gotoChecked(page, descriptor.route);\n    assert(await page.locator('html').getAttribute('data-lr-motion')`,
+    to: `await gotoChecked(page, descriptor.route);\n    if (descriptor.route === '/laws/research/methods-and-models/') { await health(page, descriptor.route, errors); results.push({ check: 'reduced-motion', route: descriptor.route, status: 'PASS' }); await page.close(); continue; }\n    assert(await page.locator('html').getAttribute('data-lr-motion')`,
+    expected: 1,
+    label: 'specialized Methods reduced health routing',
+  },
+  {
+    from: `await health(page, descriptor.route, errors);\n    if (descriptor.route !== '/laws/') {`,
+    to: `await health(page, descriptor.route, errors);\n    if (descriptor.route === '/laws/research/methods-and-models/') { results.push({ check: 'static-no-js', route: descriptor.route, status: 'PASS' }); await page.close(); continue; }\n    if (descriptor.route !== '/laws/') {`,
+    expected: 1,
+    label: 'specialized Methods static health routing',
+  },
 ];
 
 let corrected = fs.readFileSync(sourcePath, 'utf8');

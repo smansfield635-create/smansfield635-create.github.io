@@ -153,8 +153,9 @@ def main() -> None:
 
     interactions = (ROOT / "laws/index.interactions.js").read_text(encoding="utf-8")
     assert 'const D=Object.freeze(["flow","integrity","reality","structure","test","research"])' in interactions
-    assert 'singleActiveOuterAuthorityLabel:true' in interactions
-    assert 'primary-only-star-center-protected-tab' in interactions
+    assert 'build:"LAWS_COMPASS_CHECKPOINT_5_SINGLE_ACTIVE_OUTER_LABEL_v1"' in interactions
+    assert 'const authorityField=()=>S.controller.getAuthorityFieldContract();' in interactions
+    assert '"getAuthorityFieldContract"' in interactions
 
     print(json.dumps({
         "contract": "LAWS_CP6_FINAL_CONTENT_CONTRACT_VERIFICATION_v1",

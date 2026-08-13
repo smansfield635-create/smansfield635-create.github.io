@@ -4,14 +4,12 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
       - '.github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json'
       - '.github/workflows/h-earth-repository-preflight-execution-binding-validation.yml'
       - 'tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs'
   push:
     branches: [main]
     paths:
-      - '.github/ai-toolset-transport/authorized-toolset-registry.v1.json'
       - '.github/ai-toolset-transport/h-earth-repository-preflight-execution-binding.v1.json'
       - '.github/workflows/h-earth-repository-preflight-execution-binding-validation.yml'
       - 'tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs'

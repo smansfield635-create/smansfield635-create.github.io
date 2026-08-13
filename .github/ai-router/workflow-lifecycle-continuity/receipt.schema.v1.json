@@ -1,0 +1,8 @@
+{
+  "schemaId": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_RECEIPT_SCHEMA_v1",
+  "receiptSchema": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_RECEIPT_v1",
+  "requiredFields": ["schema", "result", "governingHead", "gapId", "requirements", "normalization", "authorityEffects"],
+  "allowedResults": ["PASS_CLOSED_ELIGIBLE", "FAIL_CLOSED"],
+  "governingGapId": "WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY",
+  "additionalAuthorityCreated": false
+}

@@ -1,6 +1,11 @@
 name: Exact Candidate Adoption Carrier v1
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/exact-candidate-adoption-carrier-v1.yml'
+      - '.github/ai-router/exact-candidate-adoption/**'
+      - '.github/ai-router/router.v1.json'
   workflow_dispatch:
     inputs:
       generation:
@@ -19,7 +24,7 @@ on:
           - ADOPT
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   ADOPTION_GENERATION: ${{ inputs.generation }}
@@ -29,7 +34,62 @@ env:
   FINAL_ADOPTION_OUTPUT: ${{ runner.temp }}/exact-candidate-adoption-final.receipt.json
 
 jobs:
+  qualify-carrier:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact carrier candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify admitted five-path scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "${{ github.event.pull_request.base.sha }}" --depth=1
+          mapfile -t CHANGED < <(git diff --name-only "${{ github.event.pull_request.base.sha }}"...HEAD | sort)
+          EXPECTED=(
+            '.github/ai-router/exact-candidate-adoption/exact-candidate-adoption-self-test.v1.mjs'
+            '.github/ai-router/exact-candidate-adoption/exact-candidate-adoption.v1.mjs'
+            '.github/ai-router/exact-candidate-adoption/fixtures/gen1378.v1.json'
+            '.github/ai-router/router.v1.json'
+            '.github/workflows/exact-candidate-adoption-carrier-v1.yml'
+          )
+          mapfile -t EXPECTED_SORTED < <(printf '%s\n' "${EXPECTED[@]}" | sort)
+          test "${#CHANGED[@]}" -eq 5
+          test "$(printf '%s\n' "${CHANGED[@]}")" = "$(printf '%s\n' "${EXPECTED_SORTED[@]}")"
+
+      - name: Run exact-candidate carrier self-test
+        run: node .github/ai-router/exact-candidate-adoption/exact-candidate-adoption-self-test.v1.mjs
+
+      - name: Verify low-entropy and force-false contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - <<'NODE'
+          const fs=require('fs');
+          const fixture=JSON.parse(fs.readFileSync('.github/ai-router/exact-candidate-adoption/fixtures/gen1378.v1.json','utf8'));
+          if(fixture.force!==false) throw new Error('FORCE_POLICY_NONFALSE');
+          if(fixture.generation!==1378) throw new Error('GENERATION_DRIFT');
+          if(fixture.candidate!=='cb0b892fdc20f612e79c1c35307bd476192cddef') throw new Error('CANDIDATE_DRIFT');
+          const workflow=fs.readFileSync('.github/workflows/exact-candidate-adoption-carrier-v1.yml','utf8');
+          for(const prohibited of ['branch:', 'paths:', 'manifest:', 'content:']) {
+            const dispatch=workflow.split('workflow_dispatch:')[1]?.split('permissions:')[0] ?? '';
+            if(dispatch.includes(prohibited)) throw new Error('HIGH_ENTROPY_DISPATCH_INPUT:'+prohibited);
+          }
+          if(!workflow.includes('force:false') && !workflow.includes('force: false')) {
+            const executor=fs.readFileSync('.github/ai-router/exact-candidate-adoption/exact-candidate-adoption.v1.mjs','utf8');
+            if(!executor.includes('force:false')) throw new Error('FAST_FORWARD_POLICY_NOT_BOUND');
+          }
+          NODE
+
   adopt-and-qualify:
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout trusted carrier
@@ -56,7 +116,6 @@ jobs:
           set -euo pipefail
           node - <<'NODE'
           const fs=require('fs');
-          const path=require('path');
           const fixture=JSON.parse(fs.readFileSync('.github/ai-router/exact-candidate-adoption/fixtures/gen1378.v1.json','utf8'));
           let raw={result:'NO_EXECUTOR_RECEIPT'};
           if(fs.existsSync(process.env.ADOPTION_OUTPUT)) raw=JSON.parse(fs.readFileSync(process.env.ADOPTION_OUTPUT,'utf8'));
@@ -69,19 +128,7 @@ jobs:
           if(observed===fixture.candidate) result=raw.result==='ALREADY_ADOPTED'?'ALREADY_ADOPTED':'ADOPTED';
           else if(observed===fixture.expectedParent) result='REFUSED';
           else result='ADOPTION_OUTCOME_UNKNOWN';
-          const receipt={
-            schema:'EXACT_CANDIDATE_ADOPTION_FINAL_RECEIPT_v1',
-            result,
-            generation:fixture.generation,
-            candidate:fixture.candidate,
-            authorizedBranch:fixture.authorizedBranch,
-            expectedParent:fixture.expectedParent,
-            observedPostState:observed,
-            executorResult:raw.result ?? null,
-            executorErrorCode:raw.errorCode ?? null,
-            mutationObserved:observed===fixture.candidate && observed!==fixture.expectedParent,
-            force:false
-          };
+          const receipt={schema:'EXACT_CANDIDATE_ADOPTION_FINAL_RECEIPT_v1',result,generation:fixture.generation,candidate:fixture.candidate,authorizedBranch:fixture.authorizedBranch,expectedParent:fixture.expectedParent,observedPostState:observed,executorResult:raw.result ?? null,executorErrorCode:raw.errorCode ?? null,mutationObserved:observed===fixture.candidate && observed!==fixture.expectedParent,force:false};
           fs.writeFileSync(process.env.FINAL_ADOPTION_OUTPUT,JSON.stringify(receipt,null,2)+'\n');
           if(!['ADOPTED','ALREADY_ADOPTED'].includes(result)) {
             console.error(JSON.stringify(receipt));

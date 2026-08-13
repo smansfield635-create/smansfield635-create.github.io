@@ -13,7 +13,7 @@ html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs::before { di
 html[data-methods-models-euclidean-showroom="active"] .mm-family-tab,
 html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[data-mm-z-position] { position: relative !important; top: auto !important; left: auto !important; flex: 1 1 0 !important; width: auto !important; min-width: 8rem !important; min-height: 2.6rem !important; transform: none !important; opacity: .55 !important; filter: none !important; }
 html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[aria-selected="true"] { opacity: 1 !important; }
-html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset-top: 12.6rem !important; inset-bottom: 9rem !important; }
+html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { top: 12.6rem !important; bottom: 9rem !important; }
 html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { top: auto !important; bottom: 6.25rem !important; left: 50% !important; width: min(42rem, calc(100% - 3rem)) !important; height: 2.8rem !important; display: flex !important; gap: .45rem !important; transform: translateX(-50%) translateZ(130px) !important; perspective: none !important; pointer-events: auto !important; }
 html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab,
 html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab[data-mm-y-position] { position: relative !important; top: auto !important; left: auto !important; flex: 1 1 0 !important; width: auto !important; min-width: 0 !important; min-height: 2.6rem !important; transform: none !important; opacity: .62 !important; filter: none !important; }

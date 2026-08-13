@@ -1,487 +1,133 @@
 <!doctype html>
-<html
-  lang="en"
-  data-route="/showroom/globe/audralia/disposition/"
-  data-page="audralia-command-cockpit"
-  data-room="audralia"
-  data-public-facing-name="Audralia Command Cockpit"
-  data-version="AUDRALIA-COMMAND-COCKPIT-CONTEXTUAL-SUCCESSOR-v2"
-  data-contract="AUDRALIA_COMMAND_COCKPIT_CONTEXTUAL_SUCCESSOR_TNT_v2"
-  data-previous-contract="AUDRALIA_COCKPIT_COMMAND_CONSOLE_TNT_v1"
-  data-role="audralia-inspection-and-next-movement-surface"
-  data-purpose="present-current-world-context-diagnostic-authority-evidence-and-admissible-next-movement"
-  data-primary-route="/showroom/globe/audralia/disposition/"
-  data-parent-route="/showroom/globe/audralia/"
-  data-diagnostic-route="/showroom/globe/audralia/diagnostic/"
-  data-static-page-usable-without-js="true"
-  data-heavy-runtime-loaded="false"
-  data-generated-image="false"
-  data-graphic-box="false"
-  data-canvas="false"
-  data-webgl="false"
-  data-production-mutation-authorized="false"
-  data-runtime-repair-authorized="false"
-  data-runtime-telemetry-claimed="false"
-  data-visual-pass-claimed="false"
->
+<html lang="en" data-route="/showroom/globe/audralia/disposition/" data-page="audralia-command-cockpit" data-room="audralia" data-public-facing-name="Audralia Command Cockpit" data-version="AUDRALIA-COMMAND-COCKPIT-NARRATIVE-INTEGRATION-v3" data-contract="AUDRALIA_COMMAND_COCKPIT_NARRATIVE_INTEGRATION_TNT_v3" data-previous-contract="AUDRALIA_COMMAND_COCKPIT_CONTEXTUAL_SUCCESSOR_TNT_v2" data-role="audralia-narrative-inspection-and-next-movement-surface" data-purpose="marry-living-world-narrative-with-current-inspection-governance-and-next-movement" data-primary-route="/showroom/globe/audralia/disposition/" data-parent-route="/showroom/globe/audralia/" data-diagnostic-route="/showroom/globe/audralia/diagnostic/" data-static-page-usable-without-js="true" data-heavy-runtime-loaded="false" data-generated-image="false" data-graphic-box="false" data-canvas="false" data-webgl="false" data-production-mutation-authorized="false" data-runtime-repair-authorized="false" data-runtime-telemetry-claimed="false" data-visual-pass-claimed="false" data-plane="world">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#040713">
-  <meta
-    name="description"
-    content="Audralia Command Cockpit: inspect the published world configuration, diagnostic authority, governing context, evidence routes, and the next useful movement without confusing observation with runtime control."
-  >
+  <meta name="description" content="Audralia Command Cockpit: enter the living world, understand what is happening beneath it, inspect the evidence, and choose the next useful movement without confusing observation with control.">
   <title>Audralia · Command Cockpit · Diamond Gate Bridge</title>
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/disposition/">
-
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#040713;
-      --bg2:#07101a;
-      --ink:#f7f3e8;
-      --soft:rgba(239,243,247,.76);
-      --muted:rgba(239,243,247,.56);
-      --faint:rgba(239,243,247,.36);
-      --gold:#f0c96f;
-      --cyan:#79dff3;
-      --green:#8fe0b6;
-      --violet:#b49af0;
-      --orange:#efb26c;
-      --line:rgba(226,235,244,.14);
-      --panel:rgba(8,14,24,.84);
-      --panel2:rgba(255,255,255,.032);
-      --accent-rgb:240,201,111;
-      --accent-ink:#171006;
-      --max:1120px;
-      --radius-xl:34px;
-      --radius-lg:26px;
-      --radius-md:20px;
-    }
-
-    html[data-plane="world"]{--accent-rgb:240,201,111;--accent-ink:#171006}
-    html[data-plane="diagnostic"]{--accent-rgb:121,223,243;--accent-ink:#061417}
-    html[data-plane="construction"]{--accent-rgb:180,154,240;--accent-ink:#120d1d}
-    html[data-plane="evidence"]{--accent-rgb:143,224,182;--accent-ink:#07150e}
-    html[data-plane="next"]{--accent-rgb:239,178,108;--accent-ink:#1a1006}
-
-    *{box-sizing:border-box;min-width:0}
-    html,body{margin:0;min-width:320px;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;scroll-behavior:smooth;overflow-x:hidden}
-    body{min-height:100svh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-    body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:
-      radial-gradient(circle at 17% 13%,rgba(121,223,243,.12),transparent 32rem),
-      radial-gradient(circle at 82% 18%,rgba(180,154,240,.10),transparent 29rem),
-      radial-gradient(circle at 56% 82%,rgba(143,224,182,.07),transparent 34rem),
-      linear-gradient(180deg,var(--bg2),var(--bg) 56%,#02040b)}
-    body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.42;background-image:
-      radial-gradient(circle,rgba(255,255,255,.72) 0 1px,transparent 1.8px),
-      radial-gradient(circle,rgba(121,223,243,.64) 0 1px,transparent 1.7px),
-      radial-gradient(circle,rgba(240,201,111,.62) 0 1px,transparent 1.7px),
-      radial-gradient(circle,rgba(180,154,240,.56) 0 1px,transparent 1.65px);
-      background-size:89px 89px,144px 144px,233px 233px,377px 377px;
-      background-position:13px 21px,55px 34px,89px 144px,21px 233px;
-      mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.86) 62%,rgba(0,0,0,.36) 100%)}
-
-    a{color:inherit;text-decoration:none}
-    button,summary{font:inherit}
-    button{cursor:pointer}
-    summary{cursor:pointer;list-style:none}
-    summary::-webkit-details-marker{display:none}
-    a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid rgb(var(--accent-rgb));outline-offset:4px}
-    [hidden]{display:none!important}
-
-    .skip{position:absolute;left:-9999px;top:8px;z-index:100;padding:.75rem 1rem;border-radius:999px;background:rgb(var(--accent-rgb));color:var(--accent-ink);font-weight:900}
-    .skip:focus{left:8px}
-    .shell{position:relative;z-index:2;width:min(var(--max),calc(100% - 32px));margin:0 auto;padding:max(22px,env(safe-area-inset-top)) 0 max(58px,env(safe-area-inset-bottom))}
-
-    .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:30px}
-    .brand{display:grid;gap:4px}
-    .brand small{color:var(--gold);font-size:.76rem;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
-    .brand strong{font-size:1rem;color:var(--soft)}
-    .nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
-    .nav a{display:inline-flex;align-items:center;justify-content:center;min-height:2.5rem;padding:.62rem .92rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);font-size:.84rem;font-weight:850}
-    .nav a:hover,.nav a:focus-visible{border-color:rgba(var(--accent-rgb),.52);background:rgba(var(--accent-rgb),.10)}
-
-    .hero,.surface,.plane-stage,.boundary{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018)),var(--panel);box-shadow:0 24px 70px rgba(0,0,0,.28)}
-    .hero{position:relative;overflow:hidden;border-radius:var(--radius-xl);padding:clamp(28px,6vw,68px);min-height:min(74vh,760px);display:grid;align-content:end}
-    .hero::before{content:"";position:absolute;width:min(72vw,760px);aspect-ratio:1;border:1px solid rgba(121,223,243,.12);border-radius:50%;right:-32%;top:-26%;box-shadow:0 0 0 89px rgba(121,223,243,.025),0 0 0 144px rgba(180,154,240,.018),0 0 0 233px rgba(240,201,111,.012);pointer-events:none}
-    .hero-inner{position:relative;z-index:1;max-width:900px}
-    .eyebrow{margin:0 0 12px;color:rgb(var(--accent-rgb));font-size:.78rem;font-weight:950;letter-spacing:.18em;text-transform:uppercase}
-    h1,h2,h3{margin:0;color:var(--ink);text-wrap:balance}
-    h1{max-width:880px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.25rem,10vw,7rem);line-height:.86;letter-spacing:-.067em}
-    h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.15rem,6vw,4.8rem);line-height:.94;letter-spacing:-.052em}
-    h3{font-size:clamp(1.18rem,3vw,1.55rem);line-height:1.08;letter-spacing:-.03em}
-    p{margin:0;color:var(--soft);font-size:clamp(1rem,2.7vw,1.16rem);line-height:1.62}
-    p+p{margin-top:1rem}
-    .hero-copy{max-width:760px;margin-top:24px}
-    .hero-thesis{max-width:760px;margin-top:24px;color:var(--gold);font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.45rem,4vw,2.35rem);line-height:1.25}
-    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
-    .button{display:inline-flex;align-items:center;justify-content:center;min-height:3rem;padding:.76rem 1.1rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.045);font-size:.86rem;font-weight:900;letter-spacing:.02em}
-    .button.primary{background:linear-gradient(135deg,rgba(var(--accent-rgb),1),rgba(var(--accent-rgb),.80));border-color:rgba(var(--accent-rgb),.75);color:var(--accent-ink)}
-    .button:hover,.button:focus-visible{transform:translateY(-1px);border-color:rgba(var(--accent-rgb),.62)}
-
-    .pulse-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:30px}
-    .pulse{padding:14px 15px;border:1px solid rgba(255,255,255,.11);border-radius:18px;background:rgba(0,0,0,.18)}
-    .pulse span{display:block;color:var(--muted);font-size:.72rem;font-weight:900;letter-spacing:.13em;text-transform:uppercase}
-    .pulse strong{display:block;margin-top:5px;font-size:.96rem;line-height:1.35}
-
-    .section-space{margin-top:22px}
-    .surface{border-radius:var(--radius-xl);padding:clamp(22px,5vw,46px)}
-    .section-head{display:grid;gap:10px;max-width:820px;margin-bottom:24px}
-    .section-head .eyebrow{margin:0}
-    .section-head p{max-width:760px}
-
-    .plane-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:9px;border:1px solid var(--line);border-radius:24px;background:rgba(0,0,0,.24)}
-    .plane-tab{border:0;border-radius:17px;padding:1rem .7rem;background:transparent;color:var(--muted);font-size:.82rem;font-weight:900;line-height:1.18;transition:background .18s ease,color .18s ease,transform .18s ease}
-    .plane-tab[aria-selected="true"]{background:rgb(var(--accent-rgb));color:var(--accent-ink);box-shadow:0 14px 36px rgba(var(--accent-rgb),.16)}
-    .plane-tab:hover{color:var(--ink)}
-
-    .plane-stage{margin-top:14px;border-color:rgba(var(--accent-rgb),.34);border-radius:var(--radius-xl);padding:clamp(24px,5vw,50px);background:linear-gradient(145deg,rgba(var(--accent-rgb),.13),rgba(4,8,15,.9) 52%,rgba(4,8,15,.98))}
-    .plane-number{margin:0 0 10px;color:rgb(var(--accent-rgb));font-size:.8rem;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
-    .plane-title{max-width:850px}
-    .plane-copy{max-width:780px;margin-top:20px}
-    .state-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
-    .state-chip{display:inline-flex;align-items:center;gap:8px;padding:.62rem .82rem;border:1px solid rgba(var(--accent-rgb),.30);border-radius:999px;background:rgba(0,0,0,.23);color:var(--soft);font-size:.78rem;font-weight:850}
-    .state-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:rgb(var(--accent-rgb));box-shadow:0 0 16px rgba(var(--accent-rgb),.68)}
-
-    .lens-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:24px}
-    .lens{padding:18px;border:1px solid rgba(255,255,255,.11);border-radius:20px;background:rgba(255,255,255,.026)}
-    .lens small{display:block;margin-bottom:7px;color:rgb(var(--accent-rgb));font-size:.72rem;font-weight:950;letter-spacing:.13em;text-transform:uppercase}
-    .lens p{font-size:.94rem;line-height:1.54}
-
-    .action-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
-    .action-row .button{min-width:190px}
-
-    .map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}
-    .map article{padding:18px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.028)}
-    .map b{display:block;margin-bottom:7px;color:var(--gold);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}
-    .map strong{display:block;font-size:1.08rem;line-height:1.15}
-    .map p{margin-top:9px;font-size:.9rem;line-height:1.48;color:var(--muted)}
-
-    .legacy{margin-top:12px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.025)}
-    .legacy summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;font-weight:900}
-    .legacy summary::after{content:"+";display:grid;place-items:center;width:2.3rem;height:2.3rem;flex:0 0 auto;border:1px solid rgba(var(--accent-rgb),.30);border-radius:50%;color:rgb(var(--accent-rgb));font-size:1.3rem}
-    .legacy[open] summary::after{content:"−"}
-    .legacy-body{padding:0 20px 20px;border-top:1px solid var(--line)}
-    .legacy-body p{padding-top:18px;font-size:.95rem}
-    .legacy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:16px}
-    .legacy-item{padding:14px 15px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(0,0,0,.16)}
-    .legacy-item strong{display:block;font-size:.96rem}
-    .legacy-item span{display:block;margin-top:4px;color:var(--muted);font-size:.82rem;line-height:1.4}
-
-    .boundary{border-radius:var(--radius-xl);padding:clamp(22px,5vw,40px);border-color:rgba(240,201,111,.28);background:linear-gradient(145deg,rgba(240,201,111,.08),rgba(4,8,15,.94) 45%)}
-    .boundary-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.72fr);gap:24px;align-items:start}
-    .boundary strong{color:var(--gold)}
-    .boundary-list{display:grid;gap:9px;margin:0;padding:0;list-style:none}
-    .boundary-list li{padding:12px 14px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(0,0,0,.16);color:var(--soft);font-size:.9rem;line-height:1.45}
-
-    footer{padding:34px 4px 0;color:var(--faint);font-size:.82rem;text-align:center}
-
-    @media(max-width:820px){
-      .topbar{display:grid}.nav{justify-content:flex-start}
-      .pulse-row,.lens-grid,.boundary-grid{grid-template-columns:1fr}
-      .plane-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .plane-tab:last-child{grid-column:1/-1}
-      .map{grid-template-columns:1fr 1fr}
-    }
-
-    @media(max-width:560px){
-      .shell{width:min(100% - 24px,var(--max))}
-      .hero{min-height:auto;padding:28px 22px 30px}
-      h1{font-size:clamp(3.2rem,17vw,5.25rem)}
-      .hero-actions,.action-row{display:grid}
-      .button,.action-row .button{width:100%;min-width:0}
-      .plane-tabs{grid-template-columns:1fr 1fr;padding:7px}
-      .plane-tab{padding:.92rem .55rem}
-      .map,.legacy-grid{grid-template-columns:1fr}
-      .surface,.plane-stage,.boundary{border-radius:26px}
-    }
-
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.button,.plane-tab{transition:none}}
+    :root{color-scheme:dark;--bg:#040713;--bg2:#07101a;--ink:#f7f3e8;--soft:rgba(239,243,247,.77);--muted:rgba(239,243,247,.56);--gold:#f0c96f;--cyan:#79dff3;--green:#8fe0b6;--violet:#b49af0;--orange:#efb26c;--line:rgba(226,235,244,.14);--panel:rgba(8,14,24,.84);--accent-rgb:240,201,111;--accent-ink:#171006;--max:1120px;--r1:34px;--r2:24px}
+    html[data-plane="world"]{--accent-rgb:240,201,111;--accent-ink:#171006}html[data-plane="diagnostic"]{--accent-rgb:121,223,243;--accent-ink:#061417}html[data-plane="construction"]{--accent-rgb:180,154,240;--accent-ink:#120d1d}html[data-plane="evidence"]{--accent-rgb:143,224,182;--accent-ink:#07150e}html[data-plane="next"]{--accent-rgb:239,178,108;--accent-ink:#1a1006}
+    *{box-sizing:border-box;min-width:0}html,body{margin:0;min-width:320px;min-height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden;scroll-behavior:smooth}body{min-height:100svh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(circle at 18% 12%,rgba(121,223,243,.12),transparent 30rem),radial-gradient(circle at 82% 18%,rgba(180,154,240,.10),transparent 28rem),radial-gradient(circle at 54% 82%,rgba(143,224,182,.07),transparent 34rem),linear-gradient(180deg,var(--bg2),var(--bg) 58%,#02040b)}
+    body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.42;background-image:radial-gradient(circle,rgba(255,255,255,.72) 0 1px,transparent 1.8px),radial-gradient(circle,rgba(121,223,243,.64) 0 1px,transparent 1.7px),radial-gradient(circle,rgba(240,201,111,.62) 0 1px,transparent 1.7px),radial-gradient(circle,rgba(180,154,240,.56) 0 1px,transparent 1.65px);background-size:89px 89px,144px 144px,233px 233px,377px 377px;background-position:13px 21px,55px 34px,89px 144px,21px 233px;mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.84) 64%,rgba(0,0,0,.34) 100%)}
+    a{color:inherit;text-decoration:none}button,summary{font:inherit}button{cursor:pointer}summary{cursor:pointer;list-style:none}summary::-webkit-details-marker{display:none}a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid rgb(var(--accent-rgb));outline-offset:4px}[hidden]{display:none!important}
+    .skip{position:absolute;left:-9999px;top:8px;z-index:100;padding:.75rem 1rem;border-radius:999px;background:rgb(var(--accent-rgb));color:var(--accent-ink);font-weight:900}.skip:focus{left:8px}
+    .shell{position:relative;z-index:2;width:min(var(--max),calc(100% - 32px));margin:0 auto;padding:max(22px,env(safe-area-inset-top)) 0 max(58px,env(safe-area-inset-bottom))}.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:30px}.brand{display:grid;gap:4px}.brand small{color:var(--gold);font-size:.76rem;font-weight:950;letter-spacing:.16em;text-transform:uppercase}.brand strong{font-size:1rem;color:var(--soft)}.nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.nav a,.button{display:inline-flex;align-items:center;justify-content:center;min-height:2.7rem;padding:.66rem .96rem;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);font-size:.85rem;font-weight:900}.nav a:hover,.button:hover{border-color:rgba(var(--accent-rgb),.55);background:rgba(var(--accent-rgb),.09)}
+    .hero,.surface,.stage,.boundary{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.018)),var(--panel);box-shadow:0 24px 70px rgba(0,0,0,.28)}.hero{position:relative;overflow:hidden;border-radius:var(--r1);padding:clamp(28px,6vw,68px);min-height:min(74vh,760px);display:grid;align-content:end}.hero::before{content:"";position:absolute;width:min(72vw,760px);aspect-ratio:1;border:1px solid rgba(121,223,243,.12);border-radius:50%;right:-32%;top:-26%;box-shadow:0 0 0 89px rgba(121,223,243,.025),0 0 0 144px rgba(180,154,240,.018),0 0 0 233px rgba(240,201,111,.012)}.hero-inner{position:relative;z-index:1;max-width:900px}.eyebrow{margin:0 0 12px;color:rgb(var(--accent-rgb));font-size:.78rem;font-weight:950;letter-spacing:.18em;text-transform:uppercase}h1,h2,h3{margin:0;color:var(--ink);text-wrap:balance}h1{max-width:900px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.1rem,10vw,7rem);line-height:.88;letter-spacing:-.064em}h2{font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.1rem,6vw,4.6rem);line-height:.95;letter-spacing:-.05em}h3{font-size:clamp(1.18rem,3vw,1.55rem);line-height:1.1;letter-spacing:-.03em}p{margin:0;color:var(--soft);font-size:clamp(1rem,2.7vw,1.16rem);line-height:1.64}p+p{margin-top:1rem}.hero-copy{max-width:760px;margin-top:24px}.hero-thesis{max-width:760px;margin-top:24px;color:var(--gold);font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.45rem,4vw,2.35rem);line-height:1.25}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.button.primary{background:linear-gradient(135deg,rgba(var(--accent-rgb),1),rgba(var(--accent-rgb),.80));border-color:rgba(var(--accent-rgb),.75);color:var(--accent-ink)}
+    .section-space{margin-top:22px}.surface{border-radius:var(--r1);padding:clamp(22px,5vw,46px)}.section-head{display:grid;gap:10px;max-width:830px;margin-bottom:24px}.section-head .eyebrow{margin:0}.story-bridge{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;align-items:stretch}.story-card{border:1px solid var(--line);border-radius:var(--r2);padding:clamp(22px,4vw,36px);background:rgba(255,255,255,.028)}.story-card strong{display:block;margin-bottom:10px;color:var(--gold);font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.35rem,3.3vw,2rem);line-height:1.18}.story-card.minor strong{font-family:inherit;font-size:1rem;color:var(--cyan)}
+    .tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;padding:9px;border:1px solid var(--line);border-radius:24px;background:rgba(0,0,0,.24)}.tab{border:0;border-radius:17px;padding:1rem .7rem;background:transparent;color:var(--muted);font-size:.82rem;font-weight:900;line-height:1.18;transition:.18s}.tab[aria-selected="true"]{background:rgb(var(--accent-rgb));color:var(--accent-ink);box-shadow:0 14px 36px rgba(var(--accent-rgb),.16)}.tab:hover{color:var(--ink)}
+    .stage{margin-top:14px;border-color:rgba(var(--accent-rgb),.34);border-radius:var(--r1);padding:clamp(24px,5vw,50px);background:linear-gradient(145deg,rgba(var(--accent-rgb),.13),rgba(4,8,15,.9) 52%,rgba(4,8,15,.98))}.stage-number{margin:0 0 10px;color:rgb(var(--accent-rgb));font-size:.8rem;font-weight:950;letter-spacing:.16em;text-transform:uppercase}.stage-title{max-width:850px}.stage-copy{max-width:790px;margin-top:20px}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.chip{display:inline-flex;align-items:center;gap:8px;padding:.62rem .82rem;border:1px solid rgba(var(--accent-rgb),.30);border-radius:999px;background:rgba(0,0,0,.23);color:var(--soft);font-size:.78rem;font-weight:850}.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:rgb(var(--accent-rgb));box-shadow:0 0 16px rgba(var(--accent-rgb),.68)}.lenses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:24px}.lens{padding:18px;border:1px solid rgba(255,255,255,.11);border-radius:20px;background:rgba(255,255,255,.026)}.lens small{display:block;margin-bottom:7px;color:rgb(var(--accent-rgb));font-size:.72rem;font-weight:950;letter-spacing:.13em;text-transform:uppercase}.lens p{font-size:.94rem;line-height:1.54}
+    .map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.map article{padding:18px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.028)}.map b{display:block;margin-bottom:7px;color:var(--gold);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase}.map strong{display:block;font-size:1.08rem;line-height:1.15}.map p{margin-top:9px;font-size:.9rem;line-height:1.48;color:var(--muted)}
+    .boundary{border-radius:var(--r1);padding:clamp(24px,5vw,46px);border-color:rgba(240,201,111,.28)}.boundary-copy{max-width:830px}.guardrails{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:24px}.guard{padding:18px;border:1px solid var(--line);border-radius:20px;background:rgba(0,0,0,.18)}.guard strong{color:var(--gold)}
+    .legacy{margin-top:12px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.025)}.legacy summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;font-weight:900}.legacy summary::after{content:"+";display:grid;place-items:center;width:2.3rem;height:2.3rem;flex:0 0 auto;border:1px solid rgba(var(--accent-rgb),.30);border-radius:50%;color:rgb(var(--accent-rgb));font-size:1.3rem}.legacy[open] summary::after{content:"−"}.legacy-body{padding:0 20px 20px;border-top:1px solid var(--line)}.legacy-body p{padding-top:18px;font-size:.95rem}.legacy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:16px}.legacy-item{padding:14px 15px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(0,0,0,.16)}.legacy-item strong{display:block;font-size:.96rem}.legacy-item span{display:block;margin-top:4px;color:var(--muted);font-size:.82rem}
+    footer{padding:30px 4px 0;text-align:center;color:var(--muted);font-size:.82rem;line-height:1.6}
+    @media(max-width:820px){.story-bridge{grid-template-columns:1fr}.tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.tab:last-child{grid-column:1/-1}.lenses,.map,.guardrails{grid-template-columns:1fr}.topbar{display:grid}.nav{justify-content:flex-start}}
+    @media(max-width:520px){.shell{width:min(100% - 24px,var(--max))}.hero{min-height:auto;padding:30px 24px 34px}.surface,.stage,.boundary{border-radius:28px}.tabs{gap:6px;padding:7px}.tab{padding:.9rem .6rem}.actions{display:grid}.actions .button{width:100%}.legacy-grid{grid-template-columns:1fr}h1{font-size:clamp(3.1rem,16vw,5rem)}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
   </style>
 </head>
 <body>
-  <a class="skip" href="#cockpit">Skip to cockpit</a>
+<a class="skip" href="#main">Skip to cockpit</a>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><small>Diamond Gate Bridge</small><strong>Audralia · Command Cockpit</strong></div>
+    <nav class="nav" aria-label="Audralia cockpit navigation"><a href="/showroom/globe/audralia/">Enter Audralia</a><a href="/showroom/">Showroom</a><a href="/governance/">Governance</a></nav>
+  </header>
 
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand">
-        <small>Diamond Gate Bridge</small>
-        <strong>Audralia · Command Cockpit</strong>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <p class="eyebrow">Audralia · Command Cockpit</p>
+        <h1 id="hero-title">Every world has a surface. Audralia also has a way of understanding what happens beneath it.</h1>
+        <p class="hero-copy">Audralia is a living planetary environment: a place to enter, move through, inspect and keep building. As the world grew, the question changed. It was no longer only <em>what can we make?</em> It became <em>how do we understand what already exists, protect what matters, and know where the world can go next?</em></p>
+        <p class="hero-thesis">That is what this cockpit is for.</p>
+        <div class="actions"><a class="button primary" href="#planes">Open the cockpit</a><a class="button" href="/showroom/globe/audralia/">Enter the world first</a></div>
       </div>
-      <nav class="nav" aria-label="Audralia navigation">
-        <a href="/showroom/globe/audralia/">Enter Audralia</a>
-        <a href="/showroom/globe/audralia/diagnostic/">Diagnostics</a>
-        <a href="/governance/">Governance</a>
-        <a href="/">Compass</a>
-      </nav>
-    </header>
+    </section>
 
-    <main id="cockpit">
-      <section class="hero" aria-labelledby="heroTitle">
-        <div class="hero-inner">
-          <p class="eyebrow">Audralia Command Cockpit</p>
-          <h1 id="heroTitle">The world is alive. The cockpit tells you what that means.</h1>
-          <p class="hero-copy">
-            Audralia is the experience. This room is where you inspect the published world configuration,
-            the diagnostic authority around it, the evidence that supports what is being said, and the next
-            useful movement—without confusing observation with control.
-          </p>
-          <p class="hero-thesis">See the state. Understand the boundary. Then decide where to go.</p>
+    <section class="surface section-space" aria-labelledby="meaning-title">
+      <div class="section-head"><p class="eyebrow">The world behind the controls</p><h2 id="meaning-title">The machinery matters because the world matters.</h2><p>Audralia belongs to a larger story about possibility becoming visible. The terrain, weather, movement and systems are not presented as an engineering diagram. They form a world people can actually enter. The cockpit simply lets you look one layer deeper when curiosity turns into a question.</p></div>
+      <div class="story-bridge">
+        <article class="story-card"><strong>A living world should be able to grow without forgetting what it already became.</strong><p>That is where narrative and engineering meet. The experience remains the reason to build; state, boundaries, diagnostics, continuity and evidence are what help the world keep its shape while it changes.</p></article>
+        <article class="story-card minor"><strong>Two ways to experience Audralia</strong><p><b>Enter the world</b> when you want the experience. <b>Open the cockpit</b> when you want to understand the systems that let the experience continue.</p></article>
+      </div>
+    </section>
 
-          <div class="hero-actions">
-            <a class="button primary" href="#planes">Open the cockpit</a>
-            <a class="button" href="/showroom/globe/audralia/">Enter the world</a>
-          </div>
-
-          <div class="pulse-row" aria-label="Published cockpit summary">
-            <div class="pulse">
-              <span>World</span>
-              <strong>Live planetary route</strong>
-            </div>
-            <div class="pulse">
-              <span>Inspection</span>
-              <strong>Read-only diagnostic authority</strong>
-            </div>
-            <div class="pulse">
-              <span>Cockpit role</span>
-              <strong>Context and next movement</strong>
-            </div>
-          </div>
+    <section class="surface section-space" id="planes" aria-labelledby="planes-title">
+      <div class="section-head"><p class="eyebrow">Five questions beneath the world</p><h2 id="planes-title">Go deeper without losing the story.</h2><p>The same cockpit can answer five different questions. Choose the one that matches what you came here to understand.</p></div>
+      <div class="tabs" role="tablist" aria-label="Audralia cockpit planes">
+        <button class="tab" role="tab" aria-selected="true" data-plane-target="world">World State</button>
+        <button class="tab" role="tab" aria-selected="false" data-plane-target="diagnostic">Diagnostics</button>
+        <button class="tab" role="tab" aria-selected="false" data-plane-target="construction">Construction</button>
+        <button class="tab" role="tab" aria-selected="false" data-plane-target="evidence">Evidence</button>
+        <button class="tab" role="tab" aria-selected="false" data-plane-target="next">Next Move</button>
+      </div>
+      <article class="stage" aria-live="polite">
+        <p class="stage-number" id="stage-number">01 · World State</p>
+        <h2 class="stage-title" id="stage-title">Start with the world itself.</h2>
+        <p class="stage-copy" id="stage-copy">Audralia is not a diagram of a future system. It is a published planetary environment people can enter. Before looking at machinery, begin with the thing the machinery exists to serve.</p>
+        <div class="chips" id="stage-chips"><span class="chip">Live planetary route</span><span class="chip">Canonical weather / spatial LOD</span><span class="chip">Stable camera semantics</span></div>
+        <div class="lenses">
+          <article class="lens"><small>Practical</small><p id="practical">Enter Audralia when you want to experience the product rather than read about its systems.</p></article>
+          <article class="lens"><small>Engineering</small><p id="engineering">The published parent route binds the current planetary, weather, spatial-LOD and camera configuration.</p></article>
+          <article class="lens"><small>Boundary</small><p id="boundary-lens">This cockpit reports published repository-defined state. It does not present static configuration as live production telemetry.</p></article>
         </div>
-      </section>
+        <div class="actions" id="stage-actions"><a class="button primary" href="/showroom/globe/audralia/">Enter Audralia</a></div>
+      </article>
+    </section>
 
-      <section class="surface section-space" id="planes" aria-labelledby="planesTitle">
-        <header class="section-head">
-          <p class="eyebrow">Five cockpit planes</p>
-          <h2 id="planesTitle">One world. Five questions worth asking.</h2>
-          <p>
-            The cockpit is no longer a wall of instruments. Choose the question you actually need answered;
-            the room changes state around it.
-          </p>
-        </header>
+    <section class="surface section-space" aria-labelledby="journey-title">
+      <div class="section-head"><p class="eyebrow">One world · five responsibilities</p><h2 id="journey-title">The controls are not separate from the journey. They protect it.</h2><p>Each plane has a technical responsibility, but together they tell one story: understand the world, observe it carefully, change it deliberately, prove what happened, then choose the next movement.</p></div>
+      <div class="map">
+        <article><b>01</b><strong>World State</strong><p>What exists right now?</p></article>
+        <article><b>02</b><strong>Diagnostics</strong><p>What is the world telling us?</p></article>
+        <article><b>03</b><strong>Construction</strong><p>How does it keep growing?</p></article>
+        <article><b>04</b><strong>Evidence</strong><p>How do we know what worked?</p></article>
+        <article><b>05</b><strong>Next Move</strong><p>Where does the journey go from here?</p></article>
+      </div>
+    </section>
 
-        <div class="plane-tabs" role="tablist" aria-label="Cockpit planes">
-          <button class="plane-tab" id="tab-world" role="tab" aria-selected="true" aria-controls="panel-world" data-plane-tab="world">World State</button>
-          <button class="plane-tab" id="tab-diagnostic" role="tab" aria-selected="false" aria-controls="panel-diagnostic" data-plane-tab="diagnostic">Diagnostics</button>
-          <button class="plane-tab" id="tab-construction" role="tab" aria-selected="false" aria-controls="panel-construction" data-plane-tab="construction">Construction</button>
-          <button class="plane-tab" id="tab-evidence" role="tab" aria-selected="false" aria-controls="panel-evidence" data-plane-tab="evidence">Evidence</button>
-          <button class="plane-tab" id="tab-next" role="tab" aria-selected="false" aria-controls="panel-next" data-plane-tab="next">Next Move</button>
-        </div>
+    <section class="boundary section-space" aria-labelledby="boundary-title">
+      <div class="boundary-copy"><p class="eyebrow">Authority boundary</p><h2 id="boundary-title">A cockpit should tell you what the ship can do—and what it cannot do yet.</h2><p>Audralia keeps observation, control and proof separate on purpose. That distinction is not fine print. It is part of how an increasingly sophisticated world stays understandable while it evolves.</p></div>
+      <div class="guardrails">
+        <article class="guard"><p><strong>Observation is not mutation.</strong> This page can orient and route you; it does not authorize production file, renderer or runtime changes.</p></article>
+        <article class="guard"><p><strong>Published state is not invented telemetry.</strong> Static repository truth remains distinct from live operational measurement.</p></article>
+        <article class="guard"><p><strong>Inspection is not automatic qualification.</strong> Evidence can support a claim, reject it, or leave it unresolved.</p></article>
+        <article class="guard"><p><strong>No dead ends.</strong> Each major question points toward the surface that actually owns the answer.</p></article>
+      </div>
+    </section>
 
-        <section class="plane-stage" id="panel-world" role="tabpanel" aria-labelledby="tab-world" data-plane-panel="world">
-          <p class="plane-number">01 · World state</p>
-          <h2 class="plane-title">Start with the world that actually exists.</h2>
-          <p class="plane-copy">
-            Audralia’s published route is a live planetary environment. Its current integration declares canonical
-            weather and spatial level-of-detail active, with camera semantics held stable. The cockpit begins here
-            because every deeper question should remain attached to the product people can actually enter.
-          </p>
-          <div class="state-strip">
-            <span class="state-chip">Live planetary route</span>
-            <span class="state-chip">Canonical weather / spatial LOD</span>
-            <span class="state-chip">Camera semantics frozen</span>
-          </div>
-          <div class="lens-grid">
-            <article class="lens"><small>Practical</small><p>Enter Audralia first when you want to experience the product rather than read about its machinery.</p></article>
-            <article class="lens"><small>Engineering</small><p>The published world binds its current planetary, weather and camera configuration at the parent route.</p></article>
-            <article class="lens"><small>Boundary</small><p>This cockpit reports repository-defined configuration; it does not claim live production telemetry.</p></article>
-          </div>
-          <div class="action-row"><a class="button primary" href="/showroom/globe/audralia/">Enter Audralia</a></div>
-        </section>
+    <section class="surface section-space" aria-labelledby="legacy-title">
+      <div class="section-head"><p class="eyebrow">Continuity</p><h2 id="legacy-title">The cockpit changed because Audralia changed.</h2><p>The earlier cockpit vocabulary is preserved as provenance rather than allowed to define the current room. Its useful ideas survive inside the newer responsibility model.</p></div>
+      <details class="legacy"><summary>Open legacy cockpit provenance</summary><div class="legacy-body"><p>Earlier station names documented a restored command-console phase. They remain historical context, not the current information architecture.</p><div class="legacy-grid"><div class="legacy-item"><strong>Systems Glass</strong><span>Visible readiness and surface inspection</span></div><div class="legacy-item"><strong>Lattice Console</strong><span>Relations and structural context</span></div><div class="legacy-item"><strong>Stream Deck</strong><span>Flow and channel framing</span></div><div class="legacy-item"><strong>Seat Inspector</strong><span>User and position framing</span></div><div class="legacy-item"><strong>Runtime Containment</strong><span>Safety and hold boundaries</span></div><div class="legacy-item"><strong>Dexterion Gauge Board</strong><span>Measures and checks</span></div><div class="legacy-item"><strong>Receipt Dock</strong><span>Trace and record</span></div><div class="legacy-item"><strong>Contract Seal</strong><span>Boundary and proof</span></div></div></div></details>
+    </section>
 
-        <section class="plane-stage" id="panel-diagnostic" role="tabpanel" aria-labelledby="tab-diagnostic" data-plane-panel="diagnostic" hidden>
-          <p class="plane-number">02 · Diagnostic authority</p>
-          <h2 class="plane-title">Inspect without pretending inspection is control.</h2>
-          <p class="plane-copy">
-            Audralia has a dedicated diagnostic chamber with its own inspection authority, control bridge and
-            reporting lane. Its job is to make evidence inspectable while remaining explicitly read-only: it does
-            not receive production-mutation, renderer-repair or runtime-restart authority merely because it can see the system.
-          </p>
-          <div class="state-strip">
-            <span class="state-chip">Read-only authority</span>
-            <span class="state-chip">Family inspection</span>
-            <span class="state-chip">No repair authority</span>
-          </div>
-          <div class="lens-grid">
-            <article class="lens"><small>Practical</small><p>Use diagnostics when the question is “what does the system report?” rather than “what should we change?”</p></article>
-            <article class="lens"><small>Engineering</small><p>The authority inspects required contracts and reports absence or mismatch without promoting itself into production control.</p></article>
-            <article class="lens"><small>Boundary</small><p>Visibility is not permission. A diagnostic result does not itself authorize mutation or declare readiness.</p></article>
-          </div>
-          <div class="action-row"><a class="button primary" href="/showroom/globe/audralia/diagnostic/">Open diagnostic chamber</a></div>
-        </section>
+    <section class="surface section-space" aria-labelledby="close-title">
+      <div class="section-head"><p class="eyebrow">The point of the cockpit</p><h2 id="close-title">Understand enough to move with intention.</h2><p>Audralia is still becoming. The cockpit does not replace the world with documentation; it gives the world a place to explain itself when you want to look beneath the surface.</p></div>
+      <div class="actions"><a class="button primary" href="/showroom/globe/audralia/">Return to Audralia</a><a class="button" href="/showroom/globe/audralia/diagnostic/">Open Diagnostics</a><a class="button" href="/governance/">Open Governance</a><a class="button" href="/evidence/">Inspect Evidence</a></div>
+    </section>
+  </main>
 
-        <section class="plane-stage" id="panel-construction" role="tabpanel" aria-labelledby="tab-construction" data-plane-panel="construction" hidden>
-          <p class="plane-number">03 · Construction & continuity</p>
-          <h2 class="plane-title">The world can keep changing without every change owning the world.</h2>
-          <p class="plane-copy">
-            Audralia now sits inside the broader Diamond Gate construction model: intent is separated from authority,
-            bounded work is separated from verification, and continuity is treated as something that must preserve
-            the right state rather than simply continue moving. This cockpit explains that relationship; it is not the executor.
-          </p>
-          <div class="state-strip">
-            <span class="state-chip">Bounded change</span>
-            <span class="state-chip">Authority preserved</span>
-            <span class="state-chip">Verification remains separate</span>
-          </div>
-          <div class="lens-grid">
-            <article class="lens"><small>Practical</small><p>A new feature should not casually rewrite the world around it just because the work is moving quickly.</p></article>
-            <article class="lens"><small>Engineering</small><p>Construction, control and qualification remain distinct responsibilities across the governing platform.</p></article>
-            <article class="lens"><small>Boundary</small><p>The cockpit routes you into governing context; it does not grant merge, deployment or mutation authority.</p></article>
-          </div>
-          <div class="action-row"><a class="button primary" href="/governance/">Open governance</a></div>
-        </section>
-
-        <section class="plane-stage" id="panel-evidence" role="tabpanel" aria-labelledby="tab-evidence" data-plane-panel="evidence" hidden>
-          <p class="plane-number">04 · Evidence</p>
-          <h2 class="plane-title">A claim should lead somewhere you can inspect.</h2>
-          <p class="plane-copy">
-            The mature cockpit does not ask you to trust a dashboard because it looks technical. Where a statement
-            depends on engineering evidence, the path should lead back to a route, contract, diagnostic surface,
-            receipt or public record that gives the statement something concrete to stand on.
-          </p>
-          <div class="state-strip">
-            <span class="state-chip">Traceable claims</span>
-            <span class="state-chip">Inspection over theater</span>
-            <span class="state-chip">Product and apparatus distinguished</span>
-          </div>
-          <div class="lens-grid">
-            <article class="lens"><small>Practical</small><p>You should be able to move from “that sounds impressive” to “show me where that is demonstrated.”</p></article>
-            <article class="lens"><small>Engineering</small><p>Evidence remains scoped to what the corresponding instrument, route or receipt can actually establish.</p></article>
-            <article class="lens"><small>Boundary</small><p>No static cockpit card is treated as empirical proof of a live runtime condition.</p></article>
-          </div>
-          <div class="action-row"><a class="button primary" href="/evidence/">Open evidence record</a></div>
-        </section>
-
-        <section class="plane-stage" id="panel-next" role="tabpanel" aria-labelledby="tab-next" data-plane-panel="next" hidden>
-          <p class="plane-number">05 · Next movement</p>
-          <h2 class="plane-title">A cockpit earns its place when it helps you choose what happens next.</h2>
-          <p class="plane-copy">
-            If you want the experience, enter Audralia. If you need to inspect the system, open diagnostics. If the
-            question is how change is governed, move to Governance. If the claim needs substantiation, follow the
-            evidence. The cockpit is useful because the routes are different—and because it keeps them different.
-          </p>
-          <div class="state-strip">
-            <span class="state-chip">Experience</span>
-            <span class="state-chip">Inspect</span>
-            <span class="state-chip">Govern</span>
-            <span class="state-chip">Verify</span>
-          </div>
-          <div class="action-row">
-            <a class="button primary" href="/showroom/globe/audralia/">Enter Audralia</a>
-            <a class="button" href="/showroom/globe/audralia/diagnostic/">Inspect diagnostics</a>
-            <a class="button" href="/governance/">See governance</a>
-            <a class="button" href="/evidence/">Follow evidence</a>
-          </div>
-        </section>
-      </section>
-
-      <section class="surface section-space" aria-labelledby="mapTitle">
-        <header class="section-head">
-          <p class="eyebrow">Cockpit map</p>
-          <h2 id="mapTitle">The room now follows responsibility, not old instrument names.</h2>
-          <p>
-            Each plane has a distinct job. That makes the cockpit easier to read and harder to misuse.
-          </p>
-        </header>
-        <div class="map">
-          <article><b>01</b><strong>World State</strong><p>What product exists and what published configuration defines it?</p></article>
-          <article><b>02</b><strong>Diagnostics</strong><p>What can be inspected without turning observation into mutation?</p></article>
-          <article><b>03</b><strong>Construction</strong><p>How does change remain bounded, governed and continuous?</p></article>
-          <article><b>04</b><strong>Evidence</strong><p>What supports the claims being made about the system?</p></article>
-          <article><b>05</b><strong>Next Move</strong><p>Which route fits the question you actually came here to answer?</p></article>
-        </div>
-
-        <details class="legacy">
-          <summary>Legacy cockpit vocabulary</summary>
-          <div class="legacy-body">
-            <p>
-              Earlier versions of this room organized Audralia around station names. Those names are retained here
-              as provenance, not as the governing architecture of the current cockpit.
-            </p>
-            <div class="legacy-grid">
-              <div class="legacy-item"><strong>Systems Glass / Lattice Console</strong><span>Earlier command-glass vocabulary; now absorbed into World State and Diagnostics.</span></div>
-              <div class="legacy-item"><strong>Stream Deck / Seat Inspector</strong><span>Earlier portal-control vocabulary; now replaced by explicit route and responsibility choices.</span></div>
-              <div class="legacy-item"><strong>Runtime Containment / Dexterion Gauge Board</strong><span>Earlier hold-and-measure vocabulary; current claims remain bounded to actual diagnostic and governing surfaces.</span></div>
-              <div class="legacy-item"><strong>Receipt Dock / Contract Seal</strong><span>Earlier evidence vocabulary; now represented by the Evidence plane and traceable public records.</span></div>
-            </div>
-          </div>
-        </details>
-      </section>
-
-      <section class="boundary section-space" aria-labelledby="boundaryTitle">
-        <div class="boundary-grid">
-          <div>
-            <p class="eyebrow">Authority boundary</p>
-            <h2 id="boundaryTitle">A cockpit can orient you without pretending to fly the ship.</h2>
-            <p style="margin-top:18px">
-              This route is an inspection and orientation surface. It presents repository-defined context and sends
-              you to the appropriate product, diagnostic, governance or evidence route. It does not silently convert
-              itself into production control because a button was pressed.
-            </p>
-          </div>
-          <ul class="boundary-list" aria-label="Cockpit authority limits">
-            <li><strong>No production mutation.</strong> This page does not authorize file, renderer or runtime changes.</li>
-            <li><strong>No telemetry fiction.</strong> Static published state is not represented as live production telemetry.</li>
-            <li><strong>No readiness inflation.</strong> Inspection does not automatically become a pass, qualification or deployment claim.</li>
-            <li><strong>No dead end.</strong> Every major question routes to the surface that actually owns it.</li>
-          </ul>
-        </div>
-      </section>
-    </main>
-
-    <footer>Audralia · Command Cockpit · contextual successor · inspection before intervention</footer>
-  </div>
-
-  <script>
-    (function(){
-      "use strict";
-      var root=document.documentElement;
-      var tabs=Array.prototype.slice.call(document.querySelectorAll("[data-plane-tab]"));
-      var panels=Array.prototype.slice.call(document.querySelectorAll("[data-plane-panel]"));
-      var valid=tabs.map(function(tab){return tab.getAttribute("data-plane-tab")});
-
-      function activate(name,focus){
-        if(valid.indexOf(name)===-1)return;
-        root.setAttribute("data-plane",name);
-        tabs.forEach(function(tab){
-          var active=tab.getAttribute("data-plane-tab")===name;
-          tab.setAttribute("aria-selected",active?"true":"false");
-          tab.tabIndex=active?0:-1;
-          if(active&&focus)tab.focus();
-        });
-        panels.forEach(function(panel){
-          panel.hidden=panel.getAttribute("data-plane-panel")!==name;
-        });
-      }
-
-      tabs.forEach(function(tab,index){
-        tab.addEventListener("click",function(){activate(tab.getAttribute("data-plane-tab"),false)});
-        tab.addEventListener("keydown",function(event){
-          var next=index;
-          if(event.key==="ArrowRight"||event.key==="ArrowDown")next=(index+1)%tabs.length;
-          else if(event.key==="ArrowLeft"||event.key==="ArrowUp")next=(index-1+tabs.length)%tabs.length;
-          else if(event.key==="Home")next=0;
-          else if(event.key==="End")next=tabs.length-1;
-          else return;
-          event.preventDefault();
-          activate(tabs[next].getAttribute("data-plane-tab"),true);
-        });
-      });
-
-      activate("world",false);
-      window.__AUDRALIA_COMMAND_COCKPIT__=Object.freeze({
-        schema:"AUDRALIA_COMMAND_COCKPIT_CONTEXTUAL_SUCCESSOR_v2",
-        route:"/showroom/globe/audralia/disposition/",
-        role:"inspection-and-next-movement",
-        planes:Object.freeze(valid.slice()),
-        productionMutationAuthority:false,
-        runtimeRepairAuthority:false,
-        runtimeTelemetryClaimed:false
-      });
-    }());
-  </script>
+  <footer>Audralia · Command Cockpit · Living-world narrative integrated with current inspection and governance boundaries.</footer>
+</div>
+<script>
+(() => {
+  const data = {
+    world:{number:'01 · World State',title:'Start with the world itself.',copy:'Audralia is not a diagram of a future system. It is a published planetary environment people can enter. Before looking at machinery, begin with the thing the machinery exists to serve.',chips:['Live planetary route','Canonical weather / spatial LOD','Stable camera semantics'],practical:'Enter Audralia when you want to experience the product rather than read about its systems.',engineering:'The published parent route binds the current planetary, weather, spatial-LOD and camera configuration.',boundary:'This cockpit reports published repository-defined state. It does not present static configuration as live production telemetry.',actions:[['Enter Audralia','/showroom/globe/audralia/']]},
+    diagnostic:{number:'02 · Diagnostics',title:'Learn what the world is telling you without disturbing it.',copy:'A living world generates questions. Is the geometry behaving? Are systems stable enough to inspect? What belongs to the product, and what belongs to the instrument used to observe it? Diagnostics exist to make those questions visible before anyone reaches for a repair.',chips:['Read-only inspection','Product / apparatus distinction','Held authority'],practical:'Use diagnostics when curiosity becomes a specific question about how Audralia is behaving.',engineering:'The diagnostic chamber is an inspection authority, not a production-mutation or runtime-repair authority.',boundary:'Observation can inform the next move without silently becoming permission to make that move.',actions:[['Open Diagnostics','/showroom/globe/audralia/diagnostic/'],['Return to World','/showroom/globe/audralia/']]},
+    construction:{number:'03 · Construction',title:'A world this large has to survive its own growth.',copy:'Every new capability changes the world around it. The challenge is not simply to add more. It is to let Audralia become richer without casually erasing the state, relationships and intentions that made the existing world coherent.',chips:['Bounded change','Continuity','Governed execution'],practical:'The visitor should feel a world becoming more capable, not a construction site repeatedly starting over.',engineering:'Construction belongs to bounded scope, explicit authority, continuity and verification rather than uncontrolled page mutation.',boundary:'The cockpit explains the construction relationship but does not itself authorize repository changes.',actions:[['Open Governance','/governance/'],['See Build System','/build/']]},
+    evidence:{number:'04 · Evidence',title:'A claim becomes interesting when the work can answer for it.',copy:'Audralia can be ambitious without asking anyone to take ambition on faith. Evidence is where the experience meets receipts, tests, inspection records and other proof that separates what was imagined from what actually survived execution.',chips:['Traceable evidence','Qualification can fail','Public proof routes'],practical:'Follow the evidence when you want to know why a technical or product claim deserves confidence.',engineering:'Evidence remains distinct from assertion; qualification can pass, fail or remain unresolved depending on the governing instrument.',boundary:'A visible result is not automatically a universal validation claim.',actions:[['Inspect Evidence','/evidence/'],['See Awards Context','/showroom/globe/h-earth/awards/']]},
+    next:{number:'05 · Next Move',title:'The frontier is not “more.” It is the right next movement.',copy:'Audralia is still becoming. Once you understand the world, its condition, its construction boundaries and its evidence, the final cockpit question is simple: where does the journey belong next?',chips:['Choose by question','Preserve authority','Keep the frontier visible'],practical:'Move toward the experience, diagnostic, governance or evidence surface that matches what you actually want to understand.',engineering:'Routing preserves separation of responsibility instead of making one page pretend to own every capability.',boundary:'The cockpit can recommend the owning route; it does not manufacture authority that route does not possess.',actions:[['Enter Audralia','/showroom/globe/audralia/'],['Open Diagnostics','/showroom/globe/audralia/diagnostic/'],['Open Governance','/governance/']]}
+  };
+  const tabs=[...document.querySelectorAll('.tab')];
+  const number=document.getElementById('stage-number'),title=document.getElementById('stage-title'),copy=document.getElementById('stage-copy'),chips=document.getElementById('stage-chips'),practical=document.getElementById('practical'),engineering=document.getElementById('engineering'),boundary=document.getElementById('boundary-lens'),actions=document.getElementById('stage-actions');
+  function render(key){const d=data[key];document.documentElement.dataset.plane=key;tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.planeTarget===key)));number.textContent=d.number;title.textContent=d.title;copy.textContent=d.copy;practical.textContent=d.practical;engineering.textContent=d.engineering;boundary.textContent=d.boundary;chips.innerHTML=d.chips.map(x=>`<span class="chip">${x}</span>`).join('');actions.innerHTML=d.actions.map((a,i)=>`<a class="button${i===0?' primary':''}" href="${a[1]}">${a[0]}</a>`).join('');}
+  tabs.forEach(t=>t.addEventListener('click',()=>render(t.dataset.planeTarget)));
+})();
+</script>
 </body>
 </html>

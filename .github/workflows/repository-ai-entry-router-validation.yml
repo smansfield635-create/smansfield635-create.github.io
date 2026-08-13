@@ -48,6 +48,89 @@ jobs:
             --output /tmp/repository-ai-entry-router-self-test.json
           node -e "const r=require('/tmp/repository-ai-entry-router-self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.executionBackendRegistryState!=='RETIRED'||r.retiredBackendExecutionAuthorized!==false)process.exit(1)"
 
+      - name: Verify every active project exact-path mutation registration
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { spawnSync } from 'node:child_process';
+
+          const registry = JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json', 'utf8'));
+          const activeProjects = (registry.projects ?? []).filter(project => project.status === 'ACTIVE_REGISTERED_PROJECT');
+          const projectReceipts = [];
+          const failures = [];
+          let exactPathCount = 0;
+          let retirementReceipt = null;
+
+          for (const project of activeProjects) {
+            const paths = [...new Set(project.ownedExactPaths ?? [])];
+            if (paths.length === 0) {
+              projectReceipts.push({ projectId: project.projectId, exactPathCount: 0, result: 'NOT_APPLICABLE_NO_EXACT_PATHS' });
+              continue;
+            }
+            exactPathCount += paths.length;
+            const safeId = String(project.projectId).toLowerCase().replace(/[^a-z0-9_-]+/g, '-');
+            const output = `/tmp/repository-ai-entry-router-exact-path-${safeId}.json`;
+            const args = [
+              'tools/repository-ai-entry-router.mjs',
+              '--mutation-intent',
+              ...paths.flatMap(filePath => ['--path', filePath]),
+              '--task',
+              `Generic exact-path registration conformance for ${project.projectId}`,
+              '--output', output
+            ];
+            const child = spawnSync(process.execPath, args, { encoding: 'utf8' });
+            let receipt = null;
+            try {
+              receipt = JSON.parse(fs.readFileSync(output, 'utf8'));
+            } catch (error) {
+              failures.push({ projectId: project.projectId, error: 'RECEIPT_MISSING_OR_INVALID', detail: error.message, exitCode: child.status });
+              continue;
+            }
+            const valid = child.status === 0
+              && receipt.disposition === 'PASS'
+              && receipt.routes?.length === paths.length
+              && receipt.routes.every((route, index) => route.path === paths[index] && route.projectId === project.projectId && route.disposition === 'PASS');
+            projectReceipts.push({
+              projectId: project.projectId,
+              exactPathCount: paths.length,
+              disposition: receipt.disposition,
+              exitCode: child.status,
+              valid
+            });
+            if (!valid) failures.push({ projectId: project.projectId, error: 'REGISTERED_EXACT_PATH_ROUTE_CONFORMANCE_FAILED', receipt });
+            if (project.projectId === 'INSTRUMENT_LIFECYCLE_RETIREMENT') retirementReceipt = receipt;
+          }
+
+          const aggregate = {
+            schema: 'REPOSITORY_AI_ENTRY_ROUTER_EXACT_PATH_REGISTRATION_CONFORMANCE_RECEIPT_v1',
+            result: failures.length === 0 ? 'PASS' : 'FAIL',
+            governingHead: process.env.EXPECTED_HEAD,
+            activeProjectCount: activeProjects.length,
+            exactPathCount,
+            projectReceipts,
+            failures,
+            arbitraryCommandExecutionAuthorized: false,
+            pathSource: 'REPOSITORY_AI_ROUTER_REGISTRY_v1.projects[].ownedExactPaths'
+          };
+          fs.writeFileSync('/tmp/repository-ai-entry-router-exact-path-registration-conformance.json', JSON.stringify(aggregate, null, 2) + '\n');
+
+          if (retirementReceipt) {
+            fs.writeFileSync('/tmp/repository-ai-entry-router-instrument-lifecycle-retirement-route.json', JSON.stringify(retirementReceipt, null, 2) + '\n');
+          } else {
+            fs.writeFileSync('/tmp/repository-ai-entry-router-instrument-lifecycle-retirement-route.json', JSON.stringify({
+              schema: 'REPOSITORY_AI_ENTRY_ROUTER_TEMPORARY_RETIREMENT_ROUTE_RECEIPT_v1',
+              result: 'NOT_APPLICABLE_TEMPORARY_PROJECT_NOT_REGISTERED',
+              disposition: 'NOT_APPLICABLE',
+              governingHead: process.env.EXPECTED_HEAD,
+              projectId: 'INSTRUMENT_LIFECYCLE_RETIREMENT'
+            }, null, 2) + '\n');
+          }
+
+          if (failures.length !== 0) process.exit(1);
+          NODE
+
       - name: Exercise operation lifecycle infrastructure mutation routes
         shell: bash
         run: |
@@ -186,6 +269,8 @@ jobs:
           name: repository-ai-entry-router-validation-receipts
           path: |
             /tmp/repository-ai-entry-router-self-test.json
+            /tmp/repository-ai-entry-router-exact-path-registration-conformance.json
+            /tmp/repository-ai-entry-router-instrument-lifecycle-retirement-route.json
             /tmp/repository-operation-successor-router-receipt.json
             /tmp/repository-operation-successor-self-test.json
             /tmp/repository-ai-entry-router-h-earth-route.json

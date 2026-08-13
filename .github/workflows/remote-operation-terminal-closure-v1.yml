@@ -25,7 +25,7 @@ env:
   REMOTE_RECEIPT_TEST_PATH: tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
   REMOTE_RECEIPT_TEST_BLOB: e134d08cb9ccfd237dfd23803ae8ba6cc0ff1a93
   LOCK_MANAGER_PATH: tools/operation-intake/repository-operation-lock-manager.v1.mjs
-  LOCK_MANAGER_BLOB: bb2c01247db69e1ab9c87fc7ad91ba1336ed10eb
+  LOCK_MANAGER_BLOB: 1b8639cc3ae7c788e263445c9dfdc0c090ab73c9
   LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
 
 jobs:

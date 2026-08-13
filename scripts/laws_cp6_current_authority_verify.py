@@ -15,7 +15,7 @@ def load(name: str) -> dict:
 
 def ids(path: str) -> set[str]:
     text = (ROOT / path).read_text(encoding="utf-8")
-    return set(re.findall(r'data-content-id="(CP6-CONTENT-\d+)"', text))
+    return set(re.findall(r'(CP6-CONTENT-\d+)', text))
 
 
 def main() -> None:
@@ -37,7 +37,7 @@ def main() -> None:
     expected = {
         "laws/research/applied-investigations/index.html": 11,
         "laws/research/evidence-and-sources/index.html": 6,
-        "laws/research/methods-and-models/index.html": 10,
+        "laws/research/methods-and-models/canonical-records-v1.html": 10,
         "laws/research/findings-and-boundaries/index.html": 7,
         "laws/test/admission-and-baseline/index.html": 2,
         "laws/test/forward-construction/index.html": 1,

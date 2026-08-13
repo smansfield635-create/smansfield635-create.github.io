@@ -79,8 +79,10 @@ jobs:
           test "$action" = "ADMIT"
           echo "fixture_id=$fixture_id" >> "$GITHUB_OUTPUT"
           echo "action=$action" >> "$GITHUB_OUTPUT"
-      - name: Adversarially self-test closed-world dispatcher
-        run: node .github/ai-router/fixed-fixture-intake/self-test.v1.mjs > "$RUNNER_TEMP/fixed-fixture-intake/self-test.json"
+      - name: Adversarially self-test closed-world dispatcher and differential carrier
+        run: |
+          node .github/ai-router/fixed-fixture-intake/self-test.v1.mjs > "$RUNNER_TEMP/fixed-fixture-intake/self-test.json"
+          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --self-test > "$RUNNER_TEMP/fixed-fixture-intake/differential-self-test.json"
       - name: Select exact repository-held fixture
         run: |
           node .github/ai-router/fixed-fixture-intake/dispatcher.v1.mjs \
@@ -88,32 +90,31 @@ jobs:
             --action '${{ steps.request.outputs.action }}' \
             --output "$RUNNER_TEMP/fixed-fixture-intake/selection.json"
           jq -e '.result == "FIXTURE_SELECTED_FAIL_CLOSED" and .arbitraryPayloadAccepted == false and .authorityCreated == false and .repositoryMutationPerformed == false' "$RUNNER_TEMP/fixed-fixture-intake/selection.json" >/dev/null
-      - name: Verify current main and immutable bridge identity
+      - name: Verify immutable canonical tooling identity
         id: identity
-        env:
-          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          expected_main="$(jq -r '.exactGoverningHead' "$RUNNER_TEMP/fixed-fixture-intake/selection.json")"
+          expected_base="$(jq -r '.exactGoverningHead' "$RUNNER_TEMP/fixed-fixture-intake/selection.json")"
           bridge_head="$(jq -r '.bridgeImplementationHead' "$RUNNER_TEMP/fixed-fixture-intake/selection.json")"
-          observed_main="$(git rev-parse HEAD^{commit})"
-          test "$observed_main" = "$expected_main"
+          current_main="$(git rev-parse HEAD^{commit})"
+          git cat-file -e "$expected_base^{commit}"
           git cat-file -e "$bridge_head^{commit}"
           git worktree add --detach "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" "$bridge_head"
           test "$(git -C "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" rev-parse HEAD^{commit})" = "$bridge_head"
-          jq '.bridgeRequest' "$RUNNER_TEMP/fixed-fixture-intake/selection.json" > "$RUNNER_TEMP/fixed-fixture-intake/bridge-input.json"
-          echo "expected_main=$expected_main" >> "$GITHUB_OUTPUT"
+          echo "expected_base=$expected_base" >> "$GITHUB_OUTPUT"
           echo "bridge_head=$bridge_head" >> "$GITHUB_OUTPUT"
-      - name: Execute immutable permanent bridge into canonical gate
+          echo "current_main=$current_main" >> "$GITHUB_OUTPUT"
+      - name: Differential carry-forward into unchanged canonical gate
         id: bridge
         env:
           GITHUB_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set +e
-          node "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge/tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs" \
-            --input "$RUNNER_TEMP/fixed-fixture-intake/bridge-input.json" \
+          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs \
+            --selection "$RUNNER_TEMP/fixed-fixture-intake/selection.json" \
+            --bridge-root "$RUNNER_TEMP/fixed-fixture-intake/permanent-bridge" \
             --output "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json"
           echo "status=$?" >> "$GITHUB_OUTPUT"
           exit 0
@@ -123,7 +124,7 @@ jobs:
         run: |
           set -euo pipefail
           test -s "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json"
-          jq -e '.schema == "PRE_REGISTRATION_INTAKE_BRIDGE_RECEIPT_v1" and .result == "CANONICAL_RECEIPT_RETURNED" and .canonicalGateExecuted == true and .admissionResultRewritten == false and .canonicalReceiptJson.result == "ADMITTED_AND_LOCKED"' "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json" >/dev/null
+          jq -e '.schema == "FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_RECEIPT_v1" and .result == "CANONICAL_RECEIPT_PRESERVED" and .differentialReceipt.carryForwardAdmissible == true and .canonicalGateExecuted == true and .admissionResultRewritten == false and .canonicalReceiptJson.result == "ADMITTED_AND_LOCKED"' "$RUNNER_TEMP/fixed-fixture-intake/bridge-receipt.json" >/dev/null
           test '${{ steps.bridge.outputs.status }}' = '0'
       - uses: actions/upload-artifact@v4
         if: always()
@@ -131,6 +132,7 @@ jobs:
           name: fixed-fixture-intake-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/fixed-fixture-intake/self-test.json
+            ${{ runner.temp }}/fixed-fixture-intake/differential-self-test.json
             ${{ runner.temp }}/fixed-fixture-intake/selection.json
             ${{ runner.temp }}/fixed-fixture-intake/bridge-receipt.json
           if-no-files-found: error
@@ -153,7 +155,9 @@ jobs:
               `operationId = ${c.operationId || 'UNKNOWN'}`,
               `lockGeneration = ${c.lock?.lockGeneration ?? c.lockGeneration ?? 'UNKNOWN'}`,
               `scopeHash = ${c.lock?.scopeHash ?? c.scopeHash ?? 'UNKNOWN'}`,
-              `governingHead = ${{ steps.identity.outputs.expected_main }}`,
+              `governingHead = ${{ steps.identity.outputs.expected_base }}`,
+              `executionHead = ${{ steps.identity.outputs.current_main }}`,
+              `differentialResult = ${r.differentialReceipt?.result || 'UNKNOWN'}`,
               `workflowRun = ${context.runId}`
             ];
             await github.rest.issues.createComment({owner:context.repo.owner, repo:context.repo.repo, issue_number:context.issue.number, body:'```text\n'+lines.join('\n')+'\n```'});

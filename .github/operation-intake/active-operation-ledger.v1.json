@@ -804,18 +804,6 @@
       "scopeHash": "762e904550167722cf6b26349c50f104b9397614e7e863101b727be29295920a",
       "state": "ADMITTED_LOCKED"
     },
-    "7644469558282b9b5f2bbd248952f06ecf4c434847cc1a29606c57f464f522ba": {
-      "governingHead": "bc0ebc1c7671f3e32ce3d83869018f70e4cddb4a",
-      "lockGeneration": 1422,
-      "lockScope": "ACTIVATION:31746046556:2",
-      "operationId": "B31746046556",
-      "procedureLocatorDigest": "386c441c26f475a0cfc118222829b89501f226ede673062069d432d131a9d6ad",
-      "released": false,
-      "requestDigest": "8a1a8f562f05822037c291695a7541e7636896f829d9423d0a1a664fc7f8954b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "7644469558282b9b5f2bbd248952f06ecf4c434847cc1a29606c57f464f522ba",
-      "state": "ADMITTED_LOCKED"
-    },
     "77483db15506c301bd383f4bcfad6602353b1b1239b042e0dadef83e2c864663": {
       "governingHead": "641dc113fd924617082ffc5420dae0f6ea539a97",
       "lockGeneration": 550,
@@ -20974,6 +20962,19 @@
       "requestDigest": "ebaf51168e658648369988643be8db72740270c05503bfebb2e2f5f8a72ab7ed",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "20fa9937b0c68703dc7e3eef1adce6df5362bf57e545f65be948bffd90b56f5e",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "bc0ebc1c7671f3e32ce3d83869018f70e4cddb4a",
+      "lockGeneration": 1422,
+      "lockScope": "ACTIVATION:31746046556:2",
+      "operationId": "B31746046556",
+      "procedureLocatorDigest": "386c441c26f475a0cfc118222829b89501f226ede673062069d432d131a9d6ad",
+      "released": true,
+      "requestDigest": "8a1a8f562f05822037c291695a7541e7636896f829d9423d0a1a664fc7f8954b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7644469558282b9b5f2bbd248952f06ecf4c434847cc1a29606c57f464f522ba",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

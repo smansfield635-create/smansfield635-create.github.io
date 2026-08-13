@@ -286,14 +286,14 @@
 
   function pointerStart(slot, event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    state.pointer[slot] = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    state.pointer[slot] = { id: event.pointerId, x: event.clientX, y: event.clientY, lensIndex: state.lensIndex };
   }
 
   function pointerFinish(slot, event, handler) {
     const start = state.pointer[slot];
     state.pointer[slot] = null;
     if (!start || start.id !== event.pointerId) return;
-    handler(event.clientX - start.x, event.clientY - start.y);
+    handler(event.clientX - start.x, event.clientY - start.y, start);
   }
 
   function wheelMove(axis, delta, callback) {
@@ -332,12 +332,12 @@
   }, { passive: false });
 
   elements.deck.addEventListener("pointerdown", event => pointerStart("deck", event), true);
-  elements.deck.addEventListener("pointerup", event => pointerFinish("deck", event, (dx, dy) => {
+  elements.deck.addEventListener("pointerup", event => pointerFinish("deck", event, (dx, dy, start) => {
     if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) >= 44) {
       event.preventDefault();
       moveLens(dy > 0 ? 1 : -1, "y-stage-swipe");
     } else if (Math.abs(dx) >= 44) {
-      const preservedLensIndex = state.lensIndex;
+      const preservedLensIndex = start.lensIndex;
       beginTransition("x", dx < 0 ? "next" : "previous");
       queueMicrotask(() => restoreLens(preservedLensIndex));
     }

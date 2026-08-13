@@ -9,7 +9,7 @@ const FIXTURE_ID = 'P1_PROJECT_CONTINUATION_PUBLIC_TOPOLOGY_RETIREMENT_V1';
 const REPOSITORY = 'smansfield635-create/smansfield635-create.github.io';
 const LOCK_REF = 'refs/heads/operation-locks/repository-operation-intake-v1';
 const GATE = Object.freeze({path:'tools/operation-intake/repository-operation-intake-gate.v1.mjs', blob:'f0b22e6b9574507632f1ad07647710971a4d63de'});
-const LOCK_MANAGER = Object.freeze({path:'tools/operation-intake/repository-operation-lock-manager.v1.mjs', blob:'6fc0199c9dc943b8cdf3efe7c789f0e1888774b8'});
+const LOCK_MANAGER = Object.freeze({path:'tools/operation-intake/repository-operation-lock-manager.v1.mjs', blob:'bb2c01247db69e1ab9c87fc7ad91ba1336ed10eb'});
 const EXTRA_DEPENDENCIES = Object.freeze([
   '.github/ai-router/router.v1.json',
   'tools/repository-ai-entry-router.mjs',
@@ -72,16 +72,16 @@ function assessCarryForward(baseHead,currentHead,dependencies,cwd=process.cwd())
   return stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CARRY_FORWARD_RECEIPT_v1',result:baseHead===currentHead?'SAME_HEAD':'PASS_CARRY_FORWARD_ADMISSIBLE',baseHead,currentHead,changedPaths:changed,dependencyPaths:dependencies,collisions:[],carryForwardAdmissible:true,successorRequired:false});
 }
 
-function verifyBoundTooling(bridgeRoot) {
+function verifyCandidateTooling(candidateRoot) {
   for (const identity of [GATE,LOCK_MANAGER]) {
-    const absolute=path.join(bridgeRoot,identity.path);
+    const absolute=path.join(candidateRoot,identity.path);
     if (!fs.existsSync(absolute)) fail('BOUND_TOOLING_MISSING',identity.path);
-    const probe=run('git',['hash-object',identity.path],{cwd:bridgeRoot});
+    const probe=run('git',['hash-object',identity.path],{cwd:candidateRoot});
     if (probe.status !== 0 || probe.stdout.trim() !== identity.blob) fail('BOUND_TOOLING_BLOB_MISMATCH',{path:identity.path,expected:identity.blob,actual:probe.stdout.trim()});
   }
 }
 
-function executeCanonicalGate(bridge,bridgeRoot,outputPath) {
+function executeCanonicalGate(bridge,candidateRoot,outputPath) {
   const token=process.env.GITHUB_TOKEN;
   if (!token) fail('GITHUB_TOKEN_MISSING');
   const work=path.join(path.dirname(path.resolve(outputPath)),`differential-${bridge.requestNonce}`);
@@ -91,7 +91,7 @@ function executeCanonicalGate(bridge,bridgeRoot,outputPath) {
   const receiptFile=path.join(work,'canonical-admission-receipt.json');
   fs.writeFileSync(requestFile,jsonText(bridge.operationRequest));
   fs.writeFileSync(procedureFile,jsonText(bridge.constructionProcedure));
-  const child=run(process.execPath,[path.join(bridgeRoot,GATE.path),'--request',requestFile,'--procedure',procedureFile,'--repository',REPOSITORY,'--lock-ref',LOCK_REF,'--output',receiptFile],{cwd:bridgeRoot,env:{...process.env,GITHUB_TOKEN:token},timeout:120000});
+  const child=run(process.execPath,[path.join(candidateRoot,GATE.path),'--request',requestFile,'--procedure',procedureFile,'--repository',REPOSITORY,'--lock-ref',LOCK_REF,'--output',receiptFile],{cwd:candidateRoot,env:{...process.env,GITHUB_TOKEN:token},timeout:120000});
   if (!fs.existsSync(receiptFile)) fail('CANONICAL_RECEIPT_MISSING',{exitCode:child.status,stderr:child.stderr});
   const bytes=fs.readFileSync(receiptFile);
   const receipt=JSON.parse(bytes.toString('utf8'));
@@ -113,12 +113,13 @@ function selfTest() {
   ok('POS_002_OVERLAP_PARENT',overlaps('a','a/b'));
   ok('POS_003_DISJOINT',!overlaps('a/b','c/d'));
   const dependencies=['AGENTS.md','.github/ai-router/project-continuation/README.md','.github/ai-router/router.v1.json'];
-  const changed=['.github/ai-router/fixed-fixture-intake/self-test.v1.mjs','.github/workflows/repository-operation-intake-validation.yml'];
+  const changed=['.github/ai-router/fixed-fixture-intake/self-test.v1.mjs','.github/workflows/repository-operation-intake-validation.yml','tools/operation-intake/repository-operation-lock-manager.v1.mjs'];
   const collisions=[]; for(const c of changed)for(const d of dependencies)if(overlaps(c,d))collisions.push([c,d]);
   ok('POS_004_CONTROL_PLANE_CHANGES_DO_NOT_COLLIDE',collisions.length===0);
   const bad=[]; for(const c of ['AGENTS.md'])for(const d of dependencies)if(overlaps(c,d))bad.push([c,d]);
   ok('NEG_001_SUBJECT_CHANGE_COLLIDES',bad.length===1);
   ok('POS_005_EXTERNAL_SURFACE_CLOSED',EXTRA_DEPENDENCIES.length===3);
+  ok('POS_006_CANONICAL_GATE_IDENTITY_UNCHANGED',GATE.blob==='f0b22e6b9574507632f1ad07647710971a4d63de');
   return stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_SELF_TEST_v1',result:'PASS_CLOSED',checkCount:checks.length,checks,fixtureId:FIXTURE_ID,canonicalGateModified:false,admissionSemanticsDuplicated:false});
 }
 
@@ -128,13 +129,14 @@ async function main() {
   let base={};
   try {
     const validated=validateSelection(readJson(args.selection));
-    const currentHead=run('git',['rev-parse','HEAD^{commit}'],{cwd:process.cwd()});
+    const candidateRoot=process.cwd();
+    const currentHead=run('git',['rev-parse','HEAD^{commit}'],{cwd:candidateRoot});
     if (currentHead.status !== 0) fail('CURRENT_HEAD_UNAVAILABLE');
     const observed=currentHead.stdout.trim();
-    const differential=assessCarryForward(validated.bridge.exactGoverningHead,observed,validated.dependencies,process.cwd());
+    const differential=assessCarryForward(validated.bridge.exactGoverningHead,observed,validated.dependencies,candidateRoot);
     base={exactOperationBase:validated.bridge.exactGoverningHead,currentMainHead:observed,differentialReceipt:differential,dependencyPathCount:validated.dependencies.length};
-    verifyBoundTooling(path.resolve(args['bridge-root']));
-    const gate=executeCanonicalGate(validated.bridge,path.resolve(args['bridge-root']),args.output);
+    verifyCandidateTooling(candidateRoot);
+    const gate=executeCanonicalGate(validated.bridge,candidateRoot,args.output);
     const result=gate.receipt.result==='ADMITTED_AND_LOCKED'?'CANONICAL_RECEIPT_PRESERVED':'FAIL_CLOSED';
     const receipt=stable({schema:'FIXED_FIXTURE_DIFFERENTIAL_CANONICAL_INTAKE_RECEIPT_v1',result,fixtureId:FIXTURE_ID,exactOperationBase:validated.bridge.exactGoverningHead,currentMainHead:observed,differentialReceipt:differential,dependencyPathCount:validated.dependencies.length,canonicalGateExecuted:true,canonicalGatePath:GATE.path,canonicalGateBlob:GATE.blob,lockManagerBlob:LOCK_MANAGER.blob,requestDigest:gate.requestDigest,procedureLocatorDigest:gate.procedureDigest,canonicalReceiptSha256:sha256(gate.bytes),canonicalReceiptJson:gate.receipt,canonicalChildExitCode:gate.childStatus,admissionResultRewritten:false,authorityCreated:false,repositoryMutationPerformed:false});
     writeJson(args.output,receipt);

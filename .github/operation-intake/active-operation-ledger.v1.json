@@ -1032,6 +1032,18 @@
       "scopeHash": "90c32484574087c2c6bde891d2e1a83643562fcdf7f4100735efbb169a894614",
       "state": "ADMITTED_LOCKED"
     },
+    "911a98cfc87a57f8affe8c046b13b531a5c6ca5aaa69fa8107aced135419ea09": {
+      "governingHead": "2a109d5d5a2c4969425ed9344103955956321f6d",
+      "lockGeneration": 1430,
+      "lockScope": "ACTIVATION:31748279568:1",
+      "operationId": "B31748279568",
+      "procedureLocatorDigest": "2d0b9389213b4b363e335e8faa9ad3ace2ac38d4eeb9876fa2dc0da72f20ab20",
+      "released": false,
+      "requestDigest": "37b1a74fee499e3c288a1a5f62580b9f482aa3ecd0b20245eb4517102c2152ed",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "911a98cfc87a57f8affe8c046b13b531a5c6ca5aaa69fa8107aced135419ea09",
+      "state": "ADMITTED_LOCKED"
+    },
     "91498847235a51be58ef771a735c58e11a5e9b4ae49e65b29a5f9fc377c830ee": {
       "governingHead": "5928b5019102d762137b1749b7489b337426f151",
       "lockGeneration": 298,
@@ -1972,7 +1984,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1429,
+  "lockGeneration": 1430,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

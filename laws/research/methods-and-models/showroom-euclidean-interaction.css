@@ -21,7 +21,7 @@ html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab[aria-selected
   html[data-methods-models-euclidean-showroom="active"] .mm-family-tab,
   html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[data-mm-z-position] { flex: 0 0 7rem !important; min-width: 7rem !important; min-height: 2.3rem !important; }
   html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset: 4rem .4rem 9rem !important; }
-  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(86vw, 24rem) !important; height: min(58vh, 32rem) !important; min-height: 24rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(79vw, 22.5rem) !important; height: min(58vh, 32rem) !important; min-height: 24rem !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { bottom: 5rem !important; left: .65rem !important; width: calc(100% - 1.3rem) !important; height: 2.6rem !important; gap: .3rem !important; transform: none !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab,
   html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab[data-mm-y-position] { min-height: 2.45rem !important; }

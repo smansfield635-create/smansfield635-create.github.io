@@ -13,8 +13,10 @@ on:
       - "laws/research/methods-and-models/showroom-euclidean.css"
       - "laws/research/methods-and-models/showroom-euclidean-interaction.css"
       - "laws/research/methods-and-models/showroom-euclidean.js"
+      - "laws/research/methods-and-models/rotational-text.css"
+      - "laws/research/methods-and-models/rotational-text.js"
       - "laws/research/methods-and-models/canonical-records-v1.html"
-      - "verification/methods-models-showroom-browser.mjs"
+      - "verification/methods-models-rotational-text-browser.mjs"
       - ".github/workflows/methods-models-showroom-exact-head.yml"
   workflow_dispatch:
 
@@ -60,7 +62,8 @@ jobs:
           node --check laws/research/methods-and-models/showroom.js
           node --check laws/research/methods-and-models/showroom-refinement.js
           node --check laws/research/methods-and-models/showroom-euclidean.js
-          node --check verification/methods-models-showroom-browser.mjs
+          node --check laws/research/methods-and-models/rotational-text.js
+          node --check verification/methods-models-rotational-text-browser.mjs
 
       - name: Start exact-head static server
         shell: bash
@@ -75,18 +78,18 @@ jobs:
           cat /tmp/methods-models-server.log
           exit 1
 
-      - name: Execute exact-head source and browser verification
+      - name: Execute exact-head rotational-text source and browser verification
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: node verification/methods-models-showroom-browser.mjs
+        run: node verification/methods-models-rotational-text-browser.mjs
 
-      - name: Upload verification receipt
+      - name: Upload rotational-text verification receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: methods-models-showroom-exact-head-evidence
+          name: methods-models-rotational-text-exact-head-evidence
           path: |
-            methods-models-showroom-exact-head.json
+            methods-models-rotational-text-browser.json
             /tmp/methods-models-server.log
           if-no-files-found: warn
           retention-days: 30

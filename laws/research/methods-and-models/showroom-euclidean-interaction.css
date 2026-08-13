@@ -2,20 +2,18 @@ html[data-methods-models-euclidean-showroom="active"] .mm-instrument,
 html[data-methods-models-euclidean-showroom="active"] .mm-model-deck {
   pointer-events: none !important;
 }
-
 html[data-methods-models-euclidean-showroom="active"] .mm-model-card[data-mm-x-position="active"] {
   pointer-events: auto !important;
 }
-
 html[data-methods-models-euclidean-showroom="active"] .mm-deck-controls,
 html[data-methods-models-euclidean-showroom="active"] .mm-z-axis-controls,
 html[data-methods-models-euclidean-showroom="active"] [data-mm-dock-previous],
 html[data-methods-models-euclidean-showroom="active"] [data-mm-dock-next] {
   display: none !important;
 }
-
 @media (max-width: 720px) {
-  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card {
-    width: min(78vw, 30rem) !important;
-  }
+  html[data-methods-models-euclidean-showroom="active"] .mm-stage__header { display: none !important; }
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset: 4rem .4rem 9rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(86vw, 24rem) !important; height: min(58vh, 32rem) !important; min-height: 24rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] .mm-euclidean-coordinate { display: none !important; }
 }

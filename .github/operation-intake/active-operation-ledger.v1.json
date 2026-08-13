@@ -60,18 +60,6 @@
       "scopeHash": "0501ae249d87ccf7e89e5afa5b15554a071e9fc1083ab13db3f081a07a5079cf",
       "state": "ADMITTED_LOCKED"
     },
-    "085799fb919e3251dc508e61a17c69d1bc8334aa14b0e53730066ce6e5b74fdc": {
-      "governingHead": "8883d4431cb789081bdfe028a13a064cdc1637c1",
-      "lockGeneration": 1349,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ROUTER_VALIDATION:RETIRED_SUCCESSOR_RECONCILIATION",
-      "operationId": "ROUTER_VALIDATION_RETIRED_SUCCESSOR_RECONCILIATION_20260813_001",
-      "procedureLocatorDigest": "907bceff0ce2cf59fc31ac2f44852901031dc0e52349c5729b495c570d7ce4db",
-      "released": false,
-      "requestDigest": "f3801f5b0b0fa1f7cb52e960b4db352730d4bd6ed154871588d19e2e49dac42c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "085799fb919e3251dc508e61a17c69d1bc8334aa14b0e53730066ce6e5b74fdc",
-      "state": "ADMITTED_LOCKED"
-    },
     "09bf95ed0b631e0161641a0ac2b0ed7e1b4e154372645434a7dd54cfcf5a508f": {
       "governingHead": "ecbcf817c50b54ce5bf2d22f8512be7cb9e7b0c9",
       "lockGeneration": 349,
@@ -20154,6 +20142,19 @@
       "scopeHash": "9fe2c0c1e288860c5ee03f4e1854ebbb4cb4d6ce98e6da5ec24305ac3ecde668",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "8883d4431cb789081bdfe028a13a064cdc1637c1",
+      "lockGeneration": 1349,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:ROUTER_VALIDATION:RETIRED_SUCCESSOR_RECONCILIATION",
+      "operationId": "ROUTER_VALIDATION_RETIRED_SUCCESSOR_RECONCILIATION_20260813_001",
+      "procedureLocatorDigest": "907bceff0ce2cf59fc31ac2f44852901031dc0e52349c5729b495c570d7ce4db",
+      "released": true,
+      "requestDigest": "f3801f5b0b0fa1f7cb52e960b4db352730d4bd6ed154871588d19e2e49dac42c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "085799fb919e3251dc508e61a17c69d1bc8334aa14b0e53730066ce6e5b74fdc",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

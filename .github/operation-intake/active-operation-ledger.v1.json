@@ -612,6 +612,18 @@
       "scopeHash": "6125bbaf86772503e43db6e50b7bf5ece384bd687edffbb322389c1f5acf24f8",
       "state": "ADMITTED_LOCKED"
     },
+    "618c30a17e85683a6b6a4434810aab456953702c67e2aa95431f6b066a697e47": {
+      "governingHead": "27d763cce6029ebb19f6325346d120b95003019d",
+      "lockGeneration": 1299,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY:RATIFICATION_INSTALLATION:V1:EXACT_8_PATH_SCOPE",
+      "operationId": "WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_RATIFICATION_INSTALLATION_v1",
+      "procedureLocatorDigest": "3edc7a72752998d08b24f3f2e5fa14704f218ea608c736ab6f53b5a4cd1fa59e",
+      "released": false,
+      "requestDigest": "6e94450bc124230a8dd30a23e5436df80d251fd2ddf2c8809fc1d9639fadce6c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "618c30a17e85683a6b6a4434810aab456953702c67e2aa95431f6b066a697e47",
+      "state": "ADMITTED_LOCKED"
+    },
     "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 460,
@@ -1792,7 +1804,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1298,
+  "lockGeneration": 1299,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

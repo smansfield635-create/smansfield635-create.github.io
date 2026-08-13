@@ -88,18 +88,23 @@ jobs:
               failures.push({ projectId: project.projectId, error: 'RECEIPT_MISSING_OR_INVALID', detail: error.message, exitCode: child.status });
               continue;
             }
+            const expectedPaths = [...paths].sort();
+            const actualPaths = (receipt.routes ?? []).map(route => route.path).sort();
+            const pathsMatch = JSON.stringify(actualPaths) === JSON.stringify(expectedPaths);
             const valid = child.status === 0
               && receipt.disposition === 'PASS'
               && receipt.routes?.length === paths.length
-              && receipt.routes.every((route, index) => route.path === paths[index] && route.projectId === project.projectId && route.disposition === 'PASS');
+              && pathsMatch
+              && receipt.routes.every(route => route.projectId === project.projectId && route.disposition === 'PASS');
             projectReceipts.push({
               projectId: project.projectId,
               exactPathCount: paths.length,
               disposition: receipt.disposition,
               exitCode: child.status,
+              pathsMatch,
               valid
             });
-            if (!valid) failures.push({ projectId: project.projectId, error: 'REGISTERED_EXACT_PATH_ROUTE_CONFORMANCE_FAILED', receipt });
+            if (!valid) failures.push({ projectId: project.projectId, error: 'REGISTERED_EXACT_PATH_ROUTE_CONFORMANCE_FAILED', expectedPaths, actualPaths, receipt });
             if (project.projectId === 'INSTRUMENT_LIFECYCLE_RETIREMENT') retirementReceipt = receipt;
           }
 

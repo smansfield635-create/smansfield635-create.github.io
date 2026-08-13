@@ -1,0 +1,103 @@
+name: Exact Candidate Adoption Carrier v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      generation:
+        description: Frozen operation generation
+        required: true
+        type: string
+      candidate:
+        description: Immutable candidate commit SHA
+        required: true
+        type: string
+      adopt:
+        description: Exact adoption request token
+        required: true
+        type: choice
+        options:
+          - ADOPT
+
+permissions:
+  contents: write
+
+env:
+  ADOPTION_GENERATION: ${{ inputs.generation }}
+  ADOPTION_CANDIDATE: ${{ inputs.candidate }}
+  ADOPTION_REQUEST: ${{ inputs.adopt }}
+  ADOPTION_OUTPUT: ${{ runner.temp }}/exact-candidate-adoption-receipt.json
+
+jobs:
+  adopt-and-qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout trusted carrier
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Run carrier self-test
+        run: node .github/ai-router/exact-candidate-adoption/exact-candidate-adoption-self-test.v1.mjs
+
+      - name: Verify and adopt exact candidate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/ai-router/exact-candidate-adoption/exact-candidate-adoption.v1.mjs
+
+      - name: Checkout adopted candidate for explicit qualification
+        if: success()
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.candidate }}
+          persist-credentials: false
+
+      - name: Qualify Generation 1378 candidate explicitly
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${{ inputs.generation }}" = "1378"
+          test "${{ inputs.candidate }}" = "cb0b892fdc20f612e79c1c35307bd476192cddef"
+          test ! -e .github/workflows/platform-control-plane-strike-v1.yml
+          test ! -d .github/ai-router/platform-control-plane
+          node - <<'NODE'
+          const fs=require('fs');
+          const router=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json','utf8'));
+          const retired='.github/workflows/platform-control-plane-strike-v1.yml';
+          if(router.routerInfrastructure.ownedExactPaths.includes(retired)) throw new Error('RETIRED_WORKFLOW_REFERENCE_STILL_PRESENT');
+          NODE
+          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test-receipt.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const p=process.env.RUNNER_TEMP+'/router-self-test-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const result=String(r.result ?? r.status ?? '');
+          if(!/PASS/i.test(result)) throw new Error('ROUTER_SELF_TEST_NONPASS:'+result);
+          NODE
+
+      - name: Emit qualification receipt
+        if: success()
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),crypto=require('crypto');
+          const adoption=JSON.parse(fs.readFileSync(process.env.ADOPTION_OUTPUT,'utf8'));
+          const router=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-self-test-receipt.json','utf8'));
+          const receipt={schema:'EXACT_CANDIDATE_ADOPTION_QUALIFICATION_RECEIPT_v1',result:'PASS_CLOSED',generation:1378,candidate:'cb0b892fdc20f612e79c1c35307bd476192cddef',adoptionResult:adoption.result,fixtureDigest:adoption.fixtureDigest,routerSelfTest:router};
+          const text=JSON.stringify(receipt,null,2)+'\n';
+          receipt.receiptDigest=crypto.createHash('sha256').update(text).digest('hex');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/exact-candidate-qualification-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+
+      - name: Upload immutable adoption evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exact-candidate-adoption-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/exact-candidate-adoption-receipt.json
+            ${{ runner.temp }}/exact-candidate-qualification-receipt.json
+            ${{ runner.temp }}/router-self-test-receipt.json
+          if-no-files-found: warn
+          retention-days: 90

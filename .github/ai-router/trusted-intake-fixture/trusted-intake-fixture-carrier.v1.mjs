@@ -95,10 +95,10 @@ export async function executeTrustedFixture({commentBody, outputPath}) {
   const operationDigest=sha256(canonical(fixture.operationRequest)); const procedureDigest=sha256(canonical(fixture.constructionProcedure));
   const token=process.env.GITHUB_TOKEN;
   const differentialReceipt=await assessCarryForward(fixture,token);
-  const canonical=executeCanonicalGate(fixture,outputPath,token);
-  if(canonical.receipt.requestDigest!==operationDigest) fail('CANONICAL_GATE_OPERATION_DIGEST_MISMATCH');
-  if(canonical.receipt.procedureLocatorDigest!==procedureDigest) fail('CANONICAL_GATE_PROCEDURE_DIGEST_MISMATCH');
-  const receipt=stable({schema:'TRUSTED_CANONICAL_INTAKE_CARRIER_RECEIPT_v1',result:canonical.receipt.result==='ADMITTED_AND_LOCKED'?'CANONICAL_RECEIPT_PRESERVED':'FAIL_CLOSED',marker:MARKER,fixtureId:fixture.fixtureId,fixtureSha256:sha256(canonical(fixture)),operationRequestSha256:operationDigest,constructionProcedureSha256:procedureDigest,exactProductBase:fixture.exactGoverningHead,currentMainHead:differentialReceipt.targetHead,differentialReceipt,allowedPathCount:10,mergeAuthority:false,admissionSemanticsDuplicated:false,canonicalGateExecuted:true,canonicalGatePath:GATE_PATH,admissionResultRewritten:false,canonicalReceiptSha256:sha256(canonical.bytes),canonicalReceiptJson:canonical.receipt,canonicalChildExitCode:canonical.childStatus});
+  const gateResult=executeCanonicalGate(fixture,outputPath,token);
+  if(gateResult.receipt.requestDigest!==operationDigest) fail('CANONICAL_GATE_OPERATION_DIGEST_MISMATCH');
+  if(gateResult.receipt.procedureLocatorDigest!==procedureDigest) fail('CANONICAL_GATE_PROCEDURE_DIGEST_MISMATCH');
+  const receipt=stable({schema:'TRUSTED_CANONICAL_INTAKE_CARRIER_RECEIPT_v1',result:gateResult.receipt.result==='ADMITTED_AND_LOCKED'?'CANONICAL_RECEIPT_PRESERVED':'FAIL_CLOSED',marker:MARKER,fixtureId:fixture.fixtureId,fixtureSha256:sha256(canonical(fixture)),operationRequestSha256:operationDigest,constructionProcedureSha256:procedureDigest,exactProductBase:fixture.exactGoverningHead,currentMainHead:differentialReceipt.targetHead,differentialReceipt,allowedPathCount:10,mergeAuthority:false,admissionSemanticsDuplicated:false,canonicalGateExecuted:true,canonicalGatePath:GATE_PATH,admissionResultRewritten:false,canonicalReceiptSha256:sha256(gateResult.bytes),canonicalReceiptJson:gateResult.receipt,canonicalChildExitCode:gateResult.childStatus});
   fs.mkdirSync(path.dirname(outputPath),{recursive:true}); fs.writeFileSync(outputPath,jsonText(receipt)); return receipt;
 }
 

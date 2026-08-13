@@ -68,11 +68,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          rm -f /tmp/repository-operation-successor-self-test.json /tmp/repository-operation-successor-self-test.stdout.json
           set +e
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs \
-            --output /tmp/repository-operation-successor-self-test.json
+            --output /tmp/repository-operation-successor-self-test.json \
+            > /tmp/repository-operation-successor-self-test.stdout.json
           successor_status=$?
           set -e
+          if [ ! -s /tmp/repository-operation-successor-self-test.json ]; then
+            cp /tmp/repository-operation-successor-self-test.stdout.json /tmp/repository-operation-successor-self-test.json
+          fi
           export SUCCESSOR_STATUS="$successor_status"
           node - <<'NODE'
           const r=require('/tmp/repository-operation-successor-self-test.json');

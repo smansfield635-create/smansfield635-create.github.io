@@ -19,13 +19,13 @@ env:
   REQUEST_MARKER: REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1
   WORKFLOW_PATH: .github/workflows/remote-operation-terminal-closure-v1.yml
   BRIDGE_PATH: tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
-  BRIDGE_BLOB: 7d8dd52e177805717916bf524acded9f4152c174
+  BRIDGE_BLOB: bc4551a2b9a62084882c994fc23ea5035f5787a8
   TEST_PATH: tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
   TEST_BLOB: e34f3110a1630f087a8b9829059e5efb9de7512a
   REMOTE_RECEIPT_TEST_PATH: tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
   REMOTE_RECEIPT_TEST_BLOB: e134d08cb9ccfd237dfd23803ae8ba6cc0ff1a93
   LOCK_MANAGER_PATH: tools/operation-intake/repository-operation-lock-manager.v1.mjs
-  LOCK_MANAGER_BLOB: edb249f76cc326ea2f07aae20510f894c0e4511c
+  LOCK_MANAGER_BLOB: bb2c01247db69e1ab9c87fc7ad91ba1336ed10eb
   LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
 
 jobs:

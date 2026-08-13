@@ -13,29 +13,29 @@ html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs::before { di
 html[data-methods-models-euclidean-showroom="active"] .mm-family-tab,
 html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[data-mm-z-position] { position: relative !important; top: auto !important; left: auto !important; flex: 1 1 0 !important; width: auto !important; min-width: 8rem !important; min-height: 2.6rem !important; transform: none !important; opacity: .55 !important; filter: none !important; }
 html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[aria-selected="true"] { opacity: 1 !important; }
-html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { top: 12.6rem !important; bottom: 9rem !important; }
-html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { top: auto !important; bottom: 6.25rem !important; left: 50% !important; width: min(42rem, calc(100% - 3rem)) !important; height: 2.8rem !important; display: flex !important; gap: .45rem !important; transform: translateX(-50%) translateZ(130px) !important; perspective: none !important; pointer-events: auto !important; }
+html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { top: 12.6rem !important; bottom: 11rem !important; }
+html[data-methods-models-euclidean-showroom="active"] .mm-lens-panel { bottom: 4.9rem !important; width: min(58rem, calc(100% - 4rem)) !important; min-height: 0 !important; padding: .72rem 1.1rem !important; font-size: .84rem !important; line-height: 1.35 !important; }
+html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { top: auto !important; bottom: .85rem !important; left: 50% !important; width: min(42rem, calc(100% - 3rem)) !important; height: 2.8rem !important; display: flex !important; gap: .45rem !important; transform: translateX(-50%) translateZ(130px) !important; perspective: none !important; pointer-events: auto !important; }
 html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab,
 html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab[data-mm-y-position] { position: relative !important; top: auto !important; left: auto !important; flex: 1 1 0 !important; width: auto !important; min-width: 0 !important; min-height: 2.6rem !important; transform: none !important; opacity: .62 !important; filter: none !important; }
 html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab[aria-selected="true"] { opacity: 1 !important; }
-html[data-methods-models-euclidean-showroom="active"] .mm-lens-panel { bottom: .75rem !important; width: min(58rem, calc(100% - 4rem)) !important; }
 @media (max-width: 1100px) {
   html[data-methods-models-euclidean-showroom="active"] .mm-stage__header { display: none !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs { top: .75rem !important; left: .75rem !important; right: .75rem !important; width: auto !important; transform: none !important; }
-  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset: 4.5rem 1.4rem 9rem !important; }
-  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(76vw, 38rem) !important; height: min(60vh, 38rem) !important; max-height: none !important; }
-  html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { bottom: 5.7rem !important; width: min(38rem, calc(100% - 2rem)) !important; }
-  html[data-methods-models-euclidean-showroom="active"] .mm-lens-panel { bottom: .55rem !important; width: min(38rem, calc(100% - 2rem)) !important; }
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset: 4.5rem 1.4rem 11.5rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(76vw, 38rem) !important; height: min(56vh, 35rem) !important; max-height: none !important; }
+  html[data-methods-models-euclidean-showroom="active"] .mm-lens-panel { bottom: 4.55rem !important; width: min(38rem, calc(100% - 2rem)) !important; padding: .68rem .95rem !important; font-size: .82rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { bottom: .65rem !important; width: min(38rem, calc(100% - 2rem)) !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-euclidean-coordinate { display: none !important; }
 }
 @media (max-width: 720px) {
   html[data-methods-models-euclidean-showroom="active"] .mm-family-tabs { top: .7rem !important; left: .65rem !important; right: .65rem !important; height: 2.55rem !important; gap: .3rem !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-family-tab,
   html[data-methods-models-euclidean-showroom="active"] .mm-family-tab[data-mm-z-position] { flex: 0 0 7rem !important; min-width: 7rem !important; min-height: 2.3rem !important; }
-  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset: 4rem .4rem 9rem !important; }
-  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(79vw, 22.5rem) !important; height: min(58vh, 32rem) !important; min-height: 24rem !important; }
-  html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { bottom: 5rem !important; left: .65rem !important; width: calc(100% - 1.3rem) !important; height: 2.6rem !important; gap: .3rem !important; transform: none !important; }
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-instrument { inset: 4rem .4rem 11rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card { width: min(79vw, 22.5rem) !important; height: min(54vh, 29rem) !important; min-height: 22rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] .mm-lens-panel { bottom: 4.25rem !important; width: calc(100% - 1.3rem) !important; padding: .62rem .8rem !important; font-size: .78rem !important; }
+  html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs { bottom: .55rem !important; left: .65rem !important; width: calc(100% - 1.3rem) !important; height: 2.6rem !important; gap: .3rem !important; transform: none !important; }
   html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab,
   html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab[data-mm-y-position] { min-height: 2.45rem !important; }
-  html[data-methods-models-euclidean-showroom="active"] .mm-lens-panel { bottom: .55rem !important; width: calc(100% - 1.3rem) !important; }
 }

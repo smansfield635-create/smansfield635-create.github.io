@@ -78,11 +78,37 @@ async function state(page){
   });
 }
 
-async function waitSelected(page,index){
+async function hitProbe(page,index){
+  return page.evaluate(i => {
+    const tabs=[...document.querySelectorAll("[data-mm-family-tabs] .mm-family-tab")];
+    const tab=tabs[i];
+    if(!tab) return {missing:true,index:i};
+    const r=tab.getBoundingClientRect();
+    const x=r.left+r.width/2;
+    const y=r.top+r.height/2;
+    const hit=document.elementFromPoint(x,y);
+    return {
+      index:i,
+      rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},
+      point:{x,y},
+      hitTag:hit?.tagName||"",
+      hitClass:hit?.className||"",
+      hitText:hit?.textContent?.trim().slice(0,120)||"",
+      targetIsHit:hit===tab,
+      targetContainsHit:Boolean(hit&&tab.contains(hit)),
+      pointerEvents:getComputedStyle(tab).pointerEvents,
+      visibility:getComputedStyle(tab).visibility,
+      display:getComputedStyle(tab).display,
+      opacity:getComputedStyle(tab).opacity
+    };
+  },index);
+}
+
+async function waitSelected(page,index,timeout=5000){
   await page.waitForFunction(i => {
     const tabs=[...document.querySelectorAll("[data-mm-family-tabs] .mm-family-tab")];
     return tabs[i]?.getAttribute("aria-selected")==="true" && document.documentElement.dataset.mmRotationalTextActive===String(i);
-  },{},index);
+  },{timeout},index);
 }
 
 async function verifyProfile(profile, viewport){
@@ -103,8 +129,17 @@ async function verifyProfile(profile, viewport){
   if(initial.activeCardInert||initial.activeCardHidden==="true") failures.push("active_content_inert");
   if(initial.tabRects.some(r=>r.left < -3 || r.right > viewport.width+3)) failures.push("tab_horizontal_containment");
 
+  const clickProbeBefore=await hitProbe(page,1);
+  console.log(`ROTATIONAL_CLICK_PROBE_BEFORE:${profile}:${JSON.stringify(clickProbeBefore)}`);
   await page.click('[data-mm-family-tabs] .mm-family-tab:nth-child(2)');
-  await waitSelected(page,1);
+  try {
+    await waitSelected(page,1);
+  } catch (error) {
+    const clickProbeAfter=await hitProbe(page,1);
+    const clickState=await state(page);
+    console.log(`ROTATIONAL_CLICK_PROBE_AFTER:${profile}:${JSON.stringify({clickProbeAfter,clickState})}`);
+    throw error;
+  }
   const clicked=await state(page);
   if(clicked.selectedText!=="Pressure / Capacity"||clicked.family!=="pressure"||clicked.selectedVector!=="0,1,0") failures.push("click_state_binding");
 

@@ -23,15 +23,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          old='compass.css?v=dgb-main-compass-architecture-context-round-002-v1'
-          new='compass.css?v=display-continuity-reference-v1'
-          before="$(grep -o "$old" index.html | wc -l | tr -d ' ')"
-          test "$before" = "1"
-          sed -i "s/$old/$new/" index.html
-          after_old="$(grep -o "$old" index.html | wc -l | tr -d ' ')"
-          after_new="$(grep -o "$new" index.html | wc -l | tr -d ' ')"
-          test "$after_old" = "0"
-          test "$after_new" = "1"
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          old = b'compass.css?v=dgb-main-compass-architecture-context-round-002-v1'
+          new = b'compass.css?v=display-continuity-reference-v1'
+          data = path.read_bytes()
+          assert data.count(old) == 1, f'expected exactly one old cache identity, found {data.count(old)}'
+          assert data.count(new) == 0, f'new cache identity already present {data.count(new)} time(s)'
+          data = data.replace(old, new, 1)
+          assert data.count(old) == 0
+          assert data.count(new) == 1
+          path.write_bytes(data)
+          PY
           git diff --exit-code -- . ':!index.html'
           git diff --check -- index.html
 

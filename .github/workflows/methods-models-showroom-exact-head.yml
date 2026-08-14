@@ -83,13 +83,14 @@ jobs:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: node verification/methods-models-rotational-text-browser.mjs
 
-      - name: Upload rotational-text verification receipt
+      - name: Upload rotational-text verification receipt and rendered evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: methods-models-rotational-text-exact-head-evidence
           path: |
             methods-models-rotational-text-browser.json
+            methods-models-rendered-evidence/
             /tmp/methods-models-server.log
           if-no-files-found: warn
           retention-days: 30

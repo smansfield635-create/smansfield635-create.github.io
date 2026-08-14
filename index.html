@@ -8,8 +8,11 @@
 <link rel="stylesheet" href="/assets/compass/compass.css?v=compass-contextual-quick-pass-v11">
 <style>
 .compass-estate__header{max-width:920px}
-.compass-introduction{max-width:860px}
-.compass-introduction__body{gap:14px;line-height:1.68}
+.compass-introduction{max-width:860px;position:relative;isolation:isolate;overflow:hidden}
+.compass-introduction__body{position:relative;isolation:isolate;gap:14px;line-height:1.68;margin:.55rem;padding:clamp(1rem,2.6vw,1.5rem);border:1px solid rgba(219,226,221,.18);border-radius:1.15rem;background:linear-gradient(145deg,rgba(7,15,22,.92),rgba(12,25,33,.86) 56%,rgba(9,17,25,.91));box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(102,196,215,.035),0 18px 46px rgba(0,0,0,.34);backdrop-filter:blur(14px)}
+.compass-introduction__body::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 12% 8%,rgba(244,214,128,.075),transparent 35%),linear-gradient(125deg,transparent 0 58%,rgba(86,197,218,.045) 76%,transparent 100%)}
+.compass-introduction__body>p:not(.compass-philosophy-claim){color:rgba(244,241,230,.91);text-shadow:0 1px 12px rgba(0,0,0,.32)}
+.compass-philosophy-claim{border-color:rgba(244,214,128,.32)!important;background:linear-gradient(135deg,rgba(244,214,128,.075),rgba(11,25,34,.72))!important;box-shadow:inset 3px 0 0 rgba(244,214,128,.52),0 12px 32px rgba(0,0,0,.22)!important}
 .compass-instrument__grid{align-items:start}
 .compass-panel{min-height:0!important;padding:clamp(22px,3vw,32px)!important}
 .compass-panel h2{font-size:clamp(1.85rem,3.2vw,2.8rem)!important;line-height:1.02!important;max-width:18ch}
@@ -70,13 +73,15 @@ button[data-compass-room-proxy]::after{content:none!important;display:none!impor
 .compass-capability-choices{display:grid;gap:.65rem;align-content:start}
 .compass-monument{min-height:0!important;padding:clamp(.9rem,2vw,1.2rem)!important;border-radius:1.05rem!important;display:grid!important;align-content:start!important;gap:.3rem!important;text-decoration:none;transition:border-color .2s ease,background .2s ease,transform .2s ease,box-shadow .2s ease}
 .compass-monument h2{font-size:clamp(1.2rem,2.5vw,1.65rem)!important;margin:0!important}
-.compass-monument p,.compass-monument strong{display:none!important}
+.compass-monument strong{display:none!important}
+.compass-monument p{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;max-width:34ch!important;margin:.35rem 0 0!important;color:rgba(229,232,225,.76)!important;font-size:clamp(.76rem,1.4vw,.86rem)!important;line-height:1.38!important}
 .compass-monument[aria-selected="true"]{border-color:rgba(244,214,128,.72)!important;background:linear-gradient(145deg,rgba(244,214,128,.12),rgba(86,197,218,.07))!important;box-shadow:0 18px 46px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12)!important;transform:translateY(-1px)}
-.compass-monument-detail{position:relative;overflow:hidden;min-height:15rem;padding:clamp(1.35rem,3.2vw,2.2rem);border:1px solid rgba(211,225,233,.20);border-radius:1.35rem;background:linear-gradient(145deg,rgba(21,36,48,.82),rgba(9,18,29,.66));box-shadow:0 28px 70px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10);backdrop-filter:blur(18px);display:grid;align-content:center;justify-items:start;gap:.65rem}
+.compass-monument-detail{position:relative;overflow:hidden;min-height:10rem;padding:clamp(1.2rem,2.8vw,1.8rem);border:1px solid rgba(211,225,233,.20);border-radius:1.35rem;background:linear-gradient(145deg,rgba(21,36,48,.82),rgba(9,18,29,.66));box-shadow:0 28px 70px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.10);backdrop-filter:blur(18px);display:grid;align-content:center;justify-items:start;gap:.65rem}
 .compass-monument-detail::before,.compass-built__active-proof::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 12% 8%,rgba(244,214,128,.12),transparent 38%),linear-gradient(120deg,transparent 0 62%,rgba(96,210,228,.06) 78%,transparent 100%)}
 .compass-monument-detail>*{position:relative;z-index:1}
+.compass-monument-detail>[data-capability-active-kicker],.compass-monument-detail>[data-capability-active-title]{display:none!important}
 .compass-monument-detail h3{font-family:var(--font-display,Georgia,serif);font-size:clamp(1.85rem,3.8vw,3rem);line-height:1;margin:.1rem 0 .3rem;max-width:17ch}
-.compass-monument-detail p{max-width:52ch;line-height:1.58;margin:0}
+.compass-monument-detail p{max-width:52ch;line-height:1.58;margin:0;font-size:clamp(.98rem,1.8vw,1.08rem)}
 .compass-monument-detail a{margin-top:.55rem}
 .compass-built{max-width:72rem!important;margin:clamp(44px,7vw,82px) auto 0!important;padding:clamp(1.35rem,3.6vw,2.2rem)!important;border-radius:1.4rem!important}
 .compass-built>h2{max-width:20ch!important;font-size:clamp(2rem,4.5vw,3.6rem)!important;line-height:.96!important;margin:10px 0 14px!important}
@@ -95,8 +100,8 @@ button[data-compass-room-proxy]::after{content:none!important;display:none!impor
 .compass-build-cta p{max-width:52ch!important;line-height:1.5!important;margin:.3rem 0!important}
 .compass-build-cta a{margin:0!important;align-self:end;white-space:nowrap}
 @media(max-width:820px){.compass-instrument__grid{gap:12px!important}.compass-panel{min-height:0!important}.compass-monuments{grid-template-columns:minmax(190px,.64fr) minmax(0,1.36fr)!important}.compass-built__proof{grid-template-columns:repeat(3,minmax(0,1fr))!important}.compass-build-cta{grid-template-columns:1fr}.compass-build-cta a{justify-self:start}}
-@media(max-width:760px){.compass-monuments{grid-template-columns:1fr!important}.compass-capability-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.compass-monument-detail{min-height:0}.compass-built__proof{grid-template-columns:1fr!important}}
-@media(max-width:480px){.compass-capability-choices{grid-template-columns:1fr}}
+@media(max-width:760px){.compass-introduction__body{margin:.4rem;padding:1rem}.compass-monuments{grid-template-columns:1fr!important}.compass-capability-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.compass-monument-detail{min-height:0}.compass-built__proof{grid-template-columns:1fr!important}}
+@media(max-width:480px){.compass-capability-choices{grid-template-columns:1fr}.compass-monument{padding:.9rem 1rem!important}}
 </style>
 </head>
 <body>

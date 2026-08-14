@@ -114,6 +114,30 @@
         "Execute rollback in an isolated branch or worktree.",
         "Verify protected blobs and accepted baseline identities are restored exactly."
       ]
+    },
+    {
+      "procedureId": "WHOLE_ESTATE_DISPLAY_CONTINUITY",
+      "purpose": "Load and apply whole-estate narrative and display continuity laws before applicable page, frontier, product, room, world, campaign, navigation, transition, responsive, or shared visual-system construction.",
+      "steps": [
+        "Read .github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json and .github/ai-router/display-continuity-constitution-v1/README.md.",
+        "Read control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json and the governing narrative spine when narrative relation is material.",
+        "Resolve the route display contract: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, return contract, claim boundary, local visual identity, and continuity hook.",
+        "Treat the runtime class as a ceiling, not a requirement.",
+        "Preserve Compass global orientation, room-local identity, explicit return, semantic meaning under reduced motion, and claim boundaries.",
+        "If the task is not visual or experiential, do not invent display work or widen the admitted scope merely because this global context exists.",
+        "Honor all project-specific entrypoints, nested AGENTS.md files, scientific and evidence boundaries, and runtime authorities after loading this context."
+      ],
+      "failClosedWhen": [
+        "COMPETING_GLOBAL_ORIENTATION",
+        "NARRATIVE_RELATION_UNRESOLVED",
+        "RUNTIME_CEILING_UNJUSTIFIED",
+        "MOBILE_OR_REDUCED_MOTION_SEMANTICS_MISSING",
+        "DISCOVERY_MUTATES_CARDINAL_MAP",
+        "VISUAL_EMPHASIS_CREATES_CLAIM_AUTHORITY",
+        "DEEP_ROUTE_HAS_NO_EXPLICIT_RETURN",
+        "UNIVERSAL_SHELL_FLATTENS_REQUIRED_LOCAL_IDENTITY"
+      ],
+      "authorityCreated": false
     }
   ]
 }

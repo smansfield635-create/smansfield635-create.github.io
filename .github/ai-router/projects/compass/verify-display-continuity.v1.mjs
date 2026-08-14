@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 const ROOT = process.cwd();
 const GOVERNING_HEAD = 'e933c08094019c015dd4abfbe7b5082e26044f89';
 const OUTPUT = process.env.COMPASS_VERIFICATION_OUTPUT || '/tmp/compass-display-continuity-verification-receipt.json';
-const allowedPaths = new Set(['index.html','assets/compass/compass-core.css','assets/compass/compass.css','assets/compass/compass.controller.js','assets/compass/compass.cosmos.js','assets/compass/compass.crystals.js','assets/compass/compass.mirrorland-window.js','assets/compass/upstream-compass.css','assets/compass/upstream-compass.geometry.js','assets/compass/upstream-compass.renderer.js','.github/ai-router/router.v1.json','.github/ai-router/projects/compass/entrypoint.v1.json','.github/ai-router/projects/compass/route-display-contract.v1.json','.github/ai-router/projects/compass/verify-display-continuity.v1.mjs','.github/workflows/compass-display-continuity-validation.yml']);
+const allowedPaths = new Set(['index.html','assets/compass/compass-core.css','assets/compass/compass.css','assets/compass/compass.controller.js','assets/compass/compass.cosmos.js','assets/compass/compass.crystals.js','assets/compass/compass.mirrorland-window.js','assets/compass/upstream-compass.css','assets/compass/upstream-compass.geometry.js','assets/compass/upstream-compass.renderer.js','.github/ai-router/router.v1.json','.github/ai-router/projects/compass/entrypoint.v1.json','.github/ai-router/projects/compass/route-display-contract.v1.json','.github/ai-router/projects/compass/construction-execution-plan.v2.json','.github/ai-router/projects/compass/verify-display-continuity.v1.mjs','.github/workflows/compass-display-continuity-validation.yml']);
 const prohibitedPrefixes = ['door/','home/','showroom/','h-earth-3d/','laws/','evidence/','governance/','products/','build/'];
 const requiredContractFields = ['LOCAL_IDENTITY','NARRATIVE_RELATION','ORIENTATION_RELATION','DISPLAY_ROLE','RUNTIME_CEILING','PERSISTENT_OBJECTS','TRANSITION_MEANING','PROGRESSIVE_DISCLOSURE','MOBILE_COMPOSITION','REDUCED_MOTION_EQUIVALENCE','RETURN_CONTRACT','CLAIM_BOUNDARY','LOCAL_VISUAL_IDENTITY','CONTINUITY_HOOK'];
 const requiredAdoptionIds = ['PRIMARY_OBJECT_DOMINANCE','STATE_LED_PAGE_ARCHITECTURE','PROGRESSIVE_DISCLOSURE_NOT_VERTICAL_DUMP','NESTED_READER_LENSES','PERSISTENT_ORIENTATION_FEEDBACK','TRUE_MOBILE_TABLET_COMPOSITION','EDITORIAL_TYPOGRAPHIC_HIERARCHY','SEMANTIC_COLOR_STATES','NARRATIVE_TRANSFORMATION_SPINE','CLAIM_AND_AUTHORITY_SEPARATION','LOCAL_COMPASS_IDENTITY','VISUAL_DIFFERENTIAL_REQUIRED'];
@@ -19,6 +19,7 @@ const git=(args)=>spawnSync('git',args,{cwd:ROOT,encoding:'utf8'});
 const router=json('.github/ai-router/router.v1.json');
 const entrypoint=json('.github/ai-router/projects/compass/entrypoint.v1.json');
 const contract=json('.github/ai-router/projects/compass/route-display-contract.v1.json');
+const planV2=json('.github/ai-router/projects/compass/construction-execution-plan.v2.json');
 const html=read('index.html');
 const css=read('assets/compass/compass.css');
 const coreCss=read('assets/compass/compass-core.css');
@@ -28,6 +29,7 @@ const compassRoute=router.projects?.find(project=>project.projectId==='COMPASS')
 check('COMPASS_PROJECT_ROUTE_REGISTERED',Boolean(compassRoute),compassRoute||null);
 check('COMPASS_ENTRYPOINT_ACTIVE',entrypoint.projectId==='COMPASS'&&entrypoint.status==='ACTIVE_REGISTERED_PROJECT',entrypoint.status);
 check('ROUTING_CREATES_NO_AUTHORITY',entrypoint.authorityBoundary?.includes('THIS_ENTRYPOINT_ROUTES_AND_DOES_NOT_CREATE_MUTATION_AUTHORITY'),entrypoint.authorityBoundary);
+check('CONSTRUCTION_PLAN_V2_BOUND',entrypoint.procedures?.constructionPlan==='.github/ai-router/projects/compass/construction-execution-plan.v2.json'&&planV2.schema==='COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2'&&planV2.status==='LOCKED_DIRECT_REFERENCE_REQUIRED',{entrypointPlan:entrypoint.procedures?.constructionPlan,planSchema:planV2.schema,planStatus:planV2.status});
 for(const field of requiredContractFields){const value=contract.fields?.[field];const resolved=Array.isArray(value)?value.length>0:value!==undefined&&value!==null&&value!=='';check(`ROUTE_DISPLAY_CONTRACT_${field}`,resolved,value)}
 check('ROUTE_DISPLAY_CONTRACT_ALL_14_RESOLVED',requiredContractFields.every(field=>contract.fields?.[field]!==undefined),requiredContractFields);
 

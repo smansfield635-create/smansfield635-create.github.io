@@ -9,7 +9,7 @@ const OUTPUT = process.env.COMPASS_VERIFICATION_OUTPUT || '/tmp/compass-display-
 const allowedPaths = new Set(['index.html','assets/compass/compass-core.css','assets/compass/compass.css','assets/compass/compass.controller.js','assets/compass/compass.cosmos.js','assets/compass/compass.crystals.js','assets/compass/compass.mirrorland-window.js','assets/compass/upstream-compass.css','assets/compass/upstream-compass.geometry.js','assets/compass/upstream-compass.renderer.js','.github/ai-router/router.v1.json','.github/ai-router/projects/compass/entrypoint.v1.json','.github/ai-router/projects/compass/route-display-contract.v1.json','.github/ai-router/projects/compass/verify-display-continuity.v1.mjs','.github/workflows/compass-display-continuity-validation.yml']);
 const prohibitedPrefixes = ['door/','home/','showroom/','h-earth-3d/','laws/','evidence/','governance/','products/','build/'];
 const requiredContractFields = ['LOCAL_IDENTITY','NARRATIVE_RELATION','ORIENTATION_RELATION','DISPLAY_ROLE','RUNTIME_CEILING','PERSISTENT_OBJECTS','TRANSITION_MEANING','PROGRESSIVE_DISCLOSURE','MOBILE_COMPOSITION','REDUCED_MOTION_EQUIVALENCE','RETURN_CONTRACT','CLAIM_BOUNDARY','LOCAL_VISUAL_IDENTITY','CONTINUITY_HOOK'];
-const requiredAdoptionIds = ['PRIMARY_OBJECT_DOMINANCE','STATE_LED_PAGE_ARCHITECTURE','PROGRESSIVE_DISCLOSURE_NOT_VERTICAL_DUMP','NESTED_READER_LENSES','PERSISTENT_ORIENTATION_FEEDBACK','TRUE_MOBILE_TABLET_COMPOSITION','EDITORIAL_TYPOGRAPHIC_HIERARCHY','SEMANTIC_COLOR_STATES','NARRATIVE_TRANSFORMATION_SPINE','CLAIM_AND_AUTHORITY_SEPARATION','LOCAL_COMPASS_IDENTITY','VISUAL_DIFFERENTIAL_REQUIRED'];
+const requiredAdoptionIds = ['PRIMARY_OBJECT_DOMINANCE','STATE_LED_PAGE_ARCHITECTURE','PROGRESSIVE_DISCLOSURE_NOT_VERTICAL_DUMP','NESTED_READER_LENSES','PERSISTENT_ORIENTATION_FEEDBACK','TRUE_MOBILE_TABLET_COMPOSITION','EDITORIAL_TYPOGRAPHIC_HIERARCHY','SEMANTIC_COLOR_STATES','NARRATIVE_TRANSFORMATION_SPINE','CLAIM_AND_AUTHORITY_SEPARATION','LOCAL_COMPASS_IDENTITY','VISUAL_DIFFERENTIAL_REQUIRED','STORY_BACKGROUND_NARRATIVE_FIELD'];
 const requiredAuditPrs = [469,490,494,495,497,938,941,942,947,969,988,1004,1006,1008,1010];
 const checks=[];
 const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
@@ -44,7 +44,25 @@ for(const source of freeze?.directSourceBindings||[]){if(!source.blob)continue;c
 const narrativeResolved=git(['rev-parse',`${freeze?.freezeBaselineHead}:${freeze?.narrativeAuthority?.path}`]);
 check('FROZEN_NARRATIVE_SOURCE_IDENTITY',narrativeResolved.status===0&&narrativeResolved.stdout.trim()===freeze?.narrativeAuthority?.blob,{expected:freeze?.narrativeAuthority?.blob,actual:narrativeResolved.stdout.trim()||null});
 const postFreezeDiff=freeze?.freezeBaselineHead?git(['diff','--name-only',`${freeze.freezeBaselineHead}...HEAD`]):null;
-if(postFreezeDiff?.status===0){const postFreezePaths=postFreezeDiff.stdout.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);const visualMutation=postFreezePaths.some(p=>p==='index.html'||p.startsWith('assets/compass/'));const evidence=freeze?.adoptionEvidence||[];const evidenceIds=new Set(evidence.map(item=>item.id));const complete=freeze?.implementationAdoptionStatus==='COMPLETE'&&requiredAdoptionIds.every(id=>evidenceIds.has(id));check('POST_FREEZE_VISUAL_MUTATION_REQUIRES_MATRIX_COMPLETION',!visualMutation||complete,{visualMutation,implementationAdoptionStatus:freeze?.implementationAdoptionStatus||null,evidenceIds:[...evidenceIds],postFreezePaths})}else{check('POST_FREEZE_VISUAL_MUTATION_REQUIRES_MATRIX_COMPLETION',false,postFreezeDiff?.stderr||'post-freeze diff failed')}
+if(postFreezeDiff?.status===0){
+  const postFreezePaths=postFreezeDiff.stdout.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
+  const visualMutation=postFreezePaths.some(p=>p==='index.html'||p.startsWith('assets/compass/'));
+  const evidence=freeze?.adoptionEvidence||[];
+  const evidenceIds=new Set(evidence.map(item=>item.id));
+  const complete=freeze?.implementationAdoptionStatus==='COMPLETE'&&requiredAdoptionIds.every(id=>evidenceIds.has(id));
+  check('POST_FREEZE_VISUAL_MUTATION_REQUIRES_MATRIX_COMPLETION',!visualMutation||complete,{visualMutation,implementationAdoptionStatus:freeze?.implementationAdoptionStatus||null,evidenceIds:[...evidenceIds],postFreezePaths});
+}else{
+  check('POST_FREEZE_VISUAL_MUTATION_REQUIRES_MATRIX_COMPLETION',false,postFreezeDiff?.stderr||'post-freeze diff failed');
+}
+
+check('PRIMARY_OBJECT_DOMINANCE_IMPLEMENTED',css.includes('.compass-scene { order: 3; }')&&css.includes('82vh'),'scene is third in page sequence and viewport-dominant');
+check('DOWNSTREAM_CONTEXT_REORDERED',css.includes('.compass-introduction { order: 5; }')&&css.includes('.compass-practical-context { order: 6; }'),'explanation follows orientation and selection');
+check('STATE_LED_VISUAL_FEEDBACK_IMPLEMENTED',['data-selected-cardinal="north"','data-selected-cardinal="east"','data-selected-cardinal="south"','data-selected-cardinal="west"'].every(token=>css.includes(token)),'all four cardinal states drive presentation');
+check('SEMANTIC_CARDINAL_COLORS_IMPLEMENTED',['data-cardinal-id="north"','data-cardinal-id="east"','data-cardinal-id="south"','data-cardinal-id="west"'].every(token=>css.includes(token)),'four semantic cardinal color bindings');
+check('EDITORIAL_HIERARCHY_IMPLEMENTED',css.includes('Georgia')&&css.includes('Segoe Script')&&css.includes('ESTATE WAYFINDING INSTRUMENT'),'display serif, restrained script accent, instrument label');
+check('STORY_BACKGROUND_FIELD_IMPLEMENTED',css.includes('STORY_BACKGROUND_FIELD')&&css.includes('LATENT POSSIBILITY')&&css.includes('PRESSURE')&&css.includes('ORIENTATION')&&css.includes('CONTINUATION'),'transformation spine participates in background');
+check('TRUE_RESPONSIVE_RECOMPOSITION_IMPLEMENTED',css.includes('@media (max-width: 980px)')&&css.includes('@media (max-width: 820px)')&&css.includes('@media (max-width: 560px)'),'desktop/tablet/phone recomposition tiers');
+check('VISUAL_DIFFERENTIAL_IS_STRUCTURAL',css.includes('grid-template-columns: minmax(0, 1.2fr)')&&css.includes('.compass-route-deck { grid-template-columns: repeat(4')&&css.includes('.compass-panel {\n  position: relative;'),'composition, density and state ledger changed');
 
 const cardinals=[['north','Orientation'],['east','Worlds'],['south','Instruments'],['west','Frontier']];
 for(const [id,label] of cardinals)check(`CARDINAL_${id.toUpperCase()}_PRESENT`,html.includes(`data-cardinal-id="${id}"`)&&html.includes(`data-coordinate-label="${label}"`),`${id}:${label}`);

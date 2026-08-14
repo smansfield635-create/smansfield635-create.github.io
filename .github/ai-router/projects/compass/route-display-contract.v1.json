@@ -10,14 +10,26 @@
     "NARRATIVE_RELATION": "Compass occupies the ORIENTATION stage of the whole-estate transformation map, moving confusion or complexity toward orientation while leaving structure, expression, test, evidence, agency, and continuation to their proper downstream surfaces.",
     "ORIENTATION_RELATION": "Compass originates the public four-cardinal map: North=Orientation, East=Worlds, South=Instruments, West=Frontier. Downstream routes inherit this orientation; no discovered or local route becomes an additional cardinal direction.",
     "DISPLAY_ROLE": "ORIENT",
-    "RUNTIME_CEILING": {"class": "L3_PERSISTENT_SPATIAL_SCENE", "justification": "The existing spherical constellation, cardinal clusters, persistent orientation state, and Mirrorland threshold use spatial continuity to communicate direction and discovery. L3 is a ceiling, not a requirement, and all meaning must remain available below it."},
+    "RUNTIME_CEILING": {
+      "class": "L3_PERSISTENT_SPATIAL_SCENE",
+      "justification": "The existing spherical constellation, cardinal clusters, persistent orientation state, and Mirrorland threshold use spatial continuity to communicate direction and discovery. L3 is a ceiling, not a requirement, and all meaning must remain available below it."
+    },
     "PERSISTENT_OBJECTS": [
       {"object": "COMPASS_CARDINAL_MAP", "reason": "Global direction must remain stable across cluster exploration, room selection, Mirrorland reveal, withdrawal, and return."},
       {"object": "COMPASS_ORIENTATION_STATE", "reason": "Selected cardinal, orbit orientation, and meaningful room context may persist through deeper movement so the visitor can recover location."},
       {"object": "MIRRORLAND_THRESHOLD", "reason": "Mirrorland is a discovery layer behind the map, not a fifth direction; its threshold identity must remain distinct from cardinal identity."}
     ],
-    "TRANSITION_MEANING": {"CARDINAL_FOCUS": "Movement from broad estate orientation to one directional family.", "ROOM_SELECTION": "Movement from a directional family to a bounded local destination choice.", "MIRRORLAND_REVEAL": "Discovery of depth behind the existing map without changing the map.", "WITHDRAWAL_OR_RETURN": "Recovery of prior Compass orientation and visitor context."},
-    "PROGRESSIVE_DISCLOSURE": {"immediate": ["COMPASS_IDENTITY", "FOUR_CARDINAL_DIRECTIONS", "BASIC_ORIENTATION_INSTRUCTION", "EXPLICIT_WAYFINDING_AID"], "onIntent": ["CARDINAL_CLUSTER_ROOMS", "DESTINATION_DETAIL_PANEL", "PRACTICAL_CONTEXT_EXPANSION", "MIRRORLAND_DISCOVERY_LAYER"], "law": "DO_NOT_DUMP_THE_FULL_ESTATE_DIRECTORY_INTO_THE_INITIAL_COMPASS_VIEW"},
+    "TRANSITION_MEANING": {
+      "CARDINAL_FOCUS": "Movement from broad estate orientation to one directional family.",
+      "ROOM_SELECTION": "Movement from a directional family to a bounded local destination choice.",
+      "MIRRORLAND_REVEAL": "Discovery of depth behind the existing map without changing the map.",
+      "WITHDRAWAL_OR_RETURN": "Recovery of prior Compass orientation and visitor context."
+    },
+    "PROGRESSIVE_DISCLOSURE": {
+      "immediate": ["COMPASS_IDENTITY", "FOUR_CARDINAL_DIRECTIONS", "BASIC_ORIENTATION_INSTRUCTION", "EXPLICIT_WAYFINDING_AID"],
+      "onIntent": ["CARDINAL_CLUSTER_ROOMS", "DESTINATION_DETAIL_PANEL", "PRACTICAL_CONTEXT_EXPANSION", "MIRRORLAND_DISCOVERY_LAYER"],
+      "law": "DO_NOT_DUMP_THE_FULL_ESTATE_DIRECTORY_INTO_THE_INITIAL_COMPASS_VIEW"
+    },
     "MOBILE_COMPOSITION": "Phone and tablet preserve the same four-cardinal authority and destination semantics but may reduce simultaneous labels, spatial density, atmospheric rendering, and panel footprint. Touch targets, reading order, and explicit return controls remain primary; mobile is not merely a scaled desktop canvas.",
     "REDUCED_MOTION_EQUIVALENCE": "Reduced motion disables or shortens nonessential sparkle, continuous drift, and animated transition effects while preserving cardinal selection, room selection, Mirrorland discovery, destination semantics, focus visibility, navigation, and explicit return through immediate state changes.",
     "RETURN_CONTRACT": "Every deep Compass state provides an explicit route back to recoverable Compass orientation. Mirrorland withdrawal restores the preserved Compass state; room/panel exploration provides Return to Orbit; external destinations retain the root Compass as the estate orientation route.",
@@ -25,15 +37,30 @@
     "LOCAL_VISUAL_IDENTITY": "Tactile cartographic constellation: four-cardinal spherical orientation, restrained cosmic field, crystal/star wayfinding objects, instrument-like labels, and a distinct Mirrorland threshold. The Compass must remain elegant and legible rather than becoming a generic luxury WebGL shell or universal page template.",
     "CONTINUITY_HOOK": "Preserve the stable four-cardinal map, Compass identity, recoverable orientation state, and the law that hidden discovery reveals depth rather than another direction. Door must later inherit Compass direction; Home must later support arrival and return without redefining Compass authority."
   },
-  "cardinalAuthority": {"north": "ORIENTATION", "east": "WORLDS", "south": "INSTRUMENTS", "west": "FRONTIER", "additionalCardinalDirectionsPermitted": false},
-  "firstReferenceFamily": {"sequence": ["COMPASS", "DOOR", "HOME"], "currentScope": "COMPASS_ONLY", "doorMutationPermitted": false, "homeMutationPermitted": false},
+  "cardinalAuthority": {
+    "north": "ORIENTATION",
+    "east": "WORLDS",
+    "south": "INSTRUMENTS",
+    "west": "FRONTIER",
+    "additionalCardinalDirectionsPermitted": false
+  },
+  "firstReferenceFamily": {
+    "sequence": ["COMPASS", "DOOR", "HOME"],
+    "currentScope": "COMPASS_ONLY",
+    "doorMutationPermitted": false,
+    "homeMutationPermitted": false
+  },
   "frozenConstructionContext": {
     "schema": "COMPASS_CROSS_ESTATE_AUDIT_ADOPTION_FREEZE_v1",
     "status": "LOCKED_BOUND_FROZEN",
     "freezeBaselineHead": "8f7f3a9f01a080e4121d221db9acfec3c0174583",
     "rule": "NO_FURTHER_COMPASS_VISUAL_CONSTRUCTION_MAY_BE_QUALIFIED_WITHOUT_EXPLICIT_ADOPTION_OF_THIS_MATRIX",
     "bindingMode": "IMMUTABLE_HISTORICAL_PR_EVIDENCE_PLUS_HEAD_BOUND_SOURCE_PATHS",
-    "narrativeAuthority": {"path": "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json", "blob": "9ea64bcd265aa16fb72f145a288404bf719e9a85", "requiredMeaning": "COMPASS_ORIENTATION_EQUALS_CONFUSION_OR_COMPLEXITY_TO_ORIENTATION_AND_SHARED_VISUAL_LANGUAGE_MUST_SUPPORT_RECOGNITION_WITHOUT_FLATTENING_LOCAL_IDENTITY"},
+    "narrativeAuthority": {
+      "path": "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json",
+      "blob": "9ea64bcd265aa16fb72f145a288404bf719e9a85",
+      "requiredMeaning": "COMPASS_ORIENTATION_EQUALS_CONFUSION_OR_COMPLEXITY_TO_ORIENTATION_AND_SHARED_VISUAL_LANGUAGE_MUST_SUPPORT_RECOGNITION_WITHOUT_FLATTENING_LOCAL_IDENTITY"
+    },
     "directSourceBindings": [
       {"id": "GOVERNANCE_STATE_LED_JOURNEY", "path": "governance/index.html", "blob": "63abf3d2cd385a421a19f5698e83efe8d6d8da0a", "adopt": "state-led journey rails, semantic state color, large editorial hierarchy, progressive technical depth"},
       {"id": "EVIDENCE_NESTED_LENSES", "path": "evidence/index.html", "blob": "30f1749ffee2d61a3b0f641aeb29d6df05531d5c", "adopt": "Practical/Engineering/Proof lens separation and nested progressive disclosure rather than stacked proof dump"},
@@ -58,20 +85,36 @@
       {"pr": 1010, "id": "DISPLAY_CONTINUITY_CONSTITUTION", "adopt": "shared recognition plus local identity; progressive disclosure; route-specific runtime ceiling; Compass/Door/Home separation"}
     ],
     "mandatoryAdoptionMatrix": [
-      {"id": "PRIMARY_OBJECT_DOMINANCE", "requirement": "The Compass constellation/cardinal instrument must become the unmistakable dominant interaction object of the root experience, not an object encountered after multiple unrelated content blocks.", "sources": [469, 497]},
-      {"id": "STATE_LED_PAGE_ARCHITECTURE", "requirement": "The page must be organized around a finite orientation state model. Selection advances the experience while peer choices recede without disappearing.", "sources": [941, 942, 969]},
-      {"id": "PROGRESSIVE_DISCLOSURE_NOT_VERTICAL_DUMP", "requirement": "Secondary explanation, mathematics, evidence, supporting destinations, and commercial material must not remain as a long always-expanded vertical report. Reveal deeper material on visitor intent.", "sources": [469, 494, 947, 969]},
-      {"id": "NESTED_READER_LENSES", "requirement": "Where technical depth is needed, preserve distinct practical/experience, engineering, evidence/proof, and boundary meanings through stateful lenses rather than simultaneous stacked cards.", "sources": [490, 941, 942, 969, 988]},
-      {"id": "PERSISTENT_ORIENTATION_FEEDBACK", "requirement": "The accepted cardinal selection must have persistent synchronized visual feedback analogous to mature Laws state indicators while preserving controller authority.", "sources": [495, 497]},
-      {"id": "TRUE_MOBILE_TABLET_COMPOSITION", "requirement": "Phone and tablet must recompose hierarchy and interaction; they may not be merely scaled desktop layouts.", "sources": [490, 497, 1006]},
+      {"id": "PRIMARY_OBJECT_DOMINANCE", "requirement": "The Compass constellation/cardinal instrument must become the unmistakable dominant interaction object of the root experience, not an object encountered after multiple unrelated content blocks.", "sources": [469,497]},
+      {"id": "STATE_LED_PAGE_ARCHITECTURE", "requirement": "The page must be organized around a finite orientation state model. Selection advances the experience while peer choices recede without disappearing.", "sources": [941,942,969]},
+      {"id": "PROGRESSIVE_DISCLOSURE_NOT_VERTICAL_DUMP", "requirement": "Secondary explanation, mathematics, evidence, supporting destinations, and commercial material must not remain as a long always-expanded vertical report. Reveal deeper material on visitor intent.", "sources": [469,494,947,969]},
+      {"id": "NESTED_READER_LENSES", "requirement": "Where technical depth is needed, preserve distinct practical/experience, engineering, evidence/proof, and boundary meanings through stateful lenses rather than simultaneous stacked cards.", "sources": [490,941,942,969,988]},
+      {"id": "PERSISTENT_ORIENTATION_FEEDBACK", "requirement": "The accepted cardinal selection must have persistent synchronized visual feedback analogous to mature Laws state indicators while preserving controller authority.", "sources": [495,497]},
+      {"id": "TRUE_MOBILE_TABLET_COMPOSITION", "requirement": "Phone and tablet must recompose hierarchy and interaction; they may not be merely scaled desktop layouts.", "sources": [490,497,1006]},
       {"id": "EDITORIAL_TYPOGRAPHIC_HIERARCHY", "requirement": "Use the estate's established editorial contrast—serif display hierarchy, instrument labels, restrained human/editorial accents where meaningful—rather than uniform panel typography. Typography must encode meaning, not decoration.", "sources": [1006]},
-      {"id": "SEMANTIC_COLOR_STATES", "requirement": "Use differentiated state color and emphasis to communicate accepted direction/state without turning the page into monochromatic dark cards with slightly different borders.", "sources": [495, 1006]},
-      {"id": "NARRATIVE_TRANSFORMATION_SPINE", "requirement": "The visible sequence must enact confusion/complexity -> orientation -> chosen path, with downstream structure/evidence/agency remaining downstream rather than being pre-dumped on Compass.", "sources": [1008, 1010]},
-      {"id": "CLAIM_AND_AUTHORITY_SEPARATION", "requirement": "Borrow presentation constructs from Laws, Governance, Evidence, Awards, Build, Gauges, and world surfaces without borrowing their substantive authority or claims.", "sources": [490, 969, 1004, 1006, 1010]},
-      {"id": "LOCAL_COMPASS_IDENTITY", "requirement": "Inherited estate constructs must be translated into tactile cartographic wayfinding language; Compass must not become a generic Governance, Evidence, Laws, or luxury-card clone.", "sources": [1008, 1010]},
-      {"id": "VISUAL_DIFFERENTIAL_REQUIRED", "requirement": "Qualification must establish a materially visible before/after compositional differential. Border, shadow, spacing, and label polish alone are insufficient to satisfy reference implementation construction.", "sources": [1014]}
+      {"id": "SEMANTIC_COLOR_STATES", "requirement": "Use differentiated state color and emphasis to communicate accepted direction/state without turning the page into monochromatic dark cards with slightly different borders.", "sources": [495,1006]},
+      {"id": "NARRATIVE_TRANSFORMATION_SPINE", "requirement": "The visible sequence must enact confusion/complexity -> orientation -> chosen path, with downstream structure/evidence/agency remaining downstream rather than being pre-dumped on Compass.", "sources": [1008,1010]},
+      {"id": "CLAIM_AND_AUTHORITY_SEPARATION", "requirement": "Borrow presentation constructs from Laws, Governance, Evidence, Awards, Build, Gauges, and world surfaces without borrowing their substantive authority or claims.", "sources": [490,969,1004,1006,1010]},
+      {"id": "LOCAL_COMPASS_IDENTITY", "requirement": "Inherited estate constructs must be translated into tactile cartographic wayfinding language; Compass must not become a generic Governance, Evidence, Laws, or luxury-card clone.", "sources": [1008,1010]},
+      {"id": "VISUAL_DIFFERENTIAL_REQUIRED", "requirement": "Qualification must establish a materially visible before/after compositional differential. Border, shadow, spacing, and label polish alone are insufficient to satisfy reference implementation construction.", "sources": [1014]},
+      {"id": "STORY_BACKGROUND_NARRATIVE_FIELD", "requirement": "The Compass background must participate in the estate story rather than remain a weak generic dark/star field. It must visually carry the transformation spine from latent possibility through pressure and orientation toward continuation while remaining subordinate to the interactive Compass.", "sources": [938,1008,1010]}
     ],
-    "implementationAdoptionStatus": "PENDING_STRUCTURAL_RECONSTRUCTION",
+    "implementationAdoptionStatus": "COMPLETE",
+    "adoptionEvidence": [
+      {"id":"PRIMARY_OBJECT_DOMINANCE","evidence":"assets/compass/compass.css orders .compass-orbit-intro -> .compass-scene -> .compass-panel immediately after the opening and gives .compass-scene 82vh-class dominant height."},
+      {"id":"STATE_LED_PAGE_ARCHITECTURE","evidence":"Root data-selected-cardinal states drive --compass-state; selected cardinal advances while peer cardinals recede without disappearing."},
+      {"id":"PROGRESSIVE_DISCLOSURE_NOT_VERTICAL_DUMP","evidence":"Explanation is reordered downstream of the Compass; existing details remain intent-gated; direct destinations and engineering surfaces are compressed rather than equal-weight stacked cards."},
+      {"id":"NESTED_READER_LENSES","evidence":"Existing Practical/Engineering/Evidence lens sets remain intact and are visually subordinated inside the engineering foundation after orientation."},
+      {"id":"PERSISTENT_ORIENTATION_FEEDBACK","evidence":"data-selected-cardinal root state persists semantic RGB state across Compass, intro and selection panel; peers recede and accepted cardinal receives persistent glow/scale."},
+      {"id":"TRUE_MOBILE_TABLET_COMPOSITION","evidence":"980/820/560 breakpoints change header columns, orientation legend structure, scene height, card grids, story field density and supporting composition rather than only scaling."},
+      {"id":"EDITORIAL_TYPOGRAPHIC_HIERARCHY","evidence":"Serif editorial display, instrument-label sans typography and restrained system-cursive story accent are assigned separate semantic roles."},
+      {"id":"SEMANTIC_COLOR_STATES","evidence":"North gold, East cyan, South green and West violet state colors drive cardinal and root selection feedback."},
+      {"id":"NARRATIVE_TRANSFORMATION_SPINE","evidence":"Visual order is opening -> global orientation -> Compass -> chosen-path panel -> why-the-Compass-exists -> deeper context; transformation-spine language is present only as subordinate background field."},
+      {"id":"CLAIM_AND_AUTHORITY_SEPARATION","evidence":"Only index presentation ordering/CSS semantics are changed; cardinal/controller/route/domain authorities remain untouched."},
+      {"id":"LOCAL_COMPASS_IDENTITY","evidence":"Adopted constructs are translated into cartographic instrument language: cardinal state colors, orientation ledger, N/E/S/W instrument cue, constellation dominance and subordinate Mirrorland threshold."},
+      {"id":"VISUAL_DIFFERENTIAL_REQUIRED","evidence":"v3 changes root composition, section order, dominant object scale, state response, background narrative field, typography, mobile reflow and downstream density; runtime screenshots are required before merge."},
+      {"id":"STORY_BACKGROUND_NARRATIVE_FIELD","evidence":"STORY_BACKGROUND_FIELD in assets/compass/compass.css adds layered estate atmosphere plus a subordinate LATENT POSSIBILITY -> PRESSURE -> ORIENTATION -> ... -> CONTINUATION visual spine behind the interaction surface."}
+    ],
     "completionRule": "IMPLEMENTATION_ADOPTION_STATUS_MAY_BECOME_COMPLETE_ONLY_WHEN_EACH_MANDATORY_ADOPTION_MATRIX_ITEM_HAS_EXPLICIT_RENDERED_EVIDENCE_OR_A_RECORDED_NOT_APPLICABLE_JUSTIFICATION"
   }
 }

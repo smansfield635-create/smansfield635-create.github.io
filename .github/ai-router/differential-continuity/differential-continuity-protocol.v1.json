@@ -1,9 +1,0 @@
-{
-  "schema": "PUBLIC_GOVERNANCE_RETIREMENT_HANDOFF_v1",
-  "result": "PUBLIC_GOVERNANCE_IMPLEMENTATION_RETIRED",
-  "authorityCreated": false,
-  "executionAuthorized": false,
-  "mutationAuthorized": false,
-  "mergeAuthorized": false,
-  "forwardingPerformed": false
-}

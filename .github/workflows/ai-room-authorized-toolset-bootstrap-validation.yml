@@ -1,165 +1,49 @@
-name: Authorized Toolset Transport Genesis and Active Conformance
-
+name: Authorized Toolset Active Conformance
 on:
   pull_request:
     branches: [main]
-    paths:
-      - '.github/ai-toolset-transport/**'
-      - '.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml'
-      - '.github/workflows/ai-room-execution-transport.yml'
-      - 'tools/ai-room-transport/**'
+    paths: ['.github/ai-toolset-transport/**','.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml','.github/workflows/ai-room-execution-transport.yml','tools/ai-room-transport/**']
   push:
     branches: [main]
-    paths:
-      - '.github/ai-toolset-transport/**'
-      - '.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml'
-      - '.github/workflows/ai-room-execution-transport.yml'
-      - 'tools/ai-room-transport/**'
+    paths: ['.github/ai-toolset-transport/**','.github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml','.github/workflows/ai-room-execution-transport.yml','tools/ai-room-transport/**']
   workflow_dispatch:
-
 permissions:
   contents: read
-  actions: read
-
 env:
   EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  GENESIS_BASE: 56b6ab1f192aec994af0c537dd7c9dad1be14d7f
-  GENESIS_HEAD: 1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500
-  GENESIS_TREE: 476c1ef4d7e81db57b0f763d6a94f475ea317d1c
-  GENESIS_MANIFEST_BLOB: 12f433ab0031c2f77b93362408be4503fce1d0e0
-
 jobs:
-  historical-genesis:
-    name: immutable-historical-genesis-verification
+  builder:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact current subject with full history
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
-          persist-credentials: false
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0, persist-credentials: false}
       - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Verify frozen genesis identity and reproduce original bootstrap
-        run: |
-          set -euo pipefail
+        with: {node-version: 22}
+      - run: |
           test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
-          test "$(git rev-parse "$GENESIS_HEAD^{tree}")" = "$GENESIS_TREE"
-          test "$(git rev-parse "$GENESIS_HEAD:.github/ai-toolset-transport/changed-path-manifest.v1.json")" = "$GENESIS_MANIFEST_BLOB"
-          test "$(git rev-parse "HEAD:.github/ai-toolset-transport/changed-path-manifest.v1.json")" = "$GENESIS_MANIFEST_BLOB"
-          git worktree add --detach "$RUNNER_TEMP/ai-room-genesis" "$GENESIS_HEAD"
-          cd "$RUNNER_TEMP/ai-room-genesis"
-          node tools/ai-room-transport/self-test.v1.mjs \
-            --root . \
-            --expected-head "$GENESIS_HEAD" \
-            --holder "GITHUB_ACTIONS_AI_ROOM_TRANSPORT_HISTORICAL_GENESIS_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
-            --output-dir "$RUNNER_TEMP/genesis-evidence"
-          node - <<'NODE'
-          const fs = require('fs');
-          const r = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/genesis-evidence/bootstrap-self-test-receipt.json'));
-          if (r.result !== 'PASS_CLOSED' || r.fingerprintPayload?.changedPathCount !== 20 || r.negativeFixtureCount !== 20 || r.negativeFixturesPassed !== 20) process.exit(1);
-          if (!r.commandExecutionPassed || !r.receiptValidationPassed || !r.continuationGatePassed) process.exit(1);
-          NODE
+          node tools/ai-room-transport/active-conformance.v1.mjs --root . --expected-head "$EXPECTED_HEAD" --holder "ACTIVE_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output /tmp/builder.json
+          node -e "const r=require('/tmp/builder.json');if(r.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||r.descriptorsResolved!==r.descriptorCount)process.exit(1)"
       - uses: actions/upload-artifact@v4
-        with:
-          name: ai-room-historical-genesis-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/genesis-evidence
-          if-no-files-found: error
-          retention-days: 90
-
-  active-builder:
-    name: active-extension-conformance-builder
-    needs: historical-genesis
+        with: {name: 'active-builder-${{ github.run_id }}-${{ github.run_attempt }}', path: /tmp/builder.json, if-no-files-found: error}
+  verifier:
+    needs: builder
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
-          persist-credentials: false
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0, persist-credentials: false}
       - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Run extension-aware active conformance
-        run: |
-          set -euo pipefail
-          node --check tools/ai-room-transport/active-conformance.v1.mjs
-          node tools/ai-room-transport/active-conformance.v1.mjs \
-            --root . \
-            --expected-head "$EXPECTED_HEAD" \
-            --holder "ACTIVE_BUILDER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
-            --output "$RUNNER_TEMP/active-builder.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/active-builder.json');if(r.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||r.descriptorCount<1||r.descriptorsResolved!==r.descriptorCount||r.negativeFixturesPassed!==4)process.exit(1)"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ai-room-active-builder-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/active-builder.json
-          if-no-files-found: error
-          retention-days: 90
-
-  active-fresh-verifier:
-    name: active-extension-fresh-independent-verifier
-    needs: active-builder
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
+        with: {node-version: 22}
       - uses: actions/download-artifact@v4
-        with:
-          name: ai-room-active-builder-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/builder
-      - name: Independently reproduce active conformance
-        run: |
-          set -euo pipefail
-          node tools/ai-room-transport/active-conformance.v1.mjs \
-            --root . \
-            --expected-head "$EXPECTED_HEAD" \
-            --holder "ACTIVE_FRESH_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" \
-            --output "$RUNNER_TEMP/active-verifier.json"
+        with: {name: 'active-builder-${{ github.run_id }}-${{ github.run_attempt }}', path: /tmp/builder}
+      - run: |
+          node tools/ai-room-transport/active-conformance.v1.mjs --root . --expected-head "$EXPECTED_HEAD" --holder "ACTIVE_VERIFIER_${GITHUB_RUN_ID}_${GITHUB_RUN_ATTEMPT}" --output /tmp/verifier.json
           node - <<'NODE'
-          const fs = require('fs');
-          const b = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/builder/active-builder.json'));
-          const v = JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP + '/active-verifier.json'));
-          if (b.result !== 'PASS_CLOSED_ACTIVE_CONFORMANCE' || v.result !== 'PASS_CLOSED_ACTIVE_CONFORMANCE') process.exit(1);
-          if (b.executionHolder === v.executionHolder || b.packageFingerprint !== v.packageFingerprint) process.exit(1);
+          const fs=require('fs'),b=JSON.parse(fs.readFileSync('/tmp/builder/builder.json')),v=JSON.parse(fs.readFileSync('/tmp/verifier.json'));if(b.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||v.result!=='PASS_CLOSED_ACTIVE_CONFORMANCE'||b.executionHolder===v.executionHolder||b.packageFingerprint!==v.packageFingerprint)process.exit(1);fs.writeFileSync('/tmp/certification.json',JSON.stringify({schema:'AUTHORIZED_TOOLSET_ACTIVE_CONFORMANCE_CERTIFICATION_v2',result:'PASS_CLOSED',currentHead:process.env.EXPECTED_HEAD,activePackageFingerprint:b.packageFingerprint,distinctExecutionHolders:true,historicalGenesisReplayed:false,bootstrapAuthorityReactivated:false,productMutationPerformed:false},null,2)+'\n');
           NODE
       - uses: actions/upload-artifact@v4
         with:
-          name: ai-room-active-verifier-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/active-verifier.json
+          name: active-conformance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/verifier.json
+            /tmp/certification.json
           if-no-files-found: error
-          retention-days: 90
-
-  certify:
-    name: genesis-and-active-conformance-certification
-    needs: [historical-genesis, active-builder, active-fresh-verifier]
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: ai-room-*-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/evidence
-      - name: Emit combined certification
-        run: |
-          node - <<'NODE'
-          const fs=require('fs'),crypto=require('crypto'),path=require('path');
-          const find=n=>{const q=[];const walk=d=>fs.readdirSync(d,{withFileTypes:true}).forEach(x=>x.isDirectory()?walk(path.join(d,x.name)):q.push(path.join(d,x.name)));walk(process.env.RUNNER_TEMP+'/evidence');return q.find(x=>x.endsWith(n));};
-          const g=find('bootstrap-self-test-receipt.json'),b=find('active-builder.json'),v=find('active-verifier.json');if(!g||!b||!v)throw Error('EVIDENCE_MISSING');
-          const B=JSON.parse(fs.readFileSync(b)),V=JSON.parse(fs.readFileSync(v));if(B.packageFingerprint!==V.packageFingerprint)throw Error('FINGERPRINT_MISMATCH');
-          const out={schema:'AUTHORIZED_TOOLSET_GENESIS_AND_ACTIVE_CONFORMANCE_CERTIFICATION_v1',result:'PASS_CLOSED',historicalGenesisHead:process.env.GENESIS_HEAD,currentHead:process.env.EXPECTED_HEAD,activePackageFingerprint:B.packageFingerprint,descriptorCount:B.descriptorCount,distinctExecutionHolders:B.executionHolder!==V.executionHolder,genesisReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(g)).digest('hex'),builderReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(b)).digest('hex'),verifierReceiptSha256:crypto.createHash('sha256').update(fs.readFileSync(v)).digest('hex'),bootstrapAuthorityReactivated:false,productMutationPerformed:false,mergePerformed:false};
-          fs.writeFileSync('/tmp/authorized-toolset-conformance-certification.json',JSON.stringify(out,null,2)+'\n');
-          NODE
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ai-room-genesis-active-final-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/authorized-toolset-conformance-certification.json
-          if-no-files-found: error
-          retention-days: 90

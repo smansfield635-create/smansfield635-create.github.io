@@ -62,7 +62,7 @@ check('ENTER_ONLY_EXPLICIT_NAVIGATION',controller.includes('requestEnterSelectio
 check('RETURN_TO_ORBIT_PRESENT',html.includes('data-compass-return-to-orbit')&&html.includes('Return to Orbit'),'explicit return');
 check('BACK_TO_COMPASS_PRESENT',html.includes('data-compass-mirrorland-back')&&html.includes('Back to Compass'),'Mirrorland return');
 
-check('MIRRORLAND_INVITATIONAL_COPY',html.includes('You found the hidden entrance.')&&!html.includes('See if you can find it'),'invitation, not fake scavenger hunt');
+check('MIRRORLAND_INVITATIONAL_COPY',html.includes('Enter through the door to choose a world or experience.')&&!html.includes('See if you can find it'),'clear invitation and door affordance, not fake scavenger hunt');
 check('MIRRORLAND_THREE_ROUTES',html.includes('>Enter the Narrative</a>')&&html.includes('>Enter the Demo</a>')&&html.includes('>See the World Map</a>'),'three threshold routes');
 check('MIRRORLAND_ROUTE_TARGETS',html.includes('href="/showroom/">Enter the Narrative')&&html.includes('href="/showroom/globe/h-earth/">Enter the Demo')&&html.includes('href="/showroom/globe/audralia/">See the World Map'),'Showroom / H-Earth / Audralia map');
 check('MIRRORLAND_GENERIC_ENTER_SUPPRESSED',html.includes("mode==='MIRRORLAND_FOCUSED'")&&html.includes('enter.hidden=true')&&html.includes('stopImmediatePropagation'),'generic direct redirect blocked in favor of three routes');

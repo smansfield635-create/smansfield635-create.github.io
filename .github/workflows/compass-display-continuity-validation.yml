@@ -168,6 +168,82 @@ jobs:
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length)process.exit(1);
           NODE
+      - name: Assert 19 rendered foreground room labels
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1280,height:800}});
+          const failures=[];
+          const observations=[];
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const fail=(id,evidence)=>failures.push({id,evidence});
+          await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:20000});
+          await page.waitForSelector('[data-compass-root]',{timeout:10000});
+          await page.waitForSelector('[data-compass-room-proxy]',{timeout:10000});
+          await page.waitForSelector('[data-compass-projected-room-label]',{state:'attached',timeout:10000});
+          await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER),{timeout:10000});
+          const declarationMap=await page.evaluate(()=>Object.fromEntries([...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')].map(el=>[el.dataset.roomId,{label:(el.dataset.label||'').trim(),wing:el.dataset.wing}])));
+          if(Object.keys(declarationMap).length!==19) fail('DECLARATION_COUNT',Object.keys(declarationMap));
+          const scene=page.locator('[data-compass-scene]');
+          const box=await scene.boundingBox();
+          if(!box) throw new Error('COMPASS_SCENE_NOT_RENDERED');
+          const anchor={x:Math.round(box.x+box.width*.50),y:Math.round(box.y+box.height*.55)};
+          const inspect=async wing=>page.evaluate(activeWing=>{
+            const root=document.querySelector('[data-compass-root]');
+            const foreground=root?.dataset.clusterPreviewPrimaryRoom||root?.dataset.clusterPrimaryRoom||'';
+            const label=document.querySelector('[data-compass-projected-room-label]');
+            const style=label?getComputedStyle(label):null;
+            const rect=label?.getBoundingClientRect();
+            return {wing:activeWing,mode:root?.dataset.compassMode||'',foreground,renderedRoomId:label?.dataset.roomId||'',text:(label?.textContent||'').replace(/\s+/g,' ').trim(),visible:Boolean(label&&!label.hidden&&style&&style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect&&rect.width>0&&rect.height>0),background:style?.backgroundImage||style?.backgroundColor||'',rect:rect?{left:rect.left,top:rect.top,width:rect.width,height:rect.height}:null};
+          },wing);
+          async function drag(dx,dy){
+            await page.mouse.move(anchor.x,anchor.y);
+            await page.mouse.down();
+            for(let step=1;step<=10;step++){await page.mouse.move(anchor.x+dx*step/10,anchor.y+dy*step/10,{steps:1});await sleep(20);}
+            await page.mouse.up();
+            await sleep(180);
+          }
+          const moves=[];
+          for(let ring=0;ring<10;ring++){
+            const d=72+(ring%5)*38;
+            const angle=(ring*0.7);
+            for(let k=0;k<8;k++){
+              const a=angle+k*Math.PI/4;
+              moves.push({dx:Math.round(Math.cos(a)*d),dy:Math.round(Math.sin(a)*d)});
+            }
+          }
+          for(const wing of ['north','east','south','west']){
+            await page.evaluate(w=>document.querySelector(`[data-compass-cardinal][data-cardinal-id="${w}"]`)?.click(),wing);
+            await page.waitForFunction(w=>{const root=document.querySelector('[data-compass-root]');return root?.dataset.compassMode==='CLUSTER_OPEN'&&root?.dataset.selectedCardinal===w;},wing,{timeout:10000}).catch(()=>{});
+            await sleep(450);
+            const expected=new Set(Object.entries(declarationMap).filter(([,v])=>v.wing===wing).map(([id])=>id));
+            const seen=new Set();
+            for(let i=0;i<=moves.length&&seen.size<expected.size;i++){
+              const state=await inspect(wing);
+              if(state.foreground&&expected.has(state.foreground)){
+                const declared=declarationMap[state.foreground];
+                const correct=state.visible&&state.renderedRoomId===state.foreground&&state.text===declared.label&&!/^rgb\(0, 0, 0\)$/.test(state.background||'');
+                observations.push({...state,expectedLabel:declared.label,correct});
+                if(correct) seen.add(state.foreground); else fail(`${state.foreground}_RENDERED_LABEL_INVALID`,{state,declared});
+              }
+              if(i<moves.length) await drag(moves[i].dx,moves[i].dy);
+            }
+            const missing=[...expected].filter(id=>!seen.has(id));
+            if(missing.length) fail(`${wing}_FOREGROUND_STATES_MISSING`,{seen:[...seen],missing});
+            await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation?.({source:'foreground-label-render-gate',scrollToScene:false}));
+            await sleep(250);
+          }
+          await page.screenshot({path:'/tmp/compass-foreground-room-label-final.png',fullPage:true});
+          await browser.close();
+          const uniqueCorrect=new Set(observations.filter(item=>item.correct).map(item=>item.foreground));
+          if(uniqueCorrect.size!==19) fail('NINETEEN_FOREGROUND_LABELS_NOT_PROVEN',{count:uniqueCorrect.size,ids:[...uniqueCorrect]});
+          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v1',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:[...uniqueCorrect].sort(),observations,failures};
+          fs.writeFileSync('/tmp/compass-foreground-room-label-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length) process.exit(1);
+          NODE
       - name: Upload runtime filtering evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -175,6 +251,8 @@ jobs:
           name: compass-runtime-qualification-evidence
           path: |
             /tmp/compass-runtime-qualification-receipt.json
+            /tmp/compass-foreground-room-label-receipt.json
+            /tmp/compass-foreground-room-label-final.png
             /tmp/compass-desktop.png
             /tmp/compass-tablet.png
             /tmp/compass-phone.png

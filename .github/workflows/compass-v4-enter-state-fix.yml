@@ -1,0 +1,39 @@
+name: Compass v4 Enter-state correction
+
+on:
+  push:
+    branches:
+      - agent/compass-reconstruction-v4
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/compass-reconstruction-v4
+          fetch-depth: 0
+      - name: Restrict normal Enter action to room context
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('assets/compass/compass.cosmos.js')
+          s=p.read_text()
+          old='if (state.enterButton) state.enterButton.hidden = false;'
+          new='if (state.enterButton) state.enterButton.hidden = stateName !== "room";'
+          if s.count(old) != 1:
+              raise SystemExit(f'expected one Enter visibility assignment, found {s.count(old)}')
+          p.write_text(s.replace(old,new))
+          PY
+          git diff --check
+          grep -F 'state.enterButton.hidden = stateName !== "room"' assets/compass/compass.cosmos.js
+          git rm .github/workflows/compass-v4-enter-state-fix.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/compass/compass.cosmos.js
+          git commit -m 'Show Compass Enter action only for selected room context'
+          git push origin HEAD:agent/compass-reconstruction-v4

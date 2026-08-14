@@ -1,505 +1,310 @@
 @import url('/assets/compass/compass-core.css?v=display-continuity-reference-v2');
 
 /*
-  Compass reference implementation — structural reconstruction v3.
-  Bound to COMPASS_CROSS_ESTATE_AUDIT_ADOPTION_FREEZE_v1.
+  Compass reference implementation — Display Continuity Constitution v2.
 
-  This layer translates mature estate constructs into Compass-local wayfinding:
-  dominant primary object, state-led hierarchy, progressive disclosure, semantic
-  state color, editorial typography, true tablet/mobile recomposition, and a
-  narrative story background that visually carries latent possibility through
-  orientation into chosen movement.
+  This layer remains bounded to the Compass presentation surface. Existing
+  controller, crystal, route, preserved-state, Mirrorland lifecycle, keyboard,
+  reduced-motion, scientific, product, Door, Home, and local-domain authorities
+  remain unchanged.
 
-  STORY_BACKGROUND_FIELD
   Mirrorland remains a threshold behind the map, never a fifth direction.
+
+  v2 corrects the perceptual-fidelity defect in v1: the reference layer must be
+  unmistakably visible as the estate's global orientation instrument rather
+  than reading as a near-identical polish pass over the existing Compass.
 */
 
 [data-compass-root] {
-  --compass-gold: #f3d98b;
-  --compass-cyan: #79ddff;
-  --compass-green: #91e1ba;
-  --compass-violet: #b6a2ff;
-  --compass-orange: #efb775;
-  --compass-ink: #f5f0df;
-  --compass-muted: rgba(231, 235, 233, 0.72);
-  --compass-panel: rgba(5, 10, 18, 0.84);
-  --compass-state: 243, 217, 139;
-  position: relative;
-  isolation: isolate;
-  overflow: clip;
-  background:
-    radial-gradient(circle at 9% 4%, rgba(121, 221, 255, 0.13), transparent 26rem),
-    radial-gradient(circle at 88% 8%, rgba(243, 217, 139, 0.10), transparent 30rem),
-    radial-gradient(circle at 18% 58%, rgba(145, 225, 186, 0.06), transparent 28rem),
-    radial-gradient(circle at 82% 72%, rgba(182, 162, 255, 0.07), transparent 30rem),
-    linear-gradient(180deg, #02060d 0%, #030811 34%, #02050a 68%, #010307 100%);
-  color: var(--compass-ink);
+  --compass-reference-gold: #f3d98b;
+  --compass-reference-gold-soft: rgba(243, 217, 139, 0.42);
+  --compass-reference-cyan: #7cdcff;
+  --compass-reference-cyan-soft: rgba(124, 220, 255, 0.30);
+  --compass-reference-violet: rgba(176, 151, 255, 0.82);
+  --compass-reference-panel: rgba(5, 10, 19, 0.94);
 }
 
-[data-compass-root][data-selected-cardinal="north"] { --compass-state: 243, 217, 139; }
-[data-compass-root][data-selected-cardinal="east"] { --compass-state: 121, 221, 255; }
-[data-compass-root][data-selected-cardinal="south"] { --compass-state: 145, 225, 186; }
-[data-compass-root][data-selected-cardinal="west"] { --compass-state: 182, 162, 255; }
-
-/* Story background: not a generic star field. A quiet transformation spine runs
-   behind the page so the visitor moves through possibility -> pressure ->
-   orientation -> continuation while the Compass remains the foreground authority. */
-[data-compass-root]::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  opacity: 0.82;
-  background:
-    radial-gradient(circle at 14% 12%, rgba(255,255,255,.52) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 79% 17%, rgba(121,221,255,.48) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 61% 38%, rgba(243,217,139,.46) 0 1.1px, transparent 1.8px),
-    radial-gradient(circle at 25% 55%, rgba(145,225,186,.36) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 84% 74%, rgba(182,162,255,.40) 0 1px, transparent 1.7px),
-    radial-gradient(circle at 42% 91%, rgba(239,183,117,.32) 0 1px, transparent 1.7px),
-    linear-gradient(112deg, transparent 0 17%, rgba(121,221,255,.025) 17.2% 17.4%, transparent 17.6% 49%, rgba(243,217,139,.026) 49.2% 49.4%, transparent 49.6% 100%);
-  background-size: 37px 43px, 53px 61px, 71px 79px, 83px 91px, 97px 103px, 113px 127px, auto;
-}
-
-[data-compass-root]::after {
-  content: "LATENT POSSIBILITY   ·   PRESSURE   ·   ORIENTATION   ·   STRUCTURE   ·   EXPRESSION   ·   TEST   ·   EVIDENCE   ·   AGENCY   ·   CONTINUATION";
-  position: fixed;
-  right: 18px;
-  top: 18vh;
-  z-index: -1;
-  width: 12px;
-  writing-mode: vertical-rl;
-  color: rgba(231,235,233,.16);
-  font: 800 .58rem/1.5 Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: .2em;
-  pointer-events: none;
-}
-
-.compass-estate__hall {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: min(1180px, calc(100% - 28px));
-  margin-inline: auto;
-}
-
-.compass-estate__hall > * { order: 20; }
-.compass-estate__header { order: 1; }
-.compass-orbit-intro { order: 2; }
-.compass-scene { order: 3; }
-.compass-panel { order: 4; }
-.compass-introduction { order: 5; }
-.compass-practical-context { order: 6; }
-.compass-supporting-entry { order: 7; }
-.compass-supporting-foundation { order: 8; }
-
-/* Editorial opening: concise, atmospheric, and materially smaller than the
-   navigation instrument that follows it. */
+/* Root identity: make the Compass read as an instrument, not another article. */
 .compass-estate__header {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
-  gap: clamp(24px, 5vw, 70px);
-  align-items: end;
-  min-height: min(52vh, 540px);
-  max-width: 1120px;
-  margin: 0 auto clamp(24px, 4vw, 44px);
-  padding: clamp(52px, 8vw, 96px) clamp(8px, 3vw, 34px) clamp(34px, 5vw, 58px);
-  text-align: left;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  max-width: 980px;
+  margin: 0 auto clamp(30px, 5vw, 64px);
+  padding: clamp(28px, 5vw, 58px) clamp(18px, 4vw, 46px);
+  text-align: center;
+  border: 1px solid rgba(243, 217, 139, 0.28);
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(124, 220, 255, 0.16), transparent 42%),
+    linear-gradient(145deg, rgba(12, 20, 34, 0.96), rgba(3, 7, 14, 0.90));
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(124, 220, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .compass-estate__header::before {
   content: "ESTATE WAYFINDING INSTRUMENT";
-  position: absolute;
-  left: clamp(8px, 3vw, 34px);
-  top: clamp(34px, 6vw, 68px);
-  display: inline-flex;
+  display: block;
   width: max-content;
-  max-width: calc(100% - 40px);
+  max-width: 100%;
+  margin: 0 auto 18px;
   padding: 7px 12px;
-  border: 1px solid rgba(var(--compass-state), .30);
+  border: 1px solid rgba(124, 220, 255, 0.28);
   border-radius: 999px;
-  background: rgba(3, 9, 16, .52);
-  color: rgba(225, 239, 242, .88);
-  font: 850 .67rem/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: .18em;
+  color: rgba(220, 241, 248, 0.90);
+  background: rgba(5, 12, 21, 0.72);
+  font: 850 0.68rem/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  backdrop-filter: blur(10px);
-}
-
-.compass-estate__header::after {
-  content: "A map for what becomes possible.";
-  position: absolute;
-  left: clamp(8px, 3vw, 34px);
-  bottom: 10px;
-  color: rgba(243,217,139,.66);
-  font-family: "Segoe Script", "Bradley Hand", "Brush Script MT", cursive;
-  font-size: clamp(1rem, 2vw, 1.45rem);
-  font-style: italic;
-  transform: rotate(-1.4deg);
-}
-
-.compass-estate__header .compass-estate__kicker {
-  grid-column: 1;
-  margin: 0 0 10px;
-  color: var(--compass-gold);
 }
 
 .compass-estate h1 {
-  grid-column: 1;
-  margin: 0;
-  font-size: clamp(4.2rem, 10vw, 8.1rem);
-  line-height: .82;
-  letter-spacing: -.055em;
-  text-shadow: 0 18px 50px rgba(0,0,0,.48), 0 0 44px rgba(var(--compass-state), .08);
+  font-size: clamp(4rem, 11vw, 8.6rem);
+  line-height: 0.82;
+  text-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.55),
+    0 0 36px rgba(243, 217, 139, 0.10);
 }
 
 .compass-estate__sentence {
-  grid-column: 2;
-  align-self: end;
-  max-width: 32rem;
-  margin: 0 0 10px;
-  color: rgba(231,235,233,.78);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.12rem, 2.1vw, 1.55rem);
-  line-height: 1.48;
+  max-width: 46rem;
+  margin: 24px auto 0;
+  color: rgba(232, 238, 238, 0.82);
+  font-size: clamp(1rem, 1.7vw, 1.22rem);
+  line-height: 1.65;
   text-wrap: balance;
 }
 
-/* Global orientation is a compact instrument legend, not another large card. */
+/* Global orientation handoff: a clear bridge from explanation to navigation. */
 .compass-orbit-intro {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 18px 30px;
-  align-items: end;
-  max-width: 1120px;
-  width: 100%;
-  margin: 0 auto 14px;
-  padding: 18px 20px 20px;
-  overflow: visible;
-  border: 0;
-  border-top: 1px solid rgba(var(--compass-state), .28);
-  border-bottom: 1px solid rgba(225,235,238,.10);
-  border-radius: 0;
-  background: linear-gradient(90deg, rgba(var(--compass-state), .06), transparent 48%);
-  box-shadow: none;
+  max-width: 980px;
+  margin: clamp(40px, 7vw, 84px) auto 24px;
+  padding: clamp(28px, 4vw, 46px);
+  overflow: hidden;
+  border: 1px solid rgba(243, 217, 139, 0.42);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(243, 217, 139, 0.13), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(124, 220, 255, 0.13), transparent 32%),
+    linear-gradient(135deg, rgba(10, 18, 31, 0.97), rgba(4, 9, 17, 0.93));
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.34),
+    0 0 42px rgba(124, 220, 255, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
 }
 
+/* Reset the core pseudo-element box before using it as an actual label. */
 .compass-orbit-intro::before {
   content: "GLOBAL ORIENTATION";
   position: static;
-  grid-column: 1 / -1;
+  inset: auto;
   display: block;
   width: max-content;
-  margin: 0;
-  color: rgb(var(--compass-state));
-  font: 900 .70rem/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: .22em;
+  max-width: 100%;
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: var(--compass-reference-gold);
+  background: none;
+  font: 900 0.72rem/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-}
-
-.compass-orbit-intro .compass-estate__kicker { display: none; }
-.compass-orbit-intro h2 {
-  margin: 0;
-  max-width: 760px;
-  font-size: clamp(2rem, 4.5vw, 3.8rem);
-  line-height: .95;
-  letter-spacing: -.04em;
-}
-.compass-orbit-intro > p { margin: 0; max-width: 42rem; color: var(--compass-muted); }
-.compass-orientation__aid {
-  grid-column: 2;
-  grid-row: 2 / span 2;
-  align-self: center;
-  display: inline-flex;
-  max-width: 250px;
-  padding: 10px 14px;
-  border: 1px solid rgba(121,221,255,.24);
-  border-radius: 999px;
-  background: rgba(4,12,20,.54);
-  color: rgba(228,241,245,.88);
-  text-align: center;
-  box-shadow: none;
-}
-
-/* Primary object dominance. */
-.compass-scene {
-  position: relative;
-  width: 100%;
-  min-height: clamp(650px, 82vh, 900px);
-  margin: 0 auto;
-  border: 1px solid rgba(var(--compass-state), .42);
-  border-radius: 42px;
-  box-shadow:
-    0 54px 140px rgba(0,0,0,.52),
-    0 0 0 1px rgba(121,221,255,.05),
-    0 0 110px rgba(var(--compass-state), .08),
-    inset 0 0 180px rgba(0,0,0,.30),
-    inset 0 1px 0 rgba(255,255,255,.08);
-  transition: border-color .28s ease, box-shadow .28s ease;
-}
-
-.compass-scene::after {
-  content: "N  ·  E  ·  S  ·  W";
-  position: absolute;
-  left: 50%;
-  bottom: 18px;
-  z-index: 4;
-  transform: translateX(-50%);
-  color: rgba(var(--compass-state), .72);
-  font: 900 .63rem/1 Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: .46em;
   pointer-events: none;
 }
 
-/* Cardinal authority receives semantic state color. Peers recede, never vanish. */
-[data-cardinal-id="north"] { --cardinal-rgb: 243, 217, 139; }
-[data-cardinal-id="east"] { --cardinal-rgb: 121, 221, 255; }
-[data-cardinal-id="south"] { --cardinal-rgb: 145, 225, 186; }
-[data-cardinal-id="west"] { --cardinal-rgb: 182, 162, 255; }
+.compass-orbit-intro h2 {
+  max-width: 760px;
+  font-size: clamp(2rem, 4.5vw, 3.7rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
 
+.compass-orientation__aid {
+  display: inline-flex;
+  margin-top: 20px;
+  padding: 10px 14px;
+  border: 1px solid rgba(124, 220, 255, 0.26);
+  border-radius: 999px;
+  background: rgba(7, 15, 25, 0.74);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+}
+
+/* The constellation becomes the dominant object on the page. */
+.compass-scene {
+  min-height: clamp(560px, 72vh, 820px);
+  border: 2px solid rgba(243, 217, 139, 0.34);
+  border-radius: 38px;
+  box-shadow:
+    0 44px 120px rgba(0, 0, 0, 0.52),
+    0 0 0 1px rgba(124, 220, 255, 0.08),
+    0 0 70px rgba(124, 220, 255, 0.09),
+    inset 0 0 140px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+/* The inline cosmos block intentionally owns the scene background. Keep the
+   reference contribution to the border geometry so authority is not doubled. */
+.compass-scene::before {
+  border: 1px solid rgba(243, 217, 139, 0.24);
+  opacity: 0.58;
+}
+
+/* Four cardinal anchors: equal authority, visibly stronger than room proxies. */
 [data-compass-cardinal] {
-  min-width: 150px;
-  max-width: 188px;
+  min-width: 156px;
+  max-width: 190px;
   padding: 13px 16px;
-  border: 1px solid rgba(var(--cardinal-rgb), .48);
+  border: 1px solid rgba(243, 217, 139, 0.48);
   background:
-    radial-gradient(circle at 50% 0%, rgba(var(--cardinal-rgb), .16), transparent 58%),
-    linear-gradient(145deg, rgba(7,15,26,.96), rgba(14,25,37,.92));
-  box-shadow: 0 16px 38px rgba(0,0,0,.36), 0 0 26px rgba(var(--cardinal-rgb), .11), inset 0 1px 0 rgba(255,255,255,.09);
-  transition: opacity .24s ease, transform .24s ease, border-color .24s ease, box-shadow .24s ease, filter .24s ease;
+    radial-gradient(circle at 50% 0%, rgba(243, 217, 139, 0.12), transparent 55%),
+    linear-gradient(145deg, rgba(10, 18, 30, 0.98), rgba(20, 32, 46, 0.94));
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.38),
+    0 0 24px rgba(124, 220, 255, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
 }
 
 [data-compass-cardinal] span:first-child {
-  color: rgb(var(--cardinal-rgb));
-  font-size: .88rem;
-  letter-spacing: .12em;
+  color: rgba(255, 249, 226, 1);
+  font-size: 0.86rem;
+  letter-spacing: 0.11em;
 }
-[data-compass-cardinal] span:last-child { margin-top: 3px; color: rgba(225,234,237,.76); font-size: .68rem; }
+
+[data-compass-cardinal] span:last-child {
+  margin-top: 3px;
+  color: rgba(222, 234, 238, 0.82);
+  font-size: 0.70rem;
+}
 
 [data-compass-cardinal]:hover,
-[data-compass-cardinal]:focus-visible {
-  transform: translateY(-2px);
-  border-color: rgba(var(--cardinal-rgb), .88);
-  box-shadow: 0 20px 46px rgba(0,0,0,.42), 0 0 38px rgba(var(--cardinal-rgb), .22), inset 0 1px 0 rgba(255,255,255,.12);
+[data-compass-cardinal]:focus-visible,
+[data-compass-cardinal][data-active="true"],
+[data-compass-cardinal][data-selected="true"],
+[data-compass-cardinal][aria-current="true"] {
+  border-color: rgba(243, 217, 139, 0.88);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(243, 217, 139, 0.22), transparent 60%),
+    linear-gradient(145deg, rgba(30, 27, 19, 0.98), rgba(12, 29, 41, 0.96));
+  box-shadow:
+    0 20px 46px rgba(0, 0, 0, 0.42),
+    0 0 34px rgba(243, 217, 139, 0.18),
+    0 0 26px rgba(124, 220, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
 }
 
-[data-compass-root][data-selected-cardinal="north"] [data-cardinal-id]:not([data-cardinal-id="north"]),
-[data-compass-root][data-selected-cardinal="east"] [data-cardinal-id]:not([data-cardinal-id="east"]),
-[data-compass-root][data-selected-cardinal="south"] [data-cardinal-id]:not([data-cardinal-id="south"]),
-[data-compass-root][data-selected-cardinal="west"] [data-cardinal-id]:not([data-cardinal-id="west"]) {
-  opacity: .36;
-  filter: saturate(.55) brightness(.72);
-}
-
-[data-compass-root][data-selected-cardinal="north"] [data-cardinal-id="north"],
-[data-compass-root][data-selected-cardinal="east"] [data-cardinal-id="east"],
-[data-compass-root][data-selected-cardinal="south"] [data-cardinal-id="south"],
-[data-compass-root][data-selected-cardinal="west"] [data-cardinal-id="west"] {
-  opacity: 1;
-  transform: scale(1.05);
-  border-color: rgba(var(--cardinal-rgb), .96);
-  box-shadow: 0 26px 56px rgba(0,0,0,.48), 0 0 48px rgba(var(--cardinal-rgb), .28), inset 0 1px 0 rgba(255,255,255,.14);
-}
-
+/* Mirrorland is a subordinate threshold, visibly unlike the four directions. */
 .compass-object--mirrorland {
-  border: 1px dashed rgba(182,162,255,.44);
-  background: radial-gradient(circle at 50% 0%, rgba(182,162,255,.12), transparent 60%), linear-gradient(145deg, rgba(20,15,36,.82), rgba(7,15,26,.78));
-  box-shadow: 0 12px 32px rgba(0,0,0,.28), 0 0 24px rgba(182,162,255,.07);
-  opacity: .42;
+  border: 1px dashed rgba(176, 151, 255, 0.48);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(176, 151, 255, 0.13), transparent 60%),
+    linear-gradient(145deg, rgba(20, 15, 36, 0.88), rgba(7, 15, 26, 0.84));
+  box-shadow:
+    0 12px 34px rgba(0, 0, 0, 0.30),
+    0 0 24px rgba(176, 151, 255, 0.08);
+  opacity: 0.58;
 }
+
 .compass-object--mirrorland:hover,
 .compass-object--mirrorland:focus-visible,
 .compass-object--mirrorland[data-active="true"],
-.compass-object--mirrorland[data-selected="true"] { opacity: .88; border-color: rgba(182,162,255,.84); }
+.compass-object--mirrorland[data-selected="true"] {
+  border-color: rgba(176, 151, 255, 0.86);
+  opacity: 0.92;
+}
 
-/* Selection panel becomes the state ledger immediately beneath the instrument. */
 .compass-panel {
-  position: relative;
-  width: min(920px, calc(100% - 34px));
-  margin: -28px auto 36px;
-  z-index: 6;
-  padding: clamp(22px, 4vw, 38px);
-  border: 1px solid rgba(var(--compass-state), .34);
-  border-radius: 28px;
-  background: linear-gradient(145deg, rgba(7,15,26,.96), rgba(3,7,13,.94));
-  box-shadow: 0 28px 74px rgba(0,0,0,.44), 0 0 36px rgba(var(--compass-state), .06), inset 0 1px 0 rgba(255,255,255,.06);
-  backdrop-filter: blur(18px);
-}
-.compass-panel__eyebrow { color: rgb(var(--compass-state)); letter-spacing: .18em; }
-.compass-panel h2 { font-size: clamp(2rem, 4vw, 3.2rem); }
-[data-compass-enter] { background: linear-gradient(135deg, rgba(var(--compass-state), .96), rgba(var(--compass-state), .62)); }
-
-/* Narrative threshold now follows orientation. It explains why the map exists
-   after the visitor has actually encountered it. */
-.compass-introduction,
-.compass-practical-context,
-.compass-supporting-entry,
-.compass-supporting-foundation {
-  width: min(1040px, 100%);
-  margin-inline: auto;
+  border: 1px solid rgba(243, 217, 139, 0.30);
+  background:
+    linear-gradient(145deg, rgba(9, 16, 27, 0.97), rgba(4, 8, 15, 0.96));
+  box-shadow:
+    0 24px 72px rgba(0, 0, 0, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-.compass-introduction {
-  position: relative;
-  margin-top: clamp(28px, 5vw, 62px);
-  padding: clamp(28px, 5vw, 52px);
-  border: 0;
-  border-left: 1px solid rgba(243,217,139,.36);
-  border-radius: 0;
-  background: linear-gradient(90deg, rgba(243,217,139,.055), transparent 68%);
-}
-.compass-introduction::before {
-  content: "WHY THE COMPASS EXISTS";
-  display: block;
-  margin-bottom: 14px;
-  color: var(--compass-gold);
-  font: 900 .69rem/1.2 Inter, ui-sans-serif, system-ui, sans-serif;
-  letter-spacing: .2em;
-}
-.compass-introduction > p:first-child {
-  max-width: 800px;
-  margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.45rem, 3vw, 2.25rem);
-  line-height: 1.35;
-  color: rgba(245,240,223,.92);
-}
-.compass-introduction__more { margin-top: 20px; }
-.compass-introduction__more > summary { width: max-content; max-width: 100%; }
-
-.compass-practical-context {
-  margin-top: 16px;
-  border-color: rgba(121,221,255,.18);
-  background: rgba(4,10,18,.52);
-}
-.compass-practical-context__summary { min-height: 74px; }
-.compass-practical-context__title { font-size: clamp(1.18rem, 2.5vw, 1.7rem); }
-
-/* Direct destinations are a compact orientation dock, not a second homepage. */
-.compass-supporting-entry {
-  margin-top: clamp(42px, 7vw, 84px);
-  padding: clamp(24px, 4vw, 42px);
-  border: 1px solid rgba(225,235,238,.10);
-  border-radius: 30px;
-  background: linear-gradient(145deg, rgba(5,11,19,.74), rgba(2,6,11,.62));
-}
-.compass-supporting-entry > p:not(.compass-estate__kicker) { max-width: 760px; }
-.compass-route-deck { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
-.compass-route-card { min-height: 0; padding: 16px; }
-.compass-route-card__label { font-size: 1.15rem; }
-.compass-route-card__purpose { font-size: .82rem; line-height: 1.45; opacity: .72; }
-.compass-value-deck { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
-.compass-value-card { min-height: 0; padding: 18px; }
-
-/* Engineering stays available but enters as progressively disclosed artifacts. */
-.compass-supporting-foundation {
-  margin-top: 20px;
-  padding: clamp(22px, 4vw, 38px);
-  border: 1px solid rgba(225,235,238,.09);
-  border-radius: 28px;
-  background: rgba(3,8,14,.50);
-}
-.compass-supporting-foundation__header {
-  display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(260px,.7fr);
-  gap: 18px 32px;
-  align-items: end;
-  margin-bottom: 18px;
-}
-.compass-supporting-foundation__header .compass-estate__kicker { grid-column: 1 / -1; }
-.compass-supporting-foundation__header h2 { margin: 0; font-size: clamp(1.8rem, 4vw, 3.1rem); }
-.compass-supporting-foundation__header > p { margin: 0; color: var(--compass-muted); }
-.compass-formula-artifact { margin-top: 9px; }
-.compass-formula-artifact > summary { min-height: 76px; padding-block: 14px; }
-
-/* Remaining long-form disclosures become a quiet archive behind the route, not
-   equal-weight black rectangles competing with the Compass. */
-.compass-estate__hall > details:not(.compass-practical-context):not(.compass-formula-artifact) {
-  width: min(1040px, 100%);
-  margin: 10px auto 0;
-  border-color: rgba(225,235,238,.08);
-  background: rgba(3,8,14,.42);
-}
-.compass-estate__hall > details:not([open]) { min-height: 0; }
-
-/* State continuity propagates beyond the instrument. */
-[data-compass-root][data-selected-cardinal]:not([data-selected-cardinal=""]) .compass-panel,
-[data-compass-root][data-selected-cardinal]:not([data-selected-cardinal=""]) .compass-orbit-intro {
-  border-color: rgba(var(--compass-state), .44);
-}
-
-@media (max-width: 980px) {
-  .compass-estate__header { grid-template-columns: 1fr; min-height: auto; padding-top: 92px; }
-  .compass-estate__sentence { grid-column: 1; max-width: 46rem; }
-  .compass-orbit-intro { grid-template-columns: 1fr; }
-  .compass-orientation__aid { grid-column: 1; grid-row: auto; max-width: none; width: max-content; }
-  .compass-route-deck { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .compass-supporting-foundation__header { grid-template-columns: 1fr; }
+[data-compass-return-to-orbit],
+[data-compass-mirrorland-back] {
+  font-weight: 850;
 }
 
 @media (max-width: 820px) {
-  [data-compass-root]::after { display: none; }
-  .compass-estate__hall { width: min(100% - 18px, 1180px); }
   .compass-estate__header {
-    padding: 86px 12px 44px;
-    margin-bottom: 14px;
+    text-align: left;
+    border-radius: 28px;
   }
-  .compass-estate__header::before { left: 12px; top: 44px; }
-  .compass-estate__header::after { left: 12px; bottom: 8px; }
-  .compass-estate h1 { font-size: clamp(3.8rem, 16vw, 6.2rem); }
-  .compass-estate__sentence { font-size: clamp(1.1rem, 3vw, 1.35rem); }
-  .compass-orbit-intro { padding: 16px 10px 18px; }
-  .compass-scene { min-height: clamp(560px, 76svh, 760px); border-radius: 30px; }
-  .compass-panel { width: calc(100% - 18px); margin-top: -18px; border-radius: 24px; }
-  [data-compass-cardinal] { min-width: 122px; max-width: 148px; padding: 10px 11px; }
-  .compass-introduction { padding: 28px 18px 28px 22px; }
-  .compass-supporting-entry,
-  .compass-supporting-foundation { padding: 22px 16px; border-radius: 24px; }
+
+  .compass-estate__header::before,
+  .compass-orbit-intro::before {
+    margin-inline: 0;
+  }
+
+  .compass-estate__sentence {
+    margin-inline: 0;
+  }
+
+  .compass-orbit-intro {
+    border-radius: 24px;
+  }
+
+  .compass-scene {
+    min-height: clamp(500px, 70svh, 680px);
+    border-radius: 30px;
+  }
+
+  [data-compass-cardinal] {
+    min-width: 126px;
+    max-width: 154px;
+    padding: 10px 12px;
+  }
 }
 
 @media (max-width: 560px) {
-  [data-compass-root] {
-    background:
-      radial-gradient(circle at 15% 5%, rgba(121,221,255,.11), transparent 19rem),
-      radial-gradient(circle at 85% 17%, rgba(243,217,139,.08), transparent 20rem),
-      linear-gradient(180deg, #02060d, #02050a 58%, #010307);
+  .compass-estate__header {
+    margin-bottom: 36px;
+    padding: 24px 18px 28px;
+    border-radius: 24px;
   }
-  [data-compass-root]::before { opacity: .54; background-size: 47px 53px, 67px 73px, 83px 91px, 101px 107px, 119px 127px, 137px 149px, auto; }
-  .compass-estate__header { padding-top: 82px; padding-bottom: 52px; }
-  .compass-estate__header::before { font-size: .60rem; letter-spacing: .14em; }
-  .compass-estate__header::after { font-size: 1rem; }
-  .compass-estate h1 { font-size: clamp(3.5rem, 18vw, 5.1rem); }
-  .compass-orbit-intro h2 { font-size: clamp(1.8rem, 9vw, 2.65rem); }
-  .compass-orientation__aid { width: 100%; justify-content: center; }
-  .compass-scene { min-height: 74svh; border-radius: 24px; }
-  .compass-scene::after { font-size: .55rem; letter-spacing: .34em; }
-  [data-compass-cardinal] { min-width: 98px; max-width: 118px; padding: 8px; }
-  [data-compass-cardinal] span:first-child { font-size: .68rem; }
-  [data-compass-cardinal] span:last-child { font-size: .56rem; }
-  .compass-panel { padding: 20px 17px 22px; }
-  .compass-route-deck,
-  .compass-value-deck { grid-template-columns: 1fr; }
-  .compass-route-card__purpose { display: none; }
-  .compass-supporting-foundation__header h2 { font-size: 1.75rem; }
-  .compass-object--mirrorland { opacity: .34; }
+
+  .compass-estate h1 {
+    font-size: clamp(3.5rem, 18vw, 5.4rem);
+  }
+
+  .compass-orbit-intro {
+    margin-top: 46px;
+    padding: 22px 18px 24px;
+  }
+
+  .compass-scene {
+    min-height: 72svh;
+    border-radius: 24px;
+  }
+
+  [data-compass-cardinal] {
+    min-width: 104px;
+    max-width: 126px;
+    padding: 8px 9px;
+  }
+
+  [data-compass-cardinal] span:first-child {
+    font-size: 0.70rem;
+  }
+
+  [data-compass-cardinal] span:last-child {
+    font-size: 0.58rem;
+  }
+
+  .compass-object--mirrorland {
+    opacity: 0.48;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .compass-scene,
+  .compass-scene::before,
+  .compass-scene::after,
   [data-compass-cardinal],
-  .compass-object--mirrorland,
-  .compass-panel { transition: none !important; }
-  [data-compass-cardinal]:hover,
-  [data-compass-cardinal]:focus-visible,
-  [data-compass-root][data-selected-cardinal="north"] [data-cardinal-id="north"],
-  [data-compass-root][data-selected-cardinal="east"] [data-cardinal-id="east"],
-  [data-compass-root][data-selected-cardinal="south"] [data-cardinal-id="south"],
-  [data-compass-root][data-selected-cardinal="west"] [data-cardinal-id="west"] { transform: none; }
+  .compass-object--mirrorland {
+    animation: none !important;
+    transition: none !important;
+  }
 }

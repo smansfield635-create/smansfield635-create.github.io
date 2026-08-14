@@ -1,8 +1,8 @@
 /**
- * H-Earth repository registry validator dependency loader v12 successor.
+ * H-Earth repository registry validator dependency loader v13 successor.
  *
  * Preserves the complete predecessor chain and adds audit-only path recognition
- * for the exact H-Earth Awards public-face occurrence blocked by PR #935.
+ * for the four OW01 derivative paths required by automatic pre-mutation preflight.
  */
 
 import {
@@ -24,9 +24,12 @@ import {
 import {
   verifyHEarthInWorldLiveGPUBindingPathRecognition
 } from './accepted-amendments/h-earth.repository-registry.in-world-live-gpu-binding-path-recognition.js';
-import registryFacade, {
+import {
   verifyHEarthAwardsPublicFacePathRecognition
 } from './accepted-amendments/h-earth.repository-registry.awards-public-face-path-recognition.js';
+import registryFacade, {
+  verifyHEarthOW01DerivativePathRecognition
+} from './accepted-amendments/h-earth.repository-registry.ow01-derivative-path-recognition.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -45,6 +48,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     verifyHEarthInWorldLiveGPUBindingPathRecognition();
   const awardsPublicFacePathRecognitionVerification =
     verifyHEarthAwardsPublicFacePathRecognition();
+  const ow01DerivativePathRecognitionVerification =
+    verifyHEarthOW01DerivativePathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -123,6 +128,23 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       awardsPublicFacePathRecognitionVerification.checks.noAwardsMutationAuthority === true &&
       awardsPublicFacePathRecognitionVerification.checks.noAwardOutcomeAuthority === true &&
       awardsPublicFacePathRecognitionVerification.checks.noCanonicalAuthority === true,
+    ow01DerivativePathRecognitionEligible:
+      ow01DerivativePathRecognitionVerification.eligible === true,
+    ow01ExactFourTargetPathsResolved:
+      ow01DerivativePathRecognitionVerification.checks.exactTargetPathCount === true &&
+      ow01DerivativePathRecognitionVerification.checks.allTargetPathsResolve === true,
+    ow01ExistingBlobCustodyPreserved:
+      ow01DerivativePathRecognitionVerification.checks.exactLatticeBlob === true &&
+      ow01DerivativePathRecognitionVerification.checks.exactZonesBlob === true &&
+      ow01DerivativePathRecognitionVerification.checks.exactControllerBlob === true,
+    ow01EnvironmentalAudioAbsencePreserved:
+      ow01DerivativePathRecognitionVerification.checks.environmentalAudioAbsentAtBaseline === true,
+    ow01AuditOnlyNoAuthorityLeak:
+      ow01DerivativePathRecognitionVerification.checks.auditOnly === true &&
+      ow01DerivativePathRecognitionVerification.checks.pathResolutionOnly === true &&
+      ow01DerivativePathRecognitionVerification.checks.noProductAuthority === true &&
+      ow01DerivativePathRecognitionVerification.checks.noRuntimeAuthority === true &&
+      ow01DerivativePathRecognitionVerification.checks.noCanonicalAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -142,7 +164,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v12_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v13_OW01_DERIVATIVE_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -159,7 +181,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       inWorldLiveGPUBindingPathRecognition:
         inWorldLiveGPUBindingPathRecognitionVerification.eligible === true,
       awardsPublicFacePathRecognition:
-        awardsPublicFacePathRecognitionVerification.eligible === true
+        awardsPublicFacePathRecognitionVerification.eligible === true,
+      ow01DerivativePathRecognition:
+        ow01DerivativePathRecognitionVerification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
@@ -225,6 +249,19 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       awardsAuditOnlyNoAuthorityLeak:
         successorChecks.awardsAuditOnlyNoAuthorityLeak
     }),
+    ow01DerivativePathRecognitionVerification,
+    ow01DerivativePathRecognitionChecks: deepFreeze({
+      ow01DerivativePathRecognitionEligible:
+        successorChecks.ow01DerivativePathRecognitionEligible,
+      ow01ExactFourTargetPathsResolved:
+        successorChecks.ow01ExactFourTargetPathsResolved,
+      ow01ExistingBlobCustodyPreserved:
+        successorChecks.ow01ExistingBlobCustodyPreserved,
+      ow01EnvironmentalAudioAbsencePreserved:
+        successorChecks.ow01EnvironmentalAudioAbsencePreserved,
+      ow01AuditOnlyNoAuthorityLeak:
+        successorChecks.ow01AuditOnlyNoAuthorityLeak
+    }),
     boundary: deepFreeze({
       ...base.boundary,
       liveExperienceAcceptedOccurrenceProvenanceOnly: true,
@@ -257,7 +294,12 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       awardsOutcomeAuthorityCreated: false,
       awardsSemanticCanonicalAuthorityCreated: false,
       awardsHEarthRuntimeRendererTerrainGeometryWorldGameplayAuthorityCreated: false,
-      awardsMergeDeploymentPublicationAuthorityCreated: false
+      awardsMergeDeploymentPublicationAuthorityCreated: false,
+      ow01DerivativePathRecognitionOnly: true,
+      ow01TerrainZoneControllerAudioMutationAuthorityCreated: false,
+      ow01ProductRuntimeRendererGeometryWorldGameplayAuthorityCreated: false,
+      ow01CanonicalIdentityAuthorityCreated: false,
+      ow01MergeDeploymentPublicationAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
@@ -289,7 +331,12 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       awardsProductMutationAuthorized: false,
       awardsOutcomeAuthorityAuthorized: false,
       awardsCanonicalIdentityAuthorityAuthorized: false,
-      awardsMergeDeploymentPublicationAuthorized: false
+      awardsMergeDeploymentPublicationAuthorized: false,
+      ow01DerivativePathRecognitionLoaded: true,
+      ow01TerrainZoneControllerAudioMutationAuthorized: false,
+      ow01ProductRuntimeRendererGeometryWorldGameplayAuthorized: false,
+      ow01CanonicalIdentityAuthorityAuthorized: false,
+      ow01MergeDeploymentPublicationAuthorized: false
     })
   });
 }

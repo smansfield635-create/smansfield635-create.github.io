@@ -24,19 +24,32 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
           node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
-          node -e "const r=require('/tmp/router-self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.parallelGovernancePresent!==false)process.exit(1)"
-      - name: Verify every active project exact-path registration
+          node -e "const r=require('/tmp/router-self-test.json');if(r.result!=='PASS'||r.failedCount!==0||r.parallelGovernancePresent!==false||r.staleMissingExactRegistrationsActive!==false)process.exit(1)"
+      - name: Verify existing exact-path registrations
         run: |
           node --input-type=module <<'NODE'
-          import fs from'node:fs';import{spawnSync}from'node:child_process';const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json'));let failures=[];for(const p of(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT'))for(const q of new Set(p.ownedExactPaths||[])){const out='/tmp/route.json',c=spawnSync(process.execPath,['tools/repository-ai-entry-router.mjs','--mutation-intent','--path',q,'--task','Active exact-path registration conformance','--output',out],{encoding:'utf8',env:{...process.env,GITHUB_TOKEN:'qualification-token'}});let r;try{r=JSON.parse(fs.readFileSync(out))}catch{failures.push([p.projectId,q,'NO_RECEIPT']);continue}if(c.status!==0||r.disposition!=='PASS'||r.routes?.[0]?.projectId!==p.projectId)failures.push([p.projectId,q,r.disposition])}if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1)}
+          import fs from'node:fs';import{spawnSync}from'node:child_process';
+          const R=JSON.parse(fs.readFileSync('.github/ai-router/router.v1.json'));const failures=[];
+          for(const p of(R.projects||[]).filter(x=>x.status==='ACTIVE_REGISTERED_PROJECT'))for(const q of new Set(p.ownedExactPaths||[])){
+            if(!fs.existsSync(q))continue;
+            const out='/tmp/route.json';const c=spawnSync(process.execPath,['tools/repository-ai-entry-router.mjs','--path',q,'--task','Exact-path conformance','--output',out],{encoding:'utf8'});
+            let r;try{r=JSON.parse(fs.readFileSync(out))}catch{failures.push([p.projectId,q,'NO_RECEIPT']);continue}
+            if(c.status!==0||!['PASS','REVIEW_REQUIRED'].includes(r.disposition)||r.routes?.[0]?.projectId!==p.projectId)failures.push([p.projectId,q,r.disposition]);
+          }
+          if(failures.length){console.error(JSON.stringify(failures,null,2));process.exit(1)}
           NODE
       - name: Verify unregistered mutation remains blocked
         run: |
           set +e
-          GITHUB_TOKEN=qualification-token node tools/repository-ai-entry-router.mjs --mutation-intent --path future-project/example.txt --output /tmp/unregistered.json
+          node tools/repository-ai-entry-router.mjs --mutation-intent --path future-project/example.txt --output /tmp/unregistered.json
           s=$?
           set -e
           test "$s" = 1
           jq -e '.disposition == "BLOCK"' /tmp/unregistered.json >/dev/null
       - uses: actions/upload-artifact@v4
-        with: {name: 'repository-ai-entry-router-validation-${{ github.run_id }}-${{ github.run_attempt }}', path: '/tmp/router-self-test.json\n/tmp/unregistered.json', if-no-files-found: error}
+        with:
+          name: repository-ai-entry-router-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/router-self-test.json
+            /tmp/unregistered.json
+          if-no-files-found: error

@@ -1,0 +1,43 @@
+name: Compass reference v2 cache identity
+
+on:
+  push:
+    branches:
+      - agent/compass-reference-visual-fidelity-v2
+
+permissions:
+  contents: write
+
+jobs:
+  update-cache-identity:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/compass-reference-visual-fidelity-v2
+          fetch-depth: 0
+      - name: Apply exact stylesheet identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          old='compass.css?v=display-continuity-reference-v1'
+          new='compass.css?v=display-continuity-reference-v2'
+          before="$(grep -o "$old" index.html | wc -l | tr -d ' ')"
+          test "$before" = "1"
+          sed -i "s/$old/$new/" index.html
+          after_old="$(grep -o "$old" index.html 2>/dev/null | wc -l | tr -d ' ' || true)"
+          after_new="$(grep -o "$new" index.html | wc -l | tr -d ' ')"
+          test "$after_old" = "0"
+          test "$after_new" = "1"
+          git diff --check -- index.html
+      - name: Commit exact cache identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Advance Compass reference cache identity to v2'
+          git push origin HEAD:agent/compass-reference-visual-fidelity-v2

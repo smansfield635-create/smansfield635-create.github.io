@@ -103,6 +103,75 @@
       "NO_REPEATED_LARGE_EDITORIAL_CONTAINER_ACCUMULATION"
     ]
   },
+  "boundedContextualRefinement20260814": {
+    "status": "PLANNED_CONTEXTUAL_REFINEMENT_NO_ARCHITECTURE_REPLACEMENT",
+    "source": "Owner live-device review plus repository-grounded excellence and narrative archive audit on 2026-08-14.",
+    "classification": "COPY_AFFORDANCE_AND_CONTEXT_CLARIFICATION_ONLY",
+    "preserve": [
+      "FOUR_CARDINAL_STRUCTURE",
+      "DIRECT_MANIPULATION_COMPASS",
+      "CURRENT_SPATIAL_GEOMETRY",
+      "CURRENT_ROOM_TOPOLOGY_AND_ROUTES",
+      "CURRENT_CLUSTER_MODEL",
+      "CURRENT_FOREGROUND_ROOM_CONTEXT_SYNCHRONIZATION",
+      "MIRRORLAND_SPECIAL_THRESHOLD_BEHAVIOR",
+      "PROGRESSIVE_DISCLOSURE",
+      "AQUARIUM_AUDIO_DIRECTION_AND_USER_ACTIVATION_MODEL"
+    ],
+    "plannedCorrections": [
+      {
+        "id": "MIRRORLAND_DISCOVERY_TO_AFFORDANCE",
+        "problem": "Once Mirrorland is visible, repeating 'hidden entrance' or 'you found the hidden entrance' describes designer knowledge instead of telling the visitor what the discovered door does.",
+        "requiredOutcome": "After discovery, Mirrorland copy must explain that the visitor can enter through the door to choose a world or experience. Mystery may precede discovery but may not replace post-discovery affordance.",
+        "exampleDirection": "Mirrorland — enter through the door to choose a world or experience."
+      },
+      {
+        "id": "PRIMARY_INTERACTION_VERBS",
+        "problem": "Navigation instructions remain more abstract than the now-simple interaction requires.",
+        "requiredOutcome": "Primary instructions should make ROTATE -> SELECT -> ENTER immediately understandable while preserving authored language around the Compass.",
+        "mirrorlandException": "Clarify that Mirrorland opens its door/route chooser before the visitor chooses the experience beyond it."
+      },
+      {
+        "id": "DEFAULT_CONTEXT_PANEL_PLAIN_LANGUAGE",
+        "problem": "Resting-state phrases such as 'Cardinal preview' and 'Preview does not navigate' read as interface documentation rather than estate orientation.",
+        "requiredOutcome": "Use visitor-facing language that asks where the visitor wants to go and explains that bringing a direction forward reveals what is there."
+      },
+      {
+        "id": "NORTH_INTENT_CLARITY",
+        "problem": "North currently enumerates products, guide, front door, builder context, and philosophy instead of expressing a visitor intent as clearly as East, South, and West.",
+        "requiredOutcome": "North should communicate understanding/orientation as the reason to enter; individual North rooms retain their specific identities and routes."
+      },
+      {
+        "id": "OPTIONAL_INTRODUCTION_DENSITY_TRIM",
+        "problem": "The expanded Diamond Gate explanation contains multiple adjacent metaphors and may carry more prose than needed.",
+        "requiredOutcome": "If edited, reduce wording only where meaning is duplicated. Preserve the estate-first premise, interdisciplinary purpose, outside-the-cube question, and optional disclosure structure."
+      }
+    ],
+    "explicitNonGoals": [
+      "NO_NEW_COMPASS_GEOMETRY",
+      "NO_NEW_NAVIGATION_ARCHITECTURE",
+      "NO_VISIBLE_PREVIOUS_NEXT_PRIMARY_CONTROLS",
+      "NO_CAROUSEL_SUBSTITUTION",
+      "NO_TUTORIAL_OVERLAY",
+      "NO_NEW_INFORMATION_PANEL",
+      "NO_ROOM_TOPOLOGY_CHANGE",
+      "NO_ROUTE_CHANGE",
+      "NO_SCIENTIFIC_CLAIM_CHANGE",
+      "NO_AWARDS_READINESS_CLAIM",
+      "NO_EXTREME_NEW_AUDIT_PROGRAM"
+    ],
+    "reviewPosture": "NARROW_PROCEDURAL_REVIEW_APPROPRIATE",
+    "minimumVerification": [
+      "ONLY_INTENDED_COMPASS_COPY_OR_EXISTING_AFFORDANCE_BINDINGS_CHANGED",
+      "ALL_19_ROOM_IDENTITIES_AND_ROUTES_PRESERVED",
+      "MIRRORLAND_BACK_AND_ROUTE_CHOOSER_PRESERVED",
+      "ENTER_AUTHORITY_AND_FOREGROUND_ROOM_SYNCHRONIZATION_PRESERVED",
+      "AQUARIUM_AUDIO_BEHAVIOR_PRESERVED",
+      "DESKTOP_TABLET_PHONE_CONTEXT_REMAINS_LEGIBLE",
+      "NO_REGRESSION_TO_BUILDER_FACING_OR_OVERLY_ABSTRACT_PRIMARY_COPY"
+    ],
+    "stopLaw": "If implementation requires new geometry, new destination topology, new navigation mechanics, scientific authority changes, or a substitute interaction architecture, stop and reclassify before construction."
+  },
   "qualificationAmendment": {
     "law": "Technical Playwright green is insufficient. Exact-candidate qualification must include display-fidelity regression assertions and downstream visual/perceptual adjudication when the universal stack provides them.",
     "requiredAssertions": [

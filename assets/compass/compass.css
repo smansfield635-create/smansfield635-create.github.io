@@ -377,6 +377,12 @@ body {
 }
 
 /* ---------- State-responsive context: Governance/Build adoption ---------- */
+/* Initial orientation instructions already live above the instrument.
+   The large contextual feature begins only after rotation/selection creates a state. */
+[data-compass-root][data-compass-context-state="global"] .compass-panel {
+  display: none !important;
+}
+
 .compass-panel {
   position: relative;
   max-width: 980px;

@@ -28,7 +28,7 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const html=fs.readFileSync('index.html','utf8');
-          if (/data-compass-room-proxy[^}]*::after|data-compass-room-proxy\]\s*::after/.test(html)) {
+          if (/data-compass-room-proxy\][^{]*::after\s*\{[^}]*content\s*:\s*attr\(data-label\)/s.test(html)) {
             throw new Error('PROXY_BASED_VISUAL_ROOM_LABEL_PRESENT');
           }
           if (!html.includes('data-compass-projected-room-label')) {

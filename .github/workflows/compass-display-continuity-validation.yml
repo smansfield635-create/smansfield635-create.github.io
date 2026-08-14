@@ -98,7 +98,9 @@ jobs:
               built:Boolean(document.querySelector('.compass-built')),
               buildCta:Boolean(document.querySelector('.compass-build-cta')),
               mirrorRoutes:document.querySelectorAll('[data-compass-mirrorland-routes] a').length,
-              cosmos:Boolean(document.querySelector('[data-compass-cosmic-field]'))
+              cosmos:Boolean(document.querySelector('[data-compass-cosmic-field]')),
+              headerTop:document.querySelector('.compass-estate__header')?.getBoundingClientRect().top,
+              instrumentTop:document.querySelector('.compass-instrument')?.getBoundingClientRect().top
             }));
             check(`${name}_FOUR_CARDINALS`,JSON.stringify(result.cardinals)===JSON.stringify(['north','east','south','west']),result.cardinals);
             check(`${name}_ROOM_DECLARATIONS`,result.roomDeclarations===19,result.roomDeclarations);
@@ -109,6 +111,8 @@ jobs:
             check(`${name}_BUILT_AND_BUILD`,result.built&&result.buildCta,result);
             check(`${name}_MIRRORLAND_THREE_ROUTES`,result.mirrorRoutes===3,result.mirrorRoutes);
             check(`${name}_COSMOS_HOST`,result.cosmos,result.cosmos);
+            check(`${name}_OPENING_COMPACT`,Number.isFinite(result.headerTop)&&result.headerTop<140,result);
+            check(`${name}_INSTRUMENT_FOLLOWS_OPENING`,Number.isFinite(result.instrumentTop)&&result.instrumentTop<900,result);
             check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
             await page.screenshot({path:`/tmp/compass-${name.toLowerCase()}.png`,fullPage:true});
             await context.close();
@@ -130,10 +134,21 @@ jobs:
             check('CLUSTER_GUIDANCE_STATE',state.guidance==='Drag to rotate the cluster. Tap a room star to select it. Swipe across open space to return to the constellation.',state.guidance);
             check('ROOM_PREVIEW_NOT_SELECTED',Boolean(state.preview)&&state.previewState?.includes('ROOM PREVIEW')&&state.enterDisabled===true,state);
             const returnButton=page.locator('[data-compass-return-to-orbit]');
-            check('RETURN_CONTROL_EXPOSED',await returnButton.isVisible(),await returnButton.isVisible());
+            check('RETURN_CONTROL_HIDDEN_WHILE_CLUSTER_OPEN',!(await returnButton.isVisible()),await returnButton.isVisible());
+            const clusterReturned=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation({source:'playwright-qualification',scrollToScene:false})===true);
+            await page.waitForTimeout(200);
+            check('CLUSTER_RETURN_TO_CONSTELLATION',clusterReturned&&(await page.locator('[data-compass-root]').getAttribute('data-compass-mode'))==='CONSTELLATION',await page.locator('[data-compass-root]').getAttribute('data-compass-mode'));
+            await north.press('Enter');
+            await page.waitForTimeout(300);
+            const roomSelected=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestRoomSelection('north-1')===true);
+            await page.waitForTimeout(300);
+            const roomState=await page.locator('[data-compass-root]').evaluate(el=>({mode:el.dataset.compassMode,room:el.dataset.selectedRoom,guidance:document.querySelector('[data-compass-guidance]')?.textContent.trim()}));
+            check('ROOM_SELECTION_STATE',roomSelected&&roomState.mode==='ROOM_SELECTED'&&roomState.room==='north-1',roomState);
+            check('ROOM_GUIDANCE_STATE',roomState.guidance==='Drag to rotate the cluster. Enter opens the selected room. Return to Orbit keeps the cluster open.',roomState.guidance);
+            check('RETURN_CONTROL_EXPOSED_AFTER_ROOM_SELECTION',await returnButton.isVisible(),await returnButton.isVisible());
             await returnButton.click();
             await page.waitForTimeout(300);
-            check('EXPLICIT_RETURN_WORKS',(await page.locator('[data-compass-root]').getAttribute('data-compass-mode'))==='CONSTELLATION',await page.locator('[data-compass-root]').getAttribute('data-compass-mode'));
+            check('EXPLICIT_RETURN_TO_ORBIT_WORKS',(await page.locator('[data-compass-root]').getAttribute('data-compass-mode'))==='CLUSTER_OPEN',await page.locator('[data-compass-root]').getAttribute('data-compass-mode'));
             await context.close();
           }
           {

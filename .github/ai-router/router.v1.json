@@ -152,6 +152,17 @@
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/open-world/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "COMPASS",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": ["assets/compass/"],
+      "ownedExactPaths": [
+        "index.html",
+        ".github/workflows/compass-display-continuity-validation.yml"
+      ],
+      "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

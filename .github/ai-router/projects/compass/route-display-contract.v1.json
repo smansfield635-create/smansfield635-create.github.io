@@ -1,0 +1,72 @@
+{
+  "schema": "COMPASS_ROUTE_DISPLAY_CONTRACT_v1",
+  "status": "RESOLVED_BEFORE_VISUAL_CONSTRUCTION",
+  "projectId": "COMPASS",
+  "publicRoute": "/",
+  "governingConstitution": ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
+  "narrativeContinuityMap": "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json",
+  "fields": {
+    "LOCAL_IDENTITY": "The Compass is the estate's global orientation and wayfinding center. It helps a visitor locate the estate's major directional families and choose a path without turning the Compass into the estate directory or absorbing local room authority.",
+    "NARRATIVE_RELATION": "Compass occupies the ORIENTATION stage of the whole-estate transformation map, moving confusion or complexity toward orientation while leaving structure, expression, test, evidence, agency, and continuation to their proper downstream surfaces.",
+    "ORIENTATION_RELATION": "Compass originates the public four-cardinal map: North=Orientation, East=Worlds, South=Instruments, West=Frontier. Downstream routes inherit this orientation; no discovered or local route becomes an additional cardinal direction.",
+    "DISPLAY_ROLE": "ORIENT",
+    "RUNTIME_CEILING": {
+      "class": "L3_PERSISTENT_SPATIAL_SCENE",
+      "justification": "The existing spherical constellation, cardinal clusters, persistent orientation state, and Mirrorland threshold use spatial continuity to communicate direction and discovery. L3 is a ceiling, not a requirement, and all meaning must remain available below it."
+    },
+    "PERSISTENT_OBJECTS": [
+      {
+        "object": "COMPASS_CARDINAL_MAP",
+        "reason": "Global direction must remain stable across cluster exploration, room selection, Mirrorland reveal, withdrawal, and return."
+      },
+      {
+        "object": "COMPASS_ORIENTATION_STATE",
+        "reason": "Selected cardinal, orbit orientation, and meaningful room context may persist through deeper movement so the visitor can recover location."
+      },
+      {
+        "object": "MIRRORLAND_THRESHOLD",
+        "reason": "Mirrorland is a discovery layer behind the map, not a fifth direction; its threshold identity must remain distinct from cardinal identity."
+      }
+    ],
+    "TRANSITION_MEANING": {
+      "CARDINAL_FOCUS": "Movement from broad estate orientation to one directional family.",
+      "ROOM_SELECTION": "Movement from a directional family to a bounded local destination choice.",
+      "MIRRORLAND_REVEAL": "Discovery of depth behind the existing map without changing the map.",
+      "WITHDRAWAL_OR_RETURN": "Recovery of prior Compass orientation and visitor context."
+    },
+    "PROGRESSIVE_DISCLOSURE": {
+      "immediate": [
+        "COMPASS_IDENTITY",
+        "FOUR_CARDINAL_DIRECTIONS",
+        "BASIC_ORIENTATION_INSTRUCTION",
+        "EXPLICIT_WAYFINDING_AID"
+      ],
+      "onIntent": [
+        "CARDINAL_CLUSTER_ROOMS",
+        "DESTINATION_DETAIL_PANEL",
+        "PRACTICAL_CONTEXT_EXPANSION",
+        "MIRRORLAND_DISCOVERY_LAYER"
+      ],
+      "law": "DO_NOT_DUMP_THE_FULL_ESTATE_DIRECTORY_INTO_THE_INITIAL_COMPASS_VIEW"
+    },
+    "MOBILE_COMPOSITION": "Phone and tablet preserve the same four-cardinal authority and destination semantics but may reduce simultaneous labels, spatial density, atmospheric rendering, and panel footprint. Touch targets, reading order, and explicit return controls remain primary; mobile is not merely a scaled desktop canvas.",
+    "REDUCED_MOTION_EQUIVALENCE": "Reduced motion disables or shortens nonessential sparkle, continuous drift, and animated transition effects while preserving cardinal selection, room selection, Mirrorland discovery, destination semantics, focus visibility, navigation, and explicit return through immediate state changes.",
+    "RETURN_CONTRACT": "Every deep Compass state provides an explicit route back to recoverable Compass orientation. Mirrorland withdrawal restores the preserved Compass state; room/panel exploration provides Return to Orbit; external destinations retain the root Compass as the estate orientation route.",
+    "CLAIM_BOUNDARY": "Visual emphasis may explain orientation, relationship, metaphor, and navigation only. It may not imply scientific validation, award status, certification, proof, product efficacy, universal truth, or authority belonging to Evidence, Governance, Laws, products, worlds, Door, or Home.",
+    "LOCAL_VISUAL_IDENTITY": "Tactile cartographic constellation: four-cardinal spherical orientation, restrained cosmic field, crystal/star wayfinding objects, instrument-like labels, and a distinct Mirrorland threshold. The Compass must remain elegant and legible rather than becoming a generic luxury WebGL shell or universal page template.",
+    "CONTINUITY_HOOK": "Preserve the stable four-cardinal map, Compass identity, recoverable orientation state, and the law that hidden discovery reveals depth rather than another direction. Door must later inherit Compass direction; Home must later support arrival and return without redefining Compass authority."
+  },
+  "cardinalAuthority": {
+    "north": "ORIENTATION",
+    "east": "WORLDS",
+    "south": "INSTRUMENTS",
+    "west": "FRONTIER",
+    "additionalCardinalDirectionsPermitted": false
+  },
+  "firstReferenceFamily": {
+    "sequence": ["COMPASS", "DOOR", "HOME"],
+    "currentScope": "COMPASS_ONLY",
+    "doorMutationPermitted": false,
+    "homeMutationPermitted": false
+  }
+}

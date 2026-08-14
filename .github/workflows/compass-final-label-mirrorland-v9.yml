@@ -1,0 +1,59 @@
+name: Compass Final Label and Mirrorland v9
+on:
+  push:
+    branches: [compass/final-label-mirrorland-v9]
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compass/final-label-mirrorland-v9
+          fetch-depth: 0
+      - name: Apply narrow correction
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          # Labels: use the semantic proxy's existing accessible name as the visual source.
+          s=s.replace('content:attr(data-label);','content:attr(aria-label);')
+          # Mirrorland: remove redundant hidden-entrance prose and include an explicit return route among the options.
+          old='<section class="compass-mirrorland-routes" data-compass-mirrorland-routes aria-label="Mirrorland routes" hidden><p class="compass-estate__kicker">Mirrorland</p><h3>You found the hidden entrance.</h3><p>Choose an experience.</p><nav><a href="/showroom/">Enter the Narrative</a><a href="/showroom/globe/h-earth/">Enter the Demo</a><a href="/showroom/globe/audralia/">See the World Map</a></nav></section>'
+          new='<section class="compass-mirrorland-routes" data-compass-mirrorland-routes aria-label="Mirrorland routes" hidden><p class="compass-estate__kicker">Mirrorland</p><h3>Choose an experience.</h3><nav><a href="/showroom/">Enter the Narrative</a><a href="/showroom/globe/h-earth/">Enter the Demo</a><a href="/showroom/globe/audralia/">See the World Map</a><a href="#compass" data-compass-mirrorland-inline-back>Return to Compass</a></nav></section>'
+          assert old in s
+          s=s.replace(old,new,1)
+          # Page-wide user activation should start the invisible ambience, not Compass-only interaction.
+          s=s.replace("['pointerup','touchend','click','keydown'].forEach(type=>document.addEventListener(type,tryAmbient,{passive:type!=='keydown'}));","['pointerdown','pointerup','touchstart','touchend','click','keydown','wheel'].forEach(type=>document.addEventListener(type,tryAmbient,{passive:type!=='keydown'}));")
+          # Wire the visible Mirrorland return option to the canonical Back-to-Compass control.
+          anchor="const eyebrow=panel.querySelector('[data-compass-panel-eyebrow]')"
+          insert="const inlineMirrorBack=document.querySelector('[data-compass-mirrorland-inline-back]'),canonicalMirrorBack=panel.querySelector('[data-compass-mirrorland-back]');if(inlineMirrorBack&&canonicalMirrorBack){inlineMirrorBack.addEventListener('click',event=>{event.preventDefault();canonicalMirrorBack.click()})};const guidance=document.querySelector('[data-compass-guidance]');const syncMirrorInstruction=()=>{const m=root.dataset.compassMode||'';if(guidance&&(m==='MIRRORLAND_REVEALING'||m==='MIRRORLAND_FOCUSED'||m==='MIRRORLAND_WITHDRAWING'))guidance.textContent='Enter Mirrorland through the hidden door.'};new MutationObserver(syncMirrorInstruction).observe(root,{attributes:true,attributeFilter:['data-compass-mode','data-mirrorland-window-state']});syncMirrorInstruction();"
+          assert anchor in s
+          s=s.replace(anchor,insert+anchor,1)
+          s=s.replace('compass-contextual-quick-pass-v8','compass-contextual-quick-pass-v9')
+          p.write_text(s)
+      - name: Quick procedural review
+        shell: python
+        run: |
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          assert 'content:attr(aria-label)' in s
+          assert 'content:attr(data-label)' not in s
+          assert s.count('data-compass-room data-compass-destination') == 19
+          assert 'Return to Compass</a>' in s
+          assert 'You found the hidden entrance.' not in s
+          assert 'Enter Mirrorland through the hidden door.' in s
+          assert "'pointerdown'" in s and "'touchstart'" in s and "'wheel'" in s
+          assert 'data-compass-mirrorland-inline-back' in s
+          assert 'compass-contextual-quick-pass-v9' in s
+          print('PASS: 19 room labels sourced from aria-label + Mirrorland return + page-wide audio activation + v9')
+      - name: Commit and self-clean
+        run: |
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          rm .github/workflows/compass-final-label-mirrorland-v9.yml
+          git add index.html .github/workflows/compass-final-label-mirrorland-v9.yml
+          git commit -m "Fix Compass labels and Mirrorland return"
+          git push origin HEAD:compass/final-label-mirrorland-v9

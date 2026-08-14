@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Diamond Gate Bridge Compass</title>
 <meta name="description" content="Use the Diamond Gate Bridge Compass to understand why the estate exists, see its rooms, and enter the destination that fits what you need.">
-<link rel="stylesheet" href="/assets/compass/compass.css?v=compass-contextual-quick-pass-v4">
+<link rel="stylesheet" href="/assets/compass/compass.css?v=compass-contextual-quick-pass-v5">
 <style>
 .compass-estate__header{max-width:920px}
 .compass-introduction{max-width:860px}
@@ -18,8 +18,38 @@
 .compass-panel__actions{margin-top:16px!important}
 .compass-room-key{display:none!important}
 button[data-compass-room-proxy]{overflow:visible!important}
-button[data-compass-room-proxy]::after{content:attr(data-label);position:absolute;left:50%;top:-8px;transform:translate(-50%,-100%);width:max-content;max-width:9.5rem;padding:.34rem .5rem;border:1px solid rgba(224,225,215,.13);border-radius:.65rem;background:rgba(4,8,15,.56);color:rgba(236,239,232,.58);font:700 .68rem/1.15 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.01em;text-align:center;white-space:normal;opacity:.34;box-shadow:0 8px 24px rgba(0,0,0,.22);backdrop-filter:blur(7px);pointer-events:none;transition:opacity .16s ease,transform .16s ease,border-color .16s ease,background .16s ease}
-button[data-compass-room-proxy][data-primary="true"]::after,button[data-compass-room-proxy][data-selected="true"]::after,button[data-compass-room-proxy][data-keyboard-focused="true"]::after{opacity:1;color:#f5f0e4;border-color:rgba(242,213,138,.42);background:rgba(7,12,20,.9);transform:translate(-50%,-108%) scale(1.04)}
+button[data-compass-room-proxy][data-label]:not([data-label=""])::after{
+  content:attr(data-label);
+  position:absolute;
+  left:50%;
+  top:-8px;
+  transform:translate(-50%,-100%);
+  width:max-content;
+  max-width:9.5rem;
+  padding:.34rem .5rem;
+  border:1px solid rgba(224,225,215,.13);
+  border-radius:.65rem;
+  background:rgba(4,8,15,.56);
+  color:rgba(236,239,232,.58);
+  font:700 .68rem/1.15 Inter,ui-sans-serif,system-ui,sans-serif;
+  letter-spacing:.01em;
+  text-align:center;
+  white-space:normal;
+  opacity:.34;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+  backdrop-filter:blur(7px);
+  pointer-events:none;
+  transition:opacity .16s ease,transform .16s ease,border-color .16s ease,background .16s ease;
+}
+button[data-compass-room-proxy][data-label]:not([data-label=""])[data-primary="true"]::after,
+button[data-compass-room-proxy][data-label]:not([data-label=""])[data-selected="true"]::after,
+button[data-compass-room-proxy][data-label]:not([data-label=""])[data-keyboard-focused="true"]::after{
+  opacity:1;
+  color:#f5f0e4;
+  border-color:rgba(242,213,138,.42);
+  background:rgba(7,12,20,.9);
+  transform:translate(-50%,-108%) scale(1.04);
+}
 .compass-monuments{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:clamp(.75rem,2vw,1.1rem)!important;max-width:72rem!important;margin:clamp(44px,7vw,80px) auto 0!important}
 .compass-monument{min-height:0!important;padding:clamp(1rem,2.4vw,1.45rem)!important;border-radius:1.05rem!important;display:grid!important;align-content:start!important;gap:.4rem!important}
 .compass-monument h2{font-size:clamp(1.35rem,3vw,1.95rem)!important;margin:0!important}
@@ -37,8 +67,8 @@ button[data-compass-room-proxy][data-primary="true"]::after,button[data-compass-
 .compass-build-cta p{max-width:52ch!important;line-height:1.5!important;margin:.3rem 0!important}
 .compass-build-cta a{margin:0!important;align-self:end;white-space:nowrap}
 @media(max-width:820px){.compass-instrument__grid{gap:12px!important}.compass-panel{min-height:0!important}.compass-built__proof{grid-template-columns:1fr!important}.compass-build-cta{grid-template-columns:1fr}.compass-build-cta a{justify-self:start}}
-@media(max-width:760px){.compass-monuments{grid-template-columns:1fr!important}button[data-compass-room-proxy]::after{font-size:.64rem;max-width:7.2rem;padding:.3rem .42rem}}
-@media(prefers-reduced-motion:reduce){button[data-compass-room-proxy]::after{transition:none}}
+@media(max-width:760px){.compass-monuments{grid-template-columns:1fr!important}button[data-compass-room-proxy][data-label]:not([data-label=""])::after{font-size:.64rem;max-width:7.2rem;padding:.3rem .42rem}}
+@media(prefers-reduced-motion:reduce){button[data-compass-room-proxy][data-label]:not([data-label=""])::after{transition:none}}
 </style>
 </head>
 <body>
@@ -104,7 +134,7 @@ button[data-compass-room-proxy][data-primary="true"]::after,button[data-compass-
 <section class="compass-monuments" aria-label="Signature Diamond Gate capabilities"><a class="compass-monument" href="/coherence-diagnostic/" data-capability-id="coherence-diagnostic"><span class="compass-estate__kicker">Assessment</span><h2>Coherence Diagnostic</h2><p>Use a structured diagnostic when repeated patterns need to be examined rather than merely described.</p><strong>Run the diagnostic →</strong></a><a class="compass-monument" href="/showroom/globe/hearth/jeeves/" data-capability-id="talk-to-the-house"><span class="compass-estate__kicker">Ask for directions</span><h2>Talk to the House</h2><p>Ask where to begin, what a room contains, or which direction best fits the question you brought with you.</p><strong>Ask the House →</strong></a></section>
 <section class="compass-built" aria-labelledby="built-different-title"><p class="compass-estate__kicker">Built Different · how this estate is built</p><h2 id="built-different-title">Built as one connected system.</h2><p class="compass-built__lead">Diamond Gate's pages are not isolated templates. They share navigation, governing standards, browser-tested behavior, and bounded change control so one improvement does not quietly break the rest of the estate.</p><div class="compass-built__proof"><article><strong>Software TRL 7</strong><span>The governed software-construction platform has been operationally demonstrated as an integrated system. This is a bounded software disposition; it is not a claim of universal product or scientific validation.</span></article><article><strong>Bounded changes</strong><span>Public changes stay tied to an exact candidate and an explicit scope.</span></article><article><strong>Experience checked</strong><span>Browser behavior and display continuity are reviewed before changes are promoted live.</span></article></div><details class="compass-built__more"><summary>See the evidence and standards</summary><p>The detailed proof stays with the pages that own it.</p><nav><a href="/evidence/">Evidence</a><a href="/governance/">Governance</a><a href="/laws/">Laws</a></nav></details><section class="compass-build-cta" aria-labelledby="build-custom-title"><div><p class="compass-estate__kicker">Build something of your own</p><h3 id="build-custom-title">Build Your Own Custom Site</h3><p>If the construction itself caught your attention, explore a site designed around your idea instead of a generic template.</p></div><a href="/build/">Explore custom construction →</a></section></section>
 <nav class="compass-selective-routes" aria-label="Selected estate routes"><a href="/products/">Products</a><a href="/showroom/globe/">Worlds</a><a href="/gauges/">Instruments</a><a href="/explore/frontier/">Frontier</a><a href="/site-guide/">Guide Desk</a></nav><section class="compass-receipts" aria-label="Compass status" hidden><output data-compass-controller-receipt data-visual-pass-claimed="false"></output><output data-compass-crystals-receipt data-visual-pass-claimed="false"></output><output data-compass-mirrorland-window-receipt data-visual-pass-claimed="false"></output></section><p class="compass-accessibility-note">The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users. Room labels remain attached to their stars while a cluster is open, with the foreground room emphasized.</p></section></main>
-<script src="/assets/compass/compass.controller.js?v=compass-contextual-quick-pass-v4" defer></script><script src="/assets/compass/compass.crystals.js?v=compass-contextual-quick-pass-v4" defer></script><script src="/assets/compass/compass.mirrorland-window.js?v=compass-contextual-quick-pass-v4" defer></script><script src="/assets/compass/compass.cosmos.js?v=compass-contextual-quick-pass-v4" defer></script>
+<script src="/assets/compass/compass.controller.js?v=compass-contextual-quick-pass-v5" defer></script><script src="/assets/compass/compass.crystals.js?v=compass-contextual-quick-pass-v5" defer></script><script src="/assets/compass/compass.mirrorland-window.js?v=compass-contextual-quick-pass-v5" defer></script><script src="/assets/compass/compass.cosmos.js?v=compass-contextual-quick-pass-v5" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded',()=>{const root=document.querySelector('[data-compass-root]'),panel=document.querySelector('[data-compass-panel]');if(!root||!panel)return;const eyebrow=panel.querySelector('[data-compass-panel-eyebrow]'),title=panel.querySelector('[data-compass-panel-title]'),purpose=panel.querySelector('[data-compass-panel-purpose]'),relationship=panel.querySelector('[data-compass-panel-relationship]'),stateLabel=panel.querySelector('[data-compass-preview-state]'),enter=panel.querySelector('[data-compass-enter]'),enterLabel=panel.querySelector('[data-compass-enter-label]'),mirrorRoutes=panel.querySelector('[data-compass-mirrorland-routes]');const cardinal=id=>document.querySelector(`[data-compass-cardinal][data-cardinal-id="${id}"]`),room=id=>document.querySelector(`[data-compass-room-declarations] [data-compass-room][data-room-id="${id}"]`),orbitOrder=['north','east','south','west'];const legacyStaticRecognition={cardinal:'CARDINAL PREVIEW · not selected',room:'ROOM PREVIEW · Enter remains locked',selected:'ROOM SELECTED · Enter unlocked'};let foregroundRoom='';const setEnter=(enabled,label='Enter Room')=>{if(enabled){enter.disabled=false}else{enter.disabled=true}enter.setAttribute('aria-disabled',enabled?'false':'true');if(enterLabel)enterLabel.textContent=label};const syncOrbitIndex=()=>{const id=root.dataset.orbitPreviewFocus||root.dataset.orbitFocus||'north';const i=orbitOrder.indexOf(id);root.dataset.compassOrbitIndex=String(i<0?0:i)};const applyCardinalPreview=id=>{const el=cardinal(id);if(!el)return;eyebrow.textContent='Direction';stateLabel.textContent='DIRECTION IN FRONT · open to see its rooms';title.textContent=el.dataset.coordinateLabel||el.dataset.panelTitle||'Direction';purpose.textContent=el.dataset.panelBody||el.dataset.coordinateFunction||'';relationship.textContent=el.dataset.panelWhy||'Open this direction to see its rooms.'};const applyRoomContext=id=>{const el=room(id);if(!el)return false;foregroundRoom=id;eyebrow.textContent=el.dataset.localCoordinate||'Room';stateLabel.textContent='ROOM IN FRONT · ready to enter';title.textContent=el.dataset.label||'Room';purpose.textContent=el.dataset.preview||el.dataset.localFunction||'';relationship.textContent=el.dataset.whyEnter||'Enter this room when it matches what you need.';setEnter(Boolean(el.dataset.route),'Enter Room');return true};const applyRoomPreview=applyRoomContext;const sync=()=>{syncOrbitIndex();const mode=root.dataset.compassMode||'',mirror=mode==='MIRRORLAND_REVEALING'||mode==='MIRRORLAND_FOCUSED'||mode==='MIRRORLAND_WITHDRAWING';mirrorRoutes.hidden=!mirror;if(mode==='MIRRORLAND_FOCUSED'){enter.hidden=true}else{enter.hidden=false}if(mirror){foregroundRoom='';stateLabel.textContent='MIRRORLAND THRESHOLD';setEnter(false);return}const selected=root.dataset.selectedRoom||'',foreground=selected||root.dataset.clusterPreviewPrimaryRoom||root.dataset.clusterPrimaryRoom||'';if((mode==='ROOM_SELECTED'||mode==='CLUSTER_OPEN')&&foreground){applyRoomPreview(foreground);return}foregroundRoom='';setEnter(false);if(mode==='CONSTELLATION')applyCardinalPreview(root.dataset.orbitPreviewFocus||root.dataset.orbitFocus||'north')};new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-compass-mode','data-orbit-preview-focus','data-orbit-focus','data-active-cluster-wing','data-cluster-primary-room','data-cluster-preview-primary-room','data-selected-cardinal','data-selected-room','data-mirrorland-window-state']});enter.addEventListener('click',event=>{if(root.dataset.compassMode!=='CLUSTER_OPEN'||!foregroundRoom)return;const el=room(foregroundRoom),route=el&&el.dataset.route;if(!route)return;event.preventDefault();event.stopImmediatePropagation();window.location.assign(route)},true);void legacyStaticRecognition;sync();});
 </script>

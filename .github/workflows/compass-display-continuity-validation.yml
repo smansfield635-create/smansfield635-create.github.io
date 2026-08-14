@@ -90,7 +90,7 @@ jobs:
             await page.waitForTimeout(400);
             const result=await page.evaluate(()=>({
               cardinals:[...document.querySelectorAll('[data-compass-cardinal]')].map(el=>el.getAttribute('data-cardinal-id')),
-              roomDeclarations:document.querySelectorAll('[data-compass-room]').length,
+              roomDeclarations:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,
               horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
               introOpen:document.querySelector('[data-compass-full-introduction]')?.open,
               mathVisible:document.body.textContent.includes('Mathematical Foundation'),
@@ -144,7 +144,7 @@ jobs:
             await page.waitForTimeout(300);
             const roomState=await page.locator('[data-compass-root]').evaluate(el=>({mode:el.dataset.compassMode,room:el.dataset.selectedRoom,guidance:document.querySelector('[data-compass-guidance]')?.textContent.trim()}));
             check('ROOM_SELECTION_STATE',roomSelected&&roomState.mode==='ROOM_SELECTED'&&roomState.room==='north-1',roomState);
-            check('ROOM_GUIDANCE_STATE',roomState.guidance==='Drag to rotate the cluster. Enter opens the selected room. Return to Orbit keeps the cluster open.',roomState.guidance);
+            check('ROOM_GUIDANCE_STATE',roomState.guidance==='Review the selected room. Use Enter Room to continue, Return To Orbit to reopen the cluster, or swipe across open space to return to the constellation.',roomState.guidance);
             check('RETURN_CONTROL_EXPOSED_AFTER_ROOM_SELECTION',await returnButton.isVisible(),await returnButton.isVisible());
             await returnButton.click();
             await page.waitForTimeout(300);

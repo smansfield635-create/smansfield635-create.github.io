@@ -34,8 +34,8 @@ function parseArgs(argv) {
 function loadLocator() {
   const locator = JSON.parse(fs.readFileSync(LOCATOR_PATH, 'utf8'));
   if (locator.schema !== 'REPOSITORY_OPERATION_INTAKE_LOCATOR_v1' || locator.status !== 'ACTIVE_FAIL_CLOSED') fail('CANONICAL_LOCATOR_INVALID');
-  for (const key of ['entrypoint','lockRef','requestSchema','constructionProcedureSchema']) if (!locator[key]) fail('CANONICAL_LOCATOR_INCOMPLETE', key);
-  if (!fs.existsSync(locator.entrypoint)) fail('CANONICAL_GATE_MISSING');
+  for (const key of ['entrypoint','lockManager','lockRef','requestSchema','constructionProcedureSchema']) if (!locator[key]) fail('CANONICAL_LOCATOR_INCOMPLETE', key);
+  if (!fs.existsSync(locator.entrypoint) || !fs.existsSync(locator.lockManager)) fail('CANONICAL_TOOLING_MISSING');
   return locator;
 }
 function validateEnvelope(envelope) {
@@ -52,10 +52,10 @@ function selfTest() {
     locator.entrypoint === 'tools/operation-intake/repository-operation-intake-gate.v1.mjs',
     locator.lockManager === 'tools/operation-intake/repository-operation-lock-manager.v1.mjs',
     typeof locator.lockRef === 'string' && locator.lockRef.startsWith('refs/heads/operation-locks/'),
-    !fs.readFileSync(import.meta.filename, 'utf8').includes('canonicalGateBlob'),
-    !fs.readFileSync(import.meta.filename, 'utf8').includes('lockManagerBlob')
+    locator.requestSchema === '.github/operation-intake/request.schema.v1.json',
+    locator.constructionProcedureSchema === '.github/operation-intake/construction-procedure.schema.v1.json'
   ];
-  return {schema:'CANONICAL_OPERATION_INTAKE_TRANSPORT_SELF_TEST_v1',result:checks.every(Boolean)?'PASS_CLOSED':'FAIL_CLOSED',checkCount:checks.length,checks,authorityCreated:false,admissionSemanticsDuplicated:false};
+  return {schema:'CANONICAL_OPERATION_INTAKE_TRANSPORT_SELF_TEST_v1',result:checks.every(Boolean)?'PASS_CLOSED':'FAIL_CLOSED',checkCount:checks.length,checks,canonicalLocator:LOCATOR_PATH,canonicalIdentitiesResolvedAtRuntime:true,authorityCreated:false,admissionSemanticsDuplicated:false};
 }
 
 const args = process.argv.slice(2);

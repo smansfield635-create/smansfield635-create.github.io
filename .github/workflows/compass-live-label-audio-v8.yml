@@ -1,0 +1,54 @@
+name: Compass Live Label and Aquarium v8
+on:
+  push:
+    branches: [compass/live-label-audio-v8]
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compass/live-label-audio-v8
+          fetch-depth: 0
+      - name: Apply narrow live correction
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          s=s.replace('compass-contextual-quick-pass-v7','compass-contextual-quick-pass-v8')
+          s=s.replace('  -webkit-tap-highlight-color:transparent!important;\n}\nbutton[data-compass-room-proxy]::after{', '  -webkit-tap-highlight-color:transparent!important;\n  -webkit-appearance:none!important;\n  appearance:none!important;\n}\nbutton[data-compass-room-proxy]::before{content:none!important;display:none!important;background:none!important;box-shadow:none!important}\nbutton[data-compass-room-proxy]::after{',1)
+          s=s.replace('button[data-compass-room-proxy]:focus-visible::after{opacity:1}', 'button[data-compass-room-proxy]:focus-visible::after{opacity:1!important}',1)
+          old='https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg'
+          direct='https://upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg'
+          s=s.replace(old,direct)
+          s=s.replace('<audio data-compass-ambient-audio autoplay loop preload="auto" aria-hidden="true" style="display:none">','<audio data-compass-ambient-audio autoplay loop playsinline preload="auto" aria-hidden="true" style="display:none">',1)
+          oldjs="const ambient=document.querySelector('[data-compass-ambient-audio]');if(ambient){ambient.volume=.18;const tryAmbient=()=>{const q=ambient.play();if(q&&q.catch)q.catch(()=>{})};tryAmbient();['pointerdown','touchstart','keydown'].forEach(type=>document.addEventListener(type,tryAmbient,{once:true,passive:type!=='keydown'}));}"
+          newjs="const ambient=document.querySelector('[data-compass-ambient-audio]');if(ambient){ambient.volume=.24;const tryAmbient=()=>{if(!ambient.paused)return;const q=ambient.play();if(q&&q.catch)q.catch(()=>{})};tryAmbient();['pointerup','touchend','click','keydown'].forEach(type=>document.addEventListener(type,tryAmbient,{passive:type!=='keydown'}));}"
+          if oldjs not in s: raise SystemExit('ambient runtime marker missing')
+          s=s.replace(oldjs,newjs,1)
+          p.write_text(s)
+      - name: Quick procedural review
+        shell: python
+        run: |
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          assert 'upload.wikimedia.org/wikipedia/commons/c/c2/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg' in s
+          assert 'autoplay loop playsinline' in s
+          assert 'data-compass-music-toggle' not in s
+          assert 'button[data-compass-room-proxy]::before{content:none!important;display:none!important' in s
+          assert 'appearance:none!important' in s
+          assert 'focus-visible::after{opacity:1!important}' in s
+          assert s.count('data-compass-room data-compass-destination') == 19
+          assert 'compass-contextual-quick-pass-v8' in s
+          print('PASS: direct Aquarium media + invisible ambience + proxy chrome suppressed + active label contract + 19 rooms')
+      - name: Commit and self-clean
+        run: |
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          rm .github/workflows/compass-live-label-audio-v8.yml
+          git add index.html .github/workflows/compass-live-label-audio-v8.yml
+          git commit -m "Repair live Compass labels and Aquarium playback"
+          git push origin HEAD:compass/live-label-audio-v8

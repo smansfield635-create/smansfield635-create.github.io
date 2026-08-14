@@ -129,10 +129,10 @@ jobs:
             check('KEYBOARD_FOCUS',await north.evaluate(el=>document.activeElement===el),true);
             await north.press('Enter');
             await page.waitForTimeout(500);
-            const state=await page.locator('[data-compass-root]').evaluate(el=>({mode:el.dataset.compassMode,selected:el.dataset.selectedCardinal,preview:el.dataset.clusterPreviewPrimaryRoom||'',guidance:document.querySelector('[data-compass-guidance]')?.textContent.trim(),previewState:document.querySelector('[data-compass-preview-state]')?.textContent.trim(),enterDisabled:document.querySelector('[data-compass-enter]')?.disabled}));
+            const state=await page.locator('[data-compass-root]').evaluate(el=>({mode:el.dataset.compassMode,selected:el.dataset.selectedCardinal,preview:el.dataset.clusterPreviewPrimaryRoom||'',guidance:document.querySelector('[data-compass-guidance]')?.textContent.trim(),previewState:document.querySelector('[data-compass-preview-state]')?.textContent.trim(),panelTitle:document.querySelector('[data-compass-panel-title]')?.textContent.trim(),enterDisabled:document.querySelector('[data-compass-enter]')?.disabled}));
             check('CARDINAL_OPEN_STATE',state.mode==='CLUSTER_OPEN'&&state.selected==='north',state);
             check('CLUSTER_GUIDANCE_STATE',state.guidance==='Drag to rotate the cluster. Tap a room star to select it. Swipe across open space to return to the constellation.',state.guidance);
-            check('ROOM_PREVIEW_NOT_SELECTED',Boolean(state.preview)&&state.previewState?.includes('ROOM PREVIEW')&&state.enterDisabled===true,state);
+            check('FOREGROUND_ROOM_CONTEXT_AND_ENTRY_AVAILABLE',Boolean(state.preview)&&state.previewState?.includes('ROOM IN FRONT')&&Boolean(state.panelTitle)&&state.enterDisabled===false,state);
             const returnButton=page.locator('[data-compass-return-to-orbit]');
             check('RETURN_CONTROL_HIDDEN_WHILE_CLUSTER_OPEN',!(await returnButton.isVisible()),await returnButton.isVisible());
             const clusterReturned=await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation({source:'playwright-qualification',scrollToScene:false})===true);

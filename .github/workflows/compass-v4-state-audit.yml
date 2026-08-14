@@ -1,0 +1,121 @@
+name: Compass v4 exact-candidate state audit
+
+on:
+  push:
+    branches:
+      - agent/compass-v4-state-audit
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact Compass candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 97d0dcb9eb9a394905d4a246e9f437ef97d82924
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser dependency
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - name: Start candidate host
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-v4-state-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/compass-v4-state-http.log
+          exit 1
+      - name: Verify state-responsive context and Mirrorland threshold
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const browser = await chromium.launch({headless:true});
+          const context = await browser.newContext({viewport:{width:1024,height:1100}});
+          const page = await context.newPage();
+          await page.goto('http://127.0.0.1:4173/', {waitUntil:'domcontentloaded'});
+          await page.waitForFunction(() => Boolean(window.DGB_COMPASS_CONTROLLER && window.DGB_COMPASS_RECONSTRUCTION_V4?.initialized));
+          const checks=[];
+          const check=(id, pass, evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const panel=page.locator('[data-compass-panel]');
+          check('GLOBAL_PANEL_HIDDEN', await panel.evaluate(el => getComputedStyle(el).display === 'none'), await panel.evaluate(el => getComputedStyle(el).display));
+
+          await page.locator('[data-compass-scene]').dispatchEvent('pointerdown', {pointerId:1, pointerType:'touch', clientX:500, clientY:400});
+          await page.evaluate(() => window.DGB_COMPASS_CONTROLLER.requestOrbitFocus('east', {source:'state-audit-rotation'}));
+          await page.waitForFunction(() => document.querySelector('[data-compass-root]')?.dataset.compassContextState === 'cardinal');
+          let snap = await page.evaluate(() => ({
+            state: document.querySelector('[data-compass-root]').dataset.compassContextState,
+            cardinal: document.querySelector('[data-compass-root]').dataset.compassContextCardinal,
+            title: document.querySelector('[data-compass-panel-title]').textContent.trim(),
+            purpose: document.querySelector('[data-compass-panel-purpose]').textContent.trim(),
+            display: getComputedStyle(document.querySelector('[data-compass-panel]')).display
+          }));
+          check('ROTATION_UPDATES_CARDINAL_CONTEXT', snap.state==='cardinal' && snap.cardinal==='east' && snap.title.includes('Sometimes a system') && snap.display!=='none', snap);
+          await page.screenshot({path:'/tmp/compass-v4-cardinal-east.png', fullPage:true});
+
+          await page.evaluate(() => window.DGB_COMPASS_CONTROLLER.requestCardinalSelection('south'));
+          await page.waitForFunction(() => document.querySelector('[data-compass-root]')?.dataset.compassContextState === 'cluster');
+          snap = await page.evaluate(() => ({
+            state: document.querySelector('[data-compass-root]').dataset.compassContextState,
+            selected: document.querySelector('[data-compass-root]').dataset.selectedCardinal,
+            title: document.querySelector('[data-compass-panel-title]').textContent.trim(),
+            text: document.querySelector('[data-compass-panel-purpose]').textContent.trim()
+          }));
+          check('CARDINAL_OPEN_UPDATES_CLUSTER_CONTEXT', snap.state==='cluster' && snap.selected==='south' && snap.title.includes('Measure, govern') && snap.text.includes('cluster is open'), snap);
+          await page.screenshot({path:'/tmp/compass-v4-cluster-south.png', fullPage:true});
+
+          await page.evaluate(() => window.DGB_COMPASS_CONTROLLER.requestRoomSelection('south-3'));
+          await page.waitForFunction(() => document.querySelector('[data-compass-root]')?.dataset.compassContextState === 'room');
+          snap = await page.evaluate(() => ({
+            state: document.querySelector('[data-compass-root]').dataset.compassContextState,
+            selectedRoom: document.querySelector('[data-compass-root]').dataset.selectedRoom,
+            title: document.querySelector('[data-compass-panel-title]').textContent.trim(),
+            eyebrow: document.querySelector('[data-compass-panel-eyebrow]').textContent.trim(),
+            enterDisabled: document.querySelector('[data-compass-enter]').disabled
+          }));
+          check('ROOM_SELECTION_UPDATES_ROOM_CONTEXT', snap.state==='room' && snap.selectedRoom==='south-3' && snap.eyebrow.includes('Council Room') && snap.title.includes('Keep intent visible') && snap.enterDisabled===false, snap);
+          await page.screenshot({path:'/tmp/compass-v4-room-council.png', fullPage:true});
+
+          await page.evaluate(() => window.DGB_COMPASS_CONTROLLER.requestReturnToConstellation({scrollToScene:false,source:'state-audit'}));
+          await page.evaluate(() => window.DGB_COMPASS_CONTROLLER.requestMirrorlandReveal());
+          await page.waitForFunction(() => document.querySelector('[data-compass-root]')?.dataset.compassContextState === 'mirrorland');
+          snap = await page.evaluate(() => ({
+            state: document.querySelector('[data-compass-root]').dataset.compassContextState,
+            title: document.querySelector('[data-compass-panel-title]').textContent.trim(),
+            enterHidden: document.querySelector('[data-compass-enter]').hidden,
+            links: [...document.querySelectorAll('.compass-mirrorland-threshold__routes a')].map(a => [a.querySelector('strong')?.textContent.trim(), a.getAttribute('href')])
+          }));
+          const expected = JSON.stringify([
+            ['Enter the Narrative','/showroom/'],
+            ['Enter the Demo','/showroom/globe/h-earth/'],
+            ['See the World Map','/showroom/globe/audralia/']
+          ]);
+          check('MIRRORLAND_THREE_ROUTE_THRESHOLD', snap.state==='mirrorland' && snap.title.includes('found the entrance') && snap.enterHidden && JSON.stringify(snap.links)===expected, snap);
+          await page.screenshot({path:'/tmp/compass-v4-mirrorland.png', fullPage:true});
+
+          await browser.close();
+          const failures=checks.filter(x=>!x.pass);
+          const receipt={schema:'COMPASS_V4_STATE_AUDIT_v1',candidateHead:'97d0dcb9eb9a394905d4a246e9f437ef97d82924',result:failures.length?'FAIL':'PASS',checks,failures:failures.map(x=>x.id)};
+          fs.writeFileSync('/tmp/compass-v4-state-audit.json', JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length) process.exit(1);
+          NODE
+      - name: Upload exact-candidate state evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-v4-state-audit-evidence
+          path: |
+            /tmp/compass-v4-state-audit.json
+            /tmp/compass-v4-cardinal-east.png
+            /tmp/compass-v4-cluster-south.png
+            /tmp/compass-v4-room-council.png
+            /tmp/compass-v4-mirrorland.png

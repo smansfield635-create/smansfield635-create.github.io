@@ -1,0 +1,9 @@
+@media(max-width:1200px){
+html[data-methods-models-euclidean-showroom="active"] .mm-stage>div:has(>.mm-lens){position:relative!important;inset:auto!important;width:min(100%,42rem)!important;max-width:100%!important;margin:1rem auto 0!important;transform:none!important;z-index:1!important}
+html[data-methods-models-euclidean-showroom="active"] .mm-lens{position:relative!important;inset:auto!important;width:100%!important;max-width:100%!important;margin:0!important;transform:none!important;box-sizing:border-box!important}
+html[data-methods-models-euclidean-showroom="active"] .mm-lens-tabs{position:relative!important;inset:auto!important;display:flex!important;flex-wrap:wrap!important;gap:.4rem!important;width:100%!important;transform:none!important}
+html[data-methods-models-euclidean-showroom="active"] .mm-lens-tab{position:relative!important;inset:auto!important;transform:none!important;max-width:100%!important}
+html[data-methods-models-euclidean-showroom="active"] .mm-lens-panel,html[data-methods-models-euclidean-showroom="active"] .mm-progress{position:relative!important;inset:auto!important;width:100%!important;max-width:100%!important;margin:.55rem 0 0!important;transform:none!important;box-sizing:border-box!important}
+html[data-methods-models-euclidean-showroom="active"] .mm-euclidean-coordinate[data-mm-coordinate]{position:relative!important;inset:auto!important;display:flex!important;flex-wrap:wrap!important;gap:.35rem .8rem!important;width:min(100%,42rem)!important;max-width:100%!important;margin:1rem auto 2rem!important;white-space:normal!important;overflow-wrap:anywhere!important;transform:none!important;z-index:1!important}
+}
+@media(max-width:720px){html[data-methods-models-euclidean-showroom="active"] .mm-euclidean-coordinate[data-mm-coordinate]{font-size:clamp(.72rem,3.4vw,.9rem)!important}}

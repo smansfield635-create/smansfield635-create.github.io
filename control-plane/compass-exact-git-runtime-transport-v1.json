@@ -1,0 +1,31 @@
+{
+  "schema": "COMPASS_EXACT_GIT_RUNTIME_TRANSPORT_DESCRIPTOR_v1",
+  "status": "CANDIDATE_FAIL_CLOSED",
+  "publicRepository": "smansfield635-create/smansfield635-create.github.io",
+  "candidateSha": "69f7be45f45933676fe4024ca95c926f5ebc6bfc",
+  "directParentSha": "5d0010d50cb0de7a7d3d45e7ace56d6650f52ba3",
+  "sourceShas": [
+    "7917ecb7b07a32e8a653a6e1534397b232cccd6b"
+  ],
+  "playwrightVersion": "1.55.0",
+  "transportFormat": "GIT_BUNDLE_PLUS_PINNED_BROWSER_RUNTIME",
+  "purpose": "MATERIALIZE_EXACT_COMPASS_GIT_SUBJECT_AND_EXECUTION_RUNTIME_FOR_SEPARATE_PRIVATE_LOCAL_QUALIFICATION",
+  "authority": {
+    "qualificationAuthority": false,
+    "productMutationAuthority": false,
+    "publicMainWriteAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "awardsAuthority": false,
+    "ownerAcceptanceAuthority": false,
+    "userApprovalAuthority": false
+  },
+  "prohibitions": [
+    "NO_PRIVATE_QUALIFIER_COPIED_TO_PUBLIC",
+    "NO_PUBLIC_PRODUCT_MUTATION",
+    "NO_SURROGATE_AUDIT_SUBJECT",
+    "NO_MUTABLE_REF_AS_QUALIFICATION_IDENTITY",
+    "NO_TRANSPORT_RECEIPT_AS_QUALIFICATION_RECEIPT",
+    "NO_MERGE_TO_PUBLIC_MAIN"
+  ]
+}

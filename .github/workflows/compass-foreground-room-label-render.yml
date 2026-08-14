@@ -1,0 +1,173 @@
+name: Compass Foreground Room Label Render Gate
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/workflows/compass-foreground-room-label-render.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rendered-foreground-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Reject proxy-generated visual labels
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const html=fs.readFileSync('index.html','utf8');
+          if (/data-compass-room-proxy[^}]*::after|data-compass-room-proxy\]\s*::after/.test(html)) {
+            throw new Error('PROXY_BASED_VISUAL_ROOM_LABEL_PRESENT');
+          }
+          if (!html.includes('data-compass-projected-room-label')) {
+            throw new Error('PROJECTED_ROOM_LABEL_PATH_MISSING');
+          }
+          NODE
+      - name: Install Playwright outside repository contract
+        env:
+          npm_config_package_lock: 'false'
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - name: Start local static host
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-label-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/compass-label-http.log
+          exit 1
+      - name: Assert all 19 rendered foreground labels
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({viewport:{width:1280,height:800}});
+          const failures=[];
+          const observations=[];
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const fail=(id,evidence)=>failures.push({id,evidence});
+
+          await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:20000});
+          await page.waitForSelector('[data-compass-root]',{timeout:10000});
+          await page.waitForSelector('[data-compass-room-proxy]',{timeout:10000});
+          await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER),{timeout:10000});
+
+          const declarationMap=await page.evaluate(()=>Object.fromEntries(
+            [...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')]
+              .map(el=>[el.dataset.roomId,{label:(el.dataset.label||'').trim(),wing:el.dataset.wing}])
+          ));
+          if(Object.keys(declarationMap).length!==19) fail('DECLARATION_COUNT',Object.keys(declarationMap));
+
+          const inspectForeground=async wing=>page.evaluate(activeWing=>{
+            const root=document.querySelector('[data-compass-root]');
+            const foreground=root?.dataset.clusterPreviewPrimaryRoom||root?.dataset.clusterPrimaryRoom||'';
+            const label=document.querySelector('[data-compass-projected-room-label]');
+            const style=label?getComputedStyle(label):null;
+            const rect=label?.getBoundingClientRect();
+            const visible=Boolean(label&&!label.hidden&&style&&style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect&&rect.width>0&&rect.height>0);
+            return {
+              wing:activeWing,
+              mode:root?.dataset.compassMode||'',
+              foreground,
+              renderedRoomId:label?.dataset.roomId||'',
+              text:(label?.textContent||'').replace(/\s+/g,' ').trim(),
+              visible,
+              background:style?.backgroundImage||style?.backgroundColor||'',
+              rect:rect?{left:rect.left,top:rect.top,width:rect.width,height:rect.height}:null
+            };
+          },wing);
+
+          const scene=page.locator('[data-compass-scene]');
+          const box=await scene.boundingBox();
+          if(!box) throw new Error('COMPASS_SCENE_NOT_RENDERED');
+          const anchor={x:Math.round(box.x+box.width*.50),y:Math.round(box.y+box.height*.55)};
+          const drags=[];
+          for(const distance of [90,140,190,240]){
+            for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]]){
+              drags.push({dx:dx*distance,dy:dy*distance});
+            }
+          }
+
+          async function controlledDrag(dx,dy){
+            await page.mouse.move(anchor.x,anchor.y);
+            await page.mouse.down();
+            for(let step=1;step<=8;step++){
+              await page.mouse.move(anchor.x+dx*step/8,anchor.y+dy*step/8,{steps:1});
+              await sleep(28);
+            }
+            await sleep(130);
+            await page.mouse.up();
+            await sleep(260);
+          }
+
+          for(const wing of ['north','east','south','west']){
+            const opened=await page.evaluate(w=>{
+              const api=globalThis.DGB_COMPASS_CONTROLLER;
+              if(typeof api?.requestCardinalSelection==='function') return api.requestCardinalSelection(w)!==false;
+              const el=document.querySelector(`[data-compass-cardinal][data-cardinal-id="${w}"]`);
+              if(!el) return false;
+              el.click();
+              return true;
+            },wing);
+            if(!opened){fail(`${wing}_CLUSTER_OPEN_REJECTED`,null);continue;}
+            await page.waitForFunction(w=>{
+              const root=document.querySelector('[data-compass-root]');
+              return root?.dataset.compassMode==='CLUSTER_OPEN'&&root?.dataset.selectedCardinal===w;
+            },wing,{timeout:10000}).catch(()=>{});
+            await sleep(500);
+
+            const expected=new Set(Object.entries(declarationMap).filter(([,v])=>v.wing===wing).map(([id])=>id));
+            const seen=new Set();
+            for(let i=0;i<=drags.length&&seen.size<expected.size;i++){
+              const state=await inspectForeground(wing);
+              if(state.foreground&&expected.has(state.foreground)){
+                const declared=declarationMap[state.foreground];
+                const correct=state.visible&&state.renderedRoomId===state.foreground&&state.text===declared.label;
+                observations.push({...state,expectedLabel:declared.label,correct});
+                if(correct) seen.add(state.foreground);
+                else fail(`${state.foreground}_RENDERED_LABEL_INVALID`,{state,declared});
+              }
+              if(i<drags.length){
+                const drag=drags[i];
+                await controlledDrag(drag.dx,drag.dy);
+              }
+            }
+            const missing=[...expected].filter(id=>!seen.has(id));
+            if(missing.length) fail(`${wing}_FOREGROUND_STATES_MISSING`,{seen:[...seen],missing});
+            await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation?.({source:'foreground-label-render-gate',scrollToScene:false}));
+            await sleep(300);
+          }
+
+          await page.screenshot({path:'/tmp/compass-foreground-room-label-final.png',fullPage:true});
+          await browser.close();
+          const uniqueCorrect=new Set(observations.filter(item=>item.correct).map(item=>item.foreground));
+          if(uniqueCorrect.size!==19) fail('NINETEEN_FOREGROUND_LABELS_NOT_PROVEN',{count:uniqueCorrect.size,ids:[...uniqueCorrect]});
+          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v1',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:[...uniqueCorrect].sort(),observations,failures};
+          fs.writeFileSync('/tmp/compass-foreground-room-label-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length) process.exit(1);
+          NODE
+      - name: Upload rendered label evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-foreground-room-label-render-evidence
+          path: |
+            /tmp/compass-foreground-room-label-receipt.json
+            /tmp/compass-foreground-room-label-final.png

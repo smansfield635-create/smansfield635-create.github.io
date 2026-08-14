@@ -172,6 +172,58 @@
     ],
     "stopLaw": "If implementation requires new geometry, new destination topology, new navigation mechanics, scientific authority changes, or a substitute interaction architecture, stop and reclassify before construction."
   },
+  "ownerObservedRefinement20260814B": {
+    "status": "RECORDED_MANDATORY_NEXT_CONSTRUCTION_ROUND",
+    "source": "Owner live mobile review after the contextual refinement merge on 2026-08-14.",
+    "classification": "DISPLAY_FIDELITY_AND_SPATIAL_CLUTTER_CORRECTION_NO_ARCHITECTURE_REPLACEMENT",
+    "singleVisibleLabelLaw": {
+      "problem": "Concurrent readable labels create clutter and overlap, particularly in room clusters on mobile.",
+      "requiredOutcome": "Exactly one spatial label is visually prominent at a time. It must belong to the currently foregrounded or selected cardinal/room. All peer labels visually recede or hide until they become active.",
+      "semanticPreservation": "Visual suppression may not remove keyboard, screen-reader, route, or programmatic destination identity.",
+      "failure": "MORE_THAN_ONE_SIMULTANEOUS_READABLE_SPATIAL_LABEL_OR_ACTIVE_LABEL_NOT_MATCHING_FOREGROUND_STATE"
+    },
+    "premiumSurfaceMaterialLaw": {
+      "problem": "The lower feature and proof cards read as flat cardboard-like panels and understate the technological value of the content.",
+      "requiredOutcome": "Cards and tabs must read as premium high-tech glass or polished technical material: luminous depth, restrained translucency, reflective/specular edge treatment, layered shadow, selective chromatic energy, and strong text legibility.",
+      "prohibit": [
+        "FLAT_MATTE_CARDBOARD_PRESENTATION",
+        "GENERIC_NEON_EVERYWHERE",
+        "LOW_CONTRAST_GLASSMORPHISM",
+        "DECORATION_THAT_COMPETES_WITH_INFORMATION"
+      ]
+    },
+    "lawsSideBySideContinuation": {
+      "reference": "CURRENT_LAWS_CHAMBER_SIDE_BY_SIDE_PRESENTATION",
+      "requiredOutcome": "Where width permits, use the current Laws Chamber side-by-side relational composition as the donor principle for related Compass features instead of serial vertical stacking.",
+      "initialTargets": [
+        "COHERENCE_DIAGNOSTIC_WITH_TALK_TO_THE_HOUSE",
+        "BUILT_DIFFERENT_WITH_RELEVANT_PROOF_OR_BUILD_CONTINUATION_WHERE_COMPOSITIONALLY_SOUND"
+      ],
+      "responsiveLaw": "Desktop and sufficiently wide tablet may present related features side by side; phone must collapse cleanly to one column without density or hierarchy regression.",
+      "sourceInspectionRequired": true,
+      "sourceInspectionLaw": "Inspect the current Laws Chamber implementation before construction and adopt its compositional relationship rather than inventing a generic fifty-fifty grid from memory."
+    },
+    "preserve": [
+      "CURRENT_COMPASS_GEOMETRY",
+      "FOUR_CARDINAL_AUTHORITY",
+      "ALL_19_ROOM_IDENTITIES_AND_ROUTES",
+      "FOREGROUND_CONTEXT_SYNCHRONIZATION",
+      "MIRRORLAND_THRESHOLD_AND_ROUTE_CHOOSER",
+      "EXPLICIT_ENTER_AUTHORITY",
+      "AQUARIUM_AUDIO_BEHAVIOR",
+      "KEYBOARD_TOUCH_REDUCED_MOTION_AND_SCREEN_READER_EQUIVALENCE"
+    ],
+    "minimumVerification": [
+      "EXACTLY_ONE_VISIBLE_ACTIVE_SPATIAL_LABEL_AT_A_TIME",
+      "ACTIVE_LABEL_MATCHES_FOREGROUND_OR_SELECTED_OBJECT_AND_CONTEXT_PANEL",
+      "NONACTIVE_LABELS_ARE_VISUALLY_SUPPRESSED_WITHOUT_SEMANTIC_LOSS",
+      "PREMIUM_GLASS_TECH_SURFACES_PRESERVE_TEXT_CONTRAST_FOCUS_AND_TOUCH_CLARITY",
+      "CURRENT_LAWS_CHAMBER_SIDE_BY_SIDE_DONOR_WAS_INSPECTED_BEFORE_IMPLEMENTATION",
+      "WIDE_VIEW_RELATED_FEATURES_USE_SIDE_BY_SIDE_RELATIONAL_COMPOSITION_WHERE_APPROPRIATE",
+      "PHONE_REFLOWS_TO_SINGLE_COLUMN_WITHOUT_OVERFLOW_OR_CLUTTER"
+    ],
+    "stopLaw": "If the correction requires new navigation topology, new Compass geometry, route changes, scientific authority changes, or removal of semantic destination access, stop and reclassify before construction."
+  },
   "qualificationAmendment": {
     "law": "Technical Playwright green is insufficient. Exact-candidate qualification must include display-fidelity regression assertions and downstream visual/perceptual adjudication when the universal stack provides them.",
     "requiredAssertions": [
@@ -184,7 +236,10 @@
       "PROGRESSIVE_DISCLOSURE_PRESERVES_IMMEDIATE_COMPREHENSION",
       "EMPHASIS_IS_PROPORTIONAL_AND_NOT_REPEATED_VIEWPORT_SCALE_CARD_ACREAGE",
       "DESKTOP_AND_MOBILE_PRESERVE_SEMANTIC_EQUIVALENCE",
-      "LAWS_REFERENCE_MATURITY_IS_USED_ARCHITECTURALLY_WITHOUT_STYLE_CLONING"
+      "LAWS_REFERENCE_MATURITY_IS_USED_ARCHITECTURALLY_WITHOUT_STYLE_CLONING",
+      "EXACTLY_ONE_ACTIVE_SPATIAL_LABEL_IS_VISUALLY_READABLE_AT_A_TIME",
+      "PREMIUM_GLASS_TECH_SURFACES_PRESERVE_LEGIBILITY_AND_ACCESSIBILITY",
+      "LAWS_SIDE_BY_SIDE_RELATIONAL_COMPOSITION_IS_USED_WHERE_WIDTH_AND_HIERARCHY_SUPPORT_IT"
     ],
     "ownerInspectionLaw": "Owner-observed regressions are evidence to correct and bind; screenshots are not a required pre-merge approval gate unless explicitly requested."
   },

@@ -32,6 +32,23 @@ For a proposed change, add `--mutation-intent`. For many paths, use `--paths-fil
 
 The intake gate establishes whether an operation may begin and atomically locks its declared scope. The successor gate establishes only moving-head continuity through a freshly validated successor request and an atomic supersession/admission transaction. Neither gate grants project-specific mutation, merge, canonicalization, runtime, renderer, deployment, or production authority. The root router remains a dispatcher, not a source of project authority. Shared GitHub procedures explain how to resolve commits, create clean checkouts, use GitHub Actions, retrieve artifacts, verify hashes, publish receipts, and verify rollback; they do not grant project authority.
 
+## Whole-estate narrative and display continuity
+
+For every applicable public or experiential construction task, after canonical intake and repository routing are resolved and before visual construction begins, load the whole-estate continuity context:
+
+- `.github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json`
+- `.github/ai-router/display-continuity-constitution-v1/README.md`
+- `control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json`
+- `control-plane/whole-estate/narrative-spine-constitution-v1/narrative-spine.v1.json` when the narrative relation is material.
+
+This requirement applies to new public pages, material public-page renewals, frontiers, products, rooms, worlds, campaigns, Showroom work, navigation and transition changes, persistent-object work, responsive composition, shared visual systems, and any estate-wide display-coherence or continuity claim.
+
+Before construction, resolve the route display contract declared by the constitution: local identity, narrative relation, orientation relation, display role, runtime ceiling, persistent objects, transition meaning, progressive disclosure, mobile composition, reduced-motion equivalence, explicit return, claim boundary, local visual identity, and continuity hook.
+
+Preserve the authority separation: Compass owns global orientation and narrative anchoring; Governance is the public information-design and bounded-interaction reference; Evidence anchors claims and proof; Laws supplies runtime and semantic ceilings. Runtime classes are ceilings, not requirements. Semantic object identity may persist across transitions when continuity adds meaning, but continuity does not require one renderer or one universal page shell. Mobile is a distinct composition, reduced motion must preserve complete semantics, visual polish cannot create claim authority, and discovery may reveal depth without silently changing the public cardinal map.
+
+This global context does not widen mutation scope, create project authority, grant renderer/runtime authority, alter scientific standing, create claim authority, or substitute for project-specific entrypoints, nested `AGENTS.md`, evidence boundaries, or existing validation gates. If a task is not visual or experiential, do not invent display work merely because the constitution is globally discoverable.
+
 ## Progressive system continuity
 
 For a shared infrastructure or control-plane change, inspect `.github/ai-router/system-continuity/gap-registry.v1.json` before declaring the surrounding system closed. If the proposed interfaces or paths intersect an `OPEN` gap, declare and reconcile that gap rather than creating a parallel workaround.

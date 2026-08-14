@@ -66,9 +66,15 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf "$RUNNER_TEMP/reconstructed"
-          git clone -q "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" "$RUNNER_TEMP/reconstructed"
-          git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach "$CANDIDATE_SHA"
+          git init -q "$RUNNER_TEMP/reconstructed"
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" \
+            refs/transport/candidate:refs/transport/candidate \
+            refs/transport/base:refs/transport/base \
+            refs/transport/source:refs/transport/source
+          git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach refs/transport/candidate
           test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
+          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
           test -z "$(git -C "$RUNNER_TEMP/reconstructed" status --porcelain=v1 --untracked-files=all)"
           git -C "$RUNNER_TEMP/reconstructed" cat-file -p HEAD | grep -Fx "parent $BASE_SHA"
 

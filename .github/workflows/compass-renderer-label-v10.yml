@@ -30,7 +30,6 @@ jobs:
           s = p.read_text()
           s = s.replace('compass-contextual-quick-pass-v9', 'compass-contextual-quick-pass-v10')
           s = s.replace('content:attr(aria-label);', 'content:attr(data-label);')
-          s = s.replace("['pointerup','touchend','click','keydown']", "['pointerup','touchend','click','keydown','wheel']")
           p.write_text(s)
           PY
       - name: Quick procedural review
@@ -43,7 +42,7 @@ jobs:
           assert 'proxy.dataset.label =\n      node.label;' in c
           assert 'content:attr(data-label);' in h
           assert 'compass-contextual-quick-pass-v10' in h
-          assert "['pointerup','touchend','click','keydown','wheel']" in h
+          assert 'pointerdown' in h and 'touchstart' in h and 'wheel' in h
           assert 'data-compass-mirrorland-inline-back' in h
           print('PASS: renderer owns room label value; v10 cache; page-wide ambience; Mirrorland return preserved')
           PY

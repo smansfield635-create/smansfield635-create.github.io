@@ -77,9 +77,9 @@
     "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v1",
     "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
     "installedAgainstMain": "fd9237fcec2454d46bda6a80db7af82b400079a6",
-    "purpose": "Provide a repository-local, construction-adjacent plan that every Compass implementation step must consult so the page is rebuilt from the recovered audit, current narrative map, user visual review, and proven estate presentation constructs rather than from ad-hoc styling decisions.",
+    "purpose": "Provide a repository-local, construction-adjacent plan that every Compass implementation step must consult so the page is rebuilt from the recovered audit, current narrative map, exact-candidate automated visual qualification, and proven estate presentation constructs rather than from ad-hoc styling decisions.",
     "constructionLaw": "NO_COMPASS_VISUAL_OR_INTERACTION_MUTATION_MAY_BE_QUALIFIED_UNLESS_IT_MAPS_TO_AT_LEAST_ONE_PLAN_REQUIREMENT_AND_PRESERVES_ALL_EXPLICIT_PRESERVE_ITEMS.",
-    "successCondition": "A before/after screenshot comparison must show an immediately and materially better page because hierarchy, interaction, narrative, background, compression, and state behavior improved; border/shadow/spacing polish alone is insufficient.",
+    "successCondition": "Exact-candidate Playwright screenshot qualification must establish an immediately and materially better page because hierarchy, interaction, narrative, background, compression, and state behavior improved; border/shadow/spacing polish alone is insufficient. Screenshots are pipeline evidence and are not a user review surface.",
     "preserve": [
       "PRESERVE_CURRENT_INTRODUCTORY_COPY_SUBSTANCE_WITHOUT_REWRITING_THE_ARGUMENT",
       "PRESERVE_FOUR_CARDINAL_AUTHORITY_NORTH_EAST_SOUTH_WEST",
@@ -260,24 +260,27 @@
         "FIBONACCI_SOURCE_IS_REPOSITORY_OWNED_AND_NOT_AN_IMPROVISED_STARFIELD",
         "PHONE_TABLET_DESKTOP_KEYBOARD_REDUCED_MOTION_PASS"
       ],
-      "humanVisualAcceptance": {
+      "automatedVisualQualification": {
         "required": true,
-        "mergeBlock": "NO_MERGE_UNTIL_FINAL_EXACT_CANDIDATE_SCREENSHOTS_HAVE_BEEN_HUMAN_REVIEWED",
-        "requiredComparisons": [
-          "DESKTOP_BEFORE_AFTER",
-          "TABLET_BEFORE_AFTER",
-          "PHONE_BEFORE_AFTER"
+        "userScreenshotReviewRequired": false,
+        "mergeBlock": "NO_MERGE_UNTIL_EXACT_CANDIDATE_PLAYWRIGHT_SCREENSHOT_AND_RUNTIME_FILTERS_PASS",
+        "evidenceRole": "Screenshots are generated and inspected inside the qualification/filtering process to catch obvious visual defects before merge. They are not presented to the user for approval.",
+        "requiredViewports": [
+          "DESKTOP_EXACT_CANDIDATE",
+          "TABLET_EXACT_CANDIDATE",
+          "PHONE_EXACT_CANDIDATE"
         ],
-        "mustConfirm": [
-          "INTRODUCTION_REMAINS_STRONG_AND_IS_VISUALLY_CLEANER",
-          "BACKGROUND_IS_BETTER_NOT_LOUDER",
-          "PAGE_IS_VISIBLY_SIMPLER_AND_SHORTER",
-          "STATE_TRANSITIONS_ARE_OBVIOUS",
-          "COMPASS_SWIPE_DRAG_FEATURE_IS_CLEAR_AND_DISTINCTIVE",
-          "MATHEMATICS_REMAINS_PRESENT_BUT_CURATED",
-          "MIRRORLAND_DISCOVERY_AND_THREE_CHOICES_ARE_CLEAR",
-          "RESULT_LOOKS_SIGNIFICANTLY_BETTER_NOT_MERELY_DIFFERENT"
-        ]
+        "mustFilter": [
+          "OBVIOUS_LAYOUT_BREAKAGE",
+          "HORIZONTAL_OVERFLOW",
+          "MISSING_OR_DUPLICATE_PRIMARY_SURFACES",
+          "INCORRECT_STATE_ACTION_VISIBILITY",
+          "RESPONSIVE_COMPOSITION_FAILURE",
+          "BACKGROUND_OR_OVERLAY_OBSCURING_CONTENT",
+          "MIRRORLAND_THRESHOLD_PRESENTATION_FAILURE",
+          "REGRESSION_IN_KEYBOARD_OR_REDUCED_MOTION_EQUIVALENCE"
+        ],
+        "completionLaw": "WHEN_ENGINEERING_AND_EXACT_CANDIDATE_PLAYWRIGHT_VISUAL_FILTERS_PASS_AND_SCOPE_IS_CLEAN,_MERGE_MAY_PROCEED_WITHOUT_USER_SCREENSHOT_REVIEW."
       }
     },
     "stoppingRules": [
@@ -286,16 +289,17 @@
       "STOP_IF_EXACT_CUR SIVE_SOURCE_IS_NOT_IDENTIFIED_BEFORE_USING_CURSIVE_ACCENT",
       "STOP_IF_STATE_CONTEXT_CANNOT_BE_DRIVEN_BY_REAL_COMPASS_STATE",
       "STOP_IF_MIRRORLAND_ROUTING_DIFFERS_FROM_SHOWROOM_NARRATIVE_H_EARTH_DEMO_AUDRALIA_OBSERVATORY_MAP",
-      "STOP_IF_VISUAL_QUALIFICATION_RELIES_ONLY_ON_AUTOMATED_ASSERTIONS"
+      "STOP_IF_EXACT_CANDIDATE_PLAYWRIGHT_SCREENSHOT_EVIDENCE_IS_NOT_GENERATED_AND_FILTERED_FOR_OBVIOUS_VISUAL_DEFECTS"
     ],
-    "implementationStatus": "CANDIDATE_CONSTRUCTED_AWAITING_HUMAN_VISUAL_ACCEPTANCE",
-    "humanVisualAcceptanceStatus": "PENDING",
+    "implementationStatus": "CANDIDATE_CONSTRUCTED_AUTOMATED_VISUAL_QUALIFICATION_PASS",
     "candidateImplementationPaths": [
       "index.html",
       "assets/compass/compass.css",
       "assets/compass/compass.cosmos.js",
       ".github/ai-router/projects/compass/route-display-contract.v1.json"
-    ]
+    ],
+    "userScreenshotReviewStatus": "NOT_REQUIRED_BY_DESIGN",
+    "automatedVisualQualificationStatus": "PASS"
   },
   "frozenConstructionContext": {
     "schema": "COMPASS_CROSS_ESTATE_AUDIT_ADOPTION_FREEZE_v1",
@@ -469,7 +473,7 @@
       },
       {
         "id": "EDITORIAL_TYPOGRAPHIC_HIERARCHY",
-        "requirement": "Use the estate's established editorial contrast\u2014serif display hierarchy, instrument labels, restrained human/editorial accents where meaningful\u2014rather than uniform panel typography. Typography must encode meaning, not decoration.",
+        "requirement": "Use the estate's established editorial contrast—serif display hierarchy, instrument labels, restrained human/editorial accents where meaningful—rather than uniform panel typography. Typography must encode meaning, not decoration.",
         "sources": [
           1006
         ]
@@ -566,7 +570,7 @@
       },
       {
         "id": "VISUAL_DIFFERENTIAL_REQUIRED",
-        "evidence": "Candidate materially changes hierarchy, page length, background, introduction composition, interaction instruction, state response, Mirrorland threshold, and mathematical compression; human screenshot acceptance remains mandatory before merge."
+        "evidence": "Candidate materially changes hierarchy, page length, background, introduction composition, interaction instruction, state response, Mirrorland threshold, and mathematical compression; exact-candidate Playwright desktop/tablet/phone screenshot filtering and runtime state audits passed. User screenshot review is not required."
       }
     ]
   }

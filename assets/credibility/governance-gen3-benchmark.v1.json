@@ -3,6 +3,14 @@
   "status": "PUBLIC_BENCHMARK_SUMMARY",
   "generation": 3,
   "subject": "Governed software-construction control behavior after consolidation",
+  "consolidationProvenance": {
+    "milestonePullRequest": 1000,
+    "milestoneTitle": "Simplify control-plane governance and retire legacy bootstrap",
+    "historicalNote": "The consolidation happened to land as the repository's thousandth pull request. The number is historical provenance, not evidence of technical merit.",
+    "postConsolidationCleanupPullRequest": 1003,
+    "postConsolidationCleanupTitle": "Post-consolidation lean-operation cleanup",
+    "evidenceSequence": "PR #1000 milestone consolidation -> PR #1003 lean cleanup -> post-consolidation operational reconfirmation -> frozen Generation 3 blinded evaluation"
+  },
   "protocol": {
     "design": "Frozen blinded comparative evaluation followed by one-shot holdout",
     "blindedComparisonCases": 160,
@@ -14,7 +22,7 @@
   },
   "publicFinding": {
     "disposition": "GENERALIZATION_EVIDENCE_SUPPORTED_WITHIN_TESTED_BOUNDARY",
-    "summary": "The consolidated governance system was evaluated under unseen conditions after its control plane was materially simplified. The public claim is limited to evidence that the surviving system preserved legitimate-operation completion while retaining discrimination against adverse governance conditions within the frozen evaluation protocol.",
+    "summary": "After the PR #1000 control-plane consolidation and PR #1003 lean cleanup, the surviving governance system was operationally reconfirmed and then evaluated under unseen conditions. The public claim is limited to evidence that it preserved legitimate-operation completion while retaining discrimination against adverse governance conditions within the frozen evaluation protocol.",
     "supports": [
       "post-consolidation governance continuity",
       "blinded comparative evaluation",
@@ -23,6 +31,7 @@
       "adverse-condition discrimination within the tested protocol"
     ],
     "doesNotSupport": [
+      "technical merit derived from the pull-request number itself",
       "universal reliability",
       "enterprise-scale performance",
       "external certification or endorsement",
@@ -38,7 +47,7 @@
   },
   "publicationBoundary": {
     "quantitativeOutcomeValuesPublishedHere": false,
-    "reason": "This public summary records the frozen evaluation structure and authorized conclusion without exposing private evaluation material or asserting unsupported numerical results.",
+    "reason": "This public summary records the consolidation provenance, frozen evaluation structure and authorized conclusion without exposing private evaluation material or asserting unsupported numerical results.",
     "rule": "Promise -> evidence -> time-state -> boundary."
   }
 }

@@ -1,135 +1,115 @@
 /* /assets/compass/compass.cosmos.js
-   Main Compass scene-contained ARCHCOIN Fibonacci starfield transplant.
+   Compass reconstruction v4 companion.
 
-   Preserves Main Compass identity and decorative-only authority while adopting the
-   accepted ARCHCOIN static-base and burst-only sparkle field inside the Laws
-   orbit scene. No navigation, world geometry, projection, controller,
-   interaction, planet, or law-content authority is introduced.
+   Responsibilities:
+   - render the repository-owned Fibonacci/golden-angle Starry Night as a
+     decorative full-page background with sparse burst sparkle;
+   - recompose the existing introduction without rewriting its argument;
+   - remove redundant public-page sections identified in the locked plan;
+   - make the existing lower Compass context respond to orbit/cardinal/room
+     state without taking navigation or controller authority;
+   - expose Mirrorland as a three-route discovery threshold;
+   - preserve four-cardinal authority, existing cluster geometry, room routes,
+     explicit Enter navigation, Return to Orbit, Back to Compass, keyboard,
+     touch, and reduced-motion semantics.
+
+   Mirrorland remains a threshold behind the map, never a fifth direction.
 */
 (() => {
   "use strict";
 
-  const GLOBAL_KEY = "DGB_COMPASS_COSMOS";
-  const RECEIPT_KEY = "DGB_COMPASS_COSMOS_RECEIPT";
-  const READY_EVENT = "DGB_COMPASS_COSMOS_READY";
-  const FAILURE_EVENT = "DGB_COMPASS_COSMOS_FAILURE";
-  const STYLE_ID = "compass-archcoin-starfield-runtime-style";
-  const CANVAS_ATTRIBUTE = "data-compass-cosmos-canvas";
-  const BASE_VALUE = "base";
-  const OVERLAY_VALUE = "sparkle";
-  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
-  const FIELD_SEED = 0x4d41494e;
-
+  const GLOBAL_KEY = "DGB_COMPASS_RECONSTRUCTION_V4";
   if (globalThis[GLOBAL_KEY]?.initialized) return;
 
-  const CONFIG = Object.freeze({
-    mountSelector: "[data-compass-cosmic-field]",
-    sceneSelector: "[data-compass-scene]",
-    rootSelector: "[data-compass-root]",
-    mobileWidth: 820,
-    compactWidth: 560,
-    mobilePixelRatioCap: 1,
-    desktopPixelRatioCap: 1.25,
-    minimumStars: 52,
-    maximumStars: 108,
-    starAreaDivisor: 6100,
-    rogueRatio: 0.125,
-    candidateMultiplier: 8,
-    horizontalWarp: 1.13,
-    verticalWarp: 0.84,
-    radialJitter: 0.022,
-    angularJitter: 0.075,
-    zigzagPerturbation: 0.018,
-    centerVoidRadiusX: 0.225,
-    centerVoidRadiusY: 0.205,
-    minimumSparkles: 4,
-    maximumSparkles: 8,
-    firstBurstDelayMinimumMs: 2800,
-    firstBurstDelayMaximumMs: 4600,
-    burstDelayMinimumMs: 1500,
-    burstDelayMaximumMs: 3200,
-    burstDurationMinimumMs: 620,
-    burstDurationMaximumMs: 980,
-    sparkleFrameIntervalMs: 125
+  const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const FIELD_SEED = 0x44474243;
+  const COLORS = Object.freeze([
+    "255,248,224",
+    "154,217,225",
+    "234,208,131",
+    "170,155,224"
+  ]);
+
+  const CARDINALS = Object.freeze({
+    north: Object.freeze({
+      eyebrow: "North · Orientation",
+      title: "Find your bearings before you choose a destination.",
+      purpose: "Orientation is the estate's context-facing direction: products, entry points, human origin, guidance, and philosophy. It helps you understand what kind of place you are entering before you commit to one room.",
+      relationship: "Bring North forward when the question is still becoming clear. Open the star when you are ready to choose which kind of context would help most."
+    }),
+    east: Object.freeze({
+      eyebrow: "East · Worlds",
+      title: "Sometimes a system becomes clearer when you can stand inside it.",
+      purpose: "Worlds turns comparison, environment, history, civilization, and consequence into places you can explore. The Atlas and planetary environments let different system choices remain visible without reducing them to one abstract explanation.",
+      relationship: "Bring East forward when place, contrast, or an alternate world can reveal relationships that ordinary explanation leaves hidden."
+    }),
+    south: Object.freeze({
+      eyebrow: "South · Instruments",
+      title: "Measure, govern, and inspect without mistaking the instrument for the whole truth.",
+      purpose: "Instruments gathers the Lab, Laws, Governance, and operational control surfaces. These rooms help turn patterns into measurements, rules, authority boundaries, and bounded next actions.",
+      relationship: "Bring South forward when the next responsibility is to inspect what is happening, decide what can be said, or determine who is allowed to act."
+    }),
+    west: Object.freeze({
+      eyebrow: "West · Frontier",
+      title: "When understanding is no longer enough, build the next thing.",
+      purpose: "Frontier is the estate's construction-facing direction: prototypes, energy, water, infrastructure, and long-range design. It is where unresolved problems become practical experiments and buildable systems.",
+      relationship: "Bring West forward when the next question is not only what something means, but what should be made, tested, repaired, or carried forward."
+    })
   });
 
-  const VOID_MASKS = Object.freeze([
-    Object.freeze({ x: 0.24, y: 0.28, rx: 0.16, ry: 0.095, rotation: -0.46, feather: 0.22 }),
-    Object.freeze({ x: 0.76, y: 0.25, rx: 0.12, ry: 0.17, rotation: 0.31, feather: 0.20 }),
-    Object.freeze({ x: 0.72, y: 0.73, rx: 0.18, ry: 0.105, rotation: -0.19, feather: 0.24 }),
-    Object.freeze({ x: 0.27, y: 0.77, rx: 0.105, ry: 0.15, rotation: 0.52, feather: 0.20 })
-  ]);
+  const ROOMS = Object.freeze({
+    "north-1": Object.freeze({eyebrow:"Orientation · Products",title:"Choose the tool built for the job in front of you.",purpose:"Products is the shared entry point for Diamond Gate's dedicated operational systems. Each product has a narrower responsibility than the Compass and is designed to do work rather than explain the whole estate.",relationship:"Enter when you already know you need a focused instrument and want to compare the systems available."}),
+    "north-2": Object.freeze({eyebrow:"Orientation · Guide Desk",title:"See how the estate fits together without turning it into one giant menu.",purpose:"Guide Desk explains the relationships among products, worlds, instruments, frontier systems, philosophical rooms, and entry paths in plain language.",relationship:"Enter when the map itself is the problem and you want a broad explanation before choosing a direction."}),
+    "north-3": Object.freeze({eyebrow:"Orientation · Front Door",title:"Begin with the estate's formal introduction.",purpose:"Front Door is the intended threshold for visitors who want context before entering a specialized product, world, instrument, or construction path.",relationship:"Enter when you are new to Diamond Gate or prefer a guided arrival instead of choosing a specialized room first."}),
+    "north-4": Object.freeze({eyebrow:"Orientation · Meet Sean",title:"Meet the person who built the estate and the path that shaped it.",purpose:"Meet Sean provides the human origin behind Diamond Gate Bridge: the experiences, questions, constraints, and ambitions that influenced the estate's architecture.",relationship:"Enter when knowing the builder's journey will help the rest of the estate make more sense."}),
+    "north-5": Object.freeze({eyebrow:"Orientation · Philosophy Library",title:"Explore the values underneath the machinery.",purpose:"Philosophy Library carries the Nine Summits of Love and related work on responsibility, conviction, meaning, coherence, and the higher-self path.",relationship:"Enter when the question is not only what works, but what kind of relationship, responsibility, or future the work should support."}),
 
-  const COLORS = Object.freeze([
-    "255, 248, 224",
-    "154, 217, 225",
-    "234, 208, 131",
-    "170, 155, 224"
-  ]);
+    "east-1": Object.freeze({eyebrow:"Worlds · Atlas Study",title:"Start with the planetary map before choosing a world.",purpose:"Atlas Study is the shared geographic orientation for the estate's worlds. It lets you compare environments and understand where each world sits in the larger planetary landscape.",relationship:"Enter when you want the map first and the destination second."}),
+    "east-2": Object.freeze({eyebrow:"Worlds · ZIONTS",title:"Study a warning path built from recognizable choices.",purpose:"ZIONTS uses a familiar Earth trajectory to examine how social, environmental, and systemic decisions can accumulate into longer-term consequences.",relationship:"Enter when risk and consequence are easier to understand through a world that still feels close to home."}),
+    "east-3": Object.freeze({eyebrow:"Worlds · Audralia",title:"Explore a civilization organized around diagnosis and institutional integrity.",purpose:"Audralia asks what changes when diagnostic reasoning, authority boundaries, governance, and coherence shape institutions and civilization at planetary scale.",relationship:"Enter when you want to see those principles expressed as a living world rather than a report."}),
+    "east-4": Object.freeze({eyebrow:"Worlds · Hearth",title:"See systems through habitation, memory, survival, and place.",purpose:"Hearth is a living diagnostic world where land, settlement, inherited choices, survival, and environmental history are expressed through the environment itself.",relationship:"Enter when formal analysis needs the human weight of place and lived consequence."}),
+    "east-5": Object.freeze({eyebrow:"Worlds · H-Earth",title:"Compare reality against a parallel Earth you can actually explore.",purpose:"H-Earth is the estate's interactive demonstration world. It uses an alternate Earth expression to make familiar assumptions, structures, and outcomes visible through direct exploration.",relationship:"Enter when contrast and interaction can reveal what familiarity conceals."}),
+
+    "south-1": Object.freeze({eyebrow:"Instruments · The Lab",title:"Turn recurring pressure and pattern into something you can inspect.",purpose:"The Lab contains gauges and diagnostic surfaces for making conditions measurable without pretending that a measurement replaces context, judgment, or lived experience.",relationship:"Enter when comparison or measurement can clarify what repeated experience alone has not resolved."}),
+    "south-2": Object.freeze({eyebrow:"Instruments · Law Library",title:"Ask what rule, boundary, or test should govern the claim.",purpose:"Law Library contains the estate's governing Laws chamber: Flow, Integrity, Reality, Structure, Test, Research, and the standards used to keep conclusions bounded.",relationship:"Enter when the next question is what changed, what remained intact, what the evidence shows, what shaped the result, or what was actually tested."}),
+    "south-3": Object.freeze({eyebrow:"Instruments · Council Room",title:"Keep intent visible all the way to the decision.",purpose:"Council Room explains how Diamond Gate protects intent through authority, construction, verification, recovery, and delivery while keeping sophisticated engineering underneath one practical path.",relationship:"Enter when the question is who may decide, what is protected, how work stays controlled, or how a result earns the right to move forward."}),
+    "south-4": Object.freeze({eyebrow:"Instruments · Control Cockpit",title:"Translate findings into a bounded next action.",purpose:"Control Cockpit is where observations, dispositions, constraints, and authority boundaries become operational direction without pretending uncertainty has disappeared.",relationship:"Enter when the evidence is sufficient to act but the action still needs explicit boundaries and control."}),
+
+    "west-1": Object.freeze({eyebrow:"Frontier · Workshop Yard",title:"Move from unresolved problem to something buildable.",purpose:"Frontier Workshop Yard is the shared construction entry point for concepts, prototypes, technical pathways, and practical systems that do not yet have a finished form.",relationship:"Enter when the next responsibility is to make, test, or prototype rather than continue explaining."}),
+    "west-2": Object.freeze({eyebrow:"Frontier · Energy Bench",title:"Treat energy as part of a system, not an isolated technology.",purpose:"Energy Bench examines generation, transfer, storage, efficiency, distribution, and loss in relationship with the infrastructure and environments that depend on them.",relationship:"Enter when power is one requirement inside a larger design problem."}),
+    "west-3": Object.freeze({eyebrow:"Frontier · Water Bench",title:"Follow water from source to access, treatment, storage, and use.",purpose:"Water Bench examines how water moves through homes, communities, infrastructure, and larger environments while staying connected to energy, governance, habitation, and access.",relationship:"Enter when water is a system requirement whose consequences extend beyond the pipe."}),
+    "west-4": Object.freeze({eyebrow:"Frontier · Infrastructure Bay",title:"Design for the systems people only notice when they stop working.",purpose:"Infrastructure Bay examines structural support, utilities, networks, maintenance, continuity, and the hidden dependencies required for ordinary operation.",relationship:"Enter when the design has to keep functioning after attention moves somewhere else."}),
+    "west-5": Object.freeze({eyebrow:"Frontier · Vision Window",title:"Look far enough ahead to see what today's choices are building toward.",purpose:"Vision Window is the long-range planning space for possible futures, strategic direction, downstream effects, and the horizon created by present choices.",relationship:"Enter when immediate construction must remain accountable to the future it helps create."})
+  });
+
+  const GLOBAL_CONTEXT = Object.freeze({
+    eyebrow: "The Compass · Signature interaction",
+    title: "Rotate the estate. Bring a direction forward.",
+    purpose: "This Compass is not a static menu. Drag with a mouse or swipe with a finger to rotate the constellation itself. As a cardinal star comes forward, the context below changes with it before you open anything.",
+    relationship: "Explore without committing. Rotate first, open a cardinal when its direction fits, select a room, and use the explicit Enter action only when you are ready to leave the Compass."
+  });
 
   const state = {
     initialized: false,
-    destroyed: false,
-    failed: false,
-    documentVisible: !document.hidden,
-    sceneVisible: false,
-    reducedMotion: false,
     root: null,
     scene: null,
-    mount: null,
-    baseCanvas: null,
-    baseContext: null,
-    overlayCanvas: null,
-    overlayContext: null,
-    width: 0,
-    height: 0,
-    pixelRatio: 1,
-    quality: 1,
-    stars: [],
-    sparkles: [],
-    activeSparkles: [],
-    rogueCount: 0,
-    phyllotaxisCount: 0,
-    burstTimer: 0,
-    frameTimer: 0,
-    baseDrawCount: 0,
-    sparkleFrameCount: 0,
-    resizeObserver: null,
-    intersectionObserver: null,
-    motionObserver: null,
-    motionQuery: null,
-    onVisibility: null,
-    onMotion: null,
-    onResize: null
+    panel: null,
+    panelEyebrow: null,
+    panelTitle: null,
+    panelPurpose: null,
+    panelRelationship: null,
+    enterButton: null,
+    mirrorlandChoices: null,
+    interacted: false,
+    contextSignature: "",
+    night: null,
+    nightResizeTimer: 0,
+    nightSparkleTimer: 0,
+    reducedMotion: false
   };
 
-  const api = Object.freeze({
-    initialized: false,
-    start: () => scheduleNextBurst(true),
-    stop: stopSparkles,
-    destroy,
-    resize,
-    setQuality,
-    receipt: () => Object.freeze(buildReceipt())
-  });
-
-  globalThis[GLOBAL_KEY] = api;
-
-  function clamp(value, minimum, maximum) {
-    return Math.min(maximum, Math.max(minimum, value));
-  }
-
-  function hash32(value) {
-    let x = value >>> 0;
-    x ^= x >>> 16;
-    x = Math.imul(x, 0x7feb352d);
-    x ^= x >>> 15;
-    x = Math.imul(x, 0x846ca68b);
-    x ^= x >>> 16;
-    return x >>> 0;
-  }
-
-  function createRandom(seed) {
+  function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+  function randomFactory(seed) {
     let value = seed >>> 0;
     return () => {
       value += 0x6d2b79f5;
@@ -140,726 +120,330 @@
     };
   }
 
-  function randomBetween(random, minimum, maximum) {
-    return minimum + random() * (maximum - minimum);
-  }
+  function installFibonacciNight() {
+    const mount = document.createElement("div");
+    mount.dataset.compassFibonacciNight = "";
+    mount.setAttribute("aria-hidden", "true");
+    const base = document.createElement("canvas");
+    const sparkle = document.createElement("canvas");
+    base.dataset.layer = "base";
+    sparkle.dataset.layer = "sparkle";
+    mount.append(base, sparkle);
+    document.body.prepend(mount);
 
-  function shuffled(values, random) {
-    const result = [...values];
-    for (let index = result.length - 1; index > 0; index -= 1) {
-      const target = Math.floor(random() * (index + 1));
-      [result[index], result[target]] = [result[target], result[index]];
-    }
-    return result;
-  }
+    const baseContext = base.getContext("2d", {alpha:true, desynchronized:true});
+    const sparkleContext = sparkle.getContext("2d", {alpha:true, desynchronized:true});
+    if (!baseContext || !sparkleContext) return;
 
-  function buildReceipt(extra = {}) {
-    return {
-      contract: "DGB_COMPASS_COSMOS_ARCHCOIN_SCENE_FIELD_v1",
-      module: GLOBAL_KEY,
-      sourceModel: "ARCHCOIN_FIBONACCI_PHYLLOTAXIS_FIELD_v1",
-      renderingModel: "static-base-burst-overlay",
-      geometryModel: "golden-angle-square-root-jitter-elliptical-void-masked",
-      compassIdentityPreserved: true,
-      sceneContained: true,
-      fullViewportLayer: false,
-      dualSpacecraftPreserved: false,
-      continuousAnimation: false,
-      requestAnimationFrameUsed: false,
-      initialized: state.initialized,
-      destroyed: state.destroyed,
-      failed: state.failed,
-      documentVisible: state.documentVisible,
-      sceneVisible: state.sceneVisible,
-      reducedMotion: state.reducedMotion,
-      width: state.width,
-      height: state.height,
-      pixelRatio: state.pixelRatio,
-      quality: state.quality,
-      starCount: state.stars.length,
-      phyllotaxisCount: state.phyllotaxisCount,
-      rogueCount: state.rogueCount,
-      rogueRatio: CONFIG.rogueRatio,
-      voidMaskCount: VOID_MASKS.length,
-      sparkleCount: state.sparkles.length,
-      activeSparkleCount: state.activeSparkles.length,
-      sparkleFrameIntervalMs: CONFIG.sparkleFrameIntervalMs,
-      baseDrawCount: state.baseDrawCount,
-      sparkleFrameCount: state.sparkleFrameCount,
-      ownsNavigation: false,
-      ownsWorldGeometry: false,
-      ownsProjection: false,
-      ownsControllerState: false,
-      ownsInteraction: false,
-      ownsPlanet: false,
-      ownsCompassContent: false,
-      visualPassClaimed: false,
-      ...extra
+    state.night = {mount, base, sparkle, baseContext, sparkleContext, width:0, height:0, dpr:1, stars:[], rogue:[]};
+    const motion = matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotion = () => {
+      state.reducedMotion = Boolean(motion.matches || state.root?.dataset?.reducedMotion === "true");
+      if (state.reducedMotion) sparkleContext.clearRect(0,0,state.night.width,state.night.height);
     };
+    updateMotion();
+    motion.addEventListener?.("change", updateMotion);
+
+    const resize = () => {
+      const width = Math.max(320, innerWidth || document.documentElement.clientWidth || 320);
+      const height = Math.max(480, innerHeight || document.documentElement.clientHeight || 480);
+      const dpr = Math.min(devicePixelRatio || 1, width <= 820 ? 1 : 1.25);
+      Object.assign(state.night, {width, height, dpr});
+      for (const canvas of [base, sparkle]) {
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+      }
+      baseContext.setTransform(dpr,0,0,dpr,0,0);
+      sparkleContext.setTransform(dpr,0,0,dpr,0,0);
+      generateNight();
+      drawNight();
+    };
+
+    const generateNight = () => {
+      const {width, height} = state.night;
+      const count = clamp(Math.round(width * height / 7200), 96, 210);
+      const random = randomFactory(FIELD_SEED ^ width ^ (height << 7));
+      const stars = [];
+      for (let i = 0; i < count; i += 1) {
+        const radius = Math.sqrt((i + .5) / count);
+        const angle = i * GOLDEN_ANGLE + (random() - .5) * .12;
+        const x = clamp(.5 + Math.cos(angle) * radius * .71 + (random() - .5) * .026, .012, .988);
+        const y = clamp(.46 + Math.sin(angle) * radius * .60 + (random() - .5) * .026, .012, .988);
+        const rogue = random() < .13;
+        stars.push({
+          x: x * width,
+          y: y * height,
+          radius: .45 + random() * 1.35,
+          alpha: .23 + random() * .56,
+          color: COLORS[Math.floor(random() * COLORS.length)],
+          rogue
+        });
+      }
+      state.night.stars = stars;
+      state.night.rogue = stars.filter(star => star.rogue);
+    };
+
+    const drawStar = (ctx, star, alpha = star.alpha, scale = 1) => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius * scale, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${star.color},${alpha})`;
+      ctx.shadowColor = `rgba(${star.color},${alpha * .65})`;
+      ctx.shadowBlur = star.radius * scale * 4;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    };
+
+    const drawNight = () => {
+      baseContext.clearRect(0,0,state.night.width,state.night.height);
+      for (const star of state.night.stars) drawStar(baseContext, star);
+    };
+
+    const sparkleBurst = () => {
+      clearTimeout(state.nightSparkleTimer);
+      if (state.reducedMotion || document.hidden || !state.night.rogue.length) return;
+      sparkleContext.clearRect(0,0,state.night.width,state.night.height);
+      const random = randomFactory(FIELD_SEED ^ Date.now());
+      const pool = [...state.night.rogue].sort(() => random() - .5).slice(0, 3 + Math.floor(random() * 4));
+      for (const star of pool) drawStar(sparkleContext, star, Math.min(.95, star.alpha + .25), 1.8 + random() * 1.4);
+      setTimeout(() => sparkleContext.clearRect(0,0,state.night.width,state.night.height), 620);
+      state.nightSparkleTimer = setTimeout(sparkleBurst, 2200 + random() * 2400);
+    };
+
+    window.addEventListener("resize", () => {
+      clearTimeout(state.nightResizeTimer);
+      state.nightResizeTimer = setTimeout(resize, 120);
+    }, {passive:true});
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) sparkleBurst();
+    });
+
+    resize();
+    state.nightSparkleTimer = setTimeout(sparkleBurst, 2800);
   }
 
-  function publish(extra = {}) {
-    const receipt = Object.freeze(buildReceipt(extra));
-    globalThis[RECEIPT_KEY] = receipt;
-    if (state.root) {
-      state.root.dataset.compassCosmosStatus = state.failed
-        ? "held"
-        : state.initialized
-          ? "available"
-          : "pending";
-      state.root.dataset.compassCosmosRunning = String(canRun());
-      state.root.dataset.compassCosmosModel = receipt.renderingModel;
-      state.root.dataset.compassCosmosContract = receipt.contract;
-      state.root.dataset.compassCosmosSourceModel = receipt.sourceModel;
-      state.root.dataset.compassCosmosSceneContained = "true";
-      state.root.dataset.compassCosmosReceipt = JSON.stringify(receipt);
+  function recomposePage() {
+    const introduction = document.querySelector(".compass-introduction");
+    const introDetails = introduction?.querySelector(".compass-introduction__more");
+    if (introDetails) {
+      introDetails.open = true;
+      introDetails.dataset.compassEditorialOpen = "true";
     }
-    return receipt;
-  }
 
-  function fail(error) {
-    if (state.failed) return;
-    state.failed = true;
-    stopSparkles();
-    const message = error instanceof Error ? error.message : String(error);
-    publish({ lastAction: "cosmos-failure", lastFailure: message });
-    globalThis.dispatchEvent(new CustomEvent(FAILURE_EVENT, {
-      detail: Object.freeze({ message })
-    }));
-  }
+    document.querySelector(".compass-practical-context")?.remove();
+    document.querySelector(".compass-supporting-entry")?.remove();
+    document.querySelector(".compass-discovery")?.remove();
 
-  function installStyle() {
-    let style = document.getElementById(STYLE_ID);
-    if (!style) {
-      style = document.createElement("style");
-      style.id = STYLE_ID;
-      document.head.append(style);
+    const orbitIntro = document.querySelector(".compass-orbit-intro");
+    if (orbitIntro && !document.querySelector(".compass-action-bridge")) {
+      const bridge = document.createElement("section");
+      bridge.className = "compass-action-bridge";
+      bridge.setAttribute("aria-label", "From premise to Compass");
+      bridge.innerHTML = `
+        <p class="compass-action-bridge__eyebrow">From premise to action</p>
+        <h2>You do not have to begin with the right answer. Begin with the question you actually have.</h2>
+        <p>The Compass lets you bring one kind of path into focus, see what it offers, and change direction without losing the larger landscape.</p>
+      `;
+      orbitIntro.before(bridge);
     }
-    style.textContent = `
-      [data-compass-cosmic-field] {
-        position: absolute;
-        inset: 0;
-        overflow: hidden;
-        pointer-events: none;
-        contain: strict;
-        isolation: isolate;
+
+    if (orbitIntro) {
+      const kicker = orbitIntro.querySelector(".compass-estate__kicker");
+      const title = orbitIntro.querySelector("h2");
+      const paragraph = orbitIntro.querySelector("p:not(.compass-estate__kicker)");
+      if (kicker) kicker.textContent = "Signature Compass Interaction";
+      if (title) title.textContent = "Rotate the estate. Bring a direction forward.";
+      if (paragraph) paragraph.textContent = "Drag with a mouse or swipe with a finger. The constellation rotates as one instrument, and the context beneath it changes as each cardinal direction comes forward.";
+
+      if (!orbitIntro.querySelector(".compass-signature-controls")) {
+        const controls = document.createElement("div");
+        controls.className = "compass-signature-controls";
+        controls.setAttribute("aria-label", "How to use the Compass");
+        controls.innerHTML = "<span>1 · Drag or swipe to rotate</span><span>2 · Bring a direction forward</span><span>3 · Open the primary star</span>";
+        orbitIntro.append(controls);
       }
-      [data-compass-cosmic-field] canvas[${CANVAS_ATTRIBUTE}] {
-        position: absolute;
-        inset: 0;
-        display: block;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        mix-blend-mode: screen;
+      if (!orbitIntro.querySelector(".compass-mirrorland-hunt")) {
+        const hunt = document.createElement("p");
+        hunt.className = "compass-mirrorland-hunt";
+        hunt.textContent = "There is a secret entrance to Mirrorland hidden inside the Compass. See if you can find it.";
+        orbitIntro.append(hunt);
       }
-      [${CANVAS_ATTRIBUTE}="${BASE_VALUE}"] {
-        z-index: 1;
-        opacity: .93;
+    }
+
+    const foundation = document.querySelector(".compass-supporting-foundation");
+    if (foundation) {
+      const kicker = foundation.querySelector(".compass-estate__kicker");
+      const title = foundation.querySelector("h2");
+      const lead = foundation.querySelector(".compass-supporting-foundation__header > p:last-child");
+      if (kicker) kicker.textContent = "A Small Mathematical Foundation";
+      if (title) title.textContent = "Keep the mathematics. Leave the encyclopedia to the rooms built for it.";
+      if (lead) lead.textContent = "These relationships are enough to show the mathematical character beneath Diamond Gate. Deeper derivation, evidence, validation standing, and technical custody belong on the authoritative pages that own them.";
+      if (!foundation.querySelector(".compass-math-editorial-line")) {
+        const line = document.createElement("p");
+        line.className = "compass-math-editorial-line";
+        line.textContent = "A useful model should make a relationship easier to see without pretending the model is the whole reality.";
+        foundation.querySelector(".compass-supporting-foundation__header")?.after(line);
       }
-      [${CANVAS_ATTRIBUTE}="${OVERLAY_VALUE}"] {
-        z-index: 2;
-      }
-      @media (max-width: 820px) {
-        [${CANVAS_ATTRIBUTE}="${BASE_VALUE}"] { opacity: .86; }
-      }
-      @media (max-width: 560px) {
-        [${CANVAS_ATTRIBUTE}="${BASE_VALUE}"] { opacity: .78; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        [${CANVAS_ATTRIBUTE}="${OVERLAY_VALUE}"] { display: none !important; }
-      }
+      for (const details of foundation.querySelectorAll("details")) details.open = false;
+    }
+
+    const guidance = document.querySelector("[data-compass-guidance]");
+    if (guidance) guidance.textContent = "Swipe or drag to rotate. The context below follows the direction you bring forward.";
+  }
+
+  function installMirrorlandThreshold() {
+    const actions = state.panel?.querySelector(".compass-panel__actions");
+    if (!actions || state.mirrorlandChoices) return;
+    const threshold = document.createElement("section");
+    threshold.className = "compass-mirrorland-threshold";
+    threshold.hidden = true;
+    threshold.innerHTML = `
+      <p class="compass-mirrorland-threshold__notice"><strong>Mirrorland is still under construction.</strong> You are welcome to explore what is already here.</p>
+      <nav class="compass-mirrorland-threshold__routes" aria-label="Mirrorland destinations">
+        <a href="/showroom/"><strong>Enter the Narrative</strong><span>Showroom · the narrative experience</span></a>
+        <a href="/showroom/globe/h-earth/"><strong>Enter the Demo</strong><span>H-Earth · the interactive demo</span></a>
+        <a href="/showroom/globe/audralia/"><strong>See the World Map</strong><span>Audralia Observatory · planetary map</span></a>
+      </nav>
     `;
-  }
+    actions.before(threshold);
+    state.mirrorlandChoices = threshold;
 
-  function resolveReducedMotion() {
-    state.reducedMotion = Boolean(
-      state.motionQuery?.matches ||
-      state.root?.dataset?.reducedMotion === "true" ||
-      state.root?.dataset?.reducedMotion === "true"
-    );
-    return state.reducedMotion;
-  }
+    const mirrorlandObject = document.querySelector('[data-destination-type="mirrorland"]');
+    mirrorlandObject?.addEventListener("click", event => {
+      event.preventDefault();
+      state.interacted = true;
+      queueMicrotask(syncContext);
+    }, true);
 
-  function configureCanvas(canvas, value) {
-    canvas.setAttribute(CANVAS_ATTRIBUTE, value);
-    canvas.setAttribute("aria-hidden", "true");
-    canvas.style.pointerEvents = "none";
-    return canvas;
-  }
-
-  function createCanvases() {
-    state.mount = document.querySelector(CONFIG.mountSelector);
-    state.scene = document.querySelector(CONFIG.sceneSelector);
-    state.root = document.querySelector(CONFIG.rootSelector);
-
-    if (!state.mount || !state.scene || !state.root) {
-      throw new Error("COMPASS_ARCHCOIN_STARFIELD_SURFACE_NOT_FOUND");
-    }
-
-    installStyle();
-
-    const baseSelector = `[${CANVAS_ATTRIBUTE}="${BASE_VALUE}"]`;
-    const overlaySelector = `[${CANVAS_ATTRIBUTE}="${OVERLAY_VALUE}"]`;
-    const baseCanvas = state.mount.querySelector(baseSelector) ||
-      configureCanvas(document.createElement("canvas"), BASE_VALUE);
-    const overlayCanvas = state.mount.querySelector(overlaySelector) ||
-      configureCanvas(document.createElement("canvas"), OVERLAY_VALUE);
-
-    if (!baseCanvas.isConnected) state.mount.append(baseCanvas);
-    if (!overlayCanvas.isConnected) state.mount.append(overlayCanvas);
-
-    const baseContext = baseCanvas.getContext("2d", {
-      alpha: true,
-      desynchronized: true
-    });
-    const overlayContext = overlayCanvas.getContext("2d", {
-      alpha: true,
-      desynchronized: true
-    });
-
-    if (!baseContext || !overlayContext) {
-      throw new Error("COMPASS_ARCHCOIN_STARFIELD_CONTEXT_UNAVAILABLE");
-    }
-
-    state.baseCanvas = baseCanvas;
-    state.baseContext = baseContext;
-    state.overlayCanvas = overlayCanvas;
-    state.overlayContext = overlayContext;
-  }
-
-  function inCentralVoid(x, y) {
-    const dx = (x - 0.5) / CONFIG.centerVoidRadiusX;
-    const dy = (y - 0.5) / CONFIG.centerVoidRadiusY;
-    return dx * dx + dy * dy < 1;
-  }
-
-  function maskDistance(x, y, mask) {
-    const cosine = Math.cos(mask.rotation);
-    const sine = Math.sin(mask.rotation);
-    const dx = x - mask.x;
-    const dy = y - mask.y;
-    const rotatedX = dx * cosine + dy * sine;
-    const rotatedY = -dx * sine + dy * cosine;
-    return Math.sqrt(
-      (rotatedX * rotatedX) / (mask.rx * mask.rx) +
-      (rotatedY * rotatedY) / (mask.ry * mask.ry)
-    );
-  }
-
-  function rejectedByVoidMask(x, y, random, rogue = false) {
-    for (const mask of VOID_MASKS) {
-      const distance = maskDistance(x, y, mask);
-      if (distance >= 1 + mask.feather) continue;
-      if (distance <= 1) {
-        if (!rogue || random() < 0.84) return true;
-        continue;
+    state.enterButton?.addEventListener("click", event => {
+      if (isMirrorlandActive()) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
       }
-      const edgeStrength = 1 - (distance - 1) / mask.feather;
-      const rejection = edgeStrength * (rogue ? 0.48 : 0.82);
-      if (random() < rejection) return true;
-    }
-    return false;
+    }, true);
   }
 
-  function insideFieldBounds(x, y) {
-    return x >= 0.014 && x <= 0.986 && y >= 0.014 && y <= 0.986;
+  function isMirrorlandActive() {
+    const mirror = String(state.root?.dataset?.mirrorlandWindowState || "");
+    return mirror.includes("MIRRORLAND") || state.root?.dataset?.selectedDestinationType === "mirrorland";
   }
 
-  function chooseColor(random) {
-    const roll = random();
-    return roll < 0.79
-      ? COLORS[0]
-      : roll < 0.91
-        ? COLORS[1]
-        : roll < 0.975
-          ? COLORS[2]
-          : COLORS[3];
+  function showMirrorland() {
+    state.root.dataset.compassContextState = "mirrorland";
+    state.root.dataset.compassContextCardinal = "";
+    state.panelEyebrow.textContent = "Mirrorland · Secret threshold";
+    state.panelTitle.textContent = "You found the entrance behind the map.";
+    state.panelPurpose.textContent = "Mirrorland is not a fifth direction. It is a hidden threshold behind the Compass that opens three different ways of exploring the estate's constructed worlds.";
+    state.panelRelationship.textContent = "Choose the narrative in Showroom, the interactive demo in H-Earth, or the planetary map in Audralia Observatory. All three are still under construction, and you are welcome to explore.";
+    state.mirrorlandChoices.hidden = false;
+    if (state.enterButton) state.enterButton.hidden = true;
   }
 
-  function createStarRecord(position, random, rogue) {
-    const depth = Math.pow(random(), 1.55);
-    return {
-      x: position.x * state.width,
-      y: position.y * state.height,
-      radius: randomBetween(random, 0.50, 1.58) * (0.62 + depth * 0.78),
-      alpha: randomBetween(random, 0.27, 0.82) * (0.68 + depth * 0.42),
-      color: chooseColor(random),
-      depth,
-      rogue
-    };
+  function showContext(context, signature, cardinal = "", stateName = "context") {
+    if (!context || !state.panelEyebrow || !state.panelTitle || !state.panelPurpose || !state.panelRelationship) return;
+    state.root.dataset.compassContextState = stateName;
+    state.root.dataset.compassContextCardinal = cardinal;
+    state.panelEyebrow.textContent = context.eyebrow;
+    state.panelTitle.textContent = context.title;
+    state.panelPurpose.textContent = context.purpose;
+    state.panelRelationship.textContent = context.relationship;
+    if (state.mirrorlandChoices) state.mirrorlandChoices.hidden = true;
+    if (state.enterButton) state.enterButton.hidden = false;
+    state.contextSignature = signature;
   }
 
-  function createPhyllotaxisStars(count, random) {
-    const stars = [];
-    const maximumCandidates = Math.max(count * CONFIG.candidateMultiplier, count + 32);
-
-    for (
-      let candidate = 0;
-      candidate < maximumCandidates && stars.length < count;
-      candidate += 1
-    ) {
-      const normalized = (candidate + 1.5) / maximumCandidates;
-      const baseRadius = Math.sqrt(normalized) * 0.70;
-      const radialJitter = randomBetween(random, -CONFIG.radialJitter, CONFIG.radialJitter);
-      const angleJitter = randomBetween(random, -CONFIG.angularJitter, CONFIG.angularJitter);
-      const alternating = candidate % 2 === 0 ? 1 : -1;
-      const angle =
-        candidate * GOLDEN_ANGLE +
-        angleJitter +
-        alternating * CONFIG.zigzagPerturbation;
-      const radius = Math.max(0, baseRadius + radialJitter);
-      const x = 0.5 + Math.cos(angle) * radius * CONFIG.horizontalWarp;
-      const y = 0.5 + Math.sin(angle) * radius * CONFIG.verticalWarp;
-
-      if (!insideFieldBounds(x, y)) continue;
-      if (inCentralVoid(x, y)) continue;
-      if (rejectedByVoidMask(x, y, random, false)) continue;
-
-      stars.push(createStarRecord({ x, y }, random, false));
-    }
-
-    return stars;
-  }
-
-  function createRogueStars(count, random) {
-    const stars = [];
-    const maximumAttempts = Math.max(80, count * 30);
-
-    for (
-      let attempt = 0;
-      attempt < maximumAttempts && stars.length < count;
-      attempt += 1
-    ) {
-      const x = randomBetween(random, 0.018, 0.982);
-      const y = randomBetween(random, 0.018, 0.982);
-      if (inCentralVoid(x, y)) continue;
-      if (rejectedByVoidMask(x, y, random, true)) continue;
-      stars.push(createStarRecord({ x, y }, random, true));
-    }
-
-    return stars;
-  }
-
-  function createSparkles(count, random) {
-    const candidates = state.stars
-      .map((star, index) => ({ star, index }))
-      .filter(({ star }) => star.depth > 0.42 && star.alpha > 0.36);
-
-    return shuffled(candidates, random).slice(0, count).map(({ index, star }) => ({
-      starIndex: index,
-      radius: clamp(star.radius * randomBetween(random, 1.15, 1.55), 1.25, 2.45),
-      alpha: randomBetween(random, 0.58, 0.94),
-      color: star.color
-    }));
-  }
-
-  function rebuildParticleField() {
-    if (!state.width || !state.height) return;
-
-    const area = state.width * state.height;
-    const mobileFactor = state.width <= CONFIG.compactWidth
-      ? 0.70
-      : state.width <= CONFIG.mobileWidth
-        ? 0.84
-        : 1;
-    const density = state.quality * mobileFactor;
-    const starCount = clamp(
-      Math.floor((area / CONFIG.starAreaDivisor) * density),
-      CONFIG.minimumStars,
-      CONFIG.maximumStars
-    );
-    const rogueCount = clamp(
-      Math.round(starCount * CONFIG.rogueRatio),
-      6,
-      Math.max(6, starCount - 12)
-    );
-    const phyllotaxisCount = starCount - rogueCount;
-    const sparkleCount = clamp(
-      Math.floor(CONFIG.maximumSparkles * density),
-      CONFIG.minimumSparkles,
-      CONFIG.maximumSparkles
-    );
-    const dimensionSeed = hash32(
-      FIELD_SEED ^
-      Math.round(state.width * 8) ^
-      (Math.round(state.height * 8) << 1) ^
-      Math.round(state.quality * 1000)
-    );
-    const random = createRandom(dimensionSeed);
-    const phyllotaxisStars = createPhyllotaxisStars(phyllotaxisCount, random);
-    const missing = Math.max(0, phyllotaxisCount - phyllotaxisStars.length);
-    const rogueStars = createRogueStars(rogueCount + missing, random);
-
-    state.stars = [...phyllotaxisStars, ...rogueStars];
-    state.phyllotaxisCount = phyllotaxisStars.length;
-    state.rogueCount = rogueStars.length;
-    state.sparkles = createSparkles(sparkleCount, random);
-    state.activeSparkles.length = 0;
-  }
-
-  function applyCanvasSize(canvas, context, width, height, pixelRatio) {
-    canvas.width = Math.max(1, Math.round(width * pixelRatio));
-    canvas.height = Math.max(1, Math.round(height * pixelRatio));
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    context.imageSmoothingEnabled = true;
-  }
-
-  function resize() {
-    if (
-      !state.baseCanvas ||
-      !state.baseContext ||
-      !state.overlayCanvas ||
-      !state.overlayContext ||
-      !state.mount ||
-      !state.scene
-    ) return false;
-
-    const width = Math.max(1, state.mount.clientWidth || state.scene.clientWidth || 1);
-    const height = Math.max(1, state.mount.clientHeight || state.scene.clientHeight || 1);
-    const cap = width <= CONFIG.mobileWidth
-      ? CONFIG.mobilePixelRatioCap
-      : CONFIG.desktopPixelRatioCap;
-    const pixelRatio = clamp(globalThis.devicePixelRatio || 1, 1, cap);
-
-    if (
-      width === state.width &&
-      height === state.height &&
-      pixelRatio === state.pixelRatio
-    ) return false;
-
-    state.width = width;
-    state.height = height;
-    state.pixelRatio = pixelRatio;
-
-    applyCanvasSize(state.baseCanvas, state.baseContext, width, height, pixelRatio);
-    applyCanvasSize(state.overlayCanvas, state.overlayContext, width, height, pixelRatio);
-    rebuildParticleField();
-    drawBase();
-    clearOverlay();
-    publish({ lastAction: "cosmos-resized" });
-    return true;
-  }
-
-  function drawBase() {
-    const context = state.baseContext;
-    if (!context) return;
-
-    context.clearRect(0, 0, state.width, state.height);
-    context.save();
-
-    for (const star of state.stars) {
-      if (star.depth > 0.74) {
-        context.fillStyle = `rgba(${star.color}, ${star.alpha * 0.12})`;
-        context.beginPath();
-        context.arc(star.x, star.y, star.radius * 2.7, 0, Math.PI * 2);
-        context.fill();
-      }
-
-      context.fillStyle = `rgba(${star.color}, ${clamp(star.alpha, 0.08, 0.94)})`;
-      context.beginPath();
-      context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-      context.fill();
-    }
-
-    context.restore();
-    state.baseDrawCount += 1;
-  }
-
-  function clearOverlay() {
-    state.overlayContext?.clearRect(0, 0, state.width, state.height);
-  }
-
-  function canRun() {
-    return Boolean(
-      state.initialized &&
-      !state.destroyed &&
-      !state.failed &&
-      state.documentVisible &&
-      state.sceneVisible &&
-      !state.reducedMotion &&
-      state.overlayContext
-    );
-  }
-
-  function clearTimers() {
-    if (state.burstTimer) clearTimeout(state.burstTimer);
-    if (state.frameTimer) clearTimeout(state.frameTimer);
-    state.burstTimer = 0;
-    state.frameTimer = 0;
-  }
-
-  function stopSparkles() {
-    clearTimers();
-    state.activeSparkles.length = 0;
-    clearOverlay();
-    if (!state.destroyed) publish({ lastAction: "cosmos-sparkles-stopped" });
-    return true;
-  }
-
-  function scheduleNextBurst(initial = false) {
-    if (!canRun() || state.burstTimer || state.frameTimer || state.activeSparkles.length) {
-      return false;
-    }
-
-    const random = createRandom(hash32(FIELD_SEED ^ Date.now()));
-    const delay = initial
-      ? randomBetween(random, CONFIG.firstBurstDelayMinimumMs, CONFIG.firstBurstDelayMaximumMs)
-      : randomBetween(random, CONFIG.burstDelayMinimumMs, CONFIG.burstDelayMaximumMs);
-
-    state.burstTimer = globalThis.setTimeout(() => {
-      state.burstTimer = 0;
-      beginBurst();
-    }, delay);
-
-    publish({ lastAction: "cosmos-sparkle-burst-scheduled" });
-    return true;
-  }
-
-  function beginBurst() {
-    if (!canRun() || !state.sparkles.length) return false;
-
-    const random = createRandom(hash32(FIELD_SEED ^ Math.round(performance.now())));
-    const available = shuffled(state.sparkles, random);
-    const count = random() < 0.24 ? 2 : 1;
-    const now = performance.now();
-
-    state.activeSparkles = available.slice(0, count).map(sparkle => ({
-      ...sparkle,
-      start: now,
-      duration: randomBetween(
-        random,
-        CONFIG.burstDurationMinimumMs,
-        CONFIG.burstDurationMaximumMs
-      )
-    }));
-
-    drawSparkleFrame(now);
-    scheduleSparkleFrame();
-    publish({ lastAction: "cosmos-sparkle-burst-started" });
-    return true;
-  }
-
-  function scheduleSparkleFrame() {
-    if (!canRun() || state.frameTimer || !state.activeSparkles.length) return;
-    state.frameTimer = globalThis.setTimeout(() => {
-      state.frameTimer = 0;
-      runSparkleFrame();
-    }, CONFIG.sparkleFrameIntervalMs);
-  }
-
-  function runSparkleFrame() {
-    if (!canRun()) {
-      stopSparkles();
+  function syncContext() {
+    if (!state.root || !state.panel) return;
+    if (isMirrorlandActive()) {
+      showMirrorland();
       return;
     }
 
-    const now = performance.now();
-    state.activeSparkles = state.activeSparkles.filter(
-      sparkle => now - sparkle.start < sparkle.duration
-    );
+    const roomId = String(state.root.dataset.selectedRoom || "");
+    const selectedCardinal = String(state.root.dataset.selectedCardinal || "");
+    const orbitFocus = String(state.root.dataset.orbitFocus || "north");
 
-    drawSparkleFrame(now);
-
-    if (state.activeSparkles.length) scheduleSparkleFrame();
-    else {
-      clearOverlay();
-      scheduleNextBurst(false);
-      publish({ lastAction: "cosmos-sparkle-burst-completed" });
-    }
-  }
-
-  function drawSparkleFrame(timestamp) {
-    const context = state.overlayContext;
-    if (!context) return;
-
-    context.clearRect(0, 0, state.width, state.height);
-    context.save();
-    context.lineCap = "round";
-
-    for (const sparkle of state.activeSparkles) {
-      const star = state.stars[sparkle.starIndex];
-      if (!star) continue;
-
-      const progress = clamp((timestamp - sparkle.start) / sparkle.duration, 0, 1);
-      const pulse = Math.sin(progress * Math.PI);
-      const alpha = sparkle.alpha * Math.pow(pulse, 2.15);
-      const reach = sparkle.radius * (1.8 + pulse * 3.2);
-
-      context.strokeStyle = `rgba(${sparkle.color}, ${alpha})`;
-      context.lineWidth = 0.74;
-      context.beginPath();
-      context.moveTo(star.x - reach, star.y);
-      context.lineTo(star.x + reach, star.y);
-      context.moveTo(star.x, star.y - reach);
-      context.lineTo(star.x, star.y + reach);
-      context.stroke();
-
-      context.fillStyle = `rgba(${sparkle.color}, ${clamp(alpha * 1.18, 0, 1)})`;
-      context.beginPath();
-      context.arc(star.x, star.y, sparkle.radius * (0.78 + pulse * 0.34), 0, Math.PI * 2);
-      context.fill();
+    if (roomId && ROOMS[roomId]) {
+      showContext(ROOMS[roomId], `room:${roomId}`, selectedCardinal || orbitFocus, "room");
+      return;
     }
 
-    context.restore();
-    state.sparkleFrameCount += 1;
-  }
-
-  function setQuality(value) {
-    const next = clamp(Number(value), 0.60, 1);
-    if (!Number.isFinite(next) || Math.abs(next - state.quality) < 0.02) return false;
-    state.quality = next;
-    rebuildParticleField();
-    drawBase();
-    clearOverlay();
-    publish({ lastAction: "cosmos-quality-updated" });
-    return true;
-  }
-
-  function evaluateRunningState() {
-    resolveReducedMotion();
-    if (canRun()) scheduleNextBurst(true);
-    else stopSparkles();
-  }
-
-  function bindEnvironment() {
-    state.motionQuery = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)") || null;
-
-    state.onVisibility = () => {
-      state.documentVisible = !document.hidden;
-      evaluateRunningState();
-    };
-    document.addEventListener("visibilitychange", state.onVisibility, { passive: true });
-
-    state.onMotion = () => evaluateRunningState();
-    if (typeof state.motionQuery?.addEventListener === "function") {
-      state.motionQuery.addEventListener("change", state.onMotion);
-    } else {
-      state.motionQuery?.addListener?.(state.onMotion);
-    }
-
-    if (state.root && "MutationObserver" in globalThis) {
-      state.motionObserver = new MutationObserver(evaluateRunningState);
-      state.motionObserver.observe(state.root, {
-        attributes: true,
-        attributeFilter: ["data-reduced-motion", "data-laws-reduced-motion"]
+    if (selectedCardinal && CARDINALS[selectedCardinal]) {
+      const c = CARDINALS[selectedCardinal];
+      const clusterContext = Object.freeze({
+        eyebrow: c.eyebrow.replace(" · ", " · Cluster · "),
+        title: c.title,
+        purpose: `${c.purpose} The cluster is open now; rotate it and bring one room forward to learn what that room means before entering.`,
+        relationship: "Room selection changes this same context surface. Navigation does not occur until you use the explicit Enter action."
       });
+      showContext(clusterContext, `cluster:${selectedCardinal}`, selectedCardinal, "cluster");
+      return;
     }
 
-    if ("ResizeObserver" in globalThis) {
-      state.resizeObserver = new ResizeObserver(resize);
-      state.resizeObserver.observe(state.mount);
-    } else {
-      state.onResize = resize;
-      globalThis.addEventListener("resize", state.onResize, { passive: true });
+    if (state.interacted && CARDINALS[orbitFocus]) {
+      showContext(CARDINALS[orbitFocus], `cardinal:${orbitFocus}`, orbitFocus, "cardinal");
+      return;
     }
 
-    if ("IntersectionObserver" in globalThis) {
-      state.intersectionObserver = new IntersectionObserver(entries => {
-        const entry = entries[0];
-        state.sceneVisible = Boolean(entry?.isIntersecting && entry.intersectionRatio > 0);
-        evaluateRunningState();
-      }, {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.01
-      });
-      state.intersectionObserver.observe(state.scene);
-    } else {
-      state.sceneVisible = true;
-    }
-
-    globalThis.addEventListener("pagehide", destroy, { once: true });
+    showContext(GLOBAL_CONTEXT, "global", "", "global");
   }
 
-  function destroy() {
-    if (state.destroyed) return;
-    state.destroyed = true;
-    clearTimers();
-    state.activeSparkles.length = 0;
-    clearOverlay();
-    state.intersectionObserver?.disconnect();
-    state.resizeObserver?.disconnect();
-    state.motionObserver?.disconnect();
-    if (state.onVisibility) {
-      document.removeEventListener("visibilitychange", state.onVisibility);
-    }
-    if (state.onResize) {
-      globalThis.removeEventListener("resize", state.onResize);
-    }
-    if (typeof state.motionQuery?.removeEventListener === "function") {
-      state.motionQuery.removeEventListener("change", state.onMotion);
-    } else {
-      state.motionQuery?.removeListener?.(state.onMotion);
-    }
-    state.baseCanvas?.remove();
-    state.overlayCanvas?.remove();
-    state.stars.length = 0;
-    state.sparkles.length = 0;
-    publish({ lastAction: "cosmos-destroyed" });
-  }
+  function installStateObservation() {
+    state.scene?.addEventListener("pointerdown", () => { state.interacted = true; }, {passive:true});
+    state.scene?.addEventListener("touchstart", () => { state.interacted = true; }, {passive:true});
+    state.scene?.addEventListener("click", () => { state.interacted = true; queueMicrotask(syncContext); }, {passive:true});
 
-  function installBuildDoor() {
-    const note = document.querySelector(".compass-accessibility-note");
-    if (!note || document.querySelector("[data-compass-build-door]")) return;
-
-    const section = document.createElement("section");
-    section.className = "compass-supporting-entry__group";
-    section.setAttribute("aria-labelledby", "compass-build-door-title");
-    section.setAttribute("data-compass-build-door", "true");
-
-    const title = document.createElement("h3");
-    title.id = "compass-build-door-title";
-    title.className = "compass-supporting-entry__group-title";
-    title.textContent = "Build with Diamond Gate";
-
-    const nav = document.createElement("nav");
-    nav.className = "compass-route-deck";
-    nav.setAttribute("aria-label", "Website construction");
-
-    const link = document.createElement("a");
-    link.className = "compass-route-card";
-    link.href = "/build/";
-    link.setAttribute("data-direct-estate-route", "build");
-
-    const label = document.createElement("span");
-    label.className = "compass-route-card__label";
-    label.textContent = "Build Your Own Custom Site";
-
-    const purpose = document.createElement("span");
-    purpose.className = "compass-route-card__purpose";
-    purpose.textContent = "Custom website construction is available now. Explore how Diamond Gate builds, compare the engineering, inspect proof of product, or start an inquiry.";
-
-    const action = document.createElement("span");
-    action.className = "compass-route-card__action";
-    action.textContent = "Explore Website Construction";
-
-    link.append(label, purpose, action);
-    nav.append(link);
-    section.append(title, nav);
-    note.replaceWith(section);
+    const observer = new MutationObserver(() => queueMicrotask(syncContext));
+    observer.observe(state.root, {
+      attributes: true,
+      attributeFilter: [
+        "data-orbit-focus",
+        "data-selected-cardinal",
+        "data-selected-room",
+        "data-selected-destination-type",
+        "data-mirrorland-window-state",
+        "data-compass-mode"
+      ]
+    });
   }
 
   function initialize() {
-    installBuildDoor();
-    try {
-      createCanvases();
-      bindEnvironment();
-      resolveReducedMotion();
-      resize();
-      state.initialized = true;
-      globalThis[GLOBAL_KEY] = Object.freeze({ ...api, initialized: true });
-      publish({ lastAction: "cosmos-initialized" });
-      globalThis.dispatchEvent(new CustomEvent(READY_EVENT, {
-        detail: globalThis[RECEIPT_KEY]
-      }));
-      evaluateRunningState();
-    } catch (error) {
-      fail(error);
-    }
+    state.root = document.querySelector("[data-compass-root]");
+    state.scene = document.querySelector("[data-compass-scene]");
+    state.panel = document.querySelector("[data-compass-panel]");
+    if (!state.root || !state.scene || !state.panel) return;
+
+    state.panelEyebrow = state.panel.querySelector("[data-compass-panel-eyebrow]");
+    state.panelTitle = state.panel.querySelector("[data-compass-panel-title]");
+    state.panelPurpose = state.panel.querySelector("[data-compass-panel-purpose]");
+    state.panelRelationship = state.panel.querySelector("[data-compass-panel-relationship]");
+    state.enterButton = state.panel.querySelector("[data-compass-enter]");
+
+    state.root.dataset.compassReconstruction = "v4";
+    state.root.dataset.compassContextState = "global";
+    state.root.dataset.compassContextCardinal = "";
+
+    recomposePage();
+    installMirrorlandThreshold();
+    installFibonacciNight();
+    installStateObservation();
+    syncContext();
+
+    state.initialized = true;
+    globalThis[GLOBAL_KEY] = Object.freeze({
+      initialized: true,
+      schema: "COMPASS_PAGE_RECONSTRUCTION_RUNTIME_v4",
+      fibonacciSourceModel: "DGB_BUILD_GOVERNANCE_FIBONACCI_COSMOS_v7_GOLDEN_ANGLE_DERIVATION",
+      stateLedContext: true,
+      mirrorlandThreeRouteThreshold: true,
+      ownsNavigation: false,
+      ownsControllerState: false,
+      ownsWorldGeometry: false
+    });
+    globalThis.dispatchEvent(new CustomEvent("DGB_COMPASS_RECONSTRUCTION_READY", {detail: globalThis[GLOBAL_KEY]}));
   }
 
-  initialize();
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, {once:true});
+  else initialize();
 })();

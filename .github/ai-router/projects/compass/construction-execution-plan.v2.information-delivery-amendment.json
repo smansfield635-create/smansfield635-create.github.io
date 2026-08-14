@@ -1,0 +1,54 @@
+{
+  "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2_INFORMATION_DELIVERY_AMENDMENT",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "amends": [
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.display-fidelity-amendment.json"
+  ],
+  "scope": "COMPASS_ONLY",
+  "source": "Owner clarification after live mobile review on 2026-08-14.",
+  "purpose": "Clarify that the Laws Chamber donor is not merely a side-by-side layout precedent. Its deeper architectural value is state-driven information delivery: keep only a limited amount of high-value information visible at once, then let visitor interaction replace that visible information in place without accumulating parallel explanatory blocks.",
+  "lawsInformationDeliveryReference": {
+    "reference": "CURRENT_LAWS_CHAMBER_ACTIVE_STATE_INFORMATION_DELIVERY",
+    "requiredAdoption": [
+      "LIMIT_SIMULTANEOUS_INFORMATION_ON_SCREEN",
+      "ACTIVE_STATE_DETERMINES_VISIBLE_EXPLANATION",
+      "USER_ACTION_REPLACES_INFORMATION_IN_PLACE",
+      "PEER_INFORMATION_RECEDES_OR_HIDES_UNTIL_ACTIVE",
+      "PRESERVE_CONTEXT_WHILE_CHANGING_CONTENT",
+      "AVOID_VERTICAL_ACCUMULATION_OF_EQUIVALENT_DETAIL"
+    ],
+    "law": "The Compass should behave like an instrument with a stable presentation surface whose content changes with active state, not like a document that reveals every available explanation at once.",
+    "notJustLayout": "Side-by-side composition is secondary to the architectural delivery model. The essential donor is bounded visible information plus interactive state substitution.",
+    "failure": "MULTIPLE_PEER_EXPLANATIONS_VISIBLE_SIMULTANEOUSLY_WHEN_ONE_ACTIVE_STATE_CAN_CARRY_THE_REQUIRED_INFORMATION"
+  },
+  "compassApplication": {
+    "spatialLabels": "Exactly one active spatial label is visually readable at a time; changing foreground state changes that label in place.",
+    "contextSurface": "Exactly one current cardinal/room explanation should dominate the contextual surface. Rotating or selecting replaces the active explanation rather than adding another block.",
+    "featureDelivery": "Where lower-page features contain peer or alternate proof/information states, prefer a bounded active-state surface that swaps visible content over stacking all equivalent details simultaneously.",
+    "lawsSideBySideRelationship": "On wide viewports, pair the active object/control with its current information surface. The content surface may update while its spatial role remains stable.",
+    "mobileRelationship": "On phone, preserve the same active-state information architecture even when the visual layout collapses vertically. Mobile collapse must not become information accumulation.",
+    "progressiveDisclosure": "Additional depth remains available through explicit visitor intent, but only the currently useful layer should occupy primary visual attention."
+  },
+  "preserve": [
+    "FOUR_CARDINAL_AUTHORITY",
+    "ALL_19_ROOM_IDENTITIES_AND_ROUTES",
+    "CURRENT_COMPASS_GEOMETRY",
+    "FOREGROUND_CONTEXT_SYNCHRONIZATION",
+    "MIRRORLAND_THRESHOLD_AND_ROUTE_CHOOSER",
+    "EXPLICIT_ENTER_AUTHORITY",
+    "AQUARIUM_AUDIO_BEHAVIOR",
+    "KEYBOARD_TOUCH_REDUCED_MOTION_AND_SCREEN_READER_EQUIVALENCE"
+  ],
+  "minimumVerification": [
+    "ONLY_ONE_ACTIVE_SPATIAL_LABEL_IS_VISUALLY_READABLE",
+    "ONLY_ONE_PEER_DESTINATION_EXPLANATION_DOMINATES_AT_A_TIME",
+    "CHANGING_ACTIVE_STATE_REPLACES_VISIBLE_INFORMATION_WITHOUT_STACKING_NEW_EQUIVALENT_BLOCKS",
+    "ACTIVE_INFORMATION_MATCHES_FOREGROUND_OR_SELECTED_OBJECT",
+    "WIDE_VIEW_USES_STABLE_OBJECT_PLUS_ACTIVE_INFORMATION_RELATIONSHIP_WHERE_APPROPRIATE",
+    "PHONE_REFLOW_PRESERVES_ACTIVE_STATE_SUBSTITUTION_INSTEAD_OF_INFORMATION_ACCUMULATION",
+    "HIDDEN_OR_RECESSED_PEER_INFORMATION_RETAINS_SEMANTIC_AND_NAVIGATIONAL_ACCESS"
+  ],
+  "reviewPosture": "BOUNDED_DISPLAY_AND_INFORMATION_ARCHITECTURE_REFINEMENT_NO_EXTREME_AUDIT_CYCLE",
+  "stopLaw": "If implementation requires new destination topology, new Compass geometry, route changes, scientific authority changes, or replacement of direct manipulation with surrogate navigation, stop and reclassify before construction."
+}

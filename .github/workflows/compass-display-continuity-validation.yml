@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/compass-reference-implementation-v1
+      - agent/compass-structural-reconstruction-v3
     paths:
       - 'index.html'
       - 'assets/compass/**'
@@ -79,7 +80,7 @@ jobs:
           cat /tmp/compass-http.log
           exit 1
 
-      - name: Qualify desktop tablet mobile keyboard reduced motion and performance
+      - name: Qualify structural differential desktop tablet mobile keyboard reduced motion and performance
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -98,20 +99,47 @@ jobs:
             await page.waitForSelector('[data-compass-root]', { timeout: 10000 });
             await page.waitForSelector('[data-compass-cardinal]', { state: 'visible', timeout: 10000 });
             const elapsed = Date.now() - started;
-            const result = await page.evaluate(() => ({
-              title: document.title,
-              cardinals: [...document.querySelectorAll('[data-compass-cardinal]')].map(el => el.getAttribute('data-cardinal-id')),
-              horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-              returnToOrbit: Boolean(document.querySelector('[data-compass-return-to-orbit]')),
-              backToCompass: Boolean(document.querySelector('[data-compass-mirrorland-back]')),
-              mirrorlandIsCardinal: Boolean(document.querySelector('[data-compass-cardinal][data-destination-type="mirrorland"]'))
-            }));
+            const result = await page.evaluate(() => {
+              const rect = selector => {
+                const el = document.querySelector(selector);
+                if (!el) return null;
+                const r = el.getBoundingClientRect();
+                return { top: r.top + scrollY, bottom: r.bottom + scrollY, height: r.height, width: r.width };
+              };
+              const root = document.querySelector('[data-compass-root]');
+              const story = getComputedStyle(root, '::after').content;
+              const rootStyle = getComputedStyle(root);
+              const headerStyle = getComputedStyle(document.querySelector('.compass-estate__header'));
+              return {
+                title: document.title,
+                cardinals: [...document.querySelectorAll('[data-compass-cardinal]')].map(el => el.getAttribute('data-cardinal-id')),
+                horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+                returnToOrbit: Boolean(document.querySelector('[data-compass-return-to-orbit]')),
+                backToCompass: Boolean(document.querySelector('[data-compass-mirrorland-back]')),
+                mirrorlandIsCardinal: Boolean(document.querySelector('[data-compass-cardinal][data-destination-type="mirrorland"]')),
+                header: rect('.compass-estate__header'),
+                intro: rect('.compass-orbit-intro'),
+                scene: rect('.compass-scene'),
+                panel: rect('.compass-panel'),
+                narrative: rect('.compass-introduction'),
+                supporting: rect('.compass-supporting-entry'),
+                story,
+                backgroundImage: rootStyle.backgroundImage,
+                headerColumns: headerStyle.gridTemplateColumns
+              };
+            });
             check(`${name}_LOAD`, result.title.includes('Compass'), { elapsedMs: elapsed, title: result.title });
             check(`${name}_FOUR_CARDINALS`, JSON.stringify(result.cardinals) === JSON.stringify(['north','east','south','west']), result.cardinals);
             check(`${name}_NO_HORIZONTAL_OVERFLOW`, result.horizontalOverflow <= 2, result.horizontalOverflow);
             check(`${name}_EXPLICIT_RETURN_CONTROLS`, result.returnToOrbit && result.backToCompass, result);
             check(`${name}_MIRRORLAND_NOT_CARDINAL`, !result.mirrorlandIsCardinal, result.mirrorlandIsCardinal);
             check(`${name}_LOCAL_LOAD_PERFORMANCE`, elapsed < 8000, `${elapsed}ms`);
+            check(`${name}_COMPASS_PRECEDES_NARRATIVE`, result.intro && result.scene && result.panel && result.narrative && result.intro.top < result.scene.top && result.scene.top < result.panel.top && result.panel.top < result.narrative.top, { intro: result.intro, scene: result.scene, panel: result.panel, narrative: result.narrative });
+            check(`${name}_SCENE_DOMINANT`, result.scene && result.scene.height >= viewport.height * 0.65, { sceneHeight: result.scene?.height, viewportHeight: viewport.height });
+            check(`${name}_SUPPORTING_DOWNSTREAM`, result.supporting && result.scene && result.supporting.top > result.scene.bottom, { supporting: result.supporting, scene: result.scene });
+            check(`${name}_STORY_BACKGROUND_PRESENT`, result.backgroundImage.includes('radial-gradient') && (name === 'MOBILE' || result.story.includes('LATENT POSSIBILITY')), { story: result.story, backgroundImage: result.backgroundImage.slice(0,240) });
+            if (name === 'DESKTOP') check('DESKTOP_EDITORIAL_SPLIT', result.headerColumns.split(' ').length >= 2, result.headerColumns);
+            if (name === 'MOBILE') check('MOBILE_EDITORIAL_REFLOW', result.headerColumns.split(' ').length === 1, result.headerColumns);
             await page.screenshot({ path: `/tmp/compass-${name.toLowerCase()}.png`, fullPage: true });
             await context.close();
           }
@@ -124,14 +152,27 @@ jobs:
             const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
             const page = await context.newPage();
             await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 15000 });
-            const first = page.locator('[data-compass-cardinal]').first();
-            await first.focus();
-            const focused = await first.evaluate(el => document.activeElement === el);
+            const north = page.locator('[data-cardinal-id="north"]');
+            await north.focus();
+            const focused = await north.evaluate(el => document.activeElement === el);
             check('KEYBOARD_FOCUS', focused, focused);
-            await first.press('Enter');
-            await page.waitForTimeout(300);
-            const selected = await page.locator('[data-compass-root]').getAttribute('data-selected-cardinal');
-            check('KEYBOARD_CARDINAL_ACTIVATION', selected === 'north', selected);
+            await north.press('Enter');
+            await page.waitForTimeout(350);
+            const state = await page.evaluate(() => {
+              const root = document.querySelector('[data-compass-root]');
+              const north = document.querySelector('[data-cardinal-id="north"]');
+              const east = document.querySelector('[data-cardinal-id="east"]');
+              return {
+                selected: root?.getAttribute('data-selected-cardinal'),
+                northOpacity: Number(getComputedStyle(north).opacity),
+                eastOpacity: Number(getComputedStyle(east).opacity),
+                panelBorder: getComputedStyle(document.querySelector('.compass-panel')).borderColor
+              };
+            });
+            check('KEYBOARD_CARDINAL_ACTIVATION', state.selected === 'north', state);
+            check('PERSISTENT_SELECTED_VS_PEER_DIFFERENTIAL', state.northOpacity > state.eastOpacity, state);
+            check('STATE_PROPAGATES_TO_PANEL', Boolean(state.panelBorder), state.panelBorder);
+            await page.screenshot({ path: '/tmp/compass-selected-north.png', fullPage: true });
             await context.close();
           }
 
@@ -151,7 +192,7 @@ jobs:
           await browser.close();
           const failures = checks.filter(item => !item.pass);
           const receipt = {
-            schema: 'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v1',
+            schema: 'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v2_STRUCTURAL_DIFFERENTIAL',
             candidateHead: process.env.GITHUB_SHA || null,
             result: failures.length ? 'FAIL_CLOSED' : 'PASS',
             qualifications: {
@@ -161,6 +202,7 @@ jobs:
               keyboard: failures.every(f => !f.id.startsWith('KEYBOARD_')),
               reducedMotion: failures.every(f => !f.id.startsWith('REDUCED_MOTION_')),
               performance: failures.every(f => !f.id.endsWith('_LOCAL_LOAD_PERFORMANCE')),
+              structuralDifferential: failures.every(f => !f.id.includes('COMPASS_PRECEDES_NARRATIVE') && !f.id.includes('SCENE_DOMINANT') && !f.id.includes('STORY_BACKGROUND') && !f.id.includes('EDITORIAL_') && !f.id.includes('SELECTED_VS_PEER')),
               semanticContinuity: failures.length === 0
             },
             checks,
@@ -181,3 +223,4 @@ jobs:
             /tmp/compass-desktop.png
             /tmp/compass-tablet.png
             /tmp/compass-mobile.png
+            /tmp/compass-selected-north.png

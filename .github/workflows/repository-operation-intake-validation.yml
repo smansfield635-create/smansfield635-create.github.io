@@ -1,159 +1,89 @@
 name: Repository Operation Intake Validation
-
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'AI_ENTRYPOINT.json'
-      - '.github/operation-intake/**'
-      - 'tools/operation-intake/**'
-      - '.github/ai-router/fixed-fixture-intake/**'
-      - '.github/workflows/repository-operation-intake-validation.yml'
-      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
-      - 'tools/repository-ai-entry-router.mjs'
+    paths: ['AI_ENTRYPOINT.json','.github/operation-intake/**','tools/operation-intake/**','.github/ai-router/fixed-fixture-intake/**','.github/workflows/repository-operation-intake-validation.yml','.github/workflows/canonical-operation-intake-transport-v1.yml','tools/repository-ai-entry-router.mjs']
   push:
     branches: [main]
-    paths:
-      - 'AI_ENTRYPOINT.json'
-      - '.github/operation-intake/**'
-      - 'tools/operation-intake/**'
-      - '.github/ai-router/fixed-fixture-intake/**'
-      - '.github/workflows/repository-operation-intake-validation.yml'
-      - '.github/workflows/canonical-operation-intake-transport-v1.yml'
-      - 'tools/repository-ai-entry-router.mjs'
+    paths: ['AI_ENTRYPOINT.json','.github/operation-intake/**','tools/operation-intake/**','.github/ai-router/fixed-fixture-intake/**','.github/workflows/repository-operation-intake-validation.yml','.github/workflows/canonical-operation-intake-transport-v1.yml','tools/repository-ai-entry-router.mjs']
   issue_comment:
     types: [created]
   workflow_dispatch:
     inputs:
-      fixture_id:
-        description: Optional registered fixed-fixture identity
-        required: false
-        type: string
-      action:
-        description: Fixed action; only ADMIT is accepted
-        required: false
-        type: string
-
+      fixture_id: {description: Optional registered fixed-fixture identity, required: false, type: string}
+      action: {description: Fixed action; only ADMIT is accepted, required: false, type: string}
 permissions:
   contents: read
-
 env:
   EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-
 jobs:
   current-control-plane-conformance:
     if: github.event_name != 'issue_comment' && (github.event_name != 'workflow_dispatch' || inputs.fixture_id == '')
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.EXPECTED_HEAD }}
-          fetch-depth: 0
-          persist-credentials: false
+        with: {ref: '${{ env.EXPECTED_HEAD }}', fetch-depth: 0, persist-credentials: false}
       - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Verify exact current canonical spine
-        shell: bash
+        with: {node-version: 22}
+      - name: Verify current canonical spine
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          const e=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json','utf8'));
-          const l=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json','utf8'));
+          import fs from'node:fs';
+          const e=JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json')),l=JSON.parse(fs.readFileSync('.github/operation-intake/locator.v1.json'));
           if(e.status!=='ACTIVE_FAIL_CLOSED'||l.status!=='ACTIVE_FAIL_CLOSED')throw Error('ACTIVE_STATUS_MISMATCH');
-          if(e.operationIntakeGate?.locator!=='.github/operation-intake/locator.v1.json')throw Error('NONCANONICAL_INTAKE_LOCATOR');
-          if(e.remoteCanonicalIntakeTransport?.canonicalLocator!==e.operationIntakeGate.locator)throw Error('TRANSPORT_LOCATOR_DIVERGENCE');
-          if(e.remoteCanonicalIntakeTransport?.admissionSemanticsDuplicated!==false)throw Error('PARALLEL_ADMISSION_SEMANTICS');
+          if(e.operationIntakeGate?.locator!=='.github/operation-intake/locator.v1.json')throw Error('NONCANONICAL_LOCATOR');
+          if(e.remoteCanonicalIntakeTransport?.canonicalLocator!==e.operationIntakeGate.locator||e.remoteCanonicalIntakeTransport?.admissionSemanticsDuplicated!==false)throw Error('PARALLEL_INTAKE_SEMANTICS');
+          for(const p of[l.entrypoint,l.lockManager,l.requestSchema,l.constructionProcedureSchema])if(!fs.existsSync(p))throw Error('CANONICAL_PATH_MISSING:'+p);
           NODE
-          node tools/operation-intake/repository-operation-intake-self-test.v1.mjs --seed .github/operation-intake/bootstrap-seed.v1.json --output "$RUNNER_TEMP/intake-self-test.json"
+          node --check tools/operation-intake/repository-operation-intake-gate.v1.mjs
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
           node tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
-          node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test > "$RUNNER_TEMP/transport-self-test.json"
-          node .github/ai-router/fixed-fixture-intake/self-test.v1.mjs > "$RUNNER_TEMP/fixed-fixture-self-test.json"
-          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --self-test > "$RUNNER_TEMP/fixed-fixture-differential-self-test.json"
-          node tools/repository-ai-entry-router.mjs --self-test --output "$RUNNER_TEMP/router-self-test.json"
+          node tools/operation-intake/canonical-operation-intake-transport.v1.mjs --self-test > /tmp/transport-self-test.json
+          node .github/ai-router/fixed-fixture-intake/self-test.v1.mjs > /tmp/fixed-fixture-self-test.json
+          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --self-test > /tmp/fixed-fixture-differential-self-test.json
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/router-self-test.json
       - uses: actions/upload-artifact@v4
         with:
           name: repository-operation-intake-current-conformance-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/intake-self-test.json
-            ${{ runner.temp }}/transport-self-test.json
-            ${{ runner.temp }}/fixed-fixture-self-test.json
-            ${{ runner.temp }}/fixed-fixture-differential-self-test.json
-            ${{ runner.temp }}/router-self-test.json
+            /tmp/transport-self-test.json
+            /tmp/fixed-fixture-self-test.json
+            /tmp/fixed-fixture-differential-self-test.json
+            /tmp/router-self-test.json
           if-no-files-found: error
           retention-days: 90
-
   fixed-fixture-canonical-intake:
     if: >-
       (github.event_name == 'workflow_dispatch' && inputs.fixture_id != '') ||
-      (github.event_name == 'issue_comment' &&
-       contains(github.event.comment.body, 'FIXED_FIXTURE_INTAKE_REQUEST_V1') &&
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, 'FIXED_FIXTURE_INTAKE_REQUEST_V1') &&
        (github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER' || github.event.comment.author_association == 'COLLABORATOR'))
     runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-      issues: write
+    permissions: {contents: write, issues: write}
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-          persist-credentials: false
+        with: {ref: main, fetch-depth: 0, persist-credentials: false}
       - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Parse low-entropy invocation
+        with: {node-version: 22}
+      - name: Parse fixed fixture invocation
         id: request
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          DISPATCH_FIXTURE: ${{ inputs.fixture_id }}
-          DISPATCH_ACTION: ${{ inputs.action }}
-        shell: bash
+        env: {EVENT_NAME: '${{ github.event_name }}', DISPATCH_FIXTURE: '${{ inputs.fixture_id }}', DISPATCH_ACTION: '${{ inputs.action }}'}
         run: |
-          set -euo pipefail
-          if [ "$EVENT_NAME" = issue_comment ]; then
-            body="$(jq -r '.comment.body' "$GITHUB_EVENT_PATH")"
-            invocation="$(printf '%s\n' "$body" | awk '/^FIXED_FIXTURE_INTAKE_REQUEST_V1$/{getline;print;exit}')"
-            fixture_id="$(printf '%s' "$invocation"|awk '{print $1}')"
-            action="$(printf '%s' "$invocation"|awk '{print $2}')"
-            test "$(printf '%s' "$invocation"|awk '{print NF}')" = 2
-          else
-            fixture_id="$DISPATCH_FIXTURE"; action="$DISPATCH_ACTION"
-          fi
+          if [ "$EVENT_NAME" = issue_comment ]; then body="$(jq -r '.comment.body' "$GITHUB_EVENT_PATH")"; invocation="$(printf '%s\n' "$body"|awk '/^FIXED_FIXTURE_INTAKE_REQUEST_V1$/{getline;print;exit}')"; fixture_id="$(printf '%s' "$invocation"|awk '{print $1}')"; action="$(printf '%s' "$invocation"|awk '{print $2}')"; test "$(printf '%s' "$invocation"|awk '{print NF}')" = 2; else fixture_id="$DISPATCH_FIXTURE"; action="$DISPATCH_ACTION"; fi
           test -n "$fixture_id"; test "$action" = ADMIT
-          echo "fixture_id=$fixture_id" >> "$GITHUB_OUTPUT"
-          echo "action=$action" >> "$GITHUB_OUTPUT"
-      - name: Select exact repository-held fixture
-        run: |
+          echo "fixture_id=$fixture_id" >> "$GITHUB_OUTPUT"; echo "action=$action" >> "$GITHUB_OUTPUT"
+      - run: |
           node .github/ai-router/fixed-fixture-intake/dispatcher.v1.mjs --fixture-id '${{ steps.request.outputs.fixture_id }}' --action ADMIT --output "$RUNNER_TEMP/selection.json"
           jq -e '.result == "FIXTURE_SELECTED_FAIL_CLOSED" and .arbitraryPayloadAccepted == false and .authorityCreated == false' "$RUNNER_TEMP/selection.json" >/dev/null
-      - name: Execute current canonical intake
-        id: intake
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
+      - id: intake
+        env: {GITHUB_TOKEN: '${{ github.token }}'}
         run: |
-          set +e
-          node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --selection "$RUNNER_TEMP/selection.json" --output "$RUNNER_TEMP/receipt.json"
-          echo "status=$?" >> "$GITHUB_OUTPUT"
-          exit 0
+          set +e; node .github/ai-router/fixed-fixture-intake/differential-canonical-intake.v1.mjs --selection "$RUNNER_TEMP/selection.json" --output "$RUNNER_TEMP/receipt.json"; echo "status=$?" >> "$GITHUB_OUTPUT"; exit 0
       - uses: actions/upload-artifact@v4
         if: always()
-        with:
-          name: fixed-fixture-intake-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            ${{ runner.temp }}/selection.json
-            ${{ runner.temp }}/receipt.json
-          if-no-files-found: error
-          retention-days: 90
-      - name: Return compact result
-        if: always() && github.event_name == 'issue_comment'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs=require('fs');let r={};try{r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/receipt.json','utf8'));}catch{}const c=r.canonicalReceiptJson||{};await github.rest.issues.createComment({owner:context.repo.owner,repo:context.repo.repo,issue_number:context.issue.number,body:'```text\nFIXED_FIXTURE_INTAKE_RETURN_V2\ncanonicalResult = '+(c.result||'UNKNOWN')+'\noperationId = '+(c.operationId||'UNKNOWN')+'\nworkflowRun = '+context.runId+'\n```'});
-      - name: Require unchanged canonical success
+        with: {name: 'fixed-fixture-intake-${{ github.run_id }}-${{ github.run_attempt }}', path: '${{ runner.temp }}/receipt.json', if-no-files-found: error, retention-days: 90}
+      - name: Require canonical result
         if: always()
         run: |
           test '${{ steps.intake.outputs.status }}' = 0

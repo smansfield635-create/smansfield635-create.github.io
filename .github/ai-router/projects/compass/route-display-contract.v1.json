@@ -27,6 +27,148 @@
   },
   "cardinalAuthority": {"north": "ORIENTATION", "east": "WORLDS", "south": "INSTRUMENTS", "west": "FRONTIER", "additionalCardinalDirectionsPermitted": false},
   "firstReferenceFamily": {"sequence": ["COMPASS", "DOOR", "HOME"], "currentScope": "COMPASS_ONLY", "doorMutationPermitted": false, "homeMutationPermitted": false},
+  "constructionExecutionPlan": {
+    "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v1",
+    "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+    "installedAgainstMain": "fd9237fcec2454d46bda6a80db7af82b400079a6",
+    "purpose": "Provide a repository-local, construction-adjacent plan that every Compass implementation step must consult so the page is rebuilt from the recovered audit, current narrative map, user visual review, and proven estate presentation constructs rather than from ad-hoc styling decisions.",
+    "constructionLaw": "NO_COMPASS_VISUAL_OR_INTERACTION_MUTATION_MAY_BE_QUALIFIED_UNLESS_IT_MAPS_TO_AT_LEAST_ONE_PLAN_REQUIREMENT_AND_PRESERVES_ALL_EXPLICIT_PRESERVE_ITEMS.",
+    "successCondition": "A before/after screenshot comparison must show an immediately and materially better page because hierarchy, interaction, narrative, background, compression, and state behavior improved; border/shadow/spacing polish alone is insufficient.",
+    "preserve": [
+      "PRESERVE_CURRENT_INTRODUCTORY_COPY_SUBSTANCE_WITHOUT_REWRITING_THE_ARGUMENT",
+      "PRESERVE_FOUR_CARDINAL_AUTHORITY_NORTH_EAST_SOUTH_WEST",
+      "PRESERVE_EXISTING_CONSTELLATION_GEOMETRY_AND_ROTATION_MECHANICS_UNLESS_A_DEFECT_REQUIRES_BOUNDED_CORRECTION",
+      "PRESERVE_CLUSTER_AND_ROOM_NAVIGATION_AUTHORITY",
+      "PRESERVE_MIRRORLAND_AS_HIDDEN_DISCOVERY_NOT_FIFTH_CARDINAL",
+      "PRESERVE_RETURN_TO_ORBIT_AND_BACK_TO_COMPASS_RECOVERY",
+      "PRESERVE_KEYBOARD_REDUCED_MOTION_AND_TOUCH_ACCESS"
+    ],
+    "removeOrDemote": [
+      "REMOVE_PRACTICAL_MATHEMATICAL_CONTEXT_SECTION_AS_CURRENTLY_COMPOSED",
+      "REMOVE_REDUNDANT_ALWAYS_VISIBLE_LOWER_PAGE_TAXONOMY_INCLUDING_RECOGNITION_COHERENCE_MEASUREMENT_LATTICE_DISCOVERY_RESEARCH_STANDING_CONSTRUCTION_AND_BUILT_DIFFERENT_WHERE_THOSE_MEANINGS_BELONG_TO_AUTHORITATIVE_DESTINATIONS",
+      "DEMOTE_DEEP_RESEARCH_EVIDENCE_GOVERNANCE_BUILD_AND_LAWS_MATERIAL_TO_EXPLICIT_OUTBOUND_ROUTES_OR_INTENT_GATED_DISCLOSURE",
+      "REMOVE_STATIC_LOWER_CONTEXT_BEHAVIOR_THAT_DOES_NOT_FOLLOW_COMPASS_STATE"
+    ],
+    "requiredPageSequence": [
+      "COMPASS_IDENTITY_AND_OPENING",
+      "PRESERVED_INTRODUCTION_VISUALLY_RECOMPOSED",
+      "SHORT_PREMISE_TO_ACTION_BRIDGE",
+      "SIGNATURE_ROTATABLE_COMPASS_WITH_CLEAR_SWIPE_DRAG_INSTRUCTION",
+      "STATE_RESPONSIVE_CONTEXT_PANEL",
+      "MIRRORLAND_DISCOVERY_THRESHOLD_WHEN_FOUND",
+      "CURATED_MATHEMATICAL_FOUNDATION",
+      "SELECTIVE_OUTBOUND_DEEP_ROUTES"
+    ],
+    "interactionStateContract": {
+      "GLOBAL": "Shows how the Compass works, explicitly explains drag/swipe rotation, frames the custom interaction as a signature feature, and invites the visitor to find the secret Mirrorland entrance.",
+      "CARDINAL_FOCUS": "Rotation alone changes the active cardinal context without navigation. Bringing North/East/South/West forward updates the lower context to Orientation/Worlds/Instruments/Frontier.",
+      "CLUSTER_OPEN": "Opening the active cardinal reveals its cluster and updates the context from cardinal-level meaning to the cluster-level meaning without leaving Compass.",
+      "ROOM_SELECTED": "Selecting a room updates the same context surface to current room meaning and exposes one explicit Enter action.",
+      "ENTER": "Only the explicit Enter action navigates away from Compass.",
+      "WITHDRAWAL": "Return to Orbit or Back to Compass restores recoverable prior orientation state."
+    },
+    "contextContentRenewal": {
+      "required": true,
+      "scope": "Rewrite all four cardinal descriptions and all room descriptions against current estate meaning before final visual qualification.",
+      "copyLaw": "Context must explain what the visitor is looking at now, why it matters, and what entering will do; avoid stale abstract copy and avoid duplicating destination-page substance.",
+      "panelPattern": "One active state at a time: compact kicker, strong serif title, concise contextual explanation, one emphasized practical consequence or orientation cue, one explicit Enter action when navigation is available."
+    },
+    "mirrorlandThreshold": {
+      "discoveryPrompt": "Near the Compass usage guidance, explicitly invite the visitor to find the secret entrance to Mirrorland hidden inside the Compass.",
+      "underConstructionNotice": "Mirrorland downstream experiences are under construction, but visitors are explicitly welcome to explore.",
+      "routes": [
+        {"label": "Enter the Narrative", "destinationRole": "SHOWROOM_NARRATIVE", "routeAuthority": "SHOWROOM"},
+        {"label": "Enter the Demo", "destinationRole": "H_EARTH_DEMO", "routeAuthority": "H_EARTH"},
+        {"label": "See the World Map", "destinationRole": "AUDRALIA_OBSERVATORY_PLANETARY_MAP", "routeAuthority": "AUDRALIA_OBSERVATORY"}
+      ],
+      "law": "MIRRORLAND_IS_A_DISCOVERY_THRESHOLD_AND_MUST_NOT_BE_IMPLEMENTED_AS_A_DIRECT_SHOWROOM_REDIRECT_OR_AS_A_FIFTH_CARDINAL_DIRECTION"
+    },
+    "mathematics": {
+      "status": "RETAIN_CURATED",
+      "law": "Keep mathematics because it is part of Diamond Gate identity, but show only the relationships required to support orientation and the page thesis. Deep derivation, evidence, validation status, and technical custody route to authoritative pages.",
+      "presentation": "Editorial mathematical artifacts with concise plain-language interpretation, not an accordion encyclopedia."
+    },
+    "typography": {
+      "editorialHierarchy": "Use established estate serif display hierarchy, instrument labels, and restrained human/editorial accents.",
+      "cursiveAccent": "Use the prior successful cursive/almost-cursive treatment sparingly for transitional or reflective language only.",
+      "hardGate": "LOCATE_AND_BIND_THE_EXACT_PRIOR_SUCCESSFUL_CURSIVE_SOURCE_BEFORE_IMPLEMENTING_THE_ACCENT; DO_NOT_APPROXIMATE_FROM_MEMORY."
+    },
+    "fibonacciStarryNight": {
+      "status": "MANDATORY_BACKGROUND_SOURCE",
+      "sourceHead": "fd9237fcec2454d46bda6a80db7af82b400079a6",
+      "sharedCore": "assets/build/fibonacci-cosmos-core-v7.js",
+      "sharedWrapper": "assets/build/fibonacci-cosmos.js",
+      "lawsScenePrecedent": "laws/index.cosmos.js",
+      "lawsSceneBlob": "76d71d7cbafe52421c9eb68e3604792cc6755cf3",
+      "geometry": "DETERMINISTIC_GOLDEN_ANGLE_PHYLLOTAXIS_WITH_BOUNDED_JITTER_AND_SPARSE_SPARKLE",
+      "prohibited": [
+        "DO_NOT_IMPROVISE_A_GENERIC_CSS_STARFIELD",
+        "DO_NOT_USE_FULL_PAGE_DIAGONAL_LIGHT_STREAKS_OR_UNIFORM_HIGH_DENSITY_NOISE",
+        "DO_NOT_LET_BACKGROUND_COMPETE_WITH_TEXT_OR_COMPASS",
+        "DO_NOT_CREATE_NAVIGATION_INTERACTION_OR_WORLD_AUTHORITY_IN_THE_BACKGROUND_LAYER"
+      ],
+      "desiredEffect": "A mathematically structured Fibonacci Starry Night: atmospheric, elegant, recognizable, sparse enough for reading, and visibly subordinate to the Compass and introduction."
+    },
+    "directEstateAdoptions": [
+      {"source": "LAWS_CHAMBER", "paths": ["laws/index.html", "laws/index.cosmos.js"], "adopt": ["RUTHLESS_PUBLIC_HIERARCHY", "COLLAPSED_SECONDARY_EXPLANATION", "PERSISTENT_STATE_INDICATORS", "TRUE_TABLET_REFLOW", "ZERO_OPEN_OR_ONE_OPEN_DEEP_READING"], "doNotCopy": "Laws authority, Laws content taxonomy, or Laws-specific F.I.R.S.T. semantics."},
+      {"source": "GOVERNANCE", "paths": ["governance/index.html"], "adopt": ["STATE_RAIL_TO_SINGLE_LARGE_STATE_FEATURE", "SEMANTIC_COLOR_VARIABLES_BY_ACTIVE_STATE", "PEER_RECESSION_WITH_SELECTED_STATE_EMPHASIS"], "doNotCopy": "Governance engineering authority or five-stage governance semantics."},
+      {"source": "BUILD", "paths": ["build/index.html"], "adopt": ["PRACTICAL_FIRST_STATE_PANEL", "KICKER_PLUS_EDITORIAL_HEADLINE_PLUS_CONCISE_COPY_PLUS_ONE_IMPACT_PLUS_ONE_ROUTE", "PROGRESSIVE_INTERACTION_INSTEAD_OF_STACKED_EXPLANATIONS"], "doNotCopy": "Commercial offer/pricing structure or Build claims."},
+      {"source": "EVIDENCE", "paths": ["evidence/index.html"], "adopt": ["PRACTICAL_ENGINEERING_PROOF_SEPARATION_WHERE_DEPTH_IS_REQUIRED", "ONE_ACTIVE_LENS_OR_STATE_AT_A_TIME"], "doNotCopy": "Evidence claim authority, proof records, or evidence-domain taxonomy."},
+      {"source": "AWARDS", "paths": ["showroom/globe/h-earth/awards/index.html"], "adopt": ["CINEMATIC_EDITORIAL_BREATHING_ROOM", "CURIOSITY_FIRST_PROGRESSIVE_DISCLOSURE", "LARGE_SERIF_NARRATIVE_HIERARCHY", "ONE_STATEFUL_FEATURE_INSTEAD_OF_MULTIPLE_STACKED_ESSAYS"], "doNotCopy": "Awards claims, award-target semantics, or trophy language."}
+    ],
+    "introComposition": {
+      "copyStatus": "PRESERVE",
+      "visualProblem": "Current paragraph/boxed-quote/boxed-quote/paragraph/boxed-quote rhythm has too many similarly weighted rectangles and reads as messy despite strong copy.",
+      "requiredCorrection": "Recompose the same words into a cleaner editorial sequence with fewer boxes, more breathing room, and clear hierarchy between narrative prose, emphasized statements, and the transition into action."
+    },
+    "premiseToActionBridge": {
+      "replaces": "PRACTICAL_MATHEMATICAL_CONTEXT",
+      "purpose": "Answer the visitor's natural question after the introduction: what do I do with this idea?",
+      "contentRole": "Explain briefly that the Compass lets the visitor begin with the kind of question they actually have, bring a direction into focus, and change direction without losing the larger landscape.",
+      "prohibited": "Do not pre-explain the four destinations in four redundant cards; the interactive Compass should reveal them."
+    },
+    "responsiveRequirements": [
+      "DESKTOP_TABLET_AND_PHONE_MUST_RECOMPOSE_NOT_SCALE",
+      "COMPASS_USAGE_INSTRUCTION_MUST_REMAIN_OBVIOUS_ON_TOUCH_DEVICES",
+      "STATE_CONTEXT_MUST_REMAIN_ADJACENT_TO_THE_INTERACTION_IT_DESCRIBES",
+      "FIBONACCI_BACKGROUND_DENSITY_AND_DPR_MUST_REMAIN_BOUNDED",
+      "NO_HORIZONTAL_OVERFLOW"
+    ],
+    "qualificationGates": {
+      "engineering": [
+        "STATIC_CONTRACT_AND_SCOPE_PASS",
+        "ROTATION_UPDATES_CARDINAL_CONTEXT_WITHOUT_NAVIGATION",
+        "CLUSTER_AND_ROOM_SELECTION_UPDATE_CONTEXT",
+        "EXPLICIT_ENTER_IS_THE_ONLY_NAVIGATION_TRIGGER_FROM_CONTEXT",
+        "MIRRORLAND_THREE_ROUTE_THRESHOLD_CORRECT",
+        "FIBONACCI_SOURCE_IS_REPOSITORY_OWNED_AND_NOT_AN_IMPROVISED_STARFIELD",
+        "PHONE_TABLET_DESKTOP_KEYBOARD_REDUCED_MOTION_PASS"
+      ],
+      "humanVisualAcceptance": {
+        "required": true,
+        "mergeBlock": "NO_MERGE_UNTIL_FINAL_EXACT_CANDIDATE_SCREENSHOTS_HAVE_BEEN_HUMAN_REVIEWED",
+        "requiredComparisons": ["DESKTOP_BEFORE_AFTER", "TABLET_BEFORE_AFTER", "PHONE_BEFORE_AFTER"],
+        "mustConfirm": [
+          "INTRODUCTION_REMAINS_STRONG_AND_IS_VISUALLY_CLEANER",
+          "BACKGROUND_IS_BETTER_NOT_LOUDER",
+          "PAGE_IS_VISIBLY_SIMPLER_AND_SHORTER",
+          "STATE_TRANSITIONS_ARE_OBVIOUS",
+          "COMPASS_SWIPE_DRAG_FEATURE_IS_CLEAR_AND_DISTINCTIVE",
+          "MATHEMATICS_REMAINS_PRESENT_BUT_CURATED",
+          "MIRRORLAND_DISCOVERY_AND_THREE_CHOICES_ARE_CLEAR",
+          "RESULT_LOOKS_SIGNIFICANTLY_BETTER_NOT_MERELY_DIFFERENT"
+        ]
+      }
+    },
+    "stoppingRules": [
+      "STOP_IF_INTRO_COPY_WOULD_BE_SUBSTANTIVELY_REWRITTEN_WITHOUT_EXPLICIT_USER_DIRECTION",
+      "STOP_IF_FIBONACCI_BACKGROUND_SOURCE_CANNOT_BE_BOUND_TO_REPOSITORY_OWNED_IMPLEMENTATION",
+      "STOP_IF_EXACT_CUR SIVE_SOURCE_IS_NOT_IDENTIFIED_BEFORE_USING_CURSIVE_ACCENT",
+      "STOP_IF_STATE_CONTEXT_CANNOT_BE_DRIVEN_BY_REAL_COMPASS_STATE",
+      "STOP_IF_MIRRORLAND_ROUTING_DIFFERS_FROM_SHOWROOM_NARRATIVE_H_EARTH_DEMO_AUDRALIA_OBSERVATORY_MAP",
+      "STOP_IF_VISUAL_QUALIFICATION_RELIES_ONLY_ON_AUTOMATED_ASSERTIONS"
+    ]
+  },
   "frozenConstructionContext": {
     "schema": "COMPASS_CROSS_ESTATE_AUDIT_ADOPTION_FREEZE_v1",
     "status": "LOCKED_BOUND_FROZEN",

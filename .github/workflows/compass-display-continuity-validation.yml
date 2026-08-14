@@ -97,7 +97,8 @@ jobs:
               monuments:document.querySelectorAll('.compass-monument').length,
               built:Boolean(document.querySelector('.compass-built')),
               buildCta:Boolean(document.querySelector('.compass-build-cta')),
-              mirrorRoutes:document.querySelectorAll('[data-compass-mirrorland-routes] a').length,
+              mirrorRoutes:document.querySelectorAll('[data-compass-mirrorland-routes] a:not([data-compass-mirrorland-inline-back])').length,
+              mirrorBack:Boolean(document.querySelector('[data-compass-mirrorland-inline-back]')),
               cosmos:Boolean(document.querySelector('[data-compass-cosmic-field]')),
               headerTop:document.querySelector('.compass-estate__header')?.getBoundingClientRect().top,
               instrumentTop:document.querySelector('.compass-instrument')?.getBoundingClientRect().top
@@ -109,7 +110,7 @@ jobs:
             check(`${name}_MATH_REMOVED`,!result.mathVisible,result.mathVisible);
             check(`${name}_MONUMENTS`,result.monuments===2,result.monuments);
             check(`${name}_BUILT_AND_BUILD`,result.built&&result.buildCta,result);
-            check(`${name}_MIRRORLAND_THREE_ROUTES`,result.mirrorRoutes===3,result.mirrorRoutes);
+            check(`${name}_MIRRORLAND_THREE_ROUTES`,result.mirrorRoutes===3&&result.mirrorBack,result);
             check(`${name}_COSMOS_HOST`,result.cosmos,result.cosmos);
             check(`${name}_OPENING_COMPACT`,Number.isFinite(result.headerTop)&&result.headerTop<140,result);
             check(`${name}_INSTRUMENT_FOLLOWS_OPENING`,Number.isFinite(result.instrumentTop)&&result.instrumentTop<900,result);

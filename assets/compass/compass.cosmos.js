@@ -349,7 +349,7 @@
     state.panelPurpose.textContent = context.purpose;
     state.panelRelationship.textContent = context.relationship;
     if (state.mirrorlandChoices) state.mirrorlandChoices.hidden = true;
-    if (state.enterButton) state.enterButton.hidden = false;
+    if (state.enterButton) state.enterButton.hidden = stateName !== "room";
     state.contextSignature = signature;
   }
 

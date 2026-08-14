@@ -1,0 +1,66 @@
+name: Compass Labels and Music Branch Repair
+on:
+  push:
+    branches: [compass/labels-music-20260814]
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compass/labels-music-20260814
+      - name: Apply labels and ambient music correction
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          s=s.replace('compass-contextual-quick-pass-v5','compass-contextual-quick-pass-v6')
+          old='button[data-compass-room-proxy]{overflow:visible!important}'
+          new='button[data-compass-room-proxy]{overflow:visible!important;background:transparent!important;border:0!important;box-shadow:none!important;color:transparent!important;font-size:0!important}'
+          if old not in s: raise SystemExit('room proxy CSS anchor missing')
+          s=s.replace(old,new,1)
+          css_anchor='.compass-monuments{display:grid!important;'
+          music_css='''.compass-music{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin:14px 0 4px;padding:.7rem .85rem;border:1px solid rgba(224,225,215,.12);border-radius:999px;background:rgba(4,8,15,.44);width:fit-content;max-width:100%}\n.compass-music button{border:1px solid rgba(242,213,138,.32);border-radius:999px;background:rgba(7,12,20,.84);color:#f5f0e4;padding:.55rem .85rem;font:700 .78rem/1 Inter,ui-sans-serif,system-ui,sans-serif;cursor:pointer}\n.compass-music small{color:rgba(236,239,232,.62);font:.68rem/1.35 Inter,ui-sans-serif,system-ui,sans-serif;max-width:56ch}\n.compass-music a{color:inherit;text-decoration:underline;text-underline-offset:2px}\n'''
+          if css_anchor not in s: raise SystemExit('music CSS anchor missing')
+          s=s.replace(css_anchor,music_css+css_anchor,1)
+          intro='</header>\n<section class="compass-instrument" aria-labelledby="compass-orbit-title">'
+          music_html='''</header>\n<div class="compass-music" data-compass-music>\n<button type="button" data-compass-music-toggle aria-pressed="false">♫ Music · starts when you interact</button>\n<small>Saint-Saëns · <em>The Carnival of the Animals</em> · Neil &amp; Nancy O'Doan / Seattle Youth Symphony / Vilem Sokol · <a href="https://commons.wikimedia.org/wiki/File:Camille_Saint-Sa%C3%ABns_-_The_Carnival_of_the_Animals.ogg" target="_blank" rel="noopener">CC BY-SA 2.0 source</a></small>\n<audio data-compass-music-audio loop preload="metadata" crossorigin="anonymous"><source src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Camille_Saint-Sa%C3%ABns_-_The_Carnival_of_the_Animals.ogg" type="audio/ogg"></audio>\n</div>\n<section class="compass-instrument" aria-labelledby="compass-orbit-title">'''
+          if intro not in s: raise SystemExit('music HTML anchor missing')
+          s=s.replace(intro,music_html,1)
+          script_anchor="document.addEventListener('DOMContentLoaded',()=>{const root=document.querySelector('[data-compass-root]'),panel=document.querySelector('[data-compass-panel]');if(!root||!panel)return;"
+          inject="""document.addEventListener('DOMContentLoaded',()=>{const root=document.querySelector('[data-compass-root]'),panel=document.querySelector('[data-compass-panel]');if(!root||!panel)return;const musicAudio=document.querySelector('[data-compass-music-audio]'),musicToggle=document.querySelector('[data-compass-music-toggle]');let musicStarted=false,musicMuted=false;const syncRoomLabels=()=>{const wing=root.dataset.activeClusterWing||root.dataset.selectedWing||root.dataset.selectedCardinal||'';const declarations=[...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')].filter(el=>!wing||el.dataset.wing===wing);const byId=new Map([...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')].map(el=>[el.dataset.roomId,el]));const proxies=[...document.querySelectorAll('button[data-compass-room-proxy]')];proxies.forEach((proxy,index)=>{const id=proxy.dataset.roomId||proxy.dataset.compassRoomId||proxy.getAttribute('data-room-id')||proxy.getAttribute('data-destination-id')||'';const declaration=(id&&byId.get(id))||declarations[index];const label=declaration&&(declaration.dataset.label||declaration.textContent.trim());if(label){proxy.dataset.label=label;proxy.setAttribute('aria-label',label)}})};const setMusicLabel=()=>{if(!musicToggle)return;musicToggle.textContent=musicMuted?'♫ Music · Off':musicStarted?'♫ Music · On':'♫ Music · starts when you interact';musicToggle.setAttribute('aria-pressed',(!musicMuted&&musicStarted)?'true':'false')};const startMusic=()=>{if(!musicAudio||musicMuted||musicStarted)return;musicAudio.volume=.18;const play=musicAudio.play();if(play&&play.then)play.then(()=>{musicStarted=true;setMusicLabel()}).catch(()=>{})};if(musicToggle&&musicAudio){musicToggle.addEventListener('click',()=>{if(!musicStarted){musicMuted=false;startMusic();return}musicMuted=!musicMuted;if(musicMuted)musicAudio.pause();else musicAudio.play().catch(()=>{});setMusicLabel()});root.addEventListener('pointerdown',startMusic,{once:true,passive:true});root.addEventListener('keydown',startMusic,{once:true});setMusicLabel()}const labelObserver=new MutationObserver(syncRoomLabels);labelObserver.observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['data-active-cluster-wing','data-selected-wing','data-selected-cardinal','data-compass-mode']});syncRoomLabels();"""
+          if script_anchor not in s: raise SystemExit('script anchor missing')
+          s=s.replace(script_anchor,inject,1)
+          p.write_text(s)
+          PY
+      - name: Quick procedural review
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text()
+          assert s.count('data-compass-room data-compass-destination') == 19
+          assert 'data-compass-music-audio loop' in s
+          assert 'Camille_Saint-Sa%C3%ABns_-_The_Carnival_of_the_Animals.ogg' in s
+          assert 'CC BY-SA 2.0 source' in s
+          assert 'syncRoomLabels' in s
+          assert 'proxy.dataset.label=label' in s
+          assert 'background:transparent!important;border:0!important;box-shadow:none!important' in s
+          assert 'compass-contextual-quick-pass-v6' in s
+          assert 'compass-contextual-quick-pass-v5' not in s
+          print('PASS: 19 room declarations, label repair, looping audio, attribution, v6 cache key')
+          PY
+      - name: Commit correction and self-clean
+        shell: bash
+        run: |
+          rm .github/workflows/compass-labels-music-branch-repair.yml
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          git add index.html .github/workflows/compass-labels-music-branch-repair.yml
+          git commit -m "Fix Compass room labels and add looping ambient score"
+          git push origin HEAD:compass/labels-music-20260814

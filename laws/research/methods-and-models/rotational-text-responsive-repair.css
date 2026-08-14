@@ -1,7 +1,7 @@
 html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card[data-position="active"]{left:50%!important;top:50%!important;width:min(52rem,calc(100% - 4rem))!important;max-width:calc(100% - 4rem)!important;transform:translate(-50%,-50%)!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
 html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card[data-position]:not([data-position="active"]){opacity:0!important;visibility:hidden!important;pointer-events:none!important;transform:translate(-50%,-50%) scale(.9)!important}
 html[data-methods-models-euclidean-showroom="active"] .mm-deck-controls{left:1rem!important;right:1rem!important;width:auto!important;max-width:calc(100% - 2rem)!important;transform:none!important}
-@media(max-width:1024px){
+@media(max-width:1200px){
 html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-showroom{overflow-y:auto!important;overflow-x:hidden!important}
 html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-stage{height:auto!important;min-height:100dvh!important;overflow:visible!important;perspective:none!important;padding-inline:clamp(.75rem,2.5vw,1.5rem)!important;box-sizing:border-box!important}
 html[data-methods-models-euclidean-showroom="active"] .mm-stage::before,html[data-methods-models-euclidean-showroom="active"] .mm-stage::after{inset:1rem!important}
@@ -15,7 +15,7 @@ html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expa
 html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card[data-position="active"]{position:relative!important;left:auto!important;top:auto!important;width:min(100%,42rem)!important;max-width:100%!important;height:auto!important;min-height:24rem!important;max-height:none!important;margin:0 auto!important;transform:none!important;overflow:hidden!important;box-sizing:border-box!important}
 html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] .mm-model-card[data-position]:not([data-position="active"]){display:none!important}
 html[data-methods-models-euclidean-showroom="active"] .mm-deck-controls{position:relative!important;inset:auto!important;display:flex!important;width:min(100%,42rem)!important;max-width:100%!important;margin:.75rem auto 0!important;justify-content:space-between!important;transform:none!important}
-html[data-methods-models-euclidean-showroom="active"] .mm-euclidean-coordinate[data-mm-coordinate]{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important}
+html[data-methods-models-euclidean-showroom="active"] .mm-euclidean-coordinate[data-mm-coordinate]{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;transform:none!important}
 html[data-methods-models-euclidean-showroom="active"] .mm-equation,html[data-methods-models-euclidean-showroom="active"] .mm-equation-theatre,html[data-methods-models-euclidean-showroom="active"] .mm-model-card__meta,html[data-methods-models-euclidean-showroom="active"] .mm-model-card__footer{max-width:100%!important;min-width:0!important;overflow-wrap:anywhere!important;box-sizing:border-box!important}
 }
 @media(max-width:720px){

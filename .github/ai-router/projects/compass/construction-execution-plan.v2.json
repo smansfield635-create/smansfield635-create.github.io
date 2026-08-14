@@ -37,7 +37,7 @@
   },
   "mirrorland": {
     "identity": "VISIBLE_PLAYFUL_HIDDEN_ENTRANCE_NOT_DIFFICULT_SCAVENGER_HUNT",
-    "promptIntent": "Invite the visitor to find the hidden entrance to Mirrorland inside the Compass without pretending it is hard to discover.",
+    "promptIntent": "Invite the visitor to enter Mirrorland through the visible threshold without pretending discovery is difficult.",
     "prohibitedCopyIntent": "SEE_IF_YOU_CAN_FIND_IT",
     "routes": {
       "Enter the Narrative": "SHOWROOM",
@@ -56,6 +56,21 @@
     "ENTER": "Only explicit Enter navigates away.",
     "WITHDRAWAL": "Swipe across open cluster space returns to the constellation; explicit return controls preserve recoverable orientation.",
     "criticalInvariant": "ROOM_PREVIEW_IS_NOT_ROOM_SELECTED"
+  },
+  "foregroundLabelDiscipline": {
+    "status": "MANDATORY_SINGLE_ACTIVE_LABEL",
+    "problem": "Concurrent visible labels create clutter, overlap, and competition with the active spatial object, especially on phone-sized viewports.",
+    "law": "At every Compass state, exactly one semantic spatial label may be visually prominent inside the active constellation or cluster. The visible label must belong to the object currently in front or currently selected. Peer labels remain hidden or fully recessed until they become the active foreground object.",
+    "constellation": "Show only the currently forward cardinal label. The other three cardinal labels must not remain concurrently readable over the spatial field.",
+    "cluster": "Show only the currently forward or selected room label. All other room labels must be visually suppressed rather than stacked around the cluster.",
+    "stateBinding": "Visible label identity must update deterministically with orbit/cluster foreground state and selection state; label state may not drift from geometry or panel context.",
+    "accessibility": "Visual suppression must not remove destination semantics from keyboard, screen-reader, or programmatic navigation. This law governs visible clutter, not semantic availability.",
+    "prohibited": [
+      "MULTIPLE_SIMULTANEOUS_READABLE_ROOM_LABELS",
+      "OVERLAPPING_VISIBLE_LABELS",
+      "PEER_LABELS_COMPETING_WITH_FOREGROUND_LABEL",
+      "LABEL_STATE_DESYNCHRONIZED_FROM_ACTIVE_OBJECT"
+    ]
   },
   "contextContent": {
     "renewalRequired": true,
@@ -104,6 +119,45 @@
     ],
     "relationship": "These are signature Diamond Gate capabilities and must be intentionally staged as major reasons to explore the estate, while remaining distinct from Built Different proof claims."
   },
+  "surfaceMaterialLanguage": {
+    "status": "MANDATORY_HIGH_VALUE_GLASS_TECH",
+    "problem": "The current lower-page cards communicate hierarchy adequately but read as flat, cardboard-like panels rather than premium technical surfaces.",
+    "law": "Feature cards, proof cards, and lower-page tabs must present as luminous glass or polished technical material with real depth cues, restrained transparency, edge highlights, specular response, layered shadow, and selective chromatic energy. They must not become noisy, toy-like, or generically neon.",
+    "targetQualities": [
+      "GLASSLIKE_DEPTH",
+      "POLISHED_REFLECTIVE_EDGE",
+      "SUBTLE_TRANSLUCENCY",
+      "HIGH_TECH_VALUE_SIGNAL",
+      "SHINY_BUT_READABLE",
+      "SELECTIVE_COLOR_NOT_MONOCHROME",
+      "CLEAR_FOREGROUND_BACKGROUND_SEPARATION"
+    ],
+    "preserve": "Text contrast, touch target clarity, focus visibility, reduced-motion equivalence, and the existing celestial background hierarchy.",
+    "prohibited": [
+      "FLAT_CARDBOARD_CARD_APPEARANCE",
+      "UNIFORM_MATTE_PANELS",
+      "GENERIC_NEON_GLOW_EVERYWHERE",
+      "LOW_CONTRAST_GLASSMORPHISM",
+      "DECORATIVE_EFFECTS_THAT_OBSCURE_INFORMATION"
+    ]
+  },
+  "desktopRelationalComposition": {
+    "status": "MANDATORY_WHERE_SPACE_PERMITS",
+    "donor": "EXISTING_LAWS_CHAMBER_SIDE_BY_SIDE_PRESENTATION",
+    "intent": "Use the already-proven Laws Chamber relational presentation as the direct composition precedent for Compass sections that currently stack related information vertically even when the viewport can support a stronger side-by-side relationship.",
+    "law": "On desktop and sufficiently wide tablet layouts, related feature pairs or feature-plus-proof relationships should be expressed side by side when that improves comparison, hierarchy, and narrative continuity. Do not force two columns on narrow screens; phone presentation must collapse cleanly to one column.",
+    "sourceInspectionRequired": true,
+    "sourceInspectionLaw": "Before construction, inspect the current Laws Chamber implementation and reuse its compositional principle rather than approximating a generic two-column grid from memory.",
+    "initialTargets": [
+      "COHERENCE_DIAGNOSTIC_WITH_TALK_TO_THE_HOUSE",
+      "BUILT_DIFFERENT_WITH_ITS_MOST_RELEVANT_PROOF_OR_COMMERCIAL_CONTINUATION_WHERE_COMPOSITIONALLY_SOUND"
+    ],
+    "prohibited": [
+      "ARBITRARY_FIFTY_FIFTY_GRID_WITHOUT_LAWS_DONOR_INSPECTION",
+      "PHONE_SIDE_BY_SIDE_COMPRESSION",
+      "COLUMN_LAYOUT_THAT_WEAKENS_PRIMARY_HIERARCHY"
+    ]
+  },
   "commercialContinuation": {
     "status": "RESTORE",
     "feature": "BUILD_YOUR_OWN_CUSTOM_SITE",
@@ -114,11 +168,11 @@
   "requiredPageSequence": [
     "COMPACT_COMPASS_HERO_AND_IDENTITY",
     "COLLAPSED_FULL_INTRODUCTION_AVAILABLE_ON_INTENT",
-    "PRIMARY_COMPASS_INSTRUMENT_WITH_STATE_SPECIFIC_GUIDANCE",
+    "PRIMARY_COMPASS_INSTRUMENT_WITH_STATE_SPECIFIC_GUIDANCE_AND_SINGLE_ACTIVE_SPATIAL_LABEL",
     "CARDINAL_AND_ROOM_LIVE_CONTEXT_PREVIEWS",
     "MIRRORLAND_DISCOVERY_THRESHOLD_WHEN_OPENED",
-    "MONUMENTAL_COHERENCE_DIAGNOSTIC_AND_TALK_TO_THE_HOUSE_FEATURES",
-    "BUILT_DIFFERENT_TECHNOLOGY_AND_CREDIBILITY_FEATURE",
+    "LAWS_DERIVED_SIDE_BY_SIDE_MONUMENTAL_COHERENCE_DIAGNOSTIC_AND_TALK_TO_THE_HOUSE_FEATURES",
+    "BUILT_DIFFERENT_TECHNOLOGY_AND_CREDIBILITY_FEATURE_WITH_PREMIUM_GLASS_TECH_MATERIAL_LANGUAGE",
     "BUILD_YOUR_OWN_CUSTOM_SITE_CONTINUATION",
     "SELECTIVE_AUTHORITATIVE_OUTBOUND_ROUTES"
   ],
@@ -141,7 +195,8 @@
       "ASYMMETRICAL_EDITORIAL_COMPOSITION",
       "COLLAPSED_SECONDARY_EXPLANATION",
       "CINEMATIC_BREATHING_ROOM",
-      "INTERACTIVE_OBJECT_EARLY"
+      "INTERACTIVE_OBJECT_EARLY",
+      "EXISTING_SIDE_BY_SIDE_RELATIONAL_PRESENTATION"
     ],
     "GOVERNANCE": [
       "ACTIVE_STATE_DRIVES_SINGLE_CONTEXT_FEATURE",
@@ -165,7 +220,9 @@
     "STATIC_SIGNATURE_INTERACTION_DECK",
     "GLOBAL_SWIPE_INSTRUCTION",
     "CURRENT_COMPASS_MATHEMATICAL_FOUNDATION_SECTION",
-    "REDUNDANT_ENCYCLOPEDIC_LOWER_PAGE_TAXONOMY"
+    "REDUNDANT_ENCYCLOPEDIC_LOWER_PAGE_TAXONOMY",
+    "SIMULTANEOUS_VISIBLE_PEER_LABEL_CLUTTER",
+    "FLAT_CARDBOARD_LIKE_LOWER_PAGE_CARD_MATERIAL"
   ],
   "preserve": [
     "FULL_INTRODUCTION_COPY",
@@ -176,7 +233,8 @@
     "RETURN_AND_RECOVERY_BEHAVIOR",
     "KEYBOARD_TOUCH_AND_REDUCED_MOTION_EQUIVALENCE",
     "FIBONACCI_STARRY_NIGHT_SOURCE",
-    "MATHEMATICAL_FOUNDATION_DESIGN_FOR_RELOCATION"
+    "MATHEMATICAL_FOUNDATION_DESIGN_FOR_RELOCATION",
+    "SEMANTIC_ACCESS_TO_ALL_DESTINATIONS_WHILE_VISUALLY_SHOWING_ONLY_ONE_ACTIVE_LABEL"
   ],
   "qualification": {
     "userScreenshotReviewRequired": false,
@@ -189,16 +247,22 @@
       "CLUSTER_ROTATION_UPDATES_ROOM_PREVIEW_WITHOUT_SELECTION",
       "ROOM_PREVIEW_HAS_NO_ENTER_ACTION",
       "ROOM_SELECTION_EXPOSES_CORRECT_ENTER_ACTION",
+      "EXACTLY_ONE_VISIBLE_ACTIVE_SPATIAL_LABEL_AT_A_TIME_IN_CONSTELLATION_AND_CLUSTER_STATES",
+      "ACTIVE_VISIBLE_LABEL_MATCHES_FOREGROUND_OR_SELECTED_OBJECT_AND_PANEL_CONTEXT",
+      "ALL_NONACTIVE_LABELS_ARE_VISUALLY_SUPPRESSED_WITHOUT_REMOVING_SEMANTIC_ACCESS",
       "MIRRORLAND_PROMPT_IS_INVITATIONAL_NOT_FAKE_SCAVENGER_HUNT",
       "MIRRORLAND_ROUTES_MATCH_SHOWROOM_H_EARTH_AUDRALIA_OBSERVATORY",
       "COHERENCE_DIAGNOSTIC_AND_TALK_TO_THE_HOUSE_ARE_VISUALLY_MAJOR",
+      "LAWS_CHAMBER_SIDE_BY_SIDE_DONOR_IS_INSPECTED_AND_RELATIONAL_COMPOSITION_IS_USED_WHERE_WIDE_VIEWPORTS_SUPPORT_IT",
+      "PREMIUM_GLASS_TECH_SURFACES_HAVE_DEPTH_AND_VALUE_WITHOUT_LOSS_OF_TEXT_CONTRAST_OR_FOCUS_VISIBILITY",
       "BUILT_DIFFERENT_IS_VISUALLY_MAJOR_AND_CLAIMS_ARE_BOUNDED",
       "BUILD_YOUR_OWN_SITE_IS_ADJACENT_TO_BUILT_DIFFERENT",
       "MATHEMATICAL_FOUNDATION_IS_REMOVED_FROM_COMPASS_BUT_PRESERVED_FOR_RELOCATION",
       "DESKTOP_TABLET_PHONE_REFLOW_WITHOUT_HORIZONTAL_OVERFLOW",
+      "PHONE_COLLAPSES_SIDE_BY_SIDE_FEATURES_TO_SINGLE_COLUMN_WITHOUT_DENSITY_REGRESSION",
       "KEYBOARD_TOUCH_REDUCED_MOTION_AND_RETURN_BEHAVIOR_PASS"
     ],
     "mergeLaw": "Exact-candidate automated engineering and Playwright visual/interaction qualification must pass before merge. Screenshots are filtering evidence, not a user approval gate. Obvious visual or behavioral defects discovered by the filter must be corrected and the exact candidate requalified before merge."
   },
-  "handoffLaw": "A new construction room must load this file first, then the Compass entrypoint, route-display contract, display continuity constitution, narrative continuity map, and current live Compass source before mutation. It must not reconstruct these adopted decisions from chat history."
+  "handoffLaw": "A new construction room must load this file first, then the Compass entrypoint, route-display contract, display continuity constitution, narrative continuity map, current live Compass source, and current Laws Chamber source before mutation. It must not reconstruct these adopted decisions from chat history."
 }

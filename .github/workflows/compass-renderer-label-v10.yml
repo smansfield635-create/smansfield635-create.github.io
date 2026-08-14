@@ -30,6 +30,7 @@ jobs:
           s = p.read_text()
           s = s.replace('compass-contextual-quick-pass-v9', 'compass-contextual-quick-pass-v10')
           s = s.replace('content:attr(aria-label);', 'content:attr(data-label);')
+          s = s.replace("['pointerup','touchend','click','keydown']", "['pointerup','touchend','click','keydown','wheel']")
           p.write_text(s)
           PY
       - name: Quick procedural review

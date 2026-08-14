@@ -1,0 +1,183 @@
+name: Compass Display Continuity Validation
+
+on:
+  push:
+    branches:
+      - agent/compass-reference-implementation-v1
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/compass/**'
+      - '.github/workflows/compass-display-continuity-validation.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/compass/**'
+      - '.github/workflows/compass-display-continuity-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-static-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run fail-closed Compass verifier
+        env:
+          COMPASS_VERIFICATION_OUTPUT: /tmp/compass-display-continuity-verification-receipt.json
+        run: node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+
+      - name: Upload static verification receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-display-continuity-verification-receipt
+          path: /tmp/compass-display-continuity-verification-receipt.json
+
+  qualify-runtime:
+    runs-on: ubuntu-latest
+    needs: verify-static-contract
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install browser qualification dependency outside repository contract
+        env:
+          npm_config_package_lock: 'false'
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+
+      - name: Start local static host
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-http.log 2>&1 &
+          echo $! >/tmp/compass-http.pid
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/compass-http.log
+          exit 1
+
+      - name: Qualify desktop tablet mobile keyboard reduced motion and performance
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+
+          const base = 'http://127.0.0.1:4173/';
+          const browser = await chromium.launch({ headless: true });
+          const checks = [];
+          const check = (id, pass, evidence) => checks.push({ id, pass: Boolean(pass), evidence });
+
+          async function qualifyViewport(name, viewport) {
+            const context = await browser.newContext({ viewport });
+            const page = await context.newPage();
+            const started = Date.now();
+            await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            await page.waitForSelector('[data-compass-root]', { timeout: 10000 });
+            await page.waitForSelector('[data-compass-cardinal]', { state: 'visible', timeout: 10000 });
+            const elapsed = Date.now() - started;
+            const result = await page.evaluate(() => ({
+              title: document.title,
+              cardinals: [...document.querySelectorAll('[data-compass-cardinal]')].map(el => el.getAttribute('data-cardinal-id')),
+              horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+              returnToOrbit: Boolean(document.querySelector('[data-compass-return-to-orbit]')),
+              backToCompass: Boolean(document.querySelector('[data-compass-mirrorland-back]')),
+              mirrorlandIsCardinal: Boolean(document.querySelector('[data-compass-cardinal][data-destination-type="mirrorland"]'))
+            }));
+            check(`${name}_LOAD`, result.title.includes('Compass'), { elapsedMs: elapsed, title: result.title });
+            check(`${name}_FOUR_CARDINALS`, JSON.stringify(result.cardinals) === JSON.stringify(['north','east','south','west']), result.cardinals);
+            check(`${name}_NO_HORIZONTAL_OVERFLOW`, result.horizontalOverflow <= 2, result.horizontalOverflow);
+            check(`${name}_EXPLICIT_RETURN_CONTROLS`, result.returnToOrbit && result.backToCompass, result);
+            check(`${name}_MIRRORLAND_NOT_CARDINAL`, !result.mirrorlandIsCardinal, result.mirrorlandIsCardinal);
+            check(`${name}_LOCAL_LOAD_PERFORMANCE`, elapsed < 8000, `${elapsed}ms`);
+            await page.screenshot({ path: `/tmp/compass-${name.toLowerCase()}.png`, fullPage: true });
+            await context.close();
+          }
+
+          await qualifyViewport('DESKTOP', { width: 1440, height: 900 });
+          await qualifyViewport('TABLET', { width: 1024, height: 768 });
+          await qualifyViewport('MOBILE', { width: 390, height: 844 });
+
+          {
+            const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+            const page = await context.newPage();
+            await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            const first = page.locator('[data-compass-cardinal]').first();
+            await first.focus();
+            const focused = await first.evaluate(el => document.activeElement === el);
+            check('KEYBOARD_FOCUS', focused, focused);
+            await first.press('Enter');
+            await page.waitForTimeout(300);
+            const selected = await page.locator('[data-compass-root]').getAttribute('data-selected-cardinal');
+            check('KEYBOARD_CARDINAL_ACTIVATION', selected === 'north', selected);
+            await context.close();
+          }
+
+          {
+            const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
+            const page = await context.newPage();
+            await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            await page.waitForSelector('[data-compass-root]', { timeout: 10000 });
+            await page.waitForTimeout(300);
+            const reduced = await page.locator('[data-compass-root]').getAttribute('data-reduced-motion');
+            const cardinalCount = await page.locator('[data-compass-cardinal]').count();
+            check('REDUCED_MOTION_STATE', reduced === 'true', reduced);
+            check('REDUCED_MOTION_SEMANTIC_EQUIVALENCE', cardinalCount === 4, cardinalCount);
+            await context.close();
+          }
+
+          await browser.close();
+          const failures = checks.filter(item => !item.pass);
+          const receipt = {
+            schema: 'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v1',
+            candidateHead: process.env.GITHUB_SHA || null,
+            result: failures.length ? 'FAIL_CLOSED' : 'PASS',
+            qualifications: {
+              desktop: failures.every(f => !f.id.startsWith('DESKTOP_')),
+              tablet: failures.every(f => !f.id.startsWith('TABLET_')),
+              mobile: failures.every(f => !f.id.startsWith('MOBILE_')),
+              keyboard: failures.every(f => !f.id.startsWith('KEYBOARD_')),
+              reducedMotion: failures.every(f => !f.id.startsWith('REDUCED_MOTION_')),
+              performance: failures.every(f => !f.id.endsWith('_LOCAL_LOAD_PERFORMANCE')),
+              semanticContinuity: failures.length === 0
+            },
+            checks,
+            failures: failures.map(item => item.id)
+          };
+          fs.writeFileSync('/tmp/compass-runtime-qualification-receipt.json', `${JSON.stringify(receipt, null, 2)}\n`);
+          console.log(JSON.stringify(receipt, null, 2));
+          if (failures.length) process.exit(1);
+          NODE
+
+      - name: Upload runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-runtime-qualification-evidence
+          path: |
+            /tmp/compass-runtime-qualification-receipt.json
+            /tmp/compass-desktop.png
+            /tmp/compass-tablet.png
+            /tmp/compass-mobile.png

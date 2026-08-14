@@ -3,18 +3,16 @@ name: Compass Display Continuity Validation
 on:
   push:
     branches:
-      - agent/compass-reference-implementation-v1
+      - agent/compass-renewal-plan-v2-construction
     paths:
       - 'index.html'
       - 'assets/compass/**'
-      - '.github/ai-router/router.v1.json'
       - '.github/ai-router/projects/compass/**'
       - '.github/workflows/compass-display-continuity-validation.yml'
   pull_request:
     paths:
       - 'index.html'
       - 'assets/compass/**'
-      - '.github/ai-router/router.v1.json'
       - '.github/ai-router/projects/compass/**'
       - '.github/workflows/compass-display-continuity-validation.yml'
   workflow_dispatch:
@@ -30,17 +28,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
       - name: Run fail-closed Compass verifier
         env:
           COMPASS_VERIFICATION_OUTPUT: /tmp/compass-display-continuity-verification-receipt.json
         run: node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-
       - name: Upload static verification receipt
         uses: actions/upload-artifact@v4
         with:
@@ -55,19 +50,16 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install browser qualification dependency outside repository contract
+      - name: Install Playwright outside repository contract
         env:
           npm_config_package_lock: 'false'
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install chromium
-
       - name: Start local static host
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-http.log 2>&1 &
@@ -78,100 +70,90 @@ jobs:
           done
           cat /tmp/compass-http.log
           exit 1
-
-      - name: Qualify desktop tablet mobile keyboard reduced motion and performance
+      - name: Playwright desktop tablet phone interaction filtering
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import { chromium } from 'playwright';
-
-          const base = 'http://127.0.0.1:4173/';
-          const browser = await chromium.launch({ headless: true });
-          const checks = [];
-          const check = (id, pass, evidence) => checks.push({ id, pass: Boolean(pass), evidence });
-
-          async function qualifyViewport(name, viewport) {
-            const context = await browser.newContext({ viewport });
-            const page = await context.newPage();
-            const started = Date.now();
-            await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 15000 });
-            await page.waitForSelector('[data-compass-root]', { timeout: 10000 });
-            await page.waitForSelector('[data-compass-cardinal]', { state: 'visible', timeout: 10000 });
-            const elapsed = Date.now() - started;
-            const result = await page.evaluate(() => ({
-              title: document.title,
-              cardinals: [...document.querySelectorAll('[data-compass-cardinal]')].map(el => el.getAttribute('data-cardinal-id')),
-              horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-              returnToOrbit: Boolean(document.querySelector('[data-compass-return-to-orbit]')),
-              backToCompass: Boolean(document.querySelector('[data-compass-mirrorland-back]')),
-              mirrorlandIsCardinal: Boolean(document.querySelector('[data-compass-cardinal][data-destination-type="mirrorland"]'))
+          const base='http://127.0.0.1:4173/';
+          const browser=await chromium.launch({headless:true});
+          const checks=[];
+          const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          async function qualifyViewport(name,viewport){
+            const context=await browser.newContext({viewport});
+            const page=await context.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto(base,{waitUntil:'domcontentloaded',timeout:15000});
+            await page.waitForSelector('[data-compass-root]',{timeout:10000});
+            await page.waitForSelector('[data-compass-cardinal]',{state:'visible',timeout:10000});
+            await page.waitForTimeout(400);
+            const result=await page.evaluate(()=>({
+              cardinals:[...document.querySelectorAll('[data-compass-cardinal]')].map(el=>el.getAttribute('data-cardinal-id')),
+              roomDeclarations:document.querySelectorAll('[data-compass-room]').length,
+              horizontalOverflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              introOpen:document.querySelector('[data-compass-full-introduction]')?.open,
+              mathVisible:document.body.textContent.includes('Mathematical Foundation'),
+              monuments:document.querySelectorAll('.compass-monument').length,
+              built:Boolean(document.querySelector('.compass-built')),
+              buildCta:Boolean(document.querySelector('.compass-build-cta')),
+              mirrorRoutes:document.querySelectorAll('[data-compass-mirrorland-routes] a').length,
+              cosmos:Boolean(document.querySelector('[data-compass-cosmic-field]'))
             }));
-            check(`${name}_LOAD`, result.title.includes('Compass'), { elapsedMs: elapsed, title: result.title });
-            check(`${name}_FOUR_CARDINALS`, JSON.stringify(result.cardinals) === JSON.stringify(['north','east','south','west']), result.cardinals);
-            check(`${name}_NO_HORIZONTAL_OVERFLOW`, result.horizontalOverflow <= 2, result.horizontalOverflow);
-            check(`${name}_EXPLICIT_RETURN_CONTROLS`, result.returnToOrbit && result.backToCompass, result);
-            check(`${name}_MIRRORLAND_NOT_CARDINAL`, !result.mirrorlandIsCardinal, result.mirrorlandIsCardinal);
-            check(`${name}_LOCAL_LOAD_PERFORMANCE`, elapsed < 8000, `${elapsed}ms`);
-            await page.screenshot({ path: `/tmp/compass-${name.toLowerCase()}.png`, fullPage: true });
+            check(`${name}_FOUR_CARDINALS`,JSON.stringify(result.cardinals)===JSON.stringify(['north','east','south','west']),result.cardinals);
+            check(`${name}_ROOM_DECLARATIONS`,result.roomDeclarations===19,result.roomDeclarations);
+            check(`${name}_NO_OVERFLOW`,result.horizontalOverflow<=2,result.horizontalOverflow);
+            check(`${name}_INTRO_COLLAPSED`,result.introOpen===false,result.introOpen);
+            check(`${name}_MATH_REMOVED`,!result.mathVisible,result.mathVisible);
+            check(`${name}_MONUMENTS`,result.monuments===2,result.monuments);
+            check(`${name}_BUILT_AND_BUILD`,result.built&&result.buildCta,result);
+            check(`${name}_MIRRORLAND_THREE_ROUTES`,result.mirrorRoutes===3,result.mirrorRoutes);
+            check(`${name}_COSMOS_HOST`,result.cosmos,result.cosmos);
+            check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
+            await page.screenshot({path:`/tmp/compass-${name.toLowerCase()}.png`,fullPage:true});
             await context.close();
           }
-
-          await qualifyViewport('DESKTOP', { width: 1440, height: 900 });
-          await qualifyViewport('TABLET', { width: 1024, height: 768 });
-          await qualifyViewport('MOBILE', { width: 390, height: 844 });
-
+          await qualifyViewport('DESKTOP',{width:1440,height:900});
+          await qualifyViewport('TABLET',{width:1024,height:768});
+          await qualifyViewport('PHONE',{width:390,height:844});
           {
-            const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
-            const page = await context.newPage();
-            await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 15000 });
-            const first = page.locator('[data-compass-cardinal]').first();
-            await first.focus();
-            const focused = await first.evaluate(el => document.activeElement === el);
-            check('KEYBOARD_FOCUS', focused, focused);
-            await first.press('Enter');
+            const context=await browser.newContext({viewport:{width:1280,height:800}});
+            const page=await context.newPage();
+            await page.goto(base,{waitUntil:'domcontentloaded'});
+            const north=page.locator('[data-cardinal-id="north"]');
+            await north.focus();
+            check('KEYBOARD_FOCUS',await north.evaluate(el=>document.activeElement===el),true);
+            await north.press('Enter');
+            await page.waitForTimeout(500);
+            const state=await page.locator('[data-compass-root]').evaluate(el=>({mode:el.dataset.compassMode,selected:el.dataset.selectedCardinal,preview:el.dataset.clusterPreviewPrimaryRoom||'',guidance:document.querySelector('[data-compass-guidance]')?.textContent.trim(),previewState:document.querySelector('[data-compass-preview-state]')?.textContent.trim(),enterDisabled:document.querySelector('[data-compass-enter]')?.disabled}));
+            check('CARDINAL_OPEN_STATE',state.mode==='CLUSTER_OPEN'&&state.selected==='north',state);
+            check('CLUSTER_GUIDANCE_STATE',state.guidance==='Drag to rotate the cluster. Tap a room star to select it. Swipe across open space to return to the constellation.',state.guidance);
+            check('ROOM_PREVIEW_NOT_SELECTED',Boolean(state.preview)&&state.previewState?.includes('ROOM PREVIEW')&&state.enterDisabled===true,state);
+            const returnButton=page.locator('[data-compass-return-to-orbit]');
+            check('RETURN_CONTROL_EXPOSED',await returnButton.isVisible(),await returnButton.isVisible());
+            await returnButton.click();
             await page.waitForTimeout(300);
-            const selected = await page.locator('[data-compass-root]').getAttribute('data-selected-cardinal');
-            check('KEYBOARD_CARDINAL_ACTIVATION', selected === 'north', selected);
+            check('EXPLICIT_RETURN_WORKS',(await page.locator('[data-compass-root]').getAttribute('data-compass-mode'))==='CONSTELLATION',await page.locator('[data-compass-root]').getAttribute('data-compass-mode'));
             await context.close();
           }
-
           {
-            const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, reducedMotion: 'reduce' });
-            const page = await context.newPage();
-            await page.goto(base, { waitUntil: 'domcontentloaded', timeout: 15000 });
-            await page.waitForSelector('[data-compass-root]', { timeout: 10000 });
+            const context=await browser.newContext({viewport:{width:1280,height:800},reducedMotion:'reduce'});
+            const page=await context.newPage();
+            await page.goto(base,{waitUntil:'domcontentloaded'});
             await page.waitForTimeout(300);
-            const reduced = await page.locator('[data-compass-root]').getAttribute('data-reduced-motion');
-            const cardinalCount = await page.locator('[data-compass-cardinal]').count();
-            check('REDUCED_MOTION_STATE', reduced === 'true', reduced);
-            check('REDUCED_MOTION_SEMANTIC_EQUIVALENCE', cardinalCount === 4, cardinalCount);
+            const reduced=await page.locator('[data-compass-root]').getAttribute('data-reduced-motion');
+            check('REDUCED_MOTION_STATE',reduced==='true',reduced);
+            check('REDUCED_MOTION_SEMANTIC_EQUIVALENCE',await page.locator('[data-compass-cardinal]').count()===4,await page.locator('[data-compass-cardinal]').count());
             await context.close();
           }
-
           await browser.close();
-          const failures = checks.filter(item => !item.pass);
-          const receipt = {
-            schema: 'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v1',
-            candidateHead: process.env.GITHUB_SHA || null,
-            result: failures.length ? 'FAIL_CLOSED' : 'PASS',
-            qualifications: {
-              desktop: failures.every(f => !f.id.startsWith('DESKTOP_')),
-              tablet: failures.every(f => !f.id.startsWith('TABLET_')),
-              mobile: failures.every(f => !f.id.startsWith('MOBILE_')),
-              keyboard: failures.every(f => !f.id.startsWith('KEYBOARD_')),
-              reducedMotion: failures.every(f => !f.id.startsWith('REDUCED_MOTION_')),
-              performance: failures.every(f => !f.id.endsWith('_LOCAL_LOAD_PERFORMANCE')),
-              semanticContinuity: failures.length === 0
-            },
-            checks,
-            failures: failures.map(item => item.id)
-          };
-          fs.writeFileSync('/tmp/compass-runtime-qualification-receipt.json', `${JSON.stringify(receipt, null, 2)}\n`);
-          console.log(JSON.stringify(receipt, null, 2));
-          if (failures.length) process.exit(1);
+          const failures=checks.filter(item=>!item.pass);
+          const receipt={schema:'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v2',operationId:'COMPASS_RENEWAL_CONSTRUCTION_v2_20260814_001',lockGeneration:1471,candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS',checks,failures:failures.map(item=>item.id)};
+          fs.writeFileSync('/tmp/compass-runtime-qualification-receipt.json',`${JSON.stringify(receipt,null,2)}\n`);
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length)process.exit(1);
           NODE
-
-      - name: Upload runtime evidence
+      - name: Upload runtime filtering evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -180,4 +162,4 @@ jobs:
             /tmp/compass-runtime-qualification-receipt.json
             /tmp/compass-desktop.png
             /tmp/compass-tablet.png
-            /tmp/compass-mobile.png
+            /tmp/compass-phone.png

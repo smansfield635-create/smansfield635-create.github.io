@@ -1,0 +1,44 @@
+{
+  "schema": "DIAMOND_GATE_GOVERNANCE_GEN3_PUBLIC_BENCHMARK_v1",
+  "status": "PUBLIC_BENCHMARK_SUMMARY",
+  "generation": 3,
+  "subject": "Governed software-construction control behavior after consolidation",
+  "protocol": {
+    "design": "Frozen blinded comparative evaluation followed by one-shot holdout",
+    "blindedComparisonCases": 160,
+    "oneShotHoldoutCases": 40,
+    "candidateState": "FROZEN_BEFORE_EVALUATION",
+    "comparison": "Governed candidate versus competent guarded baseline",
+    "evaluationBoundary": "Previously unseen governance conditions",
+    "privateEvaluationMaterialPublished": false
+  },
+  "publicFinding": {
+    "disposition": "GENERALIZATION_EVIDENCE_SUPPORTED_WITHIN_TESTED_BOUNDARY",
+    "summary": "The consolidated governance system was evaluated under unseen conditions after its control plane was materially simplified. The public claim is limited to evidence that the surviving system preserved legitimate-operation completion while retaining discrimination against adverse governance conditions within the frozen evaluation protocol.",
+    "supports": [
+      "post-consolidation governance continuity",
+      "blinded comparative evaluation",
+      "one-shot holdout evaluation",
+      "legitimate-operation preservation within the tested protocol",
+      "adverse-condition discrimination within the tested protocol"
+    ],
+    "doesNotSupport": [
+      "universal reliability",
+      "enterprise-scale performance",
+      "external certification or endorsement",
+      "first-of-kind or industry-leading claims",
+      "publication of secret seeds, private oracle material or hidden evaluation payloads",
+      "Software TRL 8"
+    ]
+  },
+  "relationshipToTechnologyReadiness": {
+    "effect": "STRENGTHENS_EXISTING_TRL7_DISPOSITION",
+    "disposition": "SOFTWARE_TRL_7_STRENGTHENED_POST_CONSOLIDATION_OPERATIONALLY_RECONFIRMED",
+    "boundary": "Generation 3 is supporting evidence for the existing bounded Software TRL 7 self-assessment. It does not independently create the TRL 7 claim and does not advance the platform to TRL 8."
+  },
+  "publicationBoundary": {
+    "quantitativeOutcomeValuesPublishedHere": false,
+    "reason": "This public summary records the frozen evaluation structure and authorized conclusion without exposing private evaluation material or asserting unsupported numerical results.",
+    "rule": "Promise -> evidence -> time-state -> boundary."
+  }
+}

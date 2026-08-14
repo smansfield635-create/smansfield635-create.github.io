@@ -33,8 +33,11 @@ const waitForHEarth = async (page, prefix) => {
   await page.waitForTimeout(500);
 };
 const promotedHeroContract = async (page) => page.locator('#h-earth-b10-hero').evaluate((node) => {
-  const style = getComputedStyle(node);
-  return !node.hidden && style.display !== 'none' && style.visibility !== 'hidden';
+  const title = node.querySelector('#h-earth-b10-title');
+  return node instanceof HTMLElement
+    && node.getAttribute('aria-labelledby') === 'h-earth-b10-title'
+    && title instanceof HTMLElement
+    && title.textContent?.trim() === 'Welcome to H-Earth.';
 });
 const gestureUsed = async (page) => page.evaluate(() => [document.getElementById('h-earth-3d-route-root'), document.getElementById('h-earth-functional-landscape-route')].some((node) => node?.dataset.gestureUsed === 'true'));
 const dispatchTouchSequence = async (page, frames) => {

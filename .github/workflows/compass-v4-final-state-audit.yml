@@ -1,0 +1,53 @@
+name: Compass v4 final exact-candidate state audit
+
+on:
+  push:
+    branches:
+      - agent/compass-v4-state-audit
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 2fe5fe92cae0dc95bd4e339616a4c853b1c6e0ec
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/http.log; exit 1
+      - name: Verify final state contract
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import {chromium} from 'playwright';
+          const browser=await chromium.launch({headless:true}); const context=await browser.newContext({viewport:{width:1024,height:1100}}); const page=await context.newPage();
+          await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded'}); await page.waitForFunction(()=>Boolean(window.DGB_COMPASS_CONTROLLER&&window.DGB_COMPASS_RECONSTRUCTION_V4?.initialized));
+          const checks=[]; const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const snapshot=()=>page.evaluate(()=>{const r=document.querySelector('[data-compass-root]'),p=document.querySelector('[data-compass-panel]'),e=document.querySelector('[data-compass-enter]'); return {contextState:r.dataset.compassContextState,contextCardinal:r.dataset.compassContextCardinal,orbit:r.dataset.orbitFocus,selectedCardinal:r.dataset.selectedCardinal,selectedRoom:r.dataset.selectedRoom,title:document.querySelector('[data-compass-panel-title]').textContent.trim(),eyebrow:document.querySelector('[data-compass-panel-eyebrow]').textContent.trim(),panelDisplay:getComputedStyle(p).display,enterHidden:e.hidden,enterDisabled:e.disabled};});
+          let s=await snapshot(); check('GLOBAL_PANEL_HIDDEN',s.panelDisplay==='none'&&s.enterHidden===true,s);
+          await page.locator('[data-compass-scene]').dispatchEvent('pointerdown',{pointerId:1,pointerType:'touch',clientX:500,clientY:400}); await page.evaluate(()=>window.DGB_COMPASS_CONTROLLER.requestOrbitFocus('east',{source:'final-state-audit'})); await page.waitForFunction(()=>document.querySelector('[data-compass-root]').dataset.compassContextState==='cardinal'); s=await snapshot(); check('CARDINAL_CONTEXT_NON_NAVIGATIONAL',s.contextCardinal==='east'&&s.panelDisplay!=='none'&&s.enterHidden===true&&s.title.includes('Sometimes a system'),s); await page.screenshot({path:'/tmp/final-cardinal-east.png',fullPage:true});
+          await page.evaluate(()=>window.DGB_COMPASS_CONTROLLER.requestCardinalSelection('south')); await page.waitForFunction(()=>document.querySelector('[data-compass-root]').dataset.compassContextState==='cluster'); s=await snapshot(); check('CLUSTER_CONTEXT_NON_NAVIGATIONAL',s.selectedCardinal==='south'&&s.enterHidden===true&&s.title.includes('Measure, govern'),s); await page.screenshot({path:'/tmp/final-cluster-south.png',fullPage:true});
+          await page.evaluate(()=>window.DGB_COMPASS_CONTROLLER.requestRoomSelection('south-3')); await page.waitForFunction(()=>document.querySelector('[data-compass-root]').dataset.compassContextState==='room'); s=await snapshot(); check('ROOM_CONTEXT_EXPOSES_ENTER',s.selectedRoom==='south-3'&&s.enterHidden===false&&s.enterDisabled===false&&s.eyebrow.includes('Council Room')&&s.title.includes('Keep intent visible'),s); await page.screenshot({path:'/tmp/final-room-council.png',fullPage:true});
+          await page.evaluate(()=>window.DGB_COMPASS_CONTROLLER.requestReturnToConstellation({scrollToScene:false,source:'final-state-audit'})); await page.evaluate(()=>window.DGB_COMPASS_CONTROLLER.requestMirrorlandReveal()); await page.waitForFunction(()=>document.querySelector('[data-compass-root]').dataset.compassContextState==='mirrorland'); const mirror=await page.evaluate(()=>({title:document.querySelector('[data-compass-panel-title]').textContent.trim(),enterHidden:document.querySelector('[data-compass-enter]').hidden,links:[...document.querySelectorAll('.compass-mirrorland-threshold__routes a')].map(a=>[a.querySelector('strong')?.textContent.trim(),a.getAttribute('href')])})); check('MIRRORLAND_THRESHOLD_CORRECT',mirror.enterHidden&&mirror.title.includes('found the entrance')&&JSON.stringify(mirror.links)===JSON.stringify([['Enter the Narrative','/showroom/'],['Enter the Demo','/showroom/globe/h-earth/'],['See the World Map','/showroom/globe/audralia/']]),mirror); await page.screenshot({path:'/tmp/final-mirrorland.png',fullPage:true});
+          await browser.close(); const failures=checks.filter(x=>!x.pass); const receipt={schema:'COMPASS_V4_FINAL_STATE_AUDIT_v1',candidateHead:'2fe5fe92cae0dc95bd4e339616a4c853b1c6e0ec',result:failures.length?'FAIL':'PASS',checks,failures:failures.map(x=>x.id)}; fs.writeFileSync('/tmp/final-state-audit.json',JSON.stringify(receipt,null,2)+'\n'); console.log(JSON.stringify(receipt,null,2)); if(failures.length)process.exit(1);
+          NODE
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-v4-final-state-audit
+          path: |
+            /tmp/final-state-audit.json
+            /tmp/final-cardinal-east.png
+            /tmp/final-cluster-south.png
+            /tmp/final-room-council.png
+            /tmp/final-mirrorland.png

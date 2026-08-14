@@ -17,14 +17,28 @@ async function ready(page){await page.waitForFunction(()=>document.documentEleme
 async function snap(page,profile,state){const file=path.join(OUT,`${profile}-${state}.png`);await page.screenshot({path:file,fullPage:true});evidence.push({profile,state,file});}
 async function metrics(page){return page.evaluate(()=>{
  const all=[...document.querySelectorAll('body *')];
- const visible=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0};
- const escaped=all.filter(e=>visible(e)).map(e=>{const r=e.getBoundingClientRect();return {tag:e.tagName,cls:String(e.className||''),text:(e.textContent||'').trim().slice(0,80),left:r.left,right:r.right,top:r.top,bottom:r.bottom};}).filter(r=>r.left<-3||r.right>innerWidth+3);
+ const visible=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity)>0.03&&r.width>0&&r.height>0};
+ const rect=e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
+ const escaped=all.filter(e=>visible(e)).map(e=>({...rect(e),tag:e.tagName,cls:String(e.className||''),text:(e.textContent||'').trim().slice(0,80)})).filter(r=>r.left<-3||r.right>innerWidth+3);
  const tabs=[...document.querySelectorAll('[data-mm-family-tabs] .mm-family-tab')].map((e,i)=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return{i,text:e.textContent.trim(),selected:e.getAttribute('aria-selected')==='true',depth:e.dataset.mmOrbitDepth||'',vector:e.dataset.mmOrbitVector||'',left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,opacity:Number(s.opacity)}});
- const cards=[...document.querySelectorAll('.mm-model-card')].filter(visible).map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,position:e.dataset.position||'',text:(e.textContent||'').trim().slice(0,120)}});
- return {innerWidth,scrollWidth:document.documentElement.scrollWidth,horizontalOverflow:document.documentElement.scrollWidth-innerWidth,escaped:escaped.slice(0,40),tabs,cards,active:document.documentElement.dataset.mmRotationalTextActive};
+ const cards=[...document.querySelectorAll('.mm-model-card')].filter(visible).map(e=>({...rect(e),position:e.dataset.position||'',text:(e.textContent||'').trim().slice(0,120)}));
+ const activeCard=document.querySelector('.mm-model-card[data-position="active"]');
+ const activeRect=activeCard&&visible(activeCard)?rect(activeCard):null;
+ const overlaySelectors=['.mm-lens','.mm-lens-tabs','.mm-lens-panel','.mm-progress','.mm-euclidean-coordinate'];
+ const overlaps=[];
+ if(activeRect){
+   for(const selector of overlaySelectors){
+     for(const e of document.querySelectorAll(selector)){
+       if(!visible(e))continue;
+       const r=rect(e); const w=Math.max(0,Math.min(activeRect.right,r.right)-Math.max(activeRect.left,r.left)); const h=Math.max(0,Math.min(activeRect.bottom,r.bottom)-Math.max(activeRect.top,r.top)); const area=w*h;
+       if(area>24) overlaps.push({selector,area,rect:r});
+     }
+   }
+ }
+ return {innerWidth,scrollWidth:document.documentElement.scrollWidth,horizontalOverflow:document.documentElement.scrollWidth-innerWidth,escaped:escaped.slice(0,40),tabs,cards,active:document.documentElement.dataset.mmRotationalTextActive,overlaps};
 });}
-function assertContainment(m,profile,label){if(m.horizontalOverflow>2) failures.push(`${profile}:${label}:DOCUMENT_HORIZONTAL_OVERFLOW:${m.horizontalOverflow}`);if(m.escaped.some(x=>/mm-model-card|mm-inspect|toast|panel|card/i.test(x.cls))) failures.push(`${profile}:${label}:PRIMARY_PANEL_VIEWPORT_ESCAPE`);if(m.tabs.some(t=>t.left<-3||t.right>m.innerWidth+3)) failures.push(`${profile}:${label}:ESSENTIAL_CONTROL_CLIPPED`);if(m.cards.some(c=>c.left<-3||c.right>m.innerWidth+3)) failures.push(`${profile}:${label}:ESSENTIAL_TEXT_CLIPPED`);}
-function assertDepth(m,profile,label){if(m.tabs.length!==4){failures.push(`${profile}:${label}:TAB_COUNT`);return;}const xs=m.tabs.map(t=>(t.left+t.right)/2), ys=m.tabs.map(t=>(t.top+t.bottom)/2), ws=m.tabs.map(t=>t.width), os=m.tabs.map(t=>t.opacity);const spatialBuckets=new Set(m.tabs.map((t,i)=>`${Math.round(xs[i]/8)}:${Math.round(ys[i]/8)}`));if(spatialBuckets.size<4) failures.push(`${profile}:${label}:DEPTH_POSITIONS_NOT_DISTINCT`);if(Math.max(...ws)-Math.min(...ws)<12&&Math.max(...os)-Math.min(...os)<0.12) failures.push(`${profile}:${label}:ORBIT_COLLAPSES_TO_FLAT_TABSET`);}
+function assertContainment(m,profile,label){if(m.horizontalOverflow>2) failures.push(`${profile}:${label}:DOCUMENT_HORIZONTAL_OVERFLOW:${m.horizontalOverflow}`);if(m.escaped.some(x=>/mm-model-card|mm-inspect|toast|panel|card/i.test(x.cls))) failures.push(`${profile}:${label}:PRIMARY_PANEL_VIEWPORT_ESCAPE`);if(m.tabs.some(t=>t.left<-3||t.right>m.innerWidth+3)) failures.push(`${profile}:${label}:ESSENTIAL_CONTROL_CLIPPED`);if(m.cards.some(c=>c.left<-3||c.right>m.innerWidth+3)) failures.push(`${profile}:${label}:ESSENTIAL_TEXT_CLIPPED`);if(m.overlaps?.length) failures.push(`${profile}:${label}:OVERLAY_OBSCURES_PRIMARY_CONTENT:${m.overlaps.map(x=>x.selector).join(',')}`);}
+function assertDepth(m,profile,label){if(m.tabs.length!==4){failures.push(`${profile}:${label}:TAB_COUNT`);return;}const xs=m.tabs.map(t=>(t.left+t.right)/2),ys=m.tabs.map(t=>(t.top+t.bottom)/2),ws=m.tabs.map(t=>t.width),os=m.tabs.map(t=>t.opacity);const spatialBuckets=new Set(m.tabs.map((t,i)=>`${Math.round(xs[i]/8)}:${Math.round(ys[i]/8)}`));if(spatialBuckets.size<4) failures.push(`${profile}:${label}:DEPTH_POSITIONS_NOT_DISTINCT`);if(Math.max(...ws)-Math.min(...ws)<12&&Math.max(...os)-Math.min(...os)<0.12) failures.push(`${profile}:${label}:ORBIT_COLLAPSES_TO_FLAT_TABSET`);}
 async function select(page,index){await page.evaluate(i=>document.querySelectorAll('[data-mm-family-tabs] .mm-family-tab')[i]?.click(),index);await page.waitForFunction(i=>document.documentElement.dataset.mmRotationalTextActive===String(i),{timeout:5000},index);await sleep(550);}
 
 for(const [profile,width,height] of PROFILES){

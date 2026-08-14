@@ -50,7 +50,7 @@ The continuity track supplements rather than replaces repository intake, moving-
 
 For remote read-only assessment after the track is installed, use an owner/member/collaborator issue comment beginning with `PROGRESSIVE_SYSTEM_CONTINUITY_REQUEST_V1` followed by the closed assessment JSON. The route may return a receipt to the triggering issue but may not mutate repository content or the operation ledger.
 
-For H-Earth paths, the router delegates to the existing H-Earth registry and automatic preflight. Preserve all narrower instructions below `h-earth-3d/` and `showroom/globe/h-earth/`.
+For H-Earth and Audralia/globe experience paths, the router delegates to the existing H-Earth registry and automatic preflight. Preserve all narrower instructions below `h-earth-3d/` and `showroom/globe/h-earth/`. Before any experience-changing H-Earth or Audralia/globe upgrade, the operation must additionally load and satisfy `h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json`; the `H-Earth Experience Anchor Gate` is a hard acceptance boundary and may not be bypassed or weakened without explicit user authorization replacing the anchor.
 
 Intake outcomes:
 

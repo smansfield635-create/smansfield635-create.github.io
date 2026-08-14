@@ -4045,6 +4045,9 @@
     proxy.dataset.roomId =
       node.id;
 
+    proxy.dataset.label =
+      node.label;
+
     proxy.dataset.wing =
       node.wing;
 

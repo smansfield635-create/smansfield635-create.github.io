@@ -86,14 +86,11 @@ check('MIRRORLAND_NOT_CARDINAL', html.includes('data-destination-type="mirrorlan
 check('RETURN_TO_ORBIT_PRESENT', html.includes('data-compass-return-to-orbit') && html.includes('Return to Orbit'), 'explicit return control');
 check('BACK_TO_COMPASS_PRESENT', html.includes('data-compass-mirrorland-back') && html.includes('Back to Compass'), 'Mirrorland withdrawal control');
 const preservesCompassState = [
-  'state.clusterContext.set',
-  'lastRoomId',
-  'state.lastView',
-  'selectedCardinalId',
-  'activeRoomId',
-  'mirrorlandDiscoveryState'
+  'state.preserved',
+  'restorePreservedCompassState',
+  'applyPreservedState'
 ].every(token => controller.includes(token));
-check('PRESERVED_COMPASS_STATE_PRESENT', preservesCompassState, 'controller persists cluster quaternion/room context and last-view cardinal/room/Mirrorland state');
+check('PRESERVED_COMPASS_STATE_PRESENT', preservesCompassState, 'controller captures, restores, and applies preserved Compass state across Mirrorland transitions');
 check('CONTROLLER_FOUR_CARDINAL_SEQUENCE', controller.includes('"north"') && controller.includes('"east"') && controller.includes('"south"') && controller.includes('"west"'), 'controller cardinal sequence');
 check('CONTROLLER_MIRRORLAND_LIFECYCLE', ['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED','MIRRORLAND_WITHDRAWING'].every(token => controller.includes(token)), 'Mirrorland lifecycle states');
 check('MOBILE_DISTINCT_COMPOSITION', css.includes('@media (max-width: 820px)') && css.includes('@media (max-width: 560px)') && coreCss.includes('@media (max-width: 820px)'), 'tablet and phone composition rules');

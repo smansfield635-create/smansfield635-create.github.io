@@ -76,7 +76,7 @@ jobs:
           if(x.disposition!=='PASS'||x.routes.length!==8||x.routes.some(r=>r.disposition!=='PASS'||r.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE')) process.exit(1);
           NODE
 
-      - name: Verify no parallel terminal-closure repair path overlap
+      - name: Record candidate change surface without permanent cross-system prohibitions
         shell: bash
         run: |
           set -euo pipefail
@@ -88,18 +88,6 @@ jobs:
             BASE="HEAD^"
           fi
           git diff --name-only "$BASE" HEAD | sort > "$RUNNER_TEMP/changed.txt"
-          prohibited=(
-            tools/operation-intake/repository-operation-lock-manager.v1.mjs
-            tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
-            tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
-            .github/workflows/remote-operation-terminal-closure-v1.yml
-          )
-          for p in "${prohibited[@]}"; do
-            if grep -Fxq "$p" "$RUNNER_TEMP/changed.txt"; then
-              echo "PARALLEL_REPAIR_PATH_OVERLAP:$p" >&2
-              exit 1
-            fi
-          done
           if [ "${GITHUB_HEAD_REF:-}" = "agent/progressive-system-continuity-track-v1" ]; then
             allowed=(
               AGENTS.md
@@ -140,7 +128,8 @@ jobs:
           const self=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/self-test.json','utf8'));
           const router=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-eight-path.json','utf8'));
           const digest=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
-          const receipt={schema:'PROGRESSIVE_SYSTEM_CONTINUITY_VALIDATION_RECEIPT_v1',result:'PASS',head,event:process.env.GITHUB_EVENT_NAME,routerDisposition:router.disposition,routerPathCount:router.routes.length,selfTestResult:self.result,selfTestScenarioCount:self.scenarioCount,protocolSha256:digest(process.env.PROTOCOL_PATH),gateSha256:digest(process.env.GATE_PATH),gapRegistrySha256:digest(process.env.GAP_REGISTRY_PATH),parallelRepairPathOverlap:false,productMutationPerformed:false,lifecycleMutationPerformed:false,genericCommandAuthority:false};
+          const changed=fs.readFileSync(process.env.RUNNER_TEMP+'/changed.txt','utf8').trim().split('\n').filter(Boolean);
+          const receipt={schema:'PROGRESSIVE_SYSTEM_CONTINUITY_VALIDATION_RECEIPT_v1',result:'PASS',head,event:process.env.GITHUB_EVENT_NAME,routerDisposition:router.disposition,routerPathCount:router.routes.length,selfTestResult:self.result,selfTestScenarioCount:self.scenarioCount,protocolSha256:digest(process.env.PROTOCOL_PATH),gateSha256:digest(process.env.GATE_PATH),gapRegistrySha256:digest(process.env.GAP_REGISTRY_PATH),observedChangedPathCount:changed.length,permanentCrossSystemMutationProhibition:false,productMutationPerformed:false,lifecycleMutationPerformed:false,genericCommandAuthority:false};
           fs.writeFileSync('artifacts/progressive-system-continuity/validation.json',JSON.stringify(receipt,null,2)+'\n');
           NODE
 

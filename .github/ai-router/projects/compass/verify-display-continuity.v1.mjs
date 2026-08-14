@@ -8,7 +8,7 @@ const GOVERNING_HEAD = 'f3088fc54096c08c4f2709b4b8449c542cc470a1';
 const OPERATION_ID = 'COMPASS_RENEWAL_CONSTRUCTION_v2_20260814_001';
 const OUTPUT = process.env.COMPASS_VERIFICATION_OUTPUT || '/tmp/compass-display-continuity-verification-receipt.json';
 const allowedPaths = new Set([
-  'index.html','assets/compass/compass-core.css','assets/compass/compass.css','assets/compass/compass.controller.js','assets/compass/compass.cosmos.js','assets/compass/compass.crystals.js','assets/compass/compass.mirrorland-window.js','assets/compass/upstream-compass.css','assets/compass/upstream-compass.geometry.js','assets/compass/upstream-compass.renderer.js','.github/ai-router/projects/compass/verify-display-continuity.v1.mjs','.github/workflows/compass-display-continuity-validation.yml'
+  'index.html','assets/compass/compass-core.css','assets/compass/compass.css','assets/compass/compass.controller.js','assets/compass/compass.cosmos.js','assets/compass/compass.crystals.js','assets/compass/compass.mirrorland-window.js','assets/compass/upstream-compass.css','assets/compass/upstream-compass.geometry.js','assets/compass/upstream-compass.renderer.js','.github/ai-router/projects/compass/construction-execution-plan.v2.display-fidelity-amendment.json','.github/ai-router/projects/compass/entrypoint.v1.json','.github/ai-router/projects/compass/verify-display-continuity.v1.mjs','.github/workflows/compass-display-continuity-validation.yml'
 ]);
 const prohibitedPrefixes = ['door/','home/','showroom/','h-earth-3d/','laws/','evidence/','governance/','products/','build/'];
 const read = p => fs.readFileSync(path.join(ROOT,p),'utf8');
@@ -83,18 +83,22 @@ check('REDUCED_MOTION_EQUIVALENCE',css.includes('@media (prefers-reduced-motion:
 check('KEYBOARD_FOCUS_VISIBLE',css.includes(':focus-visible')&&coreCss.includes(':focus-visible'),'visible keyboard focus');
 check('REFERENCE_LAYER_DECLARED',css.includes('Compass reference implementation — renewal v2')&&css.includes('Mirrorland remains a threshold behind the map, never a fifth direction.'),'bounded Compass layer');
 
-const scopeGit=git(['diff','--name-only',`${GOVERNING_HEAD}...HEAD`]);
+let scopeBase=GOVERNING_HEAD;
+const originMain=git(['rev-parse','--verify','origin/main']);
+if(process.env.COMPASS_SCOPE_BASE_SHA) scopeBase=process.env.COMPASS_SCOPE_BASE_SHA;
+else if(originMain.status===0) scopeBase='origin/main';
+const scopeGit=git(['diff','--name-only',`${scopeBase}...HEAD`]);
 if(scopeGit.status===0){
   const changed=scopeGit.stdout.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);
-  check('EXACT_SCOPE_ONLY',changed.every(p=>allowedPaths.has(p)),changed);
-  check('NO_PROHIBITED_PATH_MUTATION',changed.every(p=>!prohibitedPrefixes.some(prefix=>p.startsWith(prefix))),changed);
+  check('EXACT_SCOPE_ONLY',changed.every(p=>allowedPaths.has(p)),{scopeBase,changed});
+  check('NO_PROHIBITED_PATH_MUTATION',changed.every(p=>!prohibitedPrefixes.some(prefix=>p.startsWith(prefix))),{scopeBase,changed});
 }else{
   check('EXACT_SCOPE_ONLY',false,scopeGit.stderr||'git diff failed');
   check('NO_PROHIBITED_PATH_MUTATION',false,scopeGit.stderr||'git diff failed');
 }
 
 const failed=checks.filter(item=>!item.pass);
-const receipt={schema:'COMPASS_DISPLAY_CONTINUITY_VERIFICATION_RECEIPT_v1',operationId:OPERATION_ID,lockGeneration:1471,governingHead:GOVERNING_HEAD,candidateHead:process.env.GITHUB_SHA||git(['rev-parse','HEAD']).stdout.trim()||null,result:failed.length===0?'PASS':'FAIL_CLOSED',staticQualification:failed.length===0?'PASS':'FAIL_CLOSED',runtimeQualification:'REQUIRES_WORKFLOW_BROWSER_EVIDENCE',checks,failures:failed.map(item=>item.id)};
+const receipt={schema:'COMPASS_DISPLAY_CONTINUITY_VERIFICATION_RECEIPT_v1',operationId:OPERATION_ID,lockGeneration:1471,governingHead:GOVERNING_HEAD,scopeBase,candidateHead:process.env.GITHUB_SHA||git(['rev-parse','HEAD']).stdout.trim()||null,result:failed.length===0?'PASS':'FAIL_CLOSED',staticQualification:failed.length===0?'PASS':'FAIL_CLOSED',runtimeQualification:'REQUIRES_WORKFLOW_BROWSER_EVIDENCE',checks,failures:failed.map(item=>item.id)};
 fs.writeFileSync(OUTPUT,`${JSON.stringify(receipt,null,2)}\n`);
 console.log(JSON.stringify(receipt,null,2));
 if(failed.length) process.exit(1);

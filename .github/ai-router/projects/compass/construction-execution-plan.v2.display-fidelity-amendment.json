@@ -1,0 +1,123 @@
+{
+  "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2_DISPLAY_FIDELITY_AMENDMENT",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "amends": ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+  "scope": "COMPASS_ONLY",
+  "purpose": "Bind the owner-observed Compass regressions and corrected opening architecture into mandatory construction context before any further public Compass repair.",
+  "precedenceLaw": "This amendment is additive and corrective. Where construction-execution-plan.v2.json can be read to permit the observed regression, this amendment controls. It does not erase preservation, authority, navigation, accessibility, Mirrorland, Fibonacci, or bounded-claim requirements in v2.",
+  "observedRegressionDisposition": {
+    "status": "CONFIRMED_MUST_REPAIR",
+    "findings": [
+      "VISITOR_FACING_LANGUAGE_BECAME_BUILDER_FACING_AND_OVERLY_ABSTRACT",
+      "EMPHASIS_WAS_INCORRECTLY_TRANSLATED_INTO_VIEWPORT_SCALE_EDITORIAL_BLOCKS",
+      "SECONDARY_ROOM_DESTINATION_LABELS_LOST_NAVIGATIONAL_LEGIBILITY",
+      "CLUSTER_ROTATION_DID_NOT_VISIBLY_SYNCHRONIZE_FOREGROUND_ROOM_IDENTITY_CONTEXT_AND_ACTION_STATE",
+      "INCREASED_EXPLANATORY_COPY_REDUCED_LEARNABILITY_AND_PROGRESSIVE_DISCLOSURE",
+      "OPENING_FRAMED_WHY_THE_COMPASS_EXISTS_BEFORE_WHY_DIAMOND_GATE_BRIDGE_EXISTS",
+      "COLLAPSED_INTRODUCTION_WITHHELD_TOO_MUCH_CONTEXT_INSTEAD_OF_PRESENTING_AN_INTRIGUING_TEASER"
+    ],
+    "classification": "TECHNICALLY_QUALIFIED_BUT_DISPLAY_FIDELITY_REGRESSED"
+  },
+  "visitorLanguageLaw": {
+    "required": "Explain what is here, what the visitor can do, why it matters, and where a destination leads in concrete public language.",
+    "prohibitedAsPrimaryCopy": [
+      "BUILDER_PERSPECTIVE_ARCHITECTURE_JARGON",
+      "CONTROL_PLANE_LANGUAGE_WITHOUT_VISITOR_MEANING",
+      "ABSTRACT_SYSTEM_TERMS_SUBSTITUTING_FOR_DESTINATION_PURPOSE"
+    ],
+    "law": "Technical language may appear only where it earns visitor understanding or bounded proof; it may not carry the primary orientation burden."
+  },
+  "openingCorrection": {
+    "primaryQuestion": "WHY_DIAMOND_GATE_BRIDGE_EXISTS",
+    "notPrimaryQuestion": "WHY_THE_COMPASS_EXISTS",
+    "relationship": "Diamond Gate Bridge is the estate being introduced; Compass is the instrument used to understand and navigate it.",
+    "collapsedState": "SUBSTANTIVE_TEASER_VISIBLE",
+    "teaserRequirements": [
+      "ESTABLISH_PURPOSE",
+      "CREATE_INTRIGUE",
+      "ESTABLISH_TONE",
+      "MAKE_EXPANSION_OPTIONAL_RATHER_THAN_REQUIRED_FOR_BASIC_COMPREHENSION"
+    ],
+    "expandedState": "PRESERVE_AND_REVEAL_COMPLETE_INTRODUCTION",
+    "law": "Collapsed may reduce depth but may not mean context absent. The visitor must understand the premise of Diamond Gate Bridge before choosing to expand."
+  },
+  "lawsArchitecturalReference": {
+    "status": "MANDATORY_REFERENCE_MATURITY_NOT_STYLE_TEMPLATE",
+    "reference": "LAWS_CHAMBER_AND_SIDE_BY_SIDE_REPRESENTATION",
+    "law": "REFERENCE_MATURITY_DOES_NOT_EQUAL_STYLE_CLONING",
+    "adopt": [
+      "PRIMARY_OBJECT_AND_CONTEXT_OPERATE_AS_ONE_COMPOSITION",
+      "SPATIAL_RELATIONSHIP_CARRIES_INFORMATION",
+      "ACTIVE_STATE_DRIVES_VISIBLE_CONTEXT",
+      "PEERS_RECEDE_WITHOUT_BECOMING_ANONYMOUS",
+      "HIERARCHY_IS_CREATED_BY_COMPOSITION_NOT_CONTAINER_ACREAGE"
+    ],
+    "prohibit": [
+      "VERTICAL_STACK_OF_GIANT_EXPLANATORY_RECTANGLES_AS_DEFAULT_ARCHITECTURE",
+      "COPYING_LAWS_VISUAL_STYLE_OR_AUTHORITY_SEMANTICS"
+    ]
+  },
+  "coupledSpatialExplanation": {
+    "wideViewport": "LIVE_COMPASS_CURRENT_VISUAL_STATE_SIDE_BY_SIDE_WITH_CURRENT_DESTINATION_MEANING_AND_ACTION_STATE",
+    "narrowViewport": "REFLOW_ALLOWED_BUT_VISUAL_INSTRUMENT_AND_CONTEXT_MUST_REMAIN_PERCEPTUALLY_AND_SEMANTICALLY_COUPLED",
+    "stateLaw": "Rotation changes the paired explanation. Foregrounding a room changes its visible identity, practical meaning, and action availability in the paired surface.",
+    "failure": "VISIBLE_SPATIAL_STATE_CHANGE_WITH_STALE_GENERIC_CONTEXT_IS_NONCOMPENSATORY"
+  },
+  "roomIdentityAndStateLaw": {
+    "secondaryLabels": "Every navigable secondary room must retain an accessible visible identity sufficient to understand the cluster without experimental selection.",
+    "clusterRotation": "As each room star becomes foregrounded, the contextual surface must immediately become that room's preview before selection.",
+    "roomPreview": "Show room name, concrete purpose, useful orientation, and no Enter action.",
+    "roomSelected": "Selection commits that same room identity and exposes the correct room-specific Enter action.",
+    "criticalSequence": [
+      "ROTATE",
+      "ROOM_COMES_FORWARD",
+      "ROOM_IDENTIFIED",
+      "CONTEXT_CHANGES",
+      "SELECT",
+      "ENTER_BECOMES_AVAILABLE"
+    ],
+    "noncompensatoryFailures": [
+      "NAVIGABLE_ROOM_WITHOUT_ACCESSIBLE_VISIBLE_IDENTITY",
+      "FOREGROUND_ROOM_CHANGES_WHILE_CONTEXT_REMAINS_GENERIC_OR_STALE",
+      "VALID_ROOM_SELECTED_WHILE_ENTER_REMAINS_INCORRECTLY_LOCKED",
+      "VISIBLE_STATE_CHANGES_WITHOUT_MEANINGFUL_INFORMATIONAL_CONSEQUENCE"
+    ]
+  },
+  "proportionalEmphasisLaw": {
+    "features": [
+      "COHERENCE_DIAGNOSTIC",
+      "TALK_TO_THE_HOUSE",
+      "BUILT_DIFFERENT",
+      "SOFTWARE_TRL_7_PROOF"
+    ],
+    "required": "Emphasis must be earned compositionally through typography, light, depth, motion, shimmer, controlled animation, responsive interaction, distinctive JavaScript behavior, or other authored treatment appropriate to the feature.",
+    "prohibited": "Do not translate importance primarily into oversized rectangular containers, excessive viewport consumption, or repeated large editorial cards.",
+    "law": "MONUMENTAL_MEANS_MEMORABLE_AND_DISTINCTIVE_NOT_MERELY_LARGE"
+  },
+  "progressiveDisclosureLaw": {
+    "law": "More explanatory text may not reduce immediate navigational comprehension. The page must become easier to learn by using it.",
+    "required": [
+      "PRIMARY_DESTINATIONS_IDENTIFIABLE_BEFORE_COMMITMENT",
+      "SECONDARY_DESTINATIONS_IDENTIFIABLE_DURING_CLUSTER_EXPLORATION",
+      "DETAIL_REVEALED_IN_RESPONSE_TO_VISITOR_INTENT",
+      "NO_REPEATED_LARGE_EDITORIAL_CONTAINER_ACCUMULATION"
+    ]
+  },
+  "qualificationAmendment": {
+    "law": "Technical Playwright green is insufficient. Exact-candidate qualification must include display-fidelity regression assertions and downstream visual/perceptual adjudication when the universal stack provides them.",
+    "requiredAssertions": [
+      "VISITOR_FACING_LANGUAGE_IS_CONCRETE_AND_ORIENTING",
+      "DIAMOND_GATE_BRIDGE_PURPOSE_TEASER_VISIBLE_WHILE_FULL_INTRO_REMAINS_COLLAPSED",
+      "NAVIGABLE_SECONDARY_ROOMS_HAVE_ACCESSIBLE_VISIBLE_IDENTITIES",
+      "FOREGROUND_ROOM_IDENTITY_SYNCHRONIZES_CONTEXT",
+      "ROOM_SELECTION_SYNCHRONIZES_ACTION_AVAILABILITY",
+      "VISIBLE_STATE_CHANGE_HAS_MEANINGFUL_INFORMATIONAL_CONSEQUENCE",
+      "PROGRESSIVE_DISCLOSURE_PRESERVES_IMMEDIATE_COMPREHENSION",
+      "EMPHASIS_IS_PROPORTIONAL_AND_NOT_REPEATED_VIEWPORT_SCALE_CARD_ACREAGE",
+      "DESKTOP_AND_MOBILE_PRESERVE_SEMANTIC_EQUIVALENCE",
+      "LAWS_REFERENCE_MATURITY_IS_USED_ARCHITECTURALLY_WITHOUT_STYLE_CLONING"
+    ],
+    "ownerInspectionLaw": "Owner-observed regressions are evidence to correct and bind; screenshots are not a required pre-merge approval gate unless explicitly requested."
+  },
+  "constructionBoundary": "NO_PUBLIC_COMPASS_REPAIR_SHOULD_BEGIN_FROM_V2_ALONE_AFTER_THIS_AMENDMENT_IS_MERGED; LOAD_V2_AND_THIS_AMENDMENT_TOGETHER."
+}

@@ -101,7 +101,10 @@ try {
   check('FIVE_ACHIEVEMENT_STORIES', await awards.locator('[data-story]').count() === 5);
   check('SIX_TROPHY_STANDARD_LENSES', await awards.locator('[data-lens]').count() === 6);
   check('AWARDS_2027_CAMPAIGN_VISIBLE', await awards.getByText('Planned submissions · late October 2026 · 2027 cycle', { exact: true }).isVisible());
-  check('AWARDS_TRANSPARENCY_BOUNDARY_VISIBLE', await awards.getByText(/does not claim that a submission, nomination, shortlist or win has already occurred/i).isVisible());
+  const transparencyBoundary = awards.getByText(/does not claim that a submission, nomination, shortlist or win has already occurred/i);
+  const transparencyDisclosure = transparencyBoundary.locator('xpath=ancestor::details[1]');
+  if (await transparencyDisclosure.count()) await transparencyDisclosure.locator('summary').click();
+  check('AWARDS_TRANSPARENCY_BOUNDARY_VISIBLE', await transparencyBoundary.isVisible());
   check('AWARDS_H_EARTH_DOOR_PRESENT', (await awards.getByText('Enter H-Earth', { exact: true }).getAttribute('href')) === '/showroom/globe/h-earth/');
   await awards.locator('[data-story="governed"]').click();
   check('GOVERNED_STORY_CONTENT_UPDATES', (await awards.locator('#story-title').textContent())?.trim() === 'Growth does not have to mean losing control.');

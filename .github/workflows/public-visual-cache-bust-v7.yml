@@ -1,0 +1,50 @@
+name: Public visual cache bust v7
+
+on:
+  push:
+    branches:
+      - agent/public-visual-cache-bust-v7
+
+permissions:
+  contents: write
+
+jobs:
+  cache-bust:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/public-visual-cache-bust-v7
+          fetch-depth: 0
+      - name: Advance shared wrapper cache key
+        shell: bash
+        run: |
+          set -euo pipefail
+          paths=(
+            governance/index.html
+            build/index.html
+            showroom/globe/h-earth/awards/index.html
+          )
+          for path in "${paths[@]}"; do
+            grep -q '/assets/build/fibonacci-cosmos.js?v=6' "$path"
+            sed -i 's#/assets/build/fibonacci-cosmos.js?v=6#/assets/build/fibonacci-cosmos.js?v=7#g' "$path"
+          done
+          if grep -R --line-number --fixed-strings '/assets/build/fibonacci-cosmos.js?v=6' "${paths[@]}"; then
+            echo 'stale cache key remains' >&2
+            exit 1
+          fi
+          for path in "${paths[@]}"; do
+            grep -q '/assets/build/fibonacci-cosmos.js?v=7' "$path"
+          done
+      - name: Commit bounded cache bust and remove temporary workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/public-visual-cache-bust-v7.yml
+          git add governance/index.html build/index.html showroom/globe/h-earth/awards/index.html
+          git commit -m 'Bust public visual wrapper cache to v7'
+          git push origin HEAD:agent/public-visual-cache-bust-v7

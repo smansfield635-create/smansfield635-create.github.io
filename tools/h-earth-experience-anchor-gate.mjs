@@ -7,7 +7,6 @@ import {execFileSync} from 'node:child_process';
 const ROOT=process.cwd();
 const MANIFEST_PATH='h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json';
 const RECEIPT_PREFIX='h-earth-3d/experience-anchor/receipts/';
-const ANCHOR_DIR='h-earth-3d/experience-anchor/';
 const NON_EXPERIENCE_H_EARTH_PREFIXES=[
   'h-earth-3d/registry/',
   'h-earth-3d/control-plane/',
@@ -15,6 +14,11 @@ const NON_EXPERIENCE_H_EARTH_PREFIXES=[
   'h-earth-3d/evaluation/',
   'h-earth-3d/evidence/'
 ];
+const INSTRUCTION_ONLY_PATHS=new Set([
+  'h-earth-3d/AGENTS.md',
+  'showroom/globe/h-earth/AGENTS.md',
+  'showroom/globe/audralia/AGENTS.md'
+]);
 const fail=code=>{console.error(`H_EARTH_EXPERIENCE_ANCHOR_GATE_FAIL:${code}`);process.exit(1)};
 const sha256=data=>crypto.createHash('sha256').update(data).digest('hex');
 const readJson=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
@@ -39,10 +43,12 @@ if(base&&base!=='0000000000000000000000000000000000000000'){
   try{changed=execFileSync('git',['diff','--name-only',base,head],{encoding:'utf8'}).split(/\r?\n/).filter(Boolean);}catch{fail('DIFF_RESOLUTION_FAILED');}
 }
 
-const isExperiencePath=p=>
-  p.startsWith('showroom/globe/h-earth/')||
-  p.startsWith('showroom/globe/audralia/')||
-  (p.startsWith('h-earth-3d/')&&!NON_EXPERIENCE_H_EARTH_PREFIXES.some(prefix=>p.startsWith(prefix))&&p!=='h-earth-3d/AGENTS.md');
+const isExperiencePath=p=>{
+  if(INSTRUCTION_ONLY_PATHS.has(p))return false;
+  if(p.startsWith('showroom/globe/h-earth/'))return true;
+  if(p.startsWith('showroom/globe/audralia/'))return true;
+  return p.startsWith('h-earth-3d/')&&!NON_EXPERIENCE_H_EARTH_PREFIXES.some(prefix=>p.startsWith(prefix));
+};
 
 const experienceChanges=changed.filter(isExperiencePath).sort();
 if(experienceChanges.length===0){

@@ -13,9 +13,9 @@
     "audioCodec": "aac",
     "byteSize": 50012274
   },
-  "repositoryProxy": {
-    "path": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.proxy.mp4.base64",
-    "decodedSha256": "3046259ca6fda023fa3f8c51af9a01adb9d09fba997842738891c4f2e862769b",
+  "repositoryVisualProxy": {
+    "path": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "sha256": "1b63b7f83ab5bd399f1210051474179182d2c10dedf1f4d4860198e1c6d7b07b",
     "purpose": "Durable in-repository visual proxy for future H-Earth upgrade review. The original-video SHA-256 remains the controlling source identity."
   },
   "controllingLaw": "AN_H_EARTH_UPGRADE_FAILS_IF_ENTERING_H_EARTH_FEELS_LIKE_ENTERING_A_DIFFERENT_PRODUCT",

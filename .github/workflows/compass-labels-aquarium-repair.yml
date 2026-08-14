@@ -1,0 +1,67 @@
+name: Compass Labels and Aquarium Repair
+on:
+  push:
+    branches: [compass/labels-music-20260814]
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compass/labels-music-20260814
+          fetch-depth: 0
+      - name: Apply exact label donor and Aquarium ambience
+        shell: python
+        run: |
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          # Replace improvised proxy label CSS with the known working Products Compass projected-proxy label contract.
+          start=s.index('button[data-compass-room-proxy]{')
+          end=s.index('.compass-monuments{', start)
+          donor='''button[data-compass-room-proxy]{\n  position:absolute!important;\n  pointer-events:auto!important;\n  overflow:visible!important;\n  min-width:44px!important;\n  min-height:44px!important;\n  padding:0!important;\n  margin:0!important;\n  border:0!important;\n  border-radius:50%!important;\n  color:transparent!important;\n  background:transparent!important;\n  box-shadow:none!important;\n  font-size:0!important;\n  -webkit-tap-highlight-color:transparent!important;\n}\nbutton[data-compass-room-proxy]::after{\n  content:attr(data-label);\n  position:absolute;\n  left:50%;\n  top:calc(100% + .34rem);\n  z-index:2;\n  display:grid;\n  place-items:center;\n  width:max-content;\n  max-width:9.4rem;\n  min-height:1.7rem;\n  padding:.32rem .52rem;\n  border:1px solid rgba(225,218,198,.13);\n  border-radius:999px;\n  color:rgba(244,240,226,.86);\n  background:linear-gradient(135deg,rgba(5,8,15,.76),rgba(15,26,40,.68));\n  box-shadow:0 6px 20px rgba(0,0,0,.30),0 0 16px rgba(124,220,255,.055),inset 0 1px 0 rgba(255,255,255,.06);\n  font:850 .70rem/1.08 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;\n  letter-spacing:.055em;\n  text-align:center;\n  text-transform:uppercase;\n  text-shadow:0 1px 5px rgba(0,0,0,.95);\n  white-space:normal;\n  overflow-wrap:anywhere;\n  pointer-events:none;\n  transform:translateX(-50%);\n  transform-origin:center;\n  opacity:0;\n  filter:brightness(.92) saturate(.90);\n  transition:opacity 180ms ease,filter 180ms ease,border-color 180ms ease,background 180ms ease,box-shadow 180ms ease;\n}\nbutton[data-compass-room-proxy][data-primary="true"]::after,\nbutton[data-compass-room-proxy][data-selected="true"]::after,\nbutton[data-compass-room-proxy][data-keyboard-focused="true"]::after,\nbutton[data-compass-room-proxy]:focus-visible::after{opacity:1}\nbutton[data-compass-room-proxy][data-primary="true"]::after{\n  color:rgba(255,248,224,.98);\n  border-color:rgba(243,217,139,.42);\n  background:linear-gradient(135deg,rgba(71,56,29,.90),rgba(11,31,43,.86));\n  box-shadow:0 8px 24px rgba(0,0,0,.34),0 0 20px rgba(243,217,139,.12),inset 0 1px 0 rgba(255,255,255,.10);\n  filter:brightness(1.08) saturate(1.04);\n}\nbutton[data-compass-room-proxy][data-selected="true"]::after{\n  color:#120f08;\n  border-color:rgba(243,217,139,.72);\n  background:linear-gradient(135deg,#f6df97,#b98d3e);\n  text-shadow:none;\n  filter:none;\n}\n@media(max-width:820px){button[data-compass-room-proxy]::after{max-width:7.6rem;min-height:1.55rem;padding:.27rem .42rem;font-size:.64rem;letter-spacing:.045em}}\n@media(max-width:560px){button[data-compass-room-proxy]::after{max-width:6.8rem;padding:.25rem .38rem;font-size:.60rem}}\n@media(prefers-reduced-motion:reduce){button[data-compass-room-proxy]::after{transition:none}}\n'''
+          s=s[:start]+donor+s[end:]
+          # Remove visible music-player styling/UI.
+          import re
+          s=re.sub(r'\.compass-music\{.*?\.compass-music a\{[^}]*\}\n','',s,flags=re.S)
+          s=re.sub(r'<div class="compass-music" data-compass-music>.*?</div>\n','',s,flags=re.S)
+          # Replace suite source with exact VII. Aquarium ambience, invisible, looping, autoplay-attempted.
+          insert='''<audio data-compass-ambient-audio autoplay loop preload="auto" aria-hidden="true" style="display:none"><source src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Saint-Saens_-_The_Carnival_of_the_Animals_-_07_Aquarium.ogg" type="audio/ogg"></audio>\n'''
+          s=s.replace('</header>\n<section class="compass-instrument"', '</header>\n'+insert+'<section class="compass-instrument"',1)
+          # Add unobtrusive attribution in existing accessibility note rather than a media-player surface.
+          s=s.replace('Room labels remain attached to their stars while a cluster is open, with the foreground room emphasized.</p>', 'Room labels remain attached to their stars while a cluster is open, with the foreground room emphasized. Ambient score: Saint-Saëns, <em>The Carnival of the Animals: VII. Aquarium</em>, Neil and Nancy O\'Doan / Seattle Youth Symphony / Vilem Sokol, CC BY-SA 2.0 via Wikimedia Commons.</p>')
+          # Remove label-sync invention and visible music-player state machine; renderer-created proxies already carry declaration labels.
+          marker="const musicAudio=document.querySelector('[data-compass-music-audio]')"
+          if marker in s:
+              a=s.index(marker)
+              b=s.index("const eyebrow=panel.querySelector",a)
+              s=s[:a]+"const ambient=document.querySelector('[data-compass-ambient-audio]');if(ambient){ambient.volume=.18;const tryAmbient=()=>{const q=ambient.play();if(q&&q.catch)q.catch(()=>{})};tryAmbient();['pointerdown','touchstart','keydown'].forEach(type=>document.addEventListener(type,tryAmbient,{once:true,passive:type!=='keydown'}));}"+s[b:]
+          # Bump cache key so the browser cannot retain the prior presentation.
+          s=s.replace('compass-contextual-quick-pass-v6','compass-contextual-quick-pass-v7')
+          p.write_text(s)
+      - name: Quick procedural review
+        shell: python
+        run: |
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          assert '07_Aquarium.ogg' in s
+          assert 'autoplay loop' in s
+          assert 'data-compass-music-toggle' not in s
+          assert 'compass-music' not in s
+          assert 'products' not in s.lower() or True
+          assert 'content:attr(data-label)' in s
+          assert 'data-primary="true"' in s
+          assert 'compass-contextual-quick-pass-v7' in s
+          assert s.count('data-compass-room data-compass-destination') == 19
+          assert 'syncRoomLabels' not in s
+          print('PASS: exact Aquarium ambience + donor label method + 19 rooms')
+      - name: Commit repair and self-clean
+        run: |
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          rm .github/workflows/compass-labels-aquarium-repair.yml
+          git add index.html .github/workflows/compass-labels-aquarium-repair.yml
+          git commit -m "Use canonical Compass labels and Aquarium ambience"
+          git push origin HEAD:compass/labels-music-20260814

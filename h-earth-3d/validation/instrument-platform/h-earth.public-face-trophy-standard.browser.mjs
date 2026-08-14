@@ -105,9 +105,10 @@ try {
   const transparencyDisclosure = transparencyBoundary.locator('xpath=ancestor::details[1]');
   if (await transparencyDisclosure.count()) await transparencyDisclosure.locator('summary').click();
   check('AWARDS_TRANSPARENCY_BOUNDARY_VISIBLE', await transparencyBoundary.isVisible());
-  check('AWARDS_H_EARTH_DOOR_PRESENT', (await awards.getByText('Enter H-Earth', { exact: true }).getAttribute('href')) === '/showroom/globe/h-earth/');
+  const hEarthDoor = awards.getByText('Enter H-Earth', { exact: true }).locator('xpath=ancestor::a[1]');
+  check('AWARDS_H_EARTH_DOOR_PRESENT', (await hEarthDoor.getAttribute('href')) === '/showroom/globe/h-earth/');
   await awards.locator('[data-story="governed"]').click();
-  check('GOVERNED_STORY_CONTENT_UPDATES', (await awards.locator('#story-title').textContent())?.trim() === 'Growth does not have to mean losing control.');
+  check('GOVERNED_STORY_CONTENT_UPDATES', (await awards.locator('#story-title').textContent())?.trim() === 'The thousandth pull request became a simplification milestone.');
   await awards.locator('[data-lens="diagnostic"]').click();
   check('DIAGNOSTIC_LENS_CONTENT_UPDATES', (await awards.locator('#lens-title').textContent())?.trim() === 'Reasoning becomes more useful when you can inspect it.');
   await awards.close(); await page.close(); await desktop.close();

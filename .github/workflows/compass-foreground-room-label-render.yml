@@ -31,9 +31,6 @@ jobs:
           if (/data-compass-room-proxy\][^{]*::after\s*\{[^}]*content\s*:\s*attr\(data-label\)/s.test(html)) {
             throw new Error('PROXY_BASED_VISUAL_ROOM_LABEL_PRESENT');
           }
-          if (!html.includes('data-compass-projected-room-label')) {
-            throw new Error('PROJECTED_ROOM_LABEL_PATH_MISSING');
-          }
           NODE
       - name: Install Playwright outside repository contract
         env:
@@ -66,6 +63,7 @@ jobs:
           await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:20000});
           await page.waitForSelector('[data-compass-root]',{timeout:10000});
           await page.waitForSelector('[data-compass-room-proxy]',{timeout:10000});
+          await page.waitForSelector('[data-compass-projected-room-label]',{state:'attached',timeout:10000});
           await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER),{timeout:10000});
 
           const declarationMap=await page.evaluate(()=>Object.fromEntries(

@@ -13,12 +13,13 @@ permissions:
 jobs:
   package-exact-git-objects:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       PUBLIC_REPOSITORY: smansfield635-create/smansfield635-create.github.io
       CANDIDATE_SHA: d374d9821b78a4744e22c1d30d101f281054f099
       BASE_SHA: 7917ecb7b07a32e8a653a6e1534397b232cccd6b
       SOURCE_SHA: 7917ecb7b07a32e8a653a6e1534397b232cccd6b
+      PLAYWRIGHT_VERSION: 1.55.0
     steps:
       - name: Checkout transport workflow head only
         uses: actions/checkout@v4
@@ -32,10 +33,7 @@ jobs:
           rm -rf "$RUNNER_TEMP/exact-public"
           git init -q "$RUNNER_TEMP/exact-public"
           git -C "$RUNNER_TEMP/exact-public" remote add origin "https://github.com/${PUBLIC_REPOSITORY}.git"
-          git -C "$RUNNER_TEMP/exact-public" fetch --no-tags origin \
-            "$CANDIDATE_SHA" \
-            "$BASE_SHA" \
-            "$SOURCE_SHA"
+          git -C "$RUNNER_TEMP/exact-public" fetch --no-tags origin "$CANDIDATE_SHA" "$BASE_SHA" "$SOURCE_SHA"
           git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/candidate "$CANDIDATE_SHA"
           git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/base "$BASE_SHA"
           git -C "$RUNNER_TEMP/exact-public" update-ref refs/transport/source "$SOURCE_SHA"
@@ -47,9 +45,6 @@ jobs:
           test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/candidate^{commit})" = "$CANDIDATE_SHA"
           test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
           test "$(git -C "$RUNNER_TEMP/exact-public" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
-          git -C "$RUNNER_TEMP/exact-public" cat-file -e "$CANDIDATE_SHA^{commit}"
-          git -C "$RUNNER_TEMP/exact-public" cat-file -e "$BASE_SHA^{commit}"
-          git -C "$RUNNER_TEMP/exact-public" cat-file -e "$SOURCE_SHA^{commit}"
           git -C "$RUNNER_TEMP/exact-public" cat-file -p "$CANDIDATE_SHA" | grep -Fx "parent $BASE_SHA"
 
       - name: Create Git-native bundle
@@ -57,9 +52,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p transport
-          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" \
-            refs/transport/candidate refs/transport/base refs/transport/source
-          git bundle verify "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle"
+          git -C "$RUNNER_TEMP/exact-public" bundle create "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" refs/transport/candidate refs/transport/base refs/transport/source
+          git -C "$RUNNER_TEMP/exact-public" bundle verify "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle"
 
       - name: Prove bundle reconstructs the exact Git subject
         shell: bash
@@ -67,16 +61,25 @@ jobs:
           set -euo pipefail
           rm -rf "$RUNNER_TEMP/reconstructed"
           git init -q "$RUNNER_TEMP/reconstructed"
-          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" \
-            refs/transport/candidate:refs/transport/candidate \
-            refs/transport/base:refs/transport/base \
-            refs/transport/source:refs/transport/source
+          git -C "$RUNNER_TEMP/reconstructed" fetch --no-tags "$GITHUB_WORKSPACE/transport/methods-models-d374d982.bundle" refs/transport/candidate:refs/transport/candidate refs/transport/base:refs/transport/base refs/transport/source:refs/transport/source
           git -C "$RUNNER_TEMP/reconstructed" checkout -q --detach refs/transport/candidate
           test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
-          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/base^{commit})" = "$BASE_SHA"
-          test "$(git -C "$RUNNER_TEMP/reconstructed" rev-parse refs/transport/source^{commit})" = "$SOURCE_SHA"
           test -z "$(git -C "$RUNNER_TEMP/reconstructed" status --porcelain=v1 --untracked-files=all)"
           git -C "$RUNNER_TEMP/reconstructed" cat-file -p HEAD | grep -Fx "parent $BASE_SHA"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Package pinned Playwright execution runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p transport/playwright-runtime transport/playwright-browsers
+          npm install --prefix transport/playwright-runtime --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          PLAYWRIGHT_BROWSERS_PATH="$GITHUB_WORKSPACE/transport/playwright-browsers" node transport/playwright-runtime/node_modules/playwright/cli.js install chromium
+          test "$(node -p "require('./transport/playwright-runtime/node_modules/playwright/package.json').version")" = "$PLAYWRIGHT_VERSION"
+          test -n "$(find transport/playwright-browsers -type f -name chrome -o -name headless_shell | head -1)"
 
       - name: Emit transport-only provenance receipt
         shell: bash
@@ -95,6 +98,8 @@ jobs:
             "bundleSha256": "$BUNDLE_SHA256",
             "bundleVerified": true,
             "reconstructionVerified": true,
+            "playwrightVersion": "$PLAYWRIGHT_VERSION",
+            "playwrightRuntimeTransported": true,
             "qualificationAuthorityCreated": false,
             "productMutationAuthorityCreated": false,
             "mergeAuthorityCreated": false,

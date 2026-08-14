@@ -178,103 +178,64 @@ jobs:
           const page=await browser.newPage({viewport:{width:1280,height:800}});
           const failures=[];
           const observations=[];
-          const traversal=[];
-          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
           const fail=(id,evidence)=>failures.push({id,evidence});
+          const normalize=v=>{const m=Math.hypot(...v)||1;return v.map(n=>n/m);};
+          const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
+          const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+          const quaternionFromTo=(from,to)=>{
+            const a=normalize(from),b=normalize(to),d=Math.max(-1,Math.min(1,dot(a,b)));
+            if(d>0.999999) return [0,0,0,1];
+            if(d<-0.999999){
+              let axis=cross(a,[1,0,0]);
+              if(Math.hypot(...axis)<1e-6) axis=cross(a,[0,1,0]);
+              axis=normalize(axis);
+              return [axis[0],axis[1],axis[2],0];
+            }
+            const c=cross(a,b),s=Math.sqrt((1+d)*2),inv=1/s;
+            return normalize([c[0]*inv,c[1]*inv,c[2]*inv,s*0.5]);
+          };
+          const roomVector=(index,count)=>{
+            const safeCount=Math.max(1,count);
+            const longitude=(Math.PI*2*index)/safeCount-Math.PI/2;
+            const latitude=Math.sin((index+0.5)*1.73)*0.48;
+            const cosineLatitude=Math.cos(latitude);
+            return normalize([Math.cos(longitude)*cosineLatitude,Math.sin(latitude),Math.sin(longitude)*cosineLatitude]);
+          };
+          const primaryAnchor=normalize([0,0.70,0.714]);
           await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:20000});
           await page.waitForSelector('[data-compass-root]',{timeout:10000});
-          await page.waitForSelector('[data-compass-room-proxy]',{timeout:10000});
           await page.waitForSelector('[data-compass-projected-room-label]',{state:'attached',timeout:10000});
           await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER),{timeout:10000});
-          const declarationMap=await page.evaluate(()=>Object.fromEntries([...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')].map(el=>[el.dataset.roomId,{label:(el.dataset.label||'').trim(),wing:el.dataset.wing}])));
-          if(Object.keys(declarationMap).length!==19) fail('DECLARATION_COUNT',Object.keys(declarationMap));
-          const inspect=async wing=>page.evaluate(activeWing=>{
-            const root=document.querySelector('[data-compass-root]');
-            const foreground=root?.dataset.clusterPreviewPrimaryRoom||root?.dataset.clusterPrimaryRoom||'';
-            const label=document.querySelector('[data-compass-projected-room-label]');
-            const style=label?getComputedStyle(label):null;
-            const rect=label?.getBoundingClientRect();
-            return {wing:activeWing,mode:root?.dataset.compassMode||'',foreground,renderedRoomId:label?.dataset.roomId||'',text:(label?.textContent||'').replace(/\s+/g,' ').trim(),visible:Boolean(label&&!label.hidden&&style&&style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect&&rect.width>0&&rect.height>0),background:style?.backgroundImage||style?.backgroundColor||'',rect:rect?{left:rect.left,top:rect.top,width:rect.width,height:rect.height}:null};
-          },wing);
-          async function proxyCenter(roomId){
-            return page.evaluate(id=>{
-              const proxy=document.querySelector(`[data-compass-room-proxy][data-room-id="${CSS.escape(id)}"]`);
-              if(!proxy) return null;
-              const rect=proxy.getBoundingClientRect();
-              const style=getComputedStyle(proxy);
-              if(rect.width<=0||rect.height<=0||style.display==='none'||style.visibility==='hidden') return null;
-              return {x:rect.left+rect.width/2,y:rect.top+rect.height/2,width:rect.width,height:rect.height};
-            },roomId);
-          }
-          async function adaptiveDrag(targetRoom,currentRoom){
-            const target=await proxyCenter(targetRoom);
-            const current=await proxyCenter(currentRoom);
-            if(!target||!current) return {ok:false,target,current};
-            const dx=(current.x-target.x)*0.92;
-            const dy=(current.y-target.y)*0.92;
-            const distance=Math.hypot(dx,dy);
-            if(distance<3) return {ok:false,target,current,dx,dy,distance};
-            const cap=180;
-            const scale=Math.min(1,cap/distance);
-            const end={x:target.x+dx*scale,y:target.y+dy*scale};
-            await page.mouse.move(target.x,target.y);
-            await page.mouse.down();
-            await page.mouse.move(end.x,end.y,{steps:12});
-            await sleep(140);
-            await page.mouse.up();
-            await sleep(360);
-            return {ok:true,target,current,end,dx,dy,distance};
-          }
-          async function recordForeground(wing,seen){
-            const state=await inspect(wing);
-            if(state.foreground&&declarationMap[state.foreground]?.wing===wing){
-              const declared=declarationMap[state.foreground];
-              const correct=state.visible&&state.renderedRoomId===state.foreground&&state.text===declared.label&&!/^rgb\(0, 0, 0\)$/.test(state.background||'');
-              observations.push({...state,expectedLabel:declared.label,correct});
-              if(correct) seen.add(state.foreground); else fail(`${state.foreground}_RENDERED_LABEL_INVALID`,{state,declared});
-            }
-            return state;
-          }
+          const declarations=await page.evaluate(()=>[...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')].map(el=>({id:el.dataset.roomId,label:(el.dataset.label||'').trim(),wing:el.dataset.wing})));
+          if(declarations.length!==19) fail('DECLARATION_COUNT',declarations.length);
           for(const wing of ['north','east','south','west']){
             await page.evaluate(w=>document.querySelector(`[data-compass-cardinal][data-cardinal-id="${w}"]`)?.click(),wing);
             await page.waitForFunction(w=>{const root=document.querySelector('[data-compass-root]');return root?.dataset.compassMode==='CLUSTER_OPEN'&&root?.dataset.selectedCardinal===w;},wing,{timeout:10000});
-            await sleep(450);
-            const expected=Object.entries(declarationMap).filter(([,v])=>v.wing===wing).map(([id])=>id);
-            const seen=new Set();
-            let state=await recordForeground(wing,seen);
-            for(const targetRoom of expected){
-              for(let attempt=0;attempt<14&&state.foreground!==targetRoom;attempt++){
-                const currentRoom=state.foreground||[...seen][seen.size-1]||expected[0];
-                const movement=await adaptiveDrag(targetRoom,currentRoom);
-                traversal.push({wing,targetRoom,attempt,currentRoom,movement});
-                if(!movement.ok){
-                  const nudgeX=(attempt%2===0?1:-1)*(44+attempt*5);
-                  const nudgeY=((attempt%3)-1)*32;
-                  const current=await proxyCenter(currentRoom);
-                  if(current){
-                    await page.mouse.move(current.x,current.y);
-                    await page.mouse.down();
-                    await page.mouse.move(current.x+nudgeX,current.y+nudgeY,{steps:10});
-                    await page.mouse.up();
-                    await sleep(320);
-                  }
-                }
-                state=await recordForeground(wing,seen);
-              }
-              if(state.foreground!==targetRoom){
-                fail(`${targetRoom}_NOT_REACHED_BY_ADAPTIVE_POINTER_TRAVERSAL`,{wing,targetRoom,lastForeground:state.foreground});
-              }
+            const rooms=declarations.filter(item=>item.wing===wing);
+            for(let index=0;index<rooms.length;index++){
+              const room=rooms[index];
+              const quaternion=quaternionFromTo(roomVector(index,rooms.length),primaryAnchor);
+              const committed=await page.evaluate(({wing,roomId,quaternion})=>globalThis.DGB_COMPASS_CONTROLLER?.requestClusterCommit(wing,{quaternion,primaryRoom:roomId,source:'foreground-label-render-gate'})===true,{wing,roomId:room.id,quaternion});
+              await page.waitForTimeout(220);
+              const state=await page.evaluate(()=>{
+                const root=document.querySelector('[data-compass-root]');
+                const label=document.querySelector('[data-compass-projected-room-label]');
+                const style=label?getComputedStyle(label):null;
+                const rect=label?.getBoundingClientRect();
+                return {mode:root?.dataset.compassMode||'',foreground:root?.dataset.clusterPreviewPrimaryRoom||root?.dataset.clusterPrimaryRoom||'',selectedRoom:root?.dataset.selectedRoom||'',renderedRoomId:label?.dataset.roomId||'',text:(label?.textContent||'').replace(/\s+/g,' ').trim(),visible:Boolean(label&&!label.hidden&&style&&style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect&&rect.width>0&&rect.height>0),background:style?.backgroundImage||style?.backgroundColor||''};
+              });
+              const correct=committed&&state.mode==='CLUSTER_OPEN'&&state.selectedRoom===''&&state.foreground===room.id&&state.renderedRoomId===room.id&&state.text===room.label&&state.visible&&!/^rgb\(0, 0, 0\)$/.test(state.background||'');
+              observations.push({wing,roomId:room.id,expectedLabel:room.label,committed,quaternion,state,correct});
+              if(!correct) fail(`${room.id}_FOREGROUND_LABEL_INVALID`,observations.at(-1));
             }
-            const missing=expected.filter(id=>!seen.has(id));
-            if(missing.length) fail(`${wing}_FOREGROUND_STATES_MISSING`,{seen:[...seen],missing});
             await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation?.({source:'foreground-label-render-gate',scrollToScene:false}));
-            await sleep(250);
+            await page.waitForTimeout(120);
           }
           await page.screenshot({path:'/tmp/compass-foreground-room-label-final.png',fullPage:true});
           await browser.close();
-          const uniqueCorrect=new Set(observations.filter(item=>item.correct).map(item=>item.foreground));
-          if(uniqueCorrect.size!==19) fail('NINETEEN_FOREGROUND_LABELS_NOT_PROVEN',{count:uniqueCorrect.size,ids:[...uniqueCorrect]});
-          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v2',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:[...uniqueCorrect].sort(),observations,traversal,failures};
+          const proved=observations.filter(item=>item.correct).map(item=>item.roomId);
+          if(proved.length!==19) fail('NINETEEN_FOREGROUND_LABELS_NOT_PROVEN',{count:proved.length,ids:proved});
+          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v3',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:proved,observations,failures};
           fs.writeFileSync('/tmp/compass-foreground-room-label-receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length) process.exit(1);

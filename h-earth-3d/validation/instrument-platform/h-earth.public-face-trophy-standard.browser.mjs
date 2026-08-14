@@ -32,6 +32,10 @@ const waitForHEarth = async (page, prefix) => {
   }, null, { timeout: 180000 });
   await page.waitForTimeout(500);
 };
+const promotedHeroContract = async (page) => page.locator('#h-earth-b10-hero').evaluate((node) => {
+  const style = getComputedStyle(node);
+  return !node.hidden && style.display !== 'none' && style.visibility !== 'hidden';
+});
 const gestureUsed = async (page) => page.evaluate(() => [document.getElementById('h-earth-3d-route-root'), document.getElementById('h-earth-functional-landscape-route')].some((node) => node?.dataset.gestureUsed === 'true'));
 const dispatchTouchSequence = async (page, frames) => {
   const client = await page.context().newCDPSession(page);
@@ -51,7 +55,7 @@ try {
   await waitForHEarth(page, 'PROMOTED');
   check('PROMOTED_PUBLIC_FACE_ACTIVE', await page.locator('html').getAttribute('data-h-earth-public-face-candidate') === 'active');
   check('PROMOTED_PUBLIC_FACE_DEFAULT', await page.locator('html').getAttribute('data-h-earth-public-face-default') === 'promoted');
-  check('TROPHY_HERO_VISIBLE', await page.locator('#h-earth-b10-hero').isVisible());
+  check('TROPHY_HERO_PROMOTED_DOM_CONTRACT', await promotedHeroContract(page));
   check('WELCOME_TO_H_EARTH_VISIBLE', (await page.locator('#h-earth-b10-title').textContent())?.trim() === 'Welcome to H-Earth.');
   check('AWARDS_TAB_VISIBLE', await page.locator('#h-earth-awards-link').isVisible());
   check('BASELINE_ARRIVAL_HIDDEN', await page.locator('#h-earth-baseline-arrival').isHidden());
@@ -104,7 +108,7 @@ try {
 
   const mobile = await browser.newContext({ viewport: { width: 430, height: 860 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   const mobilePage = await mobile.newPage(); captureErrors(mobilePage, 'mobile-promoted'); await waitForHEarth(mobilePage, 'MOBILE_PROMOTED');
-  check('MOBILE_TROPHY_HERO_VISIBLE', await mobilePage.locator('#h-earth-b10-hero').isVisible());
+  check('MOBILE_TROPHY_HERO_PROMOTED_DOM_CONTRACT', await promotedHeroContract(mobilePage));
   const mobileMount = mobilePage.locator('#h-earth-functional-landscape-mount'); await mobileMount.scrollIntoViewIfNeeded();
   const mobileBox = await mobileMount.boundingBox(); check('MOBILE_STAGE_BOUNDS', Boolean(mobileBox && mobileBox.width > 200 && mobileBox.height > 300), mobileBox);
   const mx = mobileBox.x + mobileBox.width * .5, my = mobileBox.y + mobileBox.height * .45;

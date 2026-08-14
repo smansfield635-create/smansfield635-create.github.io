@@ -14,6 +14,7 @@ on:
       - "laws/research/methods-and-models/showroom-euclidean-interaction.css"
       - "laws/research/methods-and-models/showroom-euclidean.js"
       - "laws/research/methods-and-models/rotational-text.css"
+      - "laws/research/methods-and-models/rotational-text-responsive-repair.css"
       - "laws/research/methods-and-models/rotational-text.js"
       - "laws/research/methods-and-models/canonical-records-v1.html"
       - "verification/methods-models-rotational-text-browser.mjs"

@@ -1,0 +1,138 @@
+name: Public Exact-SHA Accessibility Runtime Evidence v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-router/accessibility-runtime-evidence/public-executor-contract.v1.json'
+      - 'tools/accessibility-runtime-evidence/public-accessibility-runtime-evidence.v1.mjs'
+      - 'tools/accessibility-runtime-evidence/public-accessibility-runtime-evidence.self-test.v1.mjs'
+      - '.github/workflows/public-exact-sha-accessibility-runtime-evidence-v1.yml'
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Immutable public candidate SHA
+        required: true
+        type: string
+      entry_path:
+        description: Absolute entry path
+        required: true
+        default: /index.html
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-exact-sha-accessibility-${{ github.event_name }}-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  exact-sha-accessibility-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      CANDIDATE_SHA: ${{ github.event_name == 'workflow_dispatch' && inputs.candidate_sha || '69f7be45f45933676fe4024ca95c926f5ebc6bfc' }}
+      ENTRY_PATH: ${{ github.event_name == 'workflow_dispatch' && inputs.entry_path || '/index.html' }}
+    steps:
+      - name: Checkout exact executor candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prove executor scope and self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$ENTRY_PATH" == /* ]]
+          node tools/accessibility-runtime-evidence/public-accessibility-runtime-evidence.self-test.v1.mjs > /tmp/public-accessibility-self-test.json
+          mapfile -t changed < <(git diff --name-only 7917ecb7b07a32e8a653a6e1534397b232cccd6b...HEAD | sort)
+          expected=(
+            '.github/ai-router/accessibility-runtime-evidence/public-executor-contract.v1.json'
+            '.github/workflows/public-exact-sha-accessibility-runtime-evidence-v1.yml'
+            'tools/accessibility-runtime-evidence/public-accessibility-runtime-evidence.self-test.v1.mjs'
+            'tools/accessibility-runtime-evidence/public-accessibility-runtime-evidence.v1.mjs'
+          )
+          test "${#changed[@]}" -eq 4
+          test "$(printf '%s\n' "${changed[@]}")" = "$(printf '%s\n' "${expected[@]}")"
+
+      - name: Materialize immutable public subject in separate worktree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$CANDIDATE_SHA^{commit}"
+          git worktree add --detach _candidate "$CANDIDATE_SHA"
+          test "$(git -C _candidate rev-parse HEAD^{commit})" = "$CANDIDATE_SHA"
+          test -z "$(git -C _candidate status --porcelain)"
+
+      - name: Install pinned real-browser accessibility dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.54.2 @axe-core/playwright@4.10.2
+          npx playwright install --with-deps chromium
+
+      - name: Serve immutable subject
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory _candidate > /tmp/public-accessibility-http.log 2>&1 &
+          echo $! > /tmp/public-accessibility-http.pid
+          for attempt in $(seq 1 30); do
+            curl -fsS "http://127.0.0.1:4173${ENTRY_PATH}" >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/public-accessibility-http.log
+          exit 1
+
+      - name: Execute accessibility evidence
+        id: evidence
+        shell: bash
+        run: |
+          set +e
+          mkdir -p artifacts
+          node tools/accessibility-runtime-evidence/public-accessibility-runtime-evidence.v1.mjs \
+            --candidate-sha "$CANDIDATE_SHA" \
+            --entry-path "$ENTRY_PATH" \
+            --base-url "http://127.0.0.1:4173${ENTRY_PATH}" \
+            --output artifacts/accessibility-runtime-evidence.v1.json
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Verify deterministic receipt boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync('artifacts/accessibility-runtime-evidence.v1.json','utf8'));
+          if(r.schema!=='ACCESSIBILITY_RUNTIME_EVIDENCE_RECEIPT_v1') throw new Error('RECEIPT_SCHEMA_INVALID');
+          if(r.candidateSha!==process.env.CANDIDATE_SHA||r.entryPath!==process.env.ENTRY_PATH) throw new Error('SUBJECT_IDENTITY_MISMATCH');
+          const b=r.authorityBoundary||{};
+          if(b.evidenceProducerOnly!==true||b.privateQualificationAuthorityPreserved!==true) throw new Error('EVIDENCE_AUTHORITY_BOUNDARY_INVALID');
+          for(const k of ['productMutationAuthorized','repositoryMutationAuthorizedByReceipt','authorityCreationAuthorized','mergeAuthorized','deploymentAuthorized','promotionAuthorized','ownerAcceptanceCreated']) if(b[k]!==false) throw new Error(`AUTHORITY_INFLATION:${k}`);
+          if(r.qualificationContinuity?.priorExactShaEvidenceTransfersToChangedCandidate!==false) throw new Error('CROSS_SHA_TRANSFER_NOT_PROHIBITED');
+          NODE
+
+      - name: Upload exact-SHA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-accessibility-runtime-evidence-${{ env.CANDIDATE_SHA }}-${{ github.run_id }}
+          path: |
+            artifacts/accessibility-runtime-evidence.v1.json
+            /tmp/public-accessibility-self-test.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Preserve fail-closed disposition
+        env:
+          STATUS: ${{ steps.evidence.outputs.status }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$STATUS" = '0'
+          jq -e '.result == "PASS_CLOSED" and .failureClass == null and .realBrowserExecuted == true and .axeExecuted == true and .accessibilityTreeExecuted == true and .keyboardExecuted == true' artifacts/accessibility-runtime-evidence.v1.json >/dev/null

@@ -22,7 +22,7 @@
     "AGENTS.md",
     "AI_ENTRYPOINT.json",
     ".github/ai-router/display-continuity-constitution-v1/display-constitution.v1.json",
-    ".github/ai-router/display-continuity-constitution-v1/narrative-continuity-map.v1.json"
+    "control-plane/whole-estate/narrative-continuity-development-map-v1/map.v1.json"
   ],
   "registries": [
     ".github/ai-router/router.v1.json",

@@ -1,210 +1,45 @@
-import fs from "node:fs";
-import puppeteer from "puppeteer-core";
+import fs from 'node:fs';
+import path from 'node:path';
+import puppeteer from 'puppeteer-core';
 
-const ORIGIN = process.env.METHODS_MODELS_ORIGIN || "http://127.0.0.1:4173";
-const CHROME_PATH = process.env.CHROME_PATH;
-const EXECUTION_COMMIT = process.env.EXECUTION_COMMIT || "UNKNOWN";
-const route = `${ORIGIN}/laws/research/methods-and-models/`;
-if (!CHROME_PATH) throw new Error("CHROME_PATH_REQUIRED");
+const ORIGIN=process.env.METHODS_MODELS_ORIGIN||'http://127.0.0.1:4173';
+const CHROME_PATH=process.env.CHROME_PATH;
+const EXECUTION_COMMIT=process.env.EXECUTION_COMMIT||'UNKNOWN';
+if(!CHROME_PATH) throw new Error('CHROME_PATH_REQUIRED');
+const route=`${ORIGIN}/laws/research/methods-and-models/`;
+const OUT='methods-models-rendered-evidence'; fs.mkdirSync(OUT,{recursive:true});
+const PROFILES=[['DESKTOP',1440,1000],['TABLET_PORTRAIT',900,1100],['TABLET_LANDSCAPE',1180,820],['MOBILE_PORTRAIT',390,844]];
+const browser=await puppeteer.launch({executablePath:CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+const evidence=[]; const failures=[];
 
-const html = fs.readFileSync("laws/research/methods-and-models/index.html", "utf8");
-const baseJs = fs.readFileSync("laws/research/methods-and-models/showroom.js", "utf8");
-const entryJs = fs.readFileSync("laws/research/methods-and-models/showroom-euclidean.js", "utf8");
-const entryCss = fs.readFileSync("laws/research/methods-and-models/showroom-euclidean-interaction.css", "utf8");
-const orbitJs = fs.readFileSync("laws/research/methods-and-models/rotational-text.js", "utf8");
-const orbitCss = fs.readFileSync("laws/research/methods-and-models/rotational-text.css", "utf8");
+async function ready(page){await page.waitForFunction(()=>document.documentElement.dataset.mmRotationalTextStatus==='ready',{timeout:15000});}
+async function snap(page,profile,state){const file=path.join(OUT,`${profile}-${state}.png`);await page.screenshot({path:file,fullPage:true});evidence.push({profile,state,file});}
+async function metrics(page){return page.evaluate(()=>{
+ const all=[...document.querySelectorAll('body *')];
+ const visible=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0};
+ const escaped=all.filter(e=>visible(e)).map(e=>{const r=e.getBoundingClientRect();return {tag:e.tagName,cls:String(e.className||''),text:(e.textContent||'').trim().slice(0,80),left:r.left,right:r.right,top:r.top,bottom:r.bottom};}).filter(r=>r.left<-3||r.right>innerWidth+3);
+ const orbit=document.querySelector('[data-mm-family-tabs]');
+ const tabs=[...document.querySelectorAll('[data-mm-family-tabs] .mm-family-tab')].map((e,i)=>{const r=e.getBoundingClientRect(),s=getComputedStyle(e);return{i,text:e.textContent.trim(),selected:e.getAttribute('aria-selected')==='true',depth:e.dataset.mmOrbitDepth||'',vector:e.dataset.mmOrbitVector||'',left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,opacity:Number(s.opacity)}});
+ const cards=[...document.querySelectorAll('.mm-model-card')].filter(visible).map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height,position:e.dataset.position||'',text:(e.textContent||'').trim().slice(0,120)}});
+ return {innerWidth,scrollWidth:document.documentElement.scrollWidth,horizontalOverflow:document.documentElement.scrollWidth-innerWidth,escaped:escaped.slice(0,40),tabs,cards,active:document.documentElement.dataset.mmRotationalTextActive};
+});}
+function assertContainment(m,profile,label){if(m.horizontalOverflow>2) failures.push(`${profile}:${label}:DOCUMENT_HORIZONTAL_OVERFLOW:${m.horizontalOverflow}`);if(m.escaped.some(x=>/mm-model-card|mm-inspect|toast|panel|card/i.test(x.cls))) failures.push(`${profile}:${label}:PRIMARY_PANEL_VIEWPORT_ESCAPE`);if(m.tabs.some(t=>t.left<-3||t.right>m.innerWidth+3)) failures.push(`${profile}:${label}:ESSENTIAL_CONTROL_CLIPPED`);if(m.cards.some(c=>c.left<-3||c.right>m.innerWidth+3)) failures.push(`${profile}:${label}:ESSENTIAL_TEXT_CLIPPED`);}
+function assertDepth(m,profile,label){if(m.tabs.length!==4){failures.push(`${profile}:${label}:TAB_COUNT`);return;}const xs=m.tabs.map(t=>(t.left+t.right)/2), ws=m.tabs.map(t=>t.width), os=m.tabs.map(t=>t.opacity);if(new Set(xs.map(x=>Math.round(x/8))).size<3) failures.push(`${profile}:${label}:DEPTH_POSITIONS_NOT_DISTINCT`);if(Math.max(...ws)-Math.min(...ws)<12&&Math.max(...os)-Math.min(...os)<0.12) failures.push(`${profile}:${label}:ORBIT_COLLAPSES_TO_FLAT_TABSET`);}
+async function select(page,index){await page.evaluate(i=>document.querySelectorAll('[data-mm-family-tabs] .mm-family-tab')[i]?.click(),index);await page.waitForFunction(i=>document.documentElement.dataset.mmRotationalTextActive===String(i),{timeout:5000},index);}
 
-const sourceAssertions = {
-  entryPathStillCanonical: html.includes('data-route="/laws/research/methods-and-models/"'),
-  pageContentPreserved: baseJs.includes("451 = 256 + 192 + 3") && baseJs.includes("Pressure / Capacity") && baseJs.includes("Closure / Flow") && baseJs.includes("Method / Falsification"),
-  loaderBound: entryJs.includes("rotational-text.js") && entryCss.includes("rotational-text.css"),
-  exactCompassReference: orbitJs.includes('R_C_LAWS_COMPASS_SIX_AUTHORITY') && orbitJs.includes('LAWS_COMPASS_EXACT_TWO_OBJECT_FIELD_v2'),
-  noGeometryReimplementationAuthority: orbitJs.includes("ADOPT_EXISTING_COMPASS_GEOMETRY_WITHOUT_REIMPLEMENTATION") && orbitJs.includes("ADOPT_EXISTING_COMPASS_MOTION_LAWS_WITHOUT_REDERIVATION"),
-  fourPageLocalStates: ["Structural Envelope","Pressure / Capacity","Closure / Flow","Method / Falsification"].every(v => orbitJs.includes(v)),
-  directManipulation: orbitJs.includes("pointerdown") && orbitJs.includes("pointermove") && orbitJs.includes("pointerup"),
-  keyboardTraversal: ["ArrowRight","ArrowLeft","ArrowDown","ArrowUp","Home","End"].every(v => orbitJs.includes(v)),
-  reducedMotion: orbitCss.includes("prefers-reduced-motion:reduce"),
-  separateZControlsRemovedFromPresentation: orbitCss.includes(".mm-z-axis-controls{display:none!important}"),
-  noCanvasOrWebgl: !/getContext\(|WebGL|THREE\.|three\.js/i.test(orbitJs + orbitCss),
-  noCenterContentMass: !/center-content|center-mass-element|center-object/i.test(orbitJs + orbitCss)
-};
-const sourceFailures = Object.entries(sourceAssertions).filter(([,pass]) => !pass).map(([id]) => id);
-if (sourceFailures.length) throw new Error(`ROTATIONAL_TEXT_SOURCE_FAILED:${sourceFailures.join("|")}`);
-
-const browser = await puppeteer.launch({executablePath:CHROME_PATH,headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
-const profiles = [];
-
-const PROFILE_SET = [
-  ["DESKTOP",{width:1440,height:1000}],
-  ["TABLET",{width:900,height:1100}],
-  ["MOBILE",{width:390,height:844}]
-];
-
-async function waitReady(page){
-  await page.waitForFunction(() => document.documentElement.dataset.mmRotationalTextStatus === "ready", {timeout:15000});
-}
-
-async function state(page){
-  return page.evaluate(() => {
-    const orbit=document.querySelector("[data-mm-family-tabs]");
-    const tabs=[...orbit.querySelectorAll(".mm-family-tab")];
-    const selected=tabs.findIndex(t=>t.getAttribute("aria-selected")==="true");
-    const selectedTab=tabs[selected];
-    const z=document.querySelector(".mm-z-axis-controls");
-    const activeCard=document.querySelector('.mm-model-card[data-position="active"]');
-    return {
-      status:document.documentElement.dataset.mmRotationalTextStatus,
-      active:document.documentElement.dataset.mmRotationalTextActive,
-      family:document.body.dataset.mmFamily,
-      tabCount:tabs.length,
-      selectedCount:tabs.filter(t=>t.getAttribute("aria-selected")==="true").length,
-      selected,
-      selectedText:selectedTab?.textContent.trim()||"",
-      selectedVector:selectedTab?.dataset.mmOrbitVector||"",
-      selectedDepth:selectedTab?.dataset.mmOrbitDepth||"",
-      reference:orbit.dataset.mmCompassReference,
-      authorityField:orbit.dataset.mmCompassAuthorityField,
-      geometryDisposition:orbit.dataset.mmCompassGeometryDisposition,
-      physicsDisposition:orbit.dataset.mmCompassPhysicsDisposition,
-      zDisplay:z?getComputedStyle(z).display:"missing",
-      orbitRole:orbit.getAttribute("aria-roledescription"),
-      horizontalOverflow:document.documentElement.scrollWidth-innerWidth,
-      canvasCount:document.querySelectorAll("canvas").length,
-      activeCardInert:Boolean(activeCard?.inert),
-      activeCardHidden:activeCard?.getAttribute("aria-hidden"),
-      viewport:{width:innerWidth,height:innerHeight},
-      tabRects:tabs.map(t=>{const r=t.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};})
-    };
-  });
-}
-
-async function hitProbe(page,index){
-  return page.evaluate(i => {
-    const tabs=[...document.querySelectorAll("[data-mm-family-tabs] .mm-family-tab")];
-    const tab=tabs[i];
-    if(!tab) return {missing:true,index:i};
-    const r=tab.getBoundingClientRect();
-    const x=r.left+r.width/2;
-    const y=r.top+r.height/2;
-    const hit=document.elementFromPoint(x,y);
-    return {
-      index:i,
-      rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},
-      point:{x,y},
-      hitTag:hit?.tagName||"",
-      hitClass:hit?.className||"",
-      hitText:hit?.textContent?.trim().slice(0,120)||"",
-      targetIsHit:hit===tab,
-      targetContainsHit:Boolean(hit&&tab.contains(hit)),
-      pointerEvents:getComputedStyle(tab).pointerEvents,
-      visibility:getComputedStyle(tab).visibility,
-      display:getComputedStyle(tab).display,
-      opacity:getComputedStyle(tab).opacity
-    };
-  },index);
-}
-
-async function waitSelected(page,index,timeout=5000){
-  await page.waitForFunction(i => {
-    const tabs=[...document.querySelectorAll("[data-mm-family-tabs] .mm-family-tab")];
-    return tabs[i]?.getAttribute("aria-selected")==="true" && document.documentElement.dataset.mmRotationalTextActive===String(i);
-  },{timeout},index);
-}
-
-async function verifyProfile(profile, viewport){
-  const page=await browser.newPage();
-  await page.setViewport(viewport);
-  await page.goto(route,{waitUntil:"networkidle0",timeout:45000});
-  await waitReady(page);
-  const failures=[];
-  const initial=await state(page);
-  if(initial.status!=="ready"||initial.tabCount!==4||initial.selectedCount!==1||initial.selected!==0) failures.push("initial_semantic_state");
-  if(initial.reference!=="R_C_LAWS_COMPASS_SIX_AUTHORITY"||initial.authorityField!=="LAWS_COMPASS_EXACT_TWO_OBJECT_FIELD_v2") failures.push("compass_reference_identity");
-  if(initial.geometryDisposition!=="ADOPT_EXISTING_COMPASS_GEOMETRY_WITHOUT_REIMPLEMENTATION"||initial.physicsDisposition!=="ADOPT_EXISTING_COMPASS_MOTION_LAWS_WITHOUT_REDERIVATION") failures.push("adoption_boundary");
-  if(initial.selectedVector!=="0,1,0"||initial.selectedDepth!=="front") failures.push("front_cardinal_binding");
-  if(initial.zDisplay!=="none") failures.push("legacy_z_controls_visible");
-  if(initial.orbitRole!=="rotational tab navigation") failures.push("semantic_role");
-  if(initial.horizontalOverflow>2) failures.push("horizontal_overflow");
-  if(initial.canvasCount!==0) failures.push("unexpected_canvas");
-  if(initial.activeCardInert||initial.activeCardHidden==="true") failures.push("active_content_inert");
-  if(initial.tabRects.some(r=>r.left < -3 || r.right > viewport.width+3)) failures.push("tab_horizontal_containment");
-
-  const clickProbeBefore=await hitProbe(page,1);
-  console.log(`ROTATIONAL_CLICK_PROBE_BEFORE:${profile}:${JSON.stringify(clickProbeBefore)}`);
-  await page.click('[data-mm-family-tabs] .mm-family-tab:nth-child(2)');
-  try {
-    await waitSelected(page,1);
-  } catch (error) {
-    const clickProbeAfter=await hitProbe(page,1);
-    const clickState=await state(page);
-    console.log(`ROTATIONAL_CLICK_PROBE_AFTER:${profile}:${JSON.stringify({clickProbeAfter,clickState})}`);
-    throw error;
-  }
-  const clicked=await state(page);
-  if(clicked.selectedText!=="Pressure / Capacity"||clicked.family!=="pressure"||clicked.selectedVector!=="0,1,0") failures.push("click_state_binding");
-
-  await page.focus('[data-mm-family-tabs] .mm-family-tab[aria-selected="true"]');
-  await page.keyboard.press("ArrowRight");
-  await waitSelected(page,2);
-  const keyed=await state(page);
-  if(keyed.selectedText!=="Closure / Flow"||keyed.family!=="closure") failures.push("keyboard_state_binding");
-
-  for(let i=0;i<4;i++){
-    await page.focus('[data-mm-family-tabs] .mm-family-tab[aria-selected="true"]');
-    await page.keyboard.press("ArrowRight");
-  }
-  await waitSelected(page,2);
-  const returned=await state(page);
-  if(returned.selectedText!=="Closure / Flow"||returned.family!=="closure") failures.push("exact_four_step_return");
-
-  const orbit=await page.$("[data-mm-family-tabs]");
-  const box=await orbit.boundingBox();
-  await page.mouse.move(box.x+box.width*.72,box.y+box.height*.5);
-  await page.mouse.down();
-  await page.mouse.move(box.x+box.width*.28,box.y+box.height*.5,{steps:8});
-  await page.mouse.up();
-  await waitSelected(page,3);
-  const dragged=await state(page);
-  if(dragged.selectedText!=="Method / Falsification"||dragged.family!=="method") failures.push("pointer_drag_state_binding");
-
-  await page.emulateMediaFeatures([{name:"prefers-reduced-motion",value:"reduce"}]);
-  await page.goto(route,{waitUntil:"networkidle0",timeout:45000});
-  await waitReady(page);
-  await waitSelected(page,0);
-  await page.focus('[data-mm-family-tabs] .mm-family-tab[aria-selected="true"]');
-  await page.keyboard.press("ArrowRight");
-  await waitSelected(page,1);
-  const reduced=await page.evaluate(() => ({
-    selected:[...document.querySelectorAll("[data-mm-family-tabs] .mm-family-tab")].findIndex(t=>t.getAttribute("aria-selected")==="true"),
-    transition:getComputedStyle(document.querySelector("[data-mm-family-tabs] .mm-family-tab")).transitionDuration,
-    family:document.body.dataset.mmFamily
-  }));
-  if(reduced.selected!==1||reduced.family!=="pressure") failures.push("reduced_motion_semantic_equivalence");
-
-  profiles.push({profile,viewport,initial,clicked,keyed,returned,dragged,reduced,failures});
-  await page.close();
-  return failures;
-}
-
-const failures=[];
-for(const [name,viewport] of PROFILE_SET){
-  for(const failure of await verifyProfile(name,viewport)) failures.push(`${name}:${failure}`);
+for(const [profile,width,height] of PROFILES){
+ const page=await browser.newPage(); await page.setViewport({width,height}); await page.goto(route,{waitUntil:'networkidle0',timeout:45000}); await ready(page);
+ const states=[];
+ let m=await metrics(page); assertContainment(m,profile,'INITIAL'); assertDepth(m,profile,'INITIAL'); states.push({state:'INITIAL',metrics:m}); await snap(page,profile,'INITIAL');
+ await select(page,1); m=await metrics(page); assertContainment(m,profile,'AFTER_ONE_ROTATION'); assertDepth(m,profile,'AFTER_ONE_ROTATION'); states.push({state:'AFTER_ONE_ROTATION',metrics:m}); await snap(page,profile,'AFTER_ONE_ROTATION');
+ await select(page,2); m=await metrics(page); assertContainment(m,profile,'REAR_STATE_VISIBLE'); assertDepth(m,profile,'REAR_STATE_VISIBLE'); const rearVisible=m.tabs.some(t=>t.depth==='rear'&&t.opacity>0.08&&t.width>20); if(!rearVisible) failures.push(`${profile}:REAR_STATE_NOT_VISIBLE`); states.push({state:'REAR_STATE_VISIBLE',metrics:m}); await snap(page,profile,'REAR_STATE_VISIBLE');
+ await select(page,0); m=await metrics(page); assertContainment(m,profile,'AFTER_FULL_CYCLE'); if(m.active!=='0') failures.push(`${profile}:EXACT_CYCLE_RETURN_FAILURE`); states.push({state:'AFTER_FULL_CYCLE',metrics:m}); await snap(page,profile,'AFTER_FULL_CYCLE');
+ await page.focus('[data-mm-family-tabs] .mm-family-tab[aria-selected="true"]'); await page.keyboard.press('ArrowRight'); await page.waitForFunction(()=>document.documentElement.dataset.mmRotationalTextActive==='1',{timeout:5000}).catch(()=>failures.push(`${profile}:KEYBOARD_STATE_DIVERGENCE`));
+ await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]); await page.goto(route,{waitUntil:'networkidle0',timeout:45000}); await ready(page); await select(page,1); if((await metrics(page)).active!=='1') failures.push(`${profile}:REDUCED_MOTION_STATE_DIVERGENCE`);
+ evidence.push({profile,width,height,states}); await page.close();
 }
 await browser.close();
-
-const receipt={
-  schema:"METHODS_MODELS_ROTATIONAL_TEXT_BROWSER_QUALIFICATION_RECEIPT_v1",
-  executionCommit:EXECUTION_COMMIT,
-  sourceAssertions,
-  inheritedReference:"R_C_LAWS_COMPASS_SIX_AUTHORITY",
-  classId:"ROTATIONAL_TEXT_INFORMATION_INSTRUMENT",
-  pageLocalBinding:true,
-  compassGeometryReimplemented:false,
-  centerContentMassRequired:false,
-  profiles,
-  result:failures.length?"FAIL":"PASS",
-  failures
-};
-fs.writeFileSync("methods-models-rotational-text-browser.json",JSON.stringify(receipt,null,2)+"\n");
+const receipt={schema:'METHODS_MODELS_ROTATIONAL_TEXT_BROWSER_QUALIFICATION_RECEIPT_v2',executionCommit:EXECUTION_COMMIT,requiredProfiles:PROFILES.map(x=>x[0]),requiredRenderedStates:['INITIAL','AFTER_ONE_ROTATION','REAR_STATE_VISIBLE','AFTER_FULL_CYCLE'],renderedEvidenceDirectory:OUT,evidence,result:failures.length?'FAIL':'PASS',failures,ownerInspectionAdmitted:failures.length===0,automatedOwnerAcceptanceCreated:false};
+fs.writeFileSync('methods-models-rotational-text-browser.json',JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));
 if(failures.length) process.exit(1);

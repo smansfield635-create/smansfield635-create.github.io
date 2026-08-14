@@ -178,6 +178,7 @@ jobs:
           const page=await browser.newPage({viewport:{width:1280,height:800}});
           const failures=[];
           const observations=[];
+          const traversal=[];
           const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
           const fail=(id,evidence)=>failures.push({id,evidence});
           await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded',timeout:20000});
@@ -187,10 +188,6 @@ jobs:
           await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER),{timeout:10000});
           const declarationMap=await page.evaluate(()=>Object.fromEntries([...document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]')].map(el=>[el.dataset.roomId,{label:(el.dataset.label||'').trim(),wing:el.dataset.wing}])));
           if(Object.keys(declarationMap).length!==19) fail('DECLARATION_COUNT',Object.keys(declarationMap));
-          const scene=page.locator('[data-compass-scene]');
-          const box=await scene.boundingBox();
-          if(!box) throw new Error('COMPASS_SCENE_NOT_RENDERED');
-          const anchor={x:Math.round(box.x+box.width*.50),y:Math.round(box.y+box.height*.55)};
           const inspect=async wing=>page.evaluate(activeWing=>{
             const root=document.querySelector('[data-compass-root]');
             const foreground=root?.dataset.clusterPreviewPrimaryRoom||root?.dataset.clusterPrimaryRoom||'';
@@ -199,39 +196,76 @@ jobs:
             const rect=label?.getBoundingClientRect();
             return {wing:activeWing,mode:root?.dataset.compassMode||'',foreground,renderedRoomId:label?.dataset.roomId||'',text:(label?.textContent||'').replace(/\s+/g,' ').trim(),visible:Boolean(label&&!label.hidden&&style&&style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01&&rect&&rect.width>0&&rect.height>0),background:style?.backgroundImage||style?.backgroundColor||'',rect:rect?{left:rect.left,top:rect.top,width:rect.width,height:rect.height}:null};
           },wing);
-          async function drag(dx,dy){
-            await page.mouse.move(anchor.x,anchor.y);
-            await page.mouse.down();
-            for(let step=1;step<=10;step++){await page.mouse.move(anchor.x+dx*step/10,anchor.y+dy*step/10,{steps:1});await sleep(20);}
-            await page.mouse.up();
-            await sleep(180);
+          async function proxyCenter(roomId){
+            return page.evaluate(id=>{
+              const proxy=document.querySelector(`[data-compass-room-proxy][data-room-id="${CSS.escape(id)}"]`);
+              if(!proxy) return null;
+              const rect=proxy.getBoundingClientRect();
+              const style=getComputedStyle(proxy);
+              if(rect.width<=0||rect.height<=0||style.display==='none'||style.visibility==='hidden') return null;
+              return {x:rect.left+rect.width/2,y:rect.top+rect.height/2,width:rect.width,height:rect.height};
+            },roomId);
           }
-          const moves=[];
-          for(let ring=0;ring<10;ring++){
-            const d=72+(ring%5)*38;
-            const angle=(ring*0.7);
-            for(let k=0;k<8;k++){
-              const a=angle+k*Math.PI/4;
-              moves.push({dx:Math.round(Math.cos(a)*d),dy:Math.round(Math.sin(a)*d)});
+          async function adaptiveDrag(targetRoom,currentRoom){
+            const target=await proxyCenter(targetRoom);
+            const current=await proxyCenter(currentRoom);
+            if(!target||!current) return {ok:false,target,current};
+            const dx=(current.x-target.x)*0.92;
+            const dy=(current.y-target.y)*0.92;
+            const distance=Math.hypot(dx,dy);
+            if(distance<3) return {ok:false,target,current,dx,dy,distance};
+            const cap=180;
+            const scale=Math.min(1,cap/distance);
+            const end={x:target.x+dx*scale,y:target.y+dy*scale};
+            await page.mouse.move(target.x,target.y);
+            await page.mouse.down();
+            await page.mouse.move(end.x,end.y,{steps:12});
+            await sleep(140);
+            await page.mouse.up();
+            await sleep(360);
+            return {ok:true,target,current,end,dx,dy,distance};
+          }
+          async function recordForeground(wing,seen){
+            const state=await inspect(wing);
+            if(state.foreground&&declarationMap[state.foreground]?.wing===wing){
+              const declared=declarationMap[state.foreground];
+              const correct=state.visible&&state.renderedRoomId===state.foreground&&state.text===declared.label&&!/^rgb\(0, 0, 0\)$/.test(state.background||'');
+              observations.push({...state,expectedLabel:declared.label,correct});
+              if(correct) seen.add(state.foreground); else fail(`${state.foreground}_RENDERED_LABEL_INVALID`,{state,declared});
             }
+            return state;
           }
           for(const wing of ['north','east','south','west']){
             await page.evaluate(w=>document.querySelector(`[data-compass-cardinal][data-cardinal-id="${w}"]`)?.click(),wing);
-            await page.waitForFunction(w=>{const root=document.querySelector('[data-compass-root]');return root?.dataset.compassMode==='CLUSTER_OPEN'&&root?.dataset.selectedCardinal===w;},wing,{timeout:10000}).catch(()=>{});
+            await page.waitForFunction(w=>{const root=document.querySelector('[data-compass-root]');return root?.dataset.compassMode==='CLUSTER_OPEN'&&root?.dataset.selectedCardinal===w;},wing,{timeout:10000});
             await sleep(450);
-            const expected=new Set(Object.entries(declarationMap).filter(([,v])=>v.wing===wing).map(([id])=>id));
+            const expected=Object.entries(declarationMap).filter(([,v])=>v.wing===wing).map(([id])=>id);
             const seen=new Set();
-            for(let i=0;i<=moves.length&&seen.size<expected.size;i++){
-              const state=await inspect(wing);
-              if(state.foreground&&expected.has(state.foreground)){
-                const declared=declarationMap[state.foreground];
-                const correct=state.visible&&state.renderedRoomId===state.foreground&&state.text===declared.label&&!/^rgb\(0, 0, 0\)$/.test(state.background||'');
-                observations.push({...state,expectedLabel:declared.label,correct});
-                if(correct) seen.add(state.foreground); else fail(`${state.foreground}_RENDERED_LABEL_INVALID`,{state,declared});
+            let state=await recordForeground(wing,seen);
+            for(const targetRoom of expected){
+              for(let attempt=0;attempt<14&&state.foreground!==targetRoom;attempt++){
+                const currentRoom=state.foreground||[...seen][seen.size-1]||expected[0];
+                const movement=await adaptiveDrag(targetRoom,currentRoom);
+                traversal.push({wing,targetRoom,attempt,currentRoom,movement});
+                if(!movement.ok){
+                  const nudgeX=(attempt%2===0?1:-1)*(44+attempt*5);
+                  const nudgeY=((attempt%3)-1)*32;
+                  const current=await proxyCenter(currentRoom);
+                  if(current){
+                    await page.mouse.move(current.x,current.y);
+                    await page.mouse.down();
+                    await page.mouse.move(current.x+nudgeX,current.y+nudgeY,{steps:10});
+                    await page.mouse.up();
+                    await sleep(320);
+                  }
+                }
+                state=await recordForeground(wing,seen);
               }
-              if(i<moves.length) await drag(moves[i].dx,moves[i].dy);
+              if(state.foreground!==targetRoom){
+                fail(`${targetRoom}_NOT_REACHED_BY_ADAPTIVE_POINTER_TRAVERSAL`,{wing,targetRoom,lastForeground:state.foreground});
+              }
             }
-            const missing=[...expected].filter(id=>!seen.has(id));
+            const missing=expected.filter(id=>!seen.has(id));
             if(missing.length) fail(`${wing}_FOREGROUND_STATES_MISSING`,{seen:[...seen],missing});
             await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation?.({source:'foreground-label-render-gate',scrollToScene:false}));
             await sleep(250);
@@ -240,7 +274,7 @@ jobs:
           await browser.close();
           const uniqueCorrect=new Set(observations.filter(item=>item.correct).map(item=>item.foreground));
           if(uniqueCorrect.size!==19) fail('NINETEEN_FOREGROUND_LABELS_NOT_PROVEN',{count:uniqueCorrect.size,ids:[...uniqueCorrect]});
-          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v1',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:[...uniqueCorrect].sort(),observations,failures};
+          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v2',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:[...uniqueCorrect].sort(),observations,traversal,failures};
           fs.writeFileSync('/tmp/compass-foreground-room-label-receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length) process.exit(1);

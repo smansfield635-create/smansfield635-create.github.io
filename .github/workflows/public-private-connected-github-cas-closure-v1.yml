@@ -115,6 +115,8 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}
           OBSERVED_BLOB: ${{ steps.prepare.outputs.observed_blob }}
+          OPERATION_ID: ${{ steps.request.outputs.operation }}
+          LOCK_BRANCH: operation-locks/repository-operation-intake-v1
         run: |
           set -euo pipefail
           work="$RUNNER_TEMP/connected-github-cas-closure"
@@ -129,11 +131,6 @@ jobs:
             "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LEDGER_PATH" --data-binary "@$work/write.json" > "$work/write-result.json"
           echo "commit_sha=$(jq -r '.commit.sha' "$work/write-result.json")" >> "$GITHUB_OUTPUT"
           echo "blob_sha=$(jq -r '.content.sha' "$work/write-result.json")" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ steps.token.outputs.token }}
-          OBSERVED_BLOB: ${{ steps.prepare.outputs.observed_blob }}
-          OPERATION_ID: ${{ steps.request.outputs.operation }}
-          LOCK_BRANCH: operation-locks/repository-operation-intake-v1
 
       - name: Read back exact committed ledger and verify
         id: verify

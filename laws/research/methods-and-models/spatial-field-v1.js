@@ -15,21 +15,10 @@
   const dialog = document.querySelector("[data-mm-dialog]");
   const dialogClose = document.querySelector("[data-mm-dialog-close]");
   const coordinate = root.querySelector("[data-mm-coordinate]");
-
   if (!stage || !deck || !familyTabs || !lensTabs) return;
 
-  const state = {
-    activePointer: null,
-    returnCoordinate: null,
-    lastCommitAt: 0
-  };
-
+  const state = { activePointer: null, returnCoordinate: null };
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-  const selectedIndex = (nodes, predicate) => {
-    const list = Array.from(nodes);
-    const index = list.findIndex(predicate);
-    return index < 0 ? 0 : index;
-  };
 
   function familyButtons() {
     return Array.from(familyTabs.querySelectorAll(".mm-family-tab"));
@@ -68,103 +57,33 @@
     delete root.dataset.mmZDragging;
   }
 
-  function markAxis(axis) {
-    root.dataset.mmFieldDragging = "true";
-    root.dataset[`mm${axis.toUpperCase()}Dragging`] = "true";
-  }
-
-  function commitThrottle() {
-    const now = performance.now();
-    if (now - state.lastCommitAt < 150) return false;
-    state.lastCommitAt = now;
-    return true;
-  }
-
-  function moveModel(delta) {
-    if (!commitThrottle()) return;
-    (delta > 0 ? next : previous)?.click();
-  }
-
-  function moveFamily(delta) {
-    if (!commitThrottle()) return;
-    const buttons = familyButtons();
-    if (!buttons.length) return;
-    const current = selectedIndex(buttons, button => button.getAttribute("aria-selected") === "true");
-    const target = (current + delta + buttons.length) % buttons.length;
-    buttons[target]?.click();
-  }
-
-  function moveLens(delta) {
-    if (!commitThrottle()) return;
-    const buttons = lensButtons();
-    if (!buttons.length) return;
-    const current = selectedIndex(buttons, button => button.getAttribute("aria-selected") === "true");
-    const target = (current + delta + buttons.length) % buttons.length;
-    buttons[target]?.click();
-  }
-
   function begin(axis, event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    const surface = event.currentTarget;
     state.activePointer = {
       axis,
       id: event.pointerId,
-      surface,
+      surface: event.currentTarget,
       startX: event.clientX,
-      startY: event.clientY,
-      lastX: event.clientX,
-      lastY: event.clientY,
-      residualX: 0,
-      residualY: 0
+      startY: event.clientY
     };
-    markAxis(axis);
-    surface.setPointerCapture?.(event.pointerId);
+    root.dataset.mmFieldDragging = "true";
+    root.dataset[`mm${axis.toUpperCase()}Dragging`] = "true";
+    event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
   function move(event) {
     const pointer = state.activePointer;
     if (!pointer || pointer.id !== event.pointerId) return;
     event.preventDefault();
-
     const dx = event.clientX - pointer.startX;
     const dy = event.clientY - pointer.startY;
-    pointer.lastX = event.clientX;
-    pointer.lastY = event.clientY;
 
-    if (pointer.axis === "x") {
-      applyGeometry(dx, dy * .16, 0);
-      pointer.residualX += event.movementX || 0;
-      if (Math.abs(pointer.residualX) >= 72) {
-        moveModel(pointer.residualX < 0 ? 1 : -1);
-        pointer.residualX = 0;
-        pointer.startX = event.clientX;
-        pointer.startY = event.clientY;
-      }
-      return;
-    }
-
-    if (pointer.axis === "y") {
-      applyGeometry(dx * .08, dy, 0);
-      pointer.residualY += event.movementY || 0;
-      if (Math.abs(pointer.residualY) >= 54) {
-        moveLens(pointer.residualY > 0 ? 1 : -1);
-        pointer.residualY = 0;
-        pointer.startX = event.clientX;
-        pointer.startY = event.clientY;
-      }
-      return;
-    }
-
-    if (pointer.axis === "z") {
-      applyGeometry(dx * .04, 0, dy);
-      pointer.residualY += event.movementY || 0;
-      if (Math.abs(pointer.residualY) >= 58) {
-        moveFamily(pointer.residualY > 0 ? 1 : -1);
-        pointer.residualY = 0;
-        pointer.startX = event.clientX;
-        pointer.startY = event.clientY;
-      }
-    }
+    // Geometry follows the pointer on every move. The inherited semantic
+    // handlers remain the single release-time commit authority, preventing
+    // duplicate X/Y/Z index changes while satisfying pre-release continuity.
+    if (pointer.axis === "x") applyGeometry(dx, dy * .16, 0);
+    else if (pointer.axis === "y") applyGeometry(dx * .08, dy, 0);
+    else applyGeometry(dx * .04, 0, dy);
   }
 
   function finish(event) {
@@ -172,7 +91,7 @@
     if (!pointer || pointer.id !== event.pointerId) return;
     pointer.surface.releasePointerCapture?.(event.pointerId);
     state.activePointer = null;
-    resetGeometry();
+    requestAnimationFrame(resetGeometry);
   }
 
   function cancel(event) {
@@ -192,33 +111,6 @@
   attach(lensTabs, "y");
   attach(familyTabs, "z");
 
-  // Wheel/trackpad remains direct manipulation of the same spatial surfaces.
-  deck.addEventListener("wheel", event => {
-    if (Math.abs(event.deltaX) < 4 && Math.abs(event.deltaY) < 4) return;
-    event.preventDefault();
-    const delta = Math.abs(event.deltaX) >= Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
-    applyGeometry(clamp(-delta, -80, 80), 0, 0);
-    moveModel(delta > 0 ? 1 : -1);
-    requestAnimationFrame(resetGeometry);
-  }, { passive: false });
-
-  lensTabs.addEventListener("wheel", event => {
-    if (Math.abs(event.deltaY) < 4) return;
-    event.preventDefault();
-    applyGeometry(0, clamp(-event.deltaY, -72, 72), 0);
-    moveLens(event.deltaY > 0 ? 1 : -1);
-    requestAnimationFrame(resetGeometry);
-  }, { passive: false });
-
-  familyTabs.addEventListener("wheel", event => {
-    if (Math.abs(event.deltaY) < 4) return;
-    event.preventDefault();
-    applyGeometry(0, 0, clamp(-event.deltaY, -58, 58));
-    moveFamily(event.deltaY > 0 ? 1 : -1);
-    requestAnimationFrame(resetGeometry);
-  }, { passive: false });
-
-  // Exact inspection/return: remember the X/Y/Z coordinate before opening.
   root.addEventListener("click", event => {
     if (event.target.closest(".mm-inspect")) state.returnCoordinate = coordinateSnapshot();
   }, true);
@@ -227,9 +119,8 @@
     if (!snapshot) return;
     const families = familyButtons();
     const lenses = lensButtons();
-
-    if (families[snapshot.z]) families[snapshot.z].click();
-    if (lenses[snapshot.y]) lenses[snapshot.y].click();
+    families[snapshot.z]?.click();
+    lenses[snapshot.y]?.click();
 
     let guard = 0;
     while (Number(root.dataset.mmX || 0) !== snapshot.x && guard < 32) {
@@ -240,7 +131,6 @@
       (forward <= backward ? next : previous)?.click();
       guard += 1;
     }
-
     requestAnimationFrame(() => deck.focus({ preventScroll: true }));
   }
 
@@ -248,10 +138,8 @@
     const snapshot = state.returnCoordinate;
     queueMicrotask(() => restoreCoordinate(snapshot));
   }, true);
-
   dialog?.addEventListener("close", () => restoreCoordinate(state.returnCoordinate));
 
-  // Keep spatial geometry synchronized with the inherited semantic state.
   globalThis.addEventListener("METHODS_MODELS_EUCLIDEAN_STATE_CHANGED", event => {
     const detail = event.detail || {};
     root.dataset.mmSpatialX = String(detail.x?.index ?? root.dataset.mmX ?? 0);

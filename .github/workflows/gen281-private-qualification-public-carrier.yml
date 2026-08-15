@@ -61,8 +61,8 @@ jobs:
         run: |
           set -euo pipefail
           cd "$GITHUB_WORKSPACE/private-control-plane"
-          node --test --test-reporter=json tools/ai-room-transport/private-capable-readonly-qualification-invocation.v1.test.mjs \
-            > "$RUNNER_TEMP/gen281-qualification-test.json"
+          node --test --test-reporter=tap tools/ai-room-transport/private-capable-readonly-qualification-invocation.v1.test.mjs \
+            > "$RUNNER_TEMP/gen281-qualification-test.tap"
 
       - name: Verify post-test worktree remains clean
         if: always()
@@ -79,6 +79,6 @@ jobs:
           name: gen281-private-qualification-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/gen281-head-identity.json
-            ${{ runner.temp }}/gen281-qualification-test.json
+            ${{ runner.temp }}/gen281-qualification-test.tap
           if-no-files-found: warn
           retention-days: 90

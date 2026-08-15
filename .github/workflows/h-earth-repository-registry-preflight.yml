@@ -15,12 +15,14 @@ on:
       - '!h-earth-3d/AGENTS.md'
       - 'showroom/globe/h-earth/**'
       - '!showroom/globe/h-earth/AGENTS.md'
+      - '.github/workflows/h-earth-repository-registry-preflight.yml'
 
 permissions:
   contents: read
 
 jobs:
   automatic-h-earth-preflight:
+    if: github.ref != 'refs/heads/verification/h-earth-ow02-anchor-evidence-registry-v1-001'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -67,5 +69,122 @@ jobs:
         with:
           name: h-earth-automatic-preflight-receipt
           path: /tmp/h-earth-automatic-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  ow02-experience-anchor-registry-reservation-carrier:
+    if: github.ref == 'refs/heads/verification/h-earth-ow02-anchor-evidence-registry-v1-001'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact execution-only carrier
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify inherited registry candidate and exact one-path carrier delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^1)" = "d8129cc81068a16b0fd8a7935f63a52912f9fa56"
+          test "$(git rev-parse HEAD^1:h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.ow02-experience-anchor-evidence-path-recognition.js)" = "0546b32a2bafdf0753760b70570bf56e80f3cfd2"
+          test "$(git rev-parse HEAD^1:h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.pre-ow02-experience-anchor-evidence-path-recognition.js)" = "d23c2f5b5941d5922ecbd7878b4597564eefdfb5"
+          test "$(git rev-parse HEAD^1:h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js)" = "01fdc91fc3b994335884b252359cdd0ba3c7f2a4"
+          git diff --name-only HEAD^1 HEAD | sort -u > /tmp/carrier-delta.txt
+          printf '%s\n' '.github/workflows/h-earth-repository-registry-preflight.yml' > /tmp/expected-carrier-delta.txt
+          diff -u /tmp/expected-carrier-delta.txt /tmp/carrier-delta.txt
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Freeze exact five OW02 Experience Anchor paths
+        shell: bash
+        run: |
+          cat > /tmp/ow02-anchor-paths.txt <<'PATHS'
+          h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.anchor.png
+          h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.base.png
+          h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.candidate.png
+          h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json
+          h-earth-3d/experience-anchor/receipts/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json
+          PATHS
+          test "$(wc -l < /tmp/ow02-anchor-paths.txt | tr -d ' ')" = "5"
+
+      - name: Execute existing automatic H-Earth registry preflight against exact five paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module \
+            tools/h-earth-repository-registry-auto-preflight.mjs \
+            --paths-file /tmp/ow02-anchor-paths.txt \
+            --task "OW02 Experience Anchor registry reservation fresh execution carrier" \
+            --mutation-intent \
+            --output /tmp/h-earth-automatic-preflight-receipt.json
+
+      - name: Verify command-emitted native receipt and carrier assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='/tmp/h-earth-automatic-preflight-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const expected=[
+            '/h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.anchor.png',
+            '/h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.base.png',
+            '/h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.candidate.png',
+            '/h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json',
+            '/h-earth-3d/experience-anchor/receipts/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json'
+          ];
+          const nodeId='H_EARTH_OW02_EXPERIENCE_ANCHOR_EVIDENCE_PATH_RECOGNITION_SCOPE';
+          const paths=r.pathClassification?.normalizedPaths ?? [];
+          const classes=r.pathClassification?.classifications ?? [];
+          const failureCodes=r.validatorReceipt?.failureCodes ?? [];
+          const scopeFailures=r.scopePreview?.occurrence?.failureCodes ?? [];
+          const sameSet=paths.length===expected.length && expected.every(x=>paths.includes(x));
+          const allRegistered=classes.length===5 && classes.every(x=>x.classification==='REGISTERED_H_EARTH_PATH' && x.registered===true);
+          const allResolveToExpectedNode=classes.length===5 && classes.every(x=>(x.resolvedNodeIds ?? []).includes(nodeId));
+          const boundaries=r.boundaries ?? {};
+          const checks={
+            dependenciesVerified:r.dependenciesVerified===true,
+            exactFivePathSet:sameSet,
+            allRegistered,
+            allResolveToExpectedNode,
+            noRequestedPathUnresolved:!failureCodes.includes('REQUESTED_PATH_UNRESOLVED') && !scopeFailures.includes('REQUESTED_PATH_UNRESOLVED'),
+            noOperationScopeUnresolved:!failureCodes.includes('OPERATION_SCOPE_UNRESOLVED') && !scopeFailures.includes('OPERATION_SCOPE_UNRESOLVED'),
+            validatorFailureCodesEmpty:failureCodes.length===0,
+            finalDispositionPass:r.finalDisposition==='PASS',
+            mutationMayProceedFalse:r.mutationMayProceed===false,
+            readOnlyBoundary:boundaries.readOnlyPreflight===true,
+            noMutationAuthority:boundaries.mutationAuthorityCreated===false,
+            noMergeAuthority:boundaries.mergeAuthorityCreated===false,
+            noCanonicalizationAuthority:boundaries.canonicalizationAuthorityCreated===false
+          };
+          if(!Object.values(checks).every(Boolean)) throw new Error(`OW02_CARRIER_ASSERTION_FAILED:${JSON.stringify({checks,receipt:r})}`);
+          const out={
+            schema:'H_EARTH_OW02_EXPERIENCE_ANCHOR_REGISTRY_RECOGNITION_CARRIER_RECEIPT_v1',
+            result:'PASS',
+            registryCandidateHead:'d8129cc81068a16b0fd8a7935f63a52912f9fa56',
+            carrierLockGeneration:1485,
+            exactTargetPathCount:5,
+            allRegistered:true,
+            allResolveToExpectedNode:true,
+            finalDisposition:r.finalDisposition,
+            failureCodes,
+            productMutationPerformed:false,
+            registryMutationPerformed:false,
+            experienceAnchorMutationPerformed:false,
+            mergeAuthorityCreated:false,
+            checks
+          };
+          fs.writeFileSync('/tmp/h-earth-ow02-carrier-assertion.json',`${JSON.stringify(out,null,2)}\n`);
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload native and carrier receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-automatic-preflight-receipt
+          path: |
+            /tmp/h-earth-automatic-preflight-receipt.json
+            /tmp/h-earth-ow02-carrier-assertion.json
           if-no-files-found: error
           retention-days: 30

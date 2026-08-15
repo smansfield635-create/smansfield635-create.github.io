@@ -160,6 +160,18 @@
     root.dataset.mmSpatialReady = "true";
   });
 
+  // Reopening changes the containing fixed-layout geometry. Suppress only the
+  // carry-over transform interpolation for the first two paint frames so the
+  // restored spatial coordinate appears at its contained canonical geometry
+  // rather than traversing an off-viewport intermediate position.
+  globalThis.addEventListener("METHODS_MODELS_SHOWROOM_DISPLAY_CHANGED", event => {
+    if (event.detail?.display !== "expanded") return;
+    root.dataset.mmSpatialReopening = "true";
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      delete root.dataset.mmSpatialReopening;
+    }));
+  });
+
   if (coordinate && !coordinate.querySelector(".mm-coordinate-spatial-note")) {
     const note = document.createElement("span");
     note.className = "mm-coordinate-spatial-note";

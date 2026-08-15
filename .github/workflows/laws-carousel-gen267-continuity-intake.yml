@@ -1,4 +1,4 @@
-name: Laws Carousel Gen282 Terminal Closure
+name: Laws Carousel Gen267 Awards Perceptual Intake
 
 on:
   push:
@@ -14,12 +14,11 @@ permissions:
 env:
   PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
   PRIVATE_HEAD: 496be26a2214886e93727f6bec0da05cf9fa7505
-  OPERATION_ID: LAWS_CAROUSEL_GEN267_INSTALLED_CONTINUITY_RECONCILIATION_20260815_001
-  LOCK_SCOPE: LAWS:CAROUSEL:GEN267:INSTALLED_CONTINUITY_RECONCILIATION:V1
-  LOCK_GENERATION: '282'
+  OPERATION_ID: LAWS_CAROUSEL_GEN267_AWARDS_PERCEPTUAL_EVALUATION_20260815_001
+  LOCK_SCOPE: LAWS:CAROUSEL:GEN267:AWARDS_PERCEPTUAL_EVALUATION:V1
 
 jobs:
-  terminal-closure:
+  canonical-intake:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
@@ -33,7 +32,7 @@ jobs:
           repositories: geodiametrics1
           permission-contents: write
 
-      - name: Check out installed Gen282 merge
+      - name: Check out exact private governing head
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/geodiametrics1
@@ -48,47 +47,94 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Verify installed continuity state
+      - name: Build exact canonical Awards request and procedure
         shell: bash
         run: |
           set -euo pipefail
           cd "$GITHUB_WORKSPACE/private-control-plane"
           test "$(git rev-parse HEAD^{commit})" = "$PRIVATE_HEAD"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
-          jq -e '.mandatoryConstructionContext.acceptedCarouselPredecessorExists==true and .mandatoryConstructionContext.acceptedCarouselPredecessor.generation==267 and .mandatoryConstructionContext.acceptedCarouselPredecessor.qualifiedCandidate=="063f49ba788388f0a9075e6624792b8cf761e5bf" and .mandatoryConstructionContext.acceptedCarouselPredecessor.installedMerge=="694de80c43a92eb9fbd1a14dbfa8e8132fad99a5" and .mandatoryConstructionContext.freshConstructionAuthorityRequired==false and .mandatoryConstructionContext.successorMustBeDerivedFromLiveState==true' .github/ai-router/projects/laws/entrypoint.v1.json >/dev/null
-          jq -e '.lawsCarouselFrontier.functioningAcceptedCarouselPredecessor=="GEN267_INSTALLED" and .lawsCarouselFrontier.freshConstructionCompleted==true and .lawsCarouselFrontier.nextProductSuccessorPredeclared==false' .github/ai-router/project-continuation/laws-contextual-3d.continuation.v1.json >/dev/null
-          grep -Fq 'Functioning Laws Carousel: **Gen267 installed**.' .github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md
-          grep -Fq 'qualified candidate `063f49ba788388f0a9075e6624792b8cf761e5bf`' .github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md
-          grep -Fq 'Installed public merge: `694de80c43a92eb9fbd1a14dbfa8e8132fad99a5`' .github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md
+          jq -e '.status=="SATISFIED_AND_RATIFIED_ACTIVE" and .currentAuthority.evaluatorActive==true and .currentAuthority.awardsAdmissionAuthority==true and .currentAuthority.productAuthority==false and .currentAuthority.mergeAuthority==false' .github/ai-router/reference-class-awards-admission/evaluator/activation-criteria.v1.json >/dev/null
+          jq -e '.status=="RATIFIED_ACTIVE_FAIL_CLOSED" and .classes.SPATIAL_INSTRUMENT_AND_NAVIGATION_MODEL.interactive==true' .github/ai-router/reference-class-awards-admission/evaluator/class-requirements.v1.json >/dev/null
+          cat > "$RUNNER_TEMP/gen267-awards-request.json" <<JSON
+          {
+            "schema":"REPOSITORY_OPERATION_REQUEST_v1",
+            "operationId":"$OPERATION_ID",
+            "projectId":"LAWS",
+            "lockScope":"$LOCK_SCOPE",
+            "exactGoverningHead":"$PRIVATE_HEAD",
+            "subjectIdentity":{"class":"SPATIAL_INSTRUMENT_AND_NAVIGATION_MODEL","generation":267,"publicPullRequest":1086,"qualifiedCandidate":"063f49ba788388f0a9075e6624792b8cf761e5bf","installedPublicMerge":"694de80c43a92eb9fbd1a14dbfa8e8132fad99a5","privateContinuityMerge":"496be26a2214886e93727f6bec0da05cf9fa7505"},
+            "requestingAuthority":{"source":"PRIVATE_ISSUE_235_PLUS_GEN282_PASS_CLOSED","gen282ClosureRun":31909528439,"gen282ClosureDigest":"sha256:3fbb2ea706c0cc6aa7ec0e5383609f9fea4c5731975abd312f3a9940df652fc7"},
+            "executingRole":{"role":"READ_ONLY_EVIDENCE_BINDING_AND_REFERENCE_CLASS_AWARDS_PERCEPTUAL_EVALUATION"},
+            "independentVerifier":{"required":true,"definition":"INDEPENDENT_PERCEPTUAL_ADJUDICATION_BOUND_TO_EXACT_RENDERED_EVIDENCE"},
+            "constructionProcedureLocator":"issue://smansfield635-create/geodiametrics1/235#GEN267_AWARDS_PERCEPTUAL_EVALUATION_V1",
+            "requiredInputs":[
+              {"id":"GEN267_EXACT_QUALIFIED_CANDIDATE_063F49BA","resolved":true},
+              {"id":"GEN267_INSTALLED_PUBLIC_MERGE_694DE80C","resolved":true},
+              {"id":"GEN282_PASS_CLOSED","resolved":true},
+              {"id":"REFERENCE_CLASS_AWARDS_EVALUATOR_RATIFIED_ACTIVE","resolved":true},
+              {"id":"SPATIAL_INSTRUMENT_AND_NAVIGATION_MODEL_CLASS_ACTIVE","resolved":true}
+            ],
+            "allowedPaths":[],
+            "prohibitedPaths":["laws/","showroom/","h-earth-3d/","assets/","tools/",".github/ai-router/reference-class-awards-admission/",".github/workflows/"],
+            "requiredOutputs":["EXACT_GEN267_EVIDENCE_BUNDLE_BOUND","PAGE_EXCELLENCE_IDENTITIES_BOUND","INDEPENDENT_PERCEPTUAL_ADJUDICATION","REFERENCE_CLASS_AWARDS_NATIVE_DISPOSITION"],
+            "exactTestCommand":"READ_ONLY_NO_PRODUCT_TEST_COMMAND_AUTHORITY",
+            "workflowPath":"NONE_READ_ONLY_OPERATION",
+            "artifactPaths":["/tmp/gen267-awards-perceptual-evaluation-receipt.json"],
+            "fingerprintDomain":{"qualifiedCandidate":"063f49ba788388f0a9075e6624792b8cf761e5bf","installedPublicMerge":"694de80c43a92eb9fbd1a14dbfa8e8132fad99a5","privateHead":"$PRIVATE_HEAD","evaluationClass":"SPATIAL_INSTRUMENT_AND_NAVIGATION_MODEL"},
+            "errorPrecedence":["EVIDENCE_BINDING_INCOMPLETE","PAGE_EXCELLENCE_IDENTITY_MISMATCH","RENDERED_EVIDENCE_MISSING_OR_TAMPERED","PERCEPTUAL_ADJUDICATION_UNAVAILABLE"],
+            "stopConditions":["STOP_IF_PRODUCT_MUTATION_REQUIRED","STOP_IF_EVALUATOR_OR_REFERENCE_CORPUS_MUTATION_REQUIRED","STOP_IF_EXACT_RENDERED_EVIDENCE_CANNOT_BE_BOUND","STOP_IF_INDEPENDENT_ADJUDICATION_CANNOT_EXECUTE"],
+            "terminalDispositions":["PASS_CLOSED","FAIL_CLOSED","WITHDRAWN"]
+          }
+          JSON
+          cat > "$RUNNER_TEMP/gen267-awards-procedure.json" <<JSON
+          {
+            "schema":"REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+            "procedureId":"LAWS_CAROUSEL_GEN267_AWARDS_PERCEPTUAL_EVALUATION_PROCEDURE_V1",
+            "operationClass":"READ_ONLY_REFERENCE_CLASS_AWARDS_PERCEPTUAL_EVALUATION",
+            "exactGoverningHead":"$PRIVATE_HEAD",
+            "exactAllowedRepositoryPaths":[],
+            "exactBranchAndCommitSequence":["NO_PRODUCT_BRANCH","NO_REPOSITORY_MUTATION","RECOVER_EXACT_EVIDENCE","BIND_EVIDENCE_IDENTITIES","EXECUTE_ACTIVE_EVALUATOR","INDEPENDENT_PERCEPTUAL_ADJUDICATION","PERSIST_NATIVE_RECEIPT_OUTSIDE_PRODUCT_BYTES"],
+            "evaluationToolingHeadBindingRule":"USE_EXACT_PRIVATE_GOVERNING_HEAD_EVALUATOR_AND_EXACT_GEN267_PRODUCT_AND_EVIDENCE_IDENTITIES",
+            "canonicalInputSchemas":["REPOSITORY_OPERATION_REQUEST_v1","GEN267_EXACT_QUALIFICATION_EVIDENCE","PAGE_EXCELLENCE_RECEIPT","REFERENCE_CLASS_AWARDS_RENDERED_EVIDENCE"],
+            "canonicalOutputSchemas":["REFERENCE_CLASS_AWARDS_ADMISSION_RECEIPT","INDEPENDENT_PERCEPTUAL_ADJUDICATION_RECEIPT"],
+            "errorCodeAndValidationPrecedence":["EVIDENCE_BINDING_INCOMPLETE","PAGE_EXCELLENCE_IDENTITY_MISMATCH","RENDERED_EVIDENCE_MISSING_OR_TAMPERED","PERCEPTUAL_ADJUDICATION_UNAVAILABLE"],
+            "exactTestRunnerCommand":"READ_ONLY_NO_PRODUCT_TEST_COMMAND_AUTHORITY",
+            "independentVerifierDefinition":{"required":true,"checks":["EXACT_CANDIDATE_IDENTITY","EXACT_PAGE_EXCELLENCE_IDENTITY","EXACT_RENDERED_EVIDENCE_IDENTITY","NO_PRODUCT_MUTATION","NO_EVALUATOR_MUTATION","PERCEPTUAL_ADJUDICATOR_INDEPENDENCE"]},
+            "workflowAndArtifactPackagingPaths":{"workflowPath":"NONE_READ_ONLY_OPERATION","artifactPaths":["/tmp/gen267-awards-perceptual-evaluation-receipt.json"]},
+            "bridgeOutputFingerprintDomain":{"qualifiedCandidate":"063f49ba788388f0a9075e6624792b8cf761e5bf","installedPublicMerge":"694de80c43a92eb9fbd1a14dbfa8e8132fad99a5","privateHead":"$PRIVATE_HEAD","evaluationClass":"SPATIAL_INSTRUMENT_AND_NAVIGATION_MODEL"},
+            "priorAttemptInspectionLimits":{"mayUseGen267QualifiedEvidence":true,"mayMutateGen267Product":false,"mayMutateEvaluator":false,"mayMutateReferenceCorpus":false}
+          }
+          JSON
 
-      - name: Close canonical Gen282 lock PASS_CLOSED
+      - name: Execute canonical intake and acquire read-only evaluation lock
         shell: bash
         env:
           GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
         run: |
           set -euo pipefail
           cd "$GITHUB_WORKSPACE/private-control-plane"
-          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
-            --action close \
+          node tools/operation-intake/repository-operation-intake-gate.v1.mjs \
             --repository "$PRIVATE_REPOSITORY" \
             --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
-            --operation-id "$OPERATION_ID" \
-            --lock-scope "$LOCK_SCOPE" \
-            --lock-generation "$LOCK_GENERATION" \
-            --terminal-disposition PASS_CLOSED \
-            --output "$RUNNER_TEMP/gen282-terminal-closure.json"
-          jq -e '.result=="TERMINAL_CLOSURE_COMMITTED" and .terminalDisposition=="PASS_CLOSED" and .lockReleased==true and .lockGeneration==282' "$RUNNER_TEMP/gen282-terminal-closure.json" >/dev/null
+            --request "$RUNNER_TEMP/gen267-awards-request.json" \
+            --procedure "$RUNNER_TEMP/gen267-awards-procedure.json" \
+            --output "$RUNNER_TEMP/gen267-awards-admission-receipt.json"
+          jq -e '.result=="ADMITTED_AND_LOCKED" and .operationStarted==true' "$RUNNER_TEMP/gen267-awards-admission-receipt.json" >/dev/null
 
-      - name: Verify checkout remains clean
+      - name: Verify exact private checkout remains clean
         shell: bash
         run: |
           cd "$GITHUB_WORKSPACE/private-control-plane"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
-      - name: Upload closure evidence
+      - name: Upload canonical intake evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: laws-carousel-gen282-terminal-closure-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/gen282-terminal-closure.json
+          name: laws-carousel-gen267-awards-intake-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gen267-awards-request.json
+            ${{ runner.temp }}/gen267-awards-procedure.json
+            ${{ runner.temp }}/gen267-awards-admission-receipt.json
           if-no-files-found: error
           retention-days: 90

@@ -1,0 +1,67 @@
+name: Public → Private Canonical Execution Request Router v1
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  actions: write
+  issues: read
+  pull-requests: read
+
+jobs:
+  route:
+    if: >-
+      contains(github.event.comment.body, 'PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1') &&
+      (github.event.comment.author_association == 'OWNER' ||
+       github.event.comment.author_association == 'MEMBER' ||
+       github.event.comment.author_association == 'COLLABORATOR')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Extract closed request
+        id: request
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, json, os
+          event = json.load(open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8'))
+          body = event['comment']['body']
+          marker = 'PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1'
+          pos = body.find(marker)
+          if pos < 0:
+              raise SystemExit('REQUEST_MARKER_MISSING')
+          wrapper = json.loads(body[pos + len(marker):].strip())
+          if set(wrapper) != {'schema','request'} or wrapper['schema'] != marker:
+              raise SystemExit('ROUTER_REQUEST_NOT_CLOSED')
+          request = wrapper['request']
+          required = {'schema','requestId','repository','exactGoverningHead','operationRequest','constructionProcedure','requestNonce','executionHolder'}
+          if set(request) != required:
+              raise SystemExit('PRIVATE_REQUEST_KEYS_NOT_CLOSED')
+          if request['schema'] != 'PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1':
+              raise SystemExit('PRIVATE_REQUEST_SCHEMA_MISMATCH')
+          if request['repository'] != 'smansfield635-create/geodiametrics1':
+              raise SystemExit('PRIVATE_REPOSITORY_SUBSTITUTION_PROHIBITED')
+          encoded = base64.b64encode(json.dumps(request, sort_keys=True, separators=(',', ':')).encode()).decode()
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write('request_b64=' + encoded + '\n')
+          PY
+
+      - name: Dispatch fixed private canonical carrier
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUEST_B64: ${{ steps.request.outputs.request_b64 }}
+        run: |
+          set -euo pipefail
+          payload="$(jq -n --arg ref main --arg request_b64 "$REQUEST_B64" '{ref:$ref,inputs:{request_b64:$request_b64}}')"
+          code="$(curl --silent --show-error --output "$RUNNER_TEMP/dispatch-response.txt" --write-out '%{http_code}' \
+            --request POST \
+            --header 'Accept: application/vnd.github+json' \
+            --header "Authorization: Bearer $GH_TOKEN" \
+            --header 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/workflows/public-private-canonical-execution-carrier-v1.yml/dispatches" \
+            --data "$payload")"
+          test "$code" = "204"

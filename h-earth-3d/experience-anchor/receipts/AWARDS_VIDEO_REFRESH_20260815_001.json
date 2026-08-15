@@ -16,7 +16,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/awards/index.html",
-      "sha256": "445a0db96ef751991e5537b0ae567ed8b24fc8aed36d0a9025e885ebfac3971f"
+      "sha256": "96987e785d70b96b80caba6327c27139f8d9322c1dacaadead38062f88042091"
     }
   ],
   "invariants": {
@@ -32,5 +32,5 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "instructions": "Owner-reviewed Awards media refresh. The approved world picture edit is preserved; only the Awards presentation binding and synchronized soundtrack behavior change. No H-Earth world runtime, terrain, environment, or canonical world identity is mutated."
+  "instructions": "Owner-reviewed Awards presentation pass. The approved Compass and world picture edits, embedded audio, crop geometry, centered play control, H-Earth runtime, terrain, environment, and canonical identity are preserved. Seven restrained text statements are synchronized to the existing video timelines, with the final H-Earth reality question bound to the horizon/moon ending."
 }

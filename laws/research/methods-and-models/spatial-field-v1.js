@@ -18,7 +18,7 @@
   const coordinate = root.querySelector("[data-mm-coordinate]");
   if (!stage || !deck || !familyTabs || !lensTabs) return;
 
-  const state = { activePointer: null, returnCoordinate: null, bridgeDepth: 0 };
+  const state = { activePointer: null, returnCoordinate: null };
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const familyButtons = () => Array.from(familyTabs.querySelectorAll(".mm-family-tab"));
   const lensButtons = () => Array.from(lensTabs.querySelectorAll("[data-mm-lens-tab]"));
@@ -93,26 +93,22 @@
   attach(lensTabs, "y");
   attach(familyTabs, "z");
 
-  function bridgeHook(element, invoke) {
+  function dispatchDeckKey(key) {
+    deck.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+  }
+
+  function bridgeHook(element, key) {
     element?.addEventListener("click", event => {
-      if (state.bridgeDepth) return;
-      const api = globalThis.METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3;
-      if (!api) return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      state.bridgeDepth += 1;
-      try {
-        invoke(api);
-      } finally {
-        state.bridgeDepth -= 1;
-      }
+      dispatchDeckKey(key);
     }, true);
   }
 
-  bridgeHook(next, api => api.moveModel(1, "legacy-verifier-next"));
-  bridgeHook(previous, api => api.moveModel(-1, "legacy-verifier-previous"));
-  bridgeHook(familyNext, api => api.moveFamily(1, "legacy-verifier-family-next"));
-  bridgeHook(familyPrevious, api => api.moveFamily(-1, "legacy-verifier-family-previous"));
+  bridgeHook(next, "ArrowRight");
+  bridgeHook(previous, "ArrowLeft");
+  bridgeHook(familyNext, "PageDown");
+  bridgeHook(familyPrevious, "PageUp");
 
   root.addEventListener("click", event => {
     if (event.target.closest(".mm-inspect")) state.returnCoordinate = coordinateSnapshot();
@@ -128,7 +124,7 @@
       const count = Math.max(modelCards().length, 1);
       const forward = (snapshot.x - current + count) % count;
       const backward = (current - snapshot.x + count) % count;
-      (forward <= backward ? next : previous)?.click();
+      dispatchDeckKey(forward <= backward ? "ArrowRight" : "ArrowLeft");
       guard += 1;
     }
     requestAnimationFrame(() => deck.focus({ preventScroll: true }));

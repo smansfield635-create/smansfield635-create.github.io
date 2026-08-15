@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "request"],
+  "properties": {
+    "schema": {"const": "PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_v1"},
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "requestId", "repository", "exactGoverningHead", "operationRequest", "constructionProcedure", "requestNonce", "executionHolder"],
+      "properties": {
+        "schema": {"const": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1"},
+        "requestId": {"type": "string", "minLength": 3},
+        "repository": {"const": "smansfield635-create/geodiametrics1"},
+        "exactGoverningHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "operationRequest": {"type": "object"},
+        "constructionProcedure": {"type": "object"},
+        "requestNonce": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "executionHolder": {"type": "string", "minLength": 3}
+      }
+    }
+  }
+}

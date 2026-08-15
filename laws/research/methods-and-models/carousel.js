@@ -25,7 +25,9 @@
     pointerLastX: 0,
     pointerLastTime: 0,
     velocity: 0,
-    inspecting: false
+    inspecting: false,
+    settling: false,
+    settleTimer: null
   };
 
   const count = families.length;
@@ -33,6 +35,7 @@
   const normalize = value => ((value % count) + count) % count;
   const angleForIndex = index => -normalize(index) * step;
   const selectedFamily = () => families[state.index];
+  const reducedMotion = () => globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
 
   function radius() {
     const width = Math.max(320, viewport.clientWidth || root.clientWidth || 960);
@@ -83,6 +86,14 @@
     ring.append(article);
     cards.push(article);
     renderModelDetail(article, index, modelIndices[index]);
+    article.querySelector("[data-open-inspection]")?.addEventListener("click", event => {
+      event.stopPropagation();
+      openInspection(article, "inspect-button");
+    });
+    article.querySelector("[data-close-inspection]")?.addEventListener("click", event => {
+      event.stopPropagation();
+      closeInspection("return-to-orbit-button");
+    });
   }
 
   function renderTabs() {
@@ -165,15 +176,31 @@
   }
 
   function selectIndex(index, reason = "select", focusTab = false) {
-    if (state.inspecting) return;
-    state.index = normalize(index);
-    state.angle = angleForIndex(state.index);
-    applyGeometry(reason);
-    if (focusTab) tabs.querySelector(`[data-family-index="${state.index}"]`)?.focus({ preventScroll: true });
+    if (state.inspecting || state.settling) return;
+    const targetIndex = normalize(index);
+    if (targetIndex === state.index) {
+      if (focusTab) tabs.querySelector(`[data-family-index="${state.index}"]`)?.focus({ preventScroll: true });
+      return;
+    }
+    const targetAngle = angleForIndex(targetIndex);
+    state.settling = true;
+    root.dataset.settling = "true";
+    ring.style.setProperty("--ring-rotation", `${targetAngle}deg`);
+    clearTimeout(state.settleTimer);
+    const commit = () => {
+      state.index = targetIndex;
+      state.angle = targetAngle;
+      state.settling = false;
+      root.dataset.settling = "false";
+      applyGeometry(reason);
+      if (focusTab) tabs.querySelector(`[data-family-index="${state.index}"]`)?.focus({ preventScroll: true });
+    };
+    if (reducedMotion()) commit();
+    else state.settleTimer = setTimeout(commit, 640);
   }
 
   function openInspection(card, reason = "inspect") {
-    if (state.inspecting || Number(card.dataset.familyIndex) !== state.index) return;
+    if (state.inspecting || state.settling || Number(card.dataset.familyIndex) !== state.index) return;
     state.inspecting = true;
     state.angle = angleForIndex(state.index);
     root.dataset.inspecting = "true";
@@ -228,16 +255,8 @@
     const card = event.target.closest(".mm-card");
     if (!card) return;
     const familyIndex = Number(card.dataset.familyIndex);
-    if (familyIndex !== state.index && !state.inspecting) {
+    if (familyIndex !== state.index && !state.inspecting && !state.settling) {
       selectIndex(familyIndex, "card-select");
-      return;
-    }
-    if (event.target.closest("[data-open-inspection]")) {
-      openInspection(card);
-      return;
-    }
-    if (event.target.closest("[data-close-inspection]")) {
-      closeInspection();
       return;
     }
     const modelChoice = event.target.closest("[data-model-index]");
@@ -269,7 +288,7 @@
   }
 
   viewport.addEventListener("pointerdown", event => {
-    if (state.inspecting || (event.pointerType === "mouse" && event.button !== 0)) return;
+    if (state.inspecting || state.settling || (event.pointerType === "mouse" && event.button !== 0)) return;
     if (event.target.closest("button, a")) return;
     state.dragging = true;
     state.pointerId = event.pointerId;
@@ -313,7 +332,7 @@
       closeInspection("return-to-orbit-escape");
       return;
     }
-    if (state.inspecting || event.target.closest("[role=tablist]")) return;
+    if (state.inspecting || state.settling || event.target.closest("[role=tablist]")) return;
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
       selectIndex(state.index + (event.key === "ArrowRight" ? 1 : -1), "stage-keyboard");

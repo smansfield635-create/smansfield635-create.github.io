@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     env:
-      PRODUCT_HEAD: ba67174c834322599b94be9237fae5f9ac4a3a09
-      PRODUCT_BLOB: b3d5634b5bd30e9a3d7e4a20800188606e96220e
+      PRODUCT_HEAD: a29b2a9b48bdbd9225d207b0de1c7fa5b751e365
+      PRODUCT_BLOB: cbe15eb87533adf59d1986ef8cb043f7aabbfd17
       BASE_HEAD: aefb54971ae0f91a9abf9e8fc8e588f82f3a5744
       ANCHOR_SHA256: 7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573
       ROUTE: /showroom/globe/h-earth/

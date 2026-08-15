@@ -1,0 +1,14 @@
+name: Temporary Awards Recovery Hash
+on:
+  push:
+    branches:
+      - agent/awards-media-recovery
+jobs:
+  hash:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Hash awards recovery page
+        run: sha256sum showroom/globe/h-earth/awards/index.html

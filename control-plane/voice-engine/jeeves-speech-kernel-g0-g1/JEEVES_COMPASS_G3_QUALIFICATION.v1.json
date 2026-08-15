@@ -1,0 +1,28 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_COMPASS_G3_QUALIFICATION_v1",
+  "status": "READY_FOR_G3_RENDER",
+  "generation": "G3",
+  "predecessorGeneration": "G2",
+  "corpusCount": 8,
+  "qualificationDimensions": {
+    "mechanicalSteadinessReduction": "UNSCORED",
+    "microPitchNaturalness": "UNSCORED",
+    "microEnergyNaturalness": "UNSCORED",
+    "absenceOfFlutter": "UNSCORED",
+    "absenceOfTremolo": "UNSCORED",
+    "jeevesRestraint": "UNSCORED",
+    "syntheticIdentityReduction": "UNSCORED"
+  },
+  "failureSignals": [
+    "audible pitch wobble",
+    "flutter",
+    "tremolo",
+    "randomized instability",
+    "loss of G2 phrase intention",
+    "loss of G1 timing behavior"
+  ],
+  "acceptanceLaw": "G3 may advance only if micro-prosody reduces mechanical steadiness while preserving G1 timing and G2 phrase intention and without introducing audible modulation artifacts.",
+  "reviewArtifactPolicy": "Do not surface a user review artifact unless the rendered voice is materially closer to a natural Jeeves voice.",
+  "nextIfPass": "G4_COARTICULATION_AND_SPECTRAL_DYNAMICS",
+  "nextIfFail": "REPAIR_G3_MICRO_PROSODY_WITHOUT_ADVANCING_GENERATION"
+}

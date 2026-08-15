@@ -8,10 +8,11 @@
   "trigger": {
     "event": "issue_comment.created",
     "marker": "PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1",
-    "trustedAuthorAssociations": ["OWNER", "MEMBER", "COLLABORATOR"],
-    "requestBody": "PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1"
+    "trustedAuthorAssociations": ["OWNER"],
+    "requestBody": "PRIVATE_REQUEST_LOCATOR_ONLY"
   },
   "privateExecution": {
+    "privateRequestSource": "PRIVATE_ISSUE_COMMENT_FETCHED_WITH_JOB_SCOPED_APP_TOKEN",
     "checkoutRef": "REQUEST_EXACT_GOVERNING_HEAD_ONLY",
     "executorPath": "tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs",
     "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
@@ -22,12 +23,13 @@
   "authentication": {
     "mechanism": "GITHUB_APP_INSTALLATION_TOKEN",
     "repositoryScope": ["geodiametrics1"],
-    "requiredPermissions": {"contents": "write"},
+    "requiredPermissions": {"contents": "write", "issues": "read"},
     "tokenLifetime": "SHORT_LIVED_JOB_SCOPED",
     "publicWorkflowSecrets": ["PRIVATE_EXECUTION_APP_PRIVATE_KEY"],
     "publicWorkflowVariables": ["PRIVATE_EXECUTION_APP_ID"]
   },
   "prohibitions": [
+    "PUBLIC_TRANSPORT_OF_PRIVATE_INTAKE_PAYLOAD",
     "ARBITRARY_COMMAND_EXECUTION",
     "ARBITRARY_PRIVATE_REPOSITORY_SELECTION",
     "ARBITRARY_PRIVATE_PATH_SELECTION",

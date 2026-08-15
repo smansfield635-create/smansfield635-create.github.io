@@ -103,6 +103,7 @@ const receiptBody = {
   candidateHead: process.env.CANDIDATE_HEAD || exec('git rev-parse HEAD'),
   candidateId: CANDIDATE_ID,
   awardsPageSha256: sha256(awardsHtml),
+  validatorSha256: sha256(read('h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs')),
   allowedPaths,
   changedPaths,
   sensitiveChangedPaths,

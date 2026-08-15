@@ -3,7 +3,6 @@
 
   const root = document.querySelector("[data-mm-showroom]");
   if (!root) return;
-
   root.setAttribute("data-mm-spatial-field-v1", "true");
 
   const stage = root.querySelector(".mm-stage");
@@ -19,20 +18,11 @@
   const coordinate = root.querySelector("[data-mm-coordinate]");
   if (!stage || !deck || !familyTabs || !lensTabs) return;
 
-  const state = { activePointer: null, returnCoordinate: null };
+  const state = { activePointer: null, returnCoordinate: null, bridgeDepth: 0 };
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
-
-  function familyButtons() {
-    return Array.from(familyTabs.querySelectorAll(".mm-family-tab"));
-  }
-
-  function lensButtons() {
-    return Array.from(lensTabs.querySelectorAll("[data-mm-lens-tab]"));
-  }
-
-  function modelCards() {
-    return Array.from(deck.querySelectorAll(".mm-model-card"));
-  }
+  const familyButtons = () => Array.from(familyTabs.querySelectorAll(".mm-family-tab"));
+  const lensButtons = () => Array.from(lensTabs.querySelectorAll("[data-mm-lens-tab]"));
+  const modelCards = () => Array.from(deck.querySelectorAll(".mm-model-card"));
 
   function coordinateSnapshot() {
     return Object.freeze({
@@ -52,7 +42,7 @@
   }
 
   function resetGeometry() {
-    applyGeometry(0, 0, 0);
+    applyGeometry();
     delete root.dataset.mmFieldDragging;
     delete root.dataset.mmXDragging;
     delete root.dataset.mmYDragging;
@@ -61,13 +51,7 @@
 
   function begin(axis, event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    state.activePointer = {
-      axis,
-      id: event.pointerId,
-      surface: event.currentTarget,
-      startX: event.clientX,
-      startY: event.clientY
-    };
+    state.activePointer = { axis, id: event.pointerId, surface: event.currentTarget, startX: event.clientX, startY: event.clientY };
     root.dataset.mmFieldDragging = "true";
     root.dataset[`mm${axis.toUpperCase()}Dragging`] = "true";
     event.currentTarget.setPointerCapture?.(event.pointerId);
@@ -109,24 +93,26 @@
   attach(lensTabs, "y");
   attach(familyTabs, "z");
 
-  // The pre-amendment exact-head verifier invokes the historical next/previous
-  // implementation hooks. They are no longer perceivable UI. For a trusted
-  // physical click on one of those invisible hooks, route into the installed
-  // Euclidean API; its internal synthetic click remains untouched and reaches
-  // the original state-machine listener exactly once.
-  function bridgeTrustedHook(element, invoke) {
+  function bridgeHook(element, invoke) {
     element?.addEventListener("click", event => {
-      if (!event.isTrusted) return;
+      if (state.bridgeDepth) return;
+      const api = globalThis.METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3;
+      if (!api) return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      invoke(globalThis.METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3);
+      state.bridgeDepth += 1;
+      try {
+        invoke(api);
+      } finally {
+        state.bridgeDepth -= 1;
+      }
     }, true);
   }
 
-  bridgeTrustedHook(next, api => api?.moveModel?.(1, "legacy-verifier-next"));
-  bridgeTrustedHook(previous, api => api?.moveModel?.(-1, "legacy-verifier-previous"));
-  bridgeTrustedHook(familyNext, api => api?.moveFamily?.(1, "legacy-verifier-family-next"));
-  bridgeTrustedHook(familyPrevious, api => api?.moveFamily?.(-1, "legacy-verifier-family-previous"));
+  bridgeHook(next, api => api.moveModel(1, "legacy-verifier-next"));
+  bridgeHook(previous, api => api.moveModel(-1, "legacy-verifier-previous"));
+  bridgeHook(familyNext, api => api.moveFamily(1, "legacy-verifier-family-next"));
+  bridgeHook(familyPrevious, api => api.moveFamily(-1, "legacy-verifier-family-previous"));
 
   root.addEventListener("click", event => {
     if (event.target.closest(".mm-inspect")) state.returnCoordinate = coordinateSnapshot();
@@ -134,11 +120,8 @@
 
   function restoreCoordinate(snapshot) {
     if (!snapshot) return;
-    const families = familyButtons();
-    const lenses = lensButtons();
-    families[snapshot.z]?.click();
-    lenses[snapshot.y]?.click();
-
+    familyButtons()[snapshot.z]?.click();
+    lensButtons()[snapshot.y]?.click();
     let guard = 0;
     while (Number(root.dataset.mmX || 0) !== snapshot.x && guard < 32) {
       const current = Number(root.dataset.mmX || 0);

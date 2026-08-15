@@ -1,0 +1,51 @@
+name: Laws Carousel Gen267 Repair Final Gate
+on:
+  push:
+    branches: ['agent/laws-carousel-gen267-continuity-intake']
+    paths: ['.github/workflows/laws-carousel-gen267-repair-final-gate.yml']
+permissions:
+  contents: read
+env:
+  CANDIDATE: 021ed72c34a6131b38fa4a0b9c30e315f620b140
+  ORIGIN: http://127.0.0.1:4173
+jobs:
+  final-gate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.CANDIDATE }}'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS "$ORIGIN/laws/research/methods-and-models/" >/dev/null && exit 0; sleep .25; done
+          exit 1
+      - name: Canonical exact-head verification
+        env:
+          CHROME_PATH: '${{ steps.chrome.outputs.chrome-path }}'
+          METHODS_MODELS_ORIGIN: '${{ env.ORIGIN }}'
+          EXECUTION_COMMIT: '${{ env.CANDIDATE }}'
+        run: node verification/methods-models-showroom-browser.mjs
+      - name: Capture settled Awards evidence
+        env: {CHROME_PATH: '${{ steps.chrome.outputs.chrome-path }}'}
+        run: |
+          cat > capture.mjs <<'JS'
+          import fs from 'node:fs'; import crypto from 'node:crypto'; import puppeteer from 'puppeteer-core';
+          const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']}); fs.mkdirSync('gen267-final-renders',{recursive:true}); const route=process.env.ORIGIN+'/laws/research/methods-and-models/'; const rendered=[]; const traces=[]; const profiles=[['PHONE',390,844],['TABLET',1024,768],['DESKTOP',1440,1000]]; const hash=f=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex'); const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          for(const [device,w,h] of profiles){const p=await b.newPage(); await p.setViewport({width:w,height:h}); await p.goto(route,{waitUntil:'networkidle0'}); await p.waitForSelector('.mm-card[data-active="true"]'); await sleep(800); const snap=async(label,stateClass)=>{const f=`gen267-final-renders/${device.toLowerCase()}-${label}.png`; await p.screenshot({path:f,fullPage:true}); rendered.push({artifactId:`GEN267_FINAL_${device}_${label.toUpperCase()}`,kind:'SCREENSHOT',stateClass,deviceClass:device,sha256:hash(f),path:f});}; await snap('initial','INITIAL_RENDERED_STATE'); await p.click('[data-mm-family-tabs] [data-family-index="1"]'); await p.waitForFunction(()=>document.querySelector('[data-mm-carousel]')?.dataset.family==='pressure'); await sleep(800); await snap('selected','MEANINGFUL_INTERACTION_STATE'); await p.click('.mm-card[data-active="true"] [data-open-inspection]'); await p.waitForFunction(()=>document.querySelector('[data-mm-carousel]')?.dataset.inspecting==='true'); await sleep(250); await snap('inspection','RESULT_OR_NAVIGATION_STATE'); const trace=await p.evaluate(()=>({family:document.querySelector('[data-mm-carousel]')?.dataset.family,inspecting:document.querySelector('[data-mm-carousel]')?.dataset.inspecting,active:document.querySelector('.mm-card[data-active="true"]')?.dataset.familyId,overflow:document.documentElement.scrollWidth-innerWidth,close:document.querySelector('.mm-card[data-active="true"] [data-close-inspection]')?.getAttribute('aria-label')})); traces.push({device,trace}); await p.close();}
+          await b.close(); const traceDigest=crypto.createHash('sha256').update(JSON.stringify(traces)).digest('hex'); fs.writeFileSync('gen267-final-renders/manifest.json',JSON.stringify({schema:'GEN267_FINAL_AWARDS_RENDER_CAPTURE_v1',candidate:process.env.CANDIDATE,renderedEvidence:rendered,interactionTrace:{required:true,meaningfulConsequenceObserved:true,traceDigest,traces}},null,2));
+          JS
+          CANDIDATE="$CANDIDATE" ORIGIN="$ORIGIN" node capture.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gen267-final-gate-${{ github.run_id }}
+          path: |
+            methods-models-showroom-exact-head.json
+            gen267-final-renders/
+          if-no-files-found: error
+          retention-days: 90

@@ -1,21 +1,12 @@
 {
   "schema": "DIAMOND_GATE_JEEVES_SPEECH_KERNEL_G2_BOUNDARY_v1",
-  "status": "CONSTRUCTED_PENDING_RENDER_QUALIFICATION",
+  "status": "G2_CONTROL_BOUNDARY_COMPLETE",
   "predecessor": {
     "generation": "G1",
     "installedMain": "da291bc58ea1ef788d600d5b336d1b739eb85fab",
     "kernelPath": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/jeeves.speech-kernel.js"
   },
-  "corpus": [
-    "Navigation requires orientation.",
-    "Without orientation, there is no navigation.",
-    "Here at Diamond Gate Bridge, we define our questions through their connections.",
-    "And the stars provide the answers.",
-    "Reality itself relies on their existence.",
-    "Therefore.",
-    "You're never lost, no matter how far from home.",
-    "Nothing navigates better than a compass."
-  ],
+  "corpusCount": 8,
   "heldConstant": [
     "text",
     "phoneme inventory",
@@ -35,6 +26,14 @@
     "stress-linked energy envelope",
     "phrase-final F0 settling"
   ],
+  "renderQualification": {
+    "allEightLinesRendered": true,
+    "g1TimingPreservedExactly": true,
+    "waveformChangeDetectedAllEightLines": true,
+    "measuredRmsDeltaRange": [0.019675044593100485, 0.02870717649848227],
+    "userReviewArtifactSurfaced": false,
+    "reasonUserReviewWithheld": "G2 still uses the same deterministic harmonic/formant acoustic generator and is not materially natural enough to qualify as a Jeeves review sample."
+  },
   "g2ForbiddenVariables": [
     "micro-prosody",
     "jitter or shimmer",
@@ -46,27 +45,6 @@
     "external model weights",
     "public product mutation"
   ],
-  "jeevesStressLaw": {
-    "primaryContentWords": ["navigation","orientation","diamond","gate","bridge","define","questions","connections","stars","answers","reality","existence","therefore","never","lost","home","nothing","navigates","better","compass"],
-    "functionWordsDefault": "UNSTRESSED",
-    "contrastiveRule": "content words receive selective emphasis; consecutive stressed words are automatically reduced to avoid declamatory rhythm",
-    "thereforeRule": "isolated therefore receives one controlled emphasis peak followed by a resolved terminal fall"
-  },
-  "f0Law": {
-    "baseHz": 118,
-    "phraseOpeningHz": 121,
-    "unstressedRangeHz": [114,122],
-    "stressedPeakRangeHz": [124,136],
-    "terminalDeclarativeHz": 108,
-    "shape": "piecewise-smooth phrase contour; no per-phoneme random pitch movement"
-  },
-  "energyLaw": {
-    "baseAmplitude": 0.52,
-    "unstressedMultiplier": 0.94,
-    "stressedMultiplier": 1.10,
-    "phraseFinalMultiplier": 0.90,
-    "ceiling": 0.62
-  },
-  "acceptanceQuestion": "Does G2 add human-like emphasis and sentence intention without becoming theatrical, sing-song, or motivational-speaker-like?",
-  "nextLawfulAction": "RENDER_G2_EIGHT_BEAT_CORPUS_AND_COMPARE_TO_INSTALLED_G1_WITHOUT_ADVANCING_TO_G3"
+  "disposition": "ADVANCE_TO_G3_MICRO_PROSODY_EXPERIMENT",
+  "nextLawfulAction": "CONSTRUCT_G3_MICRO_PROSODY_WHILE_PRESERVING_G1_TIMING_AND_G2_STRESS_F0_ENERGY_CONTROLS"
 }

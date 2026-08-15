@@ -1,0 +1,31 @@
+{
+  "schema": "JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A5_CALIBRATION_GATE_QUALIFICATION_v1",
+  "status": "PASS_CLOSED",
+  "qualifiedAgainstA4Head": "a8d9c0f6b957a53cbcbdc1c38a8a43786c6371e8",
+  "profileBlobSha": "9739d167aa56e4bc72c2bfb222f2e7d62eb5e74d",
+  "observedProfileReferenceAudioStatus": "UNBOUND",
+  "execution": {
+    "runtime": "node",
+    "test": "jeeves.physical-acoustic-consumer.a5.calibration-gate.v1.test.js",
+    "result": "JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A5_CALIBRATION_GATE_v1 PASS"
+  },
+  "qualifiedBehaviors": [
+    "current UNBOUND reference state returns FAIL_REFERENCE_REQUIRED",
+    "profile-only descriptive use remains lawful",
+    "invalid reference hash is rejected",
+    "bound reference without measured physical parameters returns FAIL_MEASUREMENTS_REQUIRED",
+    "structurally bound reference plus complete measured-parameter package returns PASS_CALIBRATION_ADMISSIBLE",
+    "non-Jeeves profile identity is rejected"
+  ],
+  "materialFinding": "The surviving Jeeves profile is sufficient to constrain performance style and broad register but is insufficient to identify a unique speaker-specific physical acoustic parameter vector.",
+  "disposition": "A5_JEEVES_SPECIFIC_CALIBRATION_NOT_ADMITTED_UNTIL_ORIGINAL_REFERENCE_AND_MEASUREMENTS_EXIST",
+  "noMutationTo": [
+    "A0_A1 acoustic consumer",
+    "A2 articulatory consumer",
+    "A3 glottal source consumer",
+    "A4 phoneme-class physics",
+    "G0_G5 evidence chain",
+    "public product"
+  ],
+  "nextLawfulAction": "CREATE_AND_BIND_ONE_AUTHORIZED_ORIGINAL_JEEVES_REFERENCE_UTTERANCE_WITH_PROVENANCE_AND_SHA256; THEN EXTRACT_MEASURED_ACOUSTIC PARAMETERS AND RE-RUN A5 ADMISSION"
+}

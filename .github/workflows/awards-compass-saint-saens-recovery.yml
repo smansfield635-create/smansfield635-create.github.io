@@ -1,0 +1,32 @@
+name: Awards Compass Saint-Saens Recovery
+
+on:
+  push:
+    branches:
+      - awards-compass-saint-saens-recovery-20260815
+    paths:
+      - '.github/workflows/awards-compass-saint-saens-recovery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recover exact installed Compass source
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://upload.wikimedia.org/wikipedia/commons/7/7f/Camille_Saint-Sa%C3%ABns_-_The_Carnival_of_the_Animals.ogg'
+          curl --fail --location --retry 4 --retry-delay 2 --output saint-saens-carnival-exact.ogg "$url"
+          test "$(wc -c < saint-saens-carnival-exact.ogg | tr -d ' ')" = '24622128'
+          echo '07a9d658aa2af262a1ce04a01862774e7ad3ff5f  saint-saens-carnival-exact.ogg' | sha1sum --check --strict
+          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 saint-saens-carnival-exact.ogg
+      - name: Upload recovered source
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-saint-saens-source
+          path: saint-saens-carnival-exact.ogg
+          if-no-files-found: error
+          retention-days: 1

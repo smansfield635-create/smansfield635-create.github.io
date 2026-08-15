@@ -1,0 +1,46 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "evidenceId": "AWARDS_COMPASS_VIDEO_20260815_001",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "candidateHeadReviewed": "ad7f3c1fa25174ef13a7e8f09474c0887531d338",
+  "comparisonBase": "2c00dea965270821e159fa694e82a2501d35c1e7",
+  "experienceChange": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "259a38fbed05fcb3ed1706b8ac22bcdb2c99263f7450b8a4cb2b7487fe74351f",
+    "classification": "AWARDS_PRESENTATION_ONLY",
+    "worldRuntimeGeometryTerrainCameraMutation": false
+  },
+  "visualEvidence": {
+    "hEarthPublicFaceTrophyStandard": "PASS_CLOSED",
+    "staticAssertions": 33,
+    "staticFailures": 0,
+    "browserAssertions": 38,
+    "browserFailures": 0,
+    "baselinePublicDefaultUnchanged": true,
+    "awardsRouteIdentityPreserved": true,
+    "candidateScopeBoundedToAwardsExperienceFile": true
+  },
+  "interactionEvidence": {
+    "desktopPointerDragLook": true,
+    "desktopWheelTravel": true,
+    "desktopCtrlWheelZoom": true,
+    "mobileOneFingerLook": true,
+    "mobileTwoFingerTravel": true,
+    "mobilePinchZoom": true,
+    "pageErrors": 0,
+    "consoleErrors": 0,
+    "ownedHttpErrors": 0
+  },
+  "continuityEvidence": {
+    "run8eRuntimeModulePreserved": true,
+    "canvasIdentityPreserved": true,
+    "gestureMountIdentityPreserved": true,
+    "promotedPublicFaceActive": true,
+    "promotedPublicFaceDefault": true,
+    "awardsReturnToPromotedHEarthPresent": true,
+    "sameCanonicalWorldExperienceUnaffectedByAwardsPresentationChange": true
+  },
+  "assessment": "PASS",
+  "basis": "The exact awards candidate changed only the awards presentation route. Exact-head static and browser Trophy Standard verification passed while H-Earth desktop and mobile world interaction, promoted public-face identity, runtime mount identities, and return continuity remained intact. The awards media insertion therefore does not create a parallel H-Earth product or alter the canonical navigable world."
+}

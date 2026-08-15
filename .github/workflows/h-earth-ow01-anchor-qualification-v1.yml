@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     env:
-      PRODUCT_HEAD: 0c834c7135dc78890ef5b77af6895e9cbdb9942c
-      PRODUCT_BLOB: 272b3a8c0ef547646e674d0ad1ec2e2bca4a820a
+      PRODUCT_HEAD: 2efe60106ccaf60e0090d361fa465115adb26d36
+      PRODUCT_BLOB: c32431f4c0b0eff7812fca24daacac90bd4e7020
       BASE_HEAD: aefb54971ae0f91a9abf9e8fc8e588f82f3a5744
       ANCHOR_SHA256: 7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573
       ROUTE: /showroom/globe/h-earth/
@@ -89,42 +89,28 @@ jobs:
               response=await page.goto(`http://127.0.0.1:${port}${process.env.ROUTE}`,{waitUntil:'commit',timeout:60000});
               await page.waitForLoadState('domcontentloaded',{timeout:30000}).catch(()=>{}); await page.waitForTimeout(5000);
               vegetationDiagnostic=await page.evaluate(async()=>{
-                try{
-                  const mod=await import('/h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js');
-                  const resolution=mod.buildHEarthRun8DVegetationResolution();
-                  return {ok:true,eligible:resolution?.eligible??null,status:resolution?.status??null,instanceCount:resolution?.instanceCount??null,archetypeCounts:resolution?.archetypeCounts??null,populationInstanceCount:resolution?.populationPlan?.instanceCount??null,speciesCounts:resolution?.populationPlan?.speciesCounts??null,issues:resolution?.issues??null,instances:(resolution?.instances??[]).map(i=>({sourcePopulationInstanceId:i.sourcePopulationInstanceId,speciesId:i.speciesId,sourceInstanceClass:i.sourceInstanceClass,archetypeId:i.archetypeId,worldAnchor:i.worldAnchor,biomeClass:i.biomeClass,surfaceClass:i.surfaceClass}))};
-                }catch(error){return {ok:false,error:String(error?.stack||error)}}
+                try{const mod=await import('/h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js');const resolution=mod.buildHEarthRun8DVegetationResolution();return {ok:true,eligible:resolution?.eligible??null,status:resolution?.status??null,instanceCount:resolution?.instanceCount??null,archetypeCounts:resolution?.archetypeCounts??null,populationInstanceCount:resolution?.populationPlan?.instanceCount??null,speciesCounts:resolution?.populationPlan?.speciesCounts??null,issues:resolution?.issues??null};}catch(error){return {ok:false,error:String(error?.stack||error)}}
               });
               if(label==='candidate'){
                 r2PackageDiagnostic=await page.evaluate(async()=>{
-                  try{
-                    const mod=await import('/showroom/globe/h-earth/render/live-render-package.run8e-r2.js');
-                    const record=mod.buildHEarthRun8ER2ImmutableLiveRenderPackage();
-                    return {ok:true,eligible:record?.eligible??null,status:record?.status??null,contractId:record?.contractId??null,issues:Array.isArray(record?.issues)?record.issues:null,primitiveCount:record?.primitiveCount??null,triangleCount:record?.triangleCount??null,indexCount:record?.indexCount??null,vertexCount:record?.vertexCount??null,sourceAuthorities:record?.sourceAuthorities??null};
-                  }catch(error){return {ok:false,error:String(error?.stack||error)}}
+                  try{const mod=await import('/showroom/globe/h-earth/render/live-render-package.run8e-r2.js');const historical=mod.buildHEarthRun8ER2ImmutableLiveRenderPackage();const current=mod.getHEarthOW01LiveRenderPackageOccurrence?.();return {ok:true,historical:{eligible:historical?.eligible??null,status:historical?.status??null,issues:historical?.issues??null,primitiveCount:historical?.primitiveCount??null},current:{eligible:current?.eligible??null,status:current?.status??null,issues:current?.issues??null,primitiveCount:current?.primitiveCount??null,packageOccurrenceId:current?.packageOccurrenceId??null,packageIdentity:current?.packageIdentity??null,contentDigest:current?.contentDigest??null}};}catch(error){return {ok:false,error:String(error?.stack||error)}}
                 });
               }
               const canvases=page.locator('canvas'); const count=await canvases.count();
               beforeGesture=await page.evaluate(()=>document.querySelector('[data-gesture-used]')?.getAttribute('data-gesture-used')??null);
-              let best=null;
-              for(let i=0;i<count;i++){const box=await canvases.nth(i).boundingBox(); if(box&&(!best||box.width*box.height>best.box.width*best.box.height))best={index:i,box};}
+              let best=null; for(let i=0;i<count;i++){const box=await canvases.nth(i).boundingBox();if(box&&(!best||box.width*box.height>best.box.width*best.box.height))best={index:i,box};}
               if(best){const x=best.box.x+best.box.width*.52,y=best.box.y+best.box.height*.52;await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+80,y-20,{steps:6});await page.mouse.up();await page.mouse.wheel(0,-240);await page.waitForTimeout(700);interactionExercised=true;}
               afterGesture=await page.evaluate(()=>document.querySelector('[data-gesture-used]')?.getAttribute('data-gesture-used')??null);
             }catch(e){captureError=String(e?.stack||e);}
-            const screenshot=`${stem}.${label}.png`;
-            try{await page.screenshot({path:screenshot,fullPage:false,timeout:30000});}catch(e){captureError=(captureError?captureError+' | ':'')+String(e?.stack||e);}
-            const out={label,status:response?.status()??null,title:await page.title().catch(()=>''),url:page.url(),canvasCount:await page.locator('canvas').count().catch(()=>0),interactionExercised,beforeGesture,afterGesture,pageErrors,consoleErrors,requestFailures,captureError,r2PackageDiagnostic,vegetationDiagnostic,screenshotSha256:fs.existsSync(screenshot)?digest(screenshot):null,screenshotBytes:fs.existsSync(screenshot)?fs.statSync(screenshot).size:0};
-            await context.close(); return out;
+            const screenshot=`${stem}.${label}.png`; try{await page.screenshot({path:screenshot,fullPage:false,timeout:30000});}catch(e){captureError=(captureError?captureError+' | ':'')+String(e?.stack||e);}
+            const out={label,status:response?.status()??null,title:await page.title().catch(()=>''),url:page.url(),canvasCount:await page.locator('canvas').count().catch(()=>0),interactionExercised,beforeGesture,afterGesture,pageErrors,consoleErrors,requestFailures,captureError,r2PackageDiagnostic,vegetationDiagnostic,screenshotSha256:fs.existsSync(screenshot)?digest(screenshot):null,screenshotBytes:fs.existsSync(screenshot)?fs.statSync(screenshot).size:0};await context.close();return out;
           }
           const base=await capture('base',4174); const candidate=await capture('candidate',4173);
-          const context=await browser.newContext({viewport:{width:1440,height:900}}); const page=await context.newPage(); let anchorStatus=null,anchorError=null;
-          try{const r=await page.goto('http://127.0.0.1:4173/h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg',{waitUntil:'load',timeout:60000});anchorStatus=r?.status()??null;}catch(e){anchorError=String(e?.stack||e);}
-          const anchorPath=`${stem}.anchor.png`; try{await page.screenshot({path:anchorPath,fullPage:false,timeout:30000});}catch(e){anchorError=(anchorError?anchorError+' | ':'')+String(e?.stack||e);}
-          const anchor={status:anchorStatus,captureError:anchorError,screenshotSha256:fs.existsSync(anchorPath)?digest(anchorPath):null,screenshotBytes:fs.existsSync(anchorPath)?fs.statSync(anchorPath).size:0}; await context.close(); await browser.close();
-          const terrainPath=path.join(workspace,'h-earth-3d/terrain/h-earth.terrain-field.js'); const terrainSha256=digest(terrainPath);
+          const context=await browser.newContext({viewport:{width:1440,height:900}}); const page=await context.newPage();let anchorStatus=null,anchorError=null;try{const r=await page.goto('http://127.0.0.1:4173/h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg',{waitUntil:'load',timeout:60000});anchorStatus=r?.status()??null;}catch(e){anchorError=String(e?.stack||e);}
+          const anchorPath=`${stem}.anchor.png`;try{await page.screenshot({path:anchorPath,fullPage:false,timeout:30000});}catch(e){anchorError=(anchorError?anchorError+' | ':'')+String(e?.stack||e);}const anchor={status:anchorStatus,captureError:anchorError,screenshotSha256:fs.existsSync(anchorPath)?digest(anchorPath):null,screenshotBytes:fs.existsSync(anchorPath)?fs.statSync(anchorPath).size:0};await context.close();await browser.close();
+          const terrainPath=path.join(workspace,'h-earth-3d/terrain/h-earth.terrain-field.js');const terrainSha256=digest(terrainPath);
           const evidence={schema:'H_EARTH_OW01_ANCHOR_BROWSER_EVIDENCE_v1',evidenceId:'OW01_GRATITUDE_COASTAL_ENTRY_20260815_001',productHead:process.env.PRODUCT_HEAD,qualificationHead:process.env.GITHUB_SHA,baseHead:process.env.BASE_HEAD,anchorId:'H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001',anchorSha256:process.env.ANCHOR_SHA256,route:process.env.ROUTE,terrainFieldSha256:terrainSha256,base,candidate,anchor,automatedFindings:{baseRouteLoaded:base.status===200,candidateRouteLoaded:candidate.status===200,baseCanvasPresent:base.canvasCount>0,candidateCanvasPresent:candidate.canvasCount>0,baseNoPageErrors:base.pageErrors.length===0,candidateNoPageErrors:candidate.pageErrors.length===0,candidateInteractionExercised:candidate.interactionExercised,sameCanonicalRoute:base.title===candidate.title,visualStateChanged:base.screenshotSha256&&candidate.screenshotSha256&&base.screenshotSha256!==candidate.screenshotSha256,anchorContactSheetCaptured:anchor.status===200&&!!anchor.screenshotSha256},disposition:'PENDING_INDEPENDENT_VISUAL_REVIEW'};
-          fs.writeFileSync(`${stem}.json`,JSON.stringify(evidence,null,2)+'\n');
-          if(!fs.existsSync(`${stem}.base.png`)||!fs.existsSync(`${stem}.candidate.png`)||!fs.existsSync(`${stem}.anchor.png`)) process.exitCode=1;
+          fs.writeFileSync(`${stem}.json`,JSON.stringify(evidence,null,2)+'\n');if(!fs.existsSync(`${stem}.base.png`)||!fs.existsSync(`${stem}.candidate.png`)||!fs.existsSync(`${stem}.anchor.png`))process.exitCode=1;
           NODE
           cd /tmp/h-earth-ow01-browser && node qualify.mjs
       - name: Write fail-closed provisional anchor receipt

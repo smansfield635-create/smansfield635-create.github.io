@@ -1,0 +1,38 @@
+{
+  "schema": "AWARDS_VIDEO_VISUAL_REFRAME_ANALYSIS_v1",
+  "source": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4",
+  "sourceSha256": "928cf47551f61311860743dd7a04582db09388dd727670ebaa0eb0d5d9b557e9",
+  "detectedActiveCrop": {
+    "width": 1264,
+    "height": 720,
+    "x": 16,
+    "y": 0,
+    "observations": 538
+  },
+  "sceneTimesSeconds": [
+    8.067,
+    12.167
+  ],
+  "constructionLaw": {
+    "sequenceInvariant": true,
+    "audioInvariant": true,
+    "durationInvariant": true,
+    "newFootageRequired": false,
+    "presentationGeometryOnly": true,
+    "canvas": "1920x1080",
+    "strategy": "active visual foreground over full-bleed softened derivative of the same frame"
+  },
+  "candidate": {
+    "path": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi-visual-reframe-1080p.mp4",
+    "sha256": "5dc4191419816c73c540812c006b7ff4a3ec6e6e332cbd354f7f4094de68f713",
+    "status": "CONSTRUCTED_PENDING_EXPERIENCE_REVIEW"
+  },
+  "invariantsCheckedByConstruction": {
+    "sameInputTimeline": true,
+    "sameInputAudioStreamMappedWithoutReencoding": true,
+    "noSourceShotReplacement": true,
+    "noNewFootage": true,
+    "noCompassMutation": true,
+    "noHEarthRuntimeMutation": true
+  }
+}

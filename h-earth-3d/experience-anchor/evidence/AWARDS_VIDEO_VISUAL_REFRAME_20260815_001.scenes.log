@@ -1,0 +1,38 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf60.16.100
+  Duration: 00:00:18.00, start: 0.000000, bitrate: 565 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt470bg/bt470bg/smpte170m, progressive), 1280x720, 361 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc60.31.102 libx264
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 193 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+      vendor_id       : [0][0][0][0]
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> wrapped_avframe (native))
+Press [q] to stop, [?] for help
+[Parsed_showinfo_1 @ 0x55a1c5ccc180] config in time_base: 1/15360, frame_rate: 30/1
+[Parsed_showinfo_1 @ 0x55a1c5ccc180] config out time_base: 0/0, frame_rate: 0/0
+[Parsed_showinfo_1 @ 0x55a1c5ccc180] n:   0 pts: 123904 pts_time:8.06667 duration:    512 duration_time:0.0333333 fmt:yuv420p cl:left sar:0/1 s:1280x720 i:P iskey:0 type:I checksum:6490638F plane_checksum:[58A6DA63 DB25A3AA B9BCE564] mean:[120 120 131] stdev:[33.1 12.3 9.0]
+[Parsed_showinfo_1 @ 0x55a1c5ccc180] color_range:tv color_space:bt470bg color_primaries:bt470bg color_trc:smpte170m
+Output #0, null, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf60.16.100
+  Stream #0:0(und): Video: wrapped_avframe, yuv420p(tv, bt470bg/bt470bg/smpte170m, progressive), 1280x720, q=2-31, 200 kb/s, 30 fps, 30 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc60.31.102 wrapped_avframe
+frame=    0 fps=0.0 q=-0.0 size=       0kB time=00:00:08.06 bitrate=   0.0kbits/s speed=40.6x    [Parsed_showinfo_1 @ 0x55a1c5ccc180] n:   1 pts: 186880 pts_time:12.1667 duration:    512 duration_time:0.0333333 fmt:yuv420p cl:left sar:0/1 s:1280x720 i:P iskey:1 type:I checksum:DEAB3BDA plane_checksum:[F62579BE 3C8FEF24 BB26D2DA] mean:[151 132 122] stdev:[32.5 9.9 7.3]
+[Parsed_showinfo_1 @ 0x55a1c5ccc180] color_range:tv color_space:bt470bg color_primaries:bt470bg color_trc:smpte170m
+[out#0/null @ 0x55a1c5b95340] video:1kB audio:0kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: unknown
+frame=    2 fps=0.0 q=-0.0 Lsize=N/A time=00:00:12.16 bitrate=N/A speed=31.2x    

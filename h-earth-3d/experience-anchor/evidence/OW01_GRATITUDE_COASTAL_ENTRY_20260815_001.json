@@ -1,13 +1,13 @@
 {
   "schema": "H_EARTH_OW01_ANCHOR_BROWSER_EVIDENCE_v1",
   "evidenceId": "OW01_GRATITUDE_COASTAL_ENTRY_20260815_001",
-  "productHead": "a29b2a9b48bdbd9225d207b0de1c7fa5b751e365",
-  "qualificationHead": "db5aff737a829ea4687194f653948be8c9a12c15",
+  "productHead": "fd03d3abca2db02fe440b1bf4d50b89ffe10da6c",
+  "qualificationHead": "873ddc6bf3789b6160df9c5e59017c2bcaf23763",
   "baseHead": "aefb54971ae0f91a9abf9e8fc8e588f82f3a5744",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "route": "/showroom/globe/h-earth/",
-  "terrainFieldSha256": "04eac2578c4df80b19e1e20e2d786725c68377b478c8ecee8f9094d61b34c35b",
+  "terrainFieldSha256": "449b13db95d10a7c3aa478df5d6d95f1ec3c55ac325cb387b2293d4c2878fe85",
   "base": {
     "label": "base",
     "status": 200,
@@ -386,8 +386,8 @@
       "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_REJECTED",
       "contractId": "H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1",
       "issues": [
-        "RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_38",
-        "RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_46",
+        "RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_17",
+        "RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_25",
         "R2_WEST_ADMISSION_FAILED",
         "R2_PACKET_002_TRANSFER_FAILED"
       ],
@@ -401,19 +401,20 @@
       "ok": true,
       "eligible": true,
       "status": "RUN_8D_VEGETATION_RESOLUTION_COMPLETE",
-      "instanceCount": 38,
+      "instanceCount": 17,
       "archetypeCounts": {
-        "COASTAL_GRASS_TUFT": 38,
+        "COASTAL_GRASS_TUFT": 17,
         "LOWLAND_SHRUB": 0,
         "HIGHLAND_CONIFER_SAPLING": 0
       },
-      "populationInstanceCount": 38,
+      "populationInstanceCount": 17,
       "speciesCounts": {
-        "COASTAL_FORB_CLUSTER_v1": 7,
-        "COASTAL_GRASS_CLUSTER_v1": 8,
-        "LOWLAND_FORB_CLUSTER_v1": 7,
-        "LOWLAND_MEADOW_GRASS_CLUSTER_v1": 9,
-        "RIPARIAN_SEDGE_CLUSTER_v1": 6,
+        "COASTAL_FORB_CLUSTER_v1": 1,
+        "COASTAL_GRASS_CLUSTER_v1": 3,
+        "LOWLAND_FORB_CLUSTER_v1": 2,
+        "LOWLAND_MEADOW_GRASS_CLUSTER_v1": 3,
+        "RIPARIAN_SEDGE_CLUSTER_v1": 4,
+        "SHALLOW_SEAGRASS_CLUSTER_v1": 3,
         "UPLAND_GRASS_CLUSTER_v1": 1
       },
       "issues": [],
@@ -425,7 +426,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -161.218,
-            "y": 2.1834419679641726,
+            "y": 1.8474731159210205,
             "z": -201.156
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -438,7 +439,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -161.559,
-            "y": 2.218866081237793,
+            "y": 1.8745571088790893,
             "z": -201.622
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -451,7 +452,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -163.622,
-            "y": 2.3998965334892275,
+            "y": 2.008462817668915,
             "z": -203.685
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -464,23 +465,23 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -113.186,
-            "y": -0.12089219570159912,
+            "y": 0.05377641439437866,
             "z": -201.123
           },
           "biomeClass": "COASTAL_GRASSLAND",
           "surfaceClass": "LOWLAND_SOIL"
         },
         {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_FORB_CLUSTER_v1:35ee0460",
-          "speciesId": "COASTAL_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_FORB",
+          "sourcePopulationInstanceId": "H_EARTH_POPULATION:RIPARIAN_SEDGE_CLUSTER_v1:4aeaac3c",
+          "speciesId": "RIPARIAN_SEDGE_CLUSTER_v1",
+          "sourceInstanceClass": "LOWLAND_SEDGE",
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
-            "x": -64.148,
-            "y": -0.08760067701339722,
-            "z": -200.085
+            "x": -60.18,
+            "y": -0.3393218207359314,
+            "z": -196.118
           },
-          "biomeClass": "COASTAL_GRASSLAND",
+          "biomeClass": "LOWLAND_MEADOW",
           "surfaceClass": "LOWLAND_SOIL"
         },
         {
@@ -490,7 +491,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -40.821,
-            "y": -0.8488186883926392,
+            "y": -1.0809411692619324,
             "z": -200.883
           },
           "biomeClass": "COASTAL_GRASSLAND",
@@ -503,7 +504,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": 5.125,
-            "y": -4.993252902030945,
+            "y": -5.8404377388954165,
             "z": -202.812
           },
           "biomeClass": "COASTAL_SHRUBLAND",
@@ -516,7 +517,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -110.003,
-            "y": -2.9009672689437864,
+            "y": -2.8628242301940916,
             "z": -173.941
           },
           "biomeClass": "COASTAL_GRASSLAND",
@@ -529,7 +530,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": 150.074,
-            "y": 4.862218053340912,
+            "y": 4.676833720207214,
             "z": -177.988
           },
           "biomeClass": "COASTAL_GRASSLAND",
@@ -542,36 +543,10 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -160.786,
-            "y": 0.7991354179382324,
+            "y": 0.2866331052780151,
             "z": -152.724
           },
           "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_GRASS_CLUSTER_v1:7e874d54",
-          "speciesId": "COASTAL_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -133.342,
-            "y": -1.7328940320014954,
-            "z": -149.279
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_FORB_CLUSTER_v1:f2033f7a",
-          "speciesId": "COASTAL_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -139.594,
-            "y": -1.0354513812065125,
-            "z": -155.657
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
           "surfaceClass": "LOWLAND_SOIL"
         },
         {
@@ -581,7 +556,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -113.266,
-            "y": -3.6916954207420347,
+            "y": -3.8082044410705564,
             "z": -153.204
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -594,7 +569,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -87.986,
-            "y": -4.568569688796997,
+            "y": -4.6408957529068,
             "z": -152.048
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -607,7 +582,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -36.616,
-            "y": -1.854712634086609,
+            "y": -2.2165498423576353,
             "z": -148.678
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -620,297 +595,50 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": -15.092,
-            "y": -2.8334973740577696,
+            "y": -3.631617932319641,
             "z": -151.154
           },
           "biomeClass": "LOWLAND_MEADOW",
           "surfaceClass": "LOWLAND_SOIL"
         },
         {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_GRASS_CLUSTER_v1:ea4421b8",
-          "speciesId": "COASTAL_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_GROUNDCOVER",
+          "sourcePopulationInstanceId": "H_EARTH_POPULATION:SHALLOW_SEAGRASS_CLUSTER_v1:70edf683",
+          "speciesId": "SHALLOW_SEAGRASS_CLUSTER_v1",
+          "sourceInstanceClass": "AQUATIC_GROUNDCOVER",
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
-            "x": 128.818,
-            "y": 7.188783438205719,
-            "z": -151.119
+            "x": 102.939,
+            "y": -0.5956864047050476,
+            "z": -105.123
           },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
+          "biomeClass": "SHALLOW_COASTAL_WATER",
+          "surfaceClass": "NEARSHORE_WATER"
         },
         {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_FORB_CLUSTER_v1:4c2f19de",
-          "speciesId": "COASTAL_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_FORB",
+          "sourcePopulationInstanceId": "H_EARTH_POPULATION:SHALLOW_SEAGRASS_CLUSTER_v1:36e0f42b",
+          "speciesId": "SHALLOW_SEAGRASS_CLUSTER_v1",
+          "sourceInstanceClass": "AQUATIC_GROUNDCOVER",
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
-            "x": 125.368,
-            "y": 8.563443095684052,
-            "z": -154.694
+            "x": 82.137,
+            "y": -0.7834412741661072,
+            "z": -77.925
           },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
+          "biomeClass": "SHALLOW_COASTAL_WATER",
+          "surfaceClass": "NEARSHORE_WATER"
         },
         {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_MEADOW_GRASS_CLUSTER_v1:11cde85d",
-          "speciesId": "LOWLAND_MEADOW_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_GROUNDCOVER",
+          "sourcePopulationInstanceId": "H_EARTH_POPULATION:SHALLOW_SEAGRASS_CLUSTER_v1:986fe90a",
+          "speciesId": "SHALLOW_SEAGRASS_CLUSTER_v1",
+          "sourceInstanceClass": "AQUATIC_GROUNDCOVER",
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
-            "x": 155.319,
-            "y": 2.745145530700684,
-            "z": -148.618
+            "x": -162.412,
+            "y": -0.9832610177993775,
+            "z": -58.475
           },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_FORB_CLUSTER_v1:4ba38397",
-          "speciesId": "LOWLAND_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": 153.668,
-            "y": 2.9393443179130556,
-            "z": -150.394
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:RIPARIAN_SEDGE_CLUSTER_v1:8d349f2b",
-          "speciesId": "RIPARIAN_SEDGE_CLUSTER_v1",
-          "sourceInstanceClass": "LOWLAND_SEDGE",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": 152.439,
-            "y": 3.096649916172028,
-            "z": -151.623
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_MEADOW_GRASS_CLUSTER_v1:80b31b58",
-          "speciesId": "LOWLAND_MEADOW_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -160.232,
-            "y": 0.6377662134170532,
-            "z": -128.17
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_FORB_CLUSTER_v1:687f9deb",
-          "speciesId": "LOWLAND_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -111.283,
-            "y": -2.607551007270813,
-            "z": -127.345
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:RIPARIAN_SEDGE_CLUSTER_v1:4e18c82f",
-          "speciesId": "RIPARIAN_SEDGE_CLUSTER_v1",
-          "sourceInstanceClass": "LOWLAND_SEDGE",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -109.318,
-            "y": -2.5155950474739073,
-            "z": -125.381
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_MEADOW_GRASS_CLUSTER_v1:10027485",
-          "speciesId": "LOWLAND_MEADOW_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -87.947,
-            "y": -3.1741144943237303,
-            "z": -127.884
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_FORB_CLUSTER_v1:06bee8cf",
-          "speciesId": "LOWLAND_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -88.263,
-            "y": -3.2235098767280577,
-            "z": -128.326
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_MEADOW_GRASS_CLUSTER_v1:2da6bac7",
-          "speciesId": "LOWLAND_MEADOW_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -62.183,
-            "y": -1.8800205874443054,
-            "z": -126.246
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_FORB_CLUSTER_v1:afebf6b1",
-          "speciesId": "LOWLAND_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -66.061,
-            "y": -2.4115714120864866,
-            "z": -129.998
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_MEADOW_GRASS_CLUSTER_v1:a7263581",
-          "speciesId": "LOWLAND_MEADOW_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -39.165,
-            "y": -0.8899278926849366,
-            "z": -127.102
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_FORB_CLUSTER_v1:1bfe29c8",
-          "speciesId": "LOWLAND_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -14.72,
-            "y": -1.0619481492042542,
-            "z": -126.657
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_GRASS_CLUSTER_v1:12ee559f",
-          "speciesId": "COASTAL_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -112.598,
-            "y": 0.8014288258552551,
-            "z": -104.66
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_FORB_CLUSTER_v1:f8ef8bc5",
-          "speciesId": "COASTAL_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -84.888,
-            "y": 1.5813165020942688,
-            "z": -100.826
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_FORB_CLUSTER_v1:93b1c273",
-          "speciesId": "COASTAL_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -63.308,
-            "y": 1.236700267791748,
-            "z": -103.37
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_FORB_CLUSTER_v1:fec73b46",
-          "speciesId": "COASTAL_FORB_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_FORB",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": -13.284,
-            "y": 1.3780029726028442,
-            "z": -101.346
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_MEADOW_GRASS_CLUSTER_v1:9be2940f",
-          "speciesId": "LOWLAND_MEADOW_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "MEADOW_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": 28.413,
-            "y": 1.9443528366088867,
-            "z": -107.649
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:RIPARIAN_SEDGE_CLUSTER_v1:4a92481d",
-          "speciesId": "RIPARIAN_SEDGE_CLUSTER_v1",
-          "sourceInstanceClass": "LOWLAND_SEDGE",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": 31.004,
-            "y": 1.995766670703888,
-            "z": -104.934
-          },
-          "biomeClass": "LOWLAND_MEADOW",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_GRASS_CLUSTER_v1:231d20ad",
-          "speciesId": "COASTAL_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": 53.77,
-            "y": 3.304618449211121,
-            "z": -106.167
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
-        },
-        {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_GRASS_CLUSTER_v1:7808d526",
-          "speciesId": "COASTAL_GRASS_CLUSTER_v1",
-          "sourceInstanceClass": "COASTAL_GROUNDCOVER",
-          "archetypeId": "COASTAL_GRASS_TUFT",
-          "worldAnchor": {
-            "x": 77.15,
-            "y": 4.924509377479553,
-            "z": -106.912
-          },
-          "biomeClass": "COASTAL_GRASSLAND",
-          "surfaceClass": "LOWLAND_SOIL"
+          "biomeClass": "SHALLOW_COASTAL_WATER",
+          "surfaceClass": "OPEN_WATER"
         }
       ]
     },

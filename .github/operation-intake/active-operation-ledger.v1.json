@@ -1704,6 +1704,18 @@
       "scopeHash": "cd48c853659becba53b2c3aa0013fbdcdac958862cc11d23d29296f91786dd27",
       "state": "ADMITTED_LOCKED"
     },
+    "cd5f1e827b9270caf93d4610428eed595f1d3fb56b7191c9b4016ef245398544": {
+      "governingHead": "2c4b05698ea2d9cc847cf011c2ffeb454ba1e3ef",
+      "lockGeneration": 1489,
+      "lockScope": "H_EARTH:OW02:NO_PRODUCT_DRIFT_REBIND_PREFLIGHT:V1",
+      "operationId": "H_EARTH_OW02_NO_PRODUCT_DRIFT_REBIND_AND_PREFLIGHT_20260815_001",
+      "procedureLocatorDigest": "83a0bd56c1cbf881ff9c980e7272aba4f7ade9fa1f655b597221ef9cc2b27c9e",
+      "released": false,
+      "requestDigest": "0525370d4f2d451c6b298ad4441e0b3cc720be6dd316e16fc54271bfc383104b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cd5f1e827b9270caf93d4610428eed595f1d3fb56b7191c9b4016ef245398544",
+      "state": "ADMITTED_LOCKED"
+    },
     "cdff2f07b40bfaf3f197d945cc27879d6deaec109d02d303c74987ebcc355a10": {
       "governingHead": "651f726ebc07ef16a33a813fc44d88f9cd42c662",
       "lockGeneration": 189,
@@ -2188,7 +2200,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1488,
+  "lockGeneration": 1489,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

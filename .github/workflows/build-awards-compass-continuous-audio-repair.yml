@@ -1,0 +1,85 @@
+name: Build Awards Compass continuous audio repair
+on:
+  push:
+    branches:
+      - agent/awards-compass-continuous-audio-repair-20260815
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and repair Compass soundtrack continuity
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4"
+          TMP="${SRC%.mp4}.tmp.mp4"
+          BED="/tmp/compass-bed.wav"
+          FULL="/tmp/compass-full.wav"
+
+          test -f "$SRC"
+          ffmpeg -version >/dev/null
+          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$SRC" > /tmp/duration.txt
+          python3 - <<'PY'
+          d=float(open('/tmp/duration.txt').read().strip())
+          assert 35.8 < d < 36.2, d
+          PY
+
+          ffmpeg -hide_banner -i "$SRC" -af silencedetect=noise=-45dB:d=0.4 -f null - 2> /tmp/silence-before.log || true
+          grep -q 'silence_start: 12.' /tmp/silence-before.log
+          grep -q 'silence_end: 29.' /tmp/silence-before.log
+
+          # Recover only the existing music from the audible sections of the approved master.
+          # The later visual insert created a 16.5s silent hole between those sections.
+          # Rejoin the two surviving pieces, smooth that historical edit point, then use
+          # two copies with a crossfade to create one uninterrupted 36s bed of the same music.
+          ffmpeg -y -i "$SRC" -filter_complex \
+            "[0:a]atrim=start=0:end=12.685708,asetpts=PTS-STARTPTS[a0];\
+             [0:a]atrim=start=29.212958:end=36,asetpts=PTS-STARTPTS[a1];\
+             [a0][a1]acrossfade=d=0.20:c1=tri:c2=tri[bed]" \
+            -map "[bed]" -c:a pcm_s16le "$BED"
+
+          ffmpeg -y -i "$BED" -filter_complex \
+            "[0:a]asplit=2[x][y];\
+             [x][y]acrossfade=d=0.65:c1=tri:c2=tri,atrim=0:36,asetpts=PTS-STARTPTS,\
+             afade=t=in:st=0:d=0.18,afade=t=out:st=35.65:d=0.35[full]" \
+            -map "[full]" -c:a pcm_s16le "$FULL"
+
+          # Preserve the approved H.264 picture stream byte-for-byte at codec level.
+          ffmpeg -y -i "$SRC" -i "$FULL" -map 0:v:0 -map 1:a:0 \
+            -c:v copy -c:a aac -b:a 160k -ar 48000 -ac 2 -t 36 -movflags +faststart "$TMP"
+
+          ffmpeg -hide_banner -i "$TMP" -af silencedetect=noise=-45dB:d=0.4 -f null - 2> /tmp/silence-after.log || true
+          if grep -q 'silence_duration:' /tmp/silence-after.log; then
+            echo 'Unexpected material silence remains after repair:' >&2
+            cat /tmp/silence-after.log >&2
+            exit 1
+          fi
+
+          ffmpeg -v error -i "$SRC" -map 0:v:0 -c copy -f hash -hash sha256 /tmp/video-before.hash
+          ffmpeg -v error -i "$TMP" -map 0:v:0 -c copy -f hash -hash sha256 /tmp/video-after.hash
+          diff -u /tmp/video-before.hash /tmp/video-after.hash
+
+          mv "$TMP" "$SRC"
+          sha256sum "$SRC" | tee /tmp/repaired-sha256.txt
+      - name: Verify bounded media-only mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --short
+          git diff --name-only HEAD -- | grep -v '^$' > /tmp/changed.txt || true
+          test "$(cat /tmp/changed.txt)" = "showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4"
+      - name: Commit repaired master and retire builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          rm .github/workflows/build-awards-compass-continuous-audio-repair.yml
+          git add showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4 .github/workflows/build-awards-compass-continuous-audio-repair.yml
+          git commit -m "Repair Compass reel continuous embedded audio"
+          git push origin HEAD

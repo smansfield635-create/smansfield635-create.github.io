@@ -1,0 +1,30 @@
+name: IMI Agricultural Factorial Temporal Successor v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/extensions/imi-factorial-temporal-diagnostic-extension-v1/executions/agricultural-factorial-temporal-retrospective-successor-v1/**"
+      - ".github/workflows/imi-agricultural-factorial-temporal-successor-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-execution-pointer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify frozen and execution pointers
+        run: >-
+          python
+          research/route-operator-platform-v1/extensions/imi-factorial-temporal-diagnostic-extension-v1/executions/agricultural-factorial-temporal-retrospective-successor-v1/verify_execution_pointer_v1.py

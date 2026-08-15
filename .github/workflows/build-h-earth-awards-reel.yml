@@ -19,8 +19,11 @@ jobs:
           ref: agent/awards-h-earth-self-contained-media-repair
           fetch-depth: 0
 
-      - name: Install download helper
-        run: python -m pip install --quiet gdown
+      - name: Install media and download tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          python -m pip install --quiet gdown
 
       - name: Download source recording and public-domain Vivaldi score
         run: |

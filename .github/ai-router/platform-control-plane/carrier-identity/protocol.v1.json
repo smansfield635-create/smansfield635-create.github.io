@@ -1,0 +1,74 @@
+{
+  "schema": "L2_HC03_EXACT_CANDIDATE_BROWSER_VERIFIER_ROUTING_PROTOCOL_v1",
+  "protocolId": "EXACT_HEAD_CARRIER_IDENTITY_AND_PRECHECK_COMPATIBILITY_STANDARD_v1",
+  "status": "CANDIDATE",
+  "operationId": "L2_HC03_EXACT_CANDIDATE_BROWSER_VERIFIER_ROUTING_v1",
+  "admission": {
+    "lockGeneration": 873,
+    "exactGoverningHead": "dedfdcf8c53207234791193144dc47f3d46caeb0",
+    "exactHC03CandidateHead": "66351b7d39705e726d5d6a39b396e6711fb2d92a",
+    "hEarthAdmissionBase": "01da797ff4d46f0b1514dc06a5179818b14b3dfa"
+  },
+  "typedIdentities": {
+    "candidateHead": "identity of the exact product candidate under observation",
+    "executionHead": "identity of the L2 verifier implementation being executed",
+    "evidenceSourceHead": "identity of source material observed when deriving technical capability",
+    "wrapperDeclaredHead": "identity declared by an execution wrapper, never product authority by itself",
+    "precheckContractIdentity": "identity of the source precheck contract applied before browser execution",
+    "verifierCapabilityIdentity": "identity of reusable technical browser capability",
+    "authorityLineage": "authority identifiers relied upon to authorize the requested verification",
+    "receiptIdentity": "fresh evidence identity emitted for the exact candidate"
+  },
+  "capabilityBinding": {
+    "sourceWorkflow": ".github/workflows/h-earth-run8e-public-route-validation.yml",
+    "sourceWorkflowId": 320949283,
+    "reusableTechnicalCapability": [
+      "PLAYWRIGHT_CHROMIUM",
+      "DESKTOP_LANDSCAPE_1280x800",
+      "SAMSUNG_PORTRAIT_412x915",
+      "SAMSUNG_LANDSCAPE_915x412",
+      "LOCAL_STATIC_ROUTE_SERVER",
+      "CONSOLE_AND_PAGE_ERROR_CAPTURE",
+      "SCREENSHOT_EVIDENCE"
+    ],
+    "authorityInheritance": false
+  },
+  "forbiddenAuthorityLineage": [
+    "H_EARTH_B10",
+    "RUN7I",
+    "36933be2d4d1a4de7229766ff5b9b89f99ee8e3a"
+  ],
+  "routingLaw": [
+    "EXACT_CANDIDATE_IDENTITY_IS_REQUIRED",
+    "TECHNICAL_BROWSER_CAPABILITY_MAY_BE_REUSED",
+    "SUPERSEDED_AUTHORITY_MAY_NOT_BE_REUSED",
+    "STALE_WRAPPER_IS_NOT_A_CANDIDATE_DEFECT",
+    "OBSOLETE_PRECHECK_IS_NOT_A_CANDIDATE_DEFECT",
+    "AMBIGUITY_FAILS_CLOSED",
+    "FRESH_RECEIPTS_BIND_TO_THE_EXACT_CANDIDATE",
+    "OBSERVATIONAL_EVIDENCE_CREATES_NO_PRODUCT_MERGE_OR_LAWS_AUTHORITY"
+  ],
+  "errorPrecedence": [
+    "CANDIDATE_HEAD_MISMATCH",
+    "AUTHORITY_LINEAGE_SUPERSEDED",
+    "CARRIER_STALE_IDENTITY",
+    "PRECHECK_SCHEMA_OBSOLETE",
+    "BROWSER_CAPABILITY_UNAVAILABLE",
+    "BROWSER_EXECUTION_FAILURE",
+    "AMBIGUOUS_STOP"
+  ],
+  "terminalRouteStates": [
+    "ROUTE_ADMISSIBLE",
+    "ROUTE_ADMISSIBLE_WITH_DIAGNOSTIC",
+    "STOP"
+  ],
+  "authorityBoundaries": {
+    "repositoryMutationAuthority": false,
+    "hEarthMutationAuthority": false,
+    "lawsMutationAuthority": false,
+    "semanticAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false,
+    "browserObservationOnly": true
+  }
+}

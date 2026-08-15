@@ -11,7 +11,7 @@ permissions:
 
 env:
   PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
-  FROZEN_GEN281_HEAD: 8ccc4b5d8b0ae4f2217a7cd85bf7058f3f6ac4b8
+  FROZEN_GEN281_HEAD: 690002676fac641db478df6b877acc435d1c4097
 
 jobs:
   qualify-frozen-gen281:

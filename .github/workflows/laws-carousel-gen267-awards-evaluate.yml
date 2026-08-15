@@ -36,7 +36,8 @@ jobs:
       - name: Build bound evidence and execute active evaluator
         shell: bash
         run: |
-          cat > "$RUNNER_TEMP/evaluate.mjs" <<'JS'
+          cd "$GITHUB_WORKSPACE"
+          cat > gen267-awards-evaluate.mjs <<'JS'
           import fs from 'node:fs'; import {withEvidenceDigest,evaluate} from './private-control-plane/.github/ai-router/reference-class-awards-admission/evaluator/evaluator.v1.mjs';
           const rendered=[
           ['GEN267_PHONE_INITIAL','INITIAL_RENDERED_STATE','PHONE','bce04ae4a03d8e88763b353532ca3bcbfebfc8ba639b7fd2c48ac6c36d5f4e44'],['GEN267_PHONE_SELECTED','MEANINGFUL_INTERACTION_STATE','PHONE','6afe419ae664d8408996bbe33398094abd6ccab83be03b5b69853f09ec9b7cc6'],['GEN267_PHONE_INSPECTION','RESULT_OR_NAVIGATION_STATE','PHONE','46e280536d6fd9b390d88b5b5eae5ff0cfaa6597efb16c1e016bc26d63ec47db'],
@@ -47,7 +48,8 @@ jobs:
           const adjudication={schema:'REFERENCE_CLASS_AWARDS_ADMISSION_PERCEPTUAL_ADJUDICATION_v1',candidateCommitSha:process.env.CANDIDATE,evidenceBundleDigest:bundle.evidenceDigest,referenceId:'R_C_LAWS_COMPASS_SIX_AUTHORITY',referenceCommitSha:'eb9a1730f201ba8a8c3822b65ecb984592de38bd',adjudicator:{kind:'INDEPENDENT_MULTIMODAL_EVALUATOR',id:'OPENAI_GPT_5_6_SOL_GEN283_PERCEPTUAL_20260815',independentOfCandidateConstruction:true},styleSimilarityUsedAsRequirement:false,featureInventoryUsedAsPassBasis:false,dimensionVerdicts:dims,wholeArtifactDisposition:{sameProfessionalConversation:false,reason:'PHONE_ORBIT_TEXT_LAYERS_COLLIDE_AND_BECOME_UNREADABLE_IN_INITIAL_AND_ROTATED_STATES'},catastrophicFailures:['PRIMARY_RESPONSIVE_INTEGRITY_COLLAPSE','VISUAL_HIERARCHY_OR_LEGIBILITY_COLLAPSE']};
           const receipt=evaluate(bundle,adjudication); fs.writeFileSync('/tmp/gen267-awards-evidence-bundle.json',JSON.stringify(bundle,null,2)+'\n'); fs.writeFileSync('/tmp/gen267-awards-perceptual-adjudication.json',JSON.stringify(adjudication,null,2)+'\n'); fs.writeFileSync('/tmp/gen267-awards-evaluation-receipt.json',JSON.stringify(receipt,null,2)+'\n'); console.log(JSON.stringify(receipt)); if(receipt.result!=='BELOW_AWARDS_CONVERSATION') process.exitCode=1;
           JS
-          node "$RUNNER_TEMP/evaluate.mjs"
+          node gen267-awards-evaluate.mjs
+          rm gen267-awards-evaluate.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: gen267-awards-evaluation-${{ github.run_id }}-${{ github.run_attempt }}

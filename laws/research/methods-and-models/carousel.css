@@ -83,7 +83,7 @@
 }
 
 @layer inspection {
-  .mm-carousel[data-inspecting="true"] .mm-viewport { cursor: default; touch-action: pan-y; }
+  .mm-carousel[data-inspecting="true"] .mm-viewport { z-index: 40; cursor: default; touch-action: pan-y; }
   .mm-carousel[data-inspecting="true"] .mm-family-tabs { pointer-events: none; opacity: .42; }
   .mm-carousel[data-inspecting="true"] .mm-card:not([data-active="true"]) .mm-card__surface { opacity: .06; }
   .mm-card__inspection { display: none; flex: 1; min-height: 0; }

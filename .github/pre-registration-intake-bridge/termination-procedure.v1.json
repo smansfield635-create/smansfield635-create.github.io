@@ -1,0 +1,15 @@
+{
+  "directLedgerEditingProhibited": true,
+  "fixedCommand": "node tools/operation-intake/repository-operation-lock-manager.v1.mjs --action close --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --operation-id <OPERATION_ID> --lock-scope <LOCK_SCOPE> --lock-generation <GENERATION> --terminal-disposition <PASS_CLOSED_OR_FAIL_CLOSED> --output <OUTPUT>",
+  "lockManager": {
+    "blob": "6fc0199c9dc943b8cdf3efe7c789f0e1888774b8",
+    "path": "tools/operation-intake/repository-operation-lock-manager.v1.mjs"
+  },
+  "procedureId": "PRE_REGISTRATION_INTAKE_BRIDGE_LOCK_TERMINATION_v1",
+  "requiresExactReturnedLockIdentity": true,
+  "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_TERMINATION_PROCEDURE_v1",
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED"
+  ]
+}

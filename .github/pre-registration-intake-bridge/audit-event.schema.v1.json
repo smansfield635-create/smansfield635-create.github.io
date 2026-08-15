@@ -1,0 +1,27 @@
+{
+  "$id": "PRE_REGISTRATION_INTAKE_BRIDGE_AUDIT_EVENT_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "details": {
+      "type": "object"
+    },
+    "event": {
+      "type": "string"
+    },
+    "sequence": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "timestamp": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "sequence",
+    "event",
+    "timestamp",
+    "details"
+  ],
+  "type": "object"
+}

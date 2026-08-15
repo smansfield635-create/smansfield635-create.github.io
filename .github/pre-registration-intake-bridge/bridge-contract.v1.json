@@ -1,0 +1,117 @@
+{
+  "activationStatus": "FROZEN_CONTRACT_NOT_ACTIVE",
+  "auditRequirements": [
+    "REQUEST_DIGEST",
+    "PROCEDURE_DIGEST",
+    "GOVERNING_HEAD",
+    "GATE_BLOB",
+    "LOCK_MANAGER_BLOB",
+    "CANONICAL_RECEIPT_DIGEST",
+    "CHILD_EXIT_CODE",
+    "LOCK_IDENTITY_WHEN_PRESENT"
+  ],
+  "authorityDigest": "1cb2e1e32a1d62e4e4c12a86f944c53306ad71a693a5f642ab477fbb0a5a7793",
+  "bridgeId": "CANONICAL_REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_v1",
+  "canonicalGate": {
+    "gitBlobSha": "f0b22e6b9574507632f1ad07647710971a4d63de",
+    "path": "tools/operation-intake/repository-operation-intake-gate.v1.mjs"
+  },
+  "canonicalLockManager": {
+    "gitBlobSha": "6fc0199c9dc943b8cdf3efe7c789f0e1888774b8",
+    "path": "tools/operation-intake/repository-operation-lock-manager.v1.mjs"
+  },
+  "checkpointId": "CP3_BRIDGE_CONTRACT_FREEZE",
+  "compareAndSwapBehavior": "EXACT_CANONICAL_GATE_TO_CANONICAL_LOCK_MANAGER_REMOTE_COMPARE_AND_SWAP_PATH",
+  "constructionPathSet": [
+    ".github/pre-registration-intake-bridge/AGENTS.md",
+    ".github/pre-registration-intake-bridge/failure-baseline.v1.json",
+    ".github/pre-registration-intake-bridge/defect-disposition.v1.json",
+    ".github/pre-registration-intake-bridge/authority-basis.v1.json",
+    ".github/pre-registration-intake-bridge/bridge-contract.v1.json",
+    ".github/pre-registration-intake-bridge/locator.v1.json",
+    ".github/pre-registration-intake-bridge/input.schema.v1.json",
+    ".github/pre-registration-intake-bridge/output.schema.v1.json",
+    ".github/pre-registration-intake-bridge/audit-event.schema.v1.json",
+    ".github/pre-registration-intake-bridge/fixtures.v1.json",
+    ".github/pre-registration-intake-bridge/termination-procedure.v1.json",
+    ".github/pre-registration-intake-bridge/construction-manifest.v1.json",
+    ".github/pre-registration-intake-bridge/activation-record.template.v1.json",
+    ".github/pre-registration-intake-bridge/rollback-and-revocation.v1.json",
+    "tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs",
+    "tools/pre-registration-intake-bridge/conformance-runner.v1.mjs",
+    "tools/pre-registration-intake-bridge/remote-proof-runner.v1.mjs",
+    "tools/pre-registration-intake-bridge/independent-reproducer.v1.mjs",
+    "tools/pre-registration-intake-bridge/package-certifier.v1.mjs",
+    "tools/pre-registration-intake-bridge/authority-terminator.v1.mjs",
+    ".github/workflows/pre-registration-intake-bridge-certification.yml"
+  ],
+  "contractDigest": "817566cd31b95c1f467bbedda8817609a24a964359081eaf24cc9ffd092bb944",
+  "contractId": "REPOSITORY_OPERATION_INTAKE_PRE_REGISTRATION_EXECUTION_BRIDGE_CONTRACT_v1",
+  "explicitlyProhibitedPowers": [
+    "ARBITRARY_SHELL_EXECUTION",
+    "ARBITRARY_WORKFLOW_DISPATCH",
+    "BRANCH_CREATION",
+    "IMPLEMENTATION_FILE_MUTATION",
+    "PR_MUTATION",
+    "MERGE",
+    "DIRECT_LOCK_LEDGER_EDITING",
+    "RECEIPT_FABRICATION",
+    "ADMISSION_RESULT_REWRITING",
+    "REPOSITORY_SUBSTITUTION",
+    "LOCK_REF_SUBSTITUTION"
+  ],
+  "failureBehavior": "FAIL_CLOSED_WITH_AUDITABLE_NON_ADMISSION_RECEIPT_AND_NO_ADMISSION_REWRITING",
+  "function": "RUN_THE_EXISTING_CANONICAL_REPOSITORY_OPERATION_INTAKE_GATE_AND_RETURN_ITS_UNALTERED_COMMAND_EMITTED_RECEIPT",
+  "governingHeadRules": {
+    "inputMustBeExact40Hex": true,
+    "inputMustEqualCurrentDefaultBranchHeadAtExecution": true,
+    "movingRefSubstitutionProhibited": true,
+    "requestAndProcedureMustMatchInput": true
+  },
+  "lockAcquisitionIdentity": [
+    "operationId",
+    "lockScope",
+    "scopeHash",
+    "lockGeneration",
+    "acquisitionCommitSha",
+    "committedLedgerBlobSha"
+  ],
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "procedureSchema": {
+    "gitBlobSha": "f2fd36b4f3f562cdb9bb99ed936160238aefd45e",
+    "path": ".github/operation-intake/construction-procedure.schema.v1.json",
+    "schemaId": "REPOSITORY_CONSTRUCTION_PROCEDURE_SCHEMA_v1"
+  },
+  "receiptPreservation": {
+    "exactBytesBase64Returned": true,
+    "parsedReceiptReturnedWithoutResultRewriting": true,
+    "sha256Returned": true
+  },
+  "receiptSchema": {
+    "gitBlobSha": "46d99ead199530003a0332c5cb5b7c541f1c0312",
+    "path": ".github/operation-intake/admission-receipt.schema.v1.json",
+    "schemaId": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_SCHEMA_v1"
+  },
+  "replayBehavior": "READ_ONLY_LEDGER_PRECHECK_REJECTS_MATCHING_ACTIVE_OR_TERMINAL_OPERATION_ID_AND_REQUEST_DIGEST;CANONICAL_COMPARE_AND_SWAP_REMAINS_CONTROLLING_FOR_CONCURRENCY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "requestSchema": {
+    "gitBlobSha": "e4f79b23cb02566702b2f5569369f1a20cafe5ad",
+    "path": ".github/operation-intake/request.schema.v1.json",
+    "schemaId": "REPOSITORY_OPERATION_REQUEST_SCHEMA_v1"
+  },
+  "result": "BRIDGE_CONTRACT_FROZEN_BEFORE_IMPLEMENTATION",
+  "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_CONTRACT_v1",
+  "timeoutMilliseconds": 120000,
+  "token": {
+    "minimumPermissions": [
+      "CONTENTS_READ",
+      "CONTENTS_WRITE_FOR_FIXED_LOCK_LEDGER_PATH_ON_FIXED_LOCK_REF"
+    ],
+    "source": "GITHUB_TOKEN_ENVIRONMENT_ONLY",
+    "tokenInputFieldsProhibited": true,
+    "workflowPermissions": {
+      "actions": "read",
+      "contents": "write"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+name: Laws Carousel Gen267 Wide Geometry Diagnostic
+on:
+  push:
+    branches: ['agent/laws-carousel-gen267-continuity-intake']
+    paths: ['.github/workflows/laws-carousel-gen267-wide-geometry-diagnostic.yml']
+permissions:
+  contents: read
+env:
+  CANDIDATE: 1e8904d6ee7b2c89f7eb148e4b8e7beef4916d92
+  ORIGIN: http://127.0.0.1:4173
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: '${{ env.CANDIDATE }}'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with: {chrome-version: stable}
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS "$ORIGIN/laws/research/methods-and-models/" >/dev/null && exit 0; sleep .25; done
+          exit 1
+      - name: Measure wide geometry
+        env: {CHROME_PATH: '${{ steps.chrome.outputs.chrome-path }}'}
+        run: |
+          cat > diag.mjs <<'JS'
+          import fs from 'node:fs'; import puppeteer from 'puppeteer-core'; const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']}); const out={}; for(const [name,w,h] of [['TABLET',1024,768],['DESKTOP',1440,1000]]){const p=await b.newPage();await p.setViewport({width:w,height:h});await p.goto(process.env.ORIGIN+'/laws/research/methods-and-models/',{waitUntil:'networkidle0'});await p.click('[data-mm-family-tabs] [data-family-index="1"]');await p.waitForFunction(()=>document.querySelector('[data-mm-carousel]')?.dataset.family==='pressure');await new Promise(r=>setTimeout(r,800));out[name]=await p.evaluate(()=>{const R=s=>{const e=document.querySelector(s),r=e?.getBoundingClientRect();return r?{y:r.y,h:r.height,b:r.bottom}:null};return{scrollY,carousel:R('[data-mm-carousel]'),header:R('.mm-carousel__header'),tabs:R('[data-mm-family-tabs]'),viewport:R('[data-mm-viewport]'),card:R('.mm-card[data-active="true"]'),action:R('.mm-card[data-active="true"] [data-open-inspection]')}});await p.close()} await b.close();fs.writeFileSync('wide-geometry.json',JSON.stringify(out,null,2));
+          JS
+          CANDIDATE="$CANDIDATE" ORIGIN="$ORIGIN" node diag.mjs
+      - uses: actions/upload-artifact@v4
+        with: {name: 'gen267-wide-geometry-${{ github.run_id }}', path: wide-geometry.json}

@@ -1,0 +1,48 @@
+{
+  "schema": "H_EARTH_AWARDS_VIDEO_TEXT_OVERLAY_EVIDENCE_v1",
+  "operationId": "AWARDS_VIDEO_TEXT_OVERLAYS_20260815_001",
+  "route": "showroom/globe/h-earth/awards/",
+  "change": {
+    "type": "PRESENTATION_ONLY_TIMED_TEXT_OVERLAYS",
+    "captionCount": 7,
+    "synchronization": "VIDEO_CURRENT_TIME",
+    "mediaFrameBound": true,
+    "presentationStyle": "RESTRAINED_CINEMATIC_TEXT_NO_BOXES"
+  },
+  "compass": {
+    "pictureMutated": false,
+    "audioMutated": false,
+    "cropGeometryMutated": false,
+    "playControlMutated": false,
+    "cues": [
+      {"start": 0.8, "end": 4.6, "text": "Navigation requires orientation.", "position": "upper"},
+      {"start": 10.7, "end": 14.2, "text": "Without orientation, there is no navigation.", "position": "middle"},
+      {"start": 31.3, "end": 36.05, "text": "Nothing navigates better than a compass.", "position": "lower"}
+    ]
+  },
+  "world": {
+    "pictureMutated": false,
+    "audioMutated": false,
+    "cropGeometryMutated": false,
+    "playControlMutated": false,
+    "finalQuestionBoundToHorizonMoonEnding": true,
+    "cues": [
+      {"start": 0.8, "end": 4.1, "text": "What makes something real?", "position": "upper"},
+      {"start": 6.6, "end": 10.4, "text": "What wasn't before doesn't define what is possible.", "position": "middle"},
+      {"start": 17.8, "end": 21.8, "text": "The experience creates reality.", "position": "lower"},
+      {"start": 27.5, "end": 30.2, "text": "So where does reality begin?", "position": "horizon"}
+    ]
+  },
+  "continuityAssessment": {
+    "sameCanonicalWorld": true,
+    "worldRuntimeMutated": false,
+    "terrainMutated": false,
+    "environmentRuntimeMutated": false,
+    "presentationOnlyAwardsSurface": true,
+    "differentProductSubstitution": false
+  },
+  "candidatePage": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "96987e785d70b96b80caba6327c27139f8d9322c1dacaadead38062f88042091"
+  }
+}

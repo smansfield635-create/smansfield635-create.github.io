@@ -1,0 +1,72 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_KERNEL_G2_BOUNDARY_v1",
+  "status": "CONSTRUCTED_PENDING_RENDER_QUALIFICATION",
+  "predecessor": {
+    "generation": "G1",
+    "installedMain": "da291bc58ea1ef788d600d5b336d1b739eb85fab",
+    "kernelPath": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/jeeves.speech-kernel.js"
+  },
+  "corpus": [
+    "Navigation requires orientation.",
+    "Without orientation, there is no navigation.",
+    "Here at Diamond Gate Bridge, we define our questions through their connections.",
+    "And the stars provide the answers.",
+    "Reality itself relies on their existence.",
+    "Therefore.",
+    "You're never lost, no matter how far from home.",
+    "Nothing navigates better than a compass."
+  ],
+  "heldConstant": [
+    "text",
+    "phoneme inventory",
+    "G1 duration law",
+    "G1 word-gap law",
+    "G1 punctuation-pause law",
+    "G1 word-final lengthening",
+    "sample rate",
+    "formant table",
+    "harmonic/noise excitation families",
+    "WAV encoding"
+  ],
+  "g2AuthorizedVariables": [
+    "lexical stress weight",
+    "phrase-level F0 contour",
+    "stress-linked F0 excursion",
+    "stress-linked energy envelope",
+    "phrase-final F0 settling"
+  ],
+  "g2ForbiddenVariables": [
+    "micro-prosody",
+    "jitter or shimmer",
+    "coarticulation",
+    "formant interpolation",
+    "spectral dynamics",
+    "breath modeling",
+    "learned residual",
+    "external model weights",
+    "public product mutation"
+  ],
+  "jeevesStressLaw": {
+    "primaryContentWords": ["navigation","orientation","diamond","gate","bridge","define","questions","connections","stars","answers","reality","existence","therefore","never","lost","home","nothing","navigates","better","compass"],
+    "functionWordsDefault": "UNSTRESSED",
+    "contrastiveRule": "content words receive selective emphasis; consecutive stressed words are automatically reduced to avoid declamatory rhythm",
+    "thereforeRule": "isolated therefore receives one controlled emphasis peak followed by a resolved terminal fall"
+  },
+  "f0Law": {
+    "baseHz": 118,
+    "phraseOpeningHz": 121,
+    "unstressedRangeHz": [114,122],
+    "stressedPeakRangeHz": [124,136],
+    "terminalDeclarativeHz": 108,
+    "shape": "piecewise-smooth phrase contour; no per-phoneme random pitch movement"
+  },
+  "energyLaw": {
+    "baseAmplitude": 0.52,
+    "unstressedMultiplier": 0.94,
+    "stressedMultiplier": 1.10,
+    "phraseFinalMultiplier": 0.90,
+    "ceiling": 0.62
+  },
+  "acceptanceQuestion": "Does G2 add human-like emphasis and sentence intention without becoming theatrical, sing-song, or motivational-speaker-like?",
+  "nextLawfulAction": "RENDER_G2_EIGHT_BEAT_CORPUS_AND_COMPARE_TO_INSTALLED_G1_WITHOUT_ADVANCING_TO_G3"
+}

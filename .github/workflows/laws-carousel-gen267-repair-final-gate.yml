@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 env:
-  CANDIDATE: 021ed72c34a6131b38fa4a0b9c30e315f620b140
+  CANDIDATE: 1e8904d6ee7b2c89f7eb148e4b8e7beef4916d92
   ORIGIN: http://127.0.0.1:4173
 jobs:
   final-gate:

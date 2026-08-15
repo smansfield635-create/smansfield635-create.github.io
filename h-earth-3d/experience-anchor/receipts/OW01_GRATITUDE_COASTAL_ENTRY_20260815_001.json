@@ -1,0 +1,36 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": false,
+  "disposition": "BLOCK_PENDING_ANCHOR_REVIEW",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.candidate.png",
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "62ce12c188fb434b3c8dedcd14f63beaf7c327dfba75e89156d018b70ddaf3d5"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": false,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": false,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": false,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": false,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": false,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": false,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": false,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": false,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": false,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": false,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": false
+  }
+}

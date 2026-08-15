@@ -1,0 +1,66 @@
+{
+  "schema": "H_EARTH_OW01_ANCHOR_BROWSER_EVIDENCE_v1",
+  "evidenceId": "OW01_GRATITUDE_COASTAL_ENTRY_20260815_001",
+  "productHead": "ba67174c834322599b94be9237fae5f9ac4a3a09",
+  "qualificationHead": "e8d107e85b5d8a0cc763499a3952d74d42a3a697",
+  "baseHead": "aefb54971ae0f91a9abf9e8fc8e588f82f3a5744",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "route": "/showroom/globe/h-earth/",
+  "terrainFieldSha256": "62ce12c188fb434b3c8dedcd14f63beaf7c327dfba75e89156d018b70ddaf3d5",
+  "base": {
+    "label": "base",
+    "status": 200,
+    "title": "H-Earth · Live Interactive World",
+    "url": "http://127.0.0.1:4174/showroom/globe/h-earth/?visual=terrain-relief-v2",
+    "canvasCount": 1,
+    "interactionExercised": true,
+    "beforeGesture": "false",
+    "afterGesture": "true",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "requestFailures": [],
+    "captureError": null,
+    "screenshotSha256": "c7619947391e51fd7b6afaf4d02d21ea688cb3be769a3ac249c440302cf06009",
+    "screenshotBytes": 326865
+  },
+  "candidate": {
+    "label": "candidate",
+    "status": 200,
+    "title": "H-Earth · Live Interactive World",
+    "url": "http://127.0.0.1:4173/showroom/globe/h-earth/?visual=terrain-relief-v2",
+    "canvasCount": 1,
+    "interactionExercised": true,
+    "beforeGesture": "false",
+    "afterGesture": "false",
+    "pageErrors": [
+      "Error: R2_GPU_VIEW_SOURCE_INVALID:R2_PACKAGE_NOT_ELIGIBLE,R2_PRIMITIVE_COUNT_INVALID:undefined,R2_TRIANGLE_COUNT_INVALID:undefined,R2_INDEX_COUNT_INVALID:undefined,R2_BUFFERS_NOT_FROZEN,R2_BUFFER_LENGTH_INVALID:positions,R2_BUFFER_LENGTH_INVALID:normals,R2_BUFFER_LENGTH_INVALID:baseColorsLinear,R2_BUFFER_LENGTH_INVALID:materialParameters,R2_BUFFER_LENGTH_INVALID:materialModelCodes,R2_BUFFER_LENGTH_INVALID:surfaceClassCodes,R2_BUFFER_LENGTH_INVALID:primitiveIndices,R2_BUFFER_LENGTH_INVALID:roleCodes,R2_BUFFER_LENGTH_INVALID:indices,R2_PRIMITIVE_SPANS_INVALID,R2_PRIMITIVE_SPAN_COVERAGE_INVALID,R2_DRAW_RANGE_COVERAGE_INVALID,R2_CAMERA_INDEPENDENCE_FAILED,R2_VIEWPORT_INDEPENDENCE_FAILED,R2_RENDERER_BOUNDARY_FAILED,R2_ROUTE_BOUNDARY_FAILED,R2_SEMANTIC_PROVENANCE_INVALID,R2_SUCCESSOR_GEOMETRY_DISPOSITION_INVALID",
+      "Error: R3E2_LIVE_GPU_BINDING_NOT_READY",
+      "Error: R3E2_LIVE_GPU_BINDING_NOT_READY"
+    ],
+    "consoleErrors": [],
+    "requestFailures": [],
+    "captureError": null,
+    "screenshotSha256": "932ce081acb0540dcd4d7d1e57425e24d1bc921330808518b6bc885216276fa0",
+    "screenshotBytes": 42616
+  },
+  "anchor": {
+    "status": 200,
+    "captureError": null,
+    "screenshotSha256": "f49a4cf43be938f7c8f6d5a0fffa25dabf3d159a05b3c5a5d4538d87d8467cd1",
+    "screenshotBytes": 31401
+  },
+  "automatedFindings": {
+    "baseRouteLoaded": true,
+    "candidateRouteLoaded": true,
+    "baseCanvasPresent": true,
+    "candidateCanvasPresent": true,
+    "baseNoPageErrors": true,
+    "candidateNoPageErrors": false,
+    "candidateInteractionExercised": true,
+    "sameCanonicalRoute": true,
+    "visualStateChanged": true,
+    "anchorContactSheetCaptured": true
+  },
+  "disposition": "PENDING_INDEPENDENT_VISUAL_REVIEW"
+}

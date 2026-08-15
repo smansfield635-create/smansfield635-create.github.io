@@ -1,0 +1,247 @@
+{
+  "downstreamOnPass": {
+    "requestAdmissionFor": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_IMPLEMENTATION_001",
+    "returnTo": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY"
+  },
+  "downstreamOperation": {
+    "bridgeOutputFingerprintDomain": {
+      "domainId": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_OUTPUT_FINGERPRINT_v1",
+      "excluded": [
+        "timestamps",
+        "workflowRunId",
+        "workflowJobId",
+        "artifactId",
+        "pullRequestNumber",
+        "admissionSuccessorHead",
+        "gateReceipt",
+        "visualReviewUrl"
+      ],
+      "included": [
+        "subjectCandidateLogicalIdentity",
+        "evaluationToolingHead",
+        "requiredTerrainBlobTriple",
+        "normalizedRequest",
+        "integrationManifest",
+        "traversalManifest",
+        "cameraManifest",
+        "evaluatorInputDocument",
+        "evidencePackage",
+        "bridgeExecutionReceipt",
+        "repairedEvaluatorSourceBlob",
+        "exactChangedPathBlobMap"
+      ]
+    },
+    "canonicalInputSchemas": [
+      "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_INPUT_v1",
+      "H_EARTH_R06_C10_ARTICULATION_REQUEST_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_INTEGRATION_MANIFEST_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_TRAVERSAL_MANIFEST_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_CAMERA_MANIFEST_v1",
+      "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_ASSERTIONS_28_v1"
+    ],
+    "canonicalOutputSchemas": [
+      "H_EARTH_R06_C10_NORMALIZED_PROSPECTIVE_REQUEST_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_INTEGRATION_MANIFEST_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_TRAVERSAL_MANIFEST_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_CAMERA_MANIFEST_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_EVALUATOR_INPUT_DOCUMENT_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_BOUND_EVIDENCE_PACKAGE_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_EXECUTION_RECEIPT_v1",
+      "H_EARTH_R06_C10_PROSPECTIVE_CANDIDATE_EVALUATION_BRIDGE_FAILURE_RECEIPT_v1"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "PATH_SCOPE_DRIFT",
+      "BRANCH_OR_COMMIT_SEQUENCE_DRIFT",
+      "SUBJECT_IDENTITY_BINDING_INVALID",
+      "SUBJECT_EVIDENCE_MISSING",
+      "TERRAIN_BLOB_MISMATCH",
+      "EVALUATION_TOOLING_HEAD_BINDING_INVALID",
+      "INPUT_SCHEMA_INVALID",
+      "OUTPUT_SCHEMA_INVALID",
+      "MISSING_TRAVERSAL_POINTS",
+      "MISSING_CAMERA_RECORDS",
+      "MISSING_CHANGED_PATHS",
+      "MISSING_EVIDENCE_MEMBERS",
+      "MISSING_ROLLBACK_IDENTITY",
+      "MISSING_REQUEST_FIELD",
+      "RAW_UNDEFINED_LENGTH_FAILURE",
+      "ASSERTION_COUNT_DRIFT",
+      "ASSERTION_SEMANTICS_DRIFT",
+      "UNAUTHORIZED_GATE_INVOCATION",
+      "UNAUTHORIZED_ADMISSION_SUCCESSOR_CREATION",
+      "UNAUTHORIZED_TERRAIN_MUTATION",
+      "FINGERPRINT_MISMATCH",
+      "INDEPENDENT_VERIFICATION_FAILURE"
+    ],
+    "evaluationToolingHeadBindingRule": "BIND_TO_THE_EXACT_FINAL_IMPLEMENTATION_COMMIT_AFTER_ALL_DECLARED_BRIDGE_REPAIRED_EVALUATOR_FIXTURE_CONFORMANCE_AND_WORKFLOW_COMMITS_PASS;NEVER_BIND_TO_THE_LOGICAL_SUBJECT_IDENTIFIER",
+    "evaluatorContract": {
+      "assertionSetId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_ASSERTIONS_28_v1",
+      "assertionThresholdsAndMeanings": "FROZEN_UNCHANGED",
+      "bridgeInvokesExistingGate": false,
+      "bridgeProducesAssertionResults": false,
+      "expectedAssertionCount": 28
+    },
+    "exactAllowedRepositoryPaths": [
+      "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-candidate-evaluation-bridge.contract.v1.json",
+      "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/schemas/h-earth.r06-c10.prospective-candidate-evaluation-bridge.input.schema.v1.json",
+      "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/schemas/h-earth.r06-c10.prospective-candidate-evaluation-bridge.output.schema.v1.json",
+      "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/fixtures/h-earth.r06-c10.prospective-candidate-evaluation-bridge.fixtures.v1.json",
+      "h-earth-3d/tools/r06-c10/h-earth.r06-c10.prospective-candidate-evaluation-bridge.v1.mjs",
+      "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-003.exact-candidate-evaluator.prospective.v1.mjs",
+      "h-earth-3d/validation/h-earth.r06-c10.prospective-candidate-evaluation-bridge.conformance.v1.mjs",
+      ".github/workflows/h-earth-r06-c10-prospective-candidate-evaluation-bridge.yml"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "action": "CREATE_BRANCH",
+        "baseHeadRule": "ROLE_4_ADMISSION_EXACT_MAIN_HEAD_FOR_DOWNSTREAM_OPERATION",
+        "branch": "agent/h-earth-r06-c10-prospective-evaluation-bridge-implementation-v1-001",
+        "ordinal": 1
+      },
+      {
+        "action": "COMMIT",
+        "message": "Define prospective evaluation bridge schemas and contract",
+        "ordinal": 2,
+        "paths": [
+          "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-candidate-evaluation-bridge.contract.v1.json",
+          "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/schemas/h-earth.r06-c10.prospective-candidate-evaluation-bridge.input.schema.v1.json",
+          "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/schemas/h-earth.r06-c10.prospective-candidate-evaluation-bridge.output.schema.v1.json"
+        ]
+      },
+      {
+        "action": "COMMIT",
+        "message": "Implement prospective evaluation bridge",
+        "ordinal": 3,
+        "paths": [
+          "h-earth-3d/tools/r06-c10/h-earth.r06-c10.prospective-candidate-evaluation-bridge.v1.mjs"
+        ]
+      },
+      {
+        "action": "COMMIT",
+        "message": "Repair prospective 28 assertion evaluator",
+        "ordinal": 4,
+        "paths": [
+          "h-earth-3d/validation/h-earth.r06-c10.prospective-landform-candidate-003.exact-candidate-evaluator.prospective.v1.mjs"
+        ]
+      },
+      {
+        "action": "COMMIT",
+        "message": "Add prospective bridge fixtures and conformance",
+        "ordinal": 5,
+        "paths": [
+          "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/fixtures/h-earth.r06-c10.prospective-candidate-evaluation-bridge.fixtures.v1.json",
+          "h-earth-3d/validation/h-earth.r06-c10.prospective-candidate-evaluation-bridge.conformance.v1.mjs"
+        ]
+      },
+      {
+        "action": "COMMIT",
+        "message": "Certify prospective evaluation bridge",
+        "ordinal": 6,
+        "paths": [
+          ".github/workflows/h-earth-r06-c10-prospective-candidate-evaluation-bridge.yml"
+        ]
+      },
+      {
+        "action": "OPEN_DRAFT_PULL_REQUEST",
+        "base": "main",
+        "mergeAuthorized": false,
+        "ordinal": 7
+      }
+    ],
+    "exactTestRunnerCommand": "node h-earth-3d/validation/h-earth.r06-c10.prospective-candidate-evaluation-bridge.conformance.v1.mjs --locator h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.v1.json --fixtures h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/fixtures/h-earth.r06-c10.prospective-candidate-evaluation-bridge.fixtures.v1.json --output /tmp/h-earth-r06-c10-prospective-evaluation-bridge-certification/bridge-conformance.receipt.json --fingerprint-output /tmp/h-earth-r06-c10-prospective-evaluation-bridge-certification/bridge-certification.fingerprint.txt",
+    "independentVerifierDefinition": {
+      "requirements": [
+        "CHECKOUT_EXACT_EVALUATION_TOOLING_HEAD",
+        "DO_NOT_REUSE_BUILDER_OUTPUTS",
+        "RUN_EXACT_TEST_RUNNER_COMMAND",
+        "RECOMPUTE_ALL_SEVEN_OUTPUTS",
+        "RECOMPUTE_BRIDGE_CERTIFICATION_FINGERPRINT",
+        "REQUIRE_BYTE_IDENTICAL_OUTPUT_MANIFEST_AND_FINGERPRINT"
+      ],
+      "verifierId": "FRESH_CLEAN_CHECKOUT_PROSPECTIVE_BRIDGE_REPRODUCER_v1"
+    },
+    "operationClass": "NONPRODUCT_PROSPECTIVE_EVALUATION_BRIDGE_AND_REPAIRED_EVALUATOR_IMPLEMENTATION",
+    "operationId": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_IMPLEMENTATION_001",
+    "priorAttemptInspectionLimits": {
+      "permittedUses": [
+        "IDENTITY_DISCOVERY",
+        "ERROR_MODEL_DISCOVERY",
+        "SCHEMA_NAME_DISCOVERY",
+        "FIXTURE_REQUIREMENT_DISCOVERY"
+      ],
+      "prohibitedUses": [
+        "CHERRY_PICK_OR_MERGE_PRIOR_ATTEMPT",
+        "TREAT_PRIOR_ATTEMPT_AS_CERTIFIED",
+        "REUSE_PRIOR_RUNTIME_RECEIPT",
+        "INVOKE_GATE",
+        "CREATE_ADMISSION_SUCCESSOR",
+        "CREATE_VISUAL_REVIEW_URL"
+      ],
+      "readOnlyReferencesPermitted": [
+        "agent/h-earth-r06-c10-prospective-evaluation-bridge-v1-001",
+        "3fd9ae93814b5bf2b566e3c42da399c27f5bdb85",
+        "e2685d753434a4a58e4533d97083936df547195b"
+      ]
+    },
+    "workflowAndArtifactPackagingPaths": {
+      "artifactName": "h-earth-r06-c10-prospective-evaluation-bridge-certification-v1",
+      "artifactPaths": [
+        "/tmp/h-earth-r06-c10-prospective-evaluation-bridge-certification/bridge-conformance.receipt.json",
+        "/tmp/h-earth-r06-c10-prospective-evaluation-bridge-certification/bridge-certification.fingerprint.txt",
+        "/tmp/h-earth-r06-c10-prospective-evaluation-bridge-certification/bridge-output-manifest.json",
+        "/tmp/h-earth-r06-c10-prospective-evaluation-bridge-certification/independent-verification.receipt.json"
+      ],
+      "workflowPath": ".github/workflows/h-earth-r06-c10-prospective-candidate-evaluation-bridge.yml"
+    }
+  },
+  "exactGoverningMainHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
+  "identityAdapterLaw": {
+    "admissionSuccessorHead": "SEPARATE_REACHABLE_COMMIT_CONTAINING_IDENTICAL_TERRAIN_BYTES_PLUS_CANDIDATE_BOUND_EVIDENCE",
+    "causeClassification": "LIKELY_TEMPORARY_OR_NO_LONGER_REACHABLE_SUBJECT_COMMIT_HISTORY",
+    "directSubjectCommitExecutionRequired": false,
+    "evaluationToolingHead": "REACHABLE_EXACT_COMMIT_CONTAINING_BRIDGE_AND_REPAIRED_28_ASSERTION_EVALUATOR",
+    "remedyClassification": "LOGICAL_SUBJECT_TO_REACHABLE_EVALUATION_AND_ADMISSION_IDENTITIES",
+    "requiredDistinctness": [
+      "SUBJECT_CANDIDATE_HEAD_NOT_COLLAPSED_INTO_EVALUATION_TOOLING_HEAD",
+      "SUBJECT_CANDIDATE_HEAD_NOT_COLLAPSED_INTO_ADMISSION_SUCCESSOR_HEAD",
+      "EVALUATION_TOOLING_HEAD_NOT_COLLAPSED_INTO_ADMISSION_SUCCESSOR_HEAD"
+    ],
+    "subjectCandidateHead": "IMMUTABLE_LOGICAL_SUBJECT_IDENTIFIER",
+    "terrainIdentityProofRequiredBeforeGate": true
+  },
+  "locatorId": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_v1",
+  "locatorPath": "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.v1.json",
+  "materializationOperationId": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_MATERIALIZATION_001",
+  "projectId": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "purpose": "Govern the later prospective evaluation bridge and repaired evaluator implementation without building the bridge, evaluator, admission successor, gate receipt, or visual review surface in this operation.",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "schema": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_v1",
+  "status": "MATERIALIZED_CERTIFICATION_CANDIDATE_AWAITING_ROLE_4_DISPOSITION",
+  "subjectIdentity": {
+    "gitCommitReachabilityRequirement": "NOT_REQUIRED",
+    "identityClass": "IMMUTABLE_LOGICAL_SUBJECT_WITH_EXACT_TERRAIN_BLOB_BINDING",
+    "subjectCandidateHead": "ed8267a0251e70c4f654eef90f5e3d7329fdf419",
+    "survivingEvidence": {
+      "branch": "control/r06-c10-prospective-candidate-003-construction-and-admission",
+      "commit": "e2685d753434a4a58e4533d97083936df547195b",
+      "expectedText": "ed8267a0251e70c4f654eef90f5e3d7329fdf419\n",
+      "path": "h-earth-3d/control-plane/r06-c10/candidate-admission/executions/prospective-candidate-003/candidate-head.txt"
+    },
+    "terrainIdentity": {
+      "candidateModuleBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+      "constructorBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+      "requiredDifferential": "ZERO",
+      "successorFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8"
+    }
+  },
+  "thisOperationProhibitions": [
+    "PROSPECTIVE_EVALUATION_BRIDGE_IMPLEMENTATION",
+    "REPAIRED_28_ASSERTION_EVALUATOR_IMPLEMENTATION",
+    "ADMISSION_SUCCESSOR_CREATION",
+    "VISUAL_REVIEW_URL_CREATION",
+    "TERRAIN_MUTATION",
+    "PRODUCT_RUNTIME_MUTATION",
+    "ASSERTION_THRESHOLD_OR_MEANING_CHANGE"
+  ]
+}

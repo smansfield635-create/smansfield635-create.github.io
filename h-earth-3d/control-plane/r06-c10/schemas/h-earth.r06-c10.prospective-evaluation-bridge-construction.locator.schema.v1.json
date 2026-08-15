@@ -1,0 +1,131 @@
+{
+  "$id": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_SCHEMA_v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "downstreamOnPass": {
+      "type": "object"
+    },
+    "downstreamOperation": {
+      "required": [
+        "operationId",
+        "operationClass",
+        "exactAllowedRepositoryPaths",
+        "exactBranchAndCommitSequence",
+        "evaluationToolingHeadBindingRule",
+        "canonicalInputSchemas",
+        "canonicalOutputSchemas",
+        "errorCodeAndValidationPrecedence",
+        "exactTestRunnerCommand",
+        "independentVerifierDefinition",
+        "workflowAndArtifactPackagingPaths",
+        "bridgeOutputFingerprintDomain",
+        "priorAttemptInspectionLimits"
+      ],
+      "type": "object"
+    },
+    "exactGoverningMainHead": {
+      "const": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f"
+    },
+    "identityAdapterLaw": {
+      "type": "object"
+    },
+    "locatorId": {
+      "const": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_v1"
+    },
+    "locatorPath": {
+      "const": "h-earth-3d/control-plane/r06-c10/prospective-evaluation-bridge/h-earth.r06-c10.prospective-evaluation-bridge-construction.locator.v1.json"
+    },
+    "materializationOperationId": {
+      "const": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_MATERIALIZATION_001"
+    },
+    "projectId": {
+      "const": "H_EARTH_C2_R1_COMPLETE_WORLD"
+    },
+    "purpose": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "repository": {
+      "const": "smansfield635-create/smansfield635-create.github.io"
+    },
+    "schema": {
+      "const": "H_EARTH_R06_C10_PROSPECTIVE_EVALUATION_BRIDGE_CONSTRUCTION_LOCATOR_v1"
+    },
+    "status": {
+      "const": "MATERIALIZED_CERTIFICATION_CANDIDATE_AWAITING_ROLE_4_DISPOSITION"
+    },
+    "subjectIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "gitCommitReachabilityRequirement": {
+          "const": "NOT_REQUIRED"
+        },
+        "identityClass": {
+          "const": "IMMUTABLE_LOGICAL_SUBJECT_WITH_EXACT_TERRAIN_BLOB_BINDING"
+        },
+        "subjectCandidateHead": {
+          "const": "ed8267a0251e70c4f654eef90f5e3d7329fdf419"
+        },
+        "survivingEvidence": {
+          "type": "object"
+        },
+        "terrainIdentity": {
+          "additionalProperties": false,
+          "properties": {
+            "candidateModuleBlob": {
+              "const": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3"
+            },
+            "constructorBlob": {
+              "const": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46"
+            },
+            "requiredDifferential": {
+              "const": "ZERO"
+            },
+            "successorFieldBlob": {
+              "const": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8"
+            }
+          },
+          "required": [
+            "candidateModuleBlob",
+            "successorFieldBlob",
+            "constructorBlob",
+            "requiredDifferential"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "identityClass",
+        "subjectCandidateHead",
+        "gitCommitReachabilityRequirement",
+        "survivingEvidence",
+        "terrainIdentity"
+      ],
+      "type": "object"
+    },
+    "thisOperationProhibitions": {
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema",
+    "locatorId",
+    "status",
+    "projectId",
+    "repository",
+    "materializationOperationId",
+    "locatorPath",
+    "exactGoverningMainHead",
+    "purpose",
+    "subjectIdentity",
+    "identityAdapterLaw",
+    "downstreamOperation",
+    "thisOperationProhibitions",
+    "downstreamOnPass"
+  ],
+  "title": "H-Earth R06 C10 prospective evaluation bridge construction locator",
+  "type": "object"
+}

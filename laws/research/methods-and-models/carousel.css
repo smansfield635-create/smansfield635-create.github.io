@@ -61,9 +61,9 @@
   .mm-family-tab::before { content: attr(data-index-label); display: block; margin-bottom: .26rem; font-size: .63rem; letter-spacing: .16em; color: #64717c; }
   .mm-family-tab[aria-selected="true"] { border-top-color: #d9bc82; color: #f4f0e7; background: linear-gradient(180deg, rgba(217,188,130,.08), transparent); }
 
-  .mm-viewport { position: absolute; inset: 10.5rem 0 0; z-index: 10; perspective: 1450px; perspective-origin: 50% 46%; touch-action: pan-y; cursor: grab; user-select: none; }
+  .mm-viewport { position: absolute; inset: 10.5rem 0 0; z-index: 10; perspective: 3200px; perspective-origin: 50% 42%; touch-action: pan-y; cursor: grab; user-select: none; }
   .mm-viewport[data-dragging="true"] { cursor: grabbing; }
-  .mm-ring { --ring-rotation: 0deg; position: absolute; left: 50%; top: 45%; width: 0; height: 0; transform-style: preserve-3d; transform: rotateY(var(--ring-rotation)); transition: transform 620ms cubic-bezier(.2,.78,.18,1); will-change: transform; }
+  .mm-ring { --ring-rotation: 0deg; position: absolute; left: 50%; top: 30%; width: 0; height: 0; transform-style: preserve-3d; transform: rotateY(var(--ring-rotation)); transition: transform 620ms cubic-bezier(.2,.78,.18,1); will-change: transform; }
   .mm-viewport[data-dragging="true"] .mm-ring { transition: none; }
 
   .mm-card { position: absolute; left: calc(var(--card-width) / -2); top: calc(var(--card-height) / -2); width: var(--card-width); height: var(--card-height); transform-style: preserve-3d; backface-visibility: visible; will-change: transform; pointer-events: none; }
@@ -121,8 +121,8 @@
     .mm-live { margin-top: .55rem; min-width: 0; text-align: left; }
     .mm-family-tabs { padding-inline: .9rem; }
     .mm-family-tab { min-width: 9.5rem; }
-    .mm-viewport { inset-top: 12rem; perspective: 1100px; }
-    .mm-ring { top: 44%; }
+    .mm-viewport { inset-top: 12rem; perspective: 1800px; perspective-origin: 50% 40%; }
+    .mm-ring { top: 34%; }
     .mm-card[data-inspecting="true"] { width: min(92vw, 38rem); height: min(66vh, 590px); left: max(-46vw, -304px); top: min(-33vh, -295px); }
     .mm-card[data-inspecting="true"] .mm-card__inspection { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
     .mm-inspection__rail { display: flex; gap: .5rem; overflow-x: auto; overflow-y: hidden; padding: 0 0 .65rem; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.09); }

@@ -1,0 +1,36 @@
+name: Laws Carousel Gen267 Mobile Legibility Repair Carrier
+on:
+  push:
+    branches: ['agent/laws-carousel-gen267-mobile-legibility-repair']
+    paths: ['.github/workflows/laws-carousel-gen267-mobile-legibility-repair-carrier.yml']
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/laws-carousel-gen267-mobile-legibility-repair
+      - name: Apply bounded responsive repair
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('laws/research/methods-and-models/carousel.css')
+          s=p.read_text()
+          needle='''  @media (max-width: 440px) {\n    .mm-carousel { --card-width: min(78vw, 19.5rem); min-height: 700px; }'''
+          repl='''  @media (max-width: 440px) {\n    .mm-carousel { --card-width: min(78vw, 19.5rem); min-height: 700px; }\n    .mm-card:not([data-active="true"]) .mm-card__top,\n    .mm-card:not([data-active="true"]) .mm-card__body { opacity: 0; }\n    .mm-card:not([data-active="true"]) .mm-card__surface { opacity: .24; filter: saturate(.58); }'''
+          if needle not in s:
+              raise SystemExit('TARGET_RESPONSIVE_BLOCK_NOT_FOUND')
+          if 'mm-card:not([data-active="true"]) .mm-card__top' in s:
+              raise SystemExit('REPAIR_ALREADY_PRESENT')
+          p.write_text(s.replace(needle,repl,1))
+          PY
+          git diff --check
+          git diff -- laws/research/methods-and-models/carousel.css
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add laws/research/methods-and-models/carousel.css
+          git commit -m 'repair Gen267 mobile carousel legibility'
+          git push origin HEAD:agent/laws-carousel-gen267-mobile-legibility-repair

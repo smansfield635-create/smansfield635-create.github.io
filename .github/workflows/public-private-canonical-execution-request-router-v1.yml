@@ -18,33 +18,35 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - name: Extract closed request
+      - name: Extract closed locator
         id: request
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import base64, json, os
+          import json, os
           event = json.load(open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8'))
           body = event['comment']['body']
           marker = 'PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1'
           pos = body.find(marker)
           if pos < 0:
               raise SystemExit('REQUEST_MARKER_MISSING')
-          wrapper = json.loads(body[pos + len(marker):].strip())
-          if set(wrapper) != {'schema','request'} or wrapper['schema'] != marker:
+          request = json.loads(body[pos + len(marker):].strip())
+          required = {'schema','privateIssueNumber','privateCommentId','expectedRequestId','exactPrivateHead'}
+          if set(request) != required or request['schema'] != marker:
               raise SystemExit('ROUTER_REQUEST_NOT_CLOSED')
-          request = wrapper['request']
-          required = {'schema','requestId','repository','exactGoverningHead','operationRequest','constructionProcedure','requestNonce','executionHolder'}
-          if set(request) != required:
-              raise SystemExit('PRIVATE_REQUEST_KEYS_NOT_CLOSED')
-          if request['schema'] != 'PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1':
-              raise SystemExit('PRIVATE_REQUEST_SCHEMA_MISMATCH')
-          if request['repository'] != 'smansfield635-create/geodiametrics1':
-              raise SystemExit('PRIVATE_REPOSITORY_SUBSTITUTION_PROHIBITED')
-          encoded = base64.b64encode(json.dumps(request, sort_keys=True, separators=(',', ':')).encode()).decode()
+          if not isinstance(request['privateIssueNumber'], int) or request['privateIssueNumber'] < 1:
+              raise SystemExit('PRIVATE_ISSUE_INVALID')
+          if not isinstance(request['privateCommentId'], int) or request['privateCommentId'] < 1:
+              raise SystemExit('PRIVATE_COMMENT_INVALID')
+          head = request['exactPrivateHead']
+          if not isinstance(head, str) or len(head) != 40 or any(c not in '0123456789abcdef' for c in head):
+              raise SystemExit('EXACT_PRIVATE_HEAD_INVALID')
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
-              f.write('request_b64=' + encoded + '\n')
+              f.write(f"private_issue={request['privateIssueNumber']}\n")
+              f.write(f"private_comment={request['privateCommentId']}\n")
+              f.write(f"expected_request_id={request['expectedRequestId']}\n")
+              f.write(f"exact_private_head={head}\n")
               f.write('callback_issue=' + str(event['issue']['number']) + '\n')
           PY
 
@@ -52,11 +54,14 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          REQUEST_B64: ${{ steps.request.outputs.request_b64 }}
+          PRIVATE_ISSUE: ${{ steps.request.outputs.private_issue }}
+          PRIVATE_COMMENT: ${{ steps.request.outputs.private_comment }}
+          EXPECTED_REQUEST_ID: ${{ steps.request.outputs.expected_request_id }}
+          EXACT_PRIVATE_HEAD: ${{ steps.request.outputs.exact_private_head }}
           CALLBACK_ISSUE: ${{ steps.request.outputs.callback_issue }}
         run: |
           set -euo pipefail
-          payload="$(jq -n --arg ref main --arg request_b64 "$REQUEST_B64" --arg callback_issue "$CALLBACK_ISSUE" '{ref:$ref,inputs:{request_b64:$request_b64,callback_issue:$callback_issue}}')"
+          payload="$(jq -n --arg ref main --arg private_issue "$PRIVATE_ISSUE" --arg private_comment "$PRIVATE_COMMENT" --arg expected_request_id "$EXPECTED_REQUEST_ID" --arg exact_private_head "$EXACT_PRIVATE_HEAD" --arg callback_issue "$CALLBACK_ISSUE" '{ref:$ref,inputs:{private_issue:$private_issue,private_comment:$private_comment,expected_request_id:$expected_request_id,exact_private_head:$exact_private_head,callback_issue:$callback_issue}}')"
           code="$(curl --silent --show-error --output "$RUNNER_TEMP/dispatch-response.txt" --write-out '%{http_code}' \
             --request POST \
             --header 'Accept: application/vnd.github+json' \

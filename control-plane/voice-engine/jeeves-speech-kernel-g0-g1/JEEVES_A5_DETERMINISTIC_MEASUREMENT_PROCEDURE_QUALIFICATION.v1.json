@@ -1,0 +1,25 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_DETERMINISTIC_MEASUREMENT_PROCEDURE_QUALIFICATION_v1",
+  "candidateBase": "a714e94ae500859086bc9f9688ded391efba366f",
+  "referenceSha256": "0fb2a27506e6ef5c8f2ec280eb780654e317fe19c8a0774864fc98c4115a963f",
+  "executedRuntime": "Node.js",
+  "tests": [
+    "C01 proxy values do not satisfy AUTHORITATIVE measurement status",
+    "missing physical parameters remain unresolved rather than guessed",
+    "all-authoritative fixture passes",
+    "unresolved set deterministically maps to the minimal four evidence classes"
+  ],
+  "observedCurrentResult": "FAIL_AUTHORITATIVE_MEASUREMENTS_REQUIRED",
+  "observedProxyMeasurements": ["spectralTilt","jitterStatistics","shimmerStatistics"],
+  "observedMissingMeasurements": [
+    "vowelFormants","formantBandwidths","vocalTractLengthScale","nasalPolesAndZeros",
+    "glottalOpenQuotient","glottalClosingQuotient","aspirationByContext"
+  ],
+  "requiredNextEvidence": [
+    "SUSTAINED_VOWEL_SET","SUSTAINED_NASAL_SET","SUSTAINED_VOICED_VOWEL","ASPIRATION_CONTEXT_SET"
+  ],
+  "qualificationResult": "PASS_PROCEDURE_FAIL_CLOSED_CURRENT_REFERENCE_INSUFFICIENT",
+  "constructionAuthorization": false,
+  "calibrationAuthorization": false,
+  "nextLawfulAction": "ONE_DIAGNOSTIC_RECORDING_PER_JEEVES_A5_DIAGNOSTIC_RECORDING_PROTOCOL_v1"
+}

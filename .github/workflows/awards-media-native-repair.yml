@@ -28,8 +28,7 @@ jobs:
             'https://drive.usercontent.google.com/download?id=1C4bnM7USwBITlHHNbphl22de15YC8shO&export=download&confirm=t' \
             -o showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
           test "$(stat -c%s showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4)" -gt 4000000
-          ffprobe -v error -select_streams v:0 -show_entries stream=codec_name,width,height -of default=nw=1 showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
-          ffprobe -v error -select_streams a:0 -show_entries stream=codec_name,channels -of default=nw=1 showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
+          file showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
 
       - name: Replace fragile remote playback with native site assets
         shell: python

@@ -1,0 +1,49 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A0_A1_QUALIFICATION_v1",
+  "status": "PASS_BOUNDED_MATERIAL_BOUNDARY",
+  "characterId": "jeeves",
+  "qualifiedAgainstInterfaceHead": "ffceed8da76bfb03e007dcbdb240ba4637e987cc",
+  "candidateBeforeReceipt": "7d538dcdd6926f58ff60238b8c54a48715faea92",
+  "qualifiedBlobs": {
+    "consumer": {
+      "path": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/jeeves.physical-acoustic-consumer.a0a1.v1.js",
+      "gitBlobSha": "81bfb16b52d588d71746b076ad79c1aafeed8824",
+      "sha256": "caa48a9e8260db4fe95263487a769af18cc09d49f73128f47b1b16adb738e5f9"
+    },
+    "test": {
+      "path": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/jeeves.physical-acoustic-consumer.a0a1.v1.test.js",
+      "gitBlobSha": "618ffafa2c1280cfb888c86fc3385d24f41ea6c7",
+      "sha256": "818813d5c9472953549d365b88bcbae856c4300f39d0b5c64de1ea0399327f00"
+    }
+  },
+  "execution": {
+    "runtime": "Node v22.16.0",
+    "syntaxCheck": "PASS",
+    "testCommand": "node jeeves.physical-acoustic-consumer.a0a1.v1.test.js",
+    "result": "PASS",
+    "frozenCorpusLine": "Navigation requires orientation.",
+    "sampleRateHz": 24000,
+    "sampleCount": 71400,
+    "durationSeconds": 2.975,
+    "rms": 0.049622104955582634,
+    "peakAbsoluteAmplitude": 0.20437099039554596,
+    "zeroCrossingRate": 0.02869747899159664
+  },
+  "checks": {
+    "deterministicRepeatRender": true,
+    "nonSilentPCM": true,
+    "boundedAmplitude": true,
+    "timeVaryingFormantInterpolationObserved": true,
+    "invalidPerformanceStateFailsClosed": true,
+    "emptyPhonemeSequenceFailsClosed": true,
+    "externalRuntimeLibraries": false,
+    "externalWeights": false,
+    "remoteTTS": false,
+    "governanceMutation": false,
+    "linguisticMutation": false,
+    "g0ThroughG5Mutation": false
+  },
+  "qualificationMeaning": "A0/A1 is qualified only as the first deterministic physical acoustic consumer and source-filter material boundary. This receipt does not claim natural human voice quality or Jeeves owner-listening acceptance.",
+  "ownerListeningArtifact": "NOT_SURFACED_AT_THIS_BOUNDARY",
+  "nextLawfulAction": "PRESERVE_A0_A1_AND_ADMIT_A2_ARTICULATORY_COARTICULATION_AS_A_SEPARATE_BOUNDARY; DO_NOT_EXPAND_TO_LEARNED_COMPONENTS_OR_PUBLIC_INTEGRATION"
+}

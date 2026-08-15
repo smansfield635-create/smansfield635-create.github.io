@@ -87,7 +87,7 @@
   .mm-carousel[data-inspecting="true"] .mm-family-tabs { pointer-events: none; opacity: .42; }
   .mm-carousel[data-inspecting="true"] .mm-card:not([data-active="true"]) .mm-card__surface { opacity: .06; }
   .mm-card__inspection { display: none; flex: 1; min-height: 0; }
-  .mm-card[data-inspecting="true"] { width: min(78vw, 780px); height: min(64vh, 620px); left: max(-390px, -39vw); top: min(-31vh, -310px); }
+  .mm-card[data-inspecting="true"] { width: min(58vw, 620px); height: min(48vh, 480px); left: max(-310px, -29vw); top: -240px; }
   .mm-card[data-inspecting="true"] .mm-card__surface { transform: scale(1); border-color: rgba(217,188,130,.68); }
   .mm-card[data-inspecting="true"] .mm-card__body { padding-top: 3.4rem; }
   .mm-card[data-inspecting="true"] .mm-card__body > :not(.mm-card__inspection) { display: none; }
@@ -123,7 +123,7 @@
     .mm-family-tab { min-width: 9.5rem; }
     .mm-viewport { inset-top: 12rem; perspective: 1800px; perspective-origin: 50% 40%; }
     .mm-ring { top: 34%; }
-    .mm-card[data-inspecting="true"] { width: min(92vw, 38rem); height: min(66vh, 590px); left: max(-46vw, -304px); top: min(-33vh, -295px); }
+    .mm-card[data-inspecting="true"] { width: min(88vw, 34rem); height: min(54vh, 500px); left: max(-44vw, -272px); top: -250px; }
     .mm-card[data-inspecting="true"] .mm-card__inspection { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
     .mm-inspection__rail { display: flex; gap: .5rem; overflow-x: auto; overflow-y: hidden; padding: 0 0 .65rem; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.09); }
     .mm-inspection__rail h3 { display: none; }

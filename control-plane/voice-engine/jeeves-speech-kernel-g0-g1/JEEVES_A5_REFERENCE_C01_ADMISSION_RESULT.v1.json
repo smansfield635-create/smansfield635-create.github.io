@@ -1,0 +1,32 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_REFERENCE_C01_ADMISSION_RESULT_v1",
+  "characterId": "jeeves",
+  "utteranceId": "COMPASS_C01",
+  "referenceStatus": "BOUND_AUTHORIZED_ORIGINAL",
+  "referenceSha256": "0fb2a27506e6ef5c8f2ec280eb780654e317fe19c8a0774864fc98c4115a963f",
+  "provenanceId": "DIAMOND_GATE_JEEVES_A5_REFERENCE_C01_PROVENANCE_v1",
+  "gate": "DIAMOND_GATE_JEEVES_A5_CALIBRATION_GATE_v1",
+  "observedResult": "FAIL_MEASUREMENTS_REQUIRED",
+  "missingMeasuredParameters": [
+    "vowelFormants",
+    "formantBandwidths",
+    "vocalTractLengthScale",
+    "nasalPolesAndZeros",
+    "glottalOpenQuotient",
+    "glottalClosingQuotient",
+    "aspirationByContext"
+  ],
+  "availableMeasuredEvidence": {
+    "f0MedianHz": 100.0,
+    "f0P10Hz": 84.21053,
+    "f0P90Hz": 143.20535,
+    "activeSpeechDurationSeconds": 4.84,
+    "rmsActive": 0.02926848,
+    "peakAbs": 0.36094241,
+    "spectralTiltProxyDbPerDecade": -16.02229,
+    "jitterLocalProxy": 0.04251248,
+    "shimmerLocalProxy": 0.13832423
+  },
+  "qualificationLaw": "Reference admission is distinct from calibration admission. This original recording is now lawful evidence, but A4 acoustic constants must not be replaced with Jeeves-specific constants until the remaining measured parameters are produced by a separately qualified measurement procedure.",
+  "nextLawfulAction": "CONSTRUCT_AND_QUALIFY_A5_MEASUREMENT_PROCEDURE_FOR_THE_BOUND_C01_REFERENCE"
+}

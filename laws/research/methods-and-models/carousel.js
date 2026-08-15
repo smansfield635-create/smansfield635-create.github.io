@@ -94,9 +94,7 @@
     });
     const returnControl = article.querySelector("[data-close-inspection]");
     returnControl?.addEventListener("pointerdown", event => {
-      event.preventDefault();
       event.stopPropagation();
-      closeInspection("return-to-orbit-pointer");
     });
     returnControl?.addEventListener("click", event => {
       event.preventDefault();

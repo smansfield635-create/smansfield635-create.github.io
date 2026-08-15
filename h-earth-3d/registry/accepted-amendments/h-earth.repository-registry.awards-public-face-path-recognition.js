@@ -1,5 +1,5 @@
 /**
- * H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v4
+ * H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v5
  * Audit-only exact-path recognition for the promoted Awards public face,
  * its Trophy Standard validators, and the bounded experience-anchor evidence
  * required to review an Awards public-face mutation. No mutation authority.
@@ -32,9 +32,11 @@ const RUNNER_PATH = '/h-earth-3d/validation/instrument-platform/h-earth.public-f
 const RUNNER_BASE_BLOB = 'd14a16c31dbaaa676031cbd654f8d1ecb16eacb9';
 const ANCHOR_EVIDENCE_PATH = '/h-earth-3d/experience-anchor/evidence/AWARDS_COMPASS_VIDEO_20260815_001.json';
 const ANCHOR_RECEIPT_PATH = '/h-earth-3d/experience-anchor/receipts/AWARDS_COMPASS_VIDEO_20260815_001.json';
+const RECOVERY_EVIDENCE_PATH = '/h-earth-3d/experience-anchor/evidence/AWARDS_MEDIA_RECOVERY_20260815_001.json';
+const RECOVERY_RECEIPT_PATH = '/h-earth-3d/experience-anchor/receipts/AWARDS_MEDIA_RECOVERY_20260815_001.json';
 const AMENDMENT_PATH = '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.awards-public-face-path-recognition.js';
 const NODE_ID = 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_SCOPE';
-const EVIDENCE_ID = 'EVIDENCE_H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v4';
+const EVIDENCE_ID = 'EVIDENCE_H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v5';
 
 export const H_EARTH_AWARDS_PUBLIC_FACE_TARGET_PATHS = Object.freeze([TARGET_PATH]);
 export const H_EARTH_AWARDS_PUBLIC_FACE_RECOGNIZED_PATHS = Object.freeze([
@@ -43,6 +45,8 @@ export const H_EARTH_AWARDS_PUBLIC_FACE_RECOGNIZED_PATHS = Object.freeze([
   RUNNER_PATH,
   ANCHOR_EVIDENCE_PATH,
   ANCHOR_RECEIPT_PATH,
+  RECOVERY_EVIDENCE_PATH,
+  RECOVERY_RECEIPT_PATH,
   AMENDMENT_PATH
 ]);
 
@@ -57,13 +61,13 @@ export const H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_EVIDENCE = deepFreeze({
   evidenceId: EVIDENCE_ID,
   evidenceClass: 'EXISTING_H_EARTH_AWARDS_VALIDATOR_AND_ANCHOR_EVIDENCE_PATH_RECOGNITION_WITH_EXACT_BLOB_CUSTODY',
   sourceKind: 'AUTOMATIC_PREFLIGHT_STOPS_PLUS_EXACT_FETCHBACK',
-  sourceIdOrPath: 'PR935_AWARDS_PATH_PR1004_TROPHY_STANDARD_VALIDATORS_AND_PR1065_ANCHOR_EVIDENCE',
+  sourceIdOrPath: 'PR935_AWARDS_PATH_PR1004_TROPHY_STANDARD_VALIDATORS_PR1065_ANCHOR_EVIDENCE_AND_PR1072_MEDIA_RECOVERY',
   governingMain: AWARDS_MAIN,
   operationBase: OPERATION_BASE,
   exactTargetPathCount: 1,
-  exactRecognizedPathCount: 6,
+  exactRecognizedPathCount: 8,
   registrationEffect: 'READ_ONLY_PATH_RECOGNITION_ONLY',
-  assertionScope: Object.freeze(['EXACT_AWARDS_PATH', 'EXACT_TROPHY_STANDARD_BROWSER_VALIDATOR_PATH', 'EXACT_TROPHY_STANDARD_STATIC_VALIDATOR_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_EVIDENCE_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_RECEIPT_PATH', 'AUTOMATIC_H_EARTH_PREFLIGHT_PATH_RESOLUTION']),
+  assertionScope: Object.freeze(['EXACT_AWARDS_PATH', 'EXACT_TROPHY_STANDARD_BROWSER_VALIDATOR_PATH', 'EXACT_TROPHY_STANDARD_STATIC_VALIDATOR_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_EVIDENCE_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_RECEIPT_PATH', 'EXACT_AWARDS_MEDIA_RECOVERY_EVIDENCE_PATH', 'EXACT_AWARDS_MEDIA_RECOVERY_RECEIPT_PATH', 'AUTOMATIC_H_EARTH_PREFLIGHT_PATH_RESOLUTION']),
   evidenceLimitations: Object.freeze(['NO_AWARDS_PRODUCT_MUTATION_AUTHORITY', 'NO_VALIDATOR_MUTATION_AUTHORITY', 'NO_ANCHOR_EVIDENCE_CONTENT_AUTHORITY', 'NO_AWARD_OUTCOME_AUTHORITY', 'NO_SEMANTIC_OR_CANONICAL_IDENTITY_AUTHORITY', 'NO_H_EARTH_RUNTIME_RENDERER_TERRAIN_GEOMETRY_WORLD_OR_GAMEPLAY_AUTHORITY', 'NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY'])
 });
 
@@ -81,7 +85,7 @@ export const H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE = deepFreeze({
   authorityClass: 'AUDIT_ONLY',
   authorityPosture: 'READ_ONLY_EXISTING_H_EARTH_AWARDS_VALIDATOR_AND_ANCHOR_EVIDENCE_PATH_RECOGNITION',
   registrationEffect: 'PATH_RESOLUTION_ONLY',
-  authoritySource: Object.freeze(['PR935_AUTOMATIC_PREFLIGHT_STOP', 'PR1004_AUTOMATIC_PREFLIGHT_STOPS', 'PR1065_EXPERIENCE_ANCHOR_PREFLIGHT_STOP', `EXACT_OPERATION_BASE=${OPERATION_BASE}`]),
+  authoritySource: Object.freeze(['PR935_AUTOMATIC_PREFLIGHT_STOP', 'PR1004_AUTOMATIC_PREFLIGHT_STOPS', 'PR1065_EXPERIENCE_ANCHOR_PREFLIGHT_STOP', 'PR1072_MEDIA_RECOVERY_PREFLIGHT_STOP', `EXACT_OPERATION_BASE=${OPERATION_BASE}`]),
   authorityScope: Object.freeze(['EXACT_PATH_RESOLUTION', 'EXACT_EXISTING_OCCURRENCE_IDENTITY', 'AWARDS_EXPERIENCE_ANCHOR_EVIDENCE_PATH_RESOLUTION', 'AUTOMATIC_H_EARTH_PREFLIGHT_RESOLUTION']),
   authorityLimitations: Object.freeze(['NO_AWARDS_PRODUCT_MUTATION', 'NO_BROWSER_VALIDATOR_MUTATION_AUTHORITY', 'NO_STATIC_VALIDATOR_MUTATION_AUTHORITY', 'NO_ANCHOR_EVIDENCE_CONTENT_AUTHORITY', 'NO_AWARD_OUTCOME_AUTHORITY', 'NO_SEMANTIC_AUTHORITY', 'NO_CANONICAL_IDENTITY_AUTHORITY', 'NO_H_EARTH_RUNTIME_AUTHORITY', 'NO_RENDERER_AUTHORITY', 'NO_TERRAIN_AUTHORITY', 'NO_GEOMETRY_AUTHORITY', 'NO_WORLD_AUTHORITY', 'NO_GAMEPLAY_AUTHORITY', 'NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY']),
   parentRelations: Object.freeze([]), childRelations: Object.freeze([]), peerRelations: Object.freeze([]), upstreamBoundaries: Object.freeze([]), downstreamBoundaries: Object.freeze([]),
@@ -92,7 +96,7 @@ export const H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE = deepFreeze({
   prohibitedMutations: Object.freeze(['AWARDS_PAGE_MUTATION_FROM_REGISTRY_AUTHORITY', 'VALIDATOR_MUTATION_FROM_REGISTRY_AUTHORITY', 'ANCHOR_EVIDENCE_CONTENT_MUTATION_FROM_REGISTRY_AUTHORITY', 'AWARD_OUTCOME_CLAIM_FROM_REGISTRY_AUTHORITY']),
   requiredValidations: Object.freeze(['EXACT_ONE_AWARDS_TARGET_PATH', 'EXACT_RECOGNIZED_VALIDATOR_PATHS', 'EXACT_RECOGNIZED_AWARDS_ANCHOR_EVIDENCE_PATHS', 'PREDECESSOR_REGISTRY_IDENTITY_PRESERVED']),
   stoppingBoundaries: Object.freeze(['STOP_ON_PATH_OUTSIDE_EXACT_SCOPE', 'STOP_ON_AUTHORITY_EXPANSION']),
-  currentIdentityReferences: Object.freeze([AWARDS_MAIN, OPERATION_BASE, `TARGET_MAIN_BLOB=${TARGET_MAIN_BLOB}`, `BROWSER_BASE_BLOB=${BROWSER_BASE_BLOB}`, `RUNNER_BASE_BLOB=${RUNNER_BASE_BLOB}`, ANCHOR_EVIDENCE_PATH, ANCHOR_RECEIPT_PATH]),
+  currentIdentityReferences: Object.freeze([AWARDS_MAIN, OPERATION_BASE, `TARGET_MAIN_BLOB=${TARGET_MAIN_BLOB}`, `BROWSER_BASE_BLOB=${BROWSER_BASE_BLOB}`, `RUNNER_BASE_BLOB=${RUNNER_BASE_BLOB}`, ANCHOR_EVIDENCE_PATH, ANCHOR_RECEIPT_PATH, RECOVERY_EVIDENCE_PATH, RECOVERY_RECEIPT_PATH]),
   unresolvedFields: Object.freeze([])
 });
 
@@ -132,6 +136,8 @@ export function verifyHEarthAwardsPublicFacePathRecognition() {
   const runnerResolution = resolveHEarthRepositoryRegistryPath(RUNNER_PATH);
   const anchorEvidenceResolution = resolveHEarthRepositoryRegistryPath(ANCHOR_EVIDENCE_PATH);
   const anchorReceiptResolution = resolveHEarthRepositoryRegistryPath(ANCHOR_RECEIPT_PATH);
+  const recoveryEvidenceResolution = resolveHEarthRepositoryRegistryPath(RECOVERY_EVIDENCE_PATH);
+  const recoveryReceiptResolution = resolveHEarthRepositoryRegistryPath(RECOVERY_RECEIPT_PATH);
   const checks = deepFreeze({
     exactTargetPathCount: H_EARTH_AWARDS_PUBLIC_FACE_TARGET_PATHS.length === 1,
     targetPathResolves: targetResolution.resolved === true,
@@ -141,6 +147,8 @@ export function verifyHEarthAwardsPublicFacePathRecognition() {
     staticValidatorPathResolves: runnerResolution.resolved === true,
     awardsAnchorEvidencePathResolves: anchorEvidenceResolution.resolved === true,
     awardsAnchorReceiptPathResolves: anchorReceiptResolution.resolved === true,
+    awardsRecoveryEvidencePathResolves: recoveryEvidenceResolution.resolved === true,
+    awardsRecoveryReceiptPathResolves: recoveryReceiptResolution.resolved === true,
     auditOnly: H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE.authorityClass === 'AUDIT_ONLY',
     pathResolutionOnly: H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE.registrationEffect === 'PATH_RESOLUTION_ONLY',
     noAwardsMutationAuthority: H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE.authorityLimitations.includes('NO_AWARDS_PRODUCT_MUTATION'),
@@ -148,7 +156,7 @@ export function verifyHEarthAwardsPublicFacePathRecognition() {
     noCanonicalAuthority: H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE.authorityLimitations.includes('NO_CANONICAL_IDENTITY_AUTHORITY')
   });
   const eligible = Object.values(checks).every(Boolean);
-  return deepFreeze({ eligible, status: eligible ? 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_PASS' : 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_FAIL', checks, targetPath: TARGET_PATH, targetMainBlob: TARGET_MAIN_BLOB, browserPath: BROWSER_PATH, runnerPath: RUNNER_PATH, anchorEvidencePath: ANCHOR_EVIDENCE_PATH, anchorReceiptPath: ANCHOR_RECEIPT_PATH });
+  return deepFreeze({ eligible, status: eligible ? 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_PASS' : 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_FAIL', checks, targetPath: TARGET_PATH, targetMainBlob: TARGET_MAIN_BLOB, browserPath: BROWSER_PATH, runnerPath: RUNNER_PATH, anchorEvidencePath: ANCHOR_EVIDENCE_PATH, anchorReceiptPath: ANCHOR_RECEIPT_PATH, recoveryEvidencePath: RECOVERY_EVIDENCE_PATH, recoveryReceiptPath: RECOVERY_RECEIPT_PATH });
 }
 
 export const H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_FACADE = deepFreeze({ ...baseFacade, getHEarthRepositoryRegistryInstance, getHEarthRepositoryRegistryNode, getHEarthRepositoryRegistryEvidence, resolveHEarthRepositoryRegistryPath, resolveHEarthRepositoryRegistryOccurrence, findHEarthRepositoryRegistryNodes, getHEarthRepositoryRegistryRelationsForNode, getHEarthRepositoryRegistryDependencyClosure, verifyHEarthAwardsPublicFacePathRecognition });

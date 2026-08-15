@@ -1044,18 +1044,6 @@
       "scopeHash": "858e4ae75d0f74722bc34a122711309729eafbfd69183c5f8e81a57255b76dd6",
       "state": "ADMITTED_LOCKED"
     },
-    "8786a8ee3af526ef4d778a222acc175af61af29043dd543965c42e8b1883c4c5": {
-      "governingHead": "d8129cc81068a16b0fd8a7935f63a52912f9fa56",
-      "lockGeneration": 1485,
-      "lockScope": "H_EARTH:OW02:EXPERIENCE_ANCHOR:REGISTRY_RESERVATION:FRESH_EXECUTION_CARRIER:V1:EXACT_1_PATH_SCOPE",
-      "operationId": "H_EARTH_OW02_EXPERIENCE_ANCHOR_REGISTRY_RESERVATION_FRESH_EXECUTION_CARRIER_v1",
-      "procedureLocatorDigest": "9a1076b3c8c3d32d1b122313d7fd153759e3ed51d992d93a6b301f09e7c210d3",
-      "released": false,
-      "requestDigest": "1d2a8d63bcd5f25ae46f6f792bec5803b1ec892e804c47236029978626c11b2c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "8786a8ee3af526ef4d778a222acc175af61af29043dd543965c42e8b1883c4c5",
-      "state": "ADMITTED_LOCKED"
-    },
     "88a29052bda5c7ccc0d609c948f2fa60ddbf17efcfa957afb2edcb5ffba39412": {
       "governingHead": "c92f4c46dea84e38a4248e8bb9271e8adab5df53",
       "lockGeneration": 32,
@@ -21775,6 +21763,19 @@
       "scopeHash": "2f61e9787a521999ee39a4c3f47530661492fef0ec9c1a85c51e8981c9c63829",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "d8129cc81068a16b0fd8a7935f63a52912f9fa56",
+      "lockGeneration": 1485,
+      "lockScope": "H_EARTH:OW02:EXPERIENCE_ANCHOR:REGISTRY_RESERVATION:FRESH_EXECUTION_CARRIER:V1:EXACT_1_PATH_SCOPE",
+      "operationId": "H_EARTH_OW02_EXPERIENCE_ANCHOR_REGISTRY_RESERVATION_FRESH_EXECUTION_CARRIER_v1",
+      "procedureLocatorDigest": "9a1076b3c8c3d32d1b122313d7fd153759e3ed51d992d93a6b301f09e7c210d3",
+      "released": true,
+      "requestDigest": "1d2a8d63bcd5f25ae46f6f792bec5803b1ec892e804c47236029978626c11b2c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8786a8ee3af526ef4d778a222acc175af61af29043dd543965c42e8b1883c4c5",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

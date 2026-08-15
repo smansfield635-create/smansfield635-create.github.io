@@ -132,11 +132,8 @@
   }
 
   @media (max-width: 440px) {
-    .mm-carousel { --card-width: min(78vw, 19.5rem); min-height: 760px; }
-    .mm-viewport { inset: 18.5rem 0 0; }
-    .mm-card:not([data-active="true"]) .mm-card__top,
-    .mm-card:not([data-active="true"]) .mm-card__body { opacity: 0; }
-    .mm-card:not([data-active="true"]) .mm-card__surface { opacity: .24; filter: saturate(.58); }
+    .mm-carousel { --card-width: min(78vw, 19.5rem); min-height: 900px; }
+    .mm-viewport { inset: 26rem 0 0; }
     .mm-carousel__heading h2 { font-size: 1.8rem; }
     .mm-orbit-note { bottom: .8rem; }
     .mm-inspection__close span:last-child { font-size: .68rem; }

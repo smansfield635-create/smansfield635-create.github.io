@@ -1,0 +1,34 @@
+{
+  "schema": "EXTERNALLY_SOURCED_ICR_BRIDGE_PARTIAL_EXECUTION_FAILURE_RECEIPT_v1",
+  "operation": "EXTERNALLY_SOURCED_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "workflow_run_id": 31078103567,
+  "job_id": 92540482013,
+  "exact_head": "247e91fe24648f7e8abe1af57b4c0c16b608306f",
+  "result": "INVALID_PARTIAL_EXECUTION_RETRIEVAL_FAILURE",
+  "package_verification": "PASS_18_OF_18",
+  "software_bridge_verification": "PASS_11_OF_11",
+  "external_data_execution": {
+    "ai4i_retrieval_and_computation_reached": true,
+    "ai4i_numeric_results_exposed_or_persisted": false,
+    "hydraulic_retrieval": "FAILED_BEFORE_MODEL_EXECUTION",
+    "naval_retrieval": "NOT_REACHED",
+    "uci_execution_report_created": false,
+    "workflow_artifact_created": false
+  },
+  "failure": {
+    "class": "DATASET_CLIENT_IMPORT_UNAVAILABLE",
+    "dataset": "UCI_447_CONDITION_MONITORING_OF_HYDRAULIC_SYSTEMS",
+    "detail": "The UCI dataset exists but ucimlrepo 0.0.7 declares it unavailable for import."
+  },
+  "repair_boundary": {
+    "authorized_change": "Replace only the UCI 447 client retrieval mechanism with the official UCI ZIP and compute the same frozen sensor aggregates.",
+    "dataset_change": false,
+    "target_change": false,
+    "feature_partition_change": false,
+    "model_family_change": false,
+    "metric_change": false,
+    "threshold_change": false,
+    "terminal_disposition_change": false
+  },
+  "scientific_result": "NONE"
+}

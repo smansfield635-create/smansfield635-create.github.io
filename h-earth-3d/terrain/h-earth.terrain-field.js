@@ -56,7 +56,7 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
     maximumInlandReach: 48,
     westernHeadlandX: 48,
     easternHeadlandX: 198,
-    realizationConcentration: 3,
+    realizationConcentration: 8,
     morphology: 'ASYMMETRIC_CURVED_INLAND_BAY_NOT_STRAIGHT_CUT'
   },
   harbor: {
@@ -122,9 +122,9 @@ export function getHEarthCanonicalShorelineZ(worldX) {
     bay.halfWidth,
     bay.realizationConcentration
   );
-  const bayAsymmetry = -9.0 * concentratedBell(worldX, bay.centerX + 22, 44, 2);
-  const westernHeadland = 10.5 * concentratedBell(worldX, bay.westernHeadlandX, 42, 2);
-  const easternHeadland = 7.5 * concentratedBell(worldX, bay.easternHeadlandX, 46, 2);
+  const bayAsymmetry = -9.0 * concentratedBell(worldX, bay.centerX + 22, 44, 5);
+  const westernHeadland = 10.5 * concentratedBell(worldX, bay.westernHeadlandX, 42, 5);
+  const easternHeadland = 7.5 * concentratedBell(worldX, bay.easternHeadlandX, 46, 5);
   return canonicalBackbone + bayCore + bayAsymmetry + westernHeadland + easternHeadland;
 }
 

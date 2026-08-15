@@ -32,8 +32,6 @@ jobs:
           curl -L --fail --retry 3 \
             'https://upload.wikimedia.org/wikipedia/commons/3/3d/The_Modena_Chamber_Orchestra_-_Vivaldi%27s_Summer%2C_RV_315_-_I._Allegro_non_molto.ogg' \
             -o /tmp/h-earth-awards/vivaldi.ogg
-          ffprobe -v error -show_entries format=duration:stream=codec_name,width,height -of json /tmp/h-earth-awards/source.mp4
-          ffprobe -v error -show_entries format=duration:stream=codec_name -of json /tmp/h-earth-awards/vivaldi.ogg
 
       - name: Render finished 18-second reel
         run: |
@@ -50,11 +48,31 @@ jobs:
             showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4
           ffprobe -v error -show_entries format=duration:stream=codec_name,width,height,pix_fmt -of json showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4
 
-      - name: Commit finished reel
+      - name: Bind the finished reel to the Awards page
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('showroom/globe/h-earth/awards/index.html')
+          s = p.read_text()
+          old_media = '<div class="lens-media" id="world-media" hidden><div class="lens-media-frame"><video id="world-reel" playsinline preload="metadata" muted aria-label="18-second edited H-Earth browser-native world environment excerpt" src="https://drive.google.com/uc?export=download&id=1bt9gQEEimsTWT_VEq50PFu4LB5nNbFGc"></video><audio id="world-score" preload="metadata" src="https://upload.wikimedia.org/wikipedia/commons/3/3d/The_Modena_Chamber_Orchestra_-_Vivaldi%27s_Summer%2C_RV_315_-_I._Allegro_non_molto.ogg"></audio></div><p>18-second H-Earth environment excerpt · four-shot edited presentation · tap video to play or pause</p><p class="music-credit">Music: Antonio Vivaldi, <em>Summer</em>, I. Allegro non molto · The Modena Chamber Orchestra · public-domain recording via Musopen/Wikimedia Commons.</p></div>'
+          new_media = '<div class="lens-media" id="world-media" hidden><div class="lens-media-frame"><video id="world-reel" playsinline controls preload="metadata" aria-label="18-second edited H-Earth browser-native world environment excerpt with Vivaldi score" src="/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4"></video></div><p>18-second H-Earth environment excerpt · finished four-shot 16:9 presentation with score</p><p class="music-credit">Music: Antonio Vivaldi, <em>Summer</em>, I. Allegro non molto · The Modena Chamber Orchestra · public-domain recording via Musopen/Wikimedia Commons.</p></div>'
+          if old_media not in s:
+              raise SystemExit('expected H-Earth media block not found')
+          s = s.replace(old_media, new_media, 1)
+          start = 'const compassMedia=document.getElementById(\'compass-media\'),worldMedia=document.getElementById(\'world-media\'),worldReel=document.getElementById(\'world-reel\'),worldScore=document.getElementById(\'world-score\');const cuts=[[0,4],[18,22],[44,48],[52,58]];let cutIndex=0,cutSeeking=false;const inCut=t=>t>=cuts[cutIndex][0]-.25&&t<=cuts[cutIndex][1]+.25;const resetReel=()=>{cutIndex=0;try{worldReel.currentTime=cuts[0][0];worldScore.currentTime=0}catch(e){}};worldReel.addEventListener(\'loadedmetadata\',resetReel,{once:true});worldReel.addEventListener(\'play\',()=>{if(!inCut(worldReel.currentTime))resetReel();worldScore.play().catch(()=>{})});worldReel.addEventListener(\'pause\',()=>worldScore.pause());worldReel.addEventListener(\'timeupdate\',()=>{if(cutSeeking||worldReel.paused)return;const end=cuts[cutIndex][1];if(worldReel.currentTime>=end-.08){cutIndex+=1;if(cutIndex<cuts.length){cutSeeking=true;worldReel.currentTime=cuts[cutIndex][0];const resume=()=>{cutSeeking=false;worldReel.removeEventListener(\'seeked\',resume)};worldReel.addEventListener(\'seeked\',resume)}else{worldReel.pause();resetReel()}}});worldReel.addEventListener(\'click\',()=>{if(worldReel.paused)worldReel.play().catch(()=>{});else worldReel.pause()});'
+          repl = 'const compassMedia=document.getElementById(\'compass-media\'),worldMedia=document.getElementById(\'world-media\'),worldReel=document.getElementById(\'world-reel\');'
+          if start not in s:
+              raise SystemExit('expected client-side edit/audio script not found')
+          s = s.replace(start, repl, 1)
+          s = s.replace("if(b.dataset.lens!=='world'&&!worldReel.paused){worldReel.pause();resetReel()}", "if(b.dataset.lens!=='world'&&!worldReel.paused){worldReel.pause()}", 1)
+          p.write_text(s)
+          PY
+
+      - name: Commit final media repair and retire builder
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4
-          git diff --cached --quiet && exit 0
-          git commit -m 'Add self-contained H-Earth awards reel with Vivaldi score'
+          git add showroom/globe/h-earth/awards/index.html showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4
+          git rm .github/workflows/build-h-earth-awards-reel.yml
+          git commit -m 'Use self-contained H-Earth awards reel with Vivaldi score'
           git push origin HEAD:agent/awards-h-earth-self-contained-media-repair

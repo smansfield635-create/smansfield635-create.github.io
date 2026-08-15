@@ -1,0 +1,43 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A4_QUALIFICATION_v1",
+  "generation": "A4",
+  "status": "PASS_BOUNDED_PURPOSE",
+  "predecessorHead": "ab0aa96f39948f9d8ac9521c3b690a0bd530f2cf",
+  "qualificationCorpus": "COMPASS_C01_NAVIGATION_REQUIRES_ORIENTATION",
+  "sampleRateHz": 24000,
+  "sampleCount": 71400,
+  "durationSeconds": 2.975,
+  "observedMetrics": {
+    "rms": 0.029011973959228405,
+    "peak": 0.4403364956378937,
+    "meanAbsDeltaFromA3": 0.010975697657009148
+  },
+  "checks": {
+    "deterministicRepeatOutput": "PASS",
+    "sampleCountPreservedFromA3": "PASS",
+    "durationPreservedFromA3": "PASS",
+    "nonSilentOutput": "PASS",
+    "noOutputSaturation": "PASS",
+    "nonzeroA4DeltaFromA3": "PASS",
+    "distinctNasalProfiles": "PASS",
+    "distinctFricativeSpectralFamilies": "PASS",
+    "labialAlveolarVelarStopClassification": "PASS",
+    "A2GestureLawPreserved": "PASS_BY_DEPENDENCY",
+    "A3SourceLawPreserved": "PASS_BY_DEPENDENCY"
+  },
+  "repairEvidence": {
+    "firstCandidatePeak": 1.0,
+    "firstCandidateDisposition": "REJECTED_BEFORE_QUALIFICATION",
+    "qualifiedCandidatePeak": 0.4403364956378937,
+    "qualifiedCandidateClipping": false
+  },
+  "qualificationMeaning": "A4 qualifies only the class-specific physical-acoustics mechanism. It does not claim natural-human Jeeves quality.",
+  "forbiddenClaims": [
+    "natural human voice achieved",
+    "Jeeves identity calibrated",
+    "reference-matched speech",
+    "production narration ready"
+  ],
+  "disposition": "PASS_ADVANCE_TO_A5_DECISION_BOUNDARY",
+  "nextLawfulAction": "A5_JEEVES_SPECIFIC_ACOUSTIC_CALIBRATION_DECISION_BOUNDARY"
+}

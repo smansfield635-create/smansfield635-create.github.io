@@ -1,0 +1,145 @@
+name: Laws Carousel Gen267 Continuity Intake
+
+on:
+  push:
+    branches:
+      - 'agent/laws-carousel-gen267-continuity-intake'
+    paths:
+      - '.github/workflows/laws-carousel-gen267-continuity-intake.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+  PRIVATE_HEAD: 6ad90e9c1fb9ebc012b36166c0c89d73fb48f994
+  OPERATION_ID: LAWS_CAROUSEL_GEN267_INSTALLED_CONTINUITY_RECONCILIATION_20260815_001
+  LOCK_SCOPE: LAWS:CAROUSEL:GEN267:INSTALLED_CONTINUITY_RECONCILIATION:V1
+
+jobs:
+  canonical-intake:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private-repository installation token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+
+      - name: Check out exact private governing head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.PRIVATE_HEAD }}
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build exact canonical request and procedure
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$PRIVATE_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          cat > "$RUNNER_TEMP/laws-continuity-request.json" <<JSON
+          {
+            "schema":"REPOSITORY_OPERATION_REQUEST_v1",
+            "operationId":"$OPERATION_ID",
+            "projectId":"LAWS",
+            "lockScope":"$LOCK_SCOPE",
+            "exactGoverningHead":"$PRIVATE_HEAD",
+            "subjectIdentity":{"class":"INSTALLED_LAWS_CAROUSEL_CONTINUITY","publicQualifiedCandidate":"063f49ba788388f0a9075e6624792b8cf761e5bf","publicMergeCommit":"694de80c43a92eb9fbd1a14dbfa8e8132fad99a5","publicPr":1086},
+            "requestingAuthority":{"source":"PRIVATE_ISSUE_233_PLUS_LIVE_REVALIDATION","ownerApprovedStrategy":true},
+            "executingRole":{"role":"CONTROL_PLANE_CONTINUITY_RECONCILIATION_ONLY"},
+            "independentVerifier":{"required":true,"definition":"POST_MUTATION_EXACT_IDENTITY_AND_FRONTIER_REDERIVATION"},
+            "constructionProcedureLocator":"issue://smansfield635-create/geodiametrics1/233#GEN267_CONTINUITY_RECONCILIATION_V1",
+            "requiredInputs":[
+              {"id":"PRIVATE_MAIN_6AD90E9C","resolved":true},
+              {"id":"PUBLIC_PR_1086_MERGED","resolved":true},
+              {"id":"PUBLIC_QUALIFIED_CANDIDATE_063F49BA","resolved":true},
+              {"id":"PUBLIC_MERGE_694DE80C","resolved":true}
+            ],
+            "allowedPaths":[
+              ".github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md",
+              ".github/ai-router/projects/laws/entrypoint.v1.json",
+              ".github/ai-router/project-continuation/laws-contextual-3d.continuation.v1.json"
+            ],
+            "prohibitedPaths":["laws/","showroom/","h-earth-3d/","assets/","tools/",".github/workflows/"],
+            "requiredOutputs":["GEN267_INSTALLED_IDENTITY_BOUND","STALE_FRESH_CONSTRUCTION_FRONTIER_REMOVED","NEXT_FRONTIER_REDERIVED_FROM_LIVE_STATE"],
+            "exactTestCommand":"node tools/repository-ai-entry-router.mjs --self-test",
+            "workflowPath":".github/workflows/laws-carousel-gen267-continuity-reconciliation.yml",
+            "artifactPaths":["/tmp/laws-carousel-gen267-continuity-reconciliation-receipt.json"],
+            "fingerprintDomain":{"publicCandidate":"063f49ba788388f0a9075e6624792b8cf761e5bf","publicMerge":"694de80c43a92eb9fbd1a14dbfa8e8132fad99a5","privateBase":"$PRIVATE_HEAD"},
+            "errorPrecedence":["INSTALLED_IDENTITY_MISMATCH","SCOPE_MISMATCH","FRONTIER_REDERIVATION_FAILURE"],
+            "stopConditions":["STOP_IF_PUBLIC_GEN267_IDENTITY_NOT_PROVEN","STOP_IF_PRODUCT_MUTATION_REQUIRED","STOP_IF_NEXT_FRONTIER_NOT_UNIQUE"],
+            "terminalDispositions":["PASS_CLOSED","FAIL_CLOSED","WITHDRAWN"]
+          }
+          JSON
+          cat > "$RUNNER_TEMP/laws-continuity-procedure.json" <<JSON
+          {
+            "schema":"REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+            "procedureId":"LAWS_CAROUSEL_GEN267_INSTALLED_CONTINUITY_RECONCILIATION_PROCEDURE_V1",
+            "operationClass":"LAWS_CONTROL_PLANE_CONTINUITY_RECONCILIATION",
+            "exactGoverningHead":"$PRIVATE_HEAD",
+            "exactAllowedRepositoryPaths":[
+              ".github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md",
+              ".github/ai-router/projects/laws/entrypoint.v1.json",
+              ".github/ai-router/project-continuation/laws-contextual-3d.continuation.v1.json"
+            ],
+            "exactBranchAndCommitSequence":["CREATE_DEDICATED_PRIVATE_BRANCH_FROM_EXACT_GOVERNING_HEAD","MUTATE_ONLY_THREE_ALLOWED_CONTROL_PLANE_PATHS","VERIFY","OPEN_DRAFT_PR","MERGE_ONLY_AFTER_PASS_CLOSED"],
+            "evaluationToolingHeadBindingRule":"USE_EXACT_PRIVATE_GOVERNING_HEAD_TOOLING_AND_EXACT_PUBLIC_GEN267_IDENTITIES",
+            "canonicalInputSchemas":["REPOSITORY_OPERATION_REQUEST_v1","PUBLIC_GEN267_INSTALLATION_IDENTITY_V1"],
+            "canonicalOutputSchemas":["LAWS_CAROUSEL_GEN267_CONTINUITY_RECONCILIATION_RECEIPT_v1"],
+            "errorCodeAndValidationPrecedence":["INSTALLED_IDENTITY_MISMATCH","SCOPE_MISMATCH","FRONTIER_REDERIVATION_FAILURE"],
+            "exactTestRunnerCommand":"node tools/repository-ai-entry-router.mjs --self-test",
+            "independentVerifierDefinition":{"required":true,"checks":["THREE_PATH_SCOPE_ONLY","PUBLIC_GEN267_IDENTITY_BOUND","NO_PRODUCT_MUTATION","NO_STALE_FRESH_CONSTRUCTION_FRONTIER","UNIQUE_NEXT_FRONTIER_OR_STOP"]},
+            "workflowAndArtifactPackagingPaths":{"workflowPath":".github/workflows/laws-carousel-gen267-continuity-reconciliation.yml","artifactPaths":["/tmp/laws-carousel-gen267-continuity-reconciliation-receipt.json"]},
+            "bridgeOutputFingerprintDomain":{"publicCandidate":"063f49ba788388f0a9075e6624792b8cf761e5bf","publicMerge":"694de80c43a92eb9fbd1a14dbfa8e8132fad99a5","privateBase":"$PRIVATE_HEAD"},
+            "priorAttemptInspectionLimits":{"rejectedHistoricalCarouselBytesArePositiveAuthority":false,"mayUseNegativeEvidence":true,"mayModifyPublicProduct":false}
+          }
+          JSON
+
+      - name: Execute canonical intake and acquire single-flight lock
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          node tools/operation-intake/repository-operation-intake-gate.v1.mjs \
+            --repository "$PRIVATE_REPOSITORY" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --request "$RUNNER_TEMP/laws-continuity-request.json" \
+            --procedure "$RUNNER_TEMP/laws-continuity-procedure.json" \
+            --output "$RUNNER_TEMP/laws-continuity-admission-receipt.json"
+          jq -e '.result=="ADMITTED_AND_LOCKED" and .operationStarted==true and .repositoryWritesAuthorized==true' "$RUNNER_TEMP/laws-continuity-admission-receipt.json" >/dev/null
+
+      - name: Verify exact private checkout remains clean
+        shell: bash
+        run: |
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload canonical intake evidence
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: laws-carousel-gen267-continuity-intake-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/laws-continuity-request.json
+            ${{ runner.temp }}/laws-continuity-procedure.json
+            ${{ runner.temp }}/laws-continuity-admission-receipt.json
+          if-no-files-found: error
+          retention-days: 90

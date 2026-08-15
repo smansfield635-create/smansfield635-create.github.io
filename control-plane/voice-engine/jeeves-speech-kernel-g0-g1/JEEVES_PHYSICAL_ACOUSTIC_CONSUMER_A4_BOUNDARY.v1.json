@@ -1,0 +1,47 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A4_BOUNDARY_v1",
+  "generation": "A4",
+  "status": "CONSTRUCTED_PENDING_QUALIFICATION_RECEIPT",
+  "predecessorGeneration": "A3",
+  "predecessorHead": "ab0aa96f39948f9d8ac9521c3b690a0bd530f2cf",
+  "purpose": "Introduce phoneme-class-specific acoustic physics while preserving A3 glottal/aspiration source behavior, A2 articulatory trajectories, frozen performance-state inputs, and C01 timing.",
+  "heldConstant": [
+    "C01 phoneme sequence and durations",
+    "24000 Hz sample rate",
+    "A2 gesture/coarticulation law",
+    "A3 glottal source and aspiration law",
+    "performance-state values",
+    "no learned components",
+    "no reference conditioning"
+  ],
+  "authorizedVariables": [
+    "nasal pole and anti-resonance shaping",
+    "fricative class spectral center and bandwidth",
+    "fricative class excitation gain",
+    "stop place classification",
+    "stop closure attenuation",
+    "place-dependent stop burst center bandwidth and gain"
+  ],
+  "phonemeClassLaw": {
+    "nasals": ["M", "N", "NG"],
+    "fricativeFamilies": ["S/Z", "SH/ZH", "F/V", "TH/DH", "H"],
+    "stopPlaces": ["labial:P/B", "alveolar:T/D", "velar:K/G"]
+  },
+  "repairHistory": {
+    "initialQualificationAttempt": "REJECTED_SATURATION_PEAK_EQ_1_0",
+    "repair": "REDUCED_CLASS_EXCITATION_AND_OUTPUT_GAINS_BEFORE_FREEZE",
+    "law": "SATURATED_CANDIDATE_NOT_QUALIFIED"
+  },
+  "explicitlyNotAuthorized": [
+    "new timing law",
+    "new prosody law",
+    "A5 calibration",
+    "learned residual",
+    "external model weights",
+    "remote TTS",
+    "reference-audio conditioning",
+    "public product mutation"
+  ],
+  "nextIfPass": "A5_JEEVES_SPECIFIC_ACOUSTIC_CALIBRATION_DECISION_BOUNDARY",
+  "nextIfFail": "REPAIR_A4_CLASS_SPECIFIC_PHYSICS_WITHOUT_ADVANCING"
+}

@@ -1,0 +1,60 @@
+name: CP9 Generation 43 Canonical Termination Route
+
+on:
+  push:
+    branches:
+      - repair/cp9r-termination-route-v1-001
+    paths:
+      - '.github/operation-termination-route/**'
+      - 'tools/operation-termination-route/cp9-generation-43-close.v1.mjs'
+      - '.github/workflows/cp9-generation-43-termination-route.yml'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  close-or-verify-generation-43:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact repair head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify exact repair scope
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { execFileSync } from 'node:child_process';
+          const manifest = JSON.parse(fs.readFileSync('.github/operation-termination-route/changed-path-manifest.v1.json', 'utf8'));
+          const actual = execFileSync('git', ['diff', '--name-only', `${manifest.baseHead}...HEAD`], { encoding: 'utf8' })
+            .trim().split(/\r?\n/).filter(Boolean).sort();
+          const expected = [...manifest.expectedChangedPaths].sort();
+          if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+            throw new Error(`TERMINATION_ROUTE_SCOPE_MISMATCH:${JSON.stringify({ expected, actual })}`);
+          }
+          if (actual.length !== manifest.expectedChangedPathCount) throw new Error('TERMINATION_ROUTE_PATH_COUNT_MISMATCH');
+          NODE
+
+      - name: Invoke exact canonical close or verify terminal state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node tools/operation-termination-route/cp9-generation-43-close.v1.mjs
+
+      - name: Upload immutable closure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cp9-generation-43-canonical-termination-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .github/operation-termination-route/evidence/generation-43-closure-receipt.json
+            ${{ runner.temp }}/generation-43-closure-receipt.json
+            ${{ runner.temp }}/generation-43-closure-verification.json
+          if-no-files-found: error
+          retention-days: 90

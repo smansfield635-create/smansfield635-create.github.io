@@ -36,8 +36,6 @@ const bell = (value, center, radius) => {
   const retained = 1 - d * d;
   return retained * retained;
 };
-const concentratedBell = (value, center, radius, concentration) =>
-  Math.pow(bell(value, center, radius), concentration);
 
 export const H_EARTH_TERRAIN_FIELD_CONTRACT_ID = 'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1';
 
@@ -56,7 +54,6 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
     maximumInlandReach: 48,
     westernHeadlandX: 48,
     easternHeadlandX: 198,
-    realizationConcentration: 16,
     morphology: 'ASYMMETRIC_CURVED_INLAND_BAY_NOT_STRAIGHT_CUT'
   },
   harbor: {
@@ -116,15 +113,10 @@ export function getHEarthCanonicalShorelineZ(worldX) {
   const canonicalBackbone = coast.baselineZ
     + 7.5 * Math.sin(worldX / 58)
     + 2.75 * Math.sin((worldX + 31) / 19);
-  const bayCore = -bay.maximumInlandReach * concentratedBell(
-    worldX,
-    bay.centerX,
-    bay.halfWidth,
-    bay.realizationConcentration
-  );
-  const bayAsymmetry = -9.0 * concentratedBell(worldX, bay.centerX + 22, 44, 10);
-  const westernHeadland = 10.5 * concentratedBell(worldX, bay.westernHeadlandX, 42, 10);
-  const easternHeadland = 7.5 * concentratedBell(worldX, bay.easternHeadlandX, 46, 10);
+  const bayCore = -bay.maximumInlandReach * bell(worldX, bay.centerX, bay.halfWidth);
+  const bayAsymmetry = -9.0 * bell(worldX, bay.centerX + 22, 44);
+  const westernHeadland = 10.5 * bell(worldX, bay.westernHeadlandX, 42);
+  const easternHeadland = 7.5 * bell(worldX, bay.easternHeadlandX, 46);
   return canonicalBackbone + bayCore + bayAsymmetry + westernHeadland + easternHeadland;
 }
 

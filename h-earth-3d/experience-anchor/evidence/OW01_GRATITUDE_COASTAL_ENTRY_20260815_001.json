@@ -2,7 +2,7 @@
   "schema": "H_EARTH_OW01_ANCHOR_BROWSER_EVIDENCE_v1",
   "evidenceId": "OW01_GRATITUDE_COASTAL_ENTRY_20260815_001",
   "productHead": "a29b2a9b48bdbd9225d207b0de1c7fa5b751e365",
-  "qualificationHead": "103ee1be59af5b9d33fbb93970ba579bfae50428",
+  "qualificationHead": "c838e8fe183ff2bb3b4d523ce14435fd93da67b6",
   "baseHead": "aefb54971ae0f91a9abf9e8fc8e588f82f3a5744",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
@@ -21,6 +21,7 @@
     "consoleErrors": [],
     "requestFailures": [],
     "captureError": null,
+    "r2PackageDiagnostic": null,
     "screenshotSha256": "c7619947391e51fd7b6afaf4d02d21ea688cb3be769a3ac249c440302cf06009",
     "screenshotBytes": 326865
   },
@@ -41,6 +42,23 @@
     "consoleErrors": [],
     "requestFailures": [],
     "captureError": null,
+    "r2PackageDiagnostic": {
+      "ok": true,
+      "eligible": false,
+      "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_REJECTED",
+      "contractId": "H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1",
+      "issues": [
+        "RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_38",
+        "RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_46",
+        "R2_WEST_ADMISSION_FAILED",
+        "R2_PACKET_002_TRANSFER_FAILED"
+      ],
+      "primitiveCount": null,
+      "triangleCount": null,
+      "indexCount": null,
+      "vertexCount": null,
+      "sourceAuthorities": null
+    },
     "screenshotSha256": "932ce081acb0540dcd4d7d1e57425e24d1bc921330808518b6bc885216276fa0",
     "screenshotBytes": 42616
   },

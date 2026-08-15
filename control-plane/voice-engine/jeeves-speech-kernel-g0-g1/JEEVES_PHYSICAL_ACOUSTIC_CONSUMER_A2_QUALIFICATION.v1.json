@@ -1,0 +1,39 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A2_QUALIFICATION_v1",
+  "status": "PASS_BOUNDED_MACHINE_QUALIFICATION",
+  "generation": "A2",
+  "qualifiedPredecessorHead": "b3ea7653434a4515b0c42398eec3498417c11c34",
+  "qualificationUtterance": {
+    "id": "COMPASS_C01",
+    "text": "Navigation requires orientation."
+  },
+  "execution": {
+    "runtime": "Node.js v22.16.0",
+    "result": "PASS",
+    "sampleRateHz": 24000,
+    "sampleCount": 71400,
+    "durationSeconds": 2.975,
+    "rms": 0.049757294420253555,
+    "peak": 0.20437099039554596,
+    "meanAbsDeltaFromA1": 0.0022093778401659713
+  },
+  "checks": {
+    "deterministicRepeat": true,
+    "durationPreservedFromA1": true,
+    "sampleCountPreservedFromA1": true,
+    "boundedNeighborInfluence": true,
+    "carryoverGesturePresent": true,
+    "anticipatoryGesturePresent": true,
+    "continuousTargetDifferenceAcrossGestureWindow": true,
+    "waveformDiffersMateriallyFromA1": true,
+    "peakBounded": true,
+    "externalWeightsAbsent": true,
+    "remoteTtsAbsent": true,
+    "learnedResidualAbsent": true,
+    "publicProductMutation": false
+  },
+  "interpretation": "A2 passes only the bounded purpose of replacing edge-only target interpolation with deterministic overlapping articulatory gestures. This receipt does not claim natural-human Jeeves voice quality.",
+  "ownerReviewThreshold": "NOT_ASSESSED_AT_A2_MACHINE_BOUNDARY",
+  "disposition": "A2_ARTICULATORY_GESTURE_MODEL_QUALIFIED",
+  "nextLawfulAction": "A3_GLOTTAL_SOURCE_AND_ASPIRATION_PHYSICS_ON_C01_ONLY"
+}

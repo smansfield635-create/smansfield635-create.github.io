@@ -1,0 +1,48 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A2_BOUNDARY_v1",
+  "status": "CONSTRUCTED_PENDING_EXECUTION_QUALIFICATION",
+  "generation": "A2",
+  "predecessorHead": "b3ea7653434a4515b0c42398eec3498417c11c34",
+  "predecessor": "A0_A1_PHYSICAL_ACOUSTIC_CONSUMER",
+  "purpose": "Add bounded articulatory/coarticulation gesture overlap while preserving the qualified Jeeves performance interface and A0/A1 excitation/resonator physics.",
+  "heldConstant": [
+    "qualified Jeeves performance-state interface",
+    "single Compass C01 qualification utterance",
+    "24 kHz sample rate",
+    "A0/A1 glottal/noise excitation families",
+    "three-resonator vocal-tract filter structure",
+    "A0/A1 performance-state semantics",
+    "no external runtime libraries",
+    "no external model weights"
+  ],
+  "authorizedA2Variables": [
+    "anticipatory articulatory influence",
+    "carryover articulatory influence",
+    "bounded gesture-overlap windows",
+    "continuous formant-target blending across phoneme boundaries",
+    "continuous bandwidth-target blending across phoneme boundaries"
+  ],
+  "gestureLaw": {
+    "representation": "CURRENT_TARGET + PREVIOUS_GESTURE + NEXT_GESTURE",
+    "anticipatoryWindowFraction": 0.28,
+    "carryoverWindowFraction": 0.24,
+    "maximumNeighborInfluence": 0.42,
+    "normalizationRequired": true,
+    "continuityRequired": true
+  },
+  "explicitlyForbidden": [
+    "new text or phoneme model",
+    "new prosody law",
+    "new Jeeves identity law",
+    "learned residual",
+    "reference-conditioned synthesis",
+    "external pretrained weights",
+    "remote TTS service",
+    "general-purpose speech platform",
+    "public product mutation"
+  ],
+  "acceptanceQuestion": "Does A2 replace edge-only phoneme interpolation with continuous bounded articulatory gesture overlap while preserving deterministic output and predecessor behavior?",
+  "qualificationScope": "C01_ONLY_MACHINE_QUALIFICATION",
+  "nextIfPass": "A3_GLOTTAL_SOURCE_AND_ASPIRATION_PHYSICS",
+  "nextIfFail": "REPAIR_A2_GESTURE_OVERLAP_WITHOUT_ADVANCING"
+}

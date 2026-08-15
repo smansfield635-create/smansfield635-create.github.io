@@ -1,13 +1,13 @@
 {
   "schema": "H_EARTH_OW01_ANCHOR_BROWSER_EVIDENCE_v1",
   "evidenceId": "OW01_GRATITUDE_COASTAL_ENTRY_20260815_001",
-  "productHead": "d9e3e01bc9880a0dd1a73dd0112a44cc10bada30",
-  "qualificationHead": "c7b9b3d9955f9c485a196e6e34a2b00c20bc8818",
+  "productHead": "0c834c7135dc78890ef5b77af6895e9cbdb9942c",
+  "qualificationHead": "17cdb044449bfbad656e4e63b1b5b8310d1d8e68",
   "baseHead": "aefb54971ae0f91a9abf9e8fc8e588f82f3a5744",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "route": "/showroom/globe/h-earth/",
-  "terrainFieldSha256": "4c36e43d78ff97a248a91d4647227ce5c871a48dd57485795bc613178043bf12",
+  "terrainFieldSha256": "57537563ac2af8ddf3c02d997b8e56ef6f02dec584d3744029d76889743df5d0",
   "base": {
     "label": "base",
     "status": 200,
@@ -386,8 +386,8 @@
       "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_REJECTED",
       "contractId": "H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1",
       "issues": [
-        "RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_25",
-        "RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_33",
+        "RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_23",
+        "RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_31",
         "R2_WEST_ADMISSION_FAILED",
         "R2_PACKET_002_TRANSFER_FAILED"
       ],
@@ -401,17 +401,17 @@
       "ok": true,
       "eligible": true,
       "status": "RUN_8D_VEGETATION_RESOLUTION_COMPLETE",
-      "instanceCount": 22,
+      "instanceCount": 21,
       "archetypeCounts": {
         "COASTAL_GRASS_TUFT": 19,
-        "LOWLAND_SHRUB": 3,
+        "LOWLAND_SHRUB": 2,
         "HIGHLAND_CONIFER_SAPLING": 0
       },
-      "populationInstanceCount": 22,
+      "populationInstanceCount": 21,
       "speciesCounts": {
         "COASTAL_FORB_CLUSTER_v1": 1,
         "COASTAL_GRASS_CLUSTER_v1": 4,
-        "COASTAL_SHRUB_CLUSTER_v1": 2,
+        "COASTAL_SHRUB_CLUSTER_v1": 1,
         "LOW_COASTAL_SHRUB_v1": 1,
         "LOWLAND_FORB_CLUSTER_v1": 3,
         "LOWLAND_MEADOW_GRASS_CLUSTER_v1": 4,
@@ -532,7 +532,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": 150.074,
-            "y": 4.846056015491485,
+            "y": 4.897077889442444,
             "z": -177.988
           },
           "biomeClass": "COASTAL_GRASSLAND",
@@ -604,26 +604,13 @@
           "surfaceClass": "LOWLAND_SOIL"
         },
         {
-          "sourcePopulationInstanceId": "H_EARTH_POPULATION:COASTAL_SHRUB_CLUSTER_v1:842979ae",
-          "speciesId": "COASTAL_SHRUB_CLUSTER_v1",
-          "sourceInstanceClass": "SHRUB",
-          "archetypeId": "LOWLAND_SHRUB",
-          "worldAnchor": {
-            "x": 100.667,
-            "y": 17.995093495845794,
-            "z": -155.395
-          },
-          "biomeClass": "COASTAL_SHRUBLAND",
-          "surfaceClass": "COASTAL_SOIL"
-        },
-        {
           "sourcePopulationInstanceId": "H_EARTH_POPULATION:LOWLAND_MEADOW_GRASS_CLUSTER_v1:11cde85d",
           "speciesId": "LOWLAND_MEADOW_GRASS_CLUSTER_v1",
           "sourceInstanceClass": "MEADOW_GROUNDCOVER",
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": 155.319,
-            "y": 2.7255068135261538,
+            "y": 2.748991758823395,
             "z": -148.618
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -636,7 +623,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": 153.668,
-            "y": 2.923198254108429,
+            "y": 2.96192214012146,
             "z": -150.394
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -649,7 +636,7 @@
           "archetypeId": "COASTAL_GRASS_TUFT",
           "worldAnchor": {
             "x": 152.439,
-            "y": 3.0822066974639895,
+            "y": 3.1319044542312624,
             "z": -151.623
           },
           "biomeClass": "LOWLAND_MEADOW",
@@ -688,7 +675,7 @@
           "archetypeId": "LOWLAND_SHRUB",
           "worldAnchor": {
             "x": 82.552,
-            "y": 9.857594044208527,
+            "y": 9.545990319252015,
             "z": -125.385
           },
           "biomeClass": "COASTAL_SHRUBLAND",

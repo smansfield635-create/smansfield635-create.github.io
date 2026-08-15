@@ -1,0 +1,29 @@
+name: Diagnose Awards Compass audio duration
+on:
+  push:
+    branches:
+      - agent/awards-compass-audio-duration-diagnostic-20260815
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Measure exact media timing and silence
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4"
+          echo '=== FORMAT ==='
+          ffprobe -v error -show_entries format=duration,start_time -of default=nw=1 "$SRC"
+          echo '=== VIDEO STREAM ==='
+          ffprobe -v error -select_streams v:0 -show_entries stream=start_time,duration,nb_frames,r_frame_rate -of default=nw=1 "$SRC"
+          echo '=== AUDIO STREAM ==='
+          ffprobe -v error -select_streams a:0 -show_entries stream=start_time,duration,nb_frames,sample_rate -of default=nw=1 "$SRC"
+          echo '=== SILENCE ==='
+          ffmpeg -hide_banner -i "$SRC" -af silencedetect=noise=-45dB:d=0.15 -f null - 2>&1 | grep -E 'silence_(start|end|duration)' || true
+          echo '=== LAST 8 SECONDS RMS ==='
+          ffmpeg -hide_banner -ss 28 -i "$SRC" -af astats=metadata=1:reset=1 -f null - 2>&1 | grep -E 'RMS level dB|Peak level dB' | tail -40 || true

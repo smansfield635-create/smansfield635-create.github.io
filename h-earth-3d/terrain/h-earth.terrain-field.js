@@ -1,12 +1,13 @@
 /**
  * /h-earth-3d/terrain/h-earth.terrain-field.js
  *
- * H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v2_OW01_GRATITUDE_TRUE_COASTAL_ENTRY
+ * H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1
  *
  * Canonical world-space elevation authority for the functional-landscape
- * successor. Revision 2 binds Gratitude Bay and Gratitude Harbor to the same
- * asymmetric continental shoreline law already carried by the OW01 regional
- * terrain candidate. It creates no geometry, admission, frame, renderer, or route.
+ * successor. This repair preserves the installed Run 6 contract identity while
+ * binding Gratitude Bay and Gratitude Harbor to the asymmetric continental
+ * shoreline law already carried by the OW01 regional terrain candidate. It
+ * creates no geometry, admission, frame, renderer, or route.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -38,7 +39,7 @@ const bell = (value, center, radius) => {
 };
 
 export const H_EARTH_TERRAIN_FIELD_CONTRACT_ID =
-  'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v2_OW01_GRATITUDE_TRUE_COASTAL_ENTRY';
+  'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1';
 
 export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
   systemId: 'H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1',
@@ -75,7 +76,7 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 2,
+  generationRevision: 1,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   worldDomain: {
     xMinimum: -256,

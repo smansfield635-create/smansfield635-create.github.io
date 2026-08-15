@@ -61,7 +61,6 @@ jobs:
           repositories: geodiametrics1
           permission-contents: read
           permission-issues: read
-          permission-pull-requests: read
 
       - name: Validate canonical successor and active lock
         id: authority

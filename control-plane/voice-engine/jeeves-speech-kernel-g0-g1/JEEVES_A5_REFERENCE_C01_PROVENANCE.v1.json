@@ -1,0 +1,34 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_REFERENCE_C01_PROVENANCE_v1",
+  "characterId": "jeeves",
+  "utteranceId": "COMPASS_C01",
+  "expectedText": "Navigation requires orientation.",
+  "transcriptEvidence": "USER_DECLARED_EXPECTED_UTTERANCE_IN_ACTIVE_A5_TEST; NO_EXTERNAL_ASR_USED",
+  "source": {
+    "provider": "GOOGLE_DRIVE",
+    "driveFileId": "1pqPgd2Wria5O1ENWgaM9y--aq_nfwhpZ",
+    "fileName": "Jeeves 1.m4a",
+    "mimeType": "audio/mp4",
+    "sizeBytes": 189234,
+    "createdTime": "2026-08-15T23:40:41.705Z",
+    "modifiedTime": "2026-08-15T23:40:41.790Z"
+  },
+  "originalArtifact": {
+    "sha256": "0fb2a27506e6ef5c8f2ec280eb780654e317fe19c8a0774864fc98c4115a963f",
+    "codec": "aac",
+    "sampleRateHz": 48000,
+    "channels": 1,
+    "containerDurationSeconds": 9.642521
+  },
+  "measurementDerivative": {
+    "format": "wav_pcm_mono_24khz",
+    "sha256": "18991a0617e7c71f6e736862438434ff897557368f295c13005954c174333a93",
+    "purpose": "measurement only; original M4A remains provenance authority"
+  },
+  "authorization": {
+    "sourceSuppliedByUserForJeevesA5Test": true,
+    "originalReferenceIntent": true,
+    "thirdPartyVoiceIdentityBinding": false
+  },
+  "law": "Do not overwrite, normalize, trim, or relabel the original M4A as anything other than the provenance authority. Derived files may be used only for deterministic measurement or lawful calibration."
+}

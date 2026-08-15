@@ -1,0 +1,74 @@
+{
+  "schema": "JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A5_CALIBRATION_GATE_v1",
+  "status": "DECISION_BOUNDARY_CANDIDATE",
+  "baseQualifiedA4Head": "a8d9c0f6b957a53cbcbdc1c38a8a43786c6371e8",
+  "profilePath": "control-plane/voice-engine/diamond-gate-character-acoustic-registry-v1/profiles/jeeves.acoustic.v1.json",
+  "profileBlobSha": "9739d167aa56e4bc72c2bfb222f2e7d62eb5e74d",
+  "profileReferenceAudioStatus": "UNBOUND",
+  "question": "Can A4 be calibrated to a specific Jeeves acoustic identity from the surviving qualitative profile alone without inventing speaker-specific measurements?",
+  "profileIdentifies": [
+    "register class LOW_MID_MALE",
+    "restrained pitch range",
+    "moderate-low dynamic range",
+    "soft attack",
+    "resolved confident cadence",
+    "meaning-first pause behavior",
+    "controlled intensity ceiling",
+    "light dryness",
+    "non-theatrical delivery",
+    "Compass narration priority INTELLIGIBILITY_OVER_DRAMA"
+  ],
+  "profileDoesNotIdentify": [
+    "speaker-specific vowel formant centers",
+    "speaker-specific formant bandwidths",
+    "vocal-tract length scale",
+    "nasal pole and anti-resonance frequencies",
+    "glottal open quotient",
+    "glottal closing quotient",
+    "speaker-specific spectral tilt",
+    "aspiration magnitude by phonetic context",
+    "jitter/shimmer statistics",
+    "fricative spectral envelopes for Jeeves",
+    "stop burst spectra for Jeeves",
+    "speaker-specific coarticulation magnitudes"
+  ],
+  "lawfulWithoutReference": {
+    "allowed": [
+      "retain existing qualified performance-state bounds",
+      "retain broad LOW_MID_MALE nominal F0 region",
+      "retain restraint/urgency source modulation already qualified",
+      "evaluate A4 against descriptive Jeeves constraints",
+      "render clearly labeled uncalibrated physical-synthesis experiments"
+    ],
+    "prohibited": [
+      "claim Jeeves-specific acoustic calibration",
+      "change speaker-specific A4 constants and label them measured",
+      "infer tract geometry from prose descriptors",
+      "invent formant, nasal, glottal, spectral, jitter, or shimmer measurements",
+      "admit learned residual fitting"
+    ]
+  },
+  "decision": "REFERENCE_REQUIRED_FOR_JEEVES_SPECIFIC_ACOUSTIC_CALIBRATION",
+  "reason": "The surviving profile constrains style and broad register but leaves the speaker-specific physical parameter vector underdetermined. Multiple materially different acoustic parameter sets satisfy the same qualitative descriptors.",
+  "failClosedCondition": "If referenceAudio.status is not BOUND_AUTHORIZED_ORIGINAL with provenance and hash, Jeeves-specific A5 calibration must return FAIL_REFERENCE_REQUIRED.",
+  "requiredReferenceMinimum": {
+    "utterances": 1,
+    "recommendedText": "Navigation requires orientation.",
+    "requirements": [
+      "original authorized human performance",
+      "clean enough for acoustic measurement",
+      "exact transcript recorded",
+      "provenance recorded",
+      "SHA-256 frozen before calibration"
+    ]
+  },
+  "explicitlyNotAuthorized": [
+    "A4 constant mutation as Jeeves-specific calibration",
+    "G5 residual fit",
+    "external pretrained weights",
+    "remote TTS",
+    "recognizable third-party voice imitation",
+    "public product mutation"
+  ],
+  "nextLawfulAction": "BIND_ONE_AUTHORIZED_ORIGINAL_JEEVES_REFERENCE_UTTERANCE_WITH_PROVENANCE_AND_SHA256_THEN_ADMIT_MEASUREMENT_CALIBRATION"
+}

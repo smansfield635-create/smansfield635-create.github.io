@@ -15,12 +15,14 @@ on:
       - '!h-earth-3d/AGENTS.md'
       - 'showroom/globe/h-earth/**'
       - '!showroom/globe/h-earth/AGENTS.md'
+      - '.github/workflows/h-earth-repository-registry-preflight.yml'
 
 permissions:
   contents: read
 
 jobs:
   automatic-h-earth-preflight:
+    if: github.ref != 'refs/heads/verification/h-earth-ow02-registry-ratification-v1-001'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -67,5 +69,79 @@ jobs:
         with:
           name: h-earth-automatic-preflight-receipt
           path: /tmp/h-earth-automatic-preflight-receipt.json
+          if-no-files-found: error
+          retention-days: 30
+
+  ow02-registry-ratification-verifier:
+    if: github.ref == 'refs/heads/verification/h-earth-ow02-registry-ratification-v1-001'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact execution-only carrier
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact carrier inheritance and one-path delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^1)" = "9121420908a906bcebbafabd498f7acf0655132e"
+          git diff --name-only HEAD^1 HEAD | sort -u > /tmp/carrier-delta.txt
+          printf '%s\n' '.github/workflows/h-earth-repository-registry-preflight.yml' > /tmp/expected-carrier-delta.txt
+          diff -u /tmp/expected-carrier-delta.txt /tmp/carrier-delta.txt
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Execute and verify ratification candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --experimental-default-type=module --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import facade, {
+            H_EARTH_OW02_EXPERIENCE_ANCHOR_EVIDENCE_PATHS as paths,
+            H_EARTH_OW02_EXPERIENCE_ANCHOR_EVIDENCE_PATH_RECOGNITION_NODE as node,
+            verifyHEarthOW02ExperienceAnchorEvidencePathRecognition as verify
+          } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.ow02-experience-anchor-evidence-path-recognition.js';
+          const v=verify();
+          const checks={
+            verificationEligible:v.eligible===true,
+            lifecycleStatusRatifiedActive:node.lifecycleStatus==='RATIFIED_ACTIVE',
+            authorityPostureRatified:node.authorityPosture==='RATIFIED_ACTIVE_EXACT_PATH_RESOLUTION_ONLY',
+            exactFivePaths:paths.length===5,
+            allFivePathsResolve:paths.every(p=>facade.resolveHEarthRepositoryRegistryPath(p).resolved===true),
+            noProductAuthority:node.authorityLimitations.includes('NO_PRODUCT_AUTHORITY'),
+            noEvidenceMutationAuthority:node.authorityLimitations.includes('NO_EVIDENCE_MUTATION_AUTHORITY'),
+            noCanonicalAuthority:node.authorityLimitations.includes('NO_CANONICAL_IDENTITY_AUTHORITY'),
+            installedMainRecorded:node.currentIdentityReferences.includes('INSTALLED_MAIN=8a5a0ec097d86c2b162f702110b98cf1f5cb2df6'),
+            postMergeBoundaryPresent:node.stoppingBoundaries.includes('RATIFIED_REGISTRY_DOES_NOT_AUTHORIZE_OW02_REBIND_MERGE_OR_OW03_WITHOUT_FRESH_OW02_PREFLIGHT')
+          };
+          if(!Object.values(checks).every(Boolean)) throw new Error(`RATIFICATION_VERIFICATION_FAILED:${JSON.stringify({checks,v,node})}`);
+          const receipt={
+            schema:'H_EARTH_OW02_REGISTRY_RATIFICATION_EXECUTION_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            ratificationCandidateHead:'9121420908a906bcebbafabd498f7acf0655132e',
+            ratificationLockGeneration:1487,
+            carrierLockGeneration:1488,
+            lifecycleStatus:node.lifecycleStatus,
+            exactTargetPathCount:paths.length,
+            pathResolutionPreserved:true,
+            productMutationPerformed:false,
+            registryMutationPerformed:false,
+            evidenceMutationPerformed:false,
+            carrierBranchMergeAuthorized:false,
+            checks
+          };
+          fs.writeFileSync('/tmp/h-earth-ratification-verifier.json',`${JSON.stringify(receipt,null,2)}\n`);
+          console.log(JSON.stringify(receipt));
+          NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload ratification verifier receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ratification-verifier
+          path: /tmp/h-earth-ratification-verifier.json
           if-no-files-found: error
           retention-days: 30

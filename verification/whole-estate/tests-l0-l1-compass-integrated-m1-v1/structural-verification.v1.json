@@ -1,0 +1,72 @@
+{
+  "schema": "TESTS_L0_L1_COMPASS_INTEGRATED_M1_STRUCTURAL_VERIFICATION_RECEIPT_v1",
+  "version": "1.0.0",
+  "operation": "M1_COMPASS_INTEGRATED_CONSTRUCTION_v1",
+  "status": "PASS_M1_COMPASS_INTEGRATED_STRUCTURAL_CONFORMANCE",
+  "constructionAuthorityAnchor": "9eb936918ce063cef6c6f5d800f39ae966f3d3aa",
+  "verifiedCandidate": {
+    "branch": "agent/m1-compass-integrated-v1",
+    "head": "0c84cc4bb5b75245d225a47fde68d3de879cdaed",
+    "tree": "0b1c67de982f2d9940189c76af2baed38b06beae",
+    "candidatePath": "control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/",
+    "candidateFilesAdded": 16,
+    "existingFilesModified": 0,
+    "filesDeleted": 0
+  },
+  "remoteIdentity": {
+    "README.md": "37f69f134a35aa09703a82a7d9e16fdf877ee1c5",
+    "adapter-source-map.v1.json": "16566ada97fc5c40eae153edf05ff4472aa277e7",
+    "adaptersTree": "b810ec5c76d9bc6e4c802ee6190c6f55ca56e585",
+    "candidate-manifest.v1.json": "47846fad14c28d95105d7f9487675f47e6e6e40b",
+    "index.html": "bbbd898e3ac5232c07d06560cab31a9e33ecff77",
+    "manifestation.css": "6140be8a2d5c26e60a33a20b48bb2dc6a3e4f9a6",
+    "manifestation.mjs": "dece6b95247794a82bb2b94db1365071b108fdc4",
+    "verify.v1.mjs": "4223e1c12327dfc35f8d4ac96706c63a1b8c470c"
+  },
+  "verification": {
+    "mode": "REMOTE_BLOB_IDENTITY_READBACK_PLUS_REMOTE_EXACT_LOCAL_RECONSTRUCTION",
+    "assertionsPassed": 86,
+    "assertionsFailed": 0,
+    "verifierOutput": "PASS_M1_COMPASS_INTEGRATED_STRUCTURAL_CONFORMANCE",
+    "runtimeRemoteExactBlobReconstructed": true,
+    "runtimeRemoteExactBlob": "dece6b95247794a82bb2b94db1365071b108fdc4",
+    "moduleSyntaxChecks": "PASS",
+    "candidateDiffFromAuthorityAnchor": "ADDITIVE_ONLY"
+  },
+  "scientificRegressionBoundary": {
+    "objectsExpected": 3,
+    "objectsObserved": 3,
+    "relationsExpected": 2,
+    "relationsObserved": 2,
+    "scientificOperations": ["FOCUS"],
+    "O_integrated_equals_O_isolated": true,
+    "R_integrated_equals_R_isolated": true,
+    "A_integrated_equals_A_isolated": true,
+    "N_integrated_differs_from_N_isolated": true
+  },
+  "adapterBoundary": {
+    "capabilities": ["C01","C02","C03","C04","C05","C06","C07","C08","C09"],
+    "allCapabilitiesThroughRequiredAdapters": true,
+    "donorRuntimeImports": false,
+    "donorSemanticInheritance": false,
+    "excludedDonorsPresent": false
+  },
+  "prohibitionChecks": {
+    "m1r2Rewrite": false,
+    "m1r2Entry": false,
+    "researchContentDuplication": false,
+    "lawsSemanticInheritance": false,
+    "publicOrLiveRouteMutation": false,
+    "scientificClaimUpgrade": false,
+    "broaderPopulation": false
+  },
+  "evidenceBoundary": {
+    "structuralVerification": "PASS",
+    "runtimeReview": "NOT_YET_PERFORMED",
+    "perceptualReview": "NOT_YET_PERFORMED",
+    "baselineRegression": "NOT_YET_PERFORMED",
+    "exactHeadTerminalCertification": "NOT_YET_PERFORMED",
+    "promotionDecision": "WITHHELD"
+  },
+  "nextRequiredStage": "RUNTIME_REVIEW"
+}

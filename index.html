@@ -8,13 +8,15 @@
 <link rel="stylesheet" href="/assets/compass/compass.css?v=compass-contextual-quick-pass-v11">
 <style>
 .compass-estate__header{max-width:920px}
+.compass-estate__epigraph{max-width:760px;margin:1rem auto .85rem;padding:.8rem 1rem;border-top:1px solid rgba(244,214,128,.24);border-bottom:1px solid rgba(244,214,128,.18);color:rgba(248,242,224,.92);font-family:var(--font-display,Georgia,serif);font-size:clamp(1.05rem,2.3vw,1.32rem);font-style:italic;line-height:1.45;text-align:center;letter-spacing:.01em}
 .compass-introduction{max-width:860px;position:relative;isolation:isolate;overflow:hidden}
 .compass-introduction__body{position:relative;isolation:isolate;gap:14px;line-height:1.68;margin:.55rem;padding:clamp(1rem,2.6vw,1.5rem);border:1px solid rgba(219,226,221,.18);border-radius:1.15rem;background:linear-gradient(145deg,rgba(7,15,22,.92),rgba(12,25,33,.86) 56%,rgba(9,17,25,.91));box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 0 0 1px rgba(102,196,215,.035),0 18px 46px rgba(0,0,0,.34);backdrop-filter:blur(14px)}
 .compass-introduction__body::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 12% 8%,rgba(244,214,128,.075),transparent 35%),linear-gradient(125deg,transparent 0 58%,rgba(86,197,218,.045) 76%,transparent 100%)}
 .compass-introduction__body>p:not(.compass-philosophy-claim){color:rgba(244,241,230,.91);text-shadow:0 1px 12px rgba(0,0,0,.32)}
-.compass-monument-key{color:rgba(246,218,139,.98);font-weight:760;text-shadow:0 0 18px rgba(244,214,128,.08)}
-.compass-monument-system{color:rgba(142,222,235,.96);font-weight:700}
-.compass-monument-question{color:rgba(255,247,220,.98);font-family:var(--font-display,Georgia,serif);font-style:italic;font-weight:650}
+.compass-monument-key{color:inherit;font-weight:780;text-shadow:none}
+.compass-monument-system{color:inherit;font-weight:680}
+.compass-introduction__connective{margin:.15rem 0!important;padding:.9rem 1rem;border:1px solid rgba(218,225,223,.14);border-left:3px solid rgba(102,196,215,.42);border-radius:.75rem;background:rgba(7,17,24,.44)}
+.compass-monument-question{display:block;margin:.85rem 0 .45rem;padding:.75rem .9rem;border:1px solid rgba(244,214,128,.24);border-radius:.75rem;background:rgba(244,214,128,.045);color:rgba(255,247,220,.98);font-family:var(--font-display,Georgia,serif);font-style:italic;font-weight:650;line-height:1.5}
 .compass-introduction__orientation{margin-top:.25rem!important;padding:.9rem 1rem;border-left:2px solid rgba(102,196,215,.56);border-radius:.2rem .8rem .8rem .2rem;background:linear-gradient(90deg,rgba(70,177,199,.09),rgba(10,23,31,.15));color:rgba(248,245,231,.96)!important}
 .compass-philosophy-claim{border-color:rgba(244,214,128,.32)!important;background:linear-gradient(135deg,rgba(244,214,128,.075),rgba(11,25,34,.72))!important;box-shadow:inset 3px 0 0 rgba(244,214,128,.52),0 12px 32px rgba(0,0,0,.22)!important;color:rgba(255,244,207,.98)!important}
 .compass-instrument__grid{align-items:start}
@@ -26,6 +28,9 @@
 .compass-room-key{display:none!important}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing>span{opacity:0!important;visibility:hidden!important;transition:opacity .18s ease,visibility .18s ease}
 [data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing.is-readable-cardinal>span{opacity:1!important;visibility:visible!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal){background:transparent!important;border-color:transparent!important;box-shadow:none!important;outline-color:transparent!important}
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::before,
+[data-compass-root][data-compass-mode="CONSTELLATION"] .compass-object--wing:not(.is-readable-cardinal)::after{opacity:0!important;visibility:hidden!important;box-shadow:none!important;background:transparent!important;border-color:transparent!important}
 button[data-compass-room-proxy]{
   position:absolute!important;
   pointer-events:auto!important;
@@ -117,11 +122,12 @@ button[data-compass-room-proxy]::after{content:none!important;display:none!impor
 <p class="compass-estate__kicker">Diamond Gate Bridge · Find Your Way</p>
 <h1 id="compass-title">The Compass</h1>
 <p class="compass-estate__sentence">One estate. Many rooms. Rotate the stars, see what each room is for, then enter the one that fits what you need.</p>
+<p class="compass-estate__epigraph">“When you learn to live a life without expectations, you experience a life without limitations.”</p>
 <details class="compass-introduction" data-compass-full-introduction>
 <summary>Why Diamond Gate exists</summary>
 <div class="compass-introduction__body">
 <p>Diamond Gate exists because <span class="compass-monument-key">useful ideas</span> are often separated by the boundaries between disciplines, products, institutions, and stories. The estate gives those different kinds of work <span class="compass-monument-system">one place to meet</span> without pretending they are all the same thing.</p>
-<p>It connects <span class="compass-monument-system">research, software, worlds, evidence, governance, construction, and human questions</span> so you can move between them while <span class="compass-monument-key">keeping their differences visible</span>.</p>
+<p class="compass-introduction__connective">It connects <span class="compass-monument-system">research, software, worlds, evidence, governance, construction, and human questions</span> so you can move between them while <span class="compass-monument-key">keeping their differences visible</span>.</p>
 <p>For thousands of years, people have searched for better ways to understand themselves, each other, and the systems they inhabit. <span class="compass-monument-key">Philosophers questioned first principles.</span> Each discipline illuminated part of the landscape.</p>
 <p>Perhaps the next step is not abandoning what came before, but making those pieces easier to see together. The Earth did not become round when we discovered it. <span class="compass-monument-question">What if the next frontier is not outside the box, but outside the cube?</span> Diamond Gate Bridge begins with that question.</p>
 <p class="compass-introduction__orientation"><span class="compass-monument-system">The Compass</span> is how you orient yourself inside that larger purpose. <span class="compass-monument-key">North</span> gives context. <span class="compass-monument-key">East</span> opens worlds. <span class="compass-monument-key">South</span> measures and governs. <span class="compass-monument-key">West</span> builds and tests.</p>

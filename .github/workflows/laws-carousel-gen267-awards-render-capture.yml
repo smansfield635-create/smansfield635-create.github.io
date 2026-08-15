@@ -36,7 +36,7 @@ jobs:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         shell: bash
         run: |
-          cat > /tmp/capture.mjs <<'JS'
+          cat > gen267-awards-capture.mjs <<'JS'
           import fs from 'node:fs'; import crypto from 'node:crypto'; import puppeteer from 'puppeteer-core';
           const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
           fs.mkdirSync('gen267-awards-renders',{recursive:true}); const route=process.env.ORIGIN+'/laws/research/methods-and-models/';
@@ -48,11 +48,11 @@ jobs:
             const trace=await p.evaluate(()=>({family:document.querySelector('[data-mm-carousel]')?.dataset.family,inspecting:document.querySelector('[data-mm-carousel]')?.dataset.inspecting,active:document.querySelector('.mm-card[data-active="true"]')?.dataset.familyId,overflow:document.documentElement.scrollWidth-innerWidth,close:document.querySelector('.mm-card[data-active="true"] [data-close-inspection]')?.getAttribute('aria-label')})); traces.push({device,trace}); await p.close();}
           await browser.close(); const traceDigest=crypto.createHash('sha256').update(JSON.stringify(traces)).digest('hex'); fs.writeFileSync('gen267-awards-renders/manifest.json',JSON.stringify({schema:'GEN267_AWARDS_RENDER_CAPTURE_v1',candidate:process.env.CANDIDATE,renderedEvidence:rendered,interactionTrace:{required:true,meaningfulConsequenceObserved:true,traceDigest,traces}},null,2)+'\n');
           JS
-          CANDIDATE="$CANDIDATE" ORIGIN="$ORIGIN" node /tmp/capture.mjs
+          CANDIDATE="$CANDIDATE" ORIGIN="$ORIGIN" node gen267-awards-capture.mjs
+          rm gen267-awards-capture.mjs
       - uses: actions/upload-artifact@v4
         with:
           name: gen267-awards-rendered-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: gen267-awards-renders/
           if-no-files-found: error
           retention-days: 90
-# exact-candidate read-only capture carrier

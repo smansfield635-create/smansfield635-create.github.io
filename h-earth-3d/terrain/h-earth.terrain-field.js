@@ -6,8 +6,10 @@
  * Canonical world-space elevation authority for the functional-landscape
  * successor. This repair preserves the installed Run 6 contract identity and
  * canonical shoreline backbone while binding Gratitude Bay and Gratitude
- * Harbor through a localized asymmetric continental-coast deformation. It
- * creates no geometry, admission, frame, renderer, or route.
+ * Harbor through a localized asymmetric continental-coast deformation. OW02
+ * continues the primary mountain system inland as an articulated range with
+ * passes, a receiving basin, watershed-directed valleys and foothill taper.
+ * It creates no geometry, admission, frame, renderer, or route.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -72,6 +74,35 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
   transferLaw: 'TRANSFER_PROPERTY_TRUTH_NOT_REPRESENTATION_GEOMETRY'
 });
 
+export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
+  systemId: 'H_EARTH_GRATITUDE_INLAND_MOUNTAIN_WATERSHED_CONTINUATION_v1',
+  continent: 'GRATITUDE',
+  rangeIdentity: 'GRATITUDE_PRIMARY_INLAND_RANGE',
+  morphology: 'CURVED_ASYMMETRIC_MULTI_RIDGE_RANGE_WITH_SADDLES',
+  ridgelineSequence: [
+    { identity: 'GRATITUDE_RIDGE_EAST', center: { x: 148, z: -224 }, role: 'COASTAL_RANGE_CONTINUATION' },
+    { identity: 'GRATITUDE_RIDGE_CENTRAL', center: { x: 86, z: -235 }, role: 'PRIMARY_INLAND_SPINE' },
+    { identity: 'GRATITUDE_RIDGE_WEST', center: { x: 18, z: -226 }, role: 'WESTERN_INLAND_ARTICULATION' },
+    { identity: 'GRATITUDE_RIDGE_SHOULDER', center: { x: -52, z: -208 }, role: 'FOOTHILL_TRANSITION' }
+  ],
+  passes: [
+    { identity: 'GRATITUDE_PASS_EAST', center: { x: 119, z: -226 }, connects: ['GRATITUDE_RIDGE_EAST', 'GRATITUDE_RIDGE_CENTRAL'] },
+    { identity: 'GRATITUDE_PASS_CENTRAL', center: { x: 52, z: -230 }, connects: ['GRATITUDE_RIDGE_CENTRAL', 'GRATITUDE_RIDGE_WEST'] }
+  ],
+  basin: {
+    identity: 'GRATITUDE_INLAND_RECEIVING_BASIN',
+    center: { x: 18, z: -192 },
+    drainageRole: 'RECEIVE_UPSLOPE_WATERSHED_FLOW_WITHOUT_REPLACING_PROTECTED_LOCAL_HYDROLOGY'
+  },
+  watershedLaw: {
+    direction: 'RIDGELINES_TO_PASSES_AND_VALLEYS_TO_LOWER_GRATITUDE_TERRAIN',
+    protectedHydrologyPreserved: true,
+    waterfallReservoirRelationshipPreserved: true
+  },
+  rearBoundaryLaw: 'NO_RIDGE_OR_BLUFF_MAY_EXIST_SOLELY_AS_A_REAR_WORLD_BOX_TERMINUS',
+  foothillLaw: 'PRIMARY_RELIEF_TAPERS_CONTINUOUSLY_INTO_NAVIGABLE_SURROUNDING_TERRAIN'
+});
+
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
   generationRevision: 1,
@@ -90,10 +121,15 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     rolling: 'ROLLING_TERRAIN_PROFILE_v1',
     hill: 'NAVIGABLE_HILL_PROFILE_v1',
     ridge: 'RIDGE_BLUFF_PROFILE_v1',
+    inlandRange: 'GRATITUDE_INLAND_MULTI_RIDGE_PROFILE_v1',
+    pass: 'GRATITUDE_MOUNTAIN_PASS_PROFILE_v1',
+    basin: 'GRATITUDE_RECEIVING_BASIN_PROFILE_v1',
+    foothill: 'GRATITUDE_FOOTHILL_TAPER_PROFILE_v1',
     valley: 'DRAINAGE_VALLEY_PROFILE_v1',
     water: 'COASTAL_WATER_DEPTH_PROFILE_v1'
   },
   coastalSystem: H_EARTH_GRATITUDE_COASTAL_SYSTEM,
+  inlandMountainWatershedSystem: H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM,
   ownership: {
     ownsWorldSpaceElevationLaw: true,
     ownsDerivativeAndNormalSampleLaw: true,
@@ -135,11 +171,22 @@ function evaluateRawElevation(worldX, worldZ) {
   const rolling = 1.7 * Math.sin((worldX + 22) / 48) * smoothstep(55, 180, inlandDistance)
     + 1.2 * Math.sin((worldZ + 140) / 29) * smoothstep(70, 200, inlandDistance);
   const hill = gaussian(worldX, worldZ, 72, -172, 62, 50, 27);
-  const ridge = gaussian(worldX, worldZ, 145, -225, 78, 30, 38);
+
+  const ridgeEast = gaussian(worldX, worldZ, 148, -224, 66, 34, 38);
+  const ridgeCentral = gaussian(worldX, worldZ, 86, -235, 68, 37, 34);
+  const ridgeWest = gaussian(worldX, worldZ, 18, -226, 76, 43, 29);
+  const ridgeShoulder = gaussian(worldX, worldZ, -52, -208, 82, 52, 21);
+  const passEast = gaussian(worldX, worldZ, 119, -226, 19, 23, -14);
+  const passCentral = gaussian(worldX, worldZ, 52, -230, 20, 25, -12);
+  const receivingBasin = gaussian(worldX, worldZ, 18, -192, 66, 46, -7.5);
+  const foothillTaper = gaussian(worldX, worldZ, -12, -176, 126, 62, 8.5);
+
   const lowland = gaussian(worldX, worldZ, -92, -152, 70, 58, -6.5);
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);
-  const bluff = gaussian(worldX, worldZ, 188, -245, 48, 24, 18);
-  return coastRise + wetSandCompression + dune + rolling + hill + ridge + lowland + valley + bluff;
+  return coastRise + wetSandCompression + dune + rolling + hill
+    + ridgeEast + ridgeCentral + ridgeWest + ridgeShoulder
+    + passEast + passCentral + receivingBasin + foothillTaper
+    + lowland + valley;
 }
 
 function classifySlope(slope) {
@@ -194,6 +241,7 @@ export function sampleHEarthTerrainField(worldX, worldZ) {
     shorelineZ,
     shorelineDistance,
     coastalSystemId: H_EARTH_GRATITUDE_COASTAL_SYSTEM.systemId,
+    inlandMountainWatershedSystemId: H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM.systemId,
     gradient: { x: dx, z: dz },
     normal: { x: -dx / normalLength, y: 1 / normalLength, z: -dz / normalLength },
     slope,

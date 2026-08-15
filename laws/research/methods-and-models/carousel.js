@@ -64,7 +64,9 @@
     article.setAttribute("aria-hidden", String(index !== state.index));
     article.innerHTML = `
       <div class="mm-card__surface">
-        <button class="mm-inspection__close" type="button" data-close-inspection aria-label="Close ${family.label} inspection" hidden>×</button>
+        <button class="mm-inspection__close" type="button" data-close-inspection aria-label="Return to Orbit" hidden>
+          <span aria-hidden="true">↶</span><span>Return to Orbit</span>
+        </button>
         <div class="mm-card__top">
           <span class="mm-card__ordinal">${String(index + 1).padStart(2, "0")} / ${String(count).padStart(2, "0")}</span>
           <span class="mm-card__status">Research family</span>
@@ -183,7 +185,7 @@
     requestAnimationFrame(() => card.querySelector("[data-close-inspection]")?.focus({ preventScroll: true }));
   }
 
-  function closeInspection(reason = "inspect-close") {
+  function closeInspection(reason = "return-to-orbit") {
     if (!state.inspecting) return;
     const card = cards[state.index];
     state.inspecting = false;
@@ -230,8 +232,14 @@
       selectIndex(familyIndex, "card-select");
       return;
     }
-    if (event.target.closest("[data-open-inspection]")) openInspection(card);
-    if (event.target.closest("[data-close-inspection]")) closeInspection();
+    if (event.target.closest("[data-open-inspection]")) {
+      openInspection(card);
+      return;
+    }
+    if (event.target.closest("[data-close-inspection]")) {
+      closeInspection();
+      return;
+    }
     const modelChoice = event.target.closest("[data-model-index]");
     if (modelChoice && state.inspecting) {
       const modelIndex = Number(modelChoice.dataset.modelIndex);
@@ -302,7 +310,7 @@
   root.addEventListener("keydown", event => {
     if (event.key === "Escape" && state.inspecting) {
       event.preventDefault();
-      closeInspection("escape");
+      closeInspection("return-to-orbit-escape");
       return;
     }
     if (state.inspecting || event.target.closest("[role=tablist]")) return;

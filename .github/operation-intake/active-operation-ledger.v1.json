@@ -1176,6 +1176,18 @@
       "scopeHash": "91498847235a51be58ef771a735c58e11a5e9b4ae49e65b29a5f9fc377c830ee",
       "state": "ADMITTED_LOCKED"
     },
+    "931dca0d9cc060b3166ac19ef348fb1f2ca2962b735996591b31756693863404": {
+      "governingHead": "2c00dea965270821e159fa694e82a2501d35c1e7",
+      "lockGeneration": 1481,
+      "lockScope": "PUBLIC_PRODUCT:LAWS:RESEARCH:METHODS_AND_MODELS:FIRST_BOUNDED_GEOMETRY_CONSTRUCTION:V1",
+      "operationId": "METHODS_MODELS_FIRST_BOUNDED_GEOMETRY_CONSTRUCTION_20260814_003",
+      "procedureLocatorDigest": "4a9dcb9ee8c19a3ccdf1b828fe5b1ec0005fa9ea54745aa09022a561c300dd56",
+      "released": false,
+      "requestDigest": "304d811bf29313c2f4146d94f43d2ed0525a2453a0713da2177a8f6289169ac1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "931dca0d9cc060b3166ac19ef348fb1f2ca2962b735996591b31756693863404",
+      "state": "ADMITTED_LOCKED"
+    },
     "93492f953dfda80ce2e528609802c1c28c9ba73fb126b13c692b72ac97762c65": {
       "governingHead": "794f31c52a853bae005732e3112bd282b03066d6",
       "lockGeneration": 212,
@@ -2152,7 +2164,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1480,
+  "lockGeneration": 1481,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -49,7 +49,6 @@ jobs:
           else:
               w,h,x,y,count = 1280,720,0,0,0
 
-          # Fail safe against pathological detector output.
           if w < 240 or h < 240:
               w,h,x,y = 1280,720,0,0
 
@@ -87,9 +86,6 @@ jobs:
           OUT='showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi-visual-reframe-1080p.mp4'
           EVID='h-earth-3d/experience-anchor/evidence/AWARDS_VIDEO_VISUAL_REFRAME_20260815_001'
 
-          # The existing edited master remains the sole timing/audio source.
-          # The active visual is separated from dead/black presentation space, while
-          # a softened full-bleed derivative of that exact same frame carries the 16:9 field.
           ffmpeg -y -hide_banner -i "$SRC" \
             -filter_complex "[0:v]crop=${CW}:${CH}:${CX}:${CY},split=2[fg0][bg0];[bg0]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,gblur=sigma=42,eq=brightness=-0.16:saturation=0.88[bg];[fg0]scale=-2:1020[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2:format=auto[v]" \
             -map '[v]' -map 0:a? \
@@ -98,7 +94,6 @@ jobs:
 
           ffprobe -v error -show_format -show_streams -of json "$OUT" > "${EVID}.candidate.ffprobe.json"
 
-          # Twelve evenly spaced visual checks across the exact candidate timeline.
           ffmpeg -y -hide_banner -i "$OUT" \
             -vf "fps=2/3,scale=480:270:force_original_aspect_ratio=decrease,pad=480:270:(ow-iw)/2:(oh-ih)/2,tile=4x3" \
             -frames:v 1 -q:v 2 "${EVID}.contact-sheet.jpg"
@@ -143,3 +138,5 @@ jobs:
           git rm .github/workflows/build-awards-video-visual-reframe.yml
           git commit -m 'Construct Awards visual-first 16:9 reframe candidate'
           git push origin HEAD:agent/awards-video-visual-reframe-16x9
+
+# armed-after-install

@@ -54,8 +54,10 @@ export function buildHEarthRun8EPacket002SuccessorTransfer({
   if (!isHEarthAABB3D(westBatchAdmissionResult?.frame?.bounds)) issues.push('RUN_8E_ADMITTED_BOUNDS_INVALID');
   if (neutralPackage?.terrainPrimitiveCount !== 1) issues.push('RUN_8E_TERRAIN_PRIMITIVE_COUNT_INVALID');
   if (neutralPackage?.shorelinePrimitiveCount !== 7) issues.push('RUN_8E_SHORELINE_PRIMITIVE_COUNT_INVALID');
-  if (neutralPackage?.vegetationPrimitiveCount !== 27) issues.push('RUN_8E_VEGETATION_PRIMITIVE_COUNT_INVALID');
-  if (admittedPrimitives.length !== 35) issues.push(`RUN_8E_ADMITTED_PRIMITIVE_COUNT_EXPECTED_35_ACTUAL_${admittedPrimitives.length}`);
+  const historicalComposition = neutralPackage?.compositionMode !== 'CONTENT_ADDRESSED_CURRENT_TERRAIN';
+  if (historicalComposition && neutralPackage?.vegetationPrimitiveCount !== 27) issues.push('RUN_8E_VEGETATION_PRIMITIVE_COUNT_INVALID');
+  if (historicalComposition && admittedPrimitives.length !== 35) issues.push(`RUN_8E_ADMITTED_PRIMITIVE_COUNT_EXPECTED_35_ACTUAL_${admittedPrimitives.length}`);
+  if (!historicalComposition && admittedPrimitives.length !== neutralPackage?.primitiveCount) issues.push('RUN_8E_CURRENT_COMPOSITION_MEMBERSHIP_COUNT_MISMATCH');
   if (neutralPackage?.semanticAddressCount !== 256) issues.push('RUN_8E_SEMANTIC_ADDRESS_PROVENANCE_INVALID');
   if (neutralPackage?.terrainAddressCount !== 124) issues.push('RUN_8E_TERRAIN_ADDRESS_PROVENANCE_INVALID');
   if (neutralPackage?.shorelineWaterAddressCount !== 96) issues.push('RUN_8E_SHORELINE_ADDRESS_PROVENANCE_INVALID');
@@ -79,6 +81,7 @@ export function buildHEarthRun8EPacket002SuccessorTransfer({
     contractId: H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,
     westContractId: H_EARTH_3D_GEOMETRY_KERNEL_WEST_CONTRACT_ID,
     neutralPackageContractId: neutralPackage.contractId,
+    compositionMode: neutralPackage.compositionMode ?? 'HISTORICAL_R2_CLOSED',
     transferOccurrenceId: transferOccurrenceId.trim(),
     aggregateFrameId: westBatchAdmissionResult.frame.frameId,
     primitiveCount: admittedPrimitives.length,

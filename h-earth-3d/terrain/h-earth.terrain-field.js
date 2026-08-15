@@ -1,10 +1,12 @@
 /**
  * /h-earth-3d/terrain/h-earth.terrain-field.js
  *
- * H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1
+ * H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v2_OW01_GRATITUDE_TRUE_COASTAL_ENTRY
  *
  * Canonical world-space elevation authority for the functional-landscape
- * successor. It creates no geometry, admission, frame, renderer, or route.
+ * successor. Revision 2 binds Gratitude Bay and Gratitude Harbor to the same
+ * asymmetric continental shoreline law already carried by the OW01 regional
+ * terrain candidate. It creates no geometry, admission, frame, renderer, or route.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -28,13 +30,52 @@ const gaussian = (x, z, centerX, centerZ, radiusX, radiusZ, amplitude) => {
   const dz = (z - centerZ) / radiusZ;
   return amplitude * Math.exp(-(dx * dx + dz * dz) * 1.6);
 };
+const bell = (value, center, radius) => {
+  const d = Math.abs(value - center) / Math.max(radius, 1e-6);
+  if (d >= 1) return 0;
+  const retained = 1 - d * d;
+  return retained * retained;
+};
 
 export const H_EARTH_TERRAIN_FIELD_CONTRACT_ID =
-  'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1';
+  'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v2_OW01_GRATITUDE_TRUE_COASTAL_ENTRY';
+
+export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
+  systemId: 'H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1',
+  continent: 'GRATITUDE',
+  continentalCoast: {
+    identity: 'GRATITUDE_CONTINENTAL_COAST',
+    baselineZ: -45,
+    morphology: 'ASYMMETRIC_ORGANIC_COMPOUND_COAST'
+  },
+  bay: {
+    identity: 'GRATITUDE_BAY',
+    centerX: 118,
+    halfWidth: 82,
+    maximumInlandReach: 48,
+    westernHeadlandX: 48,
+    easternHeadlandX: 198,
+    morphology: 'ASYMMETRIC_CURVED_INLAND_BAY_NOT_STRAIGHT_CUT'
+  },
+  harbor: {
+    identity: 'GRATITUDE_HARBOR',
+    parentIdentity: 'GRATITUDE_BAY',
+    coastIdentity: 'GRATITUDE_CONTINENTAL_COAST',
+    mouthCenterX: 132,
+    shorelineRule: 'RESOLVE_FROM_CANONICAL_GRATITUDE_CONTINENTAL_SHORELINE',
+    localGeometryRule: 'PRESERVE_REGIONAL_SCALE_CHARACTER_DO_NOT_COPY_PLANETARY_VERTICES'
+  },
+  sandbarTransferLaw: {
+    count: 3,
+    identityAndRelationshipTransferRequired: true,
+    exactVertexTransferAcrossLodProhibited: true
+  },
+  transferLaw: 'TRANSFER_PROPERTY_TRUTH_NOT_REPRESENTATION_GEOMETRY'
+});
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 1,
+  generationRevision: 2,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   worldDomain: {
     xMinimum: -256,
@@ -50,7 +91,7 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     numericTolerance: 1e-8
   },
   heightProfiles: {
-    coast: 'COASTAL_ENTRY_PROFILE_v1',
+    coast: 'GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_PROFILE_v1',
     dune: 'COASTAL_BERM_PROFILE_v1',
     lowland: 'LOWLAND_PROFILE_v1',
     rolling: 'ROLLING_TERRAIN_PROFILE_v1',
@@ -59,6 +100,7 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     valley: 'DRAINAGE_VALLEY_PROFILE_v1',
     water: 'COASTAL_WATER_DEPTH_PROFILE_v1'
   },
+  coastalSystem: H_EARTH_GRATITUDE_COASTAL_SYSTEM,
   ownership: {
     ownsWorldSpaceElevationLaw: true,
     ownsDerivativeAndNormalSampleLaw: true,
@@ -73,9 +115,22 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
 
 export function getHEarthCanonicalShorelineZ(worldX) {
   if (!finite(worldX)) return Number.NaN;
-  return -82
-    + 7.5 * Math.sin(worldX / 58)
-    + 2.75 * Math.sin((worldX + 31) / 19);
+  const bay = H_EARTH_GRATITUDE_COASTAL_SYSTEM.bay;
+  const longWave = 8.6 * Math.sin((worldX + 34) / 74);
+  const mediumWave = 4.1 * Math.sin((worldX - 18) / 33);
+  const westCove = -8.5 * bell(worldX, -142, 92);
+  const bayCore = -bay.maximumInlandReach * bell(worldX, bay.centerX, bay.halfWidth);
+  const bayAsymmetry = -9.0 * bell(worldX, bay.centerX + 22, 44);
+  const westernHeadland = 10.5 * bell(worldX, bay.westernHeadlandX, 42);
+  const easternHeadland = 7.5 * bell(worldX, bay.easternHeadlandX, 46);
+  return H_EARTH_GRATITUDE_COASTAL_SYSTEM.continentalCoast.baselineZ
+    + longWave
+    + mediumWave
+    + westCove
+    + bayCore
+    + bayAsymmetry
+    + westernHeadland
+    + easternHeadland;
 }
 
 function evaluateRawElevation(worldX, worldZ) {
@@ -172,6 +227,7 @@ export function sampleHEarthTerrainField(worldX, worldZ) {
     elevation,
     shorelineZ,
     shorelineDistance,
+    coastalSystemId: H_EARTH_GRATITUDE_COASTAL_SYSTEM.systemId,
     gradient: { x: dx, z: dz },
     normal: {
       x: -dx / normalLength,

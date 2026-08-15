@@ -1,0 +1,56 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_REFERENCE_C01_MEASUREMENTS_v1",
+  "referenceProvenanceId": "DIAMOND_GATE_JEEVES_A5_REFERENCE_C01_PROVENANCE_v1",
+  "referenceAudio": {
+    "status": "BOUND_AUTHORIZED_ORIGINAL",
+    "sha256": "0fb2a27506e6ef5c8f2ec280eb780654e317fe19c8a0774864fc98c4115a963f",
+    "provenanceId": "DIAMOND_GATE_JEEVES_A5_REFERENCE_C01_PROVENANCE_v1",
+    "transcript": "Navigation requires orientation.",
+    "transcriptEvidence": "USER_DECLARED_EXPECTED_UTTERANCE; NO_EXTERNAL_ASR_USED"
+  },
+  "signalMeasurements": {
+    "sourceSampleRateHz": 48000,
+    "measurementSampleRateHz": 24000,
+    "containerDurationSeconds": 9.642521,
+    "activeSpeechStartSeconds": 0.07,
+    "activeSpeechEndSeconds": 4.91,
+    "activeSpeechDurationSeconds": 4.84,
+    "leadingSilenceSeconds": 0.07,
+    "trailingSilenceSeconds": 4.732667,
+    "rmsFull": 0.02096337,
+    "rmsActive": 0.02926848,
+    "peakAbs": 0.36094241,
+    "f0MedianHz": 100.0,
+    "f0MeanHz": 106.84945,
+    "f0P10Hz": 84.21053,
+    "f0P90Hz": 143.20535,
+    "spectralCentroidHz": 4710.34278,
+    "zeroCrossingRateActive": 0.13666612,
+    "spectralTiltProxyDbPerDecade": -16.02229,
+    "jitterLocalProxy": 0.04251248,
+    "shimmerLocalProxy": 0.13832423
+  },
+  "provisionalMixedUtteranceFormantProxies": {
+    "method": "LPC over selected high-energy frames; not vowel-aligned and not calibration-authoritative",
+    "framesUsed": 22,
+    "F1MedianHz": 848.64,
+    "F2MedianHz": 1965.16,
+    "F3MedianHz": 4202.14
+  },
+  "measuredParameters": {
+    "spectralTilt": {"value": -16.02229, "unit": "dB_per_decade", "status": "PROXY"},
+    "jitterStatistics": {"localProxy": 0.04251248, "status": "PROXY"},
+    "shimmerStatistics": {"localProxy": 0.13832423, "status": "PROXY"}
+  },
+  "missingCalibrationAuthoritativeParameters": [
+    "vowelFormants",
+    "formantBandwidths",
+    "vocalTractLengthScale",
+    "nasalPolesAndZeros",
+    "glottalOpenQuotient",
+    "glottalClosingQuotient",
+    "aspirationByContext"
+  ],
+  "disposition": "REFERENCE_BOUND_MEASUREMENTS_PARTIAL_NOT_YET_CALIBRATION_ADMISSIBLE",
+  "law": "Do not promote mixed-utterance LPC or proxy jitter/shimmer/tilt values to Jeeves-specific calibration constants without a separately qualified measurement procedure."
+}

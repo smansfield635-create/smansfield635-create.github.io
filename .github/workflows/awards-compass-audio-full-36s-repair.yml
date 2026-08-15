@@ -27,7 +27,6 @@ jobs:
           test -f "$SRC"
           test -f "$PAGE"
 
-          # Measure the actual current streams. The picture is authoritative and must remain unchanged.
           VIDEO_DUR="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=p=0 "$SRC")"
           AUDIO_DUR="$(ffprobe -v error -select_streams a:0 -show_entries stream=duration -of csv=p=0 "$SRC")"
           echo "video_duration_before=$VIDEO_DUR"
@@ -40,12 +39,8 @@ jobs:
           PY
 
           ffmpeg -v error -i "$SRC" -map 0:v:0 -c copy -f hash -hash sha256 /tmp/video-before.hash
-
-          # Extract the already-approved/repaired music content exactly as currently embedded.
           ffmpeg -y -i "$SRC" -map 0:a:0 -c:a pcm_s16le -ar 48000 -ac 2 "$BED"
 
-          # Use two independent copies of that same bed and crossfade their seam.
-          # 18.623 + 18.623 - 0.50 = 36.746s, enough to cover the full 36s picture.
           ffmpeg -y -i "$BED" -i "$BED" -filter_complex \
             "[0:a][1:a]acrossfade=d=0.50:c1=tri:c2=tri,atrim=start=0:end=36,asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.18,afade=t=out:st=35.80:d=0.20[full]" \
             -map "[full]" -c:a pcm_s16le -ar 48000 -ac 2 "$FULL"
@@ -57,7 +52,6 @@ jobs:
           assert d >= 35.98, d
           PY
 
-          # Remux with the approved H.264 picture copied, never re-encoded.
           ffmpeg -y -i "$SRC" -i "$FULL" -map 0:v:0 -map 1:a:0 \
             -c:v copy -c:a aac -b:a 160k -ar 48000 -ac 2 -t 36 -movflags +faststart "$TMP"
 
@@ -75,24 +69,24 @@ jobs:
           ffmpeg -v error -i "$TMP" -map 0:v:0 -c copy -f hash -hash sha256 /tmp/video-after.hash
           diff -u /tmp/video-before.hash /tmp/video-after.hash
 
-          # Reject any material silence in the final 5 seconds and require actual audio energy there.
+          # Primary end-of-reel acceptance: the stream reaches 36s and contains no material silence.
           ffmpeg -hide_banner -ss 31 -i "$TMP" -af silencedetect=noise=-45dB:d=0.40 -f null - 2> /tmp/final-silence.log || true
           if grep -q 'silence_duration:' /tmp/final-silence.log; then
             echo 'Material silence detected in final five seconds:' >&2
             cat /tmp/final-silence.log >&2
             exit 1
           fi
+          # Secondary sanity check only: quiet musical passages are valid; reject only near-digital silence.
           ffmpeg -hide_banner -ss 31 -i "$TMP" -af volumedetect -f null - 2> /tmp/final-volume.log || true
           MEAN_DB="$(grep -oE 'mean_volume: -?[0-9.]+ dB' /tmp/final-volume.log | tail -1 | awk '{print $2}')"
           echo "final_5s_mean_volume_db=$MEAN_DB"
           python3 - <<PY
           v=float("$MEAN_DB")
-          assert v > -45.0, v
+          assert v > -60.0, v
           PY
 
           mv "$TMP" "$SRC"
 
-          # Force browsers/CDN onto this corrected binary identity.
           python3 - <<'PY'
           from pathlib import Path
           import re

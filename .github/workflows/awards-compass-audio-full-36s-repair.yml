@@ -1,0 +1,130 @@
+name: Awards Compass full 36s audio repair
+on:
+  push:
+    branches:
+      - agent/awards-compass-audio-full-36s-repair-20260815
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: Build and verify full-length Compass audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4"
+          PAGE="showroom/globe/h-earth/awards/index.html"
+          BED="/tmp/compass-current-bed.wav"
+          FULL="/tmp/compass-full-36s.wav"
+          TMP="/tmp/diamond-gate-compass-mirrorland-36s.mp4"
+
+          test -f "$SRC"
+          test -f "$PAGE"
+
+          # Measure the actual current streams. The picture is authoritative and must remain unchanged.
+          VIDEO_DUR="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=p=0 "$SRC")"
+          AUDIO_DUR="$(ffprobe -v error -select_streams a:0 -show_entries stream=duration -of csv=p=0 "$SRC")"
+          echo "video_duration_before=$VIDEO_DUR"
+          echo "audio_duration_before=$AUDIO_DUR"
+          python3 - <<PY
+          vd=float("$VIDEO_DUR")
+          ad=float("$AUDIO_DUR")
+          assert 35.95 <= vd <= 36.05, vd
+          assert 18.0 <= ad < 20.0, ad
+          PY
+
+          ffmpeg -v error -i "$SRC" -map 0:v:0 -c copy -f hash -hash sha256 /tmp/video-before.hash
+
+          # Extract the already-approved/repaired music content exactly as currently embedded.
+          ffmpeg -y -i "$SRC" -map 0:a:0 -c:a pcm_s16le -ar 48000 -ac 2 "$BED"
+
+          # Use two independent copies of that same bed and crossfade their seam.
+          # 18.623 + 18.623 - 0.50 = 36.746s, enough to cover the full 36s picture.
+          ffmpeg -y -i "$BED" -i "$BED" -filter_complex \
+            "[0:a][1:a]acrossfade=d=0.50:c1=tri:c2=tri,atrim=start=0:end=36,asetpts=PTS-STARTPTS,afade=t=in:st=0:d=0.18,afade=t=out:st=35.80:d=0.20[full]" \
+            -map "[full]" -c:a pcm_s16le -ar 48000 -ac 2 "$FULL"
+
+          FULL_DUR="$(ffprobe -v error -select_streams a:0 -show_entries stream=duration -of csv=p=0 "$FULL")"
+          echo "constructed_audio_duration=$FULL_DUR"
+          python3 - <<PY
+          d=float("$FULL_DUR")
+          assert d >= 35.98, d
+          PY
+
+          # Remux with the approved H.264 picture copied, never re-encoded.
+          ffmpeg -y -i "$SRC" -i "$FULL" -map 0:v:0 -map 1:a:0 \
+            -c:v copy -c:a aac -b:a 160k -ar 48000 -ac 2 -t 36 -movflags +faststart "$TMP"
+
+          VIDEO_AFTER="$(ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=p=0 "$TMP")"
+          AUDIO_AFTER="$(ffprobe -v error -select_streams a:0 -show_entries stream=duration -of csv=p=0 "$TMP")"
+          echo "video_duration_after=$VIDEO_AFTER"
+          echo "audio_duration_after=$AUDIO_AFTER"
+          python3 - <<PY
+          vd=float("$VIDEO_AFTER")
+          ad=float("$AUDIO_AFTER")
+          assert 35.95 <= vd <= 36.05, vd
+          assert 35.95 <= ad <= 36.05, ad
+          PY
+
+          ffmpeg -v error -i "$TMP" -map 0:v:0 -c copy -f hash -hash sha256 /tmp/video-after.hash
+          diff -u /tmp/video-before.hash /tmp/video-after.hash
+
+          # Reject any material silence in the final 5 seconds and require actual audio energy there.
+          ffmpeg -hide_banner -ss 31 -i "$TMP" -af silencedetect=noise=-45dB:d=0.40 -f null - 2> /tmp/final-silence.log || true
+          if grep -q 'silence_duration:' /tmp/final-silence.log; then
+            echo 'Material silence detected in final five seconds:' >&2
+            cat /tmp/final-silence.log >&2
+            exit 1
+          fi
+          ffmpeg -hide_banner -ss 31 -i "$TMP" -af volumedetect -f null - 2> /tmp/final-volume.log || true
+          MEAN_DB="$(grep -oE 'mean_volume: -?[0-9.]+ dB' /tmp/final-volume.log | tail -1 | awk '{print $2}')"
+          echo "final_5s_mean_volume_db=$MEAN_DB"
+          python3 - <<PY
+          v=float("$MEAN_DB")
+          assert v > -45.0, v
+          PY
+
+          mv "$TMP" "$SRC"
+
+          # Force browsers/CDN onto this corrected binary identity.
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('showroom/globe/h-earth/awards/index.html')
+          s=p.read_text()
+          pattern=r'diamond-gate-compass-mirrorland-36s\.mp4(?:\?v=[^"\']*)?'
+          matches=re.findall(pattern,s)
+          assert len(matches)==1, matches
+          s=re.sub(pattern,'diamond-gate-compass-mirrorland-36s.mp4?v=audio-full36s-20260815',s,count=1)
+          p.write_text(s)
+          PY
+
+          sha256sum "$SRC"
+      - name: Verify bounded mutation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --name-only HEAD -- | sort > /tmp/changed.txt
+          cat /tmp/changed.txt
+          printf '%s\n' \
+            'showroom/globe/h-earth/awards/index.html' \
+            'showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4' | sort > /tmp/expected.txt
+          diff -u /tmp/expected.txt /tmp/changed.txt
+      - name: Commit repaired master and retire builder
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "smansfield635-create"
+          git config user.email "smansfield635@gmail.com"
+          rm .github/workflows/awards-compass-audio-full-36s-repair.yml
+          git add showroom/globe/h-earth/awards/index.html \
+                  showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4 \
+                  .github/workflows/awards-compass-audio-full-36s-repair.yml
+          git commit -m "Extend Compass music through full 36 second reel"
+          git push origin HEAD

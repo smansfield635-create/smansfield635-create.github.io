@@ -31,7 +31,14 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git hash-object h-earth-3d/terrain/h-earth.terrain-field.js)" = "$PRODUCT_BLOB"
-          test "$(git diff --name-only "$PRODUCT_HEAD"...HEAD | sort)" = ".github/workflows/h-earth-ow01-anchor-qualification-v1.yml"
+          while IFS= read -r changed; do
+            case "$changed" in
+              .github/workflows/h-earth-ow01-anchor-qualification-v1.yml) ;;
+              h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.*) ;;
+              h-earth-3d/experience-anchor/receipts/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json) ;;
+              *) echo "UNAUTHORIZED_POST_PRODUCT_PATH:$changed" >&2; exit 1 ;;
+            esac
+          done < <(git diff --name-only "$PRODUCT_HEAD"...HEAD | sort)
           git cat-file -e "$BASE_HEAD^{commit}"
           git cat-file -e "$PRODUCT_HEAD^{commit}"
       - name: Materialize exact baseline worktree
@@ -77,10 +84,30 @@ jobs:
             page.on('pageerror',e=>pageErrors.push(String(e)));
             page.on('console',m=>{if(m.type()==='error'&&!/favicon/i.test(m.text()))consoleErrors.push(m.text())});
             page.on('requestfailed',r=>requestFailures.push(`${r.url()} :: ${r.failure()?.errorText??'unknown'}`));
-            let response=null, interactionExercised=false, beforeGesture=null, afterGesture=null, captureError=null;
+            let response=null, interactionExercised=false, beforeGesture=null, afterGesture=null, captureError=null, r2PackageDiagnostic=null;
             try{
               response=await page.goto(`http://127.0.0.1:${port}${process.env.ROUTE}`,{waitUntil:'commit',timeout:60000});
               await page.waitForLoadState('domcontentloaded',{timeout:30000}).catch(()=>{}); await page.waitForTimeout(5000);
+              if(label==='candidate'){
+                r2PackageDiagnostic=await page.evaluate(async()=>{
+                  try{
+                    const mod=await import('/showroom/globe/h-earth/render/live-render-package.run8e-r2.js');
+                    const record=mod.buildHEarthRun8ER2ImmutableLiveRenderPackage();
+                    return {
+                      ok:true,
+                      eligible:record?.eligible??null,
+                      status:record?.status??null,
+                      contractId:record?.contractId??null,
+                      issues:Array.isArray(record?.issues)?record.issues:null,
+                      primitiveCount:record?.primitiveCount??null,
+                      triangleCount:record?.triangleCount??null,
+                      indexCount:record?.indexCount??null,
+                      vertexCount:record?.vertexCount??null,
+                      sourceAuthorities:record?.sourceAuthorities??null
+                    };
+                  }catch(error){return {ok:false,error:String(error?.stack||error)}}
+                });
+              }
               const canvases=page.locator('canvas'); const count=await canvases.count();
               beforeGesture=await page.evaluate(()=>document.querySelector('[data-gesture-used]')?.getAttribute('data-gesture-used')??null);
               let best=null;
@@ -90,7 +117,7 @@ jobs:
             }catch(e){captureError=String(e?.stack||e);}
             const screenshot=`${stem}.${label}.png`;
             try{await page.screenshot({path:screenshot,fullPage:false,timeout:30000});}catch(e){captureError=(captureError?captureError+' | ':'')+String(e?.stack||e);}
-            const out={label,status:response?.status()??null,title:await page.title().catch(()=>''),url:page.url(),canvasCount:await page.locator('canvas').count().catch(()=>0),interactionExercised,beforeGesture,afterGesture,pageErrors,consoleErrors,requestFailures,captureError,screenshotSha256:fs.existsSync(screenshot)?digest(screenshot):null,screenshotBytes:fs.existsSync(screenshot)?fs.statSync(screenshot).size:0};
+            const out={label,status:response?.status()??null,title:await page.title().catch(()=>''),url:page.url(),canvasCount:await page.locator('canvas').count().catch(()=>0),interactionExercised,beforeGesture,afterGesture,pageErrors,consoleErrors,requestFailures,captureError,r2PackageDiagnostic,screenshotSha256:fs.existsSync(screenshot)?digest(screenshot):null,screenshotBytes:fs.existsSync(screenshot)?fs.statSync(screenshot).size:0};
             await context.close(); return out;
           }
           const base=await capture('base',4174); const candidate=await capture('candidate',4173);

@@ -1,0 +1,65 @@
+name: Laws Carousel Gen283 Terminal Closure
+on:
+  push:
+    branches: ['agent/laws-carousel-gen267-continuity-intake']
+    paths: ['.github/workflows/laws-carousel-gen283-terminal-closure.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+env:
+  PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+  PRIVATE_HEAD: 496be26a2214886e93727f6bec0da05cf9fa7505
+  OPERATION_ID: LAWS_CAROUSEL_GEN267_AWARDS_PERCEPTUAL_EVALUATION_20260815_001
+  LOCK_SCOPE: LAWS:CAROUSEL:GEN267:AWARDS_PERCEPTUAL_EVALUATION:V1
+  LOCK_GENERATION: '283'
+jobs:
+  close:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private write token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+      - uses: actions/checkout@v4
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.PRIVATE_HEAD }}
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify completed evaluation identity
+        run: |
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$PRIVATE_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          jq -e '.status=="SATISFIED_AND_RATIFIED_ACTIVE" and .currentAuthority.evaluatorActive==true' .github/ai-router/reference-class-awards-admission/evaluator/activation-criteria.v1.json >/dev/null
+      - name: Close Gen283 PASS_CLOSED
+        env:
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          node tools/operation-intake/repository-operation-lock-manager.v1.mjs \
+            --action close \
+            --repository "$PRIVATE_REPOSITORY" \
+            --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 \
+            --operation-id "$OPERATION_ID" \
+            --lock-scope "$LOCK_SCOPE" \
+            --lock-generation "$LOCK_GENERATION" \
+            --terminal-disposition PASS_CLOSED \
+            --output "$RUNNER_TEMP/gen283-terminal-closure.json"
+          jq -e '.result=="TERMINAL_CLOSURE_COMMITTED" and .terminalDisposition=="PASS_CLOSED" and .lockReleased==true and .lockGeneration==283' "$RUNNER_TEMP/gen283-terminal-closure.json" >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: laws-carousel-gen283-terminal-closure-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen283-terminal-closure.json
+          if-no-files-found: error
+          retention-days: 90

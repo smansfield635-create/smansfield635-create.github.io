@@ -65,12 +65,19 @@ const round = (value, precision = 2) => {
 function deriveInitialViewport() {
   const cssWidth = Math.max(320, Math.round(mount.clientWidth || canvas.clientWidth || canvas.width || 640));
   const cssHeight = Math.max(180, Math.round(mount.clientHeight || canvas.clientHeight || canvas.height || 360));
-  const maximumPixels = 960 * 540;
-  const scale = Math.min(1, Math.sqrt(maximumPixels / (cssWidth * cssHeight)));
+  const requestedPixelRatio = Math.min(2, Math.max(1, Number(window.devicePixelRatio) || 1));
+  const requestedWidth = cssWidth * requestedPixelRatio;
+  const requestedHeight = cssHeight * requestedPixelRatio;
+  const maximumPixels = 1440 * 900;
+  const scale = Math.min(1, Math.sqrt(maximumPixels / (requestedWidth * requestedHeight)));
+  const width = Math.max(320, Math.round(requestedWidth * scale));
+  const height = Math.max(180, Math.round(requestedHeight * scale));
   return Object.freeze({
-    width: Math.max(320, Math.round(cssWidth * scale)),
-    height: Math.max(180, Math.round(cssHeight * scale)),
-    pixelRatio: 1
+    width,
+    height,
+    pixelRatio: Math.min(width / cssWidth, height / cssHeight),
+    requestedDevicePixelRatio: requestedPixelRatio,
+    maximumPixels
   });
 }
 
@@ -140,6 +147,11 @@ function buildPublicReceipt() {
     status: 'RUN_8E_R3E2_PUBLIC_LIVE_GPU_COMPOSITION_ACTIVE',
     integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
     viewport,
+    presentationAntialiasing: {
+      mode: 'BOUNDED_HIGH_DPI_SUPERSAMPLING_PLUS_SHADER_DERIVATIVE_FILTERING',
+      effectivePixelRatio: viewport.pixelRatio,
+      defaultFramebufferMsaaDisabledForOffscreenFramebufferBlitCompatibility: true
+    },
     moduleSources,
     intake: intakeReceipt,
     liveGpu: bindingReceipt,
@@ -177,6 +189,18 @@ function buildPublicReceipt() {
     }
   });
 }
+
+const nativeCanvasGetContext = canvas.getContext.bind(canvas);
+let webglPresentationCompatibilityOverrideActive = true;
+canvas.getContext = (contextType, options) => {
+  if (contextType === 'webgl2') {
+    return nativeCanvasGetContext(contextType, {
+      ...(options ?? {}),
+      antialias: false
+    });
+  }
+  return nativeCanvasGetContext(contextType, options);
+};
 
 try {
   intake = installHEarthRun8ER3D2PointerTouchIntake({
@@ -219,6 +243,9 @@ try {
     }
   });
 
+  canvas.getContext = nativeCanvasGetContext;
+  webglPresentationCompatibilityOverrideActive = false;
+
   const bindingReceipt = binding.getReceipt();
   const contextCount = bindingReceipt?.resources?.counters?.contextCreationCount ?? 0;
   const rendererCount = bindingReceipt?.counters?.rendererInitializationCount ?? 0;
@@ -226,7 +253,11 @@ try {
   emitDiagnosticStage(
     'WEBGL2_CONTEXT_ACQUIRED',
     contextCount > 0 ? 'PASS' : 'FAIL',
-    { contextCreationCount: contextCount }
+    {
+      contextCreationCount: contextCount,
+      defaultFramebufferAntialias: bindingReceipt?.resources?.context?.antialias === true,
+      presentationAntialiasMode: 'BOUNDED_HIGH_DPI_SUPERSAMPLING_PLUS_SHADER_DERIVATIVE_FILTERING'
+    }
   );
   emitDiagnosticStage(
     'RENDERER_CONSTRUCTED',
@@ -238,6 +269,10 @@ try {
     mountConnected: mount.isConnected
   });
 } catch (error) {
+  if (webglPresentationCompatibilityOverrideActive) {
+    canvas.getContext = nativeCanvasGetContext;
+    webglPresentationCompatibilityOverrideActive = false;
+  }
   root.dataset.run8eReady = 'false';
   root.dataset.run8eError = 'true';
   emitDiagnosticStage('RENDERER_MOUNTED', 'FAIL', {

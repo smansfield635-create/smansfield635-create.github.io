@@ -102,6 +102,7 @@ const receiptBody = {
   comparisonBase,
   candidateHead: process.env.CANDIDATE_HEAD || exec('git rev-parse HEAD'),
   candidateId: CANDIDATE_ID,
+  awardsPageSha256: sha256(awardsHtml),
   allowedPaths,
   changedPaths,
   sensitiveChangedPaths,

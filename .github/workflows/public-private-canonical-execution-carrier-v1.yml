@@ -1,28 +1,26 @@
 name: Public → Private Canonical Execution Carrier v1
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       private_issue:
-        description: Private issue number containing the frozen intake
         required: true
         type: string
       private_comment:
-        description: Private issue-comment ID containing the frozen intake
         required: true
         type: string
       expected_request_id:
-        description: Exact expected private intake request ID
         required: true
         type: string
       exact_private_head:
-        description: Exact private governing-head SHA
         required: true
         type: string
       callback_issue:
-        description: Public issue number for redacted receipt
         required: true
         type: string
+    secrets:
+      PRIVATE_EXECUTION_APP_PRIVATE_KEY:
+        required: true
 
 permissions:
   contents: read
@@ -30,7 +28,6 @@ permissions:
 
 jobs:
   carrier:
-    if: github.actor == 'smansfield635-create'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:

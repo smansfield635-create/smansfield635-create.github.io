@@ -89,7 +89,7 @@ function decoratePrimitive(primitive, role, terrainColors = null) {
   });
 }
 
-export function buildHEarthRun8ENeutralPackage() {
+export function buildHEarthRun8ENeutralPackage({ compositionMode = 'HISTORICAL_R2_CLOSED' } = {}) {
   const legacy = previewHEarthFunctionalLandscape();
   const terrain = constructHEarthRun8BSuccessorTerrainAndMountain();
   const vegetation = constructHEarthRun8DGroundedVegetation();
@@ -112,8 +112,10 @@ export function buildHEarthRun8ENeutralPackage() {
     : null;
   if (!isHEarthAABB3D(bounds)) issues.push('RUN_8E_NEUTRAL_PACKAGE_BOUNDS_INVALID');
   if (shorelinePrimitives.length !== 7) issues.push(`RUN_8E_SHORELINE_COUNT_EXPECTED_7_ACTUAL_${shorelinePrimitives.length}`);
-  if (vegetationPrimitives.length !== 27) issues.push(`RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_${vegetationPrimitives.length}`);
-  if (primitives.length !== 35) issues.push(`RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_${primitives.length}`);
+  const historicalComposition = compositionMode === 'HISTORICAL_R2_CLOSED';
+  if (!historicalComposition && compositionMode !== 'CONTENT_ADDRESSED_CURRENT_TERRAIN') issues.push('RUN_8E_COMPOSITION_MODE_INVALID');
+  if (historicalComposition && vegetationPrimitives.length !== 27) issues.push(`RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_${vegetationPrimitives.length}`);
+  if (historicalComposition && primitives.length !== 35) issues.push(`RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_${primitives.length}`);
   const ids = primitives.map((primitive) => primitive.primitiveId);
   if (new Set(ids).size !== ids.length) issues.push('RUN_8E_DUPLICATE_PRIMITIVE_ID');
 
@@ -121,6 +123,7 @@ export function buildHEarthRun8ENeutralPackage() {
     ok: issues.length === 0,
     status: issues.length === 0 ? 'RUN_8E_SUCCESSOR_NEUTRAL_PACKAGE_COMPLETE' : 'RUN_8E_SUCCESSOR_NEUTRAL_PACKAGE_FAILED',
     contractId: H_EARTH_RUN_8E_NEUTRAL_PACKAGE_CONTRACT_ID,
+    compositionMode,
     controllingRun8EContractId: H_EARTH_RUN_8E_CONTROL_CONTRACT_ID,
     primitives,
     primitiveIds: freeze(ids),

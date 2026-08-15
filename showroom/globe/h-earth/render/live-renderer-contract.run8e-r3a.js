@@ -10,7 +10,7 @@ import {
 } from '../functional-landscape/navigation.js';
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
 import {
-  getHEarthRun8ER2CanonicalLiveRenderPackage
+  getHEarthOW01CanonicalLiveRenderPackageOccurrence
 } from './live-render-package.run8e-r2.canonical.js';
 import {
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage
@@ -124,7 +124,7 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   const viewMatrix = lookAt(camera.position, camera.target, camera.up);
   const projectionMatrix = perspective(camera.verticalFovDegrees, width / height, camera.nearPlane, camera.farPlane);
   const viewProjectionMatrix = multiply4(projectionMatrix, viewMatrix);
-  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
+  const packageRecord = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
   const packageEvaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
   if (packageEvaluation.eligible !== true) throw new Error(`R3A_PACKAGE_REJECTED:${packageEvaluation.issues.join(',')}`);
   const gpuViews = createHEarthRun8ER2DCanonicalGPUUploadViews(packageRecord);
@@ -169,6 +169,7 @@ export function createHEarthRun8ER3AFrameUniformPacket({
     },
     packageIdentity: packageRecord.packageIdentity,
     packageContentDigest: packageRecord.contentDigest,
+    packageOccurrenceId: packageRecord.packageOccurrenceId,
     gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
     gpuBufferElementCounts: {
       positions: gpuViews.positions.length,
@@ -193,11 +194,12 @@ export function createHEarthRun8ER3AFrameUniformPacket({
 }
 
 export function getHEarthRun8ER3ALiveRendererInterface() {
-  const packageRecord = getHEarthRun8ER2CanonicalLiveRenderPackage();
+  const packageRecord = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
     packageIdentity: packageRecord.packageIdentity,
     packageContentDigest: packageRecord.contentDigest,
+    packageOccurrenceId: packageRecord.packageOccurrenceId,
     gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
     attributeLayout: [
       { location: 0, name: 'aPosition', components: 3, buffer: 'positions' },
@@ -230,7 +232,8 @@ export function getHEarthRun8ER3ALiveRendererInterface() {
 export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
   const issues = [];
   if (packet?.contractId !== H_EARTH_RUN_8E_R3A_CONTRACT_ID) issues.push('R3A_PACKET_CONTRACT_MISMATCH');
-  if (packet?.packageIdentity !== 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898') issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
+  if (packet?.packageOccurrenceId !== 'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001') issues.push('R3A_PACKAGE_OCCURRENCE_MISMATCH');
+  if (typeof packet?.packageIdentity !== 'string' || !packet.packageIdentity.startsWith('H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_')) issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
   for (const name of ['viewMatrix', 'projectionMatrix', 'viewProjectionMatrix']) {
     const matrix = packet?.camera?.[name];
     if (!Array.isArray(matrix) || matrix.length !== 16 || matrix.some((value) => !finite(value))) {

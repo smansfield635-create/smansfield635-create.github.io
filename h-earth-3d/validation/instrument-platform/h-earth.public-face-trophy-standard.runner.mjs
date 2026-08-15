@@ -67,9 +67,21 @@ check('GESTURE_MOUNT_ID_PRESERVED', indexHtml.includes('id="h-earth-functional-l
 check('AWARDS_ROUTE_IDENTITY', awardsHtml.includes('data-awards-overview="DIAMOND_GATE_BRIDGE_AWARD_LANDSCAPE"'));
 check('AWARDS_CLAIM_BOUNDARY', awardsHtml.includes('data-claim-boundary="TARGETS_AND_RATIONALE_NOT_NOMINATIONS_OR_WINS"'));
 const stories = [...awardsHtml.matchAll(/data-story="([^"]+)"/g)].map((match) => match[1]);
-const trophyLenses = [...awardsHtml.matchAll(/data-lens="([^"]+)"/g)].map((match) => match[1]);
+const trophyLenses = [...awardsHtml.matchAll(/<button\b[^>]*\bdata-lens="([^"]+)"[^>]*>/g)].map((match) => match[1]);
 check('FIVE_ACHIEVEMENT_STORIES', stories.length === 5, stories);
 check('SIX_TROPHY_STANDARD_LENSES', trophyLenses.length === 6, trophyLenses);
+check('TROPHY_CHAPTER_ORDER', JSON.stringify(trophyLenses) === JSON.stringify(['compass','world','ip','ai','diagnostic','independent']), trophyLenses);
+check('COMPASS_SEVEN_BEAT_ARGUMENT', [
+  'Navigation requires orientation.',
+  'Without orientation, there is no navigation.',
+  'Here at Diamond Gate Bridge, we define our questions through their connections.',
+  'And the stars provide the answers.',
+  'Reality relies on their existence.',
+  'Therefore.',
+  'Nothing navigates better than a compass.'
+].every((text) => awardsHtml.includes(text)));
+check('CHAPTER_HANDOFF_PRESENT', awardsHtml.includes('id="chapter-handoff"') && awardsHtml.includes('id="chapter-next"'));
+check('NEXT_CHAPTER_NO_AUTOPLAY', awardsHtml.includes("handoffNext.addEventListener('click',()=>activateLens") && !awardsHtml.includes("handoffNext.addEventListener('click',()=>worldReel.play"));
 check('AWARD_TARGETS_NOT_WINS', /does not claim that a submission, nomination, shortlist or win has already occurred/i.test(awardsHtml) && !/data-award-state="(?:WIN|WON|NOMINATED|SHORTLISTED)"/i.test(awardsHtml));
 check('AWARDS_2027_TARGET_DATE_PRESENT', awardsHtml.includes('Planned submissions · late October 2026 · 2027 cycle'));
 check('AWARDS_RETURN_TO_PROMOTED_H_EARTH', awardsHtml.includes('href="/showroom/globe/h-earth/"'));
@@ -90,6 +102,8 @@ const receiptBody = {
   comparisonBase,
   candidateHead: process.env.CANDIDATE_HEAD || exec('git rev-parse HEAD'),
   candidateId: CANDIDATE_ID,
+  awardsPageSha256: sha256(awardsHtml),
+  validatorSha256: sha256(read('h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs')),
   allowedPaths,
   changedPaths,
   sensitiveChangedPaths,

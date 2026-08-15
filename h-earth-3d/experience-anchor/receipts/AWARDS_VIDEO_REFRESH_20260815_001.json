@@ -16,7 +16,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/awards/index.html",
-      "sha256": "96987e785d70b96b80caba6327c27139f8d9322c1dacaadead38062f88042091"
+      "sha256": "d2a7899e77757dcb3e5cbe87af11b6764d0269bbed06cff37f17e40e54cd5c78"
+    },
+    {
+      "path": "h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs",
+      "sha256": "724e64aa87565de98729b1ea2d6a5ff6374bda6520399a6561d3f15e5a45b386"
     }
   ],
   "invariants": {
@@ -32,5 +36,5 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "instructions": "Owner-reviewed Awards presentation pass. The approved Compass and world picture edits, embedded audio, crop geometry, centered play control, H-Earth runtime, terrain, environment, and canonical identity are preserved. Seven restrained text statements are synchronized to the existing video timelines, with the final H-Earth reality question bound to the horizon/moon ending."
+  "instructions": "Owner-reviewed Awards presentation pass for the six-chapter story sequence. The approved Compass and world picture edits, embedded audio, crop geometry, centered play controls, H-Earth runtime, terrain, environment, and canonical identity remain preserved. Compass now carries the approved seven-beat argument with strengthened cinematic readability. The Trophy Standard is ordered Orientation to World to Identity to Intelligence to Reasoning to Construction, preserves manual nonlinear access, and exposes a next-chapter handoff after completed video chapters without autoplaying the next video's audio or picture."
 }

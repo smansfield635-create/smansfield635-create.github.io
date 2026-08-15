@@ -1,13 +1,14 @@
 {
   "schema": "H_EARTH_AWARDS_VIDEO_REFRESH_EVIDENCE_v1",
   "operationId": "AWARDS_COMPASS_HEARTH_VIDEO_REFRESH_20260815_001",
-  "governingMain": "92a9d54f0d8c90fd3dffb869efd06bca2642fb02",
+  "governingMain": "0f20e83e3ac726db02af6d54ea62b29298375577",
   "route": "showroom/globe/h-earth/awards/",
   "ownerReview": {
     "compassDisposition": "APPROVED_AFTER_GROOMING",
     "worldPictureDisposition": "APPROVED_LOCKED_NO_RECUT",
     "soundtrackDisposition": "CONTINUOUS_AUDIO_REQUESTED_FOR_BOTH_PRESENTATIONS",
-    "textOverlayDisposition": "OWNER_APPROVED_TIMED_CINEMATIC_OVERLAYS"
+    "textOverlayDisposition": "OWNER_APPROVED_SEVEN_BEAT_COMPASS_AND_SHARED_CINEMATIC_READABILITY",
+    "chapterSequenceDisposition": "OWNER_APPROVED_SIX_CHAPTER_STORY_SEQUENCE"
   },
   "compassPresentation": {
     "driveFileId": "1C4bnM7USwBITlHHNbphl22de15YC8shO",
@@ -16,9 +17,13 @@
     "visualTreatment": "GROOMED_SMOOTH_MOTION_16_BY_9",
     "audioTreatment": "EMBEDDED_CONTINUOUS_AUDIO_THROUGH_END",
     "timedTextOverlays": [
-      {"start": 0.8, "end": 4.6, "text": "Navigation requires orientation.", "position": "upper"},
-      {"start": 10.7, "end": 14.2, "text": "Without orientation, there is no navigation.", "position": "middle"},
-      {"start": 31.3, "end": 36.05, "text": "Nothing navigates better than a compass.", "position": "lower"}
+      {"start": 0.8, "end": 4.2, "text": "Navigation requires orientation.", "position": "upper"},
+      {"start": 5.05, "end": 8.65, "text": "Without orientation, there is no navigation.", "position": "middle"},
+      {"start": 9.55, "end": 15.75, "text": "Here at Diamond Gate Bridge, we define our questions through their connections.", "position": "lower", "kind": "long"},
+      {"start": 16.65, "end": 20.35, "text": "And the stars provide the answers.", "position": "upper"},
+      {"start": 21.25, "end": 25.45, "text": "Reality relies on their existence.", "position": "middle"},
+      {"start": 27, "end": 29.15, "text": "Therefore.", "position": "middle", "kind": "inference"},
+      {"start": 30.25, "end": 36.05, "text": "Nothing navigates better than a compass.", "position": "lower", "kind": "conclusion"}
     ]
   },
   "worldPresentation": {
@@ -43,14 +48,25 @@
     ]
   },
   "overlayImplementation": {
-    "captionCount": 7,
+    "compassCaptionCount": 7,
+    "worldCaptionCount": 4,
+    "totalCaptionCount": 11,
     "synchronization": "VIDEO_CURRENT_TIME",
     "boundToVisibleMediaFrame": true,
-    "presentationStyle": "RESTRAINED_CINEMATIC_TEXT_NO_BOXES",
+    "presentationStyle": "OFF_WHITE_KEYLINE_SHADOW_RESTRAINED_GLOW_WITH_LOCAL_ATMOSPHERIC_FIELD",
     "pictureMutated": false,
     "audioMutated": false,
     "cropGeometryMutated": false,
     "playControlMutated": false
+  },
+  "chapterSequence": {
+    "order": ["compass", "world", "ip", "ai", "diagnostic", "independent"],
+    "conceptualOrder": ["ORIENTATION", "WORLD", "IDENTITY", "INTELLIGENCE", "REASONING", "CONSTRUCTION"],
+    "manualNonlinearAccessPreserved": true,
+    "videoEndMarksCurrentChapterComplete": true,
+    "nextChapterHandoffPresent": true,
+    "nextChapterAutoplay": false,
+    "futureVideoSlotsRemainChapterBound": true
   },
   "continuityAssessment": {
     "sameCanonicalWorld": true,
@@ -63,6 +79,6 @@
   },
   "candidatePage": {
     "path": "showroom/globe/h-earth/awards/index.html",
-    "sha256": "96987e785d70b96b80caba6327c27139f8d9322c1dacaadead38062f88042091"
+    "sha256": "d2a7899e77757dcb3e5cbe87af11b6764d0269bbed06cff37f17e40e54cd5c78"
   }
 }

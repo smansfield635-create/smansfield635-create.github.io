@@ -1,0 +1,43 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_DIAGNOSTIC_RECORDING_PROTOCOL_v1",
+  "purpose": "Collect one short original recording that can resolve the A5 speaker-specific acoustic parameters that the C01 narration reference cannot identify authoritatively.",
+  "recordingLaw": {
+    "oneContinuousTake": true,
+    "cleanDryRecording": true,
+    "noMusic": true,
+    "noReverb": true,
+    "noEQ": true,
+    "noNoiseReduction": true,
+    "normalPhoneMicrophoneAllowed": true,
+    "distanceGuidanceCm": [15, 30],
+    "targetDelivery": "same intended Jeeves low-mid composed register as C01",
+    "doNotPerformAccent": true
+  },
+  "script": [
+    {"id":"V1_AH","instruction":"Sustain AH as in father for about 2 seconds."},
+    {"id":"V2_EE","instruction":"Sustain EE as in see for about 2 seconds."},
+    {"id":"V3_OO","instruction":"Sustain OO as in food for about 2 seconds."},
+    {"id":"N1_M","instruction":"Sustain MMM for about 2 seconds."},
+    {"id":"N2_N","instruction":"Sustain NNN for about 2 seconds."},
+    {"id":"N3_NG","instruction":"Sustain NG as at the end of sing for about 2 seconds."},
+    {"id":"G1_AH_REPEAT","instruction":"Repeat AH as in father three times, about 1.5 seconds each, with a short natural pause between repetitions."},
+    {"id":"H1_HA","instruction":"Say HA five times evenly, separated by short pauses."},
+    {"id":"H2_HEE","instruction":"Say HEE five times evenly, separated by short pauses."},
+    {"id":"H3_HOO","instruction":"Say HOO five times evenly, separated by short pauses."}
+  ],
+  "measurementCoverage": {
+    "vowelFormants": ["V1_AH","V2_EE","V3_OO"],
+    "formantBandwidths": ["V1_AH","V2_EE","V3_OO"],
+    "vocalTractLengthScale": ["V1_AH","V2_EE","V3_OO"],
+    "nasalPolesAndZeros": ["N1_M","N2_N","N3_NG"],
+    "glottalOpenQuotient": ["V1_AH","G1_AH_REPEAT"],
+    "glottalClosingQuotient": ["V1_AH","G1_AH_REPEAT"],
+    "spectralTilt": ["V1_AH","V2_EE","V3_OO","G1_AH_REPEAT"],
+    "aspirationByContext": ["H1_HA","H2_HEE","H3_HOO"],
+    "jitterStatistics": ["V1_AH","G1_AH_REPEAT"],
+    "shimmerStatistics": ["V1_AH","G1_AH_REPEAT"]
+  },
+  "estimatedSpokenDurationSeconds": 28,
+  "law": "This is a diagnostic measurement specimen, not a narration corpus and not a request to clone the speaker's identity. Measurements are inputs to a separately designed Jeeves acoustic identity.",
+  "nextLawfulActionAfterRecording": "PROVENANCE_HASH_FREEZE_DIAGNOSTIC_AUDIO_THEN_RUN_A5_MEASUREMENT_PROCEDURE"
+}

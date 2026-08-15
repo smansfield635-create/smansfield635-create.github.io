@@ -46,7 +46,7 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
   continent: 'GRATITUDE',
   continentalCoast: {
     identity: 'GRATITUDE_CONTINENTAL_COAST',
-    baselineZ: -45,
+    baselineZ: -82,
     morphology: 'ASYMMETRIC_ORGANIC_COMPOUND_COAST'
   },
   bay: {

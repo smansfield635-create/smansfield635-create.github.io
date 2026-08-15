@@ -1,5 +1,6 @@
 name: H-Earth OW01 Live Package Occurrence Diagnostic v4
 
+# Triggered after workflow registration; branch-only diagnostic, no product writes.
 on:
   push:
     branches:

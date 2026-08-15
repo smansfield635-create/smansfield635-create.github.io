@@ -1812,18 +1812,6 @@
       "scopeHash": "d3713cfb790f3d6b56d22862f66fe154a86f8320a592bffa9fe1292cd9aca6ff",
       "state": "ADMITTED_LOCKED"
     },
-    "d4891adc035854eb798c1714915a64731d0fca9f9cde1814adda447ca6fee581": {
-      "governingHead": "d8129cc81068a16b0fd8a7935f63a52912f9fa56",
-      "lockGeneration": 1486,
-      "lockScope": "H_EARTH:OW02:EXPERIENCE_ANCHOR:REGISTRY_RESERVATION:FRESH_EXECUTION_CARRIER:V2:EXACT_1_PATH_SCOPE",
-      "operationId": "H_EARTH_OW02_EXPERIENCE_ANCHOR_REGISTRY_RESERVATION_FRESH_EXECUTION_CARRIER_v2",
-      "procedureLocatorDigest": "38d3b2e21660792f176bb4fbcc9c89b00c0a306732c7021d33d948e2ed9e1726",
-      "released": false,
-      "requestDigest": "a80f40024dd08bba0a31a437c5140f4f76811b118708990d3738524d6c06b000",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "d4891adc035854eb798c1714915a64731d0fca9f9cde1814adda447ca6fee581",
-      "state": "ADMITTED_LOCKED"
-    },
     "d4e382130aa1e21a827ed0cd0abc67f8446720775fda82a13e9f17954e3980f5": {
       "governingHead": "c37b2efac4df714b63b7cc48832e29d88aa71443",
       "lockGeneration": 582,
@@ -21788,6 +21776,19 @@
       "scopeHash": "8786a8ee3af526ef4d778a222acc175af61af29043dd543965c42e8b1883c4c5",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "governingHead": "d8129cc81068a16b0fd8a7935f63a52912f9fa56",
+      "lockGeneration": 1486,
+      "lockScope": "H_EARTH:OW02:EXPERIENCE_ANCHOR:REGISTRY_RESERVATION:FRESH_EXECUTION_CARRIER:V2:EXACT_1_PATH_SCOPE",
+      "operationId": "H_EARTH_OW02_EXPERIENCE_ANCHOR_REGISTRY_RESERVATION_FRESH_EXECUTION_CARRIER_v2",
+      "procedureLocatorDigest": "38d3b2e21660792f176bb4fbcc9c89b00c0a306732c7021d33d948e2ed9e1726",
+      "released": true,
+      "requestDigest": "a80f40024dd08bba0a31a437c5140f4f76811b118708990d3738524d6c06b000",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d4891adc035854eb798c1714915a64731d0fca9f9cde1814adda447ca6fee581",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

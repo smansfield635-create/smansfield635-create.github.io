@@ -1,0 +1,42 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": false,
+  "disposition": "BLOCK_PENDING_ANCHOR_REVIEW",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.base.png",
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.candidate.png",
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.anchor.png",
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW02_INLAND_MOUNTAIN_WATERSHED_20260815_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "617b5c57b3ce78a5041dee671fcc4dcfac85489e72b606f85154a325c13a9a27"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "sha256": "c65e8d890a97effe45611c61ed6b0d17f2344990530f17669192f958ca4ed67b"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": false,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": false,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": false,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": false,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": false,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": false,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": false,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": false,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": false,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": false,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": false
+  }
+}

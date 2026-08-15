@@ -2,17 +2,17 @@
 
 This carrier uses public GitHub-hosted compute only as execution transport. The private control plane remains the sole authority.
 
-The carrier accepts only `PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_v1`, fixed to `smansfield635-create/geodiametrics1`, checks out the exact requested private governing head, runs the private repository-owned `tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs`, and returns only a redacted public receipt plus the digest of the native private receipt.
-
-It must use a GitHub App installation token scoped only to `geodiametrics1` with the minimum permission required by the canonical private lock CAS. The public workflow must never receive arbitrary repository, path, command, ledger bytes, or authority-result inputs.
+The public request contains no private intake payload. It contains only a closed locator: private issue number, private issue-comment ID, expected intake request ID, and exact private governing head. The privileged carrier mints a short-lived GitHub App token, fetches the frozen intake directly from `smansfield635-create/geodiametrics1`, verifies its identity and head, checks out that exact private head, runs the private repository-owned `tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs`, and returns only a redacted public receipt plus the digest of the native private receipt.
 
 Required public repository configuration:
 
 - Variable: `PRIVATE_EXECUTION_APP_ID`
 - Secret: `PRIVATE_EXECUTION_APP_PRIVATE_KEY`
-- GitHub App installed on `geodiametrics1`
-- App repository permission: Contents — Read and write
+- GitHub App installed only on `geodiametrics1`
+- App repository permissions: Contents — Read and write; Issues — Read
 
-The GitHub App token is job-scoped and must be revoked by the token action after completion.
+The owner-comment router has no private credential. It can only dispatch the fixed privileged carrier workflow. The privileged workflow refuses non-owner actors, arbitrary repository/path/command inputs, caller-supplied ledger bytes, and caller-supplied authority results.
 
-Success is not a public workflow success by itself. Success is the native private canonical receipt reporting the requested private result, with post-write private verification performed by the private canonical bridge.
+The GitHub App token is job-scoped and is revoked by the pinned token action after completion. The full private canonical receipt is never published to the public repository.
+
+Success is not a public workflow success by itself. Success is the native private canonical receipt reporting the requested private result after the private bridge completes its own exact-head, canonical-gate, CAS, and readback checks.

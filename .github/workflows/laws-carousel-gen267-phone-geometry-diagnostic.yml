@@ -1,0 +1,46 @@
+name: Laws Carousel Gen267 Phone Geometry Diagnostic
+on:
+  push:
+    branches: ['agent/laws-carousel-gen267-continuity-intake']
+    paths: ['.github/workflows/laws-carousel-gen267-phone-geometry-diagnostic.yml']
+permissions:
+  contents: read
+env:
+  CANDIDATE: d7d9cfa4c1aa4a38082852094d3d8f069d2881b3
+  ORIGIN: http://127.0.0.1:4173
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CANDIDATE }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/server.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS "$ORIGIN/laws/research/methods-and-models/" >/dev/null && exit 0; sleep .25; done
+          exit 1
+      - name: Measure phone geometry
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          cat > diagnose.mjs <<'JS'
+          import fs from 'node:fs'; import puppeteer from 'puppeteer-core';
+          const b=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']}); const p=await b.newPage(); await p.setViewport({width:390,height:844}); await p.goto(process.env.ORIGIN+'/laws/research/methods-and-models/',{waitUntil:'networkidle0'}); await p.waitForSelector('.mm-card[data-active="true"]'); await new Promise(r=>setTimeout(r,800));
+          const read=async()=>p.evaluate(()=>{const R=s=>{const e=document.querySelector(s); if(!e)return null; const r=e.getBoundingClientRect(); return {x:r.x,y:r.y,w:r.width,h:r.height,bottom:r.bottom,right:r.right};}; const action=document.querySelector('.mm-card[data-active="true"] [data-open-inspection]'); const ar=action?.getBoundingClientRect(); const hit=ar?document.elementFromPoint(ar.x+ar.width/2,ar.y+ar.height/2):null; return {scrollY,carousel:R('[data-mm-carousel]'),header:R('.mm-carousel__header'),tabs:R('[data-mm-family-tabs]'),viewport:R('[data-mm-viewport]'),ring:R('[data-mm-ring]'),card:R('.mm-card[data-active="true"]'),action:R('.mm-card[data-active="true"] [data-open-inspection]'),actionHit:{tag:hit?.tagName,cls:hit?.className,text:hit?.textContent?.trim()?.slice(0,80)},inspecting:document.querySelector('[data-mm-carousel]')?.dataset.inspecting};});
+          const initial=await read(); await p.click('[data-mm-family-tabs] [data-family-index="1"]'); await p.waitForFunction(()=>document.querySelector('[data-mm-carousel]')?.dataset.family==='pressure'); await new Promise(r=>setTimeout(r,800)); const selected=await read(); let clickError=null; try{await p.click('.mm-card[data-active="true"] [data-open-inspection]'); await new Promise(r=>setTimeout(r,300));}catch(e){clickError=String(e)} const after=await read(); fs.writeFileSync('phone-geometry.json',JSON.stringify({initial,selected,after,clickError},null,2)); await p.screenshot({path:'phone-geometry.png',fullPage:true}); await b.close();
+          JS
+          CANDIDATE="$CANDIDATE" ORIGIN="$ORIGIN" node diagnose.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gen267-phone-geometry-${{ github.run_id }}
+          path: |
+            phone-geometry.json
+            phone-geometry.png

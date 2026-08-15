@@ -1,0 +1,53 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A0_A1_BOUNDARY_v1",
+  "status": "CONSTRUCTED_PENDING_QUALIFICATION",
+  "characterId": "jeeves",
+  "baseInterfaceHead": "ffceed8da76bfb03e007dcbdb240ba4637e987cc",
+  "qualifiedInterface": "JEEVES_SPEECH_PERFORMANCE_STATE_INTERFACE.v1.json",
+  "purpose": "Introduce the first bounded physical acoustic consumer beneath the frozen Jeeves performance-state interface without changing governance, transcript, G0-G5 evidence, or admitting learned components.",
+  "authorizedScope": [
+    "deterministic Rosenberg-style glottal excitation",
+    "deterministic broadband noise excitation for fricative and release energy",
+    "three-resonator source-filter synthesis",
+    "phoneme-class formant targets",
+    "phoneme-class bandwidth targets",
+    "time-varying cross-phoneme formant interpolation",
+    "performance-state F0, energy, attack, restraint and bounded excursion consumption",
+    "single frozen Compass C01 qualification sequence",
+    "24 kHz mono PCM-domain generation"
+  ],
+  "consumerInputLaw": {
+    "performanceState": "must already satisfy the qualified Jeeves performance-state interface",
+    "phonemeFrames": "ordered phoneme plus duration frames supplied by the existing linguistic/timing layer",
+    "mayRewriteText": false,
+    "mayRewriteCharacterIdentity": false,
+    "mayRewriteGovernanceState": false,
+    "mayInferThirdPartyVoiceIdentity": false
+  },
+  "physicalModel": {
+    "source": "ROSENBERG_STYLE_GLOTTAL_PULSE_PLUS_DETERMINISTIC_NOISE",
+    "filter": "THREE_TIME_VARYING_RESONATORS",
+    "formantCount": 3,
+    "coarticulation": "SMOOTHSTEP_EDGE_INTERPOLATION_BETWEEN_ADJACENT_PHONEME_TARGETS",
+    "sampleRateHz": 24000,
+    "externalRuntimeLibraries": false,
+    "externalModelWeights": false,
+    "remoteService": false
+  },
+  "heldOutsideBoundary": [
+    "general text-to-phoneme construction",
+    "new timing law",
+    "new governance mapping law",
+    "G5 residual fitting",
+    "learned vocoder",
+    "reference-audio conditioning",
+    "nasal pole-zero network beyond current bandwidth approximation",
+    "full articulatory tract geometry",
+    "breath model",
+    "all-eight-line Compass qualification",
+    "public product integration"
+  ],
+  "acceptanceQuestion": "Can the first consumer deterministically transform a lawful Jeeves performance state plus frozen phoneme frames into bounded non-silent PCM while demonstrating time-varying source-filter behavior and no governance or linguistic mutation?",
+  "nextIfPass": "PRESERVE_A0_A1_AND_ADMIT_A2_ARTICULATORY_COARTICULATION_OR_SINGLE_LINE_OWNER_LISTENING_ONLY_IF_AUDIO_QUALITY_IS_MATERIALLY_REVIEWABLE",
+  "nextIfFail": "REPAIR_A0_A1_PHYSICAL_CONSUMER_WITHOUT_ADVANCING_SCOPE"
+}

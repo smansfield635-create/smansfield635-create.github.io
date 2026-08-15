@@ -2,7 +2,7 @@
 <html lang="en"
   data-route="/laws/research/methods-and-models/"
   data-page-family="RESEARCH_CHILD_SHOWROOM"
-  data-methods-models-contract="METHODS_MODELS_EUCLIDEAN_SHOWROOM_v3"
+  data-methods-models-contract="METHODS_MODELS_SPATIAL_INFORMATION_INSTRUMENT_v1"
   data-canonical-archive="METHODS_MODELS_CANONICAL_ARCHIVE_v1_DRAFT"
   data-source-completeness="open"
   data-scientific-validation-claimed="false"
@@ -13,16 +13,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <title>Methods and Models · Research · Laws · Diamond Gate Bridge</title>
-  <meta name="description" content="Operate the Methods and Models showroom: structural collapse, pressure and capacity, closure and flow, and falsification methods presented as one Euclidean model instrument across model, lens, and family axes.">
+  <meta name="description" content="Operate the Methods and Models showroom: structural collapse, pressure and capacity, closure and flow, and falsification methods presented as one spatial information instrument across record, lens, and family axes.">
   <link rel="canonical" href="https://diamondgatebridge.com/laws/research/methods-and-models/">
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/laws/research/methods-and-models/showroom.css?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1">
   <link rel="stylesheet" href="/laws/research/methods-and-models/showroom-refinement.css?v=METHODS_MODELS_SHOWROOM_DOCK_V2">
   <link rel="stylesheet" href="/laws/research/methods-and-models/showroom-euclidean.css?v=METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3">
   <link rel="stylesheet" href="/laws/research/methods-and-models/showroom-euclidean-interaction.css?v=METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3A">
+  <link rel="stylesheet" href="/laws/research/methods-and-models/spatial-field-v1.css?v=METHODS_MODELS_SPATIAL_FIELD_V1">
   <script defer src="/laws/research/methods-and-models/showroom.js?v=METHODS_MODELS_DUAL_AXIS_SHOWROOM_V1"></script>
   <script defer src="/laws/research/methods-and-models/showroom-refinement.js?v=METHODS_MODELS_SHOWROOM_DOCK_V2"></script>
   <script defer src="/laws/research/methods-and-models/showroom-euclidean.js?v=METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3"></script>
+  <script defer src="/laws/research/methods-and-models/spatial-field-v1.js?v=METHODS_MODELS_SPATIAL_FIELD_V1"></script>
 </head>
 <body data-mm-family="structure" data-mm-display="expanded">
 <a class="mm-skip" href="#methods-models-showroom">Skip to the model showroom</a>
@@ -42,12 +44,12 @@
   <main class="mm-main" id="main">
     <section class="mm-intro" aria-labelledby="page-title" data-mm-background-surface>
       <div>
-        <p class="mm-kicker">Research · Model Showroom</p>
+        <p class="mm-kicker">Research · Spatial Model Showroom</p>
         <h1 id="page-title">Methods and Models</h1>
       </div>
       <div>
         <p class="mm-intro__question">How was the proposition specified, calculated, compared, and exposed to failure?</p>
-        <p class="mm-intro__cue">Rotate the model field through X for models, Y for interpretive lenses, and Z for model families. Collapse the complete coordinate into a compact dock when you are ready to examine the public research context beneath it.</p>
+        <p class="mm-intro__cue">The information field is the control surface. Drag records horizontally through X, drag interpretive lenses through Y, and drag the four family territories through Z depth. Tap a record only to inspect it; closing inspection returns to the exact coordinate you left.</p>
       </div>
     </section>
 
@@ -55,7 +57,7 @@
       <div class="mm-stage">
         <header class="mm-stage__header">
           <div>
-            <p class="mm-kicker">Primary exhibit · Euclidean model field</p>
+            <p class="mm-kicker">Primary exhibit · Spatial information field</p>
             <h2 id="mm-family-title" data-mm-family-title>Structural Envelope and Collapse</h2>
             <p class="mm-stage__question" data-mm-family-question>What must be present, saturated, and functionally failed before collapse is qualified?</p>
           </div>
@@ -65,17 +67,16 @@
           </button>
         </header>
 
-        <div class="mm-family-tabs" role="tablist" aria-label="Model families" data-mm-family-tabs>
+        <div class="mm-family-tabs" role="tablist" aria-label="Model family territories" data-mm-family-tabs>
           <button class="mm-family-tab" type="button" role="tab" aria-selected="true">Structural Envelope</button>
           <button class="mm-family-tab" type="button" role="tab" aria-selected="false">Pressure / Capacity</button>
           <button class="mm-family-tab" type="button" role="tab" aria-selected="false">Closure / Flow</button>
           <button class="mm-family-tab" type="button" role="tab" aria-selected="false">Method / Falsification</button>
         </div>
 
-        <div class="mm-z-axis-controls" aria-label="Rotate the model-family depth axis">
-          <button type="button" data-mm-family-previous aria-label="Previous model family">↑</button>
-          <span aria-hidden="true">Z</span>
-          <button type="button" data-mm-family-next aria-label="Next model family">↓</button>
+        <div class="mm-z-axis-controls" aria-hidden="true">
+          <button type="button" data-mm-family-previous tabindex="-1">Previous family</button>
+          <button type="button" data-mm-family-next tabindex="-1">Next family</button>
         </div>
 
         <div class="mm-instrument">
@@ -83,7 +84,7 @@
           <div class="mm-depth-plane" aria-hidden="true"></div>
           <div class="mm-depth-plane" aria-hidden="true"></div>
 
-          <div class="mm-model-deck" data-mm-model-deck tabindex="0" aria-label="Models within the active family">
+          <div class="mm-model-deck" data-mm-model-deck tabindex="0" aria-label="Directly manipulate records within the active family">
             <article class="mm-model-card" data-position="active">
               <div class="mm-model-card__meta">
                 <span class="mm-model-card__index">01 / 06</span>
@@ -101,9 +102,9 @@
             </article>
           </div>
 
-          <div class="mm-deck-controls" aria-label="Model controls">
-            <button class="mm-model-control" type="button" aria-label="Previous model" data-mm-previous>←</button>
-            <button class="mm-model-control" type="button" aria-label="Next model" data-mm-next>→</button>
+          <div class="mm-deck-controls" aria-hidden="true">
+            <button class="mm-model-control" type="button" tabindex="-1" data-mm-previous>Previous model</button>
+            <button class="mm-model-control" type="button" tabindex="-1" data-mm-next>Next model</button>
           </div>
         </div>
 

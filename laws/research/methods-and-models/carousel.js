@@ -92,9 +92,16 @@
       event.stopPropagation();
       openInspection(article, "inspect-button");
     });
-    article.querySelector("[data-close-inspection]")?.addEventListener("click", event => {
+    const returnControl = article.querySelector("[data-close-inspection]");
+    returnControl?.addEventListener("pointerdown", event => {
+      event.preventDefault();
       event.stopPropagation();
-      closeInspection("return-to-orbit-button");
+      closeInspection("return-to-orbit-pointer");
+    });
+    returnControl?.addEventListener("click", event => {
+      event.preventDefault();
+      event.stopPropagation();
+      if (state.inspecting) closeInspection("return-to-orbit-button");
     });
   }
 

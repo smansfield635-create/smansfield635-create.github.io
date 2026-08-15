@@ -36,6 +36,7 @@
    active card's projected footprint enough to remain inside every audited
    viewport. This is geometry containment, not a surrogate control. */
 html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] [data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="active"]{transform:translate3d(-50%,-50%,125px) rotateY(0deg) scale(.88)!important}
+[data-mm-spatial-field-v1][data-mm-spatial-reopening="true"] .mm-model-card{transition:none!important;animation:none!important}
 
 /* Already-bound historical state hooks are moved here by spatial-field-v1.js.
    The nodes retain their inherited listeners but present no perceivable control. */

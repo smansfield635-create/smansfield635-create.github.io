@@ -1,7 +1,9 @@
 name: Gen279 Through Gen281 Invocation
 
 on:
-  pull_request:
+  push:
+    branches:
+      - 'agent/gen279-through-gen281-invocation-v2'
     paths:
       - '.github/workflows/gen279-through-gen281-invocation.yml'
   workflow_dispatch:

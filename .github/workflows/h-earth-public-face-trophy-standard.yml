@@ -48,9 +48,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
-      - name: Temporary Awards page digest probe
-        run: sha256sum showroom/globe/h-earth/awards/index.html
-
       - name: Publish pending public verification status
         if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
         uses: actions/github-script@v7

@@ -1,0 +1,49 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A3_BOUNDARY_v1",
+  "status": "CONSTRUCTED_PENDING_QUALIFICATION",
+  "generation": "A3",
+  "predecessorHead": "1947ff3db0454d8b33c14e47be62e6cdba7269db",
+  "purpose": "Replace the simplified A2 voiced excitation with a more expressive deterministic glottal source and bounded aspiration physics while preserving A2 articulatory/coarticulation trajectories and the qualified performance-state interface.",
+  "heldConstant": [
+    "qualified Jeeves performance-state interface",
+    "C01 phoneme sequence and durations",
+    "A2 gesture overlap law",
+    "A2 formant and bandwidth trajectories",
+    "three-resonator vocal-tract filter topology",
+    "sample rate 24000 Hz",
+    "no learned components"
+  ],
+  "a3AuthorizedVariables": [
+    "glottal open quotient",
+    "glottal closing quotient",
+    "source spectral tilt",
+    "bounded cycle-to-cycle F0 perturbation",
+    "bounded aspiration coupled to glottal phase",
+    "voiced-noise floor"
+  ],
+  "bounds": {
+    "openQuotient": [0.45, 0.72],
+    "closingQuotient": [0.10, 0.28],
+    "spectralTilt": [0.55, 0.95],
+    "cycleF0PerturbationFractionMax": 0.006,
+    "aspirationGainMax": 0.12,
+    "voicedNoiseGainMax": 0.04
+  },
+  "explicitlyForbidden": [
+    "new timing law",
+    "new semantic or governance mapping",
+    "new articulatory gesture law",
+    "reference-audio conditioning",
+    "learned residual",
+    "external pretrained weights",
+    "remote TTS dependency",
+    "public product mutation"
+  ],
+  "qualificationCorpus": {
+    "lineId": "COMPASS_C01",
+    "text": "Navigation requires orientation."
+  },
+  "acceptanceQuestion": "Does A3 produce deterministic bounded C01 audio with preserved duration and A2 articulatory behavior while introducing a measurable source-waveform change through glottal/aspiration physics?",
+  "nextIfPass": "A4_NASAL_FRICATIVE_STOP_SPECIFIC_PHYSICS",
+  "nextIfFail": "REPAIR_A3_SOURCE_PHYSICS_WITHOUT_ADVANCING"
+}

@@ -25,6 +25,11 @@ import {
   evaluateHEarthRun8AFormerBoundaryContinuity
 } from '../control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js';
 
+import {
+  H_EARTH_R06_C10_OFFICIAL_LANDFORM_CANDIDATE,
+  sampleHEarthR06C10OfficialLandformDelta
+} from './h-earth.r06-c10.official-landform-candidate-001.js';
+
 const freeze = (value, seen = new WeakSet()) => {
   if (value === null || typeof value !== 'object' || seen.has(value)) return value;
   seen.add(value);
@@ -59,7 +64,7 @@ export function canonicalizeHEarthRun8BElevation(value) {
 
 export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD = freeze({
   contractId: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 2,
+  generationRevision: 3,
   predecessorContractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
   predecessorGenerationRevision: H_EARTH_TERRAIN_FIELD.generationRevision,
   predecessorOccurrenceDisposition: 'PRESERVED_UNCHANGED',
@@ -89,11 +94,12 @@ export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD = freeze({
       H_EARTH_RUN_8A_TERRAIN_SAMPLING_AND_REFINEMENT_CONTRACT
         .profiles.FULL_DETAIL.refinementSpacingWorldUnits,
     sharedEdgeRule: 'SAME_WORLD_COORDINATE_SAME_SUCCESSOR_SAMPLE_AND_NORMAL',
-    normalRule: 'RUN_8A_SUCCESSOR_FIELD_CENTRAL_DIFFERENCE',
+    normalRule: 'RUN_8B_SUCCESSOR_FIELD_CENTRAL_DIFFERENCE_WITH_R06_C10_CANDIDATE',
     deterministic: true,
     canonicalElevationGridContractId:
       H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID.contractId
   },
+  boundedLandformCandidate: H_EARTH_R06_C10_OFFICIAL_LANDFORM_CANDIDATE,
   ownership: {
     ownsSuccessorWorldSpaceElevationLaw: true,
     ownsSuccessorDerivativeAndNormalSampleLaw: true,
@@ -114,9 +120,12 @@ export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD = freeze({
 });
 
 export function sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ) {
-  return canonicalizeHEarthRun8BElevation(
+  const baselineElevation = canonicalizeHEarthRun8BElevation(
     sampleHEarthRun8ASuccessorTerrainElevation(worldX, worldZ)
   );
+  const candidateDelta =
+    sampleHEarthR06C10OfficialLandformDelta(worldX, worldZ);
+  return canonicalizeHEarthRun8BElevation(baselineElevation + candidateDelta);
 }
 
 export function sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ) {
@@ -131,12 +140,33 @@ export function sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ) {
     });
   }
 
-  const elevation = canonicalizeHEarthRun8BElevation(source.elevation);
+  const elevation = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ);
+  const step = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.sampling.derivativeStep;
+  const left = sampleHEarthRun8BSuccessorTerrainElevation(worldX - step, worldZ);
+  const right = sampleHEarthRun8BSuccessorTerrainElevation(worldX + step, worldZ);
+  const back = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ - step);
+  const front = sampleHEarthRun8BSuccessorTerrainElevation(worldX, worldZ + step);
+  const gradientX = (right - left) / (2 * step);
+  const gradientZ = (front - back) / (2 * step);
+  const normalLength = Math.hypot(-gradientX, 1, -gradientZ);
+  const candidateDelta =
+    sampleHEarthR06C10OfficialLandformDelta(worldX, worldZ);
 
   return freeze({
     ...source,
     world: { ...source.world, y: elevation },
     elevation,
+    baselineElevation: canonicalizeHEarthRun8BElevation(source.elevation),
+    appliedCandidateDelta: candidateDelta,
+    gradient: { x: gradientX, z: gradientZ },
+    normal: {
+      x: -gradientX / normalLength,
+      y: 1 / normalLength,
+      z: -gradientZ / normalLength
+    },
+    slope: Math.hypot(gradientX, gradientZ),
+    curvature:
+      left - 2 * elevation + right + back - 2 * elevation + front,
     status: 'RUN_8B_SUCCESSOR_TERRAIN_SAMPLE_COMPLETE',
     contractId: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
     generationRevision:
@@ -146,6 +176,8 @@ export function sampleHEarthRun8BSuccessorTerrainField(worldX, worldZ) {
       H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT.contractId,
     canonicalElevationGridContractId:
       H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID.contractId,
+    boundedLandformCandidateId:
+      H_EARTH_R06_C10_OFFICIAL_LANDFORM_CANDIDATE.candidateId,
     predecessorContractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
     predecessorMutated: false
   });

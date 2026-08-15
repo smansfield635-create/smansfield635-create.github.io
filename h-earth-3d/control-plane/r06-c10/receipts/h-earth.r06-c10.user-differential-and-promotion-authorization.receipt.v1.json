@@ -1,0 +1,42 @@
+{
+  "schema": "H_EARTH_R06_C10_USER_DIFFERENTIAL_AND_PROMOTION_AUTHORIZATION_RECEIPT_v1",
+  "operationId": "H_EARTH_R06_C10_BOUNDED_LANDFORM_PROMOTION_001",
+  "recordedAt": "2026-08-04T17:31:00-05:00",
+  "userAuthority": "PROJECT_ORIGIN_AND_FINAL_PHYSICAL_DIFFERENTIAL_AUTHORITY",
+  "sourceCandidateHead": "95504c9927922318225da1d61fa303cec70497f9",
+  "candidateTerrainModuleBlob": "eb544a41aaa56bdee5d6d92114e85d6b4e6262f3",
+  "successorTerrainFieldBlob": "aa6111a2e37a0ddfd5004a2ec9920a2451f5a4b8",
+  "verifiedPreview": {
+    "publicationMergeHead": "8a4c542083581b76614133871eaf5a3ea32097bb",
+    "publicPath": "/preview/h-earth/r06-c10/95504c9927922318225da1d61fa303cec70497f9/index.html",
+    "deployedVerificationRun": 30956016633,
+    "deployedVerificationArtifact": 8911054523,
+    "desktopRuntime": "PASS",
+    "touchMobileRuntime": "PASS",
+    "visibleWorldFrame": "PASS",
+    "candidateTerrainModuleLoaded": true
+  },
+  "userDifferential": {
+    "result": "PASS_BOUNDED_MATERIAL_IMPROVEMENT",
+    "overallPresentation": "LOOKS_GREAT",
+    "observedChange": "THE_TWO_FOREGROUND_HILLS_CHANGED_AND_ONE_DIVIDED_INTO_A_THIRD_HILL",
+    "acceptance": "ACCEPTED_AS_A_GOOD_BOUNDED_IMPROVEMENT",
+    "limitation": "SPATIAL_FOOTPRINT_AND_ENVIRONMENT_SIZE_CHANGE_ARE_MINIMAL",
+    "requestedSuccessorDirection": "PRESERVE_THIS_IMPROVEMENT_AS_THE_BASELINE_AND_EXPAND_THE_LANDFORM_AND_MOUNTAIN_SYSTEM_OVER_A_LARGER_AREA"
+  },
+  "promotionAuthorization": {
+    "promoteExactTerrainBytesToMain": true,
+    "terrainRetuningDuringPromotion": false,
+    "publicPreviewPackageAsProductSource": false,
+    "futureExpansionAuthorizedFromPromotedBaseline": true
+  },
+  "preservation": {
+    "acceptedV2Presentation": true,
+    "navigation": true,
+    "water": true,
+    "materials": true,
+    "camera": true,
+    "candidateShape": true
+  },
+  "result": "USER_ACCEPTED_FOR_MAIN_AND_SUCCESSOR_EXPANSION"
+}

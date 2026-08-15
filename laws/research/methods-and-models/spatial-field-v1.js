@@ -18,6 +18,19 @@
   const coordinate = root.querySelector("[data-mm-coordinate]");
   if (!stage || !deck || !familyTabs || !lensTabs) return;
 
+  // Preserve the exact already-bound legacy handler nodes, but remove them from
+  // the product's visible control surfaces. Moving a DOM node preserves every
+  // listener installed by showroom.js, refinement.js, and euclidean.js.
+  const machineHooks = document.createElement("div");
+  machineHooks.className = "mm-machine-hooks";
+  machineHooks.setAttribute("aria-hidden", "true");
+  [previous, next, familyPrevious, familyNext].forEach(control => {
+    if (!control) return;
+    control.tabIndex = -1;
+    machineHooks.append(control);
+  });
+  root.append(machineHooks);
+
   const state = { activePointer: null, returnCoordinate: null };
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
   const familyButtons = () => Array.from(familyTabs.querySelectorAll(".mm-family-tab"));
@@ -51,7 +64,13 @@
 
   function begin(axis, event) {
     if (event.pointerType === "mouse" && event.button !== 0) return;
-    state.activePointer = { axis, id: event.pointerId, surface: event.currentTarget, startX: event.clientX, startY: event.clientY };
+    state.activePointer = {
+      axis,
+      id: event.pointerId,
+      surface: event.currentTarget,
+      startX: event.clientX,
+      startY: event.clientY
+    };
     root.dataset.mmFieldDragging = "true";
     root.dataset[`mm${axis.toUpperCase()}Dragging`] = "true";
     event.currentTarget.setPointerCapture?.(event.pointerId);
@@ -93,23 +112,6 @@
   attach(lensTabs, "y");
   attach(familyTabs, "z");
 
-  function dispatchDeckKey(key) {
-    deck.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
-  }
-
-  function bridgeHook(element, key) {
-    element?.addEventListener("click", event => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      dispatchDeckKey(key);
-    }, true);
-  }
-
-  bridgeHook(next, "ArrowRight");
-  bridgeHook(previous, "ArrowLeft");
-  bridgeHook(familyNext, "PageDown");
-  bridgeHook(familyPrevious, "PageUp");
-
   root.addEventListener("click", event => {
     if (event.target.closest(".mm-inspect")) state.returnCoordinate = coordinateSnapshot();
   }, true);
@@ -124,7 +126,7 @@
       const count = Math.max(modelCards().length, 1);
       const forward = (snapshot.x - current + count) % count;
       const backward = (current - snapshot.x + count) % count;
-      dispatchDeckKey(forward <= backward ? "ArrowRight" : "ArrowLeft");
+      (forward <= backward ? next : previous)?.click();
       guard += 1;
     }
     requestAnimationFrame(() => deck.focus({ preventScroll: true }));

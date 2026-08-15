@@ -28,7 +28,8 @@
     velocity: 0,
     inspecting: false,
     settling: false,
-    settleTimer: null
+    settleTimer: null,
+    suppressClick: false
   };
 
   const count = families.length;
@@ -253,6 +254,11 @@
   });
 
   ring.addEventListener("click", event => {
+    if (state.suppressClick) {
+      state.suppressClick = false;
+      event.preventDefault();
+      return;
+    }
     const card = event.target.closest(".mm-card");
     if (!card) return;
     const familyIndex = Number(card.dataset.familyIndex);
@@ -303,6 +309,7 @@
     state.pointerStartAngle = state.angle;
     state.pointerTravel = 0;
     state.velocity = 0;
+    state.suppressClick = false;
     viewport.dataset.dragging = "true";
     viewport.setPointerCapture?.(event.pointerId);
   });
@@ -335,6 +342,7 @@
       if (activeCard && !event.target.closest("button, a")) openInspection(activeCard, "active-object-pointer-tap");
       return;
     }
+    state.suppressClick = true;
     snapFromDrag();
   }
 

@@ -1,0 +1,30 @@
+name: Public Private Canonical Execution Carrier v1
+on:
+  workflow_dispatch:
+    inputs:
+      exact_private_head:
+        description: Exact private main SHA
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  carrier:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Create private repository token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+      - name: Check out exact private repository head
+        uses: actions/checkout@v4
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ inputs.exact_private_head }}
+          token: ${{ steps.private-token.outputs.token }}
+          persist-credentials: false

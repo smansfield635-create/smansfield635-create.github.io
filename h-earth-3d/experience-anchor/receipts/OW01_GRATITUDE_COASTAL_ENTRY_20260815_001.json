@@ -2,14 +2,10 @@
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
-  "reviewedAgainstAnchor": true,
-  "disposition": "REPAIR_REQUIRED",
-  "reviewResult": "INDEPENDENT_VISUAL_REVIEW_FAIL_CLOSED",
-  "reviewSummary": "The frozen baseline renders the live H-Earth ground environment, while the OW01 candidate collapses to a black render surface. Browser evidence records R2 GPU-view source validation failures and R3E2 live GPU binding not ready. The coastal construction intent may remain valid, but this exact candidate cannot be accepted as an experience-preserving upgrade until rendering is repaired and requalified.",
+  "reviewedAgainstAnchor": false,
+  "disposition": "BLOCK_PENDING_ANCHOR_REVIEW",
   "visualEvidence": [
-    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.base.png",
     "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.candidate.png",
-    "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.anchor.png",
     "h-earth-3d/experience-anchor/evidence/OW01_GRATITUDE_COASTAL_ENTRY_20260815_001.json"
   ],
   "interactionEvidence": [
@@ -21,25 +17,19 @@
   "experienceFiles": [
     {
       "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
-      "sha256": "62ce12c188fb434b3c8dedcd14f63beaf7c327dfba75e89156d018b70ddaf3d5"
+      "sha256": "04eac2578c4df80b19e1e20e2d786725c68377b478c8ecee8f9094d61b34c35b"
     }
   ],
-  "observedFailures": [
-    "CANDIDATE_RENDER_SURFACE_BLACK",
-    "R2_GPU_VIEW_SOURCE_INVALID",
-    "R3E2_LIVE_GPU_BINDING_NOT_READY",
-    "CANDIDATE_INTERACTION_STATE_DID_NOT_ADVANCE"
-  ],
   "invariants": {
-    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "SAME_CANONICAL_WORLD_IDENTITY": false,
     "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": false,
     "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": false,
     "EMBODIED_LOCAL_GROUND_EXPERIENCE": false,
     "DIRECT_LOOK_AND_TRAVEL_INTERACTION": false,
-    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": false,
     "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": false,
-    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
-    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": false,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": false,
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": false,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": false
   }

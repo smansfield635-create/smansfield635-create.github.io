@@ -1,13 +1,13 @@
 {
   "schema": "H_EARTH_OW01_ANCHOR_BROWSER_EVIDENCE_v1",
   "evidenceId": "OW01_GRATITUDE_COASTAL_ENTRY_20260815_001",
-  "productHead": "ba67174c834322599b94be9237fae5f9ac4a3a09",
-  "qualificationHead": "e8d107e85b5d8a0cc763499a3952d74d42a3a697",
+  "productHead": "a29b2a9b48bdbd9225d207b0de1c7fa5b751e365",
+  "qualificationHead": "103ee1be59af5b9d33fbb93970ba579bfae50428",
   "baseHead": "aefb54971ae0f91a9abf9e8fc8e588f82f3a5744",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "route": "/showroom/globe/h-earth/",
-  "terrainFieldSha256": "62ce12c188fb434b3c8dedcd14f63beaf7c327dfba75e89156d018b70ddaf3d5",
+  "terrainFieldSha256": "04eac2578c4df80b19e1e20e2d786725c68377b478c8ecee8f9094d61b34c35b",
   "base": {
     "label": "base",
     "status": 200,

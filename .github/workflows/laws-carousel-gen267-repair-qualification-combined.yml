@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 env:
-  CANDIDATE: b62c5afcf5c9a8a1ccf01749f61f6fb37eaff3f1
+  CANDIDATE: d7d9cfa4c1aa4a38082852094d3d8f069d2881b3
   ORIGIN: http://127.0.0.1:4173
 jobs:
   qualify:

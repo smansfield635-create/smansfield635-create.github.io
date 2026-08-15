@@ -32,6 +32,11 @@
 [data-mm-spatial-field-v1] .mm-lens-tab[data-mm-y-position="next"]{transform:translate3d(0,1.15rem,-72px) rotateX(-4deg);opacity:.72}
 [data-mm-spatial-field-v1][data-mm-y-dragging="true"] .mm-lens-tab{transition:none;cursor:grabbing}
 
+/* Preserve the inherited Euclidean centering transform while reducing only the
+   active card's projected footprint enough to remain inside every audited
+   viewport. This is geometry containment, not a surrogate control. */
+html[data-methods-models-euclidean-showroom="active"] body[data-mm-display="expanded"] [data-mm-spatial-field-v1] .mm-model-card[data-mm-x-position="active"]{transform:translate3d(-50%,-50%,125px) rotateY(0deg) scale(.88)!important}
+
 /* Already-bound historical state hooks are moved here by spatial-field-v1.js.
    The nodes retain their inherited listeners but present no perceivable control. */
 [data-mm-spatial-field-v1] .mm-deck-controls,[data-mm-spatial-field-v1] .mm-z-axis-controls{display:none!important}

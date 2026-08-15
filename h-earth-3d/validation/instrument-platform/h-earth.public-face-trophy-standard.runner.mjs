@@ -41,6 +41,7 @@ const indexHtml = read('showroom/globe/h-earth/index.html');
 const awardsHtml = read('showroom/globe/h-earth/awards/index.html');
 const workflow = read('.github/workflows/h-earth-public-face-trophy-standard.yml');
 const browserRunner = read('h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.browser.mjs');
+console.log(`AWARDS_PAGE_SHA256=${sha256(awardsHtml)}`);
 
 check('PROMOTED_PUBLIC_FACE_ACTIVE', indexHtml.includes('data-h-earth-public-face-candidate="active"'));
 check('PROMOTED_PUBLIC_FACE_DEFAULT', indexHtml.includes('data-h-earth-public-face-default="promoted"'));

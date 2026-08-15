@@ -1,0 +1,30 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_COMPASS_G4_QUALIFICATION_v1",
+  "status": "READY_FOR_G4_RENDER",
+  "generation": "G4",
+  "predecessorGeneration": "G3",
+  "corpusCount": 8,
+  "qualificationDimensions": {
+    "coarticulationNaturalness": "UNSCORED",
+    "spectralMotionNaturalness": "UNSCORED",
+    "metallicIdentityReduction": "UNSCORED",
+    "boundarySmoothness": "UNSCORED",
+    "preservationOfG1Timing": "UNSCORED",
+    "preservationOfG2PhraseIntention": "UNSCORED",
+    "preservationOfG3MicroProsody": "UNSCORED",
+    "ownerReviewThreshold": "UNSCORED"
+  },
+  "failureSignals": [
+    "spectral smearing",
+    "mushy consonants",
+    "formant warble",
+    "loss of intelligibility",
+    "loss of G1 timing behavior",
+    "loss of G2 phrase intention",
+    "loss of G3 micro-prosody"
+  ],
+  "acceptanceLaw": "G4 passes only if coarticulation and spectral dynamics materially reduce rigid acoustic identity without sacrificing intelligibility or predecessor behavior.",
+  "reviewArtifactPolicy": "Surface audio to the owner only if the resulting voice is materially worth hearing as a Jeeves candidate.",
+  "nextIfPass": "OWNER_REVIEW_IF_THRESHOLD_MET_OTHERWISE_G5_DECISION",
+  "nextIfFail": "REPAIR_G4_WITHOUT_ADVANCING_GENERATION"
+}

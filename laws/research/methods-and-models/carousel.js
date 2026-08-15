@@ -24,6 +24,7 @@
     pointerStartAngle: 0,
     pointerLastX: 0,
     pointerLastTime: 0,
+    pointerTravel: 0,
     velocity: 0,
     inspecting: false,
     settling: false,
@@ -266,6 +267,10 @@
       renderModelDetail(card, state.index, modelIndex);
       modelChoice.focus({ preventScroll: true });
       publish("model-select");
+      return;
+    }
+    if (!state.inspecting && !state.settling && familyIndex === state.index) {
+      openInspection(card, "active-object-tap");
     }
   });
 
@@ -296,6 +301,7 @@
     state.pointerLastX = event.clientX;
     state.pointerLastTime = performance.now();
     state.pointerStartAngle = state.angle;
+    state.pointerTravel = 0;
     state.velocity = 0;
     viewport.dataset.dragging = "true";
     viewport.setPointerCapture?.(event.pointerId);
@@ -306,6 +312,7 @@
     const now = performance.now();
     const width = Math.max(320, viewport.clientWidth);
     const delta = event.clientX - state.pointerStartX;
+    state.pointerTravel = Math.max(state.pointerTravel, Math.abs(delta));
     state.angle = state.pointerStartAngle + (delta / width) * 190;
     const elapsed = Math.max(8, now - state.pointerLastTime);
     state.velocity = (event.clientX - state.pointerLastX) / elapsed;
@@ -316,10 +323,18 @@
 
   function finishPointer(event) {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
+    const tap = state.pointerTravel < 7;
     state.dragging = false;
     viewport.dataset.dragging = "false";
     viewport.releasePointerCapture?.(event.pointerId);
     state.pointerId = null;
+    if (tap) {
+      state.angle = angleForIndex(state.index);
+      applyGeometry("tap-release");
+      const activeCard = cards[state.index];
+      if (activeCard && !event.target.closest("button, a")) openInspection(activeCard, "active-object-pointer-tap");
+      return;
+    }
     snapFromDrag();
   }
 

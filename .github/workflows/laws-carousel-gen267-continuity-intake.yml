@@ -59,7 +59,7 @@ jobs:
           jq -e '.lawsCarouselFrontier.functioningAcceptedCarouselPredecessor=="GEN267_INSTALLED" and .lawsCarouselFrontier.freshConstructionCompleted==true and .lawsCarouselFrontier.nextProductSuccessorPredeclared==false' .github/ai-router/project-continuation/laws-contextual-3d.continuation.v1.json >/dev/null
           grep -Fq 'Functioning Laws Carousel: **Gen267 installed**.' .github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md
           grep -Fq 'qualified candidate `063f49ba788388f0a9075e6624792b8cf761e5bf`' .github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md
-          grep -Fq 'installed public merge: `694de80c43a92eb9fbd1a14dbfa8e8132fad99a5`' .github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md
+          grep -Fq 'Installed public merge: `694de80c43a92eb9fbd1a14dbfa8e8132fad99a5`' .github/ai-router/projects/laws/LAWS_CAROUSEL_CONSTRUCTION_PLAN.v1.md
 
       - name: Close canonical Gen282 lock PASS_CLOSED
         shell: bash

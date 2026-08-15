@@ -17,6 +17,10 @@
     {
       "path": "showroom/globe/h-earth/awards/index.html",
       "sha256": "d2a7899e77757dcb3e5cbe87af11b6764d0269bbed06cff37f17e40e54cd5c78"
+    },
+    {
+      "path": "h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs",
+      "sha256": "724e64aa87565de98729b1ea2d6a5ff6374bda6520399a6561d3f15e5a45b386"
     }
   ],
   "invariants": {

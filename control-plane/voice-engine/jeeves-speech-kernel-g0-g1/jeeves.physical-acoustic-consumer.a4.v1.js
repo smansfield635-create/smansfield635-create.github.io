@@ -34,11 +34,11 @@ function render(performanceState,phonemeFrames){
       const q=i/Math.max(1,n-1),phrase=globalSample/Math.max(1,total-1),baseF0=performanceState.f0CenterHz*Math.pow(2,(performanceState.f0ExcursionSemitones*.35*Math.sin(Math.PI*phrase))/12),perturb=(hash01(cycleIndex,17)-.5)*.012,f0=baseF0*(1+perturb);phase+=f0/SR;if(phase>=1){phase-=1;cycleIndex++;}
       const attack=Math.max(1,performanceState.attackMs*SR/1000),env=Math.min(1,i/attack,(n-i)/Math.max(1,attack*1.4));
       let exc=A3.sourceSample({phase,cycleIndex,sampleIndex:globalSample,fi,voiced,fricative:false,performanceState});
-      if(fric){const noise=(hash01(fi+53,globalSample)-.5)*2,p=fricativeProfile(ph);exc+=step(noise,coeff(p.center,p.bw),classState.fr)*p.gain*38;}
-      if(stop){const closure=Math.max(0,1-Math.min(1,i/Math.max(1,.010*SR)));exc*=.18+.82*(1-closure);if(i<.016*SR){const noise=(hash01(fi+71,globalSample)-.5)*2,p=stopProfile(ph);exc+=step(noise,coeff(p.center,p.bw),classState.burst)*p.gain*42*(1-i/(.016*SR));}}
+      if(fric){const noise=(hash01(fi+53,globalSample)-.5)*2,p=fricativeProfile(ph);exc+=step(noise,coeff(p.center,p.bw),classState.fr)*p.gain*8;}
+      if(stop){const closure=Math.max(0,1-Math.min(1,i/Math.max(1,.010*SR)));exc*=.18+.82*(1-closure);if(i<.016*SR){const noise=(hash01(fi+71,globalSample)-.5)*2,p=stopProfile(ph);exc+=step(noise,coeff(p.center,p.bw),classState.burst)*p.gain*10*(1-i/(.016*SR));}}
       const g=A2.articulatoryTargets(prev,ph,next,q);let y=exc;for(let r=0;r<3;r++)y=step(y,coeff(g.formants[r],g.bandwidths[r]),tract[r]);
       if(nasal){const p=nasalProfile(ph),pole=step(y,coeff(p.pole,90),classState.nasal),a=Math.exp(-2*Math.PI*p.zero/SR),low=onePole(y,a,classState.zero);y=.72*pole+.38*(y-low);}
-      const variability=1+performanceState.energyVariance*.25*Math.sin(2*Math.PI*(.7*phrase+.11*fi)),gain=1.05-.23*clamp(performanceState.restraint,0,1);out[i]=clamp(y*performanceState.energyScale*variability*gain*env*48,-1,1);
+      const variability=1+performanceState.energyVariance*.25*Math.sin(2*Math.PI*(.7*phrase+.11*fi)),gain=1.05-.23*clamp(performanceState.restraint,0,1);out[i]=clamp(y*performanceState.energyScale*variability*gain*env*42,-1,1);
     }
     parts.push(out);
   }

@@ -1,0 +1,95 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_PERFORMANCE_STATE_INTERFACE_v1",
+  "status": "CONSTRUCTION_CANDIDATE_INTERFACE_ONLY",
+  "characterId": "jeeves",
+  "purpose": "Define the complete typed boundary between Diamond Gate governance/character state and a downstream physical acoustic speech generator without changing G0-G5 or authorizing waveform construction.",
+  "governingMainAtConstruction": "eacb69cf93d18c4f6e1ec4307a05b634dccef4a8",
+  "preservedEvidenceChain": ["G0", "G1", "G2", "G3", "G4", "G5"],
+  "upstreamLaw": "Governance and character systems may determine performance parameters only; they may not emit waveform samples, formant trajectories, excitation spectra, learned residuals, or voice-reference substitutions through this interface.",
+  "downstreamLaw": "The physical acoustic generator may consume this state but may not rewrite character identity, semantic intent, transcript, or governance history.",
+  "inputEnvelope": {
+    "required": {
+      "characterId": "jeeves",
+      "utteranceId": "non-empty stable string",
+      "text": "non-empty exact utterance text",
+      "deliveryMode": ["conversation", "orientation", "compassNarration"],
+      "semanticIntent": "non-empty stable string",
+      "governanceStateId": "non-empty stable string"
+    },
+    "optional": {
+      "contextStateId": "stable string or null",
+      "historyStateId": "stable string or null",
+      "semanticAnchors": "ordered array of exact text spans",
+      "pressureClass": "stable string or null",
+      "coherenceState": "finite numeric value supplied by the governing system or null"
+    }
+  },
+  "performanceState": {
+    "schemaVersion": 1,
+    "fields": {
+      "speechRateScale": {"type": "number", "minimum": 0.65, "maximum": 1.35, "neutral": 1.0, "meaning": "Global duration multiplier inverse; lower values are slower."},
+      "wordGapMs": {"type": "number", "minimum": 20, "maximum": 180, "neutral": 60},
+      "conceptPauseMs": {"type": "number", "minimum": 0, "maximum": 900, "neutral": 180},
+      "boundaryPauseMs": {"type": "number", "minimum": 80, "maximum": 1400, "neutral": 420},
+      "stressStrength": {"type": "number", "minimum": 0.0, "maximum": 1.0, "neutral": 0.45, "meaning": "Dimensionless semantic stress request."},
+      "f0CenterHz": {"type": "number", "minimum": 90, "maximum": 150, "neutral": 118},
+      "f0ExcursionSemitones": {"type": "number", "minimum": 0.0, "maximum": 8.0, "neutral": 2.5},
+      "energyScale": {"type": "number", "minimum": 0.45, "maximum": 0.80, "neutral": 0.52},
+      "energyVariance": {"type": "number", "minimum": 0.0, "maximum": 0.25, "neutral": 0.06, "meaning": "Allowed phrase-level relative energy variation."},
+      "attackMs": {"type": "number", "minimum": 4, "maximum": 80, "neutral": 12},
+      "urgency": {"type": "number", "minimum": 0.0, "maximum": 1.0, "neutral": 0.15},
+      "restraint": {"type": "number", "minimum": 0.0, "maximum": 1.0, "neutral": 0.85},
+      "terminalCadence": {"type": "enum", "values": ["resolved", "open", "questioning"], "neutral": "resolved"},
+      "pauseLaw": {"type": "enum", "values": ["meaning-first"], "neutral": "meaning-first"},
+      "theatricality": {"type": "enum", "values": ["prohibited"], "neutral": "prohibited"}
+    }
+  },
+  "semanticControlLaw": {
+    "semanticAnchorsMayAffect": ["stressStrength", "conceptPauseMs", "f0ExcursionSemitones", "energyVariance"],
+    "semanticAnchorsMayNotAffect": ["characterId", "text", "voiceIdentity", "phonemeIdentity"],
+    "priorityOrder": ["exact text preservation", "character identity preservation", "semantic intelligibility", "Jeeves restraint", "delivery-mode expression"]
+  },
+  "jeevesInvariantEnvelope": {
+    "register": "LOW_MID_MALE",
+    "resonance": "WARM_CLEAR_LIGHTLY_TEXTURED",
+    "pitchRange": "RESTRAINED",
+    "dynamicRange": "MODERATE_LOW",
+    "attack": "SOFT",
+    "terminalCadenceDefault": "resolved",
+    "theatricality": "PROHIBITED",
+    "identityMutationThroughPerformanceState": false
+  },
+  "prohibitedOutputs": [
+    "waveform samples",
+    "phoneme substitutions",
+    "formant frequencies",
+    "formant bandwidths",
+    "glottal waveform parameters",
+    "turbulence spectra",
+    "nasal coupling coefficients",
+    "coarticulation trajectories",
+    "learned residual vectors",
+    "reference-audio identity embeddings",
+    "third-party voice identities"
+  ],
+  "determinismLaw": "For identical canonical input envelope, governance state, interface version, and mapping version, the emitted performance state must be identical.",
+  "receiptRequirements": [
+    "interfaceVersion",
+    "mappingVersion",
+    "utteranceId",
+    "governanceStateId",
+    "inputHash",
+    "performanceStateHash",
+    "validationResult"
+  ],
+  "validationResultDomain": ["PASS", "FAIL_SCHEMA", "FAIL_RANGE", "FAIL_IDENTITY", "FAIL_TEXT_MUTATION", "FAIL_PROHIBITED_FIELD"],
+  "explicitlyNotAuthorized": [
+    "G6 acoustic construction",
+    "G5 residual fitting",
+    "reference-audio fabrication",
+    "external pretrained weights",
+    "remote TTS services",
+    "public product mutation"
+  ],
+  "nextLawfulAction": "QUALIFY_AND_FREEZE_THIS_INTERFACE_THEN_SEPARATELY_ADMIT_A_PHYSICAL_ACOUSTIC_GENERATOR_CONSUMER"
+}

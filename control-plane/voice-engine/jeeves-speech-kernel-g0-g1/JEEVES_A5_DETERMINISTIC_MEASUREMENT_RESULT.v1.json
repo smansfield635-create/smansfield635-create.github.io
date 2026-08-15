@@ -1,0 +1,44 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_DETERMINISTIC_MEASUREMENT_RESULT_v1",
+  "reference": {
+    "provenanceId": "DIAMOND_GATE_JEEVES_A5_REFERENCE_C01_PROVENANCE_v1",
+    "sha256": "0fb2a27506e6ef5c8f2ec280eb780654e317fe19c8a0774864fc98c4115a963f",
+    "transcript": "Navigation requires orientation."
+  },
+  "procedure": "jeeves.a5.deterministic-measurement-procedure.v1.js",
+  "authorityLaw": "A measurement may satisfy A5 speaker-specific calibration only when its status is AUTHORITATIVE. PROXY, PROVISIONAL, UNSPECIFIED, UNQUALIFIED, and NOT_IDENTIFIABLE values remain unresolved.",
+  "observedC01": {
+    "authoritative": [],
+    "proxy": ["spectralTilt", "jitterStatistics", "shimmerStatistics"],
+    "missing": [
+      "vowelFormants",
+      "formantBandwidths",
+      "vocalTractLengthScale",
+      "nasalPolesAndZeros",
+      "glottalOpenQuotient",
+      "glottalClosingQuotient",
+      "aspirationByContext"
+    ],
+    "unresolved": [
+      "vowelFormants",
+      "formantBandwidths",
+      "vocalTractLengthScale",
+      "nasalPolesAndZeros",
+      "glottalOpenQuotient",
+      "glottalClosingQuotient",
+      "spectralTilt",
+      "aspirationByContext",
+      "jitterStatistics",
+      "shimmerStatistics"
+    ]
+  },
+  "result": "FAIL_AUTHORITATIVE_MEASUREMENTS_REQUIRED",
+  "interpretation": "The bound C01 narration reference is sufficient to anchor register/timing/energy and useful mixed-utterance proxies, but it is not a calibration-authoritative speaker-identification specimen for the ten A5 physical parameters.",
+  "nextEvidenceClasses": [
+    "SUSTAINED_VOWEL_SET",
+    "SUSTAINED_NASAL_SET",
+    "SUSTAINED_VOICED_VOWEL",
+    "ASPIRATION_CONTEXT_SET"
+  ],
+  "nextLawfulAction": "COLLECT_ONE_BOUNDED_DIAGNOSTIC_RECORDING_COVERING_ALL_FOUR_EVIDENCE_CLASSES_THEN_MEASURE_AND_RERUN_A5"
+}

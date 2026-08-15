@@ -1,0 +1,44 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_PHYSICAL_ACOUSTIC_CONSUMER_A3_QUALIFICATION_v1",
+  "status": "PASS_BOUNDED_PURPOSE",
+  "generation": "A3",
+  "predecessorGeneration": "A2",
+  "predecessorHead": "1947ff3db0454d8b33c14e47be62e6cdba7269db",
+  "qualificationCorpus": {
+    "lineId": "COMPASS_C01",
+    "text": "Navigation requires orientation."
+  },
+  "execution": {
+    "runtime": "Node.js",
+    "test": "jeeves.physical-acoustic-consumer.a3.v1.test.js",
+    "result": "PASS"
+  },
+  "observed": {
+    "sampleRateHz": 24000,
+    "sampleCount": 71400,
+    "durationSeconds": 2.975,
+    "rms": 0.019447279822891152,
+    "peak": 0.12908349931240082,
+    "meanAbsDeltaFromA2": 0.028380007106687345,
+    "deterministicRepeat": true,
+    "durationPreservedFromA2": true,
+    "a2ArticulatoryTrajectoryReused": true,
+    "glottalOpenCloseLawExercised": true,
+    "aspirationCouplingExercised": true,
+    "boundedCyclePerturbationExercised": true
+  },
+  "qualificationDimensions": {
+    "sourcePhysicsMateriallyChanged": "PASS",
+    "determinism": "PASS",
+    "boundedAmplitude": "PASS",
+    "durationPreservation": "PASS",
+    "articulatoryLawPreservation": "PASS",
+    "naturalHumanJeevesQuality": "NOT_CLAIMED"
+  },
+  "externalWeightsUsed": false,
+  "remoteTtsUsed": false,
+  "learnedResidualUsed": false,
+  "publicProductMutation": false,
+  "disposition": "A3_SOURCE_PHYSICS_QUALIFIED_FOR_BOUNDED_PURPOSE",
+  "nextLawfulAction": "A4_NASAL_FRICATIVE_STOP_SPECIFIC_PHYSICS"
+}

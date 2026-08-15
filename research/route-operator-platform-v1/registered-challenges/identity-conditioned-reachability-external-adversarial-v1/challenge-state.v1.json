@@ -1,0 +1,14 @@
+{
+  "baseline_teams_registered": 0,
+  "execution_status": "NOT_STARTED",
+  "external_systems_admitted": 0,
+  "external_systems_registered": 0,
+  "first_external_observation_released": false,
+  "next_gate": "EXTERNAL_AUTHOR_CUSTODIAN_AND_OBSERVER_REGISTRATION",
+  "observer_teams_registered": 0,
+  "operation_id": "IDENTITY_CONDITIONED_REACHABILITY_EXTERNAL_ADVERSARIAL_REGISTERED_FALSIFICATION_CHALLENGE_v1",
+  "postdata_mutation_permitted": false,
+  "protocol_status": "FROZEN",
+  "scientific_result": "NONE",
+  "version": "1.0.0"
+}

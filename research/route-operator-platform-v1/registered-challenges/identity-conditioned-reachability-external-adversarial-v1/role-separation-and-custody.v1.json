@@ -1,0 +1,81 @@
+{
+  "communication_rule": "AFTER_PUBLIC_OBSERVATION_RELEASE_ALL_AUTHOR_OBSERVER_COMMUNICATION_IS_PROHIBITED_EXCEPT_CUSTODIAN_LOGGED_CLARIFICATIONS_SHARED_TO_ALL_TEAMS",
+  "required_hash_commitments": [
+    "SYSTEM_TRUTH_PACKAGE_SHA256",
+    "PUBLIC_OBSERVATION_PACKAGE_SHA256",
+    "HELDOUT_INTERVENTION_PLAN_SHA256",
+    "OBSERVER_SUBMISSION_SHA256",
+    "BASELINE_SUBMISSION_SHA256",
+    "UNBLINDING_PACKAGE_SHA256"
+  ],
+  "roles": {
+    "baseline_team": {
+      "may": [
+        "fit preregistered baseline models"
+      ],
+      "may_not": [
+        "receive additional data",
+        "use hidden truth"
+      ]
+    },
+    "custodian": {
+      "may": [
+        "hold_encrypted_truth",
+        "verify_hash_commitments",
+        "release_public_packages",
+        "unblind_after_prediction_freeze"
+      ],
+      "may_not": [
+        "provide inferential guidance",
+        "modify submissions"
+      ]
+    },
+    "evaluator": {
+      "may": [
+        "score_submissions",
+        "apply_frozen_adjudication"
+      ],
+      "may_not": [
+        "change_thresholds",
+        "redefine_failures",
+        "exclude_results posthoc"
+      ]
+    },
+    "observer_team": {
+      "may": [
+        "infer_boundary",
+        "infer_relations",
+        "predict_withheld_outcomes"
+      ],
+      "may_not": [
+        "access_hidden_truth",
+        "communicate_with_system_authors_after observation release",
+        "repair_predictions_after freeze"
+      ]
+    },
+    "protocol_authority": {
+      "may": [
+        "freeze_protocol",
+        "verify_manifest",
+        "answer_predata_semantic_questions"
+      ],
+      "may_not": [
+        "author_primary_systems",
+        "access_hidden_truth",
+        "alter_protocol_after_public_observation_release"
+      ]
+    },
+    "system_author": {
+      "may": [
+        "build_external_system",
+        "declare_hidden_truth",
+        "precommit_interventions"
+      ],
+      "may_not": [
+        "serve_as_observer_for_own_system",
+        "alter_truth_after_commitment"
+      ]
+    }
+  },
+  "version": "1.0.0"
+}

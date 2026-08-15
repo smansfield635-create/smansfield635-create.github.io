@@ -1,0 +1,61 @@
+name: Laws Carousel Gen267 Repair Qualification Final
+on:
+  push:
+    branches: ['agent/laws-carousel-gen267-continuity-intake']
+    paths: ['.github/workflows/laws-carousel-gen267-repair-qualification-final.yml']
+permissions:
+  contents: read
+env:
+  CANDIDATE: 426b6b3c65336e4a7d5ff6bdfae9d6e418fe3933
+  ORIGIN: http://127.0.0.1:4173
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.CANDIDATE }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Set up Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Start server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gen267-repair-final-server.log 2>&1 &
+          for i in $(seq 1 40); do curl -fsS "$ORIGIN/laws/research/methods-and-models/" >/dev/null && exit 0; sleep .25; done
+          exit 1
+      - name: Run canonical exact-head verifier
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          METHODS_MODELS_ORIGIN: ${{ env.ORIGIN }}
+          EXECUTION_COMMIT: ${{ env.CANDIDATE }}
+        run: node verification/methods-models-showroom-browser.mjs
+      - name: Capture fresh Awards evidence
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          cat > gen267-repair-final-capture.mjs <<'JS'
+          import fs from 'node:fs'; import crypto from 'node:crypto'; import puppeteer from 'puppeteer-core';
+          const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+          fs.mkdirSync('gen267-repair-final-renders',{recursive:true}); const route=process.env.ORIGIN+'/laws/research/methods-and-models/';
+          const profiles=[['PHONE',390,844],['TABLET',1024,768],['DESKTOP',1440,1000]]; const rendered=[]; const traces=[]; const hash=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          for(const [device,w,h] of profiles){const p=await browser.newPage(); await p.setViewport({width:w,height:h}); await p.goto(route,{waitUntil:'networkidle0'}); await p.waitForSelector('.mm-card[data-active="true"]'); const snap=async(state)=>{const f=`gen267-repair-final-renders/${device.toLowerCase()}-${state}.png`; await p.screenshot({path:f,fullPage:true}); rendered.push({artifactId:`GEN267_REPAIR_FINAL_${device}_${state.toUpperCase()}`,kind:'SCREENSHOT',stateClass:state==='initial'?'INITIAL_RENDERED_STATE':state==='selected'?'MEANINGFUL_INTERACTION_STATE':'RESULT_OR_NAVIGATION_STATE',deviceClass:device,sha256:hash(f),path:f});}; await snap('initial'); await p.click('[data-mm-family-tabs] [data-family-index="1"]'); await p.waitForFunction(()=>document.querySelector('[data-mm-carousel]')?.dataset.family==='pressure'); await snap('selected'); await p.click('.mm-card[data-active="true"] [data-open-inspection]'); await p.waitForFunction(()=>document.querySelector('[data-mm-carousel]')?.dataset.inspecting==='true'); await snap('inspection'); const trace=await p.evaluate(()=>({family:document.querySelector('[data-mm-carousel]')?.dataset.family,inspecting:document.querySelector('[data-mm-carousel]')?.dataset.inspecting,active:document.querySelector('.mm-card[data-active="true"]')?.dataset.familyId,overflow:document.documentElement.scrollWidth-innerWidth,close:document.querySelector('.mm-card[data-active="true"] [data-close-inspection]')?.getAttribute('aria-label')})); traces.push({device,trace}); await p.close();}
+          await browser.close(); const traceDigest=crypto.createHash('sha256').update(JSON.stringify(traces)).digest('hex'); fs.writeFileSync('gen267-repair-final-renders/manifest.json',JSON.stringify({schema:'GEN267_REPAIR_FINAL_AWARDS_RENDER_CAPTURE_v1',candidate:process.env.CANDIDATE,renderedEvidence:rendered,interactionTrace:{required:true,meaningfulConsequenceObserved:true,traceDigest,traces}},null,2)+'\n');
+          JS
+          CANDIDATE="$CANDIDATE" ORIGIN="$ORIGIN" node gen267-repair-final-capture.mjs
+          rm gen267-repair-final-capture.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gen267-repair-final-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            methods-models-showroom-exact-head.json
+            gen267-repair-final-renders/
+          if-no-files-found: error
+          retention-days: 90

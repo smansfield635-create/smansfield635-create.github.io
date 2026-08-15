@@ -1,0 +1,85 @@
+name: Tests L0 L1 Compass Integrated M1 Evidence
+
+on:
+  push:
+    branches:
+      - agent/tests-l0-l1-compass-integrated-m1-v1
+  pull_request:
+    paths:
+      - 'control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/**'
+      - 'verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/**'
+      - '.github/workflows/tests-l0-l1-compass-integrated-m1-structural.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  structural-conformance:
+    runs-on: ubuntu-24.04
+    env:
+      AUTHORITY_ANCHOR: 9eb936918ce063cef6c6f5d800f39ae966f3d3aa
+      M1_COMPASS_STRUCTURAL_RECEIPT: /tmp/m1-compass-integrated-structural-receipt.v1.json
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Verify candidate source syntax
+        run: |
+          node --check control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/compass-tests.adapters.mjs
+          node --check control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/manifestation.mjs
+          node --check verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/verify.structural.mjs
+          node --check verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/verify.runtime.mjs
+      - name: Verify bounded Compass-integrated M1 structure
+        run: node verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/verify.structural.mjs
+      - name: Upload structural receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: m1-compass-integrated-structural-${{ github.run_id }}
+          path: /tmp/m1-compass-integrated-structural-receipt.v1.json
+          if-no-files-found: error
+          retention-days: 30
+
+  runtime-review:
+    needs: structural-conformance
+    runs-on: ubuntu-24.04
+    env:
+      M1_COMPASS_BASE_URL: http://127.0.0.1:4173
+      M1_COMPASS_RUNTIME_DIR: /tmp/m1-compass-integrated-runtime
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Install Chromium runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --no-package-lock playwright@1.54.2
+          npx playwright install --with-deps chromium
+      - name: Start bounded local repository server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory "$GITHUB_WORKSPACE" >/tmp/m1-compass-server.log 2>&1 &
+          echo $! >/tmp/m1-compass-server.pid
+          for attempt in $(seq 1 30); do
+            if curl -fsS "http://127.0.0.1:4173/control-plane/whole-estate/tests-l0-l1-compass-integrated-m1-v1/" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/m1-compass-server.log || true
+          exit 1
+      - name: Execute bounded runtime review
+        run: node verification/whole-estate/tests-l0-l1-compass-integrated-m1-v1/verify.runtime.mjs
+      - name: Upload runtime receipt and perceptual fixtures
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: m1-compass-integrated-runtime-${{ github.run_id }}
+          path: /tmp/m1-compass-integrated-runtime
+          if-no-files-found: warn
+          retention-days: 30

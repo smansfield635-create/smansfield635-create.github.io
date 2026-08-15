@@ -1776,18 +1776,6 @@
       "scopeHash": "d4e382130aa1e21a827ed0cd0abc67f8446720775fda82a13e9f17954e3980f5",
       "state": "ADMITTED_LOCKED"
     },
-    "d6d48b82175787cd161b7dc34bdd6d3aa95fb2b403483fba961ed9be29059bca": {
-      "governingHead": "710aa5ff5bc9b2544034ec6a1f0a1f3e18ef32c0",
-      "lockGeneration": 1475,
-      "lockScope": "COMPASS:LIVE_PAGE:CLARITY_POLISH:20260814",
-      "operationId": "COMPASS_HOMEPAGE_CLARITY_POLISH_20260814_v3",
-      "procedureLocatorDigest": "4274034f0eaed236d6cf813b8d6e17fa7aab6b6f8682e8c98945f347c961a2b2",
-      "released": false,
-      "requestDigest": "3f68010790be7e9057dc99d43d657bd73ab15d6f8f251579314bbf386714dba5",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "d6d48b82175787cd161b7dc34bdd6d3aa95fb2b403483fba961ed9be29059bca",
-      "state": "ADMITTED_LOCKED"
-    },
     "d70fe6a0b02255b935d282c4fcd87176847b5c1fd9b7298a1d16490abe18bf20": {
       "governingHead": "2e1b39287a296185b83172715e844d0adcea0743",
       "lockGeneration": 645,
@@ -21648,6 +21636,19 @@
       "requestDigest": "59e7415a2f6f9a9d2b73476f8351cb52ccbd38b5d746b2d47bff086ede0d8809",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "b96655b63011657e454d60e26871fced51f8dea3423f4565a1f62bdc4cb043ab",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "710aa5ff5bc9b2544034ec6a1f0a1f3e18ef32c0",
+      "lockGeneration": 1475,
+      "lockScope": "COMPASS:LIVE_PAGE:CLARITY_POLISH:20260814",
+      "operationId": "COMPASS_HOMEPAGE_CLARITY_POLISH_20260814_v3",
+      "procedureLocatorDigest": "4274034f0eaed236d6cf813b8d6e17fa7aab6b6f8682e8c98945f347c961a2b2",
+      "released": true,
+      "requestDigest": "3f68010790be7e9057dc99d43d657bd73ab15d6f8f251579314bbf386714dba5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d6d48b82175787cd161b7dc34bdd6d3aa95fb2b403483fba961ed9be29059bca",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

@@ -16,7 +16,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/awards/index.html",
-      "sha256": "9c6b16607ad87ae6e76411c08bb7863bc338d3e0abb0d938bb6ae42fcaa29e27"
+      "sha256": "c0cf8d68a346fe1f684bb8058e9991d164c6b872c92bd85632ecbb4ed0c3152e"
+    },
+    {
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4",
+      "sha256": "928cf47551f61311860743dd7a04582db09388dd727670ebaa0eb0d5d9b557e9"
     }
   ],
   "invariants": {

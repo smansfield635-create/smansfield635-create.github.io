@@ -13,8 +13,8 @@ permissions:
 
 env:
   PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
-  INSTALLED_GEN281_HEAD: 7d156b828578ed5d5ffa7a22e14f97007159dc32
-  GEN279_HEAD: 97ec91a8c6205dfa9c0ac7dc5db8b596ae76b452
+  INSTALLED_GEN281_HEAD: 6ad90e9c1fb9ebc012b36166c0c89d73fb48f994
+  GEN279_HEAD: 6ad90e9c1fb9ebc012b36166c0c89d73fb48f994
   GEN280_EVIDENCE_HEAD: 8c5ecdd64ff91432ccccbf10f88075e1d166d6ec
   GEN279_TOOLING_HEAD: a2b851a44ad042a4035bddafbf36bfda049a4d22
 
@@ -66,7 +66,7 @@ jobs:
           cat > "$RUNNER_TEMP/gen279-request.json" <<JSON
           {
             "schema": "AI_ROOM_EXECUTION_REQUEST_v1",
-            "requestId": "GEN279_ROUTER_SELF_TEST_THROUGH_GEN281_20260815_001",
+            "requestId": "GEN279_INSTALLED_ROUTER_SELF_TEST_THROUGH_GEN281_20260815_001",
             "descriptorId": "GEN279_REPOSITORY_AI_ROUTER_SELF_TEST_DESCRIPTOR_V1",
             "operationId": "GEN276_CLOSURE_TRANSPORT_ROUTER_REGISTRATION_20260815_002",
             "admissionReceiptIdentity": {
@@ -88,10 +88,10 @@ jobs:
               "availableWorkflowPaths": [],
               "availableToolingHeads": ["$GEN279_TOOLING_HEAD"]
             },
-            "requestNonce": "6f3d45f462399032d5240ff679ec971c7eb3c7348d6436f42ce0bf96bb9bbd22"
+            "requestNonce": "0a2eb0dba4b744b86a3b7bd5018a8641baf56f78a5f87484b67dd2aed0975254"
           }
           JSON
-          jq -e '.tools[] | select(.descriptorId=="GEN279_REPOSITORY_AI_ROUTER_SELF_TEST_DESCRIPTOR_V1")' "$RUNNER_TEMP/gen279-registry.json" > "$RUNNER_TEMP/gen279-descriptor.json"
+          jq -e '.tools[] | select(.descriptorId=="GEN279_REPOSITORY_AI_ROUTER_SELF_TEST_DESCRIPTOR_V1" and .descriptorActivationStatus=="ACTIVE_CERTIFIED")' "$RUNNER_TEMP/gen279-registry.json" > "$RUNNER_TEMP/gen279-descriptor.json"
           jq -e '.schema=="AI_ROOM_EXECUTION_REQUEST_v1" and .inputs=={}' "$RUNNER_TEMP/gen279-request.json" >/dev/null
 
       - name: Invoke exact Gen279 request through installed Gen281
@@ -106,7 +106,7 @@ jobs:
             --request "$RUNNER_TEMP/gen279-request.json" \
             --registry "$RUNNER_TEMP/gen279-registry.json" \
             --output "$RUNNER_TEMP/gen279-native-receipt.json" \
-            --request-id "GEN279_ROUTER_SELF_TEST_THROUGH_GEN281_20260815_001"
+            --request-id "GEN279_INSTALLED_ROUTER_SELF_TEST_THROUGH_GEN281_20260815_001"
           status=$?
           cp /tmp/gen281-private-capable-invocation-receipt.json "$RUNNER_TEMP/gen281-wrapper-receipt.json" 2>/dev/null || true
           echo "$status" > "$RUNNER_TEMP/gen281-exit-status.txt"
@@ -123,7 +123,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: gen279-through-gen281-${{ github.run_id }}-${{ github.run_attempt }}
+          name: gen279-installed-through-gen281-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             ${{ runner.temp }}/gen279-request.json
             ${{ runner.temp }}/gen279-descriptor.json

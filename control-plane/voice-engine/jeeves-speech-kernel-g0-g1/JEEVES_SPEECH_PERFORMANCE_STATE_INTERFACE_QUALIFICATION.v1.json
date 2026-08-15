@@ -1,0 +1,53 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_PERFORMANCE_STATE_INTERFACE_QUALIFICATION_v1",
+  "status": "PASS_CLOSED_INTERFACE_FROZEN",
+  "characterId": "jeeves",
+  "qualifiedCandidateHead": "ce07cddccc46d74249d88d8fe1ed7af5e70941fd",
+  "governingMainAtConstruction": "eacb69cf93d18c4f6e1ec4307a05b634dccef4a8",
+  "qualifiedPaths": [
+    {
+      "path": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/JEEVES_SPEECH_PERFORMANCE_STATE_INTERFACE.v1.json",
+      "gitBlobSha": "ef4592b01434f0d0a0d276a730aae177ad782bd7"
+    },
+    {
+      "path": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/jeeves.speech-performance-state.interface.v1.js",
+      "gitBlobSha": "f7ea58e2fca3ec26d2fd5ff01ee9ee03b30d797e",
+      "sha256ObservedDuringQualification": "b5445cd8557ab6fc426be86e54f3fefe429d188307c249566f1ce40380a89bac"
+    },
+    {
+      "path": "control-plane/voice-engine/jeeves-speech-kernel-g0-g1/jeeves.speech-performance-state.interface.v1.test.js",
+      "gitBlobSha": "3a6a537a0d3ecf926eb3fc7b0b1e83f1ff8298ea",
+      "sha256ObservedDuringQualification": "06c4bcd0d8fd8f97199a399386fab68d5a9da8adbe6843b068ee963f72526f71"
+    }
+  ],
+  "qualificationExecution": {
+    "runtime": "node",
+    "syntaxCheck": "PASS",
+    "testCommand": "node jeeves.speech-performance-state.interface.v1.test.js",
+    "result": "PASS",
+    "observedOutput": "JEEVES_SPEECH_PERFORMANCE_STATE_INTERFACE_v1 PASS"
+  },
+  "verifiedBehaviors": {
+    "lawfulJeevesCompassStateAccepted": true,
+    "characterIdentitySubstitutionRejected": true,
+    "utteranceTextMutationRejected": true,
+    "numericRangeEscapeRejected": true,
+    "acousticWaveformFieldLeakageRejected": true,
+    "theatricalityViolationRejected": true,
+    "canonicalJsonOrderingDeterministic": true
+  },
+  "preservedBoundaries": [
+    "G0-G5 evidence chain unchanged",
+    "governance emits performance controls only",
+    "physical acoustic variables remain downstream",
+    "no G5 residual fitting",
+    "no G6 acoustic construction",
+    "no reference-audio fabrication",
+    "no external pretrained weights",
+    "no remote TTS dependency",
+    "no public product mutation"
+  ],
+  "freezeLaw": "Any change to any qualified interface blob invalidates this qualification and requires a fresh qualification receipt before downstream acoustic construction may consume the changed interface.",
+  "disposition": "INTERFACE_QUALIFIED_AND_FROZEN_FOR_SEPARATE_DOWNSTREAM_CONSUMER_ADMISSION",
+  "nextLawfulAction": "SEPARATELY_ADMIT_THE_FIRST_PHYSICAL_ACOUSTIC_GENERATOR_CONSUMER_AGAINST_THIS_FROZEN_INTERFACE_WITHOUT_MUTATING_G0_G5_OR_THE_INTERFACE"
+}

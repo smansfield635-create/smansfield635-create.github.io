@@ -1,0 +1,134 @@
+name: Gen279 Through Gen281 Invocation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/gen279-through-gen281-invocation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+  INSTALLED_GEN281_HEAD: 1d8fd94fcbf736d702dd80d263129a8503617eb0
+  GEN279_HEAD: 97ec91a8c6205dfa9c0ac7dc5db8b596ae76b452
+  GEN280_EVIDENCE_HEAD: 8c5ecdd64ff91432ccccbf10f88075e1d166d6ec
+  GEN279_TOOLING_HEAD: a2b851a44ad042a4035bddafbf36bfda049a4d22
+
+jobs:
+  invoke-gen279-through-gen281:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private-repository installation token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+
+      - name: Check out installed Gen281 head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.INSTALLED_GEN281_HEAD }}
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Recover exact Gen279 package
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$INSTALLED_GEN281_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          git -c "url.https://x-access-token:${PRIVATE_TOKEN}@github.com/.insteadOf=https://github.com/" fetch --no-tags origin "$GEN279_HEAD" "$GEN280_EVIDENCE_HEAD" "$GEN279_TOOLING_HEAD"
+          git show "$GEN279_HEAD:.github/ai-toolset-transport/authorized-toolset-registry.v1.json" > "$RUNNER_TEMP/gen279-registry.json"
+          git show "$GEN280_EVIDENCE_HEAD:.github/ai-router/operation-lifecycle/evidence/gen279-successor-authority.receipt.v1.json" > "$RUNNER_TEMP/gen279-successor.json"
+          git show "$GEN280_EVIDENCE_HEAD:.github/ai-router/operation-lifecycle/evidence/gen279-baseline-router-pass.receipt.v1.json" > "$RUNNER_TEMP/gen279-router.json"
+          successor_sha="$(sha256sum "$RUNNER_TEMP/gen279-successor.json" | awk '{print $1}')"
+          router_sha="$(sha256sum "$RUNNER_TEMP/gen279-router.json" | awk '{print $1}')"
+          cat > "$RUNNER_TEMP/gen279-request.json" <<JSON
+          {
+            "schema": "AI_ROOM_EXECUTION_REQUEST_v1",
+            "requestId": "GEN279_ROUTER_SELF_TEST_THROUGH_GEN281_20260815_001",
+            "descriptorId": "GEN279_REPOSITORY_AI_ROUTER_SELF_TEST_DESCRIPTOR_V1",
+            "operationId": "GEN276_CLOSURE_TRANSPORT_ROUTER_REGISTRATION_20260815_002",
+            "admissionReceiptIdentity": {
+              "sourceClass": "REPOSITORY_PATH_AT_EXACT_HEAD",
+              "exactHead": "$GEN280_EVIDENCE_HEAD",
+              "path": ".github/ai-router/operation-lifecycle/evidence/gen279-successor-authority.receipt.v1.json",
+              "sha256": "$successor_sha"
+            },
+            "routerReceiptIdentity": {
+              "sourceClass": "REPOSITORY_PATH_AT_EXACT_HEAD",
+              "exactHead": "$GEN280_EVIDENCE_HEAD",
+              "path": ".github/ai-router/operation-lifecycle/evidence/gen279-baseline-router-pass.receipt.v1.json",
+              "sha256": "$router_sha"
+            },
+            "inputs": {},
+            "availableCapabilities": {
+              "schema": "AVAILABLE_CAPABILITY_RECEIPT_v1",
+              "availableBackends": ["LOCAL_CLEAN_GIT"],
+              "availableWorkflowPaths": [],
+              "availableToolingHeads": ["$GEN279_TOOLING_HEAD"]
+            },
+            "requestNonce": "6f3d45f462399032d5240ff679ec971c7eb3c7348d6436f42ce0bf96bb9bbd22"
+          }
+          JSON
+          jq -e '.tools[] | select(.descriptorId=="GEN279_REPOSITORY_AI_ROUTER_SELF_TEST_DESCRIPTOR_V1")' "$RUNNER_TEMP/gen279-registry.json" > "$RUNNER_TEMP/gen279-descriptor.json"
+          jq -e '.schema=="AI_ROOM_EXECUTION_REQUEST_v1" and .inputs=={}' "$RUNNER_TEMP/gen279-request.json" >/dev/null
+
+      - name: Invoke exact Gen279 request through installed Gen281
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set +e
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          node tools/ai-room-transport/private-capable-readonly-qualification-invocation.v1.mjs \
+            --exact-head "$GEN279_HEAD" \
+            --request "$RUNNER_TEMP/gen279-request.json" \
+            --registry "$RUNNER_TEMP/gen279-registry.json" \
+            --output "$RUNNER_TEMP/gen279-native-receipt.json" \
+            --request-id "GEN279_ROUTER_SELF_TEST_THROUGH_GEN281_20260815_001"
+          status=$?
+          cp /tmp/gen281-private-capable-invocation-receipt.json "$RUNNER_TEMP/gen281-wrapper-receipt.json" 2>/dev/null || true
+          echo "$status" > "$RUNNER_TEMP/gen281-exit-status.txt"
+          exit "$status"
+
+      - name: Verify installed worktree remains clean
+        if: always()
+        shell: bash
+        run: |
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload invocation evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gen279-through-gen281-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gen279-request.json
+            ${{ runner.temp }}/gen279-descriptor.json
+            ${{ runner.temp }}/gen279-successor.json
+            ${{ runner.temp }}/gen279-router.json
+            ${{ runner.temp }}/gen279-native-receipt.json
+            ${{ runner.temp }}/gen281-wrapper-receipt.json
+            ${{ runner.temp }}/gen281-exit-status.txt
+          if-no-files-found: warn
+          retention-days: 90

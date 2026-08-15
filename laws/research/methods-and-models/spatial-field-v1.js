@@ -160,16 +160,29 @@
     root.dataset.mmSpatialReady = "true";
   });
 
-  // Reopening changes the containing fixed-layout geometry. Suppress only the
-  // carry-over transform interpolation for the first two paint frames so the
-  // restored spatial coordinate appears at its contained canonical geometry
-  // rather than traversing an off-viewport intermediate position.
+  function stabilizeExpandedGeometry() {
+    root.scrollLeft = 0;
+    stage.scrollLeft = 0;
+    deck.scrollLeft = 0;
+    modelCards().forEach(card => {
+      card.getAnimations?.().forEach(animation => animation.cancel());
+    });
+  }
+
+  // Reopening changes the containing fixed-layout geometry. Clear retained
+  // horizontal scroll origins and cancel only carry-over card animations during
+  // the reopening paint frames; normal spatial transitions resume immediately.
   globalThis.addEventListener("METHODS_MODELS_SHOWROOM_DISPLAY_CHANGED", event => {
     if (event.detail?.display !== "expanded") return;
     root.dataset.mmSpatialReopening = "true";
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      delete root.dataset.mmSpatialReopening;
-    }));
+    stabilizeExpandedGeometry();
+    requestAnimationFrame(() => {
+      stabilizeExpandedGeometry();
+      requestAnimationFrame(() => {
+        stabilizeExpandedGeometry();
+        delete root.dataset.mmSpatialReopening;
+      });
+    });
   });
 
   if (coordinate && !coordinate.querySelector(".mm-coordinate-spatial-note")) {

@@ -1,0 +1,18 @@
+{
+  "schema": "METHODS_MINIMUM_REAL_3D_PROOF_BUILDER_RECEIPT_v1",
+  "status": "PASS",
+  "governingHead": "29bbcfc6d58d5efd1c22bf5b526af81490b80469",
+  "validatedCandidateHead": "fba5239ce97a35cbebd1732c91b086d2a93b9f93",
+  "workflowRun": 31068588197,
+  "workflowJob": 92511588627,
+  "artifactId": 8954768713,
+  "artifactDigest": "sha256:1eab3becae0e148aee20c998e885059a46a33c4912e346a60bb95fcc70d0201b",
+  "fingerprint": "51575d2a45db96ae2cfd1f370d09e987fdbbf78bcefec12d0da62d23519efd4c",
+  "fingerprintDomainPathCount": 13,
+  "registeredPathCount": 17,
+  "receiptPathCount": 4,
+  "conditionsChecked": 18,
+  "publicMutation": false,
+  "perceptualAcceptanceClaim": false,
+  "awardReadinessClaim": false
+}

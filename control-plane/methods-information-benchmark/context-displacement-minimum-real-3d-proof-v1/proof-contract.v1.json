@@ -1,0 +1,42 @@
+{
+  "schema": "METHODS_MINIMUM_REAL_3D_PROOF_CONTRACT_v1",
+  "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_MINIMUM_REAL_3D_PROOF_v1",
+  "governingHead": "29bbcfc6d58d5efd1c22bf5b526af81490b80469",
+  "lockGeneration": 316,
+  "lockScope": "METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT:EXISTING_SPATIAL_CONSTRUCT:MINIMUM_REAL_3D_PROOF:V1",
+  "scopeHash": "4745d73c9fdf3551d23902cecf3fc65073bd1fc253ce73407e94f1361049a8fc",
+  "registeredPathCount": 17,
+  "minimumReference": {
+    "stages": 2,
+    "modelsPerStage": 3,
+    "fullyPopulatedModel": "pcr",
+    "lenses": ["practical", "engineering", "evidence"]
+  },
+  "requiredConditions": [
+    "PERSISTENT_WEBGL2_CONTEXT",
+    "PRIMARY_DIRECT_MANIPULATION",
+    "ONE_FINGER_ORBIT_AND_SWEEP",
+    "TWO_FINGER_STAGE_TRAVEL",
+    "PINCH_INSPECTION_DISTANCE",
+    "BOUNDED_FLICK_SETTLEMENT",
+    "REAL_DEPTH_MODEL_FOCUS",
+    "SIMULTANEOUS_VISIBLE_PRACTICAL_ENGINEERING_EVIDENCE",
+    "EVIDENCE_HOLD_NO_PROMOTION",
+    "THIRTEEN_FIELD_SHA256_EXACT_RETURN",
+    "KEYBOARD_AND_REDUCED_MOTION_EQUIVALENCE",
+    "SECONDARY_LINEAR_VIEW",
+    "SMALLER_CORPUS_SAME_RUNTIME",
+    "NO_PUBLIC_PRODUCT_MUTATION"
+  ],
+  "excludedVisualFoundation": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+  "comparativeProof": "0773c74f0d4ebbf5f34478f1b15288e8c8f1b63c",
+  "authorityBoundary": {
+    "publicPageMutation": false,
+    "compassMutation": false,
+    "hEarthMutation": false,
+    "deployment": false,
+    "release": false,
+    "mergeAuthorized": false,
+    "perceptualAcceptanceClaim": false
+  }
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#030712">
+  <title>Methods — Minimum Real 3D Proof</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#linear-view">Skip to linear Methods view</a>
+  <main id="app" class="app" data-mode="spatial">
+    <canvas id="scene" aria-label="Interactive three-dimensional Methods model field"></canvas>
+    <div class="veil" aria-hidden="true"></div>
+
+    <header class="masthead">
+      <div class="identity">
+        <p class="eyebrow">Nonpublic minimum real 3D proof</p>
+        <h1>Methods <span>in motion</span></h1>
+      </div>
+      <div class="status-cluster">
+        <span id="gpu-status" class="status-pill">GPU starting</span>
+        <button id="mode-toggle" class="quiet-control" type="button" aria-pressed="false">Linear view</button>
+      </div>
+    </header>
+
+    <section class="stage-orbit" aria-label="Stage selector">
+      <button id="stage-0" class="stage-orb is-active" type="button" data-stage="0">
+        <span>01</span><strong>Pressure &amp; Capacity</strong>
+      </button>
+      <div class="stage-axis" aria-hidden="true"><i></i></div>
+      <button id="stage-1" class="stage-orb" type="button" data-stage="1">
+        <span>02</span><strong>Method &amp; Falsification</strong>
+      </button>
+    </section>
+
+    <section class="model-selector" aria-label="Model selector">
+      <p class="selector-kicker">Sweep the field or choose a model</p>
+      <div id="model-buttons" class="model-buttons"></div>
+    </section>
+
+    <section class="model-identity" aria-live="polite">
+      <p id="model-relation" class="model-relation"></p>
+      <h2 id="model-title"></h2>
+      <div id="model-equation" class="model-equation"></div>
+      <p id="model-statement" class="model-statement"></p>
+      <p class="gesture-hint">Drag to sweep · tap to approach · pinch to inspect · two fingers to travel</p>
+    </section>
+
+    <section class="lens-constellation" aria-label="Practical, Engineering, and Evidence lenses">
+      <article class="lens practical" data-lens="practical" tabindex="0">
+        <div class="lens-heading"><span>01</span><h3>Practical</h3></div>
+        <h4 id="practical-title"></h4>
+        <p id="practical-body"></p>
+        <small id="practical-footer"></small>
+      </article>
+      <article class="lens engineering" data-lens="engineering" tabindex="0">
+        <div class="lens-heading"><span>02</span><h3>Engineering</h3></div>
+        <h4 id="engineering-title"></h4>
+        <p id="engineering-body"></p>
+        <small id="engineering-footer"></small>
+      </article>
+      <article class="lens evidence" data-lens="evidence" tabindex="0">
+        <div class="lens-heading"><span>03</span><h3>Evidence</h3></div>
+        <h4 id="evidence-title"></h4>
+        <p id="evidence-body"></p>
+        <small id="evidence-footer"></small>
+      </article>
+    </section>
+
+    <div class="focus-controls">
+      <button id="return-control" class="return-control" type="button" hidden>Return to exact prior state</button>
+      <p id="state-status" role="status" aria-live="polite">Spatial state settled</p>
+    </div>
+
+    <section id="linear-view" class="linear-view" hidden aria-labelledby="linear-title">
+      <div class="linear-header">
+        <p class="eyebrow">Secondary accessible representation</p>
+        <h2 id="linear-title">Methods proof — linear view</h2>
+        <p>The same stages, model identities, and three lenses are preserved without spatial movement.</p>
+      </div>
+      <div id="linear-content"></div>
+    </section>
+
+    <div id="announcement" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+  </main>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>

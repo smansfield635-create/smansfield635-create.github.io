@@ -1,0 +1,43 @@
+{
+  "schema": "METHODS_MINIMUM_REAL_3D_PROOF_SMALLER_CORPUS_FIXTURE_v1",
+  "corpusId": "small-reuse-corpus",
+  "version": "SMALL_REUSE_CORPUS_v1.0.0",
+  "stages": [
+    {
+      "id": "signal-return",
+      "title": "Signal & Return",
+      "accent": [0.72, 0.48, 1.0],
+      "origin": [0, 0, 0],
+      "models": [
+        {
+          "id": "signal",
+          "title": "Signal",
+          "equation": "Observed ≠ Constitutive",
+          "relationship": "separates output from identity",
+          "statement": "Visible output does not by itself establish intrinsic continuity.",
+          "sourceState": "fixture",
+          "position": [-1.4, 0, 0],
+          "lenses": {
+            "practical": {"title": "What is visible?", "body": "Observe output without presuming internal cause.", "footer": "Synthetic reuse fixture."},
+            "engineering": {"title": "Separate measurement channels", "body": "Keep observed output distinct from constitutive state.", "footer": "No empirical claim."},
+            "evidence": {"title": "Fixture only", "body": "This record tests runtime reuse, not scientific validity.", "footer": "No claim promotion."}
+          }
+        },
+        {
+          "id": "return",
+          "title": "Return With Memory",
+          "equation": "Return = restore(snapshot, token)",
+          "relationship": "restores prior state",
+          "statement": "A lawful return restores the exact prior state rather than approximating a reset.",
+          "sourceState": "fixture",
+          "position": [1.4, 0, 0],
+          "lenses": {
+            "practical": {"title": "Go back without losing place", "body": "Return restores the prior view and selection.", "footer": "Synthetic reuse fixture."},
+            "engineering": {"title": "Token-bound restoration", "body": "The snapshot is verified before restoration.", "footer": "No empirical claim."},
+            "evidence": {"title": "Deterministic test only", "body": "The fixture can verify state integrity without validating a scientific construct.", "footer": "No claim promotion."}
+          }
+        }
+      ]
+    }
+  ]
+}

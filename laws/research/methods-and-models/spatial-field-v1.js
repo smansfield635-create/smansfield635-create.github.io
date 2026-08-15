@@ -69,19 +69,30 @@
       id: event.pointerId,
       surface: event.currentTarget,
       startX: event.clientX,
-      startY: event.clientY
+      startY: event.clientY,
+      dragging: false
     };
-    root.dataset.mmFieldDragging = "true";
-    root.dataset[`mm${axis.toUpperCase()}Dragging`] = "true";
-    event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
   function move(event) {
     const pointer = state.activePointer;
     if (!pointer || pointer.id !== event.pointerId) return;
-    event.preventDefault();
     const dx = event.clientX - pointer.startX;
     const dy = event.clientY - pointer.startY;
+    const distance = Math.hypot(dx, dy);
+
+    // Do not capture a pointer merely because it was pressed. A tap must remain
+    // a tap so model inspection and family/lens selection keep their native
+    // click semantics. Capture begins only after a real drag gesture emerges.
+    if (!pointer.dragging && distance < 5) return;
+    if (!pointer.dragging) {
+      pointer.dragging = true;
+      root.dataset.mmFieldDragging = "true";
+      root.dataset[`mm${pointer.axis.toUpperCase()}Dragging`] = "true";
+      pointer.surface.setPointerCapture?.(event.pointerId);
+    }
+
+    event.preventDefault();
     if (pointer.axis === "x") applyGeometry(dx, dy * .16, 0);
     else if (pointer.axis === "y") applyGeometry(dx * .08, dy, 0);
     else applyGeometry(dx * .04, 0, dy);
@@ -90,15 +101,18 @@
   function finish(event) {
     const pointer = state.activePointer;
     if (!pointer || pointer.id !== event.pointerId) return;
-    pointer.surface.releasePointerCapture?.(event.pointerId);
+    if (pointer.dragging && pointer.surface.hasPointerCapture?.(event.pointerId)) {
+      pointer.surface.releasePointerCapture(event.pointerId);
+    }
     state.activePointer = null;
-    requestAnimationFrame(resetGeometry);
+    if (pointer.dragging) requestAnimationFrame(resetGeometry);
   }
 
   function cancel(event) {
     if (state.activePointer?.id !== event.pointerId) return;
+    const wasDragging = state.activePointer.dragging;
     state.activePointer = null;
-    resetGeometry();
+    if (wasDragging) resetGeometry();
   }
 
   function attach(surface, axis) {

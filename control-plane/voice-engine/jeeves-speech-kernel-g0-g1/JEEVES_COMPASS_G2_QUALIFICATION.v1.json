@@ -1,0 +1,28 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_COMPASS_G2_QUALIFICATION_v1",
+  "status": "READY_FOR_G2_RENDER",
+  "generation": "G2",
+  "predecessorGeneration": "G1",
+  "corpusCount": 8,
+  "qualificationDimensions": {
+    "stressNaturalness": "UNSCORED",
+    "phraseIntention": "UNSCORED",
+    "f0Naturalness": "UNSCORED",
+    "energyNaturalness": "UNSCORED",
+    "jeevesRestraint": "UNSCORED",
+    "nonTheatricalDelivery": "UNSCORED",
+    "syntheticCadenceReduction": "UNSCORED"
+  },
+  "failureSignals": [
+    "sing-song contour",
+    "motivational-speaker emphasis",
+    "uniform content-word punching",
+    "pitch stepping",
+    "energy pumping",
+    "loss of G1 timing behavior"
+  ],
+  "acceptanceLaw": "G2 may advance only if stress/F0/energy materially improve sentence intention while preserving Jeeves restraint and the installed G1 timing law.",
+  "reviewArtifactPolicy": "Do not surface a user review artifact unless the rendered voice is materially closer to a natural Jeeves voice.",
+  "nextIfPass": "G3_MICRO_PROSODY",
+  "nextIfFail": "REPAIR_G2_STRESS_F0_ENERGY_WITHOUT_ADVANCING_GENERATION"
+}

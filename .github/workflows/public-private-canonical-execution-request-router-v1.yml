@@ -47,6 +47,7 @@ jobs:
           encoded = base64.b64encode(json.dumps(request, sort_keys=True, separators=(',', ':')).encode()).decode()
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
               f.write('request_b64=' + encoded + '\n')
+              f.write('callback_issue=' + str(event['issue']['number']) + '\n')
           PY
 
       - name: Dispatch fixed private canonical carrier
@@ -54,9 +55,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REQUEST_B64: ${{ steps.request.outputs.request_b64 }}
+          CALLBACK_ISSUE: ${{ steps.request.outputs.callback_issue }}
         run: |
           set -euo pipefail
-          payload="$(jq -n --arg ref main --arg request_b64 "$REQUEST_B64" '{ref:$ref,inputs:{request_b64:$request_b64}}')"
+          payload="$(jq -n --arg ref main --arg request_b64 "$REQUEST_B64" --arg callback_issue "$CALLBACK_ISSUE" '{ref:$ref,inputs:{request_b64:$request_b64,callback_issue:$callback_issue}}')"
           code="$(curl --silent --show-error --output "$RUNNER_TEMP/dispatch-response.txt" --write-out '%{http_code}' \
             --request POST \
             --header 'Accept: application/vnd.github+json' \

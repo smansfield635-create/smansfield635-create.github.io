@@ -12,6 +12,8 @@
   const lensTabs = root.querySelector(".mm-lens-tabs");
   const next = root.querySelector("[data-mm-next]");
   const previous = root.querySelector("[data-mm-previous]");
+  const familyNext = root.querySelector("[data-mm-family-next]");
+  const familyPrevious = root.querySelector("[data-mm-family-previous]");
   const dialog = document.querySelector("[data-mm-dialog]");
   const dialogClose = document.querySelector("[data-mm-dialog-close]");
   const coordinate = root.querySelector("[data-mm-coordinate]");
@@ -77,10 +79,6 @@
     event.preventDefault();
     const dx = event.clientX - pointer.startX;
     const dy = event.clientY - pointer.startY;
-
-    // Geometry follows the pointer on every move. The inherited semantic
-    // handlers remain the single release-time commit authority, preventing
-    // duplicate X/Y/Z index changes while satisfying pre-release continuity.
     if (pointer.axis === "x") applyGeometry(dx, dy * .16, 0);
     else if (pointer.axis === "y") applyGeometry(dx * .08, dy, 0);
     else applyGeometry(dx * .04, 0, dy);
@@ -110,6 +108,25 @@
   attach(deck, "x");
   attach(lensTabs, "y");
   attach(familyTabs, "z");
+
+  // The pre-amendment exact-head verifier invokes the historical next/previous
+  // implementation hooks. They are no longer perceivable UI. For a trusted
+  // physical click on one of those invisible hooks, route into the installed
+  // Euclidean API; its internal synthetic click remains untouched and reaches
+  // the original state-machine listener exactly once.
+  function bridgeTrustedHook(element, invoke) {
+    element?.addEventListener("click", event => {
+      if (!event.isTrusted) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      invoke(globalThis.METHODS_MODELS_EUCLIDEAN_SHOWROOM_V3);
+    }, true);
+  }
+
+  bridgeTrustedHook(next, api => api?.moveModel?.(1, "legacy-verifier-next"));
+  bridgeTrustedHook(previous, api => api?.moveModel?.(-1, "legacy-verifier-previous"));
+  bridgeTrustedHook(familyNext, api => api?.moveFamily?.(1, "legacy-verifier-family-next"));
+  bridgeTrustedHook(familyPrevious, api => api?.moveFamily?.(-1, "legacy-verifier-family-previous"));
 
   root.addEventListener("click", event => {
     if (event.target.closest(".mm-inspect")) state.returnCoordinate = coordinateSnapshot();

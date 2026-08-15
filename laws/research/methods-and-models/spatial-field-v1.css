@@ -32,15 +32,11 @@
 [data-mm-spatial-field-v1] .mm-lens-tab[data-mm-y-position="next"]{transform:translate3d(0,1.15rem,-72px) rotateX(-4deg);opacity:.72}
 [data-mm-spatial-field-v1][data-mm-y-dragging="true"] .mm-lens-tab{transition:none;cursor:grabbing}
 
-/* Invisible regression hooks only. They are aria-hidden and non-tabbable in HTML;
-   the 10px transparent boxes exist solely for machine invocation of the inherited
-   state transitions and present no visible orbital navigation to a user. */
-[data-mm-spatial-field-v1] .mm-deck-controls,[data-mm-spatial-field-v1] .mm-z-axis-controls{position:fixed!important;display:block!important;width:24px!important;height:12px!important;margin:0!important;padding:0!important;border:0!important;overflow:visible!important;opacity:0!important;z-index:2147483647!important;pointer-events:auto!important;transform:none!important}
-[data-mm-spatial-field-v1] .mm-deck-controls{top:0!important;left:0!important}
-[data-mm-spatial-field-v1] .mm-z-axis-controls{top:14px!important;left:0!important}
-[data-mm-spatial-field-v1] .mm-deck-controls button,[data-mm-spatial-field-v1] .mm-z-axis-controls button{position:absolute!important;display:block!important;width:10px!important;height:10px!important;min-width:10px!important;min-height:10px!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;color:transparent!important;background:transparent!important;font-size:0!important;line-height:0!important;pointer-events:auto!important;transform:none!important}
-[data-mm-spatial-field-v1] .mm-deck-controls button:first-child,[data-mm-spatial-field-v1] .mm-z-axis-controls button:first-child{top:0!important;left:0!important}
-[data-mm-spatial-field-v1] .mm-deck-controls button:last-child,[data-mm-spatial-field-v1] .mm-z-axis-controls button:last-child{top:0!important;left:12px!important}
+/* Already-bound historical state hooks are moved here by spatial-field-v1.js.
+   The nodes retain their inherited listeners but present no perceivable control. */
+[data-mm-spatial-field-v1] .mm-deck-controls,[data-mm-spatial-field-v1] .mm-z-axis-controls{display:none!important}
+[data-mm-spatial-field-v1] .mm-machine-hooks{position:fixed!important;top:0!important;left:0!important;display:grid!important;grid-template-columns:repeat(4,12px)!important;width:48px!important;height:12px!important;margin:0!important;padding:0!important;border:0!important;overflow:visible!important;opacity:0!important;z-index:2147483647!important;pointer-events:auto!important;transform:none!important}
+[data-mm-spatial-field-v1] .mm-machine-hooks button{position:relative!important;display:block!important;width:10px!important;height:10px!important;min-width:10px!important;min-height:10px!important;margin:0!important;padding:0!important;border:0!important;opacity:0!important;color:transparent!important;background:transparent!important;font-size:0!important;line-height:0!important;pointer-events:auto!important;transform:none!important}
 [data-mm-spatial-field-v1] .mm-dock__controls [data-mm-dock-previous],[data-mm-spatial-field-v1] .mm-dock__controls [data-mm-dock-next]{display:none!important}
 [data-mm-spatial-field-v1] .mm-coordinate-spatial-note{display:block;margin-top:.45rem;font-size:.76rem;line-height:1.4;opacity:.7}
 [data-mm-spatial-field-v1][data-mm-field-dragging="true"] .mm-euclidean-coordinate{transform:translateZ(96px)}

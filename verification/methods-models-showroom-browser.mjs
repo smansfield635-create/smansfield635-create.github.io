@@ -51,6 +51,7 @@ async function readState(page) {
       contract: document.documentElement.dataset.methodsModelsContract,
       family: root?.dataset.family,
       inspecting: root?.dataset.inspecting,
+      settling: root?.dataset.settling,
       tabs: document.querySelectorAll(".mm-family-tab").length,
       cards: document.querySelectorAll(".mm-card").length,
       activeCards: document.querySelectorAll('.mm-card[data-active="true"]').length,
@@ -64,6 +65,26 @@ async function readState(page) {
       closeLabel: close?.getAttribute("aria-label") || close?.textContent?.trim() || "",
       horizontalOverflow: document.documentElement.scrollWidth - innerWidth,
       viewportWidth: innerWidth
+    };
+  });
+}
+
+async function hitDiagnostic(page, selector) {
+  return page.$eval(selector, element => {
+    const rect = element.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const hit = document.elementFromPoint(x, y);
+    const style = getComputedStyle(element);
+    const activeCard = element.closest(".mm-card");
+    const hitCard = hit?.closest?.(".mm-card");
+    return {
+      rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height, right: rect.right, bottom: rect.bottom },
+      center: { x, y },
+      style: { display: style.display, visibility: style.visibility, pointerEvents: style.pointerEvents, opacity: style.opacity },
+      hit: hit ? { tag: hit.tagName, className: String(hit.className || ""), text: String(hit.textContent || "").trim().slice(0, 120), familyId: hitCard?.dataset?.familyId || null, active: hitCard?.dataset?.active || null } : null,
+      expectedCard: { familyId: activeCard?.dataset?.familyId || null, active: activeCard?.dataset?.active || null },
+      viewport: { width: innerWidth, height: innerHeight }
     };
   });
 }
@@ -90,16 +111,29 @@ async function verifyProfile(name, viewport, reducedMotion = false) {
   if (selected.ringTransform === initial.ringTransform) failures.push("tab_rotation_no_depth_change");
 
   const activeSelector = '.mm-card[data-active="true"]';
-  await page.click(`${activeSelector} [data-open-inspection]`);
-  await page.waitForFunction(() => document.querySelector("[data-mm-carousel]")?.dataset.inspecting === "true");
-  const inspection = await readState(page);
+  const inspectSelector = `${activeSelector} [data-open-inspection]`;
+  const inspectHit = await hitDiagnostic(page, inspectSelector);
+  await page.click(inspectSelector);
+  await new Promise(resolve => setTimeout(resolve, 250));
+  const postInspectClick = await readState(page);
+  if (postInspectClick.inspecting !== "true") {
+    failures.push("inspection_pointer_hit_failed");
+    profiles.push({ name, viewport, reducedMotion, failures, initial, selected, inspectHit, postInspectClick });
+    await page.close();
+    return;
+  }
+
+  const inspection = postInspectClick;
   if (inspection.activeFamilyId !== "pressure" || inspection.activeCardInspecting !== "true") failures.push("same_object_inspection_identity");
   if (inspection.dialogs !== 0) failures.push("inspection_detached_dialog");
   if (!/return\s+to\s+orbit/i.test(inspection.closeLabel)) failures.push("return_to_orbit_control_missing");
 
-  await page.click(`${activeSelector} [data-close-inspection]`);
-  await page.waitForFunction(() => document.querySelector("[data-mm-carousel]")?.dataset.inspecting === "false");
+  const returnSelector = `${activeSelector} [data-close-inspection]`;
+  const returnHit = await hitDiagnostic(page, returnSelector);
+  await page.click(returnSelector);
+  await new Promise(resolve => setTimeout(resolve, 250));
   const returned = await readState(page);
+  if (returned.inspecting !== "false") failures.push("return_pointer_hit_failed");
   if (returned.activeFamilyId !== "pressure" || returned.activeFamilyIndex !== inspection.activeFamilyIndex || returned.activeCardInspecting !== "false") failures.push("return_to_orbit_identity");
 
   const box = await page.$eval("[data-mm-viewport]", el => { const r = el.getBoundingClientRect(); return { x: r.left, y: r.top, width: r.width, height: r.height }; });
@@ -126,7 +160,7 @@ async function verifyProfile(name, viewport, reducedMotion = false) {
   }
   if (keyboard.horizontalOverflow > 2) failures.push("post_interaction_horizontal_overflow");
 
-  profiles.push({ name, viewport, reducedMotion, failures, initial, selected, inspection, returned, keyboard });
+  profiles.push({ name, viewport, reducedMotion, failures, initial, selected, inspectHit, inspection, returnHit, returned, keyboard });
   await page.close();
 }
 

@@ -768,6 +768,18 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
+    "68699dff7ee9bf3b2fe33dc6179757a1197d98b01174f01fcc0dca0bdaf98e70": {
+      "governingHead": "96022cb12cc2154de2590eec340a756ab169ba2b",
+      "lockGeneration": 1477,
+      "lockScope": "COMPASS_CONTROL_PLANE_DOCUMENTATION",
+      "operationId": "COMPASS_NARRATIVE_AND_TRANSITION_COHERENCE_DOCUMENTATION_20260814_v1",
+      "procedureLocatorDigest": "1e4f006fb287e04ce5337fb02195091891d8dce02c50ee08d78b0324e94b3581",
+      "released": false,
+      "requestDigest": "d1b04cd09970565cf4cdab4d95430382bc26b7f5c214c8f7ca4807dc9abba724",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "68699dff7ee9bf3b2fe33dc6179757a1197d98b01174f01fcc0dca0bdaf98e70",
+      "state": "ADMITTED_LOCKED"
+    },
     "68f8bd53a5e2887ce30f0e59983668c6d44e89715fa9e3801e7217800a01c9e7": {
       "governingHead": "065ed8a3d4e8204197c21410294941409d5a13c3",
       "lockGeneration": 1446,
@@ -2140,7 +2152,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1476,
+  "lockGeneration": 1477,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

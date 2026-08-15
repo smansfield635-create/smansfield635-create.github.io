@@ -5,7 +5,9 @@
  *
  * Durable geographic-formation identities aligned to existing lattice region
  * semantics. The records define membership and envelopes only; they create no
- * vertices, chunks, proxies, admission, or rendering.
+ * vertices, chunks, proxies, admission, or rendering. OW02 adds the articulated
+ * inland range, pass, basin and foothill identities without replacing the
+ * previously qualified coastal or local formation truths.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -110,6 +112,71 @@ export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
     proxyRealizationEligibility: false,
     navigationClass: 'GROUND_OBSERVER_NAVIGABLE'
   }),
+  GRATITUDE_INLAND_RANGE_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_INLAND_RANGE_001',
+    formationClass: 'INLAND_MOUNTAIN_RANGE',
+    addressPartitions: [
+      { rows: [11, 16], columns: [2, 16] }
+    ],
+    worldBounds: { xMin: -126, xMax: 222, zMin: -254, zMax: -176 },
+    elevationEnvelope: { minimum: 8, maximum: 112 },
+    heightProfileReference: 'GRATITUDE_INLAND_MULTI_RIDGE_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_MIXED_NAVIGABLE_AND_BOUNDED_SLOPE'
+  }),
+  GRATITUDE_PASS_EAST_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_PASS_EAST_001',
+    formationClass: 'MOUNTAIN_PASS',
+    addressPartitions: [
+      { rows: [13, 16], columns: [11, 14] }
+    ],
+    worldBounds: { xMin: 94, xMax: 142, zMin: -252, zMax: -202 },
+    elevationEnvelope: { minimum: 12, maximum: 58 },
+    heightProfileReference: 'GRATITUDE_MOUNTAIN_PASS_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: false,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_PASS'
+  }),
+  GRATITUDE_PASS_CENTRAL_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_PASS_CENTRAL_001',
+    formationClass: 'MOUNTAIN_PASS',
+    addressPartitions: [
+      { rows: [13, 16], columns: [8, 11] }
+    ],
+    worldBounds: { xMin: 28, xMax: 76, zMin: -255, zMax: -204 },
+    elevationEnvelope: { minimum: 10, maximum: 54 },
+    heightProfileReference: 'GRATITUDE_MOUNTAIN_PASS_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: false,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE_PASS'
+  }),
+  GRATITUDE_RECEIVING_BASIN_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_RECEIVING_BASIN_001',
+    formationClass: 'WATERSHED_RECEIVING_BASIN',
+    addressPartitions: [
+      { rows: [9, 13], columns: [5, 11] }
+    ],
+    worldBounds: { xMin: -58, xMax: 92, zMin: -228, zMax: -148 },
+    elevationEnvelope: { minimum: -8, maximum: 28 },
+    heightProfileReference: 'GRATITUDE_RECEIVING_BASIN_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: false,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE'
+  }),
+  GRATITUDE_FOOTHILL_TRANSITION_001: formation({
+    formationId: 'H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001',
+    formationClass: 'FOOTHILL_TRANSITION',
+    addressPartitions: [
+      { rows: [8, 13], columns: [1, 12] }
+    ],
+    worldBounds: { xMin: -168, xMax: 116, zMin: -224, zMax: -132 },
+    elevationEnvelope: { minimum: 2, maximum: 42 },
+    heightProfileReference: 'GRATITUDE_FOOTHILL_TAPER_PROFILE_v1',
+    fullRealizationEligibility: true,
+    proxyRealizationEligibility: true,
+    navigationClass: 'GROUND_OBSERVER_NAVIGABLE'
+  }),
   DISTANT_HIGHLAND_001: formation({
     formationId: 'H_EARTH_DISTANT_HIGHLAND_001',
     formationClass: 'DISTANT_HIGHLAND_OR_MOUNTAIN',
@@ -159,7 +226,11 @@ export function evaluateHEarthTerrainFormations() {
     'HILL',
     'RIDGE_OR_BLUFF',
     'VALLEY_OR_DRAINAGE',
-    'DISTANT_HIGHLAND_OR_MOUNTAIN'
+    'DISTANT_HIGHLAND_OR_MOUNTAIN',
+    'INLAND_MOUNTAIN_RANGE',
+    'MOUNTAIN_PASS',
+    'WATERSHED_RECEIVING_BASIN',
+    'FOOTHILL_TRANSITION'
   ];
   const issues = required
     .filter((formationClass) => !classes.has(formationClass))

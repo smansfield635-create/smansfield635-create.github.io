@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { projectControlPlaneState, REQUEST_SCHEMA, EVENT_SCHEMA } from './control-plane-state-projector.v1.mjs';
+const head='a'.repeat(40),d1='1'.repeat(64),d2='2'.repeat(64),d3='3'.repeat(64);
+const event=(eventId,operationId,sequence,status,evidenceDigest=d1,lane='L2_CONTROL_PLANE')=>({schema:EVENT_SCHEMA,eventId,operationId,sequence,lane,status,subjectHead:head,evidenceDigest});
+const source={schema:REQUEST_SCHEMA,events:[event('e1','op-a',1,'ADMITTED'),event('e2','op-a',2,'CONSTRUCTING',d2),event('e3','op-a',3,'PASS_CLOSED',d3),event('e4','op-b',1,'STOP',d1,'L3_LAWS'),event('e5','op-b',1,'FAIL_CLOSED',d2,'L3_LAWS')]};
+const snapshot=JSON.stringify(source);const receipt=projectControlPlaneState(source);assert.equal(receipt.result,'PASS_CLOSED');assert.equal(JSON.stringify(source),snapshot,'source mutated');assert.equal(receipt.operationCount,2);assert.equal(receipt.contradictionCount,1);const a=receipt.operations.find(o=>o.operationId==='op-a');const b=receipt.operations.find(o=>o.operationId==='op-b');assert.equal(a.currentStatus,'PASS_CLOSED');assert.equal(b.currentStatus,'CONTRADICTED');assert.deepEqual(b.alternativeStatuses,['FAIL_CLOSED','STOP']);assert.equal(receipt.sourceEvidenceRewritten,false);assert.equal(receipt.authorityCreated,false);
+const duplicate=projectControlPlaneState({schema:REQUEST_SCHEMA,events:[event('dup','a',1,'ADMITTED'),event('dup','b',1,'STOP')]});assert.equal(duplicate.result,'FAIL_CLOSED');assert.equal(duplicate.errorCode,'DUPLICATE_EVENT_ID');
+const invalid=projectControlPlaneState({schema:REQUEST_SCHEMA,events:[{...event('bad','a',1,'ADMITTED'),evidenceDigest:'bad'}]});assert.equal(invalid.result,'FAIL_CLOSED');assert.equal(invalid.errorCode,'OBSERVATION_EVENT_INVALID');
+const result={schema:'L2_OBSERVABILITY_SELF_TEST_RECEIPT_v1',result:'PASS_CLOSED',tests:['LATEST_UNAMBIGUOUS_PROJECTION','CONTRADICTION_PRESERVATION','SOURCE_IMMUTABILITY','DUPLICATE_EVENT_FAIL_CLOSED','INVALID_EVIDENCE_FAIL_CLOSED'],sourceEvidenceRewritten:false,authorityCreated:false};const i=process.argv.indexOf('--output');if(i>=0&&process.argv[i+1])fs.writeFileSync(process.argv[i+1],JSON.stringify(result,null,2)+'\n');process.stdout.write(JSON.stringify(result)+'\n');

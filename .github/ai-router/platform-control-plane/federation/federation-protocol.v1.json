@@ -1,0 +1,39 @@
+{
+  "schema": "L2_FEDERATION_PROTOCOL_v1",
+  "protocolId": "L2_CONTROL_PLANE_READ_ONLY_REPOSITORY_FEDERATION_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_WHEN_EXPLICITLY_REFERENCED",
+  "purpose": "Verify repository identity and evidence envelopes across enrolled repositories without external mutation or authority inheritance.",
+  "sequence": [
+    "RESOLVE_SOURCE_REPOSITORY_IDENTITY",
+    "RESOLVE_TARGET_REPOSITORY_IDENTITY",
+    "VERIFY_EXACT_SOURCE_HEAD",
+    "VERIFY_EVIDENCE_DIGEST_DOMAIN",
+    "VERIFY_OPERATION_IS_READ_ONLY_AND_REGISTERED",
+    "EMIT_NON_AUTHORITATIVE_FEDERATION_RECEIPT"
+  ],
+  "envelope": {
+    "requestSchema": "L2_FEDERATION_VERIFICATION_REQUEST_v1",
+    "receiptSchema": "L2_FEDERATION_VERIFICATION_RECEIPT_v1",
+    "digestAlgorithm": "sha256",
+    "headFormat": "40_HEX_GIT_COMMIT_SHA"
+  },
+  "governingLaws": [
+    "SHARED_TOOLING_DOES_NOT_IMPLY_SHARED_MUTATION_AUTHORITY",
+    "FEDERATED_EVIDENCE_MAY_PROPAGATE_AUTHORITY_MAY_NOT",
+    "SOURCE_REPOSITORY_IDENTITY_MISMATCH_FAILS_CLOSED",
+    "TARGET_REPOSITORY_IDENTITY_MISMATCH_FAILS_CLOSED",
+    "EXTERNAL_REPOSITORY_WRITE_IS_OUT_OF_SCOPE",
+    "FEDERATION_RECEIPT_DOES_NOT_CREATE_PROJECT_SCIENTIFIC_PRODUCT_OR_MERGE_AUTHORITY"
+  ],
+  "authorityBoundary": {
+    "externalRepositoryWritesAllowed": false,
+    "authorityInheritanceAllowed": false,
+    "authorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "productAuthorityCreated": false,
+    "scientificClaimAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "L2_CONTROL_PLANE_OBSERVABILITY_PROTOCOL_v1",
+  "protocolId": "L2_EVIDENCE_PRESERVING_CONTROL_PLANE_OBSERVABILITY_v1",
+  "version": "1.0.0",
+  "status": "ACTIVE_WHEN_EXPLICITLY_REFERENCED",
+  "purpose": "Project operation state from immutable evidence references while preserving contradictions, provenance, lane identity, and exact-head identity without rewriting source evidence or creating authority.",
+  "eventSchema": "L2_CONTROL_PLANE_OBSERVATION_EVENT_v1",
+  "projectionSchema": "L2_CONTROL_PLANE_STATE_RECEIPT_v1",
+  "knownStatuses": ["ADMITTED", "CONSTRUCTING", "PASS_CLOSED", "FAIL_CLOSED", "STOP", "SUPERSEDED"],
+  "knownLanes": ["L1_PRODUCT", "L2_CONTROL_PLANE", "L3_LAWS"],
+  "projectionLaws": [
+    "SOURCE_EVIDENCE_IS_IMMUTABLE",
+    "OBSERVATION_DOES_NOT_CREATE_AUTHORITY",
+    "CONTRADICTORY_SAME_SEQUENCE_STATUS_MUST_REMAIN_VISIBLE",
+    "LATEST_SEQUENCE_MAY_BE_PROJECTED_ONLY_WHEN_UNAMBIGUOUS",
+    "DUPLICATE_EVENT_ID_FAILS_CLOSED",
+    "EVERY_EVENT_REQUIRES_EXACT_HEAD_AND_SHA256_EVIDENCE_DIGEST",
+    "CROSS_LANE_EVIDENCE_MAY_BE_OBSERVED_WITHOUT_AUTHORITY_INHERITANCE"
+  ],
+  "authorityBoundary": {
+    "sourceEvidenceRewriteAllowed": false,
+    "authorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "repositoryMutationAuthorityCreated": false,
+    "repositorySettingsAuthorityCreated": false,
+    "rulesetActivationAuthorityCreated": false,
+    "hEarthAuthorityCreated": false,
+    "lawsAuthorityCreated": false
+  }
+}

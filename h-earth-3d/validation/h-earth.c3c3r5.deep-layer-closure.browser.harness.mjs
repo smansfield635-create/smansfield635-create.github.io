@@ -105,7 +105,11 @@ try{
   await page.waitForTimeout(7000);
   const snapshot=await page.evaluate(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.()??null);
   assert.equal(Boolean(snapshot),true,'R5_PUBLIC_SNAPSHOT_MISSING');
-  assert.equal(snapshot?.liveGpu?.ready,true,'R5_LIVE_GPU_NOT_READY');
+  assert.equal(snapshot?.eligible,true,'R5_PUBLIC_RECEIPT_INELIGIBLE');
+  assert.equal(snapshot?.liveGpu?.eligible,true,'R5_LIVE_GPU_RECEIPT_INELIGIBLE');
+  assert.equal(snapshot?.liveGpu?.status,'RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE','R5_LIVE_GPU_NOT_ACTIVE');
+  assert.ok((snapshot?.liveGpu?.counters?.gpuFramebufferPresentationCount??0)>0,'R5_LIVE_GPU_NO_PRESENTED_FRAME');
+  assert.ok((snapshot?.liveGpu?.resources?.counters?.contextCreationCount??0)>0,'R5_WEBGL2_CONTEXT_NOT_CREATED');
   assert.equal(consoleErrors.length,0,`R5_CONSOLE_ERRORS:${JSON.stringify(consoleErrors)}`);
   assert.equal(pageErrors.length,0,`R5_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
   assert.equal(failedRequests.length,0,`R5_REQUEST_FAILURES:${JSON.stringify(failedRequests)}`);

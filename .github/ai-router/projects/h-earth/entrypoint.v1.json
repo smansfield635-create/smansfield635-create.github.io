@@ -27,7 +27,8 @@
       "reciprocalComparativeBaseline": ".github/ai-router/projects/h-earth/ow01-reciprocal-comparative-baseline.v1.json",
       "narrativeWorldReciprocity": ".github/ai-router/projects/h-earth/ow01-narrative-world-reciprocity-binding.v1.json",
       "environmentalAcousticContinuity": ".github/ai-router/projects/h-earth/ow01-environmental-acoustic-continuity.v1.json",
-      "contextLaw": "THE_OW01_PLAN RECIPROCAL_COMPARATIVE_BASELINE NARRATIVE_WORLD_RECIPROCITY_BINDING AND ENVIRONMENTAL_ACOUSTIC_CONTINUITY_CONTRACT MUST_BE_LOADED_AND_APPLIED_TOGETHER; NONE_MAY_BE_USED_TO_ERASE_OR_BYPASS_ANOTHER.",
+      "preconstructionExcellence": ".github/ai-router/projects/h-earth/reciprocal-preconstruction-excellence-record.v1.json",
+      "contextLaw": "THE_OW01_PLAN RECIPROCAL_COMPARATIVE_BASELINE NARRATIVE_WORLD_RECIPROCITY_BINDING ENVIRONMENTAL_ACOUSTIC_CONTINUITY_CONTRACT AND RECIPROCAL_PRECONSTRUCTION_EXCELLENCE_RECORD MUST_BE_LOADED_AND_APPLIED_TOGETHER; NONE_MAY_BE_USED_TO_ERASE_OR_BYPASS_ANOTHER.",
       "appliesWhen": [
         "OW01_PRODUCT_CONSTRUCTION",
         "OW01_GEOGRAPHIC_RECONCILIATION",
@@ -41,7 +42,11 @@
         "GLOBE_H_EARTH_RECIPROCAL_COMPARATIVE_BROWSER_AUDIT",
         "H_EARTH_MAP_NARRATIVE_RECIPROCAL_AUDIT",
         "H_EARTH_SPATIAL_AUDIO_GEOGRAPHY_AUDIT",
-        "H_EARTH_GAME_NARRATIVE_DEVELOPMENT_AFFECTING_WORLD_OR_ROUTE_STATE"
+        "H_EARTH_GAME_NARRATIVE_DEVELOPMENT_AFFECTING_WORLD_OR_ROUTE_STATE",
+        "H_EARTH_BOUNDARY_DISSOLUTION_OR_VISIBLE_WORLD_CONTINUATION",
+        "H_EARTH_CLIMATE_BIOME_VEGETATION_MATERIAL_OR_HYDROLOGY_CONSTRUCTION",
+        "H_EARTH_TO_AUDRALIA_POSITIONAL_OR_MORPHOLOGY_RECONCILIATION",
+        "REFERENCE_CLASS_AWARDS_OR_EXCELLENCE_REVIEW_OF_H_EARTH"
       ],
       "loadBefore": [
         "PRODUCT_BRANCH_CREATION",
@@ -51,7 +56,9 @@
         "QUALIFICATION_EXECUTION",
         "PLAYWRIGHT_EXACT_CANDIDATE_EXECUTION",
         "PAGE_EXCELLENCE_AWARDS_OR_OWNER_INSPECTION_HANDOFF",
-        "USER_VISUAL_OR_EXPERIENTIAL_REVIEW_PREPARATION"
+        "USER_VISUAL_OR_EXPERIENTIAL_REVIEW_PREPARATION",
+        "DEFICIENCY_DRIVEN_REPAIR_CONSTRUCTION",
+        "GLOBE_REGIONAL_RECONCILIATION_CONSTRUCTION"
       ],
       "comparisonRequirement": {
         "candidateVsPriorSameSurface": true,
@@ -59,14 +66,21 @@
         "candidateVsNarrativeWorldPlan": true,
         "narrativeWorldPlanVsCandidate": true,
         "candidateAudioVsCanonicalGeographyAndPlayerPosition": true,
+        "candidateVsPinnedDeficiencyRegister": true,
+        "candidateVsPinnedCollaborativeStrategy": true,
+        "candidateVsReferenceClassExcellence": true,
+        "geographicIdentityReciprocityRequired": true,
+        "environmentalIdentityReciprocityRequired": true,
         "exactCandidateShaRequired": true,
         "requiredBaselineRegressionAllowed": false,
         "reciprocalGeographicDivergenceAllowed": false,
+        "reciprocalEnvironmentalDivergenceAllowed": false,
+        "orphanPinnedDeficiencyAllowed": false,
         "narrativeWorldContradictionAllowed": false,
         "acousticGeographicContradictionAllowed": false,
         "silentNarrativeOrGeographicHoldResolutionAllowed": false
       },
-      "failureMode": "STOP_IF_ANY_REQUIRED_OW01_CONTEXT_IS_MISSING_UNREADABLE_SUPERSEDED_NOT_BOUND_TO_THE_CURRENT_OW01_OPERATION_CONTEXT_OR_IF_REQUIRED_LONGITUDINAL_RECIPROCAL_NARRATIVE_WORLD_OR_SPATIAL_AUDIO_COMPARISON_IS_SKIPPED",
+      "failureMode": "STOP_IF_ANY_REQUIRED_OW01_CONTEXT_IS_MISSING_UNREADABLE_SUPERSEDED_NOT_BOUND_TO_THE_CURRENT_OW01_OPERATION_CONTEXT_OR_IF_REQUIRED_LONGITUDINAL_RECIPROCAL_NARRATIVE_WORLD_SPATIAL_AUDIO_PRECONSTRUCTION_DEFICIENCY_STRATEGY_OR_REFERENCE_CLASS_COMPARISON_IS_SKIPPED",
       "authorityCreatedByBinding": false
     }
   },
@@ -111,8 +125,13 @@
     "MISSING_OR_INVALID_OW01_RECIPROCAL_COMPARATIVE_BASELINE",
     "MISSING_OR_INVALID_OW01_NARRATIVE_WORLD_RECIPROCITY_BINDING",
     "MISSING_OR_INVALID_OW01_ENVIRONMENTAL_ACOUSTIC_CONTINUITY",
+    "MISSING_OR_INVALID_H_EARTH_RECIPROCAL_PRECONSTRUCTION_EXCELLENCE_RECORD",
+    "UNMAPPED_ACCEPTED_DEFICIENCY_DETECTED",
+    "PINNED_DEFICIENCY_WITHOUT_STRATEGY_TREATMENT_DETECTED",
+    "REQUIRED_REFERENCE_CLASS_COMPARISON_SKIPPED",
     "REQUIRED_LONGITUDINAL_REGRESSION_DETECTED",
     "RECIPROCAL_GLOBE_H_EARTH_GEOGRAPHIC_DIVERGENCE_DETECTED",
+    "RECIPROCAL_GLOBE_H_EARTH_ENVIRONMENTAL_DIVERGENCE_DETECTED",
     "NARRATIVE_WORLD_RECIPROCAL_CONTRADICTION_DETECTED",
     "ACOUSTIC_GEOGRAPHIC_OR_DISTANCE_CONTRADICTION_DETECTED",
     "SILENT_NARRATIVE_OR_GEOGRAPHIC_HOLD_RESOLUTION_DETECTED"

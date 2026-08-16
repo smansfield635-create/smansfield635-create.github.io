@@ -8,7 +8,7 @@
     let active=false,startX=0,startY=0,id=null;
     stage.style.touchAction='pan-y';
     stage.addEventListener('pointerdown',e=>{
-      if(disabled()||e.button>0)return;
+      if(disabled()||e.button>0||e.target.closest('a,button,input,select,textarea,[role="button"]'))return;
       active=true;id=e.pointerId;startX=e.clientX;startY=e.clientY;
       stage.setPointerCapture?.(id);
     });
@@ -175,5 +175,5 @@
 
   function boot(){statementOrbit();capabilityOrbit();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  window.CompassEditorialCarousel={boot,version:'successor-v3'};
+  window.CompassEditorialCarousel={boot,version:'successor-v4'};
 })();

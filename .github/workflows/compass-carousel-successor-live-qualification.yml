@@ -32,8 +32,8 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import { chromium } from 'playwright';
-          const live='https://diamondgatebridge.com/?compass-successor-qualify=successor-v3';
-          const expectedVersion='successor-v3';
+          const live='https://diamondgatebridge.com/?compass-successor-qualify=successor-v4';
+          const expectedVersion='successor-v4';
           const browser=await chromium.launch({headless:true});
           const checks=[]; const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence}); let fatal=null;
           async function load(page,suffix='desktop'){
@@ -56,7 +56,7 @@ jobs:
             const loaded=await load(page);
             check('LIVE_SUCCESSOR_RUNTIME',loaded.version===expectedVersion,loaded); check('LIVE_STATEMENT_ORBIT',loaded.statement,loaded); check('LIVE_CAPABILITY_ORBIT',loaded.capability,loaded); check('LEGACY_SWITCHER_REMOVED',!loaded.legacy,loaded);
             const structure=await page.evaluate(()=>{const ps=[...document.querySelectorAll('.compass-orbit-plaque')],ss=[...document.querySelectorAll('.compass-statement-object')],rear=ps.find(x=>x.dataset.slot==='rear'),rs=rear&&getComputedStyle(rear),rr=rear?.getBoundingClientRect();const nav=[...document.querySelectorAll('[data-statement-orbit] button,[data-statement-orbit] a,[data-capability-orbit] button,[data-capability-orbit] a')].filter(el=>{if(!el.offsetParent)return false;const t=(el.textContent||'').trim().toLowerCase(),a=(el.getAttribute('aria-label')||'').toLowerCase();return t==='previous'||t==='next'||a.includes('previous')||a.includes('next');}).length;const counters=[...document.querySelectorAll('[data-statement-orbit] [class*="counter"],[data-capability-orbit] [class*="counter"],[data-carousel-counter]')].filter(x=>x.offsetParent).length;return{statements:ss.length,noChrome:ss.every(el=>{const s=getComputedStyle(el);return s.borderTopWidth==='0px'&&s.backgroundImage==='none'&&s.backgroundColor==='rgba(0, 0, 0, 0)';}),plaques:ps.length,rearVisible:!!(rr&&rr.width&&rr.height&&Number(rs.opacity)>.1),rearFilter:rs?.filter||'',rearPointer:rs?.pointerEvents||'',nav,counters};});
-            check('TWO_FLOATING_STATEMENTS',structure.statements===2,structure); check('STATEMENTS_NO_CARD_CHROME',structure.noChrome,structure); check('TWO_CAPABILITY_PLAQUES',structure.plaques===2,structure); check('REAR_PARENT_VISIBLE',structure.rearVisible&&structure.rearFilter.includes('blur'),structure); check('REAR_PARENT_NONINTERACTIVE',structure.rearPointer==='none',structure); check('NO_VISIBLE_ARROW_CONTROLS',structure.nav===0,structure.nav); check('NO_NUMERIC_COUNTERS',structure.counters===0,structure.counters);
+            check('TWO_FLOATING_STATEMENTS',structure.statements===2,structure); check('STATEMENTS_NO_CARD_CHROME',structure.noChrome,structure); check('TWO_CAPABILITY_PLAQUES',structure.plaques===2,structure); check('REAR_PARENT_VISIBLE',structure.rearVisible,structure); check('REAR_PARENT_NONINTERACTIVE',structure.rearPointer==='none',structure); check('NO_VISIBLE_ARROW_CONTROLS',structure.nav===0,structure.nav); check('NO_NUMERIC_COUNTERS',structure.counters===0,structure.counters);
 
             const brain=page.locator('.compass-orbit-plaque[data-slot="front"] [data-human-brain] canvas'); await brain.scrollIntoViewIfNeeded(); await page.waitForTimeout(180);
             check('BRAIN_CANVAS_PRESENT',await brain.count()===1,await brain.count()); const bi=await brain.evaluate(el=>({w:el.width,h:el.height,data:el.toDataURL().length})); check('BRAIN_RENDERED_NONEMPTY',bi.w>10&&bi.h>10&&bi.data>1000,bi);

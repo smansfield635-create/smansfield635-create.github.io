@@ -70,3 +70,5 @@ jobs:
             h-earth-3d/validation/evidence/cp3d/**
             /tmp/h-earth-c3c3-server.log
           if-no-files-found: error
+
+# C3C3 exact-head qualification trigger: 2026-08-16

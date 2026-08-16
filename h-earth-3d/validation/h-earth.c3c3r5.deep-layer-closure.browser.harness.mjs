@@ -11,6 +11,11 @@ import {
   H_EARTH_RUN_8B_C3C3R5_PERCEPTUAL_GRID_PROFILE,
   constructHEarthRun8BSuccessorTerrainAndMountain
 } from '../../showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js';
+import {
+  H_EARTH_RUN_8B_C3C3R5_MACRO_COMPOSITION_PROFILE,
+  evaluateHEarthRun8BSuccessorTerrainField,
+  sampleHEarthRun8BSuccessorTerrainField
+} from '../terrain/h-earth.successor-terrain-field.run8b.js';
 import { constructHEarthDistantContextGeometry } from '../../showroom/globe/h-earth/render/geometry-distant-context.js';
 import { buildHEarthRun8ENeutralPackage } from '../../showroom/globe/h-earth/render/run8e-successor-environment.js';
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js';
@@ -43,8 +48,9 @@ assert.equal(H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.structuralTerrainTransp
 assert.equal(H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.tintContributionClass,'TRANSLUCENT_COMPOSITION_CONTRIBUTION','R5_TINT_LAYER_NOT_TRANSLUCENT_COMPOSITION');
 const materialSamples=[[-180,-160],[-60,-150],[60,-155],[180,-170]].map(([x,z])=>sampleHEarthRun8CSuccessorSurfaceMaterial(x,z));
 assert.ok(materialSamples.every(sample=>sample.valid===true),'R5_MATERIAL_SAMPLE_INVALID');
-const tintStrengths=materialSamples.map(sample=>sample.environmentalTintStrength??sample.tintStrength??0);
+const tintStrengths=materialSamples.map(sample=>sample.environmentalTintStrength??0);
 assert.ok(Math.max(...tintStrengths)-Math.min(...tintStrengths)>0.001,'R5_TINT_NOT_SPATIALLY_VARIANT');
+assert.ok(materialSamples.every(sample=>sample.structuralTerrainOpaque===true&&sample.framebufferBackgroundLeakage===false),'R5_LAYERED_COLOR_LEAKS_BACKGROUND');
 
 const distant=constructHEarthDistantContextGeometry();
 assert.equal(distant.ok,true,'R5_DISTANT_CONTEXT_CONSTRUCTION_FAILED');
@@ -57,6 +63,13 @@ assert.equal(currentNeutral.ok,true,'R5_CURRENT_NEUTRAL_PACKAGE_FAILED');
 assert.equal(currentNeutral.currentPlanetaryDistantContextIncluded,true,'R5_D10_DISTANT_CONTEXT_NOT_ADMITTED_TO_CURRENT_PACKAGE');
 assert.ok(currentNeutral.distantContextPrimitiveCount>=1,'R5_D10_DISTANT_CONTEXT_COUNT_ZERO');
 assert.ok(distantIds.every(id=>currentNeutral.primitiveIds.includes(id)),'R5_D10_DISTANT_CONTEXT_IDS_MISSING_FROM_CURRENT_PACKAGE');
+
+const fieldEvaluation=evaluateHEarthRun8BSuccessorTerrainField();
+assert.equal(fieldEvaluation.eligible,true,`R5_D11_SUCCESSOR_FIELD_INVALID:${fieldEvaluation.issues.join(',')}`);
+assert.equal(H_EARTH_RUN_8B_C3C3R5_MACRO_COMPOSITION_PROFILE.orientation,'EAST_FACING_TOWARD_OPEN_OCEAN','R5_D11_REVEAL_ORIENTATION_INVALID');
+const revealSamples=[[-72,-254],[-48,-254],[-24,-254],[0,-254],[24,-254]].map(([x,z])=>sampleHEarthRun8BSuccessorTerrainField(x,z));
+assert.ok(revealSamples.some(sample=>sample.macroCompositionApplied===true&&sample.macroCompositionCut>4),'R5_D11_OCEAN_REVEAL_CORRIDOR_NOT_MATERIAL');
+assert.ok(revealSamples.every(sample=>sample.macroCompositionCut<=sample.preCompositionMountainContribution+1e-9),'R5_D11_REVEAL_CUT_BASE_TERRAIN');
 
 const livePackage=getHEarthOW01CanonicalLiveRenderPackageOccurrence();
 assert.equal(livePackage.eligible,true,'R5_LIVE_PACKAGE_INELIGIBLE');
@@ -74,12 +87,12 @@ assert.equal(gpu.materialParameters.length,livePackage.vertexCount*4,'R5_GPU_MAT
 
 const cameraPacket=buildHEarthRun8ER3AWaypointPacket('COAST',{width:709,height:1536,pixelRatio:1},1);
 assert.equal(cameraPacket.status,'RUN_8E_R3A_FRAME_UNIFORM_PACKET_COMPLETE','R5_CAMERA_PACKET_FAILED');
-assert.equal(cameraPacket.camera.planetRelativeUpApplied,true,'R5_PLANET_RELATIVE_UP_NOT_APPLIED');
-assert.equal(cameraPacket.camera.planetaryWorldFrameContractId,H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,'R5_CAMERA_PLANET_FRAME_ID_MISMATCH');
+assert.equal(cameraPacket.planetRelativeCameraConsumed,true,'R5_PLANET_RELATIVE_CAMERA_NOT_CONSUMED');
+assert.equal(cameraPacket.planetaryWorldFrameContractId,H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,'R5_CAMERA_PLANET_FRAME_ID_MISMATCH');
 assert.ok(Math.hypot(cameraPacket.camera.up.x,cameraPacket.camera.up.y,cameraPacket.camera.up.z)>0.99,'R5_CAMERA_UP_INVALID');
 
 const browser=await chromium.launch({headless:true,args:['--enable-webgl','--ignore-gpu-blocklist','--use-gl=swiftshader','--disable-dev-shm-usage']});
-let screenshotPath=`${evidenceDirectory}/c3c3r5-deep-layer-qualified-view.png`;
+const screenshotPath=`${evidenceDirectory}/c3c3r5-deep-layer-qualified-view.png`;
 try{
   const page=await browser.newPage({viewport:{width:709,height:1536},deviceScaleFactor:1,isMobile:true,hasTouch:true});
   const consoleErrors=[],pageErrors=[],failedRequests=[];
@@ -90,7 +103,7 @@ try{
   assert.ok(response&&response.status()>=200&&response.status()<400,`R5_HTTP_${response?.status()}`);
   await page.waitForTimeout(7000);
   const snapshot=await page.evaluate(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.()??null);
-  assert.equal(globalThis.Boolean(snapshot),true,'R5_PUBLIC_SNAPSHOT_MISSING');
+  assert.equal(Boolean(snapshot),true,'R5_PUBLIC_SNAPSHOT_MISSING');
   assert.equal(snapshot?.liveGpu?.ready,true,'R5_LIVE_GPU_NOT_READY');
   assert.equal(consoleErrors.length,0,`R5_CONSOLE_ERRORS:${JSON.stringify(consoleErrors)}`);
   assert.equal(pageErrors.length,0,`R5_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
@@ -102,19 +115,21 @@ const receipt={
   receiptType:'H_EARTH_C3C3R5_DEEP_LAYER_CLOSURE_QUALIFICATION_v1',
   status:'PASS_CLOSED',
   perspectiveChangeCountsAsImprovement:false,
-  layers:{D5:'PASS',D6:'PASS',D7:'SOURCE_PATH_PROVEN',D8:'SOURCE_PATH_PROVEN',D9:'PASS',D10:'PASS'},
+  layers:{D5:'PASS',D6:'PASS',D7:'SOURCE_PATH_PROVEN',D8:'SOURCE_PATH_PROVEN',D9:'PASS',D10:'PASS',D11:'MACHINE_PASS'},
   planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,
   liveGridProfile:H_EARTH_RUN_8B_C3C3R5_PERCEPTUAL_GRID_PROFILE,
   layeredColorProfile:H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE,
+  macroCompositionProfile:H_EARTH_RUN_8B_C3C3R5_MACRO_COMPOSITION_PROFILE,
   currentNeutralPrimitiveCount:currentNeutral.primitiveCount,
   distantContextPrimitiveIds:distantIds,
   canonicalLivePackageIdentity:livePackage.packageIdentity,
   canonicalLivePackageDigest:livePackage.contentDigest,
   distantContextDrawSpanCount:distantSpans.length,
+  maximumObservedRevealCut:Math.max(...revealSamples.map(sample=>sample.macroCompositionCut)),
   gpuTransportProven:true,
   planetRelativeCameraProven:true,
   ownerVisualInspectionNotYetAuthorized:true,
-  remainingLayer:'D11_MACRO_COMPOSITION_THEN_D12_VISUAL_AUDIT'
+  remainingLayer:'D12_SEPARATE_VISUAL_EXPERIENTIAL_AUDIT'
 };
 await writeFile(`${evidenceDirectory}/c3c3r5-deep-layer-closure.receipt.json`,`${JSON.stringify(receipt,null,2)}\n`);
 console.log(JSON.stringify(receipt,null,2));

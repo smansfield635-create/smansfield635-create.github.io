@@ -104,8 +104,8 @@ void main(){
   function projectWorldDirection(packet){
     const m=packet?.camera?.viewProjectionMatrix,p=packet?.camera?.position,d=canonicalWorldSunDirection;
     if(!Array.isArray(m)||m.length!==16||!p||!d)return Object.freeze({x:null,y:null,projected:false,visible:false,reason:'CAMERA_PACKET_INVALID'});
-    // uSunDirection is light-travel direction. The visible celestial body lies opposite it.
-    const distance=4800,x=Number(p.x)-d.x*distance,y=Number(p.y)-d.y*distance,z=Number(p.z)-d.z*distance;
+    // Canonical atmosphere sunDirection points from the world toward the sun.
+    const distance=4800,x=Number(p.x)+d.x*distance,y=Number(p.y)+d.y*distance,z=Number(p.z)+d.z*distance;
     const cx=m[0]*x+m[4]*y+m[8]*z+m[12],cy=m[1]*x+m[5]*y+m[9]*z+m[13],cz=m[2]*x+m[6]*y+m[10]*z+m[14],cw=m[3]*x+m[7]*y+m[11]*z+m[15];
     if(!Number.isFinite(cw)||cw<=1e-6)return Object.freeze({x:null,y:null,projected:false,visible:false,reason:'BEHIND_CAMERA'});
     const uvx=cx/cw*.5+.5,uvy=cy/cw*.5+.5,ndcz=cz/cw;

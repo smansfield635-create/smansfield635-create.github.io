@@ -123,6 +123,9 @@
     .mm-family-tab { min-width: 9.5rem; }
     .mm-viewport { inset-top: 12rem; perspective: 1800px; perspective-origin: 50% 40%; }
     .mm-ring { top: 34%; }
+    .mm-card:not([data-active="true"]) .mm-card__top,
+    .mm-card:not([data-active="true"]) .mm-card__body { visibility: hidden; }
+
     .mm-card[data-inspecting="true"] { width: min(88vw, 34rem); height: min(54vh, 500px); left: max(-44vw, -272px); top: -250px; }
     .mm-card[data-inspecting="true"] .mm-card__inspection { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
     .mm-inspection__rail { display: flex; gap: .5rem; overflow-x: auto; overflow-y: hidden; padding: 0 0 .65rem; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.09); }

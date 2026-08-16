@@ -11,7 +11,17 @@ const bufferOrder = Object.freeze([
   'materialModelCodes', 'surfaceClassCodes', 'primitiveIndices', 'roleCodes', 'indices'
 ]);
 
-const textEncoder = new TextEncoder();
+function assertPackageEligible(packageRecord, runtime) {
+  if (packageRecord?.eligible === true && packageRecord?.buffers) return;
+  const diagnostic = {
+    runtime,
+    eligible: packageRecord?.eligible ?? null,
+    status: packageRecord?.status ?? null,
+    contractId: packageRecord?.contractId ?? null,
+    issues: packageRecord?.issues ?? ['PACKAGE_RECORD_MISSING_OR_UNDIAGNOSED']
+  };
+  throw new Error(`CP3D_PACKAGE_REJECTED:${JSON.stringify(diagnostic)}`);
+}
 
 function encodeNumbers(values) {
   const bytes = new Uint8Array(values.length * 8 + 1);
@@ -27,14 +37,11 @@ async function sha256(bytes) {
 }
 
 async function snapshot(packageRecord, runtime) {
+  assertPackageEligible(packageRecord, runtime);
   const bufferRecords = [];
   for (const kind of bufferOrder) {
     const values = packageRecord.buffers[kind];
-    bufferRecords.push({
-      kind,
-      length: values.length,
-      sha256: await sha256(encodeNumbers(values))
-    });
+    bufferRecords.push({ kind, length: values.length, sha256: await sha256(encodeNumbers(values)) });
   }
   return {
     runtime,
@@ -70,6 +77,15 @@ try {
   const browserSnapshot = await page.evaluate(async ({ url }) => {
     const module = await import(`${url}?runtime=BROWSER&stamp=${Date.now()}`);
     const packageRecord = module.getHEarthRun8ER2CanonicalLiveRenderPackage();
+    if (packageRecord?.eligible !== true || !packageRecord?.buffers) {
+      throw new Error(`CP3D_PACKAGE_REJECTED:${JSON.stringify({
+        runtime: 'BROWSER',
+        eligible: packageRecord?.eligible ?? null,
+        status: packageRecord?.status ?? null,
+        contractId: packageRecord?.contractId ?? null,
+        issues: packageRecord?.issues ?? ['PACKAGE_RECORD_MISSING_OR_UNDIAGNOSED']
+      })}`);
+    }
     const order = [
       'positions', 'normals', 'baseColorsLinear', 'materialParameters',
       'materialModelCodes', 'surfaceClassCodes', 'primitiveIndices', 'roleCodes', 'indices'
@@ -86,11 +102,7 @@ try {
       return [...new Uint8Array(digest)].map(value => value.toString(16).padStart(2, '0')).join('');
     };
     const records = [];
-    for (const kind of order) records.push({
-      kind,
-      length: packageRecord.buffers[kind].length,
-      sha256: await digestHex(encode(packageRecord.buffers[kind]))
-    });
+    for (const kind of order) records.push({ kind, length: packageRecord.buffers[kind].length, sha256: await digestHex(encode(packageRecord.buffers[kind])) });
     return {
       runtime: 'BROWSER',
       eligible: packageRecord.eligible,
@@ -147,7 +159,6 @@ try {
   await writeFile(`${evidenceDirectory}/cp3d1d-shared-package-boundary-browser.receipt.json`, `${JSON.stringify(browserSnapshot, null, 2)}\n`);
   await writeFile(`${evidenceDirectory}/cp3d1d-shared-package-boundary-equality.receipt.json`, `${JSON.stringify(receipt, null, 2)}\n`);
   console.log(JSON.stringify(receipt, null, 2));
-
   assert.equal(completeEquality, true, 'CP3D1D_SHARED_PACKAGE_BOUNDARY_EQUALITY_FAIL');
 } finally {
   await browser.close();

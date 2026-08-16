@@ -49,7 +49,7 @@
     const z = abs < .08 ? 78 : -Math.min(260, 96 + abs * 86);
     const rotate = -sign * Math.min(15, abs * 9);
     const scale = Math.max(.62, 1 - abs * .18);
-    const opacity = abs < .08 ? 1 : Math.max(.045, .2 - Math.max(0, abs - 1) * .08);
+    const opacity = abs < .08 ? 1 : abs <= 1.08 ? .24 : Math.max(.045, .1 - Math.max(0, abs - 2) * .04);
     const blur = abs < .08 ? 0 : Math.min(2.4, .55 + Math.max(0, abs - 1) * .9);
     const order = Math.max(1, count + 2 - Math.round(abs * 2));
     return { x, z, rotate, scale, opacity, blur, order };

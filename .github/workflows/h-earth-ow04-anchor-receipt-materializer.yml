@@ -83,16 +83,21 @@ jobs:
               reviewedCandidateHead:head,
               qualificationOperation:'H_EARTH_OW04_RECIPROCAL_ANCHOR_REVIEW_20260816_001',
               exactCandidateEvidenceRunId:Number(process.env.EVIDENCE_RUN_ID),
-              finding:'Exact candidate desktop/mobile/interaction capture completed successfully after restoration of the real inspection path. OW04 changes remain within the same H-Earth ground experience, preserve direct manipulation and canonical continuity, add only non-navigable distant-world continuation, preserve the frozen accessible region, and create no waterward landmass.'
+              finding:'Exact candidate desktop/mobile/interaction capture completed successfully after restoration of the real inspection path. OW04 remains within the same H-Earth ground experience, preserves direct manipulation and canonical continuity, adds only non-navigable distant-world continuation, preserves the frozen accessible region, and creates no waterward landmass.'
             }
           };
           fs.writeFileSync(receiptPath,JSON.stringify(receipt,null,2)+'\n');
           NODE
-          node tools/h-earth-experience-anchor-gate.mjs
-      - name: Commit reciprocal qualification receipt
+      - name: Commit receipt into candidate
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json h-earth-3d/experience-anchor/receipts/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json
           git commit -m "OW04: admit exact candidate anchor evidence"
-          git push
+      - name: Re-run hard anchor gate on committed candidate
+        env:
+          BASE_SHA: 911064c339e952df0972eef70c575cb6ea22ed0e
+          HEAD_SHA: HEAD
+        run: node tools/h-earth-experience-anchor-gate.mjs
+      - name: Push qualified receipt-bearing candidate
+        run: git push

@@ -1,0 +1,20 @@
+{
+  "schema": "AI_MEDIA_TRANSPORT_SUBSTRATE_QUALIFICATION_v1",
+  "tool": "tools/ai-room-transport/ai-media-transport-substrate.v1.mjs",
+  "fixture": {
+    "bytes": 1048699,
+    "partCount": 12,
+    "result": "PASS_BYTE_IDENTICAL_RECONSTRUCTION"
+  },
+  "gates": {
+    "boundedStagingRoot": ".media-staging/awards-compass-v2",
+    "sourceShaRequired": true,
+    "perPartShaRequired": true,
+    "wholeFileShaRequired": true,
+    "resumableManifest": true,
+    "productionMutationAuthority": false,
+    "mergeAuthority": false,
+    "deploymentAuthority": false
+  },
+  "disposition": "QUALIFIED_FOR_REAL_CANDIDATE_STAGING"
+}

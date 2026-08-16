@@ -1,0 +1,27 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_INTERNAL_INTELLIGIBILITY_THRESHOLD_QUALIFICATION_v1",
+  "status": "PASS_INTERNAL_THRESHOLD_ONLY",
+  "utterance": "Navigation requires orientation.",
+  "executedCommand": "node jeeves.c01.intelligibility-threshold.v1.test.js",
+  "observed": {
+    "wordCount": 3,
+    "explicitWordGapCount": 2,
+    "minimumWordGapMs": 115,
+    "distinctVowelSignatures": 9,
+    "distinctFricativeSignatures": 3,
+    "distinctStopSignatures": 3,
+    "distinctApproximantSignatures": 2,
+    "nasalClassPresent": true,
+    "collapsedClassNegativeControlRejected": true,
+    "missingWordGapNegativeControlRejected": true
+  },
+  "meaning": "The C01 realization plan preserves lexical boundaries and non-collapsed phoneme-class targets strongly enough to admit a new renderer implementation.",
+  "notClaimed": [
+    "audible sentence intelligibility",
+    "natural speech",
+    "Jeeves voice quality",
+    "human auditory pass"
+  ],
+  "humanListeningAuthorized": false,
+  "nextLawfulAction": "CONSTRUCT_RENDERER_THAT_CONSUMES_THE_QUALIFIED_C01_REALIZATION_PLAN_AND_QUALIFY_ACOUSTIC_CLASS_SEPARABILITY_BEFORE_HUMAN_LISTENING"
+}

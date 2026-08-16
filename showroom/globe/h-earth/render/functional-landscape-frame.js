@@ -31,8 +31,10 @@ const freeze = (value, seen = new WeakSet()) => {
 const finiteVector = (value) => value && ['x', 'y', 'z'].every((axis) =>
   typeof value[axis] === 'number' && Number.isFinite(value[axis]));
 
+const OW04_VISUAL_HORIZON_FAR_PLANE = 2304;
+
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v5_SUBTROPICAL_CAUSAL_PRESENTATION';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v6_SUBTROPICAL_VISUAL_HORIZON_REACH';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE =
   'FUNCTIONAL_LANDSCAPE_COAST_TO_INLAND_PROOF';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES = freeze([
@@ -48,9 +50,17 @@ function defaultCamera() {
     up: { ...source.up },
     verticalFovDegrees: source.verticalFovDegrees,
     nearPlane: source.nearPlane,
-    farPlane: source.farPlane,
+    // The frozen OW03 accessible terrain reaches roughly 1024 world units and
+    // its existing visual-only ocean/terrain envelope continues farther still.
+    // The legacy 512-unit clip plane made that already-authored exterior world
+    // impossible to render. Extend only successor-frame draw reach; navigation,
+    // collision, semantic address, and playable extents remain unchanged.
+    farPlane: Math.max(source.farPlane, OW04_VISUAL_HORIZON_FAR_PLANE),
     sourceCapacityContractId: 'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5',
-    cameraAuthority: source.cameraStateAuthority
+    cameraAuthority: source.cameraStateAuthority,
+    visualHorizonReachOnly: true,
+    navigationExtentExpanded: false,
+    collisionExtentExpanded: false
   });
 }
 
@@ -229,6 +239,14 @@ export function constructHEarthFunctionalLandscapeFrame({
     camera: freeze({ ...camera }),
     viewport: freeze({ ...viewport }),
     environment: freeze({ ...environment }),
+    visualHorizonReach: freeze({
+      farPlane: camera.farPlane,
+      minimumRequiredFarPlane: OW04_VISUAL_HORIZON_FAR_PLANE,
+      navigationExtentExpanded: false,
+      collisionExtentExpanded: false,
+      semanticAddressExtentExpanded: false,
+      purpose: 'RENDER_ALREADY_AUTHORED_NONINTERACTIVE_WORLD_CONTINUATION_BEYOND_FROZEN_ACCESSIBLE_REGION'
+    }),
     presentationAssignments,
     visibility: freeze({ visiblePrimitiveIds: transfer.primitiveIds, hiddenPrimitiveIds: [], visibilityAuthority: 'FUNCTIONAL_LANDSCAPE_SUCCESSOR_COMPOSITOR' }),
     geometryConstructionAuthority: false,

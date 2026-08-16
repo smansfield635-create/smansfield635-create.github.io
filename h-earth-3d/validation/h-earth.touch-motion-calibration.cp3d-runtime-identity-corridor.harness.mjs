@@ -5,7 +5,8 @@ import path from 'node:path';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
-const promotedIdentity = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898';
+const liveOccurrenceId = 'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
+const identityPrefix = 'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_';
 
 const paths = Object.freeze({
   rendererContract: path.join(root, 'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'),
@@ -24,28 +25,37 @@ const source = Object.freeze(Object.fromEntries(sourceEntries));
 
 assert.match(
   source.rendererContract,
-  /getHEarthRun8ER2CanonicalLiveRenderPackage\s*}\s*from\s*['"]\.\/live-render-package\.run8e-r2\.canonical\.js['"]/,
-  'CP3D_RENDERER_CONTRACT_CANONICAL_PACKAGE_IMPORT_MISMATCH'
+  /getHEarthOW01CanonicalLiveRenderPackageOccurrence\s*}\s*from\s*['"]\.\/live-render-package\.run8e-r2\.canonical\.js['"]/,
+  'CP3D_RENDERER_CONTRACT_OW01_PACKAGE_IMPORT_MISMATCH'
 );
 assert.match(
   source.rendererContract,
-  /packet\?\.packageIdentity\s*!==\s*['"]H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_9BD0B898['"]/,
-  'CP3D_RENDERER_PROMOTED_IDENTITY_NOT_ENFORCED'
+  /packageOccurrenceId\s*!==\s*['"]H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001['"]/,
+  'CP3D_RENDERER_LIVE_OCCURRENCE_NOT_ENFORCED'
+);
+assert.match(
+  source.rendererContract,
+  /packageIdentity\.startsWith\(['"]H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_['"]\)/,
+  'CP3D_RENDERER_CONTENT_ADDRESSED_IDENTITY_CLASS_NOT_ENFORCED'
 );
 
 const packageModule = await import(`${pathToFileURL(paths.package).href}?cp3d=${Date.now()}`);
-assert.equal(typeof packageModule.getHEarthRun8ER2CanonicalLiveRenderPackage, 'function', 'CP3D_CANONICAL_PACKAGE_GETTER_NOT_EXPORTED');
-const packageRecord = packageModule.getHEarthRun8ER2CanonicalLiveRenderPackage();
-assert.equal(packageRecord?.eligible, true, `CP3D_CANONICAL_PACKAGE_NOT_ELIGIBLE:${packageRecord?.issues?.join(',') ?? 'UNKNOWN'}`);
-assert.equal(packageRecord.packageIdentity, promotedIdentity, 'CP3D_CANONICAL_PACKAGE_PROMOTED_IDENTITY_MISMATCH');
+assert.equal(typeof packageModule.getHEarthOW01CanonicalLiveRenderPackageOccurrence, 'function', 'CP3D_OW01_PACKAGE_GETTER_NOT_EXPORTED');
+const packageRecord = packageModule.getHEarthOW01CanonicalLiveRenderPackageOccurrence();
+assert.equal(packageRecord?.eligible, true, `CP3D_OW01_PACKAGE_NOT_ELIGIBLE:${packageRecord?.issues?.join(',') ?? 'UNKNOWN'}`);
+assert.equal(packageRecord?.packageOccurrenceId, liveOccurrenceId, 'CP3D_OW01_PACKAGE_OCCURRENCE_MISMATCH');
+assert.equal(typeof packageRecord?.packageIdentity, 'string', 'CP3D_OW01_PACKAGE_IDENTITY_NOT_STRING');
+assert.equal(packageRecord.packageIdentity.startsWith(identityPrefix), true, 'CP3D_OW01_PACKAGE_IDENTITY_CLASS_MISMATCH');
 assert.equal(packageRecord.sourceAuthorities?.numericIdentityBoundary, 'SHARED_COMPLETE_PACKAGE_BUFFER_BOUNDARY', 'CP3D_SHARED_PACKAGE_BOUNDARY_NOT_DECLARED');
 
-const rendererExpectedIdentity = promotedIdentity;
+const rendererExpectedOccurrence = liveOccurrenceId;
+const rendererExpectedIdentityClass = identityPrefix;
+const packageDeclaredOccurrence = packageRecord.packageOccurrenceId;
 const packageDeclaredIdentity = packageRecord.packageIdentity;
 const packageExportedIdentity = packageRecord.packageIdentity;
 const bindingImportedIdentity = packageDeclaredIdentity;
 const publicIntegrationIdentity = packageDeclaredIdentity;
-const validatedIdentity = rendererExpectedIdentity;
+const validatedIdentity = packageDeclaredIdentity;
 
 assert.match(source.binding, /createHEarthRun8ER3CPersistentRenderer\s*}\s*from\s*['"]\.\.\/\.\.\/render\/persistent-live-renderer\.run8e-r3c\.js['"]/, 'CP3D_BINDING_RENDERER_IMPORT_MISMATCH');
 assert.match(source.integration, /createHEarthRun8ER3D3LiveGpuBinding\s*}\s*from\s*['"]\.\.\/diagnostic\/run8e-r3d\/live-gpu-binding\.js['"]/, 'CP3D_PUBLIC_INTEGRATION_BINDING_IMPORT_MISMATCH');
@@ -53,8 +63,9 @@ assert.match(source.integration, /installHEarthRun8ER3D2PointerTouchIntake\s*}\s
 assert.match(source.receiptWrapper, /await\s+import\(['"]\.\/public-live-gpu-integration\.run8e-r3e\.js['"]\)/, 'CP3D_RECEIPT_WRAPPER_INTEGRATION_IMPORT_MISMATCH');
 assert.match(source.route, /public-live-gpu-integration\.run8e-r3e\.receipt\.js/, 'CP3D_ROUTE_RECEIPT_WRAPPER_SELECTION_MISMATCH');
 
-assert.equal(rendererExpectedIdentity, packageDeclaredIdentity,
-  `CP3D_RUNTIME_IDENTITY_CORRIDOR_FAIL:renderer=${rendererExpectedIdentity}:package=${packageDeclaredIdentity}`);
+assert.equal(rendererExpectedOccurrence, packageDeclaredOccurrence,
+  `CP3D_RUNTIME_OCCURRENCE_CORRIDOR_FAIL:renderer=${rendererExpectedOccurrence}:package=${packageDeclaredOccurrence}`);
+assert.equal(packageDeclaredIdentity.startsWith(rendererExpectedIdentityClass), true, 'CP3D_RUNTIME_IDENTITY_CLASS_CORRIDOR_FAIL');
 assert.equal(packageDeclaredIdentity, packageExportedIdentity, 'CP3D_PACKAGE_DECLARED_EXPORTED_IDENTITY_MISMATCH');
 assert.equal(packageExportedIdentity, bindingImportedIdentity, 'CP3D_BINDING_IMPORTED_IDENTITY_MISMATCH');
 assert.equal(bindingImportedIdentity, publicIntegrationIdentity, 'CP3D_PUBLIC_INTEGRATION_IDENTITY_MISMATCH');
@@ -68,12 +79,16 @@ assert.match(source.cp3b, /boundedElapsedClampCount/, 'CP3D_CP3B_ELAPSED_CLAMP_C
 assert.match(source.cp3b, /releaseTerminationCount/, 'CP3D_CP3B_RELEASE_TERMINATION_COUNTER_MISSING');
 
 const receipt = Object.freeze({
-  receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_RUNTIME_IDENTITY_CORRIDOR_EXECUTION_RECEIPT_v2',
-  checkpoint: 'CP3D_1E_1_CANONICAL_RUNTIME_IDENTITY_CORRIDOR',
+  receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_RUNTIME_IDENTITY_CORRIDOR_EXECUTION_RECEIPT_v3',
+  checkpoint: 'CP3D_1E_1_OW01_CONTENT_ADDRESSED_RUNTIME_IDENTITY_CORRIDOR',
   eligible: true,
-  status: 'CANONICAL_RUNTIME_PACKAGE_IDENTITY_CORRIDOR_PASS',
+  status: 'OW01_CONTENT_ADDRESSED_RUNTIME_PACKAGE_IDENTITY_CORRIDOR_PASS',
+  occurrence: {
+    rendererExpectedOccurrence,
+    packageDeclaredOccurrence
+  },
   identities: {
-    rendererExpectedIdentity,
+    rendererExpectedIdentityClass,
     packageDeclaredIdentity,
     packageExportedIdentity,
     bindingImportedIdentity,
@@ -82,11 +97,12 @@ const receipt = Object.freeze({
   },
   packageBoundary: {
     module: '/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js',
+    getter: 'getHEarthOW01CanonicalLiveRenderPackageOccurrence',
     boundary: packageRecord.sourceAuthorities.numericIdentityBoundary,
     law: packageRecord.sourceAuthorities.numericCanonicalizationLaw
   },
   imports: {
-    rendererContractConsumesCanonicalPackage: true,
+    rendererContractConsumesOW01CanonicalPackage: true,
     bindingConsumesExactPersistentRenderer: true,
     publicIntegrationConsumesExactBinding: true,
     receiptWrapperConsumesExactPublicIntegration: true,
@@ -100,6 +116,7 @@ const receipt = Object.freeze({
     elapsedClampCounterAvailable: true,
     releaseTerminationCounterAvailable: true
   },
+  historicalFixedPackageIdentityRequired: false,
   boundary: {
     staticAndNodeIdentityCorridorOnly: true,
     persistentRendererCanonicalConsumptionProvedBySurvivalStage: false,

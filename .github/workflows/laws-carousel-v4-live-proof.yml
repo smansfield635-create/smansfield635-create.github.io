@@ -1,4 +1,4 @@
-name: Laws Carousel V4 Live Proof
+name: Laws Carousel V5 Live Proof
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
       - 'laws/index.html'
       - 'laws/index.destination-carousel.js'
       - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.mobile-background-tabs.core.js'
       - '.github/workflows/laws-carousel-v4-live-proof.yml'
 
 permissions:
@@ -16,27 +17,34 @@ jobs:
   live-proof:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify public Laws V4 delivery
+      - name: Verify public Laws V5 delivery
         run: |
           set -euo pipefail
           for attempt in $(seq 1 30); do
             stamp="${GITHUB_SHA}-${attempt}"
-            html="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/?v4-proof=${stamp}" || true)"
-            bootstrap="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.mobile-background-tabs.js?v=LAWS_DESTINATION_STAGE_LIVE_20260816C&v4-proof=${stamp}" || true)"
-            runtime="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V4_20260816A&v4-proof=${stamp}" || true)"
+            html="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/?v5-proof=${stamp}" || true)"
+            bootstrap="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.mobile-background-tabs.js?v=LAWS_DESTINATION_STAGE_LIVE_20260816D&v5-proof=${stamp}" || true)"
+            core="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.mobile-background-tabs.core.js?v=LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY&v5-proof=${stamp}" || true)"
+            runtime="$(curl -fsSL --retry 3 --retry-delay 2 -H 'Cache-Control: no-cache' "https://diamondgatebridge.com/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V5_20260816A&v5-proof=${stamp}" || true)"
 
-            if grep -q 'LAWS_DESTINATION_STAGE_LIVE_20260816C' <<<"$html" \
-              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V4_20260816A' <<<"$bootstrap" \
-              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v4' <<<"$runtime" \
-              && grep -q 'oneGestureOneStep: true' <<<"$runtime" \
+            if grep -q 'LAWS_DESTINATION_STAGE_LIVE_20260816D' <<<"$html" \
+              && grep -q 'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY' <<<"$bootstrap" \
+              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V5_20260816A' <<<"$bootstrap" \
+              && grep -q 'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5' <<<"$core" \
+              && grep -q 'COMPASS_ORBIT = "O1"' <<<"$core" \
+              && grep -q 'DESTINATION_ORBIT = "O2"' <<<"$core" \
+              && grep -q 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v5' <<<"$runtime" \
+              && grep -q 'directionOnlyGesture: true' <<<"$runtime" \
+              && grep -q 'liveGestureGeometry: false' <<<"$runtime" \
+              && grep -q 'atomicRotation: true' <<<"$runtime" \
               && grep -q 'Return to Orbit' <<<"$runtime"; then
-              echo 'LIVE_LAWS_CAROUSEL_V4_VERIFIED'
+              echo 'LIVE_LAWS_CAROUSEL_V5_VERIFIED'
               echo "attempt=$attempt"
               exit 0
             fi
 
-            echo "Public V4 delivery not settled yet; attempt $attempt/30"
+            echo "Public V5 delivery not settled yet; attempt $attempt/30"
             sleep 10
           done
-          echo 'LIVE_LAWS_CAROUSEL_V4_NOT_VERIFIED' >&2
+          echo 'LIVE_LAWS_CAROUSEL_V5_NOT_VERIFIED' >&2
           exit 1

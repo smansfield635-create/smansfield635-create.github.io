@@ -1,0 +1,174 @@
+/*
+ * LAWS_NATIVE_DESTINATION_CAROUSEL_v1
+ * Spatial presentation enhancement for the existing Laws destination Rolodex.
+ * Reuses the established Rolodex state, arrows, keyboard traversal, touch scroll,
+ * preview custody, routes, and content. No Compass, controller, evidence, record,
+ * claim, or route authority is introduced.
+ */
+
+html[data-laws-root-rolodex="active"] {
+  --laws-carousel-card-width: min(74vw, 36rem);
+  --laws-carousel-edge: clamp(1rem, 3.5vw, 3.5rem);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-field {
+  isolation: isolate;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
+  position: relative;
+  min-width: 0;
+  padding: clamp(.7rem, 1.4vw, 1.15rem) 0 clamp(1rem, 2vw, 1.6rem);
+  border: 1px solid rgba(132, 218, 255, .13);
+  border-radius: clamp(1.15rem, 2vw, 1.8rem);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(60, 155, 210, .065), transparent 48%),
+    linear-gradient(180deg, rgba(4, 11, 27, .52), rgba(3, 8, 20, .28));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .018),
+    inset 0 -3rem 7rem rgba(0, 0, 0, .12);
+  overflow: hidden;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
+  position: relative;
+  z-index: 8;
+  margin: 0;
+  padding: 0 var(--laws-carousel-edge) .65rem;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-control {
+  background: rgba(5, 14, 31, .78);
+  box-shadow: 0 0 0 1px rgba(128, 224, 255, .025), 0 .45rem 1.4rem rgba(0, 0, 0, .18);
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-control:hover {
+  border-color: rgba(132, 218, 255, .48);
+  background: rgba(15, 34, 62, .88);
+  transform: translateY(-1px);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+  position: relative;
+  z-index: 2;
+  padding: clamp(.9rem, 1.6vw, 1.35rem) 0 clamp(1.2rem, 2.2vw, 1.8rem);
+  perspective: 1900px;
+  perspective-origin: 50% 48%;
+  scroll-padding-inline: calc(50% - var(--laws-carousel-card-width) / 2);
+  scroll-snap-type: x mandatory;
+  touch-action: pan-x pan-y;
+  cursor: grab;
+  mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-viewport:active {
+  cursor: grabbing;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-track {
+  gap: clamp(1rem, 2.4vw, 2rem);
+  padding-inline: calc(50% - var(--laws-carousel-card-width) / 2);
+  transform-style: preserve-3d;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+  flex-basis: var(--laws-carousel-card-width);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  opacity: .28;
+  filter: saturate(.64) brightness(.74);
+  transform: translateZ(-90px) scale(.86);
+  transform-origin: center center;
+  box-shadow: 0 1.1rem 3rem rgba(0, 0, 0, .18);
+  transition:
+    opacity 360ms ease,
+    filter 360ms ease,
+    transform 460ms cubic-bezier(.2,.78,.18,1),
+    border-color 360ms ease,
+    box-shadow 420ms ease;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
+  z-index: 4;
+  opacity: 1;
+  filter: none;
+  transform: translateZ(54px) scale(1);
+  border-color: rgba(132, 218, 255, .55);
+  box-shadow:
+    0 1.8rem 5rem rgba(0, 0, 0, .34),
+    0 0 0 1px rgba(128, 224, 255, .035),
+    inset 0 1px 0 rgba(255, 255, 255, .025);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"]) .laws-rolodex-enter {
+  opacity: .42;
+  pointer-events: none;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] .laws-rolodex-enter {
+  box-shadow: 0 0 1.6rem rgba(114, 226, 255, .07);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-position {
+  font-variant-numeric: tabular-nums;
+  color: rgba(196, 224, 239, .82);
+}
+
+@media (min-width: 781px) and (max-width: 1200px) {
+  html[data-laws-root-rolodex="active"] {
+    --laws-carousel-card-width: min(68vw, 32rem);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
+    border-color: rgba(132, 218, 255, .15);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+    transform: translateZ(-72px) scale(.88);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
+    transform: translateZ(40px) scale(1);
+  }
+}
+
+@media (max-width: 780px) {
+  html[data-laws-root-rolodex="active"] {
+    --laws-carousel-card-width: 82vw;
+    --laws-carousel-edge: 1rem;
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
+    margin-inline: .55rem;
+    border-radius: 1.25rem;
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
+    padding-inline: 1rem;
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+    mask-image: linear-gradient(90deg, transparent 0, #000 2.5%, #000 97.5%, transparent 100%);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+    transform: translateZ(-48px) scale(.9);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
+    transform: translateZ(24px) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card,
+  html[data-laws-root-rolodex="active"] .laws-rolodex-control {
+    transition: none !important;
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card,
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
+    transform: none;
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_CALIBRATED_C01_QUALIFICATION_v1",
+  "status": "PASS_CANDIDATE_BOUNDARY",
+  "referenceSha256": "7db9a791629e0a0ba02ca026e0d5a7fbf5d43d0cf75395960c1751cb0654be29",
+  "utteranceId": "COMPASS_C01",
+  "text": "Navigation requires orientation.",
+  "execution": {
+    "runtime": "Node 22.16.0",
+    "sampleRateHz": 24000,
+    "sampleCount": 71400,
+    "durationSeconds": 2.975,
+    "deterministicRepeat": true
+  },
+  "a4EquivalentBaseline": {
+    "neutralF0Hz": 118,
+    "rms": 0.028987277636683965,
+    "peak": 0.44173410534858704,
+    "zeroCrossingRate": 0.037941176470588235
+  },
+  "a5Calibrated": {
+    "neutralF0Hz": 100,
+    "rms": 0.029639219097624497,
+    "peak": 0.33171749114990234,
+    "zeroCrossingRate": 0.03994397759103641,
+    "meanAbsoluteDeltaFromBaseline": 0.020176045294187307
+  },
+  "referenceComparison": {
+    "referenceActiveRms": 0.02926848,
+    "a4AbsoluteRmsDistance": 0.0002812023633160358,
+    "a5AbsoluteRmsDistance": 0.000370739097624497,
+    "referenceMedianF0Hz": 100,
+    "a4F0DistanceHz": 18,
+    "a5F0DistanceHz": 0,
+    "note": "RMS is preserved near the reference operating level; qualification does not claim perceptual naturalness or waveform identity."
+  },
+  "renderedWav": {
+    "sha256": "38bfdcea8e8612867915e2913bd9bdae92657d659343b193c4ed452b664262e6",
+    "fileName": "Jeeves_A5_C01_Navigation_requires_orientation.wav",
+    "repositoryPersistence": "NOT_PERSISTED_BINARY_IN_THIS_BOUNDARY; DETERMINISTICALLY_REPRODUCIBLE_FROM_QUALIFIED_RENDERER_AND_C01_FRAMES"
+  },
+  "firstCandidateFailure": "Initial direct-envelope render saturated at peak=1.0; candidate was rejected before qualification and calibrated output normalization was reduced without changing measured spectral targets.",
+  "notClaimed": ["natural-human quality", "voice cloning", "perceptual superiority", "reference waveform reproduction"],
+  "nextLawfulAction": "HUMAN_AUDITORY_AB_REVIEW_OF_A4_VERSUS_A5_C01_THEN_DECIDE_WHETHER_TO_EXPAND_CALIBRATION_TO_REMAINING_COMPASS_LINES"
+}

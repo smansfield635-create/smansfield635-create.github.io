@@ -124,7 +124,7 @@
   function capabilityOrbit(){
     const old=document.querySelector('[data-compass-capability-switcher]');
     if(!old||document.querySelector('[data-capability-orbit]'))return;
-    const stage=document.createElement('section');stage.className='compass-capability-orbit';stage.dataset.capabilityOrbit='true';stage.setAttribute('aria-label','Signature Diamond Gate capabilities');stage.tabIndex=0;
+    const stage=document.createElement('section');stage.className='compass-capability-orbit';stage.dataset.capabilityOrbit='true';stage.dataset.capabilityMode='orbit';stage.setAttribute('aria-label','Signature Diamond Gate capabilities');stage.tabIndex=0;
     const coherence=document.createElement('article');coherence.className='compass-orbit-plaque';coherence.dataset.capability='coherence';
     coherence.innerHTML=`<div class="compass-plaque-copy"><p class="compass-estate__kicker">Diagnostic</p><h2>Coherence Diagnostic</h2><p>Compare what matters to you with how you are actually living and deciding. See areas of alignment, tension, and repeated mismatch.</p><div class="compass-plaque-actions"><a class="compass-orbit-action" href="/coherence-diagnostic/">ENTER</a><button class="compass-orbit-action compass-orbit-action--secondary" type="button" data-return-parent>RETURN TO ORBIT</button></div></div><div class="compass-brain-shell" data-human-brain></div>`;
     const house=document.createElement('article');house.className='compass-orbit-plaque';house.dataset.capability='house';
@@ -133,6 +133,7 @@
     mountBrain(coherence.querySelector('[data-human-brain]'));
     const cards=[coherence,house];let index=0,busy=false,mode='ORBIT',memberIndex=0,memberBusy=false;
 
+    const houseParent=house.querySelector('[data-house-parent]');
     const houseOrbit=house.querySelector('[data-house-orbit]');
     const memberDefs=[
       {id:'jeeves',name:'Jeeves',status:'Available now',body:'The currently bound House guide.',href:'/showroom/globe/hearth/jeeves/'},
@@ -145,8 +146,23 @@
     function rotateParent(dir){if(busy||mode==='HOUSE_MEMBERS')return;busy=true;index=mod(index+dir,2);stage.dataset.rotate=dir>0?'next':'prev';renderParent();setTimeout(()=>{stage.dataset.rotate='';busy=false},reduce.matches?110:440)}
     function renderMembers(){members.forEach((el,i)=>{const d=mod(i-memberIndex,3);el.dataset.slot=d===0?'front':d===1?'rear-right':'rear-left';el.setAttribute('aria-hidden',d===0?'false':'true');});}
     function rotateMember(dir){if(memberBusy||mode!=='HOUSE_MEMBERS')return;memberBusy=true;memberIndex=mod(memberIndex+dir,3);houseOrbit.dataset.rotate=dir>0?'next':'prev';renderMembers();setTimeout(()=>{houseOrbit.dataset.rotate='';memberBusy=false},reduce.matches?110:440)}
-    function enterHouse(){if(index!==1)return;mode='HOUSE_MEMBERS';stage.dataset.mode='house-members';house.querySelector('[data-house-parent]').hidden=true;houseOrbit.hidden=false;renderMembers();}
-    function leaveHouse(){mode='ORBIT';stage.dataset.mode='orbit';houseOrbit.hidden=true;house.querySelector('[data-house-parent]').hidden=false;renderParent();}
+    function enterHouse(){
+      if(index!==1)return;
+      mode='HOUSE_MEMBERS';
+      stage.dataset.capabilityMode='house-members';
+      house.classList.add('is-house-members');
+      houseParent.hidden=true;houseParent.setAttribute('aria-hidden','true');houseParent.style.display='none';
+      houseOrbit.hidden=false;houseOrbit.removeAttribute('hidden');houseOrbit.setAttribute('aria-hidden','false');houseOrbit.style.display='grid';
+      renderMembers();
+    }
+    function leaveHouse(){
+      mode='ORBIT';
+      stage.dataset.capabilityMode='orbit';
+      house.classList.remove('is-house-members');
+      houseOrbit.hidden=true;houseOrbit.setAttribute('hidden','');houseOrbit.setAttribute('aria-hidden','true');houseOrbit.style.display='none';
+      houseParent.hidden=false;houseParent.removeAttribute('hidden');houseParent.setAttribute('aria-hidden','false');houseParent.style.removeProperty('display');
+      renderParent();
+    }
 
     stage.querySelectorAll('[data-return-parent]').forEach(btn=>btn.addEventListener('click',e=>{e.stopPropagation();rotateParent(1)}));
     house.querySelector('[data-enter-house]').addEventListener('click',e=>{e.stopPropagation();enterHouse()});
@@ -159,5 +175,5 @@
 
   function boot(){statementOrbit();capabilityOrbit();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-  window.CompassEditorialCarousel={boot,version:'successor-v2'};
+  window.CompassEditorialCarousel={boot,version:'successor-v3'};
 })();

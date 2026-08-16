@@ -1,5 +1,5 @@
 /*
- * LAWS_DESTINATION_CAROUSEL_RUNTIME_v3
+ * LAWS_DESTINATION_CAROUSEL_RUNTIME_v4
  * True single-state spatial carousel for the existing Laws destination records.
  * Presentation/interaction only. It does not create or alter destination content,
  * routes, evidence, Compass state, controller authority, or claim authority.
@@ -7,9 +7,12 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v3";
+  const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v4";
   const ROOT_SELECTOR = "[data-laws-root-rolodex-section]";
   const FIELD_SELECTOR = ".laws-rolodex-field[data-rolodex-id]";
+  const SWIPE_MIN_PX = 26;
+  const SWIPE_AXIS_RATIO = 1.12;
+  const PREVIEW_LIMIT = .22;
   const stateByField = new WeakMap();
   let installed = false;
 
@@ -33,6 +36,8 @@
         count: state.cards.length,
         destinationId: active?.dataset.destinationId || "",
         dragging: state.dragging,
+        discreteSwipe: true,
+        oneGestureOneStep: true,
         navigationAuthority: false,
         contentAuthority: false,
         routeAuthority: false,
@@ -41,8 +46,8 @@
     }));
   }
 
-  function geometryFor(relative, dragProgress, count) {
-    const d = relative - dragProgress;
+  function geometryFor(relative, dragPreview, count) {
+    const d = relative - dragPreview;
     const abs = Math.abs(d);
     const sign = Math.sign(d);
     const x = d * 86;
@@ -59,8 +64,8 @@
     const count = state.cards.length;
     state.cards.forEach((card, index) => {
       const relative = signedDistance(index, state.index, count);
-      const g = geometryFor(relative, state.dragProgress, count);
-      const active = index === state.index && Math.abs(state.dragProgress) < .45;
+      const g = geometryFor(relative, state.dragPreview, count);
+      const active = index === state.index && Math.abs(state.dragPreview) < .08;
       card.dataset.active = String(active);
       card.dataset.carouselRelative = String(relative);
       card.setAttribute("aria-current", active ? "true" : "false");
@@ -78,13 +83,15 @@
     state.position.textContent = `${state.index + 1} / ${count}`;
     field.dataset.carouselIndex = String(state.index);
     field.dataset.carouselDragging = String(state.dragging);
+    field.dataset.carouselSettled = String(!state.dragging && state.dragPreview === 0);
     publish(field, state, reason);
   }
 
   function select(field, state, index, reason = "select", focus = false) {
     if (!state.cards.length) return;
     state.index = wrap(index, state.cards.length);
-    state.dragProgress = 0;
+    state.dragPreview = 0;
+    state.horizontalIntent = false;
     render(field, state, reason);
     if (focus) {
       state.cards[state.index].querySelector(".laws-rolodex-enter")?.focus({ preventScroll: true });
@@ -93,29 +100,38 @@
 
   function finishDrag(field, state, event) {
     if (!state.dragging || event.pointerId !== state.pointerId) return;
-    const projected = state.dragProgress + Math.max(-.7, Math.min(.7, state.velocity * 130));
-    const travel = Math.abs(event.clientX - state.startX);
+    const deltaX = event.clientX - state.startX;
+    const deltaY = event.clientY - state.startY;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+    const qualifies = absX >= SWIPE_MIN_PX && absX >= absY * SWIPE_AXIS_RATIO;
+
     state.dragging = false;
     field.dataset.carouselDragging = "false";
     state.viewport.dataset.dragging = "false";
     try { state.viewport.releasePointerCapture?.(event.pointerId); } catch (_) {}
     state.pointerId = null;
 
-    if (travel < 7) {
-      state.dragProgress = 0;
-      render(field, state, "pointer-tap");
+    if (!qualifies) {
+      select(field, state, state.index, "swipe-cancel");
       return;
     }
 
-    let advance = 0;
-    if (Math.abs(projected) >= .18) advance = projected > 0 ? 1 : -1;
-    select(field, state, state.index + advance, "drag-snap");
+    const advance = deltaX < 0 ? 1 : -1;
+    select(field, state, state.index + advance, "swipe-step");
   }
 
   function removeSurrogateControls(field) {
     const controls = Array.from(field.querySelectorAll(".laws-rolodex-control"));
     controls.forEach(control => control.remove());
     field.dataset.surrogateNavigation = "removed";
+  }
+
+  function normalizeOrbitTerminology() {
+    document.querySelectorAll(".laws-exhibit-return").forEach(button => {
+      button.textContent = "Return to Orbit";
+      button.setAttribute("aria-label", "Return to Orbit");
+    });
   }
 
   function bindField(field) {
@@ -135,15 +151,15 @@
       dragging: false,
       pointerId: null,
       startX: 0,
-      lastX: 0,
-      lastTime: 0,
-      velocity: 0,
-      dragProgress: 0
+      startY: 0,
+      dragPreview: 0,
+      horizontalIntent: false
     };
     stateByField.set(field, state);
     field.dataset.lawsDestinationCarousel = "active";
+    field.dataset.carouselGestureLaw = "one-swipe-one-step";
     viewport.setAttribute("aria-roledescription", "carousel");
-    viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Drag horizontally or use Left and Right Arrow keys.`);
+    viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Swipe once to rotate one record, or use Left and Right Arrow keys.`);
 
     field.addEventListener("click", event => {
       const card = event.target.closest(".laws-rolodex-card");
@@ -158,7 +174,7 @@
       event.stopImmediatePropagation();
       if (event.key === "Home") select(field, state, 0, "keyboard-home", true);
       else if (event.key === "End") select(field, state, state.cards.length - 1, "keyboard-end", true);
-      else select(field, state, state.index + (event.key === "ArrowRight" ? 1 : -1), "keyboard-arrow", true);
+      else select(field, state, state.index + (event.key === "ArrowRight" ? 1 : -1), "keyboard-step", true);
     }, true);
 
     viewport.addEventListener("pointerdown", event => {
@@ -166,26 +182,26 @@
       state.dragging = true;
       state.pointerId = event.pointerId;
       state.startX = event.clientX;
-      state.lastX = event.clientX;
-      state.lastTime = performance.now();
-      state.velocity = 0;
-      state.dragProgress = 0;
+      state.startY = event.clientY;
+      state.dragPreview = 0;
+      state.horizontalIntent = false;
       field.dataset.carouselDragging = "true";
+      field.dataset.carouselSettled = "false";
       viewport.dataset.dragging = "true";
       viewport.setPointerCapture?.(event.pointerId);
     });
 
     viewport.addEventListener("pointermove", event => {
       if (!state.dragging || event.pointerId !== state.pointerId) return;
-      const now = performance.now();
+      const deltaX = event.clientX - state.startX;
+      const deltaY = event.clientY - state.startY;
+      const absX = Math.abs(deltaX);
+      const absY = Math.abs(deltaY);
+      state.horizontalIntent = state.horizontalIntent || (absX >= 8 && absX > absY);
+      if (!state.horizontalIntent) return;
       const width = Math.max(280, viewport.clientWidth);
-      const delta = event.clientX - state.startX;
-      state.dragProgress = Math.max(-1.15, Math.min(1.15, -delta / (width * .48)));
-      const elapsed = Math.max(8, now - state.lastTime);
-      state.velocity = (state.lastX - event.clientX) / elapsed;
-      state.lastX = event.clientX;
-      state.lastTime = now;
-      render(field, state, "drag-progress");
+      state.dragPreview = Math.max(-PREVIEW_LIMIT, Math.min(PREVIEW_LIMIT, -deltaX / (width * 1.7)));
+      render(field, state, "swipe-preview");
     });
 
     viewport.addEventListener("pointerup", event => finishDrag(field, state, event));
@@ -206,21 +222,33 @@
     const fields = Array.from(root.querySelectorAll(FIELD_SELECTOR));
     if (!fields.length) return false;
     fields.forEach(bindField);
+    normalizeOrbitTerminology();
     installed = fields.some(field => stateByField.has(field));
     if (installed) {
       document.documentElement.dataset.lawsDestinationCarouselRuntime = "active";
+      document.documentElement.dataset.lawsCarouselGestureLaw = "one-swipe-one-step";
       globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({
         contract: CONTRACT,
         installed: true,
         reducedMotion: reducedMotion(),
         surrogateNavigation: false,
+        discreteSwipe: true,
+        oneGestureOneStep: true,
+        returnLanguage: "Return to Orbit",
         navigationAuthority: false,
         contentAuthority: false,
         routeAuthority: false,
         evidenceAuthority: false
       });
       globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", {
-        detail: Object.freeze({ contract: CONTRACT, fieldCount: fields.length, surrogateNavigation: false })
+        detail: Object.freeze({
+          contract: CONTRACT,
+          fieldCount: fields.length,
+          surrogateNavigation: false,
+          discreteSwipe: true,
+          oneGestureOneStep: true,
+          returnLanguage: "Return to Orbit"
+        })
       }));
     }
     return installed;
@@ -230,6 +258,7 @@
     install();
     globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY", () => requestAnimationFrame(install));
     globalThis.addEventListener("LAWS_ROLODEX_PLACEMENT_READY", () => requestAnimationFrame(install));
+    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", () => requestAnimationFrame(normalizeOrbitTerminology));
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });

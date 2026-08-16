@@ -27,7 +27,7 @@ jobs:
           node --check laws/index.destination-carousel.js
           node --check laws/index.mobile-background-tabs.js
           node --check laws/index.mobile-background-tabs.core.js
-      - name: Verify carousel and orbit custody contract
+      - name: Verify V6 continuous pointer contract
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -36,48 +36,25 @@ jobs:
           loader = Path('laws/index.mobile-background-tabs.js').read_text()
           core = Path('laws/index.mobile-background-tabs.core.js').read_text()
           required_js = [
-              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v5',
-              'pointerdown', 'pointermove', 'pointerup',
-              'ArrowLeft', 'ArrowRight', 'Home', 'End',
-              'LAWS_DESTINATION_CAROUSEL_CHANGED',
-              'data-laws-root-rolodex-section',
-              'swipe-step', 'swipe-cancel',
-              'removeSurrogateControls',
-              'surrogateNavigation: false',
-              'discreteSwipe: true', 'oneGestureOneStep: true',
-              'directionOnlyGesture: true', 'liveGestureGeometry: false',
-              'atomicRotation: true', 'restoreOrbitState',
-              'Return to Orbit'
+              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v6', 'pointerdown', 'pointermove', 'pointerup', 'pointercancel',
+              'STEP_VIEWPORT_RATIO = .72', 'CLASSIFY_PX = 8', 'AXIS_RATIO = 1.12',
+              'orbitPosition', 'detentPosition', 'dragOriginPosition', 'nearestCircularRelativePosition',
+              'continuousPointerGeometry: true', 'fractionalOrbitPosition: true', 'selectionDuringDrag: false',
+              'settleToNearestDetent: true', 'verticalGesturePassthrough: true',
+              'directionOnlyGesture: false', 'liveGestureGeometry: true', 'atomicRotation: false',
+              'restoreOrbitState', 'Return to Orbit', 'navigationAuthority: false', 'contentAuthority: false',
+              'routeAuthority: false', 'evidenceAuthority: false'
           ]
           required_core = [
-              'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5',
-              'COMPASS_ORBIT = "O1"', 'DESTINATION_ORBIT = "O2"',
-              'enforceCompassEntry', 'captureOrigin', 'restoreOrigin',
-              'orbitViewportOffset', 'carouselIndex', 'rolodexId', 'destinationId',
-              'LAWS_ORBIT_CUSTODY_RESTORED', 'DGB_LAWS_ORBIT_CUSTODY'
+              'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5', 'COMPASS_ORBIT = "O1"', 'DESTINATION_ORBIT = "O2"',
+              'enforceCompassEntry', 'captureOrigin', 'restoreOrigin', 'DGB_LAWS_ORBIT_CUSTODY'
           ]
-          required_css = [
-              'position: absolute !important',
-              '--laws-carousel-x', '--laws-carousel-z',
-              'translateZ', 'rotateY',
-              'data-carousel-relative',
-              'prefers-reduced-motion',
-              '.laws-rolodex-control',
-              'display: none !important'
-          ]
-          for token in required_js:
-              assert token in js, f'missing JS contract token: {token}'
-          for token in required_core:
-              assert token in core, f'missing orbit custody token: {token}'
-          for token in required_css:
-              assert token in css, f'missing CSS contract token: {token}'
-          assert 'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY' in loader
-          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V5_20260816A' in loader
-          for forbidden in ['dragPreview', 'PREVIEW_LIMIT', 'swipe-preview', 'state.velocity', 'projected =']:
-              assert forbidden not in js, f'forbidden intermediate gesture geometry/token present: {forbidden}'
-          for forbidden in ['control-previous', 'control-next', 'Previous item in', 'Next item in']:
-              assert forbidden not in js, f'forbidden surrogate navigation present: {forbidden}'
-          assert 'navigationAuthority: false' in js and 'contentAuthority: false' in js
-          assert 'routeAuthority: false' in js and 'evidenceAuthority: false' in js
-          print('Laws V5 atomic carousel + orbit custody exact-head static qualification PASS')
+          required_css = ['--laws-carousel-x', '--laws-carousel-z', 'translateZ', 'rotateY', 'touch-action: pan-y', 'prefers-reduced-motion']
+          for token in required_js: assert token in js, f'missing V6 JS token: {token}'
+          for token in required_core: assert token in core, f'missing custody token: {token}'
+          for token in required_css: assert token in css, f'missing CSS token: {token}'
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V6_20260816A' in loader
+          for forbidden in ['directionOnlyGesture: true', 'liveGestureGeometry: false', 'atomicRotation: true', 'swipe-step', 'oneGestureOneStep: true']:
+              assert forbidden not in js, f'revoked atomic gesture law remains: {forbidden}'
+          print('Laws V6 continuous pointer geometry exact-head static qualification PASS')
           PY

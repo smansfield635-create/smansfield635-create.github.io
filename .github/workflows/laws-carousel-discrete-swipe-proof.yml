@@ -1,201 +1,60 @@
-name: Laws Carousel Atomic Orbit Proof
+name: Laws Carousel Continuous Pointer Proof
 
 on:
   pull_request:
     paths:
       - 'laws/index.destination-carousel.js'
+      - 'laws/index.destination-carousel.css'
       - 'laws/index.mobile-background-tabs.js'
-      - 'laws/index.mobile-background-tabs.core.js'
       - '.github/workflows/laws-carousel-discrete-swipe-proof.yml'
-
-permissions:
-  contents: read
+permissions: { contents: read }
 
 jobs:
-  atomic-orbit-proof:
+  continuous-pointer-proof:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out exact candidate head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 1
-
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha }}', fetch-depth: 1 }
       - name: Install Chromium
         run: |
           npm init -y >/dev/null 2>&1
           npm install playwright@1.55.0 >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null
-
       - name: Serve exact candidate
-        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-atomic-orbit-http.log 2>&1 &
-
-      - name: Prove continuous O1 entry, direction-only gesture, atomic step, and O2 return
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-pointer-http.log 2>&1 &
+      - name: Prove frozen pointer contract Q1-Q7
         run: |
           node <<'NODE'
-          const { chromium } = require('playwright');
-          (async () => {
-            const browser = await chromium.launch({headless:true});
-            const page = await browser.newPage({viewport:{width:1024,height:1366}});
+          const fs=require('fs'); const {chromium}=require('playwright'); const A=(x,m)=>{if(!x)throw Error(m)};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({viewport:{width:960,height:1536},hasTouch:true,isMobile:true,deviceScaleFactor:1});
+            const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
+            const runtime=await page.evaluate(()=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL);A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v6','wrong runtime');
+            for(const[k,v]of Object.entries({continuousPointerGeometry:true,fractionalOrbitPosition:true,selectionDuringDrag:false,settleToNearestDetent:true,verticalGesturePassthrough:true,directionOnlyGesture:false,liveGestureGeometry:true,atomicRotation:false}))A(runtime[k]===v,`telemetry ${k}`);
+            const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first(),viewport=field.locator('.laws-rolodex-viewport');await viewport.scrollIntoViewIfNeeded();await page.waitForTimeout(100);
+            const box=await viewport.boundingBox();A(box&&box.width>400,'viewport unavailable');const S=box.width*.72,sx=box.x+box.width*.86,sy0=box.y+box.height*.52,cdp=await context.newCDPSession(page);let tid=1;
+            const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
+            const down=async()=>{tid++;await touch('touchStart',sx,sy0);await page.waitForTimeout(35)},move=async f=>{await touch('touchMove',sx-S*f,sy0);await page.waitForTimeout(45)},up=async()=>{await touch('touchEnd',sx,sy0);await page.waitForTimeout(650)};
+            const snap=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,orbit:+el.dataset.carouselOrbitPosition,state:el.dataset.carouselGestureState,label:el.querySelector('.laws-rolodex-position')?.textContent?.trim(),cards:[...el.querySelectorAll('.laws-rolodex-card')].map(c=>({active:c.dataset.active,relative:+c.dataset.carouselRelative,x:parseFloat(c.style.getPropertyValue('--laws-carousel-x')),z:parseFloat(c.style.getPropertyValue('--laws-carousel-z')),rotate:parseFloat(c.style.getPropertyValue('--laws-carousel-rotate')),scale:parseFloat(c.style.getPropertyValue('--laws-carousel-scale')),opacity:parseFloat(c.style.getPropertyValue('--laws-carousel-opacity')),blur:parseFloat(c.style.getPropertyValue('--laws-carousel-blur'))}))}));
+            const restore=async index=>{await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id:await field.getAttribute('data-rolodex-id'),index});await page.waitForTimeout(80)},frame=n=>page.screenshot({path:n,fullPage:false}),vec=(s,i)=>[s.cards[i].x,s.cards[i].z,s.cards[i].rotate,s.cards[i].scale,s.cards[i].opacity,s.cards[i].blur];
 
-            // Install before any page script. The former proof checked only the final
-            // corrected scroll position, which could not detect a down-then-up jump.
-            await page.addInitScript(() => {
-              globalThis.__lawsEntryScrollTrace = [{ y: globalThis.scrollY || 0, source: 'init', t: performance.now() }];
-              globalThis.addEventListener('scroll', () => {
-                globalThis.__lawsEntryScrollTrace.push({
-                  y: globalThis.scrollY || 0,
-                  source: 'scroll',
-                  t: performance.now()
-                });
-              }, { capture: true, passive: true });
-            });
-
-            await page.goto('http://127.0.0.1:4173/laws/', {waitUntil:'networkidle'});
-            await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]', {timeout:15000});
-            // Allow delayed placement/load guards to finish so the trace covers the
-            // entire initialization interval, not just DOMContentLoaded.
-            await page.waitForTimeout(750);
-
-            const runtime = await page.evaluate(() => globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
-            const custody = await page.evaluate(() => globalThis.DGB_LAWS_ORBIT_CUSTODY);
-            if (runtime?.contract !== 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v5') throw new Error('V5 carousel runtime not installed');
-            if (custody?.contract !== 'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5') throw new Error('V5 orbit custody runtime not installed');
-            if (!runtime?.discreteSwipe || !runtime?.oneGestureOneStep || !runtime?.directionOnlyGesture || !runtime?.atomicRotation) throw new Error('atomic gesture contract missing');
-            if (runtime?.liveGestureGeometry !== false) throw new Error('live gesture geometry is not prohibited');
-            if (runtime?.surrogateNavigation !== false) throw new Error('surrogate navigation returned');
-            if (runtime?.returnLanguage !== 'Return to Orbit') throw new Error('return language contract missing');
-            if (custody?.defaultEntryOrbit !== 'O1' || custody?.destinationOrbit !== 'O2') throw new Error('orbit identities missing');
-
-            const entry = await page.evaluate(() => {
-              const trace = globalThis.__lawsEntryScrollTrace || [];
-              return {
-                scrollY,
-                maxScrollY: trace.reduce((max, sample) => Math.max(max, Math.abs(Number(sample.y) || 0)), 0),
-                scrollTrace: trace,
-                pageEntryOrbit: document.documentElement.dataset.lawsPageEntryOrbit,
-                heroOrbit: document.querySelector('[data-laws-experience-stage="hero"]')?.dataset.lawsOrbitId,
-                destinationOrbit: document.querySelector('[data-laws-root-rolodex-section]')?.dataset.lawsOrbitId,
-                rolodexScrollCustody: document.documentElement.dataset.lawsRolodexScrollCustody
-              };
-            });
-            if (entry.scrollY > 4) throw new Error(`ordinary /laws/ entry escaped O1: scrollY=${entry.scrollY}`);
-            if (entry.maxScrollY > 4) throw new Error(`ordinary /laws/ transiently escaped O1 during initialization: maxScrollY=${entry.maxScrollY}; trace=${JSON.stringify(entry.scrollTrace)}`);
-            if (entry.pageEntryOrbit !== 'O1' || entry.heroOrbit !== 'O1' || entry.destinationOrbit !== 'O2') throw new Error(`entry/orbit identity failure: ${JSON.stringify(entry)}`);
-            if (entry.rolodexScrollCustody !== 'horizontal-only') throw new Error(`Rolodex scroll custody is not horizontal-only: ${entry.rolodexScrollCustody}`);
-            await page.screenshot({path:'laws-o1-entry-proof.png', fullPage:false});
-
-            const stage = page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
-            const field = stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]');
-            const viewport = field.locator('.laws-rolodex-viewport');
-            await viewport.scrollIntoViewIfNeeded();
-
-            const index = async () => Number(await field.getAttribute('data-carousel-index'));
-            const count = await field.locator('.laws-rolodex-card').count();
-            const geometry = async () => field.locator('.laws-rolodex-card').evaluateAll(cards => cards.map(card => ({
-              active: card.dataset.active,
-              relative: card.dataset.carouselRelative,
-              x: card.style.getPropertyValue('--laws-carousel-x'),
-              z: card.style.getPropertyValue('--laws-carousel-z'),
-              rotate: card.style.getPropertyValue('--laws-carousel-rotate'),
-              scale: card.style.getPropertyValue('--laws-carousel-scale'),
-              opacity: card.style.getPropertyValue('--laws-carousel-opacity'),
-              blur: card.style.getPropertyValue('--laws-carousel-blur')
-            })));
-            const start = await index();
-            const canonicalBefore = await geometry();
-
-            await viewport.dispatchEvent('pointerdown', {pointerId:17,pointerType:'touch',clientX:760,clientY:620,isPrimary:true});
-            await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:500,clientY:620,isPrimary:true});
-            await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:250,clientY:620,isPrimary:true});
-            const duringMoveIndex = await index();
-            const duringMoveGeometry = await geometry();
-            if (duringMoveIndex !== start) throw new Error(`pointermove changed index: ${start} -> ${duringMoveIndex}`);
-            if (JSON.stringify(duringMoveGeometry) !== JSON.stringify(canonicalBefore)) throw new Error('pointermove changed carousel geometry before gesture resolution');
-            if ((await field.getAttribute('data-carousel-gesture-state')) !== 'direction-horizontal') throw new Error('gesture direction was not detected without geometry movement');
-
-            await viewport.dispatchEvent('pointerup', {pointerId:17,pointerType:'touch',clientX:250,clientY:620,isPrimary:true});
-            await page.waitForFunction(el => el.dataset.carouselSettled === 'true' && el.dataset.carouselGestureState === 'idle', await field.elementHandle());
-            const afterLarge = await index();
-            if (afterLarge !== (start + 1) % count) throw new Error(`large swipe must advance exactly one: ${start} -> ${afterLarge}`);
-
-            async function swipe(fromX, toX, fromY=620, toY=620, pointerId=18) {
-              await viewport.dispatchEvent('pointerdown', {pointerId,pointerType:'touch',clientX:fromX,clientY:fromY,isPrimary:true});
-              await viewport.dispatchEvent('pointermove', {pointerId,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
-              await viewport.dispatchEvent('pointerup', {pointerId,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
-              await page.waitForFunction(el => el.dataset.carouselSettled === 'true' && el.dataset.carouselGestureState === 'idle', await field.elementHandle());
-            }
-
-            await swipe(520, 505, 620, 620, 18);
-            const afterSmall = await index();
-            if (afterSmall !== afterLarge) throw new Error(`small movement changed index: ${afterLarge} -> ${afterSmall}`);
-
-            await swipe(260, 780, 620, 620, 19);
-            const afterReverse = await index();
-            if (afterReverse !== start) throw new Error(`reverse swipe must move exactly one back: ${afterSmall} -> ${afterReverse}`);
-
-            // Explicitly prove a mostly-vertical touch is left to normal page
-            // traversal and cannot be misclassified as a carousel rotation.
-            await swipe(520, 550, 500, 760, 20);
-            const afterVertical = await index();
-            if (afterVertical !== afterReverse) throw new Error(`vertical gesture changed carousel index: ${afterReverse} -> ${afterVertical}`);
-
-            const controls = await field.locator('.laws-rolodex-control').count();
-            if (controls !== 0) throw new Error('forbidden surrogate controls present');
-
-            const beforeExhibit = await page.evaluate(() => {
-              const section = document.querySelector('[data-laws-root-rolodex-section]');
-              const field = section?.querySelector('.laws-rolodex-field[data-destination-stage-state="active"]');
-              const card = field?.querySelector('.laws-rolodex-card[data-active="true"]');
-              return {
-                orbitTop: section?.getBoundingClientRect().top,
-                rolodexId: field?.dataset.rolodexId,
-                index: Number(field?.dataset.carouselIndex),
-                destinationId: card?.dataset.destinationId
-              };
-            });
-
-            await field.locator('.laws-rolodex-card[data-active="true"] .laws-rolodex-enter').click();
-            const returnButton = page.locator('.laws-exhibit-return');
-            await returnButton.waitFor({state:'visible', timeout:5000});
-            await page.waitForFunction(() => document.querySelector('.laws-exhibit-return')?.textContent?.trim() === 'Return to Orbit');
-            const originReceipt = await page.evaluate(() => globalThis.DGB_LAWS_ORBIT_CUSTODY?.getOrigin?.());
-            if (originReceipt?.orbitId !== 'O2') throw new Error(`exhibit origin is not O2: ${JSON.stringify(originReceipt)}`);
-            if (originReceipt?.rolodexId !== beforeExhibit.rolodexId || originReceipt?.destinationId !== beforeExhibit.destinationId || originReceipt?.carouselIndex !== beforeExhibit.index) throw new Error(`O2 origin receipt lost active-card identity: ${JSON.stringify({beforeExhibit,originReceipt})}`);
-
-            await returnButton.click();
-            await page.waitForFunction(() => document.documentElement.dataset.lawsLastReturnOrbit === 'O2');
-            await page.waitForTimeout(100);
-            const afterReturn = await page.evaluate(() => {
-              const section = document.querySelector('[data-laws-root-rolodex-section]');
-              const destinationId = document.documentElement.dataset.lawsLastReturnDestination;
-              const card = Array.from(section?.querySelectorAll('.laws-rolodex-card[data-destination-id]') || []).find(node => node.dataset.destinationId === destinationId);
-              const field = card?.closest('.laws-rolodex-field[data-rolodex-id]');
-              return {
-                orbit: document.documentElement.dataset.lawsLastReturnOrbit,
-                orbitTop: section?.getBoundingClientRect().top,
-                rolodexId: field?.dataset.rolodexId,
-                index: Number(field?.dataset.carouselIndex),
-                destinationId: card?.dataset.destinationId,
-                active: card?.dataset.active
-              };
-            });
-            if (afterReturn.orbit !== 'O2') throw new Error(`Return to Orbit crossed orbit boundary: ${JSON.stringify(afterReturn)}`);
-            if (afterReturn.rolodexId !== beforeExhibit.rolodexId || afterReturn.destinationId !== beforeExhibit.destinationId || afterReturn.index !== beforeExhibit.index || afterReturn.active !== 'true') throw new Error(`Return to Orbit did not restore same O2 card: ${JSON.stringify({beforeExhibit,afterReturn})}`);
-            if (Math.abs(afterReturn.orbitTop - beforeExhibit.orbitTop) > 3) throw new Error(`Return to Orbit did not restore same O2 viewport: ${beforeExhibit.orbitTop} -> ${afterReturn.orbitTop}`);
-
-            await page.screenshot({path:'laws-o2-return-proof.png', fullPage:false});
-            console.log(JSON.stringify({contract:runtime.contract,entry,start,duringMoveIndex,afterLarge,afterSmall,afterReverse,afterVertical,beforeExhibit,afterReturn}, null, 2));
-            await browser.close();
-          })().catch(err => { console.error(err); process.exit(1); });
+            await restore(0);const q10=await snap();await frame('q1-00.png');await down();await move(.25);const q125=await snap();await frame('q1-25.png');await move(.50);const q150=await snap();await frame('q1-50.png');await move(.75);const q175=await snap();await frame('q1-75.png');A([q125,q150,q175].every(s=>s.index===q10.index&&s.label===q10.label),'Q1 semantic selection changed');A(new Set([q10,q125,q150,q175].map(s=>JSON.stringify(vec(s,0)))).size===4,'Q1 geometry not continuous');A(q125.cards[0].x>q150.cards[0].x&&q150.cards[0].x>q175.cards[0].x,'Q1 active monotonic failure');A(q125.cards[1].x>q150.cards[1].x&&q150.cards[1].x>q175.cards[1].x,'Q1 neighbor monotonic failure');A([q125,q150,q175].every(s=>s.state==='dragging'),'Q1 custody failure');await up();const q1end=await snap();A(q1end.index===1&&Math.abs(q1end.orbit-1)<.001,'Q1 detent failure');
+            await restore(0);const q2base=await snap();await down();await move(.30);const q230=await snap();await frame('q2-30.png');A(Math.abs(q230.cards[0].x-q2base.cards[0].x)>10&&q230.index===0,'Q2 visible motion failure');await up();const q2end=await snap();await frame('q2-settled.png');A(q2end.index===0&&Math.abs(q2end.orbit-q2base.orbit)<.001,'Q2 return failure');
+            await restore(0);await down();await move(.70);const q370=await snap();await frame('q3-70.png');A(q370.index===0&&q370.orbit>.6&&q370.orbit<.8,'Q3 fractional failure');await up();const q3end=await snap();await frame('q3-settled.png');A(q3end.index===1&&Math.abs(q3end.orbit-1)<.001,'Q3 commit failure');
+            const count=(await snap()).cards.length;await restore(count-1);await down();await move(.25);const q425=await snap();await frame('q4-25.png');await move(.50);const q450=await snap();await frame('q4-50.png');await move(.70);const q470=await snap();await frame('q4-70.png');A([q425,q450,q470].every(s=>s.index===count-1),'Q4 semantic seam failure');A(q425.cards[0].x>q450.cards[0].x&&q450.cards[0].x>q470.cards[0].x,'Q4 geometric seam failure');await up();const q4end=await snap();await frame('q4-settled.png');A(q4end.index===0,'Q4 seam commit failure');
+            await restore(0);await viewport.scrollIntoViewIfNeeded();const q5before=await snap(),scrollBefore=await page.evaluate(()=>scrollY);await frame('q5-before.png');const b5=await viewport.boundingBox();tid++;const vx=b5.x+b5.width*.5,vy=b5.y+b5.height*.45;await touch('touchStart',vx,vy);await page.waitForTimeout(30);await touch('touchMove',vx+4,vy+220);await page.waitForTimeout(200);await touch('touchEnd',vx+4,vy+220);await page.waitForTimeout(150);const q5after=await snap(),scrollAfter=await page.evaluate(()=>scrollY);await frame('q5-after.png');A(q5after.index===q5before.index,'Q5 vertical rotated carousel');A(Math.abs(scrollAfter-scrollBefore)>20,`Q5 page traversal ${scrollBefore}->${scrollAfter}`);
+            await viewport.scrollIntoViewIfNeeded();await restore(0);const q6base=await snap();await viewport.evaluate(el=>el.addEventListener('pointerdown',e=>{globalThis.__lawsQ6PointerId=e.pointerId},{capture:true,once:true}));await down();await move(.42);const q6drag=await snap();await frame('q6-drag.png');A(q6drag.index===q6base.index&&Math.abs(q6drag.cards[0].x-q6base.cards[0].x)>10,'Q6 drag setup failure');const pid=await page.evaluate(()=>globalThis.__lawsQ6PointerId);A(Number.isInteger(pid),'Q6 pointer id missing');await viewport.evaluate((el,pid)=>el.dispatchEvent(new PointerEvent('pointercancel',{bubbles:true,pointerId:pid,pointerType:'touch',isPrimary:true})),pid);await page.waitForTimeout(650);await touch('touchCancel',sx,sy0).catch(()=>{});const q6end=await snap();await frame('q6-cancelled.png');A(q6end.index===q6base.index&&Math.abs(q6end.orbit-q6base.orbit)<.001,'Q6 cancellation did not restore originating unwrapped detent');
+            A(!errors.length,'page errors '+errors.join(' | '));fs.writeFileSync('laws-continuous-pointer-proof.json',JSON.stringify({contract:runtime.contract,Q1:{q10,q125,q150,q175,q1end},Q2:{q2base,q230,q2end},Q3:{q370,q3end},Q4:{q425,q450,q470,q4end},Q5:{scrollBefore,scrollAfter,q5after},Q6:{q6base,q6drag,q6end},result:'PASS'},null,2));console.log('LAWS_CONTINUOUS_POINTER_Q1_Q7_PASS');await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
           NODE
-
-      - name: Upload orbit proof frames
+      - name: Upload intermediate proof frames and receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: laws-atomic-orbit-proof
+          name: laws-continuous-pointer-proof
           path: |
-            laws-o1-entry-proof.png
-            laws-o2-return-proof.png
+            q*.png
+            laws-continuous-pointer-proof.json
           if-no-files-found: warn

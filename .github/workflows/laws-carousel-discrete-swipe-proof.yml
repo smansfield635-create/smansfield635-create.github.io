@@ -57,7 +57,7 @@ jobs:
             const id=await field.getAttribute('data-rolodex-id'); const count=await field.locator('.laws-rolodex-card').count();
             const get=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,angle:+el.dataset.carouselOrbitAngle,canonical:el.dataset.carouselCanonicalLanding,phase:el.dataset.carouselGestureState,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform}));
             const restore=async index=>{A(await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id,index}),'restore failed');await page.waitForTimeout(80)};
-            const cdp=await context.newCDPSession(page);let tid=400;const sx=box.x+box.width*.75,sy=box.y+box.height*.50;
+            const cdp=await context.newCDPSession(page);let tid=400;const sx=box.x+box.width*.72,sy=box.y+box.height*.50;
             const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
             async function beginMove(dx,dy=0){tid++;await touch('touchStart',sx,sy);await page.waitForTimeout(25);await touch('touchMove',sx+dx,sy+dy);await page.waitForTimeout(80);}
             async function end(){await touch('touchEnd',sx,sy);await page.waitForTimeout(850);}
@@ -71,18 +71,18 @@ jobs:
             A(short.canonical==='true','short swipe lacked canonical landing');
 
             await restore(0); const longStart=await get();
-            await beginMove(-box.width*.72); const duringLong=await get();
+            await beginMove(-box.width*.62); const duringLong=await get();
             A(duringLong.ring===longStart.ring&&duringLong.index===0,'long swipe gained positional custody');
             await end(); const long=await get();
             A(long.index===1%count,'long left swipe traversed more or less than one step');
 
-            await restore(0); await beginMove(box.width*.58); const duringReverse=await get();
+            await restore(0); await beginMove(box.width*.52); const duringReverse=await get();
             A(duringReverse.index===0,'reverse semantic index moved during custody');
             await end(); const reverse=await get();
             A(reverse.index===count-1,'right swipe was not exactly one previous step');
             A(reverse.canonical==='true','reverse lacked canonical landing');
 
-            await restore(0); const cancelStart=await get(); await beginMove(-box.width*.45); await touch('touchCancel',sx,sy); await page.waitForTimeout(120); const cancelled=await get();
+            await restore(0); const cancelStart=await get(); await beginMove(-box.width*.4); await touch('touchCancel',sx,sy); await page.waitForTimeout(120); const cancelled=await get();
             A(cancelled.index===0&&cancelled.ring===cancelStart.ring&&cancelled.canonical==='true','cancel changed canonical geometry');
 
             await restore(0); const verticalStart=await get(); await beginMove(8,box.height*.22); await touch('touchEnd',sx,sy); await page.waitForTimeout(120); const vertical=await get();

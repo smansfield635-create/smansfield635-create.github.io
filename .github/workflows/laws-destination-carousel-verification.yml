@@ -27,27 +27,34 @@ jobs:
           node --check laws/index.destination-carousel.js
           node --check laws/index.mobile-background-tabs.js
           node --check laws/index.mobile-background-tabs.core.js
-      - name: Verify preserved responsive core identity
-        run: |
-          test "$(git hash-object laws/index.mobile-background-tabs.core.js)" = "e7718c0a7508fe6e4f938837930517a5c85c83f1"
-      - name: Verify carousel construction contract
+      - name: Verify carousel and orbit custody contract
         run: |
           python3 - <<'PY'
           from pathlib import Path
           js = Path('laws/index.destination-carousel.js').read_text()
           css = Path('laws/index.destination-carousel.css').read_text()
           loader = Path('laws/index.mobile-background-tabs.js').read_text()
+          core = Path('laws/index.mobile-background-tabs.core.js').read_text()
           required_js = [
-              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v4',
+              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v5',
               'pointerdown', 'pointermove', 'pointerup',
               'ArrowLeft', 'ArrowRight', 'Home', 'End',
               'LAWS_DESTINATION_CAROUSEL_CHANGED',
               'data-laws-root-rolodex-section',
-              'neighbor-select', 'swipe-step', 'swipe-cancel',
+              'swipe-step', 'swipe-cancel',
               'removeSurrogateControls',
               'surrogateNavigation: false',
               'discreteSwipe: true', 'oneGestureOneStep: true',
+              'directionOnlyGesture: true', 'liveGestureGeometry: false',
+              'atomicRotation: true', 'restoreOrbitState',
               'Return to Orbit'
+          ]
+          required_core = [
+              'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5',
+              'COMPASS_ORBIT = "O1"', 'DESTINATION_ORBIT = "O2"',
+              'enforceCompassEntry', 'captureOrigin', 'restoreOrigin',
+              'orbitViewportOffset', 'carouselIndex', 'rolodexId', 'destinationId',
+              'LAWS_ORBIT_CUSTODY_RESTORED', 'DGB_LAWS_ORBIT_CUSTODY'
           ]
           required_css = [
               'position: absolute !important',
@@ -60,19 +67,17 @@ jobs:
           ]
           for token in required_js:
               assert token in js, f'missing JS contract token: {token}'
+          for token in required_core:
+              assert token in core, f'missing orbit custody token: {token}'
           for token in required_css:
               assert token in css, f'missing CSS contract token: {token}'
-          assert 'index.mobile-background-tabs.core.js' in loader
-          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V4_20260816A' in loader
-          assert 'navigationAuthority: false' in js
-          assert 'contentAuthority: false' in js
-          assert 'routeAuthority: false' in js
-          assert 'evidenceAuthority: false' in js
-          assert 'control-previous' not in js
-          assert 'control-next' not in js
-          assert 'Previous item in' not in js
-          assert 'Next item in' not in js
-          assert 'state.velocity' not in js
-          assert 'projected =' not in js
-          print('Laws destination carousel exact-head static qualification PASS')
+          assert 'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY' in loader
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V5_20260816A' in loader
+          for forbidden in ['dragPreview', 'PREVIEW_LIMIT', 'swipe-preview', 'state.velocity', 'projected =']:
+              assert forbidden not in js, f'forbidden intermediate gesture geometry/token present: {forbidden}'
+          for forbidden in ['control-previous', 'control-next', 'Previous item in', 'Next item in']:
+              assert forbidden not in js, f'forbidden surrogate navigation present: {forbidden}'
+          assert 'navigationAuthority: false' in js and 'contentAuthority: false' in js
+          assert 'routeAuthority: false' in js and 'evidenceAuthority: false' in js
+          print('Laws V5 atomic carousel + orbit custody exact-head static qualification PASS')
           PY

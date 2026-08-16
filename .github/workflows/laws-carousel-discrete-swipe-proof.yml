@@ -1,17 +1,18 @@
-name: Laws Carousel Discrete Swipe Proof
+name: Laws Carousel Atomic Orbit Proof
 
 on:
   pull_request:
     paths:
       - 'laws/index.destination-carousel.js'
       - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.mobile-background-tabs.core.js'
       - '.github/workflows/laws-carousel-discrete-swipe-proof.yml'
 
 permissions:
   contents: read
 
 jobs:
-  discrete-swipe-proof:
+  atomic-orbit-proof:
     runs-on: ubuntu-latest
     steps:
       - name: Check out exact candidate head
@@ -27,9 +28,9 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null
 
       - name: Serve exact candidate
-        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-discrete-swipe-http.log 2>&1 &
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-atomic-orbit-http.log 2>&1 &
 
-      - name: Prove one swipe one step and Return to Orbit
+      - name: Prove O1 entry, direction-only gesture, atomic step, and O2 return
         run: |
           node <<'NODE'
           const { chromium } = require('playwright');
@@ -38,11 +39,26 @@ jobs:
             const page = await browser.newPage({viewport:{width:1024,height:1366}});
             await page.goto('http://127.0.0.1:4173/laws/', {waitUntil:'networkidle'});
             await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]', {timeout:15000});
+
             const runtime = await page.evaluate(() => globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
-            if (runtime?.contract !== 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v4') throw new Error('V4 runtime not installed');
-            if (!runtime?.discreteSwipe || !runtime?.oneGestureOneStep) throw new Error('discrete swipe contract missing');
+            const custody = await page.evaluate(() => globalThis.DGB_LAWS_ORBIT_CUSTODY);
+            if (runtime?.contract !== 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v5') throw new Error('V5 carousel runtime not installed');
+            if (custody?.contract !== 'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5') throw new Error('V5 orbit custody runtime not installed');
+            if (!runtime?.discreteSwipe || !runtime?.oneGestureOneStep || !runtime?.directionOnlyGesture || !runtime?.atomicRotation) throw new Error('atomic gesture contract missing');
+            if (runtime?.liveGestureGeometry !== false) throw new Error('live gesture geometry is not prohibited');
             if (runtime?.surrogateNavigation !== false) throw new Error('surrogate navigation returned');
             if (runtime?.returnLanguage !== 'Return to Orbit') throw new Error('return language contract missing');
+            if (custody?.defaultEntryOrbit !== 'O1' || custody?.destinationOrbit !== 'O2') throw new Error('orbit identities missing');
+
+            const entry = await page.evaluate(() => ({
+              scrollY,
+              pageEntryOrbit: document.documentElement.dataset.lawsPageEntryOrbit,
+              heroOrbit: document.querySelector('[data-laws-experience-stage="hero"]')?.dataset.lawsOrbitId,
+              destinationOrbit: document.querySelector('[data-laws-root-rolodex-section]')?.dataset.lawsOrbitId
+            }));
+            if (entry.scrollY > 4) throw new Error(`ordinary /laws/ entry escaped O1: scrollY=${entry.scrollY}`);
+            if (entry.pageEntryOrbit !== 'O1' || entry.heroOrbit !== 'O1' || entry.destinationOrbit !== 'O2') throw new Error(`entry/orbit identity failure: ${JSON.stringify(entry)}`);
+            await page.screenshot({path:'laws-o1-entry-proof.png', fullPage:false});
 
             const stage = page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
             const field = stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]');
@@ -50,26 +66,45 @@ jobs:
             await viewport.scrollIntoViewIfNeeded();
 
             const index = async () => Number(await field.getAttribute('data-carousel-index'));
+            const count = await field.locator('.laws-rolodex-card').count();
             const settled = async () => await field.getAttribute('data-carousel-settled');
+            const geometry = async () => field.locator('.laws-rolodex-card').evaluateAll(cards => cards.map(card => ({
+              active: card.dataset.active,
+              relative: card.dataset.carouselRelative,
+              x: card.style.getPropertyValue('--laws-carousel-x'),
+              z: card.style.getPropertyValue('--laws-carousel-z'),
+              rotate: card.style.getPropertyValue('--laws-carousel-rotate'),
+              scale: card.style.getPropertyValue('--laws-carousel-scale'),
+              opacity: card.style.getPropertyValue('--laws-carousel-opacity'),
+              blur: card.style.getPropertyValue('--laws-carousel-blur')
+            })));
             const start = await index();
+            const canonicalBefore = await geometry();
+
+            await viewport.dispatchEvent('pointerdown', {pointerId:17,pointerType:'touch',clientX:760,clientY:620,isPrimary:true});
+            await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:500,clientY:620,isPrimary:true});
+            await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:250,clientY:620,isPrimary:true});
+            const duringMoveIndex = await index();
+            const duringMoveGeometry = await geometry();
+            if (duringMoveIndex !== start) throw new Error(`pointermove changed index: ${start} -> ${duringMoveIndex}`);
+            if (JSON.stringify(duringMoveGeometry) !== JSON.stringify(canonicalBefore)) throw new Error('pointermove changed carousel geometry before gesture resolution');
+            if ((await field.getAttribute('data-carousel-gesture-state')) !== 'direction-horizontal') throw new Error('gesture direction was not detected without geometry movement');
+
+            await viewport.dispatchEvent('pointerup', {pointerId:17,pointerType:'touch',clientX:250,clientY:620,isPrimary:true});
+            await page.waitForFunction(el => el.dataset.carouselSettled === 'true' && el.dataset.carouselGestureState === 'idle', await field.elementHandle());
+            const afterLarge = await index();
+            if (afterLarge !== (start + 1) % count) throw new Error(`large swipe must advance exactly one: ${start} -> ${afterLarge}`);
 
             async function swipe(fromX, toX, fromY=620, toY=620) {
-              await viewport.dispatchEvent('pointerdown', {pointerId:17,pointerType:'touch',clientX:fromX,clientY:fromY,isPrimary:true});
-              await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:(fromX+toX)/2,clientY:(fromY+toY)/2,isPrimary:true});
-              await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
-              await viewport.dispatchEvent('pointerup', {pointerId:17,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
-              await page.waitForFunction(el => el.dataset.carouselSettled === 'true', await field.elementHandle());
+              await viewport.dispatchEvent('pointerdown', {pointerId:18,pointerType:'touch',clientX:fromX,clientY:fromY,isPrimary:true});
+              await viewport.dispatchEvent('pointermove', {pointerId:18,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
+              await viewport.dispatchEvent('pointerup', {pointerId:18,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
+              await page.waitForFunction(el => el.dataset.carouselSettled === 'true' && el.dataset.carouselGestureState === 'idle', await field.elementHandle());
             }
-
-            await swipe(760, 250);
-            const afterLarge = await index();
-            if (afterLarge !== (start + 1) % 4) throw new Error(`large swipe must advance exactly one: ${start} -> ${afterLarge}`);
-            if ((await settled()) !== 'true') throw new Error('large swipe did not settle');
 
             await swipe(520, 505);
             const afterSmall = await index();
             if (afterSmall !== afterLarge) throw new Error(`small movement changed index: ${afterLarge} -> ${afterSmall}`);
-            if ((await settled()) !== 'true') throw new Error('small movement did not return to canonical settlement');
 
             await swipe(260, 780);
             const afterReverse = await index();
@@ -78,14 +113,59 @@ jobs:
             const controls = await field.locator('.laws-rolodex-control').count();
             if (controls !== 0) throw new Error('forbidden surrogate controls present');
 
+            const beforeExhibit = await page.evaluate(() => {
+              const section = document.querySelector('[data-laws-root-rolodex-section]');
+              const field = section?.querySelector('.laws-rolodex-field[data-destination-stage-state="active"]');
+              const card = field?.querySelector('.laws-rolodex-card[data-active="true"]');
+              return {
+                orbitTop: section?.getBoundingClientRect().top,
+                rolodexId: field?.dataset.rolodexId,
+                index: Number(field?.dataset.carouselIndex),
+                destinationId: card?.dataset.destinationId
+              };
+            });
+
             await field.locator('.laws-rolodex-card[data-active="true"] .laws-rolodex-enter').click();
             const returnButton = page.locator('.laws-exhibit-return');
             await returnButton.waitFor({state:'visible', timeout:5000});
             await page.waitForFunction(() => document.querySelector('.laws-exhibit-return')?.textContent?.trim() === 'Return to Orbit');
-            if ((await returnButton.textContent()).trim() !== 'Return to Orbit') throw new Error('public exit does not say Return to Orbit');
-            await returnButton.click();
+            const originReceipt = await page.evaluate(() => globalThis.DGB_LAWS_ORBIT_CUSTODY?.getOrigin?.());
+            if (originReceipt?.orbitId !== 'O2') throw new Error(`exhibit origin is not O2: ${JSON.stringify(originReceipt)}`);
+            if (originReceipt?.rolodexId !== beforeExhibit.rolodexId || originReceipt?.destinationId !== beforeExhibit.destinationId || originReceipt?.carouselIndex !== beforeExhibit.index) throw new Error(`O2 origin receipt lost active-card identity: ${JSON.stringify({beforeExhibit,originReceipt})}`);
 
-            console.log(JSON.stringify({contract:runtime.contract,start,afterLarge,afterSmall,afterReverse,returnLanguage:runtime.returnLanguage}, null, 2));
+            await returnButton.click();
+            await page.waitForFunction(() => document.documentElement.dataset.lawsLastReturnOrbit === 'O2');
+            await page.waitForTimeout(100);
+            const afterReturn = await page.evaluate(() => {
+              const section = document.querySelector('[data-laws-root-rolodex-section]');
+              const destinationId = document.documentElement.dataset.lawsLastReturnDestination;
+              const card = Array.from(section?.querySelectorAll('.laws-rolodex-card[data-destination-id]') || []).find(node => node.dataset.destinationId === destinationId);
+              const field = card?.closest('.laws-rolodex-field[data-rolodex-id]');
+              return {
+                orbit: document.documentElement.dataset.lawsLastReturnOrbit,
+                orbitTop: section?.getBoundingClientRect().top,
+                rolodexId: field?.dataset.rolodexId,
+                index: Number(field?.dataset.carouselIndex),
+                destinationId: card?.dataset.destinationId,
+                active: card?.dataset.active
+              };
+            });
+            if (afterReturn.orbit !== 'O2') throw new Error(`Return to Orbit crossed orbit boundary: ${JSON.stringify(afterReturn)}`);
+            if (afterReturn.rolodexId !== beforeExhibit.rolodexId || afterReturn.destinationId !== beforeExhibit.destinationId || afterReturn.index !== beforeExhibit.index || afterReturn.active !== 'true') throw new Error(`Return to Orbit did not restore same O2 card: ${JSON.stringify({beforeExhibit,afterReturn})}`);
+            if (Math.abs(afterReturn.orbitTop - beforeExhibit.orbitTop) > 3) throw new Error(`Return to Orbit did not restore same O2 viewport: ${beforeExhibit.orbitTop} -> ${afterReturn.orbitTop}`);
+
+            await page.screenshot({path:'laws-o2-return-proof.png', fullPage:false});
+            console.log(JSON.stringify({contract:runtime.contract,entry,start,duringMoveIndex,afterLarge,afterSmall,afterReverse,beforeExhibit,afterReturn}, null, 2));
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
+
+      - name: Upload orbit proof frames
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-atomic-orbit-proof
+          path: |
+            laws-o1-entry-proof.png
+            laws-o2-return-proof.png
+          if-no-files-found: warn

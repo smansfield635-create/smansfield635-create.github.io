@@ -57,7 +57,7 @@ jobs:
             const get=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,angle:+el.dataset.carouselOrbitAngle,canonical:el.dataset.carouselCanonicalLanding,phase:el.dataset.carouselGestureState,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform}));
             const trace=()=>page.evaluate(id=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.getTransactionTrace(id).slice(-16),id);
             const restore=async index=>{A(await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id,index}),'restore failed');await page.waitForTimeout(80)};
-            const cdp=await context.newCDPSession(page);let tid=400;const sx=box.x+box.width*.50,sy=box.y+box.height*.04;
+            const cdp=await context.newCDPSession(page);let tid=400;
             const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
             async function waitCanonical(){
               await page.waitForFunction(id=>{
@@ -66,6 +66,9 @@ jobs:
               },id,{timeout:3500});
             }
             async function gesture(dx,dy=0,finish='end'){
+              await viewport.scrollIntoViewIfNeeded();
+              const currentBox=await viewport.boundingBox(); A(currentBox,'viewport missing during gesture');
+              const sx=currentBox.x+currentBox.width*.50, sy=currentBox.y+currentBox.height*.04;
               tid++;
               await touch('touchStart',sx,sy);
               await page.waitForTimeout(25);

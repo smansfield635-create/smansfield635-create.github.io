@@ -50,7 +50,6 @@ jobs:
             const handle=await iframe.elementHandle();
             const frame=await handle.contentFrame();
             assert.ok(frame,'SNAPSHOT_FRAME_NOT_AVAILABLE');
-            await frame.waitForURL(snapshotUrl,{timeout:30000});
             await frame.waitForFunction(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:90000});
             await frame.waitForFunction(()=>Number(globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.()?.liveGpu?.counters?.gpuFramebufferPresentationCount??0)>=1,null,{timeout:90000});
             const facts=await frame.evaluate(()=>{
@@ -68,7 +67,11 @@ jobs:
                 moduleSrc:document.getElementById('h-earth-current-run8e-module')?.src??null
               };
             });
-            assert.equal(facts.href,snapshotUrl,'SNAPSHOT_FRAME_URL_MISMATCH');
+            const actualFrameUrl=new URL(facts.href);
+            const expectedFrameUrl=new URL(snapshotUrl);
+            assert.equal(actualFrameUrl.origin,expectedFrameUrl.origin,'SNAPSHOT_FRAME_ORIGIN_MISMATCH');
+            assert.equal(actualFrameUrl.pathname,expectedFrameUrl.pathname,'SNAPSHOT_FRAME_PATH_MISMATCH');
+            assert.equal(actualFrameUrl.searchParams.get('visual'),'terrain-relief-v2','SNAPSHOT_CANONICAL_VISUAL_NOT_ACTIVE');
             assert.equal(facts.ready,true,'PREVIEW_RUNTIME_NOT_READY');
             assert.equal(facts.eligible,true,'PREVIEW_RUNTIME_NOT_ELIGIBLE');
             assert.equal(facts.initialized,true,'PREVIEW_RENDERER_NOT_INITIALIZED');

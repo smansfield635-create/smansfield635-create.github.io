@@ -6,7 +6,9 @@ on:
     paths:
       - 'showroom/globe/h-earth/**'
       - 'h-earth-3d/environment/**'
+      - 'h-earth-3d/terrain/**'
       - 'h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs'
+      - 'h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs'
       - 'h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs'
       - '.github/workflows/h-earth-cp3d-renderer-survival.yml'
   workflow_dispatch:
@@ -63,6 +65,12 @@ jobs:
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
         run: node h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs
 
+      - name: Capture C3C3R5 multi-view visual audit evidence
+        env:
+          CP3D_ORIGIN: http://127.0.0.1:4173
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: node h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs
+
       - name: Upload C3C3R5 evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -73,4 +81,4 @@ jobs:
             /tmp/h-earth-c3c3-server.log
           if-no-files-found: error
 
-# C3C3R5 exact-head deep-layer closure qualification trigger: 2026-08-16
+# C3C3R5 exact-head deep-layer + multi-view visual evidence trigger: 2026-08-16

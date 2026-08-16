@@ -1,0 +1,52 @@
+name: Laws live delivery repair
+
+on:
+  push:
+    branches:
+      - laws-live-delivery-repair-20260816
+
+permissions:
+  contents: write
+
+jobs:
+  repair-live-html-asset-identity:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: laws-live-delivery-repair-20260816
+      - name: Bust Laws bootstrap identity and make stage assets explicit
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('laws/index.html')
+          s = p.read_text()
+          old_css = '/laws/index.mobile-background-tabs.css?v=LAWS_CP6_MOBILE_BACKGROUND_TABS_20260801A'
+          old_js = '/laws/index.mobile-background-tabs.js?v=LAWS_CP6_MOBILE_BACKGROUND_TABS_20260801A'
+          new_css = '/laws/index.mobile-background-tabs.css?v=LAWS_DESTINATION_STAGE_LIVE_20260816A'
+          new_js = '/laws/index.mobile-background-tabs.js?v=LAWS_DESTINATION_STAGE_LIVE_20260816A'
+          assert old_css in s, 'old mobile CSS identity not found'
+          assert old_js in s, 'old bootstrap JS identity not found'
+          s = s.replace(old_css, new_css, 1).replace(old_js, new_js, 1)
+          anchor = '<link data-laws-cp6-contextual-renewal="true" href="/laws/cp6-contextual-renewal.css?v=LAWS_CP6_CONTEXTUAL_RENEWAL_V1" rel="stylesheet"/>'
+          explicit = ('<link data-laws-destination-stage-css="true" href="/laws/index.destination-stage.css?v=LAWS_DESTINATION_STAGE_LIVE_20260816A" rel="stylesheet"/>'
+                      '<link data-laws-destination-stage-anchor-css="true" href="/laws/index.destination-stage-anchor.css?v=LAWS_DESTINATION_STAGE_LIVE_20260816A" rel="stylesheet"/>')
+          assert anchor in s, 'head insertion anchor not found'
+          if 'data-laws-destination-stage-css="true"' not in s:
+              s = s.replace(anchor, explicit + anchor, 1)
+          p.write_text(s)
+          PY
+          git diff --check
+          grep -q 'LAWS_DESTINATION_STAGE_LIVE_20260816A' laws/index.html
+          grep -q 'data-laws-destination-stage-css="true"' laws/index.html
+      - name: Commit repaired public HTML
+        shell: bash
+        run: |
+          if git diff --quiet -- laws/index.html; then exit 0; fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add laws/index.html
+          git commit -m 'Repair Laws live destination stage delivery'
+          git push origin HEAD:laws-live-delivery-repair-20260816

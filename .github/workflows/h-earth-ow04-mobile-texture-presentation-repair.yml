@@ -1,0 +1,126 @@
+name: H-Earth OW04 Mobile Texture Presentation Repair
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-ow04-subtropical-world-continuation-20260815
+
+permissions:
+  contents: write
+
+jobs:
+  repair-mobile-texture-presentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact OW04 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Replace physical presentation boundary with textured fullscreen draw
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js')
+          text = path.read_text()
+
+          shader_anchor = "const DFS = `#version 300 es\nprecision highp float;in vec2 vUv;uniform sampler2D uDepth;out vec4 outColor;void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;"
+          presentation_shader = """const PFS = `#version 300 es
+precision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;"""
+          if 'uniform sampler2D uColor' not in text:
+              if shader_anchor not in text:
+                  raise SystemExit('OW04_TEXTURE_PRESENT_SHADER_ANCHOR_MISSING')
+              text = text.replace(shader_anchor, shader_anchor + '\n' + presentation_shader, 1)
+
+          program_anchor = """    resources.depthProgram = createProgram(
+      resources.depthVertexShader,
+      resources.depthFragmentShader,
+      'DP'
+    );"""
+          program_insert = """    resources.presentationFragmentShader = createShader(gl.FRAGMENT_SHADER, PFS, 'PF');
+    resources.presentationProgram = createProgram(
+      resources.depthVertexShader,
+      resources.presentationFragmentShader,
+      'PP'
+    );"""
+          if 'resources.presentationProgram = createProgram' not in text:
+              if program_anchor not in text:
+                  raise SystemExit('OW04_TEXTURE_PRESENT_PROGRAM_ANCHOR_MISSING')
+              text = text.replace(program_anchor, program_anchor + '\n' + program_insert, 1)
+
+          uniform_anchor = "      depth: uniform(resources.depthProgram, 'uDepth')"
+          uniform_replacement = """      depth: uniform(resources.depthProgram, 'uDepth'),
+      presentationColor: uniform(resources.presentationProgram, 'uColor')"""
+          if "presentationColor: uniform(resources.presentationProgram, 'uColor')" not in text:
+              if uniform_anchor not in text:
+                  raise SystemExit('OW04_TEXTURE_PRESENT_UNIFORM_ANCHOR_MISSING')
+              text = text.replace(uniform_anchor, uniform_replacement, 1)
+
+          start = text.find("  function presentColorFrame() {")
+          end = text.find("\n\n  function captureColorFrame", start)
+          if start < 0 or end < 0:
+              raise SystemExit('OW04_TEXTURE_PRESENT_FUNCTION_MISSING')
+
+          replacement = """  function presentColorFrame() {
+    if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
+
+    // Physical-device presentation law: the validated offscreen color texture
+    // is presented through a normal fullscreen textured draw. This avoids both
+    // framebuffer blit dependence and a second geometry/depth pass on the
+    // browser-visible default framebuffer.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, width, height);
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
+    gl.depthMask(true);
+    gl.useProgram(resources.presentationProgram);
+    gl.bindVertexArray(null);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture);
+    gl.uniform1i(resources.uniforms.presentationColor, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.flush();
+
+    const error = gl.getError();
+    if (error !== gl.NO_ERROR) {
+      throw new Error(`R3C_TEXTURE_PRESENTATION_DRAW_ERROR:${error}`);
+    }
+
+    counters.visiblePresentationCount += 1;
+    return Object.freeze({
+      frameNumber: counters.frameCount,
+      width,
+      height,
+      presentationPath: 'OFFSCREEN_COLOR_TEXTURE_FULLSCREEN_DRAW'
+    });
+  }"""
+
+          text = text[:start] + replacement + text[end:]
+          path.write_text(text)
+          PY
+
+      - name: Verify bounded renderer-only mutation
+        run: |
+          set -euo pipefail
+          git diff --check
+          grep -F "presentationPath: 'OFFSCREEN_COLOR_TEXTURE_FULLSCREEN_DRAW'" showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          grep -F "uniform sampler2D uColor" showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          grep -F "resources.presentationProgram = createProgram" showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          unexpected="$(git diff --name-only | grep -v '^showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js$' || true)"
+          test -z "$unexpected" || { echo "Unexpected product mutation path: $unexpected" >&2; exit 1; }
+
+      - name: Commit repaired presentation boundary
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Texture presentation repair already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          git commit -m 'H-Earth OW04: present governed scene through fullscreen texture draw'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

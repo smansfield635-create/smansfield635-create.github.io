@@ -72,7 +72,8 @@ const DVS = `#version 300 es
 precision highp float;const vec2 p[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));out vec2 vUv;void main(){vec2 q=p[gl_VertexID];vUv=q*.5+.5;gl_Position=vec4(q,0.,1.);}`;
 const DFS = `#version 300 es
 precision highp float;in vec2 vUv;uniform sampler2D uDepth;out vec4 outColor;void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
-const PFS = `#version 300 es\nprecision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;
+const PFS = `#version 300 es
+precision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;
 
 export function createHEarthRun8ER3CPersistentRenderer({
   canvas,

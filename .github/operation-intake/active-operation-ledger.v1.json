@@ -1,5 +1,17 @@
 {
   "activeScopes": {
+    "00391b61b9ba252cb1dcd4a1d9d4f31fbef7b78967dcdf4ade55d9300e05d898": {
+      "governingHead": "20b47fec2411dc2d368d67034aee3ce83f8cfc29",
+      "lockGeneration": 1495,
+      "lockScope": "PUBLIC_PRODUCT:LAWS:CHAMBER:CAROUSEL:LIVE_PRODUCT_RECONSTRUCTION:V1",
+      "operationId": "LAWS_CAROUSEL_LIVE_PRODUCT_RECONSTRUCTION_20260816_001",
+      "procedureLocatorDigest": "607f9330b8146d98c7aa088530d97f1b5b39ab6e773781bcf1ca1f421c594f44",
+      "released": false,
+      "requestDigest": "bf128bab643b229176f3507fc491460cf1068a409b4cbb8ebea67ef21fd29151",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "00391b61b9ba252cb1dcd4a1d9d4f31fbef7b78967dcdf4ade55d9300e05d898",
+      "state": "ADMITTED_LOCKED"
+    },
     "01572acf600dc9a4724182e4e740faac14e141f961b09501aa9022b8d4d08d65": {
       "governingHead": "b7728eb3f8e1da8b0c408a4f255adb144fabcee3",
       "lockGeneration": 366,
@@ -2200,7 +2212,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1494,
+  "lockGeneration": 1495,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

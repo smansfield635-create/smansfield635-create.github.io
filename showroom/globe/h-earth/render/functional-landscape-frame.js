@@ -32,7 +32,7 @@ const finiteVector = (value) => value && ['x', 'y', 'z'].every((axis) =>
   typeof value[axis] === 'number' && Number.isFinite(value[axis]));
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v4_SUBTROPICAL_ENVIRONMENT';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v5_SUBTROPICAL_CAUSAL_PRESENTATION';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE =
   'FUNCTIONAL_LANDSCAPE_COAST_TO_INLAND_PROOF';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES = freeze([
@@ -56,7 +56,7 @@ function defaultCamera() {
 
 function defaultEnvironment() {
   return freeze({
-    environmentSnapshotId: 'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_SUBTROPICAL_OW04_001',
+    environmentSnapshotId: 'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_SUBTROPICAL_OW04_002',
     sourceEnvironmentContractId: 'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_ENVIRONMENT_DESCRIPTOR_v1',
     climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
     skyTop: [56, 105, 139, 255],
@@ -66,6 +66,70 @@ function defaultEnvironment() {
     horizonClosed: false,
     distanceHazeEnabled: true,
     ownsSkyAuthority: false
+  });
+}
+
+function stablePaletteIndex(primitive, count) {
+  const token = String(primitive?.metadata?.chunkId ?? primitive?.primitiveId ?? '');
+  let hash = 0;
+  for (let index = 0; index < token.length; index += 1) hash = (hash * 31 + token.charCodeAt(index)) >>> 0;
+  return count > 0 ? hash % count : 0;
+}
+
+function decorateSubtropicalPrimitive(primitive) {
+  const intent = String(primitive?.materialHint?.materialIntent ??
+    primitive?.materialHint?.materialReference ?? 'DEFAULT');
+  if (intent.includes('WATER') || intent.includes('FOAM')) return primitive;
+
+  const physicalRole = String(primitive?.metadata?.physicalRole ?? '');
+  const isDistant = intent.includes('DISTANT') || primitive?.metadata?.visualContinuationLayer === true;
+  const isTerrain = primitive?.semanticRole === 'FUNCTIONAL_LANDSCAPE_TERRAIN_CHUNK';
+  if (!isDistant && !isTerrain) return primitive;
+
+  const coastal = [
+    [81, 105, 68, 255],
+    [94, 108, 72, 255],
+    [74, 101, 65, 255],
+    [105, 106, 74, 255]
+  ];
+  const transition = [
+    [66, 101, 62, 255],
+    [75, 108, 66, 255],
+    [82, 105, 67, 255],
+    [70, 95, 61, 255]
+  ];
+  const inland = [
+    [60, 92, 58, 255],
+    [70, 98, 61, 255],
+    [76, 94, 63, 255],
+    [63, 88, 57, 255]
+  ];
+  const distant = [
+    [67, 87, 70, 255],
+    [73, 91, 72, 255],
+    [62, 82, 66, 255]
+  ];
+
+  let palette = coastal;
+  if (isDistant) palette = distant;
+  else if (physicalRole.includes('INLAND_ELEVATED')) palette = inland;
+  else if (physicalRole.includes('COASTAL_TO_INLAND')) palette = transition;
+
+  return freeze({
+    ...primitive,
+    renderMaterial: freeze({
+      rgba: palette[stablePaletteIndex(primitive, palette.length)],
+      transparencyClass: 'OPAQUE'
+    }),
+    metadata: freeze({
+      ...primitive.metadata,
+      climatePresentation: 'WARM_SUBTROPICAL_COASTAL',
+      materialDistribution: isDistant
+        ? 'ATMOSPHERIC_SUBTROPICAL_DISTANCE'
+        : 'MUTED_VEGETATED_MOSAIC_WITH_JUSTIFIED_SOIL_AND_STONE_EXPOSURE',
+      uniformGreening: false,
+      rendererAuthorityCreated: false
+    })
   });
 }
 
@@ -128,7 +192,7 @@ export function constructHEarthFunctionalLandscapeFrame({
     return freeze({ ok: false, status: 'FUNCTIONAL_LANDSCAPE_FRAME_REJECTED', contractId: H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID, frameOccurrenceId, neutralPreview, westAdmission, transfer, issues });
   }
 
-  const admittedPrimitives = transfer.admittedPrimitives;
+  const admittedPrimitives = transfer.admittedPrimitives.map(decorateSubtropicalPrimitive);
   const presentationAssignments = admittedPrimitives.map(createPresentationAssignment);
 
   return freeze({

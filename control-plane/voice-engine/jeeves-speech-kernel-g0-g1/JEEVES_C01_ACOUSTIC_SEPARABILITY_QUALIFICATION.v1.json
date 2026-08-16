@@ -1,0 +1,31 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_ACOUSTIC_SEPARABILITY_QUALIFICATION_v1",
+  "status": "PASS_INTERNAL_ACOUSTIC_SEPARABILITY",
+  "utterance": "Navigation requires orientation.",
+  "sampleRateHz": 24000,
+  "sampleCount": 64344,
+  "durationSeconds": 2.681,
+  "wordGapsSeconds": [0.115, 0.115],
+  "wordGapEnergy": "ZERO",
+  "observedClassMeans": {
+    "vowelZcr": 0.027394974032639297,
+    "fricativeZcr": 0.48327492008894446,
+    "stopZcr": 0.1849186565408992
+  },
+  "qualifiedProperties": [
+    "explicit lexical silence boundaries preserved",
+    "vowel acoustic class remains distinct from fricative class",
+    "stop acoustic class remains distinct from vowel class",
+    "within-class vowel signatures are non-collapsed",
+    "within-class fricative signatures are non-collapsed",
+    "within-class stop signatures are non-collapsed"
+  ],
+  "notClaimed": [
+    "audible sentence intelligibility",
+    "human listener recognition",
+    "natural speech",
+    "Jeeves voice quality"
+  ],
+  "humanListeningAuthorized": false,
+  "nextLawfulAction": "CONSTRUCT_INTERNAL_WORD_LEVEL_RECOGNIZABILITY_GATE_BEFORE_ANY_HUMAN_LISTENING"
+}

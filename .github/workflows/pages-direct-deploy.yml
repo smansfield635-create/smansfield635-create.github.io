@@ -40,17 +40,17 @@ jobs:
 
           path = Path('_site/index.html')
           text = path.read_text(encoding='utf-8')
-          css = '<link rel="stylesheet" href="/assets/compass/compass.carousel.css?v=compass-carousel-successor-v5">'
-          js = '<script src="/assets/compass/compass.carousel.js?v=compass-carousel-successor-v5" defer></script>'
+          css = '<link rel="stylesheet" href="/assets/compass/compass.carousel.css?v=compass-carousel-successor-v6">'
+          js = '<script src="/assets/compass/compass.carousel.js?v=compass-carousel-successor-v6" defer></script>'
           text = re.sub(r'<link rel="stylesheet" href="/assets/compass/compass\.carousel\.css\?v=[^"]+">\n?', '', text)
           text = re.sub(r'<script src="/assets/compass/compass\.carousel\.js\?v=[^"]+" defer></script>\n?', '', text)
-          text = re.sub(r'/assets/compass/compass\.cosmos\.js\?v=[^"\']+', '/assets/compass/compass.cosmos.js?v=compass-carousel-successor-v5', text)
+          text = re.sub(r'/assets/compass/compass\.cosmos\.js\?v=[^"\']+', '/assets/compass/compass.cosmos.js?v=compass-carousel-successor-v6', text)
           text = text.replace('</head>', f'{css}\n</head>', 1)
           text = text.replace('</body>', f'{js}\n</body>', 1)
           path.write_text(text, encoding='utf-8')
-          assert 'compass.carousel.css?v=compass-carousel-successor-v5' in text
-          assert 'compass.carousel.js?v=compass-carousel-successor-v5' in text
-          assert 'compass.cosmos.js?v=compass-carousel-successor-v5' in text
+          assert 'compass.carousel.css?v=compass-carousel-successor-v6' in text
+          assert 'compass.carousel.js?v=compass-carousel-successor-v6' in text
+          assert 'compass.cosmos.js?v=compass-carousel-successor-v6' in text
           PY
 
       - name: Upload site artifact

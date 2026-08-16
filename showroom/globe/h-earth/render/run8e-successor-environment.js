@@ -99,21 +99,26 @@ export function buildHEarthRun8ENeutralPackage({ compositionMode = 'HISTORICAL_R
   if (terrain?.ok !== true || !terrain.primitive) issues.push('RUN_8E_SUCCESSOR_TERRAIN_INVALID');
   if (vegetationEvaluation.eligible !== true) issues.push(...vegetationEvaluation.issues);
 
+  const historicalComposition = compositionMode === 'HISTORICAL_R2_CLOSED';
+  if (!historicalComposition && compositionMode !== 'CONTENT_ADDRESSED_CURRENT_TERRAIN') issues.push('RUN_8E_COMPOSITION_MODE_INVALID');
+
   const shorelinePrimitives = legacy?.componentResults?.shoreline?.primitives ?? [];
+  const distantContextPrimitives = historicalComposition
+    ? []
+    : (legacy?.componentResults?.distantContext?.primitives ?? []);
   const vegetationPrimitives = (vegetation?.instances ?? [])
     .flatMap((instance) => instance.components ?? [])
     .map((component) => component.primitiveRecord)
     .filter(Boolean);
   const primitives = terrain?.primitive
-    ? [terrain.primitive, ...shorelinePrimitives, ...vegetationPrimitives]
+    ? [terrain.primitive, ...shorelinePrimitives, ...distantContextPrimitives, ...vegetationPrimitives]
     : [];
   const bounds = primitives.length > 0
     ? mergeHEarthGeometryBounds(primitives.map((primitive) => primitive.geometry.bounds))
     : null;
   if (!isHEarthAABB3D(bounds)) issues.push('RUN_8E_NEUTRAL_PACKAGE_BOUNDS_INVALID');
   if (shorelinePrimitives.length !== 7) issues.push(`RUN_8E_SHORELINE_COUNT_EXPECTED_7_ACTUAL_${shorelinePrimitives.length}`);
-  const historicalComposition = compositionMode === 'HISTORICAL_R2_CLOSED';
-  if (!historicalComposition && compositionMode !== 'CONTENT_ADDRESSED_CURRENT_TERRAIN') issues.push('RUN_8E_COMPOSITION_MODE_INVALID');
+  if (!historicalComposition && distantContextPrimitives.length < 1) issues.push('RUN_8E_CURRENT_DISTANT_CONTEXT_MISSING');
   if (historicalComposition && vegetationPrimitives.length !== 27) issues.push(`RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_${vegetationPrimitives.length}`);
   if (historicalComposition && primitives.length !== 35) issues.push(`RUN_8E_NEUTRAL_COUNT_EXPECTED_35_ACTUAL_${primitives.length}`);
   const ids = primitives.map((primitive) => primitive.primitiveId);
@@ -130,6 +135,8 @@ export function buildHEarthRun8ENeutralPackage({ compositionMode = 'HISTORICAL_R
     primitiveCount: primitives.length,
     terrainPrimitiveCount: terrain?.primitive ? 1 : 0,
     shorelinePrimitiveCount: shorelinePrimitives.length,
+    distantContextPrimitiveCount: distantContextPrimitives.length,
+    distantContextPrimitiveIds: freeze(distantContextPrimitives.map((primitive) => primitive.primitiveId)),
     vegetationPrimitiveCount: vegetationPrimitives.length,
     bounds,
     semanticAddressCount: legacy?.semanticAddressCount ?? 0,
@@ -145,6 +152,7 @@ export function buildHEarthRun8ENeutralPackage({ compositionMode = 'HISTORICAL_R
     legacyProxyIncluded: false,
     legacyProxyPreservedOutsideSuccessorFrame: true,
     successorMountainIncluded: true,
+    currentPlanetaryDistantContextIncluded: !historicalComposition && distantContextPrimitives.length > 0,
     admitted: false,
     WestAdmissionPerformed: false,
     packet002TransferPerformed: false,

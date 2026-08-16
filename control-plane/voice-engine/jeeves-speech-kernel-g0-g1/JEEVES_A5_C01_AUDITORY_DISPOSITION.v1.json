@@ -1,0 +1,16 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_C01_AUDITORY_DISPOSITION_v1",
+  "status": "FAIL_INTELLIGIBILITY",
+  "candidateHeadReviewed": "ddc1da1749a90923421bd2ba67055892d028ddf1",
+  "renderedWavSha256": "38bfdcea8e8612867915e2913bd9bdae92657d659343b193c4ed452b664262e6",
+  "expectedUtterance": "Navigation requires orientation.",
+  "ownerObservation": "Perceived primarily as 'who, who'; sentence identity was not recognizable enough for voice-quality judgment.",
+  "interpretation": "Machine acoustic qualification did not establish linguistic intelligibility. A5 must not expand to additional Compass lines.",
+  "frozenFailureClasses": [
+    "phoneme-to-acoustic realization",
+    "lexical boundary preservation",
+    "consonant-vowel contrast",
+    "word-level intelligibility"
+  ],
+  "nextLawfulAction": "CONSTRUCT_C01_INTELLIGIBILITY_REPAIR_BEFORE_ANY_FURTHER_JEEVES_VOICE_QUALITY_CALIBRATION"
+}

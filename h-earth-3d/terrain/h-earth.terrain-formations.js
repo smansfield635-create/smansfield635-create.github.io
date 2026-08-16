@@ -55,7 +55,7 @@ export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
     addressPartitions: [
       { rows: [4, 8], columns: [1, 4] }
     ],
-    worldBounds: { xMin: -242, xMax: -150, zMin: -154, zMax: -42 },
+    worldBounds: { xMin: -250, xMax: -190, zMin: -145, zMax: -48 },
     elevationEnvelope: { minimum: -1, maximum: 20 },
     heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
     fullRealizationEligibility: true,
@@ -68,7 +68,7 @@ export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
     addressPartitions: [
       { rows: [4, 9], columns: [3, 7] }
     ],
-    worldBounds: { xMin: -186, xMax: -78, zMin: -168, zMax: -74 },
+    worldBounds: { xMin: -200, xMax: -140, zMin: -164, zMax: -72 },
     elevationEnvelope: { minimum: -3, maximum: 16 },
     heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
     fullRealizationEligibility: true,
@@ -81,7 +81,7 @@ export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
     addressPartitions: [
       { rows: [4, 8], columns: [6, 9] }
     ],
-    worldBounds: { xMin: -85, xMax: -23, zMin: -142, zMax: -51 },
+    worldBounds: { xMin: -149, xMax: -101, zMin: -141, zMax: -57 },
     elevationEnvelope: { minimum: -1, maximum: 24 },
     heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
     fullRealizationEligibility: true,
@@ -94,7 +94,7 @@ export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
     addressPartitions: [
       { rows: [4, 9], columns: [8, 11] }
     ],
-    worldBounds: { xMin: -39, xMax: 55, zMin: -159, zMax: -67 },
+    worldBounds: { xMin: -106, xMax: -58, zMin: -157, zMax: -72 },
     elevationEnvelope: { minimum: -3, maximum: 18 },
     heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
     fullRealizationEligibility: true,
@@ -133,7 +133,7 @@ export const H_EARTH_TERRAIN_FORMATIONS = deepFreeze({
     addressPartitions: [
       { rows: [4, 8], columns: [14, 16] }
     ],
-    worldBounds: { xMin: 173, xMax: 249, zMin: -145, zMax: -47 },
+    worldBounds: { xMin: 208, xMax: 256, zMin: -139, zMax: -49 },
     elevationEnvelope: { minimum: -1, maximum: 24 },
     heightProfileReference: 'GRATITUDE_COMPOUND_COAST_PROFILE_v1',
     fullRealizationEligibility: true,

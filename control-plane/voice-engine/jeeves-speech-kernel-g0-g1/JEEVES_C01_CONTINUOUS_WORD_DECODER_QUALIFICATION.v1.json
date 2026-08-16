@@ -1,0 +1,29 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_CONTINUOUS_WORD_DECODER_QUALIFICATION_v1",
+  "status": "PASS_INTERNAL_WORD_LEVEL_RECOGNIZABILITY",
+  "candidateRendererHead": "6203b112aed6a06ecd0df7b316d562b8ac66cbb6",
+  "decoderEvidenceLaw": "Candidate boundaries are detected from continuous waveform silence; candidate phone and word labels are not read during decoding.",
+  "closedSet": ["Navigation", "requires", "orientation"],
+  "decodedOrder": ["Navigation", "requires", "orientation"],
+  "wordRegionsSeconds": [0.846, 0.6479583333, 0.9569583333],
+  "positiveNearestCompetitorMargins": {
+    "Navigation": 0.0272010875,
+    "requires": 0.6232284113,
+    "orientation": 0.0957164065
+  },
+  "controls": {
+    "exactlyTwoInteriorSilenceRuns": true,
+    "minimumSilenceRunMs": 80,
+    "reversedOrderRejected": true,
+    "allMarginsPositive": true
+  },
+  "scope": "INTERNAL_CLOSED_SET_WORD_RECOGNIZABILITY_ONLY",
+  "notClaimed": [
+    "open-vocabulary speech recognition",
+    "human auditory intelligibility",
+    "natural speech",
+    "Jeeves voice quality"
+  ],
+  "humanListeningAuthorized": false,
+  "nextLawfulAction": "CONSTRUCT_OPEN_VARIATION_ROBUSTNESS_GATE_BEFORE_ANY_HUMAN_LISTENING_CANDIDATE"
+}

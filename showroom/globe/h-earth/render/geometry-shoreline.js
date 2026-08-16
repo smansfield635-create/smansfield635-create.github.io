@@ -1,10 +1,10 @@
 /**
  * /showroom/globe/h-earth/render/geometry-shoreline.js
  *
- * C3C1 3D coastal-corner shoreline provider. Each canonical shoreline band is
- * one neutral primitive containing two open 3D strips: the existing north coast
- * and the derived east coast. They meet/overlap at the northeast corner without
- * forcing the 1600-unit open-ocean ribbon through a tight parametric bend.
+ * C3C3R2 rendered-path repair. Each canonical shoreline band remains one
+ * neutral primitive containing two open 3D strips: north coast and east coast.
+ * OPEN_WATER is now segmented in world space so the exact primitive consumed by
+ * landscape-preview carries a flat near shore and a planetary ocean falloff.
  */
 
 import {
@@ -32,13 +32,20 @@ const freeze = (value, seen = new WeakSet()) => {
 const lerp = (a, b, t) => a + (b - a) * t;
 const CP3D_CANONICAL_SCALE = 2 ** 24;
 const CP3D_CANONICAL_SHORELINE_BANDS = new Set(['DRY_SAND_EDGE', 'DAMP_TRANSITION']);
-const VISUAL_OCEAN_CONTINUATION_OFFSET = -1600;
+const VISUAL_OCEAN_CONTINUATION_OFFSET = -2200;
 const NORTH_X_MIN = -1024;
 const CORNER_X = 232;
 const CORNER_Z = -64.475;
 const EAST_Z_MIN = -1024;
 const NORTH_SAMPLE_COUNT = 257;
 const EAST_SAMPLE_COUNT = 193;
+const PLANETARY_OCEAN_PROFILE = freeze({
+  nearFieldFlatDistance: 640,
+  effectivePlanetRadius: 42000,
+  maximumDrop: 48,
+  projectionClass: 'WORLD_SPACE_SPHERICAL_APPROXIMATION',
+  segmentOffsets: freeze([-58, -180, -360, -640, -900, -1250, -1700, VISUAL_OCEAN_CONTINUATION_OFFSET])
+});
 
 function canonicalize(value) {
   const result = Math.round(value * CP3D_CANONICAL_SCALE) / CP3D_CANONICAL_SCALE;
@@ -48,9 +55,18 @@ function canonicalizePoint(point, bandId) {
   if (!CP3D_CANONICAL_SHORELINE_BANDS.has(bandId)) return point;
   return { ...point, x: canonicalize(point.x), y: canonicalize(point.y), z: canonicalize(point.z) };
 }
+function planetaryDropForOffset(offset) {
+  const distanceFromShore = Math.max(0, -offset);
+  if (distanceFromShore <= PLANETARY_OCEAN_PROFILE.nearFieldFlatDistance) return 0;
+  const curvedDistance = distanceFromShore - PLANETARY_OCEAN_PROFILE.nearFieldFlatDistance;
+  return Math.min(
+    PLANETARY_OCEAN_PROFILE.maximumDrop,
+    (curvedDistance * curvedDistance) / (2 * PLANETARY_OCEAN_PROFILE.effectivePlanetRadius)
+  );
+}
 
 export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_C3C1_NORTHEAST_COASTAL_CORNER_v2';
+  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_C3C3R2_RENDERED_PLANETARY_OCEAN_v1';
 
 export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   { bandId: 'DRY_SAND_EDGE', innerOffset: 34, outerOffset: 14, materialReference: 'H_EARTH_MATERIAL_DRY_SAND', materialIntent: 'DRY_SAND' },
@@ -59,24 +75,25 @@ export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   { bandId: 'FOAM_CONTACT', innerOffset: 0, outerOffset: -3.2, materialReference: 'H_EARTH_MATERIAL_FOAM', materialIntent: 'FOAM_CONTACT' },
   { bandId: 'SHALLOW_WATER', innerOffset: -3.2, outerOffset: -22, materialReference: 'H_EARTH_MATERIAL_NEARSHORE_WATER', materialIntent: 'SHALLOW_WATER' },
   { bandId: 'NEARSHORE_WATER', innerOffset: -22, outerOffset: -58, materialReference: 'H_EARTH_MATERIAL_NEARSHORE_WATER', materialIntent: 'NEARSHORE_WATER' },
-  { bandId: 'OPEN_WATER', innerOffset: -58, outerOffset: VISUAL_OCEAN_CONTINUATION_OFFSET, materialReference: 'H_EARTH_MATERIAL_OPEN_WATER', materialIntent: 'OPEN_WATER_VISUAL_WORLD_CONTINUATION' }
+  { bandId: 'OPEN_WATER', innerOffset: -58, outerOffset: VISUAL_OCEAN_CONTINUATION_OFFSET, materialReference: 'H_EARTH_MATERIAL_OPEN_WATER', materialIntent: 'OPEN_WATER_PLANETARY_VISUAL_WORLD_CONTINUATION' }
 ]);
 
-function elevationFor(worldX, worldZ, offset) {
+function elevationFor(worldX, worldZ, offset, bandId) {
   if (offset <= 0) {
-    return H_EARTH_TERRAIN_FIELD.worldDomain.seaLevelY + (offset >= -3.2 ? 0.035 : 0.015);
+    const base = H_EARTH_TERRAIN_FIELD.worldDomain.seaLevelY + (offset >= -3.2 ? 0.035 : 0.015);
+    return bandId === 'OPEN_WATER' ? base - planetaryDropForOffset(offset) : base;
   }
   return sampleHEarthTerrainField(worldX, worldZ).elevation;
 }
 
 function northPoint(x, offset, bandId) {
   const worldZ = getHEarthCanonicalShorelineZ(x) - offset;
-  return canonicalizePoint({ x, y: elevationFor(x, worldZ, offset), z: worldZ }, bandId);
+  return canonicalizePoint({ x, y: elevationFor(x, worldZ, offset, bandId), z: worldZ }, bandId);
 }
 
 function eastPoint(z, offset, bandId) {
   const worldX = getHEarthCanonicalEasternShorelineX(z) - offset;
-  return canonicalizePoint({ x: worldX, y: elevationFor(worldX, z, offset), z }, bandId);
+  return canonicalizePoint({ x: worldX, y: elevationFor(worldX, z, offset, bandId), z }, bandId);
 }
 
 function appendStrip({ vertices, indices, sourceSampleIds, count, innerAt, outerAt, samplePrefix }) {
@@ -99,11 +116,7 @@ function appendStrip({ vertices, indices, sourceSampleIds, count, innerAt, outer
   }
 }
 
-function constructBand(band) {
-  const vertices = [];
-  const indices = [];
-  const sourceSampleIds = [];
-
+function appendNorthSegment(vertices, indices, sourceSampleIds, bandId, innerOffset, outerOffset, segmentIndex = null) {
   appendStrip({
     vertices,
     indices,
@@ -111,15 +124,17 @@ function constructBand(band) {
     count: NORTH_SAMPLE_COUNT,
     innerAt: (index) => {
       const x = lerp(NORTH_X_MIN, CORNER_X, index / (NORTH_SAMPLE_COUNT - 1));
-      return northPoint(x, band.innerOffset, band.bandId);
+      return northPoint(x, innerOffset, bandId);
     },
     outerAt: (index) => {
       const x = lerp(NORTH_X_MIN, CORNER_X, index / (NORTH_SAMPLE_COUNT - 1));
-      return northPoint(x, band.outerOffset, band.bandId);
+      return northPoint(x, outerOffset, bandId);
     },
-    samplePrefix: 'H_EARTH_C3C1_NORTH_COAST_SAMPLE'
+    samplePrefix: segmentIndex === null ? 'H_EARTH_C3C1_NORTH_COAST_SAMPLE' : `H_EARTH_C3C3R2_NORTH_OCEAN_SEGMENT_${segmentIndex}`
   });
+}
 
+function appendEastSegment(vertices, indices, sourceSampleIds, bandId, innerOffset, outerOffset, segmentIndex = null) {
   appendStrip({
     vertices,
     indices,
@@ -127,17 +142,34 @@ function constructBand(band) {
     count: EAST_SAMPLE_COUNT,
     innerAt: (index) => {
       const z = lerp(CORNER_Z, EAST_Z_MIN, index / (EAST_SAMPLE_COUNT - 1));
-      return eastPoint(z, band.innerOffset, band.bandId);
+      return eastPoint(z, innerOffset, bandId);
     },
     outerAt: (index) => {
       const z = lerp(CORNER_Z, EAST_Z_MIN, index / (EAST_SAMPLE_COUNT - 1));
-      return eastPoint(z, band.outerOffset, band.bandId);
+      return eastPoint(z, outerOffset, bandId);
     },
-    samplePrefix: 'H_EARTH_C3C1_EAST_COAST_SAMPLE'
+    samplePrefix: segmentIndex === null ? 'H_EARTH_C3C1_EAST_COAST_SAMPLE' : `H_EARTH_C3C3R2_EAST_OCEAN_SEGMENT_${segmentIndex}`
   });
+}
+
+function constructBand(band) {
+  const vertices = [];
+  const indices = [];
+  const sourceSampleIds = [];
+  const visualContinuation = band.bandId === 'OPEN_WATER';
+
+  if (visualContinuation) {
+    const offsets = PLANETARY_OCEAN_PROFILE.segmentOffsets;
+    for (let index = 0; index < offsets.length - 1; index += 1) {
+      appendNorthSegment(vertices, indices, sourceSampleIds, band.bandId, offsets[index], offsets[index + 1], index);
+      appendEastSegment(vertices, indices, sourceSampleIds, band.bandId, offsets[index], offsets[index + 1], index);
+    }
+  } else {
+    appendNorthSegment(vertices, indices, sourceSampleIds, band.bandId, band.innerOffset, band.outerOffset);
+    appendEastSegment(vertices, indices, sourceSampleIds, band.bandId, band.innerOffset, band.outerOffset);
+  }
 
   const primitiveId = `H_EARTH_FUNCTIONAL_SHORELINE:${band.bandId}`;
-  const visualContinuation = band.bandId === 'OPEN_WATER';
   const construction = constructHEarthTriangleMesh({
     primitiveId,
     geometryId: `${primitiveId}:GEOMETRY`,
@@ -148,7 +180,7 @@ function constructBand(band) {
     expectedClosure: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
     semanticRole: `FUNCTIONAL_SHORELINE_${band.bandId}`,
     materialHint: freeze({ materialReference: band.materialReference, materialIntent: band.materialIntent }),
-    source: freeze({ sourceType: 'H_EARTH_C3C1_COMPOUND_NORTH_AND_EAST_COASTAL_STRIPS', terrainFieldContractId: H_EARTH_TERRAIN_FIELD.contractId }),
+    source: freeze({ sourceType: 'H_EARTH_C3C3R2_COMPOUND_NORTH_AND_EAST_COASTAL_STRIPS', terrainFieldContractId: H_EARTH_TERRAIN_FIELD.contractId }),
     metadata: freeze({
       providerContractId: H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,
       bandId: band.bandId,
@@ -157,12 +189,23 @@ function constructBand(band) {
       innerOffset: band.innerOffset,
       outerOffset: band.outerOffset,
       sourceSampleIds,
-      sampleCount: NORTH_SAMPLE_COUNT + EAST_SAMPLE_COUNT,
-      northSampleCount: NORTH_SAMPLE_COUNT,
-      eastSampleCount: EAST_SAMPLE_COUNT,
-      topologyLaw: 'TWO_OPEN_3D_STRIPS_SHARE_NORTHEAST_CORNER_REGION_WITHOUT_FORCING_FAR_OCEAN_OFFSET_THROUGH_TIGHT_BEND',
-      waterSurfaceLaw: band.outerOffset <= 0 ? 'ONE_COHERENT_SEA_LEVEL_SURFACE' : 'CANONICAL_TERRAIN_FIELD',
+      sampleCount: sourceSampleIds.length,
+      northSampleCount: visualContinuation ? NORTH_SAMPLE_COUNT * (PLANETARY_OCEAN_PROFILE.segmentOffsets.length - 1) : NORTH_SAMPLE_COUNT,
+      eastSampleCount: visualContinuation ? EAST_SAMPLE_COUNT * (PLANETARY_OCEAN_PROFILE.segmentOffsets.length - 1) : EAST_SAMPLE_COUNT,
+      topologyLaw: visualContinuation
+        ? 'SEGMENTED_NORTH_AND_EAST_OPEN_WATER_STRIPS_PRESERVE_COAST_CONTACT_AND_DROP_ONLY_BEYOND_NEAR_FIELD'
+        : 'TWO_OPEN_3D_STRIPS_SHARE_NORTHEAST_CORNER_REGION_WITHOUT_FORCING_FAR_OCEAN_OFFSET_THROUGH_TIGHT_BEND',
+      waterSurfaceLaw: visualContinuation ? 'WORLD_SPACE_PLANETARY_FALLOFF_AFTER_FLAT_NEAR_FIELD' : band.outerOffset <= 0 ? 'ONE_COHERENT_SEA_LEVEL_SURFACE' : 'CANONICAL_TERRAIN_FIELD',
       visualContinuationLayer: visualContinuation,
+      renderedLandscapeMemberRequired: true,
+      planetaryOceanLimb: visualContinuation,
+      worldSpaceCurvature: visualContinuation,
+      planetaryProjectionClass: visualContinuation ? PLANETARY_OCEAN_PROFILE.projectionClass : null,
+      planetaryRadius: visualContinuation ? PLANETARY_OCEAN_PROFILE.effectivePlanetRadius : null,
+      planetaryLimbStartDistance: visualContinuation ? PLANETARY_OCEAN_PROFILE.nearFieldFlatDistance : null,
+      planetaryMaximumDrop: visualContinuation ? PLANETARY_OCEAN_PROFILE.maximumDrop : null,
+      viewportFixedArc: false,
+      localShorelineDeformation: false,
       primaryOceanExposure: '+Z_NORTH',
       secondaryOceanExposure: '+X_EAST',
       inlandReliefMutationAuthorized: false,
@@ -171,7 +214,7 @@ function constructBand(band) {
       collisionAuthority: false,
       accessibleRegionExpansion: false,
       oceanFacingLandProhibited: visualContinuation,
-      continuationLaw: visualContinuation ? 'OPEN_WATER_EXTENDS_INDEPENDENTLY_OUTWARD_FROM_NORTH_AND_EAST_CONTINENTAL_EDGES' : null,
+      continuationLaw: visualContinuation ? 'OPEN_WATER_EXTENDS_INDEPENDENTLY_OUTWARD_FROM_NORTH_AND_EAST_CONTINENTAL_EDGES_WITH_WORLD_SPACE_FALLOFF' : null,
       foundingPacketMutationPerformed: false,
       cp3dCanonicalCoordinateLaw: CP3D_CANONICAL_SHORELINE_BANDS.has(band.bandId) ? 'ROUND_TO_2_POW_NEGATIVE_24_BEFORE_BOUNDS_AND_NORMALS' : null,
       admitted: false,
@@ -189,24 +232,18 @@ function constructBand(band) {
 
 export function constructHEarthFunctionalShorelineGeometry() {
   const results = H_EARTH_FUNCTIONAL_SHORELINE_BANDS.map(constructBand);
-  const issues = results.filter((result) => !result.ok).map((result) => `SHORELINE_BAND_INVALID:${result.bandId}`);
+  const issues = results.flatMap((result) => result.issues);
   const primitives = results.filter((result) => result.ok).map((result) => result.primitive);
-  const bounds = primitives.length > 0 ? mergeHEarthGeometryBounds(primitives.map((primitive) => primitive.geometry.bounds)) : null;
+  const openWaterPrimitive = primitives.find((primitive) => primitive.metadata?.bandId === 'OPEN_WATER') ?? null;
   return freeze({
-    ok: issues.length === 0 && primitives.length === H_EARTH_FUNCTIONAL_SHORELINE_BANDS.length,
-    status: issues.length === 0 ? 'FUNCTIONAL_SHORELINE_GEOMETRY_COMPLETE' : 'FUNCTIONAL_SHORELINE_GEOMETRY_FAILED',
+    ok: results.every((result) => result.ok),
+    status: results.every((result) => result.ok) ? 'FUNCTIONAL_SHORELINE_GEOMETRY_COMPLETE' : 'FUNCTIONAL_SHORELINE_GEOMETRY_FAILED',
     contractId: H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,
-    sourceBoundaryId: 'H_EARTH_C3C1_NORTHEAST_COASTAL_CORNER',
-    sourceBoundaryContractId: H_EARTH_TERRAIN_FIELD.contractId,
-    bandCount: primitives.length,
-    northSampleCount: NORTH_SAMPLE_COUNT,
-    eastSampleCount: EAST_SAMPLE_COUNT,
-    results,
     primitives,
-    bounds,
-    visualOceanContinuation: true,
+    bounds: primitives.length ? mergeHEarthGeometryBounds(primitives.map((primitive) => primitive.geometry.bounds)) : null,
+    renderedPlanetaryOpenWater: openWaterPrimitive?.metadata?.planetaryOceanLimb === true,
+    openWaterPrimitiveId: openWaterPrimitive?.primitiveId ?? null,
     accessibleRegionExpansion: false,
-    admitted: false,
     issues
   });
 }

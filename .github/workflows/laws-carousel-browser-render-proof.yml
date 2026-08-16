@@ -75,6 +75,7 @@ jobs:
             if (await cards.count() < 3) throw new Error('active destination family lacks carousel records');
             const active = field.locator('.laws-rolodex-card[data-active="true"]');
             if (await active.count() !== 1) throw new Error('exactly one active carousel card required');
+            if (await field.locator('.laws-rolodex-control').count() !== 0) throw new Error('surrogate Previous/Next controls are forbidden');
 
             const cardStyles = await cards.evaluateAll(nodes => nodes.slice(0,3).map(n => ({
               position:getComputedStyle(n).position,
@@ -86,10 +87,19 @@ jobs:
             if (new Set(cardStyles.map(s => s.transform)).size < 2) throw new Error('carousel cards do not occupy distinct spatial transforms');
 
             const before = await active.getAttribute('data-destination-id');
-            await field.locator('.laws-rolodex-control').last().click();
+            const viewport = field.locator('.laws-rolodex-viewport');
+            await viewport.focus();
+            await page.keyboard.press('ArrowRight');
             await page.waitForTimeout(750);
             const after = await field.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
-            if (!after || after === before) throw new Error('next control did not advance carousel state');
+            if (!after || after === before) throw new Error('keyboard spatial traversal did not advance carousel state');
+
+            const activeBox = await field.locator('.laws-rolodex-card[data-active="true"]').boundingBox();
+            const viewportBox = await viewport.boundingBox();
+            if (!activeBox || !viewportBox) throw new Error('active card or viewport lacks rendered geometry');
+            const cardCenter = activeBox.x + activeBox.width / 2;
+            const viewportCenter = viewportBox.x + viewportBox.width / 2;
+            if (Math.abs(cardCenter - viewportCenter) > 24) throw new Error(`active card lacks center custody: ${cardCenter} vs ${viewportCenter}`);
 
             await tabs.nth(0).click();
             await page.waitForTimeout(250);
@@ -100,7 +110,7 @@ jobs:
             if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
             await stage.scrollIntoViewIfNeeded();
             await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
-            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, cardStyles}, null, 2));
+            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, activeBox, viewportBox, cardStyles}, null, 2));
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE

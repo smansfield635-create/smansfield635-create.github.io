@@ -75,21 +75,56 @@ jobs:
             if (await cards.count() < 3) throw new Error('active destination family lacks carousel records');
             const active = field.locator('.laws-rolodex-card[data-active="true"]');
             if (await active.count() !== 1) throw new Error('exactly one active carousel card required');
+            if (await field.locator('.laws-rolodex-control').count() !== 0) throw new Error('surrogate Previous/Next controls are forbidden');
 
             const cardStyles = await cards.evaluateAll(nodes => nodes.slice(0,3).map(n => ({
               position:getComputedStyle(n).position,
               transform:getComputedStyle(n).transform,
               opacity:getComputedStyle(n).opacity,
+              relative:n.getAttribute('data-carousel-relative'),
+              active:n.getAttribute('data-active'),
+              x:n.style.getPropertyValue('--laws-carousel-x'),
               rect:n.getBoundingClientRect().toJSON()
             })));
             if (!cardStyles.every(s => s.position === 'absolute')) throw new Error('cards are not spatially positioned');
             if (new Set(cardStyles.map(s => s.transform)).size < 2) throw new Error('carousel cards do not occupy distinct spatial transforms');
 
             const before = await active.getAttribute('data-destination-id');
-            await field.locator('.laws-rolodex-control').last().click();
-            await page.waitForTimeout(750);
-            const after = await field.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
-            if (!after || after === before) throw new Error('next control did not advance carousel state');
+            const viewport = field.locator('.laws-rolodex-viewport');
+            await viewport.focus();
+            await page.keyboard.press('ArrowRight');
+            await page.waitForFunction(() => {
+              const field = document.querySelector('.laws-rolodex-field[data-destination-stage-state="active"]');
+              const active = field?.querySelector('.laws-rolodex-card[data-active="true"]');
+              const viewport = field?.querySelector('.laws-rolodex-viewport');
+              if (!active || !viewport) return false;
+              const a = active.getBoundingClientRect();
+              const v = viewport.getBoundingClientRect();
+              return Math.abs((a.left + a.width / 2) - (v.left + v.width / 2)) <= 24;
+            }, null, { timeout: 3000 });
+
+            const activeAfter = field.locator('.laws-rolodex-card[data-active="true"]');
+            const after = await activeAfter.getAttribute('data-destination-id');
+            if (!after || after === before) throw new Error('keyboard spatial traversal did not advance carousel state');
+
+            const activeBox = await activeAfter.boundingBox();
+            const viewportBox = await viewport.boundingBox();
+            const track = field.locator('.laws-rolodex-track');
+            const trackBox = await track.boundingBox();
+            const activeMeta = await activeAfter.evaluate(n => ({
+              relative:n.getAttribute('data-carousel-relative'),
+              active:n.getAttribute('data-active'),
+              x:n.style.getPropertyValue('--laws-carousel-x'),
+              z:n.style.getPropertyValue('--laws-carousel-z'),
+              scale:n.style.getPropertyValue('--laws-carousel-scale'),
+              transform:getComputedStyle(n).transform,
+              left:getComputedStyle(n).left,
+              width:getComputedStyle(n).width
+            }));
+            if (!activeBox || !viewportBox || !trackBox) throw new Error('active card, track, or viewport lacks rendered geometry');
+            const cardCenter = activeBox.x + activeBox.width / 2;
+            const viewportCenter = viewportBox.x + viewportBox.width / 2;
+            if (Math.abs(cardCenter - viewportCenter) > 24) throw new Error(`active card lacks settled center custody: ${cardCenter} vs ${viewportCenter}`);
 
             await tabs.nth(0).click();
             await page.waitForTimeout(250);
@@ -100,7 +135,7 @@ jobs:
             if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
             await stage.scrollIntoViewIfNeeded();
             await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
-            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, cardStyles}, null, 2));
+            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, activeMeta, activeBox, viewportBox, trackBox, cardStyles}, null, 2));
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE

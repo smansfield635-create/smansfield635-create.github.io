@@ -1,0 +1,26 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_INTELLIGIBILITY_REPAIR_BOUNDARY_v1",
+  "status": "ADMITTED_BOUNDED_REPAIR",
+  "predecessorAuditoryDisposition": "FAIL_INTELLIGIBILITY",
+  "utterance": "Navigation requires orientation.",
+  "governingRequirement": "A listener who knows only that one English sentence is being spoken must be able to recognize the words before naturalness or Jeeves identity is judged.",
+  "repairScope": [
+    "correct C01 phoneme sequence",
+    "explicit word boundaries and silence gaps",
+    "phoneme-class duration contrast",
+    "consonant onset/release audibility",
+    "vowel identity preservation",
+    "word-final consonant preservation"
+  ],
+  "frozenOutsideScope": [
+    "A5 reference provenance",
+    "100 Hz neutral F0 anchor",
+    "Jeeves character identity specification",
+    "A2-A4 historical evidence",
+    "learned components",
+    "external model weights",
+    "remote TTS"
+  ],
+  "criticalCorrection": "The prior C01 test vector concatenated phoneme frames continuously and contained no explicit word-gap frames. This repair must model lexical boundaries as acoustic silence rather than relying on phoneme duration alone.",
+  "nextBoundary": "RENDER_ONE_REPAIRED_C01_AUDITORY_CANDIDATE"
+}

@@ -1,0 +1,127 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_L0_L1_BOUNDED_MANIFESTATION_CANDIDATE_v1",
+  "version": "1.0.0",
+  "operation": "TESTS_L0_L1_BOUNDED_MANIFESTATION_M1_v1",
+  "candidateId": "M1_TESTS_METHODS_OPERATIONAL_FIELD",
+  "status": "BOUNDED_NONPUBLIC_L0_L1_MANIFESTATION_CANDIDATE",
+  "constructionBaseMain": "64d0ea7673d1ecb61372a0dd8b127b889157da1d",
+  "governingAuthority": {
+    "authorityContract": {
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json",
+      "blob": "0bfab791c005ca71cee771a5d14d27f8dfab3177"
+    },
+    "registryContract": {
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/object-projection-registry-contract.v1.json",
+      "blob": "ed969c87359c42444c477a752f332f07f0059a30"
+    },
+    "promotedRegistry": {
+      "path": "control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json",
+      "blob": "b801a11e342051a6b00e6f7098b1d691685ad0b6",
+      "promotionMerge": "64d0ea7673d1ecb61372a0dd8b127b889157da1d"
+    }
+  },
+  "layerBoundary": {
+    "L0": "MANIFESTED",
+    "L1": "MANIFESTED",
+    "L2_INSPECTION": "WITHHELD_NOT_IMPLEMENTED",
+    "L3_FOLLOW": "WITHHELD_NOT_IMPLEMENTED",
+    "L3_PROVENANCE_ROUTE": "WITHHELD_NOT_IMPLEMENTED",
+    "L4_ENTER": "WITHHELD_NOT_IMPLEMENTED"
+  },
+  "projection": {
+    "id": "METHODS",
+    "projectionCount": 1,
+    "objectCount": 3,
+    "relationCount": 2,
+    "corpusCompletenessClaim": false,
+    "projectionMembershipCreatesOntology": false
+  },
+  "l0Controls": [
+    {"id": "METHODS", "enabled": true, "active": true, "populationStatus": "ADMITTED_BY_PROMOTED_REGISTRY"},
+    {"id": "MODELS", "enabled": false, "active": false, "populationStatus": "UNAUTHORIZED_IN_THIS_CANDIDATE"},
+    {"id": "EXPERIMENTS", "enabled": false, "active": false, "populationStatus": "UNAUTHORIZED_IN_THIS_CANDIDATE"},
+    {"id": "EVIDENCE", "enabled": false, "active": false, "populationStatus": "UNAUTHORIZED_IN_THIS_CANDIDATE"}
+  ],
+  "objects": [
+    {"OBJECT_ID": "METHODS", "OBJECT_CLASS": "METHOD"},
+    {"OBJECT_ID": "ROUTE_OPERATOR_PLATFORM", "OBJECT_CLASS": "METHOD"},
+    {"OBJECT_ID": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO", "OBJECT_CLASS": "TEST_INSTANCE"}
+  ],
+  "relations": [
+    {
+      "RELATION_ID": "METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "SOURCE_OBJECT": "METHODS",
+      "RELATION": "GOVERNS_PROCEDURE_FOR",
+      "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"
+    },
+    {
+      "RELATION_ID": "ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO",
+      "SOURCE_OBJECT": "ROUTE_OPERATOR_PLATFORM",
+      "RELATION": "EXECUTES",
+      "TARGET_OBJECT": "PROSPECTIVE_FINAL_REPORT_PORTFOLIO"
+    }
+  ],
+  "interactionBoundary": {
+    "implementedOperations": ["FOCUS"],
+    "focusMeaning": "MOVE_ATTENTION_WITHIN_CURRENT_SPATIAL_FIELD_ONLY",
+    "focusMutatesScientificState": false,
+    "inspectionImplemented": false,
+    "followImplemented": false,
+    "enterImplemented": false,
+    "unsupportedInteractionDisposition": "ABSENT"
+  },
+  "perceptualContract": {
+    "stableL0SelectorControl": true,
+    "onePerceptuallyDominantActiveL1Object": true,
+    "neighboringObjectsSpatiallyRetained": true,
+    "fieldLikeAttentionMovement": true,
+    "ordinaryVerticalDocumentTranslationAsPrimaryGrammar": false,
+    "directionalRelationConnectorsRequired": true,
+    "relationLabelsRequired": true,
+    "activeObjectScaleMeansScientificImportance": false
+  },
+  "nonSemanticSpatiality": {
+    "spatialAdjacencyCreatesRelation": false,
+    "selectorMembershipCreatesOntology": false,
+    "screenDistanceExpressesRelationStrength": false,
+    "objectScaleExpressesScientificImportance": false,
+    "animationPathExpressesCausality": false,
+    "navigationOrderExpressesScientificSequence": false,
+    "responsivePositionCreatesOrChangesRelation": false
+  },
+  "deepEntryBoundary": {
+    "m1r2Identity": "M1R2_METHOD_PROCEDURE_FIELD",
+    "m1r2Classification": "VALID_DEEP_PROCEDURAL_INSTRUMENT",
+    "status": "WITHHELD_DEEP_ENTRY_AUTHORITY_UNRESOLVED_FOR_SELECTED_PARENT_BINDING",
+    "enterControlPresent": false,
+    "parentBindingInferred": false,
+    "m1r2MutationAuthorized": false
+  },
+  "populationBoundary": {
+    "placeholderObjects": 0,
+    "inventedObjects": 0,
+    "inventedRelations": 0,
+    "broaderModelsPopulation": false,
+    "broaderExperimentsPopulation": false,
+    "broaderEvidencePopulation": false,
+    "researchContentCopied": false
+  },
+  "mutationBoundary": {
+    "publicMutation": false,
+    "publicRouteCreation": false,
+    "researchAuthorityMutation": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "M1R2Mutation": false,
+    "scientificClaimUpgrade": false
+  },
+  "evidenceBoundary": {
+    "staticConstructionConformance": "AUTHORIZED_TO_RUN",
+    "runtimeInteraction": "NOT_YET_ESTABLISHED",
+    "accessibilityResponsiveEquivalence": "NOT_YET_ESTABLISHED",
+    "perceptualEvaluation": "NOT_YET_ESTABLISHED",
+    "freshIndependentVerification": "NOT_YET_ESTABLISHED",
+    "userDifferential": "NOT_YET_ESTABLISHED",
+    "publicPromotion": "WITHHELD"
+  }
+}

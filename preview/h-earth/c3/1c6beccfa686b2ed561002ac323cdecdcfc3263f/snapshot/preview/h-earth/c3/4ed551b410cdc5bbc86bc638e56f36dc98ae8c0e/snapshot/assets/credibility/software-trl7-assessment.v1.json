@@ -1,0 +1,77 @@
+{
+  "schema": "DIAMOND_GATE_SOFTWARE_TRL7_SELF_ASSESSMENT_v1",
+  "status": "PUBLIC_INSPECTABLE_MECHANICALLY_VALIDATED_AND_SEMANTICALLY_BOUND_SELF_ASSESSMENT",
+  "assessmentDate": "2026-08-13",
+  "assessor": "Diamond Gate",
+  "assessedTechnology": "Diamond Gate governed software-construction platform",
+  "assessmentResult": "SELF_ASSESSED_TRL_7_PASS",
+  "framework": {
+    "name": "NASA Technology Readiness Levels",
+    "primarySource": "https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7123_001D_&page_name=AppendixE",
+    "softwareGuidance": "https://swehb.nasa.gov/spaces/SWEHBVD/pages/240222216/7.12%2B%E2%80%93%2BSoftware%2BTechnology%2BReadiness%2BLevels%2BSTRLs%2Band%2BMilestone%2BReview%2BAlignment",
+    "level": 7,
+    "definition": "System prototype demonstration in an operational environment."
+  },
+  "boundary": {
+    "included": ["authority and intake control","exact-state bounded execution","governed software construction","continuity and recovery","qualification and regression behavior","integration with the actual repository and automation environment"],
+    "excluded": ["every Diamond Gate research claim","every public page or experimental world as an independent TRL 7 technology","enterprise-scale traffic or market adoption","NASA certification, evaluation, affiliation or endorsement","TRL 8 or TRL 9 readiness"]
+  },
+  "criteria": [
+    {
+      "id": "key-functionality",
+      "criterion": "Prototype software has all key functionality available for demonstration and test.",
+      "disposition": "PASS",
+      "reason": "The bounded platform exposes and exercises the key lifecycle functions required for governed construction: authority/intake, exact-state execution, construction, continuity/recovery and qualification.",
+      "semanticContract": {"requiredCapabilities":["bounded-execution","lifecycle-continuity"],"requiredEvidenceClasses":["implementation","executable-test"],"bindingRule":"Each required capability must be represented by an exact historical implementation or executable self-test identity; generic repository links cannot satisfy this criterion."},
+      "publicEvidence": [
+        {"id":"bounded-execution-implementation","class":"implementation","capability":"bounded-execution","label":"Historical bounded execution carrier","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs"},
+        {"id":"bounded-execution-test","class":"executable-test","capability":"bounded-execution","label":"Historical bounded execution self-test","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs"},
+        {"id":"lifecycle-continuity-implementation","class":"implementation","capability":"lifecycle-continuity","label":"Historical successor packet compiler","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs"}
+      ]
+    },
+    {
+      "id": "operational-integration",
+      "criterion": "Prototype software is well integrated with operational hardware/software systems and demonstrates operational feasibility.",
+      "disposition": "PASS",
+      "reason": "The assessed platform has been exercised through the actual GitHub repository and automation environment used to govern, construct, qualify and advance the live estate; the assessment does not substitute synthetic scale for the actual operational platform.",
+      "semanticContract": {"requiredCapabilities":["operational-repository-integration"],"requiredEvidenceClasses":["operational-environment","execution-record"],"bindingRule":"The operational environment must be the actual public repository and the execution record must be an exact immutable commit, not a synthetic fixture or prose-only claim."},
+      "publicEvidence": [
+        {"id":"operational-repository","class":"operational-environment","capability":"operational-repository-integration","label":"Current public repository","url":"https://github.com/smansfield635-create/smansfield635-create.github.io"},
+        {"id":"level4-gauntlet-merge","class":"execution-record","capability":"operational-repository-integration","label":"Level 4 benchmark gauntlet merge","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/commit/331e002a169d5cccbbbedd1fb9c3d20be18d1cc9"}
+      ]
+    },
+    {
+      "id": "defect-maturity",
+      "criterion": "Most software bugs are removed within the assessed prototype boundary.",
+      "disposition": "PASS_BOUNDED",
+      "reason": "This is not interpreted as defect-free software. Within the bounded governed-construction platform, material defects discovered during operation are tracked through repair, requalification and closure rather than knowingly left as accepted blockers. TRL 8 remains explicitly unclaimed because the platform is still evolving.",
+      "semanticContract": {"requiredCapabilities":["defect-disposition"],"requiredEvidenceClasses":["history","boundary-record"],"bindingRule":"This bounded disposition requires inspectable repair/requalification history plus an explicit public boundary; it does not assert zero defects or substitute repository activity for a formal defect census."},
+      "publicEvidence": [
+        {"id":"repository-history","class":"history","capability":"defect-disposition","label":"Current repository history","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/commits/main/"},
+        {"id":"claim-boundaries","class":"boundary-record","capability":"defect-disposition","label":"Evidence claim boundaries","url":"/assets/credibility/claims.v1.json"}
+      ]
+    },
+    {
+      "id": "documented-test-performance",
+      "criterion": "Documented test performance demonstrates agreement with the declared predictions or acceptance conditions.",
+      "disposition": "PASS",
+      "reason": "The public record includes a frozen quantitative benchmark gauntlet with an invalidated first run, corrected custody state, admissible Run 002 and independent reproduction, plus executable qualification evidence for bounded execution and continuity mechanisms.",
+      "semanticContract": {"requiredCapabilities":["benchmark-performance","bounded-execution","continuity"],"requiredEvidenceClasses":["execution-record","executable-test"],"bindingRule":"The criterion requires an immutable benchmark execution record and executable test identities; implementation source alone cannot satisfy documented test performance."},
+      "publicEvidence": [
+        {"id":"benchmark-execution-record","class":"execution-record","capability":"benchmark-performance","label":"Identity-conditioned reachability Level 4 gauntlet merge","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/commit/331e002a169d5cccbbbedd1fb9c3d20be18d1cc9"},
+        {"id":"bounded-execution-test-performance","class":"executable-test","capability":"bounded-execution","label":"Historical bounded execution self-test","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs"},
+        {"id":"continuity-test-performance","class":"executable-test","capability":"continuity","label":"Historical continuity self-test","url":"https://github.com/smansfield635-create/smansfield635-create.github.io/blob/89da45a265140e90334371b318bcd4c25733fa98/.github/ai-router/differential-continuity/differential-continuity-self-test.v1.mjs"}
+      ]
+    }
+  ],
+  "mechanicalValidation": {
+    "status": "MANDATORY_FAIL_CLOSED",
+    "validator": "/.github/credibility/validate-software-trl7-assessment.v1.mjs",
+    "workflow": "/.github/workflows/software-trl7-readiness-validation-v1.yml",
+    "receiptArtifact": "software-trl7-mechanical-validation-receipt",
+    "validatedInvariants": ["assessment JSON parses and carries the exact schema identity","the assessed technology and TRL level remain exact","NASA NODIS and NASA SWEHB remain the declared external framework sources","the included and excluded assessment boundaries remain explicit","all four required TRL 7 criterion identities remain present and unique","every criterion carries an allowed disposition and substantive rationale","every criterion declares a semantic contract with required capabilities and evidence classes","every evidence reference has a unique identity, evidence class and capability binding","required capabilities are covered by criterion-local evidence","required evidence classes are covered by criterion-local evidence","historical GitHub implementation and executable-test evidence is pinned to exact 40-character commit identities","execution-record evidence is pinned to exact 40-character commit identities","implementation-only evidence cannot satisfy documented test performance","the defect-maturity criterion remains explicitly bounded and does not assert zero defects","the closure preserves self-assessment and NASA non-certification language","the human-facing readiness page preserves the semantic-validation qualification","no positive NASA approval, certification or endorsement statement is introduced"],
+    "changePolicy": "Any change to the assessment, shared TRL presentation, readiness page, public claims registry, validator or validation workflow triggers mechanical revalidation. Failure prevents the validation job from passing."
+  },
+  "semanticValidation": {"status":"MANDATORY_FAIL_CLOSED_EVIDENCE_BINDING","scope":"Machine-validates criterion-to-capability-to-evidence-class bindings and immutable evidence identities. It does not claim machine understanding of arbitrary source-code behavior or independent third-party verification.","rule":"PASS requires criterion-local evidence satisfying the declared semantic contract; evidence cannot be silently reassigned across criteria or replaced by implementation-only proof where execution evidence is required."},
+  "closure": {"decision":"TRL_7_SELF_ASSESSMENT_CLOSED_PASS","qualification":"This is a Diamond Gate self-assessment against published NASA software TRL criteria. It is not a NASA certification, evaluation, affiliation or endorsement.","nextThreshold":"TRL 8 requires a completed, fully integrated, thoroughly debugged system with completed verification/validation and documentation; that threshold is not claimed."}
+}

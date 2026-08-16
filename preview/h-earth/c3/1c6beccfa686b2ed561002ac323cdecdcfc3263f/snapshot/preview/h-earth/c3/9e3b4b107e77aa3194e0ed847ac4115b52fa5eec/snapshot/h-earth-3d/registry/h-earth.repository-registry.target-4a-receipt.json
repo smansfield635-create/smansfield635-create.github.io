@@ -1,0 +1,67 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4A_VALIDATOR_CONTRACT_RECEIPT_v1",
+  "targetNumber": 4,
+  "targetSubtarget": "4A-9",
+  "result": "PASS",
+  "branch": "agent/h-earth-repository-registry-installation-001",
+  "completionCommitIdentity": "THE_COMMIT_CONTAINING_THIS_RECEIPT",
+  "executionEnvironment": "LOCAL_EPHEMERAL_SEMANTIC_CONTRACT_AUDIT_PLUS_GITHUB_FETCHBACK",
+  "audit": {
+    "auditId": "H_EARTH_REPOSITORY_REGISTRY_TARGET_4A_CONTRACT_AUDIT_v1",
+    "result": "PASS",
+    "totalChecks": 33,
+    "passedChecks": 33,
+    "failedChecks": [],
+    "counts": {
+      "inputRequiredFields": 15,
+      "receiptRequiredFields": 21,
+      "dispositions": 4,
+      "failureClasses": 12,
+      "failureCodes": 24,
+      "decisionSteps": 14
+    }
+  },
+  "fetchback": {
+    "identityBoundaryGitBlob": "d91adf288d8d94edb43b2bbde18db7e1ee5c215a",
+    "inputContractGitBlob": "a52a1da0f1ab659626b2cf693a8204eed1aebade",
+    "receiptContractGitBlob": "b950527bbaffd50aee79e2e876479e0c796a0b44",
+    "dispositionLawGitBlob": "1f8e9615a9acc4c6a38d69ad973d30c06422ffaf",
+    "failureTaxonomyGitBlob": "e76ae45ba041cbe5843bb2b51baba549c1f2979f",
+    "criticalityMatrixGitBlob": "5fb9a774de95b9b09b49d119e23ad4169f76dc4e",
+    "decisionAlgorithmGitBlob": "2fda233d468edf3ef09578317289ff4e896cd75a",
+    "auditToolGitBlob": "6579da1ce7396990d8fae7c7e7dc9c1cb5f1b192",
+    "consolidatedContractGitBlob": "a6733c868cfee1abce172c0ac901fecf3dd209b2",
+    "bootstrapGitBlob": "3f8fd12af6f6ae3bc5bf16bffa297315f5bc85ac",
+    "protectedTarget2CandidateGitBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+    "protectedTarget3InstructionGitBlob": "de421803f21808ce27b2ffff349af8756c4d9929"
+  },
+  "finalVerification": {
+    "consolidatedContractRegistered": true,
+    "bootstrapRegistered": true,
+    "target2CandidateUnchanged": true,
+    "target3InstructionUnchanged": true,
+    "temporaryWorkflowAbsent": true,
+    "temporaryTransportAbsent": true,
+    "mainChanged": false,
+    "prOpen": true,
+    "prDraft": true,
+    "prMerged": false
+  },
+  "boundaries": {
+    "validatorContractComplete": true,
+    "validatorEngineInstalled": false,
+    "fixturesInstalled": false,
+    "portabilityReferencePackageInstalled": false,
+    "systemicComprehensionAuditExecuted": false,
+    "workflowEnforcementInstalled": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false,
+    "mainChanged": false
+  },
+  "stoppingCondition": {
+    "target4AComplete": true,
+    "advanceBeyondTarget4A": false,
+    "nextAuthorizedSubtarget": "4B-1"
+  }
+}

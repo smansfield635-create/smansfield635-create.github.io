@@ -1,0 +1,348 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b110f;
+  color: #edf3ef;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(83, 118, 100, 0.2), transparent 46%),
+    linear-gradient(180deg, #0e1713 0%, #070b09 100%);
+}
+
+button {
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid rgba(205, 224, 211, 0.25);
+  border-radius: 12px;
+  background: rgba(24, 38, 32, 0.92);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  border-color: rgba(223, 240, 229, 0.8);
+  background: rgba(42, 62, 52, 0.98);
+  outline: none;
+}
+
+button[aria-pressed="true"] {
+  background: #dbe9df;
+  color: #14201a;
+  border-color: #f4fff7;
+}
+
+.route-shell {
+  width: min(1180px, 100%);
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding:
+    max(18px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(22px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.route-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: #9fb9aa;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(1.35rem, 4vw, 2.45rem);
+  line-height: 1.05;
+}
+
+.route-status {
+  max-width: 280px;
+  margin: 0;
+  color: #c6d8cd;
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.viewer-panel {
+  overflow: hidden;
+  border: 1px solid rgba(208, 226, 214, 0.2);
+  border-radius: 18px;
+  background: rgba(12, 19, 16, 0.9);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+}
+
+.render-mount {
+  position: relative;
+  width: 100%;
+  min-height: 360px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #537184;
+  touch-action: none;
+  outline: none;
+}
+
+.render-mount:focus-visible {
+  box-shadow: inset 0 0 0 3px rgba(235, 248, 239, 0.86);
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  image-rendering: auto;
+}
+
+.reticle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  translate: -50% -50%;
+  opacity: 0.66;
+  pointer-events: none;
+}
+
+.reticle::before,
+.reticle::after {
+  content: "";
+  position: absolute;
+  background: rgba(245, 252, 247, 0.9);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.72);
+}
+
+.reticle::before {
+  left: 8px;
+  top: 0;
+  width: 2px;
+  height: 18px;
+}
+
+.reticle::after {
+  left: 0;
+  top: 8px;
+  width: 18px;
+  height: 2px;
+}
+
+.semantic-readout {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.semantic-readout span {
+  padding: 6px 9px;
+  border: 1px solid rgba(240, 249, 243, 0.24);
+  border-radius: 999px;
+  background: rgba(4, 9, 7, 0.72);
+  color: #f3faf5;
+  font-size: 0.72rem;
+  backdrop-filter: blur(8px);
+}
+
+.telemetry {
+  margin: 0;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  border-top: 1px solid rgba(208, 226, 214, 0.16);
+}
+
+.telemetry div {
+  min-width: 0;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.telemetry dt {
+  color: #89a397;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.telemetry dd {
+  margin: 4px 0 0;
+  overflow: hidden;
+  color: #ecf4ef;
+  font-size: 0.74rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(210px, 0.7fr) minmax(300px, 1.3fr);
+  gap: 12px;
+}
+
+.movement-grid,
+.view-controls,
+.waypoints {
+  display: grid;
+  gap: 8px;
+}
+
+.movement-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.view-controls {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.waypoints {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.route-footer {
+  color: #81978b;
+  font-size: 0.73rem;
+  line-height: 1.45;
+}
+
+.route-footer p {
+  margin: 0;
+}
+
+@media (max-width: 820px) {
+  .route-header {
+    align-items: start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .route-status {
+    max-width: none;
+    text-align: left;
+  }
+
+  .render-mount {
+    min-height: 300px;
+  }
+
+  .telemetry {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .view-controls {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .route-shell {
+    gap: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .render-mount {
+    min-height: 340px;
+    aspect-ratio: 4 / 5;
+  }
+
+  .telemetry {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .waypoints {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .view-controls {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .route-shell {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    grid-template-areas:
+      "header header"
+      "viewer controls"
+      "viewer waypoints"
+      "footer footer";
+    gap: 10px;
+  }
+
+  .route-header { grid-area: header; }
+  .viewer-panel { grid-area: viewer; }
+  .controls { grid-area: controls; }
+  .waypoints { grid-area: waypoints; }
+  .route-footer { grid-area: footer; }
+
+  .render-mount {
+    min-height: 280px;
+    aspect-ratio: 16 / 9;
+  }
+
+  .telemetry {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .controls,
+  .view-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .waypoints {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "schema": "METHODS_SPATIAL_ROUTER_PREREQUISITE_PERMANENT_RATIFICATION_RECEIPT_v1",
+  "status": "RATIFICATION_CANDIDATE_VERIFIED_PASS_CLOSED",
+  "governingMainHead": "25f6e9cd6caf1dba73552e81eaa8a23e1c393d5f",
+  "sourcePr": 627,
+  "sourceCandidateHead": "ef83732de58b35385abab38ad27ffabb9e4c943b",
+  "sourceMergeCommit": "f3cfe54cb7cab3439e5d993aea1759e243f49e08",
+  "registeredExactPathCount": 13,
+  "prefixWideOwnership": false,
+  "rejectedVisualSubject": "2044e7ab5d27af7bcfbd477a6c3ee046549744ed",
+  "rejectedVisualFoundationExcluded": true,
+  "predecessorLock": {
+    "operationId": "METHODS_CONTEXT_DISPLACEMENT_EXISTING_SPATIAL_CONSTRUCT_ADOPTION_ROUTER_OWNERSHIP_PREREQUISITE_v1",
+    "lockScope": "METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION:ROUTER_OWNERSHIP:V1",
+    "scopeHash": "0177ef035b320f214e48b3074ef7ffefd812ea48fd9b887b82b683eb517105d8",
+    "lockGeneration": 272,
+    "terminalDisposition": "PASS_CLOSED",
+    "lockReleased": true,
+    "closureCommitSha": "898cc91523eabb25e1923b2f6fb33f6b6138d022"
+  },
+  "ratificationOperation": {
+    "operationId": "METHODS_CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION_ROUTER_PREREQUISITE_POST_MERGE_VALIDATION_LOCK_CLOSURE_AND_PERMANENT_RATIFICATION_v1",
+    "lockScope": "METHODS_INFORMATION_BENCHMARK:CONTEXT_DISPLACEMENT_SPATIAL_ADOPTION:ROUTER_OWNERSHIP:POST_MERGE_RATIFICATION:V1",
+    "scopeHash": "9e421c4c599e072988bd0662d7da3354be716c59a8428eb57e15fa65fc583a05",
+    "lockGeneration": 278,
+    "terminalClosureRequiredAfterCandidateCommit": true
+  },
+  "builderFingerprint": "a762b6fd9d1effc5925e82d83bde9ee47719bb9be8eff1837a99d5e97dd43a3a",
+  "freshVerifierFingerprint": "a762b6fd9d1effc5925e82d83bde9ee47719bb9be8eff1837a99d5e97dd43a3a",
+  "exactNormalizedEquality": true,
+  "validationWorkflowRun": 31048886240,
+  "finalCandidateScope": {
+    "changedPathCount": 1,
+    "changedPath": ".github/ai-router/projects/methods-information-benchmark/router-prerequisite-permanent-ratification.v1.json",
+    "workflowRestoredToBlob": "5f5b6317d520ef072c4347b62a179870491d5448"
+  },
+  "authorityBoundaries": {
+    "targetSpatialAdoptionExecuted": false,
+    "methodsPageMutation": false,
+    "compassMutation": false,
+    "hEarthMutation": false,
+    "publicOrVisualMutation": false,
+    "mergeAuthorized": false,
+    "namedAwardReadinessClaim": false
+  },
+  "permanentEffectCondition": "EFFECTIVE_ONLY_AFTER_THIS_CANDIDATE_IS_MERGED_AND_MAIN_VALIDATION_PASSES"
+}

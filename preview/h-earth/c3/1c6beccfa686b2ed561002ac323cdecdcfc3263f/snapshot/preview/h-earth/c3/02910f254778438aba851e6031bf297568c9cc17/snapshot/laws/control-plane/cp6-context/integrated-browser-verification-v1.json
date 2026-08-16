@@ -1,0 +1,90 @@
+{
+  "contract": "LAWS_CP6_CONTEXTUAL_INTEGRATED_BROWSER_VERIFICATION_v1",
+  "status": "PASS",
+  "baseURL": "http://127.0.0.1:4173",
+  "checks": [
+    {
+      "check": "repository-contracts",
+      "status": "PASS",
+      "migratedRecords": 48,
+      "compatibilityBindings": 9,
+      "currentCompassContract": "SIX_AUTHORITY_SINGLE_ACTIVE_OUTER_LABEL",
+      "legacyFailuresClassified": true
+    },
+    {
+      "check": "current-compass-phone",
+      "status": "PASS",
+      "authorities": 6,
+      "childRoutes": 24,
+      "visibleOuterLabels": 1,
+      "visibleAuthorityIds": [
+        "flow"
+      ]
+    },
+    {
+      "check": "browser-phone",
+      "status": "PASS",
+      "pages": 13,
+      "overflow": 0,
+      "browserErrors": 0
+    },
+    {
+      "check": "current-compass-tablet",
+      "status": "PASS",
+      "authorities": 6,
+      "childRoutes": 24,
+      "visibleOuterLabels": 1,
+      "visibleAuthorityIds": [
+        "flow"
+      ]
+    },
+    {
+      "check": "browser-tablet",
+      "status": "PASS",
+      "pages": 13,
+      "overflow": 0,
+      "browserErrors": 0
+    },
+    {
+      "check": "current-compass-desktop",
+      "status": "PASS",
+      "authorities": 6,
+      "childRoutes": 24,
+      "visibleOuterLabels": 1,
+      "visibleAuthorityIds": [
+        "flow"
+      ]
+    },
+    {
+      "check": "browser-desktop",
+      "status": "PASS",
+      "pages": 13,
+      "overflow": 0,
+      "browserErrors": 0
+    },
+    {
+      "check": "reduced-motion",
+      "status": "PASS"
+    },
+    {
+      "check": "static-no-javascript",
+      "status": "PASS",
+      "pages": 13
+    }
+  ],
+  "legacyBenchmarkDisposition": "CLASSIFIED_WITH_NO_MATERIAL_PRODUCT_FINDINGS",
+  "userVisualAcceptance": "REQUIRED_NOT_RECORDED",
+  "mergeAuthorization": false,
+  "candidateHead": "f5dc7be648c6308e8baf6bb0ac58c200577803ec",
+  "workflowRunId": "30730515877",
+  "workflowRunAttempt": "1",
+  "scopeBoundary": {
+    "frontierFilesMutated": 0,
+    "compassRuntimeFilesMutated": 0,
+    "routeDeletions": 0,
+    "redirectsCreated": 0,
+    "evidenceStatusUpgrades": 0,
+    "futureFrontierDeploymentClaims": 0
+  },
+  "checkpointDisposition": "OPEN_PENDING_LIVE_USER_VISUAL_ACCEPTANCE_MERGE_AND_DEPLOYMENT"
+}

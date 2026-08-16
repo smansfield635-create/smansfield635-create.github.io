@@ -81,6 +81,9 @@ jobs:
               position:getComputedStyle(n).position,
               transform:getComputedStyle(n).transform,
               opacity:getComputedStyle(n).opacity,
+              relative:n.getAttribute('data-carousel-relative'),
+              active:n.getAttribute('data-active'),
+              x:n.style.getPropertyValue('--laws-carousel-x'),
               rect:n.getBoundingClientRect().toJSON()
             })));
             if (!cardStyles.every(s => s.position === 'absolute')) throw new Error('cards are not spatially positioned');
@@ -91,15 +94,31 @@ jobs:
             await viewport.focus();
             await page.keyboard.press('ArrowRight');
             await page.waitForTimeout(750);
-            const after = await field.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
+            const activeAfter = field.locator('.laws-rolodex-card[data-active="true"]');
+            const after = await activeAfter.getAttribute('data-destination-id');
             if (!after || after === before) throw new Error('keyboard spatial traversal did not advance carousel state');
 
-            const activeBox = await field.locator('.laws-rolodex-card[data-active="true"]').boundingBox();
+            const activeBox = await activeAfter.boundingBox();
             const viewportBox = await viewport.boundingBox();
-            if (!activeBox || !viewportBox) throw new Error('active card or viewport lacks rendered geometry');
+            const track = field.locator('.laws-rolodex-track');
+            const trackBox = await track.boundingBox();
+            const activeMeta = await activeAfter.evaluate(n => ({
+              relative:n.getAttribute('data-carousel-relative'),
+              active:n.getAttribute('data-active'),
+              x:n.style.getPropertyValue('--laws-carousel-x'),
+              z:n.style.getPropertyValue('--laws-carousel-z'),
+              scale:n.style.getPropertyValue('--laws-carousel-scale'),
+              transform:getComputedStyle(n).transform,
+              left:getComputedStyle(n).left,
+              width:getComputedStyle(n).width
+            }));
+            if (!activeBox || !viewportBox || !trackBox) throw new Error('active card, track, or viewport lacks rendered geometry');
             const cardCenter = activeBox.x + activeBox.width / 2;
             const viewportCenter = viewportBox.x + viewportBox.width / 2;
-            if (Math.abs(cardCenter - viewportCenter) > 24) throw new Error(`active card lacks center custody: ${cardCenter} vs ${viewportCenter}`);
+            await stage.scrollIntoViewIfNeeded();
+            await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
+            console.log(JSON.stringify({heroBox, stageBox, before, after, activeMeta, activeBox, viewportBox, trackBox, cardStyles}, null, 2));
+            if (Math.abs(cardCenter - viewportCenter) > 24) throw new Error(`active card lacks center custody: ${cardCenter} vs ${viewportCenter}; ${JSON.stringify({activeMeta, activeBox, viewportBox, trackBox})}`);
 
             await tabs.nth(0).click();
             await page.waitForTimeout(250);
@@ -108,9 +127,6 @@ jobs:
             if (!familyAfter || familyAfter !== activeFieldAfter) throw new Error('family tab did not move stage custody');
 
             if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
-            await stage.scrollIntoViewIfNeeded();
-            await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
-            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, activeBox, viewportBox, cardStyles}, null, 2));
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE

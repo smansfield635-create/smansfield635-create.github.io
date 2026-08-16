@@ -1,0 +1,176 @@
+{
+  "schema": "H_EARTH_C3C1_OWNER_INSPECTION_BASELINE_v1",
+  "evidenceId": "H_EARTH_C3C1_OWNER_INSPECTION_BASELINE_20260816_001",
+  "recordedAtLocal": "2026-08-16T13:25:00-05:00",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "inspectionSubject": {
+    "pr": 1170,
+    "branch": "candidate/h-earth-c3c1-coastal-corner-20260816",
+    "inspectionCandidateHead": "ad32fa71e419929fb7e8922aa34f1a5a22671337",
+    "frozenInteractivePreviewCandidate": "96805e300510630185b789f799711527408fce2f",
+    "routeClass": "IMMUTABLE_INTERACTIVE_OWNER_INSPECTION_SURFACE",
+    "productionPromotionAuthorized": false
+  },
+  "ownerSuppliedEvidence": [
+    {
+      "fileName": "23720.jpg",
+      "sha256": "eed463d8aa235ea48d595c3191dc2ccd0a6f2ae33e46ce609063bded8ecf53f2",
+      "byteCount": 100633,
+      "pixelWidth": 709,
+      "pixelHeight": 1536,
+      "viewRole": "ELEVATED_COASTAL_OPEN_OCEAN_VIEW",
+      "observations": [
+        "OPEN_WATER_DOMINATES_THE_WATERWARD_DIRECTION",
+        "NO_OPPOSING_LANDMASS_IS_VISIBLE_ACROSS_THE_OPEN_OCEAN",
+        "COASTLINE_CURVES_AWAY_FROM_THE_VIEWER_RATHER_THAN_TERMINATING_AS_A_STRAIGHT_BOX_EDGE",
+        "DISTANT_OCEAN_HORIZON_REMAINS_PERCEPTUALLY_TOO_LOW",
+        "SKY_FIELD_REMAINS LARGE_UNIFORM_AND_PHYSICALLY_UNCLOSED"
+      ]
+    },
+    {
+      "fileName": "23718.jpg",
+      "sha256": "908226c62621ce12a9dc6121a014056489ff46e9c25d29bd097470795e3185f5",
+      "byteCount": 106067,
+      "pixelWidth": 709,
+      "pixelHeight": 1536,
+      "viewRole": "INLAND_MOUNTAIN_CONTINUITY_VIEW",
+      "observations": [
+        "INLAND_RELIEF_REMAINS PRESENT AND CONTINUOUS",
+        "PRIMARY_MOUNTAIN_MASS_PRESERVES LARGE_SCALE_VERTICAL_IDENTITY",
+        "CURRENT_TERRAIN_SURFACE_REMAINS NAVIGABLE_WITHOUT ACCESSIBLE_REGION_EXPANSION",
+        "SKY_FIELD_HAS NO VISIBLE_CELESTIAL_OR_ATMOSPHERIC_DEPTH_REFERENCE"
+      ]
+    },
+    {
+      "fileName": "23716.jpg",
+      "sha256": "bbda85732b18587d332368e8f77041a6736df714b32c62caae800a27ec5f1d43",
+      "byteCount": 80685,
+      "pixelWidth": 709,
+      "pixelHeight": 1536,
+      "viewRole": "LOW_COASTAL_LATERAL_CONTINUATION_VIEW",
+      "observations": [
+        "COASTAL_FOREGROUND_REMAINS CONTIGUOUS WITH THE EXISTING PLAYABLE REGION",
+        "OPEN_WATER_REMAINS VISIBLE ON THE CORRECT WATERWARD SIDE",
+        "LATERAL_OR_OPPOSITE_COASTAL_CONTINUATION_STILL READS AS A VISIBLE TERMINATION IN THE FAR VIEW",
+        "DISTANT_WORLD_CONTEXT_IS TOO SHALLOW TO HIDE THE ACCESSIBLE_REGION_BOUNDARY"
+      ]
+    },
+    {
+      "fileName": "23712.jpg",
+      "sha256": "85c7f47d005d4e0e21d9e841c2c84ec61ddea9e1bc8a9bd18d55724efaf89a8a",
+      "byteCount": 91262,
+      "pixelWidth": 709,
+      "pixelHeight": 1536,
+      "viewRole": "INLAND_PASS_TO_OCEAN_VIEW",
+      "observations": [
+        "A NAVIGABLE PASS OR VALLEY OPENS THROUGH THE MOUNTAIN SYSTEM TOWARD THE OCEAN",
+        "MOUNTAIN_MASSING EXISTS ON BOTH SIDES OF THE PASS AND DOES NOT COLLAPSE TO A FLAT BACKDROP",
+        "OCEAN REMAINS SPATIALLY RELATED TO THE INLAND RELIEF",
+        "DISTANT OCEAN AND SKY STILL MEET AS A LOW FLAT BAND RATHER THAN A PLANETARY HORIZON"
+      ]
+    },
+    {
+      "fileName": "23714.jpg",
+      "sha256": "4ae3e8b79e352837dbb7f30197c5dc071574eba6f7b3a4781aeba90039d598c4",
+      "byteCount": 98049,
+      "pixelWidth": 709,
+      "pixelHeight": 1536,
+      "viewRole": "MOUNTAIN_EDGE_COASTAL_OPEN_OCEAN_VIEW",
+      "observations": [
+        "MOUNTAIN_TO_COAST_TRANSITION REMAINS COHERENT IN ONE NAVIGABLE SPACE",
+        "OPEN_OCEAN IS PRESENT BEYOND THE COASTAL EDGE",
+        "NO EAST_SIDE DISTANT LANDMASS IS VISIBLE ACROSS THE WATER",
+        "OCEAN SURFACE EXTENDS VISUALLY BEYOND THE NEAR COAST",
+        "HORIZON AND ATMOSPHERE REMAIN THE PRIMARY UNRESOLVED WORLD_CLOSURE DEFECT"
+      ]
+    }
+  ],
+  "proofOfSuccess": {
+    "status": "PARTIAL_SUCCESS_BASELINE_FROZEN",
+    "provenStrengths": [
+      {
+        "id": "S1_NORTHEAST_OPEN_OCEAN_TRUTH",
+        "finding": "The northeast reconstruction now reads as open ocean rather than land across the water.",
+        "preservationLaw": "NO_FUTURE_REPAIR_MAY_REINTRODUCE_EAST_SIDE_OR_NORTHEAST_OPPOSING_LANDMASS"
+      },
+      {
+        "id": "S2_COASTAL_CORNER_TURN",
+        "finding": "The coastline now turns through the northeast coastal corner instead of behaving as one straight regional edge.",
+        "preservationLaw": "PRESERVE_CURRENT_NORTH_TO_EAST_COASTAL_TOPOLOGY"
+      },
+      {
+        "id": "S3_INLAND_RELIEF_CONTINUITY",
+        "finding": "Mountain, pass/valley, and coast remain visually connected in one traversable environment.",
+        "preservationLaw": "NO_HORIZON_OR_ATMOSPHERE_REPAIR_MAY_FLATTEN_OR_REDERIVE_EXISTING_INLAND_RELIEF"
+      },
+      {
+        "id": "S4_ACCESSIBLE_REGION_SCALE",
+        "finding": "The current useful accessible-region scale is sufficient for the next repair and does not need another enlargement.",
+        "preservationLaw": "DELTA_ACCESSIBLE_REGION_EXTENT_EQUALS_ZERO_FOR_NEXT_REPAIR"
+      },
+      {
+        "id": "S5_DIRECT_INTERACTIVE_INSPECTION",
+        "finding": "The baseline is established from multiple owner-navigated viewpoints rather than a single presentation render.",
+        "preservationLaw": "NEXT_CANDIDATE_MUST_RETURN_TO_AN_IMMUTABLE_INTERACTIVE_OWNER_INSPECTION_SURFACE"
+      }
+    ]
+  },
+  "remainingDeficiencies": [
+    {
+      "id": "D1_LOW_DISTANT_OCEAN_HORIZON",
+      "evidence": ["23720.jpg", "23712.jpg", "23714.jpg"],
+      "failureCondition": "The distant ocean/sky boundary sits perceptually too low and reads as a flat low band rather than a planetary-scale horizon.",
+      "requiredDisposition": "RECOMPOSE_DISTANT_OCEAN_HORIZON_WITHOUT_TILTING_OR_RELOCATING_THE_PLAYABLE_NEAR_WATER_SURFACE"
+    },
+    {
+      "id": "D2_UNCLOSED_ATMOSPHERIC_WORLD",
+      "evidence": ["23720.jpg", "23718.jpg", "23716.jpg", "23712.jpg", "23714.jpg"],
+      "failureCondition": "The sky is a large nearly uniform field with insufficient sun, haze, scattering, or depth cues to read as a physical atmosphere.",
+      "requiredDisposition": "MATERIALIZE_THE_EXISTING_SKY_SUN_HAZE_ATMOSPHERE_SYSTEM_AS_VISIBLE_WORLD_CONTEXT"
+    },
+    {
+      "id": "D3_VISIBLE_LATERAL_OR_LANDWARD_TERMINATION",
+      "evidence": ["23716.jpg"],
+      "failureCondition": "At least one lateral/opposite coastal direction still exposes the visual termination of the authored region instead of a continuing world.",
+      "requiredDisposition": "EXTEND_NONNAVIGABLE_LANDWARD_AND_LATERAL_VISIBLE_WORLD_CONTEXT_BEYOND_THE_ACCESSIBLE_BOUNDARY"
+    }
+  ],
+  "nextConstructionBaseline": {
+    "constructionClass": "C3_SUCCESSOR_WORLD_CLOSURE_REPAIR",
+    "mustPreserve": [
+      "S1_NORTHEAST_OPEN_OCEAN_TRUTH",
+      "S2_COASTAL_CORNER_TURN",
+      "S3_INLAND_RELIEF_CONTINUITY",
+      "S4_ACCESSIBLE_REGION_SCALE",
+      "S5_DIRECT_INTERACTIVE_INSPECTION"
+    ],
+    "mustRepair": [
+      "D1_LOW_DISTANT_OCEAN_HORIZON",
+      "D2_UNCLOSED_ATMOSPHERIC_WORLD",
+      "D3_VISIBLE_LATERAL_OR_LANDWARD_TERMINATION"
+    ],
+    "hardConstraints": [
+      "NO_PRODUCTION_ROUTE_PROMOTION_BEFORE_DIRECT_OWNER_INSPECTION",
+      "NO_ACCESSIBLE_REGION_ENLARGEMENT",
+      "NO_NEW_NAVIGATION_ADDRESSES_OUTSIDE_CURRENT_ACCESSIBLE_REGION",
+      "NO_EAST_OR_NORTHEAST_OPPOSING_LANDMASS",
+      "NO_FLAT_OCEAN_PLANE_TILT_AS_HORIZON_FAKE",
+      "NO_REDESIGN_OF_SUCCESSFUL_NORTHEAST_COASTAL_TOPOLOGY",
+      "NO_IMAGE_GENERATION_AS_SUBSTITUTE_FOR_INTERACTIVE_EVIDENCE"
+    ],
+    "qualificationQuestions": [
+      "Does the repaired ocean/sky meeting read as a natural distant planetary horizon from multiple coastal elevations?",
+      "Does the sky read as a closed physical atmosphere with visible directional light and depth rather than a blank canvas?",
+      "Can the owner rotate and traverse without exposing a hard lateral or landward world edge?",
+      "Is east/northeast still unambiguously open ocean with no opposing landmass?",
+      "Are the existing mountain, pass/valley, coast, and accessible-region relationships materially unchanged?"
+    ]
+  },
+  "disposition": "BASELINE_ACCEPTED_FOR_NEXT_BOUNDED_CONSTRUCTION",
+  "authority": {
+    "createsProductMutationAuthority": false,
+    "createsMergeAuthority": false,
+    "createsProductionPromotionAuthority": false,
+    "evidenceAndBaselineOnly": true
+  }
+}

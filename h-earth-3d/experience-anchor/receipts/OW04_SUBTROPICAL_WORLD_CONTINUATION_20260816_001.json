@@ -1,0 +1,57 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "sha256": "9666b2f89b3a3939c1b6499d821784d65f26a39fdf54e50f4e9b35c674b9cefa"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/functional-landscape-frame.js",
+      "sha256": "54c53d74af6e981a1658fd7c36e61c39aa7bc39a30125275745afc0682a76ef0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "sha256": "24b0dc5cfec380a0fdb12403b4cbd06417ccd6a9ff0b6027f9486c97706b25e4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "sha256": "8ee1e308cea6a271fd0ede1de6a6566f1c9110e1a2d1d468f4d834183413c925"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+      "sha256": "f376d79fc30326c373ed328d336ec86f943e89c9ac9eaa0f4e5a6f3457a0ad5b"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewSummary": {
+    "reviewedCandidateHead": "a8fe5f75350029e094a89a0e02b3ad6cdfdf089e",
+    "qualificationOperation": "H_EARTH_OW04_RECIPROCAL_ANCHOR_REVIEW_20260816_001",
+    "exactCandidateEvidenceRunId": 31954259847,
+    "finding": "Exact candidate desktop/mobile/interaction capture completed successfully after restoration of the real inspection path. OW04 remains within the same H-Earth ground experience, preserves direct manipulation and canonical continuity, adds only non-navigable distant-world continuation, preserves the frozen accessible region, and creates no waterward landmass."
+  }
+}

@@ -1,0 +1,45 @@
+/*
+ * METHODS & MODELS — final spatial polish
+ * Scope: vertical stage balance + established Laws Fibonacci star field integration.
+ * No carousel geometry, card sizing, content, interaction, inspection, or return semantics are changed.
+ */
+
+.mm-fibonacci-field {
+  opacity: .30;
+}
+
+/* Use the available lower stage so the foreground object clears the orientation chrome. */
+.mm-ring {
+  top: 35%;
+}
+
+@media (max-width: 1100px) {
+  .mm-ring {
+    top: 44%;
+  }
+
+  .mm-fibonacci-field {
+    opacity: .27;
+  }
+}
+
+@media (max-width: 760px) {
+  .mm-ring {
+    top: 45%;
+  }
+
+  .mm-fibonacci-field {
+    opacity: .24;
+  }
+}
+
+/* Inspection retains the established centered custody state. */
+.mm-carousel[data-inspecting="true"] .mm-ring {
+  top: 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mm-fibonacci-field canvas[data-laws-cosmos-canvas="sparkle"] {
+    display: none !important;
+  }
+}

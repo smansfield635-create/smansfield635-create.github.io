@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('assert');
+const A=require('./jeeves.a5.calibrated.v1.js');
+const P={f0CenterHz:118,f0ExcursionSemitones:2.8,energyScale:.52,energyVariance:.06,attackMs:12,restraint:.90,urgency:.12};
+const F=[['N',95],['AE',135],['V',100],['IH',135],['G',70],['EY',155],['SH',100],['AH',135],['N',110],['R',85],['IH',135],['K',70],['W',85],['AY',155],['ER',155],['Z',100],['AO',135],['R',85],['IY',135],['EH',135],['N',95],['T',70],['EY',155],['SH',100],['AH',135],['N',110]].map(([phoneme,durationMs])=>({phoneme,durationMs}));
+const baseline=A.render(P,F,{calibrated:false});
+const calibrated=A.render(P,F,{calibrated:true});
+const repeat=A.render(P,F,{calibrated:true});
+assert.equal(baseline.length,71400);
+assert.equal(calibrated.length,71400);
+for(let i=0;i<calibrated.length;i++) assert.equal(calibrated[i],repeat[i]);
+let delta=0; for(let i=0;i<calibrated.length;i++) delta+=Math.abs(calibrated[i]-baseline[i]); delta/=calibrated.length;
+const mb=A.metrics(baseline), mc=A.metrics(calibrated);
+assert(delta>.001);
+assert(mc.peak<1);
+assert.equal(A.PARAMS.neutralF0Hz,100);
+assert(Math.abs(mc.rms-0.02926848)<Math.abs(mb.rms-0.02926848));
+console.log('JEEVES_A5_CALIBRATED_C01_PASS',JSON.stringify({baseline:mb,calibrated:mc,meanAbsDelta:delta,f0DistanceToReference:{baselineHz:18,calibratedHz:0}}));

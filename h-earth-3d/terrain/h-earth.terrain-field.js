@@ -130,9 +130,16 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 1,
+  generationRevision: 2,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
-  worldDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64, seaLevelY: 0 },
+  coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
+  worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
+  boundaryPolicy: {
+    mode: 'PROCEDURAL_CONTINUATION_BEYOND_CORE_DOMAIN',
+    finitePerimeterWallProhibited: true,
+    visibleRectangularTerminationProhibited: true,
+    foundingPacketMutationPerformed: false
+  },
   sampling: {
     derivativeStep: 0.5,
     sharedEdgeRule: 'SAME_WORLD_COORDINATE_SAMPLES_SAME_CANONICAL_FIELD',
@@ -253,8 +260,7 @@ function resolveMaterialProfile(shorelineDistance, elevation, slope) {
 
 export function sampleHEarthTerrainElevation(worldX, worldZ) {
   if (!finite(worldX) || !finite(worldZ)) return Number.NaN;
-  const { worldDomain } = H_EARTH_TERRAIN_FIELD;
-  return evaluateRawElevation(clamp(worldX, worldDomain.xMinimum, worldDomain.xMaximum), clamp(worldZ, worldDomain.zMinimum, worldDomain.zMaximum));
+  return evaluateRawElevation(worldX, worldZ);
 }
 
 export function sampleHEarthTerrainField(worldX, worldZ) {

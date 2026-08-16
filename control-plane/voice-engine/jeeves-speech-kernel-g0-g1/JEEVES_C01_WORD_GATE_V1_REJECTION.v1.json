@@ -1,0 +1,12 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_WORD_GATE_V1_REJECTION_v1",
+  "status": "REJECTED_CIRCULAR_EVIDENCE",
+  "rejectedFiles": [
+    "jeeves.c01.word-recognizability-gate.v1.js",
+    "jeeves.c01.word-recognizability-gate.v1.test.js"
+  ],
+  "reason": "The v1 gate used phoneme and word labels carried on rendered segment metadata when computing recognition distance. A self-match against labels already supplied by the realization plan cannot establish acoustic recognizability.",
+  "law": "Recognition qualification must depend on waveform observations, not the hidden target labels being qualified.",
+  "replacementBoundary": "WAVEFORM_ONLY_PHONE_AND_WORD_DECODABILITY_GATE",
+  "humanListeningAuthorized": false
+}

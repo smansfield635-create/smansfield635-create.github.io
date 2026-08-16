@@ -40,24 +40,28 @@ jobs:
           path = Path('_site/index.html')
           text = path.read_text(encoding='utf-8')
 
-          css = '<link rel="stylesheet" href="/assets/compass/compass.carousel.css?v=compass-carousel-live-v2">'
-          js = '<script src="/assets/compass/compass.carousel.js?v=compass-carousel-live-v2" defer></script>'
+          css = '<link rel="stylesheet" href="/assets/compass/compass.carousel.css?v=compass-carousel-successor-v3">'
+          js = '<script src="/assets/compass/compass.carousel.js?v=compass-carousel-successor-v3" defer></script>'
 
-          if css not in text:
-              text = text.replace('</head>', f'{css}\n</head>', 1)
-          if js not in text:
-              text = text.replace('</body>', f'{js}\n</body>', 1)
-
+          # Remove older direct bindings before installing the current deterministic binding.
+          import re
+          text = re.sub(r'<link rel="stylesheet" href="/assets/compass/compass\.carousel\.css\?v=[^"]+">\n?', '', text)
+          text = re.sub(r'<script src="/assets/compass/compass\.carousel\.js\?v=[^"]+" defer></script>\n?', '', text)
           text = text.replace(
               '/assets/compass/compass.cosmos.js?v=compass-contextual-quick-pass-v11',
-              '/assets/compass/compass.cosmos.js?v=compass-carousel-live-v2'
+              '/assets/compass/compass.cosmos.js?v=compass-carousel-successor-v3'
+          ).replace(
+              '/assets/compass/compass.cosmos.js?v=compass-carousel-live-v2',
+              '/assets/compass/compass.cosmos.js?v=compass-carousel-successor-v3'
           )
 
+          text = text.replace('</head>', f'{css}\n</head>', 1)
+          text = text.replace('</body>', f'{js}\n</body>', 1)
           path.write_text(text, encoding='utf-8')
 
-          assert 'compass.carousel.css?v=compass-carousel-live-v2' in text
-          assert 'compass.carousel.js?v=compass-carousel-live-v2' in text
-          assert 'compass.cosmos.js?v=compass-carousel-live-v2' in text
+          assert 'compass.carousel.css?v=compass-carousel-successor-v3' in text
+          assert 'compass.carousel.js?v=compass-carousel-successor-v3' in text
+          assert 'compass.cosmos.js?v=compass-carousel-successor-v3' in text
           PY
 
       - name: Upload site artifact

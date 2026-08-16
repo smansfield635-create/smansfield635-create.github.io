@@ -29,7 +29,7 @@
     const script = document.createElement("script"); script.src = src; script.defer = true; script.setAttribute(marker, "true"); script.onload = resolve; script.onerror = reject; document.head.append(script);
   });
   load("/laws/index.mobile-background-tabs.core.js?v=LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY", "data-laws-responsive-core")
-    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V11_DIRECTION_ONLY_ATOMIC_20260816E", "data-laws-destination-carousel-runtime"))
+    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V11_DIRECTION_ONLY_ATOMIC_20260816E&ux=20260816F_MEANINGFUL_PRODUCT_FEEDBACK", "data-laws-destination-carousel-runtime"))
     .then(() => load("/laws/index.destination-stage.js?v=LAWS_DESTINATION_STAGE_V1_20260816A", "data-laws-destination-stage-runtime"))
     .catch(error => { document.documentElement.dataset.lawsDestinationCarouselRuntime = "load-failed"; document.documentElement.dataset.lawsDestinationStage = "load-failed"; console.error("Laws destination stage bootstrap failed", error); });
 })();

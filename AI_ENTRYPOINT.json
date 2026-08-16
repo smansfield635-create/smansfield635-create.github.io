@@ -13,7 +13,50 @@
   "mutationCommand": "INTAKE_ADMISSION_RECEIPT=<ADMITTED_AND_LOCKED_RECEIPT> node tools/repository-ai-entry-router.mjs --mutation-intent --path <repository-path> [--path <repository-path> ...] --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/mutation-router-receipt.json",
   "operationIntakeGate": {
     "locator": ".github/operation-intake/locator.v1.json",
-    "mandatoryBeforeMutationRouting": true
+    "mandatoryBeforeMutationRouting": true,
+    "successorLifecycle": {
+      "protocol": ".github/ai-router/operation-lifecycle/successor-protocol.v1.json",
+      "gateCli": ".github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs",
+      "selfTest": ".github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs",
+      "trigger": "ACTIVE_OPERATION_GOVERNING_HEAD_DIFFERS_FROM_CURRENT_REFS_HEADS_MAIN",
+      "successResult": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+      "predecessorTerminalDisposition": "SUPERSEDED",
+      "authorityInherited": false,
+      "freshSuccessorRequestAndProcedureRequired": true,
+      "exactHeadRevalidationRequired": true,
+      "oneLedgerCompareAndSwapRequired": true,
+      "command": "GITHUB_TOKEN=<token> node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs --transition <TRANSITION.json> --request <SUCCESSOR_REQUEST.json> --procedure <SUCCESSOR_PROCEDURE.json> --repository smansfield635-create/smansfield635-create.github.io --lock-ref refs/heads/operation-locks/repository-operation-intake-v1 --output <SUCCESSOR_RECEIPT.json>",
+      "remoteInvocationMarker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+      "remoteInvocationWorkflow": ".github/workflows/remote-operation-successor-v1.yml",
+      "remoteInvocationSchema": "REMOTE_OPERATION_SUCCESSOR_INVOCATION_REQUEST_v1",
+      "remoteInvocationAuthorityInherited": false,
+      "remoteInvocationGenericCommandAuthority": false,
+      "postRatificationSuccessorCompiler": {
+        "cli": ".github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs",
+        "selfTest": ".github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs",
+        "compileSchema": "REPOSITORY_OPERATION_SUCCESSOR_PACKET_COMPILE_REQUEST_v1",
+        "compiledPacketSchema": "REPOSITORY_OPERATION_SUCCESSOR_COMPILED_PACKET_v1",
+        "remoteInvocationMarker": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1",
+        "remoteInvocationSchema": "REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_INVOCATION_REQUEST_v1",
+        "remoteInvocationWorkflow": ".github/workflows/remote-operation-successor-v1.yml",
+        "explicitJsonPointerRebindsRequired": true,
+        "freshOperationIdRequired": true,
+        "freshProcedureIdRequired": true,
+        "scopeExpansionAllowed": false,
+        "authorityInherited": false,
+        "automaticEvidenceRelabeling": false,
+        "automaticProductMutation": false,
+        "atomicSuccessorGateStillRequired": true
+      },
+      "differentialPreflight": {
+        "systemId": "REPOSITORY_DIFFERENTIAL_CONTINUITY_AND_PROOF_CHURN_SUPPRESSION_v1",
+        "gateCli": ".github/ai-router/differential-continuity/differential-continuity-gate.v1.mjs",
+        "workflow": ".github/workflows/differential-continuity-v1.yml",
+        "requiredBeforeStrictSuccessorWhenCompleteDependencySurfaceAvailable": true,
+        "carryForwardDoesNotExpandAuthority": true,
+        "fallbackOnOverlapAmbiguityDivergenceOrIncompleteEvidence": "STRICT_SUCCESSOR"
+      }
+    }
   },
   "remoteCanonicalIntakeTransport": {
     "schema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_CAPABILITY_v1",

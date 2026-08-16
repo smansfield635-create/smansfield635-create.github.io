@@ -1,4 +1,4 @@
-/* Laws responsive continuity + Methods-reference destination carousel + dedicated destination stage bootstrap. */
+/* Laws responsive continuity + canonical Methods-behavior destination carousel + dedicated destination stage bootstrap. */
 (() => {
   "use strict";
   const installRolodexScrollCustody = () => {
@@ -26,20 +26,10 @@
   installRolodexScrollCustody();
   const load = (src, marker) => new Promise((resolve, reject) => {
     if (document.querySelector(`script[${marker}]`)) { resolve(); return; }
-    const script = document.createElement("script");
-    script.src = src;
-    script.defer = true;
-    script.setAttribute(marker, "true");
-    script.onload = resolve;
-    script.onerror = reject;
-    document.head.append(script);
+    const script = document.createElement("script"); script.src = src; script.defer = true; script.setAttribute(marker, "true"); script.onload = resolve; script.onerror = reject; document.head.append(script);
   });
   load("/laws/index.mobile-background-tabs.core.js?v=LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY", "data-laws-responsive-core")
-    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V9_METHODS_REFERENCE_PORT_20260816C_ONE_SWIPE_ONE_STEP", "data-laws-destination-carousel-runtime"))
+    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V10_METHODS_BEHAVIORAL_EQUIVALENCE_20260816D", "data-laws-destination-carousel-runtime"))
     .then(() => load("/laws/index.destination-stage.js?v=LAWS_DESTINATION_STAGE_V1_20260816A", "data-laws-destination-stage-runtime"))
-    .catch(error => {
-      document.documentElement.dataset.lawsDestinationCarouselRuntime = "load-failed";
-      document.documentElement.dataset.lawsDestinationStage = "load-failed";
-      console.error("Laws destination stage bootstrap failed", error);
-    });
+    .catch(error => { document.documentElement.dataset.lawsDestinationCarouselRuntime = "load-failed"; document.documentElement.dataset.lawsDestinationStage = "load-failed"; console.error("Laws destination stage bootstrap failed", error); });
 })();

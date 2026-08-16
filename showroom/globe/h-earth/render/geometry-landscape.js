@@ -1,11 +1,11 @@
 /**
  * /showroom/globe/h-earth/render/geometry-landscape.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_RUN_6C_v2
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_C3C3R3_v1
  *
- * Constructs connected neutral terrain chunks from the Run 6B realization
- * descriptors and canonical terrain field. Semantic group membership remains
- * distinct from the subset physically realized as terrain in each chunk.
+ * Preserves the OW04 subtropical terrain field while restoring the perceptual
+ * 16x16 cell structure as subtle world-space relief. Color may describe region;
+ * it may not erase terrain topology.
  */
 
 import {
@@ -33,9 +33,23 @@ const freeze = (value, seen = new WeakSet()) => {
   Object.values(value).forEach((nested) => freeze(nested, seen));
   return Object.freeze(value);
 };
+const lerp = (a, b, t) => a + (b - a) * t;
+const clamp01 = (value) => Math.min(1, Math.max(0, value));
+const smooth = (t) => t * t * (3 - 2 * t);
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_OW04_SUBTROPICAL_CAUSAL_v6';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_C3C3R3_GRID_DEPTH_RESTORATION_v1';
+
+const zMaximum = H_EARTH_TERRAIN_FIELD.coreDomain?.zMaximum ?? H_EARTH_TERRAIN_FIELD.worldDomain.zMaximum;
+export const H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE = freeze({
+  cellCountPerAxis: 16,
+  seamWidthWorldUnits: 7.5,
+  seamDepthWorldUnits: 0.72,
+  shoulderWidthWorldUnits: 18,
+  shoulderLiftWorldUnits: 0.14,
+  literalOverlayProhibited: true,
+  colorTopologyLaw: 'COLOR_MAY_DESCRIBE_REGION_BUT_MAY_NOT_ERASE_TERRAIN_TOPOLOGY'
+});
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   contractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID,
@@ -48,13 +62,14 @@ export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
     xMinimum: H_EARTH_TERRAIN_FIELD.worldDomain.xMinimum,
     xMaximum: H_EARTH_TERRAIN_FIELD.worldDomain.xMaximum,
     zMinimum: H_EARTH_TERRAIN_FIELD.worldDomain.zMinimum,
-    zMaximum: H_EARTH_TERRAIN_FIELD.coreDomain.zMaximum
+    zMaximum
   },
   accessibleRegionExtentFrozen: true,
   furtherTerrainExpansionProhibited: true,
   visibleWorldContinuationOwnedElsewhere: true,
   climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
-  materialResponseLaw: 'COASTAL_FOREGROUND_IS_A_MIXED_GROUNDCOVER_AND_EXPOSED_SAND_SOIL_MOSAIC_WHILE_TRANSITION_AND_INLAND_TERRAIN_CARRY_STRONGER_VEGETATED_SUBTROPICAL_SIGNAL',
+  materialResponseLaw: 'SUBTROPICAL_COLOR_PRESERVED_WITH_WORLD_SPACE_CELL_DEPTH_CUES',
+  perceptualGridProfile: H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE,
   neutralPrimitiveOnly: true,
   semanticGroupIdentityPreserved: true,
   physicalTerrainMembershipSeparated: true,
@@ -73,7 +88,35 @@ function realizeFrozenAccessibleBoundary(bounds) {
   });
 }
 
-const lerp = (a, b, t) => a + (b - a) * t;
+function distanceToPeriodicBoundary(value, minimum, maximum, count) {
+  const size = (maximum - minimum) / count;
+  if (!(size > 0)) return Number.POSITIVE_INFINITY;
+  const local = ((value - minimum) % size + size) % size;
+  return Math.min(local, size - local);
+}
+
+function perceptualGridRelief(x, z) {
+  const profile = H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE;
+  const xDistance = distanceToPeriodicBoundary(
+    x,
+    H_EARTH_TERRAIN_FIELD.worldDomain.xMinimum,
+    H_EARTH_TERRAIN_FIELD.worldDomain.xMaximum,
+    profile.cellCountPerAxis
+  );
+  const zDistance = distanceToPeriodicBoundary(
+    z,
+    H_EARTH_TERRAIN_FIELD.worldDomain.zMinimum,
+    zMaximum,
+    profile.cellCountPerAxis
+  );
+  const distance = Math.min(xDistance, zDistance);
+  const seamT = smooth(clamp01(distance / profile.seamWidthWorldUnits));
+  const shoulderT = smooth(clamp01((distance - profile.seamWidthWorldUnits) /
+    Math.max(1, profile.shoulderWidthWorldUnits - profile.seamWidthWorldUnits)));
+  const seam = -profile.seamDepthWorldUnits * (1 - seamT);
+  const shoulder = profile.shoulderLiftWorldUnits * seamT * (1 - shoulderT);
+  return seam + shoulder;
+}
 
 function edgeSampleKey(sharedEdgeKey, ordinal) {
   return `${sharedEdgeKey}:S${String(ordinal).padStart(2, '0')}`;
@@ -86,19 +129,10 @@ function makeEdgeSamples(chunk, grid) {
     for (let ordinal = 0; ordinal < size; ordinal += 1) {
       let row;
       let column;
-      if (side === 'north') {
-        row = 0;
-        column = ordinal;
-      } else if (side === 'south') {
-        row = size - 1;
-        column = ordinal;
-      } else if (side === 'west') {
-        row = ordinal;
-        column = 0;
-      } else {
-        row = ordinal;
-        column = size - 1;
-      }
+      if (side === 'north') { row = 0; column = ordinal; }
+      else if (side === 'south') { row = size - 1; column = ordinal; }
+      else if (side === 'west') { row = ordinal; column = 0; }
+      else { row = ordinal; column = size - 1; }
       const sample = grid[row][column];
       samples.push(freeze({
         key: edgeSampleKey(chunk.sharedEdgeKeys[side], ordinal),
@@ -110,20 +144,11 @@ function makeEdgeSamples(chunk, grid) {
     }
     return freeze(samples);
   };
-
-  return freeze({
-    north: edge('north'),
-    south: edge('south'),
-    west: edge('west'),
-    east: edge('east')
-  });
+  return freeze({ north: edge('north'), south: edge('south'), west: edge('west'), east: edge('east') });
 }
 
 function resolveSubtropicalMaterialIntent(chunk) {
   if (chunk.physicalRole === 'COASTAL_FOREGROUND_TERRAIN') {
-    // The central coastal sectors carry the dominant humid groundcover signal,
-    // while the flanking sectors retain exposed sand/soil. This prevents the
-    // desert read without replacing it with a uniform green sheet.
     return chunk.columnGroup === 1 || chunk.columnGroup === 2
       ? 'HIGHLAND_SUBTROPICAL_COASTAL_GROUNDCOVER_WITH_EXPOSED_SAND_SOIL'
       : 'SUBTROPICAL_COASTAL_EXPOSED_SAND_SOIL_WITH_SPARSE_GROUNDCOVER';
@@ -143,6 +168,7 @@ function constructChunk(chunk) {
   const vertices = [];
   const indices = [];
   const grid = [];
+  let maximumAppliedGridDepth = 0;
 
   for (let row = 0; row < size; row += 1) {
     const rowSamples = [];
@@ -150,8 +176,10 @@ function constructChunk(chunk) {
     for (let column = 0; column < size; column += 1) {
       const x = lerp(worldBounds.xMin, worldBounds.xMax, column / (size - 1));
       const sample = sampleHEarthTerrainField(x, z);
+      const relief = perceptualGridRelief(x, z);
+      maximumAppliedGridDepth = Math.max(maximumAppliedGridDepth, Math.max(0, -relief));
       rowSamples.push(sample);
-      vertices.push(createHEarthVector3(x, sample.elevation, z));
+      vertices.push(createHEarthVector3(x, sample.elevation + relief, z));
     }
     grid.push(rowSamples);
   }
@@ -178,13 +206,9 @@ function constructChunk(chunk) {
     normalMode: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.normalMode.FACE_AND_VERTEX,
     expectedClosure: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
     semanticRole: 'FUNCTIONAL_LANDSCAPE_TERRAIN_CHUNK',
-    materialHint: freeze({
-      materialKey: 'worldTerrainField',
-      materialIntent,
-      climateIdentity: 'WARM_SUBTROPICAL_COASTAL'
-    }),
+    materialHint: freeze({ materialKey: 'worldTerrainField', materialIntent, climateIdentity: 'WARM_SUBTROPICAL_COASTAL' }),
     source: freeze({
-      sourceType: 'H_EARTH_CANONICAL_TERRAIN_FIELD_CHUNK',
+      sourceType: 'H_EARTH_CANONICAL_TERRAIN_FIELD_CHUNK_C3C3R3_GRID_DEPTH',
       terrainFieldContractId: H_EARTH_TERRAIN_FIELD.contractId,
       realizationPlannerContractId: H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.contractId
     }),
@@ -206,6 +230,14 @@ function constructChunk(chunk) {
       realizedWorldBounds: worldBounds,
       climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
       environmentalCausality: 'LOCAL_ELEVATION_SLOPE_DRAINAGE_EXPOSURE_AND_COASTAL_INFLUENCE_NOT_OUTER_PERIMETER_DISTANCE',
+      perceptualCellGridRestoration: true,
+      perceptualGridClass: 'SUBTLE_RECESSED_WORLD_SPACE_CELL_SEAMS',
+      perceptualGridCellCountPerAxis: H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE.cellCountPerAxis,
+      perceptualGridSeamWidth: H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE.seamWidthWorldUnits,
+      perceptualGridSeamDepth: H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE.seamDepthWorldUnits,
+      maximumAppliedGridDepth,
+      literalGridOverlay: false,
+      colorTopologyLaw: H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE.colorTopologyLaw,
       accessibleRegionExtentFrozen: true,
       accessibleRegionExtentPolicy: 'PRESERVE_OW03_ENLARGED_REGION_NO_FURTHER_TERRAIN_EXPANSION',
       visualWorldContinuationRequiredOutsideAccessibleExtent: true,
@@ -228,21 +260,15 @@ function constructChunk(chunk) {
   });
 }
 
-export function constructHEarthFunctionalLandscapeTerrain({
-  realizationPlan = H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN
-} = {}) {
+export function constructHEarthFunctionalLandscapeTerrain({ realizationPlan = H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN } = {}) {
   const issues = [];
   if (realizationPlan?.eligible !== true || realizationPlan.physicalChunkCount !== 16 || realizationPlan.terrainChunkCount !== 10) {
     return freeze({ ok: false, status: 'FUNCTIONAL_LANDSCAPE_TERRAIN_REJECTED', contractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID, chunkResults: [], primitives: [], bounds: null, issues: ['REALIZATION_PLAN_INVALID'] });
   }
 
-  const terrainChunks = realizationPlan.chunks.filter((chunk) =>
-    chunk.terrainMemberAddressIds.length > 0 && chunk.physicalRole.includes('TERRAIN')
-  );
+  const terrainChunks = realizationPlan.chunks.filter((chunk) => chunk.terrainMemberAddressIds.length > 0 && chunk.physicalRole.includes('TERRAIN'));
   const chunkResults = terrainChunks.map(constructChunk);
-  chunkResults.forEach((result) => {
-    if (!result.ok) issues.push(`TERRAIN_CHUNK_INVALID:${result.chunkId}`);
-  });
+  chunkResults.forEach((result) => { if (!result.ok) issues.push(`TERRAIN_CHUNK_INVALID:${result.chunkId}`); });
 
   const byId = new Map(chunkResults.map((result) => [result.chunkId, result]));
   for (const chunk of terrainChunks) {
@@ -251,23 +277,15 @@ export function constructHEarthFunctionalLandscapeTerrain({
       const neighborId = chunk.physicalNeighborChunkIds[side];
       if (!neighborId || !byId.has(neighborId)) continue;
       const opposite = side === 'east' ? 'west' : 'north';
-      const evaluation = evaluateHEarthTerrainSharedEdge({
-        edgeA: current.edgeSamples[side],
-        edgeB: byId.get(neighborId).edgeSamples[opposite]
-      });
+      const evaluation = evaluateHEarthTerrainSharedEdge({ edgeA: current.edgeSamples[side], edgeB: byId.get(neighborId).edgeSamples[opposite] });
       if (!evaluation.eligible) issues.push(`SHARED_EDGE_FAILED:${chunk.chunkId}:${side}:${neighborId}`);
     }
   }
 
   const primitives = chunkResults.filter((result) => result.ok).map((result) => result.primitive);
-  const bounds = primitives.length > 0
-    ? mergeHEarthGeometryBounds(primitives.map((primitive) => primitive.geometry.bounds))
-    : null;
+  const bounds = primitives.length > 0 ? mergeHEarthGeometryBounds(primitives.map((primitive) => primitive.geometry.bounds)) : null;
   const realizedTerrainAddressIds = [...new Set(terrainChunks.flatMap((chunk) => chunk.terrainMemberAddressIds))].sort();
-
-  if (realizedTerrainAddressIds.length !== 124) {
-    issues.push(`REALIZED_TERRAIN_ADDRESS_COUNT_EXPECTED_124_ACTUAL_${realizedTerrainAddressIds.length}`);
-  }
+  if (realizedTerrainAddressIds.length !== 124) issues.push(`REALIZED_TERRAIN_ADDRESS_COUNT_EXPECTED_124_ACTUAL_${realizedTerrainAddressIds.length}`);
 
   return freeze({
     ok: issues.length === 0 && primitives.length === terrainChunks.length,
@@ -280,6 +298,8 @@ export function constructHEarthFunctionalLandscapeTerrain({
     chunkResults,
     primitives,
     bounds,
+    perceptualCellGridRestoration: true,
+    perceptualGridProfile: H_EARTH_C3C3R3_PERCEPTUAL_GRID_PROFILE,
     accessibleRegionExtent: H_EARTH_GEOMETRY_LANDSCAPE_PROFILE.accessibleRegionExtent,
     accessibleRegionExtentFrozen: true,
     accessibleRegionExpansion: false,

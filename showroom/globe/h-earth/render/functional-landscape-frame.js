@@ -31,10 +31,14 @@ const freeze = (value, seen = new WeakSet()) => {
 const finiteVector = (value) => value && ['x', 'y', 'z'].every((axis) =>
   typeof value[axis] === 'number' && Number.isFinite(value[axis]));
 
-const OW04_VISUAL_HORIZON_FAR_PLANE = 2304;
+// Camera-to-envelope sizing, not nominal world-coordinate sizing. The far OW04
+// continuation corners are ~3044 world units from coastal entry; retain margin
+// beyond that complete intended visual envelope without expanding navigation,
+// collision, semantic-address, or accessible-region authority.
+const OW04_VISUAL_HORIZON_FAR_PLANE = 3328;
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v6_SUBTROPICAL_VISUAL_HORIZON_REACH';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v7_CAMERA_TO_ENVELOPE_VISUAL_HORIZON_REACH';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE =
   'FUNCTIONAL_LANDSCAPE_COAST_TO_INLAND_PROOF';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES = freeze([
@@ -50,11 +54,11 @@ function defaultCamera() {
     up: { ...source.up },
     verticalFovDegrees: source.verticalFovDegrees,
     nearPlane: source.nearPlane,
-    // The frozen OW03 accessible terrain reaches roughly 1024 world units and
-    // its existing visual-only ocean/terrain envelope continues farther still.
-    // The legacy 512-unit clip plane made that already-authored exterior world
-    // impossible to render. Extend only successor-frame draw reach; navigation,
-    // collision, semantic address, and playable extents remain unchanged.
+    // The frozen OW03 accessible terrain remains unchanged. OW04's existing
+    // noninteractive visual continuation reaches a camera-relative envelope
+    // beyond 3044 units from coastal entry, so the legacy 512 and provisional
+    // 2304 clip planes both truncate authored context. Extend successor-frame
+    // draw reach only; no playable or semantic extent is enlarged.
     farPlane: Math.max(source.farPlane, OW04_VISUAL_HORIZON_FAR_PLANE),
     sourceCapacityContractId: 'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5',
     cameraAuthority: source.cameraStateAuthority,
@@ -242,6 +246,8 @@ export function constructHEarthFunctionalLandscapeFrame({
     visualHorizonReach: freeze({
       farPlane: camera.farPlane,
       minimumRequiredFarPlane: OW04_VISUAL_HORIZON_FAR_PLANE,
+      sizingBasis: 'COASTAL_ENTRY_CAMERA_TO_FARTHEST_OW04_ENVELOPE_WITH_MARGIN',
+      farthestRequiredDistanceApprox: 3044,
       navigationExtentExpanded: false,
       collisionExtentExpanded: false,
       semanticAddressExtentExpanded: false,

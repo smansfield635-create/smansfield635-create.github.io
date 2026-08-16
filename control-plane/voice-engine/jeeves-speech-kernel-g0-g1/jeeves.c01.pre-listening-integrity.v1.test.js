@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('assert');
+const G=require('./jeeves.c01.pre-listening-integrity.v1.js');
+const q=G.evaluate();
+assert.strictEqual(q.pass,true,JSON.stringify(q));
+assert.strictEqual(q.finite,true);
+assert.strictEqual(q.clippedSamples,0);
+assert.strictEqual(q.lexicalGapsExact,true);
+assert.strictEqual(q.longRunsAtExpectedOnly,true);
+assert.strictEqual(q.longSilenceRuns.length,2);
+assert.strictEqual(q.classCoverage,true);
+assert.deepStrictEqual(q.phoneClasses,['approximant','fricative','nasal','stop','vowel']);
+assert.deepStrictEqual(q.robustness,{pass:true,passed:13,cases:13});
+console.log(JSON.stringify(q));

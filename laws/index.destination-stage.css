@@ -1,0 +1,267 @@
+/* LAWS_DESTINATION_STAGE_v1 — dedicated second chamber below the Laws Compass. */
+html[data-laws-destination-stage="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"] {
+  position: relative;
+  display: block !important;
+  width: calc(100vw - clamp(1rem, 3vw, 3rem));
+  max-width: 112rem;
+  margin: clamp(3.5rem, 8vw, 8rem) auto clamp(5rem, 10vw, 10rem) !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 1px solid rgba(128,224,255,.16);
+  border-radius: clamp(1.4rem, 2.8vw, 2.6rem);
+  background:
+    radial-gradient(circle at 50% 14%, rgba(87,184,255,.11), transparent 30%),
+    radial-gradient(circle at 78% 70%, rgba(132,109,255,.07), transparent 32%),
+    linear-gradient(180deg, rgba(2,7,18,.94), rgba(2,6,15,.86));
+  box-shadow:
+    0 4rem 10rem rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.025),
+    inset 0 0 140px rgba(0,0,0,.18);
+  isolation: isolate;
+}
+
+html[data-laws-destination-stage="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 14% 24%, rgba(128,224,255,.07) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 72% 31%, rgba(220,232,255,.09) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 44% 74%, rgba(184,165,255,.08) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 89% 82%, rgba(128,224,255,.07) 0 1px, transparent 1.8px);
+  background-size: 17rem 17rem, 23rem 23rem, 29rem 29rem, 31rem 31rem;
+  opacity: .7;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__inner {
+  position: relative;
+  padding: clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 4.5rem) clamp(2.5rem, 6vw, 6rem);
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__header {
+  display: grid;
+  gap: clamp(1.6rem, 3vw, 2.8rem);
+  padding-bottom: clamp(1.8rem, 3.5vw, 3rem);
+  border-bottom: 1px solid rgba(128,224,255,.12);
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__kicker {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  color: rgba(166,225,255,.82);
+  font-size: .72rem;
+  font-weight: 760;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__kicker span:first-child {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid rgba(128,224,255,.28);
+  border-radius: 50%;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__heading-row {
+  display: grid;
+  grid-template-columns: minmax(0,1.2fr) minmax(18rem,.6fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__eyebrow {
+  margin: 0 0 .85rem;
+  color: rgba(128,224,255,.78);
+  font-size: .76rem;
+  font-weight: 760;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__header h2 {
+  max-width: 12ch;
+  margin: 0;
+  color: #f3f8ff;
+  font-size: clamp(2.6rem, 6vw, 6.3rem);
+  line-height: .92;
+  letter-spacing: -.055em;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__lede {
+  margin: 0;
+  color: rgba(187,205,228,.78);
+  font-size: clamp(.98rem, 1.4vw, 1.14rem);
+  line-height: 1.72;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: .65rem;
+  margin-top: clamp(1.5rem, 3vw, 2.6rem);
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__tab {
+  min-height: 3.2rem;
+  padding: .8rem 1rem;
+  border: 1px solid rgba(128,224,255,.17);
+  border-radius: 999px;
+  background: rgba(5,14,31,.66);
+  color: rgba(197,216,237,.78);
+  font: inherit;
+  font-size: .76rem;
+  font-weight: 760;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__tab[aria-selected="true"] {
+  color: #f3f8ff;
+  border-color: rgba(128,224,255,.58);
+  background: linear-gradient(180deg, rgba(31,72,112,.6), rgba(10,28,54,.86));
+  box-shadow: 0 0 2.2rem rgba(99,205,255,.1), inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__tab:focus-visible {
+  outline: 2px solid rgba(128,224,255,.95);
+  outline-offset: 3px;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__context {
+  display: grid;
+  gap: .4rem;
+  margin: clamp(2rem, 4vw, 3.6rem) 0 clamp(1rem, 2vw, 1.7rem);
+  text-align: center;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__context p {
+  margin: 0;
+  color: rgba(128,224,255,.84);
+  font-size: .75rem;
+  font-weight: 760;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__context h3 {
+  margin: 0;
+  color: #eef6ff;
+  font-size: clamp(1.65rem, 3.2vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -.035em;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field {
+  position: relative;
+  min-height: clamp(34rem, 48vw, 43rem);
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field > .laws-rolodex-field {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field > .laws-rolodex-field[data-destination-stage-state="inactive"] {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field > .laws-rolodex-field[data-destination-stage-state="active"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-field__heading {
+  display: none !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-field__browser {
+  width: 100% !important;
+  min-height: clamp(32rem, 46vw, 41rem) !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-controls {
+  justify-content: center !important;
+  padding: 0 0 1rem !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-viewport {
+  height: clamp(29rem, 43vw, 38rem) !important;
+  min-height: clamp(29rem, 43vw, 38rem) !important;
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%) !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card {
+  --laws-carousel-width: min(62vw, 39rem);
+  border-color: rgba(128,224,255,.18);
+  background:
+    radial-gradient(circle at 80% 0%, rgba(91,178,226,.08), transparent 32%),
+    linear-gradient(145deg, rgba(7,18,38,.97), rgba(4,10,24,.93));
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card[data-active="true"] {
+  border-color: rgba(128,224,255,.58);
+  box-shadow: 0 2.4rem 7rem rgba(0,0,0,.46), 0 0 3rem rgba(88,192,255,.07), inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+@media (max-width: 900px) {
+  html[data-laws-destination-stage="active"] .laws-destination-stage__heading-row {
+    grid-template-columns: 1fr;
+    gap: 1.3rem;
+  }
+  html[data-laws-destination-stage="active"] .laws-destination-stage__tabs {
+    grid-template-columns: 1fr;
+  }
+  html[data-laws-destination-stage="active"] .laws-destination-stage__field {
+    min-height: 34rem;
+  }
+  html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card {
+    --laws-carousel-width: 78vw;
+  }
+}
+
+@media (max-width: 560px) {
+  html[data-laws-destination-stage="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"] {
+    width: calc(100vw - 1rem);
+    margin-top: 2.5rem !important;
+    border-radius: 1.25rem;
+  }
+  html[data-laws-destination-stage="active"] .laws-destination-stage__inner {
+    padding: 1.5rem .65rem 2.4rem;
+  }
+  html[data-laws-destination-stage="active"] .laws-destination-stage__header,
+  html[data-laws-destination-stage="active"] .laws-destination-stage__tabs,
+  html[data-laws-destination-stage="active"] .laws-destination-stage__context {
+    margin-left: .6rem;
+    margin-right: .6rem;
+  }
+  html[data-laws-destination-stage="active"] .laws-destination-stage__header h2 {
+    font-size: clamp(2.3rem, 13vw, 4.2rem);
+  }
+  html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card {
+    --laws-carousel-width: 82vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-laws-destination-stage="active"] .laws-destination-stage__field > .laws-rolodex-field,
+  html[data-laws-destination-stage="active"] .laws-destination-stage__tab {
+    transition: none !important;
+  }
+}

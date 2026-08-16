@@ -63,7 +63,7 @@ jobs:
             const before=await track.evaluate(n=>getComputedStyle(n).transform);
             const box=await viewport.boundingBox(); A(box,'viewport missing');
             const cdp=await context.newCDPSession(page); let tid=700;
-            const sx=box.x+box.width*.72, sy=box.y+box.height*.5;
+            const sx=box.x+box.width*.75, sy=box.y+box.height*.5;
             const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
             const sample=()=>field.evaluate(el=>{const t=el.querySelector('.laws-rolodex-track');const cs=getComputedStyle(t);return {phase:el.dataset.carouselGestureState,index:el.dataset.carouselIndex,angle:el.dataset.carouselOrbitAngle,transform:cs.transform,transition:cs.transitionDuration,barrier:el.dataset.carouselTransitionFrame||''};});
             await touch('touchStart',sx,sy); await page.waitForTimeout(30); await touch('touchMove',sx-box.width*.35,sy); await page.waitForTimeout(80);

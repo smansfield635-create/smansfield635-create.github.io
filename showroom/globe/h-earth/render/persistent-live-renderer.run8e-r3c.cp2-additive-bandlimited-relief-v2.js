@@ -165,7 +165,7 @@ export function createHEarthRun8ER3CPersistentRenderer(options={}){
     presentColorFrame:renderer.presentColorFrame,captureColorFrame:renderer.captureColorFrame,captureDepthSummary:renderer.captureDepthSummary,
     getResourceReceipt(){const receipt=pass.getReceipt();return {...renderer.getResourceReceipt(),c3c3:{
       contract:'H_EARTH_C3C3_REGIONAL_BOUNDARY_CLOSURE_CONSTRUCTION_CONTRACT_v1',initialized,
-      O1_WORLD_LOCKED_SUN:{pass:initialized&&vectorEqual(canonicalSunDirection,receipt.canonicalWorldSunDirection),canonicalWorldSunDirection,projection:receipt.lastSunProjection,cameraRelativeFallback:false},
+      O1_WORLD_LOCKED_SUN:{pass:initialized&&vectorEqual(canonicalSunDirection,receipt.canonicalWorldSunDirection),canonicalWorldSunDirection:canonicalSunDirection,projection:receipt.lastSunProjection,cameraRelativeFallback:false},
       O2_DEPTH_HIERARCHY:{pass:receipt.depthHierarchy.materialized,...receipt.depthHierarchy},
       O3_CONNECTED_REGION_BOUNDARIES:{pass:receipt.regionalBoundaryEnclosure.classification!=='UNRESOLVED',...receipt.regionalBoundaryEnclosure,eastNortheastOceanPreserved:true,openOceanBoxing:false},
       passReceipt:receipt,preservations:{accessibleRegionExpansion:false,navigationAuthorityMutation:false,collisionAuthorityMutation:false,shorelineAuthorityMutation:false,enlargedRegionScalePreserved:true,openOceanPreserved:true}

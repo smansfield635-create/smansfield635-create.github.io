@@ -13,41 +13,28 @@ import {
   isHEarthAggregateFrameAdmissionRecord
 } from './geometry-kernel.js';
 
-import {
-  previewHEarthFunctionalLandscape
-} from './landscape-preview.js';
-
+import { previewHEarthFunctionalLandscape } from './landscape-preview.js';
 import {
   buildHEarthFunctionalLandscapePostWestTransfer,
   H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_CONTRACT_ID
 } from '../../../../h-earth-3d/integration/h-earth.functional-landscape-post-west-transfer.js';
-
-import {
-  H_EARTH_3D_CAMERA_CAPACITY
-} from '../capacity.js';
+import { H_EARTH_3D_CAMERA_CAPACITY } from '../capacity.js';
 
 const freeze = (value, seen = new WeakSet()) => {
-  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) {
-    return value;
-  }
-  if (seen.has(value)) {
-    return value;
-  }
+  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) return value;
+  if (seen.has(value)) return value;
   seen.add(value);
   Object.values(value).forEach((nested) => freeze(nested, seen));
   return Object.freeze(value);
 };
 
-const finiteVector = (value) => value &&
-  ['x', 'y', 'z'].every((axis) =>
-    typeof value[axis] === 'number' && Number.isFinite(value[axis]));
+const finiteVector = (value) => value && ['x', 'y', 'z'].every((axis) =>
+  typeof value[axis] === 'number' && Number.isFinite(value[axis]));
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v3_REALIZATION_PARTITIONS';
-
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v4_SUBTROPICAL_ENVIRONMENT';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE =
   'FUNCTIONAL_LANDSCAPE_COAST_TO_INLAND_PROOF';
-
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES = freeze([
   'FIRST_ADMITTED_WET_SAND_PROOF',
   'MINIMUM_NATIVE_SHORELINE_PROOF'
@@ -62,22 +49,21 @@ function defaultCamera() {
     verticalFovDegrees: source.verticalFovDegrees,
     nearPlane: source.nearPlane,
     farPlane: source.farPlane,
-    sourceCapacityContractId:
-      'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5',
+    sourceCapacityContractId: 'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5',
     cameraAuthority: source.cameraStateAuthority
   });
 }
 
 function defaultEnvironment() {
   return freeze({
-    environmentSnapshotId:
-      'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_SNAPSHOT_001',
-    sourceEnvironmentContractId:
-      'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_ENVIRONMENT_DESCRIPTOR_v1',
-    skyTop: [38, 72, 96, 255],
-    skyHorizon: [174, 198, 194, 255],
-    groundHaze: [116, 139, 132, 255],
-    horizonClosed: true,
+    environmentSnapshotId: 'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_SUBTROPICAL_OW04_001',
+    sourceEnvironmentContractId: 'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_ENVIRONMENT_DESCRIPTOR_v1',
+    climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
+    skyTop: [56, 105, 139, 255],
+    skyHorizon: [182, 211, 204, 255],
+    groundHaze: [126, 153, 134, 255],
+    humidityCharacter: 'WARM_MARITIME_HAZE_WITH_GREEN_REFLECTED_GROUND_LIGHT',
+    horizonClosed: false,
     distanceHazeEnabled: true,
     ownsSkyAuthority: false
   });
@@ -88,9 +74,7 @@ function createPresentationAssignment(primitive) {
     primitive?.materialHint?.materialReference ?? 'DEFAULT';
   const isWater = String(intent).includes('WATER');
   const isFoam = String(intent).includes('FOAM');
-  const isDistant = String(intent).includes('HIGHLAND') ||
-    String(intent).includes('DISTANT');
-
+  const isDistant = String(intent).includes('HIGHLAND') || String(intent).includes('DISTANT');
   return freeze({
     primitiveId: primitive.primitiveId,
     presentationMode: H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE,
@@ -100,8 +84,7 @@ function createPresentationAssignment(primitive) {
     materialIntent: intent,
     semanticRole: primitive.semanticRole ?? null,
     semanticAddressIds: primitive?.metadata?.memberAddressIds ?? [],
-    formationIds: primitive?.metadata?.formationIds ??
-      [primitive?.metadata?.formationId].filter(Boolean),
+    formationIds: primitive?.metadata?.formationIds ?? [primitive?.metadata?.formationId].filter(Boolean),
     geometryIdentityPreserved: true,
     sourceGeometryReconstructed: false,
     admissionRecordAltered: false,
@@ -110,87 +93,43 @@ function createPresentationAssignment(primitive) {
 }
 
 export function constructHEarthFunctionalLandscapeFrame({
-  frameOccurrenceId =
-    'H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_OCCURRENCE_001',
-  transferOccurrenceId =
-    'H_EARTH_FUNCTIONAL_LANDSCAPE_TRANSFER_OCCURRENCE_001',
+  frameOccurrenceId = 'H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_OCCURRENCE_001',
+  transferOccurrenceId = 'H_EARTH_FUNCTIONAL_LANDSCAPE_TRANSFER_OCCURRENCE_001',
   camera = defaultCamera(),
   viewport = { width: 1280, height: 720, pixelRatio: 1 },
   environment = defaultEnvironment(),
   revision = 1
 } = {}) {
   const issues = [];
-  if (typeof frameOccurrenceId !== 'string' ||
-      frameOccurrenceId.length === 0) {
-    issues.push('FRAME_OCCURRENCE_ID_INVALID');
-  }
-  if (!finiteVector(camera?.position) ||
-      !finiteVector(camera?.target) ||
-      !finiteVector(camera?.up)) {
-    issues.push('CAMERA_INVALID');
-  }
-  if (!Number.isFinite(viewport?.width) ||
-      !Number.isFinite(viewport?.height) ||
-      viewport.width <= 0 ||
-      viewport.height <= 0) {
-    issues.push('VIEWPORT_INVALID');
-  }
-  if (!Number.isSafeInteger(revision) || revision < 1) {
-    issues.push('REVISION_INVALID');
-  }
+  if (typeof frameOccurrenceId !== 'string' || frameOccurrenceId.length === 0) issues.push('FRAME_OCCURRENCE_ID_INVALID');
+  if (!finiteVector(camera?.position) || !finiteVector(camera?.target) || !finiteVector(camera?.up)) issues.push('CAMERA_INVALID');
+  if (!Number.isFinite(viewport?.width) || !Number.isFinite(viewport?.height) || viewport.width <= 0 || viewport.height <= 0) issues.push('VIEWPORT_INVALID');
+  if (!Number.isSafeInteger(revision) || revision < 1) issues.push('REVISION_INVALID');
 
   const neutralPreview = previewHEarthFunctionalLandscape();
-  if (neutralPreview.ok !== true) {
-    issues.push('NEUTRAL_PREVIEW_INVALID');
-  }
+  if (neutralPreview.ok !== true) issues.push('NEUTRAL_PREVIEW_INVALID');
 
   const westAdmission = issues.length === 0
     ? admitHEarthPrimitiveBatch(neutralPreview.primitives, {
         frameId: `${frameOccurrenceId}:WEST_AGGREGATE`,
-        metadata: {
-          successorProgram: 'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6',
-          presentationMode:
-            H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE
-        }
+        metadata: { successorProgram: 'H_EARTH_FUNCTIONAL_LANDSCAPE_RUN_6', presentationMode: H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE }
       })
     : null;
 
-  if (westAdmission?.valid !== true ||
-      !isHEarthAggregateFrameAdmissionRecord(westAdmission?.frame)) {
-    issues.push('WEST_ADMISSION_FAILED');
-  }
+  if (westAdmission?.valid !== true || !isHEarthAggregateFrameAdmissionRecord(westAdmission?.frame)) issues.push('WEST_ADMISSION_FAILED');
 
   const transfer = issues.length === 0
-    ? buildHEarthFunctionalLandscapePostWestTransfer({
-        neutralPreview,
-        westBatchAdmissionResult: westAdmission,
-        transferOccurrenceId
-      })
+    ? buildHEarthFunctionalLandscapePostWestTransfer({ neutralPreview, westBatchAdmissionResult: westAdmission, transferOccurrenceId })
     : null;
 
-  if (transfer?.ok !== true ||
-      transfer.contractId !==
-        H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_CONTRACT_ID) {
-    issues.push('POST_WEST_TRANSFER_FAILED');
-  }
+  if (transfer?.ok !== true || transfer.contractId !== H_EARTH_FUNCTIONAL_LANDSCAPE_POST_WEST_TRANSFER_CONTRACT_ID) issues.push('POST_WEST_TRANSFER_FAILED');
 
   if (issues.length > 0) {
-    return freeze({
-      ok: false,
-      status: 'FUNCTIONAL_LANDSCAPE_FRAME_REJECTED',
-      contractId: H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID,
-      frameOccurrenceId,
-      neutralPreview,
-      westAdmission,
-      transfer,
-      issues
-    });
+    return freeze({ ok: false, status: 'FUNCTIONAL_LANDSCAPE_FRAME_REJECTED', contractId: H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID, frameOccurrenceId, neutralPreview, westAdmission, transfer, issues });
   }
 
   const admittedPrimitives = transfer.admittedPrimitives;
-  const presentationAssignments = admittedPrimitives.map(
-    createPresentationAssignment
-  );
+  const presentationAssignments = admittedPrimitives.map(createPresentationAssignment);
 
   return freeze({
     ok: true,
@@ -201,14 +140,12 @@ export function constructHEarthFunctionalLandscapeFrame({
     frameId: frameOccurrenceId,
     revision,
     presentationMode: H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE,
-    compatibilityModesPreserved:
-      H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES,
+    compatibilityModesPreserved: H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES,
     packet001Altered: false,
     existingPacket002Altered: false,
     existingAdmittedGeometryFrameAltered: false,
     transfer,
-    westAggregateFrameAdmissionRecord:
-      transfer.aggregateFrameAdmissionRecord,
+    westAggregateFrameAdmissionRecord: transfer.aggregateFrameAdmissionRecord,
     primitiveCount: admittedPrimitives.length,
     primitiveIds: transfer.primitiveIds,
     primitives: admittedPrimitives,
@@ -229,11 +166,7 @@ export function constructHEarthFunctionalLandscapeFrame({
     viewport: freeze({ ...viewport }),
     environment: freeze({ ...environment }),
     presentationAssignments,
-    visibility: freeze({
-      visiblePrimitiveIds: transfer.primitiveIds,
-      hiddenPrimitiveIds: [],
-      visibilityAuthority: 'FUNCTIONAL_LANDSCAPE_SUCCESSOR_COMPOSITOR'
-    }),
+    visibility: freeze({ visiblePrimitiveIds: transfer.primitiveIds, hiddenPrimitiveIds: [], visibilityAuthority: 'FUNCTIONAL_LANDSCAPE_SUCCESSOR_COMPOSITOR' }),
     geometryConstructionAuthority: false,
     westAdmissionAuthority: false,
     rendererAuthority: false,

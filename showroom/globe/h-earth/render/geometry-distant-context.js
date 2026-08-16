@@ -1,12 +1,18 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v4
+ * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v5
  *
  * Constructs a non-navigable near/middle/far visual envelope beyond the frozen
  * accessible region. It carries inland/lateral terrain and horizon continuity
  * only. It owns no semantic address, collision, navigation, admission, or
  * playable extent, and creates no waterward landmass.
+ *
+ * OW04 v5 retires the legacy near-field two-row highland curtain. That proxy
+ * occupied the normal coastal sightline and could read as an enclosing wall.
+ * Distant continuity now begins at the frozen accessible boundary and recedes
+ * through the multi-row visual envelope instead of inserting a second terrain
+ * face inside the already-authored world.
  */
 
 import {
@@ -34,7 +40,7 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const smooth = (t) => t * t * (3 - 2 * t);
 
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v4_SEAMLESS_VISUAL_WORLD_ENVELOPE';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v5_SEAMLESS_VISUAL_WORLD_ENVELOPE_NO_NEAR_CURTAIN';
 
 const ACCESSIBLE = freeze({ xMin: -1024, xMax: 1024, zMin: -1024 });
 const VISUAL_HORIZON = freeze({ xMin: -1664, xMax: 1664, zMin: -1664 });
@@ -71,31 +77,10 @@ function constructVisualWorldContinuation(formation) {
   const vertices = [];
   const indices = [];
 
-  // Preserve the established contextual highland silhouette, but keep it
-  // irregular and subordinate to the larger continuation envelope.
-  const { worldBounds, elevationEnvelope } = formation;
-  const baseY = elevationEnvelope.minimum;
-  const amplitude = elevationEnvelope.maximum - elevationEnvelope.minimum;
-  appendBlendedBand({
-    vertices,
-    indices,
-    sampleCount: 25,
-    rowCount: 2,
-    pointAt: (alongT, distanceT) => {
-      const x = lerp(worldBounds.xMin, worldBounds.xMax, alongT);
-      const envelope = 0.1 + 0.9 * Math.sin(alongT * Math.PI);
-      const crest = baseY + amplitude * envelope *
-        (0.68 + 0.14 * Math.sin(alongT * Math.PI * 5.5));
-      return {
-        x,
-        y: distanceT === 0 ? baseY : crest,
-        z: worldBounds.zMin + 7 * Math.sin(alongT * Math.PI * 2.3)
-      };
-    }
-  });
-
-  // Inland near/middle/far envelope. Multiple rows prevent the old single
-  // stretched strip from reading as a shelf around the accessible rectangle.
+  // Inland near/middle/far envelope. Continuity starts at the frozen playable
+  // boundary, not at the legacy near-field highland proxy. Multiple rows carry
+  // the existing terrain outward and attenuate it toward a distant irregular
+  // horizon without creating a shelf or enclosing wall.
   appendBlendedBand({
     vertices,
     indices,
@@ -122,7 +107,8 @@ function constructVisualWorldContinuation(formation) {
 
   // Lateral continuation exists only landward of each canonical coast. It
   // blends through several rows and becomes increasingly irregular with
-  // distance, eliminating the parallel-wall reading.
+  // distance, eliminating the parallel-wall reading while leaving the
+  // ocean-facing side as uninterrupted open water.
   for (const side of ['WEST', 'EAST']) {
     const sign = side === 'WEST' ? -1 : 1;
     const innerX = side === 'WEST' ? ACCESSIBLE.xMin : ACCESSIBLE.xMax;
@@ -184,6 +170,7 @@ function constructVisualWorldContinuation(formation) {
       accessibleRegionBounds: ACCESSIBLE,
       visualHorizonBounds: VISUAL_HORIZON,
       oceanFacingTerrainContinuation: false,
+      legacyNearFieldHighlandCurtainRetired: true,
       navigationAddressIds: [],
       navigable: false,
       collisionAuthority: false,

@@ -1,0 +1,33 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_PRE_LISTENING_INTEGRITY_QUALIFICATION_v1",
+  "status": "PASS_PRE_LISTENING_SENTENCE_INTEGRITY",
+  "qualifiedHeadBeforeReceipt": "5291c36829ee97ec9b0e6edaa0cb13e1d9cf6689",
+  "executionMethod": "Exact committed equations recovered through connected GitHub and executed locally; raw.githubusercontent.com DNS was unavailable and was not treated as evidence.",
+  "observed": {
+    "sampleRateHz": 24000,
+    "sampleCount": 64344,
+    "durationSeconds": 2.681,
+    "finiteSamples": true,
+    "peakAmplitude": 0.5,
+    "rms": 0.12724932238054829,
+    "clippedSamples": 0,
+    "longSilenceRunCount": 2,
+    "lexicalGapTargetMs": 115,
+    "observedLongSilenceRunMs": [115.04166666666667, 115.04166666666667],
+    "lexicalGapsExact": true,
+    "noUnexpectedLongInternalDropouts": true,
+    "phoneClassCoverage": ["approximant", "fricative", "nasal", "stop", "vowel"],
+    "robustnessPassed": 13,
+    "robustnessCases": 13,
+    "weakestRobustnessMargin": 0.18636161601384016
+  },
+  "disposition": "HUMAN_LISTENING_CANDIDATE_MATERIALIZATION_NOW_ADMISSIBLE_BUT_NOT_YET_PERFORMED",
+  "notClaimed": [
+    "human auditory intelligibility",
+    "natural speech",
+    "Jeeves voice quality",
+    "open-vocabulary recognition"
+  ],
+  "audioSurfacedToOwner": false,
+  "nextLawfulAction": "MATERIALIZE_ONE_EXACT_QUALIFIED_C01_WAV_THEN_CONDUCT_OWNER_INTELLIGIBILITY_REVIEW"
+}

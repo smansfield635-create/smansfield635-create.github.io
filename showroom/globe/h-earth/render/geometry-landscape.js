@@ -35,7 +35,7 @@ const freeze = (value, seen = new WeakSet()) => {
 };
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_OW04_SUBTROPICAL_CAUSAL_v5';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_OW04_SUBTROPICAL_CAUSAL_v6';
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   contractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID,
@@ -54,7 +54,7 @@ export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   furtherTerrainExpansionProhibited: true,
   visibleWorldContinuationOwnedElsewhere: true,
   climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
-  materialResponseLaw: 'COASTAL_FOREGROUND_RETAINS_SAND_AND_SOIL_WHILE_TRANSITION_AND_INLAND_TERRAIN_CARRY_VEGETATED_SUBTROPICAL_SIGNAL',
+  materialResponseLaw: 'COASTAL_FOREGROUND_IS_A_MIXED_GROUNDCOVER_AND_EXPOSED_SAND_SOIL_MOSAIC_WHILE_TRANSITION_AND_INLAND_TERRAIN_CARRY_STRONGER_VEGETATED_SUBTROPICAL_SIGNAL',
   neutralPrimitiveOnly: true,
   semanticGroupIdentityPreserved: true,
   physicalTerrainMembershipSeparated: true,
@@ -121,7 +121,12 @@ function makeEdgeSamples(chunk, grid) {
 
 function resolveSubtropicalMaterialIntent(chunk) {
   if (chunk.physicalRole === 'COASTAL_FOREGROUND_TERRAIN') {
-    return 'SUBTROPICAL_COASTAL_SAND_SOIL_AND_GROUNDCOVER';
+    // The central coastal sectors carry the dominant humid groundcover signal,
+    // while the flanking sectors retain exposed sand/soil. This prevents the
+    // desert read without replacing it with a uniform green sheet.
+    return chunk.columnGroup === 1 || chunk.columnGroup === 2
+      ? 'HIGHLAND_SUBTROPICAL_COASTAL_GROUNDCOVER_WITH_EXPOSED_SAND_SOIL'
+      : 'SUBTROPICAL_COASTAL_EXPOSED_SAND_SOIL_WITH_SPARSE_GROUNDCOVER';
   }
   if (chunk.physicalRole === 'COASTAL_TO_INLAND_TRANSITION_TERRAIN') {
     return 'HIGHLAND_SUBTROPICAL_COASTAL_SCRUB_GRASS_AND_HUMID_SOIL';

@@ -1,0 +1,27 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_CALIBRATED_C01_QUALIFICATION_v2",
+  "status": "PASS_CANDIDATE_BOUNDARY",
+  "supersedes": "JEEVES_A5_CALIBRATED_C01_QUALIFICATION.v1.json",
+  "correction": "RMS qualification requires reference-level proximity within 0.001, not improvement over A4; A4 happens to be marginally closer in RMS while A5 materially improves the F0 anchor.",
+  "rendererSha256": "41c1241696cbbad4d9e04317e66222bf5857b6a61ed510c535fb7c940bacfca3",
+  "testSha256": "569b9673496107af165ecfb7bba4ca241b62aae671a6ec7f5559a15f22d30e35",
+  "renderedWavSha256": "38bfdcea8e8612867915e2913bd9bdae92657d659343b193c4ed452b664262e6",
+  "observed": {
+    "sampleRateHz": 24000,
+    "sampleCount": 71400,
+    "durationSeconds": 2.975,
+    "deterministicRepeat": true,
+    "a4EquivalentRms": 0.028987277636683965,
+    "a4EquivalentPeak": 0.44173410534858704,
+    "a5Rms": 0.029639219097624497,
+    "a5Peak": 0.33171749114990234,
+    "meanAbsoluteDeltaFromA4Equivalent": 0.020176045294187307,
+    "referenceActiveRms": 0.02926848,
+    "referenceMedianF0Hz": 100,
+    "a4F0DistanceHz": 18,
+    "a5F0DistanceHz": 0
+  },
+  "disposition": "MACHINE_QUALIFIED_READY_FOR_HUMAN_AUDITORY_AB_REVIEW",
+  "notClaimed": ["perceptual superiority", "natural-human speech", "voice cloning", "reference waveform identity"],
+  "nextLawfulAction": "HUMAN_AUDITORY_AB_REVIEW_BEFORE_EXPANDING_A5_CALIBRATION_TO_ADDITIONAL_COMPASS_LINES"
+}

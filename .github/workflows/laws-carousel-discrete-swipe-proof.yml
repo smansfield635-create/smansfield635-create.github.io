@@ -81,6 +81,7 @@ jobs:
             await field.locator('.laws-rolodex-card[data-active="true"] .laws-rolodex-enter').click();
             const returnButton = page.locator('.laws-exhibit-return');
             await returnButton.waitFor({state:'visible', timeout:5000});
+            await page.waitForFunction(() => document.querySelector('.laws-exhibit-return')?.textContent?.trim() === 'Return to Orbit');
             if ((await returnButton.textContent()).trim() !== 'Return to Orbit') throw new Error('public exit does not say Return to Orbit');
             await returnButton.click();
 

@@ -35,7 +35,7 @@ const freeze = (value, seen = new WeakSet()) => {
 };
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_OW03_CORRECTIVE_v3_BOUNDARY_DISSOLUTION';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_OW03_CORRECTIVE_v4_FROZEN_ACCESSIBLE_EXTENT';
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   contractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID,
@@ -44,6 +44,15 @@ export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   uniformSharedBoundaryResolution: true,
   terrainChunkMaximum: 10,
   worldFieldContractId: H_EARTH_TERRAIN_FIELD.contractId,
+  accessibleRegionExtent: {
+    xMinimum: H_EARTH_TERRAIN_FIELD.worldDomain.xMinimum,
+    xMaximum: H_EARTH_TERRAIN_FIELD.worldDomain.xMaximum,
+    zMinimum: H_EARTH_TERRAIN_FIELD.worldDomain.zMinimum,
+    zMaximum: H_EARTH_TERRAIN_FIELD.coreDomain.zMaximum
+  },
+  accessibleRegionExtentFrozen: true,
+  furtherTerrainExpansionProhibited: true,
+  visibleWorldContinuationOwnedElsewhere: true,
   neutralPrimitiveOnly: true,
   semanticGroupIdentityPreserved: true,
   physicalTerrainMembershipSeparated: true,
@@ -52,7 +61,7 @@ export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   ownsRenderer: false
 });
 
-function dissolveOuterBoundary(bounds) {
+function realizeFrozenAccessibleBoundary(bounds) {
   const domain = H_EARTH_TERRAIN_FIELD.worldDomain;
   return freeze({
     xMin: bounds.xMin === -256 ? domain.xMinimum : bounds.xMin,
@@ -110,7 +119,7 @@ function makeEdgeSamples(chunk, grid) {
 
 function constructChunk(chunk) {
   const size = H_EARTH_GEOMETRY_LANDSCAPE_PROFILE.samplesPerAxis;
-  const worldBounds = dissolveOuterBoundary(chunk.worldBounds);
+  const worldBounds = realizeFrozenAccessibleBoundary(chunk.worldBounds);
   const vertices = [];
   const indices = [];
   const grid = [];
@@ -185,7 +194,9 @@ function constructChunk(chunk) {
       realizationState: chunk.realizationState,
       sourceWorldBounds: chunk.worldBounds,
       realizedWorldBounds: worldBounds,
-      boundaryDissolution: 'OUTER_CHUNKS_EXTENDED_TO_PROCEDURAL_CONTINUATION_DOMAIN',
+      accessibleRegionExtentFrozen: true,
+      accessibleRegionExtentPolicy: 'PRESERVE_OW03_ENLARGED_REGION_NO_FURTHER_TERRAIN_EXPANSION',
+      visualWorldContinuationRequiredOutsideAccessibleExtent: true,
       visibleRectangularTerminationProhibited: true,
       foundingPacketMutationPerformed: false,
       semanticIdentityIndependentOfPhysicalGranularity: true,
@@ -292,6 +303,9 @@ export function constructHEarthFunctionalLandscapeTerrain({
     chunkResults,
     primitives,
     bounds,
+    accessibleRegionExtent: H_EARTH_GEOMETRY_LANDSCAPE_PROFILE.accessibleRegionExtent,
+    accessibleRegionExtentFrozen: true,
+    accessibleRegionExpansion: false,
     admitted: false,
     issues
   });

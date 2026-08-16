@@ -1,0 +1,42 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_OBSERVABLE_CALIBRATION_RESULT_v1",
+  "status": "A5_OBSERVABLE_CALIBRATION_ADMISSIBLE",
+  "referenceSha256": "7db9a791629e0a0ba02ca026e0d5a7fbf5d43d0cf75395960c1751cb0654be29",
+  "lawCorrection": {
+    "supersedesRequirement": "PHYSIOLOGICAL_GLOTTAL_QUOTIENTS_AS_DIRECT_MICROPHONE_MEASUREMENTS",
+    "replacement": "CALIBRATE_ONLY_TO_MICROPHONE_OBSERVABLE_ACOUSTIC_PARAMETERS_OR_MODEL_EFFECTIVE_PARAMETERS",
+    "reason": "Phone-microphone audio does not directly observe vocal-fold contact geometry; claiming physiological open/closing quotients as authoritative would exceed the evidence."
+  },
+  "segmentationDisposition": "USABLE_WITH_PROTOCOL_ADAPTATION",
+  "observedProtocol": {
+    "vowelEvidence": "Three repeated short tokens for AH, EE, OO; pooled for spectral-envelope calibration.",
+    "nasalEvidence": "Long sustained nasal-class regions available in diagnostic sequence.",
+    "repeatedAhEvidence": "Three long AH repetitions available for stable source statistics.",
+    "aspirationEvidence": "Five HA, five HE, five HOO tokens available with separated onset/body regions."
+  },
+  "effectiveCalibrationMeasurements": {
+    "neutralF0AnchorHz": {"value": 100.0, "status": "AUTHORITATIVE_EFFECTIVE", "source": "C01 plus repeated diagnostic voiced regions"},
+    "vowelSpectralEnvelopeHz": {
+      "AH": {"dominantEnvelopePeaks": [327.39, 690.67, 1033.45, 2597.90, 3678.96], "status": "AUTHORITATIVE_EFFECTIVE"},
+      "EE": {"dominantEnvelopePeaks": [255.62, 2604.49, 3689.21, 3955.08], "status": "AUTHORITATIVE_EFFECTIVE"},
+      "OO": {"dominantEnvelopePeaks": [358.15, 1107.42, 2285.89, 3621.83], "status": "AUTHORITATIVE_EFFECTIVE"}
+    },
+    "aspirationOnsetToBodyHighBandDb": {
+      "HA": {"median": -2.8084, "status": "AUTHORITATIVE_EFFECTIVE"},
+      "HE": {"median": -3.8075, "status": "AUTHORITATIVE_EFFECTIVE"},
+      "HOO": {"median": 2.3847, "status": "AUTHORITATIVE_EFFECTIVE"}
+    },
+    "spectralTiltProxyDbPerDecade": {"value": -16.02229, "status": "AUTHORITATIVE_AS_ENGINE_TARGET_NOT_PHYSIOLOGICAL"},
+    "jitterLocalProxy": {"value": 0.04251248, "status": "AUTHORITATIVE_AS_ENGINE_TARGET_NOT_PHYSIOLOGICAL"},
+    "shimmerLocalProxy": {"value": 0.13832423, "status": "AUTHORITATIVE_AS_ENGINE_TARGET_NOT_PHYSIOLOGICAL"}
+  },
+  "notClaimed": [
+    "anatomical vocal tract length",
+    "physiological glottal open quotient",
+    "physiological glottal closing quotient",
+    "electroglottographic contact measures",
+    "direct voice cloning identity"
+  ],
+  "calibrationAuthority": "AUTHORIZE_A5_JEEVES_SPECIFIC_EFFECTIVE_ACOUSTIC_CALIBRATION_WITHIN_EXISTING_ORIGINAL_IDENTITY_ENVELOPE",
+  "nextLawfulAction": "CONSTRUCT_A5_CALIBRATED_JEEVES_ACOUSTIC_PARAMETER_SET_AND_RENDER_C01_FOR_AB_COMPARISON"
+}

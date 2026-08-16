@@ -27,39 +27,35 @@ jobs:
           node --check laws/index.destination-carousel.js
           node --check laws/index.mobile-background-tabs.js
           node --check laws/index.mobile-background-tabs.core.js
-      - name: Verify V8 direction-only atomic gesture contract
+      - name: Verify Methods-reference shared-ring contract
         run: |
           python3 - <<'PY'
           from pathlib import Path
           js = Path('laws/index.destination-carousel.js').read_text()
           css = Path('laws/index.destination-carousel.css').read_text()
           loader = Path('laws/index.mobile-background-tabs.js').read_text()
-          core = Path('laws/index.mobile-background-tabs.core.js').read_text()
+          methods = Path('laws/research/methods-and-models/carousel.js').read_text()
           required_js = [
-              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v8', 'pointerdown', 'pointermove', 'pointerup', 'pointercancel',
-              'CLASSIFY_PX=8', 'AXIS_RATIO=1.12', 'orbitPosition', 'detentPosition', 'targetDetent',
-              'nearestCircularRelativePosition', 'continuousPointerGeometry:false', 'fractionalOrbitPosition:false',
-              'selectionDuringGesture:false', 'directionOnlyGesture:true', 'liveGestureGeometry:false',
-              'atomicRotation:true', 'oneGestureOneStep:true', 'canonicalFrameLockedDuringGesture:true',
-              'geometryOwnedSettlementCompletion:true', 'timerOwnedSettlementCompletion:false',
-              'verticalGesturePassthrough:true', 'POST_LANDING_GUARD_MS=1000', 'getTransactionTrace',
-              'restoreOrbitState', 'Return to Orbit', 'navigationAuthority:false', 'contentAuthority:false',
-              'routeAuthority:false', 'evidenceAuthority:false', 'direction-locked', 'pointer-atomic-step'
+            'LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT',
+            'METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1',
+            'pointerStartAngle', 'state.angle', 'pointermove', 'snapFromDrag',
+            'angleForIndex', 'selectIndex', 'sharedRingAuthority: true',
+            'directManipulation: true', 'oneAuthoritativeSpatialCoordinate: true',
+            'restoreOrbitState', 'Return to Orbit'
           ]
-          required_core = [
-              'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5', 'COMPASS_ORBIT = "O1"', 'DESTINATION_ORBIT = "O2"',
-              'enforceCompassEntry', 'captureOrigin', 'restoreOrigin', 'DGB_LAWS_ORBIT_CUSTODY'
+          required_css = [
+            '--laws-ring-rotation', '--laws-ring-radius', '--laws-card-angle',
+            'rotateY(var(--laws-ring-rotation))',
+            'rotateY(var(--laws-card-angle,0deg)) translateZ(var(--laws-ring-radius))',
+            '.laws-rolodex-viewport[data-dragging="true"] .laws-rolodex-track',
+            'transition:none!important', 'touch-action:pan-y'
           ]
-          required_css = ['--laws-carousel-x', '--laws-carousel-z', 'translateZ', 'rotateY', 'touch-action: pan-y', 'prefers-reduced-motion']
-          for token in required_js: assert token in js, f'missing V8 JS token: {token}'
-          for token in required_core: assert token in core, f'missing custody token: {token}'
-          for token in required_css: assert token in css, f'missing CSS token: {token}'
-          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V8_ATOMIC_STEP_20260816A' in loader
-          for forbidden in [
-              'continuousPointerGeometry:true', 'fractionalOrbitPosition:true', 'directionOnlyGesture:false',
-              'liveGestureGeometry:true', 'atomicRotation:false', 'pointer-geometry', 'release-target',
-              'settlement-frame', 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v7'
-          ]:
-              assert forbidden not in js + loader, f'revoked continuous geometry authority remains: {forbidden}'
-          print('Laws V8 direction-only atomic gesture exact-head static qualification PASS')
+          reference_tokens = ['pointerStartAngle', 'state.angle', 'snapFromDrag', 'angleForIndex', 'selectIndex']
+          for token in required_js: assert token in js, f'missing reference-port JS token: {token}'
+          for token in required_css: assert token in css, f'missing shared-ring CSS token: {token}'
+          for token in reference_tokens: assert token in methods, f'Methods reference token missing: {token}'
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V9_METHODS_REFERENCE_PORT_20260816B' in loader
+          forbidden = ['detentPosition','targetDetent','directionOnlyGesture:true','atomicRotation:true','pointer-atomic-step','nearestCircularRelativePosition','--laws-carousel-x','--laws-carousel-z']
+          for token in forbidden: assert token not in js + css, f'legacy independent spatial authority remains: {token}'
+          print('LAWS_METHODS_REFERENCE_PORT_STATIC_PASS')
           PY

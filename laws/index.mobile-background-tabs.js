@@ -1,7 +1,6 @@
 /* Laws responsive continuity + destination carousel + dedicated destination stage bootstrap. */
 (() => {
   "use strict";
-
   const installRolodexScrollCustody = () => {
     const proto = globalThis.Element?.prototype;
     if (!proto || typeof proto.scrollIntoView !== "function" || proto.__dgbLawsRolodexScrollCustody) return;
@@ -21,15 +20,10 @@
     };
     Object.defineProperty(horizontalOnlyScrollIntoView, "name", { value: "scrollIntoView" });
     Object.defineProperty(proto, "scrollIntoView", { configurable: true, writable: true, value: horizontalOnlyScrollIntoView });
-    Object.defineProperty(proto, "__dgbLawsRolodexScrollCustody", {
-      configurable: true,
-      value: Object.freeze({ nativeScrollIntoView, scope: "laws-root-rolodex-cards", verticalDocumentScroll: false })
-    });
+    Object.defineProperty(proto, "__dgbLawsRolodexScrollCustody", { configurable: true, value: Object.freeze({ nativeScrollIntoView, scope: "laws-root-rolodex-cards", verticalDocumentScroll: false }) });
     document.documentElement.dataset.lawsRolodexScrollCustody = "horizontal-only";
   };
-
   installRolodexScrollCustody();
-
   const load = (src, marker) => new Promise((resolve, reject) => {
     if (document.querySelector(`script[${marker}]`)) { resolve(); return; }
     const script = document.createElement("script");
@@ -48,9 +42,8 @@
     link.setAttribute(marker, "true");
     document.head.append(link);
   };
-
   load("/laws/index.mobile-background-tabs.core.js?v=LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY", "data-laws-responsive-core")
-    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V6_20260816A", "data-laws-destination-carousel-runtime"))
+    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V8_ATOMIC_STEP_20260816A", "data-laws-destination-carousel-runtime"))
     .then(() => load("/laws/index.destination-stage.js?v=LAWS_DESTINATION_STAGE_V1_20260816A", "data-laws-destination-stage-runtime"))
     .then(() => loadStyle("/laws/index.destination-stage-anchor.css?v=LAWS_DESTINATION_STAGE_ANCHOR_CORRECTION_V1_20260816A", "data-laws-destination-stage-anchor-css"))
     .catch(error => {

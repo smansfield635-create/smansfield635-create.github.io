@@ -27,7 +27,7 @@ jobs:
           node --check laws/index.destination-carousel.js
           node --check laws/index.mobile-background-tabs.js
           node --check laws/index.mobile-background-tabs.core.js
-      - name: Verify V6 continuous pointer contract
+      - name: Verify V8 direction-only atomic gesture contract
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -36,25 +36,30 @@ jobs:
           loader = Path('laws/index.mobile-background-tabs.js').read_text()
           core = Path('laws/index.mobile-background-tabs.core.js').read_text()
           required_js = [
-              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v6', 'pointerdown', 'pointermove', 'pointerup', 'pointercancel',
-              'STEP_VIEWPORT_RATIO = .72', 'CLASSIFY_PX = 8', 'AXIS_RATIO = 1.12',
-              'orbitPosition', 'detentPosition', 'dragOriginPosition', 'nearestCircularRelativePosition',
-              'continuousPointerGeometry: true', 'fractionalOrbitPosition: true', 'selectionDuringDrag: false',
-              'settleToNearestDetent: true', 'verticalGesturePassthrough: true',
-              'directionOnlyGesture: false', 'liveGestureGeometry: true', 'atomicRotation: false',
-              'restoreOrbitState', 'Return to Orbit', 'navigationAuthority: false', 'contentAuthority: false',
-              'routeAuthority: false', 'evidenceAuthority: false'
+              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v8', 'pointerdown', 'pointermove', 'pointerup', 'pointercancel',
+              'CLASSIFY_PX=8', 'AXIS_RATIO=1.12', 'orbitPosition', 'detentPosition', 'targetDetent',
+              'nearestCircularRelativePosition', 'continuousPointerGeometry:false', 'fractionalOrbitPosition:false',
+              'selectionDuringGesture:false', 'directionOnlyGesture:true', 'liveGestureGeometry:false',
+              'atomicRotation:true', 'oneGestureOneStep:true', 'canonicalFrameLockedDuringGesture:true',
+              'geometryOwnedSettlementCompletion:true', 'timerOwnedSettlementCompletion:false',
+              'verticalGesturePassthrough:true', 'POST_LANDING_GUARD_MS=1000', 'getTransactionTrace',
+              'restoreOrbitState', 'Return to Orbit', 'navigationAuthority:false', 'contentAuthority:false',
+              'routeAuthority:false', 'evidenceAuthority:false', 'direction-locked', 'pointer-atomic-step'
           ]
           required_core = [
               'LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_v5', 'COMPASS_ORBIT = "O1"', 'DESTINATION_ORBIT = "O2"',
               'enforceCompassEntry', 'captureOrigin', 'restoreOrigin', 'DGB_LAWS_ORBIT_CUSTODY'
           ]
           required_css = ['--laws-carousel-x', '--laws-carousel-z', 'translateZ', 'rotateY', 'touch-action: pan-y', 'prefers-reduced-motion']
-          for token in required_js: assert token in js, f'missing V6 JS token: {token}'
+          for token in required_js: assert token in js, f'missing V8 JS token: {token}'
           for token in required_core: assert token in core, f'missing custody token: {token}'
           for token in required_css: assert token in css, f'missing CSS token: {token}'
-          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V6_20260816A' in loader
-          for forbidden in ['directionOnlyGesture: true', 'liveGestureGeometry: false', 'atomicRotation: true', 'swipe-step', 'oneGestureOneStep: true']:
-              assert forbidden not in js, f'revoked atomic gesture law remains: {forbidden}'
-          print('Laws V6 continuous pointer geometry exact-head static qualification PASS')
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V8_ATOMIC_STEP_20260816A' in loader
+          for forbidden in [
+              'continuousPointerGeometry:true', 'fractionalOrbitPosition:true', 'directionOnlyGesture:false',
+              'liveGestureGeometry:true', 'atomicRotation:false', 'pointer-geometry', 'release-target',
+              'settlement-frame', 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v7'
+          ]:
+              assert forbidden not in js + loader, f'revoked continuous geometry authority remains: {forbidden}'
+          print('Laws V8 direction-only atomic gesture exact-head static qualification PASS')
           PY

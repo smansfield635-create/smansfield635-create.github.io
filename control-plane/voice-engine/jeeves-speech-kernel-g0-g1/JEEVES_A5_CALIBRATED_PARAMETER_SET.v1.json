@@ -1,0 +1,27 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_CALIBRATED_PARAMETER_SET_v1",
+  "status": "CALIBRATION_CANDIDATE_BOUND_TO_A5_OBSERVABLE_EVIDENCE",
+  "characterId": "jeeves",
+  "referenceSha256": "7db9a791629e0a0ba02ca026e0d5a7fbf5d43d0cf75395960c1751cb0654be29",
+  "authoritySource": "JEEVES_A5_OBSERVABLE_CALIBRATION_RESULT.v1.json",
+  "neutralF0Hz": 100.0,
+  "sourceTargets": {
+    "spectralTiltDbPerDecade": -16.02229,
+    "jitterLocalProxy": 0.04251248,
+    "shimmerLocalProxy": 0.13832423
+  },
+  "vowelEnvelopeOverridesHz": {
+    "AH": [327.39, 690.67, 1033.45],
+    "IY": [255.62, 2604.49, 3689.21],
+    "UW": [358.15, 1107.42, 2285.89]
+  },
+  "aspirationOnsetToBodyHighBandDb": {
+    "H_AH": -2.8084,
+    "H_IY": -3.8075,
+    "H_UW": 2.3847
+  },
+  "inheritanceLaw": "All unmeasured vowels and non-overridden phoneme-class physics remain at qualified A4 values; no interpolation is represented as direct observation.",
+  "identityLaw": "These are effective acoustic calibration targets inside the Jeeves original-identity envelope and do not authorize cloning of the reference speaker.",
+  "outputNormalizationGain": 7,
+  "nextLawfulAction": "RENDER_C01_AND_QUALIFY_AGAINST_A4_BASELINE_AND_BOUND_REFERENCE_METRICS"
+}

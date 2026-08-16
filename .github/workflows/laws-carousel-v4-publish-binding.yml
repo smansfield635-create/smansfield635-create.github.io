@@ -20,21 +20,21 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
-      - name: Bump public Laws asset identity to D
+      - name: Bump public Laws asset identity to E
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('laws/index.html')
           s = p.read_text()
-          old = 'LAWS_DESTINATION_STAGE_LIVE_20260816C'
-          new = 'LAWS_DESTINATION_STAGE_LIVE_20260816D'
+          old = 'LAWS_DESTINATION_STAGE_LIVE_20260816D'
+          new = 'LAWS_DESTINATION_STAGE_LIVE_20260816E'
           if new in s:
               print('binding already current')
           elif old in s:
               p.write_text(s.replace(old, new))
-              print('binding advanced to D')
+              print('binding advanced to E')
           else:
-              raise SystemExit('expected C binding not found')
+              raise SystemExit('expected D binding not found')
           PY
       - name: Commit cache binding if changed
         run: |
@@ -45,5 +45,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add laws/index.html
-          git commit -m 'Publish Laws carousel V5 cache binding'
+          git commit -m 'Publish Laws entry-scroll custody cache binding E'
           git push origin HEAD:main

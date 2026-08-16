@@ -552,6 +552,18 @@
       "scopeHash": "4108c909a9b8952f198bf6aa7220b5798b1bdc8f8d7e31241fc769616a15ecb9",
       "state": "ADMITTED_LOCKED"
     },
+    "426ff2d0163868151bce81b066f563343d74277eef07c022458b129beb3ab3b9": {
+      "governingHead": "2a785fb2fa5b9769a3a061e82b7ffd27a9974c77",
+      "lockGeneration": 1493,
+      "lockScope": "H_EARTH_OW03_PUBLIC_WORLD_GEOMETRY_SUCCESSOR",
+      "operationId": "H_EARTH_OW03_SHORELINE_TOPOLOGY_WORLD_BOUNDARY_DISSOLUTION_20260815_001",
+      "procedureLocatorDigest": "0931ce524f0c08d81d14de89b662fd6f110b1be2eecb0ab90f6e1c94373b9029",
+      "released": false,
+      "requestDigest": "d7fb38230c9db6e69173c8441b719f6f8a82a83798bbebb590ed7e5e9d81d804",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "426ff2d0163868151bce81b066f563343d74277eef07c022458b129beb3ab3b9",
+      "state": "ADMITTED_LOCKED"
+    },
     "44f9bcd41eef1dc7a1b8e370b5a5569ce7fa663809c5db16d1b4c280421af81e": {
       "governingHead": "fd1d8b0b9f8f758749402d3976f70a2bebd9d33b",
       "lockGeneration": 1453,
@@ -2188,7 +2200,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1492,
+  "lockGeneration": 1493,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

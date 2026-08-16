@@ -12,7 +12,8 @@ import {
 import {
   verifyHEarthOW03ExperienceAnchorEvidencePathRecognition
 } from './accepted-amendments/h-earth.repository-registry.ow03-experience-anchor-evidence-path-recognition.js';
-import registryFacade, {
+import registryFacade from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.facade.js';
+import {
   verifyHEarthOW04ExactPathRecognition
 } from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js';
 import {

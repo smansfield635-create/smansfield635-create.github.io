@@ -1,0 +1,20 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_DIAGNOSTIC_REFERENCE_PROVENANCE_v1",
+  "characterId": "jeeves",
+  "referenceRole": "A5_DIAGNOSTIC_CALIBRATION_SPECIMEN",
+  "source": {
+    "driveFileId": "162Kn68R_l5WJPp_dLberLFSdqbBhN9fu",
+    "fileName": "Jeeves 2.m4a",
+    "mimeType": "audio/mp4",
+    "fileSizeBytes": 1790229,
+    "sha256": "7db9a791629e0a0ba02ca026e0d5a7fbf5d43d0cf75395960c1751cb0654be29",
+    "codec": "aac",
+    "sampleRateHz": 48000,
+    "channels": 1,
+    "durationSeconds": 107.774313
+  },
+  "authorization": "USER_SUPPLIED_ORIGINAL_DIAGNOSTIC_RECORDING",
+  "externalSpeechModelUsed": false,
+  "identityLaw": "The recording is a physical-acoustics calibration specimen and does not authorize cloning or direct identity transfer into Jeeves.",
+  "status": "BOUND_AUTHORIZED_ORIGINAL"
+}

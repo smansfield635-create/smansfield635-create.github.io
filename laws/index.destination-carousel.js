@@ -1,47 +1,252 @@
 /*
- * LAWS_DESTINATION_CAROUSEL_RUNTIME_v8
- * Direction-only pointer custody followed by one atomic neighboring rotation.
- * Presentation/interaction only. No content, route, evidence, Compass, or claim authority.
+ * LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT
+ * Spatial kernel is a direct Laws adaptation of METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1.
+ * Laws retains content, stage, destination, and visual authority only.
  */
 (() => {
   "use strict";
-  const CONTRACT="LAWS_DESTINATION_CAROUSEL_RUNTIME_v8";
-  const ROOT_SELECTOR="[data-laws-root-rolodex-section]";
-  const FIELD_SELECTOR=".laws-rolodex-field[data-rolodex-id]";
-  const CLASSIFY_PX=8,AXIS_RATIO=1.12,ROTATION_DURATION_MS=360,CANONICAL_EPSILON=1e-7,POST_LANDING_GUARD_MS=1000;
-  const stateByField=new WeakMap(),fieldByRolodexId=new Map();
-  let transactionSequence=0,installed=false;
-  const wrap=(v,c)=>c?((v%c)+c)%c:0;
-  const reducedMotion=()=>globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches===true;
-  const clamp01=v=>Math.max(0,Math.min(1,v));
-  const smoothstep=v=>{const t=clamp01(v);return t*t*(3-2*t)};
-  const now=()=>performance.now();
-  function nearestCircularRelativePosition(i,p,c){const vi=i+Math.round((p-i)/c)*c;return vi-p}
-  function geometryFor(r,c){const a=Math.abs(r),s=Math.sign(r),n=smoothstep(Math.min(a,1));return{x:r*86,z:a<=1?78-260*n:Math.max(-260,-182-(a-1)*78),rotate:-s*Math.min(15,a*9),scale:Math.max(.62,1-a*.18),opacity:a<=1?1-.76*n:Math.max(.045,.24-(a-1)*.12),blur:a<=1?.55*n:Math.min(2.4,.55+(a-1)*.9),order:Math.max(1,c+2-Math.round(a*2))}}
-  function spatiallyBusy(s){return s.gestureState==="pending"||s.gestureState==="direction-locked"||s.gestureState==="settling"}
-  function trace(s,type,detail={}){const sample=Object.freeze({type,t:now(),transactionId:s.transactionId,phase:s.gestureState,p:s.orbitPosition,q:s.targetDetent,committedIndex:s.index,direction:s.direction,...detail});s.trace.push(sample);if(s.trace.length>600)s.trace.splice(0,s.trace.length-600);return sample}
-  function renderGeometry(field,s,p=s.orbitPosition){const c=s.cards.length;s.orbitPosition=p;s.cards.forEach((card,i)=>{const r=nearestCircularRelativePosition(i,p,c),g=geometryFor(r,c),active=i===s.index;card.dataset.active=String(active);card.dataset.carouselRelative=String(r);card.setAttribute("aria-current",active?"true":"false");card.setAttribute("aria-hidden",active?"false":"true");card.style.setProperty("--laws-carousel-x",`${g.x}%`);card.style.setProperty("--laws-carousel-z",`${g.z}px`);card.style.setProperty("--laws-carousel-rotate",`${g.rotate}deg`);card.style.setProperty("--laws-carousel-scale",String(g.scale));card.style.setProperty("--laws-carousel-opacity",String(g.opacity));card.style.setProperty("--laws-carousel-blur",`${g.blur}px`);card.style.zIndex=String(g.order);const enter=card.querySelector(".laws-rolodex-enter");if(enter)enter.tabIndex=active?0:-1});s.position.textContent=`${s.index+1} / ${c}`;field.dataset.carouselIndex=String(s.index);field.dataset.carouselOrbitPosition=String(p);field.dataset.carouselTargetDetent=s.targetDetent==null?"":String(s.targetDetent);field.dataset.carouselTransactionId=s.transactionId||"";field.dataset.carouselGestureState=s.gestureState;field.dataset.carouselDirection=String(s.direction||0);field.dataset.carouselSettled=String(s.settled)}
-  function canonicalGeometryMatches(s,d){if(Math.abs(s.orbitPosition-d)>CANONICAL_EPSILON)return false;return s.cards.every((card,i)=>{const e=nearestCircularRelativePosition(i,d,s.cards.length),a=Number(card.dataset.carouselRelative);return Number.isFinite(a)&&Math.abs(a-e)<=CANONICAL_EPSILON})}
-  function contractDetail(field,s,reason){return Object.freeze({contract:CONTRACT,reason,rolodexId:field.dataset.rolodexId||"",index:s.index,count:s.cards.length,destinationId:s.cards[s.index]?.dataset.destinationId||"",orbitPosition:s.orbitPosition,targetDetent:s.targetDetent,transactionId:s.transactionId,transactionPhase:s.gestureState,direction:s.direction,settled:s.settled,continuousPointerGeometry:false,fractionalOrbitPosition:false,selectionDuringGesture:false,directionOnlyGesture:true,liveGestureGeometry:false,atomicRotation:true,oneGestureOneStep:true,canonicalFrameLockedDuringGesture:true,geometryOwnedSettlementCompletion:true,timerOwnedSettlementCompletion:false,verticalGesturePassthrough:true,postLandingGuardMs:POST_LANDING_GUARD_MS,navigationAuthority:false,contentAuthority:false,routeAuthority:false,evidenceAuthority:false})}
-  function publish(field,s,reason){globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED",{detail:contractDetail(field,s,reason)}))}
-  function closeTransaction(field,s,d,reason,focus=false){if(s.settleFrame)cancelAnimationFrame(s.settleFrame);s.settleFrame=0;s.orbitPosition=d;s.detentPosition=d;s.targetDetent=d;s.index=wrap(d,s.cards.length);s.gestureState="idle";s.settled=true;s.direction=0;renderGeometry(field,s,d);const canonical=canonicalGeometryMatches(s,d);field.dataset.carouselCanonicalLanding=String(canonical);s.lastLandingTime=now();s.guardUntil=s.lastLandingTime+POST_LANDING_GUARD_MS;trace(s,"canonical-landing",{reason,detent:d,canonical,guardUntil:s.guardUntil});publish(field,s,`${reason}-settled`);if(focus)s.cards[s.index]?.querySelector(".laws-rolodex-enter")?.focus({preventScroll:true});s.transactionId=null;field.dataset.carouselTransactionId=""}
-  function rotateOne(field,s,direction,reason,focus=false,animate=true){if(!s.cards.length||s.gestureState==="settling")return false;const step=direction>0?1:direction<0?-1:0;if(!step)return false;if(!s.transactionId)s.transactionId=`laws-carousel-${++transactionSequence}`;const start=s.detentPosition,target=start+step;s.targetDetent=target;s.gestureState="settling";s.settled=false;trace(s,"atomic-rotation-begin",{reason,start,target,step});publish(field,s,reason);if(!animate||reducedMotion()){closeTransaction(field,s,target,reason,focus);return true}const startedAt=now();let last=start;const frame=ts=>{if(s.gestureState!=="settling"||s.targetDetent!==target)return;const progress=clamp01((ts-startedAt)/ROTATION_DURATION_MS),next=start+step*smoothstep(progress),m=step>0?Math.max(last,Math.min(target,next)):Math.min(last,Math.max(target,next));last=m;renderGeometry(field,s,m);trace(s,"rotation-frame",{progress,next:m,target});if(progress>=1||Math.abs(m-target)<=CANONICAL_EPSILON){renderGeometry(field,s,target);closeTransaction(field,s,target,reason,focus);return}s.settleFrame=requestAnimationFrame(frame)};s.settleFrame=requestAnimationFrame(frame);return true}
-  function select(field,s,index,reason="select",focus=false,animate=true){if(!s.cards.length||spatiallyBusy(s))return false;const target=wrap(index,s.cards.length);if(target===s.index)return true;let delta=target-s.index;if(delta>s.cards.length/2)delta-=s.cards.length;if(delta<-s.cards.length/2)delta+=s.cards.length;s.transactionId=`laws-carousel-${++transactionSequence}`;if(Math.abs(delta)===1)return rotateOne(field,s,Math.sign(delta),reason,focus,animate);closeTransaction(field,s,s.detentPosition+delta,reason,focus);return true}
-  function resetPointer(s,pid){try{if(pid!=null)s.viewport.releasePointerCapture?.(pid)}catch(_){}s.pointerId=null;s.classification="none";s.startX=0;s.startY=0}
-  function finishPointer(field,s,event,cancelled=false){if(event.pointerId!==s.pointerId)return;const horizontal=s.classification==="horizontal"&&s.direction!==0,pid=s.pointerId,direction=s.direction;trace(s,cancelled?"pointer-cancel":"pointer-release",{classifiedHorizontal:horizontal,direction});resetPointer(s,pid);if(cancelled||!horizontal){s.gestureState="idle";s.settled=true;s.direction=0;s.targetDetent=s.detentPosition;renderGeometry(field,s,s.detentPosition);field.dataset.carouselCanonicalLanding=String(canonicalGeometryMatches(s,s.detentPosition));s.transactionId=null;field.dataset.carouselTransactionId="";publish(field,s,cancelled?"pointer-cancel-noop":"pointer-unclassified-noop");return}rotateOne(field,s,direction,"pointer-atomic-step")}
-  function removeSurrogateControls(field){field.querySelectorAll(".laws-rolodex-control").forEach(c=>c.remove());field.dataset.surrogateNavigation="removed"}
-  function normalizeOrbitTerminology(){document.querySelectorAll(".laws-exhibit-return").forEach(b=>{b.textContent="Return to Orbit";b.setAttribute("aria-label","Return to Orbit")})}
-  function getFieldState(id){const field=fieldByRolodexId.get(String(id||"")),s=field&&stateByField.get(field);return field&&s?{field,state:s}:null}
-  function snapshot(id){const e=getFieldState(id);if(!e)return null;const{field,state:s}=e;return Object.freeze({contract:CONTRACT,rolodexId:field.dataset.rolodexId||"",index:s.index,orbitPosition:s.orbitPosition,detentPosition:s.detentPosition,targetDetent:s.targetDetent,destinationId:s.cards[s.index]?.dataset.destinationId||"",transactionId:s.transactionId,gestureState:s.gestureState,direction:s.direction,settled:s.settled,lastLandingTime:s.lastLandingTime,guardUntil:s.guardUntil})}
-  function getTransactionTrace(id){const e=getFieldState(id);return e?e.state.trace.slice():[]}
-  function restoreOrbitState(receipt={}){const e=getFieldState(receipt.rolodexId);if(!e)return false;const{field,state:s}=e;if(spatiallyBusy(s))return false;let index=Number.isInteger(receipt.index)?receipt.index:s.index;if(receipt.destinationId){const byId=s.cards.findIndex(c=>c.dataset.destinationId===receipt.destinationId);if(byId>=0)index=byId}const target=wrap(index,s.cards.length);let delta=target-s.index;if(delta>s.cards.length/2)delta-=s.cards.length;if(delta<-s.cards.length/2)delta+=s.cards.length;s.transactionId=`laws-carousel-${++transactionSequence}`;closeTransaction(field,s,s.detentPosition+delta,"orbit-restore",false);return true}
-  function bindField(field){if(stateByField.has(field))return;const viewport=field.querySelector(".laws-rolodex-viewport"),cards=Array.from(field.querySelectorAll(".laws-rolodex-card")),position=field.querySelector(".laws-rolodex-position");if(!viewport||!position||cards.length<2)return;removeSurrogateControls(field);viewport.style.touchAction="pan-y";const initialIndex=Math.max(0,cards.findIndex(c=>c.dataset.active==="true"));const s={viewport,cards,position,index:initialIndex,orbitPosition:initialIndex,detentPosition:initialIndex,targetDetent:initialIndex,pointerId:null,transactionId:null,startX:0,startY:0,classification:"none",direction:0,settled:true,gestureState:"idle",settleFrame:0,lastLandingTime:0,guardUntil:0,trace:[]};stateByField.set(field,s);fieldByRolodexId.set(field.dataset.rolodexId||"",field);field.dataset.lawsDestinationCarousel="active";field.dataset.carouselGestureLaw="direction-only-then-one-atomic-step";viewport.setAttribute("aria-roledescription","carousel");viewport.setAttribute("aria-label",`${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim()||"Laws"} destinations. Swipe horizontally to move exactly one record after release. Vertical gestures scroll the page.`);
-    field.addEventListener("click",event=>{const card=event.target.closest(".laws-rolodex-card");if(!card||event.target.closest("button, a")||spatiallyBusy(s))return;const i=s.cards.indexOf(card);if(i>=0&&i!==s.index)select(field,s,i,"neighbor-select")},true);
-    viewport.addEventListener("keydown",event=>{if(!["ArrowLeft","ArrowRight","Home","End"].includes(event.key)||spatiallyBusy(s))return;event.preventDefault();event.stopImmediatePropagation();if(event.key==="Home")select(field,s,0,"keyboard-home",true);else if(event.key==="End")select(field,s,s.cards.length-1,"keyboard-end",true);else{s.transactionId=`laws-carousel-${++transactionSequence}`;rotateOne(field,s,event.key==="ArrowRight"?1:-1,"keyboard-step",true)}},true);
-    viewport.addEventListener("pointerdown",event=>{if(spatiallyBusy(s)||event.target.closest("button, a")||(event.pointerType==="mouse"&&event.button!==0))return;s.transactionId=`laws-carousel-${++transactionSequence}`;s.pointerId=event.pointerId;s.startX=event.clientX;s.startY=event.clientY;s.classification="pending";s.direction=0;s.gestureState="pending";s.settled=true;s.targetDetent=s.detentPosition;renderGeometry(field,s,s.detentPosition);trace(s,"transaction-begin",{source:"pointer",startX:s.startX,startY:s.startY,origin:s.detentPosition});try{viewport.setPointerCapture?.(event.pointerId)}catch(_){} });
-    viewport.addEventListener("pointermove",event=>{if(event.pointerId!==s.pointerId)return;const dx=event.clientX-s.startX,dy=event.clientY-s.startY,ax=Math.abs(dx),ay=Math.abs(dy);if(s.classification==="pending"){if(Math.max(ax,ay)<CLASSIFY_PX)return;if(ax>ay*AXIS_RATIO){s.classification="horizontal";s.direction=dx<0?1:-1;s.gestureState="direction-locked";trace(s,"direction-locked",{deltaX:dx,deltaY:dy,direction:s.direction})}else if(ay>ax*AXIS_RATIO){s.classification="vertical";s.gestureState="vertical-passthrough";trace(s,"vertical-passthrough",{deltaX:dx,deltaY:dy});return}else return}if(s.classification==="horizontal"){event.preventDefault();trace(s,"gesture-sample",{deltaX:dx,deltaY:dy,direction:s.direction});renderGeometry(field,s,s.detentPosition)}},{passive:false});
-    viewport.addEventListener("pointerup",e=>finishPointer(field,s,e,false));viewport.addEventListener("pointercancel",e=>finishPointer(field,s,e,true));cards.forEach((card,i)=>card.addEventListener("focusin",()=>{if(!spatiallyBusy(s)&&i!==s.index)select(field,s,i,"focus-custody")}));renderGeometry(field,s,initialIndex);field.dataset.carouselCanonicalLanding="true";publish(field,s,"mount")}
-  function install(){const root=document.querySelector(ROOT_SELECTOR);if(!root)return false;const fields=Array.from(root.querySelectorAll(FIELD_SELECTOR));if(!fields.length)return false;fields.forEach(bindField);normalizeOrbitTerminology();installed=fields.some(f=>stateByField.has(f));if(!installed)return false;document.documentElement.dataset.lawsDestinationCarouselRuntime="active";document.documentElement.dataset.lawsCarouselGestureLaw="direction-only-then-one-atomic-step";const api={contract:CONTRACT,installed:true,reducedMotion:reducedMotion(),surrogateNavigation:false,continuousPointerGeometry:false,fractionalOrbitPosition:false,selectionDuringGesture:false,directionOnlyGesture:true,liveGestureGeometry:false,atomicRotation:true,oneGestureOneStep:true,canonicalFrameLockedDuringGesture:true,geometryOwnedSettlementCompletion:true,timerOwnedSettlementCompletion:false,verticalGesturePassthrough:true,postLandingGuardMs:POST_LANDING_GUARD_MS,returnLanguage:"Return to Orbit",getState:snapshot,getTransactionTrace,restoreOrbitState,navigationAuthority:false,contentAuthority:false,routeAuthority:false,evidenceAuthority:false};globalThis.DGB_LAWS_DESTINATION_CAROUSEL=Object.freeze(api);globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY",{detail:Object.freeze({contract:CONTRACT,fieldCount:fields.length,directionOnlyGesture:true,liveGestureGeometry:false,atomicRotation:true,oneGestureOneStep:true,canonicalFrameLockedDuringGesture:true,verticalGesturePassthrough:true,postLandingGuardMs:POST_LANDING_GUARD_MS})}));return true}
-  function initialize(){install();globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY",()=>requestAnimationFrame(install));globalThis.addEventListener("LAWS_ROLODEX_PLACEMENT_READY",()=>requestAnimationFrame(install));globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED",()=>requestAnimationFrame(normalizeOrbitTerminology))}
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initialize,{once:true});else initialize();
+  const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT";
+  const REFERENCE = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1";
+  const BUILD = "20260816A";
+  const ROOT_SELECTOR = "[data-laws-root-rolodex-section]";
+  const FIELD_SELECTOR = ".laws-rolodex-field[data-rolodex-id]";
+  const stateByField = new WeakMap();
+  const fieldById = new Map();
+
+  const normalize = (value, count) => ((value % count) + count) % count;
+  const reducedMotion = () => globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
+
+  function radius(viewport) {
+    const width = Math.max(320, viewport.clientWidth || 960);
+    if (width < 520) return Math.max(245, Math.min(330, width * .72));
+    if (width < 820) return Math.max(320, Math.min(440, width * .58));
+    return Math.max(430, Math.min(650, width * .49));
+  }
+
+  function angleForIndex(index, count) {
+    return -normalize(index, count) * (360 / count);
+  }
+
+  function publish(field, state, reason) {
+    const card = state.cards[state.index];
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({
+      contract: CONTRACT,
+      referenceContract: REFERENCE,
+      buildId: BUILD,
+      reason,
+      rolodexId: field.dataset.rolodexId || "",
+      index: state.index,
+      count: state.cards.length,
+      destinationId: card?.dataset.destinationId || "",
+      orbitAngle: state.angle,
+      dragging: state.dragging,
+      settling: state.settling,
+      sharedRingAuthority: true,
+      directManipulation: true,
+      navigationAuthority: false,
+      contentAuthority: false,
+      routeAuthority: false,
+      evidenceAuthority: false
+    }) }));
+  }
+
+  function applyGeometry(field, state, reason = "geometry") {
+    const count = state.cards.length;
+    const step = 360 / count;
+    const r = radius(state.viewport);
+    state.track.style.setProperty("--laws-ring-rotation", `${state.angle}deg`);
+    state.track.style.setProperty("--laws-ring-radius", `${r}px`);
+    state.cards.forEach((card, index) => {
+      card.style.setProperty("--laws-card-angle", `${index * step}deg`);
+      const active = index === state.index;
+      card.dataset.active = String(active);
+      card.setAttribute("aria-current", active ? "true" : "false");
+      card.setAttribute("aria-hidden", active ? "false" : "true");
+      const enter = card.querySelector(".laws-rolodex-enter");
+      if (enter) enter.tabIndex = active ? 0 : -1;
+    });
+    state.position.textContent = `${state.index + 1} / ${count}`;
+    field.dataset.carouselIndex = String(state.index);
+    field.dataset.carouselOrbitAngle = String(state.angle);
+    field.dataset.carouselDragging = String(state.dragging);
+    field.dataset.carouselSettling = String(state.settling);
+    field.dataset.carouselCanonicalLanding = String(!state.dragging && !state.settling && Math.abs(state.angle - angleForIndex(state.index, count)) < .001);
+    publish(field, state, reason);
+  }
+
+  function selectIndex(field, state, index, reason = "select", focus = false) {
+    if (state.dragging || state.settling) return false;
+    const target = normalize(index, state.cards.length);
+    if (target === state.index) return true;
+    const targetAngle = angleForIndex(target, state.cards.length);
+    state.settling = true;
+    field.dataset.carouselSettling = "true";
+    state.track.style.setProperty("--laws-ring-rotation", `${targetAngle}deg`);
+    const commit = () => {
+      state.index = target;
+      state.angle = targetAngle;
+      state.settling = false;
+      applyGeometry(field, state, reason);
+      if (focus) state.cards[state.index]?.querySelector(".laws-rolodex-enter")?.focus({ preventScroll: true });
+    };
+    clearTimeout(state.settleTimer);
+    if (reducedMotion()) commit();
+    else state.settleTimer = setTimeout(commit, 640);
+    return true;
+  }
+
+  function snapFromDrag(field, state) {
+    const count = state.cards.length;
+    const step = 360 / count;
+    const projected = state.angle + Math.max(-26, Math.min(26, state.velocity * 90));
+    const next = normalize(Math.round(-projected / step), count);
+    state.index = next;
+    state.angle = angleForIndex(next, count);
+    state.settling = false;
+    applyGeometry(field, state, "drag-snap");
+  }
+
+  function finishPointer(field, state, event, cancelled = false) {
+    if (!state.dragging || event.pointerId !== state.pointerId) return;
+    const tap = state.pointerTravel < 7;
+    state.dragging = false;
+    state.viewport.dataset.dragging = "false";
+    try { state.viewport.releasePointerCapture?.(event.pointerId); } catch (_) {}
+    state.pointerId = null;
+    if (cancelled || tap) {
+      state.angle = angleForIndex(state.index, state.cards.length);
+      applyGeometry(field, state, cancelled ? "pointer-cancel" : "tap-release");
+      return;
+    }
+    state.suppressClick = true;
+    snapFromDrag(field, state);
+  }
+
+  function restoreOrbitState(receipt = {}) {
+    const field = fieldById.get(String(receipt.rolodexId || ""));
+    const state = field && stateByField.get(field);
+    if (!field || !state || state.dragging || state.settling) return false;
+    let index = Number.isInteger(receipt.index) ? receipt.index : state.index;
+    if (receipt.destinationId) {
+      const found = state.cards.findIndex(card => card.dataset.destinationId === receipt.destinationId);
+      if (found >= 0) index = found;
+    }
+    state.index = normalize(index, state.cards.length);
+    state.angle = angleForIndex(state.index, state.cards.length);
+    applyGeometry(field, state, "orbit-restore");
+    return true;
+  }
+
+  function snapshot(id) {
+    const field = fieldById.get(String(id || ""));
+    const state = field && stateByField.get(field);
+    if (!field || !state) return null;
+    return Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, rolodexId: field.dataset.rolodexId || "", index: state.index, orbitAngle: state.angle, dragging: state.dragging, settling: state.settling, destinationId: state.cards[state.index]?.dataset.destinationId || "" });
+  }
+
+  function bindField(field) {
+    if (stateByField.has(field)) return;
+    const viewport = field.querySelector(".laws-rolodex-viewport");
+    const track = field.querySelector(".laws-rolodex-track");
+    const cards = Array.from(field.querySelectorAll(".laws-rolodex-card"));
+    const position = field.querySelector(".laws-rolodex-position");
+    if (!viewport || !track || !position || cards.length < 2) return;
+    field.querySelectorAll(".laws-rolodex-control").forEach(control => control.remove());
+    const initialIndex = Math.max(0, cards.findIndex(card => card.dataset.active === "true"));
+    const state = { viewport, track, cards, position, index: initialIndex, angle: angleForIndex(initialIndex, cards.length), dragging: false, settling: false, settleTimer: null, pointerId: null, pointerStartX: 0, pointerStartAngle: 0, pointerLastX: 0, pointerLastTime: 0, pointerTravel: 0, velocity: 0, suppressClick: false };
+    stateByField.set(field, state);
+    fieldById.set(field.dataset.rolodexId || "", field);
+    field.dataset.lawsDestinationCarousel = "active";
+    field.dataset.carouselSpatialKernel = "methods-reference-shared-ring";
+    viewport.style.touchAction = "pan-y";
+    viewport.setAttribute("aria-roledescription", "carousel");
+    viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Drag horizontally to rotate the shared orbit. Vertical gestures scroll the page.`);
+
+    viewport.addEventListener("pointerdown", event => {
+      if (state.settling || (event.pointerType === "mouse" && event.button !== 0) || event.target.closest("button, a")) return;
+      state.dragging = true;
+      state.pointerId = event.pointerId;
+      state.pointerStartX = event.clientX;
+      state.pointerLastX = event.clientX;
+      state.pointerLastTime = performance.now();
+      state.pointerStartAngle = state.angle;
+      state.pointerTravel = 0;
+      state.velocity = 0;
+      state.suppressClick = false;
+      viewport.dataset.dragging = "true";
+      try { viewport.setPointerCapture?.(event.pointerId); } catch (_) {}
+    });
+
+    viewport.addEventListener("pointermove", event => {
+      if (!state.dragging || event.pointerId !== state.pointerId) return;
+      const now = performance.now();
+      const width = Math.max(320, viewport.clientWidth);
+      const delta = event.clientX - state.pointerStartX;
+      state.pointerTravel = Math.max(state.pointerTravel, Math.abs(delta));
+      state.angle = state.pointerStartAngle + (delta / width) * 190;
+      const elapsed = Math.max(8, now - state.pointerLastTime);
+      state.velocity = (event.clientX - state.pointerLastX) / elapsed;
+      state.pointerLastX = event.clientX;
+      state.pointerLastTime = now;
+      track.style.setProperty("--laws-ring-rotation", `${state.angle}deg`);
+      field.dataset.carouselOrbitAngle = String(state.angle);
+    });
+
+    viewport.addEventListener("pointerup", event => finishPointer(field, state, event, false));
+    viewport.addEventListener("pointercancel", event => finishPointer(field, state, event, true));
+
+    viewport.addEventListener("keydown", event => {
+      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key) || state.dragging || state.settling) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (event.key === "Home") selectIndex(field, state, 0, "keyboard-home", true);
+      else if (event.key === "End") selectIndex(field, state, cards.length - 1, "keyboard-end", true);
+      else selectIndex(field, state, state.index + (event.key === "ArrowRight" ? 1 : -1), "keyboard-step", true);
+    }, true);
+
+    track.addEventListener("click", event => {
+      if (state.suppressClick) { state.suppressClick = false; event.preventDefault(); return; }
+      if (state.dragging || state.settling || event.target.closest("button, a")) return;
+      const card = event.target.closest(".laws-rolodex-card");
+      if (!card) return;
+      const index = cards.indexOf(card);
+      if (index >= 0 && index !== state.index) selectIndex(field, state, index, "card-select");
+    });
+
+    cards.forEach((card, index) => card.addEventListener("focusin", () => {
+      if (!state.dragging && !state.settling && index !== state.index) selectIndex(field, state, index, "focus-select");
+    }));
+
+    applyGeometry(field, state, "mount");
+  }
+
+  function normalizeOrbitTerminology() {
+    document.querySelectorAll(".laws-exhibit-return").forEach(button => { button.textContent = "Return to Orbit"; button.setAttribute("aria-label", "Return to Orbit"); });
+  }
+
+  function install() {
+    const root = document.querySelector(ROOT_SELECTOR);
+    if (!root) return false;
+    const fields = Array.from(root.querySelectorAll(FIELD_SELECTOR));
+    fields.forEach(bindField);
+    normalizeOrbitTerminology();
+    if (!fields.some(field => stateByField.has(field))) return false;
+    document.documentElement.dataset.lawsDestinationCarouselRuntime = "active";
+    document.documentElement.dataset.lawsCarouselContract = CONTRACT;
+    document.documentElement.dataset.lawsCarouselReference = REFERENCE;
+    document.documentElement.dataset.lawsCarouselBuild = BUILD;
+    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, installed: true, sharedRingAuthority: true, directManipulation: true, oneAuthoritativeSpatialCoordinate: true, surrogateNavigation: false, restoreOrbitState, getState: snapshot, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, fieldCount: fields.length, sharedRingAuthority: true, directManipulation: true }) }));
+    return true;
+  }
+
+  function initialize() {
+    install();
+    globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY", () => requestAnimationFrame(install));
+    globalThis.addEventListener("LAWS_ROLODEX_PLACEMENT_READY", () => requestAnimationFrame(install));
+    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", () => requestAnimationFrame(normalizeOrbitTerminology));
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
+  else initialize();
 })();

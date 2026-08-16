@@ -1,0 +1,32 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_WAVEFORM_ONLY_DECODER_V2_QUALIFICATION_v1",
+  "status": "PASS_INTERNAL_WAVEFORM_DECODABILITY",
+  "candidateBranch": "agent/jeeves-c01-intelligibility-repair-v1",
+  "evidenceLaw": "Candidate phone/word labels are stripped before decoding. Classification operates on waveform observations against an independently generated canonical prototype bank.",
+  "repairsSinceV1": [
+    "parallel rather than cascaded resonant realization for vowels/approximants",
+    "explicit voicing restored for V, G, and Z",
+    "multi-probe spectral-band signatures replace sparse single-frequency probes"
+  ],
+  "observedIndependentNumericalQualification": {
+    "phonesCorrect": 26,
+    "phonesTotal": 26,
+    "phoneAccuracy": 1.0,
+    "wordSequencesRecovered": 3,
+    "wordSequencesExpected": 3,
+    "wordBoundaryGapsMs": [115,115]
+  },
+  "decodedPhoneSequences": [
+    "N-AE-V-IH-G-EY-SH-AH-N",
+    "R-IH-K-W-AY-ER-Z",
+    "AO-R-IY-EH-N-T-EY-SH-AH-N"
+  ],
+  "humanListeningAuthorized": false,
+  "notClaimed": [
+    "human sentence recognition",
+    "naturalness",
+    "Jeeves voice identity",
+    "auditory superiority"
+  ],
+  "nextLawfulAction": "CONSTRUCT_WORD_LEVEL_WAVEFORM_DECODER_WITHOUT_PHONE_SEGMENT_LABELS_THEN_REQUIRE BLIND THREE_WORD_RECOVERY_BEFORE HUMAN_LISTENING"
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_OPEN_VARIATION_ROBUSTNESS_EXECUTION_v1",
+  "status": "FAIL_ROBUSTNESS",
+  "executedAgainstHead": "f7ccc16f5a822c56a60321e7e5c61f88717ac7d6",
+  "executionEnvironment": "local Node execution from exact committed source",
+  "cases": 13,
+  "passed": 5,
+  "failed": 8,
+  "passedCases": ["nominal","f0-low","f0-high","formant-low","formant-high"],
+  "failedCases": ["duration-low","duration-high","noise-211","noise-887","corner-a","corner-b","cross-a","cross-b"],
+  "observations": {
+    "f0Range94to106HzRobust": true,
+    "formantScalePlusMinus3PercentRobust": true,
+    "durationPlusMinus8PercentRobust": false,
+    "independentNoiseSeedRobust": false,
+    "dominantCollapse": "Navigation and orientation frequently decode as requires under duration/noise perturbation"
+  },
+  "humanListeningAuthorized": false,
+  "nextLawfulAction": "REPAIR_WORD_IDENTITY_ROBUSTNESS_BY_REDUCING_DECODER_DEPENDENCE_ON_NOISE_REALIZATION_AND_ABSOLUTE_DURATION_BEFORE_RETEST"
+}

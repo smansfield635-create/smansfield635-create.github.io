@@ -1,8 +1,7 @@
 /*
  * LAWS_DESTINATION_CAROUSEL_RUNTIME_v6
  * Continuous Euclidean pointer geometry for the existing Laws destination records.
- * Presentation/interaction only. It does not create or alter destination content,
- * routes, evidence, Compass state, controller authority, or claim authority.
+ * Presentation/interaction only. No content, route, evidence, Compass, or claim authority.
  */
 (() => {
   "use strict";
@@ -20,57 +19,57 @@
 
   const wrap = (value, count) => count ? ((value % count) + count) % count : 0;
   const reducedMotion = () => globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
+  const clamp01 = value => Math.max(0, Math.min(1, value));
+  const smoothstep = value => { const t = clamp01(value); return t * t * (3 - 2 * t); };
 
   function nearestCircularRelativePosition(index, position, count) {
-    const base = index - position;
-    let best = base;
-    for (const offset of [-count, count]) {
-      const candidate = base + offset;
-      if (Math.abs(candidate) < Math.abs(best)) best = candidate;
-    }
-    return best;
+    const virtualIndex = index + Math.round((position - index) / count) * count;
+    return virtualIndex - position;
   }
 
   function geometryFor(relative, count) {
     const d = relative;
     const abs = Math.abs(d);
     const sign = Math.sign(d);
+    const near = smoothstep(Math.min(abs, 1));
     const x = d * 86;
-    const z = abs < .08 ? 78 : -Math.min(260, 96 + abs * 86);
+    const z = abs <= 1 ? 78 - 260 * near : Math.max(-260, -182 - (abs - 1) * 78);
     const rotate = -sign * Math.min(15, abs * 9);
     const scale = Math.max(.62, 1 - abs * .18);
-    const opacity = abs < .08 ? 1 : abs <= 1.08 ? .24 : Math.max(.045, .1 - Math.max(0, abs - 2) * .04);
-    const blur = abs < .08 ? 0 : Math.min(2.4, .55 + Math.max(0, abs - 1) * .9);
+    const opacity = abs <= 1 ? 1 - .76 * near : Math.max(.045, .24 - (abs - 1) * .12);
+    const blur = abs <= 1 ? .55 * near : Math.min(2.4, .55 + (abs - 1) * .9);
     const order = Math.max(1, count + 2 - Math.round(abs * 2));
     return { x, z, rotate, scale, opacity, blur, order };
   }
 
-  function publish(field, state, reason) {
+  function contractDetail(field, state, reason) {
     const active = state.cards[state.index];
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", {
-      detail: Object.freeze({
-        contract: CONTRACT,
-        reason,
-        rolodexId: field.dataset.rolodexId || "",
-        index: state.index,
-        count: state.cards.length,
-        destinationId: active?.dataset.destinationId || "",
-        dragging: state.gestureState === "dragging",
-        settled: state.settled,
-        continuousPointerGeometry: true,
-        fractionalOrbitPosition: true,
-        selectionDuringDrag: false,
-        settleToNearestDetent: true,
-        verticalGesturePassthrough: true,
-        directionOnlyGesture: false,
-        liveGestureGeometry: true,
-        atomicRotation: false,
-        navigationAuthority: false,
-        contentAuthority: false,
-        routeAuthority: false,
-        evidenceAuthority: false
-      })
-    }));
+    return Object.freeze({
+      contract: CONTRACT,
+      reason,
+      rolodexId: field.dataset.rolodexId || "",
+      index: state.index,
+      count: state.cards.length,
+      destinationId: active?.dataset.destinationId || "",
+      dragging: state.gestureState === "dragging",
+      settled: state.settled,
+      continuousPointerGeometry: true,
+      fractionalOrbitPosition: true,
+      selectionDuringDrag: false,
+      settleToNearestDetent: true,
+      verticalGesturePassthrough: true,
+      directionOnlyGesture: false,
+      liveGestureGeometry: true,
+      atomicRotation: false,
+      navigationAuthority: false,
+      contentAuthority: false,
+      routeAuthority: false,
+      evidenceAuthority: false
+    });
+  }
+
+  function publish(field, state, reason) {
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: contractDetail(field, state, reason) }));
   }
 
   function renderGeometry(field, state, position = state.orbitPosition) {
@@ -102,64 +101,47 @@
     field.dataset.carouselGestureState = state.gestureState;
   }
 
-  function render(field, state, reason = "render", publishChange = true) {
-    renderGeometry(field, state);
-    if (publishChange) publish(field, state, reason);
-  }
-
   function setDragTransitions(state, dragging) {
     state.viewport.dataset.dragging = String(dragging);
-    state.cards.forEach(card => {
-      if (dragging) {
-        if (!card.dataset.carouselTransitionBeforeDrag) card.dataset.carouselTransitionBeforeDrag = card.style.transition || "";
-        card.style.transition = "none";
-      } else {
-        card.style.transition = card.dataset.carouselTransitionBeforeDrag || "";
-        delete card.dataset.carouselTransitionBeforeDrag;
-      }
-    });
+    for (const card of state.cards) {
+      if (dragging) card.style.setProperty("transition", "none", "important");
+      else card.style.removeProperty("transition");
+    }
   }
 
-  function markSettled(field, state, reason) {
+  function completeSettle(field, state, reason) {
     clearTimeout(state.settleTimer);
-    const settle = () => {
+    const finish = () => {
+      state.orbitPosition = state.detentPosition;
       state.settled = true;
       state.gestureState = "idle";
-      state.orbitPosition = state.detentPosition;
-      field.dataset.carouselSettled = "true";
-      field.dataset.carouselGestureState = "idle";
       renderGeometry(field, state, state.detentPosition);
       publish(field, state, `${reason}-settled`);
     };
-    if (reducedMotion()) settle();
-    else state.settleTimer = setTimeout(settle, SETTLE_MS);
+    if (reducedMotion()) finish();
+    else state.settleTimer = setTimeout(finish, SETTLE_MS);
   }
 
   function settleTo(field, state, detent, reason = "settle", focus = false, animate = true) {
     const count = state.cards.length;
     const nextIndex = wrap(detent, count);
-    const changed = nextIndex !== state.index || detent !== state.detentPosition;
+    const changed = nextIndex !== state.index || Math.abs(detent - state.orbitPosition) > 1e-7;
     state.index = nextIndex;
     state.detentPosition = detent;
     state.settled = !animate || !changed || reducedMotion();
-    state.gestureState = changed && animate ? "settling" : "idle";
+    state.gestureState = state.settled ? "idle" : "settling";
     setDragTransitions(state, false);
+    if (!state.settled) void state.cards[0]?.getBoundingClientRect();
     renderGeometry(field, state, detent);
     publish(field, state, reason);
-    if (changed && animate && !reducedMotion()) markSettled(field, state, reason);
-    else {
-      state.orbitPosition = detent;
-      state.settled = true;
-      state.gestureState = "idle";
-      renderGeometry(field, state, detent);
-    }
+    if (!state.settled) completeSettle(field, state, reason);
     if (focus) state.cards[state.index].querySelector(".laws-rolodex-enter")?.focus({ preventScroll: true });
   }
 
   function select(field, state, index, reason = "select", focus = false, animate = true) {
     if (!state.cards.length) return;
-    const wrappedTarget = wrap(index, state.cards.length);
-    let delta = wrappedTarget - state.index;
+    const target = wrap(index, state.cards.length);
+    let delta = target - state.index;
     if (delta > state.cards.length / 2) delta -= state.cards.length;
     if (delta < -state.cards.length / 2) delta += state.cards.length;
     settleTo(field, state, state.detentPosition + delta, reason, focus, animate);
@@ -176,12 +158,12 @@
   }
 
   function resetPointer(state, pointerId) {
-    try { state.viewport.releasePointerCapture?.(pointerId); } catch (_) {}
+    try { if (pointerId != null) state.viewport.releasePointerCapture?.(pointerId); } catch (_) {}
     state.pointerId = null;
     state.classification = "none";
-    state.lastVelocityX = 0;
     state.lastMoveX = 0;
     state.lastMoveTime = 0;
+    state.lastVelocityX = 0;
     state.accumulatedDeltaX = 0;
   }
 
@@ -190,23 +172,21 @@
     const wasDragging = state.gestureState === "dragging";
     const originalDetent = state.dragOriginPosition;
     const pointerId = state.pointerId;
-
     if (!wasDragging) {
       resetPointer(state, pointerId);
       state.gestureState = "idle";
       state.settled = true;
-      field.dataset.carouselGestureState = "idle";
       setDragTransitions(state, false);
+      renderGeometry(field, state, state.detentPosition);
       return;
     }
-
     const target = cancelled ? originalDetent : chooseDetent(state);
     resetPointer(state, pointerId);
     settleTo(field, state, target, cancelled ? "pointer-cancel" : "pointer-detent");
   }
 
   function removeSurrogateControls(field) {
-    Array.from(field.querySelectorAll(".laws-rolodex-control")).forEach(control => control.remove());
+    field.querySelectorAll(".laws-rolodex-control").forEach(control => control.remove());
     field.dataset.surrogateNavigation = "removed";
   }
 
@@ -248,6 +228,7 @@
       if (byId >= 0) index = byId;
     }
     resetPointer(state, state.pointerId);
+    setDragTransitions(state, false);
     state.gestureState = "idle";
     select(field, state, index, "orbit-restore", false, false);
     return true;
@@ -262,28 +243,20 @@
 
     removeSurrogateControls(field);
     viewport.style.touchAction = "pan-y";
-
     const initialIndex = Math.max(0, cards.findIndex(card => card.dataset.active === "true"));
     const state = {
-      viewport,
-      cards,
-      position,
+      viewport, cards, position,
       index: initialIndex,
       orbitPosition: initialIndex,
       detentPosition: initialIndex,
       dragOriginPosition: initialIndex,
       pointerId: null,
-      startX: 0,
-      startY: 0,
-      stepPixels: 1,
+      startX: 0, startY: 0, stepPixels: 1,
       classification: "none",
       settled: true,
       gestureState: "idle",
       settleTimer: null,
-      lastMoveX: 0,
-      lastMoveTime: 0,
-      lastVelocityX: 0,
-      accumulatedDeltaX: 0
+      lastMoveX: 0, lastMoveTime: 0, lastVelocityX: 0, accumulatedDeltaX: 0
     };
     stateByField.set(field, state);
     fieldByRolodexId.set(field.dataset.rolodexId || "", field);
@@ -294,7 +267,7 @@
 
     field.addEventListener("click", event => {
       const card = event.target.closest(".laws-rolodex-card");
-      if (!card || event.target.closest("button, a")) return;
+      if (!card || event.target.closest("button, a") || state.gestureState === "dragging") return;
       const index = state.cards.indexOf(card);
       if (index >= 0 && index !== state.index) select(field, state, index, "neighbor-select");
     }, true);
@@ -324,7 +297,7 @@
       state.lastVelocityX = 0;
       state.accumulatedDeltaX = 0;
       field.dataset.carouselGestureState = "pending";
-      viewport.setPointerCapture?.(event.pointerId);
+      try { viewport.setPointerCapture?.(event.pointerId); } catch (_) {}
     });
 
     viewport.addEventListener("pointermove", event => {
@@ -333,7 +306,6 @@
       const deltaY = event.clientY - state.startY;
       const absX = Math.abs(deltaX);
       const absY = Math.abs(deltaY);
-
       if (state.classification === "pending") {
         if (Math.max(absX, absY) < CLASSIFY_PX) return;
         if (absX > absY * AXIS_RATIO) {
@@ -344,31 +316,28 @@
         } else if (absY > absX * AXIS_RATIO) {
           state.classification = "vertical";
           state.gestureState = "vertical-passthrough";
-          try { viewport.releasePointerCapture?.(event.pointerId); } catch (_) {}
+          field.dataset.carouselGestureState = "vertical-passthrough";
           return;
         } else return;
       }
-
       if (state.classification !== "horizontal") return;
       const dt = Math.max(1, event.timeStamp - state.lastMoveTime);
       state.lastVelocityX = (event.clientX - state.lastMoveX) / dt;
       state.lastMoveX = event.clientX;
       state.lastMoveTime = event.timeStamp;
       state.accumulatedDeltaX = deltaX;
-      const p = state.dragOriginPosition - deltaX / state.stepPixels;
-      renderGeometry(field, state, p);
+      renderGeometry(field, state, state.dragOriginPosition - deltaX / state.stepPixels);
     });
 
     viewport.addEventListener("pointerup", event => finishPointer(field, state, event, false));
     viewport.addEventListener("pointercancel", event => finishPointer(field, state, event, true));
 
-    cards.forEach((card, index) => {
-      card.addEventListener("focusin", () => {
-        if (state.gestureState !== "dragging" && index !== state.index) select(field, state, index, "focus-custody");
-      });
-    });
+    cards.forEach((card, index) => card.addEventListener("focusin", () => {
+      if (state.gestureState !== "dragging" && index !== state.index) select(field, state, index, "focus-custody");
+    }));
 
-    render(field, state, "mount");
+    renderGeometry(field, state, initialIndex);
+    publish(field, state, "mount");
   }
 
   function install() {
@@ -379,47 +348,44 @@
     fields.forEach(bindField);
     normalizeOrbitTerminology();
     installed = fields.some(field => stateByField.has(field));
-    if (installed) {
-      document.documentElement.dataset.lawsDestinationCarouselRuntime = "active";
-      document.documentElement.dataset.lawsCarouselGestureLaw = "continuous-pointer-fractional-orbit-then-detent";
-      globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({
-        contract: CONTRACT,
-        installed: true,
-        reducedMotion: reducedMotion(),
-        surrogateNavigation: false,
-        continuousPointerGeometry: true,
-        fractionalOrbitPosition: true,
-        selectionDuringDrag: false,
-        settleToNearestDetent: true,
-        verticalGesturePassthrough: true,
-        directionOnlyGesture: false,
-        liveGestureGeometry: true,
-        atomicRotation: false,
-        returnLanguage: "Return to Orbit",
-        getState: snapshot,
-        restoreOrbitState,
-        navigationAuthority: false,
-        contentAuthority: false,
-        routeAuthority: false,
-        evidenceAuthority: false
-      });
-      globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", {
-        detail: Object.freeze({
-          contract: CONTRACT,
-          fieldCount: fields.length,
-          continuousPointerGeometry: true,
-          fractionalOrbitPosition: true,
-          selectionDuringDrag: false,
-          settleToNearestDetent: true,
-          verticalGesturePassthrough: true,
-          directionOnlyGesture: false,
-          liveGestureGeometry: true,
-          atomicRotation: false,
-          returnLanguage: "Return to Orbit"
-        })
-      }));
-    }
-    return installed;
+    if (!installed) return false;
+    document.documentElement.dataset.lawsDestinationCarouselRuntime = "active";
+    document.documentElement.dataset.lawsCarouselGestureLaw = "continuous-pointer-fractional-orbit-then-detent";
+    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({
+      contract: CONTRACT,
+      installed: true,
+      reducedMotion: reducedMotion(),
+      surrogateNavigation: false,
+      continuousPointerGeometry: true,
+      fractionalOrbitPosition: true,
+      selectionDuringDrag: false,
+      settleToNearestDetent: true,
+      verticalGesturePassthrough: true,
+      directionOnlyGesture: false,
+      liveGestureGeometry: true,
+      atomicRotation: false,
+      returnLanguage: "Return to Orbit",
+      getState: snapshot,
+      restoreOrbitState,
+      navigationAuthority: false,
+      contentAuthority: false,
+      routeAuthority: false,
+      evidenceAuthority: false
+    });
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({
+      contract: CONTRACT,
+      fieldCount: fields.length,
+      continuousPointerGeometry: true,
+      fractionalOrbitPosition: true,
+      selectionDuringDrag: false,
+      settleToNearestDetent: true,
+      verticalGesturePassthrough: true,
+      directionOnlyGesture: false,
+      liveGestureGeometry: true,
+      atomicRotation: false,
+      returnLanguage: "Return to Orbit"
+    }) }));
+    return true;
   }
 
   function initialize() {

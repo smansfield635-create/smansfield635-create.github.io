@@ -93,7 +93,16 @@ jobs:
             const viewport = field.locator('.laws-rolodex-viewport');
             await viewport.focus();
             await page.keyboard.press('ArrowRight');
-            await page.waitForTimeout(750);
+            await page.waitForFunction(() => {
+              const field = document.querySelector('.laws-rolodex-field[data-destination-stage-state="active"]');
+              const active = field?.querySelector('.laws-rolodex-card[data-active="true"]');
+              const viewport = field?.querySelector('.laws-rolodex-viewport');
+              if (!active || !viewport) return false;
+              const a = active.getBoundingClientRect();
+              const v = viewport.getBoundingClientRect();
+              return Math.abs((a.left + a.width / 2) - (v.left + v.width / 2)) <= 24;
+            }, null, { timeout: 3000 });
+
             const activeAfter = field.locator('.laws-rolodex-card[data-active="true"]');
             const after = await activeAfter.getAttribute('data-destination-id');
             if (!after || after === before) throw new Error('keyboard spatial traversal did not advance carousel state');
@@ -115,10 +124,7 @@ jobs:
             if (!activeBox || !viewportBox || !trackBox) throw new Error('active card, track, or viewport lacks rendered geometry');
             const cardCenter = activeBox.x + activeBox.width / 2;
             const viewportCenter = viewportBox.x + viewportBox.width / 2;
-            await stage.scrollIntoViewIfNeeded();
-            await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
-            console.log(JSON.stringify({heroBox, stageBox, before, after, activeMeta, activeBox, viewportBox, trackBox, cardStyles}, null, 2));
-            if (Math.abs(cardCenter - viewportCenter) > 24) throw new Error(`active card lacks center custody: ${cardCenter} vs ${viewportCenter}; ${JSON.stringify({activeMeta, activeBox, viewportBox, trackBox})}`);
+            if (Math.abs(cardCenter - viewportCenter) > 24) throw new Error(`active card lacks settled center custody: ${cardCenter} vs ${viewportCenter}`);
 
             await tabs.nth(0).click();
             await page.waitForTimeout(250);
@@ -127,6 +133,9 @@ jobs:
             if (!familyAfter || familyAfter !== activeFieldAfter) throw new Error('family tab did not move stage custody');
 
             if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
+            await stage.scrollIntoViewIfNeeded();
+            await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
+            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, activeMeta, activeBox, viewportBox, trackBox, cardStyles}, null, 2));
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE

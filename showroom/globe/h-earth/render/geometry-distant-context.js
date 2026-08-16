@@ -94,7 +94,7 @@ function appendBlendedBand({ vertices, indices, sampleCount, rowCount, pointAt }
   }
 }
 
-function appendBox(vertices, indices, { x, y, z, width, height, depth }) {
+function appendOpenPier(vertices, indices, { x, y, z, width, height, depth }) {
   const base = vertices.length;
   const x0 = x - width / 2, x1 = x + width / 2;
   const z0 = z - depth / 2, z1 = z + depth / 2;
@@ -103,9 +103,11 @@ function appendBox(vertices, indices, { x, y, z, width, height, depth }) {
     [x0,y0,z0],[x1,y0,z0],[x1,y1,z0],[x0,y1,z0],
     [x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]
   ].forEach(([vx,vy,vz]) => vertices.push(createHEarthVector3(vx,vy,vz)));
+  // Intentionally omit top/bottom caps. The distant-context provider is one
+  // OPEN_ALLOWED neutral mesh; embedding closed box shells in that same mesh
+  // produces mixed topology and correctly fails the geometry kernel.
   const faces = [
     0,1,2,0,2,3, 4,6,5,4,7,6,
-    0,4,5,0,5,1, 3,2,6,3,6,7,
     1,5,6,1,6,2, 0,3,7,0,7,4
   ];
   faces.forEach((index) => indices.push(base + index));
@@ -173,14 +175,14 @@ function constructVisualWorldContinuation(formation) {
   const southGateZ = ACCESSIBLE.zMin - THRESHOLDS.south.gateDistance;
   const southGateX = lerp(ACCESSIBLE.xMin, ACCESSIBLE.xMax, THRESHOLDS.south.passCenter);
   const southGround = sampleHEarthTerrainField(southGateX, ACCESSIBLE.zMin).elevation;
-  appendBox(vertices, indices, { x: southGateX - 86, y: southGround, z: southGateZ, width: 18, height: 54, depth: 18 });
-  appendBox(vertices, indices, { x: southGateX + 86, y: southGround, z: southGateZ, width: 18, height: 54, depth: 18 });
+  appendOpenPier(vertices, indices, { x: southGateX - 86, y: southGround, z: southGateZ, width: 18, height: 54, depth: 18 });
+  appendOpenPier(vertices, indices, { x: southGateX + 86, y: southGround, z: southGateZ, width: 18, height: 54, depth: 18 });
 
   const westGateX = ACCESSIBLE.xMin - THRESHOLDS.west.gateDistance;
   const westGateZ = lerp(ACCESSIBLE.zMin, landwardEndZ, THRESHOLDS.west.passCenter);
   const westGround = sampleHEarthTerrainField(ACCESSIBLE.xMin, westGateZ).elevation;
-  appendBox(vertices, indices, { x: westGateX, y: westGround, z: westGateZ - 78, width: 18, height: 48, depth: 18 });
-  appendBox(vertices, indices, { x: westGateX, y: westGround, z: westGateZ + 78, width: 18, height: 48, depth: 18 });
+  appendOpenPier(vertices, indices, { x: westGateX, y: westGround, z: westGateZ - 78, width: 18, height: 48, depth: 18 });
+  appendOpenPier(vertices, indices, { x: westGateX, y: westGround, z: westGateZ + 78, width: 18, height: 48, depth: 18 });
 
   const primitiveId = `${formation.formationId}:CONNECTED_REGION_CONTEXT`;
   const construction = constructHEarthTriangleMesh({

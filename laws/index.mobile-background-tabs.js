@@ -50,7 +50,7 @@
   };
 
   load("/laws/index.mobile-background-tabs.core.js?v=LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY", "data-laws-responsive-core")
-    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V6_20260816A", "data-laws-destination-carousel-runtime"))
+    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V7_SINGLE_TRAJECTORY_20260816A", "data-laws-destination-carousel-runtime"))
     .then(() => load("/laws/index.destination-stage.js?v=LAWS_DESTINATION_STAGE_V1_20260816A", "data-laws-destination-stage-runtime"))
     .then(() => loadStyle("/laws/index.destination-stage-anchor.css?v=LAWS_DESTINATION_STAGE_ANCHOR_CORRECTION_V1_20260816A", "data-laws-destination-stage-anchor-css"))
     .catch(error => {

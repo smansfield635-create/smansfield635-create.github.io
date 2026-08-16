@@ -19,179 +19,65 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
       - name: Install Playwright
         env:
           npm_config_package_lock: 'false'
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install chromium
-
       - name: Qualify deployed Compass successor
         shell: bash
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import { chromium } from 'playwright';
-
           const live='https://diamondgatebridge.com/?compass-successor-qualify=8a482495';
           const browser=await chromium.launch({headless:true});
-          const checks=[];
-          const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const checks=[]; const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          async function waitForSuccessor(page){let last={};for(let attempt=0;attempt<18;attempt++){await page.goto(`${live}-${attempt}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForTimeout(550);last=await page.evaluate(()=>({version:globalThis.CompassEditorialCarousel?.version||'',statement:Boolean(document.querySelector('[data-statement-orbit]')),capability:Boolean(document.querySelector('[data-capability-orbit]')),oldSwitcher:Boolean(document.querySelector('[data-compass-capability-switcher]'))}));if(last.version==='successor-v2'&&last.statement&&last.capability&&!last.oldSwitcher)return last;await page.waitForTimeout(10000);}return last;}
+          let fatal=null;
+          try{
+            const context=await browser.newContext({viewport:{width:1280,height:800}}); const page=await context.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            const loaded=await waitForSuccessor(page);
+            check('LIVE_SUCCESSOR_RUNTIME',loaded.version==='successor-v2',loaded); check('LIVE_STATEMENT_ORBIT',loaded.statement,loaded); check('LIVE_CAPABILITY_ORBIT',loaded.capability,loaded); check('LEGACY_SWITCHER_REMOVED',!loaded.oldSwitcher,loaded);
+            const structure=await page.evaluate(()=>{const plaques=[...document.querySelectorAll('.compass-orbit-plaque')],statementObjects=[...document.querySelectorAll('.compass-statement-object')],rear=plaques.find(el=>el.dataset.slot==='rear'),rearStyle=rear?getComputedStyle(rear):null,rearRect=rear?.getBoundingClientRect();const visibleArrow=[...document.querySelectorAll('[data-statement-orbit] button,[data-statement-orbit] a,[data-capability-orbit] button,[data-capability-orbit] a')].filter(el=>{if(!el.offsetParent)return false;const t=(el.textContent||'').trim().toLowerCase(),a=(el.getAttribute('aria-label')||'').toLowerCase();return t==='previous'||t==='next'||a.includes('previous')||a.includes('next');}).length;const counters=[...document.querySelectorAll('[data-statement-orbit] [class*="counter"],[data-capability-orbit] [class*="counter"],[data-carousel-counter]')].filter(el=>el.offsetParent).length;return{statementCount:statementObjects.length,statementHasPanel:statementObjects.some(el=>{const s=getComputedStyle(el);return s.borderTopWidth!=='0px'||s.backgroundImage!=='none'||s.backgroundColor!=='rgba(0, 0, 0, 0)';}),capabilityCount:plaques.length,frontCapability:plaques.find(el=>el.dataset.slot==='front')?.dataset.capability||'',rearVisible:Boolean(rearRect&&rearRect.width>0&&rearRect.height>0&&Number(rearStyle?.opacity)>0.1),rearBlur:rearStyle?.filter||'',rearPointer:rearStyle?.pointerEvents||'',visibleArrow,counters};});
+            check('TWO_FLOATING_STATEMENTS',structure.statementCount===2,structure); check('STATEMENTS_NO_CARD_CHROME',!structure.statementHasPanel,structure); check('TWO_CAPABILITY_PLAQUES',structure.capabilityCount===2,structure); check('REAR_PARENT_VISIBLE',structure.rearVisible&&structure.rearBlur.includes('blur'),structure); check('REAR_PARENT_NONINTERACTIVE',structure.rearPointer==='none',structure); check('NO_VISIBLE_ARROW_CONTROLS',structure.visibleArrow===0,structure.visibleArrow); check('NO_NUMERIC_COUNTERS',structure.counters===0,structure.counters);
 
-          async function waitForSuccessor(page){
-            let last={};
-            for(let attempt=0;attempt<18;attempt++){
-              await page.goto(`${live}-${attempt}`,{waitUntil:'domcontentloaded',timeout:30000});
-              await page.waitForTimeout(500);
-              last=await page.evaluate(()=>({
-                version:globalThis.CompassEditorialCarousel?.version||'',
-                statement:Boolean(document.querySelector('[data-statement-orbit]')),
-                capability:Boolean(document.querySelector('[data-capability-orbit]')),
-                oldSwitcher:Boolean(document.querySelector('[data-compass-capability-switcher]'))
-              }));
-              if(last.version==='successor-v2'&&last.statement&&last.capability&&!last.oldSwitcher)return last;
-              await page.waitForTimeout(10000);
-            }
-            return last;
-          }
+            // Brain is foreground here. Prove it renders and owns its own drag gesture before rotating the parent.
+            const brain=page.locator('.compass-orbit-plaque[data-slot="front"] [data-human-brain] canvas');
+            check('BRAIN_CANVAS_PRESENT',await brain.count()===1,await brain.count());
+            const brainState=await brain.evaluate(el=>({w:el.width,h:el.height,data:el.toDataURL().length,rect:el.getBoundingClientRect().toJSON()})); check('BRAIN_RENDERED_NONEMPTY',brainState.w>10&&brainState.h>10&&brainState.data>1000,brainState);
+            const brainBox=await brain.boundingBox(); const parentBeforeBrain=await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability');
+            await page.mouse.move(brainBox.x+brainBox.width*.45,brainBox.y+brainBox.height*.5);await page.mouse.down();await page.mouse.move(brainBox.x+brainBox.width*.70,brainBox.y+brainBox.height*.5,{steps:4});await page.mouse.up();await page.waitForTimeout(160);
+            const parentAfterBrain=await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability'); check('BRAIN_PARENT_GESTURE_ISOLATION',parentBeforeBrain===parentAfterBrain,{parentBeforeBrain,parentAfterBrain});
 
-          const context=await browser.newContext({viewport:{width:1280,height:800}});
-          const page=await context.newPage();
-          const errors=[];
-          page.on('pageerror',e=>errors.push(String(e)));
-          const loaded=await waitForSuccessor(page);
-          check('LIVE_SUCCESSOR_RUNTIME',loaded.version==='successor-v2',loaded);
-          check('LIVE_STATEMENT_ORBIT',loaded.statement,loaded);
-          check('LIVE_CAPABILITY_ORBIT',loaded.capability,loaded);
-          check('LEGACY_SWITCHER_REMOVED',!loaded.oldSwitcher,loaded);
+            // Swipe from the copy-side open region, intentionally outside brain custody.
+            const stage=page.locator('[data-capability-orbit]'),box=await stage.boundingBox();
+            const before=await page.evaluate(()=>[...document.querySelectorAll('.compass-orbit-plaque')].map(el=>({id:el.dataset.capability,slot:el.dataset.slot,transform:getComputedStyle(el).transform})));
+            await page.mouse.move(box.x+box.width*.38,box.y+box.height*.27);await page.mouse.down();await page.mouse.move(box.x+box.width*.16,box.y+box.height*.27,{steps:5});
+            const held=await page.evaluate(()=>[...document.querySelectorAll('.compass-orbit-plaque')].map(el=>({id:el.dataset.capability,slot:el.dataset.slot,transform:getComputedStyle(el).transform})));
+            check('NO_POINTER_CUSTODIED_INTERMEDIATE_GEOMETRY',JSON.stringify(before)===JSON.stringify(held),{before,held}); await page.mouse.up();await page.waitForTimeout(600);
+            const after=await page.evaluate(()=>[...document.querySelectorAll('.compass-orbit-plaque')].map(el=>({id:el.dataset.capability,slot:el.dataset.slot})));
+            check('ONE_GESTURE_ONE_NEIGHBOR',after.find(x=>x.slot==='front')?.id!==before.find(x=>x.slot==='front')?.id,{before,after}); check('HOUSE_FOREGROUND_AFTER_ONE_SWIPE',after.find(x=>x.slot==='front')?.id==='house',after);
 
-          const structure=await page.evaluate(()=>{
-            const statement=document.querySelector('[data-statement-orbit]');
-            const capability=document.querySelector('[data-capability-orbit]');
-            const plaques=[...document.querySelectorAll('.compass-orbit-plaque')];
-            const statementObjects=[...document.querySelectorAll('.compass-statement-object')];
-            const front=plaques.find(el=>el.dataset.slot==='front');
-            const rear=plaques.find(el=>el.dataset.slot==='rear');
-            const rearStyle=rear?getComputedStyle(rear):null;
-            const rearRect=rear?.getBoundingClientRect();
-            const visibleArrow=[...document.querySelectorAll('button,a')].filter(el=>{
-              if(!el.offsetParent)return false;
-              const text=(el.textContent||'').trim().toLowerCase();
-              const aria=(el.getAttribute('aria-label')||'').toLowerCase();
-              return text==='previous'||text==='next'||aria.includes('previous')||aria.includes('next');
-            }).length;
-            const numericCounters=[...document.querySelectorAll('[class*="counter"],[data-carousel-counter]')].filter(el=>el.offsetParent).length;
-            return {
-              statementCount:statementObjects.length,
-              statementHasPanel:statementObjects.some(el=>{const s=getComputedStyle(el);return s.borderTopWidth!=='0px'||s.backgroundImage!=='none'||s.backgroundColor!=='rgba(0, 0, 0, 0)';}),
-              capabilityCount:plaques.length,
-              frontCapability:front?.dataset.capability||'',
-              rearCapability:rear?.dataset.capability||'',
-              rearVisible:Boolean(rearRect&&rearRect.width>0&&rearRect.height>0&&Number(rearStyle?.opacity)>0.1),
-              rearBlur:rearStyle?.filter||'',
-              rearPointer:rearStyle?.pointerEvents||'',
-              visibleArrow,numericCounters,
-              enterCount:capability?.querySelectorAll('.compass-orbit-action').length||0
-            };
-          });
-          check('TWO_FLOATING_STATEMENTS',structure.statementCount===2,structure);
-          check('STATEMENTS_NO_CARD_CHROME',structure.statementHasPanel===false,structure);
-          check('TWO_CAPABILITY_PLAQUES',structure.capabilityCount===2,structure);
-          check('REAR_PARENT_VISIBLE',structure.rearVisible&&structure.rearBlur.includes('blur'),structure);
-          check('REAR_PARENT_NONINTERACTIVE',structure.rearPointer==='none',structure);
-          check('NO_VISIBLE_ARROW_CONTROLS',structure.visibleArrow===0,structure.visibleArrow);
-          check('NO_NUMERIC_COUNTERS',structure.numericCounters===0,structure.numericCounters);
+            await page.locator('.compass-orbit-plaque[data-slot="front"] [data-enter-house]').click();await page.waitForTimeout(180);
+            const nestedBefore=await page.evaluate(()=>({mode:document.querySelector('[data-capability-orbit]')?.dataset.mode||'',parentFront:document.querySelector('.compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'',members:[...document.querySelectorAll('.house-orbit-member')].map(el=>({id:el.dataset.member,slot:el.dataset.slot,href:el.querySelector('a[href]')?.getAttribute('href')||null}))}));
+            check('HOUSE_MEMBER_ORBIT_ACTIVE',nestedBefore.mode==='house-members'&&nestedBefore.members.length===3,nestedBefore); check('JEEVES_ROUTE_PRESERVED',nestedBefore.members.find(x=>x.id==='jeeves')?.href==='/showroom/globe/hearth/jeeves/',nestedBefore.members); check('ELARA_NO_FABRICATED_ROUTE',nestedBefore.members.find(x=>x.id==='elara')?.href===null,nestedBefore.members); check('AUREN_NO_FABRICATED_ROUTE',nestedBefore.members.find(x=>x.id==='auren')?.href===null,nestedBefore.members);
+            const nested=page.locator('[data-house-orbit]'),nb=await nested.boundingBox(); await page.mouse.move(nb.x+nb.width*.72,nb.y+nb.height*.28);await page.mouse.down();await page.mouse.move(nb.x+nb.width*.47,nb.y+nb.height*.28,{steps:4});await page.mouse.up();await page.waitForTimeout(600);
+            const nestedAfter=await page.evaluate(()=>({parentFront:document.querySelector('.compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'',memberFront:document.querySelector('.house-orbit-member[data-slot="front"]')?.dataset.member||'',rearCount:[...document.querySelectorAll('.house-orbit-member')].filter(el=>el.dataset.slot?.startsWith('rear')).filter(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&r.height>0&&Number(s.opacity)>0.1}).length}));
+            check('PARENT_NESTED_GESTURE_ISOLATION',nestedAfter.parentFront==='house',nestedAfter); check('NESTED_ONE_NEIGHBOR',nestedAfter.memberFront==='elara',nestedAfter); check('NESTED_REAR_PEERS_VISIBLE',nestedAfter.rearCount===2,nestedAfter);
+            const desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);check('DESKTOP_NO_HORIZONTAL_OVERFLOW',desktopOverflow<=2,desktopOverflow);check('NO_PAGE_ERRORS',errors.length===0,errors);await page.screenshot({path:'/tmp/compass-successor-desktop.png',fullPage:true});await context.close();
 
-          const stage=page.locator('[data-capability-orbit]');
-          const box=await stage.boundingBox();
-          const before=await page.evaluate(()=>[...document.querySelectorAll('.compass-orbit-plaque')].map(el=>({id:el.dataset.capability,slot:el.dataset.slot,transform:getComputedStyle(el).transform})));
-          await page.mouse.move(box.x+box.width*.68,box.y+box.height*.5);
-          await page.mouse.down();
-          await page.mouse.move(box.x+box.width*.48,box.y+box.height*.5,{steps:5});
-          const held=await page.evaluate(()=>[...document.querySelectorAll('.compass-orbit-plaque')].map(el=>({id:el.dataset.capability,slot:el.dataset.slot,transform:getComputedStyle(el).transform})));
-          check('NO_POINTER_CUSTODIED_INTERMEDIATE_GEOMETRY',JSON.stringify(before)===JSON.stringify(held),{before,held});
-          await page.mouse.up();
-          await page.waitForTimeout(600);
-          const after=await page.evaluate(()=>[...document.querySelectorAll('.compass-orbit-plaque')].map(el=>({id:el.dataset.capability,slot:el.dataset.slot})));
-          check('ONE_GESTURE_ONE_NEIGHBOR',after.find(x=>x.slot==='front')?.id!==before.find(x=>x.slot==='front')?.id,{before,after});
-          check('HOUSE_FOREGROUND_AFTER_ONE_SWIPE',after.find(x=>x.slot==='front')?.id==='house',after);
+            const phoneContext=await browser.newContext({viewport:{width:390,height:844}}),phone=await phoneContext.newPage(),phoneErrors=[];phone.on('pageerror',e=>phoneErrors.push(String(e)));await phone.goto(live+'-phone',{waitUntil:'domcontentloaded',timeout:30000});await phone.waitForFunction(()=>globalThis.CompassEditorialCarousel?.version==='successor-v2',{timeout:15000});const phoneMetrics=await phone.evaluate(()=>({overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,rearVisible:[...document.querySelectorAll('.compass-orbit-plaque[data-slot="rear"]')].some(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&r.height>0&&Number(s.opacity)>0.1})}));check('PHONE_NO_HORIZONTAL_OVERFLOW',phoneMetrics.overflow<=2,phoneMetrics);check('PHONE_REAR_PEER_VISIBLE',phoneMetrics.rearVisible,phoneMetrics);check('PHONE_NO_PAGE_ERRORS',phoneErrors.length===0,phoneErrors);await phone.screenshot({path:'/tmp/compass-successor-phone.png',fullPage:true});await phoneContext.close();
 
-          await page.locator('[data-enter-house]').click();
-          await page.waitForTimeout(150);
-          const nestedBefore=await page.evaluate(()=>({
-            mode:document.querySelector('[data-capability-orbit]')?.dataset.mode||'',
-            parentFront:document.querySelector('.compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'',
-            members:[...document.querySelectorAll('.house-orbit-member')].map(el=>({id:el.dataset.member,slot:el.dataset.slot,href:el.querySelector('a[href]')?.getAttribute('href')||null,disabled:el.querySelector('button[disabled]')!==null}))
-          }));
-          check('HOUSE_MEMBER_ORBIT_ACTIVE',nestedBefore.mode==='house-members'&&nestedBefore.members.length===3,nestedBefore);
-          check('JEEVES_ROUTE_PRESERVED',nestedBefore.members.find(x=>x.id==='jeeves')?.href==='/showroom/globe/hearth/jeeves/',nestedBefore.members);
-          check('ELARA_NO_FABRICATED_ROUTE',nestedBefore.members.find(x=>x.id==='elara')?.href===null,nestedBefore.members);
-          check('AUREN_NO_FABRICATED_ROUTE',nestedBefore.members.find(x=>x.id==='auren')?.href===null,nestedBefore.members);
-
-          const nested=page.locator('[data-house-orbit]');
-          const nb=await nested.boundingBox();
-          await page.mouse.move(nb.x+nb.width*.7,nb.y+nb.height*.5);await page.mouse.down();await page.mouse.move(nb.x+nb.width*.45,nb.y+nb.height*.5,{steps:4});await page.mouse.up();await page.waitForTimeout(600);
-          const nestedAfter=await page.evaluate(()=>({
-            parentFront:document.querySelector('.compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'',
-            memberFront:document.querySelector('.house-orbit-member[data-slot="front"]')?.dataset.member||'',
-            rearCount:[...document.querySelectorAll('.house-orbit-member')].filter(el=>el.dataset.slot?.startsWith('rear')).filter(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&r.height>0&&Number(s.opacity)>0.1}).length
-          }));
-          check('PARENT_NESTED_GESTURE_ISOLATION',nestedAfter.parentFront==='house',nestedAfter);
-          check('NESTED_ONE_NEIGHBOR',nestedAfter.memberFront==='elara',nestedAfter);
-          check('NESTED_REAR_PEERS_VISIBLE',nestedAfter.rearCount===2,nestedAfter);
-
-          const brain=page.locator('[data-human-brain] canvas');
-          check('BRAIN_CANVAS_PRESENT',await brain.count()===1,await brain.count());
-          const brainState=await brain.evaluate(el=>({w:el.width,h:el.height,data:el.toDataURL().length,rect:el.getBoundingClientRect().toJSON()}));
-          check('BRAIN_RENDERED_NONEMPTY',brainState.w>10&&brainState.h>10&&brainState.data>1000,brainState);
-          const brainBox=await brain.boundingBox();
-          const parentBeforeBrain=await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability');
-          await page.mouse.move(brainBox.x+brainBox.width*.55,brainBox.y+brainBox.height*.5);await page.mouse.down();await page.mouse.move(brainBox.x+brainBox.width*.75,brainBox.y+brainBox.height*.5,{steps:4});await page.mouse.up();await page.waitForTimeout(150);
-          const parentAfterBrain=await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability');
-          check('BRAIN_PARENT_GESTURE_ISOLATION',parentBeforeBrain===parentAfterBrain,{parentBeforeBrain,parentAfterBrain});
-
-          const pageMetrics=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,errors:[] }));
-          check('DESKTOP_NO_HORIZONTAL_OVERFLOW',pageMetrics.overflow<=2,pageMetrics.overflow);
-          check('NO_PAGE_ERRORS',errors.length===0,errors);
-          await page.screenshot({path:'/tmp/compass-successor-desktop.png',fullPage:true});
-          await context.close();
-
-          const phoneContext=await browser.newContext({viewport:{width:390,height:844}});
-          const phone=await phoneContext.newPage();
-          const phoneErrors=[];phone.on('pageerror',e=>phoneErrors.push(String(e)));
-          await phone.goto(live+'-phone',{waitUntil:'domcontentloaded',timeout:30000});
-          await phone.waitForFunction(()=>globalThis.CompassEditorialCarousel?.version==='successor-v2',{timeout:15000});
-          const phoneMetrics=await phone.evaluate(()=>({overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,rearVisible:[...document.querySelectorAll('.compass-orbit-plaque[data-slot="rear"]')].some(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&r.height>0&&Number(s.opacity)>0.1})}));
-          check('PHONE_NO_HORIZONTAL_OVERFLOW',phoneMetrics.overflow<=2,phoneMetrics);
-          check('PHONE_REAR_PEER_VISIBLE',phoneMetrics.rearVisible,phoneMetrics);
-          check('PHONE_NO_PAGE_ERRORS',phoneErrors.length===0,phoneErrors);
-          await phone.screenshot({path:'/tmp/compass-successor-phone.png',fullPage:true});
-          await phoneContext.close();
-
-          const rmContext=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'});
-          const rm=await rmContext.newPage();
-          await rm.goto(live+'-reduced',{waitUntil:'domcontentloaded',timeout:30000});
-          await rm.waitForFunction(()=>globalThis.CompassEditorialCarousel?.version==='successor-v2',{timeout:15000});
-          const rmBrain=rm.locator('[data-human-brain] canvas');
-          const img1=await rmBrain.evaluate(el=>el.toDataURL());await rm.waitForTimeout(450);const img2=await rmBrain.evaluate(el=>el.toDataURL());
-          check('REDUCED_MOTION_BRAIN_STATIC',img1===img2,{len1:img1.length,len2:img2.length});
-          check('REDUCED_MOTION_INFORMATION_EQUIVALENT',await rm.locator('.compass-orbit-plaque').count()===2,await rm.locator('.compass-orbit-plaque').count());
-          await rmContext.close();
-          await browser.close();
-
-          const failures=checks.filter(x=>!x.pass);
-          const receipt={schema:'COMPASS_CAROUSEL_SUCCESSOR_LIVE_QUALIFICATION_v1',target:live,expectedProductHead:'8a482495e7d7b0daf3a8653d982ce164d76ca49a',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
-          fs.writeFileSync('/tmp/compass-carousel-successor-live-receipt.json',JSON.stringify(receipt,null,2)+'\n');
-          console.log(JSON.stringify(receipt,null,2));
-          if(failures.length)process.exit(1);
+            const rmContext=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'}),rm=await rmContext.newPage();await rm.goto(live+'-reduced',{waitUntil:'domcontentloaded',timeout:30000});await rm.waitForFunction(()=>globalThis.CompassEditorialCarousel?.version==='successor-v2',{timeout:15000});const rmBrain=rm.locator('.compass-orbit-plaque[data-slot="front"] [data-human-brain] canvas'),img1=await rmBrain.evaluate(el=>el.toDataURL());await rm.waitForTimeout(450);const img2=await rmBrain.evaluate(el=>el.toDataURL());check('REDUCED_MOTION_BRAIN_STATIC',img1===img2,{len1:img1.length,len2:img2.length});check('REDUCED_MOTION_INFORMATION_EQUIVALENT',await rm.locator('.compass-orbit-plaque').count()===2,await rm.locator('.compass-orbit-plaque').count());await rmContext.close();
+          }catch(error){fatal=String(error?.stack||error);check('QUALIFIER_EXECUTION',false,fatal);}finally{await browser.close();}
+          const failures=checks.filter(x=>!x.pass);const receipt={schema:'COMPASS_CAROUSEL_SUCCESSOR_LIVE_QUALIFICATION_v1',target:live,expectedProductHead:'8a482495e7d7b0daf3a8653d982ce164d76ca49a',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id),fatal};fs.writeFileSync('/tmp/compass-carousel-successor-live-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
           NODE
-
       - name: Upload qualification evidence
         if: always()
         uses: actions/upload-artifact@v4

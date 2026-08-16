@@ -1,9 +1,10 @@
 /*
- * LAWS_NATIVE_DESTINATION_CAROUSEL_v2
- * True chamber-native spatial carousel presentation for the existing Laws records.
+ * LAWS_NATIVE_DESTINATION_CAROUSEL_v3
+ * Chamber-native spatial carousel presentation for the existing Laws records.
+ * Surrogate Previous/Next controls are prohibited; traversal is spatial.
  */
 html[data-laws-root-rolodex="active"] {
-  --laws-carousel-width: min(72vw, 35rem);
+  --laws-carousel-width: min(68vw, 33rem);
   --laws-carousel-height: clamp(25rem, 38vw, 31rem);
 }
 
@@ -27,8 +28,19 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
 html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
   position: relative;
   z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 2.1rem;
   margin: 0;
-  padding: 0 clamp(1rem, 3vw, 2.4rem) .5rem;
+  padding: .2rem clamp(1rem, 3vw, 2.4rem) .55rem;
+  pointer-events: none;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-control {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
@@ -38,12 +50,12 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
   min-height: var(--laws-carousel-height) !important;
   overflow: hidden !important;
   padding: 0 !important;
-  perspective: 1500px;
+  perspective: 1700px;
   perspective-origin: 50% 48%;
   touch-action: pan-y;
   cursor: grab;
   outline-offset: -2px;
-  mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-viewport[data-dragging="true"] {
@@ -70,14 +82,14 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-card {
   min-height: min(22rem, calc(var(--laws-carousel-height) - 2.2rem)) !important;
   margin: 0 !important;
   flex: none !important;
-  opacity: var(--laws-carousel-opacity, .2) !important;
-  filter: blur(var(--laws-carousel-blur, 0px)) saturate(.76) brightness(.82);
+  opacity: var(--laws-carousel-opacity, .12) !important;
+  filter: blur(var(--laws-carousel-blur, 0px)) saturate(.68) brightness(.7);
   transform:
     translate(-50%, -50%)
     translateX(var(--laws-carousel-x, 0%))
-    translateZ(var(--laws-carousel-z, -120px))
+    translateZ(var(--laws-carousel-z, -140px))
     rotateY(var(--laws-carousel-rotate, 0deg))
-    scale(var(--laws-carousel-scale, .8)) !important;
+    scale(var(--laws-carousel-scale, .76)) !important;
   transform-origin: center center;
   will-change: transform, opacity, filter;
   pointer-events: none;
@@ -98,46 +110,66 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
   filter: none;
-  border-color: rgba(132, 218, 255, .58);
+  border-color: rgba(132, 218, 255, .62);
   box-shadow:
-    0 2rem 5.5rem rgba(0, 0, 0, .4),
-    0 0 0 1px rgba(121, 234, 255, .045),
-    0 0 2.6rem rgba(93, 201, 255, .055),
-    inset 0 1px 0 rgba(255,255,255,.025);
+    0 2rem 5.5rem rgba(0, 0, 0, .42),
+    0 0 0 1px rgba(121, 234, 255, .055),
+    0 0 2.9rem rgba(93, 201, 255, .065),
+    inset 0 1px 0 rgba(255,255,255,.03);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"]) :is(
+  .laws-rolodex-card__count,
+  h4,
+  .laws-rolodex-card__question,
+  .laws-rolodex-card__description,
+  .laws-rolodex-enter
+) {
+  opacity: .12;
+  transition: opacity 240ms ease;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] :is(
+  .laws-rolodex-card__count,
+  h4,
+  .laws-rolodex-card__question,
+  .laws-rolodex-card__description,
+  .laws-rolodex-enter
+) {
+  opacity: 1;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"]) .laws-rolodex-enter {
   pointer-events: none;
-  opacity: .28;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-position {
+  min-width: 4.5rem;
+  color: rgba(204, 232, 245, .78);
   font-variant-numeric: tabular-nums;
-  color: rgba(204, 232, 245, .88);
-}
-
-html[data-laws-root-rolodex="active"] .laws-rolodex-control {
-  background: rgba(4, 13, 30, .84);
-  border-color: rgba(132, 218, 255, .22);
-  box-shadow: 0 .5rem 1.4rem rgba(0, 0, 0, .22);
-}
-
-html[data-laws-root-rolodex="active"] .laws-rolodex-control:hover,
-html[data-laws-root-rolodex="active"] .laws-rolodex-control:focus-visible {
-  border-color: rgba(132, 218, 255, .55);
-  background: rgba(13, 31, 58, .92);
+  font-size: .76rem;
+  letter-spacing: .11em;
+  text-align: center;
 }
 
 @media (min-width: 781px) and (max-width: 1200px) {
   html[data-laws-root-rolodex="active"] {
-    --laws-carousel-width: min(66vw, 31.5rem);
+    --laws-carousel-width: min(58vw, 28.5rem);
     --laws-carousel-height: clamp(26rem, 52vw, 31rem);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
+    margin-inline: clamp(.35rem, 1.2vw, .8rem);
+  }
+
+  html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
+    mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
   }
 }
 
 @media (max-width: 780px) {
   html[data-laws-root-rolodex="active"] {
-    --laws-carousel-width: 80vw;
+    --laws-carousel-width: 78vw;
     --laws-carousel-height: 27rem;
   }
   html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
@@ -157,7 +189,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-control:focus-visible {
 
 @media (max-width: 430px) {
   html[data-laws-root-rolodex="active"] {
-    --laws-carousel-width: 84vw;
+    --laws-carousel-width: 82vw;
     --laws-carousel-height: 28rem;
   }
 }
@@ -167,8 +199,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-field[data-carousel-dragging
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-laws-root-rolodex="active"] .laws-rolodex-card,
-  html[data-laws-root-rolodex="active"] .laws-rolodex-control {
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
     transition: none !important;
   }
   html[data-laws-root-rolodex="active"] .laws-rolodex-card {

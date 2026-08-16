@@ -188,7 +188,11 @@
     state.angle = angleForDetent(state.detent, state.cards.length);
     state.gestureState = "idle";
     state.direction = 0;
+    state.viewport.dataset.dragging = "true";
     applyCanonicalSemantics(field, state, "orbit-restore");
+    void state.track.offsetWidth;
+    state.viewport.dataset.dragging = "false";
+    trace(state, "canonical-restore", { canonical: field.dataset.carouselCanonicalLanding === "true" });
     return true;
   }
 

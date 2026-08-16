@@ -1,7 +1,7 @@
 /**
- * H-Earth repository registry validator dependency loader v17 successor.
- * Preserves the inherited identity state and adds only exact parent-promotion
- * receipt path recognition required by PR #1134 preflight.
+ * H-Earth repository registry validator dependency loader v18 successor.
+ * Preserves the inherited identity state and adds only exact C3 coastal
+ * reconstruction authority path recognition required by PR #1167 preflight.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
@@ -10,13 +10,15 @@ import {
 import {
   verifyHEarthOW03ExperienceAnchorEvidencePathRecognition
 } from './accepted-amendments/h-earth.repository-registry.ow03-experience-anchor-evidence-path-recognition.js';
-import registryFacade from './accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js';
 import {
   verifyHEarthOW04ExactPathRecognition
 } from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js';
 import {
   verifyHEarthOW04ParentPromotionReceiptRecognition
 } from './accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js';
+import registryFacade, {
+  verifyHEarthC3CoastalReconstructionAuthorityRecognition
+} from './accepted-amendments/h-earth.repository-registry.c3-coastal-reconstruction-authority-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
@@ -24,6 +26,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const ow03Verification = verifyHEarthOW03ExperienceAnchorEvidencePathRecognition();
   const ow04Verification = verifyHEarthOW04ExactPathRecognition();
   const parentPromotionVerification = verifyHEarthOW04ParentPromotionReceiptRecognition();
+  const c3Verification = verifyHEarthC3CoastalReconstructionAuthorityRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -41,6 +44,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     parentPromotionReceiptRecognitionEligible: parentPromotionVerification.eligible === true,
     parentPromotionReceiptExactPathResolved: parentPromotionVerification.checks.exactTargetPathCount === true && parentPromotionVerification.checks.targetPathResolves === true,
     parentPromotionAuditOnlyNoAuthorityLeak: parentPromotionVerification.checks.auditOnly === true && parentPromotionVerification.checks.pathResolutionOnly === true && parentPromotionVerification.checks.noProductAuthority === true && parentPromotionVerification.checks.noReceiptMutationAuthority === true && parentPromotionVerification.checks.noAnchorWaiverAuthority === true,
+    c3CoastalReconstructionAuthorityRecognitionEligible: c3Verification.eligible === true,
+    c3CoastalReconstructionAuthorityExactPathResolved: c3Verification.checks.exactTargetPathCount === true && c3Verification.checks.targetPathResolves === true,
+    c3CoastalReconstructionAuthorityAuditOnlyNoAuthorityLeak: c3Verification.checks.auditOnly === true && c3Verification.checks.pathResolutionOnly === true && c3Verification.checks.noProductAuthority === true && c3Verification.checks.noInlandAuthority === true && c3Verification.checks.noAnchorWaiverAuthority === true,
     registryIdPreserved: registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved: registryInstance.registryVersion === base.registryInstance.registryVersion,
     schemaIdPreserved: registryInstance.schemaId === base.registryInstance.schemaId,
@@ -54,7 +60,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
 
   return deepFreeze({
     ...base,
-    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v17_OW04_PARENT_PROMOTION_RECEIPT_RECOGNITION_SUCCESSOR',
+    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v18_C3_COASTAL_RECONSTRUCTION_AUTHORITY_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -63,40 +69,40 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       ow03ExperienceAnchorEvidencePathRecognition: ow03Verification.eligible === true,
       ow04ExactPathRecognition: ow04Verification.eligible === true,
       ow04ParentPromotionReceiptRecognition: parentPromotionVerification.eligible === true,
-      parentPromotionSuccessorIntegrity: successorIntegrityVerified
+      c3CoastalReconstructionAuthorityRecognition: c3Verification.eligible === true,
+      c3CoastalReconstructionSuccessorIntegrity: successorIntegrityVerified
     }),
     identityVerified: base.identityVerified,
     inheritedIdentityPreserved: base.identityVerified === false,
     successorIntegrityVerified,
-    parentPromotionSuccessorChecks: deepFreeze(successorChecks),
+    c3CoastalReconstructionSuccessorChecks: deepFreeze(successorChecks),
     ow03ExperienceAnchorEvidencePathRecognitionVerification: ow03Verification,
     ow04ExactPathRecognitionVerification: ow04Verification,
     ow04ParentPromotionReceiptRecognitionVerification: parentPromotionVerification,
+    c3CoastalReconstructionAuthorityRecognitionVerification: c3Verification,
     boundary: deepFreeze({
       ...base.boundary,
       ow04ExactPathRecognitionOnly: true,
       ow04ParentPromotionReceiptRecognitionOnly: true,
-      ow04ParentPromotionProductMutationAuthorityCreated: false,
-      ow04ParentPromotionTerrainMutationAuthorityCreated: false,
-      ow04ParentPromotionRendererMutationAuthorityCreated: false,
-      ow04ParentPromotionEvidenceMutationAuthorityCreated: false,
-      ow04ParentPromotionReceiptMutationAuthorityCreated: false,
-      ow04ParentPromotionExperienceAnchorWaiverAuthorityCreated: false,
-      ow04ParentPromotionMergeDeploymentPublicationAuthorityCreated: false
+      c3CoastalReconstructionAuthorityRecognitionOnly: true,
+      c3CoastalReconstructionProductMutationAuthorityCreated: false,
+      c3CoastalReconstructionInlandMutationAuthorityCreated: false,
+      c3CoastalReconstructionRendererRuntimeAtmosphereMutationAuthorityCreated: false,
+      c3CoastalReconstructionExperienceAnchorWaiverAuthorityCreated: false,
+      c3CoastalReconstructionMergeDeploymentPublicationAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
       ow04ExactPathRecognitionLoaded: true,
       ow04ParentPromotionReceiptRecognitionLoaded: true,
-      ow04ParentPromotionSuccessorIntegrityVerified: successorIntegrityVerified,
+      c3CoastalReconstructionAuthorityRecognitionLoaded: true,
+      c3CoastalReconstructionSuccessorIntegrityVerified: successorIntegrityVerified,
       inheritedIdentityStatePreserved: true,
-      ow04ParentPromotionProductMutationAuthorized: false,
-      ow04ParentPromotionTerrainMutationAuthorized: false,
-      ow04ParentPromotionRendererMutationAuthorized: false,
-      ow04ParentPromotionEvidenceMutationAuthorized: false,
-      ow04ParentPromotionReceiptMutationAuthorized: false,
-      ow04ParentPromotionExperienceAnchorWaiverAuthorized: false,
-      ow04ParentPromotionMergeDeploymentPublicationAuthorized: false
+      c3CoastalReconstructionProductMutationAuthorized: false,
+      c3CoastalReconstructionInlandMutationAuthorized: false,
+      c3CoastalReconstructionRendererRuntimeAtmosphereMutationAuthorized: false,
+      c3CoastalReconstructionExperienceAnchorWaiverAuthorized: false,
+      c3CoastalReconstructionMergeDeploymentPublicationAuthorized: false
     })
   });
 }

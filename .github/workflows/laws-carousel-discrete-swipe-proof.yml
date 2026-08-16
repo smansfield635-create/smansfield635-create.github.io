@@ -30,15 +30,32 @@ jobs:
       - name: Serve exact candidate
         run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-atomic-orbit-http.log 2>&1 &
 
-      - name: Prove O1 entry, direction-only gesture, atomic step, and O2 return
+      - name: Prove continuous O1 entry, direction-only gesture, atomic step, and O2 return
         run: |
           node <<'NODE'
           const { chromium } = require('playwright');
           (async () => {
             const browser = await chromium.launch({headless:true});
             const page = await browser.newPage({viewport:{width:1024,height:1366}});
+
+            // Install before any page script. The former proof checked only the final
+            // corrected scroll position, which could not detect a down-then-up jump.
+            await page.addInitScript(() => {
+              globalThis.__lawsEntryScrollTrace = [{ y: globalThis.scrollY || 0, source: 'init', t: performance.now() }];
+              globalThis.addEventListener('scroll', () => {
+                globalThis.__lawsEntryScrollTrace.push({
+                  y: globalThis.scrollY || 0,
+                  source: 'scroll',
+                  t: performance.now()
+                });
+              }, { capture: true, passive: true });
+            });
+
             await page.goto('http://127.0.0.1:4173/laws/', {waitUntil:'networkidle'});
             await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]', {timeout:15000});
+            // Allow delayed placement/load guards to finish so the trace covers the
+            // entire initialization interval, not just DOMContentLoaded.
+            await page.waitForTimeout(750);
 
             const runtime = await page.evaluate(() => globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
             const custody = await page.evaluate(() => globalThis.DGB_LAWS_ORBIT_CUSTODY);
@@ -50,14 +67,22 @@ jobs:
             if (runtime?.returnLanguage !== 'Return to Orbit') throw new Error('return language contract missing');
             if (custody?.defaultEntryOrbit !== 'O1' || custody?.destinationOrbit !== 'O2') throw new Error('orbit identities missing');
 
-            const entry = await page.evaluate(() => ({
-              scrollY,
-              pageEntryOrbit: document.documentElement.dataset.lawsPageEntryOrbit,
-              heroOrbit: document.querySelector('[data-laws-experience-stage="hero"]')?.dataset.lawsOrbitId,
-              destinationOrbit: document.querySelector('[data-laws-root-rolodex-section]')?.dataset.lawsOrbitId
-            }));
+            const entry = await page.evaluate(() => {
+              const trace = globalThis.__lawsEntryScrollTrace || [];
+              return {
+                scrollY,
+                maxScrollY: trace.reduce((max, sample) => Math.max(max, Math.abs(Number(sample.y) || 0)), 0),
+                scrollTrace: trace,
+                pageEntryOrbit: document.documentElement.dataset.lawsPageEntryOrbit,
+                heroOrbit: document.querySelector('[data-laws-experience-stage="hero"]')?.dataset.lawsOrbitId,
+                destinationOrbit: document.querySelector('[data-laws-root-rolodex-section]')?.dataset.lawsOrbitId,
+                rolodexScrollCustody: document.documentElement.dataset.lawsRolodexScrollCustody
+              };
+            });
             if (entry.scrollY > 4) throw new Error(`ordinary /laws/ entry escaped O1: scrollY=${entry.scrollY}`);
+            if (entry.maxScrollY > 4) throw new Error(`ordinary /laws/ transiently escaped O1 during initialization: maxScrollY=${entry.maxScrollY}; trace=${JSON.stringify(entry.scrollTrace)}`);
             if (entry.pageEntryOrbit !== 'O1' || entry.heroOrbit !== 'O1' || entry.destinationOrbit !== 'O2') throw new Error(`entry/orbit identity failure: ${JSON.stringify(entry)}`);
+            if (entry.rolodexScrollCustody !== 'horizontal-only') throw new Error(`Rolodex scroll custody is not horizontal-only: ${entry.rolodexScrollCustody}`);
             await page.screenshot({path:'laws-o1-entry-proof.png', fullPage:false});
 
             const stage = page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
@@ -67,7 +92,6 @@ jobs:
 
             const index = async () => Number(await field.getAttribute('data-carousel-index'));
             const count = await field.locator('.laws-rolodex-card').count();
-            const settled = async () => await field.getAttribute('data-carousel-settled');
             const geometry = async () => field.locator('.laws-rolodex-card').evaluateAll(cards => cards.map(card => ({
               active: card.dataset.active,
               relative: card.dataset.carouselRelative,
@@ -95,20 +119,26 @@ jobs:
             const afterLarge = await index();
             if (afterLarge !== (start + 1) % count) throw new Error(`large swipe must advance exactly one: ${start} -> ${afterLarge}`);
 
-            async function swipe(fromX, toX, fromY=620, toY=620) {
-              await viewport.dispatchEvent('pointerdown', {pointerId:18,pointerType:'touch',clientX:fromX,clientY:fromY,isPrimary:true});
-              await viewport.dispatchEvent('pointermove', {pointerId:18,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
-              await viewport.dispatchEvent('pointerup', {pointerId:18,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
+            async function swipe(fromX, toX, fromY=620, toY=620, pointerId=18) {
+              await viewport.dispatchEvent('pointerdown', {pointerId,pointerType:'touch',clientX:fromX,clientY:fromY,isPrimary:true});
+              await viewport.dispatchEvent('pointermove', {pointerId,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
+              await viewport.dispatchEvent('pointerup', {pointerId,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
               await page.waitForFunction(el => el.dataset.carouselSettled === 'true' && el.dataset.carouselGestureState === 'idle', await field.elementHandle());
             }
 
-            await swipe(520, 505);
+            await swipe(520, 505, 620, 620, 18);
             const afterSmall = await index();
             if (afterSmall !== afterLarge) throw new Error(`small movement changed index: ${afterLarge} -> ${afterSmall}`);
 
-            await swipe(260, 780);
+            await swipe(260, 780, 620, 620, 19);
             const afterReverse = await index();
             if (afterReverse !== start) throw new Error(`reverse swipe must move exactly one back: ${afterSmall} -> ${afterReverse}`);
+
+            // Explicitly prove a mostly-vertical touch is left to normal page
+            // traversal and cannot be misclassified as a carousel rotation.
+            await swipe(520, 550, 500, 760, 20);
+            const afterVertical = await index();
+            if (afterVertical !== afterReverse) throw new Error(`vertical gesture changed carousel index: ${afterReverse} -> ${afterVertical}`);
 
             const controls = await field.locator('.laws-rolodex-control').count();
             if (controls !== 0) throw new Error('forbidden surrogate controls present');
@@ -155,7 +185,7 @@ jobs:
             if (Math.abs(afterReturn.orbitTop - beforeExhibit.orbitTop) > 3) throw new Error(`Return to Orbit did not restore same O2 viewport: ${beforeExhibit.orbitTop} -> ${afterReturn.orbitTop}`);
 
             await page.screenshot({path:'laws-o2-return-proof.png', fullPage:false});
-            console.log(JSON.stringify({contract:runtime.contract,entry,start,duringMoveIndex,afterLarge,afterSmall,afterReverse,beforeExhibit,afterReturn}, null, 2));
+            console.log(JSON.stringify({contract:runtime.contract,entry,start,duringMoveIndex,afterLarge,afterSmall,afterReverse,afterVertical,beforeExhibit,afterReturn}, null, 2));
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE

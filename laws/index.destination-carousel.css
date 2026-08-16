@@ -1,14 +1,10 @@
 /*
- * LAWS_NATIVE_DESTINATION_CAROUSEL_v1
- * Spatial presentation enhancement for the existing Laws destination Rolodex.
- * Reuses the established Rolodex state, arrows, keyboard traversal, touch scroll,
- * preview custody, routes, and content. No Compass, controller, evidence, record,
- * claim, or route authority is introduced.
+ * LAWS_NATIVE_DESTINATION_CAROUSEL_v2
+ * True chamber-native spatial carousel presentation for the existing Laws records.
  */
-
 html[data-laws-root-rolodex="active"] {
-  --laws-carousel-card-width: min(74vw, 36rem);
-  --laws-carousel-edge: clamp(1rem, 3.5vw, 3.5rem);
+  --laws-carousel-width: min(72vw, 35rem);
+  --laws-carousel-height: clamp(25rem, 38vw, 31rem);
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-field {
@@ -18,147 +14,156 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-field {
 html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
   position: relative;
   min-width: 0;
-  padding: clamp(.7rem, 1.4vw, 1.15rem) 0 clamp(1rem, 2vw, 1.6rem);
-  border: 1px solid rgba(132, 218, 255, .13);
-  border-radius: clamp(1.15rem, 2vw, 1.8rem);
-  background:
-    radial-gradient(circle at 50% 42%, rgba(60, 155, 210, .065), transparent 48%),
-    linear-gradient(180deg, rgba(4, 11, 27, .52), rgba(3, 8, 20, .28));
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .018),
-    inset 0 -3rem 7rem rgba(0, 0, 0, .12);
   overflow: hidden;
+  padding: .7rem 0 1.25rem;
+  border: 1px solid rgba(132, 218, 255, .15);
+  border-radius: clamp(1.1rem, 2vw, 1.65rem);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(73, 170, 226, .07), transparent 48%),
+    linear-gradient(180deg, rgba(3, 10, 25, .58), rgba(2, 7, 18, .3));
+  box-shadow: inset 0 0 90px rgba(0, 0, 0, .14);
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
   position: relative;
-  z-index: 8;
+  z-index: 20;
   margin: 0;
-  padding: 0 var(--laws-carousel-edge) .65rem;
-}
-
-html[data-laws-root-rolodex="active"] .laws-rolodex-control {
-  background: rgba(5, 14, 31, .78);
-  box-shadow: 0 0 0 1px rgba(128, 224, 255, .025), 0 .45rem 1.4rem rgba(0, 0, 0, .18);
-  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
-}
-
-html[data-laws-root-rolodex="active"] .laws-rolodex-control:hover {
-  border-color: rgba(132, 218, 255, .48);
-  background: rgba(15, 34, 62, .88);
-  transform: translateY(-1px);
+  padding: 0 clamp(1rem, 3vw, 2.4rem) .5rem;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
-  position: relative;
+  position: relative !important;
   z-index: 2;
-  padding: clamp(.9rem, 1.6vw, 1.35rem) 0 clamp(1.2rem, 2.2vw, 1.8rem);
-  perspective: 1900px;
+  height: var(--laws-carousel-height) !important;
+  min-height: var(--laws-carousel-height) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  perspective: 1500px;
   perspective-origin: 50% 48%;
-  scroll-padding-inline: calc(50% - var(--laws-carousel-card-width) / 2);
-  scroll-snap-type: x mandatory;
-  touch-action: pan-x pan-y;
+  touch-action: pan-y;
   cursor: grab;
-  mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%);
+  outline-offset: -2px;
+  mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
 }
 
-html[data-laws-root-rolodex="active"] .laws-rolodex-viewport:active {
+html[data-laws-root-rolodex="active"] .laws-rolodex-viewport[data-dragging="true"] {
   cursor: grabbing;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-track {
-  gap: clamp(1rem, 2.4vw, 2rem);
-  padding-inline: calc(50% - var(--laws-carousel-card-width) / 2);
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
   transform-style: preserve-3d;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-card {
-  flex-basis: var(--laws-carousel-card-width);
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  opacity: .28;
-  filter: saturate(.64) brightness(.74);
-  transform: translateZ(-90px) scale(.86);
+  position: absolute !important;
+  top: 50%;
+  left: 50%;
+  width: var(--laws-carousel-width) !important;
+  max-width: var(--laws-carousel-width) !important;
+  min-height: min(22rem, calc(var(--laws-carousel-height) - 2.2rem)) !important;
+  margin: 0 !important;
+  flex: none !important;
+  opacity: var(--laws-carousel-opacity, .2) !important;
+  filter: blur(var(--laws-carousel-blur, 0px)) saturate(.76) brightness(.82);
+  transform:
+    translate(-50%, -50%)
+    translateX(var(--laws-carousel-x, 0%))
+    translateZ(var(--laws-carousel-z, -120px))
+    rotateY(var(--laws-carousel-rotate, 0deg))
+    scale(var(--laws-carousel-scale, .8)) !important;
   transform-origin: center center;
-  box-shadow: 0 1.1rem 3rem rgba(0, 0, 0, .18);
+  will-change: transform, opacity, filter;
+  pointer-events: none;
+  box-shadow: 0 1.4rem 4.2rem rgba(0, 0, 0, .32);
   transition:
+    transform 520ms cubic-bezier(.2,.76,.18,1),
     opacity 360ms ease,
     filter 360ms ease,
-    transform 460ms cubic-bezier(.2,.78,.18,1),
-    border-color 360ms ease,
+    border-color 320ms ease,
     box-shadow 420ms ease;
 }
 
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-carousel-relative="-1"],
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-carousel-relative="1"],
 html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
-  z-index: 4;
-  opacity: 1;
+  pointer-events: auto;
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
   filter: none;
-  transform: translateZ(54px) scale(1);
-  border-color: rgba(132, 218, 255, .55);
+  border-color: rgba(132, 218, 255, .58);
   box-shadow:
-    0 1.8rem 5rem rgba(0, 0, 0, .34),
-    0 0 0 1px rgba(128, 224, 255, .035),
-    inset 0 1px 0 rgba(255, 255, 255, .025);
+    0 2rem 5.5rem rgba(0, 0, 0, .4),
+    0 0 0 1px rgba(121, 234, 255, .045),
+    0 0 2.6rem rgba(93, 201, 255, .055),
+    inset 0 1px 0 rgba(255,255,255,.025);
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"]) .laws-rolodex-enter {
-  opacity: .42;
   pointer-events: none;
-}
-
-html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] .laws-rolodex-enter {
-  box-shadow: 0 0 1.6rem rgba(114, 226, 255, .07);
+  opacity: .28;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-position {
   font-variant-numeric: tabular-nums;
-  color: rgba(196, 224, 239, .82);
+  color: rgba(204, 232, 245, .88);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-control {
+  background: rgba(4, 13, 30, .84);
+  border-color: rgba(132, 218, 255, .22);
+  box-shadow: 0 .5rem 1.4rem rgba(0, 0, 0, .22);
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-control:hover,
+html[data-laws-root-rolodex="active"] .laws-rolodex-control:focus-visible {
+  border-color: rgba(132, 218, 255, .55);
+  background: rgba(13, 31, 58, .92);
 }
 
 @media (min-width: 781px) and (max-width: 1200px) {
   html[data-laws-root-rolodex="active"] {
-    --laws-carousel-card-width: min(68vw, 32rem);
-  }
-
-  html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
-    border-color: rgba(132, 218, 255, .15);
-  }
-
-  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
-    transform: translateZ(-72px) scale(.88);
-  }
-
-  html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
-    transform: translateZ(40px) scale(1);
+    --laws-carousel-width: min(66vw, 31.5rem);
+    --laws-carousel-height: clamp(26rem, 52vw, 31rem);
   }
 }
 
 @media (max-width: 780px) {
   html[data-laws-root-rolodex="active"] {
-    --laws-carousel-card-width: 82vw;
-    --laws-carousel-edge: 1rem;
+    --laws-carousel-width: 80vw;
+    --laws-carousel-height: 27rem;
   }
-
   html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser {
-    margin-inline: .55rem;
-    border-radius: 1.25rem;
+    margin-inline: .5rem;
+    border-radius: 1.15rem;
   }
-
   html[data-laws-root-rolodex="active"] .laws-rolodex-controls {
     padding-inline: 1rem;
   }
-
   html[data-laws-root-rolodex="active"] .laws-rolodex-viewport {
-    mask-image: linear-gradient(90deg, transparent 0, #000 2.5%, #000 97.5%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 2%, #000 98%, transparent 100%);
   }
-
   html[data-laws-root-rolodex="active"] .laws-rolodex-card {
-    transform: translateZ(-48px) scale(.9);
+    min-height: 22.5rem !important;
   }
+}
 
-  html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
-    transform: translateZ(24px) scale(1);
+@media (max-width: 430px) {
+  html[data-laws-root-rolodex="active"] {
+    --laws-carousel-width: 84vw;
+    --laws-carousel-height: 28rem;
   }
+}
+
+html[data-laws-root-rolodex="active"] .laws-rolodex-field[data-carousel-dragging="true"] .laws-rolodex-card {
+  transition: opacity 90ms linear, filter 90ms linear !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -166,9 +171,7 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-position {
   html[data-laws-root-rolodex="active"] .laws-rolodex-control {
     transition: none !important;
   }
-
-  html[data-laws-root-rolodex="active"] .laws-rolodex-card,
-  html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] {
-    transform: none;
+  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
+    filter: none;
   }
 }

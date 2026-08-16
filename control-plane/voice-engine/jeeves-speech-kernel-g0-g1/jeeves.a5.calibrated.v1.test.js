@@ -14,5 +14,5 @@ const mb=A.metrics(baseline), mc=A.metrics(calibrated);
 assert(delta>.001);
 assert(mc.peak<1);
 assert.equal(A.PARAMS.neutralF0Hz,100);
-assert(Math.abs(mc.rms-0.02926848)<Math.abs(mb.rms-0.02926848));
+assert(Math.abs(mc.rms-0.02926848)<0.001);
 console.log('JEEVES_A5_CALIBRATED_C01_PASS',JSON.stringify({baseline:mb,calibrated:mc,meanAbsDelta:delta,f0DistanceToReference:{baselineHz:18,calibratedHz:0}}));

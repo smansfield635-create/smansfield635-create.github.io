@@ -1,0 +1,72 @@
+name: Laws Carousel Browser Render Proof
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.mobile-background-tabs.js'
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.destination-carousel.css'
+      - 'laws/index.stellar-continuity.css'
+      - '.github/workflows/laws-carousel-browser-render-proof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+      - name: Serve exact candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-carousel-http.log 2>&1 &
+          echo $! > /tmp/laws-carousel-http.pid
+      - name: Prove rendered carousel in browser
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({headless:true});
+            const page = await browser.newPage({ viewport: { width: 1024, height: 1366 } });
+            const errors = [];
+            page.on('pageerror', e => errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/laws/', { waitUntil: 'networkidle' });
+            await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]', { timeout: 15000 });
+            const field = page.locator('.laws-rolodex-field[data-laws-destination-carousel="active"]').first();
+            await field.waitFor({ state: 'visible', timeout: 10000 });
+            const cards = field.locator('.laws-rolodex-card');
+            if (await cards.count() < 2) throw new Error('fewer than two carousel cards rendered');
+            const active = field.locator('.laws-rolodex-card[data-active="true"]');
+            if (await active.count() !== 1) throw new Error('exactly one active carousel card required');
+            const styles = await cards.evaluateAll(nodes => nodes.slice(0,2).map(n => ({ position:getComputedStyle(n).position, transform:getComputedStyle(n).transform, opacity:getComputedStyle(n).opacity })));
+            if (!styles.every(s => s.position === 'absolute')) throw new Error('cards are not spatially positioned');
+            if (styles[0].transform === styles[1].transform) throw new Error('neighbor and active card transforms are identical');
+            const before = await active.getAttribute('data-destination-id');
+            const controls = field.locator('.laws-rolodex-control');
+            await controls.last().click();
+            await page.waitForTimeout(700);
+            const after = await field.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
+            if (!after || after === before) throw new Error('next control did not advance carousel state');
+            if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
+            await field.screenshot({ path: 'laws-carousel-render-proof.png' });
+            console.log(JSON.stringify({runtime:'active', before, after, styles}, null, 2));
+            await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE
+      - name: Upload rendered proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: laws-carousel-render-proof
+          path: laws-carousel-render-proof.png
+          if-no-files-found: warn

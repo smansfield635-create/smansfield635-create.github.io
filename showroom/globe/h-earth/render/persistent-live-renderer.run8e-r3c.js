@@ -1,4 +1,4 @@
-/** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_C3C2_v1 */
+/** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_C3C3R5_WORLD_SPACE_HORIZON_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
@@ -76,18 +76,16 @@ uniform float uSunIntensity;
 out vec4 outColor;
 void main(){
   if(uPresentationMode==1){outColor=texture(uColor,vUv);return;}
-  float lateral=abs(vUv.x-.5)*2.0;
-  float horizon=0.455+0.026*lateral*lateral;
-  float altitude=clamp((vUv.y-horizon)/max(.001,1.0-horizon),0.0,1.0);
-  vec3 sky=mix(uSkyHorizon,uSkyZenith,smoothstep(0.0,.88,altitude));
-  float haze=exp(-pow((vUv.y-horizon)/.085,2.0));
-  sky=mix(sky,uGroundHaze,.30*haze);
+  float altitude=clamp(vUv.y,0.0,1.0);
+  vec3 sky=mix(uSkyHorizon,uSkyZenith,smoothstep(0.0,.92,altitude));
+  float lowerAtmosphere=1.0-smoothstep(0.0,.24,altitude);
+  sky=mix(sky,uGroundHaze,.16*lowerAtmosphere);
   float sd=distance(vUv,uSunCenter);
   float halo=1.0-smoothstep(.018,.105,sd);
   float core=1.0-smoothstep(.008,.024,sd);
   sky=mix(sky,uSunColor,clamp(halo*.23*uSunIntensity+core*.92,0.0,1.0));
   float aerial=.018*sin((vUv.x*8.0+vUv.y*3.0)*3.14159265)+.012*sin((vUv.x*17.0-vUv.y*5.0)*3.14159265);
-  sky+=vec3(aerial*max(0.0,1.0-altitude)*.25);
+  sky+=vec3(aerial*(1.0-altitude)*.18);
   outColor=vec4(pow(clamp(sky,0.0,1.0),vec3(1.0/2.2)),1.0);
 }`;
 
@@ -346,7 +344,8 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
     gl.clearDepth(1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // C3C2: materialize the atmospheric enclosure before any world geometry.
+    // C3C3R5: atmospheric background supplies only sky/air. Planetary horizon
+    // shape is owned by world-space geometry and the planet-relative camera.
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.BLEND);
     gl.depthMask(false);
@@ -487,8 +486,11 @@ export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, he
       },
       atmosphericEnclosure: {
         materialized: initialized,
-        model: 'FULLSCREEN_SKY_GRADIENT_SUN_CURVED_HORIZON_HAZE',
+        model: 'FULLSCREEN_SKY_GRADIENT_SUN_WITHOUT_HORIZON_GEOMETRY',
         ownerBaseline: 'H_EARTH_C3C1_OWNER_NAVIGATED_SUCCESS_BASELINE_20260816',
+        screenSpaceCurvedHorizonAuthority: false,
+        worldSpaceGeometryOwnsHorizon: true,
+        planetRelativeCameraOwnsOrientation: true,
         grayFallbackPermitted: false,
         transparentFallbackPermitted: false
       },

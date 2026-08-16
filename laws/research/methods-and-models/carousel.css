@@ -110,23 +110,45 @@
 }
 
 @layer responsive {
+  @media (max-width: 1100px) {
+    .mm-carousel { --card-width: min(72vw, 27rem); --card-height: 31rem; min-height: 980px; }
+    .mm-carousel__header { position: relative; z-index: 32; }
+    .mm-family-tabs { z-index: 31; gap: .35rem; padding-inline: clamp(.75rem, 2vw, 1.25rem); }
+    .mm-family-tab { flex: 1 1 0; min-width: 0; padding: .72rem .55rem .8rem; color: transparent; font-size: 0; overflow: hidden; }
+    .mm-family-tab::before { margin: 0; color: #68747e; font-size: .62rem; text-align: center; }
+    .mm-family-tab[aria-selected="true"] { color: #f4f0e7; font-size: .78rem; }
+    .mm-family-tab[aria-selected="true"]::before { margin-bottom: .26rem; color: #9a845d; }
+    .mm-viewport { inset: 16.5rem 0 0; perspective: 2200px; perspective-origin: 50% 44%; }
+    .mm-ring { top: 43%; }
+    .mm-card:not([data-active="true"]) .mm-card__top,
+    .mm-card:not([data-active="true"]) .mm-card__body { visibility: hidden; }
+    .mm-card:not([data-active="true"]) .mm-card__surface { opacity: .2; filter: saturate(.45); }
+
+    .mm-carousel[data-inspecting="true"] .mm-carousel__header { opacity: .12; pointer-events: none; }
+    .mm-carousel[data-inspecting="true"] .mm-family-tabs { visibility: hidden; }
+    .mm-carousel[data-inspecting="true"] .mm-card:not([data-active="true"]) { visibility: hidden; }
+    .mm-carousel[data-inspecting="true"] .mm-orbit-note { opacity: 0; }
+    .mm-carousel[data-inspecting="true"] .mm-viewport { inset: 8.5rem 0 0; z-index: 40; }
+    .mm-carousel[data-inspecting="true"] .mm-ring { top: 48%; }
+    .mm-card[data-inspecting="true"] { width: min(90vw, 720px); height: min(66vh, 620px); left: max(-360px, -45vw); top: min(-310px, -33vh); }
+    .mm-card[data-inspecting="true"] .mm-card__surface { background: linear-gradient(155deg, rgba(21,27,33,.995), rgba(6,9,12,.995)); box-shadow: 0 36px 90px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.04); }
+    .mm-card[data-inspecting="true"] .mm-card__body { padding: 3.8rem 1.3rem 1.35rem; }
+  }
+
   @media (max-width: 760px) {
     .mm-shell { padding-inline: .8rem; }
     .mm-topbar { align-items: flex-start; padding: 1rem 0; }
     .mm-nav { gap: .45rem .8rem; font-size: .76rem; }
     .mm-intro { grid-template-columns: 1fr; gap: 1.4rem; padding-top: 2.4rem; }
     .mm-intro h1 { font-size: clamp(3.7rem, 18vw, 6rem); }
-    .mm-carousel { --card-width: min(76vw, 21rem); --card-height: 29rem; min-height: 950px; }
+    .mm-carousel { --card-width: min(82vw, 21rem); --card-height: 29rem; min-height: 980px; }
     .mm-carousel__header { display: block; }
     .mm-live { margin-top: .55rem; min-width: 0; text-align: left; }
     .mm-family-tabs { padding-inline: .9rem; }
-    .mm-family-tab { min-width: 9.5rem; }
     .mm-viewport { inset: 18.75rem 0 0; perspective: 1800px; perspective-origin: 50% 40%; }
-    .mm-ring { top: 42%; }
-    .mm-card:not([data-active="true"]) .mm-card__top,
-    .mm-card:not([data-active="true"]) .mm-card__body { visibility: hidden; }
+    .mm-ring { top: 44%; }
 
-    .mm-card[data-inspecting="true"] { width: min(88vw, 34rem); height: min(54vh, 500px); left: max(-44vw, -272px); top: -250px; }
+    .mm-card[data-inspecting="true"] { width: min(92vw, 34rem); height: min(68vh, 600px); left: max(-46vw, -272px); top: min(-300px, -34vh); }
     .mm-card[data-inspecting="true"] .mm-card__inspection { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
     .mm-inspection__rail { display: flex; gap: .5rem; overflow-x: auto; overflow-y: hidden; padding: 0 0 .65rem; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.09); }
     .mm-inspection__rail h3 { display: none; }
@@ -135,8 +157,9 @@
   }
 
   @media (max-width: 440px) {
-    .mm-carousel { --card-width: min(78vw, 19.5rem); min-height: 950px; }
+    .mm-carousel { --card-width: min(86vw, 19.5rem); min-height: 980px; }
     .mm-carousel__heading h2 { font-size: 1.8rem; }
+    .mm-family-tab[aria-selected="true"] { font-size: .72rem; }
     .mm-orbit-note { bottom: .8rem; }
     .mm-inspection__close span:last-child { font-size: .68rem; }
   }

@@ -46,58 +46,49 @@ jobs:
           if start < 0 or end < 0:
               raise SystemExit('OW04_PRESENTATION_REPAIR_PRESENT_FUNCTION_MISSING')
 
-          replacement = '''  function presentColorFrame() {
-    if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-
-    // Physical-device presentation law: do not depend on an implementation-
-    // specific offscreen-to-default framebuffer blit. The governed scene is
-    // redrawn explicitly into the browser-visible default framebuffer using
-    // the same resident package, programs, VAO, uniforms, and draw ranges.
-    // The offscreen geometry framebuffer remains intact for diagnostic
-    // readback and exact evidence capture.
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, width, height);
-    gl.clearColor(...resources.skyColor, 1);
-    gl.clearDepth(1);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-    gl.disable(gl.CULL_FACE);
-    gl.useProgram(resources.geometryProgram);
-    gl.bindVertexArray(resources.vertexArray);
-
-    for (const range of latestDrawRanges) {
-      if (range.transparencyClass === 'TRANSLUCENT') {
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        gl.depthMask(false);
-      } else {
-        gl.disable(gl.BLEND);
-        gl.depthMask(true);
-      }
-      gl.drawElements(
-        gl.TRIANGLES,
-        range.indexCount,
-        gl.UNSIGNED_INT,
-        range.indexStart * 4
-      );
-    }
-
-    gl.depthMask(true);
-    gl.disable(gl.BLEND);
-    gl.flush();
-    const error = gl.getError();
-    if (error !== gl.NO_ERROR) {
-      throw new Error(`R3C_VISIBLE_PRESENTATION_DRAW_ERROR:${error}`);
-    }
-    counters.visiblePresentationCount += 1;
-    return Object.freeze({
-      frameNumber: counters.frameCount,
-      width,
-      height,
-      presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'
-    });
-  }'''
+          replacement = "\n".join([
+              "  function presentColorFrame() {",
+              "    if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');",
+              "",
+              "    // Physical-device presentation law: avoid offscreen-to-default framebuffer blit.",
+              "    // Redraw the governed resident scene explicitly into the browser-visible framebuffer.",
+              "    gl.bindFramebuffer(gl.FRAMEBUFFER, null);",
+              "    gl.viewport(0, 0, width, height);",
+              "    gl.clearColor(...resources.skyColor, 1);",
+              "    gl.clearDepth(1);",
+              "    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);",
+              "    gl.enable(gl.DEPTH_TEST);",
+              "    gl.depthFunc(gl.LEQUAL);",
+              "    gl.disable(gl.CULL_FACE);",
+              "    gl.useProgram(resources.geometryProgram);",
+              "    gl.bindVertexArray(resources.vertexArray);",
+              "",
+              "    for (const range of latestDrawRanges) {",
+              "      if (range.transparencyClass === 'TRANSLUCENT') {",
+              "        gl.enable(gl.BLEND);",
+              "        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);",
+              "        gl.depthMask(false);",
+              "      } else {",
+              "        gl.disable(gl.BLEND);",
+              "        gl.depthMask(true);",
+              "      }",
+              "      gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);",
+              "    }",
+              "",
+              "    gl.depthMask(true);",
+              "    gl.disable(gl.BLEND);",
+              "    gl.flush();",
+              "    const error = gl.getError();",
+              "    if (error !== gl.NO_ERROR) throw new Error(`R3C_VISIBLE_PRESENTATION_DRAW_ERROR:${error}`);",
+              "    counters.visiblePresentationCount += 1;",
+              "    return Object.freeze({",
+              "      frameNumber: counters.frameCount,",
+              "      width,",
+              "      height,",
+              "      presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'",
+              "    });",
+              "  }"
+          ])
 
           current = text[start:end]
           if "presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'" not in current:
@@ -112,10 +103,8 @@ jobs:
           git diff --check
           grep -F "presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'" showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
           grep -F "latestDrawRanges = Object.freeze(packet.drawRanges.map" showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
-          if git diff --name-only | grep -v '^showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js$'; then
-            echo 'Unexpected product mutation path' >&2
-            exit 1
-          fi
+          unexpected="$(git diff --name-only | grep -v '^showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js$' || true)"
+          test -z "$unexpected" || { echo "Unexpected product mutation path: $unexpected" >&2; exit 1; }
 
       - name: Commit repaired renderer
         run: |

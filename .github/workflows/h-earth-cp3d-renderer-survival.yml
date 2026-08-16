@@ -70,24 +70,24 @@ jobs:
       - name: Execute promoted renderer identity corridor
         run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
 
-      - name: Execute C3C1 browser renderer survival
+      - name: Execute C3C2 browser renderer survival
         env:
           CP3D_ORIGIN: http://127.0.0.1:4173
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
         run: node h-earth-3d/validation/h-earth.c3c1.browser-renderer-survival.harness.mjs
 
-      - name: Probe frozen public inspection transport
+      - name: Probe frozen C3C2 public inspection transport
         env:
-          PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/c3/96805e300510630185b789f799711527408fce2f/
-          FROZEN_SHA: 96805e300510630185b789f799711527408fce2f
+          PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/c3/4fdbbffb95018cec50372678d7631843249f52bd/
+          FROZEN_SHA: 4fdbbffb95018cec50372678d7631843249f52bd
         run: |
           for attempt in $(seq 1 30); do
-            if curl --fail --silent --location "$PREVIEW_URL" > /tmp/h-earth-c3c1-preview.html; then
+            if curl --fail --silent --location "$PREVIEW_URL" > /tmp/h-earth-c3c2-preview.html; then
               break
             fi
             sleep 2
           done
-          grep -q "$FROZEN_SHA" /tmp/h-earth-c3c1-preview.html
+          grep -q "$FROZEN_SHA" /tmp/h-earth-c3c2-preview.html
           node --input-type=module <<'NODE'
           import assert from 'node:assert/strict';
           import { chromium } from 'playwright';
@@ -125,7 +125,7 @@ jobs:
             assert.ok(facts.presentations >= 1,'PREVIEW_NO_PRESENTED_FRAME');
             assert.equal(facts.canvas,true,'PREVIEW_CANVAS_MISSING');
             assert.ok(facts.width > 0 && facts.height > 0,'PREVIEW_CANVAS_DIMENSIONS_INVALID');
-            console.log(JSON.stringify({status:'C3C1_FROZEN_PUBLIC_INSPECTION_TRANSPORT_PASS',previewUrl,frozenSha,facts},null,2));
+            console.log(JSON.stringify({status:'C3C2_FROZEN_PUBLIC_INSPECTION_TRANSPORT_PASS',previewUrl,frozenSha,facts},null,2));
           } finally {
             await browser.close();
           }
@@ -139,5 +139,5 @@ jobs:
           path: |
             h-earth-3d/validation/evidence/cp3d/**
             /tmp/h-earth-cp3d-server.log
-            /tmp/h-earth-c3c1-preview.html
+            /tmp/h-earth-c3c2-preview.html
           if-no-files-found: error

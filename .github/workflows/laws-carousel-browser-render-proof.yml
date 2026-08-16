@@ -1,4 +1,4 @@
-name: Laws Carousel Browser Render Proof
+name: Laws Destination Stage Browser Proof
 
 on:
   pull_request:
@@ -6,6 +6,8 @@ on:
       - 'laws/index.mobile-background-tabs.js'
       - 'laws/index.destination-carousel.js'
       - 'laws/index.destination-carousel.css'
+      - 'laws/index.destination-stage.js'
+      - 'laws/index.destination-stage.css'
       - 'laws/index.stellar-continuity.css'
       - '.github/workflows/laws-carousel-browser-render-proof.yml'
   workflow_dispatch:
@@ -22,6 +24,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
+      - name: Verify JavaScript syntax
+        run: |
+          node --check laws/index.destination-carousel.js
+          node --check laws/index.destination-stage.js
+          node --check laws/index.mobile-background-tabs.js
       - name: Install Playwright
         run: |
           npm init -y >/dev/null 2>&1
@@ -29,37 +36,71 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null
       - name: Serve exact candidate
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-carousel-http.log 2>&1 &
-          echo $! > /tmp/laws-carousel-http.pid
-      - name: Prove rendered carousel in browser
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-stage-http.log 2>&1 &
+          echo $! > /tmp/laws-stage-http.pid
+      - name: Prove separate visible stage and working carousel
         run: |
           node <<'NODE'
           const { chromium } = require('playwright');
           (async () => {
             const browser = await chromium.launch({headless:true});
-            const page = await browser.newPage({ viewport: { width: 1024, height: 1366 } });
+            const page = await browser.newPage({ viewport: { width: 1024, height: 1366 }, deviceScaleFactor: 1 });
             const errors = [];
             page.on('pageerror', e => errors.push(String(e)));
             await page.goto('http://127.0.0.1:4173/laws/', { waitUntil: 'networkidle' });
             await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]', { timeout: 15000 });
-            const field = page.locator('.laws-rolodex-field[data-laws-destination-carousel="active"]').first();
-            await field.waitFor({ state: 'visible', timeout: 10000 });
+            await page.waitForSelector('html[data-laws-destination-stage="active"]', { timeout: 15000 });
+
+            const hero = page.locator('[data-laws-experience-stage="hero"]');
+            const stage = page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
+            await stage.waitFor({ state: 'visible', timeout: 10000 });
+            const heroBox = await hero.boundingBox();
+            const stageBox = await stage.boundingBox();
+            if (!heroBox || !stageBox) throw new Error('hero or destination stage has no rendered box');
+            if (stageBox.y <= heroBox.y + heroBox.height + 20) throw new Error('destination carousel is not a separate stage below the Compass');
+            if (stageBox.width < 700 || stageBox.height < 650) throw new Error(`destination stage is not materially sized: ${JSON.stringify(stageBox)}`);
+
+            const title = await stage.locator('#laws-destination-stage-title').textContent();
+            if (!title || !title.includes('Choose where the inquiry goes next')) throw new Error('dedicated stage title missing');
+
+            const tabs = stage.locator('.laws-destination-stage__tab');
+            if (await tabs.count() !== 3) throw new Error('exactly three destination-family tabs required');
+            const selectedTabs = stage.locator('.laws-destination-stage__tab[aria-selected="true"]');
+            if (await selectedTabs.count() !== 1) throw new Error('exactly one family tab must be selected');
+
+            const visibleFields = stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]');
+            if (await visibleFields.count() !== 1) throw new Error('exactly one destination family must occupy the stage');
+            const field = visibleFields.first();
             const cards = field.locator('.laws-rolodex-card');
-            if (await cards.count() < 2) throw new Error('fewer than two carousel cards rendered');
+            if (await cards.count() < 3) throw new Error('active destination family lacks carousel records');
             const active = field.locator('.laws-rolodex-card[data-active="true"]');
             if (await active.count() !== 1) throw new Error('exactly one active carousel card required');
-            const styles = await cards.evaluateAll(nodes => nodes.slice(0,2).map(n => ({ position:getComputedStyle(n).position, transform:getComputedStyle(n).transform, opacity:getComputedStyle(n).opacity })));
-            if (!styles.every(s => s.position === 'absolute')) throw new Error('cards are not spatially positioned');
-            if (styles[0].transform === styles[1].transform) throw new Error('neighbor and active card transforms are identical');
+
+            const cardStyles = await cards.evaluateAll(nodes => nodes.slice(0,3).map(n => ({
+              position:getComputedStyle(n).position,
+              transform:getComputedStyle(n).transform,
+              opacity:getComputedStyle(n).opacity,
+              rect:n.getBoundingClientRect().toJSON()
+            })));
+            if (!cardStyles.every(s => s.position === 'absolute')) throw new Error('cards are not spatially positioned');
+            if (new Set(cardStyles.map(s => s.transform)).size < 2) throw new Error('carousel cards do not occupy distinct spatial transforms');
+
             const before = await active.getAttribute('data-destination-id');
-            const controls = field.locator('.laws-rolodex-control');
-            await controls.last().click();
-            await page.waitForTimeout(700);
+            await field.locator('.laws-rolodex-control').last().click();
+            await page.waitForTimeout(750);
             const after = await field.locator('.laws-rolodex-card[data-active="true"]').getAttribute('data-destination-id');
             if (!after || after === before) throw new Error('next control did not advance carousel state');
+
+            await tabs.nth(0).click();
+            await page.waitForTimeout(250);
+            const familyAfter = await stage.getAttribute('data-destination-family');
+            const activeFieldAfter = await stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]').getAttribute('data-rolodex-id');
+            if (!familyAfter || familyAfter !== activeFieldAfter) throw new Error('family tab did not move stage custody');
+
             if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
-            await field.screenshot({ path: 'laws-carousel-render-proof.png' });
-            console.log(JSON.stringify({runtime:'active', before, after, styles}, null, 2));
+            await stage.scrollIntoViewIfNeeded();
+            await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
+            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, cardStyles}, null, 2));
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
@@ -67,6 +108,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: laws-carousel-render-proof
-          path: laws-carousel-render-proof.png
+          name: laws-destination-stage-render-proof
+          path: laws-destination-stage-render-proof.png
           if-no-files-found: warn

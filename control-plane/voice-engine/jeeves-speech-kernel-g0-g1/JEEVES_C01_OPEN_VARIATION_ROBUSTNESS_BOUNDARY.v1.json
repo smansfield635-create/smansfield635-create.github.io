@@ -1,0 +1,21 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_OPEN_VARIATION_ROBUSTNESS_BOUNDARY_v1",
+  "status": "ADMITTED_INTERNAL_ONLY",
+  "predecessor": "PASS_INTERNAL_WORD_LEVEL_RECOGNIZABILITY",
+  "candidateRendererHead": "6203b112aed6a06ecd0df7b316d562b8ac66cbb6",
+  "requiredPerturbationAxes": {
+    "phoneDurationScale": [0.92, 1.00, 1.08],
+    "f0Hz": [94, 100, 106],
+    "formantScale": [0.97, 1.00, 1.03],
+    "noiseSeed": [211, 503, 887]
+  },
+  "samplingLaw": "Deterministic covering array including nominal plus single-axis extrema and mixed corner cases; no candidate is tuned after decoding.",
+  "passLaw": [
+    "all tested variants expose exactly three waveform-detected word regions",
+    "closed-set continuous-waveform decoder returns Navigation/requires/orientation in order for every variant",
+    "all nearest-competitor margins remain positive",
+    "reversed-order control remains rejected",
+    "no human listening evidence is used"
+  ],
+  "humanListeningAuthorized": false
+}

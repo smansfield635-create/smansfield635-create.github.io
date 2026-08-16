@@ -1,41 +1,41 @@
 /**
- * H-Earth repository registry validator dependency loader v14 successor.
+ * H-Earth repository registry validator dependency loader v15 successor.
  *
- * Preserves the complete v13 predecessor loader byte-for-byte behind a delegated
- * base path and adds only OW02 Experience Anchor evidence-path recognition.
+ * Preserves the complete v14 predecessor loader byte-for-byte behind a delegated
+ * base path and adds only OW03 Experience Anchor evidence-path recognition.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
   runHEarthC2R1MC5AutomaticRegistryPreflight
-} from './h-earth.repository-registry.validator-engine.loader.pre-ow02-experience-anchor-evidence-path-recognition.js';
+} from './h-earth.repository-registry.validator-engine.loader.pre-ow03-experience-anchor-evidence-path-recognition.js';
 import registryFacade, {
-  verifyHEarthOW02ExperienceAnchorEvidencePathRecognition
-} from './accepted-amendments/h-earth.repository-registry.ow02-experience-anchor-evidence-path-recognition.js';
+  verifyHEarthOW03ExperienceAnchorEvidencePathRecognition
+} from './accepted-amendments/h-earth.repository-registry.ow03-experience-anchor-evidence-path-recognition.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const base = loadBaseDependencies();
-  const ow02Verification = verifyHEarthOW02ExperienceAnchorEvidencePathRecognition();
+  const ow03Verification = verifyHEarthOW03ExperienceAnchorEvidencePathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
   const successorChecks = {
     predecessorLoaderIdentityVerified: base.identityVerified === true,
-    ow02EvidencePathRecognitionEligible: ow02Verification.eligible === true,
-    ow02ExactFivePathsResolved:
-      ow02Verification.checks.exactTargetPathCount === true &&
-      ow02Verification.checks.allTargetPathsResolve === true,
-    ow02AllFiveAbsentAtGoverningMain:
-      ow02Verification.checks.allOccurrencesAbsentAtGoverningMain === true,
-    ow02AuditOnlyNoAuthorityLeak:
-      ow02Verification.checks.auditOnly === true &&
-      ow02Verification.checks.pathResolutionOnly === true &&
-      ow02Verification.checks.noProductAuthority === true &&
-      ow02Verification.checks.noEvidenceMutationAuthority === true &&
-      ow02Verification.checks.noAnchorWaiverAuthority === true &&
-      ow02Verification.checks.noCanonicalAuthority === true,
+    ow03EvidencePathRecognitionEligible: ow03Verification.eligible === true,
+    ow03ExactFourPathsResolved:
+      ow03Verification.checks.exactTargetPathCount === true &&
+      ow03Verification.checks.allTargetPathsResolve === true,
+    ow03AllFourAbsentAtGoverningMain:
+      ow03Verification.checks.allOccurrencesAbsentAtGoverningMain === true,
+    ow03AuditOnlyNoAuthorityLeak:
+      ow03Verification.checks.auditOnly === true &&
+      ow03Verification.checks.pathResolutionOnly === true &&
+      ow03Verification.checks.noProductAuthority === true &&
+      ow03Verification.checks.noEvidenceMutationAuthority === true &&
+      ow03Verification.checks.noAnchorWaiverAuthority === true &&
+      ow03Verification.checks.noCanonicalAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -55,46 +55,46 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v14_OW02_EXPERIENCE_ANCHOR_EVIDENCE_PATH_RECOGNITION_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v15_OW03_EXPERIENCE_ANCHOR_EVIDENCE_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
     identityChecks: deepFreeze({
       ...base.identityChecks,
-      ow02ExperienceAnchorEvidencePathRecognition:
-        ow02Verification.eligible === true
+      ow03ExperienceAnchorEvidencePathRecognition:
+        ow03Verification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
       Object.values(successorChecks).every(Boolean),
-    ow02ExperienceAnchorEvidencePathRecognitionVerification: ow02Verification,
-    ow02ExperienceAnchorEvidencePathRecognitionChecks: deepFreeze({
-      eligible: successorChecks.ow02EvidencePathRecognitionEligible,
-      exactFivePathsResolved: successorChecks.ow02ExactFivePathsResolved,
-      allFiveAbsentAtGoverningMain: successorChecks.ow02AllFiveAbsentAtGoverningMain,
-      auditOnlyNoAuthorityLeak: successorChecks.ow02AuditOnlyNoAuthorityLeak
+    ow03ExperienceAnchorEvidencePathRecognitionVerification: ow03Verification,
+    ow03ExperienceAnchorEvidencePathRecognitionChecks: deepFreeze({
+      eligible: successorChecks.ow03EvidencePathRecognitionEligible,
+      exactFourPathsResolved: successorChecks.ow03ExactFourPathsResolved,
+      allFourAbsentAtGoverningMain: successorChecks.ow03AllFourAbsentAtGoverningMain,
+      auditOnlyNoAuthorityLeak: successorChecks.ow03AuditOnlyNoAuthorityLeak
     }),
     boundary: deepFreeze({
       ...base.boundary,
-      ow02ExperienceAnchorEvidencePathRecognitionOnly: true,
-      ow02ProductMutationAuthorityCreated: false,
-      ow02TerrainMutationAuthorityCreated: false,
-      ow02EvidenceMutationAuthorityCreated: false,
-      ow02ReceiptMutationAuthorityCreated: false,
-      ow02ExperienceAnchorWaiverAuthorityCreated: false,
-      ow02CanonicalIdentityAuthorityCreated: false,
-      ow02MergeDeploymentPublicationAuthorityCreated: false
+      ow03ExperienceAnchorEvidencePathRecognitionOnly: true,
+      ow03ProductMutationAuthorityCreated: false,
+      ow03TerrainMutationAuthorityCreated: false,
+      ow03EvidenceMutationAuthorityCreated: false,
+      ow03ReceiptMutationAuthorityCreated: false,
+      ow03ExperienceAnchorWaiverAuthorityCreated: false,
+      ow03CanonicalIdentityAuthorityCreated: false,
+      ow03MergeDeploymentPublicationAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
-      ow02ExperienceAnchorEvidencePathRecognitionLoaded: true,
-      ow02ProductMutationAuthorized: false,
-      ow02TerrainMutationAuthorized: false,
-      ow02EvidenceMutationAuthorized: false,
-      ow02ReceiptMutationAuthorized: false,
-      ow02ExperienceAnchorWaiverAuthorized: false,
-      ow02CanonicalIdentityAuthorityAuthorized: false,
-      ow02MergeDeploymentPublicationAuthorized: false
+      ow03ExperienceAnchorEvidencePathRecognitionLoaded: true,
+      ow03ProductMutationAuthorized: false,
+      ow03TerrainMutationAuthorized: false,
+      ow03EvidenceMutationAuthorized: false,
+      ow03ReceiptMutationAuthorized: false,
+      ow03ExperienceAnchorWaiverAuthorized: false,
+      ow03CanonicalIdentityAuthorityAuthorized: false,
+      ow03MergeDeploymentPublicationAuthorized: false
     })
   });
 }

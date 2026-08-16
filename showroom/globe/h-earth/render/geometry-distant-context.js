@@ -1,9 +1,9 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * C3C3R2 rendered-path repair. The inaccessible landward world continues as
- * low-relief terrain beyond two explicit regional thresholds. The retired
- * DISTANT_HIGHLAND scenery identity is not used as visual authority.
+ * C3C3R3 objective-visible regional-boundary repair. South and west remain
+ * visually continuous into adjacent regions, but each boundary now carries a
+ * deliberately legible low ridge/pass threshold rather than a mountain wall.
  */
 
 import {
@@ -30,13 +30,21 @@ const smooth = (t) => t * t * (3 - 2 * t);
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_C3C3R2_LOW_RELIEF_REGIONAL_THRESHOLDS_v1';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_C3C3R3_OBJECTIVE_VISIBLE_REGIONAL_THRESHOLDS_v1';
 
 const ACCESSIBLE = freeze({ xMin: -1024, xMax: 1024, zMin: -1024 });
 const VISUAL_HORIZON = freeze({ xMin: -4200, xMax: 3600, zMin: -4200 });
 const THRESHOLDS = freeze({
-  south: { boundaryId: 'H_EARTH_CONNECTED_REGION_THRESHOLD_SOUTH_002', regionBeyondId: 'CONTINENTAL_INTERIOR_REGION_VISUAL_CONTEXT', gateDistance: 310, passCenter: 0.57, passHalfWidth: 0.10 },
-  west: { boundaryId: 'H_EARTH_CONNECTED_REGION_THRESHOLD_WEST_002', regionBeyondId: 'WESTERN_ADJACENT_REGION_VISUAL_CONTEXT', gateDistance: 270, passCenter: 0.52, passHalfWidth: 0.12 }
+  south: { boundaryId: 'H_EARTH_CONNECTED_REGION_THRESHOLD_SOUTH_003', regionBeyondId: 'CONTINENTAL_INTERIOR_REGION_VISUAL_CONTEXT', gateDistance: 245, passCenter: 0.57, passHalfWidth: 0.105 },
+  west: { boundaryId: 'H_EARTH_CONNECTED_REGION_THRESHOLD_WEST_003', regionBeyondId: 'WESTERN_ADJACENT_REGION_VISUAL_CONTEXT', gateDistance: 225, passCenter: 0.52, passHalfWidth: 0.125 }
+});
+const THRESHOLD_PROFILE = freeze({
+  baseUplift: 3.2,
+  shoulderUplift: 5.6,
+  maximumUplift: 8.8,
+  longitudinalSigma: 0.024,
+  visualClass: 'LOW_RIDGE_WITH_OPEN_PASS_AND_CONTINUING_TERRAIN',
+  mountainScaleProhibited: true
 });
 
 function lowReliefContinuation(innerElevation, distanceT, phase) {
@@ -45,17 +53,15 @@ function lowReliefContinuation(innerElevation, distanceT, phase) {
   const rolling = (0.7 * Math.sin(phase + distanceT * Math.PI * 2.1)) + (0.32 * Math.sin(phase * 0.7 + distanceT * Math.PI * 5.1));
   return Math.max(0.35, retained + rolling * (1 - settle) * 0.5);
 }
-
 function passShoulder(alongT, center, halfWidth) {
   const distance = Math.abs(alongT - center);
-  return smooth(clamp01((distance - halfWidth) / (halfWidth * 1.5)));
+  return smooth(clamp01((distance - halfWidth) / (halfWidth * 1.35)));
 }
-
 function thresholdBerm(distanceT, alongT, threshold) {
   const gateT = threshold.gateDistance / 3200;
-  const longitudinal = Math.exp(-Math.pow((distanceT - gateT) / 0.032, 2));
+  const longitudinal = Math.exp(-Math.pow((distanceT - gateT) / THRESHOLD_PROFILE.longitudinalSigma, 2));
   const shoulder = passShoulder(alongT, threshold.passCenter, threshold.passHalfWidth);
-  return longitudinal * (1.8 + shoulder * 3.6);
+  return longitudinal * (THRESHOLD_PROFILE.baseUplift + shoulder * THRESHOLD_PROFILE.shoulderUplift);
 }
 
 function appendBand({ vertices, indices, sampleCount, rowCount, pointAt }) {
@@ -87,7 +93,7 @@ function constructVisualWorldContinuation() {
     vertices,
     indices,
     sampleCount: 97,
-    rowCount: 19,
+    rowCount: 25,
     pointAt: (alongT, distanceT) => {
       const eased = smooth(distanceT);
       const innerX = lerp(ACCESSIBLE.xMin, ACCESSIBLE.xMax, alongT);
@@ -109,8 +115,8 @@ function constructVisualWorldContinuation() {
   appendBand({
     vertices,
     indices,
-    sampleCount: 73,
-    rowCount: 17,
+    sampleCount: 81,
+    rowCount: 23,
     pointAt: (alongT, distanceT) => {
       const eased = smooth(distanceT);
       const innerZ = lerp(ACCESSIBLE.zMin, landwardEndZ, alongT);
@@ -125,7 +131,7 @@ function constructVisualWorldContinuation() {
     }
   });
 
-  const primitiveId = 'H_EARTH_CONNECTED_REGION_CONTEXT:C3C3R2';
+  const primitiveId = 'H_EARTH_CONNECTED_REGION_CONTEXT:C3C3R3';
   const construction = constructHEarthTriangleMesh({
     primitiveId,
     geometryId: `${primitiveId}:GEOMETRY`,
@@ -135,30 +141,26 @@ function constructVisualWorldContinuation() {
     normalMode: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.normalMode.FACE_AND_VERTEX,
     expectedClosure: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
     semanticRole: 'CONNECTED_REGION_THRESHOLD_AND_LOW_RELIEF_VISUAL_CONTINUATION',
-    materialHint: freeze({
-      materialKey: 'worldTerrainField',
-      materialIntent: 'SUBTROPICAL_LOW_RELIEF_ADJACENT_REGION_CONTINUATION',
-      climateIdentity: 'WARM_SUBTROPICAL_COASTAL'
-    }),
-    source: freeze({
-      sourceType: 'H_EARTH_C3C3R2_CONNECTED_REGION_THRESHOLD_SYSTEM',
-      highlandFormationAuthorityRetired: true
-    }),
+    materialHint: freeze({ materialKey: 'worldTerrainField', materialIntent: 'SUBTROPICAL_CONNECTED_REGION_THRESHOLD_AND_ADJACENT_CONTINUATION', climateIdentity: 'WARM_SUBTROPICAL_COASTAL' }),
+    source: freeze({ sourceType: 'H_EARTH_C3C3R3_CONNECTED_REGION_THRESHOLD_SYSTEM', highlandFormationAuthorityRetired: true }),
     metadata: freeze({
       providerContractId: H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
       formationId: null,
       formationClass: 'LOW_RELIEF_ADJACENT_REGION_CONTINUATION',
       sourceAddressRule: null,
-      lodClass: 'CONNECTED_REGION_THRESHOLD_WITH_LOW_RELIEF_VISUAL_CONTEXT',
+      lodClass: 'CONNECTED_REGION_THRESHOLD_WITH_OBJECTIVE_VISIBLE_LOW_RIDGE_PASS',
       visualContinuationLayer: true,
       connectedRegionThresholdSystem: true,
+      objectiveVisibleRegionalThresholds: true,
+      thresholdVisualClass: THRESHOLD_PROFILE.visualClass,
       boundaryIds: [THRESHOLDS.south.boundaryId, THRESHOLDS.west.boundaryId],
       regionBeyondIds: [THRESHOLDS.south.regionBeyondId, THRESHOLDS.west.regionBeyondId],
       thresholdCount: 2,
       mountainBarricadeRetired: true,
       highlandMaterialIdentityRetired: true,
       highlandFormationAuthorityRetired: true,
-      maximumThresholdUplift: 5.4,
+      minimumThresholdUplift: THRESHOLD_PROFILE.baseUplift,
+      maximumThresholdUplift: THRESHOLD_PROFILE.maximumUplift,
       semanticBoundaryArchitecturePresent: true,
       worldVisibleBeyondThreshold: true,
       adjacentRegionTraversable: false,
@@ -176,20 +178,17 @@ function constructVisualWorldContinuation() {
       navigable: false,
       collisionAuthority: false,
       accessibleRegionExpansion: false,
-      continuationLaw: 'LOW_RELIEF_WORLD_CONTINUES_BEYOND_SOUTH_AND_WEST_THRESHOLDS_WHILE_NORTH_AND_EAST_REMAIN_OPEN_OCEAN',
+      continuationLaw: 'WORLD_CONTINUES_BEYOND_LEGIBLE_LOW_RIDGE_PASS_THRESHOLDS_WHILE_NORTH_AND_EAST_REMAIN_OPEN_OCEAN',
       visibleRectangularTerminationProhibited: true,
       technicalStatusSignageProhibited: true,
       baselinePreservationId: 'H_EARTH_C3C3_OWNER_VIDEO_23750_POSITIVE_BASELINE_20260816',
+      ownerRepairEvidenceId: 'H_EARTH_C3C3R2_OWNER_VIDEO_23753_REPAIR_REQUIRED_20260816',
       admitted: false,
       aggregateFrameAuthority: false
     })
   });
 
-  return freeze({
-    ok: construction?.valid === true && isHEarthNeutralPrimitiveRecord(construction?.primitiveRecord),
-    primitive: construction?.primitiveRecord ?? null,
-    issues: construction?.issues ?? []
-  });
+  return freeze({ ok: construction?.valid === true && isHEarthNeutralPrimitiveRecord(construction?.primitiveRecord), primitive: construction?.primitiveRecord ?? null, issues: construction?.issues ?? [] });
 }
 
 export function constructHEarthDistantContextGeometry() {
@@ -203,6 +202,7 @@ export function constructHEarthDistantContextGeometry() {
     bounds: result.primitive?.geometry?.bounds ?? null,
     visualContinuationLayer: true,
     connectedRegionThresholdSystem: true,
+    objectiveVisibleRegionalThresholds: true,
     thresholdCount: 2,
     mountainBarricadeRetired: true,
     highlandMaterialIdentityRetired: true,

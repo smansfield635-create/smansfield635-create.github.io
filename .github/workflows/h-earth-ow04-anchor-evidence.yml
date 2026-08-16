@@ -39,7 +39,7 @@ jobs:
           CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           mkdir -p /tmp/ow04-anchor-evidence
-          cat > /tmp/ow04-capture.mjs <<'NODE'
+          cat > .tmp-ow04-capture.mjs <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
           import { chromium } from 'playwright';
@@ -87,10 +87,11 @@ jobs:
           } finally {await browser.close();}
           const manifest={schema:'H_EARTH_OW04_EXACT_CANDIDATE_ANCHOR_EVIDENCE_v1',candidateHead:process.env.CANDIDATE_HEAD,productFiles:productFiles.map(path=>({path,sha256:sha(path)})),captures:results,result:results.every(r=>r.status===200&&r.canvasVisible&&r.interactionExercised&&r.pageErrors.length===0&&r.consoleErrors.length===0&&r.httpErrors.length===0)?'PASS':'FAIL'};
           fs.writeFileSync('/tmp/ow04-anchor-evidence/manifest.json',JSON.stringify(manifest,null,2)+'\n');
+          fs.unlinkSync('.tmp-ow04-capture.mjs');
           if(manifest.result!=='PASS'){console.error(JSON.stringify(manifest,null,2));process.exit(1)}
           console.log(JSON.stringify(manifest,null,2));
           NODE
-          node /tmp/ow04-capture.mjs
+          node .tmp-ow04-capture.mjs
       - name: Upload exact candidate evidence
         if: always()
         uses: actions/upload-artifact@v4

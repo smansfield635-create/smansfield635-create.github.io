@@ -33,7 +33,10 @@
       ".github/workflows/repository-operation-intake-validation.yml",
       ".github/workflows/progressive-system-continuity-v1.yml"
     ],
-    "ownedPathPrefixes": [".github/ai-router/"],
+    "ownedPathPrefixes": [
+      ".github/ai-router/",
+      ".github/workflows/remote-operation-successor-v1.yml"
+    ],
     "validationCommand": "node tools/repository-ai-entry-router.mjs --self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/router-self-test-receipt.json"
   },
   "projects": [

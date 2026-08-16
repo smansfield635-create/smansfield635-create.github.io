@@ -1,16 +1,20 @@
 /**
- * H-Earth repository registry validator dependency loader v15 successor.
+ * H-Earth repository registry validator dependency loader v16 successor.
  *
- * Preserves the complete v14 predecessor loader byte-for-byte behind a delegated
- * base path and adds only OW03 Experience Anchor evidence-path recognition.
+ * Preserves the complete pre-OW03 predecessor loader behind delegation,
+ * preserves OW03 Experience Anchor path recognition, and adds only the exact
+ * OW04 governed-path recognition required by the reciprocal preflight repair.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
   runHEarthC2R1MC5AutomaticRegistryPreflight
 } from './h-earth.repository-registry.validator-engine.loader.pre-ow03-experience-anchor-evidence-path-recognition.js';
-import registryFacade, {
+import {
   verifyHEarthOW03ExperienceAnchorEvidencePathRecognition
 } from './accepted-amendments/h-earth.repository-registry.ow03-experience-anchor-evidence-path-recognition.js';
+import registryFacade, {
+  verifyHEarthOW04ExactPathRecognition
+} from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -18,6 +22,7 @@ import {
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const base = loadBaseDependencies();
   const ow03Verification = verifyHEarthOW03ExperienceAnchorEvidencePathRecognition();
+  const ow04Verification = verifyHEarthOW04ExactPathRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -36,6 +41,18 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       ow03Verification.checks.noEvidenceMutationAuthority === true &&
       ow03Verification.checks.noAnchorWaiverAuthority === true &&
       ow03Verification.checks.noCanonicalAuthority === true,
+    ow04ExactPathRecognitionEligible: ow04Verification.eligible === true,
+    ow04ExactFourPathsResolved:
+      ow04Verification.checks.exactTargetPathCount === true &&
+      ow04Verification.checks.allTargetPathsResolve === true,
+    ow04CandidateOccurrencesPresent:
+      ow04Verification.checks.allCandidateOccurrencesPresent === true,
+    ow04AuditOnlyNoAuthorityLeak:
+      ow04Verification.checks.auditOnly === true &&
+      ow04Verification.checks.pathResolutionOnly === true &&
+      ow04Verification.checks.noProductAuthority === true &&
+      ow04Verification.checks.noRendererAuthority === true &&
+      ow04Verification.checks.noAnchorWaiverAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -55,46 +72,51 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v15_OW03_EXPERIENCE_ANCHOR_EVIDENCE_PATH_RECOGNITION_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v16_OW04_EXACT_PATH_RECOGNITION_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
     identityChecks: deepFreeze({
       ...base.identityChecks,
       ow03ExperienceAnchorEvidencePathRecognition:
-        ow03Verification.eligible === true
+        ow03Verification.eligible === true,
+      ow04ExactPathRecognition:
+        ow04Verification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
       Object.values(successorChecks).every(Boolean),
     ow03ExperienceAnchorEvidencePathRecognitionVerification: ow03Verification,
-    ow03ExperienceAnchorEvidencePathRecognitionChecks: deepFreeze({
-      eligible: successorChecks.ow03EvidencePathRecognitionEligible,
-      exactFourPathsResolved: successorChecks.ow03ExactFourPathsResolved,
-      allFourAbsentAtGoverningMain: successorChecks.ow03AllFourAbsentAtGoverningMain,
-      auditOnlyNoAuthorityLeak: successorChecks.ow03AuditOnlyNoAuthorityLeak
+    ow04ExactPathRecognitionVerification: ow04Verification,
+    ow04ExactPathRecognitionChecks: deepFreeze({
+      eligible: successorChecks.ow04ExactPathRecognitionEligible,
+      exactFourPathsResolved: successorChecks.ow04ExactFourPathsResolved,
+      candidateOccurrencesPresent: successorChecks.ow04CandidateOccurrencesPresent,
+      auditOnlyNoAuthorityLeak: successorChecks.ow04AuditOnlyNoAuthorityLeak
     }),
     boundary: deepFreeze({
       ...base.boundary,
-      ow03ExperienceAnchorEvidencePathRecognitionOnly: true,
-      ow03ProductMutationAuthorityCreated: false,
-      ow03TerrainMutationAuthorityCreated: false,
-      ow03EvidenceMutationAuthorityCreated: false,
-      ow03ReceiptMutationAuthorityCreated: false,
-      ow03ExperienceAnchorWaiverAuthorityCreated: false,
-      ow03CanonicalIdentityAuthorityCreated: false,
-      ow03MergeDeploymentPublicationAuthorityCreated: false
+      ow04ExactPathRecognitionOnly: true,
+      ow04ProductMutationAuthorityCreated: false,
+      ow04TerrainMutationAuthorityCreated: false,
+      ow04RendererMutationAuthorityCreated: false,
+      ow04EvidenceMutationAuthorityCreated: false,
+      ow04ReceiptMutationAuthorityCreated: false,
+      ow04ExperienceAnchorWaiverAuthorityCreated: false,
+      ow04CanonicalIdentityAuthorityCreated: false,
+      ow04MergeDeploymentPublicationAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
-      ow03ExperienceAnchorEvidencePathRecognitionLoaded: true,
-      ow03ProductMutationAuthorized: false,
-      ow03TerrainMutationAuthorized: false,
-      ow03EvidenceMutationAuthorized: false,
-      ow03ReceiptMutationAuthorized: false,
-      ow03ExperienceAnchorWaiverAuthorized: false,
-      ow03CanonicalIdentityAuthorityAuthorized: false,
-      ow03MergeDeploymentPublicationAuthorized: false
+      ow04ExactPathRecognitionLoaded: true,
+      ow04ProductMutationAuthorized: false,
+      ow04TerrainMutationAuthorized: false,
+      ow04RendererMutationAuthorized: false,
+      ow04EvidenceMutationAuthorized: false,
+      ow04ReceiptMutationAuthorized: false,
+      ow04ExperienceAnchorWaiverAuthorized: false,
+      ow04CanonicalIdentityAuthorityAuthorized: false,
+      ow04MergeDeploymentPublicationAuthorized: false
     })
   });
 }

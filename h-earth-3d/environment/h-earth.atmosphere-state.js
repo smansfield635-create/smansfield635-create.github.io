@@ -94,7 +94,10 @@ export const H_EARTH_ATMOSPHERE_STATE = deepFreeze({
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   defaultTimeOfDayHours: 15.25,
   defaultObserverElevation: 2.25,
-  defaultViewDistance: 160,
+  // Reconciled to the OW04 camera-to-envelope visual reach. This value is
+  // optical/presentation reach only and creates no playable-world authority.
+  defaultViewDistance: 3328,
+  distancePressureReferenceDistance: 3328,
   cloudProfile: {
     cloudClass: 'SPARSE_COASTAL_CUMULUS',
     cloudCoverage: 0.18,
@@ -107,10 +110,13 @@ export const H_EARTH_ATMOSPHERE_STATE = deepFreeze({
     gustStrength: 0.16
   },
   fogProfile: {
-    fogStartDistance: 92,
-    fogFalloff: 0.0062,
-    maximumFogFactor: 0.86,
-    distanceDesaturationStrength: 0.42
+    // Preserve near-field clarity and let the already-authored OW04
+    // continuation enter atmospheric perspective progressively instead of
+    // saturating before its ~928-unit near edge.
+    fogStartDistance: 640,
+    fogFalloff: 0.00065,
+    maximumFogFactor: 0.82,
+    distanceDesaturationStrength: 0.34
   },
   ownership: {
     ownsSunState: true,
@@ -224,7 +230,11 @@ export function sampleHEarthAtmosphereState({
   const solar = resolveSolarState(normalizedTime);
   const colors = resolveSkyColors(solar);
   const altitudeRelief = clamp01(observerElevation / 120);
-  const distancePressure = clamp01(viewDistance / 512);
+  // Distance pressure now scales against the same OW04 optical reach as the
+  // successor camera instead of saturating at the legacy 512-unit regime.
+  const distancePressure = clamp01(
+    viewDistance / H_EARTH_ATMOSPHERE_STATE.distancePressureReferenceDistance
+  );
   const hazeDensity = clamp01(
     0.2 + distancePressure * 0.24 - altitudeRelief * 0.08
   );

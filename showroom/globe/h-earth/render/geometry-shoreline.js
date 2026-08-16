@@ -35,6 +35,7 @@ const CP3D_CANONICAL_SHORELINE_BANDS = new Set([
   'DRY_SAND_EDGE',
   'DAMP_TRANSITION'
 ]);
+const VISUAL_OCEAN_CONTINUATION_OFFSET = -1600;
 
 function canonicalizeCP3DCoordinate(value) {
   const canonical = Math.round(value * CP3D_CANONICAL_SCALE) / CP3D_CANONICAL_SCALE;
@@ -52,7 +53,7 @@ function canonicalizeCP3DShorelinePoint(point, bandId) {
 }
 
 export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1';
+  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_OW03_CORRECTIVE_v3_VISUAL_WORLD_CONTINUATION';
 
 export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   {
@@ -100,40 +101,36 @@ export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   {
     bandId: 'OPEN_WATER',
     innerOffset: -58,
-    outerOffset: -146,
+    outerOffset: VISUAL_OCEAN_CONTINUATION_OFFSET,
     materialReference: 'H_EARTH_MATERIAL_OPEN_WATER',
-    materialIntent: 'OPEN_WATER'
+    materialIntent: 'OPEN_WATER_VISUAL_WORLD_CONTINUATION'
   }
 ]);
 
-const sampleCount = 33;
-const xAt = (index) => -256 + (index / (sampleCount - 1)) * 512;
-
-function tangentAndWaterwardNormal(x) {
-  const step = 0.5;
-  const z0 = getHEarthCanonicalShorelineZ(x - step);
-  const z1 = getHEarthCanonicalShorelineZ(x + step);
-  const tangentX = 2 * step;
-  const tangentZ = z1 - z0;
-  const length = Math.hypot(tangentX, tangentZ);
-  let normalX = -tangentZ / length;
-  let normalZ = tangentX / length;
-  if (normalZ < 0) {
-    normalX *= -1;
-    normalZ *= -1;
-  }
-  return { x: normalX, z: normalZ };
-}
+const sampleCount = 257;
+const shorelineXMinimum = -1024;
+const shorelineXMaximum = 1024;
+const xAt = (index) =>
+  shorelineXMinimum +
+  (index / (sampleCount - 1)) *
+  (shorelineXMaximum - shorelineXMinimum);
 
 function pointAtOffset(x, offset) {
   const shorelineZ = getHEarthCanonicalShorelineZ(x);
-  const normal = tangentAndWaterwardNormal(x);
-  const worldX = x - normal.x * offset;
-  const worldZ = shorelineZ - normal.z * offset;
+  // The canonical coast is a graph z=f(x). Offsetting in its graph-normal
+  // direction made adjacent ribbons fold across one another at tight bays.
+  // A shared world-Z transect preserves ordering for every x, so every band
+  // consumes the same boundary and cannot self-intersect or swap sides.
+  const worldX = x;
+  const worldZ = shorelineZ - offset;
   const sample = sampleHEarthTerrainField(worldX, worldZ);
+  const waterward = offset <= 0;
   return {
     x: worldX,
-    y: sample.elevation + (offset <= 0 ? 0.04 : 0),
+    y: waterward
+      ? H_EARTH_TERRAIN_FIELD.worldDomain.seaLevelY +
+        (offset >= -3.2 ? 0.035 : 0.015)
+      : sample.elevation,
     z: worldZ,
     sample
   };
@@ -164,6 +161,7 @@ function constructBand(band) {
   }
 
   const primitiveId = `H_EARTH_FUNCTIONAL_SHORELINE:${band.bandId}`;
+  const visualContinuation = band.bandId === 'OPEN_WATER';
   const construction = constructHEarthTriangleMesh({
     primitiveId,
     geometryId: `${primitiveId}:GEOMETRY`,
@@ -189,6 +187,23 @@ function constructBand(band) {
       innerOffset: band.innerOffset,
       outerOffset: band.outerOffset,
       sourceSampleIds,
+      sampleCount,
+      shorelineXMinimum,
+      shorelineXMaximum,
+      topologyLaw: 'ORDERED_SHARED_X_TRANSECTS_NO_SELF_INTERSECTION',
+      waterSurfaceLaw: band.outerOffset <= 0
+        ? 'ONE_COHERENT_SEA_LEVEL_SURFACE'
+        : 'CANONICAL_TERRAIN_FIELD',
+      visualContinuationLayer: visualContinuation,
+      navigationAddressIds: [],
+      navigable: false,
+      collisionAuthority: false,
+      accessibleRegionExpansion: false,
+      oceanFacingLandProhibited: visualContinuation,
+      continuationLaw: visualContinuation
+        ? 'VISIBLE_OCEAN_CONTINUES_BEYOND_FROZEN_ACCESSIBLE_REGION_WITHOUT_ADDRESS_OR_COLLISION_AUTHORITY'
+        : null,
+      foundingPacketMutationPerformed: false,
       cp3dCanonicalCoordinateLaw: CP3D_CANONICAL_SHORELINE_BANDS.has(band.bandId)
         ? 'ROUND_TO_2_POW_NEGATIVE_24_BEFORE_BOUNDS_AND_NORMALS'
         : null,
@@ -230,6 +245,8 @@ export function constructHEarthFunctionalShorelineGeometry() {
     results,
     primitives,
     bounds,
+    visualOceanContinuation: true,
+    accessibleRegionExpansion: false,
     admitted: false,
     issues
   });

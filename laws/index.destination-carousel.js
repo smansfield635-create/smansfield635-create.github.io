@@ -1,14 +1,15 @@
 /*
  * LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC
  * Shared Methods ring geometry with Laws direction-only gesture custody.
- * v12 product refinement: bounded non-positional gesture feedback + decisive landing.
+ * v13 traversal repair: runtime-owned 500ms Euclidean ring motion before semantic landing.
+ * transitionend is deliberately not settlement authority.
  */
 (() => {
   "use strict";
   const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v11_DIRECTION_ONLY_ATOMIC";
   const REFERENCE = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1";
   const BUILD = "20260816E_DIRECTION_ONLY_CANONICAL";
-  const PRODUCT_REFINEMENT = "20260816F_MEANINGFUL_PRODUCT_FEEDBACK";
+  const PRODUCT_REFINEMENT = "20260816G_RUNTIME_OWNED_RING_TRAVERSAL";
   const ROOT_SELECTOR = "[data-laws-root-rolodex-section]";
   const FIELD_SELECTOR = ".laws-rolodex-field[data-rolodex-id]";
   const CLASSIFY_PX = 8;
@@ -16,7 +17,8 @@
   const AXIS_RATIO = 1.12;
   const CANONICAL_EPSILON = .001;
   const POST_LANDING_GUARD_MS = 1000;
-  const SETTLE_FALLBACK_MS = 640;
+  const TRAVERSAL_MS = 500;
+  const SETTLE_FALLBACK_MS = TRAVERSAL_MS + 48;
   const LANDING_PULSE_MS = 420;
   const stateByField = new WeakMap();
   const fieldById = new Map();
@@ -43,9 +45,7 @@
     return sample;
   }
 
-  function clearTarget(state) {
-    state.cards.forEach(card => { delete card.dataset.carouselTarget; });
-  }
+  function clearTarget(state) { state.cards.forEach(card => { delete card.dataset.carouselTarget; }); }
 
   function setFeedback(field, state, mode = "idle", pressure = 0) {
     const bounded = Math.max(0, Math.min(1, Number.isFinite(pressure) ? pressure : 0));
@@ -57,7 +57,7 @@
 
   function publish(field, state, reason) {
     const card = state.cards[state.index];
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, reason, rolodexId: field.dataset.rolodexId || "", index: state.index, count: state.cards.length, destinationId: card?.dataset.destinationId || "", orbitAngle: state.angle, detent: state.detent, targetDetent: state.targetDetent, transactionId: state.transactionId, transactionPhase: state.gestureState, direction: state.direction, gesturePressure: state.pressure, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, velocityProjection: false, momentumTraversal: false, postLandingGuardMs: POST_LANDING_GUARD_MS, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }) }));
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, reason, rolodexId: field.dataset.rolodexId || "", index: state.index, count: state.cards.length, destinationId: card?.dataset.destinationId || "", orbitAngle: state.angle, detent: state.detent, targetDetent: state.targetDetent, transactionId: state.transactionId, transactionPhase: state.gestureState, direction: state.direction, gesturePressure: state.pressure, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, postLandingGuardMs: POST_LANDING_GUARD_MS, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }) }));
   }
 
   function applyCanonicalSemantics(field, state, reason = "geometry") {
@@ -91,6 +91,11 @@
     field.dataset.carouselOrbitAngle = String(angle);
   }
 
+  function setTraversalTransition(state, enabled) {
+    if (enabled && !reducedMotion()) state.track.style.setProperty("transition", `transform ${TRAVERSAL_MS}ms cubic-bezier(.16,.84,.18,1)`, "important");
+    else state.track.style.setProperty("transition", "none", "important");
+  }
+
   function pulseLanding(field) {
     field.dataset.carouselLandingPulse = "true";
     clearTimeout(field.__lawsLandingPulseTimer);
@@ -110,6 +115,7 @@
     state.viewport.dataset.dragging = "false";
     clearTarget(state);
     setFeedback(field, state, "idle", 0);
+    setTraversalTransition(state, false);
     applyCanonicalSemantics(field, state, `${reason}-settled`);
     pulseLanding(field);
     state.lastLandingTime = now();
@@ -120,34 +126,40 @@
     state.transactionId = null;
     field.dataset.carouselTransactionId = "";
     if (focus) state.cards[state.index]?.querySelector(".laws-rolodex-enter")?.focus({ preventScroll: true });
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_LANDED", { detail: Object.freeze({ contract: CONTRACT, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, transactionId, index: state.index, detent: state.detent, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_LANDED", { detail: Object.freeze({ contract: CONTRACT, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, transactionId, index: state.index, detent: state.detent, traversalMs: TRAVERSAL_MS, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
   }
 
   function rotateToDetent(field, state, targetDetent, reason, focus = false) {
     if (state.gestureState === "settling") return false;
+    const startAngle = angleForDetent(state.detent, state.cards.length);
+    const targetAngle = angleForDetent(targetDetent, state.cards.length);
     state.targetDetent = targetDetent;
     state.gestureState = "settling";
     state.landingCommitted = false;
     field.dataset.carouselGestureState = "settling";
     field.dataset.carouselTargetDetent = String(targetDetent);
     field.dataset.carouselDirection = String(Math.sign(targetDetent - state.detent));
+    field.dataset.carouselCanonicalLanding = "false";
     setFeedback(field, state, "release", 0);
     clearTarget(state);
     state.cards[normalize(targetDetent, state.cards.length)].dataset.carouselTarget = "true";
-    trace(state, "atomic-rotation-begin", { reason, fromDetent: state.detent, targetDetent });
+    setTraversalTransition(state, false);
+    setRingAngle(field, state, startAngle);
+    void state.track.offsetWidth;
+    setTraversalTransition(state, true);
+    void state.track.offsetWidth;
+    trace(state, "atomic-rotation-begin", { reason, fromDetent: state.detent, targetDetent, traversalMs: TRAVERSAL_MS });
     publish(field, state, reason);
-    const targetAngle = angleForDetent(targetDetent, state.cards.length);
-    const complete = event => {
-      if (event && event.target !== state.track) return;
-      state.track.removeEventListener("transitionend", complete);
-      finishLanding(field, state, targetDetent, reason, focus);
-    };
-    state.track.addEventListener("transitionend", complete);
-    requestAnimationFrame(() => {
+    if (reducedMotion()) {
       setRingAngle(field, state, targetAngle);
-      if (reducedMotion()) complete();
-      else state.settleTimer = setTimeout(() => complete(), SETTLE_FALLBACK_MS);
-    });
+      finishLanding(field, state, targetDetent, reason, focus);
+      return true;
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      setRingAngle(field, state, targetAngle);
+      trace(state, "ring-traversal-painted", { fromAngle: startAngle, targetAngle, traversalMs: TRAVERSAL_MS });
+      state.settleTimer = setTimeout(() => finishLanding(field, state, targetDetent, reason, focus), SETTLE_FALLBACK_MS);
+    }));
     return true;
   }
 
@@ -192,6 +204,7 @@
       state.direction = 0;
       state.targetDetent = state.detent;
       setFeedback(field, state, "idle", 0);
+      setTraversalTransition(state, false);
       setRingAngle(field, state, angleForDetent(state.detent, state.cards.length));
       applyCanonicalSemantics(field, state, cancelled ? "pointer-cancel-noop" : "pointer-unclassified-noop");
       state.transactionId = null;
@@ -220,6 +233,7 @@
     state.direction = 0;
     clearTarget(state);
     setFeedback(field, state, "idle", 0);
+    setTraversalTransition(state, false);
     state.viewport.dataset.dragging = "true";
     applyCanonicalSemantics(field, state, "orbit-restore");
     void state.track.offsetWidth;
@@ -258,6 +272,7 @@
     field.dataset.carouselGestureLaw = "direction-only-release-one-atomic-step";
     field.dataset.carouselProductRefinement = PRODUCT_REFINEMENT;
     setFeedback(field, state, "idle", 0);
+    setTraversalTransition(state, false);
     viewport.style.touchAction = "pan-y";
     viewport.setAttribute("aria-roledescription", "carousel");
     viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Swipe horizontally to rotate exactly one neighboring record after release. Vertical gestures scroll the page.`);
@@ -278,6 +293,7 @@
       field.dataset.carouselGestureState = "pending";
       state.viewport.dataset.dragging = "false";
       setFeedback(field, state, "pending", 0);
+      setTraversalTransition(state, false);
       setRingAngle(field, state, angleForDetent(state.detent, cards.length));
       trace(state, "transaction-begin", { source: "pointer", startX: state.startX, startY: state.startY });
       try { viewport.setPointerCapture?.(event.pointerId); } catch (_) {}
@@ -295,10 +311,12 @@
         if (ax > ay * AXIS_RATIO) {
           state.classification = "horizontal";
           state.gestureState = "direction-locked";
+          field.dataset.carouselGestureState = "direction-locked";
           trace(state, "direction-locked", { dx, dy });
         } else if (ay > ax * AXIS_RATIO) {
           state.classification = "vertical";
           state.gestureState = "vertical-passthrough";
+          field.dataset.carouselGestureState = "vertical-passthrough";
           setFeedback(field, state, "idle", 0);
           trace(state, "vertical-passthrough", { dx, dy });
           return;
@@ -327,6 +345,7 @@
       else if (event.key === "End") selectIndex(field, state, cards.length - 1, "keyboard-end", true);
       else rotateOne(field, state, event.key === "ArrowRight" ? 1 : -1, "keyboard-step", true);
     }, true);
+
     track.addEventListener("click", event => {
       if (state.suppressClick) { state.suppressClick = false; event.preventDefault(); return; }
       if (isBusy(state) || event.target.closest("button, a")) return;
@@ -359,8 +378,8 @@
     document.documentElement.dataset.lawsCarouselBuild = BUILD;
     document.documentElement.dataset.lawsCarouselGestureLaw = "direction-only-release-one-atomic-step";
     document.documentElement.dataset.lawsCarouselProductRefinement = PRODUCT_REFINEMENT;
-    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, installed: true, sharedRingAuthority: true, directManipulation: false, directionOnlyGesture: true, liveGestureGeometry: false, boundedGestureFeedback: true, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, velocityProjection: false, momentumTraversal: false, verticalGesturePassthrough: true, postLandingGuardMs: POST_LANDING_GUARD_MS, surrogateNavigation: false, restoreOrbitState, getState: snapshot, getTransactionTrace, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, fieldCount: fields.length, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
+    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, installed: true, sharedRingAuthority: true, directManipulation: false, directionOnlyGesture: true, liveGestureGeometry: false, boundedGestureFeedback: true, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, velocityProjection: false, momentumTraversal: false, verticalGesturePassthrough: true, postLandingGuardMs: POST_LANDING_GUARD_MS, surrogateNavigation: false, restoreOrbitState, getState: snapshot, getTransactionTrace, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
+    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, productRefinement: PRODUCT_REFINEMENT, fieldCount: fields.length, boundedGestureFeedback: true, directionOnlyGesture: true, liveGestureGeometry: false, atomicRotation: true, oneGestureOneStep: true, canonicalFrameLockedDuringGesture: true, runtimeOwnedTraversal: true, traversalMs: TRAVERSAL_MS, postLandingGuardMs: POST_LANDING_GUARD_MS }) }));
     return true;
   }
 

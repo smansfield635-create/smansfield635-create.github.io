@@ -3,18 +3,10 @@
  *
  * H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1
  *
- * Canonical world-space elevation authority for the functional-landscape
- * successor. This repair preserves the installed Run 6 contract identity and
- * canonical shoreline backbone while binding Gratitude Bay and Gratitude
- * Harbor through a localized asymmetric continental-coast deformation. OW02
- * continues the primary mountain system inland as an articulated range with
- * passes, a receiving basin, watershed-directed valleys and foothill taper.
- * OW03 resolves that backbone into a compound, nonradial continental coast
- * with named peninsulas, bays, gulfs, coves and headlands. OW04 preserves each
- * named inland relief component while attenuating only additive positive-relief
- * overlap so the coastal-entry sightline reads as articulated terrain rather
- * than an enclosing composite wall. It creates no geometry, admission, frame,
- * renderer, or route.
+ * C3C1 coastal-corner successor. Preserves the installed inland relief,
+ * watershed, basin, pass, valley and foothill formulas while replacing the
+ * north-only coastline predicate with a compound north-to-east continental
+ * edge derived from frozen C3/C3D1 authority.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -46,13 +38,24 @@ const bell = (value, center, radius) => {
 
 export const H_EARTH_TERRAIN_FIELD_CONTRACT_ID = 'H_EARTH_CANONICAL_TERRAIN_FIELD_RUN_6B_v1';
 
+const C3_CORNER = deepFreeze({
+  seamX: 198,
+  apexX: 232,
+  apexZ: -64.475,
+  eastCoastSouthReferenceZ: -1024,
+  eastCoastSouthReferenceX: 249.5
+});
+
 export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
   systemId: 'H_EARTH_GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_v1',
   continent: 'GRATITUDE',
   continentalCoast: {
     identity: 'GRATITUDE_CONTINENTAL_COAST',
     baselineZ: -82,
-    morphology: 'ASYMMETRIC_ORGANIC_COMPOUND_COAST'
+    morphology: 'ASYMMETRIC_ORGANIC_COMPOUND_COAST_WITH_NORTHEAST_CORNER',
+    cornerClass: 'COMPOUND_NORTH_TO_EAST_CONTINENTAL_CORNER',
+    primaryOceanExposure: '+Z_NORTH',
+    secondaryOceanExposure: '+X_EAST'
   },
   bay: {
     identity: 'GRATITUDE_BAY',
@@ -72,15 +75,13 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
     localGeometryRule: 'PRESERVE_REGIONAL_SCALE_CHARACTER_DO_NOT_COPY_PLANETARY_VERTICES'
   },
   compoundMorphology: {
-    systemId: 'H_EARTH_GRATITUDE_ORGANIC_COMPOUND_CONTINENT_MORPHOLOGY_v1',
-    morphology: 'NONRADIAL_ASYMMETRIC_MULTI_LOBE_CONTINENT',
+    systemId: 'H_EARTH_GRATITUDE_ORGANIC_COMPOUND_CONTINENT_MORPHOLOGY_v2_C3_CORNER',
+    morphology: 'NONRADIAL_ASYMMETRIC_MULTI_LOBE_CONTINENT_WITH_NORTHEAST_CORNER',
     peninsulas: [
       { identity: 'GRATITUDE_WESTERN_PENINSULA', centerX: -220, halfWidth: 30, waterwardReach: 25 },
       { identity: 'GRATITUDE_EASTERN_PENINSULA', centerX: 232, halfWidth: 24, waterwardReach: 20 }
     ],
-    gulfs: [
-      { identity: 'GRATITUDE_WESTERN_GULF', centerX: -170, halfWidth: 30, inlandReach: 28 }
-    ],
+    gulfs: [{ identity: 'GRATITUDE_WESTERN_GULF', centerX: -170, halfWidth: 30, inlandReach: 28 }],
     bays: [
       { identity: 'GRATITUDE_SANCTUARY_BAY', centerX: -82, halfWidth: 24, inlandReach: 20 },
       { identity: 'GRATITUDE_BAY', centerX: 118, halfWidth: 82, inlandReach: 48 }
@@ -94,11 +95,8 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
     radialSymmetryProhibited: true,
     circularBlobMorphologyProhibited: true
   },
-  sandbarTransferLaw: {
-    count: 3,
-    identityAndRelationshipTransferRequired: true,
-    exactVertexTransferAcrossLodProhibited: true
-  },
+  c3Corner: C3_CORNER,
+  sandbarTransferLaw: { count: 3, identityAndRelationshipTransferRequired: true, exactVertexTransferAcrossLodProhibited: true },
   transferLaw: 'TRANSFER_PROPERTY_TRUTH_NOT_REPRESENTATION_GEOMETRY'
 });
 
@@ -141,7 +139,7 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 3,
+  generationRevision: 4,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
   worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
@@ -158,7 +156,7 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     numericTolerance: 1e-8
   },
   heightProfiles: {
-    coast: 'GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_PROFILE_v1',
+    coast: 'GRATITUDE_TRUE_CONTINENTAL_COASTAL_ENTRY_PROFILE_C3_CORNER_v1',
     dune: 'COASTAL_BERM_PROFILE_v1',
     lowland: 'LOWLAND_PROFILE_v1',
     rolling: 'ROLLING_TERRAIN_PROFILE_v1',
@@ -190,9 +188,7 @@ export function getHEarthCanonicalShorelineZ(worldX) {
   if (!finite(worldX)) return Number.NaN;
   const coast = H_EARTH_GRATITUDE_COASTAL_SYSTEM.continentalCoast;
   const bay = H_EARTH_GRATITUDE_COASTAL_SYSTEM.bay;
-  const canonicalBackbone = coast.baselineZ
-    + 7.5 * Math.sin(worldX / 58)
-    + 2.75 * Math.sin((worldX + 31) / 19);
+  const canonicalBackbone = coast.baselineZ + 7.5 * Math.sin(worldX / 58) + 2.75 * Math.sin((worldX + 31) / 19);
   const westernPeninsula = 25 * bell(worldX, -220, 30);
   const westernGulf = -28 * bell(worldX, -170, 30);
   const centralHeadland = 20 * bell(worldX, -125, 24);
@@ -204,29 +200,56 @@ export function getHEarthCanonicalShorelineZ(worldX) {
   const easternPeninsula = 20 * bell(worldX, 232, 24);
   const westernRhythmWindow = bell(worldX, -166, 118);
   const easternRhythmWindow = bell(worldX, 220, 62);
-  const nestedCoastalRhythm = (
-    2.2 * Math.sin((worldX + 17) / 11) +
-    1.1 * Math.sin((worldX - 9) / 6.5)
-  ) * Math.max(westernRhythmWindow, easternRhythmWindow);
-  return canonicalBackbone
-    + westernPeninsula + westernGulf + centralHeadland
-    + sanctuaryBay + westernHeadland
-    + bayCore + bayAsymmetry
-    + easternHeadland + easternPeninsula
-    + nestedCoastalRhythm;
+  const nestedCoastalRhythm = (2.2 * Math.sin((worldX + 17) / 11) + 1.1 * Math.sin((worldX - 9) / 6.5)) * Math.max(westernRhythmWindow, easternRhythmWindow);
+  return canonicalBackbone + westernPeninsula + westernGulf + centralHeadland + sanctuaryBay + westernHeadland + bayCore + bayAsymmetry + easternHeadland + easternPeninsula + nestedCoastalRhythm;
+}
+
+export function getHEarthCanonicalEasternShorelineX(worldZ) {
+  if (!finite(worldZ)) return Number.NaN;
+  const southSpan = C3_CORNER.apexZ - C3_CORNER.eastCoastSouthReferenceZ;
+  const t = clamp((C3_CORNER.apexZ - worldZ) / southSpan, 0, 1.75);
+  const organic = 4.2 * Math.sin(t * Math.PI * 2.1 + 0.45) + 1.8 * Math.sin(t * Math.PI * 5.4 + 1.1);
+  const trend = C3_CORNER.apexX + (C3_CORNER.eastCoastSouthReferenceX - C3_CORNER.apexX) * Math.min(1, t);
+  return trend + organic * smoothstep(0.08, 0.55, t);
+}
+
+export function sampleHEarthCanonicalCoastalBoundary(worldX, worldZ) {
+  if (!finite(worldX) || !finite(worldZ)) return deepFreeze({ valid: false });
+  const northShoreZ = getHEarthCanonicalShorelineZ(worldX);
+  const eastShoreX = getHEarthCanonicalEasternShorelineX(worldZ);
+  const northDistance = northShoreZ - worldZ;
+  const eastDistance = eastShoreX - worldX;
+  const eastActivation = smoothstep(C3_CORNER.seamX - 18, C3_CORNER.apexX + 8, worldX) * smoothstep(C3_CORNER.apexZ + 28, C3_CORNER.apexZ - 96, -worldZ);
+  const shorelineDistance = eastActivation > 0
+    ? Math.min(northDistance + (1 - eastActivation) * 80, eastDistance)
+    : northDistance;
+  const controllingEdge = eastActivation > 0 && eastDistance < northDistance + (1 - eastActivation) * 80 ? 'EAST' : 'NORTH';
+  return deepFreeze({
+    valid: true,
+    northShoreZ,
+    eastShoreX,
+    northDistance,
+    eastDistance,
+    shorelineDistance,
+    controllingEdge,
+    waterward: shorelineDistance < 0,
+    inland: shorelineDistance >= 0
+  });
 }
 
 function evaluateRawElevation(worldX, worldZ) {
-  const shorelineZ = getHEarthCanonicalShorelineZ(worldX);
-  const inlandDistance = shorelineZ - worldZ;
-  const waterwardDistance = worldZ - shorelineZ;
-  if (waterwardDistance > 0) {
+  const boundary = sampleHEarthCanonicalCoastalBoundary(worldX, worldZ);
+  const shorelineZ = boundary.northShoreZ;
+  const inlandDistance = Math.max(0, boundary.shorelineDistance);
+  const waterwardDistance = Math.max(0, -boundary.shorelineDistance);
+  if (boundary.waterward) {
     const shallow = -0.35 - Math.min(waterwardDistance, 28) * 0.018;
     const openWater = -0.85 - Math.max(0, waterwardDistance - 28) * 0.012;
     return shallow * (1 - smoothstep(18, 38, waterwardDistance)) + openWater * smoothstep(18, 38, waterwardDistance);
   }
-  const coastRise = 0.025 * Math.max(0, inlandDistance);
-  const wetSandCompression = -0.22 * Math.exp(-Math.max(0, inlandDistance) / 16);
+
+  const coastRise = 0.025 * inlandDistance;
+  const wetSandCompression = -0.22 * Math.exp(-inlandDistance / 16);
   const dune = gaussian(worldX, worldZ, 6, shorelineZ - 34, 190, 22, 5.8);
   const rolling = 1.7 * Math.sin((worldX + 22) / 48) * smoothstep(55, 180, inlandDistance)
     + 1.2 * Math.sin((worldZ + 140) / 29) * smoothstep(70, 200, inlandDistance);
@@ -241,14 +264,7 @@ function evaluateRawElevation(worldX, worldZ) {
   const receivingBasin = gaussian(worldX, worldZ, 18, -192, 66, 46, -7.5);
   const foothillTaper = gaussian(worldX, worldZ, -12, -176, 126, 62, 8.5);
 
-  const positiveReliefComponents = [
-    hill,
-    ridgeEast,
-    ridgeCentral,
-    ridgeWest,
-    ridgeShoulder,
-    foothillTaper
-  ];
+  const positiveReliefComponents = [hill, ridgeEast, ridgeCentral, ridgeWest, ridgeShoulder, foothillTaper];
   const strongestPositiveRelief = Math.max(...positiveReliefComponents);
   const totalPositiveRelief = positiveReliefComponents.reduce((sum, value) => sum + value, 0);
   const secondaryPositiveRelief = Math.max(0, totalPositiveRelief - strongestPositiveRelief);
@@ -256,9 +272,7 @@ function evaluateRawElevation(worldX, worldZ) {
 
   const lowland = gaussian(worldX, worldZ, -92, -152, 70, 58, -6.5);
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);
-  return coastRise + wetSandCompression + dune + rolling + articulatedPositiveRelief
-    + passEast + passCentral + receivingBasin
-    + lowland + valley;
+  return coastRise + wetSandCompression + dune + rolling + articulatedPositiveRelief + passEast + passCentral + receivingBasin + lowland + valley;
 }
 
 function classifySlope(slope) {
@@ -300,8 +314,7 @@ export function sampleHEarthTerrainField(worldX, worldZ) {
   const normalLength = Math.hypot(-dx, 1, -dz);
   const slope = Math.hypot(dx, dz);
   const curvature = (left - 2 * elevation + right) / (step * step) + (back - 2 * elevation + front) / (step * step);
-  const shorelineZ = getHEarthCanonicalShorelineZ(worldX);
-  const shorelineDistance = shorelineZ - worldZ;
+  const coastalBoundary = sampleHEarthCanonicalCoastalBoundary(worldX, worldZ);
   return deepFreeze({
     valid: true,
     status: 'TERRAIN_SAMPLE_COMPLETE',
@@ -309,8 +322,10 @@ export function sampleHEarthTerrainField(worldX, worldZ) {
     generationRevision: H_EARTH_TERRAIN_FIELD.generationRevision,
     world: { x: worldX, y: elevation, z: worldZ },
     elevation,
-    shorelineZ,
-    shorelineDistance,
+    shorelineZ: coastalBoundary.northShoreZ,
+    shorelineX: coastalBoundary.eastShoreX,
+    shorelineDistance: coastalBoundary.shorelineDistance,
+    controllingCoastalEdge: coastalBoundary.controllingEdge,
     coastalSystemId: H_EARTH_GRATITUDE_COASTAL_SYSTEM.systemId,
     inlandMountainWatershedSystemId: H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM.systemId,
     gradient: { x: dx, z: dz },
@@ -319,7 +334,7 @@ export function sampleHEarthTerrainField(worldX, worldZ) {
     slopeClass: classifySlope(slope),
     curvature,
     curvatureClass: classifyCurvature(curvature),
-    materialProfile: resolveMaterialProfile(shorelineDistance, elevation, slope)
+    materialProfile: resolveMaterialProfile(coastalBoundary.shorelineDistance, elevation, slope)
   });
 }
 

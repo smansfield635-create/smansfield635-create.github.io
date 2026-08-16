@@ -52,7 +52,7 @@ function canonicalizeCP3DShorelinePoint(point, bandId) {
 }
 
 export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_RUN_6C_v1';
+  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_OW03_CORRECTIVE_v2';
 
 export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   {
@@ -106,34 +106,30 @@ export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   }
 ]);
 
-const sampleCount = 33;
-const xAt = (index) => -256 + (index / (sampleCount - 1)) * 512;
-
-function tangentAndWaterwardNormal(x) {
-  const step = 0.5;
-  const z0 = getHEarthCanonicalShorelineZ(x - step);
-  const z1 = getHEarthCanonicalShorelineZ(x + step);
-  const tangentX = 2 * step;
-  const tangentZ = z1 - z0;
-  const length = Math.hypot(tangentX, tangentZ);
-  let normalX = -tangentZ / length;
-  let normalZ = tangentX / length;
-  if (normalZ < 0) {
-    normalX *= -1;
-    normalZ *= -1;
-  }
-  return { x: normalX, z: normalZ };
-}
+const sampleCount = 257;
+const shorelineXMinimum = -1024;
+const shorelineXMaximum = 1024;
+const xAt = (index) =>
+  shorelineXMinimum +
+  (index / (sampleCount - 1)) *
+  (shorelineXMaximum - shorelineXMinimum);
 
 function pointAtOffset(x, offset) {
   const shorelineZ = getHEarthCanonicalShorelineZ(x);
-  const normal = tangentAndWaterwardNormal(x);
-  const worldX = x - normal.x * offset;
-  const worldZ = shorelineZ - normal.z * offset;
+  // The canonical coast is a graph z=f(x). Offsetting in its graph-normal
+  // direction made adjacent ribbons fold across one another at tight bays.
+  // A shared world-Z transect preserves ordering for every x, so every band
+  // consumes the same boundary and cannot self-intersect or swap sides.
+  const worldX = x;
+  const worldZ = shorelineZ - offset;
   const sample = sampleHEarthTerrainField(worldX, worldZ);
+  const waterward = offset <= 0;
   return {
     x: worldX,
-    y: sample.elevation + (offset <= 0 ? 0.04 : 0),
+    y: waterward
+      ? H_EARTH_TERRAIN_FIELD.worldDomain.seaLevelY +
+        (offset >= -3.2 ? 0.035 : 0.015)
+      : sample.elevation,
     z: worldZ,
     sample
   };
@@ -189,6 +185,14 @@ function constructBand(band) {
       innerOffset: band.innerOffset,
       outerOffset: band.outerOffset,
       sourceSampleIds,
+      sampleCount,
+      shorelineXMinimum,
+      shorelineXMaximum,
+      topologyLaw: 'ORDERED_SHARED_X_TRANSECTS_NO_SELF_INTERSECTION',
+      waterSurfaceLaw: band.outerOffset <= 0
+        ? 'ONE_COHERENT_SEA_LEVEL_SURFACE'
+        : 'CANONICAL_TERRAIN_FIELD',
+      foundingPacketMutationPerformed: false,
       cp3dCanonicalCoordinateLaw: CP3D_CANONICAL_SHORELINE_BANDS.has(band.bandId)
         ? 'ROUND_TO_2_POW_NEGATIVE_24_BEFORE_BOUNDS_AND_NORMALS'
         : null,

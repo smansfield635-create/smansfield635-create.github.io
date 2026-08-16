@@ -1,0 +1,22 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_OPEN_VARIATION_ROBUSTNESS_QUALIFICATION_v2",
+  "status": "PASS_INTERNAL_ROBUSTNESS",
+  "supersedesFailure": "JEEVES_C01_OPEN_VARIATION_ROBUSTNESS_EXECUTION.v1.json",
+  "execution": "local Node execution from exact committed source",
+  "cases": 13,
+  "passed": 13,
+  "failed": 0,
+  "perturbationsCovered": {
+    "durationScale": [0.92,1.08],
+    "f0Hz": [94,106],
+    "formantScale": [0.97,1.03],
+    "noiseSeed": [211,503,887],
+    "mixedCornerCases": 4
+  },
+  "minimumObservedPositiveMargin": 0.1863613743,
+  "decoderRepair": "time-normalized 14-frame spectro-temporal signatures with reduced high-band noise weighting and a three-noise prototype bank",
+  "decodedOrderForEveryCase": ["Navigation","requires","orientation"],
+  "humanListeningAuthorized": false,
+  "notClaimed": ["human intelligibility","natural speech","Jeeves voice quality"],
+  "nextLawfulAction": "CONSTRUCT_PRE_LISTENING_SENTENCE_INTEGRITY_GATE"
+}

@@ -116,13 +116,13 @@
     .mm-nav { gap: .45rem .8rem; font-size: .76rem; }
     .mm-intro { grid-template-columns: 1fr; gap: 1.4rem; padding-top: 2.4rem; }
     .mm-intro h1 { font-size: clamp(3.7rem, 18vw, 6rem); }
-    .mm-carousel { --card-width: min(76vw, 21rem); --card-height: 29rem; min-height: 720px; }
+    .mm-carousel { --card-width: min(76vw, 21rem); --card-height: 29rem; min-height: 950px; }
     .mm-carousel__header { display: block; }
     .mm-live { margin-top: .55rem; min-width: 0; text-align: left; }
     .mm-family-tabs { padding-inline: .9rem; }
     .mm-family-tab { min-width: 9.5rem; }
-    .mm-viewport { inset-top: 12rem; perspective: 1800px; perspective-origin: 50% 40%; }
-    .mm-ring { top: 34%; }
+    .mm-viewport { inset: 18.75rem 0 0; perspective: 1800px; perspective-origin: 50% 40%; }
+    .mm-ring { top: 42%; }
     .mm-card:not([data-active="true"]) .mm-card__top,
     .mm-card:not([data-active="true"]) .mm-card__body { visibility: hidden; }
 
@@ -135,7 +135,7 @@
   }
 
   @media (max-width: 440px) {
-    .mm-carousel { --card-width: min(78vw, 19.5rem); min-height: 700px; }
+    .mm-carousel { --card-width: min(78vw, 19.5rem); min-height: 950px; }
     .mm-carousel__heading h2 { font-size: 1.8rem; }
     .mm-orbit-note { bottom: .8rem; }
     .mm-inspection__close span:last-child { font-size: .68rem; }

@@ -1,5 +1,5 @@
 /*
- * LAWS_DESTINATION_CAROUSEL_RUNTIME_v2
+ * LAWS_DESTINATION_CAROUSEL_RUNTIME_v3
  * True single-state spatial carousel for the existing Laws destination records.
  * Presentation/interaction only. It does not create or alter destination content,
  * routes, evidence, Compass state, controller authority, or claim authority.
@@ -7,7 +7,7 @@
 (() => {
   "use strict";
 
-  const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v2";
+  const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v3";
   const ROOT_SELECTOR = "[data-laws-root-rolodex-section]";
   const FIELD_SELECTOR = ".laws-rolodex-field[data-rolodex-id]";
   const stateByField = new WeakMap();
@@ -45,12 +45,12 @@
     const d = relative - dragProgress;
     const abs = Math.abs(d);
     const sign = Math.sign(d);
-    const x = d * 62;
-    const z = abs < .08 ? 70 : -Math.min(220, 72 + abs * 72);
-    const rotate = -sign * Math.min(18, abs * 10);
-    const scale = Math.max(.66, 1 - abs * .14);
-    const opacity = abs < .08 ? 1 : Math.max(.1, .58 - (abs - 1) * .22);
-    const blur = abs < .08 ? 0 : Math.min(1.4, Math.max(0, abs - 1) * .7);
+    const x = d * 86;
+    const z = abs < .08 ? 78 : -Math.min(260, 96 + abs * 86);
+    const rotate = -sign * Math.min(15, abs * 9);
+    const scale = Math.max(.62, 1 - abs * .18);
+    const opacity = abs < .08 ? 1 : Math.max(.045, .2 - Math.max(0, abs - 1) * .08);
+    const blur = abs < .08 ? 0 : Math.min(2.4, .55 + Math.max(0, abs - 1) * .9);
     const order = Math.max(1, count + 2 - Math.round(abs * 2));
     return { x, z, rotate, scale, opacity, blur, order };
   }
@@ -64,7 +64,7 @@
       card.dataset.active = String(active);
       card.dataset.carouselRelative = String(relative);
       card.setAttribute("aria-current", active ? "true" : "false");
-      card.setAttribute("aria-hidden", Math.abs(relative) > 1 && count > 3 ? "true" : "false");
+      card.setAttribute("aria-hidden", active ? "false" : "true");
       card.style.setProperty("--laws-carousel-x", `${g.x}%`);
       card.style.setProperty("--laws-carousel-z", `${g.z}px`);
       card.style.setProperty("--laws-carousel-rotate", `${g.rotate}deg`);
@@ -112,12 +112,20 @@
     select(field, state, state.index + advance, "drag-snap");
   }
 
+  function removeSurrogateControls(field) {
+    const controls = Array.from(field.querySelectorAll(".laws-rolodex-control"));
+    controls.forEach(control => control.remove());
+    field.dataset.surrogateNavigation = "removed";
+  }
+
   function bindField(field) {
     if (stateByField.has(field)) return;
     const viewport = field.querySelector(".laws-rolodex-viewport");
     const cards = Array.from(field.querySelectorAll(".laws-rolodex-card"));
     const position = field.querySelector(".laws-rolodex-position");
     if (!viewport || !position || cards.length < 2) return;
+
+    removeSurrogateControls(field);
 
     const state = {
       viewport,
@@ -135,18 +143,9 @@
     stateByField.set(field, state);
     field.dataset.lawsDestinationCarousel = "active";
     viewport.setAttribute("aria-roledescription", "carousel");
-    viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations`);
+    viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Drag horizontally or use Left and Right Arrow keys.`);
 
     field.addEventListener("click", event => {
-      const control = event.target.closest(".laws-rolodex-control");
-      if (control) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        const controls = Array.from(field.querySelectorAll(".laws-rolodex-control"));
-        const delta = controls.indexOf(control) === 0 ? -1 : 1;
-        select(field, state, state.index + delta, delta < 0 ? "control-previous" : "control-next");
-        return;
-      }
       const card = event.target.closest(".laws-rolodex-card");
       if (!card || event.target.closest("button, a")) return;
       const index = state.cards.indexOf(card);
@@ -181,7 +180,7 @@
       const now = performance.now();
       const width = Math.max(280, viewport.clientWidth);
       const delta = event.clientX - state.startX;
-      state.dragProgress = Math.max(-1.15, Math.min(1.15, -delta / (width * .42)));
+      state.dragProgress = Math.max(-1.15, Math.min(1.15, -delta / (width * .48)));
       const elapsed = Math.max(8, now - state.lastTime);
       state.velocity = (state.lastX - event.clientX) / elapsed;
       state.lastX = event.clientX;
@@ -214,13 +213,14 @@
         contract: CONTRACT,
         installed: true,
         reducedMotion: reducedMotion(),
+        surrogateNavigation: false,
         navigationAuthority: false,
         contentAuthority: false,
         routeAuthority: false,
         evidenceAuthority: false
       });
       globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", {
-        detail: Object.freeze({ contract: CONTRACT, fieldCount: fields.length })
+        detail: Object.freeze({ contract: CONTRACT, fieldCount: fields.length, surrogateNavigation: false })
       }));
     }
     return installed;

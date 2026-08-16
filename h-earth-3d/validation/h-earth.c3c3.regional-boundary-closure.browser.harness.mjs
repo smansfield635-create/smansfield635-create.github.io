@@ -46,8 +46,10 @@ try{
   },{id:pointerId,direction})}
 
   const views=[await facts(0)];
+  // Scan the landward arc first, then cross the coastal origin far enough to
+  // exercise east/northeast open-ocean headings required by the C3C3 contract.
   for(let i=1;i<=20;i++){await yaw(900+i,1);views.push(await facts(i));}
-  for(let i=21;i<=32;i++){await yaw(900+i,-1);views.push(await facts(i));}
+  for(let i=21;i<=68;i++){await yaw(900+i,-1);views.push(await facts(i));}
 
   const valid=views.filter(v=>v.c3c3);
   assert.ok(valid.length>=8,'C3C3_RECEIPT_NOT_STABLE');

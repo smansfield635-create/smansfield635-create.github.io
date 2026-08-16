@@ -1,0 +1,91 @@
+name: Laws Carousel Discrete Swipe Proof
+
+on:
+  pull_request:
+    paths:
+      - 'laws/index.destination-carousel.js'
+      - 'laws/index.mobile-background-tabs.js'
+      - '.github/workflows/laws-carousel-discrete-swipe-proof.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  discrete-swipe-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null
+
+      - name: Serve exact candidate
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-discrete-swipe-http.log 2>&1 &
+
+      - name: Prove one swipe one step and Return to Orbit
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({headless:true});
+            const page = await browser.newPage({viewport:{width:1024,height:1366}});
+            await page.goto('http://127.0.0.1:4173/laws/', {waitUntil:'networkidle'});
+            await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]', {timeout:15000});
+            const runtime = await page.evaluate(() => globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
+            if (runtime?.contract !== 'LAWS_DESTINATION_CAROUSEL_RUNTIME_v4') throw new Error('V4 runtime not installed');
+            if (!runtime?.discreteSwipe || !runtime?.oneGestureOneStep) throw new Error('discrete swipe contract missing');
+            if (runtime?.surrogateNavigation !== false) throw new Error('surrogate navigation returned');
+            if (runtime?.returnLanguage !== 'Return to Orbit') throw new Error('return language contract missing');
+
+            const stage = page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
+            const field = stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]');
+            const viewport = field.locator('.laws-rolodex-viewport');
+            await viewport.scrollIntoViewIfNeeded();
+
+            const index = async () => Number(await field.getAttribute('data-carousel-index'));
+            const settled = async () => await field.getAttribute('data-carousel-settled');
+            const start = await index();
+
+            async function swipe(fromX, toX, fromY=620, toY=620) {
+              await viewport.dispatchEvent('pointerdown', {pointerId:17,pointerType:'touch',clientX:fromX,clientY:fromY,isPrimary:true});
+              await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:(fromX+toX)/2,clientY:(fromY+toY)/2,isPrimary:true});
+              await viewport.dispatchEvent('pointermove', {pointerId:17,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
+              await viewport.dispatchEvent('pointerup', {pointerId:17,pointerType:'touch',clientX:toX,clientY:toY,isPrimary:true});
+              await page.waitForFunction(el => el.dataset.carouselSettled === 'true', await field.elementHandle());
+            }
+
+            await swipe(760, 250);
+            const afterLarge = await index();
+            if (afterLarge !== (start + 1) % 4) throw new Error(`large swipe must advance exactly one: ${start} -> ${afterLarge}`);
+            if ((await settled()) !== 'true') throw new Error('large swipe did not settle');
+
+            await swipe(520, 505);
+            const afterSmall = await index();
+            if (afterSmall !== afterLarge) throw new Error(`small movement changed index: ${afterLarge} -> ${afterSmall}`);
+            if ((await settled()) !== 'true') throw new Error('small movement did not return to canonical settlement');
+
+            await swipe(260, 780);
+            const afterReverse = await index();
+            if (afterReverse !== start) throw new Error(`reverse swipe must move exactly one back: ${afterSmall} -> ${afterReverse}`);
+
+            const controls = await field.locator('.laws-rolodex-control').count();
+            if (controls !== 0) throw new Error('forbidden surrogate controls present');
+
+            await field.locator('.laws-rolodex-card[data-active="true"] .laws-rolodex-enter').click();
+            const returnButton = page.locator('.laws-exhibit-return');
+            await returnButton.waitFor({state:'visible', timeout:5000});
+            await page.waitForFunction(() => document.querySelector('.laws-exhibit-return')?.textContent?.trim() === 'Return to Orbit');
+            if ((await returnButton.textContent()).trim() !== 'Return to Orbit') throw new Error('public exit does not say Return to Orbit');
+            await returnButton.click();
+
+            console.log(JSON.stringify({contract:runtime.contract,start,afterLarge,afterSmall,afterReverse,returnLanguage:runtime.returnLanguage}, null, 2));
+            await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE

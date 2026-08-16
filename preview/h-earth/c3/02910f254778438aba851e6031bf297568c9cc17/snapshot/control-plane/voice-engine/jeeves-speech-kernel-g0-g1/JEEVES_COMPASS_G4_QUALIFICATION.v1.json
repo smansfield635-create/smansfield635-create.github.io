@@ -1,0 +1,23 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_COMPASS_G4_QUALIFICATION_v1",
+  "status": "PASS_BOUNDED_PURPOSE_OWNER_REVIEW_THRESHOLD_NOT_MET",
+  "generation": "G4",
+  "predecessorGeneration": "G3",
+  "corpusCount": 8,
+  "renderExecution": "PASS_ALL_EIGHT_BEATS",
+  "qualificationDimensions": {
+    "coarticulationNaturalness": "IMPROVED",
+    "spectralMotionNaturalness": "IMPROVED",
+    "metallicIdentityReduction": "MATERIAL_BUT_INSUFFICIENT",
+    "boundarySmoothness": "IMPROVED",
+    "preservationOfG1Timing": "PASS",
+    "preservationOfG2PhraseIntention": "PASS",
+    "preservationOfG3MicroProsody": "PASS",
+    "ownerReviewThreshold": "NOT_MET"
+  },
+  "observedDisposition": "G4 successfully attacks rigid phoneme boundaries and static spectral envelopes, but the deterministic harmonic/formant source remains recognizably synthetic and is not yet a credible Jeeves voice candidate.",
+  "acceptanceLaw": "G4 passes only if coarticulation and spectral dynamics materially reduce rigid acoustic identity without sacrificing intelligibility or predecessor behavior.",
+  "reviewArtifactPolicy": "No audio surfaced because ownerReviewThreshold is NOT_MET.",
+  "g4Disposition": "PASS_BOUNDED_PURPOSE",
+  "nextLawfulAction": "G5_DECISION_BOUNDARY_NARROW_ACOUSTIC_RESIDUAL_ONLY"
+}

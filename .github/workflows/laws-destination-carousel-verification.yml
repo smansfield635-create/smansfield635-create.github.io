@@ -38,14 +38,16 @@ jobs:
           css = Path('laws/index.destination-carousel.css').read_text()
           loader = Path('laws/index.mobile-background-tabs.js').read_text()
           required_js = [
-              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v3',
+              'LAWS_DESTINATION_CAROUSEL_RUNTIME_v4',
               'pointerdown', 'pointermove', 'pointerup',
               'ArrowLeft', 'ArrowRight', 'Home', 'End',
               'LAWS_DESTINATION_CAROUSEL_CHANGED',
               'data-laws-root-rolodex-section',
-              'neighbor-select', 'drag-snap',
+              'neighbor-select', 'swipe-step', 'swipe-cancel',
               'removeSurrogateControls',
-              'surrogateNavigation: false'
+              'surrogateNavigation: false',
+              'discreteSwipe: true', 'oneGestureOneStep: true',
+              'Return to Orbit'
           ]
           required_css = [
               'position: absolute !important',
@@ -61,7 +63,7 @@ jobs:
           for token in required_css:
               assert token in css, f'missing CSS contract token: {token}'
           assert 'index.mobile-background-tabs.core.js' in loader
-          assert 'index.destination-carousel.js' in loader
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V4_20260816A' in loader
           assert 'navigationAuthority: false' in js
           assert 'contentAuthority: false' in js
           assert 'routeAuthority: false' in js
@@ -70,5 +72,7 @@ jobs:
           assert 'control-next' not in js
           assert 'Previous item in' not in js
           assert 'Next item in' not in js
+          assert 'state.velocity' not in js
+          assert 'projected =' not in js
           print('Laws destination carousel exact-head static qualification PASS')
           PY

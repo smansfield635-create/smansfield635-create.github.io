@@ -1440,18 +1440,6 @@
       "scopeHash": "a78fffa03c9cd7e1639ba441caab37ef334959d0599b4a2c0af6c0c493ac089b",
       "state": "ADMITTED_LOCKED"
     },
-    "a9b819502be9236e17e01459fc593ea923b43d80971ff664fdb929e9a21a350e": {
-      "governingHead": "eacb69cf93d18c4f6e1ec4307a05b634dccef4a8",
-      "lockGeneration": 1490,
-      "lockScope": "H_EARTH:OW03:EXPERIENCE_ANCHOR_EVIDENCE:V1",
-      "operationId": "H_EARTH_OW03_EXPERIENCE_ANCHOR_EVIDENCE_20260815_001",
-      "procedureLocatorDigest": "2453958069e0d39fc13bdee1eff1d686f208c461f44479f705443f009013df5b",
-      "released": false,
-      "requestDigest": "cd9c4e8c97323846bb85f2a9a35425253cbe9054fd806323a109f0bca31b85b1",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a9b819502be9236e17e01459fc593ea923b43d80971ff664fdb929e9a21a350e",
-      "state": "ADMITTED_LOCKED"
-    },
     "aa53681c8031a7e59affe6a2763018e45f8ced56416d18b3da9f474e57d8ad1f": {
       "governingHead": "e876e6107d3e01a19e76c9fd487b6de0d511cb25",
       "lockGeneration": 390,
@@ -21851,6 +21839,19 @@
       "requestDigest": "0525370d4f2d451c6b298ad4441e0b3cc720be6dd316e16fc54271bfc383104b",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "cd5f1e827b9270caf93d4610428eed595f1d3fb56b7191c9b4016ef245398544",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "eacb69cf93d18c4f6e1ec4307a05b634dccef4a8",
+      "lockGeneration": 1490,
+      "lockScope": "H_EARTH:OW03:EXPERIENCE_ANCHOR_EVIDENCE:V1",
+      "operationId": "H_EARTH_OW03_EXPERIENCE_ANCHOR_EVIDENCE_20260815_001",
+      "procedureLocatorDigest": "2453958069e0d39fc13bdee1eff1d686f208c461f44479f705443f009013df5b",
+      "released": true,
+      "requestDigest": "cd9c4e8c97323846bb85f2a9a35425253cbe9054fd806323a109f0bca31b85b1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a9b819502be9236e17e01459fc593ea923b43d80971ff664fdb929e9a21a350e",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

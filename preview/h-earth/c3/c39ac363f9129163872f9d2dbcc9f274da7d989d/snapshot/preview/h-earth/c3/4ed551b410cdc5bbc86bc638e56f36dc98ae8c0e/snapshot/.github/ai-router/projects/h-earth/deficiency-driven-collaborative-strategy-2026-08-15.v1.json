@@ -1,0 +1,168 @@
+{
+  "schema": "H_EARTH_DEFICIENCY_DRIVEN_COLLABORATIVE_STRATEGY_v1",
+  "status": "PINNED_STRATEGY_PENDING_INSTALLATION",
+  "projectId": "H_EARTH",
+  "date": "2026-08-15",
+  "sourceDeficiencyRegister": ".github/ai-router/projects/h-earth/definitive-deficiency-register-2026-08-15.v1.json",
+  "sourceMain": "ac716b6a57631538f92f38eac833a7e1c575e29f",
+  "auditedCandidate": "541360177526a14a59e8afad0944ca44fe39bc96",
+  "purpose": "Define one collaborative preconstruction strategy that treats every pinned D01-D12 deficiency without redefining any deficiency or granting product-construction authority.",
+  "laws": {
+    "deficiencyIdentityImmutable": true,
+    "allPinnedDeficienciesRequireTreatment": true,
+    "strategyMayCoordinateDeficiencies": true,
+    "strategyMayNotSilentlyDropOrRedefineDeficiency": true,
+    "constructionAuthorized": false,
+    "accessibleExtentFrozen": true,
+    "macroGratitudeSilhouetteRemainsProvisional": true,
+    "reciprocityRemainsBidirectional": true,
+    "referenceClassExcellenceIsCrossCuttingNotCosmetic": true
+  },
+  "workstreams": [
+    {
+      "id": "S01",
+      "name": "SEAMLESS_VISIBLE_WORLD_CONTINUATION",
+      "addresses": ["D01", "D02", "D09"],
+      "objective": "Make the authored region and noninteractive continuation read as one continuous world while preserving the frozen accessible extent.",
+      "actions": [
+        "Sample the authored edge continuously for elevation, slope, terrain frequency, shoreline direction, water level and atmospheric state.",
+        "Create a middle-distance transition band that inherits those edge conditions before progressively reducing detail, contrast and geometric frequency.",
+        "Use asymmetrical distant silhouettes and atmosphere rather than a uniform enclosing wall, shelf or rectangular perimeter.",
+        "Keep the ocean-facing continuation open water plus atmospheric depth where geography requires it; never generate opposing land across the continental-edge ocean view.",
+        "Keep all exterior continuation nonaddressable, noncollidable and nonnavigable.",
+        "Prohibit any further playable-terrain enlargement as a seam-hiding mechanism."
+      ],
+      "successEvidence": [
+        "No perimeter, shelf, wall, rectangular horizon cue, abrupt tonal break or elevation break is perceptible from representative traversal positions.",
+        "Visible-world extent exceeds accessible extent while accessible addresses, collision and navigation topology remain unchanged."
+      ]
+    },
+    {
+      "id": "S02",
+      "name": "SUBTROPICAL_CAUSAL_ENVIRONMENT",
+      "addresses": ["D03", "D04", "D05", "D11"],
+      "objective": "Make Gratitude read immediately as a warm subtropical coastal environment through causal ecological relationships rather than palette replacement.",
+      "actions": [
+        "Drive moisture, vegetation and material response from local elevation, slope, drainage, freshwater proximity, coastal exposure, shelter and aspect fields.",
+        "Increase vegetation and humid material response in valleys, drainage corridors, sheltered lower slopes and freshwater-influenced areas.",
+        "Retain exposed soil and geology on steep, wind-exposed, rocky or otherwise causally justified surfaces.",
+        "Treat the shore as an ecological gradient from inland vegetation through coastal scrub/grass, dry beach, wet beach, nearshore water and humid atmosphere.",
+        "Introduce atmospheric humidity and distance haze consistent with a warm subtropical coast without flattening visibility or terrain readability.",
+        "Require first-glance environmental identity to work without explanatory text."
+      ],
+      "successEvidence": [
+        "Independent first-glance review no longer classifies the environment as desert/arid.",
+        "Vegetation and material distribution can be explained by the causal fields rather than uniform placement.",
+        "The coast reads as a living transition rather than a geometric seam between tan land and blue water."
+      ]
+    },
+    {
+      "id": "S03",
+      "name": "MORPHOLOGY_TOLERANT_ENVIRONMENTAL_ARCHITECTURE",
+      "addresses": ["D04", "D07", "D12"],
+      "objective": "Ensure the environmental system survives later Gratitude coastline and macro-shape correction without redesign.",
+      "actions": [
+        "Keep biome and material rules dependent on local physical fields, not distance from the current outer perimeter.",
+        "Separate macro coastline masks from reusable local climate, hydrology and ecology evaluation.",
+        "Require remapping rather than redesign when coastline or region perimeter changes.",
+        "Structure the causal rules so later H-Earth regions can reuse them only after Gratitude proves them believable."
+      ],
+      "successEvidence": [
+        "A hypothetical coastline remap does not require rewriting the climate/biome rule set.",
+        "No primary environmental driver is keyed to the provisional blob perimeter."
+      ]
+    },
+    {
+      "id": "S04",
+      "name": "GRATITUDE_POSITIONAL_STANDARD_DISCOVERY",
+      "addresses": ["D06", "D08"],
+      "objective": "Develop a believable regional morphology before using Gratitude to constrain Audralia continental composition.",
+      "actions": [
+        "Keep the current macro silhouette explicitly provisional during environmental repair.",
+        "Use proven local relief, drainage direction, headlands, bays, peninsulas, coastal openings and watershed-to-coast relationships to discover directional macro form.",
+        "Reject radial or blob-like symmetry where it is not supported by those regional causes.",
+        "Do not force regional geometry to match the current globe merely for visual agreement.",
+        "Do not promote regional geometry back to planetary authority until the regional environment passes geographic and environmental believability thresholds.",
+        "After regional pass, reconcile Gratitude's proven positional relationships back to Audralia and use them as a calibration constraint for surrounding continental composition."
+      ],
+      "successEvidence": [
+        "The regional morphology exhibits causally legible directional asymmetry rather than a generic rounded mass.",
+        "A later globe reconciliation can cite proven regional relationships rather than copying a local mesh silhouette literally."
+      ]
+    },
+    {
+      "id": "S05",
+      "name": "RECIPROCAL_ENVIRONMENTAL_IDENTITY",
+      "addresses": ["D08", "D11"],
+      "objective": "Make environmental identity a first-class reciprocal comparison dimension alongside geography.",
+      "actions": [
+        "Compare climate regime, biome family, hydrologic expression, vegetation distribution, atmosphere and material palette between H-Earth and Audralia at scale-appropriate resolution.",
+        "Preserve the rule that same canonical identity does not require identical visual resolution or smoothing.",
+        "Record any regional discovery that requires globe reconciliation rather than silently changing either side.",
+        "Prevent the current planetary blob from prejudicing regional development and prevent provisional regional detail from prejudicing planetary composition."
+      ],
+      "successEvidence": [
+        "Regional and planetary representations can be described as the same place in both geography and environmental identity without literal mesh equivalence.",
+        "Any remaining mismatch is explicitly classified as a reconciliation obligation rather than ignored."
+      ]
+    },
+    {
+      "id": "S06",
+      "name": "REFERENCE_CLASS_EXPERIENCE_AND_DEVICE_QUALIFICATION",
+      "addresses": ["D09", "D10"],
+      "objective": "Require the repaired environment to meet cross-device, accessibility, performance, interaction and perceptual excellence thresholds on the exact candidate.",
+      "actions": [
+        "Qualify phone, tablet and desktop initial, traversal and representative result states on the exact candidate SHA.",
+        "Verify navigation, input continuity, collision boundaries and return behavior are unchanged unless separately authorized.",
+        "Measure and inspect frame stability, loading behavior and interaction responsiveness sufficient to ensure the environmental improvements do not destroy usability.",
+        "Check accessibility obligations applicable to the entered-world interface and controls.",
+        "Perform reference-class first-glance and sustained-immersion adjudication after technical checks.",
+        "Fail if any defect is merely hidden by crop, camera angle, fog, or reduced draw distance instead of resolved."
+      ],
+      "successEvidence": [
+        "Exact-candidate phone/tablet/desktop evidence exists for required states.",
+        "No protected interaction or navigation regression is observed.",
+        "The implementation mechanism is no longer a dominant perceptual read."
+      ]
+    }
+  ],
+  "coverage": {
+    "required": ["D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10", "D11", "D12"],
+    "mapping": {
+      "D01": ["S01"],
+      "D02": ["S01"],
+      "D03": ["S02"],
+      "D04": ["S02", "S03"],
+      "D05": ["S02"],
+      "D06": ["S04"],
+      "D07": ["S03"],
+      "D08": ["S04", "S05"],
+      "D09": ["S01", "S06"],
+      "D10": ["S06"],
+      "D11": ["S02", "S05"],
+      "D12": ["S03"]
+    },
+    "orphanDeficiencyAllowed": false
+  },
+  "interactionLaws": [
+    "D03 must not be treated by uniform greening; D04 and D05 causal relationships must be solved with it.",
+    "D01 must not be treated by another region expansion; D02 continuity and D07 architectural separation must constrain it.",
+    "D06 must not be frozen before D03-D05 establish a believable place and D07 keeps those systems morphology-tolerant.",
+    "D08 reciprocity must remain bidirectional: neither current globe nor current region is allowed to become authority merely by being more developed.",
+    "D09 reference-class quality is a cross-cutting result of resolved geography, ecology, immersion, interaction and execution, not a cosmetic finishing pass.",
+    "D12 reuse is proven only after Gratitude works; premature generalization is prohibited."
+  ],
+  "preconstructionSequence": [
+    "INSTALL_THIS_STRATEGY_AS_CONTROL_PLANE_CONTEXT",
+    "DERIVE_A_BOUNDED_PRODUCT_CONSTRUCTION_RECIPE_FROM_S01_S02_AND_S03_FOR_THE_NEXT_REGIONAL_MATERIAL_CYCLE",
+    "KEEP_S04_PLANETARY_RECONCILIATION_DEFERRED_UNTIL_REGIONAL_BELIEVABILITY_THRESHOLD_IS_MET",
+    "CARRY_S05_RECIPROCITY_REQUIREMENTS_THROUGH_REGIONAL_QUALIFICATION",
+    "USE_S06_AS_TERMINAL_EXACT_CANDIDATE_QUALIFICATION",
+    "ONLY_AFTER_STRATEGY_INSTALLATION_SEPARATELY_ADMIT_PRODUCT_MUTATION"
+  ],
+  "nextBoundary": {
+    "requiredNextAction": "QUALIFY_AND_INSTALL_THIS_STRATEGY_THEN_DERIVE_SEPARATELY_ADMITTED_BOUNDED_PRODUCT_CONSTRUCTION_RECIPE",
+    "constructionAuthorized": false,
+    "law": "THE STRATEGY MAY DEFINE HOW DEFICIENCIES COOPERATE, BUT PRODUCT SOURCE MAY NOT CHANGE UNTIL A SEPARATE CONSTRUCTION OPERATION IS ADMITTED AGAINST THIS EXACT STRATEGY."
+  }
+}

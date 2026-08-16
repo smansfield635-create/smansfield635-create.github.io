@@ -1,13 +1,13 @@
 /**
  * /showroom/globe/h-earth/render/renderer.functional-landscape.js
  *
- * H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_SUCCESSOR_RUN_6D_v1
+ * H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_SUCCESSOR_OW04_v2
  *
  * Bounded successor renderer for elevation-bearing terrain, shoreline, water,
- * and distant proxies. It preserves camera-space clipping and semantic
- * identity while replacing competing DOM stacking contexts with one physical
- * depth domain. No camera, world, admission, compositor, or production
- * authority is created here.
+ * distant proxies, and causal subtropical material variation. It preserves
+ * camera-space clipping and semantic identity while keeping one physical depth
+ * domain. No camera, world, admission, compositor, or production authority is
+ * created here.
  */
 
 const freeze = (value, seen = new WeakSet()) => {
@@ -38,9 +38,19 @@ const interpolate = (a, b, t) => vector(
   a.y + (b.y - a.y) * t,
   a.z + (b.z - a.z) * t
 );
+const clamp01 = (value) => Math.max(0, Math.min(1, value));
+const mixRgb = (a, b, t) => {
+  const u = clamp01(t);
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * u),
+    Math.round(a[1] + (b[1] - a[1]) * u),
+    Math.round(a[2] + (b[2] - a[2]) * u),
+    255
+  ];
+};
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_SUCCESSOR_RUN_6D_v1';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_SUCCESSOR_OW04_v2_SUBTROPICAL_CAUSAL_MATERIALS';
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER = freeze({
   contractId: H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER_CONTRACT_ID,
@@ -66,7 +76,8 @@ export const H_EARTH_FUNCTIONAL_LANDSCAPE_RENDERER = freeze({
     degeneracyRejection: true,
     nonfiniteRejection: true,
     skyMaterialization: true,
-    semanticOverlayMaterialization: true
+    semanticOverlayMaterialization: true,
+    causalTerrainMaterialPresentation: true
   },
   held: {
     gpuBackend: true,
@@ -191,20 +202,65 @@ export function signedAreaHEarthProjectedTriangle(points) {
     (b.y - a.y) * (c.x - a.x);
 }
 
-const materialDefaults = (primitive) => {
+const baseMaterialDefaults = (primitive) => {
   const intent = primitive?.materialHint?.materialIntent ??
     primitive?.materialHint?.materialReference ?? 'DEFAULT';
   if (String(intent).includes('WATER')) {
-    return { rgba: [46, 118, 144, 210], transparencyClass: 'TRANSLUCENT' };
+    return { rgba: [42, 124, 151, 218], transparencyClass: 'TRANSLUCENT' };
   }
   if (String(intent).includes('FOAM')) {
-    return { rgba: [232, 242, 235, 190], transparencyClass: 'TRANSLUCENT' };
+    return { rgba: [232, 244, 235, 194], transparencyClass: 'TRANSLUCENT' };
   }
-  if (String(intent).includes('HIGHLAND') || String(intent).includes('DISTANT')) {
+  if (String(intent).includes('DISTANT')) {
+    return { rgba: [67, 88, 69, 255], transparencyClass: 'OPAQUE' };
+  }
+  if (String(intent).includes('HIGHLAND_SUBTROPICAL')) {
+    return { rgba: [65, 96, 62, 255], transparencyClass: 'OPAQUE' };
+  }
+  if (String(intent).includes('SUBTROPICAL')) {
+    return { rgba: [77, 103, 66, 255], transparencyClass: 'OPAQUE' };
+  }
+  if (String(intent).includes('HIGHLAND')) {
     return { rgba: [68, 83, 79, 255], transparencyClass: 'OPAQUE' };
   }
   return { rgba: [116, 103, 73, 255], transparencyClass: 'OPAQUE' };
 };
+
+function causalTerrainMaterial(primitive, worldTriangle, sourceTriangleIndex) {
+  const base = { ...baseMaterialDefaults(primitive), ...(primitive.renderMaterial ?? {}) };
+  if (base.transparencyClass === 'TRANSLUCENT') return base;
+  const intent = String(primitive?.materialHint?.materialIntent ??
+    primitive?.materialHint?.materialReference ?? 'DEFAULT');
+  if (!intent.includes('SUBTROPICAL') && !intent.includes('DISTANT')) return base;
+
+  const centroid = worldTriangle.reduce((sum, point) => ({
+    x: sum.x + point.x / 3,
+    y: sum.y + point.y / 3,
+    z: sum.z + point.z / 3
+  }), { x: 0, y: 0, z: 0 });
+  const patch = 0.5 + 0.5 * Math.sin(centroid.x * 0.021 + centroid.z * 0.017 + sourceTriangleIndex * 0.37);
+  const secondary = 0.5 + 0.5 * Math.sin(centroid.x * 0.008 - centroid.z * 0.013 + 1.4);
+  const lowlandMoisture = clamp01(1 - Math.max(0, centroid.y - 7) / 38);
+  const coastalInfluence = intent.includes('COASTAL') ? 1 : 0.45;
+  const vegetationSignal = clamp01(0.30 + 0.32 * patch + 0.22 * secondary + 0.16 * lowlandMoisture * coastalInfluence);
+
+  let dry = [111, 98, 70];
+  let wet = [64, 105, 61];
+  if (intent.includes('GROUNDCOVER')) {
+    dry = [118, 105, 74];
+    wet = [72, 112, 65];
+  } else if (intent.includes('FOOTHILL')) {
+    dry = [92, 91, 66];
+    wet = [57, 94, 55];
+  } else if (intent.includes('DISTANT')) {
+    dry = [75, 88, 72];
+    wet = [55, 83, 61];
+  }
+  return {
+    ...base,
+    rgba: mixRgb(dry, wet, vegetationSignal)
+  };
+}
 
 function sourceTriangles(primitive) {
   const vertices = primitive?.geometry?.vertices;
@@ -245,7 +301,6 @@ export function prepareHEarthFunctionalLandscapeRenderPlan(frame, viewport) {
       rejected.push({ primitiveId, reason: 'PRIMITIVE_ID_MISSING' });
       continue;
     }
-    const material = { ...materialDefaults(primitive), ...(primitive.renderMaterial ?? {}) };
     const windingPolicy = primitive?.metadata?.windingPolicy ??
       'NORMALIZE_CLOCKWISE_DOUBLE_SIDED';
 
@@ -254,6 +309,7 @@ export function prepareHEarthFunctionalLandscapeRenderPlan(frame, viewport) {
         rejected.push({ primitiveId, sourceTriangleIndex, reason: 'NONFINITE_VERTEX' });
         return;
       }
+      const material = causalTerrainMaterial(primitive, worldTriangle, sourceTriangleIndex);
       const cameraTriangle = worldTriangle.map((point) =>
         transformHEarthWorldPointToCamera(point, basis));
       const clipped = clipHEarthCameraPolygon(cameraTriangle, context);

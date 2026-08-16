@@ -238,15 +238,20 @@
 
   function syncContext() {
     if (!state.root || !state.panel) return;
+
+    // Critical ownership boundary: while a room cluster is open, the controller's
+    // foreground-room state and the index bridge own this panel. Do not rewrite it.
     if (clusterOwnsPanel() || mirrorlandOwnsPanel()) {
       state.signature = "";
       return;
     }
+
     const focus = String(state.root.dataset.orbitPreviewFocus || state.root.dataset.orbitFocus || "north");
     if (state.interacted && CARDINALS[focus]) {
       showContext(CARDINALS[focus], `cardinal:${focus}`);
       return;
     }
+
     showContext(GLOBAL_CONTEXT, "global");
   }
 
@@ -254,23 +259,55 @@
     state.root = document.querySelector("[data-compass-root]");
     state.panel = document.querySelector("[data-compass-panel]");
     if (!state.root || !state.panel) return;
+
     state.eyebrow = state.panel.querySelector("[data-compass-panel-eyebrow]");
     state.title = state.panel.querySelector("[data-compass-panel-title]");
     state.purpose = state.panel.querySelector("[data-compass-panel-purpose]");
     state.relationship = state.panel.querySelector("[data-compass-panel-relationship]");
+
     const scene = document.querySelector("[data-compass-scene]");
-    scene?.addEventListener("pointerdown", () => {state.interacted = true;}, {passive: true});
-    scene?.addEventListener("touchstart", () => {state.interacted = true;}, {passive: true});
-    scene?.addEventListener("click", () => {state.interacted = true;queueMicrotask(syncContext);}, {passive: true});
-    new MutationObserver(() => queueMicrotask(syncContext)).observe(state.root, {attributes: true,attributeFilter: ["data-compass-mode","data-orbit-focus","data-orbit-preview-focus","data-selected-cardinal","data-selected-room","data-cluster-primary-room","data-cluster-preview-primary-room","data-mirrorland-window-state"]});
+    scene?.addEventListener("pointerdown", () => {
+      state.interacted = true;
+    }, {passive: true});
+    scene?.addEventListener("touchstart", () => {
+      state.interacted = true;
+    }, {passive: true});
+    scene?.addEventListener("click", () => {
+      state.interacted = true;
+      queueMicrotask(syncContext);
+    }, {passive: true});
+
+    new MutationObserver(() => queueMicrotask(syncContext)).observe(state.root, {
+      attributes: true,
+      attributeFilter: [
+        "data-compass-mode",
+        "data-orbit-focus",
+        "data-orbit-preview-focus",
+        "data-selected-cardinal",
+        "data-selected-room",
+        "data-cluster-primary-room",
+        "data-cluster-preview-primary-room",
+        "data-mirrorland-window-state"
+      ]
+    });
+
     installFibonacciNight();
     syncContext();
-    globalThis[GLOBAL_KEY] = Object.freeze({initialized: true,contract: "DGB_COMPASS_CONTEXT_OWNERSHIP_CONTINUITY_v5",roomPreviewPanelOwnership: true,fibonacciNight: true});
+
+    globalThis[GLOBAL_KEY] = Object.freeze({
+      initialized: true,
+      contract: "DGB_COMPASS_CONTEXT_OWNERSHIP_CONTINUITY_v5",
+      roomPreviewPanelOwnership: true,
+      fibonacciNight: true
+    });
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, {once: true});
-  else init();
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, {once: true});
+  } else {
+    init();
+  }
 })();
 
 /* Editorial carousel bootstrap. The runtime itself remains isolated from Compass navigation authority. */
-(()=>{const css='/assets/compass/compass.carousel.css?v=1',js='/assets/compass/compass.carousel.js?v=1';if(!document.querySelector(`link[href^="${css.split('?')[0]}"]`)){const l=document.createElement('link');l.rel='stylesheet';l.href=css;document.head.append(l)}if(!document.querySelector(`script[src^="${js.split('?')[0]}"]`)){const s=document.createElement('script');s.src=js;s.defer=true;document.head.append(s)}})();
+(()=>{const css='/assets/compass/compass.carousel.css?v=1',js='/assets/compass/compass.carousel.js?v=1';if(!document.querySelector('link[href^="/assets/compass/compass.carousel.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href=css;document.head.append(l)}if(!document.querySelector('script[src^="/assets/compass/compass.carousel.js"]')){const s=document.createElement('script');s.src=js;s.defer=true;document.head.append(s)}})();

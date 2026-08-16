@@ -35,7 +35,7 @@
     document.head.append(script);
   });
   load("/laws/index.mobile-background-tabs.core.js?v=LAWS_ROOT_ROLODEX_RESPONSIVE_CONTINUITY_V5_ORBIT_CUSTODY", "data-laws-responsive-core")
-    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V9_METHODS_REFERENCE_PORT_20260816B", "data-laws-destination-carousel-runtime"))
+    .then(() => load("/laws/index.destination-carousel.js?v=LAWS_DESTINATION_CAROUSEL_RUNTIME_V9_METHODS_REFERENCE_PORT_20260816C_ONE_SWIPE_ONE_STEP", "data-laws-destination-carousel-runtime"))
     .then(() => load("/laws/index.destination-stage.js?v=LAWS_DESTINATION_STAGE_V1_20260816A", "data-laws-destination-stage-runtime"))
     .catch(error => {
       document.documentElement.dataset.lawsDestinationCarouselRuntime = "load-failed";

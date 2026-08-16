@@ -219,11 +219,11 @@ export function sampleHEarthCanonicalCoastalBoundary(worldX, worldZ) {
   const eastShoreX = getHEarthCanonicalEasternShorelineX(worldZ);
   const northDistance = northShoreZ - worldZ;
   const eastDistance = eastShoreX - worldX;
-  const eastActivation = smoothstep(C3_CORNER.seamX - 18, C3_CORNER.apexX + 8, worldX) * smoothstep(C3_CORNER.apexZ + 28, C3_CORNER.apexZ - 96, -worldZ);
-  const shorelineDistance = eastActivation > 0
-    ? Math.min(northDistance + (1 - eastActivation) * 80, eastDistance)
-    : northDistance;
-  const controllingEdge = eastActivation > 0 && eastDistance < northDistance + (1 - eastActivation) * 80 ? 'EAST' : 'NORTH';
+  // C3D1 defines the continent as the intersection of two half-planes:
+  // south/inland of the north coast AND west/inland of the east coast.
+  // The smaller signed distance is therefore the controlling coastal edge.
+  const shorelineDistance = Math.min(northDistance, eastDistance);
+  const controllingEdge = eastDistance < northDistance ? 'EAST' : 'NORTH';
   return deepFreeze({
     valid: true,
     northShoreZ,

@@ -35,11 +35,11 @@ const freeze = (value, seen = new WeakSet()) => {
 };
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_RUN_6C_v2_SEMANTIC_PHYSICAL_SEPARATION';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_GEOMETRY_PROVIDER_OW03_CORRECTIVE_v3_BOUNDARY_DISSOLUTION';
 
 export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   contractId: H_EARTH_GEOMETRY_LANDSCAPE_CONTRACT_ID,
-  samplesPerAxis: 9,
+  samplesPerAxis: 25,
   adjacentLodVariation: false,
   uniformSharedBoundaryResolution: true,
   terrainChunkMaximum: 10,
@@ -51,6 +51,16 @@ export const H_EARTH_GEOMETRY_LANDSCAPE_PROFILE = freeze({
   ownsFrame: false,
   ownsRenderer: false
 });
+
+function dissolveOuterBoundary(bounds) {
+  const domain = H_EARTH_TERRAIN_FIELD.worldDomain;
+  return freeze({
+    xMin: bounds.xMin === -256 ? domain.xMinimum : bounds.xMin,
+    xMax: bounds.xMax === 256 ? domain.xMaximum : bounds.xMax,
+    zMin: bounds.zMin <= -256 ? domain.zMinimum : bounds.zMin,
+    zMax: bounds.zMax
+  });
+}
 
 const lerp = (a, b, t) => a + (b - a) * t;
 
@@ -100,6 +110,7 @@ function makeEdgeSamples(chunk, grid) {
 
 function constructChunk(chunk) {
   const size = H_EARTH_GEOMETRY_LANDSCAPE_PROFILE.samplesPerAxis;
+  const worldBounds = dissolveOuterBoundary(chunk.worldBounds);
   const vertices = [];
   const indices = [];
   const grid = [];
@@ -107,14 +118,14 @@ function constructChunk(chunk) {
   for (let row = 0; row < size; row += 1) {
     const rowSamples = [];
     const z = lerp(
-      chunk.worldBounds.zMin,
-      chunk.worldBounds.zMax,
+      worldBounds.zMin,
+      worldBounds.zMax,
       row / (size - 1)
     );
     for (let column = 0; column < size; column += 1) {
       const x = lerp(
-        chunk.worldBounds.xMin,
-        chunk.worldBounds.xMax,
+        worldBounds.xMin,
+        worldBounds.xMax,
         column / (size - 1)
       );
       const sample = sampleHEarthTerrainField(x, z);
@@ -172,6 +183,11 @@ function constructChunk(chunk) {
       edgeSamples,
       lodState: chunk.lodState,
       realizationState: chunk.realizationState,
+      sourceWorldBounds: chunk.worldBounds,
+      realizedWorldBounds: worldBounds,
+      boundaryDissolution: 'OUTER_CHUNKS_EXTENDED_TO_PROCEDURAL_CONTINUATION_DOMAIN',
+      visibleRectangularTerminationProhibited: true,
+      foundingPacketMutationPerformed: false,
       semanticIdentityIndependentOfPhysicalGranularity: true,
       admitted: false,
       aggregateFrameAuthority: false

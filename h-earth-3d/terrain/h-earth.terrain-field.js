@@ -9,7 +9,9 @@
  * Harbor through a localized asymmetric continental-coast deformation. OW02
  * continues the primary mountain system inland as an articulated range with
  * passes, a receiving basin, watershed-directed valleys and foothill taper.
- * It creates no geometry, admission, frame, renderer, or route.
+ * OW03 resolves that backbone into a compound, nonradial continental coast
+ * with named peninsulas, bays, gulfs, coves and headlands. It creates no
+ * geometry, admission, frame, renderer, or route.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -65,6 +67,29 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
     mouthCenterX: 132,
     shorelineRule: 'RESOLVE_FROM_CANONICAL_GRATITUDE_CONTINENTAL_SHORELINE',
     localGeometryRule: 'PRESERVE_REGIONAL_SCALE_CHARACTER_DO_NOT_COPY_PLANETARY_VERTICES'
+  },
+  compoundMorphology: {
+    systemId: 'H_EARTH_GRATITUDE_ORGANIC_COMPOUND_CONTINENT_MORPHOLOGY_v1',
+    morphology: 'NONRADIAL_ASYMMETRIC_MULTI_LOBE_CONTINENT',
+    peninsulas: [
+      { identity: 'GRATITUDE_WESTERN_PENINSULA', centerX: -220, halfWidth: 30, waterwardReach: 25 },
+      { identity: 'GRATITUDE_EASTERN_PENINSULA', centerX: 232, halfWidth: 24, waterwardReach: 20 }
+    ],
+    gulfs: [
+      { identity: 'GRATITUDE_WESTERN_GULF', centerX: -170, halfWidth: 30, inlandReach: 28 }
+    ],
+    bays: [
+      { identity: 'GRATITUDE_SANCTUARY_BAY', centerX: -82, halfWidth: 24, inlandReach: 20 },
+      { identity: 'GRATITUDE_BAY', centerX: 118, halfWidth: 82, inlandReach: 48 }
+    ],
+    headlands: [
+      { identity: 'GRATITUDE_CENTRAL_HEADLAND', centerX: -125, halfWidth: 24, waterwardReach: 20 },
+      { identity: 'GRATITUDE_HARBOR_HEADLAND', centerX: 48, halfWidth: 42, waterwardReach: 10.5 },
+      { identity: 'GRATITUDE_EASTERN_HEADLAND', centerX: 198, halfWidth: 46, waterwardReach: 7.5 }
+    ],
+    coastalRhythmLaw: 'MAJOR_LOBES_AND_INLETS_MUST_DIFFER_IN_WIDTH_DEPTH_AND_SPACING',
+    radialSymmetryProhibited: true,
+    circularBlobMorphologyProhibited: true
   },
   sandbarTransferLaw: {
     count: 3,
@@ -149,11 +174,27 @@ export function getHEarthCanonicalShorelineZ(worldX) {
   const canonicalBackbone = coast.baselineZ
     + 7.5 * Math.sin(worldX / 58)
     + 2.75 * Math.sin((worldX + 31) / 19);
+  const westernPeninsula = 25 * bell(worldX, -220, 30);
+  const westernGulf = -28 * bell(worldX, -170, 30);
+  const centralHeadland = 20 * bell(worldX, -125, 24);
+  const sanctuaryBay = -20 * bell(worldX, -82, 24);
   const bayCore = -bay.maximumInlandReach * bell(worldX, bay.centerX, bay.halfWidth);
   const bayAsymmetry = -9.0 * bell(worldX, bay.centerX + 22, 44);
   const westernHeadland = 10.5 * bell(worldX, bay.westernHeadlandX, 42);
   const easternHeadland = 7.5 * bell(worldX, bay.easternHeadlandX, 46);
-  return canonicalBackbone + bayCore + bayAsymmetry + westernHeadland + easternHeadland;
+  const easternPeninsula = 20 * bell(worldX, 232, 24);
+  const westernRhythmWindow = bell(worldX, -166, 118);
+  const easternRhythmWindow = bell(worldX, 220, 62);
+  const nestedCoastalRhythm = (
+    2.2 * Math.sin((worldX + 17) / 11) +
+    1.1 * Math.sin((worldX - 9) / 6.5)
+  ) * Math.max(westernRhythmWindow, easternRhythmWindow);
+  return canonicalBackbone
+    + westernPeninsula + westernGulf + centralHeadland
+    + sanctuaryBay + westernHeadland
+    + bayCore + bayAsymmetry
+    + easternHeadland + easternPeninsula
+    + nestedCoastalRhythm;
 }
 
 function evaluateRawElevation(worldX, worldZ) {

@@ -17,6 +17,23 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"
 html[data-laws-root-rolodex="active"] .laws-rolodex-card[data-active="true"] :is(.laws-rolodex-card__count,h4,.laws-rolodex-card__question,.laws-rolodex-card__description,.laws-rolodex-enter) { opacity:1; }
 html[data-laws-root-rolodex="active"] .laws-rolodex-card:not([data-active="true"]) .laws-rolodex-enter { pointer-events:none; }
 html[data-laws-root-rolodex="active"] .laws-rolodex-position { min-width:4.5rem; color:rgba(204,232,245,.78); font-variant-numeric:tabular-nums; font-size:.76rem; letter-spacing:.11em; text-align:center; }
+
+/* Destination-stage hard custody: legacy max-content/anchor rules are not spatial authority. */
+html[data-laws-destination-stage="active"][data-laws-root-rolodex="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-track {
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  right:auto!important;
+  bottom:auto!important;
+  inset:auto!important;
+  width:0!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+
 @media (min-width:781px) and (max-width:1200px) { html[data-laws-root-rolodex="active"] { --laws-carousel-width:min(58vw,28.5rem); --laws-carousel-height:clamp(26rem,52vw,31rem); } html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser { margin-inline:clamp(.35rem,1.2vw,.8rem); } }
 @media (max-width:780px) { html[data-laws-root-rolodex="active"] { --laws-carousel-width:78vw; --laws-carousel-height:27rem; } html[data-laws-root-rolodex="active"] .laws-rolodex-field__browser { margin-inline:.5rem; border-radius:1.15rem; } html[data-laws-root-rolodex="active"] .laws-rolodex-card { min-height:22.5rem!important; } }
 @media (max-width:430px) { html[data-laws-root-rolodex="active"] { --laws-carousel-width:82vw; --laws-carousel-height:28rem; } }

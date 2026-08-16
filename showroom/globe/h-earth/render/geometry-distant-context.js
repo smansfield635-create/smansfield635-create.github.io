@@ -1,11 +1,12 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_RUN_6C_v3
+ * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v4
  *
- * Constructs non-navigable visual context beyond the frozen accessible region.
- * The layer carries inland/lateral terrain and horizon continuity only. It owns
- * no semantic address, collision, navigation, admission, or playable extent.
+ * Constructs a non-navigable near/middle/far visual envelope beyond the frozen
+ * accessible region. It carries inland/lateral terrain and horizon continuity
+ * only. It owns no semantic address, collision, navigation, admission, or
+ * playable extent, and creates no waterward landmass.
  */
 
 import {
@@ -15,10 +16,7 @@ import {
   isHEarthNeutralPrimitiveRecord
 } from './geometry-kernel.js';
 
-import {
-  H_EARTH_TERRAIN_FORMATIONS
-} from '../../../../h-earth-3d/terrain/h-earth.terrain-formations.js';
-
+import { H_EARTH_TERRAIN_FORMATIONS } from '../../../../h-earth-3d/terrain/h-earth.terrain-formations.js';
 import {
   getHEarthCanonicalShorelineZ,
   sampleHEarthTerrainField
@@ -32,127 +30,122 @@ const freeze = (value, seen = new WeakSet()) => {
   return Object.freeze(value);
 };
 
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = (t) => t * t * (3 - 2 * t);
+
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW03_v3_VISUAL_WORLD_CONTINUATION';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v4_SEAMLESS_VISUAL_WORLD_ENVELOPE';
 
-const ACCESSIBLE = freeze({
-  xMin: -1024,
-  xMax: 1024,
-  zMin: -1024
-});
-const VISUAL_HORIZON = freeze({
-  xMin: -1536,
-  xMax: 1536,
-  zMin: -1536
-});
+const ACCESSIBLE = freeze({ xMin: -1024, xMax: 1024, zMin: -1024 });
+const VISUAL_HORIZON = freeze({ xMin: -1664, xMax: 1664, zMin: -1664 });
 
-function appendStrip({ vertices, indices, sampleCount, innerAt, outerAt }) {
-  const base = vertices.length;
-  for (let index = 0; index < sampleCount; index += 1) {
-    const t = index / (sampleCount - 1);
-    const inner = innerAt(t);
-    const outer = outerAt(t);
-    vertices.push(
-      createHEarthVector3(inner.x, inner.y, inner.z),
-      createHEarthVector3(outer.x, outer.y, outer.z)
-    );
-  }
-  for (let index = 0; index < sampleCount - 1; index += 1) {
-    const a = base + index * 2;
-    const b = a + 1;
-    const c = a + 2;
-    const d = a + 3;
-    indices.push(a, c, b, b, c, d);
-  }
+function horizonElevation(innerElevation, distanceT, phase) {
+  const retained = innerElevation * (1 - 0.78 * distanceT);
+  const relief = 5.0 * Math.sin(phase + distanceT * Math.PI * 2.4) +
+    2.0 * Math.sin(phase * 0.63 + distanceT * Math.PI * 6.2);
+  return Math.max(1.25, retained + relief * distanceT);
 }
 
-function horizonElevation(innerElevation, t, phase) {
-  const retained = innerElevation * (1 - 0.72 * t);
-  const relief = 4.5 * Math.sin(phase + t * Math.PI * 3) +
-    2.2 * Math.sin(phase * 0.7 + t * Math.PI * 7);
-  return Math.max(1.5, retained + relief * t);
+function appendBlendedBand({ vertices, indices, sampleCount, rowCount, pointAt }) {
+  const base = vertices.length;
+  for (let row = 0; row < rowCount; row += 1) {
+    const distanceT = row / (rowCount - 1);
+    for (let index = 0; index < sampleCount; index += 1) {
+      const alongT = index / (sampleCount - 1);
+      const point = pointAt(alongT, distanceT);
+      vertices.push(createHEarthVector3(point.x, point.y, point.z));
+    }
+  }
+  for (let row = 0; row < rowCount - 1; row += 1) {
+    for (let index = 0; index < sampleCount - 1; index += 1) {
+      const a = base + row * sampleCount + index;
+      const b = a + 1;
+      const c = a + sampleCount;
+      const d = c + 1;
+      indices.push(a, c, b, b, c, d);
+    }
+  }
 }
 
 function constructVisualWorldContinuation(formation) {
   const vertices = [];
   const indices = [];
 
-  // Preserve the established distant highland silhouette inside the authored
-  // region as contextual geography.
-  const highlandSamples = 17;
+  // Preserve the established contextual highland silhouette, but keep it
+  // irregular and subordinate to the larger continuation envelope.
   const { worldBounds, elevationEnvelope } = formation;
   const baseY = elevationEnvelope.minimum;
   const amplitude = elevationEnvelope.maximum - elevationEnvelope.minimum;
-  const minimumEnvelope = 0.08;
-  appendStrip({
+  appendBlendedBand({
     vertices,
     indices,
-    sampleCount: highlandSamples,
-    innerAt: (progress) => {
-      const x = worldBounds.xMin + (worldBounds.xMax - worldBounds.xMin) * progress;
-      const z = worldBounds.zMin + 7 * Math.sin(progress * Math.PI * 2);
-      return { x, y: baseY, z };
-    },
-    outerAt: (progress) => {
-      const x = worldBounds.xMin + (worldBounds.xMax - worldBounds.xMin) * progress;
-      const z = worldBounds.zMin + 7 * Math.sin(progress * Math.PI * 2);
-      const envelope = minimumEnvelope +
-        (1 - minimumEnvelope) * Math.sin(progress * Math.PI);
+    sampleCount: 25,
+    rowCount: 2,
+    pointAt: (alongT, distanceT) => {
+      const x = lerp(worldBounds.xMin, worldBounds.xMax, alongT);
+      const envelope = 0.1 + 0.9 * Math.sin(alongT * Math.PI);
       const crest = baseY + amplitude * envelope *
-        (0.72 + 0.18 * Math.sin(progress * Math.PI * 5));
-      return { x, y: crest, z };
-    }
-  });
-
-  // Inland continuation. The inner row is sampled exactly on the frozen
-  // accessible boundary; the outer row loses fine relief into atmospheric
-  // horizon-scale terrain. It is presentation only.
-  appendStrip({
-    vertices,
-    indices,
-    sampleCount: 65,
-    innerAt: (t) => {
-      const x = ACCESSIBLE.xMin + (ACCESSIBLE.xMax - ACCESSIBLE.xMin) * t;
-      const sample = sampleHEarthTerrainField(x, ACCESSIBLE.zMin);
-      return { x, y: sample.elevation, z: ACCESSIBLE.zMin };
-    },
-    outerAt: (t) => {
-      const x = VISUAL_HORIZON.xMin + (VISUAL_HORIZON.xMax - VISUAL_HORIZON.xMin) * t;
-      const innerX = ACCESSIBLE.xMin + (ACCESSIBLE.xMax - ACCESSIBLE.xMin) * t;
-      const sample = sampleHEarthTerrainField(innerX, ACCESSIBLE.zMin);
+        (0.68 + 0.14 * Math.sin(alongT * Math.PI * 5.5));
       return {
         x,
-        y: horizonElevation(sample.elevation, 1, 0.8 + t * 2.1),
-        z: VISUAL_HORIZON.zMin
+        y: distanceT === 0 ? baseY : crest,
+        z: worldBounds.zMin + 7 * Math.sin(alongT * Math.PI * 2.3)
       };
     }
   });
 
-  // Lateral continuation terminates at the continental coast. No terrain is
-  // generated on the waterward side, so open ocean cannot acquire an opposing
-  // landmass merely to hide the render boundary.
+  // Inland near/middle/far envelope. Multiple rows prevent the old single
+  // stretched strip from reading as a shelf around the accessible rectangle.
+  appendBlendedBand({
+    vertices,
+    indices,
+    sampleCount: 81,
+    rowCount: 6,
+    pointAt: (alongT, distanceT) => {
+      const eased = smooth(distanceT);
+      const innerX = lerp(ACCESSIBLE.xMin, ACCESSIBLE.xMax, alongT);
+      const outerX = lerp(VISUAL_HORIZON.xMin, VISUAL_HORIZON.xMax, alongT);
+      const inner = sampleHEarthTerrainField(innerX, ACCESSIBLE.zMin);
+      const irregular = (18 * Math.sin(alongT * Math.PI * 5.1 + distanceT * 1.7) +
+        7 * Math.sin(alongT * Math.PI * 11.3 + 0.4)) * distanceT;
+      const x = lerp(innerX, outerX, eased) + irregular;
+      const z = lerp(ACCESSIBLE.zMin, VISUAL_HORIZON.zMin, eased) -
+        22 * Math.sin(alongT * Math.PI * 2.7) * distanceT;
+      const farY = horizonElevation(inner.elevation, distanceT, 0.7 + alongT * 2.4);
+      const localCarry = sampleHEarthTerrainField(
+        innerX,
+        lerp(ACCESSIBLE.zMin, ACCESSIBLE.zMin - 170, Math.min(1, distanceT * 1.8))
+      ).elevation;
+      return { x, y: lerp(localCarry, farY, eased), z };
+    }
+  });
+
+  // Lateral continuation exists only landward of each canonical coast. It
+  // blends through several rows and becomes increasingly irregular with
+  // distance, eliminating the parallel-wall reading.
   for (const side of ['WEST', 'EAST']) {
+    const sign = side === 'WEST' ? -1 : 1;
     const innerX = side === 'WEST' ? ACCESSIBLE.xMin : ACCESSIBLE.xMax;
     const outerX = side === 'WEST' ? VISUAL_HORIZON.xMin : VISUAL_HORIZON.xMax;
     const coastlineZ = getHEarthCanonicalShorelineZ(innerX);
-    const landwardEndZ = Math.min(-96, coastlineZ - 18);
-    appendStrip({
+    const landwardEndZ = Math.min(-112, coastlineZ - 30);
+    appendBlendedBand({
       vertices,
       indices,
-      sampleCount: 49,
-      innerAt: (t) => {
-        const z = ACCESSIBLE.zMin + (landwardEndZ - ACCESSIBLE.zMin) * t;
-        const sample = sampleHEarthTerrainField(innerX, z);
-        return { x: innerX, y: sample.elevation, z };
-      },
-      outerAt: (t) => {
-        const z = VISUAL_HORIZON.zMin + (landwardEndZ - VISUAL_HORIZON.zMin) * t;
-        const innerZ = ACCESSIBLE.zMin + (landwardEndZ - ACCESSIBLE.zMin) * t;
-        const sample = sampleHEarthTerrainField(innerX, innerZ);
+      sampleCount: 61,
+      rowCount: 5,
+      pointAt: (alongT, distanceT) => {
+        const eased = smooth(distanceT);
+        const innerZ = lerp(ACCESSIBLE.zMin, landwardEndZ, alongT);
+        const farZ = lerp(VISUAL_HORIZON.zMin, landwardEndZ - 18, alongT);
+        const inner = sampleHEarthTerrainField(innerX, innerZ);
+        const lateralBreakup = sign * (16 * Math.sin(alongT * Math.PI * 4.4 + 0.8) +
+          6 * Math.sin(alongT * Math.PI * 9.1)) * distanceT;
         return {
-          x: outerX,
-          y: horizonElevation(sample.elevation, 1, side === 'WEST' ? 1.7 : 3.1),
-          z
+          x: lerp(innerX, outerX, eased) + lateralBreakup,
+          y: lerp(inner.elevation, horizonElevation(inner.elevation, distanceT,
+            side === 'WEST' ? 1.6 + alongT : 3.0 + alongT), eased),
+          z: lerp(innerZ, farZ, eased) - 12 * Math.sin(alongT * Math.PI * 2.1) * distanceT
         };
       }
     });
@@ -170,10 +163,10 @@ function constructVisualWorldContinuation(formation) {
     semanticRole: 'DISTANT_HIGHLAND_OR_MOUNTAIN_PROXY',
     materialHint: freeze({
       materialReference: 'H_EARTH_MATERIAL_HIGHLAND_PROXY',
-      materialIntent: 'ATMOSPHERIC_DISTANT_TERRAIN_VISUAL_WORLD_CONTINUATION'
+      materialIntent: 'HIGHLAND_SUBTROPICAL_ATMOSPHERIC_DISTANT_TERRAIN_CONTINUATION'
     }),
     source: freeze({
-      sourceType: 'H_EARTH_TERRAIN_FORMATION_PROXY_WITH_VISUAL_CONTINUATION',
+      sourceType: 'H_EARTH_TERRAIN_FORMATION_PROXY_WITH_MULTI_BAND_VISUAL_CONTINUATION',
       formationId: formation.formationId,
       generationRevision: formation.generationRevision
     }),
@@ -184,11 +177,10 @@ function constructVisualWorldContinuation(formation) {
       sourceAddressRule: formation.addressRule,
       worldBounds: formation.worldBounds,
       elevationEnvelope: formation.elevationEnvelope,
-      crestEndpointPolicy: 'NONZERO_MINIMUM_ENVELOPE',
-      minimumEnvelope,
-      lodClass: 'DISTANT_COMPOSITE_PROXY',
-      proxySourceIdentities: [formation.formationId],
+      lodClass: 'DISTANT_MULTI_BAND_COMPOSITE_PROXY',
       visualContinuationLayer: true,
+      continuationRowCountInland: 6,
+      continuationRowCountLateral: 5,
       accessibleRegionBounds: ACCESSIBLE,
       visualHorizonBounds: VISUAL_HORIZON,
       oceanFacingTerrainContinuation: false,
@@ -196,7 +188,7 @@ function constructVisualWorldContinuation(formation) {
       navigable: false,
       collisionAuthority: false,
       accessibleRegionExpansion: false,
-      continuationLaw: 'VISIBLE_SURROUNDING_WORLD_IS_PRESENTATION_ONLY_AND_MUST_NOT_EXPAND_THE_AUTHORED_ACCESSIBLE_REGION',
+      continuationLaw: 'VISIBLE_SURROUNDING_WORLD_BLENDS_FROM_LOCAL_EDGE_TO_DISTANCE_WITHOUT_EXPANDING_AUTHORED_ACCESSIBLE_REGION',
       visibleRectangularTerminationProhibited: true,
       admitted: false,
       aggregateFrameAuthority: false
@@ -204,8 +196,7 @@ function constructVisualWorldContinuation(formation) {
   });
 
   return freeze({
-    ok: construction?.valid === true &&
-      isHEarthNeutralPrimitiveRecord(construction?.primitiveRecord),
+    ok: construction?.valid === true && isHEarthNeutralPrimitiveRecord(construction?.primitiveRecord),
     primitive: construction?.primitiveRecord ?? null,
     issues: construction?.issues ?? []
   });
@@ -216,9 +207,7 @@ export function constructHEarthDistantContextGeometry() {
   const result = constructVisualWorldContinuation(formation);
   return freeze({
     ok: result.ok,
-    status: result.ok
-      ? 'DISTANT_CONTEXT_GEOMETRY_COMPLETE'
-      : 'DISTANT_CONTEXT_GEOMETRY_FAILED',
+    status: result.ok ? 'DISTANT_CONTEXT_GEOMETRY_COMPLETE' : 'DISTANT_CONTEXT_GEOMETRY_FAILED',
     contractId: H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
     formationId: formation.formationId,
     primitives: result.ok ? [result.primitive] : [],

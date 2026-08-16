@@ -67,10 +67,18 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-track {
   inset: 0 !important;
   display: block !important;
   width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
   height: 100% !important;
   padding: 0 !important;
   margin: 0 !important;
   transform-style: preserve-3d;
+}
+
+html[data-laws-destination-stage="active"][data-laws-root-rolodex="active"] [data-laws-root-rolodex-section] .laws-destination-stage__field .laws-rolodex-track {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
 }
 
 html[data-laws-root-rolodex="active"] .laws-rolodex-card {
@@ -201,8 +209,6 @@ html[data-laws-root-rolodex="active"] .laws-rolodex-field[data-carousel-dragging
 @media (prefers-reduced-motion: reduce) {
   html[data-laws-root-rolodex="active"] .laws-rolodex-card {
     transition: none !important;
-  }
-  html[data-laws-root-rolodex="active"] .laws-rolodex-card {
     filter: none;
   }
 }

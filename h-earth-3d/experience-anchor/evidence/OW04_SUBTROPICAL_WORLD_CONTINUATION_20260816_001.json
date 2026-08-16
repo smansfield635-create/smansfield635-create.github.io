@@ -1,6 +1,10 @@
 {
   "schema": "H_EARTH_OW04_EXACT_CANDIDATE_EVIDENCE_v1",
   "candidateHead": "b0020917d0e9bb679f8f259fe895b3cc9720874c",
+  "experienceBytesEvidenceHead": "e39714a734542d0b6be7e8c151ce6014ff41ecb2",
+  "receiptMaterializationTriggerHead": "b0020917d0e9bb679f8f259fe895b3cc9720874c",
+  "receiptBearingHead": "e724e58f416b9d62a3a9cac6388fb891344a08e8",
+  "receiptOnlyHeadMovementPreservesExperienceBytes": true,
   "exactCandidateEvidenceRunId": 31956871552,
   "exactCandidateArtifactId": 9266184496,
   "exactCandidateArtifactSha256": "1a099cca5e11feb4036a97fc667ae8e2b3dad64089b3bbaa4823b69a53a2c246",

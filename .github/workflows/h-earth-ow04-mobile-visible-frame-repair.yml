@@ -1,0 +1,131 @@
+name: H-Earth OW04 Mobile Visible Frame Repair
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-ow04-subtropical-world-continuation-20260815
+
+permissions:
+  contents: write
+
+jobs:
+  repair-mobile-visible-frame:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact OW04 head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply bounded default-framebuffer presentation repair
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js')
+          text = path.read_text()
+
+          old_marker = "  let initialized = false;\n  const counters = {"
+          new_marker = "  let initialized = false;\n  let latestDrawRanges = Object.freeze([]);\n  const counters = {"
+          if new_marker not in text:
+              if old_marker not in text:
+                  raise SystemExit('OW04_PRESENTATION_REPAIR_INITIALIZATION_ANCHOR_MISSING')
+              text = text.replace(old_marker, new_marker, 1)
+
+          old_render_anchor = "    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);\n    gl.viewport(0, 0, width, height);"
+          new_render_anchor = "    latestDrawRanges = Object.freeze(packet.drawRanges.map((range) => Object.freeze({ ...range })));\n\n    gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);\n    gl.viewport(0, 0, width, height);"
+          if new_render_anchor not in text:
+              if old_render_anchor not in text:
+                  raise SystemExit('OW04_PRESENTATION_REPAIR_RENDER_ANCHOR_MISSING')
+              text = text.replace(old_render_anchor, new_render_anchor, 1)
+
+          start = text.find("  function presentColorFrame() {")
+          end = text.find("\n\n  function captureColorFrame", start)
+          if start < 0 or end < 0:
+              raise SystemExit('OW04_PRESENTATION_REPAIR_PRESENT_FUNCTION_MISSING')
+
+          replacement = '''  function presentColorFrame() {
+    if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
+
+    // Physical-device presentation law: do not depend on an implementation-
+    // specific offscreen-to-default framebuffer blit. The governed scene is
+    // redrawn explicitly into the browser-visible default framebuffer using
+    // the same resident package, programs, VAO, uniforms, and draw ranges.
+    // The offscreen geometry framebuffer remains intact for diagnostic
+    // readback and exact evidence capture.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, width, height);
+    gl.clearColor(...resources.skyColor, 1);
+    gl.clearDepth(1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.disable(gl.CULL_FACE);
+    gl.useProgram(resources.geometryProgram);
+    gl.bindVertexArray(resources.vertexArray);
+
+    for (const range of latestDrawRanges) {
+      if (range.transparencyClass === 'TRANSLUCENT') {
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.depthMask(false);
+      } else {
+        gl.disable(gl.BLEND);
+        gl.depthMask(true);
+      }
+      gl.drawElements(
+        gl.TRIANGLES,
+        range.indexCount,
+        gl.UNSIGNED_INT,
+        range.indexStart * 4
+      );
+    }
+
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+    gl.flush();
+    const error = gl.getError();
+    if (error !== gl.NO_ERROR) {
+      throw new Error(`R3C_VISIBLE_PRESENTATION_DRAW_ERROR:${error}`);
+    }
+    counters.visiblePresentationCount += 1;
+    return Object.freeze({
+      frameNumber: counters.frameCount,
+      width,
+      height,
+      presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'
+    });
+  }'''
+
+          current = text[start:end]
+          if "presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'" not in current:
+              text = text[:start] + replacement + text[end:]
+
+          path.write_text(text)
+          PY
+
+      - name: Verify bounded source mutation
+        run: |
+          set -euo pipefail
+          git diff --check
+          grep -F "presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'" showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          grep -F "latestDrawRanges = Object.freeze(packet.drawRanges.map" showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          if git diff --name-only | grep -v '^showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js$'; then
+            echo 'Unexpected product mutation path' >&2
+            exit 1
+          fi
+
+      - name: Commit repaired renderer
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Mobile visible-frame repair already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '4189828+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          git commit -m 'H-Earth OW04: repair physical-device visible framebuffer presentation'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

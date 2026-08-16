@@ -1,6 +1,70 @@
 /* Laws responsive continuity + destination carousel + dedicated destination stage bootstrap. */
 (() => {
   "use strict";
+
+  /*
+   * Entry-scroll custody repair.
+   *
+   * The preserved root Rolodex runtime predates the spatial carousel and calls
+   * Element#scrollIntoView while it initializes every lower-page card group.
+   * scrollIntoView is two-dimensional, so those horizontal alignment requests
+   * are allowed to move the document vertically before O1 entry custody later
+   * restores the page to the Compass. That produces the visible bottom-of-page
+   * excursion/snap-back on first load.
+   *
+   * Keep the legacy call available everywhere else, but constrain Rolodex-card
+   * alignment to the card's own horizontal viewport. No document scroll is
+   * requested from this path.
+   */
+  const installRolodexScrollCustody = () => {
+    const proto = globalThis.Element?.prototype;
+    if (!proto || typeof proto.scrollIntoView !== "function" || proto.__dgbLawsRolodexScrollCustody) return;
+
+    const nativeScrollIntoView = proto.scrollIntoView;
+    const horizontalOnlyScrollIntoView = function (...args) {
+      const card = this?.matches?.(".laws-rolodex-card")
+        && this.closest?.("[data-laws-root-rolodex-section]")
+        ? this
+        : null;
+      if (!card) return nativeScrollIntoView.apply(this, args);
+
+      const viewport = card.closest(".laws-rolodex-viewport");
+      if (!viewport) return;
+
+      const viewportRect = viewport.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const targetLeft = Math.max(0,
+        viewport.scrollLeft
+        + (cardRect.left + cardRect.width / 2)
+        - (viewportRect.left + viewportRect.width / 2));
+      const options = args[0];
+      const behavior = options && typeof options === "object" && options.behavior === "smooth"
+        ? "smooth"
+        : "auto";
+
+      viewport.scrollTo({ left: targetLeft, behavior });
+      document.documentElement.dataset.lawsRolodexScrollCustody = "horizontal-only";
+    };
+
+    Object.defineProperty(horizontalOnlyScrollIntoView, "name", { value: "scrollIntoView" });
+    Object.defineProperty(proto, "scrollIntoView", {
+      configurable: true,
+      writable: true,
+      value: horizontalOnlyScrollIntoView
+    });
+    Object.defineProperty(proto, "__dgbLawsRolodexScrollCustody", {
+      configurable: true,
+      value: Object.freeze({
+        nativeScrollIntoView,
+        scope: "laws-root-rolodex-cards",
+        verticalDocumentScroll: false
+      })
+    });
+    document.documentElement.dataset.lawsRolodexScrollCustody = "horizontal-only";
+  };
+
+  installRolodexScrollCustody();
+
   const load = (src, marker) => new Promise((resolve, reject) => {
     if (document.querySelector(`script[${marker}]`)) { resolve(); return; }
     const script = document.createElement("script");

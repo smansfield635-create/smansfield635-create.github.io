@@ -23,9 +23,9 @@ jobs:
       - name: Materialize exact OW04 anchor evidence and receipt
         env:
           BASE_SHA: 911064c339e952df0972eef70c575cb6ea22ed0e
-          EVIDENCE_RUN_ID: '31954259847'
-          EVIDENCE_ARTIFACT_ID: '9265512106'
-          EVIDENCE_ARTIFACT_SHA256: '8c2c9c240d87d4af553c037d278bd559e38b8de4ff4b6ab0f56250d0ea0f6bf1'
+          EVIDENCE_RUN_ID: '31956871552'
+          EVIDENCE_ARTIFACT_ID: '9266184496'
+          EVIDENCE_ARTIFACT_SHA256: '1a099cca5e11feb4036a97fc667ae8e2b3dad64089b3bbaa4823b69a53a2c246'
         run: |
           node <<'NODE'
           const fs = require('fs');
@@ -65,6 +65,15 @@ jobs:
             rendererFunctional:true,
             physicalInspectionBaselineRestored:true,
             constructionIntent:'INACCESSIBLE_WORLD_CONTINUATION_WITH_OPEN_OCEAN_AND_NO_PLAYABLE_EXPANSION',
+            repairedDefects:[
+              'PROJECTION_REACH_MISMATCH',
+              'ATMOSPHERIC_REACH_MISMATCH',
+              'COASTAL_ENTRY_INLAND_RELIEF_OVERLAP_CREATES_ENCLOSING_NEAR_FIELD_SCREEN'
+            ],
+            rejectedHypotheses:[
+              'DISTANT_CONTEXT_PRIMITIVE_CAUSES_ENTRY_WALL',
+              'FAR_RELIEF_MATERIAL_CONTRIBUTION_TOO_WEAK'
+            ],
             experienceFiles
           };
           fs.writeFileSync(evidencePath,JSON.stringify(evidence,null,2)+'\n');
@@ -81,9 +90,9 @@ jobs:
             invariants,
             reviewSummary:{
               reviewedCandidateHead:head,
-              qualificationOperation:'H_EARTH_OW04_RECIPROCAL_ANCHOR_REVIEW_20260816_001',
+              qualificationOperation:'H_EARTH_OW04_REACH_AND_ARTICULATED_RELIEF_ANCHOR_REVIEW_20260816_002',
               exactCandidateEvidenceRunId:Number(process.env.EVIDENCE_RUN_ID),
-              finding:'Exact candidate desktop/mobile/interaction capture completed successfully after restoration of the real inspection path. OW04 remains within the same H-Earth ground experience, preserves direct manipulation and canonical continuity, adds only non-navigable distant-world continuation, preserves the frozen accessible region, and creates no waterward landmass.'
+              finding:'Fresh exact-head desktop/mobile/interaction evidence confirms that projection and atmosphere reach are reconciled and the coastal-entry inland range now reads as articulated relief with a visible saddle and depth rather than a continuous enclosing wall. Named mountain identities, direct manipulation, canonical H-Earth continuity, frozen accessible extent, open-ocean law, and non-navigable surrounding-world continuation remain preserved.'
             }
           };
           fs.writeFileSync(receiptPath,JSON.stringify(receipt,null,2)+'\n');
@@ -93,7 +102,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json h-earth-3d/experience-anchor/receipts/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json
-          git commit -m "OW04: admit exact candidate anchor evidence"
+          git commit -m "OW04: admit repaired exact candidate anchor evidence"
       - name: Re-run hard anchor gate on committed candidate
         env:
           BASE_SHA: 911064c339e952df0972eef70c575cb6ea22ed0e

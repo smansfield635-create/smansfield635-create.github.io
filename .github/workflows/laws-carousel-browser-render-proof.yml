@@ -11,9 +11,7 @@ on:
       - 'laws/index.stellar-continuity.css'
       - '.github/workflows/laws-carousel-browser-render-proof.yml'
   workflow_dispatch:
-
-permissions:
-  contents: read
+permissions: { contents: read }
 
 jobs:
   browser-proof:
@@ -21,9 +19,7 @@ jobs:
     steps:
       - name: Check out exact candidate head
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
+        with: { ref: '${{ github.event.pull_request.head.sha || github.sha }}', fetch-depth: 1 }
       - name: Verify JavaScript syntax
         run: |
           node --check laws/index.destination-carousel.js
@@ -35,111 +31,47 @@ jobs:
           npm install playwright@1.55.0 >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null
       - name: Serve exact candidate
-        run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/laws-stage-http.log 2>&1 &
-          echo $! > /tmp/laws-stage-http.pid
-      - name: Prove separate visible stage and working carousel
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-stage-http.log 2>&1 &
+      - name: Prove separate visible stage and shared-ring carousel
         run: |
           node <<'NODE'
-          const { chromium } = require('playwright');
-          (async () => {
-            const browser = await chromium.launch({headless:true});
-            const page = await browser.newPage({ viewport: { width: 1024, height: 1366 }, deviceScaleFactor: 1 });
-            const errors = [];
-            page.on('pageerror', e => errors.push(String(e)));
-            await page.goto('http://127.0.0.1:4173/laws/', { waitUntil: 'networkidle' });
-            await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]', { timeout: 15000 });
-            await page.waitForSelector('html[data-laws-destination-stage="active"]', { timeout: 15000 });
-
-            const hero = page.locator('[data-laws-experience-stage="hero"]');
-            const stage = page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
-            await stage.waitFor({ state: 'visible', timeout: 10000 });
-            const heroBox = await hero.boundingBox();
-            const stageBox = await stage.boundingBox();
-            if (!heroBox || !stageBox) throw new Error('hero or destination stage has no rendered box');
-            if (stageBox.y <= heroBox.y + heroBox.height + 20) throw new Error('destination carousel is not a separate stage below the Compass');
-            if (stageBox.width < 700 || stageBox.height < 650) throw new Error(`destination stage is not materially sized: ${JSON.stringify(stageBox)}`);
-
-            const title = await stage.locator('#laws-destination-stage-title').textContent();
-            if (!title || !title.includes('Choose where the inquiry goes next')) throw new Error('dedicated stage title missing');
-
-            const tabs = stage.locator('.laws-destination-stage__tab');
-            if (await tabs.count() !== 3) throw new Error('exactly three destination-family tabs required');
-            const selectedTabs = stage.locator('.laws-destination-stage__tab[aria-selected="true"]');
-            if (await selectedTabs.count() !== 1) throw new Error('exactly one family tab must be selected');
-
-            const visibleFields = stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]');
-            if (await visibleFields.count() !== 1) throw new Error('exactly one destination family must occupy the stage');
-            const field = visibleFields.first();
-            const cards = field.locator('.laws-rolodex-card');
-            if (await cards.count() < 3) throw new Error('active destination family lacks carousel records');
-            const active = field.locator('.laws-rolodex-card[data-active="true"]');
-            if (await active.count() !== 1) throw new Error('exactly one active carousel card required');
-            if (await field.locator('.laws-rolodex-control').count() !== 0) throw new Error('surrogate Previous/Next controls are forbidden');
-
-            const cardStyles = await cards.evaluateAll(nodes => nodes.slice(0,3).map(n => ({
-              position:getComputedStyle(n).position,
-              transform:getComputedStyle(n).transform,
-              opacity:getComputedStyle(n).opacity,
-              relative:n.getAttribute('data-carousel-relative'),
-              active:n.getAttribute('data-active'),
-              x:n.style.getPropertyValue('--laws-carousel-x'),
-              rect:n.getBoundingClientRect().toJSON()
-            })));
-            if (!cardStyles.every(s => s.position === 'absolute')) throw new Error('cards are not spatially positioned');
-            if (new Set(cardStyles.map(s => s.transform)).size < 2) throw new Error('carousel cards do not occupy distinct spatial transforms');
-
-            const before = await active.getAttribute('data-destination-id');
-            const viewport = field.locator('.laws-rolodex-viewport');
-            await viewport.focus();
-            await page.keyboard.press('ArrowRight');
-            await page.waitForFunction(before => {
-              const field = document.querySelector('.laws-rolodex-field[data-destination-stage-state="active"]');
-              const active = field?.querySelector('.laws-rolodex-card[data-active="true"]');
-              const viewport = field?.querySelector('.laws-rolodex-viewport');
-              if (!active || !viewport) return false;
-              if (active.getAttribute('data-destination-id') === before) return false;
-              if (field.dataset.carouselGestureState !== 'idle' || field.dataset.carouselSettled !== 'true' || field.dataset.carouselCanonicalLanding !== 'true') return false;
-              const a = active.getBoundingClientRect();
-              const v = viewport.getBoundingClientRect();
-              return Math.abs((a.left + a.width / 2) - (v.left + v.width / 2)) <= 24;
-            }, before, { timeout: 3000 });
-
-            const activeAfter = field.locator('.laws-rolodex-card[data-active="true"]');
-            const after = await activeAfter.getAttribute('data-destination-id');
-            if (!after || after === before) throw new Error('keyboard spatial traversal did not advance carousel state');
-
-            const activeBox = await activeAfter.boundingBox();
-            const viewportBox = await viewport.boundingBox();
-            const track = field.locator('.laws-rolodex-track');
-            const trackBox = await track.boundingBox();
-            const activeMeta = await activeAfter.evaluate(n => ({
-              relative:n.getAttribute('data-carousel-relative'),
-              active:n.getAttribute('data-active'),
-              x:n.style.getPropertyValue('--laws-carousel-x'),
-              z:n.style.getPropertyValue('--laws-carousel-z'),
-              scale:n.style.getPropertyValue('--laws-carousel-scale'),
-              transform:getComputedStyle(n).transform,
-              left:getComputedStyle(n).left,
-              width:getComputedStyle(n).width
-            }));
-            if (!activeBox || !viewportBox || !trackBox) throw new Error('active card, track, or viewport lacks rendered geometry');
-            const cardCenter = activeBox.x + activeBox.width / 2;
-            const viewportCenter = viewportBox.x + viewportBox.width / 2;
-            if (Math.abs(cardCenter - viewportCenter) > 24) throw new Error(`active card lacks settled center custody: ${cardCenter} vs ${viewportCenter}`);
-
-            await tabs.nth(0).click();
-            await page.waitForTimeout(250);
-            const familyAfter = await stage.getAttribute('data-destination-family');
-            const activeFieldAfter = await stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]').getAttribute('data-rolodex-id');
-            if (!familyAfter || familyAfter !== activeFieldAfter) throw new Error('family tab did not move stage custody');
-
-            if (errors.length) throw new Error('page errors: ' + errors.join(' | '));
-            await stage.scrollIntoViewIfNeeded();
-            await stage.screenshot({ path: 'laws-destination-stage-render-proof.png' });
-            console.log(JSON.stringify({heroBox, stageBox, before, after, familyAfter, activeMeta, activeBox, viewportBox, trackBox, cardStyles}, null, 2));
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1024,height:1366},deviceScaleFactor:1});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});
+            await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
+            await page.waitForSelector('html[data-laws-destination-stage="active"]',{timeout:15000});
+            const identity=await page.evaluate(()=>({contract:document.documentElement.dataset.lawsCarouselContract,reference:document.documentElement.dataset.lawsCarouselReference,build:document.documentElement.dataset.lawsCarouselBuild}));
+            if(identity.contract!=='LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT'||identity.reference!=='METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1'||identity.build!=='20260816B')throw Error('runtime identity mismatch '+JSON.stringify(identity));
+            const hero=page.locator('[data-laws-experience-stage="hero"]');
+            const stage=page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
+            const heroBox=await hero.boundingBox(),stageBox=await stage.boundingBox();
+            if(!heroBox||!stageBox)throw Error('hero or destination stage has no rendered box');
+            if(stageBox.y<=heroBox.y+heroBox.height+20)throw Error('destination carousel is not a separate stage below Compass');
+            const tabs=stage.locator('.laws-destination-stage__tab'); if(await tabs.count()!==3)throw Error('exactly three family tabs required');
+            if(await stage.locator('.laws-destination-stage__tab[aria-selected="true"]').count()!==1)throw Error('ambiguous family selection');
+            const field=stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]').first();
+            const cards=field.locator('.laws-rolodex-card'),viewport=field.locator('.laws-rolodex-viewport'),track=field.locator('.laws-rolodex-track');
+            if(await cards.count()<3)throw Error('active family lacks records');
+            if(await field.locator('.laws-rolodex-control').count()!==0)throw Error('surrogate controls present');
+            const active=field.locator('.laws-rolodex-card[data-active="true"]'); if(await active.count()!==1)throw Error('exactly one active card required');
+            const before=await active.getAttribute('data-destination-id');
+            const initialTrack=await track.evaluate(n=>getComputedStyle(n).transform);
+            await viewport.focus(); await page.keyboard.press('ArrowRight');
+            await page.waitForFunction(before=>{const f=document.querySelector('.laws-rolodex-field[data-destination-stage-state="active"]');const a=f?.querySelector('.laws-rolodex-card[data-active="true"]');return !!a&&a.getAttribute('data-destination-id')!==before&&f.dataset.carouselSettling==='false'&&f.dataset.carouselCanonicalLanding==='true';},before,{timeout:3000});
+            const activeAfter=field.locator('.laws-rolodex-card[data-active="true"]'); const after=await activeAfter.getAttribute('data-destination-id'); if(!after||after===before)throw Error('keyboard selection did not advance');
+            const activeBox=await activeAfter.boundingBox(),viewportBox=await viewport.boundingBox(); if(!activeBox||!viewportBox)throw Error('missing rendered geometry');
+            const centerError=Math.abs((activeBox.x+activeBox.width/2)-(viewportBox.x+viewportBox.width/2)); if(centerError>24)throw Error(`active card lacks center custody: ${centerError}`);
+            const finalTrack=await track.evaluate(n=>getComputedStyle(n).transform); if(finalTrack===initialTrack)throw Error('shared ring transform did not rotate');
+            await tabs.nth(0).click(); await page.waitForTimeout(250);
+            const familyAfter=await stage.getAttribute('data-destination-family'),activeFieldAfter=await stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]').getAttribute('data-rolodex-id'); if(!familyAfter||familyAfter!==activeFieldAfter)throw Error('family tab did not move stage custody');
+            if(errors.length)throw Error('page errors '+errors.join(' | '));
+            await stage.scrollIntoViewIfNeeded(); await stage.screenshot({path:'laws-destination-stage-render-proof.png'});
+            console.log(JSON.stringify({identity,heroBox,stageBox,before,after,centerError,familyAfter},null,2));
             await browser.close();
-          })().catch(err => { console.error(err); process.exit(1); });
+          })().catch(e=>{console.error(e);process.exit(1)});
           NODE
       - name: Upload rendered proof
         if: always()

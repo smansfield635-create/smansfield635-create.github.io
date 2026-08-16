@@ -44,8 +44,9 @@ assert.equal(H_EARTH_RUN_8B_C3C3R5_PERCEPTUAL_GRID_PROFILE.literalGridOverlayPro
 const terrain=constructHEarthRun8BSuccessorTerrainAndMountain();
 assert.equal(terrain.ok,true,'R5_LIVE_SUCCESSOR_TERRAIN_FAILED');
 
-assert.equal(H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.structuralTerrainTransparencyClass,'OPAQUE','R5_STRUCTURAL_TERRAIN_NOT_OPAQUE');
-assert.equal(H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.tintContributionClass,'TRANSLUCENT_COMPOSITION_CONTRIBUTION','R5_TINT_LAYER_NOT_TRANSLUCENT_COMPOSITION');
+assert.equal(H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.structuralTerrainOpacity,1,'R5_STRUCTURAL_TERRAIN_NOT_OPAQUE');
+assert.equal(H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.backgroundLeakagePermitted,false,'R5_LAYERED_COLOR_BACKGROUND_LEAKAGE_ALLOWED');
+assert.equal(H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.compositionModel,'OPAQUE_STRUCTURAL_TERRAIN_PLUS_TRANSLUCENT_SPATIALLY_VARIANT_ENVIRONMENTAL_TINT_PRECOMPOSED','R5_LAYERED_COLOR_COMPOSITION_MODEL_INVALID');
 const materialSamples=[[-180,-160],[-60,-150],[60,-155],[180,-170]].map(([x,z])=>sampleHEarthRun8CSuccessorSurfaceMaterial(x,z));
 assert.ok(materialSamples.every(sample=>sample.valid===true),'R5_MATERIAL_SAMPLE_INVALID');
 const tintStrengths=materialSamples.map(sample=>sample.environmentalTintStrength??0);

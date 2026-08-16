@@ -6,7 +6,7 @@ Owner inspection established a separate perceptual regression that is not explai
 
 This audit therefore adds a distinct layer between geometry construction and final rendering:
 
-`TERRAIN TOPOLOGY -> MATERIAL/TINT COMPOSITION -> LIGHTING/NORMAL RESPONSE -> ATMOSPHERIC PRESENTATION -> OWNER PERCEPTION`
+`TERRAIN TOPOLOGY -> STRUCTURAL BASE MATERIAL -> TRANSLUCENT REGIONAL COLOR COMPOSITION -> LIGHTING/NORMAL RESPONSE -> ATMOSPHERIC PRESENTATION -> OWNER PERCEPTION`
 
 The question is not whether the grid exists. The question is whether the presentation stack allows the existing terrain topology to remain visually legible while adding the required environmental color.
 
@@ -31,19 +31,27 @@ The relief is added directly to terrain vertex elevation through `perceptualGrid
 
 For terrain and distant land it assigns a new `renderMaterial` using one of several muted subtropical RGBA palettes and declares `transparencyClass: OPAQUE`.
 
-This does not delete the geometric grid. However, it can perceptually mask the relief because the final visible terrain is dominated by broad, low-contrast color assignments at terrain-chunk scale while the cell relief is only 0.72 world units deep.
+This does not delete the geometric grid. However, it can perceptually mask the relief because the final visible terrain is dominated by broad, low-contrast opaque color assignments at terrain-chunk scale while the cell relief is only 0.72 world units deep.
 
 The present presentation therefore allows this failure mode:
 
-`GRID GEOMETRY PRESENT + STRONG OPAQUE COLOR FIELD + WEAK LOCAL CONTRAST = GRID PERCEPTUALLY LOST`
+`GRID GEOMETRY PRESENT + OPAQUE COLOR REPLACEMENT + WEAK LOCAL CONTRAST = GRID PERCEPTUALLY LOST`
 
-## Finding M3 — simply lowering alpha is not the correct repair
+## Finding M3 — translucency belongs to the color layer, not to the structural ground
 
-The owner's intuition that the color layer should be "lighter" is directionally correct, but literal transparency is not the desired mechanism. Making opaque ground partially transparent would reveal sky/background through terrain rather than reveal the terrain's own topology.
+Owner direction clarifies the intended material architecture: the environmental color itself should be translucent and spatially variant, while the structural terrain underneath remains an opaque depth-bearing surface.
 
-The correct operation is to reduce how aggressively the color layer replaces the terrain's underlying material/light response.
+The rejected architecture is:
 
-The color should act as a tint/compositional contribution, not as a visually flattening replacement surface.
+`ONE TERRAIN SURFACE WITH ITS ENTIRE MATERIAL MADE PARTIALLY TRANSPARENT`
+
+That would allow sky or unrelated background geometry to leak through the ground.
+
+The accepted architecture is a two-layer composition:
+
+`OPAQUE STRUCTURAL TERRAIN + TRANSLUCENT REGIONAL COLOR LAYER`
+
+The structural base carries geometry, cell seams, shoulder relief, normals, slope response, lighting and depth. The translucent color layer carries climate/region chroma and varies according to location, terrain role and environmental causes. Because the color layer is composited over the same terrain topology rather than replacing it, the grid can perform the depth work while the color performs the chromatic work.
 
 ## Accepted deficiency
 
@@ -51,7 +59,7 @@ The color should act as a tint/compositional contribution, not as a visually fla
 
 Definition:
 
-The terrain cell topology is present in world-space geometry but is not reliably legible after subtropical material decoration, lighting and atmospheric composition. The presentation layer is therefore suppressing an intended spatial cue without deleting its source geometry.
+The terrain cell topology is present in world-space geometry but is not reliably legible after opaque subtropical material decoration, lighting and atmospheric composition. The presentation layer is suppressing an intended spatial cue without deleting its source geometry.
 
 ## Governing repair strategy
 
@@ -62,22 +70,28 @@ The repair must preserve both layers simultaneously:
 Required strategy:
 
 1. Preserve the existing 16x16 world-space grid relief. Do not replace it with a literal line overlay.
-2. Preserve subtropical regional color, but change it from a wholesale per-chunk replacement toward a bounded tint/composition model.
-3. Increase local terrain-form readability through physically related cues: normal response, slope response, seam/shoulder micro-contrast, and restrained albedo variation.
-4. Do not create black grid lines, board-game styling, neon seams, or technical overlays.
-5. Do not use transparency to expose the grid.
-6. Evaluate the ground from normal owner camera heights and headings; close-up debug views are insufficient.
-7. Compare against the preserved positive baseline in which the grid/depth read clearly.
+2. Preserve an opaque structural terrain base so depth, normals, slope, seams and occlusion remain physically coherent.
+3. Replace the current opaque color-replacement treatment with a translucent regional color composition layered over the structural terrain.
+4. Make the color spatially variant. Chroma/intensity may vary by terrain chunk, physical role, elevation, slope, drainage/coastal influence and other already-authorized environmental causes; it must not collapse into one uniform wash.
+5. The translucent color layer must not create see-through ground. Its compositing target is the structural terrain surface, not the sky/background.
+6. Increase local terrain-form readability through normal response, slope response, seam/shoulder micro-contrast and restrained albedo variation in the structural base.
+7. Do not create black grid lines, board-game styling, neon seams, or technical overlays.
+8. Evaluate the ground from normal owner camera heights and headings; close-up debug views are insufficient.
+9. Compare against the preserved positive baseline in which the grid/depth read clearly.
 
 ## Recommended implementation boundary
 
-The first implementation target is `decorateSubtropicalPrimitive()` in `functional-landscape-frame.js`, not `geometry-landscape.js`.
+The first implementation target remains `decorateSubtropicalPrimitive()` in `functional-landscape-frame.js`, but the material contract must now separate structural material authority from color-composition authority.
 
-Reason: geometry already contains the required topology. The suspected suppression is introduced after that geometry exists.
+The required downstream representation is conceptually:
 
-The material decorator should stop treating the palette as a complete replacement color and instead carry a bounded terrain tint/intensity contract that the render-material path can combine with terrain geometry/normal response.
+- `structuralMaterial`: opaque, topology/depth-bearing;
+- `regionalColorOverlay`: translucent, spatially variant, non-depth-authoritative;
+- both bound to the same terrain geometry identity.
 
-If the current renderer transport cannot express tint strength or terrain-form modulation, that limitation must be surfaced as the next lower presentation-layer deficiency rather than altering the grid geometry to compensate.
+If the current renderer transport supports only one RGBA material per primitive, that is now an explicit lower-layer limitation and must be repaired in the material/render transport rather than forcing the geometry to compensate.
+
+A lawful implementation may use a second draw/material pass or an equivalent shader composition, provided the structural surface remains depth-authoritative and the color overlay does not become a separate floating geometric sheet.
 
 ## Qualification additions
 
@@ -85,13 +99,15 @@ A future C3C3R5 visual gate must separately prove:
 
 - `gridGeometryPresent == true`
 - `literalGridOverlay == false`
-- `subtropicalColorPresent == true`
+- `opaqueStructuralTerrainPresent == true`
+- `translucentRegionalColorCompositionPresent == true`
+- `regionalColorSpatiallyVariant == true`
 - `terrainTopologyVisuallyLegible == true`
 - `colorDoesNotEraseTopology == true`
-- `terrainNotTransparent == true`
+- `groundBackgroundLeakage == false`
 - `normal/slope/seam response contributes to legibility == true`
 
-Machine geometry checks alone cannot satisfy the last three perceptual requirements. Reference render comparison is mandatory.
+Machine geometry checks alone cannot satisfy the perceptual requirements. Reference render comparison is mandatory.
 
 ## Deterministic continuation
 
@@ -103,8 +119,12 @@ and
 
 `MATERIAL / TOPOLOGY COHERENCE`
 
+The material track is now explicitly:
+
+`WORLD-SPACE GRID RELIEF -> OPAQUE STRUCTURAL TERRAIN -> TRANSLUCENT SPATIALLY-VARIANT COLOR -> LIGHTING/NORMAL RESPONSE -> FINAL COMPOSITION`
+
 They converge before owner inspection:
 
-`TRUE PLANET FRAME + PLANET CAMERA + WORLD-SPACE HORIZON + TOPOLOGY-PRESERVING MATERIAL COMPOSITION -> COMPOSITION AUDIT -> VISUAL QUALITY AUDIT -> OWNER INSPECTION`
+`TRUE PLANET FRAME + PLANET CAMERA + WORLD-SPACE HORIZON + OPAQUE DEPTH BASE + TRANSLUCENT VARIANT COLOR -> COMPOSITION AUDIT -> VISUAL QUALITY AUDIT -> OWNER INSPECTION`
 
 No production merge is authorized by this audit document alone.

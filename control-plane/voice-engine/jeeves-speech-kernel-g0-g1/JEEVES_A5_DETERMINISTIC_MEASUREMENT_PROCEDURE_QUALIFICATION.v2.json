@@ -1,0 +1,18 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_A5_DETERMINISTIC_MEASUREMENT_PROCEDURE_QUALIFICATION_v2",
+  "candidateBranch": "agent/jeeves-a5-deterministic-measurement-procedure-v1",
+  "referenceSha256": "7db9a791629e0a0ba02ca026e0d5a7fbf5d43d0cf75395960c1751cb0654be29",
+  "checks": {
+    "rawReferenceFrozen": "PASS",
+    "protocolSegmentationUsable": "PASS_WITH_ADAPTATION",
+    "vowelEnvelopeEvidence": "PASS",
+    "nasalClassEvidence": "PASS",
+    "repeatedVoicedSourceEvidence": "PASS",
+    "aspirationContextEvidence": "PASS",
+    "noExternalSpeechModel": "PASS",
+    "physiologicalOverclaimBlocked": "PASS",
+    "identityCloneAuthorityCreated": "FALSE"
+  },
+  "disposition": "PASS_A5_OBSERVABLE_CALIBRATION_ADMISSIBLE",
+  "nextLawfulAction": "CONSTRUCT_A5_CALIBRATED_JEEVES_ACOUSTIC_PARAMETER_SET_AND_RENDER_C01_FOR_AB_COMPARISON"
+}

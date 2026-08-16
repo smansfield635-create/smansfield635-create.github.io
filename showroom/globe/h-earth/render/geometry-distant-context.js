@@ -1,9 +1,9 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * C3C1 successor. Preserves inland and westward continental continuation while
- * retiring east-side distant land, because C3D1 establishes +X east as open
- * ocean from the northeast continental corner.
+ * C3C2 successor. Preserves the C3C1 northeast coastal-corner truth while
+ * extending only the non-navigable visible world so landward/lateral views no
+ * longer terminate at the authored region edge.
  */
 
 import {
@@ -31,10 +31,10 @@ const smooth = (t) => t * t * (3 - 2 * t);
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_C3C1_NORTHEAST_COASTAL_CORNER_v1';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_C3C2_CLOSED_PLANETARY_WORLD_v1';
 
 const ACCESSIBLE = freeze({ xMin: -1024, xMax: 1024, zMin: -1024 });
-const VISUAL_HORIZON = freeze({ xMin: -2200, xMax: 2200, zMin: -2200 });
+const VISUAL_HORIZON = freeze({ xMin: -4200, xMax: 3600, zMin: -4200 });
 
 function horizonElevation(innerElevation, distanceT, phase) {
   const settleT = smooth(clamp01(distanceT * 1.55));
@@ -71,13 +71,13 @@ function constructVisualWorldContinuation(formation) {
   const vertices = [];
   const indices = [];
 
-  // South/inland continuation is preserved exactly in role: the defined
-  // continent continues away from the coastal corner into the interior.
+  // South/inland continuation remains the same continent. C3C2 lengthens the
+  // noninteractive atmospheric band only; accessible terrain is unchanged.
   appendBlendedBand({
     vertices,
     indices,
     sampleCount: 97,
-    rowCount: 9,
+    rowCount: 13,
     pointAt: (alongT, distanceT) => {
       const eased = smooth(distanceT);
       const elevationT = smooth(clamp01(distanceT * 2.0));
@@ -101,9 +101,8 @@ function constructVisualWorldContinuation(formation) {
     }
   });
 
-  // Only WEST remains a landward lateral continuation. EAST is now governed by
-  // the C3C1 shoreline/open-water bands and must not receive a distant landmass.
-  const side = 'WEST';
+  // Only WEST remains landward lateral continuation. EAST remains the proven
+  // C3C1 open-ocean anchor and receives no distant landmass.
   const sign = -1;
   const innerX = ACCESSIBLE.xMin;
   const outerX = VISUAL_HORIZON.xMin;
@@ -113,7 +112,7 @@ function constructVisualWorldContinuation(formation) {
     vertices,
     indices,
     sampleCount: 69,
-    rowCount: 7,
+    rowCount: 11,
     pointAt: (alongT, distanceT) => {
       const eased = smooth(distanceT);
       const elevationT = smooth(clamp01(distanceT * 2.0));
@@ -146,7 +145,7 @@ function constructVisualWorldContinuation(formation) {
       materialIntent: 'HIGHLAND_SUBTROPICAL_ATMOSPHERIC_DISTANT_TERRAIN_CONTINUATION'
     }),
     source: freeze({
-      sourceType: 'H_EARTH_TERRAIN_FORMATION_PROXY_C3C1_COASTAL_CORNER',
+      sourceType: 'H_EARTH_TERRAIN_FORMATION_PROXY_C3C2_WORLD_ENCLOSURE',
       formationId: formation.formationId,
       generationRevision: formation.generationRevision
     }),
@@ -159,8 +158,8 @@ function constructVisualWorldContinuation(formation) {
       elevationEnvelope: formation.elevationEnvelope,
       lodClass: 'DISTANT_RESTRAINED_ATMOSPHERIC_COMPOSITE_PROXY',
       visualContinuationLayer: true,
-      continuationRowCountInland: 9,
-      continuationRowCountLateral: 7,
+      continuationRowCountInland: 13,
+      continuationRowCountLateral: 11,
       accessibleRegionBounds: ACCESSIBLE,
       visualHorizonBounds: VISUAL_HORIZON,
       westContinentalContinuationPreserved: true,
@@ -173,8 +172,9 @@ function constructVisualWorldContinuation(formation) {
       navigable: false,
       collisionAuthority: false,
       accessibleRegionExpansion: false,
-      continuationLaw: 'INLAND_AND_WEST_CONTINENT_CONTINUE_VISUALLY_WHILE_NORTH_AND_EAST_REMAIN_OPEN_OCEAN_FROM_C3_NORTHEAST_CORNER',
+      continuationLaw: 'INLAND_AND_WEST_CONTINENT_EXTEND_TO_ATMOSPHERIC_DISTANCE_WHILE_NORTH_AND_EAST_REMAIN_OPEN_OCEAN_FROM_C3_NORTHEAST_CORNER',
       visibleRectangularTerminationProhibited: true,
+      baselinePreservationId: 'H_EARTH_C3C1_OWNER_NAVIGATED_SUCCESS_BASELINE_20260816',
       admitted: false,
       aggregateFrameAuthority: false
     })

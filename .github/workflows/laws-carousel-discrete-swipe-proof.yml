@@ -73,7 +73,6 @@ jobs:
             const frame = async name => page.screenshot({path:name,fullPage:false});
             const vector = (s,i) => [s.cards[i].x,s.cards[i].z,s.cards[i].rotate,s.cards[i].scale,s.cards[i].opacity,s.cards[i].blur];
 
-            // Q1: pointer-down -> 25/50/75% live geometry, semantic index unchanged.
             await restore(0);
             const q10=await snap(); await frame('q1-00.png');
             await startTouch();
@@ -88,16 +87,13 @@ jobs:
             assert(q125.state==='dragging' && q150.state==='dragging' && q175.state==='dragging','Q1 pointer custody not DRAGGING');
             await endTouch(); const q1end=await snap(); assert(q1end.index===1 && Math.abs(q1end.orbit-1)<.001,'Q1 release did not commit nearest neighbor detent');
 
-            // Q2: 30% visibly moves, then returns to origin.
             await restore(0); const q2base=await snap(); await startTouch(); await moveFrac(.30); const q230=await snap(); await frame('q2-30.png');
             assert(Math.abs(q230.cards[0].x-q2base.cards[0].x)>10 && q230.index===0,'Q2 missing visible sub-detent motion');
             await endTouch(); const q2end=await snap(); await frame('q2-settled.png'); assert(q2end.index===0 && Math.abs(q2end.orbit)<.001,'Q2 did not return to original detent');
 
-            // Q3: 70% visibly moves and commits neighbor.
             await restore(0); await startTouch(); await moveFrac(.70); const q370=await snap(); await frame('q3-70.png'); assert(q370.index===0 && q370.orbit>.6 && q370.orbit<.8,'Q3 fractional position incorrect before release');
             await endTouch(); const q3end=await snap(); await frame('q3-settled.png'); assert(q3end.index===1 && Math.abs(q3end.orbit-1)<.001,'Q3 did not commit neighbor');
 
-            // Q4: circular seam 4/4 -> 1/4 stays continuous through virtual position N.
             const count=(await snap()).cards.length; await restore(count-1); await startTouch();
             await moveFrac(.25); const q425=await snap(); await frame('q4-25.png');
             await moveFrac(.50); const q450=await snap(); await frame('q4-50.png');
@@ -106,15 +102,16 @@ jobs:
             assert(q425.cards[0].x > q450.cards[0].x && q450.cards[0].x > q470.cards[0].x,'Q4 virtual card 1 is discontinuous at seam');
             await endTouch(); const q4end=await snap(); await frame('q4-settled.png'); assert(q4end.index===0,'Q4 seam did not commit 4/4 -> 1/4');
 
-            // Q5: predominant vertical touch does not rotate and native page travel remains available.
+            // At this stage the carousel is lower on the page. A finger-down vertical
+            // gesture must move the document upward while leaving the carousel index fixed.
             await restore(0); await viewport.scrollIntoViewIfNeeded(); const q5before=await snap(); const sy=await page.evaluate(()=>scrollY); await frame('q5-before.png');
-            touchId++; const vx=box.x+box.width*.5, vy=box.y+box.height*.55;
-            await touch('touchStart',vx,vy); await page.waitForTimeout(30); await touch('touchMove',vx+4,vy-220); await page.waitForTimeout(200); await touch('touchEnd',vx+4,vy-220); await page.waitForTimeout(150);
+            const liveBox = await viewport.boundingBox(); assert(liveBox,'Q5 viewport box unavailable');
+            touchId++; const vx=liveBox.x+liveBox.width*.5, vy=liveBox.y+liveBox.height*.45;
+            await touch('touchStart',vx,vy); await page.waitForTimeout(30); await touch('touchMove',vx+4,vy+220); await page.waitForTimeout(200); await touch('touchEnd',vx+4,vy+220); await page.waitForTimeout(150);
             const q5after=await snap(); const ey=await page.evaluate(()=>scrollY); await frame('q5-after.png');
             assert(q5after.index===q5before.index,'Q5 vertical gesture rotated carousel');
             assert(Math.abs(ey-sy)>20,`Q5 vertical page traversal unavailable: ${sy}->${ey}`);
 
-            // Q6: pointer cancellation returns visible fractional drag to origin with semantic index unchanged.
             await viewport.scrollIntoViewIfNeeded(); await restore(0); const q6base=await snap(); await startTouch(); await moveFrac(.42); const q6drag=await snap(); await frame('q6-drag.png');
             assert(q6drag.index===0 && Math.abs(q6drag.cards[0].x-q6base.cards[0].x)>10,'Q6 cancellation setup lacked visible fractional drag');
             await cancelTouch(); const q6end=await snap(); await frame('q6-cancelled.png'); assert(q6end.index===0 && Math.abs(q6end.orbit)<.001,'Q6 cancellation did not restore original detent');

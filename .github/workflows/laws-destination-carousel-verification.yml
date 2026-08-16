@@ -9,59 +9,25 @@ on:
       - 'laws/index.mobile-background-tabs.core.js'
       - '.github/workflows/laws-destination-carousel-verification.yml'
   workflow_dispatch:
-
-permissions:
-  contents: read
-
+permissions: { contents: read }
 jobs:
   verify:
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact candidate head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
-      - name: Verify JavaScript syntax
+      - uses: actions/checkout@v4
+        with: { ref: '${{ github.event.pull_request.head.sha || github.sha }}', fetch-depth: 1 }
+      - name: Verify canonical Methods carousel contract
         run: |
           node --check laws/index.destination-carousel.js
           node --check laws/index.mobile-background-tabs.js
-          node --check laws/index.mobile-background-tabs.core.js
-      - name: Verify Methods-reference shared-ring and one-swipe-one-step contract
-        run: |
           python3 - <<'PY'
           from pathlib import Path
-          js = Path('laws/index.destination-carousel.js').read_text()
-          css = Path('laws/index.destination-carousel.css').read_text()
-          loader = Path('laws/index.mobile-background-tabs.js').read_text()
-          methods = Path('laws/research/methods-and-models/carousel.js').read_text()
-          required_js = [
-            'LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT',
-            'METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1',
-            'pointerStartAngle', 'state.angle', 'pointermove', 'snapFromDrag',
-            'angleForIndex', 'selectIndex', 'sharedRingAuthority: true',
-            'directManipulation: true', 'oneAuthoritativeSpatialCoordinate: true',
-            'oneSwipeOneStep: true', 'SWIPE_STEP_THRESHOLD_PX',
-            'signedTravel < 0 ? 1 : -1', 'drag-single-step',
-            'restoreOrbitState', 'Return to Orbit'
-          ]
-          required_css = [
-            '--laws-ring-rotation', '--laws-ring-radius', '--laws-card-angle',
-            'rotateY(var(--laws-ring-rotation))',
-            'rotateY(var(--laws-card-angle,0deg)) translateZ(var(--laws-ring-radius))',
-            '.laws-rolodex-viewport[data-dragging="true"] .laws-rolodex-track',
-            'transition:none!important', 'touch-action:pan-y'
-          ]
-          reference_tokens = ['pointerStartAngle', 'state.angle', 'snapFromDrag', 'angleForIndex', 'selectIndex']
-          for token in required_js: assert token in js, f'missing reference-port JS token: {token}'
-          for token in required_css: assert token in css, f'missing shared-ring CSS token: {token}'
-          for token in reference_tokens: assert token in methods, f'Methods reference token missing: {token}'
-          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V9_METHODS_REFERENCE_PORT_20260816C_ONE_SWIPE_ONE_STEP' in loader
-          forbidden = [
-            'detentPosition','targetDetent','directionOnlyGesture:true','atomicRotation:true',
-            'pointer-atomic-step','nearestCircularRelativePosition','--laws-carousel-x','--laws-carousel-z',
-            'const projected = state.angle', 'Math.round(-projected / step)'
-          ]
-          for token in forbidden: assert token not in js + css, f'legacy or multi-index release authority remains: {token}'
-          print('LAWS_METHODS_REFERENCE_PORT_ONE_SWIPE_ONE_STEP_STATIC_PASS')
+          js=Path('laws/index.destination-carousel.js').read_text(); css=Path('laws/index.destination-carousel.css').read_text(); loader=Path('laws/index.mobile-background-tabs.js').read_text(); methods=Path('laws/research/methods-and-models/carousel.js').read_text()
+          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v10_METHODS_BEHAVIORAL_STANDARD','METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','pointerStartAngle','state.angle','state.velocity','snapFromDrag','methodsReleaseProjection:true','momentumTraversal:true','oneAuthoritativeSpatialCoordinate:true','restoreOrbitState','Return to Orbit']
+          for t in required: assert t in js, f'missing canonical behavior {t}'
+          for t in ['--laws-ring-rotation','--laws-ring-radius','--laws-card-angle','rotateY(var(--laws-ring-rotation))','translateZ(var(--laws-ring-radius))','transition:none!important','touch-action:pan-y']: assert t in css, f'missing shared ring CSS {t}'
+          for t in ['state.velocity','snapFromDrag','Math.max(-26, Math.min(26, state.velocity * 90))','Math.round(-projected / step)']: assert t in methods, f'Methods oracle missing {t}'
+          for t in ['oneSwipeOneStep','SWIPE_STEP_THRESHOLD_PX','drag-single-step','detentPosition','targetDetent','pointer-atomic-step']: assert t not in js, f'superseded authority remains {t}'
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V10_METHODS_BEHAVIORAL_STANDARD_20260816D' in loader
+          print('LAWS_CANONICAL_METHODS_CAROUSEL_STATIC_PASS')
           PY

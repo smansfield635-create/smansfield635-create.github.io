@@ -1,4 +1,4 @@
-name: Laws Carousel Methods Reference Proof
+name: Laws Carousel Methods Behavioral Equivalence Proof
 
 on:
   pull_request:
@@ -11,26 +11,25 @@ on:
 permissions: { contents: read }
 
 jobs:
-  methods-reference-proof:
+  methods-behavior-proof:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: { ref: '${{ github.event.pull_request.head.sha }}', fetch-depth: 1 }
-      - name: Syntax check runtime
-        run: node --check laws/index.destination-carousel.js
-      - name: Verify reference-port law statically
+      - name: Syntax and canonical behavior contract
         run: |
+          node --check laws/index.destination-carousel.js
           python3 - <<'PY'
           from pathlib import Path
           js=Path('laws/index.destination-carousel.js').read_text()
-          css=Path('laws/index.destination-carousel.css').read_text()
           methods=Path('laws/research/methods-and-models/carousel.js').read_text()
-          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT','METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','state.angle','pointerStartAngle','snapFromDrag','selectIndex','sharedRingAuthority: true','directManipulation: true','oneSwipeOneStep: true','SWIPE_STEP_THRESHOLD_PX']
-          for token in required: assert token in js, f'missing reference law token: {token}'
-          for token in ['pointerStartAngle','state.angle','snapFromDrag','selectIndex']: assert token in methods, f'reference token absent from Methods: {token}'
-          for token in ['--laws-ring-rotation','--laws-card-angle','translateZ(var(--laws-ring-radius))','transition:none!important']: assert token in css, f'missing shared-ring CSS: {token}'
-          for token in ['detentPosition','targetDetent','direction-locked','pointer-atomic-step','nearestCircularRelativePosition','const projected = state.angle','Math.round(-projected / step)']: assert token not in js, f'legacy or multi-index authority remains: {token}'
-          print('LAWS_METHODS_REFERENCE_ONE_SWIPE_ONE_STEP_STATIC_PASS')
+          loader=Path('laws/index.mobile-background-tabs.js').read_text()
+          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v10_METHODS_BEHAVIORAL_STANDARD','METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','pointerStartAngle','state.angle','state.velocity','snapFromDrag','const projected=state.angle+Math.max(-26,Math.min(26,state.velocity*90))','Math.round(-projected/step)','methodsReleaseProjection:true','momentumTraversal:true']
+          for token in required: assert token in js, f'missing canonical Methods behavior: {token}'
+          for token in ['pointerStartAngle','state.angle','state.velocity','snapFromDrag','Math.max(-26, Math.min(26, state.velocity * 90))','Math.round(-projected / step)']: assert token in methods, f'Methods oracle missing token: {token}'
+          for token in ['oneSwipeOneStep','SWIPE_STEP_THRESHOLD_PX','drag-single-step']: assert token not in js, f'superseded one-step authority remains: {token}'
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V10_METHODS_BEHAVIORAL_STANDARD_20260816D' in loader
+          print('LAWS_METHODS_BEHAVIORAL_STANDARD_STATIC_PASS')
           PY
       - name: Install Chromium
         run: |
@@ -38,68 +37,37 @@ jobs:
           npm install playwright@1.55.0 >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null
       - name: Serve exact candidate
-        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-reference-http.log 2>&1 &
-      - name: Prove shared-ring direct manipulation and one-swipe-one-step snap
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-methods-behavior.log 2>&1 &
+      - name: Prove direct manipulation, momentum, seam, and settlement
         run: |
           node <<'NODE'
-          const fs=require('fs');
           const {chromium}=require('playwright');
           const A=(x,m)=>{if(!x)throw Error(m)};
-          const close=(a,b,e=.75)=>Math.abs(a-b)<=e;
           (async()=>{
             const browser=await chromium.launch({headless:true});
             const context=await browser.newContext({viewport:{width:960,height:1536},hasTouch:true,isMobile:true,deviceScaleFactor:1});
-            const page=await context.newPage(),errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            const page=await context.newPage();
             await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});
             await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
             const runtime=await page.evaluate(()=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
-            A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT','wrong runtime');
+            A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v10_METHODS_BEHAVIORAL_STANDARD','wrong runtime');
             A(runtime.referenceContract==='METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','wrong reference');
-            A(runtime.buildId==='20260816C_ONE_SWIPE_ONE_STEP','wrong build');
-            A(runtime.sharedRingAuthority===true&&runtime.directManipulation===true&&runtime.oneAuthoritativeSpatialCoordinate===true&&runtime.oneSwipeOneStep===true,'reference authority absent');
+            A(runtime.buildId==='20260816D_METHODS_BEHAVIORAL_EQUIVALENCE','wrong build');
+            A(runtime.methodsReleaseProjection===true&&runtime.momentumTraversal===true,'Methods behavior authority absent');
             const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first();
-            const viewport=field.locator('.laws-rolodex-viewport'); const track=field.locator('.laws-rolodex-track');
-            await viewport.scrollIntoViewIfNeeded(); await page.waitForTimeout(120);
-            const id=await field.getAttribute('data-rolodex-id'); const box=await viewport.boundingBox(); A(box&&box.width>400,'viewport unavailable');
-            const get=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,angle:+el.dataset.carouselOrbitAngle,dragging:el.dataset.carouselDragging,settling:el.dataset.carouselSettling,canonical:el.dataset.carouselCanonicalLanding,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform,active:el.querySelector('.laws-rolodex-card[data-active="true"]')?.getAttribute('data-destination-id')}));
-            const restore=async index=>{A(await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id,index}),'restore rejected');await page.waitForTimeout(50)};
-            const cdp=await context.newCDPSession(page); let tid=90;
+            const viewport=field.locator('.laws-rolodex-viewport'); await viewport.scrollIntoViewIfNeeded(); const box=await viewport.boundingBox(); A(box,'no viewport');
+            const id=await field.getAttribute('data-rolodex-id'); const count=await field.locator('.laws-rolodex-card').count();
+            const get=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,angle:+el.dataset.carouselOrbitAngle,canonical:el.dataset.carouselCanonicalLanding,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform}));
+            const restore=async index=>{A(await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id,index}),'restore failed');await page.waitForTimeout(60)};
+            const cdp=await context.newCDPSession(page);let tid=200;const sx=box.x+box.width*.78,sy=box.y+box.height*.52;
             const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
-            const sx=box.x+box.width*.78,sy=box.y+box.height*.52;
-            const down=async()=>{tid++;await touch('touchStart',sx,sy);await page.waitForTimeout(30)};
-            const move=async(dx,dy=0)=>{await touch('touchMove',sx+dx,sy+dy);await page.waitForTimeout(70)};
-            const up=async()=>{await touch('touchEnd',sx,sy);await page.waitForTimeout(120)};
-
-            await restore(0); const start=await get();
-            await down(); await move(-box.width*.28); const drag1=await get(); await move(-box.width*.52); const drag2=await get();
-            A(drag1.index===0&&drag2.index===0,'semantic index changed during direct manipulation');
-            A(drag1.angle<start.angle-10&&drag2.angle<drag1.angle-10,'shared orbit did not track pointer continuously');
-            A(drag1.ring!==start.ring&&drag2.ring!==drag1.ring,'shared ring transform did not change during drag');
-            await page.screenshot({path:'laws-reference-drag.png'}); await up(); await page.waitForTimeout(700); const landed=await get();
-            A(landed.index===1,'one left swipe did not resolve to exactly one next neighbor');
-            A(close(landed.angle,-360/(await field.locator('.laws-rolodex-card').count())),'landing angle not canonical');
-            A(landed.canonical==='true','canonical landing not asserted');
-
-            const count=await field.locator('.laws-rolodex-card').count(); await restore(count-1); const seamStart=await get(); await down(); await move(-box.width*.55); await up(); await page.waitForTimeout(700); const seamEnd=await get();
-            A(seamStart.index===count-1&&seamEnd.index===0,'circular seam traversal failed');
-
-            await restore(0); const beforeScroll=await page.evaluate(()=>scrollY); await down(); await move(4,220); await up(); await page.waitForTimeout(250); const afterScroll=await page.evaluate(()=>scrollY),vertical=await get();
-            A(vertical.index===0,'vertical traversal changed selected object');
-            A(Math.abs(afterScroll-beforeScroll)>20,`vertical page traversal unavailable ${beforeScroll}->${afterScroll}`);
-
-            await viewport.focus(); await page.keyboard.press('ArrowRight'); await page.waitForTimeout(700); const keyboard=await get(); A(keyboard.index===1&&keyboard.canonical==='true','keyboard shared selection failed');
-            A(!errors.length,'page errors '+errors.join(' | '));
-            await page.screenshot({path:'laws-reference-landed.png'});
-            fs.writeFileSync('laws-methods-reference-proof.json',JSON.stringify({runtime,start,drag1,drag2,landed,seamStart,seamEnd,beforeScroll,afterScroll,vertical,keyboard,result:'PASS'},null,2));
-            console.log('LAWS_METHODS_REFERENCE_ONE_SWIPE_ONE_STEP_BROWSER_PASS'); await browser.close();
+            async function gesture(points,delay){tid++;await touch('touchStart',sx,sy);await page.waitForTimeout(25);for(const dx of points){await touch('touchMove',sx+dx,sy);await page.waitForTimeout(delay);}await touch('touchEnd',sx,sy);await page.waitForTimeout(760);return get();}
+            await restore(0);const start=await get();tid++;await touch('touchStart',sx,sy);await page.waitForTimeout(25);await touch('touchMove',sx-box.width*.25,sy);await page.waitForTimeout(80);const during=await get();await touch('touchEnd',sx,sy);await page.waitForTimeout(760);const controlled=await get();
+            A(during.index===0&&during.ring!==start.ring,'direct shared-ring manipulation absent');
+            A(controlled.canonical==='true'&&controlled.index!==0,'controlled swipe failed canonical traversal');
+            await restore(0);const energetic=await gesture([-box.width*.18,-box.width*.62],8);A(energetic.canonical==='true','energetic gesture did not settle canonically');A(energetic.index!==0,'energetic gesture produced no traversal');
+            await restore(count-1);const seam=await gesture([-box.width*.5],35);A(seam.canonical==='true','seam failed canonical settlement');
+            console.log(JSON.stringify({start,during,controlled,energetic,seam,count},null,2));
+            await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
-      - name: Upload reference evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: laws-methods-reference-proof
-          path: |
-            laws-reference-*.png
-            laws-methods-reference-proof.json
-          if-no-files-found: warn

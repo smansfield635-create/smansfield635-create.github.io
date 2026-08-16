@@ -1,5 +1,5 @@
 /**
- * H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v7
+ * H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v8
  * Audit-only exact-path recognition for the promoted Awards public face,
  * its site-owned presentation media, Trophy Standard validators, and the
  * bounded experience-anchor evidence required to review an Awards mutation.
@@ -28,6 +28,7 @@ const OPERATION_BASE = '178ebf052e35d8a06c7930432b46b0c7445691d3';
 const TARGET_PATH = '/showroom/globe/h-earth/awards/index.html';
 const TARGET_MAIN_BLOB = '1e854558240b71af72f5fb22a26b78ebbbdcfc08';
 const MEDIA_PATH = '/showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4';
+const COMPASS_MEDIA_PATH = '/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4';
 const BROWSER_PATH = '/h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.browser.mjs';
 const BROWSER_BASE_BLOB = 'ae3eae6abba0121bd641b53eb932699eb903a1fd';
 const RUNNER_PATH = '/h-earth-3d/validation/instrument-platform/h-earth.public-face-trophy-standard.runner.mjs';
@@ -40,12 +41,13 @@ const REFRESH_EVIDENCE_PATH = '/h-earth-3d/experience-anchor/evidence/AWARDS_VID
 const REFRESH_RECEIPT_PATH = '/h-earth-3d/experience-anchor/receipts/AWARDS_VIDEO_REFRESH_20260815_001.json';
 const AMENDMENT_PATH = '/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.awards-public-face-path-recognition.js';
 const NODE_ID = 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_SCOPE';
-const EVIDENCE_ID = 'EVIDENCE_H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v7';
+const EVIDENCE_ID = 'EVIDENCE_H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_v8';
 
 export const H_EARTH_AWARDS_PUBLIC_FACE_TARGET_PATHS = Object.freeze([TARGET_PATH]);
 export const H_EARTH_AWARDS_PUBLIC_FACE_RECOGNIZED_PATHS = Object.freeze([
   TARGET_PATH,
   MEDIA_PATH,
+  COMPASS_MEDIA_PATH,
   BROWSER_PATH,
   RUNNER_PATH,
   ANCHOR_EVIDENCE_PATH,
@@ -60,6 +62,7 @@ export const H_EARTH_AWARDS_PUBLIC_FACE_RECOGNIZED_PATHS = Object.freeze([
 const OCCURRENCES = Object.freeze([
   deepFreeze({ repository: REPOSITORY, refType: 'COMMIT', refName: AWARDS_MAIN, commitSha: AWARDS_MAIN, path: TARGET_PATH, gitBlobSha: TARGET_MAIN_BLOB, contentSha256: null, byteCount: null, existenceStatus: 'PRESENT', fetchbackStatus: 'VERIFIED_PRESENT_AT_EXACT_GOVERNING_MAIN', occurrenceClass: 'EXISTING_H_EARTH_AWARDS_PUBLIC_FACE_READ_ONLY_RECOGNITION' }),
   deepFreeze({ repository: REPOSITORY, refType: 'WORKING_CANDIDATE', refName: 'AWARDS_SELF_CONTAINED_MEDIA_REPAIR', commitSha: null, path: MEDIA_PATH, gitBlobSha: null, contentSha256: null, byteCount: null, existenceStatus: 'PRESENT', fetchbackStatus: 'CANDIDATE_SITE_OWNED_MEDIA_PRESENT', occurrenceClass: 'H_EARTH_AWARDS_SITE_OWNED_PRESENTATION_MEDIA_READ_ONLY_RECOGNITION' }),
+  deepFreeze({ repository: REPOSITORY, refType: 'WORKING_CANDIDATE', refName: 'AWARDS_COMPASS_V26_LIVE_REPLACEMENT_20260816_002', commitSha: null, path: COMPASS_MEDIA_PATH, gitBlobSha: null, contentSha256: 'a26f11781745365a0701e88e82b43035f31f826b4ee5820e571ad972962bbfd6', byteCount: 24686831, existenceStatus: 'PRESENT', fetchbackStatus: 'OWNER_APPROVED_V26_CANDIDATE_PRESENT', occurrenceClass: 'H_EARTH_AWARDS_COMPASS_PRESENTATION_MEDIA_READ_ONLY_RECOGNITION' }),
   deepFreeze({ repository: REPOSITORY, refType: 'COMMIT', refName: OPERATION_BASE, commitSha: OPERATION_BASE, path: BROWSER_PATH, gitBlobSha: BROWSER_BASE_BLOB, contentSha256: null, byteCount: null, existenceStatus: 'PRESENT', fetchbackStatus: 'VERIFIED_PRESENT_AT_EXACT_OPERATION_BASELINE', occurrenceClass: 'EXISTING_H_EARTH_AWARDS_BROWSER_VALIDATOR_READ_ONLY_RECOGNITION' }),
   deepFreeze({ repository: REPOSITORY, refType: 'COMMIT', refName: OPERATION_BASE, commitSha: OPERATION_BASE, path: RUNNER_PATH, gitBlobSha: RUNNER_BASE_BLOB, contentSha256: null, byteCount: null, existenceStatus: 'PRESENT', fetchbackStatus: 'VERIFIED_PRESENT_AT_EXACT_OPERATION_BASELINE', occurrenceClass: 'EXISTING_H_EARTH_AWARDS_STATIC_VALIDATOR_READ_ONLY_RECOGNITION' }),
   deepFreeze({ repository: REPOSITORY, refType: 'COMMIT', refName: AWARDS_MAIN, commitSha: AWARDS_MAIN, path: AMENDMENT_PATH, gitBlobSha: null, contentSha256: null, byteCount: null, existenceStatus: 'ABSENT', fetchbackStatus: 'VERIFIED_ABSENT_AT_GOVERNING_MAIN_BEFORE_AWARDS_REGISTRY_PREREQUISITE', occurrenceClass: 'AUTHORIZED_REGISTRY_PREREQUISITE_NOT_YET_MATERIALIZED_AT_GOVERNING_MAIN' })
@@ -73,9 +76,9 @@ export const H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_EVIDENCE = deepFreeze({
   governingMain: AWARDS_MAIN,
   operationBase: OPERATION_BASE,
   exactTargetPathCount: 1,
-  exactRecognizedPathCount: 11,
+  exactRecognizedPathCount: 12,
   registrationEffect: 'READ_ONLY_PATH_RECOGNITION_ONLY',
-  assertionScope: Object.freeze(['EXACT_AWARDS_PATH', 'EXACT_AWARDS_SITE_OWNED_MEDIA_PATH', 'EXACT_TROPHY_STANDARD_BROWSER_VALIDATOR_PATH', 'EXACT_TROPHY_STANDARD_STATIC_VALIDATOR_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_EVIDENCE_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_RECEIPT_PATH', 'EXACT_AWARDS_MEDIA_RECOVERY_EVIDENCE_PATH', 'EXACT_AWARDS_MEDIA_RECOVERY_RECEIPT_PATH', 'EXACT_AWARDS_VIDEO_REFRESH_EVIDENCE_PATH', 'EXACT_AWARDS_VIDEO_REFRESH_RECEIPT_PATH', 'AUTOMATIC_H_EARTH_PREFLIGHT_PATH_RESOLUTION']),
+  assertionScope: Object.freeze(['EXACT_AWARDS_PATH', 'EXACT_AWARDS_SITE_OWNED_MEDIA_PATH', 'EXACT_AWARDS_COMPASS_MEDIA_PATH', 'EXACT_TROPHY_STANDARD_BROWSER_VALIDATOR_PATH', 'EXACT_TROPHY_STANDARD_STATIC_VALIDATOR_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_EVIDENCE_PATH', 'EXACT_AWARDS_EXPERIENCE_ANCHOR_RECEIPT_PATH', 'EXACT_AWARDS_MEDIA_RECOVERY_EVIDENCE_PATH', 'EXACT_AWARDS_MEDIA_RECOVERY_RECEIPT_PATH', 'EXACT_AWARDS_VIDEO_REFRESH_EVIDENCE_PATH', 'EXACT_AWARDS_VIDEO_REFRESH_RECEIPT_PATH', 'AUTOMATIC_H_EARTH_PREFLIGHT_PATH_RESOLUTION']),
   evidenceLimitations: Object.freeze(['NO_AWARDS_PRODUCT_MUTATION_AUTHORITY', 'NO_MEDIA_CONTENT_MUTATION_AUTHORITY', 'NO_VALIDATOR_MUTATION_AUTHORITY', 'NO_ANCHOR_EVIDENCE_CONTENT_AUTHORITY', 'NO_AWARD_OUTCOME_AUTHORITY', 'NO_SEMANTIC_OR_CANONICAL_IDENTITY_AUTHORITY', 'NO_H_EARTH_RUNTIME_RENDERER_TERRAIN_GEOMETRY_WORLD_OR_GAMEPLAY_AUTHORITY', 'NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY'])
 });
 
@@ -104,7 +107,7 @@ export const H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE = deepFreeze({
   prohibitedMutations: Object.freeze(['AWARDS_PAGE_MUTATION_FROM_REGISTRY_AUTHORITY', 'AWARDS_MEDIA_MUTATION_FROM_REGISTRY_AUTHORITY', 'VALIDATOR_MUTATION_FROM_REGISTRY_AUTHORITY', 'ANCHOR_EVIDENCE_CONTENT_MUTATION_FROM_REGISTRY_AUTHORITY', 'AWARD_OUTCOME_CLAIM_FROM_REGISTRY_AUTHORITY']),
   requiredValidations: Object.freeze(['EXACT_ONE_AWARDS_TARGET_PATH', 'EXACT_RECOGNIZED_AWARDS_MEDIA_PATH', 'EXACT_RECOGNIZED_VALIDATOR_PATHS', 'EXACT_RECOGNIZED_AWARDS_ANCHOR_EVIDENCE_PATHS', 'EXACT_RECOGNIZED_AWARDS_VIDEO_REFRESH_EVIDENCE_PATHS', 'PREDECESSOR_REGISTRY_IDENTITY_PRESERVED']),
   stoppingBoundaries: Object.freeze(['STOP_ON_PATH_OUTSIDE_EXACT_SCOPE', 'STOP_ON_AUTHORITY_EXPANSION']),
-  currentIdentityReferences: Object.freeze([AWARDS_MAIN, OPERATION_BASE, `TARGET_MAIN_BLOB=${TARGET_MAIN_BLOB}`, MEDIA_PATH, `BROWSER_BASE_BLOB=${BROWSER_BASE_BLOB}`, `RUNNER_BASE_BLOB=${RUNNER_BASE_BLOB}`, ANCHOR_EVIDENCE_PATH, ANCHOR_RECEIPT_PATH, RECOVERY_EVIDENCE_PATH, RECOVERY_RECEIPT_PATH, REFRESH_EVIDENCE_PATH, REFRESH_RECEIPT_PATH]),
+  currentIdentityReferences: Object.freeze([AWARDS_MAIN, OPERATION_BASE, `TARGET_MAIN_BLOB=${TARGET_MAIN_BLOB}`, MEDIA_PATH, COMPASS_MEDIA_PATH, 'COMPASS_V26_SHA256=a26f11781745365a0701e88e82b43035f31f826b4ee5820e571ad972962bbfd6', `BROWSER_BASE_BLOB=${BROWSER_BASE_BLOB}`, `RUNNER_BASE_BLOB=${RUNNER_BASE_BLOB}`, ANCHOR_EVIDENCE_PATH, ANCHOR_RECEIPT_PATH, RECOVERY_EVIDENCE_PATH, RECOVERY_RECEIPT_PATH, REFRESH_EVIDENCE_PATH, REFRESH_RECEIPT_PATH]),
   unresolvedFields: Object.freeze([])
 });
 
@@ -141,6 +144,7 @@ export function getHEarthRepositoryRegistryDependencyClosure(nodeId) { return no
 export function verifyHEarthAwardsPublicFacePathRecognition() {
   const targetResolution = resolveHEarthRepositoryRegistryPath(TARGET_PATH);
   const mediaResolution = resolveHEarthRepositoryRegistryPath(MEDIA_PATH);
+  const compassMediaResolution = resolveHEarthRepositoryRegistryPath(COMPASS_MEDIA_PATH);
   const browserResolution = resolveHEarthRepositoryRegistryPath(BROWSER_PATH);
   const runnerResolution = resolveHEarthRepositoryRegistryPath(RUNNER_PATH);
   const anchorEvidenceResolution = resolveHEarthRepositoryRegistryPath(ANCHOR_EVIDENCE_PATH);
@@ -156,6 +160,8 @@ export function verifyHEarthAwardsPublicFacePathRecognition() {
     exactTargetMainBlob: OCCURRENCES.find((entry) => entry.path === TARGET_PATH)?.gitBlobSha === TARGET_MAIN_BLOB,
     awardsMediaPathResolves: mediaResolution.resolved === true,
     awardsMediaOccurrenceRecognized: (mediaResolution.occurrences ?? []).some((entry) => entry.path === MEDIA_PATH && entry.existenceStatus === 'PRESENT'),
+    awardsCompassMediaPathResolves: compassMediaResolution.resolved === true,
+    awardsCompassMediaOccurrenceRecognized: (compassMediaResolution.occurrences ?? []).some((entry) => entry.path === COMPASS_MEDIA_PATH && entry.contentSha256 === 'a26f11781745365a0701e88e82b43035f31f826b4ee5820e571ad972962bbfd6' && entry.existenceStatus === 'PRESENT'),
     browserValidatorPathResolves: browserResolution.resolved === true,
     staticValidatorPathResolves: runnerResolution.resolved === true,
     awardsAnchorEvidencePathResolves: anchorEvidenceResolution.resolved === true,
@@ -171,7 +177,7 @@ export function verifyHEarthAwardsPublicFacePathRecognition() {
     noRuntimeAuthority: H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_NODE.authorityLimitations.includes('NO_H_EARTH_RUNTIME_AUTHORITY')
   });
   return deepFreeze({
-    schema: 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_RECEIPT_v7',
+    schema: 'H_EARTH_AWARDS_PUBLIC_FACE_PATH_RECOGNITION_RECEIPT_v8',
     nodeId: NODE_ID,
     evidenceId: EVIDENCE_ID,
     checks,

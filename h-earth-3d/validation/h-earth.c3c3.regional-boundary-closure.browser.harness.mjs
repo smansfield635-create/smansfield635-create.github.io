@@ -10,12 +10,27 @@ const browser=await chromium.launch({headless:true,args:['--enable-webgl','--ign
 
 try{
   const page=await browser.newPage({viewport:{width:709,height:1536},deviceScaleFactor:1,isMobile:true,hasTouch:true});
-  const consoleErrors=[],pageErrors=[];
+  const consoleErrors=[],pageErrors=[],failedRequests=[];
   page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
   page.on('pageerror',e=>pageErrors.push(String(e?.stack??e)));
+  page.on('requestfailed',r=>failedRequests.push({url:r.url(),failure:r.failure()}));
   const response=await page.goto(route,{waitUntil:'domcontentloaded',timeout:60000});
   assert.ok(response&&response.status()>=200&&response.status()<400,`C3C3_HTTP_${response?.status()}`);
-  await page.waitForFunction(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:90000});
+  await page.waitForTimeout(7000);
+  const boot=await page.evaluate(()=>({
+    ready:globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,
+    routeApiPresent:!!globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE,
+    routeDataset:{...document.getElementById('h-earth-functional-landscape-route')?.dataset},
+    statusText:document.getElementById('h-earth-live-status')?.textContent??null,
+    diagnosticError:document.querySelector('.h-earth-runtime-diagnostics__error')?.textContent??null,
+    bodyText:document.body?.innerText?.slice(-3000)??null
+  }));
+  if(!boot.ready){
+    const diagnostic={status:'C3C3_STARTUP_NOT_READY',boot,consoleErrors,pageErrors,failedRequests};
+    await writeFile(`${evidenceDirectory}/c3c3-startup-failure.json`,`${JSON.stringify(diagnostic,null,2)}\n`);
+    console.log(JSON.stringify(diagnostic,null,2));
+    throw new Error(`C3C3_STARTUP_NOT_READY:${JSON.stringify({consoleErrors,pageErrors,diagnosticError:boot.diagnosticError,statusText:boot.statusText})}`);
+  }
 
   async function facts(index){return page.evaluate((viewIndex)=>{
     const snapshot=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.();
@@ -26,7 +41,7 @@ try{
   async function yaw(pointerId,direction=1){await page.evaluate(async({id,direction})=>{
     const canvas=document.getElementById('h-earth-functional-landscape-canvas');if(!(canvas instanceof HTMLCanvasElement))throw new Error('C3C3_CANVAS_MISSING');
     const b=canvas.getBoundingClientRect(),y=b.top+b.height*.48,x0=b.left+b.width*(direction>0?.72:.28),x1=b.left+b.width*(direction>0?.35:.65);
-    const emit=(type,x,buttons)=>canvas.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:id,pointerType:'touch',isPrimary:true,clientX:x,clientY:y,buttons,pressure:buttons?.5:0}));
+    const emit=(type,x,buttons)=>canvas.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:id,pointerType:'touch',isPrimary:true,clientX:x,clientY:y,buttons,pressure:buttons?0.5:0}));
     emit('pointerdown',x0,1);emit('pointermove',x1,1);await new Promise(r=>setTimeout(r,230));emit('pointerup',x1,0);await new Promise(r=>setTimeout(r,200));
   },{id:pointerId,direction})}
 
@@ -53,8 +68,9 @@ try{
   assert.equal(preservationPass,true,'C3C3_PRESERVATION_LAW_FAILED');
   assert.equal(consoleErrors.length,0,`C3C3_CONSOLE_ERRORS:${JSON.stringify(consoleErrors)}`);
   assert.equal(pageErrors.length,0,`C3C3_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
+  assert.equal(failedRequests.length,0,`C3C3_REQUEST_FAILURES:${JSON.stringify(failedRequests)}`);
 
-  const receipt={receiptType:'H_EARTH_C3C3_REGIONAL_BOUNDARY_CLOSURE_BROWSER_QUALIFICATION_v1',eligible:true,status:'C3C3_MACHINE_QUALIFICATION_PASS',route,scannedViewCount:views.length,projectedSunPositionCount:projectedKeys.size,sunVisibilityStates:[...visibilityStates],connectedRegionThresholdViewCount:boundaryViews.length,openOceanViewCount:oceanViews.length,depthHierarchyPass:depthPass,preservationPass,consoleErrors,pageErrors,ownerInteractiveInspectionRequired:true,productionMergeAuthorized:false};
+  const receipt={receiptType:'H_EARTH_C3C3_REGIONAL_BOUNDARY_CLOSURE_BROWSER_QUALIFICATION_v1',eligible:true,status:'C3C3_MACHINE_QUALIFICATION_PASS',route,scannedViewCount:views.length,projectedSunPositionCount:projectedKeys.size,sunVisibilityStates:[...visibilityStates],connectedRegionThresholdViewCount:boundaryViews.length,openOceanViewCount:oceanViews.length,depthHierarchyPass:depthPass,preservationPass,consoleErrors,pageErrors,failedRequests,ownerInteractiveInspectionRequired:true,productionMergeAuthorized:false};
   await writeFile(`${evidenceDirectory}/c3c3-regional-boundary-closure.receipt.json`,`${JSON.stringify(receipt,null,2)}\n`);
   await page.screenshot({path:`${evidenceDirectory}/c3c3-qualified-view.png`,fullPage:true});
   console.log(JSON.stringify(receipt,null,2));

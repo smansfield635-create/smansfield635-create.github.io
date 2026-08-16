@@ -35,6 +35,7 @@ const CP3D_CANONICAL_SHORELINE_BANDS = new Set([
   'DRY_SAND_EDGE',
   'DAMP_TRANSITION'
 ]);
+const VISUAL_OCEAN_CONTINUATION_OFFSET = -1600;
 
 function canonicalizeCP3DCoordinate(value) {
   const canonical = Math.round(value * CP3D_CANONICAL_SCALE) / CP3D_CANONICAL_SCALE;
@@ -52,7 +53,7 @@ function canonicalizeCP3DShorelinePoint(point, bandId) {
 }
 
 export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_OW03_CORRECTIVE_v2';
+  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_OW03_CORRECTIVE_v3_VISUAL_WORLD_CONTINUATION';
 
 export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   {
@@ -100,9 +101,9 @@ export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   {
     bandId: 'OPEN_WATER',
     innerOffset: -58,
-    outerOffset: -146,
+    outerOffset: VISUAL_OCEAN_CONTINUATION_OFFSET,
     materialReference: 'H_EARTH_MATERIAL_OPEN_WATER',
-    materialIntent: 'OPEN_WATER'
+    materialIntent: 'OPEN_WATER_VISUAL_WORLD_CONTINUATION'
   }
 ]);
 
@@ -160,6 +161,7 @@ function constructBand(band) {
   }
 
   const primitiveId = `H_EARTH_FUNCTIONAL_SHORELINE:${band.bandId}`;
+  const visualContinuation = band.bandId === 'OPEN_WATER';
   const construction = constructHEarthTriangleMesh({
     primitiveId,
     geometryId: `${primitiveId}:GEOMETRY`,
@@ -192,6 +194,15 @@ function constructBand(band) {
       waterSurfaceLaw: band.outerOffset <= 0
         ? 'ONE_COHERENT_SEA_LEVEL_SURFACE'
         : 'CANONICAL_TERRAIN_FIELD',
+      visualContinuationLayer: visualContinuation,
+      navigationAddressIds: [],
+      navigable: false,
+      collisionAuthority: false,
+      accessibleRegionExpansion: false,
+      oceanFacingLandProhibited: visualContinuation,
+      continuationLaw: visualContinuation
+        ? 'VISIBLE_OCEAN_CONTINUES_BEYOND_FROZEN_ACCESSIBLE_REGION_WITHOUT_ADDRESS_OR_COLLISION_AUTHORITY'
+        : null,
       foundingPacketMutationPerformed: false,
       cp3dCanonicalCoordinateLaw: CP3D_CANONICAL_SHORELINE_BANDS.has(band.bandId)
         ? 'ROUND_TO_2_POW_NEGATIVE_24_BEFORE_BOUNDS_AND_NORMALS'
@@ -234,6 +245,8 @@ export function constructHEarthFunctionalShorelineGeometry() {
     results,
     primitives,
     bounds,
+    visualOceanContinuation: true,
+    accessibleRegionExpansion: false,
     admitted: false,
     issues
   });

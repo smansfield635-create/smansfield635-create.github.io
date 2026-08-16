@@ -57,7 +57,7 @@ try {
 
     let brightest = { luminance: -1, x: 0, y: 0, r: 0, g: 0, b: 0 };
     let brightSkyPixelCount = 0;
-    const yMax = Math.floor(height * 0.48);
+    const yMax = Math.floor(height * 0.55);
     for (let y = 0; y < yMax; y += 2) for (let x = 0; x < width; x += 2) {
       const i = (y * width + x) * 4;
       const r = data[i], g = data[i + 1], b = data[i + 2];
@@ -74,6 +74,7 @@ try {
       visualQuery: query.get('visual'),
       selectedRendererPath,
       atmosphericEnclosure: resources?.atmosphericEnclosure ?? null,
+      ownerVisualRepair: resources?.ownerVisualRepair ?? null,
       atmosphereBackgroundDrawCallCount: Number(resources?.counters?.atmosphereBackgroundDrawCallCount ?? 0),
       visiblePresentationCount: Number(resources?.counters?.visiblePresentationCount ?? 0),
       zenith,
@@ -86,11 +87,24 @@ try {
     };
   });
 
+  const screenshotPath = `${evidenceDirectory}/c3c2-owner-visual-materialization.png`;
+  await page.screenshot({ path: screenshotPath, fullPage: true });
+  const diagnostic = {
+    receiptType: 'H_EARTH_C3C2_OWNER_VISUAL_MATERIALIZATION_DIAGNOSTIC_v2',
+    route,
+    facts,
+    consoleErrors,
+    pageErrors
+  };
+  await writeFile(`${evidenceDirectory}/c3c2-owner-visual-materialization.diagnostic.json`, `${JSON.stringify(diagnostic, null, 2)}\n`);
+  console.log(JSON.stringify(diagnostic, null, 2));
+
   assert.equal(facts.canvas, true, 'C3C2_OWNER_VISUAL_CANVAS_MISSING');
   assert.equal(facts.visualQuery, 'terrain-relief-v2', 'C3C2_OWNER_VISUAL_COMPATIBILITY_QUERY_NOT_EXERCISED');
   assert.match(String(facts.selectedRendererPath), /cp2-additive-bandlimited-relief-v2\.js$/, 'C3C2_OWNER_VISUAL_COMPATIBILITY_ROUTE_NOT_SELECTED');
   assert.equal(facts.atmosphericEnclosure?.materialized, true, 'C3C2_OWNER_VISUAL_ATMOSPHERIC_ENCLOSURE_NOT_MATERIALIZED');
   assert.equal(facts.atmosphericEnclosure?.model, 'FULLSCREEN_SKY_GRADIENT_SUN_CURVED_HORIZON_HAZE', 'C3C2_OWNER_VISUAL_ATMOSPHERIC_MODEL_MISMATCH');
+  assert.equal(facts.ownerVisualRepair?.projectionRepairApplied, true, 'C3C2_OWNER_VISUAL_CELESTIAL_PROJECTION_REPAIR_NOT_APPLIED');
   assert.ok(facts.atmosphereBackgroundDrawCallCount >= 1, 'C3C2_OWNER_VISUAL_BACKGROUND_PASS_NOT_DRAWN');
   assert.ok(facts.visiblePresentationCount >= 1, 'C3C2_OWNER_VISUAL_FRAME_NOT_PRESENTED');
   assert.ok(facts.zenithToHorizonDelta >= 14, `C3C2_OWNER_VISUAL_SKY_GRADIENT_TOO_WEAK:${facts.zenithToHorizonDelta}`);
@@ -99,13 +113,11 @@ try {
   assert.equal(consoleErrors.length, 0, `C3C2_OWNER_VISUAL_CONSOLE_ERRORS:${JSON.stringify(consoleErrors)}`);
   assert.equal(pageErrors.length, 0, `C3C2_OWNER_VISUAL_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
 
-  const screenshotPath = `${evidenceDirectory}/c3c2-owner-visual-materialization.png`;
-  await page.screenshot({ path: screenshotPath, fullPage: true });
   const receipt = {
-    receiptType: 'H_EARTH_C3C2_OWNER_VISUAL_MATERIALIZATION_QUALIFICATION_v1',
+    receiptType: 'H_EARTH_C3C2_OWNER_VISUAL_MATERIALIZATION_QUALIFICATION_v2',
     eligible: true,
     status: 'C3C2_OWNER_VISUAL_MATERIALIZATION_PASS',
-    rootCauseClosed: 'AUTO_PROMOTED_TERRAIN_RELIEF_V2_NO_LONGER_BYPASSES_C3C2_PLANETARY_RENDERER',
+    rootCauseClosed: 'PROMOTED_RENDERER_BYPASS_AND_INITIAL_CELESTIAL_OCCLUSION_CLOSED',
     route,
     facts,
     consoleErrors,

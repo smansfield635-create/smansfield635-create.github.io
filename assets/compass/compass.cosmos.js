@@ -308,3 +308,6 @@
     init();
   }
 })();
+
+/* Editorial carousel bootstrap. The runtime itself remains isolated from Compass navigation authority. */
+(()=>{const css='/assets/compass/compass.carousel.css?v=1',js='/assets/compass/compass.carousel.js?v=1';if(!document.querySelector('link[href^="/assets/compass/compass.carousel.css"]')){const l=document.createElement('link');l.rel='stylesheet';l.href=css;document.head.append(l)}if(!document.querySelector('script[src^="/assets/compass/compass.carousel.js"]')){const s=document.createElement('script');s.src=js;s.defer=true;document.head.append(s)}})();

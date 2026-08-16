@@ -95,6 +95,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
 
   let initialized = false;
+  let latestDrawRanges = Object.freeze([]);
   const counters = {
     contextCreationCount: 1,
     shaderCreateCount: 0,
@@ -367,6 +368,8 @@ export function createHEarthRun8ER3CPersistentRenderer({
       throw new Error('R3C_VIEW_PROJECTION_INVALID');
     }
 
+    latestDrawRanges = Object.freeze(packet.drawRanges.map((range) => Object.freeze({ ...range })));
+
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
     gl.viewport(0, 0, width, height);
     gl.clearColor(...resources.skyColor, 1);
@@ -418,26 +421,43 @@ export function createHEarthRun8ER3CPersistentRenderer({
 
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(
-      0,
-      0,
-      width,
-      height,
-      0,
-      0,
-      width,
-      height,
-      gl.COLOR_BUFFER_BIT,
-      gl.NEAREST
-    );
+
+    // Physical-device presentation law: avoid offscreen-to-default framebuffer blit.
+    // Redraw the governed resident scene explicitly into the browser-visible framebuffer.
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, width, height);
+    gl.clearColor(...resources.skyColor, 1);
+    gl.clearDepth(1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.disable(gl.CULL_FACE);
+    gl.useProgram(resources.geometryProgram);
+    gl.bindVertexArray(resources.vertexArray);
+
+    for (const range of latestDrawRanges) {
+      if (range.transparencyClass === 'TRANSLUCENT') {
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.depthMask(false);
+      } else {
+        gl.disable(gl.BLEND);
+        gl.depthMask(true);
+      }
+      gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
+    }
+
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+    gl.flush();
+    const error = gl.getError();
+    if (error !== gl.NO_ERROR) throw new Error(`R3C_VISIBLE_PRESENTATION_DRAW_ERROR:${error}`);
     counters.visiblePresentationCount += 1;
     return Object.freeze({
       frameNumber: counters.frameCount,
       width,
-      height
+      height,
+      presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'
     });
   }
 

@@ -32,7 +32,7 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null
       - name: Serve exact candidate
         run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-stage-http.log 2>&1 &
-      - name: Prove separate visible stage and shared-ring carousel
+      - name: Prove separate visible stage, shared ring, and one-swipe-one-step law
         run: |
           node <<'NODE'
           const {chromium}=require('playwright');
@@ -44,7 +44,7 @@ jobs:
             await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
             await page.waitForSelector('html[data-laws-destination-stage="active"]',{timeout:15000});
             const identity=await page.evaluate(()=>({contract:document.documentElement.dataset.lawsCarouselContract,reference:document.documentElement.dataset.lawsCarouselReference,build:document.documentElement.dataset.lawsCarouselBuild}));
-            if(identity.contract!=='LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT'||identity.reference!=='METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1'||identity.build!=='20260816B')throw Error('runtime identity mismatch '+JSON.stringify(identity));
+            if(identity.contract!=='LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT'||identity.reference!=='METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1'||identity.build!=='20260816C_ONE_SWIPE_ONE_STEP')throw Error('runtime identity mismatch '+JSON.stringify(identity));
             const hero=page.locator('[data-laws-experience-stage="hero"]');
             const stage=page.locator('[data-laws-root-rolodex-section][data-laws-destination-stage="active"]');
             const heroBox=await hero.boundingBox(),stageBox=await stage.boundingBox();
@@ -54,7 +54,7 @@ jobs:
             if(await stage.locator('.laws-destination-stage__tab[aria-selected="true"]').count()!==1)throw Error('ambiguous family selection');
             const field=stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]').first();
             const cards=field.locator('.laws-rolodex-card'),viewport=field.locator('.laws-rolodex-viewport'),track=field.locator('.laws-rolodex-track');
-            if(await cards.count()<3)throw Error('active family lacks records');
+            const count=await cards.count(); if(count<3)throw Error('active family lacks records');
             if(await field.locator('.laws-rolodex-control').count()!==0)throw Error('surrogate controls present');
             const active=field.locator('.laws-rolodex-card[data-active="true"]'); if(await active.count()!==1)throw Error('exactly one active card required');
             const before=await active.getAttribute('data-destination-id');
@@ -65,11 +65,22 @@ jobs:
             const activeBox=await activeAfter.boundingBox(),viewportBox=await viewport.boundingBox(); if(!activeBox||!viewportBox)throw Error('missing rendered geometry');
             const centerError=Math.abs((activeBox.x+activeBox.width/2)-(viewportBox.x+viewportBox.width/2)); if(centerError>24)throw Error(`active card lacks center custody: ${centerError}`);
             const finalTrack=await track.evaluate(n=>getComputedStyle(n).transform); if(finalTrack===initialTrack)throw Error('shared ring transform did not rotate');
+            const swipeBefore=Number(await field.getAttribute('data-carousel-index'));
+            const vb=await viewport.boundingBox();
+            await page.mouse.move(vb.x+vb.width*.68,vb.y+vb.height*.5);
+            await page.mouse.down();
+            await page.mouse.move(vb.x+vb.width*.32,vb.y+vb.height*.5,{steps:8});
+            await page.mouse.up();
+            await page.waitForTimeout(100);
+            const swipeAfter=Number(await field.getAttribute('data-carousel-index'));
+            const expected=(swipeBefore+1)%count;
+            if(swipeAfter!==expected)throw Error(`one swipe must equal one neighboring step: before=${swipeBefore} after=${swipeAfter} expected=${expected}`);
+            if(await field.getAttribute('data-carousel-canonical-landing')!=='true')throw Error('swipe did not land canonically');
             await tabs.nth(0).click(); await page.waitForTimeout(250);
             const familyAfter=await stage.getAttribute('data-destination-family'),activeFieldAfter=await stage.locator('.laws-rolodex-field[data-destination-stage-state="active"]').getAttribute('data-rolodex-id'); if(!familyAfter||familyAfter!==activeFieldAfter)throw Error('family tab did not move stage custody');
             if(errors.length)throw Error('page errors '+errors.join(' | '));
             await stage.scrollIntoViewIfNeeded(); await stage.screenshot({path:'laws-destination-stage-render-proof.png'});
-            console.log(JSON.stringify({identity,heroBox,stageBox,before,after,centerError,familyAfter},null,2));
+            console.log(JSON.stringify({identity,heroBox,stageBox,before,after,centerError,swipeBefore,swipeAfter,expected,familyAfter},null,2));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE

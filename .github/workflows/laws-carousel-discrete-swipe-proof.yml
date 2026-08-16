@@ -25,12 +25,12 @@ jobs:
           js=Path('laws/index.destination-carousel.js').read_text()
           css=Path('laws/index.destination-carousel.css').read_text()
           methods=Path('laws/research/methods-and-models/carousel.js').read_text()
-          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT','METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','state.angle','pointerStartAngle','snapFromDrag','selectIndex','sharedRingAuthority: true','directManipulation: true']
+          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT','METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','state.angle','pointerStartAngle','snapFromDrag','selectIndex','sharedRingAuthority: true','directManipulation: true','oneSwipeOneStep: true','SWIPE_STEP_THRESHOLD_PX']
           for token in required: assert token in js, f'missing reference law token: {token}'
           for token in ['pointerStartAngle','state.angle','snapFromDrag','selectIndex']: assert token in methods, f'reference token absent from Methods: {token}'
           for token in ['--laws-ring-rotation','--laws-card-angle','translateZ(var(--laws-ring-radius))','transition:none!important']: assert token in css, f'missing shared-ring CSS: {token}'
-          for token in ['detentPosition','targetDetent','direction-locked','pointer-atomic-step','nearestCircularRelativePosition']: assert token not in js, f'legacy v8 authority remains: {token}'
-          print('LAWS_METHODS_REFERENCE_STATIC_PASS')
+          for token in ['detentPosition','targetDetent','direction-locked','pointer-atomic-step','nearestCircularRelativePosition','const projected = state.angle','Math.round(-projected / step)']: assert token not in js, f'legacy or multi-index authority remains: {token}'
+          print('LAWS_METHODS_REFERENCE_ONE_SWIPE_ONE_STEP_STATIC_PASS')
           PY
       - name: Install Chromium
         run: |
@@ -39,7 +39,7 @@ jobs:
           npx playwright install --with-deps chromium >/dev/null
       - name: Serve exact candidate
         run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-reference-http.log 2>&1 &
-      - name: Prove shared-ring direct manipulation and coherent snap
+      - name: Prove shared-ring direct manipulation and one-swipe-one-step snap
         run: |
           node <<'NODE'
           const fs=require('fs');
@@ -55,8 +55,8 @@ jobs:
             const runtime=await page.evaluate(()=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
             A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT','wrong runtime');
             A(runtime.referenceContract==='METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','wrong reference');
-            A(runtime.buildId==='20260816B','wrong build');
-            A(runtime.sharedRingAuthority===true&&runtime.directManipulation===true&&runtime.oneAuthoritativeSpatialCoordinate===true,'reference authority absent');
+            A(runtime.buildId==='20260816C_ONE_SWIPE_ONE_STEP','wrong build');
+            A(runtime.sharedRingAuthority===true&&runtime.directManipulation===true&&runtime.oneAuthoritativeSpatialCoordinate===true&&runtime.oneSwipeOneStep===true,'reference authority absent');
             const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first();
             const viewport=field.locator('.laws-rolodex-viewport'); const track=field.locator('.laws-rolodex-track');
             await viewport.scrollIntoViewIfNeeded(); await page.waitForTimeout(120);
@@ -76,7 +76,7 @@ jobs:
             A(drag1.angle<start.angle-10&&drag2.angle<drag1.angle-10,'shared orbit did not track pointer continuously');
             A(drag1.ring!==start.ring&&drag2.ring!==drag1.ring,'shared ring transform did not change during drag');
             await page.screenshot({path:'laws-reference-drag.png'}); await up(); await page.waitForTimeout(700); const landed=await get();
-            A(landed.index===1,'drag did not snap to neighboring canonical object');
+            A(landed.index===1,'one left swipe did not resolve to exactly one next neighbor');
             A(close(landed.angle,-360/(await field.locator('.laws-rolodex-card').count())),'landing angle not canonical');
             A(landed.canonical==='true','canonical landing not asserted');
 
@@ -91,7 +91,7 @@ jobs:
             A(!errors.length,'page errors '+errors.join(' | '));
             await page.screenshot({path:'laws-reference-landed.png'});
             fs.writeFileSync('laws-methods-reference-proof.json',JSON.stringify({runtime,start,drag1,drag2,landed,seamStart,seamEnd,beforeScroll,afterScroll,vertical,keyboard,result:'PASS'},null,2));
-            console.log('LAWS_METHODS_REFERENCE_BROWSER_PASS'); await browser.close();
+            console.log('LAWS_METHODS_REFERENCE_ONE_SWIPE_ONE_STEP_BROWSER_PASS'); await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
       - name: Upload reference evidence

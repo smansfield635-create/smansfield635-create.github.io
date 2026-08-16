@@ -27,7 +27,7 @@ jobs:
           node --check laws/index.destination-carousel.js
           node --check laws/index.mobile-background-tabs.js
           node --check laws/index.mobile-background-tabs.core.js
-      - name: Verify Methods-reference shared-ring contract
+      - name: Verify Methods-reference shared-ring and one-swipe-one-step contract
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -41,6 +41,8 @@ jobs:
             'pointerStartAngle', 'state.angle', 'pointermove', 'snapFromDrag',
             'angleForIndex', 'selectIndex', 'sharedRingAuthority: true',
             'directManipulation: true', 'oneAuthoritativeSpatialCoordinate: true',
+            'oneSwipeOneStep: true', 'SWIPE_STEP_THRESHOLD_PX',
+            'signedTravel < 0 ? 1 : -1', 'drag-single-step',
             'restoreOrbitState', 'Return to Orbit'
           ]
           required_css = [
@@ -54,8 +56,12 @@ jobs:
           for token in required_js: assert token in js, f'missing reference-port JS token: {token}'
           for token in required_css: assert token in css, f'missing shared-ring CSS token: {token}'
           for token in reference_tokens: assert token in methods, f'Methods reference token missing: {token}'
-          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V9_METHODS_REFERENCE_PORT_20260816B' in loader
-          forbidden = ['detentPosition','targetDetent','directionOnlyGesture:true','atomicRotation:true','pointer-atomic-step','nearestCircularRelativePosition','--laws-carousel-x','--laws-carousel-z']
-          for token in forbidden: assert token not in js + css, f'legacy independent spatial authority remains: {token}'
-          print('LAWS_METHODS_REFERENCE_PORT_STATIC_PASS')
+          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V9_METHODS_REFERENCE_PORT_20260816C_ONE_SWIPE_ONE_STEP' in loader
+          forbidden = [
+            'detentPosition','targetDetent','directionOnlyGesture:true','atomicRotation:true',
+            'pointer-atomic-step','nearestCircularRelativePosition','--laws-carousel-x','--laws-carousel-z',
+            'const projected = state.angle', 'Math.round(-projected / step)'
+          ]
+          for token in forbidden: assert token not in js + css, f'legacy or multi-index release authority remains: {token}'
+          print('LAWS_METHODS_REFERENCE_PORT_ONE_SWIPE_ONE_STEP_STATIC_PASS')
           PY

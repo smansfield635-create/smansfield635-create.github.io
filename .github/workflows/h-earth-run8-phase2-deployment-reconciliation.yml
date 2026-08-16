@@ -1,5 +1,8 @@
 name: H-Earth Run 8 Phase 2 Deployment Reconciliation
 
+# Historical validator for PR #198 / the completed Run 8 Phase 2 deployment
+# reconciliation. Its expected promoted-main identity is intentionally frozen to
+# that July execution and must not be applied to later H-Earth candidates.
 on:
   pull_request:
     paths:
@@ -8,7 +11,6 @@ on:
       - 'h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.receipt.json'
       - 'h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js'
       - 'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.run8-phase2-deployment-reconciliation-scope.js'
-      - 'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
   workflow_dispatch:
 
 permissions:
@@ -17,6 +19,12 @@ permissions:
 
 jobs:
   validate-run8-phase2-deployment:
+    # Execute only for the original Phase 2 reconciliation PR. The shared
+    # repository-registry loader is deliberately not a trigger for this durable
+    # historical proof.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.head_ref == 'agent/h-earth-run8-phase2-deployment-reconciliation-001'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

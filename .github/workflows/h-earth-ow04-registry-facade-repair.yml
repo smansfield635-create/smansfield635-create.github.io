@@ -1,0 +1,76 @@
+name: H-Earth OW04 Registry Facade Repair
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-ow04-subtropical-world-continuation-20260815
+    paths:
+      - .github/workflows/h-earth-ow04-registry-facade-repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Restore complete predecessor facade surface
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js')
+          s = p.read_text()
+          old = '''const facade = Object.freeze({
+  getHEarthRepositoryRegistryInstance,
+  getHEarthRepositoryRegistryNode,
+  getHEarthRepositoryRegistryEvidence,
+  resolveHEarthRepositoryRegistryPath,
+  resolveHEarthRepositoryRegistryOccurrence,
+  findHEarthRepositoryRegistryNodes,
+  getHEarthRepositoryRegistryRelationsForNode,
+  getHEarthRepositoryRegistryDependencyClosure,
+  getHEarthRepositoryRegistryDiscoveryDescriptor
+});'''
+          new = '''const facade = Object.freeze({
+  ...baseFacade,
+  getHEarthRepositoryRegistryInstance,
+  getHEarthRepositoryRegistryNode,
+  getHEarthRepositoryRegistryEvidence,
+  resolveHEarthRepositoryRegistryPath,
+  resolveHEarthRepositoryRegistryOccurrence,
+  findHEarthRepositoryRegistryNodes,
+  getHEarthRepositoryRegistryRelationsForNode,
+  getHEarthRepositoryRegistryDependencyClosure,
+  getHEarthRepositoryRegistryDiscoveryDescriptor
+});'''
+          if old not in s:
+              raise SystemExit('OW04_FACADE_BLOCK_NOT_FOUND')
+          p.write_text(s.replace(old,new,1))
+          PY
+          git diff --check
+      - name: Verify composite API preservation
+        run: |
+          node --experimental-default-type=module - <<'NODE'
+          import facade from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js';
+          const required = [
+            'getHEarthRepositoryRegistryCompositeMembership',
+            'getHEarthRepositoryRegistryNeighborhood',
+            'findHEarthRepositoryRegistryRelations',
+            'resolveHEarthRepositoryRegistryLifecycle',
+            'buildHEarthRepositoryArchitectureSnapshot',
+            'evaluateHEarthRepositoryRegistryOperation',
+            'auditHEarthRepositoryRegistryStructure'
+          ];
+          const missing = required.filter((name) => typeof facade[name] !== 'function');
+          if (missing.length) throw new Error(`OW04_FACADE_API_MISSING:${missing.join(',')}`);
+          NODE
+      - name: Commit and push reciprocal repair
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js
+          git commit -m 'OW04: preserve complete predecessor registry facade API'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

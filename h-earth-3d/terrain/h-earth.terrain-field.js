@@ -10,8 +10,11 @@
  * continues the primary mountain system inland as an articulated range with
  * passes, a receiving basin, watershed-directed valleys and foothill taper.
  * OW03 resolves that backbone into a compound, nonradial continental coast
- * with named peninsulas, bays, gulfs, coves and headlands. It creates no
- * geometry, admission, frame, renderer, or route.
+ * with named peninsulas, bays, gulfs, coves and headlands. OW04 preserves each
+ * named inland relief component while attenuating only additive positive-relief
+ * overlap so the coastal-entry sightline reads as articulated terrain rather
+ * than an enclosing composite wall. It creates no geometry, admission, frame,
+ * renderer, or route.
  */
 
 const deepFreeze = (value, seen = new WeakSet()) => {
@@ -124,13 +127,21 @@ export const H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM = deepFreeze({
     protectedHydrologyPreserved: true,
     waterfallReservoirRelationshipPreserved: true
   },
+  overlapLaw: {
+    identity: 'GRATITUDE_ARTICULATED_POSITIVE_RELIEF_OVERLAP_v1',
+    strongestLocalPositiveReliefRetention: 1,
+    secondaryOverlappingPositiveReliefRetention: 0.22,
+    namedReliefComponentsPreserved: true,
+    passesBasinsAndValleysExcludedFromCompression: true,
+    purpose: 'PREVENT_MULTIPLE_VALID_RELIEF_FEATURES_FROM_SUMMING_INTO_AN_ENCLOSING_NEAR_FIELD_SCREEN'
+  },
   rearBoundaryLaw: 'NO_RIDGE_OR_BLUFF_MAY_EXIST_SOLELY_AS_A_REAR_WORLD_BOX_TERMINUS',
   foothillLaw: 'PRIMARY_RELIEF_TAPERS_CONTINUOUSLY_INTO_NAVIGABLE_SURROUNDING_TERRAIN'
 });
 
 export const H_EARTH_TERRAIN_FIELD = deepFreeze({
   contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 2,
+  generationRevision: 3,
   coordinateFrame: 'H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS',
   coreDomain: { xMinimum: -256, xMaximum: 256, zMinimum: -256, zMaximum: 64 },
   worldDomain: { xMinimum: -1024, xMaximum: 1024, zMinimum: -1024, zMaximum: 768, seaLevelY: 0 },
@@ -158,6 +169,7 @@ export const H_EARTH_TERRAIN_FIELD = deepFreeze({
     basin: 'GRATITUDE_RECEIVING_BASIN_PROFILE_v1',
     foothill: 'GRATITUDE_FOOTHILL_TAPER_PROFILE_v1',
     valley: 'DRAINAGE_VALLEY_PROFILE_v1',
+    positiveReliefComposition: 'STRONGEST_LOCAL_FEATURE_PLUS_ATTENUATED_SECONDARY_OVERLAP_v1',
     water: 'COASTAL_WATER_DEPTH_PROFILE_v1'
   },
   coastalSystem: H_EARTH_GRATITUDE_COASTAL_SYSTEM,
@@ -229,11 +241,23 @@ function evaluateRawElevation(worldX, worldZ) {
   const receivingBasin = gaussian(worldX, worldZ, 18, -192, 66, 46, -7.5);
   const foothillTaper = gaussian(worldX, worldZ, -12, -176, 126, 62, 8.5);
 
+  const positiveReliefComponents = [
+    hill,
+    ridgeEast,
+    ridgeCentral,
+    ridgeWest,
+    ridgeShoulder,
+    foothillTaper
+  ];
+  const strongestPositiveRelief = Math.max(...positiveReliefComponents);
+  const totalPositiveRelief = positiveReliefComponents.reduce((sum, value) => sum + value, 0);
+  const secondaryPositiveRelief = Math.max(0, totalPositiveRelief - strongestPositiveRelief);
+  const articulatedPositiveRelief = strongestPositiveRelief + secondaryPositiveRelief * 0.22;
+
   const lowland = gaussian(worldX, worldZ, -92, -152, 70, 58, -6.5);
   const valley = gaussian(worldX, worldZ, 2, -198, 44, 82, -11.5);
-  return coastRise + wetSandCompression + dune + rolling + hill
-    + ridgeEast + ridgeCentral + ridgeWest + ridgeShoulder
-    + passEast + passCentral + receivingBasin + foothillTaper
+  return coastRise + wetSandCompression + dune + rolling + articulatedPositiveRelief
+    + passEast + passCentral + receivingBasin
     + lowland + valley;
 }
 

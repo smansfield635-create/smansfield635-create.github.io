@@ -1,0 +1,15 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_C01_WAVEFORM_DECODABILITY_GATE_v1",
+  "status": "FAIL_PHONE_LEVEL_DECODABILITY",
+  "law": "The decoder may use segment timing boundaries but may not read hidden phone or word labels when classifying waveform content.",
+  "observed": {
+    "phonesTotal": 26,
+    "phonesCorrectIndependentSpectralDecode": 9,
+    "accuracy": 0.3461538462,
+    "broadClassSeparationPreviouslyPassed": true,
+    "dominantFailure": "vowel/approximant spectra collapse toward a common low-frequency/nasal-like signature"
+  },
+  "interpretation": "Acoustic class separability is necessary but not sufficient for linguistic intelligibility. The current cascaded resonator topology does not preserve enough phone-specific spectral identity for independent decoding.",
+  "humanListeningAuthorized": false,
+  "nextLawfulAction": "REPAIR_VOWEL_AND_APPROXIMANT_FILTER_TOPOLOGY_THEN_RERUN_WAVEFORM_ONLY_DECODER"
+}

@@ -1,0 +1,55 @@
+{
+  "contract": "LAWS_CHAMBER_CP6_1_AUTHORITY_MAP_v1",
+  "checkpoint": "CHECKPOINT_6",
+  "phase": "CP6_1_AUTHORITY_BINDING_PLACEHOLDER_EXTRACTION_AND_RETIREMENT",
+  "base_main": "68c9c2c2235f927bb4aaa7bff855063f20d3e498",
+  "rollback_target": "68c9c2c2235f927bb4aaa7bff855063f20d3e498",
+  "branch": "agent/laws-cp6-1-authority-binding-placeholder-retirement-001",
+  "canonical_test_destinations": [
+    {"ordinal":1,"identity":"Admission and Baseline","slug":"admission-and-baseline","future_route":"/laws/test/admission-and-baseline/","legacy_anchor":"/laws/test/#admission-baseline"},
+    {"ordinal":2,"identity":"Forward Construction","slug":"forward-construction","future_route":"/laws/test/forward-construction/","legacy_anchor":"/laws/test/#forward-construction"},
+    {"ordinal":3,"identity":"Reverse Audit","slug":"reverse-audit","future_route":"/laws/test/reverse-audit/","legacy_anchor":"/laws/test/#reverse-audit"},
+    {"ordinal":4,"identity":"Result and Record","slug":"result-and-record","future_route":"/laws/test/result-and-record/","legacy_anchor":"/laws/test/#results-records","legacy_labels":["Results & Records","Results and Records"]}
+  ],
+  "canonical_research_destinations": [
+    {"ordinal":1,"identity":"Evidence and Sources","slug":"evidence-and-sources","future_route":"/laws/research/evidence-and-sources/","legacy_anchor":"/laws/research/#evidence-sources"},
+    {"ordinal":2,"identity":"Methods and Models","slug":"methods-and-models","future_route":"/laws/research/methods-and-models/","legacy_anchor":"/laws/research/#methods-models"},
+    {"ordinal":3,"identity":"Applied Investigations","slug":"applied-investigations","future_route":"/laws/research/applied-investigations/","legacy_anchor":"/laws/research/#applied-investigations"},
+    {"ordinal":4,"identity":"Findings and Boundaries","slug":"findings-and-boundaries","future_route":"/laws/research/findings-and-boundaries/","legacy_anchor":"/laws/research/#findings-boundaries"}
+  ],
+  "destination_count": 8,
+  "locked_declaration": {
+    "text": "RESEARCH COMES F.I.R.S.T.",
+    "letters": {"F":"FLOW","I":"INTEGRITY","R":"REALITY","S":"STRUCTURE","T":"TEST"},
+    "research_role": "Research examines and supports the complete F.I.R.S.T. sequence.",
+    "visible_implementation_authorized": false,
+    "current_4_plus_2_disposition": "RETAIN_UNTIL_FIRST_REPLACEMENT_IS_IMPLEMENTED_AND_ACCEPTED"
+  },
+  "scientific_law_split_custody": {
+    "source_and_evidence_blocks": "Research / Evidence and Sources",
+    "formulas_methods_and_no_match_modeling": "Research / Methods and Models",
+    "applied_scientific_law_studies": "Research / Applied Investigations",
+    "findings_limits_and_claim_boundaries": "Research / Findings and Boundaries",
+    "admission_threshold_and_gate_logic": "Test / Admission and Baseline",
+    "forward_gate_sequence": "Test / Forward Construction",
+    "reverse_diagnostic_or_source_audit": "Test / Reverse Audit",
+    "result_classification_and_receipts": "Test / Result and Record",
+    "main_page": "Concise Scientific Law overview and route entry only"
+  },
+  "resolved_cp6_0_items": {
+    "U1_TEST_IDENTITY_4": {"status":"RESOLVED","canonical":"Result and Record","legacy_labels":["Results & Records","Results and Records"],"legacy_route":"/laws/test/#results-records"},
+    "U2_FIRST_PRESENTATION_BINDING": {"status":"ARCHITECTURALLY_RESOLVED","implementation_phase":"CP6-4","main_location":"Main Laws overview after compass","destination_guidance":"Each of eight destination pages identifies its F.I.R.S.T. relationships."},
+    "U3_SCIENTIFIC_LAW_CUSTODY": {"status":"RESOLVED","mode":"SPLIT_BLOCK_CUSTODY"},
+    "U4_RUNTIME_WORDING_CORRESPONDENCE": {"status":"RESOLVED_FOR_LATER_TEXT_CORRECTION","authoritative_current_wording":"Cosmos decorative atmosphere; dual-spacecraft=false","behavior_change_authorized":false},
+    "U5_PARALLEL_ROUTE_AUTHORITY": {"status":"RESOLVED_BY_FILE","flow_a":"DELETE_AFTER_EXTRACTION_AND_DEPENDENCY_PROOF","structure_a":"DELETE_AFTER_EXTRACTION; canonical Constraints custody already declares consolidation","structure_b":"DELETE_AFTER_EXTRACTION; canonical Governance custody already declares consolidation","reality_theory_html":"RETAIN_COMPATIBILITY_ROUTE","battery_paths":"RETAIN_SUBSTANTIVE_CONTENT"}
+  },
+  "protected_cp5": {
+    "crystal_blob": "27577c49250f42b03d123f8105e1d55d59c3a4b4",
+    "interaction_blob": "be365cc331ee5643f916abee204d4f5f45376c04",
+    "gatewayBodyScale": 0.7666667,
+    "horizontalRadius": 1.68,
+    "verticalRadius": 1.5008,
+    "depthRadius": 1.2992,
+    "intended_visual_differential": 0
+  }
+}

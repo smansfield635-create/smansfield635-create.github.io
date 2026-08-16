@@ -1,0 +1,13 @@
+{
+  "schema":"REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "procedureId":"WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_RATIFICATION_INSTALLATION_PROCEDURE_v1",
+  "operationClass":"REPOSITORY_SHARED_CONTROL_PLANE_INSTRUMENT_RATIFICATION_INSTALLATION",
+  "exactGoverningHead":"27d763cce6029ebb19f6325346d120b95003019d",
+  "exactAllowedRepositoryPaths":[".github/ai-router/workflow-lifecycle-continuity/AGENTS.md",".github/ai-router/workflow-lifecycle-continuity/operation-request.v1.json",".github/ai-router/workflow-lifecycle-continuity/construction-procedure.v1.json",".github/ai-router/workflow-lifecycle-continuity/protocol.v1.json",".github/ai-router/workflow-lifecycle-continuity/receipt.schema.v1.json",".github/ai-router/workflow-lifecycle-continuity/workflow-lifecycle-continuity-verifier.v1.mjs",".github/ai-router/workflow-lifecycle-continuity/workflow-lifecycle-continuity-self-test.v1.mjs",".github/ai-router/workflow-lifecycle-continuity/ratification-record.v1.json"],
+  "sequence":["ROUTE_EXACT_8","MATERIALIZE_RATIFIED_ACTIVE_INSTRUMENT","SELF_TEST","EXACT_DELTA_VERIFY","OPEN_PR","PREMERGE_HEAD_RECHECK","MERGE_WITH_EXPLICIT_AUTHORITY","POST_MERGE_VERIFY","STOP_BEFORE_GAP_CLOSURE_OR_PHYSICAL_RETIREMENT"],
+  "exactTestRunnerCommand":"node .github/ai-router/workflow-lifecycle-continuity/workflow-lifecycle-continuity-self-test.v1.mjs",
+  "mergeAuthorized":true,
+  "gapClosureAuthorized":false,
+  "physicalRetirementAuthorized":false,
+  "workflowCarrierMutationAuthorized":false
+}

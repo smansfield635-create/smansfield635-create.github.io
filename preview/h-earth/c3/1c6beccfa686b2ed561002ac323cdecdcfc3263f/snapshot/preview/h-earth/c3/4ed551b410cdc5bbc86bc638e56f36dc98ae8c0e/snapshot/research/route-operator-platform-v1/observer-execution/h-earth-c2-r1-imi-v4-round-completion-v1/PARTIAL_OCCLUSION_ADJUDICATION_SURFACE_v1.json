@@ -1,0 +1,85 @@
+{
+  "affected_factor": "INLAND_ANCHOR_OCCLUSION_CLEARANCE",
+  "authority": {
+    "checklist_items": [
+      "An occlusion or visibility mask is supplied for the primary witness.",
+      "At least 80 percent of the declared witness area is unobstructed.",
+      "The witness centroid is not behind the near berm or successor terrain horizon.",
+      "The witness is not removed by near/far clipping or depth-state failure.",
+      "Occlusion findings agree across machine evidence and trained-observer review or disagreement is marked UNEVALUABLE."
+    ],
+    "factor_dictionary_sha256": "8450094cbcf17cea102cad24d876fb3c4182e572fd32e6df84e8fff506abe4aa",
+    "missingness_rule": "Missing raw value, source class, source receipt, required checklist evidence, witness annotation, or viewport identity returns UNEVALUABLE; no imputation or cross-viewport carry-forward.",
+    "normalization_rule": "SATISFIED_FROZEN_CHECKLIST_ITEMS_DIVIDED_BY_FIVE; PARTIAL_CREDIT_WITHIN_ITEM_PROHIBITED",
+    "normalization_table_sha256": "b4fb9473c540fb5b4340ae98df6c4a53181d14f25bdc1dc4ee43dc5c3d42c10f",
+    "semantic_definition": "Degree to which the declared Gratitude witness remains unblocked by terrain, berm, clipping, or foreground geometry.",
+    "zero_definition": "The primary witness is fully occluded or no admissible clearance evidence exists."
+  },
+  "decision_precedence": [
+    "INVALID",
+    "UNEVALUABLE",
+    "ZERO_DEFINITION",
+    "CHECKLIST_NUMERIC"
+  ],
+  "determination": "ONE_DETERMINATE_V4_INTERPRETATION_EXISTS; OBSERVER_REVIEW_DIFFERENCES_ARE_EMPIRICAL_DISAGREEMENTS_NOT_A_NEW_THRESHOLD_GAP",
+  "new_threshold_introduced": false,
+  "role3_measurement_binding": {
+    "actual_value_not_scored_by_instrumentation_room": true,
+    "file": "visibility-and-occlusion-receipts.json",
+    "machine_value_present": true,
+    "measurement_field": "gratitudeWitnessOcclusionClearance",
+    "role3_factorEvidence_value_is_not_a_V4_checklist_score": true
+  },
+  "rules": [
+    {
+      "availability": null,
+      "controlling_trajectory_defect": false,
+      "state": "INVALID",
+      "when": "WITNESS_IDENTITY_MASK_FRAME_OR_ROUTE_IDENTITY_MISMATCH"
+    },
+    {
+      "availability": null,
+      "controlling_trajectory_defect": false,
+      "state": "UNEVALUABLE",
+      "when": "REQUIRED_ADMISSIBLE_OCCLUSION_MEASUREMENT_OR_MASK_ABSENT"
+    },
+    {
+      "availability": null,
+      "routing": "EVIDENCE_INTERPRETATION_DIFFERENCE",
+      "state": "UNEVALUABLE",
+      "when": "MACHINE_FINDING_AND_TRAINED_OBSERVER_REVIEW_MATERIALLY_DISAGREE"
+    },
+    {
+      "availability": 0.0,
+      "controlling_trajectory_defect": true,
+      "hard_collapse": true,
+      "state": "NUMERIC",
+      "when": "PRIMARY_WITNESS_FULLY_OCCLUDED"
+    },
+    {
+      "availability_rule": "COUNT_THE_OTHER_FROZEN_CHECKLIST_ITEMS; ITEM_2_FAILS; TYPICAL_ALL_OTHER_ITEMS_PASS_RESULT_IS_0_8",
+      "controlling_trajectory_defect_rule": "TRUE_IF_THIS_IS_A_WEAKEST_REQUIRED_FACTOR_BELOW_1_OR_CAUSES_A_V4_THRESHOLD_OUTPUT",
+      "hard_collapse": false,
+      "state": "NUMERIC",
+      "when": "0_LT_UNOBSTRUCTED_FRACTION_LT_0_8_AND_MACHINE_OBSERVER_AGREE"
+    },
+    {
+      "availability": 1.0,
+      "controlling_trajectory_defect": false,
+      "hard_collapse": false,
+      "state": "NUMERIC",
+      "when": "UNOBSTRUCTED_FRACTION_GTE_0_8_AND_ALL_OTHER_ITEMS_PASS"
+    },
+    {
+      "availability_rule": "SATISFIED_ITEM_COUNT_DIVIDED_BY_5; ZERO_DEFINITION_OVERRIDES",
+      "hard_collapse_rule": "TRUE_ONLY_AT_AVAILABILITY_ZERO",
+      "state": "NUMERIC",
+      "when": "NUMERIC_MEASUREMENT_PRESENT_WITH_OTHER_CHECKLIST_FAILURES"
+    }
+  ],
+  "status": "V4_DERIVED_NO_NEW_THRESHOLD",
+  "surface_id": "H_EARTH_IMI_V4_PARTIAL_OCCLUSION_ADJUDICATION_SURFACE_v1",
+  "surface_sha256": "5b1a8f667e04e3e9fe99ac4e944f94715eca94a138cdb85b3e9202b4a08c3f9e",
+  "v4_semantics_changed": false,
+  "version": "1.0.0"
+}

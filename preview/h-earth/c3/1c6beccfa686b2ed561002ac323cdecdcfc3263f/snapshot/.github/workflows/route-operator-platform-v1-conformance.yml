@@ -1,0 +1,73 @@
+name: Route Operator Platform v1 conformance
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/**'
+      - '.github/workflows/route-operator-platform-v1-conformance.yml'
+  push:
+    paths:
+      - 'research/route-operator-platform-v1/**'
+      - '.github/workflows/route-operator-platform-v1-conformance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run expanded platform conformance
+        working-directory: research/route-operator-platform-v1
+        run: |
+          python -m unittest -v test_route_operator_platform_v1.py
+          python -m unittest -v test_pointer_custody_v1.py
+
+      - name: Run identity-safe shadow demonstration
+        working-directory: research/route-operator-platform-v1
+        run: python demo_route_operator_platform_v1.py > route-operator-platform-v1-demo.receipt.json
+
+      - name: Verify platform manifest and frozen IMI pointer
+        working-directory: research/route-operator-platform-v1
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          from route_operator_platform_v1 import (
+              verify_imi_package_pointer,
+              verify_platform_manifest,
+          )
+
+          repository_root = Path.cwd().parents[1]
+          manifest_errors = verify_platform_manifest(repository_root)
+          pointer = json.loads(Path("IMI_PACKAGE_POINTER.json").read_text(encoding="utf-8"))
+          pointer_errors = verify_imi_package_pointer(pointer)
+          errors = {
+              "manifest": manifest_errors,
+              "imi_pointer": pointer_errors,
+          }
+          if manifest_errors or pointer_errors:
+              raise SystemExit(json.dumps(errors, indent=2, sort_keys=True))
+          print(json.dumps({"status": "INTEGRITY_VERIFICATION_PASS"}, sort_keys=True))
+          PY
+
+      - name: Validate authority and demonstration JSON
+        working-directory: research/route-operator-platform-v1
+        run: |
+          python -m json.tool PLATFORM_AUTHORITY.json >/dev/null
+          python -m json.tool IMI_PACKAGE_POINTER.json >/dev/null
+          python -m json.tool MANIFEST_SHA256.json >/dev/null
+          python -m json.tool route-operator-platform-v1-demo.receipt.json >/dev/null
+
+      - name: Upload demonstration receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: route-operator-platform-v1-demo-${{ github.sha }}
+          path: research/route-operator-platform-v1/route-operator-platform-v1-demo.receipt.json
+          retention-days: 30

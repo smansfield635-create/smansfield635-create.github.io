@@ -71,4 +71,4 @@ jobs:
             /tmp/h-earth-c3c3-server.log
           if-no-files-found: error
 
-# C3C3R3 exact-head objective-visible qualification trigger: 2026-08-16
+# C3C3R4 exact-head shared planetary world-frame qualification trigger: 2026-08-16

@@ -72,6 +72,7 @@ const DVS = `#version 300 es
 precision highp float;const vec2 p[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1.,3.));out vec2 vUv;void main(){vec2 q=p[gl_VertexID];vUv=q*.5+.5;gl_Position=vec4(q,0.,1.);}`;
 const DFS = `#version 300 es
 precision highp float;in vec2 vUv;uniform sampler2D uDepth;out vec4 outColor;void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
+const PFS = `#version 300 es\nprecision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;
 
 export function createHEarthRun8ER3CPersistentRenderer({
   canvas,
@@ -226,6 +227,12 @@ export function createHEarthRun8ER3CPersistentRenderer({
       resources.depthFragmentShader,
       'DP'
     );
+    resources.presentationFragmentShader = createShader(gl.FRAGMENT_SHADER, PFS, 'PF');
+    resources.presentationProgram = createProgram(
+      resources.depthVertexShader,
+      resources.presentationFragmentShader,
+      'PP'
+    );
 
     markPostInitializationCreation();
     counters.vertexArrayCreateCount += 1;
@@ -322,7 +329,8 @@ export function createHEarthRun8ER3CPersistentRenderer({
         resources.geometryProgram,
         'uDistanceDesaturationStrength'
       ),
-      depth: uniform(resources.depthProgram, 'uDepth')
+      depth: uniform(resources.depthProgram, 'uDepth'),
+      presentationColor: uniform(resources.presentationProgram, 'uColor')
     };
 
     const environment = packet.environmentUniforms;
@@ -422,42 +430,32 @@ export function createHEarthRun8ER3CPersistentRenderer({
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
 
-    // Physical-device presentation law: avoid offscreen-to-default framebuffer blit.
-    // Redraw the governed resident scene explicitly into the browser-visible framebuffer.
+    // Physical-device presentation law: present the validated offscreen color texture
+    // through a normal fullscreen textured draw into the browser-visible framebuffer.
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, width, height);
-    gl.clearColor(...resources.skyColor, 1);
-    gl.clearDepth(1);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LEQUAL);
-    gl.disable(gl.CULL_FACE);
-    gl.useProgram(resources.geometryProgram);
-    gl.bindVertexArray(resources.vertexArray);
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
+    gl.depthMask(true);
+    gl.useProgram(resources.presentationProgram);
+    gl.bindVertexArray(null);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture);
+    gl.uniform1i(resources.uniforms.presentationColor, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.flush();
 
-    for (const range of latestDrawRanges) {
-      if (range.transparencyClass === 'TRANSLUCENT') {
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        gl.depthMask(false);
-      } else {
-        gl.disable(gl.BLEND);
-        gl.depthMask(true);
-      }
-      gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
+    const error = gl.getError();
+    if (error !== gl.NO_ERROR) {
+      throw new Error(`R3C_TEXTURE_PRESENTATION_DRAW_ERROR:${error}`);
     }
 
-    gl.depthMask(true);
-    gl.disable(gl.BLEND);
-    gl.flush();
-    const error = gl.getError();
-    if (error !== gl.NO_ERROR) throw new Error(`R3C_VISIBLE_PRESENTATION_DRAW_ERROR:${error}`);
     counters.visiblePresentationCount += 1;
     return Object.freeze({
       frameNumber: counters.frameCount,
       width,
       height,
-      presentationPath: 'EXPLICIT_DEFAULT_FRAMEBUFFER_DRAW'
+      presentationPath: 'OFFSCREEN_COLOR_TEXTURE_FULLSCREEN_DRAW'
     });
   }
 

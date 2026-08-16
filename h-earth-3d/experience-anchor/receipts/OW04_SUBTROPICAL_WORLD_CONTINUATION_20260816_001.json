@@ -15,16 +15,28 @@
   ],
   "experienceFiles": [
     {
+      "path": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "sha256": "3c525d2635f47f2e26801aa4c7e4c56b354cac7a530d6809c17531b2594108c0"
+    },
+    {
       "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
       "sha256": "9666b2f89b3a3939c1b6499d821784d65f26a39fdf54e50f4e9b35c674b9cefa"
     },
     {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "8785ed578a9250701721d55b1bc4652d143c8d26f9f1c81d646c67531f0514f5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "sha256": "59308bfa8a1f1694d8d8ad5a607b173e9a9963ea1c537963f09917281e0c113f"
+    },
+    {
       "path": "showroom/globe/h-earth/render/functional-landscape-frame.js",
-      "sha256": "54c53d74af6e981a1658fd7c36e61c39aa7bc39a30125275745afc0682a76ef0"
+      "sha256": "f65ffd85d3d9d7d5c13b7e62e7d2a68e6faf1632284aa17861681f0b3c6b5edd"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
-      "sha256": "24b0dc5cfec380a0fdb12403b4cbd06417ccd6a9ff0b6027f9486c97706b25e4"
+      "sha256": "3263dc5cdb69b4f6b615fe4f2d3a627fac3dc42bf67b9a15ee730a670a1f7050"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-landscape.js",
@@ -49,9 +61,9 @@
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
   "reviewSummary": {
-    "reviewedCandidateHead": "a8fe5f75350029e094a89a0e02b3ad6cdfdf089e",
-    "qualificationOperation": "H_EARTH_OW04_RECIPROCAL_ANCHOR_REVIEW_20260816_001",
-    "exactCandidateEvidenceRunId": 31954259847,
-    "finding": "Exact candidate desktop/mobile/interaction capture completed successfully after restoration of the real inspection path. OW04 remains within the same H-Earth ground experience, preserves direct manipulation and canonical continuity, adds only non-navigable distant-world continuation, preserves the frozen accessible region, and creates no waterward landmass."
+    "reviewedCandidateHead": "b0020917d0e9bb679f8f259fe895b3cc9720874c",
+    "qualificationOperation": "H_EARTH_OW04_REACH_AND_ARTICULATED_RELIEF_ANCHOR_REVIEW_20260816_002",
+    "exactCandidateEvidenceRunId": 31956871552,
+    "finding": "Fresh exact-head desktop/mobile/interaction evidence confirms that projection and atmosphere reach are reconciled and the coastal-entry inland range now reads as articulated relief with a visible saddle and depth rather than a continuous enclosing wall. Named mountain identities, direct manipulation, canonical H-Earth continuity, frozen accessible extent, open-ocean law, and non-navigable surrounding-world continuation remain preserved."
   }
 }

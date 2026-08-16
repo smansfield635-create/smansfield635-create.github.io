@@ -1,9 +1,9 @@
 {
   "schema": "H_EARTH_OW04_EXACT_CANDIDATE_EVIDENCE_v1",
-  "candidateHead": "a8fe5f75350029e094a89a0e02b3ad6cdfdf089e",
-  "exactCandidateEvidenceRunId": 31954259847,
-  "exactCandidateArtifactId": 9265512106,
-  "exactCandidateArtifactSha256": "8c2c9c240d87d4af553c037d278bd559e38b8de4ff4b6ab0f56250d0ea0f6bf1",
+  "candidateHead": "b0020917d0e9bb679f8f259fe895b3cc9720874c",
+  "exactCandidateEvidenceRunId": 31956871552,
+  "exactCandidateArtifactId": 9266184496,
+  "exactCandidateArtifactSha256": "1a099cca5e11feb4036a97fc667ae8e2b3dad64089b3bbaa4823b69a53a2c246",
   "captureDisposition": "SUCCESS",
   "captureCoverage": [
     "desktop",
@@ -14,18 +14,39 @@
   "rendererFunctional": true,
   "physicalInspectionBaselineRestored": true,
   "constructionIntent": "INACCESSIBLE_WORLD_CONTINUATION_WITH_OPEN_OCEAN_AND_NO_PLAYABLE_EXPANSION",
+  "repairedDefects": [
+    "PROJECTION_REACH_MISMATCH",
+    "ATMOSPHERIC_REACH_MISMATCH",
+    "COASTAL_ENTRY_INLAND_RELIEF_OVERLAP_CREATES_ENCLOSING_NEAR_FIELD_SCREEN"
+  ],
+  "rejectedHypotheses": [
+    "DISTANT_CONTEXT_PRIMITIVE_CAUSES_ENTRY_WALL",
+    "FAR_RELIEF_MATERIAL_CONTRIBUTION_TOO_WEAK"
+  ],
   "experienceFiles": [
+    {
+      "path": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "sha256": "3c525d2635f47f2e26801aa4c7e4c56b354cac7a530d6809c17531b2594108c0"
+    },
     {
       "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
       "sha256": "9666b2f89b3a3939c1b6499d821784d65f26a39fdf54e50f4e9b35c674b9cefa"
     },
     {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "8785ed578a9250701721d55b1bc4652d143c8d26f9f1c81d646c67531f0514f5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "sha256": "59308bfa8a1f1694d8d8ad5a607b173e9a9963ea1c537963f09917281e0c113f"
+    },
+    {
       "path": "showroom/globe/h-earth/render/functional-landscape-frame.js",
-      "sha256": "54c53d74af6e981a1658fd7c36e61c39aa7bc39a30125275745afc0682a76ef0"
+      "sha256": "f65ffd85d3d9d7d5c13b7e62e7d2a68e6faf1632284aa17861681f0b3c6b5edd"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
-      "sha256": "24b0dc5cfec380a0fdb12403b4cbd06417ccd6a9ff0b6027f9486c97706b25e4"
+      "sha256": "3263dc5cdb69b4f6b615fe4f2d3a627fac3dc42bf67b9a15ee730a670a1f7050"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-landscape.js",

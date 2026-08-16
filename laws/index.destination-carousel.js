@@ -7,246 +7,31 @@
   "use strict";
   const CONTRACT = "LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT";
   const REFERENCE = "METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1";
-  const BUILD = "20260816A";
+  const BUILD = "20260816B";
   const ROOT_SELECTOR = "[data-laws-root-rolodex-section]";
   const FIELD_SELECTOR = ".laws-rolodex-field[data-rolodex-id]";
   const stateByField = new WeakMap();
   const fieldById = new Map();
-
   const normalize = (value, count) => ((value % count) + count) % count;
   const reducedMotion = () => globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches === true;
-
-  function radius(viewport) {
-    const width = Math.max(320, viewport.clientWidth || 960);
-    if (width < 520) return Math.max(245, Math.min(330, width * .72));
-    if (width < 820) return Math.max(320, Math.min(440, width * .58));
-    return Math.max(430, Math.min(650, width * .49));
-  }
-
-  function angleForIndex(index, count) {
-    return -normalize(index, count) * (360 / count);
-  }
-
-  function publish(field, state, reason) {
-    const card = state.cards[state.index];
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({
-      contract: CONTRACT,
-      referenceContract: REFERENCE,
-      buildId: BUILD,
-      reason,
-      rolodexId: field.dataset.rolodexId || "",
-      index: state.index,
-      count: state.cards.length,
-      destinationId: card?.dataset.destinationId || "",
-      orbitAngle: state.angle,
-      dragging: state.dragging,
-      settling: state.settling,
-      sharedRingAuthority: true,
-      directManipulation: true,
-      navigationAuthority: false,
-      contentAuthority: false,
-      routeAuthority: false,
-      evidenceAuthority: false
-    }) }));
-  }
-
-  function applyGeometry(field, state, reason = "geometry") {
-    const count = state.cards.length;
-    const step = 360 / count;
-    const r = radius(state.viewport);
-    state.track.style.setProperty("--laws-ring-rotation", `${state.angle}deg`);
-    state.track.style.setProperty("--laws-ring-radius", `${r}px`);
-    state.cards.forEach((card, index) => {
-      card.style.setProperty("--laws-card-angle", `${index * step}deg`);
-      const active = index === state.index;
-      card.dataset.active = String(active);
-      card.setAttribute("aria-current", active ? "true" : "false");
-      card.setAttribute("aria-hidden", active ? "false" : "true");
-      const enter = card.querySelector(".laws-rolodex-enter");
-      if (enter) enter.tabIndex = active ? 0 : -1;
-    });
-    state.position.textContent = `${state.index + 1} / ${count}`;
-    field.dataset.carouselIndex = String(state.index);
-    field.dataset.carouselOrbitAngle = String(state.angle);
-    field.dataset.carouselDragging = String(state.dragging);
-    field.dataset.carouselSettling = String(state.settling);
-    field.dataset.carouselCanonicalLanding = String(!state.dragging && !state.settling && Math.abs(state.angle - angleForIndex(state.index, count)) < .001);
-    publish(field, state, reason);
-  }
-
-  function selectIndex(field, state, index, reason = "select", focus = false) {
-    if (state.dragging || state.settling) return false;
-    const target = normalize(index, state.cards.length);
-    if (target === state.index) return true;
-    const targetAngle = angleForIndex(target, state.cards.length);
-    state.settling = true;
-    field.dataset.carouselSettling = "true";
-    state.track.style.setProperty("--laws-ring-rotation", `${targetAngle}deg`);
-    const commit = () => {
-      state.index = target;
-      state.angle = targetAngle;
-      state.settling = false;
-      applyGeometry(field, state, reason);
-      if (focus) state.cards[state.index]?.querySelector(".laws-rolodex-enter")?.focus({ preventScroll: true });
-    };
-    clearTimeout(state.settleTimer);
-    if (reducedMotion()) commit();
-    else state.settleTimer = setTimeout(commit, 640);
-    return true;
-  }
-
-  function snapFromDrag(field, state) {
-    const count = state.cards.length;
-    const step = 360 / count;
-    const projected = state.angle + Math.max(-26, Math.min(26, state.velocity * 90));
-    const next = normalize(Math.round(-projected / step), count);
-    state.index = next;
-    state.angle = angleForIndex(next, count);
-    state.settling = false;
-    applyGeometry(field, state, "drag-snap");
-  }
-
-  function finishPointer(field, state, event, cancelled = false) {
-    if (!state.dragging || event.pointerId !== state.pointerId) return;
-    const tap = state.pointerTravel < 7;
-    state.dragging = false;
-    state.viewport.dataset.dragging = "false";
-    try { state.viewport.releasePointerCapture?.(event.pointerId); } catch (_) {}
-    state.pointerId = null;
-    if (cancelled || tap) {
-      state.angle = angleForIndex(state.index, state.cards.length);
-      applyGeometry(field, state, cancelled ? "pointer-cancel" : "tap-release");
-      return;
-    }
-    state.suppressClick = true;
-    snapFromDrag(field, state);
-  }
-
-  function restoreOrbitState(receipt = {}) {
-    const field = fieldById.get(String(receipt.rolodexId || ""));
-    const state = field && stateByField.get(field);
-    if (!field || !state || state.dragging || state.settling) return false;
-    let index = Number.isInteger(receipt.index) ? receipt.index : state.index;
-    if (receipt.destinationId) {
-      const found = state.cards.findIndex(card => card.dataset.destinationId === receipt.destinationId);
-      if (found >= 0) index = found;
-    }
-    state.index = normalize(index, state.cards.length);
-    state.angle = angleForIndex(state.index, state.cards.length);
-    applyGeometry(field, state, "orbit-restore");
-    return true;
-  }
-
-  function snapshot(id) {
-    const field = fieldById.get(String(id || ""));
-    const state = field && stateByField.get(field);
-    if (!field || !state) return null;
-    return Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, rolodexId: field.dataset.rolodexId || "", index: state.index, orbitAngle: state.angle, dragging: state.dragging, settling: state.settling, destinationId: state.cards[state.index]?.dataset.destinationId || "" });
-  }
-
-  function bindField(field) {
-    if (stateByField.has(field)) return;
-    const viewport = field.querySelector(".laws-rolodex-viewport");
-    const track = field.querySelector(".laws-rolodex-track");
-    const cards = Array.from(field.querySelectorAll(".laws-rolodex-card"));
-    const position = field.querySelector(".laws-rolodex-position");
-    if (!viewport || !track || !position || cards.length < 2) return;
-    field.querySelectorAll(".laws-rolodex-control").forEach(control => control.remove());
-    const initialIndex = Math.max(0, cards.findIndex(card => card.dataset.active === "true"));
-    const state = { viewport, track, cards, position, index: initialIndex, angle: angleForIndex(initialIndex, cards.length), dragging: false, settling: false, settleTimer: null, pointerId: null, pointerStartX: 0, pointerStartAngle: 0, pointerLastX: 0, pointerLastTime: 0, pointerTravel: 0, velocity: 0, suppressClick: false };
-    stateByField.set(field, state);
-    fieldById.set(field.dataset.rolodexId || "", field);
-    field.dataset.lawsDestinationCarousel = "active";
-    field.dataset.carouselSpatialKernel = "methods-reference-shared-ring";
-    viewport.style.touchAction = "pan-y";
-    viewport.setAttribute("aria-roledescription", "carousel");
-    viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Drag horizontally to rotate the shared orbit. Vertical gestures scroll the page.`);
-
-    viewport.addEventListener("pointerdown", event => {
-      if (state.settling || (event.pointerType === "mouse" && event.button !== 0) || event.target.closest("button, a")) return;
-      state.dragging = true;
-      state.pointerId = event.pointerId;
-      state.pointerStartX = event.clientX;
-      state.pointerLastX = event.clientX;
-      state.pointerLastTime = performance.now();
-      state.pointerStartAngle = state.angle;
-      state.pointerTravel = 0;
-      state.velocity = 0;
-      state.suppressClick = false;
-      viewport.dataset.dragging = "true";
-      try { viewport.setPointerCapture?.(event.pointerId); } catch (_) {}
-    });
-
-    viewport.addEventListener("pointermove", event => {
-      if (!state.dragging || event.pointerId !== state.pointerId) return;
-      const now = performance.now();
-      const width = Math.max(320, viewport.clientWidth);
-      const delta = event.clientX - state.pointerStartX;
-      state.pointerTravel = Math.max(state.pointerTravel, Math.abs(delta));
-      state.angle = state.pointerStartAngle + (delta / width) * 190;
-      const elapsed = Math.max(8, now - state.pointerLastTime);
-      state.velocity = (event.clientX - state.pointerLastX) / elapsed;
-      state.pointerLastX = event.clientX;
-      state.pointerLastTime = now;
-      track.style.setProperty("--laws-ring-rotation", `${state.angle}deg`);
-      field.dataset.carouselOrbitAngle = String(state.angle);
-    });
-
-    viewport.addEventListener("pointerup", event => finishPointer(field, state, event, false));
-    viewport.addEventListener("pointercancel", event => finishPointer(field, state, event, true));
-
-    viewport.addEventListener("keydown", event => {
-      if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key) || state.dragging || state.settling) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      if (event.key === "Home") selectIndex(field, state, 0, "keyboard-home", true);
-      else if (event.key === "End") selectIndex(field, state, cards.length - 1, "keyboard-end", true);
-      else selectIndex(field, state, state.index + (event.key === "ArrowRight" ? 1 : -1), "keyboard-step", true);
-    }, true);
-
-    track.addEventListener("click", event => {
-      if (state.suppressClick) { state.suppressClick = false; event.preventDefault(); return; }
-      if (state.dragging || state.settling || event.target.closest("button, a")) return;
-      const card = event.target.closest(".laws-rolodex-card");
-      if (!card) return;
-      const index = cards.indexOf(card);
-      if (index >= 0 && index !== state.index) selectIndex(field, state, index, "card-select");
-    });
-
-    cards.forEach((card, index) => card.addEventListener("focusin", () => {
-      if (!state.dragging && !state.settling && index !== state.index) selectIndex(field, state, index, "focus-select");
-    }));
-
-    applyGeometry(field, state, "mount");
-  }
-
-  function normalizeOrbitTerminology() {
-    document.querySelectorAll(".laws-exhibit-return").forEach(button => { button.textContent = "Return to Orbit"; button.setAttribute("aria-label", "Return to Orbit"); });
-  }
-
-  function install() {
-    const root = document.querySelector(ROOT_SELECTOR);
-    if (!root) return false;
-    const fields = Array.from(root.querySelectorAll(FIELD_SELECTOR));
-    fields.forEach(bindField);
-    normalizeOrbitTerminology();
-    if (!fields.some(field => stateByField.has(field))) return false;
-    document.documentElement.dataset.lawsDestinationCarouselRuntime = "active";
-    document.documentElement.dataset.lawsCarouselContract = CONTRACT;
-    document.documentElement.dataset.lawsCarouselReference = REFERENCE;
-    document.documentElement.dataset.lawsCarouselBuild = BUILD;
-    globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, installed: true, sharedRingAuthority: true, directManipulation: true, oneAuthoritativeSpatialCoordinate: true, surrogateNavigation: false, restoreOrbitState, getState: snapshot, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false });
-    globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, fieldCount: fields.length, sharedRingAuthority: true, directManipulation: true }) }));
-    return true;
-  }
-
-  function initialize() {
-    install();
-    globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY", () => requestAnimationFrame(install));
-    globalThis.addEventListener("LAWS_ROLODEX_PLACEMENT_READY", () => requestAnimationFrame(install));
-    globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", () => requestAnimationFrame(normalizeOrbitTerminology));
-  }
-
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
-  else initialize();
+  function radius(viewport) { const width = Math.max(320, viewport.clientWidth || 960); if (width < 520) return Math.max(245, Math.min(330, width * .72)); if (width < 820) return Math.max(320, Math.min(440, width * .58)); return Math.max(430, Math.min(650, width * .49)); }
+  function angleForIndex(index, count) { return -normalize(index, count) * (360 / count); }
+  function publish(field, state, reason) { const card = state.cards[state.index]; globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_CHANGED", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, reason, rolodexId: field.dataset.rolodexId || "", index: state.index, count: state.cards.length, destinationId: card?.dataset.destinationId || "", orbitAngle: state.angle, dragging: state.dragging, settling: state.settling, sharedRingAuthority: true, directManipulation: true, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }) })); }
+  function applyGeometry(field, state, reason = "geometry") { const count = state.cards.length; const step = 360 / count; const r = radius(state.viewport); state.track.style.setProperty("--laws-ring-rotation", `${state.angle}deg`); state.track.style.setProperty("--laws-ring-radius", `${r}px`); state.cards.forEach((card, index) => { card.style.setProperty("--laws-card-angle", `${index * step}deg`); const active = index === state.index; card.dataset.active = String(active); card.setAttribute("aria-current", active ? "true" : "false"); card.setAttribute("aria-hidden", active ? "false" : "true"); const enter = card.querySelector(".laws-rolodex-enter"); if (enter) enter.tabIndex = active ? 0 : -1; }); state.position.textContent = `${state.index + 1} / ${count}`; field.dataset.carouselIndex = String(state.index); field.dataset.carouselOrbitAngle = String(state.angle); field.dataset.carouselDragging = String(state.dragging); field.dataset.carouselSettling = String(state.settling); field.dataset.carouselCanonicalLanding = String(!state.dragging && !state.settling && Math.abs(state.angle - angleForIndex(state.index, count)) < .001); publish(field, state, reason); }
+  function selectIndex(field, state, index, reason = "select", focus = false) { if (state.dragging || state.settling) return false; const target = normalize(index, state.cards.length); if (target === state.index) return true; const targetAngle = angleForIndex(target, state.cards.length); state.settling = true; field.dataset.carouselSettling = "true"; state.track.style.setProperty("--laws-ring-rotation", `${targetAngle}deg`); const commit = () => { state.index = target; state.angle = targetAngle; state.settling = false; applyGeometry(field, state, reason); if (focus) state.cards[state.index]?.querySelector(".laws-rolodex-enter")?.focus({ preventScroll: true }); }; clearTimeout(state.settleTimer); if (reducedMotion()) commit(); else state.settleTimer = setTimeout(commit, 640); return true; }
+  function snapFromDrag(field, state) { const count = state.cards.length; const step = 360 / count; const projected = state.angle + Math.max(-26, Math.min(26, state.velocity * 90)); const next = normalize(Math.round(-projected / step), count); state.index = next; state.angle = angleForIndex(next, count); state.settling = false; applyGeometry(field, state, "drag-snap"); }
+  function finishPointer(field, state, event, cancelled = false) { if (!state.dragging || event.pointerId !== state.pointerId) return; const tap = state.pointerTravel < 7; state.dragging = false; state.viewport.dataset.dragging = "false"; try { state.viewport.releasePointerCapture?.(event.pointerId); } catch (_) {} state.pointerId = null; if (cancelled || tap) { state.angle = angleForIndex(state.index, state.cards.length); applyGeometry(field, state, cancelled ? "pointer-cancel" : "tap-release"); return; } state.suppressClick = true; snapFromDrag(field, state); }
+  function restoreOrbitState(receipt = {}) { const field = fieldById.get(String(receipt.rolodexId || "")); const state = field && stateByField.get(field); if (!field || !state || state.dragging || state.settling) return false; let index = Number.isInteger(receipt.index) ? receipt.index : state.index; if (receipt.destinationId) { const found = state.cards.findIndex(card => card.dataset.destinationId === receipt.destinationId); if (found >= 0) index = found; } state.index = normalize(index, state.cards.length); state.angle = angleForIndex(state.index, state.cards.length); applyGeometry(field, state, "orbit-restore"); return true; }
+  function snapshot(id) { const field = fieldById.get(String(id || "")); const state = field && stateByField.get(field); if (!field || !state) return null; return Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, rolodexId: field.dataset.rolodexId || "", index: state.index, orbitAngle: state.angle, dragging: state.dragging, settling: state.settling, destinationId: state.cards[state.index]?.dataset.destinationId || "" }); }
+  function bindField(field) { if (stateByField.has(field)) return; const viewport = field.querySelector(".laws-rolodex-viewport"); const track = field.querySelector(".laws-rolodex-track"); const cards = Array.from(field.querySelectorAll(".laws-rolodex-card")); const position = field.querySelector(".laws-rolodex-position"); if (!viewport || !track || !position || cards.length < 2) return; field.querySelectorAll(".laws-rolodex-control").forEach(control => control.remove()); const initialIndex = Math.max(0, cards.findIndex(card => card.dataset.active === "true")); const state = { viewport, track, cards, position, index: initialIndex, angle: angleForIndex(initialIndex, cards.length), dragging: false, settling: false, settleTimer: null, pointerId: null, pointerStartX: 0, pointerStartAngle: 0, pointerLastX: 0, pointerLastTime: 0, pointerTravel: 0, velocity: 0, suppressClick: false }; stateByField.set(field, state); fieldById.set(field.dataset.rolodexId || "", field); field.dataset.lawsDestinationCarousel = "active"; field.dataset.carouselSpatialKernel = "methods-reference-shared-ring"; viewport.style.touchAction = "pan-y"; viewport.setAttribute("aria-roledescription", "carousel"); viewport.setAttribute("aria-label", `${field.querySelector(".laws-rolodex-field__heading > p")?.textContent?.trim() || "Laws"} destinations. Drag horizontally to rotate the shared orbit. Vertical gestures scroll the page.`);
+    viewport.addEventListener("pointerdown", event => { if (state.settling || (event.pointerType === "mouse" && event.button !== 0) || event.target.closest("button, a")) return; state.dragging = true; state.pointerId = event.pointerId; state.pointerStartX = event.clientX; state.pointerLastX = event.clientX; state.pointerLastTime = performance.now(); state.pointerStartAngle = state.angle; state.pointerTravel = 0; state.velocity = 0; state.suppressClick = false; viewport.dataset.dragging = "true"; try { viewport.setPointerCapture?.(event.pointerId); } catch (_) {} });
+    viewport.addEventListener("pointermove", event => { if (!state.dragging || event.pointerId !== state.pointerId) return; const now = performance.now(); const width = Math.max(320, viewport.clientWidth); const delta = event.clientX - state.pointerStartX; state.pointerTravel = Math.max(state.pointerTravel, Math.abs(delta)); state.angle = state.pointerStartAngle + (delta / width) * 190; const elapsed = Math.max(8, now - state.pointerLastTime); state.velocity = (event.clientX - state.pointerLastX) / elapsed; state.pointerLastX = event.clientX; state.pointerLastTime = now; track.style.setProperty("--laws-ring-rotation", `${state.angle}deg`); field.dataset.carouselOrbitAngle = String(state.angle); });
+    viewport.addEventListener("pointerup", event => finishPointer(field, state, event, false)); viewport.addEventListener("pointercancel", event => finishPointer(field, state, event, true));
+    viewport.addEventListener("keydown", event => { if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key) || state.dragging || state.settling) return; event.preventDefault(); event.stopImmediatePropagation(); if (event.key === "Home") selectIndex(field, state, 0, "keyboard-home", true); else if (event.key === "End") selectIndex(field, state, cards.length - 1, "keyboard-end", true); else selectIndex(field, state, state.index + (event.key === "ArrowRight" ? 1 : -1), "keyboard-step", true); }, true);
+    track.addEventListener("click", event => { if (state.suppressClick) { state.suppressClick = false; event.preventDefault(); return; } if (state.dragging || state.settling || event.target.closest("button, a")) return; const card = event.target.closest(".laws-rolodex-card"); if (!card) return; const index = cards.indexOf(card); if (index >= 0 && index !== state.index) selectIndex(field, state, index, "card-select"); });
+    cards.forEach((card, index) => card.addEventListener("focusin", () => { if (!state.dragging && !state.settling && index !== state.index) selectIndex(field, state, index, "focus-select"); })); applyGeometry(field, state, "mount"); }
+  function normalizeOrbitTerminology() { document.querySelectorAll(".laws-exhibit-return").forEach(button => { button.textContent = "Return to Orbit"; button.setAttribute("aria-label", "Return to Orbit"); }); }
+  function install() { const root = document.querySelector(ROOT_SELECTOR); if (!root) return false; const fields = Array.from(root.querySelectorAll(FIELD_SELECTOR)); fields.forEach(bindField); normalizeOrbitTerminology(); if (!fields.some(field => stateByField.has(field))) return false; document.documentElement.dataset.lawsDestinationCarouselRuntime = "active"; document.documentElement.dataset.lawsCarouselContract = CONTRACT; document.documentElement.dataset.lawsCarouselReference = REFERENCE; document.documentElement.dataset.lawsCarouselBuild = BUILD; globalThis.DGB_LAWS_DESTINATION_CAROUSEL = Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, installed: true, sharedRingAuthority: true, directManipulation: true, oneAuthoritativeSpatialCoordinate: true, surrogateNavigation: false, restoreOrbitState, getState: snapshot, navigationAuthority: false, contentAuthority: false, routeAuthority: false, evidenceAuthority: false }); globalThis.dispatchEvent(new CustomEvent("LAWS_DESTINATION_CAROUSEL_READY", { detail: Object.freeze({ contract: CONTRACT, referenceContract: REFERENCE, buildId: BUILD, fieldCount: fields.length, sharedRingAuthority: true, directManipulation: true }) })); return true; }
+  function initialize() { install(); globalThis.addEventListener("LAWS_ROOT_ROLODEX_READY", () => requestAnimationFrame(install)); globalThis.addEventListener("LAWS_ROLODEX_PLACEMENT_READY", () => requestAnimationFrame(install)); globalThis.addEventListener("LAWS_ROLODEX_EXHIBIT_OPENED", () => requestAnimationFrame(normalizeOrbitTerminology)); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true }); else initialize();
 })();

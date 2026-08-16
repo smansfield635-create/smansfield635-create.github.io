@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="color-scheme" content="dark">
+  <title>H-Earth OW04 Qualified Inspection</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#020609;color:#eef8f6;font-family:system-ui,sans-serif}
+    .loading{padding:24px}
+    #failure{display:none;position:fixed;z-index:2147483647;left:8px;right:8px;bottom:8px;max-height:34vh;overflow:auto;padding:10px 12px;border:1px solid #ff8f8f;border-radius:12px;background:rgba(0,0,0,.9);color:#ffd4d4;font:12px/1.35 ui-monospace,monospace;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <div class="loading" id="loading">Loading exact H-Earth candidate…</div>
+  <pre id="failure"></pre>
+  <script>
+    (async()=>{
+      const EXACT='44b9a7ff717e36a022ac63a443f3a51bf8cf88d5';
+      const ROOT=`https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${EXACT}/`;
+      const DOC=`${ROOT}showroom/globe/h-earth/index.html`;
+      const MODULE=`${ROOT}showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js`;
+      const showFailure=(label,error)=>{
+        const panel=document.getElementById('failure')||document.createElement('pre');
+        panel.id='failure'; panel.style.display='block';
+        panel.textContent=`EXACT ${EXACT}\n${label}\n${error?.stack||error?.message||String(error)}`;
+        if(!panel.parentNode)document.body.appendChild(panel);
+      };
+      try{
+        const response=await fetch(DOC,{cache:'no-store'});
+        if(!response.ok)throw new Error(`SOURCE_HTTP_${response.status}`);
+        let html=await response.text();
+        html=html.replace(/<script id="h-earth-current-run8e-module"[\s\S]*?<\/script>/i,'');
+        html=html.replace(/<script>document\.getElementById\('h-earth-current-run8e-module'\)[\s\S]*?<\/script>/i,'');
+        html=html.replace(/\b(href|src)=(['"])\/(?!\/)/g,(m,a,q)=>`${a}=${q}${ROOT}`);
+        html=html.replace(/url\((['"]?)\/(?!\/)/g,(m,q)=>`url(${q}${ROOT}`);
+        html=html.replace('<head>',`<head><base href="${ROOT}showroom/globe/h-earth/"><meta name="h-earth-exact-source-commit" content="${EXACT}">`);
+        document.open(); document.write(html); document.close();
+
+        const nativeReplaceState=history.replaceState.bind(history);
+        const nativePushState=history.pushState.bind(history);
+        const sameOriginHistoryUrl=(url)=>{
+          if(url===undefined||url===null)return null;
+          const parsed=new URL(String(url),location.href);
+          return `${location.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+        };
+        history.replaceState=(state,title,url)=>url===undefined||url===null
+          ? nativeReplaceState(state,title)
+          : nativeReplaceState(state,title,sameOriginHistoryUrl(url));
+        history.pushState=(state,title,url)=>url===undefined||url===null
+          ? nativePushState(state,title)
+          : nativePushState(state,title,sameOriginHistoryUrl(url));
+
+        window.addEventListener('error',e=>showFailure('WINDOW_ERROR',e.error||e.message));
+        window.addEventListener('unhandledrejection',e=>showFailure('UNHANDLED_REJECTION',e.reason));
+        try{
+          await import(MODULE);
+        }catch(error){
+          showFailure('IMPORT_FAILED',error);
+        }
+      }catch(error){
+        showFailure('DIRECT_INSPECTION_FAILURE',error);
+      }
+    })();
+  </script>
+</body>
+</html>

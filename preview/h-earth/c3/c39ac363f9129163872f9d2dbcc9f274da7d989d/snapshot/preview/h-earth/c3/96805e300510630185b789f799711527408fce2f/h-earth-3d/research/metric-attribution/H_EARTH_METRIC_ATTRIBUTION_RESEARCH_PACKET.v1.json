@@ -1,0 +1,282 @@
+{
+  "schemaVersion": "H_EARTH_METRIC_ATTRIBUTION_RESEARCH_PACKET_v1",
+  "packetClass": "REPOSITORY_BACKED_RESEARCH_HANDOFF",
+  "packetStatus": "CONTENT_COMPLETE_MA6_EXECUTION_CLOSURE_SUPPLIED_BY_ACCOMPANYING_RECEIPT",
+  "program": "H_EARTH_METRIC_ATTRIBUTION_AND_CAUSAL_ABLATION_AUDIT",
+  "acceptedLiveProduct": "CP2",
+  "round2VisibleAdvancement": "ZERO",
+  "liveStateChanged": false,
+  "userDifferentialRequired": false,
+  "governingResearchDispositionBeforeAudit": "C_CURRENT_METRIC_OR_CAUSAL_INTERPRETATION_REQUIRED_VALIDATION_BEFORE_MORE_IMPLEMENTATION",
+  "auditQuestion": "WHICH_DIAGNOSTIC_PASS_REPRODUCES_THE_DIRECTION_AND_WAVELENGTH_OF_THE_ACCEPTED_CP2_FINAL_FRAME_REPETITION",
+  "checkpointLedger": [
+    {
+      "checkpoint": "MA0",
+      "result": "MA0_AUDIT_BASIS_FREEZE_PASS_CLOSED",
+      "mergeCommit": "6cf0b743bad7c70aa20937485cbe968777db159e",
+      "workflowRunId": 30562267369,
+      "jobId": 90938012385,
+      "canonicalReceiptSha256": "00f54a4cf4696996745cde6f3faf6926f4283439b27dfeaa0855b91c445286da",
+      "artifactId": 8767361371,
+      "artifactSha256": "9ab7cb95de23420320029aaad7ea578c482761ed210716a97f575528082fc4bf",
+      "resumeToken": "MA0_PASS_CLOSED@6b26ad697732acb628d5cac236e34c7fa7eb73c5"
+    },
+    {
+      "checkpoint": "MA1",
+      "result": "MA1_EXISTING_METRIC_REPRODUCTION_PASS_CLOSED",
+      "mergeCommit": "b78cf4b878a116c7fe4005c680df8dc01869e6ee",
+      "workflowRunId": 30563938676,
+      "jobId": 90943626721,
+      "canonicalReceiptSha256": "45cf157eff7b6d7a967d43c1f5a5a89111e86d1153173bf614528e1e912afeab",
+      "artifactId": 8768048581,
+      "artifactSha256": "fd98a6fe4e7fabe11329a9b7de80aa708b8d55a857a50e486abb7d96918c5e73",
+      "reproducedAggregateScore": 0.8081230868576569,
+      "absoluteDifferenceFromB4": 0,
+      "resumeToken": "MA1_PASS_CLOSED@dd365c1ab6cbfacae624edebffce9fda1c74b493"
+    },
+    {
+      "checkpoint": "MA2",
+      "result": "MA2_DIAGNOSTIC_PASS_AUTHORITY_PASS_CLOSED",
+      "mergeCommit": "1f3c5b5b1333a39495c1aabde427b8e95ff89c92",
+      "workflowRunId": 30564640690,
+      "jobId": 90945981245,
+      "canonicalReceiptSha256": "9351a5ba3d53f9f0635b5f56b23517cdaef5d3ab76052370637843d601e18307",
+      "artifactId": 8768334586,
+      "artifactSha256": "231b0cc64238b3ce6d32e198315afc277b478f513a743324eed86f0163c88304",
+      "diagnosticHColorEquivalentToOfficial": true,
+      "diagnosticHDepthEquivalentToOfficial": true,
+      "resumeToken": "MA2_PASS_CLOSED@c4105d6b886edca91bfe023d2107a5072599cefa"
+    },
+    {
+      "checkpoint": "MA3",
+      "result": "MA3_PASSES_A_THROUGH_D_PASS_CLOSED",
+      "mergeCommit": "e4dbc19f5eabfdc8584edbf23977e5bb05c405d3",
+      "workflowRunId": 30565119792,
+      "jobId": 90947594738,
+      "canonicalReceiptSha256": "e85c7cdcc9ea3b22686b63542ef43b25c3b546614ff0fe5c4f706755d1630ba6",
+      "artifactId": 8768511411,
+      "artifactSha256": "5e9d8f04c2bccaaa3dc103dc696bcf0c4f610c9079a34e93a54663e769e1d094",
+      "outputCount": 32,
+      "resumeToken": "MA3_PASS_CLOSED@a23b9057bf91f9924ef1df4ce44c9818772fecc2"
+    },
+    {
+      "checkpoint": "MA4",
+      "result": "MA4_PASSES_E_THROUGH_H_PASS_CLOSED",
+      "mergeCommit": "ad151f7ba98c0d16badf3ba0183ed3e21b516559",
+      "workflowRunId": 30565504244,
+      "jobId": 90948893637,
+      "canonicalReceiptSha256": "2ad7f10e86a3e8bdd1e9e06c415daa55da870b9f977155b247da8907fe4bc958",
+      "artifactId": 8768674259,
+      "artifactSha256": "7cdf75ae0d85eddcdc4633a6d8a344e4ee7097bd3d78bf0a9dbd8e0bc59398ad",
+      "outputCount": 32,
+      "diagnosticHOfficialColorEquivalenceSceneCount": 8,
+      "diagnosticHOfficialDepthEquivalenceSceneCount": 8,
+      "acceptedAggregateScore": 0.8081230868576569,
+      "resumeToken": "MA4_PASS_CLOSED@f0ba836ca4afe6838b497063182402ea0db49862"
+    },
+    {
+      "checkpoint": "MA5",
+      "result": "MA5_CROSS_PASS_CORRESPONDENCE_PASS_CLOSED",
+      "mergeCommit": "30750006bce953c002f47d89f314faca83b224f1",
+      "workflowRunId": 30567031631,
+      "jobId": 90954013381,
+      "canonicalReceiptSha256": "7c4913af311c77ba4121c31c2c29f86b265bae76bc6bf11e783360bdfdf959cc",
+      "canonicalMatrixSha256": "9463cf860a13cdbd38f3f5f7f24b27b15b958ecf1d3a3324557906fe8f940811",
+      "artifactId": 8769245958,
+      "artifactSha256": "1358f3ea4b9a5668134ace5a77c809f52496a4eb2eb048a132b4c43de4e9fdee",
+      "resumeToken": "MA5_PASS_CLOSED@0273aa51426816d064ed1bca1b8adc2d53bc9254"
+    }
+  ],
+  "verifierCorrectionLedger": [
+    {
+      "checkpoint": "MA5",
+      "failedWorkflowRunId": 30566340255,
+      "failedJobId": 90951688944,
+      "blockingCondition": "CORRUPTED_COMPRESSED_MATRIX_TRANSFER_PAYLOAD",
+      "matrixValuesEvaluated": false,
+      "correctionCount": 1,
+      "correctionScope": "TRANSFER_ENCODING_ONLY",
+      "classificationLawChanged": false,
+      "correspondenceValuesChanged": false
+    },
+    {
+      "checkpoint": "MA6",
+      "failedWorkflowRunId": 30567546917,
+      "failedJobId": 90955727124,
+      "blockingCondition": "EXPECTED_QUALIFIER_LEDGER_ARITHMETIC_ERROR_17_OF_24_IS_BELOW_0.75",
+      "matrixValuesEvaluated": true,
+      "correctionCount": 1,
+      "correctionScope": "EXPECTED_LEDGER_AND_HANDOFF_WORDING_ONLY",
+      "matchGateChanged": false,
+      "primaryClassificationChanged": false,
+      "secondaryCategoryChanged": false
+    }
+  ],
+  "diagnosticPassRegistry": {
+    "A": "HEIGHTFIELD_AS_GRAYSCALE_ELEVATION",
+    "B": "SLOPE_MAGNITUDE",
+    "C": "SURFACE_NORMAL_COMPONENTS",
+    "D": "DEPTH_ONLY",
+    "E": "SILHOUETTE_AND_MAJOR_EDGES_ONLY",
+    "F": "CONSTANT_MATERIAL_WITH_ACCEPTED_LIGHTING",
+    "G": "ACCEPTED_MATERIAL_WITH_FLAT_LIGHTING",
+    "H": "ACCEPTED_CP2_FINAL_FRAME"
+  },
+  "matchGate": {
+    "allTermsRequired": true,
+    "exactBandMatchFractionMinimum": 0.75,
+    "meanBandGridPearsonMinimum": 0.75,
+    "sceneScorePearsonMinimum": 0.75,
+    "meanPeakStrengthRatioMinimum": 0.85,
+    "dominantSceneExactMatchFractionMinimum": 0.75,
+    "aggregateScoreRatioMinimum": 0.9
+  },
+  "correspondenceRanking": [
+    {
+      "rank": 1,
+      "pass": "G",
+      "correspondenceComposite": 0.9516875508010616,
+      "exactBandMatchCount": 23,
+      "exactBandComparisonCount": 24,
+      "meanBandGridPearson": 0.9795210903175875,
+      "sceneScorePearson": 0.9923694320951161,
+      "meanPeakStrengthRatio": 0.9804080305101164,
+      "dominantSceneExactMatchCount": 7,
+      "aggregateScoreRatio": 0.9945351868190059,
+      "qualifies": true
+    },
+    {
+      "rank": 2,
+      "pass": "F",
+      "correspondenceComposite": 0.8567686756627473,
+      "exactBandMatchCount": 17,
+      "exactBandComparisonCount": 24,
+      "exactBandMatchFraction": 0.7083333333333334,
+      "meanBandGridPearson": 0.8066720367284914,
+      "sceneScorePearson": 0.8012289114198082,
+      "meanPeakStrengthRatio": 0.8841710448211679,
+      "dominantSceneExactMatchCount": 7,
+      "aggregateScoreRatio": 0.9037440789991772,
+      "qualifies": false,
+      "failedGateTerm": "EXACT_BAND_MATCH_FRACTION"
+    },
+    {
+      "rank": 3,
+      "pass": "C",
+      "correspondenceComposite": 0.8184516640603525,
+      "exactBandMatchCount": 18,
+      "exactBandComparisonCount": 24,
+      "meanBandGridPearson": 0.78235600578123,
+      "sceneScorePearson": 0.9542515710211767,
+      "meanPeakStrengthRatio": 0.8938882766080236,
+      "dominantSceneExactMatchCount": 6,
+      "aggregateScoreRatio": 0.9171174590723896,
+      "qualifies": true
+    },
+    {
+      "rank": 4,
+      "pass": "A",
+      "correspondenceComposite": 0.74646003802791,
+      "qualifies": false
+    },
+    {
+      "rank": 5,
+      "pass": "E",
+      "correspondenceComposite": 0.7108581548626312,
+      "qualifies": false
+    },
+    {
+      "rank": 6,
+      "pass": "B",
+      "correspondenceComposite": 0.6838525899278585,
+      "qualifies": false
+    },
+    {
+      "rank": 7,
+      "pass": "D",
+      "correspondenceComposite": 0.652307308005936,
+      "qualifies": false
+    }
+  ],
+  "causalClassification": {
+    "qualifyingPasses": ["C", "G"],
+    "nonqualifyingPasses": ["A", "B", "D", "E", "F"],
+    "primaryPass": "G",
+    "primaryResult": "MATERIAL_CAUSE_ESTABLISHED_FOR_CURRENT_METRIC",
+    "secondaryResult": "GEOMETRY_LIGHTING_INTERACTION_ESTABLISHED_FOR_CURRENT_METRIC",
+    "secondaryQualifyingPass": "C",
+    "strongButNonqualifyingPass": "F",
+    "structuralGeometryCause": "NOT_ESTABLISHED_BY_CURRENT_METRIC",
+    "cameraVisibleMacroFormCause": "NOT_ESTABLISHED_BY_CURRENT_METRIC",
+    "metricAttribution": "MATERIAL_DOMINANT_WITH_GEOMETRY_LIGHTING_SECONDARY",
+    "currentMetricStatus": "VALID_AS_MATERIAL_DOMINANT_REPETITION_DETECTOR_WITH_SECONDARY_GEOMETRY_LIGHTING_SENSITIVITY",
+    "humanVisibleDefectCause": "NOT_FULLY_ESTABLISHED"
+  },
+  "interpretation": {
+    "established": [
+      "THE_CURRENT_SCALAR_REPETITION_SCORE_IS_PRIMARILY_REPRODUCED_BY_THE_ACCEPTED_CP2_SPATIAL_MATERIAL_FIELD_EVEN_WITH_DIRECTIONAL_LIGHTING_REMOVED",
+      "SURFACE_NORMALS_ESTABLISH_SECONDARY_GEOMETRY_LIGHTING_SENSITIVITY",
+      "THE_CONSTANT_MATERIAL_WITH_ACCEPTED_LIGHTING_PASS_WAS_STRONG_BUT_DID_NOT_PASS_THE_FROZEN_EXACT_BAND_FRACTION_GATE",
+      "ELEVATION_SLOPE_DEPTH_AND_MAJOR_EDGES_DO_NOT_PASS_THE_FULL_CORRESPONDENCE_GATE",
+      "THE_PRIOR_BOUNDED_MORPHOLOGY_PROGRAM_TARGETED_A_VARIABLE_THAT_THE_CURRENT_FINAL_FRAME_METRIC_DOES_NOT_PRIMARILY_MEASURE"
+    ],
+    "notEstablished": [
+      "THE_HUMAN_VISIBLE_REPETITION_COMPLAINT_IS_PURELY_MATERIAL",
+      "THE_ACCEPTED_CP2_MATERIAL_SHOULD_BE_REMOVED_OR_REPLACED_WHOLESALE",
+      "A_NEW_PRODUCT_CANDIDATE_WILL_IMPROVE_THE_LIVE_EXPERIENCE",
+      "THE_TARGET_IS_INFEASIBLE"
+    ]
+  },
+  "productDisposition": {
+    "newProductCandidateAuthorized": false,
+    "liveAdmissionAuthorized": false,
+    "userDifferentialRequiredNow": false,
+    "acceptedLiveProductRemains": "CP2",
+    "reason": "THE_AUDIT_IDENTIFIED_THE_METRIC_DRIVER_BUT_HAS_NOT_ISOLATED_WHICH_ACCEPTED_MATERIAL_SUBSIGNALS_CREATE_UNWANTED_REPETITION_VERSUS_USEFUL_READABILITY"
+  },
+  "nextAuthorizedResearchOperation": {
+    "operationId": "H_EARTH_ACCEPTED_CP2_MATERIAL_SUBSIGNAL_ATTRIBUTION_RESEARCH_v1",
+    "class": "DIAGNOSTIC_ONLY_NO_PRODUCT_MUTATION",
+    "referencePasses": ["G", "H"],
+    "primaryQuestion": "WHICH_ACCEPTED_CP2_MATERIAL_SUBSIGNALS_GENERATE_THE_MATCHED_REPETITION_SIGNATURE_WITHOUT_CARRYING_THE_USEFUL_MANOR_CAVERN_AND_TERRAIN_READABILITY_CUES",
+    "boundedSequence": [
+      {
+        "checkpoint": "RMA0",
+        "work": "FREEZE_PASS_G_PASS_H_AND_THE_ACCEPTED_CP2_MATERIAL_FAMILY_REGISTRY",
+        "stop": "STOP_AFTER_FAMILY_REGISTRY_RECEIPT"
+      },
+      {
+        "checkpoint": "RMA1",
+        "work": "EXECUTE_ONE_FAMILY_AT_A_TIME_DIAGNOSTIC_ABLATIONS_WITH_GEOMETRY_CAMERA_LIGHTING_AND_METRIC_GRID_FROZEN",
+        "stop": "STOP_AFTER_ABLATION_MATRIX"
+      },
+      {
+        "checkpoint": "RMA2",
+        "work": "IDENTIFY_THE_FAMILY_OR_COMBINATION_THAT_CARRIES_THE_MATCHED_ORIENTATION_LAG_AND_PEAK_STRENGTH",
+        "stop": "STOP_AFTER_SUBSIGNAL_CAUSAL_CLASSIFICATION"
+      },
+      {
+        "checkpoint": "RMA3",
+        "work": "VERIFY_MANOR_CAVERN_TERRAIN_AND_REGRESSION_SCENE_READABILITY_RETENTION_IN_DIAGNOSTIC_OUTPUTS",
+        "stop": "STOP_WITH_RESEARCH_DISPOSITION_NO_PRODUCT_MUTATION"
+      }
+    ],
+    "materialFamilies": [
+      "BROAD_MEDIUM_GRAIN_AND_MACRO_MESO_DETAIL_FIELDS",
+      "STRATA_CROSS_GRAIN_AND_FACE_BANDS",
+      "CREST_TERRACE_AND_CONTACT_SIGNALS",
+      "CONTOUR_AND_SLOPE_RAKE",
+      "MANOR_LOCAL_MATERIAL_AND_CONTACT_CUES",
+      "CAVERN_LOCAL_MATERIAL_AND_CONTACT_CUES",
+      "BASE_COLOR_AND_ROLE_BLEND"
+    ],
+    "productImplementationAuthorized": false,
+    "liveAdmissionAuthorized": false
+  },
+  "researchRoomInstruction": "ACCEPT_THIS_PACKET_AS_THE_CONTROLLING_METRIC_ATTRIBUTION_HANDOFF; DO_NOT_AUTHORIZE_ANOTHER_PRESENTATION_OR_TERRAIN_CANDIDATE; BEGIN_ONLY_THE_BOUNDED_RMA0_THROUGH_RMA3_DIAGNOSTIC_MATERIAL_SUBSIGNAL_ATTRIBUTION_SEQUENCE; RETURN_WITH_A_SUBSIGNAL_CAUSAL_AND_USEFUL_CUE_RETENTION_DISPOSITION_BEFORE_ANY_PRODUCT_IMPLEMENTATION",
+  "ma6Closure": {
+    "resultRequired": "MA6_CAUSAL_CLASSIFICATION_AND_RESEARCH_HANDOFF_PASS_CLOSED",
+    "executionEvidenceLocation": "ACCOMPANYING_MA6_WORKFLOW_RECEIPT_AND_MERGED_PULL_REQUEST",
+    "selfReferentialExecutionIdentifiersExcludedFromPacket": true
+  }
+}

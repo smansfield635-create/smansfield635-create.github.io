@@ -1,0 +1,64 @@
+{
+  "schema": "COMPASS_AWARD_FILM_V22_SHOT_RESCUE_LEDGER_v1",
+  "status": "SOURCE_RECOVERY_LOCKED_FOR_BOUNDED_REEDIT",
+  "source": {
+    "file": "23619.mp4",
+    "durationSeconds": 105.527584,
+    "authority": "showroom/globe/h-earth/awards/source/23619.source-authority.json",
+    "sha256": "c5caa176633209bdc618f505f64cafef5535e400ce2bf1728cde79582169c9a3"
+  },
+  "inspectionMethod": {
+    "sourceRead": "DIRECT_CANONICAL_DRIVE_BYTES",
+    "coarseVisualSampling": "5_SECOND_CONTACT_INSPECTION",
+    "sceneChangeProbe": "FFMPEG_SCENE_THRESHOLD_0.18",
+    "detectedBoundariesSeconds": [19.596689,26.231767,31.1165,33.455833,39.106167,44.280978,45.8817,53.673167,56.8141,78.363967,97.167456],
+    "law": "BOUNDARIES_ARE_SOURCE_RECOVERY_MARKERS_NOT_AUTOMATIC_EDIT_POINTS"
+  },
+  "sourceRegions": [
+    {"id":"R01","approxStart":0.0,"approxEnd":19.596689,"content":"COMPASS_ORIENTATION_AND_ROTATING_STAR_FIELD","evidenceClass":"BEHAVIOR","priority":"CRITICAL","use":"OPENING_REVEAL_AND_TERMINAL_HOMECOMING","deficienciesAddressed":["D01","D02","D05","D06"]},
+    {"id":"R02","approxStart":19.596689,"approxEnd":26.231767,"content":"HEART_HERO_STATE","evidenceClass":"ARTIFACT","priority":"HIGH","use":"HEART_CONTEXT_AND_VISUAL_BREATH","deficienciesAddressed":["D03","D05"]},
+    {"id":"R03","approxStart":26.231767,"approxEnd":31.1165,"content":"NINE_SUMMITS_BOOK_AND_ENTRY","evidenceClass":"ARTIFACT","priority":"HIGH","use":"HEART_TO_MIND_SUMMITS_CONNECTION","deficienciesAddressed":["D03"]},
+    {"id":"R04","approxStart":31.1165,"approxEnd":33.455833,"content":"NINE_SUMMITS_RELATIONSHIP_LIST","evidenceClass":"CONTEXT","priority":"CRITICAL","use":"PRESERVE_EXTENDED_RELATIONSHIP_DWELL","deficienciesAddressed":["D03","D05"]},
+    {"id":"R05","approxStart":33.455833,"approxEnd":44.280978,"content":"MIRRORLAND_STAINED_GLASS_WINDOW_AND_THRESHOLD","evidenceClass":"ARTIFACT","priority":"CRITICAL","use":"RESTORE_STAINED_GLASS_AND_MIRRORLAND_REVEAL","deficienciesAddressed":["D03","D04"]},
+    {"id":"R06","approxStart":44.280978,"approxEnd":53.673167,"content":"DIAMOND_WINDOW_RESTORE_AND_TRANSITION","evidenceClass":"ARTIFACT","priority":"HIGH","use":"PRESERVE_DIAMOND_WINDOW_AS_DISTINCT_ARTIFACT_NOT_TRANSITION_RESIDUE","deficienciesAddressed":["D03","D04"]},
+    {"id":"R07","approxStart":53.673167,"approxEnd":56.8141,"content":"GEM_CRYSTAL_OBJECT_STATE","evidenceClass":"ARTIFACT","priority":"CRITICAL","use":"GIVE_GEM_UNINTERRUPTED_HERO_DWELL","deficienciesAddressed":["D03"]},
+    {"id":"R08","approxStart":56.8141,"approxEnd":78.363967,"content":"NATIVE_LATTICE_TRANSFORMATION_AND_ROTATING_LATTICE_FIELD","evidenceClass":"BEHAVIOR","priority":"CRITICAL","use":"FEATURE_NATIVE_GEM_TO_LATTICE_BEHAVIOR_AS_PRODUCT_TRANSFORMATION","deficienciesAddressed":["D01","D02","D03","D04","D05"]},
+    {"id":"R09","approxStart":78.363967,"approxEnd":97.167456,"content":"FIVE_QUESTIONS_STARS_AND_CONNECTION_FIELD","evidenceClass":"BEHAVIOR","priority":"CRITICAL","use":"LONG_LANGUAGE_FREE_CONNECTION_AND_STARS_RIDE","deficienciesAddressed":["D01","D02","D05"]},
+    {"id":"R10","approxStart":97.167456,"approxEnd":105.527584,"content":"LAWS_CHAMBER_AND_GOVERNING_RELATIONSHIPS","evidenceClass":"CONTEXT","priority":"HIGH","use":"LAWS_PROOF_POINT_BEFORE_TERMINAL_RETURN","deficienciesAddressed":["D02","D06"]}
+  ],
+  "v22RescueSequence": [
+    {"order":1,"role":"OPENING_LANGUAGE","class":"CONTEXT","sourceRegion":null,"rule":"POST_1_LANGUAGE_FIRST_THEN_RELEASE"},
+    {"order":2,"role":"COMPASS_LIVE_REVEAL","class":"BEHAVIOR","sourceRegion":"R01","rule":"SHOW_ROTATION_OR_ORIENTATION_LONG_ENOUGH_TO_READ_AS_LIVE_SYSTEM"},
+    {"order":3,"role":"HEART_TO_SUMMITS","class":"ARTIFACT","sourceRegions":["R02","R03","R04"],"rule":"PRESERVE_RELATIONSHIP_DWELL_AND_DO_NOT_REDUCE_TO_STATIC_SLIDES"},
+    {"order":4,"role":"MIRRORLAND_WINDOW","class":"ARTIFACT","sourceRegions":["R05","R06"],"rule":"RESTORE_STAINED_GLASS_WINDOW_AND_DIAMOND_AS_SEPARATE_MEMORABLE_OBJECTS"},
+    {"order":5,"role":"GEM_TO_LATTICE","class":"BEHAVIOR","sourceRegions":["R07","R08"],"rule":"NATIVE_TRANSFORMATION_SUPREMACY_NO_EDITORIAL_DISSOLVE_SUBSTITUTION"},
+    {"order":6,"role":"QUESTIONS_AND_STARS","class":"BEHAVIOR","sourceRegion":"R09","rule":"ALLOW_UNCONTESTED_WATCH_IT_HAPPEN_BANDWIDTH"},
+    {"order":7,"role":"LAWS_PROOF","class":"CONTEXT","sourceRegion":"R10","rule":"USE_LAWS_AS_PROOF_POINT_NOT_FINAL_FALLBACK_IMAGE"},
+    {"order":8,"role":"THEREFORE_PUNCTUATION","class":"CONTEXT","sourceRegion":null,"rule":"DECELERATE_AND_RELEASE_LANGUAGE_BEFORE_RETURN_MOTION"},
+    {"order":9,"role":"COMPASS_HOMECOMING","class":"BEHAVIOR","sourceRegion":"R01","rule":"REUSE_A_DISTINCT_CLEAN_NATIVE_MOTION_INTERVAL_FROM_R01_AS_TERMINAL_CLIMAX; DO_NOT_SHOW_FALLBACK_ONLY_COMPASS"},
+    {"order":10,"role":"SIGNATURE","class":"CONTEXT","sourceRegion":null,"rule":"SIGNATURE_RESOLVES_THE_BEHAVIOR; IT_DOES_NOT_REPLACE_IT"}
+  ],
+  "attentionLaw": "READ_TO_RELEASE_TO_LOOK_TO_WATCH_IT_HAPPEN_TO_ABSORB_TO_TRANSITION",
+  "mandatoryArtifactAccounting": {
+    "GEM_CRYSTAL":"PRESENT_R07",
+    "LATTICE_TRANSFORMATION":"PRESENT_R08",
+    "STAINED_GLASS_WINDOW":"PRESENT_R05_R06",
+    "MIRRORLAND_REVEAL":"PRESENT_R05",
+    "NINE_SUMMITS_RELATIONSHIP_PASSAGE":"PRESENT_R04",
+    "STARS_CONNECTION_MATERIAL":"PRESENT_R09",
+    "COMPASS_HOMECOMING":"PRESENT_R01_REPRISE",
+    "LAWS_CHAMBER_BEHAVIORAL_CLIMAX":"LAWS_IS_PROOF_POINT_R10_THEN_CLIMAX_IS_NATIVE_COMPASS_RETURN_R01_REPRISE"
+  },
+  "constructionRules": [
+    "DO_NOT_FORCE_EVERY_SOURCE_REGION_IN_FULL; SELECT_THE_STRONGEST_SMOOTH_MOTION_INSIDE_EACH_REGION",
+    "NO_BROWSER_OR_DEVICE_CHROME_IN_FINAL_COMPOSITION",
+    "NO_UNIVERSAL_PORTRAIT_CROP_OR_FLOATING_PHONE",
+    "PRESERVE_V21_CINEMATIC_LANGUAGE_AROUND_NATIVE_BEHAVIOR",
+    "DO_NOT_OVERLAY_DENSE_CONTEXT_TEXT_DURING_R08_R09_OR_TERMINAL_R01_REPRISE",
+    "USE_EDITORIAL_TRANSITIONS_TO_FRAME_NATIVE_BEHAVIOR_NOT_IMPERSONATE_IT",
+    "FINAL_DURATION_MAY_REMAIN_NEAR_57_TO_58_SECONDS_BY_REPLACING_WEAK_STATIC_DWELL_WITH_STRONGER_NATIVE_MOTION_RATHER_THAN_MERELY_EXTENDING_RUNTIME"
+  ],
+  "nextLawfulAction": "BOUNDED_V22_PICTURE_REEDIT_FROM_LOCKED_RESCUE_SEQUENCE",
+  "mergeAuthority": false,
+  "liveReplacementAuthority": false
+}

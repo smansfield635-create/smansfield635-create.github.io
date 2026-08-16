@@ -19,9 +19,21 @@ try {
   async function capture(index,label){
     const snapshot=await page.evaluate(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.()??null);
     assert.ok(snapshot,'R5_VISUAL_SNAPSHOT_MISSING');
+    const liveGpu=snapshot?.liveGpu??null;
+    const liveGpuActive=liveGpu?.eligible===true&&liveGpu?.status==='RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE'&&(liveGpu?.counters?.gpuFramebufferPresentationCount??0)>0;
+    assert.equal(liveGpuActive,true,'R5_VISUAL_GPU_NOT_ACTIVE');
     const path=`${evidenceDirectory}/c3c3r5-visual-${String(index).padStart(2,'0')}-${label}.png`;
     await canvas.screenshot({path});
-    records.push({index,label,path,navigation:snapshot?.navigation??null,liveGpuReady:snapshot?.liveGpu?.ready===true,c3c3:snapshot?.liveGpu?.resources?.c3c3??null});
+    records.push({
+      index,
+      label,
+      path,
+      navigation:liveGpu?.latestNavigationState??null,
+      liveGpuActive,
+      frameCount:liveGpu?.counters?.gpuFramebufferPresentationCount??0,
+      rendererPath:liveGpu?.selectedRendererPath??null,
+      resourceReceipt:liveGpu?.resources??null
+    });
   }
 
   async function yaw(pointerId,direction=1){
@@ -33,7 +45,11 @@ try {
       const x0=b.left+b.width*(direction>0?.76:.24);
       const x1=b.left+b.width*(direction>0?.34:.66);
       const emit=(type,x,buttons)=>canvas.dispatchEvent(new PointerEvent(type,{bubbles:true,cancelable:true,pointerId:id,pointerType:'touch',isPrimary:true,clientX:x,clientY:y,buttons,pressure:buttons?0.5:0}));
-      emit('pointerdown',x0,1);emit('pointermove',x1,1);await new Promise(r=>setTimeout(r,220));emit('pointerup',x1,0);await new Promise(r=>setTimeout(r,180));
+      emit('pointerdown',x0,1);
+      emit('pointermove',x1,1);
+      await new Promise(r=>setTimeout(r,220));
+      emit('pointerup',x1,0);
+      await new Promise(r=>setTimeout(r,180));
     },{id:pointerId,direction});
   }
 
@@ -43,7 +59,7 @@ try {
     await capture(view,`yaw-${view}`);
   }
 
-  const readyCount=records.filter(record=>record.liveGpuReady).length;
+  const readyCount=records.filter(record=>record.liveGpuActive).length;
   assert.equal(readyCount,records.length,'R5_VISUAL_GPU_NOT_READY_DURING_SCAN');
   await writeFile(`${evidenceDirectory}/c3c3r5-visual-audit-capture.receipt.json`,`${JSON.stringify({receiptType:'H_EARTH_C3C3R5_MULTI_VIEW_VISUAL_AUDIT_CAPTURE_v1',status:'CAPTURE_COMPLETE_NOT_VISUAL_PASS',perspectiveChangeCountsAsImprovement:false,viewCount:records.length,records,requiredHumanAudit:['GLOBE_PERCEPTION','NO_RECTANGULAR_TERMINALS','OCEAN_REVEAL','GRID_DEPTH_LEGIBILITY','COLOR_TOPOLOGY_MARRIAGE','NO_OCEAN_DOME_OR_WALL']},null,2)}\n`);
   console.log(JSON.stringify({status:'CAPTURE_COMPLETE_NOT_VISUAL_PASS',viewCount:records.length},null,2));

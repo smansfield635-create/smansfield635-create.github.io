@@ -72,20 +72,20 @@ export const H_EARTH_GRATITUDE_COASTAL_SYSTEM = deepFreeze({
     systemId: 'H_EARTH_GRATITUDE_ORGANIC_COMPOUND_CONTINENT_MORPHOLOGY_v1',
     morphology: 'NONRADIAL_ASYMMETRIC_MULTI_LOBE_CONTINENT',
     peninsulas: [
-      { identity: 'GRATITUDE_WESTERN_PENINSULA', centerX: -196, halfWidth: 46, waterwardReach: 31 },
-      { identity: 'GRATITUDE_EASTERN_PENINSULA', centerX: 211, halfWidth: 38, waterwardReach: 27 }
+      { identity: 'GRATITUDE_WESTERN_PENINSULA', centerX: -220, halfWidth: 30, waterwardReach: 25 },
+      { identity: 'GRATITUDE_EASTERN_PENINSULA', centerX: 232, halfWidth: 24, waterwardReach: 20 }
     ],
     gulfs: [
-      { identity: 'GRATITUDE_WESTERN_GULF', centerX: -132, halfWidth: 54, inlandReach: 35 }
+      { identity: 'GRATITUDE_WESTERN_GULF', centerX: -170, halfWidth: 30, inlandReach: 28 }
     ],
     bays: [
-      { identity: 'GRATITUDE_SANCTUARY_BAY', centerX: 8, halfWidth: 47, inlandReach: 25 },
+      { identity: 'GRATITUDE_SANCTUARY_BAY', centerX: -82, halfWidth: 24, inlandReach: 20 },
       { identity: 'GRATITUDE_BAY', centerX: 118, halfWidth: 82, inlandReach: 48 }
     ],
     headlands: [
-      { identity: 'GRATITUDE_CENTRAL_HEADLAND', centerX: -54, halfWidth: 31, waterwardReach: 24 },
-      { identity: 'GRATITUDE_HARBOR_HEADLAND', centerX: 61, halfWidth: 25, waterwardReach: 18 },
-      { identity: 'GRATITUDE_EASTERN_HEADLAND', centerX: 177, halfWidth: 29, waterwardReach: 17 }
+      { identity: 'GRATITUDE_CENTRAL_HEADLAND', centerX: -125, halfWidth: 24, waterwardReach: 20 },
+      { identity: 'GRATITUDE_HARBOR_HEADLAND', centerX: 48, halfWidth: 42, waterwardReach: 10.5 },
+      { identity: 'GRATITUDE_EASTERN_HEADLAND', centerX: 198, halfWidth: 46, waterwardReach: 7.5 }
     ],
     coastalRhythmLaw: 'MAJOR_LOBES_AND_INLETS_MUST_DIFFER_IN_WIDTH_DEPTH_AND_SPACING',
     radialSymmetryProhibited: true,
@@ -174,24 +174,25 @@ export function getHEarthCanonicalShorelineZ(worldX) {
   const canonicalBackbone = coast.baselineZ
     + 7.5 * Math.sin(worldX / 58)
     + 2.75 * Math.sin((worldX + 31) / 19);
-  const westernPeninsula = 31 * bell(worldX, -196, 46);
-  const westernGulf = -35 * bell(worldX, -132, 54);
-  const centralHeadland = 24 * bell(worldX, -54, 31);
-  const sanctuaryBay = -25 * bell(worldX, 8, 47);
-  const harborHeadland = 18 * bell(worldX, 61, 25);
+  const westernPeninsula = 25 * bell(worldX, -220, 30);
+  const westernGulf = -28 * bell(worldX, -170, 30);
+  const centralHeadland = 20 * bell(worldX, -125, 24);
+  const sanctuaryBay = -20 * bell(worldX, -82, 24);
   const bayCore = -bay.maximumInlandReach * bell(worldX, bay.centerX, bay.halfWidth);
   const bayAsymmetry = -9.0 * bell(worldX, bay.centerX + 22, 44);
-  const easternHeadland = 17 * bell(worldX, 177, 29);
-  const easternPeninsula = 27 * bell(worldX, 211, 38);
-  const estuaryNotch = -8 * bell(worldX, -15, 14);
-  const harborCove = -7 * bell(worldX, 83, 13);
-  const nestedCoastalRhythm =
-    2.6 * Math.sin((worldX + 17) / 11) +
-    1.4 * Math.sin((worldX - 9) / 6.5);
+  const westernHeadland = 10.5 * bell(worldX, bay.westernHeadlandX, 42);
+  const easternHeadland = 7.5 * bell(worldX, bay.easternHeadlandX, 46);
+  const easternPeninsula = 20 * bell(worldX, 232, 24);
+  const westernRhythmWindow = bell(worldX, -166, 118);
+  const easternRhythmWindow = bell(worldX, 220, 62);
+  const nestedCoastalRhythm = (
+    2.2 * Math.sin((worldX + 17) / 11) +
+    1.1 * Math.sin((worldX - 9) / 6.5)
+  ) * Math.max(westernRhythmWindow, easternRhythmWindow);
   return canonicalBackbone
     + westernPeninsula + westernGulf + centralHeadland
-    + sanctuaryBay + estuaryNotch + harborHeadland
-    + bayCore + bayAsymmetry + harborCove
+    + sanctuaryBay + westernHeadland
+    + bayCore + bayAsymmetry
     + easternHeadland + easternPeninsula
     + nestedCoastalRhythm;
 }

@@ -1,166 +1,160 @@
-/* LAWS_DESTINATION_STAGE_v1 — dedicated second chamber below the Laws Compass. */
+/* LAWS_DESTINATION_STAGE_v2 — restrained continuation below the Laws Compass.
+ * Design law: Compass = primary spectacle; carousel = disciplined continuation.
+ * This file changes presentation only. Carousel, route, record, controller,
+ * evidence, and Compass authority remain elsewhere.
+ */
 html[data-laws-destination-stage="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"] {
   position: relative;
   display: block !important;
-  width: calc(100vw - clamp(1rem, 3vw, 3rem));
-  max-width: 112rem;
-  margin: clamp(3.5rem, 8vw, 8rem) auto clamp(5rem, 10vw, 10rem) !important;
+  width: min(calc(100vw - clamp(1rem, 3vw, 3rem)), 104rem);
+  margin: clamp(4.5rem, 9vw, 9rem) auto clamp(5rem, 10vw, 10rem) !important;
   padding: 0 !important;
   overflow: visible !important;
-  border: 1px solid rgba(128,224,255,.16);
-  border-radius: clamp(1.4rem, 2.8vw, 2.6rem);
-  background:
-    radial-gradient(circle at 50% 14%, rgba(87,184,255,.11), transparent 30%),
-    radial-gradient(circle at 78% 70%, rgba(132,109,255,.07), transparent 32%),
-    linear-gradient(180deg, rgba(2,7,18,.94), rgba(2,6,15,.86));
-  box-shadow:
-    0 4rem 10rem rgba(0,0,0,.38),
-    inset 0 1px 0 rgba(255,255,255,.025),
-    inset 0 0 140px rgba(0,0,0,.18);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   isolation: isolate;
 }
 
 html[data-laws-destination-stage="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"]::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: clamp(-1rem, -1vw, -.25rem) 5% 0;
   z-index: -1;
   pointer-events: none;
-  border-radius: inherit;
   background:
-    radial-gradient(circle at 14% 24%, rgba(128,224,255,.07) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 72% 31%, rgba(220,232,255,.09) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 44% 74%, rgba(184,165,255,.08) 0 1px, transparent 1.8px),
-    radial-gradient(circle at 89% 82%, rgba(128,224,255,.07) 0 1px, transparent 1.8px);
-  background-size: 17rem 17rem, 23rem 23rem, 29rem 29rem, 31rem 31rem;
-  opacity: .7;
+    radial-gradient(ellipse at 50% 12%, rgba(92,191,232,.055), transparent 46%),
+    radial-gradient(ellipse at 68% 72%, rgba(137,112,216,.03), transparent 42%);
+  filter: blur(18px);
+  opacity: .8;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__inner {
   position: relative;
-  padding: clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 4.5rem) clamp(2.5rem, 6vw, 6rem);
+  padding: 0 clamp(.4rem, 2.5vw, 2.6rem) clamp(2rem, 4vw, 4rem);
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__header {
   display: grid;
-  gap: clamp(1.6rem, 3vw, 2.8rem);
-  padding-bottom: clamp(1.8rem, 3.5vw, 3rem);
-  border-bottom: 1px solid rgba(128,224,255,.12);
+  grid-template-columns: minmax(0, .9fr) minmax(18rem, .55fr);
+  gap: clamp(1.25rem, 4vw, 4rem);
+  align-items: end;
+  max-width: 76rem;
+  margin: 0 auto;
+  padding: 0 0 clamp(1.25rem, 2.4vw, 2rem);
+  border-bottom: 1px solid rgba(128,224,255,.075);
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__kicker {
-  display: flex;
-  align-items: center;
-  gap: .85rem;
-  color: rgba(166,225,255,.82);
-  font-size: .72rem;
-  font-weight: 760;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-}
-
-html[data-laws-destination-stage="active"] .laws-destination-stage__kicker span:first-child {
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid rgba(128,224,255,.28);
-  border-radius: 50%;
+  display: none;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__heading-row {
-  display: grid;
-  grid-template-columns: minmax(0,1.2fr) minmax(18rem,.6fr);
-  gap: clamp(2rem, 6vw, 6rem);
-  align-items: end;
+  display: contents;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__eyebrow {
-  margin: 0 0 .85rem;
-  color: rgba(128,224,255,.78);
-  font-size: .76rem;
-  font-weight: 760;
-  letter-spacing: .16em;
+  margin: 0 0 .55rem;
+  color: rgba(146,211,237,.58);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .14em;
   text-transform: uppercase;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__header h2 {
-  max-width: 12ch;
+  max-width: 18ch;
   margin: 0;
-  color: #f3f8ff;
-  font-size: clamp(2.6rem, 6vw, 6.3rem);
-  line-height: .92;
-  letter-spacing: -.055em;
+  color: rgba(240,247,255,.92);
+  font-size: clamp(1.8rem, 3.2vw, 3.35rem);
+  font-weight: 690;
+  line-height: 1.02;
+  letter-spacing: -.038em;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__lede {
+  max-width: 34rem;
   margin: 0;
-  color: rgba(187,205,228,.78);
-  font-size: clamp(.98rem, 1.4vw, 1.14rem);
-  line-height: 1.72;
+  color: rgba(181,199,220,.66);
+  font-size: clamp(.92rem, 1.15vw, 1.04rem);
+  line-height: 1.65;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__tabs {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: .65rem;
-  margin-top: clamp(1.5rem, 3vw, 2.6rem);
+  display: flex;
+  justify-content: center;
+  gap: clamp(.25rem, 1vw, .9rem);
+  max-width: 60rem;
+  margin: clamp(1.2rem, 2.4vw, 2rem) auto 0;
+  padding: 0;
+  border: 0;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__tab {
-  min-height: 3.2rem;
-  padding: .8rem 1rem;
-  border: 1px solid rgba(128,224,255,.17);
-  border-radius: 999px;
-  background: rgba(5,14,31,.66);
-  color: rgba(197,216,237,.78);
+  min-height: 2.6rem;
+  padding: .62rem clamp(.7rem, 1.5vw, 1.1rem);
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(188,205,224,.54);
+  box-shadow: none;
   font: inherit;
-  font-size: .76rem;
-  font-weight: 760;
-  letter-spacing: .08em;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .09em;
   text-transform: uppercase;
   cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__tab:hover {
+  color: rgba(220,234,246,.78);
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__tab[aria-selected="true"] {
-  color: #f3f8ff;
-  border-color: rgba(128,224,255,.58);
-  background: linear-gradient(180deg, rgba(31,72,112,.6), rgba(10,28,54,.86));
-  box-shadow: 0 0 2.2rem rgba(99,205,255,.1), inset 0 1px 0 rgba(255,255,255,.04);
+  color: rgba(239,248,255,.94);
+  border-bottom-color: rgba(128,224,255,.5);
+  background: transparent;
+  box-shadow: none;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__tab:focus-visible {
-  outline: 2px solid rgba(128,224,255,.95);
-  outline-offset: 3px;
+  outline: 1px solid rgba(128,224,255,.78);
+  outline-offset: 4px;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__context {
   display: grid;
-  gap: .4rem;
-  margin: clamp(2rem, 4vw, 3.6rem) 0 clamp(1rem, 2vw, 1.7rem);
+  gap: .3rem;
+  max-width: 60rem;
+  margin: clamp(1.7rem, 3vw, 2.6rem) auto clamp(.5rem, 1.5vw, 1rem);
   text-align: center;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__context p {
   margin: 0;
-  color: rgba(128,224,255,.84);
-  font-size: .75rem;
-  font-weight: 760;
-  letter-spacing: .16em;
+  color: rgba(135,205,232,.55);
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .13em;
   text-transform: uppercase;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__context h3 {
   margin: 0;
-  color: #eef6ff;
-  font-size: clamp(1.65rem, 3.2vw, 3.2rem);
-  line-height: 1.02;
-  letter-spacing: -.035em;
+  color: rgba(234,244,252,.88);
+  font-size: clamp(1.15rem, 2.1vw, 1.85rem);
+  font-weight: 650;
+  line-height: 1.08;
+  letter-spacing: -.025em;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__field {
   position: relative;
-  min-height: clamp(34rem, 48vw, 43rem);
+  min-height: clamp(30rem, 43vw, 38rem);
+  margin-top: .25rem;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__field > .laws-rolodex-field {
@@ -189,8 +183,10 @@ html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-field__browser {
   width: 100% !important;
-  min-height: clamp(32rem, 46vw, 41rem) !important;
+  min-height: clamp(29rem, 41vw, 36rem) !important;
+  padding-top: .25rem !important;
   border: 0 !important;
+  border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
   overflow: visible !important;
@@ -198,62 +194,112 @@ html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-controls {
   justify-content: center !important;
-  padding: 0 0 1rem !important;
+  gap: .5rem !important;
+  padding: 0 0 .5rem !important;
+  opacity: .72;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-control {
+  min-width: 2.45rem;
+  min-height: 2.45rem;
+  border-color: rgba(128,224,255,.13) !important;
+  background: rgba(4,11,24,.34) !important;
+  box-shadow: none !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-control:hover,
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-control:focus-visible {
+  border-color: rgba(128,224,255,.34) !important;
+  background: rgba(10,24,43,.5) !important;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-viewport {
-  height: clamp(29rem, 43vw, 38rem) !important;
-  min-height: clamp(29rem, 43vw, 38rem) !important;
-  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%) !important;
+  height: clamp(27rem, 39vw, 34rem) !important;
+  min-height: clamp(27rem, 39vw, 34rem) !important;
+  mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%) !important;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card {
-  --laws-carousel-width: min(62vw, 39rem);
-  border-color: rgba(128,224,255,.18);
+  --laws-carousel-width: min(57vw, 35rem);
+  border-color: rgba(128,224,255,.11) !important;
   background:
-    radial-gradient(circle at 80% 0%, rgba(91,178,226,.08), transparent 32%),
-    linear-gradient(145deg, rgba(7,18,38,.97), rgba(4,10,24,.93));
+    radial-gradient(circle at 78% 4%, rgba(86,173,217,.045), transparent 35%),
+    linear-gradient(145deg, rgba(6,15,31,.94), rgba(3,9,21,.92)) !important;
+  box-shadow: 0 1.2rem 3.4rem rgba(0,0,0,.28) !important;
 }
 
 html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card[data-active="true"] {
-  border-color: rgba(128,224,255,.58);
-  box-shadow: 0 2.4rem 7rem rgba(0,0,0,.46), 0 0 3rem rgba(88,192,255,.07), inset 0 1px 0 rgba(255,255,255,.025);
+  border-color: rgba(128,224,255,.3) !important;
+  box-shadow:
+    0 1.8rem 5rem rgba(0,0,0,.36),
+    0 0 2.2rem rgba(88,192,255,.035),
+    inset 0 1px 0 rgba(255,255,255,.02) !important;
+}
+
+html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card:not([data-active="true"]) {
+  filter: saturate(.56) brightness(.68) !important;
 }
 
 @media (max-width: 900px) {
-  html[data-laws-destination-stage="active"] .laws-destination-stage__heading-row {
+  html[data-laws-destination-stage="active"] .laws-destination-stage__header {
     grid-template-columns: 1fr;
-    gap: 1.3rem;
+    gap: .9rem;
+    max-width: 42rem;
   }
+
   html[data-laws-destination-stage="active"] .laws-destination-stage__tabs {
-    grid-template-columns: 1fr;
+    justify-content: flex-start;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
+
+  html[data-laws-destination-stage="active"] .laws-destination-stage__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-laws-destination-stage="active"] .laws-destination-stage__tab {
+    flex: 0 0 auto;
+  }
+
   html[data-laws-destination-stage="active"] .laws-destination-stage__field {
-    min-height: 34rem;
+    min-height: 31rem;
   }
+
   html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card {
-    --laws-carousel-width: 78vw;
+    --laws-carousel-width: 74vw;
   }
 }
 
 @media (max-width: 560px) {
   html[data-laws-destination-stage="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"] {
-    width: calc(100vw - 1rem);
-    margin-top: 2.5rem !important;
-    border-radius: 1.25rem;
+    width: calc(100vw - .75rem);
+    margin-top: 3.25rem !important;
   }
+
   html[data-laws-destination-stage="active"] .laws-destination-stage__inner {
-    padding: 1.5rem .65rem 2.4rem;
+    padding-inline: .3rem;
   }
+
   html[data-laws-destination-stage="active"] .laws-destination-stage__header,
   html[data-laws-destination-stage="active"] .laws-destination-stage__tabs,
   html[data-laws-destination-stage="active"] .laws-destination-stage__context {
-    margin-left: .6rem;
-    margin-right: .6rem;
+    margin-left: .65rem;
+    margin-right: .65rem;
   }
+
   html[data-laws-destination-stage="active"] .laws-destination-stage__header h2 {
-    font-size: clamp(2.3rem, 13vw, 4.2rem);
+    font-size: clamp(1.7rem, 8.2vw, 2.5rem);
   }
+
+  html[data-laws-destination-stage="active"] .laws-destination-stage__lede {
+    font-size: .9rem;
+    line-height: 1.58;
+  }
+
+  html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-viewport {
+    mask-image: linear-gradient(90deg, transparent 0, #000 4%, #000 96%, transparent 100%) !important;
+  }
+
   html[data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-card {
     --laws-carousel-width: 82vw;
   }

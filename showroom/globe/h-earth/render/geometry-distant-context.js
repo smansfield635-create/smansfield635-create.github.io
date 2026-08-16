@@ -1,18 +1,16 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v5
+ * H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v6
  *
- * Constructs a non-navigable near/middle/far visual envelope beyond the frozen
- * accessible region. It carries inland/lateral terrain and horizon continuity
- * only. It owns no semantic address, collision, navigation, admission, or
- * playable extent, and creates no waterward landmass.
+ * Constructs a non-navigable visual world envelope beyond the frozen accessible
+ * region. It owns no semantic address, collision, navigation, admission, or
+ * playable extent and creates no waterward landmass.
  *
- * OW04 v5 retires the legacy near-field two-row highland curtain. That proxy
- * occupied the normal coastal sightline and could read as an enclosing wall.
- * Distant continuity now begins at the frozen accessible boundary and recedes
- * through the multi-row visual envelope instead of inserting a second terrain
- * face inside the already-authored world.
+ * OW04 v6 pushes the visual-only envelope materially farther from the player,
+ * increases transitional depth, and attenuates far relief into an atmospheric
+ * horizon. The intent is that the inaccessible world reads as continuation,
+ * never as a nearby wall, shelf, or second continent across the ocean.
  */
 
 import {
@@ -40,16 +38,18 @@ const lerp = (a, b, t) => a + (b - a) * t;
 const smooth = (t) => t * t * (3 - 2 * t);
 
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v5_SEAMLESS_VISUAL_WORLD_ENVELOPE_NO_NEAR_CURTAIN';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_OW04_v6_DEEP_ATMOSPHERIC_WORLD_CONTINUATION';
 
 const ACCESSIBLE = freeze({ xMin: -1024, xMax: 1024, zMin: -1024 });
-const VISUAL_HORIZON = freeze({ xMin: -1664, xMax: 1664, zMin: -1664 });
+const VISUAL_HORIZON = freeze({ xMin: -2200, xMax: 2200, zMin: -2200 });
 
 function horizonElevation(innerElevation, distanceT, phase) {
-  const retained = innerElevation * (1 - 0.78 * distanceT);
-  const relief = 5.0 * Math.sin(phase + distanceT * Math.PI * 2.4) +
-    2.0 * Math.sin(phase * 0.63 + distanceT * Math.PI * 6.2);
-  return Math.max(1.25, retained + relief * distanceT);
+  const retained = innerElevation * (1 - 0.91 * distanceT);
+  const relief =
+    4.2 * Math.sin(phase + distanceT * Math.PI * 2.1) +
+    1.7 * Math.sin(phase * 0.67 + distanceT * Math.PI * 5.7) +
+    0.8 * Math.sin(phase * 1.41 + distanceT * Math.PI * 11.0);
+  return Math.max(0.65, retained + relief * distanceT * (1 - 0.45 * distanceT));
 }
 
 function appendBlendedBand({ vertices, indices, sampleCount, rowCount, pointAt }) {
@@ -77,61 +77,75 @@ function constructVisualWorldContinuation(formation) {
   const vertices = [];
   const indices = [];
 
-  // Inland near/middle/far envelope. Continuity starts at the frozen playable
-  // boundary, not at the legacy near-field highland proxy. Multiple rows carry
-  // the existing terrain outward and attenuate it toward a distant irregular
-  // horizon without creating a shelf or enclosing wall.
+  // Inland continuation: eight depth rows move the existing terrain away from
+  // the frozen boundary and progressively flatten it into atmospheric distance.
+  // Far-row meander prevents a ruler-straight horizon while the relief envelope
+  // shrinks with distance so no enclosing terrain face is created.
   appendBlendedBand({
     vertices,
     indices,
-    sampleCount: 81,
-    rowCount: 6,
+    sampleCount: 97,
+    rowCount: 9,
     pointAt: (alongT, distanceT) => {
       const eased = smooth(distanceT);
       const innerX = lerp(ACCESSIBLE.xMin, ACCESSIBLE.xMax, alongT);
       const outerX = lerp(VISUAL_HORIZON.xMin, VISUAL_HORIZON.xMax, alongT);
       const inner = sampleHEarthTerrainField(innerX, ACCESSIBLE.zMin);
-      const irregular = (18 * Math.sin(alongT * Math.PI * 5.1 + distanceT * 1.7) +
-        7 * Math.sin(alongT * Math.PI * 11.3 + 0.4)) * distanceT;
-      const x = lerp(innerX, outerX, eased) + irregular;
-      const z = lerp(ACCESSIBLE.zMin, VISUAL_HORIZON.zMin, eased) -
-        22 * Math.sin(alongT * Math.PI * 2.7) * distanceT;
-      const farY = horizonElevation(inner.elevation, distanceT, 0.7 + alongT * 2.4);
+      const lateralMeander = (
+        24 * Math.sin(alongT * Math.PI * 4.7 + distanceT * 1.3) +
+        9 * Math.sin(alongT * Math.PI * 10.9 + 0.6)
+      ) * distanceT * (0.35 + 0.65 * distanceT);
+      const depthMeander = (
+        34 * Math.sin(alongT * Math.PI * 2.3 + 0.4) +
+        11 * Math.sin(alongT * Math.PI * 6.8)
+      ) * distanceT;
       const localCarry = sampleHEarthTerrainField(
         innerX,
-        lerp(ACCESSIBLE.zMin, ACCESSIBLE.zMin - 170, Math.min(1, distanceT * 1.8))
+        lerp(ACCESSIBLE.zMin, ACCESSIBLE.zMin - 220, Math.min(1, distanceT * 1.55))
       ).elevation;
-      return { x, y: lerp(localCarry, farY, eased), z };
+      const farY = horizonElevation(inner.elevation, distanceT, 0.8 + alongT * 2.7);
+      return {
+        x: lerp(innerX, outerX, eased) + lateralMeander,
+        y: lerp(localCarry, farY, eased),
+        z: lerp(ACCESSIBLE.zMin, VISUAL_HORIZON.zMin, eased) - depthMeander
+      };
     }
   });
 
-  // Lateral continuation exists only landward of each canonical coast. It
-  // blends through several rows and becomes increasingly irregular with
-  // distance, eliminating the parallel-wall reading while leaving the
-  // ocean-facing side as uninterrupted open water.
+  // Lateral continuation is restricted to landward portions of the canonical
+  // coast. It recedes farther than v5 and loses elevation aggressively with
+  // distance. No geometry is generated beyond the shoreline on the waterward
+  // side, preserving the continental-edge requirement: open ocean stays open.
   for (const side of ['WEST', 'EAST']) {
     const sign = side === 'WEST' ? -1 : 1;
     const innerX = side === 'WEST' ? ACCESSIBLE.xMin : ACCESSIBLE.xMax;
     const outerX = side === 'WEST' ? VISUAL_HORIZON.xMin : VISUAL_HORIZON.xMax;
     const coastlineZ = getHEarthCanonicalShorelineZ(innerX);
-    const landwardEndZ = Math.min(-112, coastlineZ - 30);
+    const landwardEndZ = Math.min(-160, coastlineZ - 72);
     appendBlendedBand({
       vertices,
       indices,
-      sampleCount: 61,
-      rowCount: 5,
+      sampleCount: 69,
+      rowCount: 7,
       pointAt: (alongT, distanceT) => {
         const eased = smooth(distanceT);
         const innerZ = lerp(ACCESSIBLE.zMin, landwardEndZ, alongT);
-        const farZ = lerp(VISUAL_HORIZON.zMin, landwardEndZ - 18, alongT);
+        const farZ = lerp(VISUAL_HORIZON.zMin, landwardEndZ - 48, alongT);
         const inner = sampleHEarthTerrainField(innerX, innerZ);
-        const lateralBreakup = sign * (16 * Math.sin(alongT * Math.PI * 4.4 + 0.8) +
-          6 * Math.sin(alongT * Math.PI * 9.1)) * distanceT;
+        const lateralBreakup = sign * (
+          21 * Math.sin(alongT * Math.PI * 4.1 + 0.9) +
+          8 * Math.sin(alongT * Math.PI * 8.7 + 0.2)
+        ) * distanceT;
+        const farElevation = horizonElevation(
+          inner.elevation,
+          Math.min(1, distanceT * 1.08),
+          side === 'WEST' ? 1.7 + alongT : 3.2 + alongT
+        );
         return {
           x: lerp(innerX, outerX, eased) + lateralBreakup,
-          y: lerp(inner.elevation, horizonElevation(inner.elevation, distanceT,
-            side === 'WEST' ? 1.6 + alongT : 3.0 + alongT), eased),
-          z: lerp(innerZ, farZ, eased) - 12 * Math.sin(alongT * Math.PI * 2.1) * distanceT
+          y: lerp(inner.elevation, farElevation, eased),
+          z: lerp(innerZ, farZ, eased) -
+            18 * Math.sin(alongT * Math.PI * 2.2 + 0.3) * distanceT
         };
       }
     });
@@ -152,7 +166,7 @@ function constructVisualWorldContinuation(formation) {
       materialIntent: 'HIGHLAND_SUBTROPICAL_ATMOSPHERIC_DISTANT_TERRAIN_CONTINUATION'
     }),
     source: freeze({
-      sourceType: 'H_EARTH_TERRAIN_FORMATION_PROXY_WITH_MULTI_BAND_VISUAL_CONTINUATION',
+      sourceType: 'H_EARTH_TERRAIN_FORMATION_PROXY_WITH_DEEP_ATMOSPHERIC_VISUAL_CONTINUATION',
       formationId: formation.formationId,
       generationRevision: formation.generationRevision
     }),
@@ -163,19 +177,20 @@ function constructVisualWorldContinuation(formation) {
       sourceAddressRule: formation.addressRule,
       worldBounds: formation.worldBounds,
       elevationEnvelope: formation.elevationEnvelope,
-      lodClass: 'DISTANT_MULTI_BAND_COMPOSITE_PROXY',
+      lodClass: 'DISTANT_DEEP_ATMOSPHERIC_COMPOSITE_PROXY',
       visualContinuationLayer: true,
-      continuationRowCountInland: 6,
-      continuationRowCountLateral: 5,
+      continuationRowCountInland: 9,
+      continuationRowCountLateral: 7,
       accessibleRegionBounds: ACCESSIBLE,
       visualHorizonBounds: VISUAL_HORIZON,
       oceanFacingTerrainContinuation: false,
+      oceanFacingLandmassCreated: false,
       legacyNearFieldHighlandCurtainRetired: true,
       navigationAddressIds: [],
       navigable: false,
       collisionAuthority: false,
       accessibleRegionExpansion: false,
-      continuationLaw: 'VISIBLE_SURROUNDING_WORLD_BLENDS_FROM_LOCAL_EDGE_TO_DISTANCE_WITHOUT_EXPANDING_AUTHORED_ACCESSIBLE_REGION',
+      continuationLaw: 'INACCESSIBLE_WORLD_RECEDES_FROM_FROZEN_LOCAL_EDGE_INTO_ATMOSPHERIC_DISTANCE_WITHOUT_WATERWARD_LAND_OR_PLAYABLE_EXPANSION',
       visibleRectangularTerminationProhibited: true,
       admitted: false,
       aggregateFrameAuthority: false

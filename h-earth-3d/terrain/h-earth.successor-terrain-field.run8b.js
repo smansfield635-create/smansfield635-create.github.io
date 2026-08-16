@@ -20,7 +20,6 @@ import {
   H_EARTH_RUN_8A_WORLD_DOMAIN_RECONCILIATION,
   H_EARTH_RUN_8A_MOUNTAIN_DIMENSIONAL_SURFACE_CONTRACT,
   H_EARTH_RUN_8A_TERRAIN_SAMPLING_AND_REFINEMENT_CONTRACT,
-  sampleHEarthRun8ASuccessorTerrainElevation,
   sampleHEarthRun8ASuccessorTerrainField
 } from '../control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js';
 
@@ -276,9 +275,17 @@ export function evaluateHEarthRun8BSuccessorTerrainField() {
   const issues = [];
   const domain = H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.worldDomain;
   const continuity = evaluateHEarthRun8BFormerBoundaryContinuity();
+  const predecessorCore = H_EARTH_TERRAIN_FIELD.coreDomain;
+  const predecessorWorld = H_EARTH_TERRAIN_FIELD.worldDomain;
 
-  if (H_EARTH_TERRAIN_FIELD.worldDomain.zMinimum !== -256) {
-    issues.push('RUN_6_PREDECESSOR_DOMAIN_MUTATED');
+  if (
+    H_EARTH_TERRAIN_FIELD.contractId !== H_EARTH_TERRAIN_FIELD_CONTRACT_ID ||
+    predecessorCore?.xMinimum !== -256 || predecessorCore?.xMaximum !== 256 ||
+    predecessorCore?.zMinimum !== -256 || predecessorCore?.zMaximum !== 64 ||
+    predecessorWorld?.xMinimum !== -1024 || predecessorWorld?.xMaximum !== 1024 ||
+    predecessorWorld?.zMinimum !== -1024 || predecessorWorld?.zMaximum !== 768
+  ) {
+    issues.push('RUN_6_PREDECESSOR_IDENTITY_OR_DOMAIN_BASELINE_MISMATCH');
   }
   if (domain.zMinimum !== -320 || domain.zMaximum !== 64) {
     issues.push('RUN_8_SUCCESSOR_DOMAIN_INVALID');
@@ -335,6 +342,8 @@ export function evaluateHEarthRun8BSuccessorTerrainField() {
       H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD.generationRevision,
     predecessorContractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
     predecessorMutated: false,
+    predecessorCoreDomain: freeze({ ...predecessorCore }),
+    predecessorWorldDomain: freeze({ ...predecessorWorld }),
     canonicalElevationGrid: H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID,
     macroCompositionProfile: H_EARTH_RUN_8B_C3C3R5_MACRO_COMPOSITION_PROFILE,
     continuity,

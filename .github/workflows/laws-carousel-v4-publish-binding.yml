@@ -1,4 +1,4 @@
-name: Laws Carousel V5 Publish Binding
+name: Laws Carousel V6 Publish Binding
 
 on:
   push:
@@ -20,30 +20,21 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
-      - name: Bump public Laws asset identity to E
+      - name: Bump public Laws asset identity to F
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p = Path('laws/index.html')
-          s = p.read_text()
-          old = 'LAWS_DESTINATION_STAGE_LIVE_20260816D'
-          new = 'LAWS_DESTINATION_STAGE_LIVE_20260816E'
-          if new in s:
-              print('binding already current')
-          elif old in s:
-              p.write_text(s.replace(old, new))
-              print('binding advanced to E')
-          else:
-              raise SystemExit('expected D binding not found')
+          p=Path('laws/index.html'); s=p.read_text()
+          old='LAWS_DESTINATION_STAGE_LIVE_20260816E'; new='LAWS_DESTINATION_STAGE_LIVE_20260816F'
+          if new in s: print('binding already current')
+          elif old in s: p.write_text(s.replace(old,new)); print('binding advanced to F')
+          else: raise SystemExit('expected E binding not found')
           PY
       - name: Commit cache binding if changed
         run: |
-          if git diff --quiet -- laws/index.html; then
-            echo 'No binding commit required'
-            exit 0
-          fi
+          if git diff --quiet -- laws/index.html; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add laws/index.html
-          git commit -m 'Publish Laws entry-scroll custody cache binding E'
+          git commit -m 'Publish Laws continuous pointer geometry cache binding F'
           git push origin HEAD:main

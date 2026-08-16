@@ -1,0 +1,156 @@
+{
+  "operation": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B",
+  "classification": "EXPLORATORY_EMPIRICAL_ROBUSTNESS_TEST",
+  "source": {
+    "filename": "Complications_and_Deaths-Hospital.csv",
+    "byte_length": 21641635,
+    "sha256": "0ba1b358e54e8812c9d1cf72c37f715b7bfeb3da12009bb6705158f0d15f91b5",
+    "expected_rows": 90611,
+    "expected_hospitals": 4769,
+    "expected_measures": 19,
+    "duplicate_facility_measure_rows": 0
+  },
+  "primary_route": {
+    "route_id": "BASE_NONOVERLAPPING",
+    "mortality_measure_ids": [
+      "MORT_30_AMI",
+      "MORT_30_CABG",
+      "MORT_30_COPD",
+      "MORT_30_HF",
+      "MORT_30_PN",
+      "MORT_30_STK"
+    ],
+    "safety_measure_ids": [
+      "COMP_HIP_KNEE",
+      "PSI_03",
+      "PSI_06",
+      "PSI_08",
+      "PSI_09",
+      "PSI_10",
+      "PSI_11",
+      "PSI_12",
+      "PSI_13",
+      "PSI_14",
+      "PSI_15"
+    ],
+    "excluded_overlapping_composite": "PSI_90",
+    "excluded_semantically_ambiguous_measure": "PSI_04",
+    "factor_availability": "nonworse_comparable_count / comparable_count",
+    "continuous_imi": "a_MORT * a_SAFETY",
+    "constraint_severity": "1 - IMI",
+    "hard_collapse": "a_MORT == 0 or a_SAFETY == 0",
+    "additive_comparator": "(MORT_nonworse + SAFETY_nonworse) / (MORT_comparable + SAFETY_comparable)"
+  },
+  "coverage_rules": {
+    "ANY_COMPARABLE": "MORT_comparable >= 1 and SAFETY_comparable >= 1",
+    "AT_LEAST_50_PERCENT": "MORT_coverage >= 0.50 and SAFETY_coverage >= 0.50",
+    "AT_LEAST_75_PERCENT": "MORT_coverage >= 0.75 and SAFETY_coverage >= 0.75",
+    "ALL_REQUIRED": "MORT_coverage == 1 and SAFETY_coverage == 1"
+  },
+  "sensitivity_routes": {
+    "PSI04_TO_MORT": {
+      "mortality_measure_ids": [
+        "MORT_30_AMI",
+        "MORT_30_CABG",
+        "MORT_30_COPD",
+        "MORT_30_HF",
+        "MORT_30_PN",
+        "MORT_30_STK",
+        "PSI_04"
+      ],
+      "safety_measure_ids": [
+        "COMP_HIP_KNEE",
+        "PSI_03",
+        "PSI_06",
+        "PSI_08",
+        "PSI_09",
+        "PSI_10",
+        "PSI_11",
+        "PSI_12",
+        "PSI_13",
+        "PSI_14",
+        "PSI_15"
+      ]
+    },
+    "PSI04_TO_SAFETY": {
+      "mortality_measure_ids": [
+        "MORT_30_AMI",
+        "MORT_30_CABG",
+        "MORT_30_COPD",
+        "MORT_30_HF",
+        "MORT_30_PN",
+        "MORT_30_STK"
+      ],
+      "safety_measure_ids": [
+        "COMP_HIP_KNEE",
+        "PSI_03",
+        "PSI_06",
+        "PSI_08",
+        "PSI_09",
+        "PSI_10",
+        "PSI_11",
+        "PSI_12",
+        "PSI_13",
+        "PSI_14",
+        "PSI_15",
+        "PSI_04"
+      ]
+    },
+    "PSI90_INCLUDED": {
+      "mortality_measure_ids": [
+        "MORT_30_AMI",
+        "MORT_30_CABG",
+        "MORT_30_COPD",
+        "MORT_30_HF",
+        "MORT_30_PN",
+        "MORT_30_STK"
+      ],
+      "safety_measure_ids": [
+        "COMP_HIP_KNEE",
+        "PSI_03",
+        "PSI_06",
+        "PSI_08",
+        "PSI_09",
+        "PSI_10",
+        "PSI_11",
+        "PSI_12",
+        "PSI_13",
+        "PSI_14",
+        "PSI_15",
+        "PSI_90"
+      ]
+    },
+    "ALL_SENSITIVITY": {
+      "mortality_measure_ids": [
+        "MORT_30_AMI",
+        "MORT_30_CABG",
+        "MORT_30_COPD",
+        "MORT_30_HF",
+        "MORT_30_PN",
+        "MORT_30_STK",
+        "PSI_04"
+      ],
+      "safety_measure_ids": [
+        "COMP_HIP_KNEE",
+        "PSI_03",
+        "PSI_06",
+        "PSI_08",
+        "PSI_09",
+        "PSI_10",
+        "PSI_11",
+        "PSI_12",
+        "PSI_13",
+        "PSI_14",
+        "PSI_15",
+        "PSI_90"
+      ]
+    }
+  },
+  "resolved_clarifications": {
+    "additive_comparator_formula": "MEASURE_WEIGHTED_NONWORSE_FRACTION",
+    "collapse_case_coverage_tier": "ANY_COMPARABLE_ONLY",
+    "collapse_cases_numeric_at_50_percent": 0,
+    "collapse_cases_numeric_at_75_percent": 0,
+    "collapse_cases_numeric_at_all_required": 0
+  }
+}

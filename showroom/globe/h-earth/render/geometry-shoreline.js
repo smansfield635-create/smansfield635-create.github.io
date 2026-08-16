@@ -1,10 +1,10 @@
 /**
  * /showroom/globe/h-earth/render/geometry-shoreline.js
  *
- * C3C1 3D coastal-corner shoreline provider. The shoreline remains fully 3D;
- * only its horizontal planform changes from a single z=f(x) graph to one
- * continuous north-to-east coastal path. Elevation continues to come from the
- * canonical terrain field.
+ * C3C1 3D coastal-corner shoreline provider. Each canonical shoreline band is
+ * one neutral primitive containing two open 3D strips: the existing north coast
+ * and the derived east coast. They meet/overlap at the northeast corner without
+ * forcing the 1600-unit open-ocean ribbon through a tight parametric bend.
  */
 
 import {
@@ -30,10 +30,15 @@ const freeze = (value, seen = new WeakSet()) => {
   return Object.freeze(value);
 };
 const lerp = (a, b, t) => a + (b - a) * t;
-const smooth = (t) => t * t * (3 - 2 * t);
 const CP3D_CANONICAL_SCALE = 2 ** 24;
 const CP3D_CANONICAL_SHORELINE_BANDS = new Set(['DRY_SAND_EDGE', 'DAMP_TRANSITION']);
 const VISUAL_OCEAN_CONTINUATION_OFFSET = -1600;
+const NORTH_X_MIN = -1024;
+const CORNER_X = 232;
+const CORNER_Z = -64.475;
+const EAST_Z_MIN = -1024;
+const NORTH_SAMPLE_COUNT = 257;
+const EAST_SAMPLE_COUNT = 193;
 
 function canonicalize(value) {
   const result = Math.round(value * CP3D_CANONICAL_SCALE) / CP3D_CANONICAL_SCALE;
@@ -45,7 +50,7 @@ function canonicalizePoint(point, bandId) {
 }
 
 export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_C3C1_NORTHEAST_COASTAL_CORNER_v1';
+  'H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_C3C1_NORTHEAST_COASTAL_CORNER_v2';
 
 export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   { bandId: 'DRY_SAND_EDGE', innerOffset: 34, outerOffset: 14, materialReference: 'H_EARTH_MATERIAL_DRY_SAND', materialIntent: 'DRY_SAND' },
@@ -57,67 +62,41 @@ export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS = freeze([
   { bandId: 'OPEN_WATER', innerOffset: -58, outerOffset: VISUAL_OCEAN_CONTINUATION_OFFSET, materialReference: 'H_EARTH_MATERIAL_OPEN_WATER', materialIntent: 'OPEN_WATER_VISUAL_WORLD_CONTINUATION' }
 ]);
 
-function buildCoastalCenterline() {
-  const points = [];
-  const northCount = 193;
-  const northMinX = -1024;
-  const seamX = 198;
-  for (let i = 0; i < northCount; i += 1) {
-    const x = lerp(northMinX, seamX, i / (northCount - 1));
-    points.push({ x, z: getHEarthCanonicalShorelineZ(x), segment: 'NORTH' });
+function elevationFor(worldX, worldZ, offset) {
+  if (offset <= 0) {
+    return H_EARTH_TERRAIN_FIELD.worldDomain.seaLevelY + (offset >= -3.2 ? 0.035 : 0.015);
   }
-
-  const seamZ = getHEarthCanonicalShorelineZ(seamX);
-  const apexX = 232;
-  const apexZ = -64.475;
-  const cornerCount = 25;
-  for (let i = 1; i < cornerCount; i += 1) {
-    const t = i / (cornerCount - 1);
-    const e = smooth(t);
-    const x = lerp(seamX, apexX, e) + 3.5 * Math.sin(Math.PI * t) * Math.sin(Math.PI * t);
-    const z = lerp(seamZ, apexZ, e) + 2.5 * Math.sin(Math.PI * t);
-    points.push({ x, z, segment: 'CORNER' });
-  }
-
-  const eastCount = 97;
-  const southZ = -1024;
-  for (let i = 1; i < eastCount; i += 1) {
-    const z = lerp(apexZ, southZ, i / (eastCount - 1));
-    points.push({ x: getHEarthCanonicalEasternShorelineX(z), z, segment: 'EAST' });
-  }
-  return points;
+  return sampleHEarthTerrainField(worldX, worldZ).elevation;
 }
 
-const CENTERLINE = freeze(buildCoastalCenterline());
-
-function tangentAt(index) {
-  const previous = CENTERLINE[Math.max(0, index - 1)];
-  const next = CENTERLINE[Math.min(CENTERLINE.length - 1, index + 1)];
-  const dx = next.x - previous.x;
-  const dz = next.z - previous.z;
-  const length = Math.hypot(dx, dz) || 1;
-  return { x: dx / length, z: dz / length };
+function northPoint(x, offset, bandId) {
+  const worldZ = getHEarthCanonicalShorelineZ(x) - offset;
+  return canonicalizePoint({ x, y: elevationFor(x, worldZ, offset), z: worldZ }, bandId);
 }
 
-function pointAtOffset(index, offset) {
-  const coast = CENTERLINE[index];
-  const tangent = tangentAt(index);
-  // Path runs west->east along the north coast, then south down the east coast.
-  // Its left normal therefore points consistently toward open ocean.
-  const outward = { x: -tangent.z, z: tangent.x };
-  const worldX = coast.x - outward.x * offset;
-  const worldZ = coast.z - outward.z * offset;
-  const sample = sampleHEarthTerrainField(worldX, worldZ);
-  const waterward = offset <= 0;
-  return {
-    x: worldX,
-    y: waterward
-      ? H_EARTH_TERRAIN_FIELD.worldDomain.seaLevelY + (offset >= -3.2 ? 0.035 : 0.015)
-      : sample.elevation,
-    z: worldZ,
-    sample,
-    segment: coast.segment
-  };
+function eastPoint(z, offset, bandId) {
+  const worldX = getHEarthCanonicalEasternShorelineX(z) - offset;
+  return canonicalizePoint({ x: worldX, y: elevationFor(worldX, z, offset), z }, bandId);
+}
+
+function appendStrip({ vertices, indices, sourceSampleIds, count, innerAt, outerAt, samplePrefix }) {
+  const baseVertex = vertices.length;
+  for (let index = 0; index < count; index += 1) {
+    const inner = innerAt(index);
+    const outer = outerAt(index);
+    vertices.push(
+      createHEarthVector3(inner.x, inner.y, inner.z),
+      createHEarthVector3(outer.x, outer.y, outer.z)
+    );
+    sourceSampleIds.push(`${samplePrefix}_${String(index).padStart(3, '0')}`);
+  }
+  for (let index = 0; index < count - 1; index += 1) {
+    const a = baseVertex + index * 2;
+    const b = a + 1;
+    const c = a + 2;
+    const d = a + 3;
+    indices.push(a, c, b, b, c, d);
+  }
 }
 
 function constructBand(band) {
@@ -125,20 +104,37 @@ function constructBand(band) {
   const indices = [];
   const sourceSampleIds = [];
 
-  for (let index = 0; index < CENTERLINE.length; index += 1) {
-    const inner = canonicalizePoint(pointAtOffset(index, band.innerOffset), band.bandId);
-    const outer = canonicalizePoint(pointAtOffset(index, band.outerOffset), band.bandId);
-    vertices.push(createHEarthVector3(inner.x, inner.y, inner.z), createHEarthVector3(outer.x, outer.y, outer.z));
-    sourceSampleIds.push(`H_EARTH_C3C1_COASTAL_SAMPLE_${String(index).padStart(3, '0')}`);
-  }
+  appendStrip({
+    vertices,
+    indices,
+    sourceSampleIds,
+    count: NORTH_SAMPLE_COUNT,
+    innerAt: (index) => {
+      const x = lerp(NORTH_X_MIN, CORNER_X, index / (NORTH_SAMPLE_COUNT - 1));
+      return northPoint(x, band.innerOffset, band.bandId);
+    },
+    outerAt: (index) => {
+      const x = lerp(NORTH_X_MIN, CORNER_X, index / (NORTH_SAMPLE_COUNT - 1));
+      return northPoint(x, band.outerOffset, band.bandId);
+    },
+    samplePrefix: 'H_EARTH_C3C1_NORTH_COAST_SAMPLE'
+  });
 
-  for (let index = 0; index < CENTERLINE.length - 1; index += 1) {
-    const a = index * 2;
-    const b = a + 1;
-    const c = a + 2;
-    const d = a + 3;
-    indices.push(a, c, b, b, c, d);
-  }
+  appendStrip({
+    vertices,
+    indices,
+    sourceSampleIds,
+    count: EAST_SAMPLE_COUNT,
+    innerAt: (index) => {
+      const z = lerp(CORNER_Z, EAST_Z_MIN, index / (EAST_SAMPLE_COUNT - 1));
+      return eastPoint(z, band.innerOffset, band.bandId);
+    },
+    outerAt: (index) => {
+      const z = lerp(CORNER_Z, EAST_Z_MIN, index / (EAST_SAMPLE_COUNT - 1));
+      return eastPoint(z, band.outerOffset, band.bandId);
+    },
+    samplePrefix: 'H_EARTH_C3C1_EAST_COAST_SAMPLE'
+  });
 
   const primitiveId = `H_EARTH_FUNCTIONAL_SHORELINE:${band.bandId}`;
   const visualContinuation = band.bandId === 'OPEN_WATER';
@@ -152,7 +148,7 @@ function constructBand(band) {
     expectedClosure: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
     semanticRole: `FUNCTIONAL_SHORELINE_${band.bandId}`,
     materialHint: freeze({ materialReference: band.materialReference, materialIntent: band.materialIntent }),
-    source: freeze({ sourceType: 'H_EARTH_C3C1_COMPOUND_COASTAL_CENTERLINE', terrainFieldContractId: H_EARTH_TERRAIN_FIELD.contractId }),
+    source: freeze({ sourceType: 'H_EARTH_C3C1_COMPOUND_NORTH_AND_EAST_COASTAL_STRIPS', terrainFieldContractId: H_EARTH_TERRAIN_FIELD.contractId }),
     metadata: freeze({
       providerContractId: H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,
       bandId: band.bandId,
@@ -161,8 +157,10 @@ function constructBand(band) {
       innerOffset: band.innerOffset,
       outerOffset: band.outerOffset,
       sourceSampleIds,
-      sampleCount: CENTERLINE.length,
-      topologyLaw: 'CONTINUOUS_PARAMETRIC_NORTH_TO_EAST_COAST_WITH_OUTWARD_NORMAL_OFFSETS',
+      sampleCount: NORTH_SAMPLE_COUNT + EAST_SAMPLE_COUNT,
+      northSampleCount: NORTH_SAMPLE_COUNT,
+      eastSampleCount: EAST_SAMPLE_COUNT,
+      topologyLaw: 'TWO_OPEN_3D_STRIPS_SHARE_NORTHEAST_CORNER_REGION_WITHOUT_FORCING_FAR_OCEAN_OFFSET_THROUGH_TIGHT_BEND',
       waterSurfaceLaw: band.outerOffset <= 0 ? 'ONE_COHERENT_SEA_LEVEL_SURFACE' : 'CANONICAL_TERRAIN_FIELD',
       visualContinuationLayer: visualContinuation,
       primaryOceanExposure: '+Z_NORTH',
@@ -173,7 +171,7 @@ function constructBand(band) {
       collisionAuthority: false,
       accessibleRegionExpansion: false,
       oceanFacingLandProhibited: visualContinuation,
-      continuationLaw: visualContinuation ? 'OPEN_WATER_FOLLOWS_NORTH_AND_EAST_CONTINENTAL_EDGES_BEYOND_FROZEN_ACCESSIBLE_REGION' : null,
+      continuationLaw: visualContinuation ? 'OPEN_WATER_EXTENDS_INDEPENDENTLY_OUTWARD_FROM_NORTH_AND_EAST_CONTINENTAL_EDGES' : null,
       foundingPacketMutationPerformed: false,
       cp3dCanonicalCoordinateLaw: CP3D_CANONICAL_SHORELINE_BANDS.has(band.bandId) ? 'ROUND_TO_2_POW_NEGATIVE_24_BEFORE_BOUNDS_AND_NORMALS' : null,
       admitted: false,
@@ -201,7 +199,8 @@ export function constructHEarthFunctionalShorelineGeometry() {
     sourceBoundaryId: 'H_EARTH_C3C1_NORTHEAST_COASTAL_CORNER',
     sourceBoundaryContractId: H_EARTH_TERRAIN_FIELD.contractId,
     bandCount: primitives.length,
-    centerlineSampleCount: CENTERLINE.length,
+    northSampleCount: NORTH_SAMPLE_COUNT,
+    eastSampleCount: EAST_SAMPLE_COUNT,
     results,
     primitives,
     bounds,

@@ -1,4 +1,4 @@
-name: Laws Carousel Atomic Gesture Proof
+name: Laws Carousel Methods Reference Proof
 
 on:
   pull_request:
@@ -11,25 +11,26 @@ on:
 permissions: { contents: read }
 
 jobs:
-  atomic-gesture-proof:
+  methods-reference-proof:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: { ref: '${{ github.event.pull_request.head.sha }}', fetch-depth: 1 }
       - name: Syntax check runtime
         run: node --check laws/index.destination-carousel.js
-      - name: Verify frozen atomic law statically
+      - name: Verify reference-port law statically
         run: |
           python3 - <<'PY'
           from pathlib import Path
           js=Path('laws/index.destination-carousel.js').read_text()
-          loader=Path('laws/index.mobile-background-tabs.js').read_text()
-          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v8','directionOnlyGesture:true','liveGestureGeometry:false','atomicRotation:true','oneGestureOneStep:true','canonicalFrameLockedDuringGesture:true','continuousPointerGeometry:false','fractionalOrbitPosition:false','pointerdown','pointermove','pointerup','pointercancel','direction-locked','pointer-atomic-step','POST_LANDING_GUARD_MS=1000']
-          for token in required: assert token in js, f'missing atomic law token: {token}'
-          assert 'LAWS_DESTINATION_CAROUSEL_RUNTIME_V8_ATOMIC_STEP_20260816A' in loader
-          forbidden=['continuousPointerGeometry:true','fractionalOrbitPosition:true','liveGestureGeometry:true','atomicRotation:false','directionOnlyGesture:false','pointer-geometry','release-target','settlement-frame']
-          for token in forbidden: assert token not in js, f'revoked continuous geometry authority remains: {token}'
-          print('LAWS_ATOMIC_GESTURE_STATIC_PASS')
+          css=Path('laws/index.destination-carousel.css').read_text()
+          methods=Path('laws/research/methods-and-models/carousel.js').read_text()
+          required=['LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT','METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','state.angle','pointerStartAngle','snapFromDrag','selectIndex','sharedRingAuthority: true','directManipulation: true']
+          for token in required: assert token in js, f'missing reference law token: {token}'
+          for token in ['pointerStartAngle','state.angle','snapFromDrag','selectIndex']: assert token in methods, f'reference token absent from Methods: {token}'
+          for token in ['--laws-ring-rotation','--laws-card-angle','translateZ(var(--laws-ring-radius))','transition:none!important']: assert token in css, f'missing shared-ring CSS: {token}'
+          for token in ['detentPosition','targetDetent','direction-locked','pointer-atomic-step','nearestCircularRelativePosition']: assert token not in js, f'legacy v8 authority remains: {token}'
+          print('LAWS_METHODS_REFERENCE_STATIC_PASS')
           PY
       - name: Install Chromium
         run: |
@@ -37,15 +38,14 @@ jobs:
           npm install playwright@1.55.0 >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null
       - name: Serve exact candidate
-        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-atomic-http.log 2>&1 &
-      - name: Prove direction-only custody and one atomic landing
+        run: python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/laws-reference-http.log 2>&1 &
+      - name: Prove shared-ring direct manipulation and coherent snap
         run: |
           node <<'NODE'
           const fs=require('fs');
           const {chromium}=require('playwright');
           const A=(x,m)=>{if(!x)throw Error(m)};
-          const close=(a,b,e=.001)=>Math.abs(a-b)<=e;
-          const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+          const close=(a,b,e=.75)=>Math.abs(a-b)<=e;
           (async()=>{
             const browser=await chromium.launch({headless:true});
             const context=await browser.newContext({viewport:{width:960,height:1536},hasTouch:true,isMobile:true,deviceScaleFactor:1});
@@ -53,65 +53,53 @@ jobs:
             await page.goto('http://127.0.0.1:4173/laws/',{waitUntil:'networkidle'});
             await page.waitForSelector('html[data-laws-destination-carousel-runtime="active"]',{timeout:15000});
             const runtime=await page.evaluate(()=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL);
-            A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v8','wrong runtime');
-            for(const[k,v]of Object.entries({continuousPointerGeometry:false,fractionalOrbitPosition:false,selectionDuringGesture:false,directionOnlyGesture:true,liveGestureGeometry:false,atomicRotation:true,oneGestureOneStep:true,canonicalFrameLockedDuringGesture:true,geometryOwnedSettlementCompletion:true,timerOwnedSettlementCompletion:false,verticalGesturePassthrough:true,postLandingGuardMs:1000}))A(runtime[k]===v,`telemetry ${k}`);
+            A(runtime?.contract==='LAWS_DESTINATION_CAROUSEL_RUNTIME_v9_METHODS_REFERENCE_PORT','wrong runtime');
+            A(runtime.referenceContract==='METHODS_MODELS_SINGLE_AXIS_EUCLIDEAN_CAROUSEL_v1','wrong reference');
+            A(runtime.buildId==='20260816B','wrong build');
+            A(runtime.sharedRingAuthority===true&&runtime.directManipulation===true&&runtime.oneAuthoritativeSpatialCoordinate===true,'reference authority absent');
             const field=page.locator('[data-laws-root-rolodex-section] .laws-rolodex-field[data-destination-stage-state="active"]').first();
-            const viewport=field.locator('.laws-rolodex-viewport'); await viewport.scrollIntoViewIfNeeded(); await page.waitForTimeout(100);
-            const id=await field.getAttribute('data-rolodex-id'),box=await viewport.boundingBox(); A(box&&box.width>400,'viewport unavailable');
-            const S=box.width*.72,sx=box.x+box.width*.86,sy=box.y+box.height*.52,cdp=await context.newCDPSession(page); let tid=40;
+            const viewport=field.locator('.laws-rolodex-viewport'); const track=field.locator('.laws-rolodex-track');
+            await viewport.scrollIntoViewIfNeeded(); await page.waitForTimeout(120);
+            const id=await field.getAttribute('data-rolodex-id'); const box=await viewport.boundingBox(); A(box&&box.width>400,'viewport unavailable');
+            const get=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,angle:+el.dataset.carouselOrbitAngle,dragging:el.dataset.carouselDragging,settling:el.dataset.carouselSettling,canonical:el.dataset.carouselCanonicalLanding,ring:getComputedStyle(el.querySelector('.laws-rolodex-track')).transform,active:el.querySelector('.laws-rolodex-card[data-active="true"]')?.getAttribute('data-destination-id')}));
+            const restore=async index=>{A(await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id,index}),'restore rejected');await page.waitForTimeout(50)};
+            const cdp=await context.newCDPSession(page); let tid=90;
             const touch=(type,x,y)=>cdp.send('Input.dispatchTouchEvent',{type,touchPoints:/End|Cancel/.test(type)?[]:[{x,y,id:tid,radiusX:2,radiusY:2,force:1}],modifiers:0});
-            const down=async(x=sx,y=sy)=>{tid++;await touch('touchStart',x,y);await page.waitForTimeout(30)};
-            const move=async(f,y=sy)=>{await touch('touchMove',sx-S*f,y);await page.waitForTimeout(45)};
-            const up=async()=>touch('touchEnd',sx,sy);
-            const waitIdle=async()=>page.waitForFunction(el=>el.dataset.carouselGestureState==='idle'&&el.dataset.carouselSettled==='true'&&el.dataset.carouselCanonicalLanding==='true',await field.elementHandle(),{timeout:3000});
-            const snap=()=>field.evaluate(el=>({index:+el.dataset.carouselIndex,orbit:+el.dataset.carouselOrbitPosition,state:el.dataset.carouselGestureState,direction:+el.dataset.carouselDirection,canonical:el.dataset.carouselCanonicalLanding,cards:[...el.querySelectorAll('.laws-rolodex-card')].map(c=>[+c.dataset.carouselRelative,parseFloat(c.style.getPropertyValue('--laws-carousel-x')),parseFloat(c.style.getPropertyValue('--laws-carousel-z')),parseFloat(c.style.getPropertyValue('--laws-carousel-rotate')),parseFloat(c.style.getPropertyValue('--laws-carousel-scale')),parseFloat(c.style.getPropertyValue('--laws-carousel-opacity')),parseFloat(c.style.getPropertyValue('--laws-carousel-blur'))])}));
-            const restore=async index=>{A(await page.evaluate(({id,index})=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index}),{id,index}),'restore rejected');await waitIdle()};
-            const trace=()=>page.evaluate(id=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.getTransactionTrace(id),id);
+            const sx=box.x+box.width*.78,sy=box.y+box.height*.52;
+            const down=async()=>{tid++;await touch('touchStart',sx,sy);await page.waitForTimeout(30)};
+            const move=async(dx,dy=0)=>{await touch('touchMove',sx+dx,sy+dy);await page.waitForTimeout(70)};
+            const up=async()=>{await touch('touchEnd',sx,sy);await page.waitForTimeout(120)};
 
-            // Q1: gesture custody is direction-only; all pointermove frames retain canonical geometry.
-            await restore(0); const q10=await snap(); await down(); await move(.25); const q125=await snap(); await move(.50); const q150=await snap(); await move(.75); const q175=await snap();
-            A([q125,q150,q175].every(s=>s.index===0&&close(s.orbit,q10.orbit)&&same(s.cards,q10.cards)),'Q1 gesture changed carousel geometry before release');
-            A([q125,q150,q175].every(s=>s.state==='direction-locked'&&s.direction===1),'Q1 direction custody missing');
-            await page.screenshot({path:'q1-locked.png'}); await up(); await page.waitForTimeout(80); const q1moving=await snap(); A(q1moving.state==='settling'&&q1moving.orbit>q10.orbit&&q1moving.orbit<q10.orbit+1,'Q1 atomic release rotation did not begin'); await waitIdle(); const q1end=await snap(); A(q1end.index===1&&close(q1end.orbit,q10.orbit+1),'Q1 one-step landing failed');
+            await restore(0); const start=await get();
+            await down(); await move(-box.width*.28); const drag1=await get(); await move(-box.width*.52); const drag2=await get();
+            A(drag1.index===0&&drag2.index===0,'semantic index changed during direct manipulation');
+            A(drag1.angle<start.angle-10&&drag2.angle<drag1.angle-10,'shared orbit did not track pointer continuously');
+            A(drag1.ring!==start.ring&&drag2.ring!==drag1.ring,'shared ring transform did not change during drag');
+            await page.screenshot({path:'laws-reference-drag.png'}); await up(); await page.waitForTimeout(700); const landed=await get();
+            A(landed.index===1,'drag did not snap to neighboring canonical object');
+            A(close(landed.angle,-360/(await field.locator('.laws-rolodex-card').count())),'landing angle not canonical');
+            A(landed.canonical==='true','canonical landing not asserted');
 
-            // Q2: distance does not change step count; any classified left swipe advances exactly one.
-            await restore(0); const q2base=await snap(); await down(); await move(.30); const q230=await snap(); A(close(q230.orbit,q2base.orbit)&&same(q230.cards,q2base.cards),'Q2 short swipe moved geometry before release'); await up(); await waitIdle(); const q2end=await snap(); A(q2end.index===1&&close(q2end.orbit,q2base.orbit+1),'Q2 classified swipe did not advance exactly one');
-            await restore(0); const q2longBase=await snap(); await down(); await move(.95); const q295=await snap(); A(close(q295.orbit,q2longBase.orbit)&&same(q295.cards,q2longBase.cards),'Q2 long swipe moved geometry before release'); await up(); await waitIdle(); const q2long=await snap(); A(q2long.index===1&&close(q2long.orbit,q2longBase.orbit+1),'Q2 long swipe advanced more than one');
+            const count=await field.locator('.laws-rolodex-card').count(); await restore(count-1); const seamStart=await get(); await down(); await move(-box.width*.55); await up(); await page.waitForTimeout(700); const seamEnd=await get();
+            A(seamStart.index===count-1&&seamEnd.index===0,'circular seam traversal failed');
 
-            // Q3: reverse swipe moves exactly one backward.
-            await restore(1); const q3base=await snap(); tid++; await touch('touchStart',sx-S*.75,sy); await page.waitForTimeout(30); await touch('touchMove',sx,sy); await page.waitForTimeout(45); const q3drag=await snap(); A(q3drag.index===1&&close(q3drag.orbit,q3base.orbit)&&same(q3drag.cards,q3base.cards),'Q3 reverse gesture moved before release'); await touch('touchEnd',sx,sy); await waitIdle(); const q3end=await snap(); A(q3end.index===0&&close(q3end.orbit,q3base.orbit-1),'Q3 reverse one-step landing failed');
+            await restore(0); const beforeScroll=await page.evaluate(()=>scrollY); await down(); await move(4,220); await up(); await page.waitForTimeout(250); const afterScroll=await page.evaluate(()=>scrollY),vertical=await get();
+            A(vertical.index===0,'vertical traversal changed selected object');
+            A(Math.abs(afterScroll-beforeScroll)>20,`vertical page traversal unavailable ${beforeScroll}->${afterScroll}`);
 
-            // Q4: circular seam preserves the exact canonical unwrapped detent during custody.
-            const count=q3end.cards.length; await restore(count-1); const q4base=await snap(); A(q4base.index===count-1&&close(q4base.orbit,Math.round(q4base.orbit)),'Q4 restore was not canonical'); await down(); await move(.70); const q4drag=await snap(); A(q4drag.index===q4base.index&&close(q4drag.orbit,q4base.orbit)&&same(q4drag.cards,q4base.cards),'Q4 seam moved before release'); await up(); await waitIdle(); const q4end=await snap(); A(q4end.index===0&&close(q4end.orbit,q4base.orbit+1),'Q4 seam landing failed');
-
-            // Q5: cancellation is geometry-neutral and immediately canonical.
-            await restore(0); const q5base=await snap(); await viewport.evaluate(el=>el.addEventListener('pointerdown',e=>globalThis.__lawsCancelPid=e.pointerId,{capture:true,once:true})); await down(); await move(.70); const q5drag=await snap(); A(same(q5drag.cards,q5base.cards)&&close(q5drag.orbit,q5base.orbit),'Q5 cancellation setup changed geometry'); const pid=await page.evaluate(()=>globalThis.__lawsCancelPid); A(Number.isInteger(pid),'Q5 pointer id missing'); await viewport.evaluate((el,pid)=>el.dispatchEvent(new PointerEvent('pointercancel',{bubbles:true,pointerId:pid,pointerType:'touch',isPrimary:true})),pid); await touch('touchCancel',sx,sy).catch(()=>{}); await page.waitForTimeout(80); const q5end=await snap(); A(q5end.state==='idle'&&q5end.index===q5base.index&&close(q5end.orbit,q5base.orbit)&&same(q5end.cards,q5base.cards),'Q5 cancellation was not a canonical no-op');
-
-            // Q6: vertical gesture remains page traversal and never rotates.
-            await restore(0); const q6base=await snap(),beforeScroll=await page.evaluate(()=>scrollY),b6=await viewport.boundingBox(),vx=b6.x+b6.width*.5,vy=b6.y+b6.height*.45; tid++; await touch('touchStart',vx,vy); await page.waitForTimeout(30); await touch('touchMove',vx+4,vy+220); await page.waitForTimeout(180); await touch('touchEnd',vx+4,vy+220); await page.waitForTimeout(160); const afterScroll=await page.evaluate(()=>scrollY),q6=await snap(); A(q6.index===q6base.index&&close(q6.orbit,q6base.orbit)&&same(q6.cards,q6base.cards),'Q6 vertical gesture rotated carousel'); A(Math.abs(afterScroll-beforeScroll)>20,`Q6 vertical traversal unavailable ${beforeScroll}->${afterScroll}`);
-
-            // Q7: repeated swipes produce one landing each, no skipped records.
-            await viewport.scrollIntoViewIfNeeded(); await restore(0); const q7base=await snap(); for(let n=1;n<=3;n++){await down();await move(.70);await up();await waitIdle();const s=await snap();A(s.index===n%count&&close(s.orbit,q7base.orbit+n),'Q7 repeated forward failed at '+n)}
-
-            // Q8: competing commands cannot alter active pointer custody.
-            await restore(0); await down(); await move(.40); const q8before=await snap(); const restoreDuring=await page.evaluate(id=>globalThis.DGB_LAWS_DESTINATION_CAROUSEL.restoreOrbitState({rolodexId:id,index:2}),id); A(restoreDuring===false,'Q8 restore competed'); await viewport.press('ArrowRight').catch(()=>{}); await field.locator('.laws-rolodex-card').nth(2).focus().catch(()=>{}); const q8after=await snap(); A(same(q8after.cards,q8before.cards)&&close(q8after.orbit,q8before.orbit),'Q8 competing event moved geometry'); await up(); await waitIdle();
-
-            // Q9: landing is immutable for the guard interval.
-            const q9land=await snap(); await page.screenshot({path:'q9-landed.png'}); await page.waitForTimeout(1100); const q9guard=await snap(); A(q9guard.index===q9land.index&&close(q9guard.orbit,q9land.orbit)&&same(q9guard.cards,q9land.cards),'Q9 post-landing mutation');
-
-            // Q10: no pointer geometry trace exists; every atomic rotation target is one detent from its start and monotonic.
-            const allTrace=await trace(); A(!allTrace.some(x=>x.type==='pointer-geometry'),'Q10 revoked pointer geometry trace exists'); const rotations=allTrace.filter(x=>x.type==='atomic-rotation-begin'); A(rotations.length>=1,'Q10 rotation trace missing'); for(const r of rotations){A(Math.abs(r.target-r.start)===1,'Q10 non-unit atomic target');const frames=allTrace.filter(x=>x.transactionId===r.transactionId&&x.type==='rotation-frame');const dir=Math.sign(r.target-r.start);for(let i=1;i<frames.length;i++){if(dir>0)A(frames[i].p+1e-7>=frames[i-1].p,'Q10 positive rotation non-monotonic');if(dir<0)A(frames[i].p-1e-7<=frames[i-1].p,'Q10 negative rotation non-monotonic')}}
+            await viewport.focus(); await page.keyboard.press('ArrowRight'); await page.waitForTimeout(700); const keyboard=await get(); A(keyboard.index===1&&keyboard.canonical==='true','keyboard shared selection failed');
             A(!errors.length,'page errors '+errors.join(' | '));
-            fs.writeFileSync('laws-atomic-gesture-proof.json',JSON.stringify({contract:runtime.contract,Q1:{q10,q125,q150,q175,q1moving,q1end},Q2:{q2base,q230,q2end,q2longBase,q295,q2long},Q3:{q3base,q3drag,q3end},Q4:{q4base,q4drag,q4end},Q5:{q5base,q5drag,q5end},Q6:{q6base,beforeScroll,afterScroll,q6},Q7:'PASS',Q8:{q8before,q8after,restoreDuring},Q9:{q9land,q9guard},Q10:{rotationCount:rotations.length,trace:allTrace},syntheticResult:'PASS'},null,2));
-            console.log('LAWS_ATOMIC_GESTURE_SYNTHETIC_PASS'); await browser.close();
+            await page.screenshot({path:'laws-reference-landed.png'});
+            fs.writeFileSync('laws-methods-reference-proof.json',JSON.stringify({runtime,start,drag1,drag2,landed,seamStart,seamEnd,beforeScroll,afterScroll,vertical,keyboard,result:'PASS'},null,2));
+            console.log('LAWS_METHODS_REFERENCE_BROWSER_PASS'); await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
-      - name: Upload atomic gesture evidence
+      - name: Upload reference evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: laws-atomic-gesture-proof
+          name: laws-methods-reference-proof
           path: |
-            q*.png
-            laws-atomic-gesture-proof.json
+            laws-reference-*.png
+            laws-methods-reference-proof.json
           if-no-files-found: warn

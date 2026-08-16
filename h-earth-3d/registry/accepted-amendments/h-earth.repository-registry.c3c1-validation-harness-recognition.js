@@ -1,11 +1,12 @@
-/** H_EARTH_C3C1_VALIDATION_HARNESS_RECOGNITION_v1 */
+/** H_EARTH_C3C1_VALIDATION_HARNESS_RECOGNITION_v2 */
 import baseFacade from './h-earth.repository-registry.c3d1-coastal-placement-recognition.js';
 
 const BRANCH = 'candidate/h-earth-c3c1-coastal-corner-20260816';
 const NODE_ID = 'H_EARTH_C3C1_VALIDATION_HARNESS_RECOGNITION_SCOPE';
 const TARGETS = Object.freeze([
   '/h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs',
-  '/h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs'
+  '/h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs',
+  '/h-earth-3d/validation/h-earth.c3c1.browser-renderer-survival.harness.mjs'
 ]);
 
 function deepFreeze(value, seen = new WeakSet()) {
@@ -83,7 +84,7 @@ export function getHEarthRepositoryRegistryDiscoveryDescriptor() { return baseFa
 export function verifyHEarthC3C1ValidationHarnessRecognition() {
   const resolutions = TARGETS.map(resolveHEarthRepositoryRegistryPath);
   const checks = deepFreeze({
-    exactTargetPathCount: TARGETS.length === 2,
+    exactTargetPathCount: TARGETS.length === 3,
     allTargetPathsResolve: resolutions.every((r) => r.resolved === true),
     candidateOccurrencesPresent: occurrences.every((o) => o.existenceStatus === 'PRESENT' && o.refName === BRANCH),
     auditOnly: H_EARTH_C3C1_VALIDATION_HARNESS_RECOGNITION_NODE.authorityClass === 'AUDIT_ONLY',

@@ -1,0 +1,111 @@
+name: H-Earth Gen305 S26 Candidate Qualification
+
+on:
+  push:
+    branches:
+      - repair/h-earth-connected-preflight-successor-transport-20260817
+    paths:
+      - '.github/workflows/h-earth-gen305-s26-candidate-qualification-20260817.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact C3C3R5 baseline
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 2152ad18c1691c4056e9ae39795ad44228dbdc19
+          path: baseline
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out exact Gen305 candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 9620128f6f4dd3d235f345b088402d29a55d5771
+          path: candidate
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify exact mutation and protected geography identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C baseline rev-parse HEAD^{commit})" = '2152ad18c1691c4056e9ae39795ad44228dbdc19'
+          test "$(git -C candidate rev-parse HEAD^{commit})" = '9620128f6f4dd3d235f345b088402d29a55d5771'
+          allowed="$RUNNER_TEMP/allowed.txt"
+          actual="$RUNNER_TEMP/actual.txt"
+          cat > "$allowed" <<'PATHS'
+          h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md
+          h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs
+          showroom/globe/h-earth/render/geometry-distant-context.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          PATHS
+          git -C candidate diff --name-only 2152ad18c1691c4056e9ae39795ad44228dbdc19..HEAD | sort > "$actual"
+          sort -o "$allowed" "$allowed"
+          diff -u "$allowed" "$actual"
+          for p in \
+            showroom/globe/h-earth/render/functional-landscape-frame.js \
+            showroom/globe/h-earth/functional-landscape/navigation.js \
+            h-earth-3d/terrain/h-earth.terrain-field.js \
+            showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js \
+            showroom/globe/h-earth/index.html; do
+            test "$(git -C baseline rev-parse HEAD:$p)" = "$(git -C candidate rev-parse HEAD:$p)"
+          done
+          node --check candidate/showroom/globe/h-earth/render/geometry-distant-context.js
+          node --check candidate/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          node --check candidate/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          node --check candidate/h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs
+          git -C candidate diff --check 2152ad18c1691c4056e9ae39795ad44228dbdc19..HEAD
+      - name: Verify three-zone world-envelope architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd candidate
+          node --experimental-default-type=module --input-type=module <<'NODE'
+          import { H_EARTH_WORLD_ENVELOPE_ZONES, constructHEarthDistantContextGeometry } from './showroom/globe/h-earth/render/geometry-distant-context.js';
+          const z=H_EARTH_WORLD_ENVELOPE_ZONES;
+          if(!z?.NEAR_FIELD||!z?.TRANSITION_FIELD||!z?.HORIZON_BOUNDARY_FIELD) throw new Error('THREE_ZONES_MISSING');
+          if(!(z.NEAR_FIELD.geometryDensityRank>z.TRANSITION_FIELD.geometryDensityRank&&z.TRANSITION_FIELD.geometryDensityRank>z.HORIZON_BOUNDARY_FIELD.geometryDensityRank)) throw new Error('GEOMETRY_DENSITY_NOT_MONOTONIC');
+          if(!(z.NEAR_FIELD.shaderCostRank>z.TRANSITION_FIELD.shaderCostRank&&z.TRANSITION_FIELD.shaderCostRank>z.HORIZON_BOUNDARY_FIELD.shaderCostRank)) throw new Error('SHADER_COST_NOT_MONOTONIC');
+          if(z.HORIZON_BOUNDARY_FIELD.interactionAuthority!=='NONE') throw new Error('HORIZON_INTERACTION_AUTHORITY_NONZERO');
+          const result=constructHEarthDistantContextGeometry();
+          if(result.ok!==true) throw new Error(`DISTANT_CONTEXT_INVALID:${result.issues?.join(',')}`);
+          const m=result.primitives[0]?.metadata;
+          if(m?.collisionAuthority!==false||m?.navigable!==false||m?.adjacentRegionSemanticAuthority!==false) throw new Error('HORIZON_AUTHORITY_LEAK');
+          if(m?.oceanFacingLandmassCreated!==false||m?.eastContinentalContinuationRetiredForOpenOcean!==true) throw new Error('OPEN_OCEAN_REGRESSION');
+          if(m?.rectangularTerminalGeometryPresent!==false||m?.terminalHardEdgeProhibited!==true) throw new Error('BOX_EDGE_CONTRACT_REGRESSION');
+          if(m?.composedBoundarySystem?.sparseSilhouetteGeometry!==true||m?.composedBoundarySystem?.depthOrdering!==true||m?.composedBoundarySystem?.atmosphericOcclusion!==true||m?.composedBoundarySystem?.hazeOnlyBoundary!==false) throw new Error('COMPOSED_BOUNDARY_INCOMPLETE');
+          NODE
+      - name: Install fixed browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd candidate
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Run identical S26 comparative trace
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="$RUNNER_TEMP/gen305-s26-evidence"
+          mkdir -p "$evidence"
+          node candidate/h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs \
+            --baseline-root "$GITHUB_WORKSPACE/baseline" \
+            --candidate-root "$GITHUB_WORKSPACE/candidate" \
+            --candidate-sha 9620128f6f4dd3d235f345b088402d29a55d5771 \
+            --output "$evidence/browser-receipt.json" \
+            --evidence-dir "$evidence"
+      - name: Upload qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen305-s26-candidate-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen305-s26-evidence
+          if-no-files-found: error
+          retention-days: 90

@@ -1,6 +1,6 @@
 /**
- * H-Earth repository registry validator dependency loader v19 successor.
- * Preserves inherited identity and adds exact C3D1 coastal-placement path recognition.
+ * H-Earth repository registry validator dependency loader v20 successor.
+ * Preserves inherited identity and adds exact C3C1 validation-harness path recognition.
  */
 import {
   loadHEarthRepositoryRegistryValidatorDependencies as loadBaseDependencies,
@@ -10,7 +10,8 @@ import { verifyHEarthOW03ExperienceAnchorEvidencePathRecognition } from './accep
 import { verifyHEarthOW04ExactPathRecognition } from './accepted-amendments/h-earth.repository-registry.ow04-exact-path-recognition.js';
 import { verifyHEarthOW04ParentPromotionReceiptRecognition } from './accepted-amendments/h-earth.repository-registry.ow04-parent-promotion-receipt-recognition.js';
 import { verifyHEarthC3CoastalReconstructionAuthorityRecognition } from './accepted-amendments/h-earth.repository-registry.c3-coastal-reconstruction-authority-recognition.js';
-import registryFacade, { verifyHEarthC3D1CoastalPlacementRecognition } from './accepted-amendments/h-earth.repository-registry.c3d1-coastal-placement-recognition.js';
+import { verifyHEarthC3D1CoastalPlacementRecognition } from './accepted-amendments/h-earth.repository-registry.c3d1-coastal-placement-recognition.js';
+import registryFacade, { verifyHEarthC3C1ValidationHarnessRecognition } from './accepted-amendments/h-earth.repository-registry.c3c1-validation-harness-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {
@@ -20,6 +21,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   const parentPromotionVerification = verifyHEarthOW04ParentPromotionReceiptRecognition();
   const c3Verification = verifyHEarthC3CoastalReconstructionAuthorityRecognition();
   const c3d1Verification = verifyHEarthC3D1CoastalPlacementRecognition();
+  const c3c1ValidationVerification = verifyHEarthC3C1ValidationHarnessRecognition();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -43,6 +45,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     c3d1CoastalPlacementRecognitionEligible: c3d1Verification.eligible === true,
     c3d1CoastalPlacementExactPathResolved: c3d1Verification.checks.exactTargetPathCount === true && c3d1Verification.checks.targetPathResolves === true,
     c3d1CoastalPlacementAuditOnlyNoAuthorityLeak: c3d1Verification.checks.auditOnly === true && c3d1Verification.checks.pathResolutionOnly === true && c3d1Verification.checks.noProductAuthority === true && c3d1Verification.checks.noInlandAuthority === true && c3d1Verification.checks.noPublicationAuthority === true && c3d1Verification.checks.noAnchorWaiverAuthority === true,
+    c3c1ValidationHarnessRecognitionEligible: c3c1ValidationVerification.eligible === true,
+    c3c1ValidationHarnessExactPathsResolved: c3c1ValidationVerification.checks.exactTargetPathCount === true && c3c1ValidationVerification.checks.allTargetPathsResolve === true,
+    c3c1ValidationHarnessAuditOnlyNoAuthorityLeak: c3c1ValidationVerification.checks.auditOnly === true && c3c1ValidationVerification.checks.pathResolutionOnly === true && c3c1ValidationVerification.checks.noProductAuthority === true && c3c1ValidationVerification.checks.noResultForcingAuthority === true && c3c1ValidationVerification.checks.noAnchorWaiverAuthority === true,
     registryIdPreserved: registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved: registryInstance.registryVersion === base.registryInstance.registryVersion,
     schemaIdPreserved: registryInstance.schemaId === base.registryInstance.schemaId,
@@ -51,15 +56,12 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     candidateAcceptanceStatusPreserved: registryInstance.accepted === base.registryInstance.accepted,
     candidateCanonicalStatusPreserved: discovery.canonical === base.discovery.canonical
   };
-
   const successorIntegrityVerified = Object.values(successorChecks).every(Boolean);
 
   return deepFreeze({
     ...base,
-    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v19_C3D1_COASTAL_PLACEMENT_RECOGNITION_SUCCESSOR',
-    registryFacade,
-    registryInstance,
-    discovery,
+    loaderId: 'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v20_C3C1_VALIDATION_HARNESS_RECOGNITION_SUCCESSOR',
+    registryFacade, registryInstance, discovery,
     identityChecks: deepFreeze({
       ...base.identityChecks,
       ow03ExperienceAnchorEvidencePathRecognition: ow03Verification.eligible === true,
@@ -67,38 +69,36 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       ow04ParentPromotionReceiptRecognition: parentPromotionVerification.eligible === true,
       c3CoastalReconstructionAuthorityRecognition: c3Verification.eligible === true,
       c3d1CoastalPlacementRecognition: c3d1Verification.eligible === true,
-      c3d1CoastalPlacementSuccessorIntegrity: successorIntegrityVerified
+      c3c1ValidationHarnessRecognition: c3c1ValidationVerification.eligible === true,
+      c3c1ValidationHarnessSuccessorIntegrity: successorIntegrityVerified
     }),
     identityVerified: base.identityVerified,
     inheritedIdentityPreserved: base.identityVerified === false,
     successorIntegrityVerified,
-    c3d1CoastalPlacementSuccessorChecks: deepFreeze(successorChecks),
+    c3c1ValidationHarnessSuccessorChecks: deepFreeze(successorChecks),
     ow03ExperienceAnchorEvidencePathRecognitionVerification: ow03Verification,
     ow04ExactPathRecognitionVerification: ow04Verification,
     ow04ParentPromotionReceiptRecognitionVerification: parentPromotionVerification,
     c3CoastalReconstructionAuthorityRecognitionVerification: c3Verification,
     c3d1CoastalPlacementRecognitionVerification: c3d1Verification,
+    c3c1ValidationHarnessRecognitionVerification: c3c1ValidationVerification,
     boundary: deepFreeze({
       ...base.boundary,
-      c3CoastalReconstructionAuthorityRecognitionOnly: true,
-      c3d1CoastalPlacementRecognitionOnly: true,
-      c3d1ProductMutationAuthorityCreated: false,
-      c3d1InlandMutationAuthorityCreated: false,
-      c3d1PreviewPublicationAuthorityCreated: false,
-      c3d1ProductionPublicationAuthorityCreated: false,
-      c3d1ExperienceAnchorWaiverAuthorityCreated: false
+      c3c1ValidationHarnessRecognitionOnly: true,
+      c3c1ValidationResultForcingAuthorityCreated: false,
+      c3c1ProductMutationAuthorityCreatedByRegistry: false,
+      c3c1ExperienceAnchorWaiverAuthorityCreated: false,
+      c3c1MergeDeploymentPublicationAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
-      c3CoastalReconstructionAuthorityRecognitionLoaded: true,
-      c3d1CoastalPlacementRecognitionLoaded: true,
-      c3d1CoastalPlacementSuccessorIntegrityVerified: successorIntegrityVerified,
+      c3c1ValidationHarnessRecognitionLoaded: true,
+      c3c1ValidationHarnessSuccessorIntegrityVerified: successorIntegrityVerified,
       inheritedIdentityStatePreserved: true,
-      c3d1ProductMutationAuthorized: false,
-      c3d1InlandMutationAuthorized: false,
-      c3d1PreviewPublicationAuthorized: false,
-      c3d1ProductionPublicationAuthorized: false,
-      c3d1ExperienceAnchorWaiverAuthorized: false
+      c3c1ValidationResultForcingAuthorized: false,
+      c3c1ProductMutationAuthorizedByRegistry: false,
+      c3c1ExperienceAnchorWaiverAuthorized: false,
+      c3c1MergeDeploymentPublicationAuthorized: false
     })
   });
 }

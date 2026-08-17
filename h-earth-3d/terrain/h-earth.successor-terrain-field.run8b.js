@@ -55,22 +55,27 @@ export const H_EARTH_RUN_8B_CANONICAL_ELEVATION_GRID = freeze({
 });
 
 export const H_EARTH_RUN_8B_C3C3R5_MACRO_COMPOSITION_PROFILE = freeze({
-  contractId: 'H_EARTH_C3C3R5_MACRO_COMPOSITION_EAST_OCEAN_REVEAL_v1',
+  contractId: 'H_EARTH_C3C3R5_MACRO_COMPOSITION_EAST_OCEAN_REVEAL_v2',
   compositionClass: 'MOUNTAIN_PASS_OCEAN_REVEAL_CORRIDOR',
   orientation: 'EAST_FACING_TOWARD_OPEN_OCEAN',
-  corridorCenterZ: -254,
-  corridorSigmaZ: 18,
-  activationXMinimum: -112,
-  fullCutX: -36,
-  easternMountainExitX: 64,
-  maximumCutWorldUnits: 24,
-  maximumMountainContributionFractionRemoved: 0.78,
+  corridorCenterZ: -248,
+  corridorSigmaZ: 38,
+  activationXMinimum: -224,
+  fullCutX: -128,
+  easternMountainExitX: 96,
+  maximumCutWorldUnits: 38,
+  maximumMountainContributionFractionRemoved: 0.9,
+  fanCenterX: -72,
+  fanSigmaX: 150,
+  fanCenterZ: -232,
+  fanSigmaZ: 78,
+  fanMaximumCutWorldUnits: 34,
   baseTerrainCutProhibited: true,
   run8APredecessorMutation: false,
   navigationAuthorityExpansion: false,
   collisionAuthorityExpansion: false,
   purpose:
-    'TURN_EXISTING_VALLEY_LANGUAGE_INTO_A_DELIBERATE_EAST_FACING_OCEAN_REVEAL_WITHOUT_CREATING_A_NEW_OCEAN_OR_CUTTING_BASE_TERRAIN'
+    'TURN_EXISTING_VALLEY_LANGUAGE_INTO_A_BROAD_COASTAL_AMPHITHEATER_AND_EAST_FACING_OCEAN_REVEAL_WITHOUT_CREATING_A_NEW_OCEAN_OR_CUTTING_BASE_TERRAIN'
 });
 
 export function canonicalizeHEarthRun8BElevation(value) {
@@ -84,13 +89,18 @@ export function canonicalizeHEarthRun8BElevation(value) {
 function resolveMacroCompositionCut(source, worldX, worldZ) {
   if (source?.valid !== true || !finite(source.mountainContribution)) return 0;
   const profile = H_EARTH_RUN_8B_C3C3R5_MACRO_COMPOSITION_PROFILE;
-  if (worldX < profile.activationXMinimum || worldX > profile.easternMountainExitX) return 0;
-  const xOpening = smoothstep01(
-    (worldX - profile.activationXMinimum) /
-      Math.max(Number.EPSILON, profile.fullCutX - profile.activationXMinimum)
-  );
+  const xOpening = worldX >= profile.activationXMinimum && worldX <= profile.easternMountainExitX
+    ? smoothstep01(
+        (worldX - profile.activationXMinimum) /
+          Math.max(Number.EPSILON, profile.fullCutX - profile.activationXMinimum)
+      )
+    : 0;
   const zOpening = gaussian(worldZ, profile.corridorCenterZ, profile.corridorSigmaZ);
-  const requestedCut = profile.maximumCutWorldUnits * xOpening * zOpening;
+  const corridorCut = profile.maximumCutWorldUnits * xOpening * zOpening;
+  const fanCut = profile.fanMaximumCutWorldUnits
+    * gaussian(worldX, profile.fanCenterX, profile.fanSigmaX)
+    * gaussian(worldZ, profile.fanCenterZ, profile.fanSigmaZ);
+  const requestedCut = Math.max(corridorCut, fanCut);
   return Math.max(0, Math.min(
     requestedCut,
     source.mountainContribution * profile.maximumMountainContributionFractionRemoved
@@ -107,7 +117,7 @@ function projectedSuccessorElevation(worldX, worldZ) {
 
 export const H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD = freeze({
   contractId: H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_FIELD_CONTRACT_ID,
-  generationRevision: 3,
+  generationRevision: 4,
   predecessorContractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
   predecessorGenerationRevision: H_EARTH_TERRAIN_FIELD.generationRevision,
   predecessorOccurrenceDisposition: 'PRESERVED_UNCHANGED',

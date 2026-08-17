@@ -1,8 +1,8 @@
 /**
- * H-Earth repository registry validator dependency loader v9 successor.
+ * H-Earth repository registry validator dependency loader v10 successor.
  *
  * Preserves the complete predecessor chain and advances only the active
- * additive facade needed for exact Gen305 S26 preflight path resolution.
+ * additive facade needed for exact Gen306 world-manifold preflight resolution.
  */
 
 import {
@@ -15,9 +15,12 @@ import {
 import {
   verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2
 } from './accepted-amendments/h-earth.repository-registry.hc02-page-excellence-execution-carrier-scope.v2.js';
-import registryFacade, {
+import {
   verifyHEarthGen305S26PreflightScopeRegistration
 } from './accepted-amendments/h-earth.repository-registry.gen305-s26-preflight-scope-registration.js';
+import registryFacade, {
+  verifyHEarthGen306WorldManifoldPreflightScopeRegistration
+} from './accepted-amendments/h-earth.repository-registry.gen306-world-manifold-preflight-scope-registration.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -30,6 +33,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2();
   const gen305S26ScopeVerification =
     verifyHEarthGen305S26PreflightScopeRegistration();
+  const gen306WorldManifoldScopeVerification =
+    verifyHEarthGen306WorldManifoldPreflightScopeRegistration();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -61,6 +66,19 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     gen305S26PathResolutionOnly:
       gen305S26ScopeVerification.checks.noProductAuthority === true &&
       gen305S26ScopeVerification.checks.noConstructionAuthority === true,
+    gen306WorldManifoldScopeEligible:
+      gen306WorldManifoldScopeVerification.eligible === true,
+    gen306WorldManifoldExactFourTargets:
+      gen306WorldManifoldScopeVerification.checks.exactFourTargetPaths === true,
+    gen306WorldManifoldTruthfulAbsencePreserved:
+      gen306WorldManifoldScopeVerification.checks.targetOccurrencesTruthfullyAbsent === true,
+    gen306WorldManifoldPredecessorRun8EPreserved:
+      gen306WorldManifoldScopeVerification.checks.predecessorRun8EResolutionPreserved === true,
+    gen306WorldManifoldPredecessorRun8BPreserved:
+      gen306WorldManifoldScopeVerification.checks.predecessorRun8BResolutionPreserved === true,
+    gen306WorldManifoldPathResolutionOnly:
+      gen306WorldManifoldScopeVerification.checks.noProductAuthority === true &&
+      gen306WorldManifoldScopeVerification.checks.noConstructionAuthorityCreatedByRegistry === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -80,7 +98,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v9_GEN305_S26_PREFLIGHT_SCOPE_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v10_GEN306_WORLD_MANIFOLD_PREFLIGHT_SCOPE_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -91,7 +109,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02PageExcellenceExecutionCarrierScopeV2:
         hc02CarrierScopeVerification.eligible === true,
       gen305S26PreflightScopeRegistration:
-        gen305S26ScopeVerification.eligible === true
+        gen305S26ScopeVerification.eligible === true,
+      gen306WorldManifoldPreflightScopeRegistration:
+        gen306WorldManifoldScopeVerification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
@@ -107,7 +127,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02CarrierScopeVerification,
     gen305S26PreflightScopeVerification:
       gen305S26ScopeVerification,
-    gen305S26PreflightScopeChecks: deepFreeze(successorChecks),
+    gen306WorldManifoldPreflightScopeVerification:
+      gen306WorldManifoldScopeVerification,
+    gen306WorldManifoldPreflightScopeChecks: deepFreeze(successorChecks),
     boundary: deepFreeze({
       ...base.boundary,
       liveExperienceAcceptedOccurrenceProvenanceOnly: true,
@@ -118,7 +140,10 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02PageExcellenceExecutionCarrierUnboxingAuthorityCreated: false,
       gen305S26PreflightScopePathResolutionOnly: true,
       gen305S26PreflightScopeProductMutationAuthorityCreated: false,
-      gen305S26PreflightScopeConstructionAuthorityCreated: false
+      gen305S26PreflightScopeConstructionAuthorityCreated: false,
+      gen306WorldManifoldPreflightScopePathResolutionOnly: true,
+      gen306WorldManifoldPreflightScopeProductMutationAuthorityCreated: false,
+      gen306WorldManifoldPreflightScopeConstructionAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
@@ -130,7 +155,10 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02PageExcellenceExecutionCarrierUnboxingAuthorized: false,
       gen305S26PreflightScopeLoaded: true,
       gen305S26ProductMutationAuthorized: false,
-      gen305S26ConstructionAuthorizedByRegistryScope: false
+      gen305S26ConstructionAuthorizedByRegistryScope: false,
+      gen306WorldManifoldPreflightScopeLoaded: true,
+      gen306WorldManifoldProductMutationAuthorized: false,
+      gen306WorldManifoldConstructionAuthorizedByRegistryScope: false
     })
   });
 }

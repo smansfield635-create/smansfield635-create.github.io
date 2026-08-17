@@ -20,6 +20,7 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  COMPASS_SCOPE_BASE: ${{ github.event.pull_request.base.sha }}
 
 jobs:
   verify-static-contract:

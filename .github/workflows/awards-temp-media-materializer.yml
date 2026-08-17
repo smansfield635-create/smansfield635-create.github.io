@@ -6,7 +6,12 @@ on:
       - '.media-staging/awards-compass-v2/**'
 
 permissions:
-  contents: write
+  contents: read
+
+env:
+  V28_PATH: showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
+  V28_SHA256: 42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62
+  V28_BYTES: '13651045'
 
 jobs:
   materialize:
@@ -17,26 +22,26 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - name: Materialize Compass picture master
+          fetch-depth: 1
+      - name: Verify and stage protected V28 baseline
         shell: bash
         run: |
           set -euo pipefail
-          shopt -s nullglob
-          parts=(.media-staging/awards-compass-v2/part-*.b64)
-          if ((${#parts[@]} == 0)); then
-            echo 'No staged Compass media parts remain; materialization already complete.'
-            exit 0
-          fi
-          mkdir -p showroom/globe/h-earth/awards/media
-          cat "${parts[@]}" > /tmp/compass-v2.b64
-          base64 --decode /tmp/compass-v2.b64 > showroom/globe/h-earth/awards/media/diamond-gate-compass-story-v2-36s.mp4
-          test -s showroom/globe/h-earth/awards/media/diamond-gate-compass-story-v2-36s.mp4
-          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 showroom/globe/h-earth/awards/media/diamond-gate-compass-story-v2-36s.mp4
-          rm -rf .media-staging/awards-compass-v2
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -A
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Materialize Compass story picture master'
-          git push origin HEAD:${{ github.head_ref }}
+          test -f "$V28_PATH"
+          test "$(stat -c%s "$V28_PATH")" = "$V28_BYTES"
+          echo "$V28_SHA256  $V28_PATH" | sha256sum -c -
+          cp "$V28_PATH" /tmp/chapter01-compass-v28-live-baseline.mp4
+          ffprobe -v error -show_entries format=duration:stream=index,codec_name,width,height,r_frame_rate,sample_rate,channels -of json /tmp/chapter01-compass-v28-live-baseline.mp4 > /tmp/v28-ffprobe.json
+          sha256sum /tmp/chapter01-compass-v28-live-baseline.mp4 > /tmp/v28-sha256.txt
+          printf '%s\n' '{"schema":"CHAPTER_01_V28_BASELINE_EXPORT_RECEIPT_v1","sourceCommit":"ad395e724cbfea1c19c9ce43393c1148fa557816","sourceBlob":"90fed782fa6a9c2857909e7d29836d7dd0d83273","sha256":"42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62","bytes":13651045,"purpose":"ROOM_LOCAL_BASELINE_MATERIALIZATION_ONLY","productMutation":false,"liveMutation":false}' > /tmp/v28-export-receipt.json
+      - name: Upload exact V28 baseline artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter01-compass-v28-live-baseline
+          path: |
+            /tmp/chapter01-compass-v28-live-baseline.mp4
+            /tmp/v28-sha256.txt
+            /tmp/v28-ffprobe.json
+            /tmp/v28-export-receipt.json
+          if-no-files-found: error
+          retention-days: 1

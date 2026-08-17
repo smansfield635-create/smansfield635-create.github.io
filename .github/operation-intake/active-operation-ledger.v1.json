@@ -1791,6 +1791,18 @@
       "scopeHash": "d076b20a2d1b98787b29e8fac1e4fcae9c0fb5d2459fe5f7d386f0f286802dde",
       "state": "ADMITTED_LOCKED"
     },
+    "d0ab4c5ec245b1e9fc4e72c03f242eed7eb1e8f350fb383da08bcd0388187551": {
+      "governingHead": "0e6ad2bc0c585ab99e62f6ed58790b287c65b59e",
+      "lockGeneration": 1521,
+      "lockScope": "COMPASS:STUDIO_IDENTITY:COHERISCOPE:BRAIN:SPACECRAFT:EXACT_14_PATH_SCOPE",
+      "operationId": "COMPASS_STUDIO_IDENTITY_COHERISCOPE_BRAIN_SPACECRAFT_CONSTRUCTION_20260817_002",
+      "procedureLocatorDigest": "26b70097bce386b8d20be67d8b57c05b99b873bd78c1841b87473b53d7891411",
+      "released": false,
+      "requestDigest": "9e066bd555a2c35de0eb62eec41f639e21e62539d45b58cb5c7c16cba35f9408",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d0ab4c5ec245b1e9fc4e72c03f242eed7eb1e8f350fb383da08bcd0388187551",
+      "state": "ADMITTED_LOCKED"
+    },
     "d0e44ee036df91b824cdb85f5b49419a22d6bcf1431eeea285d20b735d6bdaca": {
       "governingHead": "331284949940c95db80a332235492de4c80d3d43",
       "lockGeneration": 826,
@@ -2280,7 +2292,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1520,
+  "lockGeneration": 1521,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

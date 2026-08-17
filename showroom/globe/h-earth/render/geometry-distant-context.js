@@ -1,10 +1,9 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * C3C3R5 D12 visual-composition repair. South and west remain visible
- * connected-region continuations on the shared planetary frame, but the far
- * rows now dissolve below the geometric horizon with irregular atmospheric
- * attenuation so the continuation reads as world, not as a terminal slab.
+ * Gen305 S26 performance/world-envelope successor. The accessible C3C3R5
+ * geography remains untouched. This provider owns only visual continuation
+ * beyond that geography and makes computational density fall with distance.
  */
 
 import {
@@ -39,9 +38,52 @@ const smooth = (t) => t * t * (3 - 2 * t);
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_C3C3R5_D12_HORIZON_DISSOLVE_v2';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_GEN305_S26_MONOTONIC_WORLD_ENVELOPE_v1';
 
 const ACCESSIBLE = freeze({ xMin: -1024, xMax: 1024, zMin: -1024 });
+
+/**
+ * First-class rendering zones. NEAR_FIELD is declared here only as a protected
+ * boundary: its geometry remains owned by the existing playable terrain.
+ */
+export const H_EARTH_WORLD_ENVELOPE_ZONES = freeze({
+  NEAR_FIELD: {
+    zoneId: 'NEAR_FIELD',
+    authority: 'PLAYABLE_EXISTING_C3C3R5_GEOGRAPHY',
+    fidelityRank: 3,
+    geometryDensityRank: 3,
+    shaderCostRank: 3,
+    interactionAuthority: 'EXISTING_ONLY',
+    generatedByThisProvider: false,
+    protectedBounds: ACCESSIBLE,
+    prohibited: ['GEOGRAPHY_RELOCATION', 'GEOGRAPHY_SHRINK', 'NAVIGATION_ENVELOPE_CHANGE', 'SHORELINE_TOPOLOGY_CHANGE']
+  },
+  TRANSITION_FIELD: {
+    zoneId: 'TRANSITION_FIELD',
+    authority: 'VISUAL_CONTINUATION_ONLY',
+    fidelityRank: 2,
+    geometryDensityRank: 2,
+    shaderCostRank: 2,
+    interactionAuthority: 'NONE',
+    globalDistanceRange: [0.0, 0.52],
+    southSamples: freeze({ along: 65, rows: 17 }),
+    westSamples: freeze({ along: 49, rows: 15 }),
+    prohibited: ['COLLISION', 'NAVIGATION', 'SEMANTIC_ADDRESS_EXPANSION', 'FULL_DETAIL_16X16_TERRAIN', 'HIGH_FREQUENCY_PROCEDURAL_RELIEF']
+  },
+  HORIZON_BOUNDARY_FIELD: {
+    zoneId: 'HORIZON_BOUNDARY_FIELD',
+    authority: 'VISUAL_ONLY_NON_NAVIGABLE',
+    fidelityRank: 1,
+    geometryDensityRank: 1,
+    shaderCostRank: 1,
+    interactionAuthority: 'NONE',
+    globalDistanceRange: [0.48, 1.0],
+    southSamples: freeze({ along: 33, rows: 8 }),
+    westSamples: freeze({ along: 25, rows: 7 }),
+    prohibited: ['COLLISION', 'NAVIGATION', 'SEMANTIC_ADDRESS_EXPANSION', 'FULL_DETAIL_16X16_TERRAIN', 'HIGH_FREQUENCY_PROCEDURAL_RELIEF', 'SCREEN_SPACE_BOUNDARY_AUTHORITY']
+  }
+});
+
 const THRESHOLDS = freeze({
   south: { boundaryId: 'H_EARTH_CONNECTED_REGION_THRESHOLD_SOUTH_004', regionBeyondId: 'CONTINENTAL_INTERIOR_REGION_VISUAL_CONTEXT', gateDistance: 245, passCenter: 0.57, passHalfWidth: 0.105 },
   west: { boundaryId: 'H_EARTH_CONNECTED_REGION_THRESHOLD_WEST_004', regionBeyondId: 'WESTERN_ADJACENT_REGION_VISUAL_CONTEXT', gateDistance: 225, passCenter: 0.52, passHalfWidth: 0.125 }
@@ -55,18 +97,20 @@ const THRESHOLD_PROFILE = freeze({
   mountainScaleProhibited: true
 });
 const HORIZON_DISSOLVE = freeze({
-  beginT: 0.64,
-  maximumSink: 11.5,
-  irregularity: 3.2,
+  beginT: 0.62,
+  maximumSink: 12.4,
+  irregularity: 3.5,
   terminalHardEdgeProhibited: true,
-  purpose: 'MOVE_THE_NONNAVIGABLE_FAR_RIM_BELOW_THE_GEOMETRIC_SIGHTLINE_WITHOUT_CHANGING_ACCESSIBLE_TERRAIN_OR_COLLISION'
+  purpose: 'COMPOSE_SPARSE_WORLD_SPACE_SILHOUETTE_DEPTH_WITH_ATMOSPHERIC_OCCLUSION_BELOW_GEOMETRIC_SIGHTLINE'
 });
 
 function lowReliefContinuation(innerElevation, distanceT, phase) {
   const settle = smooth(clamp01(distanceT * 1.35));
   const retained = lerp(innerElevation, Math.max(0.2, innerElevation * 0.11), settle);
-  const rolling = (0.7 * Math.sin(phase + distanceT * Math.PI * 2.1)) + (0.32 * Math.sin(phase * 0.7 + distanceT * Math.PI * 5.1));
-  return Math.max(0.05, retained + rolling * (1 - settle) * 0.42);
+  // Only broad, low-frequency shape survives into the visual envelope.
+  const rolling = (0.7 * Math.sin(phase + distanceT * Math.PI * 2.1)) +
+    (0.28 * Math.sin(phase * 0.7 + distanceT * Math.PI * 4.2));
+  return Math.max(0.05, retained + rolling * (1 - settle) * 0.40);
 }
 function passShoulder(alongT, center, halfWidth) {
   const distance = Math.abs(alongT - center);
@@ -81,17 +125,18 @@ function thresholdBerm(distanceT, alongT, threshold) {
 function horizonDissolveSink(distanceT, alongT, phase) {
   const progress = smooth(clamp01((distanceT - HORIZON_DISSOLVE.beginT) / Math.max(Number.EPSILON, 1 - HORIZON_DISSOLVE.beginT)));
   if (progress <= 0) return 0;
-  const irregular = 1 + 0.28 * Math.sin(phase + alongT * Math.PI * 5.4) + 0.12 * Math.sin(phase * 1.7 + alongT * Math.PI * 11.2);
+  const irregular = 1 + 0.24 * Math.sin(phase + alongT * Math.PI * 4.2) + 0.10 * Math.sin(phase * 1.7 + alongT * Math.PI * 8.1);
   return progress * (HORIZON_DISSOLVE.maximumSink + HORIZON_DISSOLVE.irregularity * irregular);
 }
 
-function appendBand({ vertices, indices, sampleCount, rowCount, pointAt }) {
+function appendBand({ vertices, indices, sampleCount, rowCount, globalStartT, globalEndT, pointAt }) {
   const base = vertices.length;
   for (let row = 0; row < rowCount; row += 1) {
-    const distanceT = row / (rowCount - 1);
+    const localDistanceT = row / (rowCount - 1);
+    const globalDistanceT = lerp(globalStartT, globalEndT, localDistanceT);
     for (let index = 0; index < sampleCount; index += 1) {
       const alongT = index / (sampleCount - 1);
-      const point = pointAt(alongT, distanceT);
+      const point = pointAt(alongT, globalDistanceT);
       vertices.push(createHEarthVector3(point.x, point.y, point.z));
     }
   }
@@ -106,55 +151,54 @@ function appendBand({ vertices, indices, sampleCount, rowCount, pointAt }) {
   }
 }
 
+function southPoint(alongT, distanceT) {
+  const eased = smooth(distanceT);
+  const innerX = lerp(ACCESSIBLE.xMin, ACCESSIBLE.xMax, alongT);
+  const horizonX = innerX * (2.72 + 0.08 * Math.sin(alongT * Math.PI * 3.2));
+  const outerZ = getHEarthPlanetaryHorizonZForX(horizonX, -1);
+  const worldX = lerp(innerX, horizonX, eased);
+  const worldZ = lerp(ACCESSIBLE.zMin, outerZ, eased);
+  const local = sampleHEarthTerrainField(innerX, lerp(ACCESSIBLE.zMin, ACCESSIBLE.zMin - 220, Math.min(1, distanceT * 1.8))).elevation;
+  const inner = sampleHEarthTerrainField(innerX, ACCESSIBLE.zMin);
+  const far = lowReliefContinuation(inner.elevation, distanceT, 0.7 + alongT * 2.0);
+  const dissolve = horizonDissolveSink(distanceT, alongT, 0.55);
+  const y = lerp(local, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.south) - dissolve;
+  return projectHEarthVisibleContinuationPoint({ x: worldX, y, z: worldZ });
+}
+
+const WEST_INNER_X = ACCESSIBLE.xMin;
+const WEST_COASTLINE_Z = getHEarthCanonicalShorelineZ(WEST_INNER_X);
+const WEST_LANDWARD_END_Z = Math.min(-160, WEST_COASTLINE_Z - 72);
+function westPoint(alongT, distanceT) {
+  const eased = smooth(distanceT);
+  const innerZ = lerp(ACCESSIBLE.zMin, WEST_LANDWARD_END_Z, alongT);
+  const horizonZ = lerp(-2780 - 120 * Math.sin(alongT * Math.PI * 1.6), WEST_LANDWARD_END_Z - 180, alongT);
+  const outerX = getHEarthPlanetaryHorizonXForZ(horizonZ, -1);
+  const worldX = lerp(WEST_INNER_X, outerX, eased);
+  const worldZ = lerp(innerZ, horizonZ, eased);
+  const inner = sampleHEarthTerrainField(WEST_INNER_X, innerZ);
+  const far = lowReliefContinuation(inner.elevation, distanceT, 1.4 + alongT);
+  const dissolve = horizonDissolveSink(distanceT, alongT, 1.35);
+  const y = lerp(inner.elevation, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.west) - dissolve;
+  return projectHEarthVisibleContinuationPoint({ x: worldX, y, z: worldZ });
+}
+
 function constructVisualWorldContinuation() {
   const vertices = [];
   const indices = [];
+  const transition = H_EARTH_WORLD_ENVELOPE_ZONES.TRANSITION_FIELD;
+  const horizon = H_EARTH_WORLD_ENVELOPE_ZONES.HORIZON_BOUNDARY_FIELD;
 
-  appendBand({
-    vertices,
-    indices,
-    sampleCount: 97,
-    rowCount: 31,
-    pointAt: (alongT, distanceT) => {
-      const eased = smooth(distanceT);
-      const innerX = lerp(ACCESSIBLE.xMin, ACCESSIBLE.xMax, alongT);
-      const horizonX = innerX * (2.72 + 0.08 * Math.sin(alongT * Math.PI * 3.2));
-      const outerZ = getHEarthPlanetaryHorizonZForX(horizonX, -1);
-      const worldX = lerp(innerX, horizonX, eased);
-      const worldZ = lerp(ACCESSIBLE.zMin, outerZ, eased);
-      const local = sampleHEarthTerrainField(innerX, lerp(ACCESSIBLE.zMin, ACCESSIBLE.zMin - 220, Math.min(1, distanceT * 1.8))).elevation;
-      const inner = sampleHEarthTerrainField(innerX, ACCESSIBLE.zMin);
-      const far = lowReliefContinuation(inner.elevation, distanceT, 0.7 + alongT * 2.0);
-      const dissolve = horizonDissolveSink(distanceT, alongT, 0.55);
-      const unprojectedY = lerp(local, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.south) - dissolve;
-      return projectHEarthVisibleContinuationPoint({ x: worldX, y: unprojectedY, z: worldZ });
-    }
-  });
+  // Transition field: materially lighter than playable terrain.
+  appendBand({ vertices, indices, sampleCount: transition.southSamples.along, rowCount: transition.southSamples.rows, globalStartT: 0.0, globalEndT: 0.52, pointAt: southPoint });
+  appendBand({ vertices, indices, sampleCount: transition.westSamples.along, rowCount: transition.westSamples.rows, globalStartT: 0.0, globalEndT: 0.52, pointAt: westPoint });
 
-  const innerX = ACCESSIBLE.xMin;
-  const coastlineZ = getHEarthCanonicalShorelineZ(innerX);
-  const landwardEndZ = Math.min(-160, coastlineZ - 72);
-  appendBand({
-    vertices,
-    indices,
-    sampleCount: 81,
-    rowCount: 29,
-    pointAt: (alongT, distanceT) => {
-      const eased = smooth(distanceT);
-      const innerZ = lerp(ACCESSIBLE.zMin, landwardEndZ, alongT);
-      const horizonZ = lerp(-2780 - 120 * Math.sin(alongT * Math.PI * 1.6), landwardEndZ - 180, alongT);
-      const outerX = getHEarthPlanetaryHorizonXForZ(horizonZ, -1);
-      const worldX = lerp(innerX, outerX, eased);
-      const worldZ = lerp(innerZ, horizonZ, eased);
-      const inner = sampleHEarthTerrainField(innerX, innerZ);
-      const far = lowReliefContinuation(inner.elevation, distanceT, 1.4 + alongT);
-      const dissolve = horizonDissolveSink(distanceT, alongT, 1.35);
-      const unprojectedY = lerp(inner.elevation, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.west) - dissolve;
-      return projectHEarthVisibleContinuationPoint({ x: worldX, y: unprojectedY, z: worldZ });
-    }
-  });
+  // Horizon field: sparse overlapping silhouettes preserve depth continuity while
+  // getting cheaper with distance. The overlap hides T-junctions between LODs.
+  appendBand({ vertices, indices, sampleCount: horizon.southSamples.along, rowCount: horizon.southSamples.rows, globalStartT: 0.48, globalEndT: 1.0, pointAt: southPoint });
+  appendBand({ vertices, indices, sampleCount: horizon.westSamples.along, rowCount: horizon.westSamples.rows, globalStartT: 0.48, globalEndT: 1.0, pointAt: westPoint });
 
-  const primitiveId = 'H_EARTH_CONNECTED_REGION_CONTEXT:C3C3R5_D12';
+  const primitiveId = 'H_EARTH_CONNECTED_REGION_CONTEXT:GEN305_S26';
   const construction = constructHEarthTriangleMesh({
     primitiveId,
     geometryId: `${primitiveId}:GEOMETRY`,
@@ -163,9 +207,13 @@ function constructVisualWorldContinuation() {
     indices,
     normalMode: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.normalMode.FACE_AND_VERTEX,
     expectedClosure: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
-    semanticRole: 'CURVED_PLANETARY_CONNECTED_REGION_CONTINUATION_WITH_LOW_RIDGE_PASSES_AND_HORIZON_DISSOLVE',
-    materialHint: freeze({ materialKey: 'worldTerrainField', materialIntent: 'SUBTROPICAL_CONNECTED_REGION_CONTINUATION_DISSOLVING_INTO_ATMOSPHERIC_PLANETARY_HORIZON', climateIdentity: 'WARM_SUBTROPICAL_COASTAL' }),
-    source: freeze({ sourceType: 'H_EARTH_C3C3R5_D12_SHARED_PLANETARY_CONNECTED_REGION_SYSTEM', highlandFormationAuthorityRetired: true }),
+    semanticRole: 'MONOTONIC_COST_TRANSITION_AND_HORIZON_WORLD_SPACE_CONTINUATION',
+    materialHint: freeze({
+      materialKey: 'worldTerrainField',
+      materialIntent: 'LOW_FREQUENCY_SUBTROPICAL_VISUAL_CONTINUATION_WITH_DEPTH_ORDERED_ATMOSPHERIC_OCCLUSION',
+      climateIdentity: 'WARM_SUBTROPICAL_COASTAL'
+    }),
+    source: freeze({ sourceType: 'H_EARTH_GEN305_S26_SHARED_PLANETARY_VISUAL_ENVELOPE', highlandFormationAuthorityRetired: true }),
     metadata: freeze({
       providerContractId: H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
       sharedPlanetaryWorldFrame: true,
@@ -173,15 +221,17 @@ function constructVisualWorldContinuation() {
       planetaryRadius: H_EARTH_PLANETARY_WORLD_FRAME.effectivePlanetRadius,
       protectedTangentRadius: H_EARTH_PLANETARY_WORLD_FRAME.protectedTangentRadius,
       visibleHorizonRadius: H_EARTH_PLANETARY_WORLD_FRAME.visibleHorizonRadius,
+      worldEnvelopeZones: H_EARTH_WORLD_ENVELOPE_ZONES,
+      geometryDensityMonotonicallyDecreasesWithDistance: true,
+      shaderCostMonotonicallyDecreasesWithDistanceContract: true,
+      interactionAuthorityTendsToZeroWithDistance: true,
+      horizonInteractionAuthority: 0,
+      composedBoundarySystem: freeze({ sparseSilhouetteGeometry: true, depthOrdering: true, atmosphericOcclusion: true, hazeOnlyBoundary: false }),
       circularPlanformHorizon: true,
       rectangularTerminalGeometryPresent: false,
       terminalHardEdgeProhibited: true,
       horizonDissolveApplied: true,
       horizonDissolveProfile: HORIZON_DISSOLVE,
-      formationId: null,
-      formationClass: 'LOW_RELIEF_ADJACENT_REGION_CONTINUATION_ON_CURVED_PLANETARY_FRAME',
-      sourceAddressRule: null,
-      lodClass: 'CONNECTED_REGION_THRESHOLD_WITH_CURVED_PLANETARY_CONTINUATION',
       visualContinuationLayer: true,
       connectedRegionThresholdSystem: true,
       objectiveVisibleRegionalThresholds: true,
@@ -192,15 +242,12 @@ function constructVisualWorldContinuation() {
       mountainBarricadeRetired: true,
       highlandMaterialIdentityRetired: true,
       highlandFormationAuthorityRetired: true,
-      minimumThresholdUplift: THRESHOLD_PROFILE.baseUplift,
-      maximumThresholdUplift: THRESHOLD_PROFILE.maximumUplift,
       semanticBoundaryArchitecturePresent: true,
       worldVisibleBeyondThreshold: true,
-      mountainPassOceanRevealCorridorPreservationRequired: true,
-      composedOcclusionAndRevealLaw: 'PASSES_AND_VALLEYS_FRAME_DISTANT_OCEAN_OR_CURVED_WORLD_CONTINUATION_WHILE_FAR_RIMS_DISSOLVE_BELOW_THE_GEOMETRIC_SIGHTLINE',
       adjacentRegionTraversable: false,
       adjacentRegionSemanticAuthority: false,
       accessibleRegionBounds: ACCESSIBLE,
+      playableGeographyMutation: false,
       southContinentalContinuationPreserved: true,
       westContinentalContinuationPreserved: true,
       eastContinentalContinuationRetiredForOpenOcean: true,
@@ -212,11 +259,11 @@ function constructVisualWorldContinuation() {
       navigable: false,
       collisionAuthority: false,
       accessibleRegionExpansion: false,
-      continuationLaw: 'LOCAL_TANGENT_TERRAIN_PLUS_SHARED_CURVED_PLANETARY_CONTINUATION_PLUS_COMPOSED_OCCLUSION_REVEALS_AND_HORIZON_DISSOLVE',
+      continuationLaw: 'VISUAL_DISTANCE_INCREASES_WHILE_GEOMETRY_DENSITY_SHADER_COST_AND_INTERACTION_AUTHORITY_DECREASE',
       visibleRectangularTerminationProhibited: true,
       technicalStatusSignageProhibited: true,
       baselinePreservationId: 'H_EARTH_C3C3_OWNER_VIDEO_23750_POSITIVE_BASELINE_20260816',
-      ownerRepairEvidenceId: 'H_EARTH_C3C3R5_D12_VISUAL_AUDIT_REPAIR_20260817',
+      gen305OperationId: 'H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_20260817_001',
       admitted: false,
       aggregateFrameAuthority: false
     })
@@ -232,16 +279,15 @@ export function constructHEarthDistantContextGeometry() {
     status: result.ok ? 'DISTANT_CONTEXT_GEOMETRY_COMPLETE' : 'DISTANT_CONTEXT_GEOMETRY_FAILED',
     contractId: H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
     sharedPlanetaryWorldFrameContractId: H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,
-    formationId: null,
     primitives: result.ok ? [result.primitive] : [],
     bounds: result.primitive?.geometry?.bounds ?? null,
+    worldEnvelopeZones: H_EARTH_WORLD_ENVELOPE_ZONES,
+    geometryDensityMonotonicallyDecreasesWithDistance: true,
+    composedBoundarySystem: freeze({ sparseSilhouetteGeometry: true, depthOrdering: true, atmosphericOcclusion: true }),
     visualContinuationLayer: true,
     connectedRegionThresholdSystem: true,
     objectiveVisibleRegionalThresholds: true,
     thresholdCount: 2,
-    mountainBarricadeRetired: true,
-    highlandMaterialIdentityRetired: true,
-    highlandFormationAuthorityRetired: true,
     circularPlanformHorizon: true,
     rectangularTerminalGeometryPresent: false,
     terminalHardEdgeProhibited: true,

@@ -11,9 +11,11 @@ const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pas
 for(const [key,max] of Object.entries(budgets))check(`BUDGET_${key.toUpperCase()}`,bytes[key]<=max,{bytes:bytes[key],max});
 check('SIX_ASSET_AGGREGATE_UNDER_48_KIB',Object.values(bytes).reduce((a,b)=>a+b,0)<=49152,{bytes:Object.values(bytes).reduce((a,b)=>a+b,0),baselineBytes:22294,max:49152,justification:'parametric anatomy plus Awards and proof carousels'});
 check('LEGACY_BUNDLE_NOT_LOADED',!text.index.includes('compass.carousel.js')&&!text.index.includes('compass.carousel.css'),'legacy monolith absent');
+check('LEGACY_DYNAMIC_BOOTSTRAP_SUPPRESSED',text.index.includes('CompassModularSuccessorGuard')&&text.index.includes("stem='/assets/compass/compass.'+'carousel.'")&&text.index.includes('head.append=function'),'known legacy injector is rejected before network insertion');
 const expectedRefs=['compass.statement-carousel.css','compass.capability-carousel.css','compass.orbit-input.js','compass.statement-carousel.js','compass.brain-scene.js','compass.capability-carousel.js'].map(name=>`/assets/compass/${name}?v=${VERSION}`);
 check('EXACT_SIX_CACHE_BUSTED_REFERENCES',expectedRefs.every(ref=>text.index.includes(ref))&&(text.index.match(new RegExp(VERSION,'g'))||[]).length===6,{version:VERSION,refs:expectedRefs});
 check('RUNTIME_IDENTITY_BOUND',text.capability.includes("version:'awards-trl-brain-successor-v1'"),'awards-trl-brain-successor-v1');
+check('RUNTIME_IDENTITY_IMMUTABLE',text.capability.includes("Object.defineProperty(window,'CompassEditorialCarousel'")&&text.capability.includes('set:()=>{}'),'late legacy assignment cannot replace successor identity');
 
 const capabilityOrder=[...text.capability.matchAll(/dataset\.capability='([^']+)'/g)].map(match=>match[1]).slice(0,3);
 check('CAPABILITY_ORDER_EXACT',JSON.stringify(capabilityOrder)===JSON.stringify(['diagnostic','awards','house']),capabilityOrder);

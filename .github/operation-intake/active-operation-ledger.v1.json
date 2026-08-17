@@ -468,6 +468,18 @@
       "scopeHash": "3774dc0ae012f09ec1f5bf4311aaf1235b5688fb85a4515e235c644c454bea8e",
       "state": "ADMITTED_LOCKED"
     },
+    "39d5500dfb4466816b038c15780fde4d09c8b96014e19e826f3f655a04211718": {
+      "governingHead": "f8eefd20fc1cdcdc777e070f008bb2e2b8580da1",
+      "lockGeneration": 1526,
+      "lockScope": "COMPASS:FRONT_PAGE:LAWS_SPACECRAFT_AND_BRAIN:RESOURCE_SCHEDULING_PERFORMANCE_ONLY",
+      "operationId": "COMPASS_CONTINUOUS_RENDERERS_PERFORMANCE_CONTINUATION_20260817_008",
+      "procedureLocatorDigest": "9812a487cd6d4a6c20cdc638b0c88605ee4006b1bc7e04993c45938934057647",
+      "released": false,
+      "requestDigest": "bb6e95211560337b92c5b94781ccb42ada41a7d345b061211f36a54a95c28264",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "39d5500dfb4466816b038c15780fde4d09c8b96014e19e826f3f655a04211718",
+      "state": "ADMITTED_LOCKED"
+    },
     "3ca05f8a89b5caf0137a1a389bd84cca4972eba3d67ad2589e9138c05ecd87ba": {
       "governingHead": "67c03ff5072ab35da1713d6ddef197078b7e7bbc",
       "lockGeneration": 263,
@@ -2345,7 +2357,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1525,
+  "lockGeneration": 1526,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

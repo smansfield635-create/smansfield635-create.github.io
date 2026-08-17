@@ -1,15 +1,15 @@
 name: Chapter 01 V28 Byte Materialization v2
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - instrument/ch1-v28-byte-materialization-v2
 
 permissions:
   contents: read
 
 jobs:
   materialize:
-    if: github.head_ref == 'instrument/ch1-v28-byte-materialization-v2'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:

@@ -1681,30 +1681,28 @@
       "state": "ADMITTED_LOCKED"
     },
     "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5": {
-      "governingHead": "5166e04086efb2eb1bdd1ab043c18c84cef739ad",
-      "lockGeneration": 1515,
+      "governingHead": "74e48531e73fa2de687ba6b42777891f28e5a9ba",
+      "lockGeneration": 1516,
       "lockScope": "PUBLIC_PRODUCT:COMPASS:VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR:V1",
-      "operationId": "COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1",
+      "operationId": "COMPASS_GEN1515_CACHE_IDENTITY_REPAIR_20260817_v5",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "8fec7fbe1351b09d6205f5e3357fc26bdaa14971",
-        "lockGeneration": 1514,
-        "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR:V1",
-        "operationId": "COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1",
+        "governingHead": "5166e04086efb2eb1bdd1ab043c18c84cef739ad",
+        "lockGeneration": 1515,
+        "lockScope": "PUBLIC_PRODUCT:COMPASS:VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR:V1",
+        "operationId": "COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1",
         "preservedEvidenceRefs": [
-          "issue:1011#comment:5317532443",
-          "issue:1011#comment:5317597306",
-          "merge:5166e04086efb2eb1bdd1ab043c18c84cef739ad",
-          "deploy-run:32044163440"
+          "merge:74e48531e73fa2de687ba6b42777891f28e5a9ba",
+          "issue:1011#comment:5318213893"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_VOLUMETRIC_ARTIFACTS_SUCCESSOR_TRANSITION_20260817_v1"
+        "transitionId": "COMPASS_GEN1515_CACHE_IDENTITY_SUCCESSOR_20260817_v5"
       },
-      "procedureLocatorDigest": "d341ba9ec50525df42df6073b50baee8e234b2400165ff45dcb902e602af6fa1",
+      "procedureLocatorDigest": "ff280ee96f112a92b922164c46c99ae20c3bd7bbbe80b67f0bf2252eab649297",
       "released": false,
-      "requestDigest": "5dc09f7e560fd45b7ebbacb2711ffec848469b428bb9b2f06818e25711b26e11",
+      "requestDigest": "f000f6638d125a0910e7de85c7ea07f3c5bfb5eed1b17146788b0211f7674c76",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5",
       "state": "ADMITTED_LOCKED"
@@ -2253,7 +2251,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1515,
+  "lockGeneration": 1516,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -22343,6 +22341,51 @@
         "successorLockScope": "PUBLIC_PRODUCT:COMPASS:VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR:V1",
         "successorOperationId": "COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1",
         "transitionId": "COMPASS_VOLUMETRIC_ARTIFACTS_SUCCESSOR_TRANSITION_20260817_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "5166e04086efb2eb1bdd1ab043c18c84cef739ad",
+      "lockGeneration": 1515,
+      "lockScope": "PUBLIC_PRODUCT:COMPASS:VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR:V1",
+      "operationId": "COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8fec7fbe1351b09d6205f5e3357fc26bdaa14971",
+        "lockGeneration": 1514,
+        "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR:V1",
+        "operationId": "COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1",
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5317532443",
+          "issue:1011#comment:5317597306",
+          "merge:5166e04086efb2eb1bdd1ab043c18c84cef739ad",
+          "deploy-run:32044163440"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_VOLUMETRIC_ARTIFACTS_SUCCESSOR_TRANSITION_20260817_v1"
+      },
+      "procedureLocatorDigest": "d341ba9ec50525df42df6073b50baee8e234b2400165ff45dcb902e602af6fa1",
+      "released": true,
+      "requestDigest": "5dc09f7e560fd45b7ebbacb2711ffec848469b428bb9b2f06818e25711b26e11",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "merge:74e48531e73fa2de687ba6b42777891f28e5a9ba",
+          "issue:1011#comment:5318213893"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "74e48531e73fa2de687ba6b42777891f28e5a9ba",
+        "successorLockGeneration": 1516,
+        "successorLockScope": "PUBLIC_PRODUCT:COMPASS:VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR:V1",
+        "successorOperationId": "COMPASS_GEN1515_CACHE_IDENTITY_REPAIR_20260817_v5",
+        "transitionId": "COMPASS_GEN1515_CACHE_IDENTITY_SUCCESSOR_20260817_v5"
       },
       "terminalDisposition": "SUPERSEDED"
     }

@@ -1,8 +1,8 @@
-name: H-Earth C3C3R5 S26 Private Intake Carrier
+name: H-Earth C3C3R5 S26 Private Mutation Routing Carrier
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [synchronize, reopened]
     paths:
       - '.github/workflows/h-earth-c3c3r5-s26-private-intake-carrier-20260817.yml'
 
@@ -11,7 +11,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  admit:
+  route:
     if: >-
       github.event.pull_request.head.ref == 'handoff/h-earth-c3c3r5-s26-intake-carrier-20260817' &&
       github.event.pull_request.base.ref == 'main' &&
@@ -20,16 +20,14 @@ jobs:
     timeout-minutes: 10
     env:
       PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
-      PRIVATE_INTAKE_COMMENT_ID: '5320107924'
       EXACT_PRIVATE_HEAD: 4c19e9ba783767f9324ab10df8a8541479f26c86
       EXPECTED_OPERATION: H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_20260817_001
-      EXPECTED_SCOPE: H_EARTH:C3C3R5:S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR:V1
-      EXPECTED_PUBLIC_BASELINE: 2152ad18c1691c4056e9ae39795ad44228dbdc19
+      EXPECTED_SCOPE_HASH: 89a53a52b3c48b99b4b786984e9dbb4e9e7d4f6c7f81257868d40a4b8cfa4eb2
+      EXPECTED_GENERATION: '305'
       LOCK_REF: operation-locks/repository-operation-intake-v1
-      LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
 
     steps:
-      - name: Mint bounded private intake token
+      - name: Mint read-only private routing token
         id: token
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
         with:
@@ -37,52 +35,9 @@ jobs:
           private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
           owner: smansfield635-create
           repositories: geodiametrics1
-          permission-contents: write
-          permission-issues: read
+          permission-contents: read
 
-      - name: Fetch and freeze exact intake envelope
-        shell: bash
-        env:
-          GH_TOKEN: ${{ steps.token.outputs.token }}
-        run: |
-          set -euo pipefail
-          work="$RUNNER_TEMP/h-earth-s26-intake"
-          mkdir -p "$work"
-          curl --fail-with-body --silent --show-error \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$PRIVATE_INTAKE_COMMENT_ID" > "$work/comment.json"
-          curl --fail-with-body --silent --show-error \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$PRIVATE_REPOSITORY/git/ref/heads/main" > "$work/main-ref.json"
-          python - <<'PY'
-          import json, os
-          work=os.path.join(os.environ['RUNNER_TEMP'],'h-earth-s26-intake')
-          c=json.load(open(os.path.join(work,'comment.json'),encoding='utf-8'))
-          body=c.get('body') or ''
-          marker='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'
-          if not body.startswith(marker): raise SystemExit('INTAKE_MARKER_MISSING')
-          outer=json.loads(body[len(marker):].strip())
-          if outer.get('schema')!='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_v1': raise SystemExit('ENVELOPE_SCHEMA_MISMATCH')
-          if outer.get('repository')!=os.environ['PRIVATE_REPOSITORY']: raise SystemExit('REPOSITORY_MISMATCH')
-          if outer.get('exactGoverningHead')!=os.environ['EXACT_PRIVATE_HEAD']: raise SystemExit('OUTER_HEAD_MISMATCH')
-          req=outer.get('operationRequest') or {}; proc=outer.get('constructionProcedure') or {}
-          if req.get('operationId')!=os.environ['EXPECTED_OPERATION']: raise SystemExit('OPERATION_MISMATCH')
-          if req.get('lockScope')!=os.environ['EXPECTED_SCOPE']: raise SystemExit('SCOPE_MISMATCH')
-          for x in (req.get('exactGoverningHead'),proc.get('exactGoverningHead')):
-              if x!=os.environ['EXACT_PRIVATE_HEAD']: raise SystemExit('EXACT_HEAD_MISMATCH')
-          subject=req.get('subjectIdentity') or {}
-          if subject.get('exactQualifiedBaselineHead')!=os.environ['EXPECTED_PUBLIC_BASELINE']: raise SystemExit('PUBLIC_BASELINE_MISMATCH')
-          main=json.load(open(os.path.join(work,'main-ref.json'),encoding='utf-8'))['object']['sha']
-          if main!=os.environ['EXACT_PRIVATE_HEAD']: raise SystemExit('LIVE_PRIVATE_MAIN_MOVED')
-          json.dump(req,open(os.path.join(work,'request.json'),'w',encoding='utf-8'),ensure_ascii=False,separators=(',',':'))
-          json.dump(proc,open(os.path.join(work,'procedure.json'),'w',encoding='utf-8'),ensure_ascii=False,separators=(',',':'))
-          PY
-
-      - name: Check out exact private canonical intake implementation
+      - name: Check out exact private router implementation
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/geodiametrics1
@@ -92,90 +47,82 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Execute private canonical intake gate
-        id: execute
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
-        run: |
-          set -euo pipefail
-          work="$RUNNER_TEMP/h-earth-s26-intake"
-          cd "$GITHUB_WORKSPACE/private-control-plane"
-          test "$(git rev-parse HEAD^{commit})" = "$EXACT_PRIVATE_HEAD"
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
-          set +e
-          node tools/operation-intake/repository-operation-intake-gate.v1.mjs \
-            --request "$work/request.json" \
-            --procedure "$work/procedure.json" \
-            --repository "$PRIVATE_REPOSITORY" \
-            --lock-ref "refs/heads/$LOCK_REF" \
-            --output "$work/receipt.json"
-          rc=$?
-          set -e
-          echo '--- canonical intake receipt ---'
-          cat "$work/receipt.json"
-          echo '--- end canonical intake receipt ---'
-          if [ "$rc" -ne 0 ]; then exit "$rc"; fi
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
-          python - <<'PY'
-          import json, os
-          p=os.path.join(os.environ['RUNNER_TEMP'],'h-earth-s26-intake','receipt.json')
-          r=json.load(open(p,encoding='utf-8'))
-          if r.get('result')!='ADMITTED_AND_LOCKED': raise SystemExit('CANONICAL_INTAKE_NOT_ADMITTED')
-          if r.get('operationId')!=os.environ['EXPECTED_OPERATION']: raise SystemExit('RECEIPT_OPERATION_MISMATCH')
-          lock=r.get('lock') or {}
-          if lock.get('lockScope')!=os.environ['EXPECTED_SCOPE']: raise SystemExit('RECEIPT_SCOPE_MISMATCH')
-          if lock.get('governingHead')!=os.environ['EXACT_PRIVATE_HEAD']: raise SystemExit('RECEIPT_HEAD_MISMATCH')
-          PY
-
-      - name: Exact post-write ledger readback
-        id: readback
+      - name: Verify exact active Gen305 lock and private main
         shell: bash
         env:
           GH_TOKEN: ${{ steps.token.outputs.token }}
         run: |
           set -euo pipefail
-          work="$RUNNER_TEMP/h-earth-s26-intake"
-          curl --fail-with-body --silent --show-error \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LEDGER_PATH?ref=$LOCK_REF" > "$work/readback-file.json"
-          curl --fail-with-body --silent --show-error \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$PRIVATE_REPOSITORY/git/ref/heads/$LOCK_REF" > "$work/lock-ref.json"
+          work="$RUNNER_TEMP/h-earth-s26-routing"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/git/ref/heads/main" > "$work/main.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=$LOCK_REF" > "$work/ledger-file.json"
           python - <<'PY'
-          import base64, json, os
-          work=os.path.join(os.environ['RUNNER_TEMP'],'h-earth-s26-intake')
-          receipt=json.load(open(os.path.join(work,'receipt.json'),encoding='utf-8'))
-          f=json.load(open(os.path.join(work,'readback-file.json'),encoding='utf-8'))
-          raw=base64.b64decode(''.join(f['content'].split())).decode('utf-8')
-          ledger=json.loads(raw)
-          lock=receipt['lock']
-          active=(ledger.get('activeScopes') or {}).get(lock['scopeHash'])
-          if not active: raise SystemExit('READBACK_ACTIVE_LOCK_MISSING')
-          for field in ('operationId','lockScope','scopeHash','governingHead','requestDigest','procedureLocatorDigest','lockGeneration','state','released'):
-              if active.get(field)!=lock.get(field): raise SystemExit('READBACK_LOCK_FIELD_MISMATCH:'+field)
-          if active.get('operationId')!=os.environ['EXPECTED_OPERATION']: raise SystemExit('READBACK_OPERATION_MISMATCH')
-          if ledger.get('lockGeneration')!=lock.get('lockGeneration'): raise SystemExit('READBACK_GENERATION_MISMATCH')
-          ref=json.load(open(os.path.join(work,'lock-ref.json'),encoding='utf-8'))['object']['sha']
-          with open(os.environ['GITHUB_OUTPUT'],'a') as o:
-              o.write('generation='+str(lock['lockGeneration'])+'\n')
-              o.write('blob='+f['sha']+'\n')
-              o.write('commit='+ref+'\n')
+          import base64,json,os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'h-earth-s26-routing')
+          main=json.load(open(os.path.join(work,'main.json')))['object']['sha']
+          if main!=os.environ['EXACT_PRIVATE_HEAD']: raise SystemExit('PRIVATE_MAIN_DRIFT')
+          f=json.load(open(os.path.join(work,'ledger-file.json')))
+          ledger=json.loads(base64.b64decode(''.join(f['content'].split())))
+          if str(ledger.get('lockGeneration'))!=os.environ['EXPECTED_GENERATION']: raise SystemExit('LEDGER_GENERATION_MISMATCH')
+          a=(ledger.get('activeScopes') or {}).get(os.environ['EXPECTED_SCOPE_HASH'])
+          if not a: raise SystemExit('GEN305_ACTIVE_SCOPE_MISSING')
+          if a.get('operationId')!=os.environ['EXPECTED_OPERATION'] or a.get('governingHead')!=os.environ['EXACT_PRIVATE_HEAD'] or a.get('state')!='ADMITTED_LOCKED' or a.get('released') is not False: raise SystemExit('GEN305_ACTIVE_SCOPE_INVALID')
           PY
 
-      - name: Publish bounded intake carrier receipt
+      - name: Execute canonical root mutation router for exact admitted paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/h-earth-s26-routing"
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_PRIVATE_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          cat > "$work/availability.json" <<'JSON'
+          {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"GEN305_ALREADY_ADMITTED_READ_ONLY_ROUTING_OCCURRENCE","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":true,"connectedGithubReadAvailable":true,"connectedGithubShaGuardedContentsWriteAvailable":false,"githubActionsExecutionAvailable":false}
+          JSON
+          cat > "$work/paths.txt" <<'PATHS'
+          h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md
+          h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs
+          showroom/globe/h-earth/render/functional-landscape-frame.js
+          showroom/globe/h-earth/render/geometry-distant-context.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          showroom/globe/h-earth/render/run8e-successor-environment.js
+          PATHS
+          node tools/repository-ai-entry-router.mjs \
+            --paths-file "$work/paths.txt" \
+            --mutation-intent \
+            --intake-availability-receipt "$work/availability.json" \
+            --task 'H-Earth admitted C3C3R5 S26 performance and world-envelope successor construction' \
+            --output "$work/router.json"
+          echo '--- canonical mutation routing receipt ---'
+          cat "$work/router.json"
+          echo '--- end routing receipt ---'
+          python - <<'PY'
+          import json,os
+          r=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'h-earth-s26-routing','router.json')))
+          if r.get('disposition')!='PASS': raise SystemExit('ROOT_ROUTER_NONPASS:'+str(r.get('disposition')))
+          routes=r.get('routes') or []
+          if len(routes)!=7: raise SystemExit('ROUTE_COUNT_MISMATCH')
+          if any(x.get('projectId')!='H_EARTH' or x.get('disposition')!='PASS' for x in routes): raise SystemExit('NON_H_EARTH_OR_NONPASS_ROUTE')
+          PY
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Publish routing receipt
         if: success()
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          GENERATION: ${{ steps.readback.outputs.generation }}
-          BLOB: ${{ steps.readback.outputs.blob }}
-          COMMIT: ${{ steps.readback.outputs.commit }}
         run: |
           set -euo pipefail
-          body="H_EARTH_C3C3R5_S26_PRIVATE_INTAKE_CARRIER_RECEIPT_V1\nresult: ADMITTED_AND_LOCKED\nreadbackVerified: true\noperationId: $EXPECTED_OPERATION\nlockGeneration: $GENERATION\ngoverningHead: $EXACT_PRIVATE_HEAD\npublicBaselineHead: $EXPECTED_PUBLIC_BASELINE\ncommittedLedgerBlobSha: $BLOB\nledgerRefCommitSha: $COMMIT\npublicProductMutationPerformed: false\nprivateMainMutationPerformed: false\nledgerWritePathCount: 1"
+          body='H_EARTH_C3C3R5_S26_MUTATION_ROUTING_RECEIPT_V1
+result: PASS
+operationId: H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_20260817_001
+lockGeneration: 305
+privateGoverningHead: 4c19e9ba783767f9324ab10df8a8541479f26c86
+pathCount: 7
+allRoutesProject: H_EARTH
+allRoutesDisposition: PASS
+repositoryMutationPerformed: false'
           gh api "repos/$GITHUB_REPOSITORY/issues/${{ github.event.pull_request.number }}/comments" -f body="$body" >/dev/null

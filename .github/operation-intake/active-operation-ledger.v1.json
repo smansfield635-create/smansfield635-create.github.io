@@ -2220,6 +2220,18 @@
       "scopeHash": "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e",
       "state": "ADMITTED_LOCKED"
     },
+    "fdfbe835cfd826d6524650cea12bec4ec4d44a04a0ce59d9af60c6f14b4178a7": {
+      "governingHead": "a16f4a38de6cd9f76ddf71a600b0ab525d64ecd8",
+      "lockGeneration": 1509,
+      "lockScope": "PUBLIC_PRODUCT:COMPASS:AWARDS_TRL_BRAIN_FULL_CYCLE_SUCCESSOR:V1",
+      "operationId": "COMPASS_AWARDS_TRL_BRAIN_FULL_CYCLE_SUCCESSOR_20260816_v1",
+      "procedureLocatorDigest": "3e70eaa73cdcb222ef7d7232e9c98fa0bf9635d188c069a3f9fc30242fa33345",
+      "released": false,
+      "requestDigest": "47cef3d6fb992a48211a92ab0cac37a434a089d2b8371cf30da4a53e8a36cfde",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "fdfbe835cfd826d6524650cea12bec4ec4d44a04a0ce59d9af60c6f14b4178a7",
+      "state": "ADMITTED_LOCKED"
+    },
     "ff7fed19d1b436352d85fa163e3abde7581be4299990e2f165479102ccf4ea74": {
       "governingHead": "4bf41fcd22e5acbf24491ed6586802f0cc6782b9",
       "lockGeneration": 933,
@@ -2236,7 +2248,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1508,
+  "lockGeneration": 1509,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

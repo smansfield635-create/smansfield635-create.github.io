@@ -12,14 +12,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Verify exact V28
+      - name: Verify exact V28 bytes
         shell: bash
         run: |
           set -euo pipefail
           f='showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4'
           test -s "$f"
           echo '42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62  '"$f" | sha256sum -c -
-          ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$f"
+          stat -c '%s bytes' "$f"
       - name: Upload exact V28 master
         uses: actions/upload-artifact@v4
         with:

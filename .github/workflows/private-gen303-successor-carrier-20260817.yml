@@ -102,6 +102,7 @@ jobs:
           cd "$GITHUB_WORKSPACE/private-control-plane"
           test "$(git rev-parse HEAD^{commit})" = "$EXACT_PRIVATE_HEAD"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          set +e
           node .github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs \
             --repository "$PRIVATE_REPOSITORY" \
             --lock-ref "refs/heads/$LOCK_REF" \
@@ -109,6 +110,12 @@ jobs:
             --request "$work/request.json" \
             --procedure "$work/procedure.json" \
             --output "$work/receipt.json"
+          rc=$?
+          set -e
+          echo '--- canonical successor receipt ---'
+          cat "$work/receipt.json"
+          echo '--- end canonical successor receipt ---'
+          if [ "$rc" -ne 0 ]; then exit "$rc"; fi
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
           python - <<'PY'
           import json, os

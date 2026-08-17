@@ -1,0 +1,94 @@
+name: H-Earth Gen305 S26 Registry Candidate Preflight
+
+on:
+  push:
+    branches:
+      - repair/h-earth-connected-preflight-successor-transport-20260817
+    paths:
+      - '.github/workflows/h-earth-gen305-s26-registry-candidate-preflight-20260817.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private binding read token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Check out authoritative private binding
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 4c19e9ba783767f9324ab10df8a8541479f26c86
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out candidate tooling successor
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 8c451f13bc468a6bc9c4729789938c17a134d1da
+          path: candidate-tooling
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate bounded successor and seven-path native preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/gen305-s26-registry-candidate"
+          mkdir -p "$work"
+          binding="$GITHUB_WORKSPACE/private-control-plane/.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json"
+          node --input-type=module - "$binding" <<'NODE'
+          import fs from 'node:fs';
+          const b=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          if(b.registeredBackendId!=='CONNECTED_GITHUB_EXACT_PUBLIC_H_EARTH_PREFLIGHT_V1') throw new Error('BACKEND_MISMATCH');
+          if(b.fixedToolingHead!=='012213de030780938ace85aae90e9330fac6d838') throw new Error('PREDECESSOR_BINDING_MISMATCH');
+          NODE
+          cd "$GITHUB_WORKSPACE/candidate-tooling"
+          test "$(git rev-parse HEAD^{commit})" = '8c451f13bc468a6bc9c4729789938c17a134d1da'
+          git merge-base --is-ancestor 012213de030780938ace85aae90e9330fac6d838 HEAD
+          test "$(git rev-parse HEAD:tools/h-earth-repository-registry-auto-preflight.mjs)" = '6d4af698ca75b96aaa660033e9ae24c704673eb7'
+          test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = 'b3c51381af190b6aab296db222296dc851cb7e9a'
+          node --experimental-default-type=module --input-type=module <<'NODE'
+          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const d=loadHEarthRepositoryRegistryValidatorDependencies();
+          if(d.identityVerified!==true) throw new Error('DEPENDENCY_IDENTITY_NONPASS');
+          if(d.gen305S26PreflightScopeVerification?.eligible!==true) throw new Error('GEN305_SCOPE_NONPASS');
+          NODE
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --mutation-intent \
+            --task 'Gen305 S26 candidate tooling preflight qualification' \
+            --path h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md \
+            --path h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs \
+            --path showroom/globe/h-earth/render/functional-landscape-frame.js \
+            --path showroom/globe/h-earth/render/geometry-distant-context.js \
+            --path showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js \
+            --path showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js \
+            --path showroom/globe/h-earth/render/run8e-successor-environment.js \
+            --output "$work/native-receipt.json"
+          node --input-type=module - "$work/native-receipt.json" <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          if(r.dependenciesVerified!==true) throw new Error('DEPENDENCIES_NOT_VERIFIED');
+          if(r.finalDisposition!=='PASS') throw new Error(`NATIVE_NONPASS:${r.finalDisposition}`);
+          if(r.continuation!=='SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') throw new Error('CONTINUATION_MISMATCH');
+          if(r.pathClassification?.classifications?.some(x=>x.classification!=='REGISTERED_H_EARTH_PATH')) throw new Error('UNREGISTERED_PATH_REMAINS');
+          NODE
+      - name: Upload candidate receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen305-s26-registry-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen305-s26-registry-candidate/native-receipt.json
+          if-no-files-found: error
+          retention-days: 90

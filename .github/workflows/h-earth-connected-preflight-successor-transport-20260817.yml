@@ -44,6 +44,33 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Diagnose exact subject dependency identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/h-earth-gen305-preflight"
+          mkdir -p "$work"
+          cd "$GITHUB_WORKSPACE/public-tooling"
+          git worktree add --detach "$work/subject" 2152ad18c1691c4056e9ae39795ad44228dbdc19
+          (
+            cd "$work/subject"
+            node --experimental-default-type=module --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const d = loadHEarthRepositoryRegistryValidatorDependencies();
+          fs.writeFileSync(process.env.RUNNER_TEMP + '/h-earth-gen305-preflight/dependency-diagnostic.json', JSON.stringify({
+            loaderId: d.loaderId,
+            identityVerified: d.identityVerified,
+            identityChecks: d.identityChecks,
+            liveExperienceAcceptedOccurrenceChecks: d.liveExperienceAcceptedOccurrenceChecks,
+            hc02PageExcellenceExecutionCarrierScopeChecks: d.hc02PageExcellenceExecutionCarrierScopeChecks,
+            stoppingCondition: d.stoppingCondition
+          }, null, 2) + '\n');
+          NODE
+          )
+          git worktree remove --force "$work/subject"
+          cat "$work/dependency-diagnostic.json"
+
       - name: Verify authoritative binding and execute exact Gen305 preflight
         shell: bash
         run: |
@@ -84,11 +111,13 @@ jobs:
           if (r.productMutationPerformed !== false || r.constructionAuthorityGranted !== false || r.branchCreated !== false || r.mergePerformed !== false || r.deploymentPerformed !== false || r.releasePerformed !== false) throw new Error('AUTHORITY_OR_SIDE_EFFECT_LEAK');
           NODE
 
-      - name: Upload exact preflight receipt
+      - name: Upload exact preflight evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-gen305-authoritative-preflight-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/h-earth-gen305-preflight/receipt.json
+          path: |
+            ${{ runner.temp }}/h-earth-gen305-preflight/receipt.json
+            ${{ runner.temp }}/h-earth-gen305-preflight/dependency-diagnostic.json
           if-no-files-found: error
           retention-days: 90

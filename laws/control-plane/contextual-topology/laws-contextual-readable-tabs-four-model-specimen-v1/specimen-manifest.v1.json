@@ -1,0 +1,161 @@
+{
+  "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
+  "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1",
+  "operationId": "LAWS_CONTEXTUAL_3D_FOUR_TAB_INTERACTION_REPAIR_V1_9476A_20260810_003",
+  "lockGeneration": 1045,
+  "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+  "branch": "agent/laws-four-tab-interaction-repair-9476a-003",
+  "preservedPositiveImplementationSource": {
+    "head": "3744df3801a536c6cc0f1153f4dff23408a893aa",
+    "priorOperation": "LAWS_CONTEXTUAL_3D_FOUR_TAB_STEP7_VISUAL_DELIVERY_V1_9476A_20260810_002",
+    "priorGeneration": 1035,
+    "priorDisposition": "PASS_CLOSED",
+    "pullRequest": 896,
+    "use": "POSITIVE_IMPLEMENTATION_SOURCE_NO_AUTHORITY_INHERITANCE",
+    "sourceBlobs": {
+      "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
+      "index.css": "0544dba0e40d899bd3c50469a7134f03475bab80",
+      "index.js": "1f3a6f5ba7152b16a1164fcd48ccb11220329f98"
+    }
+  },
+  "candidateBlobs": {
+    "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
+    "index.css": "9303a6ccd5faef48364cce66d03552efc4870a69",
+    "index.js": "c8da097983c5e2978c52421dfa415091beea7ef8"
+  },
+  "contentSource": {
+    "path": "laws/research/methods-and-models/showroom.js",
+    "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+    "gitBlobSha": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+    "semanticMutationAuthority": false
+  },
+  "router": {
+    "carrierRun": 31453719931,
+    "nativeReceiptDigest": "21d64f9d13d3996fb6e1ce257f4c278c68ea0c2be681a87d6be143c923cd1491",
+    "result": "PASS"
+  },
+  "pageExcellence": {
+    "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
+    "authorityHolder": "EXISTING_SOURCE_CONSTRUCTS_WITH_BOUNDED_ADAPTER",
+    "carrierRun": 31453846583,
+    "architectureBundleDigest": "11d79a00094932f7c8ce2086b443bac75ba69f3f665757077d2d6528dfcdd711",
+    "nativeReceiptDigest": "d8b27cb53be330c334685847d27bfdee71861b3028660b2c97a572794a35770e",
+    "result": "PASS"
+  },
+  "designLaw": {
+    "identity": "CONTEXTUAL_TAB_EQUALS_EUCLIDEAN_OBJECT",
+    "formula": "CONTENT = TAB = SPATIAL_OBJECT",
+    "tabObjectCount": 4,
+    "proxyObjectCount": 0,
+    "popupReplacementAllowed": false,
+    "carouselAllowed": false,
+    "objectIdentityInvariant": "ORBIT=FOCUS=SCROLL=PRACTICAL=ENGINEERING=EVIDENCE=INFORMATION"
+  },
+  "repairContract": {
+    "scope": "INTERACTION_ONLY_WITH_DIRECTLY_NECESSARY_FULL_ORBIT_SUPPORT",
+    "orbitTapDragArbitration": {
+      "thresholdCssPixels": 8,
+      "pointerCapture": "STABLE_ON_CONTEXT_SPACE",
+      "belowThresholdReleaseOnObject": "FOCUS_TOUCHED_OBJECT",
+      "crossThreshold": "ORBIT_OWNS_GESTURE_UNTIL_RELEASE",
+      "crossThresholdReleaseMayFocus": false,
+      "cardSurfaceOrbitDrag": true
+    },
+    "orbitYaw": {
+      "law": "THETA_Y_MOD_360_DEGREES",
+      "continuous": true,
+      "narrowYawClampAllowed": false
+    },
+    "focusedAdjacency": {
+      "swipeLeft": "(i+1) MOD 4",
+      "swipeRight": "(i-1+4) MOD 4",
+      "wrapIndefinitelyBothDirections": true
+    },
+    "axisLock": {
+      "focusedVertical": "SCROLL_ACTIVE_TAB_CONTENT_ONLY",
+      "focusedHorizontal": "OUTER_TAB_TRAVERSAL_ONLY",
+      "innerTabs": "DIRECT_TAP_ONLY"
+    },
+    "directlyNecessarySupport": {
+      "id": "FULL_ORBIT_READABLE_FACE_COMPENSATION",
+      "trigger": "SOURCE_BACKFACE_HIDDEN_CREATES_BLANK_OR_MIRRORED_REAR_HEMISPHERE_UNDER_UNRESTRICTED_YAW",
+      "mechanism": "COUNTER_YAW_READABLE_FACE_ONLY",
+      "preserves": [
+        "FOUR_OBJECT_COUNT",
+        "HOME_POSITIONS",
+        "DEPTH_VALUES",
+        "CONTENT",
+        "SAME_READER_SURFACE",
+        "OBJECT_IDENTITY",
+        "ARCHITECTURE_CLASS"
+      ]
+    }
+  },
+  "frozenBoundaries": {
+    "htmlSemanticContent": true,
+    "sourceGeometryAndCompositionPreserved": true,
+    "fullOrbitFacingCompensationOnly": true,
+    "fifthObject": false,
+    "newReaderSurface": false,
+    "replacementGeometry": false,
+    "architectureRedesign": false,
+    "semanticMutation": false,
+    "templateExtraction": false
+  },
+  "selectedModels": [
+    {"familyId":"structure","id":"collapse-qualified","title":"Qualified Collapse Predicate"},
+    {"familyId":"pressure","id":"pcr","title":"Pressure-to-Capacity Ratio"},
+    {"familyId":"closure","id":"mass-ledger","title":"Industrial Closure Equation"},
+    {"familyId":"method","id":"first","title":"F.I.R.S.T. Research Method"}
+  ],
+  "runtimeEvidence": {
+    "status": "PASS",
+    "sha256": "875e2c7eb09950f0e92f829ccd0f8aeb4d15f4553b514180e1fca382a2228086",
+    "viewports": {"phone":[412,915],"tablet":[834,1112],"desktop":[1440,1000]},
+    "checks": {
+      "tapBelowThresholdFocuses": true,
+      "dragAboveThresholdNeverFocusesOnRelease": true,
+      "cardSurfaceOrbitDrag": true,
+      "continuousFull360Yaw": true,
+      "modulo4WrapBothDirections": true,
+      "verticalFocusedScrollPreserved": true,
+      "focusedAxisLockPreserved": true,
+      "reducedMotionEquivalent": true,
+      "horizontalOverflow": false
+    }
+  },
+  "visualMotionAdmission": {
+    "status": "PASS",
+    "sha256": "018cf7d99d8f4c6b899c8ca394544c4ffda5181aaaad38020bd34abeb8525566",
+    "requiredViewports": ["PHONE","TABLET","DESKTOP"],
+    "fullOrbit": {
+      "quadrantsCovered": 4,
+      "surfaceFacing": "READABLE_FRONT_FACING_COMPENSATION",
+      "blankRearHemisphere": false,
+      "mirroredRearFaces": false,
+      "objectIdentityPreserved": true,
+      "depthFieldPreserved": true,
+      "compositionDisposition": "PASS"
+    },
+    "focusedAfterOrbit": {
+      "testedYawDegrees": 134.82,
+      "phoneViewportContained": true,
+      "tabletViewportContained": true,
+      "desktopViewportContained": true,
+      "horizontalOverflow": false
+    },
+    "temporalMotionEvidence": true,
+    "disposition": "PASS_FOR_COMMIT_PINNED_INSPECTION"
+  },
+  "authority": {
+    "boundedInteractionRepair": true,
+    "requalification": true,
+    "internalVisualMotionAdmission": true,
+    "commitPinnedInspectionDelivery": true,
+    "merge": false,
+    "production": false,
+    "semanticMutation": false,
+    "architectureRedesign": false,
+    "templateExtraction": false
+  }
+}

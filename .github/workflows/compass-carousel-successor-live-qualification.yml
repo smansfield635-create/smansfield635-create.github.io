@@ -5,8 +5,12 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/compass-carousel-successor-live-qualification.yml'
-      - 'assets/compass/compass.carousel.js'
-      - 'assets/compass/compass.carousel.css'
+      - 'assets/compass/compass.orbit-input.js'
+      - 'assets/compass/compass.statement-carousel.js'
+      - 'assets/compass/compass.brain-scene.js'
+      - 'assets/compass/compass.capability-carousel.js'
+      - 'assets/compass/compass.statement-carousel.css'
+      - 'assets/compass/compass.capability-carousel.css'
       - '.github/workflows/pages-direct-deploy.yml'
   workflow_dispatch:
 
@@ -32,8 +36,8 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import { chromium } from 'playwright';
-          const live='https://diamondgatebridge.com/?compass-successor-qualify=successor-v4';
-          const expectedVersion='successor-v4';
+          const live='https://diamondgatebridge.com/?compass-successor-qualify=successor-v5';
+          const expectedVersion='successor-v5';
           const browser=await chromium.launch({headless:true});
           const checks=[]; const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence}); let fatal=null;
           async function load(page,suffix='desktop'){
@@ -67,7 +71,7 @@ jobs:
 
             const enterHouse=page.locator('.compass-orbit-plaque[data-slot="front"] [data-enter-house]'); await enterHouse.scrollIntoViewIfNeeded(); await enterHouse.click(); await page.waitForTimeout(180);
             const nested0=await page.evaluate(()=>{const orbit=document.querySelector('[data-house-orbit]'),r=orbit?.getBoundingClientRect(),s=orbit?getComputedStyle(orbit):null;return{mode:document.querySelector('[data-capability-orbit]')?.dataset.capabilityMode||'',parent:document.querySelector('.compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'',houseHidden:orbit?.hidden??true,houseDisplay:s?.display||'',houseVisible:!!(r&&r.width>0&&r.height>0&&s.display!=='none'),members:[...document.querySelectorAll('.house-orbit-member')].map(x=>({id:x.dataset.member,slot:x.dataset.slot,href:x.querySelector('a[href]')?.getAttribute('href')||null}))};});
-            check('HOUSE_MEMBER_ORBIT_ACTIVE',nested0.mode==='house-members'&&nested0.houseHidden===false&&nested0.houseVisible&&nested0.members.length===3,nested0);check('JEEVES_ROUTE_PRESERVED',nested0.members.find(x=>x.id==='jeeves')?.href==='/showroom/globe/hearth/jeeves/',nested0.members);check('ELARA_NO_FABRICATED_ROUTE',nested0.members.find(x=>x.id==='elara')?.href===null,nested0.members);check('AUREN_NO_FABRICATED_ROUTE',nested0.members.find(x=>x.id==='auren')?.href===null,nested0.members);
+            check('HOUSE_MEMBER_ORBIT_ACTIVE',nested0.mode==='house-members'&&nested0.houseHidden===false&&nested0.houseVisible&&nested0.members.length===3,nested0);check('JEEVES_ROUTE_PRESERVED',nested0.members.find(x=>x.id==='jeeves')?.href==='/showroom/globe/hearth/jeeves/',nested0.members);check('ELARA_NO_FABRICATED_ROUTE',nested0.members.find(x=>x.id==='elara')?.href===null,nested0.members);check('AUREN_ROUTE_PRESERVED',nested0.members.find(x=>x.id==='auren')?.href==='/showroom/globe/hearth/auren/',nested0.members);
             const nested=page.locator('[data-house-orbit]'); await nested.scrollIntoViewIfNeeded(); await page.waitForTimeout(180); await swipe(page,nested,.72,.45,.25); await page.mouse.up(); await page.waitForTimeout(600); const nested1=await page.evaluate(()=>({mode:document.querySelector('[data-capability-orbit]')?.dataset.capabilityMode||'',parent:document.querySelector('.compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'',member:document.querySelector('.house-orbit-member[data-slot="front"]')?.dataset.member||'',rear:[...document.querySelectorAll('.house-orbit-member')].filter(x=>x.dataset.slot?.startsWith('rear')).filter(x=>{const r=x.getBoundingClientRect(),s=getComputedStyle(x);return r.width>0&&r.height>0&&Number(s.opacity)>.1}).length})); check('PARENT_NESTED_GESTURE_ISOLATION',nested1.mode==='house-members'&&nested1.parent==='house',nested1);check('NESTED_ONE_NEIGHBOR',nested1.member==='elara',nested1);check('NESTED_REAR_PEERS_VISIBLE',nested1.rear===2,nested1);
             const returnHouse=page.locator('.house-orbit-member[data-slot="front"] [data-return-house]');await returnHouse.click();await page.waitForTimeout(180);const returned=await page.evaluate(()=>({mode:document.querySelector('[data-capability-orbit]')?.dataset.capabilityMode||'',parent:document.querySelector('.compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'',houseHidden:document.querySelector('[data-house-orbit]')?.hidden??false}));check('RETURN_TO_PARENT_ORBIT',returned.mode==='orbit'&&returned.parent==='house'&&returned.houseHidden===true,returned);
             const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);check('DESKTOP_NO_HORIZONTAL_OVERFLOW',overflow<=2,overflow);check('NO_PAGE_ERRORS',errors.length===0,errors);await page.screenshot({path:'/tmp/compass-successor-desktop.png',fullPage:true});await ctx.close();

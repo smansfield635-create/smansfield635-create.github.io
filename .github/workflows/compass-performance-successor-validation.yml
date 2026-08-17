@@ -1,0 +1,65 @@
+name: Compass Performance Successor Validation
+
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'assets/compass/compass.orbit-input.js'
+      - 'assets/compass/compass.statement-carousel.js'
+      - 'assets/compass/compass.statement-carousel.css'
+      - 'assets/compass/compass.brain-scene.js'
+      - 'assets/compass/compass.capability-carousel.js'
+      - 'assets/compass/compass.capability-carousel.css'
+      - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
+      - '.github/workflows/compass-performance-successor-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify authority budgets and suspension contracts
+        run: node .github/ai-router/projects/compass/verify-performance-successor.mjs
+      - name: Verify JavaScript syntax
+        run: |
+          node --check assets/compass/compass.orbit-input.js
+          node --check assets/compass/compass.statement-carousel.js
+          node --check assets/compass/compass.brain-scene.js
+          node --check assets/compass/compass.capability-carousel.js
+      - name: Install Playwright outside repository contract
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - name: Qualify desktop tablet phone and suspension behavior
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-performance-host.log 2>&1 &
+          node --input-type=module <<'NODE'
+          import {chromium} from 'playwright';
+          const browser=await chromium.launch({headless:true});const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          for(const [name,width,height] of [['desktop',1280,800],['tablet',820,1180],['phone',390,844]]){
+            const context=await browser.newContext({viewport:{width,height}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});await page.waitForTimeout(800);
+            check(`${name}_STATEMENTS`,await page.locator('[data-statement-orbit] .compass-statement-object').count()===2,await page.locator('[data-statement-orbit] .compass-statement-object').count());
+            check(`${name}_CAPABILITIES`,await page.locator('.compass-orbit-plaque').count()===2,await page.locator('.compass-orbit-plaque').count());
+            check(`${name}_NO_OVERFLOW`,await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)<=2,await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth));
+            const brain=page.locator('[data-human-brain] canvas');check(`${name}_BRAIN_CANVAS`,await brain.count()===1,await brain.count());const pixels=await brain.evaluate(el=>el.toDataURL().length);check(`${name}_BRAIN_RENDERED_PIXELS`,pixels>1000,pixels);if(name==='desktop')await page.locator('.compass-orbit-plaque[data-slot="front"]').screenshot({path:'/tmp/compass-performance-brain-desktop.png'});
+            await page.locator('[data-capability-orbit]').evaluate(el=>{el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:1,clientX:300,clientY:40}));el.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,pointerId:1,clientX:120,clientY:42}));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:1,clientX:120,clientY:42}))});await page.waitForTimeout(400);
+            check(`${name}_ONE_NEIGHBOR`,await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability')==='house',await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability'));
+            await page.locator('[data-enter-house]').click();check(`${name}_HOUSE_GUIDANCE`,(await page.locator('.compass-capability-guidance').innerText()).includes('Swipe for another House guide'),await page.locator('.compass-capability-guidance').innerText());
+            check(`${name}_NO_ERRORS`,errors.length===0,errors);if(name==='desktop'||name==='phone')await page.screenshot({path:`/tmp/compass-performance-${name}.png`,fullPage:true});await context.close();
+          }
+          await browser.close();const failures=checks.filter(x=>!x.pass);console.log(JSON.stringify({schema:'COMPASS_PERFORMANCE_SUCCESSOR_RUNTIME_v1',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)},null,2));if(failures.length)process.exit(1);
+          NODE
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-performance-successor-visual-evidence
+          path: /tmp/compass-performance-*.png

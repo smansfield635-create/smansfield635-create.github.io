@@ -10,6 +10,8 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
+  issues: write
 
 jobs:
   preflight:
@@ -20,6 +22,7 @@ jobs:
       TOOLING_HEAD: 8c451f13bc468a6bc9c4729789938c17a134d1da
       NATIVE_TOOL_BLOB: 6d4af698ca75b96aaa660033e9ae24c704673eb7
       ACTIVATION_BLOB: b3c51381af190b6aab296db222296dc851cb7e9a
+      PR_NUMBER: '1263'
     steps:
       - name: Verify exact subject head exists
         shell: bash
@@ -46,6 +49,7 @@ jobs:
           test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = "$ACTIVATION_BLOB"
 
       - name: Execute exact Gen306 eleven-path native preflight diagnostically
+        id: native
         shell: bash
         working-directory: tooling
         run: |
@@ -66,11 +70,33 @@ jobs:
             --path showroom/globe/h-earth/render/run8e-successor-environment.js \
             --output "$RUNNER_TEMP/native-preflight.json"
           native_exit=$?
-          set -e
-          echo "nativeExit=$native_exit"
-          if test -s "$RUNNER_TEMP/native-preflight.json"; then
-            jq '{activationStatus,dependenciesVerified,finalDisposition,mutationMayProceed,issues,paths,pathResults,results}' "$RUNNER_TEMP/native-preflight.json"
+          echo "exit_code=$native_exit" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Publish compact native receipt to carrier PR
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          receipt="$RUNNER_TEMP/native-preflight.json"
+          if ! test -s "$receipt"; then
+            body="GEN306_NATIVE_PREFLIGHT_DIAGNOSTIC\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\nreceipt: MISSING"
           else
-            echo 'NATIVE_PREFLIGHT_RECEIPT_MISSING'
+            compact="$(jq -c '{activationStatus,dependenciesVerified,finalDisposition,mutationMayProceed,issues,pathResults,results,paths}' "$receipt")"
+            body="GEN306_NATIVE_PREFLIGHT_DIAGNOSTIC\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\ntoolingHead: $TOOLING_HEAD\nsubjectHead: $SUBJECT_HEAD\nreceipt: $compact"
           fi
-          exit "$native_exit"
+          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/pr-comment.json"
+          curl --fail-with-body --silent --show-error --request POST \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --data-binary "@$RUNNER_TEMP/pr-comment.json" >/dev/null
+
+      - name: Preserve native disposition
+        shell: bash
+        run: |
+          set -euo pipefail
+          test '${{ steps.native.outputs.exit_code }}' = '0'

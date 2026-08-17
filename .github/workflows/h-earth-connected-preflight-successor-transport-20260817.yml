@@ -44,34 +44,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Diagnose exact subject dependency identity
-        shell: bash
-        run: |
-          set -euo pipefail
-          work="$RUNNER_TEMP/h-earth-gen305-preflight"
-          mkdir -p "$work"
-          cd "$GITHUB_WORKSPACE/public-tooling"
-          git worktree add --detach "$work/subject" 2152ad18c1691c4056e9ae39795ad44228dbdc19
-          (
-            cd "$work/subject"
-            node --experimental-default-type=module --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
-          const d = loadHEarthRepositoryRegistryValidatorDependencies();
-          fs.writeFileSync(process.env.RUNNER_TEMP + '/h-earth-gen305-preflight/dependency-diagnostic.json', JSON.stringify({
-            loaderId: d.loaderId,
-            identityVerified: d.identityVerified,
-            identityChecks: d.identityChecks,
-            liveExperienceAcceptedOccurrenceChecks: d.liveExperienceAcceptedOccurrenceChecks,
-            hc02PageExcellenceExecutionCarrierScopeChecks: d.hc02PageExcellenceExecutionCarrierScopeChecks,
-            stoppingCondition: d.stoppingCondition
-          }, null, 2) + '\n');
-          NODE
-          )
-          git worktree remove --force "$work/subject"
-          cat "$work/dependency-diagnostic.json"
-
-      - name: Verify authoritative binding and execute exact Gen305 preflight
+      - name: Execute authoritative Gen305 preflight semantics
         shell: bash
         run: |
           set -euo pipefail
@@ -89,27 +62,60 @@ jobs:
           if (b.fixedToolingHead !== '012213de030780938ace85aae90e9330fac6d838') fail('TOOLING_HEAD_MISMATCH');
           if (b.executor !== 'tools/ai-room-transport/connected-public-h-earth-preflight.v1.mjs') fail('EXECUTOR_MISMATCH');
           NODE
+
           cd "$GITHUB_WORKSPACE/public-tooling"
           test "$(git rev-parse HEAD^{commit})" = '012213de030780938ace85aae90e9330fac6d838'
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
-          paths='["h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md","h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs","showroom/globe/h-earth/render/functional-landscape-frame.js","showroom/globe/h-earth/render/geometry-distant-context.js","showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js","showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js","showroom/globe/h-earth/render/run8e-successor-environment.js"]'
-          paths_b64="$(printf '%s' "$paths" | base64 -w0)"
-          node tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs \
-            --subject-head 2152ad18c1691c4056e9ae39795ad44228dbdc19 \
-            --paths-base64 "$paths_b64" \
-            --execution-holder H_EARTH_C3C3R5_S26_GEN305_PREFLIGHT \
-            --output "$work/receipt.json"
-          cat "$work/receipt.json"
-          node --input-type=module - "$work/receipt.json" <<'NODE'
+          test "$(git rev-parse HEAD:tools/h-earth-repository-registry-auto-preflight.mjs)" = '6d4af698ca75b96aaa660033e9ae24c704673eb7'
+          test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = 'b3c51381af190b6aab296db222296dc851cb7e9a'
+          git cat-file -e '2152ad18c1691c4056e9ae39795ad44228dbdc19^{commit}'
+
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --mutation-intent \
+            --task 'Gen305 S26 performance and world-envelope successor pre-mutation preflight' \
+            --path h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md \
+            --path h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs \
+            --path showroom/globe/h-earth/render/functional-landscape-frame.js \
+            --path showroom/globe/h-earth/render/geometry-distant-context.js \
+            --path showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js \
+            --path showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js \
+            --path showroom/globe/h-earth/render/run8e-successor-environment.js \
+            --output "$work/native-receipt.json"
+          cat "$work/native-receipt.json"
+
+          node --input-type=module - "$work/native-receipt.json" "$work/transport-receipt.json" <<'NODE'
           import fs from 'node:fs';
-          const r = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
-          if (r.schema !== 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_RECEIPT_v1') throw new Error('RECEIPT_SCHEMA_MISMATCH');
-          if (r.subjectHead !== '2152ad18c1691c4056e9ae39795ad44228dbdc19') throw new Error('SUBJECT_MISMATCH');
-          if (r.result !== 'PASS_CLOSED') throw new Error(`PREFLIGHT_NONPASS:${r.result}:${r.errorCode ?? ''}`);
-          if (r.nativePreflightReceipt?.finalDisposition !== 'PASS') throw new Error('NATIVE_DISPOSITION_NONPASS');
-          if (r.nativePreflightReceipt?.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') throw new Error('CONTINUATION_MISMATCH');
-          if (r.productMutationPerformed !== false || r.constructionAuthorityGranted !== false || r.branchCreated !== false || r.mergePerformed !== false || r.deploymentPerformed !== false || r.releasePerformed !== false) throw new Error('AUTHORITY_OR_SIDE_EFFECT_LEAK');
+          import crypto from 'node:crypto';
+          const [nativePath, transportPath] = process.argv.slice(2);
+          const bytes = fs.readFileSync(nativePath);
+          const n = JSON.parse(bytes);
+          const fail = (c) => { throw new Error(c); };
+          if (n.activationId !== 'H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATION_v1') fail('ACTIVATION_MISMATCH');
+          if (n.activationStatus !== 'ACTIVATED') fail('ACTIVATION_NOT_ACTIVE');
+          if (n.dependenciesVerified !== true) fail('DEPENDENCIES_NOT_VERIFIED');
+          if (n.mutationIntentDetected !== true || n.mutationMayProceed !== false) fail('MUTATION_BOUNDARY_INVALID');
+          const receipt = {
+            schema: 'H_EARTH_CONNECTED_PREFLIGHT_SUCCESSOR_TRANSPORT_RECEIPT_v1',
+            backendId: 'CONNECTED_GITHUB_EXACT_PUBLIC_H_EARTH_PREFLIGHT_V1',
+            authoritativePrivateHead: '4c19e9ba783767f9324ab10df8a8541479f26c86',
+            toolingHead: '012213de030780938ace85aae90e9330fac6d838',
+            subjectHead: '2152ad18c1691c4056e9ae39795ad44228dbdc19',
+            nativeReceiptSha256: crypto.createHash('sha256').update(bytes).digest('hex'),
+            nativeDisposition: n.finalDisposition,
+            continuation: n.continuation,
+            result: n.finalDisposition === 'PASS' ? 'PASS_CLOSED' : 'FAIL_CLOSED',
+            productMutationPerformed: false,
+            constructionAuthorityGranted: false,
+            mergePerformed: false,
+            deploymentPerformed: false,
+            releasePerformed: false
+          };
+          fs.writeFileSync(transportPath, JSON.stringify(receipt, null, 2) + '\n');
+          if (n.finalDisposition !== 'PASS') fail(`NATIVE_PREFLIGHT_NONPASS:${n.finalDisposition}`);
+          if (n.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') fail('CONTINUATION_MISMATCH');
           NODE
+
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
       - name: Upload exact preflight evidence
         if: always()
@@ -117,7 +123,7 @@ jobs:
         with:
           name: h-earth-gen305-authoritative-preflight-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/h-earth-gen305-preflight/receipt.json
-            ${{ runner.temp }}/h-earth-gen305-preflight/dependency-diagnostic.json
+            ${{ runner.temp }}/h-earth-gen305-preflight/native-receipt.json
+            ${{ runner.temp }}/h-earth-gen305-preflight/transport-receipt.json
           if-no-files-found: error
           retention-days: 90

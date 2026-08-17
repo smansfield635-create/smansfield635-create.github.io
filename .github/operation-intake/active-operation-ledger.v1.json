@@ -1719,6 +1719,18 @@
       "scopeHash": "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5",
       "state": "ADMITTED_LOCKED"
     },
+    "c409768312d3a3e6d47bc4d54003156029c87d0e4d25a4fd211b5213f80c8643": {
+      "governingHead": "a7b13dd5cebeafe6ce126d7df64c4088db7feb48",
+      "lockGeneration": 1524,
+      "lockScope": "COMPASS:FRONT_PAGE:LAWS_PROVENANCE:TRUE_3D_COMPASS:BRAIN_ANATOMY:PERFORMANCE",
+      "operationId": "COMPASS_FRONT_PAGE_CORRECTIVE_GEOMETRY_PROVENANCE_BRAIN_PERFORMANCE_20260817_004",
+      "procedureLocatorDigest": "b872adde3cdc15b6a3ee0997a1584a398336c15f9351954fb4ffec1ad4af1556",
+      "released": false,
+      "requestDigest": "0e38b0008130efbe19cd3f1c9153e194aa8d20b71abde988cc259f3b62571dec",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c409768312d3a3e6d47bc4d54003156029c87d0e4d25a4fd211b5213f80c8643",
+      "state": "ADMITTED_LOCKED"
+    },
     "c69e36ab428ae19cd898a5701a460585c7b2736289f8ac6684f5322da7861bbf": {
       "governingHead": "ffaaabdbd7691dd1079a7afdb81a62310fda706a",
       "lockGeneration": 180,
@@ -2321,7 +2333,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1523,
+  "lockGeneration": 1524,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

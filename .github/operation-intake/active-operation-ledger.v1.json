@@ -24,18 +24,6 @@
       "scopeHash": "01a314ffcd4d1ec341cedcc0f64e83a3304850361cab9869908dce31cb915862",
       "state": "ADMITTED_LOCKED"
     },
-    "01ae57ba677a4d5a503773c2ed435d7afe63b541371c7a7f0b83daeee4e8d0eb": {
-      "governingHead": "8fec7fbe1351b09d6205f5e3357fc26bdaa14971",
-      "lockGeneration": 1514,
-      "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR:V1",
-      "operationId": "COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1",
-      "procedureLocatorDigest": "1efc83c485ac2402f7cb363354954ba8b2e58780d0e75bd25856430e56805087",
-      "released": false,
-      "requestDigest": "24f916cd232dd2df4c87866ed4a47f0a53a54c7eeab15ca87f4965610ffff9c6",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "01ae57ba677a4d5a503773c2ed435d7afe63b541371c7a7f0b83daeee4e8d0eb",
-      "state": "ADMITTED_LOCKED"
-    },
     "030c5cb6224be06a78d1117e2cc3b8e4984de7aa4fea2dbb42736c90cf51fc86": {
       "governingHead": "888b70bd8a56767f0e33d9c083d412cd55c339f4",
       "lockGeneration": 346,
@@ -1692,6 +1680,35 @@
       "scopeHash": "c188071f90c9ba14844212f7fe7acf37e9ac8f63960c00d41c1f5d9fd326ec20",
       "state": "ADMITTED_LOCKED"
     },
+    "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5": {
+      "governingHead": "5166e04086efb2eb1bdd1ab043c18c84cef739ad",
+      "lockGeneration": 1515,
+      "lockScope": "PUBLIC_PRODUCT:COMPASS:VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR:V1",
+      "operationId": "COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "8fec7fbe1351b09d6205f5e3357fc26bdaa14971",
+        "lockGeneration": 1514,
+        "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR:V1",
+        "operationId": "COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1",
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5317532443",
+          "issue:1011#comment:5317597306",
+          "merge:5166e04086efb2eb1bdd1ab043c18c84cef739ad",
+          "deploy-run:32044163440"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_VOLUMETRIC_ARTIFACTS_SUCCESSOR_TRANSITION_20260817_v1"
+      },
+      "procedureLocatorDigest": "d341ba9ec50525df42df6073b50baee8e234b2400165ff45dcb902e602af6fa1",
+      "released": false,
+      "requestDigest": "5dc09f7e560fd45b7ebbacb2711ffec848469b428bb9b2f06818e25711b26e11",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c370775707f5e305edae644ac84f94383fdbc71ea5075ea061205afcb7413dd5",
+      "state": "ADMITTED_LOCKED"
+    },
     "c69e36ab428ae19cd898a5701a460585c7b2736289f8ac6684f5322da7861bbf": {
       "governingHead": "ffaaabdbd7691dd1079a7afdb81a62310fda706a",
       "lockGeneration": 180,
@@ -2236,7 +2253,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1514,
+  "lockGeneration": 1515,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -22298,6 +22315,36 @@
       "scopeHash": "fd0b0a281323520d67983588a20a4dd1af355bc1f8384b44326c02f0c5782a46",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "8fec7fbe1351b09d6205f5e3357fc26bdaa14971",
+      "lockGeneration": 1514,
+      "lockScope": "PUBLIC_PRODUCT:COMPASS:ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR:V1",
+      "operationId": "COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1",
+      "procedureLocatorDigest": "1efc83c485ac2402f7cb363354954ba8b2e58780d0e75bd25856430e56805087",
+      "released": true,
+      "requestDigest": "24f916cd232dd2df4c87866ed4a47f0a53a54c7eeab15ca87f4965610ffff9c6",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "01ae57ba677a4d5a503773c2ed435d7afe63b541371c7a7f0b83daeee4e8d0eb",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5317532443",
+          "issue:1011#comment:5317597306",
+          "merge:5166e04086efb2eb1bdd1ab043c18c84cef739ad",
+          "deploy-run:32044163440"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "5166e04086efb2eb1bdd1ab043c18c84cef739ad",
+        "successorLockGeneration": 1515,
+        "successorLockScope": "PUBLIC_PRODUCT:COMPASS:VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR:V1",
+        "successorOperationId": "COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1",
+        "transitionId": "COMPASS_VOLUMETRIC_ARTIFACTS_SUCCESSOR_TRANSITION_20260817_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout exact deployment head
         uses: actions/checkout@v4
@@ -31,9 +30,35 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD^{commit})" = "$GITHUB_SHA"
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Resolve authoritative Pages topology
+        id: topology
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages"
+          payload="$(curl --fail-with-body --silent --show-error \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "$api")"
+          mode="$(jq -r '.build_type // empty' <<<"$payload")"
+          branch="$(jq -r '.source.branch // empty' <<<"$payload")"
+          path="$(jq -r '.source.path // empty' <<<"$payload")"
+          if [ "$mode" = "legacy" ]; then
+            test "$branch" = "main"
+            test "$path" = "/"
+            echo "mode=legacy" >> "$GITHUB_OUTPUT"
+          elif [ "$mode" = "workflow" ]; then
+            echo "mode=workflow" >> "$GITHUB_OUTPUT"
+          else
+            echo "Unsupported GitHub Pages build_type: $mode" >&2
+            exit 1
+          fi
+          printf '%s\n' "$payload" > /tmp/compass-pages-topology.json
       - name: Prepare byte-identical site artifact
         shell: bash
         run: |
@@ -47,6 +72,7 @@ jobs:
             assets/compass/compass.statement-carousel.js
             assets/compass/compass.statement-carousel.css
             assets/compass/compass.brain-scene.js
+            assets/compass/compass.trophy-scene.js
             assets/compass/compass.capability-carousel.js
             assets/compass/compass.capability-carousel.css
           )
@@ -60,14 +86,14 @@ jobs:
           else
             candidate="$GITHUB_SHA"
           fi
-          COMPASS_DEPLOY_CANDIDATE="$candidate" node --input-type=module <<'NODE'
+          COMPASS_DEPLOY_CANDIDATE="$candidate" PAGES_MODE="${{ steps.topology.outputs.mode }}" node --input-type=module <<'NODE'
           import fs from 'node:fs';import crypto from 'node:crypto';
           const version='compass-root-award-finish-successor-v1',html=fs.readFileSync('index.html','utf8');
           if((html.match(new RegExp(version,'g'))||[]).length!==6)throw new Error('SUCCESSOR_REFERENCE_COUNT');
           if(html.includes('compass.carousel.js')||html.includes('compass.carousel.css'))throw new Error('LEGACY_REFERENCE');
           const lines=fs.readFileSync('/tmp/compass-source.sha256','utf8').trim().split('\n');
           const files=Object.fromEntries(lines.map(line=>{const [sha,...name]=line.trim().split(/\s+/);return[name.join(' '),sha]}));
-          const receipt={schema:'COMPASS_BYTE_IDENTICAL_PAGES_ARTIFACT_v1',operationId:'COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1',lockGeneration:1514,mergeHead:process.env.GITHUB_SHA,candidateHead:process.env.COMPASS_DEPLOY_CANDIDATE,productIdentity:version,files,manifestSha256:crypto.createHash('sha256').update(JSON.stringify(files)).digest('hex'),result:'PASS_CLOSED'};
+          const receipt={schema:'COMPASS_VOLUMETRIC_PAGES_BYTE_IDENTITY_RECEIPT_v1',operationId:'COMPASS_VOLUMETRIC_ARTIFACTS_BOUNDED_SUCCESSOR_20260817_v1',lockGeneration:1515,mergeHead:process.env.GITHUB_SHA,candidateHead:process.env.COMPASS_DEPLOY_CANDIDATE,protectedFloorHead:'5166e04086efb2eb1bdd1ab043c18c84cef739ad',productIdentity:version,deploymentTopology:process.env.PAGES_MODE==='legacy'?'DIRECT_GITHUB_PAGES_LEGACY_MAIN_ROOT':'DIRECT_GITHUB_PAGES_ACTIONS',files,manifestSha256:crypto.createHash('sha256').update(JSON.stringify(files)).digest('hex'),result:'PASS_CLOSED'};
           fs.writeFileSync('/tmp/compass-pages-byte-identity.json',JSON.stringify(receipt,null,2)+'\n');
           NODE
       - name: Upload deployment identity
@@ -78,10 +104,50 @@ jobs:
             /tmp/compass-source.sha256
             /tmp/compass-site.sha256
             /tmp/compass-pages-byte-identity.json
-      - name: Upload site artifact
+            /tmp/compass-pages-topology.json
+      - name: Configure workflow-based Pages
+        if: steps.topology.outputs.mode == 'workflow'
+        uses: actions/configure-pages@v5
+      - name: Upload workflow-based site artifact
+        if: steps.topology.outputs.mode == 'workflow'
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
-      - name: Deploy to GitHub Pages
+      - name: Deploy workflow-based GitHub Pages
+        if: steps.topology.outputs.mode == 'workflow'
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify repository-configured legacy Pages deployment
+        if: steps.topology.outputs.mode == 'legacy'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds/latest"
+          for attempt in $(seq 1 60); do
+            payload="$(curl --fail-with-body --silent --show-error \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$api")"
+            commit="$(jq -r '.commit // empty' <<<"$payload")"
+            status="$(jq -r '.status // empty' <<<"$payload")"
+            if [ "$commit" = "$GITHUB_SHA" ] && [ "$status" = "built" ]; then
+              printf '%s\n' "$payload" > /tmp/compass-pages-build.json
+              exit 0
+            fi
+            if [ "$commit" = "$GITHUB_SHA" ] && [ "$status" = "errored" ]; then
+              printf '%s\n' "$payload" >&2
+              exit 1
+            fi
+            sleep 10
+          done
+          echo "Timed out waiting for GitHub Pages to build exact head $GITHUB_SHA" >&2
+          exit 1
+      - name: Upload authoritative Pages build receipt
+        if: steps.topology.outputs.mode == 'legacy'
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-pages-authoritative-build
+          path: /tmp/compass-pages-build.json

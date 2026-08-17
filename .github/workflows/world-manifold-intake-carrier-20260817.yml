@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
-      CANDIDATE_HEAD: f484e601e5efaa0ae6d436101d42020d70973ce1
+      CANDIDATE_HEAD: 97c1c8aefbba0ed0f5a40d881429b0435e12660c
       BASE_HEAD: a7b13dd5cebeafe6ce126d7df64c4088db7feb48
     steps:
       - name: Checkout frozen base
@@ -46,7 +46,7 @@ jobs:
           cat "$RUNNER_TEMP/base-run8b.log"
           test "$code" -ne 0
           grep -q 'Run 8A predecessor must remain PASS' "$RUNNER_TEMP/base-run8b.log"
-      - name: Prove old Run8E harness encodes predecessor composition
+      - name: Prove old Run8E harness baseline disposition
         working-directory: base
         shell: bash
         run: |
@@ -55,7 +55,8 @@ jobs:
           code=$?
           echo "BASE_RUN8E_EXIT=$code"
           cat "$RUNNER_TEMP/base-run8e.log"
-          exit 0
+          test "$code" -ne 0
+          grep -q 'RUN_8E_VEGETATION_COUNT_EXPECTED_27_ACTUAL_16' "$RUNNER_TEMP/base-run8e.log"
       - name: Execute Gen306 architecture harness
         working-directory: candidate
         shell: bash
@@ -79,6 +80,7 @@ jobs:
           const viewport={width:320,height:180,pixelRatio:1};
           const frame=constructHEarthRun8ESuccessorEnvironmentFrame({camera,viewport,timeOfDayHours:15.25});
           if(frame.ok!==true) throw new Error(`FRAME:${JSON.stringify(frame.issues)}`);
+          if(frame.worldFarPlane!==4000||frame.run8CPresentationFarPlane!==768||frame.presentationDistanceDecoupledFromWorldEnvelope!==true) throw new Error('PRESENTATION_DISTANCE_DECOUPLING_INVALID');
           const evalResult=evaluateHEarthRun8EFrame(frame);
           if(evalResult.eligible!==true) throw new Error(`FRAME_EVAL:${JSON.stringify(evalResult.issues)}`);
           const plan=prepareHEarthRun8ERenderPlan(frame,viewport);
@@ -86,7 +88,7 @@ jobs:
           const raster=rasterizeHEarthRun8ERenderPlan(plan,frame);
           if(raster?.ok!==true) throw new Error(`RASTER:${JSON.stringify(raster?.issues)}`);
           if(raster.worldManifoldRepresentationPlanExecuted!==true||raster.singlePhysicalDepthDomainExecuted!==true) throw new Error('GEN306_RENDER_EXECUTION_FLAGS_INVALID');
-          console.log(JSON.stringify({frameStatus:frame.status,primitiveCount:frame.primitiveCount,topologySourceId:frame.topologySourceId,continuousWorldManifold:frame.continuousWorldManifold,renderPlanTriangles:plan.triangles?.length,raster:{width:raster.width,height:raster.height,skyPixelCount:raster.skyPixelCount,alphaClosed:raster.alphaClosed,singlePhysicalDepthDomainExecuted:raster.singlePhysicalDepthDomainExecuted,worldManifoldRepresentationPlanExecuted:raster.worldManifoldRepresentationPlanExecuted}}));
+          console.log(JSON.stringify({frameStatus:frame.status,primitiveCount:frame.primitiveCount,topologySourceId:frame.topologySourceId,continuousWorldManifold:frame.continuousWorldManifold,worldFarPlane:frame.worldFarPlane,run8CPresentationFarPlane:frame.run8CPresentationFarPlane,renderPlanTriangles:plan.triangles?.length,raster:{width:raster.width,height:raster.height,skyPixelCount:raster.skyPixelCount,alphaClosed:raster.alphaClosed,singlePhysicalDepthDomainExecuted:raster.singlePhysicalDepthDomainExecuted,worldManifoldRepresentationPlanExecuted:raster.worldManifoldRepresentationPlanExecuted}}));
           NODE
       - name: Verify protected source surfaces unchanged relative to base
         shell: bash

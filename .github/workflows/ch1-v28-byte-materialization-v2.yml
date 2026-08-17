@@ -1,0 +1,39 @@
+name: Chapter 01 V28 Byte Materialization v2
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  materialize:
+    if: github.head_ref == 'instrument/ch1-v28-byte-materialization-v2'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact V28 source commit
+        uses: actions/checkout@v4
+        with:
+          ref: 511ae1adc588d1a437cf570687040c4a56eec15f
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact V28 media identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          media='showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4'
+          test -s "$media"
+          test "$(stat -c %s "$media")" = '43602412'
+          echo '42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62  '"$media" | sha256sum -c -
+
+      - name: Upload exact V28 master only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter01-compass-v28-exact-master
+          path: showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

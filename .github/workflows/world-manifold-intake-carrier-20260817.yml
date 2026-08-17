@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     env:
-      CANDIDATE_HEAD: 97c1c8aefbba0ed0f5a40d881429b0435e12660c
+      CANDIDATE_HEAD: dbf2f3ec90faa59c09193e61a0d141481b68d758
       BASE_HEAD: a7b13dd5cebeafe6ce126d7df64c4088db7feb48
     steps:
       - name: Checkout frozen base
@@ -81,6 +81,7 @@ jobs:
           const frame=constructHEarthRun8ESuccessorEnvironmentFrame({camera,viewport,timeOfDayHours:15.25});
           if(frame.ok!==true) throw new Error(`FRAME:${JSON.stringify(frame.issues)}`);
           if(frame.worldFarPlane!==4000||frame.run8CPresentationFarPlane!==768||frame.presentationDistanceDecoupledFromWorldEnvelope!==true) throw new Error('PRESENTATION_DISTANCE_DECOUPLING_INVALID');
+          if(!(frame.run8CPresentation?.summary?.hazeRange>0)) throw new Error(`HAZE_RANGE_NOT_POSITIVE:${frame.run8CPresentation?.summary?.hazeRange}`);
           const evalResult=evaluateHEarthRun8EFrame(frame);
           if(evalResult.eligible!==true) throw new Error(`FRAME_EVAL:${JSON.stringify(evalResult.issues)}`);
           const plan=prepareHEarthRun8ERenderPlan(frame,viewport);
@@ -88,7 +89,7 @@ jobs:
           const raster=rasterizeHEarthRun8ERenderPlan(plan,frame);
           if(raster?.ok!==true) throw new Error(`RASTER:${JSON.stringify(raster?.issues)}`);
           if(raster.worldManifoldRepresentationPlanExecuted!==true||raster.singlePhysicalDepthDomainExecuted!==true) throw new Error('GEN306_RENDER_EXECUTION_FLAGS_INVALID');
-          console.log(JSON.stringify({frameStatus:frame.status,primitiveCount:frame.primitiveCount,topologySourceId:frame.topologySourceId,continuousWorldManifold:frame.continuousWorldManifold,worldFarPlane:frame.worldFarPlane,run8CPresentationFarPlane:frame.run8CPresentationFarPlane,renderPlanTriangles:plan.triangles?.length,raster:{width:raster.width,height:raster.height,skyPixelCount:raster.skyPixelCount,alphaClosed:raster.alphaClosed,singlePhysicalDepthDomainExecuted:raster.singlePhysicalDepthDomainExecuted,worldManifoldRepresentationPlanExecuted:raster.worldManifoldRepresentationPlanExecuted}}));
+          console.log(JSON.stringify({frameStatus:frame.status,primitiveCount:frame.primitiveCount,topologySourceId:frame.topologySourceId,continuousWorldManifold:frame.continuousWorldManifold,worldFarPlane:frame.worldFarPlane,run8CPresentationFarPlane:frame.run8CPresentationFarPlane,hazeRange:frame.run8CPresentation.summary.hazeRange,renderPlanTriangles:plan.triangles?.length,raster:{width:raster.width,height:raster.height,skyPixelCount:raster.skyPixelCount,alphaClosed:raster.alphaClosed,singlePhysicalDepthDomainExecuted:raster.singlePhysicalDepthDomainExecuted,worldManifoldRepresentationPlanExecuted:raster.worldManifoldRepresentationPlanExecuted}}));
           NODE
       - name: Verify protected source surfaces unchanged relative to base
         shell: bash
@@ -98,7 +99,10 @@ jobs:
             h-earth-3d/terrain/h-earth.terrain-field.js \
             h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js \
             showroom/globe/h-earth/render/geometry-kernel.js \
-            showroom/globe/h-earth/render/geometry-kernel.south.js
+            showroom/globe/h-earth/render/geometry-kernel.south.js \
+            h-earth-3d/environment/h-earth.atmosphere-state.js \
+            showroom/globe/h-earth/render/environment-atmosphere.js \
+            showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js
           do
             test "$(git -C base rev-parse HEAD:$path)" = "$(git -C candidate rev-parse HEAD:$path)"
           done

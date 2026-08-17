@@ -1,0 +1,77 @@
+{
+  "schema": "DIAMOND_GATE_JEEVES_SPEECH_PROGRESSION_REGISTRY_v1",
+  "status": "ACTIVE_CONTINUITY_REGISTRY",
+  "installedMainAtRegistryBase": "8186d7df982c1101c07a930feca3569e1e2df1c4",
+  "purpose": "Provide one durable repository entrypoint for progressively building, comparing, and qualifying the Diamond Gate-owned Jeeves speech kernel from G0 through G5 and later admitted successors.",
+  "governingArchitecture": "DETERMINISTIC_SPEECH_PHYSICS + DIAMOND_GATE_CHARACTER_CONTROL + NARROW_INTERNALLY_TRAINED_RESIDUALS",
+  "generationLaw": "Each successor preserves its predecessor as comparison authority; no generation silently replaces historical evidence.",
+  "generations": [
+    {
+      "generation": "G0",
+      "role": "ROBOTIC_BASELINE",
+      "meaning": "Intelligible deterministic synthesis baseline; retained as the acoustic/control comparison origin."
+    },
+    {
+      "generation": "G1",
+      "role": "TIMING_PAUSE_CONTROL",
+      "record": "G0_G1_BASELINE_RECORD.v1.json",
+      "qualification": "JEEVES_COMPASS_G1_QUALIFICATION.v1.json"
+    },
+    {
+      "generation": "G2",
+      "role": "STRESS_F0_ENERGY_CONTROL",
+      "record": "G2_BOUNDARY_RECORD.v1.json",
+      "qualification": "JEEVES_COMPASS_G2_QUALIFICATION.v1.json"
+    },
+    {
+      "generation": "G3",
+      "role": "MICRO_PROSODY_CONTROL",
+      "record": "G3_BOUNDARY_RECORD.v1.json",
+      "qualification": "JEEVES_COMPASS_G3_QUALIFICATION.v1.json"
+    },
+    {
+      "generation": "G4",
+      "role": "COARTICULATION_SPECTRAL_DYNAMICS",
+      "record": "G4_BOUNDARY_RECORD.v1.json",
+      "qualification": "JEEVES_COMPASS_G4_QUALIFICATION.v1.json",
+      "currentPredictor": true
+    },
+    {
+      "generation": "G5",
+      "role": "NARROW_ACOUSTIC_RESIDUAL",
+      "record": "G5_DECISION_RECORD.v1.json",
+      "qualification": "JEEVES_COMPASS_G5_QUALIFICATION.v1.json",
+      "referenceAdmission": "G5_REFERENCE_ADMISSION_CONTRACT.v1.json",
+      "status": "DECISION_COMPLETE_RESIDUAL_NOT_ADMITTED"
+    }
+  ],
+  "fixedQualificationCorpus": [
+    "Navigation requires orientation.",
+    "Without orientation, there is no navigation.",
+    "Here at Diamond Gate Bridge, we define our questions through their connections.",
+    "And the stars provide the answers.",
+    "Reality itself relies on their existence.",
+    "Therefore.",
+    "You're never lost, no matter how far from home.",
+    "Nothing navigates better than a compass."
+  ],
+  "comparisonRequirements": [
+    "Preserve G0 as the recognizable robotic baseline.",
+    "Preserve each admitted generation independently for A/B comparison.",
+    "Render the same fixed Compass corpus when qualifying a successor unless a separately admitted corpus revision exists.",
+    "Record source identity, configuration, hashes, and owner-review disposition for every review artifact.",
+    "Never promote a successor merely because it is newer; owner naturalness review remains required."
+  ],
+  "g5TrainingBoundary": {
+    "predictor": "G4",
+    "requiredTarget": "ONE_DIAMOND_GATE_OWNED_OR_EXPLICITLY_AUTHORIZED_ORIGINAL_JEEVES_REFERENCE_UTTERANCE",
+    "corpusBinding": "Must match one fixed Compass beat for first fit.",
+    "targetRepresentation": "FRAME_ALIGNED_LOG_MAGNITUDE_SPECTRAL_ENVELOPE_PLUS_PERIODICITY_NOISE_CORRECTIONS",
+    "rawUnalignedWaveformSubtraction": "PROHIBITED",
+    "syntheticPseudoReferenceAsGroundTruth": "PROHIBITED",
+    "externalPretrainedWeights": "PROHIBITED",
+    "thirdPartyVoiceCloning": "PROHIBITED"
+  },
+  "nextLawfulAction": "CAPTURE_OR_BIND_ONE_ORIGINAL_JEEVES_REFERENCE_UTTERANCE_MATCHING_A_FIXED_COMPASS_BEAT; RECORD AUTHORIZATION_AND_PROVENANCE; HASH_FREEZE; THEN ADMIT_G5_RESIDUAL_FIT_AS_A_SEPARATE BOUNDARY",
+  "publicProductMutation": false
+}

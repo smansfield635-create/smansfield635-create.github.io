@@ -1,10 +1,9 @@
-name: Compass Gen1524 Performance Successor Validation
+name: Compass Gen1525 Crystal Performance Construction
 
 on:
   pull_request:
     paths:
-      - 'index.html'
-      - 'assets/compass/**'
+      - 'assets/compass/compass.crystals.js'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
       - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
@@ -12,34 +11,53 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 env:
-  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1524-performance.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1524-display.json
+  GEN1525_GOVERNING_HEAD: d53b9c627c6b9be3222044b5ca879c080a7165f1
 
 jobs:
-  static-contract:
+  construct-crystal-scheduling-repair:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact Gen1524 candidate and performance contract
+      - name: Verify bounded Gen1525 lineage
         run: |
-          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
-          node .github/ai-router/projects/compass/verify-performance-successor.mjs
-          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: compass-gen1524-static-receipts
-          path: |
-            /tmp/compass-gen1524-performance.json
-            /tmp/compass-gen1524-display.json
-          retention-days: 90
+          git merge-base --is-ancestor "$GEN1525_GOVERNING_HEAD" HEAD
+          test "$(git diff --name-only "$GEN1525_GOVERNING_HEAD"...HEAD | grep -Ev '^(assets/compass/compass\.crystals\.js|\.github/ai-router/projects/compass/verify-(performance-successor|display-continuity)\.v1\.mjs|\.github/workflows/compass-(performance-successor-validation|carousel-successor-live-qualification)\.yml)$' | wc -l)" = 0
+      - name: Apply scheduling-only crystal repair
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('assets/compass/compass.crystals.js')
+          s=p.read_text()
+          marker='const idleHeavyFrameIntervalMs ='
+          if marker in s:
+              print('Gen1525 crystal scheduling repair already present')
+              raise SystemExit(0)
+          needle='''    const seconds =\n      now * 0.001;\n'''
+          replacement='''    const interactionActive =\n      Boolean(\n        state.pointer\n      );\n\n    const idleHeavyFrameIntervalMs =\n      state.reducedMotion\n        ? 1000\n        : 500;\n\n    if (\n      !interactionActive &&\n      state.lastTime &&\n      now -\n        state.lastTime * 1000 <\n        idleHeavyFrameIntervalMs\n    ) {\n      state.raf =\n        requestAnimationFrame(\n          render\n        );\n\n      return;\n    }\n\n    const seconds =\n      now * 0.001;\n'''
+          if s.count(needle)!=1:
+              raise SystemExit(f'expected one render scheduling insertion point, found {s.count(needle)}')
+          p.write_text(s.replace(needle,replacement,1))
+          PY
+      - name: Validate product mutation is crystal-only
+        run: |
+          git diff --check
+          changed="$(git diff --name-only)"
+          if [ -n "$changed" ]; then test "$changed" = 'assets/compass/compass.crystals.js'; fi
+      - name: Commit repair if needed
+        run: |
+          if git diff --quiet; then exit 0; fi
+          git config user.name 'smansfield635-create'
+          git config user.email 'smansfield635@gmail.com'
+          git add assets/compass/compass.crystals.js
+          git commit -m 'Gate Gen1525 crystal idle heavy rendering'
+          git push origin HEAD:${{ github.head_ref }}

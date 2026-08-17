@@ -19,7 +19,6 @@ jobs:
       PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
       PRIVATE_HEAD: 804e2c31c10ab04a73c1cfbae883892735a62f3d
       REQUEST_COMMENT_ID: '5321245679'
-      CALLBACK_ISSUE: '277'
     steps:
       - name: Mint exact private execution token
         id: token
@@ -30,7 +29,6 @@ jobs:
           owner: smansfield635-create
           repositories: geodiametrics1
           permission-contents: write
-          permission-issues: write
 
       - name: Verify exact private governing head
         shell: bash
@@ -72,7 +70,6 @@ jobs:
 
       - name: Execute repository-owned canonical intake transform
         id: intake
-        continue-on-error: true
         shell: bash
         env:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
@@ -81,19 +78,13 @@ jobs:
           set -euo pipefail
           node private-control-plane/tools/operation-intake/canonical-operation-intake-transport.v1.mjs --input "$RUNNER_TEMP/intake-envelope.json" --output "$RUNNER_TEMP/intake-receipt.json"
 
-      - name: Verify native admission and publish receipt
-        if: always()
+      - name: Verify native admission
         shell: bash
-        env:
-          GH_TOKEN: ${{ steps.token.outputs.token }}
         run: |
           set -euo pipefail
           test -s "$RUNNER_TEMP/intake-receipt.json"
           native="$(jq -r '.canonicalReceiptJson.result // .result // ""' "$RUNNER_TEMP/intake-receipt.json")"
           generation="$(jq -r '.canonicalReceiptJson.lock.lockGeneration // .canonicalReceiptJson.lockGeneration // ""' "$RUNNER_TEMP/intake-receipt.json")"
-          scope="$(jq -r '.canonicalReceiptJson.lock.lockScope // .canonicalReceiptJson.lockScope // ""' "$RUNNER_TEMP/intake-receipt.json")"
-          body="WORLD_MANIFOLD_CANONICAL_INTAKE_EXECUTION_RESULT_20260817\noperationId: H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002\nresult: $native\nlockGeneration: $generation\nlockScope: $scope\nrunId: $GITHUB_RUN_ID\ntransportOnly: true\nproductMutation: false"
-          jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/result.json"
-          curl --fail-with-body --silent --show-error --request POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/$CALLBACK_ISSUE/comments" --data-binary "@$RUNNER_TEMP/result.json" >/dev/null
-          test '${{ steps.intake.outcome }}' = 'success'
+          echo "nativeResult=$native"
+          echo "lockGeneration=$generation"
           test "$native" = 'ADMITTED_AND_LOCKED'

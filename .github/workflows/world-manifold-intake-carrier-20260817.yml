@@ -1,4 +1,4 @@
-name: World Manifold Gen306 Authoritative Preflight Carrier
+name: World Manifold Gen306 Tooling Successor Qualification
 
 on:
   push:
@@ -14,23 +14,24 @@ permissions:
   issues: write
 
 jobs:
-  preflight:
+  qualify:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
       SUBJECT_HEAD: a7b13dd5cebeafe6ce126d7df64c4088db7feb48
-      TOOLING_HEAD: 8c451f13bc468a6bc9c4729789938c17a134d1da
+      TOOLING_HEAD: 46b2cca200f1db036cae8288329f870a8336505a
       NATIVE_TOOL_BLOB: 6d4af698ca75b96aaa660033e9ae24c704673eb7
       ACTIVATION_BLOB: b3c51381af190b6aab296db222296dc851cb7e9a
       PR_NUMBER: '1263'
     steps:
-      - name: Verify exact subject head exists
+      - name: Verify exact subject and tooling identities
         shell: bash
         run: |
           set -euo pipefail
           test -n "$(git ls-remote https://github.com/smansfield635-create/smansfield635-create.github.io.git | grep "$SUBJECT_HEAD" || true)"
+          test -n "$(git ls-remote https://github.com/smansfield635-create/smansfield635-create.github.io.git | grep "$TOOLING_HEAD" || true)"
 
-      - name: Checkout exact reconciled preflight tooling
+      - name: Checkout exact candidate tooling head
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/smansfield635-create.github.io
@@ -39,7 +40,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Verify frozen native tool and activation identities
+      - name: Verify immutable native tooling and new registry scope
         shell: bash
         working-directory: tooling
         run: |
@@ -47,8 +48,18 @@ jobs:
           test "$(git rev-parse HEAD)" = "$TOOLING_HEAD"
           test "$(git rev-parse HEAD:tools/h-earth-repository-registry-auto-preflight.mjs)" = "$NATIVE_TOOL_BLOB"
           test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = "$ACTIVATION_BLOB"
+          node --input-type=module <<'NODE'
+          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          import { verifyHEarthGen306WorldManifoldPreflightScopeRegistration } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen306-world-manifold-preflight-scope-registration.js';
+          const scope = verifyHEarthGen306WorldManifoldPreflightScopeRegistration();
+          const loaded = loadHEarthRepositoryRegistryValidatorDependencies();
+          if (scope.eligible !== true) throw new Error(JSON.stringify(scope));
+          if (loaded.identityVerified !== true) throw new Error('LOADER_IDENTITY_NOT_VERIFIED');
+          if (loaded.gen306WorldManifoldPreflightScopeVerification?.eligible !== true) throw new Error('GEN306_SCOPE_NOT_LOADED');
+          console.log(JSON.stringify({scope:scope.status,loader:loaded.loaderId,identityVerified:loaded.identityVerified}));
+          NODE
 
-      - name: Execute exact Gen306 eleven-path native preflight diagnostically
+      - name: Execute exact eleven-path native preflight
         id: native
         shell: bash
         working-directory: tooling
@@ -56,7 +67,7 @@ jobs:
           set +e
           node tools/h-earth-repository-registry-auto-preflight.mjs \
             --mutation-intent \
-            --task 'Gen306 world-manifold architecture installation pre-mutation preflight' \
+            --task 'Gen306 world-manifold architecture installation candidate tooling qualification' \
             --path h-earth-3d/terrain/h-earth.world-manifold-domain.js \
             --path h-earth-3d/integration/h-earth.world-representation-plan.js \
             --path h-earth-3d/integration/h-earth.world-manifold-union-admission.js \
@@ -73,7 +84,7 @@ jobs:
           echo "exit_code=$native_exit" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Publish exact native diagnostic fields to carrier PR
+      - name: Publish compact qualification receipt
         if: always()
         shell: bash
         env:
@@ -81,12 +92,12 @@ jobs:
         run: |
           set -euo pipefail
           receipt="$RUNNER_TEMP/native-preflight.json"
-          if ! test -s "$receipt"; then
-            body="GEN306_NATIVE_PREFLIGHT_DETAIL\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\nreceipt: MISSING"
+          if test -s "$receipt"; then
+            compact="$(jq -c '{activationStatus,dependenciesVerified,finalDisposition,continuation,pathClassification:{classifications:.pathClassification.classifications},validatorReceipt:{finalDisposition:.validatorReceipt.finalDisposition,failureCodes:.validatorReceipt.failureCodes,derivationTrace:.validatorReceipt.derivationTrace}}' "$receipt")"
           else
-            compact="$(jq -c '{activationStatus,dependenciesVerified,finalDisposition,continuation,pathClassification,scopePreview,validatorReceipt}' "$receipt")"
-            body="GEN306_NATIVE_PREFLIGHT_DETAIL\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\ntoolingHead: $TOOLING_HEAD\nsubjectHead: $SUBJECT_HEAD\nreceipt: $compact"
+            compact='{"receipt":"MISSING"}'
           fi
+          body="GEN306_TOOLING_SUCCESSOR_QUALIFICATION\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\ntoolingHead: $TOOLING_HEAD\nreceipt: $compact"
           jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/pr-comment.json"
           curl --fail-with-body --silent --show-error --request POST \
             -H 'Accept: application/vnd.github+json' \
@@ -95,8 +106,12 @@ jobs:
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
             --data-binary "@$RUNNER_TEMP/pr-comment.json" >/dev/null
 
-      - name: Preserve native disposition
+      - name: Require native PASS
         shell: bash
         run: |
           set -euo pipefail
           test '${{ steps.native.outputs.exit_code }}' = '0'
+          test "$(jq -r '.activationStatus' "$RUNNER_TEMP/native-preflight.json")" = 'ACTIVATED'
+          test "$(jq -r '.dependenciesVerified' "$RUNNER_TEMP/native-preflight.json")" = 'true'
+          test "$(jq -r '.finalDisposition' "$RUNNER_TEMP/native-preflight.json")" = 'PASS'
+          test "$(jq '[.pathClassification.classifications[] | select(.registered != true)] | length' "$RUNNER_TEMP/native-preflight.json")" = '0'

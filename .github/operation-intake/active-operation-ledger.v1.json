@@ -156,18 +156,6 @@
       "scopeHash": "130b91450800662195c41e6efddd8931e868979b4ed76bae359a9cfe88de00e9",
       "state": "ADMITTED_LOCKED"
     },
-    "136a2997ff80725e92183cf95743a8406186e47838521a684188e37da077d9dc": {
-      "governingHead": "48132ad9f44b8b838bb7dffaf7638b9ca072d0fd",
-      "lockGeneration": 1527,
-      "lockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_AND_CRYSTALS:RESOURCE_SCHEDULING_PERFORMANCE_ONLY",
-      "operationId": "COMPASS_MIRRORLAND_CRYSTAL_SCHEDULING_PERFORMANCE_CONTINUATION_20260817_009",
-      "procedureLocatorDigest": "98e51f26ad2fc8d090014a5eb7d22bff99843379cce9c703ab24d3f065a406c0",
-      "released": false,
-      "requestDigest": "8492c093c6803f992a0d9a7687e72f73cdf6c4b17fb5b09c53a43b9a7032e696",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "136a2997ff80725e92183cf95743a8406186e47838521a684188e37da077d9dc",
-      "state": "ADMITTED_LOCKED"
-    },
     "147dc7c04b0ab95c257cf99e988904dac93874d34af5d35be4a69b8cfe1dcf2b": {
       "governingHead": "3e91d0f94a762d99c5a614e528612db40827fa19",
       "lockGeneration": 247,
@@ -838,6 +826,35 @@
       "requestDigest": "2ec2e9519751bad55e401cecc1d508cce5f5640bbb516cf985cd9182207a5675",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "68f8bd53a5e2887ce30f0e59983668c6d44e89715fa9e3801e7217800a01c9e7",
+      "state": "ADMITTED_LOCKED"
+    },
+    "6921a6a55ff2a47a5b425365486156dbd661f2cc4876bdec2f66fad921ee7483": {
+      "governingHead": "fbeca8933505da678534a26167103ad77d8c7f5f",
+      "lockGeneration": 1529,
+      "lockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_ANIMATION_MODERNIZATION_AND_CRYSTAL_SCHEDULING",
+      "operationId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_20260817_011",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "48132ad9f44b8b838bb7dffaf7638b9ca072d0fd",
+        "lockGeneration": 1527,
+        "lockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_AND_CRYSTALS:RESOURCE_SCHEDULING_PERFORMANCE_ONLY",
+        "operationId": "COMPASS_MIRRORLAND_CRYSTAL_SCHEDULING_PERFORMANCE_CONTINUATION_20260817_009",
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5321452307",
+          "issue:1011#comment:5321383788",
+          "issue:1011#comment:5321387102",
+          "issue:1011#comment:5321510923"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_TRANSITION_20260817_011"
+      },
+      "procedureLocatorDigest": "9af8d466c5da60f106346833f5ab09d3ea458311b197a65189ee4022b0b7172d",
+      "released": false,
+      "requestDigest": "53c6982bcd33351d86785cda2fd0777f3cce26c59864458d9951d9809fc48474",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6921a6a55ff2a47a5b425365486156dbd661f2cc4876bdec2f66fad921ee7483",
       "state": "ADMITTED_LOCKED"
     },
     "69428db25006e85a7e3d13ba285b67e282268f024f57830f9cb9c95f757ead70": {
@@ -2369,7 +2386,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1528,
+  "lockGeneration": 1529,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -22673,6 +22690,36 @@
       "scopeHash": "6921a6a55ff2a47a5b425365486156dbd661f2cc4876bdec2f66fad921ee7483",
       "state": "TERMINAL",
       "terminalDisposition": "VOIDED"
+    },
+    {
+      "governingHead": "48132ad9f44b8b838bb7dffaf7638b9ca072d0fd",
+      "lockGeneration": 1527,
+      "lockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_AND_CRYSTALS:RESOURCE_SCHEDULING_PERFORMANCE_ONLY",
+      "operationId": "COMPASS_MIRRORLAND_CRYSTAL_SCHEDULING_PERFORMANCE_CONTINUATION_20260817_009",
+      "procedureLocatorDigest": "98e51f26ad2fc8d090014a5eb7d22bff99843379cce9c703ab24d3f065a406c0",
+      "released": true,
+      "requestDigest": "8492c093c6803f992a0d9a7687e72f73cdf6c4b17fb5b09c53a43b9a7032e696",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "136a2997ff80725e92183cf95743a8406186e47838521a684188e37da077d9dc",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5321452307",
+          "issue:1011#comment:5321383788",
+          "issue:1011#comment:5321387102",
+          "issue:1011#comment:5321510923"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "fbeca8933505da678534a26167103ad77d8c7f5f",
+        "successorLockGeneration": 1529,
+        "successorLockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_ANIMATION_MODERNIZATION_AND_CRYSTAL_SCHEDULING",
+        "successorOperationId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_20260817_011",
+        "transitionId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_TRANSITION_20260817_011"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

@@ -1,37 +1,54 @@
-name: Compass Performance Successor Validation
+name: Compass Gen1526 Performance Successor Validation
 
 on:
   pull_request:
     paths:
-      - 'index.html'
-      - 'assets/compass/**'
+      - 'assets/compass/compass.identity-3d.js'
+      - 'assets/compass/compass.brain-scene.js'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
+      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
+      - '.github/workflows/compass-carousel-successor-live-qualification.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 env:
-  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  GEN1526_GOVERNING_HEAD: f8eefd20fc1cdcdc777e070f008bb2e2b8580da1
 
 jobs:
-  verify-performance-successor:
+  qualify-gen1526-static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify admitted Gen1521 performance and protected floor
+      - name: Verify exact candidate and bounded lineage
         run: |
-          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
+          CANDIDATE="$(git rev-parse HEAD^{commit})"
+          test "$CANDIDATE" = "$(git rev-parse HEAD)"
+          git merge-base --is-ancestor "$GEN1526_GOVERNING_HEAD" "$CANDIDATE"
+          unexpected="$(git diff --name-only "$GEN1526_GOVERNING_HEAD"..."$CANDIDATE" | grep -Ev '^(assets/compass/compass\.identity-3d\.js|assets/compass/compass\.brain-scene\.js|\.github/ai-router/projects/compass/verify-performance-successor\.mjs|\.github/ai-router/projects/compass/verify-display-continuity\.v1\.mjs|\.github/workflows/compass-performance-successor-validation\.yml|\.github/workflows/compass-carousel-successor-live-qualification\.yml)$' || true)"
+          test -z "$unexpected"
+          git diff --quiet "$GEN1526_GOVERNING_HEAD" -- assets/compass/compass.crystals.js
+      - name: Run Gen1526 static qualification
+        run: |
+          export COMPASS_CANDIDATE_HEAD="$(git rev-parse HEAD^{commit})"
+          export COMPASS_PERFORMANCE_OUTPUT=/tmp/compass-gen1526-performance.json
+          export COMPASS_VERIFICATION_OUTPUT=/tmp/compass-gen1526-display.json
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1526' /tmp/compass-gen1526-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1526' /tmp/compass-gen1526-display.json >/dev/null
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: compass-gen1521-performance-receipt
-          path: /tmp/compass-gen1521-performance.json
+          name: compass-gen1526-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/compass-gen1526-performance.json
+            /tmp/compass-gen1526-display.json

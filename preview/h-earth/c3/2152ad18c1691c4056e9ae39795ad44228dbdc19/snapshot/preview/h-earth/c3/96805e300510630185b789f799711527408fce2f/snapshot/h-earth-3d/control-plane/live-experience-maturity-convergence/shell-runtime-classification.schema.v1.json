@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "H_EARTH_LIVE_EXPERIENCE_SHELL_RUNTIME_CLASSIFICATION_SCHEMA_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "subjectHead",
+    "entries"
+  ],
+  "properties": {
+    "schema": {
+      "const": "H_EARTH_LIVE_EXPERIENCE_SHELL_RUNTIME_CLASSIFICATION_v1"
+    },
+    "subjectHead": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "repositoryPath",
+          "locator",
+          "category",
+          "runtimeDependency",
+          "defaultPlayerVisibility",
+          "futureDisposition",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repositoryPath": {
+            "type": "string",
+            "minLength": 1
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "enum": [
+              "R",
+              "P",
+              "C",
+              "D"
+            ]
+          },
+          "runtimeDependency": {
+            "enum": [
+              "REQUIRED",
+              "OPTIONAL",
+              "NONE",
+              "UNKNOWN_STOP"
+            ]
+          },
+          "defaultPlayerVisibility": {
+            "type": "boolean"
+          },
+          "futureDisposition": {
+            "enum": [
+              "PRESERVE",
+              "OVERLAY",
+              "CONTEXTUALIZE",
+              "HIDE_FROM_NORMAL_PLAY",
+              "SEPARATE_AUTHORITY_REQUIRED"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

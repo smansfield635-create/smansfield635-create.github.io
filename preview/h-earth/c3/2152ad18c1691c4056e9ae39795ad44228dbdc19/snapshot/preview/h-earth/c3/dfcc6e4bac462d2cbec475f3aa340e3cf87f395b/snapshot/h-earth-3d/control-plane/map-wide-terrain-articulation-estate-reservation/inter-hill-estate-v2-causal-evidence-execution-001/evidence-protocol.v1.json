@@ -1,0 +1,56 @@
+{
+  "capacityClasses": [
+    "UNEVALUABLE_ELIGIBLE_DOMAIN_NOT_ESTABLISHED",
+    "UNEVALUABLE_PLATFORM_QUEUE_OR_START_FAILURE",
+    "UNEVALUABLE_SHARD_TIMEOUT",
+    "UNEVALUABLE_SHARD_MEMORY_LIMIT",
+    "UNEVALUABLE_SHARD_STORAGE_LIMIT",
+    "UNEVALUABLE_SHARD_ARTIFACT_LIMIT",
+    "UNEVALUABLE_MISSING_WAVE",
+    "UNEVALUABLE_MISSING_SHARD",
+    "UNEVALUABLE_IDENTITY_MISMATCH",
+    "UNEVALUABLE_TRACE_INCOMPLETE",
+    "UNEVALUABLE_REDUCER_RECONCILIATION_FAILURE",
+    "UNEVALUABLE_NONDETERMINISTIC_EXECUTION"
+  ],
+  "configurationIdentity": [
+    "sourceMode",
+    "eligibleSeedListDigest",
+    "seedIndex",
+    "nodeId",
+    "orientationIndex",
+    "orientationDegrees"
+  ],
+  "domainExhaustionRequiresReducerSuccess": true,
+  "hardConstraintDictionary": [
+    "ESTATE_GRAPH_CONNECTED",
+    "PRINCIPAL_MANOR_CAPACITY_SUFFICIENT",
+    "FIRST_HILL_INCLUDED",
+    "SECOND_HILL_INCLUDED",
+    "INTER_HILL_AXIS_OPEN",
+    "LOW_CORRIDOR_OPEN",
+    "MOUNTAIN_VIEW_PASS",
+    "OCEAN_VIEW_PASS",
+    "PRIMARY_ROUTE_PASS",
+    "SERVICE_ROUTE_PASS",
+    "R06_C10_INTRUSION_ZERO",
+    "CAVERN_INTRUSION_ZERO",
+    "WATER_INTRUSION_ZERO",
+    "FUTURE_EXPANSION_CONNECTED"
+  ],
+  "operationId": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001",
+  "resultClasses": [
+    "PASSING_ARRANGEMENT",
+    "REJECTED_HARD_CONSTRAINT",
+    "UNEVALUABLE_CONFIGURATION",
+    "NOT_GENERATED"
+  ],
+  "schema": "H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_PROTOCOL_v1",
+  "streaming": {
+    "causalEvidenceLossProhibited": true,
+    "format": "CANONICAL_NDJSON_SEGMENTS",
+    "maximumBytesPerSegment": 33554432,
+    "maximumRecordsPerSegment": 2048
+  },
+  "zeroPassInferenceProhibited": true
+}

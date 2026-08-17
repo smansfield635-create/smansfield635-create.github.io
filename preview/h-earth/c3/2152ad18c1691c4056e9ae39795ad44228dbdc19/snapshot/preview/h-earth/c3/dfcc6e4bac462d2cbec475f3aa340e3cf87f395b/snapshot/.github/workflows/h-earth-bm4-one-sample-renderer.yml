@@ -1,0 +1,68 @@
+name: H-Earth BM4 One-Sample Baked Material Renderer
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-bm4-one-sample-renderer.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/baked-material/h-earth.bm4-one-sample-renderer-authority.v1.mjs'
+      - 'h-earth-3d/validation/baked-material/h-earth.bm4-one-sample-renderer.mjs'
+      - 'h-earth-3d/validation/baked-material/bm4/h-earth.bm4-one-sample-renderer.browser.mjs'
+      - 'h-earth-3d/validation/baked-material/bm4/h-earth.bm4-one-sample-renderer.harness.html'
+      - 'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-round2-baked-material-candidate.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  execute-one-sample-renderer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact BM4 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start exact BM4 candidate server
+        run: |
+          python3 -m http.server 4180 --bind 127.0.0.1 > /tmp/h-earth-bm4-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl -fsS http://127.0.0.1:4180/h-earth-3d/validation/baked-material/bm4/h-earth.bm4-one-sample-renderer.harness.html >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-bm4-server.log
+          exit 1
+      - name: Execute BM4 construction gates
+        env:
+          BM4_HARNESS_URL: http://127.0.0.1:4180/h-earth-3d/validation/baked-material/bm4/h-earth.bm4-one-sample-renderer.harness.html
+        run: node h-earth-3d/validation/baked-material/h-earth.bm4-one-sample-renderer.mjs | tee /tmp/bm4.log
+      - name: Upload BM4 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-bm4-one-sample-renderer
+          path: |
+            h-earth-3d/validation/baked-material/h-earth.bm4-one-sample-renderer.receipt.v1.json
+            h-earth-3d/validation/baked-material/bm4-evidence/
+            /tmp/bm4.log
+            /tmp/h-earth-bm4-server.log
+          retention-days: 90
+      - name: Enforce BM4 pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/baked-material/h-earth.bm4-one-sample-renderer.receipt.v1.json', 'utf8'));
+          if (receipt.pass !== true || receipt.result !== 'BM4_ONE_SAMPLE_BAKED_MATERIAL_RENDERER_PASS_CLOSED') {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`BM4_PASS:${receipt.candidateSourceSha256}:${receipt.bakedMapSha256}:${receipt.canonicalReceiptSha256}`);
+          NODE

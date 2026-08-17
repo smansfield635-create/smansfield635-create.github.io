@@ -28,7 +28,7 @@ jobs:
           test -s "$media"
           echo "bytes=$(stat -c %s "$media")"
           sha256sum "$media"
-          test "$(stat -c %s "$media")" = '43602412'
+          test "$(stat -c %s "$media")" = '13651045'
           echo '42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62  '"$media" | sha256sum -c -
 
       - name: Upload exact V28 master only

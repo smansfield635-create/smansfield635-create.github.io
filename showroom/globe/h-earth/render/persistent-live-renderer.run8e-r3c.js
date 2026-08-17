@@ -1,4 +1,4 @@
-/** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_v1 */
+/** H_EARTH_RUN_8E_R3C_PERSISTENT_WEBGL2_LIVE_RENDERER_C3C2_v1 */
 import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js';
@@ -11,8 +11,7 @@ const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 const color3 = (value) => {
   const array = Array.isArray(value) ? value : [0, 0, 0];
   const scale = array.some((entry) => entry > 1) ? 255 : 1;
-  return array.slice(0, 3).map((entry) =>
-    Math.min(1, Math.max(0, Number(entry) / scale)));
+  return array.slice(0, 3).map((entry) => Math.min(1, Math.max(0, Number(entry) / scale)));
 };
 const hash = (bytes) => {
   let value = 0x811c9dc5;
@@ -32,13 +31,7 @@ const summarize = (bytes, clear) => {
     const red = bytes[offset];
     const green = bytes[offset + 1];
     const blue = bytes[offset + 2];
-    if (
-      Math.abs(red - clear[0]) +
-      Math.abs(green - clear[1]) +
-      Math.abs(blue - clear[2]) > 9
-    ) {
-      nonClearPixelCount += 1;
-    }
+    if (Math.abs(red - clear[0]) + Math.abs(green - clear[1]) + Math.abs(blue - clear[2]) > 9) nonClearPixelCount += 1;
     const luminance = 0.2126 * red + 0.7152 * green + 0.0722 * blue;
     luminanceSum += luminance;
     luminanceSquareSum += luminance * luminance;
@@ -50,10 +43,7 @@ const summarize = (bytes, clear) => {
     nonClearPixelCount,
     uniqueColorBucketCount: buckets.size,
     meanLuminance,
-    luminanceStandardDeviation: Math.sqrt(Math.max(
-      0,
-      luminanceSquareSum / pixelCount - meanLuminance * meanLuminance
-    )),
+    luminanceStandardDeviation: Math.sqrt(Math.max(0, luminanceSquareSum / pixelCount - meanLuminance * meanLuminance)),
     byteHash: hash(bytes)
   };
 };
@@ -73,16 +63,36 @@ precision highp float;const vec2 p[3]=vec2[3](vec2(-1.,-1.),vec2(3.,-1.),vec2(-1
 const DFS = `#version 300 es
 precision highp float;in vec2 vUv;uniform sampler2D uDepth;out vec4 outColor;void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
 const PFS = `#version 300 es
-precision highp float;in vec2 vUv;uniform sampler2D uColor;out vec4 outColor;void main(){outColor=texture(uColor,vUv);}`;
+precision highp float;
+in vec2 vUv;
+uniform sampler2D uColor;
+uniform int uPresentationMode;
+uniform vec3 uSkyZenith;
+uniform vec3 uSkyHorizon;
+uniform vec3 uGroundHaze;
+uniform vec3 uSunColor;
+uniform vec2 uSunCenter;
+uniform float uSunIntensity;
+out vec4 outColor;
+void main(){
+  if(uPresentationMode==1){outColor=texture(uColor,vUv);return;}
+  float lateral=abs(vUv.x-.5)*2.0;
+  float horizon=0.455+0.026*lateral*lateral;
+  float altitude=clamp((vUv.y-horizon)/max(.001,1.0-horizon),0.0,1.0);
+  vec3 sky=mix(uSkyHorizon,uSkyZenith,smoothstep(0.0,.88,altitude));
+  float haze=exp(-pow((vUv.y-horizon)/.085,2.0));
+  sky=mix(sky,uGroundHaze,.30*haze);
+  float sd=distance(vUv,uSunCenter);
+  float halo=1.0-smoothstep(.018,.105,sd);
+  float core=1.0-smoothstep(.008,.024,sd);
+  sky=mix(sky,uSunColor,clamp(halo*.23*uSunIntensity+core*.92,0.0,1.0));
+  float aerial=.018*sin((vUv.x*8.0+vUv.y*3.0)*3.14159265)+.012*sin((vUv.x*17.0-vUv.y*5.0)*3.14159265);
+  sky+=vec3(aerial*max(0.0,1.0-altitude)*.25);
+  outColor=vec4(pow(clamp(sky,0.0,1.0),vec3(1.0/2.2)),1.0);
+}`;
 
-export function createHEarthRun8ER3CPersistentRenderer({
-  canvas,
-  width = 640,
-  height = 360
-} = {}) {
-  if (!(canvas instanceof HTMLCanvasElement)) {
-    throw new TypeError('R3C_CANVAS_REQUIRED');
-  }
+export function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360 } = {}) {
+  if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
   canvas.height = height;
 
@@ -122,13 +132,12 @@ export function createHEarthRun8ER3CPersistentRenderer({
     staticUniformUpdateCount: 0,
     geometryDrawCallCount: 0,
     totalDrawnIndexCount: 0,
-    depthVisualizationDrawCallCount: 0
+    depthVisualizationDrawCallCount: 0,
+    atmosphereBackgroundDrawCallCount: 0
   };
   const resources = {};
 
-  const markPostInitializationCreation = () => {
-    if (initialized) counters.postInitializationResourceCreationCount += 1;
-  };
+  const markPostInitializationCreation = () => { if (initialized) counters.postInitializationResourceCreationCount += 1; };
   const createShader = (type, source, label) => {
     markPostInitializationCreation();
     counters.shaderCreateCount += 1;
@@ -137,9 +146,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
     counters.shaderCompileCount += 1;
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      throw new Error(`R3C_SHADER_COMPILE_FAILED:${label}:${gl.getShaderInfoLog(shader)}`);
-    }
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error(`R3C_SHADER_COMPILE_FAILED:${label}:${gl.getShaderInfoLog(shader)}`);
     return shader;
   };
   const createProgram = (vertexShader, fragmentShader, label) => {
@@ -151,9 +158,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
     counters.programLinkCount += 1;
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      throw new Error(`R3C_PROGRAM_LINK_FAILED:${label}:${gl.getProgramInfoLog(program)}`);
-    }
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(`R3C_PROGRAM_LINK_FAILED:${label}:${gl.getProgramInfoLog(program)}`);
     return program;
   };
   const createBuffer = () => {
@@ -190,54 +195,32 @@ export function createHEarthRun8ER3CPersistentRenderer({
   };
   const requireCompleteFramebuffer = (label) => {
     const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-    if (status !== gl.FRAMEBUFFER_COMPLETE) {
-      throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${label}:${status}`);
-    }
+    if (status !== gl.FRAMEBUFFER_COMPLETE) throw new Error(`R3C_FRAMEBUFFER_INCOMPLETE:${label}:${status}`);
   };
 
   const renderPackage = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
   const uploadViews = createHEarthRun8ER2DCanonicalGPUUploadViews(renderPackage);
   const rendererInterface = getHEarthRun8ER3ALiveRendererInterface();
-  if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) {
-    throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
-  }
-  if (uploadViews.deterministicTransportEncoding !== true) {
-    throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
-  }
+  if (renderPackage.packageOccurrenceId !== RUNTIME_OCCURRENCE_ID) throw new Error(`R3C_RUNTIME_PACKAGE_OCCURRENCE_MISMATCH:${renderPackage.packageOccurrenceId}`);
+  if (uploadViews.deterministicTransportEncoding !== true) throw new Error('R3C_CANONICAL_GPU_TRANSPORT_MISSING');
 
   function initialize(packet) {
     if (initialized) throw new Error('R3C_RENDERER_ALREADY_INITIALIZED');
-    if (
-      packet.packageIdentity !== renderPackage.packageIdentity ||
-      packet.packageContentDigest !== renderPackage.contentDigest
-    ) {
-      throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
-    }
+    if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
 
     resources.geometryVertexShader = createShader(gl.VERTEX_SHADER, VS, 'GV');
     resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, FS, 'GF');
-    resources.geometryProgram = createProgram(
-      resources.geometryVertexShader,
-      resources.geometryFragmentShader,
-      'GP'
-    );
+    resources.geometryProgram = createProgram(resources.geometryVertexShader, resources.geometryFragmentShader, 'GP');
     resources.depthVertexShader = createShader(gl.VERTEX_SHADER, DVS, 'DV');
     resources.depthFragmentShader = createShader(gl.FRAGMENT_SHADER, DFS, 'DF');
-    resources.depthProgram = createProgram(
-      resources.depthVertexShader,
-      resources.depthFragmentShader,
-      'DP'
-    );
+    resources.depthProgram = createProgram(resources.depthVertexShader, resources.depthFragmentShader, 'DP');
     resources.presentationFragmentShader = createShader(gl.FRAGMENT_SHADER, PFS, 'PF');
-    resources.presentationProgram = createProgram(
-      resources.depthVertexShader,
-      resources.presentationFragmentShader,
-      'PP'
-    );
+    resources.presentationProgram = createProgram(resources.depthVertexShader, resources.presentationFragmentShader, 'PP');
 
     markPostInitializationCreation();
     counters.vertexArrayCreateCount += 1;
     resources.vertexArray = gl.createVertexArray();
+    if (!resources.vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
     gl.bindVertexArray(resources.vertexArray);
 
     const specifications = [
@@ -261,11 +244,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
       else gl.vertexAttribPointer(location, size, type, false, 0, 0);
     }
     resources.indexBuffer = createBuffer();
-    resources.buffers.push({
-      name: 'indices',
-      buffer: resources.indexBuffer,
-      byteLength: uploadViews.indices.byteLength
-    });
+    resources.buffers.push({ name: 'indices', buffer: resources.indexBuffer, byteLength: uploadViews.indices.byteLength });
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer);
     upload(gl.ELEMENT_ARRAY_BUFFER, uploadViews.indices);
 
@@ -282,20 +261,8 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_COMPARE_MODE, gl.NONE);
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      resources.colorTexture,
-      0
-    );
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.DEPTH_ATTACHMENT,
-      gl.TEXTURE_2D,
-      resources.depthTexture,
-      0
-    );
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, resources.colorTexture, 0);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, resources.depthTexture, 0);
     requireCompleteFramebuffer('GEOMETRY');
 
     resources.depthColorTexture = createTexture();
@@ -305,13 +272,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.depthFramebuffer);
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      resources.depthColorTexture,
-      0
-    );
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, resources.depthColorTexture, 0);
     requireCompleteFramebuffer('DEPTH');
 
     resources.uniforms = {
@@ -326,24 +287,24 @@ export function createHEarthRun8ER3CPersistentRenderer({
       fogStartDistance: uniform(resources.geometryProgram, 'uFogStartDistance'),
       fogFalloff: uniform(resources.geometryProgram, 'uFogFalloff'),
       maximumFogFactor: uniform(resources.geometryProgram, 'uMaximumFogFactor'),
-      distanceDesaturationStrength: uniform(
-        resources.geometryProgram,
-        'uDistanceDesaturationStrength'
-      ),
+      distanceDesaturationStrength: uniform(resources.geometryProgram, 'uDistanceDesaturationStrength'),
       depth: uniform(resources.depthProgram, 'uDepth'),
-      presentationColor: uniform(resources.presentationProgram, 'uColor')
+      presentationColor: uniform(resources.presentationProgram, 'uColor'),
+      presentationMode: uniform(resources.presentationProgram, 'uPresentationMode'),
+      presentationSkyZenith: uniform(resources.presentationProgram, 'uSkyZenith'),
+      presentationSkyHorizon: uniform(resources.presentationProgram, 'uSkyHorizon'),
+      presentationGroundHaze: uniform(resources.presentationProgram, 'uGroundHaze'),
+      presentationSunColor: uniform(resources.presentationProgram, 'uSunColor'),
+      presentationSunCenter: uniform(resources.presentationProgram, 'uSunCenter'),
+      presentationSunIntensity: uniform(resources.presentationProgram, 'uSunIntensity')
     };
 
     const environment = packet.environmentUniforms;
     resources.skyColor = color3(environment.skyHorizonColor);
     resources.clearColorBytes = resources.skyColor.map((entry) => Math.round(entry * 255));
+
     gl.useProgram(resources.geometryProgram);
-    gl.uniform3f(
-      resources.uniforms.sunDirection,
-      environment.sunDirection.x,
-      environment.sunDirection.y,
-      environment.sunDirection.z
-    );
+    gl.uniform3f(resources.uniforms.sunDirection, environment.sunDirection.x, environment.sunDirection.y, environment.sunDirection.z);
     gl.uniform1f(resources.uniforms.sunIntensity, environment.sunIntensity);
     gl.uniform3fv(resources.uniforms.sunColor, color3(environment.sunColor));
     gl.uniform3fv(resources.uniforms.skyZenithColor, color3(environment.skyZenithColor));
@@ -352,30 +313,30 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.uniform1f(resources.uniforms.fogStartDistance, environment.fogStartDistance);
     gl.uniform1f(resources.uniforms.fogFalloff, environment.fogFalloff);
     gl.uniform1f(resources.uniforms.maximumFogFactor, environment.maximumFogFactor);
-    gl.uniform1f(
-      resources.uniforms.distanceDesaturationStrength,
-      environment.distanceDesaturationStrength
+    gl.uniform1f(resources.uniforms.distanceDesaturationStrength, environment.distanceDesaturationStrength);
+
+    gl.useProgram(resources.presentationProgram);
+    gl.uniform3fv(resources.uniforms.presentationSkyZenith, color3(environment.skyZenithColor));
+    gl.uniform3fv(resources.uniforms.presentationSkyHorizon, resources.skyColor);
+    gl.uniform3fv(resources.uniforms.presentationGroundHaze, color3(environment.groundHazeColor));
+    gl.uniform3fv(resources.uniforms.presentationSunColor, color3(environment.sunColor));
+    gl.uniform2f(
+      resources.uniforms.presentationSunCenter,
+      Math.min(0.92, Math.max(0.08, 0.5 + environment.sunDirection.x * 0.46)),
+      Math.min(0.88, Math.max(0.18, 0.38 + environment.sunDirection.y * 0.52))
     );
-    counters.staticUniformUpdateCount = 10;
+    gl.uniform1f(resources.uniforms.presentationSunIntensity, environment.sunIntensity);
+    gl.uniform1i(resources.uniforms.presentationColor, 0);
+    counters.staticUniformUpdateCount = 17;
+
     initialized = true;
     return getResourceReceipt();
   }
 
   function renderFrame(packet) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    if (
-      packet.packageIdentity !== renderPackage.packageIdentity ||
-      packet.packageContentDigest !== renderPackage.contentDigest
-    ) {
-      throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
-    }
-    if (
-      !Array.isArray(packet.camera.viewProjectionMatrix) ||
-      packet.camera.viewProjectionMatrix.length !== 16 ||
-      packet.camera.viewProjectionMatrix.some((value) => !finite(value))
-    ) {
-      throw new Error('R3C_VIEW_PROJECTION_INVALID');
-    }
+    if (packet.packageIdentity !== renderPackage.packageIdentity || packet.packageContentDigest !== renderPackage.contentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
+    if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
 
     latestDrawRanges = Object.freeze(packet.drawRanges.map((range) => Object.freeze({ ...range })));
 
@@ -384,22 +345,25 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.clearColor(...resources.skyColor, 1);
     gl.clearDepth(1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // C3C2: materialize the atmospheric enclosure before any world geometry.
+    gl.disable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND);
+    gl.depthMask(false);
+    gl.useProgram(resources.presentationProgram);
+    gl.bindVertexArray(null);
+    gl.uniform1i(resources.uniforms.presentationMode, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    counters.atmosphereBackgroundDrawCallCount += 1;
+
+    gl.depthMask(true);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LEQUAL);
     gl.disable(gl.CULL_FACE);
     gl.useProgram(resources.geometryProgram);
     gl.bindVertexArray(resources.vertexArray);
-    gl.uniformMatrix4fv(
-      resources.uniforms.viewProjection,
-      false,
-      new Float32Array(packet.camera.viewProjectionMatrix)
-    );
-    gl.uniform3f(
-      resources.uniforms.cameraPosition,
-      packet.camera.position.x,
-      packet.camera.position.y,
-      packet.camera.position.z
-    );
+    gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
+    gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     counters.cameraUniformUpdateCount += 2;
 
     for (const range of packet.drawRanges) {
@@ -411,12 +375,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
         gl.disable(gl.BLEND);
         gl.depthMask(true);
       }
-      gl.drawElements(
-        gl.TRIANGLES,
-        range.indexCount,
-        gl.UNSIGNED_INT,
-        range.indexStart * 4
-      );
+      gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
       counters.geometryDrawCallCount += 1;
       counters.totalDrawnIndexCount += range.indexCount;
     }
@@ -430,9 +389,6 @@ export function createHEarthRun8ER3CPersistentRenderer({
 
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-
-    // Physical-device presentation law: present the validated offscreen color texture
-    // through a normal fullscreen textured draw into the browser-visible framebuffer.
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, width, height);
     gl.disable(gl.DEPTH_TEST);
@@ -443,21 +399,13 @@ export function createHEarthRun8ER3CPersistentRenderer({
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture);
     gl.uniform1i(resources.uniforms.presentationColor, 0);
+    gl.uniform1i(resources.uniforms.presentationMode, 1);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     gl.flush();
-
     const error = gl.getError();
-    if (error !== gl.NO_ERROR) {
-      throw new Error(`R3C_TEXTURE_PRESENTATION_DRAW_ERROR:${error}`);
-    }
-
+    if (error !== gl.NO_ERROR) throw new Error(`R3C_TEXTURE_PRESENTATION_DRAW_ERROR:${error}`);
     counters.visiblePresentationCount += 1;
-    return Object.freeze({
-      frameNumber: counters.frameCount,
-      width,
-      height,
-      presentationPath: 'OFFSCREEN_COLOR_TEXTURE_FULLSCREEN_DRAW'
-    });
+    return Object.freeze({ frameNumber: counters.frameCount, width, height, presentationPath: 'OFFSCREEN_COLOR_TEXTURE_FULLSCREEN_DRAW', atmosphericEnclosureMaterialized: true });
   }
 
   function captureColorFrame(label, { includePng = true } = {}) {
@@ -471,14 +419,7 @@ export function createHEarthRun8ER3CPersistentRenderer({
     const summary = summarize(pixels, resources.clearColorBytes);
     const pngDataUrl = includePng ? canvas.toDataURL('image/png') : null;
     if (includePng) counters.pngEncodingCount += 1;
-    return Object.freeze({
-      label,
-      frameNumber: counters.frameCount,
-      width,
-      height,
-      summary,
-      pngDataUrl
-    });
+    return Object.freeze({ label, frameNumber: counters.frameCount, width, height, summary, pngDataUrl });
   }
 
   function captureDepthSummary() {
@@ -512,17 +453,13 @@ export function createHEarthRun8ER3CPersistentRenderer({
         lost: gl.isContextLost(),
         vendor: gl.getParameter(gl.VENDOR),
         renderer: gl.getParameter(gl.RENDERER),
-        unmaskedVendor: debugRenderer
-          ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL)
-          : null,
-        unmaskedRenderer: debugRenderer
-          ? gl.getParameter(debugRenderer.UNMASKED_RENDERER_WEBGL)
-          : null,
+        unmaskedVendor: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL) : null,
+        unmaskedRenderer: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_RENDERER_WEBGL) : null,
         version: gl.getParameter(gl.VERSION),
         shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION)
       },
       package: {
-        logicalPromotedIdentity: LOGICAL_ID,
+        logicalPromotedIdentity: renderPackage.contractId ?? renderPackage.packageIdentity,
         runtimeIdentity: renderPackage.packageIdentity,
         runtimeContentDigest: renderPackage.contentDigest,
         primitiveCount: renderPackage.primitiveCount,
@@ -541,30 +478,25 @@ export function createHEarthRun8ER3CPersistentRenderer({
       counters: { ...counters },
       persistentObjectCounts: {
         contexts: 1,
-        programs: 2,
-        shaders: 4,
+        programs: 3,
+        shaders: 5,
         vertexArrays: 1,
         gpuBuffers: resources.buffers?.length ?? 0,
         textures: 3,
         framebuffers: 2
       },
-      resourceIdentityStable:
-        initialized &&
-        resources.buffers?.length === 9 &&
-        Boolean(
-          resources.geometryProgram &&
-          resources.depthProgram &&
-          resources.vertexArray &&
-          resources.geometryFramebuffer &&
-          resources.depthFramebuffer
-        ),
-      packageUploadedOnce:
-        counters.bufferUploadCount === 9 &&
-        counters.postInitializationBufferUploadCount === 0,
-      noPostInitializationResourceCreation:
-        counters.postInitializationResourceCreationCount === 0,
-      noPostInitializationBufferUpload:
-        counters.postInitializationBufferUploadCount === 0
+      atmosphericEnclosure: {
+        materialized: initialized,
+        model: 'FULLSCREEN_SKY_GRADIENT_SUN_CURVED_HORIZON_HAZE',
+        ownerBaseline: 'H_EARTH_C3C1_OWNER_NAVIGATED_SUCCESS_BASELINE_20260816',
+        grayFallbackPermitted: false,
+        transparentFallbackPermitted: false
+      },
+      latestDrawRangeCount: latestDrawRanges.length,
+      resourceIdentityStable: initialized && resources.buffers?.length === 9 && Boolean(resources.geometryProgram && resources.depthProgram && resources.presentationProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
+      packageUploadedOnce: counters.bufferUploadCount === 9 && counters.postInitializationBufferUploadCount === 0,
+      noPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === 0,
+      noPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0
     };
   }
 

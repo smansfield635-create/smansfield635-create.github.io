@@ -474,18 +474,6 @@
       "scopeHash": "33e1020395a365d229c5f70b86e04dcc4477028b4fc4f7e3fdaa7695eff1bb3c",
       "state": "ADMITTED_LOCKED"
     },
-    "34a578b41b4bdbf582558ddc7b3dc7370d2cd18603d8174fdaf97d3ab689c23e": {
-      "governingHead": "459585c4e1ca847d18729f16a1eb2441f1d16604",
-      "lockGeneration": 1502,
-      "lockScope": "H_EARTH:AWARDS:CHAPTER_01_COMPASS_60_SECOND_SOCIAL_LIVE_REPLACEMENT:V1",
-      "operationId": "AWARDS_COMPASS_V27_60_SECOND_SOCIAL_LIVE_REPLACEMENT_20260816_002",
-      "procedureLocatorDigest": "3840d00a7b6802a792115060d4c1894c05c147791f6a2e500b434f52ced364f6",
-      "released": false,
-      "requestDigest": "74e22f9211f14f2f8e7aaf13ecf4ceaf45aab7185a40f2270a97e6e4f43364cd",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "34a578b41b4bdbf582558ddc7b3dc7370d2cd18603d8174fdaf97d3ab689c23e",
-      "state": "ADMITTED_LOCKED"
-    },
     "34c3ea3a8f064f6aed8d88a95197a66fadbb5e0444a72bc5d5dabc851f38aefa": {
       "governingHead": "2c85d727c1fc9a73e7200b2ceb6a438efb5a54c4",
       "lockGeneration": 1498,
@@ -1168,6 +1156,34 @@
       "requestDigest": "c03cbf072aa147aef4ce7c012cda49e035aafe6ac9b0b4138f2d934169352933",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "89dd85077d021635eebc6e3a710b3cfcb6cd896c80a9ecdb5579ccbc42f3142f",
+      "state": "ADMITTED_LOCKED"
+    },
+    "8a22f0e18e12a41edd30e2e6ab71207edbe32ad79071a99a729d5d3e6ac9b95c": {
+      "governingHead": "54482eee3291d04d26c49980678330369c3ef007",
+      "lockGeneration": 1506,
+      "lockScope": "H_EARTH:AWARDS:CHAPTER_01_COMPASS_65_SECOND_HOMECOMING_SOCIAL_LIVE_REPLACEMENT:V1",
+      "operationId": "AWARDS_COMPASS_V28_65_SECOND_HOMECOMING_LIVE_REPLACEMENT_20260816_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "459585c4e1ca847d18729f16a1eb2441f1d16604",
+        "lockGeneration": 1502,
+        "lockScope": "H_EARTH:AWARDS:CHAPTER_01_COMPASS_60_SECOND_SOCIAL_LIVE_REPLACEMENT:V1",
+        "operationId": "AWARDS_COMPASS_V27_60_SECOND_SOCIAL_LIVE_REPLACEMENT_20260816_002",
+        "preservedEvidenceRefs": [
+          "showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4@bdfaf4c6292b9f60e8310758b44c42cf7410ea21ca3f3ad29fb00ebd8caf5f76",
+          "h-earth-3d/experience-anchor/evidence/AWARDS_COMPASS_V27_20260816_001.json",
+          "PR_1227_MERGED_MAIN_5788a86f6e5cafb3957e773d58e4fe91cc144fd8"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_COMPASS_V27_TO_V28_65_SECOND_HOMECOMING_TRANSITION_20260816_002"
+      },
+      "procedureLocatorDigest": "c8f7879d523d343cca07a6854a0b84229358407a8ffe484c2de8505dd53750b6",
+      "released": false,
+      "requestDigest": "db5348250d535d466b366f9c1678e81f5cd7ca03ba9adc8299d1e47480c5eb41",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8a22f0e18e12a41edd30e2e6ab71207edbe32ad79071a99a729d5d3e6ac9b95c",
       "state": "ADMITTED_LOCKED"
     },
     "8aa83ef0f77c262e81d2ded245c9ddccf3d87ea40a908b5fc0b7ac7424fea036": {
@@ -2278,7 +2294,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1505,
+  "lockGeneration": 1506,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -22065,6 +22081,35 @@
         "successorLockScope": "COMPASS_PUBLIC_INTERACTION_DIAGNOSTIC_SUCCESSOR",
         "successorOperationId": "COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v4",
         "transitionId": "COMPASS_INTERACTION_DIAGNOSTIC_459585C4_TO_54482EEE_20260816_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "459585c4e1ca847d18729f16a1eb2441f1d16604",
+      "lockGeneration": 1502,
+      "lockScope": "H_EARTH:AWARDS:CHAPTER_01_COMPASS_60_SECOND_SOCIAL_LIVE_REPLACEMENT:V1",
+      "operationId": "AWARDS_COMPASS_V27_60_SECOND_SOCIAL_LIVE_REPLACEMENT_20260816_002",
+      "procedureLocatorDigest": "3840d00a7b6802a792115060d4c1894c05c147791f6a2e500b434f52ced364f6",
+      "released": true,
+      "requestDigest": "74e22f9211f14f2f8e7aaf13ecf4ceaf45aab7185a40f2270a97e6e4f43364cd",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "34a578b41b4bdbf582558ddc7b3dc7370d2cd18603d8174fdaf97d3ab689c23e",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4@bdfaf4c6292b9f60e8310758b44c42cf7410ea21ca3f3ad29fb00ebd8caf5f76",
+          "h-earth-3d/experience-anchor/evidence/AWARDS_COMPASS_V27_20260816_001.json",
+          "PR_1227_MERGED_MAIN_5788a86f6e5cafb3957e773d58e4fe91cc144fd8"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "54482eee3291d04d26c49980678330369c3ef007",
+        "successorLockGeneration": 1506,
+        "successorLockScope": "H_EARTH:AWARDS:CHAPTER_01_COMPASS_65_SECOND_HOMECOMING_SOCIAL_LIVE_REPLACEMENT:V1",
+        "successorOperationId": "AWARDS_COMPASS_V28_65_SECOND_HOMECOMING_LIVE_REPLACEMENT_20260816_002",
+        "transitionId": "AWARDS_COMPASS_V27_TO_V28_65_SECOND_HOMECOMING_TRANSITION_20260816_002"
       },
       "terminalDisposition": "SUPERSEDED"
     }

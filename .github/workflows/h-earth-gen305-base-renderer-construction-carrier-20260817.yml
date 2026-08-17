@@ -1,0 +1,83 @@
+name: H-Earth Gen305 Base Renderer Construction Carrier
+
+on:
+  push:
+    branches:
+      - repair/h-earth-connected-preflight-successor-transport-20260817
+    paths:
+      - '.github/workflows/h-earth-gen305-base-renderer-construction-carrier-20260817.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  construct:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact construction branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: construction/h-earth-gen305-s26-world-envelope-20260817
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Apply exact bounded renderer transform
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = '74a9bff550a88c8a153e555915334d6e70a0753f'
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const path='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js';
+          let s=fs.readFileSync(path,'utf8');
+          const replaceOnce=(from,to,label)=>{
+            const count=s.split(from).length-1;
+            if(count!==1) throw new Error(`${label}_MATCH_COUNT_${count}`);
+            s=s.replace(from,to);
+          };
+
+          replaceOnce(
+            'uniform vec3 uCameraPosition;uniform vec3 uSunDirection;uniform float uSunIntensity;uniform vec3 uSunColor;uniform vec3 uSkyZenithColor;uniform vec3 uSkyHorizonColor;uniform vec3 uGroundHazeColor;uniform float uFogStartDistance;uniform float uFogFalloff;uniform float uMaximumFogFactor;uniform float uDistanceDesaturationStrength;out vec4 outColor;',
+            'uniform vec3 uCameraPosition;uniform vec3 uSunDirection;uniform float uSunIntensity;uniform vec3 uSunColor;uniform vec3 uSkyZenithColor;uniform vec3 uSkyHorizonColor;uniform vec3 uGroundHazeColor;uniform float uFogStartDistance;uniform float uFogFalloff;uniform float uMaximumFogFactor;uniform float uDistanceDesaturationStrength;uniform int uInteractionMode;out vec4 outColor;',
+            'GEOMETRY_INTERACTION_UNIFORM');
+          replaceOnce('if(vRoleCode==1u){vec2 world=', 'if(vRoleCode==1u&&uInteractionMode==0){vec2 world=', 'EXPENSIVE_TERRAIN_BRANCH');
+          replaceOnce('if(vRoleCode==1u){vec3 halfDirection=', 'if(vRoleCode==1u&&uInteractionMode==0){vec3 halfDirection=', 'TERRAIN_SPECULAR_BRANCH');
+          replaceOnce(
+            'uniform float uSunIntensity;out vec4 outColor;void main(){if(uPresentationMode==1){outColor=texture(uColor,vUv);return;}',
+            'uniform float uSunIntensity;uniform float uPresentationSampleScale;out vec4 outColor;void main(){if(uPresentationMode==1){outColor=texture(uColor,vUv*uPresentationSampleScale);return;}',
+            'PRESENTATION_SCALE_SHADER');
+          replaceOnce(
+            "distanceDesaturationStrength:uniform(resources.geometryProgram,'uDistanceDesaturationStrength'),depth:",
+            "distanceDesaturationStrength:uniform(resources.geometryProgram,'uDistanceDesaturationStrength'),interactionMode:uniform(resources.geometryProgram,'uInteractionMode'),depth:",
+            'GEOMETRY_UNIFORM_LOCATION');
+          replaceOnce(
+            "presentationSunIntensity:uniform(resources.presentationProgram,'uSunIntensity')",
+            "presentationSunIntensity:uniform(resources.presentationProgram,'uSunIntensity'),presentationSampleScale:uniform(resources.presentationProgram,'uPresentationSampleScale')",
+            'PRESENTATION_UNIFORM_LOCATION');
+          replaceOnce(
+            "gl.uniform1f(resources.uniforms.distanceDesaturationStrength,e.distanceDesaturationStrength);gl.useProgram(resources.presentationProgram);",
+            "gl.uniform1f(resources.uniforms.distanceDesaturationStrength,e.distanceDesaturationStrength);gl.uniform1i(resources.uniforms.interactionMode,0);gl.useProgram(resources.presentationProgram);",
+            'INITIAL_INTERACTION_MODE');
+          replaceOnce(
+            "gl.uniform1f(resources.uniforms.presentationSunIntensity,e.sunIntensity);gl.uniform1i(resources.uniforms.presentationColor,0);counters.staticUniformUpdateCount=17;initialized=true;",
+            "gl.uniform1f(resources.uniforms.presentationSunIntensity,e.sunIntensity);gl.uniform1f(resources.uniforms.presentationSampleScale,1);gl.uniform1i(resources.uniforms.presentationColor,0);counters.staticUniformUpdateCount=19;resources.currentPresentationScale=1;initialized=true;",
+            'INITIAL_PRESENTATION_SCALE');
+
+          const oldRender="function renderFrame(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');if(packet.packageIdentity!==renderPackage.packageIdentity||packet.packageContentDigest!==renderPackage.contentDigest)throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');if(!Array.isArray(packet.camera.viewProjectionMatrix)||packet.camera.viewProjectionMatrix.length!==16||packet.camera.viewProjectionMatrix.some(v=>!finite(v)))throw new Error('R3C_VIEW_PROJECTION_INVALID');latestDrawRanges=Object.freeze(packet.drawRanges.map(r=>Object.freeze({...r})));gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);gl.viewport(0,0,width,height);gl.clearColor(...resources.skyColor,1);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.depthMask(false);gl.useProgram(resources.presentationProgram);gl.bindVertexArray(null);gl.uniform1i(resources.uniforms.presentationMode,0);gl.drawArrays(gl.TRIANGLES,0,3);counters.atmosphereBackgroundDrawCallCount++;gl.depthMask(true);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);gl.uniformMatrix4fv(resources.uniforms.viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));gl.uniform3f(resources.uniforms.cameraPosition,packet.camera.position.x,packet.camera.position.y,packet.camera.position.z);counters.cameraUniformUpdateCount+=2;for(const range of packet.drawRanges){if(range.transparencyClass==='TRANSLUCENT'){gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);}else{gl.disable(gl.BLEND);gl.depthMask(true);}gl.drawElements(gl.TRIANGLES,range.indexCount,gl.UNSIGNED_INT,range.indexStart*4);counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=range.indexCount;}gl.depthMask(true);gl.disable(gl.BLEND);const error=gl.getError();if(error!==gl.NO_ERROR)throw new Error(`R3C_DRAW_ERROR:${error}`);counters.frameCount++;}";
+          const newRender="function renderFrame(packet){if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');if(packet.packageIdentity!==renderPackage.packageIdentity||packet.packageContentDigest!==renderPackage.contentDigest)throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');if(!Array.isArray(packet.camera.viewProjectionMatrix)||packet.camera.viewProjectionMatrix.length!==16||packet.camera.viewProjectionMatrix.some(v=>!finite(v)))throw new Error('R3C_VIEW_PROJECTION_INVALID');const reduced=packet.renderQuality?.mode==='INTERACTION_REDUCED',requestedScale=Number(packet.renderQuality?.renderScale),scale=reduced?Math.min(1,Math.max(.5,finite(requestedScale)?requestedScale:.70)):1,renderWidth=Math.max(1,Math.round(width*scale)),renderHeight=Math.max(1,Math.round(height*scale));resources.currentPresentationScale=scale;latestDrawRanges=Object.freeze(packet.drawRanges.map(r=>Object.freeze({...r})));gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);gl.viewport(0,0,renderWidth,renderHeight);gl.clearColor(...resources.skyColor,1);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.disable(gl.DEPTH_TEST);gl.disable(gl.BLEND);gl.depthMask(false);gl.useProgram(resources.presentationProgram);gl.bindVertexArray(null);gl.uniform1i(resources.uniforms.presentationMode,0);gl.drawArrays(gl.TRIANGLES,0,3);counters.atmosphereBackgroundDrawCallCount++;gl.depthMask(true);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);gl.uniform1i(resources.uniforms.interactionMode,reduced?1:0);gl.uniformMatrix4fv(resources.uniforms.viewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));gl.uniform3f(resources.uniforms.cameraPosition,packet.camera.position.x,packet.camera.position.y,packet.camera.position.z);counters.cameraUniformUpdateCount+=2;for(const range of packet.drawRanges){if(range.transparencyClass==='TRANSLUCENT'){gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);}else{gl.disable(gl.BLEND);gl.depthMask(true);}gl.drawElements(gl.TRIANGLES,range.indexCount,gl.UNSIGNED_INT,range.indexStart*4);counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=range.indexCount;}gl.depthMask(true);gl.disable(gl.BLEND);const error=gl.getError();if(error!==gl.NO_ERROR)throw new Error(`R3C_DRAW_ERROR:${error}`);counters.frameCount++;}";
+          replaceOnce(oldRender,newRender,'RENDER_FRAME');
+          replaceOnce(
+            "gl.uniform1i(resources.uniforms.presentationMode,1);gl.drawArrays(gl.TRIANGLES,0,3);",
+            "gl.uniform1i(resources.uniforms.presentationMode,1);gl.uniform1f(resources.uniforms.presentationSampleScale,resources.currentPresentationScale??1);gl.drawArrays(gl.TRIANGLES,0,3);",
+            'PRESENTATION_SAMPLE_SCALE');
+
+          fs.writeFileSync(path,s);
+          NODE
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          git diff --check
+          git diff -- showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          git config user.name 'smansfield635-create'
+          git config user.email 'smansfield635@gmail.com'
+          git add showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          git commit -m 'Add bounded Gen305 interaction render tier'
+          git push origin HEAD:construction/h-earth-gen305-s26-world-envelope-20260817

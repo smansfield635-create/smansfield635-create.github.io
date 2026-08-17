@@ -1,15 +1,17 @@
 name: H-Earth C3C3R5 S26 Private Mutation Routing Carrier
 
 on:
-  pull_request:
-    types: [synchronize, reopened]
+  push:
+    branches:
+      - handoff/h-earth-c3c3r5-s26-intake-carrier-20260817
+    paths:
+      - '.github/workflows/h-earth-c3c3r5-s26-private-intake-carrier-20260817.yml'
 
 permissions:
   contents: read
 
 jobs:
   route:
-    if: github.event.pull_request.head.ref == 'handoff/h-earth-c3c3r5-s26-intake-carrier-20260817'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:

@@ -1,4 +1,4 @@
-name: Compass Performance Successor Validation
+name: Compass Gen1524 Performance Successor Validation
 
 on:
   pull_request:
@@ -6,7 +6,9 @@ on:
       - 'index.html'
       - 'assets/compass/**'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
+      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
+      - '.github/workflows/compass-carousel-successor-live-qualification.yml'
   workflow_dispatch:
 
 permissions:
@@ -14,9 +16,11 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1524-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1524-display.json
 
 jobs:
-  verify-performance-successor:
+  static-contract:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,12 +30,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify admitted Gen1521 performance and protected floor
+      - name: Verify exact Gen1524 candidate and performance contract
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1521-performance-receipt
-          path: /tmp/compass-gen1521-performance.json
+          name: compass-gen1524-static-receipts
+          path: |
+            /tmp/compass-gen1524-performance.json
+            /tmp/compass-gen1524-display.json
+          retention-days: 90

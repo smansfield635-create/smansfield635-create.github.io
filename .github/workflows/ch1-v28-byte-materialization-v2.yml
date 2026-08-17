@@ -16,7 +16,7 @@ jobs:
       - name: Check out exact V28 merge commit
         uses: actions/checkout@v4
         with:
-          ref: 29f086be576a01d8865b6c911f28c7df72e856f7
+          ref: ad395e724cbfea1c19c9ce43393c1148fa557816
           fetch-depth: 1
           persist-credentials: false
 

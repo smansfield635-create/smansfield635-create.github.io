@@ -8797,6 +8797,31 @@
       return;
     }
 
+    const interactionActive =
+      Boolean(
+        state.pointer
+      );
+
+    const idleHeavyFrameIntervalMs =
+      state.reducedMotion
+        ? 1000
+        : 500;
+
+    if (
+      !interactionActive &&
+      state.lastTime &&
+      now -
+        state.lastTime * 1000 <
+        idleHeavyFrameIntervalMs
+    ) {
+      state.raf =
+        requestAnimationFrame(
+          render
+        );
+
+      return;
+    }
+
     const seconds =
       now * 0.001;
 

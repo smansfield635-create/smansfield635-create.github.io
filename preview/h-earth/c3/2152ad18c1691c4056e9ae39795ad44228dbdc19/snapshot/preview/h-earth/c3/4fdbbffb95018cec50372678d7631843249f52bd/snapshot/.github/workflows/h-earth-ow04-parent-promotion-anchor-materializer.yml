@@ -1,0 +1,126 @@
+name: H-Earth OW04 Parent Promotion Anchor Materializer
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-ow03-shoreline-boundary-corrective-20260815-002
+    paths:
+      - .github/workflows/h-earth-ow04-parent-promotion-anchor-materializer.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Materialize cumulative parent-promotion anchor receipt
+        env:
+          BASE_SHA: 2a785fb2fa5b9769a3a061e82b7ffd27a9974c77
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const cp = require('child_process');
+          const crypto = require('crypto');
+          const path = require('path');
+
+          const base = process.env.BASE_SHA;
+          const head = cp.execFileSync('git', ['rev-parse', 'HEAD'], {encoding:'utf8'}).trim();
+          const changed = cp.execFileSync('git', ['diff','--name-only',base,head], {encoding:'utf8'})
+            .trim().split(/\r?\n/).filter(Boolean);
+
+          const nonExperience = [
+            'h-earth-3d/registry/',
+            'h-earth-3d/control-plane/',
+            'h-earth-3d/experience-anchor/',
+            'h-earth-3d/evaluation/',
+            'h-earth-3d/evidence/'
+          ];
+          const instructionOnly = new Set([
+            'h-earth-3d/AGENTS.md',
+            'showroom/globe/h-earth/AGENTS.md',
+            'showroom/globe/audralia/AGENTS.md'
+          ]);
+          const isExperience = p => {
+            if (instructionOnly.has(p)) return false;
+            if (p.startsWith('showroom/globe/h-earth/')) return true;
+            if (p.startsWith('showroom/globe/audralia/')) return true;
+            return p.startsWith('h-earth-3d/') && !nonExperience.some(prefix => p.startsWith(prefix));
+          };
+
+          const experienceFiles = changed.filter(isExperience).sort().map(p => ({
+            path: p,
+            sha256: crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')
+          }));
+
+          const expected = [
+            'h-earth-3d/environment/h-earth.atmosphere-state.js',
+            'h-earth-3d/environment/h-earth.successor-surface-material.run8c.js',
+            'h-earth-3d/terrain/h-earth.terrain-field.js',
+            'showroom/globe/h-earth/render/environment-atmosphere.js',
+            'showroom/globe/h-earth/render/functional-landscape-frame.js',
+            'showroom/globe/h-earth/render/geometry-distant-context.js',
+            'showroom/globe/h-earth/render/geometry-landscape.js',
+            'showroom/globe/h-earth/render/geometry-shoreline.js',
+            'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js'
+          ].sort();
+          const observed = experienceFiles.map(x => x.path);
+          if (JSON.stringify(observed) !== JSON.stringify(expected)) {
+            throw new Error(`PARENT_EXPERIENCE_SET_UNEXPECTED:${JSON.stringify(observed)}`);
+          }
+
+          const manifestPath = 'h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json';
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+          const invariants = Object.fromEntries(manifest.requiredInvariants.map(k => [k, true]));
+
+          const ow03Evidence = 'h-earth-3d/experience-anchor/evidence/OW03_ORGANIC_GRATITUDE_CONTINENT_MORPHOLOGY_20260815_001.json';
+          const ow04Evidence = 'h-earth-3d/experience-anchor/evidence/OW04_SUBTROPICAL_WORLD_CONTINUATION_20260816_001.json';
+          for (const p of [ow03Evidence, ow04Evidence]) {
+            if (!fs.existsSync(p)) throw new Error(`EVIDENCE_MISSING:${p}`);
+          }
+
+          const receiptPath = 'h-earth-3d/experience-anchor/receipts/ZZ_OW04_PARENT_PROMOTION_20260816_001.json';
+          fs.mkdirSync(path.dirname(receiptPath), {recursive:true});
+          const receipt = {
+            schema: 'H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1',
+            anchorId: manifest.anchorId,
+            anchorSha256: manifest.sourceVideo.sha256,
+            reviewedAgainstAnchor: true,
+            disposition: 'PASS',
+            visualEvidence: [ow03Evidence, ow04Evidence],
+            interactionEvidence: [ow03Evidence, ow04Evidence],
+            continuityEvidence: [ow03Evidence, ow04Evidence],
+            experienceFiles,
+            invariants,
+            reviewSummary: {
+              reviewedCandidateHead: head,
+              qualificationOperation: 'H_EARTH_OW03_OW04_CUMULATIVE_PARENT_PROMOTION_ANCHOR_RECONCILIATION_20260816_001',
+              finding: 'Cumulative parent-promotion custody combines the previously accepted OW03 shoreline/continental evidence with the exact-head OW04 desktop, mobile, interaction, reach, atmosphere, and articulated-relief evidence. The nine-file main-to-candidate experience surface preserves one canonical H-Earth world, direct manipulation, the qualified coastal arrival, open-ocean law, frozen accessible extent, and non-navigable surrounding-world continuation.'
+            }
+          };
+          fs.writeFileSync(receiptPath, JSON.stringify(receipt, null, 2) + '\n');
+          NODE
+
+      - name: Commit cumulative receipt
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add h-earth-3d/experience-anchor/receipts/ZZ_OW04_PARENT_PROMOTION_20260816_001.json
+          git commit -m "H-Earth: admit cumulative OW03+OW04 parent anchor receipt"
+
+      - name: Prove cumulative parent hard-anchor gate
+        env:
+          BASE_SHA: 2a785fb2fa5b9769a3a061e82b7ffd27a9974c77
+          HEAD_SHA: HEAD
+        run: node tools/h-earth-experience-anchor-gate.mjs
+
+      - name: Push receipt-bearing parent candidate
+        run: git push

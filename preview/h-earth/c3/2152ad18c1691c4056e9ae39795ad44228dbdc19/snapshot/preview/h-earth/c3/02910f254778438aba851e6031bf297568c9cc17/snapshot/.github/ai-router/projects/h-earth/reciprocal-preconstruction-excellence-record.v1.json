@@ -1,0 +1,261 @@
+{
+  "schema": "H_EARTH_RECIPROCAL_PRECONSTRUCTION_EXCELLENCE_RECORD_v1",
+  "status": "PINNED_PRECONSTRUCTION_CONTEXT_PENDING_RATIFICATION",
+  "projectId": "H_EARTH",
+  "purpose": "Make audit, deficiency mapping, collaborative repair strategy, reciprocal world-development requirements, and reference-class excellence review one durable preconstruction record so H-Earth construction cannot begin from an unexamined visual idea or silently lose known deficiencies.",
+  "governingLaws": {
+    "canonicalIdentity": "GLOBAL_AND_REGIONAL_VIEWS_ARE_DIFFERENT_RESOLUTIONS_OF_THE_SAME_CANONICAL_WORLD",
+    "reciprocity": "GLOBAL_REGIONAL_RECIPROCITY_REQUIRES_BOTH_GEOGRAPHIC_IDENTITY_AND_ENVIRONMENTAL_IDENTITY",
+    "constructionTraceability": "EVERY_ACCEPTED_DEFICIENCY_REQUIRES_AT_LEAST_ONE_EXPLICIT_STRATEGY_TREATMENT_BEFORE_PRODUCT_CONSTRUCTION",
+    "strategyCustody": "THE_DEFICIENCY_REGISTER_AND_THE_CONSTRUCTION_STRATEGY_MUST_REMAIN_IN_THE_SAME_PINNED_PRECONSTRUCTION_RECORD",
+    "morphologyCaution": "PROVISIONAL_MACRO_MORPHOLOGY_MUST_NOT_BE_OVERFITTED_INTO_LOCAL_ENVIRONMENTAL_SYSTEMS",
+    "positionalStandard": "A_BELIEVABLE_GRATITUDE_REGION_AND_ITS_PROVEN_POSITIONAL_RELATIONSHIPS_BECOME_THE_CALIBRATION_STANDARD_FOR_LATER_AUDRALIA_CONTINENTAL_COMPOSITION",
+    "constructionBoundary": "NO_PRODUCT_CONSTRUCTION_FROM_THIS_RECORD_UNTIL_THE_RECORD_IS_LOADED_AS_MANDATORY_CONTEXT_AND_THE_ACTIVE_OPERATION_SEPARATELY_GRANTS_MUTATION_AUTHORITY"
+  },
+  "references": {
+    "reciprocalComparativeBaseline": ".github/ai-router/projects/h-earth/ow01-reciprocal-comparative-baseline.v1.json",
+    "privateReciprocalWorldDevelopment": {
+      "repository": "smansfield635-create/geodiametrics1",
+      "path": ".github/ai-router/project-continuation/h-earth.world-development-continuity.v1.json",
+      "contractId": "H_EARTH_RECIPROCAL_GLOBAL_REGIONAL_WORLD_DEVELOPMENT_CONTINUITY_v1"
+    },
+    "currentCorrectiveCandidate": {
+      "pullRequest": 1134,
+      "headAtAudit": "541360177526a14a59e8afad0944ca44fe39bc96",
+      "classification": "INSPECTION_EVIDENCE_NOT_CANONICAL_FINAL_MORPHOLOGY"
+    },
+    "referenceClassAwards": {
+      "publicEvidence": "qualification/reference-class-awards/calibration-v1/provenance.json",
+      "evidenceStatus": "NON_AUTHORITATIVE_QUALIFICATION_EVIDENCE",
+      "use": "REFERENCE_CLASS_PERCEPTUAL_AND_EXECUTION_BENCHMARK_ONLY",
+      "awardWinnerAuthorityCreated": false
+    }
+  },
+  "threeTierDevelopmentModel": {
+    "tier1": {
+      "name": "RECIPROCAL_WORLD_DEVELOPMENT",
+      "question": "Does the regional environment and planetary representation still describe one canonical place at their appropriate scales?"
+    },
+    "tier2": {
+      "name": "REFERENCE_AND_EXCELLENCE_AUDIT",
+      "question": "Against project goals, preserved strengths, direct inspection evidence, and reference-class standards, what prevents the current artifact from reading as believable and exceptional?"
+    },
+    "tier3": {
+      "name": "DEFICIENCY_TO_STRATEGY_PRECONSTRUCTION_CUSTODY",
+      "question": "Has every accepted deficiency been mapped to a collaborative repair strategy and frozen into the same record before construction begins?"
+    }
+  },
+  "auditAxes": [
+    "CANONICAL_GEOGRAPHIC_IDENTITY",
+    "GLOBAL_REGIONAL_POSITIONAL_RECIPROCITY",
+    "CONTINENTAL_MORPHOLOGY_BELIEVABILITY",
+    "LOCAL_TERRAIN_CAUSALITY",
+    "CLIMATE_AND_BIOME_IDENTITY",
+    "HYDROLOGY_VEGETATION_MATERIAL_CORRELATION",
+    "COASTAL_AND_INLAND_TRANSITION",
+    "VISIBLE_WORLD_CONTINUATION",
+    "BOUNDARY_DISSOLUTION_AND_HORIZON",
+    "TRAVERSAL_AND_NAVIGATION_PRESERVATION",
+    "ATMOSPHERIC_DEPTH",
+    "REFERENCE_CLASS_PERCEPTUAL_READABILITY",
+    "MOBILE_AND_DESKTOP_EXPERIENCE_CONTINUITY",
+    "NO_REGRESSION_OF_PROTECTED_H_EARTH_STRENGTHS"
+  ],
+  "protectedStrengths": [
+    "CURRENT_USEFUL_ACCESSIBLE_REGION_SCALE",
+    "GROUND_CHARACTER_PERSPECTIVE",
+    "ENTERED_H_EARTH_EXPERIENCE",
+    "TRAVEL_GRAMMAR",
+    "CAMERA_BEHAVIOR_UNLESS_SEPARATELY_AUTHORIZED",
+    "NAVIGATION_CONTINUITY",
+    "LOCAL_TERRAIN_DEFINITION",
+    "COAST_TO_INLAND_RELATIONSHIP",
+    "MOUNTAIN_WATERSHED_CAUSALITY_WHERE_LOCALLY_VALID",
+    "ONE_CANONICAL_WORLD_IDENTITY",
+    "ABILITY_TO_RECONCILE_REGIONAL_FINDINGS_BACK_TO_AUDRALIA"
+  ],
+  "nonFrozenProvisionalTruths": [
+    "CURRENT_GRATITUDE_MACRO_CONTINENTAL_SILHOUETTE",
+    "CURRENT_ROUND_OR_BLOB_LIKE_OUTLINE",
+    "CURRENT_OUTER_PERIMETER_AS_FINAL_GEOGRAPHIC_AUTHORITY",
+    "CURRENT_HORIZON_EXTENSION_SHAPE",
+    "ANY_BIOME_ZONING_HARD_CODED_TO_THE_CURRENT_PROVISIONAL_SILHOUETTE"
+  ],
+  "deficiencyRegister": [
+    {
+      "id": "D01",
+      "title": "SECOND_BOX_BOUNDARY_READ",
+      "finding": "The world-continuation repair remains visibly legible as an expanded outer box around the authored region.",
+      "severity": "BLOCKING_BELIEVABILITY",
+      "acceptanceNeed": "No readable perimeter line, shelf, wall, rectangular horizon cue, or tonal/elevation discontinuity may disclose the continuation mechanism."
+    },
+    {
+      "id": "D02",
+      "title": "ENVIRONMENTAL_TRANSITION_NOT_BLEND_COHERENT",
+      "finding": "The exterior continuation does not sufficiently inherit local slope, shoreline direction, material frequency, atmosphere, and terrain character before attenuating into distance.",
+      "severity": "BLOCKING_BELIEVABILITY",
+      "acceptanceNeed": "The visible world must transition continuously from authored detail into lower-frequency distant representation without an obvious layer boundary."
+    },
+    {
+      "id": "D03",
+      "title": "DESERT_READING_CONTRADICTS_SUBTROPICAL_IDENTITY",
+      "finding": "The current material palette, exposed soil dominance, weak vegetation density, and sparse biome differentiation make Gratitude read as arid/desert-like rather than subtropical.",
+      "severity": "BLOCKING_RECIPROCAL_ENVIRONMENTAL_IDENTITY",
+      "acceptanceNeed": "Ground-scale climate, vegetation, material, moisture, and atmospheric cues must collectively read as a warm subtropical coastal region."
+    },
+    {
+      "id": "D04",
+      "title": "WEAK_HYDROLOGY_VEGETATION_MATERIAL_CAUSALITY",
+      "finding": "Vegetation and material expression are not yet strongly correlated with drainage, valleys, exposure, elevation, freshwater proximity, slope, and coastal conditions.",
+      "severity": "MAJOR_NATURALISM_DEFICIENCY",
+      "acceptanceNeed": "Environmental distribution must arise from local geographic causes rather than uniform decorative greening."
+    },
+    {
+      "id": "D05",
+      "title": "GRATITUDE_MACRO_MORPHOLOGY_TOO_BLOB_LIKE",
+      "finding": "Although local coast geometry is improving, Gratitude's macro disposition remains too round and blob-like to serve as a believable continental positional standard.",
+      "severity": "BLOCKING_GLOBAL_RECONCILIATION",
+      "acceptanceNeed": "Regional proof must expose enough asymmetric coastal, relief, drainage, and directional structure to support a later non-blob planetary morphology reconstruction."
+    },
+    {
+      "id": "D06",
+      "title": "RISK_OF_OVERFITTING_LOCAL_ENVIRONMENT_TO_PROVISIONAL_SHAPE",
+      "finding": "If biome, hydrology, or continuation systems are keyed to the current silhouette, later correction of Gratitude's planetary shape will force avoidable regression.",
+      "severity": "ARCHITECTURAL_RISK",
+      "acceptanceNeed": "Environmental systems must be driven primarily by local causal fields and climate relationships, not by hard-coded dependence on the provisional outer silhouette."
+    },
+    {
+      "id": "D07",
+      "title": "ENVIRONMENTAL_RECIPROCITY_NOT_YET_FIRST_CLASS",
+      "finding": "The existing reciprocal baseline strongly governs geography but does not yet make climate, biome, hydrology, vegetation distribution, atmosphere, and material identity equally explicit comparison dimensions.",
+      "severity": "GOVERNANCE_GAP",
+      "acceptanceNeed": "Future globe and regional qualification must compare both geographic identity and environmental identity."
+    },
+    {
+      "id": "D08",
+      "title": "GRATITUDE_NOT_YET_READY_AS_AUDRALIA_POSITIONAL_STANDARD",
+      "finding": "The region is not yet sufficiently believable in shape, geography, environmental causality, and scale to constrain the later shape of the wider Audralia continent.",
+      "severity": "PROGRAM_FRONTIER",
+      "acceptanceNeed": "A believable regional standard must be established before Gratitude is used to derive surrounding continental composition on the globe."
+    }
+  ],
+  "strategy": [
+    {
+      "id": "S01",
+      "addresses": ["D01", "D02"],
+      "name": "SEAMLESS_WORLD_CONTINUATION_BLEND",
+      "actions": [
+        "FREEZE_CURRENT_ACCESSIBLE_REGION_EXTENT",
+        "DO_NOT_EXTEND_NAVIGABLE_TERRAIN_TO_HIDE_BOUNDARIES",
+        "MATCH_EDGE_SLOPE_HEIGHT_MATERIAL_FREQUENCY_AND_SHORELINE_DIRECTION_AT_THE_TRANSITION",
+        "PROGRESSIVELY_REDUCE_DETAIL_AND_CONTRAST_WITH_DISTANCE",
+        "USE_ASYMMETRIC_HORIZON_STRUCTURE_RATHER_THAN_RECTANGULAR_ENCLOSURE",
+        "KEEP_OCEAN_FACING_CONTINUATION_OPEN_WATER_AND_ATMOSPHERIC_DEPTH_ONLY_WHERE_GEOGRAPHICALLY_REQUIRED",
+        "KEEP_EXTERIOR_CONTINUATION_NONADDRESSABLE_NONCOLLIDABLE_AND_NONNAVIGABLE"
+      ]
+    },
+    {
+      "id": "S02",
+      "addresses": ["D03", "D04"],
+      "name": "SUBTROPICAL_CAUSAL_ENVIRONMENT_CONVERSION",
+      "actions": [
+        "SHIFT_FROM_ARID_DOMINANT_PALETTE_TO_SUBTROPICAL_COASTAL_MATERIAL_BALANCE_WITHOUT_UNIFORM_GREENING",
+        "INCREASE_VEGETATION_DENSITY_BY_MOISTURE_EXPOSURE_ELEVATION_AND_DRAINAGE_CONTEXT",
+        "FAVOR_DENSER_GROWTH_IN_VALLEYS_DRAINAGE_CORRIDORS_FRESHWATER_PROXIMITY_AND_SHELTERED_SLOPES",
+        "USE_MIXED_COASTAL_GRASS_SCRUB_AND_WARM_HUMID_TRANSITIONS_BEHIND_BEACHES",
+        "PRESERVE_VISIBLE_SOIL_AND_STONE_ON_EXPOSED_RIDGES_STEEP_FACES_AND_JUSTIFIED_DRYER_MICROCONTEXTS",
+        "CORRELATE_DISTANCE_HAZE_AND_ATMOSPHERIC_HUMIDITY_WITH_THE_SUBTROPICAL_COASTAL_IDENTITY"
+      ]
+    },
+    {
+      "id": "S03",
+      "addresses": ["D05", "D08"],
+      "name": "GRATITUDE_POSITIONAL_STANDARD_DEVELOPMENT",
+      "actions": [
+        "TREAT_CURRENT_MACRO_SILHOUETTE_AS_PROVISIONAL",
+        "USE_REGIONAL_COAST_RELIEF_WATERSHED_AND_DIRECTIONAL_RELATIONSHIPS_TO_DISCOVER_THE_BELIEVABLE_SHAPE",
+        "REQUIRE_ASYMMETRIC_PENINSULAS_BAYS_HEADLANDS_DRAINAGE_ORIENTATIONS_AND_RELIEF_TRANSITIONS_TO_HAVE_CAUSAL_RELATIONSHIPS",
+        "ONCE_REGIONAL_BELIEVABILITY_IS_ESTABLISHED_RECONCILE_GRATITUDE_POSITION_AND_SHAPE_BACK_TO_THE_PLANETARY_VIEW",
+        "USE_THE_RECONCILED_GRATITUDE_POSITIONAL_STANDARD_TO_CONSTRAIN_LATER_AUDRALIA_CONTINENTAL_COMPOSITION_INSTEAD_OF_FORCING_GRATITUDE_INTO_A_PRESELECTED_BLOB"
+      ]
+    },
+    {
+      "id": "S04",
+      "addresses": ["D06"],
+      "name": "MORPHOLOGY_TOLERANT_ENVIRONMENTAL_SYSTEMS",
+      "actions": [
+        "DRIVE_BIOME_AND_MATERIAL_RESPONSE_FROM_LOCAL_ELEVATION_SLOPE_WATER_PROXIMITY_DRAINAGE_EXPOSURE_AND_CLIMATE_FIELDS",
+        "KEEP_ENVIRONMENTAL_RULES_REUSABLE_IF_THE_MACRO_COASTLINE_MOVES",
+        "AVOID_OUTER_BOUNDARY_DISTANCE_AS_A_PRIMARY_BIOME_DRIVER",
+        "REQUIRE_LATER_MORPHOLOGY_RECONCILIATION_TO_REMAP_CAUSAL_FIELDS_WITHOUT_REDESIGNING_THE_CLIMATE_SYSTEM"
+      ]
+    },
+    {
+      "id": "S05",
+      "addresses": ["D07"],
+      "name": "RECIPROCAL_ENVIRONMENTAL_IDENTITY_EXPANSION",
+      "actions": [
+        "ADD_CLIMATE_REGIME_TO_GLOBE_REGIONAL_COMPARISON",
+        "ADD_BIOME_FAMILY_AND_VEGETATION_DISTRIBUTION_TO_GLOBE_REGIONAL_COMPARISON",
+        "ADD_HYDROLOGIC_EXPRESSION_AND_MOISTURE_CAUSALITY_TO_GLOBE_REGIONAL_COMPARISON",
+        "ADD_ATMOSPHERIC_CHARACTER_AND_MATERIAL_PALETTE_TO_GLOBE_REGIONAL_COMPARISON",
+        "PRESERVE_SCALE_TRANSLATION_LAW_SO_EQUAL_IDENTITY_DOES_NOT_REQUIRE_EQUAL_VISUAL_RESOLUTION"
+      ]
+    },
+    {
+      "id": "S06",
+      "addresses": ["D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08"],
+      "name": "COLLABORATIVE_QUALIFICATION_AND_REFERENCE_CLASS_REVIEW",
+      "actions": [
+        "AUDIT_EXACT_CANDIDATE_AGAINST_PRIOR_H_EARTH_BASELINE",
+        "AUDIT_EXACT_CANDIDATE_AGAINST_CURRENT_PARALLEL_AUDRALIA_REPRESENTATION",
+        "AUDIT_EXACT_CANDIDATE_AGAINST_THIS_DEFICIENCY_REGISTER",
+        "AUDIT_EXACT_CANDIDATE_AGAINST_REFERENCE_CLASS_AWARDS_PERCEPTUAL_EXECUTION_STANDARDS_WITHOUT_CLAIMING_AWARD_WINNER_STATUS",
+        "REQUIRE_PHONE_TABLET_AND_DESKTOP_FIRST_GLANCE_READABILITY",
+        "REQUIRE_INTERACTION_NAVIGATION_AND_RETURN_CONTINUITY",
+        "FAIL_IF_A_DEFICIENCY_IS_MERELY_HIDDEN_BY_CAMERA_OR_CROP_INSTEAD_OF_RESOLVED",
+        "FAIL_IF_SOLVING_ONE_DEFICIENCY_MATERIALLY_WORSENS_ANOTHER_ACCEPTED_DEFICIENCY"
+      ]
+    }
+  ],
+  "strategyCoverage": {
+    "requiredDeficiencyIds": ["D01", "D02", "D03", "D04", "D05", "D06", "D07", "D08"],
+    "coveredByStrategyIds": ["S01", "S02", "S03", "S04", "S05", "S06"],
+    "coverageLaw": "EVERY_REQUIRED_DEFICIENCY_ID_MUST_APPEAR_IN_AT_LEAST_ONE_STRATEGY_ADDRESSES_SET",
+    "orphanDeficiencyAllowed": false
+  },
+  "constructionSequence": [
+    "LOAD_RECIPROCAL_WORLD_DEVELOPMENT_CONTEXT",
+    "LOAD_THIS_PINNED_PRECONSTRUCTION_RECORD",
+    "CONFIRM_PROTECTED_STRENGTHS_AND_NONFROZEN_PROVISIONAL_TRUTHS",
+    "CONFIRM_DEFICIENCY_TO_STRATEGY_COVERAGE",
+    "SEPARATELY_ADMIT_BOUNDED_PRODUCT_CONSTRUCTION",
+    "EXECUTE_BOUNDARY_BLEND_AND_SUBTROPICAL_CAUSAL_ENVIRONMENT_WORK_WITHOUT_EXPANDING_ACCESSIBLE_EXTENT",
+    "QUALIFY_AGAINST_ALL_MAPPED_DEFICIENCIES_AND_REFERENCE_CLASS_STANDARDS",
+    "ONLY_AFTER_BELIEVABLE_REGIONAL_DISPOSITION_RECONCILE_GRATITUDE_POSITION_AND_MORPHOLOGY_BACK_TO_AUDRALIA",
+    "USE_RECONCILED_GRATITUDE_AS_POSITIONAL_CALIBRATION_FOR_LATER_AUDRALIA_CONTINENTAL_COMPOSITION"
+  ],
+  "qualificationDispositionLaw": {
+    "passRequires": [
+      "NO_REQUIRED_DEFICIENCY_REMAINS_UNADDRESSED",
+      "NO_PROTECTED_STRENGTH_REGRESSION",
+      "NO_GLOBE_REGIONAL_CANONICAL_IDENTITY_DIVERGENCE",
+      "NO_ENVIRONMENTAL_IDENTITY_CONTRADICTION",
+      "VISIBLE_WORLD_CONTINUATION_NO_LONGER_READS_AS_A_SECOND_BOX",
+      "GRATITUDE_READS_SUBTROPICAL_AT_GROUND_SCALE",
+      "ENVIRONMENTAL_SYSTEMS_REMAIN_MORPHOLOGY_TOLERANT",
+      "REFERENCE_CLASS_REVIEW_FINDS_POSITIVE_ADVANCEMENT_ON_APPLICABLE_DIMENSIONS"
+    ],
+    "partialImprovementIsTerminalPass": false
+  },
+  "authorityBoundary": {
+    "createsProductAuthority": false,
+    "createsGeographicCanonicalizationAuthority": false,
+    "createsAudraliaMorphologyAuthority": false,
+    "createsMutationAuthority": false,
+    "createsMergeAuthority": false,
+    "createsDeploymentAuthority": false,
+    "createsAwardWinnerClaim": false,
+    "effect": "MANDATORY_PRECONSTRUCTION_AUDIT_DEFICIENCY_AND_STRATEGY_CONTEXT_ONLY"
+  }
+}

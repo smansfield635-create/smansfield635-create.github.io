@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "H_EARTH_GRATITUDE_REGION_ENTRY_ZONE_RECONCILIATION_DURABLE_RECEIPT_v1",
+  "sectionId": "GR-CR-02_ENTRY_ZONE",
+  "checkpointId": "GR-CR-02H",
+  "status": "PASS_CLOSED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "workingBranch": "agent/h-earth-gratitude-region-coordinate-reconciliation-001",
+  "draftPullRequest": 311,
+  "executionCustody": {
+    "executedHead": "d5e9076249eff57e834aadfa5224e08a60df03b3",
+    "entryReconciliationGitBlob": "b7e5d6378a772e3ba62320e609cb491365002d05",
+    "runnerGitBlob": "ebf166d39cf815ded36af296006dd09a79232293",
+    "workflowGitBlob": "c4617267bc97ca301787a9857b52b0a9c684cffa",
+    "workflowRunId": 30466121733,
+    "workflowJobId": 90624178550,
+    "workflowConclusion": "success",
+    "artifactId": 8729596939,
+    "artifactDigest": "sha256:e0335ee749d7d03953ae943c4964cba806d2e9042949be7532fa51f5d210247e",
+    "executionReceiptSha256": "7cf53b9f6a213c42bb64cb375d26d0e19f0ef7d2065aee29163efa2681e8431a",
+    "executionLogSha256": "07e430fd75b0846fc28e3df7b3d83c7b75906df8d51629e7b3e38f2be6248d4f"
+  },
+  "completedMicroCheckpoints": ["GR-CR-02A", "GR-CR-02B", "GR-CR-02C", "GR-CR-02D", "GR-CR-02E", "GR-CR-02F", "GR-CR-02G", "GR-CR-02H"],
+  "correctionHistory": {
+    "failedAttemptRunId": 30465870866,
+    "failedAttemptIssue": "GLOBAL_LANDWARD_MOST_SHORELINE_CROSSING_WAS_INCORRECTLY_APPLIED_AS_ONE_EXCLUSION_LINE_ACROSS_ALL_X",
+    "correction": "SELECT_WATERWARD_MOST_SEA_LEVEL_CROSSING_PER_X_AND_DERIVE_A_LOCAL_INTERPOLATED_EXCLUSION_TRACE",
+    "correctedRunId": 30466121733,
+    "correctedRunConclusion": "success"
+  },
+  "executionReceipt": {
+    "eligible": true,
+    "status": "GR_CR_02H_ENTRY_ZONE_PASS",
+    "sectionStatus": "PASS_CLOSED",
+    "firstExecutionDigest": "a181533c91aa129b52f8608251d0a23fadcc6abd2a4fb7b39df2e514d9770fc5",
+    "secondExecutionDigest": "a181533c91aa129b52f8608251d0a23fadcc6abd2a4fb7b39df2e514d9770fc5",
+    "deterministicRepeatExecution": true,
+    "issues": []
+  },
+  "entryZoneCandidate": {
+    "candidateId": "GRATITUDE_REGION_ENTRY_ZONE_CANDIDATE_01",
+    "candidateClass": "MEASURED_OR_DERIVED_CANDIDATE_PENDING_LATER_MANIFEST_ACCEPTANCE",
+    "eligible": true,
+    "accepted": false,
+    "finalPlacement": false,
+    "center": {"x": 1.0454545454545454, "z": -104.6590909090909},
+    "bounds": {"xMinimum": -24, "xMaximum": 24, "zMinimum": -132, "zMaximum": -88},
+    "elevationRange": {"minimum": -0.16044354438781738, "maximum": 5.570830881595612},
+    "slopeRange": {"minimum": 0.03722603713947951, "maximum": 0.3346133760439463},
+    "connectedSampleCount": 88,
+    "approximateSampleAreaWorldUnitsSquared": 1408,
+    "formationMembership": ["H_EARTH_COASTAL_BERM_001"],
+    "centerSemanticAddressId": "H_EARTH_GROUND_CELL_001:R02:C09",
+    "centerPhysicalChunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C09_C12",
+    "candidateDigest": "67415311d14c6931a351898d92b5b9d4130400fdd94f732b25928373f0819bd1"
+  },
+  "stoppingBoundary": {
+    "entryZoneMeasurementExecuted": true,
+    "entryZoneCandidateDerived": true,
+    "entryZoneCandidateAccepted": false,
+    "finalCoordinatesAssigned": false,
+    "mirrorManorMeasurementExecuted": false,
+    "terrainMutation": false,
+    "geometryConstruction": false,
+    "runtimeGameplayRouteOrProductionChange": false,
+    "controllingManifestMutation": false
+  },
+  "nextSection": "GR-CR-03_MIRROR_MANOR"
+}

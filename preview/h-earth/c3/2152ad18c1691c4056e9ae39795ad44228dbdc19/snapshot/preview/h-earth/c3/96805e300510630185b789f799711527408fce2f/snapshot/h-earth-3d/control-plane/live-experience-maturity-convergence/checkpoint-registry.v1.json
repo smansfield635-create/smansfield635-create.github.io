@@ -1,0 +1,71 @@
+{
+  "schema": "H_EARTH_LIVE_EXPERIENCE_CHECKPOINT_REGISTRY_v1",
+  "programId": "H_EARTH_LIVE_EXPERIENCE_MATURITY_CONVERGENCE_v1",
+  "ordering": "STRICT_LINEAR_UNLESS_EXACT_REPOSITORY_SUPERSESSION",
+  "checkpoints": [
+    {
+      "id": "HC00",
+      "name": "LIVE_EXPERIENCE_CONVERGENCE_CONTROL_PACKAGE",
+      "status": "CANDIDATE_CONSTRUCTION",
+      "productMutationAllowed": false,
+      "visualInspectionRequired": false
+    },
+    {
+      "id": "HC01",
+      "name": "PRE_UNBOX_BASELINE_AND_SHELL_RUNTIME_CLASSIFICATION",
+      "status": "NOT_STARTED",
+      "productMutationAllowed": false,
+      "visualInspectionRequired": false
+    },
+    {
+      "id": "HC02",
+      "name": "VIEWPORT_AUTHORITY_UNBOXING_CANDIDATE",
+      "status": "NOT_STARTED_REQUIRES_SEPARATE_PRODUCT_ADMISSION",
+      "productMutationAllowed": true,
+      "visualInspectionRequired": false
+    },
+    {
+      "id": "HC03",
+      "name": "POST_UNBOX_RUNTIME_AND_STRUCTURAL_REGRESSION",
+      "status": "NOT_STARTED",
+      "productMutationAllowed": false,
+      "visualInspectionRequired": false
+    },
+    {
+      "id": "HC04",
+      "name": "FIRST_UNBOXED_VISUAL_INSPECTION",
+      "status": "NOT_STARTED",
+      "productMutationAllowed": false,
+      "visualInspectionRequired": true
+    },
+    {
+      "id": "HC05",
+      "name": "GROUND_VIEW_ENVIRONMENTAL_MATURITY",
+      "status": "NOT_STARTED_REQUIRES_BOUNDED_PERCEPTUAL_PASSES",
+      "productMutationAllowed": true,
+      "visualInspectionRequired": true
+    },
+    {
+      "id": "HC06",
+      "name": "MINIMAL_PLAYER_INTERFACE",
+      "status": "NOT_STARTED",
+      "productMutationAllowed": true,
+      "visualInspectionRequired": true
+    },
+    {
+      "id": "HC07",
+      "name": "AUDRALIA_H_EARTH_WORLD_CONTINUITY",
+      "status": "NOT_STARTED",
+      "productMutationAllowed": true,
+      "visualInspectionRequired": true
+    },
+    {
+      "id": "HC08",
+      "name": "AUTHORITATIVE_H_EARTH_WORLD_VIEW_BASELINE_FREEZE",
+      "status": "NOT_STARTED",
+      "productMutationAllowed": false,
+      "visualInspectionRequired": true
+    }
+  ],
+  "gateLaw": "FAILED_OR_UNCLOSED_CHECKPOINT_DOES_NOT_AUTHORIZE_DOWNSTREAM_WORK"
+}

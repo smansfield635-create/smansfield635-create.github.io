@@ -1,0 +1,99 @@
+{
+  "schema": "H_EARTH_OW01_RECIPROCAL_COMPARATIVE_BASELINE_v1",
+  "status": "LOCKED_MANDATORY_CONSTRUCTION_AND_QUALIFICATION_CONTEXT",
+  "projectId": "H_EARTH",
+  "checkpointId": "OW01",
+  "purpose": "Conjugate OW01 construction with the existing reciprocal globe-to-H-Earth world-development contract, Gratitude coordinate reconciliation, and the exact saved H-Earth experience video so every applicable candidate is judged longitudinally, reciprocally, and against one immutable artifact identity.",
+  "governingPlan": ".github/ai-router/projects/h-earth/ow01-construction-execution-plan.v1.json",
+  "privateReferenceHead": "4543d2e65e51b4f53ae6c5d0741bed6dbed19a52",
+  "canonicalReferences": {
+    "reciprocalWorldDevelopment": {
+      "repository": "smansfield635-create/geodiametrics1",
+      "path": ".github/ai-router/project-continuation/h-earth.world-development-continuity.v1.json",
+      "blob": "ff730c47a4fbc3c830607f2d5ff248af036f3da7",
+      "contractId": "H_EARTH_RECIPROCAL_GLOBAL_REGIONAL_WORLD_DEVELOPMENT_CONTINUITY_v1",
+      "law": "GLOBAL_AND_REGIONAL_VIEWS_ARE_DIFFERENT_RESOLUTIONS_OF_THE_SAME_CANONICAL_WORLD"
+    },
+    "experienceVideo": {
+      "repository": "smansfield635-create/geodiametrics1",
+      "path": ".github/ai-router/project-continuation/h-earth.experience-video-anchor.v1.json",
+      "blob": "dd20fd53145d9f3b36ad638089fd4174f2ba8d7d",
+      "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+      "sha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+      "law": "THE_ACTUAL_MP4_BYTES_ARE_CONTROLLING_VISUAL_EVIDENCE"
+    },
+    "gratitudeCoordinateReconciliation": {
+      "repository": "smansfield635-create/geodiametrics1",
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.gratitude-region.coordinate-reconciliation.input-ledger.v1.json",
+      "blob": "c033b1a4de872b3e57fc11c3d2255331a175ec86",
+      "status": "PASS_CLOSED",
+      "law": "GLOBAL_TO_REGIONAL_AND_REGIONAL_TO_GLOBAL_PLACEMENT_MUST_REMAIN_RECONCILED_TO_THE_CANONICAL_WORLD"
+    }
+  },
+  "comparisonAxes": {
+    "temporal": {
+      "law": "CURRENT_SURFACE_MUST_NOT_REGRESS_REQUIRED_CAPABILITY_PROVEN_BY_ITS_PRIOR_BASELINE",
+      "hEarthBaseline": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001"
+    },
+    "reciprocal": {
+      "law": "ANY_APPLICABLE_CHANGE_TO_H_EARTH_OR_THE_GLOBE_MUST_BE_COMPARED_TO_THE_CURRENT_PARALLEL_REPRESENTATION_OF_THE_SAME_CANONICAL_WORLD",
+      "hEarthChangeReference": "CURRENT_GLOBE_OR_AUDRALIA_PLANETARY_REPRESENTATION",
+      "globeChangeReference": "CURRENT_ENTERED_H_EARTH_REGIONAL_REPRESENTATION",
+      "equalResolutionRequired": false,
+      "canonicalIdentityRequired": true
+    },
+    "artifact": {
+      "law": "PLAYWRIGHT_PAGE_EXCELLENCE_AWARDS_OWNER_INSPECTION_AND_PROMOTION_EVIDENCE_MUST_BIND_TO_THE_EXACT_PUBLIC_CANDIDATE_SHA",
+      "surrogateArtifactAllowed": false
+    }
+  },
+  "playwrightComparativeAudit": {
+    "required": true,
+    "realBrowserRequired": true,
+    "candidateAgainstPriorSameSurface": true,
+    "candidateAgainstCurrentParallelEnvironment": true,
+    "requiredEvidence": [
+      "EXACT_CANDIDATE_SHA",
+      "BASELINE_IDENTITY",
+      "PARALLEL_ENVIRONMENT_IDENTITY",
+      "SCREENSHOTS_OR_VIDEO_CAPTURE_WHERE_APPLICABLE",
+      "REAL_POINTER_AND_TOUCH_INTERACTION_EVIDENCE_WHERE_APPLICABLE",
+      "NAVIGATION_AND_RETURN_CONTINUITY",
+      "RESPONSIVE_ORIENTATION_AND_REDUCED_MOTION_EVIDENCE_WHERE_APPLICABLE",
+      "CONSOLE_CLEANLINESS",
+      "GEOGRAPHIC_RECIPROCITY_FINDINGS",
+      "LONGITUDINAL_PRESERVATION_FINDINGS",
+      "IMPROVEMENT_FINDINGS"
+    ],
+    "dimensionResults": ["PRESERVED", "IMPROVED", "REGRESSED", "NOT_COMPARABLE"],
+    "notComparableLaw": "NOT_COMPARABLE_IS_ALLOWED_ONLY_WHERE_NO_ESTABLISHED_CORRESPONDING_FEATURE_OR_CAPABILITY_EXISTS"
+  },
+  "reciprocalGeographyChecks": [
+    "CONTINENTAL_OUTLINE_AND_COASTLINE_TOPOLOGY",
+    "GRATITUDE_GLOBAL_POSITION_AND_REGIONAL_ORIENTATION",
+    "TRUE_COASTAL_HARBOR_PLACEMENT",
+    "MOUNTAIN_AND_WATERSHED_AXES_TO_THE_SAME_COAST",
+    "BAY_HEADLAND_BEACH_AND_SANDBAR_RELATIONSHIPS",
+    "DIRECTIONAL_AND_SCALE_MAPPING_BETWEEN_PLANETARY_AND_REGIONAL_VIEWS",
+    "PERSISTENT_NAMED_GEOGRAPHIC_IDENTITIES",
+    "GLOBE_TO_H_EARTH_ENTRY_AND_H_EARTH_TO_GLOBE_RETURN_CONTINUITY"
+  ],
+  "qualificationLaw": "USER_REVIEW_ELIGIBILITY_REQUIRES_NO_REQUIRED_LONGITUDINAL_REGRESSION_NO_RECIPROCAL_GEOGRAPHIC_DIVERGENCE_AND_POSITIVE_ADVANCEMENT_ON_APPLICABLE_IMPROVEMENT_DIMENSIONS.",
+  "failClosed": [
+    "FAIL_IF_REQUIRED_BASELINE_CAPABILITY_REGRESSES",
+    "FAIL_IF_GLOBE_AND_H_EARTH_DIVERGE_ON_ESTABLISHED_CANONICAL_GEOGRAPHY",
+    "FAIL_IF_COMPARISON_USES_A_SURROGATE_INSTEAD_OF_THE_EXACT_PUBLIC_CANDIDATE_SHA",
+    "FAIL_IF_VIDEO_REFERENCE_IS_REPLACED_BY_DERIVED_SCREENSHOTS_AS_CONTROLLING_EVIDENCE",
+    "FAIL_IF_EQUAL_VISUAL_RESOLUTION_IS_REQUIRED_WHERE_SCALE_TRANSLATION_LAW_ALLOWS_DIFFERENT_RESOLUTION",
+    "FAIL_IF_NOT_COMPARABLE_IS_USED_TO_BYPASS_AN_ESTABLISHED_RECIPROCAL_RELATIONSHIP"
+  ],
+  "authorityBoundary": {
+    "createsProductAuthority": false,
+    "createsGeographicAuthority": false,
+    "createsMutationAuthority": false,
+    "createsMergeAuthority": false,
+    "createsDeploymentAuthority": false,
+    "createsUserApproval": false,
+    "effect": "MANDATORY_COMPARATIVE_QUALIFICATION_CONTEXT_ONLY"
+  }
+}

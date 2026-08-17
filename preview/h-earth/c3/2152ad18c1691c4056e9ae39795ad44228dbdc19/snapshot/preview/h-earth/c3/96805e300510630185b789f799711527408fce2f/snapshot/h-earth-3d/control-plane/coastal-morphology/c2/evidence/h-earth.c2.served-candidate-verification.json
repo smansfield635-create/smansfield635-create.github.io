@@ -1,0 +1,18 @@
+{
+  "receiptType": "H_EARTH_C2_SERVED_CANDIDATE_VERIFICATION_v2_SUPERSEDED",
+  "operation": "C2.7_ISOLATED_PREVIEW_PUBLICATION",
+  "publicationResult": "PASS",
+  "visualSuccessor": "FAIL_REJECTED",
+  "userDifferential": "REJECTED",
+  "c2MergeHead": "74d830e849d848835bbf6d2924151a72b1f62f8e",
+  "liveCandidateUrl": "https://diamondgatebridge.com/preview/h-earth/c2/coastal-visual-successor-001/",
+  "servedOccurrencePresent": true,
+  "exactMergedBytesServed": true,
+  "failedCandidateDisposition": "REJECTED_EXPERIMENTAL_CANDIDATE_NOT_APPROVED_FOR_PROMOTION",
+  "productDefaultMutated": false,
+  "promotionToPublicDefault": "PROHIBITED",
+  "firstBlocker": "PHYSICALLY_AND_VISUALLY_INCOHERENT_COASTAL_MODEL",
+  "userDifferentialReady": false,
+  "supersededPriorResult": "PASS_CLOSED_USER_DIFFERENTIAL_READY",
+  "note": "Publication and byte identity remain valid engineering facts; neither establishes visual success."
+}

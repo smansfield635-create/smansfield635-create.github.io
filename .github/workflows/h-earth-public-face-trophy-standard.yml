@@ -138,3 +138,30 @@ jobs:
             const targetUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const passed = '${{ job.status }}' === 'success';
             await github.rest.repos.createCommitStatus({ owner: context.repo.owner, repo: context.repo.repo, sha: context.sha, state: passed ? 'success' : 'failure', context: 'h-earth/b10-public-candidate', description: passed ? 'Promoted Trophy Standard regression passed' : 'Promoted Trophy Standard regression failed', target_url: targetUrl });
+
+  export-chapter01-v28-to-workspace:
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'transport/ch1-v28-workspace-export-20260817' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact transport head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify exact V28
+        shell: bash
+        run: |
+          set -euo pipefail
+          MEDIA='showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4'
+          EXPECTED='42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62'
+          test "$(sha256sum "$MEDIA" | awk '{print $1}')" = "$EXPECTED"
+          test "$(stat -c %s "$MEDIA")" = '13651045'
+      - name: Upload exact V28 master
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter01-compass-v28-exact-master
+          path: showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

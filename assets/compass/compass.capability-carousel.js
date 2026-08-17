@@ -59,6 +59,6 @@
     window.CompassOrbitInput?.claimSwipe(stage,rotate);stage.addEventListener('keydown',event=>{if((event.target===stage||event.target===cards[index])&&(event.key==='ArrowRight'||event.key==='ArrowLeft')){event.preventDefault();rotate(event.key==='ArrowRight'?1:-1)}});render();
   }
   function mount(){mountCapability();mountProof()}
-  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
   window.CompassEditorialCarousel=Object.freeze({version:'awards-trl-brain-successor-v1',mount});
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
 })();

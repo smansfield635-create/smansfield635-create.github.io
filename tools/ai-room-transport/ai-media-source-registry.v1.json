@@ -14,6 +14,25 @@
       "inlineBase64Prohibited": true,
       "unverifiedPublicDownloadProhibited": true,
       "postMaterializationRequired": ["BYTE_SIZE_MATCH", "SHA256_MATCH", "FFPROBE_ACCEPTS"]
+    },
+    "CHAPTER_01_STRONG_OWNER_CANDIDATE_V2": {
+      "provider": "GOOGLE_DRIVE",
+      "fileName": "chapter01-compass-successor-continuity-owner-candidate-v2.mp4",
+      "fileId": "1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B",
+      "driveUrl": "https://drive.google.com/file/d/1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B/view",
+      "mimeType": "video/mp4",
+      "expectedBytes": 16476281,
+      "expectedSha256": "db3e981640fe7408fca12d9f6c411660a7dc15edee90ce0e3f1b798b91c928a1",
+      "expectedDurationSeconds": 65.0,
+      "expectedWidth": 1920,
+      "expectedHeight": 1080,
+      "expectedFps": 24,
+      "expectedFrames": 1560,
+      "materializationMode": "DRIVE_RAW_FETCH_STREAM_REFERENCE_TO_EXECUTION_WORKSPACE",
+      "inlineBase64Prohibited": true,
+      "unverifiedPublicDownloadProhibited": true,
+      "postMaterializationRequired": ["BYTE_SIZE_MATCH", "SHA256_MATCH", "FFPROBE_ACCEPTS"],
+      "executionRole": "PRIMARY_SOURCE_FOR_CURRENT_CHAPTER_01_TIMING_CONFORM_ONLY"
     }
   }
 }

@@ -46,7 +46,6 @@ jobs:
             .github/workflows/compass-display-continuity-validation.yml
             .github/workflows/compass-performance-successor-validation.yml
             .github/workflows/compass-carousel-successor-live-qualification.yml
-            .github/workflows/pages-direct-deploy.yml
           )
           mapfile -t changed < <(git diff --name-only "${scope_base}...HEAD")
           requires_compass_revalidation=false

@@ -1,0 +1,56 @@
+name: H-Earth Gen305 Private Connected Backend Qualification
+
+on:
+  push:
+    branches:
+      - repair/h-earth-connected-preflight-successor-transport-20260817
+    paths:
+      - '.github/workflows/h-earth-gen305-private-connected-backend-qualification-20260817.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private read token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Check out exact private successor
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: repair/h-earth-gen305-connected-preflight-rebind-20260817
+          token: ${{ steps.token.outputs.token }}
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify bound identities and self-tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='8c451f13bc468a6bc9c4729789938c17a134d1da'
+          node --input-type=module - "$expected" <<'NODE'
+          import fs from 'node:fs';
+          const expected=process.argv[2];
+          const binding=JSON.parse(fs.readFileSync('.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json','utf8'));
+          const executor=JSON.parse(fs.readFileSync('.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight.v1.json','utf8'));
+          const compiler=JSON.parse(fs.readFileSync('.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight-evidence-compiler.v1.json','utf8'));
+          if(binding.fixedToolingHead!==expected) throw new Error('BINDING_HEAD_MISMATCH');
+          if(executor.fixedBinding.toolingHead!==expected) throw new Error('EXECUTOR_DESCRIPTOR_HEAD_MISMATCH');
+          if(compiler.fixedBinding.toolingHead!==expected) throw new Error('COMPILER_DESCRIPTOR_HEAD_MISMATCH');
+          const execSource=fs.readFileSync('tools/ai-room-transport/connected-public-h-earth-preflight.v1.mjs','utf8');
+          const compilerSource=fs.readFileSync('tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler.v1.mjs','utf8');
+          if(!execSource.includes(`TOOLING_HEAD='${expected}'`)) throw new Error('EXECUTOR_SOURCE_HEAD_MISMATCH');
+          if(!compilerSource.includes(`TOOLING_HEAD = '${expected}'`)) throw new Error('COMPILER_SOURCE_HEAD_MISMATCH');
+          NODE
+          node tools/ai-room-transport/connected-public-h-earth-preflight-self-test.v1.mjs
+          node tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler-self-test.v1.mjs
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"

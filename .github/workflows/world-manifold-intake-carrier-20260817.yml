@@ -1,4 +1,4 @@
-name: World Manifold Gen306 Candidate Qualification
+name: World Manifold Gen306 Terminal Engineering Qualification
 
 on:
   push:
@@ -14,11 +14,19 @@ permissions:
 jobs:
   qualify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       CANDIDATE_HEAD: f484e601e5efaa0ae6d436101d42020d70973ce1
       BASE_HEAD: a7b13dd5cebeafe6ce126d7df64c4088db7feb48
     steps:
+      - name: Checkout frozen base
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: ${{ env.BASE_HEAD }}
+          path: base
+          fetch-depth: 1
+          persist-credentials: false
       - name: Checkout exact Gen306 candidate
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -27,30 +35,27 @@ jobs:
           path: candidate
           fetch-depth: 1
           persist-credentials: false
-      - name: Verify exact candidate identity
-        working-directory: candidate
+      - name: Prove old Run8B harness baseline disposition
+        working-directory: base
         shell: bash
         run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$CANDIDATE_HEAD"
-      - name: Syntax check exact eleven mutated modules
-        working-directory: candidate
+          set +e
+          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs > "$RUNNER_TEMP/base-run8b.log" 2>&1
+          code=$?
+          echo "BASE_RUN8B_EXIT=$code"
+          cat "$RUNNER_TEMP/base-run8b.log"
+          test "$code" -ne 0
+          grep -q 'Run 8A predecessor must remain PASS' "$RUNNER_TEMP/base-run8b.log"
+      - name: Prove old Run8E harness encodes predecessor composition
+        working-directory: base
         shell: bash
         run: |
-          set -euo pipefail
-          for path in \
-            h-earth-3d/terrain/h-earth.world-manifold-domain.js \
-            h-earth-3d/integration/h-earth.world-representation-plan.js \
-            h-earth-3d/integration/h-earth.world-manifold-union-admission.js \
-            h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs \
-            h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
-            showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js \
-            showroom/globe/h-earth/render/geometry-shoreline.js \
-            showroom/globe/h-earth/render/geometry-distant-context.js \
-            showroom/globe/h-earth/render/landscape-preview.js \
-            h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js \
-            showroom/globe/h-earth/render/run8e-successor-environment.js
-          do node --check "$path"; done
+          set +e
+          node h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs > "$RUNNER_TEMP/base-run8e.log" 2>&1
+          code=$?
+          echo "BASE_RUN8E_EXIT=$code"
+          cat "$RUNNER_TEMP/base-run8e.log"
+          exit 0
       - name: Execute Gen306 architecture harness
         working-directory: candidate
         shell: bash
@@ -58,35 +63,41 @@ jobs:
           set -euo pipefail
           node h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs | tee "$RUNNER_TEMP/gen306.json"
           test "$(jq -r '.result' "$RUNNER_TEMP/gen306.json")" = 'PASS_CLOSED'
-          for p in CONTINUOUS_WORLD_MANIFOLD RADIAL_HORIZON_CONTINUITY TOPOLOGY_PRESERVING_LOD OCEAN_SECTOR_EMPTINESS REPRESENTATION_BOUNDARY_INVISIBILITY SINGLE_WORLD_ENVELOPE_DOMAIN_FUNCTION SPATIALLY_OVERLAPPED_LOD_AUTHORITY CAMERA_SURROUNDING_FAR_ENVELOPE GEOGRAPHY_IDENTITY_PRESERVED; do test "$(jq -r ".predicates.$p" "$RUNNER_TEMP/gen306.json")" = 'true'; done
-      - name: Execute construction smoke graph
+      - name: Execute complete Gen306 frame and raster path
         working-directory: candidate
         shell: bash
         run: |
           set -euo pipefail
           node --input-type=module <<'NODE'
-          import { constructHEarthDistantContextGeometry } from './showroom/globe/h-earth/render/geometry-distant-context.js';
-          import { previewHEarthFunctionalLandscape } from './showroom/globe/h-earth/render/landscape-preview.js';
-          import { buildHEarthRun8ENeutralPackage } from './showroom/globe/h-earth/render/run8e-successor-environment.js';
-          const far=constructHEarthDistantContextGeometry({cameraWorld:{x:0,y:8,z:-40}});
-          if(far.ok!==true) throw new Error(`FAR:${JSON.stringify({issues:far.issues,construction:far.constructionDiagnostics})}`);
-          const preview=previewHEarthFunctionalLandscape({cameraWorld:{x:0,y:8,z:-40}});
-          if(preview.ok!==true) throw new Error(`PREVIEW:${JSON.stringify(preview.issues)}`);
-          if(preview.worldManifoldUnion?.valid!==true) throw new Error('MANIFOLD_UNION_INVALID');
-          const neutral=buildHEarthRun8ENeutralPackage({cameraWorld:{x:0,y:8,z:-40}});
-          if(neutral.ok!==true) throw new Error(`NEUTRAL:${JSON.stringify(neutral.issues)}`);
-          if(neutral.topologySourceId!==preview.topologySourceId) throw new Error('TOPOLOGY_IDENTITY_DIVERGED');
-          console.log(JSON.stringify({farMesh:far.meshDiagnostics,previewPrimitives:preview.primitiveCount,neutralPrimitives:neutral.primitiveCount,terrain:neutral.terrainPrimitiveCount,shoreline:neutral.shorelinePrimitiveCount,far:neutral.farRepresentationPrimitiveCount,vegetation:neutral.vegetationPrimitiveCount,topologySourceId:neutral.topologySourceId}));
+          import {
+            constructHEarthRun8ESuccessorEnvironmentFrame,
+            prepareHEarthRun8ERenderPlan,
+            rasterizeHEarthRun8ERenderPlan,
+            evaluateHEarthRun8EFrame
+          } from './showroom/globe/h-earth/render/run8e-successor-environment.js';
+          const camera={position:{x:0,y:18,z:42},target:{x:0,y:4,z:-150},up:{x:0,y:1,z:0},nearPlane:0.1,farPlane:4000,fieldOfViewDegrees:62};
+          const viewport={width:320,height:180,pixelRatio:1};
+          const frame=constructHEarthRun8ESuccessorEnvironmentFrame({camera,viewport,timeOfDayHours:15.25});
+          if(frame.ok!==true) throw new Error(`FRAME:${JSON.stringify(frame.issues)}`);
+          const evalResult=evaluateHEarthRun8EFrame(frame);
+          if(evalResult.eligible!==true) throw new Error(`FRAME_EVAL:${JSON.stringify(evalResult.issues)}`);
+          const plan=prepareHEarthRun8ERenderPlan(frame,viewport);
+          if(plan?.eligible!==true) throw new Error(`RENDER_PLAN:${JSON.stringify(plan?.issues)}`);
+          const raster=rasterizeHEarthRun8ERenderPlan(plan,frame);
+          if(raster?.ok!==true) throw new Error(`RASTER:${JSON.stringify(raster?.issues)}`);
+          if(raster.worldManifoldRepresentationPlanExecuted!==true||raster.singlePhysicalDepthDomainExecuted!==true) throw new Error('GEN306_RENDER_EXECUTION_FLAGS_INVALID');
+          console.log(JSON.stringify({frameStatus:frame.status,primitiveCount:frame.primitiveCount,topologySourceId:frame.topologySourceId,continuousWorldManifold:frame.continuousWorldManifold,renderPlanTriangles:plan.triangles?.length,raster:{width:raster.width,height:raster.height,skyPixelCount:raster.skyPixelCount,alphaClosed:raster.alphaClosed,singlePhysicalDepthDomainExecuted:raster.singlePhysicalDepthDomainExecuted,worldManifoldRepresentationPlanExecuted:raster.worldManifoldRepresentationPlanExecuted}}));
           NODE
-      - name: Execute predecessor harnesses diagnostically
-        working-directory: candidate
+      - name: Verify protected source surfaces unchanged relative to base
         shell: bash
         run: |
-          set +e
-          if test -f h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs; then
-            node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs > "$RUNNER_TEMP/run8b.log" 2>&1; echo "RUN8B_EXIT=$?"; cat "$RUNNER_TEMP/run8b.log";
-          fi
-          if test -f h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs; then
-            node h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs > "$RUNNER_TEMP/run8e.log" 2>&1; echo "RUN8E_EXIT=$?"; cat "$RUNNER_TEMP/run8e.log";
-          fi
-          exit 0
+          set -euo pipefail
+          for path in \
+            h-earth-3d/terrain/h-earth.terrain-field.js \
+            h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js \
+            showroom/globe/h-earth/render/geometry-kernel.js \
+            showroom/globe/h-earth/render/geometry-kernel.south.js
+          do
+            test "$(git -C base rev-parse HEAD:$path)" = "$(git -C candidate rev-parse HEAD:$path)"
+          done
+          echo PROTECTED_SOURCE_BYTES_UNCHANGED

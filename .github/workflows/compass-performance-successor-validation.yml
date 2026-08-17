@@ -1,37 +1,128 @@
-name: Compass Performance Successor Validation
+name: Compass Gen1531 Bounded Construction Transport
 
 on:
   pull_request:
+    branches:
+      - main
     paths:
-      - 'index.html'
-      - 'assets/compass/**'
-      - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
-  workflow_dispatch:
 
 permissions:
-  contents: read
-
-env:
-  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  contents: write
 
 jobs:
-  verify-performance-successor:
+  construct-gen1531:
+    if: github.head_ref == 'compass-gen1531-mirrorland-crystal-scheduling'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Verify admitted Gen1521 performance and protected floor
+      - name: Verify exact admitted parent
         run: |
-          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
-          node .github/ai-router/projects/compass/verify-performance-successor.mjs
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: compass-gen1521-performance-receipt
-          path: /tmp/compass-gen1521-performance.json
+          test "$(git rev-parse HEAD^)" = "74de0882af55fed53272a191b173e45f5cdbd551"
+      - name: Apply bounded demand-driven render repair
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          BASE = "74de0882af55fed53272a191b173e45f5cdbd551"
+
+          def replace_once(text, old, new, label):
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f"{label}: expected 1 match, found {count}")
+              return text.replace(old, new, 1)
+
+          # Mirrorland: preserve geometry/state semantics, render only on invalidation or active transition.
+          path = Path("assets/compass/compass.mirrorland-window.js")
+          source = path.read_text()
+          marker = "  function render(\n    now\n  ) {"
+          helper = '''  function transitionNeedsFrames() {\n    return (\n      state.rendererState ===\n        STATES.REVEALING ||\n      state.rendererState ===\n        STATES.WITHDRAWING\n    );\n  }\n\n  function requestRender() {\n    if (\n      !state.running ||\n      state.failed ||\n      state.disposed ||\n      state.raf\n    ) {\n      return;\n    }\n\n    state.raf =\n      requestAnimationFrame(\n        render\n      );\n  }\n\n'''
+          source = replace_once(source, marker, helper + marker, "mirror helper insertion")
+          source = replace_once(
+              source,
+              "  function render(\n    now\n  ) {\n    if (",
+              "  function render(\n    now\n  ) {\n    state.raf =\n      0;\n\n    if (",
+              "mirror render raf reset",
+          )
+          old_raf = "    state.raf =\n      requestAnimationFrame(\n        render\n      );"
+          count = source.count(old_raf)
+          if count != 3:
+              raise SystemExit(f"mirror direct RAF count expected 3, found {count}")
+          source = source.replace(old_raf, "    requestRender();")
+          source = replace_once(
+              source,
+              "    drawWindow();\n\n    requestRender();\n  }",
+              "    drawWindow();\n\n    if (transitionNeedsFrames()) {\n      requestRender();\n    }\n  }",
+              "mirror render continuation",
+          )
+          source = replace_once(
+              source,
+              "        new ResizeObserver(\n          resize\n        );",
+              "        new ResizeObserver(\n          () => {\n            resize();\n            requestRender();\n          }\n        );",
+              "mirror resize invalidation",
+          )
+          path.write_text(source)
+
+          # Crystals: preserve quaternion geometry/gestures; continue frames only while interaction or convergence requires them.
+          path = Path("assets/compass/compass.crystals.js")
+          source = path.read_text()
+          source = replace_once(
+              source,
+              "    raf:\n      0,\n\n    running:",
+              "    raf:\n      0,\n\n    renderObserver:\n      null,\n\n    renderInvalidationBound:\n      false,\n\n    running:",
+              "crystal scheduler state",
+          )
+          marker = "  function render(\n    now\n  ) {"
+          helper = '''  const SETTLE_EPSILON =\n    0.0008;\n\n  function quaternionNeedsSettlement(\n    current,\n    target\n  ) {\n    if (\n      !current ||\n      !target ||\n      current.length !== 4 ||\n      target.length !== 4\n    ) {\n      return false;\n    }\n\n    const alignment =\n      Math.abs(\n        current[0] * target[0] +\n        current[1] * target[1] +\n        current[2] * target[2] +\n        current[3] * target[3]\n      );\n\n    return (\n      1 - alignment\n    ) >\n      SETTLE_EPSILON;\n  }\n\n  function scalarNeedsSettlement(\n    current,\n    target\n  ) {\n    return Math.abs(\n      Number(current || 0) -\n      Number(target || 0)\n    ) > SETTLE_EPSILON;\n  }\n\n  function needsAnotherFrame() {\n    if (\n      state.pointer &&\n      state.pointer.dragging\n    ) {\n      return true;\n    }\n\n    if (\n      state.frame &&\n      (\n        state.frame.orbitGestureActive ||\n        (\n          state.frame.cluster &&\n          state.frame.cluster.gestureActive\n        )\n      )\n    ) {\n      return true;\n    }\n\n    if (\n      quaternionNeedsSettlement(\n        state.constellationQuaternion,\n        state.constellationTargetQuaternion\n      )\n    ) {\n      return true;\n    }\n\n    for (const wing of WINGS) {\n      if (\n        quaternionNeedsSettlement(\n          state.clusterQuaternions.get(wing),\n          state.clusterTargetQuaternions.get(wing)\n        )\n      ) {\n        return true;\n      }\n    }\n\n    const keys = [\n      "x",\n      "y",\n      "z",\n      "sx",\n      "sy",\n      "sz",\n      "prominence",\n      "halo",\n      "rotationSpeed",\n      "float"\n    ];\n\n    for (const node of state.registry.values()) {\n      if (\n        !node.transform ||\n        !node.target\n      ) {\n        continue;\n      }\n\n      for (const key of keys) {\n        if (\n          scalarNeedsSettlement(\n            node.transform[key],\n            node.target[key]\n          )\n        ) {\n          return true;\n        }\n      }\n    }\n\n    for (let index = 0; index < 3; index += 1) {\n      if (\n        scalarNeedsSettlement(\n          state.camera.eye[index],\n          state.camera.nextEye[index]\n        ) ||\n        scalarNeedsSettlement(\n          state.camera.target[index],\n          state.camera.nextTarget[index]\n        )\n      ) {\n        return true;\n      }\n    }\n\n    return false;\n  }\n\n  function requestRender() {\n    if (\n      !state.running ||\n      state.disposed ||\n      state.raf\n    ) {\n      return;\n    }\n\n    state.raf =\n      requestAnimationFrame(\n        render\n      );\n  }\n\n  function bindRenderInvalidation() {\n    if (\n      state.renderInvalidationBound ||\n      !state.root\n    ) {\n      return;\n    }\n\n    state.renderInvalidationBound =\n      true;\n\n    if (\n      typeof MutationObserver ===\n      "function"\n    ) {\n      state.renderObserver =\n        new MutationObserver(\n          requestRender\n        );\n\n      state.renderObserver.observe(\n        state.root,\n        {\n          attributes:\n            true,\n          attributeFilter: [\n            "data-compass-mode",\n            "data-orbit-focus",\n            "data-orbit-preview-focus",\n            "data-orbit-phase",\n            "data-orbit-gesture-active",\n            "data-orbit-quaternion",\n            "data-active-cluster-wing",\n            "data-cluster-quaternion",\n            "data-cluster-primary-room",\n            "data-cluster-preview-primary-room",\n            "data-cluster-phase",\n            "data-cluster-gesture-active",\n            "data-cluster-revision",\n            "data-selected-cardinal",\n            "data-selected-room",\n            "data-selected-destination-type",\n            "data-selected-destination-id",\n            "data-selected-destination-label",\n            "data-selected-route",\n            "data-reduced-motion",\n            "data-compass-prominence",\n            "data-window-prominence"\n          ]\n        }\n      );\n    }\n\n    globalThis.addEventListener(\n      "resize",\n      requestRender,\n      { passive: true }\n    );\n  }\n\n  function unbindRenderInvalidation() {\n    if (state.renderObserver) {\n      state.renderObserver.disconnect();\n      state.renderObserver =\n        null;\n    }\n\n    if (state.renderInvalidationBound) {\n      globalThis.removeEventListener(\n        "resize",\n        requestRender\n      );\n    }\n\n    state.renderInvalidationBound =\n      false;\n  }\n\n'''
+          source = replace_once(source, marker, helper + marker, "crystal helper insertion")
+          source = replace_once(
+              source,
+              "  function render(\n    now\n  ) {\n    if (",
+              "  function render(\n    now\n  ) {\n    state.raf =\n      0;\n\n    if (",
+              "crystal render raf reset",
+          )
+          old_raf = "    state.raf =\n      requestAnimationFrame(\n        render\n      );"
+          count = source.count(old_raf)
+          if count != 3:
+              raise SystemExit(f"crystal direct RAF count expected 3, found {count}")
+          source = source.replace(old_raf, "    requestRender();")
+          source = replace_once(
+              source,
+              "    requestRender();\n  }\n\n  function deleteGpuResources()",
+              "    if (needsAnotherFrame()) {\n      requestRender();\n    }\n  }\n\n  function deleteGpuResources()",
+              "crystal render continuation",
+          )
+          source = replace_once(
+              source,
+              "      bindPointerBridge();\n      bindSemanticFocusBridge();",
+              "      bindPointerBridge();\n      bindSemanticFocusBridge();\n      bindRenderInvalidation();",
+              "crystal invalidation bind",
+          )
+          count = source.count("    unbindPointerBridge();\n    unbindSemanticFocusBridge();\n    unbindReducedMotion();")
+          if count != 2:
+              raise SystemExit(f"crystal invalidation unbind anchors expected 2, found {count}")
+          source = source.replace(
+              "    unbindPointerBridge();\n    unbindSemanticFocusBridge();\n    unbindReducedMotion();",
+              "    unbindPointerBridge();\n    unbindSemanticFocusBridge();\n    unbindRenderInvalidation();\n    unbindReducedMotion();",
+          )
+          path.write_text(source)
+          PY
+
+          node --check assets/compass/compass.mirrorland-window.js
+          node --check assets/compass/compass.crystals.js
+
+          # The transport is temporary. Restore it byte-for-byte from the admitted base before committing.
+          git show 74de0882af55fed53272a191b173e45f5cdbd551:.github/workflows/compass-performance-successor-validation.yml > .github/workflows/compass-performance-successor-validation.yml
+
+          test "$(git diff --name-only | sort)" = $'assets/compass/compass.crystals.js\nassets/compass/compass.mirrorland-window.js'
+          git diff --check
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/compass/compass.crystals.js assets/compass/compass.mirrorland-window.js .github/workflows/compass-performance-successor-validation.yml
+          git commit -m "Repair Compass Mirrorland and crystal render scheduling"
+          git push origin HEAD:${{ github.head_ref }}

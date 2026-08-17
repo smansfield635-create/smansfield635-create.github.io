@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - control-plane-carrier/world-manifold-intake-20260817
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
 
 permissions:
   contents: read
@@ -35,11 +38,7 @@ jobs:
           GH_TOKEN: ${{ steps.token.outputs.token }}
         run: |
           set -euo pipefail
-          observed="$(curl --fail-with-body --silent --show-error \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
+          observed="$(curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
           test "$observed" = "$PRIVATE_HEAD"
 
       - name: Checkout exact private canonical intake implementation
@@ -58,28 +57,16 @@ jobs:
           GH_TOKEN: ${{ steps.token.outputs.token }}
         run: |
           set -euo pipefail
-          curl --fail-with-body --silent --show-error \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$REQUEST_COMMENT_ID" \
-            > "$RUNNER_TEMP/comment.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/comments/$REQUEST_COMMENT_ID" > "$RUNNER_TEMP/comment.json"
           python - <<'PY'
           import json, os
           source=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'comment.json'),encoding='utf-8'))['body']
           marker='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'
-          if marker not in source:
-              raise SystemExit('CORRECTED_INTAKE_MARKER_MISSING')
+          if marker not in source: raise SystemExit('CORRECTED_INTAKE_MARKER_MISSING')
           payload=json.loads(source[source.index(marker)+len(marker):].strip())
-          if payload.get('requestId')!='H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_INTAKE_20260817_002':
-              raise SystemExit('REQUEST_IDENTITY_MISMATCH')
-          if payload.get('exactGoverningHead')!='804e2c31c10ab04a73c1cfbae883892735a62f3d':
-              raise SystemExit('GOVERNING_HEAD_MISMATCH')
-          envelope={
-              'schema':'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1',
-              'operationRequest':payload['operationRequest'],
-              'constructionProcedure':payload['constructionProcedure']
-          }
+          if payload.get('requestId')!='H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_INTAKE_20260817_002': raise SystemExit('REQUEST_IDENTITY_MISMATCH')
+          if payload.get('exactGoverningHead')!='804e2c31c10ab04a73c1cfbae883892735a62f3d': raise SystemExit('GOVERNING_HEAD_MISMATCH')
+          envelope={'schema':'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1','operationRequest':payload['operationRequest'],'constructionProcedure':payload['constructionProcedure']}
           json.dump(envelope,open(os.path.join(os.environ['RUNNER_TEMP'],'intake-envelope.json'),'w',encoding='utf-8'),sort_keys=True,indent=2)
           PY
 
@@ -92,9 +79,7 @@ jobs:
           GITHUB_REPOSITORY: smansfield635-create/geodiametrics1
         run: |
           set -euo pipefail
-          node private-control-plane/tools/operation-intake/canonical-operation-intake-transport.v1.mjs \
-            --input "$RUNNER_TEMP/intake-envelope.json" \
-            --output "$RUNNER_TEMP/intake-receipt.json"
+          node private-control-plane/tools/operation-intake/canonical-operation-intake-transport.v1.mjs --input "$RUNNER_TEMP/intake-envelope.json" --output "$RUNNER_TEMP/intake-receipt.json"
 
       - name: Verify native admission and publish receipt
         if: always()
@@ -109,11 +94,6 @@ jobs:
           scope="$(jq -r '.canonicalReceiptJson.lock.lockScope // .canonicalReceiptJson.lockScope // ""' "$RUNNER_TEMP/intake-receipt.json")"
           body="WORLD_MANIFOLD_CANONICAL_INTAKE_EXECUTION_RESULT_20260817\noperationId: H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002\nresult: $native\nlockGeneration: $generation\nlockScope: $scope\nrunId: $GITHUB_RUN_ID\ntransportOnly: true\nproductMutation: false"
           jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/result.json"
-          curl --fail-with-body --silent --show-error --request POST \
-            -H 'Accept: application/vnd.github+json' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H 'X-GitHub-Api-Version: 2022-11-28' \
-            "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/$CALLBACK_ISSUE/comments" \
-            --data-binary "@$RUNNER_TEMP/result.json" >/dev/null
+          curl --fail-with-body --silent --show-error --request POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/issues/$CALLBACK_ISSUE/comments" --data-binary "@$RUNNER_TEMP/result.json" >/dev/null
           test '${{ steps.intake.outcome }}' = 'success'
           test "$native" = 'ADMITTED_AND_LOCKED'

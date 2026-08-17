@@ -47,8 +47,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "b174bb20a19e62f9aaf6e819171e24416321b9e4"
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "f4e9d4beb77cb603ea2c8e360790e97c1b511b1c"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "905a7574432f3117c7d560dfb8dbad0df08cb869"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "e1f6c303dba5243086c10c3339d5e668c5bed2c3"
           test -f .github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs
           test -f .github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs
 
@@ -129,8 +129,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "b174bb20a19e62f9aaf6e819171e24416321b9e4"
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "f4e9d4beb77cb603ea2c8e360790e97c1b511b1c"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "905a7574432f3117c7d560dfb8dbad0df08cb869"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "e1f6c303dba5243086c10c3339d5e668c5bed2c3"
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs --output "$RUNNER_TEMP/remote-operation-successor-route-self-test.json"
           node .github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs --output "$RUNNER_TEMP/successor-packet-compiler-self-test.json"
           node - "$RUNNER_TEMP/remote-operation-successor-route-self-test.json" "$RUNNER_TEMP/successor-packet-compiler-self-test.json" <<'NODE'
@@ -227,6 +227,7 @@ jobs:
           NODE
 
       - name: Upload native successor receipts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: remote-operation-successor-${{ github.run_id }}-${{ github.run_attempt }}
@@ -239,6 +240,7 @@ jobs:
           retention-days: 90
 
       - name: Return native receipt to invoking issue
+        if: always()
         uses: actions/github-script@v7
         env:
           RECEIPT_PATH: ${{ runner.temp }}/remote-operation-successor-invocation-receipt.json
@@ -247,8 +249,25 @@ jobs:
           github-token: ${{ github.token }}
           script: |
             const fs = require('node:fs');
-            const receipt = fs.readFileSync(process.env.RECEIPT_PATH, 'utf8').trim();
-            const mode = fs.readFileSync(process.env.MODE_PATH, 'utf8').trim();
+            const readNonempty = (file) => {
+              try {
+                const value = fs.readFileSync(file, 'utf8').trim();
+                return value || null;
+              } catch {
+                return null;
+              }
+            };
+            const native = readNonempty(process.env.RECEIPT_PATH);
+            const mode = readNonempty(process.env.MODE_PATH) ?? 'UNKNOWN';
+            const receipt = native ?? JSON.stringify({
+              schema: 'REMOTE_OPERATION_SUCCESSOR_WORKFLOW_FAILURE_RECEIPT_v1',
+              result: 'FAIL_CLOSED_NO_SUCCESSOR',
+              errorCode: 'NATIVE_SUCCESSOR_RECEIPT_NOT_PRODUCED',
+              nativeReceiptProduced: false,
+              authorityInherited: false,
+              directLedgerEditPerformed: false,
+              genericCommandAuthority: false
+            }, null, 2);
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,

@@ -6,6 +6,7 @@ import {
   AUTHORITY_POLICY,
   DEFAULT_GOVERNING_REF,
   EVIDENCE_POLICY,
+  readLedgerRemote,
   successorLocal,
   TRANSITION_SCHEMA
 } from './repository-operation-successor-gate.v1.mjs';
@@ -120,6 +121,55 @@ function expectError(code, fn) {
   return code;
 }
 
+async function expectAsyncError(code, fn) {
+  let actual = null;
+  try { await fn(); } catch (error) { actual = error.code || String(error.message).split(':')[0]; }
+  assert(actual === code, `EXPECTED_${code}_GOT_${actual || 'NO_ERROR'}`);
+  return code;
+}
+
+function ledgerTransportFixture({
+  ledgerValue = null,
+  contentsEncoding = 'none',
+  contentsContent = '',
+  omitContentsContent = false,
+  blobEncoding = 'base64',
+  blobSha = '4'.repeat(40),
+  blobContent = null
+} = {}) {
+  const oversized = ledgerValue || {
+    ...fixture().ledger,
+    transportPadding: 'x'.repeat((1024 * 1024) + 8192)
+  };
+  const serialized = JSON.stringify(oversized);
+  const expectedBlob = '4'.repeat(40);
+  const head = '5'.repeat(40);
+  const calls = [];
+  const request = async (url) => {
+    calls.push(url);
+    if (url.includes('/git/ref/')) return { object: { sha: head } };
+    if (url.includes('/contents/')) {
+      const contents = {
+        sha: expectedBlob,
+        encoding: contentsEncoding,
+        size: Buffer.byteLength(serialized)
+      };
+      if (!omitContentsContent) contents.content = contentsContent;
+      return contents;
+    }
+    if (url.includes('/git/blobs/')) {
+      return {
+        sha: blobSha,
+        encoding: blobEncoding,
+        content: blobContent ?? Buffer.from(serialized, 'utf8').toString('base64'),
+        size: Buffer.byteLength(serialized)
+      };
+    }
+    throw new Error(`UNEXPECTED_MOCK_URL:${url}`);
+  };
+  return { calls, expectedBlob, head, oversized, request, serialized };
+}
+
 function parseArgs(argv) {
   const result = {};
   for (let i = 0; i < argv.length; i += 1) {
@@ -130,11 +180,15 @@ function parseArgs(argv) {
   return result;
 }
 
-function main() {
+async function main() {
   const args = parseArgs(process.argv.slice(2));
   const tests = [];
   const run = (id, fn) => {
     try { tests.push({ id, pass: true, detail: fn() ?? null }); }
+    catch (error) { tests.push({ id, pass: false, detail: error.message }); }
+  };
+  const runAsync = async (id, fn) => {
+    try { tests.push({ id, pass: true, detail: await fn() ?? null }); }
     catch (error) { tests.push({ id, pass: false, detail: error.message }); }
   };
 
@@ -238,6 +292,79 @@ function main() {
     return expectError('GOVERNING_HEAD_MISMATCH', () => successorLocal(f.ledger, f.transition, f.request, f.procedure));
   });
 
+  await runAsync('OVERSIZED_LEDGER_GIT_BLOB_FALLBACK', async () => {
+    const mock = ledgerTransportFixture();
+    assert(Buffer.byteLength(mock.serialized) > 1024 * 1024, 'FIXTURE_NOT_OVERSIZED');
+    const observed = await readLedgerRemote({
+      repository: 'owner/repository',
+      token: 'self-test-token',
+      request: mock.request
+    });
+    assert(observed.contentTransport === 'GIT_BLOB_FALLBACK', 'FALLBACK_NOT_USED');
+    assert(observed.blob === mock.expectedBlob, 'BLOB_IDENTITY_NOT_PRESERVED');
+    assert(observed.branchHead === mock.head, 'LOCK_REF_HEAD_NOT_PRESERVED');
+    assert(observed.ledger.transportPadding.length === mock.oversized.transportPadding.length, 'LEDGER_BYTES_NOT_RECOVERED');
+    assert(mock.calls.length === 3 && mock.calls[2].includes(`/git/blobs/${mock.expectedBlob}`), 'EXACT_BLOB_FALLBACK_NOT_CALLED');
+    return { bytes: Buffer.byteLength(mock.serialized), transport: observed.contentTransport };
+  });
+
+  await runAsync('INLINE_CONTENTS_TRANSPORT', async () => {
+    const ledgerValue = fixture().ledger;
+    const encoded = Buffer.from(JSON.stringify(ledgerValue), 'utf8').toString('base64');
+    const mock = ledgerTransportFixture({ ledgerValue, contentsEncoding: 'base64', contentsContent: encoded });
+    const observed = await readLedgerRemote({
+      repository: 'owner/repository', token: 'self-test-token', request: mock.request
+    });
+    assert(observed.contentTransport === 'CONTENTS_INLINE', 'INLINE_TRANSPORT_NOT_USED');
+    assert(mock.calls.length === 2 && !mock.calls.some((url) => url.includes('/git/blobs/')), 'INLINE_PATH_CALLED_BLOB_FALLBACK');
+    return observed.contentTransport;
+  });
+
+  await runAsync('OMITTED_CONTENT_GIT_BLOB_FALLBACK', async () => {
+    const mock = ledgerTransportFixture({ omitContentsContent: true });
+    const observed = await readLedgerRemote({
+      repository: 'owner/repository', token: 'self-test-token', request: mock.request
+    });
+    assert(observed.contentTransport === 'GIT_BLOB_FALLBACK', 'OMITTED_CONTENT_DID_NOT_FALL_BACK');
+    assert(mock.calls[2].endsWith(`/git/blobs/${mock.expectedBlob}`), 'OMITTED_CONTENT_WRONG_BLOB_URL');
+    return observed.contentTransport;
+  });
+
+  await runAsync('REJECT_FALLBACK_BLOB_IDENTITY_MISMATCH', async () => {
+    const mock = ledgerTransportFixture({ blobSha: '6'.repeat(40) });
+    return expectAsyncError('LEDGER_BLOB_IDENTITY_FAILURE', () => readLedgerRemote({
+      repository: 'owner/repository', token: 'self-test-token', request: mock.request
+    }));
+  });
+
+  await runAsync('REJECT_FALLBACK_BLOB_ENCODING', async () => {
+    const mock = ledgerTransportFixture({ blobEncoding: 'utf-8' });
+    return expectAsyncError('LEDGER_BLOB_ENCODING_UNSUPPORTED', () => readLedgerRemote({
+      repository: 'owner/repository', token: 'self-test-token', request: mock.request
+    }));
+  });
+
+  await runAsync('REJECT_FALLBACK_INVALID_BASE64', async () => {
+    const mock = ledgerTransportFixture({ blobContent: 'not-valid-base64!!!' });
+    return expectAsyncError('LEDGER_JSON_OR_SCHEMA_FAILURE', () => readLedgerRemote({
+      repository: 'owner/repository', token: 'self-test-token', request: mock.request
+    }));
+  });
+
+  await runAsync('REJECT_FALLBACK_INVALID_JSON', async () => {
+    const mock = ledgerTransportFixture({ blobContent: Buffer.from('{', 'utf8').toString('base64') });
+    return expectAsyncError('LEDGER_JSON_OR_SCHEMA_FAILURE', () => readLedgerRemote({
+      repository: 'owner/repository', token: 'self-test-token', request: mock.request
+    }));
+  });
+
+  await runAsync('REJECT_FALLBACK_LEDGER_SCHEMA', async () => {
+    const mock = ledgerTransportFixture({ ledgerValue: { schema: 'NOT_A_LEDGER', lockGeneration: 0, activeScopes: {}, terminalHistory: [] } });
+    return expectAsyncError('LEDGER_JSON_OR_SCHEMA_FAILURE', () => readLedgerRemote({
+      repository: 'owner/repository', token: 'self-test-token', request: mock.request
+    }));
+  });
+
   const failures = tests.filter((test) => !test.pass);
   const core = {
     schema: 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_RECEIPT_v1',
@@ -267,9 +394,8 @@ function main() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  try { main(); }
-  catch (error) {
+  main().catch((error) => {
     process.stderr.write(text({ schema: 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_FAILURE_v1', result: 'FAIL_CLOSED', error: error.message }));
     process.exitCode = 1;
-  }
+  });
 }

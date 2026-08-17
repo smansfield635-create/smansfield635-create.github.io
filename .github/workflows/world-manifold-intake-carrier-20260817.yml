@@ -1,4 +1,4 @@
-name: World Manifold Gen306 Private Preflight Rebind Qualification
+name: World Manifold Gen306 Bound Post-Merge Preflight
 
 on:
   push:
@@ -12,70 +12,48 @@ permissions:
   contents: read
 
 jobs:
-  qualify:
+  preflight:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      PRIVATE_CANDIDATE: cfc5b0fc1a35228da58d3c59919aed5ed07aa9fc
       TOOLING_HEAD: 46b2cca200f1db036cae8288329f870a8336505a
-      TOOLING_TREE: b53fe28b6e2c1ab0fd334ba6147922b491b79f53
+      NATIVE_TOOL_BLOB: 6d4af698ca75b96aaa660033e9ae24c704673eb7
+      ACTIVATION_BLOB: b3c51381af190b6aab296db222296dc851cb7e9a
     steps:
-      - name: Mint private read token
-        id: token
-        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
-        with:
-          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
-          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
-          owner: smansfield635-create
-          repositories: geodiametrics1
-          permission-contents: read
-
-      - name: Checkout exact private rebind candidate
+      - name: Checkout exact bound tooling head
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          repository: smansfield635-create/geodiametrics1
-          ref: ${{ env.PRIVATE_CANDIDATE }}
-          token: ${{ steps.token.outputs.token }}
-          path: private-control-plane
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: ${{ env.TOOLING_HEAD }}
+          path: tooling
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Run installed connected-backend self-tests
-        working-directory: private-control-plane
+      - name: Execute bound exact Gen306 eleven-path native preflight
+        working-directory: tooling
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$PRIVATE_CANDIDATE"
-          node tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler-self-test.v1.mjs
-          node tools/ai-room-transport/connected-public-h-earth-preflight-self-test.v1.mjs
-
-      - name: Verify five-surface exact tooling consistency
-        working-directory: private-control-plane
-        shell: bash
-        run: |
-          set -euo pipefail
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs';
-          import { TOOLING_HEAD as compilerHead, NATIVE_TOOL_BLOB as compilerNativeBlob, ACTIVATION_BLOB as compilerActivationBlob } from './tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler.v1.mjs';
-          const read = p => JSON.parse(fs.readFileSync(p, 'utf8'));
-          const expected = process.env.TOOLING_HEAD;
-          const tree = process.env.TOOLING_TREE;
-          const binding = read('.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json');
-          const executorDescriptor = read('.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight.v1.json');
-          const compilerDescriptor = read('.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight-evidence-compiler.v1.json');
-          const executorSource = fs.readFileSync('tools/ai-room-transport/connected-public-h-earth-preflight.v1.mjs','utf8');
-          const checks = {
-            binding: binding.fixedToolingHead === expected,
-            bindingReconciled: binding.reconciliation?.reconciledToolingHead === expected && binding.reconciliation?.reconciledToolingRootTree === tree,
-            executorDescriptor: executorDescriptor.fixedBinding?.toolingHead === expected,
-            compilerDescriptor: compilerDescriptor.fixedBinding?.toolingHead === expected,
-            compilerRuntime: compilerHead === expected,
-            executorRuntime: executorSource.includes(`const TOOLING_HEAD='${expected}'`),
-            nativeToolStable: compilerNativeBlob === executorDescriptor.fixedBinding?.nativeToolBlob && compilerNativeBlob === compilerDescriptor.fixedBinding?.nativeToolBlob,
-            activationStable: compilerActivationBlob === executorDescriptor.fixedBinding?.activationBlob && compilerActivationBlob === compilerDescriptor.fixedBinding?.activationBlob,
-            noAuthorityInflation: Object.values(binding.authorityBoundary ?? {}).every(v => v === false)
-          };
-          const failed = Object.entries(checks).filter(([,v]) => v !== true).map(([k]) => k);
-          console.log(JSON.stringify({schema:'GEN306_CONNECTED_PREFLIGHT_REBIND_QUALIFICATION_v1',result:failed.length?'FAIL_CLOSED':'PASS_CLOSED',toolingHead:expected,toolingTree:tree,checks,failed},null,2));
-          if (failed.length) process.exit(1);
-          NODE
+          test "$(git rev-parse HEAD)" = "$TOOLING_HEAD"
+          test "$(git rev-parse HEAD:tools/h-earth-repository-registry-auto-preflight.mjs)" = "$NATIVE_TOOL_BLOB"
+          test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = "$ACTIVATION_BLOB"
+          node tools/h-earth-repository-registry-auto-preflight.mjs \
+            --mutation-intent \
+            --task 'Gen306 world-manifold architecture authoritative post-rebind preflight' \
+            --path h-earth-3d/terrain/h-earth.world-manifold-domain.js \
+            --path h-earth-3d/integration/h-earth.world-representation-plan.js \
+            --path h-earth-3d/integration/h-earth.world-manifold-union-admission.js \
+            --path h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs \
+            --path h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
+            --path showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js \
+            --path showroom/globe/h-earth/render/geometry-shoreline.js \
+            --path showroom/globe/h-earth/render/geometry-distant-context.js \
+            --path showroom/globe/h-earth/render/landscape-preview.js \
+            --path h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js \
+            --path showroom/globe/h-earth/render/run8e-successor-environment.js \
+            --output "$RUNNER_TEMP/native-preflight.json"
+          test "$(jq -r '.activationStatus' "$RUNNER_TEMP/native-preflight.json")" = 'ACTIVATED'
+          test "$(jq -r '.dependenciesVerified' "$RUNNER_TEMP/native-preflight.json")" = 'true'
+          test "$(jq -r '.finalDisposition' "$RUNNER_TEMP/native-preflight.json")" = 'PASS'
+          test "$(jq '[.pathClassification.classifications[] | select(.registered != true)] | length' "$RUNNER_TEMP/native-preflight.json")" = '0'
+          jq '{activationStatus,dependenciesVerified,finalDisposition,continuation,registeredPathCount:(.pathClassification.classifications|length),failureCodes:.validatorReceipt.failureCodes}' "$RUNNER_TEMP/native-preflight.json"

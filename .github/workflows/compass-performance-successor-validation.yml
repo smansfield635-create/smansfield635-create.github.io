@@ -1,4 +1,4 @@
-name: Compass Gen1525 Crystal Performance Construction
+name: Compass Gen1525 Performance Successor Validation
 
 on:
   pull_request:
@@ -11,54 +11,42 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   GEN1525_GOVERNING_HEAD: d53b9c627c6b9be3222044b5ca879c080a7165f1
 
 jobs:
-  construct-crystal-scheduling-repair:
-    if: github.event_name == 'pull_request'
+  qualify-gen1525-static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify bounded Gen1525 lineage
+      - name: Verify exact candidate and bounded lineage
         run: |
-          git merge-base --is-ancestor "$GEN1525_GOVERNING_HEAD" HEAD
-          unexpected="$(git diff --name-only "$GEN1525_GOVERNING_HEAD"...HEAD | grep -Ev '^(assets/compass/compass\.crystals\.js|\.github/ai-router/projects/compass/verify-performance-successor\.mjs|\.github/ai-router/projects/compass/verify-display-continuity\.v1\.mjs|\.github/workflows/compass-performance-successor-validation\.yml|\.github/workflows/compass-carousel-successor-live-qualification\.yml)$' || true)"
+          CANDIDATE="$(git rev-parse HEAD^{commit})"
+          test "$CANDIDATE" = "$(git rev-parse HEAD)"
+          git merge-base --is-ancestor "$GEN1525_GOVERNING_HEAD" "$CANDIDATE"
+          unexpected="$(git diff --name-only "$GEN1525_GOVERNING_HEAD"..."$CANDIDATE" | grep -Ev '^(assets/compass/compass\.crystals\.js|\.github/ai-router/projects/compass/verify-performance-successor\.mjs|\.github/ai-router/projects/compass/verify-display-continuity\.v1\.mjs|\.github/workflows/compass-performance-successor-validation\.yml|\.github/workflows/compass-carousel-successor-live-qualification\.yml)$' || true)"
           test -z "$unexpected"
-      - name: Apply scheduling-only crystal repair
+      - name: Run Gen1525 static qualification
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('assets/compass/compass.crystals.js')
-          s=p.read_text()
-          marker='const idleHeavyFrameIntervalMs ='
-          if marker in s:
-              print('Gen1525 crystal scheduling repair already present')
-              raise SystemExit(0)
-          needle='''    const seconds =\n      now * 0.001;\n'''
-          replacement='''    const interactionActive =\n      Boolean(\n        state.pointer\n      );\n\n    const idleHeavyFrameIntervalMs =\n      state.reducedMotion\n        ? 1000\n        : 500;\n\n    if (\n      !interactionActive &&\n      state.lastTime &&\n      now -\n        state.lastTime * 1000 <\n        idleHeavyFrameIntervalMs\n    ) {\n      state.raf =\n        requestAnimationFrame(\n          render\n        );\n\n      return;\n    }\n\n    const seconds =\n      now * 0.001;\n'''
-          if s.count(needle)!=1:
-              raise SystemExit(f'expected one render scheduling insertion point, found {s.count(needle)}')
-          p.write_text(s.replace(needle,replacement,1))
-          PY
-      - name: Validate product mutation is crystal-only
-        run: |
-          git diff --check
-          changed="$(git diff --name-only)"
-          if [ -n "$changed" ]; then test "$changed" = 'assets/compass/compass.crystals.js'; fi
-      - name: Commit repair if needed
-        run: |
-          if git diff --quiet; then exit 0; fi
-          git config user.name 'smansfield635-create'
-          git config user.email 'smansfield635@gmail.com'
-          git add assets/compass/compass.crystals.js
-          git commit -m 'Gate Gen1525 crystal idle heavy rendering'
-          git push origin HEAD:${{ github.head_ref }}
+          export COMPASS_CANDIDATE_HEAD="$(git rev-parse HEAD^{commit})"
+          export COMPASS_PERFORMANCE_OUTPUT=/tmp/compass-gen1525-performance.json
+          export COMPASS_VERIFICATION_OUTPUT=/tmp/compass-gen1525-display.json
+          node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1525' /tmp/compass-gen1525-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1525' /tmp/compass-gen1525-display.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compass-gen1525-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/compass-gen1525-performance.json
+            /tmp/compass-gen1525-display.json

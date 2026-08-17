@@ -1,4 +1,4 @@
-name: World Manifold Exact Canonical Intake Carrier
+name: World Manifold Gen306 Exact Mutation Router Carrier
 
 on:
   push:
@@ -12,35 +12,13 @@ permissions:
   contents: read
 
 jobs:
-  execute:
+  route:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
       PRIVATE_HEAD: 804e2c31c10ab04a73c1cfbae883892735a62f3d
-      LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
     steps:
-      - name: Checkout exact public carrier
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          path: carrier
-          fetch-depth: 1
-          persist-credentials: false
-
-      - name: Validate and split frozen intake envelope
-        shell: bash
-        run: |
-          set -euo pipefail
-          envelope="carrier/.github/carriers/world-manifold-intake-20260817-002.json"
-          test -s "$envelope"
-          test "$(jq -r '.operationRequest.operationId' "$envelope")" = 'H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002'
-          test "$(jq -r '.operationRequest.exactGoverningHead' "$envelope")" = "$PRIVATE_HEAD"
-          test "$(jq -r '.constructionProcedure.exactGoverningHead' "$envelope")" = "$PRIVATE_HEAD"
-          jq '.operationRequest' "$envelope" > "$RUNNER_TEMP/request.json"
-          jq '.constructionProcedure' "$envelope" > "$RUNNER_TEMP/procedure.json"
-
-      - name: Mint exact private execution token
+      - name: Mint exact private read token
         id: token
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
         with:
@@ -48,18 +26,9 @@ jobs:
           private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
           owner: smansfield635-create
           repositories: geodiametrics1
-          permission-contents: write
+          permission-contents: read
 
-      - name: Verify exact private governing head
-        shell: bash
-        env:
-          GH_TOKEN: ${{ steps.token.outputs.token }}
-        run: |
-          set -euo pipefail
-          observed="$(curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/branches/main" | jq -r '.commit.sha')"
-          test "$observed" = "$PRIVATE_HEAD"
-
-      - name: Checkout exact private canonical intake implementation
+      - name: Checkout exact private governing head
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/geodiametrics1
@@ -69,30 +38,48 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Execute repository-owned canonical intake gate
-        id: intake
+      - name: Build exact Gen306 route inputs
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
         run: |
           set -euo pipefail
-          node private-control-plane/tools/operation-intake/repository-operation-intake-gate.v1.mjs \
-            --request "$RUNNER_TEMP/request.json" \
-            --procedure "$RUNNER_TEMP/procedure.json" \
-            --repository "$PRIVATE_REPOSITORY" \
-            --lock-ref "$LOCK_REF" \
-            --output "$RUNNER_TEMP/intake-receipt.json"
+          cat > "$RUNNER_TEMP/paths.txt" <<'EOF'
+          h-earth-3d/terrain/h-earth.world-manifold-domain.js
+          h-earth-3d/integration/h-earth.world-representation-plan.js
+          h-earth-3d/integration/h-earth.world-manifold-union-admission.js
+          h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs
+          h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+          showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js
+          showroom/globe/h-earth/render/geometry-shoreline.js
+          showroom/globe/h-earth/render/geometry-distant-context.js
+          showroom/globe/h-earth/render/landscape-preview.js
+          h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js
+          showroom/globe/h-earth/render/run8e-successor-environment.js
+          EOF
+          cat > "$RUNNER_TEMP/availability.json" <<'EOF'
+          {
+            "schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1",
+            "result":"HOST_CAPABILITIES_OBSERVED",
+            "evidenceSource":"GITHUB_ACTIONS_EXACT_PRIVATE_HEAD_READ_ONLY_ROUTER_CARRIER_3207",
+            "localAuthenticatedExecutionAvailable":false,
+            "localNodeRuntimeAvailable":true,
+            "connectedGithubReadAvailable":false,
+            "connectedGithubShaGuardedContentsWriteAvailable":false,
+            "githubActionsExecutionAvailable":true
+          }
+          EOF
 
-      - name: Verify native admission
+      - name: Execute root AI router for all 11 admitted paths
         shell: bash
+        working-directory: private-control-plane
         run: |
           set -euo pipefail
-          test -s "$RUNNER_TEMP/intake-receipt.json"
-          native="$(jq -r '.result // ""' "$RUNNER_TEMP/intake-receipt.json")"
-          generation="$(jq -r '.lock.lockGeneration // ""' "$RUNNER_TEMP/intake-receipt.json")"
-          operation="$(jq -r '.lock.operationId // ""' "$RUNNER_TEMP/intake-receipt.json")"
-          echo "nativeResult=$native"
-          echo "lockGeneration=$generation"
-          echo "operationId=$operation"
-          test "$native" = 'ADMITTED_AND_LOCKED'
-          test "$operation" = 'H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002'
+          node tools/repository-ai-entry-router.mjs \
+            --paths-file "$RUNNER_TEMP/paths.txt" \
+            --task H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_GEN306 \
+            --mutation-intent \
+            --intake-availability-receipt "$RUNNER_TEMP/availability.json" \
+            --output "$RUNNER_TEMP/router-receipt.json"
+          cat "$RUNNER_TEMP/router-receipt.json"
+          test "$(jq -r '.disposition // .result // ""' "$RUNNER_TEMP/router-receipt.json")" = 'PASS'
+          test "$(jq '[.routes[] | select(.disposition != "PASS")] | length' "$RUNNER_TEMP/router-receipt.json")" = '0'
+          test "$(jq '.routes | length' "$RUNNER_TEMP/router-receipt.json")" = '11'

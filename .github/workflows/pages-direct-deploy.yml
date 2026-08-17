@@ -223,8 +223,12 @@ jobs:
               --arg dynamicRunConclusion "${run_conclusion:-}" --arg deploymentState "${deployment_state:-}" \
               --argjson artifactBytes "${artifact_bytes:-0}" --argjson providerHttpStatuses "$provider_statuses" \
               --argjson providerFailureCount "${run_attempt:-0}" --argjson maxProviderRetries 2 \
-              '{expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:$pagesBuildStatus,dynamicRunConclusion:($dynamicRunConclusion|select(length>0)),deploymentState:($deploymentState|select(length>0)),artifactBytes:$artifactBytes,providerHttpStatuses:$providerHttpStatuses,providerFailureCount:$providerFailureCount,maxProviderRetries:$maxProviderRetries}' \
+              '({expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:$pagesBuildStatus,artifactBytes:$artifactBytes,providerHttpStatuses:$providerHttpStatuses,providerFailureCount:$providerFailureCount,maxProviderRetries:$maxProviderRetries}
+                + (if ($dynamicRunConclusion|length) > 0 then {dynamicRunConclusion:$dynamicRunConclusion} else {} end)
+                + (if ($deploymentState|length) > 0 then {deploymentState:$deploymentState} else {} end))' \
               > /tmp/pages-resilience-input.json
+            test -s /tmp/pages-resilience-input.json
+            jq -e 'type == "object" and (.expectedHead|length) > 0 and (.topology == "legacy")' /tmp/pages-resilience-input.json >/dev/null
             node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs \
               --input /tmp/pages-resilience-input.json --output /tmp/pages-deployment-resilience-receipt.json >/dev/null
             disposition="$(jq -r '.disposition' /tmp/pages-deployment-resilience-receipt.json)"
@@ -248,11 +252,12 @@ jobs:
             sleep 10
           done
           jq -n --arg expectedHead "$GITHUB_SHA" --arg observedHead "$GITHUB_SHA" --arg topology legacy \
-            '{expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:"timeout",dynamicRunConclusion:"failure",providerFailureCount:2,providerHttpStatuses:[503],maxProviderRetries:2}' \
+            '{expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:"timeout",providerFailureCount:0,providerHttpStatuses:[],maxProviderRetries:2}' \
             > /tmp/pages-resilience-input.json
           node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs \
             --input /tmp/pages-resilience-input.json --output /tmp/pages-deployment-resilience-receipt.json >/dev/null
-          echo "disposition=WAITING_EXTERNAL_SERVICE" >> "$GITHUB_OUTPUT"
+          disposition="$(jq -r '.disposition' /tmp/pages-deployment-resilience-receipt.json)"
+          echo "disposition=$disposition" >> "$GITHUB_OUTPUT"
       - name: Upload Pages resilience receipt
         if: always() && steps.topology.outputs.mode == 'legacy'
         uses: actions/upload-artifact@v4

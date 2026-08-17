@@ -1,0 +1,235 @@
+{
+  "schema": "LAWS_CONTEXTUAL_READABLE_TAB_SPECIMEN_MANIFEST_v1",
+  "specimenId": "LAWS_CONTEXTUAL_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1",
+  "operationId": "LAWS_CONTEXTUAL_3D_FOUR_TAB_STEP7_VISUAL_DELIVERY_V1_9476A_20260810_002",
+  "lockGeneration": 1035,
+  "governingHead": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+  "branch": "agent/laws-four-tab-step7-visual-delivery-9476a-002",
+  "predecessorRuntimeQualifiedCandidate": {
+    "head": "62dab26373d71945cbf6a0bdab6d738522772436",
+    "operationId": "LAWS_CONTEXTUAL_3D_READABLE_TABS_FOUR_MODEL_SPECIMEN_V1_4D8BA_20260810_001",
+    "lockGeneration": 1026,
+    "step6EvidenceComment": 5247850631,
+    "browserEvidenceSha256": "d1e2ef67b10761314677eeaeb20ba9f573b090244ada6c680fb4d555f2f18f25",
+    "finalBlobs": {
+      "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
+      "index.css": "fd2c47de4407f1b9f871ea91e68579afcaa1509a",
+      "index.js": "1f3a6f5ba7152b16a1164fcd48ccb11220329f98"
+    }
+  },
+  "donor": {
+    "pullRequest": 888,
+    "head": "63ee26c78eb564b0229e84c30fd110c45618457b",
+    "use": "POSITIVE_IMPLEMENTATION_DONOR_NO_AUTHORITY_INHERITANCE"
+  },
+  "rejectedPredecessor": {
+    "pullRequest": 886,
+    "commitSha": "2647dee9e84b1cf2cc863a5a2a867dc599f4389c",
+    "terminalDisposition": "REJECTED_CLOSED",
+    "failureClass": "COMPASS_REPLICATION",
+    "use": "NEGATIVE_REFERENCE_ONLY"
+  },
+  "contentSource": {
+    "path": "laws/research/methods-and-models/showroom.js",
+    "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+    "gitBlobSha": "5037da7a0ad32dcb6eee2d25dc2b236bd9574965",
+    "semanticMutationAuthority": false
+  },
+  "implementationSources": [
+    {
+      "sourceId": "METHODS_READABLE_SURFACE_GRAMMAR",
+      "path": "laws/research/methods-and-models/showroom.css",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "dd4e484cbc170a7841bce4ebe95eb47f4057b92b"
+    },
+    {
+      "sourceId": "METHODS_EUCLIDEAN_SURFACE_FIELD",
+      "path": "laws/research/methods-and-models/showroom-euclidean.css",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "985bc039f8b66c2e9c85bcb276615f3e7a9f1494"
+    },
+    {
+      "sourceId": "METHODS_EUCLIDEAN_DIRECT_INTERACTION",
+      "path": "laws/research/methods-and-models/showroom-euclidean.js",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "e2289469b7efed2d21d0d55c873e56402c893932"
+    },
+    {
+      "sourceId": "LAWS_PRESENTATION_GRAMMAR",
+      "path": "laws/index.css",
+      "commitSha": "9476afe595b85f7e0e4bb696f7978bc0c62cc04d",
+      "gitBlobSha": "48c99c991a897297894fd3dae6923c432ec3f2b3"
+    }
+  ],
+  "router": {
+    "nativeReceiptDigest": "067b7ba55e91c146199ed69757f3e1e0b7395728bacbb3c37408a358b33561c7",
+    "carrierRun": 31449874764,
+    "result": "PASS"
+  },
+  "pageExcellence": {
+    "implementationClass": "EXISTING_CONSTRUCT_ADOPTION",
+    "architectureBundleDigest": "9080f8031397a39d8dee72a91c3ef6231b02bd3801f5d6bb24b75ab1ce8c0f0a",
+    "nativeReceiptDigest": "259c60a7c25257dc746e4548354a3882d61985099595935297bfb7a9a8106c59",
+    "carrierRun": 31449925876,
+    "result": "PASS"
+  },
+  "designLaw": {
+    "identity": "CONTEXTUAL_TAB_EQUALS_EUCLIDEAN_OBJECT",
+    "formula": "CONTENT = TAB = SPATIAL_OBJECT",
+    "tabObjectCount": 4,
+    "proxyObjectCount": 0,
+    "popupReplacementAllowed": false,
+    "carouselAllowed": false,
+    "objectIdentityInvariant": "ORBIT=FOCUS=SCROLL=PRACTICAL=ENGINEERING=EVIDENCE=INFORMATION"
+  },
+  "interactionContract": {
+    "verticalSwipe": "SCROLL_ACTIVE_TAB_CONTENT",
+    "horizontalSwipe": "CHANGE_ADJACENT_TAB_WITH_AXIS_LOCK",
+    "innerTabsGesture": "DIRECT_TAP_ONLY_NO_SECOND_HORIZONTAL_SWIPE_LAYER",
+    "tapActiveTabDismisses": false,
+    "returnControl": "Return to Orbit",
+    "categories": [
+      "Practical",
+      "Engineering",
+      "Evidence",
+      "Information"
+    ],
+    "informationDisclosure": "BOUNDED_VERTICAL_EXPANSION_WITHIN_SAME_TAB_OBJECT",
+    "horizontalContentOverflowAllowed": false,
+    "viewportClasses": [
+      "PHONE",
+      "TABLET",
+      "DESKTOP"
+    ],
+    "reducedMotionEquivalentRequired": true
+  },
+  "selectedModels": [
+    {
+      "familyId": "structure",
+      "id": "collapse-qualified",
+      "title": "Qualified Collapse Predicate"
+    },
+    {
+      "familyId": "pressure",
+      "id": "pcr",
+      "title": "Pressure-to-Capacity Ratio"
+    },
+    {
+      "familyId": "closure",
+      "id": "mass-ledger",
+      "title": "Industrial Closure Equation"
+    },
+    {
+      "familyId": "method",
+      "id": "first",
+      "title": "F.I.R.S.T. Research Method"
+    }
+  ],
+  "runtimeEvidence": {
+    "status": "PASS_CURRENT_SUCCESSOR_REVERIFIED",
+    "testedCommit": "2e8a6984fa2480a34e21c192b0f59581ac25740f",
+    "staticVerifier": "PASS",
+    "runtime": "PASS",
+    "checkCount": 53,
+    "failedCheckCount": 0,
+    "browserEvidenceSha256": "a2c8f4d2a585976b3d24856367b1cbd9e78d000165b7a515fb84fe58b85b5278",
+    "sourceBlobs": {
+      "index.html": "4e7e963e144055297910296d9fc865f11a9d5b84",
+      "index.css": "23f6ef328be1cd0ea58f0e0c301984b2f08de363",
+      "index.js": "1f3a6f5ba7152b16a1164fcd48ccb11220329f98"
+    },
+    "profiles": [
+      {
+        "id": "PHONE",
+        "viewport": "412x915",
+        "result": "PASS"
+      },
+      {
+        "id": "TABLET",
+        "viewport": "834x1112",
+        "result": "PASS"
+      },
+      {
+        "id": "DESKTOP",
+        "viewport": "1440x1000",
+        "result": "PASS"
+      },
+      {
+        "id": "REDUCED_MOTION_PHONE",
+        "viewport": "412x915",
+        "result": "PASS"
+      },
+      {
+        "id": "REDUCED_MOTION_DESKTOP",
+        "viewport": "1440x1000",
+        "result": "PASS"
+      }
+    ]
+  },
+  "step7": {
+    "status": "PASS_INTERNAL_VISUAL_REFERENCE_QUALITY",
+    "judgment": "PASS",
+    "evidenceCoverage": [
+      "PHONE",
+      "TABLET",
+      "DESKTOP",
+      "ORBIT",
+      "FOCUS",
+      "PRACTICAL",
+      "ENGINEERING",
+      "EVIDENCE",
+      "INFORMATION",
+      "INFORMATION_EXPANDED",
+      "HORIZONTAL_ADJACENCY",
+      "VERTICAL_READING",
+      "RETURN_TO_ORBIT",
+      "DIRECT_ORBIT_MANIPULATION",
+      "REDUCED_MOTION",
+      "TEMPORAL_FOCUS_TRANSITION"
+    ],
+    "temporalFramesMs": [
+      0,
+      10,
+      180,
+      460,
+      880
+    ],
+    "independentVerifierMayRepair": false,
+    "repairLoop": [
+      {
+        "defect": "FOCUSED_READER_SPATIAL_OCCLUSION",
+        "diagnosis": "receded objects competed with the focused reading surface",
+        "repairAuthority": "AUTHORIZED_CONSTRUCTOR",
+        "repairPath": "index.css",
+        "repair": "recede nonfocused objects deeper and reduce their visual weight while preserving object identity and 3D context",
+        "result": "PASS"
+      },
+      {
+        "defect": "DESKTOP_HEADER_ORBIT_OVERLAP",
+        "diagnosis": "front orbit object intersected the instruction block",
+        "repairAuthority": "AUTHORIZED_CONSTRUCTOR",
+        "repairPath": "index.css",
+        "repair": "lower the front orbit object by two viewport-height points",
+        "result": "PASS"
+      }
+    ],
+    "referenceQualityFindings": {
+      "authoredSpatialComposition": "PASS",
+      "readabilityAndHierarchy": "PASS",
+      "focusSeparation": "PASS",
+      "interactionCoherence": "PASS",
+      "responsiveFinish": "PASS",
+      "motionContinuity": "PASS",
+      "zeroProxyIntegrity": "PASS"
+    },
+    "browserEvidenceSha256": "a2c8f4d2a585976b3d24856367b1cbd9e78d000165b7a515fb84fe58b85b5278"
+  },
+  "authority": {
+    "internalVisualAdmission": true,
+    "boundedVisualRepair": true,
+    "merge": false,
+    "production": false,
+    "semanticMutation": false,
+    "templateExtraction": false
+  }
+}

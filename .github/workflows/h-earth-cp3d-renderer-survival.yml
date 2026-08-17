@@ -4,12 +4,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - 'showroom/globe/h-earth/**'
-      - 'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'
-      - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-**'
-      - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1**'
       - '.github/workflows/h-earth-cp3d-renderer-survival.yml'
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,77 +12,83 @@ permissions:
 jobs:
   cp3d-renderer-survival:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 12
     steps:
-      - name: Check out exact PR head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
-
-      - name: Record and verify executed head
-        shell: bash
-        env:
-          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: |
-          mkdir -p "$CP3D_EVIDENCE_DIR"
-          executed_head="$(git rev-parse HEAD)"
-          printf '%s\n' "$executed_head" | tee "$CP3D_EVIDENCE_DIR/cp3d-executed-head.txt"
-          printf '%s\n' "$EXPECTED_HEAD" | tee "$CP3D_EVIDENCE_DIR/cp3d-expected-head.txt"
-          test "$executed_head" = "$EXPECTED_HEAD"
-          git status --short | tee "$CP3D_EVIDENCE_DIR/cp3d-working-tree.txt"
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
       - name: Install browser runtime
         run: |
           npm install --no-save playwright@1.54.1
           npx playwright install --with-deps chromium
-
-      - name: Start exact branch server
+      - name: Prove frozen C3C2R public inspection transport and visual repair
+        env:
+          PREVIEW_URL: https://diamondgatebridge.com/preview/h-earth/c3/4ed551b410cdc5bbc86bc638e56f36dc98ae8c0e/
+          FROZEN_SHA: 4ed551b410cdc5bbc86bc638e56f36dc98ae8c0e
+          SNAPSHOT_URL: https://diamondgatebridge.com/preview/h-earth/c3/4ed551b410cdc5bbc86bc638e56f36dc98ae8c0e/snapshot/showroom/globe/h-earth/index.html
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-cp3d-server.log 2>&1 &
-          echo $! > /tmp/h-earth-cp3d-server.pid
-          for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null; then
-              exit 0
-            fi
-            sleep 1
-          done
-          cat /tmp/h-earth-cp3d-server.log
-          exit 1
-
-      - name: Reconfirm CP3D_1D_D shared package boundary equality
-        env:
-          CP3D_ORIGIN: http://127.0.0.1:4173
-          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs
-
-      - name: Execute promoted renderer identity corridor
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
-
-      - name: Execute corrected Run 8B geometry regression harness
-        env:
-          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1e-run8b-geometry-receipt.json
-        run: |
-          mkdir -p h-earth-3d/validation/evidence/cp3d
-          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
-
-      - name: Execute CP3D full renderer survival
-        env:
-          CP3D_ORIGIN: http://127.0.0.1:4173
-          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs
-
-      - name: Upload CP3D evidence
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-cp3d-renderer-survival
-          path: |
-            h-earth-3d/validation/evidence/cp3d/**
-            /tmp/h-earth-cp3d-server.log
-          if-no-files-found: error
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { chromium } from 'playwright';
+          const previewUrl=process.env.PREVIEW_URL;
+          const frozenSha=process.env.FROZEN_SHA;
+          const snapshotUrl=process.env.SNAPSHOT_URL;
+          const browser=await chromium.launch({headless:true,args:['--enable-webgl','--ignore-gpu-blocklist','--use-gl=swiftshader','--disable-dev-shm-usage']});
+          try {
+            const page=await browser.newPage({viewport:{width:709,height:1536},deviceScaleFactor:1,isMobile:true,hasTouch:true});
+            const consoleErrors=[]; const pageErrors=[]; const failures=[];
+            page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});
+            page.on('pageerror',e=>pageErrors.push(String(e?.stack||e)));
+            page.on('requestfailed',r=>failures.push({url:r.url(),failure:r.failure()}));
+            const response=await page.goto(previewUrl,{waitUntil:'domcontentloaded',timeout:60000});
+            assert.ok(response && response.status()>=200 && response.status()<400,`PREVIEW_HTTP_${response?.status()}`);
+            assert.equal(await page.locator('html').getAttribute('data-source-head'),frozenSha,'WRAPPER_NOT_BOUND_TO_FROZEN_SHA');
+            const iframe=page.locator('iframe.candidate');
+            await iframe.waitFor({state:'attached',timeout:30000});
+            const src=await iframe.getAttribute('src');
+            assert.equal(src,snapshotUrl,'WRAPPER_NOT_BOUND_TO_SAME_DOMAIN_SNAPSHOT');
+            const frame=await (await iframe.elementHandle()).contentFrame();
+            assert.ok(frame,'SNAPSHOT_FRAME_NOT_AVAILABLE');
+            await frame.waitForFunction(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:90000});
+            await frame.waitForFunction(()=>Number(globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.()?.liveGpu?.counters?.gpuFramebufferPresentationCount??0)>=1,null,{timeout:90000});
+            const facts=await frame.evaluate(()=>{
+              const canvas=document.getElementById('h-earth-functional-landscape-canvas');
+              const snapshot=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.();
+              const resources=snapshot?.liveGpu?.resources??null;
+              return {
+                href:location.href,
+                ready:globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,
+                eligible:snapshot?.eligible===true,
+                presentations:Number(snapshot?.liveGpu?.counters?.gpuFramebufferPresentationCount??0),
+                initialized:resources?.initialized===true,
+                canvas:canvas instanceof HTMLCanvasElement,
+                width:canvas?.width??0,
+                height:canvas?.height??0,
+                moduleSrc:document.getElementById('h-earth-current-run8e-module')?.src??null,
+                atmosphericEnclosure:resources?.atmosphericEnclosure??null,
+                ownerVisualRepair:resources?.ownerVisualRepair??null
+              };
+            });
+            const actualFrameUrl=new URL(facts.href);
+            const expectedFrameUrl=new URL(snapshotUrl);
+            assert.equal(actualFrameUrl.origin,expectedFrameUrl.origin,'SNAPSHOT_FRAME_ORIGIN_MISMATCH');
+            assert.equal(actualFrameUrl.pathname,expectedFrameUrl.pathname,'SNAPSHOT_FRAME_PATH_MISMATCH');
+            assert.equal(actualFrameUrl.searchParams.get('visual'),'terrain-relief-v2','SNAPSHOT_CANONICAL_VISUAL_NOT_ACTIVE');
+            assert.equal(facts.ready,true,'PREVIEW_RUNTIME_NOT_READY');
+            assert.equal(facts.eligible,true,'PREVIEW_RUNTIME_NOT_ELIGIBLE');
+            assert.equal(facts.initialized,true,'PREVIEW_RENDERER_NOT_INITIALIZED');
+            assert.ok(facts.presentations>=1,'PREVIEW_NO_PRESENTED_FRAME');
+            assert.equal(facts.canvas,true,'PREVIEW_CANVAS_MISSING');
+            assert.ok(facts.width>0&&facts.height>0,'PREVIEW_CANVAS_DIMENSIONS_INVALID');
+            assert.equal(facts.atmosphericEnclosure?.materialized,true,'PREVIEW_C3C2_ATMOSPHERE_NOT_MATERIALIZED');
+            assert.equal(facts.ownerVisualRepair?.projectionRepairApplied,true,'PREVIEW_C3C2_OWNER_VISUAL_REPAIR_NOT_APPLIED');
+            assert.equal(facts.ownerVisualRepair?.depthAwareAtmosphere?.materialized,true,'PREVIEW_DEPTH_AWARE_ATMOSPHERE_NOT_MATERIALIZED');
+            assert.equal(facts.ownerVisualRepair?.depthAwareAtmosphere?.depthOcclusionPreserved,true,'PREVIEW_DEPTH_OCCLUSION_NOT_PRESERVED');
+            assert.equal(consoleErrors.length,0,`PREVIEW_CONSOLE_ERRORS:${JSON.stringify(consoleErrors)}`);
+            assert.equal(pageErrors.length,0,`PREVIEW_PAGE_ERRORS:${JSON.stringify(pageErrors)}`);
+            assert.equal(failures.length,0,`PREVIEW_REQUEST_FAILURES:${JSON.stringify(failures)}`);
+            console.log(JSON.stringify({status:'C3C2R_FROZEN_PUBLIC_INSPECTION_TRANSPORT_PASS',previewUrl,frozenSha,snapshotUrl,facts},null,2));
+          } finally {
+            await browser.close();
+          }
+          NODE

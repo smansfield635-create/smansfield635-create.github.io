@@ -31,14 +31,12 @@ const freeze = (value, seen = new WeakSet()) => {
 const finiteVector = (value) => value && ['x', 'y', 'z'].every((axis) =>
   typeof value[axis] === 'number' && Number.isFinite(value[axis]));
 
-// Camera-to-envelope sizing, not nominal world-coordinate sizing. The far OW04
-// continuation corners are ~3044 world units from coastal entry; retain margin
-// beyond that complete intended visual envelope without expanding navigation,
-// collision, semantic-address, or accessible-region authority.
-const OW04_VISUAL_HORIZON_FAR_PLANE = 3328;
+// C3C2 camera-to-envelope sizing. The accessible authored region remains frozen;
+// only already noninteractive visible-world continuation receives additional draw reach.
+const C3C2_VISUAL_HORIZON_FAR_PLANE = 5600;
 
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_FRAME_CONTRACT_ID =
-  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_RUN_6E_v7_CAMERA_TO_ENVELOPE_VISUAL_HORIZON_REACH';
+  'H_EARTH_FUNCTIONAL_LANDSCAPE_ADMITTED_FRAME_C3C2_CLOSED_PLANETARY_WORLD_v1';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_PRESENTATION_MODE =
   'FUNCTIONAL_LANDSCAPE_COAST_TO_INLAND_PROOF';
 export const H_EARTH_FUNCTIONAL_LANDSCAPE_COMPATIBILITY_MODES = freeze([
@@ -54,12 +52,7 @@ function defaultCamera() {
     up: { ...source.up },
     verticalFovDegrees: source.verticalFovDegrees,
     nearPlane: source.nearPlane,
-    // The frozen OW03 accessible terrain remains unchanged. OW04's existing
-    // noninteractive visual continuation reaches a camera-relative envelope
-    // beyond 3044 units from coastal entry, so the legacy 512 and provisional
-    // 2304 clip planes both truncate authored context. Extend successor-frame
-    // draw reach only; no playable or semantic extent is enlarged.
-    farPlane: Math.max(source.farPlane, OW04_VISUAL_HORIZON_FAR_PLANE),
+    farPlane: Math.max(source.farPlane, C3C2_VISUAL_HORIZON_FAR_PLANE),
     sourceCapacityContractId: 'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5',
     cameraAuthority: source.cameraStateAuthority,
     visualHorizonReachOnly: true,
@@ -70,16 +63,20 @@ function defaultCamera() {
 
 function defaultEnvironment() {
   return freeze({
-    environmentSnapshotId: 'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_SUBTROPICAL_OW04_002',
+    environmentSnapshotId: 'H_EARTH_FUNCTIONAL_LANDSCAPE_ENVIRONMENT_C3C2_CLOSED_PLANETARY_COAST_001',
     sourceEnvironmentContractId: 'H_EARTH_3D_ENVIRONMENT_FILE_RENEWAL_STEP_034M_PUBLIC_STAGE_ENVIRONMENT_DESCRIPTOR_v1',
     climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
     skyTop: [56, 105, 139, 255],
     skyHorizon: [182, 211, 204, 255],
     groundHaze: [126, 153, 134, 255],
     humidityCharacter: 'WARM_MARITIME_HAZE_WITH_GREEN_REFLECTED_GROUND_LIGHT',
-    horizonClosed: false,
+    horizonClosed: true,
+    fullViewportSkyCoverageRequired: true,
+    celestialReferenceRequired: true,
+    curvedHorizonHazeRequired: true,
     distanceHazeEnabled: true,
-    ownsSkyAuthority: false
+    ownsSkyAuthority: false,
+    baselinePreservationId: 'H_EARTH_C3C1_OWNER_NAVIGATED_SUCCESS_BASELINE_20260816'
   });
 }
 
@@ -245,13 +242,13 @@ export function constructHEarthFunctionalLandscapeFrame({
     environment: freeze({ ...environment }),
     visualHorizonReach: freeze({
       farPlane: camera.farPlane,
-      minimumRequiredFarPlane: OW04_VISUAL_HORIZON_FAR_PLANE,
-      sizingBasis: 'COASTAL_ENTRY_CAMERA_TO_FARTHEST_OW04_ENVELOPE_WITH_MARGIN',
-      farthestRequiredDistanceApprox: 3044,
+      minimumRequiredFarPlane: C3C2_VISUAL_HORIZON_FAR_PLANE,
+      sizingBasis: 'COASTAL_ENTRY_CAMERA_TO_C3C2_NONINTERACTIVE_WORLD_ENVELOPE_WITH_MARGIN',
+      farthestRequiredDistanceApprox: 5200,
       navigationExtentExpanded: false,
       collisionExtentExpanded: false,
       semanticAddressExtentExpanded: false,
-      purpose: 'RENDER_ALREADY_AUTHORED_NONINTERACTIVE_WORLD_CONTINUATION_BEYOND_FROZEN_ACCESSIBLE_REGION'
+      purpose: 'RENDER_NONINTERACTIVE_WORLD_CONTINUATION_TO_ATMOSPHERIC_DISTANCE_BEYOND_FROZEN_ACCESSIBLE_REGION'
     }),
     presentationAssignments,
     visibility: freeze({ visiblePrimitiveIds: transfer.primitiveIds, hiddenPrimitiveIds: [], visibilityAuthority: 'FUNCTIONAL_LANDSCAPE_SUCCESSOR_COMPOSITOR' }),

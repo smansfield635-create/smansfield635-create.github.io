@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Audralia · Open World O1</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<main class="world-shell" data-o1-root>
+  <canvas data-o1-canvas aria-label="Interactive Open World view of Audralia"></canvas>
+  <header class="hud">
+    <div><strong>AUDRALIA</strong><span>OPEN WORLD · O1</span></div>
+    <button type="button" data-home>Return to Gratitude</button>
+  </header>
+  <section class="readout" aria-live="polite">
+    <span data-scale>REGIONAL</span>
+    <span data-place>Gratitude Basin</span>
+  </section>
+  <div class="help">drag to travel · pinch to change scale · double tap to recenter</div>
+</main>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>

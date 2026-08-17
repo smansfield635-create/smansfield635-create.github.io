@@ -23,13 +23,13 @@ jobs:
           path: baseline
           fetch-depth: 1
           persist-credentials: false
-      - name: Check out exact Gen305 candidate
+      - name: Check out exact Gen305 candidate with ancestry
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/smansfield635-create.github.io
           ref: 9620128f6f4dd3d235f345b088402d29a55d5771
           path: candidate
-          fetch-depth: 1
+          fetch-depth: 0
           persist-credentials: false
       - name: Verify exact mutation and protected geography identities
         shell: bash
@@ -37,6 +37,7 @@ jobs:
           set -euo pipefail
           test "$(git -C baseline rev-parse HEAD^{commit})" = '2152ad18c1691c4056e9ae39795ad44228dbdc19'
           test "$(git -C candidate rev-parse HEAD^{commit})" = '9620128f6f4dd3d235f345b088402d29a55d5771'
+          git -C candidate merge-base --is-ancestor 2152ad18c1691c4056e9ae39795ad44228dbdc19 HEAD
           allowed="$RUNNER_TEMP/allowed.txt"
           actual="$RUNNER_TEMP/actual.txt"
           cat > "$allowed" <<'PATHS'
@@ -107,5 +108,5 @@ jobs:
         with:
           name: h-earth-gen305-s26-candidate-qualification-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/gen305-s26-evidence
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 90

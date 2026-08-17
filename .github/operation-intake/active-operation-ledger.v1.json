@@ -840,18 +840,6 @@
       "scopeHash": "68f8bd53a5e2887ce30f0e59983668c6d44e89715fa9e3801e7217800a01c9e7",
       "state": "ADMITTED_LOCKED"
     },
-    "6921a6a55ff2a47a5b425365486156dbd661f2cc4876bdec2f66fad921ee7483": {
-      "governingHead": "fbeca8933505da678534a26167103ad77d8c7f5f",
-      "lockGeneration": 1528,
-      "lockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_ANIMATION_MODERNIZATION_AND_CRYSTAL_SCHEDULING",
-      "operationId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_20260817_010",
-      "procedureLocatorDigest": "1fa524ab507f2c3b2d1a3683e8d9662a1305e1b9253cc07c02e5df89bd01a755",
-      "released": false,
-      "requestDigest": "12348167411ccbbabb71e752aae7b3ac65c84437e6394c26e90c6f6e8f21c370",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "6921a6a55ff2a47a5b425365486156dbd661f2cc4876bdec2f66fad921ee7483",
-      "state": "ADMITTED_LOCKED"
-    },
     "69428db25006e85a7e3d13ba285b67e282268f024f57830f9cb9c95f757ead70": {
       "governingHead": "aa4b79c78fc259a5ac2eac32e7e9e040444d6da5",
       "lockGeneration": 935,
@@ -22672,6 +22660,19 @@
         "transitionId": "COMPASS_GEN1521_CACHE_IDENTITY_SUCCESSOR_20260817_v2"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "fbeca8933505da678534a26167103ad77d8c7f5f",
+      "lockGeneration": 1528,
+      "lockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_ANIMATION_MODERNIZATION_AND_CRYSTAL_SCHEDULING",
+      "operationId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_20260817_010",
+      "procedureLocatorDigest": "1fa524ab507f2c3b2d1a3683e8d9662a1305e1b9253cc07c02e5df89bd01a755",
+      "released": true,
+      "requestDigest": "12348167411ccbbabb71e752aae7b3ac65c84437e6394c26e90c6f6e8f21c370",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6921a6a55ff2a47a5b425365486156dbd661f2cc4876bdec2f66fad921ee7483",
+      "state": "TERMINAL",
+      "terminalDisposition": "VOIDED"
     }
   ]
 }

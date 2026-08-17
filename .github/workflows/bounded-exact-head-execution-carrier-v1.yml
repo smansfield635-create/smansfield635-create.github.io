@@ -24,18 +24,15 @@ permissions:
   contents: read
   issues: write
 
-env:
-  GEN839_SUCCESSOR_RECEIPT_B64: ewogICJhdXRob3JpdHlJbmhlcml0ZWQiOiBmYWxzZSwKICAiYXV0aG9yaXR5UG9saWN5IjogIkZSRVNIX1NVQ0NFU1NPUl9SRVFVRVNUX1JFUVVJUkVEX05PX0lNUExJQ0lUX0lOSEVSSVRBTkNFIiwKICAiYXV0aG9yaXR5U291cmNlIjogIkZSRVNIX1NVQ0NFU1NPUl9SRVFVRVNUX0FORF9DT05TVFJVQ1RJT05fUFJPQ0VEVVJFIiwKICAiYnJhbmNoQ3JlYXRpb25BdXRob3JpemVkIjogdHJ1ZSwKICAiY2FzQXR0ZW1wdCI6IDEsCiAgImNhc1JldHJ5TGltaXQiOiA4LAogICJjb21taXR0ZWRMZWRnZXJCbG9iU2hhIjogIjY1NzYwYzM0NGQ2YmQ2ODEzODNlYmEyYjExYjBmN2I4MTVhMDEzMGEiLAogICJldmlkZW5jZVBvbGljeSI6ICJFWEFDVF9IRUFEX1JFVkFMSURBVElPTl9SRVFVSVJFRCIsCiAgImV4YWN0SGVhZFJldmFsaWRhdGlvblJlcXVpcmVkIjogdHJ1ZSwKICAiZ292ZXJuaW5nUmVmIjogInJlZnMvaGVhZHMvbWFpbiIsCiAgImltcGxlbWVudGF0aW9uSW5mZXJlbmNlQXV0aG9yaXplZCI6IGZhbHNlLAogICJsZWRnZXJDb21wYXJlQW5kU3dhcENvbW1pdHRlZCI6IHRydWUsCiAgImxlZGdlckdlbmVyYXRpb25BZnRlciI6IDgzOSwKICAibGVkZ2VyR2VuZXJhdGlvbkJlZm9yZSI6IDgzOCwKICAibGl2ZUdvdmVybmluZ0hlYWQiOiAiZjYyNGI1NTA5NmM2OWM2MzkwOWQ0ZWUyNjBmY2Q1NjE1ZjhkOWFhNiIsCiAgIm9ic2VydmVkTGVkZ2VyQmxvYlNoYSI6ICJkYTJiMWU5ZTdkMDZmZTUyZGMzNzNlZWJlM2JiNmMxNTNmZjJiMzBmIiwKICAib2JzZXJ2ZWRMb2NrUmVmSGVhZCI6ICIzMTk3M2YzZThlNzAyODlhZjU0ZDAxZmZkY2Y0YzdmMjkwNjA2YjZkIiwKICAib25lTGVkZ2VyTXV0YXRpb25SZXF1aXJlZCI6IHRydWUsCiAgIm9wZXJhdGlvblN0YXJ0ZWQiOiB0cnVlLAogICJwcmVkZWNlc3NvciI6IHsKICAgICJnb3Zlcm5pbmdIZWFkIjogIjMzMTI4NDk0OTk0MGM5NWRiODBhMzMyMjM1NDkyZGU0YzgwZDNkNDMiLAogICAgImxvY2tHZW5lcmF0aW9uIjogODMyLAogICAgImxvY2tTY29wZSI6ICJSRVBPU0lUT1JZX0NPTlRST0xfUExBTkU6Qk9VTkRFRF9FWEFDVF9IRUFEX0VYRUNVVElPTl9DQVJSSUVSOklOU1RBTExBVElPTjpWMSIsCiAgICAib3BlcmF0aW9uSWQiOiAiQk9VTkRFRF9FWEFDVF9IRUFEX0VYRUNVVElPTl9DQVJSSUVSX1YxX0lOU1RBTExBVElPTl8yMDI2MDgwOV8wMDIiLAogICAgInNjb3BlSGFzaCI6ICI5MWE4YWM0YjQ4MGFiNzJlNDQwYzA3MGJhYTY5ZDE4OTY0NDM1OGQ3YjI3MDlkMTNhMWM5NGZkYjE4NzgzZWExIiwKICAgICJ0ZXJtaW5hbERpc3Bvc2l0aW9uIjogIlNVUEVSU0VERUQiLAogICAgInRlcm1pbmFsSGlzdG9yeVByZXNlcnZlZCI6IHRydWUKICB9LAogICJwcmVzZXJ2ZWRFdmlkZW5jZVJlZnMiOiBbCiAgICAiR0VORVJBVElPTl84MzJfQ0FOT05JQ0FMX0FETUlTU0lPTiIsCiAgICAiUlVOXzMxMzMzNjI5NDcwX0JPT1RTVFJBUF9ST1VURVJfOF9PRl84X1BBU1MiLAogICAgIlJVTl8zMTMzNDAwNjg3MF9GUkVTSF9DQVJSSUVSX1ZFUklGSUNBVElPTl8xOF9PRl8xOF9QQVNTIiwKICAgICJQUl84NDVfQ0FORElEQVRFX0hFQURfMEU0NzIxRkM5NkQ1M0VBOEVBRUVFMTQyMENGMzQ4RDM3MTdCRDg3RCIsCiAgICAiUlVOXzMxMzM0MDA2ODQ4X0RJRkZFUkVOVElBTF9SRUdSRVNTSU9OX1BBU1MiLAogICAgIlBSXzg0NF9NQUlOX0FEVkFOQ0VfRjYyNEI1NTBfRElTSk9JTlRfRlJPTV9DQVJSSUVSX0VJR0hUX1BBVEhfRE9NQUlOIgogIF0sCiAgInJlYXNvbkNvZGUiOiAiR09WRVJOSU5HX0hFQURfQURWQU5DRUQiLAogICJyZXBvc2l0b3J5V3JpdGVzQXV0aG9yaXplZCI6IHRydWUsCiAgInJlc3VsdCI6ICJTVUNDRVNTT1JfQURNSVRURURfUFJFREVDRVNTT1JfU1VQRVJTRURFRCIsCiAgInNjaGVtYSI6ICJSRVBPU0lUT1JZX09QRVJBVElPTl9TVUNDRVNTT1JfVFJBTlNJVElPTl9SRUNFSVBUX3YxIiwKICAic3VjY2Vzc29yIjogewogICAgImdvdmVybmluZ0hlYWQiOiAiZjYyNGI1NTA5NmM2OWM2MzkwOWQ0ZWUyNjBmY2Q1NjE1ZjhkOWFhNiIsCiAgICAibG9ja0dlbmVyYXRpb24iOiA4MzksCiAgICAibG9ja1Njb3BlIjogIlJFUE9TSVRPUllfQ09OVFJPTF9QTEFORTpCT1VOREVEX0VYQUNUX0hFQURfRVhFQ1VUSU9OX0NBUlJJRVI6SU5TVEFMTEFUSU9OOlYxIiwKICAgICJvcGVyYXRpb25JZCI6ICJCT1VOREVEX0VYQUNUX0hFQURfRVhFQ1VUSU9OX0NBUlJJRVJfVjFfSU5TVEFMTEFUSU9OXzIwMjYwODA5XzAwMl9TVUNDRVNTT1JfMDAxIiwKICAgICJwcm9jZWR1cmVMb2NhdG9yRGlnZXN0IjogIjgzYWRlMGU2NTA4MzdiNTc3NTNkMTQzNzE5M2RmZDZkYmE4ZmQyNjU0NjliNWFjMzVhYjg0NWQ3YmQ5MTk3MmMiLAogICAgInByb2plY3RJZCI6ICJSRVBPU0lUT1JZX0FJX1JPVVRFUl9JTkZSQVNUUlVDVFVSRSIsCiAgICAicmVxdWVzdERpZ2VzdCI6ICIxNDc0OTZjMDljZGFjMmM4NmE0YWU2NDAwNTk4MTE0ZGYxZGM2MmI0OGI5Y2JmYWVkYTFiZGFiNjA3NzYzYjZlIiwKICAgICJzY29wZUhhc2giOiAiOTFhOGFjNGI0ODBhYjcyZTQ0MGMwNzBiYWE2OWQxODk2NDQzNThkN2IyNzA5ZDEzYTFjOTRmZGIxODc4M2VhMSIsCiAgICAic3RhdGUiOiAiQURNSVRURURfTE9DS0VEIgogIH0sCiAgInRyYW5zaXRpb25Db21taXRTaGEiOiAiZTI1YjNmZmQ3OTYzM2IwY2Y5NGM4Njg4M2UzYTlkOTZmMjA2YWI5YSIsCiAgInRyYW5zaXRpb25JZCI6ICJCT1VOREVEX0VYQUNUX0hFQURfQ0FSUklFUl9HRU44MzJfVE9fRjYyNEI1NTBfMjAyNjA4MDlfMDAxIiwKICAid29ya2Zsb3dFeGVjdXRpb25BdXRob3JpemVkIjogdHJ1ZQp9Cg==
-
 jobs:
   verify-candidate:
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     steps:
-      - name: Check out exact candidate head
+      - name: Check out exact certification-repair candidate head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -44,73 +41,139 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify exact head and clean worktree
+      - name: Verify exact one-workflow repair and preserve generic execution route
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^{commit})" = "${{ github.sha }}"
+          BASE=f99609e4540e5bdf9b2f0c519f631858706f0ba5
+          test "$(git rev-parse HEAD^{commit})" = "${{ github.event.pull_request.head.sha }}"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
-
-      - name: Verify canonical generation-839 successor identity
-        shell: bash
-        run: |
-          set -euo pipefail
-          printf '%s' "$GEN839_SUCCESSOR_RECEIPT_B64" | base64 --decode > "$RUNNER_TEMP/gen839-successor.json"
+          test "$(git diff --name-only "$BASE"...HEAD)" = ".github/workflows/bounded-exact-head-execution-carrier-v1.yml"
           node - <<'NODE'
-          const fs=require('fs');
-          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/gen839-successor.json','utf8'));
-          const s=r.successor||{};
-          if(r.schema!=='REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1'||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED'||r.authorityInherited!==false||r.exactHeadRevalidationRequired!==true||s.operationId!=='BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001'||s.lockGeneration!==839||s.governingHead!=='f624b55096c69c63909d4ee260fcd5615f8d9aa6'||s.requestDigest!=='147496c09cdac2c86a4ae6400598114df1dc62b48b9cbfaeda1bdab607763b6e'||s.procedureLocatorDigest!=='83ade0e650837b57753d1437193dfd6dba8fd265469b5ac35ab845d7bd91972c')process.exit(1);
+          const fs=require('fs'),cp=require('child_process');
+          const p='.github/workflows/bounded-exact-head-execution-carrier-v1.yml';
+          const current=fs.readFileSync(p,'utf8');
+          const base=cp.execFileSync('git',['show','f99609e4540e5bdf9b2f0c519f631858706f0ba5:'+p],{encoding:'utf8'});
+          const marker='\n  execute-registered-command:\n';
+          const a=current.indexOf(marker),b=base.indexOf(marker);
+          if(a<0||b<0||current.slice(a)!==base.slice(b))process.exit(1);
+          const legacy=String(800+39);
+          const forbidden=['GEN'+legacy+'_SUCCESSOR_RECEIPT_B64','generation-'+legacy,'generation:'+legacy];
+          const lockKey=['lock','Generation'].join('');
+          const legacyLockPattern=new RegExp(lockKey+'\\s*(?:!==|===|==|:)\\s*'+legacy+'(?:\\D|$)');
+          if(forbidden.some(x=>current.includes(x))||legacyLockPattern.test(current))process.exit(1);
           NODE
 
-      - name: Recompute exact eight-path repository Router gate
+      - name: Verify terminal Gen1083 closure evidence
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const {data}=await github.rest.issues.getComment({owner:context.repo.owner,repo:context.repo.repo,comment_id:5256095416});
+            const m=(data.body||'').match(/```json\n([\s\S]*?)\n```/);
+            if(!m) core.setFailed('GEN1083_CLOSURE_JSON_MISSING');
+            const r=JSON.parse(m[1]); const n=r.nativeReceiptJson||{};
+            const ok=r.schema==='REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_RECEIPT_v1'&&r.result==='TERMINAL_CLOSURE_COMMITTED'&&r.operationId==='BOUNDED_EXACT_HEAD_BROWSER_SCENARIO_MATRIX_EXTENSION_V1_20260811_001'&&r.lockGeneration===1083&&r.lockScope==='REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:BROWSER_SCENARIO_MATRIX:V1'&&r.terminalDisposition==='PASS_CLOSED'&&r.semanticAuthorityCreated===false&&r.genericCommandAuthority===false&&n.schema==='REPOSITORY_OPERATION_REMOTE_CLOSURE_RECEIPT_v1'&&n.result==='TERMINAL_CLOSURE_COMMITTED'&&n.lockGeneration===1083&&n.lockReleased===true&&n.operationId===r.operationId&&n.scopeHash==='ab08a516f6c51f9d3afa86a7024eebc248e839e4744308a8315cb22824571f19'&&n.terminalDisposition==='PASS_CLOSED'&&n.terminalHistoryPreserved===true&&r.nativeReceiptSha256==='658130373f72b1aa1e9719db2e7865a510b88860b1612f3b423628935923f034';
+            if(!ok) core.setFailed('GEN1083_TERMINAL_IDENTITY_MISMATCH');
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/gen1083-closure.json',JSON.stringify(r,null,2)+'\n');
+
+      - name: Verify exact PR906 carrier head tree and four-path identity
         shell: bash
         run: |
           set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path .github/ai-router/router.v1.json \
-            --path .github/ai-router/execution-backends.v1.json \
-            --path .github/ai-router/system-continuity/gap-registry.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/protocol.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs \
-            --path .github/workflows/bounded-exact-head-execution-carrier-v1.yml \
-            --task BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001 \
-            --output "$RUNNER_TEMP/router-receipt.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/router-receipt.json'); if(r.disposition!=='PASS'||r.routes?.length!==8||!r.routes.every(x=>x.projectId==='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'&&x.disposition==='PASS'))process.exit(1)"
+          git fetch --no-tags origin refs/pull/906/head:refs/remotes/origin/pr906-head
+          HEAD906="$(git rev-parse refs/remotes/origin/pr906-head^{commit})"
+          test "$HEAD906" = "cae14cd6ced51fca446ba050f049d475c564ee45"
+          test "$(git show -s --format=%T "$HEAD906")" = "413ec09071986b72f31b24474204dd3402f8aea5"
+          cat > "$RUNNER_TEMP/expected-paths.txt" <<'EOF'
+          .github/ai-router/bounded-exact-head-execution-carrier/browser-verification.v1.mjs
+          .github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs
+          .github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json
+          .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs
+          EOF
+          git diff --name-only ed2983e76d3896b13864d9251c42be225f8c5fb4..."$HEAD906" | sort > "$RUNNER_TEMP/observed-paths.txt"
+          diff -u "$RUNNER_TEMP/expected-paths.txt" "$RUNNER_TEMP/observed-paths.txt"
 
-      - name: Run adversarial carrier self-test
+      - name: Re-execute exact PR906 carrier self-test under Gen1083 identity
         shell: bash
         run: |
           set -euo pipefail
-          node .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs --output "$RUNNER_TEMP/self-test.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/self-test.json'); if(r.result!=='PASS'||r.passed!==r.total||r.total<18||r.authorityInflationObserved!==false||r.arbitraryCommandAccepted!==false)process.exit(1)"
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          W="$RUNNER_TEMP/pr906-exact"
+          git worktree add --detach "$W" cae14cd6ced51fca446ba050f049d475c564ee45
+          trap 'git worktree remove --force "$W" >/dev/null 2>&1 || true' EXIT
+          (
+            cd "$W"
+            test "$(git rev-parse HEAD^{commit})" = "cae14cd6ced51fca446ba050f049d475c564ee45"
+            test -z "$(git status --porcelain=v1 --untracked-files=all)"
+            BROWSER_MATRIX_EXACT_HEAD_REEXEC=1 node .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs --output "$RUNNER_TEMP/gen1083-self-test.json"
+            test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          )
+          node - <<'NODE'
+          const r=require(process.env.RUNNER_TEMP+'/gen1083-self-test.json');
+          const p=r.preMatrixV1Regression||{},m=r.matrixRunnerSelfTest||{},s=r.realMatrixSmoke||{};
+          if(r.schema!=='BOUNDED_BROWSER_SCENARIO_MATRIX_EXTENSION_SELF_TEST_RECEIPT_v1'||r.result!=='PASS'||r.executionHead!=='cae14cd6ced51fca446ba050f049d475c564ee45'||r.passed!==18||r.total!==18||p.result!=='PASS'||p.fixturePassCount!==54||p.fixtureCount!==54||p.nativeRegressionPassCount!==5||p.nativeRegressionCount!==5||p.realBrowserSmoke?.result!=='PASS'||m.result!=='PASS'||m.passCount!==7||m.testCount!==7||s.result!=='PASS'||s.skipped===true||r.authorityInflationObserved!==false||r.arbitraryCommandAccepted!==false||r.callerSuppliedJavascriptAccepted!==false||r.callerSuppliedPlaywrightAccepted!==false||r.callerSuppliedViewportAccepted!==false||r.productAuthorityCreated!==false||r.semanticAuthorityCreated!==false)process.exit(1);
+          NODE
 
-      - name: Emit fresh generation-839 verification receipt
+      - name: Emit fresh Gen1083-bound certification receipt
         shell: bash
         run: |
           set -euo pipefail
           node - <<'NODE'
-          const fs=require('fs'); const p=process.env.RUNNER_TEMP;
-          const router=JSON.parse(fs.readFileSync(p+'/router-receipt.json','utf8'));
-          const self=JSON.parse(fs.readFileSync(p+'/self-test.json','utf8'));
-          const out={schema:'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_VERIFICATION_RECEIPT_v1',result:'PASS',generation:839,operationId:'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001',head:process.env.GITHUB_SHA,governingHead:'f624b55096c69c63909d4ee260fcd5615f8d9aa6',routerDisposition:router.disposition,routerRouteCount:router.routes.length,selfTestResult:self.result,selfTestPassed:self.passed,selfTestTotal:self.total,authorityInherited:false,arbitraryCommandAuthority:false,repositoryWriteAuthority:false,semanticAuthority:false};
-          fs.writeFileSync(p+'/verification.json',JSON.stringify(out,null,2)+'\n');
+          const fs=require('fs'),cp=require('child_process'),crypto=require('crypto');
+          const closure=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/gen1083-closure.json','utf8'));
+          const self=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/gen1083-self-test.json','utf8'));
+          const workflow=fs.readFileSync('.github/workflows/bounded-exact-head-execution-carrier-v1.yml');
+          const out={
+            schema:'BOUNDED_EXACT_HEAD_BROWSER_SCENARIO_MATRIX_CERTIFICATION_RECEIPT_v1',
+            result:'PASS',
+            certificationRepairOperationId:'BROWSER_SCENARIO_MATRIX_CERTIFICATION_IDENTITY_REPAIR_V1_20260811_001',
+            certificationRepairGeneration:1093,
+            certificationWorkflowHead:cp.execFileSync('git',['rev-parse','HEAD^{commit}'],{encoding:'utf8'}).trim(),
+            targetPullRequest:906,
+            targetOperationId:'BOUNDED_EXACT_HEAD_BROWSER_SCENARIO_MATRIX_EXTENSION_V1_20260811_001',
+            targetGeneration:1083,
+            targetGoverningHead:'ed2983e76d3896b13864d9251c42be225f8c5fb4',
+            targetCandidateHead:'cae14cd6ced51fca446ba050f049d475c564ee45',
+            targetCandidateTree:'413ec09071986b72f31b24474204dd3402f8aea5',
+            targetScopeHash:'ab08a516f6c51f9d3afa86a7024eebc248e839e4744308a8315cb22824571f19',
+            targetTerminalDisposition:closure.terminalDisposition,
+            targetClosureReceiptSha256:closure.nativeReceiptSha256,
+            priorExactCandidateVerificationRunId:31513719423,
+            priorExactCandidateArtifactId:9110181686,
+            priorExactCandidateArtifactDigest:'sha256:ac3cb649c9a9222433b3e2c5688aac1cbc20f4f2c0b8a3e3a72b06ada76efe1a',
+            exactCandidateSelfTest:{result:self.result,passed:self.passed,total:self.total,executionHead:self.executionHead},
+            preMatrixV1Regression:{result:self.preMatrixV1Regression.result,fixturePassCount:self.preMatrixV1Regression.fixturePassCount,fixtureCount:self.preMatrixV1Regression.fixtureCount,nativeRegressionPassCount:self.preMatrixV1Regression.nativeRegressionPassCount,nativeRegressionCount:self.preMatrixV1Regression.nativeRegressionCount},
+            matrixContractSelfTest:{result:self.matrixRunnerSelfTest.result,passCount:self.matrixRunnerSelfTest.passCount,testCount:self.matrixRunnerSelfTest.testCount},
+            realMatrixSmoke:{result:self.realMatrixSmoke.result,skipped:self.realMatrixSmoke.skipped,scenarioCount:self.realMatrixSmoke.scenarioCount},
+            historicalGen839AuthorityUsed:false,
+            genericIssueCommentExecutionRoutePreserved:true,
+            carrierFunctionalBytesMutatedByCertificationRepair:false,
+            exactOneWorkflowPathRepair:true,
+            arbitraryCommandAuthority:false,
+            callerSuppliedUrlAuthority:false,
+            callerSuppliedScriptAuthority:false,
+            callerSuppliedViewportAuthority:false,
+            environmentOverrideAuthority:false,
+            productAuthorityCreated:false,
+            semanticAuthorityCreated:false,
+            mergeAuthorityCreated:false,
+            workflowSha256:crypto.createHash('sha256').update(workflow).digest('hex')
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/gen1083-certification.json',JSON.stringify(out,null,2)+'\n');
           NODE
+          node -e "const r=require(process.env.RUNNER_TEMP+'/gen1083-certification.json'); if(r.result!=='PASS'||r.targetGeneration!==1083||r.historicalGen839AuthorityUsed!==false||r.genericIssueCommentExecutionRoutePreserved!==true||r.carrierFunctionalBytesMutatedByCertificationRepair!==false||r.exactOneWorkflowPathRepair!==true||r.productAuthorityCreated!==false||r.semanticAuthorityCreated!==false||r.mergeAuthorityCreated!==false)process.exit(1)"
 
-      - name: Upload verification evidence
+      - name: Upload Gen1083-bound certification evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: bounded-exact-head-carrier-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          name: browser-matrix-gen1083-certification-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/gen839-successor.json
-            ${{ runner.temp }}/router-receipt.json
-            ${{ runner.temp }}/self-test.json
-            ${{ runner.temp }}/verification.json
+            ${{ runner.temp }}/gen1083-closure.json
+            ${{ runner.temp }}/gen1083-self-test.json
+            ${{ runner.temp }}/expected-paths.txt
+            ${{ runner.temp }}/observed-paths.txt
+            ${{ runner.temp }}/gen1083-certification.json
           if-no-files-found: warn
           retention-days: 90
 

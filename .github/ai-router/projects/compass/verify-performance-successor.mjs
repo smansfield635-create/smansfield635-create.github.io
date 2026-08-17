@@ -43,7 +43,7 @@ const houseRoutes=[['jeeves','/showroom/globe/hearth/jeeves/'],['elara','/elara/
 for(const [id,route] of houseRoutes)check(`HOUSE_${id.toUpperCase()}_ROUTE`,text.capability.includes(`id:'${id}'`)&&text.capability.includes(`href:'${route}'`),route);
 check('HOUSE_STATE_ISOLATED',text.capability.includes("mode='house'")&&text.capability.includes("mode='orbit'")&&text.capability.includes("mode!=='orbit'")&&text.capability.includes("mode!=='house'"),'nested state owned separately');
 check('HOUSE_RETURN_RESTORES_PARENT',text.capability.includes('function renderCards')&&text.capability.includes("focus(house.querySelector('[data-enter-house]'))"),'House card and focus restored');
-check('HOUSE_BALANCED_PARENT_AND_NESTED_WIDTH',text.capabilityCss.includes('.compass-house-parent{')&&text.capabilityCss.includes('place-items:center;text-align:center')&&text.capabilityCss.includes('.house-orbit{grid-column:1/-1;position:relative;width:100%')&&/\.house-orbit-member\{[^}]*width:(8[0-9]|9[0-9]|100)%/.test(text.capabilityCss),'centered parent and >=80% nested guide');
+check('HOUSE_BALANCED_PARENT_AND_NESTED_WIDTH',text.capabilityCss.includes('.compass-house-parent{')&&text.capabilityCss.includes('place-items:center;text-align:center')&&text.capabilityCss.includes('.house-orbit{grid-column:1/-1;position:absolute;inset:')&&text.capabilityCss.includes('width:auto;min-height:0')&&/\.house-orbit-member\{[^}]*width:(8[0-9]|9[0-9]|100)%/.test(text.capabilityCss),'centered parent, stable inset guide layer, and >=80% nested guide');
 
 const proofOrder=[...text.index.matchAll(/data-proof-card="([^"]+)"/g)].map(match=>match[1]);
 check('PROOF_ORDER_EXACT',JSON.stringify(proofOrder)===JSON.stringify(['trl7','bounded','experience']),proofOrder);

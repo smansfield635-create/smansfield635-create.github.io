@@ -42,7 +42,7 @@ jobs:
           cd "$GITHUB_WORKSPACE/private-control-plane"
           test "$(git rev-parse HEAD^{commit})" = '4c19e9ba783767f9324ab10df8a8541479f26c86'
           cat > "$work/availability.json" <<'JSON'
-          {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"GEN305_ALREADY_ADMITTED_ROUTING_ONLY","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":true,"connectedGithubReadAvailable":true,"connectedGithubShaGuardedContentsWriteAvailable":false,"githubActionsExecutionAvailable":false}
+          {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"GEN305_ROUTER_EXECUTING_IN_GITHUB_ACTIONS","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":true,"connectedGithubReadAvailable":true,"connectedGithubShaGuardedContentsWriteAvailable":false,"githubActionsExecutionAvailable":true}
           JSON
           cat > "$work/paths.txt" <<'PATHS'
           h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md

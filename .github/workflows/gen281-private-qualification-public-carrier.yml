@@ -1,0 +1,84 @@
+name: Gen281 Private Qualification Public Carrier
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/gen281-private-qualification-public-carrier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+  FROZEN_GEN281_HEAD: 690002676fac641db478df6b877acc435d1c4097
+
+jobs:
+  qualify-frozen-gen281:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private-repository installation token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+
+      - name: Check out exact frozen Gen281 head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.FROZEN_GEN281_HEAD }}
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact head and clean worktree
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          actual="$(git rev-parse HEAD^{commit})"
+          test "$actual" = "$FROZEN_GEN281_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          printf '{"schema":"GEN281_PUBLIC_CARRIER_HEAD_IDENTITY_v1","result":"PASS","expectedHead":"%s","actualHead":"%s"}\n' \
+            "$FROZEN_GEN281_HEAD" "$actual" > "$RUNNER_TEMP/gen281-head-identity.json"
+
+      - name: Run repaired Gen281 qualification suite with private token
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          node --test --test-reporter=tap tools/ai-room-transport/private-capable-readonly-qualification-invocation.v1.test.mjs \
+            > "$RUNNER_TEMP/gen281-qualification-test.tap"
+
+      - name: Verify post-test worktree remains clean
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Upload exact-head qualification evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gen281-private-qualification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gen281-head-identity.json
+            ${{ runner.temp }}/gen281-qualification-test.tap
+          if-no-files-found: warn
+          retention-days: 90

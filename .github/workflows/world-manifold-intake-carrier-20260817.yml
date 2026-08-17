@@ -1,4 +1,4 @@
-name: World Manifold Gen306 Exact Mutation Router Carrier
+name: World Manifold Gen306 Authoritative Preflight Carrier
 
 on:
   push:
@@ -12,74 +12,62 @@ permissions:
   contents: read
 
 jobs:
-  route:
+  preflight:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      PRIVATE_HEAD: 804e2c31c10ab04a73c1cfbae883892735a62f3d
+      SUBJECT_HEAD: a7b13dd5cebeafe6ce126d7df64c4088db7feb48
+      TOOLING_HEAD: 8c451f13bc468a6bc9c4729789938c17a134d1da
+      NATIVE_TOOL_BLOB: 6d4af698ca75b96aaa660033e9ae24c704673eb7
+      ACTIVATION_BLOB: b3c51381af190b6aab296db222296dc851cb7e9a
     steps:
-      - name: Mint exact private read token
-        id: token
-        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
-        with:
-          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
-          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
-          owner: smansfield635-create
-          repositories: geodiametrics1
-          permission-contents: read
+      - name: Verify exact subject head exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          git ls-remote https://github.com/smansfield635-create/smansfield635-create.github.io.git "$SUBJECT_HEAD" >/dev/null
+          test -n "$(git ls-remote https://github.com/smansfield635-create/smansfield635-create.github.io.git | grep "$SUBJECT_HEAD" || true)"
 
-      - name: Checkout exact private governing head
+      - name: Checkout exact reconciled preflight tooling
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          repository: smansfield635-create/geodiametrics1
-          ref: ${{ env.PRIVATE_HEAD }}
-          token: ${{ steps.token.outputs.token }}
-          path: private-control-plane
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: ${{ env.TOOLING_HEAD }}
+          path: tooling
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Build exact Gen306 route inputs
+      - name: Verify frozen native tool and activation identities
         shell: bash
+        working-directory: tooling
         run: |
           set -euo pipefail
-          cat > "$RUNNER_TEMP/paths.txt" <<'EOF'
-          h-earth-3d/terrain/h-earth.world-manifold-domain.js
-          h-earth-3d/integration/h-earth.world-representation-plan.js
-          h-earth-3d/integration/h-earth.world-manifold-union-admission.js
-          h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs
-          h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
-          showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js
-          showroom/globe/h-earth/render/geometry-shoreline.js
-          showroom/globe/h-earth/render/geometry-distant-context.js
-          showroom/globe/h-earth/render/landscape-preview.js
-          h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js
-          showroom/globe/h-earth/render/run8e-successor-environment.js
-          EOF
-          cat > "$RUNNER_TEMP/availability.json" <<'EOF'
-          {
-            "schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1",
-            "result":"HOST_CAPABILITIES_OBSERVED",
-            "evidenceSource":"GITHUB_ACTIONS_EXACT_PRIVATE_HEAD_READ_ONLY_ROUTER_CARRIER_3207",
-            "localAuthenticatedExecutionAvailable":false,
-            "localNodeRuntimeAvailable":true,
-            "connectedGithubReadAvailable":false,
-            "connectedGithubShaGuardedContentsWriteAvailable":false,
-            "githubActionsExecutionAvailable":true
-          }
-          EOF
+          test "$(git rev-parse HEAD)" = "$TOOLING_HEAD"
+          test "$(git rev-parse HEAD:tools/h-earth-repository-registry-auto-preflight.mjs)" = "$NATIVE_TOOL_BLOB"
+          test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = "$ACTIVATION_BLOB"
 
-      - name: Execute root AI router for all 11 admitted paths
+      - name: Execute exact Gen306 eleven-path native preflight
         shell: bash
-        working-directory: private-control-plane
+        working-directory: tooling
         run: |
           set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --paths-file "$RUNNER_TEMP/paths.txt" \
-            --task H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_GEN306 \
+          node tools/h-earth-repository-registry-auto-preflight.mjs \
             --mutation-intent \
-            --intake-availability-receipt "$RUNNER_TEMP/availability.json" \
-            --output "$RUNNER_TEMP/router-receipt.json"
-          cat "$RUNNER_TEMP/router-receipt.json"
-          test "$(jq -r '.disposition // .result // ""' "$RUNNER_TEMP/router-receipt.json")" = 'PASS'
-          test "$(jq '[.routes[] | select(.disposition != "PASS")] | length' "$RUNNER_TEMP/router-receipt.json")" = '0'
-          test "$(jq '.routes | length' "$RUNNER_TEMP/router-receipt.json")" = '11'
+            --task 'Gen306 world-manifold architecture installation pre-mutation preflight' \
+            --path h-earth-3d/terrain/h-earth.world-manifold-domain.js \
+            --path h-earth-3d/integration/h-earth.world-representation-plan.js \
+            --path h-earth-3d/integration/h-earth.world-manifold-union-admission.js \
+            --path h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs \
+            --path h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
+            --path showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js \
+            --path showroom/globe/h-earth/render/geometry-shoreline.js \
+            --path showroom/globe/h-earth/render/geometry-distant-context.js \
+            --path showroom/globe/h-earth/render/landscape-preview.js \
+            --path h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js \
+            --path showroom/globe/h-earth/render/run8e-successor-environment.js \
+            --output "$RUNNER_TEMP/native-preflight.json"
+          cat "$RUNNER_TEMP/native-preflight.json"
+          test "$(jq -r '.activationStatus' "$RUNNER_TEMP/native-preflight.json")" = 'ACTIVATED'
+          test "$(jq -r '.dependenciesVerified' "$RUNNER_TEMP/native-preflight.json")" = 'true'
+          test "$(jq -r '.finalDisposition' "$RUNNER_TEMP/native-preflight.json")" = 'PASS'
+          test "$(jq -r '.mutationMayProceed' "$RUNNER_TEMP/native-preflight.json")" = 'false'

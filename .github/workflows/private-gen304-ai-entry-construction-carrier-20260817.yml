@@ -1,0 +1,184 @@
+name: S26 Private Gen304 AI Entry Construction Carrier
+
+on:
+  pull_request:
+    types: [synchronize, reopened]
+    paths:
+      - '.github/workflows/private-gen304-ai-entry-construction-carrier-20260817.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  construct-and-validate:
+    if: >-
+      github.event.pull_request.head.ref == 'handoff/s26-private-gen303-successor-carrier-20260817' &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.user.login == 'smansfield635-create'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      EXACT_PRIVATE_HEAD: e9454cdc330931a284cfa709b5745daa76255a07
+      GEN304_OPERATION: AI_ENTRY_ROOM_LOCAL_CONNECTED_GITHUB_INTAKE_ROUTING_ADOPTION_20260817_007
+      GEN304_SCOPE_HASH: cd240aad623e225c319758cb2c20cd23c5ebddc9f17c5bcab47b9de5f374eac1
+      GEN304_GENERATION: '304'
+      RECONSTRUCTION_COMMIT: 32040822ce43882f5fdb1e270660c3e5b9aa5d7d
+      TARGET_BRANCH: construction/gen304-ai-entry-connected-github-host-binding-20260817
+      LEDGER_PATH: .github/operation-intake/active-operation-ledger.v1.json
+      LOCK_REF: operation-locks/repository-operation-intake-v1
+
+    steps:
+      - name: Mint bounded private construction token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+
+      - name: Verify Gen304 authority and exact private main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/gen304"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/git/ref/heads/main" > "$work/main.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' \
+            "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/$LEDGER_PATH?ref=$LOCK_REF" > "$work/ledger-file.json"
+          python - <<'PY'
+          import base64,json,os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'gen304')
+          main=json.load(open(os.path.join(work,'main.json')))['object']['sha']
+          if main!=os.environ['EXACT_PRIVATE_HEAD']: raise SystemExit('PRIVATE_MAIN_MOVED')
+          f=json.load(open(os.path.join(work,'ledger-file.json')))
+          ledger=json.loads(base64.b64decode(''.join(f['content'].split())))
+          if ledger.get('lockGeneration')!=int(os.environ['GEN304_GENERATION']): raise SystemExit('LEDGER_GENERATION_MISMATCH')
+          lock=(ledger.get('activeScopes') or {}).get(os.environ['GEN304_SCOPE_HASH'])
+          if not lock: raise SystemExit('GEN304_LOCK_MISSING')
+          if lock.get('operationId')!=os.environ['GEN304_OPERATION'] or lock.get('lockGeneration')!=int(os.environ['GEN304_GENERATION']) or lock.get('governingHead')!=os.environ['EXACT_PRIVATE_HEAD'] or lock.get('state')!='ADMITTED_LOCKED' or lock.get('released') is not False:
+              raise SystemExit('GEN304_LOCK_IDENTITY_MISMATCH')
+          PY
+
+      - name: Check out exact private main
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.EXACT_PRIVATE_HEAD }}
+          token: ${{ steps.token.outputs.token }}
+          fetch-depth: 0
+          persist-credentials: true
+          path: private
+
+      - name: Reconstruct seven-path candidate over PR269 backend
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private"
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_PRIVATE_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          git config user.name 's26-gen304-carrier'
+          git config user.email 's26-gen304-carrier@users.noreply.github.com'
+          git show HEAD:.github/ai-router/execution-backends.v1.json > "$RUNNER_TEMP/current-backends.json"
+          git show HEAD:.github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json > "$RUNNER_TEMP/current-intake-descriptor.json"
+          git fetch origin "$RECONSTRUCTION_COMMIT"
+          set +e
+          git cherry-pick "$RECONSTRUCTION_COMMIT"
+          rc=$?
+          set -e
+          if [ "$rc" -ne 0 ]; then
+            conflicts="$(git diff --name-only --diff-filter=U | sort)"
+            expected=".github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json"
+            expected2=".github/ai-router/execution-backends.v1.json"
+            while IFS= read -r p; do
+              [ -z "$p" ] && continue
+              if [ "$p" != "$expected" ] && [ "$p" != "$expected2" ]; then echo "UNEXPECTED_CHERRY_PICK_CONFLICT:$p"; exit 1; fi
+            done <<< "$conflicts"
+            cp "$RUNNER_TEMP/current-backends.json" .github/ai-router/execution-backends.v1.json
+            cp "$RUNNER_TEMP/current-intake-descriptor.json" .github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json
+            python - <<'PY'
+          import json
+          bp='.github/ai-router/execution-backends.v1.json'
+          d=json.load(open(bp))
+          room={
+            'backendId':'ROOM_LOCAL_CONNECTED_GITHUB_INTAKE_EXECUTION',
+            'classification':'AUTHORITATIVE_FOR_CANONICAL_OPERATION_INTAKE_WHEN_LOCAL_NODE_AND_BOUNDED_CONNECTED_GITHUB_PRIMITIVES_ARE_OBSERVED_AVAILABLE',
+            'descriptor':'.github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json',
+            'runner':'.github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.mjs',
+            'selfTest':'.github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution-self-test.v1.mjs',
+            'requirements':['HOST_AVAILABILITY_RECEIPT_VALID','LOCAL_NODE_RUNTIME','CONNECTED_GITHUB_READ_PRIMITIVE','CONNECTED_GITHUB_SHA_GUARDED_CONTENTS_WRITE_PRIMITIVE','EXACT_LIVE_GOVERNING_HEAD','EXACT_OBSERVED_LEDGER_BYTES_AND_GIT_BLOB_SHA','CANONICAL_REQUEST_AND_PROCEDURE_VALIDATION','GENERATED_ONE_LEDGER_WRITE_PACKAGE_ONLY','POST_WRITE_READBACK_VERIFICATION'],
+            'directLocalGithubCredentialRequired':False,'githubActionsRunnerRequired':False,'customConnectorNativeExecutorRequired':False,
+            'callerSuppliedReplacementLedgerAllowed':False,'genericRepositoryWriteAuthority':False,'privateMainWriteAuthority':False,
+            'productWriteAuthority':False,'arbitraryCommandAuthority':False,'manualLedgerEditingAllowed':False,'manualReconstructionAllowed':False,
+            'successResult':'ADMITTED_AND_LOCKED'
+          }
+          backs=d['backends']; backs[:]=[x for x in backs if x.get('backendId')!='ROOM_LOCAL_CONNECTED_GITHUB_INTAKE_EXECUTION']
+          idx=next(i for i,x in enumerate(backs) if x.get('backendId')=='PRE_REGISTRATION_INTAKE_BRIDGE_EXECUTION')
+          backs.insert(idx,room)
+          pre=next(x for x in backs if x.get('backendId')=='PRE_REGISTRATION_INTAKE_BRIDGE_EXECUTION')
+          pre['requirements']=['LOCAL_AUTHENTICATED_OPERATION_INTAKE_EXECUTION_UNAVAILABLE','ROOM_LOCAL_CONNECTED_GITHUB_INTAKE_UNAVAILABLE','HOST_AVAILABILITY_RECEIPT_VALID','GITHUB_ACTIONS_EXECUTION_AVAILABLE','ROOT_PRE_REGISTRATION_BRIDGE_STATUS_ACTIVE_PERMANENT','ROOT_PRE_REGISTRATION_BRIDGE_IDENTITY_VALID','ISSUE_COMMENT_INVOCATION_MARKER_EXACT','CANONICAL_GATE_EXECUTION_WITH_WORKFLOW_GITHUB_TOKEN','CANONICAL_RECEIPT_RETURNED_UNALTERED']
+          tr=d['routeTransitions']; tr[:]=[x for x in tr if x.get('transitionId')!='OPERATION_INTAKE_LOCAL_AUTH_UNAVAILABLE_TO_ROOM_LOCAL_CONNECTED_GITHUB_v1']
+          idx=next(i for i,x in enumerate(tr) if x.get('transitionId')=='OPERATION_INTAKE_LOCAL_AUTH_UNAVAILABLE_TO_PRE_REGISTRATION_BRIDGE_v1')
+          tr.insert(idx,{'transitionId':'OPERATION_INTAKE_LOCAL_AUTH_UNAVAILABLE_TO_ROOM_LOCAL_CONNECTED_GITHUB_v1','appliesTo':'CANONICAL_REPOSITORY_OPERATION_INTAKE','whenLocalAuthenticatedExecutionUnavailable':True,'requiredBackend':'ROOM_LOCAL_CONNECTED_GITHUB_INTAKE_EXECUTION','requiredLocalCapabilities':['NODE_RUNTIME'],'requiredConnectedCapabilities':['GITHUB_READ','GITHUB_SHA_GUARDED_CONTENTS_WRITE'],'requiredDescriptor':'.github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json','availabilityReceiptRequired':True,'manualLedgerEditingAllowed':False,'callerSuppliedReplacementLedgerAllowed':False,'genericWritePrimitiveMayTransportGeneratedPackageOnly':True,'postWriteReadbackRequired':True,'invalidBridgeDisposition':'STOP_FAIL_CLOSED'})
+          pretr=next(x for x in tr if x.get('transitionId')=='OPERATION_INTAKE_LOCAL_AUTH_UNAVAILABLE_TO_PRE_REGISTRATION_BRIDGE_v1')
+          pretr['whenRoomLocalConnectedGithubIntakeUnavailable']=True; pretr['availabilityReceiptRequired']=True
+          json.dump(d,open(bp,'w'),indent=2); open(bp,'a').write('\n')
+          dp='.github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json'
+          q=json.load(open(dp)); q['status']='REGISTERED_FAIL_CLOSED_PENDING_FIRST_LIVE_OPERATIONAL_PROOF'; q['hostAvailabilityReceipt']={'schema':'REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1','requiredForAiEntrySelection':True,'tokenPresenceMaySatisfyAvailability':False,'roomLocalSelectionRequires':['LOCAL_NODE_RUNTIME_AVAILABLE','CONNECTED_GITHUB_READ_AVAILABLE','CONNECTED_GITHUB_SHA_GUARDED_CONTENTS_WRITE_AVAILABLE'],'absenceDisposition':'STOP_AVAILABILITY_EVIDENCE_REQUIRED','malformedDisposition':'STOP_AVAILABILITY_EVIDENCE_INVALID','authorityEffect':'NONE'}
+          json.dump(q,open(dp,'w'),indent=2); open(dp,'a').write('\n')
+          PY
+            git add .github/ai-router/execution-backends.v1.json .github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json
+            git cherry-pick --continue
+          fi
+          changed="$(git diff --name-only "$EXACT_PRIVATE_HEAD" HEAD | sort)"
+          cat > "$RUNNER_TEMP/expected-paths" <<'EOF'
+          .github/ai-router/execution-backends.v1.json
+          .github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution.v1.json
+          .github/ai-router/schemas/repository-ai-entry-router.receipt.schema.v1.json
+          .github/workflows/repository-ai-entry-router-validation.yml
+          AGENTS.md
+          AI_ENTRYPOINT.json
+          tools/repository-ai-entry-router.mjs
+          EOF
+          diff -u <(sort "$RUNNER_TEMP/expected-paths") <(printf '%s\n' "$changed")
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Run recovered and installed validation surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private"
+          node --check tools/repository-ai-entry-router.mjs
+          node .github/ai-router/operation-lifecycle/room-local-connected-github-intake-execution-self-test.v1.mjs
+          node tools/repository-ai-entry-router.mjs --self-test --output /tmp/repository-ai-entry-router-self-test.json
+          node .github/ai-router/project-continuation/verify.v1.mjs --verify-static > /tmp/project-continuation-verification.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const a=JSON.parse(fs.readFileSync('/tmp/repository-ai-entry-router-self-test.json','utf8'));
+          if (a.result!=='PASS') { console.error(a); process.exit(1); }
+          const b=JSON.parse(fs.readFileSync('/tmp/project-continuation-verification.json','utf8'));
+          if (b.result!=='PASS') { console.error(b); process.exit(1); }
+          NODE
+          cat >/tmp/room-local-availability.json <<'JSON'
+          {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"S26_GEN304_PUBLIC_PRIVATE_CARRIER","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":true,"connectedGithubReadAvailable":true,"connectedGithubShaGuardedContentsWriteAvailable":true,"githubActionsExecutionAvailable":false}
+          JSON
+          node tools/repository-ai-entry-router.mjs --mutation-intent --intake-availability-receipt /tmp/room-local-availability.json --path AI_ENTRYPOINT.json --task 'Gen304 room-local route proof' --output /tmp/room-local-route.json
+          node - <<'NODE'
+          const r=require('/tmp/room-local-route.json');
+          if (r.disposition!=='PASS') { console.error(r); process.exit(1); }
+          if (r.operationIntakeExecution?.result!=='ROOM_LOCAL_CONNECTED_GITHUB_INTAKE_REQUIRED' || r.operationIntakeExecution?.backendId!=='ROOM_LOCAL_CONNECTED_GITHUB_INTAKE_EXECUTION') { console.error(r.operationIntakeExecution); process.exit(1); }
+          NODE
+          git diff --check "$EXACT_PRIVATE_HEAD" HEAD
+
+      - name: Push exact seven-path candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private"
+          git push origin HEAD:"refs/heads/$TARGET_BRANCH"
+          echo "candidate_head=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"

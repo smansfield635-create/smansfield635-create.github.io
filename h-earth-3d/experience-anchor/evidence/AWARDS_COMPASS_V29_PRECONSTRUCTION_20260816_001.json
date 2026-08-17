@@ -1,0 +1,17 @@
+{
+  "schema": "H_EARTH_AWARDS_COMPASS_V29_PRECONSTRUCTION_EVIDENCE_v1",
+  "operationId": "AWARDS_COMPASS_V29_FINAL_CORRECTIVE_CONSTRUCTION_20260816_002",
+  "governingHead": "a16f4a38de6cd9f76ddf71a600b0ab525d64ecd8",
+  "lockGeneration": 1508,
+  "result": "PASS_CLOSED",
+  "liveV28Protected": true,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "sources": {
+    "23619.mp4": "c5caa176633209bdc618f505f64cafef5535e400ce2bf1728cde79582169c9a3",
+    "23772.mp4": "545231d08474bc41cfaa0f190a2eea88d7b6b1f5ab48221a32ae73a393b370c5",
+    "lawsCapture": "2d60526da9fe226410bf4b6f7057087e3c067a2070fd1db7ec8423e659ec423c",
+    "v22Baseline": "c5a8359dba70ff604394d3724f3ab562f7b9c6c80efbe4a606ad95c95a71f9e4",
+    "preconstructionPackage": "a162153d4c37920c77026627bcc22f1f4e3f9ad065c8f7ba668a5982c07f8773"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema": "H_EARTH_AWARDS_COMPASS_V29_CONSTRUCTION_QUALIFICATION_RECEIPT_v1",
+  "operationId": "AWARDS_COMPASS_V29_FINAL_CORRECTIVE_CONSTRUCTION_20260816_002",
+  "result": "PASS_CLOSED",
+  "governingHead": "a16f4a38de6cd9f76ddf71a600b0ab525d64ecd8",
+  "lockGeneration": 1508,
+  "candidateSha256": "ed31ed4d941e48685a5e70e655e5ebe537dfe6106dd12929293a76a6d9fa8ead",
+  "checks": {
+    "exact65Seconds": true,
+    "exact1560Frames": true,
+    "h264_1920x1080_24fps_bt709": true,
+    "aac_48khz_stereo": true,
+    "fullDecode": true,
+    "finalExactScriptBound": true,
+    "answersDistinctBeat": true,
+    "itselfSoleEmphasis": true,
+    "proofIHeroStage": true,
+    "proofIIContinuousLawsInteraction": true,
+    "closingStarsPreserved": true,
+    "completeDomainAtClosure": true,
+    "liveV28ByteIdentityUnchanged": true,
+    "exactFivePathScope": true
+  },
+  "terminalBoundary": "CONSTRUCTION_CHECKPOINT_ONLY__NO_MERGE__NO_DEPLOYMENT"
+}

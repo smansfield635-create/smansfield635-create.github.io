@@ -1,0 +1,43 @@
+{
+  "schema": "H_EARTH_AWARDS_COMPASS_V29_CONSTRUCTION_EVIDENCE_v1",
+  "operationId": "AWARDS_COMPASS_V29_FINAL_CORRECTIVE_CONSTRUCTION_20260816_002",
+  "branch": "ai/awards-compass-v29-final-corrective-20260816-002",
+  "governingHead": "a16f4a38de6cd9f76ddf71a600b0ab525d64ecd8",
+  "candidatePath": "showroom/globe/h-earth/awards/media/candidates/chapter01-compass-v29-final-corrective-65s.mp4",
+  "candidateSha256": "ed31ed4d941e48685a5e70e655e5ebe537dfe6106dd12929293a76a6d9fa8ead",
+  "media": {
+    "durationSeconds": 65,
+    "frameCount": 1560,
+    "width": 1920,
+    "height": 1080,
+    "fps": 24,
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioChannels": 2,
+    "color": "bt709",
+    "fullDecode": "PASS"
+  },
+  "custodyLedger": [
+    {"film":"00:00.0-00:34.5","source":"V22 governing chassis","function":"01-05 narrative and experiential sequence"},
+    {"film":"00:34.5-00:44.5","source":"23772.mp4 00:08.0-00:18.0","function":"Proof I hero-stage Methods carousel"},
+    {"film":"00:44.5-00:50.0","source":"Laws capture 00:23.5-00:29.0","function":"Proof II Laws Compass hero interaction"},
+    {"film":"00:50.0-01:05.0","source":"V22 governing starfield closure","function":"Inference, breath, homecoming, resolution, signature"}
+  ],
+  "script": [
+    "Navigation requires orientation.",
+    "Without orientation, there is no navigation.",
+    "Here at Diamond Gate Bridge,",
+    "we define our questions through their connections.",
+    "And the stars provide the answers.",
+    "Reality itself relies on their existence.",
+    "Therefore.",
+    "No matter how far from home, you’re never lost.",
+    "Nothing orients better than a compass.",
+    "DiamondGateBridge.com"
+  ],
+  "v28LiveSha256BeforeAndAfter": "42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62",
+  "changedPathCount": 5,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

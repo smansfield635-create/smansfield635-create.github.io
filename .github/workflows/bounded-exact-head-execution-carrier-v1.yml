@@ -24,18 +24,21 @@ permissions:
   contents: read
   issues: write
 
-env:
-  GEN839_SUCCESSOR_RECEIPT_B64: ewogICJhdXRob3JpdHlJbmhlcml0ZWQiOiBmYWxzZSwKICAiYXV0aG9yaXR5UG9saWN5IjogIkZSRVNIX1NVQ0NFU1NPUl9SRVFVRVNUX1JFUVVJUkVEX05PX0lNUExJQ0lUX0lOSEVSSVRBTkNFIiwKICAiYXV0aG9yaXR5U291cmNlIjogIkZSRVNIX1NVQ0NFU1NPUl9SRVFVRVNUX0FORF9DT05TVFJVQ1RJT05fUFJPQ0VEVVJFIiwKICAiYnJhbmNoQ3JlYXRpb25BdXRob3JpemVkIjogdHJ1ZSwKICAiY2FzQXR0ZW1wdCI6IDEsCiAgImNhc1JldHJ5TGltaXQiOiA4LAogICJjb21taXR0ZWRMZWRnZXJCbG9iU2hhIjogIjY1NzYwYzM0NGQ2YmQ2ODEzODNlYmEyYjExYjBmN2I4MTVhMDEzMGEiLAogICJldmlkZW5jZVBvbGljeSI6ICJFWEFDVF9IRUFEX1JFVkFMSURBVElPTl9SRVFVSVJFRCIsCiAgImV4YWN0SGVhZFJldmFsaWRhdGlvblJlcXVpcmVkIjogdHJ1ZSwKICAiZ292ZXJuaW5nUmVmIjogInJlZnMvaGVhZHMvbWFpbiIsCiAgImltcGxlbWVudGF0aW9uSW5mZXJlbmNlQXV0aG9yaXplZCI6IGZhbHNlLAogICJsZWRnZXJDb21wYXJlQW5kU3dhcENvbW1pdHRlZCI6IHRydWUsCiAgImxlZGdlckdlbmVyYXRpb25BZnRlciI6IDgzOSwKICAibGVkZ2VyR2VuZXJhdGlvbkJlZm9yZSI6IDgzOCwKICAibGl2ZUdvdmVybmluZ0hlYWQiOiAiZjYyNGI1NTA5NmM2OWM2MzkwOWQ0ZWUyNjBmY2Q1NjE1ZjhkOWFhNiIsCiAgIm9ic2VydmVkTGVkZ2VyQmxvYlNoYSI6ICJkYTJiMWU5ZTdkMDZmZTUyZGMzNzNlZWJlM2JiNmMxNTNmZjJiMzBmIiwKICAib2JzZXJ2ZWRMb2NrUmVmSGVhZCI6ICIzMTk3M2YzZThlNzAyODlhZjU0ZDAxZmZkY2Y0YzdmMjkwNjA2YjZkIiwKICAib25lTGVkZ2VyTXV0YXRpb25SZXF1aXJlZCI6IHRydWUsCiAgIm9wZXJhdGlvblN0YXJ0ZWQiOiB0cnVlLAogICJwcmVkZWNlc3NvciI6IHsKICAgICJnb3Zlcm5pbmdIZWFkIjogIjMzMTI4NDk0OTk0MGM5NWRiODBhMzMyMjM1NDkyZGU0YzgwZDNkNDMiLAogICAgImxvY2tHZW5lcmF0aW9uIjogODMyLAogICAgImxvY2tTY29wZSI6ICJSRVBPU0lUT1JZX0NPTlRST0xfUExBTkU6Qk9VTkRFRF9FWEFDVF9IRUFEX0VYRUNVVElPTl9DQVJSSUVSOklOU1RBTExBVElPTjpWMSIsCiAgICAib3BlcmF0aW9uSWQiOiAiQk9VTkRFRF9FWEFDVF9IRUFEX0VYRUNVVElPTl9DQVJSSUVSX1YxX0lOU1RBTExBVElPTl8yMDI2MDgwOV8wMDIiLAogICAgInNjb3BlSGFzaCI6ICI5MWE4YWM0YjQ4MGFiNzJlNDQwYzA3MGJhYTY5ZDE4OTY0NDM1OGQ3YjI3MDlkMTNhMWM5NGZkYjE4NzgzZWExIiwKICAgICJ0ZXJtaW5hbERpc3Bvc2l0aW9uIjogIlNVUEVSU0VERUQiLAogICAgInRlcm1pbmFsSGlzdG9yeVByZXNlcnZlZCI6IHRydWUKICB9LAogICJwcmVzZXJ2ZWRFdmlkZW5jZVJlZnMiOiBbCiAgICAiR0VORVJBVElPTl84MzJfQ0FOT05JQ0FMX0FETUlTU0lPTiIsCiAgICAiUlVOXzMxMzMzNjI5NDcwX0JPT1RTVFJBUF9ST1VURVJfOF9PRl84X1BBU1MiLAogICAgIlJVTl8zMTMzNDAwNjg3MF9GUkVTSF9DQVJSSUVSX1ZFUklGSUNBVElPTl8xOF9PRl8xOF9QQVNTIiwKICAgICJQUl84NDVfQ0FORElEQVRFX0hFQURfMEU0NzIxRkM5NkQ1M0VBOEVBRUVFMTQyMENGMzQ4RDM3MTdCRDg3RCIsCiAgICAiUlVOXzMxMzM0MDA2ODQ4X0RJRkZFUkVOVElBTF9SRUdSRVNTSU9OX1BBU1MiLAogICAgIlBSXzg0NF9NQUlOX0FEVkFOQ0VfRjYyNEI1NTBfRElTSk9JTlRfRlJPTV9DQVJSSUVSX0VJR0hUX1BBVEhfRE9NQUlOIgogIF0sCiAgInJlYXNvbkNvZGUiOiAiR09WRVJOSU5HX0hFQURfQURWQU5DRUQiLAogICJyZXBvc2l0b3J5V3JpdGVzQXV0aG9yaXplZCI6IHRydWUsCiAgInJlc3VsdCI6ICJTVUNDRVNTT1JfQURNSVRURURfUFJFREVDRVNTT1JfU1VQRVJTRURFRCIsCiAgInNjaGVtYSI6ICJSRVBPU0lUT1JZX09QRVJBVElPTl9TVUNDRVNTT1JfVFJBTlNJVElPTl9SRUNFSVBUX3YxIiwKICAic3VjY2Vzc29yIjogewogICAgImdvdmVybmluZ0hlYWQiOiAiZjYyNGI1NTA5NmM2OWM2MzkwOWQ0ZWUyNjBmY2Q1NjE1ZjhkOWFhNiIsCiAgICAibG9ja0dlbmVyYXRpb24iOiA4MzksCiAgICAibG9ja1Njb3BlIjogIlJFUE9TSVRPUllfQ09OVFJPTF9QTEFORTpCT1VOREVEX0VYQUNUX0hFQURfRVhFQ1VUSU9OX0NBUlJJRVI6SU5TVEFMTEFUSU9OOlYxIiwKICAgICJvcGVyYXRpb25JZCI6ICJCT1VOREVEX0VYQUNUX0hFQURfRVhFQ1VUSU9OX0NBUlJJRVJfVjFfSU5TVEFMTEFUSU9OXzIwMjYwODA5XzAwMl9TVUNDRVNTT1JfMDAxIiwKICAgICJwcm9jZWR1cmVMb2NhdG9yRGlnZXN0IjogIjgzYWRlMGU2NTA4MzdiNTc3NTNkMTQzNzE5M2RmZDZkYmE4ZmQyNjU0NjliNWFjMzVhYjg0NWQ3YmQ5MTk3MmMiLAogICAgInByb2plY3RJZCI6ICJSRVBPU0lUT1JZX0FJX1JPVVRFUl9JTkZSQVNUUlVDVFVSRSIsCiAgICAicmVxdWVzdERpZ2VzdCI6ICIxNDc0OTZjMDljZGFjMmM4NmE0YWU2NDAwNTk4MTE0ZGYxZGM2MmI0OGI5Y2JmYWVkYTFiZGFiNjA3NzYzYjZlIiwKICAgICJzY29wZUhhc2giOiAiOTFhOGFjNGI0ODBhYjcyZTQ0MGMwNzBiYWE2OWQxODk2NDQzNThkN2IyNzA5ZDEzYTFjOTRmZGIxODc4M2VhMSIsCiAgICAic3RhdGUiOiAiQURNSVRURURfTE9DS0VEIgogIH0sCiAgInRyYW5zaXRpb25Db21taXRTaGEiOiAiZTI1YjNmZmQ3OTYzM2IwY2Y5NGM4Njg4M2UzYTlkOTZmMjA2YWI5YSIsCiAgInRyYW5zaXRpb25JZCI6ICJCT1VOREVEX0VYQUNUX0hFQURfQ0FSUklFUl9HRU44MzJfVE9fRjYyNEI1NTBfMjAyNjA4MDlfMDAxIiwKICAid29ya2Zsb3dFeGVjdXRpb25BdXRob3JpemVkIjogdHJ1ZQp9Cg==
-
 jobs:
   verify-candidate:
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
+    env:
+      REPAIR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      ADMITTED_BASE: 9476afe595b85f7e0e4bb696f7978bc0c62cc04d
+      TARGET_PR897_HEAD: 8cafbb22448cc6d950c4333e1af1b61540356cfa
+      TARGET_GEN1039_SCOPE_HASH: fadfa350a31e2871ee3319cedcaf160d307b8d20f0e117af88a50bb613ed4268
+      REPAIR_GEN1049_SCOPE_HASH: 9e2a82b25e6a8aa670f8b3fb30516147d33b8fd55cf79768c52d88fb7d7bf6f0
     steps:
-      - name: Check out exact candidate head
+      - name: Check out exact repair candidate head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.REPAIR_HEAD }}
           fetch-depth: 0
           persist-credentials: false
 
@@ -44,62 +47,100 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify exact head and clean worktree
+      - name: Verify exact repair head, one-path scope, and preserved issue-comment route
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD^{commit})" = "${{ github.sha }}"
+          test "$(git rev-parse HEAD^{commit})" = "$REPAIR_HEAD"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
-
-      - name: Verify canonical generation-839 successor identity
-        shell: bash
-        run: |
-          set -euo pipefail
-          printf '%s' "$GEN839_SUCCESSOR_RECEIPT_B64" | base64 --decode > "$RUNNER_TEMP/gen839-successor.json"
+          mapfile -t changed < <(git diff --name-only "$ADMITTED_BASE" "$REPAIR_HEAD")
+          test "${#changed[@]}" -eq 1
+          test "${changed[0]}" = '.github/workflows/bounded-exact-head-execution-carrier-v1.yml'
+          git show "$ADMITTED_BASE:.github/workflows/bounded-exact-head-execution-carrier-v1.yml" > "$RUNNER_TEMP/base-workflow.yml"
           node - <<'NODE'
           const fs=require('fs');
-          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/gen839-successor.json','utf8'));
-          const s=r.successor||{};
-          if(r.schema!=='REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1'||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED'||r.authorityInherited!==false||r.exactHeadRevalidationRequired!==true||s.operationId!=='BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001'||s.lockGeneration!==839||s.governingHead!=='f624b55096c69c63909d4ee260fcd5615f8d9aa6'||s.requestDigest!=='147496c09cdac2c86a4ae6400598114df1dc62b48b9cbfaeda1bdab607763b6e'||s.procedureLocatorDigest!=='83ade0e650837b57753d1437193dfd6dba8fd265469b5ac35ab845d7bd91972c')process.exit(1);
+          const base=fs.readFileSync(process.env.RUNNER_TEMP+'/base-workflow.yml','utf8');
+          const current=fs.readFileSync('.github/workflows/bounded-exact-head-execution-carrier-v1.yml','utf8');
+          const marker='  execute-registered-command:\n';
+          const b=base.indexOf(marker), c=current.indexOf(marker);
+          if(b<0||c<0||base.slice(b)!==current.slice(c)) process.exit(1);
+          const legacyEnv=['GEN','839_SUCCESSOR_RECEIPT_B64'].join('');
+          const legacyOp=['BOUNDED_EXACT_HEAD_EXECUTION_CARRIER','_V1_INSTALLATION_20260809_002_SUCCESSOR_001'].join('');
+          if(current.includes(legacyEnv)||current.includes(legacyOp)) process.exit(1);
+          NODE
+          printf '%s\n' '.github/workflows/bounded-exact-head-execution-carrier-v1.yml' > "$RUNNER_TEMP/scope-diff.txt"
+
+      - name: Verify canonical Gen1039 target and Gen1049 repair locks
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin refs/heads/operation-locks/repository-operation-intake-v1:refs/remotes/origin/operation-locks/repository-operation-intake-v1
+          git show refs/remotes/origin/operation-locks/repository-operation-intake-v1:.github/operation-intake/active-operation-ledger.v1.json > "$RUNNER_TEMP/canonical-ledger.json"
+          node - <<'NODE'
+          const fs=require('fs');
+          const ledger=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/canonical-ledger.json','utf8'));
+          const g1039=ledger.activeScopes?.[process.env.TARGET_GEN1039_SCOPE_HASH];
+          const g1049=ledger.activeScopes?.[process.env.REPAIR_GEN1049_SCOPE_HASH];
+          const ok1039=g1039&&g1039.operationId==='PAGE_EXCELLENCE_IMPLEMENTATION_CARRIER_EXTENSION_V1_20260810_001'&&g1039.lockGeneration===1039&&g1039.governingHead===process.env.ADMITTED_BASE&&g1039.lockScope==='REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:PAGE_EXCELLENCE_IMPLEMENTATION_PHASE:V1'&&g1039.requestDigest==='7f8402d6a0757c081f9e962566db13cc24714adcddf0b1a1f420f4339aa211f4'&&g1039.procedureLocatorDigest==='841be9249220475e422d7f9de21f39f7b97dbf40983c119b8310f09beddba6e4'&&g1039.state==='ADMITTED_LOCKED'&&g1039.released===false;
+          const ok1049=g1049&&g1049.operationId==='PAGE_EXCELLENCE_IMPLEMENTATION_CARRIER_CERTIFICATION_IDENTITY_REPAIR_V1_20260810_002'&&g1049.lockGeneration===1049&&g1049.governingHead===process.env.ADMITTED_BASE&&g1049.lockScope==='REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:CERTIFICATION_IDENTITY_REPAIR:V1'&&g1049.requestDigest==='9124d57b3b472f08f08083b426e4e278c4582f802b3d840a5f5862c1229a4002'&&g1049.procedureLocatorDigest==='bac9af9fe55c65c3eaee3d6a0dcebb867737bb7dbe0986f68391e20f9d91138e'&&g1049.state==='ADMITTED_LOCKED'&&g1049.released===false;
+          if(!ok1039||!ok1049) process.exit(1);
           NODE
 
-      - name: Recompute exact eight-path repository Router gate
+      - name: Verify exact frozen PR 897 carrier candidate
         shell: bash
         run: |
           set -euo pipefail
-          node tools/repository-ai-entry-router.mjs \
-            --mutation-intent \
-            --path .github/ai-router/router.v1.json \
-            --path .github/ai-router/execution-backends.v1.json \
-            --path .github/ai-router/system-continuity/gap-registry.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/protocol.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/registry.v1.json \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/carrier.v1.mjs \
-            --path .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs \
-            --path .github/workflows/bounded-exact-head-execution-carrier-v1.yml \
-            --task BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001 \
-            --output "$RUNNER_TEMP/router-receipt.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/router-receipt.json'); if(r.disposition!=='PASS'||r.routes?.length!==8||!r.routes.every(x=>x.projectId==='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'&&x.disposition==='PASS'))process.exit(1)"
+          git fetch --no-tags origin refs/heads/infra/page-excellence-implementation-carrier-v1-001:refs/remotes/origin/pr897-target
+          test "$(git rev-parse refs/remotes/origin/pr897-target^{commit})" = "$TARGET_PR897_HEAD"
+          worktree="$RUNNER_TEMP/pr897-worktree"
+          git worktree add --detach "$worktree" "$TARGET_PR897_HEAD"
+          test -z "$(git -C "$worktree" status --porcelain=v1 --untracked-files=all)"
+          (
+            cd "$worktree"
+            CARRIER_EXACT_HEAD_REEXEC=1 node .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs --output "$RUNNER_TEMP/pr897-self-test.json"
+          )
+          test -z "$(git -C "$worktree" status --porcelain=v1 --untracked-files=all)"
+          git worktree remove --force "$worktree"
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/pr897-self-test.json','utf8'));
+          if(r.result!=='PASS'||r.executionHead!==process.env.TARGET_PR897_HEAD||r.passed!==r.total||r.total!==35||r.nativeRegressionPassCount!==r.nativeRegressionCount||r.nativeRegressionCount!==5||r.genericPageImplementationExecutionClassPresent!==true||r.architectureReceiptContinuityEnforced!==true||r.nineImplementationFindingsRequired!==true||r.canonicalOperationDerivedImplementationBundleOnly!==true||r.authorityInflationObserved!==false||r.arbitraryCommandAccepted!==false||r.callerSuppliedBundleAccepted!==false) process.exit(1);
+          NODE
 
-      - name: Run adversarial carrier self-test
+      - name: Recompute exact one-path repair Router gate
         shell: bash
         run: |
           set -euo pipefail
-          node .github/ai-router/bounded-exact-head-execution-carrier/self-test.v1.mjs --output "$RUNNER_TEMP/self-test.json"
-          node -e "const r=require(process.env.RUNNER_TEMP+'/self-test.json'); if(r.result!=='PASS'||r.passed!==r.total||r.total<18||r.authorityInflationObserved!==false||r.arbitraryCommandAccepted!==false)process.exit(1)"
-          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          worktree="$RUNNER_TEMP/repair-worktree"
+          git worktree add --detach "$worktree" "$REPAIR_HEAD"
+          (
+            cd "$worktree"
+            node tools/repository-ai-entry-router.mjs \
+              --mutation-intent \
+              --path .github/workflows/bounded-exact-head-execution-carrier-v1.yml \
+              --task PAGE_EXCELLENCE_IMPLEMENTATION_CARRIER_CERTIFICATION_IDENTITY_REPAIR_V1_20260810_002 \
+              --output "$RUNNER_TEMP/router-receipt.json"
+          )
+          test -z "$(git -C "$worktree" status --porcelain=v1 --untracked-files=all)"
+          git worktree remove --force "$worktree"
+          node - <<'NODE'
+          const fs=require('fs');
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/router-receipt.json','utf8'));
+          if(r.disposition!=='PASS'||r.governingHead!==process.env.REPAIR_HEAD||r.routes?.length!==1||r.routes[0]?.path!=='.github/workflows/bounded-exact-head-execution-carrier-v1.yml'||r.routes[0]?.projectId!=='REPOSITORY_AI_ROUTER_INFRASTRUCTURE'||r.routes[0]?.disposition!=='PASS'||r.workingTreeClean!==true) process.exit(1);
+          NODE
 
-      - name: Emit fresh generation-839 verification receipt
+      - name: Emit fresh Gen1039-bound carrier certification receipt
         shell: bash
         run: |
           set -euo pipefail
           node - <<'NODE'
           const fs=require('fs'); const p=process.env.RUNNER_TEMP;
           const router=JSON.parse(fs.readFileSync(p+'/router-receipt.json','utf8'));
-          const self=JSON.parse(fs.readFileSync(p+'/self-test.json','utf8'));
-          const out={schema:'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_VERIFICATION_RECEIPT_v1',result:'PASS',generation:839,operationId:'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_V1_INSTALLATION_20260809_002_SUCCESSOR_001',head:process.env.GITHUB_SHA,governingHead:'f624b55096c69c63909d4ee260fcd5615f8d9aa6',routerDisposition:router.disposition,routerRouteCount:router.routes.length,selfTestResult:self.result,selfTestPassed:self.passed,selfTestTotal:self.total,authorityInherited:false,arbitraryCommandAuthority:false,repositoryWriteAuthority:false,semanticAuthority:false};
+          const self=JSON.parse(fs.readFileSync(p+'/pr897-self-test.json','utf8'));
+          const out={schema:'BOUNDED_EXACT_HEAD_EXECUTION_CARRIER_VERIFICATION_RECEIPT_v1',result:'PASS',generation:1039,operationId:'PAGE_EXCELLENCE_IMPLEMENTATION_CARRIER_EXTENSION_V1_20260810_001',head:process.env.TARGET_PR897_HEAD,governingHead:process.env.ADMITTED_BASE,lockScope:'REPOSITORY_CONTROL_PLANE:BOUNDED_EXACT_HEAD_EXECUTION_CARRIER:PAGE_EXCELLENCE_IMPLEMENTATION_PHASE:V1',scopeHash:process.env.TARGET_GEN1039_SCOPE_HASH,certificationRouteGeneration:1049,certificationRouteOperationId:'PAGE_EXCELLENCE_IMPLEMENTATION_CARRIER_CERTIFICATION_IDENTITY_REPAIR_V1_20260810_002',certificationRouteHead:process.env.REPAIR_HEAD,routerDisposition:router.disposition,routerRouteCount:router.routes.length,selfTestResult:self.result,selfTestPassed:self.passed,selfTestTotal:self.total,nativeRegressionPassCount:self.nativeRegressionPassCount,nativeRegressionCount:self.nativeRegressionCount,canonicalOperationDerivedImplementationBundleOnly:self.canonicalOperationDerivedImplementationBundleOnly,architectureReceiptContinuityEnforced:self.architectureReceiptContinuityEnforced,nineImplementationFindingsRequired:self.nineImplementationFindingsRequired,historicalGeneration839AuthorityUsed:false,issueCommentExecutionRoutePreserved:true,carrierFunctionalBytesMutated:false,authorityInherited:false,arbitraryCommandAuthority:false,repositoryWriteAuthority:false,productAuthority:false,semanticAuthority:false};
           fs.writeFileSync(p+'/verification.json',JSON.stringify(out,null,2)+'\n');
           NODE
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
 
       - name: Upload verification evidence
         if: always()
@@ -107,9 +148,10 @@ jobs:
         with:
           name: bounded-exact-head-carrier-verification-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            ${{ runner.temp }}/gen839-successor.json
+            ${{ runner.temp }}/canonical-ledger.json
+            ${{ runner.temp }}/scope-diff.txt
             ${{ runner.temp }}/router-receipt.json
-            ${{ runner.temp }}/self-test.json
+            ${{ runner.temp }}/pr897-self-test.json
             ${{ runner.temp }}/verification.json
           if-no-files-found: warn
           retention-days: 90

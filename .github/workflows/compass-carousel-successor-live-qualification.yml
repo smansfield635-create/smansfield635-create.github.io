@@ -1,10 +1,9 @@
-name: Compass Gen1524 Candidate Browser Qualification
+name: Compass Gen1525 Candidate Browser Qualification
 
 on:
   pull_request:
     paths:
-      - 'index.html'
-      - 'assets/compass/**'
+      - 'assets/compass/compass.crystals.js'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
       - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
@@ -20,10 +19,11 @@ permissions:
   contents: read
 
 env:
+  GEN1525_GOVERNING_HEAD: d53b9c627c6b9be3222044b5ca879c080a7165f1
   EXPECTED_HEAD: ${{ inputs.expected_head || github.event.pull_request.head.sha || github.sha }}
   COMPASS_CANDIDATE_HEAD: ${{ inputs.expected_head || github.event.pull_request.head.sha || github.sha }}
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1524-performance.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1524-display.json
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1525-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1525-display.json
 
 jobs:
   qualify-candidate:
@@ -33,14 +33,18 @@ jobs:
         with:
           ref: ${{ env.EXPECTED_HEAD }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact checkout and static corrective contract
+      - name: Verify exact checkout and static Gen1525 contract
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$EXPECTED_HEAD"
+          git merge-base --is-ancestor "$GEN1525_GOVERNING_HEAD" "$EXPECTED_HEAD"
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
           node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1525' /tmp/compass-gen1525-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1525' /tmp/compass-gen1525-display.json >/dev/null
       - name: Install browser qualification runtime
         env:
           npm_config_package_lock: 'false'
@@ -49,8 +53,8 @@ jobs:
           npx playwright install chromium
       - name: Start isolated candidate server
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-gen1524-server.log 2>&1 &
-          echo $! >/tmp/compass-gen1524-server.pid
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-gen1525-server.log 2>&1 &
+          echo $! >/tmp/compass-gen1525-server.pid
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
           curl -fsS http://127.0.0.1:4173/ >/dev/null
       - name: Qualify desktop tablet phone and reduced motion
@@ -60,6 +64,7 @@ jobs:
           import {chromium} from 'playwright';
           const candidate=process.env.EXPECTED_HEAD,base=`http://127.0.0.1:4173/?candidate=${candidate}`;
           const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const metrics={};
           const browser=await chromium.launch({headless:true});
           const surfaces=[['desktop',1440,900,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',820,1180,true]];
           for(const [name,width,height,reduced] of surfaces){
@@ -75,11 +80,13 @@ jobs:
               const identity=globalThis.DGB_COMPASS_IDENTITY_3D_GEN1524;
               const renderer=globalThis.DGB_UPSTREAM_COMPASS_RENDERER;
               const receipt=renderer?.receipt?.()||globalThis.DGB_UPSTREAM_COMPASS_RENDERER_RECEIPT||null;
+              const crystalReceipt=globalThis.DGB_COMPASS_CRYSTALS?.receipt?.()||globalThis.DGB_COMPASS_CRYSTAL_RECEIPT||null;
               const frameTimes=[];let last=performance.now();for(let i=0;i<90;i++)await new Promise(resolve=>requestAnimationFrame(now=>{frameTimes.push(now-last);last=now;resolve()}));
               const sorted=frameTimes.slice(5).sort((a,b)=>a-b),median=sorted[Math.floor(sorted.length*.5)]||999,p95=sorted[Math.floor(sorted.length*.95)]||999;
               const root=document.querySelector('[data-compass-root]');
-              return{identity,provenance:identity?.provenance,spatial:{present:Boolean(spatial),renderer:spatial?.dataset.compassSpatialRenderer,status:spatial?.dataset.upstreamCompassRendererStatus,canvasVisible:spatial?.querySelector('canvas[data-upstream-compass-canvas]')?.dataset.upstreamCompassCanvasVisible,depth:spatial?.dataset.compassSpatialDepth,strata:spatial?.dataset.compassDepthStrata,idlePolicy:spatial?.dataset.compassSpatialIdlePolicy},craft:{present:Boolean(craft),display:craft?getComputedStyle(craft).display:null,designId:craft?.dataset.designId,geometry:craft?.dataset.geometryContract,adoption:craft?.dataset.adoption,hitAuthority:craft?.dataset.authority,performancePolicy:craft?.dataset.performancePolicy},brain:{present:Boolean(brain),topology:brain?.dataset.brainTopology,bulbs:brain?.dataset.brainPosteriorBulbs,material:brain?.dataset.brainMaterial,components:brain?.dataset.brainComponents},cardinals:document.querySelectorAll('[data-cardinal-id]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth,frame:{median:Number(median.toFixed(2)),p95:Number(p95.toFixed(2)),samples:sorted.length},rendererReceipt:receipt?{status:receipt.status,lastRendererStatus:receipt.lastRendererStatus,lastWebGLError:receipt.lastWebGLError,firstEnhancedFrameCompleted:receipt.firstEnhancedFrameCompleted}:null,rootReduced:root?.dataset.reducedMotion};
+              return{identity,provenance:identity?.provenance,spatial:{present:Boolean(spatial),renderer:spatial?.dataset.compassSpatialRenderer,status:spatial?.dataset.upstreamCompassRendererStatus,canvasVisible:spatial?.querySelector('canvas[data-upstream-compass-canvas]')?.dataset.upstreamCompassCanvasVisible,depth:spatial?.dataset.compassSpatialDepth,strata:spatial?.dataset.compassDepthStrata,idlePolicy:spatial?.dataset.compassSpatialIdlePolicy},craft:{present:Boolean(craft),display:craft?getComputedStyle(craft).display:null,designId:craft?.dataset.designId,geometry:craft?.dataset.geometryContract,adoption:craft?.dataset.adoption,hitAuthority:craft?.dataset.authority,performancePolicy:craft?.dataset.performancePolicy},brain:{present:Boolean(brain),topology:brain?.dataset.brainTopology,bulbs:brain?.dataset.brainPosteriorBulbs,material:brain?.dataset.brainMaterial,components:brain?.dataset.brainComponents},cardinals:document.querySelectorAll('[data-cardinal-id]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth,frame:{median:Number(median.toFixed(2)),p95:Number(p95.toFixed(2)),samples:sorted.length},rendererReceipt:receipt?{status:receipt.status,lastRendererStatus:receipt.lastRendererStatus,lastWebGLError:receipt.lastWebGLError,firstEnhancedFrameCompleted:receipt.firstEnhancedFrameCompleted}:null,crystalReceipt:crystalReceipt?{contract:crystalReceipt.contract||crystalReceipt.contractId||null,cardinals:crystalReceipt.registryCardinalCount||null,rooms:crystalReceipt.registryRoomCount||null}:null,rootReduced:root?.dataset.reducedMotion};
             });
+            metrics[name]=evidence.frame;
             check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
             check(`${name}_CARDINAL_AND_ROOM_FLOOR`,evidence.cardinals===4&&evidence.rooms===19,evidence);
             check(`${name}_NO_HORIZONTAL_OVERFLOW`,evidence.overflow<=2,evidence.overflow);
@@ -87,23 +94,23 @@ jobs:
             check(`${name}_SPATIAL_COMPASS_RENDERED`,evidence.spatial.renderer==='upstream-authoritative-webgl'&&evidence.spatial.canvasVisible==='true'&&evidence.rendererReceipt?.firstEnhancedFrameCompleted===true&&evidence.rendererReceipt?.lastWebGLError===0,{spatial:evidence.spatial,receipt:evidence.rendererReceipt});
             check(`${name}_LAWS_PROVENANCE`,evidence.provenance?.sourceContract==='LAWS_CP6_TRUE_3D_SPACECRAFT_PARTICIPANT_v1'&&evidence.provenance?.designId==='DGB_SCOUTCRAFT_01'&&evidence.provenance?.adoption==='DIRECT_CANONICAL_GEOMETRY_MODULE_CONSUMPTION',evidence.provenance);
             if(reduced||width<=720)check(`${name}_SPACECRAFT_SUSPENDED`,!evidence.craft.present||evidence.craft.display==='none',evidence.craft);else check(`${name}_LAWS_CRAFT_RENDERED`,evidence.craft.present&&evidence.craft.designId==='DGB_SCOUTCRAFT_01'&&evidence.craft.adoption==='DIRECT_CANONICAL_GEOMETRY_MODULE_CONSUMPTION',evidence.craft);
-            if(evidence.brain.present){check(`${name}_BRAIN_ANATOMY`,evidence.brain.topology==='CONTINUOUS_MIDBRAIN_PONS_MEDULLA_SINGLE_POSTERIOR_INFERIOR_CEREBELLAR_MASS'&&evidence.brain.bulbs==='none'&&evidence.brain.material==='NATIVE_ROSE_FLESH_V1',evidence.brain)}
+            if(evidence.brain.present)check(`${name}_BRAIN_ANATOMY`,evidence.brain.topology==='CONTINUOUS_MIDBRAIN_PONS_MEDULLA_SINGLE_POSTERIOR_INFERIOR_CEREBELLAR_MASS'&&evidence.brain.bulbs==='none'&&evidence.brain.material==='NATIVE_ROSE_FLESH_V1',evidence.brain);
             check(`${name}_FRAME_CADENCE`,evidence.frame.median<=18.5&&evidence.frame.p95<=26,{targetMs:16.7,...evidence.frame});
-            await page.screenshot({path:`/tmp/compass-gen1524-${name}.png`,fullPage:true});
+            await page.screenshot({path:`/tmp/compass-gen1525-${name}.png`,fullPage:true});
             await context.close();
           }
           await browser.close();
-          const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_FRONT_PAGE_CORRECTIVE_GEN1524_BROWSER_RECEIPT_v1',operationId:'COMPASS_FRONT_PAGE_CORRECTIVE_GEOMETRY_PROVENANCE_BRAIN_PERFORMANCE_20260817_004',lockGeneration:1524,candidateHead:candidate,targetFrameBudgetMs:16.7,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
-          fs.writeFileSync('/tmp/compass-gen1524-browser.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+          const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_CRYSTAL_RENDERER_GEN1525_BROWSER_RECEIPT_v1',operationId:'COMPASS_CRYSTAL_RENDERER_PERFORMANCE_CONTINUATION_20260817_007',lockGeneration:1525,governingHead:process.env.GEN1525_GOVERNING_HEAD,candidateHead:candidate,targetFrameBudgetMs:16.7,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',metrics,checks,failures:failures.map(x=>x.id)};
+          fs.writeFileSync('/tmp/compass-gen1525-browser.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1524-browser-qualification
+          name: compass-gen1525-browser-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-gen1524-performance.json
-            /tmp/compass-gen1524-display.json
-            /tmp/compass-gen1524-browser.json
-            /tmp/compass-gen1524-*.png
-            /tmp/compass-gen1524-server.log
+            /tmp/compass-gen1525-performance.json
+            /tmp/compass-gen1525-display.json
+            /tmp/compass-gen1525-browser.json
+            /tmp/compass-gen1525-*.png
+            /tmp/compass-gen1525-server.log
           retention-days: 90

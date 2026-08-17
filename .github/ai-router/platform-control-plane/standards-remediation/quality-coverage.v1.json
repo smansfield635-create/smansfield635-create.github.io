@@ -1,0 +1,70 @@
+{
+  "schema": "L2_QUALITY_COVERAGE_PROFILE_v1",
+  "benchmark": "ISO_IEC_25010_2023",
+  "characteristics": [
+    {
+      "name": "Functional suitability",
+      "evidenceMethods": [
+        "requirements-to-test traceability",
+        "functional self-tests"
+      ]
+    },
+    {
+      "name": "Performance efficiency",
+      "evidenceMethods": [
+        "workflow duration observations",
+        "bounded execution budgets"
+      ]
+    },
+    {
+      "name": "Compatibility",
+      "evidenceMethods": [
+        "repository/federation identity checks",
+        "browser viewport matrix where applicable"
+      ]
+    },
+    {
+      "name": "Interaction capability",
+      "evidenceMethods": [
+        "browser interaction and accessibility evidence where applicable"
+      ]
+    },
+    {
+      "name": "Reliability",
+      "evidenceMethods": [
+        "fail-closed negative tests",
+        "repeatable exact-head workflows"
+      ]
+    },
+    {
+      "name": "Security",
+      "evidenceMethods": [
+        "RBAC/identity negative tests",
+        "SSDF evidence profile"
+      ]
+    },
+    {
+      "name": "Maintainability",
+      "evidenceMethods": [
+        "bounded path scope",
+        "versioned protocols and self-tests"
+      ]
+    },
+    {
+      "name": "Flexibility",
+      "evidenceMethods": [
+        "candidate/capability/authority separation",
+        "federated read-only adaptation"
+      ]
+    },
+    {
+      "name": "Safety",
+      "evidenceMethods": [
+        "authority boundaries",
+        "STOP behavior for ambiguous or prohibited mutations"
+      ]
+    }
+  ],
+  "coverageRule": "ALL_NINE_CHARACTERISTICS_MUST_HAVE_AT_LEAST_ONE_EXPLICIT_EVIDENCE_METHOD",
+  "claimBoundary": "COVERAGE_FRAMEWORK_EVIDENCED; PRODUCT_EXCELLENCE_OR_WHOLE_STANDARD_CONFORMANCE_NOT_INFERRED"
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "L2_MEASUREMENT_MANAGEMENT_PROFILE_v1",
+  "benchmark": "ISO_10012_2026",
+  "appliesTo": "GENUINE_QUANTITATIVE_IMI_MEASUREMENT_PROCESSES_ONLY",
+  "controls": [
+    {
+      "id": "MM_INSTRUMENT_IDENTITY",
+      "status": "DEFINED",
+      "evidence": "versioned frozen instrument identity and receipt/data-lock hashes"
+    },
+    {
+      "id": "MM_OBSERVER_COMPETENCE",
+      "status": "DEFINED",
+      "evidence": "observer manual/training and competence prerequisites"
+    },
+    {
+      "id": "MM_METHOD_VALIDATION_STATE",
+      "status": "CONTROLLED_PENDING_EMPIRICAL",
+      "evidence": "preregistered reliability/validity program; untested claims explicitly withheld"
+    },
+    {
+      "id": "MM_TRACEABILITY_PROVENANCE",
+      "status": "DEFINED",
+      "evidence": "source class validation, temporal ordering, hashes, version compatibility"
+    },
+    {
+      "id": "MM_INFLUENCE_FACTORS",
+      "status": "DEFINED",
+      "evidence": "source class, timing, missingness/invalidity, observer effects recorded as influence factors"
+    },
+    {
+      "id": "MM_NONCONFORMING_MEASUREMENT",
+      "status": "DEFINED",
+      "evidence": "INVALID > UNEVALUABLE > NUMERIC handling and exclusion rules"
+    },
+    {
+      "id": "MM_PROCESS_MONITORING",
+      "status": "DEFINED",
+      "evidence": "observer reliability thresholds and monitoring protocol"
+    },
+    {
+      "id": "MM_IMPROVEMENT",
+      "status": "DEFINED",
+      "evidence": "retest/remediation cycle and versioned correction path"
+    }
+  ],
+  "empiricalEvidence": {
+    "observerReliability": "PENDING_FRESH_EMPIRICAL_EXECUTION",
+    "criterionValidity": "PENDING_FRESH_EMPIRICAL_EXECUTION",
+    "predictiveValidity": "PENDING_FRESH_EMPIRICAL_EXECUTION",
+    "fabricationForbidden": true
+  },
+  "gumBoundary": {
+    "deterministicScore": "NOT_APPLICABLE_UNLESS_RECLASSIFIED_AS_GENUINE_MEASUREMENT_RESULT_WITH_DEFINED_MEASURAND",
+    "constructedIndex": "NOT_AUTOMATICALLY_A_MEASUREMENT_RESULT",
+    "definedMeasurandRequired": true
+  },
+  "laboratoryBoundary": "NO_ISO_IEC_17025_LABORATORY_STATUS_OR_ACCREDITATION_INFERENCE"
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "L2_VV_INTEGRITY_POLICY_v1",
+  "standardBenchmark": "IEEE_1012_2024",
+  "projectIntegrityTiers": [
+    {
+      "tier": "T1",
+      "description": "observational/non-mutating",
+      "independentVerifierRequired": false
+    },
+    {
+      "tier": "T2",
+      "description": "bounded software construction",
+      "independentVerifierRequired": true
+    },
+    {
+      "tier": "T3",
+      "description": "authority-adjacent or shared-control-plane candidate",
+      "independentVerifierRequired": true,
+      "repairByVerifierForbidden": true
+    },
+    {
+      "tier": "T4",
+      "description": "irreversible/safety-critical mutation if ever admitted",
+      "independentVerifierRequired": true,
+      "organizationalIndependenceRequired": true
+    }
+  ],
+  "claimBoundary": "PROJECT_TIERS_IMPLEMENT_INTEGRITY_SENSITIVE_VV_TREATMENT; THEY_ARE_NOT_IEEE_CERTIFICATION_LEVEL_LABELS"
+}

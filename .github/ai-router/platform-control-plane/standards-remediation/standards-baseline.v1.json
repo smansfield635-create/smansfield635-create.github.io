@@ -1,0 +1,59 @@
+{
+  "schema": "L2_EXTERNAL_STANDARDS_BASELINE_v1",
+  "verifiedDate": "2026-08-09",
+  "benchmarkOnly": true,
+  "wholeStandardComplianceDeterminationAuthorized": false,
+  "certificationDeterminationAuthorized": false,
+  "accreditationDeterminationAuthorized": false,
+  "standards": [
+    {
+      "id": "ISO_IEC_IEEE_29119_2_2021",
+      "designation": "ISO/IEC/IEEE 29119-2:2021",
+      "status": "CURRENT_PUBLISHED",
+      "theme": "software test processes and traceability"
+    },
+    {
+      "id": "IEEE_1012_2024",
+      "designation": "IEEE 1012-2024",
+      "status": "CURRENT_ACTIVE",
+      "theme": "verification and validation with integrity-sensitive treatment"
+    },
+    {
+      "id": "ISO_IEC_25010_2023",
+      "designation": "ISO/IEC 25010:2023",
+      "status": "CURRENT_PUBLISHED",
+      "theme": "nine-characteristic software/ICT product quality model"
+    },
+    {
+      "id": "ISO_IEC_25023_2016",
+      "designation": "ISO/IEC 25023:2016",
+      "status": "CURRENT_PUBLISHED_REVISION_WATCH",
+      "theme": "quantitative software/system product-quality measurement"
+    },
+    {
+      "id": "NIST_SP_800_218_V1_1",
+      "designation": "NIST SP 800-218 v1.1",
+      "status": "CURRENT_FINAL",
+      "theme": "secure software development framework"
+    },
+    {
+      "id": "ISO_10012_2026",
+      "designation": "ISO 10012:2026",
+      "status": "CURRENT_PUBLISHED",
+      "theme": "measurement management systems"
+    },
+    {
+      "id": "JCGM_100_2008_AMD1_2026",
+      "designation": "JCGM 100:2008 + Amendment 1:2026",
+      "status": "CURRENT_BASE_WITH_2026_AMENDMENT",
+      "theme": "measurement uncertainty for genuine measurement results"
+    },
+    {
+      "id": "ISO_IEC_17025_2017",
+      "designation": "ISO/IEC 17025:2017",
+      "status": "CURRENT_CONFIRMED",
+      "theme": "testing/calibration laboratory competence"
+    }
+  ],
+  "copyrightBoundary": "PUBLIC_METADATA_AND_THEME_LEVEL_DESCRIPTIONS_ONLY"
+}

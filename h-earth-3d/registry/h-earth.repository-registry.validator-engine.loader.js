@@ -1,9 +1,8 @@
 /**
- * H-Earth repository registry validator dependency loader v8 successor.
+ * H-Earth repository registry validator dependency loader v9 successor.
  *
  * Preserves the complete predecessor chain and advances only the active
- * additive facade needed for HC02 Page Excellence V2 execution-carrier and
- * presentation-host path resolution.
+ * additive facade needed for exact Gen305 S26 preflight path resolution.
  */
 
 import {
@@ -13,9 +12,12 @@ import {
 import {
   verifyHEarthLiveExperienceMaturityConvergenceAcceptedOccurrences
 } from './accepted-amendments/h-earth.repository-registry.live-experience-maturity-convergence-accepted-occurrences.js';
-import registryFacade, {
+import {
   verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2
 } from './accepted-amendments/h-earth.repository-registry.hc02-page-excellence-execution-carrier-scope.v2.js';
+import registryFacade, {
+  verifyHEarthGen305S26PreflightScopeRegistration
+} from './accepted-amendments/h-earth.repository-registry.gen305-s26-preflight-scope-registration.js';
 import {
   deepFreeze
 } from './h-earth.repository-registry.validator-engine.identity.js';
@@ -26,6 +28,8 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     verifyHEarthLiveExperienceMaturityConvergenceAcceptedOccurrences();
   const hc02CarrierScopeVerification =
     verifyHEarthHC02PageExcellenceExecutionCarrierScopeV2();
+  const gen305S26ScopeVerification =
+    verifyHEarthGen305S26PreflightScopeRegistration();
   const registryInstance = registryFacade.getHEarthRepositoryRegistryInstance();
   const discovery = registryFacade.getHEarthRepositoryRegistryDiscoveryDescriptor();
 
@@ -47,6 +51,16 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       hc02CarrierScopeVerification.checks.noUnboxingAuthority === true,
     hc02IndexHtmlPredecessorRegistrationPreserved:
       hc02CarrierScopeVerification.checks.indexHtmlPredecessorRegistrationPreserved === true,
+    gen305S26ScopeEligible: gen305S26ScopeVerification.eligible === true,
+    gen305S26ExactTwoTargets:
+      gen305S26ScopeVerification.checks.exactTwoTargetPaths === true,
+    gen305S26TruthfulAbsencePreserved:
+      gen305S26ScopeVerification.checks.targetOccurrencesTruthfullyAbsent === true,
+    gen305S26PredecessorRendererPreserved:
+      gen305S26ScopeVerification.checks.predecessorRendererRegistrationPreserved === true,
+    gen305S26PathResolutionOnly:
+      gen305S26ScopeVerification.checks.noProductAuthority === true &&
+      gen305S26ScopeVerification.checks.noConstructionAuthority === true,
     registryIdPreserved:
       registryInstance.registryId === base.registryInstance.registryId,
     registryVersionPreserved:
@@ -66,7 +80,7 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
   return deepFreeze({
     ...base,
     loaderId:
-      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v8_HC02_PAGE_EXCELLENCE_EXECUTION_CARRIER_V2_SUCCESSOR',
+      'H_EARTH_REPOSITORY_REGISTRY_VALIDATOR_DEPENDENCY_LOADER_v9_GEN305_S26_PREFLIGHT_SCOPE_SUCCESSOR',
     registryFacade,
     registryInstance,
     discovery,
@@ -75,7 +89,9 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
       liveExperienceAcceptedOccurrences:
         acceptedOccurrenceVerification.eligible === true,
       hc02PageExcellenceExecutionCarrierScopeV2:
-        hc02CarrierScopeVerification.eligible === true
+        hc02CarrierScopeVerification.eligible === true,
+      gen305S26PreflightScopeRegistration:
+        gen305S26ScopeVerification.eligible === true
     }),
     identityVerified:
       base.identityVerified === true &&
@@ -89,24 +105,32 @@ export function loadHEarthRepositoryRegistryValidatorDependencies() {
     }),
     hc02PageExcellenceExecutionCarrierScopeVerification:
       hc02CarrierScopeVerification,
-    hc02PageExcellenceExecutionCarrierScopeChecks: deepFreeze(successorChecks),
+    gen305S26PreflightScopeVerification:
+      gen305S26ScopeVerification,
+    gen305S26PreflightScopeChecks: deepFreeze(successorChecks),
     boundary: deepFreeze({
       ...base.boundary,
       liveExperienceAcceptedOccurrenceProvenanceOnly: true,
-      historicalLiveExperienceCandidateReservationPreserved: true,
+      historicalCandidateReservationPreserved: true,
       hc02PageExcellenceExecutionCarrierPathResolutionOnly: true,
       hc02PageExcellenceExecutionCarrierProductMutationAuthorityCreated: false,
       hc02PageExcellenceExecutionCarrierHC02AdmissionAuthorityCreated: false,
-      hc02PageExcellenceExecutionCarrierUnboxingAuthorityCreated: false
+      hc02PageExcellenceExecutionCarrierUnboxingAuthorityCreated: false,
+      gen305S26PreflightScopePathResolutionOnly: true,
+      gen305S26PreflightScopeProductMutationAuthorityCreated: false,
+      gen305S26PreflightScopeConstructionAuthorityCreated: false
     }),
     stoppingCondition: deepFreeze({
       ...base.stoppingCondition,
       liveExperienceAcceptedOccurrencesLoaded: true,
-      historicalLiveExperienceCandidateReservationPreserved: true,
+      historicalCandidateReservationPreserved: true,
       hc02PageExcellenceExecutionCarrierScopeLoaded: true,
       hc02PageExcellenceExecutionCarrierProductMutationAuthorized: false,
       hc02PageExcellenceExecutionCarrierHC02AdmissionAuthorized: false,
-      hc02PageExcellenceExecutionCarrierUnboxingAuthorized: false
+      hc02PageExcellenceExecutionCarrierUnboxingAuthorized: false,
+      gen305S26PreflightScopeLoaded: true,
+      gen305S26ProductMutationAuthorized: false,
+      gen305S26ConstructionAuthorizedByRegistryScope: false
     })
   });
 }

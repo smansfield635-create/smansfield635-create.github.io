@@ -1,0 +1,86 @@
+name: H-Earth Gen305 Authoritative Post-Rebind Preflight
+
+on:
+  push:
+    branches:
+      - repair/h-earth-connected-preflight-successor-transport-20260817
+    paths:
+      - '.github/workflows/h-earth-gen305-authoritative-post-rebind-preflight-20260817.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private read token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Check out merged authoritative private head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 9d7c73e6ab93a6402b74e8d763f3844e0fd7a3b4
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out authoritative public tooling head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 8c451f13bc468a6bc9c4729789938c17a134d1da
+          path: public-tooling
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Execute exact authoritative Gen305 seven-path preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/gen305-authoritative-preflight"
+          mkdir -p "$work"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const root=process.env.GITHUB_WORKSPACE+'/private-control-plane';
+          const b=JSON.parse(fs.readFileSync(root+'/.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json','utf8'));
+          const e=JSON.parse(fs.readFileSync(root+'/.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight.v1.json','utf8'));
+          const c=JSON.parse(fs.readFileSync(root+'/.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight-evidence-compiler.v1.json','utf8'));
+          const head='8c451f13bc468a6bc9c4729789938c17a134d1da';
+          if(b.fixedToolingHead!==head||e.fixedBinding.toolingHead!==head||c.fixedBinding.toolingHead!==head) throw new Error('AUTHORITATIVE_REBIND_MISMATCH');
+          NODE
+          cd "$GITHUB_WORKSPACE/public-tooling"
+          test "$(git rev-parse HEAD^{commit})" = '8c451f13bc468a6bc9c4729789938c17a134d1da'
+          node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs \
+            --mutation-intent \
+            --task 'Gen305 S26 authoritative post-rebind pre-mutation preflight' \
+            --path h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md \
+            --path h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs \
+            --path showroom/globe/h-earth/render/functional-landscape-frame.js \
+            --path showroom/globe/h-earth/render/geometry-distant-context.js \
+            --path showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js \
+            --path showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js \
+            --path showroom/globe/h-earth/render/run8e-successor-environment.js \
+            --output "$work/native-receipt.json"
+          node --input-type=module - "$work/native-receipt.json" <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          if(r.dependenciesVerified!==true) throw new Error('DEPENDENCIES_NOT_VERIFIED');
+          if(r.finalDisposition!=='PASS') throw new Error(`NATIVE_NONPASS:${r.finalDisposition}`);
+          if(r.continuation!=='SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') throw new Error('CONTINUATION_MISMATCH');
+          if(r.pathClassification.classifications.length!==7||r.pathClassification.classifications.some(x=>x.classification!=='REGISTERED_H_EARTH_PATH')) throw new Error('PATH_REGISTRATION_NONPASS');
+          NODE
+      - name: Upload authoritative receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen305-authoritative-post-rebind-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen305-authoritative-preflight/native-receipt.json
+          if-no-files-found: error
+          retention-days: 90

@@ -31,7 +31,8 @@ jobs:
       - name: Verify bounded Gen1525 lineage
         run: |
           git merge-base --is-ancestor "$GEN1525_GOVERNING_HEAD" HEAD
-          test "$(git diff --name-only "$GEN1525_GOVERNING_HEAD"...HEAD | grep -Ev '^(assets/compass/compass\.crystals\.js|\.github/ai-router/projects/compass/verify-(performance-successor|display-continuity)\.v1\.mjs|\.github/workflows/compass-(performance-successor-validation|carousel-successor-live-qualification)\.yml)$' | wc -l)" = 0
+          unexpected="$(git diff --name-only "$GEN1525_GOVERNING_HEAD"...HEAD | grep -Ev '^(assets/compass/compass\.crystals\.js|\.github/ai-router/projects/compass/verify-performance-successor\.mjs|\.github/ai-router/projects/compass/verify-display-continuity\.v1\.mjs|\.github/workflows/compass-performance-successor-validation\.yml|\.github/workflows/compass-carousel-successor-live-qualification\.yml)$' || true)"
+          test -z "$unexpected"
       - name: Apply scheduling-only crystal repair
         run: |
           python3 - <<'PY'

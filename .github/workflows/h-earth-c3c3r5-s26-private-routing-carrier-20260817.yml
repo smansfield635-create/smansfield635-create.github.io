@@ -1,0 +1,128 @@
+name: H-Earth C3C3R5 S26 Private Mutation Routing Carrier
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/h-earth-c3c3r5-s26-private-routing-carrier-20260817.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  route:
+    if: >-
+      github.event.pull_request.head.ref == 'handoff/h-earth-c3c3r5-s26-routing-carrier-20260817' &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.user.login == 'smansfield635-create'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
+      EXACT_PRIVATE_HEAD: 4c19e9ba783767f9324ab10df8a8541479f26c86
+      EXPECTED_OPERATION: H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_20260817_001
+      EXPECTED_SCOPE_HASH: 89a53a52b3c48b99b4b786984e9dbb4e9e7d4f6c7f81257868d40a4b8cfa4eb2
+      EXPECTED_GENERATION: '305'
+      LOCK_REF: operation-locks/repository-operation-intake-v1
+
+    steps:
+      - name: Mint read-only private routing token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+
+      - name: Check out exact private router implementation
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ env.EXACT_PRIVATE_HEAD }}
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact active Gen305 lock and private main
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/h-earth-s26-routing"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/git/ref/heads/main" > "$work/main.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' "https://api.github.com/repos/$PRIVATE_REPOSITORY/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=$LOCK_REF" > "$work/ledger-file.json"
+          python - <<'PY'
+          import base64,json,os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'h-earth-s26-routing')
+          main=json.load(open(os.path.join(work,'main.json')))['object']['sha']
+          if main!=os.environ['EXACT_PRIVATE_HEAD']: raise SystemExit('PRIVATE_MAIN_DRIFT')
+          f=json.load(open(os.path.join(work,'ledger-file.json')))
+          ledger=json.loads(base64.b64decode(''.join(f['content'].split())))
+          if str(ledger.get('lockGeneration'))!=os.environ['EXPECTED_GENERATION']: raise SystemExit('LEDGER_GENERATION_MISMATCH')
+          a=(ledger.get('activeScopes') or {}).get(os.environ['EXPECTED_SCOPE_HASH'])
+          if not a: raise SystemExit('GEN305_ACTIVE_SCOPE_MISSING')
+          if a.get('operationId')!=os.environ['EXPECTED_OPERATION'] or a.get('governingHead')!=os.environ['EXACT_PRIVATE_HEAD'] or a.get('state')!='ADMITTED_LOCKED' or a.get('released') is not False: raise SystemExit('GEN305_ACTIVE_SCOPE_INVALID')
+          PY
+
+      - name: Execute canonical root mutation router for exact admitted paths
+        id: router
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/h-earth-s26-routing"
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = "$EXACT_PRIVATE_HEAD"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          cat > "$work/availability.json" <<'JSON'
+          {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"GEN305_ALREADY_ADMITTED_READ_ONLY_ROUTING_OCCURRENCE","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":true,"connectedGithubReadAvailable":true,"connectedGithubShaGuardedContentsWriteAvailable":false,"githubActionsExecutionAvailable":false}
+          JSON
+          cat > "$work/paths.txt" <<'PATHS'
+          h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md
+          h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs
+          showroom/globe/h-earth/render/functional-landscape-frame.js
+          showroom/globe/h-earth/render/geometry-distant-context.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js
+          showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          showroom/globe/h-earth/render/run8e-successor-environment.js
+          PATHS
+          node tools/repository-ai-entry-router.mjs \
+            --paths-file "$work/paths.txt" \
+            --mutation-intent \
+            --intake-availability-receipt "$work/availability.json" \
+            --task 'H-Earth admitted C3C3R5 S26 performance and world-envelope successor construction' \
+            --output "$work/router.json"
+          cat "$work/router.json"
+          python - <<'PY'
+          import json,os
+          p=os.path.join(os.environ['RUNNER_TEMP'],'h-earth-s26-routing','router.json')
+          r=json.load(open(p))
+          if r.get('disposition')!='PASS': raise SystemExit('ROOT_ROUTER_NONPASS:'+str(r.get('disposition')))
+          routes=r.get('routes') or []
+          if len(routes)!=7: raise SystemExit('ROUTE_COUNT_MISMATCH')
+          if any(x.get('projectId')!='H_EARTH' or x.get('disposition')!='PASS' for x in routes): raise SystemExit('NON_H_EARTH_OR_NONPASS_ROUTE')
+          PY
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+
+      - name: Publish routing receipt to carrier PR
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          body='H_EARTH_C3C3R5_S26_MUTATION_ROUTING_RECEIPT_V1
+result: PASS
+operationId: H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_20260817_001
+lockGeneration: 305
+privateGoverningHead: 4c19e9ba783767f9324ab10df8a8541479f26c86
+pathCount: 7
+allRoutesProject: H_EARTH
+allRoutesDisposition: PASS
+repositoryMutationPerformed: false'
+          gh api "repos/$GITHUB_REPOSITORY/issues/${{ github.event.pull_request.number }}/comments" -f body="$body" >/dev/null

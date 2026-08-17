@@ -31,7 +31,6 @@ jobs:
           test "$(stat -c%s "$V28_PATH")" = "$V28_BYTES"
           echo "$V28_SHA256  $V28_PATH" | sha256sum -c -
           cp "$V28_PATH" /tmp/chapter01-compass-v28-live-baseline.mp4
-          ffprobe -v error -show_entries format=duration:stream=index,codec_name,width,height,r_frame_rate,sample_rate,channels -of json /tmp/chapter01-compass-v28-live-baseline.mp4 > /tmp/v28-ffprobe.json
           sha256sum /tmp/chapter01-compass-v28-live-baseline.mp4 > /tmp/v28-sha256.txt
           printf '%s\n' '{"schema":"CHAPTER_01_V28_BASELINE_EXPORT_RECEIPT_v1","sourceCommit":"ad395e724cbfea1c19c9ce43393c1148fa557816","sourceBlob":"90fed782fa6a9c2857909e7d29836d7dd0d83273","sha256":"42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62","bytes":13651045,"purpose":"ROOM_LOCAL_BASELINE_MATERIALIZATION_ONLY","productMutation":false,"liveMutation":false}' > /tmp/v28-export-receipt.json
       - name: Upload exact V28 baseline artifact
@@ -41,7 +40,6 @@ jobs:
           path: |
             /tmp/chapter01-compass-v28-live-baseline.mp4
             /tmp/v28-sha256.txt
-            /tmp/v28-ffprobe.json
             /tmp/v28-export-receipt.json
           if-no-files-found: error
           retention-days: 1

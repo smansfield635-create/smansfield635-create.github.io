@@ -3,7 +3,7 @@ name: Compass Display Continuity Validation
 on:
   push:
     branches:
-      - agent/compass-renewal-plan-v2-construction
+      - agent/compass-interaction-diagnostic-successor-v5
     paths:
       - 'index.html'
       - 'assets/compass/**'
@@ -20,6 +20,9 @@ on:
 permissions:
   contents: read
 
+env:
+  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   verify-static-contract:
     runs-on: ubuntu-latest
@@ -27,6 +30,7 @@ jobs:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -35,8 +39,10 @@ jobs:
       - name: Run fail-closed Compass verifier
         env:
           COMPASS_VERIFICATION_OUTPUT: /tmp/compass-display-continuity-verification-receipt.json
+          COMPASS_SCOPE_BASE_SHA: ad395e724cbfea1c19c9ce43393c1148fa557816
         run: node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
       - name: Upload static verification receipt
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: compass-display-continuity-verification-receipt
@@ -49,6 +55,7 @@ jobs:
       - name: Checkout exact candidate
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -95,6 +102,7 @@ jobs:
               introOpen:document.querySelector('[data-compass-full-introduction]')?.open,
               mathVisible:document.body.textContent.includes('Mathematical Foundation'),
               monuments:document.querySelectorAll('.compass-monument').length,
+              successorCapabilityPlaques:document.querySelectorAll('[data-capability-orbit] > [data-capability]').length,
               built:Boolean(document.querySelector('.compass-built')),
               buildCta:Boolean(document.querySelector('.compass-build-cta')),
               mirrorRoutes:document.querySelectorAll('[data-compass-mirrorland-routes] a:not([data-compass-mirrorland-inline-back])').length,
@@ -108,7 +116,7 @@ jobs:
             check(`${name}_NO_OVERFLOW`,result.horizontalOverflow<=2,result.horizontalOverflow);
             check(`${name}_INTRO_COLLAPSED`,result.introOpen===false,result.introOpen);
             check(`${name}_MATH_REMOVED`,!result.mathVisible,result.mathVisible);
-            check(`${name}_MONUMENTS`,result.monuments===2,result.monuments);
+            check(`${name}_MONUMENTS`,result.monuments===2||result.successorCapabilityPlaques===2,{sourceMonuments:result.monuments,successorCapabilityPlaques:result.successorCapabilityPlaques});
             check(`${name}_BUILT_AND_BUILD`,result.built&&result.buildCta,result);
             check(`${name}_MIRRORLAND_THREE_ROUTES`,result.mirrorRoutes===3&&result.mirrorBack,result);
             check(`${name}_COSMOS_HOST`,result.cosmos,result.cosmos);
@@ -164,10 +172,385 @@ jobs:
           }
           await browser.close();
           const failures=checks.filter(item=>!item.pass);
-          const receipt={schema:'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v2',operationId:'COMPASS_RENEWAL_CONSTRUCTION_v2_20260814_001',lockGeneration:1471,candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS',checks,failures:failures.map(item=>item.id)};
+          const receipt={schema:'COMPASS_RUNTIME_QUALIFICATION_RECEIPT_v3',operationId:'COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5',lockGeneration:1507,governingHead:'ad395e724cbfea1c19c9ce43393c1148fa557816',candidateHead:process.env.COMPASS_CANDIDATE_HEAD||null,result:failures.length?'FAIL_CLOSED':'PASS',checks,failures:failures.map(item=>item.id)};
           fs.writeFileSync('/tmp/compass-runtime-qualification-receipt.json',`${JSON.stringify(receipt,null,2)}\n`);
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length)process.exit(1);
+          NODE
+      - name: Qualify candidate-local Compass successor interaction matrix
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { createHash } from 'node:crypto';
+          import { chromium } from 'playwright';
+          const base='http://127.0.0.1:4173/';
+          const operationId='COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5';
+          const governingHead='ad395e724cbfea1c19c9ce43393c1148fa557816';
+          const checks=[];
+          const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const text=value=>String(value||'').replace(/\s+/g,' ').trim();
+          const errorEvidence=error=>({name:error?.name||'Error',message:String(error?.message||error),stack:String(error?.stack||'').split('\n').slice(0,8)});
+          const angularDistance=(a,b)=>Math.abs((((Number(b)-Number(a))+540)%360)-180);
+          const browser=await chromium.launch({headless:true});
+
+          async function load(page){
+            const errors=[];
+            page.on('pageerror',error=>errors.push(String(error)));
+            await page.goto(base,{waitUntil:'domcontentloaded',timeout:20000});
+            await page.waitForSelector('[data-statement-orbit]',{state:'visible',timeout:10000});
+            await page.waitForSelector('[data-capability-orbit]',{state:'visible',timeout:10000});
+            await page.waitForFunction(()=>globalThis.CompassEditorialCarousel?.version==='successor-v5',{timeout:10000});
+            await page.waitForTimeout(180);
+            return errors;
+          }
+
+          async function guidanceState(page,stageSelector,guidanceSelector){
+            return page.evaluate(({stageSelector,guidanceSelector})=>{
+              const stage=document.querySelector(stageSelector),guidance=document.querySelector(guidanceSelector);
+              const rect=guidance?.getBoundingClientRect(),style=guidance?getComputedStyle(guidance):null;
+              return {
+                text:(guidance?.textContent||'').replace(/\s+/g,' ').trim(),
+                id:guidance?.id||'',
+                describedBy:stage?.getAttribute('aria-describedby')||'',
+                visible:Boolean(rect&&rect.width>0&&rect.height>0&&style&&style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity||1)>0.01)
+              };
+            },{stageSelector,guidanceSelector});
+          }
+
+          async function depthState(page,cardSelector){
+            return page.evaluate(cardSelector=>{
+              const all=[...document.querySelectorAll(cardSelector)];
+              const describe=el=>{
+                if(!el)return null;
+                const style=getComputedStyle(el),after=getComputedStyle(el,'::after');
+                return {
+                  slot:el.dataset.slot||'',
+                  inert:el.inert||el.hasAttribute('inert'),
+                  ariaHidden:el.getAttribute('aria-hidden'),
+                  opacity:Number(style.opacity),
+                  filter:style.filter,
+                  transform:style.transform,
+                  pointerEvents:style.pointerEvents,
+                  zIndex:Number.parseFloat(style.zIndex)||0,
+                  glossy:style.backgroundImage!=='none'||after.backgroundImage!=='none'
+                };
+              };
+              const front=all.find(el=>el.dataset.slot==='front');
+              const rear=all.filter(el=>el!==front);
+              return {count:all.length,front:describe(front),rear:rear.map(describe)};
+            },cardSelector);
+          }
+
+          function proveDepth(prefix,state,expectedCount,{requireInert=true,requireGloss=true}={}){
+            check(`${prefix}_ONE_ACTIVE_CARD`,state.count===expectedCount&&Boolean(state.front)&&state.rear.length===expectedCount-1,state);
+            check(`${prefix}_ACTIVE_CLEAR`,state.front?.opacity>=0.9&&(state.front?.filter==='none'||state.front?.filter.includes('blur(0')),state.front);
+            check(`${prefix}_REAR_OBSCURED_NONINTERACTIVE`,state.rear.every(rear=>(!requireInert||rear.inert)&&rear.ariaHidden==='true'&&rear.pointerEvents==='none'&&/blur\((?!0(?:px)?\))/.test(rear.filter)&&(rear.opacity<state.front.opacity||/brightness\((?:0?\.)/.test(rear.filter))),state);
+            check(`${prefix}_DEPTH_AND_GLOSS`,state.rear.every(rear=>rear.transform!==state.front.transform&&rear.zIndex<state.front.zIndex&&(!requireGloss||rear.glossy)),state);
+          }
+
+          async function frontIndex(page,cardSelector){
+            return page.locator(cardSelector).evaluateAll(cards=>cards.findIndex(card=>card.dataset.slot==='front'));
+          }
+
+          async function atomicSwipe(page,{prefix,stageSelector,cardSelector,count}){
+            const stage=page.locator(stageSelector);
+            await stage.scrollIntoViewIfNeeded();
+            await page.waitForTimeout(60);
+            const box=await stage.boundingBox();
+            if(!box){check(`${prefix}_STAGE_GEOMETRY`,false,null);return;}
+            const before=await frontIndex(page,cardSelector);
+            const startX=box.x+box.width*.76,endX=box.x+box.width*.24,y=box.y+Math.min(18,box.height*.08);
+            const viewport=page.viewportSize();
+            const injectionVisible=Boolean(viewport)&&startX>=0&&startX<=viewport.width&&endX>=0&&endX<=viewport.width&&y>=0&&y<=viewport.height;
+            check(`${prefix}_STAGE_IN_VIEW_FOR_POINTER_INJECTION`,injectionVisible,{box,viewport,startX,endX,y});
+            if(!injectionVisible)return;
+            await page.mouse.move(startX,y);
+            await page.mouse.down();
+            await page.mouse.move(endX,y,{steps:8});
+            await page.waitForTimeout(90);
+            const held=await frontIndex(page,cardSelector);
+            check(`${prefix}_NO_INTERMEDIATE_COMMIT`,held===before,{before,held});
+            await page.mouse.up();
+            await page.waitForTimeout(560);
+            const after=await frontIndex(page,cardSelector);
+            check(`${prefix}_ONE_RELEASE_ONE_NEIGHBOR`,after===(before+1)%count,{before,after,expected:(before+1)%count});
+          }
+
+          async function qualifyViewport({name,viewport,deviceScaleFactor=1,physicalScreenshot=false}){
+            const context=await browser.newContext({viewport,deviceScaleFactor});
+            const page=await context.newPage();
+            const errors=await load(page);
+            const layout=await page.evaluate(()=>{
+              const statement=document.querySelector('[data-statement-guidance]'),capability=document.querySelector('[data-capability-guidance]');
+              const visible=el=>{const r=el?.getBoundingClientRect(),s=el?getComputedStyle(el):null;return Boolean(r&&r.width>0&&r.height>0&&r.left>=-1&&r.right<=innerWidth+1&&s&&s.display!=='none'&&s.visibility!=='hidden')};
+              const capabilityFront=document.querySelector('[data-capability-orbit] > [data-slot="front"]');
+              const capabilityRear=document.querySelector('[data-capability-orbit] > [data-slot="rear"]');
+              const frontRect=capabilityFront?.getBoundingClientRect(),rearRect=capabilityRear?.getBoundingClientRect();
+              const rearExposure=frontRect&&rearRect?Math.max(0,rearRect.right-frontRect.right)+Math.max(0,frontRect.left-rearRect.left):0;
+              const activeTargets=[...(capabilityFront?.querySelectorAll('a,button')||[])].filter(visible).map(el=>{const r=el.getBoundingClientRect();return {label:(el.textContent||'').trim(),width:r.width,height:r.height}});
+              const brainRect=document.querySelector('[data-human-brain] canvas')?.getBoundingClientRect();
+              return {
+                viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio},
+                overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-document.documentElement.clientWidth,
+                statementGuidance:visible(statement),
+                capabilityGuidance:visible(capability),
+                statementFront:document.querySelectorAll('[data-statement-orbit] [data-slot="front"]').length,
+                capabilityFront:document.querySelectorAll('[data-capability-orbit] > [data-slot="front"]').length,
+                rearExposure,
+                activeTargets,
+                brainRect:brainRect?{width:brainRect.width,height:brainRect.height,left:brainRect.left,right:brainRect.right}:null
+              };
+            });
+            check(`${name}_VIEWPORT_AND_DPR`,layout.viewport.width===viewport.width&&layout.viewport.height===viewport.height&&layout.viewport.dpr===deviceScaleFactor,{expected:{...viewport,deviceScaleFactor},actual:layout.viewport});
+            check(`${name}_NO_HORIZONTAL_OVERFLOW`,layout.overflow<=2,layout);
+            check(`${name}_GUIDANCE_VISIBLE`,layout.statementGuidance&&layout.capabilityGuidance,layout);
+            check(`${name}_ONE_CLEAR_CARD_PER_ORBIT`,layout.statementFront===1&&layout.capabilityFront===1,layout);
+            check(`${name}_REAR_PEER_VISIBLY_SIGNALS_ORBIT`,layout.rearExposure>=8,layout.rearExposure);
+            check(`${name}_ACTIVE_TARGETS_AT_LEAST_44PX`,layout.activeTargets.length>0&&layout.activeTargets.every(target=>target.width>=44&&target.height>=44),layout.activeTargets);
+            check(`${name}_BRAIN_ENVELOPE_USABLE`,Boolean(layout.brainRect)&&layout.brainRect.width>140&&layout.brainRect.height>140&&layout.brainRect.left>=-1&&layout.brainRect.right<=viewport.width+1,layout.brainRect);
+            check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
+            const screenshotName=name==='PHONE_DPR3'?'dpr3':name.toLowerCase();
+            const screenshotPath=`/tmp/compass-interaction-diagnostic-${screenshotName}.png`;
+            await page.screenshot({path:screenshotPath,fullPage:!physicalScreenshot});
+            if(physicalScreenshot){
+              const png=fs.readFileSync(screenshotPath);
+              const dimensions={width:png.readUInt32BE(16),height:png.readUInt32BE(20)};
+              check(`${name}_PHYSICAL_1080_BY_2340`,dimensions.width===1080&&dimensions.height===2340,dimensions);
+            }
+            await context.close();
+          }
+
+          try{
+            await qualifyViewport({name:'DESKTOP',viewport:{width:1440,height:900}});
+            await qualifyViewport({name:'TABLET',viewport:{width:1024,height:768}});
+            await qualifyViewport({name:'PHONE',viewport:{width:390,height:844}});
+            await qualifyViewport({name:'PHONE_DPR3',viewport:{width:360,height:780},deviceScaleFactor:3,physicalScreenshot:true});
+
+            {
+              const context=await browser.newContext({viewport:{width:1440,height:900}});
+              const page=await context.newPage();
+              const errors=await load(page);
+              const statementExpected='Not everything is as it first appears. Swipe the thought above.';
+              const capabilityExpected='Swipe to rotate the orbit. Tap the clear card to enter.';
+              const houseExpected='Swipe to choose a House guide. Tap the clear card to talk. Return to Orbit restores the capability orbit.';
+
+              const statementGuidance=await guidanceState(page,'[data-statement-orbit]','[data-statement-guidance]');
+              check('STATEMENT_GUIDANCE_EXACT_AND_ASSOCIATED',statementGuidance.text===statementExpected&&statementGuidance.id==='compass-statement-guidance'&&statementGuidance.describedBy.split(/\s+/).includes(statementGuidance.id)&&statementGuidance.visible,statementGuidance);
+              proveDepth('STATEMENT',await depthState(page,'[data-statement-orbit] .compass-statement-object'),2,{requireInert:false,requireGloss:false});
+              const statementStage=page.locator('[data-statement-orbit]');
+              await statementStage.focus();
+              const statementBefore=await frontIndex(page,'[data-statement-orbit] .compass-statement-object');
+              await statementStage.press('ArrowRight');
+              await page.waitForTimeout(560);
+              const statementAfter=await frontIndex(page,'[data-statement-orbit] .compass-statement-object');
+              check('STATEMENT_KEYBOARD_PARITY_AND_FOCUS',statementAfter===(statementBefore+1)%2&&await statementStage.evaluate(el=>document.activeElement===el),{statementBefore,statementAfter});
+              await atomicSwipe(page,{prefix:'STATEMENT_SWIPE',stageSelector:'[data-statement-orbit]',cardSelector:'[data-statement-orbit] .compass-statement-object',count:2});
+
+              const brainRoot=page.locator('[data-human-brain]');
+              const brainCanvas=brainRoot.locator('canvas');
+              await brainCanvas.waitFor({state:'visible'});
+              const brain=await brainRoot.evaluate(root=>{
+                const canvas=root.querySelector('canvas'),rect=canvas?.getBoundingClientRect();
+                return {
+                  contract:root.dataset.brainContract,
+                  view:root.dataset.brainView,
+                  axes:(root.dataset.brainAxes||'').split(','),
+                  components:(root.dataset.brainComponents||'').split(','),
+                  regions:(root.dataset.brainRegions||'').split(','),
+                  renderer:canvas?.dataset.brainRenderer,
+                  labels:(canvas?.dataset.brainAxisLabels||'').split(','),
+                  axisPurpose:canvas?.dataset.brainAxisPurpose||root.dataset.brainAxisPurpose||'',
+                  regionsOnCanvas:(canvas?.dataset.brainRegions||'').split(','),
+                  motion:canvas?.dataset.brainMotion,
+                  yaw:Number(canvas?.dataset.brainYawDegrees),
+                  snapshotViews:(root.dataset.brainSnapshotViews||'').split(','),
+                  snapshotApi:root.dataset.brainSnapshotApi||'',
+                  role:canvas?.getAttribute('role'),
+                  ariaLabel:canvas?.getAttribute('aria-label')||'',
+                  size:rect?{width:rect.width,height:rect.height}:null
+                };
+              });
+              const components=['left-hemisphere','right-hemisphere','longitudinal-fissure','cerebellum','pons','brainstem'];
+              const regions=['frontal','temporal','parietal','occipital'];
+              check('BRAIN_ANATOMICAL_CONTRACT',brain.contract==='COMPASS_ANATOMICAL_BRAIN_XYZ_v1'&&brain.renderer==='anatomical-parametric-v2'&&brain.view==='eye-level-parallel'&&components.every(value=>brain.components.includes(value))&&regions.every(value=>brain.regions.includes(value))&&regions.every(value=>brain.regionsOnCanvas.includes(value)),brain);
+              check('BRAIN_RIGHT_HANDED_XYZ_AXES',JSON.stringify(brain.axes)===JSON.stringify(['x','y','z'])&&JSON.stringify(brain.labels)===JSON.stringify(['X','Y','Z']),brain);
+              check('BRAIN_AXES_SPATIAL_ORIENTATION_ONLY',brain.axisPurpose==='spatial-orientation-only'&&/spatial orientation axes only/i.test(brain.ariaLabel),brain);
+              check('BRAIN_ACCESSIBLE_EYE_LEVEL_RENDER',brain.role==='img'&&/human brain/i.test(brain.ariaLabel)&&brain.size?.width>140&&brain.size?.height>140,brain);
+              check('BRAIN_NORMAL_MOTION_DECLARED',brain.motion==='slow-yaw',brain.motion);
+              await brainRoot.screenshot({path:'/tmp/compass-brain-eye-level.png'});
+              const namedBrainViews=['front','side','rear','underside'];
+              const brainFrames=[];
+              for(const viewName of namedBrainViews){
+                const frame=await page.evaluate(viewName=>{
+                  const api=globalThis.CompassEditorialCarousel?.brainSnapshots;
+                  const canvas=document.querySelector('[data-human-brain] canvas');
+                  const metadata=api?.capture(viewName)||null;
+                  if(!canvas||!metadata)return {viewName,metadata,dataUrl:'',pixelEvidence:null};
+                  const context=canvas.getContext('2d');
+                  const image=context.getImageData(0,0,canvas.width,canvas.height);
+                  let tissuePixels=0;
+                  let nonBackgroundPixels=0;
+                  let minX=image.width,minY=image.height,maxX=-1,maxY=-1;
+                  let tissueMaskHash=2166136261;
+                  for(let offset=0;offset<image.data.length;offset+=4){
+                    const red=image.data[offset],green=image.data[offset+1],blue=image.data[offset+2],alpha=image.data[offset+3];
+                    if(alpha>=48)nonBackgroundPixels+=1;
+                    if(alpha>=245&&red>green*1.13&&red>blue*1.01){
+                      const pixel=offset/4,x=pixel%image.width,y=Math.floor(pixel/image.width);
+                      tissuePixels+=1;
+                      minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);
+                      tissueMaskHash=Math.imul(tissueMaskHash^(pixel+1),16777619)>>>0;
+                    }
+                  }
+                  const pixelCount=image.width*image.height;
+                  return {
+                    viewName,
+                    metadata,
+                    dataUrl:canvas.toDataURL('image/png'),
+                    pixelEvidence:{
+                      width:image.width,
+                      height:image.height,
+                      pixelCount,
+                      tissuePixels,
+                      tissueRatio:tissuePixels/pixelCount,
+                      nonBackgroundPixels,
+                      nonBackgroundRatio:nonBackgroundPixels/pixelCount,
+                      tissueBounds:maxX>=minX&&maxY>=minY?{left:minX,top:minY,width:maxX-minX+1,height:maxY-minY+1}:null,
+                      tissueMaskHash:tissueMaskHash.toString(16).padStart(8,'0')
+                    }
+                  };
+                },viewName);
+                const png=frame.dataUrl?Buffer.from(frame.dataUrl.split(',')[1]||'','base64'):Buffer.alloc(0);
+                const screenshotPath=`/tmp/compass-brain-${viewName}.png`;
+                if(png.length)fs.writeFileSync(screenshotPath,png);
+                brainFrames.push({...frame,dataUrl:undefined,pngBytes:png.length,pngSha256:png.length?createHash('sha256').update(png).digest('hex'):null,screenshotPath});
+              }
+              check('BRAIN_NAMED_SNAPSHOT_API_BOUND',JSON.stringify(brain.snapshotViews)===JSON.stringify(namedBrainViews)&&brain.snapshotApi==='CompassEditorialCarousel.brainSnapshots.capture'&&brainFrames.every((frame,index)=>frame.metadata?.name===namedBrainViews[index]&&frame.pngBytes>1000),brainFrames);
+              check('BRAIN_RENDERED_TISSUE_PIXEL_OCCUPANCY',brainFrames.every(frame=>frame.pixelEvidence?.tissueRatio>.12&&frame.pixelEvidence?.tissueRatio<.62&&frame.pixelEvidence?.nonBackgroundRatio>.16&&frame.pixelEvidence?.tissueBounds?.width>frame.pixelEvidence.width*.25&&frame.pixelEvidence?.tissueBounds?.height>frame.pixelEvidence.height*.35),brainFrames);
+              check('BRAIN_NAMED_VIEW_FRAMES_DIFFER',new Set(brainFrames.map(frame=>frame.pngSha256)).size===namedBrainViews.length&&new Set(brainFrames.map(frame=>frame.pixelEvidence?.tissueMaskHash)).size===namedBrainViews.length,brainFrames);
+              check('BRAIN_FRONT_SIDE_REAR_UNDERSIDE_POSES',brainFrames[0]?.metadata?.yawDegrees===0&&brainFrames[0]?.metadata?.pitchDegrees===0&&brainFrames[1]?.metadata?.yawDegrees===90&&brainFrames[1]?.metadata?.pitchDegrees===0&&brainFrames[2]?.metadata?.yawDegrees===180&&brainFrames[2]?.metadata?.pitchDegrees===0&&brainFrames[3]?.metadata?.pitchDegrees<=-20,brainFrames.map(frame=>frame.metadata));
+              check('BRAIN_SNAPSHOT_RESTORES_LIVE_MOTION',await page.evaluate(()=>globalThis.CompassEditorialCarousel?.brainSnapshots.restore()===true),brainFrames.map(frame=>frame.metadata));
+              const yawBefore=brain.yaw;
+              await page.waitForTimeout(900);
+              const yawAmbient=Number(await brainCanvas.getAttribute('data-brain-yaw-degrees'));
+              check('BRAIN_SLOW_YAW_ADVANCES',Number.isFinite(yawBefore)&&Number.isFinite(yawAmbient)&&angularDistance(yawBefore,yawAmbient)>0.01,{yawBefore,yawAmbient});
+              const brainBox=await brainCanvas.boundingBox();
+              if(brainBox){
+                const dragBrain=async(delta,path)=>{
+                  const before=Number(await brainCanvas.getAttribute('data-brain-yaw-degrees'));
+                  const capabilityBefore=await frontIndex(page,'[data-capability-orbit] > [data-capability]');
+                  const x=brainBox.x+brainBox.width*.5,y=brainBox.y+brainBox.height*.5;
+                  await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+delta,y,{steps:8});await page.mouse.up();await page.waitForTimeout(360);
+                  const after=Number(await brainCanvas.getAttribute('data-brain-yaw-degrees'));
+                  const capabilityAfter=await frontIndex(page,'[data-capability-orbit] > [data-capability]');
+                  await brainRoot.screenshot({path});
+                  return {before,after,distance:angularDistance(before,after),capabilityBefore,capabilityAfter};
+                };
+                const positive=await dragBrain(Math.min(90,brainBox.width*.28),'/tmp/compass-brain-yaw-positive.png');
+                const opposite=await dragBrain(Math.min(90,brainBox.width*.28),'/tmp/compass-brain-yaw-opposite.png');
+                const negative=await dragBrain(-Math.min(150,brainBox.width*.45),'/tmp/compass-brain-yaw-negative.png');
+                check('BRAIN_POINTER_ROTATION_EXPOSES_MULTIPLE_VIEWS',[positive,opposite,negative].every(value=>value.distance>5),{positive,opposite,negative});
+                check('BRAIN_GESTURE_ISOLATED_FROM_CAPABILITY_ORBIT',[positive,opposite,negative].every(value=>value.capabilityAfter===value.capabilityBefore),{positive,opposite,negative});
+              }else check('BRAIN_POINTER_ROTATION_EXPOSES_MULTIPLE_VIEWS',false,'missing canvas geometry');
+
+              const capabilityGuidance=await guidanceState(page,'[data-capability-orbit]','[data-capability-guidance]');
+              check('CAPABILITY_GUIDANCE_EXACT_AND_ASSOCIATED',capabilityGuidance.text===capabilityExpected&&capabilityGuidance.id==='compass-capability-guidance'&&capabilityGuidance.describedBy.split(/\s+/).includes(capabilityGuidance.id)&&capabilityGuidance.visible,capabilityGuidance);
+              check('PARENT_ORBIT_HAS_NO_RETURN',await page.locator('[data-capability-orbit] [data-return-parent]').count()===0,await page.locator('[data-capability-orbit] [data-return-parent]').count());
+              check('PARENT_ORBIT_STATE',await page.locator('[data-capability-orbit]').getAttribute('data-capability-mode')==='orbit',await page.locator('[data-capability-orbit]').getAttribute('data-capability-mode'));
+              proveDepth('CAPABILITY',await depthState(page,'[data-capability-orbit] > [data-capability]'),2);
+              const capabilityStage=page.locator('[data-capability-orbit]');
+              await capabilityStage.focus();
+              const capabilityBefore=await frontIndex(page,'[data-capability-orbit] > [data-capability]');
+              await capabilityStage.press('ArrowRight');await page.waitForTimeout(560);
+              const capabilityAfter=await frontIndex(page,'[data-capability-orbit] > [data-capability]');
+              await capabilityStage.press('ArrowLeft');await page.waitForTimeout(560);
+              const capabilityRestored=await frontIndex(page,'[data-capability-orbit] > [data-capability]');
+              check('CAPABILITY_KEYBOARD_PARITY_AND_FOCUS',capabilityAfter===(capabilityBefore+1)%2&&capabilityRestored===capabilityBefore&&await capabilityStage.evaluate(el=>document.activeElement===el),{capabilityBefore,capabilityAfter,capabilityRestored});
+              const capabilityAnnouncement=await page.locator('[data-capability-orbit] .compass-orbit-status').evaluate(el=>{const rect=el.getBoundingClientRect(),style=getComputedStyle(el);return {text:(el.textContent||'').trim(),width:rect.width,height:rect.height,overflow:style.overflow,ariaLive:el.getAttribute('aria-live')}});
+              check('ACTIVE_POSITION_ANNOUNCED_WITHOUT_VISIBLE_COUNTER',/Capability 1 of 2: Coherence Diagnostic/.test(capabilityAnnouncement.text)&&capabilityAnnouncement.width<=1&&capabilityAnnouncement.height<=1&&capabilityAnnouncement.overflow==='hidden'&&capabilityAnnouncement.ariaLive==='polite',capabilityAnnouncement);
+              await atomicSwipe(page,{prefix:'CAPABILITY_SWIPE',stageSelector:'[data-capability-orbit]',cardSelector:'[data-capability-orbit] > [data-capability]',count:2});
+              check('HOUSE_IS_CLEAR_PARENT_AFTER_SWIPE',await page.locator('[data-capability="house"]').getAttribute('data-slot')==='front',await page.locator('[data-capability="house"]').getAttribute('data-slot'));
+              await page.locator('[data-capability="house"] [data-house-parent] h2').click();
+              await page.waitForFunction(()=>document.querySelector('[data-capability-orbit]')?.dataset.capabilityMode==='house-members',{timeout:1200}).catch(()=>{});
+              const expandedMode=await capabilityStage.getAttribute('data-capability-mode');
+              const expandedGuidance=await guidanceState(page,'[data-capability-orbit]','[data-capability-guidance]');
+              check('HOUSE_EXPANDED_STATE_AND_GUIDANCE',expandedMode==='house-members'&&expandedGuidance.text===houseExpected&&expandedGuidance.visible,{expandedMode,expandedGuidance});
+              check('ACTIVE_CARD_TAP_ENTERS_DECLARED_FUNCTION',expandedMode==='house-members',expandedMode);
+              check('HOUSE_RETURN_VISIBLE_ONLY_WHEN_EXPANDED',await page.locator('[data-house-orbit] [data-return-house]').count()===3&&await page.locator('[data-house-orbit] [data-return-house]:visible').count()===1,{all:await page.locator('[data-house-orbit] [data-return-house]').count(),visible:await page.locator('[data-house-orbit] [data-return-house]:visible').count()});
+              if(expandedMode!=='house-members')throw new Error(`HOUSE_PARENT_TAP_DID_NOT_ENTER_MEMBERS:${expandedMode}`);
+              const functions=await page.locator('[data-house-function]').evaluateAll(links=>links.map(link=>({id:link.getAttribute('data-house-function'),path:new URL(link.href).pathname,label:(link.textContent||'').replace(/\s+/g,' ').trim(),body:(link.closest('.house-orbit-member')?.querySelector('p')?.textContent||'').replace(/\s+/g,' ').trim(),tag:link.tagName,disabled:link.matches(':disabled,[aria-disabled="true"]')})));
+              const expectedFunctions={jeeves:'/showroom/globe/hearth/jeeves/',elara:'/elara/',auren:'/products/auren/'};
+              check('HOUSE_THREE_MEANINGFUL_FUNCTIONS',functions.length===3&&Object.entries(expectedFunctions).every(([id,path])=>functions.some(item=>item.id===id&&item.path===path&&item.tag==='A'&&!item.disabled&&item.label.length>0&&item.body.length>20)),functions);
+              await page.evaluate(()=>document.querySelectorAll('[data-house-function]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();globalThis.__compassHouseCardInvocation=link.getAttribute('data-house-function');})));
+              const activeMemberCard=page.locator('[data-house-orbit] .house-orbit-member[data-slot="front"]');
+              await activeMemberCard.focus();
+              await activeMemberCard.press('Enter');
+              check('ACTIVE_HOUSE_CARD_KEYBOARD_INVOKES_FUNCTION',await page.evaluate(()=>globalThis.__compassHouseCardInvocation)==='jeeves',await page.evaluate(()=>globalThis.__compassHouseCardInvocation||null));
+              proveDepth('HOUSE_MEMBERS',await depthState(page,'[data-house-orbit] .house-orbit-member'),3);
+              await atomicSwipe(page,{prefix:'HOUSE_SWIPE',stageSelector:'[data-house-orbit]',cardSelector:'[data-house-orbit] .house-orbit-member',count:3});
+              const activeMember=await page.locator('[data-house-orbit] .house-orbit-member[data-slot="front"]').getAttribute('data-member');
+              await page.locator('[data-house-orbit] .house-orbit-member[data-slot="front"] [data-return-house]').click();
+              await page.waitForTimeout(180);
+              const restored=await page.evaluate(()=>{
+                const stage=document.querySelector('[data-capability-orbit]'),house=document.querySelector('[data-capability="house"]'),enter=house?.querySelector('[data-enter-house]'),guide=document.querySelector('[data-capability-guidance]');
+                return {mode:stage?.dataset.capabilityMode,houseSlot:house?.dataset.slot,houseParentHidden:house?.querySelector('[data-house-parent]')?.hidden,houseOrbitHidden:house?.querySelector('[data-house-orbit]')?.hidden,focusRestored:document.activeElement===enter,guidance:(guide?.textContent||'').replace(/\s+/g,' ').trim()};
+              });
+              check('RETURN_RESTORES_EXACT_PARENT_STATE_AND_FOCUS',restored.mode==='orbit'&&restored.houseSlot==='front'&&restored.houseParentHidden===false&&restored.houseOrbitHidden===true&&restored.focusRestored&&restored.guidance===capabilityExpected,{activeMember,restored});
+              const expandedOverflow=await page.evaluate(()=>Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-document.documentElement.clientWidth);
+              check('DESKTOP_EXPANDED_RETURN_NO_OVERFLOW',expandedOverflow<=2,expandedOverflow);
+              check('DESKTOP_SUCCESSOR_NO_PAGE_ERRORS',errors.length===0,errors);
+              await page.screenshot({path:'/tmp/compass-successor-return-restored.png',fullPage:true});
+              await context.close();
+            }
+
+            {
+              const context=await browser.newContext({viewport:{width:390,height:844}});
+              const page=await context.newPage();
+              await load(page);
+              if(await page.locator('[data-capability="house"]').getAttribute('data-slot')!=='front') await atomicSwipe(page,{prefix:'PHONE_CAPABILITY_SWIPE',stageSelector:'[data-capability-orbit]',cardSelector:'[data-capability-orbit] > [data-capability]',count:2});
+              const phoneHouseFront=await page.locator('[data-capability="house"]').getAttribute('data-slot')==='front';
+              check('PHONE_HOUSE_FRONT_BEFORE_ENTRY',phoneHouseFront,await page.locator('[data-capability="house"]').getAttribute('data-slot'));
+              if(phoneHouseFront){
+                await page.locator('[data-capability="house"] [data-enter-house]').click();
+                await page.waitForFunction(()=>document.querySelector('[data-capability-orbit]')?.dataset.capabilityMode==='house-members',{timeout:1200}).catch(()=>{});
+              }
+              const mobileExpanded=await page.evaluate(()=>({mode:document.querySelector('[data-capability-orbit]')?.dataset.capabilityMode,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-document.documentElement.clientWidth,front:document.querySelectorAll('[data-house-orbit] .house-orbit-member[data-slot="front"]').length,returnVisible:[...document.querySelectorAll('[data-return-house]')].filter(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>0&&r.height>0}).length}));
+              check('PHONE_EXPANDED_STATE_NO_OVERFLOW',mobileExpanded.mode==='house-members'&&mobileExpanded.overflow<=2&&mobileExpanded.front===1&&mobileExpanded.returnVisible===1,mobileExpanded);
+              await page.screenshot({path:'/tmp/compass-successor-phone-house-expanded.png',fullPage:true});
+              await context.close();
+            }
+
+            {
+              const context=await browser.newContext({viewport:{width:1280,height:800},reducedMotion:'reduce'});
+              const page=await context.newPage();
+              const errors=await load(page);
+              const canvas=page.locator('[data-human-brain] canvas');
+              const before=Number(await canvas.getAttribute('data-brain-yaw-degrees'));
+              await page.waitForTimeout(900);
+              const after=Number(await canvas.getAttribute('data-brain-yaw-degrees'));
+              const motion=await canvas.getAttribute('data-brain-motion');
+              check('REDUCED_MOTION_BRAIN_STATIC',motion==='static-reduced-motion'&&Number.isFinite(before)&&Number.isFinite(after)&&angularDistance(before,after)<=0.05,{motion,before,after,distance:angularDistance(before,after)});
+              const stage=page.locator('[data-capability-orbit]');
+              await stage.focus();
+              const activeBefore=await frontIndex(page,'[data-capability-orbit] > [data-capability]');
+              await stage.press('ArrowRight');await page.waitForTimeout(160);
+              const activeAfter=await frontIndex(page,'[data-capability-orbit] > [data-capability]');
+              const reducedState=await page.evaluate(()=>({overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-document.documentElement.clientWidth,statement:(document.querySelector('[data-statement-guidance]')?.textContent||'').replace(/\s+/g,' ').trim(),capability:(document.querySelector('[data-capability-guidance]')?.textContent||'').replace(/\s+/g,' ').trim(),routes:document.querySelectorAll('[data-house-function]').length}));
+              check('REDUCED_MOTION_SEMANTIC_AND_KEYBOARD_EQUIVALENCE',activeAfter===(activeBefore+1)%2&&reducedState.overflow<=2&&reducedState.statement==='Not everything is as it first appears. Swipe the thought above.'&&reducedState.capability==='Swipe to rotate the orbit. Tap the clear card to enter.'&&reducedState.routes===3,{activeBefore,activeAfter,reducedState});
+              check('REDUCED_MOTION_NO_PAGE_ERRORS',errors.length===0,errors);
+              await page.screenshot({path:'/tmp/compass-successor-reduced-motion.png',fullPage:true});
+              await context.close();
+            }
+          }catch(error){
+            check('CANDIDATE_LOCAL_MATRIX_COMPLETED',false,errorEvidence(error));
+          }finally{
+            await browser.close().catch(()=>{});
+            const failures=checks.filter(item=>!item.pass);
+            const receipt={schema:'COMPASS_INTERACTION_DIAGNOSTIC_RUNTIME_RECEIPT_v1',operationId,lockGeneration:1507,governingHead,candidateHead:process.env.COMPASS_CANDIDATE_HEAD||null,qualificationSurface:'CANDIDATE_LOCAL_HTTP_127_0_0_1_4173',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(item=>item.id)};
+            fs.writeFileSync('/tmp/compass-interaction-diagnostic-runtime-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+            console.log(JSON.stringify(receipt,null,2));
+            if(failures.length)process.exitCode=1;
+          }
           NODE
       - name: Assert 19 rendered foreground room labels
         run: |
@@ -235,7 +618,7 @@ jobs:
           await browser.close();
           const proved=observations.filter(item=>item.correct).map(item=>item.roomId);
           if(proved.length!==19) fail('NINETEEN_FOREGROUND_LABELS_NOT_PROVEN',{count:proved.length,ids:proved});
-          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v3',candidateHead:process.env.GITHUB_SHA||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:proved,observations,failures};
+          const receipt={schema:'COMPASS_RENDERED_FOREGROUND_ROOM_LABEL_RECEIPT_v3',candidateHead:process.env.COMPASS_CANDIDATE_HEAD||null,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',provedForegroundLabels:proved,observations,failures};
           fs.writeFileSync('/tmp/compass-foreground-room-label-receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length) process.exit(1);
@@ -247,8 +630,25 @@ jobs:
           name: compass-runtime-qualification-evidence
           path: |
             /tmp/compass-runtime-qualification-receipt.json
+            /tmp/compass-interaction-diagnostic-runtime-receipt.json
             /tmp/compass-foreground-room-label-receipt.json
             /tmp/compass-foreground-room-label-final.png
             /tmp/compass-desktop.png
             /tmp/compass-tablet.png
             /tmp/compass-phone.png
+            /tmp/compass-interaction-diagnostic-desktop.png
+            /tmp/compass-interaction-diagnostic-tablet.png
+            /tmp/compass-interaction-diagnostic-phone.png
+            /tmp/compass-interaction-diagnostic-dpr3.png
+            /tmp/compass-successor-phone-house-expanded.png
+            /tmp/compass-successor-return-restored.png
+            /tmp/compass-successor-reduced-motion.png
+            /tmp/compass-brain-eye-level.png
+            /tmp/compass-brain-yaw-positive.png
+            /tmp/compass-brain-yaw-opposite.png
+            /tmp/compass-brain-yaw-negative.png
+            /tmp/compass-brain-front.png
+            /tmp/compass-brain-side.png
+            /tmp/compass-brain-rear.png
+            /tmp/compass-brain-underside.png
+            /tmp/compass-http.log

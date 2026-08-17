@@ -73,7 +73,7 @@ jobs:
           echo "exit_code=$native_exit" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Publish compact native receipt to carrier PR
+      - name: Publish exact native diagnostic fields to carrier PR
         if: always()
         shell: bash
         env:
@@ -82,10 +82,10 @@ jobs:
           set -euo pipefail
           receipt="$RUNNER_TEMP/native-preflight.json"
           if ! test -s "$receipt"; then
-            body="GEN306_NATIVE_PREFLIGHT_DIAGNOSTIC\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\nreceipt: MISSING"
+            body="GEN306_NATIVE_PREFLIGHT_DETAIL\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\nreceipt: MISSING"
           else
-            compact="$(jq -c '{activationStatus,dependenciesVerified,finalDisposition,mutationMayProceed,issues,pathResults,results,paths}' "$receipt")"
-            body="GEN306_NATIVE_PREFLIGHT_DIAGNOSTIC\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\ntoolingHead: $TOOLING_HEAD\nsubjectHead: $SUBJECT_HEAD\nreceipt: $compact"
+            compact="$(jq -c '{activationStatus,dependenciesVerified,finalDisposition,continuation,pathClassification,scopePreview,validatorReceipt}' "$receipt")"
+            body="GEN306_NATIVE_PREFLIGHT_DETAIL\nrunId: $GITHUB_RUN_ID\nnativeExit: ${{ steps.native.outputs.exit_code }}\ntoolingHead: $TOOLING_HEAD\nsubjectHead: $SUBJECT_HEAD\nreceipt: $compact"
           fi
           jq -n --arg body "$body" '{body:$body}' > "$RUNNER_TEMP/pr-comment.json"
           curl --fail-with-body --silent --show-error --request POST \

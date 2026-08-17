@@ -47,8 +47,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "b174bb20a19e62f9aaf6e819171e24416321b9e4"
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "f4e9d4beb77cb603ea2c8e360790e97c1b511b1c"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "8b254c43abc53d769e82524c6eded1c07eaffc61"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "edba8f3b024e832fd3da6207ba786ce292aad54c"
           test -f .github/ai-router/operation-lifecycle/successor-packet-compiler.v1.mjs
           test -f .github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs
 
@@ -65,6 +65,16 @@ jobs:
           const successor = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
           const compiler = JSON.parse(fs.readFileSync(process.argv[3], 'utf8'));
           if (successor.schema !== 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_RECEIPT_v1' || successor.result !== 'PASS_CLOSED' || successor.failCount !== 0) throw new Error('SUCCESSOR_SELF_TEST_NONPASS');
+          const requiredSuccessorTests = [
+            'REMOTE_CONTENTS_INLINE_BASE64_DOES_NOT_FETCH_BLOB',
+            'REMOTE_CONTENTS_ENCODING_NONE_EMPTY_FALLS_BACK_TO_GIT_BLOB',
+            'REMOTE_GIT_BLOB_NON_BASE64_FAILS_CLOSED',
+            'REMOTE_GIT_BLOB_MALFORMED_JSON_FAILS_CLOSED',
+            'REMOTE_GIT_BLOB_LEDGER_SCHEMA_FAILS_CLOSED'
+          ];
+          for (const id of requiredSuccessorTests) {
+            if (!successor.tests?.some((test) => test.id === id && test.pass === true)) throw new Error(`SUCCESSOR_TRANSPORT_TEST_MISSING_OR_FAILED:${id}`);
+          }
           if (compiler.schema !== 'REPOSITORY_OPERATION_SUCCESSOR_PACKET_COMPILER_SELF_TEST_RECEIPT_v1' || compiler.result !== 'PASS_CLOSED' || compiler.failCount !== 0) throw new Error('COMPILER_SELF_TEST_NONPASS');
           NODE
 
@@ -78,7 +88,10 @@ jobs:
           const entry = JSON.parse(fs.readFileSync('AI_ENTRYPOINT.json', 'utf8'));
           const protocol = JSON.parse(fs.readFileSync('.github/ai-router/operation-lifecycle/successor-protocol.v1.json', 'utf8'));
           const workflow = '.github/workflows/remote-operation-successor-v1.yml';
-          if (!router.routerInfrastructure?.ownedExactPaths?.includes(workflow)) throw new Error('REMOTE_SUCCESSOR_WORKFLOW_NOT_ROUTER_OWNED');
+          const infrastructure = router.routerInfrastructure || {};
+          const workflowOwned = infrastructure.ownedExactPaths?.includes(workflow) ||
+            infrastructure.ownedPathPrefixes?.some((prefix) => workflow.startsWith(prefix));
+          if (!workflowOwned) throw new Error('REMOTE_SUCCESSOR_WORKFLOW_NOT_ROUTER_OWNED');
           const lifecycle = entry.operationIntakeGate?.successorLifecycle;
           if (!lifecycle) throw new Error('SUCCESSOR_LIFECYCLE_DISCOVERY_MISSING');
           if (lifecycle.remoteInvocationMarker !== 'REMOTE_OPERATION_SUCCESSOR_REQUEST_V1') throw new Error('REMOTE_SUCCESSOR_MARKER_MISMATCH');
@@ -90,9 +103,22 @@ jobs:
           if (compiler?.remoteInvocationMarker !== 'REMOTE_OPERATION_SUCCESSOR_COMPILE_AND_EXECUTE_REQUEST_V1') throw new Error('SUCCESSOR_COMPILER_MARKER_MISMATCH');
           if (compiler?.authorityInherited !== false || compiler?.automaticEvidenceRelabeling !== false) throw new Error('SUCCESSOR_COMPILER_AUTHORITY_BOUNDARY_INVALID');
           if (protocol.postRatificationSuccessorCompiler?.authorityEffect !== 'NONE') throw new Error('SUCCESSOR_COMPILER_PROTOCOL_AUTHORITY_INVALID');
+          const workflowSource = fs.readFileSync(workflow, 'utf8');
+          for (const token of [
+            'REMOTE_CONTENTS_INLINE_BASE64_DOES_NOT_FETCH_BLOB',
+            'REMOTE_CONTENTS_ENCODING_NONE_EMPTY_FALLS_BACK_TO_GIT_BLOB',
+            'REMOTE_GIT_BLOB_NON_BASE64_FAILS_CLOSED',
+            'REMOTE_GIT_BLOB_MALFORMED_JSON_FAILS_CLOSED',
+            'REMOTE_GIT_BLOB_LEDGER_SCHEMA_FAILS_CLOSED',
+            'REMOTE_OPERATION_SUCCESSOR_WORKFLOW_FAILURE_RECEIPT_v1'
+          ]) {
+            if (!workflowSource.includes(token)) throw new Error(`REMOTE_SUCCESSOR_CONTINUITY_TOKEN_MISSING:${token}`);
+          }
+          if ((workflowSource.match(/if: always\(\)/g) || []).length < 4) throw new Error('REMOTE_SUCCESSOR_ALWAYS_RECEIPT_GUARDS_MISSING');
           NODE
 
       - name: Upload validation receipts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: remote-operation-successor-route-validation-${{ github.run_id }}-${{ github.run_attempt }}
@@ -129,8 +155,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "b174bb20a19e62f9aaf6e819171e24416321b9e4"
-          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "f4e9d4beb77cb603ea2c8e360790e97c1b511b1c"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-gate.v1.mjs)" = "8b254c43abc53d769e82524c6eded1c07eaffc61"
+          test "$(git rev-parse HEAD:.github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs)" = "edba8f3b024e832fd3da6207ba786ce292aad54c"
           node .github/ai-router/operation-lifecycle/repository-operation-successor-self-test.v1.mjs --output "$RUNNER_TEMP/remote-operation-successor-route-self-test.json"
           node .github/ai-router/operation-lifecycle/successor-packet-compiler-self-test.v1.mjs --output "$RUNNER_TEMP/successor-packet-compiler-self-test.json"
           node - "$RUNNER_TEMP/remote-operation-successor-route-self-test.json" "$RUNNER_TEMP/successor-packet-compiler-self-test.json" <<'NODE'
@@ -138,6 +164,16 @@ jobs:
           for (const file of process.argv.slice(2)) {
             const r = JSON.parse(fs.readFileSync(file, 'utf8'));
             if (r.result !== 'PASS_CLOSED' || r.failCount !== 0) throw new Error(`SELF_TEST_FAIL_CLOSED:${file}`);
+          }
+          const successor = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          for (const id of [
+            'REMOTE_CONTENTS_INLINE_BASE64_DOES_NOT_FETCH_BLOB',
+            'REMOTE_CONTENTS_ENCODING_NONE_EMPTY_FALLS_BACK_TO_GIT_BLOB',
+            'REMOTE_GIT_BLOB_NON_BASE64_FAILS_CLOSED',
+            'REMOTE_GIT_BLOB_MALFORMED_JSON_FAILS_CLOSED',
+            'REMOTE_GIT_BLOB_LEDGER_SCHEMA_FAILS_CLOSED'
+          ]) {
+            if (!successor.tests?.some((test) => test.id === id && test.pass === true)) throw new Error(`SUCCESSOR_TRANSPORT_TEST_MISSING_OR_FAILED:${id}`);
           }
           NODE
 
@@ -226,7 +262,35 @@ jobs:
           if (receipt.predecessor?.terminalDisposition !== 'SUPERSEDED' || receipt.successor?.state !== 'ADMITTED_LOCKED') throw new Error('SUCCESSOR_LEDGER_TRANSITION_NONPASS');
           NODE
 
+      - name: Preserve workflow failure receipt when native receipt is unavailable
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node - "$RUNNER_TEMP/remote-operation-successor-invocation-receipt.json" "$RUNNER_TEMP/remote-operation-successor-workflow-failure-receipt.json" <<'NODE'
+          const fs = require('node:fs');
+          const nativePath = process.argv[2];
+          const failurePath = process.argv[3];
+          try {
+            const nativeReceipt = JSON.parse(fs.readFileSync(nativePath, 'utf8'));
+            if (nativeReceipt.schema === 'REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1') process.exit(0);
+          } catch {}
+          const receipt = {
+            schema: 'REMOTE_OPERATION_SUCCESSOR_WORKFLOW_FAILURE_RECEIPT_v1',
+            result: 'FAIL_CLOSED',
+            errorCode: 'NATIVE_SUCCESSOR_RECEIPT_UNAVAILABLE',
+            continuationAuthorized: false,
+            authorityInherited: false,
+            authorityUsable: false,
+            successorAdmissionStatus: 'UNCONFIRMED_STOP',
+            mergeAuthorityCreated: false,
+            ledgerMutationStatus: 'UNKNOWN_NATIVE_RECEIPT_UNAVAILABLE'
+          };
+          fs.writeFileSync(failurePath, `${JSON.stringify(receipt, null, 2)}\n`);
+          NODE
+
       - name: Upload native successor receipts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: remote-operation-successor-${{ github.run_id }}-${{ github.run_attempt }}
@@ -235,20 +299,44 @@ jobs:
             ${{ runner.temp }}/remote-operation-successor-route-self-test.json
             ${{ runner.temp }}/successor-packet-compiler-self-test.json
             ${{ runner.temp }}/compiled-successor-packet.json
-          if-no-files-found: warn
+            ${{ runner.temp }}/remote-operation-successor-workflow-failure-receipt.json
+          if-no-files-found: error
           retention-days: 90
 
       - name: Return native receipt to invoking issue
+        if: always()
         uses: actions/github-script@v7
         env:
           RECEIPT_PATH: ${{ runner.temp }}/remote-operation-successor-invocation-receipt.json
+          FAILURE_RECEIPT_PATH: ${{ runner.temp }}/remote-operation-successor-workflow-failure-receipt.json
           MODE_PATH: ${{ runner.temp }}/invocation-mode.txt
         with:
           github-token: ${{ github.token }}
           script: |
             const fs = require('node:fs');
-            const receipt = fs.readFileSync(process.env.RECEIPT_PATH, 'utf8').trim();
-            const mode = fs.readFileSync(process.env.MODE_PATH, 'utf8').trim();
+            const fallback = JSON.stringify({
+              schema: 'REMOTE_OPERATION_SUCCESSOR_WORKFLOW_FAILURE_RECEIPT_v1',
+              result: 'FAIL_CLOSED',
+              errorCode: 'SUCCESSOR_RECEIPT_RETURN_INPUTS_UNAVAILABLE',
+              continuationAuthorized: false,
+              authorityInherited: false,
+              authorityUsable: false,
+              successorAdmissionStatus: 'UNCONFIRMED_STOP',
+              mergeAuthorityCreated: false,
+              ledgerMutationStatus: 'UNKNOWN_RECEIPT_INPUTS_UNAVAILABLE'
+            }, null, 2);
+            let receipt = fallback;
+            for (const [candidate, schema] of [
+              [process.env.RECEIPT_PATH, 'REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1'],
+              [process.env.FAILURE_RECEIPT_PATH, 'REMOTE_OPERATION_SUCCESSOR_WORKFLOW_FAILURE_RECEIPT_v1']
+            ]) {
+              try {
+                const value = JSON.parse(fs.readFileSync(candidate, 'utf8'));
+                if (value?.schema === schema) { receipt = JSON.stringify(value, null, 2); break; }
+              } catch {}
+            }
+            let mode = 'UNKNOWN';
+            try { mode = fs.readFileSync(process.env.MODE_PATH, 'utf8').trim() || mode; } catch {}
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,

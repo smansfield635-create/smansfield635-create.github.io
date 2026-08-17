@@ -1,59 +1,98 @@
-name: World Manifold Gen306 Bound Post-Merge Preflight
+name: World Manifold Gen306 Candidate Qualification
 
 on:
   push:
     branches:
       - control-plane-carrier/world-manifold-intake-20260817
-  pull_request:
-    types: [opened, synchronize, reopened]
-    branches: [main]
 
 permissions:
   contents: read
 
 jobs:
-  preflight:
+  qualify:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
-      TOOLING_HEAD: 46b2cca200f1db036cae8288329f870a8336505a
-      NATIVE_TOOL_BLOB: 6d4af698ca75b96aaa660033e9ae24c704673eb7
-      ACTIVATION_BLOB: b3c51381af190b6aab296db222296dc851cb7e9a
+      CANDIDATE_HEAD: e9c18e8097725c05aa5261a21a2af24c8ef3e55f
+      BASE_HEAD: a7b13dd5cebeafe6ce126d7df64c4088db7feb48
     steps:
-      - name: Checkout exact bound tooling head
+      - name: Checkout exact Gen306 candidate
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/smansfield635-create.github.io
-          ref: ${{ env.TOOLING_HEAD }}
-          path: tooling
+          ref: ${{ env.CANDIDATE_HEAD }}
+          path: candidate
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Execute bound exact Gen306 eleven-path native preflight
-        working-directory: tooling
+      - name: Verify exact candidate identity
+        working-directory: candidate
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$TOOLING_HEAD"
-          test "$(git rev-parse HEAD:tools/h-earth-repository-registry-auto-preflight.mjs)" = "$NATIVE_TOOL_BLOB"
-          test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = "$ACTIVATION_BLOB"
-          node tools/h-earth-repository-registry-auto-preflight.mjs \
-            --mutation-intent \
-            --task 'Gen306 world-manifold architecture authoritative post-rebind preflight' \
-            --path h-earth-3d/terrain/h-earth.world-manifold-domain.js \
-            --path h-earth-3d/integration/h-earth.world-representation-plan.js \
-            --path h-earth-3d/integration/h-earth.world-manifold-union-admission.js \
-            --path h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs \
-            --path h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
-            --path showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js \
-            --path showroom/globe/h-earth/render/geometry-shoreline.js \
-            --path showroom/globe/h-earth/render/geometry-distant-context.js \
-            --path showroom/globe/h-earth/render/landscape-preview.js \
-            --path h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js \
-            --path showroom/globe/h-earth/render/run8e-successor-environment.js \
-            --output "$RUNNER_TEMP/native-preflight.json"
-          test "$(jq -r '.activationStatus' "$RUNNER_TEMP/native-preflight.json")" = 'ACTIVATED'
-          test "$(jq -r '.dependenciesVerified' "$RUNNER_TEMP/native-preflight.json")" = 'true'
-          test "$(jq -r '.finalDisposition' "$RUNNER_TEMP/native-preflight.json")" = 'PASS'
-          test "$(jq '[.pathClassification.classifications[] | select(.registered != true)] | length' "$RUNNER_TEMP/native-preflight.json")" = '0'
-          jq '{activationStatus,dependenciesVerified,finalDisposition,continuation,registeredPathCount:(.pathClassification.classifications|length),failureCodes:.validatorReceipt.failureCodes}' "$RUNNER_TEMP/native-preflight.json"
+          test "$(git rev-parse HEAD)" = "$CANDIDATE_HEAD"
+
+      - name: Syntax check exact eleven mutated modules
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in \
+            h-earth-3d/terrain/h-earth.world-manifold-domain.js \
+            h-earth-3d/integration/h-earth.world-representation-plan.js \
+            h-earth-3d/integration/h-earth.world-manifold-union-admission.js \
+            h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs \
+            h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js \
+            showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js \
+            showroom/globe/h-earth/render/geometry-shoreline.js \
+            showroom/globe/h-earth/render/geometry-distant-context.js \
+            showroom/globe/h-earth/render/landscape-preview.js \
+            h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js \
+            showroom/globe/h-earth/render/run8e-successor-environment.js
+          do
+            node --check "$path"
+          done
+
+      - name: Execute Gen306 architecture harness
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs | tee "$RUNNER_TEMP/gen306.json"
+          test "$(jq -r '.result' "$RUNNER_TEMP/gen306.json")" = 'PASS_CLOSED'
+          test "$(jq -r '.predicates.CONTINUOUS_WORLD_MANIFOLD' "$RUNNER_TEMP/gen306.json")" = 'true'
+          test "$(jq -r '.predicates.RADIAL_HORIZON_CONTINUITY' "$RUNNER_TEMP/gen306.json")" = 'true'
+          test "$(jq -r '.predicates.TOPOLOGY_PRESERVING_LOD' "$RUNNER_TEMP/gen306.json")" = 'true'
+          test "$(jq -r '.predicates.OCEAN_SECTOR_EMPTINESS' "$RUNNER_TEMP/gen306.json")" = 'true'
+          test "$(jq -r '.predicates.REPRESENTATION_BOUNDARY_INVISIBILITY' "$RUNNER_TEMP/gen306.json")" = 'true'
+
+      - name: Execute construction smoke graph
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { previewHEarthFunctionalLandscape } from './showroom/globe/h-earth/render/landscape-preview.js';
+          import { buildHEarthRun8ENeutralPackage } from './showroom/globe/h-earth/render/run8e-successor-environment.js';
+          const preview = previewHEarthFunctionalLandscape({cameraWorld:{x:0,y:8,z:-40}});
+          if (preview.ok !== true) throw new Error(JSON.stringify(preview.issues));
+          if (preview.worldManifoldUnion?.valid !== true) throw new Error('MANIFOLD_UNION_INVALID');
+          const neutral = buildHEarthRun8ENeutralPackage({cameraWorld:{x:0,y:8,z:-40}});
+          if (neutral.ok !== true) throw new Error(JSON.stringify(neutral.issues));
+          if (neutral.topologySourceId !== preview.topologySourceId) throw new Error('TOPOLOGY_IDENTITY_DIVERGED');
+          console.log(JSON.stringify({previewPrimitives:preview.primitiveCount,neutralPrimitives:neutral.primitiveCount,terrain:neutral.terrainPrimitiveCount,shoreline:neutral.shorelinePrimitiveCount,far:neutral.farRepresentationPrimitiveCount,vegetation:neutral.vegetationPrimitiveCount,topologySourceId:neutral.topologySourceId}));
+          NODE
+
+      - name: Execute predecessor harnesses diagnostically
+        working-directory: candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -f h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs; then
+            node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs > "$RUNNER_TEMP/run8b.log" 2>&1 || { cat "$RUNNER_TEMP/run8b.log"; exit 21; }
+            cat "$RUNNER_TEMP/run8b.log"
+          fi
+          if test -f h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs; then
+            node h-earth-3d/validation/h-earth.run8e.integration-engineering.harness.mjs > "$RUNNER_TEMP/run8e.log" 2>&1 || { cat "$RUNNER_TEMP/run8e.log"; exit 22; }
+            cat "$RUNNER_TEMP/run8e.log"
+          fi

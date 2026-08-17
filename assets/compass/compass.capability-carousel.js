@@ -37,7 +37,7 @@
     const orbitGuidance='Swipe to rotate the orbit. Use the action on the clear card to enter.',guidance=element('p','compass-capability-guidance');guidance.id='compass-capability-guidance';guidance.dataset.capabilityGuidance='true';guidance.setAttribute('aria-live','polite');guidance.textContent=orbitGuidance;
     const status=liveStatus();
     const cards=[diagnostic,awards,house],names=['Coherence Diagnostic','Awards & Recognition','Talk to the House'],capabilityRail=statusRail('capability',['Diagnostic','Awards','House']),capabilityVisited=new Set();let cardIndex=0,memberIndex=0,mode='orbit',busy=false,settleTimer=0,awardsTimer=0;
-    const finish=commit=>{clearTimeout(settleTimer);if(reduce.matches){busy=false;commit()}else settleTimer=setTimeout(()=>{busy=false;commit()},320)};
+    const finish=commit=>{clearTimeout(settleTimer);if(reduce.matches){queueMicrotask(()=>{busy=false;commit()})}else settleTimer=setTimeout(()=>{busy=false;commit()},320)};
     const rotateCard=direction=>{if(mode!=='orbit'||busy)return;busy=true;cardIndex=mod(cardIndex+direction,cards.length);renderCards();finish(()=>settleCards(true))};
     stage.append(...cards,capabilityRail,controls('capability',rotateCard),guidance,status);legacy.replaceWith(stage);
     const houseParent=house.querySelector('[data-house-parent]'),houseOrbit=house.querySelector('[data-house-orbit]');
@@ -56,7 +56,7 @@
     function settleMembers(){status.textContent=`House guide ${memberIndex+1} of ${members.length}: ${definitions[memberIndex].name}`;announce()}
     const rotateMember=direction=>{if(mode!=='house'||busy)return;busy=true;memberIndex=mod(memberIndex+direction,members.length);renderMembers();finish(()=>{if(mode==='house')settleMembers()})};
     const enterHouse=()=>{if(cardIndex!==2||mode==='house'||busy)return;mode='house';stage.dataset.capabilityMode='house-members';houseParent.hidden=true;houseOrbit.hidden=false;guidance.textContent='Swipe for another House guide. Tap the clear guide to talk. Return to Orbit restores the capability orbit.';renderMembers();settleMembers();focus(members[memberIndex])};
-    const leaveHouse=()=>{if(mode!=='house')return;clearTimeout(settleTimer);busy=false;mode='orbit';stage.dataset.capabilityMode='orbit';houseOrbit.hidden=true;houseParent.hidden=false;guidance.textContent=orbitGuidance;renderMembers();renderCards();settleCards();focus(house.querySelector('[data-enter-house]'))};
+    const leaveHouse=()=>{if(mode!=='house')return;const left=window.scrollX,top=window.scrollY;clearTimeout(settleTimer);busy=false;mode='orbit';stage.dataset.capabilityMode='orbit';houseOrbit.hidden=true;houseParent.hidden=false;guidance.textContent=orbitGuidance;renderMembers();renderCards();settleCards();focus(house.querySelector('[data-enter-house]'));window.scrollTo(left,top)};
     house.querySelector('[data-enter-house]').addEventListener('click',enterHouse);houseOrbit.addEventListener('click',event=>{if(event.target.closest('[data-return-house]')){event.preventDefault();leaveHouse()}});
     cards.forEach((card,index)=>{const activate=()=>{if(index!==cardIndex||mode!=='orbit')return;if(card===house)enterHouse();else card.querySelector('[data-capability-function]')?.click()};card.addEventListener('click',event=>{if(event.target===card||!event.target.closest(interactive))activate()});card.addEventListener('keydown',event=>{if(event.target===card&&(event.key==='Enter'||event.key===' ')){event.preventDefault();activate()}})});
     window.CompassOrbitInput?.claimSwipe(stage,rotateCard,{disabled:()=>mode!=='orbit'});window.CompassOrbitInput?.claimSwipe(houseOrbit,rotateMember,{disabled:()=>mode!=='house'});
@@ -69,7 +69,7 @@
     const guidance=element('p','compass-proof-guidance');guidance.id='compass-proof-guidance';guidance.textContent='Swipe or use the controls to inspect one proof point at a time.';
     const status=liveStatus();
     const settle=()=>{busy=false;settleRail(proofRail,index,proofVisited);status.textContent=`Proof point ${index+1} of ${cards.length}: ${names[index]}`;document.dispatchEvent(new CustomEvent('compass:proof-change',{detail:{proof:cards[index].dataset.proofCard}}))};
-    const rotate=direction=>{if(busy)return;busy=true;index=mod(index+direction,cards.length);render();clearTimeout(settleTimer);if(reduce.matches)settle();else settleTimer=setTimeout(settle,320)};
+    const rotate=direction=>{if(busy)return;busy=true;index=mod(index+direction,cards.length);render();clearTimeout(settleTimer);if(reduce.matches)queueMicrotask(settle);else settleTimer=setTimeout(settle,320)};
     stage.append(proofRail,controls('proof point',rotate),guidance,status);
     function render(){cards.forEach((card,cardIndex)=>place(card,cardIndex,cards.length,mod(cardIndex-index,cards.length),`Proof point ${cardIndex+1} of ${cards.length}: ${names[cardIndex]}`))}
     window.CompassOrbitInput?.claimSwipe(stage,rotate);stage.addEventListener('keydown',event=>{if((event.target===stage||event.target===cards[index])&&(event.key==='ArrowRight'||event.key==='ArrowLeft')){event.preventDefault();rotate(event.key==='ArrowRight'?1:-1)}});render();settle();

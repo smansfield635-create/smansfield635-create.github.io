@@ -18,6 +18,7 @@ jobs:
     env:
       PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1
       PRIVATE_HEAD: 804e2c31c10ab04a73c1cfbae883892735a62f3d
+      LOCK_REF: refs/heads/operation-locks/repository-operation-intake-v1
     steps:
       - name: Checkout exact public carrier
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -27,7 +28,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Validate frozen intake identity
+      - name: Validate and split frozen intake envelope
         shell: bash
         run: |
           set -euo pipefail
@@ -36,6 +37,8 @@ jobs:
           test "$(jq -r '.operationRequest.operationId' "$envelope")" = 'H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002'
           test "$(jq -r '.operationRequest.exactGoverningHead' "$envelope")" = "$PRIVATE_HEAD"
           test "$(jq -r '.constructionProcedure.exactGoverningHead' "$envelope")" = "$PRIVATE_HEAD"
+          jq '.operationRequest' "$envelope" > "$RUNNER_TEMP/request.json"
+          jq '.constructionProcedure' "$envelope" > "$RUNNER_TEMP/procedure.json"
 
       - name: Mint exact private execution token
         id: token
@@ -66,16 +69,18 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Execute repository-owned canonical intake transform
+      - name: Execute repository-owned canonical intake gate
         id: intake
         shell: bash
         env:
           GITHUB_TOKEN: ${{ steps.token.outputs.token }}
-          GITHUB_REPOSITORY: smansfield635-create/geodiametrics1
         run: |
           set -euo pipefail
-          node private-control-plane/tools/operation-intake/canonical-operation-intake-transport.v1.mjs \
-            --input carrier/.github/carriers/world-manifold-intake-20260817-002.json \
+          node private-control-plane/tools/operation-intake/repository-operation-intake-gate.v1.mjs \
+            --request "$RUNNER_TEMP/request.json" \
+            --procedure "$RUNNER_TEMP/procedure.json" \
+            --repository "$PRIVATE_REPOSITORY" \
+            --lock-ref "$LOCK_REF" \
             --output "$RUNNER_TEMP/intake-receipt.json"
 
       - name: Verify native admission
@@ -83,8 +88,11 @@ jobs:
         run: |
           set -euo pipefail
           test -s "$RUNNER_TEMP/intake-receipt.json"
-          native="$(jq -r '.canonicalReceiptJson.result // .result // ""' "$RUNNER_TEMP/intake-receipt.json")"
-          generation="$(jq -r '.canonicalReceiptJson.lock.lockGeneration // .canonicalReceiptJson.lockGeneration // ""' "$RUNNER_TEMP/intake-receipt.json")"
+          native="$(jq -r '.result // ""' "$RUNNER_TEMP/intake-receipt.json")"
+          generation="$(jq -r '.lock.lockGeneration // ""' "$RUNNER_TEMP/intake-receipt.json")"
+          operation="$(jq -r '.lock.operationId // ""' "$RUNNER_TEMP/intake-receipt.json")"
           echo "nativeResult=$native"
           echo "lockGeneration=$generation"
+          echo "operationId=$operation"
           test "$native" = 'ADMITTED_AND_LOCKED'
+          test "$operation" = 'H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002'

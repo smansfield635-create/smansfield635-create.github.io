@@ -1,0 +1,41 @@
+{
+  "schema": "REMOTE_VIDEO_SOURCE_REGISTRY_v1",
+  "status": "CANDIDATE_PUBLIC_EXECUTION_SURFACE",
+  "sources": [
+    {
+      "sourceId": "CHAPTER_01_LIVE_V28",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "ad395e724cbfea1c19c9ce43393c1148fa557816",
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4",
+      "expectedGitBlob": "90fed782fa6a9c2857909e7d29836d7dd0d83273",
+      "expectedSha256": "42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62",
+      "role": "CHAPTER_01_PROTECTED_BASELINE"
+    },
+    {
+      "sourceId": "CHAPTER_02_WORLD_REEL_LIVE",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "main",
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4",
+      "expectedGitBlob": "db0563a1a45811dadc36c48f0cb2356d748e9a07",
+      "role": "CHAPTER_02_EXISTING_WORLD_REEL_REFERENCE"
+    },
+    {
+      "sourceId": "CHAPTER_02_AWARDS_REEL_LIVE",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "main",
+      "path": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-awards-18s-vivaldi.mp4",
+      "expectedGitBlob": "bb716dc3642901d1e31a8a09e79229f60e4f073c",
+      "role": "H_EARTH_AWARDS_REFERENCE"
+    }
+  ],
+  "registrationLaw": {
+    "durableLocatorRequired": true,
+    "expectedGitBlobRequiredForGithubSources": true,
+    "expectedSha256Preferred": true,
+    "sourceMayBeAddedWithoutChangingRenderer": true,
+    "roomLocalMaterializationRequired": false
+  }
+}

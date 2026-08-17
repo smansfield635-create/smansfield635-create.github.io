@@ -62,12 +62,12 @@ jobs:
           fi
           COMPASS_DEPLOY_CANDIDATE="$candidate" node --input-type=module <<'NODE'
           import fs from 'node:fs';import crypto from 'node:crypto';
-          const version='compass-awards-trl-brain-successor-v1',html=fs.readFileSync('index.html','utf8');
+          const version='compass-root-award-finish-successor-v1',html=fs.readFileSync('index.html','utf8');
           if((html.match(new RegExp(version,'g'))||[]).length!==6)throw new Error('SUCCESSOR_REFERENCE_COUNT');
           if(html.includes('compass.carousel.js')||html.includes('compass.carousel.css'))throw new Error('LEGACY_REFERENCE');
           const lines=fs.readFileSync('/tmp/compass-source.sha256','utf8').trim().split('\n');
           const files=Object.fromEntries(lines.map(line=>{const [sha,...name]=line.trim().split(/\s+/);return[name.join(' '),sha]}));
-          const receipt={schema:'COMPASS_BYTE_IDENTICAL_PAGES_ARTIFACT_v1',operationId:'COMPASS_AWARDS_TRL_BRAIN_FULL_CYCLE_SUCCESSOR_20260816_v1',lockGeneration:1509,mergeHead:process.env.GITHUB_SHA,candidateHead:process.env.COMPASS_DEPLOY_CANDIDATE,productIdentity:version,files,manifestSha256:crypto.createHash('sha256').update(JSON.stringify(files)).digest('hex'),result:'PASS_CLOSED'};
+          const receipt={schema:'COMPASS_BYTE_IDENTICAL_PAGES_ARTIFACT_v1',operationId:'COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1',lockGeneration:1514,mergeHead:process.env.GITHUB_SHA,candidateHead:process.env.COMPASS_DEPLOY_CANDIDATE,productIdentity:version,files,manifestSha256:crypto.createHash('sha256').update(JSON.stringify(files)).digest('hex'),result:'PASS_CLOSED'};
           fs.writeFileSync('/tmp/compass-pages-byte-identity.json',JSON.stringify(receipt,null,2)+'\n');
           NODE
       - name: Upload deployment identity

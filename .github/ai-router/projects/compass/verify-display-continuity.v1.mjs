@@ -5,21 +5,23 @@ import {spawnSync} from 'node:child_process';
 
 const ROOT=process.cwd();
 const binding=Object.freeze({
-  schema:'COMPASS_AWARDS_TRL_BRAIN_OPERATION_BINDING_v1',
-  operationId:'COMPASS_AWARDS_TRL_BRAIN_FULL_CYCLE_SUCCESSOR_20260816_v1',
-  lockGeneration:1509,
-  governingHead:'a16f4a38de6cd9f76ddf71a600b0ab525d64ecd8',
-  governingTree:'99253d669d5cbfe89d87383401508fe1698e5433',
-  contractSha256:'87c0f55115ef05306154462a1300cc5d566ecf7d8abe80999ea375d494db630b',
-  productIdentity:'compass-awards-trl-brain-successor-v1',
+  schema:'COMPASS_ROOT_AWARD_FINISH_OPERATION_BINDING_v1',
+  operationId:'COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1',
+  lockGeneration:1514,
+  governingHead:'8fec7fbe1351b09d6205f5e3357fc26bdaa14971',
+  governingTree:'6f5d4deeda65659556d95043405083d7ed2992bd',
+  contractSha256:'1efc83c485ac2402f7cb363354954ba8b2e58780d0e75bd25856430e56805087',
+  productIdentity:'compass-root-award-finish-successor-v1',
   intakeIssue:1011,
-  intakeComment:5311599352,
-  intakeWorkflowRun:31992958534,
+  preconstructionComment:5312596996,
+  intakeComment:5312676476,
+  intakeReturnComment:5312679940,
+  intakeWorkflowRun:32002297264,
+  prewriteLiveRun:31999722203,
+  prewriteLiveArtifact:9277995909,
   exactAdmittedMutationScope:Object.freeze([
-    '.github/ai-router/projects/compass/entrypoint.v1.json',
     '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs',
     '.github/ai-router/projects/compass/verify-performance-successor.mjs',
-    '.github/ai-router/router.v1.json',
     '.github/workflows/compass-carousel-successor-live-qualification.yml',
     '.github/workflows/compass-display-continuity-validation.yml',
     '.github/workflows/compass-performance-successor-validation.yml',
@@ -38,7 +40,7 @@ const router=json('.github/ai-router/router.v1.json'),entrypoint=json('.github/a
 const html=read('index.html'),controller=read('assets/compass/compass.controller.js'),cosmos=read('assets/compass/compass.cosmos.js'),coreCss=read('assets/compass/compass-core.css'),css=read('assets/compass/compass.css'),capability=read('assets/compass/compass.capability-carousel.js'),capabilityCss=read('assets/compass/compass.capability-carousel.css'),brain=read('assets/compass/compass.brain-scene.js'),input=read('assets/compass/compass.orbit-input.js');
 const workflowFiles=['.github/workflows/compass-display-continuity-validation.yml','.github/workflows/compass-performance-successor-validation.yml','.github/workflows/compass-carousel-successor-live-qualification.yml','.github/workflows/pages-direct-deploy.yml'];const workflows=workflowFiles.map(read).join('\n');
 
-check('FRESH_CANONICAL_BINDING',binding.lockGeneration===1509&&binding.governingHead.length===40&&binding.contractSha256.length===64&&binding.intakeComment===5311599352,binding);
+check('FRESH_CANONICAL_BINDING',binding.operationId==='COMPASS_ROOT_AWARD_FINISH_BOUNDED_SUCCESSOR_20260817_v1'&&binding.lockGeneration===1514&&binding.governingHead==='8fec7fbe1351b09d6205f5e3357fc26bdaa14971'&&binding.governingTree==='6f5d4deeda65659556d95043405083d7ed2992bd'&&binding.contractSha256.length===64&&binding.preconstructionComment===5312596996&&binding.intakeComment===5312676476&&binding.intakeReturnComment===5312679940&&binding.intakeWorkflowRun===32002297264&&binding.exactAdmittedMutationScope.length===10,binding);
 check('MANDATORY_CONTEXT_BOUND',entrypoint.procedures?.constructionPlan==='.github/ai-router/projects/compass/construction-execution-plan.v2.json'&&plan.status==='LOCKED_DIRECT_REFERENCE_REQUIRED'&&interaction.status==='LOCKED_DIRECT_REFERENCE_REQUIRED',{plan:plan.status,interaction:interaction.status});
 check('ROUTE_DISPLAY_CONTRACT_PRESENT',contract.schema==='COMPASS_ROUTE_DISPLAY_CONTRACT_v1',contract.schema);
 const compassRoute=router.projects?.find(project=>project.projectId==='COMPASS');
@@ -68,7 +70,7 @@ check('PROOF_INDEPENDENT_STATE',capability.includes('function mountProof()')&&ca
 check('ANATOMICAL_WEBGL_DEPTH',brain.includes("version:'anatomical-webgl-v2'")&&brain.includes('brainDepthRatio')&&brain.includes('gl.readPixels')&&(brain.match(/gl\.drawElements\(/g)||[]).length===1,'combined volumetric mesh');
 check('ATOMIC_INPUT_SHARED',input.includes("addEventListener('pointerup'")&&!input.includes('style.transform')&&capability.match(/CompassOrbitInput\?\.claimSwipe/g)?.length>=3,'release-only shared gesture law');
 
-const stale=['COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5','successor-v5','ad395e724cbfea1c19c9ce43393c1148fa557816','lockGeneration:1507'];
+const stale=['COMPASS_AWARDS_TRL_BRAIN_FULL_CYCLE_SUCCESSOR_20260816_v1','compass-awards-trl-brain-successor-v1','lockGeneration:1509','COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5','successor-v5','ad395e724cbfea1c19c9ce43393c1148fa557816','lockGeneration:1507'];
 check('NO_STALE_SUCCESSOR_BINDING',stale.every(value=>!workflows.includes(value)),stale.filter(value=>workflows.includes(value)));
 check('EXACT_CANDIDATE_CHECKOUTS',(workflows.match(/ref: \$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/g)||[]).length>=2,'candidate workflows bind exact head');
 check('DEPLOYMENT_DOES_NOT_REWRITE_PRODUCT',!read('.github/workflows/pages-direct-deploy.yml').includes('re.sub(')&&!read('.github/workflows/pages-direct-deploy.yml').includes("path.write_text("),'candidate bytes copied unchanged');
@@ -81,4 +83,4 @@ const changedResult=git(['diff','--name-only',`${scopeBase}...HEAD`]);if(changed
 const worktree=git(['status','--porcelain','--untracked-files=no']);check('CANDIDATE_WORKTREE_CLEAN',worktree.status===0&&worktree.stdout.trim()==='',worktree.stdout.trim().split(/\r?\n/).filter(Boolean));
 const checked=git(['rev-parse','HEAD^{commit}']),candidateHead=(process.env.COMPASS_CANDIDATE_HEAD||checked.stdout||'').trim();check('EXACT_CANDIDATE_HEAD_BOUND',checked.status===0&&/^[0-9a-f]{40}$/.test(candidateHead)&&checked.stdout.trim()===candidateHead,{requested:process.env.COMPASS_CANDIDATE_HEAD||null,checkedOut:checked.stdout.trim()});
 
-const failures=checks.filter(item=>!item.pass);const receipt={schema:'COMPASS_AWARDS_TRL_BRAIN_DISPLAY_CONTINUITY_RECEIPT_v1',...binding,candidateHead,scopeBase,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',runtimeQualification:'REQUIRES_WORKFLOW_BROWSER_EVIDENCE',checks,failures:failures.map(item=>item.id)};fs.writeFileSync(OUTPUT,`${JSON.stringify(receipt,null,2)}\n`);console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+const failures=checks.filter(item=>!item.pass);const receipt={...binding,schema:'COMPASS_ROOT_AWARD_FINISH_DISPLAY_CONTINUITY_RECEIPT_v1',candidateHead,scopeBase,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',runtimeQualification:'REQUIRES_WORKFLOW_BROWSER_EVIDENCE',checks,failures:failures.map(item=>item.id)};fs.writeFileSync(OUTPUT,`${JSON.stringify(receipt,null,2)}\n`);console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);

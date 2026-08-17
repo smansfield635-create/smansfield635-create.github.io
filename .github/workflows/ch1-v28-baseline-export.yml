@@ -1,0 +1,48 @@
+name: Chapter 01 V28 Baseline Export
+
+on:
+  pull_request:
+    paths:
+      - '.v28-materialization-trigger'
+      - '.github/workflows/ch1-v28-baseline-export.yml'
+
+permissions:
+  contents: read
+
+env:
+  V28_PATH: showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
+  V28_SHA256: 42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62
+  V28_BYTES: '13651045'
+
+jobs:
+  export:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+      - name: Verify frozen V28 and prepare export
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f "$V28_PATH"
+          test "$(stat -c%s "$V28_PATH")" = "$V28_BYTES"
+          echo "$V28_SHA256  $V28_PATH" | sha256sum -c -
+          ffprobe -v error -show_entries format=duration:stream=index,codec_name,width,height,r_frame_rate,sample_rate,channels -of json "$V28_PATH" > /tmp/v28-ffprobe.json
+          cp "$V28_PATH" /tmp/chapter01-compass-v28-live-baseline.mp4
+          sha256sum /tmp/chapter01-compass-v28-live-baseline.mp4 > /tmp/v28-sha256.txt
+          printf '%s\n' '{"schema":"CHAPTER_01_V28_BASELINE_EXPORT_RECEIPT_v1","sourceCommit":"ad395e724cbfea1c19c9ce43393c1148fa557816","sourceBlob":"90fed782fa6a9c2857909e7d29836d7dd0d83273","sha256":"42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62","bytes":13651045,"purpose":"ROOM_LOCAL_BASELINE_MATERIALIZATION_ONLY","productMutation":false,"liveMutation":false}' > /tmp/v28-export-receipt.json
+      - name: Upload exact V28 baseline artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter01-compass-v28-live-baseline
+          path: |
+            /tmp/chapter01-compass-v28-live-baseline.mp4
+            /tmp/v28-sha256.txt
+            /tmp/v28-ffprobe.json
+            /tmp/v28-export-receipt.json
+          if-no-files-found: error
+          retention-days: 1

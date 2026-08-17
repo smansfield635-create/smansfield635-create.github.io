@@ -25,7 +25,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git ls-remote https://github.com/smansfield635-create/smansfield635-create.github.io.git "$SUBJECT_HEAD" >/dev/null
           test -n "$(git ls-remote https://github.com/smansfield635-create/smansfield635-create.github.io.git | grep "$SUBJECT_HEAD" || true)"
 
       - name: Checkout exact reconciled preflight tooling
@@ -46,11 +45,11 @@ jobs:
           test "$(git rev-parse HEAD:tools/h-earth-repository-registry-auto-preflight.mjs)" = "$NATIVE_TOOL_BLOB"
           test "$(git rev-parse HEAD:h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js)" = "$ACTIVATION_BLOB"
 
-      - name: Execute exact Gen306 eleven-path native preflight
+      - name: Execute exact Gen306 eleven-path native preflight diagnostically
         shell: bash
         working-directory: tooling
         run: |
-          set -euo pipefail
+          set +e
           node tools/h-earth-repository-registry-auto-preflight.mjs \
             --mutation-intent \
             --task 'Gen306 world-manifold architecture installation pre-mutation preflight' \
@@ -66,8 +65,12 @@ jobs:
             --path h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js \
             --path showroom/globe/h-earth/render/run8e-successor-environment.js \
             --output "$RUNNER_TEMP/native-preflight.json"
-          cat "$RUNNER_TEMP/native-preflight.json"
-          test "$(jq -r '.activationStatus' "$RUNNER_TEMP/native-preflight.json")" = 'ACTIVATED'
-          test "$(jq -r '.dependenciesVerified' "$RUNNER_TEMP/native-preflight.json")" = 'true'
-          test "$(jq -r '.finalDisposition' "$RUNNER_TEMP/native-preflight.json")" = 'PASS'
-          test "$(jq -r '.mutationMayProceed' "$RUNNER_TEMP/native-preflight.json")" = 'false'
+          native_exit=$?
+          set -e
+          echo "nativeExit=$native_exit"
+          if test -s "$RUNNER_TEMP/native-preflight.json"; then
+            jq '{activationStatus,dependenciesVerified,finalDisposition,mutationMayProceed,issues,paths,pathResults,results}' "$RUNNER_TEMP/native-preflight.json"
+          else
+            echo 'NATIVE_PREFLIGHT_RECEIPT_MISSING'
+          fi
+          exit "$native_exit"

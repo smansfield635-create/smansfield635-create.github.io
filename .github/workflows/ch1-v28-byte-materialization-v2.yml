@@ -13,19 +13,21 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Check out exact V28 source commit
+      - name: Check out exact V28 merge commit
         uses: actions/checkout@v4
         with:
-          ref: 511ae1adc588d1a437cf570687040c4a56eec15f
+          ref: 29f086be576a01d8865b6c911f28c7df72e856f7
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Verify exact V28 media identity
+      - name: Verify and stage V28 media
         shell: bash
         run: |
           set -euo pipefail
           media='showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4'
           test -s "$media"
+          echo "bytes=$(stat -c %s "$media")"
+          sha256sum "$media"
           test "$(stat -c %s "$media")" = '43602412'
           echo '42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62  '"$media" | sha256sum -c -
 

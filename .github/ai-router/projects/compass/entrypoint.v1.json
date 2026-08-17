@@ -3,7 +3,13 @@
   "projectId": "COMPASS",
   "status": "ACTIVE_REGISTERED_PROJECT",
   "ownedPathPrefixes": ["assets/compass/"],
-  "ownedExactPaths": ["index.html", ".github/workflows/compass-display-continuity-validation.yml"],
+  "ownedExactPaths": [
+    "index.html",
+    ".github/workflows/compass-display-continuity-validation.yml",
+    ".github/workflows/compass-performance-successor-validation.yml",
+    ".github/workflows/compass-carousel-successor-live-qualification.yml",
+    ".github/workflows/pages-direct-deploy.yml"
+  ],
   "entrypoint": ".github/ai-router/projects/compass/entrypoint.v1.json",
   "authorityBoundary": [
     "THIS_ENTRYPOINT_ROUTES_AND_DOES_NOT_CREATE_MUTATION_AUTHORITY",
@@ -58,7 +64,10 @@
   },
   "githubActionsExecution": {
     "routerValidationWorkflow": ".github/workflows/repository-ai-entry-router-validation.yml",
-    "displayContinuityValidationWorkflow": ".github/workflows/compass-display-continuity-validation.yml"
+    "displayContinuityValidationWorkflow": ".github/workflows/compass-display-continuity-validation.yml",
+    "performanceSuccessorValidationWorkflow": ".github/workflows/compass-performance-successor-validation.yml",
+    "liveQualificationWorkflow": ".github/workflows/compass-carousel-successor-live-qualification.yml",
+    "deploymentWorkflow": ".github/workflows/pages-direct-deploy.yml"
   },
   "stoppingRules": [
     "STOP_IF_CANONICAL_INTAKE_IS_NOT_ADMITTED_AND_LOCKED",

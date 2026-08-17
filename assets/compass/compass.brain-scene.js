@@ -1,45 +1,68 @@
 (()=>{
   'use strict';
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)');
-  const activeScenes=new WeakMap();
-  function createMesh(gl,lat=28,lon=40){
-    const vertices=[],normals=[],indices=[];
-    for(let y=0;y<=lat;y++)for(let x=0;x<=lon;x++){
-      const v=y/lat,u=x/lon,phi=v*Math.PI,theta=u*Math.PI*2;
-      const ripple=.055*Math.sin(theta*5+phi*7)+.035*Math.sin(theta*9-phi*4);
-      const sx=Math.sin(phi)*Math.cos(theta),sy=Math.cos(phi),sz=Math.sin(phi)*Math.sin(theta),r=1+ripple;
-      vertices.push(sx*r,sy*r,sz*r);normals.push(sx,sy,sz);
+  const TAU=Math.PI*2,reduce=matchMedia('(prefers-reduced-motion: reduce)'),activeScenes=new WeakMap();let primaryScene=null;
+  const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
+  const normalise=vector=>{const length=Math.hypot(...vector)||1;return vector.map(value=>value/length)};
+  const poses=Object.freeze({front:Object.freeze({yaw:0,pitch:0}),side:Object.freeze({yaw:Math.PI/2,pitch:0}),rear:Object.freeze({yaw:Math.PI,pitch:0}),underside:Object.freeze({yaw:.58,pitch:-.48})});
+  const palette={frontal:[.82,.45,.57],temporal:[.72,.34,.50],parietal:[.79,.41,.58],occipital:[.67,.32,.50],medial:[.54,.25,.39],cerebellum:[.61,.30,.45],pons:[.63,.31,.43],brainstem:[.56,.25,.38]};
+  function hemispherePoint(side,phi,theta){
+    const vertical=Math.sin(phi),ring=Math.cos(phi),depth=Math.sin(theta),outward=Math.max(0,Math.cos(theta));
+    const frontal=Math.exp(-Math.pow((theta-.76)/.54,2))*Math.exp(-Math.pow((phi-.04)/.92,2));
+    const parietal=Math.exp(-Math.pow((theta+.02)/.68,2))*Math.exp(-Math.pow((phi-.40)/.50,2));
+    const occipital=Math.exp(-Math.pow((theta+.90)/.46,2))*Math.exp(-Math.pow((phi-.02)/.78,2));
+    const temporal=Math.exp(-Math.pow((theta-.02)/.82,2))*Math.exp(-Math.pow((phi+.56)/.30,2));
+    const fold=.62*Math.sin(theta*7.2+phi*4.7)+.31*Math.sin(theta*12.5-phi*7.3)+.17*Math.sin(theta*18.2+phi*10.4);
+    const lobeRelief=1+.060*frontal+.035*parietal+.030*occipital+.075*temporal,lateralRadius=.70*(.92+.10*temporal+.025*parietal);
+    const position=[side*(.024+lateralRadius*ring*outward*lobeRelief*(1+.038*fold)),.075+.70*vertical*(1+.022*frontal+.018*parietal)+.018*parietal-.042*temporal+.012*fold*ring,.015+.91*(1+.070*frontal+.035*occipital+.030*temporal)*ring*depth+.038*frontal*ring+.018*fold*ring];
+    const region=phi<-.27?'temporal':theta>.38?'frontal':theta<-.48?'occipital':'parietal';return{position,normal:normalise([side*ring*outward,vertical*.76,ring*depth]),region};
+  }
+  function buildMesh(gl){
+    const positions=[],normals=[],colors=[],indices=[],parts=[];const bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};
+    const vertex=(position,normal,color)=>{const index=positions.length/3;positions.push(...position);normals.push(...normal);colors.push(...color);position.forEach((value,axis)=>{bounds.min[axis]=Math.min(bounds.min[axis],value);bounds.max[axis]=Math.max(bounds.max[axis],value)});return index};
+    const tri=(a,b,c)=>indices.push(a,b,c);
+    function addHemisphere(side){
+      const start=indices.length,rows=22,columns=34,stride=columns+1,grid=[];
+      for(let row=0;row<=rows;row++){const phi=-Math.PI/2+(row/rows)*Math.PI;for(let column=0;column<=columns;column++){const theta=-Math.PI/2+(column/columns)*Math.PI,point=hemispherePoint(side,phi,theta);grid.push(vertex(point.position,point.normal,palette[point.region]))}}
+      for(let row=0;row<rows;row++)for(let column=0;column<columns;column++){const a=grid[row*stride+column],b=a+1,d=grid[(row+1)*stride+column],c=d+1;side<0?(tri(a,c,d),tri(a,b,c)):(tri(a,d,c),tri(a,c,b))}
+      const boundary=[];for(let row=0;row<=rows;row++)boundary.push(grid[row*stride]);for(let row=rows;row>=0;row--)boundary.push(grid[row*stride+columns]);const centre=vertex([side*.024,.075,.015],[-side,0,0],palette.medial);for(let index=0;index<boundary.length;index++)side<0?tri(centre,boundary[(index+1)%boundary.length],boundary[index]):tri(centre,boundary[index],boundary[(index+1)%boundary.length]);
+      parts.push({name:side<0?'left-hemisphere':'right-hemisphere',triangles:(indices.length-start)/3});
     }
-    for(let y=0;y<lat;y++)for(let x=0;x<lon;x++){const a=y*(lon+1)+x,b=a+lon+1;indices.push(a,b,a+1,b,b+1,a+1)}
-    const buffer=(target,data)=>{const b=gl.createBuffer();gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b};
-    return{positions:buffer(gl.ARRAY_BUFFER,new Float32Array(vertices)),normals:buffer(gl.ARRAY_BUFFER,new Float32Array(normals)),indices:buffer(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices)),count:indices.length};
+    function addEllipsoid(name,cx,cy,cz,rx,ry,rz,columns=20,rows=12,warp=.025,color=palette.cerebellum){
+      const start=indices.length,grid=[];for(let row=0;row<=rows;row++){const phi=-Math.PI/2+(row/rows)*Math.PI;for(let column=0;column<columns;column++){const theta=(column/columns)*TAU,relief=1+warp*(Math.sin(theta*6+phi*5)+.4*Math.sin(theta*11-phi*7)),cp=Math.cos(phi);grid.push(vertex([cx+rx*cp*Math.cos(theta)*relief,cy+ry*Math.sin(phi)*relief,cz+rz*cp*Math.sin(theta)*relief],normalise([cp*Math.cos(theta)/rx,Math.sin(phi)/ry,cp*Math.sin(theta)/rz]),color))}}
+      for(let row=0;row<rows;row++)for(let column=0;column<columns;column++){const next=(column+1)%columns,a=grid[row*columns+column],b=grid[row*columns+next],c=grid[(row+1)*columns+next],d=grid[(row+1)*columns+column];tri(a,b,c);tri(a,c,d)}parts.push({name,triangles:(indices.length-start)/3});
+    }
+    function addStem(){const start=indices.length,segments=18,rings=[{y:-.57,r:.16,z:-.05},{y:-.72,r:.145,z:-.06},{y:-.89,r:.115,z:-.08},{y:-1.05,r:.085,z:-.10}],grid=[];rings.forEach(ring=>{for(let index=0;index<segments;index++){const theta=(index/segments)*TAU;grid.push(vertex([ring.r*Math.cos(theta),ring.y,ring.z+ring.r*.72*Math.sin(theta)],normalise([Math.cos(theta),.15,Math.sin(theta)]),palette.brainstem))}});for(let ring=0;ring<rings.length-1;ring++)for(let index=0;index<segments;index++){const next=(index+1)%segments,a=grid[ring*segments+index],b=grid[ring*segments+next],c=grid[(ring+1)*segments+next],d=grid[(ring+1)*segments+index];tri(a,b,c);tri(a,c,d)}parts.push({name:'brainstem',triangles:(indices.length-start)/3})}
+    addHemisphere(-1);addHemisphere(1);addEllipsoid('cerebellum-left',-.25,-.54,-.58,.29,.29,.36);addEllipsoid('cerebellum-right',.25,-.54,-.58,.29,.29,.36);addEllipsoid('pons',0,-.57,-.04,.23,.18,.21,18,10,.015,palette.pons);addStem();
+    const buffer=(target,data)=>{const value=gl.createBuffer();gl.bindBuffer(target,value);gl.bufferData(target,data,gl.STATIC_DRAW);return value};
+    return{positions:buffer(gl.ARRAY_BUFFER,new Float32Array(positions)),normals:buffer(gl.ARRAY_BUFFER,new Float32Array(normals)),colors:buffer(gl.ARRAY_BUFFER,new Float32Array(colors)),indices:buffer(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices)),count:indices.length,triangles:indices.length/3,parts,bounds,depthRatio:Number(((bounds.max[2]-bounds.min[2])/(bounds.max[0]-bounds.min[0])).toFixed(3))};
   }
-  function shader(gl,type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(s));return s}
-  function program(gl){
-    const vs=`attribute vec3 p,n;uniform mat4 m;uniform vec3 scale,offset;varying vec3 N,P;void main(){vec3 q=p*scale+offset;P=(m*vec4(q,1.)).xyz;N=normalize(mat3(m)*(n/scale));gl_Position=vec4(P.xy*.62,P.z*.16+0.15,1.);}`;
-    const fs=`precision mediump float;varying vec3 N,P;uniform vec3 color;void main(){vec3 l=normalize(vec3(-.35,.65,.7));float d=max(dot(normalize(N),l),0.);float rim=pow(1.-max(N.z,0.),2.2);float sulci=.78+.22*sin((P.x*19.+P.y*15.)+sin(P.y*24.)*1.7);vec3 c=color*(.28+.72*d)*(.88+.12*sulci)+vec3(.22,.10,.30)*rim;gl_FragColor=vec4(c,1.);}`;
-    const p=gl.createProgram();gl.attachShader(p,shader(gl,gl.VERTEX_SHADER,vs));gl.attachShader(p,shader(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(p);if(!gl.getProgramParameter(p,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(p));return p;
+  function shader(gl,type,source){const value=gl.createShader(type);gl.shaderSource(value,source);gl.compileShader(value);if(!gl.getShaderParameter(value,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(value));return value}
+  function makeProgram(gl){
+    const vs=`attribute vec3 p,n,c;uniform mat4 m;uniform float aspect;varying vec3 N,P,C;void main(){P=(m*vec4(p,1.)).xyz;N=normalize(mat3(m)*n);C=c;float sx=.72/max(aspect,1.);gl_Position=vec4(P.x*sx,P.y*.66+.08,P.z*.24,1.);}`;
+    const fs=`precision mediump float;varying vec3 N,P,C;void main(){vec3 light=normalize(vec3(-.32,.62,.72));float diffuse=max(dot(normalize(N),light),0.);float rim=pow(1.-max(N.z,0.),2.0);float folds=.86+.14*sin(P.x*31.+P.y*25.+sin(P.z*20.)*2.2);vec3 color=C*(.33+.67*diffuse)*folds+vec3(.16,.08,.22)*rim;gl_FragColor=vec4(color,1.);}`;
+    const program=gl.createProgram();gl.attachShader(program,shader(gl,gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl,gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));return program;
   }
-  const mat=(yaw,pitch)=>{const cy=Math.cos(yaw),sy=Math.sin(yaw),cx=Math.cos(pitch),sx=Math.sin(pitch);return new Float32Array([cy,sy*sx,sy*cx,0,0,cx,-sx,0,-sy,cy*sx,cy*cx,0,0,0,0,1])};
+  const matrix=(yaw,pitch)=>{const cy=Math.cos(yaw),sy=Math.sin(yaw),cx=Math.cos(pitch),sx=Math.sin(pitch);return new Float32Array([cy,sy*sx,sy*cx,0,0,cx,-sx,0,-sy,cy*sx,cy*cx,0,0,0,0,1])};
   function mount(canvas,{foreground=()=>true}={}){
-    if(!canvas||activeScenes.has(canvas))return activeScenes.get(canvas);
-    const gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power'});if(!gl)return null;
-    const prog=program(gl),mesh=createMesh(gl),pLoc=gl.getAttribLocation(prog,'p'),nLoc=gl.getAttribLocation(prog,'n'),mLoc=gl.getUniformLocation(prog,'m'),scaleLoc=gl.getUniformLocation(prog,'scale'),offsetLoc=gl.getUniformLocation(prog,'offset'),colorLoc=gl.getUniformLocation(prog,'color');
-    let yaw=.45,pitch=-.04,raf=0,visible=false,pageVisible=!document.hidden,last=0;
-    const resize=()=>{const d=Math.min(devicePixelRatio||1,2),r=canvas.getBoundingClientRect(),w=Math.max(2,Math.round(r.width*d)),h=Math.max(2,Math.round(r.height*d));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;gl.viewport(0,0,w,h)}};
-    const drawPart=(scale,offset,color)=>{gl.uniform3fv(scaleLoc,scale);gl.uniform3fv(offsetLoc,offset);gl.uniform3fv(colorLoc,color);gl.drawElements(gl.TRIANGLES,mesh.count,gl.UNSIGNED_SHORT,0)};
-    const draw=time=>{
-      raf=0;resize();gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.useProgram(prog);gl.uniformMatrix4fv(mLoc,false,mat(yaw,pitch));
-      gl.bindBuffer(gl.ARRAY_BUFFER,mesh.positions);gl.enableVertexAttribArray(pLoc);gl.vertexAttribPointer(pLoc,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ARRAY_BUFFER,mesh.normals);gl.enableVertexAttribArray(nLoc);gl.vertexAttribPointer(nLoc,3,gl.FLOAT,false,0,0);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);
-      drawPart([.72,.78,.62],[-.43,.12,0],[.72,.31,.47]);drawPart([.72,.78,.62],[.43,.12,0],[.76,.34,.50]);drawPart([.48,.30,.42],[.43,-.70,.02],[.56,.24,.39]);drawPart([.16,.45,.16],[.03,-.88,.03],[.60,.28,.42]);
-      if(!reduce.matches&&visible&&pageVisible&&foreground()){const dt=Math.min(40,time-last||16);yaw+=dt*.00012;last=time;raf=requestAnimationFrame(draw)};
-    };
-    const schedule=()=>{if(!raf&&visible&&pageVisible&&foreground())raf=requestAnimationFrame(draw)};
-    const observer=new IntersectionObserver(entries=>{visible=entries[0]?.isIntersecting&&entries[0].intersectionRatio>.08;if(!visible&&raf){cancelAnimationFrame(raf);raf=0}else schedule()},{threshold:[0,.08,.25]});observer.observe(canvas);
-    const onVisibility=()=>{pageVisible=!document.hidden;if(!pageVisible&&raf){cancelAnimationFrame(raf);raf=0}else schedule()};document.addEventListener('visibilitychange',onVisibility);
-    const wake=()=>schedule();document.addEventListener('compass:capability-change',wake);
-    let dragging=false,lastX=0;canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture?.(e.pointerId)});canvas.addEventListener('pointermove',e=>{if(!dragging)return;yaw+=(e.clientX-lastX)*.012;lastX=e.clientX;if(!raf)raf=requestAnimationFrame(draw)});const release=e=>{dragging=false;canvas.releasePointerCapture?.(e.pointerId);schedule()};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
-    const api={draw:()=>{if(!raf)raf=requestAnimationFrame(draw)},destroy:()=>{observer.disconnect();document.removeEventListener('visibilitychange',onVisibility);document.removeEventListener('compass:capability-change',wake);if(raf)cancelAnimationFrame(raf)}};activeScenes.set(canvas,api);api.draw();return api;
+    if(!canvas||activeScenes.has(canvas))return activeScenes.get(canvas);const gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power',preserveDrawingBuffer:true});if(!gl){const fallback=document.createElement('div');fallback.className='compass-brain-fallback';fallback.setAttribute('role','img');fallback.setAttribute('aria-label','Static anatomical brain orientation: left and right hemispheres, longitudinal fissure, cerebellum, pons, brainstem, and X, Y, Z spatial axes.');fallback.innerHTML='<span class="fallback-hemisphere fallback-hemisphere--left"></span><span class="fallback-hemisphere fallback-hemisphere--right"></span><span class="fallback-cerebellum"></span><span class="fallback-stem"></span><b aria-hidden="true">X · Y · Z</b>';canvas.hidden=true;canvas.parentElement?.append(fallback);const api={canvas,fallback:true,capture:()=>null,restore:()=>false,inspect:()=>({fallback:true,frames:0,foreground:foreground(),reducedMotion:reduce.matches}),draw:()=>{},destroy:()=>fallback.remove()};activeScenes.set(canvas,api);primaryScene=api;return api}
+    const program=makeProgram(gl),mesh=buildMesh(gl),locations={p:gl.getAttribLocation(program,'p'),n:gl.getAttribLocation(program,'n'),c:gl.getAttribLocation(program,'c'),m:gl.getUniformLocation(program,'m'),aspect:gl.getUniformLocation(program,'aspect')};
+    Object.assign(canvas.dataset,{brainContract:'COMPASS_ANATOMICAL_BRAIN_XYZ_v2',brainRenderer:'anatomical-webgl-v2',brainView:'eye-level-parallel',brainAxes:'x,y,z',brainAxisLabels:'X,Y,Z',brainAxisPurpose:'spatial-orientation-only',brainComponents:'left-hemisphere,right-hemisphere,longitudinal-fissure,cerebellum,pons,brainstem',brainRegions:'frontal,temporal,parietal,occipital',brainSnapshotViews:Object.keys(poses).join(','),brainMotion:reduce.matches?'static-reduced-motion':'slow-yaw',brainTriangleCount:String(mesh.triangles),brainDepthRatio:String(mesh.depthRatio)});
+    let yaw=.45,pitch=-.04,raf=0,visible=false,pageVisible=!document.hidden,last=0,frameCount=0,dragging=false,lastX=0,snapshotMode=false,restorePose=null;
+    const shouldAnimate=()=>!reduce.matches&&!snapshotMode&&visible&&pageVisible&&foreground();
+    const resize=()=>{const density=Math.min(devicePixelRatio||1,2),rect=canvas.getBoundingClientRect(),width=Math.max(2,Math.round(rect.width*density)),height=Math.max(2,Math.round(rect.height*density));if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;gl.viewport(0,0,width,height)}};
+    const bind=(buffer,location)=>{gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.enableVertexAttribArray(location);gl.vertexAttribPointer(location,3,gl.FLOAT,false,0,0)};
+    function draw(time=performance.now()){
+      raf=0;resize();if(shouldAnimate()){const elapsed=Math.min(40,time-last||16);yaw+=elapsed*.00012}last=time;gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.useProgram(program);gl.uniformMatrix4fv(locations.m,false,matrix(yaw,pitch));gl.uniform1f(locations.aspect,canvas.width/Math.max(1,canvas.height));bind(mesh.positions,locations.p);bind(mesh.normals,locations.n);bind(mesh.colors,locations.c);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,mesh.indices);gl.drawElements(gl.TRIANGLES,mesh.count,gl.UNSIGNED_SHORT,0);frameCount++;canvas.dataset.brainFrames=String(frameCount);canvas.dataset.brainYawDegrees=String(Number((((yaw%TAU)+TAU)%TAU*180/Math.PI).toFixed(1)));canvas.dataset.brainPitchDegrees=String(Number((pitch*180/Math.PI).toFixed(1)));if(shouldAnimate())raf=requestAnimationFrame(draw);
+    }
+    const schedule=(force=false)=>{if(!raf&&(force||shouldAnimate()))raf=requestAnimationFrame(draw)};
+    function pixelStats(){gl.finish();const width=canvas.width,height=canvas.height,pixels=new Uint8Array(width*height*4);gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels);let count=0,minX=width,minY=height,maxX=-1,maxY=-1,hash=2166136261;for(let y=0;y<height;y++)for(let x=0;x<width;x++){const offset=(y*width+x)*4;if(pixels[offset+3]>20){count++;minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y)}if((x+y*width)%31===0){hash^=pixels[offset]+pixels[offset+1]*3+pixels[offset+2]*7+pixels[offset+3]*11;hash=Math.imul(hash,16777619)}}return{width,height,tissuePixels:count,occupancy:Number((count/(width*height)).toFixed(4)),silhouetteWidth:maxX>=minX?maxX-minX+1:0,silhouetteHeight:maxY>=minY?maxY-minY+1:0,insets:maxX>=0?{left:minX,right:width-1-maxX,bottom:minY,top:height-1-maxY}:null,hash:(hash>>>0).toString(16).padStart(8,'0')}}
+    const capture=(nameOrYaw)=>{const pose=typeof nameOrYaw==='number'?{yaw:nameOrYaw*Math.PI/180,pitch:0}:poses[nameOrYaw];if(!pose)return null;if(!restorePose)restorePose={yaw,pitch};snapshotMode=true;if(raf){cancelAnimationFrame(raf);raf=0}yaw=pose.yaw;pitch=pose.pitch;draw();const stats=pixelStats();canvas.dataset.brainSnapshotView=typeof nameOrYaw==='number'?`yaw-${nameOrYaw}`:nameOrYaw;return{view:canvas.dataset.brainSnapshotView,yawDegrees:Number(((((yaw%TAU)+TAU)%TAU)*180/Math.PI).toFixed(1)),pitchDegrees:Number((pitch*180/Math.PI).toFixed(1)),...stats}};
+    const restore=()=>{if(!restorePose)return false;({yaw,pitch}=restorePose);restorePose=null;snapshotMode=false;delete canvas.dataset.brainSnapshotView;draw();schedule();return true};
+    const observer=new IntersectionObserver(entries=>{visible=Boolean(entries[0]?.isIntersecting&&entries[0].intersectionRatio>.08);if(!visible&&raf){cancelAnimationFrame(raf);raf=0}else{schedule(true)}},{threshold:[0,.08,.25]});observer.observe(canvas);
+    const onVisibility=()=>{pageVisible=!document.hidden;if(!pageVisible&&raf){cancelAnimationFrame(raf);raf=0}else schedule(true)};document.addEventListener('visibilitychange',onVisibility);const wake=()=>{if(!foreground()&&raf){cancelAnimationFrame(raf);raf=0}else schedule(true)};document.addEventListener('compass:capability-change',wake);
+    canvas.addEventListener('pointerdown',event=>{event.stopPropagation();dragging=true;lastX=event.clientX;canvas.setPointerCapture?.(event.pointerId)});canvas.addEventListener('pointermove',event=>{if(!dragging)return;event.stopPropagation();yaw+=(event.clientX-lastX)*.012;lastX=event.clientX;schedule(true)});const release=event=>{event.stopPropagation();dragging=false;canvas.releasePointerCapture?.(event.pointerId);schedule()};canvas.addEventListener('pointerup',release);canvas.addEventListener('pointercancel',release);
+    const onReduce=()=>{canvas.dataset.brainMotion=reduce.matches?'static-reduced-motion':'slow-yaw';if(reduce.matches&&raf){cancelAnimationFrame(raf);raf=0}schedule(true)};reduce.addEventListener?.('change',onReduce);
+    const api={canvas,mesh:Object.freeze({triangles:mesh.triangles,parts:mesh.parts,bounds:mesh.bounds,depthRatio:mesh.depthRatio}),capture,restore,inspect:()=>({frames:frameCount,visible,pageVisible,foreground:foreground(),reducedMotion:reduce.matches,animating:Boolean(raf),yawDegrees:Number(canvas.dataset.brainYawDegrees||0),...pixelStats()}),draw:()=>schedule(true),destroy:()=>{observer.disconnect();document.removeEventListener('visibilitychange',onVisibility);document.removeEventListener('compass:capability-change',wake);reduce.removeEventListener?.('change',onReduce);if(raf)cancelAnimationFrame(raf)}};activeScenes.set(canvas,api);primaryScene=api;draw();schedule();return api;
   }
-  window.CompassBrainScene=Object.freeze({mount,version:'volumetric-v1'});
+  window.CompassBrainScene=Object.freeze({mount,version:'anatomical-webgl-v2',poses,capture:view=>primaryScene?.capture(view)||null,restore:()=>primaryScene?.restore()||false,inspect:()=>primaryScene?.inspect()||null});
 })();

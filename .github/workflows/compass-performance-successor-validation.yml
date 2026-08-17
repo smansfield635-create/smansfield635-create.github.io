@@ -10,6 +10,8 @@ on:
       - 'assets/compass/compass.brain-scene.js'
       - 'assets/compass/compass.capability-carousel.js'
       - 'assets/compass/compass.capability-carousel.css'
+      - '.github/ai-router/router.v1.json'
+      - '.github/ai-router/projects/compass/entrypoint.v1.json'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
   workflow_dispatch:
@@ -17,49 +19,73 @@ on:
 permissions:
   contents: read
 
+env:
+  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
 jobs:
   qualify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify authority budgets and suspension contracts
-        run: node .github/ai-router/projects/compass/verify-performance-successor.mjs
-      - name: Verify JavaScript syntax
+      - name: Verify exact checkout and static contract
         run: |
+          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
+          node .github/ai-router/projects/compass/verify-performance-successor.mjs
           node --check assets/compass/compass.orbit-input.js
           node --check assets/compass/compass.statement-carousel.js
           node --check assets/compass/compass.brain-scene.js
           node --check assets/compass/compass.capability-carousel.js
       - name: Install Playwright outside repository contract
+        env:
+          npm_config_package_lock: 'false'
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install chromium
-      - name: Qualify desktop tablet phone and suspension behavior
+      - name: Start candidate host
         run: |
-          python3 -m http.server 4173 >/tmp/compass-performance-host.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-performance-host.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/compass-performance-host.log
+          exit 1
+      - name: Qualify devices interactions anatomy accessibility and fallback
+        run: |
           node --input-type=module <<'NODE'
-          import {chromium} from 'playwright';
-          const browser=await chromium.launch({headless:true});const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
-          for(const [name,width,height] of [['desktop',1280,800],['tablet',820,1180],['phone',390,844]]){
-            const context=await browser.newContext({viewport:{width,height}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto('http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});await page.waitForTimeout(800);
-            check(`${name}_STATEMENTS`,await page.locator('[data-statement-orbit] .compass-statement-object').count()===2,await page.locator('[data-statement-orbit] .compass-statement-object').count());
-            check(`${name}_CAPABILITIES`,await page.locator('.compass-orbit-plaque').count()===2,await page.locator('.compass-orbit-plaque').count());
-            check(`${name}_NO_OVERFLOW`,await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)<=2,await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth));
-            const brain=page.locator('[data-human-brain] canvas');check(`${name}_BRAIN_CANVAS`,await brain.count()===1,await brain.count());const pixels=await brain.evaluate(el=>el.toDataURL().length);check(`${name}_BRAIN_RENDERED_PIXELS`,pixels>1000,pixels);if(name==='desktop')await page.locator('.compass-orbit-plaque[data-slot="front"]').screenshot({path:'/tmp/compass-performance-brain-desktop.png'});
-            await page.locator('[data-capability-orbit]').evaluate(el=>{el.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerId:1,clientX:300,clientY:40}));el.dispatchEvent(new PointerEvent('pointermove',{bubbles:true,pointerId:1,clientX:120,clientY:42}));el.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,pointerId:1,clientX:120,clientY:42}))});await page.waitForTimeout(400);
-            check(`${name}_ONE_NEIGHBOR`,await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability')==='house',await page.locator('.compass-orbit-plaque[data-slot="front"]').getAttribute('data-capability'));
-            await page.locator('[data-enter-house]').click();check(`${name}_HOUSE_GUIDANCE`,(await page.locator('.compass-capability-guidance').innerText()).includes('Swipe for another House guide'),await page.locator('.compass-capability-guidance').innerText());
-            check(`${name}_NO_ERRORS`,errors.length===0,errors);if(name==='desktop'||name==='phone')await page.screenshot({path:`/tmp/compass-performance-${name}.png`,fullPage:true});await context.close();
-          }
-          await browser.close();const failures=checks.filter(x=>!x.pass);console.log(JSON.stringify({schema:'COMPASS_PERFORMANCE_SUCCESSOR_RUNTIME_v1',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)},null,2));if(failures.length)process.exit(1);
+          import fs from 'node:fs';import {chromium} from 'playwright';const browser=await chromium.launch({headless:true}),checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});let fatal=null;
+          const load=async(context,name)=>{const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(String(error)));await page.goto(`http://127.0.0.1:4173/?surface=${name}`,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>globalThis.CompassEditorialCarousel?.version==='awards-trl-brain-successor-v1');await page.waitForTimeout(700);return{page,errors}};
+          const active=page=>page.locator('[data-capability-orbit] > [data-capability][data-slot="front"]');
+          const state=page=>page.evaluate(()=>({capability:document.querySelector('[data-capability][data-slot="front"]')?.dataset.capability,slots:[...document.querySelectorAll('[data-capability-orbit] > [data-capability]')].map(node=>({id:node.dataset.capability,slot:node.dataset.slot,inert:node.inert,hidden:node.getAttribute('aria-hidden'),focusable:[...node.querySelectorAll('a,button')].some(control=>control.tabIndex>=0)})),proof:document.querySelector('[data-proof-card][data-slot="front"]')?.dataset.proofCard,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth}));
+          async function pointerSwipe(page,selector,direction=1){const stage=page.locator(selector);await stage.scrollIntoViewIfNeeded();const box=await stage.boundingBox(),x=box.x+box.width*.55,y=box.y+Math.min(box.height*.25,110),geometry=()=>stage.evaluate(node=>[...node.querySelectorAll('[data-slot]')].map(card=>({slot:card.dataset.slot,transform:getComputedStyle(card).transform}))),before=await geometry();await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x-direction*box.width*.3,y+2,{steps:5});const held=await geometry();await page.mouse.up();return{before,held}}
+          async function touchSwipe(page,selector,direction=1){const stage=page.locator(selector);await stage.scrollIntoViewIfNeeded();const box=await stage.boundingBox(),x=box.x+box.width*.55,y=box.y+Math.min(box.height*.25,110),geometry=()=>stage.evaluate(node=>[...node.querySelectorAll('[data-slot]')].map(card=>({slot:card.dataset.slot,transform:getComputedStyle(card).transform}))),before=await geometry(),session=await page.context().newCDPSession(page);await session.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:17}]});await session.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:x-direction*box.width*.3,y:y+2,id:17}]});const held=await geometry();await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await session.detach();return{before,held}}
+          try{
+            for(const [name,width,height] of [['desktop',1440,900],['tablet',820,1180],['phone',390,844],['phone-tall',1080,2340]]){
+              const context=await browser.newContext({viewport:{width,height}}),{page,errors}=await load(context,name),snapshot=await state(page);const structure=await page.evaluate(()=>({statements:document.querySelectorAll('[data-statement-orbit] .compass-statement-object').length,order:[...document.querySelectorAll('[data-capability-orbit] > [data-capability]')].map(node=>node.dataset.capability),proofs:[...document.querySelectorAll('[data-proof-card]')].map(node=>node.dataset.proofCard),rail:document.querySelectorAll('.compass-trl-rail li').length,current:document.querySelector('.compass-trl-rail [aria-current="step"]')?.textContent,unclaimed:[...document.querySelectorAll('.compass-trl-rail [data-unclaimed]')].map(node=>node.textContent),ctaNested:Boolean(document.querySelector('.compass-built .compass-build-cta')),sentence:[...document.querySelectorAll('h2')].some(node=>node.textContent.trim()==='For the full narrative and interactive experience, find the door to Mirrorland.')}));check(`${name}_TWO_STATEMENTS`,structure.statements===2,structure);check(`${name}_THREE_CAPABILITIES`,JSON.stringify(structure.order)===JSON.stringify(['diagnostic','awards','house']),structure);check(`${name}_ONE_FRONT_TWO_REAR`,snapshot.capability==='diagnostic'&&snapshot.slots.filter(value=>value.slot==='front').length===1&&snapshot.slots.filter(value=>value.slot.startsWith('rear')).length===2,snapshot);check(`${name}_REAR_INERT`,snapshot.slots.filter(value=>value.slot.startsWith('rear')).every(value=>value.inert&&value.hidden==='true'&&!value.focusable),snapshot);check(`${name}_PROOF_AND_TRL`,JSON.stringify(structure.proofs)===JSON.stringify(['trl7','bounded','experience'])&&structure.rail===9&&structure.current==='7'&&JSON.stringify(structure.unclaimed)===JSON.stringify(['8','9']),structure);check(`${name}_HIERARCHY_AND_COPY`,!structure.ctaNested&&structure.sentence,structure);check(`${name}_NO_OVERFLOW`,snapshot.overflow<=2,snapshot.overflow);check(`${name}_NO_ERRORS`,errors.length===0,errors);await page.screenshot({path:`/tmp/compass-performance-${name}.png`,fullPage:true});await context.close();
+            }
+            const context=await browser.newContext({viewport:{width:1280,height:900}}),{page,errors}=await load(context,'interaction'),stage=page.locator('[data-capability-orbit]');await stage.scrollIntoViewIfNeeded();await stage.focus();await stage.press('ArrowRight');await page.waitForTimeout(380);check('KEYBOARD_DIAGNOSTIC_TO_AWARDS',await active(page).getAttribute('data-capability')==='awards',await state(page));const awards=active(page),awardsState=await awards.evaluate(node=>({facets:node.querySelectorAll('.compass-awards-facets li').length,visual:node.querySelectorAll('.compass-award-diamond i').length,href:node.querySelector('a')?.getAttribute('href'),text:node.textContent.replace(/\s+/g,' ').trim()}));check('AWARDS_EXACT',awardsState.facets===5&&awardsState.visual===5&&awardsState.href==='/showroom/globe/h-earth/awards/'&&awardsState.text.includes('Interactive worlds. Original characters. Browser-native 3D. A growing software platform. Governed construction that keeps the whole estate coherent as it evolves.')&&awardsState.text.includes('Built in 2026 · Entering the 2027 award season'),awardsState);await page.waitForTimeout(1300);check('AWARDS_FINITE',(await awards.evaluate(node=>node.getAnimations({subtree:true}).filter(animation=>animation.playState==='running').length))===0,true);
+            const frames1=await page.evaluate(()=>CompassBrainScene.inspect().frames);await page.waitForTimeout(400);const frames2=await page.evaluate(()=>CompassBrainScene.inspect().frames);check('BRAIN_FOREGROUND_SUSPENSION',frames1===frames2,{frames1,frames2});await stage.locator(':scope > .compass-orbit-controls [data-orbit-next]').click();await page.waitForTimeout(380);check('BUTTON_AWARDS_TO_HOUSE',await active(page).getAttribute('data-capability')==='house',await state(page));await stage.press('ArrowRight');await page.waitForTimeout(380);check('THREE_CARD_CYCLE',await active(page).getAttribute('data-capability')==='diagnostic',await state(page));await stage.press('ArrowLeft');await page.waitForTimeout(380);check('REVERSE_DIAGNOSTIC_TO_HOUSE',await active(page).getAttribute('data-capability')==='house',await state(page));
+            await page.locator('[data-enter-house]').click();const house=await page.evaluate(()=>({mode:document.querySelector('[data-capability-orbit]').dataset.capabilityMode,routes:Object.fromEntries([...document.querySelectorAll('[data-house-function]')].map(link=>[link.dataset.houseFunction,link.getAttribute('href')])),front:document.querySelector('.house-orbit-member[data-slot="front"]')?.dataset.member}));check('HOUSE_NESTED_CANONICAL',house.mode==='house-members'&&house.front==='jeeves'&&JSON.stringify(house.routes)===JSON.stringify({jeeves:'/showroom/globe/hearth/jeeves/',elara:'/elara/',auren:'/products/auren/'}),house);await page.locator('.house-orbit-member[data-slot="front"] [data-return-house]').click();check('HOUSE_RETURN_EXACT',(await active(page).getAttribute('data-capability'))==='house'&&(await stage.getAttribute('data-capability-mode'))==='orbit',await state(page));
+            await stage.press('ArrowRight');await page.waitForTimeout(380);const canvas=page.locator('[data-human-brain] canvas'),brainBefore=await active(page).getAttribute('data-capability');const box=await canvas.boundingBox();await page.mouse.move(box.x+box.width*.3,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.7,box.y+box.height*.5,{steps:4});await page.mouse.up();check('BRAIN_GESTURE_ISOLATED',await active(page).getAttribute('data-capability')===brainBefore,await state(page));
+            const morphology=await page.evaluate(()=>{const named=['front','side','rear','underside'].map(view=>CompassBrainScene.capture(view));const yaw=[];for(let angle=0;angle<360;angle+=22.5)yaw.push(CompassBrainScene.capture(angle));const mesh=CompassBrainScene.inspect();CompassBrainScene.restore();return{named,yaw,mesh}});const widths=morphology.yaw.map(value=>value.silhouetteWidth),rotationRatio=Math.min(...widths)/Math.max(...widths),sideRatio=morphology.named[1].silhouetteWidth/morphology.named[0].silhouetteWidth;check('BRAIN_DEPTH_ROTATION',rotationRatio>=.72&&sideRatio>=.80&&sideRatio<=1.45&&morphology.mesh.occupancy>=.12,{rotationRatio,sideRatio,widths,mesh:morphology.mesh});check('BRAIN_NAMED_HASHES',new Set(morphology.named.map(value=>value.hash)).size===4,morphology.named.map(value=>({view:value.view,hash:value.hash})));check('BRAIN_NO_CROP',morphology.yaw.every(value=>value.insets&&Math.min(...Object.values(value.insets))>=Math.min(value.width,value.height)*.02),morphology.yaw.map(value=>value.insets));for(const view of ['front','side','rear','underside']){await page.evaluate(view=>CompassBrainScene.capture(view),view);await canvas.screenshot({path:`/tmp/compass-brain-${view}.png`})}await page.evaluate(()=>CompassBrainScene.restore());
+            const proof=page.locator('[data-proof-orbit]'),capabilityBefore=await active(page).getAttribute('data-capability'),held=await pointerSwipe(page,'[data-proof-orbit]',1);check('PROOF_NO_INTERMEDIATE_GEOMETRY',JSON.stringify(held.before)===JSON.stringify(held.held),held);await page.waitForTimeout(340);check('PROOF_SWIPE_ONE_AND_ISOLATED',(await page.locator('[data-proof-card][data-slot="front"]').getAttribute('data-proof-card'))==='bounded'&&(await active(page).getAttribute('data-capability'))===capabilityBefore,await state(page));await proof.locator(':scope > .compass-orbit-controls [data-orbit-next]').click();await page.waitForTimeout(340);check('PROOF_BUTTON_ONE',(await page.locator('[data-proof-card][data-slot="front"]').getAttribute('data-proof-card'))==='experience',await state(page));await proof.focus();await proof.press('ArrowRight');await page.waitForTimeout(340);check('PROOF_KEYBOARD_CYCLE',(await page.locator('[data-proof-card][data-slot="front"]').getAttribute('data-proof-card'))==='trl7',await state(page));
+            for(const route of ['/showroom/globe/h-earth/awards/','/showroom/globe/hearth/jeeves/','/elara/','/products/auren/']){const response=await page.request.get(`http://127.0.0.1:4173${route}`);check(`LOCAL_ROUTE_${route.replaceAll(/[^a-z0-9]/gi,'_')}_200`,response.status()===200,response.status())}check('INTERACTION_NO_ERRORS',errors.length===0,errors);await context.close();
+            const touchContext=await browser.newContext({viewport:{width:390,height:844},hasTouch:true,isMobile:true}),{page:touch}=await load(touchContext,'touch');const touchHeld=await touchSwipe(touch,'[data-capability-orbit]',1);await touch.waitForTimeout(380);check('TOUCH_ATOMIC_AWARDS',JSON.stringify(touchHeld.before)===JSON.stringify(touchHeld.held)&&(await active(touch).getAttribute('data-capability'))==='awards',{touchHeld,state:await state(touch)});await touchContext.close();
+            const reducedContext=await browser.newContext({viewport:{width:390,height:844},reducedMotion:'reduce'}),{page:reduced}=await load(reducedContext,'reduced');const r1=await reduced.evaluate(()=>CompassBrainScene.inspect().frames);await reduced.waitForTimeout(450);const r2=await reduced.evaluate(()=>CompassBrainScene.inspect().frames),reducedCanvas=reduced.locator('[data-human-brain] canvas'),reducedBox=await reducedCanvas.boundingBox();await reduced.mouse.move(reducedBox.x+reducedBox.width*.25,reducedBox.y+reducedBox.height*.5);await reduced.mouse.down();await reduced.mouse.move(reducedBox.x+reducedBox.width*.7,reducedBox.y+reducedBox.height*.5,{steps:4});await reduced.mouse.up();await reduced.waitForTimeout(100);check('REDUCED_BRAIN_STATIC',r1===r2,{r1,r2});check('REDUCED_MANUAL_BRAIN_REDRAW',(await reduced.evaluate(()=>CompassBrainScene.inspect().frames))>r2,true);await reducedContext.close();
+            const fallbackContext=await browser.newContext({viewport:{width:390,height:844}});await fallbackContext.addInitScript(()=>{const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){if(type==='webgl'||type==='experimental-webgl')return null;return original.call(this,type,...args)}});const {page:fallback}=await load(fallbackContext,'fallback');check('WEBGL_DENIED_FALLBACK',await fallback.locator('.compass-brain-fallback').isVisible(),await fallback.locator('.compass-brain-fallback').count());await fallbackContext.close();
+          }catch(error){fatal=String(error?.stack||error);check('RUNTIME_EXECUTION',false,fatal)}finally{await browser.close()}
+          const failures=checks.filter(item=>!item.pass),receipt={schema:'COMPASS_AWARDS_TRL_BRAIN_CANDIDATE_RUNTIME_v1',operationId:'COMPASS_AWARDS_TRL_BRAIN_FULL_CYCLE_SUCCESSOR_20260816_v1',lockGeneration:1509,governingHead:'a16f4a38de6cd9f76ddf71a600b0ab525d64ecd8',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,productIdentity:'compass-awards-trl-brain-successor-v1',result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(item=>item.id),fatal};fs.writeFileSync('/tmp/compass-performance-runtime.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
           NODE
-      - name: Upload visual evidence
+      - name: Upload candidate evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: compass-performance-successor-visual-evidence
-          path: /tmp/compass-performance-*.png
+          path: |
+            /tmp/compass-performance-runtime.json
+            /tmp/compass-performance-*.png
+            /tmp/compass-brain-*.png

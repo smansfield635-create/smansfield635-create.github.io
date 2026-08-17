@@ -1,9 +1,10 @@
 /**
  * /showroom/globe/h-earth/render/geometry-distant-context.js
  *
- * C3C3R4 planetary world-frame reconstruction. South and west remain visible
- * connected-region continuations, but their far planform is circular and their
- * elevation consumes the same shared planetary transform as OPEN_WATER.
+ * C3C3R5 D12 visual-composition repair. South and west remain visible
+ * connected-region continuations on the shared planetary frame, but the far
+ * rows now dissolve below the geometric horizon with irregular atmospheric
+ * attenuation so the continuation reads as world, not as a terminal slab.
  */
 
 import {
@@ -38,7 +39,7 @@ const smooth = (t) => t * t * (3 - 2 * t);
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID =
-  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_C3C3R4_SHARED_PLANETARY_FRAME_v1';
+  'H_EARTH_DISTANT_CONTEXT_GEOMETRY_PROVIDER_C3C3R5_D12_HORIZON_DISSOLVE_v2';
 
 const ACCESSIBLE = freeze({ xMin: -1024, xMax: 1024, zMin: -1024 });
 const THRESHOLDS = freeze({
@@ -53,12 +54,19 @@ const THRESHOLD_PROFILE = freeze({
   visualClass: 'LOW_RIDGE_WITH_OPEN_PASS_AND_CONTINUING_CURVED_PLANETARY_TERRAIN',
   mountainScaleProhibited: true
 });
+const HORIZON_DISSOLVE = freeze({
+  beginT: 0.64,
+  maximumSink: 11.5,
+  irregularity: 3.2,
+  terminalHardEdgeProhibited: true,
+  purpose: 'MOVE_THE_NONNAVIGABLE_FAR_RIM_BELOW_THE_GEOMETRIC_SIGHTLINE_WITHOUT_CHANGING_ACCESSIBLE_TERRAIN_OR_COLLISION'
+});
 
 function lowReliefContinuation(innerElevation, distanceT, phase) {
   const settle = smooth(clamp01(distanceT * 1.35));
-  const retained = lerp(innerElevation, Math.max(0.55, innerElevation * 0.16), settle);
+  const retained = lerp(innerElevation, Math.max(0.2, innerElevation * 0.11), settle);
   const rolling = (0.7 * Math.sin(phase + distanceT * Math.PI * 2.1)) + (0.32 * Math.sin(phase * 0.7 + distanceT * Math.PI * 5.1));
-  return Math.max(0.35, retained + rolling * (1 - settle) * 0.5);
+  return Math.max(0.05, retained + rolling * (1 - settle) * 0.42);
 }
 function passShoulder(alongT, center, halfWidth) {
   const distance = Math.abs(alongT - center);
@@ -69,6 +77,12 @@ function thresholdBerm(distanceT, alongT, threshold) {
   const longitudinal = Math.exp(-Math.pow((distanceT - gateT) / THRESHOLD_PROFILE.longitudinalSigma, 2));
   const shoulder = passShoulder(alongT, threshold.passCenter, threshold.passHalfWidth);
   return longitudinal * (THRESHOLD_PROFILE.baseUplift + shoulder * THRESHOLD_PROFILE.shoulderUplift);
+}
+function horizonDissolveSink(distanceT, alongT, phase) {
+  const progress = smooth(clamp01((distanceT - HORIZON_DISSOLVE.beginT) / Math.max(Number.EPSILON, 1 - HORIZON_DISSOLVE.beginT)));
+  if (progress <= 0) return 0;
+  const irregular = 1 + 0.28 * Math.sin(phase + alongT * Math.PI * 5.4) + 0.12 * Math.sin(phase * 1.7 + alongT * Math.PI * 11.2);
+  return progress * (HORIZON_DISSOLVE.maximumSink + HORIZON_DISSOLVE.irregularity * irregular);
 }
 
 function appendBand({ vertices, indices, sampleCount, rowCount, pointAt }) {
@@ -96,32 +110,27 @@ function constructVisualWorldContinuation() {
   const vertices = [];
   const indices = [];
 
-  // South: move from the accessible south edge toward the circular planetary
-  // horizon. The far Z endpoint changes continuously with X, eliminating the
-  // prior rectangular terminal line.
   appendBand({
     vertices,
     indices,
     sampleCount: 97,
-    rowCount: 27,
+    rowCount: 31,
     pointAt: (alongT, distanceT) => {
       const eased = smooth(distanceT);
       const innerX = lerp(ACCESSIBLE.xMin, ACCESSIBLE.xMax, alongT);
-      const horizonX = innerX * 2.85;
+      const horizonX = innerX * (2.72 + 0.08 * Math.sin(alongT * Math.PI * 3.2));
       const outerZ = getHEarthPlanetaryHorizonZForX(horizonX, -1);
       const worldX = lerp(innerX, horizonX, eased);
       const worldZ = lerp(ACCESSIBLE.zMin, outerZ, eased);
       const local = sampleHEarthTerrainField(innerX, lerp(ACCESSIBLE.zMin, ACCESSIBLE.zMin - 220, Math.min(1, distanceT * 1.8))).elevation;
       const inner = sampleHEarthTerrainField(innerX, ACCESSIBLE.zMin);
       const far = lowReliefContinuation(inner.elevation, distanceT, 0.7 + alongT * 2.0);
-      const unprojectedY = lerp(local, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.south);
+      const dissolve = horizonDissolveSink(distanceT, alongT, 0.55);
+      const unprojectedY = lerp(local, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.south) - dissolve;
       return projectHEarthVisibleContinuationPoint({ x: worldX, y: unprojectedY, z: worldZ });
     }
   });
 
-  // West: same shared curvature law and a circular far planform. It stops
-  // landward of the north/east ocean-facing coast so no ocean-facing landmass
-  // is manufactured.
   const innerX = ACCESSIBLE.xMin;
   const coastlineZ = getHEarthCanonicalShorelineZ(innerX);
   const landwardEndZ = Math.min(-160, coastlineZ - 72);
@@ -129,22 +138,23 @@ function constructVisualWorldContinuation() {
     vertices,
     indices,
     sampleCount: 81,
-    rowCount: 25,
+    rowCount: 29,
     pointAt: (alongT, distanceT) => {
       const eased = smooth(distanceT);
       const innerZ = lerp(ACCESSIBLE.zMin, landwardEndZ, alongT);
-      const horizonZ = lerp(-2850, landwardEndZ - 180, alongT);
+      const horizonZ = lerp(-2780 - 120 * Math.sin(alongT * Math.PI * 1.6), landwardEndZ - 180, alongT);
       const outerX = getHEarthPlanetaryHorizonXForZ(horizonZ, -1);
       const worldX = lerp(innerX, outerX, eased);
       const worldZ = lerp(innerZ, horizonZ, eased);
       const inner = sampleHEarthTerrainField(innerX, innerZ);
       const far = lowReliefContinuation(inner.elevation, distanceT, 1.4 + alongT);
-      const unprojectedY = lerp(inner.elevation, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.west);
+      const dissolve = horizonDissolveSink(distanceT, alongT, 1.35);
+      const unprojectedY = lerp(inner.elevation, far, smooth(clamp01(distanceT * 1.8))) + thresholdBerm(distanceT, alongT, THRESHOLDS.west) - dissolve;
       return projectHEarthVisibleContinuationPoint({ x: worldX, y: unprojectedY, z: worldZ });
     }
   });
 
-  const primitiveId = 'H_EARTH_CONNECTED_REGION_CONTEXT:C3C3R4';
+  const primitiveId = 'H_EARTH_CONNECTED_REGION_CONTEXT:C3C3R5_D12';
   const construction = constructHEarthTriangleMesh({
     primitiveId,
     geometryId: `${primitiveId}:GEOMETRY`,
@@ -153,9 +163,9 @@ function constructVisualWorldContinuation() {
     indices,
     normalMode: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.normalMode.FACE_AND_VERTEX,
     expectedClosure: H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
-    semanticRole: 'CURVED_PLANETARY_CONNECTED_REGION_CONTINUATION_WITH_LOW_RIDGE_PASSES',
-    materialHint: freeze({ materialKey: 'worldTerrainField', materialIntent: 'SUBTROPICAL_CONNECTED_REGION_CONTINUATION_ON_SHARED_PLANETARY_FRAME', climateIdentity: 'WARM_SUBTROPICAL_COASTAL' }),
-    source: freeze({ sourceType: 'H_EARTH_C3C3R4_SHARED_PLANETARY_CONNECTED_REGION_SYSTEM', highlandFormationAuthorityRetired: true }),
+    semanticRole: 'CURVED_PLANETARY_CONNECTED_REGION_CONTINUATION_WITH_LOW_RIDGE_PASSES_AND_HORIZON_DISSOLVE',
+    materialHint: freeze({ materialKey: 'worldTerrainField', materialIntent: 'SUBTROPICAL_CONNECTED_REGION_CONTINUATION_DISSOLVING_INTO_ATMOSPHERIC_PLANETARY_HORIZON', climateIdentity: 'WARM_SUBTROPICAL_COASTAL' }),
+    source: freeze({ sourceType: 'H_EARTH_C3C3R5_D12_SHARED_PLANETARY_CONNECTED_REGION_SYSTEM', highlandFormationAuthorityRetired: true }),
     metadata: freeze({
       providerContractId: H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
       sharedPlanetaryWorldFrame: true,
@@ -165,6 +175,9 @@ function constructVisualWorldContinuation() {
       visibleHorizonRadius: H_EARTH_PLANETARY_WORLD_FRAME.visibleHorizonRadius,
       circularPlanformHorizon: true,
       rectangularTerminalGeometryPresent: false,
+      terminalHardEdgeProhibited: true,
+      horizonDissolveApplied: true,
+      horizonDissolveProfile: HORIZON_DISSOLVE,
       formationId: null,
       formationClass: 'LOW_RELIEF_ADJACENT_REGION_CONTINUATION_ON_CURVED_PLANETARY_FRAME',
       sourceAddressRule: null,
@@ -184,7 +197,7 @@ function constructVisualWorldContinuation() {
       semanticBoundaryArchitecturePresent: true,
       worldVisibleBeyondThreshold: true,
       mountainPassOceanRevealCorridorPreservationRequired: true,
-      composedOcclusionAndRevealLaw: 'PASSES_AND_VALLEYS_MAY_FRAME_DISTANT_OCEAN_OR_CURVED_WORLD_CONTINUATION',
+      composedOcclusionAndRevealLaw: 'PASSES_AND_VALLEYS_FRAME_DISTANT_OCEAN_OR_CURVED_WORLD_CONTINUATION_WHILE_FAR_RIMS_DISSOLVE_BELOW_THE_GEOMETRIC_SIGHTLINE',
       adjacentRegionTraversable: false,
       adjacentRegionSemanticAuthority: false,
       accessibleRegionBounds: ACCESSIBLE,
@@ -199,11 +212,11 @@ function constructVisualWorldContinuation() {
       navigable: false,
       collisionAuthority: false,
       accessibleRegionExpansion: false,
-      continuationLaw: 'LOCAL_TANGENT_TERRAIN_PLUS_SHARED_CURVED_PLANETARY_CONTINUATION_PLUS_COMPOSED_OCCLUSION_AND_REVEALS',
+      continuationLaw: 'LOCAL_TANGENT_TERRAIN_PLUS_SHARED_CURVED_PLANETARY_CONTINUATION_PLUS_COMPOSED_OCCLUSION_REVEALS_AND_HORIZON_DISSOLVE',
       visibleRectangularTerminationProhibited: true,
       technicalStatusSignageProhibited: true,
       baselinePreservationId: 'H_EARTH_C3C3_OWNER_VIDEO_23750_POSITIVE_BASELINE_20260816',
-      ownerRepairEvidenceId: 'H_EARTH_C3C3R3_OWNER_SCREENSHOTS_PLANAR_RECTANGULAR_FAILURE_20260816',
+      ownerRepairEvidenceId: 'H_EARTH_C3C3R5_D12_VISUAL_AUDIT_REPAIR_20260817',
       admitted: false,
       aggregateFrameAuthority: false
     })
@@ -231,6 +244,8 @@ export function constructHEarthDistantContextGeometry() {
     highlandFormationAuthorityRetired: true,
     circularPlanformHorizon: true,
     rectangularTerminalGeometryPresent: false,
+    terminalHardEdgeProhibited: true,
+    horizonDissolveApplied: true,
     worldVisibleBeyondThreshold: true,
     adjacentRegionTraversable: false,
     accessibleRegionExpansion: false,

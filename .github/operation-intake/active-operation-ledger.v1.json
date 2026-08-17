@@ -1912,31 +1912,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "dcf4f12b48d64ceef46fe3782419edc4e76ea7af5d0df72c24a89f0ef61d41c8": {
-      "governingHead": "2981738d8f86d592b9aa48d59b549be64cc0c725",
-      "lockGeneration": 1519,
+      "governingHead": "ba3f3de8e21cae49eb10434d3e421090385aa2a3",
+      "lockGeneration": 1520,
       "lockScope": "PUBLIC_INFRASTRUCTURE:PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER:V1",
-      "operationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v4",
+      "operationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v5",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "9ccec6c4b694c2caa72f2b1450bdff6add3e6258",
-        "lockGeneration": 1518,
+        "governingHead": "2981738d8f86d592b9aa48d59b549be64cc0c725",
+        "lockGeneration": 1519,
         "lockScope": "PUBLIC_INFRASTRUCTURE:PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER:V1",
-        "operationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v3",
+        "operationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v4",
         "preservedEvidenceRefs": [
-          "pr:1245",
-          "merge:2981738d8f86d592b9aa48d59b549be64cc0c725",
-          "run:32052400051",
-          "dynamic-run:32052397493",
-          "artifact:9295181080"
+          "pr:1247",
+          "merge:ba3f3de8e21cae49eb10434d3e421090385aa2a3",
+          "run:32053809341",
+          "job:95459237260"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "PAGES_RESILIENCE_1518_TO_2981738D_20260817_v2"
+        "transitionId": "PAGES_RESILIENCE_1519_TO_BA3F3DE8_20260817_v1"
       },
-      "procedureLocatorDigest": "b9261ac473788e8cd5edb4edf7f03faf21efc0cbfcff02a9d0df857438f7245e",
+      "procedureLocatorDigest": "58c6b0d5058e135cf7b16fb6ff07991622669f31ce7b6368d614093a5fc4d162",
       "released": false,
-      "requestDigest": "0fc1c0254bf0cbf44cabdff9c461ce986b58fe8d719d0e4dd21dc9958de887e0",
+      "requestDigest": "8c622a2017866c228674e919a0a1bbfc276a2dad2f26e90bc1fe1c2c6a1d8ed4",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "dcf4f12b48d64ceef46fe3782419edc4e76ea7af5d0df72c24a89f0ef61d41c8",
       "state": "ADMITTED_LOCKED"
@@ -2281,7 +2280,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1519,
+  "lockGeneration": 1520,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -22492,6 +22491,54 @@
         "successorLockScope": "PUBLIC_INFRASTRUCTURE:PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER:V1",
         "successorOperationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v4",
         "transitionId": "PAGES_RESILIENCE_1518_TO_2981738D_20260817_v2"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "2981738d8f86d592b9aa48d59b549be64cc0c725",
+      "lockGeneration": 1519,
+      "lockScope": "PUBLIC_INFRASTRUCTURE:PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER:V1",
+      "operationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v4",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "9ccec6c4b694c2caa72f2b1450bdff6add3e6258",
+        "lockGeneration": 1518,
+        "lockScope": "PUBLIC_INFRASTRUCTURE:PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER:V1",
+        "operationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v3",
+        "preservedEvidenceRefs": [
+          "pr:1245",
+          "merge:2981738d8f86d592b9aa48d59b549be64cc0c725",
+          "run:32052400051",
+          "dynamic-run:32052397493",
+          "artifact:9295181080"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "PAGES_RESILIENCE_1518_TO_2981738D_20260817_v2"
+      },
+      "procedureLocatorDigest": "b9261ac473788e8cd5edb4edf7f03faf21efc0cbfcff02a9d0df857438f7245e",
+      "released": true,
+      "requestDigest": "0fc1c0254bf0cbf44cabdff9c461ce986b58fe8d719d0e4dd21dc9958de887e0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "dcf4f12b48d64ceef46fe3782419edc4e76ea7af5d0df72c24a89f0ef61d41c8",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "pr:1247",
+          "merge:ba3f3de8e21cae49eb10434d3e421090385aa2a3",
+          "run:32053809341",
+          "job:95459237260"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "ba3f3de8e21cae49eb10434d3e421090385aa2a3",
+        "successorLockGeneration": 1520,
+        "successorLockScope": "PUBLIC_INFRASTRUCTURE:PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER:V1",
+        "successorOperationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v5",
+        "transitionId": "PAGES_RESILIENCE_1519_TO_BA3F3DE8_20260817_v1"
       },
       "terminalDisposition": "SUPERSEDED"
     }

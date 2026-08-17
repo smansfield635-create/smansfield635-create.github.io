@@ -6,7 +6,9 @@ import {
   AUTHORITY_POLICY,
   DEFAULT_GOVERNING_REF,
   EVIDENCE_POLICY,
+  readLedgerRemote,
   successorLocal,
+  successorRemote,
   TRANSITION_SCHEMA
 } from './repository-operation-successor-gate.v1.mjs';
 import { canonical, scopeHash, stable, text } from '../../../tools/operation-intake/repository-operation-lock-manager.v1.mjs';
@@ -120,6 +122,27 @@ function expectError(code, fn) {
   return code;
 }
 
+async function expectErrorAsync(code, fn) {
+  let actual = null;
+  try { await fn(); } catch (error) { actual = error.code || String(error.message).split(':')[0]; }
+  assert(actual === code, `EXPECTED_${code}_GOT_${actual || 'NO_ERROR'}`);
+  return code;
+}
+
+function mockResponse(status, body) {
+  return { status, text: async () => JSON.stringify(body) };
+}
+
+async function withMockFetch(handler, fn) {
+  const original = globalThis.fetch;
+  globalThis.fetch = handler;
+  try { return await fn(); }
+  finally {
+    if (original) globalThis.fetch = original;
+    else delete globalThis.fetch;
+  }
+}
+
 function parseArgs(argv) {
   const result = {};
   for (let i = 0; i < argv.length; i += 1) {
@@ -130,11 +153,15 @@ function parseArgs(argv) {
   return result;
 }
 
-function main() {
+async function main() {
   const args = parseArgs(process.argv.slice(2));
   const tests = [];
   const run = (id, fn) => {
     try { tests.push({ id, pass: true, detail: fn() ?? null }); }
+    catch (error) { tests.push({ id, pass: false, detail: error.message }); }
+  };
+  const runAsync = async (id, fn) => {
+    try { tests.push({ id, pass: true, detail: await fn() ?? null }); }
     catch (error) { tests.push({ id, pass: false, detail: error.message }); }
   };
 
@@ -238,6 +265,156 @@ function main() {
     return expectError('GOVERNING_HEAD_MISMATCH', () => successorLocal(f.ledger, f.transition, f.request, f.procedure));
   });
 
+  await runAsync('REMOTE_CONTENTS_INLINE_BASE64_DOES_NOT_FETCH_BLOB', async () => {
+    const f = fixture();
+    const branchHead = '4'.repeat(40);
+    const blob = '5'.repeat(40);
+    const calls = [];
+    const observed = await withMockFetch(async (url, options = {}) => {
+      const method = options.method || 'GET';
+      calls.push({ method, url: String(url) });
+      if (String(url).includes('/git/ref/heads%2Foperation-locks%2Frepository-operation-intake-v1')) {
+        return mockResponse(200, { object: { sha: branchHead } });
+      }
+      if (method === 'GET' && String(url).includes('/contents/')) {
+        return mockResponse(200, { sha: blob, encoding: 'base64', content: Buffer.from(text(f.ledger), 'utf8').toString('base64') });
+      }
+      throw new Error(`UNEXPECTED_GITHUB_REQUEST:${method}:${url}`);
+    }, () => readLedgerRemote({ repository: 'owner/repository', token: 'self-test-token' }));
+    assert(observed.contentTransport === 'CONTENTS_INLINE', 'INLINE_TRANSPORT_NOT_REPORTED');
+    assert(observed.blob === blob, 'INLINE_BLOB_IDENTITY_MISMATCH');
+    assert(calls.length === 2, 'INLINE_TRANSPORT_FETCHED_UNEXPECTED_RESOURCE');
+    assert(!calls.some((call) => call.url.includes('/git/blobs/')), 'INLINE_TRANSPORT_FETCHED_GIT_BLOB');
+    return { contentTransport: observed.contentTransport, requestCount: calls.length };
+  });
+
+  await runAsync('REMOTE_CONTENTS_ENCODING_NONE_EMPTY_FALLS_BACK_TO_GIT_BLOB', async () => {
+    const f = fixture();
+    f.ledger.terminalHistory = [{
+      schema: 'REPOSITORY_OPERATION_LOCK_v1',
+      operationId: 'OVERSIZED_LEDGER_PADDING_RECORD',
+      payload: 'x'.repeat(1_100_000)
+    }];
+    const serializedLedger = text(f.ledger);
+    const serializedBytes = Buffer.byteLength(serializedLedger, 'utf8');
+    assert(serializedBytes > 1_048_576, 'OVERSIZED_LEDGER_FIXTURE_TOO_SMALL');
+    const branchHead = '4'.repeat(40);
+    const blob = '5'.repeat(40);
+    const commit = '6'.repeat(40);
+    const committedBlob = '7'.repeat(40);
+    const calls = [];
+    let putBody = null;
+    const receipt = await withMockFetch(async (url, options = {}) => {
+      const method = options.method || 'GET';
+      calls.push({ method, url: String(url) });
+      if (String(url).includes('/git/ref/heads%2Fmain')) {
+        return mockResponse(200, { object: { sha: NEW_HEAD } });
+      }
+      if (String(url).includes('/git/ref/heads%2Foperation-locks%2Frepository-operation-intake-v1')) {
+        return mockResponse(200, { object: { sha: branchHead } });
+      }
+      if (method === 'GET' && String(url).includes('/contents/')) {
+        return mockResponse(200, { sha: blob, encoding: 'none', content: '' });
+      }
+      if (method === 'GET' && String(url).endsWith(`/git/blobs/${blob}`)) {
+        return mockResponse(200, { sha: blob, encoding: 'base64', content: Buffer.from(serializedLedger, 'utf8').toString('base64') });
+      }
+      if (method === 'PUT' && String(url).includes('/contents/')) {
+        putBody = JSON.parse(options.body);
+        return mockResponse(200, { commit: { sha: commit }, content: { sha: committedBlob } });
+      }
+      throw new Error(`UNEXPECTED_GITHUB_REQUEST:${method}:${url}`);
+    }, () => successorRemote({
+      repository: 'owner/repository',
+      token: 'self-test-token',
+      transition: f.transition,
+      request: f.request,
+      procedure: f.procedure
+    }));
+    assert(receipt.result === 'SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED', 'OVERSIZED_REMOTE_SUCCESSOR_NONPASS');
+    assert(receipt.contentTransport === 'GIT_BLOB_FALLBACK', 'FALLBACK_TRANSPORT_NOT_REPORTED');
+    assert(receipt.ledgerCompareAndSwapCommitted === true && receipt.casAttempt === 1, 'FALLBACK_CAS_NOT_ATOMIC');
+    assert(putBody?.sha === blob, 'FALLBACK_PUT_NOT_SHA_GUARDED');
+    assert(calls.filter((call) => call.url.endsWith(`/git/blobs/${blob}`)).length === 1, 'FALLBACK_GIT_BLOB_FETCH_COUNT');
+    assert(calls.filter((call) => call.method === 'PUT').length === 1, 'FALLBACK_LEDGER_PUT_COUNT');
+    return { contentTransport: receipt.contentTransport, serializedBytes, casAttempt: receipt.casAttempt };
+  });
+
+  await runAsync('REMOTE_GIT_BLOB_NON_BASE64_FAILS_CLOSED', async () => {
+    const branchHead = '4'.repeat(40);
+    const blob = '5'.repeat(40);
+    const calls = [];
+    const result = await withMockFetch(async (url, options = {}) => {
+      const method = options.method || 'GET';
+      calls.push({ method, url: String(url) });
+      if (String(url).includes('/git/ref/heads%2Foperation-locks%2Frepository-operation-intake-v1')) {
+        return mockResponse(200, { object: { sha: branchHead } });
+      }
+      if (method === 'GET' && String(url).includes('/contents/')) {
+        return mockResponse(200, { sha: blob, encoding: 'none', content: '' });
+      }
+      if (method === 'GET' && String(url).endsWith(`/git/blobs/${blob}`)) {
+        return mockResponse(200, { sha: blob, encoding: 'utf-8', content: '{}' });
+      }
+      throw new Error(`UNEXPECTED_GITHUB_REQUEST:${method}:${url}`);
+    }, () => expectErrorAsync('LEDGER_BLOB_ENCODING_UNSUPPORTED', () => readLedgerRemote({
+      repository: 'owner/repository',
+      token: 'self-test-token'
+    })));
+    assert(calls.filter((call) => call.method === 'PUT').length === 0, 'UNSUPPORTED_ENCODING_MUTATED_LEDGER');
+    return { errorCode: result, requestCount: calls.length };
+  });
+
+  await runAsync('REMOTE_GIT_BLOB_MALFORMED_JSON_FAILS_CLOSED', async () => {
+    const branchHead = '4'.repeat(40);
+    const blob = '5'.repeat(40);
+    const calls = [];
+    const result = await withMockFetch(async (url, options = {}) => {
+      const method = options.method || 'GET';
+      calls.push({ method, url: String(url) });
+      if (String(url).includes('/git/ref/heads%2Foperation-locks%2Frepository-operation-intake-v1')) {
+        return mockResponse(200, { object: { sha: branchHead } });
+      }
+      if (method === 'GET' && String(url).includes('/contents/')) {
+        return mockResponse(200, { sha: blob, encoding: 'none', content: '' });
+      }
+      if (method === 'GET' && String(url).endsWith(`/git/blobs/${blob}`)) {
+        return mockResponse(200, { sha: blob, encoding: 'base64', content: Buffer.from('{', 'utf8').toString('base64') });
+      }
+      throw new Error(`UNEXPECTED_GITHUB_REQUEST:${method}:${url}`);
+    }, () => expectErrorAsync('LEDGER_JSON_DECODE_FAILURE', () => readLedgerRemote({
+      repository: 'owner/repository',
+      token: 'self-test-token'
+    })));
+    assert(calls.filter((call) => call.method === 'PUT').length === 0, 'MALFORMED_JSON_MUTATED_LEDGER');
+    return { errorCode: result, requestCount: calls.length };
+  });
+
+  await runAsync('REMOTE_GIT_BLOB_LEDGER_SCHEMA_FAILS_CLOSED', async () => {
+    const branchHead = '4'.repeat(40);
+    const blob = '5'.repeat(40);
+    const calls = [];
+    const result = await withMockFetch(async (url, options = {}) => {
+      const method = options.method || 'GET';
+      calls.push({ method, url: String(url) });
+      if (String(url).includes('/git/ref/heads%2Foperation-locks%2Frepository-operation-intake-v1')) {
+        return mockResponse(200, { object: { sha: branchHead } });
+      }
+      if (method === 'GET' && String(url).includes('/contents/')) {
+        return mockResponse(200, { sha: blob, encoding: 'none', content: '' });
+      }
+      if (method === 'GET' && String(url).endsWith(`/git/blobs/${blob}`)) {
+        return mockResponse(200, { sha: blob, encoding: 'base64', content: Buffer.from('{}', 'utf8').toString('base64') });
+      }
+      throw new Error(`UNEXPECTED_GITHUB_REQUEST:${method}:${url}`);
+    }, () => expectErrorAsync('LEDGER_SCHEMA_MISMATCH', () => readLedgerRemote({
+      repository: 'owner/repository',
+      token: 'self-test-token'
+    })));
+    assert(calls.filter((call) => call.method === 'PUT').length === 0, 'INVALID_SCHEMA_MUTATED_LEDGER');
+    return { errorCode: result, requestCount: calls.length };
+  });
+
   const failures = tests.filter((test) => !test.pass);
   const core = {
     schema: 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_RECEIPT_v1',
@@ -254,6 +431,9 @@ function main() {
       oneLedgerMutationRequired: true,
       implicitAuthorityInheritanceForbidden: true,
       exactHeadRevalidationRequired: true,
+      contentsInlineTransportPreserved: true,
+      oversizedLedgerGitBlobFallbackRequired: true,
+      contentTransportEvidenceRequired: true,
       currentMainLockManagerModified: false,
       currentMainIntakeGateModified: false
     }
@@ -267,9 +447,15 @@ function main() {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
-  try { main(); }
-  catch (error) {
-    process.stderr.write(text({ schema: 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_FAILURE_v1', result: 'FAIL_CLOSED', error: error.message }));
+  main().catch((error) => {
+    const receipt = { schema: 'REPOSITORY_OPERATION_SUCCESSOR_SELF_TEST_FAILURE_v1', result: 'FAIL_CLOSED', error: error.message };
+    const index = process.argv.indexOf('--output');
+    const output = index >= 0 ? process.argv[index + 1] : null;
+    if (output) {
+      const absolute = path.resolve(output);
+      fs.mkdirSync(path.dirname(absolute), { recursive: true });
+      fs.writeFileSync(absolute, text(receipt));
+    } else process.stderr.write(text(receipt));
     process.exitCode = 1;
-  }
+  });
 }

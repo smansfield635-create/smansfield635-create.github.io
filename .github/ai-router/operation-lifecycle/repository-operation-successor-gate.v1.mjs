@@ -283,15 +283,46 @@ async function readRefHead({ repository, ref, token }) {
   return digest(response.object.sha, 40, 'governingRefHead', 'remote-successor');
 }
 
-async function readLedgerRemote({ repository, lockRef = DEFAULT_LOCK_REF, token }) {
+function decodeLedgerContent(content, source) {
+  if (typeof content !== 'string' || !content.replace(/\s/g, '')) {
+    throw failure('LEDGER_CONTENT_UNAVAILABLE', 'content', source);
+  }
+  try {
+    return ledger(JSON.parse(Buffer.from(content.replace(/\s/g, ''), 'base64').toString('utf8')));
+  } catch (error) {
+    if (error.code) throw error;
+    throw failure('LEDGER_JSON_DECODE_FAILURE', 'content', source, error.message);
+  }
+}
+
+export async function readLedgerRemote({ repository, lockRef = DEFAULT_LOCK_REF, token }) {
   const base = repositoryBase(repository);
   const branch = branchFromRef(lockRef, 'lockRef');
   const ref = await githubRequest(`${base}/git/ref/${encodeURIComponent(`heads/${branch}`)}`, { headers: headers(token) });
   const branchHead = digest(ref.object.sha, 40, 'lockRefHead', 'remote-successor');
   const encodedPath = LEDGER_PATH.split('/').map(encodeURIComponent).join('/');
   const file = await githubRequest(`${base}/contents/${encodedPath}?ref=${encodeURIComponent(branchHead)}`, { headers: headers(token) });
-  const decoded = Buffer.from(file.content.replace(/\s/g, ''), 'base64').toString('utf8');
-  return { branch, branchHead, blob: file.sha, ledger: ledger(JSON.parse(decoded)) };
+  const blob = digest(file.sha, 40, 'ledgerBlobSha', 'remote-successor');
+  if (typeof file.content === 'string' && file.content.replace(/\s/g, '')) {
+    return {
+      branch,
+      branchHead,
+      blob,
+      ledger: decodeLedgerContent(file.content, 'contents-api'),
+      contentTransport: 'CONTENTS_INLINE'
+    };
+  }
+  const gitBlob = await githubRequest(`${base}/git/blobs/${blob}`, { headers: headers(token) });
+  if (gitBlob.encoding !== 'base64') {
+    throw failure('LEDGER_BLOB_ENCODING_UNSUPPORTED', 'encoding', 'git-blob', String(gitBlob.encoding));
+  }
+  return {
+    branch,
+    branchHead,
+    blob,
+    ledger: decodeLedgerContent(gitBlob.content, 'git-blob'),
+    contentTransport: 'GIT_BLOB_FALLBACK'
+  };
 }
 
 async function putLedgerRemote({ repository, lockRef = DEFAULT_LOCK_REF, token, blob, nextLedger, message }) {
@@ -357,6 +388,7 @@ export async function successorRemote({
         observedLockRefHead: observed.branchHead,
         committedLedgerBlobSha: committed.blob,
         transitionCommitSha: committed.commit,
+        contentTransport: observed.contentTransport,
         ledgerCompareAndSwapCommitted: true,
         casAttempt: attempt,
         casRetryLimit: maxAttempts
@@ -368,6 +400,7 @@ export async function successorRemote({
       httpStatus: committed.httpStatus,
       observedLedgerBlobSha: observed.blob,
       observedLockRefHead: observed.branchHead,
+      contentTransport: observed.contentTransport,
       liveGoverningHead,
       predecessor: local.receipt.predecessor,
       successor: local.receipt.successor
@@ -386,6 +419,7 @@ export async function successorRemote({
     successor: lastConflict?.successor || null,
     observedLedgerBlobSha: lastConflict?.observedLedgerBlobSha || null,
     observedLockRefHead: lastConflict?.observedLockRefHead || null,
+    contentTransport: lastConflict?.contentTransport || null,
     liveGoverningHead: lastConflict?.liveGoverningHead || null,
     authorityInherited: false,
     exactHeadRevalidationRequired: true,

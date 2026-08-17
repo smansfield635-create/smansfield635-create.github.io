@@ -1,4 +1,4 @@
-name: Compass Gen1526 Continuous Renderer Construction
+name: Compass Gen1526 Performance Successor Validation
 
 on:
   pull_request:
@@ -12,89 +12,43 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   GEN1526_GOVERNING_HEAD: f8eefd20fc1cdcdc777e070f008bb2e2b8580da1
 
 jobs:
-  construct-continuous-renderer-repair:
-    if: github.event_name == 'pull_request'
+  qualify-gen1526-static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact Gen1526 boundary
+      - name: Verify exact candidate and bounded lineage
         run: |
-          git merge-base --is-ancestor "$GEN1526_GOVERNING_HEAD" HEAD
-          unexpected="$(git diff --name-only "$GEN1526_GOVERNING_HEAD"...HEAD | grep -Ev '^(assets/compass/compass\.identity-3d\.js|assets/compass/compass\.brain-scene\.js|\.github/ai-router/projects/compass/verify-performance-successor\.mjs|\.github/ai-router/projects/compass/verify-display-continuity\.v1\.mjs|\.github/workflows/compass-performance-successor-validation\.yml|\.github/workflows/compass-carousel-successor-live-qualification\.yml)$' || true)"
+          CANDIDATE="$(git rev-parse HEAD^{commit})"
+          test "$CANDIDATE" = "$(git rev-parse HEAD)"
+          git merge-base --is-ancestor "$GEN1526_GOVERNING_HEAD" "$CANDIDATE"
+          unexpected="$(git diff --name-only "$GEN1526_GOVERNING_HEAD"..."$CANDIDATE" | grep -Ev '^(assets/compass/compass\.identity-3d\.js|assets/compass/compass\.brain-scene\.js|\.github/ai-router/projects/compass/verify-performance-successor\.mjs|\.github/ai-router/projects/compass/verify-display-continuity\.v1\.mjs|\.github/workflows/compass-performance-successor-validation\.yml|\.github/workflows/compass-carousel-successor-live-qualification\.yml)$' || true)"
           test -z "$unexpected"
           git diff --quiet "$GEN1526_GOVERNING_HEAD" -- assets/compass/compass.crystals.js
-      - name: Apply resource and scheduling only repair
+      - name: Run Gen1526 static qualification
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          def replace_exact(path, old, new):
-              p=Path(path); s=p.read_text()
-              if new in s:
-                  return
-              n=s.count(old)
-              if n != 1:
-                  raise SystemExit(f'{path}: expected exactly one replacement point, found {n}: {old[:80]}')
-              p.write_text(s.replace(old,new,1))
-
-          identity='assets/compass/compass.identity-3d.js'
-          replace_exact(identity,
-              "canvas.dataset.performancePolicy='desktop-only-30fps-dpr1';",
-              "canvas.dataset.performancePolicy='hardware-30fps-software-static-dpr1';")
-          replace_exact(identity,
-              "const gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power',preserveDrawingBuffer:false});if(!gl)return;const pr=program(gl)",
-              "const gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power',preserveDrawingBuffer:false});if(!gl)return;const debug=gl.getExtension('WEBGL_debug_renderer_info'),rendererName=String(debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):(gl.getParameter(gl.RENDERER)||'')),constrained=/SwiftShader|Software|llvmpipe/i.test(rendererName);canvas.dataset.performanceTier=constrained?'software-static-3d':'hardware-flight-3d';const pr=program(gl)")
-          replace_exact(identity,
-              "let path=makeFlight(0),lastDraw=0;state.flightStart=performance.now()+1400;",
-              "let path=makeFlight(0),lastDraw=0;state.flightStart=performance.now()+(constrained?-5900:1400);")
-          replace_exact(identity,
-              "function frame(now){state.raf=requestAnimationFrame(frame);if(document.hidden||reduce.matches||now-lastDraw<33)return;lastDraw=now;let t=(now-state.flightStart)/11800;",
-              "function frame(now){if(!constrained)state.raf=requestAnimationFrame(frame);if(document.hidden||reduce.matches||(!constrained&&now-lastDraw<33)||(constrained&&lastDraw))return;lastDraw=now;let t=constrained?.5:(now-state.flightStart)/11800;")
-          replace_exact(identity,
-              "canvas.dataset.lastHit='bounded-impact-recovery'",
-              "canvas.dataset.lastHit='bounded-impact-recovery';if(constrained){lastDraw=0;requestAnimationFrame(frame)}")
-
-          brain='assets/compass/compass.brain-scene.js'
-          replace_exact(brain,
-              "powerPreference:'low-power',preserveDrawingBuffer:true",
-              "powerPreference:'low-power',preserveDrawingBuffer:false")
-          replace_exact(brain,
-              "const pr=program(gl),mesh=buildMesh(gl)",
-              "const debug=gl.getExtension('WEBGL_debug_renderer_info'),rendererName=String(debug?gl.getParameter(debug.UNMASKED_RENDERER_WEBGL):(gl.getParameter(gl.RENDERER)||'')),constrained=/SwiftShader|Software|llvmpipe/i.test(rendererName);canvas.dataset.brainPerformanceTier=constrained?'software-static-on-demand':'hardware-slow-yaw';const pr=program(gl),mesh=buildMesh(gl)")
-          replace_exact(brain,
-              "brainMotion:reduce.matches?'static-reduced-motion':'slow-yaw'",
-              "brainMotion:reduce.matches?'static-reduced-motion':constrained?'static-resource-constrained':'slow-yaw'")
-          replace_exact(brain,
-              "const animate=()=>!reduce.matches&&!snap&&visible&&pageOn&&foreground(),resize=()=>{const d=M.min(devicePixelRatio||1,innerWidth<700?1.25:1.75)",
-              "const animate=()=>!constrained&&!reduce.matches&&!snap&&visible&&pageOn&&foreground(),resize=()=>{const d=M.min(devicePixelRatio||1,constrained?1:(innerWidth<700?1.25:1.75))")
-          replace_exact(brain,
-              "const io=new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);schedule(true)},{rootMargin:'120px'});io.observe(canvas);document.addEventListener('visibilitychange',()=>{pageOn=!document.hidden;schedule(true)});reduce.addEventListener?.('change',()=>{data.brainMotion=reduce.matches?'static-reduced-motion':'slow-yaw';schedule(true)});",
-              "const io=new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);schedule()},{rootMargin:'120px'});io.observe(canvas);document.addEventListener('visibilitychange',()=>{pageOn=!document.hidden;schedule()});reduce.addEventListener?.('change',()=>{data.brainMotion=reduce.matches?'static-reduced-motion':constrained?'static-resource-constrained':'slow-yaw';schedule(!reduce.matches&&!constrained)});")
-          PY
-      - name: Verify product delta and frozen crystal
-        run: |
-          git diff --check
-          changed="$(git diff --name-only)"
-          printf '%s\n' "$changed"
-          test "$(printf '%s\n' "$changed" | grep -Ev '^(assets/compass/compass\.identity-3d\.js|assets/compass/compass\.brain-scene\.js)$' | sed '/^$/d' | wc -l)" = 0
-          git diff --quiet "$GEN1526_GOVERNING_HEAD" -- assets/compass/compass.crystals.js
-      - name: Commit bounded repair
-        run: |
-          if git diff --quiet; then exit 0; fi
-          git config user.name 'smansfield635-create'
-          git config user.email 'smansfield635@gmail.com'
-          git add assets/compass/compass.identity-3d.js assets/compass/compass.brain-scene.js
-          git commit -m 'Adapt Compass continuous WebGL scheduling to renderer capacity'
-          git push origin HEAD:${{ github.head_ref }}
+          export COMPASS_CANDIDATE_HEAD="$(git rev-parse HEAD^{commit})"
+          export COMPASS_PERFORMANCE_OUTPUT=/tmp/compass-gen1526-performance.json
+          export COMPASS_VERIFICATION_OUTPUT=/tmp/compass-gen1526-display.json
+          node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1526' /tmp/compass-gen1526-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1526' /tmp/compass-gen1526-display.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compass-gen1526-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/compass-gen1526-performance.json
+            /tmp/compass-gen1526-display.json

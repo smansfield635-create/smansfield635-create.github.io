@@ -1804,13 +1804,30 @@
       "state": "ADMITTED_LOCKED"
     },
     "d0ab4c5ec245b1e9fc4e72c03f242eed7eb1e8f350fb383da08bcd0388187551": {
-      "governingHead": "0e6ad2bc0c585ab99e62f6ed58790b287c65b59e",
-      "lockGeneration": 1521,
+      "governingHead": "0a48af79386402b0604fcbffcfd6b20d2dbd9b48",
+      "lockGeneration": 1523,
       "lockScope": "COMPASS:STUDIO_IDENTITY:COHERISCOPE:BRAIN:SPACECRAFT:EXACT_14_PATH_SCOPE",
-      "operationId": "COMPASS_STUDIO_IDENTITY_COHERISCOPE_BRAIN_SPACECRAFT_CONSTRUCTION_20260817_002",
-      "procedureLocatorDigest": "26b70097bce386b8d20be67d8b57c05b99b873bd78c1841b87473b53d7891411",
+      "operationId": "COMPASS_GEN1521_CACHE_IDENTITY_REPAIR_20260817_v2",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "0e6ad2bc0c585ab99e62f6ed58790b287c65b59e",
+        "lockGeneration": 1521,
+        "lockScope": "COMPASS:STUDIO_IDENTITY:COHERISCOPE:BRAIN:SPACECRAFT:EXACT_14_PATH_SCOPE",
+        "operationId": "COMPASS_STUDIO_IDENTITY_COHERISCOPE_BRAIN_SPACECRAFT_CONSTRUCTION_20260817_002",
+        "preservedEvidenceRefs": [
+          "operation:COMPASS_STUDIO_IDENTITY_COHERISCOPE_BRAIN_SPACECRAFT_CONSTRUCTION_20260817_002",
+          "merge:e4137b0bb45ce5effbc007b5cd39ba320b909c3c",
+          "pages-run:32065032701",
+          "issue:1011#comment:5319876568"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_GEN1521_CACHE_IDENTITY_SUCCESSOR_20260817_v2"
+      },
+      "procedureLocatorDigest": "9a62ba9fba80ac90b659b5449abeb889a17774a73e0e87e84af0eef7be6c6726",
       "released": false,
-      "requestDigest": "9e066bd555a2c35de0eb62eec41f639e21e62539d45b58cb5c7c16cba35f9408",
+      "requestDigest": "0286ae712f9633d1a3b8fa878eac3871d9d38d23e18272de7301132ed7fcbc98",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d0ab4c5ec245b1e9fc4e72c03f242eed7eb1e8f350fb383da08bcd0388187551",
       "state": "ADMITTED_LOCKED"
@@ -2304,7 +2321,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1522,
+  "lockGeneration": 1523,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -22563,6 +22580,36 @@
         "successorLockScope": "PUBLIC_INFRASTRUCTURE:PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER:V1",
         "successorOperationId": "PAGES_DEPLOYMENT_RESILIENCE_CONTROLLER_20260817_v5",
         "transitionId": "PAGES_RESILIENCE_1519_TO_BA3F3DE8_20260817_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "0e6ad2bc0c585ab99e62f6ed58790b287c65b59e",
+      "lockGeneration": 1521,
+      "lockScope": "COMPASS:STUDIO_IDENTITY:COHERISCOPE:BRAIN:SPACECRAFT:EXACT_14_PATH_SCOPE",
+      "operationId": "COMPASS_STUDIO_IDENTITY_COHERISCOPE_BRAIN_SPACECRAFT_CONSTRUCTION_20260817_002",
+      "procedureLocatorDigest": "26b70097bce386b8d20be67d8b57c05b99b873bd78c1841b87473b53d7891411",
+      "released": true,
+      "requestDigest": "9e066bd555a2c35de0eb62eec41f639e21e62539d45b58cb5c7c16cba35f9408",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d0ab4c5ec245b1e9fc4e72c03f242eed7eb1e8f350fb383da08bcd0388187551",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "operation:COMPASS_STUDIO_IDENTITY_COHERISCOPE_BRAIN_SPACECRAFT_CONSTRUCTION_20260817_002",
+          "merge:e4137b0bb45ce5effbc007b5cd39ba320b909c3c",
+          "pages-run:32065032701",
+          "issue:1011#comment:5319876568"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "0a48af79386402b0604fcbffcfd6b20d2dbd9b48",
+        "successorLockGeneration": 1523,
+        "successorLockScope": "COMPASS:STUDIO_IDENTITY:COHERISCOPE:BRAIN:SPACECRAFT:EXACT_14_PATH_SCOPE",
+        "successorOperationId": "COMPASS_GEN1521_CACHE_IDENTITY_REPAIR_20260817_v2",
+        "transitionId": "COMPASS_GEN1521_CACHE_IDENTITY_SUCCESSOR_20260817_v2"
       },
       "terminalDisposition": "SUPERSEDED"
     }

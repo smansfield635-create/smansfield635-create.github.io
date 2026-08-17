@@ -804,36 +804,6 @@
       "scopeHash": "65c30a151d0eee047d4366a3ae54ceb8d8313ab03a3964c507bb60433ebe4c75",
       "state": "ADMITTED_LOCKED"
     },
-    "67cb54272cd566a63c7ada19747ae558d33c877ba222f38765dd0881a6da477c": {
-      "governingHead": "57d5d7f3b1e24287817b828878ed2c9ca864cbbe",
-      "lockGeneration": 1511,
-      "lockScope": "H_EARTH:REGISTRY:AWARDS_COMPASS_V30:EXACT_FOUR_PATH_ROUTING_REGISTRATION:V1",
-      "operationId": "AWARDS_COMPASS_V30_EXACT_PATH_ROUTING_REGISTRATION_20260816_001_SUCCESSOR_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "9a83c5b6f157b2bec35b1ba3dd183e975a4ecf27",
-        "lockGeneration": 1510,
-        "lockScope": "H_EARTH:REGISTRY:AWARDS_COMPASS_V30:EXACT_FOUR_PATH_ROUTING_REGISTRATION:V1",
-        "operationId": "AWARDS_COMPASS_V30_EXACT_PATH_ROUTING_REGISTRATION_20260816_001",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1200#issuecomment-5311907191",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/31995318713/artifacts/9276632297",
-          "V29_TERMINAL_CLOSURE_COMMIT_c4c21284187491cc69c53dc46286580efaa7a650",
-          "V29_NATIVE_PREFLIGHT_RUN_31993053845_ARTIFACT_9275952437_SHA256_f7a718135a2ab27d30d0171712a68e20b226cd776a345d0c58e0ee7460c678a2",
-          "LIVE_V28_SHA256_42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62_AT_PREDECESSOR_HEAD_9a83c5b6f157b2bec35b1ba3dd183e975a4ecf27"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "AWARDS_COMPASS_V30_REGISTRATION_9A83C5B6_TO_57D5D7F3_20260817_001"
-      },
-      "procedureLocatorDigest": "b58f430cbdb33a3387160e6c0be4915ac7ae70ac3979cdbe1a9772c3c0b61557",
-      "released": false,
-      "requestDigest": "7028a748b2843ce842458b82b69d2fa07e1702c9f4dd13e97230d7141dcc223e",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "67cb54272cd566a63c7ada19747ae558d33c877ba222f38765dd0881a6da477c",
-      "state": "ADMITTED_LOCKED"
-    },
     "68f8bd53a5e2887ce30f0e59983668c6d44e89715fa9e3801e7217800a01c9e7": {
       "governingHead": "065ed8a3d4e8204197c21410294941409d5a13c3",
       "lockGeneration": 1446,
@@ -22258,6 +22228,37 @@
         "transitionId": "AWARDS_COMPASS_V30_REGISTRATION_9A83C5B6_TO_57D5D7F3_20260817_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "57d5d7f3b1e24287817b828878ed2c9ca864cbbe",
+      "lockGeneration": 1511,
+      "lockScope": "H_EARTH:REGISTRY:AWARDS_COMPASS_V30:EXACT_FOUR_PATH_ROUTING_REGISTRATION:V1",
+      "operationId": "AWARDS_COMPASS_V30_EXACT_PATH_ROUTING_REGISTRATION_20260816_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "9a83c5b6f157b2bec35b1ba3dd183e975a4ecf27",
+        "lockGeneration": 1510,
+        "lockScope": "H_EARTH:REGISTRY:AWARDS_COMPASS_V30:EXACT_FOUR_PATH_ROUTING_REGISTRATION:V1",
+        "operationId": "AWARDS_COMPASS_V30_EXACT_PATH_ROUTING_REGISTRATION_20260816_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1200#issuecomment-5311907191",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/31995318713/artifacts/9276632297",
+          "V29_TERMINAL_CLOSURE_COMMIT_c4c21284187491cc69c53dc46286580efaa7a650",
+          "V29_NATIVE_PREFLIGHT_RUN_31993053845_ARTIFACT_9275952437_SHA256_f7a718135a2ab27d30d0171712a68e20b226cd776a345d0c58e0ee7460c678a2",
+          "LIVE_V28_SHA256_42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62_AT_PREDECESSOR_HEAD_9a83c5b6f157b2bec35b1ba3dd183e975a4ecf27"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_COMPASS_V30_REGISTRATION_9A83C5B6_TO_57D5D7F3_20260817_001"
+      },
+      "procedureLocatorDigest": "b58f430cbdb33a3387160e6c0be4915ac7ae70ac3979cdbe1a9772c3c0b61557",
+      "released": true,
+      "requestDigest": "7028a748b2843ce842458b82b69d2fa07e1702c9f4dd13e97230d7141dcc223e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "67cb54272cd566a63c7ada19747ae558d33c877ba222f38765dd0881a6da477c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

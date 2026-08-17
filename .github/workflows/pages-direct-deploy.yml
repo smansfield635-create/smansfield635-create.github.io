@@ -223,8 +223,9 @@ jobs:
               --arg dynamicRunConclusion "${run_conclusion:-}" --arg deploymentState "${deployment_state:-}" \
               --argjson artifactBytes "${artifact_bytes:-0}" --argjson providerHttpStatuses "$provider_statuses" \
               --argjson providerFailureCount "${run_attempt:-0}" --argjson maxProviderRetries 2 \
-              '{expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:$pagesBuildStatus,dynamicRunConclusion:($dynamicRunConclusion|select(length>0)),deploymentState:($deploymentState|select(length>0)),artifactBytes:$artifactBytes,providerHttpStatuses:$providerHttpStatuses,providerFailureCount:$providerFailureCount,maxProviderRetries:$maxProviderRetries}' \
+              '{expectedHead:$expectedHead,observedHead:$observedHead,topology:$topology,pagesBuildStatus:$pagesBuildStatus,dynamicRunConclusion:$dynamicRunConclusion,deploymentState:$deploymentState,artifactBytes:$artifactBytes,providerHttpStatuses:$providerHttpStatuses,providerFailureCount:$providerFailureCount,maxProviderRetries:$maxProviderRetries}' \
               > /tmp/pages-resilience-input.json
+            jq -e . /tmp/pages-resilience-input.json >/dev/null
             node .github/ai-router/platform/pages-deployment-resilience-controller.v1.mjs \
               --input /tmp/pages-resilience-input.json --output /tmp/pages-deployment-resilience-receipt.json >/dev/null
             disposition="$(jq -r '.disposition' /tmp/pages-deployment-resilience-receipt.json)"

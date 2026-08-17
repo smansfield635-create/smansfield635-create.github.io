@@ -1,0 +1,42 @@
+name: Chapter 01 V28 Workspace Export
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/ch1-v28-workspace-export.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export-v28:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify exact V28 media identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          MEDIA='showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4'
+          EXPECTED='42a0ee342a00179fff8f94d09f02ae58b660856cc8b9e6613be1f9990d1cfa62'
+          test -s "$MEDIA"
+          ACTUAL="$(sha256sum "$MEDIA" | awk '{print $1}')"
+          test "$ACTUAL" = "$EXPECTED"
+          test "$(stat -c %s "$MEDIA")" = '13651045'
+
+      - name: Upload exact V28 only
+        uses: actions/upload-artifact@v4
+        with:
+          name: chapter01-compass-v28-exact-master
+          path: showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0

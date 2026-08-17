@@ -1548,6 +1548,18 @@
       "scopeHash": "b65bf82ec24a40e447fa06a4476144d9840c0a74d577d5db2581ff88a3ce3ba2",
       "state": "ADMITTED_LOCKED"
     },
+    "b7c55f85253fe3fb2798be84de7f0e7a668a792a2dd1ccab5a89fc62e91e8012": {
+      "governingHead": "0e6ad2bc0c585ab99e62f6ed58790b287c65b59e",
+      "lockGeneration": 1522,
+      "lockScope": "COMPASS:AI_ROUTER:AWARD_FILM_PRODUCTION_PROTOCOL:EXACT_2_PATH_SCOPE",
+      "operationId": "COMPASS_AWARD_FILM_CYCLICAL_PRODUCTION_PROTOCOL_20260817_002",
+      "procedureLocatorDigest": "ad3257850ba7b5fe32640ee08174a09d5813bf40be3ee13e7f48e5bec6616bfd",
+      "released": false,
+      "requestDigest": "cd317a43f2fbebb32a444c9e33eb7a1e21e29b5369325bf5a8213dd63f569319",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b7c55f85253fe3fb2798be84de7f0e7a668a792a2dd1ccab5a89fc62e91e8012",
+      "state": "ADMITTED_LOCKED"
+    },
     "b7c89b7086a2e6f35d5003972b0bd087326c4c713144f01484214a0aea4c5c61": {
       "governingHead": "eec1e3adb1eaa3af4c40bba8f3187bdbb00a93fe",
       "lockGeneration": 184,
@@ -2292,7 +2304,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1521,
+  "lockGeneration": 1522,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

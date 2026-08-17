@@ -19,7 +19,9 @@ export function classifyPagesDeployment(input = {}) {
     ? input.providerHttpStatuses.map(v => asInt(v, 0)).filter(Boolean)
     : [];
   const provider5xx = providerHttpStatuses.filter(v => v >= 500 && v <= 599);
-  const providerFailureCount = Math.max(asInt(input.providerFailureCount, 0), provider5xx.length);
+  const providerFailureCount = provider5xx.length
+    ? Math.max(asInt(input.providerFailureCount, provider5xx.length), provider5xx.length)
+    : 0;
   const maxProviderRetries = Math.max(1, asInt(input.maxProviderRetries, DEFAULT_MAX_PROVIDER_RETRIES));
   const pagesBuildStatus = String(input.pagesBuildStatus || 'unknown');
   const dynamicRunConclusion = input.dynamicRunConclusion == null ? null : String(input.dynamicRunConclusion);
@@ -53,7 +55,7 @@ export function classifyPagesDeployment(input = {}) {
     disposition = 'TOPOLOGY_FAILURE';
     action = 'STOP';
     reason = 'UNSUPPORTED_PAGES_TOPOLOGY';
-  } else if (provider5xx.length || (dynamicRunConclusion === 'failure' && providerFailureCount > 0)) {
+  } else if (provider5xx.length) {
     if (providerFailureCount >= maxProviderRetries) {
       disposition = 'WAITING_EXTERNAL_SERVICE';
       action = 'PRESERVE_AND_WAIT';
@@ -68,7 +70,7 @@ export function classifyPagesDeployment(input = {}) {
     disposition = 'ARTIFACT_LIMIT_FAILURE';
     action = 'STOP_AND_REDUCE_ARTIFACT';
     reason = 'GITHUB_PAGES_ARTIFACT_EXCEEDS_1_GIB';
-  } else if (pagesBuildStatus === 'errored' || deploymentState === 'failure' || dynamicRunConclusion === 'failure') {
+  } else if (pagesBuildStatus === 'errored' || pagesBuildStatus === 'timeout' || deploymentState === 'failure' || dynamicRunConclusion === 'failure') {
     disposition = 'REPOSITORY_DEFECT';
     action = 'STOP_AND_INSPECT';
     reason = 'NON_PROVIDER_DEPLOYMENT_FAILURE';
@@ -104,6 +106,9 @@ export function selfTest() {
     assertCase('single-503', { expectedHead: head, observedHead: head, topology: 'legacy', providerHttpStatuses: [503], providerFailureCount: 1, maxProviderRetries: 2 }, 'RETRYABLE_PROVIDER_FAILURE'),
     assertCase('repeated-503-real-fixture', { expectedHead: head, observedHead: head, topology: 'legacy', artifactBytes: 1_192_627_948, providerHttpStatuses: [503], providerFailureCount: 2, maxProviderRetries: 2, dynamicRunConclusion: 'failure', pagesBuildStatus: 'building' }, 'WAITING_EXTERNAL_SERVICE'),
     assertCase('artifact-limit', { expectedHead: head, observedHead: head, topology: 'legacy', artifactBytes: 1_192_627_948, pagesBuildStatus: 'building' }, 'ARTIFACT_LIMIT_FAILURE'),
+    assertCase('failed-without-5xx-over-limit', { expectedHead: head, observedHead: head, topology: 'legacy', artifactBytes: 1_192_627_948, dynamicRunConclusion: 'failure', providerFailureCount: 2, providerHttpStatuses: [] }, 'ARTIFACT_LIMIT_FAILURE'),
+    assertCase('failed-without-5xx', { expectedHead: head, observedHead: head, topology: 'legacy', artifactBytes: 128_000_000, dynamicRunConclusion: 'failure', providerFailureCount: 2, providerHttpStatuses: [] }, 'REPOSITORY_DEFECT'),
+    assertCase('timeout-without-5xx', { expectedHead: head, observedHead: head, topology: 'legacy', pagesBuildStatus: 'timeout', providerHttpStatuses: [] }, 'REPOSITORY_DEFECT'),
     assertCase('topology', { expectedHead: head, observedHead: head, topology: 'unknown' }, 'TOPOLOGY_FAILURE'),
     assertCase('head-mismatch', { expectedHead: head, observedHead: 'deadbeef', topology: 'legacy' }, 'REPOSITORY_DEFECT')
   ];

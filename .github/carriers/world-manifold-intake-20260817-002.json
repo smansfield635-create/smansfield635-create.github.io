@@ -1,0 +1,190 @@
+{
+  "schema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1",
+  "operationRequest": {
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "operationId": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002",
+    "projectId": "H_EARTH",
+    "lockScope": "H_EARTH:WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION:V1",
+    "exactGoverningHead": "804e2c31c10ab04a73c1cfbae883892735a62f3d",
+    "subjectIdentity": {
+      "publicRepository": "smansfield635-create/smansfield635-create.github.io",
+      "exactPublicBaseHead": "a7b13dd5cebeafe6ce126d7df64c4088db7feb48",
+      "auditEvidenceComment": 5321206293,
+      "rootCauseAddendumCommit": "804e2c31c10ab04a73c1cfbae883892735a62f3d",
+      "operationClass": "ARCHITECTURE_ONLY_NO_LIVE_VISUAL_PROMOTION"
+    },
+    "requestingAuthority": {
+      "authorityId": "OWNER_EXPLICIT_AUDIT_THEN_CONSTRUCTION_AUTHORIZATION_20260817_001",
+      "mergeAuthority": false,
+      "productionAuthority": false
+    },
+    "executingRole": {
+      "roleId": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_CONSTRUCTOR_v1"
+    },
+    "independentVerifier": {
+      "roleId": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_VERIFIER_v1",
+      "mustBeDistinctFromConstructor": true
+    },
+    "constructionProcedureLocator": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_PROCEDURE_20260817_002",
+    "requiredInputs": [
+      {"id": "PRIVATE_MAIN_804e2c31c10ab04a73c1cfbae883892735a62f3d", "resolved": true},
+      {"id": "PUBLIC_MAIN_a7b13dd5cebeafe6ce126d7df64c4088db7feb48", "resolved": true},
+      {"id": "WORLD_MANIFOLD_MIGRATION_STANDARDS_AUDIT_COMMENT_5321206293", "resolved": true},
+      {"id": "FOUNDATIONAL_PACKET_KERNEL_ROOT_CAUSE_ADDENDUM", "resolved": true}
+    ],
+    "allowedPaths": [
+      "h-earth-3d/terrain/h-earth.world-manifold-domain.js",
+      "h-earth-3d/integration/h-earth.world-representation-plan.js",
+      "h-earth-3d/integration/h-earth.world-manifold-union-admission.js",
+      "h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs",
+      "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "showroom/globe/h-earth/render/landscape-preview.js",
+      "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "showroom/globe/h-earth/render/run8e-successor-environment.js"
+    ],
+    "prohibitedPaths": [
+      "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "showroom/globe/h-earth/render/geometry-kernel.js",
+      "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "showroom/globe/h-earth/render/planetary-world-frame.js",
+      "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/functional-landscape/navigation.js"
+    ],
+    "requiredOutputs": [
+      "WORLD_MANIFOLD_DOMAIN_CONTRACT",
+      "WORLD_REPRESENTATION_PLAN_CONTRACT",
+      "WORLD_MANIFOLD_UNION_ADMISSION_RECEIPT",
+      "RUN8B_SHARED_DOMAIN_BINDING",
+      "WORLD_BEARING_PACKET002_UNION_REQUIREMENT",
+      "NEGATIVE_WITNESSES_OPEN_OCEAN_DOMAIN_TOPOLOGY_TERMINAL_EDGE_LOD"
+    ],
+    "exactTestCommand": "node h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs",
+    "workflowPath": ".github/workflows/h-earth-cp3d-renderer-survival.yml",
+    "artifactPaths": ["h-earth-3d/validation/evidence/cp3d/world-manifold-architecture-receipt.json"],
+    "fingerprintDomain": {
+      "domainId": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002",
+      "algorithm": "sha256",
+      "privateGoverningHead": "804e2c31c10ab04a73c1cfbae883892735a62f3d",
+      "publicBaseHead": "a7b13dd5cebeafe6ce126d7df64c4088db7feb48"
+    },
+    "errorPrecedence": [
+      "PRIVATE_HEAD_MISMATCH",
+      "PUBLIC_BASE_HEAD_MISMATCH",
+      "UNEXPECTED_MUTATION_PATH",
+      "GENERIC_KERNEL_DRIFT",
+      "WORLD_DOMAIN_IDENTITY_MISMATCH",
+      "TOPOLOGY_SOURCE_IDENTITY_MISMATCH",
+      "OPEN_OCEAN_TERRAIN_PRESENT",
+      "UNMATCHED_TERMINAL_EDGE",
+      "LOD_OVERLAP_DISCONTINUITY",
+      "PACKET002_UNION_RECEIPT_MISSING_OR_INVALID"
+    ],
+    "stopConditions": [
+      "PRIVATE_HEAD_MISMATCH",
+      "PUBLIC_BASE_HEAD_MISMATCH",
+      "UNEXPECTED_MUTATION_PATH",
+      "GENERIC_SOUTH_OR_WEST_SEMANTICS_CHANGED",
+      "PLANETARY_TRANSFORM_CHANGED",
+      "CURRENT_FRAGMENTED_PACKAGE_CAN_TRANSFER_WITHOUT_UNION_RECEIPT",
+      "OPEN_OCEAN_TERRAIN_INJECTION_NOT_REJECTED",
+      "TOPOLOGY_SOURCE_MISMATCH_NOT_REJECTED",
+      "UNMATCHED_TERMINAL_EDGE_NOT_REJECTED",
+      "LOD_OVERLAP_DISCONTINUITY_NOT_REJECTED"
+    ],
+    "terminalDispositions": ["PASS_CLOSED", "FAIL_CLOSED", "REJECTED_CLOSED", "SUPERSEDED"]
+  },
+  "constructionProcedure": {
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "procedureId": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_PROCEDURE_20260817_002",
+    "operationClass": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_ONLY_SUCCESSOR",
+    "exactGoverningHead": "804e2c31c10ab04a73c1cfbae883892735a62f3d",
+    "exactAllowedRepositoryPaths": [
+      "h-earth-3d/terrain/h-earth.world-manifold-domain.js",
+      "h-earth-3d/integration/h-earth.world-representation-plan.js",
+      "h-earth-3d/integration/h-earth.world-manifold-union-admission.js",
+      "h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs",
+      "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "showroom/globe/h-earth/render/landscape-preview.js",
+      "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "showroom/globe/h-earth/render/run8e-successor-environment.js"
+    ],
+    "exactBranchAndCommitSequence": [
+      {"step": 1, "action": "VERIFY_AUDIT_BASES_AND_ROUTE_ALL_11_PATHS"},
+      {"step": 2, "action": "INSTALL_WORLD_MANIFOLD_DOMAIN_REPRESENTATION_PLAN_AND_UNION_ADMISSION_CONTRACTS"},
+      {"step": 3, "action": "REBIND_RUN8B_NEAR_REPRESENTATION_TO_SHARED_DOMAIN_IDENTITY_WITHOUT_CHANGING_GENERIC_KERNELS"},
+      {"step": 4, "action": "SUPERSEDE_DIRECTIONAL_SHORELINE_DISTANT_AND_PREVIEW_AS_WORLD_BEARING_AUTHORITIES_WITH_PLAN_DERIVED_REPRESENTATIONS"},
+      {"step": 5, "action": "REQUIRE_VALID_WORLD_MANIFOLD_UNION_RECEIPT_BEFORE_RUN8E_PACKET002_TRANSFER"},
+      {"step": 6, "action": "QUALIFY_POSITIVE_AND_NEGATIVE_WORLD_UNION_WITNESSES"},
+      {"step": 7, "action": "STOP_AT_ARCHITECTURE_CANDIDATE_NO_LIVE_VISUAL_PROMOTION"}
+    ],
+    "evaluationToolingHeadBindingRule": "QUALIFY_EXACT_PUBLIC_CANDIDATE_DESCENDED_FROM_a7b13dd5cebeafe6ce126d7df64c4088db7feb48_AGAINST_PRIVATE_ARCHITECTURE_AUTHORITY_804e2c31c10ab04a73c1cfbae883892735a62f3d_WITH_GENERIC_KERNEL_AND_PLANETARY_TRANSFORM_BLOBS_HELD_IMMUTABLE",
+    "canonicalInputSchemas": [
+      "REPOSITORY_OPERATION_REQUEST_v1",
+      "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+      "H_EARTH_WORLD_MANIFOLD_DOMAIN_v1",
+      "H_EARTH_WORLD_REPRESENTATION_PLAN_v1"
+    ],
+    "canonicalOutputSchemas": [
+      "H_EARTH_WORLD_MANIFOLD_DOMAIN_v1",
+      "H_EARTH_WORLD_REPRESENTATION_PLAN_v1",
+      "H_EARTH_WORLD_MANIFOLD_UNION_ADMISSION_RECEIPT_v1"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "PRIVATE_HEAD_MISMATCH",
+      "PUBLIC_BASE_HEAD_MISMATCH",
+      "UNEXPECTED_MUTATION_PATH",
+      "GENERIC_KERNEL_DRIFT",
+      "WORLD_DOMAIN_IDENTITY_MISMATCH",
+      "TOPOLOGY_SOURCE_IDENTITY_MISMATCH",
+      "OPEN_OCEAN_TERRAIN_PRESENT",
+      "UNMATCHED_TERMINAL_EDGE",
+      "LOD_OVERLAP_DISCONTINUITY",
+      "PACKET002_UNION_RECEIPT_MISSING_OR_INVALID"
+    ],
+    "exactTestRunnerCommand": "node h-earth-3d/validation/h-earth.world-manifold-architecture.harness.mjs",
+    "independentVerifierDefinition": {
+      "verifierId": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_VERIFIER_v1",
+      "mayRepair": false,
+      "mayMutateRepository": false,
+      "requiredProofs": [
+        "ONE_DOMAIN_IDENTITY",
+        "ONE_TOPOLOGY_SOURCE_IDENTITY",
+        "OPEN_OCEAN_NEGATIVE_TRUTH",
+        "CROSS_MEMBER_BOUNDARY_CORRESPONDENCE",
+        "OVERLAPPED_LOD_CONTINUITY",
+        "RADIAL_COVERAGE",
+        "NO_UNMATCHED_VISIBLE_TERMINAL_EDGE",
+        "PACKET002_REQUIRES_UNION_RECEIPT",
+        "GENERIC_KERNELS_UNCHANGED"
+      ]
+    },
+    "workflowAndArtifactPackagingPaths": {
+      "workflowPath": ".github/workflows/h-earth-cp3d-renderer-survival.yml",
+      "artifactPaths": ["h-earth-3d/validation/evidence/cp3d/world-manifold-architecture-receipt.json"]
+    },
+    "bridgeOutputFingerprintDomain": {
+      "domainId": "H_EARTH_WORLD_MANIFOLD_ARCHITECTURE_INSTALLATION_20260817_002",
+      "algorithm": "sha256",
+      "privateGoverningHead": "804e2c31c10ab04a73c1cfbae883892735a62f3d",
+      "publicBaseHead": "a7b13dd5cebeafe6ce126d7df64c4088db7feb48"
+    },
+    "priorAttemptInspectionLimits": {
+      "mayAuthorizeMutation": false,
+      "mayRelabelRejectedGen305AsPositiveDonor": false,
+      "mayReuseGen305PerformanceEvidence": true,
+      "mayUseDirectionalBandGeometryAsSuccessorDonor": false,
+      "mayModifyGenericSouthWestOrPlanetaryTransform": false
+    }
+  }
+}

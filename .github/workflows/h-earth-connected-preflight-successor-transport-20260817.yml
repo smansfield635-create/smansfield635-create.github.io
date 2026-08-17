@@ -1,0 +1,94 @@
+name: H-Earth Connected Preflight Successor Transport
+
+on:
+  push:
+    branches:
+      - repair/h-earth-connected-preflight-successor-transport-20260817
+    paths:
+      - '.github/workflows/h-earth-connected-preflight-successor-transport-20260817.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Mint private control-plane read token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+
+      - name: Check out authoritative private control-plane head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 4c19e9ba783767f9324ab10df8a8541479f26c86
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out exact public tooling head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 012213de030780938ace85aae90e9330fac6d838
+          path: public-tooling
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify authoritative binding and execute exact Gen305 preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/h-earth-gen305-preflight"
+          mkdir -p "$work"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const bindingPath = `${process.env.GITHUB_WORKSPACE}/private-control-plane/.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json`;
+          const b = JSON.parse(fs.readFileSync(bindingPath, 'utf8'));
+          const fail = (c) => { throw new Error(c); };
+          if (b.status !== 'RATIFIED_ACTIVE_RECONCILED_TOOLING') fail('BINDING_NOT_ACTIVE');
+          if (b.projectId !== 'H_EARTH' || b.executionClass !== 'PREFLIGHT') fail('BINDING_CLASS_MISMATCH');
+          if (b.registeredBackendId !== 'CONNECTED_GITHUB_EXACT_PUBLIC_H_EARTH_PREFLIGHT_V1') fail('BACKEND_ID_MISMATCH');
+          if (b.fixedRepository !== 'smansfield635-create/smansfield635-create.github.io') fail('REPOSITORY_MISMATCH');
+          if (b.fixedToolingHead !== '012213de030780938ace85aae90e9330fac6d838') fail('TOOLING_HEAD_MISMATCH');
+          if (b.executor !== 'tools/ai-room-transport/connected-public-h-earth-preflight.v1.mjs') fail('EXECUTOR_MISMATCH');
+          NODE
+          cd "$GITHUB_WORKSPACE/public-tooling"
+          test "$(git rev-parse HEAD^{commit})" = '012213de030780938ace85aae90e9330fac6d838'
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          paths='["h-earth-3d/docs/H_EARTH_C3C3R5_S26_PERFORMANCE_WORLD_ENVELOPE_SUCCESSOR_CONTRACT_v1.md","h-earth-3d/validation/h-earth.c3c3r5.s26-performance-world-envelope.browser.harness.mjs","showroom/globe/h-earth/render/functional-landscape-frame.js","showroom/globe/h-earth/render/geometry-distant-context.js","showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js","showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js","showroom/globe/h-earth/render/run8e-successor-environment.js"]'
+          paths_b64="$(printf '%s' "$paths" | base64 -w0)"
+          node tools/ai-room-transport/h-earth-repository-preflight-remote-execution.v1.mjs \
+            --subject-head 2152ad18c1691c4056e9ae39795ad44228dbdc19 \
+            --paths-base64 "$paths_b64" \
+            --execution-holder H_EARTH_C3C3R5_S26_GEN305_PREFLIGHT \
+            --output "$work/receipt.json"
+          cat "$work/receipt.json"
+          node --input-type=module - "$work/receipt.json" <<'NODE'
+          import fs from 'node:fs';
+          const r = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
+          if (r.schema !== 'H_EARTH_PREMUTATION_PREFLIGHT_REMOTE_EXECUTION_RECEIPT_v1') throw new Error('RECEIPT_SCHEMA_MISMATCH');
+          if (r.subjectHead !== '2152ad18c1691c4056e9ae39795ad44228dbdc19') throw new Error('SUBJECT_MISMATCH');
+          if (r.result !== 'PASS_CLOSED') throw new Error(`PREFLIGHT_NONPASS:${r.result}:${r.errorCode ?? ''}`);
+          if (r.nativePreflightReceipt?.finalDisposition !== 'PASS') throw new Error('NATIVE_DISPOSITION_NONPASS');
+          if (r.nativePreflightReceipt?.continuation !== 'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE') throw new Error('CONTINUATION_MISMATCH');
+          if (r.productMutationPerformed !== false || r.constructionAuthorityGranted !== false || r.branchCreated !== false || r.mergePerformed !== false || r.deploymentPerformed !== false || r.releasePerformed !== false) throw new Error('AUTHORITY_OR_SIDE_EFFECT_LEAK');
+          NODE
+
+      - name: Upload exact preflight receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen305-authoritative-preflight-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-gen305-preflight/receipt.json
+          if-no-files-found: error
+          retention-days: 90

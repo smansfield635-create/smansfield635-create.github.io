@@ -156,6 +156,18 @@
       "scopeHash": "130b91450800662195c41e6efddd8931e868979b4ed76bae359a9cfe88de00e9",
       "state": "ADMITTED_LOCKED"
     },
+    "136a2997ff80725e92183cf95743a8406186e47838521a684188e37da077d9dc": {
+      "governingHead": "48132ad9f44b8b838bb7dffaf7638b9ca072d0fd",
+      "lockGeneration": 1527,
+      "lockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_AND_CRYSTALS:RESOURCE_SCHEDULING_PERFORMANCE_ONLY",
+      "operationId": "COMPASS_MIRRORLAND_CRYSTAL_SCHEDULING_PERFORMANCE_CONTINUATION_20260817_009",
+      "procedureLocatorDigest": "98e51f26ad2fc8d090014a5eb7d22bff99843379cce9c703ab24d3f065a406c0",
+      "released": false,
+      "requestDigest": "8492c093c6803f992a0d9a7687e72f73cdf6c4b17fb5b09c53a43b9a7032e696",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "136a2997ff80725e92183cf95743a8406186e47838521a684188e37da077d9dc",
+      "state": "ADMITTED_LOCKED"
+    },
     "147dc7c04b0ab95c257cf99e988904dac93874d34af5d35be4a69b8cfe1dcf2b": {
       "governingHead": "3e91d0f94a762d99c5a614e528612db40827fa19",
       "lockGeneration": 247,
@@ -2357,7 +2369,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1526,
+  "lockGeneration": 1527,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -108,40 +108,6 @@
       "scopeHash": "0cbb894a22e576db5e8f30790ca5b753f50d8e73f0394804166ce80d919effd0",
       "state": "ADMITTED_LOCKED"
     },
-    "0df3b9044dc92968554c2a92f25e0c58f09240b4bc43689bc14a9b8312ac1040": {
-      "governingHead": "ad395e724cbfea1c19c9ce43393c1148fa557816",
-      "lockGeneration": 1507,
-      "lockScope": "COMPASS_PUBLIC_INTERACTION_DIAGNOSTIC_SUCCESSOR",
-      "operationId": "COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "54482eee3291d04d26c49980678330369c3ef007",
-        "lockGeneration": 1505,
-        "lockScope": "COMPASS_PUBLIC_INTERACTION_DIAGNOSTIC_SUCCESSOR",
-        "operationId": "COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v4",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310364550",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310451190",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310595520",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/1228",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/31984792797",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310777003",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310799323",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310805294",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/ad395e724cbfea1c19c9ce43393c1148fa557816"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_INTERACTION_DIAGNOSTIC_54482EEE_TO_AD395E72_20260816_v1"
-      },
-      "procedureLocatorDigest": "4f9c62b76d9c340ee1758aff67692ecec116344d52965770f3c6a1ae94d0a1c0",
-      "released": false,
-      "requestDigest": "56dfdbac259c23789e0996723df1b80e5903deb62fedf1fdcdf245ce7b836322",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "0df3b9044dc92968554c2a92f25e0c58f09240b4bc43689bc14a9b8312ac1040",
-      "state": "ADMITTED_LOCKED"
-    },
     "0faf1fc693e77d00999271a450734a320f5e93551f408a7834bdcf7cf172a882": {
       "governingHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
       "lockGeneration": 1169,
@@ -22171,6 +22137,41 @@
         "transitionId": "COMPASS_INTERACTION_DIAGNOSTIC_54482EEE_TO_AD395E72_20260816_v1"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ad395e724cbfea1c19c9ce43393c1148fa557816",
+      "lockGeneration": 1507,
+      "lockScope": "COMPASS_PUBLIC_INTERACTION_DIAGNOSTIC_SUCCESSOR",
+      "operationId": "COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "54482eee3291d04d26c49980678330369c3ef007",
+        "lockGeneration": 1505,
+        "lockScope": "COMPASS_PUBLIC_INTERACTION_DIAGNOSTIC_SUCCESSOR",
+        "operationId": "COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v4",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310364550",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310451190",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310595520",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/1228",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/31984792797",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310777003",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310799323",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310805294",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/ad395e724cbfea1c19c9ce43393c1148fa557816"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_INTERACTION_DIAGNOSTIC_54482EEE_TO_AD395E72_20260816_v1"
+      },
+      "procedureLocatorDigest": "4f9c62b76d9c340ee1758aff67692ecec116344d52965770f3c6a1ae94d0a1c0",
+      "released": true,
+      "requestDigest": "56dfdbac259c23789e0996723df1b80e5903deb62fedf1fdcdf245ce7b836322",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0df3b9044dc92968554c2a92f25e0c58f09240b4bc43689bc14a9b8312ac1040",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

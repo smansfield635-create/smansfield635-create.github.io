@@ -1872,6 +1872,18 @@
       "scopeHash": "d83783e3636cd140c13098efc8ee524598e0dd7291e710306fc3c668e585babf",
       "state": "ADMITTED_LOCKED"
     },
+    "d898f07a9152be7835f622d334a4376312c2e03e7adef6624fcbfbd91572b844": {
+      "governingHead": "57d5d7f3b1e24287817b828878ed2c9ca864cbbe",
+      "lockGeneration": 1512,
+      "lockScope": "H_EARTH:REGISTRY:AWARDS_COMPASS_V30:PR1237:MERGE_ONLY:V1",
+      "operationId": "AWARDS_COMPASS_V30_REGISTRY_PR1237_MERGE_20260817_001",
+      "procedureLocatorDigest": "d21048c2f792cc037ae62a46ace959e2c0ff509708b9ac0246272267fbee5582",
+      "released": false,
+      "requestDigest": "4f0baead64edb4be35a41f12f3dd8e52107e2a16357cd220f100fe360e31d6d4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d898f07a9152be7835f622d334a4376312c2e03e7adef6624fcbfbd91572b844",
+      "state": "ADMITTED_LOCKED"
+    },
     "dbb3be875a160b8d1b32c59516c7c8f02a24f72223106b64cddea5fd6bdb5d2d": {
       "governingHead": "9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
       "lockGeneration": 603,
@@ -2224,7 +2236,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1511,
+  "lockGeneration": 1512,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

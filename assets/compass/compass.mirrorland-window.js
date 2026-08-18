@@ -2975,7 +2975,10 @@
       return;
     }
 
-    requestRender();
+    state.raf =
+      requestAnimationFrame(
+        render
+      );
   }
 
   function render(
@@ -3154,6 +3157,8 @@
       lastFailure:
         null
     });
+
+    requestRender();
 
     return true;
   }

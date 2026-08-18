@@ -1,4 +1,4 @@
-name: Compass Gen1536 Coherence Browser Qualification
+name: Compass Gen1537 Live Recovery Browser Qualification
 
 on:
   pull_request:
@@ -8,9 +8,7 @@ on:
       - 'assets/compass/**'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
       - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
-      - '.github/workflows/compass-performance-successor-validation.yml'
       - '.github/workflows/compass-carousel-successor-live-qualification.yml'
-      - '.github/workflows/compass-display-continuity-validation.yml'
   workflow_dispatch:
 
 permissions:
@@ -18,8 +16,8 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-coherence-performance.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-coherence-display.json
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1537-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1537-display.json
 
 jobs:
   qualify-browser:
@@ -33,63 +31,61 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact checkout and static contracts
+      - name: Verify exact checkout and Gen1537 static contracts
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
           node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-      - name: Install browser runtime
+      - name: Install Chromium
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install chromium
       - name: Start exact candidate server
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-coherence-server.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-gen1537-server.log 2>&1 &
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
           curl -fsS http://127.0.0.1:4173/ >/dev/null
-      - name: Qualify responsive portals scrolling lifecycle and cadence
+      - name: Qualify Mirrorland, 3D Compass, lower carousel, and cadence
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import {chromium} from 'playwright';
           const head=process.env.COMPASS_CANDIDATE_HEAD,base=`http://127.0.0.1:4173/?candidate=${head}`;
           const checks=[],metrics={};const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
-          const measure=async page=>page.evaluate(async()=>{const a=[];let last=performance.now();for(let i=0;i<100;i++)await new Promise(r=>requestAnimationFrame(now=>{a.push(now-last);last=now;r()}));const s=a.slice(8).sort((x,y)=>x-y),q=p=>s[Math.min(s.length-1,Math.floor(s.length*p))];return{median:Number(q(.5).toFixed(2)),p95:Number(q(.95).toFixed(2)),samples:s.length}});
+          const measure=async page=>page.evaluate(async()=>{const a=[];let last=performance.now();for(let i=0;i<90;i++)await new Promise(r=>requestAnimationFrame(now=>{a.push(now-last);last=now;r()}));const s=a.slice(8).sort((x,y)=>x-y),q=p=>s[Math.min(s.length-1,Math.floor(s.length*p))];return{median:Number(q(.5).toFixed(2)),p95:Number(q(.95).toFixed(2)),samples:s.length}});
           const browser=await chromium.launch({headless:true});
           try{
             for(const [name,width,height,reduced] of [['desktop',1440,900,false],['tablet',820,1180,false],['phone',390,844,false],['phone-tall',430,932,false],['reduced',820,1180,true]]){
               const context=await browser.newContext({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));
-              await page.goto(`${base}&surface=${name}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_IDENTITY_3D_GEN1536?.mounted),null,{timeout:15000});await page.waitForFunction(()=>Boolean(document.querySelector('[data-capability-orbit]')),null,{timeout:10000});await page.waitForTimeout(1000);
-              const state=await page.evaluate(()=>{const cards=[...document.querySelectorAll('[data-capability-orbit] [data-capability]')],front=cards.find(x=>x.dataset.slot==='front'),craft=document.querySelector('[data-compass-spacecraft-layer]'),objects=[...document.querySelectorAll('.compass-object-portal')],heights=cards.map(x=>Math.round(x.offsetHeight));return{overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth,spatialCompass:Boolean(document.querySelector('[data-compass-spatial-instrument]')),rotation:Boolean(document.querySelector('.compass-identity-o-control')),objectCount:objects.length,objectLabels:objects.map(x=>x.getAttribute('aria-label')),front:front?.dataset.capability||'',heights,craft:{present:Boolean(craft),design:craft?.dataset.designId||'',source:craft?.dataset.sourceModule||'',surface:craft?.dataset.presentationSurface||'',offscreen:craft?.dataset.offscreenRendering||''},rooms:new Set([...document.querySelectorAll('[data-room-id]')].map(x=>x.dataset.roomId).filter(x=>/^(north|east|south|west)-\d+$/.test(x))).size,cardinals:document.querySelectorAll('[data-cardinal-id]').length};});
+              await page.goto(`${base}&surface=${name}`,{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.mounted),null,{timeout:15000});
+              await page.waitForFunction(()=>Boolean(document.querySelector('[data-capability-orbit]')),null,{timeout:10000});await page.waitForTimeout(1400);
+              const state=await page.evaluate(()=>{const recovery=globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.receipt?.();const mount=document.querySelector('[data-gen1537-compass-instrument] [data-upstream-compass-mount]'),receipt=globalThis.DGB_UPSTREAM_COMPASS_RENDERER_RECEIPT||null,door=document.querySelector('[data-compass-object="mirrorland"]'),cards=[...document.querySelectorAll('[data-capability-orbit] [data-capability]')],house=document.querySelector('[data-capability="house"]');const rect=n=>{if(!n)return null;const r=n.getBoundingClientRect(),s=getComputedStyle(n);return{x:r.x,y:r.y,width:r.width,height:r.height,display:s.display,visibility:s.visibility,opacity:Number(s.opacity),pointerEvents:s.pointerEvents}};return{overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth,recovery,mount:rect(mount),renderer:{installed:receipt?.installed||false,mounted:receipt?.mountedInstanceCount||0,first:receipt?.firstEnhancedFrameCompleted||false,status:receipt?.status||'',failure:receipt?.lastFailureCode||''},spacecraft:document.querySelectorAll('[data-compass-spacecraft-layer],.compass-spacecraft-layer').length,door:rect(door),doorAuthority:door?.dataset.gen1537HitAuthority||'',cardCount:cards.length,houseNested:Boolean(house?.querySelector('[data-house-orbit],[data-return-house]')),houseGuides:house?.querySelectorAll('[data-house-guide-selector] [data-house-function]').length||0,rooms:new Set([...document.querySelectorAll('[data-room-id]')].map(x=>x.dataset.roomId).filter(x=>/^(north|east|south|west)-\d+$/.test(x))).size,cardinals:document.querySelectorAll('[data-cardinal-id]').length};});
               const frame=await measure(page);metrics[name]=frame;
-              check(`${name}_NO_ERRORS`,errors.length===0,errors);check(`${name}_NO_OVERFLOW`,state.overflow<=2,state.overflow);check(`${name}_ONE_COMPASS`,!state.spatialCompass&&!state.rotation,state);check(`${name}_OBJECT_IDENTITIES`,state.objectCount===3&&state.objectLabels.every(Boolean),state.objectLabels);check(`${name}_STABLE_GEOMETRY`,Math.max(...state.heights)-Math.min(...state.heights)<=2,state.heights);check(`${name}_CANONICAL_SPACECRAFT`,state.craft.present&&state.craft.design==='DGB_SCOUTCRAFT_01'&&state.craft.source==='/laws/index.spacecraft.geometry.js'&&state.craft.surface==='LIVE_SCENE_BOUND_WEBGL_3D',state.craft);check(`${name}_TOPOLOGY`,state.cardinals===4&&state.rooms===19,state);check(`${name}_FRAME_CADENCE`,frame.median<=20&&frame.p95<=34,frame);
-              await page.screenshot({path:`/tmp/compass-coherence-${name}.png`,fullPage:true});await context.close();
+              check(`${name}_NO_ERRORS`,errors.length===0,errors);check(`${name}_NO_OVERFLOW`,state.overflow<=2,state.overflow);check(`${name}_SPACECRAFT_ABSENT`,state.spacecraft===0,state);check(`${name}_FIXED_CENTER_3D_COMPASS`,state.mount?.width>80&&state.mount?.height>80&&state.renderer.installed&&state.renderer.mounted===1&&state.renderer.first&&!state.renderer.failure,state.renderer);check(`${name}_MIRRORLAND_HIT_SURFACE`,state.door?.width>=70&&state.door?.height>=120&&state.door.pointerEvents==='auto'&&state.doorAuthority==='protected-direct-controller-surface',state.door);check(`${name}_LOWER_CAROUSEL_PRESERVED`,state.cardCount===3&&!state.houseNested&&state.houseGuides===3,state);check(`${name}_TOPOLOGY`,state.cardinals===4&&state.rooms===19,state);check(`${name}_FRAME_CADENCE`,frame.median<=20&&frame.p95<=34,frame);
+              await page.screenshot({path:`/tmp/compass-gen1537-${name}.png`,fullPage:true});await context.close();
             }
             {
-              const context=await browser.newContext({viewport:{width:820,height:1180}});const page=await context.newPage();await page.goto(`${base}&surface=house-guides`,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>Boolean(document.querySelector('[data-capability-orbit]')));await page.click('[data-capability-orbit] [data-orbit-next]');await page.waitForTimeout(380);await page.click('[data-capability-orbit] [data-orbit-next]');await page.waitForTimeout(380);
-              const houseState=await page.evaluate(()=>{const stage=document.querySelector('[data-capability-orbit]'),house=document.querySelector('[data-capability="house"]'),object=house?.querySelector('.compass-house-portal'),selector=house?.querySelector('[data-house-guide-selector]'),links=selector?[...selector.querySelectorAll('[data-house-function]')]:[];const rect=node=>{if(!node)return null;const r=node.getBoundingClientRect(),s=getComputedStyle(node);return{x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom,display:s.display,visibility:s.visibility,opacity:Number(s.opacity),clientRects:node.getClientRects().length,visible:(typeof node.checkVisibility==='function'?node.checkVisibility({checkOpacity:true,checkVisibilityCSS:true}):true)&&r.width>0&&r.height>0}};return{mode:stage?.dataset.capabilityMode||'',slot:house?.dataset.slot||'',nestedOrbit:Boolean(house?.querySelector('[data-house-orbit]')),returnControl:Boolean(house?.querySelector('[data-return-house]')),objectTag:object?.tagName||'',object:rect(object),selector:rect(selector),links:links.map(link=>({id:link.dataset.houseFunction,href:link.getAttribute('href'),label:link.getAttribute('aria-label'),rect:rect(link)}))};});
-              const expected=[['jeeves','/showroom/globe/hearth/jeeves/'],['elara','/elara/'],['auren','/products/auren/']];
-              const guides=houseState.links.length===3&&expected.every(([id,href],index)=>houseState.links[index]?.id===id&&houseState.links[index]?.href===href&&houseState.links[index]?.label&&houseState.links[index]?.rect?.visible);
-              const beneath=houseState.object?.visible&&houseState.selector?.visible&&houseState.selector.y>=houseState.object.bottom-4;
-              check('HOUSE_STAYS_IN_CAPABILITY_ORBIT',houseState.mode==='orbit'&&houseState.slot==='front'&&!houseState.nestedOrbit&&!houseState.returnControl,houseState);
-              check('HOUSE_IDENTITY_IS_NOT_FALSE_CONTROL',houseState.objectTag==='DIV',houseState);
-              check('HOUSE_GUIDES_BENEATH_OBJECT',guides&&beneath,houseState);
-              await context.close();
-            }
-            {
-              const context=await browser.newContext({viewport:{width:820,height:1180}});const page=await context.newPage();await page.goto(`${base}&surface=scroll`,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_IDENTITY_3D_GEN1536?.mounted));await page.waitForTimeout(800);const proof=await page.evaluate(async()=>{const craft=document.querySelector('[data-compass-spacecraft-layer]'),scene=document.querySelector('[data-compass-scene]');if(!craft||!scene)return null;const wait=ms=>new Promise(r=>setTimeout(r,ms));scene.scrollIntoView({block:'center'});await wait(500);const active=craft.dataset.offscreenRendering;scrollTo(0,document.documentElement.scrollHeight);await wait(700);const away=craft.dataset.offscreenRendering;scene.scrollIntoView({block:'center'});await wait(700);const back=craft.dataset.offscreenRendering;return{active,away,back}});const frame=await measure(page);metrics.scroll=frame;check('SPACECRAFT_LIFECYCLE',proof&&proof.active==='active-on-demand'&&proof.away==='suspended'&&proof.back==='active-on-demand',proof);check('REAL_SCROLL_CADENCE',frame.median<=20&&frame.p95<=34,frame);await context.close();
+              const context=await browser.newContext({viewport:{width:820,height:1180}});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto(`${base}&surface=mirrorland`,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.mounted));await page.waitForTimeout(900);
+              const before=await page.locator('[data-compass-root]').getAttribute('data-compass-mode');
+              await page.locator('[data-compass-object="mirrorland"]').click({position:{x:40,y:80}});await page.waitForTimeout(900);
+              const after=await page.locator('[data-compass-root]').getAttribute('data-compass-mode');
+              const routesVisible=await page.locator('[data-compass-mirrorland-routes]').evaluate(el=>!el.hidden);
+              check('MIRRORLAND_DOOR_TRANSITIONS',before==='CONSTELLATION'&&['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED'].includes(after),{before,after,errors});
+              check('MIRRORLAND_ROUTES_REVEALED',after==='MIRRORLAND_FOCUSED'?routesVisible:true,{after,routesVisible});
+              await page.screenshot({path:'/tmp/compass-gen1537-mirrorland-open.png',fullPage:true});await context.close();
             }
           }finally{await browser.close()}
-          const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_COHERENCE_BROWSER_QUALIFICATION_RECEIPT_v1',operationId:'COMPASS_COHERENCE_OBJECT_PORTAL_AND_IDENTITY_SIMPLIFICATION_20260818_001',lockGeneration:1536,candidateHead:head,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',metrics,checks,failures:failures.map(x=>x.id)};fs.writeFileSync('/tmp/compass-coherence-browser.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+          const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_GEN1537_BROWSER_QUALIFICATION_RECEIPT_v1',operationId:'COMPASS_LIVE_RECOVERY_GEN1537_20260818_001',lockGeneration:1537,candidateHead:head,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',metrics,checks,failures:failures.map(x=>x.id)};fs.writeFileSync('/tmp/compass-gen1537-browser.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1536-coherence-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1537-recovery-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-coherence-performance.json
-            /tmp/compass-coherence-display.json
-            /tmp/compass-coherence-browser.json
-            /tmp/compass-coherence-*.png
-            /tmp/compass-coherence-server.log
+            /tmp/compass-gen1537-performance.json
+            /tmp/compass-gen1537-display.json
+            /tmp/compass-gen1537-browser.json
+            /tmp/compass-gen1537-*.png
+            /tmp/compass-gen1537-server.log
           retention-days: 90

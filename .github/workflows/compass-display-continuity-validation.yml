@@ -1,4 +1,4 @@
-name: Compass Gen1536 Coherence Display Continuity
+name: Compass Gen1537 Recovery Display Continuity
 
 on:
   pull_request:
@@ -18,8 +18,8 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-coherence-display.json
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-coherence-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1537-display.json
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1537-performance.json
 
 jobs:
   static-contract:
@@ -32,20 +32,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact Gen1536 coherence successor
+      - name: Verify exact Gen1537 recovery successor
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1536 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-coherence-display.json >/dev/null
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1536 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-coherence-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1537 and .operation == "COMPASS_LIVE_RECOVERY_GEN1537_20260818_001" and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-gen1537-display.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1537 and .operation == "COMPASS_LIVE_RECOVERY_GEN1537_20260818_001" and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-gen1537-performance.json >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1536-display-static-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1537-display-static-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-coherence-display.json
-            /tmp/compass-coherence-performance.json
+            /tmp/compass-gen1537-display.json
+            /tmp/compass-gen1537-performance.json
           retention-days: 90
 
   owner-evidence:
@@ -65,23 +65,23 @@ jobs:
           npx playwright install chromium
       - name: Start exact candidate host
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-coherence-display-http.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-gen1537-display-http.log 2>&1 &
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
           exit 1
-      - name: Capture owner-facing evidence
+      - name: Capture Gen1537 owner-facing evidence
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';import {chromium} from 'playwright';
           const browser=await chromium.launch({headless:true}),checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
-          try{for(const [name,width,height] of [['desktop',1440,900],['tablet',820,1180],['phone',390,844],['phone-tall',430,932]]){const context=await browser.newContext({viewport:{width,height}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.COMPASS_CANDIDATE_HEAD}&display=${name}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_IDENTITY_3D_GEN1536?.mounted));await page.waitForFunction(()=>document.querySelectorAll('.compass-object-portal').length===3);await page.waitForTimeout(900);const state=await page.evaluate(()=>{const cards=[...document.querySelectorAll('[data-capability]')],front=cards.find(x=>x.dataset.slot==='front');return{identity:document.querySelectorAll('[data-compass-identity-3d]').length,secondary:Boolean(document.querySelector('[data-compass-spatial-instrument]')),rotate:Boolean(document.querySelector('.compass-identity-o-control')),portals:document.querySelectorAll('.compass-object-portal').length,front:front?.dataset.capability||'',height:front?.getBoundingClientRect().height||0,overflow:document.documentElement.scrollWidth-innerWidth}});check(`${name}_COHERENT_IDENTITY`,state.identity===1&&!state.secondary&&!state.rotate,state);check(`${name}_OBJECT_PORTALS`,state.portals===3&&state.height>350,state);check(`${name}_NO_OVERFLOW`,state.overflow<=2,state.overflow);check(`${name}_NO_ERRORS`,errors.length===0,errors);await page.screenshot({path:`/tmp/compass-coherence-owner-${name}.png`,fullPage:true});await context.close()}}finally{await browser.close()}
-          const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_COHERENCE_OWNER_DISPLAY_EVIDENCE_RECEIPT_v1',operationId:'COMPASS_COHERENCE_OBJECT_PORTAL_AND_IDENTITY_SIMPLIFICATION_20260818_001',lockGeneration:1536,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};fs.writeFileSync('/tmp/compass-coherence-owner-display.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+          try{for(const [name,width,height] of [['desktop',1440,900],['tablet',820,1180],['phone',390,844],['phone-tall',430,932]]){const context=await browser.newContext({viewport:{width,height}}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.COMPASS_CANDIDATE_HEAD}&display=${name}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY?.mounted));await page.waitForFunction(()=>Boolean(globalThis.DGB_UPSTREAM_COMPASS_RENDERER_RECEIPT?.firstEnhancedFrameCompleted));await page.waitForTimeout(750);const state=await page.evaluate(()=>{const receipt=globalThis.DGB_UPSTREAM_COMPASS_RENDERER_RECEIPT||{},door=document.querySelector('[data-compass-object="mirrorland"]'),orbit=document.querySelector('[data-capability-orbit]'),house=document.querySelector('[data-capability="house"]');const r=n=>n?(()=>{const x=n.getBoundingClientRect(),s=getComputedStyle(n);return{width:x.width,height:x.height,visibility:s.visibility,opacity:Number(s.opacity),pointerEvents:s.pointerEvents}})():null;return{instrument:r(document.querySelector('[data-gen1537-compass-instrument] [data-upstream-compass-mount]')),renderer:{mounted:receipt.mountedInstanceCount||0,first:receipt.firstEnhancedFrameCompleted||false,failure:receipt.lastFailureCode||''},spacecraft:document.querySelectorAll('[data-compass-spacecraft-layer],.compass-spacecraft-layer').length,door:r(door),doorAuthority:door?.dataset.gen1537HitAuthority||'',capabilityCards:orbit?.querySelectorAll('[data-capability]').length||0,houseGuides:house?.querySelectorAll('[data-house-guide-selector] [data-house-function]').length||0,houseNested:Boolean(house?.querySelector('[data-house-orbit],[data-return-house]')),overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth}});check(`${name}_3D_COMPASS_VISIBLE`,state.instrument?.width>80&&state.instrument?.height>80&&state.renderer.mounted===1&&state.renderer.first&&!state.renderer.failure,state);check(`${name}_SPACECRAFT_ABSENT`,state.spacecraft===0,state.spacecraft);check(`${name}_MIRRORLAND_HIT_READY`,state.door?.width>=70&&state.door?.height>=120&&state.door.pointerEvents==='auto'&&state.doorAuthority==='protected-direct-controller-surface',state.door);check(`${name}_LOWER_STANDARD_PRESERVED`,state.capabilityCards===3&&state.houseGuides===3&&!state.houseNested,state);check(`${name}_NO_OVERFLOW`,state.overflow<=2,state.overflow);check(`${name}_NO_ERRORS`,errors.length===0,errors);await page.screenshot({path:`/tmp/compass-gen1537-owner-${name}.png`,fullPage:true});await context.close()}}finally{await browser.close()}
+          const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_GEN1537_OWNER_DISPLAY_EVIDENCE_RECEIPT_v1',operationId:'COMPASS_LIVE_RECOVERY_GEN1537_20260818_001',lockGeneration:1537,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};fs.writeFileSync('/tmp/compass-gen1537-owner-display.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1536-owner-display-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1537-owner-display-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-coherence-owner-display.json
-            /tmp/compass-coherence-owner-*.png
-            /tmp/compass-coherence-display-http.log
+            /tmp/compass-gen1537-owner-display.json
+            /tmp/compass-gen1537-owner-*.png
+            /tmp/compass-gen1537-display-http.log
           retention-days: 90

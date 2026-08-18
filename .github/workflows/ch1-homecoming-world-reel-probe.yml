@@ -1,0 +1,54 @@
+name: CH1 Homecoming World Reel Probe
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ch1-homecoming-world-reel-probe.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  render-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install ffmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
+      - name: Render registered world reel inspection
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/request.json" <<'JSON'
+          {
+            "schema":"VIDEO_CONFORM_REQUEST_v1",
+            "requestId":"CH01_HOMECOMING_WORLD_REEL_PROBE_20260817_001",
+            "output":{"filename":"ch01-homecoming-world-reel-probe.mp4","durationSeconds":29,"fps":24,"width":960,"height":540,"crf":25,"preset":"veryfast"},
+            "segments":[{"sourceId":"CHAPTER_02_WORLD_REEL_LIVE","sourceStart":0,"sourceEnd":29,"targetStart":0,"targetEnd":29,"fit":"contain"}]
+          }
+          JSON
+          mkdir -p "$RUNNER_TEMP/out"
+          node tools/video-conform/video-conform-renderer.v1.mjs \
+            --request "$RUNNER_TEMP/request.json" \
+            --registry .github/ai-router/video-conform/source-registry.v1.json \
+            --output-dir "$RUNNER_TEMP/out" \
+            --receipt "$RUNNER_TEMP/receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ch1-homecoming-world-reel-probe-${{ github.event.pull_request.head.sha }}
+          path: |
+            ${{ runner.temp }}/receipt.json
+            ${{ runner.temp }}/out/*.mp4
+            ${{ runner.temp }}/out/*.jpg
+          if-no-files-found: error
+          retention-days: 7

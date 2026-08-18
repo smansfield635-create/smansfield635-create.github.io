@@ -5,22 +5,25 @@ permissions:
   contents: read
 jobs:
   capture-gen307-anchor-evidence:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - name: Checkout exact Gen307 candidate
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: 71bafea00748e672cf64320507d346438bf06a75
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Use Node 22
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Install Chromium
+      - name: Bind preinstalled Chrome and Playwright core
         run: |
-          npm install --no-save --package-lock=false playwright@1.55.0
-          npx playwright install --with-deps chromium
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$chrome"
+          printf 'CHROME_BIN=%s\n' "$chrome" >> "$GITHUB_ENV"
+          npm install --no-save --package-lock=false playwright-core@1.55.0
+          "$chrome" --version
       - name: Start exact candidate server
         run: |
           python3 -m http.server 4189 --bind 127.0.0.1 > /tmp/gen307-anchor-server.log 2>&1 &
@@ -38,9 +41,9 @@ jobs:
           cat > .gen307-capture.mjs <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-          import { chromium } from 'playwright';
+          import { chromium } from 'playwright-core';
           const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
-          const browser=await chromium.launch({headless:true,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--disable-dev-shm-usage','--no-sandbox']});
+          const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_BIN,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--disable-dev-shm-usage','--no-sandbox']});
           const captures=[];
           try {
             for (const cfg of [
@@ -78,7 +81,7 @@ jobs:
           rm -f .gen307-capture.mjs
       - name: Upload exact candidate evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: h-earth-gen307-exact-candidate-anchor-evidence
           path: /tmp/gen307-anchor-evidence

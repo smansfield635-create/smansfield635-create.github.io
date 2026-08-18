@@ -1,0 +1,33 @@
+name: Compass Live Binding Normalize
+on:
+  pull_request:
+    types: [synchronize]
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  normalize:
+    if: github.head_ref == 'repair/compass-live-asset-bindings-v1'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ github.token }}
+      - shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text().replace('&gen1532-live-binding-v1','&g=1532-live-binding-v1')
+          p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m 'Normalize reconciled Compass cache key'
+            git push origin HEAD:${{ github.head_ref }}
+          fi

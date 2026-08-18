@@ -1,4 +1,4 @@
-name: Compass Display Continuity Validation
+name: Compass Gen1533 Flagship Display Continuity
 
 on:
   pull_request:
@@ -27,18 +27,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact reconciled successor
+      - name: Verify exact Gen1533 flagship successor
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
-          COMPASS_VERIFICATION_OUTPUT=/tmp/compass-gen1531-display.json node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-          COMPASS_PERFORMANCE_OUTPUT=/tmp/compass-gen1531-performance.json node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          COMPASS_VERIFICATION_OUTPUT=/tmp/compass-flagship-display.json node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          COMPASS_PERFORMANCE_OUTPUT=/tmp/compass-flagship-performance.json node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1533 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-flagship-display.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1533 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-flagship-performance.json >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1531-reconciliation-static-receipts
+          name: compass-gen1533-flagship-static-receipts
           path: |
-            /tmp/compass-gen1531-display.json
-            /tmp/compass-gen1531-performance.json
+            /tmp/compass-flagship-display.json
+            /tmp/compass-flagship-performance.json
 
   runtime-display:
     runs-on: ubuntu-latest
@@ -58,10 +60,10 @@ jobs:
           npx playwright install chromium
       - name: Start exact candidate host
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-http.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-flagship-http.log 2>&1 &
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
-          cat /tmp/compass-http.log; exit 1
-      - name: Qualify reconciled desktop tablet phone and reduced motion
+          cat /tmp/compass-flagship-http.log; exit 1
+      - name: Qualify flagship desktop tablet phone and reduced motion
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -82,6 +84,7 @@ jobs:
               const craft=document.querySelector('[data-compass-spacecraft-layer]');
               const front=document.querySelector('[data-capability][data-slot="front"]');
               const control=document.querySelector('.compass-identity-o-control');
+              const scene=document.querySelector('[data-compass-scene]');
               return {
                 overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
                 cardinals:document.querySelectorAll('[data-compass-cardinal]').length,
@@ -96,26 +99,33 @@ jobs:
                 product:front?.querySelector('h2')?.textContent.trim()||'',
                 productDescriptor:front?.querySelector('.coheriscope-descriptor')?.textContent.trim()||'',
                 brain:{material:brain?.dataset.brainMaterial||'',linework:brain?.dataset.brainLinework||'',depth:brain?.dataset.brainDepthModel||''},
-                craft:{present:Boolean(craft),source:craft?.dataset.sourceContract||'',authority:craft?.dataset.authority||'',design:craft?.dataset.designId||''},
+                craft:{present:Boolean(craft),source:craft?.dataset.sourceContract||'',authority:craft?.dataset.authority||'',design:craft?.dataset.designId||'',interactionAuthority:craft?.dataset.interactionAuthority||''},
                 trophy:document.querySelectorAll('.compass-award-trophy').length,
                 house:document.querySelectorAll('[data-house-parent]').length,
                 proofs:document.querySelectorAll('[data-proof-card]').length,
                 capabilityOrbit:Boolean(document.querySelector('[data-capability-orbit]')),
                 editorialVersion:globalThis.CompassEditorialCarousel?.version||'',
-                rootIdentity:root?.dataset.studioIdentity||''
+                rootIdentity:root?.dataset.studioIdentity||'',
+                flagship:root?.dataset.flagshipContract||'',
+                continuity:root?.dataset.objectContinuity||'',
+                spacecraftInteraction:root?.dataset.spacecraftInteraction||'',
+                scenePerspective:scene?getComputedStyle(scene).perspective:''
               };
             });
             check(`${name}_CORE`,r.cardinals===4&&r.rooms===19&&r.trophy===1&&r.house===1&&r.proofs===3,r);
             check(`${name}_NO_OVERFLOW`,r.overflow<=2,r.overflow);
             check(`${name}_RUNTIMES_READY`,r.identityApi&&r.capabilityOrbit&&r.editorialVersion==='root-award-finish-successor-v1',r);
             check(`${name}_TRUE_3D_IDENTITY`,r.identity&&r.maker&&r.title&&r.layers>=19,r);
+            check(`${name}_FLAGSHIP_SPATIAL_CONTRACT`,r.flagship==='COMPASS_GEN1533_SPATIAL_ESTATE_FLAGSHIP_v1'&&r.continuity==='SPATIAL_OBJECT_REMAINS_INFORMATION_OBJECT'&&r.scenePerspective!=='none',r);
             check(`${name}_STUDIO_DESCRIPTOR`,r.descriptor==='Independent Studio for Interactive Worlds, Creative Technology & Original Systems',r.descriptor);
             check(`${name}_O_CONTROL`,r.control>=32,r.control);
             check(`${name}_COHERISCOPE`,r.product==='Coheriscope'&&r.productDescriptor==='The Coherence Diagnostic by Diamond Gate Bridge',r);
             check(`${name}_ROSE_BRAIN`,r.brain.material==='NATIVE_ROSE_FLESH_V1'&&r.brain.linework==='none'&&r.brain.depth==='GEOMETRY_LIGHT_FALLOFF_FOLD_OCCLUSION_FORM_SHADOW',r.brain);
             const craftCanonical=r.craft.source==='LAWS_CP6_TRUE_3D_SPACECRAFT_PARTICIPANT_v1'&&r.craft.authority==='ambient-presentation-and-bounded-hit-response-only'&&r.craft.design==='DGB_SCOUTCRAFT_01';
             check(`${name}_SPACECRAFT_RESPONSIVE_POLICY`,craftExpected?(r.craft.present&&craftCanonical):!r.craft.present,{craftExpected,craft:r.craft});
+            if(craftExpected)check(`${name}_SPACECRAFT_BOUNDED_INTERACTION`,r.spacecraftInteraction==='BOUNDED_PARALLAX_PROXIMITY_RESPONSE_NO_NAVIGATION_AUTHORITY'&&(!r.craft.interactionAuthority||r.craft.interactionAuthority==='bounded-spatial-response-only-no-navigation'),r.craft);
             check(`${name}_NO_ERRORS`,errors.length===0,errors);
+            await page.screenshot({path:`/tmp/compass-flagship-display-${name}.png`,fullPage:true});
             await context.close();
           }
 
@@ -129,6 +139,8 @@ jobs:
             check('ONE_REVOLUTION_CANONICAL_RETURN',returned,returned);
             const inspect=await page.evaluate(()=>globalThis.CompassBrainScene?.inspect?.()||null);
             check('BRAIN_RUNTIME_INSPECTABLE',inspect&&inspect.material==='NATIVE_ROSE_FLESH_V1'&&inspect.linework==='none'&&inspect.topology==='CONTINUOUS_MIDBRAIN_PONS_MEDULLA_SINGLE_POSTERIOR_INFERIOR_CEREBELLAR_MASS',inspect);
+            const parallax=await page.evaluate(()=>{const scene=document.querySelector('[data-compass-scene]');const craft=document.querySelector('[data-compass-spacecraft-layer]');if(!scene||!craft)return null;const r=scene.getBoundingClientRect();scene.dispatchEvent(new PointerEvent('pointerdown',{clientX:r.left+r.width*.75,clientY:r.top+r.height*.45,bubbles:true}));window.dispatchEvent(new PointerEvent('pointermove',{clientX:r.left+r.width*.75,clientY:r.top+r.height*.45,bubbles:true}));return new Promise(resolve=>setTimeout(()=>resolve({x:getComputedStyle(document.querySelector('[data-compass-root]')).getPropertyValue('--flagship-x').trim(),authority:craft.dataset.interactionAuthority||''}),80))});
+            check('BOUNDED_WORLD_INTERACTION_RUNTIME',parallax&&Number(parallax.x)>0&&parallax.authority==='bounded-spatial-response-only-no-navigation',parallax);
             check('INTERACTION_NO_ERRORS',errors.length===0,errors);
             await context.close();
           }
@@ -149,13 +161,15 @@ jobs:
           }
           await browser.close();
           const failures=checks.filter(x=>!x.pass);
-          const receipt={schema:'COMPASS_GEN1526_VISUALS_GEN1531_DISPLAY_CONTINUITY_RUNTIME_v1',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
-          fs.writeFileSync('/tmp/compass-gen1531-runtime.json',JSON.stringify(receipt,null,2)+'\n');
+          const receipt={schema:'COMPASS_FLAGSHIP_DISPLAY_CONTINUITY_RUNTIME_RECEIPT_v1',operationId:'COMPASS_FLAGSHIP_ARCHITECTURAL_SUCCESSOR_20260817_001',lockGeneration:1533,governingHead:'d19405d327585850ac095f236820f7b3072edc1c',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
+          fs.writeFileSync('/tmp/compass-flagship-runtime.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1531-reconciliation-runtime-evidence
-          path: /tmp/compass-gen1531-runtime.json
+          name: compass-gen1533-flagship-runtime-evidence
+          path: |
+            /tmp/compass-flagship-runtime.json
+            /tmp/compass-flagship-display-*.png

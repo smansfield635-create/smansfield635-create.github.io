@@ -16,9 +16,9 @@ jobs:
       - name: Verify Gen309 evidence path registration and native preflight
         run: |
           node --input-type=module <<'NODE'
-          import { verifyHEarthGen308AnchorEvidencePathRecognition } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen308-anchor-evidence-path-recognition.js';
+          import { verifyHEarthGen308ExperienceAnchorEvidencePathRecognition } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen308-experience-anchor-evidence-path-recognition.js';
           import { runAutomaticHEarthPreflight } from './h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js';
-          const verification=verifyHEarthGen308AnchorEvidencePathRecognition();
+          const verification=verifyHEarthGen308ExperienceAnchorEvidencePathRecognition();
           console.log('GEN309_REGISTRY_VERIFICATION='+JSON.stringify(verification));
           if(verification.eligible!==true) process.exit(1);
           const paths=[

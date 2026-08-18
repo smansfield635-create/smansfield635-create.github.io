@@ -8859,14 +8859,10 @@
     const watchedAttributes = [
       "data-compass-mode",
       "data-orbit-focus",
-      "data-orbit-preview-focus",
       "data-orbit-phase",
       "data-orbit-gesture-active",
-      "data-orbit-quaternion",
       "data-active-cluster-wing",
-      "data-cluster-quaternion",
       "data-cluster-primary-room",
-      "data-cluster-preview-primary-room",
       "data-cluster-phase",
       "data-cluster-gesture-active",
       "data-cluster-revision",
@@ -8876,9 +8872,7 @@
       "data-selected-destination-id",
       "data-selected-destination-label",
       "data-selected-route",
-      "data-reduced-motion",
-      "data-compass-prominence",
-      "data-window-prominence"
+      "data-reduced-motion"
     ];
 
     const invalidationSignature = () =>

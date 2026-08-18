@@ -1,0 +1,55 @@
+/* Gen1537 corrective presentation layer.
+   Scope: restore Mirrorland hit authority, remove spacecraft dominance,
+   and propagate the lower-carousel dimensional standard into the Compass stage.
+*/
+
+[data-compass-spacecraft-layer],
+.compass-spacecraft-layer{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+
+.compass-instrument{position:relative;isolation:isolate}
+.compass-instrument__grid{position:relative;overflow:visible!important;border-radius:1.55rem;padding:clamp(.5rem,1.5vw,.85rem);background:
+  radial-gradient(circle at 50% 38%,rgba(83,194,220,.10),transparent 34%),
+  radial-gradient(circle at 68% 24%,rgba(133,83,201,.08),transparent 28%),
+  linear-gradient(145deg,rgba(5,12,20,.42),rgba(7,16,26,.18));
+}
+.compass-scene{position:relative!important;isolation:isolate;overflow:hidden!important;min-height:clamp(430px,58vw,690px)!important;border:1px solid rgba(184,224,235,.18)!important;border-radius:1.45rem!important;background:
+  radial-gradient(circle at 50% 42%,rgba(88,201,225,.10),transparent 23%),
+  radial-gradient(circle at 52% 54%,rgba(127,83,196,.08),transparent 35%),
+  linear-gradient(180deg,rgba(4,10,18,.88),rgba(4,9,16,.72))!important;
+box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 34px 90px rgba(0,0,0,.42)!important}
+.compass-scene::before{content:"";position:absolute;inset:8% 10%;z-index:0;pointer-events:none;border-radius:50%;background:radial-gradient(circle,rgba(113,211,230,.08),rgba(113,211,230,.02) 31%,transparent 66%);filter:blur(10px)}
+
+.compass-gen1537-instrument{position:absolute;inset:8% 12% 10%;z-index:2;display:grid;place-items:center;pointer-events:none;perspective:1100px;filter:drop-shadow(0 24px 34px rgba(0,0,0,.48))}
+.compass-gen1537-instrument__mount{position:relative;width:min(72%,520px);aspect-ratio:1;transform:rotateX(58deg) rotateZ(-8deg);transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.8,.2,1)}
+.compass-scene:hover .compass-gen1537-instrument__mount{transform:rotateX(55deg) rotateZ(-5deg) translateZ(10px)}
+.compass-gen1537-instrument__mount canvas{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important}
+.compass-gen1537-instrument__fallback{position:absolute;inset:7%;border-radius:50%;border:1px solid rgba(143,222,236,.42);background:
+  radial-gradient(circle at 50% 48%,rgba(242,218,147,.11) 0 4%,transparent 5%),
+  repeating-conic-gradient(from 0deg,rgba(151,225,238,.18) 0 1deg,transparent 1deg 15deg),
+  radial-gradient(circle,rgba(9,28,40,.38) 0 56%,rgba(90,194,215,.10) 57% 63%,rgba(5,13,22,.62) 64% 100%);
+box-shadow:inset 0 0 48px rgba(83,203,224,.12),0 0 48px rgba(89,200,220,.11)}
+.compass-gen1537-instrument__fallback::before,.compass-gen1537-instrument__fallback::after{content:"";position:absolute;left:50%;top:50%;transform-origin:50% 88%;border-radius:999px}
+.compass-gen1537-instrument__fallback::before{width:4px;height:37%;background:linear-gradient(#f5d77f,#81d7e8);transform:translate(-50%,-88%) rotate(18deg);box-shadow:0 0 18px rgba(128,220,238,.34)}
+.compass-gen1537-instrument__fallback::after{width:9px;height:9px;background:#f4da8f;transform:translate(-50%,-50%);box-shadow:0 0 24px rgba(244,218,143,.55)}
+
+.compass-scene__semantic{position:relative!important;z-index:6!important}
+.compass-object--wing{backdrop-filter:blur(8px);box-shadow:0 14px 34px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.06)!important;transition:transform .22s ease,opacity .22s ease,filter .22s ease!important}
+.compass-object--wing.is-readable-cardinal{transform:translateZ(0) scale(1.06)!important;filter:brightness(1.14) saturate(1.05)}
+
+/* The stained-glass door is the visible object. This link is only the protected hit surface. */
+.compass-object--mirrorland{position:absolute!important;z-index:30!important;left:50%!important;top:50%!important;width:clamp(84px,18%,150px)!important;height:clamp(150px,36%,270px)!important;transform:translate(-50%,-50%)!important;display:block!important;opacity:.001!important;visibility:visible!important;pointer-events:auto!important;background:transparent!important;border:0!important;box-shadow:none!important;color:transparent!important;overflow:hidden!important}
+.compass-object--mirrorland *{opacity:0!important;pointer-events:none!important}
+
+[data-compass-mirrorland-window-mount]{position:absolute!important;inset:0!important;z-index:18!important;pointer-events:none!important}
+[data-compass-crystals-mount]{z-index:4!important;pointer-events:none!important}
+[data-compass-cosmic-field]{z-index:1!important;pointer-events:none!important}
+
+.compass-guidance{position:relative;z-index:35;margin:.65rem auto 0;max-width:42rem;padding:.65rem .85rem;border:1px solid rgba(179,222,231,.12);border-radius:999px;background:rgba(5,13,21,.55);backdrop-filter:blur(12px)}
+
+@media(max-width:760px){
+  .compass-scene{min-height:480px!important}
+  .compass-gen1537-instrument{inset:13% 4% 18%}
+  .compass-gen1537-instrument__mount{width:min(82%,430px);transform:rotateX(61deg) rotateZ(-7deg)}
+  .compass-object--mirrorland{width:96px!important;height:190px!important}
+}
+@media(prefers-reduced-motion:reduce){.compass-gen1537-instrument__mount,.compass-scene:hover .compass-gen1537-instrument__mount{transition:none;transform:rotateX(58deg) rotateZ(-8deg)}}

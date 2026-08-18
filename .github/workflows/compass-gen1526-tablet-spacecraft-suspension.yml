@@ -1,0 +1,41 @@
+name: Compass Gen1526 Tablet Spacecraft Suspension
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'restore/compass-gen1526-exact-release-v1-final'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ github.token }}
+      - name: Suspend ambient Laws flyby on tablet class
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assets/compass/compass.identity-3d.js')
+          s=p.read_text()
+          old="async function mountLawsCraft(){if(reduce.matches||innerWidth<=720||document.querySelector('[data-compass-spacecraft-layer]'))return;"
+          new="async function mountLawsCraft(){if(reduce.matches||innerWidth<=900||document.querySelector('[data-compass-spacecraft-layer]'))return;"
+          if old not in s:
+              raise SystemExit('expected Gen1526 Laws craft viewport contract not found')
+          s=s.replace(old,new,1)
+          p.write_text(s)
+          PY
+          grep -Fq "reduce.matches||innerWidth<=900" assets/compass/compass.identity-3d.js
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/compass/compass.identity-3d.js
+          git commit -m 'Suspend ambient Laws flyby on tablet class'
+          git push origin HEAD:${{ github.head_ref }}

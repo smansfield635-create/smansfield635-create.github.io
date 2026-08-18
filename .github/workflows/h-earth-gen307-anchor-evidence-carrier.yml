@@ -17,13 +17,10 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
-      - name: Bind preinstalled Chrome and Playwright core
+      - name: Install Playwright Chromium
         run: |
-          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
-          test -n "$chrome"
-          printf 'CHROME_BIN=%s\n' "$chrome" >> "$GITHUB_ENV"
-          npm install --no-save --package-lock=false playwright-core@1.55.0
-          "$chrome" --version
+          npm install --no-save --package-lock=false playwright@1.54.1
+          npx playwright install chromium
       - name: Start exact candidate server
         run: |
           python3 -m http.server 4189 --bind 127.0.0.1 > /tmp/gen307-anchor-server.log 2>&1 &
@@ -41,9 +38,9 @@ jobs:
           cat > .gen307-capture.mjs <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
-          import { chromium } from 'playwright-core';
+          import { chromium } from 'playwright';
           const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
-          const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_BIN,args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--disable-dev-shm-usage','--no-sandbox']});
+          const browser=await chromium.launch({headless:true,args:['--use-angle=swiftshader','--enable-unsafe-swiftshader','--enable-webgl','--ignore-gpu-blocklist','--disable-dev-shm-usage','--no-sandbox']});
           const captures=[];
           try {
             for (const cfg of [
@@ -59,25 +56,26 @@ jobs:
               const response=await page.goto('http://127.0.0.1:4189/showroom/globe/h-earth/?gen307-anchor=1',{waitUntil:'domcontentloaded',timeout:120000});
               const canvas=page.locator('#h-earth-functional-landscape-canvas');
               await canvas.waitFor({state:'visible',timeout:60000});
-              await page.waitForTimeout(10000);
+              await page.waitForTimeout(12000);
               const runtimeState=await page.evaluate(()=>({
                 startupText:document.getElementById('h-earth-startup-result')?.textContent??null,
                 routeDataset:{...(document.getElementById('h-earth-functional-landscape-route')?.dataset??{})},
+                webgl2Available:!!document.createElement('canvas').getContext('webgl2'),
                 canvas:{width:document.getElementById('h-earth-functional-landscape-canvas')?.width??0,height:document.getElementById('h-earth-functional-landscape-canvas')?.height??0}
               }));
               const beforeBytes=await canvas.screenshot({type:'png'}),before=hash(beforeBytes),box=await canvas.boundingBox();
               if(!box||box.width<2||box.height<2)throw new Error(`CANVAS_BOUNDS_INVALID:${cfg.id}`);
               if(!cfg.isMobile){const cx=box.x+box.width*.5,cy=box.y+box.height*.5;await page.mouse.move(cx,cy);await page.mouse.down();await page.mouse.move(cx+125,cy+48,{steps:12});await page.mouse.up();await page.mouse.wheel(0,-420);}
               else {const client=await context.newCDPSession(page);await client.send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:2});const cx=box.x+box.width*.5,cy=box.y+box.height*.45;await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:cx,y:cy,radiusX:4,radiusY:4,force:1,id:1}]});for(let i=1;i<=8;i++)await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:cx+9*i,y:cy+3*i,radiusX:4,radiusY:4,force:1,id:1}]});await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});}
-              await page.waitForTimeout(1400);
+              await page.waitForTimeout(1600);
               const afterBytes=await canvas.screenshot({type:'png'}),after=hash(afterBytes);
               fs.writeFileSync(`/tmp/gen307-anchor-evidence/${cfg.id}-before.png`,beforeBytes);
               fs.writeFileSync(`/tmp/gen307-anchor-evidence/${cfg.id}-after.png`,afterBytes);
-              captures.push({id:cfg.id,status:response?.status()??null,canvasVisible:true,canvasWidth:runtimeState.canvas.width,canvasHeight:runtimeState.canvas.height,interactionExercised:before!==after,pageErrors,consoleErrors,httpErrors,startupText:runtimeState.startupText,routeDataset:runtimeState.routeDataset,beforeCanvasSha256:before,afterCanvasSha256:after});
+              captures.push({id:cfg.id,status:response?.status()??null,canvasVisible:true,canvasWidth:runtimeState.canvas.width,canvasHeight:runtimeState.canvas.height,webgl2Available:runtimeState.webgl2Available,interactionExercised:before!==after,pageErrors,consoleErrors,httpErrors,startupText:runtimeState.startupText,routeDataset:runtimeState.routeDataset,beforeCanvasSha256:before,afterCanvasSha256:after});
               await context.close();
             }
           } finally {await browser.close();}
-          const concretePass=r=>r.status===200&&r.canvasVisible&&r.canvasWidth>1&&r.canvasHeight>1&&r.interactionExercised&&r.pageErrors.length===0&&r.httpErrors.length===0;
+          const concretePass=r=>r.status===200&&r.canvasVisible&&r.canvasWidth>1&&r.canvasHeight>1&&r.webgl2Available&&r.interactionExercised&&r.pageErrors.length===0&&r.httpErrors.length===0;
           const manifest={schema:'H_EARTH_GEN307_EXACT_CANDIDATE_ANCHOR_EVIDENCE_v1',candidateHead:process.env.CANDIDATE_HEAD,captures,result:captures.length===2&&captures.every(concretePass)?'PASS':'FAIL'};
           fs.writeFileSync('/tmp/gen307-anchor-evidence/manifest.json',JSON.stringify(manifest,null,2)+'\n');
           console.log(JSON.stringify(manifest,null,2));

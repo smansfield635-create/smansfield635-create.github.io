@@ -1,12 +1,15 @@
-name: Compass Performance Successor Validation
+name: Compass Gen1531 Static Qualification
 
 on:
   pull_request:
+    branches: [main]
     paths:
-      - 'index.html'
-      - 'assets/compass/**'
+      - 'assets/compass/compass.crystals.js'
+      - 'assets/compass/compass.mirrorland-window.js'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
+      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
+      - '.github/workflows/compass-carousel-successor-live-qualification.yml'
   workflow_dispatch:
 
 permissions:
@@ -14,24 +17,32 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1531-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1531-display.json
 
 jobs:
-  verify-performance-successor:
+  qualify-static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify admitted Gen1521 performance and protected floor
+      - name: Qualify exact Gen1531 candidate
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1531' /tmp/compass-gen1531-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1531' /tmp/compass-gen1531-display.json >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1521-performance-receipt
-          path: /tmp/compass-gen1521-performance.json
+          name: compass-gen1531-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/compass-gen1531-performance.json
+            /tmp/compass-gen1531-display.json
+          retention-days: 90

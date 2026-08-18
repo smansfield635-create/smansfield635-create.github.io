@@ -8,15 +8,19 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Checkout exact qualified Gen307 tooling
+      - name: Checkout exact Gen309 tooling candidate
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: 9297d33a20ef3dfdf243cd59f74206f95404d8a7
+          ref: f78f3f70c0da3e6ab6ce9e2b2dc6df64f1f29aca
           fetch-depth: 1
-      - name: Execute native read-only H-Earth preflight
+      - name: Verify Gen309 evidence path registration and native preflight
         run: |
           node --input-type=module <<'NODE'
+          import { verifyHEarthGen308AnchorEvidencePathRecognition } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen308-anchor-evidence-path-recognition.js';
           import { runAutomaticHEarthPreflight } from './h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js';
+          const verification=verifyHEarthGen308AnchorEvidencePathRecognition();
+          console.log('GEN309_REGISTRY_VERIFICATION='+JSON.stringify(verification));
+          if(verification.eligible!==true) process.exit(1);
           const paths=[
             'h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.visual.json',
             'h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.interaction.json',

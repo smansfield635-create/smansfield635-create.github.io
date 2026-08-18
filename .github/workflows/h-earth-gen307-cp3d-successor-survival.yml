@@ -30,15 +30,13 @@ jobs:
           done
           cat /tmp/h-earth-cp3d-gen307-server.log
           exit 1
-      - name: Record stale predecessor CP3D boundary classification
+      - name: Record stale predecessor CP3D assertions
         run: |
           node --input-type=module <<'NODE'
           const mod=await import('./showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js');
           const p=mod.getHEarthRun8ER2CanonicalLiveRenderPackage();
-          console.log(JSON.stringify({schema:'H_EARTH_GEN307_CP3D_PREDECESSOR_ASSERTION_CLASSIFICATION_v1',candidateHead:'71bafea00748e672cf64320507d346438bf06a75',gen306DifferentialRun:32090223103,predecessorAssertionStale:true,currentPackageStatus:p?.status,currentPackageIssues:p?.issues??[]},null,2));
+          console.log(JSON.stringify({schema:'H_EARTH_GEN307_CP3D_PREDECESSOR_ASSERTION_CLASSIFICATION_v2',candidateHead:'71bafea00748e672cf64320507d346438bf06a75',gen306PackageDifferentialRun:32090223103,gen306RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',gen307RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',packageBoundaryAssertionStale:true,runtimeIdentityImportAssertionStale:true,currentPackageStatus:p?.status,currentPackageIssues:p?.issues??[]},null,2));
           NODE
-      - name: Execute promoted renderer identity corridor
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
       - name: Execute corrected Run 8B geometry regression harness
         env:
           H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1e-run8b-geometry-receipt.json

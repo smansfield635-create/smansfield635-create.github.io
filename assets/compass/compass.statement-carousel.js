@@ -28,6 +28,24 @@
     stage.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();rotate(event.key==='ArrowRight'?1:-1)}});
     render(true);
   }
+  function promoteSpacecraftSurface(attempt=0){
+    const craft=document.querySelector('canvas[data-compass-spacecraft-layer]');
+    if(!craft){if(attempt<40)setTimeout(()=>promoteSpacecraftSurface(attempt+1),50);return}
+    if(craft.dataset.performanceTier!=='demand-driven-static-3d'){if(attempt<40)setTimeout(()=>promoteSpacecraftSurface(attempt+1),50);return}
+    try{
+      const snapshot=document.createElement('canvas');
+      snapshot.width=craft.width;snapshot.height=craft.height;snapshot.className=craft.className;
+      for(const {name,value} of [...craft.attributes])if(name.startsWith('data-')||name==='aria-hidden')snapshot.setAttribute(name,value);
+      snapshot.dataset.presentationSurface='canonical-laws-3d-snapshot-2d';
+      snapshot.dataset.webglLifecycle='released-after-canonical-3d-frame';
+      snapshot.style.cssText=craft.style.cssText;
+      const ctx=snapshot.getContext('2d',{alpha:true});
+      if(!ctx)return;
+      ctx.drawImage(craft,0,0);
+      craft.getContext('webgl')?.getExtension('WEBGL_lose_context')?.loseContext();
+      craft.replaceWith(snapshot);
+    }catch{}
+  }
   function mountWorldInteraction(){
     const root=document.querySelector('[data-compass-root]');
     const scene=document.querySelector('[data-compass-scene]');
@@ -71,7 +89,7 @@
     scene.addEventListener('pointerdown',pulse,{passive:true});
     document.addEventListener('visibilitychange',()=>{if(document.hidden){tx=ty=0}});
   }
-  function boot(){mountStatements();mountWorldInteraction()}
+  function boot(){mountStatements();mountWorldInteraction();promoteSpacecraftSurface()}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot,{once:true}):boot();
-  window.CompassStatementCarousel=Object.freeze({version:'statement-flagship-v2',worldInteraction:'bounded-parallax-proximity'});
+  window.CompassStatementCarousel=Object.freeze({version:'statement-flagship-v2',worldInteraction:'bounded-parallax-proximity',spacecraftSurface:'canonical-3d-frame-promoted-and-webgl-released'});
 })();

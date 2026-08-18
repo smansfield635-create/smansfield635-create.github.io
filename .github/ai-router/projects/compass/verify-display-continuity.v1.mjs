@@ -7,7 +7,7 @@ const LOCK=1531;
 const BASE='74de0882af55fed53272a191b173e45f5cdbd551';
 const OUT=process.env.COMPASS_VERIFICATION_OUTPUT||'/tmp/compass-gen1531-display.json';
 const EXPECTED_BLOBS=Object.freeze({
-  'assets/compass/compass.identity-3d.js':'04df9de4b20b1420a707d25c2f2b28664a90ca65',
+  'assets/compass/compass.identity-3d.js':'ec15e347cc613d69f901c3ae9acb386c53dc64e1',
   'assets/compass/compass.brain-scene.js':'80553f1a689b1724f60bd8c7a65da96da592b40d',
   'assets/compass/compass.crystals.js':'9fed7adbfdeec37a734fc4a125acc5f4617d50bc',
   'assets/compass/compass.mirrorland-window.js':'f99d3ffedf7b7654d067d21d9363eb287877f852'
@@ -41,13 +41,16 @@ const m=read('assets/compass/compass.mirrorland-window.js');
 const c=read('assets/compass/compass.crystals.js');
 const identity=read('assets/compass/compass.identity-3d.js');
 const brain=read('assets/compass/compass.brain-scene.js');
+const lawsAdapter=read('assets/compass/compass.laws-spacecraft.js');
 check('FOUR_CARDINALS',(html.match(/data-cardinal-id="(north|east|south|west)"/g)||[]).length===4,'4');
 check('NINETEEN_ROOMS',(html.match(/data-compass-room data-compass-destination/g)||[]).length===19,'19');
 check('MIRRORLAND_ROUTES',['Enter the Narrative','Enter the Demo','See the World Map','Return to Compass'].every(x=>html.includes(x)),'routes');
 check('MIRRORLAND_STATE_MEANING',['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED','MIRRORLAND_WITHDRAWING','MIRRORLAND_WINDOW_REVEAL_COMPLETE','MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE'].every(x=>m.includes(x)),'state meaning preserved');
 check('MIRRORLAND_GEOMETRY_PRESENT',m.includes('function buildPanes()')&&m.includes('createPane(')&&m.includes('paneCount'),'stained-glass geometry retained');
 check('CRYSTAL_INTERACTION_PRESENT',c.includes('bindPointerBridge')&&c.includes('bindSemanticFocusBridge')&&c.includes('gestureActive'),'gesture/focus bridges retained');
-check('CANONICAL_SCOUTCRAFT_PRESENT',identity.includes('DGB_SCOUTCRAFT_01'),'Gen1526 Laws-derived spacecraft identity present');
+check('LOCAL_SPACECRAFT_RENDERER_DISABLED',identity.includes('DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT'),'simplified Compass-local spacecraft renderer disabled');
+check('ACTUAL_LAWS_BACKGROUND_OWNER_ADOPTED',lawsAdapter.includes('/laws/index.spacecraft.background.js?v=LAWS_CP6_TRUE_3D_SPACECRAFT_BACKGROUND_20260801A')&&lawsAdapter.includes('DIRECT_LAWS_PRESENTATION_OWNER'),'later Laws background spacecraft presentation owner adopted');
+check('LAWS_SPACECRAFT_BOUND_BEFORE_IDENTITY',html.indexOf('compass.laws-spacecraft.js')>=0&&html.indexOf('compass.laws-spacecraft.js')<html.indexOf('compass.identity-3d.js'),'Laws spacecraft adapter loads before identity runtime');
 check('INTEGRATED_BRAINSTEM_PRESENT',['midbrain','pons','medulla'].every(x=>brain.includes(x)),'continuous Gen1526 brainstem components present');
 check('SINGLE_INTEGRATED_CEREBELLUM',brain.includes('cerebellum')&&!brain.includes('cerebellum-left')&&!brain.includes('cerebellum-right'),'single integrated cerebellum retained');
 

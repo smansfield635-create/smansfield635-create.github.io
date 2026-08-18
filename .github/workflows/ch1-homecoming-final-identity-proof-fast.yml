@@ -1,0 +1,65 @@
+name: CH1 Homecoming Final Identity Proof Fast
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ch1-homecoming-final-identity-proof-fast.yml'
+      - '.github/ai-router/video-conform/source-registry.v1.json'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Hash promoted media and execute registered-source renderer fetch
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          FILE=proof-media/video-conform/ch01-homecoming-world-v1.mp4
+          SHA=$(sha256sum "$FILE" | awk '{print $1}')
+          BYTES=$(stat -c '%s' "$FILE")
+          BLOB=$(git hash-object "$FILE")
+          printf 'SHA=%s\nBYTES=%s\nBLOB=%s\n' "$SHA" "$BYTES" "$BLOB" > "$RUNNER_TEMP/identity.txt"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p='.github/ai-router/video-conform/source-registry.v1.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          const s=r.sources.find(x=>x.sourceId==='CHAPTER_01_HOMECOMING_WORLD_V1');
+          if(!s) throw new Error('SOURCE_NOT_FOUND');
+          delete s.expectedSha256;
+          delete s.expectedBytes;
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/probe-registry.json',JSON.stringify(r,null,2)+'\n');
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/request.json',JSON.stringify({schema:'VIDEO_CONFORM_REQUEST_v1',requestId:'CH01_HOMECOMING_FINAL_IDENTITY_PROOF_FAST_20260817_001',output:{filename:'homecoming-proof.mp4',durationSeconds:0.25,fps:24,width:320,height:180,crf:30,preset:'ultrafast'},segments:[{sourceId:'CHAPTER_01_HOMECOMING_WORLD_V1',sourceStart:0,sourceEnd:0.25,targetStart:0,targetEnd:0.25,fit:'contain'}]},null,2)+'\n');
+          NODE
+          command -v ffmpeg >/dev/null
+          mkdir -p "$RUNNER_TEMP/out"
+          node tools/video-conform/video-conform-renderer.v1.mjs --request "$RUNNER_TEMP/request.json" --registry "$RUNNER_TEMP/probe-registry.json" --output-dir "$RUNNER_TEMP/out" --receipt "$RUNNER_TEMP/receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/receipt.json','utf8'));
+          if(r.result!=='PASS_CLOSED') throw new Error(`RENDERER_${r.result}:${r.error||''}`);
+          const c=r.custody?.find(x=>x.sourceId==='CHAPTER_01_HOMECOMING_WORLD_V1');
+          if(!c) throw new Error('CUSTODY_MISSING');
+          fs.appendFileSync(process.env.RUNNER_TEMP+'/identity.txt',`CUSTODY_SHA=${c.sha256}\nCUSTODY_BYTES=${c.bytes}\nCUSTODY_BLOB=${c.gitBlob}\nRENDERER_RESULT=${r.result}\n`);
+          NODE
+      - name: Comment proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          { echo 'CH1_HOMECOMING_FINAL_IDENTITY_PROOF_FAST_V1'; echo; echo '```'; cat "$RUNNER_TEMP/identity.txt"; echo '```'; } > "$RUNNER_TEMP/comment.md"
+          gh api "repos/${REPO}/issues/${PR}/comments" -f body="$(cat "$RUNNER_TEMP/comment.md")"

@@ -1,0 +1,44 @@
+name: Compass Identity Support Dedupe Executor
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'repair/compass-identity-support-dedupe-v1'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ github.token }}
+      - name: Mark explicit identity bindings authoritative
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          old_css='<link rel="stylesheet" href="/assets/compass/compass.identity-3d.css?v=gen1532-live-binding-v1">'
+          new_css='<link rel="stylesheet" href="/assets/compass/compass.identity-3d.css?v=gen1532-live-binding-v1" data-compass-identity-style="true">'
+          old_js='<script src="/assets/compass/compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1" defer></script>'
+          new_js='<script src="/assets/compass/compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1" defer data-compass-identity-runtime="true"></script>'
+          if old_css not in s or old_js not in s:
+              raise SystemExit('expected live identity bindings not found')
+          s=s.replace(old_css,new_css,1).replace(old_js,new_js,1)
+          p.write_text(s)
+          PY
+          grep -Fq 'data-compass-identity-style="true"' index.html
+          grep -Fq 'data-compass-identity-runtime="true"' index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Prevent duplicate legacy identity support injection'
+          git push origin HEAD:${{ github.head_ref }}

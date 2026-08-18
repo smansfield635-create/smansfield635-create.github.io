@@ -1,0 +1,53 @@
+{
+  "archive_id": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B_COMPLETE_PACKAGE_v1",
+  "operation": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B",
+  "status": "PASS_CLOSED_WITH_HYBRID_CUSTODY",
+  "classification": "EXPLORATORY_EMPIRICAL_ROBUSTNESS_TEST",
+  "parent_drive_folder_id": "1Rd6K8L6vvkN0ZpFwGsxwVZn5A0i_g3ms",
+  "source_identity": {
+    "filename": "Complications_and_Deaths-Hospital.csv",
+    "byte_length": 21641635,
+    "sha256": "0ba1b358e54e8812c9d1cf72c37f715b7bfeb3da12009bb6705158f0d15f91b5",
+    "expected_rows": 90611,
+    "expected_hospitals": 4769,
+    "expected_measures": 19,
+    "duplicate_facility_measure_rows": 0
+  },
+  "resolved_clarifications": {
+    "operation": "HOSPITAL_MEASURE_LEVEL_IMI_ROBUSTNESS_EXTENSION_1B",
+    "additive_comparator": {
+      "status": "RESOLVED",
+      "name": "MEASURE_WEIGHTED_NONWORSE_FRACTION",
+      "formula": "(MORT_nonworse + SAFETY_nonworse) / (MORT_comparable + SAFETY_comparable)",
+      "not_equal_to": "(a_MORT + a_SAFETY) / 2"
+    },
+    "collapse_case_coverage": {
+      "status": "RESOLVED",
+      "case_count": 3,
+      "ANY_COMPARABLE": "NUMERIC_HARD_COLLAPSE",
+      "AT_LEAST_50_PERCENT": "UNEVALUABLE_ALL_THREE",
+      "AT_LEAST_75_PERCENT": "UNEVALUABLE_ALL_THREE",
+      "ALL_REQUIRED": "UNEVALUABLE_ALL_THREE"
+    },
+    "evidentiary_interpretation": "The cases demonstrate additive concealment only within the permissive route and do not constitute complete-coverage collapse evidence."
+  },
+  "archive_scope": {
+    "findings": "ARCHIVED_IN_GOOGLE_DOC",
+    "report": "RECOVERED_AND_PACKAGED",
+    "summary": "RECOVERED_EXACT_PRIMARY_TABLE_AND_PACKAGED",
+    "sensitivity": "RECOVERED_CORE_PLUS_EXECUTABLE_RECONSTRUCTION",
+    "hospital_level_results": "ORIGINAL_RETAINED_IN_FILE_LIBRARY_PLUS_EXECUTABLE_RECONSTRUCTION",
+    "collapse_examples": "AGGREGATE_RECOVERED_PLUS_EXECUTABLE_RECONSTRUCTION",
+    "source_csv": "NOT_DUPLICATED_IN_PACKAGE; HASH_BOUND AND RETRIEVABLE_FROM CMS ARCHIVE"
+  },
+  "determinations": {
+    "hospital_robustness_extension": "EMPIRICALLY_VALUABLE",
+    "hospital_feasibility_evidence": "STRENGTHENED",
+    "noncompensatory_collapse_claim": "OBSERVED_IN_REAL_DATA_UNDER_PERMISSIVE_COVERAGE",
+    "factor_distinctness": "EMPIRICALLY_SUPPORTED",
+    "duplicate_control": "EMPIRICALLY_JUSTIFIED",
+    "required_factor_missingness_rule": "EMPIRICALLY_JUSTIFIED",
+    "independent_cross_domain_validation": "NOT_SATISFIED",
+    "next_major_instrument_test": "ANOTHER_DOMAIN"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_L0_L1_M1_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE_MANIFEST_v1",
+  "version": "1.0.0",
+  "operation": "M1_ACCESSIBILITY_RESPONSIVE_EQUIVALENCE_EVIDENCE_v1",
+  "status": "EVIDENCE_CONSTRUCTION_LANE_ONLY",
+  "governingManifestation": {
+    "candidateId": "M1_TESTS_METHODS_OPERATIONAL_FIELD",
+    "candidateHead": "9370bba7841b8a831f7f1c034d0b74fb83dab2e0",
+    "promotionMerge": "391c3543fd048bac90493232f04973911468d3eb",
+    "path": "control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1"
+  },
+  "admittedPriorEvidence": {
+    "runtimeInteractionMerge": "051268bfacbfc5671c68f4f24a5601b807412d86",
+    "runtimeResult": "PASS_BOUNDED_M1_RUNTIME_INTERACTION_EVIDENCE",
+    "runtimeBoundary": "ESTABLISHED_FOR_DECLARED_FIXTURES_ONLY"
+  },
+  "governingRegistry": {
+    "promotionMerge": "64d0ea7673d1ecb61372a0dd8b127b889157da1d",
+    "projection": "METHODS",
+    "objectCount": 3,
+    "relationCount": 2
+  },
+  "implementedLayerBoundary": {
+    "L0": true,
+    "L1": true,
+    "FOCUS": true,
+    "L2_INSPECT": false,
+    "L3_FOLLOW": false,
+    "L3_PROVENANCE": false,
+    "L4_ENTER": false
+  },
+  "equivalenceInvariant": "ACCESS_ROUTE_OR_RESPONSIVE_PRESENTATION_MAY_CHANGE_PERCEPTION_BUT_MAY_NOT_CHANGE_OPERATION_TARGET_SCIENTIFIC_GRAPH_OR_WITHHELD_LAYER_BOUNDARY",
+  "profiles": [
+    {"id": "DESKTOP", "width": 1440, "height": 1000},
+    {"id": "TABLET", "width": 820, "height": 1180},
+    {"id": "PHONE", "width": 390, "height": 844},
+    {"id": "NARROW_REFLOW", "width": 320, "height": 800}
+  ],
+  "accessFixtures": [
+    "KEYBOARD_TAB_AND_ROVING_FOCUS",
+    "KEYBOARD_ACTIVATION",
+    "POINTER_ACTIVATION",
+    "TOUCH_ACTIVATION",
+    "BOUNDED_BROWSER_NATIVE_ASSISTIVE_ACTIVATION",
+    "ACCESSIBILITY_TREE_ROLE_NAME_STATE",
+    "LIVE_STATUS_ANNOUNCEMENT_SURFACE",
+    "VISIBLE_FOCUS_SURFACE",
+    "MINIMUM_INTERACTIVE_TARGET_SIZE",
+    "REDUCED_MOTION_EQUIVALENCE"
+  ],
+  "responsiveFixtures": [
+    "NO_DOCUMENT_HORIZONTAL_OVERFLOW",
+    "ALL_THREE_OBJECTS_REMAIN_WITHIN_SPATIAL_FIELD",
+    "EXACT_TWO_RELATIONS_REMAIN_RENDERED",
+    "RELATION_GEOMETRY_REMAINS_FINITE",
+    "SEMANTIC_GRAPH_REMAINS_IDENTICAL",
+    "DISABLED_PROJECTION_ISOLATION_REMAINS_IDENTICAL",
+    "WITHHELD_LAYER_BOUNDARY_REMAINS_IDENTICAL"
+  ],
+  "claimBoundary": {
+    "accessibilityResponsiveEquivalenceMayBeEstablished": true,
+    "externalPhysicalScreenReaderOrATDevice": "NOT_CLAIMED_BY_THIS_LANE",
+    "perceptualEvaluation": "NOT_CLAIMED_BY_THIS_LANE",
+    "freshIndependentVerification": "NOT_CLAIMED_BY_THIS_LANE",
+    "userDifferential": "NOT_CLAIMED_BY_THIS_LANE",
+    "publicPromotionFitness": "NOT_CLAIMED_BY_THIS_LANE",
+    "scientificClaimUpgrade": false
+  },
+  "mutationBoundary": {
+    "publicMutation": false,
+    "publicRouteCreation": false,
+    "m1SourceMutation": false,
+    "registryMutation": false,
+    "runtimeEvidenceMutation": false,
+    "researchAuthorityMutation": false,
+    "TStarMutation": false,
+    "BStarMutation": false,
+    "M1R2Mutation": false,
+    "broaderModelsPopulation": false,
+    "broaderExperimentsPopulation": false,
+    "broaderEvidencePopulation": false
+  },
+  "evidenceDisposition": "CI_ARTIFACTS_REQUIRE_SEPARATE_REVIEW_BEFORE_ADMISSION_OR_NEXT_GATE"
+}

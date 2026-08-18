@@ -1,0 +1,25 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": false,
+  "disposition": "BLOCK_PENDING_ANCHOR_REVIEW",
+  "visualEvidence": [],
+  "interactionEvidence": [],
+  "continuityEvidence": [],
+  "experienceFiles": [],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": false,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": false,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": false,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": false,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": false,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": false,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": false,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": false,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": false,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": false,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": false
+  },
+  "instructions": "Copy this template into h-earth-3d/experience-anchor/receipts/ for an experience-changing candidate. Populate exact changed experience-file SHA-256 values and repository-resident visual, interaction, and continuity evidence. Set every invariant true and disposition PASS only after actual comparison to the controlling anchor. The gate fails closed otherwise."
+}

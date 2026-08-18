@@ -1,0 +1,41 @@
+{
+  "schema": "H_EARTH_R06_C10_SUCCESSOR_ROOM_CANDIDATE_ADMISSION_LOCATOR_v1",
+  "status": "ACTIVE_FAIL_CLOSED",
+  "purpose": "Give any fresh or successor room one repository-discoverable command for exact committed candidate admission without conversation memory or private working state.",
+  "gateId": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_GATE_v1",
+  "gatePath": "h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs",
+  "adapterPath": "h-earth-3d/validation/h-earth.r06-c10.candidate-admission.adapter.v1.mjs",
+  "manifestPath": "h-earth-3d/control-plane/r06-c10/candidate-admission/h-earth.r06-c10.current-candidate-admission.manifest.v1.json",
+  "receiptSchemaPath": "h-earth-3d/control-plane/r06-c10/schemas/h-earth.r06-c10.exact-candidate-admission.receipt.schema.v1.json",
+  "governanceContractPath": "h-earth-3d/control-plane/r06-c10/governance/h-earth.r06-c10.inter-role-candidate-admission-gate.v1.json",
+  "singleCommandTemplate": "node h-earth-3d/validation/h-earth.r06-c10.exact-candidate-admission-gate.v1.mjs --candidate <EXACT_CANDIDATE_HEAD> --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/gate-receipt.json",
+  "requiredCandidateManifest": {
+    "schema": "H_EARTH_R06_C10_EXACT_CANDIDATE_ADMISSION_MANIFEST_v1",
+    "candidateHeadBinding": "RESOLVED_FROM_GATE_ARGUMENT",
+    "assertionSetId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_ASSERTIONS_28_v1",
+    "expectedAssertionCount": 28,
+    "adapterPath": "h-earth-3d/validation/h-earth.r06-c10.candidate-admission.adapter.v1.mjs",
+    "evaluatorPath": "REQUIRED_COMMITTED_MJS_PATH",
+    "privateStateAllowed": false,
+    "dirtyWorktreeAllowed": false,
+    "oneDeclaredCommandRequired": true
+  },
+  "freshRoomProcedure": [
+    "Start from a clean repository checkout containing this locator.",
+    "Do not accept a message, screenshot, generated archive, or Role 1 summary as candidate admission authority.",
+    "Run the single command against the exact candidate commit.",
+    "Confirm the gate receipt binds the exact candidate head, parent, changed paths, blobs, 28 assertion records, raw measurements, evidence package, and rollback identity.",
+    "Record the reproductionFingerprintSha256.",
+    "A second independent room must reproduce the same fingerprint before downstream ratification or user review.",
+    "Any missing file, dirty state, changed authority blob, private state, receipt mismatch, nonzero assertion failure, or fingerprint divergence fails closed."
+  ],
+  "authoritativeLaws": [
+    "NO_CANDIDATE_PASS_BY_MESSAGE",
+    "NO_CANDIDATE_PASS_FROM_PRIVATE_OR_UNCOMMITTED_STATE",
+    "NO_CANDIDATE_PASS_WITHOUT_ONE_REPOSITORY_DISCOVERABLE_COMMAND",
+    "NO_DOWNSTREAM_HANDOFF_WITHOUT_FRESH_ROOM_REPRODUCTION",
+    "ROLE_1_PRIVATE_EXECUTION_STATE_IS_NONAUTHORITATIVE",
+    "REPOSITORY_REPRODUCIBLE_EXECUTION_IS_THE_SOLE_CANDIDATE_PASS_AUTHORITY"
+  ],
+  "conversationMemoryRequired": false
+}

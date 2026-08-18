@@ -1,0 +1,43 @@
+{
+  "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+  "contractVersion": 1,
+  "targetNumber": 4,
+  "targetSubtarget": "4A-7",
+  "subtargetName": "DECISION_ALGORITHM_CONTRACT",
+  "status": "COMPLETE_CANDIDATE_NOT_ACCEPTED",
+  "accepted": false,
+  "canonical": false,
+  "engineIndependent": true,
+  "orderedSteps": [
+    {"sequence":1,"step":"VALIDATE_INPUT_SHAPE"},
+    {"sequence":2,"step":"VERIFY_REGISTRY_IDENTITY"},
+    {"sequence":3,"step":"RESOLVE_PATHS_AND_OCCURRENCES"},
+    {"sequence":4,"step":"RESOLVE_AFFECTED_NODES"},
+    {"sequence":5,"step":"EXPAND_RELATIONS_AND_COMPOSITES"},
+    {"sequence":6,"step":"PROJECT_CARDINAL_STRUCTURE"},
+    {"sequence":7,"step":"PROJECT_AUTHORITY_AND_EVIDENCE"},
+    {"sequence":8,"step":"PROJECT_LIFECYCLE"},
+    {"sequence":9,"step":"COMPARE_DECLARED_AND_DERIVED_SCOPE"},
+    {"sequence":10,"step":"EVALUATE_MUTATION_LIMITS"},
+    {"sequence":11,"step":"EVALUATE_STOPPING_BOUNDARIES"},
+    {"sequence":12,"step":"CLASSIFY_FAILURES"},
+    {"sequence":13,"step":"CALCULATE_FINAL_DISPOSITION"},
+    {"sequence":14,"step":"EMIT_DETERMINISTIC_RECEIPT"}
+  ],
+  "executionLaw": {
+    "maySkipSteps": false,
+    "mayReorderSteps": false,
+    "stopOnMalformedInput": true,
+    "stopOnRegistryIdentityFailure": true,
+    "preserveAllFailureCodes": true,
+    "finalDispositionUsesDispositionLaw": true,
+    "receiptRequiredForEveryEvaluatedOperation": true
+  },
+  "noImplementationClaim": {
+    "validatorEngineInstalled": false,
+    "fixturesInstalled": false,
+    "comprehensionAuditExecuted": false,
+    "workflowEnforcementInstalled": false
+  },
+  "stoppingCondition": {"decisionAlgorithmContractComplete": true, "advanceBeyondTarget4A7": false, "nextAuthorizedSubtarget": "4A-8"}
+}

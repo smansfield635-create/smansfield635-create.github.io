@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Core Invariants | Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Core Invariants under the Diamond Gate Bridge laws chamber."
+  />
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg0:#041124;
+      --bg1:#07203d;
+      --bg2:#0b2f58;
+      --ink:rgba(255,255,255,.97);
+      --mut:rgba(255,255,255,.84);
+      --soft:rgba(255,255,255,.66);
+      --gold:rgba(244,226,176,.96);
+      --line:rgba(255,255,255,.12);
+      --lineStrong:rgba(244,226,176,.26);
+      --panel:rgba(8,14,24,.78);
+      --panelStrong:rgba(8,14,24,.90);
+      --shadow:0 24px 76px rgba(0,0,0,.48);
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
+      color:var(--ink);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+    body{overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
+    .env{
+      position:absolute;inset:0;pointer-events:none;overflow:hidden;
+      background:
+        radial-gradient(circle at 12% 22%, rgba(120,0,22,.18), transparent 34%),
+        radial-gradient(circle at 82% 24%, rgba(90,40,120,.16), transparent 38%),
+        radial-gradient(circle at 60% 26%, rgba(18,58,140,.14), transparent 34%),
+        radial-gradient(circle at 50% 30%, rgba(244,226,176,.05), transparent 24%);
+      filter:blur(5px);opacity:.46;
+    }
+    .wrap{
+      position:relative;z-index:1;width:min(1080px,calc(100vw - 32px));margin:0 auto;
+      padding:calc(24px + var(--safe-top)) calc(16px + var(--safe-right)) calc(40px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    }
+    .topbar,.hero,.section{
+      border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,var(--panel) 0%,var(--panelStrong) 100%);
+      box-shadow:var(--shadow);position:relative;overflow:hidden;
+    }
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brandMark{width:42px;height:42px;border-radius:14px;transform:rotate(45deg);border:1px solid rgba(244,226,176,.24);background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));flex:0 0 auto}
+    .brandTitle{margin:0 0 3px;font-size:.96rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .brandSubtitle{margin:0;color:var(--soft);font-size:.82rem}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .nav a{min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--lineStrong);background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));color:#fff3cf;font-size:12px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center}
+    .hero,.section{padding:28px 24px 24px;margin-bottom:18px}
+    .eyebrow{margin:0 0 12px;color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    h1,h2{font-family:Georgia,"Times New Roman",serif}
+    h1{margin:0 0 12px;font-size:clamp(42px,7vw,72px);line-height:.94}
+    h2{margin:0 0 12px;font-size:clamp(24px,4vw,36px);line-height:1.02}
+    p{margin:0;color:var(--mut);line-height:1.65;font-size:16px;max-width:760px}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+    .card{border:1px solid rgba(255,255,255,.10);border-radius:22px;background:linear-gradient(180deg, rgba(10,16,30,.76) 0%, rgba(8,14,26,.90) 100%);padding:18px}
+    .card h3{margin:0 0 8px;font-size:16px;font-weight:900;color:#fff3cf}
+    .card p{font-size:14px;line-height:1.58}
+    @media (max-width:860px){.grid{grid-template-columns:1fr}.topbar{align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="env" aria-hidden="true"></div>
+    <main class="wrap">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brandMark" aria-hidden="true"></div>
+          <div>
+            <p class="brandTitle">Diamond Gate Bridge</p>
+            <p class="brandSubtitle">Laws / Core Invariants</p>
+          </div>
+        </div>
+        <nav class="nav" aria-label="Page navigation">
+          <a href="/laws/">Back to Laws</a>
+          <a href="/index.html">Compass</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow">Core invariants</p>
+        <h1>Core Invariants</h1>
+        <p>
+          This chamber establishes the core invariants surface under the laws branch. It is now a deterministic endpoint and can be deepened later.
+        </p>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">Opening structure</p>
+        <h2>Stable, governing, non-optional.</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Structural law</h3>
+            <p>Core invariants define what cannot drift without breaking the larger system.</p>
+          </article>
+          <article class="card">
+            <h3>Boundary clarity</h3>
+            <p>This layer keeps governing rules readable instead of buried inside downstream pages.</p>
+          </article>
+          <article class="card">
+            <h3>Expansion readiness</h3>
+            <p>The endpoint is live now and ready for future doctrinal compression or expansion.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

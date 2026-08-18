@@ -1,0 +1,43 @@
+{
+  "contract": "LAWS_CHAMBER_CP6_LANE_1_CONTENT_DISPOSITION_v1",
+  "base_head": "c009f2a03c19a6b54ebad62dfba658f808f0b4c1",
+  "branch": "agent/laws-cp6-compass-first-progressive-disclosure-001",
+  "architectural_correction": true,
+  "dispositions": [
+    {
+      "source_block": "Laws Threshold abstract opening",
+      "disposition": "REDUNDANT_COPY_REMOVED_WITH_CANONICAL_SOURCE_PRESERVED",
+      "canonical_preservation": "Claim-language, evidence-boundary, domain-separation, and custody records remain inside collapsed supporting orientation and canonical destination pages."
+    },
+    {
+      "source_block": "Expanded Research comes F.I.R.S.T. cards and route lists",
+      "disposition": "PRESERVED_IN_COMPACT_ORIENTATION",
+      "canonical_preservation": "Flow, Integrity, Reality, Structure, and Test links remain; Research remains the examination and support layer."
+    },
+    {
+      "source_block": "Immediate Capability Route Deck",
+      "disposition": "DUPLICATE_ROUTE_DIRECTORY_REMOVED",
+      "canonical_preservation": "Compass controls and canonical destination routes remain unchanged."
+    },
+    {
+      "source_block": "Compass Standards explanatory block",
+      "disposition": "REDUNDANT_COPY_REMOVED_WITH_CANONICAL_SOURCE_PRESERVED",
+      "canonical_preservation": "Accessible compass guidance remains inside the existing compass region."
+    },
+    {
+      "source_block": "Supporting Laws discovery material",
+      "disposition": "PRESERVED_IN_COLLAPSED_ORIENTATION",
+      "canonical_preservation": "All supporting discovery content is grouped into three initially closed native details panels."
+    },
+    {
+      "source_block": "Closing invitation",
+      "disposition": "REDUNDANT_COPY_REMOVED_WITH_CANONICAL_SOURCE_PRESERVED",
+      "canonical_preservation": "Practical opening, compass, and existing accessibility guidance preserve the usable instruction."
+    }
+  ],
+  "destination_page_mutation": 0,
+  "lane_2_mutation": 0,
+  "protected_runtime_mutation": 0,
+  "osf_main_page_insertion": "ONE_BOUNDED_STATEMENT_ONLY",
+  "migrated_record_custody": "48_OF_48"
+}

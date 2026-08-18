@@ -1,0 +1,9 @@
+/* LAWS_DESTINATION_STAGE_ANCHOR_CORRECTION_v1
+ * Wins over the older responsive Rolodex max-content track rule so the
+ * dedicated stage carousel anchors its active card to the real stage center.
+ */
+html[data-laws-destination-stage="active"] [data-laws-root-rolodex-section][data-laws-destination-stage="active"] .laws-destination-stage__field .laws-rolodex-track {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}

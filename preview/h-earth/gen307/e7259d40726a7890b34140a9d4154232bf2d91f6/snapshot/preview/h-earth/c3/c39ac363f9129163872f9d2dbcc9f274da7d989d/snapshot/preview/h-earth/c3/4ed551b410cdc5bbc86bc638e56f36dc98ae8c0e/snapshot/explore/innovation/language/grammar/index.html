@@ -1,0 +1,1152 @@
+<!-- TNT — /explore/innovation/language/grammar/index.html
+     GOAL: Keep the gem + lens system, remove “abstract one-liners”.
+     CHANGES (requested):
+       - Lenses stay (STYLE + CONCEPT/NOW/ROADMAP) INSIDE modal ONLY.
+       - NO extra inner tabs (no FEELS/MATTERS/WORKS/NEXT inside the modal).
+       - Each SECTION (FEELS / WORKS / MATTERS / NEXT) shows 4 BUBBLES.
+       - Each BUBBLE contains 4 PARAGRAPHS (context + example + correlation + takeaway).
+       - Bottom actions are GEM BUBBLES (no purple/blue links).
+     LOCKS:
+       - Uses /assets/ui.css + /assets/branch.css only (no UI/CSS edits).
+       - Does NOT style html/body background (ui.css owns field).
+       - Deterministic state propagation: lang/style/time always carried.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GRAMMAR · Traversal Contracts</title>
+
+<link rel="stylesheet" href="/assets/ui.css"/>
+<link rel="stylesheet" href="/assets/branch.css"/>
+<script defer src="/assets/instrument.js"></script>
+
+<style>
+/* PAGE-LOCAL ONLY (no field ownership) */
+:root{ --R:154px; --goldSoft:rgba(212,175,55,.35); --obs1:#070b12; --obs2:#0c1626; }
+
+/* Top */
+.top-left{
+  position:fixed;left:16px;top:16px;z-index:90;
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.brand{
+  position:fixed;left:50%;top:16px;transform:translateX(-50%);
+  z-index:80;text-align:center;
+  padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);backdrop-filter:blur(8px);
+}
+.brand .t1{font-weight:950;letter-spacing:1.1px;font-size:12px;opacity:.95}
+.brand .t2{margin-top:2px;font-size:11px;letter-spacing:.6px;opacity:.72}
+
+/* Stage (diamond-of-diamonds) */
+.stage{
+  position:fixed;left:50%;top:52%;
+  transform:translate(-50%,-50%);
+  width:min(720px,94vw);height:min(720px,94vw);
+  z-index:40;
+}
+.outer{
+  position:absolute;left:50%;top:50%;
+  width:min(680px,92vw);height:min(680px,92vw);
+  transform:translate(-50%,-50%) rotate(45deg);
+  border-radius:60px;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.14), transparent 60%),
+    linear-gradient(160deg, rgba(14,24,40,.45) 0%, rgba(7,11,18,.62) 70%);
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 90px 260px rgba(0,0,0,.62),
+    inset 0 2px 0 rgba(255,255,255,.10),
+    inset 0 -50px 90px rgba(0,0,0,.55);
+  pointer-events:none;opacity:.85;
+}
+.outer::after{
+  content:"";position:absolute;inset:0;border-radius:60px;
+  background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.04) 0deg 6deg, transparent 6deg 18deg);
+  opacity:.16;
+}
+
+/* Diamonds */
+.d{
+  width:170px;height:170px;
+  position:absolute;left:50%;top:50%;
+  transform-origin:center;border-radius:26px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(0,80,255,.18), transparent 60%),
+    linear-gradient(160deg, rgba(12,22,38,.92) 0%, rgba(7,11,18,.95) 70%);
+
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:
+    0 28px 84px rgba(0,0,0,.78),
+    inset 0 2px 0 rgba(255,255,255,.14),
+    inset 0 -28px 44px rgba(0,0,0,.62);
+  transition:transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+.d::before{
+  content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, var(--goldSoft) 50%, transparent 100%);
+  opacity:.45;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.d::after{
+  content:"";position:absolute;left:12%;right:12%;top:10%;height:28%;
+  border-radius:999px;
+  background:linear-gradient(to bottom, rgba(255,255,255,.16), rgba(255,255,255,0));
+  opacity:.85;transform:rotate(-10deg);
+  pointer-events:none;
+}
+.d:hover{
+  transform:translate(-50%,-50%) rotate(45deg) scale(1.02);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 18px rgba(212,175,55,.18),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+  border-color:rgba(212,175,55,.28);
+}
+.d.active{
+  border-color:rgba(212,175,55,.70);
+  box-shadow:
+    0 34px 110px rgba(0,0,0,.88),
+    0 0 30px rgba(212,175,55,.40),
+    inset 0 2px 0 rgba(255,255,255,.18),
+    inset 0 -32px 52px rgba(0,0,0,.68);
+}
+
+:root{ --gR: 168px; }
+.d-n{ transform:translate(-50%,-50%) translate(0, calc(var(--gR) * -1)) rotate(45deg); }
+.d-e{ transform:translate(-50%,-50%) translate(var(--gR), 0) rotate(45deg); }
+.d-s{ transform:translate(-50%,-50%) translate(0, var(--gR)) rotate(45deg); }
+.d-w{ transform:translate(-50%,-50%) translate(calc(var(--gR) * -1), 0) rotate(45deg); }
+
+.in{
+  width:100%;height:100%;transform:rotate(-45deg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:16px;gap:10px;pointer-events:none;user-select:none;
+}
+.lab{font-weight:950;letter-spacing:.9px;font-size:16px}
+.sub{font-size:12.5px;opacity:.84;line-height:1.35;max-width:18em}
+
+.core{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:74px;height:74px;border-radius:22px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 18px 44px rgba(0,0,0,.62), inset 0 2px 0 rgba(255,255,255,.10);
+  display:grid;place-items:center;
+  font-weight:950;letter-spacing:.5px;opacity:.92;pointer-events:none;
+}
+
+/* Dock */
+.dock{
+  position:fixed;left:50%;
+  bottom:max(12px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:90;
+  width:min(980px,94vw);
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:10px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+}
+
+/* Modal (centered) */
+.bd{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(10px);
+  display:none;
+}
+.bd.show{display:block;}
+.modal{
+  position:fixed;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1040px,94vw);
+  max-height:88vh;
+  display:none;z-index:210;
+}
+.modal.show{display:block;}
+.shell{
+  height:88vh;
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,.10);
+  background:
+    radial-gradient(circle at 52% 14%, rgba(176,0,0,.16), transparent 55%),
+    radial-gradient(circle at 38% 28%, rgba(90,140,255,.12), transparent 55%),
+    linear-gradient(145deg, rgba(17,22,28,.90), rgba(11,15,20,.94));
+  box-shadow:0 60px 180px rgba(0,0,0,.92);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.mhead{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.mtitle{margin:0;font-weight:950;letter-spacing:.3px;font-size:16px}
+.mclose{border:0;background:transparent;color:#fff;font-size:18px;cursor:pointer;padding:8px 10px}
+.lensbar{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:center;
+  padding:10px 12px 12px;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.chip{
+  padding:10px 16px;border-radius:999px;
+  background:linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.96));
+  border:1px solid rgba(255,255,255,.10);
+  color:#fff;font-weight:900;letter-spacing:.2px;
+  cursor:pointer;
+  box-shadow:0 14px 36px rgba(0,0,0,.65);
+}
+.chip.active{
+  border-color:rgba(212,175,55,.70);
+  box-shadow:0 18px 50px rgba(0,0,0,.9), 0 0 16px rgba(212,175,55,.30);
+}
+.mbody{padding:14px 16px 18px;overflow:auto;-webkit-overflow-scrolling:touch;flex:1 1 auto}
+
+/* Bubble grid (4 bubbles) */
+.grid{display:grid;gap:14px}
+@media (min-width:920px){ .grid{grid-template-columns:1fr 1fr} }
+.bubble{
+  padding:16px 18px;border-radius:22px;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(120,160,255,.08), transparent 55%),
+    linear-gradient(145deg, rgba(12,22,38,.92), rgba(7,11,18,.95));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 60px rgba(0,0,0,.70), inset 0 2px 0 rgba(255,255,255,.06);
+  position:relative;
+}
+.bubble::before{
+  content:"";position:absolute;inset:0;border-radius:22px;padding:1px;
+  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.35) 50%, transparent 100%);
+  opacity:.55;
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  pointer-events:none;
+}
+.bubble h4{margin:0 0 10px;font-weight:950;letter-spacing:.2px}
+.bubble p{margin:0 0 10px;line-height:1.55;color:rgba(255,255,255,.84)}
+.bubble p:last-child{margin-bottom:0}
+.actions{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:14px
+}
+
+/* Small */
+@media (max-width:560px){
+  :root{ --gR: 150px; }
+  .d{ width:156px; height:156px; }
+  .stage{ top:54%; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-left">
+  <a class="crp-btn" id="btnExplore" href="/explore/">EXPLORE</a>
+  <a class="crp-btn" id="btnLanguage" href="/explore/innovation/language/">LANGUAGE</a>
+  <a class="crp-btn" id="btnExit" href="/door/">EXIT</a>
+</div>
+
+<div class="brand">
+  <div class="t1" id="b1">GRAMMAR</div>
+  <div class="t2" id="b2">Traversal contracts · structural language.</div>
+</div>
+
+<div class="stage" aria-label="Grammar sections">
+  <div class="outer"></div>
+
+  <div class="d d-n" id="dFeels" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labFeels">HOW IT FEELS</div>
+      <div class="sub" id="subFeels">User experience under constraint.</div>
+    </div>
+  </div>
+
+  <div class="d d-e" id="dMatters" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labMatters">WHY IT MATTERS</div>
+      <div class="sub" id="subMatters">Safety · coherence · scale.</div>
+    </div>
+  </div>
+
+  <div class="d d-w" id="dWorks" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labWorks">HOW IT WORKS</div>
+      <div class="sub" id="subWorks">Contracts · receipts · routing.</div>
+    </div>
+  </div>
+
+  <div class="d d-s" id="dNext" role="button" tabindex="0">
+    <div class="in">
+      <div class="lab" id="labNext">WHAT’S NEXT</div>
+      <div class="sub" id="subNext">Roadmap extensions.</div>
+    </div>
+  </div>
+
+  <div class="core">◆</div>
+</div>
+
+<nav class="dock" aria-label="Bottom navigation">
+  <a class="crp-btn" id="dockExplore" href="/explore/">EXPLORE</a>
+  <a class="crp-btn" id="dockInnovation" href="/explore/?">INNOVATION</a>
+  <a class="crp-btn" id="dockLanguage" href="/explore/innovation/language/">LANGUAGE</a>
+  <a class="crp-btn crp-btn-primary" id="dockGrammar" href="/explore/innovation/language/grammar/">GRAMMAR</a>
+</nav>
+
+<div class="bd" id="bd" aria-hidden="true"></div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="shell">
+    <div class="mhead">
+      <h3 class="mtitle" id="mTitle">GRAMMAR</h3>
+      <button class="mclose" id="mClose" aria-label="Close" type="button">✕</button>
+    </div>
+
+    <!-- LENSES (ONLY LENSES INSIDE MODAL) -->
+    <div class="lensbar">
+      <button class="chip" id="chipStyle" type="button">STYLE: FORMAL</button>
+      <button class="chip" id="chipConcept" data-time="origin" type="button">CONCEPT</button>
+      <button class="chip" id="chipNow" data-time="now" type="button">NOW</button>
+      <button class="chip" id="chipRoadmap" data-time="post" type="button">ROADMAP</button>
+    </div>
+
+    <div class="mbody">
+      <div class="grid">
+        <div class="bubble">
+          <h4 id="h1"></h4>
+          <p id="p1a"></p>
+          <p id="p1b"></p>
+          <p id="p1c"></p>
+          <p id="p1d"></p>
+        </div>
+        <div class="bubble">
+          <h4 id="h2"></h4>
+          <p id="p2a"></p>
+          <p id="p2b"></p>
+          <p id="p2c"></p>
+          <p id="p2d"></p>
+        </div>
+        <div class="bubble">
+          <h4 id="h3"></h4>
+          <p id="p3a"></p>
+          <p id="p3b"></p>
+          <p id="p3c"></p>
+          <p id="p3d"></p>
+        </div>
+        <div class="bubble">
+          <h4 id="h4"></h4>
+          <p id="p4a"></p>
+          <p id="p4b"></p>
+          <p id="p4c"></p>
+          <p id="p4d"></p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="crp-btn" id="btnReturn" type="button">RETURN</button>
+        <a class="crp-btn" id="btnJumpLanguage" href="/explore/innovation/language/">JUMP LANGUAGE</a>
+        <a class="crp-btn" id="btnJumpExplore" href="/explore/">JUMP EXPLORE</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ===== STATE =====
+  var qs = new URLSearchParams(location.search);
+  var qLang = qs.get("lang");
+  var qStyle = qs.get("style");
+  var qTime = qs.get("time");
+
+  var lang = (qLang==="zh"||qLang==="en") ? qLang : ((localStorage.getItem("gd_lang")==="zh") ? "zh" : "en");
+  var style = (qStyle==="formal"||qStyle==="informal") ? qStyle : (localStorage.getItem("gd_style")||"formal");
+  var time = (qTime==="origin"||qTime==="now"||qTime==="post") ? qTime : (localStorage.getItem("gd_time")||"now");
+  if(time==="trajectory") time="post";
+
+  try{
+    localStorage.setItem("gd_lang", lang);
+    localStorage.setItem("gd_style", style);
+    localStorage.setItem("gd_time", time);
+  }catch(e){}
+
+  function q(){ return "lang="+encodeURIComponent(lang)+"&style="+encodeURIComponent(style)+"&time="+encodeURIComponent(time); }
+  function wire(){
+    var s = q();
+    document.getElementById("btnExplore").href = "/explore/?" + s;
+    document.getElementById("btnLanguage").href = "/explore/innovation/language/?" + s;
+    document.getElementById("btnExit").href = "/door/?" + s;
+
+    document.getElementById("dockExplore").href = "/explore/?" + s;
+    document.getElementById("dockInnovation").href = "/explore/?" + s;
+    document.getElementById("dockLanguage").href = "/explore/innovation/language/?" + s;
+    document.getElementById("dockGrammar").href = "/explore/innovation/language/grammar/?" + s;
+
+    document.getElementById("btnJumpLanguage").href = "/explore/innovation/language/?" + s;
+    document.getElementById("btnJumpExplore").href = "/explore/?" + s;
+  }
+  wire();
+
+  // ===== TEXT (single-language render) =====
+  var UI = {
+    en:{
+      b1:"GRAMMAR",
+      b2:"Traversal contracts · structural language.",
+      tiles:{feels:"HOW IT FEELS", matters:"WHY IT MATTERS", works:"HOW IT WORKS", next:"WHAT’S NEXT"},
+      lens:{formal:"FORMAL", informal:"INFORMAL", concept:"CONCEPT", now:"NOW", roadmap:"ROADMAP"},
+      act:{return:"RETURN", jLang:"JUMP LANGUAGE", jExplore:"JUMP EXPLORE"}
+    },
+    zh:{
+      b1:"语法",
+      b2:"遍历契约 · 结构语言。",
+      tiles:{feels:"使用感", matters:"为什么重要", works:"如何运作", next:"下一步"},
+      lens:{formal:"正式", informal:"直接", concept:"概念", now:"当前", roadmap:"路线图"},
+      act:{return:"返回", jLang:"跳转语言", jExplore:"跳转探索"}
+    }
+  };
+  var T = (lang==="zh") ? UI.zh : UI.en;
+  document.documentElement.lang = (lang==="zh") ? "zh" : "en";
+  document.getElementById("b1").textContent = T.b1;
+  document.getElementById("b2").textContent = T.b2;
+
+  document.getElementById("labFeels").textContent = T.tiles.feels;
+  document.getElementById("labMatters").textContent = T.tiles.matters;
+  document.getElementById("labWorks").textContent = T.tiles.works;
+  document.getElementById("labNext").textContent = T.tiles.next;
+
+  document.getElementById("btnReturn").textContent = T.act.return;
+  document.getElementById("btnJumpLanguage").textContent = T.act.jLang;
+  document.getElementById("btnJumpExplore").textContent = T.act.jExplore;
+
+  // ===== CONTENT MODEL =====
+  // section -> time -> style -> 4 bubbles (each bubble: title + 4 paragraphs)
+  var C = {
+    feels:{
+      origin:{
+        formal:{
+          bubbles:[
+            {h:"You don’t get lost",
+             p:["Language sticks, so you don’t feel like the site is ‘resetting’ under you.",
+                "Example: You pick EN once, then every jump keeps EN unless you change it on purpose.",
+                "Correlation: Less reset → less confusion → fewer wrong clicks → faster learning.",
+                "Takeaway: Grammar here means ‘navigation grammar’—how the site keeps you oriented."]},
+            {h:"It speaks precisely",
+             p:["Formal mode uses contract language so terms don’t blur as the system grows.",
+                "Example: ‘origin/now/post’ always means concept/live/roadmap, not whatever a page author feels.",
+                "Correlation: Stable meanings → stable expectation → trust increases over repeated sessions.",
+                "Takeaway: If a sentence can’t be read the same way twice, it’s not formal enough."]},
+            {h:"Concept keeps it clean",
+             p:["Concept shows the idea without drowning you in implementation details.",
+                "Example: You see the rule (‘state must propagate’) before you see the code that enforces it.",
+                "Correlation: Concept-first reduces cognitive load and makes the later details easier to place.",
+                "Takeaway: Concept isn’t ‘less true’—it’s ‘less cluttered’."]},
+            {h:"Exploration feels safe",
+             p:["You can tap around without fear because returns and routes are deterministic.",
+                "Example: Back always returns; the modal closes; the same page remains coherent.",
+                "Correlation: Safe exploration increases coverage and reduces user hesitation.",
+                "Takeaway: Grammar is the safety feeling created by consistent structure."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"You don’t get lost",
+             p:["The site doesn’t randomly forget your settings, so you stay oriented.",
+                "Example: You choose EN once, and it stays EN while you click around.",
+                "Correlation: Less ‘where am I?’ means faster understanding and fewer mistakes.",
+                "Takeaway: Grammar = the rules that keep you from drifting."]},
+            {h:"It talks like a human",
+             p:["Informal mode keeps it short and direct—no academic fog.",
+                "Example: ‘Keep keys stable’ beats a paragraph of theory when you’re trying to build.",
+                "Correlation: Short clarity → faster decisions → more progress in less time.",
+                "Takeaway: Informal is not sloppy; it’s compressed."]},
+            {h:"Concept stays simple",
+             p:["Concept view shows the idea without making you read the manual.",
+                "Example: ‘State must follow you’ is enough to understand why resets feel bad.",
+                "Correlation: Simple first → you’re willing to keep going.",
+                "Takeaway: Learn the idea, then deepen if you want."]},
+            {h:"You can tap safely",
+             p:["Exploration doesn’t punish you—return paths stay obvious.",
+                "Example: You open, read, close, and you’re right back where you started.",
+                "Correlation: Safe tapping increases curiosity and decreases frustration.",
+                "Takeaway: Grammar makes exploration calm instead of chaotic."]}
+          ]
+        }
+      },
+      now:{
+        formal:{
+          bubbles:[
+            {h:"State feels locked",
+             p:["Now mode confirms the system is actively carrying your state across pages.",
+                "Example: The URL includes lang/style/time, and the next page reads it deterministically.",
+                "Correlation: Determinism prevents ‘random’ behavior across devices and browsers.",
+                "Takeaway: If Now doesn’t carry state, the contract is broken."]},
+            {h:"The UI stays uniform",
+             p:["Uniform gem behavior is part of the grammar: same press, same response.",
+                "Example: Diamonds always open a centered modal; buttons look and behave the same.",
+                "Correlation: UI uniformity reduces training time for new users.",
+                "Takeaway: The look is not decoration—it’s a usability contract."]},
+            {h:"Lens changes are real",
+             p:["When you switch lenses, content must change, not just highlights.",
+                "Example: Formal vs informal rewrites meaning; concept vs roadmap changes emphasis.",
+                "Correlation: Real lensing prevents stale content and keeps trust high.",
+                "Takeaway: A lens that doesn’t change content is a fake lens."]},
+            {h:"Back stays stable",
+             p:["Stability means back/close never produces a new, inconsistent state.",
+                "Example: Close returns to the same diamond face; no extra overlays remain.",
+                "Correlation: Clean returns reduce fatigue and keep navigation predictable.",
+                "Takeaway: Grammar is ‘return discipline’ as much as it is ‘forward travel’."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"It keeps your settings",
+             p:["Now mode means your choices follow you.",
+                "Example: You don’t keep re-selecting language every time you click.",
+                "Correlation: Less rework means more learning and less irritation.",
+                "Takeaway: If you feel resets, something isn’t wired."]},
+            {h:"Everything behaves the same",
+             p:["Same gems, same modals, same buttons—no surprises.",
+                "Example: Every page uses the same interaction pattern, so you already know how to use it.",
+                "Correlation: Familiar patterns reduce friction and speed up exploration.",
+                "Takeaway: Consistency is a feature."]},
+            {h:"Lens changes matter",
+             p:["If you toggle a lens, you should feel it immediately in the text.",
+                "Example: Informal gets blunt; roadmap talks about what’s next.",
+                "Correlation: Real changes make the tool feel alive instead of cosmetic.",
+                "Takeaway: Lens = meaning shift, not UI decoration."]},
+            {h:"Return is clean",
+             p:["Close means close—no weird leftovers.",
+                "Example: You don’t end up in a different page than you expected.",
+                "Correlation: Clean returns keep you calm and keep you moving.",
+                "Takeaway: Calm navigation beats clever navigation."]}
+          ]
+        }
+      },
+      post:{
+        formal:{
+          bubbles:[
+            {h:"Roadmap is readable",
+             p:["Roadmap tells you what’s coming without jargon overload.",
+                "Example: ‘More pages, same rules’ is the promise, not a technical essay.",
+                "Correlation: Readable roadmap increases adoption because it’s understandable.",
+                "Takeaway: Roadmap is for orientation, not for impressing people."]},
+            {h:"New won’t wreck old",
+             p:["The structure remains stable while features expand.",
+                "Example: New subpages attach under the same trunk without changing the hub contract.",
+                "Correlation: Stable structure prevents regressions and preserves trust.",
+                "Takeaway: Growth is allowed only if the contract stays intact."]},
+            {h:"Scale still feels calm",
+             p:["Scaling should not feel like complexity explosion.",
+                "Example: You add 50 pages, but the same diamond and modal logic still works.",
+                "Correlation: Stable navigation reduces ‘system entropy’ as content grows.",
+                "Takeaway: Calm scale is a design goal, not an accident."]},
+            {h:"It becomes a real map",
+             p:["Roadmap turns the site into a navigable atlas rather than a pile of documents.",
+                "Example: You know where to go next because the trunks are predictable.",
+                "Correlation: Predictable maps improve retention and repeat visits.",
+                "Takeaway: Grammar is the difference between a map and a mess."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"Roadmap stays readable",
+             p:["It tells you what’s next without drowning you.",
+                "Example: You can read it fast and still know where you are.",
+                "Correlation: Fast readability means people keep going instead of quitting.",
+                "Takeaway: Roadmap should feel like a signpost."]},
+            {h:"New doesn’t break old",
+             p:["You can add new stuff without wrecking what already works.",
+                "Example: Same structure, more pages—no redesign.",
+                "Correlation: No breakage means less stress and more progress.",
+                "Takeaway: Expansion must be safe."]},
+            {h:"Scaling still feels calm",
+             p:["More pages, same rules.",
+                "Example: You don’t have to relearn the UI every time.",
+                "Correlation: Familiarity lowers frustration and raises confidence.",
+                "Takeaway: Calm is a feature."]},
+            {h:"It turns into a real map",
+             p:["You know where to go next, every time.",
+                "Example: Trunks and subtrunks stay consistent, like street signs.",
+                "Correlation: Better orientation means better momentum.",
+                "Takeaway: Grammar is what makes ‘traversal study’ possible."]}
+          ]
+        }
+      }
+    },
+
+    matters:{
+      origin:{
+        formal:{
+          bubbles:[
+            {h:"Safety without policing",
+             p:["Grammar creates safety by preventing ambiguity, not by restricting curiosity.",
+                "Example: You can explore freely because return paths and state handling are strict.",
+                "Correlation: Ambiguity drops → accidental misuse drops → risk drops.",
+                "Takeaway: Safety comes from structure, not from warnings."]},
+            {h:"Coherence at scale",
+             p:["Grammar prevents meaning drift as the content base grows.",
+                "Example: ‘origin/now/post’ stays consistent across every page and modal.",
+                "Correlation: Consistent terms → consistent interpretation → coherent ecosystem.",
+                "Takeaway: Without grammar, big systems collapse into contradictions."]},
+            {h:"Evidence-friendly communication",
+             p:["Grammar makes content compatible with audit-grade interpretation.",
+                "Example: Claims stay bounded and are presented as ‘what/when’, not ‘why’ stories.",
+                "Correlation: Cleaner language → clearer verification → more trust.",
+                "Takeaway: This is how you make work admissible."]},
+            {h:"Consumer legibility",
+             p:["Grammar lets consumers understand the system without learning the internal codebase.",
+                "Example: Lenses explain ‘how to read’ the site with predictable results.",
+                "Correlation: Legibility increases adoption; adoption increases feedback loops.",
+                "Takeaway: The grammar is the interface between expert and non-expert users."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"It keeps people safe",
+             p:["If things are consistent, people don’t crash into the wrong thing.",
+                "Example: Same buttons, same behavior, every time.",
+                "Correlation: Fewer mistakes means fewer bad outcomes.",
+                "Takeaway: Consistency is safety."]},
+            {h:"It stops drift",
+             p:["It prevents the ‘moving target’ problem.",
+                "Example: Words mean the same thing on every page.",
+                "Correlation: Stable meaning means stable decisions.",
+                "Takeaway: Drift kills trust."]},
+            {h:"It makes proof easier",
+             p:["Clear structure makes it easier to verify what’s true.",
+                "Example: You can point to a lens state and know what you’re reading.",
+                "Correlation: Verification gets faster when the format is predictable.",
+                "Takeaway: If it’s not clear, it’s not safe."]},
+            {h:"It helps normal people",
+             p:["People can use it without studying the whole system.",
+                "Example: The map guides you—tap, read, return.",
+                "Correlation: Less learning curve means more usage.",
+                "Takeaway: Grammar makes the system approachable."]}
+          ]
+        }
+      },
+      now:{
+        formal:{
+          bubbles:[
+            {h:"Prevents regression",
+             p:["Now means grammar is actively enforced across live changes.",
+                "Example: New pages must carry state and keep modal behavior identical.",
+                "Correlation: Enforcement reduces breakages after updates.",
+                "Takeaway: This is why you can build fast without collapsing."]},
+            {h:"Makes debugging deterministic",
+             p:["When something breaks, grammar tells you exactly where to look.",
+                "Example: Missing route → 404; missing state propagation → resets; wrong asset → style shift.",
+                "Correlation: Deterministic debugging reduces time loss.",
+                "Takeaway: Grammar is a troubleshooting protocol."]},
+            {h:"Keeps the product uniform",
+             p:["Uniformity is how the user’s brain forms a reliable map.",
+                "Example: Every diamond page behaves like the hub page.",
+                "Correlation: Reliability increases return visits.",
+                "Takeaway: Uniformity is part of the product."]},
+            {h:"Enables traversal study",
+             p:["Traversal study only works if movement is predictable.",
+                "Example: ‘Jump’ means jump; ‘return’ means return; lenses stay coherent.",
+                "Correlation: Predictable movement increases learning speed.",
+                "Takeaway: Traversal study is impossible without grammar."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"Stops breakage",
+             p:["It keeps updates from breaking the site.",
+                "Example: Same page pattern everywhere means fewer weird edge cases.",
+                "Correlation: Fewer bugs means faster shipping.",
+                "Takeaway: Consistency saves time."]},
+            {h:"Makes fixes obvious",
+             p:["When something is wrong, it’s obvious what to check.",
+                "Example: If it 404s, it’s a missing path. If it resets, state isn’t carried.",
+                "Correlation: Clear diagnosis means less rage and less waste.",
+                "Takeaway: Grammar = clean debugging."]},
+            {h:"Keeps the vibe steady",
+             p:["The site feels like one system, not a collage.",
+                "Example: Same gem look and same modals everywhere.",
+                "Correlation: One system feel increases trust.",
+                "Takeaway: Don’t reinvent the UI per page."]},
+            {h:"Makes learning faster",
+             p:["People learn by moving, not by reading forever.",
+                "Example: Tap a section, get four clear bubbles, move on.",
+                "Correlation: Faster learning increases retention.",
+                "Takeaway: Traversal beats wall-of-text."]}
+          ]
+        }
+      },
+      post:{
+        formal:{
+          bubbles:[
+            {h:"Supports public reintroduction",
+             p:["Roadmap grammar makes the site safe to show publicly.",
+                "Example: Users won’t get lost even as content is unfinished.",
+                "Correlation: Safer exploration reduces negative first impressions.",
+                "Takeaway: This is launch hygiene."]},
+            {h:"Enables certification paths",
+             p:["Stable grammar allows measurable, certifiable progress paths.",
+                "Example: Completion can be logged without changing meanings across versions.",
+                "Correlation: Stable systems can be audited; audited systems can be certified.",
+                "Takeaway: Certification needs grammar."]},
+            {h:"Allows overlays without collapse",
+             p:["Adding languages and domains becomes an overlay problem, not a redesign problem.",
+                "Example: EN core + Chinese support + optional overlays later.",
+                "Correlation: Overlays scale better than branching systems.",
+                "Takeaway: Grammar keeps expansion disciplined."]},
+            {h:"Turns the system into infrastructure",
+             p:["When grammar is stable, the system becomes reusable infrastructure.",
+                "Example: New projects plug in without changing the core interaction contract.",
+                "Correlation: Reuse increases speed and reduces complexity.",
+                "Takeaway: Grammar is what makes it infrastructure, not a website."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"Makes it launchable",
+             p:["People can explore without breaking it.",
+                "Example: Even unfinished pages stay coherent.",
+                "Correlation: Better first impressions means more engagement.",
+                "Takeaway: Launch hygiene matters."]},
+            {h:"Lets you prove progress",
+             p:["Stable structure makes progress measurable.",
+                "Example: Logs and milestones attach to the same map every time.",
+                "Correlation: Measurement is easier when the system doesn’t move.",
+                "Takeaway: Stable map = measurable work."]},
+            {h:"Scales without chaos",
+             p:["More languages and more domains won’t turn it into spaghetti.",
+                "Example: Overlays add content, not new rules.",
+                "Correlation: Less chaos means less stress and more output.",
+                "Takeaway: Discipline wins."]},
+            {h:"Becomes real infrastructure",
+             p:["It stops being a ‘project’ and becomes a platform.",
+                "Example: New domains plug in, the core stays the same.",
+                "Correlation: Reuse accelerates everything.",
+                "Takeaway: Grammar makes it durable."]}
+          ]
+        }
+      }
+    },
+
+    works:{
+      origin:{
+        formal:{
+          bubbles:[
+            {h:"State is a contract",
+             p:["Grammar treats state as a contract, not a suggestion.",
+                "Example: lang/style/time are canonical keys and always propagate.",
+                "Correlation: Contracted state reduces user confusion and dev errors.",
+                "Takeaway: If the contract isn’t enforced, traversal study fails."]},
+            {h:"Receipts and returns",
+             p:["Grammar defines how actions complete and how you return.",
+                "Example: Open modal → read → close → return to the exact same surface.",
+                "Correlation: Clean returns reduce interaction debt.",
+                "Takeaway: Navigation is a loop, not a one-way street."]},
+            {h:"Deterministic routing",
+             p:["Routes are deterministic: same input state yields same destination behavior.",
+                "Example: Clicking the same trunk from two devices should land the same way.",
+                "Correlation: Determinism makes bugs reproducible and fixable.",
+                "Takeaway: Determinism is the backbone of scaling."]},
+            {h:"Lens semantics",
+             p:["Lenses are meaning transforms—formal/informal and concept/now/roadmap.",
+                "Example: Roadmap changes emphasis from definitions to expansion path.",
+                "Correlation: Meaning transforms prevent stale content in different contexts.",
+                "Takeaway: Lenses are how one structure serves multiple reading modes."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"State is locked",
+             p:["Your settings aren’t random; they’re carried on purpose.",
+                "Example: lang/style/time follow you through clicks.",
+                "Correlation: Less rework = less frustration.",
+                "Takeaway: If it resets, it’s not wired."]},
+            {h:"Return discipline",
+             p:["Open, read, close, back where you started.",
+                "Example: No weird jumps after closing the modal.",
+                "Correlation: Clean loops keep you calm.",
+                "Takeaway: Calm navigation wins."]},
+            {h:"Same click, same result",
+             p:["If you click the same thing, it should behave the same.",
+                "Example: Two devices should show the same meaning when in the same lens state.",
+                "Correlation: Predictability builds trust fast.",
+                "Takeaway: Predictable beats clever."]},
+            {h:"Lenses change meaning",
+             p:["Formal vs informal isn’t cosmetic; it changes the explanation style.",
+                "Example: Roadmap talks future; concept talks idea; now talks live behavior.",
+                "Correlation: Context match increases comprehension.",
+                "Takeaway: Lenses are the ‘how to read’ switch."]}
+          ]
+        }
+      },
+      now:{
+        formal:{
+          bubbles:[
+            {h:"URL + storage hydration",
+             p:["Now mode confirms the live system uses URL + local storage coherently.",
+                "Example: URL param overrides; storage supplies defaults; links propagate deterministically.",
+                "Correlation: This prevents different devices from diverging silently.",
+                "Takeaway: Hydration is the ‘truth pipeline’ for state."]},
+            {h:"Uniform page contracts",
+             p:["Every diamond page should share the same interaction contract.",
+                "Example: Same diamond sizing, same modal center, same chips in modal only.",
+                "Correlation: Uniformity makes pages swappable without user retraining.",
+                "Takeaway: Clone is the primary scaling method."]},
+            {h:"Content density rule",
+             p:["Now enforces ‘no empty bubbles’: every entry has real content.",
+                "Example: Each modal view yields 4 bubbles with multi-paragraph context.",
+                "Correlation: Density reduces confusion and makes exploration worthwhile.",
+                "Takeaway: Pretty emptiness is a product failure."]},
+            {h:"Failure becomes obvious",
+             p:["When grammar is enforced, failure cases are visible and classifiable.",
+                "Example: 404 = missing path; mismatch = wrong directory; stale view = wrong lens wiring.",
+                "Correlation: Obvious failures are faster to fix.",
+                "Takeaway: Grammar turns debugging into a checklist."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"State pipeline works",
+             p:["The system reads state, keeps state, and passes state.",
+                "Example: You stop selecting the same options over and over.",
+                "Correlation: Less rework means faster progress.",
+                "Takeaway: State pipeline = sanity."]},
+            {h:"Pages feel uniform",
+             p:["Every page feels like it belongs to the same site.",
+                "Example: Same gem style and modal behavior everywhere.",
+                "Correlation: Consistency builds confidence.",
+                "Takeaway: One site, one feel."]},
+            {h:"Content is actually there",
+             p:["No empty bubbles; everything says something useful.",
+                "Example: You get context and examples, not a single vague line.",
+                "Correlation: Better content = fewer misreads.",
+                "Takeaway: Don’t ship hollow UI."]},
+            {h:"Bugs become simple",
+             p:["Problems fall into clear buckets.",
+                "Example: If it 404s, it’s a path issue—not a mystery.",
+                "Correlation: Simple buckets = faster fixes.",
+                "Takeaway: Debugging shouldn’t feel like magic."]}
+          ]
+        }
+      },
+      post:{
+        formal:{
+          bubbles:[
+            {h:"Roadmap wiring patterns",
+             p:["Roadmap defines how new trunks and leaf nodes attach without drift.",
+                "Example: Add a new subpage under the same trunk; keep the same modal/lens contract.",
+                "Correlation: Stable wiring prevents regression storms.",
+                "Takeaway: Roadmap is ‘growth with guardrails’."]},
+            {h:"Proof-grade references",
+             p:["The system evolves toward proof-grade references and reproducible explanations.",
+                "Example: Bounded statements and consistent labels across versions.",
+                "Correlation: Proof-grade docs increase institutional trust.",
+                "Takeaway: Grammar is how content stays admissible over time."]},
+            {h:"Overlay expansion",
+             p:["Roadmap supports overlays (languages, domains) without rewriting the base.",
+                "Example: Keep EN core, maintain Chinese support, add optional overlays later.",
+                "Correlation: Overlays reduce fork chaos.",
+                "Takeaway: Expansion becomes additive, not destructive."]},
+            {h:"Institutional integration",
+             p:["Roadmap positions grammar as a reusable operating layer.",
+                "Example: Teams adopt the same patterns and get predictable results.",
+                "Correlation: Shared patterns reduce training cost.",
+                "Takeaway: This is how the system becomes platform infrastructure."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"Growth stays safe",
+             p:["Add more pages without breaking the core.",
+                "Example: Same pattern, more nodes.",
+                "Correlation: Less breakage means less stress.",
+                "Takeaway: Growth should feel boring."]},
+            {h:"References get stronger",
+             p:["Explanations become easier to trust.",
+                "Example: Same labels, same meaning, across time.",
+                "Correlation: Trust increases with repetition.",
+                "Takeaway: Consistency wins."]},
+            {h:"Overlays scale better",
+             p:["More languages and domains without spaghetti.",
+                "Example: Add overlays, don’t fork the system.",
+                "Correlation: Less chaos means more output.",
+                "Takeaway: Add, don’t rewrite."]},
+            {h:"Becomes a platform",
+             p:["People reuse the patterns everywhere.",
+                "Example: One training curve, many pages.",
+                "Correlation: Reuse accelerates growth.",
+                "Takeaway: Platform = repeatable."]}
+          ]
+        }
+      }
+    },
+
+    next:{
+      origin:{
+        formal:{
+          bubbles:[
+            {h:"Next = add leaf nodes",
+             p:["Next means turning each concept into deeper, navigable leaves.",
+                "Example: Grammar → (State / Routing / Receipts / Semantics) as subpages.",
+                "Correlation: Leaves increase depth without breaking traversal.",
+                "Takeaway: Expand depth, not complexity."]},
+            {h:"Next = examples that prove",
+             p:["Add examples that show the rule in action across devices.",
+                "Example: Same lens state produces same content in mobile and tablet.",
+                "Correlation: Cross-device consistency increases credibility.",
+                "Takeaway: Show it, don’t just say it."]},
+            {h:"Next = consumer legibility",
+             p:["Translate technical ideas into consumer-readable language without losing structure.",
+                "Example: ‘You don’t get lost’ → why state propagation matters.",
+                "Correlation: Legibility increases adoption.",
+                "Takeaway: Keep structure; simplify phrasing."]},
+            {h:"Next = unify naming",
+             p:["Standardize naming across trunks to reduce drift.",
+                "Example: Concept/Now/Roadmap everywhere; no synonyms unless canonical.",
+                "Correlation: Naming discipline prevents confusion.",
+                "Takeaway: Words are infrastructure."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"Next = go deeper",
+             p:["Turn the big idea into smaller pages.",
+                "Example: Grammar gets subpages for the parts.",
+                "Correlation: Small pages are easier to read and maintain.",
+                "Takeaway: Split, don’t cram."]},
+            {h:"Next = show examples",
+             p:["Examples make it real.",
+                "Example: ‘Same link, same destination’ across devices.",
+                "Correlation: People trust what they can see.",
+                "Takeaway: Prove it."]},
+            {h:"Next = make it friendly",
+             p:["Explain it like a consumer would understand.",
+                "Example: ‘No resets’ and ‘you stay oriented’.",
+                "Correlation: Friendly language increases retention.",
+                "Takeaway: Clarity beats jargon."]},
+            {h:"Next = keep names stable",
+             p:["Stop renaming things.",
+                "Example: Same labels everywhere.",
+                "Correlation: Stable names reduce stress.",
+                "Takeaway: Don’t drift words."]}
+          ]
+        }
+      },
+      now:{
+        formal:{
+          bubbles:[
+            {h:"Now → fill content density",
+             p:["The immediate next step is content density: fill every section with real context.",
+                "Example: 4 bubbles × 4 paragraphs becomes the minimum standard.",
+                "Correlation: Density reduces user confusion and improves value-per-tap.",
+                "Takeaway: No empty bubbles, ever."]},
+            {h:"Now → route hardening",
+             p:["Ensure every click resolves to an existing page with correct path casing.",
+                "Example: /explore/innovation/language/grammar/ not /innovation/language/grammar/",
+                "Correlation: Correct paths eliminate 404 loops across devices.",
+                "Takeaway: Path correctness is the first stability gate."]},
+            {h:"Now → consistent actions",
+             p:["Replace text links with gem buttons to keep the UI uniform.",
+                "Example: ‘JUMP’ actions are bubbles, not colored anchors.",
+                "Correlation: Uniform actions reduce friction and improve trust.",
+                "Takeaway: Buttons should always look like buttons."]},
+            {h:"Now → keep lenses minimal",
+             p:["Lenses stay only where they matter: inside the modal.",
+                "Example: No lens clutter on the diamond face.",
+                "Correlation: Less clutter increases clarity.",
+                "Takeaway: The page face is navigation; the modal is meaning."]}
+          ]
+        },
+        informal:{
+          bubbles:[
+            {h:"Now → fill it out",
+             p:["Make every tap worth it.",
+                "Example: Real context, real examples, not one-liners.",
+                "Correlation: Better content means less frustration.",
+                "Takeaway: Empty bubbles = wasted time."]},
+            {h:"Now → fix links",
+             p:["Everything must route cleanly.",
+                "Example: If it 404s, the path is wrong or missing.",
+                "Correlation: Routing fixes stop the spiral.",
+                "Takeaway: Path first, then content."]},
+            {h:"Now → make buttons match",
+             p:["No purple links—use bubble buttons.",
+                "Example: Return and Jump are the same style as the rest.",
+                "Correlation: Consistency makes it feel like one site.",
+                "Takeaway: One design language."]},
+            {h:"Now → keep lens inside",
+             p:["Lenses belong inside the modal, not everywhere.",
+                "Example: The diamond face stays clean.",
+                "Correlation: Clean face = faster navigation.",
+                "Takeaway: Less clutter, more speed."]}
+          ]
+        }
+      },
+      post:{
+        formal:{bubbles:[
+          {h:"Roadmap → deeper grammar tree",
+           p:["Expand Grammar into a full tree of subpages with the same contract.",
+              "Example: Grammar/State, Grammar/Routing, Grammar/Receipts, Grammar/Semantics.",
+              "Correlation: Trees increase depth without breaking traversal.",
+              "Takeaway: Growth becomes structured and predictable."]},
+          {h:"Roadmap → tooling hints",
+           p:["Add light, consumer-friendly ‘how to use’ prompts at each node.",
+              "Example: One short ‘how to read this’ bubble per node.",
+              "Correlation: Better onboarding increases adoption.",
+              "Takeaway: Teach the reader how to traverse."]},
+          {h:"Roadmap → bilingual polish",
+           p:["Ensure both EN and 中文 versions are equally complete.",
+              "Example: No fallback-only behavior in final form.",
+              "Correlation: Equal bilingual completeness increases legitimacy.",
+              "Takeaway: Dual lens must be symmetric over time."]},
+          {h:"Roadmap → consistency audits",
+           p:["Introduce automated checks for missing bubbles and missing routes.",
+              "Example: A simple build script flags empty nodes and broken links.",
+              "Correlation: Automated checks reduce regressions.",
+              "Takeaway: Audit the structure continuously."]}
+        ]},
+        informal:{bubbles:[
+          {h:"Roadmap → build the tree",
+           p:["More pages, same pattern.",
+              "Example: Split Grammar into the parts.",
+              "Correlation: Splitting reduces confusion.",
+              "Takeaway: Depth without mess."]},
+          {h:"Roadmap → make it easy",
+           p:["Help people understand fast.",
+              "Example: Simple ‘how to use’ bubbles.",
+              "Correlation: Easier onboarding means more users.",
+              "Takeaway: Clarity scales."]},
+          {h:"Roadmap → polish bilingual",
+           p:["Make Chinese and English equally complete.",
+              "Example: No missing sections in one language.",
+              "Correlation: Symmetry increases trust.",
+              "Takeaway: Dual-language must feel intentional."]},
+          {h:"Roadmap → run audits",
+           p:["Automatically catch broken links and empty bubbles.",
+              "Example: Flag missing files in the build.",
+              "Correlation: Less breakage later.",
+              "Takeaway: Catch drift early."]}
+        ]}
+      }
+    }
+  };
+
+  // ===== MODAL CONTROL =====
+  var bd = document.getElementById("bd");
+  var modal = document.getElementById("modal");
+  var mClose = document.getElementById("mClose");
+  var mTitle = document.getElementById("mTitle");
+  var chipStyle = document.getElementById("chipStyle");
+  var chipConcept = document.getElementById("chipConcept");
+  var chipNow = document.getElementById("chipNow");
+  var chipRoadmap = document.getElementById("chipRoadmap");
+
+  var h1=document.getElementById("h1"), h2=document.getElementById("h2"), h3=document.getElementById("h3"), h4=document.getElementById("h4");
+  var p1a=document.getElementById("p1a"), p1b=document.getElementById("p1b"), p1c=document.getElementById("p1c"), p1d=document.getElementById("p1d");
+  var p2a=document.getElementById("p2a"), p2b=document.getElementById("p2b"), p2c=document.getElementById("p2c"), p2d=document.getElementById("p2d");
+  var p3a=document.getElementById("p3a"), p3b=document.getElementById("p3b"), p3c=document.getElementById("p3c"), p3d=document.getElementById("p3d");
+  var p4a=document.getElementById("p4a"), p4b=document.getElementById("p4b"), p4c=document.getElementById("p4c"), p4d=document.getElementById("p4d");
+
+  var active = "feels"; // feels|matters|works|next
+
+  function setActiveDiamond(which){
+    ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){
+      document.getElementById(id).classList.toggle("active", id===("d"+which.charAt(0).toUpperCase()+which.slice(1)));
+    });
+  }
+
+  function setLensUI(){
+    chipStyle.textContent = "STYLE: " + (style==="formal" ? T.lens.formal : T.lens.informal);
+    chipConcept.textContent = T.lens.concept;
+    chipNow.textContent = T.lens.now;
+    chipRoadmap.textContent = T.lens.roadmap;
+
+    chipConcept.classList.toggle("active", time==="origin");
+    chipNow.classList.toggle("active", time==="now");
+    chipRoadmap.classList.toggle("active", time==="post");
+  }
+
+  function fillBubble(idx, b){
+    if(idx===1){
+      h1.textContent=b.h; p1a.textContent=b.p[0]; p1b.textContent=b.p[1]; p1c.textContent=b.p[2]; p1d.textContent=b.p[3];
+    }else if(idx===2){
+      h2.textContent=b.h; p2a.textContent=b.p[0]; p2b.textContent=b.p[1]; p2c.textContent=b.p[2]; p2d.textContent=b.p[3];
+    }else if(idx===3){
+      h3.textContent=b.h; p3a.textContent=b.p[0]; p3b.textContent=b.p[1]; p3c.textContent=b.p[2]; p3d.textContent=b.p[3];
+    }else{
+      h4.textContent=b.h; p4a.textContent=b.p[0]; p4b.textContent=b.p[1]; p4c.textContent=b.p[2]; p4d.textContent=b.p[3];
+    }
+  }
+
+  function render(){
+    setLensUI();
+
+    var pack = C[active][time][style];
+    mTitle.textContent = (lang==="zh")
+      ? (active==="feels" ? "语法 · 使用感" : active==="matters" ? "语法 · 为什么重要" : active==="works" ? "语法 · 如何运作" : "语法 · 下一步")
+      : ("GRAMMAR · " + (active==="feels"?"HOW IT FEELS":active==="matters"?"WHY IT MATTERS":active==="works"?"HOW IT WORKS":"WHAT’S NEXT"));
+
+    fillBubble(1, pack.bubbles[0]);
+    fillBubble(2, pack.bubbles[1]);
+    fillBubble(3, pack.bubbles[2]);
+    fillBubble(4, pack.bubbles[3]);
+
+    try{
+      localStorage.setItem("gd_style", style);
+      localStorage.setItem("gd_time", time);
+    }catch(e){}
+    wire();
+  }
+
+  function open(which){
+    active = which;
+    setActiveDiamond(which);
+    render();
+    bd.classList.add("show");
+    modal.classList.add("show");
+  }
+  function close(){
+    bd.classList.remove("show");
+    modal.classList.remove("show");
+    ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){ document.getElementById(id).classList.remove("active"); });
+  }
+
+  // Clicks
+  document.getElementById("dFeels").onclick=function(){ open("feels"); };
+  document.getElementById("dMatters").onclick=function(){ open("matters"); };
+  document.getElementById("dWorks").onclick=function(){ open("works"); };
+  document.getElementById("dNext").onclick=function(){ open("next"); };
+
+  ["dFeels","dMatters","dWorks","dNext"].forEach(function(id){
+    var el=document.getElementById(id);
+    el.onkeydown=function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); el.click(); } };
+  });
+
+  bd.onclick=close;
+  mClose.onclick=close;
+  document.getElementById("btnReturn").onclick=close;
+
+  // Lenses
+  chipStyle.onclick=function(){ style = (style==="formal") ? "informal" : "formal"; render(); };
+  chipConcept.onclick=function(){ time="origin"; render(); };
+  chipNow.onclick=function(){ time="now"; render(); };
+  chipRoadmap.onclick=function(){ time="post"; render(); };
+
+  // Init
+  render();
+})();
+</script>
+
+</body>
+</html>
+```0

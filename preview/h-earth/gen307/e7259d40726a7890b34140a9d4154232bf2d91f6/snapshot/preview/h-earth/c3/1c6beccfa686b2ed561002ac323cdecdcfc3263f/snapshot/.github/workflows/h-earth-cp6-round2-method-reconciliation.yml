@@ -1,0 +1,61 @@
+name: H-Earth CP6 Round 2 Method Reconciliation
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/h-earth-cp6-round2-method-reconciliation.yml'
+      - 'h-earth-3d/control-plane/post-cp2-round2/h-earth.cp6-geometry-conditioned-material-repetition-metric.v1.mjs'
+      - 'h-earth-3d/control-plane/post-cp2-round2/h-earth.cp6-round2-method-reconciliation.v1.mjs'
+      - 'h-earth-3d/validation/h-earth.cp6-round2-method-reconciliation.mjs'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-method-reconciliation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact CP6 candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute deterministic CP6 verifier first pass
+        run: >-
+          node h-earth-3d/validation/h-earth.cp6-round2-method-reconciliation.mjs
+          h-earth-3d/validation/cp6-evidence/receipt-first.json
+
+      - name: Execute deterministic CP6 verifier second pass
+        run: >-
+          node h-earth-3d/validation/h-earth.cp6-round2-method-reconciliation.mjs
+          h-earth-3d/validation/cp6-evidence/receipt-second.json
+
+      - name: Require identical receipts
+        run: cmp h-earth-3d/validation/cp6-evidence/receipt-first.json h-earth-3d/validation/cp6-evidence/receipt-second.json
+
+      - name: Upload CP6 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-cp6-round2-method-reconciliation
+          path: h-earth-3d/validation/cp6-evidence/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce CP6 pass
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt = JSON.parse(fs.readFileSync('h-earth-3d/validation/cp6-evidence/receipt-first.json', 'utf8'));
+          if (receipt.result !== 'CP6_METHOD_RECONCILIATION_PASS_CLOSED' || receipt.pass !== true) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          console.log(`CP6_PASS:${receipt.canonicalSha256}`);
+          NODE

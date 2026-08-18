@@ -1,0 +1,65 @@
+{
+  "receiptId": "H_EARTH_REPOSITORY_LIFECYCLE_CONTROL_PLANE_STEP_1_REPOSITORY_SCOPE_RECONCILIATION_RECEIPT_v1",
+  "result": "PASS",
+  "issuedOn": "2026-07-23",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "pullRequest": 79,
+  "branch": "agent/h-earth-lifecycle-control-plane-step-1-001",
+  "baseMainCommit": "465596de77ef0a28a7f779e06851130f4768e445",
+  "reconciledHead": "9f5520533595a5ac1a59b10a129b45c160022f99",
+  "reconciliationCommits": [
+    "23946ea26f6b4d249b07510b92a85d8f89e172f1",
+    "9f5520533595a5ac1a59b10a129b45c160022f99"
+  ],
+  "scopeOverlayPath": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.step-1-scope-reconciliation.js",
+  "validatorLoaderPath": "/h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js",
+  "resolvedNodeId": "H_EARTH_LIFECYCLE_CONTROL_PLANE_STEP_1_ACCEPTED_PACKAGE",
+  "registeredHEarthPaths": [
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.acceptance-custody-receipt.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.completion-receipt.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.execution-trigger.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.identity-and-boundary.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-control-plane.step-1.user-acceptance-declaration.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.fixtures.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.postcondition-schema.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.precondition-schema.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.state-machine.js",
+    "/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.state-schema.json",
+    "/h-earth-3d/control-plane/step-1/h-earth.successor-activation.transition-contract.json"
+  ],
+  "automaticPreflight": {
+    "runId": 30059450961,
+    "result": "SUCCESS",
+    "finalDisposition": "PASS",
+    "failureCodes": [],
+    "unresolvedFields": [],
+    "artifactId": 8583978756,
+    "artifactDigest": "sha256:1c0967ac5035c64eab2abec7f41759e283db4571fe04b0c48a60d1177bca1d18"
+  },
+  "step1RegressionAudit": {
+    "runId": 30059450934,
+    "result": "SUCCESS",
+    "checks": "82_OF_82",
+    "fixtures": "19_OF_19"
+  },
+  "repositoryAdmission": {
+    "step1PackageScopeResolved": true,
+    "step1RepositoryAdmissionEstablished": true,
+    "exactPathSetOnly": true,
+    "authorityExpansionCreated": false
+  },
+  "boundaries": {
+    "branchRegistryScopeOverlayInstalled": true,
+    "activeRegistryMainChanged": false,
+    "baseRegistryCandidateChanged": false,
+    "bootstrapChanged": false,
+    "successorRegistryAccepted": false,
+    "successorRegistryActivated": false,
+    "transitionExecutionAuthorityEstablished": false,
+    "canonicalizationAuthorityEstablished": false,
+    "step2Authorized": false,
+    "mergeAuthorityEstablishedByThisReceipt": false,
+    "mainChanged": false
+  },
+  "nextBoundary": "SEPARATE_SINGLE_USE_MERGE_AUTHORIZATION_FOR_PR_79"
+}

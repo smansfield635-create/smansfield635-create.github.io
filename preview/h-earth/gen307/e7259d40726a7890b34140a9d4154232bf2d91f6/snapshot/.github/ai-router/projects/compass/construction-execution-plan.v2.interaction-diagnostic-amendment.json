@@ -1,0 +1,258 @@
+{
+  "schema": "COMPASS_PAGE_RECONSTRUCTION_EXECUTION_PLAN_v2_INTERACTION_DIAGNOSTIC_AMENDMENT",
+  "status": "LOCKED_DIRECT_REFERENCE_REQUIRED",
+  "projectId": "COMPASS",
+  "scope": "COMPASS_ONLY",
+  "appliesWith": [
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.display-fidelity-amendment.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.information-delivery-amendment.json",
+    ".github/ai-router/projects/compass/construction-execution-plan.v2.narrative-transition-coherence-amendment.json"
+  ],
+  "operationBinding": {
+    "operationId": "COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5",
+    "operationVersion": "v5",
+    "lockGeneration": 1507,
+    "governingHead": "ad395e724cbfea1c19c9ce43393c1148fa557816",
+    "sourceIssue": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011",
+    "sourceIssueCommentId": 5310364550,
+    "sourceIssueComment": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/1011#issuecomment-5310364550",
+    "exactAdmittedMutationScope": [
+      ".github/ai-router/router.v1.json",
+      ".github/ai-router/projects/compass/construction-execution-plan.v2.interaction-diagnostic-amendment.json",
+      ".github/ai-router/projects/compass/entrypoint.v1.json",
+      ".github/ai-router/projects/compass/verify-display-continuity.v1.mjs",
+      ".github/workflows/compass-display-continuity-validation.yml",
+      "assets/compass/compass.carousel.js",
+      "assets/compass/compass.carousel.css"
+    ],
+    "authorityCreatedByThisDocumentAlone": false,
+    "publicProductMutationAuthorizedByCanonicalOperation": true
+  },
+  "purpose": "Ratify the owner-observed Compass interaction, discoverability, control-state, and Coherence Diagnostic anatomy requirements as mandatory construction context before a successor public-product operation is admitted.",
+  "precedenceLaw": "This amendment is additive and corrective. It must be loaded with construction-execution-plan.v2.json and every previously registered amendment. It may resolve an ambiguous interaction reading, but it may not erase, weaken, bypass, or silently supersede any compatible preservation, display-fidelity, information-delivery, narrative-transition, route, accessibility, qualification, or authority requirement.",
+  "authorityBoundary": [
+    "THIS_AMENDMENT_IS_LOCKED_MANDATORY_DEVELOPMENT_CONTEXT_AND_CREATES_NO_MUTATION_AUTHORITY_BY_ITSELF",
+    "GENERATION_1507_AUTHORIZES_THE_EXACT_SEVEN_PATH_RATIFICATION_CONSTRUCTION_AND_QUALIFICATION_SCOPE",
+    "PUBLIC_COMPASS_IMPLEMENTATION_AUTHORITY_IS_LIMITED_TO_THE_FRESH_CANONICAL_SUCCESSOR_BINDING_ABOVE",
+    "NO_CARDINAL_ROOM_ROUTE_MIRRORLAND_SCIENTIFIC_EVIDENCE_GOVERNANCE_OR_DOMAIN_AUTHORITY_IS_CREATED_OR_WIDENED",
+    "STOP_RATHER_THAN_INFER_A_ROUTE_FUNCTION_GESTURE_OR_QUALIFICATION_EXCEPTION"
+  ],
+  "ownerObservedBaseline": {
+    "source": "Owner-supplied mobile recording 23776.mp4 and issue #1011 comment 5310364550.",
+    "preserve": [
+      "TOP_DISCOVERY_PROPOSITION_SPARKLE",
+      "TOP_PROPOSITION_SWIPE_TRANSITION",
+      "FLOATING_STATEMENT_PRESENTATION_WITHOUT_TAB_CHROME",
+      "THE_COMPASS_AS_THE_DOMINANT_INTERACTIVE_OBJECT",
+      "RESTRAINED_COSMIC_PRESENTATION",
+      "DISCRETE_CANONICAL_SETTLEMENT_AFTER_A_COMPLETED_GESTURE",
+      "ONE_ACTIVE_INFORMATION_STATE_WITH_STATE_DRIVEN_REPLACEMENT",
+      "FOUR_CARDINAL_AUTHORITY_AND_EXISTING_ROOM_TOPOLOGY",
+      "MIRRORLAND_THRESHOLD_AND_EXISTING_ROUTE_AUTHORITY",
+      "KEYBOARD_TOUCH_SCREEN_READER_AND_REDUCED_MOTION_EQUIVALENCE"
+    ],
+    "confirmedDefects": [
+      "THE_TOP_SWIPEABLE_PROPOSITION_DOES_NOT_SUFFICIENTLY_SIGNAL_THAT_IT_CAN_BE_SWIPED",
+      "THE_COHERENCE_DIAGNOSTIC_BRAIN_READS_AS_TOO_ABSTRACT_TO_RECOGNIZE_AS_A_BRAIN",
+      "RETURN_TO_ORBIT_IS_SHOWN_WHILE_THE_VISITOR_IS_ALREADY_BROWSING_THE_ORBIT",
+      "SOME_ORBIT_TABS_OR_CARDS_DO_NOT_MAKE_SWIPE_TO_SPIN_DISCOVERABLE",
+      "A_RETURN_CONTROL_CAN_BE_PRESENT_WHILE_THE_ACTIVE_DESTINATION_FUNCTION_CONTROL_IS_ABSENT_OR_UNCLEAR"
+    ]
+  },
+  "topPropositionAffordanceLaw": {
+    "requiredRelationship": "Place one quiet, direct swipe cue immediately beneath the swipeable statement so the cue unambiguously refers to the statement above.",
+    "preferredCopy": "Not everything is as it first appears. Swipe the thought above.",
+    "copyFlexibility": "Equivalent visitor-facing wording is allowed only when it preserves the same proximity, direction, brevity, and discoverability.",
+    "interactionLaw": "The cue must correspond to the implemented horizontal proposition swipe and may not claim a gesture that the target does not support.",
+    "presentationLaw": "The cue remains subordinate to the statement, does not become a new tab or panel, and does not compete with the approved sparkle and swipe transition.",
+    "oneTimeGuidance": "A restrained first-encounter emphasis may identify the cue, but it must settle, must not loop insistently, and must respect reduced motion.",
+    "prohibit": [
+      "AMBIGUOUS_SWIPE_HERE_WITHOUT_A_CLEAR_TARGET",
+      "GLOBAL_SWIPE_CLAIM_APPLIED_TO_NONSWIPEABLE_SURFACES",
+      "NEW_INSTRUCTION_DECK_OR_TUTORIAL_OVERLAY",
+      "CONTINUOUS_ATTENTION_SEEKING_ANIMATION"
+    ]
+  },
+  "orbitInteractionLaw": {
+    "canonicalGuidance": "Swipe to rotate the orbit. Tap the clear card to enter.",
+    "guidancePlacement": "Keep concise gesture guidance locally visible wherever an orbit, carousel, tab rail, or card set expects horizontal swipe or drag input.",
+    "gestureContract": [
+      "HORIZONTAL_SWIPE_OR_DRAG_ROTATES_THE_CURRENT_ORBIT",
+      "THE_GESTURE_SETTLES_TO_ONE_CANONICAL_CENTERED_ITEM",
+      "THE_FOREGROUND_IDENTITY_CONTEXT_AND_AVAILABLE_FUNCTION_COMMIT_TOGETHER",
+      "TAP_OR_KEYBOARD_ACTIVATION_ON_THE_CLEAR_ACTIVE_CARD_INVOKES_ITS_DECLARED_FUNCTION",
+      "CONTINUOUS_DRAG_PREVIEW_MAY_NOT_EXPOSE_CONTRADICTORY_SEMANTIC_AND_RENDERED_STATES"
+    ],
+    "discoverabilityLaw": "A visitor must not have to infer from decorative tabs that the region spins. The cue, active styling, affordance, and response to first input must make the gesture understandable without adding an instruction wall.",
+    "doNotClaim": [
+      "SWIPE_TO_RETURN_WHILE_BROWSING_THE_INITIAL_ORBIT",
+      "SWIPE_TO_ROTATE_ON_A_SURFACE_WITHOUT_ROTATION_BEHAVIOR",
+      "TAP_TO_ENTER_WHILE_NO_ACTIVE_FUNCTION_IS_AVAILABLE"
+    ]
+  },
+  "controlStateContract": {
+    "formula": "CONTROL_SET = FUNCTION_OF_ACTUAL_INTERACTION_STATE",
+    "states": {
+      "ORBIT_BROWSING": {
+        "returnToOrbit": "PROHIBITED_BECAUSE_THE_VISITOR_IS_ALREADY_IN_THE_ORBIT",
+        "primaryFunction": "REQUIRED_WHEN_THE_FOREGROUND_CARD_HAS_A_DECLARED_DESTINATION_OR_FEATURE",
+        "guidance": "SWIPE_TO_ROTATE_AND_TAP_THE_CLEAR_ACTIVE_CARD_TO_ENTER",
+        "failure": "RETURN_CONTROL_PRESENT_IN_PLACE_OF_THE_ACTIVE_ITEM_FUNCTION"
+      },
+      "ACTIVE_ITEM_SELECTED": {
+        "returnToOrbit": "ALLOWED_ONLY_IF_SELECTION_ENTERED_A_DISTINCT_DETAIL_OR_FUNCTION_STATE",
+        "primaryFunction": "REQUIRED_AND_BOUND_TO_THE_ACTIVE_ITEM_WHEN_THAT_ITEM_HAS_A_DECLARED_FUNCTION",
+        "guidance": "IDENTIFY_THE_ACTIVE_FUNCTION_AND_THE_AVAILABLE_RECOVERY_ACTION",
+        "failure": "RECOVERY_IS_AVAILABLE_BUT_THE_REASON_TO_ENTER_OR_CONTINUE_IS_MISSING"
+      },
+      "EXPANDED_DETAIL_OR_FUNCTION": {
+        "returnToOrbit": "REQUIRED_WHEN_NEEDED_TO_RECOVER_THE_PRIOR_ORBIT_CONTEXT",
+        "primaryFunction": "PRESERVE_THE_DECLARED_FEATURE_OR_DESTINATION_ACTION_WITHOUT_INVENTING_A_ROUTE",
+        "returnResult": "RESTORE_THE_EXACT_PRIOR_ORBIT_FAMILY_ACTIVE_ITEM_AND_CANONICAL_CENTERED_SETTLEMENT",
+        "failure": "RETURN_LOSES_CONTEXT_RESETS_TO_AN_UNRELATED_ITEM_OR_CREATES_A_SECOND_ORBIT"
+      }
+    },
+    "controlClarityLaw": "Every visible control must answer what it does in the current state. A recovery control may not substitute for the feature's function control, and a function control may not be fabricated where canonical route or capability authority is absent."
+  },
+  "coherenceDiagnosticBrainLaw": {
+    "requiredOutcome": "The Coherence Diagnostic visual must be immediately recognizable as a brain before it is appreciated as a cosmic, networked, or technological abstraction.",
+    "anatomicalAnchors": [
+      "CLEAR_BILATERAL_CEREBRAL_MASS",
+      "RECOGNIZABLE_OUTER_BRAIN_SILHOUETTE",
+      "VISIBLE_CENTRAL_DIVISION_OR_HEMISPHERIC_RELATIONSHIP",
+      "SUGGESTED_LOBE_AND_GYRAL_CONTOUR",
+      "ANATOMICAL_DEPTH_WITHOUT_MEDICAL_ILLUSTRATION_OVERLOAD"
+    ],
+    "stylisticLayer": [
+      "RESTRAINED_NEURAL_OR_CONSTELLATION_CONNECTIVITY",
+      "PREMIUM_LUMINOUS_DEPTH",
+      "SELECTIVE_COSMIC_ENERGY",
+      "HIGH_CONTRAST_AGAINST_THE_EXISTING_COMPASS_ENVIRONMENT"
+    ],
+    "legibilityLaw": "Anatomical recognition is noncompensatory. Additional particles, stars, glow, labels, or explanatory copy cannot compensate for a silhouette that still reads as a cloud, nebula, shell, or generic network.",
+    "responsiveLaw": "The brain remains recognizable at the smallest qualified phone viewport and may simplify internal detail without losing its anatomical silhouette.",
+    "prohibit": [
+      "GENERIC_SYMMETRICAL_BLOB",
+      "PARTICLE_CLOUD_WITHOUT_ANATOMICAL_EDGES",
+      "DECORATIVE_GLOW_THAT_ERASES_THE_BRAIN_FORM",
+      "TEXT_LABEL_USED_AS_THE_ONLY_EVIDENCE_THAT_THE_OBJECT_IS_A_BRAIN"
+    ]
+  },
+  "houseFunctionLaw": {
+    "purpose": "Ensure Talk to the House and related House cards present a truthful active function rather than only a way back.",
+    "existingAuthority": "Use the existing canonical Jeeves/House route or function where repository authority already declares it.",
+    "missingAuthority": "Do not fabricate Elara, Auren, or any other House route or function. If a named function lacks canonical destination authority, stop and request the authoritative route decision.",
+    "stateRequirement": "When a House option is the active clear card, its available canonical function is discoverable and keyboard/touch operable; Return appears only from a genuinely deeper state."
+  },
+  "responsiveAndAccessibilityLaw": {
+    "mobileReferenceViewport": "1080x2340_OWNER_RECORDING_BASELINE",
+    "requiredViewports": [
+      "DESKTOP",
+      "TABLET",
+      "PHONE_INCLUDING_1080x2340_REFERENCE"
+    ],
+    "requirements": [
+      "NO_HORIZONTAL_PAGE_OVERFLOW",
+      "LOCAL_SWIPE_CUES_REMAIN_ADJACENT_TO_THEIR_TARGETS",
+      "ACTIVE_CARD_AND_CONTROLS_REMAIN_WITHIN_THE_USABLE_VIEWPORT",
+      "TOUCH_TARGETS_REMAIN_DISTINCT_AND_LARGE_ENOUGH_TO_OPERATE",
+      "FOCUS_ORDER_MATCHES_VISUAL_STATE_ORDER",
+      "KEYBOARD_USERS_CAN_ROTATE_SELECT_ENTER_AND_RETURN_WITH_EQUIVALENT_STATE_RESULTS",
+      "SCREEN_READER_NAMES_IDENTIFY_CURRENT_ITEM_FUNCTION_AND_RETURN_DESTINATION",
+      "REDUCED_MOTION_PRESERVES_ALL_STATE_CHANGES_WITHOUT_DEPENDING_ON_SPARKLE_OR_SWIPE_ANIMATION",
+      "COLOR_CONTRAST_AND_FOCUS_VISIBILITY_REMAIN SUFFICIENT_ON_LUMINOUS_SURFACES"
+    ]
+  },
+  "futureConstructionScopeGuidance": {
+    "publicProductMutationAuthorizedByThisDocumentAlone": false,
+    "publicProductMutationAuthorizedByGeneration1507": true,
+    "exactPrimaryProductFilesForThisConstruction": [
+      "assets/compass/compass.carousel.js",
+      "assets/compass/compass.carousel.css"
+    ],
+    "exactQualificationAndPlanFilesForThisConstruction": [
+      ".github/ai-router/projects/compass/construction-execution-plan.v2.interaction-diagnostic-amendment.json",
+      ".github/ai-router/projects/compass/entrypoint.v1.json",
+      ".github/ai-router/projects/compass/verify-display-continuity.v1.mjs",
+      ".github/workflows/compass-display-continuity-validation.yml"
+    ],
+    "unchangedAdmittedPath": ".github/ai-router/router.v1.json is admitted for exact registration reconciliation but need not change when the canonical router already returns PASS for every path.",
+    "prohibitedProductPaths": [
+      "index.html",
+      "assets/compass/compass.controller.js",
+      "assets/compass/compass.crystals.js",
+      "assets/compass/compass.cosmos.js"
+    ],
+    "implementationSequence": [
+      "BIND_TO_THE_EXACT_ADMITTED_MAIN_HEAD",
+      "LOAD_V2_AND_ALL_FOUR_AMENDMENTS_TOGETHER",
+      "INVENTORY_ACTUAL_INTERACTION_STATES_CONTROLS_ROUTES_AND_FUNCTIONS",
+      "ADD_LOCAL_TOP_PROPOSITION_AND_ORBIT_DISCOVERABILITY_CUES",
+      "CORRECT_ORBIT_BROWSING_SELECTED_AND_EXPANDED_CONTROL_SETS",
+      "REFINE_THE_COHERENCE_DIAGNOSTIC_BRAIN_FROM_ANATOMICAL_STRUCTURE_OUTWARD",
+      "PRESERVE_OR_REPAIR_RENDERED_AND_SEMANTIC_COMMIT_COHERENCE",
+      "EXTEND_FAIL_CLOSED_EXACT_CANDIDATE_QUALIFICATION",
+      "QUALIFY_ENGINEERING_INTERACTION_ACCESSIBILITY_RESPONSIVENESS_AND_VISUAL_FIDELITY",
+      "STOP_ON_ANY_NONCOMPENSATORY_FAILURE_BEFORE_MERGE"
+    ]
+  },
+  "qualificationInstrumentationLaw": {
+    "law": "The exact-candidate verifier and workflow must be rebound to the admitted successor operation and exact subject head, and their exact allowed-path set must include every admitted changed path. Existing assertions may not be removed or weakened to make the candidate pass.",
+    "requiredAssertions": [
+      "TOP_PROPOSITION_HAS_A_LOCAL_ACCURATE_SWIPE_CUE_IMMEDIATELY_BENEATH_IT",
+      "APPROVED_TOP_SPARKLE_AND_SWIPE_TRANSITION_REMAIN_PRESENT",
+      "NO_FALSE_GLOBAL_SWIPE_CLAIM_EXISTS",
+      "EVERY_SWIPE_ROTATABLE_ORBIT_OR_TAB_FAMILY_HAS_LOCAL_DISCOVERABILITY",
+      "ORBIT_BROWSING_STATE_HAS_NO_RETURN_TO_ORBIT_CONTROL",
+      "ACTIVE_CLEAR_CARD_EXPOSES_ITS_CANONICAL_FUNCTION_WHEN_ONE_EXISTS",
+      "RETURN_APPEARS_ONLY_FROM_A_DISTINCT_DEEPER_STATE_AND_RESTORES_EXACT_PRIOR_ORBIT_CONTEXT",
+      "NO_HOUSE_ROUTE_OR_FUNCTION_IS_FABRICATED",
+      "COHERENCE_DIAGNOSTIC_BRAIN_IS ANATOMICALLY_RECOGNIZABLE_WITHOUT_ITS_TEXT_LABEL",
+      "FOREGROUND_GEOMETRY_IDENTITY_CONTEXT_AND_FUNCTION_REMAIN_COHERENT_DURING_DRAG_AND_SETTLEMENT",
+      "KEYBOARD_TOUCH_SCREEN_READER_AND_REDUCED_MOTION_PATHS_HAVE_EQUIVALENT_OUTCOMES",
+      "DESKTOP_TABLET_PHONE_AND_1080x2340_REFERENCE_VIEW_HAVE_NO_OVERFLOW_CLIPPED_CONTROL_OR_UNREADABLE_STATE",
+      "ALL_PRIOR_V2_AND_AMENDMENT_QUALIFICATION_ASSERTIONS_STILL_PASS"
+    ],
+    "evidenceRequired": [
+      "EXACT_CANDIDATE_ENGINEERING_CHECKS",
+      "DETERMINISTIC_INTERACTION_STATE_ASSERTIONS",
+      "KEYBOARD_AND_REDUCED_MOTION_ASSERTIONS",
+      "RESPONSIVE_PLAYWRIGHT_EVIDENCE",
+      "VISUAL_PERCEPTUAL_REVIEW_OF_BRAIN_RECOGNITION_CONTROL_CLARITY_AND_GESTURE_DISCOVERABILITY"
+    ],
+    "screenshots": "Internal qualification evidence unless the owner explicitly requests a screenshot approval gate."
+  },
+  "acceptanceCriteria": [
+    "The approved top sparkle and proposition swipe transition remain intact.",
+    "One concise cue immediately beneath the swipeable proposition clearly tells the visitor to swipe the thought above.",
+    "The cue is accurate, subordinate, non-looping after its first-encounter emphasis, and reduced-motion safe.",
+    "Every orbit or tab family that rotates by horizontal gesture provides concise local swipe guidance without reviving a global false-swipe instruction deck.",
+    "The initial carousel is treated as the orbit and never offers Return to orbit while the visitor is already browsing it.",
+    "A foreground clear card exposes its canonical destination or feature function when one exists; recovery is not presented as a substitute for function.",
+    "Return is offered only after entry into a distinct selected, expanded, or function state and restores the exact prior orbit family, active item, and canonical centered settlement.",
+    "Jeeves or other House functionality uses only existing canonical authority, and no Elara, Auren, or other route is invented.",
+    "The Coherence Diagnostic object is recognizable as a brain from silhouette and anatomical structure at desktop, tablet, phone, and the 1080x2340 owner-recording reference viewport.",
+    "Cosmic and neural styling enhances rather than obscures the brain anatomy, text, controls, or active information state.",
+    "Foreground geometry, readable identity, context, and active function remain coherent through drag, release, settlement, selection, entry, and return.",
+    "All existing cardinal, room, Mirrorland, route, topology, accessibility, reduced-motion, and bounded-authority contracts remain unchanged unless a later canonical intake explicitly admits a change.",
+    "The fail-closed qualifier is bound to the exact successor operation, subject head, lock generation, and admitted changed paths without weakening prior gates.",
+    "Exact-candidate engineering, interaction, accessibility, responsive, visual, and perceptual qualification passes with no obvious defect before merge."
+  ],
+  "stopBoundary": [
+    "STOP_IF_GENERATION_1507_OPERATION_COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5_IS_NOT_ACTIVE_ADMITTED_AND_LOCKED",
+    "STOP_IF_THE_EXACT_SUBJECT_HEAD_OR_GOVERNING_MAIN_HEAD_DIFFERS_FROM_THE_ADMISSION",
+    "STOP_IF_V2_OR_ANY_OF_THE_FOUR_AMENDMENTS_IS_MISSING_UNLOCKED_UNMAPPED_OR_NOT_LOADED_TOGETHER",
+    "STOP_IF_THE_VERIFIER_OR_WORKFLOW_REMAINS_BOUND_TO_A_STALE_OPERATION_HEAD_LOCK_GENERATION_OR_ALLOWED_PATH_SET",
+    "STOP_IF_IMPLEMENTATION_REQUIRES_A_PATH_OUTSIDE_THE_EXACT_ADMITTED_SCOPE",
+    "STOP_IF_A_VISIBLE_FUNCTION_WOULD_REQUIRE_FABRICATING_ELARA_AUREN_OR_ANY_OTHER_UNDECLARED_ROUTE_OR_CAPABILITY",
+    "STOP_IF_THE_CHANGE_WOULD_ALTER_CARDINAL_ROOM_ROUTE_MIRRORLAND_TOPOLOGY_OR_SCIENTIFIC_EVIDENCE_GOVERNANCE_AUTHORITY",
+    "STOP_IF_RETURN_CANNOT_RESTORE_THE_EXACT_PRIOR_ORBIT_CONTEXT_DETERMINISTICALLY",
+    "STOP_IF_THE_BRAIN_REMAINS_ABSTRACT_OR_UNRECOGNIZABLE_AT_ANY_REQUIRED_VIEWPORT",
+    "STOP_IF_GESTURE_GUIDANCE_DOES_NOT_MATCH_ACTUAL_RUNTIME_BEHAVIOR",
+    "STOP_IF_KEYBOARD_TOUCH_SCREEN_READER_OR_REDUCED_MOTION_EQUIVALENCE_IS_MISSING",
+    "STOP_IF_ANY_PRIOR_NONCOMPENSATORY_GATE_IS_WEAKENED_REMOVED_OR_FAILING",
+    "STOP_BEFORE_MERGE_ON_ANY_OBVIOUS_VISUAL_BEHAVIORAL_ACCESSIBILITY_OR_AUTHORITY_DEFECT"
+  ],
+  "constructionBoundary": "THIS_DOCUMENT ALONE CREATES NO AUTHORITY. CANONICAL_OPERATION COMPASS_INTERACTION_AND_DIAGNOSTIC_SUCCESSOR_20260816_v5, GENERATION 1507, AUTHORIZES THE EXACT SEVEN-PATH RATIFICATION, CONSTRUCTION, AND QUALIFICATION SCOPE ON GOVERNING HEAD AD395E724CBFEA1C19C9CE43393C1148FA557816. STOP FOR OWNER INSPECTION BEFORE MERGE OR DEPLOYMENT."
+}

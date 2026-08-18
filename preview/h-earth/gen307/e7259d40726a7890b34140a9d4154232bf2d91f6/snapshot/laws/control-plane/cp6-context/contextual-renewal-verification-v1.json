@@ -1,0 +1,50 @@
+{
+  "contract": "LAWS_CP6_CONTEXTUAL_RENEWAL_VERIFICATION_v1",
+  "status": "STATIC_TRANSFORM_PASS",
+  "authority_inputs": [
+    "LAWS_FRONTIER_COMPATIBILITY_CROSSWALK_v1",
+    "LAWS_BATTERY_STUDY_CONTEXTUAL_INTERPRETATION_RECORD_v1"
+  ],
+  "selected_study": "BATTERY_COHERENCE_HELDOUT_STUDY_v1",
+  "changed_product_files": [
+    "laws/cp6-contextual-renewal.css"
+  ],
+  "expected_product_file_count": 14,
+  "landing_pages_mutated": 1,
+  "research_children_mutated": 4,
+  "test_children_mutated": 4,
+  "law_family_authorities_mutated": 4,
+  "shared_stylesheets_created": 1,
+  "route_deletions": 0,
+  "redirects_created": 0,
+  "frontier_files_mutated": 0,
+  "compass_controller_files_mutated": 0,
+  "compass_runtime_files_mutated": 0,
+  "evidence_status_upgrades": 0,
+  "future_frontier_deployment_claims": 0,
+  "complete_frontier_study_duplications": 0,
+  "quantitative_values_source_bound": true,
+  "exact_equations_reconstructed": false,
+  "public_audit_separation_present": true,
+  "reduced_motion_rule_present": true,
+  "exact_head_reverification": {
+    "requested": true,
+    "product_head_verified_for_retrigger": "1653b5f8a09aa7861ed0548f0fa9d9c7b11074b0",
+    "public_product_mutation_in_this_retrigger": false,
+    "controlling_checks": [
+      "Laws CP6 contextual integrated verification",
+      "Laws Compass FIRST Test Benchmark"
+    ],
+    "legacy_laws_checks": "NON_BLOCKING_NOT_AWAITED"
+  },
+  "required_next_verification": [
+    "HTML_STRUCTURE_AND_LINK_CHECK",
+    "PHONE_BROWSER_PRESENTATION",
+    "TABLET_BROWSER_PRESENTATION",
+    "DESKTOP_BROWSER_PRESENTATION",
+    "REDUCED_MOTION_BROWSER_PRESENTATION",
+    "STATIC_PRESENTATION",
+    "KEYBOARD_AND_TOUCH_OPERATION",
+    "LIVE_USER_VISUAL_REVIEW"
+  ]
+}

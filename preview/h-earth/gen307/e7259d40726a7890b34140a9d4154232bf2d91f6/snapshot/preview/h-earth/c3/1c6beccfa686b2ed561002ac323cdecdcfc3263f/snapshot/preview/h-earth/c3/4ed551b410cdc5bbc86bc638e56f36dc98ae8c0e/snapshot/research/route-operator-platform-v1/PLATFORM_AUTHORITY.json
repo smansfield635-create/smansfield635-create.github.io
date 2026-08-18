@@ -1,0 +1,15 @@
+{
+  "platform_id": "ROUTE_OPERATOR_RESEARCH_PLATFORM_v1",
+  "platform_version": "1.0.0",
+  "mode": "READ_ONLY_SHADOW_RESEARCH",
+  "native_authority_mutation": false,
+  "native_verdict_override": false,
+  "public_runtime_dependency": false,
+  "post_result_rule_rewrite": "PROHIBITED",
+  "instruments": [
+    "IMI_OBSERVER_GRADE_INSTRUMENT_v1",
+    "MATHEMATICAL_COMPONENT_CONTINUITY_INSTRUMENT_v1",
+    "GRAPHIC_EXPRESSION_STABILITY_INSTRUMENT_v1"
+  ],
+  "empirical_engine": "EMPIRICAL_RESEARCH_ENGINE_v1"
+}

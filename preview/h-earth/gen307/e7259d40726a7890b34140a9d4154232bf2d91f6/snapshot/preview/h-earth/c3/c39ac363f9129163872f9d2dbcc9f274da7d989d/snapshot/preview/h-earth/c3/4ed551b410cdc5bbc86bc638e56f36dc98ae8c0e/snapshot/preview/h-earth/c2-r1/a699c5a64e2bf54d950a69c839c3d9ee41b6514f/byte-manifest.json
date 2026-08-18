@@ -1,0 +1,1036 @@
+{
+  "boundaries": {
+    "cloudflareUsed": false,
+    "productCandidateMerged": false,
+    "publicDefaultRouteMutated": false,
+    "sourceBehaviorChanged": false,
+    "unlinkedFromPublicNavigation": true
+  },
+  "expectedPublicEntry": "https://diamondgatebridge.com/preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f/index.html",
+  "generatedFileCount": 1,
+  "generatedFiles": [
+    {
+      "generationAuthority": "H_EARTH_C2_R1_COMPLETE_WORLD_IMMUTABLE_PREVIEW_PUBLICATION_001",
+      "previewFile": "preview-correspondence-verifier.js",
+      "previewSha256": "91d9764d0769d8f4410226d6c211b285661f168a06d500adbef2500666401ae2"
+    }
+  ],
+  "manifestSelfBinding": "byte-manifest.sha256",
+  "manifestType": "H_EARTH_C2_R1_IMMUTABLE_PREVIEW_SOURCE_TO_PREVIEW_BYTE_MANIFEST_v4",
+  "operationId": "H_EARTH_C2_R1_COMPLETE_WORLD_IMMUTABLE_PREVIEW_PUBLICATION_001",
+  "packageContentDigest": "fnv1a32:218f37ae",
+  "packageIdentity": "H_EARTH_C2_R1_COMPLETE_WORLD_PACKAGE_218F37AE",
+  "previewPath": "preview/h-earth/c2-r1/a699c5a64e2bf54d950a69c839c3d9ee41b6514f/",
+  "sourceDependencyClosureCount": 112,
+  "sourceEntries": [
+    {
+      "previewFile": "_source/assets/compass/compass.controller.js",
+      "previewSha256": "c4fa1b7e45d8b85eace0ee74317dbef71dac24082185881d557aa9f8fe0b9182",
+      "sourceBlob": "83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "assets/compass/compass.controller.js",
+      "sourceSha256": "0333a10d5b5954269bbd04e400ae3459f16372c4d0c9fff3da81191e8dcb161d",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/assets/compass/compass.cosmos.js",
+      "previewSha256": "c78a1f3ce0f2c103919a5a69da926c696b0e131eb5da6f182fe3bed28f632fed",
+      "sourceBlob": "745593ef65131e233ece2c5af7e2db2605fb338f",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "assets/compass/compass.cosmos.js",
+      "sourceSha256": "c78a1f3ce0f2c103919a5a69da926c696b0e131eb5da6f182fe3bed28f632fed",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/assets/compass/compass.crystals.js",
+      "previewSha256": "550a58042c2b94b88bc91329b06087131a2893a09d4cd055b1794943cd7f292a",
+      "sourceBlob": "3d6427cbdb961576468d4aab05c0e4987549cea3",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "assets/compass/compass.crystals.js",
+      "sourceSha256": "7092cecdf88c166a9d85d1afaeede715bd009564f3beabc21829fed85d943b33",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/assets/compass/compass.css",
+      "previewSha256": "a5e5707d6d40d69037278179804d28bbecaf688da9554b42280dc943e8d6ec32",
+      "sourceBlob": "d882b875b616e7da41f31baa70e3dad5007a786a",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "assets/compass/compass.css",
+      "sourceSha256": "a5e5707d6d40d69037278179804d28bbecaf688da9554b42280dc943e8d6ec32",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/assets/compass/compass.mirrorland-window.js",
+      "previewSha256": "6e2a59a61d8fbab935f2a014b09512019df691b47c08785ffe25a9d0f448df6b",
+      "sourceBlob": "b3ef695c21d391301394d587f3d0f51caacb0add",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "assets/compass/compass.mirrorland-window.js",
+      "sourceSha256": "a5da03edd0a3400464fd795d25deae3b761198d4e7d471222aa79ad4bbb7df95",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/actions/inspect-ground.js",
+      "previewSha256": "adaad5013d0f3b3870293ad2964f3e3646178a6acfa78eae31f466e941450d5d",
+      "sourceBlob": "2cdfad8dbe7de7eeb86c968534b842ce2a8adecd",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/actions/inspect-ground.js",
+      "sourceSha256": "90de47d687dbc8a02e9e2f7e7660b1dc87e290fc6e4d0de8b751b97543dbeb02",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/boundaries/matrix-boundaries.js",
+      "previewSha256": "779221ecbc6fd793e73bb63f6d0d545ffe0a7b128d50804a9d5a621969c6a4e4",
+      "sourceBlob": "13ccd75a08b3a09561a7ae1f8907a167881d4deb",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/boundaries/matrix-boundaries.js",
+      "sourceSha256": "83761069c03f88f48296db0bbeaf879c104f33332065615952e225a6fd4ca1dc",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/cells/ground-cell-001.js",
+      "previewSha256": "de7e4e5814561dc080379192f60fd33aef06efda11a0cb810d39adeb90e33b58",
+      "sourceBlob": "0ce8b5123678cfa36339879792c0bfa4a1a0444d",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/cells/ground-cell-001.js",
+      "sourceSha256": "e2175ef2ddb0399d5d325d2478a72c34e8e67feb9ae28f92b77ebdc1a4b615f2",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json",
+      "previewSha256": "ec7683f8a9056c118d948cfcd30eceb791b95cb8c16e73929758bd34ada37be3",
+      "sourceBlob": "5cada99891fc72d649d311b2e3962a0dbcf1d2e5",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-operation-ledger.json",
+      "sourceSha256": "ec7683f8a9056c118d948cfcd30eceb791b95cb8c16e73929758bd34ada37be3",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json",
+      "previewSha256": "fb046d74713430631038199c3c432828deecc1eb53f5b13364e08aacc9bbfd7b",
+      "sourceBlob": "6edca8379c995d009cb10b7b4e1c9433b5bc8ba4",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/coastal-morphology/c2-r1/evidence/complete-world/h-earth.c2-r1.complete-world-role3-entry.json",
+      "sourceSha256": "89b2dbd435fd87a72b3d3e8be13de765ba90a1961d0230ce4bef8b84311bf462",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js",
+      "previewSha256": "6286c324a290e39d8f5f3fa4576edc2590a3687e9d8bd8e7af5603a63ae9cdfa",
+      "sourceBlob": "349f4d60455e044b50cdc05e29ae0c63c2edbc65",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-persistent-renderer.js",
+      "sourceSha256": "d4211142752ca96be0f42c7b50a1b532b1e2aa6774e8078ba8851fc5615d2871",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js",
+      "previewSha256": "d48f66d1ee28040a40a17dccbc2c456d6c1724fb68afa9a8e5b8bf3d50059e39",
+      "sourceBlob": "24f90a1153dee3027db6763d20157e8d0abd5a92",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world-render-package.js",
+      "sourceSha256": "06f046b30b562dabe3ede14e883174f61bfdc868b10cd0c922df6854a3643853",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js",
+      "previewSha256": "523c55a2b8a8eabecfb9f3f8794d8a8fb7b52ddc1f12ef8598de60f15deca9b6",
+      "sourceBlob": "1185cff6155afa0efe458b7f60d0070f4bd10d22",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/complete-world.js",
+      "sourceSha256": "42edf905649582ded77997ef05d787381bc264f116ea05d01d8385594f39ccfa",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "index.html",
+      "previewSha256": "7e4e4de65dc10860024f55e329f75318c333b4f6a3462dc7148370a2fd58ed60",
+      "sourceBlob": "cc0eb8ff017771bd64fde801e9bbcf5d04ed52dc",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/coastal-morphology/c2-r1/review/complete-world/index.html",
+      "sourceSha256": "2017522956672299b8880323347a4847868904b915660295a4f40a8386b87165",
+      "transform": "ENTRY_REBASED_LABEL_AND_NOINDEX"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "previewSha256": "f1ba3deff174a1bd1f2bd9ab2fe6f34f18513ff09ce282c411508844157307de",
+      "sourceBlob": "3f0a833cc32106029318eee460d9ca15cf841959",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "sourceSha256": "cdb5bd7f54bb8071b5b8a411a761e46d050d956337fc0d4926b9bc1172b8d3e7",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+      "previewSha256": "58bc7ad637f0b17fc946fb2d18a0989676d90849310114449129f1d0088088fa",
+      "sourceBlob": "e141af58c037b1be170a168a7b7ee464b3008e6c",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+      "sourceSha256": "6ad77be70f7c0536cf9c4474d8d42228a19c46be324ff566747e7598e7a7c3f1",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+      "previewSha256": "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+      "sourceBlob": "63ac317ca90b2c71ef8dc366e83ad17b13d6a155",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+      "sourceSha256": "a52b1cbc4aa9dbdd2cbc8f4f0982e5cbbcac24ea29af1eee629a1bc36ac05643",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+      "previewSha256": "d00308f30b297f3d1ccfab1bd588172973accfae00fcc1b3eb5f0cfbf1372a97",
+      "sourceBlob": "dbab15717f754b2dc9cedd75ab6835d3f4328a15",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+      "sourceSha256": "d00308f30b297f3d1ccfab1bd588172973accfae00fcc1b3eb5f0cfbf1372a97",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "previewSha256": "081cc158471dcf4a5d6c3a57c6ceaae8ae575bc77d2195f1a60a23e45f4507eb",
+      "sourceBlob": "7d50eaf13d0bc719039bc24e571b3dec0dcaf978",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "sourceSha256": "081cc158471dcf4a5d6c3a57c6ceaae8ae575bc77d2195f1a60a23e45f4507eb",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.biome-field.js",
+      "previewSha256": "c0a67d1cbd3000e405d1415f25f1e725989b292659072040c15b37db1602ea93",
+      "sourceBlob": "059aced691f3947cdadd582d84b562fb7f9b94be",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.biome-field.js",
+      "sourceSha256": "c0a67d1cbd3000e405d1415f25f1e725989b292659072040c15b37db1602ea93",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.population-planner.js",
+      "previewSha256": "5764eba7a1d95b04ca142526234f65aa717e3685ebac82e81b5c7812fa218922",
+      "sourceBlob": "a7f7cf194f5a7dda86526244ae396adb81b521ea",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.population-planner.js",
+      "sourceSha256": "5764eba7a1d95b04ca142526234f65aa717e3685ebac82e81b5c7812fa218922",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+      "previewSha256": "62a16a20e57cb76a94a324566124df4d1b3ec322567b98e66edaa91d35326839",
+      "sourceBlob": "e5478149cfe78f1371232bf3ba2b0e610371b030",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+      "sourceSha256": "62a16a20e57cb76a94a324566124df4d1b3ec322567b98e66edaa91d35326839",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "previewSha256": "8d129eb1490c18882358bcd7e999f26cb54b19f851150ea084d51d42ba436c68",
+      "sourceBlob": "caaef944e0681a98b722f9c99526d38d8f25ec50",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "sourceSha256": "e22d06b9118950e334b5c29c57d2d5206d5c0c3ef8307b51e573108975480866",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.surface-state-field.js",
+      "previewSha256": "d67b104ed4ba19bbafee928fea4d54254893e14e4b157022a3685e047e477db2",
+      "sourceBlob": "d71aaf047bebcc18a47a6bb9c741211ca2a10f45",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.surface-state-field.js",
+      "sourceSha256": "d67b104ed4ba19bbafee928fea4d54254893e14e4b157022a3685e047e477db2",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "previewSha256": "77530b602a5474407e7bf1c49c17175f5b5d9c9294ffbac954f22843d4e69800",
+      "sourceBlob": "82d0590fdc7346f7b6cdb5eafeb3d51ef13411dc",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "sourceSha256": "fbc52764278cac8be054335136693534a7022672afff7be49ec7fda4c929bfe7",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/environment/h-earth.water-state.js",
+      "previewSha256": "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26",
+      "sourceBlob": "c99e933a14b2642e0971ffbd8b06dfbaaf562284",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/environment/h-earth.water-state.js",
+      "sourceSha256": "7a1bc16f593257ef7acb90aee35f0375506a006f2b636204f6f912d771dc7e26",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.index.js",
+      "previewSha256": "260ebdc8515e74d19eab567948d411eb385cba1306e5a74f65201d2526dab994",
+      "sourceBlob": "4cc9bf941e526d7556f1d396998f757d4d4a660e",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.index.js",
+      "sourceSha256": "260ebdc8515e74d19eab567948d411eb385cba1306e5a74f65201d2526dab994",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.integrity.js",
+      "previewSha256": "907ef078a3b2ad1aa623a087d9664f43b16e0c76e0a94937db1fd830e5f060d9",
+      "sourceBlob": "7a6c12ff8b525c3e9258c48dbce5d1a56c561ba5",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.integrity.js",
+      "sourceSha256": "6a0b8a9d1c719aae58b1bb42f7491e79bbede9111db1f866735623d01c8b3201",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.manifest.js",
+      "previewSha256": "bfe8db33483a5f1cecd1880c6acd0adb45254cf94228c15cf15e857eab595595",
+      "sourceBlob": "9d66e946f953cecc411b3e8a7e605363e836a326",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.manifest.js",
+      "sourceSha256": "ca563cb769a78bd681aaf5445ad9c1f125082d7d893acd458d31657709e89600",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.matrix.js",
+      "previewSha256": "45c590abb22d105b4d0ad2c935ddab334f92f8cf57da88ff99677dbbf0347bd3",
+      "sourceBlob": "a34f94e0c285cd6e0a46111f8e4dcc97bc95f1c9",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.matrix.js",
+      "sourceSha256": "1aa461d7502cb53401a7281b54da4728e05cd897527bf4efc262f4c905d7f9c5",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.non-rendering-harness.js",
+      "previewSha256": "96c895d45b29ae5cfece73b7a4e006d0ea2b4b694a95d061caf60885578ccaa3",
+      "sourceBlob": "4846dc6c9b3c686276f3b20a25a420a67bbb5bed",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.non-rendering-harness.js",
+      "sourceSha256": "24f9fc759c6eb5a77b3ef867b472aac310a0752a2125390553cf91de07343392",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.preflight-lanes.js",
+      "previewSha256": "e74f60f0123f5bad1b421642ceb29db2ba84f9c5b4a36f1f159ab36559f32e86",
+      "sourceBlob": "fcad33762e4f2e75b56296b8bd578e3375875796",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.preflight-lanes.js",
+      "sourceSha256": "655ea468400af8cffce171490d50d367359708425ac1cc5f5594973b9906c800",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.receipts.js",
+      "previewSha256": "788db7ff565c86a8080ba6caa9eab3c177442b934d4dc915b823d79cb5d4ead8",
+      "sourceBlob": "577db1d47b84ae6a7eb020898c5e98eae6f6d9ae",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.receipts.js",
+      "sourceSha256": "9d7f33b1df5c28878936e9af1aef86392632883b278463bf71a22b75209b60cf",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/h-earth.state.js",
+      "previewSha256": "26b7d12fe13b690bd5ff500f81fa736b27a1b1958c3fb95af461510e01897b6d",
+      "sourceBlob": "9d09c9578844ad35bc249375f44535d2cd99cfc0",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/h-earth.state.js",
+      "sourceSha256": "ff86679c3390d4b929ef4aac48318cb2c5dcff12fb536ac918d0cfd90423a4fa",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/integration/h-earth.functional-landscape-post-west-transfer.js",
+      "previewSha256": "441f3dfbd2dd319059e08321f1bf5eaa7727c7fa6191746cf66500c645d3b5eb",
+      "sourceBlob": "f7cd53b7329ee1926b3d1349ad123c33d8e28522",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/integration/h-earth.functional-landscape-post-west-transfer.js",
+      "sourceSha256": "441f3dfbd2dd319059e08321f1bf5eaa7727c7fa6191746cf66500c645d3b5eb",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "previewSha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a",
+      "sourceBlob": "8f20a80ce5797b3616bee64a53d95911c641e46b",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "sourceSha256": "734a91b0953aa1d7f5a712dde2b6fbcd4989493a32608cbbac701770dbf6046a",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+      "previewSha256": "e9d2ff89db7b2cfdcce30ab7c66f0d25dfb8f0a79164621904d2b2e698fea9ea",
+      "sourceBlob": "2bcb67ebf84f36248475921c85e75236a1115102",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+      "sourceSha256": "9dce05bd365cc2e4512289a0cf0cc387ed7ebca2aa42a198a2d145b47daed523",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "previewSha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85",
+      "sourceBlob": "9d32fd89070fa534d63c3c6a3feb4c8f5fd519f4",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "sourceSha256": "6e40a70216a823501590cf42ff4b17aedce5a9a06dbad036717889e67b52ec85",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "previewSha256": "8948a5a7a3b19528a6ea05d0474d4ad18997142f8ce258f321be93c1cd2d01e7",
+      "sourceBlob": "8ed548780039fffba3989e55f5c8f3713354e34f",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "sourceSha256": "0b7ce4277ed2611162c207ce4956b8e31e607483e78bdb4e97755329e825a544",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/objects/ground-cell-001.objects.js",
+      "previewSha256": "9d0031e831281ba56d5eb7b834e814570c688a7584d5100e15d9b9ab595f9c7d",
+      "sourceBlob": "1d791ee32d07a16f687c0e40b9e25b3c8074b880",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/objects/ground-cell-001.objects.js",
+      "sourceSha256": "c187a98b96249f3ff8e142e58916815b11040c0e42e5cd3b522e4dec76ca284b",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/readouts/ground-condition-read.js",
+      "previewSha256": "c2e29ed107ecf3fd95de3f10bbaefe225704128ddc1b08c796eb3f82d9bf7b33",
+      "sourceBlob": "618c3798626510e521726aba6a4c00cac0e103fc",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/readouts/ground-condition-read.js",
+      "sourceSha256": "8936d692d519ffae3a429157106d6fef58fc3a3da9522f6fe60af99cffd9b966",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/render/render-placeholder.js",
+      "previewSha256": "a1d7cfb3e7d52e36ee495d0e8a6ee0f03884d4ed1222f0477c858b97b03e8622",
+      "sourceBlob": "a9459c2c2a7b4330d0790979ec2cfe3ac88998a8",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/render/render-placeholder.js",
+      "sourceSha256": "a1d7cfb3e7d52e36ee495d0e8a6ee0f03884d4ed1222f0477c858b97b03e8622",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/runtime/h-earth.canonical-replay.js",
+      "previewSha256": "0ee91cedb29ac658a839afe60f8c09f8162d5a33b0da560c26abb09d9660dd41",
+      "sourceBlob": "83ffaf7848d6bcd0258410b803d7d25bf2e9b8d6",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/runtime/h-earth.canonical-replay.js",
+      "sourceSha256": "e7da99ffa20f66ba7f32102e9161435c9c9db7c589372c6375930b501bfb2cad",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/runtime/h-earth.deterministic-runtime.js",
+      "previewSha256": "b7f0e66ee738a49dd82b5fa892ed1371b509d3c30afff7b9bebb5c12cc02a406",
+      "sourceBlob": "6ab1fdd1e2c058202eddefc4596c140aad41b19d",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/runtime/h-earth.deterministic-runtime.js",
+      "sourceSha256": "72d035375709381e0d992843a373ea625168a33271c0e63b68c32d9b4fc07b84",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/runtime/h-earth.state-classification.js",
+      "previewSha256": "01787ac4ddf6eee33a92ad318d81df0e75152fd5644856e82c6a2b58bb54fedb",
+      "sourceBlob": "36db3e736d22e4098d602e0f664d922ecd8fe31a",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/runtime/h-earth.state-classification.js",
+      "sourceSha256": "acdefa848073f0cea84aee8907001cb0262d9d99c869d0fa73f16f403d4f0d13",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/runtime/tests/h-earth.headless-replay.contract.js",
+      "previewSha256": "6a0ccf310c4a4c1fefc329abd855501d280847e8d5422fb7582240213bfcabff",
+      "sourceBlob": "201be7937484cb7883e06d004b7d08beb8a54ce0",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/runtime/tests/h-earth.headless-replay.contract.js",
+      "sourceSha256": "5175a3985ea49f5d21b9f096a4f671a60478cb04c600ec403100f89d106e614f",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "previewSha256": "cdb72e983624022c09cf1d6778ea784775033f2c4ddda791b16f6715a0fdb043",
+      "sourceBlob": "0bd36eec01a75311bf6441d575bae5a057195bbc",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "sourceSha256": "dd85e0db1fa7bbe3b30ae4cb99e65d650dbf850d319427968b8c7470c945a795",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/terrain/h-earth.terrain-field.js",
+      "previewSha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+      "sourceBlob": "bf0dfcc0166fd1e677529ff46b91d943f7eae7c8",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sourceSha256": "e2e2a8985d7a38cc6e67fe866599789366833fd46566e08a5e8902cf778ee6ad",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "previewSha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b",
+      "sourceBlob": "98f8131dab38973f0f30165967443e0057f7615f",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "sourceSha256": "1755606f285666f09cb4eaea872305be0a7000cd1c22aa75f3754f7ab4d2d53b",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/tests/step-004-non-rendering-harness.contract.js",
+      "previewSha256": "3b3113065816b854246228cbc024a3b2cea88fc7c4004358c79161ac92bffc3b",
+      "sourceBlob": "8f49a19fb5ad703c3941d2893d1a24790c1896fe",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/tests/step-004-non-rendering-harness.contract.js",
+      "sourceSha256": "3b3113065816b854246228cbc024a3b2cea88fc7c4004358c79161ac92bffc3b",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json",
+      "previewSha256": "c0b9aefc85df0da0a3ab85043261e8fca055e837de1e843a4f4d75bdd9e83968",
+      "sourceBlob": "080fd062cdbec231365e69789b527bddc13e5d93",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/validation/h-earth.run8.phase1-main-promotion.receipt.json",
+      "sourceSha256": "c0b9aefc85df0da0a3ab85043261e8fca055e837de1e843a4f4d75bdd9e83968",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.receipt.json",
+      "previewSha256": "0aae117fb800b2fde104de041ac647f937d5f15099e0f2b5e61e71e132956fdf",
+      "sourceBlob": "2e87e55eb008d5d94d35fa42c3f29c151b5ee004",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/validation/h-earth.run8.phase2-deployment-reconciliation.receipt.json",
+      "sourceSha256": "d5d6fd208545cae21fc8f6a5da041ec5dc57b2a897a881adb9a8fa825a2936b9",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.receipt.json",
+      "previewSha256": "e4d9eaddfd1e3b562e8100e6555fb3441fc8a394a2e208b3e434c58b7fe07475",
+      "sourceBlob": "3abb151881b61732a43ed099d8a18ad3e15a97ea",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/validation/h-earth.run8.phase3-live-browser-proof.receipt.json",
+      "sourceSha256": "11186bfcd7782f587cfa817984b8bafa0c86fe35e8d23ec227d56b96f531853a",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json",
+      "previewSha256": "c0e04fc2646b8beb9ce4d6f1f112c941dc3e643728cf301da74f1ae704bc798f",
+      "sourceBlob": "706aa420092ef67c2b9a4a4cdfa942516b4687bf",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/validation/h-earth.run8e-direct-inspection-restoration.receipt.json",
+      "sourceSha256": "c0e04fc2646b8beb9ce4d6f1f112c941dc3e643728cf301da74f1ae704bc798f",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json",
+      "previewSha256": "4584f78874ab4cf1e0ef57d859541c948522667c0056cdf5bb7e46330f77e1ad",
+      "sourceBlob": "ad6f82b0a97ba9c528efa5f65e275fd1c8bd5ec6",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/validation/h-earth.run8e.integration-engineering.receipt.json",
+      "sourceSha256": "4584f78874ab4cf1e0ef57d859541c948522667c0056cdf5bb7e46330f77e1ad",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json",
+      "previewSha256": "bbca14cc0c59b5b90fa7d374843c0a9398b58d156708a14bd81bd0555e4207b9",
+      "sourceBlob": "4b928f3455233044ae1f8ba58b2adaff36557eda",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/validation/h-earth.run8e.pre-update-baseline-comparison.receipt.json",
+      "sourceSha256": "bbca14cc0c59b5b90fa7d374843c0a9398b58d156708a14bd81bd0555e4207b9",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/validation/h-earth.run8e.public-route.receipt.json",
+      "previewSha256": "d87f40a1486af091a05b76a59a4963e1c8aeff8fd32d8cd0d64fdd5fb2848a5b",
+      "sourceBlob": "0e2e09a7d7b5d3ee2c1536ade93cb8a42d250ac5",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/validation/h-earth.run8e.public-route.receipt.json",
+      "sourceSha256": "d87f40a1486af091a05b76a59a4963e1c8aeff8fd32d8cd0d64fdd5fb2848a5b",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "previewSha256": "21de68f27fc67fb2fdae70a0609e7e73d190f42010ded979e8f52c2b8ba2f267",
+      "sourceBlob": "ed9ff1f7d3c139a1cba7df169f278336342339f4",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "sourceSha256": "766348f5499685719a126642a8b3bb93ac082afaf4ff7f7bc972e158c306d482",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/h-earth-3d/zones/ground-cell-001.zones.js",
+      "previewSha256": "609e6fa3b04913a765c65f3b8934e249106f0186342fea2b022771e3d60f9ebb",
+      "sourceBlob": "2d21f90e6eda8b0885ce4815b352335827a38522",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "h-earth-3d/zones/ground-cell-001.zones.js",
+      "sourceSha256": "c270aaef1fdf7aac5d934457e9ce9dcc9ed1563847f6d06760ea1a83d4d0ddfe",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/index.html",
+      "previewSha256": "59f3ded941a44b95042915d1a7629af7b4d866ee08a5284566a32b3c7df4b307",
+      "sourceBlob": "1cc9a1de90bb58de6463bafe52a1b1f91c5bef4a",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "index.html",
+      "sourceSha256": "c546971a6d4a2940716ec5fa341841ee0484b44b2c61b498dc141a21e1152253",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/admitted-geometry-frame.js",
+      "previewSha256": "9fe511a21edad933cab8af4834f87206fc96cc2ed5d97f8a1683c12ec32af6fa",
+      "sourceBlob": "c45ed4482f0d653c4a51ea838c191f36e7769d26",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/admitted-geometry-frame.js",
+      "sourceSha256": "f92be6f79c9021cb549bdfdec20cc6329059f8be544c5a6985e31d0c59970815",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/capacity.js",
+      "previewSha256": "859b1913405231aa46aabd33d5be5da1dc96f0b24d7da31f6c5fd52ecfe75d35",
+      "sourceBlob": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/capacity.js",
+      "sourceSha256": "696531778b726a61af424cef67286936d5ed22fac7c087ba542cd357c7b78305",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/compositor.js",
+      "previewSha256": "a6edbf4cad3602d87894845f4d63454dec05c9ae89f9c25f6bf62dcf855370e3",
+      "sourceBlob": "3764f0d53b0564de7a5e983bd339dda75017bc82",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/compositor.js",
+      "sourceSha256": "008dd799b57cb70cd63f1e4f1ad32f83e0918795a863246ef9cea6b90e70a632",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/controller.js",
+      "previewSha256": "6f82a9b20c37a1297845035735918750ddf6ddc21066ea0e49804712d70dec29",
+      "sourceBlob": "6720240473626f6589e1964b247436d46d5f6fb8",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/controller.js",
+      "sourceSha256": "abcc24de687f9b9600b3e40c0c822e12f90f88bdbd28cc57655b81d42010443a",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/diagnostic/index.js",
+      "previewSha256": "1af36686d0620e6af22f26d7f1de2d044df52945cc9efd133a30674bca85dfa2",
+      "sourceBlob": "d1086542e57e342437cbabb72ef25c0be2cc8e62",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/diagnostic/index.js",
+      "sourceSha256": "a52f81b5338a842186703190df4cff31ef41e1324bc0b13c9dd29380615ad7c2",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js",
+      "previewSha256": "0a2a752df10677a1570ab41a639b718dc2430fcab024a6f3bdcf1950b1c388b3",
+      "sourceBlob": "20947f46a754f0730aa69c44d0fd699788c5a8d2",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/diagnostic/renderer-startup-observer.v1.js",
+      "sourceSha256": "0a2a752df10677a1570ab41a639b718dc2430fcab024a6f3bdcf1950b1c388b3",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "previewSha256": "77414402ba35685e04417d6f45e25efcbb117f58b1bf8c844e8f81c6184dee3f",
+      "sourceBlob": "5eb1b6f2e72ac0525f608850234182b2c646f66f",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "sourceSha256": "77414402ba35685e04417d6f45e25efcbb117f58b1bf8c844e8f81c6184dee3f",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "previewSha256": "332df30201c7a224754a7920e42ed00a9750ce23166620bbb3768099d09fd63a",
+      "sourceBlob": "aae214ddbc4cd18aa8c737ee7bbb3de44322da96",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "sourceSha256": "332df30201c7a224754a7920e42ed00a9750ce23166620bbb3768099d09fd63a",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+      "previewSha256": "5936b390e7d4c2b801a44c0e3505440bd089c9e2d32091abad1189fb0d044632",
+      "sourceBlob": "89434de5190f710265e97c717bb2ccba52e8571f",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+      "sourceSha256": "5936b390e7d4c2b801a44c0e3505440bd089c9e2d32091abad1189fb0d044632",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/environment.js",
+      "previewSha256": "d38cc84b43b1675ca4d024603bd8122d65be67aead0b5dc504663d8a57b168ae",
+      "sourceBlob": "3f3bc750b0e1a87531e0ea425dc0ac343fb18381",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/environment.js",
+      "sourceSha256": "b84d883a6f14a27a04c6fb066289e824216ac5e81b9c1577f2f688fd6534cb77",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/functional-landscape/direct-manipulation.js",
+      "previewSha256": "781978aa56039c0b489b536d6e9e16bd620bd0d7aaa031a32fb565b420dbb0e0",
+      "sourceBlob": "322ee2bfed5184acd8eac600f19abd72380b6c2b",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/functional-landscape/direct-manipulation.js",
+      "sourceSha256": "781978aa56039c0b489b536d6e9e16bd620bd0d7aaa031a32fb565b420dbb0e0",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/functional-landscape/environment-integration.js",
+      "previewSha256": "7917938b478e48079320a81cd6b3526cea46d213117cdf5ab1ea2d6b09ef77d9",
+      "sourceBlob": "6c047d61544fcbc4fad8673abfbacb7c827fdb22",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/functional-landscape/environment-integration.js",
+      "sourceSha256": "7917938b478e48079320a81cd6b3526cea46d213117cdf5ab1ea2d6b09ef77d9",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/functional-landscape/index.css",
+      "previewSha256": "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
+      "sourceBlob": "481148416a8d0466e76c4cb2eca7a67d8932a242",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/functional-landscape/index.css",
+      "sourceSha256": "ff03cb9944e498ffc2d8958780c6a7d43b1346f78a9fda73117b42645a21b7e0",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/functional-landscape/index.js",
+      "previewSha256": "32052951d53599414349bd34127985847625bc13bf0b64ada1bc0ed345f57883",
+      "sourceBlob": "83e85df2f4440c2825672f46fb16e28c73992db2",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/functional-landscape/index.js",
+      "sourceSha256": "32052951d53599414349bd34127985847625bc13bf0b64ada1bc0ed345f57883",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/functional-landscape/navigation.js",
+      "previewSha256": "4be99d9b81c5e3984270014b705c552950fe32bc28293b3ecf58d0c87de1c1a0",
+      "sourceBlob": "8ab3446c536fc24423d5601acce232b19fa71c91",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sourceSha256": "4be99d9b81c5e3984270014b705c552950fe32bc28293b3ecf58d0c87de1c1a0",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "previewSha256": "0f294d5d5e3f2d4bc3def98e566ac9d42c520d75ed6543ed0819af79fb456624",
+      "sourceBlob": "98c768be0cfb2ec4bc82e2b634913d91cc73a32f",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sourceSha256": "3a5551dbdc5bad1efd14e4fd8bd9d84d3c6696d6ea8495eddb7b1296d98b2811",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "previewSha256": "9cf8a5e020527fd88b96fec5f0f1ed1f0d21e0208c2e7d49b49ec6f4fb2091ab",
+      "sourceBlob": "90f6a0f0f75f2f10ca978d76ec3f3eee0cb9585e",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sourceSha256": "9cf8a5e020527fd88b96fec5f0f1ed1f0d21e0208c2e7d49b49ec6f4fb2091ab",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/index.css",
+      "previewSha256": "96317107e7d114dbc2345865b75786b2aa4d5f7a0414ea6f4f70790f610e8c81",
+      "sourceBlob": "f208b7f11096a7bf5da282226903ac634c1eab01",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/index.css",
+      "sourceSha256": "96317107e7d114dbc2345865b75786b2aa4d5f7a0414ea6f4f70790f610e8c81",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/index.html",
+      "previewSha256": "0b77cb0782bd32e59518990e1bf948bcfb4f2624c9d9951bced6bda68180b7fb",
+      "sourceBlob": "8e8c646821971f40d57a8a1966133b1dcb9a741b",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/index.html",
+      "sourceSha256": "c8c451464f6b3db5c1f4b387f9fabe50931019269070a9aea31f7ed163c4c25e",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/index.js",
+      "previewSha256": "c9b8a7412c2bc01f1d521ba384cf1d9e02cf9802fa931f8dc1b4fa8fbf05cf52",
+      "sourceBlob": "b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/index.js",
+      "sourceSha256": "bd2e6fe7fc86d1b1cbdbe0e8e0e3dc5f63907b15cf55fc326bb91935573f0f81",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-domain-consumer-preflight.js",
+      "previewSha256": "5942526f1508cc0c3e8b78d249c8cc1baf620041b9c22b9664f33042e4bcc117",
+      "sourceBlob": "3ae544e4dec79cf424220e34535705e5b109d126",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-domain-consumer-preflight.js",
+      "sourceSha256": "5942526f1508cc0c3e8b78d249c8cc1baf620041b9c22b9664f33042e4bcc117",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-fibonacci.js",
+      "previewSha256": "a907d29c43b7ecbb6de75d81118bf62acb925e57a7688de4ef2d42145a3880d6",
+      "sourceBlob": "2d9551dab7f2543b8bca1749183b491eb0a3373a",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-fibonacci.js",
+      "sourceSha256": "a907d29c43b7ecbb6de75d81118bf62acb925e57a7688de4ef2d42145a3880d6",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-foundation.js",
+      "previewSha256": "1b092d6d168158ecbb4a9344c82605faee3d0a332da501bed75ce6ba47c0bdc2",
+      "sourceBlob": "6adb9888fb22fe34c4209283eae2e1be8600709a",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-foundation.js",
+      "sourceSha256": "1b092d6d168158ecbb4a9344c82605faee3d0a332da501bed75ce6ba47c0bdc2",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-integrity.js",
+      "previewSha256": "a8e4ea0b15caec96701719b27c166a3c196fd3e081e7ac7366da0a75d6705998",
+      "sourceBlob": "4628ef37342fe2fe1f167d6d9a721e297f2ac655",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-integrity.js",
+      "sourceSha256": "a8e4ea0b15caec96701719b27c166a3c196fd3e081e7ac7366da0a75d6705998",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-lattice.js",
+      "previewSha256": "c2f36905d1fa92cb95bbb1cbb53ed8700f49e03aa8d6f645473303b42fc8ac52",
+      "sourceBlob": "668d9459f6d17b7b7973e10752e2e4c6c6ad1f04",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-lattice.js",
+      "sourceSha256": "c2f36905d1fa92cb95bbb1cbb53ed8700f49e03aa8d6f645473303b42fc8ac52",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-news.js",
+      "previewSha256": "8caf1d02c5ed7228d3d75decf8238713e2f0c34e42a322dbf7af76e393286d9f",
+      "sourceBlob": "1b3ce361beb3e4863b58e24cb3301004d6a79add",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-news.js",
+      "sourceSha256": "8caf1d02c5ed7228d3d75decf8238713e2f0c34e42a322dbf7af76e393286d9f",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-space.js",
+      "previewSha256": "8adeb01f2f14e38235b556d670decfca7ffa02220abb2e48e31e065ba802552f",
+      "sourceBlob": "869e3756c30ff089e6d1f11fd20ee85079c0564c",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-space.js",
+      "sourceSha256": "8adeb01f2f14e38235b556d670decfca7ffa02220abb2e48e31e065ba802552f",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/region-summits.js",
+      "previewSha256": "f02f2cd61af46434325702b0355d72b39e580f42ecba1888518ee7ce6b92033c",
+      "sourceBlob": "fcb090e5c1b46fa179a406e7b10688ab8bde7e68",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/region-summits.js",
+      "sourceSha256": "f02f2cd61af46434325702b0355d72b39e580f42ecba1888518ee7ce6b92033c",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/environment-atmosphere.js",
+      "previewSha256": "f678c52ef0fe16660369a97b43806074b93250efafba1fd89ea48f67a6ec836e",
+      "sourceBlob": "54459cd7dcb82bf0c2860d581d714b766162f74d",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "sourceSha256": "f678c52ef0fe16660369a97b43806074b93250efafba1fd89ea48f67a6ec836e",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/functional-landscape-compositor.js",
+      "previewSha256": "bfef4c815838d7b438f297530c9ba45282b0d9d54c1956689f0678a9f698210c",
+      "sourceBlob": "8d6a3e0b981b86c19819b3681bbd7d23192dafb0",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/functional-landscape-compositor.js",
+      "sourceSha256": "bfef4c815838d7b438f297530c9ba45282b0d9d54c1956689f0678a9f698210c",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/functional-landscape-frame.js",
+      "previewSha256": "a089cabeb7ab8304b6c03a54202aaa0fb3165c0308d7756d82094fd3d6c91525",
+      "sourceBlob": "7791056a12d7517f25e80f266fea95848c10a7f1",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/functional-landscape-frame.js",
+      "sourceSha256": "a089cabeb7ab8304b6c03a54202aaa0fb3165c0308d7756d82094fd3d6c91525",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-distant-context.js",
+      "previewSha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2",
+      "sourceBlob": "9e3c5192ee90f8342c119d60e312027e374629df",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "sourceSha256": "37ed73b064c72c8d41245720392f4a02a3833bcb47c71b13d0a6284767d129d2",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-ground.js",
+      "previewSha256": "8f1a1b8a674b4acc50589883844ab3ba8ef98ac08bbd8e87e32feb0a0fbad02c",
+      "sourceBlob": "76e16221f4a952c3c1ec019b999f50450c4c7949",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-ground.js",
+      "sourceSha256": "159392c3f753dbbdef33983db06d328ce1d870b136c8d4eb2b20dd8410b767a2",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "previewSha256": "7cb00e174da02addb85c2d1bd71361a5ceebfe71358b64c9b5f0e0acdd06fba7",
+      "sourceBlob": "cd7a15e9cc67dbb598ae68c26027fd4ea26bdd5b",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "sourceSha256": "73f1ddd4d9fca535238760aabf7b231b6592f1db799e82cde7b1e09e41fdaa96",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "previewSha256": "06d58ba6c2b191590bcc7666d76b9870550c9692e0d30bd287c17d4af74bc5bb",
+      "sourceBlob": "261e73cc2c561dbf8d4f2f8210e51dad361cec91",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "sourceSha256": "4e586ab473123bd0fc4a77c10e07d7f742a48f10d9d8afbb6ae65282136fa6ba",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-kernel.js",
+      "previewSha256": "7654ab6caf36febd37b3944fbd0a66907de51d6cc740cf6e8087308b5ea790bf",
+      "sourceBlob": "91eabcc240b54ef01a52d59a237dff629d90a722",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "sourceSha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "previewSha256": "7bdf9b19c9d15d028813044c9fe9ca79e4dc6cd2f2108e215e70db7d425bfe1b",
+      "sourceBlob": "b5289094db8648800197a03226d6322902960b48",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "sourceSha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "previewSha256": "4cb1e82aa90c80813f22e54f9ff540fc65002fc81af1765f2be08e03de727560",
+      "sourceBlob": "af1c78e2fe336678f9f477256a619b1a25c0d7b1",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "sourceSha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "previewSha256": "845434512253456f55455d775dd6b33a4955865fecbb145f0d2821bde3b243f1",
+      "sourceBlob": "26f1b41c6a25bc7324082465b70cb6b68c2a457d",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "sourceSha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-landscape.js",
+      "previewSha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f",
+      "sourceBlob": "929cb0118d6fe71ff381f315590dba6a056d0ce8",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "sourceSha256": "f2beb4059f9f458434cf43990196defaa4a55ec828a1d936d51a6aef5bf15a6f",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-shoreline.js",
+      "previewSha256": "1b61f3008d93b94ef1a6ea16f9f622889d4086d65664669f95cffeeeafc6b9e4",
+      "sourceBlob": "33829da14ab390aba747ac502bfb96332a1209e5",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "sourceSha256": "1b61f3008d93b94ef1a6ea16f9f622889d4086d65664669f95cffeeeafc6b9e4",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "previewSha256": "5dc2679e45e46c9828ae5e0ac28f9a09d5fdc274cf48edd6cb65ade77535518d",
+      "sourceBlob": "a1a82bc8d61cdeeb2e34d85ab6d590a6f583ea46",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "sourceSha256": "0e3947f2c94db8b2a779666497ca003bf5db48f7e2d9a333d3432eea9866aa06",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/geometry.js",
+      "previewSha256": "e2ca2771fc7c542bcdeeb6065a6e872ff2f2d263a19005b55f63311c0a8f1fa9",
+      "sourceBlob": "cf84443e49e1b366fac938711ddf4be2d4d1d9e9",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/geometry.js",
+      "sourceSha256": "e2ca2771fc7c542bcdeeb6065a6e872ff2f2d263a19005b55f63311c0a8f1fa9",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "previewSha256": "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+      "sourceBlob": "785856d7702a0e855c2672e6b8a7325ad5b3ba50",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "sourceSha256": "daf888d1e2e673ed058c87b390655ee2b82ea8b5f737727be4247d7f5f8c0d08",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/landscape-preview.js",
+      "previewSha256": "f9f0275608c3201568d3221c5c5f3701499a61f6f7cbc24852849c9fd6c142fe",
+      "sourceBlob": "6f9060d196bde61092489f7d578c14784117a5f6",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/landscape-preview.js",
+      "sourceSha256": "f9f0275608c3201568d3221c5c5f3701499a61f6f7cbc24852849c9fd6c142fe",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "previewSha256": "a468679e7c89d6fcab84f630a05583b0756270340fd1fadf92a647d4216fff05",
+      "sourceBlob": "bb7b7cd9f835f36cef7eb068fe764f7afe74e817",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "sourceSha256": "6e7a6e0ad335425121adff26f99f97e892f453b5c5958afed3f5f0a059e09fa3",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "previewSha256": "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+      "sourceBlob": "9d3cb84168f2aea23a013de6d8982b707abf3f60",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sourceSha256": "a37e1c535e8a090bf5334558b799589768b2d222ed6f1e653d91dc121e0ef1fa",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "previewSha256": "e76a307cb89305e9abdf4520f2ea2cb4c686dca9aec9d686732b3f067a0f36f3",
+      "sourceBlob": "1699654f39c9e183f4cfc6f75b20ba051641b763",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sourceSha256": "5ec522b9e21acc3224d2e09f16c1196322eac6b11890d61a6f9691cbe2cb5fae",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "previewSha256": "ca85699d6603d95f55ddded611ba37b46b5f13c5dd95a28997a89ee0f831df37",
+      "sourceBlob": "8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sourceSha256": "ca85699d6603d95f55ddded611ba37b46b5f13c5dd95a28997a89ee0f831df37",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/renderer.functional-landscape.js",
+      "previewSha256": "b5ff536681b7a54310312d1ccf87fa548b857c4f308abfeedaf87898b18b02e3",
+      "sourceBlob": "71ec6950e1a47c31862b596b4144635a97cbaa20",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+      "sourceSha256": "b5ff536681b7a54310312d1ccf87fa548b857c4f308abfeedaf87898b18b02e3",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "previewSha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4",
+      "sourceBlob": "fa6fb8bdc579be109c30a963c2bbdcea398a1d57",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sourceSha256": "4d231f2a792dd60940774d11c887284f9db9818d14875d4ca535203231413bf4",
+      "transform": "NONE"
+    },
+    {
+      "previewFile": "_source/showroom/globe/h-earth/renderer.js",
+      "previewSha256": "0c6113066e3b180ed28ff2fb86e40aae2255db799f9920d008d48bd89b12c608",
+      "sourceBlob": "799d37cec5244e6aa19b7d94dffe37e182b85884",
+      "sourceCommit": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f",
+      "sourceFile": "showroom/globe/h-earth/renderer.js",
+      "sourceSha256": "dfa782b1244855e71bbf42fd763cc6c5e528c6c4cb465e80168a20379c63453c",
+      "transform": "ABSOLUTE_EXISTING_FILE_PATHS_REBASED"
+    }
+  ],
+  "sourceHead": "a699c5a64e2bf54d950a69c839c3d9ee41b6514f"
+}

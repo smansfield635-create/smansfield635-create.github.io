@@ -1,0 +1,31 @@
+{
+  "schema": "REPOSITORY_AUTHORIZED_TOOLSET_AND_AI_ROOM_TRANSPORT_CHANGED_PATH_MANIFEST_v1",
+  "baseHead": "56b6ab1f192aec994af0c537dd7c9dad1be14d7f",
+  "expectedChangedPathCount": 20,
+  "expectedChangedPaths": [
+    ".github/ai-toolset-transport/AGENTS.md",
+    ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
+    ".github/ai-toolset-transport/bootstrap-seed.v1.json",
+    ".github/ai-toolset-transport/bootstrap-termination-policy.v1.json",
+    ".github/ai-toolset-transport/changed-path-manifest.v1.json",
+    ".github/ai-toolset-transport/negative-fixtures.v1.json",
+    ".github/ai-toolset-transport/progress-ledger.v1.json",
+    ".github/ai-toolset-transport/schemas.v1.json",
+    ".github/workflows/ai-room-authorized-toolset-bootstrap-validation.yml",
+    ".github/workflows/ai-room-execution-transport.yml",
+    "tools/ai-room-transport/backend-selector.v1.mjs",
+    "tools/ai-room-transport/bootstrap-authority-terminator.v1.mjs",
+    "tools/ai-room-transport/command-receipt-validator.v1.mjs",
+    "tools/ai-room-transport/continuation-gate.v1.mjs",
+    "tools/ai-room-transport/fixed-command-dispatcher.v1.mjs",
+    "tools/ai-room-transport/fresh-verifier.v1.mjs",
+    "tools/ai-room-transport/lib.v1.mjs",
+    "tools/ai-room-transport/self-test.v1.mjs",
+    "tools/ai-room-transport/toolset-resolver.v1.mjs",
+    "tools/ai-room-transport/transport-request-parser.v1.mjs"
+  ],
+  "productMutationAllowed": false,
+  "roleActivationAllowed": false,
+  "methodsAuditExecutionAllowed": false,
+  "mergeAllowed": false
+}

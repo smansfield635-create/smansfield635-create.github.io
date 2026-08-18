@@ -14,12 +14,15 @@ const plan=frame.ok?prepareHEarthRun8ERenderPlan(frame,viewport):null;
 const raster=plan?.eligible?rasterizeHEarthRun8ERenderPlan(plan,frame):null;
 const farLand=far.primitives.find(p=>p.metadata?.farSurfaceClass==='LAND'),farOcean=far.primitives.find(p=>p.metadata?.farSurfaceClass==='OCEAN');
 const maxRing=Math.max(...(far.representationPlan?.rings??[0]));
+const regional=preview.regionalDevelopment??{};
 const checks={
 previewEligible:preview.ok===true,
 gratitudeIdentity:preview.geographicIdentity?.playableRegion==='GRATITUDE',
 audraliaIdentity:preview.geographicIdentity?.continentalContext==='AUDRALIA',
 subtropicalIdentity:preview.geographicIdentity?.climate==='WARM_SUBTROPICAL_COASTAL',
 worldManifoldContinuous:preview.continuousWorldManifold===true,
+canonicalWorldFieldProtected:preview.canonicalWorldFieldProtected===true,
+regionalDevelopmentWitnessed:regional.sampleCount>=20&&regional.derivedFromCanonicalWorldManifold===true,
 oceanFacingEmptiness:preview.oceanFacingEmptinessPreserved===true,
 oceanVisualContinuation:preview.oceanVisualContinuationMaterialized===true,
 reciprocalFarClasses:Array.isArray(preview.reciprocalFarSurfaceClasses)&&preview.reciprocalFarSurfaceClasses.join(',')==='LAND,OCEAN',
@@ -34,9 +37,10 @@ farOceanNoLandmass:farOcean?.metadata?.oceanFacingLandmassCreated===false&&farOc
 horizonBeyondCamera:maxRing>camera.farPlane,
 surfaceSamplesEligible:samples.every(s=>evaluateHEarthRun8CSuccessorSurfaceMaterial(s).eligible===true),
 surfaceSamplesSubtropical:samples.every(s=>s.climateIdentity==='WARM_SUBTROPICAL_COASTAL'),
-surfaceCausalityExpanded:samples.every(s=>Number.isFinite(s.lowlandMoistureRetention)&&Number.isFinite(s.shelterMoisture)&&Number.isFinite(s.exposureDrying)),
+surfaceCausalityExpanded:samples.every(s=>Number.isFinite(s.lowlandMoistureRetention)&&Number.isFinite(s.shelterMoisture)&&Number.isFinite(s.exposureDrying)&&Number.isFinite(s.drainageRetention)&&Number.isFinite(s.orographicExposure)),
 frameEligible:evaluation.eligible===true,
 frameIdentity:frame.geographicIdentity?.playableRegion==='GRATITUDE'&&frame.geographicIdentity?.continentalContext==='AUDRALIA',
+frameRegionalEnvironment:frame.regionalEnvironmentMaterialized===true&&frame.regionalEcologyPrimitiveCount>0,
 frameReciprocalContinuation:frame.oceanVisualContinuationMaterialized===true&&frame.farOceanPrimitiveCount===1&&frame.farLandPrimitiveCount===1,
 singleDepthDomain:frame.singlePhysicalDepthDomain===true,
 skyClosed:raster?.alphaClosed===true,
@@ -46,8 +50,8 @@ noRendererAuthority:frame.rendererAuthorityCreated===false,
 noCameraAuthority:frame.cameraAuthorityCreated===false,
 noDeployment:frame.deployment===false
 };
-const deficiencyDisposition={D01:checks.oceanVisualContinuation&&checks.horizonBeyondCamera?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D02:checks.reciprocalFarClasses&&checks.frameReciprocalContinuation?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D03:checks.surfaceSamplesSubtropical&&checks.surfaceCausalityExpanded?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D04:checks.surfaceCausalityExpanded?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D05:'PRESERVED_FOR_LATER_REGIONAL_BELIEVABILITY_RECONCILIATION',D06:checks.accessibleExtentFrozen?'ARCHITECTURALLY_PRESERVED':'UNRESOLVED',D07:checks.gratitudeIdentity&&checks.audraliaIdentity&&checks.subtropicalIdentity?'RECIPROCAL_IDENTITY_EXPLICIT':'UNRESOLVED',D08:'PENDING_OWNER_BELIEVABILITY_DISPOSITION'};
+const deficiencyDisposition={D01:checks.oceanVisualContinuation&&checks.horizonBeyondCamera?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D02:checks.reciprocalFarClasses&&checks.frameReciprocalContinuation?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D03:checks.surfaceSamplesSubtropical&&checks.surfaceCausalityExpanded?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D04:checks.surfaceCausalityExpanded?'MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D05:checks.regionalDevelopmentWitnessed&&checks.frameRegionalEnvironment?'GEN311_MACHINE_ADDRESSED_PENDING_OWNER_VISUAL':'UNRESOLVED',D06:checks.accessibleExtentFrozen?'ARCHITECTURALLY_PRESERVED':'UNRESOLVED',D07:checks.gratitudeIdentity&&checks.audraliaIdentity&&checks.subtropicalIdentity?'RECIPROCAL_IDENTITY_EXPLICIT':'UNRESOLVED',D08:'PENDING_OWNER_BELIEVABILITY_DISPOSITION'};
 const issues=Object.entries(checks).filter(([,pass])=>!pass).map(([name])=>name);
-const receipt={schema:'H_EARTH_GRATITUDE_AUDRALIA_RECIPROCAL_REGIONAL_REPAIR_QUALIFICATION_RECEIPT_v1',result:issues.length?'FAIL':'PASS',baselineHead:'e7259d40726a7890b34140a9d4154232bf2d91f6',checks,deficiencyDisposition,issues,diagnostics:{primitiveCount:frame?.primitiveCount??0,farTriangleCount:far?.meshDiagnostics?.triangleCount??0,retainedLandCellCount:far?.meshDiagnostics?.retainedLandCellCount??0,retainedOceanCellCount:far?.meshDiagnostics?.retainedOceanCellCount??0,maxFarRing:maxRing,skyPixelCount:raster?.skyPixelCount??0}};
+const receipt={schema:'H_EARTH_GRATITUDE_AUDRALIA_RECIPROCAL_REGIONAL_REPAIR_QUALIFICATION_RECEIPT_v1',result:issues.length?'FAIL':'PASS',baselineHead:'87b982314a149b6fd88d3552360697d798af3e08',checks,deficiencyDisposition,issues,diagnostics:{primitiveCount:frame?.primitiveCount??0,regionalEcologyPrimitiveCount:frame?.regionalEcologyPrimitiveCount??0,regionalLandformClassCount:regional?.landformClassCount??0,farTriangleCount:far?.meshDiagnostics?.triangleCount??0,retainedLandCellCount:far?.meshDiagnostics?.retainedLandCellCount??0,retainedOceanCellCount:far?.meshDiagnostics?.retainedOceanCellCount??0,maxFarRing:maxRing,skyPixelCount:raster?.skyPixelCount??0}};
 console.log(JSON.stringify(receipt,null,2));
 if(issues.length)process.exitCode=1;

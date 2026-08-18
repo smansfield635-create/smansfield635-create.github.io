@@ -1,13 +1,14 @@
 /**
  * /h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
  *
- * H_EARTH_SUCCESSOR_SURFACE_MATERIAL_PROJECTION_RUN_8C_v2_SUBTROPICAL_CAUSAL
+ * H_EARTH_SUCCESSOR_SURFACE_MATERIAL_PROJECTION_RUN_8C_C3C3R5_LAYERED_TINT_v3
  *
  * Projects the accepted Run 7B intrinsic surface classes and material profiles
- * onto the Run 8B successor terrain field, with a bounded subtropical climate
- * presentation derived from shoreline moisture, elevation and rock exposure.
- * It does not mutate Run 7B, own geometry, perform admission, create renderer
- * authority, or alter a route.
+ * onto the Run 8B successor terrain field. C3C3R5 separates structural terrain
+ * appearance from environmental color: the structural material remains opaque,
+ * while a bounded, spatially variant subtropical tint is mathematically
+ * composited over it. The resulting terrain therefore retains topology/normal
+ * depth while gaining environmental color without framebuffer background leak.
  */
 
 import {
@@ -49,10 +50,25 @@ const clamp01 = (value) => clamp(value, 0, 1);
 const mix = (a, b, t) => a + (b - a) * clamp01(t);
 
 export const H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID =
-  'H_EARTH_SUCCESSOR_SURFACE_MATERIAL_PROJECTION_RUN_8C_v2_SUBTROPICAL_CAUSAL';
+  'H_EARTH_SUCCESSOR_SURFACE_MATERIAL_PROJECTION_RUN_8C_C3C3R5_LAYERED_TINT_v3';
 
 export const H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_SOURCE_FILE =
   '/h-earth-3d/environment/h-earth.successor-surface-material.run8c.js';
+
+export const H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE = freeze({
+  compositionModel:
+    'OPAQUE_STRUCTURAL_TERRAIN_PLUS_TRANSLUCENT_SPATIALLY_VARIANT_ENVIRONMENTAL_TINT_PRECOMPOSED',
+  structuralTerrainOpacity: 1,
+  minimumTintStrength: 0.18,
+  maximumTintStrength: 0.56,
+  backgroundLeakagePermitted: false,
+  tintMayReplaceTopology: false,
+  tintSpatialVariationRequired: true,
+  topologyAuthority: 'WORLD_SPACE_GEOMETRY_NORMALS_SLOPE_AND_GRID_RELIEF',
+  colorAuthority: 'CAUSAL_SUBTROPICAL_ENVIRONMENTAL_TINT',
+  governingLaw:
+    'GRID_OWNS_DEPTH_COLOR_OWNS_CHROMATIC_EXPRESSION_NEITHER_MAY_ERASE_THE_OTHER'
+});
 
 export const H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_PROFILE = freeze({
   contractId: H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,
@@ -62,8 +78,9 @@ export const H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_PROFILE = freeze({
   normalLightMaterialInterfaceContractId:
     H_EARTH_RUN_8A_NORMAL_LIGHT_AND_MATERIAL_INTERFACE_CONTRACT.contractId,
   projectionClass:
-    'RUN_7B_INTRINSIC_MATERIAL_PROFILES_PROJECTED_ONTO_RUN_8B_SUCCESSOR_TERRAIN_WITH_SUBTROPICAL_CAUSAL_CLIMATE_EXPRESSION',
+    'RUN_7B_INTRINSIC_STRUCTURAL_MATERIAL_PLUS_C3C3R5_TRANSLUCENT_CAUSAL_SUBTROPICAL_TINT_ON_RUN_8B_SUCCESSOR_TERRAIN',
   climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
+  layeredColorProfile: H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE,
   sourceClasses: H_EARTH_SURFACE_CLASSES,
   owns: {
     successorMaterialProjection: true,
@@ -128,37 +145,93 @@ function classifySuccessorSurface(terrainSample, shorelineDistance) {
   return 'LOWLAND_SOIL';
 }
 
-function subtropicalBaseColor(profile, surfaceClass, {
+function spatialTintVariation(worldX, worldZ) {
+  const broad =
+    0.5 + 0.5 * Math.sin(worldX * 0.013 + worldZ * 0.009);
+  const cross =
+    0.5 + 0.5 * Math.cos(worldX * 0.007 - worldZ * 0.015);
+  return clamp01(broad * 0.58 + cross * 0.42);
+}
+
+function environmentalTintTarget(surfaceClass, {
   shorelineMoisture,
   elevationDrying,
   rockExposure,
-  slopePressure
+  slopePressure,
+  spatialVariation
 }) {
-  const source = { ...profile };
-  if (surfaceClass.includes('WATER') || surfaceClass === 'WET_SAND' || surfaceClass === 'DRY_SAND') {
-    return source;
+  if (surfaceClass === 'LOWLAND_SOIL') {
+    return freeze({
+      linearR: mix(0.070, 0.095, spatialVariation),
+      linearG: mix(0.185, 0.235, shorelineMoisture * 0.72 + spatialVariation * 0.28),
+      linearB: mix(0.060, 0.082, spatialVariation)
+    });
+  }
+  if (surfaceClass === 'COASTAL_SOIL') {
+    return freeze({
+      linearR: mix(0.090, 0.120, elevationDrying * 0.55 + spatialVariation * 0.45),
+      linearG: mix(0.170, 0.215, shorelineMoisture * 0.55 + spatialVariation * 0.45),
+      linearB: mix(0.064, 0.088, spatialVariation)
+    });
+  }
+  return freeze({
+    linearR: mix(0.118, 0.150, rockExposure * 0.62 + spatialVariation * 0.38),
+    linearG: mix(0.138, 0.172, (1 - slopePressure) * 0.45 + spatialVariation * 0.55),
+    linearB: mix(0.086, 0.108, spatialVariation)
+  });
+}
+
+function composeSubtropicalTint(structuralProfile, surfaceClass, context) {
+  const structural = freeze({ ...structuralProfile });
+  if (
+    surfaceClass.includes('WATER') ||
+    surfaceClass === 'WET_SAND' ||
+    surfaceClass === 'DRY_SAND'
+  ) {
+    return freeze({
+      composed: structural,
+      structural,
+      tint: null,
+      tintStrength: 0,
+      tintAlphaEquivalent: 0,
+      spatialVariation: context.spatialVariation,
+      compositionModel: 'STRUCTURAL_MATERIAL_ONLY'
+    });
   }
 
-  const lowlandHumidity = clamp01(1 - elevationDrying);
+  const lowlandHumidity = clamp01(1 - context.elevationDrying);
   const ecologicalSignal = clamp01(
-    0.34 + shorelineMoisture * 0.24 + lowlandHumidity * 0.24 -
-    rockExposure * 0.18 - slopePressure * 0.08
+    0.32 +
+    context.shorelineMoisture * 0.22 +
+    lowlandHumidity * 0.22 -
+    context.rockExposure * 0.16 -
+    context.slopePressure * 0.08
   );
-  const soilTarget = surfaceClass === 'LOWLAND_SOIL'
-    ? { linearR: 0.075, linearG: 0.205, linearB: 0.065 }
-    : surfaceClass === 'COASTAL_SOIL'
-      ? { linearR: 0.095, linearG: 0.195, linearB: 0.070 }
-      : { linearR: 0.125, linearG: 0.155, linearB: 0.095 };
-  const strength = surfaceClass === 'STONE_AND_SPARSE_SOIL'
-    ? ecologicalSignal * 0.32
-    : ecologicalSignal * 0.72;
+  const surfaceScale = surfaceClass === 'STONE_AND_SPARSE_SOIL' ? 0.56 : 0.92;
+  const spatialScale = 0.82 + context.spatialVariation * 0.18;
+  const tintStrength = clamp(
+    ecologicalSignal * surfaceScale * spatialScale,
+    H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.minimumTintStrength,
+    H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.maximumTintStrength
+  );
+  const tint = environmentalTintTarget(surfaceClass, context);
+  const composed = freeze({
+    ...structural,
+    linearR: clamp01(mix(structural.linearR, tint.linearR, tintStrength)),
+    linearG: clamp01(mix(structural.linearG, tint.linearG, tintStrength)),
+    linearB: clamp01(mix(structural.linearB, tint.linearB, tintStrength)),
+    alpha: structural.alpha
+  });
 
   return freeze({
-    ...source,
-    linearR: clamp01(mix(source.linearR, soilTarget.linearR, strength)),
-    linearG: clamp01(mix(source.linearG, soilTarget.linearG, strength)),
-    linearB: clamp01(mix(source.linearB, soilTarget.linearB, strength)),
-    alpha: source.alpha
+    composed,
+    structural,
+    tint,
+    tintStrength,
+    tintAlphaEquivalent: tintStrength,
+    spatialVariation: context.spatialVariation,
+    compositionModel:
+      H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.compositionModel
   });
 }
 
@@ -171,6 +244,10 @@ function projectIntrinsicMaterial(prototype, surfaceClass, terrainSample, shorel
   );
   const elevationDrying = clamp01(Math.max(0, terrainSample.elevation) / 78);
   const lowlandHumidity = clamp01(1 - elevationDrying);
+  const spatialVariation = spatialTintVariation(
+    terrainSample.world.x,
+    terrainSample.world.z
+  );
 
   const wetness = water
     ? 1
@@ -204,14 +281,29 @@ function projectIntrinsicMaterial(prototype, surfaceClass, terrainSample, shorel
   const soilDepth = water
     ? 0
     : Math.max(0, prototype.soilDepth * (1 - rockExposure * 0.62));
-  const baseColorProfile = subtropicalBaseColor(
+
+  const colorComposition = composeSubtropicalTint(
     prototype.baseColorProfile,
     surfaceClass,
-    { shorelineMoisture, elevationDrying, rockExposure, slopePressure }
+    {
+      shorelineMoisture,
+      elevationDrying,
+      rockExposure,
+      slopePressure,
+      spatialVariation
+    }
   );
 
   return freeze({
-    baseColorProfile,
+    baseColorProfile: colorComposition.composed,
+    structuralBaseColorProfile: colorComposition.structural,
+    environmentalTintColorProfile: colorComposition.tint,
+    environmentalTintStrength: colorComposition.tintStrength,
+    environmentalTintAlphaEquivalent: colorComposition.tintAlphaEquivalent,
+    spatialTintVariation: colorComposition.spatialVariation,
+    colorCompositionModel: colorComposition.compositionModel,
+    structuralTerrainOpaque: true,
+    framebufferBackgroundLeakage: false,
     roughness,
     reflectance,
     wetness,
@@ -224,7 +316,10 @@ function projectIntrinsicMaterial(prototype, surfaceClass, terrainSample, shorel
     shorelineMoisture,
     elevationDrying,
     climateIdentity: 'WARM_SUBTROPICAL_COASTAL',
-    environmentalCausality: 'SHORELINE_MOISTURE_ELEVATION_SLOPE_CURVATURE_ROCK_EXPOSURE'
+    environmentalCausality:
+      'SHORELINE_MOISTURE_ELEVATION_SLOPE_CURVATURE_ROCK_EXPOSURE_AND_WORLD_POSITION',
+    colorTopologyLaw:
+      H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.governingLaw
   });
 }
 
@@ -287,7 +382,7 @@ export function sampleHEarthRun8CSuccessorSurfaceMaterial(worldX, worldZ) {
     shorelineDistance,
     surfaceClass,
     materialProfileId:
-      `H_EARTH_RUN_8C_${surfaceClass}_SUCCESSOR_MATERIAL_SUBTROPICAL_v2`,
+      `H_EARTH_RUN_8C_${surfaceClass}_SUCCESSOR_MATERIAL_C3C3R5_LAYERED_TINT_v3`,
     ...intrinsic,
     sourceIdentities: {
       run7BSurfaceStateContractId: H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID,
@@ -313,7 +408,7 @@ export function evaluateHEarthRun8CSuccessorSurfaceMaterial(sample) {
   for (const channel of [
     'roughness', 'reflectance', 'wetness', 'waterSaturation',
     'rockExposure', 'slopePressure', 'curvaturePressure',
-    'shorelineMoisture', 'elevationDrying'
+    'shorelineMoisture', 'elevationDrying', 'spatialTintVariation'
   ]) {
     if (!finite(sample?.[channel]) || sample[channel] < 0 || sample[channel] > 1) {
       issues.push(`SUCCESSOR_MATERIAL_CHANNEL_INVALID:${channel}`);
@@ -323,6 +418,22 @@ export function evaluateHEarthRun8CSuccessorSurfaceMaterial(sample) {
   if (!color || ['linearR', 'linearG', 'linearB', 'alpha']
       .some((key) => !finite(color[key]) || color[key] < 0 || color[key] > 1)) {
     issues.push('SUCCESSOR_MATERIAL_BASE_COLOR_INVALID');
+  }
+  const structural = sample?.structuralBaseColorProfile;
+  if (!structural || ['linearR', 'linearG', 'linearB', 'alpha']
+      .some((key) => !finite(structural[key]) || structural[key] < 0 || structural[key] > 1)) {
+    issues.push('SUCCESSOR_STRUCTURAL_BASE_COLOR_INVALID');
+  }
+  if (sample?.surfaceClass && !sample.surfaceClass.includes('WATER') &&
+      sample.surfaceClass !== 'WET_SAND' && sample.surfaceClass !== 'DRY_SAND') {
+    if (!finite(sample.environmentalTintStrength) ||
+        sample.environmentalTintStrength < H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.minimumTintStrength ||
+        sample.environmentalTintStrength > H_EARTH_RUN_8C_C3C3R5_LAYERED_COLOR_PROFILE.maximumTintStrength) {
+      issues.push('SUCCESSOR_ENVIRONMENTAL_TINT_STRENGTH_INVALID');
+    }
+    if (sample.structuralTerrainOpaque !== true || sample.framebufferBackgroundLeakage !== false) {
+      issues.push('SUCCESSOR_STRUCTURAL_OPACITY_CONTRACT_INVALID');
+    }
   }
   if (sample?.sourceIdentities?.run7BSurfaceStateContractId !==
       H_EARTH_SURFACE_STATE_FIELD_CONTRACT_ID) {

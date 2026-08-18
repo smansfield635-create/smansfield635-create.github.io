@@ -93,14 +93,14 @@ export const H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS = freeze({
     waypointId: 'COAST',
     label: 'Coastal entry',
     position: { x: 0, z: -96 },
-    yawDegrees: 0,
-    pitchDegrees: -8
+    yawDegrees: 180,
+    pitchDegrees: -6
   },
   BERM: {
     waypointId: 'BERM',
     label: 'Coastal berm',
     position: { x: 0, z: -132 },
-    yawDegrees: 0,
+    yawDegrees: 168,
     pitchDegrees: -7
   },
   LOWLAND: {

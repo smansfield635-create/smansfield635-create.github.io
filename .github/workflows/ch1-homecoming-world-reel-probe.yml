@@ -24,7 +24,7 @@ jobs:
           node-version: 22
       - name: Install ffmpeg
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
-      - name: Render registered world reel inspection
+      - name: Render Chapter 1 homecoming candidate from registered world reel
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -32,9 +32,9 @@ jobs:
           cat > "$RUNNER_TEMP/request.json" <<'JSON'
           {
             "schema":"VIDEO_CONFORM_REQUEST_v1",
-            "requestId":"CH01_HOMECOMING_WORLD_REEL_PROBE_20260817_001",
-            "output":{"filename":"ch01-homecoming-world-reel-probe.mp4","durationSeconds":29,"fps":24,"width":960,"height":540,"crf":25,"preset":"veryfast"},
-            "segments":[{"sourceId":"CHAPTER_02_WORLD_REEL_LIVE","sourceStart":0,"sourceEnd":29,"targetStart":0,"targetEnd":29,"fit":"contain"}]
+            "requestId":"CH01_HOMECOMING_WORLD_REEL_CANDIDATE_20260817_001",
+            "output":{"filename":"ch01-homecoming-world-reel-candidate.mp4","durationSeconds":3.5,"fps":24,"width":1920,"height":1080,"crf":18,"preset":"slow"},
+            "segments":[{"sourceId":"CHAPTER_02_WORLD_REEL_LIVE","sourceStart":20.0,"sourceEnd":23.5,"targetStart":0,"targetEnd":3.5,"fit":"cover"}]
           }
           JSON
           mkdir -p "$RUNNER_TEMP/out"

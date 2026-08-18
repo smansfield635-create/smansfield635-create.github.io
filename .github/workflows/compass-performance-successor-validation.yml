@@ -40,92 +40,48 @@ jobs:
                   raise SystemExit(f"{label}: expected 1 match, found {count}")
               return text.replace(old, new, 1)
 
-          # Mirrorland: retain state/geometry; keep RAF alive only while reveal/withdraw is active.
           path = Path("assets/compass/compass.mirrorland-window.js")
           source = path.read_text()
           marker = "  function render(\n    now\n  ) {"
           helper = '''  function transitionNeedsFrames() {\n    return (\n      state.rendererState ===\n        STATES.REVEALING ||\n      state.rendererState ===\n        STATES.WITHDRAWING\n    );\n  }\n\n  function requestRender() {\n    if (\n      !state.running ||\n      state.failed ||\n      state.disposed ||\n      state.raf\n    ) {\n      return;\n    }\n\n    state.raf =\n      requestAnimationFrame(\n        render\n      );\n  }\n\n'''
           source = replace_once(source, marker, helper + marker, "mirror helper insertion")
-          source = replace_once(
-              source,
-              "  function render(\n    now\n  ) {\n    if (",
-              "  function render(\n    now\n  ) {\n    state.raf =\n      0;\n\n    if (",
-              "mirror render raf reset",
-          )
+          source = replace_once(source, "  function render(\n    now\n  ) {\n    if (", "  function render(\n    now\n  ) {\n    state.raf =\n      0;\n\n    if (", "mirror render raf reset")
           old_raf = "    state.raf =\n      requestAnimationFrame(\n        render\n      );"
           count = source.count(old_raf)
           if count != 2:
               raise SystemExit(f"mirror direct RAF count expected 2, found {count}")
           source = source.replace(old_raf, "    requestRender();")
-          source = replace_once(
-              source,
-              "    drawWindow();\n\n    requestRender();\n  }",
-              "    drawWindow();\n\n    if (transitionNeedsFrames()) {\n      requestRender();\n    }\n  }",
-              "mirror render continuation",
-          )
-          source = replace_once(
-              source,
-              "        new ResizeObserver(\n          resize\n        );",
-              "        new ResizeObserver(\n          () => {\n            resize();\n            requestRender();\n          }\n        );",
-              "mirror resize invalidation",
-          )
+          source = replace_once(source, "    drawWindow();\n\n    requestRender();\n  }", "    drawWindow();\n\n    if (transitionNeedsFrames()) {\n      requestRender();\n    }\n  }", "mirror render continuation")
+          source = replace_once(source, "        new ResizeObserver(\n          resize\n        );", "        new ResizeObserver(\n          () => {\n            resize();\n            requestRender();\n          }\n        );", "mirror resize invalidation")
           path.write_text(source)
 
-          # Crystals: preserve interaction/geometry; render while active or converging and on external invalidation.
           path = Path("assets/compass/compass.crystals.js")
           source = path.read_text()
-          source = replace_once(
-              source,
-              "    raf:\n      0,\n\n    running:",
-              "    raf:\n      0,\n\n    renderObserver:\n      null,\n\n    renderInvalidationBound:\n      false,\n\n    running:",
-              "crystal scheduler state",
-          )
+          source = replace_once(source, "    raf:\n      0,\n\n    running:", "    raf:\n      0,\n\n    renderObserver:\n      null,\n\n    renderInvalidationBound:\n      false,\n\n    running:", "crystal scheduler state")
           marker = "  function render(\n    now\n  ) {"
-          helper = '''  const SETTLE_EPSILON =\n    0.0008;\n\n  function quaternionNeedsSettlement(\n    current,\n    target\n  ) {\n    if (\n      !current ||\n      !target ||\n      current.length !== 4 ||\n      target.length !== 4\n    ) {\n      return false;\n    }\n\n    const alignment =\n      Math.abs(\n        current[0] * target[0] +\n        current[1] * target[1] +\n        current[2] * target[2] +\n        current[3] * target[3]\n      );\n\n    return (1 - alignment) > SETTLE_EPSILON;\n  }\n\n  function scalarNeedsSettlement(current, target) {\n    return Math.abs(Number(current || 0) - Number(target || 0)) > SETTLE_EPSILON;\n  }\n\n  function needsAnotherFrame() {\n    if (state.pointer && state.pointer.dragging) {\n      return true;\n    }\n\n    if (\n      state.frame &&\n      (\n        state.frame.orbitGestureActive ||\n        (state.frame.cluster && state.frame.cluster.gestureActive)\n      )\n    ) {\n      return true;\n    }\n\n    if (quaternionNeedsSettlement(state.constellationQuaternion, state.constellationTargetQuaternion)) {\n      return true;\n    }\n\n    for (const wing of WINGS) {\n      if (quaternionNeedsSettlement(state.clusterQuaternions.get(wing), state.clusterTargetQuaternions.get(wing))) {\n        return true;\n      }\n    }\n\n    const keys = [\n      "x", "y", "z", "sx", "sy", "sz",\n      "prominence", "halo", "rotationSpeed", "float"\n    ];\n\n    for (const node of state.registry.values()) {\n      if (!node.transform || !node.target) {\n        continue;\n      }\n      for (const key of keys) {\n        if (scalarNeedsSettlement(node.transform[key], node.target[key])) {\n          return true;\n        }\n      }\n    }\n\n    for (let index = 0; index < 3; index += 1) {\n      if (\n        scalarNeedsSettlement(state.camera.eye[index], state.camera.nextEye[index]) ||\n        scalarNeedsSettlement(state.camera.target[index], state.camera.nextTarget[index])\n      ) {\n        return true;\n      }\n    }\n\n    return false;\n  }\n\n  function requestRender() {\n    if (!state.running || state.disposed || state.raf) {\n      return;\n    }\n    state.raf = requestAnimationFrame(render);\n  }\n\n  function bindRenderInvalidation() {\n    if (state.renderInvalidationBound || !state.root) {\n      return;\n    }\n    state.renderInvalidationBound = true;\n\n    if (typeof MutationObserver === "function") {\n      state.renderObserver = new MutationObserver(requestRender);\n      state.renderObserver.observe(\n        state.root,\n        {\n          attributes: true,\n          attributeFilter: [\n            "data-compass-mode",\n            "data-orbit-focus",\n            "data-orbit-preview-focus",\n            "data-orbit-phase",\n            "data-orbit-gesture-active",\n            "data-orbit-quaternion",\n            "data-active-cluster-wing",\n            "data-cluster-quaternion",\n            "data-cluster-primary-room",\n            "data-cluster-preview-primary-room",\n            "data-cluster-phase",\n            "data-cluster-gesture-active",\n            "data-cluster-revision",\n            "data-selected-cardinal",\n            "data-selected-room",\n            "data-selected-destination-type",\n            "data-selected-destination-id",\n            "data-selected-destination-label",\n            "data-selected-route",\n            "data-reduced-motion",\n            "data-compass-prominence",\n            "data-window-prominence"\n          ]\n        }\n      );\n    }\n\n    globalThis.addEventListener("resize", requestRender, { passive: true });\n  }\n\n  function unbindRenderInvalidation() {\n    if (state.renderObserver) {\n      state.renderObserver.disconnect();\n      state.renderObserver = null;\n    }\n    if (state.renderInvalidationBound) {\n      globalThis.removeEventListener("resize", requestRender);\n    }\n    state.renderInvalidationBound = false;\n  }\n\n'''
+          helper = '''  const SETTLE_EPSILON =\n    0.0008;\n\n  function quaternionNeedsSettlement(\n    current,\n    target\n  ) {\n    if (\n      !current ||\n      !target ||\n      current.length !== 4 ||\n      target.length !== 4\n    ) {\n      return false;\n    }\n\n    const alignment =\n      Math.abs(\n        current[0] * target[0] +\n        current[1] * target[1] +\n        current[2] * target[2] +\n        current[3] * target[3]\n      );\n\n    return (1 - alignment) > SETTLE_EPSILON;\n  }\n\n  function scalarNeedsSettlement(current, target) {\n    return Math.abs(Number(current || 0) - Number(target || 0)) > SETTLE_EPSILON;\n  }\n\n  function needsAnotherFrame() {\n    if (state.pointer && state.pointer.dragging) return true;\n    if (state.frame && (state.frame.orbitGestureActive || (state.frame.cluster && state.frame.cluster.gestureActive))) return true;\n    if (quaternionNeedsSettlement(state.constellationQuaternion, state.constellationTargetQuaternion)) return true;\n    for (const wing of WINGS) {\n      if (quaternionNeedsSettlement(state.clusterQuaternions.get(wing), state.clusterTargetQuaternions.get(wing))) return true;\n    }\n    const keys = ["x", "y", "z", "sx", "sy", "sz", "prominence", "halo", "rotationSpeed", "float"];\n    for (const node of state.registry.values()) {\n      if (!node.transform || !node.target) continue;\n      for (const key of keys) {\n        if (scalarNeedsSettlement(node.transform[key], node.target[key])) return true;\n      }\n    }\n    for (let index = 0; index < 3; index += 1) {\n      if (scalarNeedsSettlement(state.camera.eye[index], state.camera.nextEye[index]) || scalarNeedsSettlement(state.camera.target[index], state.camera.nextTarget[index])) return true;\n    }\n    return false;\n  }\n\n  function requestRender() {\n    if (!state.running || state.disposed || state.raf) return;\n    state.raf = requestAnimationFrame(render);\n  }\n\n  function bindRenderInvalidation() {\n    if (state.renderInvalidationBound || !state.root) return;\n    state.renderInvalidationBound = true;\n    if (typeof MutationObserver === "function") {\n      state.renderObserver = new MutationObserver(requestRender);\n      state.renderObserver.observe(state.root, { attributes: true, attributeFilter: [\n        "data-compass-mode", "data-orbit-focus", "data-orbit-preview-focus", "data-orbit-phase",\n        "data-orbit-gesture-active", "data-orbit-quaternion", "data-active-cluster-wing",\n        "data-cluster-quaternion", "data-cluster-primary-room", "data-cluster-preview-primary-room",\n        "data-cluster-phase", "data-cluster-gesture-active", "data-cluster-revision",\n        "data-selected-cardinal", "data-selected-room", "data-selected-destination-type",\n        "data-selected-destination-id", "data-selected-destination-label", "data-selected-route",\n        "data-reduced-motion", "data-compass-prominence", "data-window-prominence"\n      ]});\n    }\n    globalThis.addEventListener("resize", requestRender, { passive: true });\n  }\n\n  function unbindRenderInvalidation() {\n    if (state.renderObserver) {\n      state.renderObserver.disconnect();\n      state.renderObserver = null;\n    }\n    if (state.renderInvalidationBound) globalThis.removeEventListener("resize", requestRender);\n    state.renderInvalidationBound = false;\n  }\n\n'''
           source = replace_once(source, marker, helper + marker, "crystal helper insertion")
-          source = replace_once(
-              source,
-              "  function render(\n    now\n  ) {\n    if (",
-              "  function render(\n    now\n  ) {\n    state.raf =\n      0;\n\n    if (",
-              "crystal render raf reset",
-          )
+          source = replace_once(source, "  function render(\n    now\n  ) {\n    if (", "  function render(\n    now\n  ) {\n    state.raf =\n      0;\n\n    if (", "crystal render raf reset")
           old_raf = "    state.raf =\n      requestAnimationFrame(\n        render\n      );"
           count = source.count(old_raf)
-          if count != 2:
-              raise SystemExit(f"crystal direct RAF count expected 2, found {count}")
+          if count != 1:
+              raise SystemExit(f"crystal direct RAF count expected 1, found {count}")
           source = source.replace(old_raf, "    requestRender();")
-          source = replace_once(
-              source,
-              "    requestRender();\n  }\n\n  function deleteGpuResources()",
-              "    if (needsAnotherFrame()) {\n      requestRender();\n    }\n  }\n\n  function deleteGpuResources()",
-              "crystal render continuation",
-          )
-          source = replace_once(
-              source,
-              "      bindPointerBridge();\n      bindSemanticFocusBridge();",
-              "      bindPointerBridge();\n      bindSemanticFocusBridge();\n      bindRenderInvalidation();",
-              "crystal invalidation bind",
-          )
+          source = replace_once(source, "    requestRender();\n  }\n\n  function deleteGpuResources()", "    if (needsAnotherFrame()) {\n      requestRender();\n    }\n  }\n\n  function deleteGpuResources()", "crystal render continuation")
+          source = replace_once(source, "      bindPointerBridge();\n      bindSemanticFocusBridge();", "      bindPointerBridge();\n      bindSemanticFocusBridge();\n      bindRenderInvalidation();", "crystal invalidation bind")
           unbind_anchor = "    unbindPointerBridge();\n    unbindSemanticFocusBridge();\n    unbindReducedMotion();"
           count = source.count(unbind_anchor)
           if count != 2:
               raise SystemExit(f"crystal invalidation unbind anchors expected 2, found {count}")
-          source = source.replace(
-              unbind_anchor,
-              "    unbindPointerBridge();\n    unbindSemanticFocusBridge();\n    unbindRenderInvalidation();\n    unbindReducedMotion();",
-          )
+          source = source.replace(unbind_anchor, "    unbindPointerBridge();\n    unbindSemanticFocusBridge();\n    unbindRenderInvalidation();\n    unbindReducedMotion();")
           path.write_text(source)
           PY
 
           node --check assets/compass/compass.mirrorland-window.js
           node --check assets/compass/compass.crystals.js
-
-          # Retire temporary write-capable carrier before committing product bytes.
           git show "$GEN1531_BASE":.github/workflows/compass-performance-successor-validation.yml > .github/workflows/compass-performance-successor-validation.yml
-
           test "$(git diff --name-only "$GEN1531_BASE" | sort)" = $'assets/compass/compass.crystals.js\nassets/compass/compass.mirrorland-window.js'
           git diff --check
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/compass/compass.crystals.js assets/compass/compass.mirrorland-window.js .github/workflows/compass-performance-successor-validation.yml

@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://smansfield635-create.github.io/sitemap.xml

@@ -1,49 +1,48 @@
-name: Compass Gen1531 Semantic Invalidation Repair Transport
+name: Compass Gen1531 Static Qualification
 
 on:
   pull_request:
     branches: [main]
     paths:
+      - 'assets/compass/compass.crystals.js'
+      - 'assets/compass/compass.mirrorland-window.js'
+      - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
+      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
+      - '.github/workflows/compass-carousel-successor-live-qualification.yml'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
-  REPAIR_PARENT: e002c0f9e787c4941b4fdded6a2814f11a495df8
+  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1531-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1531-display.json
 
 jobs:
-  repair-crystal-semantic-invalidation:
-    if: github.head_ref == 'compass-gen1531-mirrorland-crystal-scheduling'
+  qualify-static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
           fetch-depth: 0
-      - name: Verify repair parent and workflow-only staging
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Qualify exact Gen1531 candidate
         run: |
-          git merge-base --is-ancestor "$REPAIR_PARENT" HEAD
-          test "$(git diff --name-only "$REPAIR_PARENT" HEAD)" = '.github/workflows/compass-performance-successor-validation.yml'
-          git diff --quiet "$REPAIR_PARENT" HEAD -- assets/compass/compass.crystals.js
-      - name: Restrict invalidation to semantic state and push product only
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          p=Path('assets/compass/compass.crystals.js')
-          s=p.read_text()
-          pattern=r'''    const watchedAttributes = \[.*?\n    \];'''
-          replacement='''    const watchedAttributes = [\n      "data-compass-mode",\n      "data-orbit-focus",\n      "data-orbit-phase",\n      "data-orbit-gesture-active",\n      "data-active-cluster-wing",\n      "data-cluster-primary-room",\n      "data-cluster-phase",\n      "data-cluster-gesture-active",\n      "data-cluster-revision",\n      "data-selected-cardinal",\n      "data-selected-room",\n      "data-selected-destination-type",\n      "data-selected-destination-id",\n      "data-selected-destination-label",\n      "data-selected-route",\n      "data-reduced-motion"\n    ];'''
-          s2,n=re.subn(pattern,replacement,s,count=1,flags=re.S)
-          if n!=1: raise SystemExit(f'watchedAttributes replacement count={n}')
-          p.write_text(s2)
-          PY
-          node --check assets/compass/compass.crystals.js
-          test "$(git diff --name-only | sort)" = 'assets/compass/compass.crystals.js'
-          git diff --check
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/compass/compass.crystals.js
-          git commit -m 'Restrict Compass crystal invalidation to semantic state'
-          git push origin HEAD:${{ github.head_ref }}
+          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
+          node .github/ai-router/projects/compass/verify-performance-successor.mjs
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1531' /tmp/compass-gen1531-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1531' /tmp/compass-gen1531-display.json >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-gen1531-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/compass-gen1531-performance.json
+            /tmp/compass-gen1531-display.json
+          retention-days: 90

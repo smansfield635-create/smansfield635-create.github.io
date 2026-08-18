@@ -1,4 +1,4 @@
-name: Compass Gen1536 Coherence Static Qualification
+name: Compass Gen1537 Recovery Static Qualification
 
 on:
   pull_request:
@@ -18,8 +18,8 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-coherence-performance.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-coherence-display.json
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1537-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1537-display.json
 
 jobs:
   qualify-static:
@@ -32,18 +32,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Qualify exact Gen1536 coherence candidate
+      - name: Qualify exact Gen1537 recovery candidate
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
           node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1536 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-coherence-performance.json >/dev/null
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1536 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-coherence-display.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1537 and .operation == "COMPASS_LIVE_RECOVERY_GEN1537_20260818_001" and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-gen1537-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1537 and .operation == "COMPASS_LIVE_RECOVERY_GEN1537_20260818_001" and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-gen1537-display.json >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1536-coherence-static-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1537-recovery-static-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-coherence-performance.json
-            /tmp/compass-coherence-display.json
+            /tmp/compass-gen1537-performance.json
+            /tmp/compass-gen1537-display.json
           retention-days: 90

@@ -1,0 +1,95 @@
+name: H-Earth Gen307 Authoritative Premutation Preflight
+
+on:
+  push:
+    branches:
+      - control-plane-carrier/gratitude-audralia-final-expression-intake-20260817
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SUBJECT_HEAD: dbf2f3ec90faa59c09193e61a0d141481b68d758
+      TOOLING_HEAD: 9297d33a20ef3dfdf243cd59f74206f95404d8a7
+    steps:
+      - name: Checkout exact Gen306 subject
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: ${{ env.SUBJECT_HEAD }}
+          path: subject
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Checkout exact candidate preflight tooling
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: ${{ env.TOOLING_HEAD }}
+          path: tooling
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify Gen307 registry scope successor
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { verifyHEarthGen307FinalExpressionPreflightScopeRegistration } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen307-final-expression-preflight-scope-registration.js';
+          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const scope=verifyHEarthGen307FinalExpressionPreflightScopeRegistration();
+          const loader=loadHEarthRepositoryRegistryValidatorDependencies();
+          console.log(JSON.stringify({scope,loaderIdentityVerified:loader.identityVerified,loaderId:loader.loaderId},null,2));
+          if(scope.eligible!==true) process.exit(2);
+          if(loader.identityVerified!==true) process.exit(3);
+          NODE
+      - name: Execute exact native H-Earth preflight
+        id: preflight
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -u
+          test "$(git -C ../subject rev-parse HEAD)" = "$SUBJECT_HEAD"
+          test "$(git rev-parse HEAD)" = "$TOOLING_HEAD"
+          set +e
+          node tools/h-earth-repository-registry-auto-preflight.mjs \
+            --mutation-intent \
+            --task 'Gen307 Gratitude Audralia final-expression pre-mutation H-Earth repository registry preflight' \
+            --path 'h-earth-3d/docs/H_EARTH_GRATITUDE_AUDRALIA_FINAL_SUBTROPICAL_CONTINENTAL_EXPRESSION_SUCCESSOR_CONTRACT_v1.md' \
+            --path 'h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs' \
+            --path 'h-earth-3d/environment/h-earth.successor-surface-material.run8c.js' \
+            --path 'h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js' \
+            --path 'h-earth-3d/control-plane/run-8/h-earth.run8d.grounded-vegetation.js' \
+            --path 'showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js' \
+            --path 'showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js' \
+            --path 'showroom/globe/h-earth/render/environment-atmosphere.js' \
+            --path 'showroom/globe/h-earth/render/geometry-distant-context.js' \
+            --path 'showroom/globe/h-earth/render/landscape-preview.js' \
+            --path 'showroom/globe/h-earth/render/run8e-successor-environment.js' \
+            --output "$RUNNER_TEMP/gen307-native-preflight.json"
+          code=$?
+          set -e
+          cat "$RUNNER_TEMP/gen307-native-preflight.json"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "final_disposition=$(jq -r '.finalDisposition' "$RUNNER_TEMP/gen307-native-preflight.json")" >> "$GITHUB_OUTPUT"
+          echo "dependencies_verified=$(jq -r '.dependenciesVerified' "$RUNNER_TEMP/gen307-native-preflight.json")" >> "$GITHUB_OUTPUT"
+          echo "path_classification=$(jq -c '.pathClassification' "$RUNNER_TEMP/gen307-native-preflight.json")" >> "$GITHUB_OUTPUT"
+          test "$(jq -r '.dependenciesVerified' "$RUNNER_TEMP/gen307-native-preflight.json")" = 'true'
+          test "$(jq -r '.finalDisposition' "$RUNNER_TEMP/gen307-native-preflight.json")" = 'PASS'
+          test "$code" -eq 0
+      - name: Publish native preflight callback
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DISPOSITION: ${{ steps.preflight.outputs.final_disposition }}
+          DEPENDENCIES: ${{ steps.preflight.outputs.dependencies_verified }}
+          EXIT_CODE: ${{ steps.preflight.outputs.exit_code }}
+          PATH_CLASSIFICATION: ${{ steps.preflight.outputs.path_classification }}
+        shell: bash
+        run: |
+          body="GEN307_NATIVE_PREFLIGHT_RESULT_V1\nsubjectHead: $SUBJECT_HEAD\ntoolingHead: $TOOLING_HEAD\ndependenciesVerified: $DEPENDENCIES\nfinalDisposition: $DISPOSITION\nexitCode: $EXIT_CODE\npathClassification: $PATH_CLASSIFICATION\nrunId: $GITHUB_RUN_ID"
+          gh api repos/${GITHUB_REPOSITORY}/issues/1274/comments -f body="$body" >/dev/null

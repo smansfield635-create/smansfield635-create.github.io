@@ -1,0 +1,25 @@
+name: Gratitude Audralia Final Expression Intake Carrier
+
+on:
+  push:
+    branches:
+      - control-plane-carrier/gratitude-audralia-final-expression-intake-20260817
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '277'
+      private_comment: '5321867235'
+      expected_request_id: 'H_EARTH_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_INTAKE_20260817_001'
+      exact_private_head: 'd6376bffa66fd2df97b731a6423576192d56f5f3'
+      callback_issue: '1273'
+    secrets:
+      PRIVATE_EXECUTION_APP_PRIVATE_KEY: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}

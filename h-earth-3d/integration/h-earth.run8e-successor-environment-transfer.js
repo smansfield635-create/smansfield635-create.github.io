@@ -32,7 +32,7 @@ export function buildHEarthRun8EPacket002SuccessorTransfer({neutralPackage,westB
   if(!isHEarthAABB3D(westBatchAdmissionResult?.frame?.bounds))issues.push('RUN_8E_ADMITTED_BOUNDS_INVALID');
   if(neutralPackage?.terrainPrimitiveCount!==1)issues.push('RUN_8E_TERRAIN_PRIMITIVE_COUNT_INVALID');
   if(neutralPackage?.shorelinePrimitiveCount!==7)issues.push('RUN_8E_SHORELINE_PRIMITIVE_COUNT_INVALID');
-  if(neutralPackage?.farRepresentationPrimitiveCount!==1)issues.push('RUN_8E_FAR_REPRESENTATION_COUNT_INVALID');
+  if(neutralPackage?.farRepresentationPrimitiveCount!==2)issues.push('RUN_8E_FAR_REPRESENTATION_COUNT_INVALID');
   if(admittedPrimitives.length!==neutralPackage?.primitiveCount)issues.push('RUN_8E_CURRENT_COMPOSITION_MEMBERSHIP_COUNT_MISMATCH');
   if(neutralPackage?.semanticAddressCount!==256||neutralPackage?.terrainAddressCount!==124||neutralPackage?.shorelineWaterAddressCount!==96||neutralPackage?.proxySummarizedAddressCount!==36)issues.push('RUN_8E_SEMANTIC_PROVENANCE_INVALID');
   if(issues.length)return freeze({ok:false,status:'RUN_8E_PACKET_002_WORLD_MANIFOLD_TRANSFER_REJECTED',contractId:H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,issues});

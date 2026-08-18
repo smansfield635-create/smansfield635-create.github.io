@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 15
     env:
       SUBJECT_HEAD: dbf2f3ec90faa59c09193e61a0d141481b68d758
-      TOOLING_HEAD: 46b2cca200f1db036cae8288329f870a8336505a
+      TOOLING_HEAD: 55d4bd3d20c66e2a3e99d47ed074622e4037247f
     steps:
       - name: Checkout exact Gen306 subject
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -25,7 +25,7 @@ jobs:
           path: subject
           fetch-depth: 1
           persist-credentials: false
-      - name: Checkout exact authoritative preflight tooling
+      - name: Checkout exact candidate preflight tooling
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/smansfield635-create.github.io
@@ -33,13 +33,27 @@ jobs:
           path: tooling
           fetch-depth: 1
           persist-credentials: false
+      - name: Verify Gen307 registry scope successor
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { verifyHEarthGen307FinalExpressionPreflightScopeRegistration } from './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen307-final-expression-preflight-scope-registration.js';
+          import { loadHEarthRepositoryRegistryValidatorDependencies } from './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js';
+          const scope=verifyHEarthGen307FinalExpressionPreflightScopeRegistration();
+          const loader=loadHEarthRepositoryRegistryValidatorDependencies();
+          console.log(JSON.stringify({scope,loaderIdentityVerified:loader.identityVerified,loaderId:loader.loaderId},null,2));
+          if(scope.eligible!==true) process.exit(2);
+          if(loader.identityVerified!==true) process.exit(3);
+          NODE
       - name: Execute exact native H-Earth preflight
         id: preflight
         working-directory: tooling
         shell: bash
         run: |
           set -u
-          test "$(git ../subject rev-parse HEAD 2>/dev/null || git -C ../subject rev-parse HEAD)" = "$SUBJECT_HEAD"
+          test "$(git -C ../subject rev-parse HEAD)" = "$SUBJECT_HEAD"
           test "$(git rev-parse HEAD)" = "$TOOLING_HEAD"
           set +e
           node tools/h-earth-repository-registry-auto-preflight.mjs \

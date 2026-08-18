@@ -49,3 +49,4 @@ jobs:
           git add index.html
           git commit -m 'Cache-bust Gen1531 Compass runtime assets'
           git push origin HEAD:main
+# armed-via-merge: 2026-08-17

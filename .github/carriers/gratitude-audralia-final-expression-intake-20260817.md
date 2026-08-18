@@ -13,3 +13,4 @@ Transport-only occurrence for canonical private intake request `H_EARTH_GRATITUD
 - Gen307 router trigger: 307
 - Corrected router occurrence trigger: 307.1
 - Gen307 authoritative preflight trigger: 307.2
+- Gen307 candidate tooling qualification trigger: 307.3

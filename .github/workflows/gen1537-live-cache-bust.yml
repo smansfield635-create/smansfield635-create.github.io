@@ -1,0 +1,39 @@
+name: Gen1537 Live Cache Bust
+
+on:
+  push:
+    paths:
+      - '.github/workflows/gen1537-live-cache-bust.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  bust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Rotate Gen1537 production cache identities
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text()
+          old = 'gen1537-live-recovery-v1'
+          new = 'gen1537-live-recovery-v2-20260818'
+          count = s.count(old)
+          if count != 2:
+              raise SystemExit(f'expected exactly 2 Gen1537 recovery cache tokens, found {count}')
+          p.write_text(s.replace(old, new))
+          PY
+      - name: Commit cache bust and remove one-shot workflow
+        run: |
+          rm .github/workflows/gen1537-live-cache-bust.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/gen1537-live-cache-bust.yml
+          git commit -m "Bust Gen1537 live recovery asset cache"
+          git push origin HEAD:main

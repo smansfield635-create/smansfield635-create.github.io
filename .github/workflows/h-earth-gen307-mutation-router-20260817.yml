@@ -34,10 +34,11 @@ jobs:
           persist-credentials: false
       - name: Route exact Gen307 mutation ceiling
         id: route
+        working-directory: private-control-plane
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C private-control-plane rev-parse HEAD^{commit})" = "d6376bffa66fd2df97b731a6423576192d56f5f3"
+          test "$(git rev-parse HEAD^{commit})" = "d6376bffa66fd2df97b731a6423576192d56f5f3"
           cat > "$RUNNER_TEMP/paths.txt" <<'EOF'
           h-earth-3d/docs/H_EARTH_GRATITUDE_AUDRALIA_FINAL_SUBTROPICAL_CONTINENTAL_EXPRESSION_SUCCESSOR_CONTRACT_v1.md
           h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs
@@ -55,7 +56,7 @@ jobs:
           {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"GITHUB_ACTIONS_HOSTED_GEN307_ROUTER_OCCURRENCE","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":false,"connectedGithubReadAvailable":false,"connectedGithubShaGuardedContentsWriteAvailable":false,"githubActionsExecutionAvailable":true}
           EOF
           set +e
-          node private-control-plane/tools/repository-ai-entry-router.mjs \
+          node tools/repository-ai-entry-router.mjs \
             --paths-file "$RUNNER_TEMP/paths.txt" \
             --mutation-intent \
             --intake-availability-receipt "$RUNNER_TEMP/availability.json" \

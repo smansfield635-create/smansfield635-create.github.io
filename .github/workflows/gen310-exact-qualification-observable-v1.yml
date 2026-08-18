@@ -14,7 +14,7 @@ jobs:
       - name: Check out immutable Gen310 subject
         uses: actions/checkout@v4
         with:
-          ref: 8aa40014ab22c4e49c2a5ad00414407ca9cda2a3
+          ref: 87b982314a149b6fd88d3552360697d798af3e08
           fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "8aa40014ab22c4e49c2a5ad00414407ca9cda2a3"
+          test "$(git rev-parse HEAD)" = "87b982314a149b6fd88d3552360697d798af3e08"
           test "$(git hash-object h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs)" = "8ec203fd16f07f710c80b4206e57cc8289153baf"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
       - name: Expose exact Run8E frame rejection
@@ -35,7 +35,7 @@ jobs:
           const camera={position:{x:0,y:26,z:48},target:{x:0,y:8,z:-96},up:{x:0,y:1,z:0},fieldOfViewDegrees:58,nearPlane:0.1,farPlane:3328};
           const viewport={width:320,height:180,pixelRatio:1};
           const frame=constructHEarthRun8ESuccessorEnvironmentFrame({camera,viewport});
-          console.log(JSON.stringify({ok:frame?.ok,status:frame?.status,issues:frame?.issues,primitiveCount:frame?.primitiveCount,worldFarPlane:frame?.worldFarPlane,run8CPresentationFarPlane:frame?.run8CPresentationFarPlane},null,2));
+          console.log(JSON.stringify({ok:frame?.ok,status:frame?.status,issues:frame?.issues,primitiveCount:frame?.primitiveCount,farOceanPrimitiveCount:frame?.farOceanPrimitiveCount,farLandPrimitiveCount:frame?.farLandPrimitiveCount,worldFarPlane:frame?.worldFarPlane,run8CPresentationFarPlane:frame?.run8CPresentationFarPlane},null,2));
           NODE
       - name: Execute registered Gen310 harness and preserve native receipt
         id: harness

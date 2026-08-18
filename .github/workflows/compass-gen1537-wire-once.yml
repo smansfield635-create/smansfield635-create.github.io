@@ -1,0 +1,44 @@
+name: Compass Gen1537 Wire Once
+
+on:
+  push:
+    branches: [agent/compass-live-recovery-gen1537]
+    paths:
+      - .github/workflows/compass-gen1537-wire-once.yml
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/compass-live-recovery-gen1537
+          fetch-depth: 0
+      - name: Wire corrective runtime after existing Compass assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          css='<link rel="stylesheet" href="/assets/compass/compass.gen1537.recovery.css?v=gen1537-live-recovery-v1" data-compass-gen1537-recovery-style="true">'
+          js='<script src="/assets/compass/compass.gen1537.recovery.js?v=gen1537-live-recovery-v1" defer data-compass-gen1537-recovery-runtime></script>'
+          if css not in s:
+              s=s.replace('</head>', css+'\n</head>', 1)
+          if js not in s:
+              s=s.replace('</body>', js+'\n</body>', 1)
+          p.write_text(s)
+          PY
+          grep -q 'compass.gen1537.recovery.css?v=gen1537-live-recovery-v1' index.html
+          grep -q 'compass.gen1537.recovery.js?v=gen1537-live-recovery-v1' index.html
+          rm .github/workflows/compass-gen1537-wire-once.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html .github/workflows/compass-gen1537-wire-once.yml
+          git diff --cached --check
+          git commit -m 'Wire Gen1537 corrective Compass assets'
+          git push origin HEAD:agent/compass-live-recovery-gen1537

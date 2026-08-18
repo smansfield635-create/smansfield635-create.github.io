@@ -6,6 +6,8 @@ Canonical lock generation: `1532`
 
 Qualified but owner-rejected predecessor: `e7259d40726a7890b34140a9d4154232bf2d91f6`
 
+Qualification comparison base: `e7259d40726a7890b34140a9d4154232bf2d91f6` — all exact-head PR qualification must compare the Gen310 successor against this frozen predecessor rather than later unrelated `main` advancement.
+
 Governing public record: `.github/ai-router/projects/h-earth/reciprocal-preconstruction-excellence-record.v1.json`
 
 Governing private continuity: `H_EARTH_RECIPROCAL_GLOBAL_REGIONAL_WORLD_DEVELOPMENT_CONTINUITY_v1`

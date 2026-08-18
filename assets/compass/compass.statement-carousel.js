@@ -33,15 +33,21 @@
     if(!craft){if(attempt<40)setTimeout(()=>promoteSpacecraftSurface(attempt+1),50);return}
     if(craft.dataset.performanceTier!=='demand-driven-static-3d'){if(attempt<40)setTimeout(()=>promoteSpacecraftSurface(attempt+1),50);return}
     try{
+      const vw=Math.max(320,innerWidth),vh=Math.max(480,innerHeight),depth=5.05;
+      const centerX=vw*.5+(1.05*1.62/depth)*(vh*.5),centerY=vh*.5-((.45+.55)*1.62/depth)*(vh*.5);
+      const cssW=Math.min(560,Math.max(360,vw*.42)),cssH=Math.min(400,Math.max(280,vh*.42));
+      const left=Math.max(12,Math.min(vw-cssW-12,centerX-cssW/2)),top=Math.max(12,Math.min(vh-cssH-12,centerY-cssH/2));
+      const scaleX=craft.width/vw,scaleY=craft.height/vh;
       const snapshot=document.createElement('canvas');
-      snapshot.width=craft.width;snapshot.height=craft.height;snapshot.className=craft.className;
+      snapshot.width=Math.max(1,Math.round(cssW));snapshot.height=Math.max(1,Math.round(cssH));snapshot.className=craft.className;
       for(const {name,value} of [...craft.attributes])if(name.startsWith('data-')||name==='aria-hidden')snapshot.setAttribute(name,value);
-      snapshot.dataset.presentationSurface='canonical-laws-3d-snapshot-2d';
+      snapshot.dataset.presentationSurface='canonical-laws-3d-tight-snapshot-2d';
       snapshot.dataset.webglLifecycle='released-after-canonical-3d-frame';
-      snapshot.style.cssText=craft.style.cssText;
+      snapshot.dataset.compositorBounds='tight-spacecraft-neighborhood';
+      snapshot.style.cssText=`position:fixed;inset:auto;left:${left}px;top:${top}px;width:${cssW}px;height:${cssH}px;`;
       const ctx=snapshot.getContext('2d',{alpha:true});
       if(!ctx)return;
-      ctx.drawImage(craft,0,0);
+      ctx.drawImage(craft,left*scaleX,top*scaleY,cssW*scaleX,cssH*scaleY,0,0,snapshot.width,snapshot.height);
       craft.getContext('webgl')?.getExtension('WEBGL_lose_context')?.loseContext();
       craft.replaceWith(snapshot);
     }catch{}
@@ -91,5 +97,5 @@
   }
   function boot(){mountStatements();mountWorldInteraction();promoteSpacecraftSurface()}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot,{once:true}):boot();
-  window.CompassStatementCarousel=Object.freeze({version:'statement-flagship-v2',worldInteraction:'bounded-parallax-proximity',spacecraftSurface:'canonical-3d-frame-promoted-and-webgl-released'});
+  window.CompassStatementCarousel=Object.freeze({version:'statement-flagship-v2',worldInteraction:'bounded-parallax-proximity',spacecraftSurface:'canonical-3d-frame-tight-promoted-and-webgl-released'});
 })();

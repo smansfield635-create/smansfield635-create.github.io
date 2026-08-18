@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - control-plane-carrier/gratitude-audralia-final-expression-intake-20260817
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
 
 permissions:
   contents: read

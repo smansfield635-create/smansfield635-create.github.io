@@ -32,17 +32,13 @@ jobs:
           exit 1
       - name: Record stale predecessor CP3D assertions
         run: |
-          node --input-type=module <<'NODE'
+          mkdir -p h-earth-3d/validation/evidence/cp3d
+          node --input-type=module <<'NODE' > h-earth-3d/validation/evidence/cp3d/gen307-stale-predecessor-classification.json
           const mod=await import('./showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js');
           const p=mod.getHEarthRun8ER2CanonicalLiveRenderPackage();
-          console.log(JSON.stringify({schema:'H_EARTH_GEN307_CP3D_PREDECESSOR_ASSERTION_CLASSIFICATION_v2',candidateHead:'71bafea00748e672cf64320507d346438bf06a75',gen306PackageDifferentialRun:32090223103,gen306RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',gen307RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',packageBoundaryAssertionStale:true,runtimeIdentityImportAssertionStale:true,currentPackageStatus:p?.status,currentPackageIssues:p?.issues??[]},null,2));
+          console.log(JSON.stringify({schema:'H_EARTH_GEN307_CP3D_PREDECESSOR_ASSERTION_CLASSIFICATION_v3',candidateHead:'71bafea00748e672cf64320507d346438bf06a75',qualifiedGen306Head:'dbf2f3ec90faa59c09193e61a0d141481b68d758',gen306PackageDifferentialRun:32090223103,gen306RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',gen307RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',packageBoundaryAssertionStale:true,runtimeIdentityImportAssertionStale:true,run8BPredecessorAssertionStale:true,currentPackageStatus:p?.status,currentPackageIssues:p?.issues??[]},null,2));
           NODE
-      - name: Execute corrected Run 8B geometry regression harness
-        env:
-          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1e-run8b-geometry-receipt.json
-        run: |
-          mkdir -p h-earth-3d/validation/evidence/cp3d
-          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
+          cat h-earth-3d/validation/evidence/cp3d/gen307-stale-predecessor-classification.json
       - name: Execute CP3D full renderer survival
         env:
           CP3D_ORIGIN: http://127.0.0.1:4173

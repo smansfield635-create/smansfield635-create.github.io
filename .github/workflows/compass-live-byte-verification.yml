@@ -3,6 +3,9 @@ name: Compass Live Byte Verification
 on:
   push:
     branches: [main]
+  pull_request:
+    paths:
+      - '.github/workflows/compass-live-byte-verification.yml'
   workflow_run:
     workflows: ["Direct GitHub Pages Deploy"]
     types: [completed]
@@ -13,12 +16,12 @@ permissions:
 
 jobs:
   verify-live:
-    if: github.event_name == 'push' || github.event.workflow_run.head_branch == 'main'
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
-      DEPLOYED_HEAD: ${{ github.event.workflow_run.head_sha || github.sha }}
-      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion || 'push-observation' }}
+      DEPLOYED_HEAD: ${{ github.event.pull_request.base.sha || github.event.workflow_run.head_sha || github.sha }}
+      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion || 'direct-observation' }}
       VERIFICATION_TRIGGER: ${{ github.event_name }}
       LIVE_ORIGIN: https://diamondgatebridge.com
     steps:

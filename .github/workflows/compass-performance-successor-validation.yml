@@ -26,7 +26,7 @@ jobs:
           git merge-base --is-ancestor "$REPAIR_PARENT" HEAD
           test "$(git diff --name-only "$REPAIR_PARENT" HEAD)" = '.github/workflows/compass-performance-successor-validation.yml'
           git diff --quiet "$REPAIR_PARENT" HEAD -- assets/compass/compass.mirrorland-window.js
-      - name: Repair requestRender wake semantics and retire carrier
+      - name: Repair requestRender wake semantics and push product only
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -43,11 +43,10 @@ jobs:
           p.write_text(s)
           PY
           node --check assets/compass/compass.mirrorland-window.js
-          git show "$REPAIR_PARENT":.github/workflows/compass-performance-successor-validation.yml > .github/workflows/compass-performance-successor-validation.yml
-          test "$(git diff --name-only "$REPAIR_PARENT" | sort)" = 'assets/compass/compass.mirrorland-window.js'
+          test "$(git diff --name-only | sort)" = 'assets/compass/compass.mirrorland-window.js'
           git diff --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/compass/compass.mirrorland-window.js .github/workflows/compass-performance-successor-validation.yml
+          git add assets/compass/compass.mirrorland-window.js
           git commit -m 'Repair Mirrorland demand-driven lifecycle wake'
           git push origin HEAD:${{ github.head_ref }}

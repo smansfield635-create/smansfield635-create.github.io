@@ -15,6 +15,29 @@
       "reusePolicy": "PROTECTED_BASELINE_AND_APPROVED_DERIVATIVE_SOURCE_ONLY"
     },
     {
+      "sourceId": "CHAPTER_01_HOMECOMING_WORLD_V1",
+      "kind": "GITHUB_RAW",
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "ref": "main",
+      "path": "proof-media/video-conform/ch01-homecoming-world-v1.mp4",
+      "expectedGitBlob": "0b9e97eec16dd4607c282bb7a8c447cafbe231ae",
+      "expectedSha256": "13b45b04c2d5de90dd6d47e58e0b4f7b6ed4180d26b88de38ed178caccff5707",
+      "expectedBytes": 1263275,
+      "durationSeconds": 3.5,
+      "width": 1920,
+      "height": 1080,
+      "fps": 24,
+      "role": "CHAPTER_01_HOMECOMING_PLANETARY_DISTANCE_DERIVATIVE",
+      "chapterScope": [1],
+      "sourceLineage": {
+        "sourceId": "CHAPTER_02_WORLD_REEL_LIVE",
+        "sourceIntervalSeconds": [20.0, 23.5],
+        "normalization": "crop=480:700:720:170 -> scale/crop 1920x1080 -> yuv420p; no audio"
+      },
+      "targetUse": "CHAPTER_01_42.0_TO_45.5_HOMECOMING_ONLY",
+      "reusePolicy": "BOUNDED_CHAPTER_01_HOMECOMING_USE_ONLY__DOES_NOT_SUPERSEDE_23774_AS_CHAPTER_02_SOURCE"
+    },
+    {
       "sourceId": "CHAPTER_02_WORLD_REEL_LIVE",
       "kind": "GITHUB_RAW",
       "repository": "smansfield635-create/smansfield635-create.github.io",
@@ -75,7 +98,7 @@
         "chapter01HomecomingCandidate": "00:43-01:02.66"
       },
       "reusePolicy": "CROSS_CHAPTER_WHEN_DISTANCE_HOME_OR_PLANETARY_SCALE_IS_SEMANTICALLY_CONTROLLING",
-      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING"
+      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING__CHAPTER_01_DEPENDENCY_SATISFIED_BY_SEPARATE_APPROVED_DERIVATIVE"
     },
     {
       "sourceId": "CHAPTER_02_TRAVERSAL_CAPTURE_23775",
@@ -115,7 +138,10 @@
     },
     {
       "sourceId": "CHAPTER_01_STRONG_OWNER_CANDIDATE_V2",
+      "provider": "GOOGLE_DRIVE",
       "fileName": "chapter01-compass-successor-continuity-owner-candidate-v2.mp4",
+      "fileId": "1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B",
+      "driveUrl": "https://drive.google.com/file/d/1wqy_MyhTr7ru5CjfBsz0zc6WS4Ejr97B/view",
       "expectedBytes": 16476281,
       "expectedSha256": "db3e981640fe7408fca12d9f6c411660a7dc15edee90ce0e3f1b798b91c928a1",
       "durationSeconds": 65.0,
@@ -125,7 +151,7 @@
       "role": "CURRENT_STRONG_CHAPTER_01_CONFORM_BASELINE",
       "chapterScope": [1],
       "reusePolicy": "PRIMARY_SOURCE_FOR_CURRENT_CHAPTER_01_TIMING_CONFORM_ONLY",
-      "executionStatus": "IDENTITY_REGISTERED__REMOTE_EXECUTOR_LOCATOR_PENDING"
+      "executionStatus": "AI_ENTRY_DRIVE_STREAM_OPERATIONAL__PUBLIC_RUNNER_DIRECT_FETCH_NOT_AVAILABLE"
     }
   ],
   "registrationLaw": {

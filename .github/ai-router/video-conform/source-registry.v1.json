@@ -22,7 +22,7 @@
       "path": "proof-media/video-conform/ch01-homecoming-world-v1.mp4",
       "expectedGitBlob": "85564815678255e2ab83b892dbdb63a9437826f9",
       "expectedSha256": "13b45b04c2d5de90dd6d47e58e0b4f7b6ed4180d26b88de38ed178caccff5707",
-      "expectedBytes": 1263275,
+      "expectedBytes": 1258225,
       "durationSeconds": 3.5,
       "width": 1920,
       "height": 1080,

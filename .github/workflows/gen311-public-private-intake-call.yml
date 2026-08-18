@@ -13,8 +13,8 @@ jobs:
     uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
     with:
       private_issue: '277'
-      private_comment: '5335544788'
-      expected_request_id: 'H_EARTH_RECIPROCAL_PROGRESSIVE_REGIONAL_DEVELOPMENT_INTAKE_20260818_004'
+      private_comment: '5335567860'
+      expected_request_id: 'H_EARTH_RECIPROCAL_PROGRESSIVE_REGIONAL_DEVELOPMENT_INTAKE_20260818_005'
       exact_private_head: '3c16ca7f96818de4b124cd3f528f0a44db86e6c9'
       callback_issue: '1313'
     secrets: inherit

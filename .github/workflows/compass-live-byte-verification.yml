@@ -1,6 +1,8 @@
 name: Compass Live Byte Verification
 
 on:
+  push:
+    branches: [main]
   workflow_run:
     workflows: ["Direct GitHub Pages Deploy"]
     types: [completed]
@@ -11,21 +13,22 @@ permissions:
 
 jobs:
   verify-live:
-    if: github.event.workflow_run.head_branch == 'main'
+    if: github.event_name == 'push' || github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
-      DEPLOYED_HEAD: ${{ github.event.workflow_run.head_sha }}
-      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+      DEPLOYED_HEAD: ${{ github.event.workflow_run.head_sha || github.sha }}
+      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion || 'push-observation' }}
+      VERIFICATION_TRIGGER: ${{ github.event_name }}
       LIVE_ORIGIN: https://diamondgatebridge.com
     steps:
-      - name: Checkout exact deployment head
+      - name: Checkout exact observed main head
         uses: actions/checkout@v4
         with:
           ref: ${{ env.DEPLOYED_HEAD }}
           fetch-depth: 0
 
-      - name: Verify live bytes against exact deployed source
+      - name: Verify live bytes against exact observed source
         id: verify
         shell: bash
         run: |
@@ -98,7 +101,8 @@ jobs:
           {
             echo "### Live deployment byte verification"
             echo
-            echo "Deployed head: \`$DEPLOYED_HEAD\`"
+            echo "Observed main head: \`$DEPLOYED_HEAD\`"
+            echo "Verification trigger: **$VERIFICATION_TRIGGER**"
             echo "Direct Pages workflow conclusion: **$UPSTREAM_CONCLUSION**"
             echo "Live byte result: **${RESULT:-FAIL_CLOSED}**"
             echo "Successful fetch attempt: \`${ATTEMPT:-none}\`"

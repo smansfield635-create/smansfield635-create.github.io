@@ -8855,19 +8855,69 @@
   function bindRenderInvalidation() {
     if (state.renderInvalidationBound || !state.root) return;
     state.renderInvalidationBound = true;
+
+    const watchedAttributes = [
+      "data-compass-mode",
+      "data-orbit-focus",
+      "data-orbit-preview-focus",
+      "data-orbit-phase",
+      "data-orbit-gesture-active",
+      "data-orbit-quaternion",
+      "data-active-cluster-wing",
+      "data-cluster-quaternion",
+      "data-cluster-primary-room",
+      "data-cluster-preview-primary-room",
+      "data-cluster-phase",
+      "data-cluster-gesture-active",
+      "data-cluster-revision",
+      "data-selected-cardinal",
+      "data-selected-room",
+      "data-selected-destination-type",
+      "data-selected-destination-id",
+      "data-selected-destination-label",
+      "data-selected-route",
+      "data-reduced-motion",
+      "data-compass-prominence",
+      "data-window-prominence"
+    ];
+
+    const invalidationSignature = () =>
+      watchedAttributes
+        .map(name => `${name}:${state.root.getAttribute(name) || ""}`)
+        .join("|");
+
+    let lastInvalidationSignature =
+      invalidationSignature();
+
     if (typeof MutationObserver === "function") {
-      state.renderObserver = new MutationObserver(requestRender);
-      state.renderObserver.observe(state.root, { attributes: true, attributeFilter: [
-        "data-compass-mode", "data-orbit-focus", "data-orbit-preview-focus", "data-orbit-phase",
-        "data-orbit-gesture-active", "data-orbit-quaternion", "data-active-cluster-wing",
-        "data-cluster-quaternion", "data-cluster-primary-room", "data-cluster-preview-primary-room",
-        "data-cluster-phase", "data-cluster-gesture-active", "data-cluster-revision",
-        "data-selected-cardinal", "data-selected-room", "data-selected-destination-type",
-        "data-selected-destination-id", "data-selected-destination-label", "data-selected-route",
-        "data-reduced-motion", "data-compass-prominence", "data-window-prominence"
-      ]});
+      state.renderObserver = new MutationObserver(() => {
+        const nextInvalidationSignature =
+          invalidationSignature();
+
+        if (nextInvalidationSignature === lastInvalidationSignature) {
+          return;
+        }
+
+        lastInvalidationSignature =
+          nextInvalidationSignature;
+
+        requestRender();
+      });
+
+      state.renderObserver.observe(
+        state.root,
+        {
+          attributes: true,
+          attributeFilter: watchedAttributes
+        }
+      );
     }
-    globalThis.addEventListener("resize", requestRender, { passive: true });
+
+    globalThis.addEventListener(
+      "resize",
+      requestRender,
+      { passive: true }
+    );
   }
 
   function unbindRenderInvalidation() {

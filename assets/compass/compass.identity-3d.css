@@ -1,8 +1,8 @@
 /* Compass Gen1533 flagship spatial presentation */
 :root{--flagship-x:0;--flagship-y:0;--flagship-energy:0}
-html,body{background:#02070b!important}
-body{overflow-x:hidden}
-.compass-estate{position:relative;isolation:isolate;background:radial-gradient(circle at 50% 14%,rgba(66,123,148,.13),transparent 32%),radial-gradient(circle at 50% 48%,rgba(201,164,84,.055),transparent 48%),linear-gradient(#02070b,#030912 42%,#040912)!important}
+html,body{max-width:100%;overflow-x:clip!important;background:#02070b!important}
+body{overflow-x:clip!important}
+.compass-estate{position:relative;isolation:isolate;max-width:100%;overflow-x:clip;background:radial-gradient(circle at 50% 14%,rgba(66,123,148,.13),transparent 32%),radial-gradient(circle at 50% 48%,rgba(201,164,84,.055),transparent 48%),linear-gradient(#02070b,#030912 42%,#040912)!important}
 .compass-estate::before{content:"";position:fixed;inset:-20%;z-index:-2;pointer-events:none;background:radial-gradient(circle at calc(50% + var(--flagship-x)*6%) calc(22% + var(--flagship-y)*4%),rgba(113,214,236,.085),transparent 22%),radial-gradient(circle at calc(48% - var(--flagship-x)*5%) calc(42% - var(--flagship-y)*3%),rgba(244,214,128,.055),transparent 28%);filter:blur(28px);transition:opacity .4s ease}
 .compass-estate__hall{position:relative;z-index:3;max-width:none!important;padding-inline:clamp(16px,4vw,64px)!important}
 .compass-estate__header{position:relative;z-index:10;display:grid;justify-items:center;max-width:1180px!important;min-height:min(86vh,880px);margin:0 auto!important;padding:clamp(36px,7vh,76px) 0 clamp(18px,4vh,42px)!important;align-content:start;text-align:center}

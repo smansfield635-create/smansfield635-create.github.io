@@ -1,0 +1,46 @@
+{
+  "schema": "H_EARTH_GEN307_EXACT_CANDIDATE_ANCHOR_EVIDENCE_v1",
+  "evidenceClass": "VISUAL",
+  "candidateProvenanceHead": "71bafea00748e672cf64320507d346438bf06a75",
+  "qualifiedGen306Base": "dbf2f3ec90faa59c09193e61a0d141481b68d758",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "captureWorkflowRun": 32091151997,
+  "captureArtifactId": 9308373643,
+  "captureArtifactSha256": "9191d690e427a872b644e1bdb9d6a89f98423a59f370ff3cb6f4764113ca15f0",
+  "captures": {
+    "desktop": {
+      "httpStatus": 200,
+      "viewport": {"width": 1440, "height": 960},
+      "canvas": {"visible": true, "width": 887, "height": 585},
+      "webgl2Available": true,
+      "startupText": "DEVICE RESULT: PASS",
+      "beforeCanvasSha256": "bfe36e23bb0d710e345fcc0b3ddf117a44e0ea71471e185a50067030839dc437",
+      "afterCanvasSha256": "6f8b3a1cb740a5f1677ee1e6665efeb5c5202ec8747841485da14dc8bcd4186d",
+      "pageErrors": [],
+      "consoleErrors": [],
+      "httpErrors": []
+    },
+    "mobile": {
+      "httpStatus": 200,
+      "viewport": {"width": 430, "height": 860},
+      "canvas": {"visible": true, "width": 420, "height": 850},
+      "webgl2Available": true,
+      "startupText": "DEVICE RESULT: PASS",
+      "beforeCanvasSha256": "23629322ce6f3a6a337cb55cdfdc1a1d3fad0d4e775b42b666baed8d3f842903",
+      "afterCanvasSha256": "da6e87cf725946717e979e596489455149f6c0d594914ea3dc3d94d374e4cad9",
+      "pageErrors": [],
+      "consoleErrors": [],
+      "httpErrors": []
+    }
+  },
+  "visualFindings": {
+    "desktopWorldVisible": true,
+    "mobileWorldVisible": true,
+    "canvasNotDashboardSubstitute": true,
+    "continuousTerrainCoastElevationHorizon": true,
+    "sameCanonicalWorldIdentity": true,
+    "reviewedAgainstHardAnchor": true
+  },
+  "result": "PASS"
+}

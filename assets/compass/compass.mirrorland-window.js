@@ -2956,9 +2956,34 @@
     }
   }
 
+  function transitionNeedsFrames() {
+    return (
+      state.rendererState ===
+        STATES.REVEALING ||
+      state.rendererState ===
+        STATES.WITHDRAWING
+    );
+  }
+
+  function requestRender() {
+    if (
+      !state.running ||
+      state.failed ||
+      state.disposed ||
+      state.raf
+    ) {
+      return;
+    }
+
+    requestRender();
+  }
+
   function render(
     now
   ) {
+    state.raf =
+      0;
+
     if (
       !state.running ||
       state.failed ||
@@ -2982,10 +3007,9 @@
 
     drawWindow();
 
-    state.raf =
-      requestAnimationFrame(
-        render
-      );
+    if (transitionNeedsFrames()) {
+      requestRender();
+    }
   }
 
   function transitionIdFromEvent(
@@ -3516,7 +3540,10 @@
     ) {
       state.resizeObserver =
         new ResizeObserver(
-          resize
+          () => {
+            resize();
+            requestRender();
+          }
         );
 
       state.resizeObserver.observe(

@@ -1021,6 +1021,12 @@
     raf:
       0,
 
+    renderObserver:
+      null,
+
+    renderInvalidationBound:
+      false,
+
     running:
       false,
 
@@ -8790,9 +8796,95 @@
       null;
   }
 
+  const SETTLE_EPSILON =
+    0.0008;
+
+  function quaternionNeedsSettlement(
+    current,
+    target
+  ) {
+    if (
+      !current ||
+      !target ||
+      current.length !== 4 ||
+      target.length !== 4
+    ) {
+      return false;
+    }
+
+    const alignment =
+      Math.abs(
+        current[0] * target[0] +
+        current[1] * target[1] +
+        current[2] * target[2] +
+        current[3] * target[3]
+      );
+
+    return (1 - alignment) > SETTLE_EPSILON;
+  }
+
+  function scalarNeedsSettlement(current, target) {
+    return Math.abs(Number(current || 0) - Number(target || 0)) > SETTLE_EPSILON;
+  }
+
+  function needsAnotherFrame() {
+    if (state.pointer && state.pointer.dragging) return true;
+    if (state.frame && (state.frame.orbitGestureActive || (state.frame.cluster && state.frame.cluster.gestureActive))) return true;
+    if (quaternionNeedsSettlement(state.constellationQuaternion, state.constellationTargetQuaternion)) return true;
+    for (const wing of WINGS) {
+      if (quaternionNeedsSettlement(state.clusterQuaternions.get(wing), state.clusterTargetQuaternions.get(wing))) return true;
+    }
+    const keys = ["x", "y", "z", "sx", "sy", "sz", "prominence", "halo", "rotationSpeed", "float"];
+    for (const node of state.registry.values()) {
+      if (!node.transform || !node.target) continue;
+      for (const key of keys) {
+        if (scalarNeedsSettlement(node.transform[key], node.target[key])) return true;
+      }
+    }
+    for (let index = 0; index < 3; index += 1) {
+      if (scalarNeedsSettlement(state.camera.eye[index], state.camera.nextEye[index]) || scalarNeedsSettlement(state.camera.target[index], state.camera.nextTarget[index])) return true;
+    }
+    return false;
+  }
+
+  function requestRender() {
+    if (!state.running || state.disposed || state.raf) return;
+    state.raf = requestAnimationFrame(render);
+  }
+
+  function bindRenderInvalidation() {
+    if (state.renderInvalidationBound || !state.root) return;
+    state.renderInvalidationBound = true;
+    if (typeof MutationObserver === "function") {
+      state.renderObserver = new MutationObserver(requestRender);
+      state.renderObserver.observe(state.root, { attributes: true, attributeFilter: [
+        "data-compass-mode", "data-orbit-focus", "data-orbit-preview-focus", "data-orbit-phase",
+        "data-orbit-gesture-active", "data-orbit-quaternion", "data-active-cluster-wing",
+        "data-cluster-quaternion", "data-cluster-primary-room", "data-cluster-preview-primary-room",
+        "data-cluster-phase", "data-cluster-gesture-active", "data-cluster-revision",
+        "data-selected-cardinal", "data-selected-room", "data-selected-destination-type",
+        "data-selected-destination-id", "data-selected-destination-label", "data-selected-route",
+        "data-reduced-motion", "data-compass-prominence", "data-window-prominence"
+      ]});
+    }
+    globalThis.addEventListener("resize", requestRender, { passive: true });
+  }
+
+  function unbindRenderInvalidation() {
+    if (state.renderObserver) {
+      state.renderObserver.disconnect();
+      state.renderObserver = null;
+    }
+    if (state.renderInvalidationBound) globalThis.removeEventListener("resize", requestRender);
+    state.renderInvalidationBound = false;
+  }
+
   function render(
     now
   ) {
+    state.raf =
+      0;
+
     if (!state.running) {
       return;
     }
@@ -9040,10 +9132,9 @@
         drawCalls
     });
 
-    state.raf =
-      requestAnimationFrame(
-        render
-      );
+    if (needsAnotherFrame()) {
+      requestRender();
+    }
   }
 
   function deleteGpuResources() {
@@ -9144,6 +9235,7 @@
 
     unbindPointerBridge();
     unbindSemanticFocusBridge();
+    unbindRenderInvalidation();
     unbindReducedMotion();
 
     deleteGpuResources();
@@ -9205,6 +9297,7 @@
 
     unbindPointerBridge();
     unbindSemanticFocusBridge();
+    unbindRenderInvalidation();
     unbindReducedMotion();
 
     deleteGpuResources();
@@ -9774,6 +9867,7 @@
 
       bindPointerBridge();
       bindSemanticFocusBridge();
+      bindRenderInvalidation();
 
       state.running =
         true;

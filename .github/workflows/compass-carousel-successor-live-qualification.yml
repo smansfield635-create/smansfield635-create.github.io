@@ -1,17 +1,11 @@
-name: Compass Gen1531 Candidate Browser Qualification
+name: Compass Gen1526 Atomic Release Browser Verification v2
 
 on:
   pull_request:
     branches: [main]
     paths:
-      - 'assets/compass/compass.identity-3d.js'
-      - 'assets/compass/compass.identity-3d.css'
-      - 'assets/compass/compass.brain-scene.js'
-      - 'assets/compass/compass.crystals.js'
-      - 'assets/compass/compass.mirrorland-window.js'
-      - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
-      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
-      - '.github/workflows/compass-performance-successor-validation.yml'
+      - 'assets/compass/**'
+      - 'index.html'
       - '.github/workflows/compass-carousel-successor-live-qualification.yml'
   workflow_dispatch:
 
@@ -19,65 +13,61 @@ permissions:
   contents: read
 
 env:
-  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1531-performance.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1531-display.json
+  CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  GEN1526_RELEASE_HEAD: 48132ad9f44b8b838bb7dffaf7638b9ca072d0fd
 
 jobs:
-  qualify-browser:
+  verify-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
+          ref: ${{ env.CANDIDATE_HEAD }}
           fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact checkout and static Gen1531 contract
+      - name: Verify Gen1526 release lineage and bounded repairs
         run: |
-          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
-          node .github/ai-router/projects/compass/verify-performance-successor.mjs
-          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-      - name: Install browser runtime
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "$CANDIDATE_HEAD"
+          test "$(git rev-parse HEAD:index.html)" = "acf63ba59b4248966a1e337c98ad7e28640cf331"
+          test "$(git rev-parse HEAD:assets/compass/compass.identity-3d.js)" = "04df9de4b20b1420a707d25c2f2b28664a90ca65"
+          test "$(git rev-parse HEAD:assets/compass/compass.crystals.js)" = "41aed86c60c2a134011720a95202da9cf3983718"
+          test "$(git rev-parse HEAD:assets/compass/compass.mirrorland-window.js)" = "b3ef695c21d391301394d587f3d0f51caacb0add"
+          test ! -e assets/compass/compass.laws-spacecraft.js
+          grep -Fq "innerWidth>900&&!snap" assets/compass/compass.brain-scene.js
+          grep -Fq 'compass.identity-3d.js?v=gen1526-atomic-release-v1' assets/compass/compass.brain-scene.js
+          grep -Fq 'compass.identity-3d.css?v=gen1526-atomic-release-v1' assets/compass/compass.brain-scene.js
+      - name: Install browser
         env:
           npm_config_package_lock: 'false'
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install chromium
-      - name: Start isolated exact candidate server
+      - name: Serve exact candidate
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-gen1531-server.log 2>&1 &
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/gen1526-v2-server.log 2>&1 &
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
           curl -fsS http://127.0.0.1:4173/ >/dev/null
-      - name: Qualify desktop tablet phone reduced motion and lifecycle recovery
+      - name: Browser matrix
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';import{chromium}from'playwright';
-          const head=process.env.COMPASS_CANDIDATE_HEAD,base=`http://127.0.0.1:4173/?candidate=${head}`,checks=[],metrics={};const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
-          const measure=async page=>page.evaluate(async()=>{const a=[];let last=performance.now();for(let i=0;i<120;i++)await new Promise(r=>requestAnimationFrame(now=>{a.push(now-last);last=now;r()}));const s=a.slice(8).sort((x,y)=>x-y);return{median:Number(s[Math.floor(s.length*.5)].toFixed(2)),p95:Number(s[Math.floor(s.length*.95)].toFixed(2)),samples:s.length}});
-          const writeReceipt=(phase,extra={})=>{const failures=checks.filter(x=>!x.pass),receipt={schema:'COMPASS_GEN1531_BROWSER_QUALIFICATION_RECEIPT_v2',operationId:'COMPASS_MIRRORLAND_CRYSTAL_ANIMATION_MODERNIZATION_PERFORMANCE_CONTINUATION_GEN1531',lockGeneration:1531,governingHead:'74de0882af55fed53272a191b173e45f5cdbd551',candidateHead:head,targetFrameBudgetMs:16.7,phase,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',metrics,checks,failures:failures.map(x=>x.id),...extra};fs.writeFileSync('/tmp/compass-gen1531-browser.json',JSON.stringify(receipt,null,2)+'\n');return receipt};
+          const checks=[],metrics={},surfaces={};const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const measure=async p=>p.evaluate(async()=>{const a=[];let last=performance.now();for(let i=0;i<180;i++)await new Promise(r=>requestAnimationFrame(n=>{a.push(n-last);last=n;r()}));const s=a.slice(12).sort((a,b)=>a-b);return{median:+s[Math.floor(s.length*.5)].toFixed(2),p95:+s[Math.floor(s.length*.95)].toFixed(2),samples:s.length}});
           const browser=await chromium.launch({headless:true});
-          try{
-            for(const [name,width,height,reduced] of [['desktop',1440,900,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',820,1180,true]]){
-              const context=await browser.newContext({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto(`${base}&surface=${name}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForFunction(()=>globalThis.DGB_COMPASS_CRYSTALS_RECEIPT?.status==='available'&&globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT?.status==='available',null,{timeout:15000});await page.waitForTimeout(1800);
-              const state=await page.evaluate(()=>({crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT,mirror:globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT,cardinals:document.querySelectorAll('[data-cardinal-id]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth}));const frame=await measure(page);metrics[name]=frame;check(`${name}_NO_ERRORS`,errors.length===0,errors);check(`${name}_TOPOLOGY`,state.cardinals===4&&state.rooms===19,state);check(`${name}_MIRRORLAND_21_PANES`,state.mirror?.paneCount===21,state.mirror);check(`${name}_CRYSTAL_REGISTRY`,state.crystals?.registryCardinalCount===4&&state.crystals?.registryRoomCount===19,state.crystals);check(`${name}_NO_OVERFLOW`,state.overflow<=2,state.overflow);check(`${name}_FRAME_CADENCE`,frame.median<=18.5&&frame.p95<=26,{target:16.7,...frame});await page.screenshot({path:`/tmp/compass-gen1531-${name}.png`,fullPage:true});await context.close();
-            }
-            writeReceipt('SURFACE_MATRIX_COMPLETE');
-            const context=await browser.newContext({viewport:{width:820,height:1180},reducedMotion:'no-preference'}),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e)));await page.goto(`${base}&surface=lifecycle`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForFunction(()=>globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT?.status==='available'&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT?.status==='available',null,{timeout:15000});
-            const tid=`gen1531-${Date.now()}`;await page.evaluate(id=>dispatchEvent(new CustomEvent('DGB_MIRRORLAND_WINDOW_REVEAL_REQUEST',{detail:{transitionId:id}})),tid);await page.waitForFunction(state=>globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT?.rendererState===state,'MIRRORLAND_FOCUSED',{timeout:5000});const focused=await page.evaluate(()=>globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT);await page.waitForTimeout(250);const focusedFrame=await measure(page);check('MIRRORLAND_REVEAL_COMPLETES',focused.rendererState==='MIRRORLAND_FOCUSED',focused);check('MIRRORLAND_FOCUSED_RETURNS_IDLE_CADENCE',focusedFrame.median<=18.5&&focusedFrame.p95<=26,focusedFrame);
-            const wid=`gen1531-w-${Date.now()}`;await page.evaluate(id=>dispatchEvent(new CustomEvent('DGB_MIRRORLAND_WINDOW_WITHDRAW_REQUEST',{detail:{transitionId:id}})),wid);await page.waitForFunction(state=>globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT?.rendererState===state,'DORMANT',{timeout:5000});await page.waitForTimeout(250);const dormantFrame=await measure(page);check('MIRRORLAND_WITHDRAW_COMPLETES',dormantFrame.median<=18.5&&dormantFrame.p95<=26,dormantFrame);check('LIFECYCLE_NO_ERRORS',errors.length===0,errors);await context.close();
-            const final=writeReceipt('LIFECYCLE_COMPLETE',{focusedFrame,dormantFrame});console.log(JSON.stringify(final,null,2));if(final.failures.length)process.exitCode=1;
-          }catch(error){const receipt=writeReceipt('HARNESS_EXCEPTION',{harnessError:String(error?.stack||error)});console.error(receipt.harnessError);process.exitCode=1;}finally{await browser.close();}
+          try{for(const [name,w,h,reduced] of [['desktop',1440,900,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',820,1180,true]]){const context=await browser.newContext({viewport:{width:w,height:h},reducedMotion:reduced?'reduce':'no-preference'}),page=await context.newPage(),errors=[],consoleErrors=[];page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text())});await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.CANDIDATE_HEAD}&surface=${name}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForFunction(()=>globalThis.DGB_COMPASS_IDENTITY_3D_GEN1524?.mounted&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT?.status==='available'&&globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT?.status==='available',null,{timeout:15000});await page.waitForTimeout(2200);const state=await page.evaluate(()=>({cardinals:document.querySelectorAll('[data-cardinal-id]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth,identity:globalThis.DGB_COMPASS_IDENTITY_3D_GEN1524,crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT,mirror:globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT,identityScript:[...document.scripts].map(s=>s.src).find(x=>x.includes('compass.identity-3d.js'))||null,brainMotion:document.querySelector('[data-brain-contract]')?.dataset?.brainMotion||document.querySelector('canvas[data-brain-contract]')?.dataset?.brainMotion||null}));const frame=await measure(page);metrics[name]=frame;surfaces[name]=state;check(`${name}_NO_ERRORS`,errors.length===0&&consoleErrors.length===0,{errors,consoleErrors});check(`${name}_TOPOLOGY`,state.cardinals===4&&state.rooms===19,state);check(`${name}_NO_OVERFLOW`,state.overflow<=2,state.overflow);check(`${name}_IDENTITY_MOUNTED`,state.identity?.mounted===true,state.identity);check(`${name}_UNIQUE_IDENTITY_CACHE_KEY`,String(state.identityScript).includes('gen1526-atomic-release-v1'),state.identityScript);check(`${name}_CRYSTALS`,state.crystals?.registryCardinalCount===4&&state.crystals?.registryRoomCount===19,state.crystals);check(`${name}_MIRRORLAND`,state.mirror?.paneCount===21,state.mirror);check(`${name}_FRAME_CADENCE`,frame.median<=18.5&&frame.p95<=26,{target:16.7,...frame});await page.screenshot({path:`/tmp/gen1526-v2-${name}.png`,fullPage:true});await context.close();}}
+          catch(e){check('HARNESS_EXCEPTION',false,String(e?.stack||e))}finally{await browser.close()}
+          const failures=checks.filter(x=>!x.pass),r={schema:'COMPASS_GEN1526_ATOMIC_RELEASE_BROWSER_RECEIPT_v2',candidateHead:process.env.CANDIDATE_HEAD,sourceHead:process.env.GEN1526_RELEASE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',metrics,surfaces,checks,failures:failures.map(x=>x.id)};fs.writeFileSync('/tmp/gen1526-v2-browser.json',JSON.stringify(r,null,2)+'\n');console.log(JSON.stringify(r,null,2));if(failures.length)process.exitCode=1;
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1531-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1526-atomic-release-v2-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-gen1531-performance.json
-            /tmp/compass-gen1531-display.json
-            /tmp/compass-gen1531-browser.json
-            /tmp/compass-gen1531-*.png
-            /tmp/compass-gen1531-server.log
+            /tmp/gen1526-v2-browser.json
+            /tmp/gen1526-v2-*.png
+            /tmp/gen1526-v2-server.log
           retention-days: 90

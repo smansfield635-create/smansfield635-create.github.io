@@ -1,19 +1,16 @@
-name: Compass Gen1533 Flagship Static Qualification
+name: Compass Gen1534 Emergency Flagship Static Qualification
 
 on:
   pull_request:
     branches: [main]
     paths:
-      - 'assets/compass/compass.identity-3d.css'
-      - 'assets/compass/compass.identity-3d.js'
-      - 'assets/compass/compass.statement-carousel.js'
-      - 'assets/compass/compass.capability-carousel.css'
-      - 'assets/compass/compass.crystals.js'
-      - 'assets/compass/compass.mirrorland-window.js'
+      - 'index.html'
+      - 'assets/compass/**'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
       - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-performance-successor-validation.yml'
       - '.github/workflows/compass-carousel-successor-live-qualification.yml'
+      - '.github/workflows/compass-display-continuity-validation.yml'
   workflow_dispatch:
 
 permissions:
@@ -21,8 +18,8 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-flagship-performance.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-flagship-display.json
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1534-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1534-display.json
 
 jobs:
   qualify-static:
@@ -35,18 +32,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Qualify exact Gen1533 flagship candidate
+      - name: Qualify exact Gen1534 emergency flagship candidate
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
           node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1533 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-flagship-performance.json >/dev/null
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1533 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-flagship-display.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1534 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-gen1534-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1534 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-gen1534-display.json >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1533-flagship-static-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1534-emergency-static-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-flagship-performance.json
-            /tmp/compass-flagship-display.json
+            /tmp/compass-gen1534-performance.json
+            /tmp/compass-gen1534-display.json
           retention-days: 90

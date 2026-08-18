@@ -28,38 +28,14 @@
     stage.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();rotate(event.key==='ArrowRight'?1:-1)}});
     render(true);
   }
-  function promoteSpacecraftSurface(attempt=0){
-    const craft=document.querySelector('canvas[data-compass-spacecraft-layer]');
-    if(!craft){if(attempt<40)setTimeout(()=>promoteSpacecraftSurface(attempt+1),50);return}
-    if(craft.dataset.performanceTier!=='demand-driven-static-3d'){if(attempt<40)setTimeout(()=>promoteSpacecraftSurface(attempt+1),50);return}
-    try{
-      const vw=Math.max(320,innerWidth),vh=Math.max(480,innerHeight),depth=5.05;
-      const centerX=vw*.5+(1.05*1.62/depth)*(vh*.5),centerY=vh*.5-((.45+.55)*1.62/depth)*(vh*.5);
-      const cssW=Math.min(500,Math.max(330,vw*.36)),cssH=Math.min(340,Math.max(240,vh*.36));
-      const left=Math.max(12,Math.min(vw-cssW-12,centerX-cssW/2)),top=Math.max(12,Math.min(vh-cssH-12,centerY-cssH/2));
-      const scaleX=craft.width/vw,scaleY=craft.height/vh;
-      const snapshot=document.createElement('canvas');
-      snapshot.width=Math.max(1,Math.round(cssW));snapshot.height=Math.max(1,Math.round(cssH));snapshot.className=craft.className;
-      for(const {name,value} of [...craft.attributes])if(name.startsWith('data-')||name==='aria-hidden')snapshot.setAttribute(name,value);
-      snapshot.dataset.presentationSurface='canonical-laws-3d-tight-snapshot-2d';
-      snapshot.dataset.webglLifecycle='released-after-canonical-3d-frame';
-      snapshot.dataset.compositorBounds='tight-spacecraft-neighborhood-no-live-filter';
-      snapshot.style.cssText=`position:fixed;inset:auto;left:${left}px;top:${top}px;width:${cssW}px;height:${cssH}px;filter:none!important;transition:none!important;box-shadow:none!important;`;
-      const ctx=snapshot.getContext('2d',{alpha:true});
-      if(!ctx)return;
-      ctx.drawImage(craft,left*scaleX,top*scaleY,cssW*scaleX,cssH*scaleY,0,0,snapshot.width,snapshot.height);
-      craft.getContext('webgl')?.getExtension('WEBGL_lose_context')?.loseContext();
-      craft.replaceWith(snapshot);
-    }catch{}
-  }
   function mountWorldInteraction(){
     const root=document.querySelector('[data-compass-root]');
     const scene=document.querySelector('[data-compass-scene]');
     if(!root||!scene||root.dataset.flagshipWorldInteraction==='true')return;
     root.dataset.flagshipWorldInteraction='true';
-    root.dataset.flagshipContract='COMPASS_GEN1533_SPATIAL_ESTATE_FLAGSHIP_v1';
+    root.dataset.flagshipContract='COMPASS_GEN1534_EMERGENCY_FLAGSHIP_v1';
     root.dataset.objectContinuity='SPATIAL_OBJECT_REMAINS_INFORMATION_OBJECT';
-    root.dataset.spacecraftInteraction='BOUNDED_PARALLAX_PROXIMITY_RESPONSE_NO_NAVIGATION_AUTHORITY';
+    root.dataset.spacecraftInteraction='SCENE_BOUND_TRUE_3D_BOUNDED_INTERACTION_NO_NAVIGATION_AUTHORITY';
     if(innerWidth>820){scene.style.setProperty('filter','none','important');scene.dataset.compositorPolicy='wide-scene-no-postprocess-filter'}
     let tx=0,ty=0,cx=0,cy=0,raf=0,settle=0;
     const apply=()=>{
@@ -67,12 +43,6 @@
       root.style.setProperty('--flagship-x',cx.toFixed(4));
       root.style.setProperty('--flagship-y',cy.toFixed(4));
       root.style.setProperty('--flagship-energy',Math.min(1,Math.hypot(cx,cy)*1.35).toFixed(3));
-      const craft=document.querySelector('[data-compass-spacecraft-layer]');
-      if(craft){
-        craft.style.setProperty('--craft-parallax-x',(cx*18).toFixed(2)+'px');
-        craft.style.setProperty('--craft-parallax-y',(cy*12).toFixed(2)+'px');
-        craft.dataset.interactionAuthority='bounded-spatial-response-only-no-navigation';
-      }
       if(Math.abs(tx-cx)>.002||Math.abs(ty-cy)>.002)raf=requestAnimationFrame(apply);
     };
     const move=e=>{
@@ -83,20 +53,21 @@
         ty=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/Math.max(1,r.height/2)));
       }
       if(!raf)raf=requestAnimationFrame(apply);
-      clearTimeout(settle);settle=setTimeout(()=>{tx=0;ty=0;if(!raf)raf=requestAnimationFrame(apply)},900);
+      clearTimeout(settle);settle=setTimeout(()=>{tx=0;ty=0;if(!raf)raf=requestAnimationFrame(apply)},700);
     };
     const pulse=e=>{
       if(reduce.matches)return;
       const r=scene.getBoundingClientRect();
       if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
       root.classList.remove('is-flagship-engaged');void root.offsetWidth;root.classList.add('is-flagship-engaged');
-      setTimeout(()=>root.classList.remove('is-flagship-engaged'),720);
+      setTimeout(()=>root.classList.remove('is-flagship-engaged'),560);
     };
-    addEventListener('pointermove',move,{passive:true});
+    scene.addEventListener('pointermove',move,{passive:true});
+    scene.addEventListener('pointerleave',()=>{tx=ty=0;if(!raf)raf=requestAnimationFrame(apply)},{passive:true});
     scene.addEventListener('pointerdown',pulse,{passive:true});
     document.addEventListener('visibilitychange',()=>{if(document.hidden){tx=ty=0}});
   }
-  function boot(){mountStatements();mountWorldInteraction();promoteSpacecraftSurface()}
+  function boot(){mountStatements();mountWorldInteraction()}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot,{once:true}):boot();
-  window.CompassStatementCarousel=Object.freeze({version:'statement-flagship-v2',worldInteraction:'bounded-parallax-proximity',spacecraftSurface:'canonical-3d-frame-tight-promoted-webgl-released-no-live-filter',wideSceneCompositor:'postprocess-filter-removed'});
+  window.CompassStatementCarousel=Object.freeze({version:'statement-gen1534-emergency-v1',worldInteraction:'scene-bounded-parallax',spacecraftSurface:'NO_PROMOTED_SNAPSHOT_SPACECRAFT',wideSceneCompositor:'postprocess-filter-removed'});
 })();

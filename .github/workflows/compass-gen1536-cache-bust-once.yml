@@ -1,0 +1,64 @@
+name: Compass Gen1536 One-Time Live Cache Bind
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/compass-gen1536-cache-bust-once.yml
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  bind-and-republish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Bind Gen1536 public asset identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f assets/compass/compass.gen1536-live-republish.txt
+          grep -q 'qualified_candidate=6b37a3eaf2461b936b7b7899545f64d3363c2aeb' assets/compass/compass.gen1536-live-republish.txt
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          replacements={
+            '/assets/compass/compass.identity-3d.js?v=gen1535-live-cache-bind-v1':'/assets/compass/compass.identity-3d.js?v=gen1536-live-binding-v1',
+            '/assets/compass/compass.capability-carousel.css?v=compass-root-award-finish-successor-v1&g=1532-live-binding-v1':'/assets/compass/compass.capability-carousel.css?v=compass-root-award-finish-successor-v1&g=1536-live-binding-v1',
+            '/assets/compass/compass.capability-carousel.js?v=compass-root-award-finish-successor-v1&g=1532-live-binding-v1':'/assets/compass/compass.capability-carousel.js?v=compass-root-award-finish-successor-v1&g=1536-live-binding-v1',
+          }
+          for old,new in replacements.items():
+            n=s.count(old)
+            if n != 1:
+              raise SystemExit(f'expected exactly one binding for {old!r}, found {n}')
+            s=s.replace(old,new)
+          p.write_text(s)
+          PY
+          grep -q 'compass.identity-3d.js?v=gen1536-live-binding-v1' index.html
+          grep -q 'compass.capability-carousel.css?v=compass-root-award-finish-successor-v1&g=1536-live-binding-v1' index.html
+          grep -q 'compass.capability-carousel.js?v=compass-root-award-finish-successor-v1&g=1536-live-binding-v1' index.html
+          rm .github/workflows/compass-gen1536-cache-bust-once.yml
+      - name: Commit exact cache-binding repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add index.html .github/workflows/compass-gen1536-cache-bust-once.yml
+          git diff --cached --check
+          git commit -m 'Bind live Compass assets to qualified Gen1536 bytes'
+          git push origin HEAD:main
+      - name: Dispatch exact-main Pages publication
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run pages-direct-deploy.yml --ref main

@@ -1,9 +1,13 @@
-name: Compass Gen1531 Static Qualification
+name: Compass Gen1533 Flagship Static Qualification
 
 on:
   pull_request:
     branches: [main]
     paths:
+      - 'assets/compass/compass.identity-3d.css'
+      - 'assets/compass/compass.identity-3d.js'
+      - 'assets/compass/compass.statement-carousel.js'
+      - 'assets/compass/compass.capability-carousel.css'
       - 'assets/compass/compass.crystals.js'
       - 'assets/compass/compass.mirrorland-window.js'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'
@@ -17,8 +21,8 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-gen1531-performance.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-gen1531-display.json
+  COMPASS_PERFORMANCE_OUTPUT: /tmp/compass-flagship-performance.json
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-flagship-display.json
 
 jobs:
   qualify-static:
@@ -31,18 +35,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Qualify exact Gen1531 candidate
+      - name: Qualify exact Gen1533 flagship candidate
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node .github/ai-router/projects/compass/verify-performance-successor.mjs
           node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1531' /tmp/compass-gen1531-performance.json >/dev/null
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1531' /tmp/compass-gen1531-display.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1533 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-flagship-performance.json >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1533 and .candidate == env.COMPASS_CANDIDATE_HEAD' /tmp/compass-flagship-display.json >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-gen1531-static-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1533-flagship-static-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-gen1531-performance.json
-            /tmp/compass-gen1531-display.json
+            /tmp/compass-flagship-performance.json
+            /tmp/compass-flagship-display.json
           retention-days: 90

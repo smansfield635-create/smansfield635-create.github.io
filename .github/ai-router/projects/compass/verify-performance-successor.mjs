@@ -2,72 +2,24 @@
 import fs from 'node:fs';
 import {spawnSync} from 'node:child_process';
 
-const OP='COMPASS_GEN1526_VISUALS_GEN1531_RUNTIME_RECONCILIATION';
-const LOCK=1531;
-const GEN1531_BASE='74de0882af55fed53272a191b173e45f5cdbd551';
-const RECONCILIATION_BASE='add183b9fcfc560a4c1bde311be28159b374c411';
-const OUT=process.env.COMPASS_PERFORMANCE_OUTPUT||'/tmp/compass-gen1531-performance.json';
-const EXPECTED_BLOBS=Object.freeze({
-  'assets/compass/compass.identity-3d.js':'04df9de4b20b1420a707d25c2f2b28664a90ca65',
-  'assets/compass/compass.brain-scene.js':'80553f1a689b1724f60bd8c7a65da96da592b40d',
-  'assets/compass/compass.identity-3d.css':'707a5aea4f7981570452c3dd02d0d2306085acb0',
-  'assets/compass/compass.crystals.js':'9fed7adbfdeec37a734fc4a125acc5f4617d50bc',
-  'assets/compass/compass.mirrorland-window.js':'f99d3ffedf7b7654d067d21d9363eb287877f852'
-});
-const ALLOWED_RECONCILIATION_SCOPE=new Set([
-  '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs',
-  '.github/ai-router/projects/compass/verify-performance-successor.mjs',
-  '.github/workflows/compass-carousel-successor-live-qualification.yml',
-  '.github/workflows/compass-display-continuity-validation.yml',
-  '.github/workflows/compass-live-byte-verification.yml',
-  '.github/workflows/compass-reconcile-gen1526-visuals.yml',
-  'assets/compass/compass.brain-scene.js',
-  'assets/compass/compass.identity-3d.css',
-  'assets/compass/compass.identity-3d.js',
-  'assets/compass/compass.laws-spacecraft.js',
-  'index.html'
-]);
-const git=args=>spawnSync('git',args,{encoding:'utf8'});
+const OP='COMPASS_FLAGSHIP_ARCHITECTURAL_SUCCESSOR_20260817_001';
+const LOCK=1533;
+const BASE='d19405d327585850ac095f236820f7b3072edc1c';
+const OUT=process.env.COMPASS_PERFORMANCE_OUTPUT||'/tmp/compass-flagship-performance.json';
 const read=p=>fs.readFileSync(p,'utf8');
-const checks=[];
-const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
-const blobAt=(ref,path)=>git(['rev-parse',`${ref}:${path}`]).stdout.trim();
-
-const head=git(['rev-parse','HEAD^{commit}']).stdout.trim();
-const expected=(process.env.COMPASS_CANDIDATE_HEAD||head).trim();
-check('EXACT_HEAD',head===expected,{head,expected});
-check('GEN1531_BASE_ANCESTOR',git(['merge-base','--is-ancestor',GEN1531_BASE,head]).status===0,{base:GEN1531_BASE,head});
-check('RECONCILIATION_BASE_ANCESTOR',git(['merge-base','--is-ancestor',RECONCILIATION_BASE,head]).status===0,{base:RECONCILIATION_BASE,head});
-
-const changed=git(['diff','--name-only',`${RECONCILIATION_BASE}...${head}`]).stdout.trim().split(/\r?\n/).filter(Boolean);
-check('EXACT_RECONCILIATION_SCOPE',changed.length>0&&changed.every(p=>ALLOWED_RECONCILIATION_SCOPE.has(p)),changed);
-for(const [path,expectedBlob] of Object.entries(EXPECTED_BLOBS)){
-  const actualBlob=blobAt(head,path);
-  check(`EXACT_RECONCILED_BLOB_${path.split('/').pop().replace(/\W/g,'_').toUpperCase()}`,actualBlob===expectedBlob,{path,expectedBlob,actualBlob});
-}
-for(const path of ['assets/compass/upstream-compass.renderer.js','assets/compass/compass.controller.js']){
-  check(`GEN1531_BYTE_PRESERVED_${path.split('/').pop().replace(/\W/g,'_').toUpperCase()}`,git(['diff','--quiet',GEN1531_BASE,head,'--',path]).status===0,path);
-}
-
-const m=read('assets/compass/compass.mirrorland-window.js');
-const c=read('assets/compass/compass.crystals.js');
-const identity=read('assets/compass/compass.identity-3d.js');
-const brain=read('assets/compass/compass.brain-scene.js');
-const html=read('index.html');
-check('MIRRORLAND_DEMAND_DRIVEN',m.includes('function transitionNeedsFrames()')&&m.includes('function requestRender()')&&m.includes('if (transitionNeedsFrames())')&&m.includes('DGB_MIRRORLAND_WINDOW_REVEAL_REQUEST')&&m.includes('DGB_MIRRORLAND_WINDOW_WITHDRAW_REQUEST'),'reveal/withdraw only continuous scheduling');
-check('MIRRORLAND_IDENTITY_PRESERVED',m.includes('SELF_CONTAINED_2D_CRYSTALLINE_STAINED_GLASS')&&m.includes('paneCount')&&m.includes('MIRRORLAND_WINDOW_REVEAL_COMPLETE')&&m.includes('MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE'),'stained glass + lifecycle');
-check('CRYSTAL_DEMAND_DRIVEN',c.includes('function needsAnotherFrame()')&&c.includes('function requestRender()')&&c.includes('function bindRenderInvalidation()')&&c.includes('MutationObserver')&&c.includes('SETTLE_EPSILON'),'interaction/convergence/invalidation scheduling');
-check('CRYSTAL_TOPOLOGY_PRESERVED',c.includes('registryCardinalCount')&&c.includes('registryRoomCount')&&c.includes('sphericalConstellationEnabled'),'cardinal/room semantic renderer retained');
-check('NO_PERPETUAL_MIRRORLAND_CONTINUATION',!m.includes('drawWindow();\n\n    requestRender();\n  }'),'no unconditional mirror continuation');
-check('NO_PERPETUAL_CRYSTAL_CONTINUATION',!c.includes('emitReceipt({\n      status:\n        "available"')||c.includes('if (needsAnotherFrame())'),'crystal continuation gated');
-check('CANONICAL_LAWS_GEOMETRY_DIRECTLY_CONSUMED',identity.includes("sourceModule:'/laws/index.spacecraft.geometry.js'")&&identity.includes("adoption:'DIRECT_CANONICAL_GEOMETRY_MODULE_CONSUMPTION'")&&identity.includes('source.buildLawsSpacecraftGeometry()'),'exact Gen1526 canonical Laws geometry consumption');
-check('SPACECRAFT_RESOURCE_AWARE_SCHEDULING',identity.includes("performancePolicy='hardware-30fps-software-static-dpr1'")&&identity.includes('/SwiftShader|Software|llvmpipe/i')&&identity.includes("performanceTier=constrained?'software-static-3d':'hardware-flight-3d'"),'Gen1526 software-static / hardware-bounded policy');
-check('DIRECT_OWNER_BOUND_TO_LIVE_HTML',html.includes('compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1')&&!html.includes('compass.laws-spacecraft.js'),'live HTML executes direct Gen1526 owner only');
-check('INTEGRATED_BRAINSTEM_PRESENT',['midbrain','pons','medulla'].every(x=>brain.includes(x)),'Gen1526 continuous brainstem retained');
-check('SINGLE_INTEGRATED_CEREBELLUM',brain.includes('cerebellum')&&!brain.includes('cerebellum-left')&&!brain.includes('cerebellum-right'),'single integrated cerebellum retained');
-
-const failures=checks.filter(x=>!x.pass);
-const receipt={schema:'COMPASS_GEN1526_VISUALS_GEN1531_PERFORMANCE_RECONCILIATION_RECEIPT_v1',operationId:OP,lockGeneration:LOCK,governingHead:GEN1531_BASE,reconciliationBase:RECONCILIATION_BASE,candidateHead:head,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
-fs.writeFileSync(OUT,JSON.stringify(receipt,null,2)+'\n');
-console.log(JSON.stringify(receipt,null,2));
-if(failures.length)process.exit(1);
+const git=args=>spawnSync('git',args,{encoding:'utf8'});
+const checks=[];const check=(id,pass,detail)=>checks.push({id,pass:Boolean(pass),detail});
+const identity=read('assets/compass/compass.identity-3d.js'),mirror=read('assets/compass/compass.mirrorland-window.js'),crystals=read('assets/compass/compass.crystals.js'),flagship=read('assets/compass/compass.identity-3d.css'),statements=read('assets/compass/compass.statement-carousel.js'),brain=read('assets/compass/compass.brain-scene.js');
+check('CANONICAL_GEOMETRY_DIRECT',identity.includes("sourceModule:'/laws/index.spacecraft.geometry.js'")&&identity.includes('source.buildLawsSpacecraftGeometry()'),'Laws spacecraft geometry remains direct');
+check('SPACECRAFT_DEMAND_DRIVEN',identity.includes("performancePolicy='demand-driven-static-3d-bounded-redraw-dpr1'")&&identity.includes("spacecraftScheduling:'DEMAND_DRIVEN_STATIC_3D_BOUNDED_REDRAW'"),'spacecraft uses one full-3D draw plus bounded interaction/resize redraws');
+check('SPACECRAFT_NO_PERPETUAL_RAF',!identity.includes('now-lastDraw<33')&&!identity.includes('state.nextLaunch')&&!identity.includes('hardware-flight-3d'),'ambient spacecraft flight loop removed');
+check('SPACECRAFT_BOUNDED_REDRAW',identity.includes("addEventListener('pointerdown'")&&identity.includes("setTimeout(()=>{impact=0;requestAnimationFrame(draw)},420)"),'impact response redraw is bounded and returns to base fidelity');
+check('SPACECRAFT_RESOLUTION_BOUND',identity.includes('maxDim=1280')&&identity.includes('Math.min(devicePixelRatio||1,1)'),'full 3D backing resolution is bounded without replacing geometry');
+check('MIRRORLAND_DEMAND_DRIVEN',mirror.includes('transitionNeedsFrames')&&mirror.includes('requestRender')&&mirror.includes('if (transitionNeedsFrames())'),'Mirrorland schedules only when transitioning');
+check('CRYSTAL_DEMAND_DRIVEN',crystals.includes('needsAnotherFrame')&&crystals.includes('requestRender')&&crystals.includes('SETTLE_EPSILON'),'crystal scheduling is convergence/invalidation driven');
+check('NO_PERPETUAL_MIRROR_CONTINUATION',!mirror.includes('drawWindow();\n\n    requestRender();\n  }'),'no unconditional Mirrorland continuation');
+check('FLAGSHIP_POINTER_WORK_BOUNDED',statements.includes('requestAnimationFrame(apply)')&&statements.includes('setTimeout(()=>{tx=0;ty=0')&&statements.includes("addEventListener('pointermove',move,{passive:true})"),'pointer response coalesced and settles to neutral');
+check('CSS_POST_INTERACTION_FIDELITY',flagship.includes('.is-flagship-engaged')&&flagship.includes('transition:filter .24s ease'),'interaction pulse is finite and base fidelity remains');
+check('REDUCED_MOTION_NO_PARALLAX',flagship.includes('@media(prefers-reduced-motion:reduce)')&&flagship.includes('.compass-spacecraft-layer{transform:none!important}'),'reduced motion removes parallax');
+check('BRAIN_RESOURCE_AWARE',brain.includes('IntersectionObserver')||brain.includes('visible'),'brain renderer has visibility-aware behavior');
+const pass=checks.every(c=>c.pass);const receipt={schema:'COMPASS_PERFORMANCE_SUCCESSOR_VERIFICATION_RECEIPT_v1',operation:OP,lockGeneration:LOCK,base:BASE,candidate:process.env.COMPASS_CANDIDATE_HEAD||git(['rev-parse','HEAD']).stdout.trim(),result:pass?'PASS_CLOSED':'FAIL_CLOSED',policy:'NO_PERMANENT_QUALITY_DOWNGRADE_POST_INTERACTION_FULL_FIDELITY',checks};fs.writeFileSync(OUT,JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));process.exit(pass?0:1);

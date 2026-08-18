@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 15
     env:
       SUBJECT_HEAD: dbf2f3ec90faa59c09193e61a0d141481b68d758
-      TOOLING_HEAD: 55d4bd3d20c66e2a3e99d47ed074622e4037247f
+      TOOLING_HEAD: 9297d33a20ef3dfdf243cd59f74206f95404d8a7
     steps:
       - name: Checkout exact Gen306 subject
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262

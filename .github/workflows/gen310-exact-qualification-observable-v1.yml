@@ -27,22 +27,42 @@ jobs:
           test "$(git rev-parse HEAD)" = "8aa40014ab22c4e49c2a5ad00414407ca9cda2a3"
           test "$(git hash-object h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs)" = "8ec203fd16f07f710c80b4206e57cc8289153baf"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
-      - name: Execute registered Gen310 harness
+      - name: Execute registered Gen310 harness and preserve native receipt
+        id: harness
         shell: bash
         run: |
-          set -euo pipefail
+          set +e
           node h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs > "$RUNNER_TEMP/gen310-native-receipt.json"
+          STATUS=$?
+          set -e
+          test -s "$RUNNER_TEMP/gen310-native-receipt.json"
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const p=process.env.RUNNER_TEMP+'/gen310-native-receipt.json';
           const r=JSON.parse(fs.readFileSync(p,'utf8'));
           if(r.schema!=='H_EARTH_GRATITUDE_AUDRALIA_RECIPROCAL_REGIONAL_REPAIR_QUALIFICATION_RECEIPT_v1') throw new Error('GEN310_RECEIPT_SCHEMA_INVALID');
-          if(r.result!=='PASS') throw new Error('GEN310_NONPASS:'+JSON.stringify(r.issues??[]));
+          console.log(JSON.stringify({result:r.result,issues:r.issues,checks:r.checks,deficiencyDisposition:r.deficiencyDisposition,diagnostics:r.diagnostics},null,2));
           NODE
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
       - name: Upload native Gen310 receipt
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: gen310-native-receipt-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/gen310-native-receipt.json
           if-no-files-found: error
           retention-days: 90
+      - name: Enforce native Gen310 pass
+        if: always()
+        env:
+          STATUS: ${{ steps.harness.outputs.status }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=process.env.RUNNER_TEMP+'/gen310-native-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          if(r.result!=='PASS') throw new Error('GEN310_NONPASS:'+JSON.stringify(r.issues??[]));
+          NODE
+          test "$STATUS" = "0"

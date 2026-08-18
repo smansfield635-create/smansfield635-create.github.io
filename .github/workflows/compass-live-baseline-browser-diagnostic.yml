@@ -64,3 +64,5 @@ jobs:
           name: compass-live-baseline-browser-${{ github.run_id }}-${{ github.run_attempt }}
           path: /tmp/compass-live-baseline-browser.json
           retention-days: 30
+
+# post-merge live verification trigger for Gen1531 merge 747b064135a0ff86915f5dbb75d8a128f66514a1

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
-import {spawnSync} from 'node:child_process';
+import {spawnSync} from'node:child_process';
 
 const OP='COMPASS_FLAGSHIP_ARCHITECTURAL_SUCCESSOR_20260817_001';
 const LOCK=1533;
@@ -32,5 +32,5 @@ check('CRYSTAL_TOPOLOGY',crystals.includes('registryCardinalCount')&&crystals.in
 check('CORRECTED_BRAIN_ANATOMY',['midbrain','pons','medulla','cerebellum'].every(x=>brain.includes(x))&&!brain.includes('cerebellum-left')&&!brain.includes('cerebellum-right'),'integrated cerebellum and continuous brainstem');
 check('ROSE_FLESH_MATERIAL',brain.includes('NATIVE_ROSE_FLESH_V1')||brain.includes('rose')||brain.includes('flesh'),'brain material identity retained');
 check('REDUCED_MOTION',flagship.includes('@media(prefers-reduced-motion:reduce)')&&cap.includes('@media(prefers-reduced-motion:reduce)'),'reduced motion presentation rules');
-check('NO_HORIZONTAL_OVERFLOW_CONTRACT',flagship.includes('overflow-x:hidden'),'root overflow bounded');
+check('NO_HORIZONTAL_OVERFLOW_CONTRACT',flagship.includes('overflow-x:hidden')||flagship.includes('overflow-x:clip'),'root overflow bounded by hidden or clip');
 const pass=checks.every(c=>c.pass);const receipt={schema:'COMPASS_DISPLAY_CONTINUITY_VERIFICATION_RECEIPT_v1',operation:OP,lockGeneration:LOCK,base:BASE,candidate:process.env.COMPASS_CANDIDATE_HEAD||git(['rev-parse','HEAD']).stdout.trim(),result:pass?'PASS_CLOSED':'FAIL_CLOSED',changedPaths:changed,checks};fs.writeFileSync(OUT,JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));process.exit(pass?0:1);

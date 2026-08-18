@@ -35,7 +35,7 @@ jobs:
           CANDIDATE_HEAD: 71bafea00748e672cf64320507d346438bf06a75
         run: |
           mkdir -p /tmp/gen307-anchor-evidence
-          cat > /tmp/gen307-capture.mjs <<'NODE'
+          cat > .gen307-capture.mjs <<'NODE'
           import fs from 'node:fs';
           import crypto from 'node:crypto';
           import { chromium } from 'playwright';
@@ -74,7 +74,8 @@ jobs:
           console.log(JSON.stringify(manifest,null,2));
           if(manifest.result!=='PASS')process.exitCode=1;
           NODE
-          node /tmp/gen307-capture.mjs
+          node .gen307-capture.mjs
+          rm -f .gen307-capture.mjs
       - name: Upload exact candidate evidence
         if: always()
         uses: actions/upload-artifact@v4

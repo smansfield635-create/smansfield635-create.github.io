@@ -48,7 +48,7 @@ jobs:
               t=t.replace("check('LAWS_SPACECRAFT_BOUND_BEFORE_IDENTITY',html.indexOf('compass.laws-spacecraft.js')>=0&&html.indexOf('compass.laws-spacecraft.js')<html.indexOf('compass.identity-3d.js'),'Laws spacecraft adapter loads before identity runtime');\n", "check('DIRECT_OWNER_BOUND_TO_LIVE_HTML',html.includes('compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1')&&!html.includes('compass.laws-spacecraft.js'),'live HTML executes direct Gen1526 owner only');\n")
               fp.write_text(t)
           PY
-          test "$(git rev-parse HEAD:assets/compass/compass.identity-3d.js)" = "04df9de4b20b1420a707d25c2f2b28664a90ca65"
+          test "$(git hash-object assets/compass/compass.identity-3d.js)" = "04df9de4b20b1420a707d25c2f2b28664a90ca65"
           grep -q 'compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1' index.html
           ! grep -q 'compass.laws-spacecraft.js' index.html
           git config user.name 'github-actions[bot]'

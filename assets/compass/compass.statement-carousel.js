@@ -60,6 +60,7 @@
     root.dataset.flagshipContract='COMPASS_GEN1533_SPATIAL_ESTATE_FLAGSHIP_v1';
     root.dataset.objectContinuity='SPATIAL_OBJECT_REMAINS_INFORMATION_OBJECT';
     root.dataset.spacecraftInteraction='BOUNDED_PARALLAX_PROXIMITY_RESPONSE_NO_NAVIGATION_AUTHORITY';
+    if(innerWidth>820){scene.style.setProperty('filter','none','important');scene.dataset.compositorPolicy='wide-scene-no-postprocess-filter'}
     let tx=0,ty=0,cx=0,cy=0,raf=0,settle=0;
     const apply=()=>{
       raf=0;cx+=(tx-cx)*.085;cy+=(ty-cy)*.085;
@@ -97,5 +98,5 @@
   }
   function boot(){mountStatements();mountWorldInteraction();promoteSpacecraftSurface()}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot,{once:true}):boot();
-  window.CompassStatementCarousel=Object.freeze({version:'statement-flagship-v2',worldInteraction:'bounded-parallax-proximity',spacecraftSurface:'canonical-3d-frame-tight-promoted-webgl-released-no-live-filter'});
+  window.CompassStatementCarousel=Object.freeze({version:'statement-flagship-v2',worldInteraction:'bounded-parallax-proximity',spacecraftSurface:'canonical-3d-frame-tight-promoted-webgl-released-no-live-filter',wideSceneCompositor:'postprocess-filter-removed'});
 })();

@@ -1,0 +1,48 @@
+name: Gen310 Exact Qualification Observable v1
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  qualify-gen310:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out immutable Gen310 subject
+        uses: actions/checkout@v4
+        with:
+          ref: 8aa40014ab22c4e49c2a5ad00414407ca9cda2a3
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact subject and harness identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "8aa40014ab22c4e49c2a5ad00414407ca9cda2a3"
+          test "$(git hash-object h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs)" = "8ec203fd16f07f710c80b4206e57cc8289153baf"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+      - name: Execute registered Gen310 harness
+        shell: bash
+        run: |
+          set -euo pipefail
+          node h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs > "$RUNNER_TEMP/gen310-native-receipt.json"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const p=process.env.RUNNER_TEMP+'/gen310-native-receipt.json';
+          const r=JSON.parse(fs.readFileSync(p,'utf8'));
+          if(r.schema!=='H_EARTH_GRATITUDE_AUDRALIA_RECIPROCAL_REGIONAL_REPAIR_QUALIFICATION_RECEIPT_v1') throw new Error('GEN310_RECEIPT_SCHEMA_INVALID');
+          if(r.result!=='PASS') throw new Error('GEN310_NONPASS:'+JSON.stringify(r.issues??[]));
+          NODE
+      - name: Upload native Gen310 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen310-native-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen310-native-receipt.json
+          if-no-files-found: error
+          retention-days: 90

@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'assets/compass/compass.identity-3d.js'
+      - 'assets/compass/compass.identity-3d.css'
+      - 'assets/compass/compass.brain-scene.js'
       - 'assets/compass/compass.crystals.js'
       - 'assets/compass/compass.mirrorland-window.js'
       - '.github/ai-router/projects/compass/verify-performance-successor.mjs'

@@ -11,3 +11,4 @@ Transport-only occurrence for canonical private intake request `H_EARTH_GRATITUD
 - Deployment authority: none
 - Intended disposition: retire unmerged after canonical intake readback
 - Gen307 router trigger: 307
+- Corrected router occurrence trigger: 307.1

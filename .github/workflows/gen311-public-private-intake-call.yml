@@ -1,0 +1,20 @@
+name: Gen311 Public Private Intake Call
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '277'
+      private_comment: '5335502725'
+      expected_request_id: 'H_EARTH_RECIPROCAL_PROGRESSIVE_REGIONAL_DEVELOPMENT_INTAKE_20260818_002'
+      exact_private_head: '3c16ca7f96818de4b124cd3f528f0a44db86e6c9'
+      callback_issue: '1313'
+    secrets: inherit

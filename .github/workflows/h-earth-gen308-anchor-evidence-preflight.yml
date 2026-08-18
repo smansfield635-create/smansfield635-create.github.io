@@ -1,0 +1,29 @@
+name: H-Earth Gen308 Anchor Evidence Native Preflight Carrier
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  preflight-gen308-evidence-paths:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact qualified Gen307 tooling
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 9297d33a20ef3dfdf243cd59f74206f95404d8a7
+          fetch-depth: 1
+      - name: Execute native read-only H-Earth preflight
+        run: |
+          node --input-type=module <<'NODE'
+          import { runAutomaticHEarthPreflight } from './h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js';
+          const paths=[
+            'h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.visual.json',
+            'h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.interaction.json',
+            'h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.continuity.json',
+            'h-earth-3d/experience-anchor/receipts/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.json'
+          ];
+          const receipt=runAutomaticHEarthPreflight({paths,taskText:'GEN308_EXPERIENCE_ANCHOR_EVIDENCE_SUPPLEMENT',mutationIntent:true});
+          console.log(JSON.stringify(receipt,null,2));
+          if(receipt.dependenciesVerified!==true||receipt.finalDisposition!=='PASS') process.exit(1);
+          NODE

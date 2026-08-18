@@ -11,14 +11,15 @@ permissions:
 
 jobs:
   verify-live:
-    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'
+    if: github.event.workflow_run.head_branch == 'main'
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
       DEPLOYED_HEAD: ${{ github.event.workflow_run.head_sha }}
+      UPSTREAM_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
       LIVE_ORIGIN: https://diamondgatebridge.com
     steps:
-      - name: Checkout exact deployed head
+      - name: Checkout exact deployment head
         uses: actions/checkout@v4
         with:
           ref: ${{ env.DEPLOYED_HEAD }}
@@ -98,14 +99,19 @@ jobs:
             echo "### Live deployment byte verification"
             echo
             echo "Deployed head: \`$DEPLOYED_HEAD\`"
-            echo "Result: **${RESULT:-FAIL_CLOSED}**"
+            echo "Direct Pages workflow conclusion: **$UPSTREAM_CONCLUSION**"
+            echo "Live byte result: **${RESULT:-FAIL_CLOSED}**"
             echo "Successful fetch attempt: \`${ATTEMPT:-none}\`"
             echo
             echo '| Public path | Expected SHA-256 | Live SHA-256 | Match |'
             echo '|---|---|---|---|'
-            while IFS=$'\t' read -r path expected actual; do
-              if [ "$expected" = "$actual" ]; then match='PASS'; else match='FAIL'; fi
-              printf '| `%s` | `%s` | `%s` | %s |\n' "$path" "$expected" "$actual" "$match"
-            done < /tmp/compass-live-byte-receipt.tsv
+            if [ -s /tmp/compass-live-byte-receipt.tsv ]; then
+              while IFS=$'\t' read -r path expected actual; do
+                if [ "$expected" = "$actual" ]; then match='PASS'; else match='FAIL'; fi
+                printf '| `%s` | `%s` | `%s` | %s |\n' "$path" "$expected" "$actual" "$match"
+              done < /tmp/compass-live-byte-receipt.tsv
+            else
+              echo '| receipt | unavailable | unavailable | FAIL |'
+            fi
           } > "$body_file"
           gh api "repos/${GITHUB_REPOSITORY}/issues/1282/comments" --method POST -F "body=@${body_file}" >/dev/null

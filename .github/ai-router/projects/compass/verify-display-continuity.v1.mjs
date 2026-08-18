@@ -47,7 +47,9 @@ check('MIRRORLAND_ROUTES',['Enter the Narrative','Enter the Demo','See the World
 check('MIRRORLAND_STATE_MEANING',['MIRRORLAND_REVEALING','MIRRORLAND_FOCUSED','MIRRORLAND_WITHDRAWING','MIRRORLAND_WINDOW_REVEAL_COMPLETE','MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE'].every(x=>m.includes(x)),'state meaning preserved');
 check('MIRRORLAND_GEOMETRY_PRESENT',m.includes('function buildPanes()')&&m.includes('createPane(')&&m.includes('paneCount'),'stained-glass geometry retained');
 check('CRYSTAL_INTERACTION_PRESENT',c.includes('bindPointerBridge')&&c.includes('bindSemanticFocusBridge')&&c.includes('gestureActive'),'gesture/focus bridges retained');
-check('CANONICAL_SCOUTCRAFT_PRESENT',identity.includes('DGB_SCOUTCRAFT_01'),'Gen1526 Laws-derived spacecraft identity present');
+check('CANONICAL_LAWS_GEOMETRY_DIRECTLY_CONSUMED',identity.includes("sourceModule:'/laws/index.spacecraft.geometry.js'")&&identity.includes("adoption:'DIRECT_CANONICAL_GEOMETRY_MODULE_CONSUMPTION'")&&identity.includes('source.buildLawsSpacecraftGeometry()'),'exact Gen1526 canonical Laws geometry consumption');
+check('SPACECRAFT_RESOURCE_AWARE_SCHEDULING',identity.includes("performancePolicy='hardware-30fps-software-static-dpr1'")&&identity.includes('/SwiftShader|Software|llvmpipe/i')&&identity.includes("performanceTier=constrained?'software-static-3d':'hardware-flight-3d'"),'Gen1526 software-static / hardware-bounded policy');
+check('DIRECT_OWNER_BOUND_TO_LIVE_HTML',html.includes('compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1')&&!html.includes('compass.laws-spacecraft.js'),'live HTML executes direct Gen1526 owner only');
 check('INTEGRATED_BRAINSTEM_PRESENT',['midbrain','pons','medulla'].every(x=>brain.includes(x)),'continuous Gen1526 brainstem components present');
 check('SINGLE_INTEGRATED_CEREBELLUM',brain.includes('cerebellum')&&!brain.includes('cerebellum-left')&&!brain.includes('cerebellum-right'),'single integrated cerebellum retained');
 

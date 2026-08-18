@@ -19,10 +19,13 @@ const ALLOWED_RECONCILIATION_SCOPE=new Set([
   '.github/ai-router/projects/compass/verify-performance-successor.mjs',
   '.github/workflows/compass-carousel-successor-live-qualification.yml',
   '.github/workflows/compass-display-continuity-validation.yml',
+  '.github/workflows/compass-live-byte-verification.yml',
   '.github/workflows/compass-reconcile-gen1526-visuals.yml',
   'assets/compass/compass.brain-scene.js',
   'assets/compass/compass.identity-3d.css',
-  'assets/compass/compass.identity-3d.js'
+  'assets/compass/compass.identity-3d.js',
+  'assets/compass/compass.laws-spacecraft.js',
+  'index.html'
 ]);
 const git=args=>spawnSync('git',args,{encoding:'utf8'});
 const read=p=>fs.readFileSync(p,'utf8');
@@ -50,13 +53,16 @@ const m=read('assets/compass/compass.mirrorland-window.js');
 const c=read('assets/compass/compass.crystals.js');
 const identity=read('assets/compass/compass.identity-3d.js');
 const brain=read('assets/compass/compass.brain-scene.js');
+const html=read('index.html');
 check('MIRRORLAND_DEMAND_DRIVEN',m.includes('function transitionNeedsFrames()')&&m.includes('function requestRender()')&&m.includes('if (transitionNeedsFrames())')&&m.includes('DGB_MIRRORLAND_WINDOW_REVEAL_REQUEST')&&m.includes('DGB_MIRRORLAND_WINDOW_WITHDRAW_REQUEST'),'reveal/withdraw only continuous scheduling');
 check('MIRRORLAND_IDENTITY_PRESERVED',m.includes('SELF_CONTAINED_2D_CRYSTALLINE_STAINED_GLASS')&&m.includes('paneCount')&&m.includes('MIRRORLAND_WINDOW_REVEAL_COMPLETE')&&m.includes('MIRRORLAND_WINDOW_WITHDRAWAL_COMPLETE'),'stained glass + lifecycle');
 check('CRYSTAL_DEMAND_DRIVEN',c.includes('function needsAnotherFrame()')&&c.includes('function requestRender()')&&c.includes('function bindRenderInvalidation()')&&c.includes('MutationObserver')&&c.includes('SETTLE_EPSILON'),'interaction/convergence/invalidation scheduling');
 check('CRYSTAL_TOPOLOGY_PRESERVED',c.includes('registryCardinalCount')&&c.includes('registryRoomCount')&&c.includes('sphericalConstellationEnabled'),'cardinal/room semantic renderer retained');
 check('NO_PERPETUAL_MIRRORLAND_CONTINUATION',!m.includes('drawWindow();\n\n    requestRender();\n  }'),'no unconditional mirror continuation');
 check('NO_PERPETUAL_CRYSTAL_CONTINUATION',!c.includes('emitReceipt({\n      status:\n        "available"')||c.includes('if (needsAnotherFrame())'),'crystal continuation gated');
-check('CANONICAL_SCOUTCRAFT_PRESENT',identity.includes('DGB_SCOUTCRAFT_01'),'Gen1526 canonical spacecraft retained');
+check('CANONICAL_LAWS_GEOMETRY_DIRECTLY_CONSUMED',identity.includes("sourceModule:'/laws/index.spacecraft.geometry.js'")&&identity.includes("adoption:'DIRECT_CANONICAL_GEOMETRY_MODULE_CONSUMPTION'")&&identity.includes('source.buildLawsSpacecraftGeometry()'),'exact Gen1526 canonical Laws geometry consumption');
+check('SPACECRAFT_RESOURCE_AWARE_SCHEDULING',identity.includes("performancePolicy='hardware-30fps-software-static-dpr1'")&&identity.includes('/SwiftShader|Software|llvmpipe/i')&&identity.includes("performanceTier=constrained?'software-static-3d':'hardware-flight-3d'"),'Gen1526 software-static / hardware-bounded policy');
+check('DIRECT_OWNER_BOUND_TO_LIVE_HTML',html.includes('compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1')&&!html.includes('compass.laws-spacecraft.js'),'live HTML executes direct Gen1526 owner only');
 check('INTEGRATED_BRAINSTEM_PRESENT',['midbrain','pons','medulla'].every(x=>brain.includes(x)),'Gen1526 continuous brainstem retained');
 check('SINGLE_INTEGRATED_CEREBELLUM',brain.includes('cerebellum')&&!brain.includes('cerebellum-left')&&!brain.includes('cerebellum-right'),'single integrated cerebellum retained');
 

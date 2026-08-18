@@ -1,0 +1,102 @@
+name: H-Earth Gen307 Private Preflight Rebind
+
+on:
+  push:
+    branches:
+      - control-plane-carrier/gratitude-audralia-final-expression-intake-20260817
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  rebind:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Mint private write token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: write
+      - name: Checkout exact private rebind branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: control-plane/h-earth-gen307-preflight-rebind-20260818
+          token: ${{ steps.private-token.outputs.token }}
+          fetch-depth: 1
+      - name: Apply exact Gen307 tooling rebind
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "d6376bffa66fd2df97b731a6423576192d56f5f3"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const prior='46b2cca200f1db036cae8288329f870a8336505a';
+          const next='9297d33a20ef3dfdf243cd59f74206f95404d8a7';
+          const nativeBlob='6d4af698ca75b96aaa660033e9ae24c704673eb7';
+          const activationBlob='b3c51381af190b6aab296db222296dc851cb7e9a';
+          const bindingPath='.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json';
+          const compilerDescPath='.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight-evidence-compiler.v1.json';
+          const executorDescPath='.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight.v1.json';
+          const compilerPath='tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler.v1.mjs';
+          const executorPath='tools/ai-room-transport/connected-public-h-earth-preflight.v1.mjs';
+          const readJson=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const writeJson=(p,v)=>fs.writeFileSync(p,JSON.stringify(v,null,2)+'\n');
+          const binding=readJson(bindingPath);
+          if(binding.fixedToolingHead!==prior) throw new Error('BINDING_PRIOR_HEAD_MISMATCH');
+          binding.fixedToolingHead=next;
+          binding.reconciliation={reason:'GEN307_FINAL_EXPRESSION_TWO_AUTHORIZED_FUTURE_PATHS_UNRESOLVED_AT_PRIOR_TOOLING_HEAD',priorToolingHead:prior,reconciledToolingHead:next,candidateValidationRun:32085683924,candidateValidationResult:'PASS',candidateSubjectHead:'dbf2f3ec90faa59c09193e61a0d141481b68d758',candidateHeadUnchanged:true,nativeToolBlobUnchanged:true,activationBlobUnchanged:true};
+          binding.firstConsumptionRule='RUN_GEN307_EXACT_ELEVEN_PATH_PREFLIGHT_AND_PRESERVE_NATIVE_DISPOSITION';
+          writeJson(bindingPath,binding);
+          for(const p of [compilerPath,executorPath]){
+            let s=fs.readFileSync(p,'utf8');
+            const needle=`TOOLING_HEAD = '${prior}'`;
+            const compact=`TOOLING_HEAD='${prior}'`;
+            if(s.includes(needle)) s=s.replace(needle,`TOOLING_HEAD = '${next}'`);
+            else if(s.includes(compact)) s=s.replace(compact,`TOOLING_HEAD='${next}'`);
+            else throw new Error(`TOOLING_HEAD_CONSTANT_NOT_FOUND:${p}`);
+            if(!s.includes(nativeBlob)||!s.includes(activationBlob)) throw new Error(`FROZEN_BLOB_IDENTITY_MISSING:${p}`);
+            fs.writeFileSync(p,s);
+          }
+          const compilerDesc=readJson(compilerDescPath);
+          if(compilerDesc.fixedBinding?.toolingHead!==prior) throw new Error('COMPILER_DESCRIPTOR_PRIOR_HEAD_MISMATCH');
+          compilerDesc.fixedBinding.toolingHead=next;
+          compilerDesc.productionCommissioningInstruction='COMPILE_REAL_CONNECTOR_EVIDENCE_AND_RUN_GEN307_EXACT_ELEVEN_PATH_PREFLIGHT_WITHOUT_PRODUCT_MUTATION';
+          compilerDesc.reconciliation={priorToolingHead:prior,reconciledToolingHead:next,candidateValidationRun:32085683924,candidateValidationResult:'PASS',nativeToolBlobUnchanged:true,activationBlobUnchanged:true};
+          compilerDesc.commissioning={exactSubjectHead:'dbf2f3ec90faa59c09193e61a0d141481b68d758',exactElevenPathCandidateValidation:'PASS',productCandidateRatified:false,connectorTreeOrderPreserved:true};
+          writeJson(compilerDescPath,compilerDesc);
+          const executorDesc=readJson(executorDescPath);
+          if(executorDesc.fixedBinding?.toolingHead!==prior) throw new Error('EXECUTOR_DESCRIPTOR_PRIOR_HEAD_MISMATCH');
+          executorDesc.fixedBinding.toolingHead=next;
+          executorDesc.reconciliation={priorToolingHead:prior,reconciledToolingHead:next,candidateValidationRun:32085683924,candidateValidationResult:'PASS',subjectHeadUnchanged:true,nativeToolBlobUnchanged:true,activationBlobUnchanged:true};
+          executorDesc.commissioning={exactSubjectHead:'dbf2f3ec90faa59c09193e61a0d141481b68d758',candidateElevenPathNativeDisposition:'PASS',candidateElevenPathContinuation:'SEPARATE_MUTATION_AUTHORITY_REQUIRED_BEFORE_CHANGE',nativeReceiptPreserved:true,productCandidateRatified:false};
+          writeJson(executorDescPath,executorDesc);
+          NODE
+          paths=(
+            '.github/ai-router/canonical-execution-substrate/h-earth-connected-public-preflight-backend-binding.v1.json'
+            '.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight-evidence-compiler.v1.json'
+            '.github/ai-router/canonical-execution-substrate/connected-public-h-earth-preflight.v1.json'
+            'tools/ai-room-transport/connected-public-h-earth-preflight-evidence-compiler.v1.mjs'
+            'tools/ai-room-transport/connected-public-h-earth-preflight.v1.mjs'
+          )
+          test "$(git diff --name-only | wc -l)" -eq 5
+          for p in "${paths[@]}"; do git diff --name-only | grep -Fx "$p" >/dev/null; done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "${paths[@]}"
+          git commit -m 'Rebind connected H-Earth preflight to Gen307 tooling'
+          git push origin HEAD:control-plane/h-earth-gen307-preflight-rebind-20260818
+      - name: Publish callback
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          body="GEN307_PRIVATE_PREFLIGHT_REBIND_RESULT_V1\nrunId: $GITHUB_RUN_ID\nconclusion: ${{ job.status }}"
+          gh api repos/${GITHUB_REPOSITORY}/issues/1274/comments -f body="$body" >/dev/null

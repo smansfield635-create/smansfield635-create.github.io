@@ -22,12 +22,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin 48132ad9 --depth=1 || true
-          git checkout 48132ad9 -- assets/compass/compass.identity-3d.js
+          git checkout origin/agent/compass-continuous-renderers-performance-gen1526-v1 -- assets/compass/compass.identity-3d.js
           python - <<'PY'
           from pathlib import Path
 
-          # Bind the exact Gen1526 direct geometry owner and remove the later full-screen Laws background adapter.
           p=Path('index.html')
           s=p.read_text()
           s=s.replace('<script src="/assets/compass/compass.laws-spacecraft.js?v=gen1532-laws-background-v1" defer></script>\n','')

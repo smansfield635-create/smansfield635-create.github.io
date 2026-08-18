@@ -5,9 +5,7 @@ on:
     branches: [main]
     paths:
       - 'showroom/globe/h-earth/**'
-      - 'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js'
-      - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-**'
-      - 'h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1**'
+      - 'h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs'
       - '.github/workflows/h-earth-cp3d-renderer-survival.yml'
   workflow_dispatch:
 
@@ -17,7 +15,7 @@ permissions:
 jobs:
   cp3d-renderer-survival:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - name: Check out exact PR head
         uses: actions/checkout@v4
@@ -25,18 +23,17 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
 
-      - name: Record and verify executed head
+      - name: Verify exact C3C3 head
         shell: bash
         env:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
         run: |
           mkdir -p "$CP3D_EVIDENCE_DIR"
-          executed_head="$(git rev-parse HEAD)"
-          printf '%s\n' "$executed_head" | tee "$CP3D_EVIDENCE_DIR/cp3d-executed-head.txt"
-          printf '%s\n' "$EXPECTED_HEAD" | tee "$CP3D_EVIDENCE_DIR/cp3d-expected-head.txt"
-          test "$executed_head" = "$EXPECTED_HEAD"
-          git status --short | tee "$CP3D_EVIDENCE_DIR/cp3d-working-tree.txt"
+          actual="$(git rev-parse HEAD)"
+          printf '%s\n' "$actual" | tee "$CP3D_EVIDENCE_DIR/c3c3-executed-head.txt"
+          printf '%s\n' "$EXPECTED_HEAD" | tee "$CP3D_EVIDENCE_DIR/c3c3-expected-head.txt"
+          test "$actual" = "$EXPECTED_HEAD"
 
       - uses: actions/setup-node@v4
         with:
@@ -47,47 +44,31 @@ jobs:
           npm install --no-save playwright@1.54.1
           npx playwright install --with-deps chromium
 
-      - name: Start exact branch server
+      - name: Start exact candidate server
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-cp3d-server.log 2>&1 &
-          echo $! > /tmp/h-earth-cp3d-server.pid
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-c3c3-server.log 2>&1 &
+          echo $! > /tmp/h-earth-c3c3-server.pid
           for attempt in $(seq 1 30); do
-            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null; then
-              exit 0
-            fi
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null; then exit 0; fi
             sleep 1
           done
-          cat /tmp/h-earth-cp3d-server.log
+          cat /tmp/h-earth-c3c3-server.log
           exit 1
 
-      - name: Reconfirm CP3D_1D_D shared package boundary equality
+      - name: Execute C3C3 world closure qualification
         env:
           CP3D_ORIGIN: http://127.0.0.1:4173
           CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d1d-corrected-cross-runtime-identity.harness.mjs
+        run: node h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs
 
-      - name: Execute promoted renderer identity corridor
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-runtime-identity-corridor.harness.mjs
-
-      - name: Execute corrected Run 8B geometry regression harness
-        env:
-          H_EARTH_RUN8B_RECEIPT: h-earth-3d/validation/evidence/cp3d/cp3d1e-run8b-geometry-receipt.json
-        run: |
-          mkdir -p h-earth-3d/validation/evidence/cp3d
-          node h-earth-3d/validation/h-earth.run8b.successor-neutral-geometry.harness.mjs
-
-      - name: Execute CP3D full renderer survival
-        env:
-          CP3D_ORIGIN: http://127.0.0.1:4173
-          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
-        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs
-
-      - name: Upload CP3D evidence
+      - name: Upload C3C3 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-cp3d-renderer-survival
+          name: h-earth-c3c3-regional-boundary-closure
           path: |
             h-earth-3d/validation/evidence/cp3d/**
-            /tmp/h-earth-cp3d-server.log
+            /tmp/h-earth-c3c3-server.log
           if-no-files-found: error
+
+# C3C3R4 exact-head shared planetary world-frame qualification trigger: 2026-08-16

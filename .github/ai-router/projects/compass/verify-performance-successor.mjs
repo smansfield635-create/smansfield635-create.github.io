@@ -19,10 +19,12 @@ const ALLOWED_RECONCILIATION_SCOPE=new Set([
   '.github/ai-router/projects/compass/verify-performance-successor.mjs',
   '.github/workflows/compass-carousel-successor-live-qualification.yml',
   '.github/workflows/compass-display-continuity-validation.yml',
+  '.github/workflows/compass-live-byte-verification.yml',
   '.github/workflows/compass-reconcile-gen1526-visuals.yml',
   'assets/compass/compass.brain-scene.js',
   'assets/compass/compass.identity-3d.css',
-  'assets/compass/compass.identity-3d.js'
+  'assets/compass/compass.identity-3d.js',
+  'index.html'
 ]);
 const git=args=>spawnSync('git',args,{encoding:'utf8'});
 const read=p=>fs.readFileSync(p,'utf8');

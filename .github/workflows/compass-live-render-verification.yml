@@ -26,7 +26,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p live-render-proof
-          cat > /tmp/verify-live.mjs <<'EOF'
+          cat > verify-live.mjs <<'EOF'
           import { chromium } from 'playwright';
           import fs from 'node:fs';
           const origin='https://diamondgatebridge.com/?live_render_verify=gen1532';
@@ -92,7 +92,7 @@ jobs:
           await browser.close();
           if(failed) process.exit(1);
           EOF
-          node /tmp/verify-live.mjs
+          node ./verify-live.mjs
       - name: Upload rendered proof
         if: always()
         uses: actions/upload-artifact@v4

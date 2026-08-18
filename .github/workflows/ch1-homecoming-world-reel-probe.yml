@@ -6,7 +6,7 @@ on:
       - '.github/workflows/ch1-homecoming-world-reel-probe.yml'
 
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
@@ -16,15 +16,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install ffmpeg
         run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg
-      - name: Render Chapter 1 homecoming candidate from registered world reel
+      - name: Render and normalize Chapter 1 homecoming source
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -32,23 +32,39 @@ jobs:
           cat > "$RUNNER_TEMP/request.json" <<'JSON'
           {
             "schema":"VIDEO_CONFORM_REQUEST_v1",
-            "requestId":"CH01_HOMECOMING_WORLD_REEL_CANDIDATE_20260817_001",
-            "output":{"filename":"ch01-homecoming-world-reel-candidate.mp4","durationSeconds":3.5,"fps":24,"width":1920,"height":1080,"crf":18,"preset":"slow"},
-            "segments":[{"sourceId":"CHAPTER_02_WORLD_REEL_LIVE","sourceStart":20.0,"sourceEnd":23.5,"targetStart":0,"targetEnd":3.5,"fit":"cover"}]
+            "requestId":"CH01_HOMECOMING_WORLD_REEL_CANDIDATE_20260817_002",
+            "output":{"filename":"source.mp4","durationSeconds":3.5,"fps":24,"width":1920,"height":1080,"crf":18,"preset":"slow"},
+            "segments":[{"sourceId":"CHAPTER_02_WORLD_REEL_LIVE","sourceStart":20.0,"sourceEnd":23.5,"targetStart":0,"targetEnd":3.5,"fit":"contain"}]
           }
           JSON
-          mkdir -p "$RUNNER_TEMP/out"
+          mkdir -p "$RUNNER_TEMP/out" proof-media/video-conform
           node tools/video-conform/video-conform-renderer.v1.mjs \
             --request "$RUNNER_TEMP/request.json" \
             --registry .github/ai-router/video-conform/source-registry.v1.json \
             --output-dir "$RUNNER_TEMP/out" \
             --receipt "$RUNNER_TEMP/receipt.json"
+          ffmpeg -loglevel error -y \
+            -i "$RUNNER_TEMP/out/source.mp4" \
+            -vf "crop=480:700:720:170,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,format=yuv420p" \
+            -an -c:v libx264 -crf 18 -preset slow -movflags +faststart \
+            proof-media/video-conform/ch01-homecoming-world-v1.mp4
+          test "$(ffprobe -v error -show_entries format=duration -of csv=p=0 proof-media/video-conform/ch01-homecoming-world-v1.mp4 | cut -d. -f1)" = "3"
+          sha256sum proof-media/video-conform/ch01-homecoming-world-v1.mp4 | tee "$RUNNER_TEMP/homecoming.sha256"
+      - name: Commit bounded derivative to probe branch
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add proof-media/video-conform/ch01-homecoming-world-v1.mp4
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Stage normalized Chapter 1 homecoming world derivative'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
       - uses: actions/upload-artifact@v4
         with:
-          name: ch1-homecoming-world-reel-probe-${{ github.event.pull_request.head.sha }}
+          name: ch1-homecoming-world-reel-probe-${{ github.run_id }}
           path: |
             ${{ runner.temp }}/receipt.json
-            ${{ runner.temp }}/out/*.mp4
-            ${{ runner.temp }}/out/*.jpg
+            ${{ runner.temp }}/homecoming.sha256
+            proof-media/video-conform/ch01-homecoming-world-v1.mp4
           if-no-files-found: error
           retention-days: 7

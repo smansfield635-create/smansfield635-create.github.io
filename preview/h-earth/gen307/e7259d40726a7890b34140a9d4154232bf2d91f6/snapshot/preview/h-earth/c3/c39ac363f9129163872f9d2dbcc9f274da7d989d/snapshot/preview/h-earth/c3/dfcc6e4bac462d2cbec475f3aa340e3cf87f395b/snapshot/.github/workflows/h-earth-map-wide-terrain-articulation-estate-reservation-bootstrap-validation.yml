@@ -1,0 +1,321 @@
+name: H-Earth Map-Wide Terrain Instrument Bootstrap Validation
+
+on:
+  pull_request_target:
+    paths:
+      - 'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/**'
+      - 'tools/h-earth-map-wide-terrain/**'
+      - 'h-earth-3d/registry/**'
+      - 'tools/operation-intake/repository-operation-lock-manager.v1.mjs'
+      - '.github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  temporary-builder-self-test:
+    runs-on: ubuntu-24.04
+    outputs:
+      validation_mode: ${{ steps.boundary.outputs.validation_mode }}
+    steps:
+      - name: Check out exact candidate head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify syntax and route exact operation boundary
+        id: boundary
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          for f in tools/h-earth-map-wide-terrain/*.mjs; do node --check "$f"; done
+          node --check tools/operation-intake/repository-operation-lock-manager.v1.mjs
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import cp from 'node:child_process';
+
+          const head = process.env.HEAD_SHA;
+          const currentBase = process.env.BASE_SHA;
+          const output = process.env.GITHUB_OUTPUT;
+          const workflowPath =
+            '.github/workflows/h-earth-map-wide-terrain-articulation-estate-reservation-bootstrap-validation.yml';
+          const currentChanged = cp.execFileSync(
+            'git',
+            ['diff', '--name-only', currentBase, head],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(Boolean).sort();
+          const currentStatus = cp.execFileSync(
+            'git',
+            ['diff', '--name-status', currentBase, head],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(Boolean);
+
+          const repairPaths = [
+            workflowPath,
+            'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-v2-causal-evidence-execution-001-exact-head.js',
+            'h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js',
+            'tools/operation-intake/repository-operation-lock-manager.v1.mjs'
+          ].sort();
+
+          const same = (left, right) =>
+            JSON.stringify([...left].sort()) === JSON.stringify([...right].sort());
+          const currentStatusMap = new Map(currentStatus.map((line) => {
+            const [kind, file] = line.split('\t');
+            return [file, kind];
+          }));
+
+          if (same(currentChanged, repairPaths)) {
+            const amendment =
+              'h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-v2-causal-evidence-execution-001-exact-head.js';
+            if (currentStatusMap.get(amendment) !== 'A') {
+              throw new Error('REPAIR_AMENDMENT_NOT_ADDED');
+            }
+            for (const file of repairPaths.filter((path) => path !== amendment)) {
+              if (currentStatusMap.get(file) !== 'M') {
+                throw new Error(`REPAIR_EXISTING_PATH_NOT_MODIFIED:${file}`);
+              }
+            }
+            fs.appendFileSync(output, 'validation_mode=governance-repair\n');
+            fs.appendFileSync(output, 'manifest_path=\n');
+            process.exit(0);
+          }
+
+          if (same(currentChanged, [workflowPath])) {
+            if (currentStatusMap.get(workflowPath) !== 'M') {
+              throw new Error('ROUTER_SUCCESSOR_WORKFLOW_NOT_MODIFIED');
+            }
+            fs.appendFileSync(output, 'validation_mode=governance-repair\n');
+            fs.appendFileSync(output, 'manifest_path=\n');
+            process.exit(0);
+          }
+
+          const operationBase = cp.execFileSync(
+            'git',
+            ['merge-base', currentBase, head],
+            { encoding: 'utf8' }
+          ).trim();
+          if (!/^[0-9a-f]{40}$/.test(operationBase)) {
+            throw new Error('OPERATION_MERGE_BASE_INVALID');
+          }
+          const operationChanged = cp.execFileSync(
+            'git',
+            ['diff', '--name-only', operationBase, head],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(Boolean).sort();
+          const operationStatus = cp.execFileSync(
+            'git',
+            ['diff', '--name-status', operationBase, head],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(Boolean);
+
+          const manifestPaths = cp.execFileSync(
+            'git',
+            ['ls-tree', '-r', '--name-only', head],
+            { encoding: 'utf8' }
+          ).trim().split(/\r?\n/).filter(
+            (file) =>
+              file.startsWith(
+                'h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/'
+              ) &&
+              file.endsWith('/changed-path-manifest.v1.json')
+          );
+
+          const matches = [];
+          for (const manifestPath of manifestPaths) {
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+            if (manifest.schema !== 'H_EARTH_EXACT_ADDITIVE_PATH_MANIFEST_v1') continue;
+            if (
+              manifest.operationId !==
+              'H_EARTH_INTER_HILL_ESTATE_V2_CAUSAL_EVIDENCE_EXECUTION_001'
+            ) continue;
+            if (!Array.isArray(manifest.addedPaths)) continue;
+            if (!Array.isArray(manifest.modifiedPaths)) continue;
+            if (!Array.isArray(manifest.deletedPaths)) continue;
+            if (manifest.modifiedPaths.length !== 0 || manifest.deletedPaths.length !== 0) continue;
+            if (manifest.pathCount !== manifest.addedPaths.length) continue;
+            if (manifest.classification !== '25_ADDED_0_MODIFIED_0_DELETED') continue;
+            if (!same(operationChanged, manifest.addedPaths)) continue;
+            if (operationStatus.some((line) => !line.startsWith('A\t'))) continue;
+            matches.push({ manifestPath, manifest });
+          }
+
+          if (matches.length !== 1) {
+            throw new Error(`NESTED_OPERATION_MANIFEST_ROUTE_COUNT:${matches.length}`);
+          }
+
+          const selected = matches[0];
+          fs.appendFileSync(output, 'validation_mode=operation-candidate\n');
+          fs.appendFileSync(output, `manifest_path=${selected.manifestPath}\n`);
+          fs.appendFileSync(output, `operation_base=${operationBase}\n`);
+          NODE
+      - name: Verify governance repair imports
+        if: steps.boundary.outputs.validation_mode == 'governance-repair'
+        run: |
+          node --check h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-v2-causal-evidence-execution-001-exact-head.js
+          node --input-type=module <<'NODE'
+          const amendment = await import(
+            './h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.inter-hill-estate-v2-causal-evidence-execution-001-exact-head.js'
+          );
+          if (
+            amendment
+              .H_EARTH_V2_CAUSAL_EVIDENCE_EXECUTION_001_REGISTRY_SCOPE_RESOLUTION_VERIFICATION
+              .result !== 'PASS'
+          ) {
+            throw new Error('CAUSAL_EVIDENCE_REGISTRY_SCOPE_NOT_PASSING');
+          }
+          const loader = await import(
+            './h-earth-3d/registry/h-earth.repository-registry.validator-engine.loader.js'
+          );
+          const dependencies = loader.loadHEarthRepositoryRegistryValidatorDependencies();
+          if (dependencies.identityVerified !== true) {
+            throw new Error('REGISTRY_LOADER_IDENTITY_NOT_VERIFIED');
+          }
+          NODE
+      - name: Run complete Builder regression for routed operation candidate
+        if: steps.boundary.outputs.validation_mode == 'operation-candidate'
+        run: >-
+          node tools/h-earth-map-wide-terrain/self-test.v1.mjs
+          --root .
+          --holder GITHUB_ACTIONS_MAP_WIDE_TERRAIN_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          --output-dir /tmp/map-wide-terrain-builder
+      - name: Run bounded Builder regression for governance repair
+        if: steps.boundary.outputs.validation_mode == 'governance-repair'
+        run: >-
+          node tools/h-earth-map-wide-terrain/self-test.v1.mjs
+          --root .
+          --holder GITHUB_ACTIONS_MAP_WIDE_TERRAIN_REPAIR_BUILDER_${{ github.run_id }}_${{ github.run_attempt }}
+          --output-dir /tmp/map-wide-terrain-builder
+      - name: Upload Builder evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-builder-evidence
+          path: /tmp/map-wide-terrain-builder
+          if-no-files-found: error
+
+  fresh-independent-verifier:
+    needs: temporary-builder-self-test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact candidate independently
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download authentic Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-builder-evidence
+          path: /tmp/builder
+      - name: Reproduce routed candidate independently
+        shell: bash
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HOLDER: GITHUB_ACTIONS_MAP_WIDE_TERRAIN_VERIFIER_${{ github.run_id }}_${{ github.run_attempt }}
+          VALIDATION_MODE: ${{ needs.temporary-builder-self-test.outputs.validation_mode }}
+        run: |
+          node --input-type=module <<'NODE'
+          import path from 'node:path';
+          import {
+            runSelfTest
+          } from './tools/h-earth-map-wide-terrain/self-test.v1.mjs';
+          import {
+            readJson,
+            stable,
+            writeJson
+          } from './tools/h-earth-map-wide-terrain/lib.v1.mjs';
+
+          const builder = readJson('/tmp/builder/bootstrap-self-test-receipt.json');
+          const outputDir = '/tmp/map-wide-terrain-verifier';
+          const reproduced = runSelfTest({
+            root: '.',
+            expectedHead: null,
+            holder: process.env.HOLDER,
+            outputDir: path.join(outputDir, 'reproduction')
+          });
+          if (reproduced.packageFingerprint !== builder.packageFingerprint) {
+            throw new Error('PACKAGE_FINGERPRINT_MISMATCH');
+          }
+          writeJson(
+            path.join(outputDir, 'fresh-verifier-receipt.json'),
+            stable({
+              schema: 'FRESH_INDEPENDENT_BOOTSTRAP_VERIFIER_RECEIPT_v1',
+              result: 'PASS_CLOSED',
+              executionHolder: process.env.HOLDER,
+              builderExecutionHolder: builder.executionHolder,
+              expectedHead: process.env.HEAD_SHA,
+              packageFingerprint: reproduced.packageFingerprint,
+              builderFingerprint: builder.packageFingerprint,
+              independentReproduction: true,
+              boundaryValidationMode: process.env.VALIDATION_MODE,
+              repairPerformed: false,
+              actualTerrainMutationPerformed: false,
+              manorConstructionPerformed: false,
+              permanentInstrumentActivated: false,
+              mergePerformed: false
+            })
+          );
+          NODE
+      - name: Upload Verifier evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-verifier-evidence
+          path: /tmp/map-wide-terrain-verifier
+          if-no-files-found: error
+
+  command-emitted-bootstrap-authority-termination:
+    needs: [temporary-builder-self-test, fresh-independent-verifier]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact certified candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Set up Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Download Builder evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-builder-evidence
+          path: /tmp/builder
+      - name: Download Verifier evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-verifier-evidence
+          path: /tmp/verifier
+      - name: Emit terminal receipt
+        run: >-
+          node tools/h-earth-map-wide-terrain/bootstrap-authority-terminator.v1.mjs
+          --builder-receipt /tmp/builder/bootstrap-self-test-receipt.json
+          --verifier-receipt /tmp/verifier/fresh-verifier-receipt.json
+          --policy h-earth-3d/control-plane/map-wide-terrain-articulation-estate-reservation/bootstrap-termination-policy.v1.json
+          --output /tmp/final/bootstrap-authority-termination-receipt.json
+      - name: Package complete evidence
+        shell: bash
+        run: |
+          mkdir -p /tmp/final/builder /tmp/final/verifier
+          cp -R /tmp/builder/. /tmp/final/builder/
+          cp -R /tmp/verifier/. /tmp/final/verifier/
+      - name: Upload final certification
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-map-wide-terrain-instrument-final-certification
+          path: /tmp/final
+          if-no-files-found: error

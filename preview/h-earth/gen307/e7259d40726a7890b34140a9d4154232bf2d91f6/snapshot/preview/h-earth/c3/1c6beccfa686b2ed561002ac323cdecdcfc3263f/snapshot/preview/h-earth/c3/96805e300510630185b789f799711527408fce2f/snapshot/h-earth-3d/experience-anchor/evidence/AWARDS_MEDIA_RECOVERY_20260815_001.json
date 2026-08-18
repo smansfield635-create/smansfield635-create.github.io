@@ -1,0 +1,33 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_EVIDENCE_v1",
+  "evidenceId": "AWARDS_MEDIA_RECOVERY_20260815_001",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "candidateHeadReviewed": "228aa5051cff175d50ff6af967e29023183fbe51",
+  "comparisonBase": "aefb54971ae0f91a9abf9e8fc8e588f82f3a5744",
+  "experienceChange": {
+    "path": "showroom/globe/h-earth/awards/index.html",
+    "sha256": "61c53becd2ecf65796cbdfafe0bec83670f261ec0035d673466fe9029f276f29",
+    "classification": "AWARDS_PRESENTATION_RECOVERY_ONLY",
+    "worldRuntimeGeometryTerrainCameraMutation": false
+  },
+  "visualEvidence": {
+    "hEarthPublicFaceTrophyStandard": "PASS",
+    "compassMediaRestoredAsIndependentLensState": true,
+    "hEarthMediaBoundOnlyToWorldLens": true,
+    "vivaldiRemoved": true,
+    "otherFourTrophyLensesUnchanged": true
+  },
+  "interactionEvidence": {
+    "lensStateReplacementPreserved": true,
+    "compassAndWorldMediaMutuallyBoundToTheirOwnLensStates": true,
+    "canonicalHEarthEntryRoutePreserved": true
+  },
+  "continuityEvidence": {
+    "sameCanonicalWorldExperienceUnaffectedByAwardsPresentationRecovery": true,
+    "noParallelOrDuplicateHEarthProduct": true,
+    "awardsReturnToCanonicalHEarthPresent": true
+  },
+  "assessment": "PASS",
+  "basis": "The recovery changes only the awards presentation route. It restores the previously working Compass media to Compass & Navigation, provides a separate H-Earth media surface only for 3D World & Game Design, removes the Vivaldi/native-player experiment, and leaves the canonical H-Earth runtime, geometry, terrain, camera, interaction and product identity unchanged. Exact-candidate H-Earth Public Face Trophy Standard verification passed."
+}

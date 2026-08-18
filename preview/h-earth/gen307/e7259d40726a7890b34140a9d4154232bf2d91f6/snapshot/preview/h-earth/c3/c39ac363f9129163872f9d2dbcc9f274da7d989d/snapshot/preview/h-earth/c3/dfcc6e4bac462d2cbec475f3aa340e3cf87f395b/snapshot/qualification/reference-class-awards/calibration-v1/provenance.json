@@ -1,0 +1,23 @@
+{
+  "schema": "REFERENCE_CLASS_AWARDS_PUBLIC_QUALIFICATION_EVIDENCE_V1",
+  "status": "NON_AUTHORITATIVE_QUALIFICATION_EVIDENCE",
+  "privateQualificationRepository": "smansfield635-create/geodiametrics1",
+  "privateQualificationExactMain": "63521af27e48ada9180f19b6832904134a19dada",
+  "workflowRunId": 31762260400,
+  "actionsArtifactDigest": "sha256:b49823e8c22b7cd701590061f00f0b45c825ba2122d124e6adc24b3fe1587d83",
+  "calibrationResult": "PASS",
+  "defaultBranchExecutionRouteProven": true,
+  "activationAuthorityCreated": false,
+  "productionEnforcementCreated": false,
+  "awardWinnerAuthorityCreated": false,
+  "namedAwardReadinessAuthorityCreated": false,
+  "candidateMutationPerformed": false,
+  "referenceCorpusMutationPerformed": false,
+  "publicEvidenceFiles": [
+    "index.html",
+    "calibration-receipt.json",
+    "provenance.json",
+    "all-controls-overview.jpg"
+  ],
+  "compositeOverviewContents": "All 36 exact-main calibration captures: four controls x phone/tablet/desktop x initial/interaction/result states."
+}

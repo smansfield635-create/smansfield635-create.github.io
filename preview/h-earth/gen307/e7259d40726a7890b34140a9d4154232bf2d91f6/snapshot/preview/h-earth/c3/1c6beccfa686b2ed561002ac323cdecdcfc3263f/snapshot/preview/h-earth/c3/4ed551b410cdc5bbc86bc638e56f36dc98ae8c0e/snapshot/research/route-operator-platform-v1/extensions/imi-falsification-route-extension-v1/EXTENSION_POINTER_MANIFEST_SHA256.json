@@ -1,0 +1,24 @@
+{
+  "artifacts": [
+    {
+      "bytes": 1211,
+      "path": "EXTENSION_PACKAGE_POINTER.json",
+      "sha256": "7543c1139f0f56b4b9d48836ef567c961f7c5c01f0dfa3ad6255ce4a5f3d4996"
+    },
+    {
+      "bytes": 1454,
+      "path": "RATIFICATION_POINTER.json",
+      "sha256": "c66147c9401f2906e4ed5b4d2a0ba092368894bdbc3550e2846ddd38fb4b39a4"
+    },
+    {
+      "bytes": 1974,
+      "path": "README.md",
+      "sha256": "9ec5c4752f9f41e88ae979cf24718b99557a9749f5f515741e1579d2bacff248"
+    }
+  ],
+  "core_mutation_performed": false,
+  "extension_id": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1",
+  "manifest_id": "IMI_FALSIFICATION_ROUTE_EXTENSION_v1_REPOSITORY_POINTER_MANIFEST_v1",
+  "manifest_version": "1.0.0",
+  "status": "PASS_CLOSED_OPERATIONAL_POINTER"
+}

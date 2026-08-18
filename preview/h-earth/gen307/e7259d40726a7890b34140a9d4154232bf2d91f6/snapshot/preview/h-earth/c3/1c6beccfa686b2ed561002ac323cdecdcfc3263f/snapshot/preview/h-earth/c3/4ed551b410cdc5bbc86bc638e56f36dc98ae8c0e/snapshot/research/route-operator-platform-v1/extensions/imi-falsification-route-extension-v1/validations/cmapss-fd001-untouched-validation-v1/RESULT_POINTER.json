@@ -1,0 +1,77 @@
+{
+  "best_compressed_model": "M3_ADDITIVE_FACTORIAL",
+  "best_overall_model": "M5_FULL_SENSOR_RIDGE",
+  "claim_dispositions": {
+    "FACTORIAL_TEMPORAL_UTILITY": "SUPPORTED",
+    "FULL_COMPLEXITY_INCREMENT": "SUPPORTED",
+    "MULTIDIMENSIONAL_CONDITION_UTILITY": "NOT_SUPPORTED",
+    "MULTIPLICATIVE_SPECIFICITY": "NOT_SUPPORTED"
+  },
+  "contract_id": "IMI_CMAPSS_FD001_FACTORIAL_TEMPORAL_RUL_UNTOUCHED_VALIDATION_v1",
+  "deterministic_two_run_result_equality": "PASS_EXACT_SHA256",
+  "execution_status": "PASS_CLOSED",
+  "freeze_receipt_sha256": "b9439d8fa434196ef312a91a3f3068ec9124052959c60a7873dd49e11fe56683",
+  "frozen_predictions_sha256": "68dd3aa5b09231e0b97d4474bb3213f26fa20ef1d44998a2f3bfbfa3a3cb3307",
+  "material_comparisons": {
+    "M2_FACTORIAL_VS_M0_AGE": {
+      "bootstrap_95_ci": [0.05285663412387696, 0.23309760648853983],
+      "material": true,
+      "relative_rmse_improvement": 0.14781755242033434
+    },
+    "M2_FACTORIAL_VS_M1_CONDITION": {
+      "bootstrap_95_ci": [0.04380925864987494, 0.1895753237258126],
+      "material": true,
+      "relative_rmse_improvement": 0.11977032830316314
+    },
+    "M2_MULTIPLICATIVE_VS_M3_ADDITIVE": {
+      "bootstrap_95_ci": [-0.44488550094513285, -0.15459740022068366],
+      "material": false,
+      "relative_rmse_improvement": -0.2910103664144621
+    },
+    "M2_MULTIPLICATIVE_VS_M4_WEAKEST": {
+      "bootstrap_95_ci": [-0.24472352091361055, -0.06974599243347822],
+      "material": false,
+      "relative_rmse_improvement": -0.14744096258683226
+    },
+    "M5_FULL_SENSOR_VS_M3_ADDITIVE": {
+      "bootstrap_95_ci": [0.00967539329803167, 0.1234297609220867],
+      "material": true,
+      "relative_rmse_improvement": 0.06995735132474723
+    }
+  },
+  "outcome_access_after_prediction_freeze": true,
+  "outcome_file_present_during_freeze": false,
+  "outcome_sha256": "a19c8ec94931949d0485bdc35118206e9c81c4547b422efb9cf86f4ceddbceca",
+  "parent_theory_adjudication": "NOT_PERFORMED",
+  "personal_portfolio_recommendation": "NARROW_AND_REDESIGN_BEFORE_FURTHER_INVESTMENT",
+  "post_outcome_model_mutation": false,
+  "prediction_freeze_verified": true,
+  "primary_result_category": "OPERATOR_NOT_DISTINGUISHED",
+  "result_sha256": "240ccb803444c627e70780e0637bb3bbe75bb28a2ebcbb68be9f34c33d5c6b7a",
+  "rmse": {
+    "M0_AGE_ONLY": 33.831750039414814,
+    "M1_IMI_CONDITION": 32.75375107375578,
+    "M2_IMI_FACTORIAL": 28.830823554491968,
+    "M3_ADDITIVE_FACTORIAL": 22.331984548322524,
+    "M4_WEAKEST_FACTORIAL": 25.1261934117244,
+    "M5_FULL_SENSOR_RIDGE": 20.769698059496697
+  },
+  "schema": "IMI_CMAPSS_FD001_UNTOUCHED_VALIDATION_RESULT_POINTER_v1",
+  "scientific_status": "UNTOUCHED_EXTERNAL_VALIDATION_EXECUTED",
+  "support_route_identity_restoration_adjudication": "NOT_PERFORMED",
+  "test_engine_count": 100,
+  "workflow_runs": [
+    {
+      "artifact_id": 8954047775,
+      "conclusion": "success",
+      "head_sha": "212728f89d76f882b402cf7a0c9c8e65c6c6aad0",
+      "run_id": 31066604448
+    },
+    {
+      "artifact_id": 8954062394,
+      "conclusion": "success",
+      "head_sha": "6c8a6d3302d1929c1a2220bc4efbc03dcd831fde",
+      "run_id": 31066654232
+    }
+  ]
+}

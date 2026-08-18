@@ -1,0 +1,59 @@
+{
+  "contract": "LAWS_CP6_FINAL_SYNCHRONIZATION_CANDIDATE_v1",
+  "candidate_revision": 3,
+  "status": "CANDIDATE_PENDING_EXACT_HEAD_VERIFICATION_AND_MERGE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "base_main": "f61595847d14afa0810584de388ec24fa8e523c0",
+  "branch": "agent/laws-cp6-final-synchronization-001",
+  "source_candidates": {
+    "complete_chamber_original_head": "6bb42ab299d3186bf6496f023a233593301a4fc5",
+    "complete_chamber_archive_ref": "archive/laws-pr493-6bb42ab",
+    "main_page_tuneup_original_head": "c76f58504f6aeac7272fd1542cd94f6f47c417b1",
+    "main_page_tuneup_archive_ref": "archive/laws-pr497-c76f585"
+  },
+  "scope": {
+    "predestined_child_routes": 24,
+    "canonical_record_presentations": 48,
+    "battery_public_surfaces": 27,
+    "integrated_browser_routes": 33,
+    "main_page_tuneup_files": 6
+  },
+  "presentation_contract": {
+    "zero_open_entry": true,
+    "exclusive_or_zero_readings": true,
+    "static_no_javascript_complete_reading": true,
+    "collapsible_compact_navigation": true,
+    "formula_node_split_rule": "ARROWS_ONLY_INTERNAL_PLUS_PRESERVED",
+    "persistent_first_indicator_count": 5,
+    "tablet_portrait_reflow": true
+  },
+  "boundaries": {
+    "route_deletion": false,
+    "route_rename": false,
+    "protected_compass_runtime_mutation": false,
+    "equation_identity_mutation": false,
+    "evidence_status_upgrade": false,
+    "claim_ceiling_upgrade": false,
+    "frontier_complete_record_owner_preserved": true,
+    "authorized_frontier_path": "frontier/energy/battery-coherence-study/index.html",
+    "imi_empirical_reliability_and_validity": "OPEN"
+  },
+  "workflow_control": {
+    "containment_merge": "2e12e2c243efb0a9a0dd629b92dc451a06c28e74",
+    "unrelated_h_earth_runs_expected": 0,
+    "unrelated_metaverse_runs_expected": 0,
+    "obsolete_batch_runs_expected": 0,
+    "manual_archive_suites": [
+      "Laws Renewal Collapsed Entry Verification",
+      "Laws post-merge stellar continuity",
+      "Laws CP6 contextual integrated verification"
+    ],
+    "retained_premerge_acceptance_suites": [
+      "Laws CP6 Final Synchronization Verification",
+      "Laws Four-Compass Exact-Head Regression",
+      "Laws FIRST Indicator Restoration Verification"
+    ],
+    "retained_postmerge_suite": "Laws CP6 Post-Merge Smoke"
+  },
+  "merge_authority": "AFTER_EXACT_HEAD_PASS"
+}

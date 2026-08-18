@@ -1,0 +1,93 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_L0_L1_OBJECT_PROJECTION_SOURCE_ADMISSION_LEDGER_v1",
+  "version": "1.0.0",
+  "operation": "TESTS_L0_L1_OBJECT_PROJECTION_REGISTRY_v1",
+  "status": "BOUNDED_SOURCE_ADMISSION_CONSTRUCTION_CANDIDATE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "constructionBaseMain": "21e1115557ce37507b9b01f4d45d5a6173714637",
+  "testsAuthorityPromotion": {
+    "pr": 759,
+    "authorizedCandidate": "8097f84b98fcf0c9784bad18ed23320d104c831c",
+    "mergeCommit": "21e1115557ce37507b9b01f4d45d5a6173714637",
+    "authorityContract": {
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json",
+      "blob": "0bfab791c005ca71cee771a5d14d27f8dfab3177"
+    },
+    "registryContract": {
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/object-projection-registry-contract.v1.json",
+      "blob": "ed969c87359c42444c477a752f332f07f0059a30"
+    },
+    "sourceAuthorityLedger": {
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/source-authority-ledger.v1.json",
+      "blob": "fe37b67fe3faf0d62b969ec3860c2d083e2e8185"
+    }
+  },
+  "populationSourceAdmission": {
+    "id": "GATE0_CANONICAL_HIERARCHY",
+    "disposition": "ADMITTED_EXISTING_MERGED_AUTHORITY_FOR_BOUNDED_TESTS_POPULATION",
+    "authorityExpansion": false,
+    "scientificClaimUpgrade": false,
+    "basis": [
+      "PR_708_MERGED_EXACT_NINE_PATH_GATE0_RECONCILIATION",
+      "LATER_WHOLE_ESTATE_BASELINE_PINS_GATE0_MERGE_AND_EXACT_PACKAGE_BLOBS",
+      "CURRENT_MAIN_RETAINS_EXACT_CANONICAL_HIERARCHY_BLOB"
+    ],
+    "gate0": {
+      "pr": 708,
+      "candidate": "3e26cc4e49bf2c2291a7a5db4093e8a31f5a54f4",
+      "mergeCommit": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+      "path": "control-plane/methods-information-benchmark/imi-methods-models-universal-integration-v1/canonical-hierarchy.v1.json",
+      "blobAtConstructionBase": "c2d7383ff6377cdbe6b31710011db1d4287e49e4",
+      "sourceDocumentStatus": "SUCCESSOR_NORMALIZATION_CANDIDATE",
+      "sourceDocumentStatusTreatment": "PRESERVED_AS_SOURCE_CONTENT_METADATA_NOT_USED_AS_CURRENT_FILE_AUTHORITY_STATUS"
+    },
+    "promotionEvidence": {
+      "path": "control-plane/whole-estate/whole-estate-narrative-and-constitutive-baseline-freeze-v1/baseline-identities.v1.json",
+      "blobAtConstructionBase": "b86cc4094901989fdd2b3a3f13e65c5d50b73005",
+      "recordedGate0Pr": 708,
+      "recordedGate0Merge": "fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+      "recordedGate0PostMergeWorkflowConclusion": "SUCCESS",
+      "recordedCanonicalHierarchyBlob": "c2d7383ff6377cdbe6b31710011db1d4287e49e4"
+    },
+    "admittedUse": [
+      "OBJECT_IDENTITY",
+      "OBJECT_CLASS",
+      "DISPLAY_LABEL",
+      "CANONICAL_STATEMENT",
+      "EXPLICIT_DECLARED_RELATION"
+    ],
+    "notAdmittedUse": [
+      "NEW_ONTOLOGY",
+      "NEW_RELATION",
+      "SCIENTIFIC_RESULT_UPGRADE",
+      "PUBLIC_ROUTE_AUTHORITY",
+      "M1R2_CONTAINMENT_INFERENCE"
+    ]
+  },
+  "constraintSources": [
+    {
+      "id": "METHODS_MODELS_ROLE_CONSTITUTION",
+      "mergeCommit": "b2533139bacbf876f818892a06c691824fa216dd",
+      "path": "control-plane/whole-estate/methods-models-role-constitution-v1/methods-models-role-contract.v1.json",
+      "blob": "60393aa69a57c01642796697d36a16c3426087c8",
+      "use": "METHODS_PROJECTION_OPERATIONAL_ROLE_AND_DECLARED_RELATION_DISCOVERY_CONSTRAINT"
+    },
+    {
+      "id": "PROMOTED_TESTS_SOURCE_AUTHORITY_LEDGER",
+      "ref": "21e1115557ce37507b9b01f4d45d5a6173714637",
+      "path": "control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/source-authority-ledger.v1.json",
+      "blob": "fe37b67fe3faf0d62b969ec3860c2d083e2e8185",
+      "use": "NON_SOURCE_CONFLICT_AND_M1R2_PRESERVATION_BOUNDARY"
+    }
+  ],
+  "sourceAdmissionLaw": {
+    "presenceOnMainAloneIsAuthority": false,
+    "historicalFileStatusAloneDeterminesAuthority": false,
+    "mergedAndLaterPinnedAuthorityMayBeExplicitlyAdmittedWithoutCreatingNewScientificAuthority": true,
+    "unsupportedSourceDisposition": "WITHHOLD",
+    "conflictDisposition": "WITHHOLD",
+    "threadContextAuthority": "PROHIBITED"
+  },
+  "publicMutationAuthorized": false,
+  "visualConstructionAuthorizedByThisLedger": false
+}

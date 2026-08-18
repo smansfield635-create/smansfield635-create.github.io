@@ -1,0 +1,90 @@
+{
+  "schema":"WHOLE_ESTATE_PROVENANCE_LEDGER_v1",
+  "status":"CHECKPOINT_1_CONSTRUCTION_CANDIDATE",
+  "evidenceClasses":["STRONG_CONTEMPORANEOUS","PARTIAL_CONTEMPORANEOUS","RETROSPECTIVE_INTERPRETATION"],
+  "entries":[
+    {
+      "id":"COMPASS_PLURAL_IDENTITY_ARCHITECTURE",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"index.html@1cc9a1de90bb58de6463bafe52a1b1f91c5bef4a",
+      "supportedStatement":"The Compass explicitly states that no single room contains the whole and frames distinct forms of knowledge as remaining themselves while contributing to a larger landscape.",
+      "claimCeiling":"CURRENT_PUBLIC_ARCHITECTURE_AND_LANGUAGE_ONLY"
+    },
+    {
+      "id":"MANOR_ROUTE_TRUTH_AND_IDENTITY_SEPARATION",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"assets/manor-blueprint/manor.blueprint.registry.js@f7e72cb61e02ff3001ae059d0ad73e6d7a75986f",
+      "supportedStatement":"The Manor registry explicitly owns route truth, separates builder paths from visitor room identity, groups routes by value category, and distinguishes main-menu routes from Mirrorland doors.",
+      "claimCeiling":"ROUTE_AND_NAVIGATION_ARCHITECTURE_ONLY"
+    },
+    {
+      "id":"LAWS_FIRST_AUTHORITY_STRUCTURE",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"laws/index.html@df2fc6b74da5791cedf07f0d01449ccf72243c36",
+      "supportedStatement":"The Laws surface declares Flow, Integrity, Reality, Structure and Test as the FIRST authorities, with Research separate as an examination-and-support layer and universal law unproven.",
+      "claimCeiling":"CURRENT_LAWS_AUTHORITY_ARCHITECTURE_ONLY"
+    },
+    {
+      "id":"RESEARCH_SUPPORT_AND_RECORD_ROLE",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"laws/research/index.html@58b06514bf03bf8c32d8c1ed4d6d39a8693df9cd",
+      "supportedStatement":"Research explicitly supplies evidence, methods, applied context, negative and mixed findings, claim ceilings and complete records without becoming a seventh FIRST authority.",
+      "claimCeiling":"CURRENT_RESEARCH_ROLE_ONLY"
+    },
+    {
+      "id":"METHODS_MODELS_EXISTING_XYZ_PRESENTATION",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"laws/research/methods-and-models/index.html@2a84f9a272d051041dd639d95e1dca4dbd5db144",
+      "supportedStatement":"The current Methods and Models showroom already uses X for models, Y for interpretive lenses and Z for model families while explicitly denying scientific validation and universal-law proof.",
+      "claimCeiling":"EXISTING_PUBLIC_PRESENTATION_BASELINE_NOT_SUCCESSOR_ACCEPTANCE"
+    },
+    {
+      "id":"GATE0_OBJECT_AND_STATE_SEPARATION",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"PR708 merge fb2d34cb3c187fc5d6526c6108b383fca4ed0801",
+      "supportedStatement":"Gate 0 freezes IMI as instrument, UCIC as invariant candidate, separates methods/models/evidence/execution/custody/interface, rejects the global product, preserves prospective result NONE and outcome access PROHIBITED.",
+      "claimCeiling":"SCIENTIFIC_ARCHITECTURE_AND_STATE_NORMALIZATION_ONLY"
+    },
+    {
+      "id":"PR712_H_EARTH_REGISTRY_PREREQUISITE",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"PR712 merge 3f51f0cd159df33571905c6cb14253ebdd137e3b",
+      "supportedStatement":"The current main registers the authorized H-Earth terrain and estate construction candidate path scope through four registry/tooling paths while preserving separate terrain, estate, manor, preview, deployment, release and publication authority boundaries.",
+      "claimCeiling":"REGISTRY_PREREQUISITE_AND_AUTHORITY_STATE_ONLY"
+    },
+    {
+      "id":"PR709_EXTERNAL_ROUTE_SPECIFICITY",
+      "classification":"STRONG_CONTEMPORANEOUS",
+      "source":"PR709@54e0f3cf59cffab6a195c9c2ffe4f104185b5e81",
+      "supportedStatement":"Five frozen true UCIC route maps discriminated five external CSB official-record cases from fifteen plausible decoys, with median route hit rate 1.0, median causal coverage 1.0 and median true-minus-decoy advantage 0.8333333333333334.",
+      "claimCeiling":"EXPLORATORY_EXTERNAL_ROUTE_CONCORDANCE_AND_SPECIFICITY_SUPPORT_ONLY",
+      "requiredLimitations":["OUTCOME_BLINDNESS_NOT_ESTABLISHED","PUBLIC_OUTCOME_CONTAMINATION_PRESENT","PROSPECTIVE_CONFIRMATION_NOT_ESTABLISHED","UNIVERSALITY_NOT_ESTABLISHED"]
+    },
+    {
+      "id":"WHOLE_ESTATE_BUILT_THROUGH_COHERENCE",
+      "classification":"PARTIAL_CONTEMPORANEOUS",
+      "sources":["current Compass plural-identity language","current route ownership boundaries","Gate 0 object separation","existing governance and return-control architecture"],
+      "supportedStatement":"Multiple current artifacts are consistent with coherence being used as a construction constraint across identity, routing and authority boundaries.",
+      "claimCeiling":"DO_NOT_PRESENT_AS_PREREGISTERED_WHOLE_ESTATE_PREDICTION_OR_SCIENTIFIC_CONFIRMATION"
+    },
+    {
+      "id":"RETROSPECTIVE_ESTATE_COHERENCE_INTERPRETATION",
+      "classification":"RETROSPECTIVE_INTERPRETATION",
+      "supportedStatement":"Earlier estate choices may be interpreted through the later constitutional coherence framework when contemporaneous evidence is incomplete.",
+      "claimCeiling":"INTERPRETIVE_PROVENANCE_ONLY"
+    },
+    {
+      "id":"FUTURE_XYZ_CONSTITUTIONAL_NAVIGATION",
+      "classification":"PARTIAL_CONTEMPORANEOUS",
+      "sources":["existing Manor native-WebGL estate runtime","existing Methods/Models X-Y-Z showroom","Gate 0 human-and-3D contract"],
+      "supportedStatement":"The estate already contains bounded 3D/spatial precedents, but the synchronized constitutional Methods-Models successor has not yet been constructed or accepted.",
+      "claimCeiling":"DESIGN_LINEAGE_NOT_FUTURE_ACCEPTANCE"
+    }
+  ],
+  "prohibitions":[
+    "RETROSPECTIVE_INTERPRETATION_MAY_NOT_BE_PRESENTED_AS_PREREGISTERED_PREDICTION",
+    "CONSTRUCTION_PROVENANCE_MAY_NOT_BE_PRESENTED_AS_UCIC_VALIDATION",
+    "CI_OR_HASH_PROVENANCE_MAY_NOT_BE_PRESENTED_AS_SCIENTIFIC_TRUTH"
+  ],
+  "publicMutationAuthorized":false
+}

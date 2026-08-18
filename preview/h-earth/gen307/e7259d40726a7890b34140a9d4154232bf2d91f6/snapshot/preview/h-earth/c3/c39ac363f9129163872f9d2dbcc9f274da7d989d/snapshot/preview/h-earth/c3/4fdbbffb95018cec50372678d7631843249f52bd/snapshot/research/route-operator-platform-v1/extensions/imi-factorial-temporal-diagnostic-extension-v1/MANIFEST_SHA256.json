@@ -1,0 +1,21 @@
+{
+  "core_mutation_performed": false,
+  "file_count": 10,
+  "files": {
+    "PORTFOLIO_ELIGIBILITY_REPORT.md": "386abba781e22a0780685ab816c2bcc98b26cc4b9f72df308ab000bbb8852b99",
+    "README.md": "55848f1f346a87fa0ecbded0f8394ba36087a164511b3a10290938f3cb7886cf",
+    "eligibility-audit.v1.json": "09e47c6c7c9e5d247e4f107a19e9596593d41d197a611aa17457c1fc8570971f",
+    "extension-contract.v1.json": "1120dbfe55167a837bc5ef152da0aca161c23ab674ece23d5ffe45ea2dca1a16",
+    "negative-fixtures.v1.json": "c6f9eb41f05de52b6d04c99f8bdfb9bb113f04619edc0a65c600f45180ebaf66",
+    "portfolio-study-registry.v1.json": "92f4b8043cdd0c99cd9cbee80741a0771aa1e8b7d713e6158d972a649351ccb2",
+    "study-eligibility.schema.v1.json": "fcf42b2d57b4ff89b9646618487e71e3764038549a675cd5bc20390e4cf29ca1",
+    "synthetic-fixtures.v1.json": "9e1c9e4f8291e23ea549128c369d73b5d69c5fb08516ecd6b14aa8fa9486edb4",
+    "temporal-receipt.schema.v1.json": "9639a434db6d4402d0d6017780bc6fd712d031118923edcf7c9dbfae39fef604",
+    "temporal_extension_v1.py": "129135cdcc8ae5a8fd7986cc2d333c3393a4fb18e78d39fb1c22667f1a860a2d"
+  },
+  "manifest_id": "IMI_FACTORIAL_TEMPORAL_DIAGNOSTIC_EXTENSION_MANIFEST_SHA256_v1",
+  "manifest_scope": "GOVERNED_PAYLOAD_FILES_EXCLUDING_THIS_MANIFEST_AND_EXECUTABLE_VERIFIER",
+  "verifier_rule": "VERIFY_FACTORIAL_TEMPORAL_EXTENSION_V1_PY_IS_PATH_REQUIRED_AND_EXECUTED_INDEPENDENTLY_BUT_NOT_SELF_HASHED_BY_THE_PAYLOAD_MANIFEST",
+  "real_reanalysis_performed": false,
+  "version": "1.0.0"
+}

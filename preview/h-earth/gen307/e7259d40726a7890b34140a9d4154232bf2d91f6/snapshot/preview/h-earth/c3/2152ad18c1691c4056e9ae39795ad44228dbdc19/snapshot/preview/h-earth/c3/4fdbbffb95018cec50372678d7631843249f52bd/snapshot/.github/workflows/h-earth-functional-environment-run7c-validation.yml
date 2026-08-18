@@ -1,0 +1,67 @@
+name: H-Earth Functional Environment Run 7C Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-functional-environment-run7c-001
+  pull_request:
+    branches:
+      - agent/h-earth-functional-environment-run7b-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run7c:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out Run 7C workspace
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute bounded Run 7C harness
+        env:
+          H_EARTH_RUN7C_EXECUTION_CANDIDATE: h-earth-run7c-execution-candidate.json
+        run: |
+          node --experimental-default-type=module \
+            h-earth-3d/validation/h-earth.functional-environment.run7c.harness.mjs \
+            | tee h-earth-run7c.log
+
+      - name: Verify execution candidate exists
+        run: |
+          test -s h-earth-run7c-execution-candidate.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const receipt = JSON.parse(
+            readFileSync('h-earth-run7c-execution-candidate.json', 'utf8')
+          );
+          if (
+            receipt.eligible !== true ||
+            receipt.failCount !== 0 ||
+            receipt.deterministicRerunMatch !== true ||
+            receipt.workspaceExecution !== true ||
+            receipt.localConstruction !== false ||
+            receipt.rendererMutation !== false ||
+            receipt.publicRouteMutation !== false
+          ) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          NODE
+
+      - name: Upload Run 7C execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run7c-execution-evidence
+          path: |
+            h-earth-run7c.log
+            h-earth-run7c-execution-candidate.json
+          if-no-files-found: error
+          retention-days: 14

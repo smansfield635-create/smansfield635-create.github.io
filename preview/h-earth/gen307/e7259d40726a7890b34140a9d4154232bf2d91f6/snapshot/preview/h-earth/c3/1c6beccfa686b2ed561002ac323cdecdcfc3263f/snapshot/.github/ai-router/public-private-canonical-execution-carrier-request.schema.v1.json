@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "privateIssueNumber", "privateCommentId", "expectedRequestId", "exactPrivateHead"],
+  "properties": {
+    "schema": {"const": "PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_v1"},
+    "privateIssueNumber": {"type": "integer", "minimum": 1},
+    "privateCommentId": {"type": "integer", "minimum": 1},
+    "expectedRequestId": {"type": "string", "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"},
+    "exactPrivateHead": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schema": "H_EARTH_GEN307_EXACT_CANDIDATE_ANCHOR_EVIDENCE_v1",
+  "evidenceClass": "CONTINUITY",
+  "candidateProvenanceHead": "71bafea00748e672cf64320507d346438bf06a75",
+  "qualifiedGen306Base": "dbf2f3ec90faa59c09193e61a0d141481b68d758",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "gen306ToGen307ExperienceDelta": [
+    "h-earth-3d/docs/H_EARTH_GRATITUDE_AUDRALIA_FINAL_SUBTROPICAL_CONTINENTAL_EXPRESSION_SUCCESSOR_CONTRACT_v1.md",
+    "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+    "h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs",
+    "showroom/globe/h-earth/render/geometry-distant-context.js",
+    "showroom/globe/h-earth/render/landscape-preview.js",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js"
+  ],
+  "continuityFindings": {
+    "sameCanonicalWorldIdentity": true,
+    "planetaryToRegionalToGroundContinuity": true,
+    "continuousTerrainAndGeographicSpace": true,
+    "embodiedLocalGroundExperience": true,
+    "directLookAndTravelInteraction": true,
+    "minimalInterfaceIntrusionOverWorld": true,
+    "terrainCoastElevationAndHorizonReadAsOneNavigableSurface": true,
+    "noParallelOrDuplicateHEarthProduct": true,
+    "noDashboardMapAppOrCardUiSubstitutionForWorldExperience": true,
+    "globeIsHigherAltitudeExpressionOfSameWorld": true,
+    "regionEntryDoesNotCreateUnrelatedProduct": true,
+    "gratitudePlayableRegionIdentityPreserved": true,
+    "audraliaContinentalContextPreserved": true,
+    "oceanFacingEmptinessPreserved": true,
+    "worldManifoldTopologySourcePreserved": true
+  },
+  "cp3dPredecessorPredicateClassification": {
+    "classification": "PREDECESSOR_INVALID_PREDICATES_NOT_DEMONSTRATED_GEN307_REGRESSION",
+    "gen306PackageDifferentialRun": 32090223103,
+    "gen306RendererContractBlob": "9ddb4555c2fee40e232f6e9b79c37c240795711d",
+    "gen307RendererContractBlob": "9ddb4555c2fee40e232f6e9b79c37c240795711d",
+    "rendererContractByteIdentical": true,
+    "stalePredicates": [
+      "PACKAGE_BOUNDARY_ASSERTION",
+      "RUNTIME_IDENTITY_IMPORT_ASSERTION",
+      "RUN8B_PREDECESSOR_ASSERTION",
+      "CP3D_CANONICAL_NODE_PACKAGE_NOT_ELIGIBLE"
+    ],
+    "exclusionReason": "The governing renderer contract is byte-identical between qualified Gen306 and Gen307; the red predicate asserts predecessor-invalid package expectations and therefore does not establish a successor regression. Exact-head browser runtime evidence independently demonstrates desktop/mobile WebGL rendering, interaction, and clean runtime errors."
+  },
+  "result": "PASS"
+}

@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://smansfield635-create.github.io/h-earth-3d/control-plane/step-1/h-earth.lifecycle-transition.precondition-schema.json",
+  "title": "H-Earth Repository Lifecycle Transition Precondition Schema v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "transitionId",
+    "sourceState",
+    "targetState",
+    "expectedParentCommit",
+    "requestingActorClass",
+    "approvingAuthorityClass",
+    "executingActorClass",
+    "validatorIdentity",
+    "authorizedPathSet",
+    "expectedInputBlobs",
+    "requiredEvidence",
+    "atomicArtifactSet",
+    "approvalBindingRequired",
+    "executionAuthorityRequired",
+    "replayProtectionRequired"
+  ],
+  "properties": {
+    "transitionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceState": {
+      "$ref": "#/$defs/lifecycleState"
+    },
+    "targetState": {
+      "$ref": "#/$defs/lifecycleState"
+    },
+    "expectedParentCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "requestingActorClass": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approvingAuthorityClass": {
+      "type": "string",
+      "minLength": 1
+    },
+    "executingActorClass": {
+      "type": "string",
+      "minLength": 1
+    },
+    "validatorIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validatorId",
+        "validationReceiptPath",
+        "validationResult"
+      ],
+      "properties": {
+        "validatorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validationReceiptPath": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "validationResult": {
+          "const": "PASS"
+        },
+        "validationCommit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "authorizedPathSet": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^/"
+      }
+    },
+    "expectedInputBlobs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "gitBlobSha"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^/"
+          },
+          "gitBlobSha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          }
+        }
+      }
+    },
+    "requiredEvidence": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "atomicArtifactSet": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "approvalBindingRequired": {
+      "const": true
+    },
+    "executionAuthorityRequired": {
+      "const": true
+    },
+    "replayProtectionRequired": {
+      "const": true
+    },
+    "authorizationDecisionId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "authorizationExpiration": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "replayNonce": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "lifecycleState": {
+      "enum": [
+        "CANDIDATE",
+        "VALIDATED",
+        "ACCEPTED",
+        "ACTIVE",
+        "SUPERSEDED",
+        "RETIRED"
+      ]
+    }
+  },
+  "x-h-earth-boundaries": {
+    "schemaMayDescribeApproval": true,
+    "schemaMayIssueApproval": false,
+    "schemaMayExecuteTransition": false,
+    "schemaMayMutateRepository": false
+  }
+}

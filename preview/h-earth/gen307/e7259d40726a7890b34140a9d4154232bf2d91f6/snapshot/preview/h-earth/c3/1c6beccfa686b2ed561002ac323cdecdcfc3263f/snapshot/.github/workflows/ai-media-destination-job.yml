@@ -1,0 +1,68 @@
+name: AI Media Destination Job
+on:
+  workflow_dispatch:
+    inputs:
+      admission_artifact_run_id:
+        description: Run containing qualified admission receipt and media staging artifact
+        required: true
+        type: string
+      expected_sha256:
+        description: Exact admitted media SHA-256
+        required: true
+        type: string
+      destination:
+        description: Isolated proof destination
+        required: true
+        default: proof-media/awards-compass-v2/candidate.mp4
+        type: string
+permissions:
+  contents: write
+  actions: read
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ai-media-destination-job
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Enforce destination boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${{ inputs.destination }}" in
+            proof-media/awards-compass-v2/*.mp4) ;;
+            *) echo 'DESTINATION_NOT_AUTHORIZED' >&2; exit 64;;
+          esac
+      - name: Download admitted transport package
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.admission_artifact_run_id }}
+          path: .media-input
+      - name: Locate bounded inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          ADMISSION="$(find .media-input -type f -name 'admission-receipt.json' -print -quit)"
+          STAGING="$(find .media-input -type f -name 'manifest.json' -path '*/.media-staging/awards-compass-v2/*' -printf '%h\n' -quit)"
+          test -n "$ADMISSION" && test -n "$STAGING"
+          rm -rf .media-staging/awards-compass-v2
+          mkdir -p .media-staging/awards-compass-v2
+          cp -R "$STAGING"/. .media-staging/awards-compass-v2/
+          cp "$ADMISSION" "$RUNNER_TEMP/admission-receipt.json"
+      - name: Materialize exact admitted media
+        run: node tools/ai-room-transport/ai-media-destination-job.v1.mjs --root . --admission-receipt "$RUNNER_TEMP/admission-receipt.json" --staging-dir .media-staging/awards-compass-v2 --destination "${{ inputs.destination }}" --expected-sha256 "${{ inputs.expected_sha256 }}" --output "$RUNNER_TEMP/destination-receipt.json" --commit-mode true
+      - name: Push bounded commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --porcelain
+          git push origin HEAD:${GITHUB_REF_NAME}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-media-destination-receipt
+          path: ${{ runner.temp }}/destination-receipt.json
+          if-no-files-found: error

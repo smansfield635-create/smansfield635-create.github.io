@@ -1,0 +1,122 @@
+{
+  "artifactId": "H_EARTH_TOUCH_MOTION_CALIBRATION_CP0_BASELINE_FREEZE_v1",
+  "program": "H_EARTH_TOUCH_MOTION_CALIBRATION_AND_FLUIDITY",
+  "checkpoint": "CP0_BASELINE_FREEZE",
+  "authorityQuestion": "WHAT_EXACT_ACCEPTED_STATE_AND_MUTATION_BOUNDARY_MUST_BE_PRESERVED?",
+  "repository": {
+    "fullName": "smansfield635-create/smansfield635-create.github.io",
+    "baselineHead": "27514bfe1c3ace69597af5eb5fd3ae830658765f",
+    "baselineHeadMessage": "Merge PR #282: guided interaction acceptance v2",
+    "baselineMergePr": 282,
+    "workingBranch": "agent/h-earth-touch-motion-calibration-cp0-baseline-001",
+    "productionRoute": "/showroom/globe/h-earth/",
+    "diagnosticRoute": "/showroom/globe/h-earth/diagnostic/"
+  },
+  "preservedSourceIdentities": [
+    {
+      "role": "PUBLIC_ROUTE_BOOTSTRAP_AND_TOUCH_CAMERA_BINDING",
+      "path": "showroom/globe/h-earth/index.js",
+      "blobSha": "b26aa16abfebf24bf0d77b62d36f7a11ade1ac5c",
+      "contractId": "H_EARTH_3D_INDEX_BOOTSTRAP_FILE_RENEWAL_STEP_034Q_BRANCH_SPECIFIC_DEPLOYED_MODULE_RESPONSE_DIAGNOSTICS_v1"
+    },
+    {
+      "role": "POINTER_TOUCH_INTAKE_AND_GESTURE_CLASSIFICATION",
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "blobSha": "f9689f0accd1fe0067c36bc0d1e4b199cf6c9fe5",
+      "contractId": "H_EARTH_RUN_8E_R3D2_POINTER_TOUCH_NAVIGATION_PROPOSAL_INTAKE_v1"
+    },
+    {
+      "role": "NAVIGATION_PROPOSAL_AND_STATE_AUTHORITY",
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "blobSha": "8ab3446c536fc24423d5601acce232b19fa71c91",
+      "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1"
+    },
+    {
+      "role": "CAMERA_AND_CONTROLLER_AUTHORITY",
+      "path": "showroom/globe/h-earth/controller.js",
+      "blobSha": "6720240473626f6589e1964b247436d46d5f6fb8",
+      "contractId": "H_EARTH_3D_CONTROLLER_FILE_RENEWAL_STEP_034P_BOUNDED_GROUND_VIEW_CAMERA_AND_CONTROLLER_v1"
+    },
+    {
+      "role": "CAMERA_INTERACTION_AND_EXECUTION_CAPACITY",
+      "path": "showroom/globe/h-earth/capacity.js",
+      "blobSha": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8",
+      "contractId": "H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5"
+    },
+    {
+      "role": "FRAME_COMPOSITION_AUTHORITY",
+      "path": "showroom/globe/h-earth/compositor.js",
+      "blobSha": "3764f0d53b0564de7a5e983bd339dda75017bc82",
+      "contractId": "H_EARTH_3D_COMPOSITOR_FILE_RENEWAL_STEP_034O_8_ADMITTED_GEOMETRY_FRAME_COMPOSITION_v1"
+    },
+    {
+      "role": "RENDERER_AND_GPU_PRESENTATION_AUTHORITY",
+      "path": "showroom/globe/h-earth/renderer.js",
+      "blobSha": "799d37cec5244e6aa19b7d94dffe37e182b85884",
+      "contractId": "H_EARTH_3D_RENDERER_FILE_RENEWAL_STEP_034O_9_ADMITTED_GEOMETRY_FRAME_MATERIALIZATION_v1"
+    },
+    {
+      "role": "CURRENT_GUIDED_EIGHT_GESTURE_ACCEPTANCE_DIAGNOSTIC",
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js",
+      "blobSha": "3e47f49c9692e22e77c784afa6877a5ed6cd9c19",
+      "contractId": "H_EARTH_GUIDED_INTERACTION_ACCEPTANCE_SESSION_v2"
+    }
+  ],
+  "baselineFacts": {
+    "primaryInputAuthority": "TOUCH",
+    "target": "ALL_SUPPORTED_TOUCH_DEVICES",
+    "gesturesInScope": [
+      "TURN_LEFT",
+      "TURN_RIGHT",
+      "PITCH_UP",
+      "PITCH_DOWN",
+      "MOVE_FORWARD",
+      "MOVE_BACKWARD",
+      "ZOOM_IN",
+      "ZOOM_OUT"
+    ],
+    "gestureFunctionality": "PRESERVED_8_OF_8_BY_CURRENT_GUIDED_DIAGNOSTIC_CORRIDOR",
+    "renderer": "PRESERVE",
+    "worldGeometry": "PRESERVE",
+    "cameraTruth": "PRESERVE",
+    "navigationProposalContract": "PRESERVE_WHERE_POSSIBLE",
+    "desktopKeyboard": "DEFERRED_NONBLOCKING",
+    "gameplayExpansion": "HELD_UNTIL_TRAVERSAL_QUALITY_ACCEPTED"
+  },
+  "authorizedMutationClass": "CONTROL_EVIDENCE_TRACE_FIXTURE_MOTION_INTEGRATION_CALIBRATION_AND_DIAGNOSTIC_PATHS_ONLY_AS_SEPARATELY_AUTHORIZED_PER_CHECKPOINT",
+  "prohibitedMutationClassesAtCp0": [
+    "RENDERER",
+    "COMPOSITOR",
+    "WORLD_GEOMETRY",
+    "TERRAIN",
+    "CHARACTER_SYSTEM",
+    "GAMEPLAY_SYSTEM",
+    "DESKTOP_KEYBOARD",
+    "DEVICE_BRAND_BRANCHING",
+    "PRODUCTION_TOUCH_MOTION_IMPLEMENTATION"
+  ],
+  "rollback": {
+    "repositoryRollbackCommit": "27514bfe1c3ace69597af5eb5fd3ae830658765f",
+    "pathRollbackLaw": "RESTORE_EACH_PRESERVED_PATH_TO_RECORDED_BLOB_IDENTITY",
+    "branchRollbackLaw": "DELETE_OR_ABANDON_CHECKPOINT_BRANCH_WITHOUT_UPDATING_MAIN"
+  },
+  "physicalEvidence": {
+    "knownExternalPackageName": "H_EARTH_FD05_BROWSER_EVIDENCE_PACKAGE_a2507ce5-f588-4a99-b03c-55de1bbe8578.json",
+    "repositoryBlobSha": null,
+    "driveFileId": null,
+    "exactReceiptIdentityStatus": "HELD_PENDING_FETCHABLE_IDENTITY",
+    "phoneRenderingClaim": "USER_REPORTED_PASS",
+    "tabletRenderingClaim": "USER_REPORTED_PASS",
+    "promotionAuthority": false
+  },
+  "exitEvidence": {
+    "baselineRenderer": "PASS_PRESERVED_BY_EXACT_REPOSITORY_IDENTITY",
+    "baselinePhoneRendering": "PASS_USER_SUPPLIED_EXTERNAL_EVIDENCE_IDENTITY_HELD",
+    "baselineTabletRendering": "PASS_USER_SUPPLIED_EXTERNAL_EVIDENCE_IDENTITY_HELD",
+    "baseline8GestureFunctionality": "PRESERVED",
+    "rollbackIdentity": "RECORDED",
+    "authorizedPathSet": "LOCKED_AT_MUTATION_CLASS_LEVEL",
+    "checkpointDisposition": "PASS_WITH_EXTERNAL_RECEIPT_IDENTITY_HOLD"
+  },
+  "stoppingBoundary": "STOP_BEFORE_CP1_OR_ANY_TOUCH_MOTION_IMPLEMENTATION_UNTIL_EXTERNAL_PHYSICAL_RECEIPT_IDENTITY_IS_FETCHED_OR_EXPLICITLY_DISPOSITIONED"
+}

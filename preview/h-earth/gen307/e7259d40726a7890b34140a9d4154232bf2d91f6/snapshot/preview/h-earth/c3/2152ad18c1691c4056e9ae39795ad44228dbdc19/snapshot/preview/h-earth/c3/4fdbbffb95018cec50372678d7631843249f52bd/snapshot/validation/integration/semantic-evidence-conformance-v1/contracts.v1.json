@@ -1,0 +1,81 @@
+{
+  "schema": "ESTATE_SEMANTIC_EVIDENCE_CONFORMANCE_CONTRACTS_v1",
+  "version": "1.0.0",
+  "status": "CANDIDATE_NONPRODUCT_VALIDATION_INTEGRATION",
+  "operationId": "ESTATE_SEMANTIC_EVIDENCE_CONFORMANCE_SUPPORT_v1",
+  "purpose": "Define reusable conformance boundaries for semantic decision evidence, authority transitions, AI evidence transformations, and failure capture ordering without modifying subject systems or LRPv1.",
+  "foundationBindings": {
+    "lineageReceiptProtocol": "LINEAGE_RECEIPT_PROTOCOL_v1",
+    "estateValidation": "ESTATE_VALIDATION_v1",
+    "repositoryAiRouter": "SMANSFIELD_REPOSITORY_AI_ROUTER_v1",
+    "lrpv1CoreMutationRequired": false
+  },
+  "relationResolution": {
+    "states": [
+      "ASSERTED",
+      "NONE",
+      "UNKNOWN",
+      "UNEVALUABLE",
+      "CONFLICTED"
+    ],
+    "edgeAdmissionRule": "EDGE_ELIGIBLE_IMPLIES_ASSERTED",
+    "nonAssertedStatesRemainDistinct": true,
+    "graphMembershipMayUpgradeResolution": false
+  },
+  "semanticDecisionProfile": {
+    "schema": "SEMANTIC_EVIDENCE_DECISION_PROFILE_v1",
+    "receiptClass": "SEMANTIC_RELATION_DECISION",
+    "requiresContextRevision": true,
+    "requiresAuthorityAndClaimCeiling": true,
+    "requiresSourceIdentityAndProvenance": true
+  },
+  "authorityTransitionProfile": {
+    "schema": "AUTHORITY_TRANSITION_LEDGER_PROFILE_v1",
+    "stateChangeRequiresAuthorityReceipt": true,
+    "transitionToAssertedRequiresSourceEvidence": true,
+    "standingChangeRequiresDedicatedAuthorityReceipt": true,
+    "claimCeilingChangeRequiresDedicatedAuthorityReceipt": true
+  },
+  "aiEvidenceConformance": {
+    "schema": "AI_EVIDENCE_CONFORMANCE_PROFILE_v1",
+    "epistemicModes": [
+      "PARAPHRASE",
+      "SYNTHESIS",
+      "INFERENCE",
+      "HYPOTHESIS"
+    ],
+    "laws": [
+      "AI_MAY_REASON_BEYOND_RECORD_BUT_MAY_NOT_UPGRADE_RECORD",
+      "OUTPUT_CLAIM_CLASS_MUST_BE_EXPLICITLY_PERMITTED",
+      "ASSERTED_RELATION_REQUIRES_ASSERTED_INPUT_OR_AUTHORIZED_TRANSITION",
+      "UNRESOLVED_INPUT_STATE_MUST_NOT_BE_SUPPRESSED",
+      "SOURCE_RECEIPTS_MAY_NOT_BE_MUTATED_BY_AI_TRANSFORMATION"
+    ]
+  },
+  "runtimeCaptureOrder": {
+    "schema": "RUNTIME_CAPTURE_ORDER_PROFILE_v1",
+    "failureRequiresCapture": true,
+    "requiredOrder": [
+      "CAPTURED",
+      "SEALED",
+      "PERSISTED",
+      "TEARDOWN"
+    ],
+    "law": "FAILURE_IMPLIES_CAPTURE_THEN_SEAL_THEN_PERSIST_THEN_TEARDOWN"
+  },
+  "graphConformance": {
+    "status": "DEFERRED_PENDING_CONTEXT_GRAPH_CONTRACT_FREEZE",
+    "currentBoundaryOnly": [
+      "NON_ASSERTED_RESOLUTION_MAY_NOT_BE_PRESENTED_AS_ASSERTED_CONNECTIVITY",
+      "GRAPH_OR_GEOMETRY_MAY_NOT_UPGRADE_UPSTREAM_STANDING_OR_CLAIM_CEILING",
+      "SPATIAL_MANIFESTATION_HAS_NO_SCIENTIFIC_RELATION_AUTHORITY"
+    ]
+  },
+  "validationBoundary": {
+    "externalValidationClaimed": false,
+    "certificationClaimed": false,
+    "scientificValidityClaimed": false,
+    "productMutationAuthorized": false,
+    "subjectSystemMutationAuthorized": false
+  }
+}

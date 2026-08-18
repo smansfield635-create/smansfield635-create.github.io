@@ -1,0 +1,45 @@
+{
+  "schema": "H_EARTH_LIVE_EXPERIENCE_PAGE_EXCELLENCE_BINDING_v1",
+  "mandatoryToolset": {"id":"MANDATORY_PAGE_TOOLSET","version":"1.1.0","statusRequired":"ACTIVE_VERSION_BOUND"},
+  "futurePublicRoute": "showroom/globe/h-earth/",
+  "futureImplementationClassCandidate": "EXISTING_CONSTRUCT_ADOPTION",
+  "classificationStatus": "STRATEGY_BINDING_ONLY_REQUIRES_FRESH_PAGE_ARCHITECTURE_RECEIPT_AT_HC02",
+  "exactSourceConstructIdentities": [
+    {
+      "sourceConstructId":"H_EARTH_LIVE_RUNTIME_CURRENT",
+      "repositoryPaths":["showroom/globe/h-earth/index.js","showroom/globe/h-earth/compositor.js","showroom/globe/h-earth/renderer.js","showroom/globe/h-earth/controller.js","showroom/globe/h-earth/environment.js"],
+      "commitSha":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc",
+      "implementationSourceDisposition":"ADOPT_UNCHANGED_BY_DEFAULT"
+    },
+    {"path":"showroom/globe/audralia/index.html","commitSha":"9eb636d33cff36b2344bb721726db7b4e8dcd2bc","gitBlobSha":"5a34e86e17b037788bcfdb21928490da56ca3eba","sourceConstructId":"AUDRALIA_WORLD_DOMINANT_VIEWPORT_CURRENT","disposition":"REFERENCE_FOR_VIEWPORT_AUTHORITY_CAPABILITY_ONLY"}
+  ],
+  "adoptionMatrix": [
+    {
+      "sourceConstructId":"H_EARTH_LIVE_RUNTIME_CURRENT",
+      "capability":"WORKING_GROUND_VIEW_RUNTIME_CAMERA_TRAVERSAL_RENDERER_COMPOSITOR",
+      "action":"ADOPT_UNCHANGED",
+      "adapterInterface":"PRESENTATION_HOST_ONLY",
+      "preservedInvariants":["RUNTIME_BEHAVIOR","CAMERA_TRAVERSAL","GEOGRAPHY_IDENTITY","WATER_RELATIONSHIPS"],
+      "prohibitedSubstitutes":["REBUILD_RUNTIME_TO_SIMPLIFY_UNBOXING"]
+    },
+    {
+      "sourceConstructId":"AUDRALIA_WORLD_DOMINANT_VIEWPORT_CURRENT",
+      "capability":"VIEWPORT_DOMINANCE_AND_CONTEXTUAL_OVERLAY_PRESENTATION",
+      "action":"ADAPT",
+      "adapterInterface":"H_EARTH_ENVIRONMENT_DOMINANT_HOST",
+      "preservedInvariants":["ENVIRONMENT_OCCUPIES_PERCEPTUAL_AUTHORITY"],
+      "prohibitedSubstitutes":["COPY_AUDRALIA_PLANETARY_VISUAL_GRAMMAR","TURN_H_EARTH_INTO_A_GLOBE"]
+    },
+    {
+      "sourceConstructId":"CURRENT_H_EARTH_DEVELOPMENT_SHELL",
+      "capability":"DIAGNOSTICS_EXPLANATORY_PANELS_BADGES_LENSES_AND_DEVELOPMENT_FRAMING",
+      "action":"EXCLUDE",
+      "adapterInterface":"DIAGNOSTIC_OR_OPTIONAL_CONTEXT_MODE",
+      "preservedInvariants":["DIAGNOSTIC_CAPABILITY_REMAINS_AVAILABLE"],
+      "prohibitedSubstitutes":["DELETE_DIAGNOSTICS_TO_HIDE_THEM","KEEP_DEVELOPMENT_SHELL_VISIBLE_BY_DEFAULT"]
+    }
+  ],
+  "visualArchitectureAuthority":"EXISTING_H_EARTH_RUNTIME_PLUS_SEPARATELY_ADOPTED_VIEWPORT_AUTHORITY_CAPABILITY",
+  "requiredRuntimeConditions":["REAL_3D_ENVIRONMENT","PRIMARY_DIRECT_MANIPULATION","PHONE_TABLET_DESKTOP_EQUIVALENCE","EXACT_RETURN_OF_SPATIAL_STATE_WHERE_APPLICABLE","NO_VISIBLE_PREVIOUS_NEXT_PRIMARY_NAVIGATION","NO_RUNTIME_REGRESSION_FROM_UNBOXING"],
+  "rule":"THIS_FILE_DOES_NOT_REPLACE_THE_PAGE_OPERATION_ENTRY_GATE_OR_ITS_REQUIRED_PHASE_RECEIPTS"
+}

@@ -1,0 +1,110 @@
+{
+  "schema": "H_EARTH_R06_C10_ROLE_4_COMPLETE_PORTABLE_SUBSTRATE_FREEZE_RECEIPT_v1",
+  "receiptId": "H_EARTH_R06_C10_ROLE_4_COMPLETE_PORTABLE_SUBSTRATE_FREEZE_RECEIPT_v1",
+  "operationId": "H_EARTH_R06_C10_ROLE_4_COMPLETE_PORTABLE_SUBSTRATE_FREEZE_001",
+  "exactSuccessToken": "R06_C10_ROLE_4_COMPLETE_PORTABLE_SUBSTRATE_FREEZE_PASS_CLOSED",
+  "status": "PASS_CLOSED",
+  "sourceRole": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "exactStartingMainHead": "5dca972ad76b4c5c0ecedd9ac4eb600a1a9c68e3",
+  "project": "H_EARTH_C2_R1_COMPLETE_WORLD",
+  "substrate": {
+    "substrateId": "H_EARTH_R06_C10_GEOMETRY_ARTICULATION_SHARED_TOOL_BASE_v1",
+    "freezeClass": "FIRST_COMPLETE_PORTABLE_SHARED_SUBSTRATE",
+    "freezeVersion": "1.0.0_ROLE_4_COMPLETE_PORTABLE_SUBSTRATE_FROZEN",
+    "packageVersion": "0.3.2_ROLE_1_RECOVERY_ROOT_GENERALIZED",
+    "archiveName": "H_EARTH_R06_C10_ROLE_1_NONPRODUCT_TOOL_CONSTRUCTION_COMPLETE_v1_0_3_2_RECOVERY_ROOT_GENERALIZED.zip",
+    "driveFileId": "1FNI8K_MBzFhKnVlq0HHVrDU1mDNYd_Gp",
+    "archiveSha256": "215749b55b6b933f4142aac585af699a99c797b9573b33bea4fdddf8ec941b07",
+    "archiveByteCount": 13364458,
+    "archiveMemberCount": 167,
+    "completeMemberManifestCoverage": "167_OF_167_PASS",
+    "completeMemberManifestSha256": "937c59f56313403763104472ab2897698bdc544ba9fb6ea21abe5e0218837172",
+    "internalSha256SumsCoverage": "166_OF_166_PASS"
+  },
+  "durableGateChain": {
+    "role1C5B": {
+      "result": "R06_C10_ROLE_1_C5B_TOOL_8_RECOVERY_ROOT_GENERALIZATION_PASS_CLOSED",
+      "receiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role1.c5b.recovery-root-generalization.receipt.v1.json",
+      "gitBlob": "7aa5a2fb7aa23c509b996c7ecc4e9b5c7f01e33e"
+    },
+    "role3C5B": {
+      "result": "R06_C10_ROLE_3_INDEPENDENT_TOOLCHAIN_EXECUTION_PASS_CLOSED",
+      "publicationResult": "R06_C10_ROLE_3_C5B_INDEPENDENT_RECEIPT_PUBLICATION_PASS_CLOSED",
+      "receiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role3.c5b-independent-toolchain-execution.receipt.v1.json",
+      "gitBlob": "aa7edfd0fcbb5f186fb43f830e47fc3871ccd429",
+      "sha256": "c740cb18ebc334cc74911ba0f9bd74128d7354d90f0d42db64ea757d8b30ac5f"
+    },
+    "role5": {
+      "result": "R06_C10_ROLE_5_INTEGRATED_TOOL_BASE_RATIFICATION_PASS_CLOSED",
+      "publicationResult": "R06_C10_ROLE_5_INTEGRATED_RATIFICATION_RECEIPT_PUBLICATION_PASS_CLOSED",
+      "receiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role5.integrated-tool-base-ratification.receipt.v1.json",
+      "gitBlob": "f2b7ff67ea77841d306717a65005c6aa582f5c40",
+      "sha256": "b5a9a78d9aeeab7b5cce27d9069780637611461383b7cb3f588df44bdc13fc8d"
+    },
+    "role2": {
+      "result": "R06_C10_ROLE_2_REVIEW_LAYER_PREPARATION_PASS_CLOSED",
+      "publicationResult": "R06_C10_ROLE_2_REVIEW_LAYER_RECEIPT_PUBLICATION_PASS_CLOSED",
+      "receiptPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role2.review-layer-preparation.receipt.v1.json",
+      "gitBlob": "854b28e8f1511cf13ed824133d81c0f5dbbb2301",
+      "sha256": "e734b0faa64e5ddaceafba2630f8e89dfbcafc842daa7c9e0e5d39814ad0d9b2"
+    }
+  },
+  "frozenOperationalLaws": {
+    "toolOwnership": "PROJECT_SHARED",
+    "roleAuthority": "OPERATION_SCOPED",
+    "oneActiveHolderPerRolePerOperation": true,
+    "mutatorSelfIndependentVerificationProhibited": true,
+    "sameOperationSelfRatificationProhibited": true,
+    "hiddenRoleAssumptionProhibited": true,
+    "conversationMemoryDependence": false,
+    "candidateAdmissionFailClosedProhibitsUserReview": true,
+    "failedAssertionConversionToPassProhibited": true,
+    "userDifferentialBaseline": "ACCEPTED_LIVE_V2_BASELINE",
+    "userDifferentialCandidateRequirement": "ADMITTED_CANDIDATE_ONLY"
+  },
+  "verificationState": {
+    "eightToolSubstrate": "COHERENT_PASS",
+    "toolchainVerification": "PASS",
+    "recoveryAndSuccession": "COHERENT_PASS",
+    "roleTransitionContinuity": "COHERENT_PASS",
+    "assertionsImplemented": 28,
+    "assertionsExecuted": 28,
+    "assertionsPass": 25,
+    "assertionsFail": 3,
+    "exactFailAssertionIds": [
+      "19_SLOPE_EDGE_RISE_AND_NORMAL_ANGLE_BOUNDS_PASS",
+      "20_TRAVERSABLE_OPENING_WIDTH_LENGTH_SLOPE_CLEARANCE_PASS",
+      "23_FALL_FACE_BASIN_DRAINAGE_OUTLET_READINESS_PASS"
+    ],
+    "currentConformanceFixture": "NOT_A_PRODUCT_CANDIDATE",
+    "candidateAdmission": "FAIL_CLOSED_AS_EXPECTED",
+    "role2ReviewLayerReadiness": "PASS"
+  },
+  "protectedState": {
+    "acceptedLiveBaseline": "TERRAIN_RELIEF_V2",
+    "acceptedLiveMainMergeCommit": "6836288462bbbc7ab7c03d5f12fafaab119f9e36",
+    "productMutation": false,
+    "currentProductCandidate": "NONE",
+    "userReviewRequested": false,
+    "officialGeometryArticulationRound": "NOT_STARTED"
+  },
+  "freezeEffect": {
+    "completePortableSubstrateFrozen": true,
+    "futureSubstrateMutationRequiresNewBoundedCorrectionOperation": true,
+    "downstreamIndependentReverificationRequiredAfterFutureSubstrateMutation": true,
+    "officialRoundStartReadiness": "PASS",
+    "officialRoundStartAuthorizedByThisReceipt": false,
+    "nextOperation": "H_EARTH_R06_C10_OFFICIAL_GEOMETRY_ARTICULATION_ROUND_START_001"
+  },
+  "publication": {
+    "authorizedChangedPathCount": 1,
+    "authorizedPath": "h-earth-3d/control-plane/r06-c10/receipts/h-earth.r06-c10.role4.complete-portable-substrate-freeze.receipt.v1.json",
+    "branch": "role4/r06-c10-complete-portable-substrate-freeze-001",
+    "commitMessage": "Freeze R06 C10 complete portable geometry substrate"
+  },
+  "return": {
+    "nextRoom": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+    "stopAfterFreeze": true,
+    "waitForUserDirection": false
+  }
+}

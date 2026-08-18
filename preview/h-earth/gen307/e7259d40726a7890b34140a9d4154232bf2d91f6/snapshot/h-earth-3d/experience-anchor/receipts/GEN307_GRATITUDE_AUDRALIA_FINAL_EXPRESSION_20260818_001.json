@@ -1,0 +1,86 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_GEN307_EXPERIENCE_ANCHOR_EVIDENCE_SUPPLEMENT_20260818_002",
+  "evidenceOperationGeneration": 308,
+  "candidateProvenanceHead": "71bafea00748e672cf64320507d346438bf06a75",
+  "qualifiedGen306Base": "dbf2f3ec90faa59c09193e61a0d141481b68d758",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.visual.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.interaction.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.continuity.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/docs/H_EARTH_GRATITUDE_AUDRALIA_FINAL_SUBTROPICAL_CONTINENTAL_EXPRESSION_SUCCESSOR_CONTRACT_v1.md",
+      "sha256": "93c4fcda4f785d051f7a6efbc99bbe4324fea99b96cf36dde27421e77fdce5bc"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "sha256": "ad3728cf073e310536426b774ce70b7d9a7a7b968f9c3ef5692efd308b77b9b4"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs",
+      "sha256": "92cbb4c678174e07c374eb247207ba2ad3d100db7e41bc71a34f4d46e1520932"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "sha256": "d03460ec397bf4e6762cf08a19c2d720cb7e7cda3035cb4a99fb2b806526a7b0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-preview.js",
+      "sha256": "a0b331fb6167536bae10161ef6ce2971ebfd2814e94cca75e428ac3b19933bb1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "4581db777853e0bfd5b22124fe8d21d3361442c666ea62f49fcf1fdda0f74b3f"
+    }
+  ],
+  "runtimeEvidence": {
+    "workflowRun": 32091151997,
+    "artifactId": 9308373643,
+    "artifactSha256": "9191d690e427a872b644e1bdb9d6a89f98423a59f370ff3cb6f4764113ca15f0",
+    "desktopWebglRuntimePass": true,
+    "mobileWebglRuntimePass": true,
+    "desktopInteractionPass": true,
+    "mobileInteractionPass": true,
+    "runtimeErrorsClean": true
+  },
+  "stalePredicateDetermination": {
+    "classification": "PREDECESSOR_INVALID_PREDICATES_EXCLUDED_FROM_GEN307_SUCCESSOR_FAILURE_INFERENCE",
+    "cp3dFailureRun": 32091152024,
+    "predicateIdentity": "CP3D_CANONICAL_NODE_PACKAGE_NOT_ELIGIBLE",
+    "relatedStalePredicates": [
+      "PACKAGE_BOUNDARY_ASSERTION",
+      "RUNTIME_IDENTITY_IMPORT_ASSERTION",
+      "RUN8B_PREDECESSOR_ASSERTION"
+    ],
+    "gen306ComparisonRun": 32090223103,
+    "gen306RendererContractBlob": "9ddb4555c2fee40e232f6e9b79c37c240795711d",
+    "gen307RendererContractBlob": "9ddb4555c2fee40e232f6e9b79c37c240795711d",
+    "governingRendererBytesUnchanged": true,
+    "exclusionReason": "The failing CP3D predicate asserts a predecessor package eligibility condition that is already invalid at the qualified Gen306 comparison state. The governing renderer contract is byte-identical in Gen306 and Gen307, while exact-head desktop/mobile browser evidence independently demonstrates WebGL rendering, interaction, and clean runtime errors. The red predicate therefore does not establish a Gen307 successor regression and must not be reopened absent a later identity change that invalidates this comparison."
+  },
+  "candidateIdentityRule": "THIS_RECEIPT_COMMIT_AND_ITS_DESCENDANTS_SUPERSEDE_71BAFEA_AS_THE_QUALIFICATION_SUBJECT;_71BAFEA_REMAINS_PROVENANCE_ONLY",
+  "issues": []
+}

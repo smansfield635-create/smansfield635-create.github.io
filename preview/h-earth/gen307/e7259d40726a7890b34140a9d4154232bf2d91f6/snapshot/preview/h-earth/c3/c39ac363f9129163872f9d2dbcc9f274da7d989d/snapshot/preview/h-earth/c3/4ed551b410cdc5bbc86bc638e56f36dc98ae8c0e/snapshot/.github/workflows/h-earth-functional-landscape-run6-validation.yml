@@ -1,0 +1,18 @@
+name: H-Earth Functional Landscape Run 6 Validation — archived
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archive-notice:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report archived verification custody
+        run: |
+          echo 'This fixed-branch Run 6 validation is retired from automatic pull-request execution.'
+          echo 'Original repository commit: 5efe5118e0addfa6965a2f00511b531afa8c8d8a'
+          echo 'Original workflow blob: 32af5e41d8235b3e6ae3f21a6c838dc9cb7762c5'
+          echo 'The original YAML remains recoverable from Git history; this manual entry creates no product or validation claim.'

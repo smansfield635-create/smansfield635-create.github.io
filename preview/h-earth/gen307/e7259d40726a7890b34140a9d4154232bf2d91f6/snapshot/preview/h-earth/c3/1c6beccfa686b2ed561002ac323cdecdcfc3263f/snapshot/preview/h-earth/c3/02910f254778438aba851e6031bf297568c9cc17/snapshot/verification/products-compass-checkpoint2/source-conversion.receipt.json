@@ -1,0 +1,28 @@
+{
+  "checkpoint": "PRODUCTS_COMPASS_CHECKPOINT_2_SOURCE_CONVERSION",
+  "status": "PATCH_APPLIED_PENDING_EXECUTION",
+  "source_blobs": {
+    "renderer": "6622f9cfd9e44589cf0e94119697256385f1317d",
+    "donor_compositor": "594eefa10bb7ad0583f7c3284a1e0daf28f34960",
+    "html": "5453122b40546361b8801b47e1017baf023fa9f8",
+    "css": "62b75247e9ac2bc250e17f524432283aae4e866e"
+  },
+  "result_blobs": {
+    "products/index.crystals.js": "db6889500dccab53365a564feb1aa96f34b4200d",
+    "products/index.compositor.js": "e712f5e583d32ee52cc88988ff98aac24161f3a8",
+    "products/index.html": "5531a2c9da687681515480d7019bbc64769ab424",
+    "products/index.compass.css": "11c624e8024b34f39e3021eaa895c39ffe436295"
+  },
+  "preservation": {
+    "products": 6,
+    "gestures_retained": true,
+    "shaders_retained": true,
+    "mesh_construction_retained": true,
+    "semantic_projection_retained": true,
+    "selection_retained": true,
+    "controller_integration_retained": true
+  },
+  "render_path": "REAR_COMPASS_FRONT_SEMANTIC",
+  "visual_pass_claimed": false,
+  "merge_authorized": false
+}

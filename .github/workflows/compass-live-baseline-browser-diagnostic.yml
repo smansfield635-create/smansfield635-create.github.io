@@ -1,0 +1,61 @@
+name: Compass Live Baseline Browser Diagnostic
+
+on:
+  push:
+    branches:
+      - diagnostic/compass-live-baseline-20260817
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - name: Measure live Compass cadence
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { chromium } from 'playwright';
+          const base='https://diamondgatebridge.com/';
+          const checks=[],metrics={};
+          const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const measure=async page=>page.evaluate(async()=>{const a=[];let last=performance.now();for(let i=0;i<120;i++)await new Promise(r=>requestAnimationFrame(now=>{a.push(now-last);last=now;r()}));const s=a.slice(8).sort((x,y)=>x-y);return{median:Number(s[Math.floor(s.length*.5)].toFixed(2)),p95:Number(s[Math.floor(s.length*.95)].toFixed(2)),samples:s.length}});
+          const browser=await chromium.launch({headless:true});
+          try {
+            for(const [name,width,height,reduced] of [['desktop',1440,900,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',820,1180,true]]){
+              const context=await browser.newContext({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'});
+              const page=await context.newPage(),errors=[];
+              page.on('pageerror',e=>errors.push(String(e)));
+              await page.goto(`${base}?live-baseline=${Date.now()}&surface=${name}`,{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForFunction(()=>globalThis.DGB_COMPASS_CRYSTALS_RECEIPT?.status==='available'&&globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT?.status==='available',null,{timeout:15000});
+              await page.waitForTimeout(1800);
+              const state=await page.evaluate(()=>({crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT,mirror:globalThis.DGB_COMPASS_MIRRORLAND_WINDOW_RECEIPT,cardinals:document.querySelectorAll('[data-cardinal-id]').length,rooms:document.querySelectorAll('[data-compass-room-declarations] [data-compass-room]').length,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-innerWidth}));
+              const frame=await measure(page);metrics[name]=frame;
+              check(`${name}_NO_ERRORS`,errors.length===0,errors);
+              check(`${name}_TOPOLOGY`,state.cardinals===4&&state.rooms===19,state);
+              check(`${name}_MIRRORLAND_21_PANES`,state.mirror?.paneCount===21,state.mirror);
+              check(`${name}_CRYSTAL_REGISTRY`,state.crystals?.registryCardinalCount===4&&state.crystals?.registryRoomCount===19,state.crystals);
+              check(`${name}_NO_OVERFLOW`,state.overflow<=2,state.overflow);
+              await context.close();
+            }
+            const receipt={schema:'COMPASS_LIVE_BASELINE_BROWSER_DIAGNOSTIC_v1',target:'https://diamondgatebridge.com/',targetFrameBudgetMs:16.7,metrics,checks};
+            fs.writeFileSync('/tmp/compass-live-baseline-browser.json',JSON.stringify(receipt,null,2)+'\n');
+            console.log(JSON.stringify(receipt,null,2));
+          } finally { await browser.close(); }
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-live-baseline-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-live-baseline-browser.json
+          retention-days: 30

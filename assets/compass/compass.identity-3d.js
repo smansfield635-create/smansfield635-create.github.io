@@ -37,7 +37,8 @@ function reconcileGen1561Runtime(){
     }
   }
   const door=document.querySelector('[data-compass-object="mirrorland"]');
-  if(door){door.setAttribute('data-compass-destination','true');door.dataset.destinationType='mirrorland';door.dataset.destinationId='mirrorland';door.dataset.gen1561MirrorlandSemantic='true'}
+  const ownedScene=state.root?.querySelector('[data-compass-scene]');
+  if(door){if(ownedScene&&door.parentElement!==ownedScene)ownedScene.append(door);door.setAttribute('data-compass-destination','true');door.dataset.destinationType='mirrorland';door.dataset.destinationId='mirrorland';door.dataset.gen1561MirrorlandSemantic='true';door.dataset.gen1561ControllerSceneBound=String(Boolean(ownedScene&&ownedScene.contains(door)))}
 }
 function mount(){
   mountIdentity();brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft();reconcileGen1561Runtime();

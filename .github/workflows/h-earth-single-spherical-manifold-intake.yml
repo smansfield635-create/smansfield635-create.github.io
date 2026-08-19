@@ -1,0 +1,20 @@
+name: H-Earth Single Spherical World Manifold Public Private Intake Call
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '305'
+      private_comment: '5344697912'
+      expected_request_id: 'H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_INTAKE_20260819_001'
+      exact_private_head: '367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab'
+      callback_issue: '1429'
+    secrets: inherit

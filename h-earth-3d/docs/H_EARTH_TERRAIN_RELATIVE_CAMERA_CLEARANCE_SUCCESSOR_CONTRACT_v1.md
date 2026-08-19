@@ -1,6 +1,8 @@
 # H-Earth Terrain-Relative Camera Clearance Successor Contract v1
 
-Operation: `H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_20260818_001`
+Operation: `H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_20260818_002`
+
+Predecessor intake `_001` / generation 319 was canonically `VOIDED` for an admitted-subject anchor naming defect before product qualification. No product byte or behavior was rejected by that disposition.
 
 Protected geographic floor: `e03363f42441cea7587a49623fd878e8ca51fe28`.
 
@@ -46,5 +48,7 @@ The exact harness `h-earth-3d/validation/h-earth.terrain-relative-camera-clearan
 7. direction reversal on a grade.
 
 Every accepted state must preserve visible-terrain clearance. The battery must also prove bounded vertical response, downhill restoration toward nominal clearance, deadband stability, visible-mesh identity, and byte preservation of protected Gen311 terrain files.
+
+The native qualification receipt must identify operation `H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_20260818_002` exactly.
 
 A machine PASS does not itself authorize merge or release. Owner/browser inspection remains required.

@@ -15,109 +15,32 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  actions: write
+  contents: read
 
 env:
+  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
   COMPASS_SCOPE_BASE_SHA: ad3357e817f50cb66b7074e0d620888f2bc5407f
   COMPASS_VERIFICATION_OUTPUT: /tmp/compass-room-selected-continuity-display.json
 
 jobs:
-  materialize-repair:
-    if: github.event_name == 'pull_request' && github.head_ref == 'fix/compass-room-selected-continuity-gen1538'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - name: Apply admitted bounded repair
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          controller_path = Path('assets/compass/compass.controller.js')
-          controller = controller_path.read_text()
-          old_guidance = '    ROOM_SELECTED:\n      "Review the selected room. Use Enter Room to continue, Return To Orbit to reopen the cluster, or swipe across open space to return to the constellation.",'
-          new_guidance = '    ROOM_SELECTED:\n      "Drag to rotate the cluster. Review the selected room, use Enter Room to continue, Return To Orbit to reopen the cluster, or swipe across open space to return to the constellation.",'
-          if old_guidance in controller:
-              controller = controller.replace(old_guidance, new_guidance, 1)
-          elif new_guidance not in controller:
-              raise SystemExit('ROOM_SELECTED_GUIDANCE_ANCHOR_MISSING')
-
-          start = controller.index('  function requestRoomSelection(')
-          end = controller.index('  function requestReturnToConstellation(', start)
-          segment = controller[start:end]
-          old_descend = '    setPanelDescended(\n      true\n    );'
-          new_descend = '    setPanelDescended(\n      false\n    );'
-          if old_descend in segment:
-              segment = segment.replace(old_descend, new_descend, 1)
-          elif new_descend not in segment:
-              raise SystemExit('ROOM_SELECTION_PANEL_STATE_ANCHOR_MISSING')
-          old_schedule = '    schedulePanelDescent(\n      id\n    );\n\n'
-          if old_schedule in segment:
-              segment = segment.replace(old_schedule, '', 1)
-          if 'schedulePanelDescent(' in segment:
-              raise SystemExit('ROOM_SELECTION_STILL_FORCES_PANEL_DESCENT')
-          controller = controller[:start] + segment + controller[end:]
-          controller_path.write_text(controller)
-
-          spacecraft_path = Path('assets/compass/compass.laws-spacecraft.js')
-          spacecraft = spacecraft_path.read_text()
-          old_start = '    api?.initialize?.();\n    root.dataset.compassSpacecraftSource='
-          new_start = '    api?.initialize?.();\n    api?.start?.();\n    root.dataset.compassSpacecraftSource='
-          if old_start in spacecraft:
-              spacecraft = spacecraft.replace(old_start, new_start, 1)
-          elif 'api?.start?.();' not in spacecraft:
-              raise SystemExit('SPACECRAFT_START_ANCHOR_MISSING')
-          spacecraft_path.write_text(spacecraft)
-          PY
-          node --check assets/compass/compass.controller.js
-          node --check assets/compass/compass.crystals.js
-          node --check assets/compass/compass.laws-spacecraft.js
-      - name: Commit bounded materialization if needed
-        id: commit
-        shell: bash
-        run: |
-          if git diff --quiet -- assets/compass/compass.controller.js assets/compass/compass.laws-spacecraft.js; then
-            echo 'changed=false' >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/compass/compass.controller.js assets/compass/compass.laws-spacecraft.js
-          git commit -m 'fix(compass): preserve room-selected manipulation [gen1538]'
-          git push origin HEAD:${{ github.head_ref }}
-          echo 'changed=true' >> "$GITHUB_OUTPUT"
-      - name: Dispatch exact-head qualification
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow run compass-display-continuity-validation.yml --ref '${{ github.head_ref }}'
-
   static-contract:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - name: Verify exact candidate static contracts
         run: |
-          test "$(git rev-parse HEAD^{commit})" = '${{ github.sha }}'
+          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node --check assets/compass/compass.controller.js
           node --check assets/compass/compass.crystals.js
           node --check assets/compass/compass.laws-spacecraft.js
           node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1538 and .candidate == env.GITHUB_SHA' "$COMPASS_VERIFICATION_OUTPUT" >/dev/null
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1538 and .candidate == env.COMPASS_CANDIDATE_HEAD' "$COMPASS_VERIFICATION_OUTPUT" >/dev/null
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -126,14 +49,13 @@ jobs:
           retention-days: 90
 
   runtime-capability-continuity:
-    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     needs: static-contract
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -153,11 +75,13 @@ jobs:
           import {chromium} from 'playwright';
           const browser=await chromium.launch({headless:true});
           const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const proxySnapshot=async page=>page.evaluate(()=>Array.from(document.querySelectorAll('[data-compass-room-proxy]')).filter(el=>{const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'}).map(el=>{const r=el.getBoundingClientRect();return{id:el.dataset.roomId||el.dataset.compassRoomProxy||el.textContent?.trim()||'',x:+r.x.toFixed(2),y:+r.y.toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),transform:getComputedStyle(el).transform}}));
+          const geometryChanged=(a,b)=>a.length>0&&b.length===a.length&&a.some((v,i)=>Math.abs(v.x-b[i].x)>1||Math.abs(v.y-b[i].y)>1||v.transform!==b[i].transform);
           try {
             for (const [name,width,height,reduced] of [['desktop',1440,1000,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',390,844,true]]) {
               const context=await browser.newContext({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'});
               const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-              await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.GITHUB_SHA}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});
+              await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.COMPASS_CANDIDATE_HEAD}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});
               await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT&&globalThis.DGB_LAWS_SPACECRAFT),null,{timeout:30000});
               await page.waitForTimeout(500);
               const selected=await page.evaluate(()=>{
@@ -166,29 +90,42 @@ jobs:
                 const beforeScroll=scrollY;const cardinal=api.requestCardinalSelection('north');const roomSelected=api.requestRoomSelection(room);
                 return {room,cardinal,roomSelected,beforeScroll,afterScroll:scrollY,state:api.getFrameState(),mode:root?.dataset.compassMode};
               });
-              await page.waitForTimeout(450);
-              const afterSelection=await page.evaluate(()=>({scrollY,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0),scene:document.querySelector('[data-compass-scene]')?.getBoundingClientRect().toJSON()}));
+              await page.waitForTimeout(350);
+              const afterSelection=await page.evaluate(()=>({scrollY,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0)}));
+              const geometry0=await proxySnapshot(page);
               check(`${name}_ROOM_SELECTED_REACHED`,selected.cardinal&&selected.roomSelected&&afterSelection.mode==='ROOM_SELECTED',{selected,afterSelection});
               check(`${name}_NO_FORCED_PANEL_DESCENT`,Math.abs(afterSelection.scrollY-selected.beforeScroll)<40,{before:selected.beforeScroll,after:afterSelection.scrollY});
+              check(`${name}_ROOM_PROXIES_PRESENT`,geometry0.length>0,geometry0);
               const scene=await page.locator('[data-compass-scene]').boundingBox();
               if(!scene) throw new Error(`${name}:SCENE_BOUNDING_BOX_MISSING`);
               const sx=scene.x+scene.width*.50,sy=scene.y+scene.height*.48;
-              const drag=async(dx,dy)=>{await page.mouse.move(sx,sy);await page.mouse.down();await page.mouse.move(sx+dx,sy+dy,{steps:8});await page.mouse.up();await page.waitForTimeout(reduced?80:450);return await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0),crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null}));};
-              const first=await drag(105,34);const second=await drag(-78,48);
+              const drag=async(dx,dy)=>{await page.mouse.move(sx,sy);await page.mouse.down();await page.waitForTimeout(70);await page.mouse.move(sx+dx,sy+dy,{steps:10});await page.waitForTimeout(130);await page.mouse.up();await page.waitForTimeout(reduced?100:520);return await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0),crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null}));};
+              const first=await drag(105,34);const geometry1=await proxySnapshot(page);
+              const second=await drag(-78,48);const geometry2=await proxySnapshot(page);
               check(`${name}_FIRST_POST_SELECTION_DRAG`,first.mode==='ROOM_SELECTED'&&first.quat!==afterSelection.quat,{before:afterSelection,after:first});
+              check(`${name}_FIRST_VISIBLE_GEOMETRY_CHANGE`,geometryChanged(geometry0,geometry1),{before:geometry0,after:geometry1});
               check(`${name}_SECOND_POST_SELECTION_DRAG`,second.mode==='ROOM_SELECTED'&&second.quat!==first.quat,{first,second});
+              check(`${name}_SECOND_VISIBLE_GEOMETRY_CHANGE`,geometryChanged(geometry1,geometry2),{first:geometry1,second:geometry2});
               check(`${name}_CONTROLLER_COMMIT_PROGRESS`,second.revision>afterSelection.revision,{before:afterSelection.revision,after:second.revision});
-              const sc=await page.evaluate(()=>{const api=globalThis.DGB_LAWS_SPACECRAFT;api.verificationSetProgress?.(.22);const a=api.snapshot?.();api.verificationSetProgress?.(.62);const b=api.snapshot?.();const hit=api.verificationHit?.();const c=api.snapshot?.();return {a,b,hit,c,receipt:api.receipt?.()};});
-              const apos=sc.a?.craft?.position||[],bpos=sc.b?.craft?.position||[];
-              check(`${name}_SPACECRAFT_FLIGHT_PROGRESS`,JSON.stringify(apos)!==JSON.stringify(bpos),{a:apos,b:bpos});
+              const sc=await page.evaluate(async reduced=>{
+                const api=globalThis.DGB_LAWS_SPACECRAFT;
+                if(reduced) return {receipt:api.receipt?.(),a:api.snapshot?.(),b:api.snapshot?.(),hit:false};
+                api.verificationSetProgress?.(.22);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const a=api.snapshot?.();
+                api.verificationSetProgress?.(.62);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const b=api.snapshot?.();
+                const hit=api.verificationHit?.();const c=api.snapshot?.();return {a,b,hit,c,receipt:api.receipt?.()};
+              },reduced);
               check(`${name}_SPACECRAFT_AUTHORITY_BOUNDARY`,sc.receipt?.ownsNavigation===false&&sc.receipt?.ownsControllerState===false&&sc.receipt?.ownsRoutes===false&&sc.receipt?.ownsCompassInteraction===false,sc.receipt);
-              if(!reduced) check(`${name}_SPACECRAFT_BOUNDED_HIT`,sc.hit===true&&Number(sc.c?.craft?.hitCount||0)>=1,{hit:sc.hit,c:sc.c});
+              if(reduced){check(`${name}_SPACECRAFT_REDUCED_MOTION_STOPPED`,sc.receipt?.reducedMotion===true&&sc.receipt?.running===false,sc.receipt);}else{
+                const apos=sc.a?.craft?.position||[],bpos=sc.b?.craft?.position||[];
+                check(`${name}_SPACECRAFT_FLIGHT_PROGRESS`,JSON.stringify(apos)!==JSON.stringify(bpos),{a:apos,b:bpos});
+                check(`${name}_SPACECRAFT_BOUNDED_HIT`,sc.hit===true&&Number(sc.c?.craft?.hitCount||0)>=1,{hit:sc.hit,c:sc.c});
+              }
               check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
               await page.screenshot({path:`/tmp/compass-room-selected-${name}.png`,fullPage:true});
               await context.close();
             }
           } finally {await browser.close();}
-          const failures=checks.filter(x=>!x.pass);const receipt={schema:'COMPASS_ROOM_SELECTED_CONTINUITY_RUNTIME_RECEIPT_v1',operationId:'COMPASS_ROOM_SELECTED_CONTINUITY_AND_QUALIFICATION_HARDENING_20260818_v2',lockGeneration:1538,candidateHead:process.env.GITHUB_SHA,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
+          const failures=checks.filter(x=>!x.pass);const receipt={schema:'COMPASS_ROOM_SELECTED_CONTINUITY_RUNTIME_RECEIPT_v1',operationId:'COMPASS_ROOM_SELECTED_CONTINUITY_AND_QUALIFICATION_HARDENING_20260818_v2',lockGeneration:1538,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
           fs.writeFileSync('/tmp/compass-room-selected-continuity-runtime-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4

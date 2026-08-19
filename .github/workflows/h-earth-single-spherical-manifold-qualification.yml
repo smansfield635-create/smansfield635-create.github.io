@@ -56,7 +56,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/smansfield635-create.github.io
-          ref: 6d603288bad6700b2a4fdd6cf5fe691e2fdb6904
+          ref: 60b47c98570abd71692b18e22431606257cdf314
           path: subject
           fetch-depth: 0
           persist-credentials: false
@@ -65,7 +65,7 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$RUNNER_TEMP/proof/request.json" --procedure "$RUNNER_TEMP/proof/procedure.json" --lock "$RUNNER_TEMP/proof/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 6d603288bad6700b2a4fdd6cf5fe691e2fdb6904 --execution-holder H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_PROOF_001 --output "$RUNNER_TEMP/proof/receipt.json"
+          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$RUNNER_TEMP/proof/request.json" --procedure "$RUNNER_TEMP/proof/procedure.json" --lock "$RUNNER_TEMP/proof/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 60b47c98570abd71692b18e22431606257cdf314 --execution-holder H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_PROOF_002 --output "$RUNNER_TEMP/proof/receipt.json"
       - name: Upload receipt
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

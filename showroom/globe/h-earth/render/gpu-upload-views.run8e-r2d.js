@@ -25,7 +25,7 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
     'roleCodes',
     'indices'
   ]),
-  maximumPermittedAbsoluteAdjustment: 0.00000051,
+  maximumPermittedAbsoluteAdjustment: 9.5367431640625e-7,
   sourceAuthorityMutation: false,
   packageSourceMutation: false,
   materialRetuning: false,

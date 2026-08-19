@@ -1,5 +1,6 @@
 name: Gen311 Repaired Head Admitted Procedure Qualification Proof
 
+# Execution-only carrier; never merge.
 on:
   pull_request:
     types: [opened, synchronize, reopened]

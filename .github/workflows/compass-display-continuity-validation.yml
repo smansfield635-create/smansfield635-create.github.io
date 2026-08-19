@@ -63,7 +63,7 @@ jobs:
           check('GEN1538_LOCAL_SPACECRAFT_DISABLED',spacecraft.includes('DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT=true'),'local spacecraft disabled');
           check('GEN1538_LAWS_SPACECRAFT_SOURCE',spacecraft.includes("import('/laws/index.spacecraft.background.js"),'Laws spacecraft imported');
           check('GEN1538_LAWS_SPACECRAFT_STARTED',spacecraft.includes('api?.start?.()'),'Laws spacecraft start invoked');
-          check('GEN1538_SOLE_PRESENTATION_AUTHORITY',statement.includes("spacecraftPresentationAuthority='laws-adapter-only'"),'statement owner delegates to Laws adapter');
+          check('GEN1538_SOLE_PRESENTATION_AUTHORITY',statement.includes("spacecraftPresentationAuthority='LAWS_SPACECRAFT_ONLY'"),'statement owner delegates to Laws adapter');
           check('GEN1538_OBSOLETE_WORLD_INTERACTION_ABSENT',!statement.includes('mountWorldInteraction'),'obsolete statement scene interaction absent');
           const failures=checks.filter(x=>!x.pass);
           const receipt={schema:'COMPASS_GEN1538_PERMANENT_INVARIANT_RECEIPT_v1',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
@@ -147,7 +147,7 @@ jobs:
               check(`${name}_EVIDENCE_EXIT`,presentation.evidenceHref==='/evidence/',presentation);
               check(`${name}_NO_HORIZONTAL_OVERFLOW`,presentation.overflow<=1,presentation);
               check(`${name}_DIMENSIONAL_STAGE_PRESENT`,presentation.capabilityCards===3&&presentation.proofCards===3,presentation);
-              check(`${name}_SOLE_SPACECRAFT_PRESENTATION_AUTHORITY`,presentation.spacecraftAuthority==='laws-adapter-only',presentation);
+              check(`${name}_SOLE_SPACECRAFT_PRESENTATION_AUTHORITY`,presentation.spacecraftAuthority==='LAWS_SPACECRAFT_ONLY',presentation);
 
               const selected=await page.evaluate(()=>{
                 const api=globalThis.DGB_COMPASS_CONTROLLER;

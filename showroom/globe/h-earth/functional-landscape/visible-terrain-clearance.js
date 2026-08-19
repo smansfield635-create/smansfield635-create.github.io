@@ -1,9 +1,13 @@
 /**
- * H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN312_v1
+ * H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN313_v1
  *
- * Samples the exact terrain mesh presented by the protected Gen311 landscape
- * preview. This module creates no geography, topology, renderer, navigation,
- * collision, merge, deployment, or production authority.
+ * Samples the exact terrain mesh presented by the protected Gen311 landscape.
+ * Gen321 extends the predecessor point/envelope model to a dense camera-volume
+ * corridor so steep relief between sparse samples cannot intersect the camera
+ * view volume while the origin itself remains nominally clear.
+ *
+ * This module creates no geography, topology, renderer, navigation-scale,
+ * collision/physics, merge, deployment, or production authority.
  */
 import {
   H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW
@@ -13,8 +17,10 @@ const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFr
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
 
-export const H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID='H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN312_v1';
+export const H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID='H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN313_v1';
 export const H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR='e03363f42441cea7587a49623fd878e8ca51fe28';
+export const H_EARTH_CAMERA_VOLUME_CLEARANCE_PROTECTED_PARENT='d9d4c0ada0d97e98340c3b771a23153cef1ecb00';
+export const H_EARTH_CAMERA_VOLUME_CLEARANCE_CONTRACT_ID='H_EARTH_CAMERA_VOLUME_CLEARANCE_GEN321_v1';
 
 function terrainPrimitive(){
   const preview=H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW;
@@ -43,9 +49,7 @@ function interpolateCell(vertices,cols,row,col,u,v){
   const e=vertices[(row+1)*cols+col];
   const d=vertices[(row+1)*cols+col+1];
   if(![a,b,e,d].every(p=>p&&finite(p.y)))return null;
-  if(u+v<=1){
-    return a.y*(1-u-v)+b.y*u+e.y*v;
-  }
+  if(u+v<=1)return a.y*(1-u-v)+b.y*u+e.y*v;
   return d.y*(u+v-1)+b.y*(1-v)+e.y*(1-u);
 }
 
@@ -63,7 +67,9 @@ export function sampleHEarthVisibleTerrainClearanceSurface(worldX,worldZ){
     valid:true,
     status:'VISIBLE_TERRAIN_SAMPLE_COMPLETE',
     contractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,
+    cameraVolumeContractId:H_EARTH_CAMERA_VOLUME_CLEARANCE_CONTRACT_ID,
     protectedGeographicFloor:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,
+    protectedParentHead:H_EARTH_CAMERA_VOLUME_CLEARANCE_PROTECTED_PARENT,
     worldX,worldZ,visibleElevation,
     sourcePrimitiveId:primitive.primitiveId,
     sourceGeometryId:geometry.geometryId,
@@ -78,29 +84,67 @@ export function sampleHEarthVisibleTerrainClearanceSurface(worldX,worldZ){
   });
 }
 
-export function sampleHEarthVisibleTerrainClearanceEnvelope(worldX,worldZ,{yawDegrees=0,lookAheadDistance=6,lateralRadius=1.25}={}){
+function cameraVolumePoints(worldX,worldZ,{yawDegrees,lookAheadDistance,lateralRadius}){
   const yaw=(finite(yawDegrees)?yawDegrees:0)*Math.PI/180;
   const forward={x:Math.sin(yaw),z:-Math.cos(yaw)};
   const right={x:Math.cos(yaw),z:Math.sin(yaw)};
-  const points=[
-    {role:'CENTER',x:worldX,z:worldZ},
-    {role:'LOOK_AHEAD',x:worldX+forward.x*lookAheadDistance,z:worldZ+forward.z*lookAheadDistance},
-    {role:'LEFT_FOOTPRINT',x:worldX-right.x*lateralRadius,z:worldZ-right.z*lateralRadius},
-    {role:'RIGHT_FOOTPRINT',x:worldX+right.x*lateralRadius,z:worldZ+right.z*lateralRadius}
-  ];
-  const samples=points.map(p=>freeze({...p,sample:sampleHEarthVisibleTerrainClearanceSurface(p.x,p.z)}));
+  // The predecessor sampled four isolated points. Gen321 samples a continuous
+  // approximation of the near camera/view corridor. Reach/radius are safety
+  // dimensions only; they do not change movement or world scale.
+  const reach=Math.max(8,finite(lookAheadDistance)?lookAheadDistance:0);
+  const radius=Math.max(3,(finite(lateralRadius)?lateralRadius:0)*2.4);
+  const distances=[0,.5,1.25,2.5,4,6,reach];
+  const lateralFractions=[-1,-2/3,-1/3,0,1/3,2/3,1];
+  const points=[];
+  for(let di=0;di<distances.length;di++){
+    const distance=distances[di];
+    // Slightly taper the corridor with distance, but never below the
+    // predecessor footprint. This captures near-plane and steep-side relief.
+    const localRadius=Math.max(finite(lateralRadius)?lateralRadius:0,radius*(1-.035*distance));
+    for(const fraction of lateralFractions){
+      const lateral=localRadius*fraction;
+      points.push({
+        role:distance===0&&fraction===0?'CENTER':'CAMERA_VOLUME',
+        distance,lateral,
+        critical:distance<=4,
+        x:worldX+forward.x*distance+right.x*lateral,
+        z:worldZ+forward.z*distance+right.z*lateral
+      });
+    }
+  }
+  return freeze({points,reach,radius});
+}
+
+export function sampleHEarthVisibleTerrainClearanceEnvelope(worldX,worldZ,{yawDegrees=0,lookAheadDistance=6,lateralRadius=1.25}={}){
+  const volume=cameraVolumePoints(worldX,worldZ,{yawDegrees,lookAheadDistance,lateralRadius});
+  const samples=volume.points.map(p=>freeze({...p,sample:sampleHEarthVisibleTerrainClearanceSurface(p.x,p.z)}));
+  const center=samples.find(x=>x.role==='CENTER');
+  if(center?.sample?.valid!==true)return freeze({valid:false,status:'VISIBLE_TERRAIN_CAMERA_VOLUME_INVALID',samples,issues:['CENTER_VISIBLE_TERRAIN_SAMPLE_INVALID']});
+  const critical=samples.filter(x=>x.critical);
+  if(critical.some(x=>x.sample.valid!==true))return freeze({valid:false,status:'VISIBLE_TERRAIN_CAMERA_VOLUME_INVALID',samples,issues:['CRITICAL_CAMERA_VOLUME_SAMPLE_OUTSIDE_PRESENTED_DOMAIN']});
   const valid=samples.filter(x=>x.sample.valid===true);
-  if(valid.length===0)return freeze({valid:false,status:'VISIBLE_TERRAIN_ENVELOPE_INVALID',samples,issues:['NO_VALID_VISIBLE_TERRAIN_CLEARANCE_SAMPLE']});
-  const visibleElevation=Math.max(...valid.map(x=>x.sample.visibleElevation));
+  if(valid.length<Math.ceil(samples.length*.8))return freeze({valid:false,status:'VISIBLE_TERRAIN_CAMERA_VOLUME_INVALID',samples,issues:['CAMERA_VOLUME_SAMPLE_COVERAGE_INSUFFICIENT']});
+  const highest=[...valid].sort((a,b)=>b.sample.visibleElevation-a.sample.visibleElevation)[0];
+  const visibleElevation=highest.sample.visibleElevation;
   return freeze({
     valid:true,
-    status:'VISIBLE_TERRAIN_ENVELOPE_COMPLETE',
+    status:'VISIBLE_TERRAIN_CAMERA_VOLUME_COMPLETE',
     contractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,
+    cameraVolumeContractId:H_EARTH_CAMERA_VOLUME_CLEARANCE_CONTRACT_ID,
+    protectedParentHead:H_EARTH_CAMERA_VOLUME_CLEARANCE_PROTECTED_PARENT,
     visibleElevation,
-    centerElevation:valid.find(x=>x.role==='CENTER')?.sample.visibleElevation??visibleElevation,
+    centerElevation:center.sample.visibleElevation,
+    highestSample:freeze({x:highest.x,z:highest.z,distance:highest.distance,lateral:highest.lateral,visibleElevation}),
     sampleCount:valid.length,
+    requiredSampleCount:samples.length,
+    invalidSampleCount:samples.length-valid.length,
+    cameraVolumeReach:volume.reach,
+    cameraVolumeRadius:volume.radius,
     samples,
     conservativeMaximumUsed:true,
+    denseCameraVolumeSampled:true,
+    nearPlaneProtection:true,
+    steepSlopeLateralProtection:true,
     geographyAuthorityCreated:false,
     topologyAuthorityCreated:false,
     navigationScaleAuthorityCreated:false,

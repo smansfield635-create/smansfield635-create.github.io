@@ -18,16 +18,14 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 1
           persist-credentials: false
-
       - name: Download registered approved master
         shell: bash
         run: |
           set -euo pipefail
           python -m pip install --quiet gdown
-          gdown 1fc7SxAJd68AEyjuKnOD5xprZm0j5FkFL -O /tmp/chapter01-final-master.mp4
+          gdown 1DlNkR4aFWAY-h5OYSoi07trfQeMu1BWR -O /tmp/chapter01-final-master.mp4
           test "$(stat -c%s /tmp/chapter01-final-master.mp4)" = "15365888"
           test "$(sha256sum /tmp/chapter01-final-master.mp4 | awk '{print $1}')" = "9be6d48d6a8ceeb6d26a64d12440f929ce7f9bac9b6b48bad301ef9a3f6d881f"
-
       - name: Create bounded unreferenced Git blobs and manifest
         env:
           GH_TOKEN: ${{ github.token }}
@@ -39,31 +37,20 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import base64, hashlib, json, os, urllib.request
-          source = '/tmp/chapter01-final-master.mp4'
-          chunk_size = 524288
-          token = os.environ['GH_TOKEN']
-          repo = os.environ['REPOSITORY']
-          chunks = []
-          with open(source, 'rb') as f:
-              index = 0
-              while True:
-                  chunk = f.read(chunk_size)
-                  if not chunk:
-                      break
-                  body = json.dumps({'content': base64.b64encode(chunk).decode('ascii'), 'encoding': 'base64'}).encode()
-                  req = urllib.request.Request(f'https://api.github.com/repos/{repo}/git/blobs', data=body, headers={'Authorization': f'Bearer {token}','Accept': 'application/vnd.github+json','X-GitHub-Api-Version': '2022-11-28','Content-Type': 'application/json','User-Agent': 'chapter01-final-master-chunk-stager'}, method='POST')
-                  with urllib.request.urlopen(req) as response:
-                      created = json.load(response)
-                  chunks.append({'index': index,'blobSha': created['sha'],'bytes': len(chunk),'sha256': hashlib.sha256(chunk).hexdigest()})
-                  index += 1
-          data = open(source, 'rb').read()
-          manifest = {'schema':'BOUNDED_BINARY_OBJECT_TRANSFER_MANIFEST_v1','repository':repo,'targetBranch':os.environ['TARGET_BRANCH'],'expectedTargetHead':os.environ['EXPECTED_TARGET_HEAD'],'destinationPath':'showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4','totalBytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'chunks':chunks}
-          with open('/tmp/ch01-transfer-manifest.json','w') as f: json.dump(manifest,f,separators=(',',':'))
-          print('MANIFEST_BEGIN')
-          print(json.dumps(manifest,separators=(',',':')))
-          print('MANIFEST_END')
+          source='/tmp/chapter01-final-master.mp4'; chunk_size=524288; token=os.environ['GH_TOKEN']; repo=os.environ['REPOSITORY']; chunks=[]
+          with open(source,'rb') as f:
+            i=0
+            while True:
+              chunk=f.read(chunk_size)
+              if not chunk: break
+              body=json.dumps({'content':base64.b64encode(chunk).decode('ascii'),'encoding':'base64'}).encode()
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/git/blobs',data=body,headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json','User-Agent':'chapter01-final-master-chunk-stager'},method='POST')
+              with urllib.request.urlopen(req) as r: created=json.load(r)
+              chunks.append({'index':i,'blobSha':created['sha'],'bytes':len(chunk),'sha256':hashlib.sha256(chunk).hexdigest()}); i+=1
+          data=open(source,'rb').read(); manifest={'schema':'BOUNDED_BINARY_OBJECT_TRANSFER_MANIFEST_v1','repository':repo,'targetBranch':os.environ['TARGET_BRANCH'],'expectedTargetHead':os.environ['EXPECTED_TARGET_HEAD'],'destinationPath':'showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4','totalBytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'chunks':chunks}
+          open('/tmp/ch01-transfer-manifest.json','w').write(json.dumps(manifest,separators=(',',':')))
+          print('MANIFEST_BEGIN'); print(json.dumps(manifest,separators=(',',':'))); print('MANIFEST_END')
           PY
-
       - name: Upload closed manifest
         uses: actions/upload-artifact@v4
         with:

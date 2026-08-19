@@ -1,0 +1,20 @@
+name: Admitted Procedure Exact Head Backend Intake
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '288'
+      private_comment: '5335843475'
+      expected_request_id: 'CONTROL_PLANE_ADMITTED_PROCEDURE_EXACT_HEAD_QUALIFICATION_BACKEND_INTAKE_20260818_001'
+      exact_private_head: '3c16ca7f96818de4b124cd3f528f0a44db86e6c9'
+      callback_issue: '1316'
+    secrets: inherit

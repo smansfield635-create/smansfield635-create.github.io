@@ -7200,6 +7200,16 @@
       return;
     }
 
+    /*
+     * Once Compass has lawfully accepted this pointer territory, suppress
+     * browser-native link/image dragging before capture. This is required
+     * when a rendered room star geometrically overlaps a dormant Mirrorland
+     * anchor: the crystal owner may own the gesture even though the physical
+     * DOM target is an <a>. Without pointerdown default suppression Chromium
+     * can begin native HTML drag-and-drop and cancel the PointerEvent stream.
+     */
+    event.preventDefault();
+
     try {
       event.currentTarget
         .setPointerCapture(

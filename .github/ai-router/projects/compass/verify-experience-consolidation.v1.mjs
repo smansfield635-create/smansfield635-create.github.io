@@ -35,7 +35,10 @@ check('ACTION_DOCK_MATCHES_FOREGROUND',runtime.includes('spec.action.forEach')&&
 check('ACTION_DISABLED_DURING_DRAG_OR_SETTLE',runtime.includes("dock.setAttribute('aria-busy'")&&runtime.includes('state.dragging||state.settling'),null);
 check('CONTINUOUS_DRAG_VELOCITY_SNAP',runtime.includes('state.velocity')&&runtime.includes('projected=state.angle')&&runtime.includes('drag-snap'),null);
 check('OBJECT_STAGE_AND_PROOF_STAGE_DISTINCT',runtime.includes("dataset.stageKind='object'")&&runtime.includes("dataset.stageKind='proof'"),null);
-check('SPATIAL_ECONOMY',runtime.includes('.compass-capability-orbit{min-height:25rem}')&&runtime.includes('.compass-capability-orbit{min-height:22.5rem}'),null);
+check('SPATIAL_ECONOMY',runtime.includes('.compass-capability-orbit{grid-template-rows:auto auto auto auto auto;min-height:0!important}')&&runtime.includes('height:14.25rem')&&runtime.includes('height:12.75rem')&&runtime.includes('min-height:0!important;margin-top:16px'),null);
+check('CLUSTER_INTERACTION_INSTRUCTION',runtime.includes("dataCompassClusterInstruction")||runtime.includes("dataset.compassClusterInstruction='true'"),null);
+check('CLUSTER_CHOOSE_SWIPE_RETURN_EXPLICIT',runtime.includes('Choose a room')&&runtime.includes('Swipe')&&runtime.includes('Return to Orbit when you are done')&&runtime.includes('[data-compass-mode="CLUSTER_OPEN"] .compass-cluster-instruction'),null);
+check('CLUSTER_SWIPE_PREMIUM_EMPHASIS',runtime.includes('compass-cluster-instruction__swipe')&&runtime.includes('clusterSwipeGlow')&&runtime.includes('text-shadow'),null);
 check('BOUNDED_OBJECT_ARRIVAL_RESPONSE',runtime.includes('objectArrival')&&runtime.includes('data-arriving'),null);
 check('COMPASS_LUMINOUS_EFFECT_NON_BLOCKING',runtime.includes('compassBreathe')&&runtime.includes('pointer-events:none'),null);
 check('HOUSE_ACTIONS_PRESERVED',runtime.includes('Speak with Jeeves')&&runtime.includes('/elara/')&&runtime.includes('/products/auren/'),null);
@@ -43,6 +46,12 @@ check('GEN1538_STATIC_COMPATIBILITY_NON_AUTHORITATIVE',runtime.includes('gen1538
 check('TRAVERSAL_SOURCE_PRESERVED',controller.includes('ROOM_SELECTED')&&controller.includes('MIRRORLAND_FOCUSED')&&controller.includes('requestReturnToConstellation')&&controller.includes('requestReturnToOrbit'),null);
 let capture=null;try{capture=JSON.parse(fs.readFileSync(capturePath,'utf8'));}catch{}
 check('CAPTURE_RECEIPT_PRESENT',Boolean(capture),capturePath);
-if(capture){check('CAPTURE_EXACT_HEAD',capture.candidateHead===candidateHead,{expected:candidateHead,actual:capture.candidateHead});check('CAPTURE_GOVERNING_HEAD',capture.governingHead===GOVERNING_HEAD,{expected:GOVERNING_HEAD,actual:capture.governingHead});for(const name of hardZeroNames)check(`HARD_ZERO_${name}`,capture.hardZero?.[name]===true,capture.hardZero?.[name]);check('STATE_MATRIX_COMPLETE',capture.stateMatrixComplete===true,capture.stateCoverage);check('NO_BROWSER_ERRORS',Array.isArray(capture.errors)&&capture.errors.length===0,capture.errors)}
-const receipt={schema:'COMPASS_SHARED_ORBIT_STATE_RECEIPT_v1',operationId:OPERATION_ID,lockGeneration:LOCK_GENERATION,candidateHead,governingHead:GOVERNING_HEAD,changedPaths:changed,hardZero:Object.fromEntries(hardZeroNames.map(k=>[k,capture?.hardZero?.[k]===true])),checks,failures,result:failures.length?'EXPERIENCE_FAIL_CLOSED':'EXPERIENCE_PASS_CLOSED'};
+if(capture){
+  check('CAPTURE_EXACT_HEAD',capture.candidateHead===candidateHead,{expected:candidateHead,actual:capture.candidateHead});
+  check('CAPTURE_GOVERNING_HEAD',capture.governingHead===GOVERNING_HEAD,{expected:GOVERNING_HEAD,actual:capture.governingHead});
+  for(const name of hardZeroNames)check(`HARD_ZERO_${name}`,capture.hardZero?.[name]===true,capture.hardZero?.[name]);
+  check('STATE_MATRIX_COMPLETE',capture.stateMatrixComplete===true,capture.stateCoverage);
+  check('NO_BROWSER_ERRORS',Array.isArray(capture.errors)&&capture.errors.length===0,capture.errors);
+}
+const receipt={schema:'COMPASS_SHARED_ORBIT_STATE_RECEIPT_v2',operationId:OPERATION_ID,lockGeneration:LOCK_GENERATION,candidateHead,governingHead:GOVERNING_HEAD,changedPaths:changed,hardZero:Object.fromEntries(hardZeroNames.map(k=>[k,capture?.hardZero?.[k]===true])),checks,failures,result:failures.length?'EXPERIENCE_FAIL_CLOSED':'EXPERIENCE_PASS_CLOSED'};
 fs.writeFileSync(output,JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);

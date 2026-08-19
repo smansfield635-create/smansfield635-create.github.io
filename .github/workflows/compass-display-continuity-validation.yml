@@ -1,4 +1,4 @@
-name: Compass Award Presentation v4 + Gen1538 Continuity
+name: Compass Engineering + Experience Qualification
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'assets/compass/**'
-      - '.github/ai-router/projects/compass/verify-award-presentation-successor.v1.mjs'
+      - '.github/ai-router/projects/compass/**'
       - '.github/workflows/compass-display-continuity-validation.yml'
   workflow_dispatch:
 
@@ -15,10 +15,12 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_AWARD_STATIC_OUTPUT: /tmp/compass-award-presentation-static-receipt.json
+  COMPASS_GOVERNING_HEAD: cfd1924c485893dedeeb2fd1fefcb91c521d7c2a
+  COMPASS_EXPERIENCE_OUTPUT: /tmp/compass-experience-consolidation-receipt.json
+  COMPASS_EXPERIENCE_CAPTURE_INPUT: /tmp/compass-experience-capture-receipt.json
 
 jobs:
-  exact-candidate-static:
+  engineering-floor:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,60 +30,68 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify v4 award contract and permanent Gen1538 floor
+      - name: Verify exact candidate and protected engineering floor
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
+          node --check assets/compass/compass.controller.js
+          node --check assets/compass/compass.crystals.js
+          node --check assets/compass/compass.cosmos.js
+          node --check assets/compass/compass.mirrorland-window.js
+          node --check assets/compass/compass.laws-spacecraft.js
           node --check assets/compass/compass.identity-3d.js
           node --check assets/compass/compass.statement-carousel.js
           node --check assets/compass/compass.capability-carousel.js
-          node --check assets/compass/compass.controller.js
-          node --check assets/compass/compass.crystals.js
-          node --check assets/compass/compass.laws-spacecraft.js
-          node .github/ai-router/projects/compass/verify-award-presentation-successor.v1.mjs
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1551 and .candidateHead == env.COMPASS_CANDIDATE_HEAD' "$COMPASS_AWARD_STATIC_OUTPUT" >/dev/null
+          node --check assets/compass/compass.brain-scene.js
+          node --check .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
+          import cp from 'node:child_process';
+          const base=process.env.COMPASS_GOVERNING_HEAD;
+          const protectedPaths=[
+            'assets/compass/compass.controller.js','assets/compass/compass.crystals.js','assets/compass/compass.cosmos.js',
+            'assets/compass/compass.mirrorland-window.js','assets/compass/compass.laws-spacecraft.js','assets/compass/compass.identity-3d.js',
+            'assets/compass/compass.statement-carousel.js','assets/compass/compass.capability-carousel.js','assets/compass/compass.brain.js','assets/compass/compass.brain-scene.js'
+          ];
+          const changed=cp.execFileSync('git',['diff','--name-only',`${base}...HEAD`],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+          const mutatedProtected=protectedPaths.filter(p=>changed.includes(p));
           const c=fs.readFileSync('assets/compass/compass.controller.js','utf8');
           const x=fs.readFileSync('assets/compass/compass.crystals.js','utf8');
           const s=fs.readFileSync('assets/compass/compass.laws-spacecraft.js','utf8');
-          const p=fs.readFileSync('assets/compass/compass.statement-carousel.js','utf8');
           const i=fs.readFileSync('assets/compass/compass.identity-3d.js','utf8');
+          const p=fs.readFileSync('assets/compass/compass.statement-carousel.js','utf8');
           const checks={
-            ROOM_SELECTED:c.includes('ROOM_SELECTED'),
-            ROOM_SELECTED_MANIPULABLE:/manipulationStates\s*:\s*Object\.freeze\(\[\s*STATES\.CLUSTER_OPEN,\s*STATES\.ROOM_SELECTED/s.test(c),
-            NO_DRAG_DESCENT:/dragCommitDescendsPanel\s*:\s*false/.test(c),
-            CRYSTALS_ROOM_SELECTED:x.includes('ROOM_SELECTED'),
-            LOCAL_SPACECRAFT_DISABLED:s.includes('DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT=true'),
-            LAWS_SPACECRAFT_IMPORTED:s.includes("import('/laws/index.spacecraft.background.js"),
-            LAWS_SPACECRAFT_STARTED:s.includes('api?.start?.()'),
-            SOLE_SPACECRAFT_AUTHORITY:p.includes("spacecraftPresentationAuthority='LAWS_SPACECRAFT_ONLY'"),
-            IDENTITY_SPACECRAFT_REMOVED:!i.includes('mountLawsCraft')&&!i.includes('createCraftCanvas')&&i.includes('spacecraftMounted:false'),
-            IDENTITY_WORDMARK_PRESERVED:i.includes('DIAMOND GATE BRIDGE')&&i.includes('THE COMPASS'),
-            COHERISCOPE_PRESERVED:i.includes("h.textContent='Coheriscope'")
+            exactHead:cp.execFileSync('git',['rev-parse','HEAD^{commit}'],{encoding:'utf8'}).trim()===process.env.COMPASS_CANDIDATE_HEAD,
+            protectedRuntimeUnchanged:mutatedProtected.length===0,
+            roomSelectedDeclared:c.includes('ROOM_SELECTED'),
+            roomSelectedManipulable:/manipulationStates\s*:\s*Object\.freeze\(\[\s*STATES\.CLUSTER_OPEN,\s*STATES\.ROOM_SELECTED/s.test(c),
+            crystalsRoomSelected:x.includes('ROOM_SELECTED'),
+            lawsSpacecraftOnly:s.includes('DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT=true')&&s.includes("import('/laws/index.spacecraft.background.js"),
+            identitySpacecraftRemoved:!i.includes('mountLawsCraft')&&!i.includes('createCraftCanvas')&&i.includes('spacecraftMounted:false'),
+            identityPreserved:i.includes('DIAMOND GATE BRIDGE')&&i.includes('THE COMPASS')&&i.includes("h.textContent='Coheriscope'"),
+            awardNarrativePreserved:p.includes("root.dataset.awardNarrative='identity-experience-purpose-system-readiness-evidence'")
           };
           const failures=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k);
-          const receipt={schema:'COMPASS_GEN1538_PERMANENT_INVARIANT_RECEIPT_v2',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures};
-          fs.writeFileSync('/tmp/compass-gen1538-permanent-invariants.json',JSON.stringify(receipt,null,2)+'\n');
+          const receipt={schema:'COMPASS_ENGINEERING_FLOOR_RECEIPT_v1',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,governingHead:base,changedPaths:changed,mutatedProtected,checks,failures,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED'};
+          fs.writeFileSync('/tmp/compass-engineering-floor-receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-award-v4-static-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            /tmp/compass-award-presentation-static-receipt.json
-            /tmp/compass-gen1538-permanent-invariants.json
+          name: compass-engineering-floor-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-engineering-floor-receipt.json
           retention-days: 90
 
-  runtime-and-visual:
+  experience:
     runs-on: ubuntu-latest
-    needs: exact-candidate-static
-    timeout-minutes: 12
+    needs: engineering-floor
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -89,86 +99,94 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install chromium
-      - name: Host exact candidate
+      - name: Host exact candidate and governing baseline
         run: |
-          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-award-http.log 2>&1 &
-          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
-          exit 1
-      - name: Execute v4 award and continuity matrix
+          git worktree add --detach /tmp/compass-governing "$COMPASS_GOVERNING_HEAD"
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-candidate-http.log 2>&1 &
+          (cd /tmp/compass-governing && python3 -m http.server 4174 --bind 127.0.0.1 >/tmp/compass-governing-http.log 2>&1) &
+          for port in 4173 4174; do
+            for i in $(seq 1 30); do curl -fsS "http://127.0.0.1:${port}/" >/dev/null && break; sleep 1; done
+            curl -fsS "http://127.0.0.1:${port}/" >/dev/null
+          done
+      - name: Capture and qualify experience
         run: |
+          mkdir -p /tmp/compass-experience-captures
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import {chromium} from 'playwright';
           const browser=await chromium.launch({headless:true});
-          const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
-          const cases=[['desktop',1440,1000,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',390,844,true]];
+          const candidateHead=process.env.COMPASS_CANDIDATE_HEAD,governingHead=process.env.COMPASS_GOVERNING_HEAD;
+          const EXPECTED_CATEGORY='Independent Studio for Interactive Worlds, Creative Technology & Original Systems';
+          const viewports=[['desktop',1440,1000],['tablet',1024,1366],['phone',390,844]];
+          const overflow=[];const composition={};const errors=[];const artifacts=[];
+          const shot=async(page,name,locator=null)=>{const path=`/tmp/compass-experience-captures/${name}.png`;if(locator){const l=page.locator(locator).first();if(await l.count()){await l.scrollIntoViewIfNeeded();await page.waitForTimeout(140);await l.screenshot({path});artifacts.push(path);return true}}await page.screenshot({path,fullPage:true});artifacts.push(path);return true};
+          const inspect=async(page)=>page.evaluate(expectedCategory=>{
+            const style=el=>el?getComputedStyle(el):null;
+            const alpha=color=>{const m=String(color||'').match(/rgba?\([^,]+,[^,]+,[^,]+(?:,\s*([\d.]+))?\)/);return m?(m[1]===undefined?1:Number(m[1])):0};
+            const cardless=el=>{if(!el)return true;const s=style(el);const radius=Math.max(...String(s.borderRadius||'0').split(/\s+/).map(v=>parseFloat(v)||0));const bgAlpha=alpha(s.backgroundColor);return radius<=2&&s.boxShadow==='none'&&(s.backgroundImage==='none'||s.backgroundImage.includes('none'))&&(!s.backdropFilter||s.backdropFilter==='none')&&bgAlpha<=.08};
+            const header=document.querySelector('.compass-estate__header'),intro=document.querySelector('.compass-introduction__body'),panel=document.querySelector('.compass-panel'),statement=document.querySelector('.compass-statement-orbit'),monument=document.querySelector('.compass-monument'),plaque=document.querySelector('.compass-orbit-plaque'),built=document.querySelector('.compass-built'),proof=document.querySelector('.compass-proof-card:not([hidden])')||document.querySelector('.compass-proof-card');
+            const purpose=document.querySelector('.compass-purpose-stage')||document.querySelector('.compass-statement-orbit')||document.querySelector('.compass-introduction');
+            const instrument=document.querySelector('.compass-instrument');
+            const capabilities=document.querySelector('[data-capability-orbit],.compass-capability-orbit');
+            const readiness=document.querySelector('[data-readiness-stage="trl-tra"],.compass-built');
+            const order=[header,instrument,purpose,capabilities,readiness].map(el=>el?el.getBoundingClientRect().top+scrollY:null);
+            const bodyText=document.body.innerText.replace(/\s+/g,' ').trim();
+            const categoryPresent=bodyText.toLowerCase().includes(expectedCategory.toLowerCase());
+            return {
+              overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              headerHeight:header?.getBoundingClientRect().height||0,
+              panelColumns:panel?style(panel).gridTemplateColumns:'',
+              capabilityColumns:document.querySelector('.compass-capability-choices')?style(document.querySelector('.compass-capability-choices')).gridTemplateColumns:'',
+              introCardless:cardless(intro),panelCardless:cardless(panel),statementCardless:cardless(statement),monumentCardless:cardless(monument),plaqueCardless:cardless(plaque),builtCardless:cardless(built),proofCardless:cardless(proof),
+              order,
+              narrative:document.querySelector('[data-compass-root]')?.dataset.awardNarrative||'',
+              evidenceHref:document.querySelector('[data-evidence-registry-exit]')?.getAttribute('href')||'',
+              readinessModel:document.querySelector('[data-compass-root]')?.dataset.readinessModel||'',
+              genericServiceLanguage:/web services|web agency|full-service agency/i.test(bodyText),
+              categoryPresent,
+              categoryText:categoryPresent?expectedCategory:'',
+              guidanceVisible:Boolean(document.querySelector('[data-compass-guidance]')),
+              hiddenPreInstruction:Boolean(document.querySelector('.compass-orbit-intro h2'))&&style(document.querySelector('.compass-orbit-intro h2'))?.position==='absolute'
+            };
+          },EXPECTED_CATEGORY);
           try{
-            for(const [name,width,height,reduced] of cases){
-              const context=await browser.newContext({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'});
-              const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-              await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.COMPASS_CANDIDATE_HEAD}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});
-              await page.waitForFunction(()=>Boolean(globalThis.CompassStatementCarousel&&globalThis.DGB_COMPASS_CONTROLLER&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT&&globalThis.DGB_LAWS_SPACECRAFT&&globalThis.DGB_COMPASS_IDENTITY_3D_GEN1536),null,{timeout:30000});
-              await page.waitForTimeout(950);
-              const presentation=await page.evaluate(()=>{
-                const root=document.querySelector('[data-compass-root]'),readiness=document.querySelector('[data-readiness-stage="trl-tra"]');
-                const els=[document.querySelector('.compass-instrument'),document.querySelector('.compass-purpose-stage'),document.querySelector('[data-capability-orbit], [data-compass-capability-switcher]'),readiness];
-                const purpose=els[1],evidence=document.querySelector('[data-evidence-registry-exit]');
-                const legacy=[...document.querySelectorAll('[data-compass-spacecraft-layer],.compass-spacecraft-layer')].filter(el=>{const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity||1)>.01});
-                const identity=globalThis.DGB_COMPASS_IDENTITY_3D_GEN1536?.receipt?.();
-                return {narrative:root?.dataset.awardNarrative||'',readinessModel:root?.dataset.readinessModel||'',readinessMode:readiness?.dataset.readinessMode||'',spacecraftAuthority:root?.dataset.spacecraftPresentationAuthority||'',purposeOpen:Boolean(purpose?.open),purposePosition:purpose?getComputedStyle(purpose).position:'',purposeBodyPosition:purpose?getComputedStyle(purpose.querySelector('.compass-introduction__body')).position:'',order:els.map(el=>el?el.getBoundingClientRect().top+scrollY:null),evidenceHref:evidence?.getAttribute('href')||'',overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,capabilityCards:document.querySelectorAll('[data-capability-orbit] .compass-orbit-plaque').length,proofCards:document.querySelectorAll('[data-proof-orbit] [data-proof-card]').length,modeButtons:document.querySelectorAll('[data-readiness-mode-button]').length,lawsHosts:document.querySelectorAll('#laws-spacecraft-background-host').length,legacyVisible:legacy.length,identity};
-              });
-              const o=presentation.order;
-              check(`${name}_NARRATIVE_ORDER`,presentation.narrative==='identity-experience-purpose-system-readiness-evidence'&&o.every(Number.isFinite)&&o[0]<o[1]&&o[1]<o[2]&&o[2]<o[3],presentation);
-              check(`${name}_PURPOSE_NORMAL_FLOW`,presentation.purposeOpen&&presentation.purposePosition!=='fixed'&&presentation.purposePosition!=='absolute'&&presentation.purposeBodyPosition!=='fixed'&&presentation.purposeBodyPosition!=='absolute',presentation);
-              check(`${name}_SHARED_TRL_TRA_CONTROL`,presentation.readinessModel==='TRL7_PLUS_TRA_ASSESSMENT_NO_SCORE'&&presentation.readinessMode==='trl'&&presentation.modeButtons===2,presentation);
-              check(`${name}_EVIDENCE_EXIT`,presentation.evidenceHref==='/evidence/',presentation);
-              check(`${name}_NO_HORIZONTAL_OVERFLOW`,presentation.overflow<=1,presentation);
-              check(`${name}_DIMENSIONAL_STAGE_PRESENT`,presentation.capabilityCards===3&&presentation.proofCards===3,presentation);
-              check(`${name}_SOLE_SPACECRAFT_PRESENTATION_AUTHORITY`,presentation.spacecraftAuthority==='LAWS_SPACECRAFT_ONLY'&&presentation.lawsHosts===1&&presentation.legacyVisible===0&&presentation.identity?.spacecraftMounted===false,presentation);
-              check(`${name}_IDENTITY_PRESERVED`,presentation.identity?.identityMounted===true&&presentation.identity?.coheriscopeIdentity==='working-product-name',presentation.identity);
-
-              const readiness=page.locator('[data-readiness-stage="trl-tra"]');await readiness.scrollIntoViewIfNeeded();
-              await page.locator('[data-readiness-mode-button="tra"]').click();await page.waitForTimeout(reduced?80:180);
-              const tra=await page.evaluate(()=>({mode:document.querySelector('[data-readiness-stage="trl-tra"]')?.dataset.readinessMode||'',titles:[...document.querySelectorAll('[data-proof-orbit] [data-proof-card] h3')].map(x=>x.textContent.trim()),note:document.querySelector('[data-readiness-mode-note]')?.textContent.trim()||''}));
-              check(`${name}_TRA_MODE_EXECUTES`,tra.mode==='tra'&&tra.titles.join('|')==='Executed Capability|Authority Isolation|Fail-Closed Evidence'&&tra.note.includes('not a second maturity score')&&tra.note.includes('does not raise Software TRL 7'),tra);
-              if(name==='desktop')await page.screenshot({path:'/tmp/compass-award-desktop-tra.png',fullPage:false});
-              await page.locator('[data-readiness-mode-button="trl"]').click();await page.waitForTimeout(reduced?80:160);
-              const trl=await page.evaluate(()=>({mode:document.querySelector('[data-readiness-stage="trl-tra"]')?.dataset.readinessMode||'',titles:[...document.querySelectorAll('[data-proof-orbit] [data-proof-card] h3')].map(x=>x.textContent.trim())}));
-              check(`${name}_TRL_MODE_RESTORES`,trl.mode==='trl'&&trl.titles.join('|')==='Software TRL 7|Bounded Changes|Experience Checked',trl);
-
-              const scene=page.locator('[data-compass-scene]');await scene.scrollIntoViewIfNeeded();await page.waitForTimeout(250);
-              const beforeScroll=await page.evaluate(()=>scrollY);
-              const selected=await page.evaluate(beforeScroll=>{const api=globalThis.DGB_COMPASS_CONTROLLER,root=document.querySelector('[data-compass-root]');return{beforeScroll,cardinal:api.requestCardinalSelection('east'),roomSelected:api.requestRoomSelection('east-1'),mode:root?.dataset.compassMode,quat:root?.dataset.clusterQuaternion||'',revision:Number(root?.dataset.clusterRevision||0)}},beforeScroll);
-              await page.waitForTimeout(reduced?250:700);
-              const after=await page.evaluate(()=>{const root=document.querySelector('[data-compass-root]');return{mode:root?.dataset.compassMode,quat:root?.dataset.clusterQuaternion||'',revision:Number(root?.dataset.clusterRevision||0),scrollY}});
-              check(`${name}_ROOM_SELECTED_REACHED`,selected.cardinal&&selected.roomSelected&&after.mode==='ROOM_SELECTED',{selected,after});
-              check(`${name}_NO_FORCED_PANEL_DESCENT`,Math.abs(after.scrollY-selected.beforeScroll)<40,{selected,after});
-              await scene.scrollIntoViewIfNeeded();await page.waitForTimeout(220);await page.screenshot({path:`/tmp/compass-award-${name}-scene.png`,fullPage:false});
-              const proxyLocator=page.locator('[data-compass-room-proxy][data-room-id="east-1"]').first();await proxyLocator.scrollIntoViewIfNeeded();await page.waitForTimeout(120);const proxy=await proxyLocator.boundingBox();
-              if(proxy){const sx=proxy.x+proxy.width/2,sy=proxy.y+proxy.height/2;await page.mouse.move(sx,sy);await page.mouse.down();await page.waitForTimeout(120);await page.mouse.move(sx+70,sy+28,{steps:12});await page.waitForTimeout(180);await page.mouse.up();await page.waitForTimeout(reduced?180:620)}
-              const dragged=await page.evaluate(()=>{const root=document.querySelector('[data-compass-root]');return{mode:root?.dataset.compassMode,quat:root?.dataset.clusterQuaternion||'',revision:Number(root?.dataset.clusterRevision||0),gesture:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT?.lastGestureType||''}});
-              check(`${name}_POST_SELECTION_DRAG`,Boolean(proxy)&&dragged.mode==='ROOM_SELECTED'&&(reduced||dragged.quat!==after.quat),{proxy,after,dragged});
-              if(!reduced)check(`${name}_POINTER_GESTURE_RECOGNIZED`,['cluster-drag','cluster-settle'].includes(dragged.gesture),dragged);
-              const sc=await page.evaluate(async reduced=>{const api=globalThis.DGB_LAWS_SPACECRAFT;if(!api)return{present:false};const receipt=api.receipt?.(),a=api.snapshot?.();if(!reduced)await new Promise(r=>setTimeout(r,420));const b=api.snapshot?.();return{present:true,receipt,a,b}},reduced);
-              check(`${name}_SPACECRAFT_AUTHORITY`,sc.present&&sc.receipt?.craftCount===1&&Number(sc.receipt?.activeCraftCount||0)<=1&&sc.receipt?.ownsNavigation===false&&sc.receipt?.ownsControllerState===false&&sc.receipt?.ownsRoutes===false&&sc.receipt?.ownsCompassInteraction===false,sc.receipt);
-              if(reduced)check(`${name}_SPACECRAFT_REDUCED_MOTION`,sc.receipt?.reducedMotion===true&&sc.receipt?.running===false,sc.receipt);else check(`${name}_SPACECRAFT_FLIGHT`,sc.receipt?.running===true&&JSON.stringify(sc.a?.craft?.position||[])!==JSON.stringify(sc.b?.craft?.position||[]),sc);
-              check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);await page.screenshot({path:`/tmp/compass-award-${name}.png`,fullPage:true});await context.close();
+            for(const [id,width,height] of viewports){
+              const context=await browser.newContext({viewport:{width,height},reducedMotion:'no-preference'});const page=await context.newPage();page.on('pageerror',e=>errors.push(`${id}:${e}`));
+              await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForTimeout(1100);
+              composition[id]=await inspect(page);overflow.push({id,delta:composition[id].overflow});await shot(page,`${id}-full`);
+              if(id==='desktop'){
+                await shot(page,'desktop-opening','.compass-estate__header');await shot(page,'desktop-compass-constellation','.compass-instrument');
+                const mirror=page.locator('[data-compass-object="mirrorland"]').first();if(await mirror.count()){await mirror.click({force:true});await page.waitForTimeout(600);await shot(page,'desktop-mirrorland-threshold','[data-compass-scene]');const back=page.locator('[data-compass-mirrorland-back]').first();if(await back.count()&&await back.isVisible())await back.click({force:true});}
+                await page.evaluate(()=>{const api=globalThis.DGB_COMPASS_CONTROLLER;api?.requestCardinalSelection?.('east');api?.requestRoomSelection?.('east-1')});await page.waitForTimeout(650);await shot(page,'desktop-selected-room','[data-compass-scene]');
+                await shot(page,'desktop-purpose-engagement','.compass-statement-orbit');
+                const orbit=page.locator('.compass-capability-orbit').first();if(await orbit.count()){await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await orbit.screenshot({path:'/tmp/compass-experience-captures/desktop-brain.png'});artifacts.push('/tmp/compass-experience-captures/desktop-brain.png');const next=page.locator('.compass-orbit-controls button').last();if(await next.count()){await next.click();await page.waitForTimeout(500);await orbit.screenshot({path:'/tmp/compass-experience-captures/desktop-trophy.png'});artifacts.push('/tmp/compass-experience-captures/desktop-trophy.png');await next.click();await page.waitForTimeout(500);await orbit.screenshot({path:'/tmp/compass-experience-captures/desktop-house.png'});artifacts.push('/tmp/compass-experience-captures/desktop-house.png')}}
+                await shot(page,'desktop-readiness-evidence','.compass-built');await shot(page,'desktop-conclusion','.compass-build-cta');
+              }
+              if(id==='phone'){await shot(page,'phone-compass-constellation','.compass-instrument');await shot(page,'phone-dimensional-capability','.compass-capability-orbit');await shot(page,'phone-readiness-evidence','.compass-built');await shot(page,'phone-conclusion','.compass-build-cta')}
+              await context.close();
             }
-          }finally{await browser.close()}
-          const failures=checks.filter(x=>!x.pass);
-          const runtime={schema:'COMPASS_AWARD_PRESENTATION_RUNTIME_RECEIPT_v1',operationId:'COMPASS_AWARD_PRESENTATION_SUCCESSOR_20260818_v4',lockGeneration:1551,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
-          const visualChecks=checks.filter(x=>/NARRATIVE_ORDER|PURPOSE_NORMAL_FLOW|SHARED_TRL_TRA_CONTROL|TRA_MODE_EXECUTES|TRL_MODE_RESTORES|EVIDENCE_EXIT|NO_HORIZONTAL_OVERFLOW|DIMENSIONAL_STAGE_PRESENT|SOLE_SPACECRAFT_PRESENTATION_AUTHORITY|IDENTITY_PRESERVED|NO_PAGE_ERRORS/.test(x.id));
-          const visualFailures=visualChecks.filter(x=>!x.pass);
-          const visual={schema:'COMPASS_AWARD_PRESENTATION_VISUAL_RECEIPT_v1',operationId:runtime.operationId,lockGeneration:1551,candidateHead:runtime.candidateHead,result:visualFailures.length?'FAIL_CLOSED':'PASS_CLOSED',checks:visualChecks,failures:visualFailures.map(x=>x.id),captures:cases.flatMap(([n])=>[`/tmp/compass-award-${n}.png`,`/tmp/compass-award-${n}-scene.png`]).concat('/tmp/compass-award-desktop-tra.png')};
-          fs.writeFileSync('/tmp/compass-award-presentation-runtime-receipt.json',JSON.stringify(runtime,null,2)+'\n');fs.writeFileSync('/tmp/compass-award-presentation-visual-receipt.json',JSON.stringify(visual,null,2)+'\n');console.log(JSON.stringify({runtime:runtime.result,visual:visual.result,failures},null,2));if(failures.length)process.exit(1);
+            for(const [id,width,height] of [['desktop',1440,1000],['phone',390,844]]){const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}`,{waitUntil:'domcontentloaded'});await page.waitForTimeout(650);await shot(page,`reduced-${id}-opening`,'.compass-estate__header');await shot(page,`reduced-${id}-compass`,'.compass-instrument');if(id==='desktop')await shot(page,'reduced-desktop-dimensional-capability','.compass-capability-orbit');await shot(page,`reduced-${id}-conclusion`,'.compass-build-cta');await context.close()}
+          } finally {await browser.close()}
+          const desktop=composition.desktop,tablet=composition.tablet,phone=composition.phone;
+          const cardless=[desktop,tablet,phone].every(x=>x.introCardless&&x.panelCardless&&x.statementCardless&&x.monumentCardless&&x.plaqueCardless&&x.builtCardless&&x.proofCardless);
+          const compactOpening=desktop.headerHeight<520&&tablet.headerHeight<520&&phone.headerHeight<440;
+          const visual=cardless&&compactOpening;
+          const narrative=[desktop,tablet,phone].every(x=>x.narrative==='identity-experience-purpose-system-readiness-evidence'&&x.order.filter(Number.isFinite).every((v,i,a)=>i===0||v>=a[i-1]));
+          const responsive=desktop.panelColumns.split(' ').filter(Boolean).length>=2&&tablet.panelColumns.split(' ').filter(Boolean).length===1&&phone.panelColumns.split(' ').filter(Boolean).length===1&&phone.capabilityColumns.split(' ').filter(Boolean).length===1;
+          const legible=[desktop,tablet,phone].every(x=>x.guidanceVisible&&x.hiddenPreInstruction);
+          const evidence=[desktop,tablet,phone].every(x=>x.evidenceHref==='/evidence/'&&x.readinessModel==='TRL7_PLUS_TRA_ASSESSMENT_NO_SCORE');
+          const category=[desktop,tablet,phone].every(x=>x.categoryPresent&&!x.genericServiceLanguage);
+          const hardZero={visualSystemCoherence:visual,narrativeContinuity:narrative,interactionLegibility:legible,responsiveRecomposition:responsive,evidenceHierarchy:evidence,categoryPreservation:category};
+          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v1',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),beats:{desktop:['opening','compass-constellation','mirrorland-threshold','selected-room','brain','trophy','house','purpose-engagement','readiness-evidence','conclusion'],phone:['compass-constellation','dimensional-capability','readiness-evidence','conclusion']},reducedMotionBeats:{desktop:['opening','compass','dimensional-capability','conclusion'],phone:['opening','compass','conclusion']},overflow,composition,protectedCapabilityNonregression:errors.length===0,publicClaimEvidenceSeparation:evidence,categoryPreservationText:desktop.categoryText||'',hardZero,artifacts,errors};
+          fs.writeFileSync(process.env.COMPASS_EXPERIENCE_CAPTURE_INPUT,JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));
           NODE
+          node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-award-v4-runtime-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-experience-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
-            /tmp/compass-award-presentation-runtime-receipt.json
-            /tmp/compass-award-presentation-visual-receipt.json
-            /tmp/compass-award-*.png
-            /tmp/compass-award-http.log
+            /tmp/compass-experience-capture-receipt.json
+            /tmp/compass-experience-consolidation-receipt.json
+            /tmp/compass-experience-captures/
           retention-days: 90

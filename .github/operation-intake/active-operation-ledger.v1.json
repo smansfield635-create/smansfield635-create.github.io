@@ -1514,18 +1514,6 @@
       "scopeHash": "9a2b61db975e60504f5ee77aafd5e3915cd18d5abbe4cc2498e526fa40f13ba2",
       "state": "ADMITTED_LOCKED"
     },
-    "9ac4703f297c3ae58c6ef2ccfaec57ddb02f622168e3b2d45dc1a266fdc37514": {
-      "governingHead": "fe39febded099960ad7b43f631014c062ef8beff",
-      "lockGeneration": 1557,
-      "lockScope": "ROUTER_INFRASTRUCTURE:PUBLIC_LEGITIMACY:GOVERNANCE_ROUTE_REGISTRATION:V1",
-      "operationId": "PUBLIC_LEGITIMACY_GOVERNANCE_ROUTE_REGISTRATION_20260819_002",
-      "procedureLocatorDigest": "99444ee7db49e3cf01fe54603784573af91d38bb1660811b5232470a68356a33",
-      "released": false,
-      "requestDigest": "d3f2b186624363a3821861fc507083fb3f71c6715208a3b22027c25e5483543a",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9ac4703f297c3ae58c6ef2ccfaec57ddb02f622168e3b2d45dc1a266fdc37514",
-      "state": "ADMITTED_LOCKED"
-    },
     "9aed87a97b66500f9c4937666d301980600f681694d45b619875059c23348825": {
       "governingHead": "cc8c8e7ba57a758729eccac5a1080f609c9cfeac",
       "lockGeneration": 362,
@@ -23276,6 +23264,19 @@
       "scopeHash": "770ce0fc3762b04105dde0f0dce0743f74c6fff8c2ce2f267d67922109502688",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "fe39febded099960ad7b43f631014c062ef8beff",
+      "lockGeneration": 1557,
+      "lockScope": "ROUTER_INFRASTRUCTURE:PUBLIC_LEGITIMACY:GOVERNANCE_ROUTE_REGISTRATION:V1",
+      "operationId": "PUBLIC_LEGITIMACY_GOVERNANCE_ROUTE_REGISTRATION_20260819_002",
+      "procedureLocatorDigest": "99444ee7db49e3cf01fe54603784573af91d38bb1660811b5232470a68356a33",
+      "released": true,
+      "requestDigest": "d3f2b186624363a3821861fc507083fb3f71c6715208a3b22027c25e5483543a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9ac4703f297c3ae58c6ef2ccfaec57ddb02f622168e3b2d45dc1a266fdc37514",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

@@ -138,17 +138,29 @@ jobs:
 
               const sc=await page.evaluate(async reduced=>{
                 const api=globalThis.DGB_LAWS_SPACECRAFT;
-                if(reduced) return {receipt:api.receipt?.(),a:api.snapshot?.(),b:api.snapshot?.(),hit:false};
+                if(reduced) return {receipt:api.receipt?.(),a:api.snapshot?.(),b:api.snapshot?.(),hit:false,hitProbe:null};
                 api.verificationSetProgress?.(.22); await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); const a=api.snapshot?.();
                 api.verificationSetProgress?.(.62); await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); const b=api.snapshot?.();
-                const hit=api.verificationHit?.(); const c=api.snapshot?.(); return {a,b,hit,c,receipt:api.receipt?.()};
+                let hit=false; let c=api.snapshot?.(); let hitProbe=null;
+                for (const progress of [.18,.28,.38,.48,.58,.68,.78,.88]) {
+                  api.verificationSetProgress?.(progress);
+                  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+                  const probe=api.snapshot?.();
+                  if (probe?.craft?.projected) {
+                    hitProbe={progress,projected:probe.craft.projected};
+                    hit=api.verificationHit?.()===true;
+                    c=api.snapshot?.();
+                    break;
+                  }
+                }
+                return {a,b,hit,c,hitProbe,receipt:api.receipt?.()};
               },reduced);
               check(`${name}_SPACECRAFT_AUTHORITY_BOUNDARY`,sc.receipt?.ownsNavigation===false&&sc.receipt?.ownsControllerState===false&&sc.receipt?.ownsRoutes===false&&sc.receipt?.ownsCompassInteraction===false,sc.receipt);
               if(reduced) check(`${name}_SPACECRAFT_REDUCED_MOTION_STOPPED`,sc.receipt?.reducedMotion===true&&sc.receipt?.running===false,sc.receipt);
               else {
                 const a=sc.a?.craft?.position||[], b=sc.b?.craft?.position||[];
                 check(`${name}_SPACECRAFT_FLIGHT_PROGRESS`,JSON.stringify(a)!==JSON.stringify(b),{a,b});
-                check(`${name}_SPACECRAFT_BOUNDED_HIT`,sc.hit===true&&Number(sc.c?.craft?.hitCount||0)>=1,{hit:sc.hit,c:sc.c});
+                check(`${name}_SPACECRAFT_BOUNDED_HIT`,sc.hit===true&&Number(sc.c?.craft?.hitCount||0)>=1,{hit:sc.hit,c:sc.c,hitProbe:sc.hitProbe});
               }
               check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
               await page.screenshot({path:`/tmp/compass-room-selected-${name}.png`,fullPage:true});

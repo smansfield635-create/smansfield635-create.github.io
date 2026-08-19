@@ -1,0 +1,104 @@
+name: H-Earth R3A Terrain Supported Qualification Proof 002
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Mint private repository token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+      - name: Recover request procedure and active lock
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/r3a-proof"; mkdir -p "$work"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $PRIVATE_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' https://api.github.com/repos/smansfield635-create/geodiametrics1/issues/comments/5337790008 > "$work/comment.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $PRIVATE_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/smansfield635-create/geodiametrics1/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1' > "$work/ledger-api.json"
+          python - <<'PY'
+          import base64,json,os
+          w=os.path.join(os.environ['RUNNER_TEMP'],'r3a-proof')
+          c=json.load(open(os.path.join(w,'comment.json'))); marker='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'; body=c['body']
+          if not body.startswith(marker): raise SystemExit('INTAKE_MARKER_MISSING')
+          env=json.loads(body[len(marker):].strip()); op='H_EARTH_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_SUCCESSOR_20260819_001'
+          if env['operationRequest']['operationId']!=op: raise SystemExit('OPERATION_ID_MISMATCH')
+          api=json.load(open(os.path.join(w,'ledger-api.json'))); ledger=json.loads(base64.b64decode(api['content']).decode())
+          matches=[x for x in ledger['activeScopes'].values() if x.get('operationId')==op and x.get('state')=='ADMITTED_LOCKED']
+          if len(matches)!=1: raise SystemExit('ACTIVE_LOCK_MISMATCH')
+          for name,value in [('request',env['operationRequest']),('procedure',env['constructionProcedure']),('lock',matches[0])]:
+            json.dump(value,open(os.path.join(w,name+'.json'),'w'),sort_keys=True,separators=(',',':'));open(os.path.join(w,name+'.json'),'a').write('\n')
+          print(matches[0].get('lockGeneration'))
+          PY
+      - name: Check out ratified private backend
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out exact candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 13d1a4af631d5282b741325a57a5f42852e4342c
+          path: subject
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Execute admitted qualification chain
+        id: execute
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/r3a-proof"
+          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$work/request.json" --procedure "$work/procedure.json" --lock "$work/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 13d1a4af631d5282b741325a57a5f42852e4342c --execution-holder H_EARTH_R3A_TERRAIN_SUPPORTED_PROOF_002 --output "$work/receipt.json"
+      - name: Publish and archive proof
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/r3a-proof"; test -s "$work/receipt.json"
+          python - <<'PY' > "$work/body.txt"
+          import base64,json,os
+          r=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'r3a-proof','receipt.json')))
+          cr=(r.get('commandResults') or [{}])[0]; stdout=cr.get('stdout')
+          if not stdout and cr.get('stdoutBase64'): stdout=base64.b64decode(cr['stdoutBase64']).decode()
+          try: native=json.loads(stdout or '')
+          except: native={}
+          d=native.get('diagnostics') or {}
+          print('H_EARTH_R3A_TERRAIN_SUPPORTED_QUALIFICATION_RESULT_V1')
+          for k,v in [('backendId',r.get('backendId')),('result',r.get('result')),('subjectHead',r.get('subjectHead')),('lockGeneration',r.get('lockGeneration')),('changedPathCount',len(r.get('changedPaths',[]))),('commandExitCodes',','.join(str(x.get('exitCode')) for x in r.get('commandResults',[]))),('workspaceCleanBeforeAndAfter',r.get('workspaceCleanBeforeAndAfter')),('runId',os.environ['GITHUB_RUN_ID']),('nativeOperationId',native.get('operationId')),('nativeResult',native.get('result')),('nativeIssueCount',len(native.get('issues',[])) if isinstance(native.get('issues',[]),list) else None),('packetChecks',d.get('packetChecks')),('exactPreservationChecks',d.get('exactPreservationChecks')),('lowYCorrections',d.get('lowYCorrections')),('risingTransitions',d.get('risingTransitions')),('descendingTransitions',d.get('descendingTransitions')),('maxOldOverrideGap',d.get('maxOldOverrideGap')),('risingTerrainDelta',d.get('risingTerrainDelta')),('descendingTerrainDelta',d.get('descendingTerrainDelta'))]: print(f'{k}: {v}')
+          if native.get('operationId')!='H_EARTH_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_SUCCESSOR_20260819_001' or native.get('result')!='PASS' or native.get('issues')!=[]: raise SystemExit('NATIVE_RECEIPT_INVALID')
+          PY
+          jq -n --rawfile body "$work/body.txt" '{body:$body}' > "$work/comment.json"
+          curl --fail-with-body --silent --show-error -X POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' https://api.github.com/repos/$GITHUB_REPOSITORY/issues/1384/comments --data-binary "@$work/comment.json" >/dev/null
+          test "$EXECUTE_OUTCOME" = success
+      - name: Upload native backend receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: h-earth-r3a-terrain-supported-002-${{ github.run_id }}
+          path: ${{ runner.temp }}/r3a-proof/receipt.json
+          if-no-files-found: error
+          retention-days: 90

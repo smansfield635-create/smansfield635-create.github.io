@@ -1,0 +1,47 @@
+name: H-Earth Gen328 FAR Count Bounded Patch
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out exact Gen328 successor
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: control-plane-delivery/h-earth-planetary-horizon-legibility-successor-20260819-001
+          fetch-depth: 0
+          token: ${{ github.token }}
+      - name: Verify exact predecessor and patch one admitted expression
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "a835823cc8652cb826c67e3d157c3ee34d47d700"
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('showroom/globe/h-earth/render/run8e-successor-environment.js')
+          s=p.read_text()
+          old="farRepresentationPrimitiveCount:manifold?.componentResults?.distantContext?.primitives?.length??0"
+          new="farRepresentationPrimitiveCount:(manifold?.componentResults?.distantContext?.primitives??[]).filter(p=>p?.metadata?.representationClass==='FAR').length"
+          if s.count(old)!=1: raise SystemExit(f'PATCH_ANCHOR_COUNT:{s.count(old)}')
+          p.write_text(s.replace(old,new))
+          PY
+          changed=$(git diff --name-only)
+          test "$changed" = "showroom/globe/h-earth/render/run8e-successor-environment.js"
+          git diff --check
+      - name: Commit bounded product patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add showroom/globe/h-earth/render/run8e-successor-environment.js
+          git commit -m 'Preserve FAR geography count with planet body shell'
+          git push origin HEAD:control-plane-delivery/h-earth-planetary-horizon-legibility-successor-20260819-001
+          echo "patchedHead=$(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"

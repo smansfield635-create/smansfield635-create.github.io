@@ -31,15 +31,15 @@
       "tools/ai-room-transport/fixed-command-dispatcher.v1.mjs",
       "tools/ai-room-transport/successor-compatibility-self-test.v1.mjs",
       ".github/workflows/repository-operation-intake-validation.yml",
-      ".github/workflows/progressive-system-continuity-v1.yml",
+      ".github/workflows/progressive-system-continuity-v1.yml"
+    ],
+    "ownedPathPrefixes": [
+      ".github/ai-router/",
+      ".github/workflows/remote-operation-successor-v1.yml",
       ".github/workflows/bounded-binary-object-transfer-v1.yml",
       "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
       "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs",
       ".github/ai-toolset-transport/bounded-binary-object-transfer.v1.json"
-    ],
-    "ownedPathPrefixes": [
-      ".github/ai-router/",
-      ".github/workflows/remote-operation-successor-v1.yml"
     ],
     "validationCommand": "node tools/repository-ai-entry-router.mjs --self-test --output <OUTSIDE_REPOSITORY_OR_IGNORED_PATH>/router-self-test-receipt.json"
   },

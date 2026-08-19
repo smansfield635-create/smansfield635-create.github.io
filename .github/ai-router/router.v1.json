@@ -177,7 +177,7 @@
     {
       "projectId": "PUBLIC_LEGITIMACY",
       "status": "ACTIVE_REGISTERED_PROJECT",
-      "ownedPathPrefixes": ["developer/", "evidence/"],
+      "ownedPathPrefixes": ["developer/", "evidence/", "governance/"],
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/public-legitimacy/entrypoint.v1.json",
       "priority": 100

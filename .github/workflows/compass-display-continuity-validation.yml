@@ -48,27 +48,36 @@ jobs:
           node --check .github/ai-router/projects/compass/verify-award-presentation-successor.v1.mjs
           node .github/ai-router/projects/compass/verify-award-presentation-successor.v1.mjs
           jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1549 and .candidateHead == env.COMPASS_CANDIDATE_HEAD' "$COMPASS_AWARD_STATIC_OUTPUT" >/dev/null
-
-          # Gen1538 is retained as a permanent behavioral floor, not as a historical
-          # changed-path comparison against its old operation base. Prove its enduring
-          # invariants directly on this exact successor; runtime execution below is the
-          # authoritative continuation proof.
-          grep -q 'ROOM_SELECTED' assets/compass/compass.controller.js
-          grep -q 'setPanelDescended(' assets/compass/compass.controller.js
-          if grep -A120 'function requestRoomSelection' assets/compass/compass.controller.js | head -n 120 | grep -q 'setPanelDescended(.*true'; then
-            echo 'Room selection reintroduced forced panel descent' >&2; exit 1
-          fi
-          grep -q 'ROOM_SELECTED' assets/compass/compass.crystals.js
-          grep -q 'DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT=true' assets/compass/compass.laws-spacecraft.js
-          grep -q "import('/laws/index.spacecraft.background.js" assets/compass/compass.laws-spacecraft.js
-          grep -q 'api?.start?.()' assets/compass/compass.laws-spacecraft.js
-          grep -q "spacecraftPresentationAuthority='laws-adapter-only'" assets/compass/compass.statement-carousel.js
-          ! grep -q 'mountWorldInteraction' assets/compass/compass.statement-carousel.js
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const controller=fs.readFileSync('assets/compass/compass.controller.js','utf8');
+          const crystals=fs.readFileSync('assets/compass/compass.crystals.js','utf8');
+          const spacecraft=fs.readFileSync('assets/compass/compass.laws-spacecraft.js','utf8');
+          const statement=fs.readFileSync('assets/compass/compass.statement-carousel.js','utf8');
+          const checks=[];
+          const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          check('GEN1538_ROOM_SELECTED_STATE_PRESENT',controller.includes('ROOM_SELECTED'),controller.includes('ROOM_SELECTED'));
+          check('GEN1538_ROOM_SELECTED_MANIPULABLE',/manipulationStates\s*:\s*Object\.freeze\(\[\s*STATES\.CLUSTER_OPEN,\s*STATES\.ROOM_SELECTED/s.test(controller),'CLUSTER_ORBIT includes ROOM_SELECTED');
+          check('GEN1538_DRAG_DOES_NOT_DESCEND_PANEL',/dragCommitDescendsPanel\s*:\s*false/.test(controller),'dragCommitDescendsPanel=false');
+          check('GEN1538_CRYSTALS_ROOM_SELECTED_AWARE',crystals.includes('ROOM_SELECTED'),'crystals contains ROOM_SELECTED');
+          check('GEN1538_LOCAL_SPACECRAFT_DISABLED',spacecraft.includes('DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT=true'),'local spacecraft disabled');
+          check('GEN1538_LAWS_SPACECRAFT_SOURCE',spacecraft.includes("import('/laws/index.spacecraft.background.js"),'Laws spacecraft imported');
+          check('GEN1538_LAWS_SPACECRAFT_STARTED',spacecraft.includes('api?.start?.()'),'Laws spacecraft start invoked');
+          check('GEN1538_SOLE_PRESENTATION_AUTHORITY',statement.includes("spacecraftPresentationAuthority='laws-adapter-only'"),'statement owner delegates to Laws adapter');
+          check('GEN1538_OBSOLETE_WORLD_INTERACTION_ABSENT',!statement.includes('mountWorldInteraction'),'obsolete statement scene interaction absent');
+          const failures=checks.filter(x=>!x.pass);
+          const receipt={schema:'COMPASS_GEN1538_PERMANENT_INVARIANT_RECEIPT_v1',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
+          fs.writeFileSync('/tmp/compass-gen1538-permanent-invariants.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length)process.exit(1);
+          NODE
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: compass-award-static-${{ github.run_id }}-${{ github.run_attempt }}
-          path: /tmp/compass-award-presentation-static-receipt.json
+          path: |
+            /tmp/compass-award-presentation-static-receipt.json
+            /tmp/compass-gen1538-permanent-invariants.json
           retention-days: 90
 
   runtime-and-visual:

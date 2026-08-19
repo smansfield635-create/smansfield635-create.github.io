@@ -40,6 +40,8 @@ const normalize = (value) => {
 
 export const H_EARTH_RUN_8E_R3A_CONTRACT_ID =
   'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1';
+export const H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID =
+  'H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_GEN325_v1';
 
 function lookAt(position, target, up) {
   const forward = normalize(subtract(target, position));
@@ -80,24 +82,50 @@ export function reconcileHEarthRun8ER3APresentationState(navigationState) {
   if (navigationState?.contractId !== H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID) {
     throw new TypeError('R3A_NAVIGATION_STATE_CONTRACT_INVALID');
   }
-  const terrain = sampleHEarthRun8BSuccessorTerrainField(
+  if (!finite(navigationState?.position?.y)) {
+    throw new TypeError('R3A_NAVIGATION_CAMERA_Y_INVALID');
+  }
+  const run8BTerrain = sampleHEarthRun8BSuccessorTerrainField(
     navigationState.position.x,
     navigationState.position.z
   );
-  if (terrain?.valid !== true || !finite(terrain.elevation)) {
+  if (run8BTerrain?.valid !== true || !finite(run8BTerrain.elevation)) {
     throw new Error('R3A_SUCCESSOR_TERRAIN_CAMERA_RECONCILIATION_FAILED');
   }
+
+  // Gen325: the navigation state already carries the lawful camera Y derived
+  // from the exact presented terrain surface. Run8B remains provenance only.
+  // R3A is not allowed to lower or replace that Y with an older terrain field.
+  const run8BSafetyFloor = run8BTerrain.elevation + 2.25;
+  const presentationY = Math.max(navigationState.position.y, run8BSafetyFloor);
+  const loweredByPresentation = presentationY < navigationState.position.y - 1e-9;
+  if (loweredByPresentation) {
+    throw new Error('R3A_TERRAIN_SUPPORTED_CAMERA_Y_LOWERED');
+  }
+
   return freeze({
     ...navigationState,
     position: {
       ...navigationState.position,
-      y: terrain.elevation + 2.25
+      y: presentationY
     },
-    terrainElevation: terrain.elevation,
-    minimumCameraY: terrain.elevation + 1.6,
-    clearance: 2.25,
-    run8ESuccessorTerrainNormal: terrain.normal,
+    terrainElevation: navigationState.terrainElevation,
+    minimumCameraY: Math.max(
+      finite(navigationState.minimumCameraY) ? navigationState.minimumCameraY : -Infinity,
+      run8BTerrain.elevation + 1.6
+    ),
+    clearance: finite(navigationState.terrainElevation)
+      ? presentationY - navigationState.terrainElevation
+      : navigationState.clearance,
+    run8ESuccessorTerrainElevation: run8BTerrain.elevation,
+    run8ESuccessorTerrainNormal: run8BTerrain.normal,
     run8ECameraReconciled: true,
+    terrainSupportedNavigationYPreserved: presentationY >= navigationState.position.y - 1e-9,
+    terrainSupportedNavigationYExactWhenAboveRun8BFloor:
+      navigationState.position.y >= run8BSafetyFloor - 1e-9
+        ? Math.abs(presentationY - navigationState.position.y) <= 1e-9
+        : null,
+    r3aPresentationCameraYDelta: presentationY - navigationState.position.y,
     presentationProjectionOnly: true,
     canonicalCameraAuthorityCreated: false,
     navigationAuthorityMutated: false
@@ -121,6 +149,9 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   const reconciledState = reconcileHEarthRun8ER3APresentationState(navigationState);
   const camera = createHEarthFunctionalLandscapeCamera(reconciledState);
   if (!camera) throw new Error('R3A_CAMERA_PROJECTION_FAILED');
+  if (camera.position.y < navigationState.position.y - 1e-9) {
+    throw new Error('R3A_FRAME_PACKET_CAMERA_LOWER_THAN_NAVIGATION');
+  }
   const viewMatrix = lookAt(camera.position, camera.target, camera.up);
   const projectionMatrix = perspective(camera.verticalFovDegrees, width / height, camera.nearPlane, camera.farPlane);
   const viewProjectionMatrix = multiply4(projectionMatrix, viewMatrix);
@@ -134,6 +165,8 @@ export function createHEarthRun8ER3AFrameUniformPacket({
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
     parentContractId: H_EARTH_RUN_8E_R3_CONTRACT_ID,
+    terrainSupportedCameraReconciliationId:
+      H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID,
     status: 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_COMPLETE',
     frameSequence,
     navigationStateId: navigationState.stateId,
@@ -143,6 +176,11 @@ export function createHEarthRun8ER3AFrameUniformPacket({
     canonicalCameraAuthorityCreated: false,
     navigationAuthorityMutated: false,
     successorTerrainCameraReconciled: true,
+    terrainSupportedNavigationYPreserved:
+      camera.position.y >= navigationState.position.y - 1e-9,
+    navigationCameraY: navigationState.position.y,
+    presentationCameraY: camera.position.y,
+    r3aPresentationCameraYDelta: camera.position.y - navigationState.position.y,
     viewport: { width, height, pixelRatio, aspect: width / height },
     camera: {
       position: { ...camera.position },
@@ -197,6 +235,8 @@ export function getHEarthRun8ER3ALiveRendererInterface() {
   const packageRecord = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
   return freeze({
     contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
+    terrainSupportedCameraReconciliationId:
+      H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID,
     packageIdentity: packageRecord.packageIdentity,
     packageContentDigest: packageRecord.contentDigest,
     packageOccurrenceId: packageRecord.packageOccurrenceId,
@@ -220,6 +260,7 @@ export function getHEarthRun8ER3ALiveRendererInterface() {
     drawRanges: packageRecord.drawRanges.map((range) => ({ ...range, primitiveIds: [...range.primitiveIds] })),
     packageUploadedOnceRequired: true,
     cameraUniformsUpdatedPerFrameRequired: true,
+    terrainSupportedNavigationYMustNotBeLowered: true,
     worldRebuildPerCameraMoveProhibited: true,
     webglContextCreated: false,
     shaderOrProgramCreated: false,
@@ -241,6 +282,10 @@ export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
     }
   }
   if (packet?.successorTerrainCameraReconciled !== true) issues.push('R3A_CAMERA_NOT_RECONCILED');
+  if (packet?.terrainSupportedNavigationYPreserved !== true) issues.push('R3A_TERRAIN_SUPPORTED_NAVIGATION_Y_NOT_PRESERVED');
+  if (!finite(packet?.navigationCameraY) || !finite(packet?.presentationCameraY) || packet.presentationCameraY < packet.navigationCameraY - 1e-9) {
+    issues.push('R3A_PACKET_CAMERA_LOWER_THAN_NAVIGATION');
+  }
   if (packet?.worldBuiltBecauseCameraMoved !== false) issues.push('R3A_WORLD_REBUILD_BOUNDARY_FAILED');
   for (const boundary of ['webglContextCreated', 'shaderOrProgramCreated', 'renderLoopCreated', 'publicRouteBound', 'visiblePresentationCreated']) {
     if (packet?.[boundary] !== false) issues.push(`R3A_BOUNDARY_FAILED:${boundary}`);

@@ -1,0 +1,146 @@
+name: Gen311 Repaired Head Admitted Procedure Qualification Proof
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Mint private repository token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+
+      - name: Recover admitted Gen311 request procedure and active lock
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/gen311-proof"
+          mkdir -p "$work"
+          curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $PRIVATE_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            https://api.github.com/repos/smansfield635-create/geodiametrics1/issues/comments/5335567860 \
+            > "$work/comment.json"
+          curl --fail-with-body --silent --show-error \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $PRIVATE_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            'https://api.github.com/repos/smansfield635-create/geodiametrics1/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1' \
+            > "$work/ledger-api.json"
+          python - <<'PY'
+          import base64, json, os
+          work=os.path.join(os.environ['RUNNER_TEMP'],'gen311-proof')
+          c=json.load(open(os.path.join(work,'comment.json')))
+          body=c['body']; marker='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'
+          if not body.startswith(marker): raise SystemExit('GEN311_INTAKE_MARKER_MISSING')
+          env=json.loads(body[len(marker):].strip())
+          if env['operationRequest']['operationId']!='H_EARTH_RECIPROCAL_PROGRESSIVE_REGIONAL_DEVELOPMENT_GEN311_20260818_001': raise SystemExit('GEN311_OPERATION_ID_MISMATCH')
+          api=json.load(open(os.path.join(work,'ledger-api.json')))
+          ledger=json.loads(base64.b64decode(api['content']).decode())
+          matches=[x for x in ledger['activeScopes'].values() if x.get('operationId')==env['operationRequest']['operationId']]
+          if len(matches)!=1 or matches[0].get('state')!='ADMITTED_LOCKED' or matches[0].get('lockGeneration')!=315: raise SystemExit('GEN311_ACTIVE_LOCK_MISMATCH')
+          json.dump(env['operationRequest'],open(os.path.join(work,'request.json'),'w'),sort_keys=True,separators=(',',':'));open(os.path.join(work,'request.json'),'a').write('\n')
+          json.dump(env['constructionProcedure'],open(os.path.join(work,'procedure.json'),'w'),sort_keys=True,separators=(',',':'));open(os.path.join(work,'procedure.json'),'a').write('\n')
+          json.dump(matches[0],open(os.path.join(work,'lock.json'),'w'),sort_keys=True,separators=(',',':'));open(os.path.join(work,'lock.json'),'a').write('\n')
+          PY
+
+      - name: Check out ratified private backend
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check out exact repaired Gen311 candidate and admitted parent history
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: e03363f42441cea7587a49623fd878e8ca51fe28
+          path: subject
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Execute admitted Gen311 qualification chain
+        id: execute
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/gen311-proof"
+          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs \
+            --request "$work/request.json" \
+            --procedure "$work/procedure.json" \
+            --lock "$work/lock.json" \
+            --workspace "$GITHUB_WORKSPACE/subject" \
+            --subject-head e03363f42441cea7587a49623fd878e8ca51fe28 \
+            --execution-holder GEN311_REPAIR_LIVE_PROOF \
+            --output "$work/receipt.json"
+
+      - name: Publish proof result
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/gen311-proof"
+          test -s "$work/receipt.json"
+          python - <<'PY' > "$work/body.txt"
+          import json, os
+          r=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'gen311-proof','receipt.json')))
+          print('GEN311_REPAIR_ADMITTED_PROCEDURE_QUALIFICATION_RESULT_V1')
+          print('backendId:',r.get('backendId'))
+          print('result:',r.get('result'))
+          print('subjectHead:',r.get('subjectHead'))
+          print('lockGeneration:',r.get('lockGeneration'))
+          print('changedPathCount:',len(r.get('changedPaths',[])))
+          print('commandCount:',r.get('commandCount'))
+          print('commandExitCodes:',','.join(str(x.get('exitCode')) for x in r.get('commandResults',[])))
+          print('workspaceCleanBeforeAndAfter:',r.get('workspaceCleanBeforeAndAfter'))
+          print('runId:',os.environ['GITHUB_RUN_ID'])
+          PY
+          jq -n --rawfile body "$work/body.txt" '{body:$body}' > "$work/comment-body.json"
+          curl --fail-with-body --silent --show-error -X POST \
+            -H 'Accept: application/vnd.github+json' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H 'X-GitHub-Api-Version: 2022-11-28' \
+            https://api.github.com/repos/$GITHUB_REPOSITORY/issues/1335/comments \
+            --data-binary "@$work/comment-body.json" >/dev/null
+
+      - name: Upload native backend receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gen311-repair-admitted-procedure-qualification-${{ github.run_id }}
+          path: ${{ runner.temp }}/gen311-proof/receipt.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Enforce proof result
+        if: always()
+        shell: bash
+        env:
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          set -euo pipefail
+          test "$EXECUTE_OUTCOME" = success

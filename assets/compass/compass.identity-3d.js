@@ -36,8 +36,8 @@ function reconcileGen1561Runtime(){
       document.addEventListener('mouseup',e=>{if(!fallback)return;fallback=false;const dx=e.clientX-startX;if(Math.abs(dx)>24){const control=stage.querySelector(dx<0?'[data-orbit-next]':'[data-orbit-previous]');control?.click()}else{dock.removeAttribute('inert');dock.setAttribute('aria-busy','false')}},true);
     }
   }
-  const html=document.documentElement;
-  if(!html.dataset.gen1561MirrorlandCapture){html.dataset.gen1561MirrorlandCapture='true';document.addEventListener('click',e=>{const door=e.target.closest?.('[data-compass-object="mirrorland"]');if(!door)return;e.preventDefault();e.stopImmediatePropagation();globalThis.DGB_COMPASS_CONTROLLER?.requestMirrorlandReveal?.()},true)}
+  const door=document.querySelector('[data-compass-object="mirrorland"]');
+  if(door){door.setAttribute('data-compass-destination','true');door.dataset.destinationType='mirrorland';door.dataset.destinationId='mirrorland';door.dataset.gen1561MirrorlandSemantic='true'}
 }
 function mount(){
   mountIdentity();brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft();reconcileGen1561Runtime();

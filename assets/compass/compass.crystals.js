@@ -6534,6 +6534,35 @@
         "[data-compass-object='mirrorland']"
       )
     ) {
+      /*
+       * Mirrorland owns its direct threshold, but it must not mask an
+       * actually rendered room star while the cluster is manipulable.
+       * Resolve the crystal renderer's own geometric hit first; this keeps
+       * dormant/overlapping Mirrorland presentation from stealing the
+       * declared ROOM_SELECTED manipulation capability.
+       */
+      const overlappingRoomHit =
+        clusterCanRotate()
+          ? findHitAtClientPoint(
+              event.clientX,
+              event.clientY,
+              [
+                NODE_TYPES.ROOM
+              ]
+            )
+          : null;
+
+      if (overlappingRoomHit) {
+        return {
+          territory:
+            POINTER_TERRITORIES
+              .RENDERED_ROOM,
+
+          nodeId:
+            overlappingRoomHit.id
+        };
+      }
+
       return {
         territory:
           POINTER_TERRITORIES

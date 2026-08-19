@@ -2,9 +2,9 @@
 import fs from 'node:fs';
 import cp from 'node:child_process';
 
-const OPERATION_ID='COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1';
-const LOCK_GENERATION=1554;
-const GOVERNING_HEAD='d809d006d6c966b23fab9c39f0f695dfad386c1f';
+const OPERATION_ID='COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v2';
+const LOCK_GENERATION=1556;
+const GOVERNING_HEAD='fe39febded099960ad7b43f631014c062ef8beff';
 const amendmentPath='.github/ai-router/projects/compass/experience-consolidation-amendment.v1.json';
 const capturePath=process.env.COMPASS_EXPERIENCE_CAPTURE_INPUT||'/tmp/compass-experience-capture-receipt.json';
 const output=process.env.COMPASS_EXPERIENCE_OUTPUT||'/tmp/compass-experience-consolidation-receipt.json';

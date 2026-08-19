@@ -15,7 +15,7 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_GOVERNING_HEAD: d809d006d6c966b23fab9c39f0f695dfad386c1f
+  COMPASS_GOVERNING_HEAD: fe39febded099960ad7b43f631014c062ef8beff
   COMPASS_EXPERIENCE_OUTPUT: /tmp/compass-experience-consolidation-receipt.json
   COMPASS_EXPERIENCE_CAPTURE_INPUT: /tmp/compass-experience-capture-receipt.json
 

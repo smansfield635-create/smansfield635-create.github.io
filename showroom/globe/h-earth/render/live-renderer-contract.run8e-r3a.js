@@ -1,306 +1,57 @@
-/** H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1 */
-import {
-  H_EARTH_RUN_8E_R3_CONTRACT_ID,
-  evaluateHEarthRun8ER3Control
-} from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
-import {
-  H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID,
-  createHEarthFunctionalLandscapeNavigationState,
-  createHEarthFunctionalLandscapeCamera
-} from '../functional-landscape/navigation.js';
+/** H_EARTH_RUN_8E_R3A_PLANETARY_SPATIAL_COHERENCE_GEN326_v1 */
+import { H_EARTH_RUN_8E_R3_CONTRACT_ID,evaluateHEarthRun8ER3Control } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js';
+import { H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID,createHEarthFunctionalLandscapeNavigationState,createHEarthFunctionalLandscapeCamera } from '../functional-landscape/navigation.js';
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
-import {
-  getHEarthOW01CanonicalLiveRenderPackageOccurrence
-} from './live-render-package.run8e-r2.canonical.js';
-import {
-  evaluateHEarthRun8ER2ImmutableLiveRenderPackage
-} from './live-render-package.run8e-r2.js';
-import {
-  H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
-  createHEarthRun8ER2DCanonicalGPUUploadViews,
-  evaluateHEarthRun8ER2DCanonicalGPUUploadViews
-} from './gpu-upload-views.run8e-r2d.js';
+import { getHEarthOW01CanonicalLiveRenderPackageOccurrence } from './live-render-package.run8e-r2.canonical.js';
+import { evaluateHEarthRun8ER2ImmutableLiveRenderPackage } from './live-render-package.run8e-r2.js';
+import { H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,createHEarthRun8ER2DCanonicalGPUUploadViews,evaluateHEarthRun8ER2DCanonicalGPUUploadViews } from './gpu-upload-views.run8e-r2d.js';
+import { H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,getHEarthPlanetRelativeUp,getHEarthDerivedHorizonDistance } from './planetary-world-frame.js';
 
-const finite = (value) => typeof value === 'number' && Number.isFinite(value);
-const freeze = (value, seen = new WeakSet()) => {
-  if (value === null || typeof value !== 'object' || Object.isFrozen(value) || seen.has(value)) return value;
-  seen.add(value);
-  Object.values(value).forEach((nested) => freeze(nested, seen));
-  return Object.freeze(value);
-};
-const frozenNumbers = (values) => Object.freeze(Array.from(values, (value) => Number(value)));
-const subtract = (a, b) => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
-const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
-const cross = (a, b) => ({ x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x });
-const normalize = (value) => {
-  const length = Math.hypot(value.x, value.y, value.z);
-  if (!(length > Number.EPSILON)) throw new Error('R3A_VECTOR_NORMALIZATION_FAILED');
-  return { x: value.x / length, y: value.y / length, z: value.z / length };
-};
+const finite=v=>typeof v==='number'&&Number.isFinite(v);
+const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
+const frozenNumbers=v=>Object.freeze(Array.from(v,Number));
+const subtract=(a,b)=>({x:a.x-b.x,y:a.y-b.y,z:a.z-b.z});
+const dot=(a,b)=>a.x*b.x+a.y*b.y+a.z*b.z;
+const cross=(a,b)=>({x:a.y*b.z-a.z*b.y,y:a.z*b.x-a.x*b.z,z:a.x*b.y-a.y*b.x});
+const normalize=v=>{const n=Math.hypot(v.x,v.y,v.z);if(!(n>Number.EPSILON))throw new Error('R3A_VECTOR_NORMALIZATION_FAILED');return{x:v.x/n,y:v.y/n,z:v.z/n}};
 
-export const H_EARTH_RUN_8E_R3A_CONTRACT_ID =
-  'H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1';
-export const H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID =
-  'H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_GEN325_v1';
+export const H_EARTH_RUN_8E_R3A_CONTRACT_ID='H_EARTH_RUN_8E_R3A_SHARED_CAMERA_GPU_PRESENTATION_CONTRACT_v1';
+export const H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID='H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_GEN325_v1';
+export const H_EARTH_RUN_8E_R3A_PLANETARY_SPATIAL_COHERENCE_ID='H_EARTH_RUN_8E_R3A_PLANETARY_SPATIAL_COHERENCE_GEN326_v1';
+const GEN326_MINIMUM_PLANETARY_FAR_PLANE=11000;
 
-function lookAt(position, target, up) {
-  const forward = normalize(subtract(target, position));
-  const right = normalize(cross(forward, up));
-  const correctedUp = cross(right, forward);
-  return frozenNumbers([
-    right.x, correctedUp.x, -forward.x, 0,
-    right.y, correctedUp.y, -forward.y, 0,
-    right.z, correctedUp.z, -forward.z, 0,
-    -dot(right, position), -dot(correctedUp, position), dot(forward, position), 1
-  ]);
+function lookAt(position,target,up){const forward=normalize(subtract(target,position)),right=normalize(cross(forward,up)),correctedUp=cross(right,forward);return frozenNumbers([right.x,correctedUp.x,-forward.x,0,right.y,correctedUp.y,-forward.y,0,right.z,correctedUp.z,-forward.z,0,-dot(right,position),-dot(correctedUp,position),dot(forward,position),1])}
+function perspective(verticalFovDegrees,aspect,nearPlane,farPlane){const f=1/Math.tan(verticalFovDegrees*Math.PI/360),range=1/(nearPlane-farPlane);return frozenNumbers([f/aspect,0,0,0,0,f,0,0,0,0,(farPlane+nearPlane)*range,-1,0,0,2*farPlane*nearPlane*range,0])}
+function multiply4(left,right){const output=new Array(16).fill(0);for(let c=0;c<4;c++)for(let r=0;r<4;r++)for(let i=0;i<4;i++)output[c*4+r]+=left[i*4+r]*right[c*4+i];return frozenNumbers(output)}
+
+export function reconcileHEarthRun8ER3APresentationState(navigationState){
+  if(navigationState?.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)throw new TypeError('R3A_NAVIGATION_STATE_CONTRACT_INVALID');
+  if(!finite(navigationState?.position?.y))throw new TypeError('R3A_NAVIGATION_CAMERA_Y_INVALID');
+  const run8BTerrain=sampleHEarthRun8BSuccessorTerrainField(navigationState.position.x,navigationState.position.z);
+  if(run8BTerrain?.valid!==true||!finite(run8BTerrain.elevation))throw new Error('R3A_SUCCESSOR_TERRAIN_CAMERA_RECONCILIATION_FAILED');
+  const run8BSafetyFloor=run8BTerrain.elevation+2.25,presentationY=Math.max(navigationState.position.y,run8BSafetyFloor);
+  if(presentationY<navigationState.position.y-1e-9)throw new Error('R3A_TERRAIN_SUPPORTED_CAMERA_Y_LOWERED');
+  return freeze({...navigationState,position:{...navigationState.position,y:presentationY},terrainElevation:navigationState.terrainElevation,minimumCameraY:Math.max(finite(navigationState.minimumCameraY)?navigationState.minimumCameraY:-Infinity,run8BTerrain.elevation+1.6),clearance:finite(navigationState.terrainElevation)?presentationY-navigationState.terrainElevation:navigationState.clearance,run8ESuccessorTerrainElevation:run8BTerrain.elevation,run8ESuccessorTerrainNormal:run8BTerrain.normal,run8ECameraReconciled:true,terrainSupportedNavigationYPreserved:presentationY>=navigationState.position.y-1e-9,terrainSupportedNavigationYExactWhenAboveRun8BFloor:navigationState.position.y>=run8BSafetyFloor-1e-9?Math.abs(presentationY-navigationState.position.y)<=1e-9:null,r3aPresentationCameraYDelta:presentationY-navigationState.position.y,presentationProjectionOnly:true,canonicalCameraAuthorityCreated:false,navigationAuthorityMutated:false});
 }
 
-function perspective(verticalFovDegrees, aspect, nearPlane, farPlane) {
-  const f = 1 / Math.tan(verticalFovDegrees * Math.PI / 360);
-  const range = 1 / (nearPlane - farPlane);
-  return frozenNumbers([
-    f / aspect, 0, 0, 0,
-    0, f, 0, 0,
-    0, 0, (farPlane + nearPlane) * range, -1,
-    0, 0, 2 * farPlane * nearPlane * range, 0
-  ]);
+function createPlanetaryPresentationCamera(reconciledState){
+  const local=createHEarthFunctionalLandscapeCamera(reconciledState);if(!local)throw new Error('R3A_CAMERA_PROJECTION_FAILED');
+  const up=getHEarthPlanetRelativeUp(local.position),observerHeight=Math.max(0,local.position.y),derivedHorizonDistance=getHEarthDerivedHorizonDistance(observerHeight),farPlane=Math.max(local.farPlane,GEN326_MINIMUM_PLANETARY_FAR_PLANE,derivedHorizonDistance+1800);
+  return freeze({...local,up:{...up},farPlane,planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,derivedGeometricHorizonDistance:derivedHorizonDistance,planetRelativeUp:true,screenSpaceCurvatureAuthority:false,worldRecenteredForCamera:false});
 }
 
-function multiply4(left, right) {
-  const output = new Array(16).fill(0);
-  for (let column = 0; column < 4; column += 1) {
-    for (let row = 0; row < 4; row += 1) {
-      for (let index = 0; index < 4; index += 1) {
-        output[column * 4 + row] += left[index * 4 + row] * right[column * 4 + index];
-      }
-    }
-  }
-  return frozenNumbers(output);
+export function createHEarthRun8ER3AFrameUniformPacket({navigationState,viewport={width:640,height:360,pixelRatio:1},frameSequence=1}={}){
+  const control=evaluateHEarthRun8ER3Control();if(control.eligible!==true)throw new Error(`R3A_CONTROL_REJECTED:${control.issues.join(',')}`);if(!Number.isSafeInteger(frameSequence)||frameSequence<1)throw new TypeError('R3A_FRAME_SEQUENCE_INVALID');
+  const width=Number(viewport?.width),height=Number(viewport?.height),pixelRatio=Number(viewport?.pixelRatio??1);if(![width,height,pixelRatio].every(finite)||width<=0||height<=0||pixelRatio<=0)throw new TypeError('R3A_VIEWPORT_INVALID');
+  const reconciledState=reconcileHEarthRun8ER3APresentationState(navigationState),camera=createPlanetaryPresentationCamera(reconciledState);if(camera.position.y<navigationState.position.y-1e-9)throw new Error('R3A_FRAME_PACKET_CAMERA_LOWER_THAN_NAVIGATION');
+  const viewMatrix=lookAt(camera.position,camera.target,camera.up),projectionMatrix=perspective(camera.verticalFovDegrees,width/height,camera.nearPlane,camera.farPlane),viewProjectionMatrix=multiply4(projectionMatrix,viewMatrix);
+  const packageRecord=getHEarthOW01CanonicalLiveRenderPackageOccurrence(),packageEvaluation=evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);if(packageEvaluation.eligible!==true)throw new Error(`R3A_PACKAGE_REJECTED:${packageEvaluation.issues.join(',')}`);
+  const gpuViews=createHEarthRun8ER2DCanonicalGPUUploadViews(packageRecord),gpuEvaluation=evaluateHEarthRun8ER2DCanonicalGPUUploadViews(gpuViews);if(gpuEvaluation.eligible!==true)throw new Error(`R3A_GPU_VIEWS_REJECTED:${gpuEvaluation.issues.join(',')}`);const environment=packageRecord.environmentDefaults;
+  return freeze({contractId:H_EARTH_RUN_8E_R3A_CONTRACT_ID,parentContractId:H_EARTH_RUN_8E_R3_CONTRACT_ID,terrainSupportedCameraReconciliationId:H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID,planetarySpatialCoherenceId:H_EARTH_RUN_8E_R3A_PLANETARY_SPATIAL_COHERENCE_ID,planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,status:'RUN_8E_R3A_FRAME_UNIFORM_PACKET_COMPLETE',frameSequence,navigationStateId:navigationState.stateId,navigationSequence:navigationState.sequence,terrainClearanceReceiptId:navigationState.terrainClearanceReceiptId,cameraAuthority:camera.cameraAuthority,canonicalCameraAuthorityCreated:false,navigationAuthorityMutated:false,successorTerrainCameraReconciled:true,terrainSupportedNavigationYPreserved:camera.position.y>=navigationState.position.y-1e-9,navigationCameraY:navigationState.position.y,presentationCameraY:camera.position.y,r3aPresentationCameraYDelta:camera.position.y-navigationState.position.y,derivedGeometricHorizonDistance:camera.derivedGeometricHorizonDistance,planetRelativeUp:true,worldRecenteredForCamera:false,viewport:{width,height,pixelRatio,aspect:width/height},camera:{position:{...camera.position},target:{...camera.target},up:{...camera.up},verticalFovDegrees:camera.verticalFovDegrees,nearPlane:camera.nearPlane,farPlane:camera.farPlane,viewMatrix,projectionMatrix,viewProjectionMatrix},environmentUniforms:{sunDirection:{...environment.sunDirection},sunIntensity:environment.sunIntensity,sunColor:[...environment.sunColor],skyZenithColor:[...environment.skyZenithColor],skyHorizonColor:[...environment.skyHorizonColor],groundHazeColor:[...environment.groundHazeColor],fogStartDistance:environment.fogStartDistance,fogFalloff:environment.fogFalloff,maximumFogFactor:environment.maximumFogFactor,distanceDesaturationStrength:environment.distanceDesaturationStrength},packageIdentity:packageRecord.packageIdentity,packageContentDigest:packageRecord.contentDigest,packageOccurrenceId:packageRecord.packageOccurrenceId,gpuTransportContractId:H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,gpuBufferElementCounts:{positions:gpuViews.positions.length,normals:gpuViews.normals.length,baseColorsLinear:gpuViews.baseColorsLinear.length,materialParameters:gpuViews.materialParameters.length,materialModelCodes:gpuViews.materialModelCodes.length,surfaceClassCodes:gpuViews.surfaceClassCodes.length,primitiveIndices:gpuViews.primitiveIndices.length,roleCodes:gpuViews.roleCodes.length,indices:gpuViews.indices.length},drawRanges:packageRecord.drawRanges.map(r=>({...r,primitiveIds:[...r.primitiveIds]})),worldBuiltBecauseCameraMoved:false,webglContextCreated:false,shaderOrProgramCreated:false,renderLoopCreated:false,publicRouteBound:false,visiblePresentationCreated:false,issues:[]});
 }
 
-export function reconcileHEarthRun8ER3APresentationState(navigationState) {
-  if (navigationState?.contractId !== H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID) {
-    throw new TypeError('R3A_NAVIGATION_STATE_CONTRACT_INVALID');
-  }
-  if (!finite(navigationState?.position?.y)) {
-    throw new TypeError('R3A_NAVIGATION_CAMERA_Y_INVALID');
-  }
-  const run8BTerrain = sampleHEarthRun8BSuccessorTerrainField(
-    navigationState.position.x,
-    navigationState.position.z
-  );
-  if (run8BTerrain?.valid !== true || !finite(run8BTerrain.elevation)) {
-    throw new Error('R3A_SUCCESSOR_TERRAIN_CAMERA_RECONCILIATION_FAILED');
-  }
+export function getHEarthRun8ER3ALiveRendererInterface(){const p=getHEarthOW01CanonicalLiveRenderPackageOccurrence();return freeze({contractId:H_EARTH_RUN_8E_R3A_CONTRACT_ID,terrainSupportedCameraReconciliationId:H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID,planetarySpatialCoherenceId:H_EARTH_RUN_8E_R3A_PLANETARY_SPATIAL_COHERENCE_ID,planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,packageIdentity:p.packageIdentity,packageContentDigest:p.contentDigest,packageOccurrenceId:p.packageOccurrenceId,gpuTransportContractId:H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,attributeLayout:[{location:0,name:'aPosition',components:3,buffer:'positions'},{location:1,name:'aNormal',components:3,buffer:'normals'},{location:2,name:'aBaseColorLinear',components:4,buffer:'baseColorsLinear'},{location:3,name:'aMaterialParameters',components:4,buffer:'materialParameters'},{location:4,name:'aMaterialModelCode',components:1,buffer:'materialModelCodes',integer:true},{location:5,name:'aSurfaceClassCode',components:1,buffer:'surfaceClassCodes',integer:true},{location:6,name:'aPrimitiveIndex',components:1,buffer:'primitiveIndices',integer:true},{location:7,name:'aRoleCode',components:1,buffer:'roleCodes',integer:true}],indexBuffer:{name:'indices',type:'UNSIGNED_INT'},frameUniformNames:['uViewProjection','uCameraPosition','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength'],drawRanges:p.drawRanges.map(r=>({...r,primitiveIds:[...r.primitiveIds]})),packageUploadedOnceRequired:true,cameraUniformsUpdatedPerFrameRequired:true,terrainSupportedNavigationYMustNotBeLowered:true,planetRelativeUpRequired:true,derivedGeometricHorizonRequired:true,worldRebuildPerCameraMoveProhibited:true,worldRecenterPerCameraMoveProhibited:true,webglContextCreated:false,shaderOrProgramCreated:false,renderLoopCreated:false,publicRouteBound:false,visiblePresentationCreated:false});}
 
-  // Gen325: the navigation state already carries the lawful camera Y derived
-  // from the exact presented terrain surface. Run8B remains provenance only.
-  // R3A is not allowed to lower or replace that Y with an older terrain field.
-  const run8BSafetyFloor = run8BTerrain.elevation + 2.25;
-  const presentationY = Math.max(navigationState.position.y, run8BSafetyFloor);
-  const loweredByPresentation = presentationY < navigationState.position.y - 1e-9;
-  if (loweredByPresentation) {
-    throw new Error('R3A_TERRAIN_SUPPORTED_CAMERA_Y_LOWERED');
-  }
-
-  return freeze({
-    ...navigationState,
-    position: {
-      ...navigationState.position,
-      y: presentationY
-    },
-    terrainElevation: navigationState.terrainElevation,
-    minimumCameraY: Math.max(
-      finite(navigationState.minimumCameraY) ? navigationState.minimumCameraY : -Infinity,
-      run8BTerrain.elevation + 1.6
-    ),
-    clearance: finite(navigationState.terrainElevation)
-      ? presentationY - navigationState.terrainElevation
-      : navigationState.clearance,
-    run8ESuccessorTerrainElevation: run8BTerrain.elevation,
-    run8ESuccessorTerrainNormal: run8BTerrain.normal,
-    run8ECameraReconciled: true,
-    terrainSupportedNavigationYPreserved: presentationY >= navigationState.position.y - 1e-9,
-    terrainSupportedNavigationYExactWhenAboveRun8BFloor:
-      navigationState.position.y >= run8BSafetyFloor - 1e-9
-        ? Math.abs(presentationY - navigationState.position.y) <= 1e-9
-        : null,
-    r3aPresentationCameraYDelta: presentationY - navigationState.position.y,
-    presentationProjectionOnly: true,
-    canonicalCameraAuthorityCreated: false,
-    navigationAuthorityMutated: false
-  });
-}
-
-export function createHEarthRun8ER3AFrameUniformPacket({
-  navigationState,
-  viewport = { width: 640, height: 360, pixelRatio: 1 },
-  frameSequence = 1
-} = {}) {
-  const control = evaluateHEarthRun8ER3Control();
-  if (control.eligible !== true) throw new Error(`R3A_CONTROL_REJECTED:${control.issues.join(',')}`);
-  if (!Number.isSafeInteger(frameSequence) || frameSequence < 1) throw new TypeError('R3A_FRAME_SEQUENCE_INVALID');
-  const width = Number(viewport?.width);
-  const height = Number(viewport?.height);
-  const pixelRatio = Number(viewport?.pixelRatio ?? 1);
-  if (![width, height, pixelRatio].every(finite) || width <= 0 || height <= 0 || pixelRatio <= 0) {
-    throw new TypeError('R3A_VIEWPORT_INVALID');
-  }
-  const reconciledState = reconcileHEarthRun8ER3APresentationState(navigationState);
-  const camera = createHEarthFunctionalLandscapeCamera(reconciledState);
-  if (!camera) throw new Error('R3A_CAMERA_PROJECTION_FAILED');
-  if (camera.position.y < navigationState.position.y - 1e-9) {
-    throw new Error('R3A_FRAME_PACKET_CAMERA_LOWER_THAN_NAVIGATION');
-  }
-  const viewMatrix = lookAt(camera.position, camera.target, camera.up);
-  const projectionMatrix = perspective(camera.verticalFovDegrees, width / height, camera.nearPlane, camera.farPlane);
-  const viewProjectionMatrix = multiply4(projectionMatrix, viewMatrix);
-  const packageRecord = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
-  const packageEvaluation = evaluateHEarthRun8ER2ImmutableLiveRenderPackage(packageRecord);
-  if (packageEvaluation.eligible !== true) throw new Error(`R3A_PACKAGE_REJECTED:${packageEvaluation.issues.join(',')}`);
-  const gpuViews = createHEarthRun8ER2DCanonicalGPUUploadViews(packageRecord);
-  const gpuEvaluation = evaluateHEarthRun8ER2DCanonicalGPUUploadViews(gpuViews);
-  if (gpuEvaluation.eligible !== true) throw new Error(`R3A_GPU_VIEWS_REJECTED:${gpuEvaluation.issues.join(',')}`);
-  const environment = packageRecord.environmentDefaults;
-  return freeze({
-    contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
-    parentContractId: H_EARTH_RUN_8E_R3_CONTRACT_ID,
-    terrainSupportedCameraReconciliationId:
-      H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID,
-    status: 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_COMPLETE',
-    frameSequence,
-    navigationStateId: navigationState.stateId,
-    navigationSequence: navigationState.sequence,
-    terrainClearanceReceiptId: navigationState.terrainClearanceReceiptId,
-    cameraAuthority: camera.cameraAuthority,
-    canonicalCameraAuthorityCreated: false,
-    navigationAuthorityMutated: false,
-    successorTerrainCameraReconciled: true,
-    terrainSupportedNavigationYPreserved:
-      camera.position.y >= navigationState.position.y - 1e-9,
-    navigationCameraY: navigationState.position.y,
-    presentationCameraY: camera.position.y,
-    r3aPresentationCameraYDelta: camera.position.y - navigationState.position.y,
-    viewport: { width, height, pixelRatio, aspect: width / height },
-    camera: {
-      position: { ...camera.position },
-      target: { ...camera.target },
-      up: { ...camera.up },
-      verticalFovDegrees: camera.verticalFovDegrees,
-      nearPlane: camera.nearPlane,
-      farPlane: camera.farPlane,
-      viewMatrix,
-      projectionMatrix,
-      viewProjectionMatrix
-    },
-    environmentUniforms: {
-      sunDirection: { ...environment.sunDirection },
-      sunIntensity: environment.sunIntensity,
-      sunColor: [...environment.sunColor],
-      skyZenithColor: [...environment.skyZenithColor],
-      skyHorizonColor: [...environment.skyHorizonColor],
-      groundHazeColor: [...environment.groundHazeColor],
-      fogStartDistance: environment.fogStartDistance,
-      fogFalloff: environment.fogFalloff,
-      maximumFogFactor: environment.maximumFogFactor,
-      distanceDesaturationStrength: environment.distanceDesaturationStrength
-    },
-    packageIdentity: packageRecord.packageIdentity,
-    packageContentDigest: packageRecord.contentDigest,
-    packageOccurrenceId: packageRecord.packageOccurrenceId,
-    gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
-    gpuBufferElementCounts: {
-      positions: gpuViews.positions.length,
-      normals: gpuViews.normals.length,
-      baseColorsLinear: gpuViews.baseColorsLinear.length,
-      materialParameters: gpuViews.materialParameters.length,
-      materialModelCodes: gpuViews.materialModelCodes.length,
-      surfaceClassCodes: gpuViews.surfaceClassCodes.length,
-      primitiveIndices: gpuViews.primitiveIndices.length,
-      roleCodes: gpuViews.roleCodes.length,
-      indices: gpuViews.indices.length
-    },
-    drawRanges: packageRecord.drawRanges.map((range) => ({ ...range, primitiveIds: [...range.primitiveIds] })),
-    worldBuiltBecauseCameraMoved: false,
-    webglContextCreated: false,
-    shaderOrProgramCreated: false,
-    renderLoopCreated: false,
-    publicRouteBound: false,
-    visiblePresentationCreated: false,
-    issues: []
-  });
-}
-
-export function getHEarthRun8ER3ALiveRendererInterface() {
-  const packageRecord = getHEarthOW01CanonicalLiveRenderPackageOccurrence();
-  return freeze({
-    contractId: H_EARTH_RUN_8E_R3A_CONTRACT_ID,
-    terrainSupportedCameraReconciliationId:
-      H_EARTH_RUN_8E_R3A_TERRAIN_SUPPORTED_CAMERA_RECONCILIATION_ID,
-    packageIdentity: packageRecord.packageIdentity,
-    packageContentDigest: packageRecord.contentDigest,
-    packageOccurrenceId: packageRecord.packageOccurrenceId,
-    gpuTransportContractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
-    attributeLayout: [
-      { location: 0, name: 'aPosition', components: 3, buffer: 'positions' },
-      { location: 1, name: 'aNormal', components: 3, buffer: 'normals' },
-      { location: 2, name: 'aBaseColorLinear', components: 4, buffer: 'baseColorsLinear' },
-      { location: 3, name: 'aMaterialParameters', components: 4, buffer: 'materialParameters' },
-      { location: 4, name: 'aMaterialModelCode', components: 1, buffer: 'materialModelCodes', integer: true },
-      { location: 5, name: 'aSurfaceClassCode', components: 1, buffer: 'surfaceClassCodes', integer: true },
-      { location: 6, name: 'aPrimitiveIndex', components: 1, buffer: 'primitiveIndices', integer: true },
-      { location: 7, name: 'aRoleCode', components: 1, buffer: 'roleCodes', integer: true }
-    ],
-    indexBuffer: { name: 'indices', type: 'UNSIGNED_INT' },
-    frameUniformNames: [
-      'uViewProjection', 'uCameraPosition', 'uSunDirection', 'uSunIntensity',
-      'uSunColor', 'uSkyZenithColor', 'uSkyHorizonColor', 'uGroundHazeColor',
-      'uFogStartDistance', 'uFogFalloff', 'uMaximumFogFactor', 'uDistanceDesaturationStrength'
-    ],
-    drawRanges: packageRecord.drawRanges.map((range) => ({ ...range, primitiveIds: [...range.primitiveIds] })),
-    packageUploadedOnceRequired: true,
-    cameraUniformsUpdatedPerFrameRequired: true,
-    terrainSupportedNavigationYMustNotBeLowered: true,
-    worldRebuildPerCameraMoveProhibited: true,
-    webglContextCreated: false,
-    shaderOrProgramCreated: false,
-    renderLoopCreated: false,
-    publicRouteBound: false,
-    visiblePresentationCreated: false
-  });
-}
-
-export function evaluateHEarthRun8ER3AFrameUniformPacket(packet) {
-  const issues = [];
-  if (packet?.contractId !== H_EARTH_RUN_8E_R3A_CONTRACT_ID) issues.push('R3A_PACKET_CONTRACT_MISMATCH');
-  if (packet?.packageOccurrenceId !== 'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001') issues.push('R3A_PACKAGE_OCCURRENCE_MISMATCH');
-  if (typeof packet?.packageIdentity !== 'string' || !packet.packageIdentity.startsWith('H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_')) issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');
-  for (const name of ['viewMatrix', 'projectionMatrix', 'viewProjectionMatrix']) {
-    const matrix = packet?.camera?.[name];
-    if (!Array.isArray(matrix) || matrix.length !== 16 || matrix.some((value) => !finite(value))) {
-      issues.push(`R3A_MATRIX_INVALID:${name}`);
-    }
-  }
-  if (packet?.successorTerrainCameraReconciled !== true) issues.push('R3A_CAMERA_NOT_RECONCILED');
-  if (packet?.terrainSupportedNavigationYPreserved !== true) issues.push('R3A_TERRAIN_SUPPORTED_NAVIGATION_Y_NOT_PRESERVED');
-  if (!finite(packet?.navigationCameraY) || !finite(packet?.presentationCameraY) || packet.presentationCameraY < packet.navigationCameraY - 1e-9) {
-    issues.push('R3A_PACKET_CAMERA_LOWER_THAN_NAVIGATION');
-  }
-  if (packet?.worldBuiltBecauseCameraMoved !== false) issues.push('R3A_WORLD_REBUILD_BOUNDARY_FAILED');
-  for (const boundary of ['webglContextCreated', 'shaderOrProgramCreated', 'renderLoopCreated', 'publicRouteBound', 'visiblePresentationCreated']) {
-    if (packet?.[boundary] !== false) issues.push(`R3A_BOUNDARY_FAILED:${boundary}`);
-  }
-  return freeze({
-    eligible: issues.length === 0,
-    status: issues.length === 0 ? 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_PASS' : 'RUN_8E_R3A_FRAME_UNIFORM_PACKET_FAIL',
-    issues
-  });
-}
-
-export function buildHEarthRun8ER3AWaypointPacket(waypointId, viewport, frameSequence = 1) {
-  const navigation = createHEarthFunctionalLandscapeNavigationState({ waypointId });
-  if (navigation?.ok !== true) throw new Error(`R3A_NAVIGATION_INITIALIZATION_FAILED:${waypointId}`);
-  return createHEarthRun8ER3AFrameUniformPacket({ navigationState: navigation.state, viewport, frameSequence });
-}
-
+export function evaluateHEarthRun8ER3AFrameUniformPacket(packet){const issues=[];if(packet?.contractId!==H_EARTH_RUN_8E_R3A_CONTRACT_ID)issues.push('R3A_PACKET_CONTRACT_MISMATCH');if(packet?.packageOccurrenceId!=='H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001')issues.push('R3A_PACKAGE_OCCURRENCE_MISMATCH');if(typeof packet?.packageIdentity!=='string'||!packet.packageIdentity.startsWith('H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_'))issues.push('R3A_PACKAGE_IDENTITY_MISMATCH');for(const name of ['viewMatrix','projectionMatrix','viewProjectionMatrix']){const m=packet?.camera?.[name];if(!Array.isArray(m)||m.length!==16||m.some(v=>!finite(v)))issues.push(`R3A_MATRIX_INVALID:${name}`)}if(packet?.successorTerrainCameraReconciled!==true)issues.push('R3A_CAMERA_NOT_RECONCILED');if(packet?.terrainSupportedNavigationYPreserved!==true)issues.push('R3A_TERRAIN_SUPPORTED_NAVIGATION_Y_NOT_PRESERVED');if(!finite(packet?.navigationCameraY)||!finite(packet?.presentationCameraY)||packet.presentationCameraY<packet.navigationCameraY-1e-9)issues.push('R3A_PACKET_CAMERA_LOWER_THAN_NAVIGATION');if(packet?.planetaryWorldFrameContractId!==H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID)issues.push('R3A_PLANETARY_FRAME_MISSING');if(packet?.planetRelativeUp!==true||!finite(packet?.derivedGeometricHorizonDistance)||packet.derivedGeometricHorizonDistance<=0)issues.push('R3A_PLANETARY_CAMERA_FRAME_INVALID');if(packet?.worldRecenteredForCamera!==false||packet?.worldBuiltBecauseCameraMoved!==false)issues.push('R3A_WORLD_CONTINUITY_BOUNDARY_FAILED');for(const b of ['webglContextCreated','shaderOrProgramCreated','renderLoopCreated','publicRouteBound','visiblePresentationCreated'])if(packet?.[b]!==false)issues.push(`R3A_BOUNDARY_FAILED:${b}`);return freeze({eligible:issues.length===0,status:issues.length===0?'RUN_8E_R3A_FRAME_UNIFORM_PACKET_PASS':'RUN_8E_R3A_FRAME_UNIFORM_PACKET_FAIL',issues});}
+export function buildHEarthRun8ER3AWaypointPacket(waypointId,viewport,frameSequence=1){const n=createHEarthFunctionalLandscapeNavigationState({waypointId});if(n?.ok!==true)throw new Error(`R3A_NAVIGATION_INITIALIZATION_FAILED:${waypointId}`);return createHEarthRun8ER3AFrameUniformPacket({navigationState:n.state,viewport,frameSequence});}
 export default getHEarthRun8ER3ALiveRendererInterface;

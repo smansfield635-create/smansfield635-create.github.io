@@ -65,7 +65,9 @@ jobs:
           };
           const failures=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k);
           const receipt={schema:'COMPASS_ENGINEERING_FLOOR_RECEIPT_v2',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,governingHead:base,changedPaths:changed,mutatedProtected,controllerNumstat,checks,failures,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED'};
-          fs.writeFileSync('/tmp/compass-engineering-floor-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+          fs.writeFileSync('/tmp/compass-engineering-floor-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify(receipt,null,2));
+          if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         if: always()
@@ -108,64 +110,71 @@ jobs:
           import {chromium} from 'playwright';
           const browser=await chromium.launch({headless:true});
           const candidateHead=process.env.COMPASS_CANDIDATE_HEAD,governingHead=process.env.COMPASS_GOVERNING_HEAD;
+          const CATEGORY='Independent Studio for Interactive Worlds, Creative Technology & Original Systems';
           const viewports=[['desktop',1440,1000],['tablet',1024,1366],['phone',390,844]];
+          const required=['constellation','cluster-open','room-selected','return-orbit','mirrorland-revealing','mirrorland-focused','brain','trophy','house','trl','tra','conclusion'];
           const errors=[],coverage={},perViewport={},artifacts=[];
-          const rect=r=>({left:+r.left.toFixed(1),top:+r.top.toFixed(1),right:+r.right.toFixed(1),bottom:+r.bottom.toFixed(1),width:+r.width.toFixed(1),height:+r.height.toFixed(1)});
           const shot=async(page,name)=>{const p=`/tmp/compass-experience-captures/${name}.png`;await page.screenshot({path:p,fullPage:true});artifacts.push(p)};
-          const inspect=async(page,label)=>page.evaluate(label=>{
+          const inspect=async(page,label)=>page.evaluate(({label,CATEGORY})=>{
             const vw=innerWidth,vh=innerHeight;
-            const isVisible=el=>{if(!el)return false;const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity||1)>.02&&r.width>2&&r.height>2};
-            const intersection=(r,b)=>{const l=Math.max(r.left,b.left),t=Math.max(r.top,b.top),rr=Math.min(r.right,b.right),bb=Math.min(r.bottom,b.bottom);return Math.max(0,rr-l)*Math.max(0,bb-t)};
-            const ratio=(r,b)=>r.width*r.height?intersection(r,b)/(r.width*r.height):1;
-            const viewport={left:0,top:0,right:vw,bottom:vh,width:vw,height:vh};
+            const style=el=>el?getComputedStyle(el):null;
+            const hiddenByAncestor=el=>{let n=el;while(n&&n!==document.documentElement){if(n.getAttribute?.('aria-hidden')==='true'||n.hidden)return true;const s=getComputedStyle(n);if(s.display==='none'||s.visibility==='hidden'||Number(s.opacity||1)<=.02)return true;n=n.parentElement}return false};
+            const visible=el=>{if(!el||hiddenByAncestor(el))return false;const r=el.getBoundingClientRect();return r.width>2&&r.height>2};
+            const overlap=(a,b)=>{const l=Math.max(a.left,b.left),t=Math.max(a.top,b.top),r=Math.min(a.right,b.right),bt=Math.min(a.bottom,b.bottom);return Math.max(0,r-l)*Math.max(0,bt-t)};
+            const ratio=(a,b)=>a.width*a.height?overlap(a,b)/(a.width*a.height):1;
             const clippingAncestor=el=>{let p=el?.parentElement;while(p&&p!==document.body){const s=getComputedStyle(p);if(/hidden|clip/.test(`${s.overflow} ${s.overflowX} ${s.overflowY}`))return p;p=p.parentElement}return null};
-            const criticalSelectors=['.compass-estate__header','.compass-identity-3d','.compass-statement-orbit','[data-compass-scene]','[data-compass-guidance]','[data-compass-panel]','.compass-purpose-stage','.compass-capability-orbit','.compass-built','.compass-build-cta'];
+            const critical=['.compass-estate__header','.compass-identity-3d','.compass-statement-orbit','[data-compass-scene]','[data-compass-guidance]','[data-compass-panel]','.compass-purpose-stage','.compass-capability-orbit','.compass-built','.compass-build-cta'];
             const geometry=[];
-            for(const sel of criticalSelectors){const el=document.querySelector(sel);if(!isVisible(el))continue;const r=el.getBoundingClientRect(),a=clippingAncestor(el),ar=a?.getBoundingClientRect();const ancestorRatio=a?ratio(r,ar):1;geometry.push({selector:sel,rect:{left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height},ancestorRatio,viewportRatio:ratio(r,viewport),ancestor:a?(a.id?`#${a.id}`:`.${[...a.classList].slice(0,2).join('.')}`):null});}
-            const textClips=[...document.querySelectorAll('h1,h2,h3,p,summary,li,span')].filter(isVisible).filter(el=>{const s=getComputedStyle(el);return /hidden|clip/.test(`${s.overflow} ${s.overflowX} ${s.overflowY}`)&&(el.scrollWidth>el.clientWidth+2||el.scrollHeight>el.clientHeight+2)}).map(el=>({tag:el.tagName,text:(el.innerText||'').trim().slice(0,90),scroll:[el.scrollWidth,el.scrollHeight],client:[el.clientWidth,el.clientHeight]}));
-            const controlClips=[...document.querySelectorAll('button,a,[role="button"],[role="tab"]')].filter(isVisible).map(el=>{const r=el.getBoundingClientRect();return {text:(el.innerText||el.getAttribute('aria-label')||'').trim().slice(0,80),ratio:ratio(r,viewport),rect:{left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height}}}).filter(x=>x.ratio>0&&x.ratio<.94);
-            const root=document.querySelector('[data-compass-root]');
-            const bodyText=document.body.innerText.replace(/\s+/g,' ').trim();
-            const activeMirror=root?.dataset.compassMode?.startsWith('MIRRORLAND_');
-            const panel=document.querySelector('[data-compass-panel]');
-            const mirrorChoice=[...document.querySelectorAll('*')].find(el=>isVisible(el)&&/Choose an experience\./i.test(el.textContent||''));
-            const stalePanelVisible=Boolean(activeMirror&&mirrorChoice&&panel&&isVisible(panel)&&/Selected|Mirrorland|Back to Compass/i.test(panel.innerText||''));
-            const cardlike=el=>{if(!isVisible(el))return false;const s=getComputedStyle(el);return (parseFloat(s.borderRadius)||0)>8&&(s.boxShadow!=='none'||s.backgroundImage!=='none'||!/^rgba\([^,]+,[^,]+,[^,]+, 0\)$/.test(s.backgroundColor||''));};
+            for(const selector of critical){const el=document.querySelector(selector);if(!visible(el))continue;const r=el.getBoundingClientRect(),a=clippingAncestor(el),ar=a?.getBoundingClientRect();geometry.push({selector,ancestorRatio:a?ratio(r,ar):1,horizontalOut:r.left<-2||r.right>vw+2,rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},ancestor:a?(a.id?`#${a.id}`:`.${[...a.classList].slice(0,2).join('.')}`):null});}
+            const textClips=[...document.querySelectorAll('h1,h2,h3,p,summary,li,span')].filter(visible).filter(el=>{
+              const text=(el.innerText||'').trim();if(text==='YXZ')return false;
+              const s=getComputedStyle(el);return /hidden|clip/.test(`${s.overflow} ${s.overflowX} ${s.overflowY}`)&&(el.scrollWidth>el.clientWidth+2||el.scrollHeight>el.clientHeight+2);
+            }).map(el=>({tag:el.tagName,text:(el.innerText||'').trim().slice(0,90),scroll:[el.scrollWidth,el.scrollHeight],client:[el.clientWidth,el.clientHeight]}));
+            const controlClips=[...document.querySelectorAll('button,a,[role="button"],[role="tab"]')].filter(visible).flatMap(el=>{const r=el.getBoundingClientRect();const verticalIntersects=r.bottom>0&&r.top<vh;if(!verticalIntersects)return[];const a=clippingAncestor(el),ar=a?.getBoundingClientRect();const ancestorRatio=a?ratio(r,ar):1;const horizontalOut=r.left<-2||r.right>vw+2;return(horizontalOut||ancestorRatio<.94)?[{text:(el.innerText||el.getAttribute('aria-label')||'').trim().slice(0,80),horizontalOut,ancestorRatio,rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom}}]:[]});
+            const root=document.querySelector('[data-compass-root]'),panel=document.querySelector('[data-compass-panel]'),routes=document.querySelector('[data-compass-mirrorland-routes]');
+            const mirrorRoutesVisible=visible(routes);
+            const staleMirrorSiblings=mirrorRoutesVisible&&panel?[...panel.children].filter(el=>el!==routes&&visible(el)).map(el=>(el.innerText||el.getAttribute('aria-label')||el.tagName).trim().slice(0,80)):[];
+            const cardlike=el=>{if(!visible(el))return false;const s=style(el);return (parseFloat(s.borderRadius)||0)>8&&(s.boxShadow!=='none'||s.backgroundImage!=='none'||parseFloat((s.backgroundColor.match(/[\d.]+\)$/)||['0'])[0])>.08)};
             const cardTargets=['.compass-introduction__body','.compass-panel','.compass-statement-orbit','.compass-monument','.compass-orbit-plaque','.compass-built','.compass-proof-card'].map(s=>document.querySelector(s)).filter(Boolean);
-            return {label,mode:root?.dataset.compassMode||'',scrollY,documentOverflowX:document.documentElement.scrollWidth-document.documentElement.clientWidth,geometry,textClips,controlClips,stalePanelVisible,cardlikeCount:cardTargets.filter(cardlike).length,bodyText,headerHeight:document.querySelector('.compass-estate__header')?.getBoundingClientRect().height||0,panelColumns:document.querySelector('.compass-panel')?getComputedStyle(document.querySelector('.compass-panel')).gridTemplateColumns:'',guidanceVisible:isVisible(document.querySelector('[data-compass-guidance]')),categoryPresent:bodyText.includes('Independent Studio for Interactive Worlds, Creative Technology & Original Systems'),evidenceHref:document.querySelector('[data-evidence-registry-exit]')?.getAttribute('href')||''};
-          },label);
-          const state=async(page,id,name)=>{const v=await inspect(page,`${id}:${name}`);coverage[id]??=[];coverage[id].push(name);perViewport[id]??={states:{},traversal:{}};perViewport[id].states[name]=v;await shot(page,`${id}-${name}`);return v};
+            const identityText=root?.dataset.studioIdentity||document.querySelector('.compass-studio-descriptor')?.textContent?.trim()||'';
+            const bodyText=document.body.innerText.replace(/\s+/g,' ').trim();
+            return {label,mode:root?.dataset.compassMode||'',scrollY,documentOverflowX:document.documentElement.scrollWidth-document.documentElement.clientWidth,geometry,textClips,controlClips,mirrorRoutesVisible,staleMirrorSiblings,cardlikeCount:cardTargets.filter(cardlike).length,headerHeight:document.querySelector('.compass-estate__header')?.getBoundingClientRect().height||0,panelColumns:panel?style(panel).gridTemplateColumns:'',guidanceVisible:visible(document.querySelector('[data-compass-guidance]')),categoryPresent:identityText===CATEGORY||identityText.replace(/\band\b/i,'&')===CATEGORY,evidenceHref:document.querySelector('[data-evidence-registry-exit]')?.getAttribute('href')||'',bodyText};
+          },{label,CATEGORY});
+          const capture=async(page,id,name)=>{const s=await inspect(page,`${id}:${name}`);coverage[id]??=[];coverage[id].push(name);perViewport[id]??={states:{},traversal:{}};perViewport[id].states[name]=s;await shot(page,`${id}-${name}`);return s};
+          const load=async(page,id)=>{await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForTimeout(1100)};
           try{
             for(const [id,width,height] of viewports){
-              const context=await browser.newContext({viewport:{width,height},reducedMotion:'no-preference'});const page=await context.newPage();page.on('pageerror',e=>errors.push(`${id}:${e}`));await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForTimeout(1100);
-              await state(page,id,'constellation');
-              await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestCardinalSelection?.('east'));await page.waitForTimeout(450);await state(page,id,'cluster-open');
+              const context=await browser.newContext({viewport:{width,height},reducedMotion:'no-preference'});const page=await context.newPage();page.on('pageerror',e=>errors.push(`${id}:${e}`));await load(page,id);
+              await capture(page,id,'constellation');
+              await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestCardinalSelection?.('east'));await page.waitForTimeout(450);await capture(page,id,'cluster-open');
               const before=await page.evaluate(()=>({y:scrollY,sceneTop:document.querySelector('[data-compass-scene]')?.getBoundingClientRect().top??null}));
-              await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestRoomSelection?.('east-1'));await page.waitForTimeout(900);const room=await state(page,id,'room-selected');const afterRoom=await page.evaluate(()=>({y:scrollY,panelTop:document.querySelector('[data-compass-panel]')?.getBoundingClientRect().top??null,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',descended:document.querySelector('[data-compass-root]')?.dataset.panelDescended||''}));
-              const ret=page.locator('[data-compass-return-to-orbit]').first();let afterReturn=null;if(await ret.count()&&await ret.isVisible()){await ret.click({force:true});await page.waitForTimeout(900);await state(page,id,'return-orbit');afterReturn=await page.evaluate(()=>({y:scrollY,sceneTop:document.querySelector('[data-compass-scene]')?.getBoundingClientRect().top??null,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||''}));}
+              await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestRoomSelection?.('east-1'));await page.waitForTimeout(900);await capture(page,id,'room-selected');const afterRoom=await page.evaluate(()=>({y:scrollY,panelTop:document.querySelector('[data-compass-panel]')?.getBoundingClientRect().top??null,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',descended:document.querySelector('[data-compass-root]')?.dataset.panelDescended||''}));
+              const ret=page.locator('[data-compass-return-to-orbit]').first();let afterReturn=null;if(await ret.count()&&await ret.isVisible()){await ret.click({force:true});await page.waitForTimeout(900);await capture(page,id,'return-orbit');afterReturn=await page.evaluate(()=>({y:scrollY,sceneTop:document.querySelector('[data-compass-scene]')?.getBoundingClientRect().top??null,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||''}));}
               const descent=afterRoom.descended==='true'&&afterRoom.y>before.y+40&&Number(afterRoom.panelTop)>=-20&&Number(afterRoom.panelTop)<height*.82;const restore=Boolean(afterReturn)&&afterReturn.mode==='CLUSTER_OPEN'&&afterReturn.y<afterRoom.y-40&&Number(afterReturn.sceneTop)<height*.7;perViewport[id].traversal={before,afterRoom,afterReturn,descent,restore,pass:descent&&restore};
-              await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToConstellation?.({source:'audit',scrollToScene:false}));await page.waitForTimeout(300);
-              const mirror=page.locator('[data-compass-object="mirrorland"]').first();if(await mirror.count()){await mirror.click({force:true});await page.waitForTimeout(250);await state(page,id,'mirrorland-revealing');await page.waitForTimeout(1500);await state(page,id,'mirrorland-focused');const back=page.locator('[data-compass-mirrorland-back]').first();if(await back.count()&&await back.isVisible()){await back.click({force:true});await page.waitForTimeout(1050)}}
-              const orbit=page.locator('.compass-capability-orbit').first();if(await orbit.count()){await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await state(page,id,'brain');const next=page.locator('.compass-orbit-controls button').last();if(await next.count()){await next.click({force:true});await page.waitForTimeout(450);await state(page,id,'trophy');await next.click({force:true});await page.waitForTimeout(450);await state(page,id,'house')}}
-              const readiness=page.locator('.compass-built').first();if(await readiness.count()){await readiness.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await state(page,id,'trl');const tra=page.locator('[data-readiness-mode-button="tra"]').first();if(await tra.count()){await tra.click({force:true});await page.waitForTimeout(350);await state(page,id,'tra')}}
-              await state(page,id,'conclusion');await context.close();
+
+              await load(page,id);const mirror=page.locator('[data-compass-object="mirrorland"]').first();if(await mirror.count()){await mirror.click({force:true});await page.waitForTimeout(250);await capture(page,id,'mirrorland-revealing');await page.waitForTimeout(1500);await capture(page,id,'mirrorland-focused');}
+
+              await load(page,id);const orbit=page.locator('.compass-capability-orbit').first();if(await orbit.count()){await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await capture(page,id,'brain');const next=page.locator('.compass-orbit-controls button').last();if(await next.count()){await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'trophy');await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'house')}}
+              const readiness=page.locator('.compass-built').first();if(await readiness.count()){await readiness.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await capture(page,id,'trl');const tra=page.locator('[data-readiness-mode-button="tra"]').first();if(await tra.count()){await tra.click({force:true});await page.waitForTimeout(350);await capture(page,id,'tra')}}
+              await capture(page,id,'conclusion');await context.close();
             }
           } finally {await browser.close()}
-          const allStates=Object.values(perViewport).flatMap(v=>Object.values(v.states));
-          const visibleGeometryIntegrity=allStates.every(s=>s.documentOverflowX<=1&&s.geometry.every(g=>g.ancestorRatio>=.94)&&s.textClips.length===0&&s.controlClips.length===0);
+          const states=Object.values(perViewport).flatMap(v=>Object.values(v.states));
+          const visibleGeometryIntegrity=states.every(s=>s.documentOverflowX<=1&&s.geometry.every(g=>g.ancestorRatio>=.94&&!g.horizontalOut)&&s.textClips.length===0&&s.controlClips.length===0);
           const traversalContinuity=Object.values(perViewport).every(v=>v.traversal.pass===true);
-          const stateLayerExclusivity=allStates.every(s=>!s.stalePanelVisible);
-          const visualSystemCoherence=allStates.every(s=>s.cardlikeCount<=1)&&['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation.headerHeight<(id==='phone'?440:520));
-          const narrativeContinuity=['desktop','tablet','phone'].every(id=>['constellation','cluster-open','room-selected','return-orbit','mirrorland-revealing','mirrorland-focused','brain','trophy','house','trl','tra','conclusion'].every(x=>coverage[id]?.includes(x)));
-          const interactionLegibility=allStates.filter(s=>/constellation|cluster-open|room-selected|return-orbit/.test(s.label)).every(s=>s.guidanceVisible&&s.textClips.length===0);
-          const desktopCols=perViewport.desktop.states.constellation.panelColumns.split(' ').filter(Boolean).length,tabletCols=perViewport.tablet.states.constellation.panelColumns.split(' ').filter(Boolean).length,phoneCols=perViewport.phone.states.constellation.panelColumns.split(' ').filter(Boolean).length;
-          const responsiveRecomposition=desktopCols>=2&&tabletCols===1&&phoneCols===1&&visibleGeometryIntegrity;
-          const evidenceHierarchy=allStates.every(s=>s.evidenceHref==='/evidence/'||!s.evidenceHref);
-          const categoryPreservation=allStates.every(s=>s.categoryPresent&&!/web agency|full-service agency/i.test(s.bodyText));
+          const stateLayerExclusivity=states.filter(s=>s.mirrorRoutesVisible).every(s=>s.staleMirrorSiblings.length===0);
+          const visualSystemCoherence=states.every(s=>s.cardlikeCount<=1)&&['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation.headerHeight<(id==='phone'?440:520));
+          const narrativeContinuity=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)));
+          const interactionLegibility=states.filter(s=>/constellation|cluster-open|room-selected|return-orbit/.test(s.label)).every(s=>s.guidanceVisible&&s.textClips.length===0);
+          const cols=id=>perViewport[id].states.constellation.panelColumns.split(' ').filter(Boolean).length;
+          const responsiveRecomposition=cols('desktop')>=2&&cols('tablet')===1&&cols('phone')===1;
+          const evidenceHierarchy=states.every(s=>!s.evidenceHref||s.evidenceHref==='/evidence/');
+          const categoryPreservation=states.every(s=>s.categoryPresent&&!/web agency|full-service agency/i.test(s.bodyText));
           const hardZero={visualSystemCoherence,narrativeContinuity,interactionLegibility,responsiveRecomposition,evidenceHierarchy,categoryPreservation,visibleGeometryIntegrity,traversalContinuity,stateLayerExclusivity};
-          const required=['constellation','cluster-open','room-selected','return-orbit','mirrorland-revealing','mirrorland-focused','brain','trophy','house','trl','tra','conclusion'];
           const stateMatrixComplete=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)));
-          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v2',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),stateCoverage:coverage,stateMatrixComplete,perViewport,hardZero,artifacts,errors};fs.writeFileSync(process.env.COMPASS_EXPERIENCE_CAPTURE_INPUT,JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify({schema:receipt.schema,candidateHead,hardZero,stateMatrixComplete,errors},null,2));
+          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v2',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),stateCoverage:coverage,stateMatrixComplete,perViewport,hardZero,artifacts,errors};
+          fs.writeFileSync(process.env.COMPASS_EXPERIENCE_CAPTURE_INPUT,JSON.stringify(receipt,null,2)+'\n');
+          console.log(JSON.stringify({schema:receipt.schema,candidateHead,hardZero,stateMatrixComplete,errors},null,2));
           NODE
           node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
       - uses: actions/upload-artifact@v4

@@ -1,0 +1,89 @@
+{
+  "schema": "COMPASS_EXPERIENCE_CONSOLIDATION_AMENDMENT_v1",
+  "operationId": "COMPASS_EXPERIENCE_CONSOLIDATION_SUCCESSOR_20260818_v1",
+  "lockGeneration": 1552,
+  "governingHead": "cfd1924c485893dedeeb2fd1fefcb91c521d7c2a",
+  "governingIssue": 1011,
+  "governingStandardComment": 5337684472,
+  "ownerMutationExperiencePackageComment": 5337709753,
+  "law": "PRESERVE_CAPABILITY_REDUCE_VISIBLE_MECHANISM_RECOMPOSE_REMAINDER",
+  "acceptance": "ENGINEERING_PASS_AND_EXPERIENCE_PASS",
+  "constructionOrder": [
+    "INVENTORY",
+    "PRESERVE",
+    "REMOVE",
+    "DEMOTE",
+    "MERGE",
+    "DISSOLVE",
+    "RECOMPOSE",
+    "ADD_ONLY_IF_NECESSARY"
+  ],
+  "hardZero": {
+    "visualSystemCoherence": true,
+    "narrativeContinuity": true,
+    "interactionLegibility": true,
+    "responsiveRecomposition": true,
+    "evidenceHierarchy": true,
+    "categoryPreservation": true
+  },
+  "productMutationEnvelope": [
+    "index.html",
+    "assets/compass/compass.css",
+    "assets/compass/compass.statement-carousel.css",
+    "assets/compass/compass.capability-carousel.css",
+    "assets/compass/compass.identity-3d.css"
+  ],
+  "protectedRuntimePaths": [
+    "assets/compass/compass.controller.js",
+    "assets/compass/compass.crystals.js",
+    "assets/compass/compass.cosmos.js",
+    "assets/compass/compass.mirrorland-window.js",
+    "assets/compass/compass.laws-spacecraft.js",
+    "assets/compass/compass.identity-3d.js",
+    "assets/compass/compass.statement-carousel.js",
+    "assets/compass/compass.capability-carousel.js",
+    "assets/compass/compass.brain.js",
+    "assets/compass/compass.brain-scene.js"
+  ],
+  "experienceReceipt": {
+    "schema": "COMPASS_EXPERIENCE_CONSOLIDATION_RECEIPT_v1",
+    "requiredCaptureViewports": [
+      {"id":"desktop","width":1440,"height":1000},
+      {"id":"tablet","width":1024,"height":1366},
+      {"id":"phone","width":390,"height":844}
+    ],
+    "requiredDesktopBeats": [
+      "opening",
+      "compass-constellation",
+      "mirrorland-threshold",
+      "selected-room",
+      "brain",
+      "trophy",
+      "house",
+      "purpose-engagement",
+      "readiness-evidence",
+      "conclusion"
+    ],
+    "requiredPhoneBeats": [
+      "compass-constellation",
+      "dimensional-capability",
+      "readiness-evidence",
+      "conclusion"
+    ],
+    "requiredReducedMotionBeats": {
+      "desktop": ["opening","compass","dimensional-capability","conclusion"],
+      "phone": ["opening","compass","conclusion"]
+    }
+  },
+  "failClosed": [
+    "ANY_HARD_ZERO_FALSE",
+    "RESPONSIVE_DESKTOP_COMPRESSION_INSTEAD_OF_RECOMPOSITION",
+    "GENERIC_FALLBACK_REPLACES_NATIVE_SPATIAL_TREATMENT",
+    "EXPLANATORY_CLUTTER_REQUIRED_FOR_INTERACTION_LEGIBILITY",
+    "PUBLIC_CLAIM_AND_EVIDENCE_CONFLATED",
+    "GENERIC_SERVICE_CATEGORY_ENDING",
+    "VISIBLE_MECHANISM_COUNT_INCREASE_WITHOUT_NECESSITY_PROOF",
+    "PROTECTED_CAPABILITY_REGRESSION",
+    "MUTATION_OUTSIDE_EXACT_ENVELOPE"
+  ]
+}

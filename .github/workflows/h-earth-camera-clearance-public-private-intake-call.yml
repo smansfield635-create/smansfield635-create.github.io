@@ -1,0 +1,20 @@
+name: H-Earth Camera Clearance Public Private Intake Call
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '294'
+      private_comment: '5337092662'
+      expected_request_id: 'H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_INTAKE_20260818_001'
+      exact_private_head: '367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab'
+      callback_issue: '1338'
+    secrets: inherit

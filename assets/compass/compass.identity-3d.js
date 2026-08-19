@@ -3,7 +3,7 @@
 const GLOBAL='DGB_COMPASS_IDENTITY_3D_GEN1536';
 if(globalThis[GLOBAL]?.mounted)return;
 const state={root:null,identity:null};
-function layers(text,count=10,step=2){let html='';for(let i=count-1;i>=0;i--)html+=`<span class="compass-wordmark-layer" aria-hidden="true" style="transform:translateZ(${-i*step}px"${i===0?' data-front="true"':''}>${text}</span>`;return html}
+function layers(text,count=10,step=2){let html='';for(let i=count-1;i>=0;i--)html+=`<span class="compass-wordmark-layer" aria-hidden="true" style="transform:translateZ(${-i*step}px)"${i===0?' data-front="true"':''}>${text}</span>`;return html}
 function mountIdentity(){
   const root=state.root=document.querySelector('[data-compass-root]');if(!root)return;
   const header=root.querySelector('.compass-estate__header')||root.querySelector('header');if(!header)return;

@@ -9,9 +9,7 @@
  * This module creates no geography, topology, renderer, navigation-scale,
  * collision/physics, merge, deployment, or production authority.
  */
-import {
-  H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW
-} from '../render/landscape-preview.js';
+import { H_EARTH_FUNCTIONAL_LANDSCAPE_NEUTRAL_PREVIEW } from '../render/landscape-preview.js';
 
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
@@ -30,7 +28,6 @@ function terrainPrimitive(){
   if(primitive?.metadata?.gen311RegionalReliefMaterialized!==true)return null;
   return primitive;
 }
-
 function locateAxisCell(values,value){
   if(!Array.isArray(values)||values.length<2||!finite(value))return null;
   const min=values[0],max=values[values.length-1];
@@ -39,82 +36,38 @@ function locateAxisCell(values,value){
   let lo=0,hi=values.length-1;
   while(lo+1<hi){const mid=(lo+hi)>>1;if(values[mid]<=value)lo=mid;else hi=mid;}
   const span=values[lo+1]-values[lo];
-  if(!(span>0))return null;
-  return {index:lo,t:clamp((value-values[lo])/span,0,1)};
+  return span>0?{index:lo,t:clamp((value-values[lo])/span,0,1)}:null;
 }
-
 function interpolateCell(vertices,cols,row,col,u,v){
-  const a=vertices[row*cols+col];
-  const b=vertices[row*cols+col+1];
-  const e=vertices[(row+1)*cols+col];
-  const d=vertices[(row+1)*cols+col+1];
+  const a=vertices[row*cols+col],b=vertices[row*cols+col+1],e=vertices[(row+1)*cols+col],d=vertices[(row+1)*cols+col+1];
   if(![a,b,e,d].every(p=>p&&finite(p.y)))return null;
-  if(u+v<=1)return a.y*(1-u-v)+b.y*u+e.y*v;
-  return d.y*(u+v-1)+b.y*(1-v)+e.y*(1-u);
+  return u+v<=1?a.y*(1-u-v)+b.y*u+e.y*v:d.y*(u+v-1)+b.y*(1-v)+e.y*(1-u);
 }
-
 export function sampleHEarthVisibleTerrainClearanceSurface(worldX,worldZ){
   const primitive=terrainPrimitive();
   if(!primitive)return freeze({valid:false,status:'VISIBLE_TERRAIN_SURFACE_UNAVAILABLE',issues:['PROTECTED_GEN311_VISIBLE_TERRAIN_MESH_INVALID']});
-  const geometry=primitive.geometry,vertices=geometry?.vertices??[];
-  const attrs=geometry?.attributes??{};
-  const xValues=attrs.xValues??[],zValues=attrs.zValues??[];
+  const geometry=primitive.geometry,vertices=geometry?.vertices??[],attrs=geometry?.attributes??{},xValues=attrs.xValues??[],zValues=attrs.zValues??[];
   const x=locateAxisCell(xValues,worldX),z=locateAxisCell(zValues,worldZ);
   if(!x||!z)return freeze({valid:false,status:'VISIBLE_TERRAIN_SAMPLE_OUTSIDE_PRESENTED_DOMAIN',worldX,worldZ,issues:['VISIBLE_TERRAIN_FOOTPRINT_OUTSIDE_MESH']});
   const visibleElevation=interpolateCell(vertices,xValues.length,z.index,x.index,x.t,z.t);
   if(!finite(visibleElevation))return freeze({valid:false,status:'VISIBLE_TERRAIN_INTERPOLATION_FAILED',worldX,worldZ,issues:['VISIBLE_TERRAIN_CELL_INVALID']});
-  return freeze({
-    valid:true,
-    status:'VISIBLE_TERRAIN_SAMPLE_COMPLETE',
-    contractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,
-    cameraVolumeContractId:H_EARTH_CAMERA_VOLUME_CLEARANCE_CONTRACT_ID,
-    protectedGeographicFloor:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,
-    protectedParentHead:H_EARTH_CAMERA_VOLUME_CLEARANCE_PROTECTED_PARENT,
-    worldX,worldZ,visibleElevation,
-    sourcePrimitiveId:primitive.primitiveId,
-    sourceGeometryId:geometry.geometryId,
-    sourceReliefContractId:primitive.metadata.gen311RegionalReliefContractId,
-    cell:freeze({column:x.index,row:z.index,u:x.t,v:z.t}),
-    presentedMeshSampled:true,
-    canonicalWorldFieldMutated:false,
-    geographyAuthorityCreated:false,
-    topologyAuthorityCreated:false,
-    navigationScaleAuthorityCreated:false,
-    issues:[]
-  });
+  return freeze({valid:true,status:'VISIBLE_TERRAIN_SAMPLE_COMPLETE',contractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,cameraVolumeContractId:H_EARTH_CAMERA_VOLUME_CLEARANCE_CONTRACT_ID,protectedGeographicFloor:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,protectedParentHead:H_EARTH_CAMERA_VOLUME_CLEARANCE_PROTECTED_PARENT,worldX,worldZ,visibleElevation,sourcePrimitiveId:primitive.primitiveId,sourceGeometryId:geometry.geometryId,sourceReliefContractId:primitive.metadata.gen311RegionalReliefContractId,cell:freeze({column:x.index,row:z.index,u:x.t,v:z.t}),presentedMeshSampled:true,canonicalWorldFieldMutated:false,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false,issues:[]});
 }
-
 function cameraVolumePoints(worldX,worldZ,{yawDegrees,lookAheadDistance,lateralRadius}){
-  const yaw=(finite(yawDegrees)?yawDegrees:0)*Math.PI/180;
-  const forward={x:Math.sin(yaw),z:-Math.cos(yaw)};
-  const right={x:Math.cos(yaw),z:Math.sin(yaw)};
-  // The predecessor sampled four isolated points. Gen321 samples a continuous
-  // approximation of the near camera/view corridor. Reach/radius are safety
-  // dimensions only; they do not change movement or world scale.
-  const reach=Math.max(8,finite(lookAheadDistance)?lookAheadDistance:0);
-  const radius=Math.max(3,(finite(lateralRadius)?lateralRadius:0)*2.4);
-  const distances=[0,.5,1.25,2.5,4,6,reach];
-  const lateralFractions=[-1,-2/3,-1/3,0,1/3,2/3,1];
-  const points=[];
-  for(let di=0;di<distances.length;di++){
-    const distance=distances[di];
-    // Slightly taper the corridor with distance, but never below the
-    // predecessor footprint. This captures near-plane and steep-side relief.
-    const localRadius=Math.max(finite(lateralRadius)?lateralRadius:0,radius*(1-.035*distance));
+  const yaw=(finite(yawDegrees)?yawDegrees:0)*Math.PI/180,forward={x:Math.sin(yaw),z:-Math.cos(yaw)},right={x:Math.cos(yaw),z:Math.sin(yaw)};
+  const reach=Math.max(10,finite(lookAheadDistance)?lookAheadDistance:0);
+  const radius=Math.max(4,(finite(lateralRadius)?lateralRadius:0)*3.2);
+  const distances=[0,.4,1,2,3.5,5.5,7.5,reach];
+  const lateralFractions=[-1,-.75,-.5,-.25,0,.25,.5,.75,1],points=[];
+  for(const distance of distances){
+    const localRadius=Math.max(finite(lateralRadius)?lateralRadius:0,radius*(1-.025*distance));
     for(const fraction of lateralFractions){
       const lateral=localRadius*fraction;
-      points.push({
-        role:distance===0&&fraction===0?'CENTER':'CAMERA_VOLUME',
-        distance,lateral,
-        critical:distance<=4,
-        x:worldX+forward.x*distance+right.x*lateral,
-        z:worldZ+forward.z*distance+right.z*lateral
-      });
+      points.push({role:distance===0&&fraction===0?'CENTER':'CAMERA_VOLUME',distance,lateral,critical:distance<=5.5,x:worldX+forward.x*distance+right.x*lateral,z:worldZ+forward.z*distance+right.z*lateral});
     }
   }
   return freeze({points,reach,radius});
 }
-
 export function sampleHEarthVisibleTerrainClearanceEnvelope(worldX,worldZ,{yawDegrees=0,lookAheadDistance=6,lateralRadius=1.25}={}){
   const volume=cameraVolumePoints(worldX,worldZ,{yawDegrees,lookAheadDistance,lateralRadius});
   const samples=volume.points.map(p=>freeze({...p,sample:sampleHEarthVisibleTerrainClearanceSurface(p.x,p.z)}));
@@ -124,32 +77,7 @@ export function sampleHEarthVisibleTerrainClearanceEnvelope(worldX,worldZ,{yawDe
   if(critical.some(x=>x.sample.valid!==true))return freeze({valid:false,status:'VISIBLE_TERRAIN_CAMERA_VOLUME_INVALID',samples,issues:['CRITICAL_CAMERA_VOLUME_SAMPLE_OUTSIDE_PRESENTED_DOMAIN']});
   const valid=samples.filter(x=>x.sample.valid===true);
   if(valid.length<Math.ceil(samples.length*.8))return freeze({valid:false,status:'VISIBLE_TERRAIN_CAMERA_VOLUME_INVALID',samples,issues:['CAMERA_VOLUME_SAMPLE_COVERAGE_INSUFFICIENT']});
-  const highest=[...valid].sort((a,b)=>b.sample.visibleElevation-a.sample.visibleElevation)[0];
-  const visibleElevation=highest.sample.visibleElevation;
-  return freeze({
-    valid:true,
-    status:'VISIBLE_TERRAIN_CAMERA_VOLUME_COMPLETE',
-    contractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,
-    cameraVolumeContractId:H_EARTH_CAMERA_VOLUME_CLEARANCE_CONTRACT_ID,
-    protectedParentHead:H_EARTH_CAMERA_VOLUME_CLEARANCE_PROTECTED_PARENT,
-    visibleElevation,
-    centerElevation:center.sample.visibleElevation,
-    highestSample:freeze({x:highest.x,z:highest.z,distance:highest.distance,lateral:highest.lateral,visibleElevation}),
-    sampleCount:valid.length,
-    requiredSampleCount:samples.length,
-    invalidSampleCount:samples.length-valid.length,
-    cameraVolumeReach:volume.reach,
-    cameraVolumeRadius:volume.radius,
-    samples,
-    conservativeMaximumUsed:true,
-    denseCameraVolumeSampled:true,
-    nearPlaneProtection:true,
-    steepSlopeLateralProtection:true,
-    geographyAuthorityCreated:false,
-    topologyAuthorityCreated:false,
-    navigationScaleAuthorityCreated:false,
-    issues:[]
-  });
+  const highest=[...valid].sort((a,b)=>b.sample.visibleElevation-a.sample.visibleElevation)[0],visibleElevation=highest.sample.visibleElevation;
+  return freeze({valid:true,status:'VISIBLE_TERRAIN_CAMERA_VOLUME_COMPLETE',contractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,cameraVolumeContractId:H_EARTH_CAMERA_VOLUME_CLEARANCE_CONTRACT_ID,protectedParentHead:H_EARTH_CAMERA_VOLUME_CLEARANCE_PROTECTED_PARENT,visibleElevation,centerElevation:center.sample.visibleElevation,highestSample:freeze({x:highest.x,z:highest.z,distance:highest.distance,lateral:highest.lateral,visibleElevation}),sampleCount:valid.length,requiredSampleCount:samples.length,invalidSampleCount:samples.length-valid.length,cameraVolumeReach:volume.reach,cameraVolumeRadius:volume.radius,samples,conservativeMaximumUsed:true,denseCameraVolumeSampled:true,nearPlaneProtection:true,steepSlopeLateralProtection:true,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false,issues:[]});
 }
-
 export default H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID;

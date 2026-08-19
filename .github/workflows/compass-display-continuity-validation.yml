@@ -15,7 +15,6 @@ on:
       - 'assets/compass/compass.laws-spacecraft.js'
       - 'assets/compass/compass.cosmos.js'
       - '.github/ai-router/projects/compass/verify-award-presentation-successor.v1.mjs'
-      - '.github/ai-router/projects/compass/verify-display-continuity.v1.mjs'
       - '.github/workflows/compass-display-continuity-validation.yml'
   workflow_dispatch:
 
@@ -26,7 +25,6 @@ env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
   COMPASS_AWARD_BASE_SHA: 4e2ab91a18ab6a36fd47b83f794267a896d86fde
   COMPASS_AWARD_STATIC_OUTPUT: /tmp/compass-award-presentation-static-receipt.json
-  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-room-selected-continuity-display.json
 
 jobs:
   exact-candidate-static:
@@ -39,7 +37,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact candidate and both fail-closed contracts
+      - name: Verify exact award candidate and permanent Gen1538 invariants
         run: |
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node --check assets/compass/compass.statement-carousel.js
@@ -49,16 +47,28 @@ jobs:
           node --check assets/compass/compass.laws-spacecraft.js
           node --check .github/ai-router/projects/compass/verify-award-presentation-successor.v1.mjs
           node .github/ai-router/projects/compass/verify-award-presentation-successor.v1.mjs
-          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
           jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1549 and .candidateHead == env.COMPASS_CANDIDATE_HEAD' "$COMPASS_AWARD_STATIC_OUTPUT" >/dev/null
-          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1538 and .candidate == env.COMPASS_CANDIDATE_HEAD' "$COMPASS_VERIFICATION_OUTPUT" >/dev/null
+
+          # Gen1538 is retained as a permanent behavioral floor, not as a historical
+          # changed-path comparison against its old operation base. Prove its enduring
+          # invariants directly on this exact successor; runtime execution below is the
+          # authoritative continuation proof.
+          grep -q 'ROOM_SELECTED' assets/compass/compass.controller.js
+          grep -q 'setPanelDescended(' assets/compass/compass.controller.js
+          if grep -A120 'function requestRoomSelection' assets/compass/compass.controller.js | head -n 120 | grep -q 'setPanelDescended(.*true'; then
+            echo 'Room selection reintroduced forced panel descent' >&2; exit 1
+          fi
+          grep -q 'ROOM_SELECTED' assets/compass/compass.crystals.js
+          grep -q 'DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT=true' assets/compass/compass.laws-spacecraft.js
+          grep -q "import('/laws/index.spacecraft.background.js" assets/compass/compass.laws-spacecraft.js
+          grep -q 'api?.start?.()' assets/compass/compass.laws-spacecraft.js
+          grep -q "spacecraftPresentationAuthority='laws-adapter-only'" assets/compass/compass.statement-carousel.js
+          ! grep -q 'mountWorldInteraction' assets/compass/compass.statement-carousel.js
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: compass-award-static-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            /tmp/compass-award-presentation-static-receipt.json
-            /tmp/compass-room-selected-continuity-display.json
+          path: /tmp/compass-award-presentation-static-receipt.json
           retention-days: 90
 
   runtime-and-visual:
@@ -82,7 +92,7 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-award-http.log 2>&1 &
           for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
           exit 1
-      - name: Qualify award presentation and Gen1538 continuity
+      - name: Qualify award presentation and permanent Gen1538 continuity
         run: |
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
@@ -97,7 +107,7 @@ jobs:
               const page=await context.newPage();
               const errors=[];page.on('pageerror',e=>errors.push(String(e)));
               await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.COMPASS_CANDIDATE_HEAD}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});
-              await page.waitForFunction(()=>Boolean(globalThis.CompassStatementCarousel&&globalThis.DGB_COMPASS_CONTROLLER&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT),null,{timeout:30000});
+              await page.waitForFunction(()=>Boolean(globalThis.CompassStatementCarousel&&globalThis.DGB_COMPASS_CONTROLLER&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT&&globalThis.DGB_LAWS_SPACECRAFT),null,{timeout:30000});
               await page.waitForTimeout(1000);
               const presentation=await page.evaluate(()=>{
                 const root=document.querySelector('[data-compass-root]');
@@ -128,6 +138,7 @@ jobs:
               check(`${name}_EVIDENCE_EXIT`,presentation.evidenceHref==='/evidence/',presentation);
               check(`${name}_NO_HORIZONTAL_OVERFLOW`,presentation.overflow<=1,presentation);
               check(`${name}_DIMENSIONAL_STAGE_PRESENT`,presentation.capabilityCards===3&&presentation.proofCards===3,presentation);
+              check(`${name}_SOLE_SPACECRAFT_PRESENTATION_AUTHORITY`,presentation.spacecraftAuthority==='laws-adapter-only',presentation);
 
               const selected=await page.evaluate(()=>{
                 const api=globalThis.DGB_COMPASS_CONTROLLER;
@@ -146,7 +157,10 @@ jobs:
               if(proxy){
                 const sx=proxy.x+proxy.width/2,sy=proxy.y+proxy.height/2;
                 await page.mouse.move(sx,sy);await page.mouse.down();
-                await page.mouse.move(sx+70,sy+28,{steps:12});await page.mouse.up();
+                await page.waitForTimeout(120);
+                await page.mouse.move(sx+70,sy+28,{steps:12});
+                await page.waitForTimeout(180);
+                await page.mouse.up();
                 await page.waitForTimeout(reduced?180:650);
               }
               const dragged=await page.evaluate(()=>{const root=document.querySelector('[data-compass-root]');return{mode:root?.dataset.compassMode,quat:root?.dataset.clusterQuaternion||'',revision:Number(root?.dataset.clusterRevision||0),gesture:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT?.lastGestureType||''}});
@@ -172,7 +186,7 @@ jobs:
           } finally {await browser.close();}
           const failures=checks.filter(x=>!x.pass);
           const runtime={schema:'COMPASS_AWARD_PRESENTATION_RUNTIME_RECEIPT_v1',operationId:'COMPASS_AWARD_PRESENTATION_SUCCESSOR_20260818_v3',lockGeneration:1549,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
-          const visualChecks=checks.filter(x=>/NARRATIVE_ORDER|PURPOSE_FIRST_READ|TRL_TRA_BOUNDARY|EVIDENCE_EXIT|NO_HORIZONTAL_OVERFLOW|DIMENSIONAL_STAGE_PRESENT|NO_PAGE_ERRORS/.test(x.id));
+          const visualChecks=checks.filter(x=>/NARRATIVE_ORDER|PURPOSE_FIRST_READ|TRL_TRA_BOUNDARY|EVIDENCE_EXIT|NO_HORIZONTAL_OVERFLOW|DIMENSIONAL_STAGE_PRESENT|SOLE_SPACECRAFT_PRESENTATION_AUTHORITY|NO_PAGE_ERRORS/.test(x.id));
           const visualFailures=visualChecks.filter(x=>!x.pass);
           const visual={schema:'COMPASS_AWARD_PRESENTATION_VISUAL_RECEIPT_v1',operationId:runtime.operationId,lockGeneration:1549,candidateHead:runtime.candidateHead,result:visualFailures.length?'FAIL_CLOSED':'PASS_CLOSED',checks:visualChecks,failures:visualFailures.map(x=>x.id),captures:cases.map(([name])=>`/tmp/compass-award-${name}.png`)};
           fs.writeFileSync('/tmp/compass-award-presentation-runtime-receipt.json',JSON.stringify(runtime,null,2)+'\n');

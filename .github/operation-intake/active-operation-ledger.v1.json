@@ -2177,13 +2177,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "d8a930d35a5dde823926900a7a0411500319f56b23209ce489a06bc0c28fa054": {
-      "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
-      "lockGeneration": 1539,
+      "governingHead": "4e2ab91a18ab6a36fd47b83f794267a896d86fde",
+      "lockGeneration": 1550,
       "lockScope": "SHOWROOM:H_EARTH:AWARDS:COMPASS_VIDEO:CH01:FINAL_EXACT_BYTE_PUBLICATION:V1",
-      "operationId": "AWARDS_COMPASS_CH01_FINAL_EXACT_BYTE_PUBLICATION_20260818_001",
-      "procedureLocatorDigest": "55974c434d5afe02bf7ba09c3dd6e26e6a002057969a46487d788c44dc801e78",
+      "operationId": "AWARDS_COMPASS_CH01_FINAL_EXACT_BYTE_PUBLICATION_20260818_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
+        "lockGeneration": 1539,
+        "lockScope": "SHOWROOM:H_EARTH:AWARDS:COMPASS_VIDEO:CH01:FINAL_EXACT_BYTE_PUBLICATION:V1",
+        "operationId": "AWARDS_COMPASS_CH01_FINAL_EXACT_BYTE_PUBLICATION_20260818_001",
+        "preservedEvidenceRefs": [
+          "GEN1539_INTAKE_WORKFLOW_32198227209",
+          "CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1_SHA256_9be6d48d6a8ceeb6d26a64d12440f929ce7f9bac9b6b48bad301ef9a3f6d881f",
+          "PR_1334_MERGE_4e2ab91a18ab6a36fd47b83f794267a896d86fde"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AWARDS_COMPASS_CH01_FINAL_EXACT_BYTE_PUBLICATION_GEN1539_TO_CURRENT_MAIN_20260818_002"
+      },
+      "procedureLocatorDigest": "f5318cca48a549fe2719b3560a030bc20e64518b9ae2bba11655c40f3fe38b9b",
       "released": false,
-      "requestDigest": "57ee46ff268f3767d5adb11c2773d5a49ec49df650e9922c0451e586410fc1f8",
+      "requestDigest": "446bcf528a28de6d285b011ee13c31c0e7dd1ad797af5cc3115ca97874a58456",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d8a930d35a5dde823926900a7a0411500319f56b23209ce489a06bc0c28fa054",
       "state": "ADMITTED_LOCKED"
@@ -2581,7 +2597,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1549,
+  "lockGeneration": 1550,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -23062,6 +23078,35 @@
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d172bc7b40cc233021af0c1cdf0df7f3086dbb13cbd0f0534732635b65e54b3c",
       "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
+      "lockGeneration": 1539,
+      "lockScope": "SHOWROOM:H_EARTH:AWARDS:COMPASS_VIDEO:CH01:FINAL_EXACT_BYTE_PUBLICATION:V1",
+      "operationId": "AWARDS_COMPASS_CH01_FINAL_EXACT_BYTE_PUBLICATION_20260818_001",
+      "procedureLocatorDigest": "55974c434d5afe02bf7ba09c3dd6e26e6a002057969a46487d788c44dc801e78",
+      "released": true,
+      "requestDigest": "57ee46ff268f3767d5adb11c2773d5a49ec49df650e9922c0451e586410fc1f8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d8a930d35a5dde823926900a7a0411500319f56b23209ce489a06bc0c28fa054",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN1539_INTAKE_WORKFLOW_32198227209",
+          "CHAPTER_01_FINAL_AWARDS_LIVE_MASTER_V1_SHA256_9be6d48d6a8ceeb6d26a64d12440f929ce7f9bac9b6b48bad301ef9a3f6d881f",
+          "PR_1334_MERGE_4e2ab91a18ab6a36fd47b83f794267a896d86fde"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "4e2ab91a18ab6a36fd47b83f794267a896d86fde",
+        "successorLockGeneration": 1550,
+        "successorLockScope": "SHOWROOM:H_EARTH:AWARDS:COMPASS_VIDEO:CH01:FINAL_EXACT_BYTE_PUBLICATION:V1",
+        "successorOperationId": "AWARDS_COMPASS_CH01_FINAL_EXACT_BYTE_PUBLICATION_20260818_002",
+        "transitionId": "AWARDS_COMPASS_CH01_FINAL_EXACT_BYTE_PUBLICATION_GEN1539_TO_CURRENT_MAIN_20260818_002"
+      },
       "terminalDisposition": "SUPERSEDED"
     }
   ]

@@ -13,8 +13,8 @@ jobs:
     uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
     with:
       private_issue: '297'
-      private_comment: '5337405342'
-      expected_request_id: 'H_EARTH_OBSERVER_VIEW_STANDOFF_INTAKE_20260818_004'
+      private_comment: '5337416626'
+      expected_request_id: 'H_EARTH_OBSERVER_VIEW_STANDOFF_INTAKE_20260818_005'
       exact_private_head: '367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab'
       callback_issue: '1362'
     secrets: inherit

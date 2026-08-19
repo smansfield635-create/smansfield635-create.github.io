@@ -1,60 +1,62 @@
-# H-Earth Camera-Volume Terrain Clearance Successor Contract v1
+# H-Earth Observer-View Stand-Off Successor Contract v1
 
-Operation: `H_EARTH_CAMERA_VOLUME_CLEARANCE_SUCCESSOR_20260818_003`
+Operation: `H_EARTH_OBSERVER_VIEW_STANDOFF_SUCCESSOR_20260818_004`
 
-Predecessor operation `H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_20260818_002` / generation 320 was machine-qualified but canonically `FAIL_CLOSED` after owner/browser evidence demonstrated that camera-origin clearance did not guarantee rendered view-volume clearance.
+Predecessor operation `H_EARTH_CAMERA_VOLUME_CLEARANCE_SUCCESSOR_20260818_003` / generation 321 was machine-qualified but canonically `FAIL_CLOSED` after owner/browser evidence demonstrated that geometric camera-volume clearance did not guarantee a usable observer view beside steep terrain.
 
-Protected predecessor head: `d9d4c0ada0d97e98340c3b771a23153cef1ecb00`.
+Protected predecessor head: `5f379351d93e1cb01b1eea1b3b72a37d0256ada0`.
 
 Protected geographic floor: `e03363f42441cea7587a49623fd878e8ca51fe28`.
 
-Failure evidence: `23889.mp4`, SHA-256 `1f613e784906d44931bd5a2dbf75549d75091854d9d36cf4388f34e93788549b`.
+Failure evidence: `23890.mp4`, SHA-256 `f489523766c2f969a6e76e030907d91021871dd78ea28a8c6b9c19fb57b3420c`.
 
 ## Purpose
 
-Preserve the successful Gen311 relief and generation-320 terrain-relative vertical dynamics while repairing the remaining adjacent-system defect: a camera origin can be above a sparse sampled terrain envelope while the near camera/view volume intersects steep visible relief.
+Preserve the successful Gen311 relief, terrain-relative clearance, and generation-321 dense camera-volume protection while repairing the remaining experiential defect: a camera can avoid literal terrain intersection yet remain so close to a steep slope that the terrain consumes the forward view and destroys useful observer-scale traversal.
 
-The successor therefore changes the clearance *sampling volume*, not world geography, terrain relief, camera/world scale, route topology, or deployment authority.
+The successor therefore adds an observer-view stand-off reference. It does not reduce mountains, change world geography, alter navigation scale, change route topology, or create camera/renderer authority.
 
 ## Governing invariant
 
-For every accepted navigation state, the camera safety corridor must remain above the exact presented terrain representation:
+For materially rising terrain in the protected camera corridor:
 
-`cameraY >= max(h_visible(x,z) for (x,z) in cameraVolumeFootprint) + minimumTerrainClearance`
+`cameraY >= max(h_visible_actual) + minimumTerrainClearance + observerViewStandOffMargin`
 
-The camera-volume footprint includes dense longitudinal and lateral samples across the near/forward view corridor. The sampler remains representational and cannot become geography or collision/physics authority.
+The margin is zero on low-relief terrain and activates only when the nearby visible-terrain maximum materially exceeds the terrain beneath the camera. It is bounded and derived solely from the presented terrain representation.
 
 ## Required behavior
 
-- exact presented Gen311 terrain mesh remains the sampled surface;
-- generation-320 navigation proposal and bounded vertical dynamics remain byte-identical unless a later admitted repair proves mutation necessary;
-- sparse four-point clearance is replaced by a dense camera-volume corridor;
-- steep terrain between the camera and the former look-ahead point must influence required clearance;
-- side relief near the view corridor must influence required clearance;
-- unsafe motion may be rejected rather than allowing penetration;
+- exact presented Gen311 terrain mesh remains the sampled physical surface;
+- generation-321 camera-volume sampling remains active;
+- actual terrain maximum is retained separately from the higher clearance-reference elevation;
+- low-relief traversal is not arbitrarily raised;
+- materially rising relief produces bounded additional observer stand-off;
+- steep-slope approaches must retain usable forward-view separation or reject movement;
+- rotation, strafing, ascent, descent, valley/pass traversal, and direction reversal preserve stand-off;
 - bounded uphill response, controlled downhill settling, and deadband behavior are preserved;
 - no abrupt vertical popping is introduced;
 - camera/world navigation scale is unchanged.
 
 ## Protected surfaces
 
-The operation may not mutate Gen311 relief construction, canonical terrain, successor terrain semantics, shoreline/ocean topology, public route, deployment paths, or Experience Anchor authority. The exact Gen311 geographic floor and generation-320 predecessor remain protected inputs.
+The operation may not mutate Gen311 relief construction, canonical terrain, shoreline/ocean topology, public route, deployment paths, or Experience Anchor authority. The exact Gen311 geographic floor and generation-321 predecessor remain protected inputs.
 
 ## Qualification
 
-The exact harness `h-earth-3d/validation/h-earth.terrain-relative-camera-clearance.harness.mjs` must execute the established traversal battery plus a dedicated camera-volume stress sequence:
+The exact harness `h-earth-3d/validation/h-earth.terrain-relative-camera-clearance.harness.mjs` must execute the established traversal battery plus an observer-view occupancy stress sequence.
 
-1. sustained uphill traversal;
-2. sustained descent;
-3. valley crossing;
-4. pass crossing;
-5. steep-slope adjacency;
-6. rotation beside rising relief;
-7. direction reversal on a grade;
-8. camera-volume/frustum stress with rotation plus short forward/lateral impulses.
+The verifier must independently sample raw actual terrain around each accepted camera state rather than trusting the production clearance reference. It must prove:
 
-The verifier must not merely trust the production envelope. It independently samples a denser raw terrain volume around each accepted camera state and requires zero camera-volume terrain intersection. It must also prove dense production sampling, bounded vertical response, downhill restoration, deadband stability, byte preservation of the protected navigation file, canonical terrain, and Gen311 landscape preview.
+1. camera-volume zero-penetration remains preserved;
+2. observer-view stand-off materially activates on steep relief;
+3. active stand-off states retain at least the required actual-terrain separation;
+4. sustained uphill and downhill traversal remain bounded;
+5. valley and pass crossing remain stable;
+6. steep-slope adjacency, rotation, and strafing preserve usable view separation;
+7. grade reversal remains stable;
+8. downhill settling restores toward the bounded target;
+9. protected navigation, Gen311 landscape preview, and canonical terrain bytes remain unchanged.
 
-The native qualification receipt must identify operation `H_EARTH_CAMERA_VOLUME_CLEARANCE_SUCCESSOR_20260818_003` exactly and report zero issues.
+The native qualification receipt must identify operation `H_EARTH_OBSERVER_VIEW_STANDOFF_SUCCESSOR_20260818_004` exactly and report zero issues.
 
-A machine PASS does not authorize merge or release. Owner/browser inspection remains required because `23889.mp4` proved that a synthetic PASS can miss an experienced camera-volume failure.
+A machine PASS does not authorize merge or release. Owner/browser inspection remains required because both `23889.mp4` and `23890.mp4` demonstrated that progressively stronger geometric tests can still miss an experienced camera-view failure.

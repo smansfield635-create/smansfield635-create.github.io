@@ -200,7 +200,7 @@ function constructPlanetBodyHorizonShell() {
     semanticRole: 'NON_GEOGRAPHIC_PLANET_BODY_HORIZON_DEPTH_OCCLUSION',
     materialHint: freeze({
       materialReference: 'H_EARTH_MATERIAL_PLANET_BODY_ATMOSPHERIC_DISTANCE',
-      materialIntent: 'PLANET_BODY_DEPTH_AND_HORIZON_SILHOUETTE_ONLY'
+      materialIntent: 'NON_GEOGRAPHIC_PLANET_BODY_DISTANT_HAZE_DEPTH_AND_HORIZON_SILHOUETTE_ONLY'
     }),
     source: freeze({
       sourceType: 'PLANETARY_WORLD_FRAME_GEOMETRIC_BODY',
@@ -211,7 +211,7 @@ function constructPlanetBodyHorizonShell() {
     metadata: freeze({
       providerContractId: H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
       planetBodyHorizonShellId: H_EARTH_PLANET_BODY_HORIZON_SHELL_ID,
-      representationClass: 'FAR',
+      representationClass: 'PLANET_BODY',
       farSurfaceClass: 'PLANET_BODY',
       geographicIdentity: null,
       playableRegionIdentity: null,
@@ -232,6 +232,7 @@ function constructPlanetBodyHorizonShell() {
       oceanFacingLandmassCreated: false,
       planetBodyOnly: true,
       boundedGeographyExtension: false,
+      samePhysicalDepthDomainAsTerrain: true,
       admitted: false,
       aggregateFrameAuthority: false,
       innerRadius: mesh.innerRadius,

@@ -38,7 +38,7 @@ function reconcileGen1561Runtime(){
   }
   const door=document.querySelector('[data-compass-object="mirrorland"]');
   const ownedScene=state.root?.querySelector('[data-compass-scene]');
-  if(door){if(ownedScene&&door.parentElement!==ownedScene)ownedScene.append(door);door.setAttribute('data-compass-destination','true');door.dataset.destinationType='mirrorland';door.dataset.destinationId='mirrorland';door.dataset.gen1561MirrorlandSemantic='true';door.dataset.gen1561ControllerSceneBound=String(Boolean(ownedScene&&ownedScene.contains(door)))}
+  if(door){if(ownedScene&&door.parentElement!==ownedScene)ownedScene.append(door);door.setAttribute('data-compass-destination','true');door.dataset.destinationType='mirrorland';door.dataset.destinationId='mirrorland';door.dataset.gen1561MirrorlandSemantic='true';door.dataset.gen1561ControllerSceneBound=String(Boolean(ownedScene&&ownedScene.contains(door)));if(!door.dataset.gen1561PointerRevealBound){door.dataset.gen1561PointerRevealBound='true';door.addEventListener('pointerup',e=>{if(e.button!=null&&e.button!==0)return;const c=globalThis.DGB_COMPASS_CONTROLLER;if(!c?.requestMirrorlandReveal)return;const frame=c.getFrameState?.();if(frame?.state==='CONSTELLATION'||frame?.state==='CLUSTER_OPEN'||frame?.state==='ROOM_SELECTED'){e.preventDefault();c.requestMirrorlandReveal()}},true)}}
 }
 function mount(){
   mountIdentity();brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft();reconcileGen1561Runtime();

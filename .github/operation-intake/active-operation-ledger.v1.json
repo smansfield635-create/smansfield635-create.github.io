@@ -2517,6 +2517,18 @@
       "scopeHash": "fb941fb311d034729a4ad8f949bf10f0473f08f64690169c0365ec59101fc34e",
       "state": "ADMITTED_LOCKED"
     },
+    "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247": {
+      "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
+      "lockGeneration": 1544,
+      "lockScope": "REPOSITORY-AI-ROUTER/PUBLIC-LEGITIMACY-REGISTRATION",
+      "operationId": "PUBLIC_LEGITIMACY_ROUTER_REGISTRATION_20260818_001",
+      "procedureLocatorDigest": "2ff8add8cb90eb5eb1a1cde7f2f77a8568b8329673bd50a3c6939dc240422966",
+      "released": false,
+      "requestDigest": "2df550e4e69ca276cdc0220da8a5a2b9ee7edddd0fbdff709ff6789756649a23",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ff79734b4cea600d6f944a537b197ea4a4265fd816845d998f108693c6616247",
+      "state": "ADMITTED_LOCKED"
+    },
     "ff7fed19d1b436352d85fa163e3abde7581be4299990e2f165479102ccf4ea74": {
       "governingHead": "4bf41fcd22e5acbf24491ed6586802f0cc6782b9",
       "lockGeneration": 933,
@@ -2533,7 +2545,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1543,
+  "lockGeneration": 1544,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

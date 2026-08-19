@@ -105,11 +105,20 @@ jobs:
               check(`${name}_NO_FORCED_PANEL_DESCENT`,Math.abs(afterSelection.scrollY-selected.beforeScroll)<40,{before:selected.beforeScroll,after:afterSelection.scrollY});
               check(`${name}_ROOM_PROXIES_PRESENT`,geometry0.length>0,geometry0);
 
-              const scene=await sceneLocator.boundingBox();
-              if(!scene){check(`${name}_SCENE_BOUNDING_BOX`,false,null);await context.close();continue;}
-              const left=Math.max(0,scene.x+8), right=Math.min(width-8,scene.x+scene.width-8), top=Math.max(0,scene.y+8), bottom=Math.min(height-8,scene.y+scene.height-8);
-              const sx=(left+right)/2, sy=(top+bottom)/2;
-              check(`${name}_GESTURE_POINT_VISIBLE`,right>left&&bottom>top&&sx>=0&&sx<=width&&sy>=0&&sy<=height,{scene,sx,sy,width,height});
+              const start=await page.evaluate(({width,height})=>{
+                const candidates=Array.from(document.querySelectorAll('[data-compass-room-proxy]')).map(el=>{
+                  const s=getComputedStyle(el); const r=el.getBoundingClientRect(); const x=r.left+r.width/2; const y=r.top+r.height/2;
+                  return {el,id:el.dataset.roomId||'',display:s.display,visibility:s.visibility,pointerEvents:s.pointerEvents,r:{x:r.x,y:r.y,width:r.width,height:r.height},x,y,inViewport:r.width>0&&r.height>0&&x>=2&&x<=width-2&&y>=2&&y<=height-2};
+                }).filter(v=>v.display!=='none'&&v.visibility!=='hidden'&&v.inViewport);
+                const chosen=candidates.find(v=>v.id==='east-1')||candidates[0]||null;
+                if(!chosen) return null;
+                const hit=document.elementFromPoint(chosen.x,chosen.y);
+                return {id:chosen.id,x:chosen.x,y:chosen.y,rect:chosen.r,pointerEvents:chosen.pointerEvents,hitTag:hit?.tagName||'',hitRoomId:hit?.closest?.('[data-compass-room-proxy]')?.dataset.roomId||'',hitInsideMirrorland:Boolean(hit?.closest?.("[data-compass-object='mirrorland']"))};
+              },{width,height});
+              check(`${name}_GESTURE_START_PROXY`,Boolean(start&&start.id),start);
+              check(`${name}_GESTURE_START_HITS_ROOM_PROXY`,Boolean(start&&start.hitRoomId),start);
+              if(!start){await context.close();continue;}
+              const sx=start.x, sy=start.y;
               const drag=async(dx,dy)=>{
                 await page.mouse.move(sx,sy); await page.mouse.down(); await page.waitForTimeout(120);
                 await page.mouse.move(sx+dx*.5,sy+dy*.5,{steps:8}); await page.waitForTimeout(180);
@@ -117,12 +126,12 @@ jobs:
                 await page.mouse.up(); await page.waitForTimeout(reduced?180:650);
                 return page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0),crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null}));
               };
-              const first=await drag(90,28); const geometry1=await proxies(page);
-              const second=await drag(-68,42); const geometry2=await proxies(page);
-              check(`${name}_FIRST_POINTER_RECOGNIZED`,['cluster-drag','cluster-settle'].includes(first.crystals?.lastGestureType),first.crystals);
+              const first=await drag(72,24); const geometry1=await proxies(page);
+              const second=await drag(-58,36); const geometry2=await proxies(page);
+              check(`${name}_FIRST_POINTER_RECOGNIZED`,['cluster-drag','cluster-settle'].includes(first.crystals?.lastGestureType),{start,receipt:first.crystals});
               check(`${name}_FIRST_POST_SELECTION_DRAG`,first.mode==='ROOM_SELECTED'&&first.quat!==afterSelection.quat,{before:afterSelection,after:first});
               check(`${name}_FIRST_VISIBLE_GEOMETRY_CHANGE`,moved(geometry0,geometry1),{before:geometry0,after:geometry1});
-              check(`${name}_SECOND_POINTER_RECOGNIZED`,['cluster-drag','cluster-settle'].includes(second.crystals?.lastGestureType),second.crystals);
+              check(`${name}_SECOND_POINTER_RECOGNIZED`,['cluster-drag','cluster-settle'].includes(second.crystals?.lastGestureType),{start,receipt:second.crystals});
               check(`${name}_SECOND_POST_SELECTION_DRAG`,second.mode==='ROOM_SELECTED'&&second.quat!==first.quat,{first,second});
               check(`${name}_SECOND_VISIBLE_GEOMETRY_CHANGE`,moved(geometry1,geometry2),{first:geometry1,second:geometry2});
               check(`${name}_CONTROLLER_COMMIT_PROGRESS`,second.revision>afterSelection.revision,{before:afterSelection.revision,after:second.revision});

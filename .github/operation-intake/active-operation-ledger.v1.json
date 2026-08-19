@@ -492,6 +492,36 @@
       "scopeHash": "3774dc0ae012f09ec1f5bf4311aaf1235b5688fb85a4515e235c644c454bea8e",
       "state": "ADMITTED_LOCKED"
     },
+    "37bea5726b7bde90a0e6affa448e84edb9352233df9be5179b02218f5e9686ee": {
+      "governingHead": "e68740655c05bafef86b18457873cabdab3e8a67",
+      "lockGeneration": 1560,
+      "lockScope": "COMPASS_SHARED_ORBIT_STATE_STAGE_SPATIAL_ECONOMY_AND_LUMINOUS_IDENTITY",
+      "operationId": "COMPASS_SHARED_ORBIT_STAGE_AND_LUMINOUS_IDENTITY_SUCCESSOR_20260819_v1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "fe39febded099960ad7b43f631014c062ef8beff",
+        "lockGeneration": 1556,
+        "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
+        "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v2",
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5345113100",
+          "pr:1435",
+          "candidate:b978b314d8c84406b38b291a790fceb1db2f1c6c",
+          "merge:2624df5edbee4c40e0e341d324bdb1cfb0eb1f2c",
+          "main:e68740655c05bafef86b18457873cabdab3e8a67"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_GEN1556_TO_SHARED_ORBIT_STAGE_E6874065_20260819_v1"
+      },
+      "procedureLocatorDigest": "fd57e8d6cda657eb84360c7b83ce6563571d39e701b1088bcd60beb50c55588d",
+      "released": false,
+      "requestDigest": "e641e96cb9423d98220b369a3efdc65fb2b347724f8119131b556be3b5543223",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "37bea5726b7bde90a0e6affa448e84edb9352233df9be5179b02218f5e9686ee",
+      "state": "ADMITTED_LOCKED"
+    },
     "39d5500dfb4466816b038c15780fde4d09c8b96014e19e826f3f655a04211718": {
       "governingHead": "f8eefd20fc1cdcdc777e070f008bb2e2b8580da1",
       "lockGeneration": 1526,
@@ -926,40 +956,6 @@
       "requestDigest": "6b135cdb22d32219b40feb12a7dc5f94a95fdcadda9697c8a54fd57f1baf91aa",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "6921a6a55ff2a47a5b425365486156dbd661f2cc4876bdec2f66fad921ee7483",
-      "state": "ADMITTED_LOCKED"
-    },
-    "693de8903d51dd84ccaab3fc2d14f40d7483e519a6c798f0ae5ba3c803fc087a": {
-      "governingHead": "fe39febded099960ad7b43f631014c062ef8beff",
-      "lockGeneration": 1556,
-      "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
-      "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v2",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "d809d006d6c966b23fab9c39f0f695dfad386c1f",
-        "lockGeneration": 1554,
-        "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
-        "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1",
-        "preservedEvidenceRefs": [
-          "issue:1011#comment:5344345994",
-          "issue:1011#comment:5344358548",
-          "issue:1011#comment:5344366624",
-          "issue:1011#comment:5344470973",
-          "issue:1011#comment:5344858549",
-          "issue:1011#comment:5344863762",
-          "pr:1416",
-          "candidate:b07c5acb4356fd88efbd958e50f7306cc0826a6f",
-          "workflow-run:32272385032"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_INSTRUCTIONAL_HIERARCHY_D809D006_TO_FE39FEBD_20260819_v3"
-      },
-      "procedureLocatorDigest": "37b45c1bccfe95a1a838dd85267326549cc9070940d0453d2fd5a050c1a7519c",
-      "released": false,
-      "requestDigest": "f3d4b8273b633313d94ea57d98b06411c01ab3936c651723a2f08c184949a584",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "693de8903d51dd84ccaab3fc2d14f40d7483e519a6c798f0ae5ba3c803fc087a",
       "state": "ADMITTED_LOCKED"
     },
     "69428db25006e85a7e3d13ba285b67e282268f024f57830f9cb9c95f757ead70": {
@@ -2643,7 +2639,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1559,
+  "lockGeneration": 1560,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -23301,6 +23297,59 @@
       "scopeHash": "9ac4703f297c3ae58c6ef2ccfaec57ddb02f622168e3b2d45dc1a266fdc37514",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "fe39febded099960ad7b43f631014c062ef8beff",
+      "lockGeneration": 1556,
+      "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
+      "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v2",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "d809d006d6c966b23fab9c39f0f695dfad386c1f",
+        "lockGeneration": 1554,
+        "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
+        "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1",
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5344345994",
+          "issue:1011#comment:5344358548",
+          "issue:1011#comment:5344366624",
+          "issue:1011#comment:5344470973",
+          "issue:1011#comment:5344858549",
+          "issue:1011#comment:5344863762",
+          "pr:1416",
+          "candidate:b07c5acb4356fd88efbd958e50f7306cc0826a6f",
+          "workflow-run:32272385032"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_INSTRUCTIONAL_HIERARCHY_D809D006_TO_FE39FEBD_20260819_v3"
+      },
+      "procedureLocatorDigest": "37b45c1bccfe95a1a838dd85267326549cc9070940d0453d2fd5a050c1a7519c",
+      "released": true,
+      "requestDigest": "f3d4b8273b633313d94ea57d98b06411c01ab3936c651723a2f08c184949a584",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "693de8903d51dd84ccaab3fc2d14f40d7483e519a6c798f0ae5ba3c803fc087a",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5345113100",
+          "pr:1435",
+          "candidate:b978b314d8c84406b38b291a790fceb1db2f1c6c",
+          "merge:2624df5edbee4c40e0e341d324bdb1cfb0eb1f2c",
+          "main:e68740655c05bafef86b18457873cabdab3e8a67"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "e68740655c05bafef86b18457873cabdab3e8a67",
+        "successorLockGeneration": 1560,
+        "successorLockScope": "COMPASS_SHARED_ORBIT_STATE_STAGE_SPATIAL_ECONOMY_AND_LUMINOUS_IDENTITY",
+        "successorOperationId": "COMPASS_SHARED_ORBIT_STAGE_AND_LUMINOUS_IDENTITY_SUCCESSOR_20260819_v1",
+        "transitionId": "COMPASS_GEN1556_TO_SHARED_ORBIT_STAGE_E6874065_20260819_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

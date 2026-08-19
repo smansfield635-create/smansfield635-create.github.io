@@ -116,32 +116,39 @@ jobs:
           import {chromium} from 'playwright';
           const browser=await chromium.launch({headless:true});
           const candidateHead=process.env.COMPASS_CANDIDATE_HEAD,governingHead=process.env.COMPASS_GOVERNING_HEAD;
+          const EXPECTED_CATEGORY='Independent Studio for Interactive Worlds, Creative Technology & Original Systems';
           const viewports=[['desktop',1440,1000],['tablet',1024,1366],['phone',390,844]];
           const overflow=[];const composition={};const errors=[];const artifacts=[];
           const shot=async(page,name,locator=null)=>{const path=`/tmp/compass-experience-captures/${name}.png`;if(locator){const l=page.locator(locator).first();if(await l.count()){await l.scrollIntoViewIfNeeded();await page.waitForTimeout(140);await l.screenshot({path});artifacts.push(path);return true}}await page.screenshot({path,fullPage:true});artifacts.push(path);return true};
-          const inspect=async(page)=>page.evaluate(()=>{
-            const style=s=>s?getComputedStyle(s):null;
-            const intro=document.querySelector('.compass-introduction__body'),panel=document.querySelector('.compass-panel'),monument=document.querySelector('.compass-monument'),plaque=document.querySelector('.compass-orbit-plaque'),built=document.querySelector('.compass-built');
-            const purpose=document.querySelector('.compass-purpose-stage')||document.querySelector('.compass-introduction');
+          const inspect=async(page)=>page.evaluate(expectedCategory=>{
+            const style=el=>el?getComputedStyle(el):null;
+            const alpha=color=>{const m=String(color||'').match(/rgba?\([^,]+,[^,]+,[^,]+(?:,\s*([\d.]+))?\)/);return m?(m[1]===undefined?1:Number(m[1])):0};
+            const cardless=el=>{if(!el)return true;const s=style(el);const radius=Math.max(...String(s.borderRadius||'0').split(/\s+/).map(v=>parseFloat(v)||0));const bgAlpha=alpha(s.backgroundColor);return radius<=2&&s.boxShadow==='none'&&(s.backgroundImage==='none'||s.backgroundImage.includes('none'))&&(!s.backdropFilter||s.backdropFilter==='none')&&bgAlpha<=.08};
+            const header=document.querySelector('.compass-estate__header'),intro=document.querySelector('.compass-introduction__body'),panel=document.querySelector('.compass-panel'),statement=document.querySelector('.compass-statement-orbit'),monument=document.querySelector('.compass-monument'),plaque=document.querySelector('.compass-orbit-plaque'),built=document.querySelector('.compass-built'),proof=document.querySelector('.compass-proof-card:not([hidden])')||document.querySelector('.compass-proof-card');
+            const purpose=document.querySelector('.compass-purpose-stage')||document.querySelector('.compass-statement-orbit')||document.querySelector('.compass-introduction');
             const instrument=document.querySelector('.compass-instrument');
             const capabilities=document.querySelector('[data-capability-orbit],.compass-capability-orbit');
             const readiness=document.querySelector('[data-readiness-stage="trl-tra"],.compass-built');
-            const order=[document.querySelector('.compass-estate__header'),instrument,purpose,capabilities,readiness].map(el=>el?el.getBoundingClientRect().top+scrollY:null);
-            const noFurniture=el=>{const s=style(el);return !s||((parseFloat(s.borderTopWidth)||0)+(parseFloat(s.borderRightWidth)||0)+(parseFloat(s.borderBottomWidth)||0)+(parseFloat(s.borderLeftWidth)||0)<=1&&s.boxShadow==='none'&&(s.backgroundImage==='none'||s.backgroundImage.includes('none')))};
+            const order=[header,instrument,purpose,capabilities,readiness].map(el=>el?el.getBoundingClientRect().top+scrollY:null);
+            const bodyText=document.body.innerText.replace(/\s+/g,' ').trim();
+            const categoryPresent=bodyText.toLowerCase().includes(expectedCategory.toLowerCase());
             return {
               overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              headerHeight:header?.getBoundingClientRect().height||0,
               panelColumns:panel?style(panel).gridTemplateColumns:'',
               capabilityColumns:document.querySelector('.compass-capability-choices')?style(document.querySelector('.compass-capability-choices')).gridTemplateColumns:'',
-              introFurniture:noFurniture(intro),panelFurniture:noFurniture(panel),monumentFurniture:noFurniture(monument),plaqueFurniture:noFurniture(plaque),builtFurniture:noFurniture(built),
+              introCardless:cardless(intro),panelCardless:cardless(panel),statementCardless:cardless(statement),monumentCardless:cardless(monument),plaqueCardless:cardless(plaque),builtCardless:cardless(built),proofCardless:cardless(proof),
               order,
               narrative:document.querySelector('[data-compass-root]')?.dataset.awardNarrative||'',
               evidenceHref:document.querySelector('[data-evidence-registry-exit]')?.getAttribute('href')||'',
               readinessModel:document.querySelector('[data-compass-root]')?.dataset.readinessModel||'',
-              genericServiceLanguage:/web services|web agency|full-service agency/i.test(document.body.innerText),
+              genericServiceLanguage:/web services|web agency|full-service agency/i.test(bodyText),
+              categoryPresent,
+              categoryText:categoryPresent?expectedCategory:'',
               guidanceVisible:Boolean(document.querySelector('[data-compass-guidance]')),
               hiddenPreInstruction:Boolean(document.querySelector('.compass-orbit-intro h2'))&&style(document.querySelector('.compass-orbit-intro h2'))?.position==='absolute'
             };
-          });
+          },EXPECTED_CATEGORY);
           try{
             for(const [id,width,height] of viewports){
               const context=await browser.newContext({viewport:{width,height},reducedMotion:'no-preference'});const page=await context.newPage();page.on('pageerror',e=>errors.push(`${id}:${e}`));
@@ -151,7 +158,7 @@ jobs:
                 await shot(page,'desktop-opening','.compass-estate__header');await shot(page,'desktop-compass-constellation','.compass-instrument');
                 const mirror=page.locator('[data-compass-object="mirrorland"]').first();if(await mirror.count()){await mirror.click({force:true});await page.waitForTimeout(600);await shot(page,'desktop-mirrorland-threshold','[data-compass-scene]');const back=page.locator('[data-compass-mirrorland-back]').first();if(await back.count()&&await back.isVisible())await back.click({force:true});}
                 await page.evaluate(()=>{const api=globalThis.DGB_COMPASS_CONTROLLER;api?.requestCardinalSelection?.('east');api?.requestRoomSelection?.('east-1')});await page.waitForTimeout(650);await shot(page,'desktop-selected-room','[data-compass-scene]');
-                await shot(page,'desktop-purpose-engagement','.compass-monuments');
+                await shot(page,'desktop-purpose-engagement','.compass-statement-orbit');
                 const orbit=page.locator('.compass-capability-orbit').first();if(await orbit.count()){await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await orbit.screenshot({path:'/tmp/compass-experience-captures/desktop-brain.png'});artifacts.push('/tmp/compass-experience-captures/desktop-brain.png');const next=page.locator('.compass-orbit-controls button').last();if(await next.count()){await next.click();await page.waitForTimeout(500);await orbit.screenshot({path:'/tmp/compass-experience-captures/desktop-trophy.png'});artifacts.push('/tmp/compass-experience-captures/desktop-trophy.png');await next.click();await page.waitForTimeout(500);await orbit.screenshot({path:'/tmp/compass-experience-captures/desktop-house.png'});artifacts.push('/tmp/compass-experience-captures/desktop-house.png')}}
                 await shot(page,'desktop-readiness-evidence','.compass-built');await shot(page,'desktop-conclusion','.compass-build-cta');
               }
@@ -161,14 +168,16 @@ jobs:
             for(const [id,width,height] of [['desktop',1440,1000],['phone',390,844]]){const context=await browser.newContext({viewport:{width,height},reducedMotion:'reduce'});const page=await context.newPage();await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}`,{waitUntil:'domcontentloaded'});await page.waitForTimeout(650);await shot(page,`reduced-${id}-opening`,'.compass-estate__header');await shot(page,`reduced-${id}-compass`,'.compass-instrument');if(id==='desktop')await shot(page,'reduced-desktop-dimensional-capability','.compass-capability-orbit');await shot(page,`reduced-${id}-conclusion`,'.compass-build-cta');await context.close()}
           } finally {await browser.close()}
           const desktop=composition.desktop,tablet=composition.tablet,phone=composition.phone;
-          const allFurniture=[desktop,tablet,phone].every(x=>x.introFurniture&&x.panelFurniture&&x.monumentFurniture&&x.plaqueFurniture&&x.builtFurniture);
+          const cardless=[desktop,tablet,phone].every(x=>x.introCardless&&x.panelCardless&&x.statementCardless&&x.monumentCardless&&x.plaqueCardless&&x.builtCardless&&x.proofCardless);
+          const compactOpening=desktop.headerHeight<520&&tablet.headerHeight<520&&phone.headerHeight<440;
+          const visual=cardless&&compactOpening;
           const narrative=[desktop,tablet,phone].every(x=>x.narrative==='identity-experience-purpose-system-readiness-evidence'&&x.order.filter(Number.isFinite).every((v,i,a)=>i===0||v>=a[i-1]));
           const responsive=desktop.panelColumns.split(' ').filter(Boolean).length>=2&&tablet.panelColumns.split(' ').filter(Boolean).length===1&&phone.panelColumns.split(' ').filter(Boolean).length===1&&phone.capabilityColumns.split(' ').filter(Boolean).length===1;
           const legible=[desktop,tablet,phone].every(x=>x.guidanceVisible&&x.hiddenPreInstruction);
           const evidence=[desktop,tablet,phone].every(x=>x.evidenceHref==='/evidence/'&&x.readinessModel==='TRL7_PLUS_TRA_ASSESSMENT_NO_SCORE');
-          const category=[desktop,tablet,phone].every(x=>!x.genericServiceLanguage);
-          const hardZero={visualSystemCoherence:allFurniture,narrativeContinuity:narrative,interactionLegibility:legible,responsiveRecomposition:responsive,evidenceHierarchy:evidence,categoryPreservation:category};
-          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v1',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),beats:{desktop:['opening','compass-constellation','mirrorland-threshold','selected-room','brain','trophy','house','purpose-engagement','readiness-evidence','conclusion'],phone:['compass-constellation','dimensional-capability','readiness-evidence','conclusion']},reducedMotionBeats:{desktop:['opening','compass','dimensional-capability','conclusion'],phone:['opening','compass','conclusion']},overflow,composition,protectedCapabilityNonregression:errors.length===0,publicClaimEvidenceSeparation:evidence,categoryPreservationText:'Independent Studio for Interactive Worlds, Creative Technology & Original Systems',hardZero,artifacts,errors};
+          const category=[desktop,tablet,phone].every(x=>x.categoryPresent&&!x.genericServiceLanguage);
+          const hardZero={visualSystemCoherence:visual,narrativeContinuity:narrative,interactionLegibility:legible,responsiveRecomposition:responsive,evidenceHierarchy:evidence,categoryPreservation:category};
+          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v1',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),beats:{desktop:['opening','compass-constellation','mirrorland-threshold','selected-room','brain','trophy','house','purpose-engagement','readiness-evidence','conclusion'],phone:['compass-constellation','dimensional-capability','readiness-evidence','conclusion']},reducedMotionBeats:{desktop:['opening','compass','dimensional-capability','conclusion'],phone:['opening','compass','conclusion']},overflow,composition,protectedCapabilityNonregression:errors.length===0,publicClaimEvidenceSeparation:evidence,categoryPreservationText:desktop.categoryText||'',hardZero,artifacts,errors};
           fs.writeFileSync(process.env.COMPASS_EXPERIENCE_CAPTURE_INPUT,JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));
           NODE
           node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs

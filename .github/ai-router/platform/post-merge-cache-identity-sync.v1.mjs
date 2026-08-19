@@ -59,17 +59,20 @@ const initial=[...new Set([...immediate,...recovery])].sort();
 const tracked=git(['ls-files']).split(/\r?\n/).filter(Boolean).filter(p=>TEXT_EXT.test(p)&&!excluded(p)&&fs.existsSync(p));
 const targets=new Map(initial.map(p=>[p,sha(p)]));
 const rewritten=new Set();
+const passDiagnostics=[];
 for(let pass=0;pass<8;pass++){
-  let mutations=0;
+  const changedThisPass=[];
   for(const file of tracked){
     if(rewriteFile(file,targets)){
-      rewritten.add(file);mutations++;
+      rewritten.add(file);changedThisPass.push(file);
       if(STATIC_EXT.test(file))targets.set(file,sha(file));
     }
   }
-  if(!mutations)break;
-  if(pass===7)throw new Error('CACHE_IDENTITY_PROPAGATION_DID_NOT_SETTLE');
+  passDiagnostics.push(changedThisPass);
+  console.log(`CACHE_IDENTITY_PASS_${pass+1}: ${JSON.stringify(changedThisPass)}`);
+  if(!changedThisPass.length)break;
+  if(pass===7)throw new Error(`CACHE_IDENTITY_PROPAGATION_DID_NOT_SETTLE ${JSON.stringify(passDiagnostics.slice(-3))}`);
 }
-const receipt={schema:'POST_MERGE_CACHE_IDENTITY_SYNC_RECEIPT_v1',base,head,recoveryBase:recoveryBase||null,immediateChangedAssets:immediate,recoveryChangedAssets:recovery,initialChangedAssets:initial,rewrittenFiles:[...rewritten].sort(),assetIdentities:Object.fromEntries([...targets].sort()),result:'PASS_CLOSED'};
+const receipt={schema:'POST_MERGE_CACHE_IDENTITY_SYNC_RECEIPT_v1',base,head,recoveryBase:recoveryBase||null,immediateChangedAssets:immediate,recoveryChangedAssets:recovery,initialChangedAssets:initial,rewrittenFiles:[...rewritten].sort(),passDiagnostics,assetIdentities:Object.fromEntries([...targets].sort()),result:'PASS_CLOSED'};
 fs.writeFileSync(process.env.CACHE_IDENTITY_RECEIPT||'/tmp/post-merge-cache-identity.json',JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));

@@ -1,0 +1,38 @@
+name: Admitted Procedure Backend Self Test
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  self-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Mint private repository token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Check out exact private backend candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: fe54dd54a70405af7ee3f1e098051a384675b15a
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify candidate and run self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd private-control-plane
+          test "$(git rev-parse HEAD)" = "fe54dd54a70405af7ee3f1e098051a384675b15a"
+          node tools/ai-room-transport/admitted-procedure-exact-head-qualification-self-test.v1.mjs

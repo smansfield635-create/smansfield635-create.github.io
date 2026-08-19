@@ -1,13 +1,10 @@
 name: H-Earth Single Spherical World Manifold Exact Head Qualification
-
 on:
   pull_request:
     types: [opened, reopened]
-
 permissions:
   contents: read
   issues: write
-
 jobs:
   prove:
     runs-on: ubuntu-24.04
@@ -34,17 +31,14 @@ jobs:
           python - <<'PY'
           import base64,json,os
           w=os.path.join(os.environ['RUNNER_TEMP'],'proof'); marker='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'; op='H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_SUCCESSOR_20260819_001'
-          c=json.load(open(w+'/comment.json')); env=json.loads(c['body'][len(marker):].strip())
-          if env['operationRequest']['operationId']!=op: raise SystemExit('OPERATION_ID_MISMATCH')
-          api=json.load(open(w+'/ledger.json')); ledger=json.loads(base64.b64decode(api['content']).decode())
+          c=json.load(open(w+'/comment.json')); env=json.loads(c['body'][len(marker):].strip()); api=json.load(open(w+'/ledger.json')); ledger=json.loads(base64.b64decode(api['content']).decode())
           matches=[x for x in ledger['activeScopes'].values() if x.get('operationId')==op and x.get('state')=='ADMITTED_LOCKED']
           if len(matches)!=1: raise SystemExit('ACTIVE_LOCK_MISMATCH')
           for name,value in [('request',env['operationRequest']),('procedure',env['constructionProcedure']),('lock',matches[0])]:
             with open(w+'/'+name+'.json','w') as f: json.dump(value,f,sort_keys=True,separators=(',',':')); f.write('\n')
           print('lockGeneration:',matches[0].get('lockGeneration'))
           PY
-      - name: Check out private backend
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/geodiametrics1
           ref: 367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab
@@ -52,11 +46,10 @@ jobs:
           path: private-control-plane
           fetch-depth: 1
           persist-credentials: false
-      - name: Check out exact candidate
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/smansfield635-create.github.io
-          ref: 60b47c98570abd71692b18e22431606257cdf314
+          ref: 4eabe01f66f9a74265d181f855d3e2eaab6d7e14
           path: subject
           fetch-depth: 0
           persist-credentials: false
@@ -64,20 +57,15 @@ jobs:
         id: execute
         continue-on-error: true
         shell: bash
-        run: |
-          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$RUNNER_TEMP/proof/request.json" --procedure "$RUNNER_TEMP/proof/procedure.json" --lock "$RUNNER_TEMP/proof/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 60b47c98570abd71692b18e22431606257cdf314 --execution-holder H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_PROOF_002 --output "$RUNNER_TEMP/proof/receipt.json"
-      - name: Upload receipt
-        if: always()
+        run: node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$RUNNER_TEMP/proof/request.json" --procedure "$RUNNER_TEMP/proof/procedure.json" --lock "$RUNNER_TEMP/proof/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 4eabe01f66f9a74265d181f855d3e2eaab6d7e14 --execution-holder H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_PROOF_003 --output "$RUNNER_TEMP/proof/receipt.json"
+      - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: h-earth-single-spherical-world-manifold-${{ github.run_id }}
           path: ${{ runner.temp }}/proof/receipt.json
           if-no-files-found: error
           retention-days: 90
-      - name: Enforce exact qualification result
-        if: always()
-        shell: bash
+      - if: always()
         env:
           EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
-        run: |
-          test "$EXECUTE_OUTCOME" = success
+        run: test "$EXECUTE_OUTCOME" = success

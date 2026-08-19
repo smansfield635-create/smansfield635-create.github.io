@@ -166,6 +166,14 @@ jobs:
           )
           gh_get() { curl --fail-with-body --silent --show-error -L "${headers[@]}" "$1"; }
           gh_post() { curl --fail-with-body --silent --show-error -L -X POST "${headers[@]}" "$1"; }
+          build_request="$(gh_post "${api_root}/pages/builds")"
+          build_request_status="$(jq -r '.status // empty' <<<"$build_request")"
+          if [ "$build_request_status" != "queued" ] && [ "$build_request_status" != "building" ] && [ "$build_request_status" != "built" ]; then
+            echo "Explicit legacy Pages build request returned unexpected status: ${build_request_status:-empty}" >&2
+            printf '%s\n' "$build_request" >&2
+            exit 1
+          fi
+          echo "Explicit legacy Pages build request accepted with status: $build_request_status"
           retried_run_id=""
           for attempt in $(seq 1 60); do
             pages_payload="$(gh_get "${api_root}/pages/builds/latest")"

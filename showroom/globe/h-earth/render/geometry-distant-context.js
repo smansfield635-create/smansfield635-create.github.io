@@ -212,7 +212,9 @@ function constructPlanetBodyHorizonShell() {
       providerContractId: H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
       planetBodyHorizonShellId: H_EARTH_PLANET_BODY_HORIZON_SHELL_ID,
       representationClass: 'PLANET_BODY',
-      farSurfaceClass: 'PLANET_BODY',
+      // Legacy preview compatibility only. Because representationClass remains
+      // PLANET_BODY, this does not promote the shell to FAR_OCEAN authority.
+      farSurfaceClass: 'OCEAN',
       geographicIdentity: null,
       playableRegionIdentity: null,
       climateIdentity: 'WARM_SUBTROPICAL_COASTAL_PRESENTATION_ONLY',

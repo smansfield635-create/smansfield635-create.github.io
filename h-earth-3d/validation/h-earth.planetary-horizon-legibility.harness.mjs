@@ -43,7 +43,7 @@ const bodyFrom = (geometry) => geometry.primitives.find((primitive) =>
   primitive?.primitiveId === SHELL_PRIMITIVE_ID
 );
 
-fail(H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID === 'H_EARTH_C3C3R5_REGION_TO_PLANET_SPHERICAL_FRAME_v1', 'GEN327_PLANETARY_FRAME_CONTRACT_DRIFT');
+fail(H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID === 'H_EARTH_PLANETARY_SPATIAL_COHERENCE_GEN326_v1', 'GEN327_PLANETARY_FRAME_CONTRACT_DRIFT');
 fail(H_EARTH_PLANETARY_WORLD_FRAME.exactSphereRadius === 420000, 'GEN327_PLANET_RADIUS_DRIFT');
 fail(H_EARTH_PLANETARY_WORLD_FRAME.protectedTangentRadius === 1100, 'GEN327_TANGENT_RADIUS_DRIFT');
 
@@ -175,7 +175,5 @@ const receipt = {
   issues
 };
 receipt.receiptSha256 = hashJson(receipt);
-// Qualification receipts are emitted through stdout and captured by the
-// admitted exact-head backend. Do not mutate the verified subject workspace.
 process.stdout.write(JSON.stringify(receipt));
 if (issues.length) process.exitCode = 1;

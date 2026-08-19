@@ -1664,6 +1664,18 @@
       "scopeHash": "b14929352e9f36b3c0bca200c19a1d5e6a7765960f8f451b1e7c00ad83aef6a9",
       "state": "ADMITTED_LOCKED"
     },
+    "b1c69a7504b3d419b60e9599374dad862a02653292431b6b396bfe4e18704d9a": {
+      "governingHead": "dffdc60207c3b666b1a6341832eba6bba6bff10f",
+      "lockGeneration": 1545,
+      "lockScope": "REPOSITORY-AI-ROUTER/VALIDATOR-BINARY-INSTALLATION-RECONCILIATION",
+      "operationId": "ROUTER_VALIDATOR_BINARY_INSTALLATION_RECONCILIATION_20260818_001",
+      "procedureLocatorDigest": "191a5fc95959a434f305da6e312f4fcdcfdabdcd480893c98fa79b6b2f9af5a8",
+      "released": false,
+      "requestDigest": "c428aa93886e786158c8feb5844c74d4a69f50687c1f9b0558a7de5914301cd2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b1c69a7504b3d419b60e9599374dad862a02653292431b6b396bfe4e18704d9a",
+      "state": "ADMITTED_LOCKED"
+    },
     "b21e939feb1c0002e661df3fa6551576765fa3fa532cb6e39eefdc123ea80474": {
       "governingHead": "d2a6bd7e67c7e381231953c4598f058c38446e55",
       "lockGeneration": 182,
@@ -2545,7 +2557,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1544,
+  "lockGeneration": 1545,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

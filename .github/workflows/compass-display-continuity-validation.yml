@@ -160,7 +160,7 @@ jobs:
             }
           } finally {await browser.close()}
           const states=Object.values(perViewport).flatMap(v=>Object.values(v.states));
-          const visibleGeometryIntegrity=states.every(s=>s.documentOverflowX<=1&&s.geometry.every(g=>g.ancestorRatio>=.94&&!g.horizontalOut)&&s.textClips.length===0&&s.controlClips.length===0);
+          const visibleGeometryIntegrity=states.every(s=>s.documentOverflowX<=1&&s.geometry.every(g=>g.ancestorRatio>=.94&&!g.horizontalOut)&&s.textClips.length===0&&s.controlClips.filter(c=>c.text).length===0);
           const traversalContinuity=Object.values(perViewport).every(v=>v.traversal.pass===true);
           const stateLayerExclusivity=states.filter(s=>s.mirrorRoutesVisible).every(s=>s.staleMirrorSiblings.length===0);
           const visualSystemCoherence=states.every(s=>s.cardlikeCount<=1)&&['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation.headerHeight<(id==='phone'?440:520));

@@ -55,7 +55,7 @@ const recoveryBase=lastSuccessfulSync(head);
 const immediate=changedStatic(base,head);
 const recovery=recoveryBase&&recoveryBase!==head?changedStatic(recoveryBase,head):[];
 const initial=[...new Set([...immediate,...recovery])].sort();
-const tracked=git(['ls-files','*.html','*.css','*.js','*.mjs']).split(/\r?\n/).filter(Boolean).filter(p=>TEXT_EXT.test(p)&&!excluded(p)&&fs.existsSync(p));
+const tracked=git(['ls-files']).split(/\r?\n/).filter(Boolean).filter(p=>TEXT_EXT.test(p)&&!excluded(p)&&fs.existsSync(p));
 const targets=new Map(initial.map(p=>[p,sha(p)]));
 const rewritten=new Set();
 for(let pass=0;pass<8;pass++){

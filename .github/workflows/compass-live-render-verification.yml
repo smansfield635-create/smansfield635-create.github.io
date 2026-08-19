@@ -1,0 +1,102 @@
+name: Compass Live Render Verification
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-render:
+    if: github.head_ref == 'verification/compass-live-render-gen1532-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Verify live rendered Compass
+        shell: bash
+        run: |
+          mkdir -p live-render-proof
+          cat > verify-live.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          const origin='https://diamondgatebridge.com/?live_render_verify=gen1532';
+          const browser=await chromium.launch({headless:true});
+          const cases=[
+            {name:'desktop',width:1440,height:1000,craft:true},
+            {name:'user-tablet',width:960,height:1536,craft:true},
+            {name:'phone-tall',width:800,height:1280,craft:true},
+            {name:'narrow-phone',width:412,height:915,craft:false}
+          ];
+          const receipt=[];
+          let failed=false;
+          for(const c of cases){
+            const page=await browser.newPage({viewport:{width:c.width,height:c.height},deviceScaleFactor:1});
+            const errors=[];
+            page.on('pageerror',e=>errors.push(String(e)));
+            page.on('console',m=>{if(m.type()==='error')errors.push('console:'+m.text())});
+            const response=await page.goto(origin,{waitUntil:'domcontentloaded',timeout:60000});
+            if(!response?.ok()) throw new Error(`${c.name}: HTTP ${response?.status()}`);
+            await page.waitForFunction(()=>document.querySelector('[data-compass-identity-3d]')&&globalThis.DGB_COMPASS_IDENTITY_3D_GEN1524?.mounted===true,{timeout:30000});
+            await page.waitForTimeout(3500);
+            const data=await page.evaluate(({expectCraft})=>{
+              const scriptSrc=[...document.scripts].map(s=>s.src).filter(Boolean);
+              const cssHref=[...document.querySelectorAll('link[rel="stylesheet"]')].map(l=>l.href);
+              const identity=document.querySelector('[data-compass-identity-3d]');
+              const craft=document.querySelector('[data-compass-spacecraft-layer]');
+              const diagnostic=[...document.querySelectorAll('[data-capability="diagnostic"], [data-capability-id="coherence-diagnostic"]')][0];
+              const headings=[...document.querySelectorAll('h1,h2,h3')].map(n=>n.textContent?.trim());
+              return {
+                identityPresent:!!identity,
+                globalMounted:globalThis.DGB_COMPASS_IDENTITY_3D_GEN1524?.mounted===true,
+                correctIdentityScript:scriptSrc.some(s=>s.includes('/assets/compass/compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1')),
+                legacyAdapterAbsent:!scriptSrc.some(s=>s.includes('compass.laws-spacecraft.js')),
+                identityCss:cssHref.some(s=>s.includes('/assets/compass/compass.identity-3d.css?v=gen1532-live-binding-v1')),
+                coheriscope:headings.includes('Coheriscope') || diagnostic?.querySelector('h2')?.textContent?.trim()==='Coheriscope',
+                craftPresent:!!craft,
+                craftDesign:craft?.dataset.designId||null,
+                craftSource:craft?.dataset.sourceModule||null,
+                craftAdoption:craft?.dataset.adoption||null,
+                craftPolicy:craft?.dataset.performancePolicy||null,
+                craftTier:craft?.dataset.performanceTier||null,
+                expectedCraft:expectCraft,
+                noHorizontalOverflow:document.documentElement.scrollWidth<=document.documentElement.clientWidth+2,
+                title:document.title
+              };
+            },{expectCraft:c.craft});
+            const checks={
+              identity:data.identityPresent&&data.globalMounted,
+              correctBinding:data.correctIdentityScript&&data.identityCss&&data.legacyAdapterAbsent,
+              coheriscope:data.coheriscope,
+              craftPolicy:c.craft ? (data.craftPresent&&data.craftDesign==='DGB_SCOUTCRAFT_01'&&data.craftSource==='/laws/index.spacecraft.geometry.js'&&data.craftAdoption==='DIRECT_CANONICAL_GEOMETRY_MODULE_CONSUMPTION'&&data.craftPolicy==='hardware-30fps-software-static-dpr1') : !data.craftPresent,
+              overflow:data.noHorizontalOverflow,
+              errors:errors.length===0
+            };
+            if(Object.values(checks).some(v=>!v)) failed=true;
+            receipt.push({case:c.name,viewport:[c.width,c.height],checks,data,errors});
+            await page.screenshot({path:`live-render-proof/${c.name}.png`,fullPage:false});
+            await page.screenshot({path:`live-render-proof/${c.name}-full.png`,fullPage:true});
+            await page.close();
+          }
+          fs.writeFileSync('live-render-proof/receipt.json',JSON.stringify({origin,receipt,pass:!failed},null,2));
+          console.log(fs.readFileSync('live-render-proof/receipt.json','utf8'));
+          await browser.close();
+          if(failed) process.exit(1);
+          EOF
+          node ./verify-live.mjs
+      - name: Upload rendered proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-live-render-proof
+          path: live-render-proof
+          if-no-files-found: error

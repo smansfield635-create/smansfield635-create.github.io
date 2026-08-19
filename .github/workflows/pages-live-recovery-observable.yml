@@ -1,0 +1,68 @@
+name: Pages Live Recovery Observable
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  recover-pages:
+    if: github.head_ref == 'verification/compass-live-render-gen1532-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Inspect and recover authoritative Pages publication
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          api="https://api.github.com/repos/${repo}"
+          headers=(-H 'Accept: application/vnd.github+json' -H "Authorization: Bearer ${GH_TOKEN}" -H 'X-GitHub-Api-Version: 2022-11-28')
+          get(){ curl --fail-with-body --silent --show-error -L "${headers[@]}" "$1"; }
+          main_sha="$(get "$api/branches/main" | jq -r '.commit.sha')"
+          topology="$(get "$api/pages")"
+          latest="$(get "$api/pages/builds/latest")"
+          latest_sha="$(jq -r '.commit // empty' <<<"$latest")"
+          latest_status="$(jq -r '.status // empty' <<<"$latest")"
+          echo "MAIN_SHA=$main_sha"
+          echo "PAGES_TOPOLOGY=$(jq -c '{build_type,source,cname,html_url}' <<<"$topology")"
+          echo "PAGES_LATEST=$(jq -c '{commit,status,created_at,updated_at,error}' <<<"$latest")"
+          if [ "$latest_sha" = "$main_sha" ] && [ "$latest_status" = "built" ]; then
+            echo 'Pages already reports current main as built.'
+            exit 0
+          fi
+          before="$(date -u +%s)"
+          echo "Dispatching Direct GitHub Pages Deploy for current main $main_sha"
+          curl --fail-with-body --silent --show-error -L -X POST "${headers[@]}" \
+            "$api/actions/workflows/pages-direct-deploy.yml/dispatches" \
+            -d '{"ref":"main"}'
+          run_id=''
+          for attempt in $(seq 1 90); do
+            runs="$(get "$api/actions/workflows/pages-direct-deploy.yml/runs?branch=main&per_page=30")"
+            run="$(jq -c --arg sha "$main_sha" --argjson before "$before" '[.workflow_runs[] | select(.head_sha==$sha and .event=="workflow_dispatch") | select((.created_at|fromdateiso8601) >= $before)] | sort_by(.created_at) | last // {}' <<<"$runs")"
+            run_id="$(jq -r '.id // empty' <<<"$run")"
+            status="$(jq -r '.status // empty' <<<"$run")"
+            conclusion="$(jq -r '.conclusion // empty' <<<"$run")"
+            if [ -n "$run_id" ]; then echo "DIRECT_RUN id=$run_id status=$status conclusion=${conclusion:-none}"; fi
+            latest="$(get "$api/pages/builds/latest")"
+            latest_sha="$(jq -r '.commit // empty' <<<"$latest")"
+            latest_status="$(jq -r '.status // empty' <<<"$latest")"
+            echo "PAGES attempt=$attempt sha=${latest_sha:-none} status=${latest_status:-none}"
+            if [ "$latest_sha" = "$main_sha" ] && [ "$latest_status" = "built" ]; then
+              echo "RECOVERY=PASS_CLOSED"
+              exit 0
+            fi
+            if [ "$status" = "completed" ] && [ "$conclusion" != "success" ] && [ -n "$conclusion" ]; then
+              echo "Direct deploy terminated: $conclusion" >&2
+              exit 1
+            fi
+            sleep 8
+          done
+          echo 'Timed out before Pages reported current main built.' >&2
+          exit 1

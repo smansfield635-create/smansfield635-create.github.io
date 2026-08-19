@@ -1,0 +1,31 @@
+name: Compass Legacy Injector Trace
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  trace:
+    if: github.head_ref == 'verification/compass-live-render-gen1532-v1'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Trace legacy runtime injection sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '=== frontpage corrective ==='
+          grep -RIn --exclude-dir=.git --exclude-dir=node_modules 'compass-gen1524-frontpage-corrective' . || true
+          echo '=== identity runtime marker ==='
+          grep -RIn --exclude-dir=.git --exclude-dir=node_modules 'data-compass-identity-runtime' . || true
+          echo '=== anatomy injector ==='
+          grep -RIn --exclude-dir=.git --exclude-dir=node_modules 'compass-gen1524-anatomy' . || true
+          echo '=== volumetric trophy injector ==='
+          grep -RIn --exclude-dir=.git --exclude-dir=node_modules 'compass-volumetric-artifacts-v1' . || true

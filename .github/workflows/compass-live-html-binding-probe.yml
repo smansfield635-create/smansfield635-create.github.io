@@ -1,0 +1,29 @@
+name: Compass Live HTML Binding Probe
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    if: github.head_ref == 'verification/compass-live-render-gen1532-v1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe production HTML bindings
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="https://diamondgatebridge.com/?binding_probe=$(date +%s)"
+          curl --fail-with-body --silent --show-error --location \
+            -H 'Cache-Control: no-cache' -H 'Pragma: no-cache' \
+            "$url" -o /tmp/live.html
+          echo "LIVE_HTML_SHA256=$(sha256sum /tmp/live.html | awk '{print $1}')"
+          grep -F '/assets/compass/compass.identity-3d.js?v=gen1532-gen1526-direct-owner-v1' /tmp/live.html
+          grep -F '/assets/compass/compass.identity-3d.css?v=gen1532-live-binding-v1' /tmp/live.html
+          ! grep -F 'compass.laws-spacecraft.js' /tmp/live.html
+          ! grep -F 'g=1521' /tmp/live.html
+          echo 'LIVE_HTML_BINDING=PASS_CLOSED'

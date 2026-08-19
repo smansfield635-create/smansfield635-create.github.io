@@ -1,0 +1,53 @@
+name: Compass Live Chrome Fast Render Probe
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  render-probe:
+    if: github.head_ref == 'verification/compass-live-render-gen1532-v1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Execute production page in system Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
+          echo "CHROME=$chrome"
+          mkdir -p fast-render-proof
+          url="https://diamondgatebridge.com/?fast_render_probe=$(date +%s)"
+          "$chrome" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=960,1536 --virtual-time-budget=8000 --dump-dom "$url" \
+            > fast-render-proof/user-tablet.dom.html 2>fast-render-proof/user-tablet.stderr.txt
+          grep -F 'data-compass-identity-3d="true"' fast-render-proof/user-tablet.dom.html
+          grep -F 'Coheriscope' fast-render-proof/user-tablet.dom.html
+          grep -F 'data-design-id="DGB_SCOUTCRAFT_01"' fast-render-proof/user-tablet.dom.html
+          grep -F 'data-source-module="/laws/index.spacecraft.geometry.js"' fast-render-proof/user-tablet.dom.html
+          grep -F 'data-adoption="DIRECT_CANONICAL_GEOMETRY_MODULE_CONSUMPTION"' fast-render-proof/user-tablet.dom.html
+          ! grep -F 'compass.laws-spacecraft.js' fast-render-proof/user-tablet.dom.html
+          "$chrome" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=960,1536 --virtual-time-budget=8000 \
+            --screenshot=fast-render-proof/user-tablet.png "$url" >/dev/null 2>&1
+          "$chrome" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=412,915 --virtual-time-budget=8000 --dump-dom "$url" \
+            > fast-render-proof/narrow-phone.dom.html 2>fast-render-proof/narrow-phone.stderr.txt
+          grep -F 'data-compass-identity-3d="true"' fast-render-proof/narrow-phone.dom.html
+          grep -F 'Coheriscope' fast-render-proof/narrow-phone.dom.html
+          ! grep -F 'data-compass-spacecraft-layer="true"' fast-render-proof/narrow-phone.dom.html
+          "$chrome" --headless=new --no-sandbox --disable-dev-shm-usage --disable-gpu \
+            --window-size=412,915 --virtual-time-budget=8000 \
+            --screenshot=fast-render-proof/narrow-phone.png "$url" >/dev/null 2>&1
+          echo 'LIVE_CHROME_RENDER=PASS_CLOSED'
+      - name: Upload fast rendered proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compass-live-chrome-fast-render-proof
+          path: fast-render-proof
+          if-no-files-found: error

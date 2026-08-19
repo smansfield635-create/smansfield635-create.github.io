@@ -929,30 +929,35 @@
       "state": "ADMITTED_LOCKED"
     },
     "693de8903d51dd84ccaab3fc2d14f40d7483e519a6c798f0ae5ba3c803fc087a": {
-      "governingHead": "d809d006d6c966b23fab9c39f0f695dfad386c1f",
-      "lockGeneration": 1554,
+      "governingHead": "fe39febded099960ad7b43f631014c062ef8beff",
+      "lockGeneration": 1556,
       "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
-      "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1",
+      "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v2",
       "predecessor": {
         "authorityInherited": false,
         "exactHeadRevalidationRequired": true,
-        "governingHead": "cfd1924c485893dedeeb2fd1fefcb91c521d7c2a",
-        "lockGeneration": 1553,
+        "governingHead": "d809d006d6c966b23fab9c39f0f695dfad386c1f",
+        "lockGeneration": 1554,
         "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
-        "operationId": "COMPASS_EXPERIENCE_INTERACTION_RESTORATION_SUCCESSOR_20260819_v2",
+        "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1",
         "preservedEvidenceRefs": [
-          "issue:1011#comment:5344142660",
-          "pr:1400",
-          "merge:1213e943e2c597bb707df5a83d585dfb9f096415",
-          "issue:1011#comment:5344345994"
+          "issue:1011#comment:5344345994",
+          "issue:1011#comment:5344358548",
+          "issue:1011#comment:5344366624",
+          "issue:1011#comment:5344470973",
+          "issue:1011#comment:5344858549",
+          "issue:1011#comment:5344863762",
+          "pr:1416",
+          "candidate:b07c5acb4356fd88efbd958e50f7306cc0826a6f",
+          "workflow-run:32272385032"
         ],
         "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
         "terminalDisposition": "SUPERSEDED",
-        "transitionId": "COMPASS_GEN1553_TO_INSTRUCTIONAL_HIERARCHY_D809D006_20260819_v1"
+        "transitionId": "COMPASS_INSTRUCTIONAL_HIERARCHY_D809D006_TO_FE39FEBD_20260819_v3"
       },
-      "procedureLocatorDigest": "bf767bcfe359f123ce916f7789e3685698b31ba9e17aeb15a331d0f1dd303582",
+      "procedureLocatorDigest": "37b45c1bccfe95a1a838dd85267326549cc9070940d0453d2fd5a050c1a7519c",
       "released": false,
-      "requestDigest": "c32b9a9e00a3570a74b1a4adbf2ee0b41ff4f95f5b6acb400134d30ab7beb710",
+      "requestDigest": "f3d4b8273b633313d94ea57d98b06411c01ab3936c651723a2f08c184949a584",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "693de8903d51dd84ccaab3fc2d14f40d7483e519a6c798f0ae5ba3c803fc087a",
       "state": "ADMITTED_LOCKED"
@@ -2626,7 +2631,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1555,
+  "lockGeneration": 1556,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -23204,6 +23209,58 @@
         "successorLockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
         "successorOperationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1",
         "transitionId": "COMPASS_GEN1553_TO_INSTRUCTIONAL_HIERARCHY_D809D006_20260819_v1"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "d809d006d6c966b23fab9c39f0f695dfad386c1f",
+      "lockGeneration": 1554,
+      "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
+      "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "cfd1924c485893dedeeb2fd1fefcb91c521d7c2a",
+        "lockGeneration": 1553,
+        "lockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
+        "operationId": "COMPASS_EXPERIENCE_INTERACTION_RESTORATION_SUCCESSOR_20260819_v2",
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5344142660",
+          "pr:1400",
+          "merge:1213e943e2c597bb707df5a83d585dfb9f096415",
+          "issue:1011#comment:5344345994"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "COMPASS_GEN1553_TO_INSTRUCTIONAL_HIERARCHY_D809D006_20260819_v1"
+      },
+      "procedureLocatorDigest": "bf767bcfe359f123ce916f7789e3685698b31ba9e17aeb15a331d0f1dd303582",
+      "released": true,
+      "requestDigest": "c32b9a9e00a3570a74b1a4adbf2ee0b41ff4f95f5b6acb400134d30ab7beb710",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "693de8903d51dd84ccaab3fc2d14f40d7483e519a6c798f0ae5ba3c803fc087a",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:1011#comment:5344345994",
+          "issue:1011#comment:5344358548",
+          "issue:1011#comment:5344366624",
+          "issue:1011#comment:5344470973",
+          "issue:1011#comment:5344858549",
+          "issue:1011#comment:5344863762",
+          "pr:1416",
+          "candidate:b07c5acb4356fd88efbd958e50f7306cc0826a6f",
+          "workflow-run:32272385032"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "fe39febded099960ad7b43f631014c062ef8beff",
+        "successorLockGeneration": 1556,
+        "successorLockScope": "COMPASS_EXPERIENCE_CONSOLIDATION_INTERACTION_RESTORATION_AND_AWARD_READINESS",
+        "successorOperationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v2",
+        "transitionId": "COMPASS_INSTRUCTIONAL_HIERARCHY_D809D006_TO_FE39FEBD_20260819_v3"
       },
       "terminalDisposition": "SUPERSEDED"
     }

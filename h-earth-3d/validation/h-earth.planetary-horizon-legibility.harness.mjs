@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {
   constructHEarthDistantContextGeometry,
@@ -176,9 +175,7 @@ const receipt = {
   issues
 };
 receipt.receiptSha256 = hashJson(receipt);
-fs.writeFileSync(
-  new URL('./h-earth.planetary-horizon-legibility.receipt.json', import.meta.url),
-  JSON.stringify(receipt, null, 2) + '\n'
-);
+// Qualification receipts are emitted through stdout and captured by the
+// admitted exact-head backend. Do not mutate the verified subject workspace.
 process.stdout.write(JSON.stringify(receipt));
 if (issues.length) process.exitCode = 1;

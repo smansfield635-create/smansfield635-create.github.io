@@ -20,11 +20,31 @@ function brandCoheriscope(){for(const card of document.querySelectorAll('[data-c
 function diagnosticMutation(mutation){const target=mutation.target;const targetInDiagnostic=target?.nodeType===1&&target.closest?.('[data-capability="diagnostic"]');if(targetInDiagnostic)return true;for(const node of mutation.addedNodes){if(node.nodeType!==1)continue;if(node.matches?.('[data-capability="diagnostic"]')||node.querySelector?.('[data-capability="diagnostic"]'))return true}return false}
 function removeSecondaryCompass(){document.querySelectorAll('[data-compass-spatial-instrument],.compass-spatial-instrument').forEach(node=>node.remove());if(state.root)state.root.dataset.secondaryCompass='absent-gen1536'}
 function removeLegacySpacecraft(){document.querySelectorAll('[data-compass-spacecraft-layer],.compass-spacecraft-layer').forEach(node=>node.remove());if(state.root)state.root.dataset.identitySpacecraft='removed-v4-laws-owner-only'}
+function reconcileGen1561Runtime(){
+  const identity=state.identity||document.querySelector('[data-compass-identity-3d]');
+  const maker=identity?.querySelector('[data-wordmark-object="diamond-gate-bridge"]');
+  if(maker){maker.hidden=true;maker.setAttribute('aria-hidden','true');maker.style.setProperty('display','none','important')}
+  const stage=document.querySelector('.compass-capability-orbit[data-reconciliation-stage="gen1561"]');
+  if(stage){
+    const compact=matchMedia('(max-width:620px)').matches?'340px':'390px';
+    stage.style.setProperty('box-sizing','border-box','important');stage.style.setProperty('min-height','0','important');stage.style.setProperty('height',compact,'important');stage.style.setProperty('max-height',compact,'important');stage.style.setProperty('padding','0','important');stage.style.setProperty('border','0','important');
+    const objectStage=stage.querySelector('.compass-object-stage'),dock=stage.querySelector('.compass-action-dock');
+    if(objectStage&&dock&&!stage.dataset.gen1561DocumentDragGuard){
+      stage.dataset.gen1561DocumentDragGuard='true';let fallback=false,startX=0;
+      const within=e=>{const r=objectStage.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom};
+      document.addEventListener('mousedown',e=>{if(e.button!==0||!within(e))return;fallback=true;startX=e.clientX;dock.replaceChildren();dock.setAttribute('aria-busy','true');dock.toggleAttribute('inert',true);dock.dataset.navigationAuthority='blocked'},true);
+      document.addEventListener('mouseup',e=>{if(!fallback)return;fallback=false;const dx=e.clientX-startX;if(Math.abs(dx)>24){const control=stage.querySelector(dx<0?'[data-orbit-next]':'[data-orbit-previous]');control?.click()}else{dock.removeAttribute('inert');dock.setAttribute('aria-busy','false')}},true);
+    }
+  }
+  const door=document.querySelector('[data-compass-object="mirrorland"]');
+  const ownedScene=state.root?.querySelector('[data-compass-scene]');
+  if(door){if(ownedScene&&door.parentElement!==ownedScene)ownedScene.append(door);door.setAttribute('data-compass-destination','true');door.dataset.destinationType='mirrorland';door.dataset.destinationId='mirrorland';door.dataset.gen1561MirrorlandSemantic='true';door.dataset.gen1561ControllerSceneBound=String(Boolean(ownedScene&&ownedScene.contains(door)));door.style.setProperty('z-index','2147483000','important');door.style.setProperty('pointer-events','auto','important');door.style.setProperty('visibility','visible','important');door.style.setProperty('touch-action','manipulation','important');if(!door.dataset.gen1561PointerRevealBound){door.dataset.gen1561PointerRevealBound='true';door.addEventListener('pointerup',e=>{if(e.button!=null&&e.button!==0)return;const c=globalThis.DGB_COMPASS_CONTROLLER;if(!c?.requestMirrorlandReveal)return;const frame=c.getFrameState?.();if(frame?.state==='CONSTELLATION'||frame?.state==='CLUSTER_OPEN'||frame?.state==='ROOM_SELECTED'){e.preventDefault();c.requestMirrorlandReveal()}},true)}}
+}
 function mount(){
-  mountIdentity();brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft();
-  const observer=new MutationObserver(mutations=>{if(mutations.some(diagnosticMutation))brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft()});
+  mountIdentity();brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft();reconcileGen1561Runtime();
+  const observer=new MutationObserver(mutations=>{if(mutations.some(diagnosticMutation))brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft();reconcileGen1561Runtime()});
   if(state.root)observer.observe(state.root,{childList:true,subtree:true});
-  globalThis[GLOBAL]=Object.freeze({mounted:true,version:'coherence-gen1536-identity-only-v4',wordmarkGeometry:'css-preserve-3d-extrusion-v2',coheriscope:true,secondarySpatialCompass:false,spacecraftMounted:false,spacecraftAuthority:'DELEGATED_TO_DGB_LAWS_SPACECRAFT',receipt:()=>({identityMounted:Boolean(state.identity),coheriscopeIdentity:state.root?.dataset.coheriscopeIdentity||'',secondaryCompass:state.root?.dataset.secondaryCompass||'',identitySpacecraft:state.root?.dataset.identitySpacecraft||'',spacecraftMounted:false})});
+  globalThis[GLOBAL]=Object.freeze({mounted:true,version:'coherence-gen1536-identity-only-v4-gen1561-reconciliation',wordmarkGeometry:'css-preserve-3d-extrusion-v2',coheriscope:true,secondarySpatialCompass:false,spacecraftMounted:false,spacecraftAuthority:'DELEGATED_TO_DGB_LAWS_SPACECRAFT',receipt:()=>({identityMounted:Boolean(state.identity),coheriscopeIdentity:state.root?.dataset.coheriscopeIdentity||'',secondaryCompass:state.root?.dataset.secondaryCompass||'',identitySpacecraft:state.root?.dataset.identitySpacecraft||'',spacecraftMounted:false})});
 }
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
 })();

@@ -29,14 +29,15 @@ function reconcileGen1561Runtime(){
     const compact=matchMedia('(max-width:620px)').matches?'340px':'390px';
     stage.style.setProperty('box-sizing','border-box','important');stage.style.setProperty('min-height','0','important');stage.style.setProperty('height',compact,'important');stage.style.setProperty('max-height',compact,'important');stage.style.setProperty('padding','0','important');stage.style.setProperty('border','0','important');
     const objectStage=stage.querySelector('.compass-object-stage'),dock=stage.querySelector('.compass-action-dock');
-    if(objectStage&&dock&&!objectStage.dataset.gen1561MouseFallback){
-      objectStage.dataset.gen1561MouseFallback='true';let fallback=false,startX=0;
-      objectStage.addEventListener('mousedown',e=>{if(e.button!==0||e.target.closest?.('a,button')||objectStage.dataset.dragging==='true')return;fallback=true;startX=e.clientX;dock.replaceChildren();dock.setAttribute('aria-busy','true');dock.toggleAttribute('inert',true);dock.dataset.navigationAuthority='blocked'},true);
-      globalThis.addEventListener('mouseup',e=>{if(!fallback)return;fallback=false;const dx=e.clientX-startX;if(Math.abs(dx)>24){const control=stage.querySelector(dx<0?'[data-orbit-next]':'[data-orbit-previous]');control?.click()}else{dock.removeAttribute('inert');dock.setAttribute('aria-busy','false')}},true);
+    if(objectStage&&dock&&!stage.dataset.gen1561DocumentDragGuard){
+      stage.dataset.gen1561DocumentDragGuard='true';let fallback=false,startX=0;
+      const within=e=>{const r=objectStage.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom};
+      document.addEventListener('mousedown',e=>{if(e.button!==0||!within(e))return;fallback=true;startX=e.clientX;dock.replaceChildren();dock.setAttribute('aria-busy','true');dock.toggleAttribute('inert',true);dock.dataset.navigationAuthority='blocked'},true);
+      document.addEventListener('mouseup',e=>{if(!fallback)return;fallback=false;const dx=e.clientX-startX;if(Math.abs(dx)>24){const control=stage.querySelector(dx<0?'[data-orbit-next]':'[data-orbit-previous]');control?.click()}else{dock.removeAttribute('inert');dock.setAttribute('aria-busy','false')}},true);
     }
   }
-  const door=document.querySelector('[data-compass-object="mirrorland"]');
-  if(door&&!door.dataset.gen1561DirectReveal){door.dataset.gen1561DirectReveal='true';door.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();globalThis.DGB_COMPASS_CONTROLLER?.requestMirrorlandReveal?.()},true)}
+  const root=state.root||document.querySelector('[data-compass-root]');
+  if(root&&!root.dataset.gen1561MirrorlandCapture){root.dataset.gen1561MirrorlandCapture='true';root.addEventListener('click',e=>{const door=e.target.closest?.('[data-compass-object="mirrorland"]');if(!door)return;e.preventDefault();e.stopImmediatePropagation();globalThis.DGB_COMPASS_CONTROLLER?.requestMirrorlandReveal?.()},true)}
 }
 function mount(){
   mountIdentity();brandCoheriscope();removeSecondaryCompass();removeLegacySpacecraft();reconcileGen1561Runtime();

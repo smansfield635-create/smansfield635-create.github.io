@@ -64,7 +64,7 @@
   // Crystals is an existing loaded presentation owner and executes before Cosmos.
   // Disable the obsolete local spacecraft synchronously, then load the bounded Laws presentation owner.
   globalThis.DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT = true;
-  void import('/assets/compass/compass.laws-spacecraft.js?v=gen1538-laws-parity-v1')
+  void import('/assets/compass/compass.laws-spacecraft.js?v=gen1538-laws-parity-v1&cb=dee3823dc51a86b6')
     .catch(error => {
       globalThis.DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_ERROR = String(error?.message || error);
     });

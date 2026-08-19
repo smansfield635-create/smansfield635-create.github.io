@@ -8,7 +8,8 @@ const HASH_PARAM='cb';
 const STATIC_EXT=/\.(?:css|js|mjs)$/i;
 const TEXT_EXT=/\.(?:html|css|js|mjs)$/i;
 const EXCLUDED_PREFIXES=['preview/','proof-media/','node_modules/','.git/'];
-const git=(args,{allowFailure=false}={})=>{const r=spawnSync('git',args,{encoding:'utf8'});if(!allowFailure&&r.status!==0)throw new Error(`git ${args.join(' ')} failed: ${r.stderr}`);return r.stdout.trim()};
+const GIT_MAX_BUFFER=64*1024*1024;
+const git=(args,{allowFailure=false}={})=>{const r=spawnSync('git',args,{encoding:'utf8',maxBuffer:GIT_MAX_BUFFER});if(r.error&&!allowFailure)throw new Error(`git ${args.join(' ')} execution failed: ${r.error.message}`);if(!allowFailure&&r.status!==0)throw new Error(`git ${args.join(' ')} failed: ${r.stderr||`status=${r.status}`}`);return (r.stdout||'').trim()};
 const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex').slice(0,16);
 const excluded=p=>EXCLUDED_PREFIXES.some(x=>p.startsWith(x));
 const cleanPath=u=>u.split('#',1)[0].split('?',1)[0];
@@ -25,7 +26,7 @@ function withHash(url,token){
 }
 function rewriteFile(file,targets){
   let text=fs.readFileSync(file,'utf8'),changed=false;
-  const replaceUrl=url=>{const resolved=resolveLocal(file,url);if(!resolved||!targets.has(resolved))return url;const next=withHash(url,targets.get(resolved));if(next!==url)changed=true;return next};
+  const replaceUrl=url=>{const resolved=resolveLocal(file,url);if(!resolved||resolved===file||!targets.has(resolved))return url;const next=withHash(url,targets.get(resolved));if(next!==url)changed=true;return next};
   if(file.endsWith('.html'))text=text.replace(/\b(?:src|href)=(['"])([^'"]+)\1/g,(m,q,u)=>m.replace(u,replaceUrl(u)));
   if(file.endsWith('.css'))text=text.replace(/url\((['"]?)([^)'"\s]+)\1\)/g,(m,q,u)=>m.replace(u,replaceUrl(u)));
   if(/\.(?:js|mjs)$/i.test(file))text=text.replace(/(['"])(\/?(?:assets|scripts|styles)\/[^'"\s]+\.(?:css|js|mjs)(?:\?[^'"\s]*)?(?:#[^'"\s]*)?)\1/g,(m,q,u)=>`${q}${replaceUrl(u)}${q}`);
@@ -55,20 +56,23 @@ const recoveryBase=lastSuccessfulSync(head);
 const immediate=changedStatic(base,head);
 const recovery=recoveryBase&&recoveryBase!==head?changedStatic(recoveryBase,head):[];
 const initial=[...new Set([...immediate,...recovery])].sort();
-const tracked=git(['ls-files','*.html','*.css','*.js','*.mjs']).split(/\r?\n/).filter(Boolean).filter(p=>TEXT_EXT.test(p)&&!excluded(p)&&fs.existsSync(p));
+const tracked=git(['ls-files']).split(/\r?\n/).filter(Boolean).filter(p=>TEXT_EXT.test(p)&&!excluded(p)&&fs.existsSync(p));
 const targets=new Map(initial.map(p=>[p,sha(p)]));
 const rewritten=new Set();
+const passDiagnostics=[];
 for(let pass=0;pass<8;pass++){
-  let mutations=0;
+  const changedThisPass=[];
   for(const file of tracked){
     if(rewriteFile(file,targets)){
-      rewritten.add(file);mutations++;
+      rewritten.add(file);changedThisPass.push(file);
       if(STATIC_EXT.test(file))targets.set(file,sha(file));
     }
   }
-  if(!mutations)break;
-  if(pass===7)throw new Error('CACHE_IDENTITY_PROPAGATION_DID_NOT_SETTLE');
+  passDiagnostics.push(changedThisPass);
+  console.log(`CACHE_IDENTITY_PASS_${pass+1}: ${JSON.stringify(changedThisPass)}`);
+  if(!changedThisPass.length)break;
+  if(pass===7)throw new Error(`CACHE_IDENTITY_PROPAGATION_DID_NOT_SETTLE ${JSON.stringify(passDiagnostics.slice(-3))}`);
 }
-const receipt={schema:'POST_MERGE_CACHE_IDENTITY_SYNC_RECEIPT_v1',base,head,recoveryBase:recoveryBase||null,immediateChangedAssets:immediate,recoveryChangedAssets:recovery,initialChangedAssets:initial,rewrittenFiles:[...rewritten].sort(),assetIdentities:Object.fromEntries([...targets].sort()),result:'PASS_CLOSED'};
+const receipt={schema:'POST_MERGE_CACHE_IDENTITY_SYNC_RECEIPT_v1',base,head,recoveryBase:recoveryBase||null,immediateChangedAssets:immediate,recoveryChangedAssets:recovery,initialChangedAssets:initial,rewrittenFiles:[...rewritten].sort(),passDiagnostics,assetIdentities:Object.fromEntries([...targets].sort()),result:'PASS_CLOSED'};
 fs.writeFileSync(process.env.CACHE_IDENTITY_RECEIPT||'/tmp/post-merge-cache-identity.json',JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));

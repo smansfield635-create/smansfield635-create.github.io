@@ -1529,13 +1529,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "a03669e7f956cc5d5b0db95a92424835b45401bd5f57fa65d5f841a5ed0efc91": {
-      "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
-      "lockGeneration": 1540,
+      "governingHead": "ac3b541321bba992d117b2bb357209764f077c29",
+      "lockGeneration": 1543,
       "lockScope": "REPOSITORY_SHARED_EXECUTION_INFRASTRUCTURE:BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER:V1",
-      "operationId": "BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER_INSTALLATION_20260818_001",
-      "procedureLocatorDigest": "6ad5deec5ae081208189ebc58021e284bc99f594781ecda3cc8697008e9da042",
+      "operationId": "BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER_INSTALLATION_20260818_001_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
+        "lockGeneration": 1540,
+        "lockScope": "REPOSITORY_SHARED_EXECUTION_INFRASTRUCTURE:BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER:V1",
+        "operationId": "BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER_INSTALLATION_20260818_001",
+        "preservedEvidenceRefs": [
+          "GEN1540_CANONICAL_ADMISSION",
+          "PR1322_ROUTER_REGISTRATION_VALIDATION_PASS",
+          "PUBLIC_MAIN_AC3B541321BBA992D117B2BB357209764F077C29"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "BOUNDED_BINARY_OBJECT_TRANSFER_GEN1540_TO_AC3B5413_20260818_001"
+      },
+      "procedureLocatorDigest": "a695472e54e02c3e1267495e43c899ffaa6fdcfacc83de42068eeb2c6108116e",
       "released": false,
-      "requestDigest": "8284b0a9e800a1de1a8c810085ee4d7bc6ad55dc92fb752bdab1f506df419ae0",
+      "requestDigest": "ed6e6cdebef8c559b5b06467a3c93bb3a271fae37cd95bfd19c0b9d08f0125ee",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "a03669e7f956cc5d5b0db95a92424835b45401bd5f57fa65d5f841a5ed0efc91",
       "state": "ADMITTED_LOCKED"
@@ -2517,7 +2533,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1542,
+  "lockGeneration": 1543,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -22942,6 +22958,35 @@
         "successorLockScope": "COMPASS:FRONT_PAGE:MIRRORLAND_ANIMATION_MODERNIZATION_AND_CRYSTAL_SCHEDULING",
         "successorOperationId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_20260817_014",
         "transitionId": "COMPASS_MIRRORLAND_MODERNIZATION_CRYSTAL_SCHEDULING_SUCCESSOR_TRANSITION_20260817_014"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "ad3357e817f50cb66b7074e0d620888f2bc5407f",
+      "lockGeneration": 1540,
+      "lockScope": "REPOSITORY_SHARED_EXECUTION_INFRASTRUCTURE:BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER:V1",
+      "operationId": "BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER_INSTALLATION_20260818_001",
+      "procedureLocatorDigest": "6ad5deec5ae081208189ebc58021e284bc99f594781ecda3cc8697008e9da042",
+      "released": true,
+      "requestDigest": "8284b0a9e800a1de1a8c810085ee4d7bc6ad55dc92fb752bdab1f506df419ae0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a03669e7f956cc5d5b0db95a92424835b45401bd5f57fa65d5f841a5ed0efc91",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "GEN1540_CANONICAL_ADMISSION",
+          "PR1322_ROUTER_REGISTRATION_VALIDATION_PASS",
+          "PUBLIC_MAIN_AC3B541321BBA992D117B2BB357209764F077C29"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "ac3b541321bba992d117b2bb357209764f077c29",
+        "successorLockGeneration": 1543,
+        "successorLockScope": "REPOSITORY_SHARED_EXECUTION_INFRASTRUCTURE:BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER:V1",
+        "successorOperationId": "BOUNDED_BINARY_OBJECT_TRANSFER_CARRIER_INSTALLATION_20260818_001_SUCCESSOR_001",
+        "transitionId": "BOUNDED_BINARY_OBJECT_TRANSFER_GEN1540_TO_AC3B5413_20260818_001"
       },
       "terminalDisposition": "SUPERSEDED"
     }

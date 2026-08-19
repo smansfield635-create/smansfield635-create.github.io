@@ -60,6 +60,15 @@
 (() => {
   "use strict";
 
+  // DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_GEN1538
+  // Crystals is an existing loaded presentation owner and executes before Cosmos.
+  // Disable the obsolete local spacecraft synchronously, then load the bounded Laws presentation owner.
+  globalThis.DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT = true;
+  void import('/assets/compass/compass.laws-spacecraft.js?v=gen1538-laws-parity-v1')
+    .catch(error => {
+      globalThis.DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_ERROR = String(error?.message || error);
+    });
+
   const CONTRACT = Object.freeze({
     id:
       "DGB_COMPASS_CRYSTALS_SPHERICAL_CONSTELLATION_AND_CLUSTER_HARDENED_v4",
@@ -6525,6 +6534,35 @@
         "[data-compass-object='mirrorland']"
       )
     ) {
+      /*
+       * Mirrorland owns its direct threshold, but it must not mask an
+       * actually rendered room star while the cluster is manipulable.
+       * Resolve the crystal renderer's own geometric hit first; this keeps
+       * dormant/overlapping Mirrorland presentation from stealing the
+       * declared ROOM_SELECTED manipulation capability.
+       */
+      const overlappingRoomHit =
+        clusterCanRotate()
+          ? findHitAtClientPoint(
+              event.clientX,
+              event.clientY,
+              [
+                NODE_TYPES.ROOM
+              ]
+            )
+          : null;
+
+      if (overlappingRoomHit) {
+        return {
+          territory:
+            POINTER_TERRITORIES
+              .RENDERED_ROOM,
+
+          nodeId:
+            overlappingRoomHit.id
+        };
+      }
+
       return {
         territory:
           POINTER_TERRITORIES
@@ -7161,6 +7199,16 @@
     ) {
       return;
     }
+
+    /*
+     * Once Compass has lawfully accepted this pointer territory, suppress
+     * browser-native link/image dragging before capture. This is required
+     * when a rendered room star geometrically overlaps a dormant Mirrorland
+     * anchor: the crystal owner may own the gesture even though the physical
+     * DOM target is an <a>. Without pointerdown default suppression Chromium
+     * can begin native HTML drag-and-drop and cancel the PointerEvent stream.
+     */
+    event.preventDefault();
 
     try {
       event.currentTarget

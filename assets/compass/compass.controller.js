@@ -322,7 +322,7 @@
       "Drag to rotate the cluster. Tap a room star to select it. Swipe across open space to return to the constellation.",
 
     ROOM_SELECTED:
-      "Drag to rotate the cluster. Review the selected room, use Enter Room to continue, Return To Orbit to reopen the cluster, or swipe across open space to return to the constellation.",
+      "Review the selected room. Use Enter Room to continue, Return To Orbit to reopen the cluster, or swipe across open space to return to the constellation.",
 
     MIRRORLAND_REVEALING:
       "Mirrorland is revealing. Wait for the Window to stabilize.",
@@ -3633,7 +3633,7 @@
       destination.route;
 
     setPanelDescended(
-      false
+      true
     );
 
     setPanel(
@@ -3655,6 +3655,10 @@
 
       return false;
     }
+
+    schedulePanelDescent(
+      id
+    );
 
     return true;
   }

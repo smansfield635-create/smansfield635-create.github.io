@@ -1,0 +1,98 @@
+name: H-Earth Planetary Horizon Legibility Exact Head Qualification 003
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Mint private repository token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+      - name: Recover admitted request and lock
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          w="$RUNNER_TEMP/proof"; mkdir -p "$w"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $PRIVATE_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' https://api.github.com/repos/smansfield635-create/geodiametrics1/issues/comments/5343805530 > "$w/comment.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $PRIVATE_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/smansfield635-create/geodiametrics1/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1' > "$w/ledger.json"
+          python - <<'PY'
+          import base64,json,os
+          w=os.path.join(os.environ['RUNNER_TEMP'],'proof'); marker='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'
+          c=json.load(open(w+'/comment.json')); env=json.loads(c['body'][len(marker):].strip()); op='H_EARTH_PLANETARY_HORIZON_LEGIBILITY_SUCCESSOR_20260819_001'
+          if env['operationRequest']['operationId']!=op: raise SystemExit('OPERATION_ID_MISMATCH')
+          api=json.load(open(w+'/ledger.json')); ledger=json.loads(base64.b64decode(api['content']).decode())
+          matches=[x for x in ledger['activeScopes'].values() if x.get('operationId')==op and x.get('state')=='ADMITTED_LOCKED']
+          if len(matches)!=1: raise SystemExit('ACTIVE_LOCK_MISMATCH')
+          for name,value in [('request',env['operationRequest']),('procedure',env['constructionProcedure']),('lock',matches[0])]:
+            with open(w+'/'+name+'.json','w') as f: json.dump(value,f,sort_keys=True,separators=(',',':')); f.write('\n')
+          print('lockGeneration:',matches[0].get('lockGeneration'))
+          PY
+      - name: Check out private backend
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out exact candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 9591ed0ed24c3d0cd55e36db15d6dbf8f224f603
+          path: subject
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Execute admitted qualification
+        id: execute
+        continue-on-error: true
+        shell: bash
+        run: |
+          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$RUNNER_TEMP/proof/request.json" --procedure "$RUNNER_TEMP/proof/procedure.json" --lock "$RUNNER_TEMP/proof/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 9591ed0ed24c3d0cd55e36db15d6dbf8f224f603 --execution-holder H_EARTH_PLANETARY_HORIZON_LEGIBILITY_PROOF_003 --output "$RUNNER_TEMP/proof/receipt.json"
+      - name: Publish proof
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          set -euo pipefail
+          python - <<'PY' > "$RUNNER_TEMP/proof/body.txt"
+          import base64,json,os
+          w=os.path.join(os.environ['RUNNER_TEMP'],'proof'); r=json.load(open(w+'/receipt.json')); cr=(r.get('commandResults') or [{}])[0]; out=cr.get('stdout')
+          if not out and cr.get('stdoutBase64'): out=base64.b64decode(cr['stdoutBase64']).decode()
+          try:n=json.loads(out or '')
+          except:n={}
+          d=n.get('diagnostics') or {}
+          print('H_EARTH_PLANETARY_HORIZON_LEGIBILITY_QUALIFICATION_RESULT_V1')
+          for k,v in [('backendId',r.get('backendId')),('result',r.get('result')),('subjectHead',r.get('subjectHead')),('lockGeneration',r.get('lockGeneration')),('changedPathCount',len(r.get('changedPaths',[]))),('commandExitCodes',','.join(str(x.get('exitCode')) for x in r.get('commandResults',[]))),('workspaceCleanBeforeAndAfter',r.get('workspaceCleanBeforeAndAfter')),('runId',os.environ['GITHUB_RUN_ID']),('nativeOperationId',n.get('operationId')),('nativeResult',n.get('result')),('nativeIssueCount',len(n.get('issues',[])) if isinstance(n.get('issues',[]),list) else None),('shellVertexCount',d.get('shellVertexCount')),('shellTriangleCount',d.get('shellTriangleCount')),('fixedShellVertexChecks',d.get('fixedShellVertexChecks')),('horizonCoverageChecks',d.get('horizonCoverageChecks')),('packageChecks',d.get('packageChecks')),('geographyAuthorityChecks',d.get('geographyAuthorityChecks')),('minimumShellY',d.get('minimumShellY')),('maximumHorizonDistanceChecked',d.get('maximumHorizonDistanceChecked')),('perspectiveCurvatureSignal',d.get('perspectiveCurvatureSignal'))]: print(f'{k}: {v}')
+          if n.get('operationId')!='H_EARTH_PLANETARY_HORIZON_LEGIBILITY_SUCCESSOR_20260819_001' or n.get('result')!='PASS' or n.get('issues')!=[]: raise SystemExit('NATIVE_RECEIPT_INVALID')
+          PY
+          jq -n --rawfile body "$RUNNER_TEMP/proof/body.txt" '{body:$body}' > "$RUNNER_TEMP/proof/comment.json"
+          curl --fail-with-body --silent --show-error -X POST -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $GH_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' https://api.github.com/repos/$GITHUB_REPOSITORY/issues/1409/comments --data-binary "@$RUNNER_TEMP/proof/comment.json" >/dev/null
+          test "$EXECUTE_OUTCOME" = success
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: h-earth-planetary-horizon-legibility-003-${{ github.run_id }}
+          path: ${{ runner.temp }}/proof/receipt.json
+          if-no-files-found: error
+          retention-days: 90

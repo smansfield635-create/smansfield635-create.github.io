@@ -12,47 +12,132 @@ on:
       - '.github/workflows/compass-display-continuity-validation.yml'
       - '.github/ai-router/router.v1.json'
       - '.github/ai-router/projects/compass/entrypoint.v1.json'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+env:
+  COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+  COMPASS_SCOPE_BASE_SHA: ad3357e817f50cb66b7074e0d620888f2bc5407f
+  COMPASS_VERIFICATION_OUTPUT: /tmp/compass-room-selected-continuity-display.json
 
 jobs:
-  materialize-spacecraft-bootstrap:
-    if: github.head_ref == 'fix/compass-room-selected-continuity-gen1538'
+  static-contract:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Bind Laws spacecraft adapter from loaded presentation owner
-        shell: bash
+      - name: Verify exact candidate static contracts
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path=Path('assets/compass/compass.crystals.js')
-          text=path.read_text()
-          marker='DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_GEN1538'
-          if marker not in text:
-              anchor='(() => {\n  "use strict";\n'
-              if anchor not in text:
-                  raise SystemExit('CRYSTALS_BOOTSTRAP_ANCHOR_MISSING')
-              block='''(() => {\n  "use strict";\n\n  // DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_GEN1538\n  // Crystals is an existing loaded presentation owner and executes before Cosmos.\n  // Disable the obsolete local spacecraft synchronously, then load the bounded Laws presentation owner.\n  globalThis.DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT = true;\n  void import('/assets/compass/compass.laws-spacecraft.js?v=gen1538-laws-parity-v1')\n    .catch(error => {\n      globalThis.DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_ERROR = String(error?.message || error);\n    });\n'''
-              text=text.replace(anchor,block,1)
-              path.write_text(text)
-          PY
+          test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
+          node --check assets/compass/compass.controller.js
           node --check assets/compass/compass.crystals.js
-          grep -q 'DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_GEN1538' assets/compass/compass.crystals.js
-          grep -q '/assets/compass/compass.laws-spacecraft.js' assets/compass/compass.crystals.js
-      - name: Commit bounded product bootstrap if needed
-        shell: bash
+          node --check assets/compass/compass.laws-spacecraft.js
+          node .github/ai-router/projects/compass/verify-display-continuity.v1.mjs
+          jq -e '.result == "PASS_CLOSED" and .lockGeneration == 1538 and .candidate == env.COMPASS_CANDIDATE_HEAD' "$COMPASS_VERIFICATION_OUTPUT" >/dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-room-selected-static-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-room-selected-continuity-display.json
+          retention-days: 90
+
+  runtime-capability-continuity:
+    runs-on: ubuntu-latest
+    needs: static-contract
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMPASS_CANDIDATE_HEAD }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium
         run: |
-          if git diff --quiet -- assets/compass/compass.crystals.js; then exit 0; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/compass/compass.crystals.js
-          git commit -m 'fix(compass): bootstrap bounded Laws spacecraft [gen1538]'
-          git push origin HEAD:${{ github.head_ref }}
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install chromium
+      - name: Host exact candidate
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-room-selected-http.log 2>&1 &
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Prove declared capability execution
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {chromium} from 'playwright';
+          const browser=await chromium.launch({headless:true});
+          const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const proxySnapshot=async page=>page.evaluate(()=>Array.from(document.querySelectorAll('[data-compass-room-proxy]')).filter(el=>{const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'}).map(el=>{const r=el.getBoundingClientRect();return{id:el.dataset.roomId||'',x:+r.x.toFixed(2),y:+r.y.toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),transform:getComputedStyle(el).transform}}));
+          const geometryChanged=(a,b)=>a.length>0&&b.length===a.length&&a.some((v,i)=>Math.abs(v.x-b[i].x)>1||Math.abs(v.y-b[i].y)>1||v.transform!==b[i].transform);
+          try {
+            for (const [name,width,height,reduced] of [['desktop',1440,1000,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',390,844,true]]) {
+              const context=await browser.newContext({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'});
+              const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+              await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.COMPASS_CANDIDATE_HEAD}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT),null,{timeout:30000});
+              await page.waitForTimeout(1200);
+              const bootstrap=await page.evaluate(()=>({controller:Boolean(globalThis.DGB_COMPASS_CONTROLLER),crystals:Boolean(globalThis.DGB_COMPASS_CRYSTALS_RECEIPT),spacecraft:Boolean(globalThis.DGB_LAWS_SPACECRAFT),spacecraftError:globalThis.DGB_COMPASS_LAWS_SPACECRAFT_BOOTSTRAP_ERROR||null,localDisabled:globalThis.DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT===true}));
+              check(`${name}_CORE_RUNTIME_BOOTSTRAP`,bootstrap.controller&&bootstrap.crystals,bootstrap);
+              check(`${name}_SPACECRAFT_BOOTSTRAP`,bootstrap.spacecraft&&!bootstrap.spacecraftError&&bootstrap.localDisabled,bootstrap);
+              if(!bootstrap.spacecraft){await context.close();continue;}
+              const selected=await page.evaluate(()=>{
+                const api=globalThis.DGB_COMPASS_CONTROLLER;const root=document.querySelector('[data-compass-root]');
+                const room=document.querySelector('[data-compass-room-declarations] [data-compass-room][data-wing="east"]')?.dataset.roomId||'';
+                const beforeScroll=scrollY;const cardinal=api.requestCardinalSelection('east');const roomSelected=api.requestRoomSelection(room);
+                return {room,cardinal,roomSelected,beforeScroll,afterScroll:scrollY,state:api.getFrameState(),mode:root?.dataset.compassMode};
+              });
+              await page.waitForTimeout(350);
+              const afterSelection=await page.evaluate(()=>({scrollY,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0)}));
+              const geometry0=await proxySnapshot(page);
+              check(`${name}_ROOM_SELECTED_REACHED`,selected.cardinal&&selected.roomSelected&&selected.room==='east-1'&&afterSelection.mode==='ROOM_SELECTED',{selected,afterSelection});
+              check(`${name}_NO_FORCED_PANEL_DESCENT`,Math.abs(afterSelection.scrollY-selected.beforeScroll)<40,{before:selected.beforeScroll,after:afterSelection.scrollY});
+              check(`${name}_ROOM_PROXIES_PRESENT`,geometry0.length>0,geometry0);
+              const scene=await page.locator('[data-compass-scene]').boundingBox();
+              if(!scene){check(`${name}_SCENE_BOUNDING_BOX`,false,null);await context.close();continue;}
+              const sx=scene.x+scene.width*.50,sy=scene.y+scene.height*.48;
+              const drag=async(dx,dy)=>{await page.mouse.move(sx,sy);await page.mouse.down();await page.waitForTimeout(70);await page.mouse.move(sx+dx,sy+dy,{steps:10});await page.waitForTimeout(130);await page.mouse.up();await page.waitForTimeout(reduced?120:520);return await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0),crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null}));};
+              const first=await drag(105,34);const geometry1=await proxySnapshot(page);
+              const second=await drag(-78,48);const geometry2=await proxySnapshot(page);
+              check(`${name}_FIRST_POST_SELECTION_DRAG`,first.mode==='ROOM_SELECTED'&&first.quat!==afterSelection.quat,{before:afterSelection,after:first});
+              check(`${name}_FIRST_VISIBLE_GEOMETRY_CHANGE`,geometryChanged(geometry0,geometry1),{before:geometry0,after:geometry1});
+              check(`${name}_SECOND_POST_SELECTION_DRAG`,second.mode==='ROOM_SELECTED'&&second.quat!==first.quat,{first,second});
+              check(`${name}_SECOND_VISIBLE_GEOMETRY_CHANGE`,geometryChanged(geometry1,geometry2),{first:geometry1,second:geometry2});
+              check(`${name}_CONTROLLER_COMMIT_PROGRESS`,second.revision>afterSelection.revision,{before:afterSelection.revision,after:second.revision});
+              const sc=await page.evaluate(async reduced=>{
+                const api=globalThis.DGB_LAWS_SPACECRAFT;
+                if(reduced) return {receipt:api.receipt?.(),a:api.snapshot?.(),b:api.snapshot?.(),hit:false};
+                api.verificationSetProgress?.(.22);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const a=api.snapshot?.();
+                api.verificationSetProgress?.(.62);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const b=api.snapshot?.();
+                const hit=api.verificationHit?.();const c=api.snapshot?.();return {a,b,hit,c,receipt:api.receipt?.()};
+              },reduced);
+              check(`${name}_SPACECRAFT_AUTHORITY_BOUNDARY`,sc.receipt?.ownsNavigation===false&&sc.receipt?.ownsControllerState===false&&sc.receipt?.ownsRoutes===false&&sc.receipt?.ownsCompassInteraction===false,sc.receipt);
+              if(reduced){check(`${name}_SPACECRAFT_REDUCED_MOTION_STOPPED`,sc.receipt?.reducedMotion===true&&sc.receipt?.running===false,sc.receipt);}else{
+                const apos=sc.a?.craft?.position||[],bpos=sc.b?.craft?.position||[];
+                check(`${name}_SPACECRAFT_FLIGHT_PROGRESS`,JSON.stringify(apos)!==JSON.stringify(bpos),{a:apos,b:bpos});
+                check(`${name}_SPACECRAFT_BOUNDED_HIT`,sc.hit===true&&Number(sc.c?.craft?.hitCount||0)>=1,{hit:sc.hit,c:sc.c});
+              }
+              check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
+              await page.screenshot({path:`/tmp/compass-room-selected-${name}.png`,fullPage:true});
+              await context.close();
+            }
+          } finally {await browser.close();}
+          const failures=checks.filter(x=>!x.pass);const receipt={schema:'COMPASS_ROOM_SELECTED_CONTINUITY_RUNTIME_RECEIPT_v1',operationId:'COMPASS_ROOM_SELECTED_CONTINUITY_AND_QUALIFICATION_HARDENING_20260818_v2',lockGeneration:1538,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
+          fs.writeFileSync('/tmp/compass-room-selected-continuity-runtime-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-room-selected-runtime-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            /tmp/compass-room-selected-continuity-runtime-receipt.json
+            /tmp/compass-room-selected-*.png
+            /tmp/compass-room-selected-http.log
+          retention-days: 90

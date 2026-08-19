@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Materialize bounded accepted-pointer lifecycle repair and restore read-only verifier
+      - name: Materialize bounded accepted-pointer lifecycle repair
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -40,11 +40,10 @@ jobs:
           p.write_text(s.replace(old,new,1))
           PY
           node --check assets/compass/compass.crystals.js
-          git show HEAD^:.github/workflows/compass-display-continuity-validation.yml > .github/workflows/compass-display-continuity-validation.yml
           git diff --check
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add assets/compass/compass.crystals.js .github/workflows/compass-display-continuity-validation.yml
+          git add assets/compass/compass.crystals.js
           git diff --cached --quiet && { echo 'no materialization delta'; exit 1; }
           git commit -m 'compass: preserve accepted pointer stream across overlays'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}

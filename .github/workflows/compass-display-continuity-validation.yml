@@ -138,7 +138,8 @@ jobs:
             const cardTargets=['.compass-introduction__body','.compass-panel','.compass-statement-orbit','.compass-monument','.compass-orbit-plaque','.compass-built','.compass-proof-card'].map(s=>document.querySelector(s)).filter(Boolean);
             const identityText=root?.dataset.studioIdentity||document.querySelector('.compass-studio-descriptor')?.textContent?.trim()||'';
             const bodyText=document.body.innerText.replace(/\s+/g,' ').trim();
-            return {label,mode:root?.dataset.compassMode||'',scrollY,documentOverflowX:document.documentElement.scrollWidth-document.documentElement.clientWidth,geometry,textClips,controlClips,mirrorRoutesVisible,staleMirrorSiblings,cardlikeCount:cardTargets.filter(cardlike).length,headerHeight:document.querySelector('.compass-estate__header')?.getBoundingClientRect().height||0,panelColumns:panel?style(panel).gridTemplateColumns:'',guidanceVisible:visible(document.querySelector('[data-compass-guidance]')),categoryPresent:identityText===CATEGORY||identityText.replace(/\band\b/i,'&')===CATEGORY,evidenceHref:document.querySelector('[data-evidence-registry-exit]')?.getAttribute('href')||'',bodyText};
+            const activeCapability=document.querySelector('.compass-capability-orbit .compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'';
+            return {label,mode:root?.dataset.compassMode||'',scrollY,documentOverflowX:document.documentElement.scrollWidth-document.documentElement.clientWidth,geometry,textClips,controlClips,mirrorRoutesVisible,staleMirrorSiblings,cardlikeCount:cardTargets.filter(cardlike).length,headerHeight:document.querySelector('.compass-estate__header')?.getBoundingClientRect().height||0,panelColumns:panel?style(panel).gridTemplateColumns:'',guidanceVisible:visible(document.querySelector('[data-compass-guidance]')),categoryPresent:identityText===CATEGORY||identityText.replace(/\band\b/i,'&')===CATEGORY,evidenceHref:document.querySelector('[data-evidence-registry-exit]')?.getAttribute('href')||'',activeCapability,bodyText};
           },{label,CATEGORY});
           const capture=async(page,id,name)=>{const s=await inspect(page,`${id}:${name}`);coverage[id]??=[];coverage[id].push(name);perViewport[id]??={states:{},traversal:{}};perViewport[id].states[name]=s;await shot(page,`${id}-${name}`);return s};
           const load=async(page,id)=>{await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForTimeout(1100)};
@@ -154,7 +155,7 @@ jobs:
 
               await load(page,id);const mirror=page.locator('[data-compass-object="mirrorland"]').first();if(await mirror.count()){await mirror.click({force:true});await page.waitForTimeout(250);await capture(page,id,'mirrorland-revealing');await page.waitForTimeout(1500);await capture(page,id,'mirrorland-focused');}
 
-              await load(page,id);const orbit=page.locator('.compass-capability-orbit').first();if(await orbit.count()){await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await capture(page,id,'brain');const next=page.locator('.compass-orbit-controls button').last();if(await next.count()){await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'trophy');await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'house')}}
+              await load(page,id);const orbit=page.locator('.compass-capability-orbit').first();if(await orbit.count()){await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await capture(page,id,'brain');const next=orbit.locator('.compass-orbit-controls [data-orbit-next]').first();if(await next.count()){await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'trophy');await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'house')}}
               const readiness=page.locator('.compass-built').first();if(await readiness.count()){await readiness.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await capture(page,id,'trl');const tra=page.locator('[data-readiness-mode-button="tra"]').first();if(await tra.count()){await tra.click({force:true});await page.waitForTimeout(350);await capture(page,id,'tra')}}
               await capture(page,id,'conclusion');await context.close();
             }
@@ -164,17 +165,18 @@ jobs:
           const traversalContinuity=Object.values(perViewport).every(v=>v.traversal.pass===true);
           const stateLayerExclusivity=states.filter(s=>s.mirrorRoutesVisible).every(s=>s.staleMirrorSiblings.length===0);
           const visualSystemCoherence=states.every(s=>s.cardlikeCount<=1)&&['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation.headerHeight<(id==='phone'?440:520));
-          const narrativeContinuity=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)));
+          const capabilityStateSemantics=['desktop','tablet','phone'].every(id=>perViewport[id].states.brain?.activeCapability==='diagnostic'&&perViewport[id].states.trophy?.activeCapability==='awards'&&perViewport[id].states.house?.activeCapability==='house');
+          const narrativeContinuity=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)))&&capabilityStateSemantics;
           const interactionLegibility=states.filter(s=>/constellation|cluster-open|room-selected|return-orbit/.test(s.label)).every(s=>s.guidanceVisible&&s.textClips.length===0);
           const cols=id=>perViewport[id].states.constellation.panelColumns.split(' ').filter(Boolean).length;
           const responsiveRecomposition=cols('desktop')>=2&&cols('tablet')===1&&cols('phone')===1;
           const evidenceHierarchy=states.every(s=>!s.evidenceHref||s.evidenceHref==='/evidence/');
           const categoryPreservation=states.every(s=>s.categoryPresent&&!/web agency|full-service agency/i.test(s.bodyText));
           const hardZero={visualSystemCoherence,narrativeContinuity,interactionLegibility,responsiveRecomposition,evidenceHierarchy,categoryPreservation,visibleGeometryIntegrity,traversalContinuity,stateLayerExclusivity};
-          const stateMatrixComplete=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)));
-          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v2',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),stateCoverage:coverage,stateMatrixComplete,perViewport,hardZero,artifacts,errors};
+          const stateMatrixComplete=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)))&&capabilityStateSemantics;
+          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v3',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),stateCoverage:coverage,stateMatrixComplete,capabilityStateSemantics,perViewport,hardZero,artifacts,errors};
           fs.writeFileSync(process.env.COMPASS_EXPERIENCE_CAPTURE_INPUT,JSON.stringify(receipt,null,2)+'\n');
-          console.log(JSON.stringify({schema:receipt.schema,candidateHead,hardZero,stateMatrixComplete,errors},null,2));
+          console.log(JSON.stringify({schema:receipt.schema,candidateHead,hardZero,stateMatrixComplete,capabilityStateSemantics,errors},null,2));
           NODE
           node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
       - uses: actions/upload-artifact@v4

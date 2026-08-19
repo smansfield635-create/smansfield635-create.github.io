@@ -57,7 +57,7 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           repository: smansfield635-create/smansfield635-create.github.io
-          ref: 286353a9f3f1868a0422f9d14dc9e10aa5ff2f3e
+          ref: 777d96d2990a4580071d11aadab83fa70370ca5a
           path: subject
           fetch-depth: 0
           persist-credentials: false
@@ -68,7 +68,7 @@ jobs:
         run: |
           set -euo pipefail
           work="$RUNNER_TEMP/terrain-conforming-proof"
-          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$work/request.json" --procedure "$work/procedure.json" --lock "$work/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 286353a9f3f1868a0422f9d14dc9e10aa5ff2f3e --execution-holder H_EARTH_TERRAIN_CONFORMING_GEN323_PROOF --output "$work/receipt.json"
+          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$work/request.json" --procedure "$work/procedure.json" --lock "$work/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 777d96d2990a4580071d11aadab83fa70370ca5a --execution-holder H_EARTH_TERRAIN_CONFORMING_GEN323_PROOF --output "$work/receipt.json"
       - name: Publish and archive proof
         if: always()
         shell: bash

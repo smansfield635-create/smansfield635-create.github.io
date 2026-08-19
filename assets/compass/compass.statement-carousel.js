@@ -28,46 +28,75 @@
     stage.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();rotate(event.key==='ArrowRight'?1:-1)}});
     render(true);
   }
-  function mountWorldInteraction(){
-    const root=document.querySelector('[data-compass-root]');
-    const scene=document.querySelector('[data-compass-scene]');
-    if(!root||!scene||root.dataset.flagshipWorldInteraction==='true')return;
-    root.dataset.flagshipWorldInteraction='true';
-    root.dataset.flagshipContract='COMPASS_GEN1534_EMERGENCY_FLAGSHIP_v1';
-    root.dataset.objectContinuity='SPATIAL_OBJECT_REMAINS_INFORMATION_OBJECT';
-    root.dataset.spacecraftInteraction='SCENE_BOUND_TRUE_3D_BOUNDED_INTERACTION_NO_NAVIGATION_AUTHORITY';
-    if(innerWidth>820){scene.style.setProperty('filter','none','important');scene.dataset.compositorPolicy='wide-scene-no-postprocess-filter'}
-    let tx=0,ty=0,cx=0,cy=0,raf=0,settle=0;
-    const apply=()=>{
-      raf=0;cx+=(tx-cx)*.085;cy+=(ty-cy)*.085;
-      root.style.setProperty('--flagship-x',cx.toFixed(4));
-      root.style.setProperty('--flagship-y',cy.toFixed(4));
-      root.style.setProperty('--flagship-energy',Math.min(1,Math.hypot(cx,cy)*1.35).toFixed(3));
-      if(Math.abs(tx-cx)>.002||Math.abs(ty-cy)>.002)raf=requestAnimationFrame(apply);
-    };
-    const move=e=>{
-      if(reduce.matches)return;
-      const r=scene.getBoundingClientRect();
-      if(e.clientY<r.top-120||e.clientY>r.bottom+120){tx*=.9;ty*=.9}else{
-        tx=Math.max(-1,Math.min(1,(e.clientX-(r.left+r.width/2))/Math.max(1,r.width/2)));
-        ty=Math.max(-1,Math.min(1,(e.clientY-(r.top+r.height/2))/Math.max(1,r.height/2)));
-      }
-      if(!raf)raf=requestAnimationFrame(apply);
-      clearTimeout(settle);settle=setTimeout(()=>{tx=0;ty=0;if(!raf)raf=requestAnimationFrame(apply)},700);
-    };
-    const pulse=e=>{
-      if(reduce.matches)return;
-      const r=scene.getBoundingClientRect();
-      if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;
-      root.classList.remove('is-flagship-engaged');void root.offsetWidth;root.classList.add('is-flagship-engaged');
-      setTimeout(()=>root.classList.remove('is-flagship-engaged'),560);
-    };
-    scene.addEventListener('pointermove',move,{passive:true});
-    scene.addEventListener('pointerleave',()=>{tx=ty=0;if(!raf)raf=requestAnimationFrame(apply)},{passive:true});
-    scene.addEventListener('pointerdown',pulse,{passive:true});
-    document.addEventListener('visibilitychange',()=>{if(document.hidden){tx=ty=0}});
+  function installAwardStyle(){
+    if(document.querySelector('[data-compass-award-presentation-style]'))return;
+    const style=document.createElement('style');
+    style.dataset.compassAwardPresentationStyle='true';
+    style.textContent=`
+      [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-introduction.compass-purpose-stage{display:block;max-width:72rem;margin:clamp(44px,7vw,82px) auto 0;padding:clamp(1rem,2.8vw,1.55rem);border:1px solid rgba(213,225,226,.16);border-radius:1.35rem;background:linear-gradient(145deg,rgba(8,19,28,.64),rgba(7,14,22,.38));box-shadow:0 24px 62px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.05)}
+      .compass-purpose-stage>summary{cursor:pointer;color:rgba(247,235,196,.96);font:780 clamp(1rem,2vw,1.18rem)/1.25 Inter,sans-serif;letter-spacing:.04em}
+      .compass-purpose-stage[open]>summary{margin-bottom:.8rem}
+      .compass-purpose-stage .compass-introduction__body{margin:.4rem 0 0}
+      .compass-readiness-stage{position:relative;isolation:isolate}
+      .compass-readiness-stage::after{content:"TRL measures the maturity claim. TRA is the evidence review used to test that claim.";display:block;max-width:62ch;margin:1rem auto 0;color:rgba(202,219,222,.68);font:650 .78rem/1.5 Inter,sans-serif;text-align:center;letter-spacing:.025em}
+      .compass-tra-boundary{margin:.9rem 0 0;padding:.78rem .9rem;border:1px solid rgba(104,200,218,.18);border-radius:.85rem;background:rgba(6,18,26,.42);color:rgba(222,232,231,.78);font:620 .82rem/1.52 Inter,sans-serif}
+      .compass-tra-boundary strong{display:block;margin-bottom:.25rem;color:rgba(246,232,190,.94);font:760 .86rem/1.3 Inter,sans-serif;letter-spacing:.04em}
+      .compass-evidence-exit{display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin:clamp(18px,3vw,28px) auto 0;padding:.72rem 1rem;border:1px solid rgba(244,214,128,.34);border-radius:999px;color:rgba(255,244,211,.96);background:linear-gradient(145deg,rgba(244,214,128,.10),rgba(73,183,205,.06));font:800 .84rem/1.2 Inter,sans-serif;letter-spacing:.03em;text-decoration:none;box-shadow:0 16px 42px rgba(0,0,0,.22)}
+      .compass-evidence-exit:hover,.compass-evidence-exit:focus-visible{border-color:rgba(244,214,128,.68);outline:none;box-shadow:0 0 0 3px rgba(244,214,128,.10),0 16px 42px rgba(0,0,0,.24)}
+      @media(max-width:620px){.compass-purpose-stage{margin-top:34px!important;padding:.8rem!important}.compass-tra-boundary{font-size:.78rem}.compass-evidence-exit{width:100%;max-width:22rem}}
+      @media(prefers-reduced-motion:reduce){.compass-evidence-exit{transition:none!important}}
+    `;
+    document.head.append(style);
   }
-  function boot(){mountStatements();mountWorldInteraction()}
+  function composeAwardNarrative(){
+    const root=document.querySelector('[data-compass-root]');
+    const header=document.querySelector('.compass-estate__header');
+    const instrument=document.querySelector('.compass-instrument');
+    const purpose=header?.querySelector('.compass-introduction');
+    const capabilities=document.querySelector('[data-compass-capability-switcher], [data-capability-orbit]');
+    const readiness=document.querySelector('.compass-built');
+    if(!root||!header||!instrument||!purpose||!readiness)return;
+    installAwardStyle();
+    root.dataset.awardNarrative='identity-experience-purpose-system-readiness-evidence';
+    root.dataset.readinessModel='TRL7_PLUS_TRA_ASSESSMENT_NO_SCORE';
+    root.dataset.spacecraftPresentationAuthority='LAWS_SPACECRAFT_ONLY';
+    purpose.classList.add('compass-purpose-stage');
+    purpose.open=true;
+    instrument.insertAdjacentElement('afterend',purpose);
+    if(capabilities&&purpose.nextElementSibling!==capabilities)purpose.insertAdjacentElement('afterend',capabilities);
+    readiness.classList.add('compass-readiness-stage');
+    readiness.dataset.readinessStage='trl-tra';
+    const kicker=readiness.querySelector(':scope > .compass-estate__kicker');
+    if(kicker)kicker.textContent='Readiness · maturity and assessment';
+    const title=readiness.querySelector(':scope > h2');
+    if(title)title.textContent='Readiness, with the boundary visible.';
+    const lead=readiness.querySelector('.compass-built__lead');
+    if(lead)lead.textContent='Diamond Gate separates what the software has demonstrated from how that readiness is assessed. The maturity claim stays bounded; the evidence remains inspectable.';
+    const trl=readiness.querySelector('[data-proof-card="trl7"]');
+    if(trl&&!trl.querySelector('.compass-tra-boundary')){
+      const boundary=document.createElement('div');
+      boundary.className='compass-tra-boundary';
+      boundary.dataset.traBoundary='assessment-not-level';
+      boundary.innerHTML='<strong>Technology Readiness Assessment (TRA)</strong><span>The TRA is the evidence-review process used to examine readiness against stated criteria. It is not a second maturity score, does not raise Software TRL 7, and creates no external certification or endorsement.</span>';
+      const rail=trl.querySelector('.compass-trl-rail');
+      rail?.insertAdjacentElement('afterend',boundary);
+    }
+    if(!readiness.querySelector('.compass-evidence-exit')){
+      const evidence=document.createElement('a');
+      evidence.className='compass-evidence-exit';
+      evidence.dataset.evidenceRegistryExit='true';
+      evidence.href='/evidence/';
+      evidence.textContent='Open the Evidence Registry →';
+      readiness.append(evidence);
+    }
+  }
+  function boot(){mountStatements();composeAwardNarrative()}
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot,{once:true}):boot();
-  window.CompassStatementCarousel=Object.freeze({version:'statement-gen1534-emergency-v1',worldInteraction:'scene-bounded-parallax',spacecraftSurface:'NO_PROMOTED_SNAPSHOT_SPACECRAFT',wideSceneCompositor:'postprocess-filter-removed'});
+  window.CompassStatementCarousel=Object.freeze({
+    version:'statement-award-presentation-v1',
+    worldInteraction:'delegated-to-laws-spacecraft',
+    spacecraftSurface:'LAWS_SPACECRAFT_ONLY',
+    narrativeOrder:'IDENTITY_EXPERIENCE_PURPOSE_SYSTEM_READINESS_EVIDENCE',
+    readinessBoundary:'TRL7_PLUS_TRA_ASSESSMENT_NO_SCORE'
+  });
 })();

@@ -5,7 +5,7 @@ import { sampleHEarthWorldManifold,H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID } f
 import { canonicalizeHEarthRun8BElevation,deriveHEarthGen311RegionalArticulation,sampleHEarthRun8BSuccessorTerrainField,H_EARTH_GEN311_REGIONAL_ARTICULATION_CONTRACT_ID } from '../terrain/h-earth.successor-terrain-field.run8b.js';
 import { sampleHEarthRun8CSuccessorSurfaceMaterial,evaluateHEarthRun8CSuccessorSurfaceMaterial,H_EARTH_GEN311_REGIONAL_MATERIAL_RESPONSE_CONTRACT_ID } from '../environment/h-earth.successor-surface-material.run8c.js';
 import { buildHEarthGen311SuccessorVegetation,evaluateHEarthGen311SuccessorVegetation,H_EARTH_GEN311_SUCCESSOR_VEGETATION_CONTRACT_ID } from '../environment/h-earth.successor-vegetation.run8d.js';
-import { previewHEarthFunctionalLandscape } from '../../showroom/globe/h-earth/render/landscape-preview.js';
+import { previewHEarthFunctionalLandscape,H_EARTH_GEN311_REGIONAL_RELIEF_CONTRACT_ID } from '../../showroom/globe/h-earth/render/landscape-preview.js';
 import { constructHEarthRun8ESuccessorEnvironmentFrame,evaluateHEarthRun8EFrame } from '../../showroom/globe/h-earth/render/run8e-successor-environment.js';
 
 const PROTECTED_BASELINE='87b982314a149b6fd88d3552360697d798af3e08';
@@ -37,6 +37,7 @@ const vegetation=buildHEarthGen311SuccessorVegetation();
 const vegetationEval=evaluateHEarthGen311SuccessorVegetation(vegetation);
 const ecologicalZones=Object.keys(vegetation.zoneCounts??{}).filter(k=>(vegetation.zoneCounts[k]??0)>0).sort();
 const preview=previewHEarthFunctionalLandscape({cameraWorld:{x:0,y:26,z:48}});
+const relief=preview.regionalRelief;
 const camera={position:{x:0,y:26,z:48},target:{x:0,y:8,z:-96},up:{x:0,y:1,z:0},fieldOfViewDegrees:58,nearPlane:.1,farPlane:3328};
 const frame=constructHEarthRun8ESuccessorEnvironmentFrame({camera,viewport:{width:320,height:180,pixelRatio:1}});
 const frameEval=evaluateHEarthRun8EFrame(frame);
@@ -66,6 +67,11 @@ const checks={
   vegetationRegionalDiversity:ecologicalZones.length>=3,
   previewEligible:preview.ok===true,
   previewRegionalWitnesses:preview.regionalDevelopment?.sampleCount>=20&&preview.regionalDevelopment?.derivedFromCanonicalWorldManifold===true,
+  physicalRegionalReliefMaterialized:relief?.ok===true&&relief?.contractId===H_EARTH_GEN311_REGIONAL_RELIEF_CONTRACT_ID&&preview.regionalReliefMaterialized===true,
+  physicalRegionalReliefCoverage:(relief?.nonzeroVertexCount??0)>=100,
+  physicalRidgelineDepth:(relief?.maximumPositiveDelta??0)>=8,
+  physicalValleyDepth:(relief?.maximumNegativeDelta??0)<=-2,
+  physicalReliefIsNonAuthoritative:relief?.canonicalWorldFieldMutated===false&&relief?.canonicalElevationValuesPreservedAtSource===true&&relief?.independentGeographyAuthority===false&&relief?.topologyMutation===false&&relief?.accessibleRegionExpansion===false,
   semanticProvenancePreserved:preview.semanticAddressCount===256&&preview.terrainAddressCount===124&&preview.shorelineWaterAddressCount===96&&preview.proxySummarizedAddressCount===36,
   worldManifoldPreserved:preview.continuousWorldManifold===true&&preview.canonicalWorldFieldProtected===true&&preview.accessibleRegionExpansion===false,
   frameEligible:frameEval.eligible===true,
@@ -75,7 +81,7 @@ const checks={
 };
 const issues=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k);
 const receipt={
-  schema:'H_EARTH_RECIPROCAL_PROGRESSIVE_REGIONAL_DEVELOPMENT_QUALIFICATION_RECEIPT_v1',
+  schema:'H_EARTH_RECIPROCAL_PROGRESSIVE_REGIONAL_DEVELOPMENT_QUALIFICATION_RECEIPT_v2_VISIBLE_RELIEF',
   operationId:'H_EARTH_RECIPROCAL_PROGRESSIVE_REGIONAL_DEVELOPMENT_GEN311_20260818_001',
   protectedBaseline:PROTECTED_BASELINE,
   result:issues.length?'FAIL':'PASS',
@@ -93,16 +99,22 @@ const receipt={
     ecologicalZones,
     ecologicalZoneCounts:vegetation.zoneCounts??{},
     regionalEcologyPrimitiveCount:frame.regionalEcologyPrimitiveCount??0,
+    regionalReliefNonzeroVertexCount:relief?.nonzeroVertexCount??0,
+    regionalReliefMaximumPositiveDelta:relief?.maximumPositiveDelta??null,
+    regionalReliefMaximumNegativeDelta:relief?.maximumNegativeDelta??null,
     maxElevationDrift,
     canonicalTerrainBlobObserved:gitBlobSha,
     canonicalTerrainBlobExpected:PROTECTED_CANONICAL_TERRAIN_BLOB
   },
   acceptance:{
-    materiallyNewRegionalEnvironmentalDepth:checks.regionalClassDiversity&&checks.materialRegionalDiversity&&checks.vegetationRegionalDiversity,
-    mountainToCoastGeographicArticulation:checks.ridgelineSignalMaterial&&checks.passSignalMaterial&&checks.valleySignalMaterial&&checks.watershedSignalMaterial&&checks.foothillSignalMaterial,
+    materiallyNewRegionalEnvironmentalDepth:checks.regionalClassDiversity&&checks.materialRegionalDiversity&&checks.vegetationRegionalDiversity&&checks.physicalRegionalReliefMaterialized,
+    mountainToCoastGeographicArticulation:checks.ridgelineSignalMaterial&&checks.passSignalMaterial&&checks.valleySignalMaterial&&checks.watershedSignalMaterial&&checks.foothillSignalMaterial&&checks.physicalRidgelineDepth&&checks.physicalValleyDepth,
     subtropicalCausalMaterialAndVegetationResponse:checks.materialCausality&&checks.vegetationEligible,
-    sameFootprintCosmeticOnlySuccessRejected:true,
-    worldManifoldRegressionRejected:checks.canonicalTerrainBlobPreserved&&checks.canonicalElevationPreserved&&checks.semanticProvenancePreserved,
+    sameFootprintCosmeticOnlySuccessRejected:checks.physicalRegionalReliefMaterialized&&checks.physicalRegionalReliefCoverage,
+    worldManifoldRegressionRejected:checks.canonicalTerrainBlobPreserved&&checks.canonicalElevationPreserved&&checks.semanticProvenancePreserved&&checks.physicalReliefIsNonAuthoritative,
+    comparativeVisualEvidenceRequiredForOwnerAcceptance:true,
+    acceptedPriorEvidenceSha256:'fcad2f87e1370683e6f16ffbf5092cfa435ab5a8453771bc3e8819173e049dbf',
+    rejectedCurrentEvidenceSha256:'c43150e2ffb6e8ff31a8d6a4664f0a4b8c9e252f6c3015d6ed73a70295cb9e92',
     ownerInspectionAuthorized:false
   }
 };

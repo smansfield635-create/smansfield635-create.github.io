@@ -1,75 +1,46 @@
-# H-Earth Terrain-Conforming Locomotion Successor Contract v1
+# H-Earth Terrain-Supported Locomotion Successor Contract v1
 
-Operation: `H_EARTH_TERRAIN_CONFORMING_LOCOMOTION_SUCCESSOR_20260818_001`
+Operation: `H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_SUCCESSOR_20260818_001`
 
-Predecessor operation `H_EARTH_OBSERVER_VIEW_STANDOFF_SUCCESSOR_20260818_004` / generation 322 was machine-qualified but canonically `FAIL_CLOSED` after owner/browser evidence proved that camera clearance, camera-volume protection, and observer-view stand-off can all remain active while a horizontal movement transition still carries the observer into the presented terrain.
-
-Protected predecessor head: `a233238aaa013109ced14b5e5ceeb3fcc2d083d3`.
-
+Protected predecessor head: `777d96d2990a4580071d11aadab83fa70370ca5a`.
 Protected geographic floor: `e03363f42441cea7587a49623fd878e8ca51fe28`.
+Failure evidence: `23892.mp4`, SHA-256 `3b804913c6069c123f3e881249cbac12a45d46a9e741b00fcd81bd8b447d0f22`.
 
-Failure evidence: `23891.mp4`, SHA-256 `7d4d8cc9298d5e162bb797a186690643838affe12adf38d2861bfbe0f370c0ae`.
+## Causal correction
 
-## Causal failure
+Generation 323 proved swept-path evaluation but still allowed camera elevation to behave as an independently carried state while the rendered ground rose beneath it. That permits the observer to occupy the terrain interior even when endpoint and path checks exist.
 
-The predecessor resolved terrain only after accepting a requested horizontal destination. That ordering permits an invalid transition:
+This successor makes ordinary ground locomotion terrain-supported. The accepted horizontal position determines the vertical support state rather than inheriting a stale camera Y.
 
-`movement intent -> accept X/Z -> react vertically`
+For every accepted ground traversal state:
 
-The successor changes the ordering to:
+`cameraY >= max(presentedTerrainY + hardSupportOffset, clearanceReferenceY + minimumClearance, clearanceReferenceY + eyeHeight)`
 
-`movement intent -> sweep presented terrain -> classify traversability -> surface-conforming motion or rejection -> camera clearance -> camera-volume protection -> observer-view stand-off`
-
-The relevant invariant is therefore not merely camera height at an endpoint. No accepted movement segment may cross from the exterior side of the presented terrain representation into its interior.
-
-## Governing locomotion law
-
-For a requested translation from A to B, the exact presented terrain surface is sampled continuously at a bounded spacing before B is accepted.
-
-For each consecutive sweep sample:
-
-`grade = abs(delta terrain height) / horizontal run`
-
-If every local grade is at or below the bounded traversable threshold, the movement is resolved incrementally along the surface and the existing camera-protection stack is applied at each intermediate position.
-
-If any local grade exceeds the threshold, the requested translation is rejected before the observer position changes. A later successor may add deterministic lateral sliding, but rejection is sufficient for this operation because it preserves the exterior state and prevents tunneling.
+The supplied/requested Y of an ordinary ground translation has no authority to place the observer below that support surface.
 
 ## Required behavior
 
-- horizontal movement may not be committed before swept presented-terrain evaluation;
-- direct position proposals may not tunnel through intermediate terrain;
-- climbable positive grades must produce surface-conforming ascent;
-- climbable negative grades must produce surface-conforming descent;
-- non-climbable grades must stop/reject before penetration;
-- rejected movement preserves the last lawful exterior X/Z state;
-- the exact Gen311 presented terrain mesh remains the traversal surface;
-- generation-320 terrain-relative clearance remains active;
-- generation-321 camera-volume protection remains active;
-- generation-322 observer-view stand-off remains active;
-- bounded vertical response and controlled downhill settling remain active;
-- camera/world navigation scale is unchanged;
-- no geography, topology, terrain, renderer, merge, deployment, or production authority is created.
-
-## Protected surfaces
-
-This operation may not mutate Gen311 terrain or relief construction, canonical terrain, shoreline/ocean topology, public route, deployment paths, or Experience Anchor authority. It also may not weaken the existing camera-volume or observer-view protections. The protected predecessor and geographic floor are immutable inputs.
+- every accepted translated X/Z is projected onto the exact presented Gen311 terrain surface;
+- rising rendered terrain forces camera elevation upward;
+- reversing across the same terrain lowers camera elevation with the surface;
+- a caller-supplied stale or arbitrarily low Y cannot create an interior state;
+- movement remains swept at bounded spacing so intermediate terrain cannot be skipped;
+- the generation-321 camera-volume and generation-322 observer-view protection stack remains intact;
+- canonical terrain, Gen311 regional relief, geography, topology, navigation scale, renderer, route and deployment authority remain unchanged;
+- no ordinary movement input may represent a camera state below presented terrain plus the hard support offset.
 
 ## Qualification
 
-The exact harness `h-earth-3d/validation/h-earth.terrain-relative-camera-clearance.harness.mjs` must use the actual presented terrain to discover and test real movement cases rather than fixed synthetic slopes.
+The exact harness `h-earth-3d/validation/h-earth.terrain-relative-camera-clearance.harness.mjs` must use the real presented terrain and prove:
 
-It must prove:
+1. an accessible real rising segment forces camera Y upward;
+2. reversing that segment lowers camera Y;
+3. deliberately supplying an extreme below-ground Y is overridden by terrain support;
+4. every accepted state remains at or above the exact terrain-support floor;
+5. long translations remain swept with sufficient intermediate samples;
+6. ordinary directional traversal materially exercises terrain-supported swept movement;
+7. the camera-volume and observer-view protections remain byte-preserved;
+8. canonical terrain and Gen311 landscape bytes remain unchanged;
+9. no geography, topology, navigation-scale, merge, deployment or production authority is created.
 
-1. a real positive climbable grade is accepted and gains terrain elevation;
-2. a real climbable descent is accepted and loses terrain elevation;
-3. accepted translations report swept evaluation before position acceptance;
-4. a real non-climbable grade is rejected while preserving the prior X/Z position;
-5. long movement proposals cannot bypass intermediate terrain through endpoint-only acceptance;
-6. every accepted camera state remains outside both the actual terrain surface and the existing clearance/stand-off envelope;
-7. ordinary directional locomotion materially exercises the swept path;
-8. canonical terrain, Gen311 landscape, camera-volume protection, and observer-view stand-off remain preserved;
-9. no accepted state can report an exterior-to-interior transition as representable.
-
-The native receipt must identify operation `H_EARTH_TERRAIN_CONFORMING_LOCOMOTION_SUCCESSOR_20260818_001` exactly and report zero issues.
-
-A machine PASS does not authorize merge or release. Owner/browser inspection remains mandatory. The decisive browser question is causal: when forward movement meets rising terrain, does the observer actually climb a traversable surface or stop at a non-traversable one, with no route into the terrain interior?
+A machine PASS does not authorize release. Owner/browser inspection remains mandatory. The decisive browser behavior is simple: forward movement into a mountain must carry the observer upward with the rendered mountain; reverse movement must carry the observer downward; ordinary traversal must never enter the terrain interior.

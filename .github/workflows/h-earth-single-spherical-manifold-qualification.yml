@@ -1,0 +1,83 @@
+name: H-Earth Single Spherical World Manifold Exact Head Qualification
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  prove:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Mint private repository token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-issues: read
+      - name: Recover admitted request and lock
+        shell: bash
+        env:
+          PRIVATE_TOKEN: ${{ steps.private-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          w="$RUNNER_TEMP/proof"; mkdir -p "$w"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $PRIVATE_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' https://api.github.com/repos/smansfield635-create/geodiametrics1/issues/comments/5344697912 > "$w/comment.json"
+          curl --fail-with-body --silent --show-error -H 'Accept: application/vnd.github+json' -H "Authorization: Bearer $PRIVATE_TOKEN" -H 'X-GitHub-Api-Version: 2022-11-28' 'https://api.github.com/repos/smansfield635-create/geodiametrics1/contents/.github/operation-intake/active-operation-ledger.v1.json?ref=operation-locks%2Frepository-operation-intake-v1' > "$w/ledger.json"
+          python - <<'PY'
+          import base64,json,os
+          w=os.path.join(os.environ['RUNNER_TEMP'],'proof'); marker='PRE_REGISTRATION_INTAKE_BRIDGE_REQUEST_V1'; op='H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_SUCCESSOR_20260819_001'
+          c=json.load(open(w+'/comment.json')); env=json.loads(c['body'][len(marker):].strip())
+          if env['operationRequest']['operationId']!=op: raise SystemExit('OPERATION_ID_MISMATCH')
+          api=json.load(open(w+'/ledger.json')); ledger=json.loads(base64.b64decode(api['content']).decode())
+          matches=[x for x in ledger['activeScopes'].values() if x.get('operationId')==op and x.get('state')=='ADMITTED_LOCKED']
+          if len(matches)!=1: raise SystemExit('ACTIVE_LOCK_MISMATCH')
+          for name,value in [('request',env['operationRequest']),('procedure',env['constructionProcedure']),('lock',matches[0])]:
+            with open(w+'/'+name+'.json','w') as f: json.dump(value,f,sort_keys=True,separators=(',',':')); f.write('\n')
+          print('lockGeneration:',matches[0].get('lockGeneration'))
+          PY
+      - name: Check out private backend
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Check out exact candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: 6d603288bad6700b2a4fdd6cf5fe691e2fdb6904
+          path: subject
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Execute admitted qualification
+        id: execute
+        continue-on-error: true
+        shell: bash
+        run: |
+          node private-control-plane/tools/ai-room-transport/admitted-procedure-exact-head-qualification.v1.mjs --request "$RUNNER_TEMP/proof/request.json" --procedure "$RUNNER_TEMP/proof/procedure.json" --lock "$RUNNER_TEMP/proof/lock.json" --workspace "$GITHUB_WORKSPACE/subject" --subject-head 6d603288bad6700b2a4fdd6cf5fe691e2fdb6904 --execution-holder H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_PROOF_001 --output "$RUNNER_TEMP/proof/receipt.json"
+      - name: Upload receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: h-earth-single-spherical-world-manifold-${{ github.run_id }}
+          path: ${{ runner.temp }}/proof/receipt.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Enforce exact qualification result
+        if: always()
+        shell: bash
+        env:
+          EXECUTE_OUTCOME: ${{ steps.execute.outcome }}
+        run: |
+          test "$EXECUTE_OUTCOME" = success

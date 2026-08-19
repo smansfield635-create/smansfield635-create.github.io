@@ -6,6 +6,7 @@ import path from 'node:path';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, '../..');
 const expectedOccurrenceId = 'H_EARTH_OW01_GRATITUDE_COASTAL_ENTRY_LIVE_RENDER_PACKAGE_OCCURRENCE_001';
+const acceptedBaselineRendererPath = '../../render/persistent-live-renderer.run8e-r3c.js';
 
 const paths = Object.freeze({
   rendererContract: path.join(root, 'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'),
@@ -46,7 +47,16 @@ assert.equal(rendererInterface?.packageOccurrenceId, packageRecord.packageOccurr
 assert.equal(rendererInterface?.singleSphericalPresentationManifoldRequired, true, 'CP3D_RENDERER_SPHERICAL_MANIFOLD_REQUIREMENT_MISSING');
 assert.equal(rendererInterface?.cameraAndWorldSameFrameRequired, true, 'CP3D_RENDERER_SHARED_FRAME_REQUIREMENT_MISSING');
 
-assert.match(source.binding, /createHEarthRun8ER3CPersistentRenderer\s*}\s*from\s*['"]\.\.\/\.\.\/render\/persistent-live-renderer\.run8e-r3c\.js['"]/, 'CP3D_BINDING_RENDERER_IMPORT_MISMATCH');
+assert.match(
+  source.binding,
+  /const\s+ACCEPTED_BASELINE_RENDERER_PATH\s*=\s*['"]\.\.\/\.\.\/render\/persistent-live-renderer\.run8e-r3c\.js['"]/,
+  'CP3D_BINDING_ACCEPTED_BASELINE_RENDERER_PATH_MISMATCH'
+);
+assert.match(source.binding, /const\s+selectedRendererModule\s*=\s*await\s+import\(selectedRendererPath\)/, 'CP3D_BINDING_DYNAMIC_RENDERER_IMPORT_MISSING');
+assert.match(source.binding, /const\s*{\s*createHEarthRun8ER3CPersistentRenderer\s*}\s*=\s*selectedRendererModule/, 'CP3D_BINDING_RENDERER_FACTORY_EXTRACTION_MISSING');
+assert.match(source.binding, /acceptedBaselineRendererSelected\s*:\s*!additiveVisualRequested\s*&&\s*!cp2LiveDifferentialRequested/, 'CP3D_BINDING_BASELINE_SELECTION_CORRESPONDENCE_MISSING');
+assert.ok(source.binding.includes(acceptedBaselineRendererPath), 'CP3D_BINDING_BASELINE_PATH_LITERAL_MISSING');
+
 assert.match(source.integration, /createHEarthRun8ER3D3LiveGpuBinding\s*}\s*from\s*['"]\.\.\/diagnostic\/run8e-r3d\/live-gpu-binding\.js['"]/, 'CP3D_PUBLIC_INTEGRATION_BINDING_IMPORT_MISMATCH');
 assert.match(source.integration, /installHEarthRun8ER3D2PointerTouchIntake\s*}\s*from\s*['"]\.\.\/diagnostic\/run8e-r3d\/pointer-touch-intake\.js['"]/, 'CP3D_PUBLIC_INTEGRATION_CP3B_IMPORT_MISMATCH');
 assert.match(source.receiptWrapper, /await\s+import\(['"]\.\/public-live-gpu-integration\.run8e-r3e\.js['"]\)/, 'CP3D_RECEIPT_WRAPPER_INTEGRATION_IMPORT_MISMATCH');
@@ -60,7 +70,7 @@ assert.match(source.cp3b, /boundedElapsedClampCount/, 'CP3D_CP3B_ELAPSED_CLAMP_C
 assert.match(source.cp3b, /releaseTerminationCount/, 'CP3D_CP3B_RELEASE_TERMINATION_COUNTER_MISSING');
 
 const receipt = Object.freeze({
-  receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_GEN329_RUNTIME_IDENTITY_CORRIDOR_EXECUTION_RECEIPT_v3',
+  receiptType: 'H_EARTH_TOUCH_MOTION_CP3D_GEN329_RUNTIME_IDENTITY_CORRIDOR_EXECUTION_RECEIPT_v4',
   checkpoint: 'CP3D_1E_1_GEN329_OW01_RUNTIME_IDENTITY_CORRIDOR',
   eligible: true,
   status: 'GEN329_OW01_RUNTIME_PACKAGE_IDENTITY_CORRIDOR_PASS',
@@ -80,7 +90,9 @@ const receipt = Object.freeze({
   },
   imports: {
     rendererContractConsumesOW01CanonicalOccurrence: true,
-    bindingConsumesExactPersistentRenderer: true,
+    bindingSelectsRendererThroughDeclaredDynamicBoundary: true,
+    acceptedBaselineRendererPath,
+    acceptedBaselineRendererSelectionPublished: true,
     publicIntegrationConsumesExactBinding: true,
     receiptWrapperConsumesExactPublicIntegration: true,
     routeSelectsExactReceiptWrapper: true

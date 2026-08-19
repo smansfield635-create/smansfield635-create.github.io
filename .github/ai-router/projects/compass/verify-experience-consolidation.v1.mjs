@@ -36,14 +36,7 @@ const protectedRuntime=[
   'assets/compass/compass.brain.js',
   'assets/compass/compass.brain-scene.js'
 ];
-const hardZeroNames=[
-  'visualSystemCoherence',
-  'narrativeContinuity',
-  'interactionLegibility',
-  'responsiveRecomposition',
-  'evidenceHierarchy',
-  'categoryPreservation'
-];
+const hardZeroNames=['visualSystemCoherence','narrativeContinuity','interactionLegibility','responsiveRecomposition','evidenceHierarchy','categoryPreservation'];
 const requiredViewports={desktop:[1440,1000],tablet:[1024,1366],phone:[390,844]};
 const requiredDesktopBeats=['opening','compass-constellation','mirrorland-threshold','selected-room','brain','trophy','house','purpose-engagement','readiness-evidence','conclusion'];
 const requiredPhoneBeats=['compass-constellation','dimensional-capability','readiness-evidence','conclusion'];
@@ -71,11 +64,14 @@ const consolidationCss=fs.existsSync('assets/compass/compass.statement-carousel.
 const cssSignals={
   glassIntroductionDissolved:/\.compass-introduction__body[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
   compassPanelDissolved:/\.compass-panel\{[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
+  statementStageDissolved:/\.compass-statement-orbit\{[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
   capabilityCardsDissolved:/\.compass-monument\{[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
-  dimensionalPlaqueDissolved:/\.compass-orbit-plaque\{[^}]*border-color:transparent!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
+  dimensionalPlaqueDissolved:/\.compass-orbit-plaque\{[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
   proofStageDissolved:/\.compass-built\{[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
+  proofCardsDissolved:/\.compass-proof-card\{[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss)||/\.compass-built__active-proof,\[data-compass-root\] \.compass-proof-card\{[^}]*border:0!important[^}]*background:none!important[^}]*box-shadow:none!important/s.test(consolidationCss),
   ctaDissolved:/\.compass-build-cta a\{[^}]*border:0!important[^}]*background:none!important/s.test(consolidationCss),
-  tabletRecomposition:/@media\(max-width:900px\)/.test(consolidationCss)&&/\.compass-panel\{grid-template-columns:1fr!important/.test(consolidationCss),
+  openingFloorRemoved:/\.compass-estate__header\{[^}]*min-height:auto!important[^}]*height:auto!important/s.test(consolidationCss),
+  tabletRecomposition:/@media\(max-width:(?:10(?:2[4-9]|[3-9]\d)|11\d\d)px\)/.test(consolidationCss)&&/\.compass-panel\{grid-template-columns:1fr!important/.test(consolidationCss),
   phoneRecomposition:/@media\(max-width:560px\)/.test(consolidationCss)&&/\.compass-capability-choices\{grid-template-columns:1fr!important/.test(consolidationCss),
   reducedMotion:/@media\(prefers-reduced-motion:reduce\)/.test(consolidationCss)
 };
@@ -106,18 +102,7 @@ if(capture){
 }
 
 const experiencePass=failures.length===0;
-const receipt={
-  schema:'COMPASS_EXPERIENCE_CONSOLIDATION_RECEIPT_v1',
-  operationId:OPERATION_ID,
-  lockGeneration:LOCK_GENERATION,
-  candidateHead,
-  governingHead:GOVERNING_HEAD,
-  changedPaths:changed,
-  hardZero:hardZeroNames.reduce((o,k)=>(o[k]=capture?.hardZero?.[k]===true,o),{}),
-  checks,
-  failures,
-  result:experiencePass?'EXPERIENCE_PASS_CLOSED':'EXPERIENCE_FAIL_CLOSED'
-};
+const receipt={schema:'COMPASS_EXPERIENCE_CONSOLIDATION_RECEIPT_v1',operationId:OPERATION_ID,lockGeneration:LOCK_GENERATION,candidateHead,governingHead:GOVERNING_HEAD,changedPaths:changed,hardZero:hardZeroNames.reduce((o,k)=>(o[k]=capture?.hardZero?.[k]===true,o),{}),checks,failures,result:experiencePass?'EXPERIENCE_PASS_CLOSED':'EXPERIENCE_FAIL_CLOSED'};
 fs.writeFileSync(output,JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify(receipt,null,2));
 if(!experiencePass)process.exit(1);

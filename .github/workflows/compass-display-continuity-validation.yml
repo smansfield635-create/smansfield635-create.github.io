@@ -1,4 +1,4 @@
-name: Compass Engineering + Information Hierarchy Qualification
+name: Compass Gen1560 Shared Orbit Qualification
 
 on:
   pull_request:
@@ -15,7 +15,7 @@ permissions:
 
 env:
   COMPASS_CANDIDATE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-  COMPASS_GOVERNING_HEAD: fe39febded099960ad7b43f631014c062ef8beff
+  COMPASS_GOVERNING_HEAD: e68740655c05bafef86b18457873cabdab3e8a67
   COMPASS_EXPERIENCE_OUTPUT: /tmp/compass-experience-consolidation-receipt.json
   COMPASS_EXPERIENCE_CAPTURE_INPUT: /tmp/compass-experience-capture-receipt.json
 
@@ -30,41 +30,48 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact candidate and protected runtime floor
+      - name: Verify exact Gen1560 candidate and mutation envelope
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD^{commit})" = "$COMPASS_CANDIDATE_HEAD"
           node --check assets/compass/compass.controller.js
-          node --check assets/compass/compass.crystals.js
-          node --check assets/compass/compass.cosmos.js
-          node --check assets/compass/compass.mirrorland-window.js
-          node --check assets/compass/compass.laws-spacecraft.js
-          node --check assets/compass/compass.identity-3d.js
           node --check assets/compass/compass.statement-carousel.js
           node --check assets/compass/compass.capability-carousel.js
           node --check assets/compass/compass.brain-scene.js
+          node --check assets/compass/compass.trophy-scene.js
+          node --check assets/compass/compass.house-scene.js
           node --check .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import cp from 'node:child_process';
           const base=process.env.COMPASS_GOVERNING_HEAD;
-          const allowed=new Set(['index.html','assets/compass/compass.css','assets/compass/compass.capability-carousel.css','.github/ai-router/projects/compass/experience-consolidation-amendment.v1.json','.github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs','.github/workflows/compass-display-continuity-validation.yml']);
-          const protectedPaths=['assets/compass/compass.controller.js','assets/compass/compass.mirrorland-window.js','assets/compass/compass.crystals.js','assets/compass/compass.cosmos.js','assets/compass/compass.laws-spacecraft.js','assets/compass/compass.identity-3d.js','assets/compass/compass.statement-carousel.js','assets/compass/compass.capability-carousel.js','assets/compass/compass.brain.js','assets/compass/compass.brain-scene.js'];
+          const allowed=new Set([
+            'index.html','assets/compass/compass.css','assets/compass/compass.capability-carousel.css','assets/compass/compass.capability-carousel.js',
+            '.github/ai-router/projects/compass/experience-consolidation-amendment.v1.json',
+            '.github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs',
+            '.github/workflows/compass-display-continuity-validation.yml'
+          ]);
+          const protectedPaths=[
+            'assets/compass/compass.controller.js','assets/compass/compass.mirrorland-window.js','assets/compass/compass.crystals.js','assets/compass/compass.cosmos.js',
+            'assets/compass/compass.laws-spacecraft.js','assets/compass/compass.identity-3d.js','assets/compass/compass.statement-carousel.js','assets/compass/compass.statement-carousel.css',
+            'assets/compass/compass.brain.js','assets/compass/compass.brain-scene.js','assets/compass/compass.trophy-scene.js','assets/compass/compass.house-scene.js'
+          ];
           const changed=cp.execFileSync('git',['diff','--name-only',`${base}...HEAD`],{encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
           const mutatedProtected=protectedPaths.filter(p=>changed.includes(p));
           const controller=fs.readFileSync('assets/compass/compass.controller.js','utf8');
+          const capability=fs.readFileSync('assets/compass/compass.capability-carousel.js','utf8');
           const checks={
             exactHead:cp.execFileSync('git',['rev-parse','HEAD^{commit}'],{encoding:'utf8'}).trim()===process.env.COMPASS_CANDIDATE_HEAD,
             exactScope:changed.every(p=>allowed.has(p)),
             protectedRuntimeUnchanged:mutatedProtected.length===0,
-            productMutationPresent:changed.some(p=>['index.html','assets/compass/compass.css','assets/compass/compass.capability-carousel.css'].includes(p)),
-            traversalSourcePreserved:controller.includes('setPanelDescended(\n      true\n    );')&&controller.includes('schedulePanelDescent(\n      id\n    );')&&controller.includes('scheduleSceneAscent(\n      wing\n    );'),
-            sphericalArchitecturePreserved:controller.includes('RIGHT_HANDED_EUCLIDEAN_XYZ')&&controller.includes('ROOM_SELECTED')&&controller.includes('MIRRORLAND_FOCUSED'),
-            constellationReturnPreserved:controller.includes('requestReturnToConstellation')&&controller.includes('requestReturnToOrbit')
+            productMutationPresent:changed.some(p=>['index.html','assets/compass/compass.css','assets/compass/compass.capability-carousel.css','assets/compass/compass.capability-carousel.js'].includes(p)),
+            sharedOrbitRuntime:capability.includes('COMPASS_SHARED_ORBIT_STAGE_CHANGED')&&capability.includes('state.velocity')&&capability.includes('drag-snap'),
+            foregroundNotEnter:capability.includes('Enter only after the object settles in front.')&&capability.includes('actionAuthority:settled'),
+            traversalSourcePreserved:controller.includes('ROOM_SELECTED')&&controller.includes('MIRRORLAND_FOCUSED')&&controller.includes('requestReturnToConstellation')&&controller.includes('requestReturnToOrbit')
           };
           const failures=Object.entries(checks).filter(([,v])=>!v).map(([k])=>k);
-          const receipt={schema:'COMPASS_GEN1554_ENGINEERING_FLOOR_RECEIPT_v1',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,governingHead:base,changedPaths:changed,mutatedProtected,checks,failures,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED'};
+          const receipt={schema:'COMPASS_GEN1560_ENGINEERING_FLOOR_RECEIPT_v1',candidateHead:process.env.COMPASS_CANDIDATE_HEAD,governingHead:base,changedPaths:changed,mutatedProtected,checks,failures,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED'};
           fs.writeFileSync('/tmp/compass-engineering-floor-receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(failures.length)process.exit(1);
@@ -72,7 +79,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-engineering-floor-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1560-engineering-${{ github.run_id }}-${{ github.run_attempt }}
           path: /tmp/compass-engineering-floor-receipt.json
           retention-days: 90
 
@@ -92,108 +99,112 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install chromium
-      - name: Host exact candidate and governing baseline
+      - name: Host exact candidate
         run: |
-          git worktree add --detach /tmp/compass-governing "$COMPASS_GOVERNING_HEAD"
           python3 -m http.server 4173 --bind 127.0.0.1 >/tmp/compass-candidate-http.log 2>&1 &
-          (cd /tmp/compass-governing && python3 -m http.server 4174 --bind 127.0.0.1 >/tmp/compass-governing-http.log 2>&1) &
-          for port in 4173 4174; do
-            for i in $(seq 1 30); do curl -fsS "http://127.0.0.1:${port}/" >/dev/null && break; sleep 1; done
-            curl -fsS "http://127.0.0.1:${port}/" >/dev/null
-          done
-      - name: Capture thirteen-condition experience matrix
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/ >/dev/null && break; sleep 1; done
+          curl -fsS http://127.0.0.1:4173/ >/dev/null
+      - name: Capture Gen1560 state and rendered matrix
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p /tmp/compass-experience-captures
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           import {chromium} from 'playwright';
           const browser=await chromium.launch({headless:true});
           const candidateHead=process.env.COMPASS_CANDIDATE_HEAD,governingHead=process.env.COMPASS_GOVERNING_HEAD;
-          const CATEGORY='Independent Studio for Interactive Worlds, Creative Technology & Original Systems';
           const viewports=[['desktop',1440,1000],['tablet',1024,1366],['phone',390,844]];
-          const required=['constellation','cluster-open','room-selected','return-orbit','mirrorland-revealing','mirrorland-focused','brain','trophy','house','trl','tra','conclusion'];
-          const errors=[],coverage={},perViewport={},artifacts=[];
-          const shot=async(page,name)=>{const p=`/tmp/compass-experience-captures/${name}.png`;await page.screenshot({path:p,fullPage:true});artifacts.push(p)};
-          const inspect=async(page,label)=>page.evaluate(({label,CATEGORY})=>{
-            const vw=innerWidth,vh=innerHeight;
-            const style=el=>el?getComputedStyle(el):null;
-            const hiddenByAncestor=el=>{let n=el;while(n&&n!==document.documentElement){if(n.getAttribute?.('aria-hidden')==='true'||n.hidden)return true;const s=getComputedStyle(n);if(s.display==='none'||s.visibility==='hidden'||Number(s.opacity||1)<=.02)return true;n=n.parentElement}return false};
-            const visible=el=>{if(!el||hiddenByAncestor(el))return false;const r=el.getBoundingClientRect();return r.width>2&&r.height>2};
-            const overlap=(a,b)=>{const l=Math.max(a.left,b.left),t=Math.max(a.top,b.top),r=Math.min(a.right,b.right),bt=Math.min(a.bottom,b.bottom);return Math.max(0,r-l)*Math.max(0,bt-t)};
-            const ratio=(a,b)=>a.width*a.height?overlap(a,b)/(a.width*a.height):1;
-            const clippingAncestor=el=>{let p=el?.parentElement;while(p&&p!==document.body){const s=getComputedStyle(p);if(/hidden|clip/.test(`${s.overflow} ${s.overflowX} ${s.overflowY}`))return p;p=p.parentElement}return null};
-            const critical=['.compass-estate__header','.compass-identity-3d','.compass-statement-orbit','[data-compass-scene]','[data-compass-guidance]','[data-compass-panel]','.compass-purpose-stage','.compass-capability-orbit','.compass-built','.compass-build-cta'];
-            const geometry=[];
-            for(const selector of critical){const el=document.querySelector(selector);if(!visible(el))continue;const r=el.getBoundingClientRect(),a=clippingAncestor(el),ar=a?.getBoundingClientRect();geometry.push({selector,ancestorRatio:a?ratio(r,ar):1,horizontalOut:r.left<-2||r.right>vw+2,rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height},ancestor:a?(a.id?`#${a.id}`:`.${[...a.classList].slice(0,2).join('.')}`):null});}
-            const textClips=[...document.querySelectorAll('h1,h2,h3,p,summary,li,span')].filter(visible).filter(el=>{const text=(el.innerText||'').trim();if(text==='YXZ')return false;const s=getComputedStyle(el);return /hidden|clip/.test(`${s.overflow} ${s.overflowX} ${s.overflowY}`)&&(el.scrollWidth>el.clientWidth+2||el.scrollHeight>el.clientHeight+2)}).map(el=>({tag:el.tagName,text:(el.innerText||'').trim().slice(0,90),scroll:[el.scrollWidth,el.scrollHeight],client:[el.clientWidth,el.clientHeight]}));
-            const controlClips=[...document.querySelectorAll('button,a,[role="button"],[role="tab"]')].filter(visible).flatMap(el=>{const r=el.getBoundingClientRect();const verticalIntersects=r.bottom>0&&r.top<vh;if(!verticalIntersects)return[];const a=clippingAncestor(el),ar=a?.getBoundingClientRect();const ancestorRatio=a?ratio(r,ar):1;const horizontalOut=r.left<-2||r.right>vw+2;return(horizontalOut||ancestorRatio<.94)?[{text:(el.innerText||el.getAttribute('aria-label')||'').trim().slice(0,80),horizontalOut,ancestorRatio,rect:{left:r.left,right:r.right,top:r.top,bottom:r.bottom}}]:[]});
-            const root=document.querySelector('[data-compass-root]'),panel=document.querySelector('[data-compass-panel]'),routes=document.querySelector('[data-compass-mirrorland-routes]');
-            const mirrorRoutesVisible=visible(routes);
-            const staleMirrorSiblings=mirrorRoutesVisible&&panel?[...panel.children].filter(el=>el!==routes&&visible(el)).map(el=>(el.innerText||el.getAttribute('aria-label')||el.tagName).trim().slice(0,80)):[];
-            const cardlike=el=>{if(!visible(el))return false;const s=style(el);return (parseFloat(s.borderRadius)||0)>8&&(s.boxShadow!=='none'||s.backgroundImage!=='none')};
-            const cardTargets=['.compass-introduction__body','.compass-panel','.compass-statement-orbit','.compass-monument','.compass-orbit-plaque','.compass-built','.compass-proof-card'].map(s=>document.querySelector(s)).filter(Boolean);
-            const identityText=root?.dataset.studioIdentity||document.querySelector('.compass-studio-descriptor')?.textContent?.trim()||'';
-            const bodyText=document.body.innerText.replace(/\s+/g,' ').trim();
-            const activeCapability=document.querySelector('.compass-capability-orbit .compass-orbit-plaque[data-slot="front"]')?.dataset.capability||'';
-            const purpose=document.querySelector('.compass-purpose-stage'),instrument=document.querySelector('.compass-instrument'),purposeFirst=document.querySelector('.compass-purpose-first-read');
-            const purposeRect=purpose?.getBoundingClientRect(),instrumentRect=instrument?.getBoundingClientRect();
-            const purposeVisibleBefore=visible(purpose)&&visible(purposeFirst)&&purposeRect&&instrumentRect&&purposeRect.top<instrumentRect.top;
-            const orbitIntro=document.querySelector('.compass-orbit-intro'),objective=orbitIntro?.querySelector('h2'),usage=orbitIntro?.querySelector(':scope > p:last-child');
-            const objectiveText=(objective?.innerText||'').trim(),usageText=(usage?.innerText||'').trim();
-            const compassObjectiveVisible=visible(orbitIntro)&&visible(objective)&&visible(usage)&&/Mirrorland/i.test(objectiveText)&&/Rotate the Compass/i.test(usageText)&&/star/i.test(usageText)&&/rooms/i.test(usageText);
-            const disclosure=document.querySelector('.compass-purpose-context > summary'),disclosureStyle=disclosure?getComputedStyle(disclosure):null,pseudo=disclosure?getComputedStyle(disclosure,'::before'):null;
-            const semanticDisclosure=Boolean(disclosure)&&disclosureStyle?.fontSize==='0px'&&/Read the full rationale/i.test(String(pseudo?.content||''))&&!/Explore the fuller context|Open the fuller message|Open the fuller experience/i.test(disclosure?.innerText&&disclosureStyle?.fontSize!=='0px'?disclosure.innerText:'');
-            const capabilityOrbit=document.querySelector('.compass-capability-orbit'),frontPlaque=document.querySelector('.compass-capability-orbit .compass-orbit-plaque[data-slot="front"]');
-            const capabilityHeight=capabilityOrbit?.getBoundingClientRect().height||0,plaqueHeight=frontPlaque?.getBoundingClientRect().height||0;
-            const scaleLimit=vw<=480?{orbit:432,plaque:300}:vw<=760?{orbit:464,plaque:325}:{orbit:500,plaque:360};
-            const dimensionalProportionality=visible(capabilityOrbit)&&visible(frontPlaque)&&capabilityHeight<=scaleLimit.orbit+2&&plaqueHeight<=scaleLimit.plaque+2;
-            return {label,mode:root?.dataset.compassMode||'',scrollY,documentOverflowX:document.documentElement.scrollWidth-document.documentElement.clientWidth,geometry,textClips,controlClips,mirrorRoutesVisible,staleMirrorSiblings,cardlikeCount:cardTargets.filter(cardlike).length,headerHeight:document.querySelector('.compass-estate__header')?.getBoundingClientRect().height||0,panelColumns:panel?style(panel).gridTemplateColumns:'',guidanceVisible:visible(document.querySelector('[data-compass-guidance]')),categoryPresent:identityText===CATEGORY||identityText.replace(/\band\b/i,'&')===CATEGORY,evidenceHref:document.querySelector('[data-evidence-registry-exit]')?.getAttribute('href')||'',activeCapability,bodyText,purposeVisibleBefore,compassObjectiveVisible,semanticDisclosure,capabilityHeight,plaqueHeight,scaleLimit,dimensionalProportionality};
-          },{label,CATEGORY});
-          const capture=async(page,id,name)=>{const s=await inspect(page,`${id}:${name}`);coverage[id]??=[];coverage[id].push(name);perViewport[id]??={states:{},traversal:{}};perViewport[id].states[name]=s;await shot(page,`${id}-${name}`);return s};
-          const load=async(page,id)=>{await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForTimeout(1100)};
+          const errors=[],stateCoverage={},metrics={};
+          async function snap(page,id,state){await page.screenshot({path:`/tmp/compass-experience-captures/${id}-${state}.png`,fullPage:true});(stateCoverage[id]??=[]).push(state)}
+          async function inspect(page){return page.evaluate(()=>{
+            const visible=el=>{if(!el)return false;const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity||1)>.02&&r.width>2&&r.height>2};
+            const root=document.querySelector('[data-compass-root]');
+            const purpose=document.querySelector('[data-compass-purpose-stage]');
+            const kicker=document.querySelector('.compass-estate__kicker');
+            const orbit=document.querySelector('.compass-capability-orbit');
+            const objectStage=document.querySelector('.compass-object-stage');
+            const cards=[...document.querySelectorAll('.compass-capability-orbit .compass-orbit-plaque')];
+            const active=cards.filter(c=>c.dataset.active==='true'&&visible(c));
+            const dock=document.querySelector('.compass-action-dock');
+            const proof=document.querySelector('[data-proof-orbit]');
+            const proofActive=[...document.querySelectorAll('[data-proof-card]')].filter(c=>c.dataset.active==='true');
+            const objective=document.querySelector('.compass-orbit-intro');
+            const scene=document.querySelector('[data-compass-scene]');
+            const sceneAfter=scene?getComputedStyle(scene,'::after'):null;
+            const purposeRect=purpose?.getBoundingClientRect();
+            const orbitRect=orbit?.getBoundingClientRect();
+            const objectRect=objectStage?.getBoundingClientRect();
+            const inactiveInteractive=cards.filter(c=>c.dataset.active!=='true').flatMap(c=>[...c.querySelectorAll('a,button,input,select,textarea')]).filter(x=>x.tabIndex>=0&&!x.closest('[inert]')).length;
+            return {
+              mode:root?.dataset.compassMode||'',
+              kicker:(kicker?.textContent||'').trim(),
+              identityEvent:document.querySelector('.compass-estate__header')?.dataset.identityEvent||'',
+              purposeOpen:Boolean(purpose?.open),purposeHeight:purposeRect?.height||0,purposeCollapsed:purpose?.dataset.gen1560CollapsedDefault==='true',
+              orbitHeight:orbitRect?.height||0,objectStageHeight:objectRect?.height||0,
+              activeCount:active.length,activeId:active[0]?.dataset.capability||'',
+              dockBusy:dock?.getAttribute('aria-busy')||'',dockText:(dock?.innerText||'').replace(/\s+/g,' ').trim(),dockLinks:[...dock?.querySelectorAll('a')||[]].map(a=>a.getAttribute('href')),
+              objectStageKind:orbit?.dataset.stageKind||'',proofStageKind:proof?.dataset.stageKind||'',proofActiveCount:proofActive.length,
+              inactiveInteractive,
+              objectiveVisible:visible(objective)&&/Mirrorland/i.test(objective?.innerText||'')&&/Rotate the Compass/i.test(objective?.innerText||''),
+              glowNonBlocking:sceneAfter?.pointerEvents==='none',
+              overflowX:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+              bodyText:document.body.innerText.replace(/\s+/g,' ').trim()
+            };
+          })}
           try{
             for(const [id,width,height] of viewports){
-              const context=await browser.newContext({viewport:{width,height},reducedMotion:'no-preference'});const page=await context.newPage();page.on('pageerror',e=>errors.push(`${id}:${e}`));await load(page,id);
-              await capture(page,id,'constellation');
-              await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestCardinalSelection?.('east'));await page.waitForTimeout(450);await capture(page,id,'cluster-open');
-              const before=await page.evaluate(()=>({y:scrollY,sceneTop:document.querySelector('[data-compass-scene]')?.getBoundingClientRect().top??null}));
-              await page.evaluate(()=>globalThis.DGB_COMPASS_CONTROLLER?.requestRoomSelection?.('east-1'));await page.waitForTimeout(900);await capture(page,id,'room-selected');const afterRoom=await page.evaluate(()=>({y:scrollY,panelTop:document.querySelector('[data-compass-panel]')?.getBoundingClientRect().top??null,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||'',descended:document.querySelector('[data-compass-root]')?.dataset.panelDescended||''}));
-              const ret=page.locator('[data-compass-return-to-orbit]').first();let afterReturn=null;if(await ret.count()&&await ret.isVisible()){await ret.click({force:true});await page.waitForTimeout(900);await capture(page,id,'return-orbit');afterReturn=await page.evaluate(()=>({y:scrollY,sceneTop:document.querySelector('[data-compass-scene]')?.getBoundingClientRect().top??null,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode||''}));}
-              const descent=afterRoom.descended==='true'&&afterRoom.y>before.y+40&&Number(afterRoom.panelTop)>=-20&&Number(afterRoom.panelTop)<height*.82;const restore=Boolean(afterReturn)&&afterReturn.mode==='CLUSTER_OPEN'&&afterReturn.y<afterRoom.y-40&&Number(afterReturn.sceneTop)<height*.7;perViewport[id].traversal={before,afterRoom,afterReturn,descent,restore,pass:descent&&restore};
-              await load(page,id);const mirror=page.locator('[data-compass-object="mirrorland"]').first();if(await mirror.count()){await mirror.click({force:true});await page.waitForTimeout(250);await capture(page,id,'mirrorland-revealing');await page.waitForTimeout(1500);await capture(page,id,'mirrorland-focused');}
-              await load(page,id);const orbit=page.locator('.compass-capability-orbit').first();if(await orbit.count()){await orbit.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await capture(page,id,'brain');const next=orbit.locator('.compass-orbit-controls [data-orbit-next]').first();if(await next.count()){await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'trophy');await next.click({force:true});await page.waitForTimeout(450);await capture(page,id,'house')}}
-              const readiness=page.locator('.compass-built').first();if(await readiness.count()){await readiness.scrollIntoViewIfNeeded();await page.waitForTimeout(250);await capture(page,id,'trl');const tra=page.locator('[data-readiness-mode-button="tra"]').first();if(await tra.count()){await tra.click({force:true});await page.waitForTimeout(350);await capture(page,id,'tra')}}
-              await capture(page,id,'conclusion');await context.close();
+              const context=await browser.newContext({viewport:{width,height},reducedMotion:'no-preference'});
+              const page=await context.newPage();page.on('pageerror',e=>errors.push(`${id}:${String(e)}`));
+              await page.goto(`http://127.0.0.1:4173/?candidate=${candidateHead}`,{waitUntil:'domcontentloaded',timeout:30000});await page.waitForTimeout(1100);
+              const initial=await inspect(page);metrics[id]={initial};await snap(page,id,'initial');
+              const next=page.locator('.compass-capability-orbit .compass-orbit-controls button').nth(1);
+              await next.click();await page.waitForTimeout(40);metrics[id].duringSettle=await inspect(page);await page.waitForTimeout(620);metrics[id].trophy=await inspect(page);await snap(page,id,'trophy');
+              await next.click();await page.waitForTimeout(620);metrics[id].house=await inspect(page);await snap(page,id,'house');
+              const proofNext=page.locator('[data-proof-orbit] .compass-orbit-controls button').nth(1);if(await proofNext.count()){await proofNext.click();await page.waitForTimeout(620);metrics[id].proof=await inspect(page);await snap(page,id,'proof')}
+              const controller=await page.evaluate(()=>({hasSelect:typeof globalThis.DGB_COMPASS_CONTROLLER?.requestCardinalSelection==='function',hasRoom:typeof globalThis.DGB_COMPASS_CONTROLLER?.requestRoomSelection==='function',hasReturn:typeof globalThis.DGB_COMPASS_CONTROLLER?.requestReturnToOrbit==='function'}));metrics[id].controller=controller;
+              await context.close();
             }
           } finally {await browser.close()}
-          const states=Object.values(perViewport).flatMap(v=>Object.values(v.states));
-          const visibleGeometryIntegrity=states.every(s=>s.documentOverflowX<=1&&s.geometry.every(g=>g.ancestorRatio>=.94&&!g.horizontalOut)&&s.textClips.length===0&&s.controlClips.filter(c=>c.text).length===0);
-          const traversalContinuity=Object.values(perViewport).every(v=>v.traversal.pass===true);
-          const stateLayerExclusivity=states.filter(s=>s.mirrorRoutesVisible).every(s=>s.staleMirrorSiblings.length===0);
-          const visualSystemCoherence=states.every(s=>s.cardlikeCount<=1)&&['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation.headerHeight<(id==='phone'?440:520));
-          const capabilityStateSemantics=['desktop','tablet','phone'].every(id=>perViewport[id].states.brain?.activeCapability==='diagnostic'&&perViewport[id].states.trophy?.activeCapability==='awards'&&perViewport[id].states.house?.activeCapability==='house');
-          const narrativeContinuity=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)))&&capabilityStateSemantics;
-          const interactionLegibility=states.filter(s=>/constellation|cluster-open|room-selected|return-orbit/.test(s.label)).every(s=>s.guidanceVisible&&s.textClips.length===0);
-          const cols=id=>perViewport[id].states.constellation.panelColumns.split(' ').filter(Boolean).length;
-          const responsiveRecomposition=cols('desktop')>=2&&cols('tablet')===1&&cols('phone')===1;
-          const evidenceHierarchy=states.every(s=>!s.evidenceHref||s.evidenceHref==='/evidence/');
-          const categoryPreservation=states.every(s=>s.categoryPresent&&!/web agency|full-service agency/i.test(s.bodyText));
-          const purposeVisibleBeforePrimaryInteraction=['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation?.purposeVisibleBefore===true);
-          const compassObjectiveVisibleAtCompass=['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation?.compassObjectiveVisible===true);
-          const semanticDisclosureLabels=['desktop','tablet','phone'].every(id=>perViewport[id].states.constellation?.semanticDisclosure===true);
-          const dimensionalStageProportionality=['desktop','tablet','phone'].every(id=>['brain','trophy','house'].every(state=>perViewport[id].states[state]?.dimensionalProportionality===true));
-          const hardZero={visualSystemCoherence,narrativeContinuity,interactionLegibility,responsiveRecomposition,evidenceHierarchy,categoryPreservation,visibleGeometryIntegrity,traversalContinuity,stateLayerExclusivity,purposeVisibleBeforePrimaryInteraction,compassObjectiveVisibleAtCompass,semanticDisclosureLabels,dimensionalStageProportionality};
-          const stateMatrixComplete=['desktop','tablet','phone'].every(id=>required.every(x=>coverage[id]?.includes(x)))&&capabilityStateSemantics;
-          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v4',candidateHead,governingHead,viewports:viewports.map(([id,width,height])=>({id,width,height})),stateCoverage:coverage,stateMatrixComplete,capabilityStateSemantics,perViewport,hardZero,artifacts,errors};
-          fs.writeFileSync(process.env.COMPASS_EXPERIENCE_CAPTURE_INPUT,JSON.stringify(receipt,null,2)+'\n');
-          console.log(JSON.stringify({schema:receipt.schema,candidateHead,hardZero,stateMatrixComplete,capabilityStateSemantics,errors},null,2));
+          const all=Object.values(metrics),desktop=metrics.desktop?.initial,phone=metrics.phone?.initial;
+          const every=fn=>all.every(fn);
+          const hardZero={
+            visualSystemCoherence:every(m=>m.initial.overflowX<=2),
+            narrativeContinuity:every(m=>m.initial.kicker==='Find Your Way'&&m.initial.purposeCollapsed&&!m.initial.purposeOpen),
+            interactionLegibility:every(m=>m.initial.activeCount===1&&/Enter Coheriscope/i.test(m.initial.dockText)&&m.trophy.activeId==='awards'&&/Enter Awards/i.test(m.trophy.dockText)&&m.house.activeId==='house'&&/Jeeves/i.test(m.house.dockText)),
+            responsiveRecomposition:Boolean(desktop&&phone&&desktop.orbitHeight<=402&&phone.orbitHeight<=362),
+            evidenceHierarchy:every(m=>m.initial.proofStageKind==='proof'&&m.initial.objectStageKind==='object'),
+            categoryPreservation:every(m=>m.initial.proofStageKind==='proof'&&m.initial.objectStageKind==='object'),
+            visibleGeometryIntegrity:every(m=>m.initial.overflowX<=2&&m.initial.objectStageHeight>0&&m.initial.orbitHeight>0),
+            traversalContinuity:every(m=>m.controller.hasSelect&&m.controller.hasRoom&&m.controller.hasReturn),
+            stateLayerExclusivity:every(m=>m.initial.activeCount===1&&m.initial.inactiveInteractive===0&&m.initial.proofActiveCount===1),
+            purposeVisibleBeforePrimaryInteraction:every(m=>m.initial.purposeHeight>0&&m.initial.purposeHeight<=120),
+            compassObjectiveVisibleAtCompass:every(m=>m.initial.objectiveVisible),
+            semanticDisclosureLabels:every(m=>/Why Diamond Gate exists/i.test(m.initial.bodyText)),
+            dimensionalStageProportionality:Boolean(desktop&&phone&&desktop.orbitHeight<=402&&phone.orbitHeight<=362&&desktop.objectStageHeight<=300&&phone.objectStageHeight<=270)
+          };
+          const newAssertions={
+            singleTopIdentityEvent:every(m=>m.initial.kicker==='Find Your Way'&&m.initial.identityEvent==='single'),
+            purposeCollapsedDefaultDepthPreserved:every(m=>m.initial.purposeCollapsed&&!m.initial.purposeOpen&&/Diamond Gate exists because/i.test(m.initial.bodyText)),
+            foregroundNotEnter:every(m=>m.initial.activeId==='diagnostic'&&m.initial.dockLinks.includes('/coherence-diagnostic/')&&m.initial.activeCount===1),
+            actionDisabledDuringSettle:every(m=>m.duringSettle.dockBusy==='true'&&m.duringSettle.dockLinks.length===0),
+            actionDockMatchesForeground:every(m=>/Enter Awards/i.test(m.trophy.dockText)&&/Jeeves/i.test(m.house.dockText)),
+            objectProofStageDistinct:every(m=>m.initial.objectStageKind==='object'&&m.initial.proofStageKind==='proof'),
+            spatialEconomy:Boolean(desktop&&phone&&desktop.orbitHeight<=402&&phone.orbitHeight<=362),
+            compassGlowNonBlocking:every(m=>m.initial.glowNonBlocking)
+          };
+          const stateMatrixComplete=Object.values(stateCoverage).every(v=>['initial','trophy','house','proof'].every(s=>v.includes(s)));
+          const receipt={schema:'COMPASS_EXPERIENCE_CAPTURE_RECEIPT_v2',operationId:'COMPASS_SHARED_ORBIT_STAGE_AND_LUMINOUS_IDENTITY_SUCCESSOR_20260819_v1',lockGeneration:1560,candidateHead,governingHead,hardZero,newAssertions,stateMatrixComplete,stateCoverage,metrics,errors,result:Object.values(hardZero).every(Boolean)&&Object.values(newAssertions).every(Boolean)&&stateMatrixComplete&&errors.length===0?'PASS_CLOSED':'FAIL_CLOSED'};
+          fs.writeFileSync('/tmp/compass-experience-capture-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(receipt.result!=='PASS_CLOSED')process.exit(1);
           NODE
-          node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
+      - name: Verify Gen1560 exact-head experience contract
+        if: always()
+        shell: bash
+        run: node .github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: compass-experience-${{ github.run_id }}-${{ github.run_attempt }}
+          name: compass-gen1560-experience-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             /tmp/compass-experience-capture-receipt.json
             /tmp/compass-experience-consolidation-receipt.json

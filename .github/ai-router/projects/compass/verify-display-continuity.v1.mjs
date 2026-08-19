@@ -32,6 +32,7 @@ check('ROOM_SELECTION_DOES_NOT_FORCE_PANEL_DESCENT',roomSelection.includes('setP
 check('ROOM_SELECTED_GUIDANCE_PRESERVES_DRAG',/ROOM_SELECTED:[\s\S]{0,220}Drag to rotate the cluster/.test(controller),true);
 check('CRYSTALS_ROOM_SELECTED_GESTURE_SCOPE',crystals.includes('frameState ===\n              "ROOM_SELECTED"')&&crystals.includes('GESTURE_TYPES.CLUSTER_DRAG'),true);
 check('CRYSTALS_CONTROLLER_RENDER_CHAIN_PRESENT',crystals.includes('requestControllerClusterBegin')&&crystals.includes('requestControllerClusterPreview')&&crystals.includes('requestControllerClusterCommit')&&crystals.includes('state.clusterQuaternions.set'),true);
+check('SPACECRAFT_BOOTSTRAPPED_BY_PRESENTATION_OWNER',crystals.includes('DGB_COMPASS_DISABLE_LOCAL_SPACECRAFT')&&crystals.includes('/assets/compass/compass.laws-spacecraft.js'),true);
 check('SPACECRAFT_LAWS_OWNER_PRESERVED',spacecraft.includes("import('/laws/index.spacecraft.background.js")&&spacecraft.includes("compassSpacecraftAuthority='ambient-presentation-and-bounded-hit-response-only'"),true);
 check('SPACECRAFT_EXPLICIT_START_BOUND',spacecraft.includes('api?.start?.();'),true);
 check('PROTECTED_SURFACES_OUTSIDE_SCOPE',!changed.some(p=>p.startsWith('laws/')||p.includes('compass.mirrorland-window.js')||p.includes('compass.cosmos.js')||p==='index.html'),changed);

@@ -74,13 +74,13 @@ jobs:
           import fs from 'node:fs';
           import {chromium} from 'playwright';
           const browser=await chromium.launch({headless:true});
-          const checks=[];const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
-          const proxySnapshot=async page=>page.evaluate(()=>Array.from(document.querySelectorAll('[data-compass-room-proxy]')).filter(el=>{const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'}).map(el=>{const r=el.getBoundingClientRect();return{id:el.dataset.roomId||'',x:+r.x.toFixed(2),y:+r.y.toFixed(2),w:+r.width.toFixed(2),h:+r.height.toFixed(2),transform:getComputedStyle(el).transform}}));
-          const geometryChanged=(a,b)=>a.length>0&&b.length===a.length&&a.some((v,i)=>Math.abs(v.x-b[i].x)>1||Math.abs(v.y-b[i].y)>1||v.transform!==b[i].transform);
+          const checks=[]; const check=(id,pass,evidence)=>checks.push({id,pass:Boolean(pass),evidence});
+          const proxies=async page=>page.evaluate(()=>Array.from(document.querySelectorAll('[data-compass-room-proxy]')).filter(el=>{const s=getComputedStyle(el);return s.display!=='none'&&s.visibility!=='hidden'}).map(el=>{const r=el.getBoundingClientRect();return{id:el.dataset.roomId||'',x:+r.x.toFixed(2),y:+r.y.toFixed(2),transform:getComputedStyle(el).transform}}));
+          const moved=(a,b)=>a.length>0&&a.length===b.length&&a.some((v,i)=>Math.abs(v.x-b[i].x)>1||Math.abs(v.y-b[i].y)>1||v.transform!==b[i].transform);
           try {
             for (const [name,width,height,reduced] of [['desktop',1440,1000,false],['tablet',820,1180,false],['phone',390,844,false],['reduced',390,844,true]]) {
               const context=await browser.newContext({viewport:{width,height},reducedMotion:reduced?'reduce':'no-preference'});
-              const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+              const page=await context.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
               await page.goto(`http://127.0.0.1:4173/?candidate=${process.env.COMPASS_CANDIDATE_HEAD}&lawsSpacecraftTest=1`,{waitUntil:'domcontentloaded',timeout:30000});
               await page.waitForFunction(()=>Boolean(globalThis.DGB_COMPASS_CONTROLLER&&globalThis.DGB_COMPASS_CRYSTALS_RECEIPT),null,{timeout:30000});
               await page.waitForTimeout(1200);
@@ -88,40 +88,57 @@ jobs:
               check(`${name}_CORE_RUNTIME_BOOTSTRAP`,bootstrap.controller&&bootstrap.crystals,bootstrap);
               check(`${name}_SPACECRAFT_BOOTSTRAP`,bootstrap.spacecraft&&!bootstrap.spacecraftError&&bootstrap.localDisabled,bootstrap);
               if(!bootstrap.spacecraft){await context.close();continue;}
+
+              const sceneLocator=page.locator('[data-compass-scene]');
+              await sceneLocator.scrollIntoViewIfNeeded();
+              await page.waitForTimeout(250);
               const selected=await page.evaluate(()=>{
-                const api=globalThis.DGB_COMPASS_CONTROLLER;const root=document.querySelector('[data-compass-root]');
+                const api=globalThis.DGB_COMPASS_CONTROLLER; const root=document.querySelector('[data-compass-root]');
                 const room=document.querySelector('[data-compass-room-declarations] [data-compass-room][data-wing="east"]')?.dataset.roomId||'';
-                const beforeScroll=scrollY;const cardinal=api.requestCardinalSelection('east');const roomSelected=api.requestRoomSelection(room);
+                const beforeScroll=scrollY; const cardinal=api.requestCardinalSelection('east'); const roomSelected=api.requestRoomSelection(room);
                 return {room,cardinal,roomSelected,beforeScroll,afterScroll:scrollY,state:api.getFrameState(),mode:root?.dataset.compassMode};
               });
-              await page.waitForTimeout(350);
+              await page.waitForTimeout(reduced?300:900);
               const afterSelection=await page.evaluate(()=>({scrollY,mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0)}));
-              const geometry0=await proxySnapshot(page);
+              const geometry0=await proxies(page);
               check(`${name}_ROOM_SELECTED_REACHED`,selected.cardinal&&selected.roomSelected&&selected.room==='east-1'&&afterSelection.mode==='ROOM_SELECTED',{selected,afterSelection});
               check(`${name}_NO_FORCED_PANEL_DESCENT`,Math.abs(afterSelection.scrollY-selected.beforeScroll)<40,{before:selected.beforeScroll,after:afterSelection.scrollY});
               check(`${name}_ROOM_PROXIES_PRESENT`,geometry0.length>0,geometry0);
-              const scene=await page.locator('[data-compass-scene]').boundingBox();
+
+              const scene=await sceneLocator.boundingBox();
               if(!scene){check(`${name}_SCENE_BOUNDING_BOX`,false,null);await context.close();continue;}
-              const sx=scene.x+scene.width*.50,sy=scene.y+scene.height*.48;
-              const drag=async(dx,dy)=>{await page.mouse.move(sx,sy);await page.mouse.down();await page.waitForTimeout(70);await page.mouse.move(sx+dx,sy+dy,{steps:10});await page.waitForTimeout(130);await page.mouse.up();await page.waitForTimeout(reduced?120:520);return await page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0),crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null}));};
-              const first=await drag(105,34);const geometry1=await proxySnapshot(page);
-              const second=await drag(-78,48);const geometry2=await proxySnapshot(page);
+              const left=Math.max(0,scene.x+8), right=Math.min(width-8,scene.x+scene.width-8), top=Math.max(0,scene.y+8), bottom=Math.min(height-8,scene.y+scene.height-8);
+              const sx=(left+right)/2, sy=(top+bottom)/2;
+              check(`${name}_GESTURE_POINT_VISIBLE`,right>left&&bottom>top&&sx>=0&&sx<=width&&sy>=0&&sy<=height,{scene,sx,sy,width,height});
+              const drag=async(dx,dy)=>{
+                await page.mouse.move(sx,sy); await page.mouse.down(); await page.waitForTimeout(120);
+                await page.mouse.move(sx+dx*.5,sy+dy*.5,{steps:8}); await page.waitForTimeout(180);
+                await page.mouse.move(sx+dx,sy+dy,{steps:8}); await page.waitForTimeout(180);
+                await page.mouse.up(); await page.waitForTimeout(reduced?180:650);
+                return page.evaluate(()=>({mode:document.querySelector('[data-compass-root]')?.dataset.compassMode,quat:document.querySelector('[data-compass-root]')?.dataset.clusterQuaternion||'',revision:Number(document.querySelector('[data-compass-root]')?.dataset.clusterRevision||0),crystals:globalThis.DGB_COMPASS_CRYSTALS_RECEIPT||null}));
+              };
+              const first=await drag(90,28); const geometry1=await proxies(page);
+              const second=await drag(-68,42); const geometry2=await proxies(page);
+              check(`${name}_FIRST_POINTER_RECOGNIZED`,['cluster-drag','cluster-settle'].includes(first.crystals?.lastGestureType),first.crystals);
               check(`${name}_FIRST_POST_SELECTION_DRAG`,first.mode==='ROOM_SELECTED'&&first.quat!==afterSelection.quat,{before:afterSelection,after:first});
-              check(`${name}_FIRST_VISIBLE_GEOMETRY_CHANGE`,geometryChanged(geometry0,geometry1),{before:geometry0,after:geometry1});
+              check(`${name}_FIRST_VISIBLE_GEOMETRY_CHANGE`,moved(geometry0,geometry1),{before:geometry0,after:geometry1});
+              check(`${name}_SECOND_POINTER_RECOGNIZED`,['cluster-drag','cluster-settle'].includes(second.crystals?.lastGestureType),second.crystals);
               check(`${name}_SECOND_POST_SELECTION_DRAG`,second.mode==='ROOM_SELECTED'&&second.quat!==first.quat,{first,second});
-              check(`${name}_SECOND_VISIBLE_GEOMETRY_CHANGE`,geometryChanged(geometry1,geometry2),{first:geometry1,second:geometry2});
+              check(`${name}_SECOND_VISIBLE_GEOMETRY_CHANGE`,moved(geometry1,geometry2),{first:geometry1,second:geometry2});
               check(`${name}_CONTROLLER_COMMIT_PROGRESS`,second.revision>afterSelection.revision,{before:afterSelection.revision,after:second.revision});
+
               const sc=await page.evaluate(async reduced=>{
                 const api=globalThis.DGB_LAWS_SPACECRAFT;
                 if(reduced) return {receipt:api.receipt?.(),a:api.snapshot?.(),b:api.snapshot?.(),hit:false};
-                api.verificationSetProgress?.(.22);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const a=api.snapshot?.();
-                api.verificationSetProgress?.(.62);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));const b=api.snapshot?.();
-                const hit=api.verificationHit?.();const c=api.snapshot?.();return {a,b,hit,c,receipt:api.receipt?.()};
+                api.verificationSetProgress?.(.22); await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); const a=api.snapshot?.();
+                api.verificationSetProgress?.(.62); await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))); const b=api.snapshot?.();
+                const hit=api.verificationHit?.(); const c=api.snapshot?.(); return {a,b,hit,c,receipt:api.receipt?.()};
               },reduced);
               check(`${name}_SPACECRAFT_AUTHORITY_BOUNDARY`,sc.receipt?.ownsNavigation===false&&sc.receipt?.ownsControllerState===false&&sc.receipt?.ownsRoutes===false&&sc.receipt?.ownsCompassInteraction===false,sc.receipt);
-              if(reduced){check(`${name}_SPACECRAFT_REDUCED_MOTION_STOPPED`,sc.receipt?.reducedMotion===true&&sc.receipt?.running===false,sc.receipt);}else{
-                const apos=sc.a?.craft?.position||[],bpos=sc.b?.craft?.position||[];
-                check(`${name}_SPACECRAFT_FLIGHT_PROGRESS`,JSON.stringify(apos)!==JSON.stringify(bpos),{a:apos,b:bpos});
+              if(reduced) check(`${name}_SPACECRAFT_REDUCED_MOTION_STOPPED`,sc.receipt?.reducedMotion===true&&sc.receipt?.running===false,sc.receipt);
+              else {
+                const a=sc.a?.craft?.position||[], b=sc.b?.craft?.position||[];
+                check(`${name}_SPACECRAFT_FLIGHT_PROGRESS`,JSON.stringify(a)!==JSON.stringify(b),{a,b});
                 check(`${name}_SPACECRAFT_BOUNDED_HIT`,sc.hit===true&&Number(sc.c?.craft?.hitCount||0)>=1,{hit:sc.hit,c:sc.c});
               }
               check(`${name}_NO_PAGE_ERRORS`,errors.length===0,errors);
@@ -129,8 +146,9 @@ jobs:
               await context.close();
             }
           } finally {await browser.close();}
-          const failures=checks.filter(x=>!x.pass);const receipt={schema:'COMPASS_ROOM_SELECTED_CONTINUITY_RUNTIME_RECEIPT_v1',operationId:'COMPASS_ROOM_SELECTED_CONTINUITY_AND_QUALIFICATION_HARDENING_20260818_v2',lockGeneration:1538,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
-          fs.writeFileSync('/tmp/compass-room-selected-continuity-runtime-receipt.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));if(failures.length)process.exit(1);
+          const failures=checks.filter(x=>!x.pass);
+          const receipt={schema:'COMPASS_ROOM_SELECTED_CONTINUITY_RUNTIME_RECEIPT_v1',operationId:'COMPASS_ROOM_SELECTED_CONTINUITY_AND_QUALIFICATION_HARDENING_20260818_v2',lockGeneration:1538,candidateHead:process.env.COMPASS_CANDIDATE_HEAD,result:failures.length?'FAIL_CLOSED':'PASS_CLOSED',checks,failures:failures.map(x=>x.id)};
+          fs.writeFileSync('/tmp/compass-room-selected-continuity-runtime-receipt.json',JSON.stringify(receipt,null,2)+'\n'); console.log(JSON.stringify(receipt,null,2)); if(failures.length)process.exit(1);
           NODE
       - uses: actions/upload-artifact@v4
         if: always()

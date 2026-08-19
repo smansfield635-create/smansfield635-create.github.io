@@ -1,15 +1,13 @@
 {
-  "schema": "COMPASS_EXPERIENCE_CONSOLIDATION_AMENDMENT_v2",
-  "operationId": "COMPASS_EXPERIENCE_INTERACTION_RESTORATION_SUCCESSOR_20260819_v2",
-  "lockGeneration": 1553,
-  "governingHead": "cfd1924c485893dedeeb2fd1fefcb91c521d7c2a",
+  "schema": "COMPASS_INFORMATION_HIERARCHY_DIMENSIONAL_SCALE_AMENDMENT_v1",
+  "operationId": "COMPASS_INSTRUCTIONAL_HIERARCHY_AND_DIMENSIONAL_SCALE_SUCCESSOR_20260819_v1",
+  "lockGeneration": 1554,
+  "governingHead": "d809d006d6c966b23fab9c39f0f695dfad386c1f",
   "governingIssue": 1011,
-  "governingStandardComment": 5337684472,
-  "preconstructionPackageComment": 5338156600,
-  "law": "PRESERVE_CAPABILITY_REDUCE_VISIBLE_MECHANISM_RECOMPOSE_REMAINDER",
-  "interactionLaw": "REDUCE_INTERFACE_NOT_INTERACTION",
-  "acceptance": "ENGINEERING_PASS_AND_EXPERIENCE_PASS_AND_RENDERED_AWARD_READINESS_REVIEW",
-  "constructionOrder": ["INVENTORY","PRESERVE","REMOVE","DEMOTE","MERGE","DISSOLVE","RECOMPOSE","ADD_ONLY_IF_NECESSARY"],
+  "ownerLiveReviewComment": 5344345994,
+  "law": "PRESERVE_CAPABILITY_RESTORE_INSTRUCTION_RESTORE_PURPOSE_HIERARCHY_REDUCE_DIMENSIONAL_STAGE",
+  "interactionLaw": "REDUCE_INTERFACE_NOT_INTERACTION_AND_REDUCE_INTERFACE_NOT_INSTRUCTION",
+  "acceptance": "ENGINEERING_PASS_AND_EXPERIENCE_PASS_AND_INFORMATION_HIERARCHY_PASS_AND_RENDERED_OWNER_REVIEW_READY",
   "hardZero": [
     "visualSystemCoherence",
     "narrativeContinuity",
@@ -19,28 +17,25 @@
     "categoryPreservation",
     "visibleGeometryIntegrity",
     "traversalContinuity",
-    "stateLayerExclusivity"
+    "stateLayerExclusivity",
+    "purposeVisibleBeforePrimaryInteraction",
+    "compassObjectiveVisibleAtCompass",
+    "semanticDisclosureLabels",
+    "dimensionalStageProportionality"
   ],
   "productMutationEnvelope": [
     "index.html",
     "assets/compass/compass.css",
-    "assets/compass/compass.statement-carousel.css",
-    "assets/compass/compass.capability-carousel.css",
-    "assets/compass/compass.identity-3d.css",
-    "assets/compass/compass.controller.js",
-    "assets/compass/compass.mirrorland-window.js"
+    "assets/compass/compass.capability-carousel.css"
   ],
-  "controllerException": {
-    "path": "assets/compass/compass.controller.js",
-    "purpose": "RESTORE_EXISTING_ROOM_SELECTION_DESCENT_AND_RETURN_TO_ORBIT_SYMMETRY_ONLY",
-    "requiredSignals": ["schedulePanelDescent(id)","setPanelDescended(true)","scheduleSceneAscent(wing)"]
-  },
-  "mirrorlandException": {
-    "path": "assets/compass/compass.mirrorland-window.js",
-    "purpose": "STATE_LAYER_EXCLUSIVITY_ONLY_IF_PRESENTATION_STATE_CANNOT_CLOSE_DEFECT",
-    "optional": true
-  },
+  "qualificationMutationEnvelope": [
+    ".github/ai-router/projects/compass/experience-consolidation-amendment.v1.json",
+    ".github/ai-router/projects/compass/verify-experience-consolidation.v1.mjs",
+    ".github/workflows/compass-display-continuity-validation.yml"
+  ],
   "protectedRuntimePaths": [
+    "assets/compass/compass.controller.js",
+    "assets/compass/compass.mirrorland-window.js",
     "assets/compass/compass.crystals.js",
     "assets/compass/compass.cosmos.js",
     "assets/compass/compass.laws-spacecraft.js",
@@ -50,6 +45,23 @@
     "assets/compass/compass.brain.js",
     "assets/compass/compass.brain-scene.js"
   ],
+  "informationHierarchyContract": {
+    "purposeBeforePrimaryInteraction": true,
+    "purposeFirstRead": "WHY_DIAMOND_GATE_EXISTS",
+    "purposeDepth": "PROGRESSIVE_DISCLOSURE_WITH_VISIBLE_FIRST_READ",
+    "compassObjective": "FIND_THE_DOOR_TO_MIRRORLAND",
+    "compassUsage": "ROTATE_BRING_STAR_FORWARD_FOLLOW_ROOMS",
+    "mechanicalDisclosureLabelsForbidden": ["Explore the fuller context","Open the fuller message","Open the fuller experience"],
+    "semanticDisclosureReplacement": "Read the full rationale"
+  },
+  "dimensionalScaleContract": {
+    "desktopOrbitMinHeightMaxPx": 496,
+    "desktopPlaqueHeightMaxPx": 350,
+    "tabletOrbitMinHeightMaxPx": 464,
+    "phoneOrbitMinHeightMaxPx": 432,
+    "objectIdentityPreserved": ["brain","trophy","house"],
+    "presentationLaw": "OBJECT_PRIMARY_CONTAINER_SUBORDINATE"
+  },
   "requiredViewports": [
     {"id":"desktop","width":1440,"height":1000},
     {"id":"tablet","width":1024,"height":1366},
@@ -58,14 +70,14 @@
   "requiredStates": ["constellation","cluster-open","room-selected","return-orbit","mirrorland-revealing","mirrorland-focused","brain","trophy","house","trl","tra","conclusion"],
   "failClosed": [
     "ANY_HARD_ZERO_FALSE",
+    "PURPOSE_NOT_VISIBLE_BEFORE_COMPASS",
+    "MIRRORLAND_OBJECTIVE_NOT_VISIBLE_AT_COMPASS",
+    "MECHANICAL_DISCLOSURE_COPY_VISIBLE",
+    "CAPABILITY_STAGE_REMAINS_PAGE_DOMINATING",
+    "TRAVERSAL_REGRESSION",
+    "STATE_LAYER_EXCLUSIVITY_REGRESSION",
     "ANY_CRITICAL_VISIBLE_ELEMENT_CLIPPED",
-    "ROOM_SELECTION_DOES_NOT_DESCEND",
-    "RETURN_TO_ORBIT_DOES_NOT_RESTORE_COMPASS",
-    "MUTUALLY_EXCLUSIVE_MIRRORLAND_LAYERS_VISIBLE_TOGETHER",
     "RESPONSIVE_DESKTOP_COMPRESSION_INSTEAD_OF_RECOMPOSITION",
-    "PUBLIC_CLAIM_AND_EVIDENCE_CONFLATED",
-    "GENERIC_SERVICE_CATEGORY_ENDING",
-    "UNRELATED_RUNTIME_MUTATION",
-    "CANDIDATE_MATERIALLY_WEAKER_THAN_LIVE_BASELINE"
+    "UNRELATED_RUNTIME_MUTATION"
   ]
 }

@@ -16,6 +16,7 @@ import {
   sampleHEarthVisibleTerrainClearanceEnvelope
 } from '../../showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js';
 
+const OPERATION_ID='H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_20260818_002';
 const EXPECTED_FLOOR='e03363f42441cea7587a49623fd878e8ca51fe28';
 const EXPECTED_CANONICAL_TERRAIN_BLOB='f4f65b05ab303a11fb1d9c4e25de211fde73722a';
 const EXPECTED_LANDSCAPE_PREVIEW_BLOB='d77990da529790f9389c9a29551b7f36bb9afa3e';
@@ -70,11 +71,10 @@ function traceBetween(name,startWaypoint,endWaypoint){
   return state;
 }
 
-// Mesh identity and sampler coverage.
 assert(H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR===EXPECTED_FLOOR,'PROTECTED_FLOOR_CONSTANT_MISMATCH');
 assert(blobSha('../terrain/h-earth.terrain-field.js')===EXPECTED_CANONICAL_TERRAIN_BLOB,'CANONICAL_TERRAIN_BLOB_DRIFT');
 assert(blobSha('../../showroom/globe/h-earth/render/landscape-preview.js')===EXPECTED_LANDSCAPE_PREVIEW_BLOB,'GEN311_LANDSCAPE_PREVIEW_BLOB_DRIFT');
-let coverage=0,reliefAboveCanonical=0;
+let coverage=0;
 for(let z=-224;z<=-104;z+=8)for(let x=-160;x<=160;x+=8){
   if(!resolveHEarthNavigableTerrainChunk(x,z))continue;
   const s=sampleHEarthVisibleTerrainClearanceSurface(x,z);
@@ -82,11 +82,10 @@ for(let z=-224;z<=-104;z+=8)for(let x=-160;x<=160;x+=8){
 }
 assert(coverage>=100,'VISIBLE_TERRAIN_SAMPLE_COVERAGE_INSUFFICIENT');
 
-// Seven required traces.
-const uphill=traceBetween('SUSTAINED_UPHILL','COAST','RIDGE');
-const descent=traceBetween('SUSTAINED_DESCENT','RIDGE','COAST');
-const valley=traceBetween('VALLEY_CROSSING','LOWLAND','HILL');
-const pass=traceBetween('PASS_CROSSING','HILL','RIDGE');
+traceBetween('SUSTAINED_UPHILL','COAST','RIDGE');
+traceBetween('SUSTAINED_DESCENT','RIDGE','COAST');
+traceBetween('VALLEY_CROSSING','LOWLAND','HILL');
+traceBetween('PASS_CROSSING','HILL','RIDGE');
 
 let steep=traceBetween('STEEP_SLOPE_ADJACENCY','HILL','RIDGE');
 for(let i=0;i<8;i++){
@@ -112,7 +111,6 @@ for(const action of ['MOVE_FORWARD','MOVE_FORWARD','MOVE_FORWARD','MOVE_BACKWARD
 }
 traces.push({name:'DIRECTION_REVERSAL_ON_GRADE_DYNAMIC',complete:reversalSamples.length===6,samples:reversalSamples});
 
-// Global dynamics checks.
 const allSamples=traces.flatMap(t=>t.samples??[]);
 assert(allSamples.length>80,'TRACE_SAMPLE_COUNT_INSUFFICIENT');
 assert(allSamples.every(s=>s.safe===true),'ZERO_PENETRATION_INVARIANT_FAILED');
@@ -125,7 +123,7 @@ assert(traces.filter(t=>t.complete).length>=7,'SEVEN_TRACE_BATTERY_INCOMPLETE');
 
 const receipt={
   schema:'H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_QUALIFICATION_RECEIPT_v1',
-  operationId:'H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_20260818_001',
+  operationId:OPERATION_ID,
   protectedGeographicFloor:EXPECTED_FLOOR,
   result:issues.length?'FAIL':'PASS',
   checks:{

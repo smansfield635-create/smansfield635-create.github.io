@@ -2,60 +2,102 @@
   'use strict';
   const reduce=matchMedia('(prefers-reduced-motion: reduce)');
   const mod=(value,base)=>((value%base)+base)%base;
+
   function arrive(item){
-    item.classList.remove('is-arriving');void item.offsetWidth;item.classList.add('is-arriving');
+    item.classList.remove('is-arriving');
+    void item.offsetWidth;
+    item.classList.add('is-arriving');
     setTimeout(()=>item.classList.remove('is-arriving'),reduce.matches?160:560);
   }
+
   function mountStatements(){
     const header=document.querySelector('.compass-estate__header');
     if(!header||header.querySelector('[data-statement-orbit]'))return;
     const items=[header.querySelector('.compass-estate__sentence'),header.querySelector('.compass-estate__epigraph')];
     if(items.some(item=>!item))return;
     const stage=document.createElement('section');
-    stage.className='compass-statement-orbit';stage.dataset.statementOrbit='true';stage.tabIndex=0;
-    stage.setAttribute('role','region');stage.setAttribute('aria-roledescription','carousel');stage.setAttribute('aria-label','Opening thoughts');
-    const guidance=document.createElement('p');guidance.className='compass-statement-guidance';guidance.textContent='Swipe the thought above.';
-    const status=document.createElement('p');status.className='compass-orbit-status';status.setAttribute('aria-live','polite');
+    stage.className='compass-statement-orbit';
+    stage.dataset.statementOrbit='true';
+    stage.tabIndex=0;
+    stage.setAttribute('role','region');
+    stage.setAttribute('aria-roledescription','carousel');
+    stage.setAttribute('aria-label','Opening thoughts');
+    const guidance=document.createElement('p');
+    guidance.className='compass-statement-guidance';
+    guidance.textContent='Swipe the thought above.';
+    const status=document.createElement('p');
+    status.className='compass-orbit-status';
+    status.setAttribute('aria-live','polite');
     let index=0,busy=false;
-    items.forEach((item,i)=>{item.classList.add('compass-statement-object');item.dataset.slot=i?'rear':'front';stage.append(item)});
-    stage.append(guidance,status);header.insertBefore(stage,header.querySelector('.compass-introduction'));
+    items.forEach((item,i)=>{
+      item.classList.add('compass-statement-object');
+      item.dataset.slot=i?'rear':'front';
+      stage.append(item);
+    });
+    stage.append(guidance,status);
+    header.insertBefore(stage,header.querySelector('.compass-introduction'));
     const render=arrival=>{
-      items.forEach((item,i)=>{const front=i===index;item.dataset.slot=front?'front':'rear';item.toggleAttribute('inert',!front);item.setAttribute('aria-hidden',front?'false':'true');item.setAttribute('aria-current',front?'true':'false')});
-      status.textContent=`Thought ${index+1} of ${items.length}`;if(arrival)arrive(items[index]);
+      items.forEach((item,i)=>{
+        const front=i===index;
+        item.dataset.slot=front?'front':'rear';
+        item.toggleAttribute('inert',!front);
+        item.setAttribute('aria-hidden',front?'false':'true');
+        item.setAttribute('aria-current',front?'true':'false');
+      });
+      status.textContent=`Thought ${index+1} of ${items.length}`;
+      if(arrival)arrive(items[index]);
     };
-    const rotate=direction=>{if(busy)return;busy=true;index=mod(index+direction,items.length);render(true);setTimeout(()=>busy=false,reduce.matches?120:340)};
+    const rotate=direction=>{
+      if(busy)return;
+      busy=true;
+      index=mod(index+direction,items.length);
+      render(true);
+      setTimeout(()=>busy=false,reduce.matches?120:340);
+    };
     window.CompassOrbitInput?.claimSwipe(stage,rotate);
-    stage.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key==='ArrowLeft'){event.preventDefault();rotate(event.key==='ArrowRight'?1:-1)}});
+    stage.addEventListener('keydown',event=>{
+      if(event.key==='ArrowRight'||event.key==='ArrowLeft'){
+        event.preventDefault();
+        rotate(event.key==='ArrowRight'?1:-1);
+      }
+    });
     render(true);
   }
+
   function installAwardStyle(){
     if(document.querySelector('[data-compass-award-presentation-style]'))return;
     const style=document.createElement('style');
     style.dataset.compassAwardPresentationStyle='true';
     style.textContent=`
-      [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-introduction.compass-purpose-stage{display:block!important;position:relative!important;inset:auto!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;float:none!important;transform:none!important;width:auto!important;max-width:72rem!important;margin:clamp(38px,6vw,68px) auto 0!important;padding:clamp(1.15rem,3vw,1.8rem)!important;border:1px solid rgba(213,225,226,.16)!important;border-radius:1.35rem!important;background:linear-gradient(145deg,rgba(8,19,28,.76),rgba(7,14,22,.50))!important;box-shadow:0 24px 62px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.05)!important;z-index:auto!important;overflow:visible!important}
+      [data-compass-root][data-award-narrative="identity-experience-purpose-system-readiness-evidence"] .compass-introduction.compass-purpose-stage{display:block!important;position:relative!important;inset:auto!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;float:none!important;transform:none!important;width:auto!important;height:auto!important;max-width:72rem!important;margin:clamp(38px,6vw,68px) auto 0!important;padding:clamp(1.15rem,3vw,1.8rem)!important;border:1px solid rgba(213,225,226,.16)!important;border-radius:1.35rem!important;background:linear-gradient(145deg,rgba(8,19,28,.76),rgba(7,14,22,.50))!important;box-shadow:0 24px 62px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.05)!important;z-index:auto!important;overflow:visible!important;contain:none!important}
       .compass-purpose-stage>summary{cursor:pointer;color:rgba(247,235,196,.78)!important;font:800 .72rem/1.3 Inter,sans-serif!important;letter-spacing:.18em!important;text-transform:uppercase}
       .compass-purpose-stage[open]>summary{margin-bottom:.75rem}
-      .compass-purpose-stage .compass-introduction__body{display:block!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;overflow:visible!important}
+      .compass-purpose-stage .compass-introduction__body{display:block!important;position:relative!important;inset:auto!important;top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;float:none!important;transform:none!important;width:100%!important;height:auto!important;max-height:none!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;overflow:visible!important;opacity:1!important;visibility:visible!important}
       .compass-purpose-stage .compass-introduction__body::before{content:none!important}
-      .compass-purpose-first-read{display:grid;gap:.75rem;max-width:58rem}
+      .compass-purpose-first-read{display:grid;position:relative;gap:.75rem;max-width:58rem;min-height:0}
       .compass-purpose-first-read h2{max-width:19ch;margin:0;color:rgba(250,246,230,.98);font:700 clamp(2rem,5vw,4rem)/.98 Georgia,serif;letter-spacing:-.045em}
       .compass-purpose-first-read p{max-width:62ch!important;margin:0!important;color:rgba(224,232,230,.76)!important;font:620 clamp(.96rem,1.8vw,1.08rem)/1.62 Inter,sans-serif!important}
-      .compass-purpose-context{max-width:58rem;margin-top:1.05rem;border-top:1px solid rgba(213,225,226,.13)}
+      .compass-purpose-context{position:relative;max-width:58rem;margin-top:1.05rem;border-top:1px solid rgba(213,225,226,.13)}
       .compass-purpose-context>summary{cursor:pointer;padding:.9rem 0 .25rem;color:rgba(137,227,255,.76);font:760 .82rem/1.35 Inter,sans-serif;letter-spacing:.035em}
-      .compass-purpose-context__body{display:grid;gap:14px;padding:.65rem 0 .35rem;color:rgba(221,228,225,.70);font-size:.94rem;line-height:1.68}
+      .compass-purpose-context__body{display:grid;position:relative!important;gap:14px;padding:.65rem 0 .35rem;color:rgba(221,228,225,.70);font-size:.94rem;line-height:1.68}
       .compass-purpose-context__body .compass-monument-question{margin:.2rem 0!important}
+      .compass-purpose-stage + [data-capability-orbit],.compass-purpose-stage + [data-compass-capability-switcher]{margin-top:clamp(38px,6vw,72px)!important}
       .compass-readiness-stage{position:relative;isolation:isolate}
-      .compass-readiness-stage::after{content:"TRL measures the maturity claim. TRA is the evidence review used to test that claim.";display:block;max-width:62ch;margin:1rem auto 0;color:rgba(202,219,222,.68);font:650 .78rem/1.5 Inter,sans-serif;text-align:center;letter-spacing:.025em}
-      .compass-tra-boundary{margin:.9rem 0 0;padding:.78rem .9rem;border:1px solid rgba(104,200,218,.18);border-radius:.85rem;background:rgba(6,18,26,.42);color:rgba(222,232,231,.78);font:620 .82rem/1.52 Inter,sans-serif}
-      .compass-tra-boundary strong{display:block;margin-bottom:.25rem;color:rgba(246,232,190,.94);font:760 .86rem/1.3 Inter,sans-serif;letter-spacing:.04em}
+      .compass-readiness-stage::after{content:"TRL states the bounded maturity determination. TRA exposes how that determination is assessed.";display:block;max-width:62ch;margin:1rem auto 0;color:rgba(202,219,222,.68);font:650 .78rem/1.5 Inter,sans-serif;text-align:center;letter-spacing:.025em}
+      .compass-readiness-mode{display:flex;justify-content:center;gap:.45rem;flex-wrap:wrap;margin:1rem auto .4rem}
+      .compass-readiness-mode button{min-width:7.2rem;min-height:42px;padding:.62rem .9rem;border:1px solid rgba(190,218,224,.16);border-radius:999px;color:rgba(211,226,228,.68);background:rgba(5,15,23,.48);font:800 .76rem/1 Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:border-color .2s,background .2s,color .2s,transform .2s}
+      .compass-readiness-mode button[aria-pressed="true"]{border-color:rgba(244,214,128,.58);color:rgba(255,244,211,.98);background:linear-gradient(145deg,rgba(244,214,128,.12),rgba(69,183,205,.07));transform:translateY(-1px)}
+      .compass-readiness-mode-note{max-width:62ch;margin:.45rem auto 0;color:rgba(197,215,219,.62);font:620 .78rem/1.5 Inter,sans-serif;text-align:center}
+      .compass-tra-chain{display:flex;gap:.34rem;flex-wrap:wrap;margin-top:.8rem}
+      .compass-tra-chain span{padding:.32rem .48rem;border:1px solid rgba(92,193,215,.18);border-radius:999px;color:rgba(211,231,234,.72);background:rgba(6,19,28,.38);font:720 .68rem/1.2 Inter,sans-serif;letter-spacing:.025em}
       .compass-evidence-exit{display:inline-flex;align-items:center;justify-content:center;min-height:46px;margin:clamp(18px,3vw,28px) auto 0;padding:.72rem 1rem;border:1px solid rgba(244,214,128,.34);border-radius:999px;color:rgba(255,244,211,.96);background:linear-gradient(145deg,rgba(244,214,128,.10),rgba(73,183,205,.06));font:800 .84rem/1.2 Inter,sans-serif;letter-spacing:.03em;text-decoration:none;box-shadow:0 16px 42px rgba(0,0,0,.22)}
       .compass-evidence-exit:hover,.compass-evidence-exit:focus-visible{border-color:rgba(244,214,128,.68);outline:none;box-shadow:0 0 0 3px rgba(244,214,128,.10),0 16px 42px rgba(0,0,0,.24)}
-      @media(max-width:620px){.compass-purpose-stage{margin-top:30px!important;padding:1rem!important}.compass-purpose-first-read h2{font-size:clamp(2rem,11vw,3rem)}.compass-tra-boundary{font-size:.78rem}.compass-evidence-exit{width:100%;max-width:22rem}}
-      @media(prefers-reduced-motion:reduce){.compass-evidence-exit{transition:none!important}}
+      @media(max-width:620px){.compass-purpose-stage{margin-top:30px!important;padding:1rem!important}.compass-purpose-first-read h2{font-size:clamp(2rem,11vw,3rem)}.compass-readiness-mode{margin-top:.8rem}.compass-evidence-exit{width:100%;max-width:22rem}}
+      @media(prefers-reduced-motion:reduce){.compass-evidence-exit,.compass-readiness-mode button{transition:none!important}}
     `;
     document.head.append(style);
   }
+
   function buildPurposeFirstRead(purpose){
     const body=purpose.querySelector('.compass-introduction__body');
     if(!body||body.querySelector('.compass-purpose-first-read'))return;
@@ -70,6 +112,86 @@
     original.forEach(node=>contextBody.append(node));
     body.append(first,context);
   }
+
+  const TRA_CONTENT=Object.freeze([
+    Object.freeze({
+      kicker:'Executed capability proof',
+      title:'Executed Capability',
+      body:'A capability is not treated as demonstrated because code exists or a state can be reached. Qualification follows real operational stimulus through ownership, controller response, visible response, and continued operation.',
+      chain:['Stimulus','Owner','State','Visible response','Continue']
+    }),
+    Object.freeze({
+      kicker:'Negative authority proof',
+      title:'Authority Isolation',
+      body:'Integrated software is also tested for what each subsystem must not own. Presentation, interaction, routing, and controller authorities remain bounded so one component cannot silently interfere with another.',
+      chain:['Required function','Bounded owner','Forbidden authority','No interference']
+    }),
+    Object.freeze({
+      kicker:'Evidence discipline',
+      title:'Fail-Closed Evidence',
+      body:'Missing execution, ownership conflict, absent state change, or absent visible response remains a failure or not-tested condition. The evidence identifies what is missing instead of converting absence into readiness.',
+      chain:['Observe','Reconcile','Fail closed','Repair','Requalify']
+    })
+  ]);
+
+  function mountReadinessModes(readiness){
+    const orbit=readiness.querySelector('[data-proof-orbit]');
+    const cards=[...readiness.querySelectorAll('[data-proof-card]')];
+    if(!orbit||cards.length!==3||readiness.querySelector('[data-readiness-mode-control]'))return;
+    const trlHtml=cards.map(card=>card.innerHTML);
+    const control=document.createElement('div');
+    control.className='compass-readiness-mode';
+    control.dataset.readinessModeControl='true';
+    control.setAttribute('role','group');
+    control.setAttribute('aria-label','Choose readiness context');
+    control.innerHTML='<button type="button" data-readiness-mode-button="trl" aria-pressed="true">TRL</button><button type="button" data-readiness-mode-button="tra" aria-pressed="false">TRA</button>';
+    const note=document.createElement('p');
+    note.className='compass-readiness-mode-note';
+    note.dataset.readinessModeNote='true';
+    const syncA11y=mode=>{
+      const labels=mode==='trl'?['Software TRL 7','Bounded Changes','Experience Checked']:TRA_CONTENT.map(item=>item.title);
+      cards.forEach((card,index)=>card.setAttribute('aria-label',`${mode.toUpperCase()} ${index+1} of 3: ${labels[index]}`));
+      const rail=readiness.querySelector('[data-status-rail="proof"]');
+      if(rail)[...rail.children].forEach((item,index)=>{if(labels[index])item.textContent=labels[index].replace('Software ','')});
+      const front=cards.find(card=>card.dataset.slot==='front')||cards[0];
+      const live=orbit.querySelector('.compass-orbit-status');
+      if(live&&front){const index=Math.max(0,cards.indexOf(front));live.textContent=`${mode.toUpperCase()} ${index+1} of 3: ${labels[index]}`;}
+    };
+    const apply=mode=>{
+      const tra=mode==='tra';
+      readiness.dataset.readinessMode=mode;
+      control.querySelectorAll('[data-readiness-mode-button]').forEach(button=>button.setAttribute('aria-pressed',button.dataset.readinessModeButton===mode?'true':'false'));
+      if(tra){
+        cards.forEach((card,index)=>{
+          const item=TRA_CONTENT[index];
+          card.innerHTML=`<p class="compass-estate__kicker">${item.kicker}</p><h3>${item.title}</h3><p>${item.body}</p><div class="compass-tra-chain" aria-label="${item.title} evidence chain">${item.chain.map(step=>`<span>${step}</span>`).join('')}</div>`;
+        });
+        note.textContent='TRA is the assessment discipline used to examine the evidence behind readiness. It is not a second maturity score, does not raise Software TRL 7, and is not external certification or endorsement.';
+      }else{
+        cards.forEach((card,index)=>card.innerHTML=trlHtml[index]);
+        note.textContent='TRL describes the bounded maturity determination. Software TRL 7 remains the current self-assessed level; TRL 8 and TRL 9 remain unclaimed.';
+      }
+      requestAnimationFrame(()=>syncA11y(mode));
+    };
+    control.addEventListener('click',event=>{
+      const button=event.target.closest('[data-readiness-mode-button]');
+      if(button)apply(button.dataset.readinessModeButton);
+    });
+    control.addEventListener('keydown',event=>{
+      if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
+      const buttons=[...control.querySelectorAll('[data-readiness-mode-button]')];
+      const current=Math.max(0,buttons.indexOf(document.activeElement));
+      const next=buttons[(current+(event.key==='ArrowRight'?1:-1)+buttons.length)%buttons.length];
+      event.preventDefault();
+      next.focus();
+      next.click();
+    });
+    const observer=new MutationObserver(()=>syncA11y(readiness.dataset.readinessMode||'trl'));
+    observer.observe(orbit,{subtree:true,attributes:true,attributeFilter:['data-slot']});
+    orbit.before(control,note);
+    apply('trl');
+  }
+
   function composeAwardNarrative(){
     const root=document.querySelector('[data-compass-root]');
     const header=document.querySelector('.compass-estate__header');
@@ -95,16 +217,8 @@
     const title=readiness.querySelector(':scope > h2');
     if(title)title.textContent='Readiness, with the boundary visible.';
     const lead=readiness.querySelector('.compass-built__lead');
-    if(lead)lead.textContent='Diamond Gate separates what the software has demonstrated from how that readiness is assessed. The maturity claim stays bounded; the evidence remains inspectable.';
-    const trl=readiness.querySelector('[data-proof-card="trl7"]');
-    if(trl&&!trl.querySelector('.compass-tra-boundary')){
-      const boundary=document.createElement('div');
-      boundary.className='compass-tra-boundary';
-      boundary.dataset.traBoundary='assessment-not-level';
-      boundary.innerHTML='<strong>Technology Readiness Assessment (TRA)</strong><span>The TRA is the evidence-review process used to examine readiness against stated criteria. It is not a second maturity score, does not raise Software TRL 7, and creates no external certification or endorsement.</span>';
-      const rail=trl.querySelector('.compass-trl-rail');
-      rail?.insertAdjacentElement('afterend',boundary);
-    }
+    if(lead)lead.textContent='One stage, two views of the same evidence: TRL states what maturity has been demonstrated; TRA shows how that determination is assessed.';
+    mountReadinessModes(readiness);
     if(!readiness.querySelector('.compass-evidence-exit')){
       const evidence=document.createElement('a');
       evidence.className='compass-evidence-exit';
@@ -114,14 +228,22 @@
       readiness.append(evidence);
     }
   }
-  function boot(){mountStatements();composeAwardNarrative();requestAnimationFrame(()=>composeAwardNarrative())}
+
+  function boot(){
+    mountStatements();
+    composeAwardNarrative();
+    requestAnimationFrame(()=>composeAwardNarrative());
+  }
+
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot,{once:true}):boot();
   window.addEventListener('load',()=>composeAwardNarrative(),{once:true});
+
   window.CompassStatementCarousel=Object.freeze({
-    version:'statement-award-presentation-v2',
+    version:'statement-award-presentation-v3',
     worldInteraction:'delegated-to-laws-spacecraft',
     spacecraftSurface:'LAWS_SPACECRAFT_ONLY',
     narrativeOrder:'IDENTITY_EXPERIENCE_PURPOSE_SYSTEM_READINESS_EVIDENCE',
-    readinessBoundary:'TRL7_PLUS_TRA_ASSESSMENT_NO_SCORE'
+    readinessBoundary:'TRL7_PLUS_TRA_ASSESSMENT_NO_SCORE',
+    readinessPresentation:'SHARED_TRL_TRA_ALTERNATING_CONTEXT'
   });
 })();

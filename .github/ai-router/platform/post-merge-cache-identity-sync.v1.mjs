@@ -26,7 +26,7 @@ function withHash(url,token){
 }
 function rewriteFile(file,targets){
   let text=fs.readFileSync(file,'utf8'),changed=false;
-  const replaceUrl=url=>{const resolved=resolveLocal(file,url);if(!resolved||!targets.has(resolved))return url;const next=withHash(url,targets.get(resolved));if(next!==url)changed=true;return next};
+  const replaceUrl=url=>{const resolved=resolveLocal(file,url);if(!resolved||resolved===file||!targets.has(resolved))return url;const next=withHash(url,targets.get(resolved));if(next!==url)changed=true;return next};
   if(file.endsWith('.html'))text=text.replace(/\b(?:src|href)=(['"])([^'"]+)\1/g,(m,q,u)=>m.replace(u,replaceUrl(u)));
   if(file.endsWith('.css'))text=text.replace(/url\((['"]?)([^)'"\s]+)\1\)/g,(m,q,u)=>m.replace(u,replaceUrl(u)));
   if(/\.(?:js|mjs)$/i.test(file))text=text.replace(/(['"])(\/?(?:assets|scripts|styles)\/[^'"\s]+\.(?:css|js|mjs)(?:\?[^'"\s]*)?(?:#[^'"\s]*)?)\1/g,(m,q,u)=>`${q}${replaceUrl(u)}${q}`);

@@ -69,3 +69,7 @@ html body main#compass[data-compass-root] section.compass-instrument>header.comp
 
 /* Gen1556 exact-head phone proportionality repair: restore the already-authored mobile dimensions after the high-specificity recovery floor. */
 @media(max-width:480px){html body main#compass[data-compass-root] .compass-capability-orbit{min-height:27rem!important}html body main#compass[data-compass-root] .compass-capability-orbit>.compass-orbit-plaque{height:290px!important;min-height:290px!important;max-height:290px!important;padding:.65rem!important}}
+
+/* Gen1556 rendered-review invariant: the Mirrorland objective is an instruction, never a card or explanatory panel. */
+html body main#compass[data-compass-root] section.compass-instrument>header.compass-orbit-intro{outline:0!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html body main#compass[data-compass-root] section.compass-instrument>header.compass-orbit-intro::before,html body main#compass[data-compass-root] section.compass-instrument>header.compass-orbit-intro::after{content:none!important;display:none!important;border:0!important;outline:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;filter:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}

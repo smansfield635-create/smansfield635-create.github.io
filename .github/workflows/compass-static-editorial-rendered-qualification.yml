@@ -1,0 +1,148 @@
+name: Compass Static Editorial Rendered Qualification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - 'tools/compass-static-editorial-qualification.mjs'
+      - '.github/workflows/compass-static-editorial-rendered-qualification.yml'
+  push:
+    branches:
+      - 'recovery/compass-static-editorial-successor'
+    paths:
+      - 'index.html'
+      - 'assets/compass/**'
+      - 'tools/compass-static-editorial-qualification.mjs'
+      - '.github/workflows/compass-static-editorial-rendered-qualification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  static-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tools/compass-static-editorial-qualification.mjs
+
+  rendered:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Serve candidate
+        run: |
+          python3 -m http.server 4173 >/tmp/compass-static-editorial-http.log 2>&1 &
+          for i in {1..30}; do
+            curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/compass-static-editorial-http.log || true
+          exit 1
+      - name: Inspect rendered successor
+        run: |
+          mkdir -p /tmp/compass-static-editorial
+          cat > /tmp/compass-static-editorial/inspect.mjs <<'NODE'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+
+          const browser = await chromium.launch({headless:true});
+          const results = {};
+          const viewports = {
+            desktop:{width:1440,height:1100},
+            tablet:{width:900,height:1000},
+            phone:{width:412,height:915}
+          };
+
+          for (const [name, viewport] of Object.entries(viewports)) {
+            const page = await browser.newPage({viewport});
+            const errors = [];
+            const failedRequests = [];
+            page.on('pageerror', e => errors.push(String(e)));
+            page.on('requestfailed', r => failedRequests.push(`${r.method()} ${r.url()} :: ${r.failure()?.errorText||'failed'}`));
+            await page.goto('http://127.0.0.1:4173/', {waitUntil:'networkidle'});
+            await page.waitForTimeout(1000);
+
+            const state = await page.evaluate(() => {
+              const q = s => document.querySelector(s);
+              const qa = s => [...document.querySelectorAll(s)];
+              const brand = document.body.innerText.includes('DiamondGateBridge.com');
+              const intro = qa('details').find(d => d.querySelector(':scope > summary')?.textContent.trim()==='New here? Open the introduction.');
+              const about = qa('details').find(d => d.querySelector(':scope > summary')?.textContent.trim()==='What is Diamond Gate Bridge?');
+              const film = q('video source[src*="diamond-gate-compass-mirrorland-36s.mp4"],video[src*="diamond-gate-compass-mirrorland-36s.mp4"]');
+              const scene = q('[data-compass-scene]');
+              const built = qa('section').find(s => /Built Different/i.test(s.innerText||''));
+              const capability = q('[data-compass-capability-switcher],[data-capability-orbit]');
+              const cta = qa('section').find(s => /Build Your Own Custom Site/i.test(s.innerText||''));
+              const bodyText = document.body.innerText;
+              const order = [scene,built,capability,cta].map(node => node ? [...document.querySelectorAll('body *')].indexOf(node) : -1);
+              const gen = globalThis.DGB_COMPASS_GEN1537_LIVE_RECOVERY;
+              const genReceipt = gen?.receipt?.() || null;
+              const capabilityGuidance = q('[data-capability-orbit] .compass-capability-guidance')?.textContent.trim() || '';
+              const trackBScript = qa('script[src]').some(s => (s.getAttribute('src')||'').includes('compass.track-b.js'));
+              const directoryVisible = qa('.compass-selective-routes').some(el => {
+                const cs = getComputedStyle(el); const r = el.getBoundingClientRect();
+                return cs.display!=='none' && cs.visibility!=='hidden' && r.width>0 && r.height>0;
+              });
+              return {
+                brand,
+                introFound:Boolean(intro), introClosed:Boolean(intro && !intro.open),
+                aboutFound:Boolean(about),
+                filmFound:Boolean(film),
+                sceneFound:Boolean(scene), sceneHeight:scene?.getBoundingClientRect().height||0,
+                builtFound:Boolean(built), capabilityFound:Boolean(capability), ctaFound:Boolean(cta),
+                staticOrder: order,
+                legacyWhyVisible: bodyText.includes('Why Diamond Gate exists'),
+                directoryVisible,
+                legacyDisclosureVisible: bodyText.includes('The Compass exposes the same destinations to keyboard, touch, pointer, and reduced-motion users.'),
+                trackBScript,
+                genReceipt,
+                capabilityGuidance,
+                horizontalOverflow: document.documentElement.scrollWidth-document.documentElement.clientWidth,
+                compassMode:q('[data-compass-root]')?.dataset.compassMode||'',
+                controllerReceipt:Boolean(q('[data-compass-controller-receipt]'))
+              };
+            });
+
+            const fail = msg => { throw new Error(`${name}: ${msg} :: ${JSON.stringify(state)}`); };
+            if (!state.brand) fail('brand missing');
+            if (!state.introFound || !state.introClosed) fail('Chapter One intro not closed by default');
+            if (!state.aboutFound) fail('Diamond Gate disclosure missing');
+            if (!state.filmFound) fail('Chapter One film missing');
+            if (!state.sceneFound || state.sceneHeight < 430) fail(`Compass scene floor failed (${state.sceneHeight})`);
+            if (!state.builtFound || !state.capabilityFound || !state.ctaFound) fail('major section missing');
+            const [sceneAt,builtAt,capabilityAt,ctaAt] = state.staticOrder;
+            if (!(sceneAt>=0 && sceneAt<builtAt && builtAt<capabilityAt && capabilityAt<ctaAt)) fail('rendered section order invalid');
+            if (state.directoryVisible) fail('legacy directory visible');
+            if (state.legacyDisclosureVisible) fail('legacy bottom disclosure visible');
+            if (state.trackBScript) fail('Track B runtime loaded');
+            if (state.horizontalOverflow > 2) fail(`horizontal overflow ${state.horizontalOverflow}`);
+            if (!state.genReceipt || state.genReceipt.mounted!==false || state.genReceipt.retired!==true || state.genReceipt.authoritative!==false || state.genReceipt.capabilityPlacementAuthority!==false || state.genReceipt.repeatedReparenting!==false) fail('Gen1537 authority contract invalid');
+            if (errors.length) fail(`page errors: ${errors.join(' | ')}`);
+            const productFailures = failedRequests.filter(x => x.includes('/assets/compass/') || x.includes('/media/') || x.includes('diamond-gate-compass-mirrorland-36s.mp4'));
+            if (productFailures.length) fail(`product request failures: ${productFailures.join(' | ')}`);
+
+            await page.screenshot({path:`/tmp/compass-static-editorial/${name}.png`,fullPage:true});
+            results[name] = {...state, errors, failedRequests};
+            await page.close();
+          }
+
+          await browser.close();
+          fs.writeFileSync('/tmp/compass-static-editorial/receipt.json', JSON.stringify({result:'PASS_CLOSED',results},null,2));
+          NODE
+          node /tmp/compass-static-editorial/inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-static-editorial-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/compass-static-editorial
+          retention-days: 30

@@ -1,4 +1,4 @@
-/** H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN306_v1 */
+/** H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN329_CONTINUOUS_OCEAN_HANDOFF_v1 */
 import {
   H_EARTH_3D_GEOMETRY_SOUTH_ENUMS,
   createHEarthVector3,
@@ -17,7 +17,7 @@ const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFr
 const SCALE=2**24;
 const canonical=v=>{const x=Math.round(v*SCALE)/SCALE;return Object.is(x,-0)?0:x};
 
-export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID='H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN306_G_WORLD_v1';
+export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID='H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN329_CONTINUOUS_OCEAN_HANDOFF_v1';
 export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS=freeze([
   {bandId:'DRY_SAND_EDGE',innerOffset:34,outerOffset:14,materialReference:'H_EARTH_MATERIAL_DRY_SAND',materialIntent:'DRY_SAND'},
   {bandId:'DAMP_TRANSITION',innerOffset:14,outerOffset:4,materialReference:'H_EARTH_MATERIAL_WET_SAND',materialIntent:'DAMP_SAND_TRANSITION'},
@@ -31,7 +31,7 @@ export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS=freeze([
 const WATER_RENDER_MATERIALS=freeze({
   SHALLOW_WATER:freeze({rgba:[58,168,181,218],transparencyClass:'TRANSLUCENT'}),
   NEARSHORE_WATER:freeze({rgba:[31,116,154,224],transparencyClass:'TRANSLUCENT'}),
-  OPEN_WATER:freeze({rgba:[15,57,96,236],transparencyClass:'TRANSLUCENT'})
+  OPEN_WATER:freeze({rgba:[15,57,96,255],transparencyClass:'OPAQUE'})
 });
 
 const sampleCount=257,shorelineXMinimum=-1024,shorelineXMaximum=1024;
@@ -58,7 +58,7 @@ function constructBand(band){
     semanticRole:`WORLD_MANIFOLD_COASTAL_CONTACT_${band.bandId}`,
     materialHint:freeze({materialReference:band.materialReference,materialIntent:band.materialIntent}),
     source:freeze({sourceType:'G_WORLD_COASTAL_CLASSIFICATION',worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID}),
-    metadata:freeze({providerContractId:H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,bandId:band.bandId,representationClass:band.bandId==='OPEN_WATER'?'MID':'NEAR',worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sourceSampleIds,sampleCount,shorelineXMinimum,shorelineXMaximum,independentGeographyAuthority:false,hardWorldTerminalAuthority:false,navigationAddressIds:[],navigable:false,collisionAuthority:false,accessibleRegionExpansion:false,oceanFacingLandmassCreated:false,admitted:false,aggregateFrameAuthority:false})
+    metadata:freeze({providerContractId:H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,bandId:band.bandId,representationClass:band.bandId==='OPEN_WATER'?'MID':'NEAR',worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sourceSampleIds,sampleCount,shorelineXMinimum,shorelineXMaximum,independentGeographyAuthority:false,hardWorldTerminalAuthority:false,navigationAddressIds:[],navigable:false,collisionAuthority:false,accessibleRegionExpansion:false,oceanFacingLandmassCreated:false,continuousOceanHandoffParticipant:band.bandId==='OPEN_WATER',admitted:false,aggregateFrameAuthority:false})
   });
   const basePrimitive=construction?.primitiveRecord??null;
   const waterMaterial=WATER_RENDER_MATERIALS[band.bandId]??null;
@@ -71,5 +71,5 @@ export function constructHEarthFunctionalShorelineGeometry(){
   const issues=results.filter(r=>!r.ok).map(r=>`SHORELINE_BAND_INVALID:${r.bandId}`);
   const primitives=results.filter(r=>r.ok).map(r=>r.primitive);
   const bounds=primitives.length?mergeHEarthGeometryBounds(primitives.map(p=>p.geometry.bounds)):null;
-  return freeze({ok:issues.length===0&&primitives.length===7,status:issues.length?'FUNCTIONAL_SHORELINE_GEOMETRY_FAILED':'FUNCTIONAL_SHORELINE_GEOMETRY_COMPLETE',contractId:H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sourceBoundaryId:'H_EARTH_G_WORLD_CANONICAL_COAST',sourceBoundaryContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,bandCount:primitives.length,results,primitives,bounds,visualOceanContinuation:true,accessibleRegionExpansion:false,independentGeographyAuthority:false,admitted:false,issues});
+  return freeze({ok:issues.length===0&&primitives.length===7,status:issues.length?'FUNCTIONAL_SHORELINE_GEOMETRY_FAILED':'FUNCTIONAL_SHORELINE_GEOMETRY_COMPLETE',contractId:H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID,worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sourceBoundaryId:'H_EARTH_G_WORLD_CANONICAL_COAST',sourceBoundaryContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,bandCount:primitives.length,results,primitives,bounds,visualOceanContinuation:true,continuousOceanHandoffPrepared:true,accessibleRegionExpansion:false,independentGeographyAuthority:false,admitted:false,issues});
 }

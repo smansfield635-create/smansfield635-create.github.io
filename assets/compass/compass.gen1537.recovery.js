@@ -1,6 +1,6 @@
 (()=>{
 'use strict';
-const PERFECTED_H_EARTH='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/63d1c995d476a3d52338e9e5b43ccb8237b935f6/showroom/globe/h-earth/index.html';
+const PERFECTED_H_EARTH='https://raw.githack.com/smansfield635-create/smansfield635-create.github.io/d29d2b8ec114669149f09904ebd269ac45c34c62/showroom/globe/h-earth/index.html';
 const bindPerfectedHEarth=()=>{
   document.querySelectorAll('[data-compass-room][data-label="H-Earth"]').forEach(el=>{
     el.dataset.route=PERFECTED_H_EARTH;
@@ -34,7 +34,7 @@ const receipt=Object.freeze({
   mounted:false,
   retired:true,
   authoritative:false,
-  version:'gen1537-historical-artifact-retired-h-earth-experience-successor-23949-v4-media-audio',
+  version:'gen1537-historical-artifact-retired-h-earth-experience-successor-23949-v5-gentle-coast',
   instrumentMounted:false,
   lowerCarouselPreserved:true,
   clusterGuidanceMounted:false,

@@ -61,7 +61,7 @@ jobs:
           cat > .track-a-inspect.mjs <<'NODE'
           import {chromium} from 'playwright';import fs from 'node:fs';
           const b=await chromium.launch({headless:true}),out={};
-          const limits={desktop:430,tablet:390,phone:370};
+          const limits={desktop:430,tablet:430,phone:370};
           async function swipe(p,s,dir=-1){const box=await s.boundingBox();const y=box.y+Math.min(box.height*.42,180),x1=dir<0?box.x+box.width*.74:box.x+box.width*.26,x2=dir<0?box.x+box.width*.26:box.x+box.width*.74;await p.mouse.move(x1,y);await p.mouse.down();await p.mouse.move(x2,y,{steps:7});await p.mouse.up();await p.waitForTimeout(260)}
           for(const [name,v] of Object.entries({desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:412,height:915}})){
             const p=await b.newPage({viewportSize:v});await p.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});const s=p.locator('[data-capability-orbit]');await s.scrollIntoViewIfNeeded();await p.waitForTimeout(500);

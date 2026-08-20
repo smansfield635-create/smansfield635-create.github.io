@@ -1,4 +1,4 @@
-/** H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_DISTANT_CONTEXT_v3_CONTINUOUS_COASTAL_OCEAN */
+/** H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_DISTANT_CONTEXT_v4_CONTINUOUS_OCEAN_FIELD */
 import {H_EARTH_3D_GEOMETRY_SOUTH_ENUMS,createHEarthVector3,constructHEarthTriangleMesh,isHEarthNeutralPrimitiveRecord} from './geometry-kernel.js';
 import {evaluateHEarthRecoveredWaterRgbaFromElevation} from './geometry-shoreline.js';
 import {H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,sampleHEarthWorldManifold} from '../../../../h-earth-3d/terrain/h-earth.world-manifold-domain.js';
@@ -10,10 +10,15 @@ export const H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID='H_EARTH_SINGLE_SPHERI
 export const H_EARTH_PLANET_BODY_HORIZON_SHELL_ID='RETIRED_BY_H_EARTH_SINGLE_SPHERICAL_WORLD_MANIFOLD_v1';
 
 const LAND_RINGS=freeze([360,540,780,1120,1600,2260,3160,4400,6000]);
-const OCEAN_RINGS=freeze([16,32,48,64,80,96,128,160,210,280,360,480,640,840,1120,1600,2260,3160,4400,6000]);
-const OCEAN_HORIZON_RINGS=freeze([7000,8200,9600,11200,13200,15600,18000]);
 const DEFAULT_SECTORS=96;
 const DEEP_OCEAN_RENDER_MATERIAL=freeze({rgba:[15,57,96,255],transparencyClass:'OPAQUE'});
+const OUTER_X=freeze([-6800,-5600,-4600,-3800,-3200,-2700,-2300,-2000,2000,2300,2700,3200,3800,4600,5600,6800]);
+const OUTER_Z=freeze([-6800,-5600,-4600,-3800,-3100,-2500,-2000,-1600,-1250,-980,-760,-600,-480,1000,1250,1550,1950,2500,3200,4000,5000,6000,7000]);
+
+function range(min,max,step){const out=[];for(let value=min;value<=max+step*0.25;value+=step)out.push(Math.round(value*1e6)/1e6);return out}
+function orderedAxis(core,outer){return freeze([...new Set([...core,...outer])].sort((a,b)=>a-b))}
+const OCEAN_X=orderedAxis(range(-1920,1920,40),OUTER_X);
+const OCEAN_Z=orderedAxis(range(-440,920,24),OUTER_Z);
 
 function compact(vertices,indices,diagnostics={},vertexRgba=null){
   const referenced=[...new Set(indices)].sort((a,b)=>a-b);
@@ -44,68 +49,48 @@ function buildLandMesh(plan,rings,sectorCount){
   return compact(vertices,indices,{retainedCellCount,suppressedCellCount,mixedTransitionCellCount});
 }
 
-function buildOceanMesh(plan,rings,sectorCount){
-  const vertices=plan.vertices.map(v=>createHEarthVector3(v.world.x,v.world.y+0.015,v.world.z));
-  const vertexRgba=plan.vertices.map(v=>evaluateHEarthRecoveredWaterRgbaFromElevation(v.sample?.elevation,{opaque:true}));
-  const indices=[];
-  let retainedCellCount=0,suppressedCellCount=0,mixedTransitionCellCount=0;
-
-  // Close the ocean through the tangent origin so the near-coast water has no inner hole.
-  const centerSample=sampleHEarthWorldManifold(0,0);
-  const centerPoint=regionToHEarthPlanetPoint({x:0,y:(centerSample?.elevation??0)+0.015,z:0});
-  const centerIndex=vertices.length;
-  vertices.push(createHEarthVector3(centerPoint.x,centerPoint.y,centerPoint.z));
-  vertexRgba.push(evaluateHEarthRecoveredWaterRgbaFromElevation(centerSample?.elevation,{opaque:true}));
-  for(let column=0;column<sectorCount;column++){
-    const next=(column+1)%sectorCount;
-    indices.push(centerIndex,column,next);
-    retainedCellCount++;
-  }
-
-  for(let ring=0;ring<rings.length-1;ring++)for(let column=0;column<sectorCount;column++){
-    const next=(column+1)%sectorCount,a=ring*sectorCount+column,b=ring*sectorCount+next,d=(ring+1)*sectorCount+next,e=(ring+1)*sectorCount+column;
-    const cell=[plan.vertices[a],plan.vertices[b],plan.vertices[d],plan.vertices[e]],votes=cell.filter(v=>v.terrainSilhouettePermitted===true).length;
-    if(votes>2){suppressedCellCount++;continue}
-    if(votes>0)mixedTransitionCellCount++;
-    indices.push(a,e,b,b,e,d);retainedCellCount++;
-  }
-
-  const outerStart=vertices.length;
-  for(const radius of OCEAN_HORIZON_RINGS)for(let column=0;column<sectorCount;column++){
-    const theta=column/sectorCount*Math.PI*2;
-    const q=regionToHEarthPlanetPoint({x:Math.cos(theta)*radius,y:0.015,z:Math.sin(theta)*radius});
+function buildContinuousOceanField(){
+  const width=OCEAN_X.length,height=OCEAN_Z.length;
+  const vertices=[],vertexRgba=[],samples=[];
+  for(let zi=0;zi<height;zi++)for(let xi=0;xi<width;xi++){
+    const x=OCEAN_X[xi],z=OCEAN_Z[zi],sample=sampleHEarthWorldManifold(x,z);
+    const q=regionToHEarthPlanetPoint({x,y:0.015,z});
     vertices.push(createHEarthVector3(q.x,q.y,q.z));
-    vertexRgba.push(freeze([15,57,96,255]));
+    vertexRgba.push(evaluateHEarthRecoveredWaterRgbaFromElevation(sample?.elevation,{opaque:true}));
+    samples.push(sample);
   }
-
-  const baseLast=(rings.length-1)*sectorCount;
-  for(let column=0;column<sectorCount;column++){
-    const next=(column+1)%sectorCount,a=baseLast+column,b=baseLast+next,d=outerStart+next,e=outerStart+column;
-    const inner=[plan.vertices[a],plan.vertices[b]],landVotes=inner.filter(v=>v.terrainSilhouettePermitted===true).length;
-    if(landVotes===2)continue;
+  const indices=[];
+  let retainedCellCount=0,suppressedLandCellCount=0,mixedCoastCellCount=0;
+  for(let zi=0;zi<height-1;zi++)for(let xi=0;xi<width-1;xi++){
+    const a=zi*width+xi,b=a+1,e=(zi+1)*width+xi,d=e+1;
+    const cell=[samples[a],samples[b],samples[d],samples[e]];
+    const waterVotes=cell.filter(s=>s?.surfaceClass==='WATER').length;
+    if(waterVotes===0){suppressedLandCellCount++;continue}
+    if(waterVotes<4)mixedCoastCellCount++;
     indices.push(a,e,b,b,e,d);retainedCellCount++;
   }
-  for(let ring=0;ring<OCEAN_HORIZON_RINGS.length-1;ring++)for(let column=0;column<sectorCount;column++){
-    const next=(column+1)%sectorCount,a=outerStart+ring*sectorCount+column,b=outerStart+ring*sectorCount+next,d=outerStart+(ring+1)*sectorCount+next,e=outerStart+(ring+1)*sectorCount+column;
-    indices.push(a,e,b,b,e,d);retainedCellCount++;
-  }
-
+  const maximumRadius=Math.max(...vertices.map(v=>Math.hypot(v.x,v.z)));
   return compact(vertices,indices,{
     retainedCellCount,
-    suppressedCellCount,
-    mixedTransitionCellCount,
-    nearCoastRings:rings,
-    horizonContinuationRings:OCEAN_HORIZON_RINGS,
-    outerRadius:OCEAN_HORIZON_RINGS.at(-1),
+    suppressedLandCellCount,
+    mixedCoastCellCount,
+    gridWidth:width,
+    gridHeight:height,
+    xMinimum:OCEAN_X[0],
+    xMaximum:OCEAN_X.at(-1),
+    zMinimum:OCEAN_Z[0],
+    zMaximum:OCEAN_Z.at(-1),
+    outerRadius:maximumRadius,
     waterColorAuthority:'CANONICAL_WATER_DEPTH_CONTINUOUS',
     historical23923ColorAnchorsPreserved:true,
     visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',
+    nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',
     lateralColorTerminationPossible:false,
-    innerOceanHoleClosed:true
+    visibleRectangularTerminationProhibited:true
   },vertexRgba);
 }
 
-function primitive(mesh,surfaceClass,plan){
+function primitive(mesh,surfaceClass,plan=null){
   if(mesh.indices.length===0||mesh.vertices.length<3)return null;
   const ocean=surfaceClass==='OCEAN';
   const id=`H_EARTH_WORLD_MANIFOLD:FAR_${surfaceClass}_CONTINUATION`;
@@ -119,58 +104,42 @@ function primitive(mesh,surfaceClass,plan){
     expectedClosure:H_EARTH_3D_GEOMETRY_SOUTH_ENUMS.expectedClosure.OPEN_ALLOWED,
     semanticRole:ocean?'AUDRALIA_OPEN_OCEAN_CONTINUOUS_SPHERICAL_SURFACE':'AUDRALIA_CONTINENTAL_CONTEXT_FROM_WORLD_MANIFOLD',
     materialHint:freeze({materialReference:ocean?'H_EARTH_MATERIAL_OPEN_WATER_DISTANCE':'H_EARTH_MATERIAL_AUDRALIA_SUBTROPICAL_DISTANCE',materialIntent:ocean?'ONE_CONTINUOUS_OPEN_OCEAN_TO_GEOMETRIC_HORIZON':'AUDRALIA_WARM_SUBTROPICAL_CONTINENTAL_CONTEXT'}),
-    source:freeze({sourceType:'WORLD_MANIFOLD_PLUS_FIXED_PLANETARY_FRAME',representationPlanContractId:H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID,planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID}),
+    source:freeze({sourceType:ocean?'WORLD_MANIFOLD_CONTINUOUS_OCEAN_FIELD':'WORLD_MANIFOLD_PLUS_FIXED_PLANETARY_FRAME',representationPlanContractId:H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID,planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,worldDomainContractId:H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID}),
     metadata:freeze({
       providerContractId:H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
-      representationClass:'FAR',
-      farSurfaceClass:surfaceClass,
-      geographicIdentity:'AUDRALIA',
-      playableRegionIdentity:'GRATITUDE',
-      climateIdentity:'WARM_SUBTROPICAL_COASTAL',
+      representationClass:'FAR',farSurfaceClass:surfaceClass,
+      geographicIdentity:'AUDRALIA',playableRegionIdentity:'GRATITUDE',climateIdentity:'WARM_SUBTROPICAL_COASTAL',
       representationPlanContractId:H_EARTH_WORLD_REPRESENTATION_PLAN_CONTRACT_ID,
       planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,
       topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,
-      sourceAuthority:'DERIVED_REPRESENTATION_ONLY',
-      independentGeographyAuthority:false,
-      fullXYZSphericalContinuation:true,
-      singleSphericalPresentationManifold:true,
-      singleContinuousOceanToHorizon:ocean,
+      sourceAuthority:'DERIVED_REPRESENTATION_ONLY',independentGeographyAuthority:false,
+      fullXYZSphericalContinuation:true,singleSphericalPresentationManifold:true,singleContinuousOceanToHorizon:ocean,
       visibleWaterAuthority:ocean?'ONE_CONTINUOUS_OCEAN_SURFACE':null,
+      nearCoastTessellation:ocean?'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS':null,
       waterColorAuthority:ocean?'CANONICAL_WATER_DEPTH_CONTINUOUS':null,
-      historical23923ColorAnchorsPreserved:ocean,
-      lateralColorTerminationPossible:ocean?false:null,
-      fixedPlanetaryAnchor:plan.continuationAnchorFixed===true,
-      worldRecenteredForCamera:false,
-      navigationAddressIds:[],
-      navigable:false,
-      collisionAuthority:false,
-      accessibleRegionExpansion:false,
-      oceanFacingLandmassCreated:false,
-      visibleRectangularTerminationProhibited:true,
-      separateVisiblePlanetBodySubstitute:false,
-      admitted:false,
-      aggregateFrameAuthority:false
+      historical23923ColorAnchorsPreserved:ocean,lateralColorTerminationPossible:ocean?false:null,
+      fixedPlanetaryAnchor:plan?.continuationAnchorFixed!==false,worldRecenteredForCamera:false,
+      navigationAddressIds:[],navigable:false,collisionAuthority:false,accessibleRegionExpansion:false,
+      oceanFacingLandmassCreated:false,visibleRectangularTerminationProhibited:true,separateVisiblePlanetBodySubstitute:false,
+      admitted:false,aggregateFrameAuthority:false
     })
   });
   const base=construction?.primitiveRecord??null;
   if(construction?.valid!==true||!isHEarthNeutralPrimitiveRecord(base))return null;
-  if(!ocean)return base;
-  return freeze({...base,renderMaterial:freeze({...DEEP_OCEAN_RENDER_MATERIAL,vertexRgba:mesh.vertexRgba})});
+  return ocean?freeze({...base,renderMaterial:freeze({...DEEP_OCEAN_RENDER_MATERIAL,vertexRgba:mesh.vertexRgba})}):base;
 }
 
 export function constructHEarthDistantContextGeometry({cameraWorld={x:0,y:8,z:-40},sectorCount=DEFAULT_SECTORS}={}){
   const landPlan=buildHEarthWorldManifoldRepresentationPlan({cameraWorld,rings:LAND_RINGS,sectorCount});
-  const oceanPlan=buildHEarthWorldManifoldRepresentationPlan({cameraWorld,rings:OCEAN_RINGS,sectorCount});
   const issues=[];
   if(landPlan.eligible!==true)issues.push(...landPlan.issues.map(i=>`LAND:${i}`));
-  if(oceanPlan.eligible!==true)issues.push(...oceanPlan.issues.map(i=>`OCEAN:${i}`));
-  if(landPlan.vertices.some(v=>v.valid!==true)||oceanPlan.vertices.some(v=>v.valid!==true))issues.push('FAR_CONTEXT_WORLD_SAMPLE_INVALID');
+  if(landPlan.vertices.some(v=>v.valid!==true))issues.push('FAR_CONTEXT_WORLD_SAMPLE_INVALID');
   if(issues.length)return freeze({ok:false,status:'DISTANT_CONTEXT_GEOMETRY_FAILED',contractId:H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,primitives:[],issues});
 
   const landMesh=buildLandMesh(landPlan,LAND_RINGS,sectorCount);
-  const oceanMesh=buildOceanMesh(oceanPlan,OCEAN_RINGS,sectorCount);
+  const oceanMesh=buildContinuousOceanField();
   const land=primitive(landMesh,'LAND',landPlan);
-  const ocean=primitive(oceanMesh,'OCEAN',oceanPlan);
+  const ocean=primitive(oceanMesh,'OCEAN');
   if(!land)issues.push('FAR_LAND_REPRESENTATION_EMPTY_OR_INVALID');
   if(!ocean)issues.push('FAR_OCEAN_REPRESENTATION_EMPTY_OR_INVALID');
   const primitives=[land,ocean].filter(Boolean);
@@ -178,41 +147,16 @@ export function constructHEarthDistantContextGeometry({cameraWorld={x:0,y:8,z:-4
   if(oceanMesh.outerRadius<horizon)issues.push('CONTINUOUS_OCEAN_DOES_NOT_REACH_DERIVED_HORIZON');
 
   return freeze({
-    ok:issues.length===0,
-    status:issues.length?'DISTANT_CONTEXT_GEOMETRY_FAILED':'DISTANT_CONTEXT_GEOMETRY_COMPLETE',
-    contractId:H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,
-    planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,
-    planetBodyHorizonShellId:H_EARTH_PLANET_BODY_HORIZON_SHELL_ID,
-    representationPlan:landPlan,
-    oceanRepresentationPlan:oceanPlan,
-    topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,
-    representationClass:'FAR',
-    geographicIdentity:'AUDRALIA',
-    playableRegionIdentity:'GRATITUDE',
-    climateIdentity:'WARM_SUBTROPICAL_COASTAL',
+    ok:issues.length===0,status:issues.length?'DISTANT_CONTEXT_GEOMETRY_FAILED':'DISTANT_CONTEXT_GEOMETRY_COMPLETE',
+    contractId:H_EARTH_GEOMETRY_DISTANT_CONTEXT_CONTRACT_ID,planetaryWorldFrameContractId:H_EARTH_PLANETARY_WORLD_FRAME_CONTRACT_ID,
+    planetBodyHorizonShellId:H_EARTH_PLANET_BODY_HORIZON_SHELL_ID,representationPlan:landPlan,
+    topologySourceId:H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID,representationClass:'FAR',geographicIdentity:'AUDRALIA',playableRegionIdentity:'GRATITUDE',climateIdentity:'WARM_SUBTROPICAL_COASTAL',
     meshDiagnostics:freeze({land:landMesh,ocean:oceanMesh,triangleCount:landMesh.triangleCount+oceanMesh.triangleCount}),
-    primitives,
-    bounds:primitives[0]?.geometry?.bounds??null,
-    visualContinuationLayer:false,
-    fullXYZSphericalContinuation:true,
-    singleSphericalPresentationManifold:true,
-    derivedHorizonDistance:horizon,
-    fixedPlanetaryAnchor:true,
-    worldRecenteredForCamera:false,
-    accessibleRegionExpansion:false,
-    radialHorizonContinuity:true,
-    oceanSectorEmptinessEnforced:true,
-    oceanVisualContinuationMaterialized:true,
-    planetBodyHorizonShellMaterialized:false,
-    separateVisiblePlanetBodySubstitute:false,
-    singleContinuousOceanToHorizon:true,
-    visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',
-    waterColorAuthority:'CANONICAL_WATER_DEPTH_CONTINUOUS',
-    historical23923ColorAnchorsPreserved:true,
-    lateralColorTerminationPossible:false,
-    oppositeShoreFabricationProhibited:true,
-    independentGeographyAuthority:false,
-    admitted:false,
-    issues
+    primitives,bounds:primitives[0]?.geometry?.bounds??null,visualContinuationLayer:false,fullXYZSphericalContinuation:true,singleSphericalPresentationManifold:true,
+    derivedHorizonDistance:horizon,fixedPlanetaryAnchor:true,worldRecenteredForCamera:false,accessibleRegionExpansion:false,radialHorizonContinuity:true,
+    oceanSectorEmptinessEnforced:true,oceanVisualContinuationMaterialized:true,planetBodyHorizonShellMaterialized:false,separateVisiblePlanetBodySubstitute:false,
+    singleContinuousOceanToHorizon:true,visibleWaterAuthority:'ONE_CONTINUOUS_OCEAN_SURFACE',nearCoastTessellation:'WORLD_SPACE_FIELD_NOT_RADIAL_RINGS',
+    waterColorAuthority:'CANONICAL_WATER_DEPTH_CONTINUOUS',historical23923ColorAnchorsPreserved:true,lateralColorTerminationPossible:false,
+    oppositeShoreFabricationProhibited:true,independentGeographyAuthority:false,admitted:false,issues
   });
 }

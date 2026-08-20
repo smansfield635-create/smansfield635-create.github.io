@@ -1,0 +1,70 @@
+name: H-Earth ADR1 Architectural Depth Readiness
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-adr1-architectural-depth-readiness-20260819-002
+  pull_request:
+    paths:
+      - 'h-earth-3d/docs/H_EARTH_ADR1_ARCHITECTURAL_DEPTH_READINESS_v1.md'
+      - 'showroom/globe/h-earth/render/geometry-adr1-estate-proxy.js'
+      - 'showroom/globe/h-earth/render/landscape-preview.js'
+      - 'showroom/globe/h-earth/functional-landscape/navigation.js'
+      - 'h-earth-3d/validation/h-earth.adr1-architectural-depth-readiness.harness.mjs'
+      - '.github/workflows/h-earth-adr1-architectural-depth-readiness.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ADR1_PARENT: 108dd921f54ff14d99c515f945e67c799cef1065
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact bounded ADR1 path set
+        shell: bash
+        run: |
+          set -euo pipefail
+          git cat-file -e "$ADR1_PARENT^{commit}"
+          mapfile -t changed < <(git diff --name-only "$ADR1_PARENT" HEAD)
+          test "${#changed[@]}" -gt 0
+          for path in "${changed[@]}"; do
+            case "$path" in
+              h-earth-3d/docs/H_EARTH_ADR1_ARCHITECTURAL_DEPTH_READINESS_v1.md|\
+              showroom/globe/h-earth/render/geometry-adr1-estate-proxy.js|\
+              showroom/globe/h-earth/render/landscape-preview.js|\
+              showroom/globe/h-earth/functional-landscape/navigation.js|\
+              h-earth-3d/validation/h-earth.adr1-architectural-depth-readiness.harness.mjs|\
+              .github/workflows/h-earth-adr1-architectural-depth-readiness.yml) ;;
+              *) echo "ADR1_SCOPE_VIOLATION:$path" >&2; exit 1 ;;
+            esac
+          done
+      - name: Verify protected Gen329 and Experience Anchor bytes unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          protected=(
+            showroom/globe/h-earth/render/geometry-shoreline.js
+            showroom/globe/h-earth/render/geometry-distant-context.js
+            showroom/globe/h-earth/render/planetary-world-frame.js
+            h-earth-3d/terrain/h-earth.terrain-field.js
+            h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+            h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
+            showroom/globe/h-earth/render/live-render-package.run8e-r2.js
+            showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js
+            h-earth-3d/experience-anchor
+            .github/workflows/pages.yml
+          )
+          for path in "${protected[@]}"; do
+            git diff --quiet "$ADR1_PARENT" HEAD -- "$path" || { echo "ADR1_PROTECTED_PATH_CHANGED:$path" >&2; exit 1; }
+          done
+      - name: Run exact ADR1 qualification
+        run: node h-earth-3d/validation/h-earth.adr1-architectural-depth-readiness.harness.mjs

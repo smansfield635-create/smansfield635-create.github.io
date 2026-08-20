@@ -29,7 +29,6 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
     'positions',
     'materialModelCodes',
     'surfaceClassCodes',
-    'primitiveIndices',
     'indices'
   ]),
   presentationRoleProjection: freezeRecord({
@@ -45,6 +44,14 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
     sourceBandEndpointsPreserved: true,
     adjacentBandBoundaryColorsCorrespond: true,
     sourceAuthorityMutation: false,
+    geometryMutation: false
+  }),
+  presentationPrimitiveSeedProjection: freezeRecord({
+    purpose: 'REMOVE_PER_BAND_SHADER_VARIATION_SEAM_FOR_SHORELINE_AND_OCEAN',
+    sourceShorelineRoleCode: 2,
+    gpuPresentationPrimitiveIndex: 0,
+    semanticPrimitiveIdentityMutation: false,
+    drawRangeMutation: false,
     geometryMutation: false
   }),
   maximumPermittedAbsoluteAdjustment: 9.5367431640625e-7,
@@ -150,6 +157,28 @@ function projectGpuRoleCodes(source) {
   };
 }
 
+function projectGpuPrimitiveIndices(sourcePrimitiveIndices, sourceRoleCodes) {
+  const result = new Uint16Array(sourcePrimitiveIndices.length);
+  let remappedElementCount = 0;
+  for (let index = 0; index < sourcePrimitiveIndices.length; index += 1) {
+    const sourceRole = Number(sourceRoleCodes[index]);
+    const before = Number(sourcePrimitiveIndices[index]);
+    const after = sourceRole === 2 ? 0 : before;
+    result[index] = after;
+    if (after !== before) remappedElementCount += 1;
+  }
+  return {
+    view: result,
+    receipt: freezeRecord({
+      sourceShorelineRoleCode: 2,
+      gpuPresentationPrimitiveIndex: 0,
+      remappedElementCount,
+      semanticPrimitiveIdentityMutation: false,
+      drawRangeMutation: false
+    })
+  };
+}
+
 export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()
 ) {
@@ -164,6 +193,10 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     packageRecord
   );
   const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
+  const projectedPrimitiveIndices = projectGpuPrimitiveIndices(
+    rawViews.primitiveIndices,
+    rawViews.roleCodes
+  );
 
   return freezeRecord({
     positions: new Float32Array(rawViews.positions),
@@ -172,7 +205,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     materialParameters: canonicalMaterialParameters.view,
     materialModelCodes: new Uint8Array(rawViews.materialModelCodes),
     surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
-    primitiveIndices: new Uint16Array(rawViews.primitiveIndices),
+    primitiveIndices: projectedPrimitiveIndices.view,
     roleCodes: projectedRoleCodes.view,
     indices: new Uint32Array(rawViews.indices),
     canonicalizationReceipt: freezeRecord({
@@ -183,6 +216,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       materialParameterBuffer: canonicalMaterialParameters.receipt,
       depthColorProjection: projectedBaseColors.receipt,
       gpuRoleProjection: projectedRoleCodes.receipt,
+      gpuPrimitiveSeedProjection: projectedPrimitiveIndices.receipt,
       sourcePackageMutated: false,
       transportEncodingOnly: true
     }),

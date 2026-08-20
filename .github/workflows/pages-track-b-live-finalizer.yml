@@ -1,60 +1,10 @@
-name: Track B Live Finalizer
+name: Track B Live Finalizer (retired)
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'ops/track-b-live-request.txt'
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+  workflow_dispatch:
 
 jobs:
-  finalize:
+  retired:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout request head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
-          fetch-depth: 0
-
-      - name: Request GitHub Pages build
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          api_root="https://api.github.com/repos/${GITHUB_REPOSITORY}"
-          headers=(
-            -H "Accept: application/vnd.github+json"
-            -H "Authorization: Bearer ${GH_TOKEN}"
-            -H "X-GitHub-Api-Version: 2022-11-28"
-          )
-          topology="$(curl --fail-with-body --silent --show-error "${headers[@]}" "${api_root}/pages")"
-          mode="$(jq -r '.build_type // empty' <<<"$topology")"
-          if [ "$mode" = "legacy" ]; then
-            curl --fail-with-body --silent --show-error -X POST "${headers[@]}" "${api_root}/pages/builds" >/tmp/pages-build-request.json
-            cat /tmp/pages-build-request.json
-          fi
-
-      - name: Wait for public single-authority Compass
-        shell: bash
-        run: |
-          set -euo pipefail
-          for attempt in $(seq 1 120); do
-            url="https://diamondgatebridge.com/index.html?trackb=${GITHUB_RUN_ID}-${attempt}"
-            body="$(curl --fail --silent --show-error -L -H 'Cache-Control: no-cache' "$url" || true)"
-            if grep -Fq 'New here? Open the introduction.' <<<"$body" \
-              && grep -Fq 'data-compass-capability-mount' <<<"$body" \
-              && ! grep -Fq '>Why Diamond Gate exists<' <<<"$body"; then
-              echo "LIVE_VERIFIED attempt=$attempt"
-              exit 0
-            fi
-            echo "waiting attempt=$attempt"
-            sleep 5
-          done
-          echo "Live site did not converge within 10 minutes." >&2
-          exit 1
+      - run: echo "Retired. Direct GitHub Pages Deploy is the single publication authority."

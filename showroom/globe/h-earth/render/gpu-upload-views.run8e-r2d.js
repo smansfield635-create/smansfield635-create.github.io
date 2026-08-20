@@ -10,6 +10,15 @@ const finite = (value) => typeof value === 'number' && Number.isFinite(value);
 export const H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID =
   'H_EARTH_RUN_8E_R2D_DETERMINISTIC_GPU_UPLOAD_VIEWS_v1';
 
+const WATER_DEPTH_COLOR_STOPS = freezeRecord({
+  SHALLOW_WATER: freezeRecord({ inner: [45,160,178], outer: [36,145,175] }),
+  INNER_SHELF_WATER: freezeRecord({ inner: [36,145,175], outer: [25,119,160] }),
+  MID_SHELF_WATER: freezeRecord({ inner: [25,119,160], outer: [16,91,139] }),
+  OUTER_SHELF_WATER: freezeRecord({ inner: [16,91,139], outer: [9,61,108] }),
+  DEEP_APPROACH_WATER: freezeRecord({ inner: [9,61,108], outer: [5,36,76] }),
+  OPEN_WATER_NEAR_MID_REPRESENTATION: freezeRecord({ inner: [5,36,76], outer: [2,15,42] })
+});
+
 export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
   contractId: H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID,
   encodingClass: 'DECIMAL_CANONICALIZATION_BEFORE_FLOAT32_TRANSPORT',
@@ -18,7 +27,6 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
   appliedBuffers: Object.freeze(['normals', 'materialParameters']),
   unchangedBuffers: Object.freeze([
     'positions',
-    'baseColorsLinear',
     'materialModelCodes',
     'surfaceClassCodes',
     'primitiveIndices',
@@ -30,6 +38,13 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
     purpose: 'BYPASS_CP2_HARDCODED_TEAL_WATER_OVERRIDE',
     semanticPackageRoleMutation: false,
     materialBufferMutation: false,
+    geometryMutation: false
+  }),
+  presentationDepthColorProjection: freezeRecord({
+    purpose: 'CONTINUOUS_VERTEX_INTERPOLATED_SHORELINE_DEPTH_DESCENT',
+    sourceBandEndpointsPreserved: true,
+    adjacentBandBoundaryColorsCorrespond: true,
+    sourceAuthorityMutation: false,
     geometryMutation: false
   }),
   maximumPermittedAbsoluteAdjustment: 9.5367431640625e-7,
@@ -77,6 +92,43 @@ function canonicalFloat32(source, bufferName) {
   };
 }
 
+function srgb8ToLinear(value) {
+  const normalized = Math.min(255, Math.max(0, Number(value))) / 255;
+  return normalized <= 0.04045
+    ? normalized / 12.92
+    : Math.pow((normalized + 0.055) / 1.055, 2.4);
+}
+
+function projectContinuousDepthColors(source, packageRecord) {
+  const result = new Float32Array(source);
+  let projectedPrimitiveCount = 0;
+  let projectedVertexCount = 0;
+  for (const span of packageRecord?.primitiveSpans ?? []) {
+    const stop = WATER_DEPTH_COLOR_STOPS[span?.materialIntent];
+    if (!stop) continue;
+    projectedPrimitiveCount += 1;
+    for (let localVertexIndex = 0; localVertexIndex < span.vertexCount; localVertexIndex += 1) {
+      const vertexIndex = span.vertexStart + localVertexIndex;
+      const rgb = localVertexIndex % 2 === 0 ? stop.inner : stop.outer;
+      const colorOffset = vertexIndex * 4;
+      result[colorOffset] = srgb8ToLinear(rgb[0]);
+      result[colorOffset + 1] = srgb8ToLinear(rgb[1]);
+      result[colorOffset + 2] = srgb8ToLinear(rgb[2]);
+      projectedVertexCount += 1;
+    }
+  }
+  return {
+    view: result,
+    receipt: freezeRecord({
+      projectedPrimitiveCount,
+      projectedVertexCount,
+      sourceBandEndpointsPreserved: true,
+      adjacentBandBoundaryColorsCorrespond: true,
+      interpolationAuthority: 'GPU_VERTEX_INTERPOLATION_ACROSS_SHARED_DEPTH_ENDPOINTS'
+    })
+  };
+}
+
 function projectGpuRoleCodes(source) {
   const result = new Uint8Array(source.length);
   let remappedElementCount = 0;
@@ -107,12 +159,16 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     rawViews.materialParameters,
     'materialParameters'
   );
+  const projectedBaseColors = projectContinuousDepthColors(
+    rawViews.baseColorsLinear,
+    packageRecord
+  );
   const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
 
   return freezeRecord({
     positions: new Float32Array(rawViews.positions),
     normals: canonicalNormals.view,
-    baseColorsLinear: new Float32Array(rawViews.baseColorsLinear),
+    baseColorsLinear: projectedBaseColors.view,
     materialParameters: canonicalMaterialParameters.view,
     materialModelCodes: new Uint8Array(rawViews.materialModelCodes),
     surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
@@ -125,6 +181,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       packageContentDigestAtSource: packageRecord.contentDigest,
       normalBuffer: canonicalNormals.receipt,
       materialParameterBuffer: canonicalMaterialParameters.receipt,
+      depthColorProjection: projectedBaseColors.receipt,
       gpuRoleProjection: projectedRoleCodes.receipt,
       sourcePackageMutated: false,
       transportEncodingOnly: true

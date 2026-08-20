@@ -1,7 +1,7 @@
 /**
  * /showroom/globe/h-earth/render/environment-atmosphere.js
  *
- * H_EARTH_LOW_COST_ATMOSPHERE_PRESENTATION_RUN_7C_v1
+ * H_EARTH_LOW_COST_ATMOSPHERE_PRESENTATION_RUN_7C_v2_PLAYER_SCALE_DEPTH
  *
  * Pure presentation adapter for canonical H-Earth atmosphere state. It derives
  * a sky gradient, sun disc, horizon haze, distance fog, and terrain-distance
@@ -44,12 +44,25 @@ const validateColor = (color) =>
 export const H_EARTH_ATMOSPHERE_PRESENTATION_CONTRACT_ID =
   'H_EARTH_LOW_COST_ATMOSPHERE_PRESENTATION_RUN_7C_v1';
 
+export const H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE = deepFreeze({
+  profileId: 'H_EARTH_PLAYER_SCALE_ATMOSPHERE_DEPTH_v1',
+  fogStartMultiplier: 1.28,
+  fogFalloffMultiplier: 0.82,
+  midgroundColorHazeWeight: 0.78,
+  distanceDesaturationWeight: 0.72,
+  skyHorizonHazeWeight: 0.32,
+  horizonOverlayBaseOpacity: 0.14,
+  horizonOverlayDensityWeight: 0.48,
+  authority: 'PRESENTATION_ONLY'
+});
+
 export const H_EARTH_ATMOSPHERE_PRESENTATION = deepFreeze({
   contractId: H_EARTH_ATMOSPHERE_PRESENTATION_CONTRACT_ID,
-  presentationRevision: 1,
-  model: 'SKY_GRADIENT_SUN_DISC_HORIZON_HAZE_DISTANCE_FOG_TERRAIN_DESATURATION',
+  presentationRevision: 2,
+  model: 'SKY_GRADIENT_SUN_DISC_HORIZON_HAZE_DELAYED_DISTANCE_FOG_PLAYER_SCALE_TERRAIN_DESATURATION',
   consumesAtmosphereContractId: H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID,
   implementationClass: 'PURE_PRESENTATION_PLAN_AND_COLOR_PROJECTION',
+  playerScaleProfileId: H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.profileId,
   ownership: {
     ownsNativeAtmosphereTruth: false,
     ownsSunTruth: false,
@@ -79,6 +92,12 @@ function validAtmosphere(sample) {
   return evaluateHEarthAtmosphereStateSample(sample).eligible === true;
 }
 
+export function getHEarthPlayerScaleFogStartDistance(atmosphereState) {
+  if (!validAtmosphere(atmosphereState)) return Number.NaN;
+  return atmosphereState.fogStartDistance *
+    H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.fogStartMultiplier;
+}
+
 export function computeHEarthAtmosphericFogFactor(
   distance,
   atmosphereState
@@ -86,8 +105,11 @@ export function computeHEarthAtmosphericFogFactor(
   if (!finite(distance) || distance < 0 || !validAtmosphere(atmosphereState)) {
     return Number.NaN;
   }
-  const beyondStart = Math.max(0, distance - atmosphereState.fogStartDistance);
-  const raw = 1 - Math.exp(-beyondStart * atmosphereState.fogFalloff);
+  const protectedStart = getHEarthPlayerScaleFogStartDistance(atmosphereState);
+  const beyondStart = Math.max(0, distance - protectedStart);
+  const effectiveFalloff = atmosphereState.fogFalloff *
+    H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.fogFalloffMultiplier;
+  const raw = 1 - Math.exp(-beyondStart * effectiveFalloff);
   return clamp(raw, 0, atmosphereState.maximumFogFactor);
 }
 
@@ -104,7 +126,8 @@ export function sampleHEarthAtmosphereSkyColor(
     horizonToUpper
   );
   const horizonHaze = clamp01(1 - Math.abs(y - 0.18) / 0.2) *
-    atmosphereState.hazeDensity * 0.44;
+    atmosphereState.hazeDensity *
+    H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.skyHorizonHazeWeight;
   return deepFreeze(mixColor(base, atmosphereState.groundHazeColor, horizonHaze));
 }
 
@@ -132,24 +155,33 @@ export function applyHEarthAtmosphericDistanceToColor({
     baseColor[0] * 0.2126 + baseColor[1] * 0.7152 + baseColor[2] * 0.0722
   );
   const desaturationFactor = clamp01(
-    fogFactor * atmosphereState.distanceDesaturationStrength
+    fogFactor * atmosphereState.distanceDesaturationStrength *
+      H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.distanceDesaturationWeight
   );
   const desaturated = mixColor(
     baseColor,
     [luminance, luminance, luminance, 255],
     desaturationFactor
   );
+  const colorHazeFactor = clamp01(
+    fogFactor * (
+      H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.midgroundColorHazeWeight +
+      fogFactor * (1 - H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.midgroundColorHazeWeight)
+    )
+  );
   const rgba = mixColor(
     desaturated,
     atmosphereState.groundHazeColor,
-    fogFactor
+    colorHazeFactor
   );
   return deepFreeze({
     eligible: true,
     status: 'ATMOSPHERIC_DISTANCE_COLOR_COMPLETE',
     rgba,
     fogFactor,
+    colorHazeFactor,
     desaturationFactor,
+    playerScaleProtectedFogStart: getHEarthPlayerScaleFogStartDistance(atmosphereState),
     issues: []
   });
 }
@@ -159,9 +191,6 @@ export function buildHEarthAtmospherePresentation(
   {
     viewportWidth = 640,
     viewportHeight = 360,
-    // Keep the standalone presentation default aligned with OW04's
-    // camera-to-envelope visual reach. Callers may still pass an exact camera
-    // far plane; this does not create camera authority here.
     cameraFarPlane = 3328
   } = {}
 ) {
@@ -196,6 +225,7 @@ export function buildHEarthAtmospherePresentation(
     status: 'ATMOSPHERE_PRESENTATION_COMPLETE',
     contractId: H_EARTH_ATMOSPHERE_PRESENTATION_CONTRACT_ID,
     presentationRevision: H_EARTH_ATMOSPHERE_PRESENTATION.presentationRevision,
+    playerScaleProfileId: H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.profileId,
     sourceAtmosphereContractId: atmosphereState.contractId,
     sourceAtmosphereRevision: atmosphereState.atmosphereStateRevision,
     viewport: {
@@ -234,11 +264,18 @@ export function buildHEarthAtmospherePresentation(
       normalizedMinimumY: clamp01(horizonCenter - hazeHalfHeight),
       normalizedMaximumY: clamp01(horizonCenter + hazeHalfHeight),
       rgba: atmosphereState.groundHazeColor,
-      opacity: clamp01(0.2 + atmosphereState.hazeDensity * 0.58)
+      opacity: clamp01(
+        H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.horizonOverlayBaseOpacity +
+        atmosphereState.hazeDensity *
+          H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.horizonOverlayDensityWeight
+      )
     },
     distanceFog: {
-      startDistance: atmosphereState.fogStartDistance,
-      falloff: atmosphereState.fogFalloff,
+      sourceStartDistance: atmosphereState.fogStartDistance,
+      startDistance: getHEarthPlayerScaleFogStartDistance(atmosphereState),
+      sourceFalloff: atmosphereState.fogFalloff,
+      falloff: atmosphereState.fogFalloff *
+        H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.fogFalloffMultiplier,
       maximumFactor: atmosphereState.maximumFogFactor,
       cameraFarPlane,
       factorAtFarPlane: computeHEarthAtmosphericFogFactor(
@@ -247,7 +284,8 @@ export function buildHEarthAtmospherePresentation(
       )
     },
     terrainDistanceDesaturation: {
-      strength: atmosphereState.distanceDesaturationStrength,
+      strength: atmosphereState.distanceDesaturationStrength *
+        H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.distanceDesaturationWeight,
       hazeColor: atmosphereState.groundHazeColor,
       applyFunction:
         'applyHEarthAtmosphericDistanceToColor(baseColor,distance,atmosphereState)'
@@ -271,6 +309,9 @@ export function evaluateHEarthAtmospherePresentation(plan) {
   }
   if (plan?.sourceAtmosphereContractId !== H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID) {
     issues.push('SOURCE_ATMOSPHERE_CONTRACT_ID_MISMATCH');
+  }
+  if (plan?.playerScaleProfileId !== H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.profileId) {
+    issues.push('PLAYER_SCALE_ATMOSPHERE_PROFILE_MISSING');
   }
   const stops = plan?.skyGradientStops;
   if (!Array.isArray(stops) || stops.length < 4) {
@@ -319,6 +360,7 @@ export function getHEarthAtmospherePresentationReceipt() {
     eligible: evaluation.eligible,
     status: evaluation.status,
     presentationModel: H_EARTH_ATMOSPHERE_PRESENTATION.model,
+    playerScaleProfileId: H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE.profileId,
     createsDom: false,
     createsCanvas: false,
     mutatesRenderer: false,

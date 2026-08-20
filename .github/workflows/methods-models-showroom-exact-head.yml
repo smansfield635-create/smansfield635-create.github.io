@@ -13,8 +13,11 @@ on:
       - "laws/research/methods-and-models/showroom-euclidean.css"
       - "laws/research/methods-and-models/showroom-euclidean-interaction.css"
       - "laws/research/methods-and-models/showroom-euclidean.js"
+      - "laws/research/methods-and-models/rotational-text.css"
+      - "laws/research/methods-and-models/rotational-text-responsive-repair.css"
+      - "laws/research/methods-and-models/rotational-text-overlay-repair.css"
+      - "laws/research/methods-and-models/rotational-text.js"
       - "laws/research/methods-and-models/canonical-records-v1.html"
-      - "verification/methods-models-showroom-browser.mjs"
       - ".github/workflows/methods-models-showroom-exact-head.yml"
   workflow_dispatch:
 
@@ -32,7 +35,7 @@ env:
 jobs:
   exact-head-showroom:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 15
     steps:
       - name: Checkout exact execution head
         uses: actions/checkout@v4
@@ -46,28 +49,20 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Set up Chrome
-        id: chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
-
-      - name: Install pinned browser driver
-        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
-
-      - name: Validate JavaScript syntax
+      - name: Validate public product JavaScript syntax
         run: |
           node --check laws/research/methods-and-models/showroom.js
           node --check laws/research/methods-and-models/showroom-refinement.js
           node --check laws/research/methods-and-models/showroom-euclidean.js
-          node --check verification/methods-models-showroom-browser.mjs
+          node --check laws/research/methods-and-models/rotational-text.js
 
       - name: Start exact-head static server
         shell: bash
         run: |
+          set -euo pipefail
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/methods-models-server.log 2>&1 &
           for attempt in $(seq 1 40); do
-            if curl -fsS http://127.0.0.1:4173/laws/research/methods-and-models/ >/dev/null; then
+            if curl -fsS "$METHODS_MODELS_ORIGIN/laws/research/methods-and-models/" >/dev/null; then
               exit 0
             fi
             sleep 0.25
@@ -75,18 +70,52 @@ jobs:
           cat /tmp/methods-models-server.log
           exit 1
 
-      - name: Execute exact-head source and browser verification
-        env:
-          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
-        run: node verification/methods-models-showroom-browser.mjs
+      - name: Verify exact-head public product route and asset integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$METHODS_MODELS_ORIGIN/laws/research/methods-and-models/" >/dev/null
+          for asset in \
+            rotational-text.js \
+            rotational-text.css \
+            rotational-text-responsive-repair.css \
+            rotational-text-overlay-repair.css \
+            showroom-euclidean.js \
+            showroom-euclidean-interaction.css; do
+            curl -fsS "$METHODS_MODELS_ORIGIN/laws/research/methods-and-models/$asset" >/dev/null
+          done
 
-      - name: Upload verification receipt
+      - name: Emit public integrity receipt and private qualification boundary
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const receipt={
+            schema:'METHODS_MODELS_PUBLIC_EXACT_HEAD_INTEGRITY_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            repository:process.env.GITHUB_REPOSITORY,
+            candidateSha:process.env.EXECUTION_COMMIT,
+            exactHeadVerified:true,
+            syntaxValidated:true,
+            publicRouteLoaded:true,
+            requiredProductAssetsLoaded:true,
+            terminalBrowserQualificationAuthority:false,
+            privatePlaywrightQualificationRequired:true,
+            privateQualificationModel:'PUBLIC_BUILD_PRIVATE_QUALIFICATION_EXACT_ARTIFACT_IDENTITY_v1',
+            productAcceptanceCreated:false,
+            mergeAuthorityCreated:false,
+            userApprovalCreated:false
+          };
+          fs.writeFileSync('methods-models-public-exact-head-integrity.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+
+      - name: Upload public integrity receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: methods-models-showroom-exact-head-evidence
+          name: methods-models-public-exact-head-integrity-${{ env.EXECUTION_COMMIT }}
           path: |
-            methods-models-showroom-exact-head.json
+            methods-models-public-exact-head-integrity.json
             /tmp/methods-models-server.log
           if-no-files-found: warn
           retention-days: 30

@@ -1,6 +1,13 @@
 name: Compass Static Editorial Materialize V2
 
 on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/compass-static-editorial-materialize-v2.yml'
+      - 'tools/compass-static-editorial-materialize.py'
+      - 'tools/compass-static-editorial-qualification.mjs'
   push:
     branches: [recovery/compass-static-editorial-successor]
     paths:
@@ -9,8 +16,13 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: compass-static-editorial-materialize-v2
+  cancel-in-progress: true
+
 jobs:
   materialize:
+    if: github.head_ref == 'recovery/compass-static-editorial-successor' || github.ref_name == 'recovery/compass-static-editorial-successor'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

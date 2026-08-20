@@ -51,5 +51,3 @@ function reconcileInstructions(){const root=document.querySelector('[data-compas
 function mount(){protectMirrorland();reconcileInstructions();mountCapability();mountProof();const root=document.querySelector('[data-compass-root]');if(root){root.dataset.capabilityContinuity=CONTINUITY;root.dataset.lowerProofContinuity='protected';root.dataset.legacyRecoveryAuthority='retired'}}
 const api=Object.freeze({version:'capability-continuity-v3-swipe-only-closeout',continuity:CONTINUITY,mount});Object.defineProperty(globalThis,'CompassEditorialCarousel',{configurable:false,enumerable:true,get:()=>api,set:()=>{}});document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
 })();
-
-/* Stable-byte identity refresh: forces a new public cache key after the Track B regression used the prior URL for different runtime bytes. */

@@ -242,7 +242,7 @@ function mountCapability(){
   syncCards();syncDock();publish('initial');
 
   globalThis.CompassBrainScene?.mount(diagnostic.querySelector('canvas'),{foreground:()=>index===0&&!dragging&&!settling});
-  loadScene('/assets/compass/compass.trophy-scene.js?v=capability-continuity-v1','CompassTrophyScene','data-compass-trophy-scene',()=>globalThis.CompassTrophyScene?.mount(awards.querySelector('canvas'),{foreground:()=>index===1&&!dragging&&!settling}));
+  loadScene('/assets/compass/compass.trophy-scene.js?v=capability-continuity-v1&cb=c8616fb96e0160ee','CompassTrophyScene','data-compass-trophy-scene',()=>globalThis.CompassTrophyScene?.mount(awards.querySelector('canvas'),{foreground:()=>index===1&&!dragging&&!settling}));
   loadScene('/assets/compass/compass.house-scene.js?v=capability-continuity-v1&cb=02ad599128833f50','CompassHouseScene','data-compass-house-scene-runtime',()=>globalThis.CompassHouseScene?.mount(house.querySelector('canvas'),{foreground:()=>index===2&&!dragging&&!settling}));
 }
 

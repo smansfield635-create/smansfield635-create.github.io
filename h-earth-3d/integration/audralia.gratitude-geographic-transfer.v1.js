@@ -36,7 +36,7 @@ export const AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_CONTRACT_ID='AUDRALIA_GRATIT
 const CORE=H_EARTH_TERRAIN_FIELD.coreDomain;
 const WORLD=H_EARTH_TERRAIN_FIELD.worldDomain;
 const CONTINENT=freeze({xMinimum:-1760,xMaximum:1640,zMinimum:-2050,zMaximum:820});
-const CONTINENTAL_RECONSTRUCTION_REVISION=4;
+const CONTINENTAL_RECONSTRUCTION_REVISION=5;
 
 export const AUDRALIA_GRATITUDE_CONTINENTAL_CHRONOLOGY=freeze([
   {era:1,id:'ANCIENT_SHIELD',event:'STABLE_ARCHAEAN_CORE',effect:'LOW_ROUNDED_ERODED_HIGHLANDS'},
@@ -69,14 +69,15 @@ export const AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER=freeze({
   worldLaw:'ONE_WORLD_ONE_GEOGRAPHY_MULTIPLE_SCALES_OF_ACCESS',
   physicalGeographyLaw:'GEOLOGIC_HISTORY_CAUSES_RELIEF_RELIEF_CAUSES_DRAINAGE_DRAINAGE_CAUSES_BIOMES',
   sourceTerrainContractId:H_EARTH_TERRAIN_FIELD.contractId,
-  coordinateLaw:'GEOGRAPHIC_POSITION_CANONICAL_RENDERING_RADIUS_REPRESENTATIONAL',
+  coordinateLaw:'H_EARTH_LOCAL_TANGENT_CORE_EMBEDS_IN_AUDRALIA_SPHERE_CONTINENTAL_CONTINUATION_BEGINS_OUTSIDE_CORE',
   lodLaw:'LOD_CHANGES_SAMPLING_DENSITY_NOT_GEOGRAPHIC_STATE',
   completionLaw:'FIXED_RESOLVED_GEOGRAPHY_THEN_CHRONOLOGY_CONSTRAINED_CONTINUATION',
-  resolvedEnvelope:freeze({...WORLD}),resolvedCore:freeze({...CORE}),continentalEnvelope:CONTINENT,
+  resolvedEnvelope:freeze({...CORE}),resolvedCore:freeze({...CORE}),continentalEnvelope:CONTINENT,
   coastalSystemId:H_EARTH_GRATITUDE_COASTAL_SYSTEM.systemId,
   inlandWatershedSystemId:H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM.systemId,
   chronology:AUDRALIA_GRATITUDE_CONTINENTAL_CHRONOLOGY,
   provinces:AUDRALIA_GRATITUDE_GEOGRAPHIC_PROVINCES,
+  localTangentPlaneMayDefineWholeContinent:false,
   otherTerritoriesMutated:false,globeAuthorityCreated:false,oceanAuthorityCreated:false,
   weatherAuthorityCreated:false,cloudAuthorityCreated:false,atmosphereAuthorityCreated:false,
   cameraAuthorityCreated:false,zoomAuthorityCreated:false
@@ -90,29 +91,29 @@ const WEST=coreBoundary(-1),EAST=coreBoundary(1);
 
 export function resolveAudraliaGratitudeShorelineZ(worldX){
   if(!finite(worldX))return Number.NaN;
-  if(worldX>=WORLD.xMinimum&&worldX<=WORLD.xMaximum)return getHEarthCanonicalShorelineZ(worldX);
-  const side=worldX<WORLD.xMinimum?-1:1;
-  const boundaryX=side<0?WORLD.xMinimum:WORLD.xMaximum;
-  const boundaryZ=getHEarthCanonicalShorelineZ(boundaryX);
-  const innerX=boundaryX-side*16;
-  const tangent=(boundaryZ-getHEarthCanonicalShorelineZ(innerX))/16*side;
+  if(worldX>=CORE.xMinimum&&worldX<=CORE.xMaximum)return getHEarthCanonicalShorelineZ(worldX);
+  const side=worldX<CORE.xMinimum?-1:1;
+  const boundaryX=side<0?CORE.xMinimum:CORE.xMaximum;
+  const boundary=side<0?WEST:EAST;
+  const boundaryZ=boundary.z;
+  const tangent=boundary.tangent;
   const d=Math.abs(worldX-boundaryX);
-  const inherited=boundaryZ+tangent*d*(1-smoothstep(120,480,d));
+  const inherited=boundaryZ+tangent*d*(1-smoothstep(80,320,d));
   if(side<0){
-    const riftGulf=-132*bell(d,250,210);
-    const riftShoulder=82*bell(d,500,190);
-    const drownedValley=-74*bell(d,720,135);
-    const oldCape=96*bell(d,940,165);
-    const brokenMargin=-48*bell(d,1160,160);
-    const micro=18*Math.sin((d+40)/73)+9*Math.sin((d+9)/31);
-    return inherited+riftGulf+riftShoulder+drownedValley+oldCape+brokenMargin+micro*smoothstep(45,180,d);
+    const riftGulf=-112*bell(d,210,170);
+    const riftShoulder=76*bell(d,430,170);
+    const drownedValley=-62*bell(d,650,120);
+    const oldCape=88*bell(d,850,150);
+    const brokenMargin=-42*bell(d,1040,150);
+    const micro=15*Math.sin((d+40)/73)+7*Math.sin((d+9)/31);
+    return inherited+riftGulf+riftShoulder+drownedValley+oldCape+brokenMargin+micro*smoothstep(35,150,d);
   }
-  const hardCoast=72*bell(d,170,135)-58*bell(d,350,125);
-  const longPeninsula=118*bell(d,590,230);
-  const estuary=-88*bell(d,850,155);
-  const easternCape=66*bell(d,1080,185);
-  const micro=11*Math.sin((d+15)/97)+5*Math.sin((d+13)/43);
-  return inherited+hardCoast+longPeninsula+estuary+easternCape+micro*smoothstep(60,220,d);
+  const hardCoast=64*bell(d,150,120)-52*bell(d,315,115);
+  const longPeninsula=104*bell(d,515,200);
+  const estuary=-74*bell(d,750,145);
+  const easternCape=58*bell(d,960,170);
+  const micro=10*Math.sin((d+15)/97)+5*Math.sin((d+13)/43);
+  return inherited+hardCoast+longPeninsula+estuary+easternCape+micro*smoothstep(45,180,d);
 }
 export const resolveHEarthMapWideShorelineZ=resolveAudraliaGratitudeShorelineZ;
 
@@ -247,7 +248,7 @@ export function sampleAudraliaGratitudeTerrain(worldX,worldZ){
     normal:{x:-dx/normalLength,y:1/normalLength,z:-dz/normalLength},slope,slopeClass:slopeClass(slope),curvature,curvatureClass:curvatureClass(curvature),
     materialProfile:materialProfile(shorelineDistance,elevation,slope,river,lake,forest),shorelineZ,shorelineDistance,
     coastalSystemId:canonical.coastalSystemId,inlandMountainWatershedSystemId:canonical.inlandMountainWatershedSystemId,
-    coastline:freeze({beachWeight,wetSandWeight,canonical:worldX>=WORLD.xMinimum&&worldX<=WORLD.xMaximum}),
+    coastline:freeze({beachWeight,wetSandWeight,canonical:worldX>=CORE.xMinimum&&worldX<=CORE.xMaximum}),
     hydrology:freeze({riverWeight:river,lakeWeight:lake,drainageClass:lake>.45?'LAKE':river>.45?'RIVER':'LAND',networkLaw:'DENDRITIC_TRIBUTARY_MERGER_WITH_BASIN_CAPTURE'}),
     biome:freeze({forestWeight:forest,class:forest>.62?'FOREST':forest>.30?'WOODLAND':'OPEN'}),
     province,sitePreparation:freeze({weight:0,authorityCreated:false}),insideReservedEstateEnvelope:false,
@@ -263,7 +264,7 @@ export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_HYDROLOGY=freeze({
 export const resolveHEarthMapWideReservoirBoundaryPoint=resolveProtectedReservoirBoundaryPoint;
 export const H_EARTH_MAP_WIDE_ENVIRONMENT_REDEVELOPMENT_TERRAIN_CANDIDATE=freeze({
   ...LEGACY_LOCAL_PRESENTATION,
-  worldDomain:CONTINENT,
+  worldDomain:freeze({...CORE}),
   coastline:freeze({...LEGACY_LOCAL_PRESENTATION.coastline,sandbars:LEGACY_LOCAL_PRESENTATION.coastline?.sandbars??[]}),
   continentalChronology:AUDRALIA_GRATITUDE_CONTINENTAL_CHRONOLOGY,
   geographicProvinces:AUDRALIA_GRATITUDE_GEOGRAPHIC_PROVINCES

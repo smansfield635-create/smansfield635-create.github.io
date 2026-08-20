@@ -76,16 +76,16 @@ export const H_EARTH_ATMOSPHERE_STATE_FORBIDDEN_NATIVE_OUTPUTS = deepFreeze([
 ]);
 
 const COLOR_PROFILES = deepFreeze({
-  nightZenith: [10, 18, 34, 255],
-  nightHorizon: [32, 42, 58, 255],
-  dawnZenith: [61, 89, 126, 255],
-  dawnHorizon: [222, 158, 111, 255],
-  dayZenith: [58, 113, 166, 255],
-  dayHorizon: [183, 207, 213, 255],
-  groundHazeNight: [38, 48, 56, 255],
-  groundHazeDay: [132, 153, 148, 255],
+  nightZenith: [8, 17, 36, 255],
+  nightHorizon: [29, 45, 69, 255],
+  dawnZenith: [58, 104, 158, 255],
+  dawnHorizon: [224, 172, 125, 255],
+  dayZenith: [32, 111, 187, 255],
+  dayHorizon: [170, 211, 236, 255],
+  groundHazeNight: [31, 50, 70, 255],
+  groundHazeDay: [174, 207, 226, 255],
   sunWarm: [255, 204, 136, 255],
-  sunDay: [255, 242, 205, 255]
+  sunDay: [255, 244, 214, 255]
 });
 
 export const H_EARTH_ATMOSPHERE_STATE = deepFreeze({
@@ -110,13 +110,12 @@ export const H_EARTH_ATMOSPHERE_STATE = deepFreeze({
     gustStrength: 0.16
   },
   fogProfile: {
-    // Preserve near-field clarity and let the already-authored OW04
-    // continuation enter atmospheric perspective progressively instead of
-    // saturating before its ~928-unit near edge.
-    fogStartDistance: 640,
-    fogFalloff: 0.00065,
-    maximumFogFactor: 0.82,
-    distanceDesaturationStrength: 0.34
+    // Preserve near-field clarity and allow a blue aerial-perspective horizon
+    // to form progressively over the spherical world without a gray veil.
+    fogStartDistance: 720,
+    fogFalloff: 0.00052,
+    maximumFogFactor: 0.72,
+    distanceDesaturationStrength: 0.24
   },
   ownership: {
     ownsSunState: true,
@@ -236,10 +235,10 @@ export function sampleHEarthAtmosphereState({
     viewDistance / H_EARTH_ATMOSPHERE_STATE.distancePressureReferenceDistance
   );
   const hazeDensity = clamp01(
-    0.2 + distancePressure * 0.24 - altitudeRelief * 0.08
+    0.16 + distancePressure * 0.2 - altitudeRelief * 0.08
   );
   const aerialPerspectiveStrength = clamp01(
-    0.28 + distancePressure * 0.36 + hazeDensity * 0.18
+    0.24 + distancePressure * 0.32 + hazeDensity * 0.16
   );
   const fogStartDistance = Math.max(
     24,

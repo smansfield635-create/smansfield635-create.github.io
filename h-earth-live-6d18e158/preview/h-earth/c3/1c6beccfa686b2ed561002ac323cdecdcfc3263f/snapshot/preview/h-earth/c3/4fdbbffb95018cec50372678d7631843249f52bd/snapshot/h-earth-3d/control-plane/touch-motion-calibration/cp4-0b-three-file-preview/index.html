@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#061014">
   <meta name="description" content="H-Earth Ground-View Matrix with live runtime diagnostics.">
   <title>H-Earth · CP4 Corrected Tablet-Fluidity Preview</title>
-  <link rel="stylesheet" href="./preview.css">
+  <link rel="stylesheet" href="./preview.css?cb=dd9205d939e7c331">
 </head>
 <body>
   <main id="h-earth-3d-route-root" class="h-earth-3d-route-root h-earth-live-route" data-h-earth-route="public-environment-host" data-h-earth-public-route="functional-landscape" data-h-earth-gesture-primary="true">
@@ -61,7 +61,7 @@
       document.getElementById('h-earth-startup-download').addEventListener('click',()=>{if(!latestReceipt)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(latestReceipt,null,2)],{type:'application/json'}));a.download='h-earth-renderer-startup-receipt.json';a.click();URL.revokeObjectURL(a.href);});
     })();
   </script>
-  <script id="h-earth-current-run8e-module" type="module" src="./preview.js"></script>
+  <script id="h-earth-current-run8e-module" type="module" src="./preview.js?cb=bb2a3b41b1dc1898"></script>
   <script>document.getElementById('h-earth-current-run8e-module').addEventListener('error',()=>{window.H_EARTH_RUNTIME_DIAGNOSTICS?.mark('BOOT_STARTED','FAIL','Current Run 8E module graph failed to load.');});</script>
 </body>
 </html>

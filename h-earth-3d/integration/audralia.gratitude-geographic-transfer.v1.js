@@ -132,7 +132,7 @@ const DRAINAGE=freeze([
   {id:'DELTA_BRANCH_WEST',order:3,width:9,points:[[430,-1770],[330,-1840],[220,-1910]]},
   {id:'DELTA_BRANCH_CENTRAL',order:3,width:10,points:[[430,-1770],[440,-1870],[470,-1980]]},
   {id:'DELTA_BRANCH_EAST',order:2,width:7,points:[[430,-1770],[560,-1840],[690,-1910]]}
-].map(r=>freeze({...r,points:freeze(r.points.map(freeze))})));
+].map(r=>freeze({...r,points:freeze(r.points.map(point=>freeze(point)))})));
 
 const LAKES=freeze([
   freeze({id:'GREAT_INTERIOR_LAKE',x:260,z:-1010,rx:150,rz:90,spill:[360,-980]}),

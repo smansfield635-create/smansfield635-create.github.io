@@ -3,9 +3,24 @@ import {
   getHEarthRun8ER2ImmutableLiveRenderPackage,
   createHEarthRun8ER2GPUBufferViews
 } from './live-render-package.run8e-r2.js';
+import { getHEarthCanonicalShorelineZ } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 
 const freezeRecord = (value) => Object.freeze(value);
 const finite = (value) => typeof value === 'number' && Number.isFinite(value);
+const clamp01 = (value) => Math.min(1, Math.max(0, value));
+const smoothstep = (a, b, value) => {
+  const t = clamp01((value - a) / Math.max(Number.EPSILON, b - a));
+  return t * t * (3 - 2 * t);
+};
+const srgb8ToLinear = (value) => {
+  const srgb = clamp01(value / 255);
+  return srgb <= 0.04045 ? srgb / 12.92 : Math.pow((srgb + 0.055) / 1.055, 2.4);
+};
+const mix3 = (a, b, t) => [
+  a[0] + (b[0] - a[0]) * t,
+  a[1] + (b[1] - a[1]) * t,
+  a[2] + (b[2] - a[2]) * t
+];
 
 export const H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID =
   'H_EARTH_RUN_8E_R2D_DETERMINISTIC_GPU_UPLOAD_VIEWS_v1';
@@ -18,7 +33,6 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
   appliedBuffers: Object.freeze(['normals', 'materialParameters']),
   unchangedBuffers: Object.freeze([
     'positions',
-    'baseColorsLinear',
     'materialModelCodes',
     'surfaceClassCodes',
     'primitiveIndices',
@@ -32,6 +46,21 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
     materialBufferMutation: false,
     geometryMutation: false
   }),
+  waterOpticalProjection: freezeRecord({
+    purpose: 'RESTORE_23923_COAST_DISTANCE_OPTICS_ON_ACTIVE_WEBGL_PATH',
+    coordinateLaw: 'DISTANCE_FROM_CANONICAL_COAST',
+    shallowRgb: Object.freeze([58, 168, 181]),
+    shelfRgb: Object.freeze([31, 116, 154]),
+    deepRgb: Object.freeze([15, 57, 96]),
+    projectedPrimitiveIds: Object.freeze([
+      'H_EARTH_FUNCTIONAL_SHORELINE:SHALLOW_WATER',
+      'H_EARTH_FUNCTIONAL_SHORELINE:NEARSHORE_WATER',
+      'H_EARTH_FUNCTIONAL_SHORELINE:OPEN_WATER',
+      'H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION'
+    ]),
+    sourcePackageMutated: false,
+    geometryMutation: false
+  }),
   maximumPermittedAbsoluteAdjustment: 9.5367431640625e-7,
   sourceAuthorityMutation: false,
   packageSourceMutation: false,
@@ -39,6 +68,14 @@ export const H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION = freezeRecord({
   normalRetuning: false,
   transportEncodingOnly: true
 });
+
+const WATER_PRIMITIVE_IDS = new Set(
+  H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION.waterOpticalProjection.projectedPrimitiveIds
+);
+const PLANET_RADIUS = 420000;
+const SHALLOW = Object.freeze([58, 168, 181]);
+const SHELF = Object.freeze([31, 116, 154]);
+const DEEP = Object.freeze([15, 57, 96]);
 
 function canonicalDecimal(value) {
   if (!finite(value)) throw new TypeError('R2D_GPU_CANONICALIZATION_NONFINITE');
@@ -98,6 +135,61 @@ function projectGpuRoleCodes(source) {
   };
 }
 
+function invertSphericalPresentationPoint(x, y, z) {
+  const horizontal = Math.hypot(x, z);
+  if (horizontal <= Number.EPSILON) return { x: 0, z: 0 };
+  const angularDistance = Math.atan2(horizontal, y + PLANET_RADIUS);
+  const radialDistance = angularDistance * PLANET_RADIUS;
+  const scale = radialDistance / horizontal;
+  return { x: x * scale, z: z * scale };
+}
+
+function recoveredWaterRgb(worldX, worldZ) {
+  const shorelineZ = getHEarthCanonicalShorelineZ(worldX);
+  const distance = Math.max(0, worldZ - shorelineZ);
+  const shallowToShelf = smoothstep(6, 86, distance);
+  const shelfToDeep = smoothstep(54, 360, distance);
+  return mix3(mix3(SHALLOW, SHELF, shallowToShelf), DEEP, shelfToDeep);
+}
+
+function projectRecoveredWaterBaseColors(rawViews, packageRecord) {
+  const result = new Float32Array(rawViews.baseColorsLinear);
+  let projectedVertexCount = 0;
+  const projectedPrimitiveIds = [];
+  for (const span of packageRecord?.primitiveSpans ?? []) {
+    if (!WATER_PRIMITIVE_IDS.has(span?.primitiveId)) continue;
+    projectedPrimitiveIds.push(span.primitiveId);
+    const start = Number(span.vertexStart) || 0;
+    const count = Number(span.vertexCount) || 0;
+    for (let local = 0; local < count; local += 1) {
+      const vertexIndex = start + local;
+      const p = vertexIndex * 3;
+      const c = vertexIndex * 4;
+      const localWorld = invertSphericalPresentationPoint(
+        rawViews.positions[p],
+        rawViews.positions[p + 1],
+        rawViews.positions[p + 2]
+      );
+      const rgb = recoveredWaterRgb(localWorld.x, localWorld.z);
+      result[c] = srgb8ToLinear(rgb[0]);
+      result[c + 1] = srgb8ToLinear(rgb[1]);
+      result[c + 2] = srgb8ToLinear(rgb[2]);
+      result[c + 3] = 1;
+      projectedVertexCount += 1;
+    }
+  }
+  return {
+    view: result,
+    receipt: freezeRecord({
+      projectedVertexCount,
+      projectedPrimitiveIds: Object.freeze(projectedPrimitiveIds),
+      coordinateLaw: 'DISTANCE_FROM_CANONICAL_COAST',
+      sourcePackageMutated: false,
+      activeWebglBaseColorProjection: true
+    })
+  };
+}
+
 export function createHEarthRun8ER2DCanonicalGPUUploadViews(
   packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()
 ) {
@@ -108,11 +200,12 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     'materialParameters'
   );
   const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
+  const projectedWaterColors = projectRecoveredWaterBaseColors(rawViews, packageRecord);
 
   return freezeRecord({
     positions: new Float32Array(rawViews.positions),
     normals: canonicalNormals.view,
-    baseColorsLinear: new Float32Array(rawViews.baseColorsLinear),
+    baseColorsLinear: projectedWaterColors.view,
     materialParameters: canonicalMaterialParameters.view,
     materialModelCodes: new Uint8Array(rawViews.materialModelCodes),
     surfaceClassCodes: new Uint8Array(rawViews.surfaceClassCodes),
@@ -126,6 +219,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       normalBuffer: canonicalNormals.receipt,
       materialParameterBuffer: canonicalMaterialParameters.receipt,
       gpuRoleProjection: projectedRoleCodes.receipt,
+      gpuWaterOpticalProjection: projectedWaterColors.receipt,
       sourcePackageMutated: false,
       transportEncodingOnly: true
     }),
@@ -154,6 +248,9 @@ export function evaluateHEarthRun8ER2DCanonicalGPUUploadViews(views) {
   if (views?.canonicalizationReceipt?.contractId !==
       H_EARTH_RUN_8E_R2D_GPU_UPLOAD_VIEW_CONTRACT_ID) {
     issues.push('R2D_GPU_CANONICALIZATION_RECEIPT_MISSING');
+  }
+  if ((views?.canonicalizationReceipt?.gpuWaterOpticalProjection?.projectedVertexCount ?? 0) <= 0) {
+    issues.push('R2D_GPU_WATER_OPTICAL_PROJECTION_MISSING');
   }
   if (views?.deterministicTransportEncoding !== true) {
     issues.push('R2D_GPU_TRANSPORT_ENCODING_NOT_DETERMINISTIC');

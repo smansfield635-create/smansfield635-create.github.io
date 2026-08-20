@@ -1,0 +1,116 @@
+name: Gen332 Live Production Verification v2
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/gen332-live-production-verification-v2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LIVE_BASE: https://diamondgatebridge.com
+      MERGE_SHA: 8a94bf4ce178f6ed03cf710e6d4caa0cd3680d0b
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix "$RUNNER_TEMP/pw" --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          node "$RUNNER_TEMP/pw/node_modules/playwright/cli.js" install chromium
+          mkdir -p "$RUNNER_TEMP/evidence"
+      - name: Wait for production identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$RUNNER_TEMP/evidence"
+          ready=false
+          for attempt in $(seq 1 60); do
+            nonce="${GITHUB_RUN_ID}-${attempt}"
+            ok=true
+            for route in developer evidence governance; do
+              curl -fsSL -H 'Cache-Control: no-cache, no-store, max-age=0' -H 'Pragma: no-cache' \
+                "${LIVE_BASE}/${route}/?gen332=${nonce}" -o "$out/${route}.html" || ok=false
+            done
+            curl -fsSL -H 'Cache-Control: no-cache, no-store, max-age=0' -H 'Pragma: no-cache' \
+              "${LIVE_BASE}/assets/public-legitimacy/public-legitimacy.carousel.detent.js?gen332=${nonce}" -o "$out/detent.js" || ok=false
+            curl -fsSL -H 'Cache-Control: no-cache, no-store, max-age=0' -H 'Pragma: no-cache' \
+              "${LIVE_BASE}/assets/public-legitimacy/public-legitimacy.carousel.parity.css?gen332=${nonce}" -o "$out/parity.css" || ok=false
+            if [ "$ok" = true ] \
+              && grep -Fq 'cb=42b22dda0853ce32' "$out/developer.html" \
+              && grep -Fq 'cb=3d4544bed6c20e37' "$out/developer.html" \
+              && grep -Fq 'cb=42b22dda0853ce32' "$out/evidence.html" \
+              && grep -Fq 'cb=3d4544bed6c20e37' "$out/evidence.html" \
+              && grep -Fq 'cb=42b22dda0853ce32' "$out/governance.html" \
+              && grep -Fq 'cb=3d4544bed6c20e37' "$out/governance.html" \
+              && grep -Fq 'syncInspectionPlane' "$out/detent.js" \
+              && grep -Fq 'ring.style.setProperty("transition","none","important")' "$out/detent.js" \
+              && grep -Fq 'transform:none!important' "$out/parity.css"; then
+              ready=true
+              echo "Production identities observed on attempt ${attempt}."
+              break
+            fi
+            sleep 10
+          done
+          test "$ready" = true
+      - name: Verify live interaction matrix
+        shell: bash
+        env:
+          PW_ROOT: ${{ runner.temp }}/pw
+          EVIDENCE_DIR: ${{ runner.temp }}/evidence
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs'), path=require('path');
+          const {chromium}=require(path.join(process.env.PW_ROOT,'node_modules/playwright'));
+          const devices=[['desktop',1440,900],['tablet',1024,768],['phone',390,844]];
+          const routes=[['developer','/developer/',2,'authority',false],['evidence','/evidence/',3,'recovery',true],['governance','/governance/',2,'build',false]];
+          const cases=[];
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try {
+              for(const [dn,w,h] of devices) for(const [rn,rp,target,id,lenses] of routes){
+                const page=await browser.newPage({viewport:{width:w,height:h}}), errors=[];
+                page.on('console',m=>{if(m.type()==='error')errors.push(m.text())});
+                page.on('pageerror',e=>errors.push(e.message));
+                await page.goto(`${process.env.LIVE_BASE}${rp}?verify=${Date.now()}-${dn}`,{waitUntil:'networkidle'});
+                await page.locator(`[data-tabs] [data-index="${target}"]`).click();
+                await page.waitForFunction(x=>document.querySelector('[data-carousel]')?.dataset.activeId===x,id,{timeout:5000});
+                await page.locator('.card[data-active="true"] [data-open]').click();
+                await page.waitForFunction(()=>document.querySelector('[data-carousel]')?.dataset.inspectionPlane==='flat',{timeout:5000});
+                const s=await page.evaluate(()=>{const root=document.querySelector('[data-carousel]'),v=root.querySelector('[data-viewport]'),r=root.querySelector('[data-ring]'),c=root.querySelector('.card[data-active="true"]'),b=c.getBoundingClientRect();return{activeId:root.dataset.activeId,plane:root.dataset.inspectionPlane,ring:getComputedStyle(r).transform,card:getComputedStyle(c).transform,perspective:getComputedStyle(v).perspective,rect:{left:b.left,top:b.top,right:b.right,bottom:b.bottom},vw:innerWidth,vh:innerHeight}});
+                if(s.activeId!==id||s.plane!=='flat'||s.ring!=='none'||s.card!=='none'||s.perspective!=='none')throw new Error(`${rn}/${dn}: plane failure ${JSON.stringify(s)}`);
+                if(s.rect.left<-.5||s.rect.top<-.5||s.rect.right>s.vw+.5||s.rect.bottom>s.vh+.5)throw new Error(`${rn}/${dn}: viewport escape ${JSON.stringify(s.rect)}`);
+                let lensResult='N/A';
+                if(lenses){const seen=[];for(let i=0;i<3;i++){const t=page.locator(`.card[data-active="true"] [data-lens="${i}"]`);await t.click();if(await t.getAttribute('aria-selected')!=='true')throw new Error(`evidence/${dn}: lens ${i}`);seen.push((await page.locator('.card[data-active="true"] [data-lens-panel]').innerText()).trim())}if(new Set(seen).size!==3||seen.some(x=>!x))throw new Error(`evidence/${dn}: lens content`);lensResult='ALL_3_PASS'}
+                await page.screenshot({path:path.join(process.env.EVIDENCE_DIR,`live-${rn}-${dn}.png`)});
+                await page.locator('.card[data-active="true"] [data-close]').click();
+                await page.waitForFunction(()=>document.querySelector('[data-carousel]')?.dataset.inspectionPlane==='orbit',{timeout:5000});
+                if(await page.evaluate(()=>getComputedStyle(document.querySelector('[data-ring]')).transform)==='none')throw new Error(`${rn}/${dn}: orbit not restored`);
+                const n=await page.locator('[data-tabs] [data-index]').count(), next=(target+1)%n;
+                await page.locator(`[data-tabs] [data-index="${next}"]`).click();
+                await page.waitForFunction(i=>Number(document.querySelector('[data-tabs] [aria-selected="true"]')?.dataset.index)===i,next,{timeout:5000});
+                if(errors.length)throw new Error(`${rn}/${dn}: ${errors.join(' | ')}`);
+                cases.push({route:rn,device:dn,result:'PASS',lenses:lensResult,...s,orbitRestored:true,outerTabsAfterReturn:true});
+                await page.close();
+              }
+              fs.writeFileSync(path.join(process.env.EVIDENCE_DIR,'live-receipt.json'),JSON.stringify({schema:'GEN332_LIVE_PUBLIC_LEGITIMACY_INSPECTION_VERIFICATION_V1',result:'PASS_CLOSED',mergeSha:process.env.MERGE_SHA,cases},null,2)+'\n');
+            } finally {await browser.close()}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload live evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen332-live-production-evidence-v2
+          path: ${{ runner.temp }}/evidence/**
+          if-no-files-found: error
+          retention-days: 30

@@ -1085,13 +1085,29 @@
       "state": "ADMITTED_LOCKED"
     },
     "80f687f61e6309bc59dcf236b27ab841a5c69d8e768dad13f9e64648b28c2142": {
-      "governingHead": "6ba7ae760ed71a434c0a11717293195feabc7625",
-      "lockGeneration": 1564,
+      "governingHead": "887a61ee0f1cadb20dbcd7412fac669ef58ea213",
+      "lockGeneration": 1565,
       "lockScope": "H_EARTH:AUDRALIA:PC1:GEOGRAPHIC_QUALIFICATION:EXECUTION_CARRIER:EXACT_2_PATH_CONTROL_PLANE_SCOPE",
-      "operationId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_20260820_002",
-      "procedureLocatorDigest": "235032f43943470c21dc37f992936b5ebee12032a3158fc646f611037261e714",
+      "operationId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_20260820_005",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "6ba7ae760ed71a434c0a11717293195feabc7625",
+        "lockGeneration": 1564,
+        "lockScope": "H_EARTH:AUDRALIA:PC1:GEOGRAPHIC_QUALIFICATION:EXECUTION_CARRIER:EXACT_2_PATH_CONTROL_PLANE_SCOPE",
+        "operationId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_20260820_002",
+        "preservedEvidenceRefs": [
+          "PC1_CANDIDATE_HEAD:f0edfdb3f0106852d13a9bd4805f4bba1b9d3e00",
+          "PREDECESSOR_ADMISSION:GEN1564",
+          "ISSUE:1477"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_SUCCESSOR_20260820_005"
+      },
+      "procedureLocatorDigest": "c1ff67e0a5cb94f0f8750b393fd1aaf845c0f97fd2f21e0adb6c8f6e2d3ba93b",
       "released": false,
-      "requestDigest": "0654babf91ec6dce7444d10597c877311f900077e6de2b617cec244d10cf40ce",
+      "requestDigest": "c074197e6eb9c43e8f6849eee1de63437f1ae813d8d8a14dbbf23392bb892075",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "80f687f61e6309bc59dcf236b27ab841a5c69d8e768dad13f9e64648b28c2142",
       "state": "ADMITTED_LOCKED"
@@ -2679,7 +2695,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1564,
+  "lockGeneration": 1565,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -23441,6 +23457,35 @@
         "successorLockScope": "COMPASS_RECOVERED_BASELINE_UPPER_CAPABILITY_RECONCILIATION_AND_PROTECTED_CAROUSEL_RECOVERY",
         "successorOperationId": "COMPASS_RECOVERED_BASELINE_RECONCILIATION_20260819_v1",
         "transitionId": "COMPASS_RECOVERED_RECONCILIATION_B3B0D52F_20260819_v5"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "6ba7ae760ed71a434c0a11717293195feabc7625",
+      "lockGeneration": 1564,
+      "lockScope": "H_EARTH:AUDRALIA:PC1:GEOGRAPHIC_QUALIFICATION:EXECUTION_CARRIER:EXACT_2_PATH_CONTROL_PLANE_SCOPE",
+      "operationId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_20260820_002",
+      "procedureLocatorDigest": "235032f43943470c21dc37f992936b5ebee12032a3158fc646f611037261e714",
+      "released": true,
+      "requestDigest": "0654babf91ec6dce7444d10597c877311f900077e6de2b617cec244d10cf40ce",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "80f687f61e6309bc59dcf236b27ab841a5c69d8e768dad13f9e64648b28c2142",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PC1_CANDIDATE_HEAD:f0edfdb3f0106852d13a9bd4805f4bba1b9d3e00",
+          "PREDECESSOR_ADMISSION:GEN1564",
+          "ISSUE:1477"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "887a61ee0f1cadb20dbcd7412fac669ef58ea213",
+        "successorLockGeneration": 1565,
+        "successorLockScope": "H_EARTH:AUDRALIA:PC1:GEOGRAPHIC_QUALIFICATION:EXECUTION_CARRIER:EXACT_2_PATH_CONTROL_PLANE_SCOPE",
+        "successorOperationId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_20260820_005",
+        "transitionId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_SUCCESSOR_20260820_005"
       },
       "terminalDisposition": "SUPERSEDED"
     }

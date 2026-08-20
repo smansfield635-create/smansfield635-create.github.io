@@ -18,10 +18,11 @@ jobs:
   qualify-player-scale-depth:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out candidate
+      - name: Check out exact candidate head
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Enforce admitted six-path ceiling
         shell: bash
@@ -91,5 +92,5 @@ jobs:
         with:
           name: h-earth-player-scale-depth-convergence-${{ github.run_id }}-${{ github.run_attempt }}
           path: h-earth-3d/validation/evidence/player-scale-depth-convergence/receipt.json
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 90

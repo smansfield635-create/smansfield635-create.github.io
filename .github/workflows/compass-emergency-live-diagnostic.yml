@@ -64,3 +64,4 @@ jobs:
           git commit -m 'chore(compass): capture emergency live diagnostic' || exit 0
           git pull --rebase origin main
           git push origin HEAD:main
+# retrigger: 2026-08-20T21:49Z

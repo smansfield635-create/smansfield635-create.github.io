@@ -1,17 +1,16 @@
 /* Track B — upper-page presentation reconstruction. Track A capability carousel remains protected. */
-.compass-track-b-brand{margin:0 auto .7rem;text-align:center;font:800 clamp(.72rem,1.3vw,.88rem)/1.2 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,214,128,.92)}
+.compass-track-b-brand{margin:0 auto .7rem;text-align:center;font:800 clamp(.72rem,1.3vw,.88rem)/1.2 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:none;color:rgba(244,214,128,.92)}
 .compass-estate__header{max-width:76rem!important;margin-left:auto!important;margin-right:auto!important;padding-bottom:clamp(.4rem,1.2vw,.9rem)!important}
 .compass-estate__header h1{font-size:clamp(3.8rem,10vw,8.8rem)!important;line-height:.84!important;letter-spacing:-.035em!important;margin:.1rem 0 .45rem!important;text-align:center}
 .compass-estate__header .compass-estate__descriptor,.compass-estate__header p{max-width:66rem;margin-left:auto!important;margin-right:auto!important;text-align:center}
-.compass-track-b-intro{max-width:72rem;margin:clamp(.8rem,2vw,1.4rem) auto clamp(1.2rem,3vw,2rem);border:1px solid rgba(220,226,223,.2);border-radius:1.2rem;background:linear-gradient(145deg,rgba(8,18,26,.86),rgba(12,27,36,.72));box-shadow:0 20px 54px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.07);overflow:hidden}
+.compass-track-b-intro{max-width:72rem;margin:clamp(.7rem,1.7vw,1.15rem) auto clamp(1rem,2.4vw,1.6rem);border:1px solid rgba(220,226,223,.2);border-radius:1.2rem;background:linear-gradient(145deg,rgba(8,18,26,.86),rgba(12,27,36,.72));box-shadow:0 20px 54px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.07);overflow:hidden}
 .compass-track-b-intro>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.2rem;color:rgba(255,247,220,.97);font:780 clamp(1rem,2vw,1.18rem)/1.25 Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.015em}
 .compass-track-b-intro>summary::-webkit-details-marker{display:none}.compass-track-b-intro>summary::after{content:'+';font-size:1.45rem;font-weight:400;color:rgba(102,196,215,.9)}.compass-track-b-intro[open]>summary::after{content:'−'}
 .compass-track-b-intro__body{display:grid;gap:1rem;padding:0 1rem 1rem}
 .compass-track-b-film{position:relative;aspect-ratio:16/9;border-radius:1rem;overflow:hidden;background:#03070b;box-shadow:0 18px 50px rgba(0,0,0,.35)}
 .compass-track-b-film video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
-.compass-track-b-about{border-top:1px solid rgba(220,226,223,.16);padding-top:.2rem}.compass-track-b-about>summary{cursor:pointer;padding:.9rem .25rem;color:rgba(244,241,230,.94);font-weight:760}.compass-track-b-about .compass-introduction{margin:.25rem 0 0!important;max-width:none!important}.compass-track-b-about .compass-introduction__body{margin:0!important}
-[data-compass-scene]{min-height:clamp(31rem,54vw,45rem)!important}
-[data-compass-root]{margin-top:clamp(.6rem,2vw,1.3rem)!important}
-.compass-track-b-relocated-orbit{margin-top:clamp(2rem,5vw,4rem)!important}
-@media(max-width:760px){.compass-estate__header h1{font-size:clamp(3.15rem,17vw,5.4rem)!important}.compass-track-b-brand{letter-spacing:.12em}[data-compass-scene]{min-height:30rem!important}.compass-track-b-intro{margin-left:.65rem;margin-right:.65rem}}
-@media(max-width:480px){[data-compass-scene]{min-height:27rem!important}.compass-track-b-intro__body{padding:0 .65rem .75rem}.compass-track-b-intro>summary{padding:.9rem 1rem}}
+.compass-track-b-about{border-top:1px solid rgba(220,226,223,.16);padding-top:.2rem}.compass-track-b-about>summary{cursor:pointer;padding:.9rem .25rem;color:rgba(244,241,230,.94);font-weight:760}.compass-track-b-about .compass-track-b-original-intro{margin:.25rem 0 0!important;max-width:none!important}.compass-track-b-about .compass-introduction__body{margin:0!important}
+[data-compass-root]{margin-top:clamp(.45rem,1.5vw,1rem)!important}
+.compass-track-b-relocated-orbit{margin-top:clamp(1.8rem,4vw,3.2rem)!important}
+@media(max-width:760px){.compass-estate__header h1{font-size:clamp(3.15rem,17vw,5.4rem)!important}.compass-track-b-brand{letter-spacing:.12em}.compass-track-b-intro{margin-left:.65rem;margin-right:.65rem}}
+@media(max-width:480px){.compass-track-b-intro__body{padding:0 .65rem .75rem}.compass-track-b-intro>summary{padding:.9rem 1rem}}

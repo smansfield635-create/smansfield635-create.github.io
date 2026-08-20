@@ -7,6 +7,7 @@ const tabs=root?.querySelector("[data-tabs]");
 if(!root||!viewport||!ring||!tabs)return;
 
 let dragging=false,pointerId=null,startX=0,lastX=0,lastTime=0,travel=0,velocity=0,startIndex=0,suppressClick=false;
+let openPointerId=null,openButton=null,openStartX=0,openStartY=0,openTravel=0;
 const tabButtons=()=>[...tabs.querySelectorAll("[data-index]")];
 const cards=()=>[...ring.querySelectorAll(".card")];
 const count=()=>Math.max(1,tabButtons().length||cards().length);
@@ -48,6 +49,15 @@ function selectAdjacent(direction){
 }
 
 viewport.addEventListener("pointerdown",event=>{
+  const opener=event.target.closest("[data-open]");
+  if(opener&&event.pointerType!=="mouse"&&root.dataset.inspecting!=="true"){
+    openPointerId=event.pointerId;
+    openButton=opener;
+    openStartX=event.clientX;
+    openStartY=event.clientY;
+    openTravel=0;
+    return;
+  }
   if(root.dataset.inspecting==="true"||(event.pointerType==="mouse"&&event.button!==0)||event.target.closest("button,a"))return;
   event.stopImmediatePropagation();
   dragging=true;
@@ -63,6 +73,10 @@ viewport.addEventListener("pointerdown",event=>{
 },{capture:true});
 
 viewport.addEventListener("pointermove",event=>{
+  if(openPointerId===event.pointerId){
+    openTravel=Math.max(openTravel,Math.hypot(event.clientX-openStartX,event.clientY-openStartY));
+    return;
+  }
   if(!dragging||event.pointerId!==pointerId)return;
   event.stopImmediatePropagation();
   const now=performance.now();
@@ -79,6 +93,19 @@ viewport.addEventListener("pointermove",event=>{
 },{capture:true});
 
 function finish(event){
+  if(openPointerId===event.pointerId){
+    const button=openButton;
+    const isTap=openTravel<7;
+    openPointerId=null;
+    openButton=null;
+    openTravel=0;
+    if(isTap&&button?.isConnected&&root.dataset.inspecting!=="true"){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      button.click();
+    }
+    return;
+  }
   if(!dragging||event.pointerId!==pointerId)return;
   event.stopImmediatePropagation();
   dragging=false;
@@ -97,7 +124,15 @@ function finish(event){
   else ring.style.setProperty("--ring-rotation",`${angleFor(startIndex)}deg`);
 }
 viewport.addEventListener("pointerup",finish,{capture:true});
-viewport.addEventListener("pointercancel",finish,{capture:true});
+viewport.addEventListener("pointercancel",event=>{
+  if(openPointerId===event.pointerId){
+    openPointerId=null;
+    openButton=null;
+    openTravel=0;
+    return;
+  }
+  finish(event);
+},{capture:true});
 viewport.addEventListener("click",event=>{
   if(!suppressClick)return;
   suppressClick=false;

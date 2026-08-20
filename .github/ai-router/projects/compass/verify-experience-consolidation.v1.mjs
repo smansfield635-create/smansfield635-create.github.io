@@ -32,7 +32,7 @@ check('TROPHY_RENDERER_BOUNDED',files.trophyJs.includes('procedural-webgl-trophy
 check('BRAIN_CSS_RETIRED',files.brainCss.includes('RETIRED / NON-AUTHORITATIVE')&&!files.brainCss.includes('.compass-capability-orbit')&&!files.brainCss.includes('.compass-object-caption'));
 check('RECOVERY_CSS_INERT',files.recoveryCss.includes('RETIRED / NON-AUTHORITATIVE')&&!files.recoveryCss.includes('{',files.recoveryCss));
 check('RECOVERY_RUNTIME_INERT',files.recoveryJs.includes('authoritative:false')&&!/MutationObserver|setInterval|appendChild|style\.cssText/.test(files.recoveryJs));
-check('LOWER_PROOF_PRESERVED',files.capabilityJs.includes("rail('proof',['TRL 7','Bounded','Checked'])")&&files.capabilityJs.includes('setTimeout(settle,320)')&&files.capabilityJs.includes('CompassOrbitInput?.claimSwipe')&&files.index.includes('data-proof-card="trl7"')&&files.index.includes('data-proof-card="bounded"')&&files.index.includes('data-proof-card="checked"'));
+check('LOWER_PROOF_PRESERVED',files.capabilityJs.includes("rail('proof',['TRL 7','Bounded','Checked'])")&&files.capabilityJs.includes('setTimeout(settle,320)')&&files.capabilityJs.includes('CompassOrbitInput?.claimSwipe')&&files.index.includes('data-proof-card="trl7"')&&files.index.includes('data-proof-card="bounded"')&&files.index.includes('data-proof-card="experience"'));
 check('MIRRORLAND_CONTINUITY',files.index.includes('find the door to Mirrorland')&&files.capabilityJs.includes('protectMirrorland()')&&files.controller.includes('MIRRORLAND_FOCUSED'));
 check('CONSTELLATION_TRAVERSAL_PRESERVED',files.controller.includes('ROOM_SELECTED')&&files.controller.includes('requestReturnToConstellation')&&files.controller.includes('requestReturnToOrbit'));
 

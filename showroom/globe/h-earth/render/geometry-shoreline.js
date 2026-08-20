@@ -1,4 +1,4 @@
-/** H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN329_CONTINUOUS_OCEAN_HANDOFF_v2 */
+/** H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN329_CONTINUOUS_OCEAN_HANDOFF_v3 */
 import {
   H_EARTH_3D_GEOMETRY_SOUTH_ENUMS,
   createHEarthVector3,
@@ -17,21 +17,21 @@ const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFr
 const SCALE=2**24;
 const canonical=v=>{const x=Math.round(v*SCALE)/SCALE;return Object.is(x,-0)?0:x};
 
-export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID='H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN329_CONTINUOUS_OCEAN_HANDOFF_v2';
+export const H_EARTH_GEOMETRY_SHORELINE_CONTRACT_ID='H_EARTH_FUNCTIONAL_SHORELINE_GEOMETRY_PROVIDER_GEN329_CONTINUOUS_OCEAN_HANDOFF_v3';
 export const H_EARTH_FUNCTIONAL_SHORELINE_BANDS=freeze([
   {bandId:'DRY_SAND_EDGE',innerOffset:34,outerOffset:14,materialReference:'H_EARTH_MATERIAL_DRY_SAND',materialIntent:'DRY_SAND'},
   {bandId:'DAMP_TRANSITION',innerOffset:14,outerOffset:4,materialReference:'H_EARTH_MATERIAL_WET_SAND',materialIntent:'DAMP_SAND_TRANSITION'},
   {bandId:'WET_SAND',innerOffset:4,outerOffset:0,materialReference:'H_EARTH_MATERIAL_WET_SAND',materialIntent:'WET_SAND'},
   {bandId:'FOAM_CONTACT',innerOffset:0,outerOffset:-3.2,materialReference:'H_EARTH_MATERIAL_FOAM',materialIntent:'FOAM_CONTACT'},
-  {bandId:'SHALLOW_WATER',innerOffset:-3.2,outerOffset:-22,materialReference:'H_EARTH_MATERIAL_NEARSHORE_WATER',materialIntent:'SHALLOW_WATER'},
-  {bandId:'NEARSHORE_WATER',innerOffset:-22,outerOffset:-58,materialReference:'H_EARTH_MATERIAL_NEARSHORE_WATER',materialIntent:'NEARSHORE_WATER'},
-  {bandId:'OPEN_WATER',innerOffset:-58,outerOffset:-320,materialReference:'H_EARTH_MATERIAL_OPEN_WATER',materialIntent:'OPEN_WATER_NEAR_MID_REPRESENTATION'}
+  {bandId:'SHALLOW_WATER',innerOffset:-3.2,outerOffset:-10,materialReference:'H_EARTH_MATERIAL_NEARSHORE_WATER',materialIntent:'SHALLOW_WATER'},
+  {bandId:'NEARSHORE_WATER',innerOffset:-10,outerOffset:-42,materialReference:'H_EARTH_MATERIAL_NEARSHORE_WATER',materialIntent:'NEARSHORE_WATER'},
+  {bandId:'OPEN_WATER',innerOffset:-42,outerOffset:-320,materialReference:'H_EARTH_MATERIAL_OPEN_WATER',materialIntent:'OPEN_WATER_NEAR_MID_REPRESENTATION'}
 ]);
 
 const WATER_RENDER_MATERIALS=freeze({
-  SHALLOW_WATER:freeze({rgba:[58,168,181,218],transparencyClass:'TRANSLUCENT'}),
-  NEARSHORE_WATER:freeze({rgba:[21,91,129,238],transparencyClass:'TRANSLUCENT'}),
-  OPEN_WATER:freeze({rgba:[4,24,54,255],transparencyClass:'OPAQUE'})
+  SHALLOW_WATER:freeze({rgba:[45,160,178,220],transparencyClass:'TRANSLUCENT'}),
+  NEARSHORE_WATER:freeze({rgba:[8,68,116,244],transparencyClass:'TRANSLUCENT'}),
+  OPEN_WATER:freeze({rgba:[2,15,42,255],transparencyClass:'OPAQUE'})
 });
 
 const sampleCount=257,shorelineXMinimum=-1024,shorelineXMaximum=1024;

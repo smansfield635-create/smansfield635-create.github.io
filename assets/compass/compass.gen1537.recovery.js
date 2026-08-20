@@ -28,6 +28,6 @@ document.addEventListener('click',event=>{
     globalThis.location.assign(H_EARTH_CANONICAL);
   }
 },true);
-const receipt=Object.freeze({mounted:true,retired:false,authoritative:true,version:'gen1537-h-earth-canonical-direct-route-stable-20260820-1720',externalProxyBypass:true,canonicalRoute:H_EARTH_CANONICAL,mutationObserverRemoved:true});
-Object.defineProperty(globalThis,'DGB_COMPASS_GEN1537_LIVE_RECOVERY',{configurable:true,enumerable:false,writable:false,value:Object.freeze({mounted:true,retired:false,authoritative:true,version:receipt.version,receipt:()=>receipt,stop:()=>{}})});
+const receipt=Object.freeze({mounted:false,retired:true,authoritative:false,version:'gen1537-retired-h-earth-route-only-20260820',externalProxyBypass:true,canonicalRoute:H_EARTH_CANONICAL,mutationObserverRemoved:true,capabilityPlacementAuthority:false,repeatedReparenting:false});
+Object.defineProperty(globalThis,'DGB_COMPASS_GEN1537_LIVE_RECOVERY',{configurable:true,enumerable:false,writable:false,value:Object.freeze({mounted:false,retired:true,authoritative:false,version:receipt.version,receipt:()=>receipt,stop:()=>{}})});
 })();

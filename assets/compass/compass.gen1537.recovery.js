@@ -2,8 +2,8 @@
 'use strict';
 const GLOBAL='DGB_COMPASS_GEN1537_LIVE_RECOVERY';
 const CLUSTER_GUIDANCE={
-  CLUSTER_OPEN:'Tap a star to select it · Swipe across open space to return to constellation',
-  ROOM_SELECTED:'Enter Room · Return to Orbit · Swipe across open space to return to constellation'
+  CLUSTER_OPEN:'Select a room star to move forward · Return to Orbit · Swipe to return to constellation',
+  ROOM_SELECTED:'Enter Room · Return to Orbit · Swipe to return to constellation'
 };
 function mountClusterGuidance(root){
   const scene=root?.querySelector('[data-compass-scene]');
@@ -35,7 +35,7 @@ function retire(){
     root.dataset.gen1537LowerCarousel='preserved-unmodified';
     mountClusterGuidance(root);
   }
-  globalThis[GLOBAL]=Object.freeze({mounted:true,retired:true,version:'gen1537-retired-emergency-v2',receipt:()=>Object.freeze({instrumentMounted:false,lowerCarouselPreserved:true,clusterGuidanceMounted:true,retired:true})});
+  globalThis[GLOBAL]=Object.freeze({mounted:true,retired:true,version:'gen1537-retired-emergency-v3',receipt:()=>Object.freeze({instrumentMounted:false,lowerCarouselPreserved:true,clusterGuidanceMounted:true,retired:true})});
 }
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',retire,{once:true}):retire();
 })();

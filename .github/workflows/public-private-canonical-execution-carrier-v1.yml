@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   carrier:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
       PRIVATE_REPOSITORY: smansfield635-create/geodiametrics1

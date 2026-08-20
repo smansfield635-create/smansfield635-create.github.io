@@ -35,7 +35,8 @@ export function buildHEarthRun8EPacket002SuccessorTransfer({neutralPackage,westB
   if(JSON.stringify(neutralIds)!==JSON.stringify(admittedIds)||JSON.stringify(admittedIds)!==JSON.stringify(aggregateIds))issues.push('RUN_8E_PRIMITIVE_MEMBERSHIP_CORRESPONDENCE_FAILED');
   if(!isHEarthAABB3D(westBatchAdmissionResult?.frame?.bounds))issues.push('RUN_8E_ADMITTED_BOUNDS_INVALID');
   if(neutralPackage?.terrainPrimitiveCount!==1)issues.push('RUN_8E_TERRAIN_PRIMITIVE_COUNT_INVALID');
-  if(neutralPackage?.shorelinePrimitiveCount!==7)issues.push('RUN_8E_SHORELINE_PRIMITIVE_COUNT_INVALID');
+  const shorelineBandCount=Array.isArray(neutralPackage?.shorelineBandIds)?neutralPackage.shorelineBandIds.length:0;
+  if(!Number.isSafeInteger(neutralPackage?.shorelinePrimitiveCount)||neutralPackage.shorelinePrimitiveCount<1||neutralPackage.shorelinePrimitiveCount!==shorelineBandCount)issues.push('RUN_8E_SHORELINE_PRIMITIVE_COUNT_INVALID');
   if(neutralPackage?.farRepresentationPrimitiveCount!==2)issues.push('RUN_8E_FAR_REPRESENTATION_COUNT_INVALID');
   if(admittedPrimitives.length!==neutralPackage?.primitiveCount)issues.push('RUN_8E_CURRENT_COMPOSITION_MEMBERSHIP_COUNT_MISMATCH');
   if(neutralPackage?.semanticAddressCount!==256||neutralPackage?.terrainAddressCount!==124||neutralPackage?.shorelineWaterAddressCount!==96||neutralPackage?.proxySummarizedAddressCount!==36)issues.push('RUN_8E_SEMANTIC_PROVENANCE_INVALID');

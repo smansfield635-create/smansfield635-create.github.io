@@ -1,4 +1,4 @@
-/** H_EARTH_SUCCESSOR_TERRAIN_NEAR_TO_MID_REPRESENTATION_RUN_8B_v3 */
+/** H_EARTH_SUCCESSOR_TERRAIN_NEAR_TO_MID_REPRESENTATION_RUN_8B_v4_CONTINUOUS_LAND_HANDOFF */
 import {
   H_EARTH_3D_GEOMETRY_KERNEL_SOUTH_CONTRACT_ID,
   H_EARTH_3D_GEOMETRY_SOUTH_ENUMS,
@@ -26,19 +26,20 @@ import {
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
 const finite=v=>typeof v==='number'&&Number.isFinite(v);
 
-export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_CONTRACT_ID='H_EARTH_SUCCESSOR_TERRAIN_NEAR_TO_MID_REPRESENTATION_RUN_8B_v3';
+export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_CONTRACT_ID='H_EARTH_SUCCESSOR_TERRAIN_NEAR_TO_MID_REPRESENTATION_RUN_8B_v4_CONTINUOUS_LAND_HANDOFF';
 export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_SOURCE_FILE='/showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js';
 export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_PRIMITIVE_ID='H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001';
 
 const FULL_DETAIL=H_EARTH_RUN_8A_TERRAIN_SAMPLING_AND_REFINEMENT_CONTRACT.profiles.FULL_DETAIL;
-// G_world-derived representation footprint. The rear overlap intentionally
-// crosses the canonical ~636-unit fog onset so Run8C atmospheric perspective
-// can vary continuously before the FAR representation assumes dominance.
-const NEAR_TO_MID_DOMAIN=freeze({xMinimum:-384,xMaximum:384,zMinimum:-736,zMaximum:128});
+// Derived-only presentation footprint. It stays inside the already-authoritative
+// G_world domain but extends well beyond the previously visible ±384/-736
+// rectangle so zooming cannot expose a clipped land shelf before FAR overlap.
+const NEAR_TO_MID_DOMAIN=freeze({xMinimum:-768,xMaximum:768,zMinimum:-1024,zMaximum:128});
 const ATMOSPHERIC_OVERLAP=freeze({
-  purpose:'ENSURE_NEAR_TO_MID_G_WORLD_REPRESENTATION_CROSSES_CANONICAL_ATMOSPHERIC_PERSPECTIVE_ONSET',
+  purpose:'ENSURE_NEAR_TO_MID_G_WORLD_REPRESENTATION_OVERLAPS_FAR_CONTEXT_BEYOND_VISIBLE_LAND_TERMINATION',
   canonicalFogStartNominal:640,
-  rearRepresentationReachFromCoastalEntry:736,
+  rearRepresentationReachFromCoastalEntry:1024,
+  lateralRepresentationReach:768,
   geographyAuthorityCreated:false,
   traversalAuthorityCreated:false,
   hardTerminalAuthorityCreated:false
@@ -66,7 +67,7 @@ export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE=freeze({
 });
 
 export const H_EARTH_RUN_8B_Z_BANDS=freeze([
-  {bandId:'MID_ATMOSPHERIC_OVERLAP',zMinimum:-736,zMaximum:-420},
+  {bandId:'MID_ATMOSPHERIC_OVERLAP',zMinimum:-1024,zMaximum:-420},
   {bandId:'NEAR_INLAND_RELIEF',zMinimum:-420,zMaximum:-220},
   {bandId:'NEAR_COASTAL_CONTINUITY',zMinimum:-220,zMaximum:128}
 ]);

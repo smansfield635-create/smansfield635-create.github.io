@@ -29,6 +29,17 @@ jobs:
         with:
           ref: recovery/compass-static-editorial-successor
           fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            index.html
+            assets/compass/compass.crystals.js
+            assets/compass/compass.gen1537.recovery.js
+            assets/compass/compass.capability-carousel.js
+            tools/ai-room-transport/ai-media-source-registry.v1.json
+            tools/compass-static-editorial-materialize.py
+            tools/compass-static-editorial-qualification.mjs
+            .github/workflows/compass-static-editorial-successor-materialize.yml
+            .github/workflows/compass-static-editorial-materialize-v2.yml
       - name: Generate candidate without committing
         run: python -O tools/compass-static-editorial-materialize.py
       - name: Diagnose structural authority counts

@@ -10,14 +10,14 @@
 .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{position:relative;box-sizing:border-box;width:min(100%,980px);min-height:34rem;height:auto;max-height:none;margin:clamp(10px,1.5vw,18px) auto 0;padding:0;display:grid;grid-template-rows:22rem auto auto auto;gap:.55rem;place-items:center;perspective:1700px;overflow:visible;outline:0;isolation:isolate;touch-action:pan-y}
 .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]::before{content:"";position:absolute;inset:8% 10% 30%;z-index:-1;border-radius:50%;background:radial-gradient(ellipse,rgba(80,170,194,.08),rgba(201,168,91,.018) 42%,transparent 72%)}
 
-.compass-object-stage{position:relative;width:min(94vw,700px);height:22rem;perspective:1650px;transform-style:preserve-3d;touch-action:pan-y;cursor:grab;overflow:visible}
+.compass-object-stage{position:relative;width:min(94vw,700px);height:22rem;perspective:5200px;transform-style:preserve-3d;touch-action:pan-y;cursor:grab;overflow:visible}
 .compass-object-stage::after{content:"";position:absolute;inset:0;z-index:90;pointer-events:auto;background:transparent}
 .compass-object-stage[data-dragging="true"]{cursor:grabbing}
 .compass-object-ring{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;transform:rotateY(var(--compass-object-angle,0deg));transition:transform .56s cubic-bezier(.2,.78,.18,1);will-change:transform}
 .compass-object-stage[data-dragging="true"] .compass-object-ring{transition:none}
 .compass-object-ring,.compass-object-ring *{pointer-events:none!important}
 
-.compass-orbit-plaque{position:absolute;left:-15rem;top:-9.5rem;width:30rem;min-height:19rem;height:auto;padding:.3rem;display:grid;grid-template-rows:13rem auto;align-content:start;gap:.55rem;border:0;border-radius:1.5rem;background:transparent;box-shadow:none;opacity:.17;filter:brightness(.48) saturate(.62);overflow:visible;contain:layout;transform-style:preserve-3d;transition:opacity .35s,filter .35s}
+.compass-orbit-plaque{position:absolute;left:-15rem;top:-8.15rem;width:30rem;min-height:19rem;height:auto;padding:.3rem;display:grid;grid-template-rows:13rem auto;align-content:start;gap:.55rem;border:0;border-radius:1.5rem;background:transparent;box-shadow:none;opacity:.17;filter:brightness(.48) saturate(.62);overflow:visible;contain:layout;transform-style:preserve-3d;transition:opacity .35s,filter .35s}
 .compass-orbit-plaque[data-active="true"]{opacity:1;filter:none;z-index:8}
 .compass-orbit-plaque:not([data-active="true"])>*{opacity:.08!important}
 .compass-object-sr-title,.compass-orbit-status{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
@@ -73,7 +73,7 @@ html body main#compass[data-compass-root] section.compass-instrument>header.comp
 @media(max-width:760px){
   .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{min-height:31rem;grid-template-rows:19rem auto auto auto}
   .compass-object-stage{width:100%;height:19rem}
-  .compass-orbit-plaque{left:-44vw;top:-8.2rem;width:88vw;min-height:17rem;grid-template-rows:10.8rem auto;padding:.2rem}
+  .compass-orbit-plaque{left:-44vw;top:-7.15rem;width:88vw;min-height:17rem;grid-template-rows:10.8rem auto;padding:.2rem}
   .compass-object-portal,.compass-brain-field,.compass-house-field,.compass-brain-field canvas,.compass-house-field canvas{height:10.8rem;min-height:10.8rem}
   .compass-object-caption{width:96%;min-height:4.4rem;font-size:.78rem!important}
   .compass-object-caption strong{font-size:1.18rem}
@@ -82,7 +82,7 @@ html body main#compass[data-compass-root] section.compass-instrument>header.comp
 }
 @media(max-width:480px){
   .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{min-height:30rem;grid-template-rows:18.4rem auto auto auto}
-  .compass-orbit-plaque{left:-46vw;top:-7.9rem;width:92vw;min-height:16.5rem;grid-template-rows:10.1rem auto}
+  .compass-orbit-plaque{left:-46vw;top:-6.85rem;width:92vw;min-height:16.5rem;grid-template-rows:10.1rem auto}
   .compass-object-portal,.compass-brain-field,.compass-house-field,.compass-brain-field canvas,.compass-house-field canvas{height:10.1rem;min-height:10.1rem}
   .compass-object-caption{font-size:.76rem!important;min-height:4.6rem}
   .compass-stage-action{min-height:40px;padding:.58rem .78rem;font-size:.68rem}

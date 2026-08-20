@@ -14,7 +14,7 @@ jobs:
     if: >-
       contains(github.event.comment.body, 'PUBLIC_PRIVATE_CANONICAL_EXECUTION_REQUEST_V1') &&
       github.event.comment.author_association == 'OWNER'
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       private_issue: ${{ steps.request.outputs.private_issue }}

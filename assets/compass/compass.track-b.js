@@ -1,38 +1,25 @@
 (()=>{
 'use strict';
-const CONTRACT='COMPASS_TRACK_B_UPPER_PRESENTATION_v2';
+const CONTRACT='COMPASS_TRACK_B_UPPER_PRESENTATION_v3';
 if(globalThis.__DGB_TRACK_B?.contract===CONTRACT)return;
 const qs=(s,r=document)=>r.querySelector(s);
 const textNodes=(root=document)=>[...root.querySelectorAll('h1,h2,h3,h4,p,strong,span,summary,a')];
 const exactText=(text,root=document)=>textNodes(root).find(n=>n.textContent.trim()===text);
 const includesText=(text,root=document)=>textNodes(root).find(n=>n.textContent.includes(text));
-function meaningfulBlock(node,predicate=()=>true){if(!node)return null;let cur=node;while(cur&&cur!==document.body){if(/^(SECTION|ARTICLE|ASIDE|DETAILS|DIV)$/.test(cur.tagName)&&predicate(cur))return cur;cur=cur.parentElement}return null}
-function ensureCss(){if(qs('link[data-track-b-style]'))return;const l=document.createElement('link');l.rel='stylesheet';l.href='/assets/compass/compass.track-b.css?v=track-b-v2';l.dataset.trackBStyle='true';document.head.append(l)}
-function brandHeader(){const title=exactText('The Compass');const header=qs('.compass-estate__header')||meaningfulBlock(title,n=>!n.querySelector('[data-compass-scene]'))||qs('main header')||qs('header');if(!header||qs('.compass-track-b-brand',header))return header;const b=document.createElement('div');b.className='compass-track-b-brand';b.textContent='DiamondGateBridge.com';header.prepend(b);return header}
-function findIntroBlock(){const heading=exactText('Why Diamond Gate exists')||includesText('Why Diamond Gate exists');if(!heading)return null;return meaningfulBlock(heading,n=>{const t=n.textContent||'';return t.includes('Why Diamond Gate exists')&&n.querySelectorAll('p').length>=2&&!n.querySelector('[data-compass-scene]')})||heading.parentElement}
-function buildIntro(header){const intro=findIntroBlock();if(!header||!intro||qs('.compass-track-b-intro'))return;
-  const oldHeading=exactText('Why Diamond Gate exists',intro)||includesText('Why Diamond Gate exists',intro);if(oldHeading)oldHeading.remove();
-  intro.classList.add('compass-track-b-original-intro');intro.dataset.trackBOriginalIntro='true';
-  const outer=document.createElement('details');outer.className='compass-track-b-intro';outer.dataset.trackBIntroduction='true';
-  const summary=document.createElement('summary');summary.textContent='New here? Open the introduction.';
-  const body=document.createElement('div');body.className='compass-track-b-intro__body';
-  const film=document.createElement('div');film.className='compass-track-b-film';
-  const video=document.createElement('video');video.controls=true;video.preload='metadata';video.playsInline=true;video.setAttribute('aria-label','Diamond Gate Bridge — Chapter One');
-  const source=document.createElement('source');source.src='/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4';source.type='video/mp4';video.append(source);film.append(video);
-  const about=document.createElement('details');about.className='compass-track-b-about';const aboutSummary=document.createElement('summary');aboutSummary.textContent='What is Diamond Gate Bridge?';about.append(aboutSummary,intro);
-  body.append(film,about);outer.append(summary,body);header.after(outer);
-}
-function blockWithText(text,required=[]){const node=exactText(text)||includesText(text);if(!node)return null;return meaningfulBlock(node,n=>{const content=n.textContent||'';return required.every(x=>content.includes(x))})||node.parentElement}
-function relocateCarousel(){const orbit=qs('[data-capability-orbit]');if(!orbit)return;
-  const orbitBlock=meaningfulBlock(orbit,n=>n!==orbit&&n.contains(orbit)&&!n.querySelector('[data-proof-orbit]'))||orbit.parentElement;
-  const built=blockWithText('Built as one connected system.',['Software TRL 7','Experience Checked'])||blockWithText('Built Different',['Software TRL 7','Experience Checked']);
-  const build=blockWithText('Build Your Own Custom Site',['Explore custom construction'])||blockWithText('Build something of your own',['Explore custom construction']);
-  if(!orbitBlock||!built)return;
-  built.dataset.trackBBuiltEvidence='true';orbitBlock.dataset.trackBCapabilityBlock='true';if(build)build.dataset.trackBBuildCta='true';
-  if(build&&build!==built&&!built.contains(build)){built.after(build);build.after(orbitBlock)}else{built.after(orbitBlock)}
-  orbitBlock.classList.add('compass-track-b-relocated-orbit');
-}
+function climb(node,predicate=()=>true){if(!node)return null;let cur=node;while(cur&&cur!==document.body){if(/^(SECTION|ARTICLE|ASIDE|DETAILS|DIV)$/.test(cur.tagName)&&predicate(cur))return cur;cur=cur.parentElement}return null}
+function ensureCss(){if(qs('link[data-track-b-style]'))return;const l=document.createElement('link');l.rel='stylesheet';l.href='/assets/compass/compass.track-b.css?v=track-b-v3';l.dataset.trackBStyle='true';document.head.append(l)}
+function brandHeader(){const title=exactText('The Compass');const header=qs('.compass-estate__header')||climb(title,n=>!n.querySelector('[data-compass-scene]'))||qs('main header')||qs('header');if(!header)return null;if(!qs('.compass-track-b-brand',header)){const b=document.createElement('div');b.className='compass-track-b-brand';b.textContent='DiamondGateBridge.com';header.prepend(b)}return header}
+function ensureIntroShell(header){let outer=qs('.compass-track-b-intro');if(outer||!header)return outer;outer=document.createElement('details');outer.className='compass-track-b-intro';outer.dataset.trackBIntroduction='true';const summary=document.createElement('summary');summary.textContent='New here? Open the introduction.';const body=document.createElement('div');body.className='compass-track-b-intro__body';const film=document.createElement('div');film.className='compass-track-b-film';const video=document.createElement('video');video.controls=true;video.preload='metadata';video.playsInline=true;video.setAttribute('aria-label','Diamond Gate Bridge — Chapter One');const source=document.createElement('source');source.src='/showroom/globe/h-earth/awards/media/diamond-gate-compass-mirrorland-36s.mp4';source.type='video/mp4';video.append(source);film.append(video);const about=document.createElement('details');about.className='compass-track-b-about';const aboutSummary=document.createElement('summary');aboutSummary.textContent='What is Diamond Gate Bridge?';const copy=document.createElement('div');copy.className='compass-track-b-about-copy';about.append(aboutSummary,copy);body.append(film,about);outer.append(summary,body);header.after(outer);return outer}
+function findWhyBlock(){const heading=exactText('Why Diamond Gate exists')||includesText('Why Diamond Gate exists');if(!heading)return null;return climb(heading,n=>{const t=n.textContent||'';return t.includes('Why Diamond Gate exists')&&n.querySelectorAll('p').length>=1&&!n.querySelector('[data-compass-scene]')})||heading.parentElement}
+function consolidateIntro(){const outer=qs('.compass-track-b-intro'),copy=qs('.compass-track-b-about-copy');if(!outer||!copy||copy.dataset.consolidated==='true')return false;const source=findWhyBlock();if(!source)return false;const clone=source.cloneNode(true);const heading=exactText('Why Diamond Gate exists',clone)||includesText('Why Diamond Gate exists',clone);if(heading)heading.remove();clone.classList.add('compass-track-b-original-intro');clone.dataset.trackBOriginalIntro='true';copy.replaceChildren(clone);copy.dataset.consolidated='true';source.remove();return true}
+function blockFrom(node,required=[]){if(!node)return null;return climb(node,n=>{const t=n.textContent||'';return required.every(x=>t.includes(x))})||climb(node)||node.parentElement}
+function findBuilt(){return blockFrom(exactText('Built as one connected system.')||includesText('Built as one connected system.')||exactText('Software TRL 7')||includesText('Software TRL 7'),['Software TRL 7'])}
+function findBuildCta(){return blockFrom(exactText('Build Your Own Custom Site')||includesText('Build Your Own Custom Site')||exactText('Build something of your own')||includesText('Build something of your own'),['Build'])}
+function findOrbitBlock(orbit){const label=exactText('Three ways to engage.')||includesText('Three ways to engage.');if(label){const b=climb(label,n=>n.contains(orbit));if(b)return b}return orbit.closest('section')||orbit.parentElement}
+function relocateCarousel(){const orbit=qs('[data-capability-orbit]');if(!orbit)return false;const orbitBlock=findOrbitBlock(orbit),built=findBuilt(),build=findBuildCta();if(!orbitBlock||!built)return false;built.dataset.trackBBuiltEvidence='true';orbitBlock.dataset.trackBCapabilityBlock='true';if(build)build.dataset.trackBBuildCta='true';if(build&&build!==built&&!built.contains(build)){built.after(build);build.after(orbitBlock)}else built.after(orbitBlock);orbitBlock.classList.add('compass-track-b-relocated-orbit');return true}
 function annotateScene(){const scene=qs('[data-compass-scene]');if(scene)scene.dataset.trackBPresentation='context-dominant'}
-function init(){ensureCss();const header=brandHeader();buildIntro(header);relocateCarousel();annotateScene();document.documentElement.dataset.trackB='constructed-v2';globalThis.__DGB_TRACK_B=Object.freeze({contract:CONTRACT,chapterOne:'owner-approved-live-master',trackAFrozen:true});}
+let attempts=0,timer=0,observer;
+function reconcile(){attempts++;ensureCss();const header=brandHeader();ensureIntroShell(header);const introDone=consolidateIntro();const orderDone=relocateCarousel();annotateScene();document.documentElement.dataset.trackB='constructed-v3';if(introDone&&orderDone){clearTimeout(timer);observer?.disconnect();return}if(attempts<12){clearTimeout(timer);timer=setTimeout(reconcile,Math.min(160*attempts,800))}}
+function init(){globalThis.__DGB_TRACK_B=Object.freeze({contract:CONTRACT,chapterOne:'owner-approved-live-master',trackAFrozen:true});observer=new MutationObserver(()=>{if(attempts<12)reconcile()});observer.observe(document.documentElement,{childList:true,subtree:true});reconcile()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

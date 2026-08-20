@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      CANDIDATE_SHA: 0b07234669eefc428376563a984cfa03dc0b7973
+      CANDIDATE_SHA: c10647db707329fb85c29e27323a06593eacc22e
       PLAYWRIGHT_VERSION: 1.55.0
     steps:
       - uses: actions/checkout@v4
@@ -84,6 +84,7 @@ jobs:
                     return {
                       activeId:root.dataset.activeId,
                       inspecting:root.dataset.inspecting,
+                      inspectionPlane:root.dataset.inspectionPlane,
                       ringTransform:getComputedStyle(ring).transform,
                       ringTransformStyle:getComputedStyle(ring).transformStyle,
                       cardTransform:getComputedStyle(card).transform,
@@ -94,6 +95,7 @@ jobs:
                     };
                   });
                   if(state.activeId!==route.expected) throw new Error(`${route.name}/${device.name}: wrong active id ${state.activeId}`);
+                  if(state.inspectionPlane!=='flat') throw new Error(`${route.name}/${device.name}: inspection plane ${state.inspectionPlane}`);
                   if(state.ringTransform!=='none') throw new Error(`${route.name}/${device.name}: ring transform ${state.ringTransform}`);
                   if(state.cardTransform!=='none') throw new Error(`${route.name}/${device.name}: card transform ${state.cardTransform}`);
                   if(state.perspective!=='none') throw new Error(`${route.name}/${device.name}: viewport perspective ${state.perspective}`);
@@ -114,8 +116,9 @@ jobs:
                   await page.screenshot({path:path.join(process.env.EVIDENCE_DIR,`${route.name}-${device.name}-inspection.png`),fullPage:false});
                   await page.locator('.card[data-active="true"] [data-close]').click();
                   await page.waitForFunction(()=>document.querySelector('[data-carousel]')?.dataset.inspecting==='false');
-                  const restored=await page.evaluate(()=>getComputedStyle(document.querySelector('[data-ring]')).transform);
-                  if(restored==='none') throw new Error(`${route.name}/${device.name}: orbit rotation not restored`);
+                  const restored=await page.evaluate(()=>({transform:getComputedStyle(document.querySelector('[data-ring]')).transform,plane:document.querySelector('[data-carousel]').dataset.inspectionPlane}));
+                  if(restored.transform==='none') throw new Error(`${route.name}/${device.name}: orbit rotation not restored`);
+                  if(restored.plane!=='orbit') throw new Error(`${route.name}/${device.name}: orbit plane flag not restored`);
                   const next=(route.target+1)%await page.locator('[data-tabs] [data-index]').count();
                   await page.locator(`[data-tabs] [data-index="${next}"]`).click();
                   await page.waitForFunction(i=>Number(document.querySelector('[data-tabs] [aria-selected="true"]')?.dataset.index)===i,next,{timeout:3000});

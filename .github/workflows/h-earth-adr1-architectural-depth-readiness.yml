@@ -66,5 +66,24 @@ jobs:
           for path in "${protected[@]}"; do
             git diff --quiet "$ADR1_PARENT" HEAD -- "$path" || { echo "ADR1_PROTECTED_PATH_CHANGED:$path" >&2; exit 1; }
           done
-      - name: Run exact ADR1 qualification
-        run: node h-earth-3d/validation/h-earth.adr1-architectural-depth-readiness.harness.mjs
+      - name: Run exact ADR1 qualification and retain receipt
+        id: adr1
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.adr1-architectural-depth-readiness.harness.mjs | tee adr1-qualification.json
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+      - name: Upload ADR1 qualification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-adr1-qualification
+          path: adr1-qualification.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Enforce ADR1 qualification result
+        if: always()
+        shell: bash
+        run: |
+          test "${{ steps.adr1.outputs.exit_code }}" = "0"

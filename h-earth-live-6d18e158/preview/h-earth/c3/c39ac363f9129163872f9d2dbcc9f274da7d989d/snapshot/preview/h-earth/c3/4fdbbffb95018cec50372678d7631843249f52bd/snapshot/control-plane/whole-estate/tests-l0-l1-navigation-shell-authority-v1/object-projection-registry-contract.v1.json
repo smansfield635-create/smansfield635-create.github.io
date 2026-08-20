@@ -1,0 +1,75 @@
+{
+  "schema": "WHOLE_ESTATE_TESTS_OBJECT_PROJECTION_REGISTRY_CONTRACT_v1",
+  "version": "1.0.0",
+  "status": "REGISTRY_CONSTRUCTION_AUTHORIZED_VISUAL_MANIFESTATION_WITHHELD",
+  "registryRole": "LEGAL_AND_SCIENTIFIC_ADMISSION_BOUNDARY_FOR_INITIAL_TESTS_SHELL_OBJECTS",
+  "requiredFields": [
+    "OBJECT_ID",
+    "DISPLAY_LABEL",
+    "PROJECTION",
+    "OBJECT_CLASS",
+    "AUTHORITY_SOURCE",
+    "AUTHORITY_POINTER",
+    "CURRENT_STANDING",
+    "PROJECTION_JUSTIFICATION",
+    "DECLARED_RELATIONS",
+    "RELATION_AUTHORITY_POINTERS",
+    "INSPECTION_AVAILABLE",
+    "DEEP_ENTRY_AVAILABLE",
+    "DEEP_ENTRY_TARGET"
+  ],
+  "projectionVocabulary": ["METHODS", "MODELS", "EXPERIMENTS", "EVIDENCE"],
+  "evidenceAdditionalRequiredFields": [
+    "EVIDENCE_AUTHORITY",
+    "SOURCE_REFERENCE",
+    "SOURCE_STANDING",
+    "SOURCE_ROUTE"
+  ],
+  "evidenceAuthorityVocabulary": ["RESEARCH_AUTHORITY", "TEST_AUTHORITY"],
+  "researchAuthorityEvidenceRule": {
+    "localRepresentation": ["REFERENCE", "STANDING", "ROUTE"],
+    "sourceRouteMustTerminateIn": "RESEARCH_AUTHORITY_DOMAIN",
+    "researchContentDuplicationPermitted": false
+  },
+  "relationRules": {
+    "declaredRelationRequiresAuthorityPointer": true,
+    "spatialAdjacencyCreatesRelation": false,
+    "selectorMembershipCreatesRelation": false,
+    "navigationOrderCreatesRelation": false,
+    "unsupportedRelationDisposition": "OMIT"
+  },
+  "deepEntryRules": {
+    "deepEntryTargetRequiresExistingAuthorizedStructure": true,
+    "deepEntryMayRedefineTarget": false,
+    "m1r2PermittedOnlyThroughAuthorityBackedParentMethodObject": true
+  },
+  "admissionAlgorithm": [
+    "VERIFY_OBJECT_AUTHORITY_POINTER",
+    "VERIFY_OBJECT_CLASS_AND_CURRENT_STANDING_FROM_AUTHORITY",
+    "VERIFY_PROJECTION_JUSTIFICATION_WITHOUT_ONTOLOGY_CREATION",
+    "VERIFY_EACH_DECLARED_RELATION_AND_RELATION_AUTHORITY_POINTER",
+    "IF_EVIDENCE_VERIFY_EXPLICIT_EVIDENCE_AUTHORITY_AND_SOURCE_TRIPLE",
+    "IF_DEEP_ENTRY_VERIFY_CONTAINMENT_AUTHORITY_AND_TARGET_IDENTITY",
+    "ADMIT_ONLY_IF_ALL_REQUIRED_CHECKS_PASS"
+  ],
+  "failClosedStates": [
+    "AUTHORITY_UNRESOLVED",
+    "OBJECT_CLASS_UNRESOLVED",
+    "STANDING_UNRESOLVED",
+    "RELATION_AUTHORITY_UNRESOLVED",
+    "EVIDENCE_AUTHORITY_AMBIGUOUS",
+    "SOURCE_ROUTE_UNRESOLVED",
+    "DEEP_ENTRY_AUTHORITY_UNRESOLVED"
+  ],
+  "initialManifestation": {
+    "projectionCount": 1,
+    "objectCountMinimum": 3,
+    "objectCountMaximum": 5,
+    "preferredProjection": "METHODS_IF_ADEQUATE_AUTHORITY_BACKED_SET_EXISTS",
+    "placeholderObjectsPermitted": false,
+    "corpusCompletenessRequired": false
+  },
+  "populationStatus": "NOT_STARTED",
+  "visualConstructionStatus": "BLOCKED_UNTIL_REGISTRY_SCOPE_PASSES_AUTHORITY_REVIEW",
+  "publicMutationAuthorized": false
+}

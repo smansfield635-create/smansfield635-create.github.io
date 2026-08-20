@@ -1,0 +1,115 @@
+name: Laws Bounded Correction
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - main
+    paths:
+      - laws/validation/laws-runtime-projected-clearance.request.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-and-validate:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.actor != 'github-actions[bot]' &&
+        github.event.pull_request.head.repo.full_name == github.repository &&
+        github.event.pull_request.head.ref == 'agent/laws-runtime-projected-clearance-001'
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out correction branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/laws-runtime-projected-clearance-001
+          fetch-depth: 0
+
+      - name: Verify branch and exact source custody
+        shell: bash
+        run: |
+          test "$(git branch --show-current)" = "agent/laws-runtime-projected-clearance-001"
+          git fetch origin main
+          test "$(git hash-object laws/index.crystals.js)" = "cd06f18bf8384efc97fcabeec5a4de94210c87a8"
+          test "$(git hash-object laws/index.html)" = "e37f03bb195ff8cb5fe5bea60b0b4e45d5df3260"
+          test "$(git hash-object laws/validation/laws.orbit-direct-manipulation.harness.mjs)" = "9339b8cfce13fb73805f1b4515bb7e9cc303e9d6"
+          test "$(git hash-object laws/validation/laws.orbit-direct-manipulation.receipt.json)" = "9ac18b0e2da3b24331958bf5caa583129d5f1f95"
+          test "$(git hash-object laws/index.compositor.js)" = "66ca5b4f1fd25c591e74b109ba9ab6368b2c64aa"
+          test "$(git hash-object laws/index.css)" = "9c2ef3e9636e134795102e48ea63553d2f3b9778"
+          test "$(git hash-object laws/index.interactions.js)" = "a6563d2e2e7064136925299a79731147f4a8580b"
+          test "$(git hash-object laws/index.interactions.source.round4.js)" = "24fc3e216f3526e9c6d30939454a73bdcf13cd7d"
+
+      - name: Apply bounded full-file correction
+        run: python verification/laws-repair/apply-laws-projected-clearance-repair.py
+
+      - name: Execute syntax and deterministic validation
+        env:
+          LAWS_REPAIR_PARENT_COMMIT: ${{ github.event.pull_request.base.sha || github.sha }}
+        run: |
+          node --check laws/index.crystals.js
+          node --check laws/index.compositor.js
+          node --check laws/index.interactions.js
+          node --check laws/index.interactions.source.round4.js
+          node laws/validation/laws.orbit-direct-manipulation.harness.mjs
+          node -e "const r=JSON.parse(require('fs').readFileSync('laws/validation/laws.orbit-direct-manipulation.receipt.json'));if(r.status!=='PASS'||r.assertions.failed!==0)process.exit(1)"
+
+      - name: Verify bounded path set and protected authority
+        shell: bash
+        run: |
+          git diff --exit-code origin/main -- \
+            laws/index.controller.js \
+            laws/index.compositor.js \
+            laws/index.planet.js \
+            laws/index.interactions.js \
+            laws/index.interactions.source.round4.js \
+            laws/index.css
+          python - <<'PY'
+          import subprocess
+          allowed = {
+              'laws/index.crystals.js',
+              'laws/index.html',
+              'laws/validation/laws.orbit-direct-manipulation.harness.mjs',
+              'laws/validation/laws.orbit-direct-manipulation.receipt.json',
+              'laws/validation/laws-runtime-projected-clearance.request.json',
+              'laws/validation/laws-runtime-projected-clearance.implementation.json'
+          }
+          changed = set(subprocess.check_output(
+              ['git', 'status', '--short'], text=True
+          ).splitlines())
+          paths = {line[3:] for line in changed}
+          unexpected = sorted(paths - allowed)
+          required = allowed - {
+              'laws/validation/laws-runtime-projected-clearance.request.json'
+          }
+          missing = sorted(required - paths)
+          if unexpected or missing:
+              raise SystemExit(
+                  f'BOUNDED_PATH_SET_FAILED unexpected={unexpected} missing={missing}'
+              )
+          print('BOUNDED_PATH_SET=PASS')
+          PY
+
+      - name: Commit corrected Laws files
+        shell: bash
+        run: |
+          rm laws/validation/laws-runtime-projected-clearance.request.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            laws/index.crystals.js \
+            laws/index.html \
+            laws/validation/laws.orbit-direct-manipulation.harness.mjs \
+            laws/validation/laws.orbit-direct-manipulation.receipt.json \
+            laws/validation/laws-runtime-projected-clearance.implementation.json
+          git add -u laws/validation/laws-runtime-projected-clearance.request.json
+          git commit -m "Repair Laws runtime projected clearance"
+          git push origin HEAD:agent/laws-runtime-projected-clearance-001

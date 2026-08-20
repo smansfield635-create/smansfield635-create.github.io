@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+  <title>Diamond Gate Bridge · Gate</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge gate chamber. Four filtered directions under the Nine Summits hierarchy."
+  >
+
+  <style>
+    :root {
+      --bg: #04060a;
+      --bg-deep: #08111d;
+      --panel: rgba(255, 255, 255, 0.05);
+      --panel-soft: rgba(255, 255, 255, 0.03);
+      --line: rgba(255, 255, 255, 0.10);
+
+      --text: #eef4ff;
+      --muted: #9fb0cf;
+
+      --gold: #f1c36b;
+      --gold-soft: #ffdca0;
+      --blue: #58a6ff;
+      --blue-soft: #9dd1ff;
+      --ok: #8fffb5;
+
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      --radius: 24px;
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      overflow-x: hidden;
+      font:
+        16px/1.55 Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(241, 195, 107, 0.10), transparent 24%),
+        radial-gradient(circle at bottom, rgba(88, 166, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+    }
+
+    .fx {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.96;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(100% - 24px, var(--max));
+      margin: 0 auto;
+      padding: 18px 0 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), #ffffff);
+      box-shadow: 0 0 28px rgba(241, 195, 107, 0.45);
+      flex: 0 0 auto;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .nav a {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--blue-soft);
+      font-size: 14px;
+      transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    .nav a[aria-current="page"] {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel-soft));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+      gap: 18px;
+      padding: 18px 0 12px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .section {
+      padding: 24px;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--gold-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.03;
+      letter-spacing: -0.04em;
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: clamp(40px, 7vw, 76px);
+      color: var(--gold-soft);
+      max-width: 10ch;
+    }
+
+    h2 {
+      font-size: clamp(24px, 3.6vw, 40px);
+      color: var(--gold-soft);
+    }
+
+    h3 {
+      font-size: 30px;
+      color: #ffffff;
+    }
+
+    .lede,
+    .copy,
+    .detail,
+    .proof-value {
+      color: var(--muted);
+    }
+
+    .lede {
+      margin: 16px 0 0;
+      max-width: 38rem;
+      font-size: 18px;
+    }
+
+    .proof-label,
+    .card-kicker {
+      color: var(--blue-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .gate-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .gate-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .gate-card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .gate-card.primary {
+      min-height: 100%;
+    }
+
+    .detail {
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-weight: 600;
+    }
+
+    .button-primary {
+      background: linear-gradient(
+        135deg,
+        rgba(241, 195, 107, 0.20),
+        rgba(255, 255, 255, 0.08)
+      );
+      color: #ffffff;
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--blue-soft);
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .support-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 12px 4px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .gate-grid,
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 18px, var(--max));
+        padding-top: 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section {
+        padding: 18px;
+      }
+
+      .lede {
+        font-size: 16px;
+      }
+
+      .nav a,
+      .button {
+        width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <canvas
+      class="fx"
+      id="home-fx"
+      aria-hidden="true"
+    ></canvas>
+
+    <div class="shell">
+      <header class="topbar" aria-label="Primary navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"></div>
+          <div>
+            <p class="brand-title">Diamond Gate Bridge</p>
+            <p class="brand-sub">Gate chamber · filter before entry</p>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Top navigation">
+          <a href="/">Root</a>
+          <a href="/gate/" aria-current="page">Gate</a>
+          <a href="/home/">Home</a>
+          <a href="/prelude/">Prelude</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="/gauges/">Gauges</a>
+          <a href="/laws/">Laws</a>
+          <a href="/big-laughs/">Big Laughs</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="gate-title">
+          <article class="panel hero-main">
+            <p class="eyebrow">Filter chamber</p>
+            <h1 id="gate-title">Choose the right door.</h1>
+            <p class="lede">
+              This chamber sorts the visitor before deeper movement. The root opens
+              the threshold. The gate clarifies direction.
+            </p>
+          </article>
+
+          <aside class="panel hero-side" aria-labelledby="gate-proof-title">
+            <div>
+              <p class="proof-label" id="gate-proof-title">Gate role</p>
+              <p class="proof-value">FILTER CHAMBER</p>
+            </div>
+            <div>
+              <p class="proof-label">Hierarchy</p>
+              <p class="proof-value">NINE SUMMITS PRIMARY</p>
+            </div>
+            <div>
+              <p class="proof-label">Routing mode</p>
+              <p class="proof-value">FOUR CLEAN PATHS</p>
+            </div>
+            <div>
+              <p class="proof-label">Root relation</p>
+              <p class="proof-value">ROOT INVITES · GATE SORTS</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section panel" aria-labelledby="paths-title">
+          <p class="eyebrow">Directional filter</p>
+          <h2 id="paths-title">Four paths under one spine.</h2>
+
+          <div class="gate-grid">
+            <div class="gate-col">
+              <article class="gate-card primary">
+                <p class="card-kicker">Primary path</p>
+                <h3>Nine Summits / 256 Carats</h3>
+                <p class="detail">
+                  The governing value-frame, the book spine, and the human-potential
+                  path remain first in hierarchy and first in emphasis.
+                </p>
+                <div class="actions">
+                  <a class="button button-primary" href="/prelude/">Enter through Prelude</a>
+                  <a class="button button-secondary" href="/home/">Open Home</a>
+                </div>
+              </article>
+            </div>
+
+            <div class="gate-col">
+              <article class="gate-card">
+                <p class="card-kicker">Institutional path</p>
+                <h3>About / Contact</h3>
+                <p class="detail">
+                  Identity, mission, legitimacy, and direct communication.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/about/">Open About</a>
+                  <a class="button button-secondary" href="/contact/">Open Contact</a>
+                </div>
+              </article>
+
+              <article class="gate-card">
+                <p class="card-kicker">Public expression path</p>
+                <h3>Big Laughs / Speaking</h3>
+                <p class="detail">
+                  Comedy, motivational speaking, public presence, and live engagement.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/big-laughs/">Open the path</a>
+                </div>
+              </article>
+
+              <article class="gate-card">
+                <p class="card-kicker">System path</p>
+                <h3>Gauges / Laws</h3>
+                <p class="detail">
+                  Measurement, doctrine, calibration, and governing structure.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/gauges/">Open Gauges</a>
+                  <a class="button button-secondary" href="/laws/">Open Laws</a>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="support-grid">
+            <article class="support-card">
+              <p class="card-kicker">Root</p>
+              <p class="detail">
+                The light invitation surface.
+              </p>
+            </article>
+
+            <article class="support-card">
+              <p class="card-kicker">Gate</p>
+              <p class="detail">
+                The sorting chamber before deeper commitment.
+              </p>
+            </article>
+
+            <article class="support-card">
+              <p class="card-kicker">Destinations</p>
+              <p class="detail">
+                The actual worlds that carry the content weight.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>
+          Result: PAGE=GATE | ROLE=FILTER_CHAMBER | ROOT_RELATION=ROOT_INVITES_GATE_SORTS
+        </span>
+        <span><a href="/">Return to root</a></span>
+      </footer>
+    </div>
+  </div>
+
+  <script type="module" src="/index.js"></script>
+</body>
+</html>

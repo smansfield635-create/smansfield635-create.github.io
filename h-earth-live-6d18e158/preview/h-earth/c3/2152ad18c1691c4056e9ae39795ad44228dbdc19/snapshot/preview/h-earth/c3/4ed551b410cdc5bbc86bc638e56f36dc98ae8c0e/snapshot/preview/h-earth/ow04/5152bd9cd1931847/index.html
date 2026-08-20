@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="color-scheme" content="dark">
+  <meta name="h-earth-exact-source-commit" content="5152bd9cd1931847e63b742d9e01f1a413ba66e4">
+  <title>H-Earth OW04 Temporary Inspection</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#020609;color:#eef8f6;font-family:system-ui,sans-serif}
+    body{display:grid;place-items:center;padding:24px;box-sizing:border-box}
+    .review-loading{max-width:680px;padding:24px;border:1px solid rgba(220,242,238,.2);border-radius:18px;background:#061014}
+    .review-loading h1{margin:0 0 10px;font-size:clamp(1.5rem,5vw,3rem)}
+    .review-loading p{margin:0;color:rgba(238,248,246,.72)}
+    .review-error{color:#ffd2d2;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <section class="review-loading" aria-live="polite">
+    <h1>Loading H-Earth OW04 inspection candidate</h1>
+    <p id="review-status">Resolving the exact candidate source commit…</p>
+  </section>
+  <script>
+    (async () => {
+      const EXACT_SOURCE_COMMIT = '5152bd9cd1931847e63b742d9e01f1a413ba66e4';
+      const SOURCE_ROOT = `https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@${EXACT_SOURCE_COMMIT}/`;
+      const SOURCE_DOCUMENT = `${SOURCE_ROOT}showroom/globe/h-earth/index.html`;
+      const response = await fetch(SOURCE_DOCUMENT, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`TEMPORARY_REVIEW_SOURCE_HTTP_FAILURE:${response.status}`);
+      let sourceHtml = await response.text();
+      sourceHtml = sourceHtml.replace(/\b(href|src)=(['"])\/(?!\/)/g,(match,attribute,quote)=>`${attribute}=${quote}${SOURCE_ROOT}`);
+      sourceHtml = sourceHtml.replace(/url\((['"]?)\/(?!\/)/g,(match,quote)=>`url(${quote}${SOURCE_ROOT}`);
+      const closeScript = '<' + '/script>';
+      const deliveryBootstrap = `
+        <base href="${SOURCE_ROOT}showroom/globe/h-earth/">
+        <meta name="robots" content="noindex,nofollow,noarchive">
+        <meta name="h-earth-temporary-review-operation" content="H_EARTH_OW04_EXACT_CANDIDATE_TEMPORARY_INSPECTION_001">
+        <meta name="h-earth-exact-source-commit" content="${EXACT_SOURCE_COMMIT}">
+        <script>
+          (() => {
+            const sourceRoot = ${JSON.stringify(SOURCE_ROOT)};
+            const sourceCommit = ${JSON.stringify(EXACT_SOURCE_COMMIT)};
+            const originalFetch = window.fetch.bind(window);
+            window.fetch = (input, init) => {
+              if (typeof input === 'string' && input.startsWith('/') && !input.startsWith('//')) input = sourceRoot + input.slice(1);
+              else if (input instanceof Request) {
+                const url = new URL(input.url, document.baseURI);
+                if (url.origin === location.origin && url.pathname.startsWith('/')) input = new Request(sourceRoot + url.pathname.slice(1) + url.search + url.hash, input);
+              }
+              return originalFetch(input, init);
+            };
+            window.H_EARTH_TEMPORARY_REVIEW_DELIVERY = Object.freeze({operationId:'H_EARTH_OW04_EXACT_CANDIDATE_TEMPORARY_INSPECTION_001',exactSourceCommit:sourceCommit,sourceRoot,productMutation:false,liveHEarthPageMutation:false});
+          })();
+        ${closeScript}`;
+      sourceHtml = sourceHtml.replace('<head>', `<head>${deliveryBootstrap}`);
+      sourceHtml = sourceHtml.replace('<html lang="en"', `<html lang="en" data-h-earth-temporary-review="active" data-h-earth-exact-source-commit="${EXACT_SOURCE_COMMIT}"`);
+      document.open(); document.write(sourceHtml); document.close();
+    })().catch((error) => {
+      const status = document.getElementById('review-status');
+      if (status) { status.className='review-error'; status.textContent = error instanceof Error ? `${error.message}\n${error.stack ?? ''}` : String(error); }
+      console.error(error);
+    });
+  </script>
+</body>
+</html>

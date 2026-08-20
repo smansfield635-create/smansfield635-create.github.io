@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "H_EARTH_B1_MORPHOLOGY_DESCRIPTOR_BASELINE_CLOSURE_v1",
+  "checkpoint": "B1",
+  "result": "B1_MORPHOLOGY_DESCRIPTOR_BASELINE_PASS_CLOSED",
+  "constructionMerge": "44a80e67423c84e4822295162bb71be09cd9ae7c",
+  "executedMergeCandidate": "324ea2e42310439cc69acbb7c9ae28576e148ae2",
+  "dedicatedWorkflowRun": 30524573834,
+  "carrierWorkflowRun": 30524573895,
+  "artifactId": 8752156976,
+  "artifactSha256": "53525c42e8e572589974fff76ca0e933c22f3b19d191873a5bc73c0daafcc3cd",
+  "baselineDigest": "fnv1a32:513f79fa",
+  "canonicalReceiptSha256": "58ab9339a2c1e727829adde182b478cd319067b4644e57f7bc841f02b0ffa2ed",
+  "grid": {
+    "width": 129,
+    "height": 97,
+    "xSpacingWorldUnits": 4,
+    "zSpacingWorldUnits": 4
+  },
+  "dominantRepetition": {
+    "orientationDegrees": 0,
+    "lagCells": 2,
+    "lagWorldUnits": 8,
+    "score": 0.9772799930696833
+  },
+  "morphologyRadiiCells": {
+    "small": 1,
+    "medium": 2,
+    "large": 2
+  },
+  "hotspotCount": 42,
+  "landformClassCount": 10,
+  "ridgeCellCount": 1147,
+  "valleyCellCount": 1650,
+  "maximumFlowAccumulation": 1670,
+  "frozenAuthoritiesPreserved": true,
+  "productMutationPerformed": false,
+  "heightfieldMutationPerformed": false,
+  "liveRouteChanged": false,
+  "b2Authorized": true
+}

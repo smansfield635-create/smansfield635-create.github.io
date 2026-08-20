@@ -1,0 +1,25 @@
+name: Identity Conditioned Reachability Hidden Structure v1
+
+on:
+  pull_request:
+    paths:
+      - "research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-hidden-structure-v1/**"
+      - ".github/workflows/identity-conditioned-reachability-hidden-structure-v1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  observer-blinded-hidden-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify frozen package and execute isolated observer gauntlet
+        working-directory: research/route-operator-platform-v1/empirical-tests/identity-conditioned-reachability-hidden-structure-v1
+        run: python verify_hidden_structure_gauntlet_v1.py

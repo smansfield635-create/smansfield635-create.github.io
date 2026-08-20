@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>H-Earth CP7D Neutral Control-Field Renderer</title>
+  <style>
+    html,body{margin:0;background:#020405;color:#eef;font-family:monospace}
+    main{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px}
+    figure{margin:0;min-width:0}figcaption{padding:4px 0}
+    canvas{display:block;width:100%;height:auto;background:#000}
+    pre{margin:8px;white-space:pre-wrap;font-size:11px}
+  </style>
+</head>
+<body>
+  <main>
+    <figure><figcaption>Accepted CP2</figcaption><canvas id="accepted" width="960" height="540"></canvas></figure>
+    <figure><figcaption>CP7D neutral integration</figcaption><canvas id="neutral" width="960" height="540"></canvas></figure>
+  </main>
+  <pre id="status">initializing</pre>
+  <script type="module">
+    import authority from '../../../control-plane/post-cp2-round2/cp7/h-earth.cp7d-neutral-renderer-integration.v1.mjs';
+    import { createCp7dNeutralRendererSuite } from './h-earth.cp7d-neutral-renderer.browser.mjs';
+    const status=document.getElementById('status');
+    try{
+      window.H_EARTH_CP7D_RESULT=await createCp7dNeutralRendererSuite({
+        acceptedCanvas:document.getElementById('accepted'),
+        neutralCanvas:document.getElementById('neutral'),
+        authority
+      });
+      status.textContent=JSON.stringify(window.H_EARTH_CP7D_RESULT,null,2);
+      document.documentElement.dataset.cp7dReady='true';
+    }catch(error){
+      document.documentElement.dataset.cp7dReady='false';
+      document.documentElement.dataset.cp7dError='true';
+      status.textContent=error?.stack??String(error);
+      throw error;
+    }
+  </script>
+</body>
+</html>

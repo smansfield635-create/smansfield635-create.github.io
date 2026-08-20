@@ -1,0 +1,51 @@
+{
+  "schema": "DIAMOND_GATE_SPEECH_KERNEL_G0_G1_BASELINE_v1",
+  "status": "CONSTRUCTED_PENDING_LISTENING_QUALIFICATION",
+  "sourceRecovery": {
+    "exactPriorSynthesizerSourceRecovered": false,
+    "reason": "Earlier robotic Compass synthesizer source was not persisted in repository or recoverable file library. G0 is canonicalized now from the documented deterministic stages: text -> phonemes -> timing -> fixed pitch/excitation -> waveform.",
+    "doNotRepresentAsByteIdenticalToEarlierEphemeralRender": true
+  },
+  "generationLaw": {
+    "G0": "IMMUTABLE_CANONICAL_DETERMINISTIC_BASELINE",
+    "G1": "TIMING_AND_PAUSES_ONLY",
+    "prohibitedInG1": ["stress control","F0 contour changes","energy changes","micro-prosody","coarticulation changes","spectral dynamics changes","learned residual"]
+  },
+  "sharedAcoustics": {
+    "sampleRateHz": 24000,
+    "fixedF0Hz": 118,
+    "fixedAmplitude": 0.52,
+    "samePhonemeInventory": true,
+    "sameExcitation": true,
+    "sameFormantTable": true,
+    "sameWaveWriter": true
+  },
+  "g1TimingLaw": {
+    "vowelsMs": 135,
+    "stopsMs": 70,
+    "fricativesMs": 100,
+    "nasalsMs": 95,
+    "approximantsMs": 85,
+    "wordGapMs": 60,
+    "commaPauseMs": 220,
+    "periodPauseMs": 420,
+    "wordFinalLengthening": 1.15,
+    "thereforeLocalLengthening": 1.08
+  },
+  "corpus": [
+    "Navigation requires orientation.",
+    "Without orientation, there is no navigation.",
+    "Here at Diamond Gate Bridge, we define our questions through their connections.",
+    "And the stars provide the answers.",
+    "Reality itself relies on their existence.",
+    "Therefore.",
+    "You're never lost, no matter how far from home.",
+    "Nothing navigates better than a compass."
+  ],
+  "combinedRenderSha256": {
+    "G0_COMPASS_8_BEATS.wav": "7bebd5a7389a9cc66dcc2c476fef2cdc7d1612c36a69a51e876f903944ce74d5",
+    "G1_COMPASS_8_BEATS.wav": "f928da1a107b4def89af7d94b2156cbd2a6a8e59f8b28cd0a817fa605b7f1723"
+  },
+  "qualificationQuestion": "DID_TIMING_CONTROL_MATERIALLY_REDUCE_ROBOTIC_SPEECH",
+  "nextLawfulAction": "OWNER_LISTEN_G0_VS_G1_THEN_RECORD_G1_DISPOSITION"
+}

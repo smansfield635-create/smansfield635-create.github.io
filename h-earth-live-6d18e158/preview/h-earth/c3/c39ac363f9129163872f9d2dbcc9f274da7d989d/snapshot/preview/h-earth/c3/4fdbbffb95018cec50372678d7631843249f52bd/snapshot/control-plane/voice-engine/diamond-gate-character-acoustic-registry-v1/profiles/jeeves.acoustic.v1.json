@@ -1,0 +1,96 @@
+{
+  "schema": "DIAMOND_GATE_CHARACTER_ACOUSTIC_PROFILE_v1",
+  "characterId": "jeeves",
+  "displayName": "Jeeves",
+  "status": "PROFILE_CANDIDATE_READY_FOR_SYNTHESIS",
+  "canonicalSources": [
+    "characters/index.html",
+    "assets/hearth/jeeves/jeeves.voice.js",
+    "assets/hearth/jeeves/jeeves.expression.js"
+  ],
+  "acousticIdentity": {
+    "register": "LOW_MID_MALE",
+    "resonance": "WARM_CLEAR_LIGHTLY_TEXTURED",
+    "pace": "DELIBERATE_RESPONSIVE",
+    "pitchRange": "RESTRAINED",
+    "dynamicRange": "MODERATE_LOW",
+    "pauseLaw": "MEANING_FIRST",
+    "attack": "SOFT",
+    "terminalCadence": "RESOLVED_CONFIDENT",
+    "emphasis": "SELECTIVE_ARGUMENTATIVE_WHEN_CLARIFICATION_REQUIRES",
+    "dryness": "LIGHT",
+    "intensityCeiling": "CONTROLLED",
+    "theatricality": "PROHIBITED"
+  },
+  "characterExpressionConstraints": {
+    "required": [
+      "highly intelligent",
+      "composed",
+      "attentive",
+      "clear",
+      "courteous",
+      "observant",
+      "restrained",
+      "confident",
+      "concrete",
+      "lightly dry",
+      "precise without stiffness"
+    ],
+    "prohibited": [
+      "mechanically cheerful",
+      "servile",
+      "theatrical",
+      "breathy mystical imitation",
+      "combative lecturer imitation",
+      "recognizable imitation of a real person"
+    ]
+  },
+  "creativeDirection": {
+    "target": "ORIGINAL_DIAMOND_GATE_IDENTITY",
+    "qualities": [
+      "spacious philosophical calm",
+      "tonal ease",
+      "precise argumentative emphasis",
+      "controlled urgency when a distinction matters",
+      "Jeeves restraint"
+    ],
+    "namedReferencePolicy": "REFERENCE_QUALITIES_ONLY_NOT_IDENTITY_IMITATION"
+  },
+  "deliveryModes": {
+    "conversation": {
+      "pace": "RESPONSIVE",
+      "warmth": "MODERATE",
+      "pauses": "SHORT_MEDIUM",
+      "authority": "CALM"
+    },
+    "orientation": {
+      "pace": "MEASURED",
+      "warmth": "MODERATE_LOW",
+      "pauses": "MEDIUM",
+      "authority": "ELEVATED"
+    },
+    "compassNarration": {
+      "pace": "DELIBERATE",
+      "warmth": "MODERATE",
+      "pauses": "MEDIUM_LONG",
+      "authority": "HIGH",
+      "spaciousness": "HIGH",
+      "intimacy": "MODERATE",
+      "terminalCadence": "STRONG_RESOLVED",
+      "priority": "INTELLIGIBILITY_OVER_DRAMA"
+    }
+  },
+  "referenceAudio": {
+    "status": "UNBOUND",
+    "authorizationRequired": true,
+    "provenanceRequired": true,
+    "minimumProductionGuidance": "Use an authorized original/reference source; do not bind a recognizable third-party voice identity."
+  },
+  "engine": {
+    "adapterStatus": "UNBOUND",
+    "preferredFirstBenchmark": "FISH_AUDIO_S2_OR_EQUIVALENT_REFERENCE_CONDITIONED_TTS",
+    "modelIdentityMayOwnCharacterIdentity": false
+  },
+  "qualificationId": "JEEVES_COMPASS_CH01_Q01",
+  "nextLawfulAction": "BIND_AUTHORIZED_REFERENCE_OR_ORIGINAL_BASE_AND_RENDER_SIX_FROZEN_COMPASS_LINES"
+}

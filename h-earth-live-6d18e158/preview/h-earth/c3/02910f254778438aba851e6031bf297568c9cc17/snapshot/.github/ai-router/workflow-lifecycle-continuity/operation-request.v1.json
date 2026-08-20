@@ -1,0 +1,13 @@
+{
+  "schema":"REPOSITORY_OPERATION_REQUEST_v1",
+  "operationId":"WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY_RATIFICATION_INSTALLATION_v1",
+  "projectId":"REPOSITORY_AI_ROUTER_INFRASTRUCTURE",
+  "lockScope":"REPOSITORY_AI_ROUTER_INFRASTRUCTURE:WORKFLOW_LIFECYCLE_RETIREMENT_CONTINUITY:RATIFICATION_INSTALLATION:V1:EXACT_8_PATH_SCOPE",
+  "exactGoverningHead":"27d763cce6029ebb19f6325346d120b95003019d",
+  "subjectIdentity":{"authorityIssue":820,"sourceCandidatePr":943,"gapId":"WORKFLOW_INSTRUMENT_LIFECYCLE_ADOPTION_RETIREMENT_SIGNAL_CONTINUITY","purpose":"RATIFY_AND_INSTALL_FAIL_CLOSED_CLI_INSTRUMENT"},
+  "allowedPaths":[".github/ai-router/workflow-lifecycle-continuity/AGENTS.md",".github/ai-router/workflow-lifecycle-continuity/operation-request.v1.json",".github/ai-router/workflow-lifecycle-continuity/construction-procedure.v1.json",".github/ai-router/workflow-lifecycle-continuity/protocol.v1.json",".github/ai-router/workflow-lifecycle-continuity/receipt.schema.v1.json",".github/ai-router/workflow-lifecycle-continuity/workflow-lifecycle-continuity-verifier.v1.mjs",".github/ai-router/workflow-lifecycle-continuity/workflow-lifecycle-continuity-self-test.v1.mjs",".github/ai-router/workflow-lifecycle-continuity/ratification-record.v1.json"],
+  "mergeAuthority":true,
+  "gapClosureAuthority":false,
+  "physicalRetirementAuthority":false,
+  "workflowCarrierMutationAuthority":false
+}

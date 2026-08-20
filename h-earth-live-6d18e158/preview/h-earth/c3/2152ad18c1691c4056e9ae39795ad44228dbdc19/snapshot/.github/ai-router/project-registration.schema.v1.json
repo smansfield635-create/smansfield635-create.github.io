@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "REPOSITORY_AI_PROJECT_REGISTRATION_SCHEMA_v1",
+  "title": "Repository AI project registration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "projectId",
+    "status",
+    "ownedPathPrefixes",
+    "ownedExactPaths",
+    "entrypoint",
+    "authorityBoundary",
+    "requiredInstructions",
+    "procedures"
+  ],
+  "properties": {
+    "schema": {
+      "const": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "ACTIVE_REGISTERED_PROJECT",
+        "HELD",
+        "RETIRED"
+      ]
+    },
+    "ownedPathPrefixes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ownedExactPaths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "entrypoint": {
+      "type": "string"
+    },
+    "authorityBoundary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "requiredInstructions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "registries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "procedures": {
+      "type": "object"
+    },
+    "localExecution": {
+      "type": "object"
+    },
+    "githubActionsExecution": {
+      "type": "object"
+    },
+    "stoppingRules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

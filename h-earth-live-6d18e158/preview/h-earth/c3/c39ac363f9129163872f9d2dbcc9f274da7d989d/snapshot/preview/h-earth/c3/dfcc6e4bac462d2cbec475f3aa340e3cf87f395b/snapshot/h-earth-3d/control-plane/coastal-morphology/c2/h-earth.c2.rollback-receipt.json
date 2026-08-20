@@ -1,0 +1,9 @@
+{
+  "receiptType": "H_EARTH_C2_ROLLBACK_ANCHOR_v1",
+  "operation": "C2.0_WORKSPACE_AND_ROLLBACK",
+  "rollbackBranch": "rollback/h-earth-c2-bounded-coastal-visual-successor-001",
+  "rollbackHead": "4bc08c26548c36ab9fd96bdaead7434ca08cf8ac",
+  "candidateBranch": "agent/h-earth-c2-bounded-coastal-visual-successor-001",
+  "publicDefaultMutated": false,
+  "status": "ANCHOR_DECLARED_PENDING_REF_CONFIRMATION"
+}

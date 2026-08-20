@@ -1,0 +1,117 @@
+{
+  "contract": "LAWS_COMPLETE_RENEWAL_ROLLBACK_AND_PROTECTED_PATHS_v1",
+  "mode": "IMPLEMENTATION_CUSTODY_AND_ROLLBACK_AUTHORITY",
+  "status": "FROZEN_FOR_REPRESENTATIVE_IMPLEMENTATION",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "branch": "agent/laws-complete-renewal-cross-compatible-001",
+  "rollback_baseline": {
+    "commit": "8b2e2d872a968643c8e17a78f8e0df6060027730",
+    "description": "Main immediately after merge of frozen complete Laws narrative authority PR #489.",
+    "rollback_must_restore": [
+      "ALL_CURRENT_LAWS_PRODUCT_PAGES",
+      "ALL_CURRENT_LAWS_ROUTES",
+      "ALL_CURRENT_CANONICAL_RECORDS",
+      "ALL_CURRENT_COMPASS_BEHAVIOR",
+      "ALL_CURRENT_FRONTIER_LINK_TARGETS"
+    ]
+  },
+  "protected_runtime_paths": [
+    "laws/index.controller.js",
+    "laws/index.compositor.js",
+    "laws/index.crystals.js",
+    "laws/index.interactions.js",
+    "laws/index.cosmos.js",
+    "laws/index.planet.js",
+    "assets/audralia/audralia.planet.js"
+  ],
+  "protected_authority_paths": [
+    "laws/control-plane/narrative/laws-complete-narrative-map-v1.json",
+    "laws/control-plane/narrative/laws-complete-narrative-map-completeness-amendment-v1.json",
+    "laws/control-plane/narrative/laws-complete-narrative-map-freeze-record-v1.json",
+    "laws/control-plane/cp6-3/migration-ledger.json",
+    "laws/control-plane/cp6-4-5/content-reduction-custody-ledger.json",
+    "laws/control-plane/cp6-1/route-retirement-ledger.json",
+    "laws/control-plane/renewal/laws-complete-renewal-representative-implementation-authority-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-cross-compatibility-matrix-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-route-shape-reconciliation-v1.json",
+    "laws/control-plane/renewal/laws-complete-renewal-rollback-and-protected-paths-v1.json"
+  ],
+  "protected_counts_and_invariants": {
+    "laws_authorities": 6,
+    "predestined_child_routes": 24,
+    "canonical_research_and_test_destinations": 8,
+    "canonical_records": 48,
+    "complete_custody_population": 138,
+    "compatibility_bindings": 9,
+    "frontier_product_file_mutation": 0,
+    "compass_runtime_mutation": 0,
+    "route_deletion_redirect_or_rename": 0,
+    "evidence_status_upgrade": 0,
+    "equation_identity_change": 0
+  },
+  "authorized_product_paths_for_initial_cohort": [
+    "laws/categories/flow/signals/index.html",
+    "laws/categories/reality/measure.html",
+    "laws/test/reverse-audit/index.html",
+    "laws/research/findings-and-boundaries/index.html",
+    "laws/industrial-posture/index.html"
+  ],
+  "authorized_shared_asset_prefixes": [
+    "assets/laws-destination/",
+    "laws/control-plane/renewal/",
+    "scripts/verify-laws-complete-renewal-"
+  ],
+  "conditionally_authorized_existing_styles": [
+    {
+      "path": "laws/contextual-study.css",
+      "condition": "May be read and selectively superseded for the five representatives only; no broad batch behavior may be introduced before user acceptance."
+    }
+  ],
+  "explicitly_held_paths": [
+    "ALL_OTHER_19_CHILD_PAGE_HTML_FILES",
+    "ALL_OTHER_SURVIVING_PUBLIC_BACK_PAGES",
+    "ALL_FRONTIER_FILES",
+    "ALL_NON_LAWS_PRODUCT_FILES",
+    "ALL_COMPATIBILITY_WRAPPER_ROUTES_NOT_IN_THE_INITIAL_COHORT"
+  ],
+  "route_and_content_boundaries": {
+    "existing_routes_remain_authoritative": true,
+    "direct_entry_preserved": true,
+    "previous_next_context_may_be_added_without_route_reassignment": true,
+    "complete_frontier_study_remains_frontier_owned": true,
+    "canonical_record_ownership_may_not_move": true,
+    "source_copy_may_not_be_deleted_during_representative_validation": true,
+    "route_shape_adapter": "laws/control-plane/renewal/laws-complete-renewal-route-shape-reconciliation-v1.json"
+  },
+  "stop_conditions": [
+    "ANY_PROTECTED_RUNTIME_DIFF",
+    "ANY_FRONTIER_PRODUCT_DIFF",
+    "ANY_UNAUTHORIZED_PAGE_DIFF",
+    "ANY_ROUTE_DELETION_REDIRECT_OR_RENAME",
+    "ANY_CANONICAL_RECORD_LOSS",
+    "ANY_EQUATION_OR_VARIABLE_MUTATION",
+    "ANY_EVIDENCE_OR_CLAIM_STATUS_UPGRADE",
+    "ANY_DEFAULT_MONOLITHIC_SCROLL_REINTRODUCED_BY_SHARED_COMPONENT",
+    "ANY_REDUCED_OR_STATIC_MODE_LOSS_OF_MEANING",
+    "ANY_MOBILE_REMOVAL_OF_AUDIT_OR_BOUNDARY_ACCESS",
+    "ANY_SHARED_COMPONENT_THAT_REQUIRES_PAGE_SPECIFIC_FORKS_TO_PRESERVE_BASIC_OPERATION"
+  ],
+  "verification_required_before_user_review": [
+    "EXACT_CHANGED_PATH_INVENTORY",
+    "PROTECTED_PATH_ZERO_DIFF",
+    "ROUTE_AND_RECORD_COUNT_PRESERVATION",
+    "DESKTOP_TABLET_PHONE_RENDER",
+    "KEYBOARD_POINTER_TOUCH_OPERATION",
+    "FULL_REDUCED_STATIC_NO_JS_EQUIVALENCE",
+    "FORMAL_NOTATION_SELECTABLE_AND_COPYABLE",
+    "NO_HORIZONTAL_OVERFLOW",
+    "NO_BROWSER_ERRORS",
+    "NO_MONOLITHIC_DEFAULT_DISCLOSURE",
+    "ALL_FIVE_PAGES_CONSUME_THE_SAME_SHARED_CONTRACT"
+  ],
+  "merge_boundary": {
+    "merge_authorized": false,
+    "user_visual_differential_required": true,
+    "later_explicit_merge_authority_required": true
+  }
+}

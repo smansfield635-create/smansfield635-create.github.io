@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "R&D_PACKAGE_RECONCILE_APPLY_VERIFY_RECEIPT_SCHEMA_v1",
+  "type": "object",
+  "required": ["instrument", "mode", "pass", "protocolId"],
+  "properties": {
+    "instrument": { "const": "R&D_PACKAGE_RECONCILE_APPLY_VERIFY_v1" },
+    "mode": { "enum": ["PLAN_ONLY", "APPLICATION"] },
+    "pass": { "type": "boolean" },
+    "protocolId": { "type": "string" }
+  }
+}

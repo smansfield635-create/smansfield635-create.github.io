@@ -1,0 +1,38 @@
+name: IMI Coast Entry to Gratitude Manifest-Relative Reset v3 conformance
+
+on:
+  pull_request:
+    paths:
+      - 'research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v3/**'
+      - '.github/workflows/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v3-conformance.yml'
+  push:
+    paths:
+      - 'research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v3/**'
+      - '.github/workflows/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v3-conformance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify v3 release records and produce conformance receipt
+        shell: bash
+        working-directory: research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v3
+        run: |
+          set -euo pipefail
+          python verify_release_records_v3.py | tee IMI_COAST_TO_GRATITUDE_V3_REPOSITORY_CONFORMANCE_RECEIPT.json
+      - name: Validate JSON records
+        working-directory: research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v3
+        run: find . -maxdepth 1 -name '*.json' -print0 | xargs -0 -n1 python -m json.tool >/dev/null
+      - name: Upload conformance receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: imi-coast-to-gratitude-v3-${{ github.sha }}
+          path: research/route-operator-platform-v1/deployments/imi-h-earth-coast-entry-to-gratitude-initial-presentation-v3/IMI_COAST_TO_GRATITUDE_V3_REPOSITORY_CONFORMANCE_RECEIPT.json
+          retention-days: 90

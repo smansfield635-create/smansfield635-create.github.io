@@ -1,0 +1,33 @@
+{
+  "catalog_id": "ICR_OPAQUE_RELATION_CATALOG_v1",
+  "nodes": [
+    "N04",
+    "N11",
+    "N18",
+    "N25",
+    "N32",
+    "N39",
+    "N77",
+    "N88",
+    "N91"
+  ],
+  "observable_fields": [
+    "generic_output",
+    "identity_challenge",
+    "support_draw",
+    "substitute_draw",
+    "fracture_latched",
+    "clearance_used",
+    "failure_code"
+  ],
+  "relations": [
+    {"relation_id": "R01", "source": "N04", "target": "N11"},
+    {"relation_id": "R02", "source": "N11", "target": "N18"},
+    {"relation_id": "R03", "source": "N18", "target": "N25"},
+    {"relation_id": "R04", "source": "N25", "target": "N32"},
+    {"relation_id": "R05", "source": "N32", "target": "N39"},
+    {"relation_id": "R06", "source": "N11", "target": "N88"},
+    {"relation_id": "R07", "source": "N77", "target": "N32"},
+    {"relation_id": "R08", "source": "N25", "target": "N91"}
+  ]
+}

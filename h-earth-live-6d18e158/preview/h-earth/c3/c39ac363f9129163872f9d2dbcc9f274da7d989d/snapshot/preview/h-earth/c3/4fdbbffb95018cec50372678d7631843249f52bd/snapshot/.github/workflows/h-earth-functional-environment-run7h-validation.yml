@@ -1,0 +1,131 @@
+name: H-Earth Functional Environment Run 7H Validation
+
+on:
+  push:
+    branches:
+      - agent/h-earth-functional-environment-run7h-001
+  pull_request:
+    branches:
+      - agent/h-earth-functional-environment-run7g-001
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-run7h:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out Run 7H workspace
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Execute bounded Run 7H integration harness
+        env:
+          H_EARTH_RUN7H_EXECUTION_CANDIDATE: h-earth-run7h-execution-candidate.json
+        run: |
+          set -o pipefail
+          node --experimental-default-type=module \
+            h-earth-3d/validation/h-earth.functional-environment.run7h.harness.mjs \
+            2>&1 | tee h-earth-run7h-node.log
+
+      - name: Verify Run 7H execution candidate
+        run: |
+          test -s h-earth-run7h-execution-candidate.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const receipt = JSON.parse(readFileSync('h-earth-run7h-execution-candidate.json', 'utf8'));
+          if (
+            receipt.eligible !== true ||
+            receipt.failCount !== 0 ||
+            receipt.deterministicRerunMatch !== true ||
+            receipt.waypointCount !== 5 ||
+            receipt.lifecycleStateCount !== 4 ||
+            receipt.authorityCollapse !== false ||
+            receipt.workspaceExecution !== true ||
+            receipt.localConstruction !== false ||
+            receipt.rendererAuthorityReplaced !== false ||
+            receipt.cameraAuthorityReplaced !== false ||
+            receipt.navigationAuthorityReplaced !== false ||
+            receipt.productPromotionClaim !== false ||
+            receipt.liveVerificationClaim !== false
+          ) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          NODE
+
+      - name: Install bounded Chromium dependency
+        run: |
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start bounded static server
+        run: |
+          python3 -m http.server 4173 > h-earth-run7h-server.log 2>&1 &
+          echo $! > h-earth-run7h-server.pid
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent \
+              http://127.0.0.1:4173/showroom/globe/h-earth/functional-landscape/ \
+              > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat h-earth-run7h-server.log
+          exit 1
+
+      - name: Execute Run 7H desktop and Samsung browser matrix
+        env:
+          H_EARTH_RUN7H_URL: http://127.0.0.1:4173/showroom/globe/h-earth/functional-landscape/
+          H_EARTH_RUN7H_BROWSER_ARTIFACT_DIR: h-earth-run7h-browser-artifacts
+        run: |
+          set -o pipefail
+          node h-earth-3d/validation/h-earth.functional-environment.run7h.browser.mjs \
+            2>&1 | tee h-earth-run7h-browser.log
+
+      - name: Verify browser receipt
+        run: |
+          test -s h-earth-run7h-browser-artifacts/run7h-browser-receipt.json
+          node --input-type=module <<'NODE'
+          import { readFileSync } from 'node:fs';
+          const receipt = JSON.parse(readFileSync(
+            'h-earth-run7h-browser-artifacts/run7h-browser-receipt.json', 'utf8'));
+          if (
+            receipt.eligible !== true ||
+            receipt.configurationCount !== 3 ||
+            receipt.desktopExecution !== 'PASS' ||
+            receipt.samsungMobilePortraitExecution !== 'PASS' ||
+            receipt.samsungMobileLandscapeExecution !== 'PASS' ||
+            receipt.touchAndPointerExecution !== 'PASS' ||
+            receipt.integratedEnvironmentPresentation !== 'PASS' ||
+            receipt.lifecycleTransitionProof !== 'PASS' ||
+            receipt.actualBrowserExecution !== true
+          ) process.exit(1);
+          NODE
+
+      - name: Stop bounded static server
+        if: always()
+        run: |
+          if [ -f h-earth-run7h-server.pid ]; then
+            kill "$(cat h-earth-run7h-server.pid)" || true
+          fi
+
+      - name: Upload Run 7H execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-run7h-execution-evidence
+          path: |
+            h-earth-run7h-node.log
+            h-earth-run7h-browser.log
+            h-earth-run7h-server.log
+            h-earth-run7h-execution-candidate.json
+            h-earth-run7h-browser-artifacts
+          if-no-files-found: error
+          retention-days: 14

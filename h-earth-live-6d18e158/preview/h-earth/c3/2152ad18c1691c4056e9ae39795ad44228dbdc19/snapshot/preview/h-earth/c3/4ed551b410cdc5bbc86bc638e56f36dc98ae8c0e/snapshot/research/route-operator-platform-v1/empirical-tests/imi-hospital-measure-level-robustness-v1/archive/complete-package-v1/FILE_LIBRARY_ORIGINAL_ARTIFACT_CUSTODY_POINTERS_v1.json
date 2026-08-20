@@ -1,0 +1,26 @@
+{
+  "custody_class": "FILE_LIBRARY_ORIGINALS_PLUS_DRIVE_RECONSTRUCTION_PACKAGE",
+  "original_artifacts": [
+    {
+      "title": "IMI_Hospital_Robustness_Test_Report.md",
+      "file_library_id": "file_00000000a6c081fd9a263a96db3d27a7",
+      "created_at": "2026-08-04T04:11:18Z"
+    },
+    {
+      "title": "IMI_Hospital_Level_Results.csv",
+      "file_library_id": "file_0000000046e481f789c3f5a1bd32a179",
+      "created_at": "2026-08-04T04:11:18Z"
+    },
+    {
+      "title": "IMI_Hospital_Robustness_Summary.csv",
+      "file_library_id": "file_000000003bb08230bfd054c2a928db45",
+      "created_at": "2026-08-04T04:11:19Z"
+    },
+    {
+      "title": "IMI_Hospital_Sensitivity_Results.csv",
+      "file_library_id": "file_0000000091f481fdb4daada831789474",
+      "created_at": "2026-08-04T04:11:20Z"
+    }
+  ],
+  "transfer_note": "The Google Drive connector cannot ingest a File Library object directly. Original objects remain retained in File Library; this package provides exact identity, recovered results, and executable reconstruction."
+}

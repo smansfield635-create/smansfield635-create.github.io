@@ -72,7 +72,7 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
-          node h-earth-3d/validation/h-earth.adr1-architectural-depth-readiness.harness.mjs | tee adr1-qualification.json
+          node h-earth-3d/validation/h-earth.adr1-architectural-depth-readiness.harness.mjs 2>&1 | tee adr1-qualification.json
           echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
       - name: Upload ADR1 qualification receipt
         if: always()

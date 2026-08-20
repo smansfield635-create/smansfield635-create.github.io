@@ -11,7 +11,7 @@
   <link rel="modulepreload" href="../h-earth/terrain-estate-construction-v1/renderer.mjs?cb=0818ec6631424ed0">
   <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-model.mjs">
   <link rel="modulepreload" href="./canonical-weather-spatial-lod-proof/weather-renderer.mjs">
-  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v1">
+  <link rel="stylesheet" href="./index.css?v=AUDRALIA_LIVE_STARTUP_LOADING_v2">
   <link rel="stylesheet" href="./weather-presentation-reconciliation/reconciliation.css?v=AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION_v2">
 </head>
 <body>
@@ -19,10 +19,10 @@
     <div class="audralia-loading-panel">
       <div class="audralia-loading-orbit" aria-hidden="true"></div>
       <div class="audralia-loading-title">Audralia</div>
-      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing world and camera…</div>
-      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
-      <div class="audralia-loading-time" data-audralia-loader-progress>0 of 4 systems ready</div>
-      <div class="audralia-loading-note">Building the same world progressively: surface atmosphere, regional weather, and bounded local weather.</div>
+      <div class="audralia-loading-stage" data-audralia-loader-stage>Preparing Audralia…</div>
+      <div class="audralia-loading-track" data-audralia-loader-track role="progressbar" aria-label="Audralia initialization progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span data-audralia-loader-fill></span></div>
+      <div class="audralia-loading-time" data-audralia-loader-progress>0%</div>
+      <div class="audralia-loading-note" data-audralia-loader-note>Entering the same world progressively: planetary surface, atmosphere, regional weather, local weather, and continuity validation.</div>
     </div>
   </div>
 
@@ -62,8 +62,7 @@
       cameraSemanticsFrozen: true
     });
   </script>
-  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs"></script>
-  <script type="module" src="./weather-presentation-reconciliation/app.mjs?cb=2c64ff2e477f6dd2"></script>
+  <script type="module" src="./weather-presentation-reconciliation/loader-progress.mjs?cb=gratitude-chronology-startup-v2"></script>
   <script type="module" src="./celestial-checkpoint-1.mjs"></script>
 </body>
 </html>

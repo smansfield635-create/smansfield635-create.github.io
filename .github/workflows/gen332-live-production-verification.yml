@@ -1,0 +1,170 @@
+name: Gen332 Live Production Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/gen332-live-production-verification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PLAYWRIGHT_VERSION: 1.55.0
+      LIVE_BASE: https://diamondgatebridge.com
+      MERGE_SHA: 8a94bf4ce178f6ed03cf710e6d4caa0cd3680d0b
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix "$RUNNER_TEMP/pw" --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          node "$RUNNER_TEMP/pw/node_modules/playwright/cli.js" install chromium
+          mkdir -p "$RUNNER_TEMP/evidence"
+      - name: Wait for exact Gen332 live asset identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/evidence"
+          success=false
+          for attempt in $(seq 1 60); do
+            nonce="${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${attempt}"
+            ok=true
+            for route in developer evidence governance; do
+              curl --fail-with-body --silent --show-error --location \
+                -H 'Cache-Control: no-cache, no-store, max-age=0' -H 'Pragma: no-cache' \
+                "${LIVE_BASE}/${route}/?gen332_live=${nonce}" -o "$tmp/${route}.html" || ok=false
+            done
+            curl --fail-with-body --silent --show-error --location \
+              -H 'Cache-Control: no-cache, no-store, max-age=0' -H 'Pragma: no-cache' \
+              "${LIVE_BASE}/assets/public-legitimacy/public-legitimacy.carousel.detent.js?gen332_live=${nonce}" \
+              -o "$tmp/detent.js" || ok=false
+            curl --fail-with-body --silent --show-error --location \
+              -H 'Cache-Control: no-cache, no-store, max-age=0' -H 'Pragma: no-cache' \
+              "${LIVE_BASE}/assets/public-legitimacy/public-legitimacy.carousel.parity.css?gen332_live=${nonce}" \
+              -o "$tmp/parity.css" || ok=false
+            if [ "$ok" = true ] \
+              && grep -Fq 'cb=gen332plane01' "$tmp/developer.html" \
+              && grep -Fq 'cb=gen332plane02' "$tmp/developer.html" \
+              && grep -Fq 'cb=gen332plane01' "$tmp/evidence.html" \
+              && grep -Fq 'cb=gen332plane02' "$tmp/evidence.html" \
+              && grep -Fq 'cb=gen332plane01' "$tmp/governance.html" \
+              && grep -Fq 'cb=gen332plane02' "$tmp/governance.html" \
+              && grep -Fq 'syncInspectionPlane' "$tmp/detent.js" \
+              && grep -Fq 'ring.style.setProperty("transition","none","important")' "$tmp/detent.js" \
+              && grep -Fq 'transform:none!important' "$tmp/parity.css"; then
+              success=true
+              echo "Gen332 live asset identity observed on attempt ${attempt}."
+              break
+            fi
+            echo "Waiting for Gen332 live propagation, attempt ${attempt}."
+            sleep 10
+          done
+          test "$success" = true
+      - name: Exercise live nonzero inspection planes and internal controls
+        shell: bash
+        env:
+          PW_ROOT: ${{ runner.temp }}/pw
+          EVIDENCE_DIR: ${{ runner.temp }}/evidence
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const {chromium}=require(path.join(process.env.PW_ROOT,'node_modules/playwright'));
+          const devices=[
+            {name:'desktop',width:1440,height:900},
+            {name:'tablet',width:1024,height:768},
+            {name:'phone',width:390,height:844}
+          ];
+          const routes=[
+            {name:'developer',path:'/developer/',target:2,expected:'authority'},
+            {name:'evidence',path:'/evidence/',target:3,expected:'recovery',lenses:true},
+            {name:'governance',path:'/governance/',target:2,expected:'build'}
+          ];
+          const cases=[];
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              for(const device of devices){
+                for(const route of routes){
+                  const page=await browser.newPage({viewport:{width:device.width,height:device.height}});
+                  const errors=[];
+                  page.on('console',m=>{if(m.type()==='error')errors.push(`console:${m.text()}`)});
+                  page.on('pageerror',e=>errors.push(`page:${e.message}`));
+                  const nonce=`${process.env.GITHUB_RUN_ID||Date.now()}-${route.name}-${device.name}`;
+                  await page.goto(`${process.env.LIVE_BASE}${route.path}?gen332_browser=${nonce}`,{waitUntil:'networkidle'});
+                  await page.locator(`[data-tabs] [data-index="${route.target}"]`).click();
+                  await page.waitForFunction(id=>document.querySelector('[data-carousel]')?.dataset.activeId===id,route.expected,{timeout:4000});
+                  await page.locator('.card[data-active="true"] [data-open]').click();
+                  await page.waitForFunction(()=>document.querySelector('[data-carousel]')?.dataset.inspecting==='true' && document.querySelector('[data-carousel]')?.dataset.inspectionPlane==='flat',{timeout:4000});
+                  const state=await page.evaluate(()=>{
+                    const root=document.querySelector('[data-carousel]');
+                    const viewport=root.querySelector('[data-viewport]');
+                    const ring=root.querySelector('[data-ring]');
+                    const card=root.querySelector('.card[data-active="true"]');
+                    const r=card.getBoundingClientRect();
+                    return {
+                      activeId:root.dataset.activeId,
+                      plane:root.dataset.inspectionPlane,
+                      ringTransform:getComputedStyle(ring).transform,
+                      cardTransform:getComputedStyle(card).transform,
+                      perspective:getComputedStyle(viewport).perspective,
+                      rect:{left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height},
+                      viewport:{width:innerWidth,height:innerHeight}
+                    };
+                  });
+                  if(state.activeId!==route.expected) throw new Error(`${route.name}/${device.name}: active=${state.activeId}`);
+                  if(state.plane!=='flat') throw new Error(`${route.name}/${device.name}: plane=${state.plane}`);
+                  if(state.ringTransform!=='none') throw new Error(`${route.name}/${device.name}: ring=${state.ringTransform}`);
+                  if(state.cardTransform!=='none') throw new Error(`${route.name}/${device.name}: card=${state.cardTransform}`);
+                  if(state.perspective!=='none') throw new Error(`${route.name}/${device.name}: perspective=${state.perspective}`);
+                  const q=state.rect;
+                  if(q.left<-.5||q.top<-.5||q.right>state.viewport.width+.5||q.bottom>state.viewport.height+.5) throw new Error(`${route.name}/${device.name}: escaped ${JSON.stringify(q)}`);
+                  let lensResult='N/A';
+                  if(route.lenses){
+                    const seen=[];
+                    for(let i=0;i<3;i++){
+                      const tab=page.locator(`.card[data-active="true"] [data-lens="${i}"]`);
+                      await tab.click();
+                      if(await tab.getAttribute('aria-selected')!=='true') throw new Error(`evidence/${device.name}: lens ${i} selection failed`);
+                      const text=(await page.locator('.card[data-active="true"] [data-lens-panel]').innerText()).trim();
+                      if(!text) throw new Error(`evidence/${device.name}: lens ${i} empty`);
+                      seen.push(text);
+                    }
+                    if(new Set(seen).size!==3) throw new Error(`evidence/${device.name}: lens content not distinct`);
+                    lensResult='ALL_3_PASS';
+                  }
+                  await page.screenshot({path:path.join(process.env.EVIDENCE_DIR,`live-${route.name}-${device.name}.png`),fullPage:false});
+                  await page.locator('.card[data-active="true"] [data-close]').click();
+                  await page.waitForFunction(()=>document.querySelector('[data-carousel]')?.dataset.inspecting==='false' && document.querySelector('[data-carousel]')?.dataset.inspectionPlane==='orbit',{timeout:4000});
+                  const restored=await page.evaluate(()=>getComputedStyle(document.querySelector('[data-ring]')).transform);
+                  if(restored==='none') throw new Error(`${route.name}/${device.name}: orbit transform not restored`);
+                  const count=await page.locator('[data-tabs] [data-index]').count();
+                  const next=(route.target+1)%count;
+                  await page.locator(`[data-tabs] [data-index="${next}"]`).click();
+                  await page.waitForFunction(i=>Number(document.querySelector('[data-tabs] [aria-selected="true"]')?.dataset.index)===i,next,{timeout:4000});
+                  if(errors.length) throw new Error(`${route.name}/${device.name}: ${errors.join(' | ')}`);
+                  cases.push({route:route.name,device:device.name,result:'PASS',...state,lenses:lensResult,orbitRestored:true,outerTabsAfterReturn:true});
+                  await page.close();
+                }
+              }
+              const receipt={schema:'GEN332_LIVE_PUBLIC_LEGITIMACY_INSPECTION_VERIFICATION_V1',result:'PASS_CLOSED',mergeSha:process.env.MERGE_SHA,liveBase:process.env.LIVE_BASE,cases};
+              fs.writeFileSync(path.join(process.env.EVIDENCE_DIR,'live-receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+            } finally { await browser.close(); }
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload live verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen332-live-production-evidence
+          path: ${{ runner.temp }}/evidence/**
+          if-no-files-found: error
+          retention-days: 30

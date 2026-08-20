@@ -6,6 +6,14 @@ on:
       - recovery/compass-static-editorial-successor
     paths:
       - '.github/workflows/compass-static-editorial-successor-materialize.yml'
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/compass-static-editorial-successor-materialize.yml'
+      - 'tools/compass-static-editorial-qualification.mjs'
+      - 'index.html'
 
 permissions:
   contents: write
@@ -16,6 +24,7 @@ concurrency:
 
 jobs:
   materialize:
+    if: github.head_ref == 'recovery/compass-static-editorial-successor' || github.ref_name == 'recovery/compass-static-editorial-successor'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -90,7 +99,6 @@ jobs:
           assert s.count(plan) == 1
           s = s.replace(plan, plan + ' data-compass-static-editorial-successor="v1"', 1)
 
-          # Hard construction assertions.
           assert 'DiamondGateBridge.com' in s
           assert 'New here? Open the introduction.' in s
           assert 'What is Diamond Gate Bridge?' in s

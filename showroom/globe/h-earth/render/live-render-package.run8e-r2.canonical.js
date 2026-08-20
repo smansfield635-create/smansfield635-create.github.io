@@ -1,7 +1,8 @@
-/** H_EARTH_RUN_8E_R2_CANONICAL_LIVE_RENDER_PACKAGE_v1 */
+/** H_EARTH_RUN_8E_R2_CANONICAL_LIVE_RENDER_PACKAGE_v2_RUNTIME_SKY */
 import {
   getHEarthRun8ER2ImmutableLiveRenderPackage as getRawPackage,
-  getHEarthOW01LiveRenderPackageOccurrence as getOW01RawPackage,
+  buildHEarthRun8ER2ImmutableLiveRenderPackage as buildRawPackage,
+  H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID,
   evaluateHEarthRun8ER2ImmutableLiveRenderPackage
 } from './live-render-package.run8e-r2.js';
 
@@ -89,13 +90,16 @@ function buildCanonicalPackage(raw = getRawPackage()) {
     ...raw,
     packageIdentity: `H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_${digest.toUpperCase()}`,
     contentDigest: `fnv1a32:${digest}`,
-    revision: 2,
+    revision: 3,
     buffers,
     sourceAuthorities: freezeRecord({
       ...raw.sourceAuthorities,
       numericIdentityBoundary: 'SHARED_COMPLETE_PACKAGE_BUFFER_BOUNDARY',
       numericCanonicalizationLaw: 'ROUND_TO_BINARY_GRID_2^-24_AND_NORMALIZE_NEGATIVE_ZERO',
-      canonicalizedFloatBuffers: FLOAT_BUFFER_NAMES
+      canonicalizedFloatBuffers: FLOAT_BUFFER_NAMES,
+      atmosphereTimeBinding: raw.packageOccurrenceId === H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID
+        ? 'BROWSER_LOCAL_CLOCK_AT_PACKAGE_CONSTRUCTION'
+        : 'PACKAGE_DECLARED_TIME'
     })
   });
 
@@ -111,6 +115,11 @@ function buildCanonicalPackage(raw = getRawPackage()) {
   return packageRecord;
 }
 
+function browserLocalClockHours() {
+  const value = new Date();
+  return value.getHours() + value.getMinutes() / 60 + value.getSeconds() / 3600;
+}
+
 let cachedPackage = null;
 let cachedOW01Package = null;
 
@@ -120,7 +129,12 @@ export function getHEarthRun8ER2CanonicalLiveRenderPackage() {
 }
 
 export function getHEarthOW01CanonicalLiveRenderPackageOccurrence() {
-  if (!cachedOW01Package) cachedOW01Package = buildCanonicalPackage(getOW01RawPackage());
+  if (!cachedOW01Package) {
+    cachedOW01Package = buildCanonicalPackage(buildRawPackage({
+      packageOccurrenceId: H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID,
+      timeOfDayHours: browserLocalClockHours()
+    }));
+  }
   return cachedOW01Package;
 }
 

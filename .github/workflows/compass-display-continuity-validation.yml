@@ -57,7 +57,7 @@ jobs:
       - name: Inspect WebGL, trophy exclusivity, stage size, and rotation
         run: |
           mkdir -p /tmp/track-a-rendered
-          cat > /tmp/inspect.mjs <<'NODE'
+          cat > .track-a-inspect.mjs <<'NODE'
           import {chromium} from 'playwright';import fs from 'node:fs';
           const b=await chromium.launch({headless:true}),out={};
           for(const [name,v] of Object.entries({desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:412,height:915}})){
@@ -70,7 +70,7 @@ jobs:
           }
           await b.close();fs.writeFileSync('/tmp/track-a-rendered/receipt.json',JSON.stringify({result:'PASS_CLOSED',out},null,2));
           NODE
-          node /tmp/inspect.mjs
+          node .track-a-inspect.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

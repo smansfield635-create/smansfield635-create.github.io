@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: recovery/compass-static-editorial-successor
-          fetch-depth: 0
+          fetch-depth: 1
       - run: python tools/compass-static-editorial-materialize.py
       - run: node tools/compass-static-editorial-qualification.mjs
       - name: Commit generated candidate and remove temporary construction carriers

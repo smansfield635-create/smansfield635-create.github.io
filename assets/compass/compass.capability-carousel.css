@@ -7,7 +7,7 @@
 
 .compass-capability-cue{max-width:760px;margin:clamp(46px,7vw,82px) auto 0;color:rgba(190,214,219,.52);font:700 .7rem/1.3 Inter,sans-serif;letter-spacing:.18em;text-align:center;text-transform:uppercase}
 
-.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{position:relative;box-sizing:border-box;width:min(100%,980px);min-height:34rem;height:auto;max-height:none;margin:clamp(10px,1.5vw,18px) auto 0;padding:0;display:grid;grid-template-rows:22rem auto auto auto;gap:.55rem;place-items:center;perspective:1700px;overflow:visible;outline:0;isolation:isolate;touch-action:pan-y}
+.compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]{position:relative;box-sizing:border-box;width:min(100%,980px);min-height:34rem;height:auto;max-height:none;margin:clamp(10px,1.5vw,18px) auto 0;padding:0;display:grid;grid-template-rows:22rem auto auto auto;gap:.55rem;place-items:center;perspective:none;overflow:visible;outline:0;isolation:isolate;touch-action:pan-y}
 .compass-capability-orbit[data-continuity-contract="COMPASS_CAPABILITY_CONTINUITY_v1"]::before{content:"";position:absolute;inset:8% 10% 30%;z-index:-1;border-radius:50%;background:radial-gradient(ellipse,rgba(80,170,194,.08),rgba(201,168,91,.018) 42%,transparent 72%)}
 
 .compass-object-stage{position:relative;width:min(94vw,700px);height:22rem;perspective:5200px;transform-style:preserve-3d;touch-action:pan-y;cursor:grab;overflow:visible}

@@ -2377,6 +2377,18 @@
       "scopeHash": "e705191c2e8d19f69525f0fa6f083068b6528233582990254765ecf4d70d8dde",
       "state": "ADMITTED_LOCKED"
     },
+    "e78aea49bc3812f8878dada4e45026499c69e99cf593462051081677f8a811b9": {
+      "governingHead": "734498affe60b36e412337c1b3be947565ab5859",
+      "lockGeneration": 1562,
+      "lockScope": "H_EARTH:AUDRALIA:GPC1:RECIPROCAL_WORLD_MODEL:PRECONSTRUCTION:EXACT_13_PATH_SCOPE",
+      "operationId": "AUDRALIA_GPC1_RECIPROCAL_WORLD_MODEL_PRECONSTRUCTION_20260820_001",
+      "procedureLocatorDigest": "73fbaca0cc37ad5840c70fedd99b38522f10abccf460d83c68952aea9f10b084",
+      "released": false,
+      "requestDigest": "3e211023a4962502b83b723aae98f57d071594cd74a0cb9c4a6c1d80508fb64b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e78aea49bc3812f8878dada4e45026499c69e99cf593462051081677f8a811b9",
+      "state": "ADMITTED_LOCKED"
+    },
     "e9611715ad661429fa34af32a596898c47a6ac30ef2c270a6c6ff48d7bd92a7f": {
       "governingHead": "a573b16783d7e34ef982dd413c889c71cbd859d6",
       "lockGeneration": 440,
@@ -2643,7 +2655,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1561,
+  "lockGeneration": 1562,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

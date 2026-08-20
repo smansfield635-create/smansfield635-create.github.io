@@ -1,0 +1,73 @@
+name: Gen331 Live Production Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/gen331-live-production-verification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Verify Gen331 custom-domain live state
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://diamondgatebridge.com'
+          tmp="$RUNNER_TEMP/gen331-live"
+          mkdir -p "$tmp"
+          fetch() {
+            local path="$1" out="$2"
+            curl --fail-with-body --silent --show-error --location \
+              -H 'Cache-Control: no-cache, no-store, max-age=0' \
+              -H 'Pragma: no-cache' \
+              "${base}${path}?gen331_live_verify=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+              -o "$out"
+          }
+          success=false
+          for attempt in $(seq 1 60); do
+            if fetch '/developer/' "$tmp/developer.html" \
+              && fetch '/evidence/' "$tmp/evidence.html" \
+              && fetch '/governance/' "$tmp/governance.html" \
+              && fetch '/assets/public-legitimacy/public-legitimacy.carousel.parity.css' "$tmp/parity.css"; then
+              if grep -Fq 'How the machine works.' "$tmp/developer.html" \
+                && grep -Fq 'How we know it worked.' "$tmp/evidence.html" \
+                && grep -Fq 'Intent should stay visible all the way to delivery.' "$tmp/governance.html" \
+                && grep -Fq 'cb=2e1e23d2424a55aa' "$tmp/developer.html" \
+                && grep -Fq 'cb=2e1e23d2424a55aa' "$tmp/evidence.html" \
+                && grep -Fq 'cb=2e1e23d2424a55aa' "$tmp/governance.html" \
+                && grep -Fq '.carousel:not([data-inspecting=true]) .ring{top:39%}' "$tmp/developer.html" \
+                && grep -Fq '@media(max-width:1100px){.carousel:not([data-inspecting=true]) .ring{top:48%}}' "$tmp/evidence.html" \
+                && grep -Fq '@media(max-width:760px){.carousel:not([data-inspecting=true]) .ring{top:49%}' "$tmp/governance.html" \
+                && grep -Fq '.carousel[data-inspecting=true] .card[data-active=true]{transform:none!important}' "$tmp/developer.html" \
+                && grep -Fq 'position:fixed' "$tmp/parity.css" \
+                && grep -Fq 'height:100dvh' "$tmp/parity.css"; then
+                success=true
+                break
+              fi
+            fi
+            sleep 10
+          done
+          test "$success" = true
+          sha256sum "$tmp"/* | tee "$tmp/live-sha256.txt"
+          cat > "$tmp/receipt.txt" <<EOF
+          GEN331_LIVE_PRODUCTION_VERIFICATION_V1
+          result=PASS_CLOSED
+          adoptionCandidate=e250bb7a68cfece2be888eba52ae1c1d85a5127a
+          adoptionMerge=78c5e3d8720e2cc9c94efbc6f62dd8154bf1dd26
+          deploymentTrigger=d7aa2f3ad03adf707451b9ad99be214751b899b1
+          routes=/developer/,/evidence/,/governance/
+          sharedParityCacheIdentity=2e1e23d2424a55aa
+          EOF
+      - name: Upload live verification evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen331-live-production-verification
+          path: ${{ runner.temp }}/gen331-live/**
+          if-no-files-found: error
+          retention-days: 30

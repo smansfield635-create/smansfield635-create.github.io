@@ -76,33 +76,43 @@ function createHashWriter() {
 }
 
 function coherentEnvironmentDefaults(environment = {}) {
-  const horizon = Array.isArray(environment.skyHorizonColor)
+  const sourceHorizon = Array.isArray(environment.skyHorizonColor)
     ? environment.skyHorizonColor.slice(0, 3).map(Number)
     : [18, 42, 72];
-  const zenith = Array.isArray(environment.skyZenithColor)
+  const sourceZenith = Array.isArray(environment.skyZenithColor)
     ? environment.skyZenithColor.slice(0, 3).map(Number)
     : [8, 24, 48];
   const sun = Array.isArray(environment.sunColor)
     ? environment.sunColor.slice(0, 3).map(Number)
     : [255, 220, 180];
-  const scale = horizon.concat(zenith, sun).some(value => value > 1) ? 255 : 1;
-  const sunY = Math.abs(Number(environment?.sunDirection?.y ?? 1));
+  const scale = sourceHorizon.concat(sourceZenith, sun).some(value => value > 1) ? 255 : 1;
   const daylight = clamp01(Number(environment.sunIntensity ?? 0));
-  const lowSun = clamp01(1 - sunY * 1.7) * daylight;
-  const skyLift = 0.12 + daylight * 0.20;
-  const correlatedHorizon = horizon.map((value, index) => {
-    const h = value / scale;
-    const z = zenith[index] / scale;
-    const s = sun[index] / scale;
-    const atmosphericBase = mix(h, z, 0.22 + skyLift * 0.18);
-    const warmed = mix(atmosphericBase, s, lowSun * 0.34);
+  const sunY = Math.abs(Number(environment?.sunDirection?.y ?? 1));
+  const lowSun = clamp01(1 - sunY * 1.55) * Math.sqrt(daylight);
+  const dayHorizon = [0.42, 0.66, 0.86];
+  const dayZenith = [0.08, 0.30, 0.62];
+  const nightHorizon = [0.035, 0.075, 0.14];
+  const nightZenith = [0.012, 0.028, 0.075];
+  const correlatedHorizon = [0, 1, 2].map(index => {
+    const source = sourceHorizon[index] / scale;
+    const solarBase = mix(nightHorizon[index], dayHorizon[index], daylight);
+    const sourceBlend = mix(solarBase, source, 0.18);
+    const warmed = mix(sourceBlend, sun[index] / scale, lowSun * 0.46);
+    return canonicalNumber(clamp01(warmed) * scale);
+  });
+  const correlatedZenith = [0, 1, 2].map(index => {
+    const source = sourceZenith[index] / scale;
+    const solarBase = mix(nightZenith[index], dayZenith[index], daylight);
+    const sourceBlend = mix(solarBase, source, 0.16);
+    const warmed = mix(sourceBlend, sun[index] / scale, lowSun * 0.10);
     return canonicalNumber(clamp01(warmed) * scale);
   });
   return freezeRecord({
     ...environment,
     skyHorizonColor: freezeArray(correlatedHorizon),
+    skyZenithColor: freezeArray(correlatedZenith),
     skyLightingCorrelation: freezeRecord({
-      model: 'SAME_SOLAR_STATE_LOW_SUN_HORIZON_CORRELATION',
+      model: 'SAME_SOLAR_STATE_DAYLIGHT_AND_LOW_SUN_SKY_CORRELATION',
       daylight,
       lowSun,
       sourceSunIntensity: Number(environment.sunIntensity ?? 0),
@@ -140,7 +150,7 @@ function buildCanonicalPackage(raw = getRawPackage()) {
       atmosphereTimeBinding: raw.packageOccurrenceId === H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID
         ? 'BROWSER_LOCAL_CLOCK_AT_PACKAGE_CONSTRUCTION'
         : 'PACKAGE_DECLARED_TIME',
-      skyLightingCorrelation: 'SAME_SOLAR_STATE_LOW_SUN_HORIZON_CORRELATION'
+      skyLightingCorrelation: 'SAME_SOLAR_STATE_DAYLIGHT_AND_LOW_SUN_SKY_CORRELATION'
     })
   });
 

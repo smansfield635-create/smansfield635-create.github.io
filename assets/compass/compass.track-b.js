@@ -12,7 +12,7 @@ function brandHeader(){const title=exactText('The Compass');const header=qs('.co
 function findIntroBlock(){const heading=exactText('Why Diamond Gate exists')||includesText('Why Diamond Gate exists');if(!heading)return null;return meaningfulBlock(heading,n=>{const t=n.textContent||'';return t.includes('Why Diamond Gate exists')&&n.querySelectorAll('p').length>=2&&!n.querySelector('[data-compass-scene]')})||heading.parentElement}
 function buildIntro(header){const intro=findIntroBlock();if(!header||!intro||qs('.compass-track-b-intro'))return;
   const oldHeading=exactText('Why Diamond Gate exists',intro)||includesText('Why Diamond Gate exists',intro);if(oldHeading)oldHeading.remove();
-  intro.classList.add('compass-track-b-original-intro');
+  intro.classList.add('compass-track-b-original-intro');intro.dataset.trackBOriginalIntro='true';
   const outer=document.createElement('details');outer.className='compass-track-b-intro';outer.dataset.trackBIntroduction='true';
   const summary=document.createElement('summary');summary.textContent='New here? Open the introduction.';
   const body=document.createElement('div');body.className='compass-track-b-intro__body';
@@ -28,6 +28,7 @@ function relocateCarousel(){const orbit=qs('[data-capability-orbit]');if(!orbit)
   const built=blockWithText('Built as one connected system.',['Software TRL 7','Experience Checked'])||blockWithText('Built Different',['Software TRL 7','Experience Checked']);
   const build=blockWithText('Build Your Own Custom Site',['Explore custom construction'])||blockWithText('Build something of your own',['Explore custom construction']);
   if(!orbitBlock||!built)return;
+  built.dataset.trackBBuiltEvidence='true';orbitBlock.dataset.trackBCapabilityBlock='true';if(build)build.dataset.trackBBuildCta='true';
   if(build&&build!==built&&!built.contains(build)){built.after(build);build.after(orbitBlock)}else{built.after(orbitBlock)}
   orbitBlock.classList.add('compass-track-b-relocated-orbit');
 }

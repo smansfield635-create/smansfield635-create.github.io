@@ -51,3 +51,6 @@ function reconcileInstructions(){const root=document.querySelector('[data-compas
 function mount(){protectMirrorland();reconcileInstructions();mountCapability();mountProof();const root=document.querySelector('[data-compass-root]');if(root){root.dataset.capabilityContinuity=CONTINUITY;root.dataset.lowerProofContinuity='protected';root.dataset.legacyRecoveryAuthority='retired'}}
 const api=Object.freeze({version:'capability-continuity-v3-swipe-only-closeout',continuity:CONTINUITY,mount});Object.defineProperty(globalThis,'CompassEditorialCarousel',{configurable:false,enumerable:true,get:()=>api,set:()=>{}});document.readyState==='loading'?document.addEventListener('DOMContentLoaded',mount,{once:true}):mount();
 })();
+
+/* Track B upper-page presentation loader only. Capability behavior above is unchanged. */
+(()=>{if(document.querySelector('script[data-compass-track-b]'))return;const s=document.createElement('script');s.src='/assets/compass/compass.track-b.js?v=track-b-v1';s.defer=true;s.dataset.compassTrackB='true';document.head.append(s)})();

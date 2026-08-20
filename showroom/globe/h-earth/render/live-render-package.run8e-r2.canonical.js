@@ -27,6 +27,8 @@ const HASH_BUFFER_ORDER = Object.freeze([
 
 const freezeArray = values => Object.freeze(Array.from(values));
 const freezeRecord = value => Object.freeze(value);
+const clamp01 = value => Math.min(1, Math.max(0, Number(value) || 0));
+const mix = (a, b, t) => Number(a) + (Number(b) - Number(a)) * clamp01(t);
 
 function canonicalNumber(value) {
   if (!Number.isFinite(value)) throw new TypeError('R2_CANONICAL_NONFINITE_NUMBER');
@@ -73,6 +75,43 @@ function createHashWriter() {
   };
 }
 
+function coherentEnvironmentDefaults(environment = {}) {
+  const horizon = Array.isArray(environment.skyHorizonColor)
+    ? environment.skyHorizonColor.slice(0, 3).map(Number)
+    : [18, 42, 72];
+  const zenith = Array.isArray(environment.skyZenithColor)
+    ? environment.skyZenithColor.slice(0, 3).map(Number)
+    : [8, 24, 48];
+  const sun = Array.isArray(environment.sunColor)
+    ? environment.sunColor.slice(0, 3).map(Number)
+    : [255, 220, 180];
+  const scale = horizon.concat(zenith, sun).some(value => value > 1) ? 255 : 1;
+  const sunY = Math.abs(Number(environment?.sunDirection?.y ?? 1));
+  const daylight = clamp01(Number(environment.sunIntensity ?? 0));
+  const lowSun = clamp01(1 - sunY * 1.7) * daylight;
+  const skyLift = 0.12 + daylight * 0.20;
+  const correlatedHorizon = horizon.map((value, index) => {
+    const h = value / scale;
+    const z = zenith[index] / scale;
+    const s = sun[index] / scale;
+    const atmosphericBase = mix(h, z, 0.22 + skyLift * 0.18);
+    const warmed = mix(atmosphericBase, s, lowSun * 0.34);
+    return canonicalNumber(clamp01(warmed) * scale);
+  });
+  return freezeRecord({
+    ...environment,
+    skyHorizonColor: freezeArray(correlatedHorizon),
+    skyLightingCorrelation: freezeRecord({
+      model: 'SAME_SOLAR_STATE_LOW_SUN_HORIZON_CORRELATION',
+      daylight,
+      lowSun,
+      sourceSunIntensity: Number(environment.sunIntensity ?? 0),
+      sourceSunDirectionY: Number(environment?.sunDirection?.y ?? 0),
+      sourceAuthorityMutation: false
+    })
+  });
+}
+
 function buildCanonicalPackage(raw = getRawPackage()) {
   if (raw?.eligible !== true) return raw;
 
@@ -92,6 +131,7 @@ function buildCanonicalPackage(raw = getRawPackage()) {
     contentDigest: `fnv1a32:${digest}`,
     revision: 2,
     buffers,
+    environmentDefaults: coherentEnvironmentDefaults(raw.environmentDefaults),
     sourceAuthorities: freezeRecord({
       ...raw.sourceAuthorities,
       numericIdentityBoundary: 'SHARED_COMPLETE_PACKAGE_BUFFER_BOUNDARY',
@@ -99,7 +139,8 @@ function buildCanonicalPackage(raw = getRawPackage()) {
       canonicalizedFloatBuffers: FLOAT_BUFFER_NAMES,
       atmosphereTimeBinding: raw.packageOccurrenceId === H_EARTH_OW01_LIVE_RENDER_PACKAGE_OCCURRENCE_ID
         ? 'BROWSER_LOCAL_CLOCK_AT_PACKAGE_CONSTRUCTION'
-        : 'PACKAGE_DECLARED_TIME'
+        : 'PACKAGE_DECLARED_TIME',
+      skyLightingCorrelation: 'SAME_SOLAR_STATE_LOW_SUN_HORIZON_CORRELATION'
     })
   });
 

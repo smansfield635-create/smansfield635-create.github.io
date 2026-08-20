@@ -58,6 +58,8 @@ box-shadow:inset 0 0 70px rgba(83,203,224,.14),0 0 70px rgba(89,200,220,.14),0 2
 [data-compass-cosmic-field]{z-index:1!important;pointer-events:none!important}
 
 .compass-guidance{position:relative;z-index:42;margin:.65rem auto 0;max-width:42rem;padding:.65rem .85rem;border:1px solid rgba(179,222,231,.12);border-radius:999px;background:rgba(5,13,21,.55);backdrop-filter:blur(12px)}
+[data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-guidance,
+[data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-guidance{position:absolute!important;left:50%!important;right:auto!important;bottom:clamp(14px,2.5vw,24px)!important;transform:translateX(-50%)!important;width:min(calc(100% - 28px),46rem)!important;max-width:46rem!important;margin:0!important;padding:.72rem 1rem!important;border-color:rgba(153,226,240,.22)!important;background:linear-gradient(90deg,rgba(4,14,23,.88),rgba(7,20,30,.76),rgba(4,14,23,.88))!important;box-shadow:0 12px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.05)!important;color:rgba(226,239,239,.88)!important;font:700 clamp(.68rem,1.35vw,.78rem)/1.45 Inter,ui-sans-serif,system-ui,sans-serif!important;letter-spacing:.025em!important;text-align:center!important;white-space:normal!important;pointer-events:none!important}
 
 /* Top-of-page collapse: expose only the Mirrorland reference and Compass instructions. */
 .compass-estate__header{display:none!important}
@@ -75,5 +77,7 @@ box-shadow:inset 0 0 70px rgba(83,203,224,.14),0 0 70px rgba(89,200,220,.14),0 2
   .compass-gen1537-instrument__mount canvas{transform:scale(3.1)!important}
   .compass-object--wing{max-width:7rem!important;padding:.45rem .55rem!important}
   .compass-object--mirrorland{width:104px!important;height:200px!important}
+  [data-compass-root][data-compass-mode="CLUSTER_OPEN"] .compass-guidance,
+  [data-compass-root][data-compass-mode="ROOM_SELECTED"] .compass-guidance{bottom:12px!important;width:calc(100% - 20px)!important;padding:.62rem .72rem!important;font-size:.67rem!important;line-height:1.4!important}
 }
 @media(prefers-reduced-motion:reduce){.compass-gen1537-instrument,.compass-gen1537-instrument__mount,.compass-scene:hover .compass-gen1537-instrument__mount,[data-compass-crystals-mount]{transition:none!important}.compass-gen1537-instrument__mount,.compass-scene:hover .compass-gen1537-instrument__mount{transform:rotateX(54deg) rotateZ(-7deg)}}

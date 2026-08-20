@@ -7,7 +7,7 @@ on:
       - 'ops/track-b-live-request.txt'
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -58,25 +58,3 @@ jobs:
           done
           echo "Live site did not converge within 10 minutes." >&2
           exit 1
-
-      - name: Record live verification
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p ops
-          cat > ops/pages-live-release.json <<EOF
-          {
-            "schema": "DGB_PAGES_LIVE_RELEASE_RECEIPT_v1",
-            "requestedByHead": "${GITHUB_SHA}",
-            "url": "https://diamondgatebridge.com/index.html",
-            "trackBIntro": true,
-            "singleCapabilityMount": true,
-            "historicalWhyBlockAbsent": true,
-            "result": "LIVE_VERIFIED"
-          }
-          EOF
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add ops/pages-live-release.json
-          git commit -m "chore(delivery): record Track B live verification [skip ci]" || exit 0
-          git push origin HEAD:main

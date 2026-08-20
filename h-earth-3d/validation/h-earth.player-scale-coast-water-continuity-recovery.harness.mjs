@@ -21,9 +21,7 @@ const protectedKnownGood = [
 ];
 
 const results = [];
-const test = (id, ok, detail = '') => {
-  results.push({ id, pass: Boolean(ok), detail });
-};
+const test = (id, ok, detail = '') => results.push({ id, pass: Boolean(ok), detail });
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
 const blob = (ref, path) => git('rev-parse', `${ref}:${path}`);
 
@@ -37,9 +35,18 @@ try {
   }
 
   const materialSource = fs.readFileSync(MATERIAL, 'utf8');
-  for (const token of ['WET_SAND', 'DRY_SAND', 'WATER_SHALLOW', 'WATER_MID', 'WATER_DEEP']) {
-    test(`MATERIAL_CLASS_PRESENT:${token}`, materialSource.includes(token));
-  }
+  test('BEACH_CLASS_PRESENT:WET_SAND', materialSource.includes("'WET_SAND'"));
+  test('BEACH_CLASS_PRESENT:DRY_SAND', materialSource.includes("'DRY_SAND'"));
+  test('WATER_CLASS_PRESENT:OPEN_WATER', materialSource.includes("'OPEN_WATER'"));
+  test('WATER_CLASS_PRESENT:NEARSHORE_WATER', materialSource.includes("'NEARSHORE_WATER'"));
+  test('OFFSHORE_DEPTH_GRADIENT_PRESENT', materialSource.includes('function offshoreWaterColor'));
+  test('SHALLOW_COLOR_PRESENT', /shallow=\{linearR:\.058,linearG:\.285,linearB:\.325\}/.test(materialSource));
+  test('SHELF_COLOR_PRESENT', /shelf=\{linearR:\.032,linearG:\.165,linearB:\.235\}/.test(materialSource));
+  test('DEEP_COLOR_PRESENT', /deep=\{linearR:\.014,linearG:\.067,linearB:\.142\}/.test(materialSource));
+  test('SHALLOW_TO_SHELF_TRANSITION_PRESENT', materialSource.includes('shelfT=smooth01(offshore/72)'));
+  test('SHELF_TO_DEEP_TRANSITION_PRESENT', materialSource.includes('deepT=smooth01((offshore-72)/168)'));
+  test('DEPTH_GRADIENT_PROFILE_PRESENT', materialSource.includes("profileId:'H_EARTH_OFFSHORE_DEPTH_VISUAL_GRADIENT_v1'"));
+  test('WATER_USES_DEPTH_GRADIENT', materialSource.includes("if(c.includes('WATER'))return offshoreWaterColor(source,d)"));
 
   const atmosphereSource = fs.readFileSync(ATMOSPHERE, 'utf8');
   test('PLAYER_SCALE_ATMOSPHERE_OVERRIDE_REMOVED', !atmosphereSource.includes('H_EARTH_PLAYER_SCALE_ATMOSPHERE_PRESENTATION_PROFILE'));

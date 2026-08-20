@@ -90,7 +90,7 @@ function buildCanonicalPackage(raw = getRawPackage()) {
     ...raw,
     packageIdentity: `H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_${digest.toUpperCase()}`,
     contentDigest: `fnv1a32:${digest}`,
-    revision: 3,
+    revision: 2,
     buffers,
     sourceAuthorities: freezeRecord({
       ...raw.sourceAuthorities,

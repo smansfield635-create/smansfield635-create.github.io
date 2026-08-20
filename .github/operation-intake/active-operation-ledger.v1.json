@@ -1084,6 +1084,18 @@
       "scopeHash": "77e9d50eb7b12a10edb88aa4520d9d7c1333f174f9fbbc325bf8f0234749d07e",
       "state": "ADMITTED_LOCKED"
     },
+    "80f687f61e6309bc59dcf236b27ab841a5c69d8e768dad13f9e64648b28c2142": {
+      "governingHead": "6ba7ae760ed71a434c0a11717293195feabc7625",
+      "lockGeneration": 1564,
+      "lockScope": "H_EARTH:AUDRALIA:PC1:GEOGRAPHIC_QUALIFICATION:EXECUTION_CARRIER:EXACT_2_PATH_CONTROL_PLANE_SCOPE",
+      "operationId": "AUDRALIA_PC1_GEOGRAPHIC_QUALIFICATION_EXECUTION_CARRIER_20260820_002",
+      "procedureLocatorDigest": "235032f43943470c21dc37f992936b5ebee12032a3158fc646f611037261e714",
+      "released": false,
+      "requestDigest": "0654babf91ec6dce7444d10597c877311f900077e6de2b617cec244d10cf40ce",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "80f687f61e6309bc59dcf236b27ab841a5c69d8e768dad13f9e64648b28c2142",
+      "state": "ADMITTED_LOCKED"
+    },
     "8132ef3b3d75f3c357864a490f155d6ee345e69d1f1fe1c036c4cc5c62c2b4ba": {
       "governingHead": "2c85d727c1fc9a73e7200b2ceb6a438efb5a54c4",
       "lockGeneration": 1497,
@@ -2667,7 +2679,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 1563,
+  "lockGeneration": 1564,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

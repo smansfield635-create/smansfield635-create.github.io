@@ -1,0 +1,137 @@
+name: Gen332 Public Legitimacy Inspection Plane Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/gen332-public-legitimacy-inspection-plane-verification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-exact-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CANDIDATE_SHA: 0b07234669eefc428376563a984cfa03dc0b7973
+      PLAYWRIGHT_VERSION: 1.55.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Materialize exact candidate and browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init -q "$RUNNER_TEMP/candidate"
+          git -C "$RUNNER_TEMP/candidate" remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C "$RUNNER_TEMP/candidate" fetch --no-tags origin "$CANDIDATE_SHA"
+          git -C "$RUNNER_TEMP/candidate" checkout -q --detach "$CANDIDATE_SHA"
+          test "$(git -C "$RUNNER_TEMP/candidate" rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test -z "$(git -C "$RUNNER_TEMP/candidate" status --porcelain=v1 --untracked-files=all)"
+          npm install --prefix "$RUNNER_TEMP/pw" --no-save "playwright@${PLAYWRIGHT_VERSION}"
+          node "$RUNNER_TEMP/pw/node_modules/playwright/cli.js" install chromium
+          mkdir -p "$RUNNER_TEMP/evidence"
+          python3 -m http.server 4173 --directory "$RUNNER_TEMP/candidate" >"$RUNNER_TEMP/server.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/server.pid"
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4173/developer/ >/dev/null && break; sleep 1; done
+      - name: Exercise nonzero inspection planes and internal controls
+        shell: bash
+        env:
+          PW_ROOT: ${{ runner.temp }}/pw
+          EVIDENCE_DIR: ${{ runner.temp }}/evidence
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const path=require('path');
+          const {chromium}=require(path.join(process.env.PW_ROOT,'node_modules/playwright'));
+          const devices=[
+            {name:'desktop',width:1440,height:900},
+            {name:'tablet',width:1024,height:768},
+            {name:'phone',width:390,height:844}
+          ];
+          const routes=[
+            {name:'developer',path:'/developer/',target:2,expected:'authority'},
+            {name:'evidence',path:'/evidence/',target:3,expected:'recovery',lenses:true},
+            {name:'governance',path:'/governance/',target:2,expected:'build'}
+          ];
+          const results=[];
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              for(const device of devices){
+                for(const route of routes){
+                  const page=await browser.newPage({viewport:{width:device.width,height:device.height}});
+                  const errors=[];
+                  page.on('console',m=>{if(m.type()==='error')errors.push(`console:${m.text()}`)});
+                  page.on('pageerror',e=>errors.push(`page:${e.message}`));
+                  await page.goto(`http://127.0.0.1:4173${route.path}`,{waitUntil:'networkidle'});
+                  await page.locator(`[data-tabs] [data-index="${route.target}"]`).click();
+                  await page.waitForFunction(id=>document.querySelector('[data-carousel]')?.dataset.activeId===id,route.expected,{timeout:3000});
+                  await page.locator('.card[data-active="true"] [data-open]').click();
+                  await page.waitForFunction(()=>document.querySelector('[data-carousel]')?.dataset.inspecting==='true');
+                  const state=await page.evaluate(()=>{
+                    const root=document.querySelector('[data-carousel]');
+                    const viewport=root.querySelector('[data-viewport]');
+                    const ring=root.querySelector('[data-ring]');
+                    const card=root.querySelector('.card[data-active="true"]');
+                    const r=card.getBoundingClientRect();
+                    return {
+                      activeId:root.dataset.activeId,
+                      inspecting:root.dataset.inspecting,
+                      ringTransform:getComputedStyle(ring).transform,
+                      ringTransformStyle:getComputedStyle(ring).transformStyle,
+                      cardTransform:getComputedStyle(card).transform,
+                      cardTransformStyle:getComputedStyle(card).transformStyle,
+                      perspective:getComputedStyle(viewport).perspective,
+                      rect:{left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height},
+                      viewport:{width:innerWidth,height:innerHeight}
+                    };
+                  });
+                  if(state.activeId!==route.expected) throw new Error(`${route.name}/${device.name}: wrong active id ${state.activeId}`);
+                  if(state.ringTransform!=='none') throw new Error(`${route.name}/${device.name}: ring transform ${state.ringTransform}`);
+                  if(state.cardTransform!=='none') throw new Error(`${route.name}/${device.name}: card transform ${state.cardTransform}`);
+                  if(state.perspective!=='none') throw new Error(`${route.name}/${device.name}: viewport perspective ${state.perspective}`);
+                  const q=state.rect;
+                  if(q.left<-.5||q.top<-.5||q.right>state.viewport.width+.5||q.bottom>state.viewport.height+.5) throw new Error(`${route.name}/${device.name}: card escaped viewport ${JSON.stringify(q)}`);
+                  if(route.lenses){
+                    const seen=[];
+                    for(let i=0;i<3;i++){
+                      const tab=page.locator(`.card[data-active="true"] [data-lens="${i}"]`);
+                      await tab.click();
+                      if(await tab.getAttribute('aria-selected')!=='true') throw new Error(`evidence/${device.name}: lens ${i} did not select`);
+                      const text=(await page.locator('.card[data-active="true"] [data-lens-panel]').innerText()).trim();
+                      if(!text) throw new Error(`evidence/${device.name}: lens ${i} empty`);
+                      seen.push(text);
+                    }
+                    if(new Set(seen).size!==3) throw new Error(`evidence/${device.name}: lens content did not change`);
+                  }
+                  await page.screenshot({path:path.join(process.env.EVIDENCE_DIR,`${route.name}-${device.name}-inspection.png`),fullPage:false});
+                  await page.locator('.card[data-active="true"] [data-close]').click();
+                  await page.waitForFunction(()=>document.querySelector('[data-carousel]')?.dataset.inspecting==='false');
+                  const restored=await page.evaluate(()=>getComputedStyle(document.querySelector('[data-ring]')).transform);
+                  if(restored==='none') throw new Error(`${route.name}/${device.name}: orbit rotation not restored`);
+                  const next=(route.target+1)%await page.locator('[data-tabs] [data-index]').count();
+                  await page.locator(`[data-tabs] [data-index="${next}"]`).click();
+                  await page.waitForFunction(i=>Number(document.querySelector('[data-tabs] [aria-selected="true"]')?.dataset.index)===i,next,{timeout:3000});
+                  if(errors.length) throw new Error(`${route.name}/${device.name}: ${errors.join(' | ')}`);
+                  results.push({route:route.name,device:device.name,result:'PASS',...state,orbitRestored:true,outerTabsAfterReturn:true,lenses:route.lenses?'ALL_3_PASS':'N/A'});
+                  await page.close();
+                }
+              }
+              fs.writeFileSync(path.join(process.env.EVIDENCE_DIR,'receipt.json'),JSON.stringify({schema:'GEN332_PUBLIC_LEGITIMACY_INSPECTION_PLANE_VERIFICATION_V1',candidateSha:process.env.CANDIDATE_SHA,result:'PASS_CLOSED',cases:results},null,2)+'\n');
+            } finally { await browser.close(); }
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Upload exact-candidate inspection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: gen332-public-legitimacy-inspection-plane-evidence
+          path: ${{ runner.temp }}/evidence/**
+          if-no-files-found: error
+          retention-days: 30

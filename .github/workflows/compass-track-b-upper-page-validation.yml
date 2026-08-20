@@ -1,0 +1,46 @@
+name: Compass Track B Upper Page Qualification
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/compass/compass.track-b.js'
+      - 'assets/compass/compass.track-b.css'
+      - 'assets/compass/compass.capability-carousel.js'
+      - '.github/workflows/compass-track-b-upper-page-validation.yml'
+permissions:
+  contents: read
+jobs:
+  rendered:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 4173 >/tmp/track-b-http.log 2>&1 &
+          for i in {1..30}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Inspect Track B presentation
+        run: |
+          mkdir -p /tmp/track-b-rendered
+          cat > .track-b-inspect.mjs <<'NODE'
+          import {chromium} from 'playwright';import fs from 'node:fs';
+          const b=await chromium.launch({headless:true}),out={};
+          for(const [name,viewport] of Object.entries({desktop:{width:1440,height:1100},tablet:{width:900,height:1000},phone:{width:412,height:915}})){
+            const p=await b.newPage({viewport});await p.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});await p.waitForTimeout(1200);
+            const state=await p.evaluate(()=>{const brand=document.querySelector('.compass-track-b-brand'),intro=document.querySelector('.compass-track-b-intro'),about=document.querySelector('.compass-track-b-about'),copy=document.querySelector('[data-track-b-about-copy]'),video=document.querySelector('.compass-track-b-film video'),built=document.querySelector('[data-track-b-built-evidence]'),orbit=document.querySelector('[data-capability-orbit]'),orbitBlock=document.querySelector('[data-track-b-capability-block]'),cta=document.querySelector('[data-track-b-build-cta]'),scene=document.querySelector('[data-compass-scene]'),why=[...document.querySelectorAll('h1,h2,h3,h4,p,strong,span')].filter(n=>n.textContent.trim()==='Why Diamond Gate exists');const bp=built?.parentElement,op=orbitBlock?.parentElement,cp=cta?.parentElement;const idx=(n,p)=>n&&p?[...p.children].indexOf(n):-1;return{brand:brand?.textContent.trim()||'',introClosed:Boolean(intro&&!intro.open),summary:intro?.querySelector(':scope>summary')?.textContent.trim()||'',about:about?.querySelector(':scope>summary')?.textContent.trim()||'',aboutCopy:copy?.textContent.trim()||'',video:video?.querySelector('source')?.getAttribute('src')||'',visibleWhyOutsideIntro:why.some(n=>!intro?.contains(n)),builtFound:Boolean(built),ctaFound:Boolean(cta),builtBeforeOrbit:Boolean(built&&orbitBlock&&(built.compareDocumentPosition(orbitBlock)&Node.DOCUMENT_POSITION_FOLLOWING)),ctaBeforeOrbit:Boolean(cta&&orbitBlock&&(cta.compareDocumentPosition(orbitBlock)&Node.DOCUMENT_POSITION_FOLLOWING)),sameParent:Boolean(bp&&bp===op&&bp===cp),builtIndex:idx(built,bp),ctaIndex:idx(cta,cp),orbitIndex:idx(orbitBlock,op),builtParent:bp?.className||bp?.tagName||'',ctaParent:cp?.className||cp?.tagName||'',orbitParent:op?.className||op?.tagName||'',sceneHeight:scene?.getBoundingClientRect().height||0,trackAArrows:orbit?.querySelectorAll('[data-orbit-next],[data-orbit-previous]').length??-1,guidance:orbit?.querySelector('.compass-capability-guidance')?.textContent.trim()||'',overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth}});
+            console.log(name,JSON.stringify(state));
+            if(state.brand!=='DiamondGateBridge.com')throw Error(`${name}: brand`);if(!state.introClosed)throw Error(`${name}: intro open`);if(state.summary!=='New here? Open the introduction.')throw Error(`${name}: summary`);if(state.about!=='What is Diamond Gate Bridge?')throw Error(`${name}: about`);if(!state.video.includes('diamond-gate-compass-mirrorland-36s.mp4'))throw Error(`${name}: video`);if(!state.aboutCopy.includes('Diamond Gate exists because useful ideas are often separated')||!state.aboutCopy.includes('The Compass is how you orient yourself'))throw Error(`${name}: about copy`);if(state.visibleWhyOutsideIntro)throw Error(`${name}: legacy why remains`);if(!state.builtFound||!state.ctaFound||!state.builtBeforeOrbit||!state.ctaBeforeOrbit)throw Error(`${name}: lower order ${JSON.stringify({sameParent:state.sameParent,builtIndex:state.builtIndex,ctaIndex:state.ctaIndex,orbitIndex:state.orbitIndex,builtParent:state.builtParent,ctaParent:state.ctaParent,orbitParent:state.orbitParent})}`);if(state.trackAArrows!==0||state.guidance!=='Swipe to rotate.')throw Error(`${name}: Track A regression`);if(state.overflow>2)throw Error(`${name}: overflow ${state.overflow}`);if(state.sceneHeight<430)throw Error(`${name}: compass presentation too small ${state.sceneHeight}`);await p.screenshot({path:`/tmp/track-b-rendered/${name}.png`,fullPage:true});out[name]=state;await p.close();
+          }
+          await b.close();fs.writeFileSync('/tmp/track-b-rendered/receipt.json',JSON.stringify({result:'PASS_CLOSED',out},null,2));
+          NODE
+          node .track-b-inspect.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compass-track-b-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/track-b-rendered
+          retention-days: 30

@@ -1,0 +1,64 @@
+name: H-Earth 23923 Optical Recovery Visual Audit
+
+on:
+  push:
+    branches:
+      - control-plane-delivery/h-earth-23923-optical-recovery-20260820-001
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser runtime
+        run: |
+          npm install --no-save playwright@1.54.1
+          npx playwright install --with-deps chromium
+      - name: Start exact branch server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-optical-audit-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/h-earth-optical-audit-server.log
+          exit 1
+      - name: Capture coast and lateral views
+        run: |
+          mkdir -p h-earth-optical-audit
+          node --input-type=module <<'NODE'
+          import { chromium } from 'playwright';
+          import { writeFile } from 'node:fs/promises';
+          const browser = await chromium.launch({headless:true,args:['--enable-webgl','--ignore-gpu-blocklist','--use-gl=swiftshader','--disable-dev-shm-usage']});
+          const context = await browser.newContext({viewport:{width:709,height:1536},deviceScaleFactor:1,isMobile:true,hasTouch:true,userAgent:'Mozilla/5.0 (Linux; Android 16) AppleWebKit/537.36 Chrome/150 Mobile Safari/537.36'});
+          const page = await context.newPage();
+          const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+          await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/',{waitUntil:'domcontentloaded',timeout:60000});
+          await page.waitForFunction(()=>globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.ready===true,null,{timeout:90000});
+          await page.waitForTimeout(1500);
+          await page.screenshot({path:'h-earth-optical-audit/01-start.png'});
+          const drag=async(dx,dy)=>{const x=355,y=860;await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(x+dx,y+dy,{steps:24});await page.mouse.up();await page.waitForTimeout(900);};
+          await drag(-250,0); await page.screenshot({path:'h-earth-optical-audit/02-look-right.png'});
+          await drag(500,0); await page.screenshot({path:'h-earth-optical-audit/03-look-left.png'});
+          await drag(-250,180); await page.screenshot({path:'h-earth-optical-audit/04-coast-oblique.png'});
+          const state=await page.evaluate(()=>({snapshot:globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getSnapshot?.()??null,diagnostics:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()??null}));
+          await writeFile('h-earth-optical-audit/receipt.json',JSON.stringify({exactHead:process.env.GITHUB_SHA,errors,state},null,2));
+          await browser.close();
+          if(errors.length) process.exit(1);
+          NODE
+      - name: Upload visual audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-23923-optical-recovery-visual-audit
+          path: h-earth-optical-audit/**
+          if-no-files-found: error
